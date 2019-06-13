@@ -113,7 +113,7 @@ export class FiltersAppEffects {
 				this.config.filters.map<[IFilter, FilterMetadata]>((filter: IFilter) => {
 					const metadata: FilterMetadata = this.resolveMetadata(filter.type);
 					const selectedFilter = facets.filters.find(({ fieldName }) => fieldName === filter.modelName);
-					metadata.initializeFilter(overlays, filter.modelName, selectedFilter);
+					metadata.initializeFilter(overlays, filter.modelName, selectedFilter, filter.visibility);
 					return [filter, metadata];
 				})
 			);

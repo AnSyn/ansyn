@@ -5,4 +5,5 @@ export interface IFilter {
 	displayName: string;
 	type: FilterType;
 	customData?: any;
+	visibility?: boolean;
 }

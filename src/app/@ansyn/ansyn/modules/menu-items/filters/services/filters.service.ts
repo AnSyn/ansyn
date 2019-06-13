@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IFilter } from '../models/IFilter';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, get as _get } from 'lodash';
 import { Filters, IFiltersState } from '../reducer/filters.reducer';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { EnumFilterMetadata, IEnumFiled } from '../models/metadata/enum-filter-metadata';
@@ -11,7 +11,7 @@ import { IFilterModel } from '../../../core/models/IFilterModel';
 import { FilterType } from '../models/filter-type';
 import { ICaseFilter } from '../../cases/models/case.model';
 import { IOverlay } from '../../../overlays/models/overlay.model';
-import { get as _get } from 'lodash'
+
 export const filtersConfig = 'filtersConfig';
 
 // @dynamic

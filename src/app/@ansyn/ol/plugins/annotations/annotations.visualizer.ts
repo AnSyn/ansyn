@@ -106,7 +106,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			style: feature.properties.style,
 			showMeasures: feature.properties.showMeasures,
 			label: feature.properties.label,
-			icon: feature.properties.icon
+			icon: feature.properties.icon,
+			undeletable: feature.properties.undeletable
 		}));
 	}
 

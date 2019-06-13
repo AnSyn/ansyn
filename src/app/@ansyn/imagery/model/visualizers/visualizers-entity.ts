@@ -9,4 +9,5 @@ export interface IVisualizerEntity {
 	type?: string;
 	style?: Partial<IVisualizerStateStyle>;
 	showMeasures?: boolean;
+	undeletable?: boolean;
 }

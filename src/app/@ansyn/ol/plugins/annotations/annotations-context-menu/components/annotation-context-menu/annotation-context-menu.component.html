@@ -82,7 +82,7 @@
 						></ansyn-annotations-color>
 					</p>
 				</li>
-				<li>
+				<li *ngIf="!getFeatureProps(featureId)?.undeletable">
 					<button class='removeFeature' (click)="removeFeature(featureId)">
 						<i [attr.tooltip-value]="'Delete' | translate" tooltip-class="bottom">
 							<svg viewBox="0 0 1024 1024">

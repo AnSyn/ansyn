@@ -1,10 +1,68 @@
 @import "../../less/map-facade";
 
+
+@mouse-cordinate-bottom: 35px;
+@mouse-coordinate-bottom-minimize: 5px;
+
 :host {
 	position: absolute;
+	display: inline-block;
+	min-width: 114px;
+	border-radius: 0;
+	background-color: rgba(0,0,0,.3);
 	z-index: @z-index-map-rotation;
-	left: 15px;
+	left: 0;
+	padding: 0 15px;
 	font-size: smaller;
 	text-align: center;
+	vertical-align: bottom;
 	user-select: none;
+	height: @scale-line-height + 6px;
+}
+
+
+div.imageries-container {
+	:host {
+		bottom: @mouse-cordinate-bottom;
+	}
+
+	&.layout3 {
+		div.map-container-wrapper:first-child {
+			:host {
+				bottom: @mouse-cordinate-bottom - @status-bar-height;
+			}
+		}
+	}
+
+	&.layout4 {
+		div.map-container-wrapper:nth-child(2) {
+			:host {
+				bottom: @mouse-cordinate-bottom - @status-bar-height;
+			}
+		}
+	}
+
+	&.layout5 {
+		div.map-container-wrapper:first-child {
+			:host {
+				bottom: @mouse-cordinate-bottom - @status-bar-height;
+			}
+		}
+	}
+
+	&.layout6 {
+		div.map-container-wrapper {
+			&:nth-child(1), &:nth-child(2) {
+				:host {
+					bottom: @mouse-cordinate-bottom - @status-bar-height;
+				}
+			}
+		}
+	}
+}
+
+div.footer-collapsed {
+	:host{
+		bottom: @mouse-coordinate-bottom-minimize;
+	}
 }

@@ -50,7 +50,7 @@
 
 		/deep/ .ol-scale-line {
 			bottom: 0;
-			height: 32px;
+			height: @scale-line-height;
 		}
 
 		/deep/ .ol-scale-line-inner {
@@ -63,25 +63,14 @@
 
 		/deep/ .ol-scale-line {
 			min-width: 144px;
-			display: inline-block;
-		}
-
-		/deep/ ansyn-sentinel-combo-box { /* TODO: remove ansyn-sentinel-combo-box style*/
-			bottom: 0;
-		}
-
-		/deep/ ansyn-imagery-mouse-coordinates {
-			bottom: 55px - @status-bar-height;
 		}
 
 		&.layout1 {
-			/deep/ .ol-scale-line, /deep/ ansyn-sentinel-combo-box { /* TODO: remove ansyn-sentinel-combo-box style*/
+			/deep/ .ol-scale-line {
 				bottom: @status-bar-height;
 			}
 
-			/deep/ ansyn-imagery-mouse-coordinates {
-				bottom: 55px;
-			}
+
 
 			div.map-container-wrapper {
 				top: 0;
@@ -96,12 +85,8 @@
 		}
 
 		&.layout2 {
-			/deep/ .ol-scale-line, /deep/ ansyn-sentinel-combo-box { /* TODO: remove ansyn-sentinel-combo-box style*/
+			/deep/ .ol-scale-line {
 				bottom: @status-bar-height;
-			}
-
-			/deep/ ansyn-imagery-mouse-coordinates {
-				bottom: 55px;
 			}
 
 			div.map-container-wrapper {
@@ -159,12 +144,8 @@
 						height: @height-minus-status;
 					}
 
-					/deep/ .ol-scale-line, /deep/ ansyn-sentinel-combo-box { /* TODO: remove ansyn-sentinel-combo-box style*/
+					/deep/ .ol-scale-line {
 						bottom: @status-bar-height;
-					}
-
-					/deep/ ansyn-imagery-mouse-coordinates {
-						bottom: 55px;
 					}
 				}
 			}
@@ -189,12 +170,8 @@
 						height: @height-minus-status;
 					}
 
-					/deep/ .ol-scale-line, /deep/ ansyn-sentinel-combo-box { /* TODO: remove ansyn-sentinel-combo-box style*/
+					/deep/ .ol-scale-line {
 						bottom: @status-bar-height;
-					}
-
-					/deep/ ansyn-imagery-mouse-coordinates {
-						bottom: 55px;
 					}
 				}
 
@@ -236,12 +213,8 @@
 						height: @height-minus-status;
 					}
 
-					/deep/ .ol-scale-line, /deep/ ansyn-sentinel-combo-box { /* TODO: remove ansyn-sentinel-combo-box style*/
+					/deep/ .ol-scale-line {
 						bottom: @status-bar-height;
-					}
-
-					/deep/ ansyn-imagery-mouse-coordinates {
-						bottom: 55px;
 					}
 				}
 
@@ -286,12 +259,8 @@
 						height: @height-minus-status;
 					}
 
-					/deep/ .ol-scale-line, /deep/ ansyn-sentinel-combo-box { /* TODO: remove ansyn-sentinel-combo-box style*/
+					/deep/ .ol-scale-line {
 						bottom: @status-bar-height;
-					}
-
-					/deep/ ansyn-imagery-mouse-coordinates {
-						bottom: 55px;
 					}
 				}
 
@@ -327,19 +296,11 @@
 			/deep/ .ol-scale-line, /deep/ .ol-attribution {
 				bottom: 5px;
 			}
-
-			/deep/ ansyn-imagery-mouse-coordinates {
-				bottom: 25px;
-			}
 		}
 
 		&.layout2 {
 			/deep/ .ol-scale-line, /deep/ .ol-attribution {
 				bottom: 5px;
-			}
-
-			/deep/ ansyn-imagery-mouse-coordinates {
-				bottom: 25px;
 			}
 
 			div.map-container-wrapper {
@@ -396,10 +357,6 @@
 					/deep/ .ol-scale-line, /deep/ .ol-attribution {
 						bottom: 5px;
 					}
-
-					/deep/ ansyn-imagery-mouse-coordinates {
-						bottom: 25px;
-					}
 				}
 			}
 		}
@@ -421,10 +378,6 @@
 
 					/deep/ .ol-scale-line, /deep/ .ol-attribution {
 						bottom: 5px;
-					}
-
-					/deep/ ansyn-imagery-mouse-coordinates {
-						bottom: 25px;
 					}
 				}
 
@@ -469,10 +422,6 @@
 					/deep/ .ol-scale-line, /deep/ .ol-attribution {
 						bottom: 5px;
 					}
-
-					/deep/ ansyn-imagery-mouse-coordinates {
-						bottom: 25px;
-					}
 				}
 
 				&:nth-child(1) {
@@ -507,10 +456,6 @@
 
 					/deep/ .ol-scale-line, /deep/ .ol-attribution {
 						bottom: 5px;
-					}
-
-					/deep/ ansyn-imagery-mouse-coordinates {
-						bottom: 25px;
 					}
 				}
 

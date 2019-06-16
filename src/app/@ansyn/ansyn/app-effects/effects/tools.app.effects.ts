@@ -33,7 +33,7 @@ import {
 	SetAutoImageProcessingSuccess,
 	SetManualImageProcessing,
 	SetMeasureDistanceToolState,
-	SetPinLocationModeAction,
+	SetPinLocationModeAction, SetSubMenu,
 	ShowOverlaysFootprintAction, StartMouseShadow, StopMouseShadow, ToolsActionsTypes, UpdateToolsFlags
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
@@ -230,6 +230,13 @@ export class ToolsAppEffects {
 			}
 			return clearActions;
 		}));
+
+	@Effect()
+	onCloseGoTo$ = this.actions$.pipe(
+		ofType<SetSubMenu>(ToolsActionsTypes.SET_SUB_MENU),
+		filter( action => Boolean(!action.payload)),
+		map( () => new SetPinLocationModeAction(false))
+	);
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>, protected imageryCommunicatorService: ImageryCommunicatorService,
 				@Inject(toolsConfig) protected config: IToolsConfig) {

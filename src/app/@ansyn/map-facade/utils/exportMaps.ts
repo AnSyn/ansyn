@@ -9,6 +9,7 @@ export function mapsToPng(maps: ICanvasExportData[], layout: LayoutKey): Observa
 	c.width = size.width;
 	c.height = size.height;
 	const ctx = c.getContext('2d');
+	ctx.font = "30px Arial";
 	ctx.clearRect(0, 0, size.width, size.height);
 	return putImagesOnCanvas(ctx, maps, layout);
 }
@@ -49,21 +50,27 @@ function putImagesOnCanvas(ctx: CanvasRenderingContext2D, maps: ICanvasExportDat
 	let loaded = 0;
 	return new Observable(obs => {
 		maps.forEach((map, index, all) => {
-			const img = new Image(map.width, map.height);
-			img.onload = (event) => {
-				drawImage(event.target, index, all);
-				loaded++;
-				if (loaded === total) {
-					ctx.canvas.toBlob(blob => {
-						obs.next(blob);
-						obs.complete();
-					})
-				}
+			if (map.data !== null) {
+				const img = new Image(map.width, map.height);
+				img.onload = (event) => {
+					drawImage(event.target, index, all);
+					loaded++;
+					if (loaded === total) {
+						ctx.canvas.toBlob(blob => {
+							obs.next(blob);
+							obs.complete();
+						});
+					}
 
-				img.onload = null;
-			};
-			img.src = map.data;
-		})
+					img.onload = null;
+				};
+				img.src = map.data;
+			}
+			else {
+				drawImage(map, index, all);
+				loaded++;
+			}
+		});
 	});
 
 	function drawImage(img, index, allMaps) {
@@ -83,8 +90,8 @@ function putImagesOnCanvas(ctx: CanvasRenderingContext2D, maps: ICanvasExportDat
 				if (index === 1) {
 					x = allMaps[0].width;
 				} else if (index === 2) {
-					x = maps[0].width;
-					y = maps[1].height;
+					x = allMaps[0].width;
+					y = allMaps[1].height;
 				}
 				break;
 			case 'layout5':
@@ -97,16 +104,22 @@ function putImagesOnCanvas(ctx: CanvasRenderingContext2D, maps: ICanvasExportDat
 				break;
 			case 'layout6':
 				if (index === 1) {
-					x = maps[0].width;
+					x = allMaps[0].width;
 				} else if (index === 2) {
-					y = maps[0].height;
+					y = allMaps[0].height;
 				} else if (index === 3) {
-					x = maps[2].width;
-					y = maps[1].height;
+					x = allMaps[2].width;
+					y = allMaps[1].height;
 				}
 				break;
 		}
 
-		ctx.drawImage(img, x, y, w, h);
+		if (img.src) {
+			ctx.drawImage(img, x, y, w, h);
+		}
+		else {
+
+			ctx.fillText('Unable to get map image', x + (img.width / 2), y + (img.height / 2 ));
+		}
 	}
 }

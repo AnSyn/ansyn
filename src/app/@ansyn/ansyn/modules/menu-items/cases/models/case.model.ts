@@ -95,7 +95,9 @@ export interface ICaseTimeState {
 
 export interface ICaseBooleanFilterMetadata {
 	displayTrue: boolean;
+	isDisplayTrueDisabled: boolean;
 	displayFalse: boolean;
+	isDisplayFalseDisabled: boolean;
 }
 
 export interface ICaseSliderFilterMetadata {
@@ -103,11 +105,14 @@ export interface ICaseSliderFilterMetadata {
 	end: number;
 }
 
-export type CaseEnumFilterMetadata = string[];
+export interface ICaseEnumFilterMetadata {
+	unCheckedEnums: string[];
+	disabledEnums: string[];
+}
 
 export type CaseArrayFilterMetadata = [string, boolean][];
 
-export type CaseFilterMetadata = ICaseBooleanFilterMetadata | CaseEnumFilterMetadata | ICaseSliderFilterMetadata | CaseArrayFilterMetadata;
+export type CaseFilterMetadata = ICaseBooleanFilterMetadata | ICaseEnumFilterMetadata | ICaseSliderFilterMetadata | CaseArrayFilterMetadata;
 
 export interface ICaseFilter<T = CaseFilterMetadata> {
 	type: FilterType;

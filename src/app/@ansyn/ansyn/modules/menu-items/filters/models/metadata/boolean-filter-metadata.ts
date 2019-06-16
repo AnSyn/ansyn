@@ -81,7 +81,9 @@ export class BooleanFilterMetadata extends FilterMetadata {
 		});
 		if (caseFilter) {
 			this.properties.false.value = caseFilter.metadata.displayFalse;
+			this.properties.false.disabled = caseFilter.metadata.isDisplayFalseDisabled;
 			this.properties.true.value = caseFilter.metadata.displayTrue;
+			this.properties.true.disabled = caseFilter.metadata.isDisplayTrueDisabled;
 		}
 	}
 
@@ -98,10 +100,15 @@ export class BooleanFilterMetadata extends FilterMetadata {
 		return false;
 	}
 
-	getMetadataForOuterState(): { displayTrue: boolean, displayFalse: boolean } {
+	getMetadataForOuterState(): ICaseBooleanFilterMetadata {
 		const displayTrue = this.properties.true.value;
 		const displayFalse = this.properties.false.value;
-		return { displayTrue, displayFalse };
+		return {
+			displayTrue,
+			isDisplayTrueDisabled: this.properties.true.disabled,
+			displayFalse,
+			isDisplayFalseDisabled: this.properties.false.disabled
+		};
 	}
 
 	isFiltered(): boolean {

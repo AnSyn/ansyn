@@ -1,4 +1,4 @@
-import { EnumFilterMetadata } from './enum-filter-metadata';
+import { EnumFilterMetadata, IEnumFiled } from './enum-filter-metadata';
 import { ICaseEnumFilterMetadata } from '../../../cases/models/case.model';
 
 describe('EnumFilterMetadata', () => {
@@ -229,6 +229,28 @@ describe('EnumFilterMetadata', () => {
 
 			expect(result).toEqual(expectedResult);
 		});
+
+		it('getMetadataForOuterState with disabled enum value should return the disabled values array', () => {
+			enumFilterMetadata.accumulateData('firstFeild');
+			enumFilterMetadata.accumulateData('secondFeild');
+			enumFilterMetadata.accumulateData('secondFeild');
+			enumFilterMetadata.accumulateData('thirdFeild');
+			enumFilterMetadata.accumulateData('thirdFeild');
+			enumFilterMetadata.accumulateData('thirdFeild');
+
+			enumFilterMetadata.enumsFields.forEach((value: IEnumFiled, key: string) => {
+				if (key === 'thirdFeild') {
+					value.disabled = true;
+				}
+			});
+
+			const result: ICaseEnumFilterMetadata = enumFilterMetadata.getMetadataForOuterState();
+			const expectedResult: ICaseEnumFilterMetadata = { unCheckedEnums: [], disabledEnums: ['thirdFeild'] }
+
+			expect(result).toEqual(expectedResult);
+		});
+
+		// enumFilterMetadata
 	});
 
 	describe('isFiltered', () => {

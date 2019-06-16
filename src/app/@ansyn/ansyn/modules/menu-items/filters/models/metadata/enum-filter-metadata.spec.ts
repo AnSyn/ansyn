@@ -1,4 +1,5 @@
 import { EnumFilterMetadata } from './enum-filter-metadata';
+import { ICaseEnumFilterMetadata } from '../../../cases/models/case.model';
 
 describe('EnumFilterMetadata', () => {
 	let enumFilterMetadata: EnumFilterMetadata;
@@ -193,9 +194,10 @@ describe('EnumFilterMetadata', () => {
 			enumFilterMetadata.updateMetadata('firstFeild');
 			enumFilterMetadata.updateMetadata('secondFeild');
 
-			const result: any = enumFilterMetadata.getMetadataForOuterState();
+			const result: ICaseEnumFilterMetadata = enumFilterMetadata.getMetadataForOuterState();
+			const expectedResult: ICaseEnumFilterMetadata = { unCheckedEnums: ['firstFeild', 'secondFeild'], disabledEnums: [] }
 
-			expect(result).toEqual(['firstFeild', 'secondFeild']);
+			expect(result).toEqual(expectedResult);
 		});
 
 		it('getMetadataForOuterState with selected value should return this value in an array', () => {
@@ -208,9 +210,10 @@ describe('EnumFilterMetadata', () => {
 
 			enumFilterMetadata.updateMetadata('firstFeild');
 
-			const result: any = enumFilterMetadata.getMetadataForOuterState();
+			const result: ICaseEnumFilterMetadata = enumFilterMetadata.getMetadataForOuterState();
+			const expectedResult: ICaseEnumFilterMetadata = { unCheckedEnums: ['firstFeild'], disabledEnums: [] }
 
-			expect(result).toEqual(['firstFeild']);
+			expect(result).toEqual(expectedResult);
 		});
 
 		it('getMetadataForOuterState with none selected values should return an empty array', () => {
@@ -221,9 +224,10 @@ describe('EnumFilterMetadata', () => {
 			enumFilterMetadata.accumulateData('thirdFeild');
 			enumFilterMetadata.accumulateData('thirdFeild');
 
-			const result: any = enumFilterMetadata.getMetadataForOuterState();
+			const result: ICaseEnumFilterMetadata = enumFilterMetadata.getMetadataForOuterState();
+			const expectedResult: ICaseEnumFilterMetadata = { unCheckedEnums: [], disabledEnums: [] }
 
-			expect(result).toEqual([]);
+			expect(result).toEqual(expectedResult);
 		});
 	});
 

@@ -1,4 +1,5 @@
 import { SetFavoriteOverlaysAction } from './modules/overlays/overlay-status/actions/overlay-status.actions';
+import { ICaseEnumFilterMetadata } from './modules/menu-items/cases/models/case.model';
 
 export { ANSYN_ID } from './api/ansyn-id.provider';
 export { AnsynApi } from './api/ansyn-api.service';
@@ -286,7 +287,7 @@ export {
 export {
 	ICaseMapsState, IDilutedCaseState, ImageManualProcessArgs
 }from './modules/menu-items/cases/models/case.model';
-export { CaseEnumFilterMetadata } from './modules/menu-items/cases/models/case.model';
+export { ICaseEnumFilterMetadata } from './modules/menu-items/cases/models/case.model';
 export { ICaseMapState } from './modules/menu-items/cases/models/case.model';
 
 

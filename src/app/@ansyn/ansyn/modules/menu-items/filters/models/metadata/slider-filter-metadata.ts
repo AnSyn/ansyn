@@ -61,7 +61,7 @@ export class SliderFilterMetadata extends FilterMetadata {
 			overlay[key] <= this.end;
 	}
 
-	getMetadataForOuterState(): { start: number, end: number } {
+	getMetadataForOuterState(): ICaseSliderFilterMetadata {
 		if (this.start === -Infinity && this.end === Infinity) {
 			return null;
 		}

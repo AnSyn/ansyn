@@ -1,6 +1,6 @@
 import { FilterMetadata } from './filter-metadata.interface';
 import { mapValuesToArray } from '../../../../core/utils/misc';
-import { CaseEnumFilterMetadata, ICaseFilter } from '../../../cases/models/case.model';
+import { ICaseEnumFilterMetadata, ICaseFilter } from '../../../cases/models/case.model';
 import { FilterType } from '../filter-type';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
 import { get as _get } from 'lodash';
@@ -47,7 +47,7 @@ export class EnumFilterMetadata extends FilterMetadata {
 		});
 	}
 
-	initializeFilter(overlays: IOverlay[], modelName: string, caseFilter?: ICaseFilter<CaseEnumFilterMetadata>, visibility?: boolean): void {
+	initializeFilter(overlays: IOverlay[], modelName: string, caseFilter?: ICaseFilter<ICaseEnumFilterMetadata>, visibility?: boolean): void {
 		super.initializeFilter(overlays, modelName, caseFilter, visibility);
 		this.enumsFields = new Map<string, IEnumFiled>();
 
@@ -58,13 +58,27 @@ export class EnumFilterMetadata extends FilterMetadata {
 		if (caseFilter) {
 			if (caseFilter.positive) {
 				this.enumsFields.forEach((enumsField: IEnumFiled) => {
-					enumsField.isChecked = caseFilter.metadata.includes(enumsField.key);
+					enumsField.isChecked = caseFilter.metadata.unCheckedEnums.includes(enumsField.key);
 				});
 			} else {
-				caseFilter.metadata
+				// hack for old cases:
+				if (Array.isArray(caseFilter.metadata)) {
+					caseFilter.metadata = { unCheckedEnums: caseFilter.metadata, disabledEnums: [] };
+				}
+
+				caseFilter.metadata.unCheckedEnums
 					.map(key => this.enumsFields.get(key))
 					.filter(Boolean)
-					.forEach((enumsField: IEnumFiled) => enumsField.isChecked = false);
+					.forEach((enumsField: IEnumFiled) => {
+						enumsField.isChecked = false;
+					});
+
+				caseFilter.metadata.disabledEnums
+					.map(key => this.enumsFields.get(key))
+					.filter(Boolean)
+					.forEach((enumsField: IEnumFiled) => {
+						enumsField.disabled = true;
+					});
 			}
 		}
 
@@ -84,16 +98,24 @@ export class EnumFilterMetadata extends FilterMetadata {
 		return selectedFields.some((filterParams) => _get(overlay, key) === filterParams);
 	}
 
-	getMetadataForOuterState(): string[] {
-		const returnValue: string[] = [];
+	getMetadataForOuterState(): ICaseEnumFilterMetadata {
+		const unCheckedEnums: string[] = [];
+		const disabledEnums: string[] = [];
 
-		this.enumsFields.forEach((value: { count: number, isChecked: boolean }, key: string) => {
+		this.enumsFields.forEach((value: IEnumFiled, key: string) => {
 			if (!value.isChecked) {
-				returnValue.push(key);
+				unCheckedEnums.push(key);
+			}
+
+			if (value.disabled) {
+				disabledEnums.push(key);
 			}
 		});
 
-		return returnValue;
+		return {
+			unCheckedEnums,
+			disabledEnums
+		};
 	}
 
 	isFiltered(): boolean {

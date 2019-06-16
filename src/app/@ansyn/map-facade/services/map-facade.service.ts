@@ -8,7 +8,7 @@ import {
 	ImageryCommunicatorService,
 	IMapInstanceChanged,
 	IMapSettings,
-	getFootprintIntersectionRatioInExtent
+	getFootprintIntersectionRatioInExtent, ICanvasExportData
 } from '@ansyn/imagery';
 import { Observable } from 'rxjs';
 import { saveAs } from 'file-saver';
@@ -87,13 +87,8 @@ export class MapFacadeService {
 				const maps = [];
 				communicators.forEach(comm => {
 					const map = comm.ActiveMap;
-					try {
-						maps.push(map.getExportData());
-					}
-					catch (e) {
-						console.log('unable get ' + map.getExtraData());
-						maps.push({width: 1, height: 1, data: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='});
-					}
+					const exportData: ICanvasExportData = map.getExportData();
+					maps.push(exportData);
 				});
 				mapsToPng(maps, this.layout).subscribe(blob => saveAs(blob, "map.png"));
 	}

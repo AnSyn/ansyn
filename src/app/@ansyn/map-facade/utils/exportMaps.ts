@@ -59,6 +59,8 @@ function putImagesOnCanvas(ctx: CanvasRenderingContext2D, maps: ICanvasExportDat
 						obs.complete();
 					})
 				}
+
+				img.onload = null;
 			};
 			img.src = map.data;
 		})

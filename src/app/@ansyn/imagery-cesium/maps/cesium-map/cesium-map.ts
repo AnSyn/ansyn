@@ -1,6 +1,6 @@
 import {
 	BaseImageryMap,
-	ExtentCalculator,
+	ExtentCalculator, ICanvasExportData,
 	ImageryMap,
 	ImageryMapExtent,
 	ImageryMapPosition,
@@ -170,11 +170,24 @@ export class CesiumMap extends BaseImageryMap<any> {
 		return <HTMLElement>this.element;
 	}
 
-	getExportData(): ImageData {
+	getExportData(): ICanvasExportData {
 		// @TODO: get cesium real map image.
 		this.mapObject.render();
 		const c = this.mapObject.canvas;
-		return new ImageData(c.width, c.height);
+		let exportData: ICanvasExportData = {
+			width: c.width,
+			height: c.height,
+			data: null
+		};
+		try {
+			exportData = {
+				width: c.width,
+				height: c.height,
+				data: c.toDataURL()
+			}
+		}catch (e) {
+		}
+		return exportData;
 	}
 
 	createMapObject(layer: CesiumLayer): Observable<boolean> {

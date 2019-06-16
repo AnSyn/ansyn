@@ -1,5 +1,5 @@
 import {
-	BaseImageryMap,
+	BaseImageryMap, ICanvasExportData,
 	IMAGERY_MAIN_LAYER_NAME,
 	ImageryLayerProperties,
 	ImageryMap,
@@ -153,14 +153,22 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		return <HTMLElement>this.element;
 	}
 
-	getExportData(): ImageData {
+	getExportData(): ICanvasExportData {
 		const c = this.mapObject.getViewport().firstChild;
-		const ctx = c.getContext('2d');
+		let exportData: ICanvasExportData = {
+			width: c.width,
+			height: c.height,
+			data: null
+		};
 		try {
-			return ctx.getImageData(0, 0, c.width, c.height);
-		} catch (e) {
-			return new ImageData(c.width, c.height);
+			exportData = {
+				width: c.width,
+				height: c.height,
+				data: c.toDataURL()
+			}
+		}catch (e) {
 		}
+		return exportData;
 	}
 
 	dispose() {

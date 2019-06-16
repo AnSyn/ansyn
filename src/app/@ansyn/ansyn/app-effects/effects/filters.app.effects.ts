@@ -53,6 +53,7 @@ import { FilterType } from '../../modules/menu-items/filters/models/filter-type'
 import { ICaseFacetsState } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay, IOverlaySpecialObject } from '../../modules/overlays/models/overlay.model';
 import { get as _get } from 'lodash';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -74,11 +75,12 @@ export class FiltersAppEffects {
 
 	@Effect()
 	updateOverlayFilters$ = this.onCriterialFiltersChanges$.pipe(
-		withLatestFrom(this.overlaysArray$),
-		mergeMap(([[filters, removedOverlaysIds, removedOverlaysVisibility], overlaysArray]: [[Filters, string[], boolean], IOverlay[]]) => {
+		withLatestFrom(this.overlaysArray$, this.translate.get(overlaysStatusMessages.noOverLayMatchFilters)),
+		mergeMap(([[filters, removedOverlaysIds, removedOverlaysVisibility], overlaysArray, noOverlayMatchFilter]: [[Filters, string[], boolean], IOverlay[], string]) => {
 			const filterModels: IFilterModel[] = FiltersService.pluckFilterModels(filters);
 			const filteredOverlays: string[] = buildFilteredOverlays(overlaysArray, filterModels, removedOverlaysIds, removedOverlaysVisibility);
-			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : overlaysStatusMessages.noOverLayMatchFilters;
+			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : noOverlayMatchFilter;
+			console.log(overlaysStatusMessages.noOverLayMatchFilters);
 			return [
 				new SetFilteredOverlaysAction(filteredOverlays),
 				new SetOverlaysStatusMessage(message)
@@ -166,6 +168,7 @@ export class FiltersAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected genericTypeResolverService: GenericTypeResolverService,
+				protected translate: TranslateService,
 				@Inject(filtersConfig) protected config: IFiltersConfig) {
 	}
 

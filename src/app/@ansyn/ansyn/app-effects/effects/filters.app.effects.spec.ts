@@ -36,6 +36,7 @@ import { OverlaysService } from '../../modules/overlays/services/overlays.servic
 import { imageryStatusFeatureKey, ImageryStatusReducer } from '@ansyn/map-facade';
 import { FilterType } from '../../modules/menu-items/filters/models/filter-type';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -64,7 +65,8 @@ describe('Filters app effects', () => {
 					[menuFeatureKey]: MenuReducer,
 					[imageryStatusFeatureKey]: ImageryStatusReducer,
 					[overlayStatusFeatureKey]: OverlayStatusReducer
-				})
+				}),
+				TranslateModule.forRoot()
 			],
 			providers: [
 				FiltersAppEffects,

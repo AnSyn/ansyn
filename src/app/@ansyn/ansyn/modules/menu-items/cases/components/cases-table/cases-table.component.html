@@ -64,13 +64,19 @@
 				<!--menu-->
 				<div class="case-menu-container">
 					<div class="case-menu" (click)="caseMenuClick($event, caseRow)" #caseMenu>
-						<button (click)="removeCase(id)">
+						<button (click)="removeCase(id)"
+						[attr.tooltip-value]="'remove' | translate"
+						tooltip-class="bottom">
 							<i class="icon-delete"></i>
 						</button>
-						<button (click)="shareCase(id)">
+						<button (click)="shareCase(id)"
+							[attr.tooltip-value]="'share' | translate"
+							tooltip-class="bottom">
 							<i class="icon-share"></i>
 						</button>
-						<button (click)="editCase(id)">
+						<button (click)="editCase(id)"
+							[attr.tooltip-value]="'edit' | translate"
+							tooltip-class="bottom">
 							<i class="icon-edit"></i>
 						</button>
 					</div>

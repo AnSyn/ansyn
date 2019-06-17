@@ -35,6 +35,7 @@ import { ToolsModule } from './modules/menu-items/tools/tools.module';
 import { OverlaysModule } from './modules/overlays/overlays.module';
 import { AnsynPluginsModule } from './modules/plugins/ansyn-plugins.module';
 import { StatusBarModule } from './modules/status-bar/status-bar.module';
+import { TranslateService } from '@ngx-translate/core';
 
 @NgModule({
 	imports: [
@@ -107,5 +108,9 @@ export class AnsynModule {
 				}
 			]
 		};
+	}
+
+	constructor(public translate: TranslateService) {
+		translate.setDefaultLang('default');
 	}
 }

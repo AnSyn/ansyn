@@ -5,7 +5,7 @@ import { GenericTypeResolverService } from './services/generic-type-resolver.ser
 import { LoggerService } from './services/logger.service';
 import { ErrorHandlerService } from './services/error-handler.service';
 import { StorageService } from './services/storage/storage.service';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { AnsynModalComponent } from './components/ansyn-modal/ansyn-modal.component';
 import { ManualRemovedOverlaysComponent } from './components/manual-removed-overlays/manual-removed-overlays.component';
 import { AnsynTranslationModule } from './translation/ansyn-translation.module';
@@ -42,7 +42,5 @@ import { ContextMenuComponent } from './components/context-menu/context-menu.com
 })
 
 export class CoreModule {
-	constructor(public translate: TranslateService) {
-		translate.setDefaultLang('default');
-	}
+
 }

@@ -12,6 +12,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { DataLayersService, layersConfig } from '../../../layers-manager/services/data-layers.service';
 import { CoreConfig } from '../../../../core/models/core.config';
 import { LoggerConfig } from '../../../../core/models/logger.config';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('EditCaseComponent', () => {
 	let component: EditCaseComponent;
@@ -39,7 +40,8 @@ describe('EditCaseComponent', () => {
 				CasesModule,
 				EffectsModule.forRoot([]),
 				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
-				RouterTestingModule
+				RouterTestingModule,
+				TranslateModule.forRoot()
 			],
 			providers: [
 				DataLayersService,

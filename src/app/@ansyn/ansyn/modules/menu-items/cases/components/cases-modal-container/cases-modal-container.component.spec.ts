@@ -13,6 +13,7 @@ import { DataLayersService, layersConfig } from '../../../layers-manager/service
 import { casesConfig } from '../../services/cases.service';
 import { CoreConfig } from '../../../../core/models/core.config';
 import { LoggerConfig } from '../../../../core/models/logger.config';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('ModalContainerComponent', () => {
 	let component: CasesModalContainerComponent;
@@ -25,7 +26,8 @@ describe('ModalContainerComponent', () => {
 				CasesModule,
 				EffectsModule.forRoot([]),
 				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
-				RouterTestingModule
+				RouterTestingModule,
+				TranslateModule.forRoot()
 			],
 			providers: [
 				DataLayersService,

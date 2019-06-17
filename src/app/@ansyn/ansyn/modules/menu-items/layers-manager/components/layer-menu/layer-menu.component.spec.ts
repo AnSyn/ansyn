@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LayerMenuComponent } from './layer-menu.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('LayerMenuComponent', () => {
 	let component: LayerMenuComponent;
@@ -8,7 +9,8 @@ describe('LayerMenuComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [LayerMenuComponent]
+			declarations: [LayerMenuComponent],
+			imports: [TranslateModule.forRoot()]
 		})
 			.compileComponents();
 	}));

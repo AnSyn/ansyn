@@ -11,6 +11,7 @@ import { CoreConfig } from '../../../../core/models/core.config';
 import { LoggerService } from '../../../../core/services/logger.service';
 import { LoggerConfig } from '../../../../core/models/logger.config';
 import { casesFeatureKey, CasesReducer } from '../../../cases/reducers/cases.reducer';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('LayersManagerComponent', () => {
 	let component: LayersManagerComponent;
@@ -26,7 +27,8 @@ describe('LayersManagerComponent', () => {
 				StoreModule.forRoot({
 					[layersFeatureKey]: LayersReducer,
 					[casesFeatureKey]: CasesReducer
-				})
+				}),
+				TranslateModule.forRoot()
 			],
 			providers: [
 				{ provide: layersConfig, useValue: { schema: null } },

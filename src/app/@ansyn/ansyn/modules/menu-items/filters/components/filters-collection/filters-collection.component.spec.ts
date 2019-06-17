@@ -53,7 +53,7 @@ describe('FiltersCollectionComponent', () => {
 			],
 			providers: [
 				{ provide: mapFacadeConfig, useValue: {} },
-				{ provide: filtersConfig, useValue: { filters: null } }, {
+				{ provide: filtersConfig, useValue: { filters: [] } }, {
 					provide: LoggerConfig,
 					useValue: {}
 				}, { provide: CoreConfig, useValue: {} }]

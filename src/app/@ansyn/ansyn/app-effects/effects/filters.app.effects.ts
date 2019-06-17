@@ -80,7 +80,7 @@ export class FiltersAppEffects {
 			const filterModels: IFilterModel[] = FiltersService.pluckFilterModels(filters);
 			const filteredOverlays: string[] = buildFilteredOverlays(overlaysArray, filterModels, removedOverlaysIds, removedOverlaysVisibility);
 			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : translation[overlaysStatusMessages.noOverLayMatchFilters];
-			console.log(overlaysStatusMessages.noOverLayMatchFilters);
+			console.log('message: ' , message);
 			return [
 				new SetFilteredOverlaysAction(filteredOverlays),
 				new SetOverlaysStatusMessage(message)

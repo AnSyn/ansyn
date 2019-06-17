@@ -4,7 +4,7 @@ import {
 	OverlayStatusReducer
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { FiltersAppEffects } from './filters.app.effects';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
@@ -36,8 +36,15 @@ import { OverlaysService } from '../../modules/overlays/services/overlays.servic
 import { imageryStatusFeatureKey, ImageryStatusReducer } from '@ansyn/map-facade';
 import { FilterType } from '../../modules/menu-items/filters/models/filter-type';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService, MissingTranslationHandler, USE_DEFAULT_LANG, TranslateLoader } from '@ngx-translate/core';
 
+class MockLoader implements TranslateLoader{
+	getTranslation(lang: string): Observable<any> {
+		return of({
+			'No overlays match your query, please try another search': 'No overlays match your query, please try another search'
+		})
+	}
+}
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
 	let actions: Observable<any>;
@@ -66,13 +73,21 @@ describe('Filters app effects', () => {
 					[imageryStatusFeatureKey]: ImageryStatusReducer,
 					[overlayStatusFeatureKey]: OverlayStatusReducer
 				}),
-				TranslateModule.forRoot()
+				TranslateModule.forRoot({
+					loader: {provide: TranslateLoader, useClass: MockLoader}
+				})
 			],
 			providers: [
 				FiltersAppEffects,
 				GenericTypeResolverService,
 				{ provide: filtersConfig, useValue: {} },
-				provideMockActions(() => actions)
+				provideMockActions(() => actions),
+				{ provide: USE_DEFAULT_LANG },
+				{
+					provide: MissingTranslationHandler, useValue: {
+						handle: () => ''
+					}
+				}
 			]
 		}).compileComponents();
 	}));

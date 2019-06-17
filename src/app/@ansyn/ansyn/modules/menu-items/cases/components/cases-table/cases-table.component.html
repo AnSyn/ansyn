@@ -65,17 +65,17 @@
 				<div class="case-menu-container">
 					<div class="case-menu" (click)="caseMenuClick($event, caseRow)" #caseMenu>
 						<button (click)="removeCase(id)"
-						[attr.tooltip-value]="'remove' | translate"
+						[attr.tooltip-value]="'Remove' | translate"
 						tooltip-class="bottom">
 							<i class="icon-delete"></i>
 						</button>
 						<button (click)="shareCase(id)"
-							[attr.tooltip-value]="'share' | translate"
+							[attr.tooltip-value]="'Share' | translate"
 							tooltip-class="bottom">
 							<i class="icon-share"></i>
 						</button>
 						<button (click)="editCase(id)"
-							[attr.tooltip-value]="'edit' | translate"
+							[attr.tooltip-value]="'Edit' | translate"
 							tooltip-class="bottom">
 							<i class="icon-edit"></i>
 						</button>

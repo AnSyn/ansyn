@@ -18,6 +18,7 @@ import { IFiltersState } from '../modules/menu-items/filters/reducer/filters.red
 import { ILayerState } from '../modules/menu-items/layers-manager/reducers/layers.reducer';
 import { IToolsState } from '../modules/menu-items/tools/reducers/tools.reducer';
 import { IOverlaysState } from '../modules/overlays/reducers/overlays.reducer';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 export interface IAppState {
 	overlays: IOverlaysState;
@@ -33,6 +34,7 @@ export interface IAppState {
 
 @NgModule({
 	imports: [
+		TranslateModule,
 		EffectsModule.forFeature([
 			OverlaysAppEffects,
 			MapAppEffects,

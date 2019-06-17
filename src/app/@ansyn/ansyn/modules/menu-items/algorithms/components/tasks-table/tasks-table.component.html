@@ -57,7 +57,9 @@
 				<!--menu-->
 				<div class="task-menu-container">
 					<div class="task-menu" (click)="taskMenuClick($event, taskRow)" #taskMenu>
-						<button (click)="showModal(id, entities[id].name)">
+						<button (click)="showModal(id, entities[id].name)"
+						[attr.tooltip-value]="'Remove' | translate"
+						tooltip-class="bottom">
 							<i class="icon-delete"></i>
 						</button>
 					</div>

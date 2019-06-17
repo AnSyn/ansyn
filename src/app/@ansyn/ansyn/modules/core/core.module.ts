@@ -5,12 +5,10 @@ import { GenericTypeResolverService } from './services/generic-type-resolver.ser
 import { LoggerService } from './services/logger.service';
 import { ErrorHandlerService } from './services/error-handler.service';
 import { StorageService } from './services/storage/storage.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { AnsynModalComponent } from './components/ansyn-modal/ansyn-modal.component';
 import { ManualRemovedOverlaysComponent } from './components/manual-removed-overlays/manual-removed-overlays.component';
 import { AnsynTranslationModule } from './translation/ansyn-translation.module';
-import { ComponentTranslateLoader } from './translation/component-translate-loader';
-import { DefaultTranslateLoader } from './translation/default-translate-loader';
 import { AnsynFormsModule } from './forms/ansyn-forms.module';
 import { FormsModule } from '@angular/forms';
 import { ContextMenuComponent } from './components/context-menu/context-menu.component';
@@ -19,7 +17,7 @@ import { ContextMenuComponent } from './components/context-menu/context-menu.com
 	imports: [
 		CommonModule,
 		AnsynFormsModule,
-		AnsynTranslationModule.addLoader([DefaultTranslateLoader, ComponentTranslateLoader]),
+		TranslateModule,
 		BrowserAnimationsModule,
 		FormsModule
 	],

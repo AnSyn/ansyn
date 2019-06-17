@@ -75,11 +75,11 @@ export class FiltersAppEffects {
 
 	@Effect()
 	updateOverlayFilters$ = this.onCriterialFiltersChanges$.pipe(
-		withLatestFrom(this.overlaysArray$, this.translate.get(overlaysStatusMessages.noOverLayMatchFilters)),
-		mergeMap(([[filters, removedOverlaysIds, removedOverlaysVisibility], overlaysArray, noOverlayMatchFilter]: [[Filters, string[], boolean], IOverlay[], string]) => {
+		withLatestFrom(this.overlaysArray$, this.translate.getTranslation('')),
+		mergeMap(([[filters, removedOverlaysIds, removedOverlaysVisibility], overlaysArray, translation]: [[Filters, string[], boolean], IOverlay[], any]) => {
 			const filterModels: IFilterModel[] = FiltersService.pluckFilterModels(filters);
 			const filteredOverlays: string[] = buildFilteredOverlays(overlaysArray, filterModels, removedOverlaysIds, removedOverlaysVisibility);
-			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : noOverlayMatchFilter;
+			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : translation[overlaysStatusMessages.noOverLayMatchFilters];
 			console.log(overlaysStatusMessages.noOverLayMatchFilters);
 			return [
 				new SetFilteredOverlaysAction(filteredOverlays),
@@ -168,8 +168,9 @@ export class FiltersAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected genericTypeResolverService: GenericTypeResolverService,
-				protected translate: TranslateService,
+				public translate: TranslateService,
 				@Inject(filtersConfig) protected config: IFiltersConfig) {
+		window['filterEffect'] = this;
 	}
 
 	resolveMetadata(filterType: FilterType): FilterMetadata {

@@ -21,6 +21,9 @@ import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/
 import { UnsupportedDevicesComponent } from './components/unsupported-devices/unsupported-devices.component';
 import { ansynConfig } from './config/ansyn.config';
 import { CoreModule } from './modules/core/core.module';
+import { AnsynTranslationModule } from './modules/core/translation/ansyn-translation.module';
+import { ComponentTranslateLoader } from './modules/core/translation/component-translate-loader';
+import { DefaultTranslateLoader } from './modules/core/translation/default-translate-loader';
 import { TasksRemoteDefaultService } from './modules/menu-items/algorithms/services/tasks-remote-default.service';
 import { TasksModule } from './modules/menu-items/algorithms/tasks.module';
 import { CasesModule } from './modules/menu-items/cases/cases.module';
@@ -36,6 +39,7 @@ import { StatusBarModule } from './modules/status-bar/status-bar.module';
 @NgModule({
 	imports: [
 		CommonModule,
+		AnsynTranslationModule.addLoader([DefaultTranslateLoader, ComponentTranslateLoader]),
 		StoreModule.forRoot({}),
 		EffectsModule.forRoot([]),
 		AppProvidersModule,

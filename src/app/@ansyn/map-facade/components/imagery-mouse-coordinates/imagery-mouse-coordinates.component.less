@@ -1,7 +1,7 @@
 @import "../../less/map-facade";
 
 
-@mouse-cordinate-bottom: 35px;
+@mouse-cordinate-bottom: calc(@status-bar-height + 5px);
 @mouse-coordinate-bottom-minimize: 5px;
 
 :host {
@@ -29,7 +29,7 @@ div.imageries-container {
 	&.layout3 {
 		div.map-container-wrapper:first-child {
 			:host {
-				bottom: @mouse-cordinate-bottom - @status-bar-height;
+				bottom: @mouse-coordinate-bottom-minimize;
 			}
 		}
 	}
@@ -37,7 +37,7 @@ div.imageries-container {
 	&.layout4 {
 		div.map-container-wrapper:nth-child(2) {
 			:host {
-				bottom: @mouse-cordinate-bottom - @status-bar-height;
+				bottom: @mouse-coordinate-bottom-minimize;
 			}
 		}
 	}
@@ -45,7 +45,7 @@ div.imageries-container {
 	&.layout5 {
 		div.map-container-wrapper:first-child {
 			:host {
-				bottom: @mouse-cordinate-bottom - @status-bar-height;
+				bottom: @mouse-coordinate-bottom-minimize;
 			}
 		}
 	}
@@ -54,7 +54,7 @@ div.imageries-container {
 		div.map-container-wrapper {
 			&:nth-child(1), &:nth-child(2) {
 				:host {
-					bottom: @mouse-cordinate-bottom - @status-bar-height;
+					bottom: @mouse-coordinate-bottom-minimize;
 				}
 			}
 		}

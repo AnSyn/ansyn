@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild, AfterContentChecked } from '@angular/core';
 import { MapEffects } from '../../effects/map.effects';
 import { fromEvent, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
@@ -31,7 +31,7 @@ import { IMapSettings } from '@ansyn/imagery';
 	providers: [DragDropMapService]
 })
 
-export class ImageriesManagerComponent implements OnInit {
+export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 	public selectedLayout$: Observable<IMapsLayout> = this.store.pipe(
 		select(selectLayout),
 		map((layout: LayoutKey) => <IMapsLayout> layoutOptions.get(layout))
@@ -59,6 +59,7 @@ export class ImageriesManagerComponent implements OnInit {
 	mapsEntities: Dictionary<IMapSettings>;
 	activeMapId: string;
 	footerCollapse: boolean;
+	collapsable: boolean;
 
 	constructor(protected mapEffects: MapEffects,
 				protected store: Store<IMapState>,
@@ -73,6 +74,9 @@ export class ImageriesManagerComponent implements OnInit {
 		this.initClickOutside();
 	}
 
+	ngAfterContentChecked(): void {
+		this.collapsable = !!this.document.querySelector('div.status-timeline-container button.hide-menu');
+	}
 
 
 	initClickOutside() {

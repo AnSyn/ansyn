@@ -16,6 +16,7 @@ import { FiltersModule } from '../../filters.module';
 import { filtersFeatureKey, FiltersReducer } from '../../reducer/filters.reducer';
 import { filtersConfig } from '../../services/filters.service';
 import { FiltersCollectionComponent } from './filters-collection.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('FiltersCollectionComponent', () => {
 	let component: FiltersCollectionComponent;
@@ -47,7 +48,8 @@ describe('FiltersCollectionComponent', () => {
 				StoreModule.forRoot({
 					[filtersFeatureKey]: FiltersReducer,
 					[overlayStatusFeatureKey]: OverlayStatusReducer
-				})
+				}),
+				TranslateModule.forRoot()
 			],
 			providers: [
 				{ provide: mapFacadeConfig, useValue: {} },

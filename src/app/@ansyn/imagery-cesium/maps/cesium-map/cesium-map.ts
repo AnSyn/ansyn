@@ -337,7 +337,6 @@ export class CesiumMap extends BaseImageryMap<any> {
 		Cesium.Camera.prototype.rotateUp = function (angle) {
 			const maxAngle = -0.1;
 			if (angle > 0 && this.pitch + angle > maxAngle) {
-				console.log("originalRotateUp ", angle, " after change ", maxAngle - this.pitch);
 				angle = maxAngle - this.pitch;
 			}
 			originalRotateUp.call(this, angle);

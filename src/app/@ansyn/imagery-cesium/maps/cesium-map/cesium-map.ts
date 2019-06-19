@@ -16,6 +16,7 @@ import { fromPromise } from 'rxjs/internal-compatibility';
 import { map, mergeMap, take } from 'rxjs/operators';
 import { CesiumLayer, ISceneMode } from '../../models/cesium-layer';
 import { CesiumProjectionService } from '../../projection/cesium-projection.service';
+import { Cartesian2, Cartesian3, ScreenSpaceEventMap, Viewer } from 'cesium';
 
 declare const Cesium: any;
 
@@ -31,7 +32,7 @@ export const CesiumMapName = 'CesiumMap';
 })
 export class CesiumMap extends BaseImageryMap<any> {
 	static groupLayers = new Map<string, any>();
-	mapObject: any;
+	mapObject: Viewer;
 	element: HTMLElement;
 	_moveEndListener;
 	_mouseMoveHandler;
@@ -111,7 +112,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 
 	registerScreenEvents(): any {
 		const handler = new Cesium.ScreenSpaceEventHandler(this.mapObject.scene.canvas);
-		handler.setInputAction((movement) => {
+		handler.setInputAction((movement: { startPosition: Cartesian2, endPosition: Cartesian2 }) => {
 			// Cesium's camera.pickEllipsoid works in 2D, 2.5D (Columbus View), and 3D.
 			// PickEllipsoid produces a coordinate on the surface of the 3D globe,
 			// but this can easily be converted to a latitude/longitude coordinate
@@ -155,7 +156,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		handler = handler && handler.destroy();
 	}
 
-	getCoordinateFromScreenPixel(screenPixel: { x, y }): [number, number, number] {
+	getCoordinateFromScreenPixel(screenPixel: Cartesian2): [number, number, number] {
 		const cartesian = this.mapObject.camera.pickEllipsoid(screenPixel, this.mapObject.scene.globe.ellipsoid);
 		if (cartesian) {
 			const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
@@ -185,7 +186,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 				height: c.height,
 				data: c.toDataURL()
 			}
-		}catch (e) {
+		} catch (e) {
 		}
 		return exportData;
 	}
@@ -207,16 +208,17 @@ export class CesiumMap extends BaseImageryMap<any> {
 						mapProjection: layer.mapProjection,
 						sceneMode: cesiumSceneMode,
 						imageryProvider: layer.layer,
-						baseLayerPicker: true
+						shadows: false,
+						automaticallyTrackDataSourceClocks: false
 					});
 
 					// Set the global imagery layer to fully transparent and set the globe's base color to black
 					// const baseImageryLayer = viewer.imageryLayers.get(0);
 					// baseImageryLayer.alpha = 0.0;
-					viewer.scene.globe.baseColor = Cesium.Color.BLACK;
 					this.mapObject = viewer;
 					this.mapObject.imageryLayers.addImageryProvider(layer.layer);
 					this.initListeners();
+					this.setCesuimImprovements();
 					return true;
 				})
 			);
@@ -234,17 +236,21 @@ export class CesiumMap extends BaseImageryMap<any> {
 				fullscreenButton: false,
 				homeButton: false,
 				infoBox: false,
-				geocoder: false
+				geocoder: false,
+				shadows: false,
+				automaticallyTrackDataSourceClocks: false,
+				orderIndependentTranslucency: false
 			});
 
 			// Set the global imagery layer to fully transparent and set the globe's base color to black
 			// const baseImageryLayer = viewer.imageryLayers.get(0);
 			// baseImageryLayer.alpha = 0.0;
-			viewer.scene.globe.baseColor = Cesium.Color.BLACK;
 			this.mapObject = viewer;
 			this.initListeners();
-			return of(true);
 		}
+
+		this.setCesuimImprovements();
+		return of(true);
 	}
 
 	getCesiumSceneMode(sceneMode: ISceneMode): any {
@@ -269,16 +275,15 @@ export class CesiumMap extends BaseImageryMap<any> {
 	}
 
 	resetView(layer: CesiumLayer, position: ImageryMapPosition, extent ?: ImageryMapExtent): Observable<boolean> {
-		if (!this.mapObject || (layer.mapProjection && this.mapObject.scene.mapProjection.projectionName !== layer.mapProjection.projectionName)) {
+		if (!this.mapObject || (layer.mapProjection && (<any>this.mapObject.scene.mapProjection).projectionName !== layer.mapProjection.projectionName)) {
 			return this.createMapObject(layer).pipe(
 				mergeMap((isReady) => {
 					if (extent) {
 						return this.fitToExtent(extent);
 					}
 					return this.setPosition(position);
-				}))
+				}));
 		}
-		;
 
 		// else
 		const imageryLayers = this.mapObject.imageryLayers;
@@ -303,6 +308,43 @@ export class CesiumMap extends BaseImageryMap<any> {
 		return this.setPosition(position);
 	}
 
+	setCesuimImprovements() {
+		this.mapObject.cesiumWidget.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
+		(<any>this.mapObject)._enableInfoOrSelection = false;
+		Cesium.Label.enableRightToLeftDetection = true;
+
+		this.mapObject.scene.globe.depthTestAgainstTerrain = false;
+		this.mapObject.resolutionScale = 1;
+		this.mapObject.scene.useDepthPicking = false;
+		this.mapObject.scene.postProcessStages.fxaa.enabled = false;
+		// const SKY_COLOR = 'rgb(81,202,232)';
+		// this.mapObject.scene.backgroundColor = Cesium.Color.fromCssColorString(SKY_COLOR);
+		// this.mapObject.scene.globe.baseColor = Cesium.Color.fromCssColorString(SKY_COLOR);
+		this.mapObject.trackedEntityChanged.addEventListener(() => {
+			this.mapObject.trackedEntity = undefined;
+		});
+
+		this.mapObject.shadowMap.enabled = false;
+		this.mapObject.scene.skyBox.show = false;
+		this.mapObject.scene.sunBloom = false;
+		this.mapObject.scene.fog.enabled = false;
+		this.mapObject.scene.sun.show = false;
+		this.mapObject.scene.moon.show = false;
+		this.mapObject.scene.globe.showWaterEffect = false;
+		(<any>this.mapObject.scene.globe).showGroundAtmosphere = false;
+
+		let originalRotateUp = Cesium.Camera.prototype.rotateUp;
+		Cesium.Camera.prototype.rotateUp = function (angle) {
+			const maxAngle = -0.1;
+			if (angle > 0 && this.pitch + angle > maxAngle) {
+				console.log("originalRotateUp ", angle, " after change ", maxAngle - this.pitch);
+				angle = maxAngle - this.pitch;
+			}
+			originalRotateUp.call(this, angle);
+		};
+		Cesium.Camera.DEFAULT_VIEW_FACTOR = 0;
+	}
+
 	fitToExtent(extent: ImageryMapExtent) {
 		const polygon = ExtentCalculator.extentToPolygon(extent);
 		return this.internalSetPosition((<any>polygon.geometry));
@@ -316,13 +358,9 @@ export class CesiumMap extends BaseImageryMap<any> {
 		throw new Error('Method not implemented.');
 	}
 
-	setCameraView(heading: number, pitch: number, roll: number, destination: [number, number, number]) {
+	setCameraView(heading: number, pitch: number, roll: number, destination: Cartesian3) {
 		this.mapObject.camera.setView({
-			destination: Cesium.Cartesian3.fromDegrees(
-				destination[0],
-				destination[1],
-				destination[2]
-			),
+			destination: destination,
 			orientation: {
 				heading: heading,
 				pitch: pitch,
@@ -334,7 +372,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 	setPosition(position: ImageryMapPosition): Observable<boolean> {
 		if (position.projectedState && position.projectedState.projection &&
 			position.projectedState.projection.code === 'cesium_WGS84') {
-			this.setCameraView(position.projectedState.rotation, position.projectedState.pitch, position.projectedState.roll, position.projectedState.center);
+			this.setCameraView(position.projectedState.rotation, position.projectedState.pitch, position.projectedState.roll, position.projectedState.cameraPosition);
 			return of(true);
 		} else {
 			const { extentPolygon } = position;
@@ -357,8 +395,8 @@ export class CesiumMap extends BaseImageryMap<any> {
 		);
 	}
 
-	_imageToGround({ x, y }: { x: number, y: number }) {
-		const position = this.mapObject.camera.getPickRay({ x, y });
+	_imageToGround(cartesian2: Cartesian2) {
+		const position = this.mapObject.camera.getPickRay(cartesian2);
 		const cartesian = this.mapObject.scene.globe.pick(position, this.mapObject.scene);
 		if (cartesian) {
 			const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
@@ -375,6 +413,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 			const center = this.getInnerCenter();
 			const projectedState: ImageryMapProjectedState = {
 				center: [center.coordinates[0], center.coordinates[1], center.coordinates[2]],
+				cameraPosition: this.mapObject.camera.position,
 				rotation: +this.mapObject.camera.heading.toFixed(7),
 				pitch: +this.mapObject.camera.pitch.toFixed(7),
 				roll: +this.mapObject.camera.roll.toFixed(7),
@@ -418,7 +457,8 @@ export class CesiumMap extends BaseImageryMap<any> {
 	setRotation(rotation: number): void {
 		if (this.mapObject && this.mapObject.camera) {
 			const center = this.getInnerCenter();
-			this.setCameraView(rotation, this.mapObject.camera.pitch, this.mapObject.camera.roll, [center.coordinates[0], center.coordinates[1], center.coordinates[2]]);
+			const position = Cesium.Cartesian3.fromDegrees(center.coordinates[0], center.coordinates[1], center.coordinates[2]);
+			this.setCameraView(rotation, this.mapObject.camera.pitch, this.mapObject.camera.roll, position);
 		}
 	}
 

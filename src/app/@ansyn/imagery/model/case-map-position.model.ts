@@ -12,6 +12,7 @@ export interface ImageryMapProjectedState {
 	pitch?: number;
 	roll?: number;
 	zoom?: number;
+	cameraPosition?: any;
 }
 
 export interface IMousePointerMove {

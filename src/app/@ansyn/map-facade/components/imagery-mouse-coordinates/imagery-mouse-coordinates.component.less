@@ -1,9 +1,6 @@
 @import "../../less/map-facade";
 
 
-@mouse-cordinate-bottom: calc(@status-bar-height + 5px);
-@mouse-coordinate-bottom-minimize: 5px;
-
 :host {
 	position: absolute;
 	display: inline-block;
@@ -17,13 +14,13 @@
 	text-align: center;
 	vertical-align: bottom;
 	user-select: none;
-	height: @scale-line-height + 6px;
+	height: @mouse-coordinate-height;
 }
 
 
 div.imageries-container {
 	:host {
-		bottom: @mouse-cordinate-bottom;
+		bottom: @mouse-coordinate-bottom;
 	}
 
 	&.layout3 {

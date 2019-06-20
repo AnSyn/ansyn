@@ -1,9 +1,10 @@
-import { SliderFilterMetadata } from './../../models/metadata/slider-filter-metadata';
+import { SliderFilterMetadata } from '../../models/metadata/slider-filter-metadata';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SliderFilterContainerComponent } from './slider-filter-container.component';
 import { SliderModule } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { FilterCounterComponent } from '../filter-counter/filter-counter.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('SliderFilterContainerComponent', () => {
 	let component: SliderFilterContainerComponent;
@@ -13,7 +14,7 @@ describe('SliderFilterContainerComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [SliderFilterContainerComponent, FilterCounterComponent],
 			imports: [
-				SliderModule, FormsModule
+				SliderModule, FormsModule, TranslateModule.forRoot()
 			]
 		})
 			.compileComponents();

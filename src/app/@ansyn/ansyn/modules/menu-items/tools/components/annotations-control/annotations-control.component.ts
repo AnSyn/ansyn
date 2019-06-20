@@ -1,11 +1,12 @@
 import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, fromEvent } from 'rxjs';
 import { select, Store } from '@ngrx/store';
+import { selectAutoClose } from '../../../../../../menu/reducers/menu.reducer';
 import { AnnotationSetProperties, ClearActiveInteractionsAction, SetAnnotationMode } from '../../actions/tools.actions';
 import { DOCUMENT } from '@angular/common';
 import { selectAnnotationMode, selectAnnotationProperties } from '../../reducers/tools.reducer';
 import { IVisualizerStyle } from '@ansyn/imagery';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, filter } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectActiveAnnotationLayer, selectLayers } from '../../../layers-manager/reducers/layers.reducer';
 import { ILayer, LayerType } from '../../../layers-manager/models/layers.model';
@@ -68,11 +69,23 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 
 	public ANNOTATION_MODE_LIST = ANNOTATION_MODE_LIST;
 
+	@AutoSubscription
+	clickOutsideColorOrWeight = () => fromEvent(this.document, 'click')
+		.pipe(
+			filter((event: any) => this.selectedBox !== SelectionBoxTypes.None),
+			filter( ({ path }) => !path.some( comp =>
+				['ansyn-annotations-color', 'ansyn-annotations-weight'].includes(comp.localName) ||
+				['icon-annotation-weight', 'icon-annotation-color'].includes(comp.className)
+				)
+			),
+			tap( _ => this.toggleSelection())
+		);
+
 	@HostBinding('class.expand')
 	@Input()
 	set expand(value) {
 		if (!value) {
-			this.selectedBox = undefined;
+			this.selectedBox = SelectionBoxTypes.None;
 		}
 		this._expand = value;
 	}
@@ -94,8 +107,8 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		this.store.dispatch(new SetActiveAnnotationLayer(id));
 	}
 
-	toggleSelection(selected: SelectionBoxTypes) {
-		this.selectedBox = this.selectedBox === selected ? SelectionBoxTypes.None : selected;
+	toggleSelection(selected: SelectionBoxTypes = SelectionBoxTypes.None) {
+		this.selectedBox = selected;
 	}
 
 	setAnnotationMode(mode?: AnnotationMode) {

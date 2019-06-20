@@ -1,7 +1,6 @@
 import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable, fromEvent } from 'rxjs';
 import { select, Store } from '@ngrx/store';
-import { selectAutoClose } from '../../../../../../menu/reducers/menu.reducer';
 import { AnnotationSetProperties, ClearActiveInteractionsAction, SetAnnotationMode } from '../../actions/tools.actions';
 import { DOCUMENT } from '@angular/common';
 import { selectAnnotationMode, selectAnnotationProperties } from '../../reducers/tools.reducer';

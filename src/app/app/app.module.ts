@@ -23,7 +23,7 @@ import { SentinelModule } from './sentinel/sentinel.module';
 		BrowserModule,
 		StoreModule.forRoot({}),
 		EffectsModule.forRoot([]),
-		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: configuration.production }),
+		StoreDevtoolsModule.instrument({ maxAge: 200, logOnly: configuration.production }),
 		AnsynModule,
 		LoginModule,
 		ImisightModule,

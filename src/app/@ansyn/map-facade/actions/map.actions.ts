@@ -7,6 +7,7 @@ import {
 	IMapSettings,
 	IWorldViewMapState
 } from '@ansyn/imagery';
+import { IOverlay } from '../../ansyn/modules/overlays/models/overlay.model';
 import { LayoutKey } from '../models/maps-layout';
 
 export interface IPendingOverlay {
@@ -30,7 +31,8 @@ export const MapActionTypes = {
 	SET_MAP_MANUAL_IMAGE_PROCESSING: 'SET_MAP_MANUAL_IMAGE_PROCESSING',
 	CONTEXT_MENU: {
 		SHOW: 'CONTEXT_MENU_SHOW',
-		DISPLAY: 'CONTEXT_MENU_DISPLAY'
+		DISPLAY: 'CONTEXT_MENU_DISPLAY',
+		ANGLE_FILTER_SHOW: 'ANGLE_FILTER_SHOW'
 	},
 	VISUALIZERS: {
 		HOVER_FEATURE: 'HOVER_FEATURE'
@@ -153,6 +155,12 @@ export class ContextMenuDisplayAction implements Action {
 
 	constructor(public payload: string) {
 	}
+}
+
+export class ContextMenuShowAngleFilter implements Action {
+	type = MapActionTypes.CONTEXT_MENU.ANGLE_FILTER_SHOW;
+
+	constructor(public payload: {event: MouseEvent, point: Point, overlays: IOverlay[]}) {}
 }
 
 export class PinLocationModeTriggerAction implements Action {

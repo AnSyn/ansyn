@@ -1,0 +1,9 @@
+<div class="angle-filter">
+	<i class="icon-map-Point point"></i>
+	<div class="arrows">
+	<button *ngFor="let overlay of overlays"
+			(mousedown)="print($event, overlay)">
+		<span class="arrow"></span>
+	</button>
+	</div>
+</div>

@@ -8,6 +8,7 @@ import { ProjectableRaster } from '../maps/open-layers-map/models/projectable-ra
 
 export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSourceProvider<CONF> {
 	create(metaData: IMapSettings): Promise<any[]> {
+		console.log(metaData.data.overlay.azimuth);
 		const source = this.getXYZSource(metaData.data.overlay.imageUrl);
 		const extent = this.getExtent(metaData.data.overlay.footprint);
 		const tileLayer = this.getTileLayer(source, extent);

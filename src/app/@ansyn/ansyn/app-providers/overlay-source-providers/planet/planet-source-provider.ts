@@ -3,7 +3,7 @@ import { Inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import {
 	geojsonMultiPolygonToPolygon,
-	geojsonPolygonToMultiPolygon
+	geojsonPolygonToMultiPolygon, toDegrees
 } from '@ansyn/imagery';
 import { HttpResponseBase } from '@angular/common/http/src/response';
 import { IOverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
@@ -399,7 +399,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			thumbnailUrl: this.appendApiKey(element._links.thumbnail),
 			date: new Date(element.properties.acquired),
 			photoTime: element.properties.acquired,
-			azimuth: toRadians(element.properties.view_angle),
+			azimuth: element.properties.sun_azimuth,
 			sourceType: this.sourceType,
 			isGeoRegistered: GeoRegisteration.geoRegistered,
 			tag: element

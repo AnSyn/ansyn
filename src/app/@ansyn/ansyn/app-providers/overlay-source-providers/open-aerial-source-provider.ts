@@ -2,7 +2,7 @@ import { Inject } from '@angular/core';
 import {
 	bboxFromGeoJson,
 	geojsonMultiPolygonToPolygon,
-	geojsonPolygonToMultiPolygon,
+	geojsonPolygonToMultiPolygon, getPointByGeometry,
 	getPolygonByPointAndRadius,
 
 } from '@ansyn/imagery';
@@ -118,6 +118,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 
 	protected parseData(openAerialElement: any): IOverlay {
 		const footprint: any = wellknown.parse(openAerialElement.footprint);
+		const centerPoiint = getPointByGeometry(footprint.geometry ? footprint.geometry : footprint);
 		return new Overlay({
 			id: openAerialElement._id,
 			footprint: geojsonPolygonToMultiPolygon(footprint.geometry ? footprint.geometry : footprint),
@@ -129,7 +130,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 			thumbnailUrl: openAerialElement.properties.thumbnail,
 			date: new Date(openAerialElement.acquisition_end),
 			photoTime: openAerialElement.acquisition_end,
-			azimuth: toRadians(180),
+			azimuth: centerPoiint.coordinates[1],
 			sourceType: this.sourceType,
 			isGeoRegistered: GeoRegisteration.geoRegistered,
 			tag: openAerialElement

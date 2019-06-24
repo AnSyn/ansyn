@@ -15,7 +15,7 @@
 			(mousedown)="isClick($event) && data.action($event)">
 			<i class="icon-context-menu-{{data.name}}"></i>
 			<span>{{data.name | translate  | titlecase}}</span>
-			<div class="sub-buttons-list">
+			<div class="sub-buttons-list" *ngIf="asList(data.subList)">
 				<button
 					*ngFor="let filter of this[data.subList]"
 					(mousedown)="isClick($event) && data.action($event, filter)"

@@ -1,0 +1,108 @@
+@import 'ansyn/less/z-index-globals';
+
+:host {
+
+	outline: none;
+	position: fixed;
+	z-index: @z-index-context-menu;
+
+	&:focus {
+		div.angle-filter {
+			width: 200px;
+			height: 200px;
+			-webkit-border-radius: 100%;
+			-moz-border-radius: 100%;
+			border-radius: 100%;
+			visibility: visible;
+			-webkit-border-radius: 100%;
+			-moz-border-radius: 100%;
+			border-radius: 100%;
+			background-color: rgba(205, 205, 205, 0.7);
+
+			i.point {
+				visibility: visible;
+				transition: visibility 100ms;
+			}
+
+
+			div.arrows {
+				button {
+					visibility: visible;
+					transition: visibility 100ms;
+					padding: 10px;
+					border: none;
+					background-color: transparent;
+
+					span.arrow {
+						display: inline-block;
+						position: relative;
+						width: 30px;
+						height: 50px;
+						zoom: .75;
+
+						&:before {
+							box-sizing: border-box;
+							content: "";
+							display: block;
+							position: absolute;
+							left: 50%;
+							transform: translate(-50%, 0);
+							top: 1px;
+							bottom: 0;
+							width: 1px;
+							background: deeppink;
+							zoom: 2;
+
+							&.active {
+								background: purple;
+							}
+						}
+
+						&:after {
+							box-sizing: content-box;
+							content: "";
+							display: block;
+							position: absolute;
+							top: 0;
+							left: 50%;
+							width: 57%;
+							height: 0;
+							padding-bottom: 57%;
+							border: 1px solid deeppink;
+							border-width: 1px 0 0 1px;
+							transform: translate(0, 0) rotate(45deg);
+							transform-origin: 0% 0%;
+							border-radius: 0;
+							zoom: 2;
+							//background: rgba(0,255,0,.5);
+							&.active {
+								border: 1px solid purple;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	div.angle-filter {
+		visibility: hidden;
+		position: fixed;
+		transition: visibility 200ms;
+
+		button{
+			visibility: hidden;
+			transition: visibility 100ms;
+		}
+
+		i.point{
+			position: relative;
+			top: 100px;
+			left: 100px;
+			visibility: hidden;
+			transition: visibility 100ms;
+		}
+	}
+
+
+}

@@ -3,8 +3,9 @@ import { IEntryComponent, MapActionTypes } from '@ansyn/map-facade';
 import { Actions, ofType } from '@ngrx/effects';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap, debounceTime } from 'rxjs/operators';
-import { ContextMenuShowAngleFilter } from '../../../../../map-facade/actions/map.actions';
+import { ContextMenuShowAngleFilter } from '@ansyn/map-facade';
 import { IOverlay } from '../../../overlays/models/overlay.model';
+import { Point } from 'geojson';
 
 @Component({
 	selector: 'ansyn-angle-filter',
@@ -17,7 +18,7 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 	mapId: string;
 
 	overlays: IOverlay[];
-
+	point: Point;
 	@AutoSubscription
 	showAngleFilter$ = this.actions$.pipe(
 		ofType(MapActionTypes.CONTEXT_MENU.ANGLE_FILTER_SHOW),
@@ -53,6 +54,7 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 	}
 
 	show(action: ContextMenuShowAngleFilter) {
+		this.point = action.payload.point;
 		this.overlays = action.payload.overlays;
 		this.renderer.setStyle(this.elem.nativeElement, 'top', `${action.payload.event.y}px`);
 		this.renderer.setStyle(this.elem.nativeElement, 'left', `${action.payload.event.x}px`);

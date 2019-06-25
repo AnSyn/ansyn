@@ -100,15 +100,19 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
-		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => ({
-			featureJson: feature,
-			id: feature.properties.id,
-			style: feature.properties.style,
-			showMeasures: feature.properties.showMeasures,
-			label: feature.properties.label,
-			icon: feature.properties.icon,
-			undeletable: feature.properties.undeletable
-		}));
+		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => {
+			const featureJson = { ...feature };
+			delete featureJson.properties.featureJson;
+			return {
+				featureJson,
+				id: feature.properties.id,
+				style: feature.properties.style,
+				showMeasures: feature.properties.showMeasures,
+				label: feature.properties.label,
+				icon: feature.properties.icon,
+				undeletable: feature.properties.undeletable
+			}
+		});
 	}
 
 	constructor(protected projectionService: OpenLayersProjectionService,
@@ -293,6 +297,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			showMeasures: false,
 			label: '',
 			icon: this.iconSrc,
+			undeletable: false,
 			mode
 		});
 		this.projectionService
@@ -361,7 +366,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (entity && entity.showMeasures) {
 			styles.push(...this.getMeasuresAsStyles(feature));
 		}
-		if (entity && entity.icon ) {
+		if (entity && entity.icon) {
 			styles.push(this.getCenterIndicationStyle(feature))
 		}
 

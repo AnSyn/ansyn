@@ -255,7 +255,6 @@ describe('OverlaysService', () => {
 		});
 
 		overlaysService.search(searchParams).subscribe((result: any) => {
-			console.log(result);
 			expect(result.key).toBe('value');
 		});
 

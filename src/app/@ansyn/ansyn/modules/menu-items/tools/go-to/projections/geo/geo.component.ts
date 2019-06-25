@@ -8,7 +8,7 @@ import {
 	Validator
 } from '@angular/forms';
 import { isEqual as _isEqual } from 'lodash';
-import { ProjectionConverterService } from '../../../services/projection-converter.service';
+import { ProjectionConverterService } from '@ansyn/map-facade';
 
 
 @Component({

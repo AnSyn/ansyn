@@ -6,7 +6,7 @@ import { GoToModule } from '../go-to.module';
 import { GoToAction, SetPinLocationModeAction } from '../../actions/tools.actions';
 import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
-import { ProjectionConverterService } from '../../services/projection-converter.service';
+import { ProjectionConverterService } from '@ansyn/map-facade';
 import { toolsConfig } from '../../models/tools-config';
 import { CoreConfig } from '../../../../core/models/core.config';
 import { CoreModule } from '../../../../core/core.module';

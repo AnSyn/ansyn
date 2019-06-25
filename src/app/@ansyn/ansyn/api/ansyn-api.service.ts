@@ -9,7 +9,7 @@ import {
 	SetLayoutAction,
 	SetMapPositionByRadiusAction,
 	SetMapPositionByRectAction,
-	ShadowMouseProducer, ToggleFooter
+	ShadowMouseProducer, ToggleFooter, ICoordinatesSystem
 } from '@ansyn/map-facade';
 import { Actions, ofType } from '@ngrx/effects';
 import { Dictionary } from '@ngrx/entity/src/models';
@@ -20,7 +20,6 @@ import { FeatureCollection, Point, Polygon } from 'geojson';
 import { cloneDeep } from 'lodash';
 import { Observable } from 'rxjs';
 import { map, tap, withLatestFrom } from 'rxjs/internal/operators';
-import { ICoordinatesSystem } from '../modules/core/models/coordinate-system.model';
 import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
 import { UpdateLayer } from '../modules/menu-items/layers-manager/actions/layers.actions';
 import { ILayer } from '../modules/menu-items/layers-manager/models/layers.model';
@@ -29,7 +28,7 @@ import {
 	selectLayersEntities
 } from '../modules/menu-items/layers-manager/reducers/layers.reducer';
 import { GoToAction, SetActiveCenter, ToolsActionsTypes } from '../modules/menu-items/tools/actions/tools.actions';
-import { ProjectionConverterService } from '../modules/menu-items/tools/services/projection-converter.service';
+import { ProjectionConverterService } from '@ansyn/map-facade';
 import {
 	DisplayOverlayAction,
 	LoadOverlaysSuccessAction,

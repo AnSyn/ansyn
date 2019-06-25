@@ -1,4 +1,5 @@
 <div *ngIf='long && isVisible'>
-	{{ long }}&deg; {{lat}}&deg; <span *ngIf=height>{{height}}m</span> {{floatingPositionSuffix}}
+	{{ long }}{{floationgSystem === 'WGS84' ? '&deg;' : ''}} {{lat}}{{floationgSystem === 'WGS84' ? '&deg;' : ''}} <span *ngIf="zone">{{zone}} </span>
+	<span *ngIf=height>{{height}}m</span> {{floatingPositionSuffix}}
 </div>
 

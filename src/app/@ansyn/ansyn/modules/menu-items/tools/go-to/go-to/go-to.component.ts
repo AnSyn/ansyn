@@ -11,10 +11,9 @@ import {
 } from '../../actions/tools.actions';
 import { Observable } from 'rxjs';
 import { IEd50Notification, IToolsConfig, toolsConfig } from '../../models/tools-config';
-import { ProjectionConverterService } from '../../services/projection-converter.service';
+import { ICoordinatesSystem, IMapFacadeConfig, mapFacadeConfig, ProjectionConverterService } from '@ansyn/map-facade';
 import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
 import { copyFromContent } from '@ansyn/map-facade';
-import { ICoordinatesSystem } from '../../../../core/models/coordinate-system.model';
 
 @Component({
 	selector: 'ansyn-go-to',
@@ -66,7 +65,7 @@ export class GoToComponent implements OnInit {
 	}
 
 	get notification(): IEd50Notification {
-		return this.config.Proj4.ed50Notification;
+		return this.mapfacadeConfig.Proj4.ed50Notification;
 	}
 
 	ngOnInit(): void {
@@ -91,7 +90,10 @@ export class GoToComponent implements OnInit {
 		});
 	}
 
-	constructor(protected store$: Store<IToolsState>, @Inject(toolsConfig) protected config: IToolsConfig, protected projectionConverterService: ProjectionConverterService) {
+	constructor(protected store$: Store<IToolsState>,
+				@Inject(toolsConfig) protected config: IToolsConfig,
+				@Inject(mapFacadeConfig) protected mapfacadeConfig: IMapFacadeConfig,
+				protected projectionConverterService: ProjectionConverterService) {
 	}
 
 	submitGoTo(): void {

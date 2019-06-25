@@ -150,7 +150,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	getExistingRasterLayer(): ImageLayer {
 		const layers = this.communicator.ActiveMap.getLayers();
 		const imageLayer = layers.find((layer) => {
-			if (layer instanceof ImageLayer) {
+			if (layer.type && layer.type === 'IMAGE') { // for component
 				const source = layer.getSource();
 				return source instanceof ProjectableRaster;
 			}

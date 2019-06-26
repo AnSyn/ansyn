@@ -1,7 +1,7 @@
 import { Attribute, Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { ComboBoxComponent } from '../combo-box/combo-box.component';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { tap } from 'rxjs/operators';
+import { debounceTime, tap } from 'rxjs/operators';
 import { NgControl } from '@angular/forms';
 
 @Component({
@@ -18,15 +18,17 @@ export class ComboBoxOptionComponent implements OnInit, OnDestroy {
 	@Attribute('disabled') disabled: '' | null;
 
 	@AutoSubscription
-	selectedChanged$ = this._parent.injector.get(NgControl).valueChanges.pipe(tap(selected => {
-		if (selected) {
-			if (selected === this.value) {
-				this._parent.renderSelected = this.el.nativeElement.innerHTML;
+	selectedChanged$ = this._parent.injector.get(NgControl).valueChanges.pipe(
+		debounceTime(1000),
+		tap(selected => {
+			if (selected) {
+				if (selected === this.value) {
+					this._parent.renderSelected = this.el.nativeElement.innerHTML;
+				}
+			} else {
+				this._parent.renderSelected = '';
 			}
-		} else {
-			this._parent.renderSelected = '';
-		}
-	}));
+		}));
 
 	@HostListener('click') onClick() {
 		if (this.value) {

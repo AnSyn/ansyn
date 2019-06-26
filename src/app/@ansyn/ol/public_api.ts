@@ -1,3 +1,5 @@
+export { removeWorkers } from './maps/open-layers-map/shared/openlayers-shared';
+
 export { ANNOTATION_MODE_LIST } from './plugins/annotations/annotations.model';
 export { OL_PLUGINS_CONFIG, IOLPluginsConfig } from './plugins/plugins.config';
 export { OL_CONFIG } from './config/ol-config';

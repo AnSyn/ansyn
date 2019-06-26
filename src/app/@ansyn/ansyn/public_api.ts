@@ -1,5 +1,6 @@
-import { SetFavoriteOverlaysAction } from './modules/overlays/overlay-status/actions/overlay-status.actions';
-import { ICaseEnumFilterMetadata } from './modules/menu-items/cases/models/case.model';
+export { AddAlertMsg, RemoveAlertMsg } from './modules/overlays/overlay-status/actions/overlay-status.actions';
+export { IAlert } from './modules/alerts/alerts.model';
+export { AlertsModule, } from './modules/alerts/alerts.module';
 
 export { ANSYN_ID } from './api/ansyn-id.provider';
 export { AnsynApi } from './api/ansyn-api.service';
@@ -16,7 +17,6 @@ export { mergeConfig } from './fetch-config-providers';
 export { IConfigModel } from './config.model';
 
 // // statusBar
-export { GoNextPresetOverlay } from './modules/status-bar/actions/status-bar.actions';
 export { IStatusBarConfig } from './modules/status-bar/models/statusBar-config.model';
 export { IComboBoxesProperties } from './modules/status-bar/models/combo-boxes.model';
 export {
@@ -24,7 +24,6 @@ export {
 	StatusBarInitialState,
 	StatusBarReducer
 } from './modules/status-bar/reducers/status-bar.reducer';
-export { ExpandAction } from './modules/status-bar/actions/status-bar.actions';
 export { statusBarStateSelector } from './modules/status-bar/reducers/status-bar.reducer';
 export { SearchMode } from './modules/status-bar/models/search-mode.enum';
 export { comboBoxesOptions } from './modules/status-bar/models/combo-boxes.model';
@@ -38,7 +37,11 @@ export {
 	CopySelectedCaseLinkAction,
 	SetComboBoxesProperties,
 	StatusBarActionsTypes,
-	UpdateGeoFilterStatus
+	UpdateGeoFilterStatus,
+	StatusBarActions,
+	GoAdjacentOverlay,
+	ExpandAction,
+	GoNextPresetOverlay
 } from './modules/status-bar/actions/status-bar.actions';
 export { SearchModeEnum } from './modules/status-bar/models/search-mode.enum';
 export { StatusBarConfig } from './modules/status-bar/models/statusBar.config';
@@ -92,7 +95,7 @@ export {
 	UpdateOverlaysManualProcessArgs,
 	UpdateToolsFlags,
 	AnnotationRemoveFeature,
-	AnnotationUpdateFeature,
+	AnnotationUpdateFeature
 } from './modules/menu-items/tools/actions/tools.actions';
 export {
 	CasesActionTypes, CopyCaseLinkAction,
@@ -237,7 +240,7 @@ export { LoggerService } from './modules/core/services/logger.service';
 export {
 	selectDataInputFilter, selectOverlaysCriteria, selectRegion
 }from './modules/overlays/reducers/overlays.reducer';
-export { GoAdjacentOverlay } from './modules/status-bar/actions/status-bar.actions';
+
 export { ICoreConfig } from './modules/core/models/core.config.model';
 export { CoreConfig } from './modules/core/models/core.config';
 export { endTimingLog, startTimingLog } from './modules/core/utils/logs/timer-logs';

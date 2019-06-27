@@ -2,7 +2,7 @@ import { Inject } from '@angular/core';
 import {
 	getPointByGeometry,
 	ImageryVisualizer,
-	IVisualizerEntity,
+	IVisualizerEntity, IVisualizerStyle,
 	MarkerSize,
 	VisualizerInteractions,
 	VisualizerStates
@@ -361,7 +361,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	featureStyle(feature: olFeature, state: string = VisualizerStates.INITIAL) {
-		let styles: olStyle[] = [super.featureStyle(feature, state)];
+		let superStyle = super.featureStyle(feature, state);
+		let styles: olStyle[] = Array.isArray(superStyle) ? superStyle : [superStyle];
 		const entity = this.getEntity(feature);
 		if (entity && entity.showMeasures) {
 			styles.push(...this.getMeasuresAsStyles(feature));

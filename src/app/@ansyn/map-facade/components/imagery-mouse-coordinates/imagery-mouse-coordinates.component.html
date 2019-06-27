@@ -1,4 +1,5 @@
-<div *ngIf='long && isVisible'>
+<div *ngIf='long && isVisible'
+[class.mouse-coordinate]="long && isVisible">
 	{{ long }}&deg; {{lat}}&deg; <span *ngIf=height>{{height}}m</span> {{floatingPositionSuffix}}
 </div>
 

@@ -131,6 +131,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 		let firstStyle: any = {};
 		let secondaryStyle: any = {};
+		let textStyle: any = {};
 
 		if (styleSettings.shadow) {
 			secondaryStyle.stroke = new Stroke({
@@ -160,7 +161,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 				width: styleSettings.label.stroke ? 4 : 0
 			});
 
-			firstStyle.text = new Text({
+			textStyle.text = new Text({
 				font: styleSettings.label.font,
 				offsetX: styleSettings.label.offsetX,
 				offsetY: <any>styleSettings.label.offsetY,
@@ -169,6 +170,9 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 				fill,
 				stroke
 			});
+			if (feature.getProperties().mode === 'Arrow') {
+				textStyle.geometry = (feature) => feature.getGeometry().getLineString(0)
+			}
 		}
 
 		if (styleSettings['marker-color'] || styleSettings['marker-size']) {
@@ -177,11 +181,8 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			firstStyle.image = new Circle({ fill: new Fill({ color }), stroke: null, radius });
 		}
 
-		if (Object.keys(secondaryStyle).length !== 0) {
-			return [firstStyle, secondaryStyle].map(s => new Style(s));
-		}
 
-		return isStyle ? new Style(firstStyle) : firstStyle;
+		return [firstStyle, textStyle, secondaryStyle].map( style => isStyle ? new Style(style) : style);
 	}
 
 	colorWithAlpha(color, alpha = 1) {

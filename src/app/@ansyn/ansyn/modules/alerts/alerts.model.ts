@@ -26,7 +26,3 @@ export const AlertsProvider: FactoryProvider = {
 	useFactory: alertsFactory,
 	deps: [ALERTS_COLLECTION]
 };
-
-export interface IAlertComponent {
-	mapId: string;
-}

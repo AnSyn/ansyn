@@ -4,17 +4,20 @@
 :host {
 	position: absolute;
 	display: inline-block;
-	min-width: 114px;
 	border-radius: 0;
 	background-color: rgba(0,0,0,.3);
 	z-index: @z-index-map-rotation;
 	left: 0;
-	padding: 0 15px;
 	font-size: smaller;
 	text-align: center;
 	vertical-align: bottom;
 	user-select: none;
-	height: @mouse-coordinate-height;
+
+	.mouse-coordinate{
+		padding: 0 15px;
+		min-width: 114px;
+		height: @mouse-coordinate-height;
+	}
 }
 
 

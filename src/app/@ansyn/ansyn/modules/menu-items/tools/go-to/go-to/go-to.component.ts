@@ -10,8 +10,14 @@ import {
 	SetSubMenu
 } from '../../actions/tools.actions';
 import { Observable } from 'rxjs';
-import { IEd50Notification, IToolsConfig, toolsConfig } from '../../models/tools-config';
-import { ICoordinatesSystem, IMapFacadeConfig, mapFacadeConfig, ProjectionConverterService } from '@ansyn/map-facade';
+import { IToolsConfig, toolsConfig } from '../../models/tools-config';
+import {
+	ICoordinatesSystem,
+	IEd50Notification,
+	IMapFacadeConfig,
+	mapFacadeConfig,
+	ProjectionConverterService
+} from '@ansyn/map-facade';
 import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
 import { copyFromContent } from '@ansyn/map-facade';
 

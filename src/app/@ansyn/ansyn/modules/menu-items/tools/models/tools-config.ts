@@ -1,11 +1,5 @@
 import { ICoordinatesSystem } from '@ansyn/map-facade';
 
-export interface IEd50Notification {
-	href?: string;
-	title: string;
-	hrefText?: string;
-}
-
 export interface IShadowMouseConfig {
 	activeByDefault: boolean
 }

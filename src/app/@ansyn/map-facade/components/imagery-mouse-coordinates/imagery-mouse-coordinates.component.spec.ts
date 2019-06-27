@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ProjectionConverterService } from '../../services/projection-converter.service';
 
 import { ImageryMouseCoordinatesComponent } from './imagery-mouse-coordinates.component';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
@@ -15,6 +16,7 @@ describe('ImageryMouseCoordinatesComponent', () => {
 			imports: [],
 			providers: [
 				ImageryCommunicatorService,
+				ProjectionConverterService,
 				{
 					provide: mapFacadeConfig,
 					useValue: <IMapFacadeConfig>{

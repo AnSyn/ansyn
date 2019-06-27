@@ -1,4 +1,8 @@
-import { IEd50Notification } from '../../ansyn/modules/menu-items/tools/models/tools-config';
+export interface IEd50Notification {
+	href?: string;
+	title: string;
+	hrefText?: string;
+}
 
 export interface IMapSearchConfig {
 	active: boolean;

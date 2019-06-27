@@ -55,7 +55,6 @@ export { OverlayDisplayMode } from './modules/menu-items/tools/overlays-display-
 export { SelectCaseSuccessAction } from './modules/menu-items/cases/actions/cases.actions';
 export { ILayersManagerConfig } from './modules/menu-items/layers-manager/models/layers-manager-config';
 export { IFiltersConfig } from './modules/menu-items/filters/models/filters-config';
-export { IUtmZone } from '../map-facade/services/projection-converter.service';
 export { DataLayersService } from './modules/menu-items/layers-manager/services/data-layers.service';
 
 export { LoadCaseAction } from './modules/menu-items/cases/actions/cases.actions';

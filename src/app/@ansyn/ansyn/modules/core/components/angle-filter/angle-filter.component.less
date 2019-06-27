@@ -4,6 +4,8 @@
 @point-size: 20px;
 @arrow-height: 50px;
 @arrow-width: 30px;
+@background-color: rgba(205, 205, 205, 0.7);
+@border-color: rgb(41, 41, 41);
 :host {
 	outline: none;
 	position: fixed;
@@ -20,7 +22,7 @@
 		display: flex;
 		flex-direction: column;
 		i.point {
-			position: relative;
+			position: absolute;
 			top: calc((@circle-diameter / 2) - (@point-size / 2));
 			left: calc((@circle-diameter / 2) - (@point-size / 2));
 			font-size: 20px;
@@ -35,7 +37,8 @@
 			-webkit-border-radius: 100%;
 			-moz-border-radius: 100%;
 			border-radius: 100%;
-			background-color: rgba(205, 205, 205, 0.7);
+			background-color: @background-color;
+			border-color: @border-color;
 
 			div.arrows {
 				position: absolute;
@@ -44,7 +47,7 @@
 				height: @circle-diameter;
 
 				span.arrow {
-					position: relative;
+					position: absolute;
 					top: calc( (@circle-diameter /2 ) - (@arrow-height / 2));
 					left: calc( (@circle-diameter /2 ) + (@arrow-width / 3));
 					transition: visibility 100ms;
@@ -99,6 +102,13 @@
 		div.rectangles {
 			display: flex;
 			justify-content: center;
+
+			p {
+				border:1px solid @border-color;
+				background-color: @background-color;
+				margin:5px;
+				padding: 2.5px;
+			}
 		}
 
 	}

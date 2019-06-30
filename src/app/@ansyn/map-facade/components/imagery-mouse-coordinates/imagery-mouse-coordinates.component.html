@@ -1,5 +1,16 @@
-<div *ngIf='long && isVisible'>
-	{{ long }}{{floationgSystem === 'WGS84' ? '&deg;' : ''}} {{lat}}{{floationgSystem === 'WGS84' ? '&deg;' : ''}} <span *ngIf="zone">{{zone}} </span>
-	<span *ngIf=height>{{height}}m</span> {{floatingPositionSuffix}}
+<div *ngIf='long && isVisible'
+	 [class.mouse-coordinate]="long && isVisible"
+	 [ngSwitch]="floationgSystem" >
+
+	<ansyn-geo-holder *ngSwitchCase="'WGS84'"
+	[lat]="lat"
+	[long]="long"
+	[height]="height"></ansyn-geo-holder>
+	<ansyn-utm-holder *ngSwitchCase="'UTM'"
+	[x]="long"
+	[y]="lat"
+	[zone]="zone"
+	[height]="height"></ansyn-utm-holder>
+	 &nbsp;{{floatingPositionSuffix}}
 </div>
 

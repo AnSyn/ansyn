@@ -29,6 +29,8 @@ import { imageryStatusFeatureKey, ImageryStatusReducer } from './reducers/imager
 import { mapFeatureKey, MapReducer } from './reducers/map.reducer';
 import { GeocoderService } from './services/geocoder.service';
 import { ImageryMouseCoordinatesComponent } from './components/imagery-mouse-coordinates/imagery-mouse-coordinates.component';
+import { GeoHolderComponent } from './components/imagery-mouse-coordinates/holders/geo-holder/geo-holder.component';
+import { UtmHolderComponent } from './components/imagery-mouse-coordinates/holders/utm-holder/utm-holder.component';
 
 @NgModule({
 	imports: [
@@ -59,7 +61,9 @@ import { ImageryMouseCoordinatesComponent } from './components/imagery-mouse-coo
 		AnsynLoaderComponent,
 		AnsynPopoverComponent,
 		EntryComponentDirective,
-		ImageryMouseCoordinatesComponent
+		ImageryMouseCoordinatesComponent,
+		GeoHolderComponent,
+		UtmHolderComponent
 	],
 	exports: [
 		ImageriesManagerComponent,

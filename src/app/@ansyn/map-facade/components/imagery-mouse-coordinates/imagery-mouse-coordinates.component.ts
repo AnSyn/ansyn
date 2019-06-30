@@ -48,8 +48,8 @@ export class ImageryMouseCoordinatesComponent implements OnInit, OnDestroy {
 			const height = !isNaN(args.height) ? args.height.toFixed(2) : null;
 			if (this.floationgSystem === 'UTM') {
 				const toUTM = this.projectionConverterService.convertByProjectionDatum([+long, +lat], wgs84, utm);
-				this.long = `${Math.round(toUTM[0])}`;
-				this.lat = `${Math.round(toUTM[1])}`;
+				this.long = `${Math.floor(toUTM[0])}`;
+				this.lat = `${Math.floor(toUTM[1])}`;
 				this.zone = toUTM[2];
 				this.height = height;
 			}

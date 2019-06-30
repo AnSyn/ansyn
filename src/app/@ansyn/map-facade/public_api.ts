@@ -47,7 +47,8 @@ export {
 	SetLayoutSuccessAction,
 	IPendingOverlay,
 	ToggleFooter,
-	ContextMenuShowAngleFilter
+	ContextMenuShowAngleFilter,
+	IAngleFilterClick
 } from './actions/map.actions';
 
 export {

@@ -16,7 +16,7 @@ import { uniq as _uniq } from 'lodash';
 import { Point } from 'geojson';
 import { Actions, ofType } from '@ngrx/effects';
 import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/operators';
-import { ContextMenuShowAngleFilter } from '../../../../../map-facade/actions/map.actions';
+import { ContextMenuShowAngleFilter, IAngleFilterClick } from '@ansyn/map-facade';
 import { selectRegion } from '../../../overlays/reducers/overlays.reducer';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { CaseGeoFilter, ICaseMapState } from '../../../menu-items/cases/models/case.model';
@@ -58,11 +58,17 @@ export class ContextMenuComponent implements OnInit {
 	);
 
 	geoFilter;
+	currentOverlay: IOverlay;
 
 	nextSensors = [];
 	prevSensors = [];
 	allSensors = [];
-	angleFilter = [];
+	angleFilter: IAngleFilterClick = {
+		click: {x: 0, y: 0},
+		angles: [],
+		displayedOverlay: undefined,
+		point: null
+	};
 	point: Point;
 
 	private _filteredOverlays: IOverlay[];
@@ -162,7 +168,8 @@ export class ContextMenuComponent implements OnInit {
 			ofType(MapActionTypes.CONTEXT_MENU.SHOW),
 			tap(this.show.bind(this)),
 			withLatestFrom(this.displayedOverlay$),
-			tap(this.setFilteredOverlays.bind(this))
+			tap(this.setFilteredOverlays.bind(this)),
+			tap(this.setAngleFilter.bind(this))
 		).subscribe();
 		this.geoFilter$.subscribe();
 	}
@@ -172,6 +179,15 @@ export class ContextMenuComponent implements OnInit {
 		const filteredOverlays = action.payload.overlays.filter(({ id }) => id !== displayedOverlayId);
 		this.initializeSensors(filteredOverlays, displayedOverlay);
 		this.filteredOverlays = filteredOverlays;
+		this.currentOverlay = displayedOverlay;
+	}
+
+	setAngleFilter([action, displayedOverlay]: [ContextMenuShowAction, IOverlay]) {
+		this.angleFilter.click.x = action.payload.event.x;
+		this.angleFilter.click.y = action.payload.event.y;
+		this.angleFilter.angles = action.payload.overlays;
+		this.angleFilter.point = action.payload.point;
+		this.angleFilter.displayedOverlay = displayedOverlay;
 	}
 
 	show(action: ContextMenuShowAction) {
@@ -238,7 +254,7 @@ export class ContextMenuComponent implements OnInit {
 
 	clickAngle($event: MouseEvent) {
 		event.stopPropagation();
-		this.store.dispatch(new ContextMenuShowAngleFilter({event: $event, point: this.point, overlays: this.filteredOverlays}));
+		this.store.dispatch(new ContextMenuShowAngleFilter(this.angleFilter));
 	}
 
 	displayOverlayEvent(event$: MouseEvent, overlay?) {
@@ -262,9 +278,10 @@ export class ContextMenuComponent implements OnInit {
 
 	isDisabled(subList: string) {
 		if (subList === 'angleFilter') {
-			return !this[subList];
+			return !this[subList] || this[subList].angles.length === 0;
+		}else {
+			return !this[subList] || this[subList].length === 0;
 		}
-		return !this[subList] || this[subList].length === 0;
 	}
 
 	asList(subList: string) {

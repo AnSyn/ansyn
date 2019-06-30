@@ -7,8 +7,15 @@ import {
 	IMapSettings,
 	IWorldViewMapState
 } from '@ansyn/imagery';
-import { IOverlay } from '../../ansyn/modules/overlays/models/overlay.model';
 import { LayoutKey } from '../models/maps-layout';
+
+export interface IAngleFilterClick {
+	click: {x: number, y: number};
+	angles: {overlay: any, degreeFromPoint: number}[];
+	displayedOverlay: any;
+	point: Point;
+
+}
 
 export interface IPendingOverlay {
 	overlay: any;
@@ -160,7 +167,7 @@ export class ContextMenuDisplayAction implements Action {
 export class ContextMenuShowAngleFilter implements Action {
 	type = MapActionTypes.CONTEXT_MENU.ANGLE_FILTER_SHOW;
 
-	constructor(public payload: {event: MouseEvent, point: Point, overlays: IOverlay[]}) {}
+	constructor(public payload: IAngleFilterClick) {}
 }
 
 export class PinLocationModeTriggerAction implements Action {

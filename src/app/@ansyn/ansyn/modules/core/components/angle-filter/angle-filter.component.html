@@ -2,16 +2,21 @@
 	<i class="icon-map-Point point"></i>
 	<div class="circle">
 		<div class="arrows">
-		<span class="arrow" *ngFor="let overlay of overlays"
-			  (mousedown)="print($event, overlay)"></span>
+		<span class="arrow" *ngFor="let angle of angles"
+			  (mousedown)="showOverlay($event, angle.overlay)"
+			  [style.transform]="'rotate(' + angle.degreeFromPoint + 'deg)'"
+			  [class.active]="isActive(angle.overlay)"
+		></span>
 		</div>
 	</div>
 	<div class="rectangles">
-		<p>
+		<button (click)="nextOverlay(true)"
+		[disabled]="!overlay">
 			<i class="icon-show-menu"></i>
-		</p>
-		<p>
+		</button>
+		<button (click)="nextOverlay(false)"
+				[disabled]="!overlay">
 			<i class="icon-show-menu"></i>
-		</p>
+		</button>
 	</div>
 </div>

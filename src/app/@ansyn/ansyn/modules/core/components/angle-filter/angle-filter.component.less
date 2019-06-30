@@ -3,16 +3,22 @@
 @circle-diameter: 150px;
 @point-size: 20px;
 @arrow-height: 50px;
-@arrow-width: 30px;
+@arrow-width: 20px;
 @background-color: rgba(205, 205, 205, 0.7);
 @border-color: rgb(41, 41, 41);
 :host {
 	outline: none;
 	position: fixed;
+	transform: translate(-@circle-diameter / 2, -@circle-diameter / 2);
 	z-index: @z-index-context-menu;
 	&:focus {
 		div.angle-filter{
 			visibility: visible;
+
+			div.circle{
+				width: @circle-diameter;
+				height: @circle-diameter;
+			}
 		}
 	}
 
@@ -32,8 +38,8 @@
 		}
 		div.circle {
 			display: flex;
-			width: @circle-diameter;
-			height: @circle-diameter;
+			width: 0;
+			height: 0;
 			-webkit-border-radius: 100%;
 			-moz-border-radius: 100%;
 			border-radius: 100%;
@@ -43,8 +49,6 @@
 			div.arrows {
 				position: absolute;
 				top: 0;
-				width: @circle-diameter;
-				height: @circle-diameter;
 
 				span.arrow {
 					position: absolute;
@@ -56,6 +60,7 @@
 					width: @arrow-width;
 					height: @arrow-height;
 					zoom: .75;
+					cursor: pointer;
 
 					&:before {
 						box-sizing: border-box;
@@ -70,9 +75,10 @@
 						background: deeppink;
 						zoom: 2;
 
-						&.active {
-							background: purple;
-						}
+					}
+
+					&.active:before {
+						background: purple;
 					}
 
 					&:after {
@@ -85,16 +91,17 @@
 						width: 57%;
 						height: 0;
 						padding-bottom: 57%;
-						border: 1px solid deeppink;
+						border-color:  deeppink;
 						border-width: 1px 0 0 1px;
+						border-style: solid;
 						transform: translate(0, 0) rotate(45deg);
 						transform-origin: 0% 0%;
 						border-radius: 0;
 						zoom: 2;
 						//background: rgba(0,255,0,.5);
-						&.active {
-							border: 1px solid purple;
-						}
+					}
+					&.active:after {
+						border-color: purple;
 					}
 				}
 			}
@@ -103,11 +110,17 @@
 			display: flex;
 			justify-content: center;
 
-			p {
+			button:first-child {
+				transform: rotate(180deg);
+			}
+			button {
 				border:1px solid @border-color;
 				background-color: @background-color;
 				margin:5px;
 				padding: 2.5px;
+				i{
+					color: deeppink;
+				}
 			}
 		}
 

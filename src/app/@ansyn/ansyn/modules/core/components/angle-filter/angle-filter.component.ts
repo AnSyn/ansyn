@@ -1,17 +1,14 @@
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2, HostBinding } from '@angular/core';
+import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { getPointByGeometry, toDegrees, toRadians } from '@ansyn/imagery';
-import { IEntryComponent, MapActionTypes } from '@ansyn/map-facade';
+import { ContextMenuShowAngleFilter, IEntryComponent, MapActionTypes } from '@ansyn/map-facade';
 import { Actions, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { tap, debounceTime } from 'rxjs/operators';
-import { ContextMenuShowAngleFilter } from '@ansyn/map-facade';
+import { Point } from 'geojson';
+import { debounceTime, tap } from 'rxjs/operators';
 import { DisplayOverlayAction, SetHoveredOverlayAction, SetMarkUp } from '../../../overlays/actions/overlays.actions';
 import { IOverlay } from '../../../overlays/models/overlay.model';
-import { Point } from 'geojson';
 import { MarkUpClass } from '../../../overlays/reducers/overlays.reducer';
-import { GoAdjacentOverlay } from '../../../status-bar/actions/status-bar.actions';
-import { Store } from '@ngrx/store';
-import { fromEvent } from 'rxjs';
 
 @Component({
 	selector: 'ansyn-angle-filter',
@@ -31,10 +28,6 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 		debounceTime(200),
 		tap(this.show.bind(this))
 	);
-
-	@AutoSubscription
-	onBlur$ = fromEvent(this.elem.nativeElement, 'blur').pipe(
-		tap(( ) => console.log('blur')));
 
 
 	get angles() {
@@ -56,7 +49,7 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 				degreeFromPoint: brng
 			}
 		});
-		this._angles.sort( (a, b) => 	a.degreeFromPoint - b.degreeFromPoint)
+		this._angles.sort((a, b) => a.degreeFromPoint - b.degreeFromPoint)
 	}
 
 	@HostBinding('attr.tabindex')
@@ -104,14 +97,13 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 	}
 
 
-
 	getType(): string {
 		return '';
 	}
 
 	showOverlay(event: MouseEvent, overlay: any) {
 		event.stopPropagation();
-		this.store$.dispatch(new DisplayOverlayAction({overlay: overlay, mapId: this.mapId}));
+		this.store$.dispatch(new DisplayOverlayAction({ overlay: overlay, mapId: this.mapId }));
 	}
 
 
@@ -121,8 +113,7 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 		index += isNext ? 1 : -1;
 		if (index === anglesSize) {
 			index = 0;
-		}
-		else if (index === -1 ) {
+		} else if (index === -1) {
 			index = anglesSize - 1;
 		}
 		const overlayToDisplay = this._angles[index].overlay;
@@ -149,9 +140,11 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 	}
 
 	overlayOver(overlay: any) {
-		this.store$.dispatch(new SetMarkUp({classToSet: MarkUpClass.hover, dataToSet:{
+		this.store$.dispatch(new SetMarkUp({
+			classToSet: MarkUpClass.hover, dataToSet: {
 				overlaysIds: overlay ? [overlay.id] : []
-			} }));
+			}
+		}));
 		this.store$.dispatch(new SetHoveredOverlayAction(overlay));
 	}
 }

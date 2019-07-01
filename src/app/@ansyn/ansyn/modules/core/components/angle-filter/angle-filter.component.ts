@@ -146,7 +146,7 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 		return this.overlay && this.overlay.id === overlay.id;
 	}
 
-	overlayOver(overlay: any) {
+	overlayOver(overlay?: any) {
 		this.store$.dispatch(new SetMarkUp({
 			classToSet: MarkUpClass.hover, dataToSet: {
 				overlaysIds: overlay ? [overlay.id] : []

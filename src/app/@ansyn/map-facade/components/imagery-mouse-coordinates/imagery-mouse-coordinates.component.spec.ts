@@ -1,5 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ProjectionConverterService } from '../../services/projection-converter.service';
+import { GeoHolderComponent } from './holders/geo-holder/geo-holder.component';
+import { UtmHolderComponent } from './holders/utm-holder/utm-holder.component';
 
 import { ImageryMouseCoordinatesComponent } from './imagery-mouse-coordinates.component';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
@@ -12,7 +14,7 @@ describe('ImageryMouseCoordinatesComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ImageryMouseCoordinatesComponent],
+			declarations: [ImageryMouseCoordinatesComponent, GeoHolderComponent, UtmHolderComponent],
 			imports: [],
 			providers: [
 				ImageryCommunicatorService,

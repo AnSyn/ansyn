@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
 	selector: 'ansyn-utm-holder',
@@ -11,6 +11,7 @@ export class UtmHolderComponent implements OnInit {
 	@Input() y: string;
 	@Input() zone: string;
 	@Input() height: string;
+
 	constructor() {
 	}
 

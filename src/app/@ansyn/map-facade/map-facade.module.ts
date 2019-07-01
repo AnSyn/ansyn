@@ -74,7 +74,9 @@ import { UtmHolderComponent } from './components/imagery-mouse-coordinates/holde
 		AnimatedEllipsisComponent,
 		AnsynLoaderComponent,
 		AnsynPopoverComponent,
-		EntryComponentDirective
+		EntryComponentDirective,
+		GeoHolderComponent,
+		UtmHolderComponent
 	]
 })
 

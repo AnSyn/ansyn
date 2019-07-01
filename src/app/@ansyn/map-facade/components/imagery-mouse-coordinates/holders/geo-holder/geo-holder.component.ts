@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
 	selector: 'ansyn-geo-holder',
@@ -10,6 +10,7 @@ export class GeoHolderComponent implements OnInit {
 	@Input() lat: string;
 	@Input() long: string;
 	@Input() height: string;
+
 	constructor() {
 	}
 

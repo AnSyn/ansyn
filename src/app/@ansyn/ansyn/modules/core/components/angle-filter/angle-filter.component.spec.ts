@@ -14,7 +14,7 @@ describe('AngleFilterComponent', () => {
 			imports: [
 				StoreModule.forRoot({[overlaysFeatureKey]: OverlayReducer})
 			],
-			provider: [
+			providers: [
 				provideMockActions(() => actions)
 			]
 		})

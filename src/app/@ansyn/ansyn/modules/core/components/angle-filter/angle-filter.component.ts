@@ -10,6 +10,7 @@ import { DisplayOverlayAction, SetHoveredOverlayAction, SetMarkUp } from '../../
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { MarkUpClass } from '../../../overlays/reducers/overlays.reducer';
 
+const WORLD_RADIUS = 6371e3;
 @Component({
 	selector: 'ansyn-angle-filter',
 	templateUrl: './angle-filter.component.html',
@@ -35,18 +36,24 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 	}
 
 	set angles(value: any[]) {
-		console.log('point', JSON.stringify(this.point));
-		this._angles = value.map((a) => {
-			const center = getPointByGeometry(a.footprint);
-			const y = Math.sin(this.getLongFromPoint(this.point, true) - this.getLongFromPoint(center, true)) * Math.cos(this.getLatFromPoint(center, true));
-			const x = Math.cos(this.getLatFromPoint(this.point, true)) * Math.sin(this.getLatFromPoint(center, true)) -
-				Math.sin(this.getLatFromPoint(this.point, true)) * Math.cos(this.getLatFromPoint(center, true)) * Math.cos(this.getLongFromPoint(center, true) - this.getLongFromPoint(this.point, true));
+		const pointLat = this.getLatFromPoint(this.point, true);
+		const pointLong = this.getLongFromPoint(this.point, true);
+		this._angles = value.map((angle) => {
+			const center = getPointByGeometry(angle.footprint);
+			const centerLat = this.getLatFromPoint(center, true);
+			const centerLong = this.getLongFromPoint(center, true);
+			const longDelta = centerLong - pointLong;
+			const latDelta = centerLat - pointLat;
+			const a = Math.sin(latDelta / 2) * Math.sin(latDelta / 2) + Math.cos(pointLat) * Math.cos(centerLat) * Math.sin(longDelta / 2 ) * Math.sin( longDelta / 2);
+			const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+			const d = WORLD_RADIUS * c;
+			const y = Math.sin(longDelta) * Math.cos(centerLat);
+			const x = Math.cos(pointLat) * Math.sin(centerLat) - Math.sin(pointLat) * Math.cos(centerLat) * Math.cos(longDelta);
 			const brng = 360 - (toDegrees(Math.atan2(y, x)));
-			console.log(a.id + ', center: ' + JSON.stringify(center) + 'degree: ' + brng);
-
 			return {
-				overlay: a,
-				degreeFromPoint: brng
+				overlay: angle,
+				degreeFromPoint: brng,
+				distanceFromPoint: d / (10 ** Math.log2(d))
 			}
 		});
 		this._angles.sort((a, b) => a.degreeFromPoint - b.degreeFromPoint)

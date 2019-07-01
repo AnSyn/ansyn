@@ -2,8 +2,8 @@
 
 @circle-diameter: 150px;
 @point-size: 20px;
-@arrow-height: 50px;
-@arrow-width: 20px;
+@arrow-height: @circle-diameter / 2;
+@arrow-width: 10px;
 @background-color: rgba(205, 205, 205, 0.7);
 @border-color: rgb(41, 41, 41);
 :host {
@@ -52,14 +52,13 @@
 
 				span.arrow {
 					position: absolute;
-					top: calc( (@circle-diameter /2 ) - (@arrow-height / 2));
-					left: calc( (@circle-diameter /2 ) + (@arrow-width / 3));
+					top: calc( (@circle-diameter /2 ) - (@arrow-height));
+					left: calc( (@circle-diameter /2 ) - (@arrow-width / 2));
 					transition: visibility 100ms;
 					transform-origin: bottom;
 					display: inline-block;
 					width: @arrow-width;
 					height: @arrow-height;
-					zoom: .75;
 					cursor: pointer;
 
 					&:before {

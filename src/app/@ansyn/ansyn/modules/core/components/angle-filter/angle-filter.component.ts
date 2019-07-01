@@ -5,9 +5,10 @@ import { Actions, ofType } from '@ngrx/effects';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap, debounceTime } from 'rxjs/operators';
 import { ContextMenuShowAngleFilter } from '@ansyn/map-facade';
-import { DisplayOverlayAction } from '../../../overlays/actions/overlays.actions';
+import { DisplayOverlayAction, SetHoveredOverlayAction, SetMarkUp } from '../../../overlays/actions/overlays.actions';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { Point } from 'geojson';
+import { MarkUpClass } from '../../../overlays/reducers/overlays.reducer';
 import { GoAdjacentOverlay } from '../../../status-bar/actions/status-bar.actions';
 import { Store } from '@ngrx/store';
 import { fromEvent } from 'rxjs';
@@ -47,7 +48,7 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 			const y = Math.sin(this.getLongFromPoint(this.point, true) - this.getLongFromPoint(center, true)) * Math.cos(this.getLatFromPoint(center, true));
 			const x = Math.cos(this.getLatFromPoint(this.point, true)) * Math.sin(this.getLatFromPoint(center, true)) -
 				Math.sin(this.getLatFromPoint(this.point, true)) * Math.cos(this.getLatFromPoint(center, true)) * Math.cos(this.getLongFromPoint(center, true) - this.getLongFromPoint(this.point, true));
-			const brng = (toDegrees(Math.atan2(y, x)) + 180);
+			const brng = 360 - (toDegrees(Math.atan2(y, x)));
 			console.log(a.id + ', center: ' + JSON.stringify(center) + 'degree: ' + brng);
 
 			return {
@@ -145,5 +146,12 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 
 	isActive(overlay: any) {
 		return this.overlay && this.overlay.id === overlay.id;
+	}
+
+	overlayOver(overlay: any) {
+		this.store$.dispatch(new SetMarkUp({classToSet: MarkUpClass.hover, dataToSet:{
+				overlaysIds: overlay ? [overlay.id] : []
+			} }));
+		this.store$.dispatch(new SetHoveredOverlayAction(overlay));
 	}
 }

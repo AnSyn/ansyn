@@ -4,6 +4,8 @@
 		<div class="arrows">
 		<span class="arrow" *ngFor="let angle of angles"
 			  (mousedown)="showOverlay($event, angle.overlay)"
+			  (mouseover)="overlayOver(angle.overlay)"
+			  (mouseleave)="overlayOver()"
 			  [style.transform]="'rotate(' + angle.degreeFromPoint + 'deg)'"
 			  [class.active]="isActive(angle.overlay)"
 		></span>

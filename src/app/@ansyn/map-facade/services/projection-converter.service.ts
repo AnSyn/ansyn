@@ -1,13 +1,19 @@
 import { inRange, isEqual } from 'lodash';
 import proj4 from 'proj4';
 import { Inject, Injectable } from '@angular/core';
-import { IToolsConfig, toolsConfig } from '../models/tools-config';
-import { ICoordinatesSystem } from '../../../core/models/coordinate-system.model';
+import { IMapFacadeConfig } from '../models/map-config.model';
+import { mapFacadeConfig } from '../models/map-facade.config';
 
 export interface IUtmZone {
 	zone: number;
 	utmProj: string;
 }
+
+export interface ICoordinatesSystem {
+	datum: 'wgs84' | 'ed50';
+	projection: 'geo' | 'utm';
+}
+
 
 // @dynamic
 @Injectable()
@@ -33,7 +39,7 @@ export class ProjectionConverterService {
 		return validX && validY && validZone;
 	}
 
-	constructor(@Inject(toolsConfig) protected toolsConfigProj: IToolsConfig) {
+	constructor(@Inject(mapFacadeConfig) protected mapfacadeConfigProj: IMapFacadeConfig) {
 	}
 
 	// isValidConversion
@@ -95,6 +101,6 @@ export class ProjectionConverterService {
 	}
 
 	getUtmFromConf(zone: number): string {
-		return this.toolsConfigProj.Proj4.ed50.replace('${zone}', zone.toString());
+		return this.mapfacadeConfigProj.Proj4.ed50.replace('${zone}', zone.toString());
 	}
 }

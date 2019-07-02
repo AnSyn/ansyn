@@ -1,8 +1,18 @@
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { filter, take, tap } from 'rxjs/operators';
+import { filter, take, tap, map } from 'rxjs/operators';
 import { CommunicatorEntity, ImageryCommunicatorService, IMapInstanceChanged, IMousePointerMove } from '@ansyn/imagery';
 import { mapFacadeConfig } from '../../models/map-facade.config';
 import { IMapFacadeConfig } from '../../models/map-config.model';
+import { ICoordinatesSystem, ProjectionConverterService } from '../../services/projection-converter.service';
+
+const wgs84: ICoordinatesSystem = {
+	datum: 'wgs84',
+	projection: 'geo'
+};
+const utm: ICoordinatesSystem = {
+	datum: 'ed50',
+	projection: 'utm'
+};
 
 @Component({
 	selector: 'ansyn-imagery-mouse-coordinates',
@@ -16,21 +26,39 @@ export class ImageryMouseCoordinatesComponent implements OnInit, OnDestroy {
 	mouseMovedEventSubscriber;
 	communicator: CommunicatorEntity;
 	floatingPositionSuffix = '';
+	floationgSystem: string;
 
 	lat: string;
 	long: string;
 	height: string;
+	zone: string;
 
 	constructor(protected communicators: ImageryCommunicatorService,
-				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
+				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
+				protected projectionConverterService: ProjectionConverterService) {
 		this.floatingPositionSuffix = this.config.floatingPositionSuffix || '';
+		this.floationgSystem = this.config.floatingPositionSystem || 'WGS84';
 	}
 
 	registerMouseEvents() {
 		this.mouseMovedEventSubscriber = this.communicator.ActiveMap.mousePointerMoved.subscribe((args: IMousePointerMove) => {
-			this.lat = !isNaN(args.lat) ? args.lat.toFixed(5) : null;
-			this.long = !isNaN(args.long) ? args.long.toFixed(5) : null;
-			this.height = !isNaN(args.height) ? args.height.toFixed(2) : null;
+
+			const lat = !isNaN(args.lat) ? args.lat.toFixed(5) : null;
+			const long = !isNaN(args.long) ? args.long.toFixed(5) : null;
+			const height = !isNaN(args.height) ? args.height.toFixed(2) : null;
+			if (this.floationgSystem === 'UTM') {
+				const toUTM = this.projectionConverterService.convertByProjectionDatum([+long, +lat], wgs84, utm);
+				this.long = `${Math.floor(toUTM[0])}`;
+				this.lat = `${Math.floor(toUTM[1])}`;
+				this.zone = toUTM[2];
+				this.height = height;
+			}
+			else {
+				this.lat = lat;
+				this.long = long;
+				this.height = height;
+				this.zone = null;
+			}
 		});
 	}
 

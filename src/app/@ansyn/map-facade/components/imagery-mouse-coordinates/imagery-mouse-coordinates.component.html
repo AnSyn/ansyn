@@ -1,5 +1,16 @@
 <div *ngIf='long && isVisible'
-[class.mouse-coordinate]="long && isVisible">
-	{{ long }}&deg; {{lat}}&deg; <span *ngIf=height>{{height}}m</span> {{floatingPositionSuffix}}
+	 [class.mouse-coordinate]="long && isVisible"
+	 [ngSwitch]="floationgSystem" >
+
+	<ansyn-geo-holder *ngSwitchCase="'WGS84'"
+	[lat]="lat"
+	[long]="long"
+	[height]="height"></ansyn-geo-holder>
+	<ansyn-utm-holder *ngSwitchCase="'UTM'"
+	[x]="long"
+	[y]="lat"
+	[zone]="zone"
+	[height]="height"></ansyn-utm-holder>
+	 &nbsp;{{floatingPositionSuffix}}
 </div>
 

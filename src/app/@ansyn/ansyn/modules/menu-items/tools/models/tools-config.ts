@@ -1,10 +1,4 @@
-import { ICoordinatesSystem } from '../../../core/models/coordinate-system.model';
-
-export interface IEd50Notification {
-	href?: string;
-	title: string;
-	hrefText?: string;
-}
+import { ICoordinatesSystem } from '@ansyn/map-facade';
 
 export interface IShadowMouseConfig {
 	activeByDefault: boolean
@@ -14,11 +8,6 @@ export interface IToolsConfig {
 	GoTo: {
 		from: ICoordinatesSystem;
 		to: ICoordinatesSystem;
-	},
-	Proj4: {
-		ed50: string;
-		ed50Customized: string;
-		ed50Notification: IEd50Notification;
 	},
 	ImageProcParams: Array<IImageProcParam>,
 	ShadowMouse?: IShadowMouseConfig

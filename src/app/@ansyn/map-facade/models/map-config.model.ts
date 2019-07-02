@@ -1,3 +1,9 @@
+export interface IEd50Notification {
+	href?: string;
+	title: string;
+	hrefText?: string;
+}
+
 export interface IMapSearchConfig {
 	active: boolean;
 	url: string;
@@ -17,6 +23,12 @@ export interface IMapFacadeConfig {
 		mainText: string;
 	};
 	floatingPositionSuffix?: string;
+	floatingPositionSystem?: 'WGS84' | 'UTM',
+	Proj4: {
+		ed50: string;
+		ed50Customized: string;
+		ed50Notification: IEd50Notification;
+	},
 }
 
 

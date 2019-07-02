@@ -6,7 +6,7 @@ import { AnsynApi } from './ansyn-api.service';
 import { LayoutKey, mapFeatureKey, MapReducer, SetLayoutAction } from '@ansyn/map-facade';
 import { ANSYN_ID } from './ansyn-id.provider';
 import { GoToAction } from '../modules/menu-items/tools/actions/tools.actions';
-import { ProjectionConverterService } from '../modules/menu-items/tools/services/projection-converter.service';
+import { ProjectionConverterService } from '@ansyn/map-facade';
 import { DisplayOverlayAction } from '../modules/overlays/actions/overlays.actions';
 import { IOverlay } from '../modules/overlays/models/overlay.model';
 

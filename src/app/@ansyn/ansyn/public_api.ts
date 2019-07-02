@@ -58,9 +58,8 @@ export { OverlayDisplayMode } from './modules/menu-items/tools/overlays-display-
 export { SelectCaseSuccessAction } from './modules/menu-items/cases/actions/cases.actions';
 export { ILayersManagerConfig } from './modules/menu-items/layers-manager/models/layers-manager-config';
 export { IFiltersConfig } from './modules/menu-items/filters/models/filters-config';
-export { IUtmZone } from './modules/menu-items/tools/services/projection-converter.service';
 export { DataLayersService } from './modules/menu-items/layers-manager/services/data-layers.service';
-export { ProjectionConverterService } from './modules/menu-items/tools/services/projection-converter.service';
+
 export { LoadCaseAction } from './modules/menu-items/cases/actions/cases.actions';
 export { SettingsComponent } from './modules/menu-items/settings/settings/settings.component';
 export { GoToAction } from './modules/menu-items/tools/actions/tools.actions';
@@ -250,7 +249,6 @@ export { IFilterModel } from './modules/core/models/IFilterModel';
 export { sortByDate, sortByDateDesc } from './modules/core/utils/sorting';
 export { limitArray, mergeLimitedArrays } from './modules/core/utils/i-limited-array';
 export { toastMessages } from './modules/core/models/toast-messages';
-export { ICoordinatesSystem } from './modules/core/models/coordinate-system.model';
 export { cloneDeep } from './modules/core/utils/rxjs/operators/cloneDeep';
 export { rxPreventCrash } from './modules/core/utils/rxjs/operators/rxPreventCrash';
 export { IContext } from './modules/core/models/context.model';

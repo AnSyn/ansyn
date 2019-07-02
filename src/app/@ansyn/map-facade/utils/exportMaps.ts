@@ -2,14 +2,13 @@ import { ICanvasExportData } from '@ansyn/imagery';
 import { Observable } from 'rxjs';
 import { LayoutKey } from '../models/maps-layout';
 
-
 export function mapsToPng(maps: ICanvasExportData[], layout: LayoutKey): Observable<Blob> {
 	let c = document.createElement('canvas');
 	let size = getSizeByLayout(layout, maps);
 	c.width = size.width;
 	c.height = size.height;
 	const ctx = c.getContext('2d');
-	ctx.font = "30px Arial";
+	ctx.font = '30px Arial';
 	ctx.clearRect(0, 0, size.width, size.height);
 	return putImagesOnCanvas(ctx, maps, layout);
 }
@@ -45,6 +44,18 @@ function getSizeByLayout(layout: LayoutKey, maps: ICanvasExportData[]) {
 	}
 }
 
+function createBlobFromDataURL(dataURI: string) {
+		let byteString = atob(dataURI.split(',')[1]);
+		let mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+		let ab = new ArrayBuffer(byteString.length);
+		let ia = new Uint8Array(ab);
+		for (let i = 0; i < byteString.length; i++) {
+			ia[i] = byteString.charCodeAt(i);
+		}
+		let blob = new Blob([ab], {type: mimeString});
+		return blob;
+}
+
 function putImagesOnCanvas(ctx: CanvasRenderingContext2D, maps: ICanvasExportData[], layout: LayoutKey): Observable<Blob> {
 	const total = maps.length;
 	let loaded = 0;
@@ -56,17 +67,21 @@ function putImagesOnCanvas(ctx: CanvasRenderingContext2D, maps: ICanvasExportDat
 					drawImage(event.target, index, all);
 					loaded++;
 					if (loaded === total) {
-						ctx.canvas.toBlob(blob => {
-							obs.next(blob);
+						if (window.navigator.userAgent.indexOf('Chrome/44') > -1) {
+							obs.next(createBlobFromDataURL(ctx.canvas.toDataURL()));
 							obs.complete();
-						});
+						} else {
+							ctx.canvas.toBlob(blob => {
+								obs.next(blob);
+								obs.complete()
+							});
+						}
 					}
 
 					img.onload = null;
 				};
 				img.src = map.data;
-			}
-			else {
+			} else {
 				drawImage(map, index, all);
 				loaded++;
 			}
@@ -116,10 +131,9 @@ function putImagesOnCanvas(ctx: CanvasRenderingContext2D, maps: ICanvasExportDat
 
 		if (img.src) {
 			ctx.drawImage(img, x, y, w, h);
-		}
-		else {
+		} else {
 
-			ctx.fillText('Unable to get map image', x + (img.width / 2), y + (img.height / 2 ));
+			ctx.fillText('Unable to get map image', x + (img.width / 2), y + (img.height / 2));
 		}
 	}
 }

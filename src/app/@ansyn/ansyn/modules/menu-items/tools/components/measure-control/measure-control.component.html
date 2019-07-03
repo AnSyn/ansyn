@@ -1,7 +1,8 @@
 
 	<div
 		*ngIf="show"
-		[class.measure]="show">
+		[class.measure]="show"
+	[style.direction]="'ltr' | translate">
 		<p>{{'Measure Distance' | translate}}</p>
 
 		<button

@@ -67,14 +67,14 @@ function putImagesOnCanvas(ctx: CanvasRenderingContext2D, maps: ICanvasExportDat
 					drawImage(event.target, index, all);
 					loaded++;
 					if (loaded === total) {
-						if (window.navigator.userAgent.indexOf('Chrome/44') > -1) {
-							obs.next(createBlobFromDataURL(ctx.canvas.toDataURL()));
-							obs.complete();
-						} else {
+						if (ctx.canvas.toBlob) {
 							ctx.canvas.toBlob(blob => {
 								obs.next(blob);
 								obs.complete()
 							});
+						} else {
+							obs.next(createBlobFromDataURL(ctx.canvas.toDataURL()));
+							obs.complete();
 						}
 					}
 

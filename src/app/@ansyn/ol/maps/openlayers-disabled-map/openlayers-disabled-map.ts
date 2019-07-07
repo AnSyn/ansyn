@@ -127,6 +127,10 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		view.setRotation(rotation);
 	}
 
+	setResolution(resolution: number): void {
+		this.mapObject.getView().setResolution(resolution);
+	}
+
 	updateSize(): void {
 		this.mapObject.updateSize();
 	}
@@ -139,6 +143,10 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 
 	getPointerMove() {
 		return new Observable();
+	}
+
+	getResolution(): number {
+		return this.mapObject.getView().getResolution()
 	}
 
 	getRotation(): number {

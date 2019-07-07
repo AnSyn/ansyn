@@ -516,6 +516,14 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return view.getRotation();
 	}
 
+	setResolution(resolution: number): void {
+		this.mapObject.getView().setResolution(resolution);
+	}
+
+	getResolution(): number {
+		return this.mapObject.getView().getResolution();
+	}
+
 
 	flyTo(location: [number, number]) {
 		const view = this._mapObject.getView();

@@ -53,6 +53,7 @@ import { FilterType } from '../../modules/menu-items/filters/models/filter-type'
 import { ICaseFacetsState } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay, IOverlaySpecialObject } from '../../modules/overlays/models/overlay.model';
 import { get as _get } from 'lodash';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -74,11 +75,11 @@ export class FiltersAppEffects {
 
 	@Effect()
 	updateOverlayFilters$ = this.onCriterialFiltersChanges$.pipe(
-		withLatestFrom(this.overlaysArray$),
-		mergeMap(([[filters, removedOverlaysIds, removedOverlaysVisibility], overlaysArray]: [[Filters, string[], boolean], IOverlay[]]) => {
+		withLatestFrom(this.overlaysArray$, this.translate.getTranslation('')),
+		mergeMap(([[filters, removedOverlaysIds, removedOverlaysVisibility], overlaysArray, translation]: [[Filters, string[], boolean], IOverlay[], any]) => {
 			const filterModels: IFilterModel[] = FiltersService.pluckFilterModels(filters);
 			const filteredOverlays: string[] = buildFilteredOverlays(overlaysArray, filterModels, removedOverlaysIds, removedOverlaysVisibility);
-			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : overlaysStatusMessages.noOverLayMatchFilters;
+			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : translation[overlaysStatusMessages.noOverLayMatchFilters];
 			return [
 				new SetFilteredOverlaysAction(filteredOverlays),
 				new SetOverlaysStatusMessage(message)
@@ -113,7 +114,7 @@ export class FiltersAppEffects {
 				this.config.filters.map<[IFilter, FilterMetadata]>((filter: IFilter) => {
 					const metadata: FilterMetadata = this.resolveMetadata(filter.type);
 					const selectedFilter = facets.filters.find(({ fieldName }) => fieldName === filter.modelName);
-					metadata.initializeFilter(overlays, filter.modelName, selectedFilter);
+					metadata.initializeFilter(overlays, filter.modelName, selectedFilter, filter.visibility);
 					return [filter, metadata];
 				})
 			);
@@ -166,6 +167,7 @@ export class FiltersAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected genericTypeResolverService: GenericTypeResolverService,
+				public translate: TranslateService,
 				@Inject(filtersConfig) protected config: IFiltersConfig) {
 	}
 

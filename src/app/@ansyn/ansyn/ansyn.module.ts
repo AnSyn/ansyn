@@ -21,6 +21,9 @@ import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/
 import { UnsupportedDevicesComponent } from './components/unsupported-devices/unsupported-devices.component';
 import { ansynConfig } from './config/ansyn.config';
 import { CoreModule } from './modules/core/core.module';
+import { AnsynTranslationModule } from './modules/core/translation/ansyn-translation.module';
+import { ComponentTranslateLoader } from './modules/core/translation/component-translate-loader';
+import { DefaultTranslateLoader } from './modules/core/translation/default-translate-loader';
 import { TasksRemoteDefaultService } from './modules/menu-items/algorithms/services/tasks-remote-default.service';
 import { TasksModule } from './modules/menu-items/algorithms/tasks.module';
 import { CasesModule } from './modules/menu-items/cases/cases.module';
@@ -32,10 +35,12 @@ import { ToolsModule } from './modules/menu-items/tools/tools.module';
 import { OverlaysModule } from './modules/overlays/overlays.module';
 import { AnsynPluginsModule } from './modules/plugins/ansyn-plugins.module';
 import { StatusBarModule } from './modules/status-bar/status-bar.module';
+import { TranslateService } from '@ngx-translate/core';
 
 @NgModule({
 	imports: [
 		CommonModule,
+		AnsynTranslationModule.addLoader([DefaultTranslateLoader, ComponentTranslateLoader]),
 		StoreModule.forRoot({}),
 		EffectsModule.forRoot([]),
 		AppProvidersModule,
@@ -103,5 +108,9 @@ export class AnsynModule {
 				}
 			]
 		};
+	}
+
+	constructor(public translate: TranslateService) {
+		translate.setDefaultLang('default');
 	}
 }

@@ -4,11 +4,13 @@ import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { FiltersActions, FiltersActionTypes } from '../actions/filters.actions';
 import { FiltersService } from '../services/filters.service';
 import {
-	CaseEnumFilterMetadata,
+	ICaseEnumFilterMetadata,
 	ICaseBooleanFilterMetadata,
 	ICaseFacetsState,
-	ICaseFilter, ICaseSliderFilterMetadata
+	ICaseFilter,
+	ICaseSliderFilterMetadata
 } from '../../cases/models/case.model';
+import { IFilterSearchResults } from '../models/filter-search-results';
 
 export type Filters = Map<IFilter, FilterMetadata>;
 
@@ -18,6 +20,7 @@ export interface IFiltersState {
 	facets: ICaseFacetsState;
 	enableOnlyFavoritesSelection: boolean;
 	filtersSearch: string;
+	filtersSearchResults: IFilterSearchResults;
 }
 
 export const initialFiltersState: IFiltersState = {
@@ -29,6 +32,7 @@ export const initialFiltersState: IFiltersState = {
 	},
 	enableOnlyFavoritesSelection: false,
 	filtersSearch: '',
+	filtersSearchResults: {}
 };
 
 export const filtersFeatureKey = 'filters';
@@ -52,7 +56,7 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 			const clonedFilters = new Map(state.filters);
 
 			clonedFilters.set(actionPayload.filter, actionPayload.newMetadata);
-			const facets = { ...state.facets, filters: <ICaseFilter<ICaseBooleanFilterMetadata | CaseEnumFilterMetadata | ICaseSliderFilterMetadata>[]> FiltersService.buildCaseFilters(clonedFilters, state.facets.filters) };
+			const facets = { ...state.facets, filters: <ICaseFilter<ICaseBooleanFilterMetadata | ICaseEnumFilterMetadata | ICaseSliderFilterMetadata>[]> FiltersService.buildCaseFilters(clonedFilters, state.facets.filters) };
 			return { ...state, filters: clonedFilters, facets };
 		}
 
@@ -65,6 +69,8 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 		case FiltersActionTypes.SET_FILTER_SEARCH:
 			return { ...state, filtersSearch: action.payload };
 
+		case FiltersActionTypes.SET_FILTERS_SEARCH_RESULTS:
+			return { ...state, filtersSearchResults: action.payload };
 		default:
 			return state;
 	}
@@ -75,3 +81,4 @@ export const selectFacets = createSelector(filtersStateSelector, ({ facets }) =>
 export const selectShowOnlyFavorites = createSelector(selectFacets, ({ showOnlyFavorites }: ICaseFacetsState) => showOnlyFavorites);
 export const selectIsLoading = createSelector(filtersStateSelector, ({ isLoading }) => isLoading);
 export const selectFiltersSearch = createSelector(filtersStateSelector, (state) => state && state.filtersSearch);
+export const selectFiltersSearchResults = createSelector(filtersStateSelector, (state) => state && state.filtersSearchResults);

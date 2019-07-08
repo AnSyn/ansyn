@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IFilter } from '../models/IFilter';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, get as _get } from 'lodash';
 import { Filters, IFiltersState } from '../reducer/filters.reducer';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { EnumFilterMetadata, IEnumFiled } from '../models/metadata/enum-filter-metadata';
@@ -9,9 +9,9 @@ import { buildFilteredOverlays } from '../../../core/utils/overlays';
 import { mapValuesToArray } from '../../../core/utils/misc';
 import { IFilterModel } from '../../../core/models/IFilterModel';
 import { FilterType } from '../models/filter-type';
-import { ICaseFilter } from '../../cases/models/case.model';
+import { ICaseEnumFilterMetadata, ICaseFilter } from '../../cases/models/case.model';
 import { IOverlay } from '../../../overlays/models/overlay.model';
-import { get as _get } from 'lodash'
+
 export const filtersConfig = 'filtersConfig';
 
 // @dynamic
@@ -26,10 +26,19 @@ export class FiltersService {
 			let outerStateMetadata: any = newMetadata.getMetadataForOuterState();
 			const historyEnumFilter = facetsFilters.find(({ type, fieldName }) => type === FilterType.Enum && fieldName === filter.modelName)
 			if (historyEnumFilter) {
-				const facetsFilterToContact = (<string[]>historyEnumFilter.metadata).filter((key) => {
+				const oldMetaData: ICaseEnumFilterMetadata = <ICaseEnumFilterMetadata>historyEnumFilter.metadata;
+				const facetsFilterToContact = oldMetaData.unCheckedEnums.filter((key) => {
 					return !(<any>newMetadata).enumsFields.has(key)
 				});
-				outerStateMetadata = outerStateMetadata.concat(facetsFilterToContact);
+
+				const facetsDisabledFilterToContact = oldMetaData.disabledEnums.filter((key) => {
+					return !(<any>newMetadata).enumsFields.has(key)
+				});
+				const enumMetaData: ICaseEnumFilterMetadata = {
+					unCheckedEnums: outerStateMetadata.unCheckedEnums.concat(facetsFilterToContact),
+					disabledEnums: outerStateMetadata.disabledEnums.concat(facetsDisabledFilterToContact)
+				};
+				outerStateMetadata = enumMetaData;
 			}
 			caseFilters.push({ fieldName: filter.modelName, metadata: outerStateMetadata, type: filter.type });
 		});

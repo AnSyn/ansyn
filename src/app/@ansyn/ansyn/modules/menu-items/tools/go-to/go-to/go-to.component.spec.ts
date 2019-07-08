@@ -6,11 +6,12 @@ import { GoToModule } from '../go-to.module';
 import { GoToAction, SetPinLocationModeAction } from '../../actions/tools.actions';
 import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
-import { ProjectionConverterService } from '../../services/projection-converter.service';
+import { mapFacadeConfig, ProjectionConverterService } from '@ansyn/map-facade';
 import { toolsConfig } from '../../models/tools-config';
 import { CoreConfig } from '../../../../core/models/core.config';
 import { CoreModule } from '../../../../core/core.module';
 import { LoggerConfig } from '../../../../core/models/logger.config';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('GoToComponent', () => {
 	let component: GoToComponent;
@@ -20,7 +21,13 @@ describe('GoToComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [GoToModule, HttpClientModule, StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer }), CoreModule, EffectsModule.forRoot([])],
+			imports: [GoToModule,
+				HttpClientModule,
+				StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer }),
+				CoreModule,
+				EffectsModule.forRoot([]),
+				TranslateModule.forRoot()
+			],
 			providers: [
 				ProjectionConverterService,
 				{ provide: LoggerConfig, useValue: {} },
@@ -30,7 +37,11 @@ describe('GoToComponent', () => {
 						GoTo: {
 							from: '',
 							to: ''
-						},
+						}
+					}
+				},
+				{
+					provide: mapFacadeConfig, useValue: {
 						Proj4: {
 							ed50: '+proj=utm +datum=ed50 +zone=${zone} +ellps=intl +units=m + no_defs',
 							ed50Customized: ''

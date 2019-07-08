@@ -1,9 +1,11 @@
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { IMapSettings } from '@ansyn/imagery';
-import { selectMaps } from '@ansyn/map-facade';
+import { selectFooterCollapse, selectMaps } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, tap } from 'rxjs/operators';
+import { CoreConfig } from '../../../core/models/core.config';
+import { ICoreConfig } from '../../../core/models/core.config.model';
 import { IOverlay } from '../../models/overlay.model';
 import { IOverlaysConfig } from '../../models/overlays.config';
 import { OverlaysConfig } from '../../services/overlays.service';
@@ -18,6 +20,7 @@ import { Dictionary } from '@ngrx/entity';
 @AutoSubscriptions()
 export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 	@Input() mapId: string;
+	footerCollapse: boolean;
 	@AutoSubscription
 	overlay$: Observable<Dictionary<IMapSettings>> = this.store$.pipe(
 		select(selectMaps),
@@ -27,6 +30,10 @@ export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 		})
 	);
 
+	@AutoSubscription
+	footerCollapse$ = this.store$.select(selectFooterCollapse).pipe(
+		tap( (collapse) => this.footerCollapse = collapse)
+	);
 	set overlay(overlay: IOverlay) {
 		let sourceTypeConfig;
 		// Extract the title, according to the new overlay and the configuration
@@ -45,14 +52,17 @@ export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 	}
 
 	constructor(protected store$: Store<any>,
-				@Inject(OverlaysConfig) public _config: IOverlaysConfig) {
+				@Inject(OverlaysConfig) public _config: IOverlaysConfig,
+				@Inject(CoreConfig) public coreConfig: ICoreConfig) {
 	}
 
 	ngOnDestroy(): void {
 	}
 
+
 	ngOnInit(): void {
 	}
+
 
 	getType(): string {
 		return '';

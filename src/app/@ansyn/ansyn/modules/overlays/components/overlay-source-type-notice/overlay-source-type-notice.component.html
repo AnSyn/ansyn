@@ -1,4 +1,6 @@
 <div [hidden]="!title" class="overlay-source-type-notice"
+	 [class.collapse-enable]="coreConfig.isFooterCollapsible"
+	 [class.footer-collapse]="footerCollapse"
 	 [attr.tooltip-value]="title"
 	 tooltip-class="top wrap">{{title}}
 </div>

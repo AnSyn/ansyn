@@ -168,7 +168,13 @@
 		"url": "http://dev.virtualearth.net/REST/v1/Locations?locality=$searchString&maxResults=1&key=$apiKey",
 		"apiKey": "AofqJGk-uEej_Pv7hkbpXh6H3pb54luGZj6lfe90ksZEoBY-JmgTwGE2s9TF6peC"
 	},
-	"floatingPositionSuffix": "{{ getv "/ansyn/floation/position/suffix" "" }}"
+	"floatingPositionSuffix": "{{ getv "/ansyn/floation/position/suffix" "" }}",
+	"floatingPositionSystem" : "WGS84",
+	"Proj4": {
+	  "ed50": "+proj=utm +datum=ed50 +zone=${zone} +ellps=intl +units=m + no_defs",
+	  "ed50Customized": "",
+	  "ed50Notification": ""
+	}
   },
   "mapProvidersConfig": {
   	"openLayersMap": {
@@ -256,11 +262,6 @@
         "projection": "utm"
       }
     },
-    "Proj4": {
-      "ed50": "+proj=utm +datum=ed50 +zone=${zone} +ellps=intl +units=m + no_defs",
-      "ed50Customized": "",
-      "ed50Notification": ""
-    },
     "ImageProcParams": [
       {
         "name": "Sharpness",
@@ -334,7 +335,8 @@
 	   	}
     },
 	 "httpTimeout": "3000",
-	 "isFooterCollapsible": {{ getv "/ansyn/iscollapsible" "false" }}
+	 "isFooterCollapsible": {{ getv "/ansyn/iscollapsible" "false" }},
+	 "enable3D": true
   },
   "olConfig": {
   	 "needToUseLayerExtent": false,
@@ -364,6 +366,7 @@
   },
   "loginConfig": {
   	"baseUrl": "{{ getv "/ansyn/login/baseurl" "http://platform.ansyn.io:9001/api/v1/login" }}",
+  	"title": "{{ getv "/ansyn/login/title" "AnSyn" }}",
   	"active":  {{ getv "/ansyn/login/active" "false" }},
   	"authorizedPath": "/"
   },

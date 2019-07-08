@@ -1,5 +1,5 @@
 import { Inject, Injectable, NgModuleRef } from '@angular/core';
-import { ImageryMapPosition } from '@ansyn/imagery';
+import { ImageryCommunicatorService, ImageryMapPosition } from '@ansyn/imagery';
 import {
 	LayoutKey,
 	MapActionTypes,
@@ -9,7 +9,7 @@ import {
 	SetLayoutAction,
 	SetMapPositionByRadiusAction,
 	SetMapPositionByRectAction,
-	ShadowMouseProducer
+	ShadowMouseProducer, ToggleFooter, ICoordinatesSystem
 } from '@ansyn/map-facade';
 import { Actions, ofType } from '@ngrx/effects';
 import { Dictionary } from '@ngrx/entity/src/models';
@@ -20,7 +20,6 @@ import { FeatureCollection, Point, Polygon } from 'geojson';
 import { cloneDeep } from 'lodash';
 import { Observable } from 'rxjs';
 import { map, tap, withLatestFrom } from 'rxjs/internal/operators';
-import { ICoordinatesSystem } from '../modules/core/models/coordinate-system.model';
 import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
 import { UpdateLayer } from '../modules/menu-items/layers-manager/actions/layers.actions';
 import { ILayer } from '../modules/menu-items/layers-manager/models/layers.model';
@@ -29,7 +28,7 @@ import {
 	selectLayersEntities
 } from '../modules/menu-items/layers-manager/reducers/layers.reducer';
 import { GoToAction, SetActiveCenter, ToolsActionsTypes } from '../modules/menu-items/tools/actions/tools.actions';
-import { ProjectionConverterService } from '../modules/menu-items/tools/services/projection-converter.service';
+import { ProjectionConverterService } from '@ansyn/map-facade';
 import {
 	DisplayOverlayAction,
 	LoadOverlaysSuccessAction,
@@ -100,6 +99,7 @@ export class AnsynApi {
 	constructor(public store: Store<any>,
 				protected actions$: Actions,
 				protected projectionConverterService: ProjectionConverterService,
+				protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected moduleRef: NgModuleRef<any>,
 				@Inject(ANSYN_ID) public id: string) {
 		this.init();
@@ -167,6 +167,15 @@ export class AnsynApi {
 		this.store.dispatch(new SetMapPositionByRectAction({ id: this.activeMapId, rect }));
 	}
 
+	/**
+	 * rotate the map by degree. if it is not geo registered image rotate the image.
+	 * @param degree
+	 * @param mapId
+	 */
+	setRotation(degree: number, mapId?: string) {
+		this.imageryCommunicatorService.provide(mapId ? mapId : this.activeMapId).setRotation(degree);
+	}
+
 	setMapPositionByRadius(center: Point, radiusInMeters: number, search: boolean = false) {
 		this.store.dispatch(new SetMapPositionByRadiusAction({ id: this.activeMapId, center, radiusInMeters }));
 		if (search) {
@@ -183,6 +192,10 @@ export class AnsynApi {
 
 	getOverlayData(mapId: string = this.activeMapId) {
 		return this.mapsEntities[mapId].data.overlay;
+	}
+
+	collapseFooter(collapse: boolean) {
+		this.store.dispatch( new ToggleFooter(collapse))
 	}
 
 	init(): void {

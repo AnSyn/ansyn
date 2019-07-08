@@ -188,6 +188,10 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	setRotation() {
+		this.ansynApi.setRotation(100);
+	}
+
 	setAnnotationsWithIcons() {
 		let center: Point = {
 			type: 'Point',
@@ -295,5 +299,54 @@ export class SandboxComponent implements OnInit, OnDestroy {
 
 	getOverlayData() {
 		console.log(this.ansynApi.getOverlayData());
+	}
+
+	footerCollapse(collapse) {
+		this.ansynApi.collapseFooter(JSON.parse(collapse));
+
+	}
+
+	undeletableAnnotations() {
+		this.ansynApi.setAnnotations({
+			"type": "FeatureCollection",
+			"features": [
+				{
+					"type": "Feature",
+					"geometry": {
+						"type": "Point",
+						"coordinates": [
+							-117.94590568490094,
+							33.816596031188965
+						]
+					},
+					"properties": {
+						"id": "efecb919-089e-d5e6-9ab3-3b3b73d9d9c8",
+						"style": {
+							"opacity": 1,
+							"initial": {
+								"fill": "#ff0080",
+								"stroke": "#ff80c0",
+								"stroke-width": 1,
+								"fill-opacity": 0.4,
+								"marker-size": "medium",
+								"marker-color": "#ff0080",
+								"label": {
+									"overflow": true,
+									"font": "27px Calibri,sans-serif",
+									"stroke": "#000",
+									"fill": "white"
+								},
+								"stroke-opacity": 1
+							}
+						},
+						"showMeasures": false,
+						"showLabel": false,
+						"label": "",
+						"mode": "Point",
+						"undeletable": true
+					}
+				}
+			]
+		})
 	}
 }

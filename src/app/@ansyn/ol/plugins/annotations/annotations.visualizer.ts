@@ -2,7 +2,7 @@ import { Inject } from '@angular/core';
 import {
 	getPointByGeometry,
 	ImageryVisualizer,
-	IVisualizerEntity,
+	IVisualizerEntity, IVisualizerStyle,
 	MarkerSize,
 	VisualizerInteractions,
 	VisualizerStates
@@ -100,14 +100,19 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
-		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => ({
-			featureJson: feature,
-			id: feature.properties.id,
-			style: feature.properties.style,
-			showMeasures: feature.properties.showMeasures,
-			label: feature.properties.label,
-			icon: feature.properties.icon
-		}));
+		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => {
+			const featureJson = { ...feature };
+			delete featureJson.properties.featureJson;
+			return {
+				featureJson,
+				id: feature.properties.id,
+				style: feature.properties.style,
+				showMeasures: feature.properties.showMeasures,
+				label: feature.properties.label,
+				icon: feature.properties.icon,
+				undeletable: feature.properties.undeletable
+			}
+		});
 	}
 
 	constructor(protected projectionService: OpenLayersProjectionService,
@@ -292,6 +297,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			showMeasures: false,
 			label: '',
 			icon: this.iconSrc,
+			undeletable: false,
 			mode
 		});
 		this.projectionService
@@ -355,12 +361,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	featureStyle(feature: olFeature, state: string = VisualizerStates.INITIAL) {
-		let styles: olStyle[] = [super.featureStyle(feature, state)];
+		let superStyle = super.featureStyle(feature, state);
+		let styles: olStyle[] = Array.isArray(superStyle) ? superStyle : [superStyle];
 		const entity = this.getEntity(feature);
 		if (entity && entity.showMeasures) {
 			styles.push(...this.getMeasuresAsStyles(feature));
 		}
-		if (entity && entity.icon ) {
+		if (entity && entity.icon) {
 			styles.push(this.getCenterIndicationStyle(feature))
 		}
 

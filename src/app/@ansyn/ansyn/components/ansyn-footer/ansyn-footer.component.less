@@ -23,7 +23,7 @@ div.status-timeline-container {
 	button.hide-menu {
 		position: absolute;
 		transform: translateY(calc(~'-100% - @{status-bar-height}'));
-		left: calc(~'50% - 0px');
+		left: calc(~'50% - 30px');
 		width: 60px;
 		background: #2e2d46;
 		border: none;
@@ -32,7 +32,7 @@ div.status-timeline-container {
 		outline: none;
 		visibility: visible;
 		transition: .5s;
-		z-index: @z-index-status-bar-navigation-area;
+		z-index: @z-index-hide-menu-button;
 
 		&:hover {
 			background-color: #27B2CF;

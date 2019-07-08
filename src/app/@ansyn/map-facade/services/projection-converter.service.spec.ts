@@ -1,8 +1,7 @@
 import { inject, TestBed } from '@angular/core/testing';
+import { mapFacadeConfig } from '../models/map-facade.config';
 
-import { ProjectionConverterService } from './projection-converter.service';
-import { toolsConfig } from '../models/tools-config';
-import { ICoordinatesSystem } from '../../../core/models/coordinate-system.model';
+import { ICoordinatesSystem, ProjectionConverterService } from './projection-converter.service';
 
 describe('ProjectionConverterService', () => {
 	let projectionConverterService: ProjectionConverterService;
@@ -16,7 +15,7 @@ describe('ProjectionConverterService', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [ProjectionConverterService, {
-				provide: toolsConfig, useValue: {
+				provide: mapFacadeConfig , useValue: {
 					Proj4: {
 						ed50: '+proj=utm +datum=ed50 +zone=${zone} +ellps=intl +units=m + no_defs',
 						ed50Customized: ''

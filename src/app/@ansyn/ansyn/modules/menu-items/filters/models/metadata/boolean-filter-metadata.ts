@@ -17,7 +17,7 @@ export interface IBooleanProperties {
 	false: IBooleanProperty;
 }
 
-export class BooleanFilterMetadata implements FilterMetadata {
+export class BooleanFilterMetadata extends FilterMetadata {
 	type: FilterType = FilterType.Boolean;
 	properties: IBooleanProperties = {
 		true: {
@@ -69,7 +69,8 @@ export class BooleanFilterMetadata implements FilterMetadata {
 		}
 	}
 
-	initializeFilter(overlays: IOverlay[], modelName: string, caseFilter: ICaseFilter<ICaseBooleanFilterMetadata>): void {
+	initializeFilter(overlays: IOverlay[], modelName: string, caseFilter: ICaseFilter<ICaseBooleanFilterMetadata>, visibility?: boolean): void {
+		super.initializeFilter(overlays, modelName, caseFilter, visibility);
 		this.properties.true.count = 0;
 		this.properties.true.value = true;
 		this.properties.false.value = true;
@@ -80,7 +81,9 @@ export class BooleanFilterMetadata implements FilterMetadata {
 		});
 		if (caseFilter) {
 			this.properties.false.value = caseFilter.metadata.displayFalse;
+			this.properties.false.disabled = caseFilter.metadata.isDisplayFalseDisabled;
 			this.properties.true.value = caseFilter.metadata.displayTrue;
+			this.properties.true.disabled = caseFilter.metadata.isDisplayTrueDisabled;
 		}
 	}
 
@@ -97,10 +100,15 @@ export class BooleanFilterMetadata implements FilterMetadata {
 		return false;
 	}
 
-	getMetadataForOuterState(): { displayTrue: boolean, displayFalse: boolean } {
+	getMetadataForOuterState(): ICaseBooleanFilterMetadata {
 		const displayTrue = this.properties.true.value;
 		const displayFalse = this.properties.false.value;
-		return { displayTrue, displayFalse };
+		return {
+			displayTrue,
+			isDisplayTrueDisabled: this.properties.true.disabled,
+			displayFalse,
+			isDisplayFalseDisabled: this.properties.false.disabled
+		};
 	}
 
 	isFiltered(): boolean {
@@ -117,7 +125,7 @@ export class BooleanFilterMetadata implements FilterMetadata {
 	}
 
 	shouldBeHidden(): boolean {
-		return false;
+		return !this.visible;
 	}
 
 }

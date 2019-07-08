@@ -1,37 +1,40 @@
-import OLMap from 'ol/Map';
-import View from 'ol/View';
-import ScaleLine from 'ol/control/ScaleLine';
-import Group from 'ol/layer/Group';
-import olGeoJSON from 'ol/format/GeoJSON';
-import OLGeoJSON from 'ol/format/GeoJSON';
-import Vector from 'ol/source/Vector';
-import Layer from 'ol/layer/Layer';
-import VectorLayer from 'ol/layer/Vector';
-import olFeature from 'ol/Feature';
-import olPolygon from 'ol/geom/Polygon';
-import AttributionControl from 'ol/control/Attribution';
-import * as turf from '@turf/turf';
-import { feature } from '@turf/turf';
+import { HttpClient } from '@angular/common/http';
+import { Inject } from '@angular/core';
 import {
 	areCoordinatesNumeric,
-	BaseImageryMap, ImageryMapExtent, ImageryMapExtentPolygon, ImageryMapPosition,
+	BaseImageryMap,
+	ExtentCalculator, ICanvasExportData,
 	IMAGERY_MAIN_LAYER_NAME,
 	ImageryLayerProperties,
 	ImageryMap,
-	IMapProgress,
-	ExtentCalculator
+	ImageryMapExtent,
+	ImageryMapExtentPolygon,
+	ImageryMapPosition,
+	IMapProgress
 } from '@ansyn/imagery';
-import { Observable, of, Subject, timer } from 'rxjs';
+import * as turf from '@turf/turf';
+import { feature } from '@turf/turf';
 import { Feature, FeatureCollection, GeoJsonObject, GeometryObject, Point as GeoPoint, Polygon } from 'geojson';
+import AttributionControl from 'ol/control/Attribution';
+import ScaleLine from 'ol/control/ScaleLine';
+import olFeature from 'ol/Feature';
+import olGeoJSON from 'ol/format/GeoJSON';
+import OLGeoJSON from 'ol/format/GeoJSON';
+import olPolygon from 'ol/geom/Polygon';
+import * as olInteraction from 'ol/interaction'
+import Group from 'ol/layer/Group';
+import Layer from 'ol/layer/Layer';
+import VectorLayer from 'ol/layer/Vector';
+import OLMap from 'ol/Map';
+import Vector from 'ol/source/Vector';
+import View from 'ol/View';
+import { Observable, of, Subject, timer } from 'rxjs';
+import { debounceTime, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { IOlConfig, OL_CONFIG } from '../../../config/ol-config';
+import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
+import { OpenLayersMonitor } from '../helpers/openlayers-monitor';
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
-import { Inject } from '@angular/core';
-import { debounceTime, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
-import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
-import { HttpClient } from '@angular/common/http';
-import { OpenLayersMonitor } from '../helpers/openlayers-monitor';
-import { IOlConfig, OL_CONFIG } from '../../../config/ol-config';
-import * as olInteraction from 'ol/interaction'
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -542,6 +545,24 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	getHtmlContainer(): HTMLElement {
 		return this.targetElement;
+	}
+
+	getExportData(): ICanvasExportData {
+		const c: HTMLCanvasElement = this.mapObject.getViewport().firstChild;
+		let exportData: ICanvasExportData = {
+			width: c.width,
+			height: c.height,
+			data: null
+		};
+		try {
+			exportData = {
+				width: c.width,
+				height: c.height,
+				data: c.toDataURL()
+			}
+		}catch (e) {
+		}
+		return exportData;
 	}
 
 	// BaseImageryMap End

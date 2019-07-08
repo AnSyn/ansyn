@@ -24,3 +24,14 @@
 <button (click)="setAnnotationsWithIcons()"> Set Annotations with icons</button>
 
 <button (click)="getOverlayData()">Get overlay data</button>
+
+<button (click)="setRotation()">Set rotation</button>
+
+<label>collapse footer
+<select (change)="footerCollapse($event.target.value)">
+	<option value="false" selected>false</option>
+	<option value="true">true</option>
+</select>
+</label>
+
+<button (click)="undeletableAnnotations()">Add undeletable annotation</button>

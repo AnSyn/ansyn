@@ -1,13 +1,14 @@
-@import "ansyn/less/common";
-@import "ansyn/less/z-index-globals";
+@import 'map-facade/less/map-facade';
 
 :host {
 	position: absolute;
-	left: 150px;
 	z-index: 1;
+	left: 0;
+	bottom: calc(@mouse-coordinate-height + @mouse-coordinate-bottom);
 	background-color: rgba(0, 0, 0, 0.3);
 	color: white;
 	padding: 4px;
+	box-sizing: border-box;
 
 	select {
 		// combo
@@ -18,4 +19,44 @@
 	}
 }
 
+div.imageries-container {
+	&.layout3 {
+		div.map-container-wrapper:first-child {
+			:host {
+				bottom: @mouse-coordinate-height;
+			}
+		}
+	}
 
+	&.layout4 {
+		div.map-container-wrapper:nth-child(2) {
+			:host {
+				bottom: @mouse-coordinate-height;
+			}
+		}
+	}
+
+	&.layout5 {
+		div.map-container-wrapper:first-child {
+			:host {
+				bottom: @mouse-coordinate-height;
+			}
+		}
+	}
+
+	&.layout6 {
+		div.map-container-wrapper {
+			&:nth-child(1), &:nth-child(2) {
+				:host {
+					bottom: @mouse-coordinate-height;
+				}
+			}
+		}
+	}
+}
+
+div.footer-collapsed{
+	:host{
+		bottom: calc(@mouse-coordinate-height + @mouse-coordinate-bottom-minimize);
+	}
+}

@@ -1,10 +1,68 @@
 @import "ansyn/less/z-index-globals";
 
+
 :host {
 	position: absolute;
-	z-index: @z-index-map-rotation;
-	left: 15px;
+	display: inline-block;
+	border-radius: 0;
+	background-color: rgba(0,0,0,.3);
+	z-index: @z-index-mouse-coordinate;
+	left: 0;
 	font-size: smaller;
 	text-align: center;
+	vertical-align: bottom;
 	user-select: none;
+
+	.mouse-coordinate{
+		padding: 0 15px;
+		min-width: 114px;
+		height: @mouse-coordinate-height;
+	}
+}
+
+
+div.imageries-container {
+	:host {
+		bottom: @mouse-coordinate-bottom;
+	}
+
+	&.layout3 {
+		div.map-container-wrapper:first-child {
+			:host {
+				bottom: @mouse-coordinate-bottom-minimize;
+			}
+		}
+	}
+
+	&.layout4 {
+		div.map-container-wrapper:nth-child(2) {
+			:host {
+				bottom: @mouse-coordinate-bottom-minimize;
+			}
+		}
+	}
+
+	&.layout5 {
+		div.map-container-wrapper:first-child {
+			:host {
+				bottom: @mouse-coordinate-bottom-minimize;
+			}
+		}
+	}
+
+	&.layout6 {
+		div.map-container-wrapper {
+			&:nth-child(1), &:nth-child(2) {
+				:host {
+					bottom: @mouse-coordinate-bottom-minimize;
+				}
+			}
+		}
+	}
+}
+
+div.footer-collapsed {
+	:host{
+		bottom: @mouse-coordinate-bottom-minimize;
+	}
 }

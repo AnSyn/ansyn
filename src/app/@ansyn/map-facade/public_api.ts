@@ -1,3 +1,5 @@
+export { IEd50Notification } from './models/map-config.model';
+
 export { IEntryComponent } from './directives/entry-component.directive';
 
 export {
@@ -12,7 +14,8 @@ export {
 	selectMaps,
 	selectLayout,
 	selectWasWelcomeNotificationShown,
-	selectToastMessage
+	selectToastMessage,
+	selectFooterCollapse
 } from './reducers/map.reducer';
 
 export {
@@ -44,7 +47,8 @@ export {
 	ToggleMapLayersAction,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
-	IPendingOverlay
+	IPendingOverlay,
+	ToggleFooter
 } from './actions/map.actions';
 
 export {
@@ -62,6 +66,7 @@ export {
 export { copyFromContent } from './utils/clipboard';
 export { getTimeFormat, getTimeDiff, getTimeDiffFormat  } from './utils/time';
 
+export { ProjectionConverterService, ICoordinatesSystem, IUtmZone } from './services/projection-converter.service';
 export { MapFacadeService } from './services/map-facade.service';
 export { IMapFacadeConfig } from './models/map-config.model';
 export { mapFacadeConfig } from './models/map-facade.config';

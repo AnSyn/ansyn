@@ -99,3 +99,7 @@
 .icon-context-menu-best:before { content: '\e95b'; } /* '' */
 .icon-remove-from-case:before { content: '\e978'; } /* '' */
 .icon-reset-timeline:before { content: '\e97a'; } /* '' */
+
+.icon-export-maps:before {
+	content: '\e92b'
+}

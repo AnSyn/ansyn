@@ -1,11 +1,17 @@
 <button
 	[disabled]="disabledRemove"
-	(click)="openModal.emit(SelectedModalEnum.remove)">
+	(click)="openModal.emit(SelectedModalEnum.remove)"
+	[attr.tooltip-value]="'Remove' | translate"
+	tooltip-class="bottom">
 	<i class="icon-delete"></i>
 </button>
-<button (click)="openModal.emit(SelectedModalEnum.download)">
+<button (click)="openModal.emit(SelectedModalEnum.download)"
+		[attr.tooltip-value]="'Export' | translate"
+		tooltip-class="bottom">
 	<i class="icon-layer-export"></i>
 </button>
-<button (click)="openModal.emit(SelectedModalEnum.edit)">
+<button (click)="openModal.emit(SelectedModalEnum.edit)"
+[attr.tooltip-value]="'Edit' | translate"
+tooltip-class="bottom">
 	<i class="icon-edit"></i>
 </button>

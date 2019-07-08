@@ -33,7 +33,7 @@ import {
 	SetActiveCenter, SetAnnotationMode,
 	SetAutoImageProcessing,
 	SetAutoImageProcessingSuccess,
-	SetMeasureDistanceToolState, SetPinLocationModeAction,
+	SetMeasureDistanceToolState, SetPinLocationModeAction, SetSubMenu,
 	ShowOverlaysFootprintAction
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
@@ -329,5 +329,15 @@ describe('ToolsAppEffects', () => {
 		});
 
 		expect(toolsAppEffects.clearActiveInteractions$).toBeObservable(expectedResult);
+	});
+
+	it('setSubMenu to null should call setPinLocationMode with false' , () => {
+		actions = hot('--a--', {
+			a: new SetSubMenu(null)
+		});
+		const expectdResult = cold('--b--', {
+			b: new SetPinLocationModeAction(false)
+		});
+		expect(toolsAppEffects.onCloseGoTo$).toBeObservable(expectdResult);
 	});
 });

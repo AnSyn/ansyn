@@ -108,7 +108,6 @@
 			*ngIf="timeSelectionEditIcon"
 			(ansynClickOutside)="toggleTimelineStartEndSearch($event)"
 			[trigger]="timePickerTrigger"
-
 			[startDatePickerValue]="(time)?.from"
 			[endDatePickerValue]="(time)?.to"
 			(closeComponent)="toggleTimelineStartEndSearch()"

@@ -5,7 +5,8 @@
     "@turf/turf",
     "lodash",
     "angular2-uuid",
-    "auto-subscriptions"
+    "auto-subscriptions",
+    "file-saver"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

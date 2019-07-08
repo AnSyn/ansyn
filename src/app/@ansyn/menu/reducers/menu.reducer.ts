@@ -59,7 +59,7 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 			setMenuSessionData({ isPinned: action.payload });
 			return { ...state, isPinned: action.payload, clickOutside: !action.payload };
 
-		case MenuActionTypes.SET_AUTO_CLODE:
+		case MenuActionTypes.SET_AUTO_CLOSE:
 			return { ...state, autoClose: action.payload };
 
 		default:
@@ -75,4 +75,3 @@ export const selectEntitiesMenuItems: MemoizedSelector<IMenuState, Dictionary<IM
 export const selectIsPinned = createSelector(menuStateSelector, (menu) => menu && menu.isPinned);
 export const selectAutoClose = createSelector(menuStateSelector, (menu) => menu.autoClose);
 export const selectSelectedMenuItem = createSelector(menuStateSelector, (menu) => menu.selectedMenuItem);
-

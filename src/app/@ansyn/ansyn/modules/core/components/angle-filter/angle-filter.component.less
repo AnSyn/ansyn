@@ -1,11 +1,13 @@
 @import 'ansyn/less/z-index-globals';
+@import 'ansyn/less/colors';
 
 @circle-diameter: 150px;
-@point-size: 20px;
+@point-size: 30px;
 @arrow-height: @circle-diameter / 2;
 @arrow-width: 10px;
 @background-color: rgba(205, 205, 205, 0.7);
-@border-color: rgb(41, 41, 41);
+@border-color: rgb(165, 165, 165);
+
 :host {
 	outline: none;
 	position: fixed;
@@ -27,14 +29,25 @@
 		transition: visibility 200ms;
 		display: flex;
 		flex-direction: column;
-		i.point {
+		p.point {
+			width: @point-size;
+			height: @point-size;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			margin: 0;
 			position: absolute;
-			top: calc((@circle-diameter / 2) - (@point-size / 2));
-			left: calc((@circle-diameter / 2) - (@point-size / 2));
-			font-size: 20px;
+			top: calc(50% - @point-size);
+			left: calc(50% - (@point-size / 2));
 			background: white;
-			color: black;
+			-webkit-border-radius: 100%;
+			-moz-border-radius: 100%;
+			border-radius: 100%;
 			z-index: 5;
+			i {
+				color: black;
+				font-size: @point-size - 10;
+			}
 		}
 		div.circle {
 			display: flex;
@@ -44,7 +57,7 @@
 			-moz-border-radius: 100%;
 			border-radius: 100%;
 			background-color: @background-color;
-			border-color: @border-color;
+			border: 1px solid @border-color;
 
 			div.arrows {
 				position: absolute;
@@ -71,13 +84,13 @@
 						top: 1px;
 						bottom: 0;
 						width: 1px;
-						background: deeppink;
+						background: @overlays-dots-color;
 						zoom: 2;
 
 					}
 
 					&.active:before {
-						background: purple;
+						background: @overlays-dots-color-hover;
 					}
 
 					&:after {
@@ -90,7 +103,7 @@
 						width: 57%;
 						height: 0;
 						padding-bottom: 57%;
-						border-color:  deeppink;
+						border-color:  @overlays-dots-color;
 						border-width: 1px 0 0 1px;
 						border-style: solid;
 						transform: translate(0, 0) rotate(45deg);
@@ -100,7 +113,7 @@
 						//background: rgba(0,255,0,.5);
 					}
 					&.active:after {
-						border-color: purple;
+						border-color: @overlays-dots-color-hover;
 					}
 				}
 			}
@@ -113,12 +126,14 @@
 				transform: rotate(180deg);
 			}
 			button {
+				width: 25px;
+				height: 25px;
 				border:1px solid @border-color;
 				background-color: @background-color;
 				margin:5px;
 				padding: 2.5px;
 				i{
-					color: deeppink;
+					color: @overlays-dots-color;
 				}
 			}
 		}

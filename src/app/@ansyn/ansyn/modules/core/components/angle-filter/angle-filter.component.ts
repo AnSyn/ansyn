@@ -109,7 +109,8 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 	}
 
 	showOverlay(event: MouseEvent, overlay: any) {
-		event.stopPropagation();
+		this.hide();
+		this.overlay = overlay;
 		this.store$.dispatch(new DisplayOverlayAction({ overlay: overlay, mapId: this.mapId }));
 	}
 

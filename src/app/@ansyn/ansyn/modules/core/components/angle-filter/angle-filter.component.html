@@ -1,8 +1,9 @@
 <div class="angle-filter">
-	<p class="point">
-	<i class="icon-map-Point"></i>
-	</p>
+
 	<div class="circle">
+		<p class="point">
+			<i class="icon-map-Point"></i>
+		</p>
 		<div class="arrows">
 		<span class="arrow" *ngFor="let angle of angles"
 			  (mousedown)="showOverlay($event, angle.overlay)"

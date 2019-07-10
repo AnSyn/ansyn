@@ -2,21 +2,25 @@
 @import 'ansyn/less/colors';
 
 @circle-diameter: 150px;
-@point-size: 30px;
-@arrow-height: @circle-diameter / 2;
-@arrow-width: 10px;
+@point-size: 25px;
+@arrow-height: 70px;
+@arrow-width: 5px;
 @background-color: rgba(205, 205, 205, 0.7);
 @border-color: rgb(165, 165, 165);
 
 :host {
-	outline: none;
 	position: fixed;
 	transform: translate(-@circle-diameter / 2, -@circle-diameter / 2);
 	z-index: @z-index-context-menu;
+	*{
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+	}
 	&:focus {
 		div.angle-filter{
 			visibility: visible;
-
+			transition: visibility 200ms;
 			div.circle{
 				width: @circle-diameter;
 				height: @circle-diameter;
@@ -29,26 +33,7 @@
 		transition: visibility 200ms;
 		display: flex;
 		flex-direction: column;
-		p.point {
-			width: @point-size;
-			height: @point-size;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			margin: 0;
-			position: absolute;
-			top: calc(50% - @point-size);
-			left: calc(50% - (@point-size / 2));
-			background: white;
-			-webkit-border-radius: 100%;
-			-moz-border-radius: 100%;
-			border-radius: 100%;
-			z-index: 5;
-			i {
-				color: black;
-				font-size: @point-size - 10;
-			}
-		}
+
 		div.circle {
 			display: flex;
 			width: 0;
@@ -58,16 +43,36 @@
 			border-radius: 100%;
 			background-color: @background-color;
 			border: 1px solid @border-color;
-
-			div.arrows {
+			p.point {
+				width: @point-size;
+				height: @point-size;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				margin: 0;
 				position: absolute;
+				top: 62px;
+				left: 62px;
+				background: white;
+				-webkit-border-radius: 100%;
+				-moz-border-radius: 100%;
+				border-radius: 100%;
+				z-index: 5;
+				i {
+					color: black;
+					font-size: @point-size - 10;
+				}
+			}
+			div.arrows {
+				position: relative;
 				top: 0;
+				width: 100%;
+				height: 100%;
 
 				span.arrow {
 					position: absolute;
-					top: calc( (@circle-diameter /2 ) - (@arrow-height));
-					left: calc( (@circle-diameter /2 ) - (@arrow-width / 2));
-					transition: visibility 100ms;
+					left: calc(50% - 2px);
+					top: 3px;
 					transform-origin: bottom;
 					display: inline-block;
 					width: @arrow-width;

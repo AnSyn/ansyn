@@ -41,7 +41,7 @@ export class OpenLayersStaticImageSourceProvider extends OpenLayersMapSourceProv
 
 		const source = new Static({
 			url: metaData.data.overlay.imageUrl,
-			crossOrigin: null,
+			crossOrigin: 'Anonymous',
 			imageExtent: extent,
 			projection
 		});

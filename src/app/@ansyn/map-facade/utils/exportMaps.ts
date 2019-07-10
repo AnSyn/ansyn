@@ -67,15 +67,7 @@ function putImagesOnCanvas(ctx: CanvasRenderingContext2D, maps: ICanvasExportDat
 					drawImage(event.target, index, all);
 					loaded++;
 					if (loaded === total) {
-						if (ctx.canvas.toBlob) {
-							ctx.canvas.toBlob(blob => {
-								obs.next(blob);
-								obs.complete()
-							});
-						} else {
-							obs.next(createBlobFromDataURL(ctx.canvas.toDataURL()));
-							obs.complete();
-						}
+						done();
 					}
 
 					img.onload = null;
@@ -84,8 +76,23 @@ function putImagesOnCanvas(ctx: CanvasRenderingContext2D, maps: ICanvasExportDat
 			} else {
 				drawImage(map, index, all);
 				loaded++;
+				if (loaded === total) {
+					done();
+				}
 			}
 		});
+
+		function done() {
+			if (ctx.canvas.toBlob) {
+				ctx.canvas.toBlob(blob => {
+					obs.next(blob);
+					obs.complete()
+				});
+			} else {
+				obs.next(createBlobFromDataURL(ctx.canvas.toDataURL('image/jpeg', 1.0)));
+				obs.complete();
+			}
+		}
 	});
 
 	function drawImage(img, index, allMaps) {

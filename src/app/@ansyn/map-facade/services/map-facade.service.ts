@@ -100,7 +100,7 @@ export class MapFacadeService {
 				});
 				return mapsToPng(_maps, this.layout)
 			}),
-			tap(blob => saveAs(blob, 'map.png'))
+			tap(blob => saveAs(blob, 'map.jpeg'))
 		).subscribe();
 	}
 }

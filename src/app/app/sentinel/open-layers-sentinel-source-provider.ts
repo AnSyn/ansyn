@@ -49,6 +49,7 @@ export class OpenLayersSentinelSourceProvider extends OpenLayersMapSourceProvide
 				const bbox = turf.bbox(turf.feature(footprint));
 				const { date } = metaData.data.overlay;
 				const source = new TileWMS({
+					crossOrigin: 'Anonymous',
 					url: baseUrl,
 					params: {
 						LAYERS: sentinelLayer[metaData.id] ? sentinelLayer[metaData.id] : sentinelLayer.defaultLayer,

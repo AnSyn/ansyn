@@ -558,7 +558,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			exportData = {
 				width: c.width,
 				height: c.height,
-				data: c.toDataURL()
+				data: c.toDataURL('image/jpeg', 1.0)
 			}
 		}catch (e) {
 		}

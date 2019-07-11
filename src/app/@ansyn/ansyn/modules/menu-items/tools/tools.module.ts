@@ -8,7 +8,7 @@ import { AnnotationsControlComponent } from './components/annotations-control/an
 import { StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from './reducers/tools.reducer';
 import { ImageProcessingControlComponent } from './components/image-processing-control/image-processing-control.component';
-import { ProjectionConverterService } from './services/projection-converter.service';
+import { ProjectionConverterService } from '@ansyn/map-facade';
 import { IToolsConfig, toolsConfig } from './models/tools-config';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { AnnotationsContextMenuModule } from '@ansyn/ol';

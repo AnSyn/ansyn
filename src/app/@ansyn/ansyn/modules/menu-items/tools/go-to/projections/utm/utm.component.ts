@@ -8,8 +8,7 @@ import {
 	Validator
 } from '@angular/forms';
 import { isEqual as _isEqual } from 'lodash';
-import { ProjectionConverterService } from '../../../services/projection-converter.service';
-import { IEd50Notification } from '../../../models/tools-config';
+import { IEd50Notification, ProjectionConverterService } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-utm',

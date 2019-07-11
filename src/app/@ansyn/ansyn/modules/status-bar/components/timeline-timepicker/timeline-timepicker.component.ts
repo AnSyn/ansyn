@@ -1,5 +1,7 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, OnDestroy, Output, ViewChild } from '@angular/core';
 import { ICaseTimeState } from '../../../menu-items/cases/models/case.model';
+import { combineLatest, fromEvent } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 declare function require(name: string);
 
@@ -14,7 +16,7 @@ const flatpickr = require('flatpickr');
 	styleUrls: ['./timeline-timepicker.component.less']
 })
 
-export class TimelineTimepickerComponent implements OnInit {
+export class TimelineTimepickerComponent implements OnInit, OnDestroy {
 
 	private _startDatePickerValue = new Date(new Date().getTime() - 3600000 * 24 * 365);
 	private _endDatePickerValue = new Date();
@@ -75,8 +77,22 @@ export class TimelineTimepickerComponent implements OnInit {
 		});
 
 		this.startDatePickerInstance.setDate(this.startDatePickerValue, false);
+		this.startDatePickerInstance.currentYearElement.onmousewheel = (function(event) {
+			const delta = event.wheelDelta / Math.abs(event.wheelDelta);
+			const year = event.target.valueAsNumber + delta;
+			setTimeout(() => this.startDatePickerInstance.changeYear(year), 100);
+		}).bind(this);
+		this.endDatePickerInstance.currentYearElement.onmousewheel = (function(event) {
+			const delta = event.wheelDelta / Math.abs(event.wheelDelta);
+			const year = event.target.valueAsNumber + delta;
+			setTimeout(() => this.endDatePickerInstance.changeYear(year), 100);
+		}).bind(this);
 	}
 
+	ngOnDestroy(): void {
+		this.endDatePickerInstance.destroy();
+		this.startDatePickerInstance.destroy();
+	}
 
 	selectedDateChanged(date: Date[], dateString: string, instance: any) {
 		this.error = '';
@@ -92,7 +108,7 @@ export class TimelineTimepickerComponent implements OnInit {
 	}
 
 	isValidDate(date): boolean {
-		if (Object.prototype.toString.call(date) === "[object Date]") {
+		if (Object.prototype.toString.call(date) === '[object Date]') {
 			// it is a date
 			if (isNaN(date.getTime())) {  // d.valueOf() could also work
 				// date is not valid

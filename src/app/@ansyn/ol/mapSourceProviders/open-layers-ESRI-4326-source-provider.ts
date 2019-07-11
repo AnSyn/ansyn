@@ -28,6 +28,7 @@ export class OpenLayerESRI4326SourceProvider extends OpenLayersMapSourceProvider
 			maxZoom: config.maxZoom,
 			projection: config.projection,
 			tileSize: config.tileSize,
+			crossOrigin: 'Anonymous',
 			tileUrlFunction: function (tileCoord) {
 				return config.baseUrl
 					.replace('{z}', (tileCoord[0] - 1).toString())

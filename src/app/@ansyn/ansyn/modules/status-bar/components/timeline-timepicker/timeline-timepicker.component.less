@@ -68,21 +68,36 @@
 }
 
 div.control-buttons {
+	button {
+		background: transparent;
+		border: none;
+		color: @overlays-dots-color;
+		&:disabled {
+			cursor: default;
+			pointer-events: none;
+			opacity: .6;
+		}
+	}
 	margin-top: 10px;
 	display: flex;
 	justify-content: space-between;
 	color: @overlays-dots-color;
-	a {
-		cursor: pointer;
-		&:hover {
-			font-weight: bold;
-		}
-		&:first-child {
-			width: 42px;
-		}
-		&:last-child {
-			margin: 0 9px;
-			width: 17px;
+	button {
+		a {
+			cursor: pointer;
+
+			&:hover {
+				font-weight: bold;
+			}
+
+			&:first-child {
+				width: 42px;
+			}
+
+			&:last-child {
+				margin: 0 9px;
+				width: 17px;
+			}
 		}
 	}
 	.error {

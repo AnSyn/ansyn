@@ -1,11 +1,3 @@
-	<button class="small-icon-button set-favorite" *ngIf="overlay "
-			[class.active2]="isFavorite"
-			(click)="toggleFavorite()"
-			[attr.tooltip-value]="favoritesButtonText | translate"
-			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
-		<i class="icon icon-favorites"></i>
-	</button>
-
 	<button class="small-icon-button set-preset" *ngIf="overlay "
 			[class.active2]="isPreset"
 			(click)="togglePreset()"
@@ -21,4 +13,10 @@
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
 		<i class="icon" [ngClass]="isRemoved ? 'icon-restore-overlay' : 'icon-remove-overlay'"></i>
 	</button>
-
+	<button class="small-icon-button set-favorite" *ngIf="overlay"
+			(click)="toggleFavorite()"
+			[attr.tooltip-value]="favoritesButtonText | translate"
+			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
+		<i class="icon" [class.icon-favorites]="!isFavorite"
+		   [class.icon-favorites-active]="isFavorite"></i>
+	</button>

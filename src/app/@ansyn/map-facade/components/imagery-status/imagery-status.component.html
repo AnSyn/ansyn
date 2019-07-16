@@ -30,7 +30,7 @@
 			(click)="toggleMapLayers()"
 			[attr.tooltip-value]="'Show/ Hide layers' | translate"
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
-		<i [class.icon-main-data-layers]="displayLayers"
+		<i [class.icon-layers-show]="displayLayers"
 		   [class.icon-layers-hide]="!displayLayers"></i>
 	</button>
 
@@ -55,6 +55,7 @@
 	</div>
 </div>
 
+<div class="notifications">
 <ng-container
 	*ngFor="let component of entryComponents.status">
 	<ng-container
@@ -62,3 +63,4 @@
 		[ansynEntryComponent]="{ component: component , mapId: mapId }">
 	</ng-container>
 </ng-container>
+</div>

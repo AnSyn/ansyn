@@ -6,7 +6,7 @@
 			#trigger
 			class="combo-box-width"
 			(click)="toggleDataInputFilterIcon()"
-			icon="icon-status-bar-input-data"
+			icon="icon-input_filter"
 			[isActive]="dataInputFilterExpand"
 			[attr.tooltip-value]="toolTips.dataInputFilter | translate"
 			tooltip-class="top">
@@ -58,14 +58,14 @@
 		</ansyn-combo-box>
 
 		<div class="buttons" [class.active]="geoFilterStatus.searchMode !== SearchModeEnum.none">
-			<button (click)="toggleIndicatorView()"
+			<!--<button (click)="toggleIndicatorView()"
 					[disabled]="geoFilterStatus.searchMode !== SearchModeEnum.none"
 					[attr.tooltip-value]="toolTips.geoFilterShow | translate"
 					tooltip-class="top right"
 					class="eye-button toggle-icon"
 					[class.active2]="geoFilterStatus.indicator">
 				<i class="icon-status-bar-show-pin-point"></i>
-			</button>
+			</button>-->
 			<button
 				(click)="toggleMapSearch()"
 				[attr.tooltip-value]="toolTips.geoFilterEdit | translate"

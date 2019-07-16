@@ -12,6 +12,7 @@
 		position: relative;
 		display: flex;
 		height: 100%;
+		border-left: 1px solid @background-color-11;
 		span {
 			margin-left: 5px;
 			line-height: 23px;
@@ -21,22 +22,18 @@
 		}
 
 		.icon-status-bar-imagery-count {
-			font-size: 16px;
+			font-size: 20px;
 		}
 	}
 
 	.combo-boxes {
 		display: flex;
 		padding: 0 10px;
-		justify-content: space-between;
 		flex: 1;
 		height: 100%;
 		position: relative;
 
 		.combo-box-container {
-			.combo-box-width {
-				width: 140px;
-			}
 			&.with-buttons {
 				/deep/ button[ansynComboBoxTrigger] {
 					padding-right: 14px;

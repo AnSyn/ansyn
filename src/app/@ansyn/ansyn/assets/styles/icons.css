@@ -21,7 +21,7 @@
 .icon-input_filter:before { content: '\e814'; } /* '' */
 .icon-layers-hide:before { content: '\e815'; } /* '' */
 .icon-layers-show:before { content: '\e816'; } /* '' */
-.icon-link:before { content: '\e818'; } /* '' */
+.icon-status-bar-share-link:before { content: '\e818'; } /* '' */
 .icon-main-cases:before { content: '\e819'; } /* '' */
 .icon-main-data-layers:before { content: '\e81a'; } /* '' */
 .icon-main-filters:before { content: '\e81b'; } /* '' */
@@ -55,7 +55,7 @@
 .icon-upload-button:before { content: '\e837'; } /* '' */
 .icon-remove-overlay-copy:before { content: '\e838'; } /* '' */
 .icon-export-maps:before { content: '\e839'; } /* '' */
-.icon-map-point:before { content: '\e83a'; } /* '' */
+.icon-map-Point:before { content: '\e83a'; } /* '' */
 .icon-context-menu-first:before { content: '\e83b'; } /* '' */
 .icon-context-menu-angle:before { content: '\e83c'; } /* '' */
 .icon-context-menu-prev:before { content: '\e83d'; } /* '' */
@@ -63,7 +63,7 @@
 .icon-context-menu-next:before { content: '\e83f'; } /* '' */
 .icon-context-menu-last:before { content: '\e840'; } /* '' */
 .icon-status-bar-orientation:before { content: '\e90d'; } /* '' */
-.icon-map-polygon:before { content: '\e90f'; } /* '' */
+.icon-map-Polygon:before { content: '\e90f'; } /* '' */
 .icon-drop-off:before { content: '\e91c'; } /* '' */
 .icon-status-bar-expand:before { content: '\e91d'; } /* '' */
 .icon-drop-on:before { content: '\e91e'; } /* '' */

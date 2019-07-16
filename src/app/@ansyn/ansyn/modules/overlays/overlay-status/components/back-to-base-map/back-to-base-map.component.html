@@ -1,7 +1,9 @@
+<div class="back-to-world-view">
 <button (click)="backToWorldView()" *ngIf="overlay "
-		class="small-icon-button back-to-world-view"
+		class="small-icon-button"
 		[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'"
 		[attr.tooltip-value]="'Back to base map' | translate">
-	<i class="icon-context-menu-prev"></i>
+	<i class="icon-back-to-base-map"></i>
 	{{'Back to base map' | translate}}
 </button>
+</div>

@@ -31,7 +31,7 @@ export class EnumFilterMetadata extends FilterMetadata {
 
 	accumulateData(value: string): void {
 		if (!this.enumsFields.get(value)) {
-			this.enumsFields.set(value, { count: 1, filteredCount: 0, isChecked: true, key: value });
+			this.enumsFields.set(value, {count: 1, filteredCount: 0, isChecked: true, key: value});
 		} else {
 			this.enumsFields.get(value).count = this.enumsFields.get(value).count + 1;
 		}
@@ -56,16 +56,12 @@ export class EnumFilterMetadata extends FilterMetadata {
 		});
 
 		if (caseFilter) {
+				caseFilter.metadata = Array.isArray(caseFilter.metadata) ? {unCheckedEnums: caseFilter.metadata, disabledEnums: []} : caseFilter.metadata; // hack for old contexts:
 			if (caseFilter.positive) {
 				this.enumsFields.forEach((enumsField: IEnumFiled) => {
 					enumsField.isChecked = caseFilter.metadata.unCheckedEnums.includes(enumsField.key);
 				});
 			} else {
-				// hack for old cases:
-				if (Array.isArray(caseFilter.metadata)) {
-					caseFilter.metadata = { unCheckedEnums: caseFilter.metadata, disabledEnums: [] };
-				}
-
 				caseFilter.metadata.unCheckedEnums
 					.map(key => this.enumsFields.get(key))
 					.filter(Boolean)
@@ -89,7 +85,7 @@ export class EnumFilterMetadata extends FilterMetadata {
 			return false;
 		}
 		const selectedFields: string[] = [];
-		this.enumsFields.forEach(({ isChecked }: IEnumFiled, key: string) => {
+		this.enumsFields.forEach(({isChecked}: IEnumFiled, key: string) => {
 			if (isChecked) {
 				selectedFields.push(key);
 			}

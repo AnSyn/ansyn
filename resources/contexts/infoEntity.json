@@ -8,18 +8,24 @@
 		"facets": {
 			"filters": [
 				{
-					"metadata": [
-						"Landsat8",
-						"Sentinel-2A",
-						"Sentinel-2B"
-					],
+					"metadata": {
+            "unCheckedEnums": [
+              "Landsat8",
+              "Sentinel-2A",
+              "Sentinel-2B"
+            ],
+            "disabledEnums": []
+          },
 					"fieldName": "sensorName"
 				},
 				{
-					"metadata": [
-						"Landsat8L1G",
-						"Sentinel2L1C"
-					],
+					"metadata": {
+            "unCheckedEnums": [
+              "Landsat8L1G",
+              "Sentinel2L1C"
+            ],
+            "disabledEnums": []
+          },
 					"fieldName": "sensorType"
 				}
 			]

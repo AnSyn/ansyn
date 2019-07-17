@@ -9,7 +9,7 @@ export class ImageryZoomerService {
 	constructor(protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 
-	getMap(mapId: string): BaseImageryMap{
+	getMap(mapId: string): BaseImageryMap {
 		return this.imageryCommunicatorService.provide(mapId).ActiveMap
 	}
 

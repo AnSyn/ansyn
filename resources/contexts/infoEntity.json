@@ -16,10 +16,13 @@
 					"fieldName": "sensorName"
 				},
 				{
-					"metadata": [
-						"Landsat8L1G",
-						"Sentinel2L1C"
-					],
+					"metadata": {
+            "unCheckedEnums": [
+              "Landsat8L1G",
+              "Sentinel2L1C"
+            ],
+            "disabledEnums": []
+          },
 					"fieldName": "sensorType"
 				}
 			]

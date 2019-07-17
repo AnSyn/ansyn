@@ -56,7 +56,7 @@ export class EnumFilterMetadata extends FilterMetadata {
 		});
 
 		if (caseFilter) {
-				caseFilter.metadata = Array.isArray(caseFilter.metadata) ? {unCheckedEnums: caseFilter.metadata, disabledEnums: []} : caseFilter.metadata; // hack for old cases and contexts:
+				caseFilter.metadata = Array.isArray(caseFilter.metadata) ? {unCheckedEnums: caseFilter.metadata, disabledEnums: []} : caseFilter.metadata; // hack for old contexts:
 			if (caseFilter.positive) {
 				this.enumsFields.forEach((enumsField: IEnumFiled) => {
 					enumsField.isChecked = caseFilter.metadata.unCheckedEnums.includes(enumsField.key);

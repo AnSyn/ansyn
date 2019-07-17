@@ -18,9 +18,12 @@
 		color: white;
 		padding: 4px;
 
+		&:hover:not(:disabled) {
+			background: rgba(0, 0, 0, 0.5);
+		}
 		button {
 			position: relative;
-			padding: 4px 6px;
+			padding: 4px 5px;
 			vertical-align: middle;
 			color: white;
 			line-height: 0;
@@ -30,15 +33,11 @@
 				background: transparent;
 				border: none;
 				outline: none;
-				padding: 4px 7px;
+				padding: 4px 6px;
 				align-items: center;
 
 				z-index: 1;
 				height: 25px;
-				&:hover:not(:disabled) {
-					background: rgba(0, 0, 0, 0.5);
-				}
-
 				&:disabled {
 					opacity: .6;
 				}

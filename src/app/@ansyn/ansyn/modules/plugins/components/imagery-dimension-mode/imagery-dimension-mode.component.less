@@ -17,6 +17,9 @@
 		line-height: 0;
 		left: 5px;
 		top: 6px;
+		&:hover:not(:disabled) {
+			background: rgba(0, 0, 0, 0.5);
+		}
 
 		button {
 			position: relative;
@@ -34,9 +37,7 @@
 				align-items: center;
 				z-index: 1;
 				height: 25px;
-				&:hover:not(:disabled) {
-					background: rgba(0, 0, 0, 0.5);
-				}
+
 
 				&:disabled {
 					opacity: .6;

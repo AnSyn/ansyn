@@ -1,4 +1,4 @@
-import { Inject, Injectable, NgModuleRef } from '@angular/core';
+import { EventEmitter, Inject, Injectable, NgModuleRef } from '@angular/core';
 import { ImageryCommunicatorService, ImageryMapPosition } from '@ansyn/imagery';
 import {
 	LayoutKey,
@@ -44,11 +44,12 @@ import { ANSYN_ID } from './ansyn-id.provider';
 	init: 'init',
 	destroy: 'destroy'
 })
-export class AnsynApi {
+export class AnsynApi{
 	activeMapId;
 	mapsList: ICaseMapState[];
 	mapsEntities;
 	activeAnnotationLayer;
+	status = new EventEmitter<{mapId: string; status: string}>(true);
 
 	@AutoSubscription
 	activateMap$: Observable<string> = this.store.select(selectActiveMapId).pipe(
@@ -77,6 +78,11 @@ export class AnsynApi {
 				this.activeAnnotationLayer = activeAnnotationLayer;
 			})
 		);
+
+	@AutoSubscription
+	ready$ = this.imageryCommunicatorService.instanceCreated.subscribe((map) => {
+		this.status.emit({mapId: map.id, status: 'ready'});
+	});
 
 	onShadowMouseProduce$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.SHADOW_MOUSE_PRODUCER),

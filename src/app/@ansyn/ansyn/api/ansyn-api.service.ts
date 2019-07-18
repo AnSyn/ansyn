@@ -19,7 +19,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { FeatureCollection, Point, Polygon } from 'geojson';
 import { cloneDeep } from 'lodash';
 import { Observable } from 'rxjs';
-import { map, tap, withLatestFrom } from 'rxjs/internal/operators';
+import { map, tap, withLatestFrom, take } from 'rxjs/internal/operators';
 import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
 import { UpdateLayer } from '../modules/menu-items/layers-manager/actions/layers.actions';
 import { ILayer } from '../modules/menu-items/layers-manager/models/layers.model';
@@ -80,9 +80,10 @@ export class AnsynApi{
 		);
 
 	@AutoSubscription
-	ready$ = this.imageryCommunicatorService.instanceCreated.subscribe((map) => {
-		this.status.emit({mapId: map.id, status: 'ready'});
-	});
+	ready$ = this.imageryCommunicatorService.instanceCreated.pipe(
+		take(1),
+		tap((map) => this.status.emit({mapId: map.id, status: 'ready'}))
+	);
 
 	onShadowMouseProduce$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.SHADOW_MOUSE_PRODUCER),
@@ -102,7 +103,7 @@ export class AnsynApi{
 		})
 	);
 
-	constructor(public store: Store<any>,
+	constructor(private store: Store<any>,
 				protected actions$: Actions,
 				protected projectionConverterService: ProjectionConverterService,
 				protected imageryCommunicatorService: ImageryCommunicatorService,

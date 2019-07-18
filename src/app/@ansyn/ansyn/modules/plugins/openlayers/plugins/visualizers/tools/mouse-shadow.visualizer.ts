@@ -12,10 +12,12 @@ import { selectToolFlag, toolsFlags } from '../../../../../menu-items/tools/redu
 import { AutoSubscription } from 'auto-subscriptions';
 import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
 import { filter, map, mergeMap, take, tap } from 'rxjs/operators';
+import { Inject } from '@angular/core';
+import { IToolsConfig, toolsConfig } from '../../../../../menu-items/tools/models/tools-config';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Actions, Store, OpenLayersProjectionService]
+	deps: [Actions, Store, OpenLayersProjectionService, toolsConfig]
 })
 export class MouseShadowVisualizer extends EntitiesVisualizer {
 	_iconSrc: Style;
@@ -32,6 +34,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 	onEnterMap$ = this.actions$
 		.pipe(ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_ENTER));
 
+	isAlwaysSendosition$ = of(this.toolsConfigData && this.toolsConfigData.ShadowMouse.alwaysSendPosition);
 	@AutoSubscription
 	onLeaveMap$ = this.actions$
 		.pipe(
@@ -42,10 +45,10 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 			}));
 
 	@AutoSubscription
-	createShadowMouseProducer$ = combineLatest(this.isActive$, this.shadowMouseFlag$, this.onEnterMap$)
-		.pipe(tap(([isActive, shadowMouseFlag]) => {
+	createShadowMouseProducer$ = combineLatest(this.isActive$, this.shadowMouseFlag$, this.isAlwaysSendosition$, this.onEnterMap$)
+		.pipe(tap(([isActive, shadowMouseFlag, alwaysSendPosition ]) => {
 			this.clearEntities();
-			if (isActive && shadowMouseFlag) {
+			if ((isActive && shadowMouseFlag) || alwaysSendPosition) {
 				this.iMap.mapObject.on('pointermove', this.onPointerMove, this);
 			} else {
 				this.iMap.mapObject.un('pointermove', this.onPointerMove, this);
@@ -63,7 +66,10 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 	);
 
 
-	constructor(protected actions$: Actions, protected store$: Store<any>, protected projectionService: OpenLayersProjectionService) {
+	constructor(protected actions$: Actions,
+				protected store$: Store<any>,
+				protected projectionService: OpenLayersProjectionService,
+				@Inject(toolsConfig) public toolsConfigData: IToolsConfig) {
 		super();
 
 		this._iconSrc = new Style({

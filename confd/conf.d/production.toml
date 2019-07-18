@@ -27,5 +27,6 @@ keys = [
 	"/ansyn/overlay/sentinel/inactive",
 	"/ansyn/iscollapsible",
 	"/ansyn/floation/position/suffix",
-	"/ansyn/is/shadow/active"
+	"/ansyn/is/shadow/active",
+	"/ansyn/always/send/position"
 ]

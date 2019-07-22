@@ -37,6 +37,7 @@ import { OverlaysModule } from './modules/overlays/overlays.module';
 import { AnsynPluginsModule } from './modules/plugins/ansyn-plugins.module';
 import { StatusBarModule } from './modules/status-bar/status-bar.module';
 import { TranslateService } from '@ngx-translate/core';
+import { ImageryZoomerComponent } from "./modules/plugins/components/imagery-zoomer/imagery-zoomer.component";
 
 @NgModule({
 	imports: [
@@ -62,7 +63,7 @@ import { TranslateService } from '@ngx-translate/core';
 		AppEffectsModule,
 		MapFacadeModule.provide({
 			entryComponents: {
-				container: [AnnotationContextMenuComponent, AngleFilterComponent],
+				container: [AnnotationContextMenuComponent,AngleFilterComponent, ImageryZoomerComponent],
 				status: []
 			}
 		}),
@@ -83,13 +84,14 @@ import { TranslateService } from '@ngx-translate/core';
 		{ provide: UrlSerializer, useClass: DefaultUrlSerializer }
 	],
 	entryComponents: [
-		OverlayOutOfBoundsComponent
+		OverlayOutOfBoundsComponent, ImageryZoomerComponent
 	],
 	declarations: [
 		AnsynComponent,
 		OverlayOutOfBoundsComponent,
 		UnsupportedDevicesComponent,
-		AnsynFooterComponent
+		AnsynFooterComponent,
+		ImageryZoomerComponent
 	],
 	exports: [AnsynComponent, UnsupportedDevicesComponent]
 })

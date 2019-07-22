@@ -73,6 +73,10 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract getRotation(): number;
 
+	abstract getResolution(): number;
+
+	abstract setResolution(resolution: number): void;
+
 	abstract getPosition(): Observable<ImageryMapPosition>;
 
 	abstract updateSize(): void;

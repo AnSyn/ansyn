@@ -4,26 +4,26 @@
 :host  {
 	position: absolute;
 	right: 40px;
-	top: 120px;
+	top: 160px;
 	z-index: 1;
-	background-color: rgba(0, 0, 0, 0.3);
-	color: white;
 
-	.show {
-		padding: 4px;
-	}
 
 	.buttons {
 		line-height: 0;
 		left: 5px;
 		top: 6px;
+		text-align: center;
+		margin-bottom: 5px;
+		background-color: rgba(0, 0, 0, 0.3);
+		color: white;
+		padding: 4px;
+
 		&:hover:not(:disabled) {
 			background: rgba(0, 0, 0, 0.5);
 		}
-
 		button {
 			position: relative;
-			padding: 4px 6px;
+			padding: 4px 5px;
 			vertical-align: middle;
 			color: white;
 			line-height: 0;
@@ -33,12 +33,11 @@
 				background: transparent;
 				border: none;
 				outline: none;
-				padding: 4px 7px;
+				padding: 4px 6px;
 				align-items: center;
+
 				z-index: 1;
 				height: 25px;
-
-
 				&:disabled {
 					opacity: .6;
 				}
@@ -48,6 +47,14 @@
 				vertical-align: middle;
 				display: block;
 			}
+		}
+	}
+}
+
+div.imageries-container {
+	&.layout2, &.layout3, &.layout4, &.layout5, &.layout6 {
+		:host {
+			top: 190px;
 		}
 	}
 }

@@ -10,6 +10,11 @@ import { DisplayOverlayAction, SetHoveredOverlayAction, SetMarkUp } from '../../
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { MarkUpClass } from '../../../overlays/reducers/overlays.reducer';
 
+export interface IAngle {
+	overlay: IOverlay;
+	degreeFromPoint: number;
+	distanceFromPoint: number;
+}
 const WORLD_RADIUS = 6371e3;
 @Component({
 	selector: 'ansyn-angle-filter',
@@ -21,7 +26,7 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 
 	mapId: string;
 	overlay: IOverlay;
-	_angles: any[];
+	overlaysAngles: IAngle[];
 	point: Point;
 	@AutoSubscription
 	showAngleFilter$ = this.actions$.pipe(
@@ -30,16 +35,11 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 		tap(this.show.bind(this))
 	);
 
-
-	get angles() {
-		return this._angles;
-	}
-
-	set angles(value: any[]) {
+	setAnglesToOverlays(overlays: IOverlay[]) {
 		const pointLat = this.getLatFromPoint(this.point, true);
 		const pointLong = this.getLongFromPoint(this.point, true);
-		this._angles = value.map((angle) => {
-			const center = getPointByGeometry(angle.footprint);
+		this.overlaysAngles = overlays.filter( overlay => overlay.sensorLocation).map((overlay) => {
+			const center = overlay.sensorLocation;
 			const centerLat = this.getLatFromPoint(center, true);
 			const centerLong = this.getLongFromPoint(center, true);
 			const longDelta = centerLong - pointLong;
@@ -51,12 +51,12 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 			const x = Math.cos(pointLat) * Math.sin(centerLat) - Math.sin(pointLat) * Math.cos(centerLat) * Math.cos(longDelta);
 			const brng = 360 - (toDegrees(Math.atan2(y, x)));
 			return {
-				overlay: angle,
+				overlay: overlay,
 				degreeFromPoint: brng,
 				distanceFromPoint: d / (10 ** Math.log2(d))
 			}
 		});
-		this._angles.sort((a, b) => a.degreeFromPoint - b.degreeFromPoint)
+		this.overlaysAngles.sort((a, b) => a.degreeFromPoint - b.degreeFromPoint)
 	}
 
 	@HostBinding('attr.tabindex')
@@ -90,7 +90,7 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 	show(action: ContextMenuShowAngleFilter) {
 		this.point = action.payload.point;
 		this.overlay = action.payload.displayedOverlay;
-		this.angles = action.payload.angles;
+		this.setAnglesToOverlays(action.payload.overlays);
 		this.renderer.setStyle(this.elem.nativeElement, 'top', `${action.payload.click.y}px`);
 		this.renderer.setStyle(this.elem.nativeElement, 'left', `${action.payload.click.x}px`);
 		this.elem.nativeElement.focus();
@@ -116,15 +116,15 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 
 
 	nextOverlay(isNext: boolean) {
-		const anglesSize = this._angles.length;
-		let index = this._angles.findIndex((angle) => this.overlay.id === angle.overlay.id);
+		const anglesSize = this.overlaysAngles.length;
+		let index = this.overlaysAngles.findIndex((angle) => this.overlay.id === angle.overlay.id);
 		index += isNext ? 1 : -1;
 		if (index === anglesSize) {
 			index = 0;
 		} else if (index === -1) {
 			index = anglesSize - 1;
 		}
-		const overlayToDisplay = this._angles[index].overlay;
+		const overlayToDisplay = this.overlaysAngles[index].overlay;
 		this.store$.dispatch(new DisplayOverlayAction({ overlay: overlayToDisplay, mapId: this.mapId }));
 	}
 

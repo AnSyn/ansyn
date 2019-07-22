@@ -5,7 +5,7 @@
 			<i class="icon-map-Point"></i>
 		</p>
 		<div class="arrows">
-		<span class="arrow" *ngFor="let angle of angles"
+		<span class="arrow" *ngFor="let angle of overlaysAngles"
 			  (mousedown)="showOverlay($event, angle.overlay)"
 			  (mouseover)="overlayOver(angle.overlay)"
 			  (mouseleave)="overlayOver()"

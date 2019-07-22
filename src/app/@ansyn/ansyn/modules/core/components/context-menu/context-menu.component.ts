@@ -65,7 +65,7 @@ export class ContextMenuComponent implements OnInit {
 	allSensors = [];
 	angleFilter: IAngleFilterClick = {
 		click: {x: 0, y: 0},
-		angles: [],
+		overlays: [],
 		displayedOverlay: undefined,
 		point: null
 	};
@@ -185,7 +185,7 @@ export class ContextMenuComponent implements OnInit {
 	setAngleFilter([action, displayedOverlay]: [ContextMenuShowAction, IOverlay]) {
 		this.angleFilter.click.x = action.payload.event.x;
 		this.angleFilter.click.y = action.payload.event.y;
-		this.angleFilter.angles = action.payload.overlays;
+		this.angleFilter.overlays = action.payload.overlays;
 		this.angleFilter.point = action.payload.point;
 		this.angleFilter.displayedOverlay = displayedOverlay;
 	}
@@ -278,7 +278,7 @@ export class ContextMenuComponent implements OnInit {
 
 	isDisabled(subList: string) {
 		if (subList === 'angleFilter') {
-			return !this[subList] || this[subList].angles.length === 0;
+			return !this[subList] || this[subList].overlays.length === 0;
 		}else {
 			return !this[subList] || this[subList].length === 0;
 		}

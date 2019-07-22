@@ -9,15 +9,15 @@ import {
 } from '@ansyn/imagery';
 import { LayoutKey } from '../models/maps-layout';
 
-export interface IAngleFilterClick {
+export interface IAngleFilterClick { // @TODO: map-facade should not know IOverlay
 	click: {x: number, y: number};
-	angles: {overlay: any, degreeFromPoint: number}[];
+	overlays: any[];
 	displayedOverlay: any;
 	point: Point;
 
 }
 
-export interface IPendingOverlay {
+export interface IPendingOverlay { // @TODO: map-facade should not know IOverlay
 	overlay: any;
 	extent?: any;
 }

@@ -118,7 +118,6 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 
 	protected parseData(openAerialElement: any): IOverlay {
 		const footprint: any = wellknown.parse(openAerialElement.footprint);
-		const centerPoiint = getPointByGeometry(footprint.geometry ? footprint.geometry : footprint);
 		return new Overlay({
 			id: openAerialElement._id,
 			footprint: geojsonPolygonToMultiPolygon(footprint.geometry ? footprint.geometry : footprint),
@@ -130,10 +129,11 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 			thumbnailUrl: openAerialElement.properties.thumbnail,
 			date: new Date(openAerialElement.acquisition_end),
 			photoTime: openAerialElement.acquisition_end,
-			azimuth: centerPoiint.coordinates[1],
+			azimuth: toRadians(180),
 			sourceType: this.sourceType,
 			isGeoRegistered: GeoRegisteration.geoRegistered,
-			tag: openAerialElement
+			tag: openAerialElement,
+			sensorLocation: getPointByGeometry(footprint.geometry ? footprint.geometry : footprint)
 		});
 
 	}

@@ -63,7 +63,7 @@ import { ImageryZoomerComponent } from "./modules/plugins/components/imagery-zoo
 		AppEffectsModule,
 		MapFacadeModule.provide({
 			entryComponents: {
-				container: [AnnotationContextMenuComponent,AngleFilterComponent, ImageryZoomerComponent],
+				container: [AnnotationContextMenuComponent, AngleFilterComponent, ImageryZoomerComponent],
 				status: []
 			}
 		}),

@@ -28,5 +28,6 @@ keys = [
 	"/ansyn/iscollapsible",
 	"/ansyn/floation/position/suffix",
 	"/ansyn/is/shadow/active",
-	"/ansyn/3d/enable"
+	"/ansyn/3d/enable",
+	"/ansyn/force/send/shadow/mouse/position"
 ]

@@ -34,7 +34,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 	onEnterMap$ = this.actions$
 		.pipe(ofType(MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_ENTER));
 
-	isAlwaysSendosition$ = of(this.toolsConfigData && this.toolsConfigData.ShadowMouse.alwaysSendPosition);
+	forceSendShadowMousePosition$ = of(this.toolsConfigData && this.toolsConfigData.ShadowMouse.forceSendShadowMousePosition);
 	@AutoSubscription
 	onLeaveMap$ = this.actions$
 		.pipe(
@@ -45,10 +45,10 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 			}));
 
 	@AutoSubscription
-	createShadowMouseProducer$ = combineLatest(this.isActive$, this.shadowMouseFlag$, this.isAlwaysSendosition$, this.onEnterMap$)
-		.pipe(tap(([isActive, shadowMouseFlag, alwaysSendPosition ]) => {
+	createShadowMouseProducer$ = combineLatest(this.isActive$, this.shadowMouseFlag$, this.forceSendShadowMousePosition$, this.onEnterMap$)
+		.pipe(tap(([isActive, shadowMouseFlag, forceSendShadowMousePosition ]) => {
 			this.clearEntities();
-			if ((isActive && shadowMouseFlag) || alwaysSendPosition) {
+			if ((isActive && shadowMouseFlag) || forceSendShadowMousePosition) {
 				this.iMap.mapObject.on('pointermove', this.onPointerMove, this);
 			} else {
 				this.iMap.mapObject.un('pointermove', this.onPointerMove, this);
@@ -120,7 +120,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 				this.store$.dispatch(new ShadowMouseProducer({ point: projectedPoint }));
 			}))
 			.subscribe();
-	}
+	};
 
 	onDispose() {
 		this.iMap.mapObject.un('pointermove', this.onPointerMove, this);

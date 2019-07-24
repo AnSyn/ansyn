@@ -49,7 +49,7 @@ export class AnsynApi{
 	mapsList: ICaseMapState[];
 	mapsEntities;
 	activeAnnotationLayer;
-	status = new EventEmitter<{mapId: string; status: string}>(true);
+	onReady = new EventEmitter<boolean>(true);
 
 	@AutoSubscription
 	activateMap$: Observable<string> = this.store.select(selectActiveMapId).pipe(
@@ -82,7 +82,7 @@ export class AnsynApi{
 	@AutoSubscription
 	ready$ = this.imageryCommunicatorService.instanceCreated.pipe(
 		take(1),
-		tap((map) => this.status.emit({mapId: map.id, status: 'ready'}))
+		tap((map) => this.onReady.emit(true))
 	);
 
 	onShadowMouseProduce$: Observable<any> = this.actions$.pipe(

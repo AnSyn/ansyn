@@ -28,5 +28,5 @@ keys = [
 	"/ansyn/iscollapsible",
 	"/ansyn/floation/position/suffix",
 	"/ansyn/is/shadow/active",
-	"/ansyn/always/send/position"
+	"/ansyn/force/send/shadow/mouse/position"
 ]

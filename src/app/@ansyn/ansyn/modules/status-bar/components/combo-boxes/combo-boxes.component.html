@@ -77,8 +77,8 @@
 	</div>
 
 	<!-- Time -->
-	<div class="combo-box-container block with-buttons hidden-low-resolution">
-		<ansyn-combo-box
+	<div class="combo-box-container block hidden-medium-resolution">
+		<!--<ansyn-combo-box
 			class="combo-box-width"
 			direction="top"
 			name="time"
@@ -91,22 +91,25 @@
 				{{ timeFilter | translate}}
 			</ansyn-combo-box-option>
 
-		</ansyn-combo-box>
+		</ansyn-combo-box>-->
+		<button ansynComboBoxTrigger
+                #timePickerTrigger
+				(click)="toggleTimelineStartEndSearch()"
+				[attr.tooltip-value]="toolTips.timeFilterEdit | translate"
+				[isActive]="timeSelectionEditIcon"
+				icon="icon-status-bar-time"
+				tooltip-class="top"
+				class="combo-box-width">
+			<span class="render">{{'Start-End' | translate}}</span>
+		</button>
+		<!--<div class="buttons" [class.active]="timeSelectionEditIcon">
 
-		<div class="buttons" [class.active]="timeSelectionEditIcon">
-			<button (click)="toggleTimelineStartEndSearch()"
-					[attr.tooltip-value]="toolTips.timeFilterEdit | translate"
-					tooltip-class="top right"
-					#timePickerTrigger
-					class="relative">
-				<i class="icon-edit"></i>
-			</button>
-		</div>
+		</div>-->
 
 		<ansyn-timeline-timepicker
 			*ngIf="timeSelectionEditIcon"
 			(ansynClickOutside)="toggleTimelineStartEndSearch($event)"
-			[trigger]="timePickerTrigger"
+			[trigger]="timePickerTrigger.optionsTrigger.nativeElement"
 			[startDatePickerValue]="(time)?.from"
 			[endDatePickerValue]="(time)?.to"
 			(closeComponent)="toggleTimelineStartEndSearch()"

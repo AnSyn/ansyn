@@ -1,4 +1,5 @@
-@import "ansyn/less/common";
+@import 'ansyn/less/common';
+@import 'ansyn/less/colors';
 
 input:disabled ~ .regular-checkmark,
 input:disabled ~ .regular-checkbox-text,
@@ -38,7 +39,7 @@ input:disabled ~ .switch {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: darken(@background-color-3, 20%);
+	background-color: @background-color-5;
 	-webkit-transition: transform .4s, background-color .4s;
 	transition: transform .4s, background-color .4s;
 }

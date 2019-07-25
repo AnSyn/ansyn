@@ -1,4 +1,5 @@
 @import "ansyn/less/z-index-globals";
+@import "ansyn/less/colors";
 
 div.tasks-table {
 	width: 100%;
@@ -187,7 +188,7 @@ p.no-tasks {
 /deep/ ansyn-loader#ansyn-tasks-table-loader {
 	.loader-1 {
 		.loader-outter, .loader-inner {
-			border-color: yellow;
+			border-color: @application-contrast-color;
 		}
 	}
 }

@@ -1,9 +1,8 @@
 import { combineLatest, Observable } from 'rxjs';
 import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
-import { distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { IVisualizerEntity, IVisualizerStateStyle } from '@ansyn/imagery';
-import { mergeMap, withLatestFrom } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { EMPTY } from 'rxjs/index';
 import * as turf from '@turf/turf';

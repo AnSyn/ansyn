@@ -12,7 +12,7 @@ import {
 } from '../../reducers/tasks.reducer';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { tap } from 'rxjs/internal/operators';
+import { tap } from 'rxjs/operators';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { AlgorithmTaskPreview, ITaskModalData, TasksPageToShow } from '../../models/tasks.model';
 

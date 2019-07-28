@@ -16,7 +16,7 @@ import {
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { distinctUntilChanged, map, pluck, tap } from 'rxjs/internal/operators';
+import { distinctUntilChanged, map, pluck, tap } from 'rxjs/operators';
 import { ICasePreview } from '../../models/case.model';
 
 const animations: any[] = [

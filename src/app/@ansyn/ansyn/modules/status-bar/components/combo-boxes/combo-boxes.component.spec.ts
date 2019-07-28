@@ -13,7 +13,7 @@ import { MockComponent } from '../../../core/test/mock-component';
 import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
 import { ClickOutsideDirective } from '../../../core/click-outside/click-outside.directive';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { EMPTY } from 'rxjs/internal/observable/empty';
+import { EMPTY } from 'rxjs';
 
 describe('ComboBoxesComponent', () => {
 	let component: ComboBoxesComponent;

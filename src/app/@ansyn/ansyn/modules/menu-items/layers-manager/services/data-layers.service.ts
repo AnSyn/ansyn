@@ -4,7 +4,7 @@ import { featureCollection } from '@turf/turf';
 import { UUID } from 'angular2-uuid';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Observable, of } from 'rxjs';
-import { catchError, filter, tap } from 'rxjs/internal/operators';
+import { catchError, filter, tap } from 'rxjs/operators';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { StorageService } from '../../../core/services/storage/storage.service';
 import { ICase } from '../../cases/models/case.model';

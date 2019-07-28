@@ -15,7 +15,7 @@ import {
 import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
 import { differenceWith, isEqual } from 'lodash';
-import { filter, map, mergeMap, pluck, switchMap, withLatestFrom } from 'rxjs/internal/operators';
+import { filter, map, mergeMap, pluck, switchMap, withLatestFrom } from 'rxjs/operators';
 import { OverlayStatusActionsTypes } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { IAppState } from '../app.effects.module';
 import { selectGeoFilterSearchMode } from '../../modules/status-bar/reducers/status-bar.reducer';

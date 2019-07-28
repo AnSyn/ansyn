@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { map, mergeMap, withLatestFrom } from 'rxjs/internal/operators';
+import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { Feature } from 'geojson';
 import { EMPTY, Observable, of } from 'rxjs';

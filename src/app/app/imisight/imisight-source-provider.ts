@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map } from 'rxjs/internal/operators';
+import { catchError, map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import {
 	BaseOverlaySourceProvider,

@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostBinding, HostListener, Inject, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subscription, Observable } from 'rxjs';
-import { pluck, take } from 'rxjs/internal/operators';
+import { pluck, take } from 'rxjs/operators';
 import { selectWasWelcomeNotificationShown } from '../../reducers/map.reducer';
 import { SetWasWelcomeNotificationShownFlagAction } from '../../actions/map.actions';
 import { IMapFacadeConfig } from '../../models/map-config.model';

@@ -5,7 +5,7 @@ import { MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/imagery';
 import { StoreModule } from '@ngrx/store';
 import { sentinelFeatureKey, SentinelReducer } from '../reducers/sentinel.reducer';
 import { SentinelLayersService } from './sentinel-layers.service';
-import { of } from 'rxjs/internal/observable/of';
+import { of } from 'rxjs';
 
 describe('SentinelLayersService', () => {
 	let httpClient: HttpClient;

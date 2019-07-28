@@ -4,14 +4,13 @@ import { TasksService } from '../../services/tasks.service';
 import { combineLatest, Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { switchMap, take, tap } from 'rxjs/internal/operators';
 import {
 	AlgorithmTask,
 	AlgorithmTaskStatus,
 	AlgorithmTaskWhichOverlays,
 	IAlgorithmConfig
 } from '../../models/tasks.model';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import {
 	RunTaskAction,
 	SetCurrentTask,

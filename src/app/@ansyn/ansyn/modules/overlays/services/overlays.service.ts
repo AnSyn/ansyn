@@ -6,7 +6,7 @@ import { IOverlaysConfig } from '../models/overlays.config';
 import { unionBy } from 'lodash';
 import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
 import { Store } from '@ngrx/store';
-import { map } from 'rxjs/internal/operators';
+import { map } from 'rxjs/operators';
 import { selectFavoriteOverlays } from '../overlay-status/reducers/overlay-status.reducer';
 import { sortByDateDesc } from '../../core/utils/sorting';
 import { mapValuesToArray } from '../../core/utils/misc';

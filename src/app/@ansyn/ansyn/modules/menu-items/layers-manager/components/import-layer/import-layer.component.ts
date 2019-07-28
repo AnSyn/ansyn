@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { tap } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
 import { DataLayersService } from '../../services/data-layers.service';
@@ -8,6 +7,7 @@ import * as toGeoJSON from 'togeojson';
 import { fromEvent, Observable } from 'rxjs';
 import { UUID } from 'angular2-uuid';
 import { SetToastMessageAction } from '@ansyn/map-facade';
+import { tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-import-layer',

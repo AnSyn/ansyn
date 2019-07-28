@@ -9,9 +9,8 @@ import {
 	selectFiltersSearchResults
 } from '../../reducer/filters.reducer';
 import { SetFilterSearch, UpdateFacetsAction } from '../../actions/filters.actions';
-import { distinctUntilChanged, map } from 'rxjs/internal/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { tap } from 'rxjs/operators';
+import { tap, distinctUntilChanged, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { IFiltersConfig } from '../../models/filters-config';
 import { IFilterSearchResults } from '../../models/filter-search-results';

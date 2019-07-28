@@ -20,6 +20,7 @@ import { AnsynFooterComponent } from './components/ansyn-footer/ansyn-footer.com
 import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/overlay-out-of-bounds.component';
 import { UnsupportedDevicesComponent } from './components/unsupported-devices/unsupported-devices.component';
 import { ansynConfig } from './config/ansyn.config';
+import { AngleFilterComponent } from './modules/core/components/angle-filter/angle-filter.component';
 import { CoreModule } from './modules/core/core.module';
 import { AnsynTranslationModule } from './modules/core/translation/ansyn-translation.module';
 import { ComponentTranslateLoader } from './modules/core/translation/component-translate-loader';
@@ -62,7 +63,7 @@ import { ImageryZoomerComponent } from "./modules/plugins/components/imagery-zoo
 		AppEffectsModule,
 		MapFacadeModule.provide({
 			entryComponents: {
-				container: [AnnotationContextMenuComponent, ImageryZoomerComponent],
+				container: [AnnotationContextMenuComponent, AngleFilterComponent, ImageryZoomerComponent],
 				status: []
 			}
 		}),

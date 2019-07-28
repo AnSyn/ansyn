@@ -2,7 +2,7 @@ import { Inject } from '@angular/core';
 import {
 	bboxFromGeoJson,
 	geojsonMultiPolygonToPolygon,
-	geojsonPolygonToMultiPolygon,
+	geojsonPolygonToMultiPolygon, getPointByGeometry,
 	getPolygonByPointAndRadius,
 
 } from '@ansyn/imagery';
@@ -132,7 +132,8 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 			azimuth: toRadians(180),
 			sourceType: this.sourceType,
 			isGeoRegistered: GeoRegisteration.geoRegistered,
-			tag: openAerialElement
+			tag: openAerialElement,
+			sensorLocation: getPointByGeometry(footprint.geometry ? footprint.geometry : footprint)
 		});
 
 	}

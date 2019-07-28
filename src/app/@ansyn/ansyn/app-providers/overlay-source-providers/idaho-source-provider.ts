@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import * as wellknown from 'wellknown';
 import { Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { geojsonMultiPolygonToPolygon, getPolygonByPointAndRadius } from '@ansyn/imagery';
+import { geojsonMultiPolygonToPolygon, getPointByGeometry, getPolygonByPointAndRadius } from '@ansyn/imagery';
 import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
 import { catchError, map } from 'rxjs/operators';
 import { ErrorHandlerService } from '../../modules/core/services/error-handler.service';
@@ -136,7 +136,8 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 			baseImageUrl: 'https://idaho.geobigdata.io/v1/tile/' + idahoElement.properties.bucketName + '/' + idahoElement.identifier + '/{z}/{x}/{y}' + '?token=' + token + '&doDRA=true',
 			token: token,
 			catalogID: idahoElement.properties.catalogID,
-			cloudCoverage: idahoElement.properties.cloudCover / 100
+			cloudCoverage: idahoElement.properties.cloudCover / 100,
+			sensorLocation: getPointByGeometry(footprint.geometry ? footprint.geometry : footprint)
 		});
 	}
 }

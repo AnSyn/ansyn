@@ -2,15 +2,12 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AlertsModule } from './modules/alerts/alerts.module';
 import { DefaultUrlSerializer, RouterModule, UrlSerializer } from '@angular/router';
 import { ImageryModule } from '@ansyn/imagery';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { MenuModule } from '@ansyn/menu';
 import { AnnotationContextMenuComponent } from '@ansyn/ol';
-import { EffectsModule } from '@ngrx/effects';
-import { StoreModule } from '@ngrx/store';
 import { AnsynComponent } from './ansyn/ansyn.component';
 import { ANSYN_ID } from './api/ansyn-id.provider';
 import { AppEffectsModule } from './app-effects/app.effects.module';
@@ -42,8 +39,6 @@ import { ImageryZoomerComponent } from "./modules/plugins/components/imagery-zoo
 	imports: [
 		CommonModule,
 		AnsynTranslationModule.addLoader([DefaultTranslateLoader, ComponentTranslateLoader]),
-		StoreModule.forRoot({}),
-		EffectsModule.forRoot([]),
 		AppProvidersModule,
 		CasesModule,
 		FiltersModule,
@@ -54,7 +49,6 @@ import { ImageryZoomerComponent } from "./modules/plugins/components/imagery-zoo
 		OverlaysModule,
 		FormsModule,
 		HttpClientModule,
-		BrowserAnimationsModule,
 		AnsynPluginsModule,
 		CoreModule,
 		MenuModule.provideMenuItems(ansynConfig.ansynMenuItems),

@@ -20,6 +20,7 @@ import { IToolsState } from '../modules/menu-items/tools/reducers/tools.reducer'
 import { IOverlaysState } from '../modules/overlays/reducers/overlays.reducer';
 import { TranslateModule } from '@ngx-translate/core';
 import { StoreModule } from '@ngrx/store';
+import { CasesModule } from '../modules/menu-items/cases/cases.module';
 
 export interface IAppState {
 	overlays: IOverlaysState;
@@ -36,7 +37,6 @@ export interface IAppState {
 @NgModule({
 	imports: [
 		TranslateModule,
-		StoreModule.forFeature(casesFeatureKey, CasesReducer),
 		EffectsModule.forFeature([
 			OverlaysAppEffects,
 			MapAppEffects,

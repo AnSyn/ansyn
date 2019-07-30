@@ -46,7 +46,7 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 	setAnglesToOverlays(overlays: IOverlay[]) {
 		const pointLat = this.getLatFromPoint(this.point, true);
 		const pointLong = this.getLongFromPoint(this.point, true);
-		this.overlaysAngles = overlays.filter( overlay => overlay.sensorLocation).map((overlay) => {
+		this.overlaysAngles = overlays.map((overlay) => {
 			const center = overlay.sensorLocation;
 			const centerLat = this.getLatFromPoint(center, true);
 			const centerLong = this.getLongFromPoint(center, true);

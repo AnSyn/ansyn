@@ -13,6 +13,7 @@ import { DataLayersService, layersConfig } from '../../../layers-manager/service
 import { CoreConfig } from '../../../../core/models/core.config';
 import { LoggerConfig } from '../../../../core/models/logger.config';
 import { TranslateModule } from '@ngx-translate/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('DeleteCaseComponent', () => {
 	let component: DeleteCaseComponent;
@@ -37,6 +38,7 @@ describe('DeleteCaseComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
+				BrowserAnimationsModule,
 				HttpClientModule,
 				CasesModule,
 				EffectsModule.forRoot([]),

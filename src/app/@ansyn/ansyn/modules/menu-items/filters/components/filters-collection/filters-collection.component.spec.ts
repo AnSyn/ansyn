@@ -17,6 +17,7 @@ import { filtersFeatureKey, FiltersReducer } from '../../reducer/filters.reducer
 import { filtersConfig } from '../../services/filters.service';
 import { FiltersCollectionComponent } from './filters-collection.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('FiltersCollectionComponent', () => {
 	let component: FiltersCollectionComponent;
@@ -42,6 +43,7 @@ describe('FiltersCollectionComponent', () => {
 				mockAnysnFilterContainer
 			],
 			imports: [
+				BrowserAnimationsModule,
 				HttpClientModule,
 				FiltersModule,
 				EffectsModule.forRoot([]),

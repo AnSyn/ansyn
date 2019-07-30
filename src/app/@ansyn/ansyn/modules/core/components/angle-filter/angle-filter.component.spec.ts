@@ -102,7 +102,7 @@ describe('AngleFilterComponent', () => {
 		spyOn(store, 'dispatch')
 		component.mapId = 'mapId';
 		component.overlay = OVERLAYS[1];
-		component.nextOverlay(true);
+		component.nextOverlay(<any>{}, true);
 		expect(store.dispatch).toHaveBeenCalledWith(new DisplayOverlayAction({overlay: OVERLAYS[2], mapId: 'mapId'}))
 	})
 

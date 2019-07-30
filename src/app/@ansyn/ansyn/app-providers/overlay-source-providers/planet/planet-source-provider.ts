@@ -403,7 +403,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			sourceType: this.sourceType,
 			isGeoRegistered: GeoRegisteration.geoRegistered,
 			tag: element,
-			sensorLocation: getPointByGeometry(element.geometry)
+			sensorLocation: this.multipleOverlaysSourceConfig.useAngleDebugMode ? getPointByGeometry(element.geometry) : undefined
 		});
 
 	}

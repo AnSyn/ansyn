@@ -21,6 +21,10 @@ import { limitArray } from '../../modules/core/utils/i-limited-array';
 import { sortByDateDesc } from '../../modules/core/utils/sorting';
 import { toRadians } from '@ansyn/imagery';
 import { GeoRegisteration, IOverlay, Overlay } from '../../modules/overlays/models/overlay.model';
+import {
+	IMultipleOverlaysSourceConfig,
+	MultipleOverlaysSourceConfig
+} from '../../modules/core/models/multiple-overlays-source-config';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
 export const OpenAerialOverlaySourceType = 'OPEN_AERIAL';
@@ -39,6 +43,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 	constructor(public errorHandlerService: ErrorHandlerService,
 				protected loggerService: LoggerService,
 				protected http: HttpClient,
+				@Inject(MultipleOverlaysSourceConfig) protected multipleOverlays: IMultipleOverlaysSourceConfig,
 				@Inject(OpenAerialOverlaysSourceConfig)
 				protected openAerialOverlaysSourceConfig: IOpenAerialOverlaySourceConfig) {
 		super(loggerService);
@@ -133,7 +138,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 			sourceType: this.sourceType,
 			isGeoRegistered: GeoRegisteration.geoRegistered,
 			tag: openAerialElement,
-			sensorLocation: getPointByGeometry(footprint.geometry ? footprint.geometry : footprint)
+			sensorLocation: this.multipleOverlays.useAngleDebugMode ? getPointByGeometry(footprint.geometry ? footprint.geometry : footprint) : undefined
 		});
 
 	}

@@ -10,16 +10,16 @@
 			  (mouseover)="overlayHover(angle.overlay)"
 			  (mouseleave)="overlayHover()"
 			  [style.transform]="'rotate(' + angle.degreeFromPoint + 'deg)'"
-			  [class.active]="isActive(angle.overlay)"
+			  [class.active]="isActive(angle.overlay) || this.hoverOverlay === angle.overlay.id"
 		></span>
 		</div>
 	</div>
 	<div class="rectangles">
-		<button (click)="nextOverlay(true)"
+		<button (click)="nextOverlay($event, true)"
 		[disabled]="!overlay">
 			<i class="icon-show-menu"></i>
 		</button>
-		<button (click)="nextOverlay(false)"
+		<button (click)="nextOverlay($event, false)"
 				[disabled]="!overlay">
 			<i class="icon-show-menu"></i>
 		</button>

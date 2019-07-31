@@ -1,14 +1,14 @@
 import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { getPointByGeometry, toDegrees, toRadians } from '@ansyn/imagery';
+import { toDegrees, toRadians } from '@ansyn/imagery';
 import { ContextMenuShowAngleFilter, IEntryComponent, MapActionTypes } from '@ansyn/map-facade';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Point } from 'geojson';
-import { debounceTime, tap } from 'rxjs/operators';
+import { debounceTime, map, tap, filter } from 'rxjs/operators';
 import { DisplayOverlayAction, SetHoveredOverlayAction, SetMarkUp } from '../../../overlays/actions/overlays.actions';
 import { IOverlay } from '../../../overlays/models/overlay.model';
-import { MarkUpClass } from '../../../overlays/reducers/overlays.reducer';
+import { MarkUpClass, selectDropMarkup } from '../../../overlays/reducers/overlays.reducer';
 
 export interface IAngle {
 	overlay: IOverlay;
@@ -27,6 +27,7 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 	mapId: string;
 	overlay: IOverlay;
 	overlaysAngles: IAngle[];
+	hoverOverlay: string;
 	point: Point;
 	@AutoSubscription
 	showAngleFilter$ = this.actions$.pipe(
@@ -35,10 +36,17 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 		tap(this.show.bind(this))
 	);
 
+	@AutoSubscription
+	onHoverFootprintOrTimeline = this.store$.select(selectDropMarkup).pipe(
+		map( (drops) => drops.get(MarkUpClass.hover)),
+		filter( hovers => Boolean(this.overlaysAngles && this.overlaysAngles.length)),
+		tap( hovers => this.hoverOverlay = hovers.overlaysIds[0])
+
+	);
 	setAnglesToOverlays(overlays: IOverlay[]) {
 		const pointLat = this.getLatFromPoint(this.point, true);
 		const pointLong = this.getLongFromPoint(this.point, true);
-		this.overlaysAngles = overlays.filter( overlay => overlay.sensorLocation).map((overlay) => {
+		this.overlaysAngles = overlays.map((overlay) => {
 			const center = overlay.sensorLocation;
 			const centerLat = this.getLatFromPoint(center, true);
 			const centerLong = this.getLongFromPoint(center, true);
@@ -108,14 +116,15 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 		return '';
 	}
 
-	showOverlay(event: MouseEvent, overlay: any) {
-		this.hide();
+	showOverlay(event: MouseEvent, overlay: IOverlay) {
+		event.stopPropagation();
 		this.overlay = overlay;
 		this.store$.dispatch(new DisplayOverlayAction({ overlay: overlay, mapId: this.mapId }));
 	}
 
 
-	nextOverlay(isNext: boolean) {
+	nextOverlay(event: MouseEvent, isNext: boolean) {
+		event.stopPropagation();
 		const anglesSize = this.overlaysAngles.length;
 		let index = this.overlaysAngles.findIndex((angle) => this.overlay.id === angle.overlay.id);
 		index += isNext ? 1 : -1;

@@ -185,7 +185,7 @@ export class ContextMenuComponent implements OnInit {
 	setAngleFilter([action, displayedOverlay]: [ContextMenuShowAction, IOverlay]) {
 		this.angleFilter.click.x = action.payload.event.x;
 		this.angleFilter.click.y = action.payload.event.y;
-		this.angleFilter.overlays = action.payload.overlays;
+		this.angleFilter.overlays = action.payload.overlays.filter( overlay => overlay.sensorLocation);
 		this.angleFilter.point = action.payload.point;
 		this.angleFilter.displayedOverlay = displayedOverlay;
 	}

@@ -37,7 +37,7 @@ export class ErrorHandlerService {
 		return pipe(
 			timeout(time),
 			catchError((err) => {
-				if (err.message === 'Timeout has occured') {
+				if (err.message === 'Timeout has occurred') {
 					const message = `${from} Requested time out after ${time}`;
 					return throwError(message);
 				}

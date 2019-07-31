@@ -67,6 +67,10 @@ export class ProjectionConverterService {
 		}
 		const fromWgs84Geo = from.datum === 'wgs84' && from.projection === 'geo';
 		const toWgs84Geo = to.datum === 'wgs84' && to.projection === 'geo';
+
+		const toWgs84Utm = to.datum === 'wgs84' && to.projection === 'utm';
+		const fromWgs84Utm = from.datum === 'wgs84' && from.projection === 'utm';
+
 		const fromEd50Utm = from.datum === 'ed50' && from.projection === 'utm';
 		const toEd50Utm = to.datum === 'ed50' && to.projection === 'utm';
 
@@ -88,6 +92,27 @@ export class ProjectionConverterService {
 				y -= 10000000;
 			}
 			const utmProj = this.getUtmFromConf(zone);
+			const conv = proj4(utmProj, 'EPSG:4326', [x, y]);
+			return [...conv];
+		}
+
+		if (fromWgs84Geo && toWgs84Utm) {
+			const lng = coords[0];
+			const zone = (Math.floor((lng + 180) / 6) % 60) + 1;
+			const projection = '+proj=utm +zone$(zone) +datum=WGS84'.replace('$(zone)', zone.toString());
+			const conv = proj4('EPSG:4326', projection, coords);
+			if (conv[1] < 0) {
+				conv[1] += 10000000;
+			}
+			return [...conv, zone];
+		}
+
+		if (fromWgs84Utm && toWgs84Geo) {
+			let [x, y, zone] = coords;
+			if (y > 5000000) {
+				y -= 10000000;
+			}
+			const utmProj = '+proj=utm +zone$(zone) +datum=WGS84'.replace('$(zone)', zone.toString());
 			const conv = proj4(utmProj, 'EPSG:4326', [x, y]);
 			return [...conv];
 		}

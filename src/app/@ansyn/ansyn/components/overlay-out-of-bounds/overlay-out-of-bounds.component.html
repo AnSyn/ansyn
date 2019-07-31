@@ -2,5 +2,6 @@
 	[attr.tooltip-value]="'Back to overlay extent' | translate"
 	tooltip-class="top"
 	(click)="backToExtent()">
+	<span class="indicator" [style.background-color]="color"></span>
 	{{'Image is out of bounds' | translate}}
 </button>

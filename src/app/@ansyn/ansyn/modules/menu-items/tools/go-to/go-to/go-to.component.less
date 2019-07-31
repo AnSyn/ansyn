@@ -60,15 +60,18 @@
 			button.pin-location {
 				background: transparent;
 				border: none;
-				color: fade(white, 40%);
+				color: white;
 				display: flex;
 				font-size: 14px;
 				align-items: center;
-				i {
-					margin-top: 5px;
+
+				&:hover {
+					background-color: fade(@background-color-6, 60%);
+					border-radius: 5px;
 				}
 				&.active {
-					opacity: 1;
+					background-color: fade(@background-color-6, 60%);
+					border-radius: 5px;
 				}
 			}
 

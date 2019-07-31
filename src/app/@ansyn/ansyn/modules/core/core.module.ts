@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GenericTypeResolverService } from './services/generic-type-resolver.service';
 import { LoggerService } from './services/logger.service';
 import { ErrorHandlerService } from './services/error-handler.service';
@@ -19,7 +18,6 @@ import { AngleFilterComponent } from './components/angle-filter/angle-filter.com
 		CommonModule,
 		AnsynFormsModule,
 		TranslateModule,
-		BrowserAnimationsModule,
 		FormsModule
 	],
 	providers: [

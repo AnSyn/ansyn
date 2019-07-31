@@ -13,12 +13,14 @@ import { OverlaysAppEffects } from './effects/overlays.app.effects';
 import { ToolsAppEffects } from './effects/tools.app.effects';
 import { UpdateCaseAppEffects } from './effects/cases/update-case.app.effects';
 import { SelectCaseAppEffects } from './effects/cases/select-case.app.effects';
-import { ICasesState } from '../modules/menu-items/cases/reducers/cases.reducer';
+import { casesFeatureKey, CasesReducer, ICasesState } from '../modules/menu-items/cases/reducers/cases.reducer';
 import { IFiltersState } from '../modules/menu-items/filters/reducer/filters.reducer';
 import { ILayerState } from '../modules/menu-items/layers-manager/reducers/layers.reducer';
 import { IToolsState } from '../modules/menu-items/tools/reducers/tools.reducer';
 import { IOverlaysState } from '../modules/overlays/reducers/overlays.reducer';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { StoreModule } from '@ngrx/store';
+import { CasesModule } from '../modules/menu-items/cases/cases.module';
 
 export interface IAppState {
 	overlays: IOverlaysState;
@@ -45,7 +47,7 @@ export interface IAppState {
 			FiltersAppEffects,
 			ToolsAppEffects,
 			UpdateCaseAppEffects,
-			SelectCaseAppEffects,
+			SelectCaseAppEffects
 		])
 	]
 })

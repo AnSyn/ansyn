@@ -7,5 +7,4 @@ import { configuration } from './configuration/configuration';
 if (configuration.production) {
 	enableProdMode();
 }
-
 fetchConfigProviders().then(providers => platformBrowserDynamic(providers).bootstrapModule(AppAnsynModule));

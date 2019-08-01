@@ -184,7 +184,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 			exportData = {
 				width: c.width,
 				height: c.height,
-				data: c.toDataURL()
+				data: c.toDataURL('image/jpeg', 1.0)
 			}
 		} catch (e) {
 		}
@@ -461,6 +461,10 @@ export class CesiumMap extends BaseImageryMap<any> {
 		}
 	}
 
+	setResolution(resolution: number): void {
+		this.mapObject.resolutionScale = resolution;
+	}
+
 	updateSize(): void {
 		console.log('Update size cesium');
 	}
@@ -505,6 +509,10 @@ export class CesiumMap extends BaseImageryMap<any> {
 			return rotation;
 		}
 		return NaN;
+	}
+
+	getResolution(): number {
+		return this.mapObject.resolutionScale;
 	}
 
 	removeAllLayers(): void {

@@ -1,3 +1,4 @@
+export { ImageryZoomerService } from "./services/imagery-zoomer.service";
 export { IEd50Notification } from './models/map-config.model';
 
 export { IEntryComponent } from './directives/entry-component.directive';
@@ -48,7 +49,9 @@ export {
 	SetLayoutAction,
 	SetLayoutSuccessAction,
 	IPendingOverlay,
-	ToggleFooter
+	ToggleFooter,
+	ContextMenuShowAngleFilter,
+	IAngleFilterClick
 } from './actions/map.actions';
 
 export {

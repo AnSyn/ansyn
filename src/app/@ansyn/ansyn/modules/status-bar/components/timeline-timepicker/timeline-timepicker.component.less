@@ -6,6 +6,7 @@
 	transition: .4s;
 	position: absolute;
 	display: flex;
+	box-shadow: 0 0 2px 1px white;
 	background: @background-color-0;
 	width: 230px;
 	flex-direction: column;
@@ -62,6 +63,16 @@
 }
 
 div.control-buttons {
+	button {
+		background: transparent;
+		border: none;
+		color: @overlays-dots-color;
+		&:disabled {
+			cursor: default;
+			pointer-events: none;
+			opacity: .6;
+		}
+	}
 	margin-top: 10px;
 	margin-bottom: 5px;
 	display: flex;

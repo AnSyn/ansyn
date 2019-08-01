@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { groupBy } from 'lodash';
-import { map } from 'rxjs/internal/operators';
+import { map } from 'rxjs/operators';
 import { ILayerCollection } from '../layers-collection/layer-collection.component';
 import { ILayer, LayerType } from '../../models/layers.model';
 import { ILayerState, selectLayers } from '../../reducers/layers.reducer';

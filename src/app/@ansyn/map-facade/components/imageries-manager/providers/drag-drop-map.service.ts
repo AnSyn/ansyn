@@ -2,8 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { SetMapsDataActionStore, UpdateMapSizeAction } from '../../../actions/map.actions';
 import { Store } from '@ngrx/store';
 import { DOCUMENT } from '@angular/common';
-import { fromEvent } from 'rxjs/internal/observable/fromEvent';
-import { forkJoin } from 'rxjs';
+import { forkJoin, fromEvent } from 'rxjs';
 import { tap, take } from 'rxjs/operators';
 
 export interface IDragDropData {

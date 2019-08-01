@@ -3,7 +3,7 @@ import { Inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import {
 	geojsonMultiPolygonToPolygon,
-	geojsonPolygonToMultiPolygon
+	geojsonPolygonToMultiPolygon, getPointByGeometry
 } from '@ansyn/imagery';
 import { HttpResponseBase } from '@angular/common/http/src/response';
 import { IOverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
@@ -402,7 +402,8 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			azimuth: toRadians(element.properties.view_angle),
 			sourceType: this.sourceType,
 			isGeoRegistered: GeoRegisteration.geoRegistered,
-			tag: element
+			tag: element,
+			sensorLocation: this.multipleOverlaysSourceConfig.useAngleDebugMode ? getPointByGeometry(element.geometry) : undefined
 		});
 
 	}

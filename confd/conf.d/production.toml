@@ -27,5 +27,8 @@ keys = [
 	"/ansyn/overlay/sentinel/inactive",
 	"/ansyn/iscollapsible",
 	"/ansyn/floation/position/suffix",
-	"/ansyn/is/shadow/active"
+	"/ansyn/is/shadow/active",
+	"/ansyn/3d/enable",
+	"/ansyn/force/send/shadow/mouse/position",
+	"/ansyn/angle/debug/mode"
 ]

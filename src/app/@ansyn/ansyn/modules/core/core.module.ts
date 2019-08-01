@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GenericTypeResolverService } from './services/generic-type-resolver.service';
 import { LoggerService } from './services/logger.service';
 import { ErrorHandlerService } from './services/error-handler.service';
@@ -12,13 +11,13 @@ import { AnsynTranslationModule } from './translation/ansyn-translation.module';
 import { AnsynFormsModule } from './forms/ansyn-forms.module';
 import { FormsModule } from '@angular/forms';
 import { ContextMenuComponent } from './components/context-menu/context-menu.component';
+import { AngleFilterComponent } from './components/angle-filter/angle-filter.component';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		AnsynFormsModule,
 		TranslateModule,
-		BrowserAnimationsModule,
 		FormsModule
 	],
 	providers: [
@@ -37,8 +36,10 @@ import { ContextMenuComponent } from './components/context-menu/context-menu.com
 	declarations: [
 		AnsynModalComponent,
 		ManualRemovedOverlaysComponent,
-		ContextMenuComponent
-	]
+		ContextMenuComponent,
+		AngleFilterComponent
+	],
+	entryComponents: [AngleFilterComponent]
 })
 
 export class CoreModule {

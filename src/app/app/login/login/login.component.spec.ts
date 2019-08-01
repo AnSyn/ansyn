@@ -6,7 +6,6 @@ import { AuthService } from '../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
 import { Router } from '@angular/router';
-import { fromPromise } from 'rxjs/internal/observable/fromPromise';
 import { LoginConfig } from '../services/login-config.service';
 
 describe('LoginComponent', () => {

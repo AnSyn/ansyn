@@ -15,7 +15,7 @@ import { Actions } from '@ngrx/effects';
 import { ImageryCommunicatorService, ImageryVisualizer } from '@ansyn/imagery';
 import { select, Store } from '@ngrx/store';
 import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
-import { distinctUntilChanged, filter, map, mergeMap, tap } from 'rxjs/internal/operators';
+import { distinctUntilChanged, filter, map, mergeMap, tap } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { selectContextEntities } from '../reducers/context.reducer';
 import { ICaseMapState, IContextEntity,  } from '@ansyn/ansyn';

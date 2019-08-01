@@ -295,7 +295,8 @@
       }
     ],
     "ShadowMouse": {
-    	"activeByDefault": {{ getv "/ansyn/is/shadow/active" "false"}}
+    	"activeByDefault": {{ getv "/ansyn/is/shadow/active" "false"}},
+    	"forceSendShadowMousePosition": {{ getv "/ansyn/force/send/shadow/mouse/position" "false"}}
     }
   },
   "loggerConfig": {
@@ -336,7 +337,7 @@
     },
 	 "httpTimeout": "3000",
 	 "isFooterCollapsible": {{ getv "/ansyn/iscollapsible" "false" }},
-	 "enable3D": true
+	 "enable3D": {{ getv "/ansyn/3d/enable" "true" }}
   },
   "olConfig": {
   	 "needToUseLayerExtent": false,
@@ -427,6 +428,7 @@
     }
   },
   "multipleOverlaysSourceConfig": {
+  "useAngleDebugMode":  {{ getv "/ansyn/angle/debug/mode" "false" }},
 	 "defaultProvider": {
 	 	"inActive": false,
 		"whitelist": [

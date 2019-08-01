@@ -1,7 +1,8 @@
 import { ICoordinatesSystem } from '@ansyn/map-facade';
 
 export interface IShadowMouseConfig {
-	activeByDefault: boolean
+	activeByDefault: boolean,
+	forceSendShadowMousePosition: boolean
 }
 
 export interface IToolsConfig {

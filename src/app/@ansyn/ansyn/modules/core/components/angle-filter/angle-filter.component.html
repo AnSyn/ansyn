@@ -1,0 +1,27 @@
+<div class="angle-filter">
+
+	<div class="circle">
+		<p class="point">
+			<i class="icon-map-Point"></i>
+		</p>
+		<div class="arrows">
+		<span class="arrow" *ngFor="let angle of overlaysAngles"
+			  (mousedown)="showOverlay($event, angle.overlay)"
+			  (mouseover)="overlayHover(angle.overlay)"
+			  (mouseleave)="overlayHover()"
+			  [style.transform]="'rotate(' + angle.degreeFromPoint + 'deg)'"
+			  [class.active]="isActive(angle.overlay) || this.hoverOverlay === angle.overlay.id"
+		></span>
+		</div>
+	</div>
+	<div class="rectangles">
+		<button (click)="nextOverlay($event, true)"
+		[disabled]="!overlay">
+			<i class="icon-show-menu"></i>
+		</button>
+		<button (click)="nextOverlay($event, false)"
+				[disabled]="!overlay">
+			<i class="icon-show-menu"></i>
+		</button>
+	</div>
+</div>

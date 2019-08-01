@@ -11,7 +11,6 @@ import { CasesToolsComponent } from './components/cases-tools/cases-tools.compon
 import { EffectsModule } from '@ngrx/effects';
 import { CasesEffects } from './effects/cases.effects';
 import { casesConfig, CasesService } from './services/cases.service';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SaveCaseComponent } from './components/save-case/save-case.component';
 import { StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from './reducers/cases.reducer';
@@ -25,8 +24,7 @@ import { CoreModule } from '../../core/core.module';
 		CommonModule,
 		CoreModule,
 		FormsModule,
-		EffectsModule.forFeature([CasesEffects]),
-		BrowserAnimationsModule
+		EffectsModule.forFeature([CasesEffects])
 	],
 	declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent, CasesAutoSaveComponent],
 	entryComponents: [CasesComponent, EditCaseComponent, SaveCaseComponent, DeleteCaseComponent],

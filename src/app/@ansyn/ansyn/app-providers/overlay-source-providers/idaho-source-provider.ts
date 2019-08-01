@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import * as wellknown from 'wellknown';
 import { Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { geojsonMultiPolygonToPolygon, getPolygonByPointAndRadius } from '@ansyn/imagery';
+import { geojsonMultiPolygonToPolygon, getPointByGeometry, getPolygonByPointAndRadius } from '@ansyn/imagery';
 import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
 import { catchError, map } from 'rxjs/operators';
 import { ErrorHandlerService } from '../../modules/core/services/error-handler.service';
@@ -17,6 +17,10 @@ import {
 } from '../../modules/overlays/models/base-overlay-source-provider.model';
 import { OverlaySourceProvider } from '../../modules/overlays/models/overlays-source-providers';
 import { GeoRegisteration, IOverlay, IOverlaysFetchData, Overlay } from '../../modules/overlays/models/overlay.model';
+import {
+	IMultipleOverlaysSourceConfig,
+	MultipleOverlaysSourceConfig
+} from '../../modules/core/models/multiple-overlays-source-config';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
 export const IdahoOverlaySourceType = 'IDAHO';
@@ -45,6 +49,7 @@ export interface IIdahoOverlaySourceConfig {
 export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 	constructor(public errorHandlerService: ErrorHandlerService,
 				protected httpClient: HttpClient,
+				@Inject(MultipleOverlaysSourceConfig) protected multipleOverlays: IMultipleOverlaysSourceConfig,
 				@Inject(IdahoOverlaysSourceConfig) protected _overlaySourceConfig: IIdahoOverlaySourceConfig,
 				protected loggerService: LoggerService) {
 		super(loggerService);
@@ -136,7 +141,8 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 			baseImageUrl: 'https://idaho.geobigdata.io/v1/tile/' + idahoElement.properties.bucketName + '/' + idahoElement.identifier + '/{z}/{x}/{y}' + '?token=' + token + '&doDRA=true',
 			token: token,
 			catalogID: idahoElement.properties.catalogID,
-			cloudCoverage: idahoElement.properties.cloudCover / 100
+			cloudCoverage: idahoElement.properties.cloudCover / 100,
+			sensorLocation: this.multipleOverlays.useAngleDebugMode ? getPointByGeometry(footprint.geometry ? footprint.geometry : footprint) : undefined
 		});
 	}
 }

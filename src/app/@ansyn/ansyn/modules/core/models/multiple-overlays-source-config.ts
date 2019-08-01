@@ -20,6 +20,7 @@ export interface IOverlaysSourceProvider {
 }
 
 export interface IMultipleOverlaysSourceConfig {
+	useAngleDebugMode: boolean
 	defaultProvider: IOverlaysSourceProvider;
 	diagonalSensorNames: string[];
 	indexProviders: IIndexProviders;

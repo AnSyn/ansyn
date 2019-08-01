@@ -2,15 +2,12 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AlertsModule } from './modules/alerts/alerts.module';
 import { DefaultUrlSerializer, RouterModule, UrlSerializer } from '@angular/router';
 import { ImageryModule } from '@ansyn/imagery';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { MenuModule } from '@ansyn/menu';
 import { AnnotationContextMenuComponent } from '@ansyn/ol';
-import { EffectsModule } from '@ngrx/effects';
-import { StoreModule } from '@ngrx/store';
 import { AnsynComponent } from './ansyn/ansyn.component';
 import { ANSYN_ID } from './api/ansyn-id.provider';
 import { AppEffectsModule } from './app-effects/app.effects.module';
@@ -20,6 +17,7 @@ import { AnsynFooterComponent } from './components/ansyn-footer/ansyn-footer.com
 import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/overlay-out-of-bounds.component';
 import { UnsupportedDevicesComponent } from './components/unsupported-devices/unsupported-devices.component';
 import { ansynConfig } from './config/ansyn.config';
+import { AngleFilterComponent } from './modules/core/components/angle-filter/angle-filter.component';
 import { CoreModule } from './modules/core/core.module';
 import { AnsynTranslationModule } from './modules/core/translation/ansyn-translation.module';
 import { ComponentTranslateLoader } from './modules/core/translation/component-translate-loader';
@@ -36,13 +34,12 @@ import { OverlaysModule } from './modules/overlays/overlays.module';
 import { AnsynPluginsModule } from './modules/plugins/ansyn-plugins.module';
 import { StatusBarModule } from './modules/status-bar/status-bar.module';
 import { TranslateService } from '@ngx-translate/core';
+import { ImageryZoomerComponent } from "./modules/plugins/components/imagery-zoomer/imagery-zoomer.component";
 
 @NgModule({
 	imports: [
 		CommonModule,
 		AnsynTranslationModule.addLoader([DefaultTranslateLoader, ComponentTranslateLoader]),
-		StoreModule.forRoot({}),
-		EffectsModule.forRoot([]),
 		AppProvidersModule,
 		CasesModule,
 		FiltersModule,
@@ -53,7 +50,6 @@ import { TranslateService } from '@ngx-translate/core';
 		OverlaysModule,
 		FormsModule,
 		HttpClientModule,
-		BrowserAnimationsModule,
 		AnsynPluginsModule,
 		CoreModule,
 		MenuModule.provideMenuItems(ansynConfig.ansynMenuItems),
@@ -61,7 +57,7 @@ import { TranslateService } from '@ngx-translate/core';
 		AppEffectsModule,
 		MapFacadeModule.provide({
 			entryComponents: {
-				container: [AnnotationContextMenuComponent],
+				container: [AnnotationContextMenuComponent, AngleFilterComponent, ImageryZoomerComponent],
 				status: []
 			}
 		}),
@@ -82,13 +78,14 @@ import { TranslateService } from '@ngx-translate/core';
 		{ provide: UrlSerializer, useClass: DefaultUrlSerializer }
 	],
 	entryComponents: [
-		OverlayOutOfBoundsComponent
+		OverlayOutOfBoundsComponent, ImageryZoomerComponent
 	],
 	declarations: [
 		AnsynComponent,
 		OverlayOutOfBoundsComponent,
 		UnsupportedDevicesComponent,
-		AnsynFooterComponent
+		AnsynFooterComponent,
+		ImageryZoomerComponent
 	],
 	exports: [AnsynComponent, UnsupportedDevicesComponent]
 })

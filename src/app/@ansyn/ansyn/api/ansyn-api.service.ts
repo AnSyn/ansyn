@@ -1,4 +1,4 @@
-import { Inject, Injectable, NgModuleRef } from '@angular/core';
+import { EventEmitter, Inject, Injectable, NgModuleRef } from '@angular/core';
 import { ImageryCommunicatorService, ImageryMapPosition } from '@ansyn/imagery';
 import {
 	LayoutKey,
@@ -18,8 +18,8 @@ import { featureCollection } from '@turf/turf';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { FeatureCollection, Point, Polygon } from 'geojson';
 import { cloneDeep } from 'lodash';
-import { Observable } from 'rxjs';
-import { map, tap, withLatestFrom } from 'rxjs/internal/operators';
+import { combineLatest, Observable } from 'rxjs';
+import { map, tap, withLatestFrom, take } from 'rxjs/operators';
 import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
 import { UpdateLayer } from '../modules/menu-items/layers-manager/actions/layers.actions';
 import { ILayer } from '../modules/menu-items/layers-manager/models/layers.model';
@@ -36,6 +36,7 @@ import {
 } from '../modules/overlays/actions/overlays.actions';
 import { IOverlay, IOverlaysCriteria } from '../modules/overlays/models/overlay.model';
 import { ANSYN_ID } from './ansyn-id.provider';
+import { selectFilteredOveralys, selectOverlaysArray } from '../modules/overlays/reducers/overlays.reducer';
 
 @Injectable({
 	providedIn: 'root'
@@ -44,11 +45,12 @@ import { ANSYN_ID } from './ansyn-id.provider';
 	init: 'init',
 	destroy: 'destroy'
 })
-export class AnsynApi {
+export class AnsynApi{
 	activeMapId;
 	mapsList: ICaseMapState[];
 	mapsEntities;
 	activeAnnotationLayer;
+	onReady = new EventEmitter<boolean>(true);
 
 	@AutoSubscription
 	activateMap$: Observable<string> = this.store.select(selectActiveMapId).pipe(
@@ -78,6 +80,12 @@ export class AnsynApi {
 			})
 		);
 
+	@AutoSubscription
+	ready$ = this.imageryCommunicatorService.instanceCreated.pipe(
+		take(1),
+		tap((map) => this.onReady.emit(true))
+	);
+
 	onShadowMouseProduce$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.SHADOW_MOUSE_PRODUCER),
 		map(({ payload }: ShadowMouseProducer) => {
@@ -96,7 +104,7 @@ export class AnsynApi {
 		})
 	);
 
-	constructor(public store: Store<any>,
+	constructor(private store: Store<any>,
 				protected actions$: Actions,
 				protected projectionConverterService: ProjectionConverterService,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
@@ -159,12 +167,24 @@ export class AnsynApi {
 		return this.mapsEntities[this.activeMapId].data.position;
 	}
 
+	// todo:  change Array<number> to geojson.Point
 	goToPosition(position: Array<number>): void {
 		this.store.dispatch(new GoToAction(position));
 	}
 
 	setMapPositionByRect(rect: Polygon) {
 		this.store.dispatch(new SetMapPositionByRectAction({ id: this.activeMapId, rect }));
+	}
+
+	getOverlays(): Observable<IOverlay[]> {
+		return combineLatest(this.store.select(selectOverlaysArray), this.store.select(selectFilteredOveralys)).pipe(
+			take(1),
+			map(([overlays, filteredOverlays]: [IOverlay[], string[]]) => {
+				return overlays.filter((overlay) => {
+					return filteredOverlays.includes(overlay.id);
+				});
+			})
+		);
 	}
 
 	/**

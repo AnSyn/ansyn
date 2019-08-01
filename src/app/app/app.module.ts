@@ -4,7 +4,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AnsynModule } from '@ansyn/ansyn';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { BrowserModule } from '@angular/platform-browser';
 import { LoggerService } from '@ansyn/ansyn';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { LoginModule } from './login/login.module';
@@ -17,13 +16,14 @@ import { SandboxModule } from './sandbox/sandbox.module';
 import { ContextModule } from './context/context.module';
 import { DeviceDetectorModule } from 'ngx-device-detector';
 import { SentinelModule } from './sentinel/sentinel.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
 	imports: [
-		BrowserModule,
+		BrowserAnimationsModule,
 		StoreModule.forRoot({}),
 		EffectsModule.forRoot([]),
-		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: configuration.production }),
+		StoreDevtoolsModule.instrument({ maxAge: 200, logOnly: configuration.production }),
 		AnsynModule,
 		LoginModule,
 		ImisightModule,

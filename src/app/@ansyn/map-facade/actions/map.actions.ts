@@ -9,7 +9,15 @@ import {
 } from '@ansyn/imagery';
 import { LayoutKey } from '../models/maps-layout';
 
-export interface IPendingOverlay {
+export interface IAngleFilterClick { // @TODO: map-facade should not know IOverlay
+	click: {x: number, y: number};
+	overlays: any[];
+	displayedOverlay: any;
+	point: Point;
+
+}
+
+export interface IPendingOverlay { // @TODO: map-facade should not know IOverlay
 	overlay: any;
 	extent?: any;
 }
@@ -30,7 +38,8 @@ export const MapActionTypes = {
 	SET_MAP_MANUAL_IMAGE_PROCESSING: 'SET_MAP_MANUAL_IMAGE_PROCESSING',
 	CONTEXT_MENU: {
 		SHOW: 'CONTEXT_MENU_SHOW',
-		DISPLAY: 'CONTEXT_MENU_DISPLAY'
+		DISPLAY: 'CONTEXT_MENU_DISPLAY',
+		ANGLE_FILTER_SHOW: 'ANGLE_FILTER_SHOW'
 	},
 	VISUALIZERS: {
 		HOVER_FEATURE: 'HOVER_FEATURE'
@@ -153,6 +162,12 @@ export class ContextMenuDisplayAction implements Action {
 
 	constructor(public payload: string) {
 	}
+}
+
+export class ContextMenuShowAngleFilter implements Action {
+	type = MapActionTypes.CONTEXT_MENU.ANGLE_FILTER_SHOW;
+
+	constructor(public payload: IAngleFilterClick) {}
 }
 
 export class PinLocationModeTriggerAction implements Action {

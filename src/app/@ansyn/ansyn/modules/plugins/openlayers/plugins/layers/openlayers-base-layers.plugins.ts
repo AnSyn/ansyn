@@ -1,10 +1,9 @@
 import { Store } from '@ngrx/store';
 import TileLayer from 'ol/layer/Tile';
-import { filter, map, tap } from 'rxjs/operators';
+import { filter, map, tap, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { BaseImageryPlugin } from '@ansyn/imagery';
 import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
-import { debounceTime, distinctUntilChanged } from 'rxjs/internal/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '@ansyn/ol';
 import { ILayer } from '../../../../menu-items/layers-manager/models/layers.model';

@@ -47,7 +47,6 @@ import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model'
 import { MarkUpClass } from '../../modules/overlays/reducers/overlays.reducer';
 import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity/src/models';
-import { fromPromise } from 'rxjs/internal-compatibility';
 import {
 	SetManualImageProcessing,
 	SetMapGeoEnabledModeToolsActionStore, ToolsActionsTypes, UpdateOverlaysManualProcessArgs
@@ -63,6 +62,7 @@ import {
 	BackToWorldView,
 	OverlayStatusActionsTypes
 } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
+import { fromPromise } from 'rxjs/internal-compatibility';
 
 @Injectable()
 export class MapAppEffects {

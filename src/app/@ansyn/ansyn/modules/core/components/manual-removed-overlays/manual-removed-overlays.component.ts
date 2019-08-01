@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { tap } from 'rxjs/internal/operators';
+import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import {
 	ResetRemovedOverlaysIdsAction,

@@ -26,7 +26,7 @@ import {
 	BaseMapSourceProvider,
 	CommunicatorEntity,
 	ImageryCommunicatorService,
-	extentFromGeojson
+	bboxFromGeoJson
 } from '@ansyn/imagery';
 import {
 	catchError,
@@ -285,7 +285,7 @@ export class MapAppEffects {
 		/* -3- */
 		const resetView = pipe(
 			mergeMap((layer) => {
-				const extent = payloadExtent || isNotIntersect && extentFromGeojson(overlay.footprint);
+				const extent = payloadExtent || isNotIntersect && bboxFromGeoJson(overlay.footprint);
 				return communicator.resetView(layer, mapData.position, extent);
 			}),
 			map(() => new DisplayOverlaySuccessAction(payload))

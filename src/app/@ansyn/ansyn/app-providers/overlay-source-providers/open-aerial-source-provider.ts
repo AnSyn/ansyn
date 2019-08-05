@@ -1,7 +1,7 @@
 import { Inject } from '@angular/core';
 import {
 	bboxFromGeoJson,
-	geojsonMultiPolygonToPolygon,
+	geojsonMultiPolygonToFirstPolygon,
 	geojsonPolygonToMultiPolygon, getPointByGeometry,
 	getPolygonByPointAndRadius,
 
@@ -51,7 +51,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 
 	fetch(fetchParams: IFetchParams): Observable<any> {
 		if (fetchParams.region.type === 'MultiPolygon') {
-			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as GeoJSON.MultiPolygon);
+			fetchParams.region = geojsonMultiPolygonToFirstPolygon(fetchParams.region as GeoJSON.MultiPolygon);
 		}
 		let bbox;
 

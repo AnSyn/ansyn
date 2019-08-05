@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ImageryCommunicatorService, extentFromGeojson, IMapSettings } from '@ansyn/imagery';
+import { ImageryCommunicatorService, bboxFromGeoJson, IMapSettings } from '@ansyn/imagery';
 import { take, tap } from 'rxjs/operators';
 import { IEntryComponent, selectMaps } from '@ansyn/map-facade';
 import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
@@ -26,7 +26,7 @@ export class OverlayOutOfBoundsComponent implements OnInit, OnDestroy, IEntryCom
 
 	backToExtent(): void {
 		const communicator = this.communicatorService.provide(this.mapState.id);
-		const extent = extentFromGeojson(this.mapState.data.overlay.footprint);
+		const extent = bboxFromGeoJson(this.mapState.data.overlay.footprint);
 		communicator.ActiveMap.fitToExtent(extent)
 			.pipe(take(1))
 			.subscribe();

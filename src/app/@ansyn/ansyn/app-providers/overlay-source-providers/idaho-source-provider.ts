@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import * as wellknown from 'wellknown';
 import { Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { geojsonMultiPolygonToPolygon, getPointByGeometry, getPolygonByPointAndRadius } from '@ansyn/imagery';
+import { geojsonMultiPolygonToFirstPolygon, getPointByGeometry, getPolygonByPointAndRadius } from '@ansyn/imagery';
 import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
 import { catchError, map } from 'rxjs/operators';
 import { ErrorHandlerService } from '../../modules/core/services/error-handler.service';
@@ -70,7 +70,7 @@ export class IdahoSourceProvider extends BaseOverlaySourceProvider {
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		// Multiple Source Provider may send a MultiPolygon which Idaho can't handle
 		if (fetchParams.region.type === 'MultiPolygon') {
-			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as MultiPolygon);
+			fetchParams.region = geojsonMultiPolygonToFirstPolygon(fetchParams.region as MultiPolygon);
 		} else if (fetchParams.region.type === 'Point') {
 			const polygonFeature: Feature<Polygon> = getPolygonByPointAndRadius((fetchParams.region as Point).coordinates);
 			fetchParams.region = polygonFeature.geometry;

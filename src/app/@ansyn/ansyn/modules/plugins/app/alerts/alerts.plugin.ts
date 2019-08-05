@@ -1,6 +1,6 @@
 import {
 	BaseImageryPlugin,
-	geojsonMultiPolygonToPolygon,
+	geojsonMultiPolygonToPolygons,
 	ImageryMapPosition,
 	ImageryPlugin
 } from '@ansyn/imagery';
@@ -18,6 +18,7 @@ import { isFullOverlay } from '../../../core/utils/overlays';
 import { ICaseMapState } from '../../../menu-items/cases/models/case.model';
 import { IOverlayDrop } from '../../../overlays/models/overlay.model';
 import { CesiumMap } from '@ansyn/imagery-cesium';
+import { Polygon } from 'geojson';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap, CesiumMap],
@@ -61,10 +62,15 @@ export class AlertsPlugin extends BaseImageryPlugin {
 		let isInBound;
 		if (!isWorldView) {
 			const viewExtent = position.extentPolygon;
-			const layerExtent = geojsonMultiPolygonToPolygon(currentMap.data.overlay.footprint);
+			const layerExtents: Polygon[] = geojsonMultiPolygonToPolygons(currentMap.data.overlay.footprint);
 
 			try {
-				isInBound = Boolean(intersect(layerExtent, viewExtent));
+				for (let i = 0; i < layerExtents.length; i++) {
+					isInBound = Boolean(intersect(layerExtents[i], viewExtent));
+					if (isInBound) {
+						break;
+					}
+				}
 			} catch (e) {
 				console.warn('checkImageOutOfBounds$: turf exception', e);
 			}

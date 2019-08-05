@@ -1,5 +1,5 @@
 import { Feature, FeatureCollection, GeometryObject, MultiPolygon, Point, Polygon } from 'geojson';
-import { bbox, bboxPolygon, centerOfMass, circle, feature, geometry, lineString, point } from '@turf/turf';
+import { bbox, bboxPolygon, centerOfMass, circle, feature, geometry, lineString, point, union } from '@turf/turf';
 
 export function getPolygonByPoint(lonLat: number[]): Feature<Polygon> {
 	return bboxPolygon(bbox(point(lonLat)));
@@ -34,4 +34,8 @@ export function geojsonPolygonToMultiPolygon(polygon: Polygon): MultiPolygon {
 
 export function areCoordinatesNumeric(coord) {
 	return coord && !isNaN(coord[0]) && !isNaN(coord[1]) && (Math.abs(coord[0]) !== 999999) && (Math.abs(coord[1]) !== 999999);
+}
+
+export function unifyPolygons(features: Feature<Polygon>[]): Feature<MultiPolygon | Polygon> {
+	return union(...features);
 }

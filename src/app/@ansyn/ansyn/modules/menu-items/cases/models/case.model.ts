@@ -1,5 +1,5 @@
 import { IDilutedOverlay, IDilutedOverlaysHash, IOverlay, IOverlaysHash } from '../../../overlays/models/overlay.model';
-import { Feature, Point, Polygon } from 'geojson';
+import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
 import { LayoutKey } from '@ansyn/map-facade';
 import { FilterType } from '../../filters/models/filter-type';
 import { IMapSettings, IMapSettingsData, IVisualizerEntity } from '@ansyn/imagery';
@@ -48,6 +48,10 @@ export interface IOverlaysManualProcessArgs {
 	[key: string]: ImageManualProcessArgs;
 }
 
+export interface IOverlaysScannedArea {
+	[key: string]: Feature<MultiPolygon>;
+}
+
 export interface IDilutedCaseState {
 	maps?: IDilutedCaseMapsState;
 	time: ICaseTimeState;
@@ -63,6 +67,7 @@ export interface IDilutedCaseState {
 	removedOverlaysVisibility: boolean;
 	presetOverlays?: IDilutedOverlay[];
 	overlaysManualProcessArgs: IOverlaysManualProcessArgs;
+	overlaysScannedArea?: IOverlaysScannedArea;
 	layers?: ICaseLayersState;
 }
 

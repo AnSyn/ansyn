@@ -13,7 +13,11 @@ import { selectFacets } from '../../../modules/menu-items/filters/reducer/filter
 import { selectComboBoxesProperties } from '../../../modules/status-bar/reducers/status-bar.reducer';
 import { selectOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/reducers/tools.reducer';
 import { UpdateCaseAction } from '../../../modules/menu-items/cases/actions/cases.actions';
-import { selectAutoSave, selectSelectedCase } from '../../../modules/menu-items/cases/reducers/cases.reducer';
+import {
+	selectAutoSave,
+	selectScannedArea,
+	selectSelectedCase
+} from '../../../modules/menu-items/cases/reducers/cases.reducer';
 import { selectMiscOverlays, selectOverlaysCriteria } from '../../../modules/overlays/reducers/overlays.reducer';
 import { ICase } from '../../../modules/menu-items/cases/models/case.model';
 
@@ -42,7 +46,8 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectOverlaysCriteria),
 		this.store$.select(selectOverlaysManualProcessArgs),
 		this.store$.select(selectContextEntities),
-		this.store$.select(selectMiscOverlays)
+		this.store$.select(selectMiscOverlays),
+		this.store$.select(selectScannedArea)
 	]
 		.map(event => event.pipe(this.clearIsAutoSave))
 		.concat([this.store$.select(selectAutoSave).pipe(this.setIsAutoSave)]);
@@ -67,7 +72,8 @@ export class UpdateCaseAppEffects {
 				overlaysManualProcessArgs,
 				contextEntities,
 				miscOverlays,
-				autoSave
+				autoSave,
+				overlaysScannedArea
 			] = events;
 
 			const { id, name, lastModified, creationTime, selectedContextId } = selectedCase;
@@ -99,7 +105,8 @@ export class UpdateCaseAppEffects {
 					facets,
 					contextEntities,
 					miscOverlays,
-					overlaysManualProcessArgs
+					overlaysManualProcessArgs,
+					overlaysScannedArea
 				}
 			};
 

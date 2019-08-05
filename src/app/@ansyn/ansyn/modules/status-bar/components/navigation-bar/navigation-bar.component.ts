@@ -9,6 +9,7 @@ import {
 	GoNextPresetOverlay
 } from '../../../status-bar/actions/status-bar.actions';
 import { EnableCopyOriginalOverlayDataAction } from '@ansyn/map-facade';
+import { SetScannedAreaAction } from '../../../plugins/actions/plugins.actions';
 
 @Component({
 	selector: 'ansyn-navigation-bar',
@@ -19,12 +20,14 @@ export class NavigationBarComponent {
 	goPrevActive = false;
 	goNextActive = false;
 	goNextQuickLoop = false;
+	scanAreaActive = false;
 
 	get toolTips(): IToolTipsConfig {
 		return this.statusBarConfig.toolTips || {};
 	}
 
 	private _nextPresetOverlayKeys = 'qQ/'.split('').map(char => char.charCodeAt(0));
+	private _scannedAreaKey = '`~;'.split('').map(char => char.charCodeAt(0));
 	private _overlayHack = 'Eeק'.split('').map(char => char.charCodeAt(0));
 
 	@HostListener('window:keyup', ['$event'])
@@ -43,6 +46,10 @@ export class NavigationBarComponent {
 			this.clickGoNextPresetOverlay();
 			this.goNextQuickLoop = false;
 		}
+		// else if (this._scannedAreaKey.indexOf($event.which) !== -1) {
+		// 	this.clickScannedArea();
+		// 	this.scanAreaActive = false;
+		// }
 
 		if (this._overlayHack.indexOf($event.which) !== -1) {
 			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(false));
@@ -62,9 +69,20 @@ export class NavigationBarComponent {
 		} else if (this._nextPresetOverlayKeys.indexOf($event.which) !== -1) {
 			this.goNextQuickLoop = true;
 		}
+		// else if (this._scannedAreaKey.indexOf($event.which) !== -1) {
+		// 	this.clickScannedArea();
+		// 	this.scanAreaActive = true;
+		// }
 
 		if (this._overlayHack.indexOf($event.which) !== -1) {
 			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(true));
+		}
+	}
+
+	@HostListener('window:keypress', ['$event'])
+	onkeypress($event: KeyboardEvent) {
+		if (this._scannedAreaKey.indexOf($event.which) !== -1) {
+			this.clickScannedArea();
 		}
 	}
 
@@ -74,6 +92,10 @@ export class NavigationBarComponent {
 
 	clickGoAdjacent(isNext): void {
 		this.store.dispatch(new GoAdjacentOverlay({ isNext }));
+	}
+
+	clickScannedArea(): void {
+		this.store.dispatch(new SetScannedAreaAction());
 	}
 
 	clickGoNextPresetOverlay(): void {

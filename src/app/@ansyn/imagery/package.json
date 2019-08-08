@@ -10,6 +10,7 @@
 	},
 	"dependencies": {
 		"auto-subscriptions": "^2.0.5",
-		"@turf/turf": "^5.1.6"
+		"@turf/turf": "^5.1.6",
+		"@types/geojson": "^7946.0.3"
 	}
 }

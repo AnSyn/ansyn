@@ -233,6 +233,10 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 		this.iMap.addLayer(this.hoverLayer);
 	}
 
+	onDispose(): void {
+		this.removeInteraction(VisualizerInteractions.doubleClick);
+		this.removeInteraction(VisualizerInteractions.pointerMove);
+	}
 
 	onSelectFeature($event) {
 		if ($event.selected.length > 0) {

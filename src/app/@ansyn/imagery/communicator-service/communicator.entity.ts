@@ -285,8 +285,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
-		this.imageryCommunicatorService.remove(this.id);
-		this.destroyPlugins();
+		this.destroyCurrentComponent();
 	}
 
 	private resetPlugins(): Observable<boolean> {
@@ -310,6 +309,8 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 			this._mapComponentRef.destroy();
 			this._mapComponentRef = undefined;
 		}
+		this.imageryCommunicatorService.remove(this.id);
+		this._activeMap.dispose();
 	}
 
 	destroyPlugins(): void {

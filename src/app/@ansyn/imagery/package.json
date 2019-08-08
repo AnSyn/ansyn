@@ -6,11 +6,11 @@
 	"license": "MIT",
 	"peerDependencies": {
 		"@angular/common": "^7.2.2",
-		"@angular/core": "^7.2.2"
+		"@angular/core": "^7.2.2",
+		"@types/geojson": "7946.0.3"
 	},
 	"dependencies": {
 		"auto-subscriptions": "^2.0.5",
-		"@turf/turf": "^5.1.6",
-		"@types/geojson": "^7946.0.3"
+		"@turf/turf": "^5.1.6"
 	}
 }

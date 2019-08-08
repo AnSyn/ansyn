@@ -6,15 +6,16 @@ import {
 	IOverlaysCriteria,
 	PhotoAngle,
 	selectMiscOverlays,
-	selectOverlaysArray, SetMiscOverlay
+	selectOverlaysArray,
+	SetMiscOverlay
 } from '@ansyn/ansyn';
 import { Point, Polygon } from 'geojson';
-import { OpenLayersStaticImageSourceProviderSourceType, OpenLayerMarcoSourceProviderSourceType } from '@ansyn/ol';
+import { OpenLayerMarcoSourceProviderSourceType, OpenLayersStaticImageSourceProviderSourceType } from '@ansyn/ol';
 import * as momentNs from 'moment';
 import { take, tap } from 'rxjs/operators';
-import { ImageryCommunicatorService } from "@ansyn/imagery";
-import { AutoSubscription, AutoSubscriptions } from "auto-subscriptions";
-import { Store } from "@ngrx/store";
+import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { Store } from '@ngrx/store';
 
 const moment = momentNs;
 
@@ -31,25 +32,25 @@ export class SandboxComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	miscOverlays$ = this.store$.select(selectMiscOverlays).pipe(
-		tap( x => console.log('sandbox' , 'miscOverlays', x))
+		tap(x => console.log('sandbox', 'miscOverlays', x))
 	);
 
 	currentOverlays: IOverlay[];
 
 	@AutoSubscription
 	currentOverlays$ = this.store$.select(selectOverlaysArray).pipe(
-		tap( x => console.log('sandbox' , 'overlays array', x)),
-		tap( (x: IOverlay[]) => this.currentOverlays = x)
+		tap(x => console.log('sandbox', 'overlays array', x)),
+		tap((x: IOverlay[]) => this.currentOverlays = x)
 	);
 
 	overlays = [
-		this.overlay('000', OpenLayersStaticImageSourceProviderSourceType, 'https://upload.wikimedia.org/wikipedia/commons/e/e2/Reeipublic_Banana.gif', 576, 1024),
-		this.overlay('111', OpenLayersStaticImageSourceProviderSourceType, 'https://image.shutterstock.com/image-vector/cool-comic-book-bubble-text-450w-342092249.jpg', 470, 450),
-		this.overlay('222', OpenLayersStaticImageSourceProviderSourceType, 'https://imgs.xkcd.com/comics/online_communities.png', 1024, 968),
-		this.overlay('333', OpenLayersStaticImageSourceProviderSourceType, 'https://image.shutterstock.com/z/stock-vector-cool-milkshake-190524542.jpg', 1600, 1500)
+		this.overlay('000', OpenLayersStaticImageSourceProviderSourceType, 'https://upload.wikimedia.org/wikipedia/commons/e/e2/Reeipublic_Banana.gif', null, GeoRegisteration.notGeoRegistered, 'vis', null, 576, 1024),
+		this.overlay('111', OpenLayersStaticImageSourceProviderSourceType, 'https://image.shutterstock.com/image-vector/cool-comic-book-bubble-text-450w-342092249.jpg', null, GeoRegisteration.notGeoRegistered, 'vis', null, 470, 450),
+		this.overlay('222', OpenLayersStaticImageSourceProviderSourceType, 'https://imgs.xkcd.com/comics/online_communities.png', null, GeoRegisteration.notGeoRegistered, 'vis', null, 1024, 968),
+		this.overlay('333', OpenLayersStaticImageSourceProviderSourceType, 'https://image.shutterstock.com/z/stock-vector-cool-milkshake-190524542.jpg', null, GeoRegisteration.notGeoRegistered, 'vis', null, 1600, 1500)
 	];
 
-	overlay(id: string, sourceType: string, imageUrl: string, imageWidth: number, imageHeight: number, name?: string): IOverlay {
+	overlay(id: string, sourceType: string, imageUrl: string, footprint: any, geoRegistered: GeoRegisteration = GeoRegisteration.notGeoRegistered, sensorType: string = 'mySensorType', sensorName: string = 'mySensorName', imageWidth: number, imageHeight: number): IOverlay {
 		const days = 10 * Math.random();
 		const date = moment().subtract(days, 'day').toDate();
 		const left = -117.94,
@@ -65,7 +66,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 			date: date,
 			azimuth: 0,
 			approximateTransform: 'Identity',
-			isGeoRegistered: GeoRegisteration.notGeoRegistered,
+			isGeoRegistered: geoRegistered,
 			sourceType: sourceType,
 			tag: {
 				imageData: {
@@ -73,7 +74,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 					imageHeight: imageHeight
 				}
 			},
-			footprint: {
+			footprint: footprint ? footprint : {
 				type: 'MultiPolygon',
 				coordinates: [[[
 					[left, top],
@@ -86,12 +87,12 @@ export class SandboxComponent implements OnInit, OnDestroy {
 			baseImageUrl: '',
 			imageUrl: imageUrl,
 			thumbnailUrl: '',
-			sensorName: name ? name : 'mySensorName',
-			sensorType: 'mySensorType',
+			sensorName: sensorName,
+			sensorType: sensorType,
 			bestResolution: 1,
 			cloudCoverage: 1,
 			photoAngle: PhotoAngle.vertical
-		}
+		};
 	}
 
 	constructor(protected ansynApi: AnsynApi,
@@ -164,13 +165,13 @@ export class SandboxComponent implements OnInit, OnDestroy {
 
 	setMarcoOverlays() {
 		const overlays = [
-			this.overlay('M000', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_RGB_8bpp.j2k', 576, 1024, 'OGN_RGB_8_j2k'),
-			this.overlay('M001', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_RGB_16bpp.j2k', 576, 1024, 'OGN_RGB_16_j2k'),
-			this.overlay('M002', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_4Band_16bpp.tif', 576, 1024, 'OGN_4Band_16_tif'),
-			this.overlay('M003', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_4Band_8bpp.tif', 576, 1024, 'OGN_4Band_8_tif'),
-			this.overlay('M004', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_IR_16bpp.j2k', 576, 1024, 'OGN_IR_16bpp_j2k'),
-			this.overlay('M005', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_IR_8bpp.j2k', 576, 1024, 'OGN_IR_8bpp_j2k'),
-			this.overlay('M006', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_IR_8bpp.tif', 576, 1024, 'OGN_IR_8bpp_tif')// ,
+			this.overlay('M000', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_RGB_8bpp.j2k', null, GeoRegisteration.notGeoRegistered, 'vis', 'OGN_RGB_8_j2k', 576, 1024),
+			this.overlay('M001', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_RGB_16bpp.j2k', null, GeoRegisteration.notGeoRegistered, 'vis', 'OGN_RGB_16_j2k', 576, 1024),
+			this.overlay('M002', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_4Band_16bpp.tif', null, GeoRegisteration.notGeoRegistered, 'vis', 'OGN_4Band_16_tif', 576, 1024),
+			this.overlay('M003', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_4Band_8bpp.tif', null, GeoRegisteration.notGeoRegistered, 'vis', 'OGN_4Band_8_tif', 576, 1024),
+			this.overlay('M004', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_IR_16bpp.j2k', null, GeoRegisteration.notGeoRegistered, 'vis', 'OGN_IR_16bpp_j2k', 576, 1024),
+			this.overlay('M005', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_IR_8bpp.j2k', null, GeoRegisteration.notGeoRegistered, 'vis', 'OGN_IR_8bpp_j2k', 576, 1024),
+			this.overlay('M006', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/OGN_IR_8bpp.tif', null, GeoRegisteration.notGeoRegistered, 'vis', 'OGN_IR_8bpp_tif', 576, 1024)// ,
 			// this.overlay('M007', OpenLayerMarcoSourceProviderSourceType, 's3://mp-images/14DEC08015334-S2AS_R1C1-054168615010_01_P001.TIF', 576, 1024, '14DEC08015334_tif')
 		];
 		this.ansynApi.setOverlays(overlays);
@@ -182,7 +183,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 
 	setMiscOverlays() {
 		if (this.currentOverlays.length > 0) {
-			this.store$.dispatch(new SetMiscOverlay({ key: 'example', overlay: this.currentOverlays[0]}))
+			this.store$.dispatch(new SetMiscOverlay({ key: 'example', overlay: this.currentOverlays[0] }))
 		} else {
 			console.warn('Cannot set misc overlays because there are no query overlays');
 		}
@@ -199,49 +200,49 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		};
 		this.ansynApi.setMapPositionByRadius(center, 5000, true);
 		this.ansynApi.setAnnotations({
-			"type": "FeatureCollection",
-			"features": [
+			'type': 'FeatureCollection',
+			'features': [
 				{
-					"type": "Feature",
-					"geometry": {
-						"type": "Point",
-						"coordinates": [
+					'type': 'Feature',
+					'geometry': {
+						'type': 'Point',
+						'coordinates': [
 							-117.94590568490094,
 							33.816596031188965
 						]
 					},
-					"properties": {
-						"id": "efecb919-089e-d5e6-9ab3-3b3b73d9d9c8",
-						"style": {
-							"opacity": 1,
-							"initial": {
-								"fill": "#ff0080",
-								"stroke": "#ff80c0",
-								"stroke-width": 1,
-								"fill-opacity": 0.4,
-								"marker-size": "medium",
-								"marker-color": "#ff0080",
-								"label": {
-									"overflow": true,
-									"font": "27px Calibri,sans-serif",
-									"stroke": "#000",
-									"fill": "white"
+					'properties': {
+						'id': 'efecb919-089e-d5e6-9ab3-3b3b73d9d9c8',
+						'style': {
+							'opacity': 1,
+							'initial': {
+								'fill': '#ff0080',
+								'stroke': '#ff80c0',
+								'stroke-width': 1,
+								'fill-opacity': 0.4,
+								'marker-size': 'medium',
+								'marker-color': '#ff0080',
+								'label': {
+									'overflow': true,
+									'font': '27px Calibri,sans-serif',
+									'stroke': '#000',
+									'fill': 'white'
 								},
-								"stroke-opacity": 1
+								'stroke-opacity': 1
 							}
 						},
-						"showMeasures": false,
-						"showLabel": false,
-						"label": "",
-						"mode": "Point",
-						"icon": "assets/icons/map/entity-marker.svg"
+						'showMeasures': false,
+						'showLabel': false,
+						'label': '',
+						'mode': 'Point',
+						'icon': 'assets/icons/map/entity-marker.svg'
 					}
 				},
 				{
-					"type": "Feature",
-					"geometry": {
-						"type": "Polygon",
-						"coordinates": [
+					'type': 'Feature',
+					'geometry': {
+						'type': 'Polygon',
+						'coordinates': [
 							[
 								[
 									-117.93876457057195,
@@ -266,35 +267,35 @@ export class SandboxComponent implements OnInit, OnDestroy {
 							]
 						]
 					},
-					"properties": {
-						"id": "79bbd5d3-6df8-f861-d036-7589555673a9",
-						"style": {
-							"opacity": 1,
-							"initial": {
-								"fill": "#400040",
-								"stroke": "#008040",
-								"stroke-width": 1,
-								"fill-opacity": 0.4,
-								"marker-size": "medium",
-								"marker-color": "#400040",
-								"label": {
-									"overflow": true,
-									"font": "27px Calibri,sans-serif",
-									"stroke": "#000",
-									"fill": "white"
+					'properties': {
+						'id': '79bbd5d3-6df8-f861-d036-7589555673a9',
+						'style': {
+							'opacity': 1,
+							'initial': {
+								'fill': '#400040',
+								'stroke': '#008040',
+								'stroke-width': 1,
+								'fill-opacity': 0.4,
+								'marker-size': 'medium',
+								'marker-color': '#400040',
+								'label': {
+									'overflow': true,
+									'font': '27px Calibri,sans-serif',
+									'stroke': '#000',
+									'fill': 'white'
 								},
-								"stroke-opacity": 1
+								'stroke-opacity': 1
 							}
 						},
-						"showMeasures": false,
-						"showLabel": false,
-						"label": "",
-						"mode": "Rectangle",
-						"icon": "assets/logo.svg"
+						'showMeasures': false,
+						'showLabel': false,
+						'label': '',
+						'mode': 'Rectangle',
+						'icon': 'assets/logo.svg'
 					}
 				}
 			]
-		})
+		});
 	}
 
 	getOverlayData() {
@@ -303,7 +304,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 
 	getAllOverlaysData() {
 		this.ansynApi.getOverlays().pipe(
-			tap( x => console.log('sandbox' , 'getAllOverlaysData method', x))
+			tap(x => console.log('sandbox', 'getAllOverlaysData method', x))
 		).subscribe();
 	}
 
@@ -314,42 +315,42 @@ export class SandboxComponent implements OnInit, OnDestroy {
 
 	undeletableAnnotations() {
 		this.ansynApi.setAnnotations({
-			"type": "FeatureCollection",
-			"features": [
+			'type': 'FeatureCollection',
+			'features': [
 				{
-					"type": "Feature",
-					"geometry": {
-						"type": "Point",
-						"coordinates": [
+					'type': 'Feature',
+					'geometry': {
+						'type': 'Point',
+						'coordinates': [
 							-117.94590568490094,
 							33.816596031188965
 						]
 					},
-					"properties": {
-						"id": "efecb919-089e-d5e6-9ab3-3b3b73d9d9c8",
-						"style": {
-							"opacity": 1,
-							"initial": {
-								"fill": "#ff0080",
-								"stroke": "#ff80c0",
-								"stroke-width": 1,
-								"fill-opacity": 0.4,
-								"marker-size": "medium",
-								"marker-color": "#ff0080",
-								"label": {
-									"overflow": true,
-									"font": "27px Calibri,sans-serif",
-									"stroke": "#000",
-									"fill": "white"
+					'properties': {
+						'id': 'efecb919-089e-d5e6-9ab3-3b3b73d9d9c8',
+						'style': {
+							'opacity': 1,
+							'initial': {
+								'fill': '#ff0080',
+								'stroke': '#ff80c0',
+								'stroke-width': 1,
+								'fill-opacity': 0.4,
+								'marker-size': 'medium',
+								'marker-color': '#ff0080',
+								'label': {
+									'overflow': true,
+									'font': '27px Calibri,sans-serif',
+									'stroke': '#000',
+									'fill': 'white'
 								},
-								"stroke-opacity": 1
+								'stroke-opacity': 1
 							}
 						},
-						"showMeasures": false,
-						"showLabel": false,
-						"label": "",
-						"mode": "Point",
-						"undeletable": true
+						'showMeasures': false,
+						'showLabel': false,
+						'label': '',
+						'mode': 'Point',
+						'undeletable': true
 					}
 				}
 			]

@@ -1,6 +1,6 @@
 export { AddAlertMsg, RemoveAlertMsg } from './modules/overlays/overlay-status/actions/overlay-status.actions';
 export { IAlert } from './modules/alerts/alerts.model';
-export { AlertsModule, } from './modules/alerts/alerts.module';
+export { AlertsModule } from './modules/alerts/alerts.module';
 
 export { ANSYN_ID } from './api/ansyn-id.provider';
 export { AnsynApi } from './api/ansyn-api.service';

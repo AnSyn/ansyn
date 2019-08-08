@@ -26,5 +26,6 @@ export type ImageryMapExtentPolygon = Polygon;
 export interface ImageryMapPosition {
 	projectedState?: ImageryMapProjectedState;
 	extentPolygon?: ImageryMapExtentPolygon;
+	customResolution?: number;
 }
 

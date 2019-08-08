@@ -5,7 +5,7 @@ import { EMPTY, forkJoin, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMaps } from '../reducers/map.reducer';
 import {
-	geojsonMultiPolygonToPolygon,
+	geojsonMultiPolygonToBBOXPolygon,
 	ImageryMapPosition, IMapSettings,
 	IWorldViewMapState
 } from '@ansyn/imagery';
@@ -133,7 +133,7 @@ export class MapEffects {
 			if (!mapPosition) {
 				const map: IMapSettings = mapState.entities[mapId];
 				if (map.data.overlay) {
-					mapPosition = { extentPolygon: geojsonMultiPolygonToPolygon(map.data.overlay.footprint)};
+					mapPosition = { extentPolygon: geojsonMultiPolygonToBBOXPolygon(map.data.overlay.footprint)};
 				} else {
 					mapPosition = map.data.position;
 				}

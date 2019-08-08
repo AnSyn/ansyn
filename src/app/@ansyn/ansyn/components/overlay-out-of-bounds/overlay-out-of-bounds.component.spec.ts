@@ -3,7 +3,7 @@ import { mapFeatureKey, MapReducer, selectMaps } from '@ansyn/map-facade';
 import { casesStateSelector } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import { layersStateSelector } from '../../modules/menu-items/layers-manager/reducers/layers.reducer';
 import { OverlayOutOfBoundsComponent } from './overlay-out-of-bounds.component';
-import { ImageryCommunicatorService, extentFromGeojson } from '@ansyn/imagery';
+import { ImageryCommunicatorService, bboxFromGeoJson } from '@ansyn/imagery';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 import { geometry } from '@turf/turf';
@@ -50,7 +50,7 @@ describe('OverlayOutOfBoundsComponent', () => {
 		const ActiveMap = jasmine.createSpyObj({ fitToExtent: of(true) });
 		spyOn(imageryCommunicatorService, 'provide').and.returnValue({ ActiveMap });
 		component.backToExtent();
-		const extent = extentFromGeojson(component.mapState.data.overlay.footprint);
+		const extent = bboxFromGeoJson(component.mapState.data.overlay.footprint);
 		expect(ActiveMap.fitToExtent).toHaveBeenCalledWith(extent);
 	});
 

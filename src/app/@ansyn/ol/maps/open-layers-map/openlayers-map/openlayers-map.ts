@@ -417,7 +417,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			}));
 	}
 
-	fitRotateExtent(olmap: OLMap, extentFeature: Feature<ImageryMapExtentPolygon>): Observable<boolean> {
+	fitRotateExtent(olmap: OLMap, extentFeature: Feature<ImageryMapExtentPolygon>, customResolution?: number): Observable<boolean> {
 		const collection: any = turf.featureCollection([extentFeature]);
 
 		return this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, olmap).pipe(
@@ -433,7 +433,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 				view.setCenter(center);
 				view.setRotation(rotation);
-				view.setResolution(Math.abs(resolution));
+				view.setResolution(customResolution ? customResolution : Math.abs(resolution));
 				this.isValidPosition = true;
 				return true;
 			})
@@ -441,7 +441,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	public setPosition(position: ImageryMapPosition, map: OLMap = this.mapObject, view: View = map.getView()): Observable<boolean> {
-		const { extentPolygon, projectedState } = position;
+		const { extentPolygon, projectedState, customResolution } = position;
 
 		const someIsNan = !extentPolygon.coordinates[0].every(areCoordinatesNumeric);
 		if (someIsNan) {
@@ -460,7 +460,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			return of(true);
 		} else {
 			const extentFeature = feature(extentPolygon);
-			return this.fitRotateExtent(map, extentFeature);
+			return this.fitRotateExtent(map, extentFeature, customResolution);
 		}
 	}
 

@@ -1,5 +1,5 @@
-import { Feature, FeatureCollection, GeometryObject, MultiPolygon, Point, Polygon } from 'geojson';
-import { bbox, bboxPolygon, centerOfMass, circle, feature, geometry, lineString, point } from '@turf/turf';
+import { Feature, FeatureCollection, GeometryObject, MultiPolygon, Point, Polygon, BBox } from 'geojson';
+import { bbox, bboxPolygon, centerOfMass, circle, feature, geometry, point, AllGeoJSON } from '@turf/turf';
 
 export function getPolygonByPoint(lonLat: number[]): Feature<Polygon> {
 	return bboxPolygon(bbox(point(lonLat)));
@@ -18,14 +18,31 @@ export function getPointByGeometry(geometry: GeometryObject | FeatureCollection<
 	}
 }
 
-export function bboxFromGeoJson(polygon: Polygon): number[] {
-	let line = lineString(polygon.coordinates[0]);
-	let bboxFromPolygon = bbox(line);
+export function bboxFromGeoJson(geoJson: AllGeoJSON): number[] {
+	let bboxFromPolygon = bbox(geoJson);
 	return bboxFromPolygon;
 }
 
-export function geojsonMultiPolygonToPolygon(multiPolygon: MultiPolygon): Polygon {
+export function polygonFromBBOX(bbox: number[]): Polygon {
+	const bboxedPolygon: Feature<Polygon> = bboxPolygon(<BBox>bbox);
+	return bboxedPolygon.geometry;
+}
+
+export function geojsonMultiPolygonToBBOXPolygon(multiPolygon: MultiPolygon): Polygon {
+	const bbox = bboxFromGeoJson(multiPolygon);
+	const bboxedPolygon = polygonFromBBOX(bbox)
+	return bboxedPolygon;
+}
+
+export function geojsonMultiPolygonToFirstPolygon(multiPolygon: MultiPolygon): Polygon {
 	return <Polygon>geometry('Polygon', multiPolygon.coordinates[0]);
+}
+
+export function geojsonMultiPolygonToPolygons(multiPolygon: MultiPolygon): Polygon[] {
+	const polygons = multiPolygon.coordinates.map((polygonCoordinates) => {
+		return <Polygon>geometry('Polygon', polygonCoordinates);
+	});
+	return polygons;
 }
 
 export function geojsonPolygonToMultiPolygon(polygon: Polygon): MultiPolygon {

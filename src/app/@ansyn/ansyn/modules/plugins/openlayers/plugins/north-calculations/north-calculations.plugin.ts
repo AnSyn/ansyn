@@ -176,7 +176,8 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 						}
 						currentRotationDegrees = currentRotationDegrees % 360;
 						return toRadians(currentRotationDegrees);
-					})
+					}),
+					catchError((error) => of(0)) // prevent's subscriber disappearance
 				);
 			}
 			return of(0);
@@ -209,6 +210,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			catchError(reason => {
 				const error = `setCorrectedNorth failed ${reason}`;
 				this.loggerService.warn(error);
+				console.warn('pointNorth failed: ', error);
 				return throwError(error);
 			})
 		);

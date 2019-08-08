@@ -2,7 +2,7 @@ import { Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {
 	bboxFromGeoJson,
-	geojsonMultiPolygonToPolygon,
+	geojsonMultiPolygonToFirstPolygon,
 	geojsonPolygonToMultiPolygon,
 	getPolygonByPointAndRadius,
 	IMapSourceProvidersConfig,
@@ -61,7 +61,7 @@ export class SentinelSourceProvider extends BaseOverlaySourceProvider {
 		// let search = `${this.config.search}${fetchParams.dataInputFilters[0].sensorType}/searchIndex`;
 		const search = `${this.config.baseUrl}/search`;
 		if (fetchParams.region.type === 'MultiPolygon') {
-			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as GeoJSON.MultiPolygon);
+			fetchParams.region = geojsonMultiPolygonToFirstPolygon(fetchParams.region as GeoJSON.MultiPolygon);
 		}
 		let bbox;
 

@@ -1,11 +1,5 @@
-import { Feature, MultiPolygon, Polygon as geoPolygon } from 'geojson';
-import { area, bbox, feature, intersect, polygon, unkinkPolygon } from '@turf/turf';
-import { ImageryMapExtent } from '../model/case-map-position.model';
-
-export function extentFromGeojson(footprint: MultiPolygon | geoPolygon): ImageryMapExtent {
-	const footprintFeature: Feature<any> = feature(footprint);
-	return <any>bbox(<any>footprintFeature);
-}
+import { MultiPolygon, Polygon as geoPolygon } from 'geojson';
+import { area, intersect, polygon, unkinkPolygon } from '@turf/turf';
 
 export function getFootprintIntersectionRatioInExtent(extent: geoPolygon, footprint: MultiPolygon): number {
 	let intersectionArea = 0;

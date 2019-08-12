@@ -84,4 +84,4 @@ export const selectSelectedCase = createSelector(casesStateSelector, (cases) => 
 export const selectAutoSave: MemoizedSelector<any, boolean> = createSelector(casesStateSelector, (cases) => {
 	return cases.autoSave
 });
-export const selectScannedArea = createSelector(selectSelectedCase, (selectedCase) => selectedCase && selectedCase.state && selectedCase.state.overlaysScannedArea);
+export const selectCaseScannedArea = createSelector(selectSelectedCase, (selectedCase) => selectedCase && selectedCase.state && selectedCase.state.overlaysScannedArea);

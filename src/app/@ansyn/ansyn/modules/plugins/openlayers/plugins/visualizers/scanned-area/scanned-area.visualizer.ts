@@ -17,7 +17,7 @@ import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
 import Stroke from 'ol/style/Stroke';
 import Feature from 'ol/Feature';
-import { selectScannedArea, selectSelectedCase } from '../../../../../menu-items/cases/reducers/cases.reducer';
+import { selectCaseScannedArea, selectSelectedCase } from '../../../../../menu-items/cases/reducers/cases.reducer';
 import { ICase, ICaseMapState, IOverlaysScannedArea } from '../../../../../menu-items/cases/models/case.model';
 
 @ImageryVisualizer({
@@ -27,7 +27,7 @@ import { ICase, ICaseMapState, IOverlaysScannedArea } from '../../../../../menu-
 export class ScannedAreaVisualizer extends EntitiesVisualizer {
 
 	@AutoSubscription
-	scannedArea$ = combineLatest(this.store$.select(selectScannedArea), this.store$.select(selectSelectedCase)).pipe(
+	scannedArea$ = combineLatest(this.store$.select(selectCaseScannedArea), this.store$.select(selectSelectedCase)).pipe(
 		map(([scannedAreaData, selectedCase]: [IOverlaysScannedArea, ICase]) => {
 			const currentMapData = selectedCase.state.maps.data.find((state) => {
 				return state.id === this.mapId});

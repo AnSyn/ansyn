@@ -9,7 +9,7 @@ import {
 	GoNextPresetOverlay
 } from '../../../status-bar/actions/status-bar.actions';
 import { EnableCopyOriginalOverlayDataAction } from '@ansyn/map-facade';
-import { SetScannedAreaAction } from '../../../plugins/actions/plugins.actions';
+import { ActivateScannedAreaAction } from '../../../plugins/actions/plugins.actions';
 
 @Component({
 	selector: 'ansyn-navigation-bar',
@@ -95,7 +95,7 @@ export class NavigationBarComponent {
 	}
 
 	clickScannedArea(): void {
-		this.store.dispatch(new SetScannedAreaAction());
+		this.store.dispatch(new ActivateScannedAreaAction());
 	}
 
 	clickGoNextPresetOverlay(): void {

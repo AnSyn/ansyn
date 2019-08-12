@@ -15,7 +15,7 @@ import { selectOverlaysManualProcessArgs } from '../../../modules/menu-items/too
 import { UpdateCaseAction } from '../../../modules/menu-items/cases/actions/cases.actions';
 import {
 	selectAutoSave,
-	selectScannedArea,
+	selectCaseScannedArea,
 	selectSelectedCase
 } from '../../../modules/menu-items/cases/reducers/cases.reducer';
 import { selectMiscOverlays, selectOverlaysCriteria } from '../../../modules/overlays/reducers/overlays.reducer';
@@ -47,7 +47,7 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectOverlaysManualProcessArgs),
 		this.store$.select(selectContextEntities),
 		this.store$.select(selectMiscOverlays),
-		this.store$.select(selectScannedArea)
+		this.store$.select(selectCaseScannedArea)
 	]
 		.map(event => event.pipe(this.clearIsAutoSave))
 		.concat([this.store$.select(selectAutoSave).pipe(this.setIsAutoSave)]);

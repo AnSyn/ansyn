@@ -5,7 +5,7 @@ import { combineLatest, EMPTY, Observable } from 'rxjs';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { SetTasksPageToShow, TasksActionTypes } from '../../menu-items/algorithms/actions/tasks.actions';
-import { PluginsActionTypes } from '../actions/plugins.actions';
+import { PluginsActionTypes, SetScannedAreaAction } from '../actions/plugins.actions';
 import {
 	IMapState,
 	mapFacadeConfig,
@@ -25,7 +25,7 @@ import {
 import { MultiPolygon, Point } from 'geojson';
 import { SetActiveCenter } from '../../menu-items/tools/actions/tools.actions';
 import { unifyPolygons } from '../../../../imagery/utils/geo';
-import { selectScannedArea, selectSelectedCase } from '../../menu-items/cases/reducers/cases.reducer';
+import { selectCaseScannedArea, selectSelectedCase } from '../../menu-items/cases/reducers/cases.reducer';
 import { selectDropMarkup } from '../../overlays/reducers/overlays.reducer';
 import { ICase, IOverlaysScannedArea } from '../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../overlays/models/overlay.model';
@@ -37,7 +37,7 @@ export class PluginsEffects {
 
 	@Effect()
 	setScannedAreaData$: Observable<any> = this.actions$.pipe(
-		ofType(PluginsActionTypes.SET_SCANNED_AREA),
+		ofType(PluginsActionTypes.ACTIVATE_SCANNED_AREA),
 		withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(selectSelectedCase)),
 		map(([action, mapState, selectedCase]) => {
 			const communicatorEntity = this.imageryCommunicatorService.provide(mapState.activeMapId)
@@ -50,18 +50,20 @@ export class PluginsEffects {
 				map((position: ImageryMapPosition) => [position, selectedCase, mapSettings.data.overlay]));
 		}),
 		filter(([position, selectedCase, overlay]: [ImageryMapPosition, ICase, IOverlay]) => Boolean(position) && Boolean(overlay)),
-		tap(([position, selectedCase, overlay]: [ImageryMapPosition, ICase, IOverlay]) => {
+		mergeMap(([position, selectedCase, overlay]: [ImageryMapPosition, ICase, IOverlay]) => {
 			if (!selectedCase.state.overlaysScannedArea) {
 				selectedCase.state.overlaysScannedArea = { [overlay.id]: multiPolygon(geojsonPolygonToMultiPolygon(position.extentPolygon).coordinates) };
 			} else {
 				try {
+					let scannedArea: IOverlaysScannedArea;
 					const scannedAreaPolygon = geojsonMultiPolygonToPolygon(selectedCase.state.overlaysScannedArea[overlay.id].geometry);
 					const combinedResult = unifyPolygons([feature(scannedAreaPolygon), feature(position.extentPolygon)]);
 					if (combinedResult.geometry.type === 'MultiPolygon') {
-						selectedCase.state.overlaysScannedArea[overlay.id] = <any>combinedResult;
+						scannedArea = { [overlay.id]: <any>combinedResult };
 					} else { // polygon
-						selectedCase.state.overlaysScannedArea[overlay.id] = feature(geojsonPolygonToMultiPolygon(<any>combinedResult.geometry))
+						scannedArea = { [overlay.id]: feature(geojsonPolygonToMultiPolygon(<any>combinedResult.geometry))};
 					}
+					return [new SetScannedAreaAction(scannedArea)]
 				} catch (e) {
 					console.error('failed to save scanned area', e);
 				}

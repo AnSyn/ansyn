@@ -6,7 +6,6 @@
 	transition: .4s;
 	position: absolute;
 	display: flex;
-	box-shadow: 0 0 2px 1px white;
 	background: @background-color-0;
 	width: 230px;
 	flex-direction: column;
@@ -63,32 +62,29 @@
 }
 
 div.control-buttons {
+	margin-top: 10px;
+	margin-bottom: 5px;
+	display: flex;
+	justify-content: space-between;
 	button {
+		color: @application-primary-color;
 		background: transparent;
 		border: none;
-		color: @overlays-dots-color;
 		&:disabled {
 			cursor: default;
 			pointer-events: none;
 			opacity: .6;
 		}
-	}
-	margin-top: 10px;
-	margin-bottom: 5px;
-	display: flex;
-	justify-content: space-between;
-	color: @application-primary-color;
-	a {
-		cursor: pointer;
-		&:hover {
-			font-weight: bold;
-		}
-		&:first-child {
-			width: 42px;
-		}
-		&:last-child {
-			margin: 0 9px;
-			width: 17px;
+
+		a {
+			cursor: pointer;
+			margin: 0;
+			&:hover {
+				font-weight: bold;
+			}
+			&:last-child {
+				margin-right: 9px;
+			}
 		}
 	}
 	.error {

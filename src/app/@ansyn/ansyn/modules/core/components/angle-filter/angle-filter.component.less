@@ -91,13 +91,13 @@
 						top: 1px;
 						bottom: 0;
 						width: 1px;
-						background: @overlays-dots-color;
+						background: @application-primary-color;
 						zoom: 2;
 
 					}
 
 					&.active:before, &:hover {
-						background: @overlays-dots-color-hover;
+						background: @application-contrast-color;
 						z-index: 2;
 					}
 
@@ -111,7 +111,7 @@
 						width: 57%;
 						height: 0;
 						padding-bottom: 57%;
-						border-color: @overlays-dots-color;
+						border-color: @application-primary-color;
 						border-width: 1px 0 0 1px;
 						border-style: solid;
 						transform: translate(0, 0) rotate(45deg);
@@ -122,7 +122,7 @@
 					}
 
 					&.active:after, &:hover {
-						border-color: @overlays-dots-color-hover;
+						border-color: @application-contrast-color;
 						z-index: 2;
 					}
 				}
@@ -144,7 +144,7 @@
 				background-color: @background-color;
 				margin: 5px;
 				i {
-					color: @overlays-dots-color;
+					color: @application-primary-color;
 				}
 			}
 		}

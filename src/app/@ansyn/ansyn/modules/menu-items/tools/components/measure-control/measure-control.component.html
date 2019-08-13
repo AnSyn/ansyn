@@ -5,14 +5,16 @@
 	[style.direction]="'ltr' | translate">
 		<p>{{'Measure Distance' | translate}}</p>
 
-		<button
+		<div class="buttons">
+		<button id="clearBtn"
 			(click)="clearMeasure()">
 			<span class="bold-on-hover">{{'Clear' | translate}}</span>
 		</button>
 
-		<button
+		<button id="doneBtn"
 			(click)="done()">
 			<span class="bold-on-hover">{{'Done' | translate}}</span>
 		</button>
+		</div>
 	</div>
 

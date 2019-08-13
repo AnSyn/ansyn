@@ -1,24 +1,27 @@
 @import "ansyn/less/common";
+@import "ansyn/less/colors";
 
 :host {
 	color: white;
 	transition: .4s;
 	position: absolute;
 	display: flex;
-	box-shadow: 0 0 2px 1px white;
-	background: black;
+	background: @background-color-0;
 	width: 230px;
-	height: 97px;
-	padding: 12px;
 	flex-direction: column;
 	top: 0;
-	right: 0;
-	transform: translate(0, calc(~'-100% - 15px'));
+	transform: translate(0, calc(~'-100%'));
+
+	hr{
+		width: 98%;
+		margin: auto;
+	}
 }
 
 .time-row {
 	display: flex;
 	align-items: center;
+	padding: 6px;
 	margin: 6px 0;
 	span {
 		color: white;
@@ -34,12 +37,9 @@
 		position: relative;
 		width: 155px;
 		height: 22px;
-		padding: 0 10px;
 		display: flex;
 		justify-content: space-around;
 		align-items: center;
-		background: white;
-		border: 1px solid dimgrey;
 		font-size: 12px;
 		color: white;
 		.icon-status-bar-time {
@@ -51,52 +51,39 @@
 		color: white;
 		width: 100%;
 		border: none;
-		padding: 0 10px;
 		left: 0;
 		box-sizing: border-box;
 		margin: 0;
-		position: absolute;
-		display: inline-block;
 		height: 100%;
 	}
 	i {
 		color: white;
-		position: absolute;
-		right: 10px;
-		top: 5px;
 	}
 }
 
 div.control-buttons {
+	margin-top: 10px;
+	margin-bottom: 5px;
+	display: flex;
+	justify-content: space-between;
 	button {
+		color: @application-primary-color;
 		background: transparent;
 		border: none;
-		color: @overlays-dots-color;
 		&:disabled {
 			cursor: default;
 			pointer-events: none;
 			opacity: .6;
 		}
-	}
-	margin-top: 10px;
-	display: flex;
-	justify-content: space-between;
-	color: @overlays-dots-color;
-	button {
+
 		a {
 			cursor: pointer;
-
+			margin: 0;
 			&:hover {
 				font-weight: bold;
 			}
-
-			&:first-child {
-				width: 42px;
-			}
-
 			&:last-child {
-				margin: 0 9px;
-				width: 17px;
+				margin-right: 9px;
 			}
 		}
 	}

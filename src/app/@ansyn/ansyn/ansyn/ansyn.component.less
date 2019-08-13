@@ -1,4 +1,5 @@
 @import 'ansyn/less/common';
+@import "ansyn/less/z-index-globals";
 
 :host {
 	&.component {
@@ -16,7 +17,7 @@
 		}
 	}
 
-	font-family: 'Open Sans', sans-serif;
+	font-family: @app-font;
 	font-size: 14px;
 	direction: ltr;
 	div.app {
@@ -148,7 +149,7 @@
 				position: relative;
 				height: 100%;
 				.ansynToolsAlone {
-					background: @application-main-color;
+					background: @background-color-3;
 					height: 100%;
 
 				}

@@ -18,7 +18,7 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 		},
 		{
 			key: 'overlayIsNotPartOfQuery',
-			background: '#27B2CF',
+			background: '#9ca9b3',
 			text: 'This Overlay Is Not a Part of the Query'
 		},
 		{
@@ -65,7 +65,7 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 		{
 			name: 'Help',
 			component: HelpComponent,
-			iconClass: 'icon-help-settings'
+			iconClass: 'icon-main-help'
 		}
 	]
 };

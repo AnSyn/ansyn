@@ -1,32 +1,33 @@
+@import 'ansyn/less/common';
+@import 'ansyn/less/colors';
+@import "ansyn/less/z-index-globals";
+
 :host {
 	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
 	color: white;
-	margin-left: 12px;
 	.inputs {
 		display: flex;
-		margin-top: 5px;
+		margin-top: 15px;
 		.input-box {
-
-			margin-right: 5px;
-			padding: 0 10px;
-			&:last-child {
-				margin-right: 0;
-			}
+			display: flex;
+    	flex-direction: column;
+			margin-right: 20px;
 			label {
 				opacity: 0.7;
-				font-size: 12px;
+				margin-bottom: 5px;
+				font-size: 16px;
 			}
 			input {
-				width: 100%;
+				width: 75px;
 				background: transparent;
 				border: none;
-				border-bottom: 1px solid #229db6;
 				outline: none;
 				color: white;
 				font-size: 14px;
-				padding: 1px 0 1px 1px;
+				padding: 6px 11px;
+				background: black;
 			}
 
 		}
@@ -35,8 +36,9 @@
 			font-size: 18px;
 			display: flex;
 			justify-content: flex-end;
-			align-items: center;
-			padding-right: 17px;
+			align-items: flex-end;
+    	margin-bottom: 5px;
+			margin-left: auto;
 			cursor: pointer;
 		}
 

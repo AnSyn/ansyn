@@ -126,8 +126,99 @@ div.pin-location {
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
 
+/* latin */
+@font-face {
+	font-family: 'Lato';
+	font-style: normal;
+	font-weight: 300;
+	src: local('Lato Light'), local('Lato-Light'), url(/assets/fonts/Lato/Lato-Light.ttf) format('truetype');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+/* latin */
+@font-face {
+	font-family: 'Lato';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Lato'), local('Lato'), url(/assets/fonts/Lato/Lato-Regular.ttf) format('truetype');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+/* latin */
+@font-face {
+	font-family: 'Lato';
+	font-style: normal;
+	font-weight: 600;
+	src: local('Lato Black'), local('Lato-Black'), url(/assets/fonts/Lato/Lato-Black.ttf) format('truetype');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+/* latin */
+@font-face {
+	font-family: 'Lato';
+	font-style: normal;
+	font-weight: 700;
+	src: local('Lato Bold'), local('Lato-Bold'), url(/assets/fonts/Lato/Lato-Bold.ttf) format('truetype');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+/* latin */
+@font-face {
+	font-family: 'Lato';
+	font-style: normal;
+	font-weight: 800;
+	src: local('Lato Hairline'), local('Lato-Hairline'), url(/assets/fonts/Lato/Lato-Hairline.ttf) format('truetype');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+
+/* latin */
+@font-face {
+	font-family: 'Lato';
+	font-style: normal;
+	font-weight: 800;
+	src: local('Lato HairlineItalic'), local('Lato-HairlineItalic'), url(/assets/fonts/Lato/Lato-HairlineItalic.ttf) format('truetype');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+/* latin */
+@font-face {
+	font-family: 'Lato';
+	font-style: italic;
+	font-weight: 300;
+	src: local('Lato Light Italic'), local('LatoLight-Italic'), url(/assets/fonts/Lato/Lato-LightItalic.ttf) format('truetype');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+/* latin */
+@font-face {
+	font-family: 'Lato';
+	font-style: italic;
+	font-weight: 400;
+	src: local('Lato Italic'), local('Lato-Italic'), url(/assets/fonts/Lato/Lato-Italic.ttf) format('truetype');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+/* latin */
+@font-face {
+	font-family: 'Lato';
+	font-style: italic;
+	font-weight: 600;
+	src: local('Lato Black Italic'), local('Lato-BlackItalic'), url(/assets/fonts/Lato/Lato-BlackItalic.ttf) format('truetype');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+/* latin */
+@font-face {
+	font-family: 'Lato';
+	font-style: italic;
+	font-weight: 700;
+	src: local('Lato Bold Italic'), local('Lato-BoldItalic'), url(/assets/fonts/Lato/Lato-BoldItalic.ttf) format('truetype');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
 .flatpickr-calendar {
-	font-family: 'Open Sans', sans-serif;
+	font-family: 'Lato', sans-serif;
 	font-size: 14px;
 	cursor: pointer;
 }
@@ -144,11 +235,12 @@ input[type=number]::-webkit-outer-spin-button {
 
 @font-face {
 	font-family: 'AnSyn';
-	src: url('/assets/fonts/AnSyn/AnSyn.eot?mxpept&v=1');
-	src: url('/assets/fonts/AnSyn/AnSyn.eot?mxpept&v=1#iefix') format('embedded-opentype'),
-	url('/assets/fonts/AnSyn/AnSyn.ttf?mxpept&v=1') format('truetype'),
-	url('/assets/fonts/AnSyn/AnSyn.woff?mxpept&v=1') format('woff'),
-	url('/assets/fonts/AnSyn/AnSyn.svg?mxpept&v=1#AnSyn') format('svg');
+	src: url('/assets/fonts/AnSyn/AnSyn.eot?56493936');
+  src: url('/assets/fonts/AnSyn/AnSyn.eot?56493936#iefix') format('embedded-opentype'),
+       url('/assets/fonts/AnSyn/AnSyn.woff2?56493936') format('woff2'),
+       url('/assets/fonts/AnSyn/AnSyn.woff?56493936') format('woff'),
+       url('/assets/fonts/AnSyn/AnSyn.ttf?56493936') format('truetype'),
+       url('/assets/fonts/AnSyn/AnSyn.svg?56493936#AnSyn') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -162,6 +254,7 @@ input[type=number]::-webkit-outer-spin-button {
 	font-variant: normal;
 	text-transform: none;
 	line-height: 1;
+	font-size: 24px;
 
 	/* Better Font Rendering =========== */
 	-webkit-font-smoothing: antialiased;

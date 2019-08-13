@@ -1,4 +1,7 @@
-@import "../../less/map-facade";
+@import "ansyn/less/common";
+@import "ansyn/less/colors";
+@import "ansyn/less/z-index-globals";
+@import "map-facade/less/map-facade";
 
 @height-minus-status: calc(~"100% - @{status-bar-height}");
 
@@ -84,7 +87,7 @@
 			pointer-events: none;
 
 			&.active {
-				border: solid 3px @application-main-color;
+				border: solid 3px @background-color-3;
 			}
 		}
 

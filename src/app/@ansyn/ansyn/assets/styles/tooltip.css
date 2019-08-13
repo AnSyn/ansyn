@@ -62,7 +62,7 @@
 	padding: 5px 10px;
 }
 [tooltip-value]:not(.active):not(:disabled):after {
-	font-family: "Open Sans", sans-serif;
+	font-family:'Lato', sans-serif;
 	font-size: small;
 	opacity: 0;
 	position: absolute;

@@ -1,3 +1,5 @@
+@import 'ansyn/less/colors';
+
 :host {
 	position: absolute;
 	top: 6px;
@@ -7,12 +9,21 @@
 	max-width: 33%;
 
 	div {
-		padding: 0 5px;
+		background: @background-color-6;
+		border-radius: 5px;
 		font-size: 12px;
 		margin: 0 2.5px;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+
+		span.indicator {
+			width: 10px;
+			height: 10px;
+			display: inline-block;
+			border-radius: 100%;
+			margin: 0 2px;
+		}
 	}
 }
 

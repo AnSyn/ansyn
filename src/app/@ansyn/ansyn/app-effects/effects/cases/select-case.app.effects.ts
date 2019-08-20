@@ -2,7 +2,13 @@ import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { SetFavoriteOverlaysAction, SetRemovedOverlaysIdsAction, SetRemovedOverlaysVisibilityAction, SetPresetOverlaysAction } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
+import {
+	SetFavoriteOverlaysAction,
+	SetRemovedOverlaysIdsAction,
+	SetRemovedOverlaysVisibilityAction,
+	SetPresetOverlaysAction,
+	SetOverlaysTranslationDataAction
+} from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { SetComboBoxesProperties } from '../../../modules/status-bar/actions/status-bar.actions';
 import { IAppState } from '../../app.effects.module';
 import { ofType } from '@ngrx/effects';
@@ -67,6 +73,7 @@ export class SelectCaseAppEffects {
 		let { time } = state;
 		const { layout } = state.maps;
 
+		const { overlaysTranslationData } = state;
 		if (!time) {
 			time = this.casesService.defaultTime;
 		}
@@ -91,6 +98,7 @@ export class SelectCaseAppEffects {
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetPresetOverlaysAction((presetOverlays || []).map(this.parseOverlay.bind(this))),
 			new SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this))}),
+			new SetOverlaysTranslationDataAction(overlaysTranslationData),
 			new BeginLayerCollectionLoadAction({ caseId: payload.id }),
 			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 			new UpdateFacetsAction(facets),

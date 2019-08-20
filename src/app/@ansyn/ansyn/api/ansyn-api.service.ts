@@ -1,5 +1,5 @@
 import { EventEmitter, Inject, Injectable, NgModuleRef } from '@angular/core';
-import { ImageryCommunicatorService, ImageryMapPosition } from '@ansyn/imagery';
+import { ImageryCommunicatorService, ImageryMapPosition, IMapSettings } from '@ansyn/imagery';
 import {
 	LayoutKey,
 	MapActionTypes,
@@ -21,13 +21,23 @@ import { cloneDeep } from 'lodash';
 import { combineLatest, Observable } from 'rxjs';
 import { map, tap, withLatestFrom, take } from 'rxjs/operators';
 import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
-import { UpdateLayer } from '../modules/menu-items/layers-manager/actions/layers.actions';
+import {
+	AddLayer,
+	RemoveLayer,
+	SetLayerSelection,
+	UpdateLayer
+} from '../modules/menu-items/layers-manager/actions/layers.actions';
 import { ILayer } from '../modules/menu-items/layers-manager/models/layers.model';
 import {
 	selectActiveAnnotationLayer,
 	selectLayersEntities
 } from '../modules/menu-items/layers-manager/reducers/layers.reducer';
-import { GoToAction, SetActiveCenter, ToolsActionsTypes } from '../modules/menu-items/tools/actions/tools.actions';
+import {
+	GoToAction,
+	HideMeasurePanel,
+	SetActiveCenter,
+	ToolsActionsTypes
+} from '../modules/menu-items/tools/actions/tools.actions';
 import { ProjectionConverterService } from '@ansyn/map-facade';
 import {
 	DisplayOverlayAction,
@@ -37,6 +47,9 @@ import {
 import { IOverlay, IOverlaysCriteria } from '../modules/overlays/models/overlay.model';
 import { ANSYN_ID } from './ansyn-id.provider';
 import { selectFilteredOveralys, selectOverlaysArray } from '../modules/overlays/reducers/overlays.reducer';
+import { ToggleMenuCollapse } from '@ansyn/menu';
+import { UUID } from 'angular2-uuid';
+import { DataLayersService } from '../modules/menu-items/layers-manager/services/data-layers.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -45,9 +58,9 @@ import { selectFilteredOveralys, selectOverlaysArray } from '../modules/overlays
 	init: 'init',
 	destroy: 'destroy'
 })
-export class AnsynApi{
+export class AnsynApi {
 	activeMapId;
-	mapsList: ICaseMapState[];
+	mapsList: IMapSettings[];
 	mapsEntities;
 	activeAnnotationLayer;
 	onReady = new EventEmitter<boolean>(true);
@@ -58,13 +71,13 @@ export class AnsynApi{
 	);
 
 	@AutoSubscription
-	maps$: Observable<ICaseMapState[]> = this.store.pipe(
+	maps$: Observable<IMapSettings[]> = this.store.pipe(
 		select(selectMapsList),
 		tap((mapsList) => this.mapsList = mapsList)
 	);
 
 	@AutoSubscription
-	mapsEntities$: Observable<Dictionary<ICaseMapState>> = this.store.pipe(
+	mapsEntities$: Observable<Dictionary<IMapSettings>> = this.store.pipe(
 		select(selectMaps),
 		tap((mapsEntities) => this.mapsEntities = mapsEntities)
 	);
@@ -109,6 +122,7 @@ export class AnsynApi{
 				protected projectionConverterService: ProjectionConverterService,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected moduleRef: NgModuleRef<any>,
+				private dataLayersService: DataLayersService,
 				@Inject(ANSYN_ID) public id: string) {
 		this.init();
 	}
@@ -215,7 +229,51 @@ export class AnsynApi{
 	}
 
 	collapseFooter(collapse: boolean) {
-		this.store.dispatch( new ToggleFooter(collapse))
+		this.store.dispatch(new ToggleFooter(collapse));
+	}
+
+	collapseMenu(collapse: boolean) {
+		this.store.dispatch(new ToggleMenuCollapse(collapse));
+	}
+
+	hideMeasurePanel(collapse: boolean) {
+		this.store.dispatch(new HideMeasurePanel(collapse));
+	}
+
+	insertLayer(layerName: string, layerData: FeatureCollection<any>): string {
+		if (!Boolean(layerData)) {
+			console.error('failed to add layer ', layerName, ' feature collection is undefined');
+			return null;
+		}
+
+		this.generateFeaturesIds(layerData);
+		const layer = this.dataLayersService.generateAnnotationLayer(layerName, layerData);
+		this.store.dispatch(new AddLayer(layer));
+		return layer.id;
+	}
+
+	removeLayer(layerId: string): void {
+		if (!(layerId && layerId.length)) {
+			console.error('failed to remove layer - invalid layerId ', layerId);
+			return;
+		}
+		this.store.dispatch(new RemoveLayer(layerId));
+	}
+
+	showLayer(layerId: string, show: boolean): void {
+		if (!(layerId && layerId.length)) {
+			console.error('failed to show layer - invalid layerId ', layerId);
+			return;
+		}
+		this.store.dispatch(new SetLayerSelection({ id: layerId, value: show}));
+	}
+
+	private generateFeaturesIds(annotationsLayer): void {
+		/* reference */
+		annotationsLayer.features.forEach((feature) => {
+			feature.properties = { ...feature.properties, id: UUID.UUID() };
+		});
+
 	}
 
 	init(): void {

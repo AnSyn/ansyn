@@ -3,7 +3,7 @@ import TileWMS from 'ol/source/TileWMS';
 import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
+import { CacheService, ImageryCommunicatorService, ImageryMapSource, IMapSettings } from '@ansyn/imagery';
 import { ImisightOverlaySourceType } from './imisight-source-provider';
 import { ICaseMapState } from '@ansyn/ansyn';
 import { map } from 'rxjs/operators';
@@ -25,7 +25,7 @@ export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvide
 		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
 	}
 
-	public create(metaData: ICaseMapState): any {
+	public create(metaData: IMapSettings): any {
 		const url = metaData.data.overlay.imageUrl;
 		const layers = metaData.data.overlay.tag.urls;
 		const projection = 'EPSG:3857';

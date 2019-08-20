@@ -15,6 +15,7 @@ import {
 	ContainerChangedTriggerAction,
 	SelectMenuItemAction,
 	ToggleIsPinnedAction,
+	ToggleMenuCollapse,
 	UnSelectMenuItemAction
 } from '../actions/menu.actions';
 import { fromEvent, Observable } from 'rxjs';
@@ -24,6 +25,7 @@ import {
 	selectAutoClose,
 	selectEntitiesMenuItems,
 	selectIsPinned,
+	selectMenuCollapse,
 	selectSelectedMenuItem
 } from '../reducers/menu.reducer';
 import { select, Store } from '@ngrx/store';
@@ -72,7 +74,12 @@ const animations: any[] = [
 export class MenuComponent implements OnInit, OnDestroy {
 	_componentElem;
 	currentComponent: ComponentRef<any>;
-	collapse = false;
+	collapse: boolean;
+
+	@AutoSubscription
+	collapse$ = this.store.select(selectMenuCollapse).pipe(
+		tap(this.startToggleMenuCollapse.bind(this))
+	);
 
 	@ViewChild('componentElem', { read: ViewContainerRef })
 	set componentElem(value) {
@@ -258,8 +265,17 @@ export class MenuComponent implements OnInit, OnDestroy {
 		this.store.dispatch(new ToggleIsPinnedAction(!this.isPinned));
 	}
 
-	startToggleMenuCollapse() {
-		this.collapse = !this.collapse;
+	toggleCollapse() {
+		this.store.dispatch(new ToggleMenuCollapse(!this.collapse));
+	}
+
+	startToggleMenuCollapse(collapse: boolean) {
+		if (this.collapse === undefined) {
+			this.collapse = collapse;
+			return;
+		}
+
+		this.collapse = collapse;
 
 		this.menuWrapperElement.nativeElement.classList.toggle('collapsed');
 

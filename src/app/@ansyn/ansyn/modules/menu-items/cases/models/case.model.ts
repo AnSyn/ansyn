@@ -48,6 +48,15 @@ export interface IOverlaysManualProcessArgs {
 	[key: string]: ImageManualProcessArgs;
 }
 
+export interface ITranslationData {
+	dragged?: boolean;
+	offset: [number, number];
+}
+
+export interface IOverlaysTranslationData {
+	[key: string]: ITranslationData;
+}
+
 export interface IDilutedCaseState {
 	maps?: IDilutedCaseMapsState;
 	time: ICaseTimeState;
@@ -63,6 +72,7 @@ export interface IDilutedCaseState {
 	removedOverlaysVisibility: boolean;
 	presetOverlays?: IDilutedOverlay[];
 	overlaysManualProcessArgs: IOverlaysManualProcessArgs;
+	overlaysTranslationData: IOverlaysTranslationData;
 	layers?: ICaseLayersState;
 }
 
@@ -150,6 +160,7 @@ export interface IDilutedCaseMapData extends IMapSettingsData {
 	isAutoImageProcessingActive?: boolean;
 	overlayDisplayMode?: OverlayDisplayMode;
 	imageManualProcessArgs?: ImageManualProcessArgs;
+	translationData: ITranslationData;
 }
 
 export interface ICaseMapData extends IDilutedCaseMapData {

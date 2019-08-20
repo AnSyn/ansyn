@@ -5,12 +5,17 @@ import {
 	IOverlay,
 	IOverlaysCriteria,
 	PhotoAngle,
+	RegionContainment,
 	selectMiscOverlays,
 	selectOverlaysArray,
 	SetMiscOverlay
 } from '@ansyn/ansyn';
-import { Point, Polygon } from 'geojson';
-import { OpenLayerMarcoSourceProviderSourceType, OpenLayersStaticImageSourceProviderSourceType } from '@ansyn/ol';
+import { FeatureCollection, Point, Polygon } from 'geojson';
+import {
+	AnnotationMode, AnnotationsVisualizer,
+	OpenLayerMarcoSourceProviderSourceType,
+	OpenLayersStaticImageSourceProviderSourceType
+} from '@ansyn/ol';
 import * as momentNs from 'moment';
 import { take, tap } from 'rxjs/operators';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
@@ -36,6 +41,8 @@ export class SandboxComponent implements OnInit, OnDestroy {
 	);
 
 	currentOverlays: IOverlay[];
+	layerId: string;
+	needToShowLayer = true;
 
 	@AutoSubscription
 	currentOverlays$ = this.store$.select(selectOverlaysArray).pipe(
@@ -67,6 +74,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 			azimuth: 0,
 			approximateTransform: 'Identity',
 			isGeoRegistered: geoRegistered,
+			containedInSearchPolygon: RegionContainment.unknown,
 			sourceType: sourceType,
 			tag: {
 				imageData: {
@@ -355,5 +363,169 @@ export class SandboxComponent implements OnInit, OnDestroy {
 				}
 			]
 		})
+	}
+
+	collapseAll() {
+		this.ansynApi.collapseFooter(true);
+		this.ansynApi.collapseMenu(true);
+		this.ansynApi.hideMeasurePanel(true);
+	}
+
+	unCollapseAll() {
+		this.ansynApi.collapseFooter(false);
+		this.ansynApi.collapseMenu(false);
+		this.ansynApi.hideMeasurePanel(false);
+	}
+
+	insertLayer() {
+		const layer: FeatureCollection = {
+			'type': 'FeatureCollection',
+			'features': [{
+				'type': 'Feature',
+				'geometry': { 'type': 'Point', 'coordinates': [-122.3865658852983, 37.62603244149734] },
+				'properties': {
+					'id': 'dcfa10f2-7b49-3151-5126-954c1a3305e0',
+					'style': {
+						'opacity': 1,
+						'initial': {
+							'fill': '#ffffff',
+							'stroke': '#27b2cf',
+							'stroke-width': 1,
+							'fill-opacity': 0.4,
+							'stroke-opacity': 1,
+							'marker-size': 'medium',
+							'marker-color': '#ffffff',
+							'label': {
+								'overflow': true,
+								'font': '27px Calibri,sans-serif',
+								'stroke': '#000',
+								'fill': 'white'
+							}
+						}
+					},
+					'showMeasures': false,
+					'label': '',
+					'icon': '',
+					'undeletable': false,
+					'mode': 'Point'
+				}
+			}, {
+				'type': 'Feature',
+				'geometry': {
+					'type': 'LineString',
+					'coordinates': [[-122.38998010946246, 37.62742342165281], [-122.39137109122585, 37.62379844287092], [-122.39006441323906, 37.62198595347998], [-122.3879568670617, 37.62232316054677]]
+				},
+				'properties': {
+					'id': 'c9bd6965-8b3c-143c-4ce3-381753621935',
+					'style': {
+						'opacity': 1,
+						'initial': {
+							'fill': '#ffffff',
+							'stroke': '#27b2cf',
+							'stroke-width': 1,
+							'fill-opacity': 0.4,
+							'stroke-opacity': 1,
+							'marker-size': 'medium',
+							'marker-color': '#ffffff',
+							'label': {
+								'overflow': true,
+								'font': '27px Calibri,sans-serif',
+								'stroke': '#000',
+								'fill': 'white'
+							}
+						}
+					},
+					'showMeasures': false,
+					'label': '',
+					'icon': '',
+					'undeletable': false,
+					'mode': 'LineString'
+				}
+			}, {
+				'type': 'Feature',
+				'geometry': {
+					'type': 'Polygon',
+					'coordinates': [[[-122.37396275851451, 37.6248522159596], [-122.37122294848395, 37.619962707863365], [-122.37792494597112, 37.62042636898715], [-122.37944237857565, 37.62392489531998], [-122.37396275851451, 37.6248522159596]]]
+				},
+				'properties': {
+					'id': '64c65741-d1e4-7faa-2a5e-65f4e00a7fc7',
+					'style': {
+						'opacity': 1,
+						'initial': {
+							'fill': '#af0505',
+							'stroke': '#27b2cf',
+							'stroke-width': 7,
+							'fill-opacity': 0.4,
+							'stroke-opacity': 0,
+							'marker-size': 'medium',
+							'marker-color': '#af0505',
+							'label': {
+								'overflow': true,
+								'font': '27px Calibri,sans-serif',
+								'stroke': '#000',
+								'fill': 'white'
+							}
+						}
+					},
+					'showMeasures': false,
+					'label': '',
+					'icon': '',
+					'undeletable': false,
+					'mode': 'Polygon'
+				}
+			}, {
+				'type': 'Feature',
+				'geometry': {
+					'type': 'Polygon',
+					'coordinates': [[[-122.38508709430224, 37.621606594524884], [-122.38516977341148, 37.622446049608556], [-122.38541463342742, 37.62325324490413], [-122.38581226451696, 37.623997160349084], [-122.38634738594031, 37.624649207690055], [-122.38699943328128, 37.62518432911341], [-122.38774334872623, 37.62558196020294], [-122.38855054402181, 37.625826820218876], [-122.38938999910548, 37.625909499328124], [-122.39022945418914, 37.625826820218876], [-122.39103664948472, 37.62558196020294], [-122.39178056492968, 37.62518432911341], [-122.39243261227064, 37.624649207690055], [-122.392967733694, 37.623997160349084], [-122.39336536478353, 37.62325324490413], [-122.39361022479947, 37.622446049608556], [-122.39369290390871, 37.621606594524884], [-122.39361022479947, 37.62076713944121], [-122.39336536478353, 37.61995994414564], [-122.392967733694, 37.619216028700684], [-122.39243261227064, 37.61856398135971], [-122.39178056492968, 37.61802885993636], [-122.39103664948472, 37.617631228846825], [-122.39022945418914, 37.61738636883089], [-122.38938999910548, 37.617303689721645], [-122.38855054402181, 37.61738636883089], [-122.38774334872623, 37.617631228846825], [-122.38699943328128, 37.61802885993636], [-122.38634738594031, 37.61856398135971], [-122.38581226451696, 37.619216028700684], [-122.38541463342742, 37.61995994414564], [-122.38516977341148, 37.62076713944121], [-122.38508709430224, 37.621606594524884]]]
+				},
+				'properties': {
+					'id': 'bf8fa21d-d98e-40a1-7c33-669016a18c88',
+					'style': {
+						'opacity': 1,
+						'initial': {
+							'fill': '#af0505',
+							'stroke': '#0498b6',
+							'stroke-width': 7,
+							'fill-opacity': 0,
+							'stroke-opacity': 1,
+							'marker-size': 'medium',
+							'marker-color': '#af0505',
+							'label': {
+								'overflow': true,
+								'font': '27px Calibri,sans-serif',
+								'stroke': '#000',
+								'fill': 'white'
+							}
+						}
+					},
+					'showMeasures': false,
+					'label': 'test',
+					'icon': '',
+					'undeletable': false,
+					'mode': 'Circle'
+				}
+			}]
+		};
+		this.layerId = this.ansynApi.insertLayer('test', layer);
+	}
+
+	removeLayer() {
+		this.ansynApi.removeLayer(this.layerId);
+	}
+
+	showLayer() {
+		this.needToShowLayer = !this.needToShowLayer;
+		this.ansynApi.showLayer(this.layerId, this.needToShowLayer);
+	}
+
+	startDrag() {
+		const plugin: AnnotationsVisualizer = this.imageryCommunicatorService.communicatorsAsArray()[0].getPlugin(AnnotationsVisualizer);
+		plugin.setMode(AnnotationMode.Translate);
+	}
+
+	stopDrag() {
+		const plugin: AnnotationsVisualizer = this.imageryCommunicatorService.communicatorsAsArray()[0].getPlugin(AnnotationsVisualizer);
+		plugin.setMode(null);
 	}
 }

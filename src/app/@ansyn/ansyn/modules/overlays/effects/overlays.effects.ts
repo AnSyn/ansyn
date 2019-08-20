@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { from, Observable } from 'rxjs';
-import { catchError, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
+import { from, Observable, EMPTY } from 'rxjs';
+import { catchError, filter, map, mergeMap, switchMap, withLatestFrom, tap } from 'rxjs/operators';
 import { LoggerService } from '../../core/services/logger.service';
 import { UpdateOverlaysCountAction } from '../../overlays/actions/overlays.actions';
 import {
@@ -17,15 +17,53 @@ import {
 	SetOverlaysCriteriaAction,
 	SetOverlaysStatusMessage
 } from '../actions/overlays.actions';
-import { IOverlay, IOverlaysFetchData } from '../models/overlay.model';
+import { IOverlay, IOverlaysFetchData, IOverlaysCriteria, RegionContainment } from '../models/overlay.model';
 import { BackToWorldView } from '../overlay-status/actions/overlay-status.actions';
 import { selectFavoriteOverlays, selectPresetOverlays } from '../overlay-status/reducers/overlay-status.reducer';
-import { MarkUpClass, overlaysStateSelector, overlaysStatusMessages, selectDrops } from '../reducers/overlays.reducer';
+import {
+	MarkUpClass,
+	overlaysStateSelector,
+	overlaysStatusMessages,
+	selectDrops,
+	selectOverlaysArray,
+	selectOverlaysCriteria
+} from '../reducers/overlays.reducer';
 import { OverlaysService } from '../services/overlays.service';
+import { rxPreventCrash } from '../../core/utils/rxjs/operators/rxPreventCrash';
+import { getPolygonIntersectionRatioWithMultiPolygon, isPointContainedInMultiPolygon } from '@ansyn/imagery';
 
 @Injectable()
 export class OverlaysEffects {
 
+	@Effect({ dispatch: false })
+	setOverlaysContainedInRegionField$ = this.actions$.pipe(
+		ofType(OverlaysActionTypes.SET_OVERLAYS_CRITERIA, OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
+		withLatestFrom(this.store$.select(selectOverlaysCriteria), this.store$.select(selectOverlaysArray)),
+		filter(([action, criteria, overlays]: [any, IOverlaysCriteria, IOverlay[]]) => Boolean(overlays) && overlays.length > 0),
+		tap(([action, criteria, overlays]: [any, IOverlaysCriteria, IOverlay[]]) => {
+			overlays.forEach((overlay: IOverlay) => {
+				try {
+					if (criteria.region.type === 'Point') {
+						const isContained = isPointContainedInMultiPolygon(criteria.region, overlay.footprint);
+						overlay.containedInSearchPolygon = isContained ? RegionContainment.contained : RegionContainment.notContained;
+					} else {
+						const ratio = getPolygonIntersectionRatioWithMultiPolygon(criteria.region, overlay.footprint);
+						if (!Boolean(ratio)) {
+							overlay.containedInSearchPolygon = RegionContainment.notContained;
+						} else if (ratio === 1) {
+							overlay.containedInSearchPolygon = RegionContainment.contained;
+						} else {
+							overlay.containedInSearchPolygon = RegionContainment.intersect;
+						}
+					}
+				} catch (e) {
+					console.error('failed to calc overlay intersection ratio of ', overlay, ' error ', e);
+					overlay.containedInSearchPolygon = RegionContainment.unknown;
+				}
+			});
+		}),
+		rxPreventCrash()
+	);
 
 	@Effect()
 	setOverlaysCriteria$ = this.actions$.pipe(

@@ -2,7 +2,7 @@ import { Inject } from '@angular/core';
 import {
 	getPointByGeometry,
 	ImageryVisualizer,
-	IVisualizerEntity, IVisualizerStyle,
+	IVisualizerEntity,
 	MarkerSize,
 	VisualizerInteractions,
 	VisualizerStates
@@ -23,7 +23,7 @@ import DragBox from 'ol/interaction/DragBox';
 import Draw from 'ol/interaction/Draw';
 import * as Sphere from 'ol/sphere';
 import olFill from 'ol/style/Fill';
-import olIcon from 'ol/style/Icon'
+import olIcon from 'ol/style/Icon';
 import olStroke from 'ol/style/Stroke';
 import olStyle from 'ol/style/Style';
 import olText from 'ol/style/Text';
@@ -34,6 +34,7 @@ import { OpenLayersProjectionService } from '../../projection/open-layers-projec
 import { EntitiesVisualizer } from '../entities-visualizer';
 import { IOLPluginsConfig, OL_PLUGINS_CONFIG } from '../plugins.config';
 import { AnnotationMode, IAnnotationBoundingRect, IDrawEndEvent } from './annotations.model';
+import { DragPixelsInteraction } from './dragPixelsInteraction';
 
 // @dynamic
 @ImageryVisualizer({
@@ -50,6 +51,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	private iconSrc = '';
 	geoJsonFormat: OLGeoJSON;
 	dragBox = new DragBox({ condition: platformModifierKeyOnly });
+	translationSubscriptions = [];
 
 	protected measuresTextStyle = {
 		font: '16px Calibri,sans-serif',
@@ -70,7 +72,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		onChangeMode: new Subject<AnnotationMode>(),
 		onDrawEnd: new Subject<IDrawEndEvent>(),
 		removeEntity: new Subject<string>(),
-		updateEntity: new Subject<IVisualizerEntity>()
+		updateEntity: new Subject<IVisualizerEntity>(),
+		offsetEntity: new Subject<any>()
 	};
 
 	@AutoSubscription
@@ -111,7 +114,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				label: feature.properties.label,
 				icon: feature.properties.icon,
 				undeletable: feature.properties.undeletable
-			}
+			};
 		});
 	}
 
@@ -167,9 +170,28 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	setMode(mode) {
 		if (this.mode !== mode) {
 			this.mode = mode;
-			this.removeDrawInteraction();
+			this.removeInteractions();
 
-			if (this.mode) {
+			if (this.mode === AnnotationMode.Translate) {
+				const traslationInteractionHandler = new DragPixelsInteraction();
+				this.translationSubscriptions.push(
+					traslationInteractionHandler.onDrag.subscribe((pixel: [number, number]) => {
+						if (Boolean(this.source)) {
+							const features: [] = this.source.getFeatures();
+							features.forEach((feature: any) => {
+								const geometry = feature.getGeometry();
+								geometry.translate(pixel[0], pixel[1]);
+							});
+						}
+					}),
+					traslationInteractionHandler.onStopDrag.subscribe((pixel: [number, number]) => {
+						this.offset[0] = this.offset[0] + pixel[0];
+						this.offset[1] = this.offset[1] + pixel[1];
+						this.events.offsetEntity.next(this.offset);
+					})
+				);
+				this.addInteraction(VisualizerInteractions.translateInteractionHandler, traslationInteractionHandler);
+			} else if (this.mode) {
 				const drawInteractionHandler = new Draw({
 					type: this.modeDictionary[mode] ? this.modeDictionary[mode].type : mode,
 					geometryFunction: this.modeDictionary[mode] ? this.modeDictionary[mode].geometryFunction : undefined,
@@ -187,10 +209,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	getFeatureBoundingRect(selectedFeature): IAnnotationBoundingRect {
 		const { geometry }: any = new OLGeoJSON().writeFeatureObject(selectedFeature);
 		const { maxX, maxY, minX, minY } = this.findMinMax(geometry.coordinates);
-		const width = `${maxX - minX}px`;
-		const left = `${minX}px`;
-		const height = `${maxY - minY}px`;
-		const top = `${minY}px`;
+		const width = `${ maxX - minX }px`;
+		const left = `${ minX }px`;
+		const height = `${ maxY - minY }px`;
+		const top = `${ minY }px`;
 		return { left, top, width, height };
 	}
 
@@ -252,7 +274,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	};
 
 	protected mapBoxstart = () => {
-		this.events.onSelect.next([])
+		this.events.onSelect.next([]);
 	};
 
 	protected mapBoxdrag = ({ target }) => {
@@ -261,7 +283,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.vector.getSource().forEachFeatureIntersectingExtent(extent, (feature) => {
 			selected.push(feature.getId());
 		});
-		this.events.onSelect.next(selected)
+		this.events.onSelect.next(selected);
 	};
 
 	onInit() {
@@ -271,7 +293,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		map.on('pointermove', this.mapPointermove);
 		this.dragBox.on('boxstart', this.mapBoxstart);
 		this.dragBox.on('boxdrag', this.mapBoxdrag);
-		map.addInteraction(this.dragBox)
+		map.addInteraction(this.dragBox);
 	}
 
 	featureAtPixel = (pixel) => {
@@ -289,6 +311,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		let cloneGeometry = <any>geometry.clone();
 		if (cloneGeometry instanceof olCircle) {
 			cloneGeometry = <any>fromCircle(<any>cloneGeometry);
+		}
+		if (this.offset[0] !== 0 || this.offset[1] !== 0) {
+			cloneGeometry.translate(-this.offset[0], -this.offset[1]);
 		}
 		feature.setGeometry(cloneGeometry);
 		feature.setProperties({
@@ -313,8 +338,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	}
 
-	removeDrawInteraction() {
+	removeInteractions() {
 		this.removeInteraction(VisualizerInteractions.drawInteractionHandler);
+		this.translationSubscriptions.forEach((subscriber) => subscriber.unsubscribe());
+		this.translationSubscriptions = [];
+		this.removeInteraction(VisualizerInteractions.translateInteractionHandler);
 	}
 
 	rectangleGeometryFunction([topLeft, bottomRight], opt_geometry) {
@@ -353,10 +381,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	onDispose(): void {
 		super.onDispose();
 		const { mapObject: map } = this.iMap;
-		this.removeDrawInteraction();
+		this.removeInteractions();
 		map.un('click', this.mapClick);
 		map.un('pointermove', this.mapPointermove);
-		map.removeInteraction(this.dragBox)
+		map.removeInteraction(this.dragBox);
 
 	}
 
@@ -368,7 +396,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			styles.push(...this.getMeasuresAsStyles(feature));
 		}
 		if (entity && entity.icon) {
-			styles.push(this.getCenterIndicationStyle(feature))
+			styles.push(this.getCenterIndicationStyle(feature));
 		}
 
 		return styles;
@@ -492,14 +520,14 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			new olStyle({
 				text: new olText({
 					...this.measuresTextStyle,
-					text: `Circumference: ${this.formatLength(calcCircumference)}`,
+					text: `Circumference: ${ this.formatLength(calcCircumference) }`,
 					offsetY: -height / 2 - 44
 				})
 			}),
 			new olStyle({
 				text: new olText({
 					...this.measuresTextStyle,
-					text: `Area: ${this.formatArea(calcArea / 1000000)}`,
+					text: `Area: ${ this.formatArea(calcArea / 1000000) }`,
 					offsetY: -height / 2 - 25
 				})
 			})
@@ -511,7 +539,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (!internal) {
 			this.events.removeEntity.next(featureId);
 		}
-		this.events.onSelect.next(this.selected.filter((id) => id !== featureId))
+		this.events.onSelect.next(this.selected.filter((id) => id !== featureId));
 	}
 
 	updateFeature(featureId, props: Partial<IVisualizerEntity>) {
@@ -527,12 +555,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	toggleVisibility() {
 		super.toggleVisibility();
-		this.events.onSelect.next([])
+		this.events.onSelect.next([]);
 	}
 
 	public setIconSrc(src: string) {
 		this.iconSrc = src;
 	}
 }
-
-

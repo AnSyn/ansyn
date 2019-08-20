@@ -7,14 +7,16 @@ export type VisualizerInteractionTypes =
 	| 'pointerMove'
 	| 'doubleClick'
 	| 'contextMenu'
-	| 'drawInteractionHandler';
+	| 'drawInteractionHandler'
+	| 'translateInteractionHandler';
 
 export const VisualizerInteractions: { [key: string]: VisualizerInteractionTypes } = {
 	click: 'click',
 	pointerMove: 'pointerMove',
 	doubleClick: 'doubleClick',
 	contextMenu: 'contextMenu',
-	drawInteractionHandler: 'drawInteractionHandler'
+	drawInteractionHandler: 'drawInteractionHandler',
+	translateInteractionHandler: 'translateInteractionHandler'
 };
 
 export interface IImageryVisualizerMetaData extends IImageryPluginMetaData {

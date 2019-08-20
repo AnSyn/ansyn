@@ -9,7 +9,7 @@
 		 "autoSave": false,
 		 "state": {
 		   "timeFilter": "Start - End",
-		   "orientation": "Align North",
+		   "orientation": "User Perspective",
 		   "maps": {
 			 "layout": "layout1",
 			 "data": [
@@ -85,6 +85,7 @@
 		   "removedOverlaysIds": [],
 		   "removedOverlaysVisibility": true,
 		   "presetOverlays": [],
+		   "overlaysTranslationData": {},
 		   "region": {
 			 "type": "Point",
 			 "coordinates": [
@@ -245,7 +246,12 @@
         "modelName": "cloudCoverage",
         "displayName": "Cloud Coverage",
         "type": "Slider"
-      }
+      },
+      {
+      	"modelName": "containedInSearchPolygon",
+	   	"displayName": "Contains Region",
+	   	"type": "Enum"
+	  }
     ]
   },
   "contextConfig": {

@@ -72,6 +72,7 @@ export class AlertsPlugin extends BaseImageryPlugin {
 					}
 				}
 			} catch (e) {
+				// todo: check for multi polygon bug
 				console.warn('checkImageOutOfBounds$: turf exception', e);
 			}
 		}

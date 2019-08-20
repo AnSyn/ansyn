@@ -1,7 +1,7 @@
-import { getFootprintIntersectionRatioInExtent } from './calc-extent';
 import * as turf from '@turf/turf';
+import { getPolygonIntersectionRatioWithMultiPolygon } from './geo';
 
-describe('calc-extent', () => {
+describe('geo utils', () => {
 	// Small
 	const extent1 = <GeoJSON.Polygon> turf.geometry('Polygon', [[
 		[-74.30634782, 40.70691754],
@@ -30,13 +30,13 @@ describe('calc-extent', () => {
 		'coordinates': [extent2.coordinates]
 	};
 
-	describe('getFootprintIntersectionRatioInExtent', () => {
+	describe('getPolygonIntersectionRatioWithMultiPolygon', () => {
 		it('should extent intersection area be', function () {
-			expect(getFootprintIntersectionRatioInExtent(extent1, polygon2)).toBeGreaterThan(1);
+			expect(getPolygonIntersectionRatioWithMultiPolygon(extent1, polygon2)).toBeGreaterThan(1);
 		});
 
 		it('should extent intersection area be', function () {
-			expect(getFootprintIntersectionRatioInExtent(extent2, polygon1)).toBeLessThan(0.0001);
+			expect(getPolygonIntersectionRatioWithMultiPolygon(extent2, polygon1)).toBeLessThan(0.0001);
 		});
 	});
 });

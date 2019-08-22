@@ -59,11 +59,6 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 		})
 	);
 
-	// todo: check if needs to be removed
-	setMode(mode) {
-		this.annotationsVisualizer.setMode(mode);
-	}
-
 	get offset() {
 		return this.annotationsVisualizer.offset;
 	}
@@ -71,8 +66,6 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	set offset(offset: [number, number]) {
 		this.annotationsVisualizer.offset = offset;
 	}
-
-	// todo: till here
 
 	currentOverlay$ = this.store$.pipe(
 		select(selectMapsList),

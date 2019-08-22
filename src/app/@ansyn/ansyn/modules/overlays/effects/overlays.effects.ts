@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { from, Observable, EMPTY } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, withLatestFrom, tap } from 'rxjs/operators';
 import { LoggerService } from '../../core/services/logger.service';
-import { UpdateOverlaysCountAction } from '../../overlays/actions/overlays.actions';
+import { UpdateOverlaysCountAction } from '../actions/overlays.actions';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,

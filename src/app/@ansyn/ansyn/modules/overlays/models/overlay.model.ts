@@ -64,7 +64,7 @@ export interface IOverlay extends IDilutedOverlay {
 	catalogID?: string;
 	photoAngle?: PhotoAngle;
 	sensorLocation?: Point;
-	containedInSearchPolygon: RegionContainment;
+	containedInSearchPolygon?: RegionContainment;
 }
 
 export class Overlay implements IOverlay {

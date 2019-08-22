@@ -32,7 +32,7 @@ describe('geo utils', () => {
 
 	describe('getPolygonIntersectionRatioWithMultiPolygon', () => {
 		it('should extent intersection area be', function () {
-			expect(getPolygonIntersectionRatioWithMultiPolygon(extent1, polygon2)).toBeGreaterThan(1);
+			expect(getPolygonIntersectionRatioWithMultiPolygon(extent1, polygon2)).toBeGreaterThanOrEqual(1);
 		});
 
 		it('should extent intersection area be', function () {

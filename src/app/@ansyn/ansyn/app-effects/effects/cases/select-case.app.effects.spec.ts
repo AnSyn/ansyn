@@ -8,7 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import {
 	SetFavoriteOverlaysAction,
 	SetRemovedOverlaysIdsAction, SetRemovedOverlaysVisibilityAction,
-	SetPresetOverlaysAction
+	SetPresetOverlaysAction, SetOverlaysTranslationDataAction
 } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { SetComboBoxesProperties } from '../../../modules/status-bar/actions/status-bar.actions';
 import { SelectCaseAppEffects } from './select-case.app.effects';
@@ -98,7 +98,8 @@ describe('SelectCaseAppEffects', () => {
 				overlaysManualProcessArgs: IOverlaysManualProcessArgs = {},
 				facets: ICaseFacetsState = { showOnlyFavorites: true, filters: [] },
 				contextEntities: IContextEntity[] = [{ id: '234', date: new Date(), featureJson: null }],
-				miscOverlays: IOverlaysHash = {}
+				miscOverlays: IOverlaysHash = {},
+				overlaysTranslationData = {}
 			;
 
 			let noInitialSearch;
@@ -113,6 +114,7 @@ describe('SelectCaseAppEffects', () => {
 				removedOverlaysVisibility,
 				removedOverlaysIds,
 				presetOverlays,
+				overlaysTranslationData,
 				maps,
 				layers,
 				overlaysManualProcessArgs,
@@ -133,7 +135,7 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijklmnopq)--', {
+			const expectedResult = cold('--(abcdefghrijklmnopq)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
@@ -142,6 +144,7 @@ describe('SelectCaseAppEffects', () => {
 				f: new SetFavoriteOverlaysAction(favoriteOverlays),
 				g: new SetPresetOverlaysAction(presetOverlays),
 				h: new SetMiscOverlays({ miscOverlays }),
+				r: new SetOverlaysTranslationDataAction(overlaysTranslationData),
 				i: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
 				j: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 				k: new UpdateFacetsAction(facets),

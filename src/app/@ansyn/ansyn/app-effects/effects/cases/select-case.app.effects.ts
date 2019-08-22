@@ -14,9 +14,10 @@ import { IAppState } from '../../app.effects.module';
 import { ofType } from '@ngrx/effects';
 import { concatMap } from 'rxjs/operators';
 import {
+	layoutOptions,
 	SetActiveMapId,
 	SetLayoutAction,
-	SetMapsDataActionStore
+	SetMapsDataActionStore, UpdateMapAction
 } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
 import {
@@ -89,11 +90,10 @@ export class SelectCaseAppEffects {
 		// filters
 		const { facets } = state;
 
-		return [
+		const selectCaseAction = [
 			new SetLayoutAction(<any>layout),
 			new SetComboBoxesProperties({ orientation, timeFilter }),
 			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
-			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),
 			new SetActiveMapId(state.maps.activeMapId),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetPresetOverlaysAction((presetOverlays || []).map(this.parseOverlay.bind(this))),
@@ -102,6 +102,7 @@ export class SelectCaseAppEffects {
 			new BeginLayerCollectionLoadAction({ caseId: payload.id }),
 			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 			new UpdateFacetsAction(facets),
+			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),
 			new UpdateSelectedLayersIds(activeLayersIds),
 			// @todo refactor
 			<any> { type: '[Context] Set context params', payload: { contextEntities }},
@@ -110,6 +111,12 @@ export class SelectCaseAppEffects {
 			new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
 			new SelectCaseSuccessAction(payload)
 		];
+
+		if (layoutOptions.get(layout).mapsCount === 1){
+			selectCaseAction.push( new UpdateMapAction({id: currentActiveMapID, changes: {id: data[0].id}}))
+		}
+
+		return selectCaseAction;
 	}
 
 	parseMapData(map: ICaseMapState): ICaseMapState {

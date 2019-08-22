@@ -4,7 +4,7 @@ import {
 	IEntryComponent,
 	selectActiveMapId,
 	selectMaps,
-	selectMapsTotal,
+	selectMapsTotal, selectOverlayFromMap,
 } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -59,19 +59,21 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		tap((mapsAmount) => this.mapsAmount = mapsAmount)
 	);
 
-	@AutoSubscription
+	/*@AutoSubscription
 	overlay$: Observable<Dictionary<IMapSettings>> = this.store$.pipe(
 		select(selectMaps),
 		tap((maps) => {
 			if (maps[this.mapId]) {
 				this.overlay = maps[this.mapId].data.overlay;
-				this.updateDraggedStatus();
 			}
-			this.updateRemovedStatus();
-			this.updateFavoriteStatus();
-			this.updatePresetStatus();
 		})
+	);*/
+
+	@AutoSubscription
+	overlay$ = () => this.store$.select(selectOverlayFromMap(this.mapId)).pipe(
+		tap( overlay => this.overlay = overlay)
 	);
+
 	@AutoSubscription
 	favoriteOverlays$: Observable<any[]> = this.store$.select(selectFavoriteOverlays).pipe(
 		tap((favoriteOverlays) => {

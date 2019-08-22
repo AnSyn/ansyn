@@ -65,11 +65,11 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		tap((maps) => {
 			if (maps[this.mapId]) {
 				this.overlay = maps[this.mapId].data.overlay;
+				this.updateDraggedStatus();
 			}
 			this.updateRemovedStatus();
 			this.updateFavoriteStatus();
 			this.updatePresetStatus();
-			this.updateDraggedStatus();
 		})
 	);
 	@AutoSubscription

@@ -93,13 +93,16 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	annotationMode$: Observable<AnnotationMode> = this.store$.pipe(select(selectAnnotationMode));
 
 	@AutoSubscription
-	getOffsetFromCase$ = combineLatest([this.store$.select(selectTranslationData), this.currentOverlay$]).pipe(
-		tap(([translationData, overlay]: [IOverlaysTranslationData, IOverlay]) => {
-			if (overlay && overlay.id in translationData && translationData[overlay.id].offset) {
+	getOffsetFromCase$ = this.currentOverlay$.pipe(
+		filter(Boolean),
+		withLatestFrom(this.store$.select(selectTranslationData)),
+		tap(([overlay, translationData]: [IOverlay, IOverlaysTranslationData]) => {
+			if (overlay.id in translationData && translationData[overlay.id].offset) {
 				this.offset = translationData[overlay.id].offset;
 			} else {
 				this.offset = [0, 0];
 			}
+			this.annotationsVisualizer.onResetView().subscribe();
 		})
 	);
 

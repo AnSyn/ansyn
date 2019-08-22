@@ -72,14 +72,14 @@ export class OverlayStatusEffects {
 
 	@Effect()
 	switchOverlayDisableTranslate$: Observable<any> = this.actions$.pipe(
-		ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS, OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS),
+		ofType(OverlaysActionTypes.DISPLAY_OVERLAY, OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS),
 		withLatestFrom(this.store$.select(selectTranslationData)),
 		mergeMap(([action, overlaysTranslationData]: [BackToWorldSuccess | DisplayOverlaySuccessAction, IOverlaysTranslationData]) => {
 			const overlay = (<any>action.payload).overlay;
 			const actions = [];
-			if (overlay && overlay.id in overlaysTranslationData) {
-				actions.push(new ToggleDraggedModeAction({overlayId: overlay.id, dragged: false}));
-			}
+			Object.keys(overlaysTranslationData).forEach( overlayId => {
+				actions.push(new ToggleDraggedModeAction({overlayId: overlayId, dragged: false}));
+			});
 			actions.push(new SetAnnotationMode(null));
 			return actions;
 		})

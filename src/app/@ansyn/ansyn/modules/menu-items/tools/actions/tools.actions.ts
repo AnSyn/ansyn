@@ -32,6 +32,7 @@ export const ToolsActionsTypes = {
 	},
 	SET_ACTIVE_ANNOTATION_LAYER: 'SET_ACTIVE_ANNOTATION_LAYER',
 	CLEAR_ACTIVE_TOOLS: 'CLEAR_ACTIVE_TOOLS',
+	HIDE_MEASURE_PANEL: type('HIDE_MEASURE_PANEL'),
 
 	ANNOTATION_REMOVE_FEATURE: 'ANNOTATION_REMOVE_FEATURE',
 	ANNOTATION_UPDATE_FEATURE: 'ANNOTATION_UPDATE_FEATURE'
@@ -145,6 +146,13 @@ export class SetAutoImageProcessingSuccess implements Action {
 
 	constructor(public payload: boolean) {
 		// code...
+	}
+}
+
+export class HideMeasurePanel implements Action {
+	type = ToolsActionsTypes.HIDE_MEASURE_PANEL;
+
+	constructor(public payload: boolean) {
 	}
 }
 

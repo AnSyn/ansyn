@@ -67,7 +67,7 @@ export class DragDropMapService {
 		const dragEnd = fromEvent(dragElement, 'transitionend').pipe(take(1));
 		const dropEnd = fromEvent(dropElement, 'transitionend').pipe(take(1));
 
-		const transitionsEnd = tap(([dragEvent, dropEvent]: [any, any]) => {
+		const transitionsEnd = tap(([dragEvent, dropEvent]: [any, any?]) => {
 			const dragElement = dragEvent.target.closest('.map-container-wrapper');
 			dragElement.querySelector('.active-border').style.height = null;
 			dragElement.querySelector('button.drag-me i').style.opacity = null;
@@ -101,7 +101,7 @@ export class DragDropMapService {
 		});
 
 		if (dropElement) {
-			forkJoin(dragEnd, dropEnd).pipe(transitionsEnd).subscribe();
+			forkJoin([dragEnd, dropEnd]).pipe(transitionsEnd).subscribe();
 			const { left: dropLeft, top: dropTop, width: dropWidth, height: dropHeight } = dropElement.getBoundingClientRect();
 			dropElement.style.filter = null;
 			dropElement.style.transition = `transform ${this.TRANSITION_DURATION}ms`;
@@ -115,7 +115,7 @@ export class DragDropMapService {
 			dropElement.style.height = `${dragHeight}px`;
 			this.store.dispatch(new UpdateMapSizeAction());
 		} else {
-			forkJoin(dragEnd).pipe(transitionsEnd).subscribe();
+			forkJoin([dragEnd]).pipe(transitionsEnd).subscribe();
 			dragElement.style.transform = `translate(0, 0)`;
 		}
 

@@ -9,6 +9,10 @@ import { GoToAction } from '../modules/menu-items/tools/actions/tools.actions';
 import { ProjectionConverterService } from '@ansyn/map-facade';
 import { DisplayOverlayAction } from '../modules/overlays/actions/overlays.actions';
 import { IOverlay } from '../modules/overlays/models/overlay.model';
+import { DataLayersService, layersConfig } from '../modules/menu-items/layers-manager/services/data-layers.service';
+import { ErrorHandlerService } from '../modules/core/services/error-handler.service';
+import { throwError } from 'rxjs';
+import { StorageService } from '../modules/core/services/storage/storage.service';
 
 describe('apiService', () => {
 	let ansynApi: AnsynApi;
@@ -23,6 +27,7 @@ describe('apiService', () => {
 			],
 			providers: [
 				AnsynApi,
+				DataLayersService,
 				ImageryCommunicatorService,
 				{
 					provide: ProjectionConverterService,
@@ -31,7 +36,13 @@ describe('apiService', () => {
 				{
 					provide: ANSYN_ID,
 					useValue: 'fakeId'
-				}
+				},
+				{
+					provide: ErrorHandlerService,
+					useValue: { httpErrorHandle: () => throwError(null) }
+				},
+				{ provide: StorageService, useValue: {} },
+				{ provide: layersConfig, useValue: {} }
 			]
 		}).compileComponents();
 	}));

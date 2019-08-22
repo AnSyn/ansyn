@@ -13,7 +13,8 @@ export enum toolsFlags {
 	pinLocation = 'pinLocation',
 	autoImageProcessing = 'autoImageProcessing',
 	imageProcessingDisabled = 'imageProcessingDisabled',
-	isMeasureToolActive = 'isMeasureToolActive'
+	isMeasureToolActive = 'isMeasureToolActive',
+	hideMeasure = 'hideMeasure'
 }
 
 export enum SubMenuEnum { goTo, manualImageProcessing, overlays, annotations }
@@ -148,6 +149,11 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 		case ToolsActionsTypes.SET_SUB_MENU:
 			return { ...state, subMenu: action.payload };
 
+		case ToolsActionsTypes.HIDE_MEASURE_PANEL:
+			tmpMap = new Map(state.flags);
+			tmpMap.set(toolsFlags.hideMeasure, action.payload);
+			return { ...state, flags: tmpMap };
+
 		default:
 			return state;
 
@@ -161,3 +167,4 @@ export const selectAnnotationProperties = createSelector(toolsStateSelector, (to
 export const selectToolFlags = createSelector(toolsStateSelector, (tools: IToolsState) => tools.flags);
 export const selectToolFlag = (flag: toolsFlags) => createSelector(selectToolFlags, (flags: Map<toolsFlags, boolean>) => flags.get(flag));
 export const selectIsMeasureToolActive = createSelector(selectToolFlags, (_toolsFlags) => _toolsFlags.get(toolsFlags.isMeasureToolActive));
+export const selectIsMeasureToolHidden = createSelector(selectToolFlags, (_toolsFlags) => _toolsFlags.get(toolsFlags.hideMeasure));

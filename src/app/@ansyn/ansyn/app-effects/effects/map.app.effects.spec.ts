@@ -16,17 +16,16 @@ import {
 } from '@ansyn/map-facade';
 import * as extentFromGeojson from '@ansyn/imagery';
 import {
-	IBaseImageryMapConstructor, IMapSettings,
-	MAP_SOURCE_PROVIDERS_CONFIG
-} from '@ansyn/imagery';
-import {
 	BaseMapSourceProvider,
 	CacheService,
 	CommunicatorEntity,
+	IBaseImageryMapConstructor,
 	IMAGERY_CONFIG,
 	IMAGERY_MAPS,
 	ImageryCommunicatorService,
 	ImageryMapSource,
+	IMapSettings,
+	MAP_SOURCE_PROVIDERS_CONFIG,
 	VisualizersConfig
 } from '@ansyn/imagery';
 import { HttpClientModule } from '@angular/common/http';
@@ -35,14 +34,15 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import {
 	casesFeatureKey,
 	CasesReducer,
-	casesStateSelector, ICasesState
+	casesStateSelector,
+	ICasesState
 } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import { CasesService } from '../../modules/menu-items/cases/services/cases.service';
 import {
+	ILayerState,
 	initialLayersState,
 	layersStateSelector
 } from '../../modules/menu-items/layers-manager/reducers/layers.reducer';
-import { ILayerState } from '../../modules/menu-items/layers-manager/reducers/layers.reducer';
 import {
 	IToolsState,
 	toolsInitialState,
@@ -51,12 +51,16 @@ import {
 import {
 	IStatusBarState,
 	statusBarFeatureKey,
-	StatusBarInitialState, StatusBarReducer, statusBarStateSelector
+	StatusBarInitialState,
+	StatusBarReducer,
+	statusBarStateSelector
 } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import {
-	IOverlaysState, OverlayReducer,
-	overlaysFeatureKey, overlaysInitialState,
+	IOverlaysState,
+	OverlayReducer,
+	overlaysFeatureKey,
+	overlaysInitialState,
 	overlaysStateSelector
 } from '../../modules/overlays/reducers/overlays.reducer';
 import {
@@ -69,8 +73,13 @@ import {
 } from '../../modules/overlays/actions/overlays.actions';
 import { OverlaySourceProvider } from '../../modules/overlays/models/overlays-source-providers';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
-import { GeoRegisteration, IOverlay, IOverlaysFetchData } from '../../modules/overlays/models/overlay.model';
-import { ICase, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
+import {
+	GeoRegisteration,
+	IOverlay,
+	IOverlaysFetchData,
+	RegionContainment
+} from '../../modules/overlays/models/overlay.model';
+import { ICase } from '../../modules/menu-items/cases/models/case.model';
 
 @ImageryMapSource({
 	sourceType: 'sourceType1',
@@ -83,7 +92,7 @@ class SourceProviderMock1 extends BaseMapSourceProvider {
 		return Promise.resolve(true);
 	}
 
-	createAsync(metaData: ICaseMapState): Promise<any> {
+	createAsync(metaData: IMapSettings): Promise<any> {
 		return Promise.resolve();
 	}
 
@@ -361,7 +370,8 @@ describe('MapAppEffects', () => {
 				photoTime: new Date().toDateString(),
 				date: new Date(),
 				azimuth: 0,
-				isGeoRegistered: GeoRegisteration.geoRegistered
+				isGeoRegistered: GeoRegisteration.geoRegistered,
+				containedInSearchPolygon: RegionContainment.unknown
 			};
 			icaseState.selectedCase.state.maps.data[0].data.overlay = testOverlay;
 			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, mapId: 'imagery1' }) });
@@ -378,7 +388,8 @@ describe('MapAppEffects', () => {
 				photoTime: new Date().toDateString(),
 				azimuth: 0,
 				isGeoRegistered: GeoRegisteration.geoRegistered,
-				sourceType: 'PLANET'
+				sourceType: 'PLANET',
+				containedInSearchPolygon: RegionContainment.unknown
 			};
 			actions = hot('--a--', { a: new DisplayOverlayAction({ overlay: testOverlay, mapId: 'imagery1' }) });
 
@@ -403,7 +414,8 @@ describe('MapAppEffects', () => {
 				photoTime: new Date().toDateString(),
 				date: new Date(),
 				azimuth: 0,
-				isGeoRegistered: GeoRegisteration.geoRegistered
+				isGeoRegistered: GeoRegisteration.geoRegistered,
+				containedInSearchPolygon: RegionContainment.unknown
 			};
 			icaseState.selectedCase.state.maps.data[0].data.overlay = overlay;
 

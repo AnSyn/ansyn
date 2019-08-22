@@ -16,7 +16,7 @@ import { Dictionary } from '@ngrx/entity';
 @AutoSubscriptions()
 export class OverlayOutOfBoundsComponent implements OnInit, OnDestroy, IEntryComponent {
 	@Input() mapId: string;
-	mapState: ICaseMapState;
+	mapState: IMapSettings;
 	color = '#0091ff';
 
 	@AutoSubscription

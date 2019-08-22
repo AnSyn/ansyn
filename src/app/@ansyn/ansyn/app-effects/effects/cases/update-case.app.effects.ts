@@ -6,7 +6,13 @@ import {
 	selectActiveMapId, selectLayout, selectMapsList
 } from '@ansyn/map-facade';
 import { filter, tap, withLatestFrom, map } from 'rxjs/operators';
-import { selectFavoriteOverlays, selectPresetOverlays, selectRemovedOverlays, selectRemovedOverlaysVisibility } from '../../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
+import {
+	selectFavoriteOverlays,
+	selectPresetOverlays,
+	selectRemovedOverlays,
+	selectRemovedOverlaysVisibility,
+	selectTranslationData
+} from '../../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../../app.effects.module';
 import { selectSelectedLayersIds } from '../../../modules/menu-items/layers-manager/reducers/layers.reducer';
 import { selectFacets } from '../../../modules/menu-items/filters/reducer/filters.reducer';
@@ -42,7 +48,8 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectOverlaysCriteria),
 		this.store$.select(selectOverlaysManualProcessArgs),
 		this.store$.select(selectContextEntities),
-		this.store$.select(selectMiscOverlays)
+		this.store$.select(selectMiscOverlays),
+		this.store$.select(selectTranslationData)
 	]
 		.map(event => event.pipe(this.clearIsAutoSave))
 		.concat([this.store$.select(selectAutoSave).pipe(this.setIsAutoSave)]);
@@ -67,6 +74,7 @@ export class UpdateCaseAppEffects {
 				overlaysManualProcessArgs,
 				contextEntities,
 				miscOverlays,
+				overlaysTranslationData,
 				autoSave
 			] = events;
 
@@ -99,7 +107,8 @@ export class UpdateCaseAppEffects {
 					facets,
 					contextEntities,
 					miscOverlays,
-					overlaysManualProcessArgs
+					overlaysManualProcessArgs,
+					overlaysTranslationData
 				}
 			};
 

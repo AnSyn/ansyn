@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 import { AlertMsgTypes } from '../../../alerts/model';
 import { IOverlay } from '../../models/overlay.model';
+import { IOverlaysTranslationData } from '../../../menu-items/cases/models/case.model';
 
 
 export enum OverlayStatusActionsTypes {
@@ -16,7 +17,10 @@ export enum OverlayStatusActionsTypes {
 	TOGGLE_OVERLAY_PRESET = 'TOGGLE_OVERLAY_PRESET',
 	SET_PRESET_OVERLAYS = 'SET_PRESET_OVERLAYS',
 	ADD_ALERT_MSG = 'ADD_ALERT_MSG',
-	REMOVE_ALERT_MSG = 'REMOVE_ALERT_MSG'
+	REMOVE_ALERT_MSG = 'REMOVE_ALERT_MSG',
+	TOGGLE_DRAGGED_MODE = 'TOGGLE_DRAGGED_MODE',
+	SET_OVERLAY_TRANSLATION_DATA = 'SET_OVERLAY_TRANSLATION_DATA',
+	SET_OVERLAYS_TRANSLATION_DATA = 'SET_OVERLAYS_TRANSLATION_DATA'
 }
 
 
@@ -100,12 +104,35 @@ export class SetPresetOverlaysAction implements Action {
 
 export class AddAlertMsg implements Action {
 	type = OverlayStatusActionsTypes.ADD_ALERT_MSG;
+
 	constructor(public payload: { value: string, key: AlertMsgTypes }) {
 	}
 }
 
 export class RemoveAlertMsg implements Action {
 	type = OverlayStatusActionsTypes.REMOVE_ALERT_MSG;
+
 	constructor(public payload: { value: string, key: AlertMsgTypes }) {
+	}
+}
+
+export class ToggleDraggedModeAction implements Action {
+	type = OverlayStatusActionsTypes.TOGGLE_DRAGGED_MODE;
+
+	constructor(public payload: { overlayId: string, dragged: boolean }) {
+	}
+}
+
+export class SetOverlayTranslationDataAction implements Action {
+	type = OverlayStatusActionsTypes.SET_OVERLAY_TRANSLATION_DATA;
+
+	constructor(public payload: { overlayId: string, offset: [number, number] }) {
+	}
+}
+
+export class SetOverlaysTranslationDataAction implements Action {
+	type = OverlayStatusActionsTypes.SET_OVERLAYS_TRANSLATION_DATA;
+
+	constructor(public payload: IOverlaysTranslationData) {
 	}
 }

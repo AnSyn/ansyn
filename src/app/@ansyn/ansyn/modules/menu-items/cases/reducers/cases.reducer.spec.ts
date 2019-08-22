@@ -29,7 +29,8 @@ describe('CasesReducer', () => {
 			dataInputFilters: { fullyChecked: true, filters: [], active: true },
 			timeFilter: 'Start - End',
 			region: {},
-			overlaysManualProcessArgs: {}
+			overlaysManualProcessArgs: {},
+			overlaysTranslationData: {}
 		}
 	};
 

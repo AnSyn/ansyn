@@ -26,7 +26,7 @@ import {
 	BaseMapSourceProvider,
 	CommunicatorEntity,
 	ImageryCommunicatorService,
-	bboxFromGeoJson
+	bboxFromGeoJson, IMapSettings
 } from '@ansyn/imagery';
 import {
 	catchError,
@@ -326,7 +326,7 @@ export class MapAppEffects {
 			return false;
 		}
 
-		const caseMapState: ICaseMapState = MapFacadeService.mapById(Object.values(mapState.entities), payload.mapId || mapState.activeMapId);
+		const caseMapState: IMapSettings = MapFacadeService.mapById(Object.values(mapState.entities), payload.mapId || mapState.activeMapId);
 		if (!caseMapState) {
 			return false;
 		}

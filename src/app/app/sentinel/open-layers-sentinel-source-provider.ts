@@ -1,7 +1,7 @@
 import {
 	CacheService,
 	ImageryCommunicatorService,
-	ImageryMapSource,
+	ImageryMapSource, IMapSettings,
 	IMapSourceProvidersConfig,
 	MAP_SOURCE_PROVIDERS_CONFIG
 } from '@ansyn/imagery';
@@ -35,7 +35,7 @@ export class OpenLayersSentinelSourceProvider extends OpenLayersMapSourceProvide
 		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
 	}
 
-	public create(metaData: ICaseMapState): any {
+	public create(metaData: IMapSettings): any {
 		return this.store.select(selectSentinelselectedLayers).pipe(
 			take(1),
 			map(sentinelLayer => {
@@ -69,7 +69,7 @@ export class OpenLayersSentinelSourceProvider extends OpenLayersMapSourceProvide
 			})).toPromise();
 	}
 
-	generateLayerId(metaData: ICaseMapState) {
+	generateLayerId(metaData: IMapSettings) {
 		return `${super.generateLayerId(metaData)}/${this.layer}`;
 	}
 

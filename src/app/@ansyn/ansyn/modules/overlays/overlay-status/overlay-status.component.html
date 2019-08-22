@@ -20,3 +20,11 @@
 		<i class="icon" [class.icon-favorites]="!isFavorite"
 		   [class.icon-favorites-active]="isFavorite"></i>
 	</button>
+
+	<button class="small-icon-button drag-mode" *ngIf="overlay"
+			[class.active2]="isDragged"
+			(click)="toggleDragged()"
+			[attr.tooltip-value]="this.draggedButtonText | translate"
+			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
+		<i class="icon fa fa-arrows"></i>
+	</button>

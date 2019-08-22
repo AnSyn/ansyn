@@ -32,6 +32,13 @@ export enum PhotoAngle {
 	vertical = 'verticle'
 }
 
+export enum RegionContainment {
+	unknown = 'unknown',
+	contained = 'contained',
+	notContained = 'notContained',
+	intersect = 'intersect'
+}
+
 export interface IOverlay extends IDilutedOverlay {
 	footprint?: MultiPolygon;
 	sensorType?: string;
@@ -57,6 +64,7 @@ export interface IOverlay extends IDilutedOverlay {
 	catalogID?: string;
 	photoAngle?: PhotoAngle;
 	sensorLocation?: Point;
+	containedInSearchPolygon?: RegionContainment;
 }
 
 export class Overlay implements IOverlay {
@@ -87,6 +95,7 @@ export class Overlay implements IOverlay {
 	id: string;
 	sourceType: string;
 	photoAngle: PhotoAngle = PhotoAngle.vertical;
+	containedInSearchPolygon: RegionContainment = RegionContainment.unknown;
 
 	constructor(overlayProps: Partial<IOverlay>) {
 		Object.entries(overlayProps).forEach(([key, value]) => {

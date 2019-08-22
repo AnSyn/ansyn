@@ -11,7 +11,8 @@ export const MenuActionTypes = {
 	TRIGGER: {
 		CONTAINER_CHANGED: 'CONTAINER_CHANGED'
 	},
-	SET_AUTO_CLOSE: 'SET_AUTO_CLOSE'
+	SET_AUTO_CLOSE: 'SET_AUTO_CLOSE',
+	MENU_COLLAPSE: 'MENU_COLLAPSE'
 };
 
 export class InitializeMenuItemsAction implements Action {
@@ -70,3 +71,9 @@ export class SetAutoClose implements Action {
 	}
 }
 
+export class ToggleMenuCollapse implements Action {
+	type = MenuActionTypes.MENU_COLLAPSE;
+
+	constructor(public payload: boolean) {
+	}
+}

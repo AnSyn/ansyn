@@ -37,8 +37,10 @@ import {
 } from '../../../../../menu-items/tools/actions/tools.actions';
 import { UpdateLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
 import { SearchMode, SearchModeEnum } from '../../../../../status-bar/models/search-mode.enum';
-import { ICaseMapState } from '../../../../../menu-items/cases/models/case.model';
+import { ICaseMapState, IOverlaysTranslationData } from '../../../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
+import { selectTranslationData } from '../../../../../overlays/overlay-status/reducers/overlay-status.reducer';
+import { SetOverlayTranslationDataAction } from '../../../../../overlays/overlay-status/actions/overlay-status.actions';
 
 // @dynamic
 @ImageryPlugin({
@@ -57,6 +59,14 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 		})
 	);
 
+	get offset() {
+		return this.annotationsVisualizer.offset;
+	}
+
+	set offset(offset: [number, number]) {
+		this.annotationsVisualizer.offset = offset;
+	}
+
 	currentOverlay$ = this.store$.pipe(
 		select(selectMapsList),
 		map((mapList) => MapFacadeService.mapById(mapList, this.mapId)),
@@ -74,6 +84,20 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	);
 
 	annotationMode$: Observable<AnnotationMode> = this.store$.pipe(select(selectAnnotationMode));
+
+	@AutoSubscription
+	getOffsetFromCase$ = this.currentOverlay$.pipe(
+		filter(Boolean),
+		withLatestFrom(this.store$.select(selectTranslationData)),
+		tap(([overlay, translationData]: [IOverlay, IOverlaysTranslationData]) => {
+			if (overlay.id in translationData && translationData[overlay.id].offset) {
+				this.offset = translationData[overlay.id].offset;
+			} else {
+				this.offset = [0, 0];
+			}
+			this.annotationsVisualizer.onResetView().subscribe();
+		})
+	);
 
 	@AutoSubscription
 	activeChange$ = this.store$.pipe(
@@ -158,6 +182,15 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			this.store$.dispatch(new AnnotationUpdateFeature({
 				featureId: feature.id,
 				properties: { ...feature }
+			}));
+		})
+	);
+
+	onDraggEnd$ = () => this.annotationsVisualizer.events.offsetEntity.pipe(
+		withLatestFrom(this.currentOverlay$),
+		tap(([offset, overlay]: [any, IOverlay]) => {
+			this.store$.dispatch(new SetOverlayTranslationDataAction({
+				overlayId: overlay.id, offset
 			}));
 		})
 	);

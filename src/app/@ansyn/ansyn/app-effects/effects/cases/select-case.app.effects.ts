@@ -62,13 +62,13 @@ export class SelectCaseAppEffects {
 		const { orientation, timeFilter, overlaysManualProcessArgs } = state;
 		// map
 		const { data, activeMapId: currentActiveMapID } = state.maps;
-		data.forEach(map => {
+		/*data.forEach(map => {
 			let thisMapId = map.id;
 			map.id = UUID.UUID();
 			if (thisMapId === currentActiveMapID) {
 				state.maps.activeMapId = map.id;
 			}
-		});
+		});*/
 		// context
 		const { favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, presetOverlays, region, dataInputFilters, contextEntities, miscOverlays } = state;
 		let { time } = state;

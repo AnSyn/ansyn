@@ -22,11 +22,6 @@ import { selectTranslationData } from '../reducers/overlay-status.reducer';
 
 @Injectable()
 export class OverlayStatusEffects {
-	@Effect({dispatch: false})
-	all$ = this.actions$.pipe(
-		tap(action => console.log('[TZAHI_DEBUG]', {action}))
-	);
-
 	@Effect()
 	backToWorldView$: Observable<any> = this.actions$
 		.pipe(

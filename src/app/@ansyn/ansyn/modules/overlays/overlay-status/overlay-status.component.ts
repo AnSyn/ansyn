@@ -35,7 +35,16 @@ import { Dictionary } from '@ngrx/entity';
 	destroy: 'ngOnDestroy'
 })
 export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent {
-	@Input() mapId: string;
+	_mapId: string;
+	@Input() set mapId(value: string) {
+		console.log('[TZAHI_DEBUG] overlay status set map id ' , value);
+		this._mapId = value;
+	}
+
+	get mapId() {
+		console.log('[TZAHI_DEBUG] overlay status get map id' , this._mapId);
+		return this._mapId;
+	}
 	mapsAmount = 1;
 	overlay: IOverlay;
 	isActiveMap: boolean;

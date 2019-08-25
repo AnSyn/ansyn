@@ -25,8 +25,16 @@ import { getTimeFormat } from '../../utils/time';
 })
 export class ImageryStatusComponent implements OnInit, OnDestroy {
 	mapsAmount = 1;
+	_mapId: string;
 	@HostBinding('class.active') isActiveMap: boolean;
-	@Input() mapId: string;
+	@Input() set mapId(value: string) {
+		console.log('[TZAHI_DEBUG] imagery status set map id ' , value);
+		this._mapId = value;
+	}
+
+	get mapId() {
+		return this._mapId;
+	}
 	overlay: any; // @TODO: eject to ansyn
 	displayLayers: boolean;
 	@AutoSubscription

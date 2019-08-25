@@ -15,7 +15,15 @@ import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../model
 	styleUrls: ['./imagery-container.component.less']
 })
 export class ImageryContainerComponent {
-	@Input() mapState: IMapSettings;
+	_mapState: IMapSettings;
+	@Input()
+	set mapState(value:  IMapSettings) {
+		console.log('[TZAHI_DEBUG] imagery container new map state ' , {value});
+		this._mapState = value;
+	}
+	get mapState() {
+		return this._mapState;
+	}
 	@Input() active: boolean;
 	@Input() showStatus: boolean;
 	@Input() mapsAmount = 1;

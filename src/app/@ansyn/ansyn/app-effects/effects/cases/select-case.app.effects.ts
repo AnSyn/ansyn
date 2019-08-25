@@ -59,22 +59,15 @@ export class SelectCaseAppEffects {
 	selectCaseActions(payload: ICase, noInitialSearch: boolean): Action[] {
 		const { state, autoSave } = payload;
 		// status-bar
-		const { orientation, timeFilter, overlaysManualProcessArgs } = state;
+		const { orientation, timeFilter, overlaysManualProcessArgs, overlaysTranslationData } = state;
 		// map
 		const { data, activeMapId: currentActiveMapID } = state.maps;
-		/*data.forEach(map => {
-			let thisMapId = map.id;
-			map.id = UUID.UUID();
-			if (thisMapId === currentActiveMapID) {
-				state.maps.activeMapId = map.id;
-			}
-		});*/
+
 		// context
 		const { favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, presetOverlays, region, dataInputFilters, contextEntities, miscOverlays } = state;
 		let { time } = state;
 		const { layout } = state.maps;
 
-		const { overlaysTranslationData } = state;
 		if (!time) {
 			time = this.casesService.defaultTime;
 		}

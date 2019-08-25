@@ -1,9 +1,7 @@
 import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
-import { IMapSettings } from '@ansyn/imagery';
 import {
 	IEntryComponent,
 	selectActiveMapId,
-	selectMaps,
 	selectMapsTotal, selectOverlayFromMap,
 } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
@@ -23,7 +21,6 @@ import {
 	selectRemovedOverlays,
 	selectTranslationData
 } from './reducers/overlay-status.reducer';
-import { Dictionary } from '@ngrx/entity';
 
 @Component({
 	selector: 'ansyn-overlay-status',

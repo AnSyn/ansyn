@@ -35,16 +35,7 @@ import { Dictionary } from '@ngrx/entity';
 	destroy: 'ngOnDestroy'
 })
 export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent {
-	_mapId: string;
-	@Input() set mapId(value: string) {
-		console.log('[TZAHI_DEBUG] overlay status set map id ' , value);
-		this._mapId = value;
-	}
-
-	get mapId() {
-		console.log('[TZAHI_DEBUG] overlay status get map id' , this._mapId);
-		return this._mapId;
-	}
+	@Input() mapId: string;
 	mapsAmount = 1;
 	overlay: IOverlay;
 	isActiveMap: boolean;
@@ -67,16 +58,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		select(selectMapsTotal),
 		tap((mapsAmount) => this.mapsAmount = mapsAmount)
 	);
-
-	/*@AutoSubscription
-	overlay$: Observable<Dictionary<IMapSettings>> = this.store$.pipe(
-		select(selectMaps),
-		tap((maps) => {
-			if (maps[this.mapId]) {
-				this.overlay = maps[this.mapId].data.overlay;
-			}
-		})
-	);*/
 
 	@AutoSubscription
 	overlay$ = () => this.store$.select(selectOverlayFromMap(this.mapId)).pipe(

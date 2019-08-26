@@ -1,6 +1,7 @@
-<div class="back-to-world-view">
-<button (click)="backToWorldView()" *ngIf="overlay "
+<div class="back-to-world-view" *ngIf="overlay">
+<button (click)="backToWorldView()"
 		class="small-icon-button"
+		[class.menu-pinned]="isPinned"
 		[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'"
 		[attr.tooltip-value]="'Back to base map' | translate">
 	<i class="icon-back-to-base-map"></i>

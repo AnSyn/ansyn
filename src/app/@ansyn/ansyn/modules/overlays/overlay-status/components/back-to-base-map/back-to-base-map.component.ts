@@ -2,11 +2,12 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { IMapSettings } from '@ansyn/imagery';
 import { IEntryComponent, selectMaps, selectMapsTotal } from "@ansyn/map-facade";
 import { Store, select } from '@ngrx/store';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { BackToWorldView } from '../../actions/overlay-status.actions';
 import { Observable } from 'rxjs';
 import { Dictionary } from '@ngrx/entity';
+import { selectIsPinned } from '@ansyn/menu';
 
 @Component({
 	selector: 'ansyn-back-to-base-map',
@@ -19,6 +20,13 @@ export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponen
 	@Input() mapId: string;
 	mapsAmount: number;
 	overlay: any;
+	isPinned: boolean;
+
+	@AutoSubscription
+	isPinned$: Observable<boolean> = this.store$.pipe(
+		select(selectIsPinned),
+		tap( isPinned => this.isPinned = isPinned)
+	);
 
 	@AutoSubscription
 	mapsAmount$ = this.store$.pipe(

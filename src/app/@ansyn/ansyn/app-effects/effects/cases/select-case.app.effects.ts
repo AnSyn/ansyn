@@ -105,7 +105,7 @@ export class SelectCaseAppEffects {
 			new SelectCaseSuccessAction(payload)
 		];
 
-		if (layoutOptions.get(layout).mapsCount === 1){
+		if (layoutOptions.get(layout).mapsCount === 1) {
 			selectCaseAction.push( new UpdateMapAction({id: currentActiveMapID, changes: {id: data[0].id}}))
 		}
 

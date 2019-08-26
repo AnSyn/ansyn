@@ -4,6 +4,7 @@ import { StoreModule, Store } from '@ngrx/store';
 import { imageryStatusFeatureKey, ImageryStatusReducer, mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { overlayStatusFeatureKey, OverlayStatusReducer } from './reducers/overlay-status.reducer';
 import { TranslateModule } from '@ngx-translate/core';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 
 describe('OverlayStatusComponent', () => {
 	let component: OverlayStatusComponent;
@@ -18,7 +19,8 @@ describe('OverlayStatusComponent', () => {
 				[imageryStatusFeatureKey]: ImageryStatusReducer,
 				[overlayStatusFeatureKey]: OverlayStatusReducer
 			}),
-			TranslateModule.forRoot()]
+			TranslateModule.forRoot()],
+			providers: [ImageryCommunicatorService]
 		})
 			.compileComponents();
 	}));
@@ -40,14 +42,12 @@ describe('OverlayStatusComponent', () => {
 	});
 
 	it('check click on toggleFavorite', () => {
-		spyOn(component, 'toggleFavorite');
-		fixture.nativeElement.querySelector('.set-favorite').click();
+		fixture.nativeElement.querySelector('button.set-favorite').click();
 		expect(component.toggleFavorite).toHaveBeenCalled();
 	});
 
 	it('check click on togglePreset', () => {
-		spyOn(component, 'togglePreset');
-		fixture.nativeElement.querySelector('.set-preset').click();
+		fixture.nativeElement.querySelector('button.set-preset').click();
 		expect(component.togglePreset).toHaveBeenCalled();
 	});
 });

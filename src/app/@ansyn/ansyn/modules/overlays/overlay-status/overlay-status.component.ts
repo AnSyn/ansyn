@@ -51,14 +51,9 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 
 
 	@AutoSubscription
-	mapsAmount$ = this.store$.pipe(
+	mapsAmount$: Observable<number> = this.store$.pipe(
 		select(selectMapsTotal),
 		tap((mapsAmount) => this.mapsAmount = mapsAmount)
-	);
-
-	@AutoSubscription
-	overlay$ = () => this.store$.select(selectOverlayFromMap(this.mapId)).pipe(
-		tap( overlay => this.overlay = overlay)
 	);
 
 	@AutoSubscription
@@ -92,12 +87,16 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		})
 	);
 	@AutoSubscription
-	active$ = this.store$.pipe(
+	active$: Observable<boolean> = this.store$.pipe(
 		select(selectActiveMapId),
 		map((activeMapId) => activeMapId === this.mapId),
 		tap((isActiveMap) => this.isActiveMap = isActiveMap)
 	);
 
+	@AutoSubscription
+	overlay$ = () => this.store$.select(selectOverlayFromMap(this.mapId)).pipe(
+		tap( overlay => this.overlay = overlay)
+	);
 
 	constructor(public store$: Store<any>) {
 		this.isPreset = true;

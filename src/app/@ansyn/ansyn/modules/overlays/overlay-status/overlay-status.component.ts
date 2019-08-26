@@ -94,7 +94,8 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	);
 
 	@AutoSubscription
-	overlay$ = () => this.store$.select(selectOverlayFromMap(this.mapId)).pipe(
+	overlay$ = () => this.store$.pipe(
+		select(selectOverlayFromMap(this.mapId)),
 		tap( overlay => this.overlay = overlay)
 	);
 

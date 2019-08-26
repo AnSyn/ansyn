@@ -1,10 +1,16 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { OverlayStatusComponent } from './overlay-status.component';
 import { StoreModule, Store } from '@ngrx/store';
-import { imageryStatusFeatureKey, ImageryStatusReducer, mapFeatureKey, MapReducer } from '@ansyn/map-facade';
+import {
+	imageryStatusFeatureKey,
+	ImageryStatusReducer,
+	mapFeatureKey,
+	MapReducer,
+	selectMaps, selectMapStateById, selectOverlayFromMap
+} from '@ansyn/map-facade';
 import { overlayStatusFeatureKey, OverlayStatusReducer } from './reducers/overlay-status.reducer';
 import { TranslateModule } from '@ngx-translate/core';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+
 
 describe('OverlayStatusComponent', () => {
 	let component: OverlayStatusComponent;
@@ -19,35 +25,41 @@ describe('OverlayStatusComponent', () => {
 				[imageryStatusFeatureKey]: ImageryStatusReducer,
 				[overlayStatusFeatureKey]: OverlayStatusReducer
 			}),
-			TranslateModule.forRoot()],
-			providers: [ImageryCommunicatorService]
+				TranslateModule.forRoot()]
 		})
 			.compileComponents();
+	}));
+
+	beforeEach(inject([Store], (_store: Store<any>) => {
+		store = _store;
+
 	}));
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(OverlayStatusComponent);
 		component = fixture.componentInstance;
 		component.mapId = 'mapId';
-		component.overlay = <any>{id: 'overlayId' };
+		component.overlay = <any>{ id: 'overlayId' };
 		fixture.detectChanges();
 	});
-
-	beforeEach(inject([Store], (_store: Store<any>) => {
-		store = _store;
-	}));
 
 	it('should create', () => {
 		expect(component).toBeTruthy();
 	});
 
 	it('check click on toggleFavorite', () => {
-		fixture.nativeElement.querySelector('button.set-favorite').click();
+		component.overlay = <any>{ id: 'overlayId' };
+		fixture.detectChanges();
+		spyOn(component, 'toggleFavorite');
+		fixture.nativeElement.querySelector('.set-favorite').click();
 		expect(component.toggleFavorite).toHaveBeenCalled();
 	});
 
 	it('check click on togglePreset', () => {
-		fixture.nativeElement.querySelector('button.set-preset').click();
+		component.overlay = <any>{ id: 'overlayId' };
+		fixture.detectChanges();
+		spyOn(component, 'togglePreset');
+		fixture.debugElement.nativeElement.querySelector('.set-preset').click();
 		expect(component.togglePreset).toHaveBeenCalled();
 	});
 });

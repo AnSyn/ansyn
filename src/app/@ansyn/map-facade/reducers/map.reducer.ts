@@ -192,10 +192,10 @@ export const selectActiveMapId = createSelector(mapStateSelector, (map: IMapStat
 export const selectMapsList = createSelector(mapStateSelector, selectAll);
 export const selectMapsTotal = createSelector(mapStateSelector, selectTotal);
 export const selectMapsIds = createSelector(mapStateSelector, selectIds);
-export const selectMaps = createSelector(mapStateSelector, selectEntities);
+export const selectMaps = createSelector(mapStateSelector, (state) => {console.log('selectMap'); return selectEntities(state); });
 export const selectLayout: MemoizedSelector<any, LayoutKey> = createSelector(mapStateSelector, (state) => state.layout);
 export const selectWasWelcomeNotificationShown = createSelector(mapStateSelector, (state) => state.wasWelcomeNotificationShown);
 export const selectToastMessage = createSelector(mapStateSelector, (state) => state.toastMessage);
 export const selectFooterCollapse = createSelector(mapStateSelector, (state) => state.footerCollapse);
-export const selectMapStateById = (id: string) => createSelector(selectMaps, (maps) =>  maps[id] );
+export const selectMapStateById = (id: string) => createSelector(selectMaps, (maps) =>  {console.log('select map state'); return maps[id];} );
 export const selectOverlayFromMap = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.overlay);

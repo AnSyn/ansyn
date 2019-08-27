@@ -296,7 +296,14 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			return [];
 		}
 
+		facets.filters.forEach( filter => {
+			if (filter.metadata.unCheckedEnums) {
+				const metaData = filter.metadata;
+				filter.metadata = [...metaData.disabledEnums, ...metaData.unCheckedEnums]
+			}
+		});
 		return facets.filters.map(filterObj => {
+
 			if (filterObj.fieldName === 'bestResolution') {
 				return {
 					type: 'RangeFilter',

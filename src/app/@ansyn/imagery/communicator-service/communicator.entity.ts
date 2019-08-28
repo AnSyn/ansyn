@@ -285,6 +285,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
+		this.imageryCommunicatorService.remove(this.id);
 		this.destroyCurrentComponent();
 	}
 
@@ -309,7 +310,6 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 			this._mapComponentRef.destroy();
 			this._mapComponentRef = undefined;
 		}
-		this.imageryCommunicatorService.remove(this.id);
 		this._activeMap.dispose();
 	}
 

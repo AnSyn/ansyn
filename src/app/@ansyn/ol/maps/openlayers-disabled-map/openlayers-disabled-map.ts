@@ -127,10 +127,6 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		view.setRotation(rotation);
 	}
 
-	setResolution(resolution: number): void {
-		this.mapObject.getView().setResolution(resolution);
-	}
-
 	updateSize(): void {
 		this.mapObject.updateSize();
 	}
@@ -145,8 +141,21 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		return new Observable();
 	}
 
-	getResolution(): number {
-		return this.mapObject.getView().getResolution()
+	resetZoom(): void {
+		const view = this.mapObject.getView();
+		view.setZoom(1)
+	}
+
+	zoomOut(): void {
+		const view = this.mapObject.getView();
+		const current = view.getZoom();
+		view.setZoom(current - 1);
+	}
+
+	zoomIn(): void {
+		const view = this.mapObject.getView();
+		const current = view.getZoom();
+		view.setZoom(current + 1);
 	}
 
 	getRotation(): number {

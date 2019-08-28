@@ -266,21 +266,21 @@ input[type=number]::-webkit-outer-spin-button {
 	line-height: normal;
 }
 
-/deep/ .app-scroll::-webkit-scrollbar {
+/deep/ .scrolled::-webkit-scrollbar {
 	 width: 7px;
  }
 
-/deep/ .app-scroll::-webkit-scrollbar-corner {
+/deep/ .scrolled::-webkit-scrollbar-corner {
 	 background-color: transparent;
  }
 
-/deep/ .app-scroll::-webkit-scrollbar-button {
+/deep/ .scrolled::-webkit-scrollbar-button {
 	 width: 0;
 	 height: 0;
 	 display: none;
  }
 
-/deep/ .app-scroll::-webkit-scrollbar-thumb {
+/deep/ .scrolled::-webkit-scrollbar-thumb {
 	 -webkit-box-shadow: inset -1px -1px 0 rgba(0, 0, 0, 0.05), inset 1px 1px 0 rgba(0, 0, 0, 0.05);
 	 border: 4px solid transparent;
 	 background-clip: padding-box;

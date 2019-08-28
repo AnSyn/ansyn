@@ -58,18 +58,15 @@
 			width: 100%;
 			height: 100%;
 			display: flex;
+			justify-content: flex-start;
 		}
 		.status {
 			justify-content: flex-end;
 		}
 		&.separated-state {
-			.selected-case, .status {
-				display: inherit;
-			}
-			border-color: white;
-			justify-content: space-around;
-			/deep/ .selectedCase {
-				transform: translateX(0);
+			.selected-case,
+			.status {
+				justify-content: flex-end;
 			}
 		}
 	}

@@ -14,9 +14,10 @@ import { IAppState } from '../../app.effects.module';
 import { ofType } from '@ngrx/effects';
 import { concatMap } from 'rxjs/operators';
 import {
+	layoutOptions,
 	SetActiveMapId,
 	SetLayoutAction,
-	SetMapsDataActionStore
+	SetMapsDataActionStore, UpdateMapAction
 } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
 import {
@@ -58,22 +59,15 @@ export class SelectCaseAppEffects {
 	selectCaseActions(payload: ICase, noInitialSearch: boolean): Action[] {
 		const { state, autoSave } = payload;
 		// status-bar
-		const { orientation, timeFilter, overlaysManualProcessArgs } = state;
+		const { orientation, timeFilter, overlaysManualProcessArgs, overlaysTranslationData } = state;
 		// map
 		const { data, activeMapId: currentActiveMapID } = state.maps;
-		data.forEach(map => {
-			let thisMapId = map.id;
-			map.id = UUID.UUID();
-			if (thisMapId === currentActiveMapID) {
-				state.maps.activeMapId = map.id;
-			}
-		});
+
 		// context
 		const { favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, presetOverlays, region, dataInputFilters, contextEntities, miscOverlays } = state;
 		let { time } = state;
 		const { layout } = state.maps;
 
-		const { overlaysTranslationData } = state;
 		if (!time) {
 			time = this.casesService.defaultTime;
 		}
@@ -89,7 +83,7 @@ export class SelectCaseAppEffects {
 		// filters
 		const { facets } = state;
 
-		return [
+		const selectCaseAction = [
 			new SetLayoutAction(<any>layout),
 			new SetComboBoxesProperties({ orientation, timeFilter }),
 			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
@@ -110,6 +104,8 @@ export class SelectCaseAppEffects {
 			new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
 			new SelectCaseSuccessAction(payload)
 		];
+
+		return selectCaseAction;
 	}
 
 	parseMapData(map: ICaseMapState): ICaseMapState {

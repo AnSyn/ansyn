@@ -1,10 +1,8 @@
 import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
-import { IMapSettings } from '@ansyn/imagery';
 import {
 	IEntryComponent,
 	selectActiveMapId,
-	selectMaps,
-	selectMapsTotal,
+	selectMapsTotal, selectOverlayFromMap,
 } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -23,7 +21,6 @@ import {
 	selectRemovedOverlays,
 	selectTranslationData
 } from './reducers/overlay-status.reducer';
-import { Dictionary } from '@ngrx/entity';
 
 @Component({
 	selector: 'ansyn-overlay-status',
@@ -54,24 +51,11 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 
 
 	@AutoSubscription
-	mapsAmount$ = this.store$.pipe(
+	mapsAmount$: Observable<number> = this.store$.pipe(
 		select(selectMapsTotal),
 		tap((mapsAmount) => this.mapsAmount = mapsAmount)
 	);
 
-	@AutoSubscription
-	overlay$: Observable<Dictionary<IMapSettings>> = this.store$.pipe(
-		select(selectMaps),
-		tap((maps) => {
-			if (maps[this.mapId]) {
-				this.overlay = maps[this.mapId].data.overlay;
-				this.updateDraggedStatus();
-			}
-			this.updateRemovedStatus();
-			this.updateFavoriteStatus();
-			this.updatePresetStatus();
-		})
-	);
 	@AutoSubscription
 	favoriteOverlays$: Observable<any[]> = this.store$.select(selectFavoriteOverlays).pipe(
 		tap((favoriteOverlays) => {
@@ -103,12 +87,17 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		})
 	);
 	@AutoSubscription
-	active$ = this.store$.pipe(
+	active$: Observable<boolean> = this.store$.pipe(
 		select(selectActiveMapId),
 		map((activeMapId) => activeMapId === this.mapId),
 		tap((isActiveMap) => this.isActiveMap = isActiveMap)
 	);
 
+	@AutoSubscription
+	overlay$ = () => this.store$.pipe(
+		select(selectOverlayFromMap(this.mapId)),
+		tap( overlay => this.overlay = overlay)
+	);
 
 	constructor(public store$: Store<any>) {
 		this.isPreset = true;

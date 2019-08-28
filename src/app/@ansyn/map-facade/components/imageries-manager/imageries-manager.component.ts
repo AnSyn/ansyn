@@ -91,7 +91,7 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 		this.selectedLayout$.subscribe(this.setSelectedLayout.bind(this));
 		this.activeMapId$.subscribe(_activeMapId => this.activeMapId = _activeMapId);
 		this.mapsEntities$.subscribe((mapsEntities) => this.mapsEntities = mapsEntities);
-		this.ids$.subscribe((ids: string[]) => this.ids = ids);
+		this.ids$.subscribe((ids: string[]) => this.ids = ids );
 		this.footerCollapse$.subscribe( collapse => this.footerCollapse = collapse);
 	}
 

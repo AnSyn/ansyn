@@ -1,7 +1,9 @@
 <div class="collection">
+	<div class="all-layers scrolled">
 	<ng-container *ngFor="let collection of layers$ | async">
 		<ansyn-layer-collection [collection]="collection"></ansyn-layer-collection>
 	</ng-container>
+	</div>
 </div>
 
 <ansyn-data-layers-modals></ansyn-data-layers-modals>

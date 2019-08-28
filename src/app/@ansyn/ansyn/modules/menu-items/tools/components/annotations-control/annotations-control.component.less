@@ -19,32 +19,25 @@
 		color: white;
 		visibility: hidden;
 		display: flex;
+		justify-content: flex-start;
+		align-items: center;
 		position: absolute;
 		width: 100%;
 		transform: translateY(-100%);
-		background: #27b2cf;
+		background: fade(@background-color-3, 95%);;
 		padding: 0 10px;
 		box-sizing: border-box;
-		div {
-			width: 100%;
-			border-bottom: 1px solid;
+		div.combo-box {
+
+			width: 50%;
+			margin-left: 5px;
 			padding: 7px 0;
 			display: flex;
-			overflow: hidden;
 
-			select.active-annotation-layer {
-				background: @application-primary-color;
-				border: none;
-				color: white;
-				outline: none;
-				border-bottom: 1px solid white;
-				margin-left: 5px;
-				margin-top: 2px;
-				appearance: none;
-				padding-right: 18px;
-				option {
-					color: white;
-				}
+			/deep/ .options-container{
+				max-height: 150px !important;
+				margin-top: 5px ;
+				overflow: auto;
 			}
 		}
 	}

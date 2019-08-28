@@ -11,7 +11,7 @@
 		<div class="placeholder" *ngIf="placeholder" [class.float]="selected || optionsVisible"> {{ placeholder }}</div>
 	</button>
 
-	<div class="options-container"
+	<div class="options-container scrolled"
 		 *ngIf="!disabled"
 		 #optionsContainer [style.visibility]="optionsVisible ? 'visible' : 'hidden'"
 		 tabindex="0" (blur)="onBlurOptionsContainer($event)">

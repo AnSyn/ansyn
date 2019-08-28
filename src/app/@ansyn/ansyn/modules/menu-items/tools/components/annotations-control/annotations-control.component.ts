@@ -5,7 +5,7 @@ import { AnnotationSetProperties, ClearActiveInteractionsAction, SetAnnotationMo
 import { DOCUMENT } from '@angular/common';
 import { selectAnnotationMode, selectAnnotationProperties } from '../../reducers/tools.reducer';
 import { IVisualizerStyle } from '@ansyn/imagery';
-import { map, tap, filter } from 'rxjs/operators';
+import { map, tap, filter, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectActiveAnnotationLayer, selectLayers } from '../../../layers-manager/reducers/layers.reducer';
 import { ILayer, LayerType } from '../../../layers-manager/models/layers.model';
@@ -30,6 +30,8 @@ export enum SelectionBoxTypes {
 export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	fillAlpah = 0.4;
 	strokeAlpah = 1;
+	activeAnnotationId: string;
+
 
 	private _expand: boolean;
 	public selectedBox: SelectionBoxTypes;
@@ -42,13 +44,19 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		return Boolean;
 	}
 
-	annotationLayerIds$ = this.store.pipe(
+	annotationLayer$ = this.store.pipe(
 		select(selectLayers),
 		map((layers: ILayer[]) => layers.filter(({ type }) => type === LayerType.annotation))
 	);
 
+	@AutoSubscription
 	activeAnnotationLayer$ = this.store.pipe(
-		select(selectActiveAnnotationLayer)
+		select(selectActiveAnnotationLayer),
+		withLatestFrom(this.annotationLayer$),
+		filter(([layer, allLayers]) => Boolean(layer) && Boolean(allLayers)),
+		tap( ([layer, allLayers]) => {
+			this.activeAnnotationId = layer;
+		})
 	);
 
 	@AutoSubscription

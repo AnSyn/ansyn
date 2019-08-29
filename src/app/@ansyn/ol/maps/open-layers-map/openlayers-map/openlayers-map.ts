@@ -172,7 +172,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this._mapLayers = [];
 		const controls = [
 			new ScaleLine(),
-			new AttributionControl()
+			new AttributionControl({
+				collapsible: true
+			})
 		];
 		const renderer = 'canvas';
 		this._mapObject = new OLMap({

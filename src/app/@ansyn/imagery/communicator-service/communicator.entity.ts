@@ -310,7 +310,9 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 			this._mapComponentRef = undefined;
 		}
 		this.imageryCommunicatorService.remove(this.id);
-		this._activeMap.dispose();
+		if (this._activeMap) {
+			this._activeMap.dispose();
+		}
 	}
 
 	destroyPlugins(): void {

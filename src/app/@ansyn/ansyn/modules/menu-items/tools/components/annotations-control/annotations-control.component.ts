@@ -139,8 +139,8 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	isAnnotationEnable(annotation){
-		if ([AnnotationMode.LineString, AnnotationMode.Arrow].includes(annotation) && !this.annotationProperties['stroke-opacity']){
+	isAnnotationEnable(annotation) {
+		if ([AnnotationMode.LineString, AnnotationMode.Arrow].includes(annotation) && !this.annotationProperties['stroke-opacity']) {
 			return false;
 		}
 		return true;

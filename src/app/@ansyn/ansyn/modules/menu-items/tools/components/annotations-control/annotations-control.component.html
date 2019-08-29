@@ -17,7 +17,8 @@
 
 	<li *ngFor="let annotationMode of ANNOTATION_MODE_LIST"
 		[class.mode-on]="mode === annotationMode"
-		(click)="setAnnotationMode(annotationMode)">
+		(click)="setAnnotationMode(annotationMode)"
+		[class.disabled]="!isAnnotationEnable(annotationMode)">
 		<span
 			class="icon-annotation-{{annotationMode.toLowerCase()}}" [attr.tooltip-value]="annotationMode | translate"
 			tooltip-class="bottom">

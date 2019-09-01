@@ -1,19 +1,20 @@
 import { Store } from '@ngrx/store';
 import TileLayer from 'ol/layer/Tile';
-import { filter, map, tap, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { combineLatest, Observable } from 'rxjs';
+import { filter, map, tap, debounceTime, distinctUntilChanged, withLatestFrom } from 'rxjs/operators';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 import { BaseImageryPlugin } from '@ansyn/imagery';
 import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '@ansyn/ol';
 import { ILayer } from '../../../../menu-items/layers-manager/models/layers.model';
-import { selectSelectedLayersIds } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
-import { selectLayers } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
+import { selectSelectedLayersIds, selectLayers } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
 import { ICaseMapState } from '../../../../menu-items/cases/models/case.model';
 
 export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 
-	@AutoSubscription
+	protected subscriptions: Subscription[] = [];
+
+	// todo: return auto-subscription when the bug is fixed
 	toggleGroup$ = this.store$.select(selectMapsList).pipe(
 		map((mapsList) => MapFacadeService.mapById(mapsList, this.mapId)),
 		filter(Boolean),
@@ -23,11 +24,12 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 		tap((newState: boolean) => this.iMap.toggleGroup('layers', newState))
 	);
 
-	@AutoSubscription
-	osmLayersChanges$: Observable<any[]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
+	// todo: return auto-subscription when the bug is fixed
+	osmLayersChanges$: Observable<any[]> = this.store$.select(selectSelectedLayersIds)
 		.pipe(
-			tap(([result, selectedLayerId]: [ILayer[], string[]]) => {
-				result.filter(this.checkLayer)
+			withLatestFrom(this.store$.select(selectLayers)),
+			tap(([selectedLayerId, layers]: [string[], ILayer[]]) => {
+				layers.filter(this.checkLayer)
 					.forEach((layer: ILayer) => {
 						if (selectedLayerId.includes(layer.id)) {
 							this.addGroupLayer(layer);
@@ -38,20 +40,38 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 			})
 		);
 
+	onInitSubscriptions(): void {
+		super.onInitSubscriptions();
+		this.subscriptions.push(
+			this.toggleGroup$.subscribe(() => {
+			}),
+			this.osmLayersChanges$.subscribe(() => {
+			})
+		)
+	}
+
+	onDispose(): void {
+		this.subscriptions.forEach((sub) => sub.unsubscribe());
+		this.subscriptions = [];
+		super.onDispose();
+	}
+
 	protected constructor(protected store$: Store<any>) {
 		super();
 	}
 
 	abstract checkLayer(layer: ILayer);
 
-	abstract createLayer(layer: ILayer): TileLayer;
+	abstract createLayer(layer: ILayer): Observable<TileLayer>;
 
 	addGroupLayer(layer: ILayer) {
 		const group = OpenLayersMap.groupLayers.get(OpenLayersMap.groupsKeys.layers);
 		const layersArray = group.getLayers().getArray();
 		if (!layersArray.some((shownLayer) => shownLayer.get('id') === layer.id)) {
-			const _layer = this.createLayer(layer);
-			group.getLayers().push(_layer);
+			this.createLayer(layer).subscribe((tileLayer) => {
+				const _layer = tileLayer;
+				group.getLayers().push(_layer);
+			});
 		}
 	}
 

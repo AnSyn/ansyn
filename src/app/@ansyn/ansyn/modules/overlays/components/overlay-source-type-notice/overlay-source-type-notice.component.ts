@@ -1,6 +1,6 @@
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { IMapSettings } from '@ansyn/imagery';
-import { selectFooterCollapse, selectMaps } from '@ansyn/map-facade';
+import { selectFooterCollapse, selectMaps, selectOverlayFromMap } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, tap } from 'rxjs/operators';
@@ -21,12 +21,12 @@ import { Dictionary } from '@ngrx/entity';
 export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 	@Input() mapId: string;
 	footerCollapse: boolean;
+	private _title: string = null;
 	@AutoSubscription
-	overlay$: Observable<Dictionary<IMapSettings>> = this.store$.pipe(
-		select(selectMaps),
-		filter((maps) => Boolean(maps[this.mapId])),
-		tap((maps) => {
-			this.overlay = maps[this.mapId].data.overlay;
+	overlay$ = () => this.store$.pipe(
+		select(selectOverlayFromMap(this.mapId)),
+		tap((overlay) => {
+			this.overlay = overlay;
 		})
 	);
 
@@ -46,7 +46,7 @@ export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	private _title: string = null;
+
 	get title() {
 		return this._title;
 	}

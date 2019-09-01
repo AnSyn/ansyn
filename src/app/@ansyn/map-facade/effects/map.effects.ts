@@ -6,7 +6,9 @@ import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMaps } from '../reducers/map.reducer';
 import {
 	geojsonMultiPolygonToBBOXPolygon,
-	ImageryMapPosition, IMapSettings,
+	ImageryCommunicatorService,
+	ImageryMapPosition,
+	IMapSettings,
 	IWorldViewMapState
 } from '@ansyn/imagery';
 import {
@@ -22,26 +24,24 @@ import {
 	MapActionTypes,
 	MapInstanceChangedAction,
 	PinLocationModeTriggerAction,
+	SetLayoutSuccessAction,
 	SetMapPositionByRadiusAction,
 	SetMapPositionByRectAction,
-	SynchronizeMapsAction,
-	UpdateMapAction,
+	SetToastMessageAction,
 	SetWasWelcomeNotificationShownFlagAction,
-	SetLayoutSuccessAction,
-	SetToastMessageAction
+	SynchronizeMapsAction,
+	UpdateMapAction
 } from '../actions/map.actions';
-import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import { catchError, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { IMapFacadeConfig } from '../models/map-config.model';
-import { Dictionary } from '@ngrx/entity/src/models';
 import { updateSession } from '../models/core-session-state.model';
 
 @Injectable()
 export class MapEffects {
 
-	@Effect({ dispatch: false })
+	@Effect({dispatch: false})
 	onUpdateSize$: Observable<void> = this.actions$.pipe(
 		ofType(MapActionTypes.UPDATE_MAP_SIZE),
 		map(() => {
@@ -52,7 +52,7 @@ export class MapEffects {
 		})
 	);
 
-	@Effect({ dispatch: false })
+	@Effect({dispatch: false})
 	onCommunicatorChange$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION),
 		withLatestFrom(this.store$.select(mapStateSelector)),
@@ -65,7 +65,7 @@ export class MapEffects {
 		})
 	);
 
-	@Effect({ dispatch: false })
+	@Effect({dispatch: false})
 	onContextMenuShow$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.CONTEXT_MENU.SHOW),
 		share()
@@ -87,29 +87,29 @@ export class MapEffects {
 		map(() => new SetLayoutSuccessAction())
 	);
 
-	@Effect({ dispatch: false })
+	@Effect({dispatch: false})
 	pinLocationModeTriggerAction$: Observable<boolean> = this.actions$.pipe(
 		ofType<PinLocationModeTriggerAction>(MapActionTypes.TRIGGER.PIN_LOCATION_MODE),
-		map(({ payload }) => payload)
+		map(({payload}) => payload)
 	);
 
 	@Effect()
 	newInstanceInitPosition$: Observable<any> = this.actions$.pipe(
 		ofType<ImageryCreatedAction>(MapActionTypes.IMAGERY_CREATED),
 		withLatestFrom(this.store$.select(mapStateSelector)),
-		filter(([{ payload }, { entities }]: [ImageryCreatedAction, IMapState]) => !MapFacadeService.mapById(Object.values(entities), payload.id).data.position),
-		switchMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
+		filter(([{payload}, {entities}]: [ImageryCreatedAction, IMapState]) => !MapFacadeService.mapById(Object.values(entities), payload.id).data.position),
+		switchMap(([{payload}, mapState]: [ImageryCreatedAction, IMapState]) => {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			const communicator = this.communicatorsService.provide(payload.id);
-			return communicator.setPosition(activeMap.data.position).pipe(map(() => [{ payload }, mapState]));
+			return communicator.setPosition(activeMap.data.position).pipe(map(() => [{payload}, mapState]));
 		}),
-		mergeMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
+		mergeMap(([{payload}, mapState]: [ImageryCreatedAction, IMapState]) => {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			const actions = [];
 			const updatedMap = mapState.entities[payload.id];
 			actions.push(new UpdateMapAction({
 				id: payload.id,
-				changes: { data: { ...updatedMap.data, position: activeMap.data.position } }
+				changes: {data: {...updatedMap.data, position: activeMap.data.position}}
 			}));
 			if (mapState.pendingMapsCount > 0) {
 				actions.push(new DecreasePendingMapsCountAction());
@@ -119,7 +119,7 @@ export class MapEffects {
 	);
 
 
-	@Effect({ dispatch: false })
+	@Effect({dispatch: false})
 	onSynchronizeAppMaps$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.SYNCHRONIZE_MAPS),
 		switchMap((action: SynchronizeMapsAction) => {
@@ -133,7 +133,7 @@ export class MapEffects {
 			if (!mapPosition) {
 				const map: IMapSettings = mapState.entities[mapId];
 				if (map.data.overlay) {
-					mapPosition = { extentPolygon: geojsonMultiPolygonToBBOXPolygon(map.data.overlay.footprint)};
+					mapPosition = {extentPolygon: geojsonMultiPolygonToBBOXPolygon(map.data.overlay.footprint)};
 				} else {
 					mapPosition = map.data.position;
 				}
@@ -180,49 +180,52 @@ export class MapEffects {
 	changeImageryMap$ = this.actions$.pipe(
 		ofType<ChangeImageryMap>(MapActionTypes.CHANGE_IMAGERY_MAP),
 		withLatestFrom(this.store$.select(selectMaps)),
-		mergeMap(([{ payload: { id, mapType, sourceType } }, mapsEntities]) => {
+		mergeMap(([{payload: {id, mapType, sourceType}}, mapsEntities]) => {
 			const communicator = this.communicatorsService.provide(id);
 			return fromPromise(communicator.setActiveMap(mapType, mapsEntities[id].data.position, sourceType)).pipe(
 				map(() => {
 					sourceType = sourceType || communicator.mapSettings.worldView.sourceType;
-					const worldView: IWorldViewMapState = { mapType, sourceType };
-					return new ChangeImageryMapSuccess({ id, worldView });
+					const worldView: IWorldViewMapState = {mapType, sourceType};
+					return new ChangeImageryMapSuccess({id, worldView});
 				}),
 				catchError((err) => {
 					console.error('CHANGE_IMAGERY_MAP ', err);
-					this.store$.dispatch(new SetToastMessageAction({ toastText: 'Failed to change map', showWarningIcon: true}));
+					this.store$.dispatch(new SetToastMessageAction({
+						toastText: 'Failed to change map',
+						showWarningIcon: true
+					}));
 					return EMPTY;
 				})
 			);
 		})
 	);
 
-	@Effect({ dispatch: false })
+	@Effect({dispatch: false})
 	setMapPositionByRect$ = this.actions$.pipe(
 		ofType<SetMapPositionByRectAction>(MapActionTypes.SET_MAP_POSITION_BY_RECT),
-		switchMap(({ payload: { id, rect } }: SetMapPositionByRectAction) => {
+		switchMap(({payload: {id, rect}}: SetMapPositionByRectAction) => {
 			const communicator = this.communicatorsService.provide(id);
 			const result$ = communicator ? communicator.setPositionByRect(rect) : EMPTY;
 			return result$;
 		})
 	);
 
-	@Effect({ dispatch: false })
+	@Effect({dispatch: false})
 	setMapPositionByRadius$ = this.actions$.pipe(
 		ofType<SetMapPositionByRadiusAction>(MapActionTypes.SET_MAP_POSITION_BY_RADIUS),
-		switchMap(({ payload: { id, center, radiusInMeters } }: SetMapPositionByRadiusAction) => {
+		switchMap(({payload: {id, center, radiusInMeters}}: SetMapPositionByRadiusAction) => {
 			const communicator = this.communicatorsService.provide(id);
 			const result$ = communicator ? communicator.setPositionByRadius(center, radiusInMeters) : EMPTY;
 			return result$;
 		})
 	);
 
-	@Effect({ dispatch: false })
+	@Effect({dispatch: false})
 	onWelcomeNotification$: Observable<any> = this.actions$
 		.pipe(
 			ofType(MapActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG),
 			tap((action: SetWasWelcomeNotificationShownFlagAction) => {
-				const payloadObj = { wasWelcomeNotificationShown: action.payload };
+				const payloadObj = {wasWelcomeNotificationShown: action.payload};
 				updateSession(payloadObj);
 			})
 		);

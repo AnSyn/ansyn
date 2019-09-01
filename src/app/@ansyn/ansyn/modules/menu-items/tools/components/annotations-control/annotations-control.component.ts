@@ -1,11 +1,11 @@
 import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { Observable, fromEvent } from 'rxjs';
+import { fromEvent, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { AnnotationSetProperties, ClearActiveInteractionsAction, SetAnnotationMode } from '../../actions/tools.actions';
 import { DOCUMENT } from '@angular/common';
 import { selectAnnotationMode, selectAnnotationProperties } from '../../reducers/tools.reducer';
 import { IVisualizerStyle } from '@ansyn/imagery';
-import { map, tap, filter } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectActiveAnnotationLayer, selectLayers } from '../../../layers-manager/reducers/layers.reducer';
 import { ILayer, LayerType } from '../../../layers-manager/models/layers.model';
@@ -137,6 +137,13 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		} else {
 			this.store.dispatch(new AnnotationSetProperties({ stroke: $event.event }));
 		}
+	}
+
+	isAnnotationEnable(annotation) {
+		if ([AnnotationMode.LineString, AnnotationMode.Arrow].includes(annotation) && !this.annotationProperties['stroke-opacity']) {
+			return false;
+		}
+		return true;
 	}
 
 }

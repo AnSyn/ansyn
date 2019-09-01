@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IEntryComponent } from "@ansyn/map-facade";
-import { ImageryZoomerService } from "@ansyn/map-facade";
+import { IEntryComponent } from '@ansyn/map-facade';
+import { ImageryZoomerService } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-imagery-zoomer',

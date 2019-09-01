@@ -24,7 +24,7 @@ export class SentinelComboBoxComponent implements OnInit, OnDestroy, IEntryCompo
 	selectedLayer: string;
 
 	@AutoSubscription
-	mapState$ = () => this.store.pipe(
+	sourceTypeShow$ = () => this.store.pipe(
 		select(selectOverlayFromMap(this.mapId)),
 		tap((overlay) => {
 			this.hidden = _get(overlay, 'sourceType') !== SentinelOverlaySourceType;

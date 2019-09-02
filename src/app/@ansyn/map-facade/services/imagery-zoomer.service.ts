@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { BaseImageryMap, ImageryCommunicatorService } from "@ansyn/imagery";
 
 @Injectable({
@@ -14,17 +14,15 @@ export class ImageryZoomerService {
 	}
 
 	resetZoom(mapId: string): void {
-		this.getMap(mapId).setResolution(1);
+		this.getMap(mapId).resetZoom();
 	}
 
 	zoomIn(mapId: string): void {
-		const zoom = this.getMap(mapId).getResolution();
-		this.getMap(mapId).setResolution(zoom * 0.8);
+		this.getMap(mapId).zoomIn();
 	}
 
 
 	zoomOut(mapId: string): void {
-		const zoom = this.getMap(mapId).getResolution();
-		this.getMap(mapId).setResolution(zoom * 1.2);
+		this.getMap(mapId).zoomOut();
 	}
 }

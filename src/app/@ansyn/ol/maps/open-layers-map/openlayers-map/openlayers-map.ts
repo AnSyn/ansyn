@@ -172,7 +172,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this._mapLayers = [];
 		const controls = [
 			new ScaleLine(),
-			new AttributionControl()
+			new AttributionControl({
+				collapsible: true
+			})
 		];
 		const renderer = 'canvas';
 		this._mapObject = new OLMap({
@@ -203,7 +205,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	createView(layer): View {
 		return new View({
-			projection: layer.getSource().getProjection()
+			projection: layer.getSource().getProjection(),
+			maxZoom: 21,
+			minZoom: 1
 		});
 	}
 
@@ -516,12 +520,21 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return view.getRotation();
 	}
 
-	setResolution(resolution: number): void {
-		this.mapObject.getView().setResolution(resolution);
+	resetZoom(): void {
+		const view = this.mapObject.getView();
+		view.setZoom(1)
 	}
 
-	getResolution(): number {
-		return this.mapObject.getView().getResolution();
+	zoomOut(): void {
+		const view = this.mapObject.getView();
+		const current = view.getZoom();
+		view.setZoom(current - 1);
+	}
+
+	zoomIn(): void {
+		const view = this.mapObject.getView();
+		const current = view.getZoom();
+		view.setZoom(current + 1);
 	}
 
 

@@ -1,15 +1,22 @@
 <div class="selected-layer"
-	 *ngIf="(annotationLayerIds$ | async)?.length > 1">
-	<div>
-		{{'Layer' | translate}}:
-		<select class="active-annotation-layer" (change)="setSelectedAnnotationLayer($event.target.value)">
-			<option
-				[selected]="(activeAnnotationLayer$ | async) === layer?.id"
-				[value]="layer?.id"
-				*ngFor="let layer of annotationLayerIds$ | async">{{ layer.name }}
-			</option>
-		</select>
-		<span class="dummy-arrow">▼</span>
+	 *ngIf="(annotationLayer$ | async)?.length > 1">
+	{{'Layer' | translate}}:
+	<div class="combo-box">
+		<ansyn-combo-box
+			class="annotaion-combo-box"
+			icon=""
+			direction="top"
+			color="transparent"
+			name="annotations-layer"
+			[ngModel]="activeAnnotationId"
+			[comboBoxToolTipDescription]="'choose annotation layer' | translate"
+			(ngModelChange)="setSelectedAnnotationLayer($event.target.value)">
+
+			<ansyn-combo-box-option *ngFor="let layer of annotationLayer$ | async" [value]="layer.id">
+				{{ layer.name }}
+			</ansyn-combo-box-option>
+
+		</ansyn-combo-box>
 	</div>
 </div>
 

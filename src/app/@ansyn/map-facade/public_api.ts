@@ -18,7 +18,8 @@ export {
 	selectToastMessage,
 	selectFooterCollapse,
 	selectOverlayFromMap,
-	selectMapStateById
+	selectMapStateById,
+	selectDisplayLayersOnMap
 } from './reducers/map.reducer';
 
 export {

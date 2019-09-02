@@ -1,11 +1,10 @@
-import { fromCircle } from 'ol/geom/Polygon';
 import { BaseImageryPlugin, ImageryPlugin, IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { uniq } from 'lodash';
 import { select, Store } from '@ngrx/store';
-import { MapFacadeService, selectActiveMapId, selectMapsList, selectOverlayFromMap } from '@ansyn/map-facade';
+import { selectActiveMapId, selectOverlayFromMap } from '@ansyn/map-facade';
 import { combineLatest, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
-import { distinctUntilChanged, filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { selectGeoFilterSearchMode } from '../../../../../status-bar/reducers/status-bar.reducer';
 import { featureCollection, FeatureCollection } from '@turf/turf';
@@ -37,7 +36,7 @@ import {
 } from '../../../../../menu-items/tools/actions/tools.actions';
 import { UpdateLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
 import { SearchMode, SearchModeEnum } from '../../../../../status-bar/models/search-mode.enum';
-import { ICaseMapState, IOverlaysTranslationData } from '../../../../../menu-items/cases/models/case.model';
+import { IOverlaysTranslationData } from '../../../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
 import { selectTranslationData } from '../../../../../overlays/overlay-status/reducers/overlay-status.reducer';
 import { SetOverlayTranslationDataAction } from '../../../../../overlays/overlay-status/actions/overlay-status.actions';

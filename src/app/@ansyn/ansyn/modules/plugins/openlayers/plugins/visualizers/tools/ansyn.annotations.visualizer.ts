@@ -2,7 +2,7 @@ import { fromCircle } from 'ol/geom/Polygon';
 import { BaseImageryPlugin, ImageryPlugin, IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { uniq } from 'lodash';
 import { select, Store } from '@ngrx/store';
-import { MapFacadeService, selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
+import { MapFacadeService, selectActiveMapId, selectMapsList, selectOverlayFromMap } from '@ansyn/map-facade';
 import { combineLatest, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
 import { distinctUntilChanged, filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
@@ -49,6 +49,7 @@ import { SetOverlayTranslationDataAction } from '../../../../../overlays/overlay
 })
 export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	annotationsVisualizer: AnnotationsVisualizer;
+	overlay: IOverlay;
 
 	activeAnnotationLayer$: Observable<ILayer> = combineLatest(
 		this.store$.pipe(select(selectActiveAnnotationLayer)),
@@ -67,13 +68,6 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 		this.annotationsVisualizer.offset = offset;
 	}
 
-	currentOverlay$ = this.store$.pipe(
-		select(selectMapsList),
-		map((mapList) => MapFacadeService.mapById(mapList, this.mapId)),
-		filter(Boolean),
-		map((map: ICaseMapState) => map.data.overlay)
-	);
-
 	annotationFlag$ = this.store$.select(selectSubMenu).pipe(
 		map((subMenu: SubMenuEnum) => subMenu === SubMenuEnum.annotations),
 		distinctUntilChanged());
@@ -86,12 +80,11 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	annotationMode$: Observable<AnnotationMode> = this.store$.pipe(select(selectAnnotationMode));
 
 	@AutoSubscription
-	getOffsetFromCase$ = this.currentOverlay$.pipe(
-		filter(Boolean),
-		withLatestFrom(this.store$.select(selectTranslationData)),
-		tap(([overlay, translationData]: [IOverlay, IOverlaysTranslationData]) => {
-			if (overlay.id in translationData && translationData[overlay.id].offset) {
-				this.offset = translationData[overlay.id].offset;
+	getOffsetFromCase$ = this.store$.pipe(
+		select(selectTranslationData),
+		tap((translationData: IOverlaysTranslationData) => {
+			if (this.overlay && translationData && translationData[this.overlay.id].offset) {
+				this.offset = translationData[this.overlay.id].offset;
 			} else {
 				this.offset = [0, 0];
 			}
@@ -141,6 +134,11 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 		mergeMap(this.onAnnotationsChange.bind(this))
 	);
 
+	@AutoSubscription
+	currentOverlay$ = () => this.store$.pipe(
+		select(selectOverlayFromMap(this.mapId)),
+		tap( overlay => this.overlay = overlay)
+	);
 
 	@AutoSubscription
 	onChangeMode$ = () => this.annotationsVisualizer.events.onChangeMode.pipe(
@@ -152,15 +150,15 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 
 	@AutoSubscription
 	onDrawEnd$ = () => this.annotationsVisualizer.events.onDrawEnd.pipe(
-		withLatestFrom(this.activeAnnotationLayer$, this.currentOverlay$),
-		tap(([{ GeoJSON, feature }, activeAnnotationLayer, overlay]: [IDrawEndEvent, ILayer, IOverlay]) => {
+		withLatestFrom(this.activeAnnotationLayer$),
+		tap(([{ GeoJSON, feature }, activeAnnotationLayer]: [IDrawEndEvent, ILayer]) => {
 			const [geoJsonFeature] = GeoJSON.features;
 			const data = <FeatureCollection<any>>{ ...activeAnnotationLayer.data };
 			data.features.push(geoJsonFeature);
-			if (overlay) {
+			if (this.overlay) {
 				geoJsonFeature.properties = {
 					...geoJsonFeature.properties,
-					...this.projectionService.getProjectionProperties(this.communicator, data, feature, overlay)
+					...this.projectionService.getProjectionProperties(this.communicator, data, feature, this.overlay)
 				};
 			}
 			geoJsonFeature.properties = { ...geoJsonFeature.properties };
@@ -187,11 +185,12 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	);
 
 	onDraggEnd$ = () => this.annotationsVisualizer.events.offsetEntity.pipe(
-		withLatestFrom(this.currentOverlay$),
-		tap(([offset, overlay]: [any, IOverlay]) => {
-			this.store$.dispatch(new SetOverlayTranslationDataAction({
-				overlayId: overlay.id, offset
-			}));
+		tap((offset: any) => {
+			if (this.overlay) {
+				this.store$.dispatch(new SetOverlayTranslationDataAction({
+					overlayId: this.overlay.id, offset
+				}));
+			}
 		})
 	);
 

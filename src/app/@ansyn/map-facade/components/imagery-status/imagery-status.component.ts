@@ -10,7 +10,7 @@ import { filter, map, tap } from 'rxjs/operators';
 import { SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
 import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../models/entry-components-provider';
 import { selectEnableCopyOriginalOverlayDataFlag } from '../../reducers/imagery-status.reducer';
-import { selectActiveMapId, selectMaps, selectMapsTotal } from '../../reducers/map.reducer';
+import { selectActiveMapId, selectMaps, selectMapStateById, selectMapsTotal } from '../../reducers/map.reducer';
 import { copyFromContent } from '../../utils/clipboard';
 import { getTimeFormat } from '../../utils/time';
 
@@ -44,15 +44,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	overlay: any; // @TODO: eject to ansyn
 	displayLayers: boolean;
-	@AutoSubscription
-	overlay$: Observable<Dictionary<IMapSettings>> = this.store$.pipe(
-		select(selectMaps),
-		filter((maps) => Boolean(maps[this.mapId])),
-		tap((maps) => {
-			this.overlay = maps[this.mapId].data.overlay;
-			this.displayLayers = maps[this.mapId].flags.displayLayers;
-		})
-	);
 
 	@AutoSubscription
 	active$ = this.store$.pipe(
@@ -82,6 +73,16 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	copyOriginalOverlayDataFlag$ = this.store$.select(selectEnableCopyOriginalOverlayDataFlag).pipe(
 		tap((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
+	);
+
+	@AutoSubscription
+	overlayNlayers$ = () => this.store$.pipe(
+		select(selectMapStateById(this.mapId)),
+		filter(Boolean),
+		tap((mapState) => {
+			this.overlay = mapState.data.overlay;
+			this.displayLayers = mapState.flags.displayLayers;
+		})
 	);
 
 	getFormattedTime(dateTimeSring: string): string {

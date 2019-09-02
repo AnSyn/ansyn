@@ -23,6 +23,11 @@ export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 	footerCollapse: boolean;
 	private _title: string = null;
 	@AutoSubscription
+	footerCollapse$ = this.store$.select(selectFooterCollapse).pipe(
+		tap( (collapse) => this.footerCollapse = collapse)
+	);
+
+	@AutoSubscription
 	overlay$ = () => this.store$.pipe(
 		select(selectOverlayFromMap(this.mapId)),
 		tap((overlay) => {
@@ -30,10 +35,6 @@ export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 		})
 	);
 
-	@AutoSubscription
-	footerCollapse$ = this.store$.select(selectFooterCollapse).pipe(
-		tap( (collapse) => this.footerCollapse = collapse)
-	);
 	set overlay(overlay: IOverlay) {
 		let sourceTypeConfig;
 		// Extract the title, according to the new overlay and the configuration

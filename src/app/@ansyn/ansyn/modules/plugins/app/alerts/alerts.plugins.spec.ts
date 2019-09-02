@@ -24,6 +24,8 @@ describe('AlertsPlugin', () => {
 	beforeEach(inject([Store, AlertsPlugin], (_store: Store<any>, _alertsPlugin: AlertsPlugin) => {
 		store = _store;
 		alertsPlugin = _alertsPlugin;
+		spyOnProperty(alertsPlugin, 'mapId').and.returnValue('mapId');
+
 	}));
 
 	it('should be defined', () => {
@@ -33,8 +35,8 @@ describe('AlertsPlugin', () => {
 	describe('setOverlaysNotInCase', () => {
 		it('should add alert if not null and not include on drops)', () => {
 			const drops: any = [{ id: 1 }, { id: 2 }, { id: 3 }];
-			const map: any = { id: 'mapId', data: { overlay: { id: 4 } } };
-			const result = alertsPlugin.setOverlaysNotInCase([drops, map]);
+			alertsPlugin.overlay = <any>{ id: 4 };
+			const result = alertsPlugin.setOverlaysNotInCase(drops);
 			expect(result).toEqual(new AddAlertMsg({
 				key: AlertMsgTypes.overlayIsNotPartOfQuery,
 				value: 'mapId'
@@ -44,8 +46,8 @@ describe('AlertsPlugin', () => {
 		describe('should remove alert if null or include on drops', () => {
 			it('not include', () => {
 				const drops: any = [{ id: 1 }, { id: 2 }, { id: 3 }];
-				const map: any = { id: 'mapId', data: { overlay: { id: 3 } } };
-				const result = alertsPlugin.setOverlaysNotInCase([drops, map]);
+				alertsPlugin.overlay = <any>{ id: 3 };
+				const result = alertsPlugin.setOverlaysNotInCase(drops);
 				expect(result).toEqual(new RemoveAlertMsg({
 					key: AlertMsgTypes.overlayIsNotPartOfQuery,
 					value: 'mapId'
@@ -54,8 +56,8 @@ describe('AlertsPlugin', () => {
 
 			it('null', () => {
 				const drops: any = [{ id: 1 }, { id: 2 }, { id: 3 }];
-				const map: any = { id: 'mapId', data: { overlay: null } };
-				const result = alertsPlugin.setOverlaysNotInCase([drops, map]);
+				alertsPlugin.overlay = null;
+				const result = alertsPlugin.setOverlaysNotInCase(drops);
 				expect(result).toEqual(new RemoveAlertMsg({
 					key: AlertMsgTypes.overlayIsNotPartOfQuery,
 					value: 'mapId'

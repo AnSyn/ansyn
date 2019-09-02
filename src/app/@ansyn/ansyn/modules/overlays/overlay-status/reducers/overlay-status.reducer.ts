@@ -4,7 +4,9 @@ import { uniq } from 'lodash';
 import { AlertMsg, AlertMsgTypes } from '../../../alerts/model';
 import { IOverlay } from '../../models/overlay.model'
 import { OverlayStatusActions, OverlayStatusActionsTypes } from '../actions/overlay-status.actions';
-import { ITranslationData } from '../../../menu-items/cases/models/case.model';
+import { IOverlaysScannedAreaData, ITranslationData } from '../../../menu-items/cases/models/case.model';
+import { selectSelectedCase } from '../../../menu-items/cases/reducers/cases.reducer';
+import { MultiPolygon } from 'geojson';
 
 export const overlayStatusFeatureKey = 'overlayStatus';
 export const overlayStatusStateSelector: MemoizedSelector<any, IOverlayStatusState> = createFeatureSelector<IOverlayStatusState>(overlayStatusFeatureKey);
@@ -18,6 +20,9 @@ export interface IOverlayStatusState {
 	alertMsg: AlertMsg;
 	overlaysTranslationData: {
 		[key: string]: ITranslationData;
+	},
+	overlaysScannedAreaData: {
+		[key: string]: MultiPolygon;
 	}
 }
 
@@ -31,7 +36,8 @@ export const overlayStatusInitialState: IOverlayStatusState = {
 		[AlertMsgTypes.overlayIsNotPartOfQuery, new Set()],
 		[AlertMsgTypes.OverlaysOutOfBounds, new Set()]
 	]),
-	overlaysTranslationData: {}
+	overlaysTranslationData: {},
+	overlaysScannedAreaData: {}
 };
 
 export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusInitialState, action: OverlayStatusActions | any): IOverlayStatusState {
@@ -121,6 +127,10 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 			return { ...state, overlaysTranslationData: action.payload };
 		}
 
+		case OverlayStatusActionsTypes.SET_OVERLAYS_SCANNED_AREA_DATA: {
+			return { ...state, overlaysScannedAreaData: action.payload };
+		}
+
 		default:
 			return state;
 	}
@@ -133,3 +143,4 @@ export const selectRemovedOverlays: MemoizedSelector<any, string[]> = createSele
 export const selectPresetOverlays: MemoizedSelector<any, IOverlay[]> = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.presetOverlays);
 export const selectAlertMsg = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.alertMsg);
 export const selectTranslationData = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.overlaysTranslationData);
+export const selectScannedAreaData = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.overlaysScannedAreaData);

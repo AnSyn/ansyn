@@ -11,6 +11,7 @@ import {
 	selectPresetOverlays,
 	selectRemovedOverlays,
 	selectRemovedOverlaysVisibility,
+	selectScannedAreaData,
 	selectTranslationData
 } from '../../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../../app.effects.module';
@@ -19,11 +20,7 @@ import { selectFacets } from '../../../modules/menu-items/filters/reducer/filter
 import { selectComboBoxesProperties } from '../../../modules/status-bar/reducers/status-bar.reducer';
 import { selectOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/reducers/tools.reducer';
 import { UpdateCaseAction } from '../../../modules/menu-items/cases/actions/cases.actions';
-import {
-	selectAutoSave,
-	selectCaseScannedArea,
-	selectSelectedCase
-} from '../../../modules/menu-items/cases/reducers/cases.reducer';
+import { selectAutoSave, selectSelectedCase } from '../../../modules/menu-items/cases/reducers/cases.reducer';
 import { selectMiscOverlays, selectOverlaysCriteria } from '../../../modules/overlays/reducers/overlays.reducer';
 import { ICase } from '../../../modules/menu-items/cases/models/case.model';
 
@@ -54,7 +51,7 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectContextEntities),
 		this.store$.select(selectMiscOverlays),
 		this.store$.select(selectTranslationData),
-		this.store$.select(selectCaseScannedArea)
+		this.store$.select(selectScannedAreaData)
 	]
 		.map(event => event.pipe(this.clearIsAutoSave))
 		.concat([this.store$.select(selectAutoSave).pipe(this.setIsAutoSave)]);
@@ -81,7 +78,7 @@ export class UpdateCaseAppEffects {
 				miscOverlays,
 				overlaysTranslationData,
 				autoSave,
-				overlaysScannedArea
+				overlaysScannedAreaData
 			] = events;
 
 			const { id, name, lastModified, creationTime, selectedContextId } = selectedCase;
@@ -115,7 +112,7 @@ export class UpdateCaseAppEffects {
 					miscOverlays,
 					overlaysManualProcessArgs,
 					overlaysTranslationData,
-					overlaysScannedArea
+					overlaysScannedAreaData
 				}
 			};
 

@@ -57,8 +57,8 @@ export interface IOverlaysTranslationData {
 	[key: string]: ITranslationData;
 }
 
-export interface IOverlaysScannedArea {
-	[key: string]: Feature<MultiPolygon>;
+export interface IOverlaysScannedAreaData {
+	[key: string]: MultiPolygon;
 }
 
 export interface IDilutedCaseState {
@@ -77,7 +77,7 @@ export interface IDilutedCaseState {
 	presetOverlays?: IDilutedOverlay[];
 	overlaysManualProcessArgs: IOverlaysManualProcessArgs;
 	overlaysTranslationData: IOverlaysTranslationData;
-	overlaysScannedArea?: IOverlaysScannedArea;
+	overlaysScannedAreaData?: IOverlaysScannedAreaData;
 	layers?: ICaseLayersState;
 }
 

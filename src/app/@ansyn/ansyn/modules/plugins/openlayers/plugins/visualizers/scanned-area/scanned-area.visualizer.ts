@@ -2,7 +2,7 @@ import { combineLatest, EMPTY, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject } from 'geojson';
-import { selectActiveMapId } from '@ansyn/map-facade';
+import { IMapState, selectActiveMapId, selectMapStateById, selectOverlayFromMap } from '@ansyn/map-facade';
 import {
 	getPointByGeometry,
 	getPolygonByPointAndRadius,
@@ -13,12 +13,11 @@ import Draw from 'ol/interaction/Draw';
 import { AutoSubscription } from 'auto-subscriptions';
 import { distinctUntilChanged, filter, map, mergeMap, take, tap } from 'rxjs/operators';
 import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
-import Icon from 'ol/style/Icon';
-import Style from 'ol/style/Style';
-import Stroke from 'ol/style/Stroke';
-import Feature from 'ol/Feature';
-import { selectCaseScannedArea, selectSelectedCase } from '../../../../../menu-items/cases/reducers/cases.reducer';
-import { ICase, ICaseMapState, IOverlaysScannedArea } from '../../../../../menu-items/cases/models/case.model';
+import { ICase, ICaseMapState, IOverlaysScannedAreaData } from '../../../../../menu-items/cases/models/case.model';
+import { selectScannedAreaData } from '../../../../../overlays/overlay-status/reducers/overlay-status.reducer';
+import { IOverlay } from '../../../../../overlays/models/overlay.model';
+import { feature } from '@turf/turf';
+
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -27,22 +26,16 @@ import { ICase, ICaseMapState, IOverlaysScannedArea } from '../../../../../menu-
 export class ScannedAreaVisualizer extends EntitiesVisualizer {
 
 	@AutoSubscription
-	scannedArea$ = combineLatest(this.store$.select(selectCaseScannedArea), this.store$.select(selectSelectedCase)).pipe(
-		map(([scannedAreaData, selectedCase]: [IOverlaysScannedArea, ICase]) => {
-			const currentMapData = selectedCase.state.maps.data.find((state) => {
-				return state.id === this.mapId});
-			return [scannedAreaData, currentMapData];
-		}),
-		filter(([scannedAreaData, selectedCaseState]: [IOverlaysScannedArea, ICaseMapState]) => {
-			return (Boolean(selectedCaseState) && Boolean(selectedCaseState.data.overlay));
-		}),
-		tap(([scannedAreaData, selectedCaseState]: [IOverlaysScannedArea, ICaseMapState]) => {
-			const id = 'scannedArea';
-			if (scannedAreaData && scannedAreaData[selectedCaseState.data.overlay.id]) {
-				const entities: [IVisualizerEntity] = [{ id, featureJson: scannedAreaData[selectedCaseState.data.overlay.id] }];
-				this.setEntities(entities);
-			} else {
+	scannedArea$ = combineLatest(this.store$.select(selectScannedAreaData), this.store$.select(selectOverlayFromMap(this.mapId))).pipe(
+		tap(([scannedAreaData, overlay]: [IOverlaysScannedAreaData, IOverlay]) => {
+			if (!Boolean(overlay) || !Boolean(scannedAreaData[overlay.id])) {
 				this.clearEntities();
+			} else {
+				const entity: IVisualizerEntity = {
+					id: 'scannedArea',
+					featureJson: feature(scannedAreaData[overlay.id])
+				};
+				this.setEntities([entity]);
 			}
 		})
 	);

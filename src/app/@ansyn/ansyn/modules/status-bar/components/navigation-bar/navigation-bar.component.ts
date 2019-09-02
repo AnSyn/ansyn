@@ -9,7 +9,7 @@ import {
 	GoNextPresetOverlay
 } from '../../../status-bar/actions/status-bar.actions';
 import { EnableCopyOriginalOverlayDataAction } from '@ansyn/map-facade';
-import { ActivateScannedAreaAction } from '../../../plugins/actions/plugins.actions';
+import { ActivateScannedAreaAction } from '../../../overlays/overlay-status/actions/overlay-status.actions';
 
 @Component({
 	selector: 'ansyn-navigation-bar',

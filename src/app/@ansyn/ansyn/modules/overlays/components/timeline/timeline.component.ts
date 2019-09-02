@@ -40,7 +40,7 @@ import { overlayOverviewComponentConstants } from '../overlay-overview/overlay-o
 import { DOCUMENT } from '@angular/common';
 import { IOverlayDrop } from '../../models/overlay.model';
 
-export const BASE_DROP_COLOR = '#d393e1';
+export const BASE_DROP_COLOR = '#8cceff';
 selection.prototype.moveToFront = function () {
 	return this.each(function () {
 		this.parentNode.appendChild(this);

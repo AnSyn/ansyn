@@ -1,4 +1,5 @@
 @import 'ansyn/less/colors';
+@import 'ansyn/less/common';
 
 :host {
 	&.combo-center .combo-container .options-container /deep/ .option {
@@ -14,10 +15,9 @@
 		width: 100%;
 		position: relative;
 		.options-container {
-			border: 1px solid;
 			width: auto;
 			min-width: 100%;
-			background: black;
+			background: @background-color-0;
 			z-index: 1;
 			&.show {
 				visibility: visible;
@@ -44,14 +44,12 @@
 
 			.options-container {
 				box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.2);
-				background: white;
 				border-color: @transparent-color;
 				/deep/ .option {
 					font-weight: 500;
 					&:hover {
-						background-color: whitesmoke;
+						color: @application-primary-color;
 					}
-					color: @application-main-color
 				}
 			}
 

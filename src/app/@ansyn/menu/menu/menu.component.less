@@ -1,5 +1,6 @@
 @import "ansyn/less/common";
-@import 'ansyn/less/z-index-globals';
+@import "ansyn/less/colors";
+@import "ansyn/less/z-index-globals";
 
 @number-of-menu-item: 8;
 
@@ -19,8 +20,6 @@ div.menu-wrapper {
 			.menu-content {
 				opacity: .5;
 			}
-			.menu-btn {
-			}
 			div.menu-btn i {
 				opacity: 1;
 				font-size: 20px;
@@ -33,7 +32,7 @@ div.menu-wrapper {
 
 	div.menu {
 		position: relative;
-		background: @menu-color;
+		background: @background-color-1;
 		flex-direction: column;
 		display: flex;
 		z-index: @z-index-menu;
@@ -56,7 +55,7 @@ div.menu-wrapper {
 			text-align: center;
 			color: white;
 			text-decoration: none;
-			padding: 10px 0;
+			padding: 14px 0;
 			cursor: pointer;
 			font-size: 0.9rem;
 
@@ -73,15 +72,13 @@ div.menu-wrapper {
 
 			span.badge {
 				position: absolute;
-				background: #D0021B;
-				right: 17px;
-				top: 2px;
-				width: 16px;
-				height: 14px;
-				font-size: 11px;
+				background: @application-secondary-color;
+				right: 20px;
+				top: 10px;
+				width: 18px;
+				height: 17px;
+				font-size: 12px;
 				border-radius: 50%;
-				border: 1px solid white;
-				padding-bottom: 2px;
 			}
 
 			img {
@@ -89,29 +86,25 @@ div.menu-wrapper {
 				display: block;
 			}
 			&:hover {
-				background-color: @application-main-color;
+				background-color: @background-color-3;
 			}
 			&.active {
-				background-color: @application-main-color;
+				background-color: @application-primary-color;
 			}
 		}
 	}
 
 	div.container {
 		position: absolute;
-
 		left: 90px;
 		z-index: @z-index-menu-container;
 		height: 100%;
-		background: rgba(red(@application-main-color), green(@application-main-color), blue(@application-main-color), .9);
+		background: fade(@background-color-3, 95%);
 
 		&.pinned {
 			position: relative;
 			left: 0;
-			background: @application-main-color;
-			button.pin i {
-				transform: rotate(0);
-			}
+			background: @background-color-3;
 		}
 
 		button.close {
@@ -130,7 +123,8 @@ div.menu-wrapper {
 
 		button.pin {
 			position: absolute;
-			right: 0;
+			right: 15px;
+			top: 15px;
 			color: white;
 			border: none;
 			background: transparent;
@@ -138,14 +132,7 @@ div.menu-wrapper {
 			outline: none;
 			z-index: @z-index-menu-container-button;
 			font-size: 24px;
-			padding: 5px;
-			margin: 15px 12px;
 			box-sizing: border-box;
-			i {
-				display: block;
-				transition: transform .5s;
-				transform: rotate(90deg);
-			}
 		}
 	}
 	div.logo {
@@ -185,7 +172,7 @@ button.hide-menu {
 	transform: translateX(100%);
 	top: calc(~'50% - 110px');
 	height: 60px;
-	background: #2e2d46;
+	background: @background-color-1;
 	border: none;
 	color: white;
 	box-shadow: 2px 0px 4px -2px black;
@@ -194,7 +181,7 @@ button.hide-menu {
 	transition: .5s;
 	z-index: 4000;
 	&:hover {
-		background-color: #27B2CF;
+		background-color: @background-color-3;
 	}
 }
 

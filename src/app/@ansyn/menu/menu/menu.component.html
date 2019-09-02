@@ -38,7 +38,7 @@
 		<button
 			*ngIf="menuConfig?.isCollapsible"
 			class="hide-menu"
-			(click)="startToggleMenuCollapse()"
+			(click)="toggleCollapse()"
 			[attr.tooltip-value]="'Hide menu' | translate"
 			tooltip-class="right">
 			<i class="fa fa-caret-left" [class.fa-caret-right]="collapse"></i>
@@ -51,11 +51,21 @@
 	<div class="container" #container [@expand]="expand" (@expand.done)="onExpandDone()"
 		 (@expand.start)="onExpandStart()">
 		<!--<button class="close" (click)="closeMenu()">×</button>-->
-		<button class="pin" (click)="toggleIsPinned()"
-				[attr.tooltip-value]="pinText | translate" tooltip-class="right">
-			<i class="icon-tools-pin"></i>
+		
+		<button class="pin" 
+			*ngIf="!isPinned"
+			(click)="toggleIsPinned()"
+			[attr.tooltip-value]="pinText | translate" tooltip-class="right">
+			<i class="icon-pin"></i>
 		</button>
 
+		<button class="pin" 
+			*ngIf="isPinned"
+			(click)="toggleIsPinned()"
+				[attr.tooltip-value]="pinText" tooltip-class="right">
+			<i class="icon-unpin"></i>
+		</button>
+		
 		<ng-template #componentElem></ng-template>
 	</div>
 

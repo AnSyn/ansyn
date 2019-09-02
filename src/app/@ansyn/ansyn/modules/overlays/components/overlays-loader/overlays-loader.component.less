@@ -9,8 +9,8 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background: rgba(red(@overlays-dots-color), green(@overlays-dots-color), blue(@overlays-dots-color), 0.1);
-	color: @application-main-color;
+	background: rgba(red(@application-contrast-color), green(@application-contrast-color), blue(@application-contrast-color), 0.1);
+	color: @background-color-3;
 	font-size: 15px;
 
 	.loading-container {
@@ -22,7 +22,7 @@
 		height: 12px;
 		position: absolute;
 		left: -20px;
-		background-color: @overlays-dots-color;
+		background-color: @application-contrast-color;
 		border-radius: 50%;
 		animation: move 4s infinite cubic-bezier(.2, .64, .81, .23);
 	}

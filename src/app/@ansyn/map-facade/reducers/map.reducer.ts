@@ -197,3 +197,5 @@ export const selectLayout: MemoizedSelector<any, LayoutKey> = createSelector(map
 export const selectWasWelcomeNotificationShown = createSelector(mapStateSelector, (state) => state.wasWelcomeNotificationShown);
 export const selectToastMessage = createSelector(mapStateSelector, (state) => state.toastMessage);
 export const selectFooterCollapse = createSelector(mapStateSelector, (state) => state.footerCollapse);
+export const selectMapStateById = (id: string) => createSelector(selectMaps, (maps) =>   maps[id] );
+export const selectOverlayFromMap = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.overlay);

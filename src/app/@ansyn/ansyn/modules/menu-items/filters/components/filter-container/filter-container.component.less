@@ -1,12 +1,14 @@
+@import "ansyn/less/common";
+
 div.container {
-	padding: 0 0 20px 0;
-	// margin-top: 25px;
-	// margin-left: 10px;
+	background-color: @background-color-2;
+	margin-bottom: 13px;
+	padding: 13px;
 	div.title-row {
 		padding: 5px 0 10px 0;
 
 		span.title {
-			font-family: "Open Sans", sans-serif;
+			font-family: @app-font;
 			font-style: normal;
 			font-weight: bold;
 			font-size: 14px;
@@ -20,7 +22,7 @@ div.container {
 		}
 
 		span.filtered {
-			font-family: "Open Sans", sans-serif;
+			font-family: @app-font;
 			font-style: italic;
 			font-weight: normal;
 			font-size: 12px;
@@ -38,7 +40,7 @@ div.container {
 			border-left: 2px solid #FFFFFF;
 			float: right;
 			margin-right: 10px;
-			margin-top: 4px;
+			margin-top: 2px;
 			cursor: pointer;
 			outline: none;
 
@@ -49,9 +51,10 @@ div.container {
 
 		div.show-all {
 			float: right;
-			font-size: 12px;
+			font-size: 10px;
 			font-style: normal;
 			color: rgba(255, 255, 255, 0.75);
+			margin-top: 3px;
 			margin-right: 7px;
 			cursor: pointer;
 		}

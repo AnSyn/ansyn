@@ -9,7 +9,7 @@
 		 "autoSave": false,
 		 "state": {
 		   "timeFilter": "Start - End",
-		   "orientation": "Align North",
+		   "orientation": "User Perspective",
 		   "maps": {
 			 "layout": "layout1",
 			 "data": [
@@ -78,13 +78,13 @@
 		   },
 		   "layers": {
 			 "activeLayersIds": [
-			   "08ca40aa-196c-80a3-d868-0264474319f6"
 			 ]
 		   },
 		   "favoriteOverlays": [],
 		   "removedOverlaysIds": [],
 		   "removedOverlaysVisibility": true,
 		   "presetOverlays": [],
+		   "overlaysTranslationData": {},
 		   "region": {
 			 "type": "Point",
 			 "coordinates": [
@@ -245,7 +245,12 @@
         "modelName": "cloudCoverage",
         "displayName": "Cloud Coverage",
         "type": "Slider"
-      }
+      },
+      {
+      	"modelName": "containedInSearchPolygon",
+	   	"displayName": "Contains Region",
+	   	"type": "Enum"
+	  }
     ]
   },
   "contextConfig": {
@@ -381,9 +386,9 @@
     "FootprintPolylineVisualizer": {
       "minSimplifyVertexCountLimit": 100,
       "colors": {
-        "active": "#27b2cf",
-        "inactive": "#d393e1",
-        "display": "#9524ad",
+        "active": "#fb634e",
+        "inactive": "#0091ff",
+        "display": "#8cceff",
         "favorite": "yellow"
       }
     },

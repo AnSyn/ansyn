@@ -1,3 +1,7 @@
+@import "ansyn/less/common";
+@import "ansyn/less/colors";
+@import "ansyn/less/z-index-globals";
+
 :host {
 	&:disabled {
 		opacity: .5;
@@ -9,13 +13,13 @@
 	font-weight: normal;
 	letter-spacing: 0.464286px;
 	font-size: 13px;
-	background: #FFFFFF;
+	background: @application-primary-color;
 	/* oldest
 	box-shadow: 0 8px 8px rgba(0, 0, 0, 0.237602), 0 0 8px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.24), 0 0 2px rgba(0, 0, 0, 0.12);
 	*/
 	box-shadow: 0 2px 2px rgba(0,0,0,.24), 0 0 2px rgba(0,0,0,.12);
 	border-radius: 2px;
 	margin: 0 4px;
-	color: #156879;
+	color: white;
 	width: 93px;
 }

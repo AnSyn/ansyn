@@ -16,7 +16,7 @@ import {
 	IEd50Notification,
 	IMapFacadeConfig,
 	mapFacadeConfig,
-	ProjectionConverterService
+	ProjectionConverterService, SetToastMessageAction
 } from '@ansyn/map-facade';
 import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
 import { copyFromContent } from '@ansyn/map-facade';
@@ -112,6 +112,7 @@ export class GoToComponent implements OnInit {
 
 	copyToClipBoard(value: string) {
 		copyFromContent(value);
+		this.store$.dispatch(new SetToastMessageAction({toastText: 'Copy to clipboard'}));
 	}
 
 	convert(coords, convertFrom: any, convertTo: any, inputKey: string) {

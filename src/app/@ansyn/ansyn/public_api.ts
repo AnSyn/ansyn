@@ -1,6 +1,8 @@
+export { OpenlayersBaseLayersPlugins } from './modules/plugins/openlayers/plugins/layers/openlayers-base-layers.plugins';
+
 export { AddAlertMsg, RemoveAlertMsg } from './modules/overlays/overlay-status/actions/overlay-status.actions';
 export { IAlert } from './modules/alerts/alerts.model';
-export { AlertsModule, } from './modules/alerts/alerts.module';
+export { AlertsModule } from './modules/alerts/alerts.module';
 
 export { ANSYN_ID } from './api/ansyn-id.provider';
 export { AnsynApi } from './api/ansyn-api.service';
@@ -50,7 +52,7 @@ export { orientations, ORIENTATIONS } from './modules/status-bar/models/combo-bo
 
 
 // menuItems
-export { ClearActiveInteractionsAction } from './modules/menu-items/tools/actions/tools.actions';
+export { ClearActiveInteractionsAction, HideMeasurePanel } from './modules/menu-items/tools/actions/tools.actions';
 export { selectAutoSave } from './modules/menu-items/cases/reducers/cases.reducer';
 export { FilterType } from './modules/menu-items/filters/models/filter-type';
 export { OverlayDisplayMode } from './modules/menu-items/tools/overlays-display-mode/overlays-display-mode.component';
@@ -261,7 +263,7 @@ export { IDeltaTime } from './modules/core/models/time.model';
 
 // overlays
 
-export { PhotoAngle } from './modules/overlays/models/overlay.model';
+export { PhotoAngle, RegionContainment } from './modules/overlays/models/overlay.model';
 export { IOverlaysCriteriaOptions } from './modules/overlays/models/overlay.model';
 export { GeoRegisteration } from './modules/overlays/models/overlay.model';
 export { IOverlaysFetchData, IOverlayDrop, IOverlaySpecialObject } from './modules/overlays/models/overlay.model';

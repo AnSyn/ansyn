@@ -8,6 +8,7 @@ import { SetSentinelLayerOnMap } from '../actions/sentinel.actions';
 import { get as _get } from 'lodash';
 import { ICaseMapState } from '@ansyn/ansyn';
 import { SentinelOverlaySourceType } from '../sentinel-source-provider';
+import { IMapSettings } from '@ansyn/imagery';
 
 @Component({
 	selector: 'ansyn-sentinel-combo-box',
@@ -19,7 +20,7 @@ export class SentinelComboBoxComponent implements OnInit, OnDestroy, IEntryCompo
 	@HostBinding('hidden') hidden = true;
 
 	@Input() mapId: string;
-	mapState: ICaseMapState;
+	mapState: IMapSettings;
 
 	@AutoSubscription
 	mapState$ = this.store.pipe(

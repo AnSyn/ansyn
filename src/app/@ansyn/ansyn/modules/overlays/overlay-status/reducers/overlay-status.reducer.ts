@@ -4,6 +4,7 @@ import { uniq } from 'lodash';
 import { AlertMsg, AlertMsgTypes } from '../../../alerts/model';
 import { IOverlay } from '../../models/overlay.model'
 import { OverlayStatusActions, OverlayStatusActionsTypes } from '../actions/overlay-status.actions';
+import { ITranslationData } from '../../../menu-items/cases/models/case.model';
 
 export const overlayStatusFeatureKey = 'overlayStatus';
 export const overlayStatusStateSelector: MemoizedSelector<any, IOverlayStatusState> = createFeatureSelector<IOverlayStatusState>(overlayStatusFeatureKey);
@@ -13,8 +14,11 @@ export interface IOverlayStatusState {
 	removedOverlaysIds: string[];
 	removedOverlaysVisibility: boolean;
 	removedOverlaysIdsCount: number;
-	presetOverlays: IOverlay[],
+	presetOverlays: IOverlay[];
 	alertMsg: AlertMsg;
+	overlaysTranslationData: {
+		[key: string]: ITranslationData;
+	}
 }
 
 export const overlayStatusInitialState: IOverlayStatusState = {
@@ -26,7 +30,8 @@ export const overlayStatusInitialState: IOverlayStatusState = {
 	alertMsg: new Map([
 		[AlertMsgTypes.overlayIsNotPartOfQuery, new Set()],
 		[AlertMsgTypes.OverlaysOutOfBounds, new Set()]
-	])
+	]),
+	overlaysTranslationData: {}
 };
 
 export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusInitialState, action: OverlayStatusActions | any): IOverlayStatusState {
@@ -66,7 +71,7 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 		case OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_IDS_COUNT:
 			return { ...state, removedOverlaysIdsCount: action.payload };
 
-		case  OverlayStatusActionsTypes.ADD_ALERT_MSG: {
+		case OverlayStatusActionsTypes.ADD_ALERT_MSG: {
 			const alertKey = action.payload.key;
 			const mapId = action.payload.value;
 			const alertMsg = new Map(state.alertMsg);
@@ -76,7 +81,7 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 			return { ...state, alertMsg };
 		}
 
-		case  OverlayStatusActionsTypes.REMOVE_ALERT_MSG: {
+		case OverlayStatusActionsTypes.REMOVE_ALERT_MSG: {
 			const alertKey = action.payload.key;
 			const mapId = action.payload.value;
 			const alertMsg = new Map(state.alertMsg);
@@ -85,6 +90,37 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 			alertMsg.set(alertKey, updatedSet);
 			return { ...state, alertMsg };
 		}
+
+		case OverlayStatusActionsTypes.TOGGLE_DRAGGED_MODE: {
+			const { overlayId, dragged } = action.payload;
+			return {
+				...state, overlaysTranslationData: {
+					...state.overlaysTranslationData, [overlayId]: {
+						...state.overlaysTranslationData[overlayId],
+						dragged
+					}
+				}
+			};
+		}
+
+		case OverlayStatusActionsTypes.SET_OVERLAY_TRANSLATION_DATA: {
+			const { overlayId, offset } = action.payload;
+			return {
+				...state, overlaysTranslationData: {
+					...state.overlaysTranslationData, [overlayId]: {
+						[overlayId]: {
+							...state.overlaysTranslationData[overlayId],
+							offset
+						}
+					}
+				}
+			};
+		}
+
+		case OverlayStatusActionsTypes.SET_OVERLAYS_TRANSLATION_DATA: {
+			return { ...state, overlaysTranslationData: action.payload };
+		}
+
 		default:
 			return state;
 	}
@@ -96,3 +132,4 @@ export const selectRemovedOverlaysIdsCount: MemoizedSelector<any, number> = crea
 export const selectRemovedOverlays: MemoizedSelector<any, string[]> = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.removedOverlaysIds);
 export const selectPresetOverlays: MemoizedSelector<any, IOverlay[]> = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.presetOverlays);
 export const selectAlertMsg = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.alertMsg);
+export const selectTranslationData = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.overlaysTranslationData);

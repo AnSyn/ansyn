@@ -46,6 +46,8 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		}
 	};
 
+	offset: [number, number] = [0, 0];
+
 	interactions: Map<VisualizerInteractionTypes, any> = new Map<VisualizerInteractionTypes, any>();
 
 	constructor(visualizerStyle: Partial<IVisualizerStateStyle> = {}, defaultStyle: Partial<IVisualizerStateStyle> = {}) {
@@ -245,6 +247,10 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 					const featureWithTheSameId = this.source.getFeatureById(_id);
 					if (featureWithTheSameId) {
 						this.source.removeFeature(featureWithTheSameId);
+					}
+					if (this.offset[0] !== 0 || this.offset[1] !== 0) {
+						const geometry = feature.getGeometry();
+						geometry.translate(this.offset[0], this.offset[1]);
 					}
 				});
 				this.source.addFeatures(features);

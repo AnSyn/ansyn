@@ -49,7 +49,7 @@
 				[disabled]="isGeoOptionsDisabled"
 				[class.mode-on]="displayModeOn && !isGeoOptionsDisabled"
 				[class.active]="isExpand(subMenuEnum.overlays) && !isGeoOptionsDisabled">
-			<i class="icon-tools-polygons"></i>
+			<i class="icon-frame-mode"></i>
 		</button>
 
 		<ansyn-overlays-display-mode
@@ -65,7 +65,7 @@
 				[class.active]="isExpand(subMenuEnum.annotations) && !isGeoOptionsDisabled"
 				(click)="toggleSubMenu(subMenuEnum.annotations)"
 				[disabled]="!(isActiveAnnotationLayer$ | async) || isGeoOptionsDisabled">
-			<span class="icon-annotation"></span>
+			<span class="icon-annotations"></span>
 		</button>
 		<ansyn-annotations-control
 			[expand]="isExpand(subMenuEnum.annotations) && !isGeoOptionsDisabled"></ansyn-annotations-control>

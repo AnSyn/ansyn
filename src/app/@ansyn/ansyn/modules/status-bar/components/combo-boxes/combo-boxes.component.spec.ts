@@ -88,17 +88,6 @@ describe('ComboBoxesComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('eye indicator should be active', () => {
-		component.geoFilterStatus.indicator = true;
-		fixture.detectChanges();
-		let result = fixture.nativeElement.querySelector('.eye-button').classList.contains('active2');
-		expect(result).toBe(true);
-		component.geoFilterStatus.indicator = false;
-		fixture.detectChanges();
-		result = fixture.nativeElement.querySelector('.eye-button').classList.contains('active2');
-		expect(result).toBe(false);
-	});
-
 	describe('check click on pinPoint flags', () => {
 		beforeEach(() => {
 			spyOn(store, 'dispatch');
@@ -109,13 +98,6 @@ describe('ComboBoxesComponent', () => {
 			fixture.nativeElement.querySelector('.edit-pinpoint').click();
 			fixture.detectChanges();
 			expect(component.geoFilterChanged).toHaveBeenCalled();
-		});
-		it('button-eye', () => {
-			fixture.nativeElement.querySelector('.eye-button').click();
-			fixture.detectChanges();
-
-			const indicator = !component.geoFilterStatus.indicator;
-			expect(store.dispatch).toHaveBeenCalledWith(new UpdateGeoFilterStatus({ indicator }));
 		});
 	});
 

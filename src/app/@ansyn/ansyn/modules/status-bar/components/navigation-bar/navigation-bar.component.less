@@ -1,4 +1,5 @@
 @import "ansyn/less/z-index-globals";
+@import 'ansyn/less/colors';
 
 :host {
 	display: block;
@@ -7,7 +8,6 @@
 }
 
 .navigation {
-	background: white;
 	display: flex;
 	flex-shrink: 0;
 	align-self: flex-end;
@@ -29,7 +29,8 @@
 		border: none;
 		padding: 0;
 		margin: 2px;
-		background: #D8D8D8;
+		border-radius: 5px;
+		background: @background-color-11;
 
 		&.transparent {
 			background: transparent;

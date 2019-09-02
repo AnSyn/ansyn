@@ -1,4 +1,4 @@
-import { BaseMapSourceProvider, ImageryLayerProperties, extentFromGeojson, IMapSettings } from '@ansyn/imagery';
+import { BaseMapSourceProvider, ImageryLayerProperties, bboxFromGeoJson, IMapSettings } from '@ansyn/imagery';
 import Layer from 'ol/layer/Layer';
 import ImageLayer from 'ol/layer/Image';
 import TileLayer from 'ol/layer/Tile';
@@ -58,7 +58,7 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 	}
 
 	getExtent(footprint, destinationProjCode = 'EPSG:3857') {
-		let extent: [number, number, number, number] = extentFromGeojson(footprint);
+		let extent: [number, number, number, number] = <[number, number, number, number]>bboxFromGeoJson(footprint);
 		[extent[0], extent[1]] = proj.transform([extent[0], extent[1]], 'EPSG:4326', destinationProjCode);
 		[extent[2], extent[3]] = proj.transform([extent[2], extent[3]], 'EPSG:4326', destinationProjCode);
 		return extent;

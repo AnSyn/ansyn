@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, select, Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
-import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
+import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import {
 	IMapState, MapActionTypes,
 	MapFacadeService,
@@ -83,6 +83,7 @@ export class ToolsAppEffects {
 	onActiveMapChangesSetOverlaysFootprintMode$: Observable<any> = this.store$.select(selectActiveMapId).pipe(
 		filter(Boolean),
 		withLatestFrom(this.store$.select(mapStateSelector), (activeMapId, mapState: IMapState) => MapFacadeService.activeMap(mapState)),
+		filter((activeMap: ICaseMapState) => Boolean(activeMap)),
 		mergeMap<any, any>((activeMap: ICaseMapState) => {
 			const actions: Action[] = [new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode)];
 			if (!Boolean(activeMap.data.overlay)) {
@@ -131,7 +132,7 @@ export class ToolsAppEffects {
 		ofType(ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING),
 		withLatestFrom(this.store$.select(mapStateSelector)),
 		mergeMap<any, any>(([action, mapsState]: [SetAutoImageProcessing, IMapState]) => {
-			const activeMap: ICaseMapState = MapFacadeService.activeMap(mapsState);
+			const activeMap: IMapSettings = MapFacadeService.activeMap(mapsState);
 			const isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
 			return [
 				new UpdateMapAction({

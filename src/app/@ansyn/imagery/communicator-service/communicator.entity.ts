@@ -13,7 +13,7 @@ import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 import { BaseImageryMap } from '../model/base-imagery-map';
 import { forkJoin, merge, Observable, of, throwError } from 'rxjs';
 import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
-import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
+import { ImageryCommunicatorService } from './communicator.service';
 import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';
 import { filter, map, mergeMap, tap } from 'rxjs/operators';
 import { IMAGERY_MAPS, ImageryMaps } from '../providers/imagery-map-collection';
@@ -286,7 +286,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 
 	ngOnDestroy() {
 		this.imageryCommunicatorService.remove(this.id);
-		this.destroyPlugins();
+		this.destroyCurrentComponent();
 	}
 
 	private resetPlugins(): Observable<boolean> {
@@ -309,6 +309,9 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		if (this._mapComponentRef) {
 			this._mapComponentRef.destroy();
 			this._mapComponentRef = undefined;
+		}
+		if (this._activeMap) {
+			this._activeMap.dispose();
 		}
 	}
 

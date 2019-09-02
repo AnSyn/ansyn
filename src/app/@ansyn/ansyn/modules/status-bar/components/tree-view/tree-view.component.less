@@ -1,3 +1,4 @@
+@import "ansyn/less/colors";
 @import "ansyn/less/common";
 @import "ansyn/less/z-index-globals";
 
@@ -6,7 +7,7 @@
 	top: 0;
 	left: 0;
 	min-width: 170px;
-	transform: translateY(calc(~'-100% - 15px'));
+	transform: translateY(calc(~'-100%'));
 
 	/deep/ .treeview-container .row-item {
 		display: flex;
@@ -14,10 +15,9 @@
 	}
 
 	.data-input-filter {
-		background: rgba(0, 0, 0, 1);
+		background: @background-color-0;
 		background-clip: padding-box;
 		padding: 10px 20px;
-		box-shadow: 0 0 2px 1px white;
 	}
 
 	.tree-view-main {
@@ -27,11 +27,16 @@
 		justify-content: space-between;
 	}
 
+	.tree-view-container{
+		max-height: 300px;
+		overflow-y: auto;
+	}
+
 	div.data-input-filters-buttons {
 		button {
 			background: transparent;
 			border: none;
-			color: @overlays-dots-color;
+			color: @application-primary-color;
 			&:disabled {
 				cursor: default;
 				pointer-events: none;
@@ -41,11 +46,9 @@
 		margin-top: 10px;
 		display: flex;
 		justify-content: space-between;
-		color: @overlays-dots-color;
+		color: @application-primary-color;
 		div {
 			button {
-				a {
-				}
 				cursor: pointer;
 				&:hover:not(:disabled) {
 					font-weight: bold;

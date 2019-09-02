@@ -1,4 +1,4 @@
-import { forkJoin, Observable, Observer, of, throwError } from 'rxjs';
+import { EMPTY, forkJoin, Observable, Observer, of, throwError } from 'rxjs';
 import * as turf from '@turf/turf';
 import * as GeoJSON from 'geojson';
 import { Point } from 'geojson';
@@ -160,13 +160,8 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 
 				if (!this.shadowMapObject) {
 					this.createShadowMap();
-					this.resetShadowMapView();
+					this.resetShadowMapView(position.projectedState);
 				}
-				const { center, zoom, rotation } = position.projectedState;
-				this.shadowMapObjectView.setCenter(center);
-				this.shadowMapObjectView.setZoom(zoom);
-				this.shadowMapObjectView.setRotation(rotation);
-
 				return this.pointNorth(this.shadowMapObject).pipe(take(1)).pipe(
 					map((calculatedNorthAngleAfterPointingNorth: number) => {
 						const shRotation = this.shadowMapObjectView.getRotation();
@@ -176,7 +171,8 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 						}
 						currentRotationDegrees = currentRotationDegrees % 360;
 						return toRadians(currentRotationDegrees);
-					})
+					}),
+					catchError((error) => of(0)) // prevent's subscriber disappearance
 				);
 			}
 			return of(0);
@@ -194,10 +190,13 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	}
 
 	setActualNorth(): Observable<any> {
-		return this.pointNorth(this.iMap.mapObject).pipe(take(1)).pipe(
+		return this.pointNorth(this.shadowMapObject).pipe(take(1)).pipe(
 			tap((virtualNorth: number) => {
 				this.communicator.setVirtualNorth(virtualNorth);
 				this.communicator.setRotation(virtualNorth);
+			}),
+			catchError(reason => {
+				return EMPTY;
 			})
 		);
 	}
@@ -207,8 +206,9 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		mapObject.renderSync();
 		return this.getCorrectedNorth(mapObject).pipe(
 			catchError(reason => {
-				const error = `setCorrectedNorth failed ${reason}`;
+				const error = `setCorrectedNorth failed ${ reason }`;
 				this.loggerService.warn(error);
+				console.warn('pointNorth failed: ', error);
 				return throwError(error);
 			})
 		);
@@ -309,7 +309,12 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		if (!this.shadowMapObject) {
 			this.createShadowMap();
 		}
-		this.resetShadowMapView();
+		const view = this.communicator.ActiveMap.mapObject.getView();
+		const projectedState = {
+			...(<any>view).getState(),
+			center: (<any>view).getCenter()
+		};
+		this.resetShadowMapView(projectedState);
 		return of(true);
 	};
 
@@ -322,7 +327,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		});
 	}
 
-	resetShadowMapView() {
+	resetShadowMapView(projectedState) {
 		const layers = this.shadowMapObject.getLayers();
 		layers.forEach((layer) => {
 			this.shadowMapObject.removeLayer(layer);
@@ -333,5 +338,10 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		});
 		this.shadowMapObject.addLayer(mainLayer);
 		this.shadowMapObject.setView(this.shadowMapObjectView);
+
+		const { center, zoom, rotation } = projectedState;
+		this.shadowMapObjectView.setCenter(center);
+		this.shadowMapObjectView.setZoom(zoom);
+		this.shadowMapObjectView.setRotation(rotation);
 	}
 }

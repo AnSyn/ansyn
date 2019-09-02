@@ -3,8 +3,6 @@ export {
 	ImageryMapExtent, ImageryMapExtentPolygon, ImageryMapProjectedState, ImageryMapPosition, IMousePointerMove
 }from './model/case-map-position.model';
 
-export { extentFromGeojson, getFootprintIntersectionRatioInExtent } from './utils/calc-extent';
-
 export { MAP_SOURCE_PROVIDERS_CONFIG, IMapSourceProvidersConfig } from './model/base-map-source-provider';
 export { MarkerSizeDic } from './model/visualizers/visualizer-style';
 export { IVisualizerEntity } from './model/visualizers/visualizers-entity';
@@ -32,10 +30,16 @@ export {
 export {
 	areCoordinatesNumeric,
 	bboxFromGeoJson,
-	geojsonMultiPolygonToPolygon, geojsonPolygonToMultiPolygon,
+	polygonFromBBOX,
+	geojsonMultiPolygonToFirstPolygon,
+	geojsonMultiPolygonToBBOXPolygon,
+	geojsonMultiPolygonToPolygons,
+	geojsonPolygonToMultiPolygon,
 	getPointByGeometry,
 	getPolygonByPoint,
-	getPolygonByPointAndRadius
+	getPolygonByPointAndRadius,
+	getPolygonIntersectionRatioWithMultiPolygon,
+	isPointContainedInMultiPolygon
 } from './utils/geo';
 
 export { IVisualizersConfig, VisualizersConfig } from './model/visualizers-config.token';

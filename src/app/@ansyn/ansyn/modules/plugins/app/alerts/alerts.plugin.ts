@@ -1,6 +1,6 @@
 import {
 	BaseImageryPlugin,
-	geojsonMultiPolygonToPolygon,
+	getPolygonIntersectionRatioWithMultiPolygon,
 	ImageryMapPosition,
 	ImageryPlugin
 } from '@ansyn/imagery';
@@ -18,6 +18,7 @@ import { isFullOverlay } from '../../../core/utils/overlays';
 import { ICaseMapState } from '../../../menu-items/cases/models/case.model';
 import { IOverlayDrop } from '../../../overlays/models/overlay.model';
 import { CesiumMap } from '@ansyn/imagery-cesium';
+import { Polygon } from 'geojson';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap, CesiumMap],
@@ -36,8 +37,10 @@ export class AlertsPlugin extends BaseImageryPlugin {
 		tap((action: RemoveAlertMsg | AddAlertMsg) => this.store$.dispatch(action))
 	);
 
+	// todo: register store map extent instead of map positionChanged
 	@AutoSubscription
 	positionChanged$ = () => this.communicator.positionChanged.pipe(
+		filter(Boolean),
 		debounceTime(500),
 		withLatestFrom(this.currentMap$),
 		map(this.positionChanged.bind(this)),
@@ -61,21 +64,16 @@ export class AlertsPlugin extends BaseImageryPlugin {
 		let isInBound;
 		if (!isWorldView) {
 			const viewExtent = position.extentPolygon;
-			const layerExtent = geojsonMultiPolygonToPolygon(currentMap.data.overlay.footprint);
-
-			try {
-				isInBound = Boolean(intersect(layerExtent, viewExtent));
-			} catch (e) {
-				console.warn('checkImageOutOfBounds$: turf exception', e);
-			}
+			const intersection = getPolygonIntersectionRatioWithMultiPolygon(viewExtent, currentMap.data.overlay.footprint);
+			isInBound = Boolean(intersection);
 		}
 		const payload = { key: AlertMsgTypes.OverlaysOutOfBounds, value: currentMap.id };
 		return isWorldView || isInBound ? new RemoveAlertMsg(payload) : new AddAlertMsg(payload);
 	}
 
 	onResetView() {
-		this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypes.OverlaysOutOfBounds, value: this.mapId }))
-		this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypes.overlayIsNotPartOfQuery, value: this.mapId }))
+		this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypes.OverlaysOutOfBounds, value: this.mapId }));
+		this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypes.overlayIsNotPartOfQuery, value: this.mapId }));
 		return super.onResetView();
 	}
 }

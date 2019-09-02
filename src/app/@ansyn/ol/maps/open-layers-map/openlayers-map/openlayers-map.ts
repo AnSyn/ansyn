@@ -172,7 +172,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this._mapLayers = [];
 		const controls = [
 			new ScaleLine(),
-			new AttributionControl()
+			new AttributionControl({
+				collapsible: true
+			})
 		];
 		const renderer = 'canvas';
 		this._mapObject = new OLMap({
@@ -203,7 +205,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	createView(layer): View {
 		return new View({
-			projection: layer.getSource().getProjection()
+			projection: layer.getSource().getProjection(),
+			maxZoom: 21,
+			minZoom: 1
 		});
 	}
 
@@ -417,7 +421,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			}));
 	}
 
-	fitRotateExtent(olmap: OLMap, extentFeature: Feature<ImageryMapExtentPolygon>): Observable<boolean> {
+	fitRotateExtent(olmap: OLMap, extentFeature: Feature<ImageryMapExtentPolygon>, customResolution?: number): Observable<boolean> {
 		const collection: any = turf.featureCollection([extentFeature]);
 
 		return this.projectionService.projectCollectionAccuratelyToImage<olFeature>(collection, olmap).pipe(
@@ -433,7 +437,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 				view.setCenter(center);
 				view.setRotation(rotation);
-				view.setResolution(Math.abs(resolution));
+				view.setResolution(customResolution ? customResolution : Math.abs(resolution));
 				this.isValidPosition = true;
 				return true;
 			})
@@ -441,7 +445,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	public setPosition(position: ImageryMapPosition, map: OLMap = this.mapObject, view: View = map.getView()): Observable<boolean> {
-		const { extentPolygon, projectedState } = position;
+		const { extentPolygon, projectedState, customResolution } = position;
 
 		const someIsNan = !extentPolygon.coordinates[0].every(areCoordinatesNumeric);
 		if (someIsNan) {
@@ -460,7 +464,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			return of(true);
 		} else {
 			const extentFeature = feature(extentPolygon);
-			return this.fitRotateExtent(map, extentFeature);
+			return this.fitRotateExtent(map, extentFeature, customResolution);
 		}
 	}
 
@@ -516,12 +520,21 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return view.getRotation();
 	}
 
-	setResolution(resolution: number): void {
-		this.mapObject.getView().setResolution(resolution);
+	resetZoom(): void {
+		const view = this.mapObject.getView();
+		view.setZoom(1)
 	}
 
-	getResolution(): number {
-		return this.mapObject.getView().getResolution();
+	zoomOut(): void {
+		const view = this.mapObject.getView();
+		const current = view.getZoom();
+		view.setZoom(current - 1);
+	}
+
+	zoomIn(): void {
+		const view = this.mapObject.getView();
+		const current = view.getZoom();
+		view.setZoom(current + 1);
 	}
 
 

@@ -14,7 +14,7 @@
 		[label]="'Search' | translate">
 	</ansyn-input>
 
-	<div class="allFilters">
+	<div class="allFilters scrolled">
 		<ng-container *ngIf="filters?.length; else noFiltersFound">
 			<ansyn-filter-container
 				*ngFor="let filter of filters"

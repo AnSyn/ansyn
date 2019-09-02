@@ -461,8 +461,16 @@ export class CesiumMap extends BaseImageryMap<any> {
 		}
 	}
 
-	setResolution(resolution: number): void {
-		this.mapObject.resolutionScale = resolution;
+	zoomIn(): void {
+		this.mapObject.camera.zoomIn();
+	}
+
+	zoomOut(): void {
+		this.mapObject.camera.zoomOut();
+	}
+
+	resetZoom(): void {
+		this.mapObject.resolutionScale = 1
 	}
 
 	updateSize(): void {
@@ -509,10 +517,6 @@ export class CesiumMap extends BaseImageryMap<any> {
 			return rotation;
 		}
 		return NaN;
-	}
-
-	getResolution(): number {
-		return this.mapObject.resolutionScale;
 	}
 
 	removeAllLayers(): void {

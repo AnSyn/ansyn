@@ -2,7 +2,7 @@ import { forkJoin, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import {
-	geojsonMultiPolygonToPolygon,
+	geojsonMultiPolygonToFirstPolygon,
 	geojsonPolygonToMultiPolygon, getPointByGeometry
 } from '@ansyn/imagery';
 import { HttpResponseBase } from '@angular/common/http/src/response';
@@ -286,7 +286,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 	private _getBboxFilter(region: { type }): { type; field_name; config } {
 		let fetchRegion = region;
 		if (fetchRegion.type === 'MultiPolygon') {
-			fetchRegion = geojsonMultiPolygonToPolygon(fetchRegion as GeoJSON.MultiPolygon);
+			fetchRegion = geojsonMultiPolygonToFirstPolygon(fetchRegion as GeoJSON.MultiPolygon);
 		}
 		return { type: 'GeometryFilter', field_name: 'geometry', config: fetchRegion };
 	}
@@ -296,7 +296,14 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			return [];
 		}
 
+		facets.filters.forEach( filter => {
+			if (filter.metadata.unCheckedEnums) {
+				const metaData = filter.metadata;
+				filter.metadata = [...metaData.disabledEnums, ...metaData.unCheckedEnums]
+			}
+		});
 		return facets.filters.map(filterObj => {
+
 			if (filterObj.fieldName === 'bestResolution') {
 				return {
 					type: 'RangeFilter',

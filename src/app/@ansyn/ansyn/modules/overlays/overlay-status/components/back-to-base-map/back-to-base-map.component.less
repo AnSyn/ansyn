@@ -1,23 +1,35 @@
+@import "ansyn/less/globals";
+@import "ansyn/less/colors";
 :host {
-	button {
-		position: relative;
-		padding: 4px 6px;
-		vertical-align: middle;
-		color: white;
-		line-height: 0;
-		cursor: pointer;
-		overflow: hidden;
-		outline: none;
-		background: black;
-		border: 1px solid grey;
-		flex: 6;
-		height: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
 
-		&:disabled {
-			opacity: .6;
+	div.back-to-world-view{
+
+		button{
+			display: flex;
+			align-items: center;
+			height: @status-bar-height;
+			border: none;
+			background-color: @background-color-5;
+			color: @background-color-12;
+			i{
+				font-size: @icon-size;
+			}
+
+			&.menu-pinned{
+				font-size: 0;
+				overflow: hidden;
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 1240px) {
+	:host{
+		div.back-to-world-view{
+			button{
+				font-size: 0;
+				overflow: hidden;
+			}
 		}
 	}
 }

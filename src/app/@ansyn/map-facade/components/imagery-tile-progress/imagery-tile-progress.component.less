@@ -1,10 +1,11 @@
-@import "../../less/map-facade";
+@import "ansyn/less/colors";
+@import "ansyn/less/z-index-globals";
 
 .map-loader-wrapper {
 	position: absolute;
 	z-index: @z-index-map-loader;
 	width: 100%;
-	background-color: @menu-color;
+	background-color: @background-color-1;
 
 	&.lowered {
 		position: absolute;
@@ -15,6 +16,6 @@
 
 	.map-loader {
 		height: 3px;
-		background-color: @overlays-dots-color;
+		background-color: @application-contrast-color;
 	}
 }

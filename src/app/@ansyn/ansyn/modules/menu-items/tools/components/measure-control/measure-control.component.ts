@@ -5,7 +5,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { combineLatest } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { SetMeasureDistanceToolState } from '../../actions/tools.actions';
-import { selectIsMeasureToolActive } from '../../reducers/tools.reducer';
+import { selectIsMeasureToolActive, selectIsMeasureToolHidden } from '../../reducers/tools.reducer';
 
 @Component({
 	selector: 'ansyn-measure-control',
@@ -18,8 +18,10 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 	show: boolean;
 
 	@AutoSubscription
-	show$ = combineLatest(this.store$.select(selectIsMeasureToolActive), this.store$.select(selectActiveMapId)).pipe(
-		tap(([isActive, activeMapId]) => this.show = isActive && activeMapId === this.mapId)
+	show$ = combineLatest(this.store$.select(selectIsMeasureToolActive),
+		this.store$.select(selectActiveMapId),
+		this.store$.select(selectIsMeasureToolHidden)).pipe(
+		tap(([isActive, activeMapId, isHidden]) => this.show = isActive && activeMapId === this.mapId && !isHidden)
 	);
 
 	constructor(protected store$: Store<any>) {

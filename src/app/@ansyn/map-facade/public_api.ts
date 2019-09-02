@@ -16,7 +16,9 @@ export {
 	selectLayout,
 	selectWasWelcomeNotificationShown,
 	selectToastMessage,
-	selectFooterCollapse
+	selectFooterCollapse,
+	selectOverlayFromMap,
+	selectMapStateById
 } from './reducers/map.reducer';
 
 export {

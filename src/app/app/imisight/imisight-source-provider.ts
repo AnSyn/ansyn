@@ -18,7 +18,7 @@ import {
 } from '@ansyn/ansyn';
 import {
 	bboxFromGeoJson,
-	geojsonMultiPolygonToPolygon,
+	geojsonMultiPolygonToFirstPolygon,
 	geojsonPolygonToMultiPolygon,
 	getPolygonByPointAndRadius,
 } from '@ansyn/imagery';
@@ -70,7 +70,7 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 		const token = localStorage.getItem('id_token');
 
 		if (fetchParams.region.type === 'MultiPolygon') {
-			fetchParams.region = geojsonMultiPolygonToPolygon(fetchParams.region as GeoJSON.MultiPolygon);
+			fetchParams.region = geojsonMultiPolygonToFirstPolygon(fetchParams.region as GeoJSON.MultiPolygon);
 		}
 		let bbox;
 

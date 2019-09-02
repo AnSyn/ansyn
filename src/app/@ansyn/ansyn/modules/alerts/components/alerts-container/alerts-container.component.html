@@ -8,9 +8,9 @@
 
 		<ng-template #textAlert>
 			<div
-				[style.background]="alert.background"
 				[attr.tooltip-value]="alert.text | translate"
 				[attr.tooltip-class]="mapsAmount === 1 ? 'top left': 'bottom left'">
+				<span class="indicator" [style.background-color]="alert.background"></span>
 				{{ alert.text | translate}}
 			</div>
 		</ng-template>

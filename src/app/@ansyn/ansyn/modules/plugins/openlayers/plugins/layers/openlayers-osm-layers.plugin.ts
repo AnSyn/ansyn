@@ -5,6 +5,7 @@ import { ImageryPlugin } from '@ansyn/imagery';
 import { OpenLayersMap } from '@ansyn/ol';
 import { OpenlayersBaseLayersPlugins } from "./openlayers-base-layers.plugins";
 import { ILayer, layerPluginTypeEnum } from '../../../../menu-items/layers-manager/models/layers.model';
+import { Observable, of } from 'rxjs';
 
 
 @ImageryPlugin({
@@ -20,7 +21,7 @@ export class OpenlayersOsmLayersPlugin extends OpenlayersBaseLayersPlugins {
 		return layer.layerPluginType === layerPluginTypeEnum.OSM;
 	}
 
-	createLayer(layer: ILayer): TileLayer {
+	createLayer(layer: ILayer): Observable<TileLayer> {
 		const vector = new TileLayer({
 			zIndex: 100,
 			source: new OSM({
@@ -33,6 +34,6 @@ export class OpenlayersOsmLayersPlugin extends OpenlayersBaseLayersPlugins {
 			})
 		});
 		vector.set('id', layer.id);
-		return vector;
+		return of(vector);
 	}
 }

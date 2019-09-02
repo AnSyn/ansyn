@@ -1,6 +1,6 @@
 import {
 	BaseImageryPlugin,
-	geojsonMultiPolygonToPolygons,
+	getPolygonIntersectionRatioWithMultiPolygon,
 	ImageryMapPosition,
 	ImageryPlugin
 } from '@ansyn/imagery';
@@ -37,8 +37,10 @@ export class AlertsPlugin extends BaseImageryPlugin {
 		tap((action: RemoveAlertMsg | AddAlertMsg) => this.store$.dispatch(action))
 	);
 
+	// todo: register store map extent instead of map positionChanged
 	@AutoSubscription
 	positionChanged$ = () => this.communicator.positionChanged.pipe(
+		filter(Boolean),
 		debounceTime(500),
 		withLatestFrom(this.currentMap$),
 		map(this.positionChanged.bind(this)),
@@ -62,27 +64,16 @@ export class AlertsPlugin extends BaseImageryPlugin {
 		let isInBound;
 		if (!isWorldView) {
 			const viewExtent = position.extentPolygon;
-			const layerExtents: Polygon[] = geojsonMultiPolygonToPolygons(currentMap.data.overlay.footprint);
-
-			try {
-				for (let i = 0; i < layerExtents.length; i++) {
-					isInBound = Boolean(intersect(layerExtents[i], viewExtent));
-					if (isInBound) {
-						break;
-					}
-				}
-			} catch (e) {
-				// todo: check for multi polygon bug
-				console.warn('checkImageOutOfBounds$: turf exception', e);
-			}
+			const intersection = getPolygonIntersectionRatioWithMultiPolygon(viewExtent, currentMap.data.overlay.footprint);
+			isInBound = Boolean(intersection);
 		}
 		const payload = { key: AlertMsgTypes.OverlaysOutOfBounds, value: currentMap.id };
 		return isWorldView || isInBound ? new RemoveAlertMsg(payload) : new AddAlertMsg(payload);
 	}
 
 	onResetView() {
-		this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypes.OverlaysOutOfBounds, value: this.mapId }))
-		this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypes.overlayIsNotPartOfQuery, value: this.mapId }))
+		this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypes.OverlaysOutOfBounds, value: this.mapId }));
+		this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypes.overlayIsNotPartOfQuery, value: this.mapId }));
 		return super.onResetView();
 	}
 }

@@ -6,6 +6,7 @@ import { OpenLayersMap } from '@ansyn/ol';
 import * as proj from 'ol/proj';
 import { OpenlayersBaseLayersPlugins } from './openlayers-base-layers.plugins';
 import { ILayer, layerPluginTypeEnum } from '../../../../menu-items/layers-manager/models/layers.model';
+import { Observable, of } from 'rxjs';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
@@ -20,7 +21,7 @@ export class OpenlayersArcgisLayersPulgin extends OpenlayersBaseLayersPlugins {
 		return layer.layerPluginType === layerPluginTypeEnum.ARCGIS
 	}
 
-	createLayer(layer: ILayer): TileLayer {
+	createLayer(layer: ILayer): Observable<TileLayer> {
 		const extent: any = proj.transformExtent(layer.extent, 'EPSG:4326', this.iMap.mapObject.getView().getProjection());
 		const vector = new TileLayer({
 			zIndex: 100,
@@ -34,6 +35,6 @@ export class OpenlayersArcgisLayersPulgin extends OpenlayersBaseLayersPlugins {
 			})
 		});
 		vector.set('id', layer.id);
-		return vector;
+		return of(vector);
 	}
 }

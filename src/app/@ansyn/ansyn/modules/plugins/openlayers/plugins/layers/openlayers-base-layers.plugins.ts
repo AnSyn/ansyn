@@ -1,7 +1,7 @@
 import { Store } from '@ngrx/store';
 import TileLayer from 'ol/layer/Tile';
 import { tap } from 'rxjs/operators';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 import { BaseImageryPlugin } from '@ansyn/imagery';
 import { selectDisplayLayersOnMap } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
@@ -10,8 +10,8 @@ import { ILayer } from '../../../../menu-items/layers-manager/models/layers.mode
 import { selectLayers, selectSelectedLayersIds } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
 
 export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
+	protected subscriptions: Subscription[] = [];
 
-	@AutoSubscription
 	osmLayersChanges$: Observable<any[]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
 		.pipe(
 			tap(([result, selectedLayerId]: [ILayer[], string[]]) => {
@@ -26,25 +26,43 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 			})
 		);
 
+	toggleGroup$ = this.store$.select(selectDisplayLayersOnMap(this.mapId)).pipe(
+		tap((newState: boolean) => this.iMap.toggleGroup('layers', newState))
+	);
+
+	onInitSubscriptions(): void {
+		super.onInitSubscriptions();
+		this.subscriptions.push(
+			this.toggleGroup$.subscribe(() => {
+			}),
+			this.osmLayersChanges$.subscribe(() => {
+			})
+		)
+	}
+
+	onDispose(): void {
+		this.subscriptions.forEach((sub) => sub.unsubscribe());
+		this.subscriptions = [];
+		super.onDispose();
+	}
+
 	protected constructor(protected store$: Store<any>) {
 		super();
 	}
 
-	@AutoSubscription
-	toggleGroup$ = () => this.store$.select(selectDisplayLayersOnMap(this.mapId)).pipe(
-		tap((newState: boolean) => this.iMap.toggleGroup('layers', newState))
-	);
 
 	abstract checkLayer(layer: ILayer);
 
-	abstract createLayer(layer: ILayer): TileLayer;
+	abstract createLayer(layer: ILayer): Observable<TileLayer>;
 
 	addGroupLayer(layer: ILayer) {
 		const group = OpenLayersMap.groupLayers.get(OpenLayersMap.groupsKeys.layers);
 		const layersArray = group.getLayers().getArray();
 		if (!layersArray.some((shownLayer) => shownLayer.get('id') === layer.id)) {
-			const _layer = this.createLayer(layer);
-			group.getLayers().push(_layer);
+			this.createLayer(layer).subscribe((tileLayer) => {
+				const _layer = tileLayer;
+				group.getLayers().push(_layer);
+			});
 		}
 	}
 

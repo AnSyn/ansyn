@@ -61,6 +61,23 @@ export class MpImageProjection extends Projection {
 				const res = Utils.m4MultVec3Projective(that.matrix, [coordinate[0], y, 0], []);
 				return res;
 			});
+
+		proj.addCoordinateTransforms('EPSG:3857', this,
+			// forward  from the source projection to the destination projection
+			function (coordinate) {
+			let coord4326 = proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
+				const res = Utils.m4MultVec3Projective(that.inversMatrix, [coord4326[0], coord4326[1], 0], []);
+				res[1] = tileSizeAtLevel0 - res[1];
+				return res;
+			},
+			// inverse from the destination projection to the source projection
+			function (coordinate) {
+				let y = coordinate[1];
+				y = tileSizeAtLevel0 - y;
+				const res = Utils.m4MultVec3Projective(that.matrix, [coordinate[0], y, 0], []);
+				let coord3857 = proj.transform(res, 'EPSG:4326', 'EPSG:3857');
+				return coord3857;
+			});
 	}
 
 	// flip the y from buttom left to top left (how our server works)

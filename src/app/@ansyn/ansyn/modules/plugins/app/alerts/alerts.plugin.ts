@@ -3,7 +3,7 @@ import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ol';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { selectOverlayFromMap } from '@ansyn/map-facade';
-import { debounceTime, map, tap } from 'rxjs/operators';
+import { debounceTime, map, tap, withLatestFrom, filter } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { intersect } from '@turf/turf';
 import { AlertMsgTypes } from '../../../alerts/model';

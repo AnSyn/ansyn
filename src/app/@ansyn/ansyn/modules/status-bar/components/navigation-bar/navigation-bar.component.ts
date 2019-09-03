@@ -46,10 +46,6 @@ export class NavigationBarComponent {
 			this.clickGoNextPresetOverlay();
 			this.goNextQuickLoop = false;
 		}
-		// else if (this._scannedAreaKey.indexOf($event.which) !== -1) {
-		// 	this.clickScannedArea();
-		// 	this.scanAreaActive = false;
-		// }
 
 		if (this._overlayHack.indexOf($event.which) !== -1) {
 			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(false));
@@ -69,10 +65,6 @@ export class NavigationBarComponent {
 		} else if (this._nextPresetOverlayKeys.indexOf($event.which) !== -1) {
 			this.goNextQuickLoop = true;
 		}
-		// else if (this._scannedAreaKey.indexOf($event.which) !== -1) {
-		// 	this.clickScannedArea();
-		// 	this.scanAreaActive = true;
-		// }
 
 		if (this._overlayHack.indexOf($event.which) !== -1) {
 			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(true));

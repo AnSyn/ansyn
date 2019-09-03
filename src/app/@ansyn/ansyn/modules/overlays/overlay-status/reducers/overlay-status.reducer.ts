@@ -11,6 +11,12 @@ import { MultiPolygon } from 'geojson';
 export const overlayStatusFeatureKey = 'overlayStatus';
 export const overlayStatusStateSelector: MemoizedSelector<any, IOverlayStatusState> = createFeatureSelector<IOverlayStatusState>(overlayStatusFeatureKey);
 
+
+export interface IScannedArea {
+	id: string;
+	area: MultiPolygon;
+}
+
 export interface IOverlayStatusState {
 	favoriteOverlays: IOverlay[];
 	removedOverlaysIds: string[];

@@ -28,7 +28,8 @@ export class ScannedAreaVisualizer extends EntitiesVisualizer{
 
 	@AutoSubscription
 	scannedArea$ = () => combineLatest(this.store$.select(selectScannedAreaData), this.store$.select(selectOverlayFromMap(this.mapId))).pipe(
-		map(([scannedAreaData, overlay]: [IOverlaysScannedAreaData, IOverlay]) => {
+		filter( ([scannedAreaData, overlay]: [IOverlaysScannedAreaData, IOverlay]) => Boolean(overlay) && Boolean(scannedAreaData)),
+		mergeMap(([scannedAreaData, overlay]: [IOverlaysScannedAreaData, IOverlay]) => {
 			const entities: IVisualizerEntity[] = [];
 			if (!Boolean(overlay) || !Boolean(scannedAreaData[overlay.id])) {
 				this.clearEntities();
@@ -38,9 +39,8 @@ export class ScannedAreaVisualizer extends EntitiesVisualizer{
 					featureJson: feature(scannedAreaData[overlay.id])
 				});
 			}
-			return entities;
-		}),
-		mergeMap( (entities) => this.setEntities(entities))
+			return this.setEntities(entities);
+		})
 	);
 
 	constructor(

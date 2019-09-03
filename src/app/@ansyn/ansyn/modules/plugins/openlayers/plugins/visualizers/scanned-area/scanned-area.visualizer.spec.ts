@@ -25,8 +25,8 @@ describe('ScannedAreaVisualizer', () => {
 		store = _store;
 	}));
 
-	beforeEach(inject([ScannedAreaVisualizer], (_algorithmScannedAreaVisualizer: ScannedAreaVisualizer) => {
-		scannedAreaVisualizer = _algorithmScannedAreaVisualizer;
+	beforeEach(inject([ScannedAreaVisualizer], (_scannedAreaVisualizer: ScannedAreaVisualizer) => {
+		scannedAreaVisualizer = _scannedAreaVisualizer;
 	}));
 
 	it('should be defined', () => {

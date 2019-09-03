@@ -77,8 +77,8 @@ export class UpdateCaseAppEffects {
 				contextEntities,
 				miscOverlays,
 				overlaysTranslationData,
-				autoSave,
-				overlaysScannedAreaData
+				overlaysScannedAreaData,
+				autoSave
 			] = events;
 
 			const { id, name, lastModified, creationTime, selectedContextId } = selectedCase;

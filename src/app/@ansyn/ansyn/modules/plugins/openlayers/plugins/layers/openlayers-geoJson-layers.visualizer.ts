@@ -1,8 +1,8 @@
 import { select, Store } from '@ngrx/store';
 import { HttpClient } from '@angular/common/http';
 import { Feature, FeatureCollection } from 'geojson';
-import { catchError, map, mergeMap, withLatestFrom, filter } from 'rxjs/operators';
-import { combineLatest, forkJoin, Observable, of } from 'rxjs';
+import { catchError, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 import { ImageryPlugin, IVisualizerEntity } from '@ansyn/imagery';
 import { selectDisplayLayersOnMap, SetToastMessageAction } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
@@ -11,20 +11,21 @@ import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
 import { ILayer, layerPluginTypeEnum } from '../../../../menu-items/layers-manager/models/layers.model';
 import { selectLayers, selectSelectedLayersIds } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
 
-@ImageryPlugin( {
+@ImageryPlugin({
 	supported: [OpenLayersMap],
 	deps: [Store, HttpClient]
-} )
+})
 export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 
-	constructor( protected store$: Store<any>,
-				protected http: HttpClient ) {
-		super( {
+	constructor(protected store$: Store<any>,
+				protected http: HttpClient) {
+		super({
 			initial: {
 				'fill-opacity': 0
 			}
-		} );
+		});
 	}
+
 	// isHidden$ = () => this.store$.select( selectDisplayLayersOnMap( this.mapId ) );
 
 	@AutoSubscription
@@ -32,46 +33,46 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 		select(selectDisplayLayersOnMap(this.mapId)),
 		withLatestFrom(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds)),
 		filter(([isHidden, layers, layersId]: [boolean, ILayer[], string[]]) => Boolean(layers)),
-		mergeMap( ([isHidden, layers, layersId]) => layers
+		mergeMap(([isHidden, layers, layersId]) => layers
 			.filter(this.isGeoJsonLayer)
 			.map((layer: ILayer) => this.layerToObservable(layer, layersId, isHidden))
 		)
 	);
 
-	parseLayerData( data ) {
+	parseLayerData(data) {
 		return data; // override if other data is used
 	}
 
-	layerToObservable( layer: ILayer, selectedLayerIds, isHidden ): Observable<boolean> {
-		if (selectedLayerIds.includes( layer.id ) && !isHidden) {
-			return this.http.get( layer.url )
+	layerToObservable(layer: ILayer, selectedLayerIds, isHidden): Observable<boolean> {
+		if (selectedLayerIds.includes(layer.id) && !isHidden) {
+			return this.http.get(layer.url)
 				.pipe(
-					map( ( data ) => this.parseLayerData( data ) ),
-					mergeMap( ( featureCollection: any ) => {
-						const entities = this.layerToEntities( featureCollection );
-						return this.setEntities( entities );
-					} ),
-					catchError( ( e ) => {
-						this.store$.dispatch( new SetToastMessageAction( {toastText: `Failed to load layer${(e && e.error) ? ' ,' + e.error : ''}`} ) );
-						return of( true );
-					} )
+					map((data) => this.parseLayerData(data)),
+					mergeMap((featureCollection: any) => {
+						const entities = this.layerToEntities(featureCollection);
+						return this.setEntities(entities);
+					}),
+					catchError((e) => {
+						this.store$.dispatch(new SetToastMessageAction({ toastText: `Failed to load layer${ (e && e.error) ? ' ,' + e.error : '' }` }));
+						return of(true);
+					})
 				);
 		}
-		return new Observable<boolean>(( observer ) => {
+		return new Observable<boolean>((observer) => {
 			this.clearEntities();
-			observer.next( true );
-		} );
+			observer.next(true);
+		});
 	}
 
-	isGeoJsonLayer( layer: ILayer ) {
+	isGeoJsonLayer(layer: ILayer) {
 		return layer.layerPluginType === layerPluginTypeEnum.geoJson;
 	}
 
-	layerToEntities( collection: FeatureCollection<any> ): IVisualizerEntity[] {
-		return collection.features.map( ( feature: Feature<any> ): IVisualizerEntity => ({
+	layerToEntities(collection: FeatureCollection<any>): IVisualizerEntity[] {
+		return collection.features.map((feature: Feature<any>): IVisualizerEntity => ({
 			id: feature.properties.id || UUID.UUID(),
 			featureJson: feature,
 			style: feature.properties.style
-		}) );
+		}));
 	}
 }

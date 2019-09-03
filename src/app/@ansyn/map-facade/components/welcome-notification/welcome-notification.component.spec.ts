@@ -20,7 +20,7 @@ describe('WelcomeNotificationComponent', () => {
 			declarations: [WelcomeNotificationComponent],
 			providers: [{
 				provide: mapFacadeConfig,
-				useValue: <any> { welcomeNotification: { headerText: 'hhh', mainText: 'mmm' } }
+				useValue: <any>{ welcomeNotification: { headerText: 'hhh', mainText: 'mmm' } }
 			}]
 		})
 			.compileComponents();

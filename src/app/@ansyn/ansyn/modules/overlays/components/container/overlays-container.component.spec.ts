@@ -67,7 +67,7 @@ describe('OverlayContainerComponent', () => {
 		storeFixture = createStore(OverlayReducer);
 		store = storeFixture.store;
 		getState = storeFixture.getState;
-		state = <State<any>> storeFixture.state; // (overlaysInitialState);
+		state = <State<any>>storeFixture.state; // (overlaysInitialState);
 		// state = overlaysInitialState;
 	}));
 
@@ -77,7 +77,7 @@ describe('OverlayContainerComponent', () => {
 		component = fixture.componentInstance;
 
 		it('should distinguish between changed data', () => {
-			const overlays = < IOverlay[] > [{
+			const overlays = <IOverlay[]>[{
 				id: '12',
 				name: 'tmp12',
 				photoTime: new Date(Date.now()).toISOString(),

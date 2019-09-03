@@ -1,7 +1,6 @@
-import { Component, ElementRef, forwardRef, HostBinding, Input, OnInit, Optional, ViewChild } from '@angular/core';
+import { Attribute, Component, ElementRef, forwardRef, HostBinding, Input, OnInit, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
-import { Attribute } from '@angular/core';
 
 @Component({
 	selector: 'ansyn-input',

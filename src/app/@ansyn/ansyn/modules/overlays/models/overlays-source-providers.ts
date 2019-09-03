@@ -1,6 +1,5 @@
-import { InjectionToken, FactoryProvider, Provider } from '@angular/core';
+import { FactoryProvider, Injectable, InjectionToken, Provider } from '@angular/core';
 import { BaseOverlaySourceProvider } from './base-overlay-source-provider.model';
-import { Injectable } from '@angular/core';
 
 export interface IOverlaySourceProviderConstructor {
 	new(...args): BaseOverlaySourceProvider;
@@ -30,7 +29,7 @@ export function BaseOverlaySourceProvidersFactory(mapSourceProviders): IMultiple
 		.reduce((a, overlaySourceProviders) => [...a, ...overlaySourceProviders], [])
 		.reduce((mapSourceProviders, overlaySourceProvider: BaseOverlaySourceProvider) => {
 			return { ...mapSourceProviders, [overlaySourceProvider.sourceType]: overlaySourceProvider };
-	}, {});
+		}, {});
 }
 
 export function OveralysSourceProvidersFactory(...providers) {

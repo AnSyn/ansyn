@@ -1,12 +1,12 @@
 import {
 	CacheService,
 	ImageryCommunicatorService,
-	ImageryMapSource, IMapSettings,
+	ImageryMapSource,
+	IMapSettings,
 	IMapSourceProvidersConfig,
 	MAP_SOURCE_PROVIDERS_CONFIG
 } from '@ansyn/imagery';
 import TileLayer from 'ol/layer/Tile';
-import { GML } from 'ol/format';
 import * as wellknown from 'wellknown';
 import * as turf from '@turf/turf';
 import * as proj from 'ol/proj';
@@ -16,7 +16,6 @@ import { Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectSentinelselectedLayers } from './reducers/sentinel.reducer';
 import { map, take } from 'rxjs/operators';
-import { ICaseMapState } from '@ansyn/ansyn';
 import { OpenLayersDisabledMap, OpenLayersMap, OpenLayersMapSourceProvider } from '@ansyn/ol';
 
 export const OpenLayerSentinelSourceProviderSourceType = 'SENTINEL';
@@ -70,14 +69,14 @@ export class OpenLayersSentinelSourceProvider extends OpenLayersMapSourceProvide
 	}
 
 	generateLayerId(metaData: IMapSettings) {
-		return `${super.generateLayerId(metaData)}/${this.layer}`;
+		return `${ super.generateLayerId(metaData) }/${ this.layer }`;
 	}
 
 	createDateString(date: Date): string {
 		const Y = date.getFullYear();
 		const m = date.getMonth() + 1;
 		const d = date.getDate();
-		const str = `${Y}-${m >= 10 ? m : `0${m}`}-${d >= 10 ? d : `0${d}`}`;
-		return `${str}`;
+		const str = `${ Y }-${ m >= 10 ? m : `0${ m }` }-${ d >= 10 ? d : `0${ d }` }`;
+		return `${ str }`;
 	}
 }

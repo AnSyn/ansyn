@@ -23,7 +23,7 @@ export class DownloadLayersComponent {
 		const annotationsLayer = cloneDeep(this.layer.data);
 		this.generateFeaturesIds(annotationsLayer);
 		const blob = new Blob([JSON.stringify(annotationsLayer)], { type: 'application/geo+json' });
-		saveAs(blob, `${this.layer.name}.geojson`);
+		saveAs(blob, `${ this.layer.name }.geojson`);
 		this.store.dispatch(new CloseLayersModal());
 	}
 
@@ -35,7 +35,7 @@ export class DownloadLayersComponent {
 			simplestyle: true,
 			name: 'label'
 		})], { type: 'application/vnd.google-earth.kml+xml' });
-		saveAs(blob, `${this.layer.name}.kml`);
+		saveAs(blob, `${ this.layer.name }.kml`);
 		this.store.dispatch(new CloseLayersModal());
 	}
 

@@ -6,6 +6,7 @@
 	display: flex;
 	align-items: center;
 }
+
 :host {
 	position: absolute;
 	z-index: @z-index-imagery-status;
@@ -14,11 +15,13 @@
 	line-height: 24px;
 	color: white;
 	justify-content: space-between;
+
 	&.with-background {
 		background: rgba(0, 0, 0, 0.6);
 		box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.5);
 		box-sizing: border-box;
 		padding: 7px 5px;
+
 		&.active {
 			background: rgba(0, 0, 0, 0.8);
 		}
@@ -33,14 +36,17 @@
 			color: white;
 			border: none;
 			outline: none;
+
 			i {
 				opacity: .6;
 			}
+
 			&:hover:not(:disabled) {
 				background: rgba(0, 0, 0, 0.5);
+
 				i {
-				opacity: 0.8;
-			}
+					opacity: 0.8;
+				}
 			}
 
 		}
@@ -62,6 +68,7 @@
 				display: flex;
 				align-items: center;
 				z-index: 1;
+
 				&:hover:not(:disabled) {
 					background: rgba(0, 0, 0, 0.5);
 				}
@@ -113,7 +120,7 @@
 		}
 	}
 
-	.notifications{
+	.notifications {
 		padding: 5px;
 		min-width: 33%;
 	}
@@ -122,14 +129,16 @@
 // Prevent collision of description and buttons in small resolution
 @media screen and (max-width: 1240px) {
 	:host {
-			justify-content: space-between;
-			.buttons {
-				position: initial;
-				left: initial;
-				top: initial;
-			}
-			.description {
-				padding-left: 0;
-			}
+		justify-content: space-between;
+
+		.buttons {
+			position: initial;
+			left: initial;
+			top: initial;
+		}
+
+		.description {
+			padding-left: 0;
+		}
 	}
 }

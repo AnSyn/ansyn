@@ -33,7 +33,7 @@ export class AuthService {
 	}
 
 	login(username: string, password: string, rememberMe: boolean): any {
-		const url = `${this.config.baseUrl}`;
+		const url = `${ this.config.baseUrl }`;
 		const body = JSON.stringify({ username, password });
 		const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 		const options = { headers };
@@ -44,7 +44,7 @@ export class AuthService {
 	}
 
 	loginAuth(authToken: string) {
-		const url = `${this.config.baseUrl}/authToken`;
+		const url = `${ this.config.baseUrl }/authToken`;
 		const body = JSON.stringify({ authToken });
 		const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 		const options = { headers };

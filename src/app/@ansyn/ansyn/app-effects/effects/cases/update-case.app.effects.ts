@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Effect } from '@ngrx/effects';
-import { Store, createFeatureSelector, createSelector } from '@ngrx/store';
-import { combineLatest, pipe, Observable } from 'rxjs';
-import {
-	selectActiveMapId, selectLayout, selectMapsList
-} from '@ansyn/map-facade';
-import { filter, tap, withLatestFrom, map } from 'rxjs/operators';
+import { createFeatureSelector, createSelector, Store } from '@ngrx/store';
+import { combineLatest, Observable, pipe } from 'rxjs';
+import { selectActiveMapId, selectLayout, selectMapsList } from '@ansyn/map-facade';
+import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	selectFavoriteOverlays,
 	selectPresetOverlays,

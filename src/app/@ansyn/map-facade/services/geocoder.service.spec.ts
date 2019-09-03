@@ -3,7 +3,7 @@ import { fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 import { GeocoderService } from './geocoder.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, defer } from 'rxjs';
+import { defer, Observable } from 'rxjs';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { IMapFacadeConfig } from '../models/map-config.model';
 import { SetToastMessageAction } from '../actions/map.actions';
@@ -21,7 +21,7 @@ describe('GeocoderService', () => {
 				GeocoderService,
 				{
 					provide: mapFacadeConfig,
-					useValue: <IMapFacadeConfig> {
+					useValue: <IMapFacadeConfig>{
 						mapSearch: {
 							url: 'find/$searchString/key/$apiKey',
 							apiKey: 'myKey',
@@ -94,7 +94,10 @@ describe('GeocoderService', () => {
 			});
 			tick();
 			expect(console.warn).toHaveBeenCalled();
-			expect(endResult).toEqual(new SetToastMessageAction({ toastText: 'Connection Problem', showWarningIcon: true }));
+			expect(endResult).toEqual(new SetToastMessageAction({
+				toastText: 'Connection Problem',
+				showWarningIcon: true
+			}));
 		}));
 	});
 });

@@ -1,10 +1,6 @@
 import { Component, ElementRef, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import {
-	CommunicatorEntity,
-	ImageryCommunicatorService,
-	IMapSettings
-} from '@ansyn/imagery';
+import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import { PointToRealNorthAction } from '../../actions/map.actions';
 
 export interface IsGeoRegisteredProperties {
@@ -59,7 +55,7 @@ export class ImageryRotationComponent {
 	}
 
 	get notGeoRegisteredNorthAngle() {
-		return ((this.communicator && this.communicator.getRotation()) || 0) ;
+		return ((this.communicator && this.communicator.getRotation()) || 0);
 	}
 
 	get rotationAngle() {

@@ -80,8 +80,10 @@
 	</div>
 
 	<div [class.invisible]="!algName">
-		<div>Note: this algorithm is only available for {{algName ? algorithms[algName].maxOverlays : '??'}} overlays.</div>
-		<div>Supported sensors: {{ algName && algorithms[algName].sensorNames?.length > 0 ? algorithms[algName].sensorNames.join(', ') : 'none' }}</div>
+		<div>Note: this algorithm is only available for {{algName ? algorithms[algName].maxOverlays : '??'}}overlays.
+		</div>
+		<div>Supported
+			sensors: {{ algName && algorithms[algName].sensorNames?.length > 0 ? algorithms[algName].sensorNames.join(', ') : 'none' }}</div>
 	</div>
 
 	<div class="big-font wide-underline margin"></div>
@@ -89,7 +91,9 @@
 	<div class="margin">The results will be available for download when the task is completed</div>
 
 	<div class="run-bar margin">
-		<button ansynButton [disabled]="f.invalid || hasError() || !(currentTaskRegion$ | async) || !(isNewTask$ | async)">Run Task</button>
+		<button ansynButton
+				[disabled]="f.invalid || hasError() || !(currentTaskRegion$ | async) || !(isNewTask$ | async)">Run Task
+		</button>
 		<div *ngIf="algName">Time Estimation: {{timeEstimation$ | async}}m</div>
 	</div>
 

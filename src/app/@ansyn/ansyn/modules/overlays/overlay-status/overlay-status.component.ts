@@ -1,19 +1,15 @@
 import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
-import {
-	IEntryComponent,
-	selectActiveMapId,
-	selectMapsTotal, selectOverlayFromMap,
-} from '@ansyn/map-facade';
+import { IEntryComponent, selectActiveMapId, selectMapsTotal, selectOverlayFromMap, } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { IOverlay } from '../models/overlay.model';
 import {
-	ToggleFavoriteAction,
-	TogglePresetOverlayAction,
 	SetRemovedOverlaysIdAction,
-	ToggleDraggedModeAction
+	ToggleDraggedModeAction,
+	ToggleFavoriteAction,
+	TogglePresetOverlayAction
 } from './actions/overlay-status.actions';
 import {
 	selectFavoriteOverlays,
@@ -96,7 +92,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	@AutoSubscription
 	overlay$ = () => this.store$.pipe(
 		select(selectOverlayFromMap(this.mapId)),
-		tap( overlay => this.overlay = overlay)
+		tap(overlay => this.overlay = overlay)
 	);
 
 	constructor(public store$: Store<any>) {

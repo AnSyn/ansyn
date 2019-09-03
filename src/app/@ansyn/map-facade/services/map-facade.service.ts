@@ -17,90 +17,90 @@ import { IMapState, selectLayout, selectMapsIds, selectMapsList } from '../reduc
 import { mapsToPng } from '../utils/exportMaps';
 
 // @dynamic
-@Injectable( {
+@Injectable({
 	providedIn: 'root'
-} )
+})
 export class MapFacadeService {
 	subscribers: { [key: string]: any[] } = {};
 
-	mapsList$ = this.store.select( selectMapsList );
+	mapsList$ = this.store.select(selectMapsList);
 	mapsList: IMapSettings[] = [];
 
 	layout: LayoutKey;
-	layout$ = this.store.select( selectLayout );
+	layout$ = this.store.select(selectLayout);
 
-	static isNotIntersect( extentPolygon, footprint, overlayCoverage ): boolean {
-		const intersection = getPolygonIntersectionRatioWithMultiPolygon( extentPolygon, footprint );
+	static isNotIntersect(extentPolygon, footprint, overlayCoverage): boolean {
+		const intersection = getPolygonIntersectionRatioWithMultiPolygon(extentPolygon, footprint);
 		return intersection < overlayCoverage;
 	}
 
 	// @todo IOveraly
-	static isOverlayGeoRegistered( overlay: any ): boolean {
+	static isOverlayGeoRegistered(overlay: any): boolean {
 		if (!overlay) {
 			return true;
 		}
 		return overlay.isGeoRegistered !== 'notGeoRegistered';
 	}
 
-	static activeMap( mapState: IMapState ): IMapSettings {
+	static activeMap(mapState: IMapState): IMapSettings {
 		return mapState.entities[mapState.activeMapId];
 	}
 
-	static mapById( mapsList: IMapSettings[], mapId: string ): IMapSettings {
-		return mapsList.find( ( {id}: IMapSettings ) => {
+	static mapById(mapsList: IMapSettings[], mapId: string): IMapSettings {
+		return mapsList.find(({ id }: IMapSettings) => {
 			return id === mapId;
-		} );
+		});
 	}
 
-	constructor( protected store: Store<IMapState>, protected imageryCommunicatorService: ImageryCommunicatorService ) {
-		(<Observable<any>>this.mapsList$).subscribe( ( mapsList ) => this.mapsList = mapsList );
-		(<Observable<any>>this.layout$).subscribe( ( layout ) => this.layout = layout );
+	constructor(protected store: Store<IMapState>, protected imageryCommunicatorService: ImageryCommunicatorService) {
+		(<Observable<any>>this.mapsList$).subscribe((mapsList) => this.mapsList = mapsList);
+		(<Observable<any>>this.layout$).subscribe((layout) => this.layout = layout);
 	}
 
-	initEmitters( id: string ) {
-		this.removeEmitters( id );
+	initEmitters(id: string) {
+		this.removeEmitters(id);
 
-		const communicator = this.imageryCommunicatorService.provide( id );
+		const communicator = this.imageryCommunicatorService.provide(id);
 		const communicatorSubscribers = [];
 		communicatorSubscribers.push(
-			communicator.positionChanged.subscribe( ( position ) => this.positionChanged( {
+			communicator.positionChanged.subscribe((position) => this.positionChanged({
 				id: communicator.id,
 				position
-			} ) ),
-			communicator.mapInstanceChanged.subscribe( this.mapInstanceChanged.bind( this ) )
+			})),
+			communicator.mapInstanceChanged.subscribe(this.mapInstanceChanged.bind(this))
 		);
 		this.subscribers[id] = communicatorSubscribers;
 	}
 
-	removeEmitters( id: string ) {
+	removeEmitters(id: string) {
 		if (this.subscribers[id]) {
-			this.subscribers[id].forEach( ( subscriber ) => subscriber.unsubscribe() );
+			this.subscribers[id].forEach((subscriber) => subscriber.unsubscribe());
 			delete this.subscribers[id];
 		}
 	}
 
-	mapInstanceChanged( $event: IMapInstanceChanged ) {
-		this.store.dispatch( new MapInstanceChangedAction( $event ) );
+	mapInstanceChanged($event: IMapInstanceChanged) {
+		this.store.dispatch(new MapInstanceChangedAction($event));
 	}
 
-	positionChanged( $event: { id: string, position: ImageryMapPosition } ) {
-		const mapInstance = <IMapSettings>MapFacadeService.mapById( this.mapsList, $event.id );
-		this.store.dispatch( new PositionChangedAction( {...$event, mapInstance} ) );
+	positionChanged($event: { id: string, position: ImageryMapPosition }) {
+		const mapInstance = <IMapSettings>MapFacadeService.mapById(this.mapsList, $event.id);
+		this.store.dispatch(new PositionChangedAction({ ...$event, mapInstance }));
 	}
 
 	exportMapsToPng() {
-		this.store.select( selectMapsIds ).pipe(
-			take( 1 ),
-			switchMap( ( mapsIds: string[] ) => {
+		this.store.select(selectMapsIds).pipe(
+			take(1),
+			switchMap((mapsIds: string[]) => {
 				const _maps = [];
-				mapsIds.forEach( ( mapId ) => {
-					const provider = this.imageryCommunicatorService.provide( mapId );
+				mapsIds.forEach((mapId) => {
+					const provider = this.imageryCommunicatorService.provide(mapId);
 					const exportData: ICanvasExportData = provider.ActiveMap.getExportData();
-					_maps.push( exportData );
-				} );
-				return mapsToPng( _maps, this.layout )
-			} ),
-			tap( blob => saveAs( blob, 'map.jpeg' ) )
+					_maps.push(exportData);
+				});
+				return mapsToPng(_maps, this.layout)
+			}),
+			tap(blob => saveAs(blob, 'map.jpeg'))
 		).subscribe();
 	}
 }

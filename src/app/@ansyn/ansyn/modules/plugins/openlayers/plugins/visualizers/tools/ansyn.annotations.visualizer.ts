@@ -136,7 +136,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	@AutoSubscription
 	currentOverlay$ = () => this.store$.pipe(
 		select(selectOverlayFromMap(this.mapId)),
-		tap( overlay => this.overlay = overlay)
+		tap(overlay => this.overlay = overlay)
 	);
 
 	@AutoSubscription

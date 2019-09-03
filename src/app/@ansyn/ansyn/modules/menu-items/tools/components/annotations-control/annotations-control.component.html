@@ -40,7 +40,8 @@
 
 		<button (click)="toggleSelection(SelectionBoxTypes.LineWidth)"
 				[class.expand]="selectedBox === SelectionBoxTypes.LineWidth">
-			<span class="icon-annotation-weight" [attr.tooltip-value]="'Width' | translate" tooltip-class="bottom"></span>
+			<span class="icon-annotation-weight" [attr.tooltip-value]="'Width' | translate"
+				  tooltip-class="bottom"></span>
 		</button>
 
 		<ansyn-annotations-weight
@@ -54,7 +55,8 @@
 
 		<button (click)="toggleSelection(SelectionBoxTypes.ColorPicker)"
 				[class.expand]="selectedBox === SelectionBoxTypes.ColorPicker">
-			<span class="icon-annotation-color" [attr.tooltip-value]="'Color' | translate" tooltip-class="bottom"></span>
+			<span class="icon-annotation-color" [attr.tooltip-value]="'Color' | translate"
+				  tooltip-class="bottom"></span>
 		</button>
 
 		<ansyn-annotations-color

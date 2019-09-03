@@ -36,7 +36,7 @@ export abstract class BaseMapSourceProvider<CONF = any> implements IImageryMapSo
 				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig<CONF>) {
 	}
 
-	generateLayerId<META extends IMapSettings>(metaData: META): string  {
+	generateLayerId<META extends IMapSettings>(metaData: META): string {
 		return new Date().toISOString()
 	};
 
@@ -68,7 +68,7 @@ export abstract class BaseMapSourceProvider<CONF = any> implements IImageryMapSo
 		return Boolean(cacheLayer);
 	}
 
-	generateExtraData<META extends IMapSettings>(metaData: META): any  {
+	generateExtraData<META extends IMapSettings>(metaData: META): any {
 		return {}
 	};
 

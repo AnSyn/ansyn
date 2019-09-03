@@ -14,43 +14,43 @@ import { OverlayDisplayMode } from '../../../../../menu-items/tools/overlays-dis
 export class BaseFootprintsVisualizer extends EntitiesVisualizer {
 
 	@AutoSubscription
-	drawOverlaysOnMap$: Observable<any> = combineLatest( this.store.select( selectOverlayFootprintMode ), this.store.select( selectDrops ) )
+	drawOverlaysOnMap$: Observable<any> = combineLatest(this.store.select(selectOverlayFootprintMode), this.store.select(selectDrops))
 		.pipe(
-			filter( ( [overlayDisplayMode, drops]: [OverlayDisplayMode, IOverlay[]] ) => Boolean( overlayDisplayMode ) ),
-			withLatestFrom( this.overlaysService.getAllOverlays$ ),
-			mergeMap( ( [[overlayDisplayMode, drops], overlays]: [[OverlayDisplayMode, IOverlay[]], Map<string, IOverlay>] ) => {
+			filter(([overlayDisplayMode, drops]: [OverlayDisplayMode, IOverlay[]]) => Boolean(overlayDisplayMode)),
+			withLatestFrom(this.overlaysService.getAllOverlays$),
+			mergeMap(([[overlayDisplayMode, drops], overlays]: [[OverlayDisplayMode, IOverlay[]], Map<string, IOverlay>]) => {
 				if (overlayDisplayMode === this.overlayDisplayMode) {
-					const pluckOverlays = <any[]>OverlaysService.pluck( overlays, drops.map( ( {id} ) => id ), ['id', 'footprint'] );
+					const pluckOverlays = <any[]>OverlaysService.pluck(overlays, drops.map(({ id }) => id), ['id', 'footprint']);
 					const entitiesToDraw = pluckOverlays
-						.filter( ( {id, footprint} ) => footprint.type === 'MultiPolygon' )
-						.map( ( {id, footprint} ) => this.geometryToEntity( id, footprint ) );
-					return this.setEntities( entitiesToDraw );
+						.filter(({ id, footprint }) => footprint.type === 'MultiPolygon')
+						.map(({ id, footprint }) => this.geometryToEntity(id, footprint));
+					return this.setEntities(entitiesToDraw);
 				} else if (this.getEntities().length > 0) {
 					this.clearEntities();
 				}
 				return EMPTY;
-			} )
+			})
 		);
 
-	constructor( public store: Store<any>,
-			public overlaysService: OverlaysService,
-			public overlayDisplayMode: string,
-			public fpConfig: Partial<IVisualizerStateStyle>,
-			...superArgs
+	constructor(public store: Store<any>,
+				public overlaysService: OverlaysService,
+				public overlayDisplayMode: string,
+				public fpConfig: Partial<IVisualizerStateStyle>,
+				...superArgs
 	) {
-		super( fpConfig, ...superArgs );
+		super(fpConfig, ...superArgs);
 	}
 
-	geometryToEntity( id, geometry ): IVisualizerEntity {
+	geometryToEntity(id, geometry): IVisualizerEntity {
 		const numOfPoints = geometry.coordinates[0][0].length;
 
 		if (this.fpConfig.minSimplifyVertexCountLimit < numOfPoints) {
-			geometry = turf.simplify( turf.multiPolygon( geometry.coordinates ), {
+			geometry = turf.simplify(turf.multiPolygon(geometry.coordinates), {
 				tolerance: 0.01,
 				highQuality: true
-			} ).geometry;
+			}).geometry;
 		}
-		return super.geometryToEntity( id, geometry );
+		return super.geometryToEntity(id, geometry);
 	}
 
 }

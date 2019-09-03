@@ -32,7 +32,7 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	};
 
 	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
-		return of(<any> {});
+		return of(<any>{});
 	};
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {

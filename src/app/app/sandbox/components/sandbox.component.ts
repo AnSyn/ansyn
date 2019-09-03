@@ -12,7 +12,8 @@ import {
 } from '@ansyn/ansyn';
 import { FeatureCollection, Point, Polygon } from 'geojson';
 import {
-	AnnotationMode, AnnotationsVisualizer,
+	AnnotationMode,
+	AnnotationsVisualizer,
 	OpenLayerMarcoSourceProviderSourceType,
 	OpenLayersStaticImageSourceProviderSourceType
 } from '@ansyn/ol';

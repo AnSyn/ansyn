@@ -1,7 +1,7 @@
 <div class="overlay-overview" (dblclick)="onDblClick()">
 	<main>
 		<img
-			#img
+            #img
 			(error)="img.src = errorSrc"
 			(load)="finishedLoadingImage()"
 			[class.loading]="loadingImage"

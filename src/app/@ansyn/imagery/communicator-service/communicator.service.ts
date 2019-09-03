@@ -26,7 +26,7 @@ export class ImageryCommunicatorService {
 
 	public createCommunicator(communicatorEntity: CommunicatorEntity): void {
 		if (this.communicators[communicatorEntity.id]) {
-			throw new Error(`'Can't create communicator ${communicatorEntity.id}, already exists!'`);
+			throw new Error(`'Can't create communicator ${ communicatorEntity.id }, already exists!'`);
 		}
 
 		this.communicators[communicatorEntity.id] = communicatorEntity;

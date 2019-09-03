@@ -59,7 +59,7 @@ describe('NavigationBarComponent', () => {
 		n: 'goPrevActive',
 		f: 'clickGoAdjacent'
 	}].forEach(key => {
-		it(`onkeyup should call ${key.n} when keycode = "${key.k}"`, () => {
+		it(`onkeyup should call ${ key.n } when keycode = "${ key.k }"`, () => {
 			spyOn(component, <'clickGoAdjacent'>key.f);
 			expect(component[key.n]).toEqual(false);
 			const $event = {

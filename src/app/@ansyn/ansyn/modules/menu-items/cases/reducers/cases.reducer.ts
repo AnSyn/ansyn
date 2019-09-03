@@ -47,7 +47,10 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 		case CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS: {
 			const lastModified = new Date();
 			const selectedCase = { ...state.selectedCase, lastModified };
-			return casesAdapter.updateOne({ id: action.payload._id, changes: { lastModified } }, { ...state, selectedCase });
+			return casesAdapter.updateOne({ id: action.payload._id, changes: { lastModified } }, {
+				...state,
+				selectedCase
+			});
 		}
 
 		case CasesActionTypes.DELETE_CASE:

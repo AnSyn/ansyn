@@ -1,13 +1,7 @@
-import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { OverlayStatusComponent } from './overlay-status.component';
-import { StoreModule, Store } from '@ngrx/store';
-import {
-	imageryStatusFeatureKey,
-	ImageryStatusReducer,
-	mapFeatureKey,
-	MapReducer,
-	selectMaps, selectMapStateById, selectOverlayFromMap
-} from '@ansyn/map-facade';
+import { Store, StoreModule } from '@ngrx/store';
+import { imageryStatusFeatureKey, ImageryStatusReducer, mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { overlayStatusFeatureKey, OverlayStatusReducer } from './reducers/overlay-status.reducer';
 import { TranslateModule } from '@ngx-translate/core';
 

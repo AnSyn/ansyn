@@ -54,7 +54,7 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		select(selectActiveAnnotationLayer),
 		withLatestFrom(this.annotationLayer$),
 		filter(([layer, allLayers]) => Boolean(layer) && Boolean(allLayers)),
-		tap( ([layer, allLayers]) => {
+		tap(([layer, allLayers]) => {
 			this.activeAnnotationId = layer;
 		})
 	);
@@ -80,12 +80,12 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	clickOutsideColorOrWeight = () => fromEvent(this.document, 'click')
 		.pipe(
 			filter((event: any) => this.selectedBox !== SelectionBoxTypes.None),
-			filter( ({ path }) => !path.some( comp =>
+			filter(({ path }) => !path.some(comp =>
 				['ansyn-annotations-color', 'ansyn-annotations-weight'].includes(comp.localName) ||
 				['icon-annotation-weight', 'icon-annotation-color'].includes(comp.className)
 				)
 			),
-			tap( _ => this.toggleSelection())
+			tap(_ => this.toggleSelection())
 		);
 
 	@HostBinding('class.expand')

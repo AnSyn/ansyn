@@ -24,7 +24,7 @@ describe('LayersReducer', () => {
 		const layersState: ILayerState = {
 			...initialLayersState,
 			selectedLayersIds: ['staticLayerId2'],
-			entities: <any> {
+			entities: <any>{
 				'annotations': {
 					id: 'annotations',
 					type: LayerType.annotation

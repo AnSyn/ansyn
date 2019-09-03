@@ -11,14 +11,15 @@ import VectorLayer from 'ol/layer/Vector';
 import ol_Layer from 'ol/layer/Layer';
 
 import {
+	BaseImageryVisualizer,
 	IVisualizerEntity,
 	IVisualizerStateStyle,
 	IVisualizerStyle,
 	MarkerSizeDic,
+	VisualizerInteractionTypes,
 	VisualizerStates
 } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
-import { BaseImageryVisualizer, VisualizerInteractionTypes } from '@ansyn/imagery';
 import * as ol_color from 'ol/color';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { map } from 'rxjs/operators';
@@ -184,7 +185,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		}
 
 
-		return [firstStyle, textStyle, secondaryStyle].map( style => isStyle ? new Style(style) : style);
+		return [firstStyle, textStyle, secondaryStyle].map(style => isStyle ? new Style(style) : style);
 	}
 
 	colorWithAlpha(color, alpha = 1) {

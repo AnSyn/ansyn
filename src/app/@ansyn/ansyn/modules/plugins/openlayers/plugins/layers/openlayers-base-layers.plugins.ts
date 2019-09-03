@@ -12,48 +12,48 @@ import { selectLayers, selectSelectedLayersIds } from '../../../../menu-items/la
 export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 
 	@AutoSubscription
-	osmLayersChanges$: Observable<any[]> = combineLatest( this.store$.select( selectLayers ), this.store$.select( selectSelectedLayersIds ) )
+	osmLayersChanges$: Observable<any[]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
 		.pipe(
-			tap( ( [result, selectedLayerId]: [ILayer[], string[]] ) => {
-				result.filter( this.checkLayer )
-					.forEach( ( layer: ILayer ) => {
-						if (selectedLayerId.includes( layer.id )) {
-							this.addGroupLayer( layer );
+			tap(([result, selectedLayerId]: [ILayer[], string[]]) => {
+				result.filter(this.checkLayer)
+					.forEach((layer: ILayer) => {
+						if (selectedLayerId.includes(layer.id)) {
+							this.addGroupLayer(layer);
 						} else {
-							this.removeGroupLayer( layer.id );
+							this.removeGroupLayer(layer.id);
 						}
-					} );
-			} )
+					});
+			})
 		);
 
-	protected constructor( protected store$: Store<any> ) {
+	protected constructor(protected store$: Store<any>) {
 		super();
 	}
 
 	@AutoSubscription
-	toggleGroup$ = () => this.store$.select( selectDisplayLayersOnMap( this.mapId ) ).pipe(
-		tap( ( newState: boolean ) => this.iMap.toggleGroup( 'layers', newState ) )
+	toggleGroup$ = () => this.store$.select(selectDisplayLayersOnMap(this.mapId)).pipe(
+		tap((newState: boolean) => this.iMap.toggleGroup('layers', newState))
 	);
 
-	abstract checkLayer( layer: ILayer );
+	abstract checkLayer(layer: ILayer);
 
-	abstract createLayer( layer: ILayer ): TileLayer;
+	abstract createLayer(layer: ILayer): TileLayer;
 
-	addGroupLayer( layer: ILayer ) {
-		const group = OpenLayersMap.groupLayers.get( OpenLayersMap.groupsKeys.layers );
+	addGroupLayer(layer: ILayer) {
+		const group = OpenLayersMap.groupLayers.get(OpenLayersMap.groupsKeys.layers);
 		const layersArray = group.getLayers().getArray();
-		if (!layersArray.some( ( shownLayer ) => shownLayer.get( 'id' ) === layer.id )) {
-			const _layer = this.createLayer( layer );
-			group.getLayers().push( _layer );
+		if (!layersArray.some((shownLayer) => shownLayer.get('id') === layer.id)) {
+			const _layer = this.createLayer(layer);
+			group.getLayers().push(_layer);
 		}
 	}
 
-	removeGroupLayer( id: string ): void {
-		const group = OpenLayersMap.groupLayers.get( OpenLayersMap.groupsKeys.layers );
+	removeGroupLayer(id: string): void {
+		const group = OpenLayersMap.groupLayers.get(OpenLayersMap.groupsKeys.layers);
 		const layersArray: any[] = group.getLayers().getArray();
-		let removeIdx = layersArray.indexOf( layersArray.find( l => l.get( 'id' ) === id ) );
+		let removeIdx = layersArray.indexOf(layersArray.find(l => l.get('id') === id));
 		if (removeIdx >= 0) {
-			group.getLayers().removeAt( removeIdx );
+			group.getLayers().removeAt(removeIdx);
 		}
 	}
 

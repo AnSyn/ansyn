@@ -19,7 +19,12 @@ export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId,
 		} else {
 			const mapStateCopy: IMapSettings = {
 				id: UUID.UUID(),
-				data: { position: { extentPolygon: activeMap.data.position.extentPolygon, projectedState: activeMap.data.position.projectedState } },
+				data: {
+					position: {
+						extentPolygon: activeMap.data.position.extentPolygon,
+						projectedState: activeMap.data.position.projectedState
+					}
+				},
 				worldView: { ...activeMap.worldView },
 				flags: {}
 			};
@@ -180,7 +185,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return { ...state, wasWelcomeNotificationShown: action.payload };
 
 		case MapActionTypes.FOOTER_COLLAPSE:
-			return { ...state, footerCollapse: action.payload};
+			return { ...state, footerCollapse: action.payload };
 
 		default:
 			return state;
@@ -197,6 +202,6 @@ export const selectLayout: MemoizedSelector<any, LayoutKey> = createSelector(map
 export const selectWasWelcomeNotificationShown = createSelector(mapStateSelector, (state) => state.wasWelcomeNotificationShown);
 export const selectToastMessage = createSelector(mapStateSelector, (state) => state.toastMessage);
 export const selectFooterCollapse = createSelector(mapStateSelector, (state) => state.footerCollapse);
-export const selectMapStateById = (id: string) => createSelector(selectMaps, (maps) =>   maps[id] );
+export const selectMapStateById = (id: string) => createSelector(selectMaps, (maps) => maps[id]);
 export const selectOverlayFromMap = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.overlay);
 export const selectDisplayLayersOnMap = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.flags.displayLayers);

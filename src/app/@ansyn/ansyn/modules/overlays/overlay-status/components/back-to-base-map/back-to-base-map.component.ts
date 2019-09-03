@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { IEntryComponent, selectMapsTotal, selectOverlayFromMap } from "@ansyn/map-facade";
+import { IEntryComponent, selectMapsTotal, selectOverlayFromMap } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -52,6 +52,6 @@ export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	backToWorldView() {
-		this.store$.dispatch(new BackToWorldView({mapId: this.mapId}));
+		this.store$.dispatch(new BackToWorldView({ mapId: this.mapId }));
 	}
 }

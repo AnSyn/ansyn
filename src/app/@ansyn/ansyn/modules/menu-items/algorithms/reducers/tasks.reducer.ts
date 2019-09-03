@@ -86,7 +86,8 @@ export function TasksReducer(state: ITasksState = initialTasksState, action: Tas
 		case TasksActionTypes.SET_CURRENT_TASK_MASTER_OVERLAY: {
 			return {
 				...state,
-				currentTask: { ...state.currentTask, state: { ...state.currentTask.state, masterOverlay: action.payload }
+				currentTask: {
+					...state.currentTask, state: { ...state.currentTask.state, masterOverlay: action.payload }
 				}
 			};
 		}

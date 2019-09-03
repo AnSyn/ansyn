@@ -60,7 +60,7 @@ export class GeoComponent implements ControlValueAccessor, Validator {
 	}
 
 	copyToClipBoard() {
-		this.copyToClipBoardHandler.emit(`${this.coordinates[1]} ${this.coordinates[0]}`);
+		this.copyToClipBoardHandler.emit(`${ this.coordinates[1] } ${ this.coordinates[0] }`);
 	}
 
 	validate(c: AbstractControl): ValidationErrors {

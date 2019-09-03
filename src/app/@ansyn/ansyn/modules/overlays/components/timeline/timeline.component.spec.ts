@@ -121,7 +121,10 @@ describe('TimelineComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			providers: [OverlaysService, OverlaysEffects, Actions, { provide: MultipleOverlaysSourceProvider, useValue: {} }, {
+			providers: [OverlaysService, OverlaysEffects, Actions, {
+				provide: MultipleOverlaysSourceProvider,
+				useValue: {}
+			}, {
 				provide: OverlaysConfig,
 				useValue: {}
 			},
@@ -140,7 +143,7 @@ describe('TimelineComponent', () => {
 		storeFixture = createStore(OverlayReducer);
 		store = storeFixture.store;
 		getState = storeFixture.getState;
-		state = <State<any>> storeFixture.state; // (overlaysInitialState);
+		state = <State<any>>storeFixture.state; // (overlaysInitialState);
 	}));
 
 

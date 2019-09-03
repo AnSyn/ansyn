@@ -1,24 +1,11 @@
 import { Observable, of } from 'rxjs';
 import { Actions, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
-import {
-	BaseImageryPlugin,
-	CommunicatorEntity,
-	ImageryPlugin
-} from '@ansyn/imagery';
+import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
 import { IStatusBarState, statusBarStateSelector } from '../../../../status-bar/reducers/status-bar.reducer';
-import {
-	MapActionTypes,
-	PointToRealNorthAction,
-	selectActiveMapId
-} from '@ansyn/map-facade';
+import { MapActionTypes, PointToRealNorthAction, selectActiveMapId } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
-import {
-	filter,
-	map,
-	tap,
-	withLatestFrom
-} from 'rxjs/operators';
+import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { comboBoxesOptions } from '../../../../status-bar/models/combo-boxes.model';
 import { LoggerService } from '../../../../core/services/logger.service';
 import {

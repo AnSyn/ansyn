@@ -12,25 +12,25 @@ import { selectContextEntities } from '../reducers/context.reducer';
 import { IContextEntity, IOverlay, } from '@ansyn/ansyn';
 import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
 
-@ImageryVisualizer( {
+@ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Actions, Store, ImageryCommunicatorService]
-} )
+})
 export class ContextEntityVisualizer extends EntitiesVisualizer {
 	referenceDate: Date;
 	idToCachedCenter: Map<string, olPolygon | olPoint> = new Map<string, olPolygon | olPoint>();
 	geoJsonFormat: GeoJSON;
 
 	@AutoSubscription
-	contextEntites$ = this.store$.select( selectContextEntities ).pipe(
-		filter( Boolean ),
-		mergeMap( this.setEntities.bind( this ) )
+	contextEntites$ = this.store$.select(selectContextEntities).pipe(
+		filter(Boolean),
+		mergeMap(this.setEntities.bind(this))
 	);
 
-	constructor( protected actions$: Actions, protected store$: Store<any> ) {
+	constructor(protected actions$: Actions, protected store$: Store<any>) {
 		super();
 
-		this.updateStyle( {
+		this.updateStyle({
 			initial: {
 				stroke: '#3DCC33',
 				fill: '#3DCC33',
@@ -40,17 +40,17 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 					src: 'assets/icons/map/entity-marker.svg',
 					anchor: [0.5, 1]
 				},
-				geometry: this.getGeometry.bind( this ),
+				geometry: this.getGeometry.bind(this),
 				label: {
 					font: '12px Calibri,sans-serif',
 					fill: '#fff',
 					stroke: '#000',
 					'stroke-width': 3,
 					offsetY: 30,
-					text: this.getText.bind( this )
+					text: this.getText.bind(this)
 				}
 			}
-		} );
+		});
 
 		this.geoJsonFormat = new GeoJSON();
 	}
@@ -58,56 +58,56 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 	@AutoSubscription
 	referenceDate$ = () => this.store$
 		.pipe(
-			select( selectOverlayFromMap( this.mapId ) ),
-			filter( Boolean ),
-			map( ( overlay: IOverlay ) => overlay.date ),
+			select(selectOverlayFromMap(this.mapId)),
+			filter(Boolean),
+			map((overlay: IOverlay) => overlay.date),
 			distinctUntilChanged(),
-			tap( ( referenceDate ) => {
+			tap((referenceDate) => {
 				this.referenceDate = referenceDate;
 				this.purgeCache();
 				this.source.refresh();
-			} )
+			})
 		);
 
-	addOrUpdateEntities( logicalEntities: IVisualizerEntity[] ): Observable<boolean> {
-		logicalEntities.forEach( ( entity ) => {
-			if (this.idToCachedCenter.has( entity.id )) {
-				this.idToCachedCenter.delete( entity.id );
+	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]): Observable<boolean> {
+		logicalEntities.forEach((entity) => {
+			if (this.idToCachedCenter.has(entity.id)) {
+				this.idToCachedCenter.delete(entity.id);
 			}
-		} );
-		return super.addOrUpdateEntities( logicalEntities );
+		});
+		return super.addOrUpdateEntities(logicalEntities);
 	}
 
-	private getText( feature ) {
-		if (!this.referenceDate || !(this.getGeometry( feature ) instanceof olPoint)) {
+	private getText(feature) {
+		if (!this.referenceDate || !(this.getGeometry(feature) instanceof olPoint)) {
 			return '';
 		}
-		const originalEntity = this.idToEntity.get( feature.getId() ).originalEntity;
+		const originalEntity = this.idToEntity.get(feature.getId()).originalEntity;
 		const entityDate = (<IContextEntity>originalEntity).date;
-		const timeDiff = getTimeDiff( this.referenceDate, entityDate );
+		const timeDiff = getTimeDiff(this.referenceDate, entityDate);
 
-		return getTimeDiffFormat( timeDiff );
+		return getTimeDiffFormat(timeDiff);
 	}
 
-	private getGeometry( originalFeature ) {
+	private getGeometry(originalFeature) {
 		const featureId = originalFeature.getId();
-		if (this.idToCachedCenter.has( featureId )) {
-			return this.idToCachedCenter.get( featureId );
+		if (this.idToCachedCenter.has(featureId)) {
+			return this.idToCachedCenter.get(featureId);
 		}
 
-		const entityMap = this.idToEntity.get( featureId );
+		const entityMap = this.idToEntity.get(featureId);
 
 		if (<any>entityMap.originalEntity.featureJson.geometry.type === 'Point') {
-			const featureGeoJson = <any>this.geoJsonFormat.writeFeatureObject( entityMap.feature );
-			const centroid = getPointByGeometry( featureGeoJson.geometry );
-			const point = new olPoint( <[number, number]>centroid.coordinates );
+			const featureGeoJson = <any>this.geoJsonFormat.writeFeatureObject(entityMap.feature);
+			const centroid = getPointByGeometry(featureGeoJson.geometry);
+			const point = new olPoint(<[number, number]>centroid.coordinates);
 
-			this.idToCachedCenter.set( featureId, point );
+			this.idToCachedCenter.set(featureId, point);
 			return point;
 		} else if (<any>entityMap.originalEntity.featureJson.geometry.type === 'Polygon') {
 			const projectedPolygon = entityMap.feature.getGeometry() as olPolygon;
 
-			this.idToCachedCenter.set( featureId, projectedPolygon );
+			this.idToCachedCenter.set(featureId, projectedPolygon);
 			return projectedPolygon;
 		}
 	}

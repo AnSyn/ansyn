@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { filter, take, tap, map } from 'rxjs/operators';
+import { filter, take, tap } from 'rxjs/operators';
 import { CommunicatorEntity, ImageryCommunicatorService, IMapInstanceChanged, IMousePointerMove } from '@ansyn/imagery';
 import { mapFacadeConfig } from '../../models/map-facade.config';
 import { IMapFacadeConfig } from '../../models/map-config.model';
@@ -48,12 +48,11 @@ export class ImageryMouseCoordinatesComponent implements OnInit, OnDestroy {
 			const height = !isNaN(args.height) ? args.height.toFixed(2) : null;
 			if (this.floationgSystem === 'UTM') {
 				const toUTM = this.projectionConverterService.convertByProjectionDatum([+long, +lat], wgs84, utm);
-				this.long = `${Math.floor(toUTM[0])}`;
-				this.lat = `${Math.floor(toUTM[1])}`;
+				this.long = `${ Math.floor(toUTM[0]) }`;
+				this.lat = `${ Math.floor(toUTM[1]) }`;
 				this.zone = toUTM[2];
 				this.height = height;
-			}
-			else {
+			} else {
 				this.lat = lat;
 				this.long = long;
 				this.height = height;

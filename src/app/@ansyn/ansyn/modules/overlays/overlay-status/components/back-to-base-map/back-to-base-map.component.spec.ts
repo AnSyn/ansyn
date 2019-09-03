@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { BackToWorldView } from '../../actions/overlay-status.actions';
 
@@ -40,6 +40,6 @@ describe('BackToBaseMapComponent', () => {
 	it('check click on backToWorldView', () => {
 		spyOn(store, 'dispatch');
 		component.backToWorldView();
-		expect(store.dispatch).toHaveBeenCalledWith(new BackToWorldView({mapId: 'mapId'}));
+		expect(store.dispatch).toHaveBeenCalledWith(new BackToWorldView({ mapId: 'mapId' }));
 	});
 });

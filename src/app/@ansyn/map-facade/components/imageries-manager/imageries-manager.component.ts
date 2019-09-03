@@ -1,10 +1,11 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild, AfterContentChecked } from '@angular/core';
+import { AfterContentChecked, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MapEffects } from '../../effects/map.effects';
 import { fromEvent, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import {
 	IMapState,
-	selectActiveMapId, selectFooterCollapse,
+	selectActiveMapId,
+	selectFooterCollapse,
 	selectLayout,
 	selectMaps,
 	selectMapsIds,
@@ -34,7 +35,7 @@ import { IMapSettings } from '@ansyn/imagery';
 export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 	public selectedLayout$: Observable<IMapsLayout> = this.store.pipe(
 		select(selectLayout),
-		map((layout: LayoutKey) => <IMapsLayout> layoutOptions.get(layout))
+		map((layout: LayoutKey) => <IMapsLayout>layoutOptions.get(layout))
 	);
 	public activeMapId$: Observable<string> = this.store.select(selectActiveMapId);
 	public mapsEntities$: Observable<Dictionary<IMapSettings>> = this.store.select(selectMaps);
@@ -91,8 +92,8 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 		this.selectedLayout$.subscribe(this.setSelectedLayout.bind(this));
 		this.activeMapId$.subscribe(_activeMapId => this.activeMapId = _activeMapId);
 		this.mapsEntities$.subscribe((mapsEntities) => this.mapsEntities = mapsEntities);
-		this.ids$.subscribe((ids: string[]) => this.ids = ids );
-		this.footerCollapse$.subscribe( collapse => this.footerCollapse = collapse);
+		this.ids$.subscribe((ids: string[]) => this.ids = ids);
+		this.footerCollapse$.subscribe(collapse => this.footerCollapse = collapse);
 	}
 
 

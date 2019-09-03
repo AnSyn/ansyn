@@ -6,6 +6,7 @@ export enum LayerType {
 	dynamic = 'Dynamic',
 	complex = 'Complex'
 }
+
 export type layerPluginType = string | layerPluginTypeEnum;
 
 export enum layerPluginTypeEnum {

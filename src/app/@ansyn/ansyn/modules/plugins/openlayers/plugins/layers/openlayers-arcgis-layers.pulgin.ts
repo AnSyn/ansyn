@@ -4,7 +4,7 @@ import TileLayer from 'ol/layer/Tile';
 import { ImageryPlugin } from '@ansyn/imagery';
 import { OpenLayersMap } from '@ansyn/ol';
 import * as proj from 'ol/proj';
-import { OpenlayersBaseLayersPlugins } from "./openlayers-base-layers.plugins";
+import { OpenlayersBaseLayersPlugins } from './openlayers-base-layers.plugins';
 import { ILayer, layerPluginTypeEnum } from '../../../../menu-items/layers-manager/models/layers.model';
 
 @ImageryPlugin({

@@ -1,16 +1,13 @@
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { IMapSettings } from '@ansyn/imagery';
-import { selectFooterCollapse, selectMaps, selectOverlayFromMap } from '@ansyn/map-facade';
+import { selectFooterCollapse, selectOverlayFromMap } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { filter, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { CoreConfig } from '../../../core/models/core.config';
 import { ICoreConfig } from '../../../core/models/core.config.model';
 import { IOverlay } from '../../models/overlay.model';
 import { IOverlaysConfig } from '../../models/overlays.config';
 import { OverlaysConfig } from '../../services/overlays.service';
-import { Observable } from 'rxjs';
-import { Dictionary } from '@ngrx/entity';
 
 @Component({
 	selector: 'ansyn-overlay-source-type-notice',
@@ -24,7 +21,7 @@ export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 	private _title: string = null;
 	@AutoSubscription
 	footerCollapse$ = this.store$.select(selectFooterCollapse).pipe(
-		tap( (collapse) => this.footerCollapse = collapse)
+		tap((collapse) => this.footerCollapse = collapse)
 	);
 
 	@AutoSubscription

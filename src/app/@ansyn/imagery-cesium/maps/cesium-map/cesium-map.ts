@@ -1,6 +1,7 @@
 import {
 	BaseImageryMap,
-	ExtentCalculator, ICanvasExportData,
+	ExtentCalculator,
+	ICanvasExportData,
 	ImageryMap,
 	ImageryMapExtent,
 	ImageryMapPosition,
@@ -16,7 +17,7 @@ import { fromPromise } from 'rxjs/internal-compatibility';
 import { map, mergeMap, take } from 'rxjs/operators';
 import { CesiumLayer, ISceneMode } from '../../models/cesium-layer';
 import { CesiumProjectionService } from '../../projection/cesium-projection.service';
-import { Cartesian2, Cartesian3, ScreenSpaceEventMap, Viewer } from 'cesium';
+import { Cartesian2, Cartesian3, Viewer } from 'cesium';
 
 declare const Cesium: any;
 

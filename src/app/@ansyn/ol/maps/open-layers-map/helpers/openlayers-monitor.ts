@@ -1,5 +1,5 @@
 import TileSource from 'ol/source/Tile';
-import { IMAGERY_MAIN_LAYER_NAME, ImageryLayerProperties, IMapErrorMessage, IMapProgress  } from '@ansyn/imagery';
+import { IMAGERY_MAIN_LAYER_NAME, ImageryLayerProperties, IMapErrorMessage, IMapProgress } from '@ansyn/imagery';
 import Static from 'ol/source/ImageStatic';
 import { HttpClient, HttpEventType, HttpRequest } from '@angular/common/http';
 import OLMap from 'ol/Map';
@@ -121,7 +121,7 @@ export class OpenLayersMonitor {
 				const src = this.source.image_.src_;
 				this.staticImageLoad(image, src);
 			} else {
-				console.warn(`'${this.source} is not supported by monitor plugin'`);
+				console.warn(`'${ this.source } is not supported by monitor plugin'`);
 			}
 		}
 	}

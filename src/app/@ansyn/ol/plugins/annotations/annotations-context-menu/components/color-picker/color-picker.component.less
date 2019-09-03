@@ -30,14 +30,17 @@ i {
 		box-sizing: border-box;
 		cursor: pointer;
 		font-size: 14px;
+
 		*:not(:last-child) {
 			margin-right: 10px;
 		}
+
 		div.text {
 			flex: 1;
 			font-size: 14px;
 			text-align: left;
 		}
+
 		div.color {
 			width: 10px;
 			height: 10px;
@@ -54,9 +57,11 @@ i {
 		box-sizing: border-box;
 		opacity: .9;
 		outline: none;
+
 		&:disabled {
 			opacity: .5;
 		}
+
 		&:hover:not(.active):not(:disabled) {
 			opacity: 1;
 		}

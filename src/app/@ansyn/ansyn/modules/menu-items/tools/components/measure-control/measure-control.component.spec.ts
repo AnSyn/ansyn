@@ -1,9 +1,9 @@
-import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { mapFeatureKey, MapReducer, selectActiveMapId } from '@ansyn/map-facade';
 import { selectIsMeasureToolActive, toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
 
 import { MeasureControlComponent } from './measure-control.component';
-import { StoreModule, Store } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 
 const mockStore = new Map<any, any>([
@@ -17,8 +17,10 @@ describe('MeasureControlComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [MeasureControlComponent],
 			imports: [
-				StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer,
-				[mapFeatureKey]: MapReducer}),
+				StoreModule.forRoot({
+					[toolsFeatureKey]: ToolsReducer,
+					[mapFeatureKey]: MapReducer
+				}),
 				TranslateModule.forRoot()
 			]
 		})

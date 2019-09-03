@@ -19,19 +19,21 @@ import { MouseShadowVisualizer } from './plugins/visualizers/tools/mouse-shadow.
 import { PolygonSearchVisualizer } from './plugins/visualizers/region/polygon-search.visualizer';
 import { OpenlayersGeoJsonLayersVisualizer } from './plugins/layers/openlayers-geoJson-layers.visualizer';
 import { TaskRegionVisualizer } from './plugins/visualizers/algorithms/task-region.visualizer';
-import { OpenlayersArcgisLayersPulgin } from "./plugins/layers/openlayers-arcgis-layers.pulgin";
+import { OpenlayersArcgisLayersPulgin } from './plugins/layers/openlayers-arcgis-layers.pulgin';
 import {
 	AnnotationsContextMenuModule,
 	AnnotationsVisualizer,
 	OpenLayerBingSourceProvider,
 	OpenLayerESRI4326SourceProvider,
 	OpenLayerIDAHOSourceProvider,
-	OpenLayerMapBoxSourceProvider, OpenLayerMarcoSourceProvider,
+	OpenLayerMapBoxSourceProvider,
+	OpenLayerMarcoSourceProvider,
 	OpenLayerOpenAerialSourceProvider,
 	OpenLayerOSMSourceProvider,
 	OpenLayerPlanetSourceProvider,
 	OpenLayersDisabledMap,
-	OpenLayersMap, OpenLayersStaticImageSourceProvider,
+	OpenLayersMap,
+	OpenLayersStaticImageSourceProvider,
 	OpenLayerTileWMSSourceProvider
 } from '@ansyn/ol';
 

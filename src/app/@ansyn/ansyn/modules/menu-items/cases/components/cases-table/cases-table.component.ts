@@ -83,7 +83,7 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 	onMouseEnterCaseRow(caseMenu: HTMLDivElement, caseRow: HTMLDivElement, tbodyElement: HTMLDivElement) {
 		let offsetTop = caseRow.offsetTop;
 		let scrollTop = tbodyElement.scrollTop;
-		caseMenu.style.top = `${offsetTop - scrollTop + 1}px`;
+		caseMenu.style.top = `${ offsetTop - scrollTop + 1 }px`;
 		caseRow.classList.add('mouse-enter');
 	}
 

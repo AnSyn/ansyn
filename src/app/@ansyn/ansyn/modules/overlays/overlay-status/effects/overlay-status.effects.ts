@@ -77,8 +77,8 @@ export class OverlayStatusEffects {
 		mergeMap(([action, overlaysTranslationData]: [BackToWorldSuccess | DisplayOverlaySuccessAction, IOverlaysTranslationData]) => {
 			const overlay = (<any>action.payload).overlay;
 			const actions = [];
-			Object.keys(overlaysTranslationData).forEach( overlayId => {
-				actions.push(new ToggleDraggedModeAction({overlayId: overlayId, dragged: false}));
+			Object.keys(overlaysTranslationData).forEach(overlayId => {
+				actions.push(new ToggleDraggedModeAction({ overlayId: overlayId, dragged: false }));
 			});
 			actions.push(new SetAnnotationMode(null));
 			return actions;

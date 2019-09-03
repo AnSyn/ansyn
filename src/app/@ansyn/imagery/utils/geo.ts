@@ -14,7 +14,9 @@ import {
 	circle,
 	feature,
 	geometry,
+	lineString,
 	point,
+	union,
 	AllGeoJSON,
 	unkinkPolygon, area, intersect, polygon, booleanContains
 } from '@turf/turf';
@@ -110,4 +112,8 @@ export function isPointContainedInMultiPolygon(point: Point, footprint: MultiPol
 		console.warn('isPointContainedInMultiPolygon: turf exception ', e);
 	}
 	return false;
+}
+
+export function unifyPolygons(features: Feature<Polygon>[]): Feature<MultiPolygon | Polygon> {
+	return union(...features);
 }

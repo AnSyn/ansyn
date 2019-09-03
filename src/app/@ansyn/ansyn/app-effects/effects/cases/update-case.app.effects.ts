@@ -11,6 +11,7 @@ import {
 	selectPresetOverlays,
 	selectRemovedOverlays,
 	selectRemovedOverlaysVisibility,
+	selectScannedAreaData,
 	selectTranslationData
 } from '../../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../../app.effects.module';
@@ -49,7 +50,8 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectOverlaysManualProcessArgs),
 		this.store$.select(selectContextEntities),
 		this.store$.select(selectMiscOverlays),
-		this.store$.select(selectTranslationData)
+		this.store$.select(selectTranslationData),
+		this.store$.select(selectScannedAreaData)
 	]
 		.map(event => event.pipe(this.clearIsAutoSave))
 		.concat([this.store$.select(selectAutoSave).pipe(this.setIsAutoSave)]);
@@ -75,6 +77,7 @@ export class UpdateCaseAppEffects {
 				contextEntities,
 				miscOverlays,
 				overlaysTranslationData,
+				overlaysScannedAreaData,
 				autoSave
 			] = events;
 
@@ -108,7 +111,8 @@ export class UpdateCaseAppEffects {
 					contextEntities,
 					miscOverlays,
 					overlaysManualProcessArgs,
-					overlaysTranslationData
+					overlaysTranslationData,
+					overlaysScannedAreaData
 				}
 			};
 

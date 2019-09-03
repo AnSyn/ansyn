@@ -9,6 +9,7 @@ import {
 	GoNextPresetOverlay
 } from '../../../status-bar/actions/status-bar.actions';
 import { EnableCopyOriginalOverlayDataAction } from '@ansyn/map-facade';
+import { ActivateScannedAreaAction } from '../../../overlays/overlay-status/actions/overlay-status.actions';
 
 @Component({
 	selector: 'ansyn-navigation-bar',
@@ -19,12 +20,14 @@ export class NavigationBarComponent {
 	goPrevActive = false;
 	goNextActive = false;
 	goNextQuickLoop = false;
+	scanAreaActive = false;
 
 	get toolTips(): IToolTipsConfig {
 		return this.statusBarConfig.toolTips || {};
 	}
 
 	private _nextPresetOverlayKeys = 'qQ/'.split('').map(char => char.charCodeAt(0));
+	private _scannedAreaKey = '`~;'.split('').map(char => char.charCodeAt(0));
 	private _overlayHack = 'Eeק'.split('').map(char => char.charCodeAt(0));
 
 	@HostListener('window:keyup', ['$event'])
@@ -68,12 +71,23 @@ export class NavigationBarComponent {
 		}
 	}
 
+	@HostListener('window:keypress', ['$event'])
+	onkeypress($event: KeyboardEvent) {
+		if (this._scannedAreaKey.indexOf($event.which) !== -1) {
+			this.clickScannedArea();
+		}
+	}
+
 	constructor(protected store: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) protected statusBarConfig: IStatusBarConfig) {
 	}
 
 	clickGoAdjacent(isNext): void {
 		this.store.dispatch(new GoAdjacentOverlay({ isNext }));
+	}
+
+	clickScannedArea(): void {
+		this.store.dispatch(new ActivateScannedAreaAction());
 	}
 
 	clickGoNextPresetOverlay(): void {

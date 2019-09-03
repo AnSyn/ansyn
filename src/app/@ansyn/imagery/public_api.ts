@@ -39,7 +39,8 @@ export {
 	getPolygonByPoint,
 	getPolygonByPointAndRadius,
 	getPolygonIntersectionRatioWithMultiPolygon,
-	isPointContainedInMultiPolygon
+	isPointContainedInMultiPolygon,
+	unifyPolygons
 } from './utils/geo';
 
 export { IVisualizersConfig, VisualizersConfig } from './model/visualizers-config.token';

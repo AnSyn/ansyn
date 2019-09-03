@@ -79,19 +79,6 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	annotationMode$: Observable<AnnotationMode> = this.store$.pipe(select(selectAnnotationMode));
 
 	@AutoSubscription
-	getOffsetFromCase$ = this.store$.pipe(
-		select(selectTranslationData),
-		tap((translationData: IOverlaysTranslationData) => {
-			if (this.overlay && translationData && translationData[this.overlay.id].offset) {
-				this.offset = translationData[this.overlay.id].offset;
-			} else {
-				this.offset = [0, 0];
-			}
-			this.annotationsVisualizer.onResetView().subscribe();
-		})
-	);
-
-	@AutoSubscription
 	activeChange$ = this.store$.pipe(
 		select(selectActiveMapId),
 		tap((activeMapId) => {
@@ -162,6 +149,18 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			}
 			geoJsonFeature.properties = { ...geoJsonFeature.properties };
 			this.store$.dispatch(new UpdateLayer(<ILayer>{ ...activeAnnotationLayer, data }));
+		})
+	);
+
+	@AutoSubscription
+	getOffsetFromCase$ = () => combineLatest(this.store$.select(selectTranslationData), this.store$.select(selectOverlayFromMap(this.mapId))).pipe(
+		tap(([translationData, overlay]: [IOverlaysTranslationData, IOverlay]) => {
+			if (this.overlay && translationData && translationData[overlay.id].offset) {
+				this.offset = translationData[overlay.id].offset;
+			} else {
+				this.offset = [0, 0];
+			}
+			this.annotationsVisualizer.onResetView().subscribe();
 		})
 	);
 

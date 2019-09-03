@@ -30,11 +30,11 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 
 
 	// todo: return auto-subscription when the bug is fixed
-	updateLayersOnMap$ = this.store$.pipe(
-		select(selectDisplayLayersOnMap(this.mapId)),
-		withLatestFrom(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds)),
-		filter(([isHidden, layers, layersId]: [boolean, ILayer[], string[]]) => Boolean(layers)),
-		mergeMap(([isHidden, layers, layersId]) => layers
+	updateLayersOnMap$ = combineLatest(this.store$.select(selectDisplayLayersOnMap(this.mapId)), this.store$.select(selectSelectedLayersIds))
+		.pipe(
+		withLatestFrom(this.store$.select(selectLayers)),
+		filter(([[isHidden, layersId], layers]: [[boolean, string[]], ILayer[]]) => Boolean(layers)),
+		mergeMap(([[isHidden, layersId], layers]) => layers
 			.filter(this.isGeoJsonLayer)
 			.map((layer: ILayer) => this.layerToObservable(layer, layersId, isHidden))
 		)

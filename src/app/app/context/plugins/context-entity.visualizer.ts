@@ -61,7 +61,6 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 			select(selectOverlayFromMap(this.mapId)),
 			filter(Boolean),
 			map((overlay: IOverlay) => overlay.date),
-			distinctUntilChanged(),
 			tap((referenceDate) => {
 				this.referenceDate = referenceDate;
 				this.purgeCache();

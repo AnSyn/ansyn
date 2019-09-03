@@ -1,14 +1,14 @@
 import { BaseImageryPlugin, geojsonMultiPolygonToPolygons, ImageryMapPosition, ImageryPlugin } from '@ansyn/imagery';
 import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ol';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { selectOverlayFromMap } from '@ansyn/map-facade';
-import { debounceTime, map, tap, withLatestFrom, filter } from 'rxjs/operators';
+import { debounceTime, map, tap, distinctUntilChanged } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { intersect } from '@turf/turf';
 import { AlertMsgTypes } from '../../../alerts/model';
 import { AddAlertMsg, RemoveAlertMsg } from '../../../overlays/overlay-status/actions/overlay-status.actions';
-import { selectDrops } from '../../../overlays/reducers/overlays.reducer';
+import { selectDrops, selectFilteredOveralys, selectOverlaysMap } from '../../../overlays/reducers/overlays.reducer';
 import { isFullOverlay } from '../../../core/utils/overlays';
 import { IOverlay, IOverlayDrop } from '../../../overlays/models/overlay.model';
 import { CesiumMap } from '@ansyn/imagery-cesium';
@@ -21,8 +21,8 @@ import { Polygon } from 'geojson';
 export class AlertsPlugin extends BaseImageryPlugin {
 	overlay: IOverlay;
 	@AutoSubscription
-	setOverlaysNotInCase$: Observable<any> = this.store$.pipe(
-		select(selectDrops),
+	setOverlaysNotInCase$: Observable<any> = combineLatest(this.store$.select(selectOverlaysMap), this.store$.select(selectFilteredOveralys) ).pipe(
+		distinctUntilChanged(),
 		map(this.setOverlaysNotInCase.bind(this)),
 		tap((action: RemoveAlertMsg | AddAlertMsg) => this.store$.dispatch(action))
 	);
@@ -44,8 +44,8 @@ export class AlertsPlugin extends BaseImageryPlugin {
 		tap(overlay => this.overlay = overlay)
 	);
 
-	setOverlaysNotInCase(drops: IOverlayDrop[]): RemoveAlertMsg | AddAlertMsg {
-		const shouldRemoved = !this.overlay || drops.some((overlayDrop: IOverlayDrop) => overlayDrop.id === this.overlay.id);
+	setOverlaysNotInCase([overlays, filteredOverlays]: [Map<string, IOverlay>, string[]]): RemoveAlertMsg | AddAlertMsg {
+		const shouldRemoved = !this.overlay || filteredOverlays.some((id: string) => id === this.overlay.id);
 		const payload = { key: AlertMsgTypes.overlayIsNotPartOfQuery, value: this.mapId };
 		return shouldRemoved ? new RemoveAlertMsg(payload) : new AddAlertMsg(payload);
 	}

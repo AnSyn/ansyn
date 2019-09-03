@@ -179,7 +179,6 @@ export class MapAppEffects {
 	markupOnMapsDataChanges$ = combineLatest(this.actions$.pipe(ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)), this.store$.select(selectActiveMapId))
 		.pipe(
 			withLatestFrom(this.store$.select(selectMapsList)),
-			tap(([[action, active], maps]) => console.log({ action, active, maps })),
 			filter(([[action, activeMapId], mapsList]) => Boolean(mapsList.length)),
 			map(([[action, activeMapId], mapsList]: [[DisplayOverlaySuccessAction, string], ICaseMapState[]]) => {
 					const actives = [];
@@ -188,7 +187,7 @@ export class MapAppEffects {
 						actives.push(action.payload.overlay.id);
 					}
 					mapsList.forEach((map: ICaseMapState) => {
-						if (Boolean(map.data.overlay)) {
+						if (Boolean(map.data.overlay) && activeMapId !== map.id) {
 							if (map.id === activeMapId) {
 								actives.push(map.data.overlay.id);
 							} else {

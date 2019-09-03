@@ -7,9 +7,15 @@ import { filter, map, tap } from 'rxjs/operators';
 import { SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
 import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../models/entry-components-provider';
 import { selectEnableCopyOriginalOverlayDataFlag } from '../../reducers/imagery-status.reducer';
-import { selectActiveMapId, selectMapStateById, selectMapsTotal } from '../../reducers/map.reducer';
+import {
+	selectActiveMapId,
+	selectDisplayLayersOnMap,
+	selectMapStateById,
+	selectMapsTotal
+} from '../../reducers/map.reducer';
 import { copyFromContent } from '../../utils/clipboard';
 import { getTimeFormat } from '../../utils/time';
+import { combineLatest } from 'rxjs';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -74,12 +80,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	overlayNlayers$ = () => this.store$.pipe(
-		select(selectMapStateById(this.mapId)),
-		filter(Boolean),
-		tap((mapState) => {
-			this.overlay = mapState.data.overlay;
-			this.displayLayers = mapState.flags.displayLayers;
+	overlayNlayers$ = () => combineLatest(this.store$.select(selectMapStateById(this.mapId)), this.store$.select(selectDisplayLayersOnMap(this.mapId))).pipe(
+		tap(([overlay, displayLayers]) => {
+			this.overlay = overlay;
+			this.displayLayers = displayLayers;
 		})
 	);
 

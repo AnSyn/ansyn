@@ -25,7 +25,7 @@ import { catchError, filter, map, mergeMap, switchMap, withLatestFrom } from 'rx
 import {
 	BackToWorldSuccess,
 	BackToWorldView,
-	OverlayStatusActionsTypes, SetOverlaysScannedAreaDataAction,
+	OverlayStatusActionsTypes, SetOverlayScannedAreaDataAction, SetOverlaysScannedAreaDataAction,
 	ToggleDraggedModeAction
 } from '../actions/overlay-status.actions';
 import { SetAnnotationMode } from '../../../menu-items/tools/actions/tools.actions';
@@ -133,7 +133,7 @@ export class OverlayStatusEffects {
 					console.error('failed to save scanned area', e);
 				}
 			}
-			return new SetOverlaysScannedAreaDataAction(overlaysScannedAreaData);
+			return new SetOverlayScannedAreaDataAction({id: overlay.id, area: overlaysScannedAreaData[overlay.id]});;
 		}));
 
 	constructor(protected actions$: Actions,

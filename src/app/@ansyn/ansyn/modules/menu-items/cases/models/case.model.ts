@@ -52,6 +52,10 @@ export interface ITranslationData {
 	dragged?: boolean;
 	offset: [number, number];
 }
+export interface IScanedArea {
+	id: string;
+	area: MultiPolygon;
+}
 
 export interface IOverlaysTranslationData {
 	[key: string]: ITranslationData;

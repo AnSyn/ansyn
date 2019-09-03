@@ -361,5 +361,11 @@ export {
 	OverlayStatusActions, OverlayStatusActionsTypes, BackToWorldSuccess,
 	BackToWorldView,
 	SetFavoriteOverlaysAction,
-	ToggleFavoriteAction
+	ToggleFavoriteAction,
+	SetOverlayScannedAreaDataAction,
+	SetOverlaysScannedAreaDataAction,
+	SetOverlaysTranslationDataAction,
+	SetOverlayTranslationDataAction,
+	ToggleDraggedModeAction,
+	TogglePresetOverlayAction
 } from './modules/overlays/overlay-status/actions/overlay-status.actions';

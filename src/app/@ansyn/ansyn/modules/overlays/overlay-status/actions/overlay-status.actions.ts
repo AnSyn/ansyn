@@ -1,7 +1,11 @@
 import { Action } from '@ngrx/store';
 import { AlertMsgTypes } from '../../../alerts/model';
 import { IOverlay } from '../../models/overlay.model';
-import { IOverlaysScannedAreaData, IOverlaysTranslationData } from '../../../menu-items/cases/models/case.model';
+import {
+	IOverlaysScannedAreaData,
+	IOverlaysTranslationData,
+	IScanedArea
+} from '../../../menu-items/cases/models/case.model';
 import { type } from '../../../core/utils/type';
 import { ImageryMapPosition } from '@ansyn/imagery';
 
@@ -23,6 +27,7 @@ export enum OverlayStatusActionsTypes {
 	TOGGLE_DRAGGED_MODE = 'TOGGLE_DRAGGED_MODE',
 	SET_OVERLAY_TRANSLATION_DATA = 'SET_OVERLAY_TRANSLATION_DATA',
 	SET_OVERLAYS_TRANSLATION_DATA = 'SET_OVERLAYS_TRANSLATION_DATA',
+	SET_OVERLAY_SCANNED_AREA_DATA = 'SET_OVERLAY_SCANNED_AREA_DATA',
 	SET_OVERLAYS_SCANNED_AREA_DATA = 'SET_OVERLAYS_SCANNED_AREA_DATA',
 	ACTIVATE_SCANNED_AREA = 'ACTIVATE_SCANNED_AREA'
 }
@@ -30,7 +35,8 @@ export enum OverlayStatusActionsTypes {
 
 export type OverlayStatusActions = BackToWorldView | BackToWorldSuccess | ToggleFavoriteAction |
 	SetFavoriteOverlaysAction | TogglePresetOverlayAction | SetPresetOverlaysAction |
-	ActivateScannedAreaAction | SetOverlaysScannedAreaDataAction;
+	ActivateScannedAreaAction | SetOverlaysScannedAreaDataAction | SetOverlayScannedAreaDataAction | SetOverlayTranslationDataAction |
+	SetOverlaysTranslationDataAction | ToggleDraggedModeAction;
 
 export class ActivateScannedAreaAction implements Action {
 	type: string = OverlayStatusActionsTypes.ACTIVATE_SCANNED_AREA;
@@ -39,6 +45,12 @@ export class ActivateScannedAreaAction implements Action {
 	}
 }
 
+export class SetOverlayScannedAreaDataAction implements Action {
+	type: string = OverlayStatusActionsTypes.SET_OVERLAY_SCANNED_AREA_DATA;
+
+	constructor(public payload: IScanedArea) {
+	}
+}
 export class SetOverlaysScannedAreaDataAction implements Action {
 	type: string = OverlayStatusActionsTypes.SET_OVERLAYS_SCANNED_AREA_DATA;
 

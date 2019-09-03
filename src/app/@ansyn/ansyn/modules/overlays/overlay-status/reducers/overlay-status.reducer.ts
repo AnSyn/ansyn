@@ -127,6 +127,14 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 			return { ...state, overlaysTranslationData: action.payload };
 		}
 
+		case OverlayStatusActionsTypes.SET_OVERLAY_SCANNED_AREA_DATA: {
+			const {id, area} = action.payload;
+			return { ...state, overlaysScannedAreaData: {
+					...state.overlaysScannedAreaData,
+					[id]: area
+				} };
+		}
+
 		case OverlayStatusActionsTypes.SET_OVERLAYS_SCANNED_AREA_DATA: {
 			return { ...state, overlaysScannedAreaData: action.payload };
 		}

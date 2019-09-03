@@ -33,10 +33,10 @@ export class BaseFootprintsVisualizer extends EntitiesVisualizer {
 		);
 
 	constructor( public store: Store<any>,
-	             public overlaysService: OverlaysService,
-	             public overlayDisplayMode: string,
-	             public fpConfig: Partial<IVisualizerStateStyle>,
-	             ...superArgs
+			public overlaysService: OverlaysService,
+			public overlayDisplayMode: string,
+			public fpConfig: Partial<IVisualizerStateStyle>,
+			...superArgs
 	) {
 		super( fpConfig, ...superArgs );
 	}

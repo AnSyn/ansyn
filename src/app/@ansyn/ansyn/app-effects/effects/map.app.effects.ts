@@ -242,9 +242,9 @@ export class MapAppEffects {
 		);
 
 	constructor( protected actions$: Actions,
-	             protected store$: Store<IAppState>,
-	             protected imageryCommunicatorService: ImageryCommunicatorService,
-	             @Inject( mapFacadeConfig ) public config: IMapFacadeConfig ) {
+			protected store$: Store<IAppState>,
+			protected imageryCommunicatorService: ImageryCommunicatorService,
+			@Inject( mapFacadeConfig ) public config: IMapFacadeConfig ) {
 	}
 
 	onDisplayOverlay( [[prevAction, {payload}], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState] ) {

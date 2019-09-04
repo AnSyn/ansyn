@@ -16,22 +16,22 @@
 
 			<div class="logo">
 
-			<ng-container *ngIf="menuConfig?.forkMe?.active">
-				<a class="forkMe" [href]="menuConfig.forkMe?.href" target="_blank">
-					<img [src]="menuConfig.forkMe?.image" [alt]="menuConfig.forkMe?.title"
-						 [title]="menuConfig.forkMe?.title">
-				</a>
-			</ng-container>
+				<ng-container *ngIf="menuConfig?.forkMe?.active">
+					<a class="forkMe" [href]="menuConfig.forkMe?.href" target="_blank">
+						<img [src]="menuConfig.forkMe?.image" [alt]="menuConfig.forkMe?.title"
+							 [title]="menuConfig.forkMe?.title">
+					</a>
+				</ng-container>
 
-			<div class="mode"
-				 *ngIf="menuConfig?.mode"
-				 [style.color]="menuConfig.color"
-				 [style.background]="menuConfig.background"
-				 [style.border]="'1px sollid' + menuConfig.color"
-			>{{menuConfig.mode}}
+				<div class="mode"
+					 *ngIf="menuConfig?.mode"
+					 [style.color]="menuConfig.color"
+					 [style.background]="menuConfig.background"
+					 [style.border]="'1px sollid' + menuConfig.color"
+				>{{menuConfig.mode}}
+				</div>
+				<img [src]="menuConfig.path" [alt]="version" [title]="version">
 			</div>
-			<img [src]="menuConfig.path" [alt]="version" [title]="version">
-		</div>
 
 		</div>
 
@@ -39,7 +39,7 @@
 			*ngIf="menuConfig?.isCollapsible"
 			class="hide-menu"
 			(click)="toggleCollapse()"
-			[attr.tooltip-value]="'Hide menu' | translate"
+			[attr.tooltip-value]="minimizeText | translate"
 			tooltip-class="right">
 			<i class="fa fa-caret-left" [class.fa-caret-right]="collapse"></i>
 		</button>
@@ -47,25 +47,24 @@
 	</div>
 
 
-
 	<div class="container" #container [@expand]="expand" (@expand.done)="onExpandDone()"
 		 (@expand.start)="onExpandStart()">
 		<!--<button class="close" (click)="closeMenu()">×</button>-->
-		
-		<button class="pin" 
-			*ngIf="!isPinned"
-			(click)="toggleIsPinned()"
-			[attr.tooltip-value]="pinText | translate" tooltip-class="right">
+
+		<button class="pin"
+				*ngIf="!isPinned"
+				(click)="toggleIsPinned()"
+				[attr.tooltip-value]="pinText | translate" tooltip-class="right">
 			<i class="icon-pin"></i>
 		</button>
 
-		<button class="pin" 
-			*ngIf="isPinned"
-			(click)="toggleIsPinned()"
+		<button class="pin"
+				*ngIf="isPinned"
+				(click)="toggleIsPinned()"
 				[attr.tooltip-value]="pinText" tooltip-class="right">
 			<i class="icon-unpin"></i>
 		</button>
-		
+
 		<ng-template #componentElem></ng-template>
 	</div>
 

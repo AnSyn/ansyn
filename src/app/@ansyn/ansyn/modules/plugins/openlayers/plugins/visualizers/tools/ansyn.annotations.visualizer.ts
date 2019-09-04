@@ -155,7 +155,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	@AutoSubscription
 	getOffsetFromCase$ = () => combineLatest(this.store$.select(selectTranslationData), this.store$.select(selectOverlayFromMap(this.mapId))).pipe(
 		tap(([translationData, overlay]: [IOverlaysTranslationData, IOverlay]) => {
-			if (this.overlay && translationData && translationData[overlay.id].offset) {
+			if (overlay && translationData[overlay.id] && translationData[overlay.id].offset) {
 				this.offset = translationData[overlay.id].offset;
 			} else {
 				this.offset = [0, 0];

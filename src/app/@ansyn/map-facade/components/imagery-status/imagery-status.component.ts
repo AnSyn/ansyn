@@ -1,5 +1,5 @@
 import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output, } from '@angular/core';
-import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { get as _get } from 'lodash'
@@ -10,12 +10,13 @@ import { selectEnableCopyOriginalOverlayDataFlag } from '../../reducers/imagery-
 import {
 	selectActiveMapId,
 	selectDisplayLayersOnMap,
-	selectMapStateById,
-	selectMapsTotal
+	selectMapsTotal,
+	selectOverlayFromMap
 } from '../../reducers/map.reducer';
 import { copyFromContent } from '../../utils/clipboard';
 import { getTimeFormat } from '../../utils/time';
 import { combineLatest, Observable } from 'rxjs';
+import { IOverlay } from '../../../ansyn/modules/overlays/models/overlay.model';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -28,7 +29,6 @@ import { combineLatest, Observable } from 'rxjs';
 })
 export class ImageryStatusComponent implements OnInit, OnDestroy {
 	mapsAmount = 1;
-	_mapId: string;
 	_entryComponents: IEntryComponentsEntities;
 	@HostBinding('class.active') isActiveMap: boolean;
 	overlay: any; // @TODO: eject to ansyn
@@ -57,6 +57,8 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 				protected communicators: ImageryCommunicatorService,
 				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities) {
 	}
+
+	_mapId: string;
 
 	get mapId() {
 		return this._mapId;
@@ -112,7 +114,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	@AutoSubscription
-	overlayNlayers$: () => Observable<[IMapSettings, boolean]> = () => combineLatest(this.store$.select(selectMapStateById(this.mapId)), this.store$.select(selectDisplayLayersOnMap(this.mapId))).pipe(
+	overlayNlayers$: () => Observable<[IOverlay, boolean]> = () => combineLatest(this.store$.select(selectOverlayFromMap(this.mapId)), this.store$.select(selectDisplayLayersOnMap(this.mapId))).pipe(
 		tap(([overlay, displayLayers]) => {
 			this.overlay = overlay;
 			this.displayLayers = displayLayers;

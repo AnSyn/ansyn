@@ -3,7 +3,7 @@ import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ol';
 import { select, Store } from '@ngrx/store';
 import { Observable, combineLatest } from 'rxjs';
 import { selectOverlayFromMap } from '@ansyn/map-facade';
-import { debounceTime, map, tap, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, map, tap, distinctUntilChanged, filter } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { intersect } from '@turf/turf';
 import { AlertMsgTypes } from '../../../alerts/model';
@@ -22,7 +22,6 @@ export class AlertsPlugin extends BaseImageryPlugin {
 	overlay: IOverlay;
 	@AutoSubscription
 	setOverlaysNotInCase$: Observable<any> = combineLatest(this.store$.select(selectOverlaysMap), this.store$.select(selectFilteredOveralys) ).pipe(
-		distinctUntilChanged(),
 		map(this.setOverlaysNotInCase.bind(this)),
 		tap((action: RemoveAlertMsg | AddAlertMsg) => this.store$.dispatch(action))
 	);
@@ -33,6 +32,7 @@ export class AlertsPlugin extends BaseImageryPlugin {
 
 	@AutoSubscription
 	positionChanged$ = () => this.communicator.positionChanged.pipe(
+		filter(Boolean),
 		debounceTime(500),
 		map(this.positionChanged.bind(this)),
 		tap((action: RemoveAlertMsg | AddAlertMsg) => this.store$.dispatch(action))

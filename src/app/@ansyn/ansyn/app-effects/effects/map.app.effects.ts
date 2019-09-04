@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { CesiumMapName } from '@ansyn/imagery-cesium';
 import { DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { combineLatest, EMPTY, from, Observable, of, pipe } from 'rxjs';
 import {
@@ -29,7 +29,7 @@ import {
 } from '@ansyn/imagery';
 import {
 	catchError,
-	debounceTime,
+	debounceTime, distinctUntilChanged,
 	filter,
 	map,
 	mergeMap,
@@ -66,6 +66,8 @@ import {
 	OverlayStatusActionsTypes
 } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { fromPromise } from 'rxjs/internal-compatibility';
+import { selectOverlaysWithMapIds } from '../../../map-facade/reducers/map.reducer';
+import { isEqual } from 'lodash';
 
 @Injectable()
 export class MapAppEffects {
@@ -176,22 +178,18 @@ export class MapAppEffects {
 		);
 
 	@Effect()
-	markupOnMapsDataChanges$ = combineLatest(this.actions$.pipe(ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS)), this.store$.select(selectActiveMapId))
+	markupOnMapsDataChanges$ = this.store$.select(selectOverlaysWithMapIds)
 		.pipe(
-			withLatestFrom(this.store$.select(selectMapsList)),
-			filter(([[action, activeMapId], mapsList]) => Boolean(mapsList.length)),
-			map(([[action, activeMapId], mapsList]: [[DisplayOverlaySuccessAction, string], ICaseMapState[]]) => {
+			distinctUntilChanged( (dataA , dataB) => isEqual(dataA[0] , dataB[0])),
+			map((overlayWithMapIds: {overlay: any, mapId: string, isActive: boolean}[]) => {
 					const actives = [];
 					const displayed = [];
-					if (action.payload.mapId === activeMapId) {
-						actives.push(action.payload.overlay.id);
-					}
-					mapsList.forEach((map: ICaseMapState) => {
-						if (Boolean(map.data.overlay) && activeMapId !== map.id) {
-							if (map.id === activeMapId) {
-								actives.push(map.data.overlay.id);
+					overlayWithMapIds.forEach((data: {overlay: any, mapId: string, isActive: boolean}) => {
+						if (Boolean(data.overlay)) {
+							if (data.isActive) {
+								actives.push(data.overlay.id);
 							} else {
-								displayed.push(map.data.overlay.id);
+								displayed.push(data.overlay.id);
 							}
 						}
 					});

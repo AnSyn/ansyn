@@ -89,16 +89,19 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		tap((isActiveMap) => this.isActiveMap = isActiveMap)
 	);
 
-	@AutoSubscription
-	overlay$ = () => this.store$.pipe(
-		select(selectOverlayFromMap(this.mapId)),
-		tap(overlay => this.overlay = overlay)
-	);
-
 	constructor(public store$: Store<any>) {
 		this.isPreset = true;
 		this.isFavorite = true;
 	}
+
+	@AutoSubscription
+	overlay$ = () => this.store$.pipe(
+		select(selectOverlayFromMap(this.mapId)),
+		tap(overlay => {
+			this.overlay = overlay;
+			this.onChangeOverlay();
+		})
+	);
 
 	@HostListener('window:keydown', ['$event'])
 	deleteKeyPressed($event: KeyboardEvent) {
@@ -111,6 +114,13 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	ngOnDestroy(): void {
+	}
+
+	onChangeOverlay() {
+		this.updateRemovedStatus();
+		this.updatePresetStatus();
+		this.updateFavoriteStatus();
+		this.updateDraggedStatus();
 	}
 
 	updateFavoriteStatus() {
@@ -131,14 +141,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 
 	updateRemovedStatus() {
 		this.isRemoved = this.removedOverlaysIds.includes(this.overlay && this.overlay.id);
-	}
-
-	private updateDraggedStatus() {
-		this.isDragged = false;
-		if (this.overlay && this.overlaysTranslationData && this.overlaysTranslationData[this.overlay.id]) {
-			this.isDragged = this.overlaysTranslationData[this.overlay.id].dragged;
-		}
-		this.draggedButtonText = this.isDragged ? 'Stop Drag' : 'Start Drag';
 	}
 
 	toggleFavorite() {
@@ -171,6 +173,14 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 
 	getType(): string {
 		return 'buttons';
+	}
+
+	private updateDraggedStatus() {
+		this.isDragged = false;
+		if (this.overlay && this.overlaysTranslationData && this.overlaysTranslationData[this.overlay.id]) {
+			this.isDragged = this.overlaysTranslationData[this.overlay.id].dragged;
+		}
+		this.draggedButtonText = this.isDragged ? 'Stop Drag' : 'Start Drag';
 	}
 
 

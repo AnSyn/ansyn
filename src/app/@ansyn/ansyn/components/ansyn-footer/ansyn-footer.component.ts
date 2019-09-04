@@ -35,6 +35,10 @@ export class AnsynFooterComponent implements OnInit, OnDestroy {
 	) {
 	}
 
+	get minimizeText(): string {
+		return this.collapse ? 'Show menu' : 'Hide menu';
+	}
+
 	ngOnInit() {
 	}
 

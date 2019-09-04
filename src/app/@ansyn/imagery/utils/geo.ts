@@ -18,9 +18,11 @@ import {
 	feature,
 	geometry,
 	intersect,
+	lineString,
 	point,
 	polygon,
-	unkinkPolygon
+	unkinkPolygon,
+	union
 } from '@turf/turf';
 
 export type BBOX = [number, number, number, number] | [number, number, number, number, number, number];
@@ -115,4 +117,8 @@ export function isPointContainedInMultiPolygon(point: Point, footprint: MultiPol
 		console.warn('isPointContainedInMultiPolygon: turf exception ', e);
 	}
 	return false;
+}
+
+export function unifyPolygons(features: Feature<Polygon>[]): Feature<MultiPolygon | Polygon> {
+	return union(...features);
 }

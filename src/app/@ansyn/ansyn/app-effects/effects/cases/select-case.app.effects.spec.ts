@@ -10,7 +10,8 @@ import {
 	SetOverlaysTranslationDataAction,
 	SetPresetOverlaysAction,
 	SetRemovedOverlaysIdsAction,
-	SetRemovedOverlaysVisibilityAction
+	SetRemovedOverlaysVisibilityAction,
+	SetOverlaysScannedAreaDataAction
 } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { SetComboBoxesProperties } from '../../../modules/status-bar/actions/status-bar.actions';
 import { SelectCaseAppEffects } from './select-case.app.effects';
@@ -97,7 +98,8 @@ describe('SelectCaseAppEffects', () => {
 				facets: ICaseFacetsState = { showOnlyFavorites: true, filters: [] },
 				contextEntities: IContextEntity[] = [{ id: '234', date: new Date(), featureJson: null }],
 				miscOverlays: IOverlaysHash = {},
-				overlaysTranslationData = {}
+				overlaysTranslationData = {},
+				overlaysScannedAreaData = {}
 			;
 
 			let noInitialSearch;
@@ -118,7 +120,8 @@ describe('SelectCaseAppEffects', () => {
 				overlaysManualProcessArgs,
 				facets,
 				contextEntities,
-				miscOverlays
+				miscOverlays,
+				overlaysScannedAreaData
 			};
 
 			const payload: ICase = {
@@ -133,7 +136,7 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghrijklmnopq)--', {
+			const expectedResult = cold('--(abcdefghrsijklmnopq)--', {
 				a: new SetLayoutAction(<any>maps.layout),
 				b: new SetComboBoxesProperties({ orientation, timeFilter }),
 				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
@@ -143,6 +146,7 @@ describe('SelectCaseAppEffects', () => {
 				g: new SetPresetOverlaysAction(presetOverlays),
 				h: new SetMiscOverlays({ miscOverlays }),
 				r: new SetOverlaysTranslationDataAction(overlaysTranslationData),
+				s: new SetOverlaysScannedAreaDataAction(overlaysScannedAreaData),
 				i: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
 				j: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 				k: new UpdateFacetsAction(facets),

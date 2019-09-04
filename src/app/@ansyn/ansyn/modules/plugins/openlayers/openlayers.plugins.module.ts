@@ -36,6 +36,7 @@ import {
 	OpenLayersStaticImageSourceProvider,
 	OpenLayerTileWMSSourceProvider
 } from '@ansyn/ol';
+import { ScannedAreaVisualizer } from './plugins/visualizers/scanned-area/scanned-area.visualizer';
 
 @NgModule({
 	imports: [
@@ -62,7 +63,8 @@ import {
 				MouseShadowVisualizer,
 				PolygonSearchVisualizer,
 				OpenlayersGeoJsonLayersVisualizer,
-				TaskRegionVisualizer
+				TaskRegionVisualizer,
+				ScannedAreaVisualizer
 			],
 			maps: [OpenLayersMap, OpenLayersDisabledMap],
 			mapSourceProviders: [
@@ -76,7 +78,6 @@ import {
 				OpenLayerOpenAerialSourceProvider,
 				OpenLayersStaticImageSourceProvider,
 				OpenLayerMarcoSourceProvider
-
 			]
 		}),
 		AnnotationsContextMenuModule

@@ -1,7 +1,8 @@
 import { Action } from '@ngrx/store';
 import { AlertMsgTypes } from '../../../alerts/model';
 import { IOverlay } from '../../models/overlay.model';
-import { IOverlaysTranslationData } from '../../../menu-items/cases/models/case.model';
+import { IOverlaysScannedAreaData, IOverlaysTranslationData, } from '../../../menu-items/cases/models/case.model';
+import { IScannedArea } from '../reducers/overlay-status.reducer';
 
 
 export enum OverlayStatusActionsTypes {
@@ -20,17 +21,55 @@ export enum OverlayStatusActionsTypes {
 	REMOVE_ALERT_MSG = 'REMOVE_ALERT_MSG',
 	TOGGLE_DRAGGED_MODE = 'TOGGLE_DRAGGED_MODE',
 	SET_OVERLAY_TRANSLATION_DATA = 'SET_OVERLAY_TRANSLATION_DATA',
-	SET_OVERLAYS_TRANSLATION_DATA = 'SET_OVERLAYS_TRANSLATION_DATA'
+	SET_OVERLAYS_TRANSLATION_DATA = 'SET_OVERLAYS_TRANSLATION_DATA',
+	SET_OVERLAY_SCANNED_AREA_DATA = 'SET_OVERLAY_SCANNED_AREA_DATA',
+	SET_OVERLAYS_SCANNED_AREA_DATA = 'SET_OVERLAYS_SCANNED_AREA_DATA',
+	ACTIVATE_SCANNED_AREA = 'ACTIVATE_SCANNED_AREA'
 }
 
 
-export type OverlayStatusActions = BackToWorldView | BackToWorldSuccess | ToggleFavoriteAction |
-	SetFavoriteOverlaysAction | TogglePresetOverlayAction | SetPresetOverlaysAction;
+export type OverlayStatusActions =
+	BackToWorldView
+	| BackToWorldSuccess
+	| ToggleFavoriteAction
+	|
+	SetFavoriteOverlaysAction
+	| TogglePresetOverlayAction
+	| SetPresetOverlaysAction
+	|
+	ActivateScannedAreaAction
+	| SetOverlaysScannedAreaDataAction
+	| SetOverlayScannedAreaDataAction
+	| SetOverlayTranslationDataAction
+	|
+	SetOverlaysTranslationDataAction
+	| ToggleDraggedModeAction;
+
+export class ActivateScannedAreaAction implements Action {
+	type: string = OverlayStatusActionsTypes.ACTIVATE_SCANNED_AREA;
+
+	constructor() {
+	}
+}
+
+export class SetOverlayScannedAreaDataAction implements Action {
+	type: string = OverlayStatusActionsTypes.SET_OVERLAY_SCANNED_AREA_DATA;
+
+	constructor( public payload: IScannedArea ) {
+	}
+}
+
+export class SetOverlaysScannedAreaDataAction implements Action {
+	type: string = OverlayStatusActionsTypes.SET_OVERLAYS_SCANNED_AREA_DATA;
+
+	constructor( public payload: IOverlaysScannedAreaData ) {
+	}
+}
 
 export class BackToWorldView implements Action {
 	type = OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW;
 
-	constructor(public payload: { mapId: string }) {
+	constructor( public payload: { mapId: string } ) {
 
 	}
 }
@@ -42,21 +81,21 @@ export class BackToWorldSuccess extends BackToWorldView {
 export class ToggleFavoriteAction implements Action {
 	type: string = OverlayStatusActionsTypes.TOGGLE_OVERLAY_FAVORITE;
 
-	constructor(public payload: { id: string, value: boolean, overlay?: IOverlay }) {
+	constructor( public payload: { id: string, value: boolean, overlay?: IOverlay } ) {
 	}
 }
 
 export class SetFavoriteOverlaysAction implements Action {
 	type = OverlayStatusActionsTypes.SET_FAVORITE_OVERLAYS;
 
-	constructor(public payload: IOverlay[]) {
+	constructor( public payload: IOverlay[] ) {
 	}
 }
 
 export class SetRemovedOverlaysIdsAction implements Action {
 	type = OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_IDS;
 
-	constructor(public payload: string[]) {
+	constructor( public payload: string[] ) {
 
 	}
 }
@@ -68,7 +107,7 @@ export class ResetRemovedOverlaysIdsAction implements Action {
 export class SetRemovedOverlaysIdAction implements Action {
 	type = OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_ID;
 
-	constructor(public payload: { mapId: string, id: string, value: boolean }) {
+	constructor( public payload: { mapId: string, id: string, value: boolean } ) {
 
 	}
 }
@@ -76,7 +115,7 @@ export class SetRemovedOverlaysIdAction implements Action {
 export class SetRemovedOverlaysVisibilityAction implements Action {
 	type = OverlayStatusActionsTypes.SET_REMOVED_OVERLAYS_VISIBILITY;
 
-	constructor(public payload: boolean) {
+	constructor( public payload: boolean ) {
 
 	}
 }
@@ -84,55 +123,55 @@ export class SetRemovedOverlaysVisibilityAction implements Action {
 export class SetRemovedOverlayIdsCount implements Action {
 	readonly type = OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_IDS_COUNT;
 
-	constructor(public payload: number) {
+	constructor( public payload: number ) {
 	}
 }
 
 export class TogglePresetOverlayAction implements Action {
 	type: string = OverlayStatusActionsTypes.TOGGLE_OVERLAY_PRESET;
 
-	constructor(public payload: { id: string, value: boolean, overlay?: any }) {
+	constructor( public payload: { id: string, value: boolean, overlay?: any } ) {
 	}
 }
 
 export class SetPresetOverlaysAction implements Action {
 	type = OverlayStatusActionsTypes.SET_PRESET_OVERLAYS;
 
-	constructor(public payload: any[]) {
+	constructor( public payload: any[] ) {
 	}
 }
 
 export class AddAlertMsg implements Action {
 	type = OverlayStatusActionsTypes.ADD_ALERT_MSG;
 
-	constructor(public payload: { value: string, key: AlertMsgTypes }) {
+	constructor( public payload: { value: string, key: AlertMsgTypes } ) {
 	}
 }
 
 export class RemoveAlertMsg implements Action {
 	type = OverlayStatusActionsTypes.REMOVE_ALERT_MSG;
 
-	constructor(public payload: { value: string, key: AlertMsgTypes }) {
+	constructor( public payload: { value: string, key: AlertMsgTypes } ) {
 	}
 }
 
 export class ToggleDraggedModeAction implements Action {
 	type = OverlayStatusActionsTypes.TOGGLE_DRAGGED_MODE;
 
-	constructor(public payload: { overlayId: string, dragged: boolean }) {
+	constructor( public payload: { overlayId: string, dragged: boolean } ) {
 	}
 }
 
 export class SetOverlayTranslationDataAction implements Action {
 	type = OverlayStatusActionsTypes.SET_OVERLAY_TRANSLATION_DATA;
 
-	constructor(public payload: { overlayId: string, offset: [number, number] }) {
+	constructor( public payload: { overlayId: string, offset: [number, number] } ) {
 	}
 }
 
 export class SetOverlaysTranslationDataAction implements Action {
 	type = OverlayStatusActionsTypes.SET_OVERLAYS_TRANSLATION_DATA;
 
-	constructor(public payload: IOverlaysTranslationData) {
+	constructor( public payload: IOverlaysTranslationData ) {
 	}
 }

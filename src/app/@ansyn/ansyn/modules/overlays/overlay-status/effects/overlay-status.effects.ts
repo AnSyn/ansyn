@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { CommunicatorEntity, ImageryCommunicatorService, ImageryMapPosition, IMapSettings } from '@ansyn/imagery';
-import { selectMaps, SetToastMessageAction, UpdateMapAction } from '@ansyn/map-facade';
+import { CommunicatorEntity, geojsonMultiPolygonToPolygons,	geojsonPolygonToMultiPolygon, ImageryCommunicatorService, ImageryMapPosition, IMapSettings, unifyPolygons } from '@ansyn/imagery';
+import { MapFacadeService, mapStateSelector, selectMaps, SetToastMessageAction, UpdateMapAction } from '@ansyn/map-facade';
 import { AnnotationMode, DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Dictionary } from '@ngrx/entity';
@@ -12,12 +12,15 @@ import {
 	BackToWorldSuccess,
 	BackToWorldView,
 	OverlayStatusActionsTypes,
+	SetOverlayScannedAreaDataAction,
 	ToggleDraggedModeAction
 } from '../actions/overlay-status.actions';
 import { SetAnnotationMode } from '../../../menu-items/tools/actions/tools.actions';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '../../actions/overlays.actions';
-import { IOverlaysTranslationData } from '../../../menu-items/cases/models/case.model';
-import { selectTranslationData } from '../reducers/overlay-status.reducer';
+import { IOverlaysScannedAreaData, IOverlaysTranslationData } from '../../../menu-items/cases/models/case.model';
+import { selectScannedAreaData, selectTranslationData } from '../reducers/overlay-status.reducer';
+import { IOverlay } from '../../models/overlay.model';
+import { feature } from '@turf/turf';
 
 
 @Injectable()
@@ -85,7 +88,41 @@ export class OverlayStatusEffects {
 		})
 	);
 
-	constructor(protected actions$: Actions,
+	@Effect()
+	onScannedAreaActivation$: Observable<any> = this.actions$.pipe(
+		ofType( OverlayStatusActionsTypes.ACTIVATE_SCANNED_AREA ),
+		withLatestFrom( this.store$.select( mapStateSelector ), this.store$.select( selectScannedAreaData ) ),
+		map( ( [action, mapState, overlaysScannedAreaData] ) => {
+			const mapSettings: IMapSettings = MapFacadeService.activeMap( mapState );
+			return [mapSettings.data.position, mapSettings.data.overlay, overlaysScannedAreaData];
+		} ),
+		filter( ( [position, overlay, overlaysScannedAreaData]: [ImageryMapPosition, IOverlay, IOverlaysScannedAreaData] ) => Boolean( position ) && Boolean( overlay ) ),
+		map( ( [position, overlay, overlaysScannedAreaData]: [ImageryMapPosition, IOverlay, IOverlaysScannedAreaData] ) => {
+			let scannedArea = overlaysScannedAreaData && overlaysScannedAreaData[overlay.id];
+			if (!scannedArea) {
+				scannedArea = geojsonPolygonToMultiPolygon( position.extentPolygon );
+			} else {
+				try {
+					const polygons = geojsonMultiPolygonToPolygons( scannedArea );
+					polygons.push( position.extentPolygon );
+					const featurePolygons = polygons.map( ( polygon ) => {
+						return feature( polygon );
+					} );
+					const combinedResult = unifyPolygons( featurePolygons );
+					if (combinedResult.geometry.type === 'MultiPolygon') {
+						scannedArea = combinedResult.geometry;
+					} else {	// polygon
+						scannedArea = geojsonPolygonToMultiPolygon( combinedResult.geometry );
+					}
+				} catch (e) {
+					console.error( 'failed to save scanned area', e );
+					return EMPTY;
+				}
+			}
+			return new SetOverlayScannedAreaDataAction( {id: overlay.id, area: scannedArea} );
+		} ) );
+
+	constructor( protected actions$: Actions,
 				protected communicatorsService: ImageryCommunicatorService,
 				protected store$: Store<any>) {
 	}

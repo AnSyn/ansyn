@@ -306,12 +306,12 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 
 	private destroyCurrentComponent(): void {
 		this.destroyPlugins();
+		if (this._activeMap) {
+			this._activeMap.dispose();
+		}
 		if (this._mapComponentRef) {
 			this._mapComponentRef.destroy();
 			this._mapComponentRef = undefined;
-		}
-		if (this._activeMap) {
-			this._activeMap.dispose();
 		}
 	}
 

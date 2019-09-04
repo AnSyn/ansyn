@@ -72,6 +72,7 @@ const animations: any[] = [
 */
 
 export class MenuComponent implements OnInit, OnDestroy {
+	_componentElem;
 	currentComponent: ComponentRef<any>;
 	collapse: boolean;
 	@AutoSubscription
@@ -119,8 +120,6 @@ export class MenuComponent implements OnInit, OnDestroy {
 				@Inject(DOCUMENT) protected document: Document,
 				@Inject(MenuConfig) public menuConfig: IMenuConfig) {
 	}
-
-	_componentElem;
 
 	get componentElem() {
 		return this._componentElem;

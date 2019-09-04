@@ -3,7 +3,7 @@
 		*ngIf="config?.isFooterCollapsible"
 		class="hide-menu"
 		(click)="toggle()"
-		[attr.tooltip-value]="'Hide menu' | translate"
+		[attr.tooltip-value]="minimizeText | translate"
 		tooltip-class="top">
 		<i class="fa fa-caret-down" [class.fa-caret-up]="collapse"></i>
 	</button>

@@ -72,14 +72,59 @@ const animations: any[] = [
 */
 
 export class MenuComponent implements OnInit, OnDestroy {
-	_componentElem;
 	currentComponent: ComponentRef<any>;
 	collapse: boolean;
-
 	@AutoSubscription
 	collapse$ = this.store.select(selectMenuCollapse).pipe(
 		tap(this.startToggleMenuCollapse.bind(this))
 	);
+	@Input() animatedElement: HTMLElement;
+	@ViewChild('menuWrapper') menuWrapperElement: ElementRef;
+	@ViewChild('menu') menuElement: ElementRef;
+	@ViewChild('container') container: ElementRef;
+	@Input() version;
+	menuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(select(selectAllMenuItems));
+	@AutoSubscription
+	selectedMenuItem$: Observable<string> = this.store
+		.pipe(
+			select(selectSelectedMenuItem),
+			tap(this.setSelectedMenuItem.bind(this))
+		);
+	selectedMenuItemName: string;
+	entities: Dictionary<IMenuItem> = {};
+	@AutoSubscription
+	entities$: Observable<Dictionary<IMenuItem>> = this.store
+		.pipe(
+			select(selectEntitiesMenuItems),
+			tap((_menuItems) => this.entities = _menuItems)
+		);
+	isPinned: boolean;
+	@AutoSubscription
+	isPinned$ = this.store
+		.pipe(
+			select(selectIsPinned),
+			tap((_isPinned: boolean) => {
+				this.isPinned = _isPinned;
+				this.onIsPinnedChange();
+			})
+		);
+	expand: boolean;
+	onAnimation: boolean;
+	isBuildNeeded: boolean;
+
+	constructor(public componentFactoryResolver: ComponentFactoryResolver,
+				protected store: Store<IMenuState>,
+				protected renderer: Renderer2,
+				protected elementRef: ElementRef,
+				@Inject(DOCUMENT) protected document: Document,
+				@Inject(MenuConfig) public menuConfig: IMenuConfig) {
+	}
+
+	_componentElem;
+
+	get componentElem() {
+		return this._componentElem;
+	}
 
 	@ViewChild('componentElem', { read: ViewContainerRef })
 	set componentElem(value) {
@@ -90,49 +135,17 @@ export class MenuComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	get componentElem() {
-		return this._componentElem;
+	get pinText(): string {
+		return this.isPinned ? 'Unpin' : 'Pin';
 	}
 
-	@Input() animatedElement: HTMLElement;
+	get selectedMenuItem(): IMenuItem {
+		return this.entities[this.selectedMenuItemName];
+	}
 
-	@ViewChild('menuWrapper') menuWrapperElement: ElementRef;
-	@ViewChild('menu') menuElement: ElementRef;
-	@ViewChild('container') container: ElementRef;
-	@Input() version;
-
-	@AutoSubscription
-	isPinned$ = this.store
-		.pipe(
-			select(selectIsPinned),
-			tap((_isPinned: boolean) => {
-				this.isPinned = _isPinned;
-				this.onIsPinnedChange();
-			})
-		);
-
-	@AutoSubscription
-	entities$: Observable<Dictionary<IMenuItem>> = this.store
-		.pipe(
-			select(selectEntitiesMenuItems),
-			tap((_menuItems) => this.entities = _menuItems)
-		);
-
-	menuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(select(selectAllMenuItems));
-
-	@AutoSubscription
-	selectedMenuItem$: Observable<string> = this.store
-		.pipe(
-			select(selectSelectedMenuItem),
-			tap(this.setSelectedMenuItem.bind(this))
-		);
-
-	selectedMenuItemName: string;
-	entities: Dictionary<IMenuItem> = {};
-	isPinned: boolean;
-	expand: boolean;
-	onAnimation: boolean;
-	isBuildNeeded: boolean;
+	get minimizeText(): string {
+		return this.collapse ? 'Show menu' : 'Hide menu';
+	}
 
 	@AutoSubscription
 	onClickOutside$ = () => fromEvent(this.document, 'click')
@@ -145,22 +158,6 @@ export class MenuComponent implements OnInit, OnDestroy {
 			}),
 			tap(this.closeMenu.bind(this))
 		);
-
-	constructor(public componentFactoryResolver: ComponentFactoryResolver,
-				protected store: Store<IMenuState>,
-				protected renderer: Renderer2,
-				protected elementRef: ElementRef,
-				@Inject(DOCUMENT) protected document: Document,
-				@Inject(MenuConfig) public menuConfig: IMenuConfig) {
-	}
-
-	get pinText(): string {
-		return this.isPinned ? 'Unpin' : 'Pin';
-	}
-
-	get selectedMenuItem(): IMenuItem {
-		return this.entities[this.selectedMenuItemName];
-	}
 
 	forceRedraw() {
 		return new Promise(resolve => {

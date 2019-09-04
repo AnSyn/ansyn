@@ -1,11 +1,11 @@
-import { Component, ElementRef, Inject, Input, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { selectFooterCollapse, ToggleFooter } from "@ansyn/map-facade";
+import { Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { selectFooterCollapse, ToggleFooter } from '@ansyn/map-facade';
 import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { ContainerChangedTriggerAction, IMenuState } from '@ansyn/menu';
 import { Store } from '@ngrx/store';
 import { CoreConfig } from '../../modules/core/models/core.config';
 import { ICoreConfig } from '../../modules/core/models/core.config.model';
-import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
 
 @Component({
@@ -14,7 +14,7 @@ import { tap } from 'rxjs/operators';
 	styleUrls: ['./ansyn-footer.component.less']
 })
 @AutoSubscriptions()
-export class AnsynFooterComponent implements OnInit, OnDestroy{
+export class AnsynFooterComponent implements OnInit, OnDestroy {
 	@Input() selectedCaseName: string;
 	@Input() activeMap: ICaseMapState;
 	@Input() animatedElement: HTMLElement;
@@ -35,6 +35,10 @@ export class AnsynFooterComponent implements OnInit, OnDestroy{
 	) {
 	}
 
+	get minimizeText(): string {
+		return this.collapse ? 'Show menu' : 'Hide menu';
+	}
+
 	ngOnInit() {
 	}
 
@@ -42,7 +46,7 @@ export class AnsynFooterComponent implements OnInit, OnDestroy{
 	}
 
 	toggle() {
-		this.store.dispatch( new ToggleFooter(!this.collapse));
+		this.store.dispatch(new ToggleFooter(!this.collapse));
 	}
 
 	startToggleCollapse(collapse: boolean) {

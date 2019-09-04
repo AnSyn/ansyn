@@ -16,7 +16,6 @@ import {
 import { copyFromContent } from '../../utils/clipboard';
 import { getTimeFormat } from '../../utils/time';
 import { combineLatest, Observable } from 'rxjs';
-import { IOverlay } from '../../../ansyn/modules/overlays/models/overlay.model';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -114,7 +113,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	@AutoSubscription
-	overlayNlayers$: () => Observable<[IOverlay, boolean]> = () => combineLatest(this.store$.select(selectOverlayFromMap(this.mapId)), this.store$.select(selectDisplayLayersOnMap(this.mapId))).pipe(
+	overlayNlayers$: () => Observable<[any, boolean]> = () => combineLatest(this.store$.select(selectOverlayFromMap(this.mapId)), this.store$.select(selectDisplayLayersOnMap(this.mapId))).pipe(
 		tap(([overlay, displayLayers]) => {
 			this.overlay = overlay;
 			this.displayLayers = displayLayers;

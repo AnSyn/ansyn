@@ -20,6 +20,7 @@ import { toolsFlags } from "../modules/menu-items/tools/reducers/tools.reducer";
 
 export class AnsynComponent implements OnInit {
 	renderContextMenu: boolean;
+	renderCredentials: boolean;
 
 	selectedCaseName$: Observable<string> = this.store$
 		.pipe(
@@ -58,6 +59,7 @@ export class AnsynComponent implements OnInit {
 
 		setTimeout(() => {
 			this.renderContextMenu = true;
+			this.renderCredentials = true;
 		}, 1000);
 
 	}

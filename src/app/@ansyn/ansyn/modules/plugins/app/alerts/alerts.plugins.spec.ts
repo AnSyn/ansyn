@@ -33,7 +33,7 @@ describe('AlertsPlugin', () => {
 	});
 
 	describe('setOverlaysNotInCase', () => {
-		it('should add alert if not null and not include on drops)', () => {
+		it('should add alert if not null and not include on filteredOverlays)', () => {
 			const all: any = [{ id: '1' }, { id: '2' }, { id: '3' }];
 			const filtered: string[] = ['1', '2', '3'];
 			alertsPlugin.overlay = <any>{ id: '4' };
@@ -44,10 +44,10 @@ describe('AlertsPlugin', () => {
 			}));
 		});
 
-		describe('should remove alert if null or include on drops', () => {
+		describe('should remove alert if null or include on filteredOverlays', () => {
 			it('not include', () => {
 				const all: any = [{ id: '1' }, { id: '2' }, { id: '3' }];
-				const filtered: string[] = ['1', '2'];
+				const filtered: string[] = ['1', '2', '3'];
 				alertsPlugin.overlay = <any>{ id: '3' };
 				const result = alertsPlugin.setOverlaysNotInCase([all, filtered]);
 				expect(result).toEqual(new RemoveAlertMsg({
@@ -58,7 +58,7 @@ describe('AlertsPlugin', () => {
 
 			it('null', () => {
 				const all: any = [{ id: 1 }, { id: 2 }, { id: 3 }];
-				const filtered: string[] = ['1', '2', '3']
+				const filtered: string[] = ['1', '2', '3'];
 				alertsPlugin.overlay = null;
 				const result = alertsPlugin.setOverlaysNotInCase([all, filtered]);
 				expect(result).toEqual(new RemoveAlertMsg({

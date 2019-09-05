@@ -28,6 +28,7 @@ import { combineLatest, Observable } from 'rxjs';
 })
 export class ImageryStatusComponent implements OnInit, OnDestroy {
 	mapsAmount = 1;
+	_mapId: string;
 	_entryComponents: IEntryComponentsEntities;
 	@HostBinding('class.active') isActiveMap: boolean;
 	overlay: any; // @TODO: eject to ansyn
@@ -57,7 +58,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities) {
 	}
 
-	_mapId: string;
+
 
 	get mapId() {
 		return this._mapId;

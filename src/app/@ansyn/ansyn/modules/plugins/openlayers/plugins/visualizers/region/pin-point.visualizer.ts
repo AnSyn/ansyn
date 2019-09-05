@@ -21,7 +21,8 @@ export class PinPointVisualizer extends RegionVisualizer {
 	_iconSrc: Style = new Style({
 		image: new Icon({
 			scale: 1,
-			src: 'assets/pinpoint-indicator.svg'
+			src: 'assets/pinpoint-indicator.svg',
+			color: '#0091ff'
 		}),
 		zIndex: 100
 	});

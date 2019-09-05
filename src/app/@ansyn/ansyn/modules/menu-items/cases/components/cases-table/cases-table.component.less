@@ -10,9 +10,11 @@ div.cases-table {
 
 	div.cases-table-head {
 		display: flex;
+
 		div.cases-table-head-row {
 			padding: 0 15px;
 			width: 100%;
+
 			div.cases-table-head-row-data {
 				display: flex;
 				align-items: center;
@@ -28,6 +30,7 @@ div.cases-table {
 			}
 		}
 	}
+
 	div.cases-table-body {
 		display: block;
 		overflow-y: auto;
@@ -40,6 +43,7 @@ div.cases-table {
 		div.cases-table-body-row:hover + div.cases-table-body-row div.cases-table-body-row-data hr {
 			top: -2px;
 		}
+
 		div.cases-table-body-row.selected + div.cases-table-body-row div.cases-table-body-row-data hr {
 			top: -2px;
 		}
@@ -77,6 +81,7 @@ div.cases-table {
 				color: #156879;
 				background: #EBF8FA;
 			}
+
 			hr {
 				display: none;
 				position: absolute;
@@ -87,9 +92,11 @@ div.cases-table {
 				left: 0;
 				color: #ebf8fa;
 			}
+
 			/deep/ .slider-text {
 				color: inherit;
 			}
+
 			div.cases-table-body-row-data {
 				position: relative;
 				display: flex;
@@ -100,6 +107,7 @@ div.cases-table {
 				//border-top: 1px solid #EBF8FA;
 				box-sizing: border-box;
 				height: 100%;
+
 				hr {
 					display: block;
 					position: absolute;
@@ -110,20 +118,25 @@ div.cases-table {
 					left: 0;
 					color: #ebf8fa;
 				}
+
 				div.cases-table-body-col {
 					flex: 1;
 				}
+
 				div.cases-table-case-name-col {
 					flex: 1.5;
 					overflow: hidden;
 					text-overflow: ellipsis;
 				}
+
 				.cases-table-auto-save-col {
 					padding-top: 20px;
 					flex: 2;
 				}
+
 				div.case-menu-container {
 					flex: 0;
+
 					div.case-menu {
 						display: flex;
 						transition: visibility .3s, transform .3s, opacity .3s;
@@ -143,6 +156,7 @@ div.cases-table {
 							background: transparent;
 							border: 1px solid transparent;
 							font-size: 20px;
+
 							&:hover {
 								box-sizing: border-box;
 								border: 1px solid #7b7b7b;

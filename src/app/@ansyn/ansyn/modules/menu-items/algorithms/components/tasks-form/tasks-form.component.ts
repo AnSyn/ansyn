@@ -180,9 +180,9 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		tap(([isNew, algName, masterOverlay, overlays]: [boolean, string, IOverlay, IOverlay[]]) => {
 			let message = '';
 			if (overlays.length < this.MIN_NUM_OF_OVERLAYS) {
-				message = `The number of selected overlays ${overlays.length} should be at least ${this.MIN_NUM_OF_OVERLAYS}`;
+				message = `The number of selected overlays ${ overlays.length } should be at least ${ this.MIN_NUM_OF_OVERLAYS }`;
 			} else if (overlays.length > this.algorithms[algName].maxOverlays) {
-				message = `The number of selected overlays ${overlays.length} should be at most ${this.algorithms[algName].maxOverlays}`;
+				message = `The number of selected overlays ${ overlays.length } should be at most ${ this.algorithms[algName].maxOverlays }`;
 			} else if (!masterOverlay) {
 				message = 'No master overlay selected';
 			}

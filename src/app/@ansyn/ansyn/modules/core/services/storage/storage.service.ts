@@ -27,11 +27,11 @@ export class StorageService {
 	}
 
 	private _buildSchemaUrl(schema: string) {
-		return `${this.config.storageService.baseUrl}/${schema}`;
+		return `${ this.config.storageService.baseUrl }/${ schema }`;
 	}
 
 	private _buildIdUrl(schema: string, id: string) {
-		return `${this._buildSchemaUrl(schema)}/${id}`;
+		return `${ this._buildSchemaUrl(schema) }/${ id }`;
 	}
 
 	private _buildEntityUrl<P extends IEntity, D>(schema: string, entity: IStoredEntity<P, D>) {
@@ -40,14 +40,18 @@ export class StorageService {
 
 	searchByCase<P extends IEntity>(schema: string, body): Observable<P[]> {
 		const url = this._buildSchemaUrl(schema);
-		const promise = this.fetchService.fetch(`${url}/search_by_case`, { method: 'POST', body: JSON.stringify(body),  headers: { 'Content-Type': 'application/json', }, })
+		const promise = this.fetchService.fetch(`${ url }/search_by_case`, {
+			method: 'POST',
+			body: JSON.stringify(body),
+			headers: { 'Content-Type': 'application/json', },
+		})
 			.then(response => response.json());
 		return from(promise);
 	}
 
 	deleteByCase<P extends IEntity>(schema: string, body): Observable<P[]> {
 		const url = this._buildSchemaUrl(schema);
-		return this._http.post<P[]>(`${url}/delete_by_case`, body);
+		return this._http.post<P[]>(`${ url }/delete_by_case`, body);
 	}
 
 	getPage<P extends IEntity>(schema: string, offset: number, pageSize: number): Observable<P[]> {

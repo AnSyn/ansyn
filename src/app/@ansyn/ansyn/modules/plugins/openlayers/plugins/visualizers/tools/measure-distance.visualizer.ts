@@ -12,16 +12,21 @@ import VectorSource from 'ol/source/Vector';
 import * as Sphere from 'ol/sphere';
 import GeoJSON from 'ol/format/GeoJSON';
 import { UUID } from 'angular2-uuid';
-import { ImageryVisualizer, VisualizerInteractions } from '@ansyn/imagery';
+import {
+	getPointByGeometry,
+	ImageryVisualizer,
+	IVisualizerEntity,
+	MarkerSize,
+	VisualizerInteractions,
+	VisualizerStates
+} from '@ansyn/imagery';
 import { FeatureCollection, GeometryObject } from 'geojson';
 import { combineLatest, Observable } from 'rxjs';
 import { selectActiveMapId } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
-import { getPointByGeometry, IVisualizerEntity, MarkerSize, VisualizerStates } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
-import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
+import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
 import { distinctUntilChanged, map, pluck, tap } from 'rxjs/operators';
-import { OpenLayersProjectionService } from '@ansyn/ol';
 import { IToolsState, toolsFlags, toolsStateSelector } from '../../../../../menu-items/tools/reducers/tools.reducer';
 
 @ImageryVisualizer({

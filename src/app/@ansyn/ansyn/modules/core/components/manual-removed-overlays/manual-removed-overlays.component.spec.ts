@@ -7,8 +7,7 @@ import {
 import { ManualRemovedOverlaysComponent } from './manual-removed-overlays.component';
 import { StoreModule } from '@ngrx/store';
 import { SliderCheckboxComponent } from '../../forms/slider-checkbox/slider-checkbox.component';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { EMPTY } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('ManualRemovedOverlaysComponent', () => {
 	let component: ManualRemovedOverlaysComponent;
@@ -20,7 +19,7 @@ describe('ManualRemovedOverlaysComponent', () => {
 			imports: [StoreModule.forRoot({
 				[overlayStatusFeatureKey]: OverlayStatusReducer
 			}),
-			TranslateModule.forRoot()]
+				TranslateModule.forRoot()]
 		})
 			.compileComponents();
 	}));

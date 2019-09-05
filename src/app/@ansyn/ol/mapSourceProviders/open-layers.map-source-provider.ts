@@ -1,4 +1,4 @@
-import { BaseMapSourceProvider, ImageryLayerProperties, bboxFromGeoJson, IMapSettings } from '@ansyn/imagery';
+import { BaseMapSourceProvider, bboxFromGeoJson, ImageryLayerProperties, IMapSettings } from '@ansyn/imagery';
 import Layer from 'ol/layer/Layer';
 import ImageLayer from 'ol/layer/Image';
 import TileLayer from 'ol/layer/Tile';
@@ -16,9 +16,9 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 
 	generateLayerId(metaData: IMapSettings) {
 		if (metaData.data.overlay) {
-			return `${metaData.worldView.mapType}/${JSON.stringify(metaData.data.overlay)}`;
+			return `${ metaData.worldView.mapType }/${ JSON.stringify(metaData.data.overlay) }`;
 		}
-		return `${metaData.worldView.mapType}/${metaData.worldView.sourceType}`;
+		return `${ metaData.worldView.mapType }/${ metaData.worldView.sourceType }`;
 	}
 
 	removeExtraData(layer: any) {

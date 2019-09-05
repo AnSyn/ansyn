@@ -11,21 +11,25 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { GEO_FILTERS, IComboBoxesProperties, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
 import { CaseDataFilterTitle } from '../../models/data-input-filters.model';
-import { Actions } from '@ngrx/effects';
+import { Actions, ofType } from '@ngrx/effects';
 import { SetComboBoxesProperties, UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations/src/animation_metadata';
 import { SearchMode, SearchModeEnum } from '../../models/search-mode.enum';
 import { filter, map, tap } from 'rxjs/operators';
-import { ofType } from '@ngrx/effects';
 import { LayoutKey, layoutOptions, selectLayout, SetLayoutAction } from '@ansyn/map-facade';
 import { selectDataInputFilter, selectRegion, selectTime } from '../../../overlays/reducers/overlays.reducer';
-import { OverlaysActionTypes, UpdateOverlaysCountAction, SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
+import {
+	OverlaysActionTypes,
+	SetOverlaysCriteriaAction,
+	UpdateOverlaysCountAction
+} from '../../../overlays/actions/overlays.actions';
 import {
 	CaseGeoFilter,
 	CaseOrientation,
 	CaseTimeFilter,
-	ICaseDataInputFiltersState, ICaseTimeState
+	ICaseDataInputFiltersState,
+	ICaseTimeState
 } from '../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 

@@ -10,7 +10,7 @@ import {
 import { LayoutKey } from '../models/maps-layout';
 
 export interface IAngleFilterClick { // @TODO: map-facade should not know IOverlay
-	click: {x: number, y: number};
+	click: { x: number, y: number };
 	overlays: any[];
 	displayedOverlay: any;
 	point: Point;
@@ -167,7 +167,8 @@ export class ContextMenuDisplayAction implements Action {
 export class ContextMenuShowAngleFilter implements Action {
 	type = MapActionTypes.CONTEXT_MENU.ANGLE_FILTER_SHOW;
 
-	constructor(public payload: IAngleFilterClick) {}
+	constructor(public payload: IAngleFilterClick) {
+	}
 }
 
 export class PinLocationModeTriggerAction implements Action {
@@ -337,8 +338,9 @@ export class SetToastMessageAction implements Action {
 	}
 }
 
-export class ToggleFooter implements Action{
+export class ToggleFooter implements Action {
 	type = MapActionTypes.FOOTER_COLLAPSE;
 
-	constructor(public payload: boolean) {}
+	constructor(public payload: boolean) {
+	}
 }

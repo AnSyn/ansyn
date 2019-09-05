@@ -3,7 +3,7 @@ import { getPolygonIntersectionRatioWithMultiPolygon } from './geo';
 
 describe('geo utils', () => {
 	// Small
-	const extent1 = <GeoJSON.Polygon> turf.geometry('Polygon', [[
+	const extent1 = <GeoJSON.Polygon>turf.geometry('Polygon', [[
 		[-74.30634782, 40.70691754],
 		[-74.30634782, 40.56996158],
 		[-74.09476401, 40.56996158],
@@ -17,7 +17,7 @@ describe('geo utils', () => {
 	};
 
 	// Big
-	const extent2 = <GeoJSON.Polygon> turf.geometry('Polygon', [[
+	const extent2 = <GeoJSON.Polygon>turf.geometry('Polygon', [[
 		[-108.6680662842075, 55.28962163640938],
 		[-108.6680662842075, 22.089029254245375],
 		[-39.48410696517823, 22.089029254245375],

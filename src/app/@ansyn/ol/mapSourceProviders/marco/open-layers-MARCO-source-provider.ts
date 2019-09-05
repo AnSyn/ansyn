@@ -46,7 +46,7 @@ export class OpenLayerMarcoSourceProvider extends OpenLayersMapSourceProvider<IM
 
 	public create(caseMapState: IMapSettings | any): any {
 		const overlayMetaData = caseMapState.data.overlay;
-		const projectionKey = `projectionKey_${overlayMetaData.id}`;
+		const projectionKey = `projectionKey_${ overlayMetaData.id }`;
 
 		return this.createTileLayer(overlayMetaData.imageUrl, overlayMetaData.approximateTransform, overlayMetaData.min, overlayMetaData.max, projectionKey);
 	}
@@ -72,9 +72,9 @@ export class OpenLayerMarcoSourceProvider extends OpenLayersMapSourceProvider<IM
 				Width: capabilities.Capabilities.contents.datasetDescriptionSummary[0].Layer.boundingBox[0]['ows:BoundingBox'].lowerCorner[0]
 			};
 
-			const imageUrl = this.config.imageUrl.replace('{imagePath}', `${imagePath}`);
+			const imageUrl = this.config.imageUrl.replace('{imagePath}', `${ imagePath }`);
 			let source = MpTileSource.create(capabilitiesMeta,
-				`${this.server}${imageUrl}`,
+				`${ this.server }${ imageUrl }`,
 				approximateTramsforom,
 				projectionKey);
 
@@ -103,7 +103,7 @@ export class OpenLayerMarcoSourceProvider extends OpenLayersMapSourceProvider<IM
 
 	private getMImageLayer(capabilitiesMeta, imagePath, approximateTramsforom, extent, projectionKey) {
 		// create Image Layer
-		const imageUrl = this.config.imageUrl.replace('{imagePath}', `${imagePath}`);
+		const imageUrl = this.config.imageUrl.replace('{imagePath}', `${ imagePath }`);
 		let source = MpTileImageSource.create(
 			capabilitiesMeta,
 			imageUrl,
@@ -123,7 +123,7 @@ export class OpenLayerMarcoSourceProvider extends OpenLayersMapSourceProvider<IM
 
 	private getWMTSCapabilities(url: string): Promise<any> {
 		return this.http.get(
-			`${this.server}${url}${this.config.capabilitiesUrl}`)
+			`${ this.server }${ url }${ this.config.capabilitiesUrl }`)
 			.toPromise();
 	}
 

@@ -1,17 +1,25 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
-import { NavigateCaseTriggerAction, RouterActionTypes } from '../actions/router.actions';
-import { Router } from '@angular/router';
-import { ISetStatePayload, SetStateAction } from '../actions/router.actions';
-import { casesStateSelector, ICasesState } from '@ansyn/ansyn';
-import { IRouterState, routerStateSelector } from '../reducers/router.reducer';
 import {
-	CasesActionTypes, LoadCaseAction, LoadDefaultCaseAction,
-	SaveCaseAsSuccessAction, SelectCaseAction
+	ISetStatePayload,
+	NavigateCaseTriggerAction,
+	RouterActionTypes,
+	SetStateAction
+} from '../actions/router.actions';
+import { Router } from '@angular/router';
+import {
+	CasesActionTypes,
+	CasesService,
+	casesStateSelector,
+	ICasesState,
+	LoadCaseAction,
+	LoadDefaultCaseAction,
+	SaveCaseAsSuccessAction,
+	SelectCaseAction
 } from '@ansyn/ansyn';
+import { IRouterState, routerStateSelector } from '../reducers/router.reducer';
 import { Store } from '@ngrx/store';
-import { CasesService } from '@ansyn/ansyn';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 
 @Injectable()

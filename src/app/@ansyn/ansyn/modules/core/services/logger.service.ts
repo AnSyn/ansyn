@@ -27,13 +27,13 @@ export class LoggerService implements ErrorHandler {
 
 	constructor(@Inject(LoggerConfig) public loggerConfig: ILoggerConfig) {
 		this.env = loggerConfig.env;
-		window.onerror =  (e) => {
+		window.onerror = (e) => {
 			this.error(e.toString());
 		};
 	}
 
 	get standardPrefix() {
-		return `Ansyn[${this.env}]`;
+		return `Ansyn[${ this.env }]`;
 	}
 
 	critical(msg: string) {
@@ -60,11 +60,11 @@ export class LoggerService implements ErrorHandler {
 		if (!this.loggerConfig.active) {
 			return;
 		}
-		let prefix = `${this.standardPrefix}[${Date()}]`;
+		let prefix = `${ this.standardPrefix }[${ Date() }]`;
 		if (includeBrowserData) {
-			prefix += `[window:${window.innerWidth}x${window.innerHeight}][userAgent: ${navigator.userAgent}]`;
+			prefix += `[window:${ window.innerWidth }x${ window.innerHeight }][userAgent: ${ navigator.userAgent }]`;
 		}
-		const str = `${prefix}[${severity}] ${msg}`;
+		const str = `${ prefix }[${ severity }] ${ msg }`;
 		this.stack.push({ severity, msg: str });
 		this.output();
 	}

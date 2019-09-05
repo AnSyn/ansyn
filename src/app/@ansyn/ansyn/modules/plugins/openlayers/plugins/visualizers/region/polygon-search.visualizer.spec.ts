@@ -30,7 +30,7 @@ describe('PolygonSearchVisualizer', () => {
 	}));
 
 	it('createRegion should return "geometry"', () => {
-		const fakeGeojson = <any> { geometry: 'geometry' };
+		const fakeGeojson = <any>{ geometry: 'geometry' };
 		const expectedResult = polygonSearchVisualizer.createRegion(fakeGeojson);
 		expect(expectedResult).toEqual('geometry');
 	});

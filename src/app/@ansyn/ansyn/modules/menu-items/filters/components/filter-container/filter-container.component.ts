@@ -3,7 +3,8 @@ import { select, Store } from '@ngrx/store';
 import {
 	Filters,
 	IFiltersState,
-	selectFilters, selectFiltersSearchResults,
+	selectFilters,
+	selectFiltersSearchResults,
 	selectIsLoading,
 	selectShowOnlyFavorites
 } from '../../reducer/filters.reducer';

@@ -4,10 +4,7 @@ import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { ExpandAction } from '../../actions/status-bar.actions';
 import { IStatusBarConfig, IToolTipsConfig } from '../../models/statusBar-config.model';
 import { StatusBarConfig } from '../../models/statusBar.config';
-import {
-	GoAdjacentOverlay,
-	GoNextPresetOverlay
-} from '../../../status-bar/actions/status-bar.actions';
+import { GoAdjacentOverlay, GoNextPresetOverlay } from '../../../status-bar/actions/status-bar.actions';
 import { EnableCopyOriginalOverlayDataAction } from '@ansyn/map-facade';
 import { ActivateScannedAreaAction } from '../../../overlays/overlay-status/actions/overlay-status.actions';
 

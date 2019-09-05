@@ -22,9 +22,9 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 import { LoggerService } from '../../core/services/logger.service';
 import { OverlaySourceProvider } from '../models/overlays-source-providers';
-import { imageryStatusInitialState, imageryStatusFeatureKey } from '@ansyn/map-facade';
+import { imageryStatusFeatureKey, imageryStatusInitialState } from '@ansyn/map-facade';
 import { IOverlay } from '../models/overlay.model';
-import { TranslateModule, USE_DEFAULT_LANG, MissingTranslationHandler } from '@ngx-translate/core';
+import { MissingTranslationHandler, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
 
 @OverlaySourceProvider({
 	sourceType: 'Mock'

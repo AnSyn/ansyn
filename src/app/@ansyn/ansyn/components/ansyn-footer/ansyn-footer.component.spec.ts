@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { mapFeatureKey, MapReducer } from "@ansyn/map-facade";
+import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 
 import { AnsynFooterComponent } from './ansyn-footer.component';
 import { MockComponent } from '../../modules/core/test/mock-component';
@@ -27,7 +27,7 @@ describe('AnsynFooterComponent', () => {
 				mockOverlays
 			],
 			imports: [
-				StoreModule.forRoot({[mapFeatureKey]: MapReducer}),
+				StoreModule.forRoot({ [mapFeatureKey]: MapReducer }),
 				TranslateModule.forRoot()
 			],
 			providers: [

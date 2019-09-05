@@ -7,4 +7,5 @@ import { Injectable } from '@angular/core';
 export class FetchService implements BaseFetchService {
 	fetch(url: string, options?: RequestInit): Promise<Response> {
 		return window.fetch(url, options);
-	}}
+	}
+}

@@ -3,8 +3,11 @@ import { Inject, Injectable } from '@angular/core';
 import {
 	BaseOverlaySourceProvider,
 	IFetchParams,
-	IOverlayFilter, isFaulty,
-	IStartAndEndDate, mergeErrors, mergeOverlaysFetchData
+	IOverlayFilter,
+	isFaulty,
+	IStartAndEndDate,
+	mergeErrors,
+	mergeOverlaysFetchData
 } from '../models/base-overlay-source-provider.model';
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
@@ -12,13 +15,12 @@ import { map } from 'rxjs/operators';
 import { groupBy } from 'lodash';
 import { IOverlayByIdMetaData } from './overlays.service';
 import { IMultipleOverlaysSource, MultipleOverlaysSource } from '../models/overlays-source-providers';
-import { ILimitedArray, mergeLimitedArrays } from '../../core/utils/i-limited-array';
 import { forkJoinSafe } from '../../core/utils/rxjs/observables/fork-join-safe';
-import { sortByDateDesc } from '../../core/utils/sorting';
 import { mergeArrays } from '../../core/utils/merge-arrays';
 import {
 	IMultipleOverlaysSourceConfig,
-	IOverlaysSourceProvider, MultipleOverlaysSourceConfig
+	IOverlaysSourceProvider,
+	MultipleOverlaysSourceConfig
 } from '../../core/models/multiple-overlays-source-config';
 import { IDataInputFilterValue } from '../../menu-items/cases/models/case.model';
 import { IOverlay, IOverlaysFetchData } from '../models/overlay.model';
@@ -50,7 +52,7 @@ export class MultipleOverlaysSourceProvider {
 		if (overlaysSource) {
 			return overlaysSource.getThumbnailUrl(overlay, position);
 		}
-		return throwError(`Cannot find overlay for source = ${overlay.sourceType} id = ${overlay.id}`);
+		return throwError(`Cannot find overlay for source = ${ overlay.sourceType } id = ${ overlay.id }`);
 	}
 
 	getThumbnailName(overlay): string {
@@ -66,7 +68,7 @@ export class MultipleOverlaysSourceProvider {
 			const type = provider.sourceType;
 			let config = this.multipleOverlaysSourceConfig.indexProviders[type];
 			if (!config) {
-				console.warn(`Missing config for provider ${type}, using defaultProvider config`);
+				console.warn(`Missing config for provider ${ type }, using defaultProvider config`);
 				config = this.multipleOverlaysSourceConfig.defaultProvider;
 			}
 			return [provider, config];
@@ -143,7 +145,7 @@ export class MultipleOverlaysSourceProvider {
 		if (overlaysSource) {
 			return overlaysSource.getById(id, sourceType);
 		}
-		return throwError(`Cannot find overlay for source = ${sourceType} id = ${id}`);
+		return throwError(`Cannot find overlay for source = ${ sourceType } id = ${ id }`);
 	}
 
 	getByIds(ids: IOverlayByIdMetaData[]): Observable<IOverlay[]> {
@@ -154,7 +156,7 @@ export class MultipleOverlaysSourceProvider {
 				if (overlaysSource) {
 					return overlaysSource.getByIds(ids);
 				}
-				return throwError(`Cannot find overlay for source = ${sourceType}`);
+				return throwError(`Cannot find overlay for source = ${ sourceType }`);
 			});
 
 		return forkJoinSafe(observables).pipe(map(mergeArrays));

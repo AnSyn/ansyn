@@ -6,7 +6,8 @@ import {
 	NG_VALIDATORS,
 	NG_VALUE_ACCESSOR,
 	ValidationErrors,
-	Validator, Validators
+	Validator,
+	Validators
 } from '@angular/forms';
 import { noop } from 'rxjs';
 

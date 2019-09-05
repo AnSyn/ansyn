@@ -3,28 +3,26 @@ import { from, Observable, of } from 'rxjs';
 import {
 	CasesActionTypes,
 	CasesService,
-	ICase,
-	IContextEntity, IOverlaySpecialObject,
-	LoadDefaultCaseAction,
-	SelectCaseAction
-} from '@ansyn/ansyn';
-import {
 	DisplayedOverlay,
-	IContext,
-} from '@ansyn/ansyn';
-import {
 	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayFromStoreAction,
+	ICase,
+	IContext,
+	IContextEntity,
+	IOverlaySpecialObject,
 	IOverlaysState,
 	IStartAndEndDate,
+	LoadDefaultCaseAction,
 	OverlaysActionTypes,
 	OverlaysService,
 	overlaysStateSelector,
-	SetFilteredOverlaysAction, SetSpecialObjectsActionStore
+	SelectCaseAction,
+	SetFilteredOverlaysAction,
+	SetSpecialObjectsActionStore
 } from '@ansyn/ansyn';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { catchError, filter, map, mergeMap, withLatestFrom, share } from 'rxjs/operators';
-import { Store, Action } from '@ngrx/store';
+import { catchError, filter, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
+import { Action, Store } from '@ngrx/store';
 import {
 	IContextParams,
 	selectContextEntities,
@@ -34,7 +32,7 @@ import {
 import { SetContextParamsAction } from '../actions/context.actions';
 import { ContextService } from '../services/context.service';
 import { get } from 'lodash';
-import { transformScale, bbox } from '@turf/turf';
+import { bbox, transformScale } from '@turf/turf';
 import { SetToastMessageAction } from '@ansyn/map-facade';
 
 @Injectable()
@@ -64,7 +62,7 @@ export class ContextAppEffects {
 					new SetContextParamsAction(paramsPayload),
 					new SelectCaseAction(selectedCase)
 				]
-		));
+			));
 	});
 
 	@Effect()
@@ -183,7 +181,7 @@ export class ContextAppEffects {
 		let case$: Observable<ICase> = of(defaultCaseQueryParams).pipe(<any>mapToCase);
 
 		if (context.imageryCountBefore && !context.imageryCountAfter) {
-			case$ = <any> this.overlaysService.getStartDateViaLimitFacets({
+			case$ = <any>this.overlaysService.getStartDateViaLimitFacets({
 				region: updatedCase.state.region,
 				limit: context.imageryCountBefore,
 				facets: updatedCase.state.facets

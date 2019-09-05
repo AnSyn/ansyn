@@ -1,5 +1,5 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { mapFeatureKey, MapReducer, selectMaps, UpdateMapAction } from '@ansyn/map-facade';
+import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { EffectsModule } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { of } from 'rxjs';
@@ -44,7 +44,7 @@ describe('OverlaySourceTypeNoticeComponent', () => {
 					}
 				},
 				{
-				provide: CoreConfig,
+					provide: CoreConfig,
 					useValue: {}
 				},
 				{

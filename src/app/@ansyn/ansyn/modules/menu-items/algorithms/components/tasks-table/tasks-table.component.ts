@@ -5,7 +5,8 @@ import { getTimeFormat } from '@ansyn/map-facade';
 import { TasksEffects } from '../../effects/tasks.effects';
 import { Observable } from 'rxjs';
 import {
-	ITasksState, selectAlgorithmTasksAreLoading,
+	ITasksState,
+	selectAlgorithmTasksAreLoading,
 	selectAlgorithmTasksSelectedTaskId,
 	selectTaskEntities,
 	selectTasksIds
@@ -76,7 +77,7 @@ export class TasksTableComponent implements OnInit, OnDestroy {
 	onMouseEnterTaskRow(taskMenu: HTMLDivElement, taskRow: HTMLDivElement, tbodyElement: HTMLDivElement) {
 		let offsetTop = taskRow.offsetTop;
 		let scrollTop = tbodyElement.scrollTop;
-		taskMenu.style.top = `${offsetTop - scrollTop + 1}px`;
+		taskMenu.style.top = `${ offsetTop - scrollTop + 1 }px`;
 		taskRow.classList.add('mouse-enter');
 	}
 

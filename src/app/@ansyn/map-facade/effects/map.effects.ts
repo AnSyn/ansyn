@@ -6,7 +6,9 @@ import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMaps } from '../reducers/map.reducer';
 import {
 	geojsonMultiPolygonToBBOXPolygon,
-	ImageryMapPosition, IMapSettings,
+	ImageryCommunicatorService,
+	ImageryMapPosition,
+	IMapSettings,
 	IWorldViewMapState
 } from '@ansyn/imagery';
 import {
@@ -22,20 +24,18 @@ import {
 	MapActionTypes,
 	MapInstanceChangedAction,
 	PinLocationModeTriggerAction,
+	SetLayoutSuccessAction,
 	SetMapPositionByRadiusAction,
 	SetMapPositionByRectAction,
-	SynchronizeMapsAction,
-	UpdateMapAction,
+	SetToastMessageAction,
 	SetWasWelcomeNotificationShownFlagAction,
-	SetLayoutSuccessAction,
-	SetToastMessageAction
+	SynchronizeMapsAction,
+	UpdateMapAction
 } from '../actions/map.actions';
-import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import { catchError, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { IMapFacadeConfig } from '../models/map-config.model';
-import { Dictionary } from '@ngrx/entity/src/models';
 import { updateSession } from '../models/core-session-state.model';
 
 @Injectable()
@@ -133,7 +133,7 @@ export class MapEffects {
 			if (!mapPosition) {
 				const map: IMapSettings = mapState.entities[mapId];
 				if (map.data.overlay) {
-					mapPosition = { extentPolygon: geojsonMultiPolygonToBBOXPolygon(map.data.overlay.footprint)};
+					mapPosition = { extentPolygon: geojsonMultiPolygonToBBOXPolygon(map.data.overlay.footprint) };
 				} else {
 					mapPosition = map.data.position;
 				}
@@ -190,7 +190,10 @@ export class MapEffects {
 				}),
 				catchError((err) => {
 					console.error('CHANGE_IMAGERY_MAP ', err);
-					this.store$.dispatch(new SetToastMessageAction({ toastText: 'Failed to change map', showWarningIcon: true}));
+					this.store$.dispatch(new SetToastMessageAction({
+						toastText: 'Failed to change map',
+						showWarningIcon: true
+					}));
 					return EMPTY;
 				})
 			);

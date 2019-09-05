@@ -2,8 +2,17 @@ import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 
 import {
+	casesFeatureKey,
+	CasesReducer,
+	CasesService,
+	casesStateSelector,
+	DisplayedOverlay,
 	DisplayMultipleOverlaysFromStoreAction,
-	DisplayOverlayFromStoreAction, ICase,
+	DisplayOverlayFromStoreAction,
+	ErrorHandlerService,
+	ICase,
+	initialCasesState,
+	IToolsState,
 	MarkUpClass,
 	OverlayReducer,
 	overlaysFeatureKey,
@@ -12,33 +21,25 @@ import {
 	overlaysStateSelector,
 	selectDropMarkup,
 	selectOverlaysMap,
-	SetFilteredOverlaysAction
-} from '@ansyn/ansyn';
-import { Observable, of, throwError } from 'rxjs';
-import {
-	casesFeatureKey,
-	CasesReducer,
-	CasesService,
-	casesStateSelector,
-	initialCasesState,
-	IToolsState,
+	SetFilteredOverlaysAction,
+	statusBarStateSelector,
+	StorageService,
 	toolsFeatureKey,
 	toolsInitialState,
 	ToolsReducer,
 	toolsStateSelector
 } from '@ansyn/ansyn';
+import { Observable, of, throwError } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { statusBarStateSelector } from '@ansyn/ansyn';
 import {
-	DisplayedOverlay, ErrorHandlerService,
-	StorageService
-} from '@ansyn/ansyn';
-import {
+	BaseMapSourceProvider,
+	CacheService,
+	ImageryCommunicatorService,
+	ImageryMapSource,
 	MAP_SOURCE_PROVIDERS_CONFIG,
 } from '@ansyn/imagery';
-import { BaseMapSourceProvider, CacheService, ImageryCommunicatorService, ImageryMapSource } from '@ansyn/imagery';
 import { initialMapState, mapFeatureKey, MapReducer, mapStateSelector, selectMapsList } from '@ansyn/map-facade';
 import { cloneDeep as _cloneDeep } from 'lodash';
 import { ContextAppEffects } from './context.app.effects';
@@ -171,7 +172,7 @@ describe('ContextAppEffects', () => {
 					useValue: {}
 				},
 				provideMockActions(() => actions),
-				{ provide: StorageService, useValue: {}},
+				{ provide: StorageService, useValue: {} },
 				// { provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock },
 				{
 					provide: CasesService,

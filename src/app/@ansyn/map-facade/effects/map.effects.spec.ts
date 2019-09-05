@@ -10,11 +10,11 @@ import { cloneDeep } from 'lodash';
 import { cold, hot } from 'jasmine-marbles';
 import {
 	DecreasePendingMapsCountAction,
-	ImageryRemovedAction,
+	ImageryCreatedAction,
+	SetLayoutSuccessAction,
 	SetMapPositionByRadiusAction,
 	SetMapPositionByRectAction,
-	SynchronizeMapsAction,
-	SetLayoutSuccessAction, ImageryCreatedAction
+	SynchronizeMapsAction
 } from '../actions/map.actions';
 import { mapFacadeConfig } from '../models/map-facade.config';
 

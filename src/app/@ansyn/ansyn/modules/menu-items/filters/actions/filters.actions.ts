@@ -56,6 +56,7 @@ export class UpdateFacetsAction implements Action {
 
 export class SetFilterSearch implements Action {
 	readonly type = FiltersActionTypes.SET_FILTER_SEARCH;
+
 	constructor(public payload: string) {
 	}
 }

@@ -198,7 +198,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	}
 
 	onMouseOut({ id }: IEventDropsEvent) {
-		if (!d3.event.toElement  || (d3.event.toElement && d3.event.toElement.id !== overlayOverviewComponentConstants.TRANSPARENT_DIV_ID)) {
+		if (!d3.event.toElement || (d3.event.toElement && d3.event.toElement.id !== overlayOverviewComponentConstants.TRANSPARENT_DIV_ID)) {
 			this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
 		}
 	}
@@ -297,8 +297,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 					if (!dropElement.empty()) {
 						if (markUpData.type === MarkUpTypes.symbole) {
 							this.appendLetters(textContainer, dropElement, markUpData.data);
-						}
-						else {
+						} else {
 							const currentClassList = dropElement.attr('class');
 							dropElement.attr('class', currentClassList.concat(' changedDrops ' + className));
 						}

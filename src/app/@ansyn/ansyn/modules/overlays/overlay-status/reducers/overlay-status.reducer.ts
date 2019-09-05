@@ -1,4 +1,3 @@
-import { ImageryStatusActionTypes, imageryStatusStateSelector } from '@ansyn/map-facade';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { uniq } from 'lodash';
 import { AlertMsg, AlertMsgTypes } from '../../../alerts/model';

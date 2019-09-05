@@ -76,8 +76,8 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 			const selectedLayersIds = state.selectedLayersIds.filter((id) => id !== action.payload);
 			let activeAnnotationLayer = state.activeAnnotationLayer;
 			if (action.payload === state.activeAnnotationLayer) {
-				activeAnnotationLayer = (<string[]> state.ids).find((id) => (id !== action.payload) && (state.entities[id].type === LayerType.annotation));
-				activeAnnotationLayer = (<string[]> state.ids).find((id) => (id !== action.payload) && (state.entities[id].type === LayerType.annotation));
+				activeAnnotationLayer = (<string[]>state.ids).find((id) => (id !== action.payload) && (state.entities[id].type === LayerType.annotation));
+				activeAnnotationLayer = (<string[]>state.ids).find((id) => (id !== action.payload) && (state.entities[id].type === LayerType.annotation));
 			}
 			return layersAdapter.removeOne(action.payload, { ...state, selectedLayersIds, activeAnnotationLayer });
 		}

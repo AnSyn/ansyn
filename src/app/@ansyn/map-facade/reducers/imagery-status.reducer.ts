@@ -1,6 +1,4 @@
-import {
-	ImageryStatusActionTypes
-} from '../actions/imagery-status.actions';
+import { ImageryStatusActionTypes } from '../actions/imagery-status.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 
 export const imageryStatusFeatureKey = 'imageryStatus';

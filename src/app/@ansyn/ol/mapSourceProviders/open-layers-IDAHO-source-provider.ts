@@ -1,8 +1,8 @@
 import {
-	IMapSettings,
 	CacheService,
 	ImageryCommunicatorService,
 	ImageryMapSource,
+	IMapSettings,
 	IMapSourceProvidersConfig,
 	MAP_SOURCE_PROVIDERS_CONFIG,
 } from '@ansyn/imagery';
@@ -79,7 +79,7 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 			const rIndex = imageData.bandAliases.indexOf('R');
 			const gIndex = imageData.bandAliases.indexOf('G');
 			const bIndex = imageData.bandAliases.indexOf('B');
-			rgbBans = `${rIndex},${gIndex},${bIndex}`;
+			rgbBans = `${ rIndex },${ gIndex },${ bIndex }`;
 		} else {
 			rgbBans = '0';
 			if (overlay.channel > 1 && overlay.channel < 5) {
@@ -105,7 +105,7 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 
 	getImageData(overlay: any, token, fileName: string): Promise<any> {
 		const idahoElement = overlay.tag;
-		const fileUrl = `http://idaho.geobigdata.io/v1/metadata/${idahoElement.properties.bucketName}/${overlay.id}/${fileName}.json`;
+		const fileUrl = `http://idaho.geobigdata.io/v1/metadata/${ idahoElement.properties.bucketName }/${ overlay.id }/${ fileName }.json`;
 
 		const httpOptions = {
 			headers: {

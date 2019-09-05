@@ -1,16 +1,13 @@
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { IMapSettings } from '@ansyn/imagery';
-import { selectFooterCollapse, selectMaps } from '@ansyn/map-facade';
+import { selectFooterCollapse, selectOverlayFromMap } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { filter, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { CoreConfig } from '../../../core/models/core.config';
 import { ICoreConfig } from '../../../core/models/core.config.model';
 import { IOverlay } from '../../models/overlay.model';
 import { IOverlaysConfig } from '../../models/overlays.config';
 import { OverlaysConfig } from '../../services/overlays.service';
-import { Observable } from 'rxjs';
-import { Dictionary } from '@ngrx/entity';
 
 @Component({
 	selector: 'ansyn-overlay-source-type-notice',
@@ -21,19 +18,20 @@ import { Dictionary } from '@ngrx/entity';
 export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 	@Input() mapId: string;
 	footerCollapse: boolean;
+	private _title: string = null;
 	@AutoSubscription
-	overlay$: Observable<Dictionary<IMapSettings>> = this.store$.pipe(
-		select(selectMaps),
-		filter((maps) => Boolean(maps[this.mapId])),
-		tap((maps) => {
-			this.overlay = maps[this.mapId].data.overlay;
-		})
+	footerCollapse$ = this.store$.select(selectFooterCollapse).pipe(
+		tap((collapse) => this.footerCollapse = collapse)
 	);
 
 	@AutoSubscription
-	footerCollapse$ = this.store$.select(selectFooterCollapse).pipe(
-		tap( (collapse) => this.footerCollapse = collapse)
+	overlay$ = () => this.store$.pipe(
+		select(selectOverlayFromMap(this.mapId)),
+		tap((overlay) => {
+			this.overlay = overlay;
+		})
 	);
+
 	set overlay(overlay: IOverlay) {
 		let sourceTypeConfig;
 		// Extract the title, according to the new overlay and the configuration
@@ -46,7 +44,7 @@ export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	private _title: string = null;
+
 	get title() {
 		return this._title;
 	}

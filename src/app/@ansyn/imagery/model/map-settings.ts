@@ -7,6 +7,7 @@ export interface IWorldViewMapState {
 
 export interface IMapSettingsData {
 	position: ImageryMapPosition;
+
 	[key: string]: any;
 }
 

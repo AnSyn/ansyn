@@ -89,7 +89,7 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract addLayerIfNotExist(layer: any);
 
-	abstract getCoordinateFromScreenPixel(screenPixel: { x, y}): [number, number, number];
+	abstract getCoordinateFromScreenPixel(screenPixel: { x, y }): [number, number, number];
 
 	abstract getHtmlContainer(): HTMLElement;
 

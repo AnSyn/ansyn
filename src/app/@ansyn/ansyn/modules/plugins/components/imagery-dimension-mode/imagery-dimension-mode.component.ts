@@ -1,10 +1,10 @@
 import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { ChangeImageryMap, IEntryComponent } from "@ansyn/map-facade";
-import { AutoSubscriptions } from "auto-subscriptions";
-import { get as _get } from "lodash";
-import { Store } from "@ngrx/store";
-import { ImageryCommunicatorService } from "@ansyn/imagery";
-import { DisabledOpenLayersMapName, OpenlayersMapName } from "@ansyn/ol";
+import { ChangeImageryMap, IEntryComponent } from '@ansyn/map-facade';
+import { AutoSubscriptions } from 'auto-subscriptions';
+import { get as _get } from 'lodash';
+import { Store } from '@ngrx/store';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
 import { CesiumMap, CesiumMapName } from '@ansyn/imagery-cesium';
 import { take } from 'rxjs/operators';
 import { CoreConfig } from '../../../core/models/core.config';
@@ -42,16 +42,16 @@ export class ImageryDimensionModeComponent implements OnInit, OnDestroy, IEntryC
 
 	toggleMapDimentions() {
 		if (this.selectedMap === DimensionMode.D2) {
-			this.store$.dispatch(new ChangeImageryMap({id: this.mapId, mapType: CesiumMapName}));
+			this.store$.dispatch(new ChangeImageryMap({ id: this.mapId, mapType: CesiumMapName }));
 		} else if (this.selectedMap === DimensionMode.D3) {
 			(<CesiumMap>this.communicators.provide(this.mapId).ActiveMap).set2DPosition().pipe(take(1)).subscribe((result) => {
-				this.store$.dispatch(new ChangeImageryMap({id: this.mapId, mapType: OpenlayersMapName}));
+				this.store$.dispatch(new ChangeImageryMap({ id: this.mapId, mapType: OpenlayersMapName }));
 			})
 		}
 	}
 
 	changeActiveMap(mapType: string) {
-		this.store$.dispatch(new ChangeImageryMap({id: this.mapId, mapType}));
+		this.store$.dispatch(new ChangeImageryMap({ id: this.mapId, mapType }));
 	}
 
 	get selectedMap() {
@@ -69,7 +69,7 @@ export class ImageryDimensionModeComponent implements OnInit, OnDestroy, IEntryC
 	}
 
 	get moveToMap() {
-		if (this.selectedMap === DimensionMode.D2 ) {
+		if (this.selectedMap === DimensionMode.D2) {
 			return DimensionMode.D3;
 		} else {
 			return DimensionMode.D2;

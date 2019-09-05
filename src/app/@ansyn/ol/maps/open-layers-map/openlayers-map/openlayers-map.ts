@@ -3,7 +3,8 @@ import { Inject } from '@angular/core';
 import {
 	areCoordinatesNumeric,
 	BaseImageryMap,
-	ExtentCalculator, ICanvasExportData,
+	ExtentCalculator,
+	ICanvasExportData,
 	IMAGERY_MAIN_LAYER_NAME,
 	ImageryLayerProperties,
 	ImageryMap,
@@ -581,7 +582,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 				height: c.height,
 				data: c.toDataURL('image/jpeg', 1.0)
 			}
-		}catch (e) {
+		} catch (e) {
 		}
 		return exportData;
 	}

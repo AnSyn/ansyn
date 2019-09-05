@@ -1,16 +1,17 @@
 @import 'ansyn/less/colors';
 @import 'ansyn/less/z-index-globals';
 @import 'ansyn/less/globals';
+@import 'ansyn/less/common';
 
 /deep/ .render {
 	display: flex;
 	align-items: center;
 }
 :host {
-	position: absolute;
+	position: relative;
 	z-index: @z-index-imagery-status;
 	display: flex;
-	width: 100%;
+	flex-grow: 1;
 	line-height: 24px;
 	color: white;
 	justify-content: space-between;
@@ -81,27 +82,22 @@
 	}
 
 	.description {
+		height: 100%;
 		max-width: 33%;
 		padding: 0 10px;
 		text-align: center;
+		display: flex;
 
 		div {
 			text-overflow: ellipsis;
 			white-space: nowrap;
 			overflow: hidden;
+			display: flex;
+			align-items: center;
 		}
 
 		button.share-link {
-			padding: 5px;
-			background: black;
-			color: #fff;
-			text-align: center;
-			border-radius: 6px;
-			border: solid black 1px;
-			cursor: pointer;
-			transition: .3s;
-			display: flex;
-			align-items: center;
+			&:extend(.base-share-link);
 
 			span.icon-status-bar-share-link {
 				margin-right: 3px;

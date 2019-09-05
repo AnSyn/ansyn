@@ -46,7 +46,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 
 	@AutoSubscription
 	createShadowMouseProducer$ = combineLatest(this.isActive$, this.shadowMouseFlag$, this.forceSendShadowMousePosition$, this.onEnterMap$)
-		.pipe(tap(([isActive, shadowMouseFlag, forceSendShadowMousePosition ]) => {
+		.pipe(tap(([isActive, shadowMouseFlag, forceSendShadowMousePosition]) => {
 			this.clearEntities();
 			if ((isActive && shadowMouseFlag) || forceSendShadowMousePosition) {
 				this.iMap.mapObject.on('pointermove', this.onPointerMove, this);

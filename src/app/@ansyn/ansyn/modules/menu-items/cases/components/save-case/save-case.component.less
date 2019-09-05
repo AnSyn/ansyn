@@ -25,6 +25,7 @@ div.save-case {
 		cursor: pointer;
 		outline: none;
 		color: #2e2d46;
+
 		&:hover {
 			font-weight: bold;
 			text-decoration: underline;
@@ -40,6 +41,7 @@ div.save-case {
 			margin-top: 10px;
 			display: flex;
 			justify-content: flex-end;
+
 			button {
 				background: transparent;
 				border: none;
@@ -47,12 +49,15 @@ div.save-case {
 				-webkit-text-stroke-width: 0.4px;
 				-webkit-text-stroke-color: transparent;
 				outline: none;
+
 				&:hover {
 					font-weight: bold;
 				}
+
 				&:disabled {
 					opacity: .6;
 				}
+
 				&:hover:not(:disabled) {
 					cursor: pointer;
 					-webkit-text-stroke-color: @background-color-3;;

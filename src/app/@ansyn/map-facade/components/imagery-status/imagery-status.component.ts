@@ -1,18 +1,21 @@
 import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output, } from '@angular/core';
-import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
-import { Dictionary } from '@ngrx/entity';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { select, Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { get as _get } from 'lodash'
-import { Observable } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
 import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../models/entry-components-provider';
 import { selectEnableCopyOriginalOverlayDataFlag } from '../../reducers/imagery-status.reducer';
-import { selectActiveMapId, selectMaps, selectMapsTotal } from '../../reducers/map.reducer';
+import {
+	selectActiveMapId,
+	selectDisplayLayersOnMap,
+	selectMapsTotal,
+	selectOverlayFromMap
+} from '../../reducers/map.reducer';
 import { copyFromContent } from '../../utils/clipboard';
 import { getTimeFormat } from '../../utils/time';
+import { combineLatest, Observable } from 'rxjs';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -28,70 +31,56 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	_mapId: string;
 	_entryComponents: IEntryComponentsEntities;
 	@HostBinding('class.active') isActiveMap: boolean;
-	@Input()
-	set mapId(value: string) {
-		this._mapId = value;
-		/* force angular to rerender the *ngFor content that binding to this arrays
-		 * so they get the new mapId	 */
-		this._entryComponents = {status: [], container: []};
-		setTimeout(() => this._entryComponents = {...this.entryComponents})
-	}
-
-
-	get mapId() {
-		return this._mapId;
-	}
-
 	overlay: any; // @TODO: eject to ansyn
 	displayLayers: boolean;
-	@AutoSubscription
-	overlay$: Observable<Dictionary<IMapSettings>> = this.store$.pipe(
-		select(selectMaps),
-		filter((maps) => Boolean(maps[this.mapId])),
-		tap((maps) => {
-			this.overlay = maps[this.mapId].data.overlay;
-			this.displayLayers = maps[this.mapId].flags.displayLayers;
-		})
-	);
-
 	@AutoSubscription
 	active$ = this.store$.pipe(
 		select(selectActiveMapId),
 		map((activeMapId) => activeMapId === this.mapId),
 		tap((isActiveMap) => this.isActiveMap = isActiveMap)
 	);
-
 	@AutoSubscription
 	mapsAmount$ = this.store$.pipe(
 		select(selectMapsTotal),
 		tap((mapsAmount) => this.mapsAmount = mapsAmount)
 	);
+	translatedOverlaySensorName = '';
+	@Output() toggleMapSynchronization = new EventEmitter<void>();
+	@Output() onMove = new EventEmitter<MouseEvent>();
+	enableCopyOriginalOverlayData: boolean;
+	@AutoSubscription
+	copyOriginalOverlayDataFlag$ = this.store$.select(selectEnableCopyOriginalOverlayDataFlag).pipe(
+		tap((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
+	);
+
+	constructor(protected store$: Store<any>,
+				protected communicators: ImageryCommunicatorService,
+				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities) {
+	}
+
+
+
+	get mapId() {
+		return this._mapId;
+	}
+
+	@Input()
+	set mapId(value: string) {
+		this._mapId = value;
+		/* force angular to rerender the *ngFor content that binding to this arrays
+		 * so they get the new mapId	 */
+		this._entryComponents = { status: [], container: [] };
+		setTimeout(() => this._entryComponents = { ...this.entryComponents })
+	}
 
 	@HostBinding('class.one-map')
 	get oneMap() {
 		return this.mapsAmount === 1;
 	}
 
-	translatedOverlaySensorName = '';
-
-	@Output() toggleMapSynchronization = new EventEmitter<void>();
-	@Output() onMove = new EventEmitter<MouseEvent>();
-
-	enableCopyOriginalOverlayData: boolean;
-
-	@AutoSubscription
-	copyOriginalOverlayDataFlag$ = this.store$.select(selectEnableCopyOriginalOverlayDataFlag).pipe(
-		tap((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
-	);
-
-	getFormattedTime(dateTimeSring: string): string {
-		const formatedTime: string = getTimeFormat(new Date(this.overlay.photoTime));
-		return formatedTime;
-	}
-
 	get description() {
 		const ActiveMap = _get(this.communicators.provide(this.mapId), 'ActiveMap');
-		const { description } = (ActiveMap && ActiveMap.getExtraData()) || <any> {};
+		const { description } = (ActiveMap && ActiveMap.getExtraData()) || <any>{};
 		return description ? description : this.overlay ? this.getFormattedTime(this.overlay.photoTime) : null;
 	}
 
@@ -105,19 +94,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 			return this.baseMapDescription;
 		}
 		const catalogId = (<any>this.overlay).catalogID ? (' catalogId ' + (<any>this.overlay).catalogID) : '';
-		return `${this.description} ${this.translatedOverlaySensorName}${catalogId}`;
-	}
-
-	// @todo refactor
-	copyOverlayDescription() {
-		if (this.enableCopyOriginalOverlayData && this.overlay.tag) {
-			const tagJson = JSON.stringify(this.overlay.tag);
-			copyFromContent(tagJson);
-			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay original data copied to clipboard' }));
-		} else {
-			copyFromContent(this.overlayDescription);
-			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay description copied to clipboard' }));
-		}
+		return `${ this.description } ${ this.translatedOverlaySensorName }${ catalogId }`;
 	}
 
 	// @todo refactor
@@ -136,9 +113,29 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		return this.overlay.isGeoRegistered === 'poorGeoRegistered';
 	}
 
-	constructor(protected store$: Store<any>,
-				protected communicators: ImageryCommunicatorService,
-				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities) {
+	@AutoSubscription
+	overlayNlayers$: () => Observable<[any, boolean]> = () => combineLatest(this.store$.select(selectOverlayFromMap(this.mapId)), this.store$.select(selectDisplayLayersOnMap(this.mapId))).pipe(
+		tap(([overlay, displayLayers]) => {
+			this.overlay = overlay;
+			this.displayLayers = displayLayers;
+		})
+	);
+
+	getFormattedTime(dateTimeSring: string): string {
+		const formatedTime: string = getTimeFormat(new Date(this.overlay.photoTime));
+		return formatedTime;
+	}
+
+	// @todo refactor
+	copyOverlayDescription() {
+		if (this.enableCopyOriginalOverlayData && this.overlay.tag) {
+			const tagJson = JSON.stringify(this.overlay.tag);
+			copyFromContent(tagJson);
+			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay original data copied to clipboard' }));
+		} else {
+			copyFromContent(this.overlayDescription);
+			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay description copied to clipboard' }));
+		}
 	}
 
 	ngOnInit(): void {
@@ -148,6 +145,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	toggleMapLayers() {
-		this.store$.dispatch(new ToggleMapLayersAction({mapId: this.mapId}));
+		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId }));
 	}
 }

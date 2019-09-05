@@ -54,11 +54,13 @@
 			</div>
 		</div>
 
-		<div class="show-more-less" *ngIf="!isLongFiltersList && !isGotSmallListFromProvider && !showOnlyFavorite && show">
+		<div class="show-more-less"
+			 *ngIf="!isLongFiltersList && !isGotSmallListFromProvider && !showOnlyFavorite && show">
 			<span (click)="toggleShowMoreLess()">{{'SHOW MORE' | translate}}</span>
 		</div>
 
-		<div class="show-more-less" *ngIf="isLongFiltersList && !isGotSmallListFromProvider && !showOnlyFavorite && show">
+		<div class="show-more-less"
+			 *ngIf="isLongFiltersList && !isGotSmallListFromProvider && !showOnlyFavorite && show">
 			<span (click)="toggleShowMoreLess()">{{'SHOW LESS' | translate}}</span>
 		</div>
 

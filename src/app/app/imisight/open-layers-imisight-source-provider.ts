@@ -3,13 +3,18 @@ import TileWMS from 'ol/source/TileWMS';
 import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { CacheService, ImageryCommunicatorService, ImageryMapSource, IMapSettings } from '@ansyn/imagery';
+import {
+	CacheService,
+	ImageryCommunicatorService,
+	ImageryMapSource,
+	IMapSettings,
+	IMapSourceProvidersConfig,
+	MAP_SOURCE_PROVIDERS_CONFIG
+} from '@ansyn/imagery';
 import { ImisightOverlaySourceType } from './imisight-source-provider';
-import { ICaseMapState } from '@ansyn/ansyn';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { OpenLayersDisabledMap, OpenLayersMap, OpenLayersMapSourceProvider } from '@ansyn/ol';
-import { IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/imagery';
 
 @ImageryMapSource({
 	sourceType: ImisightOverlaySourceType,
@@ -34,7 +39,7 @@ export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvide
 		const decodedToken = this.parseTokenObjects(helper.decodeToken(token));
 		const companyId = decodedToken.user_metadata.companyId;
 		const source = new TileWMS({
-			url: `${this.gatewayUrl}/geo/geoserver/company_${companyId}/wms`,
+			url: `${ this.gatewayUrl }/geo/geoserver/company_${ companyId }/wms`,
 			params: {
 				TRANSPARENT: true,
 				VERSION: '1.1.1',

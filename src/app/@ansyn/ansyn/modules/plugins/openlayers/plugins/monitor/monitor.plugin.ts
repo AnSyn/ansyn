@@ -1,8 +1,7 @@
 import { Store } from '@ngrx/store';
 import { BaseImageryPlugin, ImageryPlugin, IMapErrorMessage, IMapProgress } from '@ansyn/imagery';
 import { SetProgressBarAction, SetToastMessageAction } from '@ansyn/map-facade';
-import { OpenLayersMap } from '@ansyn/ol';
-import { OpenLayersDisabledMap } from '@ansyn/ol';
+import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ol';
 import { tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 

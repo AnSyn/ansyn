@@ -44,7 +44,8 @@ describe('TasksTableComponent', () => {
 			providers: [
 				{
 					provide: TasksService, useValue: {
-						loadTasks: () => {}
+						loadTasks: () => {
+						}
 					}
 				},
 				{
@@ -80,7 +81,7 @@ describe('TasksTableComponent', () => {
 	});
 
 	it('onTasksAdded should change tbodyElement scrollTop to 0( only if tbodyElement is not undefined )', () => {
-		component.tbodyElement = <any> {
+		component.tbodyElement = <any>{
 			nativeElement: { scrollTop: 100 }
 		};
 		component.onTasksAdded();
@@ -88,20 +89,20 @@ describe('TasksTableComponent', () => {
 	});
 
 	it('onMouseEnterTaskRow should calc the top of taskMenu and add "mouse-enter" class', () => {
-		let taskMenu = <HTMLDivElement> { style: { top: '-1px' } };
-		const taskRow = <HTMLDivElement> {
+		let taskMenu = <HTMLDivElement>{ style: { top: '-1px' } };
+		const taskRow = <HTMLDivElement>{
 			offsetTop: 100, classList: jasmine.createSpyObj({
 				add: () => null
 			})
 		};
-		const tbodyElement = <HTMLDivElement> { scrollTop: 50 };
+		const tbodyElement = <HTMLDivElement>{ scrollTop: 50 };
 		component.onMouseEnterTaskRow(taskMenu, taskRow, tbodyElement);
 		expect(taskMenu.style.top).toEqual('51px');
 		expect(taskRow.classList.add).toHaveBeenCalledWith('mouse-enter');
 	});
 
 	it('onMouseLeaveTaskRow should remove "mouse-enter" class', () => {
-		const taskRow = <HTMLDivElement> {
+		const taskRow = <HTMLDivElement>{
 			classList: jasmine.createSpyObj({
 				remove: () => null
 			})
@@ -112,7 +113,7 @@ describe('TasksTableComponent', () => {
 
 	it('taskMenuClick should call stopPropagation() and remove mouse-enter class from taskRow', () => {
 		const $event = jasmine.createSpyObj({ stopPropagation: () => null });
-		const taskRow = <HTMLDivElement> {
+		const taskRow = <HTMLDivElement>{
 			classList: jasmine.createSpyObj({
 				remove: () => null
 			})

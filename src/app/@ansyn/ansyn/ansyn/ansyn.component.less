@@ -3,13 +3,15 @@
 
 :host {
 	&.component {
-		.app{
-		/deep/ ansyn-popover.default-case div.pop-hover .pop-content {
+		.app {
+			/deep/ ansyn-popover.default-case div.pop-hover .pop-content {
 				visibility: hidden !important;
 			}
+
 			div.menu {
 				ansyn-menu {
 				}
+
 				ansyn-tools.ansynToolsAlone {
 					display: block;
 				}
@@ -20,6 +22,7 @@
 	font-family: @app-font;
 	font-size: 14px;
 	direction: ltr;
+
 	div.app {
 		display: flex;
 		height: 100%;
@@ -35,11 +38,13 @@
 				.buttons button.back-to-world-view {
 					font-size: 0 !important;
 					overflow: visible;
+
 					i {
 						font-size: 13.33px !important;;
 					}
 				}
 			}
+
 			/deep/ .maps-container {
 				div.imageries-container {
 					&.layout2, &.layout4, &.layout6, &.layout5 div.map-container-wrapper:not(:first-child) {
@@ -47,6 +52,7 @@
 							.buttons button.back-to-world-view {
 								font-size: 0;
 								overflow: visible;
+
 								i {
 									font-size: 13.33px;
 								}
@@ -55,22 +61,26 @@
 					}
 				}
 			}
+
 			/deep/ div.status-timeline-container {
 				ansyn-imagery-status {
 					&.one-map {
 						max-width: 35%;
 						justify-content: space-between;
+
 						.buttons {
 							position: initial;
 							left: initial;
 							top: initial;
 						}
+
 						ansyn-alerts-container {
 							position: initial;
 							right: initial;
 							max-width: initial;
 							overflow: hidden;
 						}
+
 						.description {
 							padding-left: 0;
 						}
@@ -148,11 +158,13 @@
 				transform: transitionX(0);
 				position: relative;
 				height: 100%;
+
 				.ansynToolsAlone {
 					background: @background-color-3;
 					height: 100%;
 
 				}
+
 				.ansynToolsAlone /deep/ .tools-menu-item-container {
 					padding: 0;
 				}

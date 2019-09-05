@@ -69,7 +69,6 @@ describe('ImageryStatusComponent', () => {
 	});
 
 
-
 	it('should not show link when 1 map', () => {
 		component.mapsAmount = 1;
 		fixture.detectChanges();

@@ -1,5 +1,3 @@
-
-
 export interface IToolTipsConfig {
 	orientation?: string,
 	geoFilter?: string,

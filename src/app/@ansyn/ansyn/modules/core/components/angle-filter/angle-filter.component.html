@@ -2,7 +2,7 @@
 
 	<div class="circle">
 		<p class="point">
-			<i class="icon-map-Point"></i>
+			<i class="icon-pin-point"></i>
 		</p>
 		<div class="arrows">
 		<span class="arrow" *ngFor="let angle of overlaysAngles"
@@ -16,12 +16,12 @@
 	</div>
 	<div class="rectangles">
 		<button (click)="nextOverlay($event, true)"
-		[disabled]="!overlay">
-			<i class="icon-show-menu"></i>
+			[disabled]="!overlay">
+			<i class="icon-angle-next"></i>
 		</button>
 		<button (click)="nextOverlay($event, false)"
 				[disabled]="!overlay">
-			<i class="icon-show-menu"></i>
+			<i class="icon-angle-prev"></i>
 		</button>
 	</div>
 </div>

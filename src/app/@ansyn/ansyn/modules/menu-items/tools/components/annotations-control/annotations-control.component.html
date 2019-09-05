@@ -10,7 +10,7 @@
 			name="annotations-layer"
 			[ngModel]="activeAnnotationId"
 			[comboBoxToolTipDescription]="'choose annotation layer' | translate"
-			(ngModelChange)="setSelectedAnnotationLayer($event.target.value)">
+			(ngModelChange)="setSelectedAnnotationLayer($event)">
 
 			<ansyn-combo-box-option *ngFor="let layer of annotationLayer$ | async" [value]="layer.id">
 				{{ layer.name }}
@@ -40,7 +40,8 @@
 
 		<button (click)="toggleSelection(SelectionBoxTypes.LineWidth)"
 				[class.expand]="selectedBox === SelectionBoxTypes.LineWidth">
-			<span class="icon-annotation-weight" [attr.tooltip-value]="'Width' | translate" tooltip-class="bottom"></span>
+			<span class="icon-annotation-weight" [attr.tooltip-value]="'Width' | translate"
+				  tooltip-class="bottom"></span>
 		</button>
 
 		<ansyn-annotations-weight
@@ -54,7 +55,8 @@
 
 		<button (click)="toggleSelection(SelectionBoxTypes.ColorPicker)"
 				[class.expand]="selectedBox === SelectionBoxTypes.ColorPicker">
-			<span class="icon-annotation-color" [attr.tooltip-value]="'Color' | translate" tooltip-class="bottom"></span>
+			<span class="icon-annotation-color" [attr.tooltip-value]="'Color' | translate"
+				  tooltip-class="bottom"></span>
 		</button>
 
 		<ansyn-annotations-color

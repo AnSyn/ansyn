@@ -1,19 +1,19 @@
-import { Inject, Injectable } from '@angular/core';
+import { Inject } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import {
 	BaseOverlaySourceProvider,
-	GeoRegisteration,
-	IFetchParams, IOverlay,
-	IStartAndEndDate, Overlay,
-	OverlaySourceProvider
-} from '@ansyn/ansyn';
-import {
 	ErrorHandlerService,
+	GeoRegisteration,
+	IFetchParams,
+	IOverlay,
+	IStartAndEndDate,
 	limitArray,
 	LoggerService,
+	Overlay,
+	OverlaySourceProvider,
 	sortByDateDesc
 } from '@ansyn/ansyn';
 import {
@@ -21,10 +21,10 @@ import {
 	geojsonMultiPolygonToFirstPolygon,
 	geojsonPolygonToMultiPolygon,
 	getPolygonByPointAndRadius,
+	toRadians,
 } from '@ansyn/imagery';
 import { IImisightOverlaySourceConfig, ImisightOverlaySourceConfig } from './imisight.model';
 import { Auth0Service } from './auth0.service';
-import { toRadians } from '@ansyn/imagery';
 
 export const ImisightOverlaySourceType = 'IMISIGHT';
 
@@ -98,7 +98,7 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 		};
 		return this.http.post<any>(baseUrl, params, httpOptions).pipe(
 			map(data => this.extractData(data)),
-			map((overlays: IOverlay[]) => <any> limitArray(overlays, fetchParams.limit, {
+			map((overlays: IOverlay[]) => <any>limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
 			})),
@@ -148,8 +148,8 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 			sensorName: imiSightElement.sensorName,
 			bestResolution: 1,
 			name: imiSightElement.s3Id,
-			imageUrl: `${gatewayUrl}/geo/geoserver/company_${companyId}/wms/${imiSightElement.geoFile}`,
-			thumbnailUrl: `${gatewayUrl}/geo/geoserver/company_${companyId}/wms/${imiSightElement.geoFile}`,
+			imageUrl: `${ gatewayUrl }/geo/geoserver/company_${ companyId }/wms/${ imiSightElement.geoFile }`,
+			thumbnailUrl: `${ gatewayUrl }/geo/geoserver/company_${ companyId }/wms/${ imiSightElement.geoFile }`,
 			date: new Date(imiSightElement.timestamp),
 			photoTime: imiSightElement.timestamp,
 			azimuth: toRadians(180),

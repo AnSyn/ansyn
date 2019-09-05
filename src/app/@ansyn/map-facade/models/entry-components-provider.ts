@@ -1,5 +1,5 @@
-import { InjectionToken, FactoryProvider } from '@angular/core';
-import { IEntryComponent } from "../directives/entry-component.directive";
+import { FactoryProvider, InjectionToken } from '@angular/core';
+import { IEntryComponent } from '../directives/entry-component.directive';
 
 
 export interface IEntryComponentsEntities {
@@ -29,8 +29,8 @@ export function provideEntryComponentsEntities(metadata: IEntryComponentsEntitie
 
 export function entryComponentsProviderFactory(entryComponentsEntities) {
 	return entryComponentsEntities.reduce((prev, next) => ({
-			container: [...prev.container, ...next.container],
-			status: [...prev.status, ...next.status]
+		container: [...prev.container, ...next.container],
+		status: [...prev.status, ...next.status]
 	}), { container: [], status: [] });
 }
 

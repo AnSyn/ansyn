@@ -1,19 +1,22 @@
 import { select, Store } from '@ngrx/store';
 import { HttpClient } from '@angular/common/http';
 import { Feature, FeatureCollection, Polygon } from 'geojson';
-import { catchError, filter, map, mergeMap, distinctUntilChanged, withLatestFrom, debounceTime } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, withLatestFrom, debounceTime } from 'rxjs/operators';
 import { combineLatest, forkJoin, Observable, of, Subscription } from 'rxjs';
-import { getPolygonIntersectionRatioWithMultiPolygon, IMapSettings, IVisualizerEntity } from '@ansyn/imagery';
-import { MapFacadeService, selectMaps, selectMapsList, SetToastMessageAction } from '@ansyn/map-facade';
+import {
+	ImageryPlugin,
+	IVisualizerEntity,
+	IMapSettings,
+	getPolygonIntersectionRatioWithMultiPolygon
+} from '@ansyn/imagery';
+import { selectDisplayLayersOnMap, selectMaps, SetToastMessageAction } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
-import { ImageryPlugin } from '@ansyn/imagery';
-import { AutoSubscription } from 'auto-subscriptions';
 import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
 import { ILayer, layerPluginTypeEnum } from '../../../../menu-items/layers-manager/models/layers.model';
 import { selectLayers, selectSelectedLayersIds } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
 import { ICaseMapState } from '../../../../menu-items/cases/models/case.model';
 import { Dictionary } from '@ngrx/entity';
-import { booleanContains, intersect } from '@turf/turf';
+import { intersect, booleanContains } from '@turf/turf';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
@@ -25,26 +28,19 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	protected subscriptions: Subscription[] = [];
 	currentExtent: Polygon;
 
-	isHidden$ = this.store$.select(selectMapsList).pipe(
-		map((mapsList) => MapFacadeService.mapById(mapsList, this.mapId)),
-		filter(Boolean),
-		map((map: ICaseMapState) => map.flags.displayLayers),
-		distinctUntilChanged()
-	);
 
 	// todo: return auto-subscription when the bug is fixed
-	updateLayersOnMap$ = combineLatest(this.store$.pipe(select(selectSelectedLayersIds)), this.isHidden$)
+	updateLayersOnMap$ = combineLatest(this.store$.select(selectDisplayLayersOnMap(this.mapId)), this.store$.select(selectSelectedLayersIds))
 		.pipe(
-			withLatestFrom(this.store$.select(selectLayers)),
-			mergeMap(([[selectedLayerIds, isHidden], layers]: [[string[], boolean], ILayer[]]) => {
-					const filteredLayers = layers.filter(this.isGeoJsonLayer);
-					return forkJoin(
-						filteredLayers.map((layer: ILayer) =>
-							this.layerToObservable(layer, selectedLayerIds, isHidden)))
-				}
-			)
-		);
+		withLatestFrom(this.store$.select(selectLayers)),
+		filter(([[isHidden, layersId], layers]: [[boolean, string[]], ILayer[]]) => Boolean(layers)),
+		mergeMap(([[isHidden, layersId], layers]) => layers
+			.filter(this.isGeoJsonLayer)
+			.map((layer: ILayer) => this.layerToObservable(layer, layersId, isHidden))
+		)
+	);
 
+	// TODO: get position from store
 	// todo: return auto-subscription when the bug is fixed
 	updateLayerScale$ = this.store$.select(selectMaps).pipe( // todo: select extent by map id from store
 		debounceTime(500),
@@ -137,13 +133,13 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 						return this.drawLayer(layer.name);
 					}),
 					catchError((e) => {
-						this.store$.dispatch(new SetToastMessageAction({ toastText: `Failed to load layer${ (e && e.error) ? ' ,' + e.error : '' }` }));
+						this.store$.dispatch(new SetToastMessageAction({ toastText: `Failed to load layer${(e && e.error) ? ' ,' + e.error : ''}`}));
 						return of(true);
 					})
 				);
 		}
-		// todo: deprecated
-		return Observable.create((observer) => {
+		return new Observable<boolean>((observer) => {
+			this.clearEntities();
 			this.showedLayersDictionary = this.showedLayersDictionary.filter((id) => layer.name !== id);
 			if (this.layersDictionary[layer.name]) {
 				this.layersDictionary[layer.name].forEach((entity) => {

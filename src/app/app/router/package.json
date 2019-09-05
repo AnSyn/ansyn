@@ -1,14 +1,14 @@
 {
-	"name": "@ansyn/router",
-	"version": "0.2.81",
-	"description": "Ansyn router create connections between: router, store and cases",
-	"main": "index.ts",
-	"scripts": {
-		"test": "npm test"
-	},
-	"author": "",
-	"license": "MIT",
-	"peerDependencies": {
-	},
-	"typings": "index.d.ts"
+  "name": "@ansyn/router",
+  "version": "0.2.81",
+  "description": "Ansyn router create connections between: router, store and cases",
+  "main": "index.ts",
+  "scripts": {
+    "test": "npm test"
+  },
+  "author": "",
+  "license": "MIT",
+  "peerDependencies": {
+  },
+  "typings": "index.d.ts"
 }

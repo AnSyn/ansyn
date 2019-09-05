@@ -1,7 +1,6 @@
-import { Component, ElementRef, EventEmitter, forwardRef, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, forwardRef, Input, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
-import { Input } from '@angular/core';
 import { UUID } from 'angular2-uuid';
 
 @Component({

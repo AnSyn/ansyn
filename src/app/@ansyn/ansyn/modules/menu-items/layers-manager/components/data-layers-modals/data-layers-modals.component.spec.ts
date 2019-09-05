@@ -7,7 +7,7 @@ import { DownloadLayersComponent } from './download-layers/download-layers.compo
 import { EditLayerComponent } from './edit-layer/edit-layer.component';
 import { DeleteLayerComponent } from './delete-layer/delete-layer.component';
 import { FormsModule } from '@angular/forms';
-import { MatInputModule, MatFormFieldModule } from '@angular/material';
+import { MatFormFieldModule, MatInputModule } from '@angular/material';
 import { AnsynModalComponent } from '../../../../core/components/ansyn-modal/ansyn-modal.component';
 import { AnsynInputComponent } from '../../../../core/forms/ansyn-input/ansyn-input.component';
 import { TranslateModule } from '@ngx-translate/core';

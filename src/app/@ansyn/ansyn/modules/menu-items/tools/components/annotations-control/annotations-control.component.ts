@@ -52,10 +52,9 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	activeAnnotationLayer$ = this.store.pipe(
 		select(selectActiveAnnotationLayer),
-		withLatestFrom(this.annotationLayer$),
-		filter(([layer, allLayers]) => Boolean(layer) && Boolean(allLayers)),
-		tap( ([layer, allLayers]) => {
-			this.activeAnnotationId = layer;
+		filter((layerId) => Boolean(layerId)),
+		tap((layerId) => {
+			this.activeAnnotationId = layerId;
 		})
 	);
 
@@ -80,12 +79,12 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	clickOutsideColorOrWeight = () => fromEvent(this.document, 'click')
 		.pipe(
 			filter((event: any) => this.selectedBox !== SelectionBoxTypes.None),
-			filter( ({ path }) => !path.some( comp =>
+			filter(({ path }) => !path.some(comp =>
 				['ansyn-annotations-color', 'ansyn-annotations-weight'].includes(comp.localName) ||
 				['icon-annotation-weight', 'icon-annotation-color'].includes(comp.className)
 				)
 			),
-			tap( _ => this.toggleSelection())
+			tap(_ => this.toggleSelection())
 		);
 
 	@HostBinding('class.expand')
@@ -148,10 +147,8 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	}
 
 	isAnnotationEnable(annotation) {
-		if ([AnnotationMode.LineString, AnnotationMode.Arrow].includes(annotation) && !this.annotationProperties['stroke-opacity']) {
-			return false;
-		}
-		return true;
+		return !([AnnotationMode.LineString, AnnotationMode.Arrow].includes(annotation) && !this.annotationProperties['stroke-opacity']);
+
 	}
 
 }

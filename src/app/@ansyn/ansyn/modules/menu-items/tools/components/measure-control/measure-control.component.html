@@ -1,20 +1,19 @@
-
-	<div
-		*ngIf="show"
-		[class.measure]="show"
+<div
+	*ngIf="show"
+	[class.measure]="show"
 	[style.direction]="'ltr' | translate">
-		<p>{{'Measure Distance' | translate}}</p>
+	<p>{{'Measure Distance' | translate}}</p>
 
-		<div class="buttons">
+	<div class="buttons">
 		<button id="clearBtn"
-			(click)="clearMeasure()">
+				(click)="clearMeasure()">
 			<span class="bold-on-hover">{{'Clear' | translate}}</span>
 		</button>
 
 		<button id="doneBtn"
-			(click)="done()">
+				(click)="done()">
 			<span class="bold-on-hover">{{'Done' | translate}}</span>
 		</button>
-		</div>
 	</div>
+</div>
 

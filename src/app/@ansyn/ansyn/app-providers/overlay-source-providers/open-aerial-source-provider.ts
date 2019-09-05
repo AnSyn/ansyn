@@ -2,9 +2,10 @@ import { Inject } from '@angular/core';
 import {
 	bboxFromGeoJson,
 	geojsonMultiPolygonToFirstPolygon,
-	geojsonPolygonToMultiPolygon, getPointByGeometry,
+	geojsonPolygonToMultiPolygon,
+	getPointByGeometry,
 	getPolygonByPointAndRadius,
-
+	toRadians,
 } from '@ansyn/imagery';
 import { HttpClient } from '@angular/common/http';
 import { empty, Observable } from 'rxjs';
@@ -13,13 +14,13 @@ import { catchError, map } from 'rxjs/operators';
 import { OverlaySourceProvider } from '../../modules/overlays/models/overlays-source-providers';
 import {
 	BaseOverlaySourceProvider,
-	IFetchParams, IStartAndEndDate
+	IFetchParams,
+	IStartAndEndDate
 } from '../../modules/overlays/models/base-overlay-source-provider.model';
 import { ErrorHandlerService } from '../../modules/core/services/error-handler.service';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { limitArray } from '../../modules/core/utils/i-limited-array';
 import { sortByDateDesc } from '../../modules/core/utils/sorting';
-import { toRadians } from '@ansyn/imagery';
 import { GeoRegisteration, IOverlay, Overlay } from '../../modules/overlays/models/overlay.model';
 import {
 	IMultipleOverlaysSourceConfig,
@@ -66,8 +67,8 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 		// add 1 to limit - so we'll know if provider have more then X overlays
 		const params = {
 			platform: 'uav',
-			limit: `${fetchParams.limit + 1}`,
-			bbox: `${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]}`,
+			limit: `${ fetchParams.limit + 1 }`,
+			bbox: `${ bbox[0] },${ bbox[1] },${ bbox[2] },${ bbox[3] }`,
 			acquisition_from: fetchParams.timeRange.start.toISOString(),
 			acquisition_to: fetchParams.timeRange.end.toISOString()
 		};

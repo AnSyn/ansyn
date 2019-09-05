@@ -1,4 +1,11 @@
-import { ImageryVisualizer, IVisualizersConfig, VisualizerInteractions, VisualizersConfig } from '@ansyn/imagery';
+import {
+	ImageryVisualizer,
+	IVisualizerEntity,
+	IVisualizersConfig,
+	VisualizerInteractions,
+	VisualizersConfig,
+	VisualizerStates
+} from '@ansyn/imagery';
 import { cloneDeep as _cloneDeep } from 'lodash';
 import olMultiPolygon from 'ol/geom/MultiPolygon';
 import olMultiLineString from 'ol/geom/MultiLineString';
@@ -11,11 +18,9 @@ import VectorLayer from 'ol/layer/Vector';
 import { Inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { IVisualizerEntity, VisualizerStates } from '@ansyn/imagery';
 import { MultiLineString } from 'geojson';
 import { distinctUntilChanged, pluck, tap } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
-import * as turf from '@turf/turf';
 import { OpenLayersMap } from '@ansyn/ol';
 import { BaseFootprintsVisualizer } from './base-footprints-visualizer';
 import { DisplayOverlayFromStoreAction, SetMarkUp } from '../../../../../overlays/actions/overlays.actions';
@@ -160,7 +165,7 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 			.forEach((entity: IVisualizerEntity) => {
 				let geometry: MultiLineString = entity.featureJson.geometry;
 				geometry.type = 'MultiLineString';
-				geometry.coordinates = <any> geometry.coordinates[0];
+				geometry.coordinates = <any>geometry.coordinates[0];
 			});
 		return clonedLogicalEntities;
 	}

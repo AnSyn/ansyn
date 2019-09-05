@@ -18,14 +18,17 @@
 	&:focus {
 		nav.menu {
 			visibility: visible;
+
 			div.buttons-area {
 				.menu-item {
 					&:hover:not(:disabled) {
 						span {
 							// color: @background-color-3;
 						}
+
 						div.sub-buttons-list {
 							visibility: visible;
+
 							button {
 								left: 0 !important;
 							}
@@ -46,18 +49,20 @@
 				justify-content: center;
 
 				&:hover {
-					 background-color: @context-menu-color;
+					background-color: @context-menu-color;
 					transform: scale(0.6715);
+
 					.pointer {
-						 color: @context-menu-contrast;
+						color: @context-menu-contrast;
 					}
 				}
 
 				.pointer {
-					font-size: 34px;
+					font-size: 40px;
 					font-weight: bold;
 				}
 			}
+
 			.buttons-area {
 				.menu-item {
 					transition-timing-function: cubic-bezier(0.935, 0, 0.34, 1.33);
@@ -70,8 +75,8 @@
 
 					&:hover:not(:disabled) {
 						opacity: 0.8;
-						 background-color: @context-menu-contrast;
-						 color: @context-menu-color;
+						background-color: @context-menu-contrast;
+						color: @context-menu-color;
 					}
 
 					&.best {
@@ -177,10 +182,12 @@
 								margin-left: 5.5px;
 								margin-right: 66px;
 							}
+
 							&:last-child:not(:first-child) {
 								margin-right: 0;
 								margin-left: 0;
 							}
+
 							.loop(@i) when (@i < 10) {
 								&:nth-child(@{i}) {
 									left: 20px + (@i * 32px) + (@i * 5.5px);
@@ -203,6 +210,7 @@
 						z-index: -1;
 					}
 				}
+
 				.sub-buttons-list {
 					position: absolute;
 					top: 0;

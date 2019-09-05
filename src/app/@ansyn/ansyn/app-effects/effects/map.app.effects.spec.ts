@@ -83,7 +83,7 @@ import { ICase } from '../../modules/menu-items/cases/models/case.model';
 
 @ImageryMapSource({
 	sourceType: 'sourceType1',
-	supported: [<any> 'mapType1']
+	supported: [<any>'mapType1']
 })
 class SourceProviderMock1 extends BaseMapSourceProvider {
 	readonly supported: IBaseImageryMapConstructor[] = [];
@@ -265,7 +265,10 @@ describe('MapAppEffects', () => {
 		toolsState = cloneDeep(toolsInitialState);
 		fakeOverlay = <any>{ id: 'overlayId', date: new Date(), isGeoRegistered: GeoRegisteration.geoRegistered };
 		overlaysState.entities[fakeOverlay.id] = fakeOverlay;
-		mapState.entities = icaseState.selectedCase.state.maps.data.reduce((obj, map) => ({ ...obj, [map.id]: map }), {});
+		mapState.entities = icaseState.selectedCase.state.maps.data.reduce((obj, map) => ({
+			...obj,
+			[map.id]: map
+		}), {});
 		mapState.activeMapId = icaseState.selectedCase.state.maps.activeMapId;
 
 
@@ -296,7 +299,7 @@ describe('MapAppEffects', () => {
 		let fakeCommunicator: CommunicatorEntity;
 
 		beforeEach(() => {
-			fakeCommunicator = <any> {
+			fakeCommunicator = <any>{
 				ActiveMap: { MapType: 'ol' },
 				resetView: () => {
 				}

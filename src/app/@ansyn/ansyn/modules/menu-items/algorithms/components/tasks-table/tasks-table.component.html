@@ -21,7 +21,8 @@
 		</div>
 	</div>
 
-	<div class="tasks-table-body scrolled" (ansynInfiniteScroll)="loadTasks()" *ngIf="entities$ | async as entities" #tbodyElement>
+	<div class="tasks-table-body scrolled" (ansynInfiniteScroll)="loadTasks()" *ngIf="entities$ | async as entities"
+         #tbodyElement>
 
 		<div class="tasks-table-body-row"
 			 *ngFor="let id of ids"
@@ -31,7 +32,7 @@
 			 (mouseenter)="onMouseEnterTaskRow(taskMenu, taskRow, tbodyElement)"
 			 (mouseleave)="onMouseLeaveTaskRow(taskRow)"
 			 [@leaveAnim]
-			 #taskRow>
+             #taskRow>
 
 			<hr>
 
@@ -58,8 +59,8 @@
 				<div class="task-menu-container">
 					<div class="task-menu" (click)="taskMenuClick($event, taskRow)" #taskMenu>
 						<button (click)="showModal(id, entities[id].name)"
-						[attr.tooltip-value]="'Remove' | translate"
-						tooltip-class="bottom">
+								[attr.tooltip-value]="'Remove' | translate"
+								tooltip-class="bottom">
 							<i class="icon-delete"></i>
 						</button>
 					</div>

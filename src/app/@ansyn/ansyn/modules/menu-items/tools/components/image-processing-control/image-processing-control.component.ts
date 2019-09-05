@@ -29,7 +29,7 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 
 	get defaultImageManualProcessArgs(): ImageManualProcessArgs {
 		return this.params.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam) => {
-			return <any> { ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
+			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
 		}, {});
 	}
 

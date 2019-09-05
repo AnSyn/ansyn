@@ -8,7 +8,7 @@ import {
 	selectCurrentAlgorithmTask,
 	selectTaskTotal
 } from '../reducers/tasks.reducer';
-import { map, mergeMap, withLatestFrom, filter } from 'rxjs/operators';
+import { filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { TasksService } from '../services/tasks.service';
 import {
 	AddTaskAction,
@@ -17,7 +17,8 @@ import {
 	LoadTasksFinishedAction,
 	RunTaskAction,
 	RunTaskFinishedAction,
-	SelectTaskAction, SetCurrentTaskStatus,
+	SelectTaskAction,
+	SetCurrentTaskStatus,
 	TasksActionTypes
 } from '../actions/tasks.actions';
 import { AlgorithmTask, AlgorithmTaskStatus } from '../models/tasks.model';

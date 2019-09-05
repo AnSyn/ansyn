@@ -4,7 +4,7 @@ import { AnaglyphSensorAlertComponent } from './anaglyph-sensor-alert.component'
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { StoreModule, Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
-import { AnaglyphSensorService } from '../anaglyph-sensor-service/anaglyph-sensor.service';
+import { AnaglyphSensorService } from '../service/anaglyph-sensor.service';
 
 describe('AnaglyphSensorAlertComponent', () => {
 	let component: AnaglyphSensorAlertComponent;

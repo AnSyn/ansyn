@@ -6,7 +6,7 @@ import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
 import { Store, select } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { Dictionary } from '@ngrx/entity';
-import { AnaglyphSensorService } from '../anaglyph-sensor-service/anaglyph-sensor.service';
+import { AnaglyphSensorService } from '../service/anaglyph-sensor.service';
 
 export enum AnaglyphComponentMode {
 	ShowAnaglyph,

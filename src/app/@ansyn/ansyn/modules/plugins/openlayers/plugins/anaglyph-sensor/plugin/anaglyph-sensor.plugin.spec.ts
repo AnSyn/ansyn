@@ -3,7 +3,7 @@ import { inject, TestBed } from '@angular/core/testing';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { AnaglyphSensorPlugin } from './anaglyph-sensor.plugin';
-import { AnaglyphSensorService } from '../anaglyph-sensor-service/anaglyph-sensor.service';
+import { AnaglyphSensorService } from '../service/anaglyph-sensor.service';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 
 describe('AnaglyphSensorPlugin', () => {

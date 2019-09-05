@@ -1,0 +1,30 @@
+@import 'ansyn/less/colors';
+
+:host {
+	button {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		height: 100%;
+		border-radius: 5px;
+		position: relative;
+		cursor: pointer;
+		border: none;
+		padding: 0 5px;
+		font-size: 12px;
+		margin: 0 2.5px;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		background: @background-color-6;
+		color: white;
+		outline: none;
+
+		span.indicator {
+			background: linear-gradient(90deg, rgba(0,0,255,1) 35%, rgba(255,0,0,1) 100%);
+			width: 10px;
+			height: 10px;
+			border-radius: 100%;
+			margin-right: 2px;
+		}
+	}
+}

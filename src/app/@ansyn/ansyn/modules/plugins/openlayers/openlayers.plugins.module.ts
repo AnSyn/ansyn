@@ -35,6 +35,7 @@ import {
 	OpenLayerTileWMSSourceProvider
 } from '@ansyn/ol';
 import { ScannedAreaVisualizer } from './plugins/visualizers/scanned-area/scanned-area.visualizer';
+import { OpenlayersAnaglyphSensorModule } from './plugins/anaglyph-sensor/anaglyph-sensor.module';
 
 @NgModule({
 	imports: [
@@ -78,7 +79,8 @@ import { ScannedAreaVisualizer } from './plugins/visualizers/scanned-area/scanne
 				OpenLayerMarcoSourceProvider
 			]
 		}),
-		AnnotationsContextMenuModule
+		AnnotationsContextMenuModule,
+		OpenlayersAnaglyphSensorModule
 	]
 })
 export class OpenlayersPluginsModule {

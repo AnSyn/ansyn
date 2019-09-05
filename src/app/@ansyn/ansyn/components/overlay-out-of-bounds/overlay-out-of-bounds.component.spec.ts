@@ -10,7 +10,7 @@ import { geometry } from '@turf/turf';
 import { StoreModule, Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 
-describe('OverlayOutOfBoundsComponent', () => {
+describe('AnaglyphSensorAlertComponent', () => {
 	let component: OverlayOutOfBoundsComponent;
 	let fixture: ComponentFixture<OverlayOutOfBoundsComponent>;
 	let imageryCommunicatorService: ImageryCommunicatorService;

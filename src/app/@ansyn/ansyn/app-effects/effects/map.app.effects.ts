@@ -66,7 +66,7 @@ import {
 	OverlayStatusActionsTypes
 } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { fromPromise } from 'rxjs/internal-compatibility';
-import { selectOverlaysWithMapIds } from '../../../map-facade/reducers/map.reducer';
+import { selectOverlaysWithMapIds } from '@ansyn/map-facade';
 import { isEqual } from 'lodash';
 
 @Injectable()

@@ -6,10 +6,13 @@ import { Component, OnInit } from '@angular/core';
 	styleUrls: ['./credentials.component.less']
 })
 export class CredentialsComponent implements OnInit {
-
+	isOpen: boolean;
 	constructor() { }
 
 	ngOnInit() {
 	}
 
+	setIsOpenMode() {
+
+	}
 }

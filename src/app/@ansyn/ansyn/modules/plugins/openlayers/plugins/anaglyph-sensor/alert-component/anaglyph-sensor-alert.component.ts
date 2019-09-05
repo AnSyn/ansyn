@@ -1,11 +1,9 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ImageryCommunicatorService, bboxFromGeoJson, IMapSettings } from '@ansyn/imagery';
+import { IMapSettings } from '@ansyn/imagery';
 import { take, tap } from 'rxjs/operators';
-import { IEntryComponent, selectMaps } from '@ansyn/map-facade';
+import { IEntryComponent, selectMapStateById } from '@ansyn/map-facade';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
 import { Store, select } from '@ngrx/store';
-import { Observable, of } from 'rxjs';
-import { Dictionary } from '@ngrx/entity';
 import { AnaglyphSensorService } from '../service/anaglyph-sensor.service';
 
 export enum AnaglyphComponentMode {
@@ -25,9 +23,9 @@ export class AnaglyphSensorAlertComponent implements OnInit, OnDestroy, IEntryCo
 	mode: AnaglyphComponentMode;
 
 	@AutoSubscription
-	mapState$: Observable<Dictionary<IMapSettings>> = this.store.pipe(
-		select(selectMaps),
-		tap((maps) => this.mapState = maps[this.mapId])
+	mapState$ = () => this.store.pipe(
+		select(selectMapStateById(this.mapId)),
+		tap((mapSetings: IMapSettings) => this.mapState = mapSetings)
 	);
 
 	ShowAnaglyph(): void {
@@ -36,11 +34,6 @@ export class AnaglyphSensorAlertComponent implements OnInit, OnDestroy, IEntryCo
 				this.mode = AnaglyphComponentMode.ShowOriginal;
 			}
 		});
-		// const communicator = this.communicatorService.provide(this.mapState.id);
-		// const extent = bboxFromGeoJson(this.mapState.data.overlay.footprint);
-		// communicator.ActiveMap.fitToExtent(extent)
-		// 	.pipe(take(1))
-		// 	.subscribe();
 	}
 
 	ShowOriginal(): void {
@@ -58,7 +51,6 @@ export class AnaglyphSensorAlertComponent implements OnInit, OnDestroy, IEntryCo
 	}
 
 	constructor(public store: Store<any>,
-				protected communicatorService: ImageryCommunicatorService,
 				protected anaglyphSensorService: AnaglyphSensorService) {
 		this.mode = AnaglyphComponentMode.ShowAnaglyph;
 	}

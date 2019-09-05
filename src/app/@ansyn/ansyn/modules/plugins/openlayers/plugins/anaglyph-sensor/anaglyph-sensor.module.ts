@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImageryModule } from '@ansyn/imagery';
 import { AnaglyphSensorPlugin } from './plugin/anaglyph-sensor.plugin';
-import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ol';
 import { ansynConfig } from '../../../../../config/ansyn.config';
 import { AnaglyphSensorService } from './service/anaglyph-sensor.service';
 import { AnaglyphSensorAlertComponent } from './alert-component/anaglyph-sensor-alert.component';
@@ -22,7 +21,7 @@ ansynConfig.ansynAlerts.push(
 			plugins: [
 				AnaglyphSensorPlugin
 			],
-			maps: [OpenLayersMap, OpenLayersDisabledMap],
+			maps: [],
 			mapSourceProviders: []
 		}),
 		TranslateModule.forRoot()

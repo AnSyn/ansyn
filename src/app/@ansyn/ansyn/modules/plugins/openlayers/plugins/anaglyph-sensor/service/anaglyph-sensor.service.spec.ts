@@ -1,6 +1,7 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { AnaglyphSensorService } from './anaglyph-sensor.service';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { AnaglyphConfig } from '../models/anaglyph.model';
 
 describe('AnaglyphSensorService', () => {
 	beforeEach(() => {
@@ -13,7 +14,14 @@ describe('AnaglyphSensorService', () => {
 				},
 				{
 					provide: ImageryCommunicatorService,
-					useValue: { provide: () => {} }
+					useValue: {
+						provide: () => {
+						}
+					}
+				},
+				{
+					provide: AnaglyphConfig,
+					useValue: {}
 				}
 			]
 		});

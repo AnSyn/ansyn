@@ -26,7 +26,10 @@ export class AnaglyphSensorPlugin extends BaseImageryPlugin {
 				this.anaglyphSensorService.isSupprotedOverlay(overlay).pipe(take(1)).subscribe((isSupproted: boolean) => {
 					this.isEnabled = isSupproted;
 					if (isSupproted) {
-						this.store$.dispatch(new AddAlertMsg({ key: AlertMsgTypes.anaglyphSensor, value: this.mapId }));
+						this.store$.dispatch(new AddAlertMsg({
+							key: AlertMsgTypes.anaglyphSensor,
+							value: this.mapId
+						}));
 					} else {
 						this.store$.dispatch(new RemoveAlertMsg({
 							key: AlertMsgTypes.anaglyphSensor,

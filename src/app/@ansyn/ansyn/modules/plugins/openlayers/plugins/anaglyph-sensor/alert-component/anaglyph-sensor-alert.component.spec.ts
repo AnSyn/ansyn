@@ -5,6 +5,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { StoreModule, Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AnaglyphSensorService } from '../service/anaglyph-sensor.service';
+import { AnaglyphConfig } from '../models/anaglyph.model';
 
 describe('AnaglyphSensorAlertComponent', () => {
 	let component: AnaglyphSensorAlertComponent;
@@ -14,7 +15,13 @@ describe('AnaglyphSensorAlertComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			providers: [ImageryCommunicatorService, AnaglyphSensorService],
+			providers: [
+				ImageryCommunicatorService,
+				AnaglyphSensorService,
+				{
+					provide: AnaglyphConfig,
+					useValue: {}
+				}],
 			declarations: [AnaglyphSensorAlertComponent],
 			imports: [StoreModule.forRoot({ [mapFeatureKey]: MapReducer }), TranslateModule.forRoot()]
 		})

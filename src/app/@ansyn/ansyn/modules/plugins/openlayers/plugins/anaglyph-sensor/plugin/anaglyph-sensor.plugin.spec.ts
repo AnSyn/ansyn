@@ -5,6 +5,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { AnaglyphSensorPlugin } from './anaglyph-sensor.plugin';
 import { AnaglyphSensorService } from '../service/anaglyph-sensor.service';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { AnaglyphConfig } from '../models/anaglyph.model';
 
 describe('AnaglyphSensorPlugin', () => {
 	let anaglyphSensorPlugin: AnaglyphSensorPlugin;
@@ -17,7 +18,11 @@ describe('AnaglyphSensorPlugin', () => {
 				provideMockActions(() => actions),
 				AnaglyphSensorPlugin,
 				AnaglyphSensorService,
-				ImageryCommunicatorService
+				ImageryCommunicatorService,
+				{
+					provide: AnaglyphConfig,
+					useValue: {}
+				}
 			],
 			imports: [StoreModule.forRoot({})]
 		});

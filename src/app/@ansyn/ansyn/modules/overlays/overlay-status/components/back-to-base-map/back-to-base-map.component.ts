@@ -1,12 +1,10 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { IMapSettings } from '@ansyn/imagery';
-import { IEntryComponent, selectMaps, selectMapsTotal } from "@ansyn/map-facade";
-import { Store, select } from '@ngrx/store';
-import { tap, map } from 'rxjs/operators';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { IEntryComponent, selectMapsTotal, selectOverlayFromMap } from '@ansyn/map-facade';
+import { select, Store } from '@ngrx/store';
+import { tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { BackToWorldView } from '../../actions/overlay-status.actions';
 import { Observable } from 'rxjs';
-import { Dictionary } from '@ngrx/entity';
 import { selectIsPinned } from '@ansyn/menu';
 
 @Component({
@@ -25,7 +23,7 @@ export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponen
 	@AutoSubscription
 	isPinned$: Observable<boolean> = this.store$.pipe(
 		select(selectIsPinned),
-		tap( isPinned => this.isPinned = isPinned)
+		tap(isPinned => this.isPinned = isPinned)
 	);
 
 	@AutoSubscription
@@ -34,17 +32,14 @@ export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponen
 		tap((mapsAmount) => this.mapsAmount = mapsAmount)
 	);
 
-	@AutoSubscription
-	overlay$: Observable<Dictionary<IMapSettings>>  = this.store$.pipe(
-		select(selectMaps),
-		tap((maps) => {
-			if (maps[this.mapId]) {
-				this.overlay = maps[this.mapId].data.overlay;
-			}
-		})
-	);
 	constructor(protected store$: Store<any>) {
 	}
+
+	@AutoSubscription
+	overlay$ = () => this.store$.pipe(
+		select(selectOverlayFromMap(this.mapId)),
+		tap(overlay => this.overlay = overlay)
+	);
 
 	ngOnInit() {
 	}
@@ -55,7 +50,8 @@ export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponen
 	getType(): string {
 		return 'buttons';
 	}
+
 	backToWorldView() {
-		this.store$.dispatch(new BackToWorldView({mapId: this.mapId}));
+		this.store$.dispatch(new BackToWorldView({ mapId: this.mapId }));
 	}
 }

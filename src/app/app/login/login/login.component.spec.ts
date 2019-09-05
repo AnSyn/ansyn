@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed, fakeAsync } from '@angular/core/testing';
+import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 
 import { LoginComponent } from './login.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -64,7 +64,7 @@ describe('LoginComponent', () => {
 
 
 	describe('loginRequest should be an Observable with catch or mergeMap results', () => {
-		it('on mergeMap', async(async() => {
+		it('on mergeMap', async(async () => {
 			spyOn(authService, 'login').and.callFake(() => of('ok'));
 			spyOn(router, 'navigateByUrl').and.callFake(() => Promise.resolve('navigation'));
 			component.username = 'username';
@@ -76,7 +76,7 @@ describe('LoginComponent', () => {
 			expect(router.navigateByUrl).toHaveBeenCalled();
 		}));
 
-		it('on catch (throw error): should call showTryAgainMsg() and throw "Unauthorized" error Observable', async(async() => {
+		it('on catch (throw error): should call showTryAgainMsg() and throw "Unauthorized" error Observable', async(async () => {
 			spyOn(authService, 'login').and.callFake(() => throwError(new Error('error')));
 			spyOn(component, 'showTryAgainMsg');
 			try {

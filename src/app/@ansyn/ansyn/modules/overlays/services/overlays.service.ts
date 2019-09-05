@@ -62,8 +62,8 @@ export class OverlaysService {
 	static parseOverlayDataForDisplay({ overlaysArray, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites }: IOverlayDropSources): IOverlayDrop[] {
 		const criterialOverlays: IOverlay[] = showOnlyFavorites ? [] :
 			overlaysArray.filter(({ id }) => filteredOverlays.includes(id));
-		const allOverlays: IOverlay[] = unionBy( criterialOverlays, favoriteOverlays, ({id}) => id);
-		const dropsFromOverlays: IOverlayDrop[] = allOverlays.map(({id, date}) => ({id, date}));
+		const allOverlays: IOverlay[] = unionBy(criterialOverlays, favoriteOverlays, ({ id }) => id);
+		const dropsFromOverlays: IOverlayDrop[] = allOverlays.map(({ id, date }) => ({ id, date }));
 		const allDrops = [...dropsFromOverlays, ...mapValuesToArray(specialObjects)].sort(sortByDateDesc);
 		return allDrops;
 	}
@@ -83,7 +83,7 @@ export class OverlaysService {
 			dataInputFilters: Boolean(params.dataInputFilters) && params.dataInputFilters.active ? params.dataInputFilters.filters : null,
 			limit: this.config.limit,
 			region: feature,
-			timeRange: <any> {
+			timeRange: <any>{
 				start: params.time.from,
 				end: params.time.to
 			}

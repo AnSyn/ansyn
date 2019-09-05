@@ -1,22 +1,16 @@
-import {
-	BaseImageryPlugin,
-	getPolygonIntersectionRatioWithMultiPolygon,
-	ImageryMapPosition,
-	ImageryPlugin
-} from '@ansyn/imagery';
-import { OpenLayersMap, OpenLayersDisabledMap } from '@ansyn/ol';
+import { BaseImageryPlugin, geojsonMultiPolygonToPolygons, ImageryMapPosition, ImageryPlugin } from '@ansyn/imagery';
+import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ol';
 import { select, Store } from '@ngrx/store';
-import { combineLatest, Observable } from 'rxjs';
-import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
-import { debounceTime, filter, map, tap, withLatestFrom } from 'rxjs/operators';
+import { Observable, combineLatest } from 'rxjs';
+import { selectOverlayFromMap } from '@ansyn/map-facade';
+import { debounceTime, map, tap, distinctUntilChanged, filter } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
-import { bboxPolygon, intersect } from '@turf/turf';
+import { intersect } from '@turf/turf';
 import { AlertMsgTypes } from '../../../alerts/model';
 import { AddAlertMsg, RemoveAlertMsg } from '../../../overlays/overlay-status/actions/overlay-status.actions';
-import { selectDrops } from '../../../overlays/reducers/overlays.reducer';
+import { selectDrops, selectFilteredOveralys, selectOverlaysMap } from '../../../overlays/reducers/overlays.reducer';
 import { isFullOverlay } from '../../../core/utils/overlays';
-import { ICaseMapState } from '../../../menu-items/cases/models/case.model';
-import { IOverlayDrop } from '../../../overlays/models/overlay.model';
+import { IOverlay, IOverlayDrop } from '../../../overlays/models/overlay.model';
 import { CesiumMap } from '@ansyn/imagery-cesium';
 import { Polygon } from 'geojson';
 
@@ -25,25 +19,10 @@ import { Polygon } from 'geojson';
 	deps: [Store]
 })
 export class AlertsPlugin extends BaseImageryPlugin {
-	currentMap$: Observable<ICaseMapState> = this.store$.pipe(
-		select(selectMapsList),
-		map((mapsList: ICaseMapState[]) => MapFacadeService.mapById(mapsList, this.mapId)),
-		filter(Boolean)
-	);
-
+	overlay: IOverlay;
 	@AutoSubscription
-	setOverlaysNotInCase$: Observable<any> = combineLatest(this.store$.select(selectDrops), this.currentMap$).pipe(
+	setOverlaysNotInCase$: Observable<any> = combineLatest(this.store$.select(selectOverlaysMap), this.store$.select(selectFilteredOveralys) ).pipe(
 		map(this.setOverlaysNotInCase.bind(this)),
-		tap((action: RemoveAlertMsg | AddAlertMsg) => this.store$.dispatch(action))
-	);
-
-	// todo: register store map extent instead of map positionChanged
-	@AutoSubscription
-	positionChanged$ = () => this.communicator.positionChanged.pipe(
-		filter(Boolean),
-		debounceTime(500),
-		withLatestFrom(this.currentMap$),
-		map(this.positionChanged.bind(this)),
 		tap((action: RemoveAlertMsg | AddAlertMsg) => this.store$.dispatch(action))
 	);
 
@@ -51,23 +30,46 @@ export class AlertsPlugin extends BaseImageryPlugin {
 		super();
 	}
 
-	setOverlaysNotInCase([drops, currentMap]: [IOverlayDrop[], ICaseMapState]): RemoveAlertMsg | AddAlertMsg {
-		const { data, id } = currentMap;
-		const { overlay } = data;
-		const shouldRemoved = !overlay || drops.some((overlayDrop: IOverlayDrop) => overlayDrop.id === overlay.id);
-		const payload = { key: AlertMsgTypes.overlayIsNotPartOfQuery, value: id };
+	@AutoSubscription
+	positionChanged$ = () => this.communicator.positionChanged.pipe(
+		filter(Boolean),
+		debounceTime(500),
+		map(this.positionChanged.bind(this)),
+		tap((action: RemoveAlertMsg | AddAlertMsg) => this.store$.dispatch(action))
+	);
+
+	@AutoSubscription
+	overlay$ = () => this.store$.pipe(
+		select(selectOverlayFromMap(this.mapId)),
+		tap(overlay => this.overlay = overlay)
+	);
+
+	setOverlaysNotInCase([overlays, filteredOverlays]: [Map<string, IOverlay>, string[]]): RemoveAlertMsg | AddAlertMsg {
+		const shouldRemoved = !this.overlay || filteredOverlays.some((id: string) => id === this.overlay.id);
+		const payload = { key: AlertMsgTypes.overlayIsNotPartOfQuery, value: this.mapId };
 		return shouldRemoved ? new RemoveAlertMsg(payload) : new AddAlertMsg(payload);
 	}
 
-	positionChanged([position, currentMap]: [ImageryMapPosition, ICaseMapState]): RemoveAlertMsg | AddAlertMsg {
-		const isWorldView = !isFullOverlay(currentMap.data.overlay);
+	positionChanged(position: ImageryMapPosition): RemoveAlertMsg | AddAlertMsg {
+		const isWorldView = !isFullOverlay(this.overlay);
 		let isInBound;
 		if (!isWorldView) {
 			const viewExtent = position.extentPolygon;
-			const intersection = getPolygonIntersectionRatioWithMultiPolygon(viewExtent, currentMap.data.overlay.footprint);
-			isInBound = Boolean(intersection);
+			const layerExtents: Polygon[] = geojsonMultiPolygonToPolygons(this.overlay.footprint);
+
+			try {
+				for (let i = 0; i < layerExtents.length; i++) {
+					isInBound = Boolean(intersect(layerExtents[i], viewExtent));
+					if (isInBound) {
+						break;
+					}
+				}
+			} catch (e) {
+				// todo: check for multi polygon bug
+				console.warn('checkImageOutOfBounds$: turf exception', e);
+			}
 		}
-		const payload = { key: AlertMsgTypes.OverlaysOutOfBounds, value: currentMap.id };
+		const payload = { key: AlertMsgTypes.OverlaysOutOfBounds, value: this.mapId };
 		return isWorldView || isInBound ? new RemoveAlertMsg(payload) : new AddAlertMsg(payload);
 	}
 

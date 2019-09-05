@@ -42,15 +42,15 @@ export function getTimeDiff(date1: Date, date2: Date): TimeDiff {
 }
 
 export function getTimeDiffFormat(timeDiff: TimeDiff): string {
-	let result = `${timeDiff.isNegative ? '-' : ''} `;
+	let result = `${ timeDiff.isNegative ? '-' : '' } `;
 	if (timeDiff.years > 0) {
-		result += `${timeDiff.years} yr: ${timeDiff.months} mo: ${timeDiff.days} days`;
+		result += `${ timeDiff.years } yr: ${ timeDiff.months } mo: ${ timeDiff.days } days`;
 	} else if (timeDiff.months > 0) {
-		result += `${timeDiff.months} mo: ${timeDiff.days} days: ${timeDiff.hours} hr`;
+		result += `${ timeDiff.months } mo: ${ timeDiff.days } days: ${ timeDiff.hours } hr`;
 	} else if (timeDiff.days > 0) {
-		result += `${timeDiff.days} days: ${timeDiff.hours} hr: ${timeDiff.minutes} min`;
+		result += `${ timeDiff.days } days: ${ timeDiff.hours } hr: ${ timeDiff.minutes } min`;
 	} else {
-		result += `${timeDiff.hours} hr: ${timeDiff.minutes} min: ${timeDiff.seconds} sec`;
+		result += `${ timeDiff.hours } hr: ${ timeDiff.minutes } min: ${ timeDiff.seconds } sec`;
 	}
 	return result;
 }

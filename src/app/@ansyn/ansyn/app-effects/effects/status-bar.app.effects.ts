@@ -2,15 +2,12 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-import {
-	overlayStatusStateSelector,
-	selectPresetOverlays
-} from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
+import { selectPresetOverlays } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../app.effects.module';
 import { casesStateSelector, ICasesState } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import {
 	ClickOutsideMap,
-	ContextMenuShowAction, imageryStatusStateSelector,
+	ContextMenuShowAction,
 	IMapState,
 	MapActionTypes,
 	MapFacadeService,
@@ -18,7 +15,9 @@ import {
 } from '@ansyn/map-facade';
 import { filter, map, withLatestFrom } from 'rxjs/operators';
 import {
-	CopySelectedCaseLinkAction, GoAdjacentOverlay, GoNextPresetOverlay,
+	CopySelectedCaseLinkAction,
+	GoAdjacentOverlay,
+	GoNextPresetOverlay,
 	StatusBarActionsTypes,
 	UpdateGeoFilterStatus
 } from '../../modules/status-bar/actions/status-bar.actions';
@@ -60,7 +59,7 @@ export class StatusBarAppEffects {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			return { overlayId: activeMap.data.overlay && activeMap.data.overlay.id, mapId: mapState.activeMapId };
 		}),
-		withLatestFrom(this.store.select(selectPresetOverlays), ({ overlayId, mapId },  presetOverlays ): { overlay: IOverlay, mapId: string } => {
+		withLatestFrom(this.store.select(selectPresetOverlays), ({ overlayId, mapId }, presetOverlays): { overlay: IOverlay, mapId: string } => {
 			const length = presetOverlays.length;
 			if (length === 0) {
 				return;

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MapFacadeService } from '@ansyn/map-facade';
 import {
+	ClearActiveInteractionsAction,
 	SetAutoImageProcessing,
 	SetMeasureDistanceToolState,
 	SetSubMenu,
@@ -9,18 +10,10 @@ import {
 } from '../actions/tools.actions';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import {
-	IToolsState,
-	selectSubMenu, selectToolFlag,
-	selectToolFlags,
-	SubMenuEnum,
-	toolsFlags,
-	toolsStateSelector
-} from '../reducers/tools.reducer';
-import { distinctUntilChanged, filter, map, pluck, tap } from 'rxjs/operators';
+import { selectSubMenu, selectToolFlag, selectToolFlags, SubMenuEnum, toolsFlags } from '../reducers/tools.reducer';
+import { filter, map, tap } from 'rxjs/operators';
 import { selectActiveAnnotationLayer } from '../../layers-manager/reducers/layers.reducer';
-import { ClearActiveInteractionsAction } from '../actions/tools.actions';
-import { AutoSubscription, AutoSubscriptions } from "auto-subscriptions";
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 
 @Component({
 	selector: 'ansyn-tools',
@@ -44,9 +37,9 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	public imageProcessingDisabled$: Observable<boolean> =
 		this.store.select(selectToolFlag(toolsFlags.imageProcessingDisabled)).pipe(
-		filter(Boolean),
-		tap(this.closeManualProcessingMenu.bind(this))
-	);
+			filter(Boolean),
+			tap(this.closeManualProcessingMenu.bind(this))
+		);
 
 	isActiveAnnotationLayer$ = this.store.select(selectActiveAnnotationLayer).pipe(
 		map(Boolean)

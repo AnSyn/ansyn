@@ -27,7 +27,8 @@ import { OverlaysConfig, OverlaysService } from '../../modules/overlays/services
 import { OverlaySourceProvider } from '../../modules/overlays/models/overlays-source-providers';
 import { DisplayOverlayAction } from '../../modules/overlays/actions/overlays.actions';
 import {
-	imageryStatusFeatureKey, ImageryStatusReducer,
+	imageryStatusFeatureKey,
+	ImageryStatusReducer,
 	mapFeatureKey,
 	MapReducer,
 	SetActiveMapId,
@@ -156,8 +157,13 @@ describe('StatusBarAppEffects', () => {
 		let presetOverlays;
 		let mapsList;
 		beforeEach(() => {
-			presetOverlays = <any> [mockOverlay('1'), mockOverlay('2'), mockOverlay('3')];
-			mapsList = <any> [{ id: 'map_1', data: { position: null }, worldView: { mapType: null, sourceType: null }, flags: null }];
+			presetOverlays = <any>[mockOverlay('1'), mockOverlay('2'), mockOverlay('3')];
+			mapsList = <any>[{
+				id: 'map_1',
+				data: { position: null },
+				worldView: { mapType: null, sourceType: null },
+				flags: null
+			}];
 
 			store.dispatch(new SetActiveMapId('map_1'));
 			store.dispatch(new SetMapsDataActionStore({ mapsList }));

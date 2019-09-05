@@ -3,7 +3,7 @@ import { SetMapsDataActionStore, UpdateMapSizeAction } from '../../../actions/ma
 import { Store } from '@ngrx/store';
 import { DOCUMENT } from '@angular/common';
 import { forkJoin, fromEvent } from 'rxjs';
-import { tap, take } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 
 export interface IDragDropData {
 	dragElement: HTMLElement;
@@ -46,7 +46,7 @@ export class DragDropMapService {
 		}
 		dragElement.style.pointerEvents = 'none';
 		const pointElem = this.document.elementFromPoint(left + (width / 2), top + (height / 2));
-		const newDropElement = <HTMLElement> pointElem && pointElem.closest('.map-container-wrapper');
+		const newDropElement = <HTMLElement>pointElem && pointElem.closest('.map-container-wrapper');
 		if (newDropElement) {
 			newDropElement.style.filter = 'blur(2px)';
 			newDropElement.querySelector('.active-border').style.height = '100%';
@@ -54,7 +54,7 @@ export class DragDropMapService {
 		this.data.dropElement = newDropElement;
 		dragElement.style.transition = null;
 		dragElement.style.zIndex = '200';
-		dragElement.style.transform = `translate(${$event.clientX - targetLeft - (targetWidth / 2)}px, ${$event.clientY - targetTop - (targetHeight / 2)}px)`;
+		dragElement.style.transform = `translate(${ $event.clientX - targetLeft - (targetWidth / 2) }px, ${ $event.clientY - targetTop - (targetHeight / 2) }px)`;
 	};
 
 	mouseUp = () => {
@@ -63,7 +63,7 @@ export class DragDropMapService {
 		const { dragElement, dropElement, dragElementInitialBoundingBox, ids: mapIds, entities } = this.data;
 		const { left: initialLeft, top: initialTop, width: dragWidth, height: dragHeight } = dragElementInitialBoundingBox;
 		this.document.body.style.userSelect = null;
-		dragElement.style.transition = `transform ${this.TRANSITION_DURATION}ms`;
+		dragElement.style.transition = `transform ${ this.TRANSITION_DURATION }ms`;
 		const dragEnd = fromEvent(dragElement, 'transitionend').pipe(take(1));
 		const dropEnd = fromEvent(dropElement, 'transitionend').pipe(take(1));
 
@@ -104,15 +104,15 @@ export class DragDropMapService {
 			forkJoin([dragEnd, dropEnd]).pipe(transitionsEnd).subscribe();
 			const { left: dropLeft, top: dropTop, width: dropWidth, height: dropHeight } = dropElement.getBoundingClientRect();
 			dropElement.style.filter = null;
-			dropElement.style.transition = `transform ${this.TRANSITION_DURATION}ms`;
-			dropElement.style.transform = `translate(${initialLeft - dropLeft}px, ${initialTop - dropTop}px)`;
-			dragElement.style.transform = `translate(${dropLeft - initialLeft}px, ${dropTop - initialTop}px)`;
+			dropElement.style.transition = `transform ${ this.TRANSITION_DURATION }ms`;
+			dropElement.style.transform = `translate(${ initialLeft - dropLeft }px, ${ initialTop - dropTop }px)`;
+			dragElement.style.transform = `translate(${ dropLeft - initialLeft }px, ${ dropTop - initialTop }px)`;
 			dropElement.style.zIndex = '199';
 			dropElement.classList.remove('droppable');
-			dragElement.style.width = `${dropWidth}px`;
-			dragElement.style.height = `${dropHeight}px`;
-			dropElement.style.width = `${dragWidth}px`;
-			dropElement.style.height = `${dragHeight}px`;
+			dragElement.style.width = `${ dropWidth }px`;
+			dragElement.style.height = `${ dropHeight }px`;
+			dropElement.style.width = `${ dragWidth }px`;
+			dropElement.style.height = `${ dragHeight }px`;
 			this.store.dispatch(new UpdateMapSizeAction());
 		} else {
 			forkJoin([dragEnd]).pipe(transitionsEnd).subscribe();

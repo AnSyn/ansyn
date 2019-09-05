@@ -1,5 +1,5 @@
 import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
-import { MultiPolygon, Point } from "geojson";
+import { MultiPolygon, Point } from 'geojson';
 
 export interface IOverlaysFetchData {
 	data: IOverlay[],

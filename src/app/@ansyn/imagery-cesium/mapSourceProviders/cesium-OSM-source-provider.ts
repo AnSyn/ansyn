@@ -1,4 +1,4 @@
-import { BaseMapSourceProvider, ImageryMapSource, IBaseImageryMapConstructor, IMapSettings } from '@ansyn/imagery';
+import { BaseMapSourceProvider, IBaseImageryMapConstructor, ImageryMapSource, IMapSettings } from '@ansyn/imagery';
 import { CesiumMap } from '../maps/cesium-map/cesium-map';
 import { CesiumLayer } from '../models/cesium-layer';
 

@@ -1,13 +1,11 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { mapFeatureKey, MapReducer, selectMaps } from '@ansyn/map-facade';
-import { casesStateSelector } from '../../modules/menu-items/cases/reducers/cases.reducer';
-import { layersStateSelector } from '../../modules/menu-items/layers-manager/reducers/layers.reducer';
+import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { OverlayOutOfBoundsComponent } from './overlay-out-of-bounds.component';
-import { ImageryCommunicatorService, bboxFromGeoJson } from '@ansyn/imagery';
+import { bboxFromGeoJson, ImageryCommunicatorService } from '@ansyn/imagery';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 import { geometry } from '@turf/turf';
-import { StoreModule, Store } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 
 describe('AnaglyphSensorAlertComponent', () => {
@@ -45,12 +43,15 @@ describe('AnaglyphSensorAlertComponent', () => {
 	});
 
 	it('backToExtent should calc extent and call fitToExtent', () => {
+		const mapSettings = <any>{
+			id: 'mapId',
+			data: { overlay: { footprint: geometry('Polygon', [[[0, 0], [1, 1], [2, 2], [0, 0]]]) } }
+		};
 		component.mapId = 'mapId';
-		component.mapState = <any> { id: 'mapId' , data: { overlay: { footprint: geometry('Polygon', [[[0, 0], [1, 1], [2, 2], [0, 0]]]) } } };
 		const ActiveMap = jasmine.createSpyObj({ fitToExtent: of(true) });
-		spyOn(imageryCommunicatorService, 'provide').and.returnValue({ ActiveMap });
+		spyOn(imageryCommunicatorService, 'provide').and.returnValue({ ActiveMap, mapSettings });
 		component.backToExtent();
-		const extent = bboxFromGeoJson(component.mapState.data.overlay.footprint);
+		const extent = bboxFromGeoJson(imageryCommunicatorService.provide(component.mapId).mapSettings.data.overlay.footprint);
 		expect(ActiveMap.fitToExtent).toHaveBeenCalledWith(extent);
 	});
 

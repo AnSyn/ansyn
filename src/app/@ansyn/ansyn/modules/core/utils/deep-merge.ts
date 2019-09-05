@@ -6,12 +6,10 @@ export function deepMerge(from, to, type = 'set') {
 					to[key] = {};
 				}
 				deepMerge(from[key], to[key], type);
-			}
-			else if (!to.hasOwnProperty(key)) {
+			} else if (!to.hasOwnProperty(key)) {
 				if (type === 'merge') {
 					to[key] = from[key];
-				}
-				else {
+				} else {
 					if (Boolean(from[key] instanceof Array)) {
 						to[key] = [];
 					} else {

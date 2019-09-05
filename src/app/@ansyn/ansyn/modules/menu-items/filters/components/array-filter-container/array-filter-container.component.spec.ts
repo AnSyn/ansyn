@@ -17,7 +17,7 @@ describe('ArrayFilterContainerComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ArrayFilterContainerComponent);
 		component = fixture.componentInstance;
-		component.metadata = <any> {
+		component.metadata = <any>{
 			fields: new Map([['one', false], ['two', true]]),
 			count: 10,
 			filteredCount: 5

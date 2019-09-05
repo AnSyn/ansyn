@@ -1,8 +1,4 @@
-import {
-	BaseImageryVisualizer,
-	IVisualizerEntity,
-	VisualizerInteractionTypes
-} from '@ansyn/imagery';
+import { BaseImageryVisualizer, IVisualizerEntity, VisualizerInteractionTypes } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
 
 declare const Cesium: any;

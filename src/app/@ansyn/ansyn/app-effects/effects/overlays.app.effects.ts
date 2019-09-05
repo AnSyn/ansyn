@@ -2,29 +2,35 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { combineLatest, Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { selectFooterCollapse } from "@ansyn/map-facade";
-import {
-	BackToWorldView, OverlayStatusActionsTypes, SetRemovedOverlayIdsCount, SetRemovedOverlaysIdAction,
-	ToggleFavoriteAction, SetPresetOverlaysAction, TogglePresetOverlayAction
-} from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
-import { selectRemovedOverlays } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
-import { IAppState } from '../app.effects.module';
 import {
 	ContextMenuTriggerAction,
 	IMapState,
+	IPendingOverlay,
 	LayoutKey,
 	layoutOptions,
 	MapActionTypes,
 	mapStateSelector,
 	RemovePendingOverlayAction,
 	selectActiveMapId,
+	selectFooterCollapse,
 	selectMapsList,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
-	SetPendingOverlaysAction,
+	SetPendingOverlaysAction
 } from '@ansyn/map-facade';
+import {
+	BackToWorldView,
+	OverlayStatusActionsTypes,
+	SetPresetOverlaysAction,
+	SetRemovedOverlayIdsCount,
+	SetRemovedOverlaysIdAction,
+	ToggleFavoriteAction,
+	TogglePresetOverlayAction
+} from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
+import { selectRemovedOverlays } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
+import { IAppState } from '../app.effects.module';
 
-import { CommunicatorEntity, ImageryMapPosition, ImageryCommunicatorService } from '@ansyn/imagery';
+import { CommunicatorEntity, ImageryCommunicatorService, ImageryMapPosition } from '@ansyn/imagery';
 import {
 	catchError,
 	distinctUntilChanged,
@@ -64,7 +70,6 @@ import * as turf from '@turf/turf';
 import { Position } from 'geojson';
 import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
-import { IPendingOverlay } from '@ansyn/map-facade';
 
 @Injectable()
 export class OverlaysAppEffects {

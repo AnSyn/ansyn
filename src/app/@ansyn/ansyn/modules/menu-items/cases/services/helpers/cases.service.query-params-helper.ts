@@ -8,10 +8,7 @@ import * as turf from '@turf/turf';
 import { bbox, bboxPolygon, centroid, point } from '@turf/turf';
 import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
 import { UUID } from 'angular2-uuid';
-import {
-	getPolygonByPointAndRadius,
-
-} from '@ansyn/imagery';
+import { getPolygonByPointAndRadius, } from '@ansyn/imagery';
 import {
 	ICase,
 	ICaseMapsState,
@@ -20,7 +17,7 @@ import {
 	ImageManualProcessArgs,
 	IOverlaysManualProcessArgs
 } from '../../models/case.model';
-import { IOverlay, IDilutedOverlaysHash, IOverlaysHash } from '../../../../overlays/models/overlay.model';
+import { IDilutedOverlaysHash, IOverlay, IOverlaysHash } from '../../../../overlays/models/overlay.model';
 
 export class QueryParamsHelper {
 	constructor(protected casesService: CasesService) {
@@ -80,7 +77,7 @@ export class QueryParamsHelper {
 				case 'geometry':
 					const { geometry } = qParams;
 					if (geometry) {
-						const geoJsonGeomtry = <GeoJsonObject> wellknown.parse(geometry);
+						const geoJsonGeomtry = <GeoJsonObject>wellknown.parse(geometry);
 
 						switch (geoJsonGeomtry.type) {
 							case 'Point': {
@@ -137,8 +134,8 @@ export class QueryParamsHelper {
 			urlTree.queryParams[key] = this.encodeCaseObjects(key, sCase.state[key], sCase.state);
 		});
 		const baseLocation = location.href.split('#')[0];
-		const href = this.casesService.config.useHash ? `${baseLocation}/#` : baseLocation;
-		return decodeURIComponent(`${href}${urlTree.toString()}`);
+		const href = this.casesService.config.useHash ? `${ baseLocation }/#` : baseLocation;
+		return decodeURIComponent(`${ href }${ urlTree.toString() }`);
 	}
 
 	encodeCaseObjects(key, value, caseState?: ICaseState) {

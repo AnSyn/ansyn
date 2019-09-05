@@ -5,7 +5,7 @@ import Projection from 'ol/proj/Projection';
 import TileGrid from 'ol/tilegrid/TileGrid';
 
 import { MpImageProjection } from './mp-image-projection';
-import { ProjectableRaster } from "../../../maps/open-layers-map/models/projectable-raster";
+import { ProjectableRaster } from '../../../maps/open-layers-map/models/projectable-raster';
 
 const urlTemplate = '&tileMatrix={z}&tileCol={x}&tileRow={y}';
 
@@ -72,8 +72,8 @@ export class MpTileImageSource extends ProjectableRaster {
 				const x = tileCoord[1];
 				const y = -tileCoord[2] - 1;
 				return url + urlTemplate.replace('{z}', z.toString())
-						.replace('{y}', y.toString())
-						.replace('{x}', x.toString());
+					.replace('{y}', y.toString())
+					.replace('{x}', x.toString());
 
 			},
 			tileGrid: tileGrid,

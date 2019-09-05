@@ -6,26 +6,32 @@
 		justify-content: center;
 		text-align: center;
 	}
+
 	position: relative;
 	display: block;
 	height: 100%;
 	width: 100%;
+
 	.combo-container {
 		height: 100%;
 		width: 100%;
 		position: relative;
+
 		.options-container {
 			width: auto;
 			min-width: 100%;
 			background: @background-color-0;
 			z-index: 1;
+
 			&.show {
 				visibility: visible;
 			}
+
 			&:focus {
 				visibility: visible;
 				outline: none;
 			}
+
 			visibility: hidden;
 			position: absolute;
 			top: 100%;
@@ -45,8 +51,10 @@
 			.options-container {
 				box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.2);
 				border-color: @transparent-color;
+
 				/deep/ .option {
 					font-weight: 500;
+
 					&:hover {
 						color: @application-primary-color;
 					}
@@ -84,6 +92,7 @@ div.placeholder {
 	transition: .2s;
 	text-align: left;
 	bottom: 6px;
+
 	&.float {
 		bottom: 100%;
 		padding: -1px 0;

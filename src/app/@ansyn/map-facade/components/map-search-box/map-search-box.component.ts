@@ -50,7 +50,7 @@ export class MapSearchBoxComponent implements OnDestroy {
 					}
 				),
 				take(1)
-		).subscribe());
+			).subscribe());
 	}
 
 	ngOnDestroy(): void {

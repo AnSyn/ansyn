@@ -18,37 +18,43 @@ import {
 	mapFeatureKey,
 	MapReducer,
 	mapStateSelector,
+	RemovePendingOverlayAction,
 	selectMapsList,
-	SetPendingOverlaysAction,
-	SetLayoutAction, SetLayoutSuccessAction, RemovePendingOverlayAction
+	SetLayoutAction,
+	SetLayoutSuccessAction,
+	SetPendingOverlaysAction
 } from '@ansyn/map-facade';
 
 import { cloneDeep as _cloneDeep } from 'lodash';
 import {
 	casesFeatureKey,
 	CasesReducer,
-	casesStateSelector, initialCasesState
+	casesStateSelector,
+	initialCasesState
 } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import { CasesService } from '../../modules/menu-items/cases/services/cases.service';
 import {
 	IToolsState,
 	toolsFeatureKey,
 	toolsInitialState,
-	ToolsReducer, toolsStateSelector
+	ToolsReducer,
+	toolsStateSelector
 } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import {
-	DisplayMultipleOverlaysFromStoreAction, DisplayOverlayAction,
+	DisplayMultipleOverlaysFromStoreAction,
+	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
 	DisplayOverlaySuccessAction,
-	SetFilteredOverlaysAction,
 	SetHoveredOverlayAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	MarkUpClass,
 	OverlayReducer,
-	overlaysFeatureKey, overlaysInitialState,
+	overlaysFeatureKey,
+	overlaysInitialState,
 	overlaysStateSelector,
-	selectDropMarkup, selectOverlaysMap
+	selectDropMarkup,
+	selectOverlaysMap
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { ICase } from '../../modules/menu-items/cases/models/case.model';

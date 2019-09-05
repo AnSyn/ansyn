@@ -3,10 +3,9 @@ import { Actions, ofType } from '@ngrx/effects';
 import { Point as GeoPoint } from 'geojson';
 import * as turf from '@turf/turf';
 import { inside } from '@turf/turf';
-import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';
+import { areCoordinatesNumeric, BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';
 import { fromEvent, Observable, pipe, UnaryFunction } from 'rxjs';
 import { ContextMenuDisplayAction, ContextMenuShowAction, MapActionTypes, selectActiveMapId } from '@ansyn/map-facade';
-import { areCoordinatesNumeric } from '@ansyn/imagery'
 import { filter, map, take, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { overlaysStateSelector } from '../../../overlays/reducers/overlays.reducer';
@@ -55,7 +54,7 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 
 		this.containerElem.click();
 
-		let coordinate = this.iMap.getCoordinateFromScreenPixel({x: event.offsetX, y: event.offsetY});
+		let coordinate = this.iMap.getCoordinateFromScreenPixel({ x: event.offsetX, y: event.offsetY });
 		if (!areCoordinatesNumeric(coordinate)) {
 			console.warn('no coordinate for pixel');
 			return;
@@ -80,8 +79,7 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 		} else if (this.iMap.mapType === CesiumMapName) {
 			return this.cesiumProjectionService
 				.projectAccurately(point, this.iMap.mapObject).pipe(take(1));
-		}
-		else {
+		} else {
 			console.error('not implemented');
 		}
 	}

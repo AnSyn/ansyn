@@ -14,13 +14,9 @@ import {
 	toRadians
 } from '@ansyn/imagery';
 import { IStatusBarState, statusBarStateSelector } from '../../../../status-bar/reducers/status-bar.reducer';
-import {
-	MapActionTypes,
-	PointToRealNorthAction,
-	selectActiveMapId
-} from '@ansyn/map-facade';
+import { MapActionTypes, PointToRealNorthAction, selectActiveMapId } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '@ansyn/ol';
+import { OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
 import {
 	catchError,
 	debounceTime,
@@ -36,7 +32,6 @@ import {
 
 import OLMap from 'ol/Map';
 import View from 'ol/View';
-import { OpenLayersProjectionService } from '@ansyn/ol';
 import { comboBoxesOptions } from '../../../../status-bar/models/combo-boxes.model';
 import { LoggerService } from '../../../../core/services/logger.service';
 import {

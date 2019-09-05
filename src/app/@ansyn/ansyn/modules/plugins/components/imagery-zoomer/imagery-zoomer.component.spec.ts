@@ -1,9 +1,9 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 
 import { ImageryZoomerComponent } from './imagery-zoomer.component';
-import { of } from "rxjs";
-import { ImageryCommunicatorService } from "@ansyn/imagery";
-import { TranslateModule } from "@ngx-translate/core";
+import { of } from 'rxjs';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('ImageryZoomerComponent', () => {
 	let component: ImageryZoomerComponent;

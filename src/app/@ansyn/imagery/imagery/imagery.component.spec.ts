@@ -61,7 +61,8 @@ describe('ImageryComponent', () => {
 		fixture = TestBed.createComponent(ImageryComponent);
 		component = fixture.componentInstance;
 		component.communicator = <any>{
-			ngOnInit: () => {}
+			ngOnInit: () => {
+			}
 		};
 		fixture.detectChanges();
 	});

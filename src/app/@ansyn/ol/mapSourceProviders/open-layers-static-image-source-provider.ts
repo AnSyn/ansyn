@@ -1,8 +1,10 @@
 import {
 	CacheService,
 	ImageryCommunicatorService,
-	ImageryMapSource, IMapSettings,
-	IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG
+	ImageryMapSource,
+	IMapSettings,
+	IMapSourceProvidersConfig,
+	MAP_SOURCE_PROVIDERS_CONFIG
 } from '@ansyn/imagery';
 import Projection from 'ol/proj/Projection';
 import Static from 'ol/source/ImageStatic';
@@ -31,7 +33,7 @@ export class OpenLayersStaticImageSourceProvider extends OpenLayersMapSourceProv
 
 	create(metaData: IMapSettings): Promise<any> {
 		const extent: any = [0, 0, metaData.data.overlay.tag.imageData.imageWidth, metaData.data.overlay.tag.imageData.imageHeight];
-		const code = `static-image ${metaData.data.overlay.id}`;
+		const code = `static-image ${ metaData.data.overlay.id }`;
 
 		const projection = new Projection({
 			code,

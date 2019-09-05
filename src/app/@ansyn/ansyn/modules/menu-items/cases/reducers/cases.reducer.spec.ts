@@ -2,7 +2,7 @@ import {
 	AddCaseAction,
 	CloseModalAction,
 	OpenModalAction,
-	SelectCaseAction, SelectCaseSuccessAction,
+	SelectCaseSuccessAction,
 	UpdateCaseAction
 } from '../actions/cases.actions';
 import { casesAdapter, CasesReducer, ICasesState, initialCasesState } from './cases.reducer';

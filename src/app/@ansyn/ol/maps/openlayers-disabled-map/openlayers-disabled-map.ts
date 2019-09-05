@@ -1,5 +1,6 @@
 import {
-	BaseImageryMap, ICanvasExportData,
+	BaseImageryMap,
+	ICanvasExportData,
 	IMAGERY_MAIN_LAYER_NAME,
 	ImageryLayerProperties,
 	ImageryMap,
@@ -183,7 +184,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 				height: c.height,
 				data: c.toDataURL('image/jpeg', 1.0)
 			}
-		}catch (e) {
+		} catch (e) {
 		}
 		return exportData;
 	}

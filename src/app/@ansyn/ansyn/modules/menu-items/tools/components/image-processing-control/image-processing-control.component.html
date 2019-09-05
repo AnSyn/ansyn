@@ -8,11 +8,11 @@
 			<label [for]="'image-processing-' + param">{{param.name | translate}}</label><br>
 			<div class="input-wrapper">
 				<input [id]="'image-processing-' + param"
-						 type="range"
-						 [min]="param.min"
-						 [max]="param.max"
-						 [ngModel]="imageManualProcessArgs[param.name]"
-						 (ngModelChange)="updateParam($event, param.name)">
+					   type="range"
+					   [min]="param.min"
+					   [max]="param.max"
+					   [ngModel]="imageManualProcessArgs[param.name]"
+					   (ngModelChange)="updateParam($event, param.name)">
 				<button class="button-reset" (click)="resetOne(param)">{{'reset' | translate}}</button>
 			</div>
 		</li>

@@ -68,7 +68,7 @@ describe('SaveCaseComponent', () => {
 		spyOn(component, 'close');
 		spyOn(store, 'select').and.callFake(() => of({}));
 		component.onSubmitCase();
-		expect(store.dispatch).toHaveBeenCalledWith(new SaveCaseAsAction(<any> { name: component.caseName }));
+		expect(store.dispatch).toHaveBeenCalledWith(new SaveCaseAsAction(<any>{ name: component.caseName }));
 		expect(component.close).toHaveBeenCalled();
 	});
 });

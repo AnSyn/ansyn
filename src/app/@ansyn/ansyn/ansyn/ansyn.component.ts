@@ -8,9 +8,9 @@ import { COMPONENT_MODE } from '../app-providers/component-mode';
 import { selectSelectedCase } from '../modules/menu-items/cases/reducers/cases.reducer';
 import { LoadDefaultCaseAction } from '../modules/menu-items/cases/actions/cases.actions';
 import { ICase, ICaseMapState } from '../modules/menu-items/cases/models/case.model';
-import { IToolsConfig, toolsConfig } from "../modules/menu-items/tools/models/tools-config";
-import { UpdateToolsFlags } from "../modules/menu-items/tools/actions/tools.actions";
-import { toolsFlags } from "../modules/menu-items/tools/reducers/tools.reducer";
+import { IToolsConfig, toolsConfig } from '../modules/menu-items/tools/models/tools-config';
+import { UpdateToolsFlags } from '../modules/menu-items/tools/actions/tools.actions';
+import { toolsFlags } from '../modules/menu-items/tools/reducers/tools.reducer';
 
 @Component({
 	selector: 'ansyn-app',
@@ -46,6 +46,7 @@ export class AnsynComponent implements OnInit {
 				@Inject(COMPONENT_MODE) public componentMode: boolean,
 				@Inject(toolsConfig) public toolsConfigData: IToolsConfig) {
 	}
+
 	ngOnInit(): void {
 		if (this.componentMode) {
 			this.store$.dispatch(new LoadDefaultCaseAction());

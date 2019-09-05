@@ -3,13 +3,11 @@ import ImageLayer from 'ol/layer/Image';
 import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersDisabledMap } from '@ansyn/ol';
-import { OpenLayersMap } from '@ansyn/ol';
+import { OpenLayersDisabledMap, OpenLayersMap, ProjectableRaster } from '@ansyn/ol';
 import { OpenLayersImageProcessing } from './image-processing';
 import { distinctUntilChanged, filter, map, take, tap } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import { Inject } from '@angular/core';
-import { ProjectableRaster } from '@ansyn/ol';
 import { selectMaps } from '@ansyn/map-facade';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '../../../../menu-items/tools/models/tools-config';
 import { ICaseMapState, ImageManualProcessArgs } from '../../../../menu-items/cases/models/case.model';
@@ -75,7 +73,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 
 	defaultImageManualProcessArgs(): ImageManualProcessArgs {
 		return this.params.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam: IImageProcParam) => {
-			return <any> { ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
+			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
 		}, {});
 	}
 

@@ -22,13 +22,15 @@ describe('ErrorHandlerService', () => {
 				{
 					provide: Store,
 					useValue: {
-						dispatch: () => {}
+						dispatch: () => {
+						}
 					}
 				},
 				{
 					provide: LoggerService,
 					useValue: {
-						error: () => {}
+						error: () => {
+						}
 					}
 				}
 			]

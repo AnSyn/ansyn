@@ -27,7 +27,7 @@
 		justify-content: space-between;
 	}
 
-	.tree-view-container{
+	.tree-view-container {
 		max-height: 300px;
 		overflow-y: auto;
 	}
@@ -37,25 +37,31 @@
 			background: transparent;
 			border: none;
 			color: @application-primary-color;
+
 			&:disabled {
 				cursor: default;
 				pointer-events: none;
 				opacity: .6;
 			}
 		}
+
 		margin-top: 10px;
 		display: flex;
 		justify-content: space-between;
 		color: @application-primary-color;
+
 		div {
 			button {
 				cursor: pointer;
+
 				&:hover:not(:disabled) {
 					font-weight: bold;
 				}
+
 				&:first-child {
 					width: 42px;
 				}
+
 				&:last-child {
 					width: 17px;
 					margin: 0 9px;

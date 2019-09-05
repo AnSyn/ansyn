@@ -1,11 +1,11 @@
-import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
-import { Observable, combineLatest, fromEvent } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { combineLatest, fromEvent, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { IOverlaysState, selectLoading, selectStatusMessage } from '../../reducers/overlays.reducer';
 import { SetOverlaysStatusMessage } from '../../actions/overlays.actions';
-import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
-import { map, take, tap, distinctUntilChanged, takeWhile } from 'rxjs/operators';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { distinctUntilChanged, map, takeWhile, tap } from 'rxjs/operators';
 
 const animations: any[] = [
 	trigger('timeline-status', [
@@ -53,7 +53,7 @@ export class OverlayTimelineStatusComponent implements OnInit, OnDestroy {
 					tap(() => this.close())
 				).subscribe();
 			}
-	}));
+		}));
 
 	constructor(protected store$: Store<IOverlaysState>) {
 	}

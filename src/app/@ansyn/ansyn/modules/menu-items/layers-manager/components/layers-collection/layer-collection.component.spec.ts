@@ -11,7 +11,11 @@ describe('LayerCollectionComponent', () => {
 	let fixture: ComponentFixture<LayerCollectionComponent>;
 	const ansynImportLayerComponent = MockComponent({ selector: 'ansyn-import-layer' });
 	const ansynLayerComponent = MockComponent({ selector: 'ansyn-layer', inputs: ['layer', 'showOnly'] });
-	const ansynLayerMenuComponent = MockComponent({ selector: 'ansyn-layer-menu', inputs: ['disabledRemove'], outputs: ['openModal'] });
+	const ansynLayerMenuComponent = MockComponent({
+		selector: 'ansyn-layer-menu',
+		inputs: ['disabledRemove'],
+		outputs: ['openModal']
+	});
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -33,7 +37,7 @@ describe('LayerCollectionComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(LayerCollectionComponent);
 		component = fixture.componentInstance;
-		component.collection = <any> { type: 'what' };
+		component.collection = <any>{ type: 'what' };
 		fixture.detectChanges();
 	});
 

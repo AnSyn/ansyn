@@ -1,9 +1,7 @@
-import { IMousePointerMove, IVisualizerEntity } from '@ansyn/imagery';
+import { ImageryPlugin, IMousePointerMove, IVisualizerEntity } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
-import { ImageryPlugin } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
-import { CesiumMap } from '@ansyn/imagery-cesium';
-import { BaseEntitiesVisualizer } from '@ansyn/imagery-cesium';
+import { BaseEntitiesVisualizer, CesiumMap } from '@ansyn/imagery-cesium';
 import { point } from '@turf/turf';
 
 @ImageryPlugin({

@@ -17,7 +17,8 @@ import {
 	IToolsState,
 	toolsFeatureKey,
 	toolsInitialState,
-	ToolsReducer, toolsStateSelector
+	ToolsReducer,
+	toolsStateSelector
 } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import {
 	casesFeatureKey,
@@ -30,10 +31,13 @@ import {
 	DisableImageProcessing,
 	GoToAction,
 	PullActiveCenter,
-	SetActiveCenter, SetAnnotationMode,
+	SetActiveCenter,
+	SetAnnotationMode,
 	SetAutoImageProcessing,
 	SetAutoImageProcessingSuccess,
-	SetMeasureDistanceToolState, SetPinLocationModeAction, SetSubMenu,
+	SetMeasureDistanceToolState,
+	SetPinLocationModeAction,
+	SetSubMenu,
 	ShowOverlaysFootprintAction
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
@@ -331,7 +335,7 @@ describe('ToolsAppEffects', () => {
 		expect(toolsAppEffects.clearActiveInteractions$).toBeObservable(expectedResult);
 	});
 
-	it('setSubMenu to null should call setPinLocationMode with false' , () => {
+	it('setSubMenu to null should call setPinLocationMode with false', () => {
 		actions = hot('--a--', {
 			a: new SetSubMenu(null)
 		});

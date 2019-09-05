@@ -5,6 +5,7 @@
 	display: block;
 	position: relative;
 	height: 100%;
+
 	.block {
 		box-sizing: border-box;
 		vertical-align: middle;
@@ -14,6 +15,7 @@
 		height: 100%;
 		padding: 0 5px;
 		border-left: 1px solid @background-color-8;
+
 		span {
 			margin-left: 5px;
 			line-height: 23px;
@@ -42,12 +44,15 @@
 				display: flex;
 				border-left: none;
 				box-sizing: border-box;
+
 				.icon-edit {
 					font-size: @icon-size;
 				}
+
 				&.active {
 					background-color: @application-primary-color;
 				}
+
 				&:hover:not(.active) {
 					background: @background-color-3;
 				}

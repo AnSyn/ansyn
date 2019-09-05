@@ -1,16 +1,16 @@
 {
-	"name": "@ansyn/login",
-	"version": "0.2.81",
-	"description": "overlays component to show data with graphic touch",
-	"main": "index.ts",
-	"scripts": {
-		"test": "npm test"
-	},
-	"author": "",
-	"license": "MIT",
-	"peerDependencies": {
-		"@angular/common": "^6.0.3",
-		"@angular/core": "^6.0.3"
-	},
-	"typings": "index.d.ts"
+  "name": "@ansyn/login",
+  "version": "0.2.81",
+  "description": "overlays component to show data with graphic touch",
+  "main": "index.ts",
+  "scripts": {
+    "test": "npm test"
+  },
+  "author": "",
+  "license": "MIT",
+  "peerDependencies": {
+    "@angular/common": "^6.0.3",
+    "@angular/core": "^6.0.3"
+  },
+  "typings": "index.d.ts"
 }

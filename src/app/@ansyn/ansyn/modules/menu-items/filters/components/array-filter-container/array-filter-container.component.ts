@@ -7,7 +7,7 @@ import { FilterSearchResult } from '../../models/filter-search-results';
 	templateUrl: './array-filter-container.component.html',
 	styleUrls: ['./array-filter-container.component.less']
 })
-export class ArrayFilterContainerComponent implements OnChanges{
+export class ArrayFilterContainerComponent implements OnChanges {
 	@Input() metadata: ArrayFilterMetadata;
 	@Input() filtersSearchResult: FilterSearchResult;
 	@Output() onMetadataChange = new EventEmitter<ArrayFilterMetadata>();

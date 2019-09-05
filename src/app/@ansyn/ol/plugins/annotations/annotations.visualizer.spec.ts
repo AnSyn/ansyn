@@ -33,7 +33,11 @@ describe('AnnotationsVisualizer', () => {
 	});
 
 	it('onDipsose should call removeInteractions', () => {
-		const map = jasmine.createSpyObj({ un: () => {}, removeInteraction: () => {} });
+		const map = jasmine.createSpyObj({
+			un: () => {
+			}, removeInteraction: () => {
+			}
+		});
 		spyOnProperty(annotationsVisualizer, 'iMap', 'get').and.callFake(() => ({ mapObject: map }));
 		spyOn(annotationsVisualizer, 'removeInteractions');
 		annotationsVisualizer.onDispose();
@@ -43,7 +47,11 @@ describe('AnnotationsVisualizer', () => {
 	});
 
 	it('on toggleVisable selected should be empty', () => {
-		spyOnProperty(annotationsVisualizer, 'iMap', 'get').and.callFake(() => ({ removeLayer: () => {}, addLayer: () => {} }));
+		spyOnProperty(annotationsVisualizer, 'iMap', 'get').and.callFake(() => ({
+			removeLayer: () => {
+			}, addLayer: () => {
+			}
+		}));
 		annotationsVisualizer.toggleVisibility();
 		expect(annotationsVisualizer.selected.length).toBe(0);
 	})

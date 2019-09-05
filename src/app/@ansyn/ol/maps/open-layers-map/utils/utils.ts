@@ -6,7 +6,7 @@ import { ImageryMapExtent } from '@ansyn/imagery';
 // @dynamic
 export class Utils {
 	static BoundingBoxToOLExtent(bbox: Point[]): [number, number, number, number] | any {
-		const coordinates = <[number, number][]> bbox.map((p) => [p.coordinates[0], p.coordinates[1]]);
+		const coordinates = <[number, number][]>bbox.map((p) => [p.coordinates[0], p.coordinates[1]]);
 		return olExtent.boundingExtent(coordinates);
 	}
 

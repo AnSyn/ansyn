@@ -2,14 +2,18 @@ import { Observable } from 'rxjs';
 import * as wellknown from 'wellknown';
 import { Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { geojsonMultiPolygonToFirstPolygon, getPointByGeometry, getPolygonByPointAndRadius } from '@ansyn/imagery';
+import {
+	geojsonMultiPolygonToFirstPolygon,
+	getPointByGeometry,
+	getPolygonByPointAndRadius,
+	toRadians
+} from '@ansyn/imagery';
 import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
 import { catchError, map } from 'rxjs/operators';
 import { ErrorHandlerService } from '../../modules/core/services/error-handler.service';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { limitArray } from '../../modules/core/utils/i-limited-array';
 import { sortByDateDesc } from '../../modules/core/utils/sorting';
-import { toRadians } from '@ansyn/imagery';
 import {
 	BaseOverlaySourceProvider,
 	IFetchParams,

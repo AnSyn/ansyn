@@ -2,7 +2,8 @@ import { IOverlaysState, OverlayReducer, overlaysAdapter, overlaysInitialState }
 import {
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
-	SelectOverlayAction, SetDropsAction,
+	SelectOverlayAction,
+	SetDropsAction,
 	SetFilteredOverlaysAction,
 	SetSpecialObjectsActionStore,
 	SetTimelineStateAction,
@@ -50,7 +51,7 @@ describe('Overlay Reducer', () => {
 	it('should activate loadOverlay reducer', () => {
 		const action = new LoadOverlaysAction({});
 		let mockOverlayInitialState = cloneDeep(overlaysInitialState);
-		mockOverlayInitialState = overlaysAdapter.addOne(<any>{ id: 'tmp', value: 'value'}, mockOverlayInitialState);
+		mockOverlayInitialState = overlaysAdapter.addOne(<any>{ id: 'tmp', value: 'value' }, mockOverlayInitialState);
 		expect(mockOverlayInitialState.ids.length).toBe(1);
 		const result = OverlayReducer(mockOverlayInitialState, action);
 		expect(result.loading).toBe(true);
@@ -105,7 +106,7 @@ describe('Overlay Reducer', () => {
 		const filteredOverlays = ['1', '2', '3', '4', '5', '6'];
 		/*  -> '5' and '6' does not exist on "overlays" */
 		const setFilteredOverlaysAction = new SetFilteredOverlaysAction(filteredOverlays);
-		const overlays: any = [ { id: '1' }, { id: '2' }, { id: '3' }, { id: '4' } ];
+		const overlays: any = [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }];
 		const state = OverlayReducer(overlaysAdapter.addAll(overlays, mockOverlayInitialState), setFilteredOverlaysAction);
 		expect(state.filteredOverlays).toEqual(['1', '2', '3', '4']);
 	});
@@ -132,7 +133,7 @@ describe('Overlay Reducer', () => {
 	});
 
 	it('set drops action', () => {
-		const newDrops = [{id: '23', date: new Date()}];
+		const newDrops = [{ id: '23', date: new Date() }];
 		const action = new SetDropsAction(newDrops);
 		const result = OverlayReducer(overlaysInitialState, action);
 		expect(result.drops).toEqual(newDrops);

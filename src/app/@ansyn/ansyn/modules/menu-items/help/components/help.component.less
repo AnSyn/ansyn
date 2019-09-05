@@ -43,20 +43,25 @@
 	img {
 		width: @ansyn-help-image-original-width-vh;
 	}
+
 	.img-container {
 	}
+
 	.fixed-height-text {
 		display: flex;
 		flex-direction: column;
+
 		&.topText {
 			height: 3em;
 			justify-content: flex-start;
 		}
+
 		&.midText {
 			height: 3.5em;
 			justify-content: center;
 		}
 	}
+
 	.bottomText {
 		margin-top: 2em;
 	}
@@ -94,11 +99,14 @@ footer {
 
 /deep/ .carousel-control-prev {
 	opacity: 0.8;
+
 	.carousel-control-prev-icon {
 		background-image: url(/assets/icons/help/help_prev.svg);
 	}
+
 	&:hover, &:focus {
 		opacity: 1;
+
 		.carousel-control-prev-icon {
 			background-image: url(/assets/icons/help/help_prev_bold.svg);
 		}
@@ -107,11 +115,14 @@ footer {
 
 /deep/ .carousel-control-next {
 	opacity: 0.8;
+
 	.carousel-control-next-icon {
 		background-image: url(/assets/icons/help/help_next.svg);
 	}
+
 	&:hover, &:focus {
 		opacity: 1;
+
 		.carousel-control-next-icon {
 			background-image: url(/assets/icons/help/help_next_bold.svg);
 		}

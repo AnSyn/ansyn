@@ -1,5 +1,5 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { BaseImageryMap, ImageryCommunicatorService } from "@ansyn/imagery";
+import { Injectable } from '@angular/core';
+import { BaseImageryMap, ImageryCommunicatorService } from '@ansyn/imagery';
 
 @Injectable({
 	providedIn: 'root'

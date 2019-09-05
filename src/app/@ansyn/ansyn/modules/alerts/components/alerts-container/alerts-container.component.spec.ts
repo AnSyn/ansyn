@@ -27,7 +27,7 @@ describe('AlertsContainerComponent', () => {
 					[overlayStatusFeatureKey]: OverlayStatusReducer
 				}),
 				EffectsModule.forRoot([]),
-			TranslateModule.forRoot()],
+				TranslateModule.forRoot()],
 			providers: [
 				{ provide: ALERTS, useValue: [] },
 				{ provide: mapFacadeConfig, useValue: {} },

@@ -168,3 +168,4 @@ export const selectToolFlags = createSelector(toolsStateSelector, (tools: ITools
 export const selectToolFlag = (flag: toolsFlags) => createSelector(selectToolFlags, (flags: Map<toolsFlags, boolean>) => flags.get(flag));
 export const selectIsMeasureToolActive = createSelector(selectToolFlags, (_toolsFlags) => _toolsFlags.get(toolsFlags.isMeasureToolActive));
 export const selectIsMeasureToolHidden = createSelector(selectToolFlags, (_toolsFlags) => _toolsFlags.get(toolsFlags.hideMeasure));
+export const selectOverlayFootprintMode = createSelector(toolsStateSelector, (tools: IToolsState) => tools.activeOverlaysFootprintMode)

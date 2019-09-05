@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BaseImageryMap, CommunicatorEntity, ProjectionService } from '@ansyn/imagery';
+import { BaseImageryMap, CommunicatorEntity } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
 import { FeatureCollection, GeometryObject, Point } from 'geojson';
 

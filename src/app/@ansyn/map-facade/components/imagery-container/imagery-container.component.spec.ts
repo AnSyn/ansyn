@@ -20,7 +20,7 @@ describe('ImageryContainerComponent', () => {
 				StoreModule.forRoot({ [mapFeatureKey]: MapReducer })
 			],
 			providers: [
-				{ provide: mapFacadeConfig, useValue: <IMapFacadeConfig> { mapSearch: {} } },
+				{ provide: mapFacadeConfig, useValue: <IMapFacadeConfig>{ mapSearch: {} } },
 				{ provide: ENTRY_COMPONENTS_PROVIDER, useValue: [] },
 			],
 			declarations: [

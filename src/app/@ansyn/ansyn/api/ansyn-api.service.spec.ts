@@ -3,10 +3,9 @@ import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { AnsynApi } from './ansyn-api.service';
-import { LayoutKey, mapFeatureKey, MapReducer, SetLayoutAction } from '@ansyn/map-facade';
+import { LayoutKey, mapFeatureKey, MapReducer, ProjectionConverterService, SetLayoutAction } from '@ansyn/map-facade';
 import { ANSYN_ID } from './ansyn-id.provider';
 import { GoToAction } from '../modules/menu-items/tools/actions/tools.actions';
-import { ProjectionConverterService } from '@ansyn/map-facade';
 import { DisplayOverlayAction } from '../modules/overlays/actions/overlays.actions';
 import { IOverlay } from '../modules/overlays/models/overlay.model';
 import { DataLayersService, layersConfig } from '../modules/menu-items/layers-manager/services/data-layers.service';
@@ -72,7 +71,7 @@ describe('apiService', () => {
 	});
 
 	it('should displayOverLay', () => {
-		const overlay: IOverlay = <any> { id: 'fake' };
+		const overlay: IOverlay = <any>{ id: 'fake' };
 		ansynApi.displayOverLay(overlay);
 		expect(store.dispatch).toHaveBeenCalledWith(new DisplayOverlayAction({
 			overlay,

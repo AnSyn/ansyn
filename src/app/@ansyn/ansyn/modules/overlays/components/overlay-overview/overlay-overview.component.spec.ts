@@ -64,7 +64,7 @@ describe('OverlayOverviewComponent', () => {
 
 		beforeAll(() => {
 			neededElement = document.createElement('CIRCLE');
-			neededElement.id = `dropId-${overlayId}`;
+			neededElement.id = `dropId-${ overlayId }`;
 			document.body.appendChild(neededElement);
 		});
 		it('should hide me by default', () => {

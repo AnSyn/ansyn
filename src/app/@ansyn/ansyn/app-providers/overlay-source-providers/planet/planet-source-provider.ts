@@ -3,24 +3,31 @@ import { Inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import {
 	geojsonMultiPolygonToFirstPolygon,
-	geojsonPolygonToMultiPolygon, getPointByGeometry
+	geojsonPolygonToMultiPolygon,
+	getPointByGeometry,
+	toRadians
 } from '@ansyn/imagery';
 import { HttpResponseBase } from '@angular/common/http/src/response';
 import { IOverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
-import { catchError, map, debounceTime } from 'rxjs/operators';
+import { catchError, debounceTime, map } from 'rxjs/operators';
 /* Do not change this ( rollup issue ) */
 import * as momentNs from 'moment';
 import { feature, intersect } from '@turf/turf';
 import { isEqual, uniq } from 'lodash';
 import { ErrorHandlerService } from '../../../modules/core/services/error-handler.service';
-import { IMultipleOverlaysSourceConfig, MultipleOverlaysSourceConfig } from '../../../modules/core/models/multiple-overlays-source-config';
+import {
+	IMultipleOverlaysSourceConfig,
+	MultipleOverlaysSourceConfig
+} from '../../../modules/core/models/multiple-overlays-source-config';
 import { limitArray } from '../../../modules/core/utils/i-limited-array';
 import { LoggerService } from '../../../modules/core/services/logger.service';
 import { sortByDateDesc } from '../../../modules/core/utils/sorting';
-import { toRadians } from '@ansyn/imagery';
 import {
-	BaseOverlaySourceProvider, IFetchParams,
-	IOverlayFilter, IStartAndEndDate, timeIntersection
+	BaseOverlaySourceProvider,
+	IFetchParams,
+	IOverlayFilter,
+	IStartAndEndDate,
+	timeIntersection
 } from '../../../modules/overlays/models/base-overlay-source-provider.model';
 import { OverlaySourceProvider } from '../../../modules/overlays/models/overlays-source-providers';
 import { IOverlayByIdMetaData } from '../../../modules/overlays/services/overlays.service';
@@ -73,7 +80,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		super(loggerService);
 		this.httpHeaders = new HttpHeaders({
 			Authorization:
-				`basic ${btoa((this.planetOverlaysSourceConfig.apiKey + ':'))}`
+				`basic ${ btoa((this.planetOverlaysSourceConfig.apiKey + ':')) }`
 		});
 	}
 
@@ -85,7 +92,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	appendApiKey(url: string) {
-		return `${url}?api_key=${this.planetOverlaysSourceConfig.apiKey}`;
+		return `${ url }?api_key=${ this.planetOverlaysSourceConfig.apiKey }`;
 	}
 
 	buildDataInputFilter(dataInputFilters: IDataInputFilterValue[]): IPlanetFilter {
@@ -189,7 +196,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		}
 
 		// add 1 to limit - so we'll know if provider have more then X overlays
-		const _page_size = `${fetchParams.limit + 1}`;
+		const _page_size = `${ fetchParams.limit + 1 }`;
 		let sensors = Array.isArray(fetchParams.sensors) ? fetchParams.sensors : this.planetOverlaysSourceConfig.itemTypes;
 
 		if (Array.isArray(fetchParams.dataInputFilters) && fetchParams.dataInputFilters.length > 0) {
@@ -208,7 +215,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		return this.http.post(baseUrl, body, options).pipe(
 			debounceTime(200),
 			map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features)),
-			map((overlays: IOverlay[]) => <IOverlaysPlanetFetchData> limitArray(overlays, fetchParams.limit, {
+			map((overlays: IOverlay[]) => <IOverlaysPlanetFetchData>limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
 				uniqueBy: o => o.id
 			})),
@@ -296,7 +303,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			return [];
 		}
 
-		facets.filters.forEach( filter => {
+		facets.filters.forEach(filter => {
 			if (filter.metadata.unCheckedEnums) {
 				const metaData = filter.metadata;
 				filter.metadata = [...metaData.disabledEnums, ...metaData.unCheckedEnums]
@@ -402,7 +409,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			cloudCoverage: element.properties.cloud_cover,
 			name: element.id,
 			imageUrl: this.appendApiKey(
-				`${this.planetOverlaysSourceConfig.tilesUrl}${element.properties.item_type}/${element.id}/{z}/{x}/{y}.png`),
+				`${ this.planetOverlaysSourceConfig.tilesUrl }${ element.properties.item_type }/${ element.id }/{z}/{x}/{y}.png`),
 			thumbnailUrl: this.appendApiKey(element._links.thumbnail),
 			date: new Date(element.properties.acquired),
 			photoTime: element.properties.acquired,

@@ -50,6 +50,7 @@ export function timeIntersection(whiteRange: IDateRange, blackRange: IDateRange)
 
 	return null;
 }
+
 export function isFaulty(data: IOverlaysFetchData): boolean {
 	return Array.isArray(data.errors) && data.errors.length > 0;
 }
@@ -78,7 +79,7 @@ export abstract class BaseOverlaySourceProvider {
 	}
 
 	buildFetchObservables(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<any>[] {
-		const regionFeature: Feature<any> = feature(<any> fetchParams.region);
+		const regionFeature: Feature<any> = feature(<any>fetchParams.region);
 		// They are strings!
 		const fetchParamsTimeRange = {
 			start: new Date(fetchParams.timeRange.start),
@@ -94,7 +95,7 @@ export abstract class BaseOverlaySourceProvider {
 			.filter(f => Boolean(timeIntersection(fetchParamsTimeRange, f.timeRange)))
 			.map(f => {
 				// Create new filters, by the common region and time
-				let newFetchParams: IFetchParams = <any> {
+				let newFetchParams: IFetchParams = <any>{
 					...fetchParams,
 					region: intersect(f.coverage, regionFeature).geometry,
 					timeRange: timeIntersection(fetchParamsTimeRange, f.timeRange)
@@ -110,7 +111,7 @@ export abstract class BaseOverlaySourceProvider {
 					return of({
 						data: null,
 						limited: -1,
-						errors: [new Error(`Failed to fetch overlays from ${this.sourceType}`)]
+						errors: [new Error(`Failed to fetch overlays from ${ this.sourceType }`)]
 					});
 				}));
 			})

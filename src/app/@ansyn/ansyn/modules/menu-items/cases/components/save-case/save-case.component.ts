@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { ICasesState, selectSelectedCase } from '../../reducers/cases.reducer';
 import { CloseModalAction, SaveCaseAsAction } from '../../actions/cases.actions';
 import { CasesService } from '../../services/cases.service';
-import { tap, take } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import { cloneDeep } from '../../../../core/utils/rxjs/operators/cloneDeep';
 import { ICase } from '../../models/case.model';
 

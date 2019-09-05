@@ -60,7 +60,7 @@ describe('ImageriesManagerComponent', () => {
 				ImageryCommunicatorService,
 				Actions,
 				MapFacadeService,
-				{ provide: mapFacadeConfig, useValue: { } }
+				{ provide: mapFacadeConfig, useValue: {} }
 			],
 			imports: [
 				TranslateModule.forRoot(),

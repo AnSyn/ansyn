@@ -1,6 +1,7 @@
 <ng-container *ngIf="modal$ | async as modal">
 
-	<ansyn-modal [show]="modal.type !== SelectedModalEnum.none" (showChange)="!$event && closeModal()" [ngSwitch]="modal.type">
+	<ansyn-modal [show]="modal.type !== SelectedModalEnum.none" (showChange)="!$event && closeModal()"
+				 [ngSwitch]="modal.type">
 
 		<ansyn-download-layers
 			*ngSwitchCase="SelectedModalEnum.download"

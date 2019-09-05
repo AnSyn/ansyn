@@ -2,10 +2,9 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { from, Observable, EMPTY } from 'rxjs';
-import { catchError, filter, map, mergeMap, switchMap, withLatestFrom, tap } from 'rxjs/operators';
+import { from, Observable } from 'rxjs';
+import { catchError, filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { LoggerService } from '../../core/services/logger.service';
-import { UpdateOverlaysCountAction } from '../actions/overlays.actions';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
@@ -15,9 +14,10 @@ import {
 	RequestOverlayByIDFromBackendAction,
 	SetMarkUp,
 	SetOverlaysCriteriaAction,
-	SetOverlaysStatusMessage
+	SetOverlaysStatusMessage,
+	UpdateOverlaysCountAction
 } from '../actions/overlays.actions';
-import { IOverlay, IOverlaysFetchData, IOverlaysCriteria, RegionContainment } from '../models/overlay.model';
+import { IOverlay, IOverlaysCriteria, IOverlaysFetchData, RegionContainment } from '../models/overlay.model';
 import { BackToWorldView } from '../overlay-status/actions/overlay-status.actions';
 import { selectFavoriteOverlays, selectPresetOverlays } from '../overlay-status/reducers/overlay-status.reducer';
 import {

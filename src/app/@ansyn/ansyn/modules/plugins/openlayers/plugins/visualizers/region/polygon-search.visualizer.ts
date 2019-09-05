@@ -4,12 +4,10 @@ import { UUID } from 'angular2-uuid';
 import * as turf from '@turf/turf';
 import { Observable } from 'rxjs';
 import { Position } from 'geojson';
-import { getPolygonByPointAndRadius, MarkerSize } from '@ansyn/imagery';
-import { ImageryVisualizer } from '@ansyn/imagery';
+import { getPolygonByPointAndRadius, ImageryVisualizer, MarkerSize } from '@ansyn/imagery';
 import { UpdateGeoFilterStatus } from '../../../../../status-bar/actions/status-bar.actions';
 import { RegionVisualizer } from './region.visualizer';
-import { OpenLayersMap } from '@ansyn/ol';
-import { OpenLayersProjectionService } from '@ansyn/ol';
+import { OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
 import { CaseGeoFilter, CaseRegionState } from '../../../../../menu-items/cases/models/case.model';
 
 @ImageryVisualizer({
@@ -25,11 +23,11 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 
 		this.updateStyle({
 			initial: {
-				stroke: '#f32ee1',
+				stroke: '#0091ff',
 				fill: null,
 				'stroke-width': 4,
 				'marker-size': MarkerSize.small,
-				'marker-color': '#f32ee1'
+				'marker-color': '#0091ff'
 			}
 		});
 	}

@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IEntryComponent } from '@ansyn/map-facade';
-import { ImageryZoomerService } from '@ansyn/map-facade';
+import { IEntryComponent, ImageryZoomerService } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-imagery-zoomer',
@@ -11,7 +10,7 @@ export class ImageryZoomerComponent implements OnInit, IEntryComponent {
 	@Input() mapId;
 
 
-	constructor(protected imageryZoomerService: ImageryZoomerService ) {
+	constructor(protected imageryZoomerService: ImageryZoomerService) {
 	}
 
 	ngOnInit() {

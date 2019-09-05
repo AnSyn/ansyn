@@ -5,12 +5,10 @@ import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import * as turf from '@turf/turf';
-import { getPointByGeometry } from '@ansyn/imagery';
+import { getPointByGeometry, ImageryVisualizer } from '@ansyn/imagery';
 import { Position } from 'geojson';
-import { ImageryVisualizer } from '@ansyn/imagery';
-import { OpenLayersMap } from '@ansyn/ol';
+import { OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
 import { RegionVisualizer } from './region.visualizer';
-import { OpenLayersProjectionService } from '@ansyn/ol';
 import { CaseGeoFilter, CaseRegionState } from '../../../../../menu-items/cases/models/case.model';
 
 @ImageryVisualizer({
@@ -21,7 +19,8 @@ export class PinPointVisualizer extends RegionVisualizer {
 	_iconSrc: Style = new Style({
 		image: new Icon({
 			scale: 1,
-			src: 'assets/pinpoint-indicator.svg'
+			src: 'assets/pinpoint-indicator.svg',
+			color: '#0091ff'
 		}),
 		zIndex: 100
 	});

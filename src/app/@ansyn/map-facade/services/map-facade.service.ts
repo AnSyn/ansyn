@@ -10,10 +10,10 @@ import {
 import { Store } from '@ngrx/store';
 import { saveAs } from 'file-saver';
 import { Observable } from 'rxjs';
-import { take, tap, switchMap } from 'rxjs/operators';
+import { switchMap, take, tap } from 'rxjs/operators';
 import { MapInstanceChangedAction, PositionChangedAction } from '../actions/map.actions';
 import { LayoutKey } from '../models/maps-layout';
-import { IMapState, selectLayout, selectMaps, selectMapsIds, selectMapsList } from '../reducers/map.reducer';
+import { IMapState, selectLayout, selectMapsIds, selectMapsList } from '../reducers/map.reducer';
 import { mapsToPng } from '../utils/exportMaps';
 
 // @dynamic

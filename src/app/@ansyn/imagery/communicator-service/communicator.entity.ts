@@ -118,7 +118,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 			const mapProviderConfig: IMapProviderConfig = this.mapProvidersConfig[imageryMap.prototype.mapType];
 			sourceType = mapProviderConfig && mapProviderConfig.defaultMapSource;
 			if (!sourceType) {
-				console.warn(`Couldn't find defaultMapSource setting in config, for map type ${imageryMap.prototype.mapType}`);
+				console.warn(`Couldn't find defaultMapSource setting in config, for map type ${ imageryMap.prototype.mapType }`);
 			}
 			this.mapSettings.worldView.sourceType = sourceType;
 		}
@@ -306,12 +306,12 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 
 	private destroyCurrentComponent(): void {
 		this.destroyPlugins();
+		if (this._activeMap) {
+			this._activeMap.dispose();
+		}
 		if (this._mapComponentRef) {
 			this._mapComponentRef.destroy();
 			this._mapComponentRef = undefined;
-		}
-		if (this._activeMap) {
-			this._activeMap.dispose();
 		}
 	}
 

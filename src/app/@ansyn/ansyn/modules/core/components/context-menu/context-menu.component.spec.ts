@@ -2,10 +2,14 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { ContextMenuComponent } from './context-menu.component';
 import { FormsModule } from '@angular/forms';
 import { Store, StoreModule } from '@ngrx/store';
-import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
-import { ContextMenuDisplayAction, ContextMenuShowAction } from '@ansyn/map-facade';
-import { mapFacadeConfig } from '@ansyn/map-facade';
-import { IMapFacadeConfig } from '@ansyn/map-facade';
+import {
+	ContextMenuDisplayAction,
+	ContextMenuShowAction,
+	IMapFacadeConfig,
+	mapFacadeConfig,
+	mapFeatureKey,
+	MapReducer
+} from '@ansyn/map-facade';
 import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
@@ -22,11 +26,11 @@ describe('ContextMenuComponent', () => {
 				[mapFeatureKey]: MapReducer,
 				[overlaysFeatureKey]: OverlayReducer
 			}), EffectsModule.forRoot([]),
-			TranslateModule.forRoot()],
+				TranslateModule.forRoot()],
 			declarations: [ContextMenuComponent],
 			providers: [{
 				provide: mapFacadeConfig,
-				useValue: <IMapFacadeConfig> { sensorTypeShortcuts: {}, contextMenu: { filterField: 'filterField' } }
+				useValue: <IMapFacadeConfig>{ sensorTypeShortcuts: {}, contextMenu: { filterField: 'filterField' } }
 			}]
 		}).compileComponents();
 	}));
@@ -72,7 +76,7 @@ describe('ContextMenuComponent', () => {
 		spyOn(elem, 'focus');
 		expect(elem.style.top).not.toEqual('2px');
 		expect(elem.style.left).not.toEqual('1px');
-		const action: ContextMenuShowAction = <any> { payload: { event: { x: 1, y: 2 } } };
+		const action: ContextMenuShowAction = <any>{ payload: { event: { x: 1, y: 2 } } };
 		component.show(action);
 		expect(elem.focus).toHaveBeenCalled();
 		expect(elem.style.top).toEqual('2px');
@@ -85,7 +89,7 @@ describe('ContextMenuComponent', () => {
 			{ id: '2', [component.filterField]: 'b' },
 			{ id: '3', [component.filterField]: 'a' }
 		] as any[];
-		const $event = <MouseEvent> null;
+		const $event = <MouseEvent>null;
 		spyOn(component, 'displayOverlayEvent');
 		component.clickNext($event);
 		expect(component.displayOverlayEvent).toHaveBeenCalledWith($event, component.nextfilteredOverlays[0]);
@@ -101,7 +105,7 @@ describe('ContextMenuComponent', () => {
 			{ id: '3', [component.filterField]: 'c' },
 			{ id: '4', [component.filterField]: 'b' }
 		] as any[];
-		const $event = <MouseEvent> null;
+		const $event = <MouseEvent>null;
 		spyOn(component, 'displayOverlayEvent');
 		component.clickPrev($event);
 		expect(component.displayOverlayEvent).toHaveBeenCalledWith($event, component.prevfilteredOverlays[0]);
@@ -117,7 +121,7 @@ describe('ContextMenuComponent', () => {
 			{ id: '3', [component.filterField]: 'c' },
 			{ id: '4', [component.filterField]: 'b' }
 		] as any[];
-		const $event = <MouseEvent> null;
+		const $event = <MouseEvent>null;
 		spyOn(component, 'displayOverlayEvent');
 		component.clickLast($event);
 		expect(component.displayOverlayEvent)
@@ -133,7 +137,7 @@ describe('ContextMenuComponent', () => {
 			{ id: '3', [component.filterField]: 'c' },
 			{ id: '4', [component.filterField]: 'c' }
 		] as any[];
-		const $event = <MouseEvent> null;
+		const $event = <MouseEvent>null;
 		spyOn(component, 'displayOverlayEvent');
 		component.clickFirst($event);
 		expect(component.displayOverlayEvent).toHaveBeenCalledWith($event, component.filteredOverlays[0]);
@@ -149,7 +153,7 @@ describe('ContextMenuComponent', () => {
 			{ id: '3', [component.filterField]: 'b', bestResolution: 0.5 }, // best (index 2)
 			{ id: '4', [component.filterField]: 'c', bestResolution: 1.5 }
 		] as any[];
-		const $event = <MouseEvent> null;
+		const $event = <MouseEvent>null;
 		spyOn(component, 'displayOverlayEvent');
 		component.clickBest($event);
 		expect(component.displayOverlayEvent).toHaveBeenCalledWith($event, component.filteredOverlays[2]);
@@ -159,7 +163,7 @@ describe('ContextMenuComponent', () => {
 
 	it('displayOverlayEvent should get event and overlay, call stopPropagation and store dispatch', () => {
 		spyOn(store, 'dispatch');
-		const $event = <MouseEvent> jasmine.createSpyObj({
+		const $event = <MouseEvent>jasmine.createSpyObj({
 			stopPropagation: () => {
 			}
 		});

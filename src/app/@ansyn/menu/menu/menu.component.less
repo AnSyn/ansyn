@@ -17,14 +17,17 @@ div.menu-wrapper {
 		div.menu {
 			position: absolute;
 			transform: translateX(-100%);
+
 			.menu-content {
 				opacity: .5;
 			}
+
 			div.menu-btn i {
 				opacity: 1;
 				font-size: 20px;
 			}
 		}
+
 		div.container {
 			display: none;
 		}
@@ -39,11 +42,13 @@ div.menu-wrapper {
 		width: @menu-width;
 		height: 100%;
 		transition: transform .5s;
+
 		&.expanded {
 			button.hide-menu {
 				transition: 0s;
 				transform: translateX(0);
 				visibility: hidden;
+
 				i {
 					display: none;
 				}
@@ -85,9 +90,11 @@ div.menu-wrapper {
 				margin: 0 auto 5px auto;
 				display: block;
 			}
+
 			&:hover {
 				background-color: @background-color-3;
 			}
+
 			&.active {
 				background-color: @application-primary-color;
 			}
@@ -116,6 +123,7 @@ div.menu-wrapper {
 			cursor: pointer;
 			outline: none;
 			z-index: @z-index-menu-container-button;
+
 			&:hover {
 				color: #2e2d46;
 			}
@@ -135,6 +143,7 @@ div.menu-wrapper {
 			box-sizing: border-box;
 		}
 	}
+
 	div.logo {
 		position: absolute;
 		bottom: 10px;
@@ -180,6 +189,7 @@ button.hide-menu {
 	visibility: visible;
 	transition: .5s;
 	z-index: 4000;
+
 	&:hover {
 		background-color: @background-color-3;
 	}

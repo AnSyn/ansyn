@@ -1,10 +1,9 @@
 import { ErrorHandler, NgModule } from '@angular/core';
 import { AppAnsynComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { AnsynModule } from '@ansyn/ansyn';
+import { AnsynModule, LoggerService } from '@ansyn/ansyn';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { LoggerService } from '@ansyn/ansyn';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { LoginModule } from './login/login.module';
 import { AnsynRouterModule } from './router/router.module';

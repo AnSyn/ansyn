@@ -1,14 +1,14 @@
 <div class="imageries-container"
-	 #imageriesContainer
+     #imageriesContainer
 	 [ngClass]="{'pin-location': pinLocationMode}"
 	 [class.collapsable]="collapsable"
 	 [class.footer-collapsed]="footerCollapse"
-	>
+>
 
 	<ng-template [ngIf]="ids.length">
 		<div *ngFor="let mapId of ids"
 			 class="map-container-wrapper"
-			 #dragElement
+             #dragElement
 			 (click)="clickMapContainer(mapId)"
 			 (dblclick)="dbclick()"
 			 [id]="mapId"

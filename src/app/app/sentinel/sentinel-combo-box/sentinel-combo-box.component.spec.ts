@@ -61,6 +61,6 @@ describe('SentinelComboBoxComponent', () => {
 		spyOn(store, 'dispatch');
 		const layer = 'TRUE_COLOR';
 		component.changeLayer(layer);
-		expect(store.dispatch).toHaveBeenCalledWith(new SetSentinelLayerOnMap({id: component.mapId, layer}));
+		expect(store.dispatch).toHaveBeenCalledWith(new SetSentinelLayerOnMap({ id: component.mapId, layer }));
 	})
 });

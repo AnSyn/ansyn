@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { UnsupportedDevicesComponent } from "../@ansyn/ansyn/components/unsupported-devices/unsupported-devices.component";
+import { UnsupportedDevicesComponent } from '../@ansyn/ansyn/components/unsupported-devices/unsupported-devices.component';
 import { AppAnsynComponent } from './app.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DeviceDetectorModule } from 'ngx-device-detector';

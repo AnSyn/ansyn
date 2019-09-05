@@ -7,8 +7,8 @@ import {
 	getPolygonByPointAndRadius,
 	IMapSourceProvidersConfig,
 	MAP_SOURCE_PROVIDERS_CONFIG,
+	toRadians,
 } from '@ansyn/imagery';
-import { toRadians } from '@ansyn/imagery';
 import { empty, Observable } from 'rxjs';
 import { catchError, map, timeout } from 'rxjs/operators';
 
@@ -18,11 +18,14 @@ import OLGeoJSON from 'ol/format/GeoJSON';
 import { Store } from '@ngrx/store';
 import {
 	BaseOverlaySourceProvider,
-	ErrorHandlerService, GeoRegisteration,
-	IFetchParams, IOverlay,
+	ErrorHandlerService,
+	GeoRegisteration,
+	IFetchParams,
+	IOverlay,
 	IStartAndEndDate,
 	limitArray,
-	LoggerService, Overlay,
+	LoggerService,
+	Overlay,
 	OverlaySourceProvider,
 	sortByDateDesc
 } from '@ansyn/ansyn';
@@ -59,7 +62,7 @@ export class SentinelSourceProvider extends BaseOverlaySourceProvider {
 		// if limit not provided by config - set default value
 		fetchParams.limit = fetchParams.limit ? fetchParams.limit : DEFAULT_OVERLAYS_LIMIT;
 		// let search = `${this.config.search}${fetchParams.dataInputFilters[0].sensorType}/searchIndex`;
-		const search = `${this.config.baseUrl}/search`;
+		const search = `${ this.config.baseUrl }/search`;
 		if (fetchParams.region.type === 'MultiPolygon') {
 			fetchParams.region = geojsonMultiPolygonToFirstPolygon(fetchParams.region as GeoJSON.MultiPolygon);
 		}
@@ -129,7 +132,7 @@ export class SentinelSourceProvider extends BaseOverlaySourceProvider {
 
 	getThumbnailName(overlay): string {
 		const superName = super.getThumbnailName(overlay);
-		return superName.length > 20 ? `...${superName.substring(0, 15)}` : superName;
+		return superName.length > 20 ? `...${ superName.substring(0, 15) }` : superName;
 	}
 
 	protected parseData(sentinelElement: any): IOverlay {
@@ -147,7 +150,7 @@ export class SentinelSourceProvider extends BaseOverlaySourceProvider {
 			bestResolution: 1,
 			name: sentinelElement.properties.identifier,
 			imageUrl: this.config.baseUrl + '/wms',
-			thumbnailUrl: this.config.baseUrl + `/thumbnail/${sentinelElement.properties.id}`,
+			thumbnailUrl: this.config.baseUrl + `/thumbnail/${ sentinelElement.properties.id }`,
 			date: time,
 			photoTime: time.toISOString(),
 			azimuth: toRadians(180),

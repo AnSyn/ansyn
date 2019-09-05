@@ -1,15 +1,18 @@
 import { EventEmitter, Inject, Injectable, NgModuleRef } from '@angular/core';
 import { ImageryCommunicatorService, ImageryMapPosition, IMapSettings } from '@ansyn/imagery';
 import {
+	ICoordinatesSystem,
 	LayoutKey,
 	MapActionTypes,
+	ProjectionConverterService,
 	selectActiveMapId,
 	selectMaps,
 	selectMapsList,
 	SetLayoutAction,
 	SetMapPositionByRadiusAction,
 	SetMapPositionByRectAction,
-	ShadowMouseProducer, ToggleFooter, ICoordinatesSystem
+	ShadowMouseProducer,
+	ToggleFooter
 } from '@ansyn/map-facade';
 import { Actions, ofType } from '@ngrx/effects';
 import { Dictionary } from '@ngrx/entity/src/models';
@@ -19,8 +22,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { FeatureCollection, Point, Polygon } from 'geojson';
 import { cloneDeep } from 'lodash';
 import { combineLatest, Observable } from 'rxjs';
-import { map, tap, withLatestFrom, take } from 'rxjs/operators';
-import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
+import { map, take, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	AddLayer,
 	RemoveLayer,
@@ -38,7 +40,6 @@ import {
 	SetActiveCenter,
 	ToolsActionsTypes
 } from '../modules/menu-items/tools/actions/tools.actions';
-import { ProjectionConverterService } from '@ansyn/map-facade';
 import {
 	DisplayOverlayAction,
 	LoadOverlaysSuccessAction,
@@ -60,20 +61,18 @@ import { DataLayersService } from '../modules/menu-items/layers-manager/services
 })
 export class AnsynApi {
 	activeMapId;
-	mapsList: IMapSettings[];
 	mapsEntities;
 	activeAnnotationLayer;
 	onReady = new EventEmitter<boolean>(true);
 
-	@AutoSubscription
-	activateMap$: Observable<string> = this.store.select(selectActiveMapId).pipe(
-		tap((activeMapId) => this.activeMapId = activeMapId)
+	getMaps$: Observable<IMapSettings[]> = this.store.pipe(
+		select(selectMapsList),
+		take(1)
 	);
 
 	@AutoSubscription
-	maps$: Observable<IMapSettings[]> = this.store.pipe(
-		select(selectMapsList),
-		tap((mapsList) => this.mapsList = mapsList)
+	activateMap$: Observable<string> = this.store.select(selectActiveMapId).pipe(
+		tap((activeMapId) => this.activeMapId = activeMapId)
 	);
 
 	@AutoSubscription
@@ -143,11 +142,13 @@ export class AnsynApi {
 	// }
 
 	displayOverLay(overlay: IOverlay, mapNumber: number = -1): void {
-		let mapId = this.activeMapId;
-		if (mapNumber >= 0 && mapNumber < this.mapsList.length) {
-			mapId = this.mapsList[mapNumber].id;
-		}
-		this.store.dispatch(new DisplayOverlayAction({ overlay, mapId: mapId, forceFirstDisplay: true }));
+		this.getMaps$.subscribe((mapsList: IMapSettings[]) => {
+			let mapId = this.activeMapId;
+			if (mapNumber >= 0 && mapNumber < mapsList.length) {
+				mapId = mapsList[mapNumber].id;
+			}
+			this.store.dispatch(new DisplayOverlayAction({ overlay, mapId: mapId, forceFirstDisplay: true }));
+		});
 	}
 
 	setAnnotations(featureCollection: FeatureCollection<any>): void {
@@ -265,15 +266,7 @@ export class AnsynApi {
 			console.error('failed to show layer - invalid layerId ', layerId);
 			return;
 		}
-		this.store.dispatch(new SetLayerSelection({ id: layerId, value: show}));
-	}
-
-	private generateFeaturesIds(annotationsLayer): void {
-		/* reference */
-		annotationsLayer.features.forEach((feature) => {
-			feature.properties = { ...feature.properties, id: UUID.UUID() };
-		});
-
+		this.store.dispatch(new SetLayerSelection({ id: layerId, value: show }));
 	}
 
 	init(): void {
@@ -282,5 +275,13 @@ export class AnsynApi {
 	destroy(): void {
 		this.moduleRef.destroy();
 		this.removeElement(this.id);
+	}
+
+	private generateFeaturesIds(annotationsLayer): void {
+		/* reference */
+		annotationsLayer.features.forEach((feature) => {
+			feature.properties = { ...feature.properties, id: UUID.UUID() };
+		});
+
 	}
 }

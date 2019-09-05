@@ -15,7 +15,8 @@ import {
 	SaveCaseAsAction,
 	SaveCaseAsSuccessAction,
 	SelectCaseAction,
-	SelectDilutedCaseAction, SetAutoSave,
+	SelectDilutedCaseAction,
+	SetAutoSave,
 	UpdateCaseAction,
 	UpdateCaseBackendAction,
 	UpdateCaseBackendSuccessAction
@@ -28,9 +29,8 @@ import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
 import { UUID } from 'angular2-uuid';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { DataLayersService } from '../../layers-manager/services/data-layers.service';
-import { SetToastMessageAction } from '@ansyn/map-facade';
+import { copyFromContent, SetToastMessageAction } from '@ansyn/map-facade';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
-import { copyFromContent } from '@ansyn/map-facade';
 import { IStoredEntity } from '../../../core/services/storage/storage.service';
 import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCrash';
 import { toastMessages } from '../../../core/models/toast-messages';
@@ -144,7 +144,7 @@ export class CasesEffects {
 		));
 
 	@Effect()
-	onSaveCaseAsSuccess$ =   this.actions$.pipe(
+	onSaveCaseAsSuccess$ = this.actions$.pipe(
 		ofType<SaveCaseAsAction>(CasesActionTypes.SAVE_CASE_AS_SUCCESS),
 		map(() => new SetAutoSave(true))
 	);

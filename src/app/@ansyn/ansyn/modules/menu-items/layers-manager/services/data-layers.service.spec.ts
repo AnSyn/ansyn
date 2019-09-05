@@ -26,7 +26,8 @@ describe('DataLayersService', () => {
 				},
 				{
 					provide: StorageService, useValue: {
-						searchByCase: () => {}
+						searchByCase: () => {
+						}
 					}
 				},
 				DataLayersService,

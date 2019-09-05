@@ -1,4 +1,4 @@
-import { TasksReducer, ITasksState, initialTasksState } from './tasks.reducer';
+import { initialTasksState, ITasksState, TasksReducer } from './tasks.reducer';
 import { SetTaskDrawIndicator } from '../actions/tasks.actions';
 
 describe('TasksReducer', () => {

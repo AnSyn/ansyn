@@ -34,7 +34,7 @@ import { OverlaysModule } from './modules/overlays/overlays.module';
 import { AnsynPluginsModule } from './modules/plugins/ansyn-plugins.module';
 import { StatusBarModule } from './modules/status-bar/status-bar.module';
 import { TranslateService } from '@ngx-translate/core';
-import { ImageryZoomerComponent } from "./modules/plugins/components/imagery-zoomer/imagery-zoomer.component";
+import { ImageryZoomerComponent } from './modules/plugins/components/imagery-zoomer/imagery-zoomer.component';
 
 @NgModule({
 	imports: [

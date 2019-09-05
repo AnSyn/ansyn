@@ -7,13 +7,16 @@ div.array-filter-wrapper {
 
 	div.checkboxes {
 		display: flex;
+
 		input[type=checkbox]:checked + label {
 			background: white;
 			color: @application-primary-color;
 		}
+
 		input[type=checkbox] {
 			display: none;
 		}
+
 		label {
 			cursor: pointer;
 			background: transparent;
@@ -26,10 +29,12 @@ div.array-filter-wrapper {
 			justify-content: center;
 			align-items: center;
 			height: 22px;
+
 			&:hover {
 				background: white;
 				color: @application-primary-color;
 			}
+
 			&:not(:last-child) {
 				margin-right: 10px;
 			}

@@ -77,9 +77,9 @@ export class Utils {
 	}
 
 	static uuid(): string {
-		if (typeof(window) !== 'undefined' &&
-			typeof(window.crypto) !== 'undefined' &&
-			typeof(window.crypto.getRandomValues) !== 'undefined') {
+		if (typeof (window) !== 'undefined' &&
+			typeof (window.crypto) !== 'undefined' &&
+			typeof (window.crypto.getRandomValues) !== 'undefined') {
 			let buf: Uint16Array = new Uint16Array(8);
 			window.crypto.getRandomValues(buf);
 			return (

@@ -51,7 +51,7 @@ export class Auth0Service {
 				this.router.navigate(['']);
 			} else if (err) {
 				this.router.navigate(['']);
-				alert(`Error: ${err.error}. Check the console for further details.`);
+				alert(`Error: ${ err.error }. Check the console for further details.`);
 			}
 		});
 	}

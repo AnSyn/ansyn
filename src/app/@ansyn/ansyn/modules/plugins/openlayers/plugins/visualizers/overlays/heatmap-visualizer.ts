@@ -2,8 +2,6 @@ import { OverlaysService } from '../../../../../overlays/services/overlays.servi
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { ImageryVisualizer, IVisualizersConfig, VisualizersConfig } from '@ansyn/imagery';
-import { IVisualizerEntity } from '@ansyn/imagery';
-import * as turf from '@turf/turf';
 import { OpenLayersMap } from '@ansyn/ol';
 import { BaseFootprintsVisualizer } from './base-footprints-visualizer';
 import { Inject } from '@angular/core';

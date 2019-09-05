@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { IOverlaysState, selectLoading } from '../../reducers/overlays.reducer';
 import { Observable } from 'rxjs';

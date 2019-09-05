@@ -96,7 +96,7 @@ describe('SliderFilterMetadata', () => {
 			const initialMin: number = sliderFilterMetadata.min;
 			const initialMax: number = sliderFilterMetadata.max;
 
-			sliderFilterMetadata.initializeFilter([], '', <any> { metadata: { start: 6, end: 7 } });
+			sliderFilterMetadata.initializeFilter([], '', <any>{ metadata: { start: 6, end: 7 } });
 
 			expect(sliderFilterMetadata.start).toBe(6);
 			expect(sliderFilterMetadata.end).toBe(7);
@@ -115,7 +115,7 @@ describe('SliderFilterMetadata', () => {
 			const initialMax: number = sliderFilterMetadata.max;
 			const overlay: any = { value: 6.5 };
 
-			sliderFilterMetadata.initializeFilter([], '', <any> { metadata: { start: 6, end: 7 } });
+			sliderFilterMetadata.initializeFilter([], '', <any>{ metadata: { start: 6, end: 7 } });
 			const result: boolean = sliderFilterMetadata.filterFunc(overlay, 'value');
 
 			expect(result).toBeTruthy();
@@ -128,7 +128,7 @@ describe('SliderFilterMetadata', () => {
 			const initialMax: number = sliderFilterMetadata.max;
 			const overlay: any = { value: 7.5 };
 
-			sliderFilterMetadata.initializeFilter([], '', <any> { metadata: { start: 6, end: 7 } });
+			sliderFilterMetadata.initializeFilter([], '', <any>{ metadata: { start: 6, end: 7 } });
 			const result: boolean = sliderFilterMetadata.filterFunc(overlay, 'value');
 
 			expect(result).toBeFalsy();
@@ -143,7 +143,7 @@ describe('SliderFilterMetadata', () => {
 			const initialMin: number = sliderFilterMetadata.min;
 			const initialMax: number = sliderFilterMetadata.max;
 
-			sliderFilterMetadata.initializeFilter([], '', <any> { metadata: { start: 6, end: 7 } });
+			sliderFilterMetadata.initializeFilter([], '', <any>{ metadata: { start: 6, end: 7 } });
 			const result: any = sliderFilterMetadata.getMetadataForOuterState();
 
 			expect(result).toEqual({ start: 6, end: 7 });
@@ -171,7 +171,7 @@ describe('SliderFilterMetadata', () => {
 
 			sliderFilterMetadata.accumulateData(7);
 			sliderFilterMetadata.accumulateData(8);
-			sliderFilterMetadata.initializeFilter([], '', <any> { metadata: { start: 7.5, end: 8 } });
+			sliderFilterMetadata.initializeFilter([], '', <any>{ metadata: { start: 7.5, end: 8 } });
 			const result: any = sliderFilterMetadata.isFiltered();
 
 			expect(result).toBeTruthy();
@@ -185,7 +185,7 @@ describe('SliderFilterMetadata', () => {
 
 			sliderFilterMetadata.accumulateData(7);
 			sliderFilterMetadata.accumulateData(8);
-			sliderFilterMetadata.initializeFilter([], '', <any> { metadata: { start: 7, end: 8 } });
+			sliderFilterMetadata.initializeFilter([], '', <any>{ metadata: { start: 7, end: 8 } });
 			const result: any = sliderFilterMetadata.isFiltered();
 
 			expect(result).toBeFalsy();
@@ -201,7 +201,7 @@ describe('SliderFilterMetadata', () => {
 
 			sliderFilterMetadata.accumulateData(7);
 			sliderFilterMetadata.accumulateData(8);
-			sliderFilterMetadata.initializeFilter([], '', <any> { metadata: { start: 6, end: 7 } });
+			sliderFilterMetadata.initializeFilter([], '', <any>{ metadata: { start: 6, end: 7 } });
 			sliderFilterMetadata.showAll();
 
 			const result: any = sliderFilterMetadata.getMetadataForOuterState();

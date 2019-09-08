@@ -1,7 +1,7 @@
 import { BaseImageryPlugin, ImageryPlugin, IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { uniq } from 'lodash';
 import { select, Store } from '@ngrx/store';
-import { selectActiveMapId, selectOverlayFromMap } from '@ansyn/map-facade';
+import { selectActiveMapId, selectOverlayByMapId } from '@ansyn/map-facade';
 import { combineLatest, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
 import { distinctUntilChanged, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
@@ -122,7 +122,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 
 	@AutoSubscription
 	currentOverlay$ = () => this.store$.pipe(
-		select(selectOverlayFromMap(this.mapId)),
+		select(selectOverlayByMapId(this.mapId)),
 		tap(overlay => this.overlay = overlay)
 	);
 
@@ -153,7 +153,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	getOffsetFromCase$ = () => combineLatest(this.store$.select(selectTranslationData), this.store$.select(selectOverlayFromMap(this.mapId))).pipe(
+	getOffsetFromCase$ = () => combineLatest(this.store$.select(selectTranslationData), this.store$.select(selectOverlayByMapId(this.mapId))).pipe(
 		tap(([translationData, overlay]: [IOverlaysTranslationData, IOverlay]) => {
 			if (overlay && translationData[overlay.id] && translationData[overlay.id].offset) {
 				this.offset = translationData[overlay.id].offset;

@@ -19,7 +19,8 @@ import { TranslateModule } from '@ngx-translate/core';
 		MapFacadeModule.provide({
 			entryComponents: {
 				status: [OverlayStatusComponent, BackToBaseMapComponent],
-				container: []
+				container: [],
+				floating_menu: []
 			}
 		}),
 		TranslateModule

@@ -5,6 +5,7 @@ import { IEntryComponent } from '../directives/entry-component.directive';
 export interface IEntryComponentsEntities {
 	status: { new(...args): IEntryComponent }[];
 	container: { new(...args): IEntryComponent }[];
+	floating_menu: { new(...args): IEntryComponent }[];
 }
 
 export const ENTRY_COMPONENTS_ENTITIES = new InjectionToken('ENTRY_COMPONENTS_ENTITIES');
@@ -30,8 +31,9 @@ export function provideEntryComponentsEntities(metadata: IEntryComponentsEntitie
 export function entryComponentsProviderFactory(entryComponentsEntities) {
 	return entryComponentsEntities.reduce((prev, next) => ({
 		container: [...prev.container, ...next.container],
-		status: [...prev.status, ...next.status]
-	}), { container: [], status: [] });
+		status: [...prev.status, ...next.status],
+		floating_menu: [...prev.floating_menu, ...next.floating_menu]
+	}), { container: [], status: [], floating_menu: [] });
 }
 
 export const EntryComponentsProvider: FactoryProvider = {

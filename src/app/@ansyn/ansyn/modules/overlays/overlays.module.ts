@@ -31,7 +31,8 @@ import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer'
 		MapFacadeModule.provide({
 			entryComponents: {
 				container: [OverlaySourceTypeNoticeComponent],
-				status: []
+				status: [],
+				floating_menu: []
 			}
 		})
 	],

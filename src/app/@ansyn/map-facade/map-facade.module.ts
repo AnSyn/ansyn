@@ -31,6 +31,7 @@ import { GeocoderService } from './services/geocoder.service';
 import { ImageryMouseCoordinatesComponent } from './components/imagery-mouse-coordinates/imagery-mouse-coordinates.component';
 import { GeoHolderComponent } from './components/imagery-mouse-coordinates/holders/geo-holder/geo-holder.component';
 import { UtmHolderComponent } from './components/imagery-mouse-coordinates/holders/utm-holder/utm-holder.component';
+import { FloatingMenuComponent } from './components/floating-menu/floating-menu.component';
 
 @NgModule({
 	imports: [
@@ -63,7 +64,8 @@ import { UtmHolderComponent } from './components/imagery-mouse-coordinates/holde
 		EntryComponentDirective,
 		ImageryMouseCoordinatesComponent,
 		GeoHolderComponent,
-		UtmHolderComponent
+		UtmHolderComponent,
+		FloatingMenuComponent
 	],
 	exports: [
 		ImageriesManagerComponent,

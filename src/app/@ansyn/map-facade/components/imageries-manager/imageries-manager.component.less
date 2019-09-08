@@ -65,17 +65,8 @@
 		}
 
 		&:not(.layout1) { // TODO: create a side panel with all this element and set top only once.
-			/deep/ ansyn-imagery-rotation, /deep/ ansyn-map-search-box {
+			/deep/ ansyn-floating-menu, /deep/ ansyn-map-search-box {
 				top: @status-bar-height + 25;
-			}
-
-			// todo: map facade should not know this element
-			/deep/ ansyn-imagery-dimension-mode {
-				top: 150px;
-			}
-
-			/deep/ ansyn-imagery-zoomer {
-				top: 187px;
 			}
 		}
 

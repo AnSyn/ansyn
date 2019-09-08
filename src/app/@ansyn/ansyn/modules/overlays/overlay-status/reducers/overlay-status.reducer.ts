@@ -1,6 +1,6 @@
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { uniq } from 'lodash';
-import { AlertMsg, AlertMsgTypes } from '../../../alerts/model';
+import { AlertMsg } from '../../../alerts/model';
 import { IOverlay } from '../../models/overlay.model'
 import { OverlayStatusActions, OverlayStatusActionsTypes } from '../actions/overlay-status.actions';
 import { ITranslationData } from '../../../menu-items/cases/models/case.model';
@@ -36,10 +36,7 @@ export const overlayStatusInitialState: IOverlayStatusState = {
 	removedOverlaysIds: [],
 	removedOverlaysVisibility: true,
 	removedOverlaysIdsCount: 0,
-	alertMsg: new Map([
-		[AlertMsgTypes.overlayIsNotPartOfQuery, new Set()],
-		[AlertMsgTypes.OverlaysOutOfBounds, new Set()]
-	]),
+	alertMsg: new Map([]),
 	overlaysTranslationData: {},
 	overlaysScannedAreaData: {}
 };

@@ -10,7 +10,7 @@ import { combineLatest, Observable } from 'rxjs';
 import { selectOverlayByMapId, selectMapPositionByMapId } from '@ansyn/map-facade';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
-import { AlertMsgTypes } from '../../../alerts/model';
+import { AlertMsgTypesEnum } from '../../../alerts/model';
 import { AddAlertMsg, RemoveAlertMsg } from '../../../overlays/overlay-status/actions/overlay-status.actions';
 import { selectFilteredOveralys, selectOverlaysMap } from '../../../overlays/reducers/overlays.reducer';
 import { isFullOverlay } from '../../../core/utils/overlays';
@@ -44,7 +44,7 @@ export class AlertsPlugin extends BaseImageryPlugin {
 
 	setOverlaysNotInCase([overlays, filteredOverlays]: [Map<string, IOverlay>, string[]]): RemoveAlertMsg | AddAlertMsg {
 		const shouldRemoved = !this.overlay || filteredOverlays.some((id: string) => id === this.overlay.id);
-		const payload = { key: AlertMsgTypes.overlayIsNotPartOfQuery, value: this.mapId };
+		const payload = { key: AlertMsgTypesEnum.overlayIsNotPartOfQuery, value: this.mapId };
 		return shouldRemoved ? new RemoveAlertMsg(payload) : new AddAlertMsg(payload);
 	}
 
@@ -56,13 +56,13 @@ export class AlertsPlugin extends BaseImageryPlugin {
 			const intersection = getPolygonIntersectionRatioWithMultiPolygon(viewExtent, overlay.footprint);
 			isInBound = Boolean(intersection);
 		}
-		const payload = { key: AlertMsgTypes.OverlaysOutOfBounds, value: this.mapId };
+		const payload = { key: AlertMsgTypesEnum.OverlaysOutOfBounds, value: this.mapId };
 		return isWorldView || isInBound ? new RemoveAlertMsg(payload) : new AddAlertMsg(payload);
 	}
 
 	onResetView() {
-		this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypes.OverlaysOutOfBounds, value: this.mapId }));
-		this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypes.overlayIsNotPartOfQuery, value: this.mapId }));
+		this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypesEnum.OverlaysOutOfBounds, value: this.mapId }));
+		this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypesEnum.overlayIsNotPartOfQuery, value: this.mapId }));
 		return super.onResetView();
 	}
 }

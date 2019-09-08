@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { IEntryComponent, selectMapsTotal, selectOverlayFromMap } from '@ansyn/map-facade';
+import { IEntryComponent, selectMapsTotal, selectOverlayByMapId } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -37,7 +37,7 @@ export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponen
 
 	@AutoSubscription
 	overlay$ = () => this.store$.pipe(
-		select(selectOverlayFromMap(this.mapId)),
+		select(selectOverlayByMapId(this.mapId)),
 		tap(overlay => this.overlay = overlay)
 	);
 

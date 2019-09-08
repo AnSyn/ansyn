@@ -1,4 +1,6 @@
-export { OpenlayersBaseLayersPlugins } from './modules/plugins/openlayers/plugins/layers/openlayers-base-layers.plugins';
+export {
+	OpenlayersBaseLayersPlugins
+}from './modules/plugins/openlayers/plugins/layers/openlayers-base-layers.plugins';
 
 export { AddAlertMsg, RemoveAlertMsg } from './modules/overlays/overlay-status/actions/overlay-status.actions';
 export { IAlert } from './modules/alerts/alerts.model';

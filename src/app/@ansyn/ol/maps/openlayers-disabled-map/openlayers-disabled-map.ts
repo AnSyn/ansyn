@@ -142,9 +142,9 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		return new Observable();
 	}
 
-	resetZoom(): void {
+	one2one(): void {
 		const view = this.mapObject.getView();
-		view.setZoom(1)
+		view.setResolution(1)
 	}
 
 	zoomOut(): void {

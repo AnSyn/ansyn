@@ -13,8 +13,8 @@ export class ImageryZoomerService {
 		return this.imageryCommunicatorService.provide(mapId).ActiveMap
 	}
 
-	resetZoom(mapId: string): void {
-		this.getMap(mapId).resetZoom();
+	one2one(mapId: string): void {
+		this.getMap(mapId).one2one();
 	}
 
 	zoomIn(mapId: string): void {

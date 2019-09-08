@@ -7,11 +7,11 @@ import { cold, hot } from 'jasmine-marbles';
 import { HttpClientModule } from '@angular/common/http';
 import {
 	SetFavoriteOverlaysAction,
+	SetOverlaysScannedAreaDataAction,
 	SetOverlaysTranslationDataAction,
 	SetPresetOverlaysAction,
 	SetRemovedOverlaysIdsAction,
-	SetRemovedOverlaysVisibilityAction,
-	SetOverlaysScannedAreaDataAction
+	SetRemovedOverlaysVisibilityAction
 } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { SetComboBoxesProperties } from '../../../modules/status-bar/actions/status-bar.actions';
 import { SelectCaseAppEffects } from './select-case.app.effects';

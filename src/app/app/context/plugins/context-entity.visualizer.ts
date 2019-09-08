@@ -1,6 +1,6 @@
 import olPoint from 'ol/geom/Point';
 import olPolygon from 'ol/geom/Polygon';
-import { getTimeDiff, getTimeDiffFormat, selectOverlayFromMap, } from '@ansyn/map-facade';
+import { getTimeDiff, getTimeDiffFormat, selectOverlayByMapId, } from '@ansyn/map-facade';
 import { getPointByGeometry, ImageryCommunicatorService, ImageryVisualizer, IVisualizerEntity } from '@ansyn/imagery';
 import GeoJSON from 'ol/format/GeoJSON';
 import { Observable } from 'rxjs';
@@ -58,7 +58,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 	@AutoSubscription
 	referenceDate$ = () => this.store$
 		.pipe(
-			select(selectOverlayFromMap(this.mapId)),
+			select(selectOverlayByMapId(this.mapId)),
 			filter(Boolean),
 			map((overlay: IOverlay) => overlay.date),
 			tap((referenceDate) => {

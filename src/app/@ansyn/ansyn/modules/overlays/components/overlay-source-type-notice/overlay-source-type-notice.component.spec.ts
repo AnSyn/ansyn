@@ -91,7 +91,7 @@ describe('OverlaySourceTypeNoticeComponent', () => {
 	});
 
 	it('should find the title for the overlay, value for sensor type, plus year', () => {
-		component.overlay = <any>overlays[3]
+		component.overlay = <any>overlays[3];
 		fixture.detectChanges();
 		expect(component.title).toEqual('My year is 1969');
 	});

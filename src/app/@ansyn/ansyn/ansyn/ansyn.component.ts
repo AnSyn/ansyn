@@ -11,8 +11,8 @@ import { ICase, ICaseMapState } from '../modules/menu-items/cases/models/case.mo
 import { IToolsConfig, toolsConfig } from '../modules/menu-items/tools/models/tools-config';
 import { UpdateToolsFlags } from '../modules/menu-items/tools/actions/tools.actions';
 import { toolsFlags } from '../modules/menu-items/tools/reducers/tools.reducer';
-import { ICoreConfig } from "../modules/core/models/core.config.model";
-import { CoreConfig } from "../modules/core/models/core.config";
+import { ICoreConfig } from '../modules/core/models/core.config.model';
+import { CoreConfig } from '../modules/core/models/core.config';
 
 @Component({
 	selector: 'ansyn-app',

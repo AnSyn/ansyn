@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { selectMapsTotal, selectOverlayFromMap } from '@ansyn/map-facade';
+import { selectMapsTotal, selectOverlayByMapId } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Observable } from 'rxjs';
@@ -39,7 +39,7 @@ export class AlertsContainerComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	overlay$ = () => this.store$.pipe(
-		select(selectOverlayFromMap(this.mapId)),
+		select(selectOverlayByMapId(this.mapId)),
 		tap((overlay) => {
 			this.overlay = overlay;
 		})

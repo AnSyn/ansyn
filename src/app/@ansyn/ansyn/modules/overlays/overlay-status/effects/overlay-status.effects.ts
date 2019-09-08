@@ -90,39 +90,39 @@ export class OverlayStatusEffects {
 
 	@Effect()
 	onScannedAreaActivation$: Observable<any> = this.actions$.pipe(
-		ofType( OverlayStatusActionsTypes.ACTIVATE_SCANNED_AREA ),
-		withLatestFrom( this.store$.select( mapStateSelector ), this.store$.select( selectScannedAreaData ) ),
-		map( ( [action, mapState, overlaysScannedAreaData] ) => {
-			const mapSettings: IMapSettings = MapFacadeService.activeMap( mapState );
+		ofType(OverlayStatusActionsTypes.ACTIVATE_SCANNED_AREA),
+		withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(selectScannedAreaData)),
+		map(([action, mapState, overlaysScannedAreaData]) => {
+			const mapSettings: IMapSettings = MapFacadeService.activeMap(mapState);
 			return [mapSettings.data.position, mapSettings.data.overlay, overlaysScannedAreaData];
-		} ),
-		filter( ( [position, overlay, overlaysScannedAreaData]: [ImageryMapPosition, IOverlay, IOverlaysScannedAreaData] ) => Boolean( position ) && Boolean( overlay ) ),
-		map( ( [position, overlay, overlaysScannedAreaData]: [ImageryMapPosition, IOverlay, IOverlaysScannedAreaData] ) => {
+		}),
+		filter(([position, overlay, overlaysScannedAreaData]: [ImageryMapPosition, IOverlay, IOverlaysScannedAreaData]) => Boolean(position) && Boolean(overlay)),
+		map(([position, overlay, overlaysScannedAreaData]: [ImageryMapPosition, IOverlay, IOverlaysScannedAreaData]) => {
 			let scannedArea = overlaysScannedAreaData && overlaysScannedAreaData[overlay.id];
 			if (!scannedArea) {
-				scannedArea = geojsonPolygonToMultiPolygon( position.extentPolygon );
+				scannedArea = geojsonPolygonToMultiPolygon(position.extentPolygon);
 			} else {
 				try {
-					const polygons = geojsonMultiPolygonToPolygons( scannedArea );
-					polygons.push( position.extentPolygon );
-					const featurePolygons = polygons.map( ( polygon ) => {
-						return feature( polygon );
-					} );
-					const combinedResult = unifyPolygons( featurePolygons );
+					const polygons = geojsonMultiPolygonToPolygons(scannedArea);
+					polygons.push(position.extentPolygon);
+					const featurePolygons = polygons.map((polygon) => {
+						return feature(polygon);
+					});
+					const combinedResult = unifyPolygons(featurePolygons);
 					if (combinedResult.geometry.type === 'MultiPolygon') {
 						scannedArea = combinedResult.geometry;
 					} else {	// polygon
-						scannedArea = geojsonPolygonToMultiPolygon( combinedResult.geometry );
+						scannedArea = geojsonPolygonToMultiPolygon(combinedResult.geometry);
 					}
 				} catch (e) {
-					console.error( 'failed to save scanned area', e );
+					console.error('failed to save scanned area', e);
 					return EMPTY;
 				}
 			}
-			return new SetOverlayScannedAreaDataAction( {id: overlay.id, area: scannedArea} );
-		} ) );
+			return new SetOverlayScannedAreaDataAction({ id: overlay.id, area: scannedArea });
+		}));
 
-	constructor( protected actions$: Actions,
+	constructor(protected actions$: Actions,
 				protected communicatorsService: ImageryCommunicatorService,
 				protected store$: Store<any>) {
 	}

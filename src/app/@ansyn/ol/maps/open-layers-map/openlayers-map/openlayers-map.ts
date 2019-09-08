@@ -521,9 +521,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return view.getRotation();
 	}
 
-	resetZoom(): void {
+	one2one(): void {
 		const view = this.mapObject.getView();
-		view.setZoom(1)
+		view.setResolution(1)
 	}
 
 	zoomOut(): void {

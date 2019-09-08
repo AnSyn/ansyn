@@ -4,11 +4,11 @@ import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import {
 	SetFavoriteOverlaysAction,
+	SetOverlaysScannedAreaDataAction,
 	SetOverlaysTranslationDataAction,
 	SetPresetOverlaysAction,
 	SetRemovedOverlaysIdsAction,
-	SetRemovedOverlaysVisibilityAction,
-	SetOverlaysScannedAreaDataAction
+	SetRemovedOverlaysVisibilityAction
 } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { SetComboBoxesProperties } from '../../../modules/status-bar/actions/status-bar.actions';
 import { IAppState } from '../../app.effects.module';

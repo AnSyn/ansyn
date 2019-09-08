@@ -198,7 +198,7 @@ describe('EnumFilterMetadata', () => {
 			const expectedResult: ICaseEnumFilterMetadata = {
 				unCheckedEnums: ['firstFeild', 'secondFeild'],
 				disabledEnums: []
-			}
+			};
 
 			expect(result).toEqual(expectedResult);
 		});
@@ -214,7 +214,7 @@ describe('EnumFilterMetadata', () => {
 			enumFilterMetadata.updateMetadata('firstFeild');
 
 			const result: ICaseEnumFilterMetadata = enumFilterMetadata.getMetadataForOuterState();
-			const expectedResult: ICaseEnumFilterMetadata = { unCheckedEnums: ['firstFeild'], disabledEnums: [] }
+			const expectedResult: ICaseEnumFilterMetadata = { unCheckedEnums: ['firstFeild'], disabledEnums: [] };
 
 			expect(result).toEqual(expectedResult);
 		});
@@ -228,7 +228,7 @@ describe('EnumFilterMetadata', () => {
 			enumFilterMetadata.accumulateData('thirdFeild');
 
 			const result: ICaseEnumFilterMetadata = enumFilterMetadata.getMetadataForOuterState();
-			const expectedResult: ICaseEnumFilterMetadata = { unCheckedEnums: [], disabledEnums: [] }
+			const expectedResult: ICaseEnumFilterMetadata = { unCheckedEnums: [], disabledEnums: [] };
 
 			expect(result).toEqual(expectedResult);
 		});
@@ -248,7 +248,7 @@ describe('EnumFilterMetadata', () => {
 			});
 
 			const result: ICaseEnumFilterMetadata = enumFilterMetadata.getMetadataForOuterState();
-			const expectedResult: ICaseEnumFilterMetadata = { unCheckedEnums: [], disabledEnums: ['thirdFeild'] }
+			const expectedResult: ICaseEnumFilterMetadata = { unCheckedEnums: [], disabledEnums: ['thirdFeild'] };
 
 			expect(result).toEqual(expectedResult);
 		});

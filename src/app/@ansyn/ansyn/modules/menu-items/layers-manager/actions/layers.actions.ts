@@ -15,7 +15,7 @@ export enum LayersActionTypes {
 	SET_ACTIVE_ANNOTATION_LAYER = '[Layers] Set active annotation layer',
 	SET_MODAL = '[Layers] Set modal value',
 	SHOW_ALL_LAYERS = '[Layers] Show all layers'
-};
+}
 
 export type LayersActions =
 	| BeginLayerCollectionLoadAction

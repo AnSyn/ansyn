@@ -1,7 +1,7 @@
 import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ol';
-import { selectOverlayFromMap } from '@ansyn/map-facade';
+import { selectOverlayByMapId } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { take, tap } from 'rxjs/operators';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
@@ -20,7 +20,7 @@ export class AnaglyphSensorPlugin extends BaseImageryPlugin {
 
 	@AutoSubscription
 	overlay$ = () => this.store$.pipe(
-		select(selectOverlayFromMap(this.mapId)),
+		select(selectOverlayByMapId(this.mapId)),
 		tap((overlay: IOverlay) => {
 			this.overlay = overlay;
 			if (Boolean(overlay)) {

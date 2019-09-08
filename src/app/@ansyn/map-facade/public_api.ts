@@ -17,11 +17,11 @@ export {
 	selectWasWelcomeNotificationShown,
 	selectToastMessage,
 	selectFooterCollapse,
-	selectOverlayFromMap,
+	selectOverlayByMapId,
 	selectMapStateById,
 	selectDisplayLayersOnMap,
 	selectOverlaysWithMapIds,
-	selectPositionOfMap
+	selectMapPositionByMapId
 } from './reducers/map.reducer';
 
 export {

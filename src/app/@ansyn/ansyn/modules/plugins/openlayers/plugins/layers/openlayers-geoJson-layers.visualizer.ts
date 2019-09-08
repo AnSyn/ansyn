@@ -3,18 +3,16 @@ import { HttpClient } from '@angular/common/http';
 import { Feature, FeatureCollection, Polygon } from 'geojson';
 import { catchError, debounceTime, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { combineLatest, forkJoin, Observable, of, Subscription } from 'rxjs';
-import { selectDisplayLayersOnMap, selectMaps, selectPositionOfMap, SetToastMessageAction } from '@ansyn/map-facade';
+import { selectDisplayLayersOnMap, selectMapPositionByMapId, SetToastMessageAction } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
 import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
 import { ILayer, layerPluginTypeEnum } from '../../../../menu-items/layers-manager/models/layers.model';
 import { selectLayers, selectSelectedLayersIds } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
-import { ICaseMapState } from '../../../../menu-items/cases/models/case.model';
-import { Dictionary } from '@ngrx/entity';
 import { booleanContains, intersect } from '@turf/turf';
 import {
-	getPolygonIntersectionRatioWithMultiPolygon, ImageryMapPosition,
+	getPolygonIntersectionRatioWithMultiPolygon,
+	ImageryMapPosition,
 	ImageryPlugin,
-	IMapSettings,
 	IVisualizerEntity
 } from '@ansyn/imagery';
 
@@ -39,13 +37,8 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 				)
 			})
 		);
-
-	protected subscriptions: Subscription[] = [];
-
-
-	// todo: return auto-subscription when the bug is fixed
 	// todo: select extent by map id from store
-	updateLayerScale$ =  this.store$.select(selectPositionOfMap(this.mapId)).pipe(
+	updateLayerScale$ = this.store$.select(selectMapPositionByMapId(this.mapId)).pipe(
 		debounceTime(500),
 		mergeMap((position: ImageryMapPosition) => {
 			// used squareGrid to get the extent grid
@@ -58,6 +51,10 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 			return this.setEntities(entities);
 		})
 	);
+
+
+	// todo: return auto-subscription when the bug is fixed
+	protected subscriptions: Subscription[] = [];
 
 	constructor(protected store$: Store<any>,
 				protected http: HttpClient) {

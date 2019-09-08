@@ -1,7 +1,7 @@
 import { combineLatest } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
-import { selectOverlayFromMap } from '@ansyn/map-facade';
+import { selectOverlayByMapId } from '@ansyn/map-facade';
 import { ImageryVisualizer, IVisualizerEntity, MarkerSize } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
 import { filter, mergeMap } from 'rxjs/operators';
@@ -19,7 +19,7 @@ import { feature } from '@turf/turf';
 export class ScannedAreaVisualizer extends EntitiesVisualizer {
 
 	@AutoSubscription
-	scannedArea$ = () => combineLatest(this.store$.select(selectScannedAreaData), this.store$.select(selectOverlayFromMap(this.mapId))).pipe(
+	scannedArea$ = () => combineLatest(this.store$.select(selectScannedAreaData), this.store$.select(selectOverlayByMapId(this.mapId))).pipe(
 		filter(([scannedAreaData, overlay]: [IOverlaysScannedAreaData, IOverlay]) => Boolean(overlay) && Boolean(scannedAreaData)),
 		mergeMap(([scannedAreaData, overlay]: [IOverlaysScannedAreaData, IOverlay]) => {
 			const entities: IVisualizerEntity[] = [];

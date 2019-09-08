@@ -11,7 +11,7 @@ import {
 	selectActiveMapId,
 	selectDisplayLayersOnMap,
 	selectMapsTotal,
-	selectOverlayFromMap
+	selectOverlayByMapId
 } from '../../reducers/map.reducer';
 import { copyFromContent } from '../../utils/clipboard';
 import { getTimeFormat } from '../../utils/time';
@@ -114,7 +114,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	@AutoSubscription
-	overlayNlayers$: () => Observable<[any, boolean]> = () => combineLatest(this.store$.select(selectOverlayFromMap(this.mapId)), this.store$.select(selectDisplayLayersOnMap(this.mapId))).pipe(
+	overlayNlayers$: () => Observable<[any, boolean]> = () => combineLatest(this.store$.select(selectOverlayByMapId(this.mapId)), this.store$.select(selectDisplayLayersOnMap(this.mapId))).pipe(
 		tap(([overlay, displayLayers]) => {
 			this.overlay = overlay;
 			this.displayLayers = displayLayers;

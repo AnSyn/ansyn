@@ -2,7 +2,7 @@ import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core'
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
-import { IEntryComponent, selectOverlayFromMap } from '@ansyn/map-facade';
+import { IEntryComponent, selectOverlayByMapId } from '@ansyn/map-facade';
 import { ISentinelLayer, selectSentinelLayers, selectSentinelselectedLayers } from '../reducers/sentinel.reducer';
 import { SetSentinelLayerOnMap } from '../actions/sentinel.actions';
 import { get as _get } from 'lodash';
@@ -37,7 +37,7 @@ export class SentinelComboBoxComponent implements OnInit, OnDestroy, IEntryCompo
 
 	@AutoSubscription
 	sourceTypeShow$ = () => this.store.pipe(
-		select(selectOverlayFromMap(this.mapId)),
+		select(selectOverlayByMapId(this.mapId)),
 		tap((overlay) => {
 			this.hidden = _get(overlay, 'sourceType') !== SentinelOverlaySourceType;
 		})

@@ -1,15 +1,9 @@
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { HttpClient } from '@angular/common/http';
 import { Feature, FeatureCollection, Polygon } from 'geojson';
-import { catchError, debounceTime, distinctUntilChanged, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, debounceTime, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { combineLatest, forkJoin, Observable, of, Subscription } from 'rxjs';
-import {
-	getPolygonIntersectionRatioWithMultiPolygon,
-	ImageryPlugin,
-	IMapSettings,
-	IVisualizerEntity
-} from '@ansyn/imagery';
-import { MapFacadeService, selectMaps, selectMapsList, SetToastMessageAction } from '@ansyn/map-facade';
+import { selectDisplayLayersOnMap, selectMaps, SetToastMessageAction } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
 import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
 import { ILayer, layerPluginTypeEnum } from '../../../../menu-items/layers-manager/models/layers.model';
@@ -17,6 +11,12 @@ import { selectLayers, selectSelectedLayersIds } from '../../../../menu-items/la
 import { ICaseMapState } from '../../../../menu-items/cases/models/case.model';
 import { Dictionary } from '@ngrx/entity';
 import { booleanContains, intersect } from '@turf/turf';
+import {
+	getPolygonIntersectionRatioWithMultiPolygon,
+	ImageryPlugin,
+	IMapSettings,
+	IVisualizerEntity
+} from '@ansyn/imagery';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
@@ -25,31 +25,23 @@ import { booleanContains, intersect } from '@turf/turf';
 export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	layersDictionary: { [key: string]: IVisualizerEntity[] };
 	showedLayersDictionary: string[];
-	protected subscriptions: Subscription[] = [];
 	currentExtent: Polygon;
-
-	isHidden$ = this.store$.select(selectMapsList).pipe(
-		map((mapsList) => MapFacadeService.mapById(mapsList, this.mapId)),
-		filter(Boolean),
-		map((map: ICaseMapState) => map.flags.displayLayers),
-		distinctUntilChanged()
-	);
-
 	// todo: return auto-subscription when the bug is fixed
-	updateLayersOnMap$ = combineLatest(this.store$.pipe(select(selectSelectedLayersIds)), this.isHidden$)
+	updateLayersOnMap$ = combineLatest(this.store$.select(selectDisplayLayersOnMap(this.mapId)), this.store$.select(selectSelectedLayersIds))
 		.pipe(
 			withLatestFrom(this.store$.select(selectLayers)),
-			mergeMap(([[selectedLayerIds, isHidden], layers]: [[string[], boolean], ILayer[]]) => {
-					const filteredLayers = layers.filter(this.isGeoJsonLayer);
-					return forkJoin(
-						filteredLayers.map((layer: ILayer) =>
-							this.layerToObservable(layer, selectedLayerIds, isHidden)))
-				}
-			)
+			mergeMap(([[isHidden, layersId], layers]) => {
+				const filteredLayers = layers.filter(this.isGeoJsonLayer);
+				return forkJoin(
+					filteredLayers
+						.map((layer: ILayer) => this.layerToObservable(layer, layersId, isHidden))
+				)
+			})
 		);
 
 	// todo: return auto-subscription when the bug is fixed
-	updateLayerScale$ = this.store$.select(selectMaps).pipe( // todo: select extent by map id from store
+	// todo: select extent by map id from store
+	updateLayerScale$ = this.store$.select(selectMaps).pipe(
 		debounceTime(500),
 		mergeMap((mapState: Dictionary<ICaseMapState>) => {
 			const mapSettings: IMapSettings = mapState[this.mapId];
@@ -63,6 +55,18 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 			return this.setEntities(entities);
 		})
 	);
+	protected subscriptions: Subscription[] = [];
+
+	constructor(protected store$: Store<any>,
+				protected http: HttpClient) {
+		super({
+			initial: {
+				'fill-opacity': 0
+			}
+		});
+		this.layersDictionary = {};
+		this.showedLayersDictionary = [];
+	}
 
 	onInitSubscriptions(): void {
 		super.onInitSubscriptions();
@@ -167,16 +171,5 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 			featureJson: feature,
 			style: feature.properties.style
 		}));
-	}
-
-	constructor(protected store$: Store<any>,
-				protected http: HttpClient) {
-		super({
-			initial: {
-				'fill-opacity': 0
-			}
-		});
-		this.layersDictionary = {};
-		this.showedLayersDictionary = [];
 	}
 }

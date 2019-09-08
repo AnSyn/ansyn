@@ -12,10 +12,10 @@ import { debounceTime, filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { AlertMsgTypes } from '../../../alerts/model';
 import { AddAlertMsg, RemoveAlertMsg } from '../../../overlays/overlay-status/actions/overlay-status.actions';
-import { selectDrops } from '../../../overlays/reducers/overlays.reducer';
+import { selectDrops, selectFilteredOveralys, selectOverlaysMap } from '../../../overlays/reducers/overlays.reducer';
 import { isFullOverlay } from '../../../core/utils/overlays';
 import { ICaseMapState } from '../../../menu-items/cases/models/case.model';
-import { IOverlayDrop } from '../../../overlays/models/overlay.model';
+import { IOverlay, IOverlayDrop } from '../../../overlays/models/overlay.model';
 import { CesiumMap } from '@ansyn/imagery-cesium';
 
 @ImageryPlugin({
@@ -23,14 +23,10 @@ import { CesiumMap } from '@ansyn/imagery-cesium';
 	deps: [Store]
 })
 export class AlertsPlugin extends BaseImageryPlugin {
-	currentMap$: Observable<ICaseMapState> = this.store$.pipe(
-		select(selectMapsList),
-		map((mapsList: ICaseMapState[]) => MapFacadeService.mapById(mapsList, this.mapId)),
-		filter(Boolean)
-	);
-
+	// todo: combine 2 subscriptions to one
+	overlay: IOverlay;
 	@AutoSubscription
-	setOverlaysNotInCase$: Observable<any> = combineLatest(this.store$.select(selectDrops), this.currentMap$).pipe(
+	setOverlaysNotInCase$: Observable<any> = combineLatest(this.store$.select(selectOverlaysMap), this.store$.select(selectFilteredOveralys) ).pipe(
 		map(this.setOverlaysNotInCase.bind(this)),
 		tap((action: RemoveAlertMsg | AddAlertMsg) => this.store$.dispatch(action))
 	);
@@ -40,7 +36,6 @@ export class AlertsPlugin extends BaseImageryPlugin {
 	positionChanged$ = () => this.communicator.positionChanged.pipe(
 		filter(Boolean),
 		debounceTime(500),
-		withLatestFrom(this.currentMap$),
 		map(this.positionChanged.bind(this)),
 		tap((action: RemoveAlertMsg | AddAlertMsg) => this.store$.dispatch(action))
 	);

@@ -23,11 +23,11 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 
 		this.updateStyle({
 			initial: {
-				stroke: '#f32ee1',
+				stroke: '#0091ff',
 				fill: null,
 				'stroke-width': 4,
 				'marker-size': MarkerSize.small,
-				'marker-color': '#f32ee1'
+				'marker-color': '#0091ff'
 			}
 		});
 	}

@@ -52,10 +52,9 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	activeAnnotationLayer$ = this.store.pipe(
 		select(selectActiveAnnotationLayer),
-		withLatestFrom(this.annotationLayer$),
-		filter(([layer, allLayers]) => Boolean(layer) && Boolean(allLayers)),
-		tap(([layer, allLayers]) => {
-			this.activeAnnotationId = layer;
+		filter((layerId) => Boolean(layerId)),
+		tap((layerId) => {
+			this.activeAnnotationId = layerId;
 		})
 	);
 
@@ -148,10 +147,8 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	}
 
 	isAnnotationEnable(annotation) {
-		if ([AnnotationMode.LineString, AnnotationMode.Arrow].includes(annotation) && !this.annotationProperties['stroke-opacity']) {
-			return false;
-		}
-		return true;
+		return !([AnnotationMode.LineString, AnnotationMode.Arrow].includes(annotation) && !this.annotationProperties['stroke-opacity']);
+
 	}
 
 }

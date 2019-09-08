@@ -1,6 +1,6 @@
 import olPoint from 'ol/geom/Point';
 import olPolygon from 'ol/geom/Polygon';
-import { getTimeDiff, getTimeDiffFormat, MapFacadeService, selectMapsList, } from '@ansyn/map-facade';
+import { getTimeDiff, getTimeDiffFormat, selectOverlayFromMap, } from '@ansyn/map-facade';
 import { getPointByGeometry, ImageryCommunicatorService, ImageryVisualizer, IVisualizerEntity } from '@ansyn/imagery';
 import GeoJSON from 'ol/format/GeoJSON';
 import { Observable } from 'rxjs';
@@ -9,7 +9,7 @@ import { select, Store } from '@ngrx/store';
 import { distinctUntilChanged, filter, map, mergeMap, tap } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { selectContextEntities } from '../reducers/context.reducer';
-import { ICaseMapState, IContextEntity, } from '@ansyn/ansyn';
+import { IContextEntity, IOverlay, } from '@ansyn/ansyn';
 import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
 
 @ImageryVisualizer({
@@ -27,23 +27,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		mergeMap(this.setEntities.bind(this))
 	);
 
-	@AutoSubscription
-	referenceDate$ = this.store$
-		.pipe(
-			select(selectMapsList),
-			map((mapsList: ICaseMapState[]) => MapFacadeService.mapById(mapsList, this.mapId)),
-			filter(Boolean),
-			map((map: ICaseMapState) => map.data.overlay && map.data.overlay.date),
-			distinctUntilChanged(),
-			tap((referenceDate) => {
-				this.referenceDate = referenceDate;
-				this.purgeCache();
-				this.source.refresh();
-			})
-		);
-
-	constructor(protected actions$: Actions,
-				protected store$: Store<any>) {
+	constructor(protected actions$: Actions, protected store$: Store<any>) {
 		super();
 
 		this.updateStyle({
@@ -69,6 +53,28 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		});
 
 		this.geoJsonFormat = new GeoJSON();
+	}
+
+	@AutoSubscription
+	referenceDate$ = () => this.store$
+		.pipe(
+			select(selectOverlayFromMap(this.mapId)),
+			filter(Boolean),
+			map((overlay: IOverlay) => overlay.date),
+			tap((referenceDate) => {
+				this.referenceDate = referenceDate;
+				this.purgeCache();
+				this.source.refresh();
+			})
+		);
+
+	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]): Observable<boolean> {
+		logicalEntities.forEach((entity) => {
+			if (this.idToCachedCenter.has(entity.id)) {
+				this.idToCachedCenter.delete(entity.id);
+			}
+		});
+		return super.addOrUpdateEntities(logicalEntities);
 	}
 
 	private getText(feature) {
@@ -103,15 +109,6 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 			this.idToCachedCenter.set(featureId, projectedPolygon);
 			return projectedPolygon;
 		}
-	}
-
-	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]): Observable<boolean> {
-		logicalEntities.forEach((entity) => {
-			if (this.idToCachedCenter.has(entity.id)) {
-				this.idToCachedCenter.delete(entity.id);
-			}
-		});
-		return super.addOrUpdateEntities(logicalEntities);
 	}
 
 }

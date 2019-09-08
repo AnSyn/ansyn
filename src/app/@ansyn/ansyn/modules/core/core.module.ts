@@ -12,6 +12,7 @@ import { AnsynFormsModule } from './forms/ansyn-forms.module';
 import { FormsModule } from '@angular/forms';
 import { ContextMenuComponent } from './components/context-menu/context-menu.component';
 import { AngleFilterComponent } from './components/angle-filter/angle-filter.component';
+import { CredentialsComponent } from './components/credentials/credentials.component';
 
 @NgModule({
 	imports: [
@@ -31,13 +32,15 @@ import { AngleFilterComponent } from './components/angle-filter/angle-filter.com
 		AnsynFormsModule,
 		AnsynModalComponent,
 		ManualRemovedOverlaysComponent,
-		ContextMenuComponent
+		ContextMenuComponent,
+		CredentialsComponent
 	],
 	declarations: [
 		AnsynModalComponent,
 		ManualRemovedOverlaysComponent,
 		ContextMenuComponent,
-		AngleFilterComponent
+		AngleFilterComponent,
+		CredentialsComponent
 	],
 	entryComponents: [AngleFilterComponent]
 })

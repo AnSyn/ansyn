@@ -1,33 +1,24 @@
-import { combineLatest, Observable } from 'rxjs';
-import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
-import { select, Store } from '@ngrx/store';
-import { distinctUntilChanged, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { combineLatest, EMPTY, Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { filter, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { IVisualizerEntity, IVisualizerStateStyle } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
-import { EMPTY } from 'rxjs/index';
 import * as turf from '@turf/turf';
 import { selectDrops } from '../../../../../overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../../../../overlays/services/overlays.service';
-import { ICaseMapState } from '../../../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
 import { EntitiesVisualizer } from '@ansyn/ol';
+import { selectOverlayFootprintMode } from '../../../../../menu-items/tools/reducers/tools.reducer';
+import { OverlayDisplayMode } from '../../../../../menu-items/tools/overlays-display-mode/overlays-display-mode.component';
 
 export class BaseFootprintsVisualizer extends EntitiesVisualizer {
 
-	overlayDisplayMode$: Observable<string> = this.store
-		.pipe(
-			select(selectMapsList),
-			map((mapsList: ICaseMapState[]) => MapFacadeService.mapById(mapsList, this.mapId)),
-			filter(Boolean),
-			map((map: ICaseMapState) => map.data.overlayDisplayMode),
-			distinctUntilChanged()
-		);
-
 	@AutoSubscription
-	drawOverlaysOnMap$: Observable<any> = combineLatest(this.overlayDisplayMode$, this.store.select(selectDrops))
+	drawOverlaysOnMap$: Observable<any> = combineLatest(this.store.select(selectOverlayFootprintMode), this.store.select(selectDrops))
 		.pipe(
+			filter(([overlayDisplayMode, drops]: [OverlayDisplayMode, IOverlay[]]) => Boolean(overlayDisplayMode)),
 			withLatestFrom(this.overlaysService.getAllOverlays$),
-			mergeMap(([[overlayDisplayMode, drops], overlays]: [[string, IOverlay[]], Map<string, IOverlay>]) => {
+			mergeMap(([[overlayDisplayMode, drops], overlays]: [[OverlayDisplayMode, IOverlay[]], Map<string, IOverlay>]) => {
 				if (overlayDisplayMode === this.overlayDisplayMode) {
 					const pluckOverlays = <any[]>OverlaysService.pluck(overlays, drops.map(({ id }) => id), ['id', 'footprint']);
 					const entitiesToDraw = pluckOverlays

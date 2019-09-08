@@ -237,6 +237,11 @@
         "type": "Enum"
       },
       {
+            "modelName": "containedInSearchPolygon",
+        "displayName": "Contains Region",
+        "type": "Enum"
+        },
+      {
         "modelName": "bestResolution",
         "displayName": "Resolution",
         "type": "Slider"
@@ -245,12 +250,7 @@
         "modelName": "cloudCoverage",
         "displayName": "Cloud Coverage",
         "type": "Slider"
-      },
-      {
-      	"modelName": "containedInSearchPolygon",
-	   	"displayName": "Contains Region",
-	   	"type": "Enum"
-	  }
+      }
     ]
   },
   "contextConfig": {
@@ -342,7 +342,8 @@
     },
 	 "httpTimeout": "3000",
 	 "isFooterCollapsible": {{ getv "/ansyn/iscollapsible" "false" }},
-	 "enable3D": {{ getv "/ansyn/3d/enable" "true" }}
+	 "enable3D": {{ getv "/ansyn/3d/enable" "true" }},
+	 "showCredentials": {{getv "/ansyn/showcredentials" "false"}}
   },
   "olConfig": {
   	 "needToUseLayerExtent": false,

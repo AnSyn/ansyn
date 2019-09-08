@@ -1,34 +1,23 @@
 import { Store } from '@ngrx/store';
 import TileLayer from 'ol/layer/Tile';
-import { debounceTime, distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/operators';
-import { Observable, Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 import { BaseImageryPlugin } from '@ansyn/imagery';
-import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
+import { selectDisplayLayersOnMap } from '@ansyn/map-facade';
+import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '@ansyn/ol';
 import { ILayer } from '../../../../menu-items/layers-manager/models/layers.model';
 import { selectLayers, selectSelectedLayersIds } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
-import { ICaseMapState } from '../../../../menu-items/cases/models/case.model';
 
 export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 
 	protected subscriptions: Subscription[] = [];
 
 	// todo: return auto-subscription when the bug is fixed
-	toggleGroup$ = this.store$.select(selectMapsList).pipe(
-		map((mapsList) => MapFacadeService.mapById(mapsList, this.mapId)),
-		filter(Boolean),
-		map((map: ICaseMapState) => !map.flags.displayLayers),
-		distinctUntilChanged(),
-		debounceTime(50),
-		tap((newState: boolean) => this.iMap.toggleGroup('layers', newState))
-	);
-
-	// todo: return auto-subscription when the bug is fixed
-	osmLayersChanges$: Observable<any[]> = this.store$.select(selectSelectedLayersIds)
+	osmLayersChanges$: Observable<any[]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
 		.pipe(
-			withLatestFrom(this.store$.select(selectLayers)),
-			tap(([selectedLayerId, layers]: [string[], ILayer[]]) => {
-				layers.filter(this.checkLayer)
+			tap(([result, selectedLayerId]: [ILayer[], string[]]) => {
+				result.filter(this.checkLayer)
 					.forEach((layer: ILayer) => {
 						if (selectedLayerId.includes(layer.id)) {
 							this.addGroupLayer(layer);
@@ -38,6 +27,11 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 					});
 			})
 		);
+
+	// todo: return auto-subscription when the bug is fixed
+	toggleGroup$ = this.store$.select(selectDisplayLayersOnMap(this.mapId)).pipe(
+		tap((newState: boolean) => this.iMap.toggleGroup('layers', newState))
+	);
 
 	onInitSubscriptions(): void {
 		super.onInitSubscriptions();

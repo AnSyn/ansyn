@@ -10,7 +10,7 @@
 			name="annotations-layer"
 			[ngModel]="activeAnnotationId"
 			[comboBoxToolTipDescription]="'choose annotation layer' | translate"
-			(ngModelChange)="setSelectedAnnotationLayer($event.target.value)">
+			(ngModelChange)="setSelectedAnnotationLayer($event)">
 
 			<ansyn-combo-box-option *ngFor="let layer of annotationLayer$ | async" [value]="layer.id">
 				{{ layer.name }}

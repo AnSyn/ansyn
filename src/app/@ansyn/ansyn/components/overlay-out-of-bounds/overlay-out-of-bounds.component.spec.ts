@@ -43,15 +43,15 @@ describe('OverlayOutOfBoundsComponent', () => {
 	});
 
 	it('backToExtent should calc extent and call fitToExtent', () => {
-		component.mapId = 'mapId';
-		component.mapState = <any>{
+		const mapSettings = <any>{
 			id: 'mapId',
 			data: { overlay: { footprint: geometry('Polygon', [[[0, 0], [1, 1], [2, 2], [0, 0]]]) } }
 		};
+		component.mapId = 'mapId';
 		const ActiveMap = jasmine.createSpyObj({ fitToExtent: of(true) });
-		spyOn(imageryCommunicatorService, 'provide').and.returnValue({ ActiveMap });
+		spyOn(imageryCommunicatorService, 'provide').and.returnValue({ ActiveMap, mapSettings });
 		component.backToExtent();
-		const extent = bboxFromGeoJson(component.mapState.data.overlay.footprint);
+		const extent = bboxFromGeoJson(imageryCommunicatorService.provide(component.mapId).mapSettings.data.overlay.footprint);
 		expect(ActiveMap.fitToExtent).toHaveBeenCalledWith(extent);
 	});
 

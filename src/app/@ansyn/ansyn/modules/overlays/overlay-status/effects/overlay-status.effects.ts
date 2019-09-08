@@ -1,20 +1,6 @@
 import { Injectable } from '@angular/core';
-import {
-	CommunicatorEntity,
-	geojsonMultiPolygonToPolygons,
-	geojsonPolygonToMultiPolygon,
-	ImageryCommunicatorService,
-	ImageryMapPosition,
-	IMapSettings,
-	unifyPolygons
-} from '@ansyn/imagery';
-import {
-	MapFacadeService,
-	mapStateSelector,
-	selectMaps,
-	SetToastMessageAction,
-	UpdateMapAction
-} from '@ansyn/map-facade';
+import { CommunicatorEntity, geojsonMultiPolygonToPolygons,	geojsonPolygonToMultiPolygon, ImageryCommunicatorService, ImageryMapPosition, IMapSettings, unifyPolygons } from '@ansyn/imagery';
+import { MapFacadeService, mapStateSelector, selectMaps, SetToastMessageAction, UpdateMapAction } from '@ansyn/map-facade';
 import { AnnotationMode, DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Dictionary } from '@ngrx/entity';

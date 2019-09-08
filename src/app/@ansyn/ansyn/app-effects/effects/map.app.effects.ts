@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { CesiumMapName } from '@ansyn/imagery-cesium';
 import { DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { combineLatest, EMPTY, from, Observable, of, pipe } from 'rxjs';
 import {
@@ -29,7 +29,7 @@ import {
 } from '@ansyn/imagery';
 import {
 	catchError,
-	debounceTime,
+	debounceTime, distinctUntilChanged,
 	filter,
 	map,
 	mergeMap,
@@ -66,6 +66,8 @@ import {
 	OverlayStatusActionsTypes
 } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { fromPromise } from 'rxjs/internal-compatibility';
+import { selectOverlaysWithMapIds } from '@ansyn/map-facade';
+import { isEqual } from 'lodash';
 
 @Injectable()
 export class MapAppEffects {
@@ -176,19 +178,18 @@ export class MapAppEffects {
 		);
 
 	@Effect()
-	markupOnMapsDataChanges$ = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectMapsList))
+	markupOnMapsDataChanges$ = this.store$.select(selectOverlaysWithMapIds)
 		.pipe(
-			withLatestFrom(this.store$.select(mapStateSelector)),
-			filter(([[activeMapId, mapsList], mapState]: [[string, ICaseMapState[]], IMapState]) => Boolean(mapState && mapState.entities && Object.values(mapState.entities).length)),
-			map(([[activeMapId, mapsList], mapState]: [[string, ICaseMapState[]], IMapState]) => {
+			distinctUntilChanged( (dataA , dataB) => isEqual(dataA[0] , dataB[0])),
+			map((overlayWithMapIds: {overlay: any, mapId: string, isActive: boolean}[]) => {
 					const actives = [];
 					const displayed = [];
-					Object.values(mapState.entities).forEach((map: ICaseMapState) => {
-						if (Boolean(map.data.overlay)) {
-							if (map.id === activeMapId) {
-								actives.push(map.data.overlay.id);
+					overlayWithMapIds.forEach((data: {overlay: any, mapId: string, isActive: boolean}) => {
+						if (Boolean(data.overlay)) {
+							if (data.isActive) {
+								actives.push(data.overlay.id);
 							} else {
-								displayed.push(map.data.overlay.id);
+								displayed.push(data.overlay.id);
 							}
 						}
 					});
@@ -236,6 +237,12 @@ export class MapAppEffects {
 				return new SetMapGeoEnabledModeToolsActionStore(!!isGeoRegistered);
 			})
 		);
+
+	constructor(protected actions$: Actions,
+				protected store$: Store<IAppState>,
+				protected imageryCommunicatorService: ImageryCommunicatorService,
+				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
+	}
 
 	onDisplayOverlay([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		const { overlay, extent: payloadExtent } = payload;
@@ -341,11 +348,5 @@ export class MapAppEffects {
 
 	displayShouldSwitch([[prevAction, action]]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		return (action && prevAction) && (prevAction.payload.mapId === action.payload.mapId);
-	}
-
-	constructor(protected actions$: Actions,
-				protected store$: Store<IAppState>,
-				protected imageryCommunicatorService: ImageryCommunicatorService,
-				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
 	}
 }

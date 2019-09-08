@@ -2,12 +2,11 @@ import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core'
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
-import { IEntryComponent, selectMaps } from '@ansyn/map-facade';
+import { IEntryComponent, selectOverlayFromMap } from '@ansyn/map-facade';
 import { ISentinelLayer, selectSentinelLayers, selectSentinelselectedLayers } from '../reducers/sentinel.reducer';
 import { SetSentinelLayerOnMap } from '../actions/sentinel.actions';
 import { get as _get } from 'lodash';
 import { SentinelOverlaySourceType } from '../sentinel-source-provider';
-import { IMapSettings } from '@ansyn/imagery';
 
 @Component({
 	selector: 'ansyn-sentinel-combo-box',
@@ -19,16 +18,6 @@ export class SentinelComboBoxComponent implements OnInit, OnDestroy, IEntryCompo
 	@HostBinding('hidden') hidden = true;
 
 	@Input() mapId: string;
-	mapState: IMapSettings;
-
-	@AutoSubscription
-	mapState$ = this.store.pipe(
-		select(selectMaps),
-		tap((maps) => {
-			this.mapState = maps[this.mapId];
-			this.hidden = _get(this.mapState, 'data.overlay.sourceType') !== SentinelOverlaySourceType;
-		})
-	);
 
 	sentinelLayers: ISentinelLayer[];
 	selectedLayer: string;
@@ -43,6 +32,14 @@ export class SentinelComboBoxComponent implements OnInit, OnDestroy, IEntryCompo
 	getLayer$ = this.store.select(selectSentinelselectedLayers).pipe(
 		tap((selectedLayers) => {
 			this.selectedLayer = selectedLayers[this.mapId] ? selectedLayers[this.mapId] : selectedLayers.defaultLayer;
+		})
+	);
+
+	@AutoSubscription
+	sourceTypeShow$ = () => this.store.pipe(
+		select(selectOverlayFromMap(this.mapId)),
+		tap((overlay) => {
+			this.hidden = _get(overlay, 'sourceType') !== SentinelOverlaySourceType;
 		})
 	);
 

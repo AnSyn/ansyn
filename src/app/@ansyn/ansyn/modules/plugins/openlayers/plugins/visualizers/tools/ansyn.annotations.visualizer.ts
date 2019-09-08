@@ -1,10 +1,10 @@
 import { BaseImageryPlugin, ImageryPlugin, IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { uniq } from 'lodash';
 import { select, Store } from '@ngrx/store';
-import { MapFacadeService, selectActiveMapId, selectMapsList } from '@ansyn/map-facade';
+import { selectActiveMapId, selectOverlayFromMap } from '@ansyn/map-facade';
 import { combineLatest, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
-import { distinctUntilChanged, filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { selectGeoFilterSearchMode } from '../../../../../status-bar/reducers/status-bar.reducer';
 import { featureCollection, FeatureCollection } from '@turf/turf';
@@ -36,7 +36,7 @@ import {
 } from '../../../../../menu-items/tools/actions/tools.actions';
 import { UpdateLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
 import { SearchMode, SearchModeEnum } from '../../../../../status-bar/models/search-mode.enum';
-import { ICaseMapState, IOverlaysTranslationData } from '../../../../../menu-items/cases/models/case.model';
+import { IOverlaysTranslationData } from '../../../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
 import { selectTranslationData } from '../../../../../overlays/overlay-status/reducers/overlay-status.reducer';
 import { SetOverlayTranslationDataAction } from '../../../../../overlays/overlay-status/actions/overlay-status.actions';
@@ -48,6 +48,7 @@ import { SetOverlayTranslationDataAction } from '../../../../../overlays/overlay
 })
 export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	annotationsVisualizer: AnnotationsVisualizer;
+	overlay: IOverlay;
 
 	activeAnnotationLayer$: Observable<ILayer> = combineLatest(
 		this.store$.pipe(select(selectActiveAnnotationLayer)),
@@ -66,13 +67,6 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 		this.annotationsVisualizer.offset = offset;
 	}
 
-	currentOverlay$ = this.store$.pipe(
-		select(selectMapsList),
-		map((mapList) => MapFacadeService.mapById(mapList, this.mapId)),
-		filter(Boolean),
-		map((map: ICaseMapState) => map.data.overlay)
-	);
-
 	annotationFlag$ = this.store$.select(selectSubMenu).pipe(
 		map((subMenu: SubMenuEnum) => subMenu === SubMenuEnum.annotations),
 		distinctUntilChanged());
@@ -83,20 +77,6 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	);
 
 	annotationMode$: Observable<AnnotationMode> = this.store$.pipe(select(selectAnnotationMode));
-
-	@AutoSubscription
-	getOffsetFromCase$ = this.currentOverlay$.pipe(
-		filter(Boolean),
-		withLatestFrom(this.store$.select(selectTranslationData)),
-		tap(([overlay, translationData]: [IOverlay, IOverlaysTranslationData]) => {
-			if (overlay.id in translationData && translationData[overlay.id].offset) {
-				this.offset = translationData[overlay.id].offset;
-			} else {
-				this.offset = [0, 0];
-			}
-			this.annotationsVisualizer.onResetView().subscribe();
-		})
-	);
 
 	@AutoSubscription
 	activeChange$ = this.store$.pipe(
@@ -140,6 +120,11 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 		mergeMap(this.onAnnotationsChange.bind(this))
 	);
 
+	@AutoSubscription
+	currentOverlay$ = () => this.store$.pipe(
+		select(selectOverlayFromMap(this.mapId)),
+		tap(overlay => this.overlay = overlay)
+	);
 
 	@AutoSubscription
 	onChangeMode$ = () => this.annotationsVisualizer.events.onChangeMode.pipe(
@@ -151,19 +136,31 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 
 	@AutoSubscription
 	onDrawEnd$ = () => this.annotationsVisualizer.events.onDrawEnd.pipe(
-		withLatestFrom(this.activeAnnotationLayer$, this.currentOverlay$),
-		tap(([{ GeoJSON, feature }, activeAnnotationLayer, overlay]: [IDrawEndEvent, ILayer, IOverlay]) => {
+		withLatestFrom(this.activeAnnotationLayer$),
+		tap(([{ GeoJSON, feature }, activeAnnotationLayer]: [IDrawEndEvent, ILayer]) => {
 			const [geoJsonFeature] = GeoJSON.features;
 			const data = <FeatureCollection<any>>{ ...activeAnnotationLayer.data };
 			data.features.push(geoJsonFeature);
-			if (overlay) {
+			if (this.overlay) {
 				geoJsonFeature.properties = {
 					...geoJsonFeature.properties,
-					...this.projectionService.getProjectionProperties(this.communicator, data, feature, overlay)
+					...this.projectionService.getProjectionProperties(this.communicator, data, feature, this.overlay)
 				};
 			}
 			geoJsonFeature.properties = { ...geoJsonFeature.properties };
 			this.store$.dispatch(new UpdateLayer(<ILayer>{ ...activeAnnotationLayer, data }));
+		})
+	);
+
+	@AutoSubscription
+	getOffsetFromCase$ = () => combineLatest(this.store$.select(selectTranslationData), this.store$.select(selectOverlayFromMap(this.mapId))).pipe(
+		tap(([translationData, overlay]: [IOverlaysTranslationData, IOverlay]) => {
+			if (overlay && translationData[overlay.id] && translationData[overlay.id].offset) {
+				this.offset = translationData[overlay.id].offset;
+			} else {
+				this.offset = [0, 0];
+			}
+			this.annotationsVisualizer.onResetView().subscribe();
 		})
 	);
 
@@ -186,11 +183,12 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	);
 
 	onDraggEnd$ = () => this.annotationsVisualizer.events.offsetEntity.pipe(
-		withLatestFrom(this.currentOverlay$),
-		tap(([offset, overlay]: [any, IOverlay]) => {
-			this.store$.dispatch(new SetOverlayTranslationDataAction({
-				overlayId: overlay.id, offset
-			}));
+		tap((offset: any) => {
+			if (this.overlay) {
+				this.store$.dispatch(new SetOverlayTranslationDataAction({
+					overlayId: this.overlay.id, offset
+				}));
+			}
 		})
 	);
 

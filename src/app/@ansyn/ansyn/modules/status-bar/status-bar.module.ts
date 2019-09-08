@@ -24,7 +24,7 @@ import { ClickOutsideModule } from '../core/click-outside/click-outside.module';
 		StoreModule.forFeature(statusBarFeatureKey, StatusBarReducer),
 		ClickOutsideModule
 	],
-	declarations: [StatusBarComponent, TimelineTimepickerComponent, TreeViewComponent, NavigationBarComponent, ComboBoxesComponent,],
+	declarations: [StatusBarComponent, TimelineTimepickerComponent, TreeViewComponent, NavigationBarComponent, ComboBoxesComponent],
 	providers: [
 		{
 			provide: TIME_FILTERS,

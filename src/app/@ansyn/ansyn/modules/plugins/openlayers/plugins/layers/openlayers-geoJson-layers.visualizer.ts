@@ -40,6 +40,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	// todo: select extent by map id from store
 	updateLayerScale$ = this.store$.select(selectMapPositionByMapId(this.mapId)).pipe(
 		debounceTime(500),
+		filter(Boolean),
 		mergeMap((position: ImageryMapPosition) => {
 			// used squareGrid to get the extent grid
 			this.currentExtent = position.extentPolygon;

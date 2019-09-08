@@ -36,7 +36,7 @@ describe('ImageryContainerComponent', () => {
 					inputs: ['settings']
 				}),
 				MockComponent({
-					selector: 'ansyn-imagery-rotation',
+					selector: 'ansyn-floating-menu',
 					inputs: ['mapState']
 				}),
 				MockComponent({

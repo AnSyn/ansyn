@@ -35,6 +35,7 @@ import { AnsynPluginsModule } from './modules/plugins/ansyn-plugins.module';
 import { StatusBarModule } from './modules/status-bar/status-bar.module';
 import { TranslateService } from '@ngx-translate/core';
 import { ImageryZoomerComponent } from './modules/plugins/components/imagery-zoomer/imagery-zoomer.component';
+import { ImageryDimensionModeComponent } from './modules/plugins/components/imagery-dimension-mode/imagery-dimension-mode.component';
 
 @NgModule({
 	imports: [
@@ -57,8 +58,9 @@ import { ImageryZoomerComponent } from './modules/plugins/components/imagery-zoo
 		AppEffectsModule,
 		MapFacadeModule.provide({
 			entryComponents: {
-				container: [AnnotationContextMenuComponent, AngleFilterComponent, ImageryZoomerComponent],
-				status: []
+				container: [AnnotationContextMenuComponent, AngleFilterComponent],
+				status: [],
+				floating_menu: [ImageryZoomerComponent, ImageryDimensionModeComponent]
 			}
 		}),
 		ImageryModule,
@@ -78,14 +80,15 @@ import { ImageryZoomerComponent } from './modules/plugins/components/imagery-zoo
 		{ provide: UrlSerializer, useClass: DefaultUrlSerializer }
 	],
 	entryComponents: [
-		OverlayOutOfBoundsComponent, ImageryZoomerComponent
+		OverlayOutOfBoundsComponent, ImageryZoomerComponent, ImageryDimensionModeComponent
 	],
 	declarations: [
 		AnsynComponent,
 		OverlayOutOfBoundsComponent,
 		UnsupportedDevicesComponent,
 		AnsynFooterComponent,
-		ImageryZoomerComponent
+		ImageryZoomerComponent,
+		ImageryDimensionModeComponent
 	],
 	exports: [AnsynComponent, UnsupportedDevicesComponent]
 })

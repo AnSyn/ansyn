@@ -22,6 +22,7 @@ import { TranslateModule } from '@ngx-translate/core';
 			entryComponents: {
 				container: [MeasureControlComponent],
 				status: [],
+				floating_menu: []
 			}
 		}),
 		GoToModule,

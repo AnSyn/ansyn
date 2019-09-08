@@ -1,0 +1,9 @@
+<div>
+	<ansyn-imagery-rotation [mapState]="mapState"></ansyn-imagery-rotation>
+
+	<ng-container
+		*ngFor="let component of entryComponents.floating_menu"
+		[ansynEntryComponent]="{ component: component , mapId: mapState.id }">
+	</ng-container>
+</div>
+

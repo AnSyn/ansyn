@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImageryModule } from '@ansyn/imagery';
-import { ImageryDimensionModeComponent } from '../components/imagery-dimension-mode/imagery-dimension-mode.component';
 import {
 	CesiumBINGSourceProvider,
 	CesiumGeoServerSourceProvider,
@@ -15,9 +14,9 @@ import { NorthCalculationsPlugin } from './plugins/north-calculations/north-calc
 import { MouseMarkerPlugin } from './plugins/mouse-marker/mouse-marker.plugin';
 
 @NgModule({
-	declarations: [ImageryDimensionModeComponent],
-	entryComponents: [ImageryDimensionModeComponent],
-	exports: [ImageryDimensionModeComponent],
+	declarations: [],
+	entryComponents: [],
+	exports: [],
 	imports: [
 		CommonModule,
 		ImageryModule.provide({
@@ -36,8 +35,9 @@ import { MouseMarkerPlugin } from './plugins/mouse-marker/mouse-marker.plugin';
 		}),
 		MapFacadeModule.provide({
 			entryComponents: {
-				container: [ImageryDimensionModeComponent],
-				status: []
+				container: [],
+				status: [],
+				floating_menu: []
 			}
 		})
 	]

@@ -30,7 +30,8 @@ import { SentinelComboBoxComponent } from './sentinel-combo-box/sentinel-combo-b
 		MapFacadeModule.provide({
 			entryComponents: {
 				container: [SentinelComboBoxComponent],
-				status: []
+				status: [],
+				floating_menu: []
 			}
 		}),
 		OverlaysModule.provide({

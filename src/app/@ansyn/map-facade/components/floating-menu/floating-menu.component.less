@@ -1,0 +1,19 @@
+@import "ansyn/less/colors";
+@import "ansyn/less/z-index-globals";
+
+@size: 84px;
+
+:host {
+	position: absolute;
+	z-index: @z-index-map-rotation;
+	top: 20px;
+	right: 20px;
+	text-align: center;
+	user-select: none;
+	width: @size;
+
+	div {
+		display: flex;
+		flex-direction: column;
+	}
+}

@@ -470,7 +470,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		this.mapObject.camera.zoomOut();
 	}
 
-	resetZoom(): void {
+	one2one(): void {
 		this.mapObject.resolutionScale = 1
 	}
 

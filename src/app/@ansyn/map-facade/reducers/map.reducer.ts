@@ -202,10 +202,11 @@ export const selectLayout: MemoizedSelector<any, LayoutKey> = createSelector(map
 export const selectWasWelcomeNotificationShown = createSelector(mapStateSelector, (state) => state.wasWelcomeNotificationShown);
 export const selectToastMessage = createSelector(mapStateSelector, (state) => state.toastMessage);
 export const selectFooterCollapse = createSelector(mapStateSelector, (state) => state.footerCollapse);
-export const selectMapStateById = (id: string) => createSelector(selectMaps, (maps) => maps[id]);
-export const selectOverlayFromMap = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.overlay);
-export const selectDisplayLayersOnMap = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.flags.displayLayers);
 export const selectOverlaysWithMapIds = createSelector(selectMapsList, selectActiveMapId, (mapsList, activeMapId) => {
 	const overlayAndMapId = mapsList.map( map => map.data.overlay ? ({overlay: map.data.overlay, mapId: map.id, isActive: map.id === activeMapId}) : ({}));
 	return overlayAndMapId;
 });
+export const selectMapStateById = (id: string) => createSelector(selectMaps, (maps) => maps[id]);
+export const selectOverlayFromMap = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.overlay);
+export const selectDisplayLayersOnMap = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.flags.displayLayers);
+export const selectPositionOfMap = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.position);

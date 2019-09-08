@@ -1,9 +1,9 @@
 import { Store } from '@ngrx/store';
 import { HttpClient } from '@angular/common/http';
 import { Feature, FeatureCollection, Polygon } from 'geojson';
-import { catchError, debounceTime, map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, debounceTime, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { combineLatest, forkJoin, Observable, of, Subscription } from 'rxjs';
-import { selectDisplayLayersOnMap, selectMaps, SetToastMessageAction } from '@ansyn/map-facade';
+import { selectDisplayLayersOnMap, selectMaps, selectPositionOfMap, SetToastMessageAction } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
 import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
 import { ILayer, layerPluginTypeEnum } from '../../../../menu-items/layers-manager/models/layers.model';
@@ -12,7 +12,7 @@ import { ICaseMapState } from '../../../../menu-items/cases/models/case.model';
 import { Dictionary } from '@ngrx/entity';
 import { booleanContains, intersect } from '@turf/turf';
 import {
-	getPolygonIntersectionRatioWithMultiPolygon,
+	getPolygonIntersectionRatioWithMultiPolygon, ImageryMapPosition,
 	ImageryPlugin,
 	IMapSettings,
 	IVisualizerEntity
@@ -30,6 +30,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	updateLayersOnMap$ = combineLatest(this.store$.select(selectDisplayLayersOnMap(this.mapId)), this.store$.select(selectSelectedLayersIds))
 		.pipe(
 			withLatestFrom(this.store$.select(selectLayers)),
+			filter(([[isHidden, layersId], layers]: [[boolean, string[]], ILayer[]]) => Boolean(layers)),
 			mergeMap(([[isHidden, layersId], layers]) => {
 				const filteredLayers = layers.filter(this.isGeoJsonLayer);
 				return forkJoin(
@@ -39,14 +40,16 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 			})
 		);
 
+	protected subscriptions: Subscription[] = [];
+
+
 	// todo: return auto-subscription when the bug is fixed
 	// todo: select extent by map id from store
-	updateLayerScale$ = this.store$.select(selectMaps).pipe(
+	updateLayerScale$ =  this.store$.select(selectPositionOfMap(this.mapId)).pipe(
 		debounceTime(500),
-		mergeMap((mapState: Dictionary<ICaseMapState>) => {
-			const mapSettings: IMapSettings = mapState[this.mapId];
+		mergeMap((position: ImageryMapPosition) => {
 			// used squareGrid to get the extent grid
-			this.currentExtent = mapSettings.data.position.extentPolygon;
+			this.currentExtent = position.extentPolygon;
 			const entities = [];
 			this.showedLayersDictionary.forEach((layerId) => {
 				const layerEntities = this.getLayerEntities(layerId);
@@ -55,7 +58,6 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 			return this.setEntities(entities);
 		})
 	);
-	protected subscriptions: Subscription[] = [];
 
 	constructor(protected store$: Store<any>,
 				protected http: HttpClient) {
@@ -150,7 +152,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 				);
 		}
 		// todo: deprecated
-		return Observable.create((observer) => {
+		return new Observable((observer) => {
 			this.showedLayersDictionary = this.showedLayersDictionary.filter((id) => layer.name !== id);
 			if (this.layersDictionary[layer.name]) {
 				this.layersDictionary[layer.name].forEach((entity) => {

@@ -2,14 +2,13 @@ import {
 	BaseImageryPlugin,
 	getPolygonIntersectionRatioWithMultiPolygon,
 	ImageryMapPosition,
-	ImageryPlugin,
-	IMapSettings
+	ImageryPlugin
 } from '@ansyn/imagery';
 import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ol';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
-import { selectMapStateById } from '@ansyn/map-facade';
-import { map, tap } from 'rxjs/operators';
+import { selectOverlayFromMap, selectPositionOfMap } from '@ansyn/map-facade';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { AlertMsgTypes } from '../../../alerts/model';
 import { AddAlertMsg, RemoveAlertMsg } from '../../../overlays/overlay-status/actions/overlay-status.actions';
@@ -35,10 +34,12 @@ export class AlertsPlugin extends BaseImageryPlugin {
 	}
 
 	@AutoSubscription
-	positionChange$: () => Observable<RemoveAlertMsg | AddAlertMsg | IMapSettings> = () => this.store$.select(selectMapStateById(this.mapId))
+	positionChange$ = () => combineLatest(this.store$.select(selectPositionOfMap(this.mapId)), this.store$.select(selectOverlayFromMap(this.mapId)))
 		.pipe(
-			map((mapState) => this.positionChanged(mapState.data.position, mapState.data.overlay)),
-			tap((action) => this.store$.dispatch(<any>action))
+			switchMap(([position, overlay]) => {
+				const actions = [this.positionChanged(position, overlay)];
+				return actions.map( action => this.store$.dispatch(action))
+			}),
 		);
 
 	setOverlaysNotInCase([overlays, filteredOverlays]: [Map<string, IOverlay>, string[]]): RemoveAlertMsg | AddAlertMsg {

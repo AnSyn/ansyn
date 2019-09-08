@@ -1,12 +1,11 @@
-import { Component, Input, OnDestroy, OnInit, HostBinding } from '@angular/core';
-import { Store, select } from '@ngrx/store';
+import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
+import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
 import { IEntryComponent, selectMaps } from '@ansyn/map-facade';
 import { ISentinelLayer, selectSentinelLayers, selectSentinelselectedLayers } from '../reducers/sentinel.reducer';
 import { SetSentinelLayerOnMap } from '../actions/sentinel.actions';
 import { get as _get } from 'lodash';
-import { ICaseMapState } from '@ansyn/ansyn';
 import { SentinelOverlaySourceType } from '../sentinel-source-provider';
 import { IMapSettings } from '@ansyn/imagery';
 

@@ -2,21 +2,22 @@ import { Component, ElementRef, HostBinding, HostListener, Inject, OnInit, Rende
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import {
-	IMapState,
-	mapStateSelector,
 	ContextMenuDisplayAction,
 	ContextMenuShowAction,
+	ContextMenuShowAngleFilter,
 	ContextMenuTriggerAction,
-	MapFacadeService,
+	IAngleFilterClick,
+	IMapFacadeConfig,
+	IMapState,
 	MapActionTypes,
 	mapFacadeConfig,
-	IMapFacadeConfig
+	MapFacadeService,
+	mapStateSelector
 } from '@ansyn/map-facade';
 import { uniq as _uniq } from 'lodash';
 import { Point } from 'geojson';
 import { Actions, ofType } from '@ngrx/effects';
 import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/operators';
-import { ContextMenuShowAngleFilter, IAngleFilterClick } from '@ansyn/map-facade';
 import { selectRegion } from '../../../overlays/reducers/overlays.reducer';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { CaseGeoFilter, ICaseMapState } from '../../../menu-items/cases/models/case.model';
@@ -64,7 +65,7 @@ export class ContextMenuComponent implements OnInit {
 	prevSensors = [];
 	allSensors = [];
 	angleFilter: IAngleFilterClick = {
-		click: {x: 0, y: 0},
+		click: { x: 0, y: 0 },
 		overlays: [],
 		displayedOverlay: undefined,
 		point: null
@@ -185,15 +186,15 @@ export class ContextMenuComponent implements OnInit {
 	setAngleFilter([action, displayedOverlay]: [ContextMenuShowAction, IOverlay]) {
 		this.angleFilter.click.x = action.payload.event.x;
 		this.angleFilter.click.y = action.payload.event.y;
-		this.angleFilter.overlays = action.payload.overlays.filter( overlay => overlay.sensorLocation);
+		this.angleFilter.overlays = action.payload.overlays.filter(overlay => overlay.sensorLocation);
 		this.angleFilter.point = action.payload.point;
 		this.angleFilter.displayedOverlay = displayedOverlay;
 	}
 
 	show(action: ContextMenuShowAction) {
 		this.point = action.payload.point;
-		this.renderer.setStyle(this.elem.nativeElement, 'top', `${action.payload.event.y}px`);
-		this.renderer.setStyle(this.elem.nativeElement, 'left', `${action.payload.event.x}px`);
+		this.renderer.setStyle(this.elem.nativeElement, 'top', `${ action.payload.event.y }px`);
+		this.renderer.setStyle(this.elem.nativeElement, 'left', `${ action.payload.event.x }px`);
 		this.elem.nativeElement.focus();
 	}
 
@@ -279,7 +280,7 @@ export class ContextMenuComponent implements OnInit {
 	isDisabled(subList: string) {
 		if (subList === 'angleFilter') {
 			return !this[subList] || this[subList].overlays.length === 0;
-		}else {
+		} else {
 			return !this[subList] || this[subList].length === 0;
 		}
 	}

@@ -1,10 +1,9 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ImageryCommunicatorService, bboxFromGeoJson, IMapSettings } from '@ansyn/imagery';
+import { bboxFromGeoJson, ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import { take, tap } from 'rxjs/operators';
 import { IEntryComponent, selectMaps } from '@ansyn/map-facade';
-import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
-import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
-import { Store, select } from '@ngrx/store';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Dictionary } from '@ngrx/entity';
 

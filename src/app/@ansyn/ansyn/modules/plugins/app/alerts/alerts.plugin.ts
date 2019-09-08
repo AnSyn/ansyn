@@ -4,13 +4,12 @@ import {
 	ImageryMapPosition,
 	ImageryPlugin
 } from '@ansyn/imagery';
-import { OpenLayersMap, OpenLayersDisabledMap } from '@ansyn/ol';
+import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ol';
 import { select, Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
 import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
 import { debounceTime, filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
-import { bboxPolygon, intersect } from '@turf/turf';
 import { AlertMsgTypes } from '../../../alerts/model';
 import { AddAlertMsg, RemoveAlertMsg } from '../../../overlays/overlay-status/actions/overlay-status.actions';
 import { selectDrops } from '../../../overlays/reducers/overlays.reducer';
@@ -18,7 +17,6 @@ import { isFullOverlay } from '../../../core/utils/overlays';
 import { ICaseMapState } from '../../../menu-items/cases/models/case.model';
 import { IOverlayDrop } from '../../../overlays/models/overlay.model';
 import { CesiumMap } from '@ansyn/imagery-cesium';
-import { Polygon } from 'geojson';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap, CesiumMap],

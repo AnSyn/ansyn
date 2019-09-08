@@ -16,17 +16,16 @@ import {
 	selectMaps,
 	selectMapsList,
 	SetIsLoadingAcion,
+	SetToastMessageAction,
+	ToggleMapLayersAction,
 	UpdateMapAction
 } from '@ansyn/map-facade';
 import {
-	ToggleMapLayersAction,
-	SetToastMessageAction
-} from '@ansyn/map-facade'
-import {
 	BaseMapSourceProvider,
+	bboxFromGeoJson,
 	CommunicatorEntity,
 	ImageryCommunicatorService,
-	bboxFromGeoJson, IMapSettings
+	IMapSettings
 } from '@ansyn/imagery';
 import {
 	catchError,
@@ -49,13 +48,17 @@ import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity/src/models';
 import {
 	SetManualImageProcessing,
-	SetMapGeoEnabledModeToolsActionStore, ToolsActionsTypes, UpdateOverlaysManualProcessArgs
+	SetMapGeoEnabledModeToolsActionStore,
+	ToolsActionsTypes,
+	UpdateOverlaysManualProcessArgs
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
-	DisplayOverlaySuccessAction, OverlaysActionTypes,
-	RequestOverlayByIDFromBackendAction, SetMarkUp
+	DisplayOverlaySuccessAction,
+	OverlaysActionTypes,
+	RequestOverlayByIDFromBackendAction,
+	SetMarkUp
 } from '../../modules/overlays/actions/overlays.actions';
 import { GeoRegisteration } from '../../modules/overlays/models/overlay.model';
 import {
@@ -135,7 +138,7 @@ export class MapAppEffects {
 			map(([action, entities]: [ImageryCreatedAction, Dictionary<ICaseMapState>]) => entities[action.payload.id]),
 			filter((caseMapState: ICaseMapState) => Boolean(caseMapState && caseMapState.data.overlay)),
 			map((caseMapState: ICaseMapState) => {
-				startTimingLog(`LOAD_OVERLAY_${caseMapState.data.overlay.id}`);
+				startTimingLog(`LOAD_OVERLAY_${ caseMapState.data.overlay.id }`);
 				return new DisplayOverlayAction({
 					overlay: caseMapState.data.overlay,
 					mapId: caseMapState.id,
@@ -165,7 +168,7 @@ export class MapAppEffects {
 	overlayLoadingFailed$: Observable<any> = this.actions$
 		.pipe(
 			ofType<DisplayOverlayFailedAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED),
-			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${action.payload.id}`)),
+			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${ action.payload.id }`)),
 			map(() => new SetToastMessageAction({
 				toastText: toastMessages.showOverlayErrorToast,
 				showWarningIcon: true

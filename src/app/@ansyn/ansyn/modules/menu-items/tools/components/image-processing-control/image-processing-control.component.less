@@ -36,10 +36,12 @@
 	transition-delay: 0s;
 	z-index: @z-index-image-processing-control;
 	color: white;
+
 	&.expand {
 		width: @tools-box-width;
 		height: @tools-box-height;
 		transition-delay: 0.1s;
+
 		div.image-processing-container {
 			padding: 0 20px;
 			visibility: visible;
@@ -48,38 +50,47 @@
 			flex-direction: column;
 		}
 	}
+
 	div.image-processing-container {
 		transition-delay: 0.05s;
 		visibility: hidden;
+
 		.title-wrapper {
 			display: flex;
 			margin: 10px 0;
+
 			.title {
 				font-size: 13px;
 				width: 100px;
 			}
+
 			.resetAll {
 				margin-left: auto;
 				color: @background-color-7;
 				margin-top: 5px;
 				font-size: 9px;
 				cursor: pointer;
+
 				&:hover {
 					cursor: pointer;
 					color: @background-color-11;
-				} 
+				}
 			}
 		}
+
 		ul.image-processing-options {
 			padding: 0;
+
 			li {
 				list-style-type: none;
 				font-size: 12px;
 				margin-bottom: 16px;
+
 				.input-wrapper {
 					display: flex;
-					
+
 				}
+
 				button {
 					vertical-align: top;
 					background: transparent;
@@ -89,11 +100,13 @@
 					margin-left: auto;
 					color: @background-color-7;
 					font-size: 9px;
+
 					&:hover {
 						cursor: pointer;
 						color: @background-color-11;
 					}
 				}
+
 				.track() {
 					width: @track-width;
 					height: @track-height;
@@ -116,6 +129,7 @@
 					margin: @thumb-size/2 0;
 					width: @track-width;
 					background-color: transparent;
+
 					&:focus {
 						outline: none;
 					}
@@ -143,6 +157,7 @@
 						border-radius: @track-radius;
 						border: @track-border-width solid @track-border-color;
 					}
+
 					&::-moz-range-thumb {
 						.thumb();
 					}
@@ -160,21 +175,25 @@
 						border: @track-border-width solid @track-border-color;
 						border-radius: @track-radius*2;
 					}
+
 					&::-ms-fill-upper {
 						background: @track-color;
 						border: @track-border-width solid @track-border-color;
 						border-radius: @track-radius*2;
 					}
+
 					&::-ms-thumb {
 						.thumb();
 					}
+
 					&:focus::-ms-fill-lower {
 						background: @track-color;
 					}
+
 					&:focus::-ms-fill-upper {
 						background: lighten(@track-color, @contrast);
 					}
-					
+
 				}
 			}
 		}

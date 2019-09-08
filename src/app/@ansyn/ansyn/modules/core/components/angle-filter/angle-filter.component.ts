@@ -5,7 +5,7 @@ import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Point } from 'geojson';
-import { debounceTime, map, tap, filter } from 'rxjs/operators';
+import { debounceTime, filter, map, tap } from 'rxjs/operators';
 import { DisplayOverlayAction, SetHoveredOverlayAction, SetMarkUp } from '../../../overlays/actions/overlays.actions';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { MarkUpClass, selectDropMarkup } from '../../../overlays/reducers/overlays.reducer';
@@ -15,7 +15,9 @@ export interface IAngle {
 	degreeFromPoint: number;
 	distanceFromPoint: number;
 }
+
 const WORLD_RADIUS = 6371e3;
+
 @Component({
 	selector: 'ansyn-angle-filter',
 	templateUrl: './angle-filter.component.html',
@@ -38,11 +40,11 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 
 	@AutoSubscription
 	onHoverFootprintOrTimeline = this.store$.select(selectDropMarkup).pipe(
-		map( (drops) => drops.get(MarkUpClass.hover)),
-		filter( hovers => Boolean(this.overlaysAngles && this.overlaysAngles.length)),
-		tap( hovers => this.hoverOverlay = hovers.overlaysIds[0])
-
+		map((drops) => drops.get(MarkUpClass.hover)),
+		filter(hovers => Boolean(this.overlaysAngles && this.overlaysAngles.length)),
+		tap(hovers => this.hoverOverlay = hovers.overlaysIds[0])
 	);
+
 	setAnglesToOverlays(overlays: IOverlay[]) {
 		const pointLat = this.getLatFromPoint(this.point, true);
 		const pointLong = this.getLongFromPoint(this.point, true);
@@ -52,7 +54,7 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 			const centerLong = this.getLongFromPoint(center, true);
 			const longDelta = centerLong - pointLong;
 			const latDelta = centerLat - pointLat;
-			const a = Math.sin(latDelta / 2) * Math.sin(latDelta / 2) + Math.cos(pointLat) * Math.cos(centerLat) * Math.sin(longDelta / 2 ) * Math.sin( longDelta / 2);
+			const a = Math.sin(latDelta / 2) * Math.sin(latDelta / 2) + Math.cos(pointLat) * Math.cos(centerLat) * Math.sin(longDelta / 2) * Math.sin(longDelta / 2);
 			const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 			const d = WORLD_RADIUS * c;
 			const y = Math.sin(longDelta) * Math.cos(centerLat);
@@ -99,8 +101,8 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 		this.point = action.payload.point;
 		this.overlay = action.payload.displayedOverlay;
 		this.setAnglesToOverlays(action.payload.overlays);
-		this.renderer.setStyle(this.elem.nativeElement, 'top', `${action.payload.click.y}px`);
-		this.renderer.setStyle(this.elem.nativeElement, 'left', `${action.payload.click.x}px`);
+		this.renderer.setStyle(this.elem.nativeElement, 'top', `${ action.payload.click.y }px`);
+		this.renderer.setStyle(this.elem.nativeElement, 'left', `${ action.payload.click.x }px`);
 		this.elem.nativeElement.focus();
 	}
 

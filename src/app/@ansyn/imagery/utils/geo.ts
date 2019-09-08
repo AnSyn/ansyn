@@ -8,20 +8,24 @@ import {
 	Polygon
 } from 'geojson';
 import {
+	AllGeoJSON,
+	area,
 	bbox,
 	bboxPolygon,
+	booleanContains,
 	centerOfMass,
 	circle,
 	feature,
 	geometry,
-	lineString,
+	intersect,
 	point,
+	polygon,
 	union,
-	AllGeoJSON,
-	unkinkPolygon, area, intersect, polygon, booleanContains
+	unkinkPolygon
 } from '@turf/turf';
 
 export type BBOX = [number, number, number, number] | [number, number, number, number, number, number];
+
 export function getPolygonByPoint(lonLat: number[]): Feature<Polygon> {
 	return bboxPolygon(bbox(point(lonLat)));
 }

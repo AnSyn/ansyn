@@ -3,22 +3,22 @@
 	<!-- data input filter-->
 	<div class="combo-box-container block hidden-medium-resolution">
 		<button ansynComboBoxTrigger
-			#trigger
-			class="combo-box-width"
-			(click)="toggleDataInputFilterIcon()"
-			icon="icon-input-filter"
-			[isActive]="dataInputFilterExpand"
-			[attr.tooltip-value]="toolTips.dataInputFilter | translate"
-			tooltip-class="top">
+                #trigger
+				class="combo-box-width"
+				(click)="toggleDataInputFilterIcon()"
+				icon="icon-input-filter"
+				[isActive]="dataInputFilterExpand"
+				[attr.tooltip-value]="toolTips.dataInputFilter | translate"
+				tooltip-class="top">
 			<span class="render">{{ dataInputFiltersTitle | translate}}</span>
 		</button>
 
 		<ansyn-tree-view
-						 *ngIf="dataInputFilterExpand"
-						 (ansynClickOutside)="toggleDataInputFilterIcon()"
-						 [trigger]="trigger.optionsTrigger.nativeElement"
-						 (closeTreeView)="toggleDataInputFilterIcon()"
-						 class="ansyn-tree-view"></ansyn-tree-view>
+			*ngIf="dataInputFilterExpand"
+			(ansynClickOutside)="toggleDataInputFilterIcon()"
+			[trigger]="trigger.optionsTrigger.nativeElement"
+			(closeTreeView)="toggleDataInputFilterIcon()"
+			class="ansyn-tree-view"></ansyn-tree-view>
 	</div>
 
 	<!-- Orientation -->
@@ -129,7 +129,7 @@
 			(ngModelChange)="layoutSelectChange($event)">
 
 			<ansyn-combo-box-option *ngFor="let layout of layouts; index as index" [value]="layout">
-				<i class="icon-screen-{{index + 1}}" ></i>
+				<i class="icon-screen-{{index + 1}}"></i>
 			</ansyn-combo-box-option>
 
 		</ansyn-combo-box>

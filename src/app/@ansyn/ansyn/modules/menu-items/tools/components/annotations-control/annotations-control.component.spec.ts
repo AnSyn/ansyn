@@ -7,8 +7,6 @@ import { AnnotationSetProperties, SetAnnotationMode } from '../../actions/tools.
 import { AnnotationMode, AnnotationsColorComponent, AnnotationsWeightComponent, ColorPickerComponent } from '@ansyn/ol';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { TranslateModule } from '@ngx-translate/core';
-import { ComboBoxComponent } from '../../../../core/forms/combo-box/combo-box.component';
-import { ComboBoxOptionComponent } from '../../../../core/forms/combo-box-option/combo-box-option.component';
 import { MockComponent } from '../../../../core/test/mock-component';
 
 const mockComboBoxOptionComponent = MockComponent({
@@ -93,7 +91,7 @@ describe('AnnotationsControlComponent', () => {
 
 	it('change stroke color', () => {
 		const strokeColor = 'white';
-		component.colorChange({event: strokeColor, label: 'stroke'});
+		component.colorChange({ event: strokeColor, label: 'stroke' });
 		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties({
 			'stroke': strokeColor
 		}));
@@ -101,7 +99,7 @@ describe('AnnotationsControlComponent', () => {
 
 	it('change fill color', () => {
 		const fill = 'black';
-		component.colorChange({event: fill, label: 'fill'});
+		component.colorChange({ event: fill, label: 'fill' });
 		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties({
 			fill,
 			'marker-color': fill

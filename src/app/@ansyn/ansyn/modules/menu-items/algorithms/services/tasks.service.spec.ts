@@ -9,10 +9,10 @@ describe('TasksService', () => {
 		TestBed.configureTestingModule({
 			providers: [
 				TasksService,
-				{ provide: 'algorithmsConfig', useValue: {}},
-				{ provide: StorageService, useValue: {}},
-				{ provide: OverlaysService, useValue: {}},
-				{ provide: ErrorHandlerService, useValue: {}}
+				{ provide: 'algorithmsConfig', useValue: {} },
+				{ provide: StorageService, useValue: {} },
+				{ provide: OverlaysService, useValue: {} },
+				{ provide: ErrorHandlerService, useValue: {} }
 			]
 		});
 	});

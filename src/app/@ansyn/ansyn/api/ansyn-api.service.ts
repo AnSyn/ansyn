@@ -1,15 +1,18 @@
 import { EventEmitter, Inject, Injectable, NgModuleRef } from '@angular/core';
 import { ImageryCommunicatorService, ImageryMapPosition, IMapSettings } from '@ansyn/imagery';
 import {
+	ICoordinatesSystem,
 	LayoutKey,
 	MapActionTypes,
+	ProjectionConverterService,
 	selectActiveMapId,
 	selectMaps,
 	selectMapsList,
 	SetLayoutAction,
 	SetMapPositionByRadiusAction,
 	SetMapPositionByRectAction,
-	ShadowMouseProducer, ToggleFooter, ICoordinatesSystem
+	ShadowMouseProducer,
+	ToggleFooter
 } from '@ansyn/map-facade';
 import { Actions, ofType } from '@ngrx/effects';
 import { Dictionary } from '@ngrx/entity/src/models';
@@ -19,8 +22,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { FeatureCollection, Point, Polygon } from 'geojson';
 import { cloneDeep } from 'lodash';
 import { combineLatest, Observable } from 'rxjs';
-import { map, tap, withLatestFrom, take } from 'rxjs/operators';
-import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
+import { map, take, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	AddLayer,
 	RemoveLayer,
@@ -38,7 +40,6 @@ import {
 	SetActiveCenter,
 	ToolsActionsTypes
 } from '../modules/menu-items/tools/actions/tools.actions';
-import { ProjectionConverterService } from '@ansyn/map-facade';
 import {
 	DisplayOverlayAction,
 	LoadOverlaysSuccessAction,
@@ -265,7 +266,7 @@ export class AnsynApi {
 			console.error('failed to show layer - invalid layerId ', layerId);
 			return;
 		}
-		this.store.dispatch(new SetLayerSelection({ id: layerId, value: show}));
+		this.store.dispatch(new SetLayerSelection({ id: layerId, value: show }));
 	}
 
 	private generateFeaturesIds(annotationsLayer): void {

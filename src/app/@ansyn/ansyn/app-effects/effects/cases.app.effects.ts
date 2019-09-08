@@ -1,18 +1,18 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { IMapState, mapStateSelector, UpdateMapAction } from '@ansyn/map-facade';
-import { SetToastMessageAction } from '@ansyn/map-facade';
+import { IMapState, mapStateSelector, SetToastMessageAction, UpdateMapAction } from '@ansyn/map-facade';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpErrorResponse } from '@angular/common/http';
-import { uniqBy, mapValues } from 'lodash';
+import { mapValues, uniqBy } from 'lodash';
 import { IAppState } from '../app.effects.module';
-import { catchError, map, mergeMap, withLatestFrom, tap } from 'rxjs/operators';
-import { Inject } from '@angular/core';
+import { catchError, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	CasesActionTypes,
-	LoadDefaultCaseIfNoActiveCaseAction, SelectCaseAction, SelectDilutedCaseAction
+	LoadDefaultCaseIfNoActiveCaseAction,
+	SelectCaseAction,
+	SelectDilutedCaseAction
 } from '../../modules/menu-items/cases/actions/cases.actions';
 import { IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { IToolsState, toolsStateSelector } from '../../modules/menu-items/tools/reducers/tools.reducer';

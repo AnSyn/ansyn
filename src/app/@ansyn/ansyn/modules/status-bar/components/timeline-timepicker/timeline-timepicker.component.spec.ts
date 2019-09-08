@@ -1,7 +1,6 @@
 import { TimelineTimepickerComponent } from './timeline-timepicker.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { EMPTY } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 describe('TimelineTimepickerComponent', () => {

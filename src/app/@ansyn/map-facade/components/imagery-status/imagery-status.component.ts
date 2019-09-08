@@ -2,7 +2,6 @@ import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit,
 import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import { Dictionary } from '@ngrx/entity';
 import { select, Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { get as _get } from 'lodash'
 import { Observable } from 'rxjs';
@@ -28,13 +27,14 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	_mapId: string;
 	_entryComponents: IEntryComponentsEntities;
 	@HostBinding('class.active') isActiveMap: boolean;
+
 	@Input()
 	set mapId(value: string) {
 		this._mapId = value;
 		/* force angular to rerender the *ngFor content that binding to this arrays
 		 * so they get the new mapId	 */
-		this._entryComponents = {status: [], container: []};
-		setTimeout(() => this._entryComponents = {...this.entryComponents})
+		this._entryComponents = { status: [], container: [] };
+		setTimeout(() => this._entryComponents = { ...this.entryComponents })
 	}
 
 
@@ -91,7 +91,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	get description() {
 		const ActiveMap = _get(this.communicators.provide(this.mapId), 'ActiveMap');
-		const { description } = (ActiveMap && ActiveMap.getExtraData()) || <any> {};
+		const { description } = (ActiveMap && ActiveMap.getExtraData()) || <any>{};
 		return description ? description : this.overlay ? this.getFormattedTime(this.overlay.photoTime) : null;
 	}
 
@@ -105,7 +105,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 			return this.baseMapDescription;
 		}
 		const catalogId = (<any>this.overlay).catalogID ? (' catalogId ' + (<any>this.overlay).catalogID) : '';
-		return `${this.description} ${this.translatedOverlaySensorName}${catalogId}`;
+		return `${ this.description } ${ this.translatedOverlaySensorName }${ catalogId }`;
 	}
 
 	// @todo refactor
@@ -148,6 +148,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	toggleMapLayers() {
-		this.store$.dispatch(new ToggleMapLayersAction({mapId: this.mapId}));
+		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId }));
 	}
 }

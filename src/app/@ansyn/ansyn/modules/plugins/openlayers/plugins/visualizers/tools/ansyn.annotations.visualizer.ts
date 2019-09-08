@@ -1,4 +1,3 @@
-import { fromCircle } from 'ol/geom/Polygon';
 import { BaseImageryPlugin, ImageryPlugin, IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { uniq } from 'lodash';
 import { select, Store } from '@ngrx/store';

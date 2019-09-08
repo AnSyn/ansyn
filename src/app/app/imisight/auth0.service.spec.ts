@@ -10,7 +10,7 @@ describe('Auth0Service', () => {
 			providers: [
 				Auth0Service,
 				{
-					provide: ImisightOverlaySourceConfig, useValue: <IImisightOverlaySourceConfig> {
+					provide: ImisightOverlaySourceConfig, useValue: <IImisightOverlaySourceConfig>{
 						baseUrl: 'imisight.com',
 					}
 				},

@@ -1,13 +1,12 @@
 import { Store } from '@ngrx/store';
 import TileLayer from 'ol/layer/Tile';
-import { filter, map, tap, debounceTime, distinctUntilChanged, withLatestFrom } from 'rxjs/operators';
-import { combineLatest, Observable, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
 import { BaseImageryPlugin } from '@ansyn/imagery';
 import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
-import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '@ansyn/ol';
 import { ILayer } from '../../../../menu-items/layers-manager/models/layers.model';
-import { selectSelectedLayersIds, selectLayers } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
+import { selectLayers, selectSelectedLayersIds } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
 import { ICaseMapState } from '../../../../menu-items/cases/models/case.model';
 
 export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {

@@ -4,7 +4,8 @@ import { Action, select, Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
 import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import {
-	IMapState, MapActionTypes,
+	IMapState,
+	MapActionTypes,
 	MapFacadeService,
 	mapStateSelector,
 	PinLocationModeTriggerAction,
@@ -33,8 +34,13 @@ import {
 	SetAutoImageProcessingSuccess,
 	SetManualImageProcessing,
 	SetMeasureDistanceToolState,
-	SetPinLocationModeAction, SetSubMenu,
-	ShowOverlaysFootprintAction, StartMouseShadow, StopMouseShadow, ToolsActionsTypes, UpdateToolsFlags
+	SetPinLocationModeAction,
+	SetSubMenu,
+	ShowOverlaysFootprintAction,
+	StartMouseShadow,
+	StopMouseShadow,
+	ToolsActionsTypes,
+	UpdateToolsFlags
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import {
@@ -235,8 +241,8 @@ export class ToolsAppEffects {
 	@Effect()
 	onCloseGoTo$ = this.actions$.pipe(
 		ofType<SetSubMenu>(ToolsActionsTypes.SET_SUB_MENU),
-		filter( action => Boolean(!action.payload)),
-		map( () => new SetPinLocationModeAction(false))
+		filter(action => Boolean(!action.payload)),
+		map(() => new SetPinLocationModeAction(false))
 	);
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>, protected imageryCommunicatorService: ImageryCommunicatorService,

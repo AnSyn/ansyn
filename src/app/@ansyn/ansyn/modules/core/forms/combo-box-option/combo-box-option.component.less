@@ -5,6 +5,7 @@
 	/* temporary */
 	position: relative;
 	z-index: 1;
+
 	&[disabled] {
 		opacity: .6;
 		pointer-events: none;
@@ -15,8 +16,10 @@
 			background-color: @background-color-3;
 			color: white;
 		}
+
 		&.selected {
 			color: @application-primary-color;
+
 			i {
 				opacity: 1;
 			}
@@ -41,6 +44,7 @@
 		text-align: left;
 		display: block;
 		align-items: center;
+
 		i {
 			align-text: center;
 			opacity: .8;

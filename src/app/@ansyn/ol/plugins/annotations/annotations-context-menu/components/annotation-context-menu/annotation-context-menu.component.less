@@ -96,8 +96,10 @@ i {
 						text-align: center;
 						transition: height 0.3s;
 						background: @background-color-3;
+
 						.item {
 							cursor: pointer;
+
 							&:hover, &.selected {
 								background-color: #297f9b;
 							}
@@ -141,18 +143,21 @@ i {
 			align-items: center;
 			padding: 0 15px;
 			box-sizing: border-box;
+
 			mat-form-field.label-form-field {
 				width: 100%;
 			}
 		}
 	}
 }
+
 @white-inactive: rgba(255, 255, 255, 0.8);
 .mat-form-field {
 	input {
 		caret-color: white;
 		color: white;
 	}
+
 	/deep/ .mat-form-field-label {
 		color: @white-inactive !important;
 	}

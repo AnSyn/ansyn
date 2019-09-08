@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ImageryZoomerService } from './imagery-zoomer.service';
-import { ImageryCommunicatorService } from "@ansyn/imagery";
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 
 describe('ImageryZoomerService', () => {
 	beforeEach(() => TestBed.configureTestingModule({

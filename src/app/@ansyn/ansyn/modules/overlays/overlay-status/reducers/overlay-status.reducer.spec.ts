@@ -1,8 +1,10 @@
 import { GeoRegisteration, IOverlay } from '../../models/overlay.model';
 import {
-	SetFavoriteOverlaysAction, SetPresetOverlaysAction,
-	ToggleFavoriteAction, SetRemovedOverlaysIdAction,
+	SetFavoriteOverlaysAction,
+	SetPresetOverlaysAction,
+	SetRemovedOverlaysIdAction,
 	SetRemovedOverlaysVisibilityAction,
+	ToggleFavoriteAction,
 	TogglePresetOverlayAction
 } from '../actions/overlay-status.actions';
 import { IOverlayStatusState, overlayStatusInitialState, OverlayStatusReducer } from './overlay-status.reducer';
@@ -29,7 +31,7 @@ describe('Overlay Status Reducer', () => {
 
 
 	it('should add overlay to favoriteOverlays', () => {
-		const action = new ToggleFavoriteAction({ id: o1.id, value: true, overlay: o1 })
+		const action = new ToggleFavoriteAction({ id: o1.id, value: true, overlay: o1 });
 		let result: IOverlayStatusState = OverlayStatusReducer(overlayStatusInitialState, action);
 		expect(result.favoriteOverlays.length).toBe(1);
 	});
@@ -52,7 +54,7 @@ describe('Overlay Status Reducer', () => {
 	});
 
 	it('should add overlay to presetOverlay', () => {
-		const action = new TogglePresetOverlayAction({id: o1.id, value: true, overlay: o1})
+		const action = new TogglePresetOverlayAction({ id: o1.id, value: true, overlay: o1 });
 		let result: IOverlayStatusState = OverlayStatusReducer(overlayStatusInitialState, action);
 		expect(result.presetOverlays.length).toBe(1);
 	});

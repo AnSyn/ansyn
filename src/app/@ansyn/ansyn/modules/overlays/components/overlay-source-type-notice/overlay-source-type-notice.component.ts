@@ -32,8 +32,9 @@ export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	footerCollapse$ = this.store$.select(selectFooterCollapse).pipe(
-		tap( (collapse) => this.footerCollapse = collapse)
+		tap((collapse) => this.footerCollapse = collapse)
 	);
+
 	set overlay(overlay: IOverlay) {
 		let sourceTypeConfig;
 		// Extract the title, according to the new overlay and the configuration

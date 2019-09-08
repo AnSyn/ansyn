@@ -4,11 +4,13 @@
 
 	&.white {
 		@white-inactive: rgba(255, 255, 255, 0.8);
+
 		.mat-form-field {
 			input {
 				caret-color: white;
 				color: white;
 			}
+
 			/deep/ .mat-form-field-label {
 				color: @white-inactive !important;
 			}
@@ -27,6 +29,7 @@
 		}
 
 	}
+
 	/deep/ .mat-focused .mat-form-field-label {
 		color: @background-color-3 !important;
 	}

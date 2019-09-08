@@ -12,7 +12,8 @@ import { cold, hot } from 'jasmine-marbles';
 import { menuFeatureKey, MenuReducer, SetBadgeAction } from '@ansyn/menu';
 import {
 	EnableOnlyFavoritesSelectionAction,
-	InitializeFiltersAction, InitializeFiltersSuccessAction
+	InitializeFiltersAction,
+	InitializeFiltersSuccessAction
 } from '../../modules/menu-items/filters/actions/filters.actions';
 import { EnumFilterMetadata } from '../../modules/menu-items/filters/models/metadata/enum-filter-metadata';
 import { FilterMetadata } from '../../modules/menu-items/filters/models/metadata/filter-metadata.interface';
@@ -25,7 +26,8 @@ import { GenericTypeResolverService } from '../../modules/core/services/generic-
 import {
 	LoadOverlaysAction,
 	SetDropsAction,
-	SetFilteredOverlaysAction, SetOverlaysStatusMessage
+	SetFilteredOverlaysAction,
+	SetOverlaysStatusMessage
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	OverlayReducer,
@@ -36,15 +38,16 @@ import { OverlaysService } from '../../modules/overlays/services/overlays.servic
 import { imageryStatusFeatureKey, ImageryStatusReducer } from '@ansyn/map-facade';
 import { FilterType } from '../../modules/menu-items/filters/models/filter-type';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
-import { TranslateModule, TranslateService, MissingTranslationHandler, USE_DEFAULT_LANG, TranslateLoader } from '@ngx-translate/core';
+import { MissingTranslationHandler, TranslateLoader, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
 
-class MockLoader implements TranslateLoader{
+class MockLoader implements TranslateLoader {
 	getTranslation(lang: string): Observable<any> {
 		return of({
 			'No overlays match your query, please try another search': 'No overlays match your query, please try another search'
 		})
 	}
 }
+
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
 	let actions: Observable<any>;
@@ -60,7 +63,7 @@ describe('Filters app effects', () => {
 	const filterKey4: IFilter = { modelName: 'SliderModel2', displayName: 'Slider Model2', type: FilterType.Slider };
 	const filters = new Map([[filterKey, filterMetadata], [filterKey2, filterMetadata2], [filterKey3, filterMetadata3], [filterKey4, filterMetadata4]]);
 
-	const favoriteOver = <IOverlay> {};
+	const favoriteOver = <IOverlay>{};
 	favoriteOver.id = '2';
 
 	beforeEach(async(() => {
@@ -74,7 +77,7 @@ describe('Filters app effects', () => {
 					[overlayStatusFeatureKey]: OverlayStatusReducer
 				}),
 				TranslateModule.forRoot({
-					loader: {provide: TranslateLoader, useClass: MockLoader}
+					loader: { provide: TranslateLoader, useClass: MockLoader }
 				})
 			],
 			providers: [
@@ -119,7 +122,7 @@ describe('Filters app effects', () => {
 	});
 
 	it('initializeFilters$ effect', () => {
-		actions = hot('--a--', { a: new LoadOverlaysAction(<any> {}) });
+		actions = hot('--a--', { a: new LoadOverlaysAction(<any>{}) });
 		const expectedResults = cold('--b--', { b: new InitializeFiltersAction() });
 		expect(filtersAppEffects.initializeFilters$).toBeObservable(expectedResults);
 	});
@@ -162,7 +165,7 @@ describe('Filters app effects', () => {
 	});
 
 	it('setShowFavoritesFlagOnFilters$', () => {
-		const overlays = [<IOverlay> {}, <IOverlay> {}];
+		const overlays = [<IOverlay>{}, <IOverlay>{}];
 		store.dispatch(new SetFavoriteOverlaysAction(overlays));
 		const expectedResults = cold('b', { b: new EnableOnlyFavoritesSelectionAction(true) });
 		expect(filtersAppEffects.setShowFavoritesFlagOnFilters$).toBeObservable(expectedResults);

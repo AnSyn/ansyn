@@ -7,16 +7,15 @@ import { cold, hot } from 'jasmine-marbles';
 import { HttpClientModule } from '@angular/common/http';
 import {
 	SetFavoriteOverlaysAction,
-	SetRemovedOverlaysIdsAction, SetRemovedOverlaysVisibilityAction,
-	SetPresetOverlaysAction, SetOverlaysTranslationDataAction, SetOverlaysScannedAreaDataAction
+	SetOverlaysScannedAreaDataAction,
+	SetOverlaysTranslationDataAction,
+	SetPresetOverlaysAction,
+	SetRemovedOverlaysIdsAction,
+	SetRemovedOverlaysVisibilityAction
 } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { SetComboBoxesProperties } from '../../../modules/status-bar/actions/status-bar.actions';
 import { SelectCaseAppEffects } from './select-case.app.effects';
-import {
-	SetActiveMapId,
-	SetLayoutAction,
-	SetMapsDataActionStore
-} from '@ansyn/map-facade';
+import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '@ansyn/map-facade';
 import {
 	BeginLayerCollectionLoadAction,
 	UpdateSelectedLayersIds
@@ -152,7 +151,7 @@ describe('SelectCaseAppEffects', () => {
 				j: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 				k: new UpdateFacetsAction(facets),
 				l: new UpdateSelectedLayersIds([]),
-				m: <any> { type: '[Context] Set context params', payload: { contextEntities }},
+				m: <any>{ type: '[Context] Set context params', payload: { contextEntities } },
 				n: new SetAutoSave(false),
 				o: new SetRemovedOverlaysIdsAction(removedOverlaysIds),
 				p: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),

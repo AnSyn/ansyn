@@ -59,7 +59,7 @@ describe('CasesTableComponent', () => {
 	});
 
 	it('onCasesAdded should change tbodyElement scrollTop to 0( only if tbodyElement is not undefined )', () => {
-		component.tbodyElement = <any> {
+		component.tbodyElement = <any>{
 			nativeElement: { scrollTop: 100 }
 		};
 		component.onCasesAdded();
@@ -67,20 +67,20 @@ describe('CasesTableComponent', () => {
 	});
 
 	it('onMouseEnterCaseRow should calc the top of caseMenu and add "mouse-enter" class', () => {
-		let caseMenu = <HTMLDivElement> { style: { top: '-1px' } };
-		const caseRow = <HTMLDivElement> {
+		let caseMenu = <HTMLDivElement>{ style: { top: '-1px' } };
+		const caseRow = <HTMLDivElement>{
 			offsetTop: 100, classList: jasmine.createSpyObj({
 				add: () => null
 			})
 		};
-		const tbodyElement = <HTMLDivElement> { scrollTop: 50 };
+		const tbodyElement = <HTMLDivElement>{ scrollTop: 50 };
 		component.onMouseEnterCaseRow(caseMenu, caseRow, tbodyElement);
 		expect(caseMenu.style.top).toEqual('51px');
 		expect(caseRow.classList.add).toHaveBeenCalledWith('mouse-enter');
 	});
 
 	it('onMouseLeaveCaseRow should remove "mouse-enter" class', () => {
-		const caseRow = <HTMLDivElement> {
+		const caseRow = <HTMLDivElement>{
 			classList: jasmine.createSpyObj({
 				remove: () => null
 			})
@@ -91,7 +91,7 @@ describe('CasesTableComponent', () => {
 
 	it('caseMenuClick should call stopPropagation() and remove mouse-enter class from caseRow', () => {
 		const $event = jasmine.createSpyObj({ stopPropagation: () => null });
-		const caseRow = <HTMLDivElement> {
+		const caseRow = <HTMLDivElement>{
 			classList: jasmine.createSpyObj({
 				remove: () => null
 			})

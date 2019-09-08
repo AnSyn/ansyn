@@ -4,19 +4,19 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs';
 import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
 import { AngleFilterComponent } from './angle-filter.component';
-import { GeoRegisteration, IOverlay } from "../../../overlays/models/overlay.model";
-import { Point } from "geojson";
-import { DisplayOverlayAction } from "../../../overlays/actions/overlays.actions";
+import { GeoRegisteration, IOverlay } from '../../../overlays/models/overlay.model';
+import { Point } from 'geojson';
+import { DisplayOverlayAction } from '../../../overlays/actions/overlays.actions';
 
 const POINT: Point = {
 	coordinates: [-122.4093246459961, 37.59727478027344],
-	type: "Point"
+	type: 'Point'
 };
 const OVERLAYS: IOverlay[] = [
 	{
 		id: 'overlay3',
 		name: 'overlay3',
-		sensorLocation: {type: 'Point', coordinates: [-122.66360605712876, 37.625511951836515]},
+		sensorLocation: { type: 'Point', coordinates: [-122.66360605712876, 37.625511951836515] },
 		photoTime: '',
 		date: new Date(),
 		azimuth: 1.0,
@@ -28,7 +28,7 @@ const OVERLAYS: IOverlay[] = [
 	{
 		id: 'overlay1',
 		name: 'overlay1',
-		sensorLocation: {type: 'Point', coordinates: [-122.34189022547085, 37.626320374229074]},
+		sensorLocation: { type: 'Point', coordinates: [-122.34189022547085, 37.626320374229074] },
 		photoTime: '',
 		date: new Date(),
 		azimuth: 1.0,
@@ -40,7 +40,7 @@ const OVERLAYS: IOverlay[] = [
 	{
 		id: 'overlay2',
 		name: 'overlay2',
-		sensorLocation: {type: 'Point', coordinates: [-122.4194071924828, 37.60764502079111]},
+		sensorLocation: { type: 'Point', coordinates: [-122.4194071924828, 37.60764502079111] },
 		photoTime: '',
 		date: new Date(),
 		azimuth: 1.0,
@@ -68,7 +68,7 @@ describe('AngleFilterComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [AngleFilterComponent],
 			imports: [
-				StoreModule.forRoot({[overlaysFeatureKey]: OverlayReducer})
+				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer })
 			],
 			providers: [
 				provideMockActions(() => actions)
@@ -84,7 +84,7 @@ describe('AngleFilterComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AngleFilterComponent);
 		component = fixture.componentInstance;
-		component.show({type: '', payload: PAYLOAD})
+		component.show({ type: '', payload: PAYLOAD });
 		fixture.detectChanges();
 	});
 
@@ -98,12 +98,12 @@ describe('AngleFilterComponent', () => {
 		expect(component.overlaysAngles[2].overlay.name).toBe('overlay3');
 	});
 
-	it('next overlay should called DisplayOverlayAction' , () => {
-		spyOn(store, 'dispatch')
+	it('next overlay should called DisplayOverlayAction', () => {
+		spyOn(store, 'dispatch');
 		component.mapId = 'mapId';
 		component.overlay = OVERLAYS[1];
 		component.nextOverlay(new MouseEvent('click'), true);
-		expect(store.dispatch).toHaveBeenCalledWith(new DisplayOverlayAction({overlay: OVERLAYS[2], mapId: 'mapId'}))
+		expect(store.dispatch).toHaveBeenCalledWith(new DisplayOverlayAction({ overlay: OVERLAYS[2], mapId: 'mapId' }))
 	})
 
 });

@@ -1,7 +1,5 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, OnDestroy, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ICaseTimeState } from '../../../menu-items/cases/models/case.model';
-import { combineLatest, fromEvent } from 'rxjs';
-import { tap } from 'rxjs/operators';
 
 declare function require(name: string);
 
@@ -77,12 +75,12 @@ export class TimelineTimepickerComponent implements OnInit, OnDestroy {
 		});
 
 		this.startDatePickerInstance.setDate(this.startDatePickerValue, false);
-		this.startDatePickerInstance.currentYearElement.onmousewheel = (function(event) {
+		this.startDatePickerInstance.currentYearElement.onmousewheel = (function (event) {
 			const delta = event.wheelDelta / Math.abs(event.wheelDelta);
 			const year = event.target.valueAsNumber + delta;
 			setTimeout(() => this.startDatePickerInstance.changeYear(year), 100);
 		}).bind(this);
-		this.endDatePickerInstance.currentYearElement.onmousewheel = (function(event) {
+		this.endDatePickerInstance.currentYearElement.onmousewheel = (function (event) {
 			const delta = event.wheelDelta / Math.abs(event.wheelDelta);
 			const year = event.target.valueAsNumber + delta;
 			setTimeout(() => this.endDatePickerInstance.changeYear(year), 100);

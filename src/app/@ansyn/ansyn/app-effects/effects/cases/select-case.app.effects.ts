@@ -1,25 +1,19 @@
 import { Inject, Injectable } from '@angular/core';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import {
 	SetFavoriteOverlaysAction,
-	SetRemovedOverlaysIdsAction,
-	SetRemovedOverlaysVisibilityAction,
+	SetOverlaysScannedAreaDataAction,
+	SetOverlaysTranslationDataAction,
 	SetPresetOverlaysAction,
-	SetOverlaysTranslationDataAction, SetOverlaysScannedAreaDataAction
+	SetRemovedOverlaysIdsAction,
+	SetRemovedOverlaysVisibilityAction
 } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { SetComboBoxesProperties } from '../../../modules/status-bar/actions/status-bar.actions';
 import { IAppState } from '../../app.effects.module';
-import { ofType } from '@ngrx/effects';
 import { concatMap } from 'rxjs/operators';
-import {
-	layoutOptions,
-	SetActiveMapId,
-	SetLayoutAction,
-	SetMapsDataActionStore, UpdateMapAction
-} from '@ansyn/map-facade';
-import { UUID } from 'angular2-uuid';
+import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '@ansyn/map-facade';
 import {
 	BeginLayerCollectionLoadAction,
 	UpdateSelectedLayersIds
@@ -27,7 +21,8 @@ import {
 import {
 	CasesActionTypes,
 	SelectCaseAction,
-	SelectCaseSuccessAction, SetAutoSave
+	SelectCaseSuccessAction,
+	SetAutoSave
 } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { CasesService } from '../../../modules/menu-items/cases/services/cases.service';
 import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
@@ -53,7 +48,7 @@ export class SelectCaseAppEffects {
 				protected store$: Store<IAppState>,
 				@Inject(CoreConfig) protected coreConfig: ICoreConfig,
 				protected casesService: CasesService
-				) {
+	) {
 	}
 
 	selectCaseActions(payload: ICase, noInitialSearch: boolean): Action[] {
@@ -91,7 +86,7 @@ export class SelectCaseAppEffects {
 			new SetActiveMapId(state.maps.activeMapId),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetPresetOverlaysAction((presetOverlays || []).map(this.parseOverlay.bind(this))),
-			new SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this))}),
+			new SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this)) }),
 			new SetOverlaysTranslationDataAction(overlaysTranslationData),
 			new SetOverlaysScannedAreaDataAction(overlaysScannedAreaData),
 			new BeginLayerCollectionLoadAction({ caseId: payload.id }),
@@ -99,7 +94,7 @@ export class SelectCaseAppEffects {
 			new UpdateFacetsAction(facets),
 			new UpdateSelectedLayersIds(activeLayersIds),
 			// @todo refactor
-			<any> { type: '[Context] Set context params', payload: { contextEntities }},
+			<any>{ type: '[Context] Set context params', payload: { contextEntities } },
 			new SetAutoSave(autoSave),
 			new SetRemovedOverlaysIdsAction(removedOverlaysIds),
 			new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),

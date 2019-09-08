@@ -6,7 +6,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 	styleUrls: ['./remove-task-modal.component.less']
 })
 export class RemoveTaskModalComponent {
-	@Input() message = "Confirm?";
+	@Input() message = 'Confirm?';
 	@Output() submit = new EventEmitter<boolean>();
 
 	onSubmit(answer = false) {

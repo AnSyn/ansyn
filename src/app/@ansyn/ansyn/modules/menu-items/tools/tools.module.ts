@@ -8,9 +8,8 @@ import { AnnotationsControlComponent } from './components/annotations-control/an
 import { StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from './reducers/tools.reducer';
 import { ImageProcessingControlComponent } from './components/image-processing-control/image-processing-control.component';
-import { ProjectionConverterService } from '@ansyn/map-facade';
+import { MapFacadeModule, ProjectionConverterService } from '@ansyn/map-facade';
 import { IToolsConfig, toolsConfig } from './models/tools-config';
-import { MapFacadeModule } from '@ansyn/map-facade';
 import { AnnotationsContextMenuModule } from '@ansyn/ol';
 import { MeasureControlComponent } from './components/measure-control/measure-control.component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -44,7 +43,7 @@ export class ToolsModule {
 		return {
 			ngModule: ToolsModule,
 			providers: [
-				{provide: toolsConfig, useValue: config}
+				{ provide: toolsConfig, useValue: config }
 			]
 		};
 	}

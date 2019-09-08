@@ -4,7 +4,7 @@ import { IMultipleOverlaysSourceConfig, MultipleOverlaysSourceConfig } from '@an
 import { IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { WMSCapabilities } from 'ol/format';
-import { map, filter } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { SetSentinelLayers } from '../actions/sentinel.actions';
 import { ISentinelOverlaySourceConfig, SentinelOverlaySourceType } from '../sentinel-source-provider';
 import { get as _get } from 'lodash';
@@ -37,7 +37,7 @@ export class SentinelLayersService {
 
 	getAllLayers() {
 		let parser = new WMSCapabilities();
-		return this.http.get(`${this.config.baseUrl}/wms?service=WMS&version=1.1.1&request=GetCapabilities`, { responseType: 'text' }).pipe(
+		return this.http.get(`${ this.config.baseUrl }/wms?service=WMS&version=1.1.1&request=GetCapabilities`, { responseType: 'text' }).pipe(
 			map(xml => parser.read(xml)),
 			map((capabilities: any) => _get(capabilities, 'Capability.Layer.Layer') || [])
 		);

@@ -14,31 +14,36 @@
 	transition: .2s;
 	z-index: @z-index-go-to-component;
 	overflow: hidden;
+
 	&.expand {
 		form {
 			visibility: visible;
 			opacity: 1;
 			padding: 20px 24px;
 		}
+
 		visibility: visible;
 		width: auto;
 		height: auto;
 	}
+
 	button.close {
 		position: absolute;
-    right: 10px;
-    top: 7px;
-    color: white;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    outline: none;
-    font-size: 28px;
+		right: 10px;
+		top: 7px;
+		color: white;
+		border: none;
+		background: transparent;
+		cursor: pointer;
+		outline: none;
+		font-size: 28px;
 		z-index: @z-index-go-to-close;
+
 		&:hover {
 			opacity: 0.9;
 		}
 	}
+
 	form {
 		opacity: 0;
 		transition: visibility 0s linear .2s;
@@ -53,6 +58,7 @@
 			width: 100%;
 			justify-content: space-between;
 			margin-top: 24px;
+
 			button {
 				outline: none;
 			}
@@ -69,6 +75,7 @@
 					background-color: fade(@background-color-6, 60%);
 					border-radius: 5px;
 				}
+
 				&.active {
 					background-color: fade(@background-color-6, 60%);
 					border-radius: 5px;

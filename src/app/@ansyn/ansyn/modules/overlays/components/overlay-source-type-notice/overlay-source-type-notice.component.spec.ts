@@ -1,5 +1,5 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { mapFeatureKey, MapReducer, selectMaps, UpdateMapAction } from '@ansyn/map-facade';
+import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { EffectsModule } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { of } from 'rxjs';
@@ -44,7 +44,7 @@ describe('OverlaySourceTypeNoticeComponent', () => {
 					}
 				},
 				{
-				provide: CoreConfig,
+					provide: CoreConfig,
 					useValue: {}
 				},
 				{
@@ -91,7 +91,7 @@ describe('OverlaySourceTypeNoticeComponent', () => {
 	});
 
 	it('should find the title for the overlay, value for sensor type, plus year', () => {
-		component.overlay = <any>overlays[3]
+		component.overlay = <any>overlays[3];
 		fixture.detectChanges();
 		expect(component.title).toEqual('My year is 1969');
 	});

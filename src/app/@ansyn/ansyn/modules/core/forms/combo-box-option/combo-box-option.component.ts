@@ -1,4 +1,4 @@
-import { Attribute, Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import { Attribute, Component, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { ComboBoxComponent } from '../combo-box/combo-box.component';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { debounceTime, tap } from 'rxjs/operators';

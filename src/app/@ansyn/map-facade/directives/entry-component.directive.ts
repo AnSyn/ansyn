@@ -1,4 +1,12 @@
-import { ComponentFactoryResolver, Directive, Input, OnDestroy, ViewContainerRef, ComponentRef, OnInit } from '@angular/core';
+import {
+	ComponentFactoryResolver,
+	ComponentRef,
+	Directive,
+	Input,
+	OnDestroy,
+	OnInit,
+	ViewContainerRef
+} from '@angular/core';
 
 /**
  *
@@ -7,6 +15,7 @@ import { ComponentFactoryResolver, Directive, Input, OnDestroy, ViewContainerRef
  */
 export interface IEntryComponent {
 	mapId: string;
+
 	getType(): string;
 }
 

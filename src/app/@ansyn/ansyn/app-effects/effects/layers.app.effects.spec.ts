@@ -1,7 +1,9 @@
 import {
 	ILayerState,
 	initialLayersState,
-	layersFeatureKey, LayersReducer, layersStateSelector
+	layersFeatureKey,
+	LayersReducer,
+	layersStateSelector
 } from '../../modules/menu-items/layers-manager/reducers/layers.reducer';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { LayersAppEffects } from './layers.app.effects';
@@ -11,13 +13,15 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { cloneDeep } from 'lodash';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { IAppState } from '../app.effects.module';
-	import {
+import {
 	casesFeatureKey,
 	CasesReducer,
-	casesStateSelector, ICasesState, initialCasesState
+	casesStateSelector,
+	ICasesState,
+	initialCasesState
 } from '../../modules/menu-items/cases/reducers/cases.reducer';
 
-	describe('LayersAppEffects', () => {
+describe('LayersAppEffects', () => {
 	let layersAppEffects: LayersAppEffects;
 	let actions: Observable<any>;
 	let store: Store<IAppState>;
@@ -45,7 +49,7 @@ import { IAppState } from '../app.effects.module';
 			[casesStateSelector, casesState],
 			[layersStateSelector, layerState]
 		]);
-		casesState.selectedCase = <any> {
+		casesState.selectedCase = <any>{
 			state: {
 				layers: {}
 			}

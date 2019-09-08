@@ -8,12 +8,12 @@ import { selectActiveMapId } from '@ansyn/map-facade';
 import * as turf from '@turf/turf';
 import { ImageryVisualizer } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
-import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
+import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
 import { distinctUntilChanged, map, mergeMap, pluck, take, tap } from 'rxjs/operators';
-import { OpenLayersProjectionService } from '@ansyn/ol';
 import {
 	IToolsState,
-	selectSubMenu, SubMenuEnum,
+	selectSubMenu,
+	SubMenuEnum,
 	toolsFlags,
 	toolsStateSelector
 } from '../../../../../menu-items/tools/reducers/tools.reducer';
@@ -79,7 +79,7 @@ export class GoToVisualizer extends EntitiesVisualizer {
 				this.store$.dispatch(new SetPinLocationModeAction(false));
 				this.store$.dispatch(new SetActiveCenter(point.coordinates));
 			});
-	}
+	};
 
 	constructor(public store$: Store<any>, protected projectionService: OpenLayersProjectionService) {
 		super();

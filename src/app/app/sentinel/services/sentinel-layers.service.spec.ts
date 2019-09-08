@@ -1,5 +1,5 @@
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { TestBed, inject } from '@angular/core/testing';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { inject, TestBed } from '@angular/core/testing';
 import { MultipleOverlaysSourceConfig } from '@ansyn/ansyn';
 import { MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/imagery';
 import { StoreModule } from '@ngrx/store';
@@ -13,15 +13,15 @@ describe('SentinelLayersService', () => {
 
 	beforeEach(() => TestBed.configureTestingModule({
 		imports: [HttpClientModule,
-			StoreModule.forRoot({[sentinelFeatureKey]: SentinelReducer})],
+			StoreModule.forRoot({ [sentinelFeatureKey]: SentinelReducer })],
 		providers: [{
 			provide: MAP_SOURCE_PROVIDERS_CONFIG,
-			useValue: {SENTINEL: {}}
+			useValue: { SENTINEL: {} }
 		},
 			{
 				provide: MultipleOverlaysSourceConfig,
 				useValue: {
-					indexProviders: {SENTINEL: {}}
+					indexProviders: { SENTINEL: {} }
 				}
 			}]
 	}));

@@ -1,13 +1,16 @@
 import { select, Store } from '@ngrx/store';
 import { HttpClient } from '@angular/common/http';
 import { Feature, FeatureCollection, Polygon } from 'geojson';
-import { catchError, filter, map, mergeMap, distinctUntilChanged, withLatestFrom, debounceTime } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { combineLatest, forkJoin, Observable, of, Subscription } from 'rxjs';
-import { getPolygonIntersectionRatioWithMultiPolygon, IMapSettings, IVisualizerEntity } from '@ansyn/imagery';
+import {
+	getPolygonIntersectionRatioWithMultiPolygon,
+	ImageryPlugin,
+	IMapSettings,
+	IVisualizerEntity
+} from '@ansyn/imagery';
 import { MapFacadeService, selectMaps, selectMapsList, SetToastMessageAction } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
-import { ImageryPlugin } from '@ansyn/imagery';
-import { AutoSubscription } from 'auto-subscriptions';
 import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
 import { ILayer, layerPluginTypeEnum } from '../../../../menu-items/layers-manager/models/layers.model';
 import { selectLayers, selectSelectedLayersIds } from '../../../../menu-items/layers-manager/reducers/layers.reducer';

@@ -1,4 +1,3 @@
-
 export enum ISceneMode {
 	COLUMBUS_VIEW = 'COLUMBUS_VIEW',
 	MORPHING = 'MORPHING',

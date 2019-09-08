@@ -29,7 +29,7 @@ export class BaseFootprintsVisualizer extends EntitiesVisualizer {
 			withLatestFrom(this.overlaysService.getAllOverlays$),
 			mergeMap(([[overlayDisplayMode, drops], overlays]: [[string, IOverlay[]], Map<string, IOverlay>]) => {
 				if (overlayDisplayMode === this.overlayDisplayMode) {
-					const pluckOverlays = <any[]> OverlaysService.pluck(overlays, drops.map(({ id }) => id), ['id', 'footprint']);
+					const pluckOverlays = <any[]>OverlaysService.pluck(overlays, drops.map(({ id }) => id), ['id', 'footprint']);
 					const entitiesToDraw = pluckOverlays
 						.filter(({ id, footprint }) => footprint.type === 'MultiPolygon')
 						.map(({ id, footprint }) => this.geometryToEntity(id, footprint));
@@ -54,7 +54,10 @@ export class BaseFootprintsVisualizer extends EntitiesVisualizer {
 		const numOfPoints = geometry.coordinates[0][0].length;
 
 		if (this.fpConfig.minSimplifyVertexCountLimit < numOfPoints) {
-			geometry = turf.simplify(turf.multiPolygon(geometry.coordinates), { tolerance: 0.01, highQuality: true }).geometry;
+			geometry = turf.simplify(turf.multiPolygon(geometry.coordinates), {
+				tolerance: 0.01,
+				highQuality: true
+			}).geometry;
 		}
 		return super.geometryToEntity(id, geometry);
 	}

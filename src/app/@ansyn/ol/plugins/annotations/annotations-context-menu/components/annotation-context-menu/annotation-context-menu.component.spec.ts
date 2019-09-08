@@ -42,9 +42,9 @@ describe('AnnotationContextMenuComponent', () => {
 		fixture = TestBed.createComponent(AnnotationContextMenuComponent);
 		component = fixture.componentInstance;
 		component.mapId = 'mapId';
-		spyOn(component, 'calcBoundingRect').and.returnValue({ top: `0px`, left: `0px`, width: `0px`, height: `0px`});
+		spyOn(component, 'calcBoundingRect').and.returnValue({ top: `0px`, left: `0px`, width: `0px`, height: `0px` });
 		spyOn(component, 'getFeatureProps').and.returnValue({});
-		component.annotations = <any> { idToEntity: new Map() }
+		component.annotations = <any>{ idToEntity: new Map() };
 		fixture.detectChanges();
 	});
 
@@ -54,7 +54,7 @@ describe('AnnotationContextMenuComponent', () => {
 
 	it('click on remove feature button', () => {
 		component.selection = ['featureId'];
-		component.annotations.idToEntity.set('featureId', <any> { fake: true });
+		component.annotations.idToEntity.set('featureId', <any>{ fake: true });
 		fixture.detectChanges();
 		spyOn(component, 'removeFeature');
 		const de: DebugElement = fixture.debugElement.query(By.css('button.removeFeature'));

@@ -16,13 +16,9 @@ import { ITasksState, tasksFeatureKey, TasksReducer } from '../../reducers/tasks
 import { AlgorithmTask, AlgorithmTaskStatus } from '../../models/tasks.model';
 import { SetCurrentTask, SetCurrentTaskAlgorithmName, SetCurrentTaskMasterOverlay } from '../../actions/tasks.actions';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
+import { imageryStatusFeatureKey, ImageryStatusReducer, mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { AnsynFormsModule } from '../../../../core/forms/ansyn-forms.module';
 import { MockComponent } from '../../../../core/test/mock-component';
-import {
-	imageryStatusFeatureKey,
-	ImageryStatusReducer
-} from '@ansyn/map-facade';
 import { Overlay } from '../../../../overlays/models/overlay.model';
 
 describe('TasksFormComponent', () => {

@@ -1,24 +1,15 @@
 import olPoint from 'ol/geom/Point';
 import olPolygon from 'ol/geom/Polygon';
-import {
-	getTimeDiff,
-	getTimeDiffFormat,
-} from '@ansyn/map-facade';
-import {
-	getPointByGeometry,
-
-	IVisualizerEntity
-} from '@ansyn/imagery';
+import { getTimeDiff, getTimeDiffFormat, MapFacadeService, selectMapsList, } from '@ansyn/map-facade';
+import { getPointByGeometry, ImageryCommunicatorService, ImageryVisualizer, IVisualizerEntity } from '@ansyn/imagery';
 import GeoJSON from 'ol/format/GeoJSON';
 import { Observable } from 'rxjs';
 import { Actions } from '@ngrx/effects';
-import { ImageryCommunicatorService, ImageryVisualizer } from '@ansyn/imagery';
 import { select, Store } from '@ngrx/store';
-import { MapFacadeService, selectMapsList } from '@ansyn/map-facade';
 import { distinctUntilChanged, filter, map, mergeMap, tap } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { selectContextEntities } from '../reducers/context.reducer';
-import { ICaseMapState, IContextEntity,  } from '@ansyn/ansyn';
+import { ICaseMapState, IContextEntity, } from '@ansyn/ansyn';
 import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
 
 @ImageryVisualizer({

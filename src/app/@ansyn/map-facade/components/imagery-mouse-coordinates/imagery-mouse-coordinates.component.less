@@ -1,12 +1,13 @@
 @import "ansyn/less/z-index-globals";
 @import 'map-facade/less/map-facade';
+
 @z-index-mouse-coordinate: 3;
 
 :host {
 	position: absolute;
 	display: inline-block;
 	border-radius: 0;
-	background-color: rgba(0,0,0,.3);
+	background-color: rgba(0, 0, 0, .3);
 	z-index: @z-index-mouse-coordinate;
 	left: 0;
 	font-size: smaller;
@@ -14,7 +15,7 @@
 	vertical-align: bottom;
 	user-select: none;
 
-	.mouse-coordinate{
+	.mouse-coordinate {
 		padding: 0 15px;
 		min-width: 114px;
 		height: @mouse-coordinate-height;
@@ -63,7 +64,7 @@ div.imageries-container {
 }
 
 div.footer-collapsed {
-	:host{
+	:host {
 		bottom: @mouse-coordinate-bottom-minimize;
 	}
 }

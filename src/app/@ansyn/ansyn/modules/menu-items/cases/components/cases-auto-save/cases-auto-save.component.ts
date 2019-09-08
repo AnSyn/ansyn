@@ -25,7 +25,7 @@ export class CasesAutoSaveComponent implements OnInit, OnDestroy {
 	currentCase$: Observable<any> = this.store$
 		.pipe(
 			select(selectCaseEntities),
-			map((entities: Dictionary<ICasePreview>) => <ICasePreview> entities[this.caseId]),
+			map((entities: Dictionary<ICasePreview>) => <ICasePreview>entities[this.caseId]),
 			tap((currentCase) => this.currentCase = currentCase)
 		);
 

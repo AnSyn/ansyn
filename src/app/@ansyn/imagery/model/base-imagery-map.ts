@@ -77,7 +77,7 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract zoomOut(): void;
 
-	abstract resetZoom(): void;
+	abstract one2one(): void;
 
 	abstract getPosition(): Observable<ImageryMapPosition>;
 

@@ -20,8 +20,8 @@ export class ImageryZoomerComponent implements OnInit, IEntryComponent {
 		return '';
 	}
 
-	resetZoom() {
-		this.imageryZoomerService.resetZoom(this.mapId);
+	one2one() {
+		this.imageryZoomerService.one2one(this.mapId);
 	}
 
 	zoomIn() {

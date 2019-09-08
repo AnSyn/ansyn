@@ -1,5 +1,5 @@
 import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
-import { IEntryComponent, selectActiveMapId, selectMapsTotal, selectOverlayFromMap, } from '@ansyn/map-facade';
+import { IEntryComponent, selectActiveMapId, selectMapsTotal, selectOverlayByMapId, } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Observable } from 'rxjs';
@@ -96,7 +96,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 
 	@AutoSubscription
 	overlay$ = () => this.store$.pipe(
-		select(selectOverlayFromMap(this.mapId)),
+		select(selectOverlayByMapId(this.mapId)),
 		tap(overlay => {
 			this.overlay = overlay;
 			this.onChangeOverlay();

@@ -3,8 +3,7 @@ import { uniq } from 'lodash';
 import { AlertMsg, AlertMsgTypes } from '../../../alerts/model';
 import { IOverlay } from '../../models/overlay.model'
 import { OverlayStatusActions, OverlayStatusActionsTypes } from '../actions/overlay-status.actions';
-import { IOverlaysScannedAreaData, ITranslationData } from '../../../menu-items/cases/models/case.model';
-import { selectSelectedCase } from '../../../menu-items/cases/reducers/cases.reducer';
+import { ITranslationData } from '../../../menu-items/cases/models/case.model';
 import { MultiPolygon } from 'geojson';
 
 export const overlayStatusFeatureKey = 'overlayStatus';
@@ -133,11 +132,13 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 		}
 
 		case OverlayStatusActionsTypes.SET_OVERLAY_SCANNED_AREA_DATA: {
-			const {id, area} = action.payload;
-			return { ...state, overlaysScannedAreaData: {
+			const { id, area } = action.payload;
+			return {
+				...state, overlaysScannedAreaData: {
 					...state.overlaysScannedAreaData,
 					[id]: area
-				} };
+				}
+			};
 		}
 
 		case OverlayStatusActionsTypes.SET_OVERLAYS_SCANNED_AREA_DATA: {

@@ -65,7 +65,7 @@ export class MpImageProjection extends Projection {
 		proj.addCoordinateTransforms('EPSG:3857', this,
 			// forward  from the source projection to the destination projection
 			function (coordinate) {
-			let coord4326 = proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
+				let coord4326 = proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
 				const res = Utils.m4MultVec3Projective(that.inversMatrix, [coord4326[0], coord4326[1], 0], []);
 				res[1] = tileSizeAtLevel0 - res[1];
 				return res;

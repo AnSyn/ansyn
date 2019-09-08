@@ -79,7 +79,7 @@ export class GoToVisualizer extends EntitiesVisualizer {
 				this.store$.dispatch(new SetPinLocationModeAction(false));
 				this.store$.dispatch(new SetActiveCenter(point.coordinates));
 			});
-	}
+	};
 
 	constructor(public store$: Store<any>, protected projectionService: OpenLayersProjectionService) {
 		super();

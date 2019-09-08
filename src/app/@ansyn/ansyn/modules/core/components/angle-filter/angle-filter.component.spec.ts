@@ -84,7 +84,7 @@ describe('AngleFilterComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AngleFilterComponent);
 		component = fixture.componentInstance;
-		component.show({ type: '', payload: PAYLOAD })
+		component.show({ type: '', payload: PAYLOAD });
 		fixture.detectChanges();
 	});
 
@@ -99,7 +99,7 @@ describe('AngleFilterComponent', () => {
 	});
 
 	it('next overlay should called DisplayOverlayAction', () => {
-		spyOn(store, 'dispatch')
+		spyOn(store, 'dispatch');
 		component.mapId = 'mapId';
 		component.overlay = OVERLAYS[1];
 		component.nextOverlay(new MouseEvent('click'), true);

@@ -10,8 +10,10 @@ import { ILayer } from '../../../../menu-items/layers-manager/models/layers.mode
 import { selectLayers, selectSelectedLayersIds } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
 
 export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
+
 	protected subscriptions: Subscription[] = [];
 
+	// todo: return auto-subscription when the bug is fixed
 	osmLayersChanges$: Observable<any[]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
 		.pipe(
 			tap(([result, selectedLayerId]: [ILayer[], string[]]) => {
@@ -26,6 +28,7 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 			})
 		);
 
+	// todo: return auto-subscription when the bug is fixed
 	toggleGroup$ = this.store$.select(selectDisplayLayersOnMap(this.mapId)).pipe(
 		tap((newState: boolean) => this.iMap.toggleGroup('layers', newState))
 	);
@@ -49,7 +52,6 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 	protected constructor(protected store$: Store<any>) {
 		super();
 	}
-
 
 	abstract checkLayer(layer: ILayer);
 

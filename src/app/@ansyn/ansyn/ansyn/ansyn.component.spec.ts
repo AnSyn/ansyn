@@ -9,6 +9,7 @@ import { selectSelectedCase } from '../modules/menu-items/cases/reducers/cases.r
 import { mapStateSelector } from '@ansyn/map-facade';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
 import { toolsConfig } from '../modules/menu-items/tools/models/tools-config';
+import { CoreConfig } from "../modules/core/models/core.config";
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
@@ -17,6 +18,7 @@ describe('AnsynComponent', () => {
 	let handler: Subject<any>;
 
 	const mockContextMenu = MockComponent({ selector: 'ansyn-context-menu' });
+	const mockCredentials = MockComponent({ selector: 'ansyn-credentials' });
 	const mockMenu = MockComponent({ selector: 'ansyn-menu', inputs: ['version', 'animatedElement'] });
 	const mockToast = MockComponent({ selector: 'ansyn-toast', inputs: ['duration'] });
 	const mockFooter = MockComponent({
@@ -51,6 +53,7 @@ describe('AnsynComponent', () => {
 			declarations: [
 				AnsynComponent,
 				mockContextMenu,
+				mockCredentials,
 				mockImageryView,
 				mockMenu,
 				mockToast,
@@ -67,6 +70,10 @@ describe('AnsynComponent', () => {
 				},
 				{
 					provide: toolsConfig,
+					useValue: {}
+				},
+				{
+					provide: CoreConfig,
 					useValue: {}
 				}
 			],

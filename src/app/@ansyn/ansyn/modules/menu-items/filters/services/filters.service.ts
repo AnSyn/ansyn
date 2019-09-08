@@ -24,7 +24,7 @@ export class FiltersService {
 
 		filters.forEach((newMetadata: FilterMetadata, filter: IFilter) => {
 			let outerStateMetadata: any = newMetadata.getMetadataForOuterState();
-			const historyEnumFilter = facetsFilters.find(({ type, fieldName }) => type === FilterType.Enum && fieldName === filter.modelName)
+			const historyEnumFilter = facetsFilters.find(({ type, fieldName }) => type === FilterType.Enum && fieldName === filter.modelName);
 			if (historyEnumFilter) {
 				const oldMetaData: ICaseEnumFilterMetadata = <ICaseEnumFilterMetadata>historyEnumFilter.metadata;
 				const facetsFilterToContact = oldMetaData.unCheckedEnums.filter((key) => {

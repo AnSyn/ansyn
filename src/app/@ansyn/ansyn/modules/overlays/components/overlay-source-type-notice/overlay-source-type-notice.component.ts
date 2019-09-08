@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { selectFooterCollapse, selectOverlayFromMap } from '@ansyn/map-facade';
+import { selectFooterCollapse, selectOverlayByMapId } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
@@ -26,7 +26,7 @@ export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	overlay$ = () => this.store$.pipe(
-		select(selectOverlayFromMap(this.mapId)),
+		select(selectOverlayByMapId(this.mapId)),
 		tap((overlay) => {
 			this.overlay = overlay;
 		})

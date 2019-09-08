@@ -18,11 +18,10 @@ import {
 	feature,
 	geometry,
 	intersect,
-	lineString,
 	point,
 	polygon,
-	unkinkPolygon,
-	union
+	union,
+	unkinkPolygon
 } from '@turf/turf';
 
 export type BBOX = [number, number, number, number] | [number, number, number, number, number, number];

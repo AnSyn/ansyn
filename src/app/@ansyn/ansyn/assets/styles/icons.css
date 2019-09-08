@@ -79,7 +79,7 @@
 }
 
 /* '' */
-.icon-favorites_2:before {
+.icon-favorites-active:before {
 	content: '\e810';
 }
 

@@ -3,14 +3,14 @@ import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ol';
 import { select, Store } from '@ngrx/store';
 import { Observable, combineLatest } from 'rxjs';
 import { selectOverlayFromMap } from '@ansyn/map-facade';
-import { debounceTime, map, tap, distinctUntilChanged, filter } from 'rxjs/operators';
+import { debounceTime, map, tap, filter } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { intersect } from '@turf/turf';
-import { AlertMsgTypes } from '../../../alerts/model';
+import { AlertMsgTypesEnum } from '../../../alerts/model';
 import { AddAlertMsg, RemoveAlertMsg } from '../../../overlays/overlay-status/actions/overlay-status.actions';
-import { selectDrops, selectFilteredOveralys, selectOverlaysMap } from '../../../overlays/reducers/overlays.reducer';
+import { selectFilteredOveralys, selectOverlaysMap } from '../../../overlays/reducers/overlays.reducer';
 import { isFullOverlay } from '../../../core/utils/overlays';
-import { IOverlay, IOverlayDrop } from '../../../overlays/models/overlay.model';
+import { IOverlay } from '../../../overlays/models/overlay.model';
 import { CesiumMap } from '@ansyn/imagery-cesium';
 import { Polygon } from 'geojson';
 
@@ -46,7 +46,7 @@ export class AlertsPlugin extends BaseImageryPlugin {
 
 	setOverlaysNotInCase([overlays, filteredOverlays]: [Map<string, IOverlay>, string[]]): RemoveAlertMsg | AddAlertMsg {
 		const shouldRemoved = !this.overlay || filteredOverlays.some((id: string) => id === this.overlay.id);
-		const payload = { key: AlertMsgTypes.overlayIsNotPartOfQuery, value: this.mapId };
+		const payload = { key: AlertMsgTypesEnum.overlayIsNotPartOfQuery, value: this.mapId };
 		return shouldRemoved ? new RemoveAlertMsg(payload) : new AddAlertMsg(payload);
 	}
 
@@ -69,13 +69,13 @@ export class AlertsPlugin extends BaseImageryPlugin {
 				console.warn('checkImageOutOfBounds$: turf exception', e);
 			}
 		}
-		const payload = { key: AlertMsgTypes.OverlaysOutOfBounds, value: this.mapId };
+		const payload = { key: AlertMsgTypesEnum.OverlaysOutOfBounds, value: this.mapId };
 		return isWorldView || isInBound ? new RemoveAlertMsg(payload) : new AddAlertMsg(payload);
 	}
 
 	onResetView() {
-		this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypes.OverlaysOutOfBounds, value: this.mapId }));
-		this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypes.overlayIsNotPartOfQuery, value: this.mapId }));
+		this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypesEnum.OverlaysOutOfBounds, value: this.mapId }));
+		this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypesEnum.overlayIsNotPartOfQuery, value: this.mapId }));
 		return super.onResetView();
 	}
 }

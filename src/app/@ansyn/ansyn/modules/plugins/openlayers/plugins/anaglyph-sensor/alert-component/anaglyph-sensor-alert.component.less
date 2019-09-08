@@ -8,7 +8,6 @@
 		height: 100%;
 		border-radius: 5px;
 		position: relative;
-		cursor: pointer;
 		border: none;
 		padding: 0 5px;
 		font-size: 12px;
@@ -25,6 +24,15 @@
 			height: 10px;
 			border-radius: 100%;
 			margin-right: 2px;
+		}
+
+		&:hover:not(:disabled) {
+			cursor: pointer;
+			background: rgba(0, 0, 0, 0.5);
+		}
+
+		&:disabled {
+			opacity: .6;
 		}
 	}
 }

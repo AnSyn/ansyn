@@ -2,11 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable, of, pipe } from 'rxjs';
 import { GeoRegisteration, IOverlay } from '../../../../../overlays/models/overlay.model';
 import {
-	BaseMapSourceProvider, bboxFromGeoJson, CommunicatorEntity,
-	ImageryCommunicatorService,
-	ImageryMapExtent,
-	ImageryMapPosition,
-	IMapSettings
+	BaseMapSourceProvider, CommunicatorEntity, ImageryCommunicatorService, IMapSettings
 } from '@ansyn/imagery';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { DisabledOpenLayersMapName, OpenlayersMapName, OpenLayersStaticImageSourceProviderSourceType } from '@ansyn/ol';
@@ -23,14 +19,30 @@ export class AnaglyphSensorService {
 		return of(result);
 	}
 
-	displayOriginalOverlay(mapSettings: IMapSettings, overlay: IOverlay): Observable<boolean> {
+	displayAnaglyph(mapSettings: IMapSettings): Observable<boolean> {
 		const communicator = this.communicatorService.provide(mapSettings.id);
 		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({
 			sourceType: OpenLayersStaticImageSourceProviderSourceType,
 			mapType: communicator.ActiveMap.mapType
 		});
 
-		return this.innerChangeImage(sourceLoader, overlay, communicator, mapSettings);
+		const clonedMapSettings = cloneDeep(mapSettings);
+		clonedMapSettings.data.overlay.id = `anaglyph_${ mapSettings.data.overlay.id }`;
+		clonedMapSettings.data.overlay.tag.imageData = { imageHeight: 649, imageWidth: 1024 };
+		clonedMapSettings.data.overlay.imageUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdZzZE3mBeVAS2MQU_HcQtemn7LLCEU7jSyCekDIbr51XCUdS4';
+		clonedMapSettings.data.overlay.isGeoRegistered = GeoRegisteration.notGeoRegistered;
+
+		return this.innerChangeImage(sourceLoader, clonedMapSettings.data.overlay, communicator, clonedMapSettings);
+	}
+
+	displayOriginalOverlay(mapSettings: IMapSettings): Observable<boolean> {
+		const communicator = this.communicatorService.provide(mapSettings.id);
+		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({
+			sourceType: OpenLayersStaticImageSourceProviderSourceType,
+			mapType: communicator.ActiveMap.mapType
+		});
+
+		return this.innerChangeImage(sourceLoader, mapSettings.data.overlay, communicator, mapSettings);
 	}
 
 	innerChangeImage(sourceLoader, overlay: IOverlay, communicator: CommunicatorEntity, mapSettings: IMapSettings): Observable<boolean> {
@@ -63,27 +75,8 @@ export class AnaglyphSensorService {
 			}));
 	}
 
-	displayAnaglyph(mapSettings: IMapSettings, overlay: IOverlay): Observable<boolean> {
-		const communicator = this.communicatorService.provide(mapSettings.id);
-		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({
-			sourceType: OpenLayersStaticImageSourceProviderSourceType,
-			mapType: communicator.ActiveMap.mapType
-		});
-
-		const clonedMapSettings = cloneDeep(mapSettings);
-		clonedMapSettings.data.overlay.id = `anaglyph_${ mapSettings.data.overlay.id }`;
-		// clonedMapSettings.data.overlay.tag.imageData = { imageHeight: 700, imageWidth: 700 };
-		// clonedMapSettings.data.overlay.imageUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFBEDeShykMgCKkHTIBKUGkEHoTyVuFEFLsK3UNpO1uxhdjdQl';
-		clonedMapSettings.data.overlay.tag.imageData = { imageHeight: 649, imageWidth: 1024 };
-		clonedMapSettings.data.overlay.imageUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdZzZE3mBeVAS2MQU_HcQtemn7LLCEU7jSyCekDIbr51XCUdS4';
-		clonedMapSettings.data.overlay.isGeoRegistered = GeoRegisteration.notGeoRegistered;
-
-		return this.innerChangeImage(sourceLoader, clonedMapSettings.data.overlay, communicator, clonedMapSettings);
-	}
-
 	constructor(protected communicatorService: ImageryCommunicatorService,
 				@Inject(AnaglyphConfig) public config: IAnaglyphConfig) {
 
 	}
-
 }

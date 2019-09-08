@@ -7,7 +7,8 @@ import { take, tap } from 'rxjs/operators';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
 import { AnaglyphSensorService } from '../service/anaglyph-sensor.service';
 import { AddAlertMsg, RemoveAlertMsg } from '../../../../../overlays/overlay-status/actions/overlay-status.actions';
-import { AlertMsgTypes } from '../../../../../alerts/model';
+
+export const anaglyphSensorAlertKey = 'anaglyphSensor';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],
@@ -27,30 +28,30 @@ export class AnaglyphSensorPlugin extends BaseImageryPlugin {
 					this.isEnabled = isSupproted;
 					if (isSupproted) {
 						this.store$.dispatch(new AddAlertMsg({
-							key: AlertMsgTypes.anaglyphSensor,
+							key: anaglyphSensorAlertKey,
 							value: this.mapId
 						}));
 					} else {
 						this.store$.dispatch(new RemoveAlertMsg({
-							key: AlertMsgTypes.anaglyphSensor,
+							key: anaglyphSensorAlertKey,
 							value: this.mapId
 						}));
 					}
 				});
 			} else {
-				this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypes.anaglyphSensor, value: this.mapId }));
+				this.store$.dispatch(new RemoveAlertMsg({ key: anaglyphSensorAlertKey, value: this.mapId }));
 			}
 
 		})
 	);
 
 	onResetView() {
-		this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypes.anaglyphSensor, value: this.mapId }));
+		this.store$.dispatch(new RemoveAlertMsg({ key: anaglyphSensorAlertKey, value: this.mapId }));
 		return super.onResetView();
 	}
 
 	onDispose(): void {
-		this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypes.anaglyphSensor, value: this.mapId }));
+		this.store$.dispatch(new RemoveAlertMsg({ key: anaglyphSensorAlertKey, value: this.mapId }));
 		super.onDispose();
 
 	}

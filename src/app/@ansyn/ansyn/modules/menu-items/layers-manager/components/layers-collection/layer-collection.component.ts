@@ -61,4 +61,8 @@ export class LayerCollectionComponent {
 	openModal(type: SelectedModalEnum, layer?: ILayer): void {
 		this.store.dispatch(new SetLayersModal({ type, layer }));
 	}
+
+	isAnnotationLayer(){
+		return this.collection.type === LayerType.annotation;
+	}
 }

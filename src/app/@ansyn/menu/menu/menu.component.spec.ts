@@ -97,7 +97,7 @@ describe('MenuComponent', () => {
 	it('setSelectedMenuItem should set selectedMenuItemName, if selectedMenuItemName not Empty, componentChanges() should have been call', () => {
 		spyOn(menuComponent, 'componentChanges');
 		spyOn(menuComponent, 'anyMenuItemSelected').and.returnValue(true);
-		menuComponent.setSelectedMenuItem('menuItemName');
+		menuComponent.setSelectedMenuItem(['menuItemName', true, true]);
 		expect(menuComponent.selectedMenuItemName).toEqual('menuItemName');
 		expect(menuComponent.componentChanges).toHaveBeenCalled();
 	});

@@ -4,7 +4,6 @@ div.container {
 	background-color: @background-color-2;
 	margin-bottom: 13px;
 	padding: 13px;
-	overflow: hidden;;
 
 	&.Annotation {
 		button.down-arrow {
@@ -16,8 +15,16 @@ div.container {
 				display: flex;
 			}
 
+			button.add-layer {
+				transform: translateX(-30px);
+			}
+
+			ansyn-import-layer {
+				transform: translateX(-50px);
+			}
+
 			div.actions .show-all {
-				display: block;
+				/*display: block;*/
 			}
 		}
 
@@ -39,7 +46,6 @@ div.container {
 		padding: 5px 0 10px 0;
 		display: flex;
 		justify-content: space-between;
-		align-items: baseline;
 
 		span.title {
 			font-family: @app-font;
@@ -84,7 +90,7 @@ div.container {
 
 		button.add-layer, ansyn-import-layer {
 			display: none;
-			position: relative;
+			position: absolute;
 		}
 
 		div.show-all {

@@ -21,6 +21,7 @@ import {
 	MapReducer,
 	mapStateSelector,
 	RemovePendingOverlayAction,
+	selectActiveMapId,
 	selectMaps,
 	selectMapsList,
 	SetLayoutAction,
@@ -247,7 +248,8 @@ describe('OverlaysAppEffects', () => {
 			[selectDropMarkup, overlaysState.dropsMarkUp],
 			[selectOverlaysMap, new Map(Object.entries(exampleOverlays))],
 			[selectMapsList, Object.values(mapState.entities)],
-			[selectMaps, mapState.entities]
+			[selectMaps, mapState.entities],
+			[selectActiveMapId, '1']
 		]);
 
 		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
@@ -354,6 +356,7 @@ describe('OverlaysAppEffects', () => {
 	});
 
 	describe('setHoveredOverlay$ effect', () => {
+		mapState.activeMapId = fakeMap.id;
 		mapState.entities = { [fakeMap.id]: fakeMap, [fakeMap2.id]: fakeMap2 };
 
 		it('should get hovered overlay by tracking overlays.dropsMarkUp, return an action to set overlays.hoveredOverlay', () => {
@@ -363,6 +366,4 @@ describe('OverlaysAppEffects', () => {
 			expect(overlaysAppEffects.setHoveredOverlay$).toBeObservable(expectedResults);
 		});
 	});
-
-})
-;
+});

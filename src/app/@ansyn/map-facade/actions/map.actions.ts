@@ -104,7 +104,7 @@ export class PointToRealNorthAction implements Action {
 export class PositionChangedAction implements Action {
 	type = MapActionTypes.POSITION_CHANGED;
 
-	constructor(public payload: { id: string, position: ImageryMapPosition, mapInstance: any }) {
+	constructor(public payload: { id: string, position: ImageryMapPosition, mapInstance: IMapSettings }) {
 	}
 }
 

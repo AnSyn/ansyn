@@ -68,12 +68,12 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this.http
 	);
 
+	getMoveEndPositionObservable = new Subject<ImageryMapPosition>();
+	getMoveStartPositionObservable = new Subject<ImageryMapPosition>();
+	subscribers = [];
+
 	private _moveEndListener: () => void = () => {
-		this.getPosition().pipe(take(1)).subscribe(position => {
-			if (position) {
-				this.positionChanged.emit(position);
-			}
-		});
+		this.getMoveEndPositionObservable.next(null);
 	};
 
 	private _pointerMoveListener: (args) => void = (args) => {
@@ -95,11 +95,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	};
 
 	private _moveStartListener: () => void = () => {
-		this.getPosition().pipe(take(1)).subscribe(position => {
-			if (position) {
-				this.moveStart.emit(position)
-			}
-		});
+		this.getMoveStartPositionObservable.next(null);
 	};
 
 	signalWhenTilesLoadingEnds() {
@@ -202,6 +198,27 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this._mapObject.on('movestart', this._moveStartListener);
 		this._mapObject.on('pointerdown', this._pointerDownListener);
 		this._mapObject.on('pointermove', this._pointerMoveListener);
+
+		this.subscribers.push(
+			this.getMoveEndPositionObservable.pipe(
+				switchMap((a) => {
+					return this.getPosition();
+				})
+			).subscribe(position => {
+				if (position) {
+					this.positionChanged.emit(position);
+				}
+			}),
+			this.getMoveStartPositionObservable.pipe(
+				switchMap((a) => {
+					return this.getPosition();
+				})
+			).subscribe(position => {
+				if (position) {
+					this.moveStart.emit(position)
+				}
+			})
+		);
 	}
 
 	createView(layer): View {
@@ -592,6 +609,11 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this.removeAllLayers();
 
 		if (this._mapObject) {
+			if (this.subscribers) {
+				this.subscribers.forEach((subscriber) => subscriber.unsubscribe());
+				delete this.subscribers;
+			}
+
 			this._mapObject.un('moveend', this._moveEndListener);
 			this._mapObject.un('movestart', this._moveStartListener);
 			this._mapObject.un('pointerdown', this._pointerDownListener);

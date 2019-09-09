@@ -96,12 +96,14 @@ describe('MapEffects', () => {
 					return of({});
 				}
 			};
-			const fakeMap: IMapSettings = <any>{ id: 'imagery2' };
-			mapState.entities = { [fakeMap.id]: fakeMap };
+
+			const fakeMap: IMapSettings = <any>{ id: 'imagery2', data: { position: true } };
+			const fakeMap2: IMapSettings = <any>{ id: 'imagery3', data: { position: true } };
+			mapState.entities = { [fakeMap.id]: fakeMap, [fakeMap2.id]: fakeMap2 };
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
 			spyOn(communicator, 'getPosition').and.callFake(() => of(true));
 			spyOn(mapEffects, 'setPosition').and.callFake(() => of(true));
-			const action = new SynchronizeMapsAction({ mapId: 'imagery1' });
+			const action = new SynchronizeMapsAction({ mapId: 'imagery2' });
 			actions = hot('--a--', { a: action });
 			const expectedResults = cold('--b--', { b: [action, mapState] });
 			expect(mapEffects.onSynchronizeAppMaps$).toBeObservable(expectedResults);

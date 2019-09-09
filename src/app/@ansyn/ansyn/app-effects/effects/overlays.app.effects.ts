@@ -1,6 +1,6 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
-import { combineLatest, Observable, of } from 'rxjs';
+import { combineLatest, Observable, of, pipe } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
 	ContextMenuTriggerAction,
@@ -13,6 +13,7 @@ import {
 	RemovePendingOverlayAction,
 	selectActiveMapId,
 	selectFooterCollapse,
+	selectMaps,
 	selectMapsList,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
@@ -70,6 +71,7 @@ import * as turf from '@turf/turf';
 import { Position } from 'geojson';
 import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
+import { Dictionary } from '@ngrx/entity';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -204,17 +206,18 @@ export class OverlaysAppEffects {
 	private getOverlayFromDropMarkup = map(([markupMap, overlays]: [ExtendMap<MarkUpClass, IMarkUpData>, Map<any, any>]) =>
 		overlays.get(markupMap && markupMap.get(MarkUpClass.hover) && markupMap.get(MarkUpClass.hover).overlaysIds[0])
 	);
-	private getCommunicatorForActiveMap = map(([overlay, activeMapId]: [IOverlay, string]) => {
-		const result = [overlay, this.imageryCommunicatorService.provide(activeMapId)];
-		return result;
-	});
-	private getPositionFromCommunicator = mergeMap(([overlay, communicator]: [IOverlay, CommunicatorEntity]) => {
-		if (!communicator) {
-			return of([overlay, null]);
-		}
-		return communicator.getPosition().pipe(map((position) => [overlay, position, communicator]));
-	});
-	private getOverlayWithNewThumbnail: any = switchMap(([overlay, position, communicator]: [IOverlay, ImageryMapPosition, CommunicatorEntity]) => {
+
+	private getPositionForActiveMap = pipe(
+		withLatestFrom(this.store$.select(selectActiveMapId)),
+		withLatestFrom(this.store$.select(selectMaps)),
+		filter(([[overlay, activeMapId], mapsList]: [[IOverlay, string], Dictionary<ICaseMapState>]) => Boolean(mapsList) && Boolean(mapsList[activeMapId])),
+		map(([[overlay, activeMapId], mapsList]: [[IOverlay, string], Dictionary<ICaseMapState>]) => {
+			const result = [overlay, mapsList[activeMapId].data.position];
+			return result;
+		})
+	);
+
+	private getOverlayWithNewThumbnail: any = switchMap(([overlay, position]: [IOverlay, ImageryMapPosition]) => {
 		if (!overlay) {
 			return [overlay];
 		}
@@ -222,10 +225,6 @@ export class OverlaysAppEffects {
 			...overlay,
 			thumbnailUrl: overlayOverviewComponentConstants.FETCHING_OVERLAY_DATA
 		}));
-		const sourceProvider = communicator.getMapSourceProvider({
-			mapType: communicator.activeMapName,
-			sourceType: overlay.sourceType
-		});
 		return this.overlaysService.getThumbnailUrl(overlay, position).pipe(
 			map(thumbnailUrl => ({
 				...overlay,
@@ -237,6 +236,7 @@ export class OverlaysAppEffects {
 			})
 		);
 	});
+
 	private getHoveredOverlayAction = map((overlay: IOverlay) => {
 		return new SetHoveredOverlayAction(overlay);
 	});
@@ -251,9 +251,7 @@ export class OverlaysAppEffects {
 			map(([prevAction, currentAction]) => currentAction),
 			withLatestFrom(this.overlaysService.getAllOverlays$, ([drop, footer], overlays) => [drop, overlays]),
 			this.getOverlayFromDropMarkup,
-			withLatestFrom(this.store$.select(selectActiveMapId)),
-			this.getCommunicatorForActiveMap,
-			this.getPositionFromCommunicator,
+			this.getPositionForActiveMap,
 			this.getOverlayWithNewThumbnail,
 			this.getHoveredOverlayAction
 		)

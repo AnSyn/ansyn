@@ -18,7 +18,7 @@ import {
 	ToggleMenuCollapse,
 	UnSelectMenuItemAction
 } from '../actions/menu.actions';
-import { fromEvent, Observable } from 'rxjs';
+import { combineLatest, fromEvent, Observable } from 'rxjs';
 import {
 	IMenuState,
 	selectAllMenuItems,
@@ -36,7 +36,7 @@ import { MenuConfig } from '../models/menuConfig';
 import { IMenuConfig } from '../models/menu-config.model';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { filter, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, filter, tap, withLatestFrom } from 'rxjs/operators';
 
 const animations: any[] = [
 	trigger(
@@ -75,40 +75,38 @@ export class MenuComponent implements OnInit, OnDestroy {
 	_componentElem;
 	currentComponent: ComponentRef<any>;
 	collapse: boolean;
-	@AutoSubscription
-	collapse$ = this.store.select(selectMenuCollapse).pipe(
-		tap(this.startToggleMenuCollapse.bind(this))
-	);
 	@Input() animatedElement: HTMLElement;
 	@ViewChild('menuWrapper') menuWrapperElement: ElementRef;
 	@ViewChild('menu') menuElement: ElementRef;
 	@ViewChild('container') container: ElementRef;
 	@Input() version;
+
 	menuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(select(selectAllMenuItems));
+
 	@AutoSubscription
-	selectedMenuItem$: Observable<string> = this.store
+	collapse$ = this.store.select(selectMenuCollapse).pipe(
+		tap(this.startToggleMenuCollapse.bind(this))
+	);
+
+	@AutoSubscription
+	selectedMenuItem$: Observable<any> = combineLatest(this.store.select(selectSelectedMenuItem), this.store.select(selectIsPinned), this.store.select(selectEntitiesMenuItems))
 		.pipe(
-			select(selectSelectedMenuItem),
+			filter(([_selectedMenuItemName, isPinned, menuItems]) => {
+				return Boolean(menuItems);
+			}),
+			distinctUntilChanged(),
+			tap(([_selectedMenuItemName, isPinned, menuEntities]) => this.entities = menuEntities),
+			tap(([_selectedMenuItemName, isPinned, menuEntities]) => {
+				this.isPinned = isPinned;
+				this.onIsPinnedChange();
+			}),
 			tap(this.setSelectedMenuItem.bind(this))
 		);
+
 	selectedMenuItemName: string;
 	entities: Dictionary<IMenuItem> = {};
-	@AutoSubscription
-	entities$: Observable<Dictionary<IMenuItem>> = this.store
-		.pipe(
-			select(selectEntitiesMenuItems),
-			tap((_menuItems) => this.entities = _menuItems)
-		);
+
 	isPinned: boolean;
-	@AutoSubscription
-	isPinned$ = this.store
-		.pipe(
-			select(selectIsPinned),
-			tap((_isPinned: boolean) => {
-				this.isPinned = _isPinned;
-				this.onIsPinnedChange();
-			})
-		);
 	expand: boolean;
 	onAnimation: boolean;
 	isBuildNeeded: boolean;
@@ -184,16 +182,15 @@ export class MenuComponent implements OnInit, OnDestroy {
 			.then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
 	}
 
-	setSelectedMenuItem(_selectedMenuItemName) {
+	setSelectedMenuItem([_selectedMenuItemName, isPinned, menuEntities]) {
 		this.selectedMenuItemName = _selectedMenuItemName;
 		this.expand = Boolean(this.selectedMenuItemName);
 
 		if (this.anyMenuItemSelected()) {
 			this.componentChanges();
 		} else {
-			this.store.dispatch(new ToggleIsPinnedAction(false));
+			this.store.dispatch(new ToggleIsPinnedAction(Boolean(isPinned)));
 		}
-
 	}
 
 	componentChanges(): void {

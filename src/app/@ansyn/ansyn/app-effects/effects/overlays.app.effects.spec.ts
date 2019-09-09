@@ -11,14 +11,17 @@ import {
 	CacheService,
 	ImageryCommunicatorService,
 	ImageryMapSource,
+	IMapSettings,
 	MAP_SOURCE_PROVIDERS_CONFIG
 } from '@ansyn/imagery';
 import {
+	IMapState,
 	initialMapState,
 	mapFeatureKey,
 	MapReducer,
 	mapStateSelector,
 	RemovePendingOverlayAction,
+	selectMaps,
 	selectMapsList,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
@@ -58,6 +61,7 @@ import {
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { ICase } from '../../modules/menu-items/cases/models/case.model';
+import { cloneDeep } from 'lodash';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -66,6 +70,7 @@ describe('OverlaysAppEffects', () => {
 	let casesService: CasesService;
 	let overlaysService: OverlaysService;
 	let imageryCommunicatorService: ImageryCommunicatorService;
+	let mapState: IMapState = cloneDeep(initialMapState);
 
 	let imageryCommunicatorServiceMock = {
 		provide: () => ({
@@ -107,8 +112,8 @@ describe('OverlaysAppEffects', () => {
 			},
 			maps: {
 				data: [
-					{ id: 'imagery1', data: { overlayDisplayMode: 'Heatmap' } },
-					{ id: 'imagery2', data: { overlayDisplayMode: 'None' } },
+					{ id: 'imagery1', data: { position: true, overlayDisplayMode: 'Heatmap' } },
+					{ id: 'imagery2', data: { position: true, overlayDisplayMode: 'None' } },
 					{ id: 'imagery3', data: {} }
 				],
 				activeMapId: 'imagery1'
@@ -147,7 +152,10 @@ describe('OverlaysAppEffects', () => {
 
 	const casesState = { ...initialCasesState, cases: [caseItem], selectedCase: caseItem };
 
-	const mapState = { ...initialMapState, entities: { '1': { 'id': '1' }, '2': { 'id': '2' } }, ids: ['1', '2'] };
+	const fakeMap: IMapSettings = <any>{ id: '1', data: { position: true } };
+	const fakeMap2: IMapSettings = <any>{ id: '2', data: { position: true } };
+	mapState.ids = ['1', '2'];
+	mapState.entities = { [fakeMap.id]: fakeMap, [fakeMap2.id]: fakeMap2 };
 
 	const statusBarState: any = { 'layouts': [{ 'mapsCount': 3 }] };
 
@@ -238,7 +246,8 @@ describe('OverlaysAppEffects', () => {
 			[statusBarStateSelector, statusBarState],
 			[selectDropMarkup, overlaysState.dropsMarkUp],
 			[selectOverlaysMap, new Map(Object.entries(exampleOverlays))],
-			[selectMapsList, Object.values(mapState.entities)]
+			[selectMapsList, Object.values(mapState.entities)],
+			[selectMaps, mapState.entities]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
@@ -345,6 +354,8 @@ describe('OverlaysAppEffects', () => {
 	});
 
 	describe('setHoveredOverlay$ effect', () => {
+		mapState.entities = { [fakeMap.id]: fakeMap, [fakeMap2.id]: fakeMap2 };
+
 		it('should get hovered overlay by tracking overlays.dropsMarkUp, return an action to set overlays.hoveredOverlay', () => {
 			const expectedResults = cold('(b|)', {
 				b: new SetHoveredOverlayAction(overlaysState.entities['first'])

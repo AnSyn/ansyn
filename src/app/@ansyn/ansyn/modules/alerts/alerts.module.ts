@@ -12,7 +12,8 @@ import { TranslateModule } from '@ngx-translate/core';
 		MapFacadeModule.provide({
 			entryComponents: {
 				container: [],
-				status: [AlertsContainerComponent]
+				status: [AlertsContainerComponent],
+				floating_menu: []
 			}
 		}),
 		TranslateModule

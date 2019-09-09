@@ -14,27 +14,29 @@ import { IStatusBarConfig } from './modules/status-bar/models/statusBar-config.m
 import { ICoreConfig } from './modules/core/models/core.config.model';
 import { IMultipleOverlaysSourceConfig } from './modules/core/models/multiple-overlays-source-config';
 import { IAlgorithmsConfig } from './modules/menu-items/algorithms/models/tasks.model';
+import { IAnaglyphConfig } from './modules/plugins/openlayers/plugins/anaglyph-sensor/models/anaglyph.model';
 
 export interface IConfigModel {
-	casesConfig: ICasesConfig,
-	layersManagerConfig: ILayersManagerConfig,
-	overlaysConfig: IOverlaysConfig,
-	mapFacadeConfig: IMapFacadeConfig,
-	mapProvidersConfig: IMapProvidersConfig,
-	mapSourceProvidersConfig: IMapSourceProvidersConfig,
-	filtersConfig: IFiltersConfig,
+	casesConfig: ICasesConfig;
+	layersManagerConfig: ILayersManagerConfig;
+	overlaysConfig: IOverlaysConfig;
+	mapFacadeConfig: IMapFacadeConfig;
+	mapProvidersConfig: IMapProvidersConfig;
+	mapSourceProvidersConfig: IMapSourceProvidersConfig;
+	filtersConfig: IFiltersConfig;
 	/* @todo: move to app */
-	contextConfig: any,
-	toolsConfig: IToolsConfig,
-	loggerConfig: ILoggerConfig,
-	statusBarConfig: IStatusBarConfig,
-	coreConfig: ICoreConfig,
-	menuConfig: IMenuConfig,
-	visualizersConfig: IVisualizersConfig,
-	multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
-	idahoOverlaysSourceConfig: IIdahoOverlaySourceConfig,
-	openAerialOverlaysSourceConfig: IOpenAerialOverlaySourceConfig,
-	planetOverlaysSourceConfig: IPlanetOverlaySourceConfig,
-	ORIENTATIONS: string[],
-	algorithmsConfig: IAlgorithmsConfig
+	contextConfig: any;
+	toolsConfig: IToolsConfig;
+	loggerConfig: ILoggerConfig;
+	statusBarConfig: IStatusBarConfig;
+	coreConfig: ICoreConfig;
+	menuConfig: IMenuConfig;
+	visualizersConfig: IVisualizersConfig;
+	multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig;
+	idahoOverlaysSourceConfig: IIdahoOverlaySourceConfig;
+	openAerialOverlaysSourceConfig: IOpenAerialOverlaySourceConfig;
+	planetOverlaysSourceConfig: IPlanetOverlaySourceConfig;
+	ORIENTATIONS: string[];
+	algorithmsConfig: IAlgorithmsConfig;
+	anaglyphConfig: IAnaglyphConfig;
 }

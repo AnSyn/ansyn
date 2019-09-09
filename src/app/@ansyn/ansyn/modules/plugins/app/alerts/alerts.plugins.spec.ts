@@ -4,7 +4,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { inject, TestBed } from '@angular/core/testing';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { AlertMsgTypes } from '../../../alerts/model';
+import { AlertMsgTypesEnum } from '../../../alerts/model';
 
 describe('AlertsPlugin', () => {
 	let alertsPlugin: AlertsPlugin;
@@ -39,7 +39,7 @@ describe('AlertsPlugin', () => {
 			alertsPlugin.overlay = <any>{ id: '4' };
 			const result = alertsPlugin.setOverlaysNotInCase([all, filtered]);
 			expect(result).toEqual(new AddAlertMsg({
-				key: AlertMsgTypes.overlayIsNotPartOfQuery,
+				key: AlertMsgTypesEnum.overlayIsNotPartOfQuery,
 				value: 'mapId'
 			}));
 		});
@@ -51,7 +51,7 @@ describe('AlertsPlugin', () => {
 				alertsPlugin.overlay = <any>{ id: '3' };
 				const result = alertsPlugin.setOverlaysNotInCase([all, filtered]);
 				expect(result).toEqual(new RemoveAlertMsg({
-					key: AlertMsgTypes.overlayIsNotPartOfQuery,
+					key: AlertMsgTypesEnum.overlayIsNotPartOfQuery,
 					value: 'mapId'
 				}));
 			});
@@ -62,7 +62,7 @@ describe('AlertsPlugin', () => {
 				alertsPlugin.overlay = null;
 				const result = alertsPlugin.setOverlaysNotInCase([all, filtered]);
 				expect(result).toEqual(new RemoveAlertMsg({
-					key: AlertMsgTypes.overlayIsNotPartOfQuery,
+					key: AlertMsgTypesEnum.overlayIsNotPartOfQuery,
 					value: 'mapId'
 				}));
 			});

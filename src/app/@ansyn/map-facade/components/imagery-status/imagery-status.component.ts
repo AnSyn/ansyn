@@ -69,7 +69,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		this._mapId = value;
 		/* force angular to rerender the *ngFor content that binding to this arrays
 		 * so they get the new mapId	 */
-		this._entryComponents = { status: [], container: [] };
+		this._entryComponents = { status: [], container: [], floating_menu: [] };
 		setTimeout(() => this._entryComponents = { ...this.entryComponents })
 	}
 

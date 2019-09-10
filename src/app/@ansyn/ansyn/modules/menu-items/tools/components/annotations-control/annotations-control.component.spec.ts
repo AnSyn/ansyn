@@ -91,7 +91,7 @@ describe('AnnotationsControlComponent', () => {
 
 	it('change stroke color', () => {
 		const strokeColor = 'white';
-		component.colorChange({ event: strokeColor, label: 'stroke' });
+		component.colorChange([{ event: strokeColor, label: 'stroke' }]);
 		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties({
 			'stroke': strokeColor
 		}));
@@ -99,7 +99,7 @@ describe('AnnotationsControlComponent', () => {
 
 	it('change fill color', () => {
 		const fill = 'black';
-		component.colorChange({ event: fill, label: 'fill' });
+		component.colorChange([{ event: fill, label: 'fill' }, { event: fill, label: 'marker-color' }]);
 		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties({
 			fill,
 			'marker-color': fill

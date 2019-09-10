@@ -24,8 +24,9 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	layersDictionary: { [key: string]: IVisualizerEntity[] };
 	showedLayersDictionary: string[];
 	currentExtent: Polygon;
+	protected subscriptions: Subscription[] = [];
 	// todo: return auto-subscription when the bug is fixed
-	updateLayersOnMap$ = combineLatest(this.store$.select(selectDisplayLayersOnMap(this.mapId)), this.store$.select(selectSelectedLayersIds))
+	updateLayersOnMap$ = () => combineLatest(this.store$.select(selectDisplayLayersOnMap(this.mapId)), this.store$.select(selectSelectedLayersIds))
 		.pipe(
 			withLatestFrom(this.store$.select(selectLayers)),
 			filter(([[isHidden, layersId], layers]: [[boolean, string[]], ILayer[]]) => Boolean(layers)),
@@ -37,8 +38,8 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 				)
 			})
 		);
-	// todo: select extent by map id from store
-	updateLayerScale$ = this.store$.select(selectMapPositionByMapId(this.mapId)).pipe(
+
+	updateLayerScale$ = () => this.store$.select(selectMapPositionByMapId(this.mapId)).pipe(
 		debounceTime(500),
 		filter(Boolean),
 		mergeMap((position: ImageryMapPosition) => {
@@ -52,10 +53,6 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 			return this.setEntities(entities);
 		})
 	);
-
-
-	// todo: return auto-subscription when the bug is fixed
-	protected subscriptions: Subscription[] = [];
 
 	constructor(protected store$: Store<any>,
 				protected http: HttpClient) {
@@ -71,9 +68,9 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	onInitSubscriptions(): void {
 		super.onInitSubscriptions();
 		this.subscriptions.push(
-			this.updateLayersOnMap$.subscribe(() => {
+			this.updateLayersOnMap$().subscribe(() => {
 			}),
-			this.updateLayerScale$.subscribe(() => {
+			this.updateLayerScale$().subscribe(() => {
 			})
 		)
 	}

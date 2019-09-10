@@ -250,7 +250,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	protected mapClick = (event) => {
-		if (this.mapSearchIsActive || this.mode) {
+		if (this.mapSearchIsActive || this.mode || this.isHidden) {
 			return;
 		}
 		const { shiftKey: multi } = event.originalEvent;
@@ -278,6 +278,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	};
 
 	protected mapBoxdrag = ({ target }) => {
+		if (this.isHidden) {
+			return;
+		}
 		const extent = target.getGeometry().getExtent();
 		const selected = [];
 		this.vector.getSource().forEachFeatureIntersectingExtent(extent, (feature) => {

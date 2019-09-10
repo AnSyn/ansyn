@@ -137,10 +137,6 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 					return of(0);
 				}
 
-				if (!this.shadowMapObject) {
-					this.createShadowMap();
-					this.resetShadowMapView(position.projectedState);
-				}
 				return this.pointNorth(this.shadowMapObject).pipe(take(1)).pipe(
 					map((calculatedNorthAngleAfterPointingNorth: number) => {
 						const shRotation = this.shadowMapObjectView.getRotation();
@@ -284,9 +280,14 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			.pipe(switchMap((centers: [number, number][]) => this.projectPoints(centers, sourceProjection, destProjection)));
 	}
 
-	onResetView(): Observable<boolean> {
+	onInit() {
+		super.onInit();
+		this.createShadowMap();
+	}
+
+	createShadowMap() {
 		if (!this.shadowMapObject) {
-			this.createShadowMap();
+			this.createShadowMapObject();
 		}
 		const view = this.communicator.ActiveMap.mapObject.getView();
 		const projectedState = {
@@ -294,10 +295,14 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			center: (<any>view).getCenter()
 		};
 		this.resetShadowMapView(projectedState);
+	}
+
+	onResetView(): Observable<boolean> {
+		this.createShadowMap();
 		return of(true);
 	};
 
-	createShadowMap() {
+	createShadowMapObject() {
 		const renderer = 'canvas';
 		this.shadowMapObject = new OLMap({
 			target: (<any>this.iMap).shadowNorthElement,

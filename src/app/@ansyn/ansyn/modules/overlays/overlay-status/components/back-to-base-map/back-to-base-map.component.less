@@ -26,7 +26,25 @@
 	}
 }
 
-@media screen and (max-width: 1240px) {
+.imageries-container {
+	&.layout2, &.layout4, &.layout6, &.layout5 {
+		:host {
+			div.back-to-world-view {
+				button {
+					font-size: 0;
+					overflow: hidden;
+
+					&.small-icon-button {
+						padding: 0;
+						margin: 0;
+					}
+				}
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 1820px) {
 	:host {
 		div.back-to-world-view {
 			button {

@@ -151,18 +151,17 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		this.annotations.updateFeature(featureId, { style: updatedStyle });
 	}
 
-	colorChange($event: { label: 'stroke' | 'fill', event: string }, featureId: string) {
+	colorChange($event: [{ label: 'stroke' | 'fill' | 'marker-color', event: string }], featureId: string) {
 		const { style } = this.getFeatureProps(featureId);
 		const updatedStyle = {
 			...style,
 			initial: {
 				...style.initial,
-				[$event.label]: $event.event
 			}
 		};
-		if ($event.label === 'fill') {
-			updatedStyle.initial['marker-color'] = $event.event;
-		}
+		$event.forEach((entity) => {
+			updatedStyle.initial[entity.label] = entity.event;
+		});
 		this.annotations.updateFeature(featureId, { style: updatedStyle });
 	}
 

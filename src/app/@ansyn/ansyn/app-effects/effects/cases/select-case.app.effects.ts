@@ -79,11 +79,11 @@ export class SelectCaseAppEffects {
 		const { facets } = state;
 
 		const selectCaseAction = [
+			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),
+			new SetActiveMapId(state.maps.activeMapId),
 			new SetLayoutAction(<any>layout),
 			new SetComboBoxesProperties({ orientation, timeFilter }),
 			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
-			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),
-			new SetActiveMapId(state.maps.activeMapId),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetPresetOverlaysAction((presetOverlays || []).map(this.parseOverlay.bind(this))),
 			new SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this)) }),

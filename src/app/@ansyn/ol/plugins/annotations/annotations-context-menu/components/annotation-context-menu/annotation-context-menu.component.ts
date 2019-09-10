@@ -160,6 +160,9 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 				[$event.label]: $event.event
 			}
 		};
+		if ($event.label === 'fill') {
+			updatedStyle.initial['marker-color'] = $event.event;
+		}
 		this.annotations.updateFeature(featureId, { style: updatedStyle });
 	}
 

@@ -11,7 +11,7 @@ RUN npm set progress=false \
 RUN npm install && npm run build:prod
 
 # Stage 2: Setup
-FROM nginx:1.13-alpine
+FROM nginx
 
 RUN apk update \
   && apk add ca-certificates wget \

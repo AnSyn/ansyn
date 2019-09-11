@@ -138,12 +138,12 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	colorChange($event) {
-		if ($event.label === 'fill') {
-			this.store.dispatch(new AnnotationSetProperties({ fill: $event.event, 'marker-color': $event.event }));
-		} else {
-			this.store.dispatch(new AnnotationSetProperties({ stroke: $event.event }));
-		}
+	colorChange(changesArray: Array<any>) {
+		const style = {};
+		changesArray.forEach((colorData) => {
+			style[colorData.label] = colorData.event;
+		});
+		this.store.dispatch(new AnnotationSetProperties(style));
 	}
 
 	isAnnotationEnable(annotation) {

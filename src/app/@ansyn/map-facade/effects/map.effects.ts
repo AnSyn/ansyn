@@ -122,23 +122,11 @@ export class MapEffects {
 	@Effect({ dispatch: false })
 	onSynchronizeAppMaps$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.SYNCHRONIZE_MAPS),
-		switchMap((action: SynchronizeMapsAction) => {
-			const mapId = action.payload.mapId;
-			return this.communicatorsService.provide(mapId).getPosition().pipe(
-				map((position: ImageryMapPosition) => [position, action]));
-		}),
 		withLatestFrom(this.store$.select(mapStateSelector)),
-		switchMap(([[mapPosition, action], mapState]: [any[], IMapState]) => {
+		switchMap(([action, mapState]: [SynchronizeMapsAction, IMapState]) => {
 			const mapId = action.payload.mapId;
-			if (!mapPosition) {
-				const map: IMapSettings = mapState.entities[mapId];
-				if (map.data.overlay) {
-					mapPosition = { extentPolygon: geojsonMultiPolygonToBBOXPolygon(map.data.overlay.footprint) };
-				} else {
-					mapPosition = map.data.position;
-				}
-			}
-
+			const mapSettings: IMapSettings = mapState.entities[mapId];
+			const mapPosition = mapSettings.data.position;
 			const setPositionObservables = [];
 			Object.values(mapState.entities).forEach((mapItem: IMapSettings) => {
 				if (mapId !== mapItem.id) {

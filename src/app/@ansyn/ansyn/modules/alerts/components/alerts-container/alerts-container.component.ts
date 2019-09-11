@@ -1,8 +1,8 @@
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { selectMapsTotal, selectOverlayByMapId } from '@ansyn/map-facade';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { selectAlertMsg } from '../../../overlays/overlay-status/reducers/overlay-status.reducer';
@@ -23,24 +23,15 @@ export class AlertsContainerComponent implements OnInit, OnDestroy {
 	@Input() mapId: string;
 
 	@AutoSubscription
-	mapsAmount$ = this.store$.pipe(
-		select(selectMapsTotal),
+	mapsAmount$ = this.store$.select(selectMapsTotal).pipe(
 		tap((mapsAmount) => this.mapsAmount = mapsAmount)
 	);
 
-
 	@AutoSubscription
-	alertMsg$: Observable<AlertMsg> = this.store$
-		.pipe(
-			select(selectAlertMsg),
-			tap((alertMsg) => this.alertMsg = alertMsg),
-			distinctUntilChanged()
-		);
-
-	@AutoSubscription
-	overlay$ = () => this.store$.pipe(
-		select(selectOverlayByMapId(this.mapId)),
-		tap((overlay) => {
+	alertMsg$: Observable<any> = combineLatest(this.store$.select(selectAlertMsg), this.store$.select(selectOverlayByMapId(this.mapId))).pipe(
+		distinctUntilChanged(),
+		tap(([alertMsg, overlay]) => {
+			this.alertMsg = alertMsg;
 			this.overlay = overlay;
 		})
 	);
@@ -48,7 +39,6 @@ export class AlertsContainerComponent implements OnInit, OnDestroy {
 	constructor(protected store$: Store<any>,
 				@Inject(ALERTS) public alerts: IAlert[]) {
 	}
-
 
 	showAlert(alertKey) {
 		const ids = this.alertMsg.get(alertKey);

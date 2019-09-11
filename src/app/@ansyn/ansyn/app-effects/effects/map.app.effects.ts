@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { CesiumMapName } from '@ansyn/imagery-cesium';
 import { DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
-import { select, Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { combineLatest, EMPTY, from, Observable, of, pipe } from 'rxjs';
 import {
@@ -12,6 +12,7 @@ import {
 	mapFacadeConfig,
 	MapFacadeService,
 	mapStateSelector,
+	PositionChangedAction,
 	selectActiveMapId,
 	selectMaps,
 	selectMapsList,
@@ -25,7 +26,9 @@ import {
 	bboxFromGeoJson,
 	CommunicatorEntity,
 	ImageryCommunicatorService,
-	IMapSettings
+	ImageryMapPosition,
+	IMapSettings,
+	polygonFromBBOX
 } from '@ansyn/imagery';
 import {
 	catchError,
@@ -180,11 +183,11 @@ export class MapAppEffects {
 	@Effect()
 	markupOnMapsDataChanges$ = this.store$.select(selectOverlaysWithMapIds)
 		.pipe(
-			distinctUntilChanged( (dataA , dataB) => isEqual(dataA[0] , dataB[0])),
-			map((overlayWithMapIds: {overlay: any, mapId: string, isActive: boolean}[]) => {
+			distinctUntilChanged((dataA, dataB) => isEqual(dataA[0], dataB[0])),
+			map((overlayWithMapIds: { overlay: any, mapId: string, isActive: boolean }[]) => {
 					const actives = [];
 					const displayed = [];
-					overlayWithMapIds.forEach((data: {overlay: any, mapId: string, isActive: boolean}) => {
+					overlayWithMapIds.forEach((data: { overlay: any, mapId: string, isActive: boolean }) => {
 						if (Boolean(data.overlay)) {
 							if (data.isActive) {
 								actives.push(data.overlay.id);
@@ -298,7 +301,17 @@ export class MapAppEffects {
 				const extent = payloadExtent || isNotIntersect && bboxFromGeoJson(overlay.footprint);
 				return communicator.resetView(layer, mapData.position, extent);
 			}),
-			map(() => new DisplayOverlaySuccessAction(payload))
+			mergeMap(() => {
+				const wasOverlaySetAsExtent = !payloadExtent && isNotIntersect;
+				const actionsArray: Action[] = [];
+				// in order to set the new map position for unregistered overlays maps
+				if (wasOverlaySetAsExtent) {
+					const position: ImageryMapPosition = { extentPolygon: polygonFromBBOX(bboxFromGeoJson(overlay.footprint)) };
+					actionsArray.push(new PositionChangedAction({ id: mapId, position, mapInstance: caseMapState }));
+				}
+				actionsArray.push(new DisplayOverlaySuccessAction(payload));
+				return actionsArray;
+			})
 		);
 
 		const onError = catchError((exception) => {

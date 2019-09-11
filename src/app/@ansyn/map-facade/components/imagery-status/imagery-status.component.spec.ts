@@ -49,7 +49,7 @@ describe('ImageryStatusComponent', () => {
 		fixture = TestBed.createComponent(ImageryStatusComponent);
 		component = fixture.componentInstance;
 		component.mapId = 'test';
-		component.displayLayers = true;
+		component.hideLayers = true;
 		component.overlay = {} as any;
 		component.mapsAmount = 2;
 		fixture.detectChanges();

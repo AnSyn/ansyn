@@ -24,6 +24,7 @@
 <button class="small-icon-button drag-mode" *ngIf="overlay"
 		[class.active2]="isDragged"
 		(click)="toggleDragged()"
+		[disabled]="!isLayersVisible"
 		[attr.tooltip-value]="this.draggedButtonText | translate"
 		[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
 	<i class="icon-drag-map"></i>

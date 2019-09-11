@@ -1,5 +1,11 @@
 import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
-import { IEntryComponent, selectActiveMapId, selectMapsTotal, selectOverlayByMapId, } from '@ansyn/map-facade';
+import {
+	IEntryComponent,
+	selectActiveMapId,
+	selectHideLayersOnMap,
+	selectMapsTotal,
+	selectOverlayByMapId,
+} from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Observable } from 'rxjs';
@@ -44,7 +50,17 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	isRemoved: boolean;
 	isDragged: boolean;
 	draggedButtonText: string;
+	isLayersVisible: boolean;
 
+	@AutoSubscription
+	layersVisibility$: () => Observable<boolean> = () => this.store$.select(selectHideLayersOnMap(this.mapId)).pipe(
+		tap((isLayersHidden) => {
+			this.isLayersVisible = !Boolean(isLayersHidden);
+			if (this.isDragged) {
+				this.toggleDragged();
+			}
+		})
+	);
 
 	@AutoSubscription
 	mapsAmount$: Observable<number> = this.store$.pipe(
@@ -182,6 +198,4 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		}
 		this.draggedButtonText = this.isDragged ? 'Stop Drag' : 'Start Drag';
 	}
-
-
 }

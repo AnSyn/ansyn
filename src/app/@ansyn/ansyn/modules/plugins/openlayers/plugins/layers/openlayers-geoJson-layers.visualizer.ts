@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Feature, FeatureCollection, Polygon } from 'geojson';
 import { catchError, debounceTime, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { combineLatest, forkJoin, Observable, of, Subscription } from 'rxjs';
-import { selectDisplayLayersOnMap, selectMapPositionByMapId, SetToastMessageAction } from '@ansyn/map-facade';
+import { selectHideLayersOnMap, selectMapPositionByMapId, SetToastMessageAction } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
 import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
 import { ILayer, layerPluginTypeEnum } from '../../../../menu-items/layers-manager/models/layers.model';
@@ -26,7 +26,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	currentExtent: Polygon;
 	protected subscriptions: Subscription[] = [];
 	// todo: return auto-subscription when the bug is fixed
-	updateLayersOnMap$ = () => combineLatest(this.store$.select(selectDisplayLayersOnMap(this.mapId)), this.store$.select(selectSelectedLayersIds))
+	updateLayersOnMap$ = () => combineLatest(this.store$.select(selectHideLayersOnMap(this.mapId)), this.store$.select(selectSelectedLayersIds))
 		.pipe(
 			withLatestFrom(this.store$.select(selectLayers)),
 			filter(([[isHidden, layersId], layers]: [[boolean, string[]], ILayer[]]) => Boolean(layers)),

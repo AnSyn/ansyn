@@ -30,8 +30,8 @@
 			(click)="toggleMapLayers()"
 			[attr.tooltip-value]="'Show/ Hide layers' | translate"
 			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
-		<i [class.icon-layers-show]="displayLayers"
-		   [class.icon-layers-hide]="!displayLayers"></i>
+		<i [class.icon-layers-show]="hideLayers"
+		   [class.icon-layers-hide]="!hideLayers"></i>
 	</button>
 
 	<ng-container

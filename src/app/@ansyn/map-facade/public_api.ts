@@ -19,7 +19,7 @@ export {
 	selectFooterCollapse,
 	selectOverlayByMapId,
 	selectMapStateById,
-	selectDisplayLayersOnMap,
+	selectHideLayersOnMap,
 	selectOverlaysWithMapIds,
 	selectMapPositionByMapId
 } from './reducers/map.reducer';

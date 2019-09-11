@@ -53,16 +53,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	isLayersVisible: boolean;
 
 	@AutoSubscription
-	layersVisibility$: () => Observable<boolean> = () => this.store$.select(selectHideLayersOnMap(this.mapId)).pipe(
-		tap((isLayersHidden) => {
-			this.isLayersVisible = !Boolean(isLayersHidden);
-			if (this.isDragged) {
-				this.toggleDragged();
-			}
-		})
-	);
-
-	@AutoSubscription
 	mapsAmount$: Observable<number> = this.store$.pipe(
 		select(selectMapsTotal),
 		tap((mapsAmount) => this.mapsAmount = mapsAmount)
@@ -109,6 +99,16 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		this.isPreset = true;
 		this.isFavorite = true;
 	}
+
+	@AutoSubscription
+	layersVisibility$: () => Observable<boolean> = () => this.store$.select(selectHideLayersOnMap(this.mapId)).pipe(
+		tap((isLayersHidden) => {
+			this.isLayersVisible = !Boolean(isLayersHidden);
+			if (this.isDragged) {
+				this.toggleDragged();
+			}
+		})
+	);
 
 	@AutoSubscription
 	overlay$ = () => this.store$.pipe(

@@ -9,7 +9,7 @@ import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../model
 import { selectEnableCopyOriginalOverlayDataFlag } from '../../reducers/imagery-status.reducer';
 import {
 	selectActiveMapId,
-	selectDisplayLayersOnMap,
+	selectHideLayersOnMap,
 	selectMapsTotal,
 	selectOverlayByMapId
 } from '../../reducers/map.reducer';
@@ -32,7 +32,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	_entryComponents: IEntryComponentsEntities;
 	@HostBinding('class.active') isActiveMap: boolean;
 	overlay: any; // @TODO: eject to ansyn
-	displayLayers: boolean;
+	hideLayers: boolean;
 	@AutoSubscription
 	active$ = this.store$.pipe(
 		select(selectActiveMapId),
@@ -114,10 +114,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	@AutoSubscription
-	overlayNlayers$: () => Observable<[any, boolean]> = () => combineLatest(this.store$.select(selectOverlayByMapId(this.mapId)), this.store$.select(selectDisplayLayersOnMap(this.mapId))).pipe(
-		tap(([overlay, displayLayers]) => {
+	overlayNlayers$: () => Observable<[any, boolean]> = () => combineLatest(this.store$.select(selectOverlayByMapId(this.mapId)), this.store$.select(selectHideLayersOnMap(this.mapId))).pipe(
+		tap(([overlay, hideLayers]) => {
 			this.overlay = overlay;
-			this.displayLayers = displayLayers;
+			this.hideLayers = hideLayers;
 		})
 	);
 

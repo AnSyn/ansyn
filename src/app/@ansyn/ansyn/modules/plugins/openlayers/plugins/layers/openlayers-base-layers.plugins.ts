@@ -3,7 +3,7 @@ import TileLayer from 'ol/layer/Tile';
 import { tap } from 'rxjs/operators';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { BaseImageryPlugin } from '@ansyn/imagery';
-import { selectDisplayLayersOnMap } from '@ansyn/map-facade';
+import { selectHideLayersOnMap } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '@ansyn/ol';
 import { ILayer } from '../../../../menu-items/layers-manager/models/layers.model';
@@ -29,7 +29,7 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 		);
 
 	// todo: return auto-subscription when the bug is fixed
-	toggleGroup$ = this.store$.select(selectDisplayLayersOnMap(this.mapId)).pipe(
+	toggleGroup$ = this.store$.select(selectHideLayersOnMap(this.mapId)).pipe(
 		tap((newState: boolean) => this.iMap.toggleGroup('layers', newState))
 	);
 

@@ -151,7 +151,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		case MapActionTypes.TOGGLE_MAP_LAYERS: {
 			const { mapId: id } = action.payload;
 			const entity = state.entities[id];
-			const flags = { ...entity.flags, displayLayers: !entity.flags.displayLayers };
+			const flags = { ...entity.flags, hideLayers: !entity.flags.hideLayers };
 			return mapsAdapter.updateOne({ id: action.payload.mapId, changes: { flags } }, state);
 		}
 
@@ -208,5 +208,5 @@ export const selectOverlaysWithMapIds = createSelector(selectMapsList, selectAct
 });
 export const selectMapStateById = (id: string) => createSelector(selectMaps, (maps) => maps[id]);
 export const selectOverlayByMapId = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.overlay);
-export const selectDisplayLayersOnMap = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.flags.displayLayers);
+export const selectHideLayersOnMap = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.flags.hideLayers);
 export const selectMapPositionByMapId: (mapId: string) => MemoizedSelector<any, ImageryMapPosition> = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.position);

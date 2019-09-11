@@ -16,6 +16,6 @@ export interface IMapSettings {
 	worldView: IWorldViewMapState;
 	data: IMapSettingsData;
 	flags: {
-		displayLayers?: boolean;
+		hideLayers?: boolean;
 	};
 }

@@ -8,6 +8,8 @@ import { ToolsComponent } from '../modules/menu-items/tools/tools/tools.componen
 import { SettingsComponent } from '../modules/menu-items/settings/settings/settings.component';
 import { HelpComponent } from '../modules/menu-items/help/components/help.component';
 import { TasksComponent } from '../modules/menu-items/algorithms/components/tasks/tasks.component';
+import { anaglyphSensorAlertKey } from '../modules/plugins/openlayers/plugins/anaglyph-sensor/plugin/anaglyph-sensor.plugin';
+import { AnaglyphSensorAlertComponent } from '../modules/plugins/openlayers/plugins/anaglyph-sensor/alert-component/anaglyph-sensor-alert.component';
 
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
 	ansynAlerts: [
@@ -29,6 +31,10 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			key: 'poorGeoRegistered',
 			background: '#cf802a',
 			text: 'This Image Has Poor Geo-Registration'
+		},
+		{
+			key: anaglyphSensorAlertKey,
+			component: AnaglyphSensorAlertComponent
 		}
 	],
 	ansynMenuItems: [

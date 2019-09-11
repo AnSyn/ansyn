@@ -148,6 +148,17 @@
 				i {
 					color: @application-primary-color;
 				}
+
+				&:hover:not(:disabled) {
+					border-color: @application-contrast-color;
+					z-index: 2;
+					cursor: pointer;
+				}
+
+				&:disabled {
+					background-color: @background-color;
+					opacity: 0.7;
+				}
 			}
 		}
 

@@ -1,7 +1,7 @@
 <form #f="ngForm" (ngSubmit)="onSubmit()" style="margin-top: 15px">
 
-	<div class=" small-padding-left">Status</div>
-	<div class="big-font wide-underline small-padding-left margin">{{taskStatus}}</div>
+	<div class=" small-padding-left">{{'Status' | translate}}</div>
+	<div class="big-font wide-underline small-padding-left margin">{{taskStatus | translate}}</div>
 
 	<ansyn-input
 		[(ngModel)]="taskName"
@@ -11,7 +11,7 @@
 		name="name"
 		id="ansyn-task-name"
 		class="margin"
-		label="Name">
+		[label]="'TasksName' | translate">
 	</ansyn-input>
 
 	<ansyn-combo-box
@@ -20,7 +20,7 @@
 		required
 		name="algorithm"
 		[color]="'transparent'"
-		[placeholder]="'Select algorithm'"
+		[placeholder]="'Select algorithm' | translate"
 		class="margin"
 	>
 		<ansyn-combo-box-option *ngFor="let algName of algNames" [value]="algName">
@@ -30,10 +30,10 @@
 
 	<hr class="big-font margin">
 
-	<div class="small-padding-left margin">Area of interest</div>
+	<div class="small-padding-left margin">{{'Area of interest' | translate}}</div>
 
 	<div class="small-padding-left margin flex-row">
-		<span>Pin Location</span>
+		<span>{{'Pin Location' | translate}}</span>
 		<button type="button" class="pin" [class.done]="currentTaskRegion$ | async" (click)="startDrawMode()">
 			<i class="icon-edit"></i>
 		</button>
@@ -43,8 +43,8 @@
 
 	<div class="two-columns-table">
 		<div>
-			<div>Imagery input</div>
-			<div>Master image</div>
+			<div>{{'Imagery input' | translate}}</div>
+			<div>{{'Master image' | translate}}</div>
 		</div>
 
 		<div>
@@ -53,9 +53,9 @@
 				[value]="'case_overlays'"
 				name="whichOverlays1"
 				disabled
-			>Case overlays
+			>{{'Case overlays' | translate}}
 			</ansyn-radio>
-			<div>Active overlay</div>
+			<div>{{'Active overlay' | translate}}</div>
 		</div>
 
 		<div>
@@ -63,7 +63,7 @@
 				[(ngModel)]="whichOverlays"
 				[value]="'favorite_overlays'"
 				name="whichOverlays2"
-			>Favorite overlays
+			>{{'Favorite overlays' | translate}}
 			</ansyn-radio>
 		</div>
 
@@ -74,30 +74,29 @@
 				[value]="'displayed_overlays'"
 				name="whichOverlays3"
 				disabled
-			>Displayed overlays
+			>{{'Displayed overlays' | translate}}
 			</ansyn-radio>
 		</div>
 	</div>
 
 	<div [class.invisible]="!algName">
-		<div>Note: this algorithm is only available for {{algName ? algorithms[algName].maxOverlays : '??'}}overlays.
+		<div>{{'Note: this algorithm is only available for' | translate}} {{algName ? algorithms[algName].maxOverlays : '??'}} {{'overlays' | translate}}.
 		</div>
-		<div>Supported
-			sensors: {{ algName && algorithms[algName].sensorNames?.length > 0 ? algorithms[algName].sensorNames.join(', ') : 'none' }}</div>
+		<div>{{'Supported sensors' | translate}}: {{supportedSensor.join(',')}}</div>
 	</div>
 
 	<div class="big-font wide-underline margin"></div>
 
-	<div class="margin">The results will be available for download when the task is completed</div>
+	<div class="margin">{{'The results will be available for download when the task is completed'  | translate}}</div>
 
 	<div class="run-bar margin">
 		<button ansynButton
-				[disabled]="f.invalid || hasError() || !(currentTaskRegion$ | async) || !(isNewTask$ | async)">Run Task
+				[disabled]="f.invalid || hasError() || !(currentTaskRegion$ | async) || !(isNewTask$ | async)">{{'Run Task' | translate}}
 		</button>
-		<div *ngIf="algName">Time Estimation: {{timeEstimation$ | async}}m</div>
+		<div *ngIf="algName">{{'Time Estimation' | translate}}: {{timeEstimation$ | async}}{{'m' | translate}}</div>
 	</div>
 
-	<div *ngIf="hasError()" class="errors">{{errorMsg}}</div>
+	<div *ngIf="hasError()" class="errors">{{errorMsg | translate}}</div>
 
 </form>
 

@@ -3,8 +3,8 @@
 		  (ngSubmit)="onSubmit(true)">
 		{{message}}
 		<div class="bottom-btns">
-			<button type="button" (click)="onSubmit(false)">Cancel</button>
-			<button type="submit">OK</button>
+			<button type="button" (click)="onSubmit(false)">{{'Cancel' | translate}}</button>
+			<button type="submit">{{'OK' | translate}}</button>
 		</div>
 	</form>
 </div>

@@ -11,11 +11,11 @@
 			select
 			name="name"
 			[required]="true"
-			label="Name">
+			[label]="'CaseName' | translate">
 		</ansyn-input>
 
 		<div class="select-context">
-			<label for="context">Context</label>
+			<label for="context">{{'Context' | translate}}</label>
 			<select id="context"
                     #selectContextElement
 					name="context" required [disabled]="editMode || true">
@@ -28,8 +28,8 @@
 		</div>
 
 		<div class="bottom-btns">
-			<button type="button" (click)="close()">Cancel</button>
-			<button [disabled]="f.invalid || !nameControl.value?.trim()">OK</button>
+			<button type="button" (click)="close()">{{'Cancel' | translate}}</button>
+			<button [disabled]="f.invalid || !nameControl.value?.trim()">{{'OK' | translate}}</button>
 		</div>
 	</form>
 </div>

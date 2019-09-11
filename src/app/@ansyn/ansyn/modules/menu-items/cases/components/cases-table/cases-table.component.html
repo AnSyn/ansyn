@@ -5,16 +5,16 @@
 		<div class="cases-table-head-row">
 			<div class="cases-table-head-row-data">
 				<div class="cases-table-head-col">
-					Name
+					{{'CaseName' | translate}}
 				</div>
 				<div class="cases-table-head-col">
-					Auto Save
+					{{'Auto Save' | translate}}
 				</div>
 				<div class="cases-table-head-col">
-					Owner
+					{{'Owner' | translate}}
 				</div>
 				<div class="cases-table-head-col">
-					Last Modified
+					{{'Last Modified' | translate}}
 				</div>
 			</div>
 
@@ -50,7 +50,7 @@
 
 				<ng-template #notSelected>
 					<div class="cases-table-case-name-col">
-						{{ entities[id].autoSave ? 'ON' : 'OFF' }}
+						{{ entities[id].autoSave ? ('AUTOSAVEON' | translate) : ('AUTOSAVEOFF' | translate)}}
 					</div>
 				</ng-template>
 
@@ -93,7 +93,7 @@
 <ng-template #noCases>
 
 	<p class="no-cases">
-		No cases
+		{{'No cases' | translate}}
 	</p>
 
 </ng-template>

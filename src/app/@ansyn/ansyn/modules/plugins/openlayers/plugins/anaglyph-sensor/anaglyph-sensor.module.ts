@@ -1,18 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImageryModule } from '@ansyn/imagery';
-import { anaglyphSensorAlertKey, AnaglyphSensorPlugin } from './plugin/anaglyph-sensor.plugin';
-import { ansynConfig } from '../../../../../config/ansyn.config';
+import { AnaglyphSensorPlugin } from './plugin/anaglyph-sensor.plugin';
 import { AnaglyphSensorService } from './service/anaglyph-sensor.service';
 import { AnaglyphSensorAlertComponent } from './alert-component/anaglyph-sensor-alert.component';
 import { TranslateModule } from '@ngx-translate/core';
-
-ansynConfig.ansynAlerts.push(
-	{
-		key: anaglyphSensorAlertKey,
-		component: AnaglyphSensorAlertComponent
-	}
-);
 
 @NgModule({
 	imports: [
@@ -24,7 +16,7 @@ ansynConfig.ansynAlerts.push(
 			maps: [],
 			mapSourceProviders: []
 		}),
-		TranslateModule.forRoot()
+		TranslateModule
 	],
 	providers: [AnaglyphSensorService],
 	entryComponents: [AnaglyphSensorAlertComponent],

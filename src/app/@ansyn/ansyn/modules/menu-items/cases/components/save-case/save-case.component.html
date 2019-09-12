@@ -9,12 +9,12 @@
 			select
 			name="name"
 			[required]="true"
-			label="Name">
+			[label]="'CaseName' | translate">
 		</ansyn-input>
 
 		<div class="bottom-btns">
-			<button type="button" (click)="close()">Cancel</button>
-			<button type="submit" [disabled]="f.invalid">OK</button>
+			<button type="button" (click)="close()">{{'Cancel' | translate}}</button>
+			<button type="submit" [disabled]="f.invalid">{{'OK' | translate}}</button>
 		</div>
 	</form>
 </div>

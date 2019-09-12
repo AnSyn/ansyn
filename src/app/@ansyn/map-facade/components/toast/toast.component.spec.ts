@@ -5,6 +5,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
 import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('ToastComponent', () => {
 	let component: ToastComponent;
@@ -17,7 +18,8 @@ describe('ToastComponent', () => {
 				StoreModule.forRoot({
 					[mapFeatureKey]: MapReducer
 				}),
-				EffectsModule.forRoot([])
+				EffectsModule.forRoot([]),
+				TranslateModule.forRoot()
 			],
 			declarations: [ToastComponent]
 		}).compileComponents();

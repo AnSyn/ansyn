@@ -20,7 +20,7 @@ import {
 	BeginLayerCollectionLoadAction,
 	UpdateSelectedLayersIds
 } from '../../../modules/menu-items/layers-manager/actions/layers.actions';
-import { CasesService } from '../../../modules/menu-items/cases/services/cases.service';
+import { casesConfig, CasesService } from '../../../modules/menu-items/cases/services/cases.service';
 import {
 	SelectCaseAction,
 	SelectCaseSuccessAction,
@@ -61,6 +61,7 @@ describe('SelectCaseAppEffects', () => {
 				SelectCaseAppEffects,
 				provideMockActions(() => actions),
 				{ provide: CoreConfig, useValue: {} },
+				{ provide: casesConfig, useValue: {} },
 				{ provide: CasesService, useValue: {} }
 			]
 		}).compileComponents();

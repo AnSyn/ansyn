@@ -34,14 +34,9 @@ export class AlertsPlugin extends BaseImageryPlugin {
 	}
 
 	@AutoSubscription
-	overlay$ = () => this.store$.pipe(
-		select(selectOverlayByMapId(this.mapId)),
-		tap((overlay: IOverlay) => this.overlay = overlay)
-	);
-
-	@AutoSubscription
 	positionChange$ = () => combineLatest(this.store$.select(selectMapPositionByMapId(this.mapId)), this.store$.select(selectOverlayByMapId(this.mapId)))
 		.pipe(
+			tap(([position, overlay]) => this.overlay = overlay),
 			switchMap(([position, overlay]) => {
 				const actions = [this.positionChanged(position, overlay)];
 				return actions.map(action => this.store$.dispatch(action))

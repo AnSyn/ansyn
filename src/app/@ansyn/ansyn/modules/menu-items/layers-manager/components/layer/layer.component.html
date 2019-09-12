@@ -1,14 +1,16 @@
 <div class="layer">
 
-	<ansyn-checkbox
-		class="regular-checkbox"
-		[id]="'checkbox' + layer?.id"
-		(ngModelChange)="onCheckboxClicked($event)"
-		[ngModel]="isChecked">
-		{{layer?.name}}
-	</ansyn-checkbox>
+	<div class="layer-name">
+		<ansyn-checkbox
+			class="regular-checkbox"
+			[id]="'checkbox' + layer?.id"
+			(ngModelChange)="onCheckboxClicked($event)"
+			[ngModel]="isChecked">
+			{{layer?.name}}
+		</ansyn-checkbox>
 
-	<span class="only-filter" (click)="selectOnly()" [hidden]="showOnly">{{'only' | translate}}</span>
+		<span class="only-filter" (click)="selectOnly()" [hidden]="showOnly">{{'only' | translate}}</span>
+	</div>
 
 	<ng-content></ng-content>
 

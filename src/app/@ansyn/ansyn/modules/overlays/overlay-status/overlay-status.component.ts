@@ -92,7 +92,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	);
 	@AutoSubscription
 	active$ = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectAnnotationMode)).pipe(
-		// map((activeMapId) => ),
 		tap(([activeMapId, annotationMode]: [string, AnnotationMode]) => {
 			this.isActiveMap = activeMapId === this.mapId;
 			if (annotationMode !== AnnotationMode.Translate) {

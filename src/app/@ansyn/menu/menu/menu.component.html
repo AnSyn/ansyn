@@ -61,7 +61,7 @@
 		<button class="pin"
 				*ngIf="isPinned"
 				(click)="toggleIsPinned()"
-				[attr.tooltip-value]="pinText" tooltip-class="right">
+				[attr.tooltip-value]="pinText | translate" tooltip-class="right">
 			<i class="icon-unpin"></i>
 		</button>
 

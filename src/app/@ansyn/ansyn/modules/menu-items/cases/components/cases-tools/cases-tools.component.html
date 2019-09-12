@@ -1,11 +1,11 @@
 <div class="buttons-group">
 	<button ansynButton type="button" (click)="showEditCaseModal()">
-		Add Case
+		{{'Add Case' | translate}}
 	</button>
 	<button ansynButton type="button" (click)="showSaveCaseModal()">
-		Save As
+		{{'Save As' | translate}}
 	</button>
 	<button ansynButton type="button" [disabled]="isDefaultCaseId" (click)="manualSave()">
-		Save
+		{{'Save' | translate}}
 	</button>
 </div>

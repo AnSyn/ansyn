@@ -10,12 +10,12 @@
 	<form class="edit-case-form" (submit)="onSubmitRemove()">
 
 		<div class="text">
-			<i class="icon-delete"></i>&nbsp;Delete&nbsp;"<span class="name">{{activeCase?.name}}</span>"?
+			<i class="icon-delete"></i>&nbsp;{{'Delete' | translate}}&nbsp;"<span class="name">{{activeCase?.name}}</span>"?
 		</div>
 
 		<div class="bottom-btns">
-			<button type="button" (click)="close()">Cancel</button>
-			<button type="submit">OK</button>
+			<button type="button" (click)="close()">{{'Cancel' | translate}}</button>
+			<button type="submit">{{'OK' | translate}}</button>
 		</div>
 	</form>
 

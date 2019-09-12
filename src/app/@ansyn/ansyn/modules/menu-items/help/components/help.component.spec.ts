@@ -5,6 +5,7 @@ import { HelpLocalStorageService } from '../services/help.local-storage.service'
 import { FormsModule } from '@angular/forms';
 import { AnsynCheckboxComponent } from '../../../core/forms/ansyn-checkbox/ansyn-checkbox.component';
 import { MockComponent } from '../../../core/test/mock-component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('HelpComponent', () => {
 	let component: HelpComponent;
@@ -15,7 +16,7 @@ describe('HelpComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [FormsModule],
+			imports: [FormsModule, TranslateModule.forRoot()],
 			declarations: [HelpComponent,
 				AnsynCheckboxComponent,
 				mockCarousel,

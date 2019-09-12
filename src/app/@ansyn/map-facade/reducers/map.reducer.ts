@@ -210,3 +210,4 @@ export const selectMapStateById = (id: string) => createSelector(selectMaps, (ma
 export const selectOverlayByMapId = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.overlay);
 export const selectHideLayersOnMap = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.flags.hideLayers);
 export const selectMapPositionByMapId: (mapId: string) => MemoizedSelector<any, ImageryMapPosition> = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.position);
+export const selectMapsStateByIds: (mapIds: string[]) => MemoizedSelector<any, IMapSettings[]> = (mapIds: string[]) => createSelector(selectMaps, (maps) => mapIds.map(id => maps[id]));

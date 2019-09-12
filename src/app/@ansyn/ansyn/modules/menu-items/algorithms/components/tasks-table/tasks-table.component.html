@@ -5,16 +5,16 @@
 		<div class="tasks-table-head-row">
 			<div class="tasks-table-head-row-data">
 				<div class="tasks-table-head-col">
-					Name
+					{{'TasksName' | translate}}
 				</div>
 				<div class="tasks-table-head-col">
-					Type
+					{{'Type' | translate}}
 				</div>
 				<div class="tasks-table-head-col">
-					Status
+					{{'Status' | translate}}
 				</div>
 				<div class="tasks-table-head-col">
-					Run time
+					{{'Run time' | translate}}
 				</div>
 			</div>
 
@@ -48,7 +48,7 @@
 				</div>
 
 				<div class="tasks-table-body-col">
-					{{entities[id].status}}
+					{{entities[id].status | translate}}
 				</div>
 
 				<div class="tasks-table-body-col">
@@ -76,14 +76,14 @@
 <ng-template #noTasks>
 
 	<p class="no-tasks">
-		No tasks
+		{{'No tasks' | translate}}
 	</p>
 
 </ng-template>
 
 <ansyn-modal [show]="modal?.show">
 	<ansyn-remove-task-modal *ngIf="modal?.show"
-							 [message]="'Delete task ' + modal?.name + '?'"
+							 [message]="('Delete task ' | translate) + modal?.name + '?'"
 							 (submit)="onModalResult($event)"
 	></ansyn-remove-task-modal>
 </ansyn-modal>

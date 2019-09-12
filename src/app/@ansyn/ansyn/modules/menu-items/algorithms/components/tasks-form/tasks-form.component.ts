@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { selectFavoriteOverlays } from '../../../../overlays/overlay-status/reducers/overlay-status.reducer';
 import { TasksService } from '../../services/tasks.service';
-import { combineLatest, Observable, of } from 'rxjs';
+import { combineLatest, EMPTY, forkJoin, Observable, of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import {
@@ -10,7 +10,7 @@ import {
 	AlgorithmTaskWhichOverlays,
 	IAlgorithmConfig
 } from '../../models/tasks.model';
-import { filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { filter, map, mergeMap, switchMap, take, tap } from 'rxjs/operators';
 import {
 	RunTaskAction,
 	SetCurrentTask,
@@ -34,6 +34,7 @@ import { ToggleIsPinnedAction } from '@ansyn/menu';
 import { Dictionary } from '@ngrx/entity';
 import { ICaseMapState } from '../../../cases/models/case.model';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-tasks-form',
@@ -53,50 +54,52 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	algNames: string[] = [];
 	loading = false;
 	errorMsg = '';
+	supportedSensor: string[] = [];
 	MIN_NUM_OF_OVERLAYS = 2;
-
-	get algorithms(): { [alg: string]: IAlgorithmConfig } {
-		return this.tasksService.config.algorithms;
-	}
-
+	@AutoSubscription
+	supportedSensor$ = this.store$.select(selectCurrentAlgorithmTaskAlgorithmName).pipe(
+		mergeMap(algName => {
+			if (this.algName && this.algorithms[algName] && this.algorithms[algName].sensorNames) {
+				const supportedSensor = this.algorithms[algName].sensorNames.map(sensor => this.translate.get(sensor));
+				return forkJoin(supportedSensor);
+			} else {
+				return EMPTY;
+			}
+		}),
+		tap(supportedSensor => {
+			this.supportedSensor = supportedSensor;
+		})
+	);
 	@AutoSubscription
 	currentTaskStatus$: Observable<AlgorithmTaskStatus> = this.store$.select(selectCurrentAlgorithmTaskStatus).pipe(
 		tap((status: AlgorithmTaskStatus) => {
 			this.taskStatus = status;
 		})
 	);
-
 	@AutoSubscription
 	currentTaskName$: Observable<string> = this.store$.select(selectCurrentAlgorithmTaskName).pipe(
 		tap((name: string) => {
 			this.taskName = name;
 		})
 	);
-
 	@AutoSubscription
 	currentTaskAlgorithmName$: Observable<string> = this.store$.select(selectCurrentAlgorithmTaskAlgorithmName).pipe(
 		tap((name: string) => {
 			this.algName = name;
 		})
 	);
-
 	@AutoSubscription
 	currentTaskOverlays$: Observable<IOverlay[]> = this.store$.select(selectCurrentAlgorithmTaskOverlays);
-
 	@AutoSubscription
 	currentTaskMasterOverlay$: Observable<IOverlay> = this.store$.select(selectCurrentAlgorithmTaskMasterOverlay);
-
 	currentTaskRegion$: Observable<IOverlay[]> = this.store$.select(selectCurrentAlgorithmTaskRegion);
-
 	@AutoSubscription
 	algorithmConfig$: Observable<IAlgorithmConfig> = this.currentTaskAlgorithmName$.pipe(
 		map((name: string) => this.algorithms[name])
 	);
-
 	timeEstimation$: Observable<number> = combineLatest(this.currentTaskOverlays$, this.algorithmConfig$).pipe(
 		map(([overlays, config]: [IOverlay[], IAlgorithmConfig]) => config.timeEstimationPerOverlayInMinutes * overlays.length)
 	);
-
 	selectedTask$: Observable<AlgorithmTask> = this.store$.select(selectAlgorithmTasksSelectedTaskId).pipe(
 		switchMap((taskId: string) => {
 			if (taskId) {
@@ -108,7 +111,6 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		}),
 		take(1)
 	);
-
 	@AutoSubscription
 	initCurrentTask$ = this.selectedTask$.pipe(
 		tap((selectedTask: AlgorithmTask) => {
@@ -122,12 +124,10 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 			this.store$.dispatch(new SetCurrentTask(task));
 		})
 	);
-
 	@AutoSubscription
 	isNewTask$: Observable<boolean> = this.currentTaskStatus$.pipe(
 		map((status: AlgorithmTaskStatus) => status === 'New')
 	);
-
 	@AutoSubscription
 	getOverlaysForNewTask$: Observable<IOverlay[]> = combineLatest(
 		this.isNewTask$,
@@ -145,7 +145,6 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 			this.store$.dispatch(new SetCurrentTaskOverlays(overlays || []));
 		})
 	);
-
 	@AutoSubscription
 	getMasterOverlayForNewTask$: Observable<any> = combineLatest(
 		this.isNewTask$,
@@ -168,23 +167,25 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 			}
 		})
 	);
-
 	@AutoSubscription
 	checkForErrors$: Observable<any> = combineLatest(
 		this.isNewTask$,
 		this.currentTaskAlgorithmName$,
 		this.currentTaskMasterOverlay$,
-		this.currentTaskOverlays$
+		this.currentTaskOverlays$,
+		this.translate.get('The number of selected overlays _X_ should be at least _Y_'),
+		this.translate.get('The number of selected overlays _X_ should be at most _Y_'),
+		this.translate.get('No master overlay selected')
 	).pipe(
-		filter(([isNew, algName, masterOverlay, overlays]: [boolean, string, IOverlay, IOverlay[]]) => isNew && Boolean(algName)),
-		tap(([isNew, algName, masterOverlay, overlays]: [boolean, string, IOverlay, IOverlay[]]) => {
+		filter(([isNew, algName, masterOverlay, overlays, atLeastMsg, atMosteMsg, masterMsg]: [boolean, string, IOverlay, IOverlay[], string, string, string]) => isNew && Boolean(algName)),
+		tap(([isNew, algName, masterOverlay, overlays, atLeastMsg, atMostMsg, masterMsg]: [boolean, string, IOverlay, IOverlay[], string, string, string]) => {
 			let message = '';
 			if (overlays.length < this.MIN_NUM_OF_OVERLAYS) {
-				message = `The number of selected overlays ${ overlays.length } should be at least ${ this.MIN_NUM_OF_OVERLAYS }`;
+				message = atLeastMsg.replace('_X_', `${overlays.length}` ).replace('_Y_', `${this.MIN_NUM_OF_OVERLAYS}`);
 			} else if (overlays.length > this.algorithms[algName].maxOverlays) {
-				message = `The number of selected overlays ${ overlays.length } should be at most ${ this.algorithms[algName].maxOverlays }`;
+				message = atMostMsg.replace('_X_', `${overlays.length}`).replace('_Y_', `${this.algorithms[algName].maxOverlays}`);
 			} else if (!masterOverlay) {
-				message = 'No master overlay selected';
+				message = masterMsg;
 			}
 			this.showError(message);
 		})
@@ -192,8 +193,13 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 
 	constructor(
 		public tasksService: TasksService,
-		protected store$: Store<any>
+		protected store$: Store<any>,
+		protected translate: TranslateService
 	) {
+	}
+
+	get algorithms(): { [alg: string]: IAlgorithmConfig } {
+		return this.tasksService.config.algorithms;
 	}
 
 	ngOnInit() {

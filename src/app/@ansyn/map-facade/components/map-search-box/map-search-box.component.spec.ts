@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { GeocoderService } from '../../services/geocoder.service';
 import { asyncData } from '../../test/async-observable-helpers';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('MapSearchBoxComponent', () => {
 	let component: MapSearchBoxComponent;
@@ -13,7 +14,7 @@ describe('MapSearchBoxComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [MapSearchBoxComponent],
-			imports: [FormsModule],
+			imports: [FormsModule, TranslateModule.forRoot()],
 			providers: [
 				{
 					provide: ImageryCommunicatorService, useValue: {

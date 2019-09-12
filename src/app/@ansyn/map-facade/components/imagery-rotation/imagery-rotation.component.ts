@@ -34,7 +34,7 @@ export class ImageryRotationComponent {
 	notGeoRegisteredProperties: IsGeoRegisteredProperties = {
 		letter: '?',
 		color: '#6e6e7f',
-		tooltipNorth: 'Press Alt+Shift and drag to rotate',
+		tooltipNorth: 'Drag to Change Orientation',
 		tooltip: null,
 		compass: 'assets/icons/map/compass_disabled.svg',
 		rotatePointer: 'notGeoRegisteredNorthAngle'

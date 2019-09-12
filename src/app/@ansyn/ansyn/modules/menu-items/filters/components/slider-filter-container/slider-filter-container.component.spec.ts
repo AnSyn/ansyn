@@ -4,6 +4,7 @@ import { SliderFilterContainerComponent } from './slider-filter-container.compon
 import { SliderModule } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { FilterCounterComponent } from '../filter-counter/filter-counter.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('SliderFilterContainerComponent', () => {
 	let component: SliderFilterContainerComponent;
@@ -13,7 +14,7 @@ describe('SliderFilterContainerComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [SliderFilterContainerComponent, FilterCounterComponent],
 			imports: [
-				SliderModule, FormsModule
+				SliderModule, FormsModule, TranslateModule.forRoot()
 			]
 		})
 			.compileComponents();

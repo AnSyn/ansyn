@@ -19,6 +19,7 @@ import { RemoveTaskModalComponent } from './components/remove-task-modal/remove-
 import { TasksRemoteService } from './services/tasks-remote.service';
 import { OverlaysModule } from '../../overlays/overlays.module';
 import { CoreModule } from '../../core/core.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
 	imports: [
@@ -29,7 +30,8 @@ import { CoreModule } from '../../core/core.module';
 		CommonModule,
 		FormsModule,
 		StoreModule.forFeature(tasksFeatureKey, TasksReducer),
-		EffectsModule.forFeature([TasksEffects])
+		EffectsModule.forFeature([TasksEffects]),
+		TranslateModule
 	],
 	declarations: [TasksComponent, TasksTableComponent, TasksTablePageComponent, TasksTablePageHeaderComponent,
 		TasksFormPageComponent, TasksFormPageHeaderComponent, TasksFormComponent, RemoveTaskModalComponent],

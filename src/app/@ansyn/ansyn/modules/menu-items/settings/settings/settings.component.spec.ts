@@ -3,6 +3,7 @@ import { SettingsComponent } from './settings.component';
 import { StoreModule } from '@ngrx/store';
 import { settingsFeatureKey, SettingsReducer } from '../reducers/settings.reducer';
 import { SliderCheckboxComponent } from '../../../core/forms/slider-checkbox/slider-checkbox.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('SettingsComponent', () => {
 	let component: SettingsComponent;
@@ -13,7 +14,8 @@ describe('SettingsComponent', () => {
 			imports: [
 				StoreModule.forRoot({
 					[settingsFeatureKey]: SettingsReducer
-				})
+				}),
+				TranslateModule.forRoot()
 			],
 			declarations: [SettingsComponent, SliderCheckboxComponent]
 		})

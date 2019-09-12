@@ -54,7 +54,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	algNames: string[] = [];
 	loading = false;
 	errorMsg = '';
-	supportedSensor: string[];
+	supportedSensor: string[] = [];
 	MIN_NUM_OF_OVERLAYS = 2;
 	@AutoSubscription
 	supportedSensor$ = this.store$.select(selectCurrentAlgorithmTaskAlgorithmName).pipe(

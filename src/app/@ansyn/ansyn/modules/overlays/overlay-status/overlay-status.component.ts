@@ -8,8 +8,8 @@ import {
 } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
+import { tap, withLatestFrom } from 'rxjs/operators';
 import { IOverlay } from '../models/overlay.model';
 import {
 	SetRemovedOverlaysIdAction,
@@ -23,6 +23,8 @@ import {
 	selectRemovedOverlays,
 	selectTranslationData
 } from './reducers/overlay-status.reducer';
+import { AnnotationMode } from '@ansyn/ol';
+import { selectAnnotationMode } from '../../menu-items/tools/reducers/tools.reducer';
 
 @Component({
 	selector: 'ansyn-overlay-status',
@@ -89,10 +91,16 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		})
 	);
 	@AutoSubscription
-	active$: Observable<boolean> = this.store$.pipe(
-		select(selectActiveMapId),
-		map((activeMapId) => activeMapId === this.mapId),
-		tap((isActiveMap) => this.isActiveMap = isActiveMap)
+	active$ = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectAnnotationMode)).pipe(
+		// map((activeMapId) => ),
+		tap(([activeMapId, annotationMode]: [string, AnnotationMode]) => {
+			this.isActiveMap = activeMapId === this.mapId;
+			if (annotationMode !== AnnotationMode.Translate) {
+				if (this.isDragged) {
+					this.toggleDragged();
+				}
+			}
+		})
 	);
 
 	constructor(public store$: Store<any>) {

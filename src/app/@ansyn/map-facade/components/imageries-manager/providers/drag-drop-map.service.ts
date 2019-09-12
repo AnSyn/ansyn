@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { DOCUMENT } from '@angular/common';
 import { forkJoin, fromEvent } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
+import { IMapSettings } from '@ansyn/imagery';
 
 export interface IDragDropData {
 	dragElement: HTMLElement;
@@ -11,7 +12,7 @@ export interface IDragDropData {
 	dragElementInitialBoundingBox: ClientRect;
 	targetElementInitialBoundingBox: ClientRect;
 	ids: string[];
-	entities: object;
+	entities: IMapSettings[];
 }
 
 @Injectable()
@@ -22,7 +23,7 @@ export class DragDropMapService {
 	constructor(protected store: Store<any>, @Inject(DOCUMENT) protected document: any) {
 	}
 
-	onMouseDown($event, dragElement: HTMLElement, ids: string[], entities: object) {
+	onMouseDown($event, dragElement: HTMLElement, ids: string[], entities: IMapSettings[]) {
 		this.document.body.style.userSelect = 'none';
 		dragElement.querySelector<HTMLElement>('.active-border').style.height = '100%';
 		dragElement.querySelector<HTMLElement>('button.drag-me i').style.opacity = '1';
@@ -90,7 +91,7 @@ export class DragDropMapService {
 				const indexOf2 = ids.indexOf(id2);
 				ids[indexOf1] = id2;
 				ids[indexOf2] = id1;
-				const mapsList = ids.map((id) => entities[id]);
+				const mapsList = ids.map((id) => entities.find(entity => entity.id === id));
 				this.store.dispatch(new SetMapsDataActionStore({ mapsList }));
 				dropElement.style.width = null;
 				dropElement.style.height = null;

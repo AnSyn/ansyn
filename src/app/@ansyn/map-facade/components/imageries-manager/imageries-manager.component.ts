@@ -140,7 +140,6 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 		if (!item) {
 			return null;
 		}
-		return item.data.overlay && item.data.overlay.id;
+		return item.id;
 	}
-
 }

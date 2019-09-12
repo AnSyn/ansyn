@@ -63,7 +63,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 				const supportedSensor = this.algorithms[algName].sensorNames.map(sensor => this.translate.get(sensor));
 				return forkJoin(supportedSensor);
 			} else {
-				return EMPTY
+				return EMPTY;
 			}
 		}),
 		tap(supportedSensor => {
@@ -177,13 +177,13 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		this.translate.get('The number of selected overlays _X_ should be at most _Y_'),
 		this.translate.get('No master overlay selected')
 	).pipe(
-		filter(([isNew, algName, masterOverlay, overlays, atLeastMsg, atMoreMsg, masterMsg]: [boolean, string, IOverlay, IOverlay[], string, string, string]) => isNew && Boolean(algName)),
-		tap(([isNew, algName, masterOverlay, overlays, atLeastMsg, atMoreMsg, masterMsg]: [boolean, string, IOverlay, IOverlay[], string, string, string]) => {
+		filter(([isNew, algName, masterOverlay, overlays, atLeastMsg, atMosteMsg, masterMsg]: [boolean, string, IOverlay, IOverlay[], string, string, string]) => isNew && Boolean(algName)),
+		tap(([isNew, algName, masterOverlay, overlays, atLeastMsg, atMostMsg, masterMsg]: [boolean, string, IOverlay, IOverlay[], string, string, string]) => {
 			let message = '';
 			if (overlays.length < this.MIN_NUM_OF_OVERLAYS) {
 				message = atLeastMsg.replace('_X_', `${overlays.length}` ).replace('_Y_', `${this.MIN_NUM_OF_OVERLAYS}`);
 			} else if (overlays.length > this.algorithms[algName].maxOverlays) {
-				message = atMoreMsg.replace('_X_', `${overlays.length}`).replace('_Y_', `${this.algorithms[algName].maxOverlays}`);
+				message = atMostMsg.replace('_X_', `${overlays.length}`).replace('_Y_', `${this.algorithms[algName].maxOverlays}`);
 			} else if (!masterOverlay) {
 				message = masterMsg;
 			}

@@ -42,6 +42,7 @@ import {
 } from '../modules/menu-items/tools/actions/tools.actions';
 import {
 	DisplayOverlayAction,
+	DisplayOverlaySuccessAction,
 	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
 	SetOverlaysCriteriaAction
@@ -67,6 +68,7 @@ export class AnsynApi {
 	events = {
 		onReady: new EventEmitter<boolean>(),
 		overlaysLoadedSuccess: new EventEmitter<IOverlay[] | false>(),
+		displayOverlaySuccess: new EventEmitter<IOverlay | false>()
 	};
 	/** @deprecated onReady as own events was deprecated use events.onReady instead */
 	onReady = new EventEmitter<boolean>(true);
@@ -115,6 +117,18 @@ export class AnsynApi {
 		tap(({ payload }) => {
 			this.events.overlaysLoadedSuccess.emit(payload.length > 0 ? payload : false);
 		})
+	);
+
+	@AutoSubscription
+	displayOverlaySuccess$ = this.actions$.pipe(
+		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
+		tap(({ payload }) => this.events.displayOverlaySuccess.emit(payload.overlay))
+	);
+
+	@AutoSubscription
+	displayOverlayFailed$ = this.actions$.pipe(
+		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED),
+		tap(({ payload }) => this.events.displayOverlaySuccess.emit(false))
 	);
 
 	/** Events **/

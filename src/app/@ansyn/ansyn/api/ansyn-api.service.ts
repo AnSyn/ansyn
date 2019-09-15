@@ -43,6 +43,7 @@ import {
 import {
 	DisplayOverlayAction,
 	LoadOverlaysSuccessAction,
+	OverlaysActionTypes,
 	SetOverlaysCriteriaAction
 } from '../modules/overlays/actions/overlays.actions';
 import { IOverlay, IOverlaysCriteria } from '../modules/overlays/models/overlay.model';
@@ -63,6 +64,11 @@ export class AnsynApi {
 	activeMapId;
 	mapsEntities;
 	activeAnnotationLayer;
+	events = {
+		onReady: new EventEmitter<boolean>(),
+		overlaysLoadedSuccess: new EventEmitter<IOverlay[] | false>(),
+	};
+	/** @deprecated onReady as own events was deprecated use events.onReady instead */
 	onReady = new EventEmitter<boolean>(true);
 
 	getMaps$: Observable<IMapSettings[]> = this.store.pipe(
@@ -92,11 +98,26 @@ export class AnsynApi {
 			})
 		);
 
+
+	/** Events **/
 	@AutoSubscription
 	ready$ = this.imageryCommunicatorService.instanceCreated.pipe(
 		take(1),
-		tap((map) => this.onReady.emit(true))
+		tap((map) => {
+			this.onReady.emit(true);
+			this.events.onReady.emit(true);
+		})
 	);
+
+	@AutoSubscription
+	overlaysSearchEnd$ = this.actions$.pipe(
+		ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
+		tap(({ payload }) => {
+			this.events.overlaysLoadedSuccess.emit(payload.length > 0 ? payload : false);
+		})
+	);
+
+	/** Events **/
 
 	onShadowMouseProduce$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.SHADOW_MOUSE_PRODUCER),

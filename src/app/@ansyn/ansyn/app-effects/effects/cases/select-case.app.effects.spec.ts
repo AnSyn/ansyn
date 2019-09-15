@@ -61,7 +61,7 @@ describe('SelectCaseAppEffects', () => {
 				SelectCaseAppEffects,
 				provideMockActions(() => actions),
 				{ provide: CoreConfig, useValue: {} },
-				{ provide: casesConfig, useValue: {} },
+				{ provide: casesConfig, useValue: {defaultCase: {id: 'caseId'}} },
 				{ provide: CasesService, useValue: {} }
 			]
 		}).compileComponents();
@@ -137,26 +137,26 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(deabcfghrsijklmnopq)--', {
-				a: new SetLayoutAction(<any>maps.layout),
-				b: new SetComboBoxesProperties({ orientation, timeFilter }),
-				c: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
-				d: new SetMapsDataActionStore({ mapsList: maps.data }),
-				e: new SetActiveMapId(maps.activeMapId),
+			const expectedResult = cold('--(abcdefghijklmnopqrs)--', {
+				a: new SetMapsDataActionStore({ mapsList: maps.data }),
+				b: new SetActiveMapId(maps.activeMapId),
+				c: new SetLayoutAction(<any>maps.layout),
+				d: new SetComboBoxesProperties({ orientation, timeFilter }),
+				e: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
 				f: new SetFavoriteOverlaysAction(favoriteOverlays),
 				g: new SetPresetOverlaysAction(presetOverlays),
 				h: new SetMiscOverlays({ miscOverlays }),
-				r: new SetOverlaysTranslationDataAction(overlaysTranslationData),
-				s: new SetOverlaysScannedAreaDataAction(overlaysScannedAreaData),
-				i: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
-				j: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
-				k: new UpdateFacetsAction(facets),
-				l: new UpdateSelectedLayersIds([]),
-				m: <any>{ type: '[Context] Set context params', payload: { contextEntities } },
-				n: new SetAutoSave(false),
-				o: new SetRemovedOverlaysIdsAction(removedOverlaysIds),
-				p: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
-				q: new SelectCaseSuccessAction(payload)
+				i: new SetOverlaysTranslationDataAction(overlaysTranslationData),
+				j: new SetOverlaysScannedAreaDataAction(overlaysScannedAreaData),
+				k: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
+				l: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
+				m: new UpdateFacetsAction(facets),
+				n: new UpdateSelectedLayersIds([]),
+				o: <any>{ type: '[Context] Set context params', payload: { contextEntities } },
+				p: new SetAutoSave(false),
+				q: new SetRemovedOverlaysIdsAction(removedOverlaysIds),
+				r: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
+				s: new SelectCaseSuccessAction(payload)
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

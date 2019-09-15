@@ -263,10 +263,6 @@ export class AnsynApi {
 	}
 
 	insertLayer(layerName: string, layerData: FeatureCollection<any>): string {
-		if (!(layerName && layerName.length)) {
-			console.error('failed to add layer without an name', layerName);
-			return null;
-		}
 		if (!Boolean(layerData)) {
 			console.error('failed to add layer ', layerName, ' feature collection is undefined');
 			return null;

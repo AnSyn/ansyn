@@ -182,7 +182,6 @@ export class AnsynApi {
 		return this.mapsEntities[this.activeMapId].data.position;
 	}
 
-	// todo:  change Array<number> to geojson.Point
 	goToPosition(position: Position): void {
 		this.store.dispatch(new GoToAction(position));
 	}

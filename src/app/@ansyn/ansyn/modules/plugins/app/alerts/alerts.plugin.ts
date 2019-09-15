@@ -8,7 +8,7 @@ import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ol';
 import { select, Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
 import { selectMapPositionByMapId, selectOverlayByMapId } from '@ansyn/map-facade';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { AlertMsgTypesEnum } from '../../../alerts/model';
 import { AddAlertMsg, RemoveAlertMsg } from '../../../overlays/overlay-status/actions/overlay-status.actions';

@@ -24,7 +24,7 @@ import {
 	SelectCaseSuccessAction,
 	SetAutoSave
 } from '../../../modules/menu-items/cases/actions/cases.actions';
-import { CasesService } from '../../../modules/menu-items/cases/services/cases.service';
+import { casesConfig, CasesService } from '../../../modules/menu-items/cases/services/cases.service';
 import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
 import { UpdateOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/actions/tools.actions';
 import { isFullOverlay } from '../../../modules/core/utils/overlays';
@@ -34,6 +34,8 @@ import { SetMiscOverlays, SetOverlaysCriteriaAction } from '../../../modules/ove
 import { ICase, ICaseMapState } from '../../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../../modules/overlays/models/overlay.model';
 import { mapValues } from 'lodash';
+import { UUID } from 'angular2-uuid';
+import { ICasesConfig } from '../../../modules/menu-items/cases/models/cases-config';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -47,6 +49,7 @@ export class SelectCaseAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				@Inject(CoreConfig) protected coreConfig: ICoreConfig,
+				@Inject(casesConfig) public caseConfig: ICasesConfig,
 				protected casesService: CasesService
 	) {
 	}
@@ -56,8 +59,14 @@ export class SelectCaseAppEffects {
 		// status-bar
 		const { orientation, timeFilter, overlaysManualProcessArgs, overlaysTranslationData, overlaysScannedAreaData } = state;
 		// map
-		const { data } = state.maps;
-
+		const { data, activeMapId: currentActiveMapID } = state.maps;
+		const defaultMapIndex = data.findIndex(map => map.id === this.caseConfig.defaultCase.state.maps.activeMapId);
+		if (payload.id !== this.caseConfig.defaultCase.id && defaultMapIndex !== -1) {
+			data[defaultMapIndex].id = UUID.UUID();
+			if (currentActiveMapID === this.caseConfig.defaultCase.state.maps.activeMapId) {
+				state.maps.activeMapId = data[defaultMapIndex].id;
+			}
+		}
 		// context
 		const { favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, presetOverlays, region, dataInputFilters, contextEntities, miscOverlays } = state;
 		let { time } = state;

@@ -7,8 +7,8 @@ import {
 	selectActiveMapId,
 	selectFooterCollapse,
 	selectLayout,
-	selectMaps,
 	selectMapsIds,
+	selectMapsList,
 	selectWasWelcomeNotificationShown
 } from '../../reducers/map.reducer';
 import {
@@ -19,7 +19,6 @@ import {
 } from '../../actions/map.actions';
 import { DOCUMENT } from '@angular/common';
 import { filter, map, tap } from 'rxjs/operators';
-import { Dictionary } from '@ngrx/entity/src/models';
 import { DragDropMapService } from './providers/drag-drop-map.service';
 import { IMapsLayout, LayoutKey, layoutOptions } from '../../models/maps-layout';
 import { IMapSettings } from '@ansyn/imagery';
@@ -38,7 +37,7 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 		map((layout: LayoutKey) => <IMapsLayout>layoutOptions.get(layout))
 	);
 	public activeMapId$: Observable<string> = this.store.select(selectActiveMapId);
-	public mapsEntities$: Observable<Dictionary<IMapSettings>> = this.store.select(selectMaps);
+	public mapsEntities$: Observable<IMapSettings[]> = this.store.select(selectMapsList);
 	public ids$ = this.store.select(selectMapsIds);
 	public footerCollapse$ = this.store.select(selectFooterCollapse);
 
@@ -57,7 +56,7 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 
 	pinLocationMode: boolean;
 	ids: string[] = [];
-	mapsEntities: Dictionary<IMapSettings>;
+	mapsEntities: IMapSettings[] = [];
 	activeMapId: string;
 	footerCollapse: boolean;
 	collapsable: boolean;
@@ -137,4 +136,10 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 		this.preventDbClick = true;
 	}
 
+	trackByFun(index, item) {
+		if (!item) {
+			return null;
+		}
+		return item.id;
+	}
 }

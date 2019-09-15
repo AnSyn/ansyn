@@ -19,7 +19,7 @@ import { Dictionary } from '@ngrx/entity/src/models';
 import { select, Store } from '@ngrx/store';
 import { featureCollection } from '@turf/turf';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { FeatureCollection, Point, Polygon } from 'geojson';
+import { FeatureCollection, Point, Polygon, Position } from 'geojson';
 import { cloneDeep } from 'lodash';
 import { combineLatest, Observable } from 'rxjs';
 import { map, take, tap, withLatestFrom } from 'rxjs/operators';
@@ -133,7 +133,7 @@ export class AnsynApi {
 		}
 	}
 
-	setOutSourceMouseShadow(coordinates): void {
+	setOutSourceMouseShadow(coordinates: Position): void {
 		this.store.dispatch(new ShadowMouseProducer({ point: { coordinates, type: 'point' }, outsideSource: true }));
 	}
 
@@ -183,7 +183,7 @@ export class AnsynApi {
 	}
 
 	// todo:  change Array<number> to geojson.Point
-	goToPosition(position: Array<number>): void {
+	goToPosition(position: Position): void {
 		this.store.dispatch(new GoToAction(position));
 	}
 
@@ -242,6 +242,10 @@ export class AnsynApi {
 	}
 
 	insertLayer(layerName: string, layerData: FeatureCollection<any>): string {
+		if (!(layerName && layerName.length)) {
+			console.error('failed to add layer without an name', layerName);
+			return null;
+		}
 		if (!Boolean(layerData)) {
 			console.error('failed to add layer ', layerName, ' feature collection is undefined');
 			return null;

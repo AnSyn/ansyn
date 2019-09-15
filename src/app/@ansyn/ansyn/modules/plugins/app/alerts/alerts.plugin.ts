@@ -5,9 +5,9 @@ import {
 	ImageryPlugin
 } from '@ansyn/imagery';
 import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ol';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
-import { selectOverlayByMapId, selectMapPositionByMapId } from '@ansyn/map-facade';
+import { selectMapPositionByMapId, selectOverlayByMapId } from '@ansyn/map-facade';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { AlertMsgTypesEnum } from '../../../alerts/model';
@@ -36,6 +36,7 @@ export class AlertsPlugin extends BaseImageryPlugin {
 	@AutoSubscription
 	positionChange$ = () => combineLatest(this.store$.select(selectMapPositionByMapId(this.mapId)), this.store$.select(selectOverlayByMapId(this.mapId)))
 		.pipe(
+			tap(([position, overlay]) => this.overlay = overlay),
 			switchMap(([position, overlay]) => {
 				const actions = [this.positionChanged(position, overlay)];
 				return actions.map(action => this.store$.dispatch(action))

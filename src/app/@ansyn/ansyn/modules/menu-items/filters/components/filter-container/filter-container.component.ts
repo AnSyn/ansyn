@@ -48,7 +48,6 @@ import { FilterType } from '../../models/filter-type';
 })
 export class FilterContainerComponent implements OnInit, OnDestroy {
 
-	public show = true;
 	public isLongFiltersList = false;
 	public showOnlyFavorite = false;
 	public isGotSmallListFromProvider = true;
@@ -67,7 +66,9 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 
 	metadataFromState$: Observable<any> = this.store.select(selectFilters).pipe(
 		map((filters: Filters) => filters.get(this.filter)),
-		tap((metadata: FilterMetadata) => this.metadataFromState = metadata)
+		tap((metadata: FilterMetadata) => {
+			this.metadataFromState = metadata
+		})
 	);
 
 	isGotSmallListFromProvider$ = this.metadataFromState$.pipe(
@@ -119,5 +120,11 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 
 	toggleShowMoreLess(): void {
 		this.isLongFiltersList = !this.isLongFiltersList;
+	}
+
+	toggleVisible(): void {
+		const newMetadata = clone(this.metadataFromState);
+		newMetadata.collapse = !newMetadata.collapse;
+		this.store.dispatch(new UpdateFilterAction({filter: this.filter, newMetadata}));
 	}
 }

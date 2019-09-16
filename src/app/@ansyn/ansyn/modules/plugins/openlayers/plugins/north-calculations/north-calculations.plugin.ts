@@ -129,6 +129,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	@AutoSubscription
 	positionChangedCalcNorthAccurately$ = () => this.store$.select(selectMapPositionByMapId(this.mapId)).pipe(
 		debounceTime(50),
+		filter(Boolean),
 		switchMap((position: ImageryMapPosition) => {
 			const view = this.iMap.mapObject.getView();
 			const projection = view.getProjection();

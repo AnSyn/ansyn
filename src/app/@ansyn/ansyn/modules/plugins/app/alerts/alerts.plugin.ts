@@ -36,8 +36,8 @@ export class AlertsPlugin extends BaseImageryPlugin {
 	@AutoSubscription
 	positionChange$ = () => combineLatest(this.store$.select(selectMapPositionByMapId(this.mapId)), this.store$.select(selectOverlayByMapId(this.mapId)))
 		.pipe(
-			filter(([position, overlay]) => Boolean(position) && Boolean(overlay)),
 			tap(([position, overlay]) => this.overlay = overlay),
+			filter(([position, overlay]) => Boolean(position) && Boolean(overlay)),
 			switchMap(([position, overlay]) => {
 				const actions = [this.positionChanged(position, overlay)];
 				return actions.map(action => this.store$.dispatch(action))

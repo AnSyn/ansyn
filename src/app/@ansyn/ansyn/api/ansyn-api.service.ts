@@ -68,7 +68,7 @@ export class AnsynApi {
 	events = {
 		onReady: new EventEmitter<boolean>(),
 		overlaysLoadedSuccess: new EventEmitter<IOverlay[] | false>(),
-		displayOverlaySuccess: new EventEmitter<IOverlay | false>()
+		displayOverlaySuccess: new EventEmitter<{overlay: IOverlay | false, mapId: string}>()
 	};
 	/** @deprecated onReady as own events was deprecated use events.onReady instead */
 	onReady = new EventEmitter<boolean>(true);
@@ -122,13 +122,19 @@ export class AnsynApi {
 	@AutoSubscription
 	displayOverlaySuccess$ = this.actions$.pipe(
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
-		tap(({ payload }) => this.events.displayOverlaySuccess.emit(payload.overlay))
+		tap(({ payload }) => this.events.displayOverlaySuccess.emit({
+			overlay: payload.overlay,
+			mapId: payload.mapId
+		}))
 	);
 
 	@AutoSubscription
 	displayOverlayFailed$ = this.actions$.pipe(
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED),
-		tap(({ payload }) => this.events.displayOverlaySuccess.emit(false))
+		tap(({ payload }) => this.events.displayOverlaySuccess.emit({
+			overlay: false,
+			mapId: payload.mapId
+		}))
 	);
 
 	/** Events **/

@@ -121,8 +121,9 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		const dispatchValue = this.mode === mode ? undefined : mode;
 		if (dispatchValue) {
 			this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetAnnotationMode] }));
+			this.store.dispatch(new SetAnnotationMode({ annotationMode: dispatchValue }));
 		}
-		this.store.dispatch(new SetAnnotationMode({ annotationMode: dispatchValue }));
+		this.store.dispatch(new SetAnnotationMode(null));
 	}
 
 	selectLineWidth($event) {

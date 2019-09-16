@@ -182,7 +182,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	toggleDragged() {
-		this.store$.dispatch(new ToggleDraggedModeAction({ overlayId: this.overlay.id, dragged: !this.isDragged }))
+		this.store$.dispatch(new ToggleDraggedModeAction({ mapId: this.mapId, overlayId: this.overlay.id, dragged: !this.isDragged }))
 	}
 
 	removeOverlay() {

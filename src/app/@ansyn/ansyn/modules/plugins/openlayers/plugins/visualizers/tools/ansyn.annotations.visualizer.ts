@@ -1,7 +1,7 @@
 import { BaseImageryPlugin, ImageryPlugin, IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { uniq } from 'lodash';
 import { select, Store } from '@ngrx/store';
-import { selectActiveMapId, selectOverlayByMapId } from '@ansyn/map-facade';
+import { MapActionTypes, selectActiveMapId, selectOverlayByMapId } from '@ansyn/map-facade';
 import { combineLatest, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
 import { distinctUntilChanged, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
@@ -32,7 +32,7 @@ import {
 import {
 	AnnotationRemoveFeature,
 	AnnotationUpdateFeature,
-	SetAnnotationMode
+	SetAnnotationMode, ToolsActionsTypes
 } from '../../../../../menu-items/tools/actions/tools.actions';
 import { UpdateLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
 import { SearchMode, SearchModeEnum } from '../../../../../status-bar/models/search-mode.enum';
@@ -40,11 +40,12 @@ import { IOverlaysTranslationData } from '../../../../../menu-items/cases/models
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
 import { selectTranslationData } from '../../../../../overlays/overlay-status/reducers/overlay-status.reducer';
 import { SetOverlayTranslationDataAction } from '../../../../../overlays/overlay-status/actions/overlay-status.actions';
+import { Actions, ofType } from '@ngrx/effects';
 
 // @dynamic
 @ImageryPlugin({
 	supported: [OpenLayersMap],
-	deps: [Store, OpenLayersProjectionService, OL_PLUGINS_CONFIG]
+	deps: [Store, Actions, OpenLayersProjectionService, OL_PLUGINS_CONFIG]
 })
 export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	annotationsVisualizer: AnnotationsVisualizer;
@@ -76,8 +77,6 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 		distinctUntilChanged()
 	);
 
-	annotationMode$: Observable<AnnotationMode> = this.store$.pipe(select(selectAnnotationMode));
-
 	@AutoSubscription
 	activeChange$ = this.store$.pipe(
 		select(selectActiveMapId),
@@ -98,10 +97,16 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	annoatationModeChange$: Observable<any> = this.annotationMode$
-		.pipe(tap((mode) => {
-			this.annotationsVisualizer.setMode(mode)
-		}));
+	annoatationModeChange$: any = this.actions$
+		.pipe(
+			ofType(ToolsActionsTypes.STORE.SET_ANNOTATION_MODE),
+			tap((action: SetAnnotationMode) => {
+				const annotationMode = Boolean(action.payload) ? action.payload.annotationMode : null;
+				const useMapId = action.payload && action.payload.mapId;
+				if (!useMapId || (useMapId && action.payload.mapId === this.mapId)) {
+					this.annotationsVisualizer.setMode(annotationMode)
+				}
+			}));
 
 	@AutoSubscription
 	annotationPropertiesChange$: Observable<any> = this.store$.pipe(
@@ -130,7 +135,11 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	onChangeMode$ = () => this.annotationsVisualizer.events.onChangeMode.pipe(
 		tap((mode) => {
 			const newMode = !Boolean(mode) ? undefined : mode; // prevent infinite loop
-			this.store$.dispatch(new SetAnnotationMode(newMode))
+			if (newMode === undefined) {
+				this.store$.dispatch(new SetAnnotationMode(undefined));
+			} else {
+				this.store$.dispatch(new SetAnnotationMode({ annotationMode: newMode, mapId: this.mapId }));
+			}
 		})
 	);
 
@@ -182,6 +191,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 		})
 	);
 
+	@AutoSubscription
 	onDraggEnd$ = () => this.annotationsVisualizer.events.offsetEntity.pipe(
 		tap((offset: any) => {
 			if (this.overlay) {
@@ -226,6 +236,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	}
 
 	constructor(public store$: Store<any>,
+				protected actions$: Actions,
 				protected projectionService: OpenLayersProjectionService,
 				@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig) {
 		super();

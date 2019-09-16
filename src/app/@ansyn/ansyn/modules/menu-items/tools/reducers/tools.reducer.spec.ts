@@ -10,7 +10,7 @@ describe('ToolsReducer', () => {
 	});
 
 	it('Check SET_ANNOTATION_MODE', () => {
-		const action = new SetAnnotationMode(AnnotationMode.Point);
+		const action = new SetAnnotationMode({ annotationMode: AnnotationMode.Point });
 		const result = ToolsReducer(cloneDeep(toolsInitialState), action);
 		expect(result.annotationMode).toBe('Point');
 	});

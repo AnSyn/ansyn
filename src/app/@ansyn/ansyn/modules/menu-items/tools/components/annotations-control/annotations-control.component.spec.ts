@@ -72,13 +72,13 @@ describe('AnnotationsControlComponent', () => {
 	it('setAnnotationMode', () => {
 		component.mode = undefined;
 		component.setAnnotationMode(AnnotationMode.Point);
-		expect(store.dispatch).toHaveBeenCalledWith(new SetAnnotationMode(AnnotationMode.Point));
+		expect(store.dispatch).toHaveBeenCalledWith(new SetAnnotationMode({ annotationMode: AnnotationMode.Point }));
 	});
 
 	it('setAnnotationMode with mode set', () => {
 		component.mode = AnnotationMode.Point;
 		component.setAnnotationMode(AnnotationMode.Point);
-		expect(store.dispatch).toHaveBeenCalledWith(new SetAnnotationMode());
+		expect(store.dispatch).toHaveBeenCalledWith(new SetAnnotationMode(null));
 	});
 
 	it('select line width', () => {

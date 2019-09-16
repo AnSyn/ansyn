@@ -182,11 +182,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 								const geometry = feature.getGeometry();
 								geometry.translate(pixel[0], pixel[1]);
 							});
+							this.offset[0] = this.offset[0] + pixel[0];
+							this.offset[1] = this.offset[1] + pixel[1];
 						}
 					}),
-					traslationInteractionHandler.onStopDrag.subscribe((pixel: [number, number]) => {
-						this.offset[0] = this.offset[0] + pixel[0];
-						this.offset[1] = this.offset[1] + pixel[1];
+					traslationInteractionHandler.onStopDrag.subscribe(() => {
 						this.events.offsetEntity.next(this.offset);
 					})
 				);

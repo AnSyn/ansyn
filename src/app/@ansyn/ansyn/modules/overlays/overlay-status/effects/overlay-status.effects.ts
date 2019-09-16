@@ -1,6 +1,20 @@
 import { Injectable } from '@angular/core';
-import { CommunicatorEntity, geojsonMultiPolygonToPolygons,	geojsonPolygonToMultiPolygon, ImageryCommunicatorService, ImageryMapPosition, IMapSettings, unifyPolygons } from '@ansyn/imagery';
-import { MapFacadeService, mapStateSelector, selectMaps, SetToastMessageAction, UpdateMapAction } from '@ansyn/map-facade';
+import {
+	CommunicatorEntity,
+	geojsonMultiPolygonToPolygons,
+	geojsonPolygonToMultiPolygon,
+	ImageryCommunicatorService,
+	ImageryMapPosition,
+	IMapSettings,
+	unifyPolygons
+} from '@ansyn/imagery';
+import {
+	MapFacadeService,
+	mapStateSelector,
+	selectMaps,
+	SetToastMessageAction,
+	UpdateMapAction
+} from '@ansyn/map-facade';
 import { AnnotationMode, DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Dictionary } from '@ngrx/entity';
@@ -69,7 +83,7 @@ export class OverlayStatusEffects {
 			if (action.payload.dragged) {
 				annotationMode = AnnotationMode.Translate;
 			}
-			return new SetAnnotationMode(annotationMode)
+			return new SetAnnotationMode({ annotationMode: annotationMode, mapId: action.payload.mapId });
 		})
 	);
 
@@ -79,9 +93,10 @@ export class OverlayStatusEffects {
 		withLatestFrom(this.store$.select(selectTranslationData)),
 		mergeMap(([action, overlaysTranslationData]: [BackToWorldSuccess | DisplayOverlaySuccessAction, IOverlaysTranslationData]) => {
 			const overlay = (<any>action.payload).overlay;
+			const mapId = (<any>action.payload).mapId;
 			const actions = [];
 			Object.keys(overlaysTranslationData).forEach(overlayId => {
-				actions.push(new ToggleDraggedModeAction({ overlayId: overlayId, dragged: false }));
+				actions.push(new ToggleDraggedModeAction({ mapId, overlayId, dragged: false }));
 			});
 			actions.push(new SetAnnotationMode(null));
 			return actions;

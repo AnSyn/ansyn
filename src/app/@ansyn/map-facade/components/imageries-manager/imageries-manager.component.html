@@ -5,24 +5,24 @@
 	 [class.footer-collapsed]="footerCollapse"
 >
 
-	<ng-template [ngIf]="ids.length">
-		<div *ngFor="let mapId of ids"
+	<ng-template [ngIf]="mapsEntities.length > 0">
+		<div *ngFor="let map of mapsEntities; trackBy: trackByFun "
 			 class="map-container-wrapper"
              #dragElement
-			 (click)="clickMapContainer(mapId)"
+			 (click)="clickMapContainer(map.id)"
 			 (dblclick)="dbclick()"
-			 [id]="mapId"
+			 [id]="map.id"
 			 draggable="false">
 			<ansyn-imagery-container class="map"
-									 [mapState]="mapsEntities[mapId]"
-									 [active]="activeMapId === mapId"
-									 [showStatus]="ids.length > 1"
+									 [mapState]="map"
+									 [active]="activeMapId === map.id"
+									 [showStatus]="mapsEntities.length > 1"
 									 (onMove)="dragDropMapService.onMouseDown($event, dragElement, ids, mapsEntities)"
-									 [mapsAmount]="ids.length">
+									 [mapsAmount]="mapsEntities.length">
 			</ansyn-imagery-container>
 
 			<div class="active-border"
-				 [class.active]="activeMapId === mapId">
+				 [class.active]="activeMapId === map.id">
 			</div>
 		</div>
 

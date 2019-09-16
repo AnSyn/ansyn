@@ -1,5 +1,5 @@
 
-.icon-add:before {
+.icon-layer-add:before {
 	content: '\e800';
 }
 
@@ -74,7 +74,7 @@
 }
 
 /* '' */
-.icon-export:before {
+.icon-layer-export:before {
 	content: '\e80f';
 }
 
@@ -94,7 +94,7 @@
 }
 
 /* '' */
-.icon-import:before {
+.icon-layer-import:before {
 	content: '\e813';
 }
 

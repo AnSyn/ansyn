@@ -29,66 +29,6 @@
 		width: 100%;
 		overflow: hidden;
 
-		&.isPinned, &.isNotPinned {
-			background: black;
-		}
-
-		&.isPinned div.layer {
-			/deep/ .status {
-				.buttons button.back-to-world-view {
-					font-size: 0 !important;
-					overflow: visible;
-
-					i {
-						font-size: 13.33px !important;;
-					}
-				}
-			}
-
-			/deep/ .maps-container {
-				div.imageries-container {
-					&.layout2, &.layout4, &.layout6, &.layout5 div.map-container-wrapper:not(:first-child) {
-						/deep/ ansyn-imagery-status {
-							.buttons button.back-to-world-view {
-								font-size: 0;
-								overflow: visible;
-
-								i {
-									font-size: 13.33px;
-								}
-							}
-						}
-					}
-				}
-			}
-
-			/deep/ div.status-timeline-container {
-				ansyn-imagery-status {
-					&.one-map {
-						max-width: 35%;
-						justify-content: space-between;
-
-						.buttons {
-							position: initial;
-							left: initial;
-							top: initial;
-						}
-
-						ansyn-alerts-container {
-							position: initial;
-							right: initial;
-							max-width: initial;
-							overflow: hidden;
-						}
-
-						.description {
-							padding-left: 0;
-						}
-					}
-				}
-			}
-		}
-
 		div.layer {
 			width: 100%;
 			height: 100%;

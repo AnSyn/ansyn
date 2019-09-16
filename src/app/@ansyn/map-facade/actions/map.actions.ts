@@ -233,7 +233,7 @@ export class ClickOutsideMap implements Action {
 export class ShadowMouseProducer implements Action {
 	readonly type = MapActionTypes.SHADOW_MOUSE_PRODUCER;
 
-	constructor(public payload: { point: { coordinates: Array<number>, type: string }, outsideSource?: boolean }) {
+	constructor(public payload: { point: { coordinates: Position, type: string }, outsideSource?: boolean }) {
 
 	}
 }

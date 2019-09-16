@@ -19,7 +19,7 @@ import { Dictionary } from '@ngrx/entity/src/models';
 import { select, Store } from '@ngrx/store';
 import { featureCollection } from '@turf/turf';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { FeatureCollection, Point, Polygon, Position } from 'geojson';
+import { FeatureCollection, Point, Polygon } from 'geojson';
 import { cloneDeep } from 'lodash';
 import { combineLatest, Observable } from 'rxjs';
 import { map, take, tap, withLatestFrom } from 'rxjs/operators';
@@ -133,8 +133,11 @@ export class AnsynApi {
 		}
 	}
 
-	setOutSourceMouseShadow(coordinates: Position): void {
-		this.store.dispatch(new ShadowMouseProducer({ point: { coordinates, type: 'point' }, outsideSource: true }));
+	setOutSourceMouseShadow(geoPoint: Point): void {
+		this.store.dispatch(new ShadowMouseProducer({
+			point: { coordinates: geoPoint.coordinates, type: 'point' },
+			outsideSource: true
+		}));
 	}
 
 	// displayOverLay(overlay: IOverlay): void {
@@ -182,8 +185,8 @@ export class AnsynApi {
 		return this.mapsEntities[this.activeMapId].data.position;
 	}
 
-	goToPosition(position: Position): void {
-		this.store.dispatch(new GoToAction(position));
+	goToPosition(geoPoint: Point): void {
+		this.store.dispatch(new GoToAction(geoPoint.coordinates));
 	}
 
 	setMapPositionByRect(rect: Polygon) {
@@ -206,8 +209,8 @@ export class AnsynApi {
 	 * @param degree
 	 * @param mapId
 	 */
-	setRotation(degree: number, mapId?: string) {
-		this.imageryCommunicatorService.provide(mapId ? mapId : this.activeMapId).setRotation(degree);
+	setRotation(degree: number, mapId: string = this.activeMapId) {
+		this.imageryCommunicatorService.provide(mapId).setRotation(degree);
 	}
 
 	setMapPositionByRadius(center: Point, radiusInMeters: number, search: boolean = false) {

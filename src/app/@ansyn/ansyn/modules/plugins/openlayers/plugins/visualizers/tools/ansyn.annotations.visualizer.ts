@@ -102,9 +102,9 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			ofType(ToolsActionsTypes.STORE.SET_ANNOTATION_MODE),
 			tap((action: SetAnnotationMode) => {
 				const annotationMode = Boolean(action.payload) ? action.payload.annotationMode : null;
-				const useMapId = action.payload && action.payload.mapId;
+				const useMapId = action.payload && Boolean(action.payload.mapId);
 				if (!useMapId || (useMapId && action.payload.mapId === this.mapId)) {
-					this.annotationsVisualizer.setMode(annotationMode)
+					this.annotationsVisualizer.setMode(annotationMode, !useMapId)
 				}
 			}));
 
@@ -133,13 +133,9 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 
 	@AutoSubscription
 	onChangeMode$ = () => this.annotationsVisualizer.events.onChangeMode.pipe(
-		tap((mode) => {
-			const newMode = !Boolean(mode) ? undefined : mode; // prevent infinite loop
-			if (newMode === undefined) {
-				this.store$.dispatch(new SetAnnotationMode(undefined));
-			} else {
-				this.store$.dispatch(new SetAnnotationMode({ annotationMode: newMode, mapId: this.mapId }));
-			}
+		tap((arg: {mode: AnnotationMode, forceBroadcast: boolean}) => {
+			const newMode = !Boolean(arg.mode) ? undefined : arg.mode; // prevent infinite loop
+			this.store$.dispatch(new SetAnnotationMode({ annotationMode: newMode, mapId: arg.forceBroadcast ? null : this.mapId}));
 		})
 	);
 

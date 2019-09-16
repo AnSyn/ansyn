@@ -9,7 +9,7 @@ import {
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { combineLatest, Observable } from 'rxjs';
-import { tap, withLatestFrom } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { IOverlay } from '../models/overlay.model';
 import {
 	SetRemovedOverlaysIdAction,
@@ -24,7 +24,9 @@ import {
 	selectTranslationData
 } from './reducers/overlay-status.reducer';
 import { AnnotationMode } from '@ansyn/ol';
-import { selectAnnotationMode } from '../../menu-items/tools/reducers/tools.reducer';
+import { ITranslationData } from '../../menu-items/cases/models/case.model';
+import { Actions, ofType } from '@ngrx/effects';
+import { SetAnnotationMode, ToolsActionsTypes } from '../../menu-items/tools/actions/tools.actions';
 
 @Component({
 	selector: 'ansyn-overlay-status',
@@ -76,33 +78,38 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	);
 
 	@AutoSubscription
-	draggedMode$: Observable<any> = this.store$.select(selectTranslationData).pipe(
-		tap((overlaysTranslationData) => {
-			this.overlaysTranslationData = overlaysTranslationData;
-			this.updateDraggedStatus();
-		})
-	);
-
-	@AutoSubscription
 	removedOverlays$: Observable<string[]> = this.store$.select(selectRemovedOverlays).pipe(
 		tap((removedOverlaysIds) => {
 			this.removedOverlaysIds = removedOverlaysIds;
 			this.updateRemovedStatus();
 		})
 	);
+
 	@AutoSubscription
-	active$ = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectAnnotationMode)).pipe(
-		tap(([activeMapId, annotationMode]: [string, AnnotationMode]) => {
+	active$ = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectTranslationData)).pipe(
+		tap(([activeMapId, overlaysTranslationData]: [string, { [key: string]: ITranslationData }]) => {
 			this.isActiveMap = activeMapId === this.mapId;
-			if (annotationMode !== AnnotationMode.Translate && this.isActiveMap) {
-				if (this.isDragged) {
-					this.toggleDragged();
-				}
-			}
+			this.overlaysTranslationData = overlaysTranslationData;
+			this.updateDraggedStatus();
 		})
 	);
 
-	constructor(public store$: Store<any>) {
+	@AutoSubscription
+	annoatationModeChange$: any = this.actions$
+		.pipe(
+			ofType(ToolsActionsTypes.STORE.SET_ANNOTATION_MODE),
+			tap((action: SetAnnotationMode) => {
+				const useMapId = action.payload && Boolean(action.payload.mapId);
+				if ((!useMapId || (useMapId && action.payload.mapId === this.mapId)) &&
+					(action.payload.annotationMode !== AnnotationMode.Translate &&
+					action.payload.annotationMode !== null)) {
+					if (this.isDragged) {
+						this.toggleDragged();
+					}
+				}
+			}));
+
+	constructor(public store$: Store<any>, protected actions$: Actions,) {
 		this.isPreset = true;
 		this.isFavorite = true;
 	}
@@ -121,6 +128,9 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	overlay$ = () => this.store$.pipe(
 		select(selectOverlayByMapId(this.mapId)),
 		tap(overlay => {
+			if (this.isDragged) {
+				this.toggleDragged();
+			}
 			this.overlay = overlay;
 			this.onChangeOverlay();
 		})
@@ -137,6 +147,9 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	ngOnDestroy(): void {
+		if (this.isDragged) {
+			this.toggleDragged();
+		}
 	}
 
 	onChangeOverlay() {
@@ -182,7 +195,11 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	toggleDragged() {
-		this.store$.dispatch(new ToggleDraggedModeAction({ mapId: this.mapId, overlayId: this.overlay.id, dragged: !this.isDragged }))
+		this.store$.dispatch(new ToggleDraggedModeAction({
+			mapId: this.mapId,
+			overlayId: this.overlay.id,
+			dragged: !this.isDragged
+		}))
 	}
 
 	removeOverlay() {

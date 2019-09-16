@@ -11,7 +11,7 @@ import {
 import {
 	MapFacadeService,
 	mapStateSelector,
-	selectMaps,
+	selectMaps, selectMapsList,
 	SetToastMessageAction,
 	UpdateMapAction
 } from '@ansyn/map-facade';
@@ -78,28 +78,24 @@ export class OverlayStatusEffects {
 	@Effect()
 	toggleTranslate$: Observable<any> = this.actions$.pipe(
 		ofType(OverlayStatusActionsTypes.TOGGLE_DRAGGED_MODE),
-		map((action: ToggleDraggedModeAction) => {
+		withLatestFrom(this.store$.select(selectMapsList)),
+		mergeMap(([action, maps]: [ToggleDraggedModeAction, IMapSettings[]]) => {
 			let annotationMode = null;
+
+			const resultActions = [];
 			if (action.payload.dragged) {
 				annotationMode = AnnotationMode.Translate;
 			}
-			return new SetAnnotationMode({ annotationMode: annotationMode, mapId: action.payload.mapId });
-		})
-	);
-
-	@Effect()
-	switchOverlayDisableTranslate$: Observable<any> = this.actions$.pipe(
-		ofType(OverlaysActionTypes.DISPLAY_OVERLAY, OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS),
-		withLatestFrom(this.store$.select(selectTranslationData)),
-		mergeMap(([action, overlaysTranslationData]: [BackToWorldSuccess | DisplayOverlaySuccessAction, IOverlaysTranslationData]) => {
-			const overlay = (<any>action.payload).overlay;
-			const mapId = (<any>action.payload).mapId;
-			const actions = [];
-			Object.keys(overlaysTranslationData).forEach(overlayId => {
-				actions.push(new ToggleDraggedModeAction({ mapId, overlayId, dragged: false }));
+			const filteredMaps = maps.filter((mapSettings) => mapSettings.id !== action.payload.mapId &&
+				Boolean(mapSettings.data.overlay) && mapSettings.data.overlay.id === action.payload.overlayId);
+			filteredMaps.forEach((mapSettings) => {
+				resultActions.push(new SetAnnotationMode({
+					annotationMode: annotationMode,
+					mapId: mapSettings.id
+				}));
 			});
-			actions.push(new SetAnnotationMode(null));
-			return actions;
+			resultActions.push(new SetAnnotationMode({ annotationMode: annotationMode, mapId: action.payload.mapId }));
+			return resultActions;
 		})
 	);
 

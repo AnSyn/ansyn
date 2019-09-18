@@ -158,7 +158,7 @@ export class RemoveAlertMsg implements Action {
 export class ToggleDraggedModeAction implements Action {
 	type = OverlayStatusActionsTypes.TOGGLE_DRAGGED_MODE;
 
-	constructor(public payload: { overlayId: string, dragged: boolean }) {
+	constructor(public payload: { mapId: string, overlayId: string, dragged: boolean }) {
 	}
 }
 

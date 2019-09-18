@@ -69,7 +69,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		onClick: new Subject(),
 		onSelect: new Subject<string[]>(),
 		onHover: new Subject<string>(),
-		onChangeMode: new Subject<AnnotationMode>(),
+		onChangeMode: new Subject<{ mode: AnnotationMode, forceBroadcast: boolean }>(),
 		onDrawEnd: new Subject<IDrawEndEvent>(),
 		removeEntity: new Subject<string>(),
 		updateEntity: new Subject<IVisualizerEntity>(),
@@ -167,7 +167,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.geoJsonFormat = new OLGeoJSON();
 	}
 
-	setMode(mode) {
+	setMode(mode, forceBroadcast: boolean) {
 		if (this.mode !== mode) {
 			this.mode = mode;
 			this.removeInteractions();
@@ -182,11 +182,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 								const geometry = feature.getGeometry();
 								geometry.translate(pixel[0], pixel[1]);
 							});
+							this.offset[0] = this.offset[0] + pixel[0];
+							this.offset[1] = this.offset[1] + pixel[1];
 						}
 					}),
-					traslationInteractionHandler.onStopDrag.subscribe((pixel: [number, number]) => {
-						this.offset[0] = this.offset[0] + pixel[0];
-						this.offset[1] = this.offset[1] + pixel[1];
+					traslationInteractionHandler.onStopDrag.subscribe(() => {
 						this.events.offsetEntity.next(this.offset);
 					})
 				);
@@ -202,7 +202,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				drawInteractionHandler.on('drawend', this.onDrawEndEvent.bind(this));
 				this.addInteraction(VisualizerInteractions.drawInteractionHandler, drawInteractionHandler);
 			}
-			this.events.onChangeMode.next(mode);
+			this.events.onChangeMode.next({ mode, forceBroadcast });
 		}
 	}
 
@@ -309,7 +309,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	onDrawEndEvent({ feature }) {
 		const { mode } = this;
-		this.setMode(undefined);
+		this.setMode(undefined, true);
 		const geometry = feature.getGeometry();
 		let cloneGeometry = <any>geometry.clone();
 		if (cloneGeometry instanceof olCircle) {

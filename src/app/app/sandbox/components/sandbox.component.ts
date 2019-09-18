@@ -522,11 +522,11 @@ export class SandboxComponent implements OnInit, OnDestroy {
 
 	startDrag() {
 		const plugin: AnnotationsVisualizer = this.imageryCommunicatorService.communicatorsAsArray()[0].getPlugin(AnnotationsVisualizer);
-		plugin.setMode(AnnotationMode.Translate);
+		plugin.setMode(AnnotationMode.Translate, false);
 	}
 
 	stopDrag() {
 		const plugin: AnnotationsVisualizer = this.imageryCommunicatorService.communicatorsAsArray()[0].getPlugin(AnnotationsVisualizer);
-		plugin.setMode(null);
+		plugin.setMode(null, false);
 	}
 }

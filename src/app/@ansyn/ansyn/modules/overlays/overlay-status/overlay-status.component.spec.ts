@@ -4,21 +4,25 @@ import { Store, StoreModule } from '@ngrx/store';
 import { imageryStatusFeatureKey, ImageryStatusReducer, mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { overlayStatusFeatureKey, OverlayStatusReducer } from './reducers/overlay-status.reducer';
 import { TranslateModule } from '@ngx-translate/core';
-
+import { Observable } from 'rxjs';
+import { provideMockActions } from '@ngrx/effects/testing';
 
 describe('OverlayStatusComponent', () => {
 	let component: OverlayStatusComponent;
 	let fixture: ComponentFixture<OverlayStatusComponent>;
 	let store: Store<any>;
+	let actions: Observable<any>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [OverlayStatusComponent],
-			imports: [StoreModule.forRoot({
-				[mapFeatureKey]: MapReducer,
-				[imageryStatusFeatureKey]: ImageryStatusReducer,
-				[overlayStatusFeatureKey]: OverlayStatusReducer
-			}),
+			providers: [provideMockActions(() => actions)],
+			imports: [
+				StoreModule.forRoot({
+					[mapFeatureKey]: MapReducer,
+					[imageryStatusFeatureKey]: ImageryStatusReducer,
+					[overlayStatusFeatureKey]: OverlayStatusReducer
+				}),
 				TranslateModule.forRoot()]
 		})
 			.compileComponents();

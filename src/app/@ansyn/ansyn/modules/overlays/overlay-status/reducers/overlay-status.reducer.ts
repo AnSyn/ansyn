@@ -115,10 +115,8 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 			return {
 				...state, overlaysTranslationData: {
 					...state.overlaysTranslationData, [overlayId]: {
-						[overlayId]: {
 							...state.overlaysTranslationData[overlayId],
 							offset
-						}
 					}
 				}
 			};

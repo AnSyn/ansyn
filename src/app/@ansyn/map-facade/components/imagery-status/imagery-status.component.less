@@ -31,6 +31,7 @@
 	.buttons {
 		line-height: 0;
 		display: flex;
+		flex: 1;
 
 		button.drag-me {
 			background: transparent;
@@ -88,18 +89,11 @@
 
 	.description {
 		height: 100%;
-		max-width: 33%;
 		padding: 0 10px;
-		text-align: center;
+		justify-content: center;
+		align-items: center;
 		display: flex;
-
-		div {
-			text-overflow: ellipsis;
-			white-space: nowrap;
-			overflow: hidden;
-			display: flex;
-			align-items: center;
-		}
+		flex: 1;
 
 		button.share-link {
 			&:extend(.base-share-link);
@@ -117,8 +111,10 @@
 	}
 
 	.notifications {
+		display: flex;
+		flex: 1;
 		padding: 5px;
-		min-width: 33%;
+	justify-content: flex-end;
 	}
 }
 
@@ -134,7 +130,14 @@
 		}
 
 		.description {
+			justify-content: flex-start;
 			padding-left: 0;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		ansyn-popover {
+			width: 80px;
 		}
 	}
 }

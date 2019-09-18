@@ -5,9 +5,11 @@ import { ICaseFilter } from '../../../cases/models/case.model';
 export abstract class FilterMetadata {
 	type: FilterType;
 	visible: boolean;
+	collapse: boolean;
 
 	initializeFilter(overlays: IOverlay[], modelName: string, caseFilter?: ICaseFilter, visible?: boolean) {
 		this.visible = visible !== undefined ? visible : true;
+		this.collapse = false;
 	};
 
 	abstract accumulateData(value: any): void;

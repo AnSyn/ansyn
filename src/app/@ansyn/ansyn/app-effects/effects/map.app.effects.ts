@@ -183,7 +183,7 @@ export class MapAppEffects {
 	@Effect()
 	markupOnMapsDataChanges$ = this.store$.select(selectOverlaysWithMapIds)
 		.pipe(
-			distinctUntilChanged((dataA, dataB) => isEqual(dataA[0], dataB[0])),
+			distinctUntilChanged((dataA, dataB) => isEqual(dataA, dataB)),
 			map((overlayWithMapIds: { overlay: any, mapId: string, isActive: boolean }[]) => {
 					const actives = [];
 					const displayed = [];

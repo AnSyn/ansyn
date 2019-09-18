@@ -28,7 +28,7 @@ export class AlertsContainerComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	alertMsg$: Observable<any> = combineLatest(this.store$.select(selectAlertMsg), this.store$.select(selectOverlayByMapId(this.mapId))).pipe(
+	alertMsg$: () => Observable<any> = () => combineLatest(this.store$.select(selectAlertMsg), this.store$.select(selectOverlayByMapId(this.mapId))).pipe(
 		distinctUntilChanged(),
 		tap(([alertMsg, overlay]) => {
 			this.alertMsg = alertMsg;

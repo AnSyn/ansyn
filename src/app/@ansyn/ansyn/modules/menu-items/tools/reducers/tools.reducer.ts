@@ -66,7 +66,8 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			};
 
 		case ToolsActionsTypes.STORE.SET_ANNOTATION_MODE:
-			return { ...state, annotationMode: <AnnotationMode>action.payload };
+			const annotationMode = action.payload ? action.payload.annotationMode : null;
+			return { ...state, annotationMode: annotationMode};
 
 		case ToolsActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED:
 			tmpMap = new Map(state.flags);

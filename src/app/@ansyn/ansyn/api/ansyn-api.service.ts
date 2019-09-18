@@ -42,7 +42,9 @@ import {
 } from '../modules/menu-items/tools/actions/tools.actions';
 import {
 	DisplayOverlayAction,
+	DisplayOverlaySuccessAction,
 	LoadOverlaysSuccessAction,
+	OverlaysActionTypes,
 	SetOverlaysCriteriaAction
 } from '../modules/overlays/actions/overlays.actions';
 import { IOverlay, IOverlaysCriteria } from '../modules/overlays/models/overlay.model';
@@ -63,6 +65,12 @@ export class AnsynApi {
 	activeMapId;
 	mapsEntities;
 	activeAnnotationLayer;
+	events = {
+		onReady: new EventEmitter<boolean>(),
+		overlaysLoadedSuccess: new EventEmitter<IOverlay[] | false>(),
+		displayOverlaySuccess: new EventEmitter<{overlay: IOverlay | false, mapId: string}>()
+	};
+	/** @deprecated onReady as own events was deprecated use events.onReady instead */
 	onReady = new EventEmitter<boolean>(true);
 
 	getMaps$: Observable<IMapSettings[]> = this.store.pipe(
@@ -92,11 +100,44 @@ export class AnsynApi {
 			})
 		);
 
+
+	/** Events **/
 	@AutoSubscription
 	ready$ = this.imageryCommunicatorService.instanceCreated.pipe(
 		take(1),
-		tap((map) => this.onReady.emit(true))
+		tap((map) => {
+			this.onReady.emit(true);
+			this.events.onReady.emit(true);
+		})
 	);
+
+	@AutoSubscription
+	overlaysSearchEnd$ = this.actions$.pipe(
+		ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
+		tap(({ payload }) => {
+			this.events.overlaysLoadedSuccess.emit(payload.length > 0 ? payload : false);
+		})
+	);
+
+	@AutoSubscription
+	displayOverlaySuccess$ = this.actions$.pipe(
+		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
+		tap(({ payload }) => this.events.displayOverlaySuccess.emit({
+			overlay: payload.overlay,
+			mapId: payload.mapId
+		}))
+	);
+
+	@AutoSubscription
+	displayOverlayFailed$ = this.actions$.pipe(
+		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED),
+		tap(({ payload }) => this.events.displayOverlaySuccess.emit({
+			overlay: false,
+			mapId: payload.mapId
+		}))
+	);
+
+	/** Events **/
 
 	onShadowMouseProduce$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.SHADOW_MOUSE_PRODUCER),

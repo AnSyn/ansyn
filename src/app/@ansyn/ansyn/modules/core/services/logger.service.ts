@@ -44,7 +44,6 @@ export class LoggerService implements ErrorHandler {
 		window.onerror = (e) => {
 			this.error(e.toString());
 		};
-		console.log('ctor of logger');
 	}
 
 	get standardPrefix() {
@@ -107,12 +106,10 @@ export class LoggerService implements ErrorHandler {
 
 	setClientAsConnected() {
 		this.isConnected = true;
-		console.log('isConnected', this.isConnected);
 	}
 
 	setClientAsDisconnected() {
 		this.isConnected = false;
-		console.log('isConnected', this.isConnected);
 	}
 
 	private updateLogTimeForDisconnect() {

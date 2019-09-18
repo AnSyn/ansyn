@@ -307,7 +307,8 @@
   "loggerConfig": {
     "env": "PROD",
     "active": {{ getv "/ansyn/logger/active" "false"}},
-    "componentName": "{{ getv "/ansyn/logger/component/name" "app_client" }}"
+    "componentName": "{{ getv "/ansyn/logger/component/name" "app_client" }}",
+    "disconnectionTimeoutInMinutes": {{ getv "/ansyn/logger/disconnection/minutes" "1"}}
   },
   "statusBarConfig": {
     "toolTips": {

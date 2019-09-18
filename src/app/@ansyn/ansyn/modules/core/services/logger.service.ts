@@ -2,6 +2,7 @@ import { ErrorHandler, Inject, Injectable } from '@angular/core';
 import { LoggerConfig } from '../models/logger.config';
 import { ILoggerConfig } from '../models/logger-config.model';
 import { Debounce } from 'lodash-decorators';
+import * as momentNs from 'moment';
 
 export type Severity = 'CRITICAL' | 'ERROR' | 'WARNING' | 'INFO' | 'DEBUG'
 
@@ -15,9 +16,14 @@ export class LoggerService implements ErrorHandler {
 	env = 'ENV'; // default (unknown environment)
 	componentName = 'app'; // default (unknown environment)
 	stack: ILogObject[] = [];
+	lastLogTime: Date;
+	disconnectionInMilliseconds: number;
+	timeoutCookie;
+	isConnected: boolean;
 
 	beforeAppClose() {
 		this.info('app closed');
+		this.setClientAsDisconnected();
 	}
 
 	handleError(error: any): void {
@@ -33,9 +39,12 @@ export class LoggerService implements ErrorHandler {
 	constructor(@Inject(LoggerConfig) public loggerConfig: ILoggerConfig) {
 		this.env = loggerConfig.env;
 		this.componentName = loggerConfig.componentName;
+		this.disconnectionInMilliseconds = new Date().getTime() - momentNs().subtract(this.loggerConfig.disconnectionTimeoutInMinutes, 'minutes').toDate().getTime();
+		this.isConnected = false;
 		window.onerror = (e) => {
 			this.error(e.toString());
 		};
+		console.log('ctor of logger');
 	}
 
 	get standardPrefix() {
@@ -66,6 +75,7 @@ export class LoggerService implements ErrorHandler {
 		if (!this.loggerConfig.active) {
 			return;
 		}
+		this.updateLogTimeForDisconnect();
 		let prefix = `${ this.standardPrefix }[${ Date() }]`;
 		if (includeBrowserData) {
 			prefix += `[window:${ window.innerWidth }x${ window.innerHeight }][userAgent: ${ navigator.userAgent }]`;
@@ -95,4 +105,33 @@ export class LoggerService implements ErrorHandler {
 		this.stack = [];
 	}
 
+	setClientAsConnected() {
+		this.isConnected = true;
+		console.log('isConnected', this.isConnected);
+	}
+
+	setClientAsDisconnected() {
+		this.isConnected = false;
+		console.log('isConnected', this.isConnected);
+	}
+
+	private updateLogTimeForDisconnect() {
+		if (!this.isConnected) {
+			this.setClientAsConnected();
+		}
+		this.lastLogTime = new Date();
+
+		if (this.timeoutCookie) {
+			window.clearTimeout(this.timeoutCookie);
+			this.timeoutCookie = null;
+		}
+
+		this.timeoutCookie = window.setTimeout(() => {
+			if (this.isConnected) {
+				this.setClientAsDisconnected();
+				window.clearTimeout(this.timeoutCookie);
+				this.timeoutCookie = null;
+			}
+		}, this.disconnectionInMilliseconds);
+	}
 }

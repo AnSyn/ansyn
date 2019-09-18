@@ -102,14 +102,14 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 				const useMapId = action.payload && Boolean(action.payload.mapId);
 				if ((!useMapId || (useMapId && action.payload.mapId === this.mapId)) &&
 					(action.payload.annotationMode !== AnnotationMode.Translate &&
-					action.payload.annotationMode !== null)) {
+						action.payload.annotationMode !== null)) {
 					if (this.isDragged) {
 						this.toggleDragged();
 					}
 				}
 			}));
 
-	constructor(public store$: Store<any>, protected actions$: Actions,) {
+	constructor(public store$: Store<any>, protected actions$: Actions) {
 		this.isPreset = true;
 		this.isFavorite = true;
 	}

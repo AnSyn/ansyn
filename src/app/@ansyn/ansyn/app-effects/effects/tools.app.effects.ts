@@ -205,7 +205,7 @@ export class ToolsAppEffects {
 			// reset the following interactions: Measure Distance, Annotation, Pinpoint search, Pin location
 			let clearActions = [
 				new SetMeasureDistanceToolState(false),
-				new SetAnnotationMode(),
+				new SetAnnotationMode(null),
 				new UpdateGeoFilterStatus(),
 				new SetPinLocationModeAction(false)
 			];

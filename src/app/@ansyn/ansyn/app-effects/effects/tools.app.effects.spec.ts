@@ -311,7 +311,7 @@ describe('ToolsAppEffects', () => {
 
 		const expectedResult = cold('--(abcd)--', {
 			a: new SetMeasureDistanceToolState(false),
-			b: new SetAnnotationMode(),
+			b: new SetAnnotationMode(null),
 			c: new UpdateGeoFilterStatus(),
 			d: new SetPinLocationModeAction(false)
 		});
@@ -327,7 +327,7 @@ describe('ToolsAppEffects', () => {
 		});
 
 		const expectedResult = cold('--(bce)--', {
-			b: new SetAnnotationMode(),
+			b: new SetAnnotationMode(null),
 			c: new UpdateGeoFilterStatus(),
 			e: new SetPinLocationModeAction(false)
 		});

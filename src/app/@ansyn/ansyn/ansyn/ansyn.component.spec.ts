@@ -10,6 +10,7 @@ import { mapStateSelector } from '@ansyn/map-facade';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
 import { toolsConfig } from '../modules/menu-items/tools/models/tools-config';
 import { CoreConfig } from "../modules/core/models/core.config";
+import { LoggerService } from '../modules/core/services/logger.service';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
@@ -64,6 +65,7 @@ describe('AnsynComponent', () => {
 				mockOverlayOverviewComponent,
 			],
 			providers: [
+				LoggerService,
 				{
 					provide: COMPONENT_MODE,
 					useValue: false

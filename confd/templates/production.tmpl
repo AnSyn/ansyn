@@ -306,7 +306,8 @@
   },
   "loggerConfig": {
     "env": "PROD",
-    "active": false
+    "active": {{ getv "/ansyn/logger/active" "false"}},
+    "componentName": "{{ getv "/ansyn/logger/component/name" "app_client" }}"
   },
   "statusBarConfig": {
     "toolTips": {

@@ -13,7 +13,12 @@ export interface ILogObject {
 @Injectable()
 export class LoggerService implements ErrorHandler {
 	env = 'ENV'; // default (unknown environment)
+	componentName = 'app'; // default (unknown environment)
 	stack: ILogObject[] = [];
+
+	beforeAppClose() {
+		this.info('app closed');
+	}
 
 	handleError(error: any): void {
 		if (error.stack) {
@@ -27,13 +32,14 @@ export class LoggerService implements ErrorHandler {
 
 	constructor(@Inject(LoggerConfig) public loggerConfig: ILoggerConfig) {
 		this.env = loggerConfig.env;
+		this.componentName = loggerConfig.componentName;
 		window.onerror = (e) => {
 			this.error(e.toString());
 		};
 	}
 
 	get standardPrefix() {
-		return `Ansyn[${ this.env }]`;
+		return `Ansyn[${ this.env }, ${this.componentName}]`;
 	}
 
 	critical(msg: string) {

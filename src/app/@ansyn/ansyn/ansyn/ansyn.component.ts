@@ -1,5 +1,5 @@
 import { select, Store } from '@ngrx/store';
-import { Component, HostBinding, Inject, Input, OnInit } from '@angular/core';
+import { Component, HostBinding, HostListener, Inject, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
 import { selectIsPinned } from '@ansyn/menu';
@@ -13,6 +13,7 @@ import { UpdateToolsFlags } from '../modules/menu-items/tools/actions/tools.acti
 import { toolsFlags } from '../modules/menu-items/tools/reducers/tools.reducer';
 import { ICoreConfig } from '../modules/core/models/core.config.model';
 import { CoreConfig } from '../modules/core/models/core.config';
+import { LoggerService } from '../modules/core/services/logger.service';
 
 @Component({
 	selector: 'ansyn-app',
@@ -45,10 +46,17 @@ export class AnsynComponent implements OnInit {
 	@HostBinding('class.component') component = this.componentMode;
 	@Input() version;
 
+	@HostListener('window:beforeunload', ['$event'])
+	public doSomething($event) {
+		this.loggerService.beforeAppClose();
+		return true;
+	}
+
 	constructor(protected store$: Store<any>,
 				@Inject(COMPONENT_MODE) public componentMode: boolean,
 				@Inject(CoreConfig) public coreConfig: ICoreConfig,
-				@Inject(toolsConfig) public toolsConfigData: IToolsConfig) {
+				@Inject(toolsConfig) public toolsConfigData: IToolsConfig,
+				public loggerService: LoggerService) {
 	}
 
 	ngOnInit(): void {

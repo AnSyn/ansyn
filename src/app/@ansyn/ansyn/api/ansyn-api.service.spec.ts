@@ -12,6 +12,7 @@ import { DataLayersService, layersConfig } from '../modules/menu-items/layers-ma
 import { ErrorHandlerService } from '../modules/core/services/error-handler.service';
 import { throwError } from 'rxjs';
 import { StorageService } from '../modules/core/services/storage/storage.service';
+import { Point } from 'geojson';
 
 describe('apiService', () => {
 	let ansynApi: AnsynApi;
@@ -58,9 +59,9 @@ describe('apiService', () => {
 	});
 
 	it('should go to location', () => {
-		const position = [-117, 33];
+		const position = <Point>{type: 'Point', coordinates: [-117, 33]};
 		ansynApi.goToPosition(position);
-		expect(store.dispatch).toHaveBeenCalledWith(new GoToAction(position));
+		expect(store.dispatch).toHaveBeenCalledWith(new GoToAction(position.coordinates));
 	});
 
 

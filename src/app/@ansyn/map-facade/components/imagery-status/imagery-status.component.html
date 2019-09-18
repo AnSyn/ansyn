@@ -10,7 +10,7 @@
 
 	<button
 		*ngIf="mapsAmount > 1"
-		class="drag-me"
+		class="small-icon-button drag-me"
 		[attr.tooltip-value]="'Move' | translate"
 		tooltip-class="bottom"
 		(mousedown)="onMove.emit($event)">

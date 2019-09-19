@@ -4,6 +4,7 @@ import { CredentialsComponent } from './credentials.component';
 import { CredentialsService } from '../../services/credentials/credentials.service';
 import { HttpClientModule } from '@angular/common/http';
 import { credentialsConfig } from '../../services/credentials/config';
+import { of } from 'rxjs';
 
 describe('CredentialsComponent', () => {
 	let component: CredentialsComponent;
@@ -17,7 +18,7 @@ describe('CredentialsComponent', () => {
 				{
 					provide: CredentialsService,
 					useValue: {
-						getCredentials: () => {}
+						getCredentials: () => { return of(true)}
 					}
 				},
 				{

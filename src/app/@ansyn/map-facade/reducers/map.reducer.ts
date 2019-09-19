@@ -26,7 +26,9 @@ export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId,
 					}
 				},
 				worldView: { ...activeMap.worldView },
-				flags: {}
+				flags: {
+					hideLayers: false
+				}
 			};
 			mapsList.push(mapStateCopy);
 		}

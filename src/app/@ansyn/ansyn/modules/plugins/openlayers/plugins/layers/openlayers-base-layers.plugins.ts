@@ -30,7 +30,7 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 
 	// todo: return auto-subscription when the bug is fixed
 	toggleGroup$ = () => this.store$.select(selectHideLayersOnMap(this.mapId)).pipe(
-		tap((newState: boolean) => this.iMap.toggleGroup('layers', newState))
+		tap((newState: boolean) => this.iMap.toggleGroup('layers', !newState))
 	);
 
 	onInitSubscriptions(): void {

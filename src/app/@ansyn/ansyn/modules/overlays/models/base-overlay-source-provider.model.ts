@@ -107,6 +107,7 @@ export abstract class BaseOverlaySourceProvider {
 				}
 
 				return this.fetch(newFetchParams).pipe(catchError(err => {
+					let errMsg = err.message ? err.message : err.toString();
 					this.loggerService.error(err);
 					return of({
 						data: null,

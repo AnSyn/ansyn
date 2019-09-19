@@ -65,7 +65,10 @@ describe('AnsynComponent', () => {
 				mockOverlayOverviewComponent,
 			],
 			providers: [
-				LoggerService,
+				{
+					provide: LoggerService,
+					useValue: {}
+				},
 				{
 					provide: COMPONENT_MODE,
 					useValue: false

@@ -113,7 +113,8 @@ export class OverlaysEffects {
 					forceFirstDisplay: true
 				})),
 				catchError((exception) => {
-					this.loggerService.error(exception);
+					let errMsg = exception.message ? exception.message : exception.toString();
+					this.loggerService.error(errMsg);
 					console.error(exception);
 					return from([
 						new DisplayOverlayFailedAction({ id: action.payload.overlayId, mapId: action.payload.mapId }),

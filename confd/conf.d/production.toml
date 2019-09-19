@@ -34,5 +34,6 @@ keys = [
 	"/ansyn/angle/debug/mode",
 	"/ansyn/anaglyph/sensornames",
 	"/ansyn/logger/component/name",
-	"/ansyn/logger/active"
+	"/ansyn/logger/active",
+	"/ansyn/logger/disconnection/minutes"
 ]

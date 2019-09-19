@@ -47,7 +47,7 @@ export class AnsynComponent implements OnInit {
 	@Input() version;
 
 	@HostListener('window:beforeunload', ['$event'])
-	public doSomething($event) {
+	public onWindowClose($event) {
 		this.loggerService.beforeAppClose();
 		return true;
 	}

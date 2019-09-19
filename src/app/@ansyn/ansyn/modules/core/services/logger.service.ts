@@ -14,9 +14,8 @@ export interface ILogObject {
 @Injectable()
 export class LoggerService implements ErrorHandler {
 	env = 'ENV'; // default (unknown environment)
-	componentName = 'app'; // default (unknown environment)
+	componentName = 'app';
 	stack: ILogObject[] = [];
-	lastLogTime: Date;
 	disconnectionInMilliseconds: number;
 	timeoutCookie;
 	isConnected: boolean;
@@ -116,7 +115,6 @@ export class LoggerService implements ErrorHandler {
 		if (!this.isConnected) {
 			this.setClientAsConnected();
 		}
-		this.lastLogTime = new Date();
 
 		if (this.timeoutCookie) {
 			window.clearTimeout(this.timeoutCookie);

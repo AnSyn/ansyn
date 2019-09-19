@@ -3,6 +3,7 @@ import { LoggerConfig } from '../models/logger.config';
 import { ILoggerConfig } from '../models/logger-config.model';
 import { Debounce } from 'lodash-decorators';
 import * as momentNs from 'moment';
+const moment = momentNs;
 
 export type Severity = 'CRITICAL' | 'ERROR' | 'WARNING' | 'INFO' | 'DEBUG'
 
@@ -38,7 +39,7 @@ export class LoggerService implements ErrorHandler {
 	constructor(@Inject(LoggerConfig) public loggerConfig: ILoggerConfig) {
 		this.env = loggerConfig.env;
 		this.componentName = loggerConfig.componentName;
-		this.disconnectionInMilliseconds = new Date().getTime() - momentNs().subtract(this.loggerConfig.disconnectionTimeoutInMinutes, 'minutes').toDate().getTime();
+		this.disconnectionInMilliseconds = new Date().getTime() - moment().subtract(this.loggerConfig.disconnectionTimeoutInMinutes, 'minutes').toDate().getTime();
 		this.isConnected = false;
 		window.onerror = (e) => {
 			this.error(e.toString());

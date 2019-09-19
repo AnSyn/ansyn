@@ -29,14 +29,14 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 		);
 
 	// todo: return auto-subscription when the bug is fixed
-	toggleGroup$ = this.store$.select(selectHideLayersOnMap(this.mapId)).pipe(
-		tap((newState: boolean) => this.iMap.toggleGroup('layers', newState))
+	toggleGroup$ = () => this.store$.select(selectHideLayersOnMap(this.mapId)).pipe(
+		tap((newState: boolean) => this.iMap.toggleGroup('layers', !newState))
 	);
 
 	onInitSubscriptions(): void {
 		super.onInitSubscriptions();
 		this.subscriptions.push(
-			this.toggleGroup$.subscribe(() => {
+			this.toggleGroup$().subscribe(() => {
 			}),
 			this.osmLayersChanges$.subscribe(() => {
 			})
@@ -62,8 +62,7 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 		const layersArray = group.getLayers().getArray();
 		if (!layersArray.some((shownLayer) => shownLayer.get('id') === layer.id)) {
 			this.createLayer(layer).subscribe((tileLayer) => {
-				const _layer = tileLayer;
-				group.getLayers().push(_layer);
+				group.getLayers().push(tileLayer);
 			});
 		}
 	}

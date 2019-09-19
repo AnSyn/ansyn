@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { CredentialsService } from "../../services/Credentials/credentials.service";
-import { tap } from "rxjs/operators";
+import { CredentialsService } from '../../services/credentials/credentials.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-credentials',
@@ -16,7 +16,7 @@ export class CredentialsComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.credentialsService.getCredentials("hi").pipe(
+		this.credentialsService.getCredentials().pipe(
 			tap(() => {
 				this.credentialsMessage = this.credentialsService.credentials;
 			})

@@ -1,4 +1,4 @@
-export const CredentialsConfig = 'credentialsConfig';
+export const credentialsConfig = 'credentialsConfig';
 
 export interface ICredentialsConfig {
 	active: boolean;

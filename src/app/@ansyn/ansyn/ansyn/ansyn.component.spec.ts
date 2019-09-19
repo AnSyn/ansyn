@@ -18,7 +18,7 @@ describe('AnsynComponent', () => {
 	let handler: Subject<any>;
 
 	const mockContextMenu = MockComponent({ selector: 'ansyn-context-menu' });
-	const mockCredentials = MockComponent({ selector: 'ansyn-credentials.json' });
+	const mockCredentials = MockComponent({ selector: 'ansyn-credentials' });
 	const mockMenu = MockComponent({ selector: 'ansyn-menu', inputs: ['version', 'animatedElement'] });
 	const mockToast = MockComponent({ selector: 'ansyn-toast', inputs: ['duration'] });
 	const mockFooter = MockComponent({

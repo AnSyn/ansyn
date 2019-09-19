@@ -90,7 +90,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	}
 
 	getLayerEntities(layerId): IVisualizerEntity[] {
-		const entities: IVisualizerEntity[] = this.layersDictionary[layerId];
+		const entities: IVisualizerEntity[] = this.layersDictionary[layerId] || [];
 		const filteredEntities = entities.filter((entity: IVisualizerEntity) => {
 			try {
 				switch (entity.featureJson.geometry.type) {
@@ -115,8 +115,6 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 				return false;
 			}
 		});
-		// console.log('layer entities count: ', entities.length);
-		// console.log('layer entities count in extent: ', filteredEntities.length);
 		return filteredEntities;
 	}
 
@@ -141,12 +139,11 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 						return this.drawLayer(layer.name);
 					}),
 					catchError((e) => {
-						this.store$.dispatch(new SetToastMessageAction({ toastText: `Failed to load layer${ (e && e.error) ? ' ,' + e.error : '' }` }));
+						this.store$.dispatch(new SetToastMessageAction({ toastText: `Failed to load layer${ (e && e.statusText) ? ' ,' + e.statusText : '' }` }));
 						return of(true);
 					})
 				);
 		}
-		// todo: deprecated
 		return new Observable((observer) => {
 			this.showedLayersDictionary = this.showedLayersDictionary.filter((id) => layer.name !== id);
 			if (this.layersDictionary[layer.name]) {

@@ -348,8 +348,7 @@
     },
 	 "httpTimeout": "3000",
 	 "isFooterCollapsible": {{ getv "/ansyn/iscollapsible" "false" }},
-	 "enable3D": {{ getv "/ansyn/3d/enable" "true" }},
-	 "showCredentials": {{getv "/ansyn/showcredentials" "false"}}
+	 "enable3D": {{ getv "/ansyn/3d/enable" "true" }}
   },
   "olConfig": {
   	 "needToUseLayerExtent": false,
@@ -382,6 +381,11 @@
   	"title": "{{ getv "/ansyn/login/title" "AnSyn" }}",
   	"active":  {{ getv "/ansyn/login/active" "false" }},
   	"authorizedPath": "/"
+  },
+  "credentialsConfig": {
+  	"baseUrl": "assets/config/credentials.json",
+  	"active":  {{ getv "/ansyn/credentials/active" "false" }},
+  	"noCredentialsMessage": "invalid credentials"
   },
   "visualizersConfig": {
     "FrameVisualizer": {

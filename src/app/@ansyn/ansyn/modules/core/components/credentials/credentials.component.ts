@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { CredentialsService } from '../../services/credentials/credentials.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-credentials',
@@ -7,12 +9,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CredentialsComponent implements OnInit {
 	isOpen: boolean;
-	constructor() { }
+	credentialsMessage: any;
+
+	constructor(protected credentialsService: CredentialsService) {
+		this.isOpen = false;
+	}
 
 	ngOnInit() {
+		this.credentialsService.getCredentials().pipe(
+			tap(() => {
+				this.credentialsMessage = this.credentialsService.credentials;
+			})
+		).subscribe();
+	}
+
+	openCredentials() {
 	}
 
 	setIsOpenMode() {
-
+		this.isOpen = !this.isOpen;
 	}
 }

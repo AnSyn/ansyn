@@ -9,8 +9,8 @@ import { selectSelectedCase } from '../modules/menu-items/cases/reducers/cases.r
 import { mapStateSelector } from '@ansyn/map-facade';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
 import { toolsConfig } from '../modules/menu-items/tools/models/tools-config';
-import { CoreConfig } from "../modules/core/models/core.config";
 import { LoggerService } from '../modules/core/services/logger.service';
+import { credentialsConfig } from '../modules/core/services/credentials/config';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
@@ -78,7 +78,7 @@ describe('AnsynComponent', () => {
 					useValue: {}
 				},
 				{
-					provide: CoreConfig,
+					provide: credentialsConfig,
 					useValue: {}
 				}
 			],

@@ -193,6 +193,10 @@
 	content: '\e826';
 }
 
+.icon-credentials:before {
+	content: '\e84c';
+}
+
 /* '' */
 .icon-angle-prev:before {
 	content: '\e827';

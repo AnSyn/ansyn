@@ -10,6 +10,7 @@ keys = [
     "/ansyn/login/baseurl",
     "/ansyn/login/active",
     "/ansyn/login/title",
+    "/ansyn/credentials/active",
     "/ansyn/menu/items",
     "/ansyn/menu/background",
     "/ansyn/menu/color",

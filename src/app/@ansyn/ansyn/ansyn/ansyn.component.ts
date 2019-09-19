@@ -11,9 +11,8 @@ import { ICase, ICaseMapState } from '../modules/menu-items/cases/models/case.mo
 import { IToolsConfig, toolsConfig } from '../modules/menu-items/tools/models/tools-config';
 import { UpdateToolsFlags } from '../modules/menu-items/tools/actions/tools.actions';
 import { toolsFlags } from '../modules/menu-items/tools/reducers/tools.reducer';
-import { ICoreConfig } from '../modules/core/models/core.config.model';
-import { CoreConfig } from '../modules/core/models/core.config';
 import { LoggerService } from '../modules/core/services/logger.service';
+import { credentialsConfig, ICredentialsConfig } from '../modules/core/services/credentials/config';
 
 @Component({
 	selector: 'ansyn-app',
@@ -54,7 +53,7 @@ export class AnsynComponent implements OnInit {
 
 	constructor(protected store$: Store<any>,
 				@Inject(COMPONENT_MODE) public componentMode: boolean,
-				@Inject(CoreConfig) public coreConfig: ICoreConfig,
+				@Inject(credentialsConfig) public config: ICredentialsConfig,
 				@Inject(toolsConfig) public toolsConfigData: IToolsConfig,
 				public loggerService: LoggerService) {
 	}
@@ -71,7 +70,7 @@ export class AnsynComponent implements OnInit {
 
 		setTimeout(() => {
 			this.renderContextMenu = true;
-			this.renderCredentials = this.coreConfig.showCredentials;
+			this.renderCredentials = this.config.active;
 		}, 1000);
 
 	}

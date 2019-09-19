@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { credentialsConfig, ICredentialsConfig } from './config';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
@@ -19,10 +20,14 @@ export class CredentialsService {
 		const url = `${ this.config.baseUrl }`;
 		const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 		const options = { headers };
-		this.httpClient.get(url);
 		return this.httpClient.get(url + '?' + 'hi', options)
-			.pipe(map((data: any) => {
-				data ? this.credentials = data : this.credentials = this.config.noCredentialsMessage;
-			}));
+			.pipe(
+				map((data: any) => {
+					this.credentials = data ? data : this.config.noCredentialsMessage;
+				}),
+				catchError((err) => {
+					this.credentials = this.config.noCredentialsMessage;
+					return of(true);
+				}));
 	}
 }

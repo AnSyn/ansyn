@@ -101,7 +101,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 			tap((action: SetAnnotationMode) => {
 				const useMapId = action.payload && Boolean(action.payload.mapId);
 				if ((!useMapId || (useMapId && action.payload.mapId === this.mapId)) &&
-					(action.payload.annotationMode !== AnnotationMode.Translate &&
+					(Boolean(action.payload) && action.payload.annotationMode !== AnnotationMode.Translate &&
 						action.payload.annotationMode !== null)) {
 					if (this.isDragged) {
 						this.toggleDragged();

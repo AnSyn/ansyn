@@ -15,7 +15,7 @@
 	width: 100%;
 	line-height: 24px;
 	color: white;
-	justify-content: space-between;
+	justify-content: center;
 	align-items: center;
 
 	&.with-background {
@@ -29,29 +29,10 @@
 	}
 
 	.buttons {
+		position: absolute;
+		left: 0;
 		line-height: 0;
 		display: flex;
-		flex: 1;
-
-		button.drag-me {
-			background: transparent;
-			color: white;
-			border: none;
-			outline: none;
-
-			i {
-				opacity: .6;
-			}
-
-			&:hover:not(:disabled) {
-				background: rgba(0, 0, 0, 0.5);
-
-				i {
-					opacity: 0.8;
-				}
-			}
-
-		}
 
 		button {
 			position: relative;
@@ -66,7 +47,7 @@
 				background: transparent;
 				border: none;
 				outline: none;
-				padding: 2px 4px;
+				padding: 0;
 				display: flex;
 				align-items: center;
 				z-index: 1;
@@ -93,7 +74,6 @@
 		justify-content: center;
 		align-items: center;
 		display: flex;
-		flex: 1;
 
 		button.share-link {
 			&:extend(.base-share-link);
@@ -109,26 +89,11 @@
 			}
 		}
 	}
-
-	.notifications {
-		display: flex;
-		flex: 1;
-		padding: 5px;
-	justify-content: flex-end;
-	}
 }
 
 // Prevent collision of description and buttons in small resolution
-@media screen and (max-width: 1240px) {
+@media screen and (max-width: 1280px) {
 	:host {
-		justify-content: space-between;
-
-		.buttons {
-			position: initial;
-			left: initial;
-			top: initial;
-		}
-
 		.description {
 			justify-content: flex-start;
 			padding-left: 0;
@@ -136,8 +101,22 @@
 			white-space: nowrap;
 		}
 
-		ansyn-popover {
-			width: 80px;
+		&:not(.one-map){
+			ansyn-popover {
+				width: 120px;
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 1024px) {
+	:host {
+		&:not(.one-map){
+			ansyn-popover {
+				width: initial;
+				position: relative;
+				left: 100px;
+			}
 		}
 	}
 }

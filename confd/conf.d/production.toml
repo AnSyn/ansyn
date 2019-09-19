@@ -32,5 +32,8 @@ keys = [
 	"/ansyn/3d/enable",
 	"/ansyn/force/send/shadow/mouse/position",
 	"/ansyn/angle/debug/mode",
-	"/ansyn/anaglyph/sensornames"
+	"/ansyn/anaglyph/sensornames",
+	"/ansyn/logger/component/name",
+	"/ansyn/logger/active",
+	"/ansyn/logger/disconnection/minutes"
 ]

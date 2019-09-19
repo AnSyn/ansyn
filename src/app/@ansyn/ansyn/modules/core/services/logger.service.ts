@@ -2,6 +2,8 @@ import { ErrorHandler, Inject, Injectable } from '@angular/core';
 import { LoggerConfig } from '../models/logger.config';
 import { ILoggerConfig } from '../models/logger-config.model';
 import { Debounce } from 'lodash-decorators';
+import * as momentNs from 'moment';
+const moment = momentNs;
 
 export type Severity = 'CRITICAL' | 'ERROR' | 'WARNING' | 'INFO' | 'DEBUG'
 
@@ -13,7 +15,16 @@ export interface ILogObject {
 @Injectable()
 export class LoggerService implements ErrorHandler {
 	env = 'ENV'; // default (unknown environment)
+	componentName = 'app';
 	stack: ILogObject[] = [];
+	disconnectionInMilliseconds: number;
+	timeoutCookie;
+	isConnected: boolean;
+
+	beforeAppClose() {
+		this.info('app closed');
+		this.setClientAsDisconnected();
+	}
 
 	handleError(error: any): void {
 		if (error.stack) {
@@ -27,13 +38,16 @@ export class LoggerService implements ErrorHandler {
 
 	constructor(@Inject(LoggerConfig) public loggerConfig: ILoggerConfig) {
 		this.env = loggerConfig.env;
+		this.componentName = loggerConfig.componentName;
+		this.disconnectionInMilliseconds = new Date().getTime() - moment().subtract(this.loggerConfig.disconnectionTimeoutInMinutes, 'minutes').toDate().getTime();
+		this.isConnected = false;
 		window.onerror = (e) => {
 			this.error(e.toString());
 		};
 	}
 
 	get standardPrefix() {
-		return `Ansyn[${ this.env }]`;
+		return `Ansyn[${ this.env }, ${this.componentName}]`;
 	}
 
 	critical(msg: string) {
@@ -60,6 +74,7 @@ export class LoggerService implements ErrorHandler {
 		if (!this.loggerConfig.active) {
 			return;
 		}
+		this.updateLogTimeForDisconnect();
 		let prefix = `${ this.standardPrefix }[${ Date() }]`;
 		if (includeBrowserData) {
 			prefix += `[window:${ window.innerWidth }x${ window.innerHeight }][userAgent: ${ navigator.userAgent }]`;
@@ -89,4 +104,30 @@ export class LoggerService implements ErrorHandler {
 		this.stack = [];
 	}
 
+	setClientAsConnected() {
+		this.isConnected = true;
+	}
+
+	setClientAsDisconnected() {
+		this.isConnected = false;
+	}
+
+	private updateLogTimeForDisconnect() {
+		if (!this.isConnected) {
+			this.setClientAsConnected();
+		}
+
+		if (this.timeoutCookie) {
+			window.clearTimeout(this.timeoutCookie);
+			this.timeoutCookie = null;
+		}
+
+		this.timeoutCookie = window.setTimeout(() => {
+			if (this.isConnected) {
+				this.setClientAsDisconnected();
+				window.clearTimeout(this.timeoutCookie);
+				this.timeoutCookie = null;
+			}
+		}, this.disconnectionInMilliseconds);
+	}
 }

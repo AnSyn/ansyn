@@ -174,8 +174,15 @@ export class AnsynApi {
 		}
 	}
 
-	setOutSourceMouseShadow(coordinates): void {
-		this.store.dispatch(new ShadowMouseProducer({ point: { coordinates, type: 'point' }, outsideSource: true }));
+	setOutSourceMouseShadow(geoPoint: Point): void {
+		if (!Boolean(geoPoint)) {
+			console.error('can\'t set undefined point to shadow mouse');
+			return null;
+		}
+		this.store.dispatch(new ShadowMouseProducer({
+			point: { coordinates: geoPoint.coordinates, type: 'point' },
+			outsideSource: true
+		}));
 	}
 
 	// displayOverLay(overlay: IOverlay): void {
@@ -183,6 +190,10 @@ export class AnsynApi {
 	// }
 
 	displayOverLay(overlay: IOverlay, mapNumber: number = -1): void {
+		if (!Boolean(overlay)) {
+			console.error('can\'t display undefined overlay');
+			return null;
+		}
 		this.getMaps$.subscribe((mapsList: IMapSettings[]) => {
 			let mapId = this.activeMapId;
 			if (mapNumber >= 0 && mapNumber < mapsList.length) {
@@ -193,6 +204,14 @@ export class AnsynApi {
 	}
 
 	setAnnotations(featureCollection: FeatureCollection<any>): void {
+		if (!Boolean(featureCollection)) {
+			console.error('can\'t set undefined annotations');
+			return null;
+		}
+		if (featureCollection.type !== 'FeatureCollection') {
+			console.error('feature collection must have FeatureCollection type');
+			return null;
+		}
 		this.store.dispatch(new UpdateLayer(<ILayer>{
 			...this.activeAnnotationLayer,
 			data: cloneDeep(featureCollection)
@@ -204,10 +223,18 @@ export class AnsynApi {
 	}
 
 	setOverlays(overlays: IOverlay[]): void {
+		if (!Boolean(overlays)) {
+			console.error('can\'t set undefined overlays');
+			return null;
+		}
 		this.store.dispatch(new LoadOverlaysSuccessAction(overlays, true));
 	}
 
 	changeMapLayout(layout: LayoutKey): Observable<any> {
+		if (!Boolean(layout)) {
+			console.error('can\'t change layout to undefined');
+			return null;
+		}
 		this.store.dispatch(new SetLayoutAction(layout));
 		return this.onSetLayoutSuccess$;
 	}
@@ -223,12 +250,19 @@ export class AnsynApi {
 		return this.mapsEntities[this.activeMapId].data.position;
 	}
 
-	// todo:  change Array<number> to geojson.Point
-	goToPosition(position: Array<number>): void {
-		this.store.dispatch(new GoToAction(position));
+	goToPosition(geoPoint: Point): void {
+		if (!Boolean(geoPoint)) {
+			console.error('can\'t go to undefined point');
+			return null;
+		}
+		this.store.dispatch(new GoToAction(geoPoint.coordinates));
 	}
 
 	setMapPositionByRect(rect: Polygon) {
+		if (!Boolean(rect)) {
+			console.error('can\'t set position to undefined rect');
+			return null;
+		}
 		this.store.dispatch(new SetMapPositionByRectAction({ id: this.activeMapId, rect }));
 	}
 
@@ -248,11 +282,19 @@ export class AnsynApi {
 	 * @param degree
 	 * @param mapId
 	 */
-	setRotation(degree: number, mapId?: string) {
-		this.imageryCommunicatorService.provide(mapId ? mapId : this.activeMapId).setRotation(degree);
+	setRotation(degree: number, mapId: string = this.activeMapId) {
+		if (!Boolean(degree)) {
+			console.error('can\'t rotate to undefined degree');
+			return null;
+		}
+		this.imageryCommunicatorService.provide(mapId).setRotation(degree);
 	}
 
 	setMapPositionByRadius(center: Point, radiusInMeters: number, search: boolean = false) {
+		if (!Boolean(center)) {
+			console.error('can\'t set position to undefined point');
+			return null;
+		}
 		this.store.dispatch(new SetMapPositionByRadiusAction({ id: this.activeMapId, center, radiusInMeters }));
 		if (search) {
 			const criteria: IOverlaysCriteria = {
@@ -263,6 +305,10 @@ export class AnsynApi {
 	}
 
 	setOverlaysCriteria(criteria: IOverlaysCriteria) {
+		if (!Boolean(criteria)) {
+			console.error('failed to set overlays criteria to undefined');
+			return null;
+		}
 		this.store.dispatch(new SetOverlaysCriteriaAction(criteria));
 	}
 
@@ -283,6 +329,10 @@ export class AnsynApi {
 	}
 
 	insertLayer(layerName: string, layerData: FeatureCollection<any>): string {
+		if (!(layerName && layerName.length)) {
+			console.error('failed to add layer without a name', layerName);
+			return null;
+		}
 		if (!Boolean(layerData)) {
 			console.error('failed to add layer ', layerName, ' feature collection is undefined');
 			return null;

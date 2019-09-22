@@ -1,36 +1,46 @@
 @import 'ansyn/less/colors';
 
 :host {
+	position: absolute;
+	top: 6px;
+	right: 5px;
 	display: flex;
-	justify-content: center;
-	align-items: center;
+	justify-content: flex-end;
+	max-width: 45%;
 
 	div {
 		background: @background-color-6;
 		border-radius: 5px;
-		font-size: 12px;
 		margin: 0 2.5px;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
 		padding: 0 5px;
+		display: flex;
+		align-items: center;
+		overflow: hidden;
+		justify-content: flex-start;
 
+		span.text {
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			font-size: 12px;
+		}
 		span.indicator {
 			width: 10px;
 			height: 10px;
-			display: inline-block;
 			border-radius: 100%;
 			margin: 0 2px;
 		}
 	}
 }
-
-@media screen and (max-width: 1240px) {
+@media screen and (max-width: 1366px) {
 	:host {
-		position: initial;
-		right: initial;
-		max-width: initial;
-		overflow: hidden;
+		max-width: 37%;
+	}
+}
+@media screen and (max-width: 1024px) {
+	:host {
+		div span.text{
+			font-size: 0;
+		}
 
 	}
 }

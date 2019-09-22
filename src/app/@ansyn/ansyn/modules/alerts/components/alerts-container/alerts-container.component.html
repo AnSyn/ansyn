@@ -11,7 +11,7 @@
 				[attr.tooltip-value]="alert.text | translate"
 				[attr.tooltip-class]="mapsAmount === 1 ? 'top left': 'bottom left'">
 				<span class="indicator" [style.background-color]="alert.background"></span>
-				{{ alert.text | translate}}
+				<span class="text">{{ alert.text | translate}}</span>
 			</div>
 		</ng-template>
 

@@ -10,25 +10,19 @@
 	height: @status-bar-height;
 	box-shadow: 0 -10px 20px 0 rgba(0, 0, 0, 0.3);
 	display: flex;
-	justify-content: space-between;
 	transform: translate(0, -100%);
-
-	.ansyn-tree-view {
-		width: inherit;
-	}
 
 	ansyn-imagery-status {
 		position: relative;
-		align-items: center;
-		justify-content: space-between;
-	}
-
-	.status-bar {
+		height: 100%;
 		flex-grow: 1;
+	}
+	.status-bar {
 		height: 100%;
 		color: white;
 		display: flex;
-		justify-content: space-between;
+		flex: 1;
+		justify-content: flex-end;
 
 		.selected-case {
 			button.share-link {
@@ -48,22 +42,15 @@
 
 		.selected-case, .status {
 			display: flex;
-			justify-content: flex-start;
 			align-items: center;
 		}
 
 		.status {
 			justify-content: flex-end;
 		}
-
-		&.separated-state {
-			.selected-case,
-			.status {
-				justify-content: flex-end;
-			}
-		}
 	}
 }
+
 
 @screens-list: 1800px, 1700px, 1600px, 1500px;
 @screen-list-width: 120px, 100px, 80px, 60px;

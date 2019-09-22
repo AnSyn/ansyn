@@ -26,7 +26,11 @@ import {
 } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { casesConfig, CasesService } from '../../../modules/menu-items/cases/services/cases.service';
 import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
-import { UpdateOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/actions/tools.actions';
+import {
+	SetAnnotationMode,
+	ShowOverlaysFootprintAction,
+	UpdateOverlaysManualProcessArgs
+} from '../../../modules/menu-items/tools/actions/tools.actions';
 import { isFullOverlay } from '../../../modules/core/utils/overlays';
 import { ICoreConfig } from '../../../modules/core/models/core.config.model';
 import { CoreConfig } from '../../../modules/core/models/core.config';
@@ -107,6 +111,8 @@ export class SelectCaseAppEffects {
 			new SetAutoSave(autoSave),
 			new SetRemovedOverlaysIdsAction(removedOverlaysIds),
 			new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
+			new ShowOverlaysFootprintAction('None'),
+			new SetAnnotationMode(null),
 			new SelectCaseSuccessAction(payload)
 		];
 

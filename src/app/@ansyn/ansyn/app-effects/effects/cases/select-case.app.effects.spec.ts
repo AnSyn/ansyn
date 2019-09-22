@@ -27,7 +27,11 @@ import {
 	SetAutoSave
 } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
-import { UpdateOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/actions/tools.actions';
+import {
+	SetAnnotationMode,
+	ShowOverlaysFootprintAction,
+	UpdateOverlaysManualProcessArgs
+} from '../../../modules/menu-items/tools/actions/tools.actions';
 import { CoreConfig } from '../../../modules/core/models/core.config';
 import { SetMiscOverlays, SetOverlaysCriteriaAction } from '../../../modules/overlays/actions/overlays.actions';
 import {
@@ -137,7 +141,7 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijklmnopqrs)--', {
+			const expectedResult = cold('--(abcdefghijklmnopqrstx)--', {
 				a: new SetMapsDataActionStore({ mapsList: maps.data }),
 				b: new SetActiveMapId(maps.activeMapId),
 				c: new SetLayoutAction(<any>maps.layout),
@@ -156,7 +160,9 @@ describe('SelectCaseAppEffects', () => {
 				p: new SetAutoSave(false),
 				q: new SetRemovedOverlaysIdsAction(removedOverlaysIds),
 				r: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
-				s: new SelectCaseSuccessAction(payload)
+				s: new ShowOverlaysFootprintAction('None'),
+				t: new SetAnnotationMode(null),
+				x: new SelectCaseSuccessAction(payload)
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

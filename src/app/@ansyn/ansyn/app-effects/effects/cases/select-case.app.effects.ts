@@ -27,6 +27,7 @@ import {
 import { casesConfig, CasesService } from '../../../modules/menu-items/cases/services/cases.service';
 import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
 import {
+	SetAnnotationMode,
 	ShowOverlaysFootprintAction,
 	UpdateOverlaysManualProcessArgs
 } from '../../../modules/menu-items/tools/actions/tools.actions';
@@ -111,6 +112,7 @@ export class SelectCaseAppEffects {
 			new SetRemovedOverlaysIdsAction(removedOverlaysIds),
 			new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
 			new ShowOverlaysFootprintAction('None'),
+			new SetAnnotationMode(null),
 			new SelectCaseSuccessAction(payload)
 		];
 

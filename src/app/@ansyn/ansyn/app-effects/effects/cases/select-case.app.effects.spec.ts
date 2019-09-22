@@ -28,6 +28,7 @@ import {
 } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
 import {
+	SetAnnotationMode,
 	ShowOverlaysFootprintAction,
 	UpdateOverlaysManualProcessArgs
 } from '../../../modules/menu-items/tools/actions/tools.actions';
@@ -140,7 +141,7 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijklmnopqrst)--', {
+			const expectedResult = cold('--(abcdefghijklmnopqrstx)--', {
 				a: new SetMapsDataActionStore({ mapsList: maps.data }),
 				b: new SetActiveMapId(maps.activeMapId),
 				c: new SetLayoutAction(<any>maps.layout),
@@ -160,7 +161,8 @@ describe('SelectCaseAppEffects', () => {
 				q: new SetRemovedOverlaysIdsAction(removedOverlaysIds),
 				r: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
 				s: new ShowOverlaysFootprintAction('None'),
-				t: new SelectCaseSuccessAction(payload)
+				t: new SetAnnotationMode(null),
+				x: new SelectCaseSuccessAction(payload)
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

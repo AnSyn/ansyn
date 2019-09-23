@@ -24,12 +24,22 @@ import {
 import { casesConfig, CasesService } from '../services/cases.service';
 import { casesStateSelector, ICasesState, selectCaseTotal } from '../reducers/cases.reducer';
 import { ICasesConfig } from '../models/cases-config';
-import { catchError, debounceTime, filter, map, mergeMap, share, switchMap, withLatestFrom } from 'rxjs/operators';
+import {
+	catchError,
+	concatMap,
+	debounceTime,
+	filter,
+	map,
+	mergeMap,
+	share,
+	switchMap,
+	withLatestFrom
+} from 'rxjs/operators';
 import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
 import { UUID } from 'angular2-uuid';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { DataLayersService } from '../../layers-manager/services/data-layers.service';
-import { copyFromContent, SetToastMessageAction } from '@ansyn/map-facade';
+import { copyFromContent, SetMapsDataActionStore, SetToastMessageAction } from '@ansyn/map-facade';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { IStoredEntity } from '../../../core/services/storage/storage.service';
 import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCrash';
@@ -146,7 +156,10 @@ export class CasesEffects {
 	@Effect()
 	onSaveCaseAsSuccess$ = this.actions$.pipe(
 		ofType<SaveCaseAsAction>(CasesActionTypes.SAVE_CASE_AS_SUCCESS),
-		map(() => new SetAutoSave(true))
+		concatMap(({ payload }) => [
+			new SetAutoSave(true),
+			new SetMapsDataActionStore({ mapsList: payload.state.maps.data }),
+		])
 	);
 
 	@Effect()

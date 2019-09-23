@@ -61,7 +61,7 @@ export class SelectCaseAppEffects {
 		// map
 		const { data, activeMapId: currentActiveMapID } = state.maps;
 		const defaultMapIndex = data.findIndex(map => map.id === this.caseConfig.defaultCase.state.maps.activeMapId);
-		if (payload.id !== this.caseConfig.defaultCase.id && defaultMapIndex !== -1) {
+		if (defaultMapIndex !== -1) {
 			data[defaultMapIndex].id = UUID.UUID();
 			if (currentActiveMapID === this.caseConfig.defaultCase.state.maps.activeMapId) {
 				state.maps.activeMapId = data[defaultMapIndex].id;

@@ -30,6 +30,7 @@
 
 	.buttons {
 		position: absolute;
+		height: 100%;
 		left: 0;
 		line-height: 0;
 		display: flex;
@@ -92,6 +93,15 @@
 }
 
 // Prevent collision of description and buttons in small resolution
+@media screen and (max-width: 1366px) {
+	:host {
+		.description {
+			ansyn-popover {
+				transform: translateX(-30px);
+			}
+		}
+	}
+}
 @media screen and (max-width: 1280px) {
 	:host {
 		.description {
@@ -99,6 +109,11 @@
 			padding-left: 0;
 			text-overflow: ellipsis;
 			white-space: nowrap;
+
+			ansyn-popover {
+				max-width: 85%;
+				transform: translateX(0px);
+			}
 		}
 
 		&:not(.one-map){
@@ -111,6 +126,12 @@
 
 @media screen and (max-width: 1024px) {
 	:host {
+		.description {
+			ansyn-popover{
+				transform: translateX(115px);
+				max-width: 50%;
+			}
+		}
 		&:not(.one-map){
 			ansyn-popover {
 				width: initial;

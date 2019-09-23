@@ -47,7 +47,7 @@
 	<ansyn-popover *ngIf="overlay" [text]="overlayDescription"
 				   [popDirection]="mapsAmount > 1 ? 'bottom wrap' : 'top wrap'">
 		<button class="share-link" (click)="copyOverlayDescription()">
-			<span>{{overlayDescription | translate}}</span>
+			<span>{{translatedOverlaySensorName }} {{overlayDescription | translate}}</span>
 		</button>
 	</ansyn-popover>
 	<div *ngIf="!overlay">

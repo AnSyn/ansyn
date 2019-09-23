@@ -6,7 +6,11 @@ import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Point } from 'geojson';
 import { debounceTime, filter, map, tap } from 'rxjs/operators';
-import { DisplayOverlayAction, SetHoveredOverlayAction, SetMarkUp } from '../../../overlays/actions/overlays.actions';
+import {
+	DisplayOverlayFromStoreAction,
+	SetHoveredOverlayAction,
+	SetMarkUp
+} from '../../../overlays/actions/overlays.actions';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { MarkUpClass, selectDropMarkup } from '../../../overlays/reducers/overlays.reducer';
 
@@ -45,6 +49,22 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 		tap(hovers => this.hoverOverlay = hovers.overlaysIds[0])
 	);
 
+	constructor(protected actions$: Actions,
+				protected store$: Store<any>,
+				protected elem: ElementRef,
+				protected renderer: Renderer2) {
+	}
+
+	@HostBinding('attr.tabindex')
+	get tabindex() {
+		return 1;
+	}
+
+	@HostListener('window:mousewheel')
+	get onMousewheel() {
+		return this.hide;
+	}
+
 	setAnglesToOverlays(overlays: IOverlay[]) {
 		const pointLat = this.getLatFromPoint(this.point, true);
 		const pointLong = this.getLongFromPoint(this.point, true);
@@ -69,26 +89,9 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 		this.overlaysAngles.sort((a, b) => a.degreeFromPoint - b.degreeFromPoint)
 	}
 
-	@HostBinding('attr.tabindex')
-	get tabindex() {
-		return 1;
-	}
-
-	@HostListener('window:mousewheel')
-	get onMousewheel() {
-		return this.hide;
-	}
-
 	@HostListener('contextmenu', ['$event'])
 	onContextMenu($event) {
 		$event.preventDefault();
-	}
-
-
-	constructor(protected actions$: Actions,
-				protected store$: Store<any>,
-				protected elem: ElementRef,
-				protected renderer: Renderer2) {
 	}
 
 	ngOnInit() {
@@ -121,7 +124,7 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 	showOverlay(event: MouseEvent, overlay: IOverlay) {
 		event.stopPropagation();
 		this.overlay = overlay;
-		this.store$.dispatch(new DisplayOverlayAction({ overlay: overlay, mapId: this.mapId }));
+		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id: overlay.id }));
 		this.hide();
 	}
 
@@ -137,22 +140,7 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 			index = anglesSize - 1;
 		}
 		const overlayToDisplay = this.overlaysAngles[index].overlay;
-		this.store$.dispatch(new DisplayOverlayAction({ overlay: overlayToDisplay, mapId: this.mapId }));
-	}
-
-	private getLatFromPoint(point: Point, convert?: boolean) {
-		if (convert) {
-			toRadians(point.coordinates[1]);
-		}
-		return point.coordinates[1];
-	}
-
-
-	private getLongFromPoint(point: Point, convert?: boolean) {
-		if (convert) {
-			toRadians(point.coordinates[0]);
-		}
-		return point.coordinates[0];
+		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id: overlayToDisplay.id }));
 	}
 
 	isActive(overlay: any) {
@@ -166,5 +154,19 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 			}
 		}));
 		this.store$.dispatch(new SetHoveredOverlayAction(overlay));
+	}
+
+	private getLatFromPoint(point: Point, convert?: boolean) {
+		if (convert) {
+			toRadians(point.coordinates[1]);
+		}
+		return point.coordinates[1];
+	}
+
+	private getLongFromPoint(point: Point, convert?: boolean) {
+		if (convert) {
+			toRadians(point.coordinates[0]);
+		}
+		return point.coordinates[0];
 	}
 }

@@ -6,7 +6,7 @@ import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/o
 import { AngleFilterComponent } from './angle-filter.component';
 import { GeoRegisteration, IOverlay } from '../../../overlays/models/overlay.model';
 import { Point } from 'geojson';
-import { DisplayOverlayAction } from '../../../overlays/actions/overlays.actions';
+import { DisplayOverlayAction, DisplayOverlayFromStoreAction } from '../../../overlays/actions/overlays.actions';
 
 const POINT: Point = {
 	coordinates: [-122.4093246459961, 37.59727478027344],
@@ -103,7 +103,7 @@ describe('AngleFilterComponent', () => {
 		component.mapId = 'mapId';
 		component.overlay = OVERLAYS[1];
 		component.nextOverlay(new MouseEvent('click'), true);
-		expect(store.dispatch).toHaveBeenCalledWith(new DisplayOverlayAction({ overlay: OVERLAYS[2], mapId: 'mapId' }))
+		expect(store.dispatch).toHaveBeenCalledWith(new DisplayOverlayFromStoreAction({ id: OVERLAYS[2].id }))
 	})
 
 });

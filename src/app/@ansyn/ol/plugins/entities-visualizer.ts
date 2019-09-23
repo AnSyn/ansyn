@@ -174,7 +174,14 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 				stroke
 			});
 			if (feature.getProperties().mode === 'Arrow') {
-				textStyle.geometry = (feature) => feature.getGeometry().getLineString(0)
+				textStyle.geometry = (feature) => {
+					if (feature.getGeometry().getLineString) {
+						return feature.getGeometry().getLineString(0)
+					}
+					else { // for kml import
+						return feature.getGeometry().getGeometries()[0];
+					}
+				}
 			}
 		}
 

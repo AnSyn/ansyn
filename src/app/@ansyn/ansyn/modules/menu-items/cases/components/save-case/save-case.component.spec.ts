@@ -66,9 +66,9 @@ describe('SaveCaseComponent', () => {
 	it('onSubmitCase should call dispatch with SaveCaseAsAction and call close()', () => {
 		spyOn(store, 'dispatch');
 		spyOn(component, 'close');
-		spyOn(store, 'select').and.callFake(() => of({}));
+		spyOn(store, 'select').and.callFake(() => of({state: {maps: {data: []}}}));
 		component.onSubmitCase();
-		expect(store.dispatch).toHaveBeenCalledWith(new SaveCaseAsAction(<any>{ name: component.caseName }));
+		expect(store.dispatch).toHaveBeenCalledWith(new SaveCaseAsAction(<any>{ name: component.caseName, state: {maps: {data: []}}}));
 		expect(component.close).toHaveBeenCalled();
 	});
 });

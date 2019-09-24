@@ -10,12 +10,12 @@ import { IOverlay } from '../../../../../overlays/models/overlay.model';
 import { EntitiesVisualizer } from '@ansyn/ol';
 import { selectOverlayFootprintMode } from '../../../../../menu-items/tools/reducers/tools.reducer';
 import { OverlayDisplayMode } from '../../../../../menu-items/tools/overlays-display-mode/overlays-display-mode.component';
-import { selectOverlayDisplayByMapId } from '@ansyn/map-facade';
+import { selectOverlayDisplayModeByMapId } from '@ansyn/map-facade';
 
 export class BaseFootprintsVisualizer extends EntitiesVisualizer {
 
 	@AutoSubscription
-	drawOverlaysOnMap$: () => Observable<any> = () => combineLatest(this.store.select(selectOverlayDisplayByMapId(this.mapId)), this.store.select(selectDrops))
+	drawOverlaysOnMap$: () => Observable<any> = () => combineLatest(this.store.select(selectOverlayDisplayModeByMapId(this.mapId)), this.store.select(selectDrops))
 		.pipe(
 			filter(([overlayDisplayMode, drops]: [OverlayDisplayMode, IOverlay[]]) => Boolean(overlayDisplayMode)),
 			withLatestFrom(this.overlaysService.getAllOverlays$),

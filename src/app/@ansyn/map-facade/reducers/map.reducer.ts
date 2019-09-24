@@ -208,6 +208,10 @@ export const selectOverlaysWithMapIds = createSelector(selectMapsList, selectAct
 	const overlayAndMapId = mapsList.map( map => map.data.overlay ? ({overlay: map.data.overlay, mapId: map.id, isActive: map.id === activeMapId}) : ({}));
 	return overlayAndMapId;
 });
+export const selectOverlayOfActiveMap = createSelector(selectMapsList, selectActiveMapId, (mapsList, activeMapId) => {
+	const activeMapSettings = mapsList.filter((map: IMapSettings) => map.id === activeMapId);
+	return Boolean(activeMapSettings[0]) && activeMapSettings[0].data.overlay;
+});
 export const selectMapStateById = (id: string) => createSelector(selectMaps, (maps) => maps[id]);
 export const selectOverlayByMapId = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.overlay);
 export const selectHideLayersOnMap = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.flags.hideLayers);

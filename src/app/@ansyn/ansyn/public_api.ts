@@ -1,3 +1,6 @@
+export { CredentialsService } from './modules/core/services/credentials/credentials.service';
+export { credentialsConfig, ICredentialsConfig } from './modules/core/services/credentials/config';
+
 export {
 	OpenlayersBaseLayersPlugins
 }from './modules/plugins/openlayers/plugins/layers/openlayers-base-layers.plugins';
@@ -69,7 +72,7 @@ export { SettingsComponent } from './modules/menu-items/settings/settings/settin
 export { GoToAction } from './modules/menu-items/tools/actions/tools.actions';
 export { ILayerState } from './modules/menu-items/layers-manager/reducers/layers.reducer';
 export { ICasesState } from './modules/menu-items/cases/reducers/cases.reducer';
-export { IToolsState } from './modules/menu-items/tools/reducers/tools.reducer';
+export { IToolsState, selectGeoRegisteredOptionsEnabled } from './modules/menu-items/tools/reducers/tools.reducer';
 export {
 	ISettingsState, selectFlags, settingsStateSelector, selectIsAnaglyphActive
 }from './modules/menu-items/settings/reducers/settings.reducer';

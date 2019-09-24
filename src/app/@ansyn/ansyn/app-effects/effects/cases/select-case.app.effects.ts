@@ -110,7 +110,6 @@ export class SelectCaseAppEffects {
 			new SetAutoSave(autoSave),
 			new SetRemovedOverlaysIdsAction(removedOverlaysIds),
 			new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
-			new ShowOverlaysFootprintAction('None'),
 			new SelectCaseSuccessAction(payload)
 		];
 

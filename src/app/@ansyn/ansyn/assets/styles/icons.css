@@ -79,12 +79,12 @@
 }
 
 /* '' */
-.icon-favorites-active:before {
+.icon-favorite-full:before {
 	content: '\e810';
 }
 
 /* '' */
-.icon-favorites:before {
+.icon-favorite-empty:before {
 	content: '\e811';
 }
 

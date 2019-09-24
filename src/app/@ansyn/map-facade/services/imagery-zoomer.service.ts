@@ -21,7 +21,6 @@ export class ImageryZoomerService {
 		this.getMap(mapId).zoomIn();
 	}
 
-
 	zoomOut(mapId: string): void {
 		this.getMap(mapId).zoomOut();
 	}

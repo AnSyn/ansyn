@@ -28,6 +28,7 @@ import { casesConfig, CasesService } from '../../../modules/menu-items/cases/ser
 import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
 import {
 	SetAnnotationMode,
+	SetMeasureDistanceToolState,
 	UpdateOverlaysManualProcessArgs
 } from '../../../modules/menu-items/tools/actions/tools.actions';
 import { isFullOverlay } from '../../../modules/core/utils/overlays';
@@ -111,6 +112,7 @@ export class SelectCaseAppEffects {
 			new SetRemovedOverlaysIdsAction(removedOverlaysIds),
 			new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
 			new SetAnnotationMode(null),
+			new SetMeasureDistanceToolState(false),
 			new SelectCaseSuccessAction(payload)
 		];
 

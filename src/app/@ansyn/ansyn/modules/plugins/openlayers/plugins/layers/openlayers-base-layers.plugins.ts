@@ -58,13 +58,22 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 	abstract createLayer(layer: ILayer): Observable<TileLayer>;
 
 	addGroupLayer(layer: ILayer) {
-		const group = OpenLayersMap.groupLayers.get(OpenLayersMap.groupsKeys.layers);
-		const layersArray = group.getLayers().getArray();
-		if (!layersArray.some((shownLayer) => shownLayer.get('id') === layer.id)) {
+		// double check because it's async
+		if (!this.layerExists(layer)) {
 			this.createLayer(layer).subscribe((tileLayer) => {
-				group.getLayers().push(tileLayer);
+				if (!this.layerExists(layer)) {
+					const group = OpenLayersMap.groupLayers.get(OpenLayersMap.groupsKeys.layers);
+					group.getLayers().push(tileLayer);
+				}
 			});
 		}
+	}
+
+	layerExists(layer: ILayer): boolean {
+		const group = OpenLayersMap.groupLayers.get(OpenLayersMap.groupsKeys.layers);
+		const layersArray = group.getLayers().getArray();
+		const exists = layersArray.some((shownLayer) => shownLayer.get('id') === layer.id);
+		return Boolean(exists);
 	}
 
 	removeGroupLayer(id: string): void {

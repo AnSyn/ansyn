@@ -29,6 +29,7 @@ import {
 import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
 import {
 	SetAnnotationMode,
+	SetMeasureDistanceToolState,
 	UpdateOverlaysManualProcessArgs
 } from '../../../modules/menu-items/tools/actions/tools.actions';
 import { CoreConfig } from '../../../modules/core/models/core.config';
@@ -140,7 +141,7 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijklmnopqrst)--', {
+			const expectedResult = cold('--(abcdefghijklmnopqrstx)--', {
 				a: new SetMapsDataActionStore({ mapsList: maps.data }),
 				b: new SetActiveMapId(maps.activeMapId),
 				c: new SetLayoutAction(<any>maps.layout),
@@ -160,7 +161,8 @@ describe('SelectCaseAppEffects', () => {
 				q: new SetRemovedOverlaysIdsAction(removedOverlaysIds),
 				r: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
 				s: new SetAnnotationMode(null),
-				t: new SelectCaseSuccessAction(payload)
+				t: new SetMeasureDistanceToolState(false),
+				x: new SelectCaseSuccessAction(payload)
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

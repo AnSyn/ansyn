@@ -71,6 +71,7 @@ import {
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { selectOverlaysWithMapIds } from '@ansyn/map-facade';
 import { isEqual } from 'lodash';
+import { selectGeoRegisteredOptionsEnabled } from '../../modules/menu-items/tools/reducers/tools.reducer';
 
 @Injectable()
 export class MapAppEffects {
@@ -232,12 +233,15 @@ export class MapAppEffects {
 	@Effect()
 	activeMapGeoRegistrationChanged$: Observable<any> = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectMapsList))
 		.pipe(
-			withLatestFrom(this.store$.select(mapStateSelector)),
-			filter(([[activeMapId, mapsList], mapState]: [[string, ICaseMapState[]], IMapState]) => Boolean(mapState.activeMapId && Object.values(mapState.entities).length)),
-			map(([[activeMapId, mapsList], mapState]: [[string, ICaseMapState[]], IMapState]) => {
+			withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(selectGeoRegisteredOptionsEnabled)),
+			filter(([[activeMapId, mapsList], mapState, isGeoRegisteredOptionsEnabled]: [[string, ICaseMapState[]], IMapState, boolean]) => Boolean(mapState.activeMapId && Object.values(mapState.entities).length)),
+			switchMap(([[activeMapId, mapsList], mapState, isGeoRegisteredOptionsEnabled]: [[string, ICaseMapState[]], IMapState, boolean]) => {
 				const activeMapState = MapFacadeService.activeMap(mapState);
 				const isGeoRegistered = activeMapState && MapFacadeService.isOverlayGeoRegistered(activeMapState.data.overlay);
-				return new SetMapGeoEnabledModeToolsActionStore(!!isGeoRegistered);
+				if (!!isGeoRegistered !== isGeoRegisteredOptionsEnabled) {
+					return [new SetMapGeoEnabledModeToolsActionStore(!!isGeoRegistered)];
+				}
+				return [];
 			})
 		);
 

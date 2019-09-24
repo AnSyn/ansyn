@@ -20,6 +20,7 @@ export class LoggerService implements ErrorHandler {
 	disconnectionInMilliseconds: number;
 	timeoutCookie;
 	isConnected: boolean;
+	connectionTime: Date;
 
 	beforeAppClose() {
 		this.info('app closed');
@@ -105,6 +106,9 @@ export class LoggerService implements ErrorHandler {
 	}
 
 	setClientAsConnected() {
+		if (!this.isConnected) {
+			this.connectionTime = new Date();
+		}
 		this.isConnected = true;
 	}
 

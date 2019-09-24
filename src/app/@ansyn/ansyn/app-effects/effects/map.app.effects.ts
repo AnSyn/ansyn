@@ -72,7 +72,7 @@ import { fromPromise } from 'rxjs/internal-compatibility';
 import { selectOverlaysWithMapIds } from '@ansyn/map-facade';
 import { isEqual } from 'lodash';
 import { selectGeoRegisteredOptionsEnabled } from '../../modules/menu-items/tools/reducers/tools.reducer';
-import { selectOverlayOfActiveMap } from '../../../map-facade/reducers/map.reducer';
+import { selectOverlayOfActiveMap } from '@ansyn/map-facade';
 
 @Injectable()
 export class MapAppEffects {

@@ -3,7 +3,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { get as _get } from 'lodash'
-import { map, tap } from 'rxjs/operators';
+import { map, tap, filter, switchMap, withLatestFrom } from 'rxjs/operators';
 import { SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
 import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../models/entry-components-provider';
 import { selectEnableCopyOriginalOverlayDataFlag } from '../../reducers/imagery-status.reducer';
@@ -15,7 +15,8 @@ import {
 } from '../../reducers/map.reducer';
 import { copyFromContent } from '../../utils/clipboard';
 import { getTimeFormat } from '../../utils/time';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -55,6 +56,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	constructor(protected store$: Store<any>,
 				protected communicators: ImageryCommunicatorService,
+				protected translate: TranslateService,
 				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities) {
 	}
 
@@ -78,7 +80,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		return this.mapsAmount === 1;
 	}
 
-	get description() {
+	get overlayTimeDate() {
 		const ActiveMap = _get(this.communicators.provide(this.mapId), 'ActiveMap');
 		const { description } = (ActiveMap && ActiveMap.getExtraData()) || <any>{};
 		return description ? description : this.overlay ? this.getFormattedTime(this.overlay.photoTime) : null;
@@ -94,7 +96,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 			return this.baseMapDescription;
 		}
 		const catalogId = (<any>this.overlay).catalogID ? (' catalogId ' + (<any>this.overlay).catalogID) : '';
-		return `${ this.description } ${ this.translatedOverlaySensorName }${ catalogId }`;
+		return `${ this.translatedOverlaySensorName } ${ this.overlayTimeDate } ${ catalogId }`;
 	}
 
 	// @todo refactor
@@ -114,16 +116,25 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	@AutoSubscription
-	overlayNlayers$: () => Observable<[any, boolean]> = () => combineLatest(this.store$.select(selectOverlayByMapId(this.mapId)), this.store$.select(selectHideLayersOnMap(this.mapId))).pipe(
-		tap(([overlay, hideLayers]) => {
-			this.overlay = overlay;
-			this.hideLayers = hideLayers;
-		})
+	hideLayers$ = () => this.store$.pipe(
+		select(selectHideLayersOnMap(this.mapId)),
+		tap( hideLayers => this.hideLayers = hideLayers)
+	);
+	@AutoSubscription
+	overlayData$: () => Observable<any> = () => this.store$.pipe(
+		select(selectOverlayByMapId(this.mapId)),
+		filter(Boolean),
+		switchMap( (overlay) => of(overlay).pipe(
+			withLatestFrom(this.translate.get(overlay.sensorName)),
+			tap(([overlay, sensorNameTranslate]) => {
+				this.overlay = overlay;
+				this.translatedOverlaySensorName = sensorNameTranslate;
+			})
+		))
 	);
 
 	getFormattedTime(dateTimeSring: string): string {
-		const formatedTime: string = getTimeFormat(new Date(this.overlay.photoTime));
-		return formatedTime;
+		return getTimeFormat(new Date(dateTimeSring));
 	}
 
 	// @todo refactor

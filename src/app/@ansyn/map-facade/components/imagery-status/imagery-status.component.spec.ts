@@ -84,7 +84,7 @@ describe('ImageryStatusComponent', () => {
 				})
 			}
 		});
-		const result = component.description;
+		const result = component.overlayTimeDate;
 		expect(result).toEqual(myDescription)
 	})
 });

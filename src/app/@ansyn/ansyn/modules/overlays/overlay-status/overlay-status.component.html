@@ -1,10 +1,10 @@
 <button class="small-icon-button set-preset" *ngIf="overlay "
-		[class.active2]="isPreset"
+
 		(click)="togglePreset()"
 		[disabled]="noGeoRegistration"
 		[attr.tooltip-value]="presetsButtonText | translate"
 		[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
-	<i class="icon icon-quick-loop-add"></i>
+	<i class="icon icon-quick-loop-add" [class.active]="isPreset"></i>
 </button>
 
 <button class="small-icon-button remove-overlay" *ngIf="overlay "
@@ -17,15 +17,15 @@
 		(click)="toggleFavorite()"
 		[attr.tooltip-value]="favoritesButtonText | translate"
 		[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
-	<i class="icon" [class.icon-favorites]="!isFavorite"
-	   [class.icon-favorites-active]="isFavorite"></i>
+	<i class="icon" [ngClass]="!isFavorite? 'icon-favorite-empty' : 'icon-favorite-full'"
+	   [class.active]="isFavorite"></i>
 </button>
 
 <button class="small-icon-button drag-mode" *ngIf="overlay"
-		[class.active2]="isDragged"
+
 		(click)="toggleDragged()"
 		[disabled]="!isLayersVisible"
 		[attr.tooltip-value]="this.draggedButtonText | translate"
 		[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
-	<i class="icon-drag-map"></i>
+	<i class="icon-drag-map" [class.active]="isDragged"></i>
 </button>

@@ -213,7 +213,8 @@ export const selectOverlayOfActiveMap = createSelector(selectMapsList, selectAct
 	return Boolean(activeMapSettings[0]) && activeMapSettings[0].data.overlay;
 });
 export const selectMapStateById = (id: string) => createSelector(selectMaps, (maps) => maps[id]);
+export const selectMapsStateByIds: (mapIds: string[]) => MemoizedSelector<any, IMapSettings[]> = (mapIds: string[]) => createSelector(selectMaps, (maps) => mapIds.map(id => maps[id]));
 export const selectOverlayByMapId = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.overlay);
 export const selectHideLayersOnMap = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.flags.hideLayers);
 export const selectMapPositionByMapId: (mapId: string) => MemoizedSelector<any, ImageryMapPosition> = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.position);
-export const selectMapsStateByIds: (mapIds: string[]) => MemoizedSelector<any, IMapSettings[]> = (mapIds: string[]) => createSelector(selectMaps, (maps) => mapIds.map(id => maps[id]));
+export const selectOverlayDisplayModeByMapId: (mapId: string) => MemoizedSelector<any, any> = (mapId: string) => createSelector(selectMapStateById(mapId) , (mapState) => mapState.data.overlayDisplayMode);

@@ -23,6 +23,7 @@ export {
 	selectOverlaysWithMapIds,
 	selectMapPositionByMapId,
 	selectMapsStateByIds,
+	selectOverlayDisplayModeByMapId,
 	selectOverlayOfActiveMap
 } from './reducers/map.reducer';
 

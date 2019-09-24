@@ -29,7 +29,6 @@ import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/
 import {
 	SetAnnotationMode,
 	SetMeasureDistanceToolState,
-	ShowOverlaysFootprintAction,
 	UpdateOverlaysManualProcessArgs
 } from '../../../modules/menu-items/tools/actions/tools.actions';
 import { isFullOverlay } from '../../../modules/core/utils/overlays';
@@ -112,7 +111,6 @@ export class SelectCaseAppEffects {
 			new SetAutoSave(autoSave),
 			new SetRemovedOverlaysIdsAction(removedOverlaysIds),
 			new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
-			new ShowOverlaysFootprintAction('None'),
 			new SetAnnotationMode(null),
 			new SetMeasureDistanceToolState(false),
 			new SelectCaseSuccessAction(payload)

@@ -140,7 +140,7 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijklmnopqrst)--', {
+			const expectedResult = cold('--(abcdefghijklmnopqrs)--', {
 				a: new SetMapsDataActionStore({ mapsList: maps.data }),
 				b: new SetActiveMapId(maps.activeMapId),
 				c: new SetLayoutAction(<any>maps.layout),
@@ -159,8 +159,7 @@ describe('SelectCaseAppEffects', () => {
 				p: new SetAutoSave(false),
 				q: new SetRemovedOverlaysIdsAction(removedOverlaysIds),
 				r: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
-				s: new ShowOverlaysFootprintAction('None'),
-				t: new SelectCaseSuccessAction(payload)
+				s: new SelectCaseSuccessAction(payload)
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

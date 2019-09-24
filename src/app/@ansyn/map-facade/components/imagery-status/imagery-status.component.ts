@@ -123,11 +123,11 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	overlayData$: () => Observable<any> = () => this.store$.pipe(
 		select(selectOverlayByMapId(this.mapId)),
+		tap( overlay => this.overlay = overlay),
 		filter(Boolean),
 		switchMap( (overlay) => of(overlay).pipe(
 			withLatestFrom(this.translate.get(overlay.sensorName)),
 			tap(([overlay, sensorNameTranslate]) => {
-				this.overlay = overlay;
 				this.translatedOverlaySensorName = sensorNameTranslate;
 			})
 		))

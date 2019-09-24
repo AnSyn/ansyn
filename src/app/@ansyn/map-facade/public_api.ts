@@ -22,7 +22,8 @@ export {
 	selectHideLayersOnMap,
 	selectOverlaysWithMapIds,
 	selectMapPositionByMapId,
-	selectMapsStateByIds
+	selectMapsStateByIds,
+	selectOverlayDisplayByMapId
 } from './reducers/map.reducer';
 
 export {

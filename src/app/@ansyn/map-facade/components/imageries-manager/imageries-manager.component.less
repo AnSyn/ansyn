@@ -12,20 +12,21 @@
 
 	div.collapsable {
 		&.layout2 {
-			&:nth-child(1) {
-				top: 0;
-				left: 0;
-
-				/deep/ .ol-attribution {
-					bottom: 60px;
+			div.map-container-wrapper {
+				&:first-child {
+					/deep/ .ol-attribution {
+						bottom: 60px;
+					}
 				}
 			}
 		}
 
 		&.layout4 {
 			div.map-container-wrapper {
-				/deep/ .ol-attribution {
-					bottom: 60px;
+				&:first-child {
+					/deep/ .ol-attribution {
+						bottom: 60px;
+					}
 				}
 			}
 		}

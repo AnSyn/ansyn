@@ -36,6 +36,7 @@ import { ICase } from '../models/case.model';
 import { casesFeatureKey, CasesReducer, casesStateSelector, initialCasesState } from '../reducers/cases.reducer';
 import { casesConfig, CasesService } from '../services/cases.service';
 import { CasesEffects } from './cases.effects';
+import { SetMapsDataActionStore } from '@ansyn/map-facade';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
@@ -208,9 +209,11 @@ describe('CasesEffects', () => {
 		expect(casesEffects.onSaveCaseAs$).toBeObservable(expectedResults);
 	});
 
-	it('onSaveCaseAsSuccess$ should set auto save with "true"', () => {
-		actions = hot('--a--', { a: new SaveCaseAsSuccessAction(<any>{}) });
-		const expectedResults = cold('--b--', { b: new SetAutoSave(true) });
+	it('onSaveCaseAsSuccess$ should set auto save with "true" and update map', () => {
+		actions = hot('--a--', { a: new SaveCaseAsSuccessAction(<any>{state: {maps: {data: []}}}) });
+		const expectedResults = cold('--(bc)--', {
+			b: new SetAutoSave(true),
+			c: new SetMapsDataActionStore({mapsList: []})});
 		expect(casesEffects.onSaveCaseAsSuccess$).toBeObservable(expectedResults);
 	});
 

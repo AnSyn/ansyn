@@ -55,12 +55,11 @@
 	</div>
 </div>
 
-<div class="notifications">
+
+<ng-container
+	*ngFor="let component of entryComponents.status">
 	<ng-container
-		*ngFor="let component of entryComponents.status">
-		<ng-container
-			*ngIf="component.prototype.getType() === 'notification'"
-			[ansynEntryComponent]="{ component: component , mapId: mapId }">
-		</ng-container>
+		*ngIf="component.prototype.getType() === 'notification'"
+		[ansynEntryComponent]="{ component: component , mapId: mapId }">
 	</ng-container>
-</div>
+</ng-container>

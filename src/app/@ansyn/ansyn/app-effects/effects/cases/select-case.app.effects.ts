@@ -27,7 +27,7 @@ import {
 import { casesConfig, CasesService } from '../../../modules/menu-items/cases/services/cases.service';
 import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
 import {
-	ShowOverlaysFootprintAction,
+	SetAnnotationMode,
 	UpdateOverlaysManualProcessArgs
 } from '../../../modules/menu-items/tools/actions/tools.actions';
 import { isFullOverlay } from '../../../modules/core/utils/overlays';
@@ -64,7 +64,7 @@ export class SelectCaseAppEffects {
 		// map
 		const { data, activeMapId: currentActiveMapID } = state.maps;
 		const defaultMapIndex = data.findIndex(map => map.id === this.caseConfig.defaultCase.state.maps.activeMapId);
-		if (payload.id !== this.caseConfig.defaultCase.id && defaultMapIndex !== -1) {
+		if (defaultMapIndex !== -1) {
 			data[defaultMapIndex].id = UUID.UUID();
 			if (currentActiveMapID === this.caseConfig.defaultCase.state.maps.activeMapId) {
 				state.maps.activeMapId = data[defaultMapIndex].id;
@@ -110,6 +110,7 @@ export class SelectCaseAppEffects {
 			new SetAutoSave(autoSave),
 			new SetRemovedOverlaysIdsAction(removedOverlaysIds),
 			new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
+			new SetAnnotationMode(null),
 			new SelectCaseSuccessAction(payload)
 		];
 

@@ -3,7 +3,7 @@ import { cloneDeep as _cloneDeep } from 'lodash';
 
 export function cloneDeep() {
 	return function cloneDeepImplementation(source) {
-		return Observable.create(subscriber => {
+		return new Observable(subscriber => {
 			const subscription = source.subscribe(value => {
 					try {
 						subscriber.next(_cloneDeep(value));

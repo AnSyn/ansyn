@@ -18,6 +18,7 @@
 		position: relative;
 		display: flex;
 		height: 24px;
+		transform: translateX(-50%);
 
 		span {
 			margin-left: 5px;
@@ -53,6 +54,14 @@
 			&.bottom {
 				transform: translate(0, 100%);
 			}
+		}
+	}
+}
+
+@media screen and (max-width: 1366px) {
+	:host {
+		.block {
+			transform: translateX(0%);
 		}
 	}
 }

@@ -10,18 +10,23 @@
 	height: @status-bar-height;
 	box-shadow: 0 -10px 20px 0 rgba(0, 0, 0, 0.3);
 	display: flex;
+	justify-content: flex-end;
 	transform: translate(0, -100%);
 
 	ansyn-imagery-status {
 		position: relative;
 		height: 100%;
-		flex-grow: 1;
+		flex: 1;
+
+		.description {
+			width: 60%;
+		}
 	}
 	.status-bar {
 		height: 100%;
 		color: white;
 		display: flex;
-		flex: 1;
+		flex-shrink: 1;
 		justify-content: flex-end;
 
 		.selected-case {

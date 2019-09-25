@@ -15,7 +15,8 @@ export const FiltersActionTypes = {
 	ENABLE_ONLY_FAVORITES_SELECTION: 'ENABLE_ONLY_FAVORITES_SELECTION',
 	UPDATE_FACETS: 'UPDATE_FACETS',
 	SET_FILTER_SEARCH: 'SET_FILTER_SEARCH',
-	SET_FILTERS_SEARCH_RESULTS: 'SET_FILTERS_SEARCH_RESULTS'
+	SET_FILTERS_SEARCH_RESULTS: 'SET_FILTERS_SEARCH_RESULTS',
+	SET_FILTERS_SCROLL: 'SET_FILTER_SCROLL'
 };
 
 export class InitializeFiltersAction implements Action {
@@ -68,8 +69,15 @@ export class SetFiltersSearchResults implements Action {
 	}
 }
 
+export class SetFiltersScroll implements Action {
+	readonly type = FiltersActionTypes.SET_FILTERS_SCROLL;
+
+	constructor(public payload: number) {}
+}
+
 export type FiltersActions = InitializeFiltersAction
 	| InitializeFiltersSuccessAction
 	| UpdateFilterAction
 	| EnableOnlyFavoritesSelectionAction
-	| UpdateFacetsAction;
+	| UpdateFacetsAction
+	| SetFiltersScroll;

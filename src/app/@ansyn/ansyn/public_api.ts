@@ -1,3 +1,5 @@
+import { SetFiltersScroll } from './modules/menu-items/filters/actions/filters.actions';
+
 export {
 	OpenlayersBaseLayersPlugins
 }from './modules/plugins/openlayers/plugins/layers/openlayers-base-layers.plugins';
@@ -118,7 +120,8 @@ export {
 	EnableOnlyFavoritesSelectionAction,
 	FiltersActionTypes, InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
-	UpdateFacetsAction
+	UpdateFacetsAction,
+	SetFiltersScroll
 } from './modules/menu-items/filters/actions/filters.actions';
 export {
 	BeginLayerCollectionLoadAction,
@@ -146,7 +149,8 @@ export {
 	filtersStateSelector,
 	selectFacets,
 	selectFilters,
-	selectShowOnlyFavorites
+	selectShowOnlyFavorites,
+	selectFiltersScroll
 } from './modules/menu-items/filters/reducer/filters.reducer';
 export { ToolsComponent } from './modules/menu-items/tools/tools/tools.component';
 export { layersConfig } from './modules/menu-items/layers-manager/services/data-layers.service';

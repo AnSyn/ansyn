@@ -1,16 +1,17 @@
 import { filtersConfig } from '../../services/filters.service';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IFilter } from '../../models/IFilter';
 import { select, Store } from '@ngrx/store';
 import {
 	filtersStateSelector,
 	IFiltersState,
+	selectFiltersScroll,
 	selectFiltersSearch,
 	selectFiltersSearchResults
 } from '../../reducer/filters.reducer';
-import { SetFilterSearch, UpdateFacetsAction } from '../../actions/filters.actions';
+import { SetFilterSearch, SetFiltersScroll, UpdateFacetsAction } from '../../actions/filters.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { distinctUntilChanged, map, tap } from 'rxjs/operators';
+import { distinctUntilChanged, map, take, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { IFiltersConfig } from '../../models/filters-config';
 import { IFilterSearchResults } from '../../models/filter-search-results';
@@ -26,7 +27,7 @@ export class FiltersCollectionComponent implements OnDestroy, OnInit {
 	public onlyFavorite: boolean;
 	public filters: IFilter[] = this.config.filters;
 	filtersSearch$: any = this.store.select(selectFiltersSearch);
-
+	@ViewChild('scrollElement') scrollElement: ElementRef;
 	@AutoSubscription
 	filtersSearchResults$: any = this.store.pipe(
 		select(selectFiltersSearchResults),
@@ -37,7 +38,6 @@ export class FiltersCollectionComponent implements OnDestroy, OnInit {
 			});
 		})
 	);
-
 	@AutoSubscription
 	filters$: Observable<any> = this.store.select(filtersStateSelector).pipe(
 		distinctUntilChanged(),
@@ -57,8 +57,24 @@ export class FiltersCollectionComponent implements OnDestroy, OnInit {
 		})
 	);
 
+	@AutoSubscription
+	scroll$ = this.store.pipe(
+		select(selectFiltersScroll),
+		take(1),
+		tap((scroll: number) => {
+			requestAnimationFrame(() => {
+				this.scrollElement.nativeElement.scrollBy(0, scroll)
+			})
+		})
+	);
 
 	constructor(@Inject(filtersConfig) protected config: IFiltersConfig, public store: Store<IFiltersState>) {
+	}
+
+	@HostListener('scroll', ['$event'])
+	scrollHandler(event) {
+		event.preventDefault();
+		this.store.dispatch(new SetFiltersScroll(event.target.scrollTop));
 	}
 
 	showOnlyFavorites($event) {

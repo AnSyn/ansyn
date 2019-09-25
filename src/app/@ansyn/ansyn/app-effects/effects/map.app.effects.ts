@@ -63,7 +63,7 @@ import {
 	RequestOverlayByIDFromBackendAction,
 	SetMarkUp
 } from '../../modules/overlays/actions/overlays.actions';
-import { GeoRegisteration } from '../../modules/overlays/models/overlay.model';
+import { GeoRegisteration, IOverlay } from '../../modules/overlays/models/overlay.model';
 import {
 	BackToWorldView,
 	OverlayStatusActionsTypes
@@ -71,6 +71,8 @@ import {
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { selectOverlaysWithMapIds } from '@ansyn/map-facade';
 import { isEqual } from 'lodash';
+import { selectGeoRegisteredOptionsEnabled } from '../../modules/menu-items/tools/reducers/tools.reducer';
+import { selectOverlayOfActiveMap } from '@ansyn/map-facade';
 
 @Injectable()
 export class MapAppEffects {
@@ -230,14 +232,16 @@ export class MapAppEffects {
 		);
 
 	@Effect()
-	activeMapGeoRegistrationChanged$: Observable<any> = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectMapsList))
+	activeMapGeoRegistrationChanged$: Observable<any> = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectOverlayOfActiveMap))
 		.pipe(
-			withLatestFrom(this.store$.select(mapStateSelector)),
-			filter(([[activeMapId, mapsList], mapState]: [[string, ICaseMapState[]], IMapState]) => Boolean(mapState.activeMapId && Object.values(mapState.entities).length)),
-			map(([[activeMapId, mapsList], mapState]: [[string, ICaseMapState[]], IMapState]) => {
-				const activeMapState = MapFacadeService.activeMap(mapState);
-				const isGeoRegistered = activeMapState && MapFacadeService.isOverlayGeoRegistered(activeMapState.data.overlay);
-				return new SetMapGeoEnabledModeToolsActionStore(!!isGeoRegistered);
+			withLatestFrom(this.store$.select(selectGeoRegisteredOptionsEnabled)),
+			filter(([[activeMapId, overlay], isGeoRegisteredOptionsEnabled]: [[string, IOverlay], boolean]) => Boolean(activeMapId)),
+			switchMap(([[activeMapId, overlay], isGeoRegisteredOptionsEnabled]: [[string, IOverlay], boolean]) => {
+				const isGeoRegistered = MapFacadeService.isOverlayGeoRegistered(overlay);
+				if (!!isGeoRegistered !== isGeoRegisteredOptionsEnabled) {
+					return [new SetMapGeoEnabledModeToolsActionStore(!!isGeoRegistered)];
+				}
+				return [];
 			})
 		);
 

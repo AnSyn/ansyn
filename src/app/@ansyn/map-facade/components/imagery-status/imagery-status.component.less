@@ -10,6 +10,7 @@
 
 :host {
 	position: absolute;
+	height: @status-bar-height;
 	z-index: @z-index-imagery-status;
 	display: flex;
 	width: 100%;
@@ -31,7 +32,7 @@
 	.buttons {
 		position: absolute;
 		left: 0;
-		line-height: 0;
+		height: @status-bar-height;
 		display: flex;
 
 		button {

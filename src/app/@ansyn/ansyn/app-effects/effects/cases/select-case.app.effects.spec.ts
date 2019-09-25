@@ -29,7 +29,7 @@ import {
 import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
 import {
 	SetAnnotationMode,
-	ShowOverlaysFootprintAction,
+	SetMeasureDistanceToolState,
 	UpdateOverlaysManualProcessArgs
 } from '../../../modules/menu-items/tools/actions/tools.actions';
 import { CoreConfig } from '../../../modules/core/models/core.config';
@@ -160,8 +160,8 @@ describe('SelectCaseAppEffects', () => {
 				p: new SetAutoSave(false),
 				q: new SetRemovedOverlaysIdsAction(removedOverlaysIds),
 				r: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
-				s: new ShowOverlaysFootprintAction('None'),
-				t: new SetAnnotationMode(null),
+				s: new SetAnnotationMode(null),
+				t: new SetMeasureDistanceToolState(false),
 				x: new SelectCaseSuccessAction(payload)
 			});
 

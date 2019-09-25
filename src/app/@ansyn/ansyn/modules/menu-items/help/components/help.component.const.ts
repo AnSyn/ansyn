@@ -10,8 +10,8 @@ export const helpComponentConstants = {
 				'Now the app will fetch the overlays for this location'
 			],
 			image: [
-				'Frame 86.jpg',
-				'Frame 87.jpg'
+				'Frame 86.png',
+				'Frame 87.png'
 			]
 		},
 		{
@@ -22,8 +22,8 @@ export const helpComponentConstants = {
 				'You can navigate between overlays by using the arrows and the keyboard'
 			],
 			image: [
-				'Frame 88.jpg',
-				'Frame 89.jpg'
+				'Frame 88.png',
+				'Frame 89.png'
 			]
 		},
 		{
@@ -34,8 +34,8 @@ export const helpComponentConstants = {
 				'See the number of available overlays in the filters menu and in the status bar'
 			],
 			image: [
-				'Frame 90.jpg',
-				'Frame 91.jpg'
+				'Frame 90.png',
+				'Frame 91.png'
 			]
 		},
 		{
@@ -46,8 +46,8 @@ export const helpComponentConstants = {
 				'You can also use image processing options, make measurements and more'
 			],
 			image: [
-				'Frame 92.jpg',
-				'Frame 93.jpg'
+				'Frame 92.png',
+				'Frame 93.png'
 			]
 		},
 		{
@@ -58,8 +58,8 @@ export const helpComponentConstants = {
 				'Good luck!'
 			],
 			image: [
-				'Frame 94.jpg',
-				'Frame 95.jpg'
+				'Frame 94.png',
+				'Frame 95.png'
 			]
 		}
 	]

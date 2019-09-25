@@ -58,7 +58,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		this.overlay('333', OpenLayersStaticImageSourceProviderSourceType, 'https://image.shutterstock.com/z/stock-vector-cool-milkshake-190524542.jpg', null, GeoRegisteration.notGeoRegistered, 'vis', null, 1600, 1500)
 	];
 
-	overlay(id: string, sourceType: string, imageUrl: string, footprint: any, geoRegistered: GeoRegisteration = GeoRegisteration.notGeoRegistered, sensorType: string = 'mySensorType', sensorName: string = 'mySensorName', imageWidth: number, imageHeight: number): IOverlay {
+	overlay(id: string, sourceType: string, imageUrl: string, footprint: any, geoRegistered: GeoRegisteration = GeoRegisteration.notGeoRegistered, sensorType: string = 'mySensorType', sensorName: string = 'mySensorName', imageWidth?: number, imageHeight?: number): IOverlay {
 		const days = 10 * Math.random();
 		const date = moment().subtract(days, 'day').toDate();
 		const left = -117.94,

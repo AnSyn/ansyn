@@ -1,25 +1,28 @@
-<carousel [interval]="0">
-	<slide *ngFor="let slide of const.SLIDES_DATA">
-		<div class="help-slide">
-			<div class="header1">{{'How to start exploring?' | translate}}</div>
-			<div class="header2">{{slide.text[0] | translate}}</div>
-			<div class="fixed-height-text topText">{{slide.text[1] | translate}}</div>
-			<div class="img-container"><img [src]="img(slide.image[0])"></div>
-			<div class="fixed-height-text midText">{{slide.text[2] | translate}}</div>
-			<div class="img-container"><img [src]="img(slide.image[1])"></div>
-			<div class="bottomText">{{slide.text[3] | translate}}</div>
-		</div>
-	</slide>
-</carousel>
+<div [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''">
 
-<hr/>
+	<carousel [interval]="0">
+		<slide *ngFor="let slide of const.SLIDES_DATA">
+			<div class="help-slide">
+				<div class="header1">{{'How to start exploring?' | translate}}</div>
+				<div class="header2">{{slide.text[0] | translate}}</div>
+				<div class="fixed-height-text topText">{{slide.text[1] | translate}}</div>
+				<div class="img-container"><img [src]="img(slide.image[0])"></div>
+				<div class="fixed-height-text midText">{{slide.text[2] | translate}}</div>
+				<div class="img-container"><img [src]="img(slide.image[1])"></div>
+				<div class="bottomText">{{slide.text[3] | translate}}</div>
+			</div>
+		</slide>
+	</carousel>
 
-<footer>
-	<label>
-		<ansyn-checkbox
-			[ngModel]="helpLocalStorageService.getHelpLocalStorageData().dontShowHelpOnStartup"
-			(ngModelChange)="helpLocalStorageService.setHelpLocalStorageData({ dontShowHelpOnStartup: $event })">
-			{{'Don\'t show on startup' | translate}}
-		</ansyn-checkbox>
-	</label>
-</footer>
+	<hr/>
+
+	<footer>
+		<label>
+			<ansyn-checkbox
+				[ngModel]="helpLocalStorageService.getHelpLocalStorageData().dontShowHelpOnStartup"
+				(ngModelChange)="helpLocalStorageService.setHelpLocalStorageData({ dontShowHelpOnStartup: $event })">
+				{{'Don\'t show on startup' | translate}}
+			</ansyn-checkbox>
+		</label>
+	</footer>
+</div>

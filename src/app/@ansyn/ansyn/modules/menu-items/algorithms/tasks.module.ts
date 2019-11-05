@@ -37,14 +37,15 @@ import { TranslateModule } from '@ngx-translate/core';
 		TasksFormPageComponent, TasksFormPageHeaderComponent, TasksFormComponent, RemoveTaskModalComponent],
 	entryComponents: [TasksComponent],
 	exports: [TasksComponent],
-	providers: [TasksService]
+	providers: []
 })
 export class TasksModule {
-	static provideRemote(value: { new(...args): TasksRemoteService }): ModuleWithProviders {
+	static provideRemote(tasksRemoteServiceValue: { new(...args): TasksRemoteService }, tasksServiceValue: { new(...args): TasksService }): ModuleWithProviders {
 		return {
 			ngModule: TasksModule,
 			providers: [
-				{ provide: TasksRemoteService, useClass: value }
+				{ provide: TasksRemoteService, useClass: tasksRemoteServiceValue },
+				{ provide: TasksService, useClass: tasksServiceValue }
 			]
 		};
 	}

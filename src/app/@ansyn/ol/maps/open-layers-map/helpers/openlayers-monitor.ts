@@ -19,7 +19,7 @@ export class OpenLayersMonitor {
 
 	messages = {
 		all: 'Failed to load overlay',
-		partial: 'Failed to load {{amount}} tiles',
+		partial: 'Failed to load {amount} tiles',
 		one: 'Failed to load a tile'
 	};
 
@@ -94,7 +94,7 @@ export class OpenLayersMonitor {
 		} else if (this.tilesCounter.error === 1) { // Only 1
 			message = this.messages.one;
 		} else { // More than 1, but not all
-			message = this.messages.partial.replace('{{amount}}', String(this.tilesCounter.error));
+			message = this.messages.partial.replace('{amount}', String(this.tilesCounter.error));
 		}
 
 		this.tilesLoadErrorEventEmitter.emit({ message });

@@ -15,7 +15,8 @@ import {
 	PositionChangedAction,
 	selectActiveMapId,
 	selectMaps,
-	selectMapsList,
+	selectOverlayOfActiveMap,
+	selectOverlaysWithMapIds,
 	SetIsLoadingAcion,
 	SetToastMessageAction,
 	ToggleMapLayersAction,
@@ -32,7 +33,8 @@ import {
 } from '@ansyn/imagery';
 import {
 	catchError,
-	debounceTime, distinctUntilChanged,
+	debounceTime,
+	distinctUntilChanged,
 	filter,
 	map,
 	mergeMap,
@@ -69,10 +71,8 @@ import {
 	OverlayStatusActionsTypes
 } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { fromPromise } from 'rxjs/internal-compatibility';
-import { selectOverlaysWithMapIds } from '@ansyn/map-facade';
 import { isEqual } from 'lodash';
 import { selectGeoRegisteredOptionsEnabled } from '../../modules/menu-items/tools/reducers/tools.reducer';
-import { selectOverlayOfActiveMap } from '@ansyn/map-facade';
 
 @Injectable()
 export class MapAppEffects {
@@ -309,7 +309,7 @@ export class MapAppEffects {
 				const wasOverlaySetAsExtent = !payloadExtent && isNotIntersect;
 				const actionsArray: Action[] = [];
 				// in order to set the new map position for unregistered overlays maps
-				if (wasOverlaySetAsExtent) {
+				if (overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered && wasOverlaySetAsExtent) {
 					const position: ImageryMapPosition = { extentPolygon: polygonFromBBOX(bboxFromGeoJson(overlay.footprint)) };
 					actionsArray.push(new PositionChangedAction({ id: mapId, position, mapInstance: caseMapState }));
 				}

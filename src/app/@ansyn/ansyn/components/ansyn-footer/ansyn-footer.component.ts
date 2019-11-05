@@ -1,12 +1,12 @@
 import { Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { selectFooterCollapse, ToggleFooter } from '@ansyn/map-facade';
-import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { ContainerChangedTriggerAction, IMenuState } from '@ansyn/menu';
 import { Store } from '@ngrx/store';
 import { CoreConfig } from '../../modules/core/models/core.config';
 import { ICoreConfig } from '../../modules/core/models/core.config.model';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
+import { IMapSettings } from '@ansyn/imagery';
 
 @Component({
 	selector: 'ansyn-footer',
@@ -16,7 +16,7 @@ import { tap } from 'rxjs/operators';
 @AutoSubscriptions()
 export class AnsynFooterComponent implements OnInit, OnDestroy {
 	@Input() selectedCaseName: string;
-	@Input() activeMap: ICaseMapState;
+	@Input() activeMap: IMapSettings;
 	@Input() animatedElement: HTMLElement;
 
 	@ViewChild('footerWrapper') wrapperElement: ElementRef;

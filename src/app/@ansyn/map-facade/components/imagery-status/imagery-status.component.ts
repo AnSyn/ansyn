@@ -1,5 +1,5 @@
 import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output, } from '@angular/core';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { get as _get } from 'lodash'
@@ -29,10 +29,9 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class ImageryStatusComponent implements OnInit, OnDestroy {
 	mapsAmount = 1;
-	_mapId: string;
+	_map: IMapSettings;
 	_entryComponents: IEntryComponentsEntities;
 	@HostBinding('class.active') isActiveMap: boolean;
-	overlay: any; // @TODO: eject to ansyn
 	hideLayers: boolean;
 	@AutoSubscription
 	active$ = this.store$.pipe(
@@ -60,19 +59,28 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities) {
 	}
 
-
-
-	get mapId() {
-		return this._mapId;
+	get map() {
+		return this._map;
 	}
 
 	@Input()
-	set mapId(value: string) {
-		this._mapId = value;
+	set map(value: IMapSettings) {
+		this._map = value;
 		/* force angular to rerender the *ngFor content that binding to this arrays
 		 * so they get the new mapId	 */
 		this._entryComponents = { status: [], container: [], floating_menu: [] };
+		this.translate.get(this.overlay ? this.overlay.sensorName : 'sensorName')
+			.subscribe(translatedOverlaySensorName => this.translatedOverlaySensorName = translatedOverlaySensorName);
 		setTimeout(() => this._entryComponents = { ...this.entryComponents })
+	}
+
+	// @TODO: eject to ansyn
+	get overlay() {
+		return this.map && this.map.data && (<any>this.map.data).overlay;
+	}
+
+	get mapId() {
+		return this.map && this.map.id;
 	}
 
 	@HostBinding('class.one-map')
@@ -118,19 +126,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	hideLayers$ = () => this.store$.pipe(
 		select(selectHideLayersOnMap(this.mapId)),
-		tap( hideLayers => this.hideLayers = hideLayers)
-	);
-	@AutoSubscription
-	overlayData$: () => Observable<any> = () => this.store$.pipe(
-		select(selectOverlayByMapId(this.mapId)),
-		tap( overlay => this.overlay = overlay),
-		filter(Boolean),
-		switchMap( (overlay) => of(overlay).pipe(
-			withLatestFrom(this.translate.get(overlay.sensorName)),
-			tap(([overlay, sensorNameTranslate]) => {
-				this.translatedOverlaySensorName = sensorNameTranslate;
-			})
-		))
+		tap(hideLayers => this.hideLayers = hideLayers)
 	);
 
 	getFormattedTime(dateTimeSring: string): string {

@@ -14,6 +14,12 @@
 	outline: none;
 	animation: moveIntoView 1s;
 
+	div {
+		&.rtl {
+			direction: rtl;
+		}
+	}
+
 	&:focus {
 		z-index: @z-index-welcome-notification;
 

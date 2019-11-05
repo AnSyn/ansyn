@@ -2,7 +2,7 @@
 	 [style.visibility]="(isHidden$ | async) ? 'hidden' : 'visible'">
 	<ansyn-imagery-status *ngIf="showStatus"
 						  class="with-background"
-						  [mapId]="mapState.id"
+						  [map]="mapState"
 						  (onMove)="onMove.emit($event)"
 						  (toggleMapSynchronization)="toggleMapSynchronization()">
 	</ansyn-imagery-status>

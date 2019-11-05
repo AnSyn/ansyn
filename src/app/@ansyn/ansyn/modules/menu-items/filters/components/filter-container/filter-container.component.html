@@ -17,7 +17,7 @@
 	</div>
 
 	<div *ngIf="(isLoading$ | async); else filterBody">
-		<ansyn-animated-ellipsis [text]="'Loading' | translate"></ansyn-animated-ellipsis>
+		<ansyn-animated-ellipsis [text]="'Loading' | translate" [rtl]="'rtl' === ('direction' | translate)"></ansyn-animated-ellipsis>
 	</div>
 
 	<ng-template #filterBody>

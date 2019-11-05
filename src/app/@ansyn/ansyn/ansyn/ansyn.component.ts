@@ -1,9 +1,15 @@
 import { select, Store } from '@ngrx/store';
 import { Component, HostBinding, HostListener, Inject, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { MapFacadeService, mapStateSelector } from '@ansyn/map-facade';
+import { combineLatest, Observable } from 'rxjs';
+import {
+	MapFacadeService,
+	mapStateSelector,
+	selectActiveMapId,
+	selectMapsList,
+	selectOverlayOfActiveMap
+} from '@ansyn/map-facade';
 import { selectIsPinned } from '@ansyn/menu';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, withLatestFrom } from 'rxjs/operators';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
 import { selectSelectedCase } from '../modules/menu-items/cases/reducers/cases.reducer';
 import { LoadDefaultCaseAction } from '../modules/menu-items/cases/actions/cases.actions';
@@ -13,6 +19,7 @@ import { UpdateToolsFlags } from '../modules/menu-items/tools/actions/tools.acti
 import { toolsFlags } from '../modules/menu-items/tools/reducers/tools.reducer';
 import { LoggerService } from '../modules/core/services/logger.service';
 import { credentialsConfig, ICredentialsConfig } from '../modules/core/services/credentials/config';
+import { IOverlay } from '../modules/overlays/models/overlay.model';
 
 @Component({
 	selector: 'ansyn-app',
@@ -34,11 +41,11 @@ export class AnsynComponent implements OnInit {
 		map((_isPinned) => _isPinned ? 'isPinned' : 'isNotPinned')
 	);
 
-	activeMap$: Observable<ICaseMapState> = this.store$
+	activeMap$: Observable<any> = combineLatest(
+		this.store$.select(selectActiveMapId), this.store$.select(selectOverlayOfActiveMap))
 		.pipe(
-			select(mapStateSelector),
-			filter(Boolean),
-			map(MapFacadeService.activeMap),
+			withLatestFrom(this.store$.select(selectMapsList)),
+			map(([[activeMapId, overlay], mapList]: [[string, IOverlay], ICaseMapState[]]) => MapFacadeService.mapById(mapList, activeMapId)),
 			filter(Boolean)
 		);
 

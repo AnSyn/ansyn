@@ -25,6 +25,10 @@ export class TasksService {
 	) {
 	}
 
+	isSupportedOverlay(overlay: IOverlay) {
+		return true;
+	}
+
 	loadTasks(tasksOffset: number = 0): Observable<any[]> {
 		return this.storageService.getPage<AlgorithmTaskPreview>(this.config.schema, tasksOffset, this.config.paginationLimit)
 			.pipe(

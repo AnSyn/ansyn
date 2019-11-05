@@ -10,7 +10,7 @@ import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { combineLatest, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { IOverlay } from '../models/overlay.model';
+import { GeoRegisteration, IOverlay } from '../models/overlay.model';
 import {
 	SetRemovedOverlaysIdAction,
 	ToggleDraggedModeAction,
@@ -49,7 +49,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	isFavorite: boolean;
 	favoritesButtonText: string;
 	isPreset: boolean;
-	noGeoRegistration: any;
 	presetsButtonText: string;
 	isRemoved: boolean;
 	isDragged: boolean;
@@ -221,5 +220,12 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 			this.isDragged = this.overlaysTranslationData[this.overlay.id].dragged;
 		}
 		this.draggedButtonText = this.isDragged ? 'Stop Drag' : 'Start Drag';
+	}
+
+	get noGeoRegistration() {
+		if (!this.overlay) {
+			return false;
+		}
+		return this.overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered;
 	}
 }

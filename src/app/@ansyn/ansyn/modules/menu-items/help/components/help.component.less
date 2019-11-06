@@ -16,73 +16,80 @@
 	font-size: @ansyn-help-font-size-default;
 	display: flex;
 	flex-direction: column;
-}
 
-.help-slide {
-	box-sizing: border-box;
-	height: @ansyn-help-slide-height;
-	padding: calc(~"(100vh - @{ansyn-help-footer-height}) * 0.022") 1vh 0 1vh;
-	display: flex;
-	justify-content: stretch;
-	flex-direction: column;
-	align-items: center;
+	div {
 
-	& > * {
-		width: @ansyn-help-image-original-width-px;
-	}
-
-	.header1 {
-		font-size: @ansyn-help-font-size-head1;
-	}
-
-	.header2 {
-		font-size: @ansyn-help-font-size-head2;
-		margin: calc(~"(100vh - @{ansyn-help-footer-height}) * 0.031") 0;
-	}
-
-	img {
-		width: @ansyn-help-image-original-width-vh;
-	}
-
-	.img-container {
-	}
-
-	.fixed-height-text {
-		display: flex;
-		flex-direction: column;
-
-		&.topText {
-			height: 3em;
-			justify-content: flex-start;
+		&.rtl {
+		    direction: rtl;
 		}
 
-		&.midText {
-			height: 3.5em;
+		.help-slide {
+			box-sizing: border-box;
+			height: @ansyn-help-slide-height;
+			padding: calc(~"(100vh - @{ansyn-help-footer-height}) * 0.022") 1vh 0 1vh;
+			display: flex;
+			justify-content: stretch;
+			flex-direction: column;
+			align-items: center;
+
+			& > * {
+				width: @ansyn-help-image-original-width-px;
+			}
+
+			.header1 {
+				font-size: @ansyn-help-font-size-head1;
+			}
+
+			.header2 {
+				font-size: @ansyn-help-font-size-head2;
+				margin: calc(~"(100vh - @{ansyn-help-footer-height}) * 0.031") 0;
+			}
+
+			img {
+				width: @ansyn-help-image-original-width-vh;
+			}
+
+			.img-container {
+			}
+
+			.fixed-height-text {
+				display: flex;
+				flex-direction: column;
+
+				&.topText {
+					height: 3em;
+					justify-content: flex-start;
+				}
+
+				&.midText {
+					height: 3.5em;
+					justify-content: center;
+				}
+			}
+
+			.bottomText {
+				margin-top: 2em;
+			}
+		}
+
+		hr {
+			width: 80%;
+			text-align: center;
+			border-color: fade(#ffffff, 50);
+		}
+
+		footer {
+			box-sizing: border-box;
+			padding: 0 10%;
+			flex: 1;
+			display: flex;
+			flex-direction: column;
 			justify-content: center;
+
+			input {
+				transform: translateY(3px)
+			}
 		}
-	}
-
-	.bottomText {
-		margin-top: 2em;
-	}
-}
-
-hr {
-	width: 80%;
-	text-align: center;
-	border-color: fade(#ffffff, 50);
-}
-
-footer {
-	box-sizing: border-box;
-	padding: 0 10%;
-	flex: 1;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-
-	input {
-		transform: translateY(3px)
 	}
 }
 

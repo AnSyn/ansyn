@@ -6,7 +6,7 @@
 			(load)="finishedLoadingImage()"
 			[class.loading]="loadingImage"
 			[style.transform]="'rotate(' + rotation + 'rad)'">
-		<p class="error-text" *ngIf="img.src.includes(errorSrc)">Preview is not available</p>
+		<p class="error-text" *ngIf="img.src.includes(errorSrc)">{{"Preview is not available" | translate}}</p>
 		<ansyn-loader [show]="loadingImage"></ansyn-loader>
 	</main>
 	<footer>

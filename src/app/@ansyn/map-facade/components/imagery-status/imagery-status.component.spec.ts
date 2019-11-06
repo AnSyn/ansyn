@@ -1,7 +1,7 @@
 import { HttpClientModule } from '@angular/common/http';
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
@@ -12,6 +12,20 @@ import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { MockComponent } from '../../test/mock-component';
 import { ImageryStatusComponent } from './imagery-status.component';
 
+const MAP: IMapSettings = {
+	id: 'test',
+	data: {
+		position: {},
+		overlay: {}
+	},
+	flags: {
+		hideLayers: true
+	},
+	worldView: {
+		mapType: 'mapType',
+		sourceType: 'sourceType'
+	}
+};
 describe('ImageryStatusComponent', () => {
 	let component: ImageryStatusComponent;
 	let fixture: ComponentFixture<ImageryStatusComponent>;
@@ -48,9 +62,9 @@ describe('ImageryStatusComponent', () => {
 		communicatorService = _communicatorService;
 		fixture = TestBed.createComponent(ImageryStatusComponent);
 		component = fixture.componentInstance;
-		component.mapId = 'test';
+		component._map = MAP;
+		component._entryComponents = {status: [], container: [], floating_menu: []};
 		component.hideLayers = true;
-		component.overlay = {} as any;
 		component.mapsAmount = 2;
 		fixture.detectChanges();
 	}));

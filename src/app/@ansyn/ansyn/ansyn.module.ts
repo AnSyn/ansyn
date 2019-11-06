@@ -36,6 +36,7 @@ import { StatusBarModule } from './modules/status-bar/status-bar.module';
 import { TranslateService } from '@ngx-translate/core';
 import { ImageryZoomerComponent } from './modules/plugins/components/imagery-zoomer/imagery-zoomer.component';
 import { ImageryDimensionModeComponent } from './modules/plugins/components/imagery-dimension-mode/imagery-dimension-mode.component';
+import { TasksService } from './modules/menu-items/algorithms/services/tasks.service';
 
 @NgModule({
 	imports: [
@@ -46,7 +47,7 @@ import { ImageryDimensionModeComponent } from './modules/plugins/components/imag
 		FiltersModule,
 		LayersManagerModule,
 		ToolsModule,
-		TasksModule.provideRemote(TasksRemoteDefaultService),
+		TasksModule.provideRemote(TasksRemoteDefaultService, TasksService),
 		SettingsModule,
 		OverlaysModule,
 		FormsModule,

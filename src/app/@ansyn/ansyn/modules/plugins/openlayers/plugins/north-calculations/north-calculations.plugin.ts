@@ -92,18 +92,22 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
 		filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.mapId),
 		withLatestFrom(this.store$.select(statusBarStateSelector), ({ payload }: DisplayOverlaySuccessAction, { comboBoxesProperties }: IStatusBarState) => {
-			return [payload.forceFirstDisplay, comboBoxesProperties.orientation, payload.overlay];
+			return [payload.forceFirstDisplay, comboBoxesProperties.orientation, payload.overlay, payload.openWithAngle];
 		}),
-		filter(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
+		filter(([forceFirstDisplay, orientation, overlay, openWithAngle]: [boolean, CaseOrientation, IOverlay, number]) => {
 			return comboBoxesOptions.orientations.includes(orientation);
 		}),
-		switchMap(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
-			if (orientation === 'Align North' && !forceFirstDisplay) {
+		switchMap(([forceFirstDisplay, orientation, overlay, openWithAngle]: [boolean, CaseOrientation, IOverlay, number]) => {
+			if (orientation === 'Align North' && !forceFirstDisplay && openWithAngle === undefined) {
 				return this.setActualNorth();
 			}
 			return this.getVirtualNorth(this.iMap.mapObject).pipe(take(1)).pipe(
 				tap((virtualNorth: number) => {
 					this.communicator.setVirtualNorth(virtualNorth);
+					if (openWithAngle !== undefined) {
+						this.communicator.setRotation(toRadians(openWithAngle) - virtualNorth);
+						return EMPTY;
+					}
 					if (!forceFirstDisplay && orientation === 'Imagery Perspective') {
 						this.communicator.setRotation(overlay.azimuth);
 					}

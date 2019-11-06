@@ -174,7 +174,7 @@ export class OverlaysAppEffects {
 		map(([{ payload }, overlays, { activeMapId }]: [DisplayOverlayFromStoreAction, Map<string, IOverlay>, IMapState]) => {
 			const mapId = payload.mapId || activeMapId;
 			const overlay = overlays.get(payload.id);
-			return new DisplayOverlayAction({ overlay, mapId, extent: payload.extent });
+			return new DisplayOverlayAction({ overlay, mapId, extent: payload.extent, openWithAngle: payload.openWithAngle });
 		})
 	);
 

@@ -121,10 +121,10 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 		return '';
 	}
 
-	showOverlay(event: MouseEvent, overlay: IOverlay) {
+	showOverlay(event: MouseEvent, angleData: any) {
 		event.stopPropagation();
-		this.overlay = overlay;
-		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id: overlay.id }));
+		this.overlay = angleData.overlay;
+		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id: angleData.overlay.id, openWithAngle: 360 - angleData.degreeFromPoint }));
 		this.hide();
 	}
 

@@ -98,7 +98,12 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		map((name: string) => this.algorithms[name])
 	);
 	timeEstimation$: Observable<number> = combineLatest(this.currentTaskOverlays$, this.algorithmConfig$).pipe(
-		map(([overlays, config]: [IOverlay[], IAlgorithmConfig]) => config.timeEstimationPerOverlayInMinutes * overlays.length)
+		map(([overlays, config]: [IOverlay[], IAlgorithmConfig]) => {
+			if (!Boolean(config)) {
+				return 0;
+			}
+			return config.timeEstimationPerOverlayInMinutes * overlays.length
+		})
 	);
 	selectedTask$: Observable<AlgorithmTask> = this.store$.select(selectAlgorithmTasksSelectedTaskId).pipe(
 		switchMap((taskId: string) => {
@@ -137,7 +142,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		filter(([isNew, algName, overlays]: [boolean, string, IOverlay[]]) => isNew && Boolean(algName)),
 		map((([isNew, algName, overlays]: [boolean, string, IOverlay[]]) => {
 			const result = overlays.filter((overlay: IOverlay) => {
-				return this.algorithms[algName].sensorNames.includes(overlay.sensorName);
+				return this.tasksService.isSupportedOverlay(overlay) && this.algorithms[algName].sensorNames.includes(overlay.sensorName);
 			});
 			return result;
 		})),
@@ -181,9 +186,9 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		tap(([isNew, algName, masterOverlay, overlays, atLeastMsg, atMostMsg, masterMsg]: [boolean, string, IOverlay, IOverlay[], string, string, string]) => {
 			let message = '';
 			if (overlays.length < this.MIN_NUM_OF_OVERLAYS) {
-				message = atLeastMsg.replace('_X_', `${overlays.length}` ).replace('_Y_', `${this.MIN_NUM_OF_OVERLAYS}`);
+				message = atLeastMsg.replace('_X_', `${ overlays.length }`).replace('_Y_', `${ this.MIN_NUM_OF_OVERLAYS }`);
 			} else if (overlays.length > this.algorithms[algName].maxOverlays) {
-				message = atMostMsg.replace('_X_', `${overlays.length}`).replace('_Y_', `${this.algorithms[algName].maxOverlays}`);
+				message = atMostMsg.replace('_X_', `${ overlays.length }`).replace('_Y_', `${ this.algorithms[algName].maxOverlays }`);
 			} else if (!masterOverlay) {
 				message = masterMsg;
 			}

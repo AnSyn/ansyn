@@ -298,7 +298,7 @@ describe('OverlaysAppEffects', () => {
 		actions = hot('--a--', { a: new SetLayoutSuccessAction() });
 		const expectedResults = cold('--(bc)--', {
 			b: new DisplayOverlayAction({ overlay: <any>ov1, 'mapId': '1', extent: undefined }),
-			c: new DisplayOverlayAction({ overlay: <any>ov2, 'mapId': '2', extent: undefined })
+			c: new DisplayOverlayAction({ overlay: <any>ov2, 'mapId': '2', extent: undefined})
 		});
 		expect(overlaysAppEffects.displayPendingOverlaysOnChangeLayoutSuccess$).toBeObservable(expectedResults);
 	});
@@ -327,11 +327,12 @@ describe('OverlaysAppEffects', () => {
 			actions = hot('--a--', {
 				a: new DisplayOverlayFromStoreAction({
 					id: firstOverlayId,
-					mapId: '4444'
+					mapId: '4444',
+					openWithAngle: 0
 				})
 			});
 			const expectedResults = cold('--b--', {
-				b: new DisplayOverlayAction({ overlay: <any>firstOverlay, mapId: '4444', extent: undefined })
+				b: new DisplayOverlayAction({ overlay: <any>firstOverlay, mapId: '4444', extent: undefined, openWithAngle: 0 })
 			});
 			expect(overlaysAppEffects.onDisplayOverlayFromStore$).toBeObservable(expectedResults);
 		});
@@ -343,12 +344,13 @@ describe('OverlaysAppEffects', () => {
 
 			actions = hot('--a--', {
 				a: new DisplayOverlayFromStoreAction({
-					id: lastOverlayId
+					id: lastOverlayId,
+					openWithAngle: 0
 				})
 			});
 
 			const expectedResults = cold('--b--', {
-				b: new DisplayOverlayAction({ overlay: <any>lastOverlay, mapId: 'activeMapId', extent: undefined })
+				b: new DisplayOverlayAction({ overlay: <any>lastOverlay, mapId: 'activeMapId', extent: undefined, openWithAngle: 0 })
 			});
 			expect(overlaysAppEffects.onDisplayOverlayFromStore$).toBeObservable(expectedResults);
 		});

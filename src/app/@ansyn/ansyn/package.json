@@ -1,16 +1,17 @@
 {
 	"name": "@ansyn/ansyn",
-	"version": "0.5.0",
+	"version": "0.6.0",
 	"peerDependencies": {
 		"@ngrx/core": "^1.2.0",
 		"@ngrx/store": "^7.2.0",
 		"@ngrx/effects": "^7.2.0",
 		"@angular/common": "^7.2.2",
 		"@angular/core": "^7.2.2",
-		"@ansyn/imagery": "0.5.0",
-		"@ansyn/map-facade": "0.5.0",
-		"@ansyn/menu": "0.5.0",
-		"@ansyn/imagery-cesium": "0.5.0",
+		"@ansyn/imagery": "0.6.0",
+		"@ansyn/map-facade": "0.6.0",
+		"@ansyn/menu": "0.6.0",
+		"@ansyn/imagery-cesium": "0.6.0",
+		"@ansyn/event-drops": "^0.2.8-1.9",
 		"ol": "^5.3.0",
 		"@angular/cdk": "^7.3.0",
 		"@angular/material": "^7.3.0",
@@ -31,6 +32,7 @@
 		"proj4": "^2.5.0",
 		"rison": "^0.1.1",
 		"togeojson": "^0.16.0",
+		"auto-subscriptions": "^2.0.5",
 		"tokml": "^0.4.0"
 	},
 	"license": "MIT"

@@ -78,7 +78,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		const newProjection = layer.getSource().getProjection();
 
 		// for outside only
-		if (position && position.projectedState.projection.code === newProjection.getCode()) {
+		if (position && position.projectedState && position.projectedState.projection.code === newProjection.getCode()) {
 			return new View({
 				projection: newProjection,
 				center: position.projectedState.center,

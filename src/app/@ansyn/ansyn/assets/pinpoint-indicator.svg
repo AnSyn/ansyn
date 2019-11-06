@@ -1,97 +1,67 @@
-<svg width="34" height="34" viewBox="0 0 34 34" version="1.1" xmlns="http://www.w3.org/2000/svg"
-	 xmlns:xlink="http://www.w3.org/1999/xlink">
-	<title>Group 13</title>
-	<desc>Created using Figma</desc>
-	<g id="Canvas" transform="translate(-28155 -4897)">
-		<g id="Group 13">
-			<g id="icons">
-				<g id="pinpoint indicator">
-					<g id="Group">
-						<g id="Shape">
-							<g id="Vector" filter="url(#filter0_f)">
-								<use xlink:href="#path0_fill" transform="translate(28156 4898)"/>
-							</g>
-							<g id="Vector">
-								<use xlink:href="#path0_fill" transform="translate(28156 4898)" fill="#F32EE1"/>
-							</g>
-						</g>
-						<g id="Shape">
-							<g id="Vector" filter="url(#filter1_f)">
-								<use xlink:href="#path1_fill" transform="translate(28178.8 4898)"/>
-							</g>
-							<g id="Vector">
-								<use xlink:href="#path1_fill" transform="translate(28178.8 4898)" fill="#F32EE1"/>
-							</g>
-						</g>
-						<g id="Shape">
-							<g id="Vector" filter="url(#filter2_f)">
-								<use xlink:href="#path2_fill" transform="translate(28156 4920.78)"/>
-							</g>
-							<g id="Vector">
-								<use xlink:href="#path2_fill" transform="translate(28156 4920.78)" fill="#F32EE1"/>
-							</g>
-						</g>
-						<g id="Shape">
-							<g id="Vector" filter="url(#filter3_f)">
-								<use xlink:href="#path3_fill" transform="translate(28178.8 4920.78)"/>
-							</g>
-							<g id="Vector">
-								<use xlink:href="#path3_fill" transform="translate(28178.8 4920.78)" fill="#F32EE1"/>
-							</g>
-						</g>
-						<g id="Oval">
-							<g id="Vector" filter="url(#filter4_f)">
-								<use xlink:href="#path4_fill" transform="translate(28168.1 4910.06)"/>
-							</g>
-							<g id="Vector">
-								<use xlink:href="#path4_fill" transform="translate(28168.1 4910.06)" fill="#F32EE1"/>
-							</g>
-						</g>
-					</g>
-				</g>
-			</g>
-		</g>
-	</g>
-	<defs>
-		<filter id="filter0_f" filterUnits="userSpaceOnUse" x="28155" y="4897" width="13" height="13"
-				color-interpolation-filters="sRGB">
-			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-			<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-			<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur"/>
-		</filter>
-		<filter id="filter1_f" filterUnits="userSpaceOnUse" x="28176" y="4897" width="13" height="13"
-				color-interpolation-filters="sRGB">
-			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-			<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-			<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur"/>
-		</filter>
-		<filter id="filter2_f" filterUnits="userSpaceOnUse" x="28155" y="4918" width="13" height="13"
-				color-interpolation-filters="sRGB">
-			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-			<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-			<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur"/>
-		</filter>
-		<filter id="filter3_f" filterUnits="userSpaceOnUse" x="28176" y="4918" width="13" height="13"
-				color-interpolation-filters="sRGB">
-			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-			<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-			<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur"/>
-		</filter>
-		<filter id="filter4_f" filterUnits="userSpaceOnUse" x="28166" y="4908" width="12" height="12"
-				color-interpolation-filters="sRGB">
-			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-			<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-			<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur"/>
-		</filter>
-		<path id="path0_fill"
-			  d="M 2.85228 2.85228L 9.14231 2.85228L 9.14231 0L 0 0L 0 9.14231L 2.85228 9.14231L 2.85228 2.85228Z"/>
-		<path id="path1_fill"
-			  d="M 9.1424 0L -7.36426e-07 0L -7.36426e-07 2.85228L 6.29012 2.85228L 6.29012 9.14231L 9.1424 9.14231L 9.1424 0Z"/>
-		<path id="path2_fill"
-			  d="M 0 9.1424L 9.14231 9.1424L 9.14231 6.29012L 2.85228 6.29012L 2.85228 -7.36426e-07L 0 -7.36426e-07L 0 9.1424Z"/>
-		<path id="path3_fill"
-			  d="M 6.29012 6.29012L -7.36426e-07 6.29012L -7.36426e-07 9.1424L 9.1424 9.1424L 9.1424 -7.36426e-07L 6.29012 -7.36426e-07L 6.29012 6.29012Z"/>
-		<path id="path4_fill"
-			  d="M 3.90442 7.80885C 6.06078 7.80885 7.80885 6.06078 7.80885 3.90442C 7.80885 1.74807 6.06078 0 3.90442 0C 1.74807 0 0 1.74807 0 3.90442C 0 6.06078 1.74807 7.80885 3.90442 7.80885Z"/>
-	</defs>
+<svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 13">
+<g id="icons">
+<g id="pinpoint indicator">
+<g id="Group">
+<g id="Shape">
+<g id="Vector" filter="url(#filter0_f)">
+<path d="M3.85228 3.85228H10.1423V1H1V10.1423H3.85228V3.85228Z" fill="#0091FF"/>
+</g>
+<path id="Vector_2" d="M3.85228 3.85228H10.1423V1H1V10.1423H3.85228V3.85228Z" fill="#0091FF"/>
+</g>
+<g id="Shape_2">
+<g id="Vector_3" filter="url(#filter1_f)">
+<path d="M32.9197 1H23.7773V3.85228H30.0675V10.1423H32.9197V1Z" fill="#0091FF"/>
+</g>
+<path id="Vector_4" d="M32.9197 1H23.7773V3.85228H30.0675V10.1423H32.9197V1Z" fill="#0091FF"/>
+</g>
+<g id="Shape_3">
+<g id="Vector_5" filter="url(#filter2_f)">
+<path d="M1 32.9188H10.1423V30.0665H3.85228V23.7764H1V32.9188Z" fill="#0091FF"/>
+</g>
+<path id="Vector_6" d="M1 32.9188H10.1423V30.0665H3.85228V23.7764H1V32.9188Z" fill="#0091FF"/>
+</g>
+<g id="Shape_4">
+<g id="Vector_7" filter="url(#filter3_f)">
+<path d="M30.0675 30.0665H23.7773V32.9188H32.9197V23.7764H30.0675V30.0665Z" fill="#0091FF"/>
+</g>
+<path id="Vector_8" d="M30.0675 30.0665H23.7773V32.9188H32.9197V23.7764H30.0675V30.0665Z" fill="#0091FF"/>
+</g>
+<g id="Oval">
+<g id="Vector_9" filter="url(#filter4_f)">
+<path d="M16.9591 20.864C19.1155 20.864 20.8635 19.116 20.8635 16.9596C20.8635 14.8032 19.1155 13.0552 16.9591 13.0552C14.8028 13.0552 13.0547 14.8032 13.0547 16.9596C13.0547 19.116 14.8028 20.864 16.9591 20.864Z" fill="#0091FF"/>
+</g>
+<path id="Vector_10" d="M16.9591 20.864C19.1155 20.864 20.8635 19.116 20.8635 16.9596C20.8635 14.8032 19.1155 13.0552 16.9591 13.0552C14.8028 13.0552 13.0547 14.8032 13.0547 16.9596C13.0547 19.116 14.8028 20.864 16.9591 20.864Z" fill="#0091FF"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<filter id="filter0_f" x="-1" y="-1" width="13.1423" height="13.1423" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur"/>
+</filter>
+<filter id="filter1_f" x="21.7773" y="-1" width="13.1424" height="13.1423" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur"/>
+</filter>
+<filter id="filter2_f" x="-1" y="21.7764" width="13.1423" height="13.1424" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur"/>
+</filter>
+<filter id="filter3_f" x="21.7773" y="21.7764" width="13.1424" height="13.1424" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur"/>
+</filter>
+<filter id="filter4_f" x="11.0547" y="11.0552" width="11.8088" height="11.8088" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur"/>
+</filter>
+</defs>
 </svg>

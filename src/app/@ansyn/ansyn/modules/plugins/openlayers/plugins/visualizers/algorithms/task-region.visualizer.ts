@@ -33,8 +33,7 @@ export class TaskRegionVisualizer extends EntitiesVisualizer {
 	iconStyle: Style = new Style({
 		image: new Icon({
 			scale: 1,
-			src: 'assets/pinpoint-indicator.svg',
-			color: '#0091ff'
+			src: 'assets/pinpoint-indicator.svg'
 		}),
 		zIndex: 100
 	});

@@ -28,7 +28,7 @@ describe('ImageryContainerComponent', () => {
 				EntryComponentDirective,
 				MockComponent({
 					selector: 'ansyn-imagery-status',
-					inputs: ['mapId'],
+					inputs: ['map'],
 					outputs: ['onMove', 'toggleMapSynchronization']
 				}),
 				MockComponent({

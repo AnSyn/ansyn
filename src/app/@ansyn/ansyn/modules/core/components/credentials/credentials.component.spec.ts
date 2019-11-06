@@ -5,6 +5,7 @@ import { CredentialsService } from '../../services/credentials/credentials.servi
 import { HttpClientModule } from '@angular/common/http';
 import { credentialsConfig } from '../../services/credentials/config';
 import { of } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('CredentialsComponent', () => {
 	let component: CredentialsComponent;
@@ -12,7 +13,9 @@ describe('CredentialsComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpClientModule],
+			imports: [HttpClientModule,
+			TranslateModule.forRoot()
+			],
 			declarations: [CredentialsComponent],
 			providers: [
 				{

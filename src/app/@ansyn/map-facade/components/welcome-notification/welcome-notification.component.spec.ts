@@ -5,6 +5,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { mapFacadeConfig } from '../../models/map-facade.config';
 import { SetWasWelcomeNotificationShownFlagAction } from '../../actions/map.actions';
 import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('WelcomeNotificationComponent', () => {
 	let component: WelcomeNotificationComponent;
@@ -15,7 +16,8 @@ describe('WelcomeNotificationComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				StoreModule.forRoot({ [mapFeatureKey]: MapReducer }),
-				EffectsModule.forRoot([])
+				EffectsModule.forRoot([]),
+				TranslateModule.forRoot()
 			],
 			declarations: [WelcomeNotificationComponent],
 			providers: [{

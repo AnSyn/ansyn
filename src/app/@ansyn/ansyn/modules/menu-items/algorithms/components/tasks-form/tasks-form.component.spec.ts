@@ -53,7 +53,8 @@ describe('TasksFormComponent', () => {
 					useValue: {
 						config: {
 							algorithms: {}
-						}
+						},
+						isSupportedOverlay: () => true
 					}
 				},
 				{

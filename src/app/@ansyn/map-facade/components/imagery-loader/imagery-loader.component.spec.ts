@@ -4,16 +4,20 @@ import { ImageryLoaderComponent } from './imagery-loader.component';
 import { StoreModule } from '@ngrx/store';
 import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { MockComponent } from '../../test/mock-component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('ImageryLoaderComponent', () => {
 	let component: ImageryLoaderComponent;
 	let fixture: ComponentFixture<ImageryLoaderComponent>;
 
-	const mockLoader = MockComponent({ selector: 'ansyn-loader', inputs: ['show', 'loaderText'] });
+	const mockLoader = MockComponent({ selector: 'ansyn-loader', inputs: ['show', 'loaderText', 'rtl'] });
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StoreModule.forRoot({ [mapFeatureKey]: MapReducer })],
+			imports: [
+				StoreModule.forRoot({ [mapFeatureKey]: MapReducer }),
+				TranslateModule.forRoot()
+			],
 			declarations: [ImageryLoaderComponent, mockLoader]
 		})
 			.compileComponents();

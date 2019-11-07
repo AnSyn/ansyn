@@ -79,7 +79,7 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 			const d = WORLD_RADIUS * c;
 			const y = Math.sin(longDelta) * Math.cos(centerLat);
 			const x = Math.cos(pointLat) * Math.sin(centerLat) - Math.sin(pointLat) * Math.cos(centerLat) * Math.cos(longDelta);
-			const brng = 360 - (toDegrees(Math.atan2(y, x)));
+			const brng = (toDegrees(Math.atan2(y, x)));
 			return {
 				overlay: overlay,
 				degreeFromPoint: brng,
@@ -124,7 +124,7 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 	showOverlay(event: MouseEvent, angleData: any) {
 		event.stopPropagation();
 		this.overlay = angleData.overlay;
-		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id: angleData.overlay.id, openWithAngle: 360 - angleData.degreeFromPoint }));
+		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id: angleData.overlay.id, openWithAngle: angleData.degreeFromPoint }));
 		this.hide();
 	}
 

@@ -14,27 +14,27 @@ const POINT: Point = {
 };
 const OVERLAYS: IOverlay[] = [
 	{
-		id: 'overlay3',
-		name: 'overlay3',
+		id: 'overlay1',
+		name: 'overlay1',
 		sensorLocation: { type: 'Point', coordinates: [-122.66360605712876, 37.625511951836515] },
 		photoTime: '',
 		date: new Date(),
 		azimuth: 1.0,
 		isGeoRegistered: GeoRegisteration.geoRegistered,
 		tag: {
-			degreeFromPoint: 444.3150991468975
+			degreeFromPoint: -84.3150991468975
 		}
 	},
 	{
-		id: 'overlay1',
-		name: 'overlay1',
+		id: 'overlay3',
+		name: 'overlay3',
 		sensorLocation: { type: 'Point', coordinates: [-122.34189022547085, 37.626320374229074] },
 		photoTime: '',
 		date: new Date(),
 		azimuth: 1.0,
 		isGeoRegistered: GeoRegisteration.geoRegistered,
 		tag: {
-			degreeFromPoint: 293.2050505878401
+			degreeFromPoint: 66.7949494121599
 		}
 	},
 	{
@@ -46,7 +46,7 @@ const OVERLAYS: IOverlay[] = [
 		azimuth: 1.0,
 		isGeoRegistered: GeoRegisteration.geoRegistered,
 		tag: {
-			degreeFromPoint: 404.0884066098252
+			degreeFromPoint: -44.0884066098252
 		}
 	}
 ];
@@ -101,9 +101,9 @@ describe('AngleFilterComponent', () => {
 	it('next overlay should called DisplayOverlayAction', () => {
 		spyOn(store, 'dispatch');
 		component.mapId = 'mapId';
-		component.overlay = OVERLAYS[1];
+		component.overlay = OVERLAYS[2];
 		component.nextOverlay(new MouseEvent('click'), true);
-		expect(store.dispatch).toHaveBeenCalledWith(new DisplayOverlayFromStoreAction({ id: OVERLAYS[2].id }))
+		expect(store.dispatch).toHaveBeenCalledWith(new DisplayOverlayFromStoreAction({ id: OVERLAYS[1].id }))
 	})
 
 });

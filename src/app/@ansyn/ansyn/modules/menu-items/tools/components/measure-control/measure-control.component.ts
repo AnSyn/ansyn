@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { IEntryComponent, selectActiveMapId, selectOverlayOfActiveMap } from '@ansyn/map-facade';
+import { IEntryComponent, selectActiveMapId, selectOverlayByMapId } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { combineLatest } from 'rxjs';
@@ -7,7 +7,6 @@ import { tap } from 'rxjs/operators';
 import { SetMeasureDistanceToolState } from '../../actions/tools.actions';
 import { selectIsMeasureToolActive, selectIsMeasureToolHidden } from '../../reducers/tools.reducer';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
-import { isFullOverlay } from '../../../../core/utils/overlays';
 
 @Component({
 	selector: 'ansyn-measure-control',
@@ -21,22 +20,18 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 	currentOverlay: IOverlay = undefined;
 
 	@AutoSubscription
-	show$ = combineLatest(this.store$.select(selectIsMeasureToolActive),
+	show$ = () => combineLatest(
+		this.store$.select(selectIsMeasureToolActive),
 		this.store$.select(selectActiveMapId),
-		this.store$.select(selectIsMeasureToolHidden)).pipe(
-		tap(([isActive, activeMapId, isHidden]) => {
-			this.show = isActive && activeMapId === this.mapId && !isHidden;
-		})
-	);
-
-	@AutoSubscription
-	closeOnDifferentOverlay = this.store$.select(selectOverlayOfActiveMap).pipe(
-		tap((overlay) => {
+		this.store$.select(selectIsMeasureToolHidden),
+		this.store$.select(selectOverlayByMapId(this.mapId))).pipe(
+		tap(([isActive, activeMapId, isHidden, overlay]) => {
 			const differentOverlay = this.isDifferentOverlay(this.currentOverlay, overlay);
 			this.currentOverlay = overlay;
 			if (differentOverlay) {
 				this.done();
 			}
+			this.show = isActive && activeMapId === this.mapId && !isHidden;
 		})
 	);
 

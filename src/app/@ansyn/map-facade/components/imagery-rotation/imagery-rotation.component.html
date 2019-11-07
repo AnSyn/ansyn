@@ -14,7 +14,7 @@
 	 tooltip-class="bottom left">
 	<img [src]="geoRegisteredProperties.compass"
 		 (click)="toggleNorth()"
-		 (mousedown)="stopPropagation($event)"
 		 [style.transform]="'rotate(' + this[geoRegisteredProperties.rotatePointer] + 'rad)'"
 		 [style.cursor]="isRotating ? '' : 'pointer'"/>
+	    <!--(mousedown)="stopPropagation($event)"-->
 </div>

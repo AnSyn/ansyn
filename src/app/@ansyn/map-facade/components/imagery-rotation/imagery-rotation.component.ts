@@ -76,10 +76,10 @@ export class ImageryRotationComponent {
 		return !this.mapState.data.overlay || (this.mapState.data.overlay.isGeoRegistered !== 'notGeoRegistered');
 	}
 
-	stopPropagation($event: Event) {
-		$event.stopPropagation();
-		$event.preventDefault(); // prevents the dragging of the image.
-	}
+	// stopPropagation($event: Event) {
+	// 	$event.stopPropagation();
+	// 	$event.preventDefault(); // prevents the dragging of the image.
+	// }
 
 	protected setRotation(radians: number) {
 		this.communicator.setRotation(radians);
@@ -97,7 +97,7 @@ export class ImageryRotationComponent {
 	}
 
 	startRotating($event) {
-		$event.preventDefault();
+		// $event.preventDefault();
 
 		this.isRotating = true;
 

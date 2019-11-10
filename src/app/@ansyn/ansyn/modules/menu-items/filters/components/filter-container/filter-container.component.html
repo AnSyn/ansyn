@@ -5,7 +5,7 @@
 		<span class="title" [class.title-disabled]="showOnlyFavorite">{{ filter.displayName | translate }}</span>
 
 		<span *ngIf="metadataFromState && metadataFromState.collapse && metadataFromState.isFiltered() && !showOnlyFavorite"
-			  class="filtered">(filtered)</span>
+			  class="filtered">{{"(filtered)" | translate}}</span>
 
 		<button [@rotateArrow]="!metadataFromState.collapse" #downArrow class="down-arrow" [disabled]="disabledShowAll"
 				(click)="toggleVisible()">

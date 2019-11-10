@@ -6,7 +6,8 @@ import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/o
 import { AngleFilterComponent } from './angle-filter.component';
 import { GeoRegisteration, IOverlay } from '../../../overlays/models/overlay.model';
 import { Point } from 'geojson';
-import { DisplayOverlayAction, DisplayOverlayFromStoreAction } from '../../../overlays/actions/overlays.actions';
+import { DisplayOverlayFromStoreAction } from '../../../overlays/actions/overlays.actions';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 
 const POINT: Point = {
 	coordinates: [-122.4093246459961, 37.59727478027344],
@@ -71,6 +72,7 @@ describe('AngleFilterComponent', () => {
 				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer })
 			],
 			providers: [
+				ImageryCommunicatorService,
 				provideMockActions(() => actions)
 			]
 		})

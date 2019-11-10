@@ -165,7 +165,7 @@ export class ToolsAppEffects {
 	onLayoutsChangeSetMouseShadowEnable$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.SET_LAYOUT),
 		withLatestFrom(this.store$.select(selectMapsList), this.store$.select(selectActiveMapId), (action, mapsList: IMapSettings[], activeMapId: string) => [mapsList, activeMapId]),
-		filter(([mapsList, activeMapId]) => Boolean(mapsList.length && activeMapId)),
+		filter(([mapsList, activeMapId]) => Boolean(mapsList && mapsList.length && activeMapId)),
 		withLatestFrom(this.store$.select(selectToolFlag(toolsFlags.shadowMouseActiveForManyScreens))),
 		mergeMap(([[mapsList, activeMapId], shadowMouseActiveForManyScreens]: [[IMapSettings[], string], boolean]) => {
 			const registredMapsCount = mapsList.reduce((count, map) => (!map.data.overlay || map.data.overlay.isGeoRegistered) ? count + 1 : count, 0);

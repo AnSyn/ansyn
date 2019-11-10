@@ -45,6 +45,7 @@ export class AnsynComponent implements OnInit {
 		this.store$.select(selectActiveMapId), this.store$.select(selectOverlayOfActiveMap))
 		.pipe(
 			withLatestFrom(this.store$.select(selectMapsList)),
+			filter(([[activeMapId, overlay], mapList]: [[string, IOverlay], ICaseMapState[]]) => Boolean(mapList)),
 			map(([[activeMapId, overlay], mapList]: [[string, IOverlay], ICaseMapState[]]) => MapFacadeService.mapById(mapList, activeMapId)),
 			filter(Boolean)
 		);

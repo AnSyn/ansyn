@@ -343,6 +343,10 @@ export class MapAppEffects {
 	}
 
 	onDisplayOverlayFilter([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
+		if (!Boolean(mapState)) {
+			return false;
+		}
+
 		if (payload.force) {
 			return true;
 		}

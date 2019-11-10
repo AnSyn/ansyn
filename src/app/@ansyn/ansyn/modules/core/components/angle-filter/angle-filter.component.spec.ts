@@ -1,7 +1,7 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
 import { AngleFilterComponent } from './angle-filter.component';
 import { GeoRegisteration, IOverlay } from '../../../overlays/models/overlay.model';
@@ -81,6 +81,9 @@ describe('AngleFilterComponent', () => {
 
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
+		const map = new Map();
+		map.set('selectActiveMapId', '1');
+		spyOn(store, 'select').and.callFake(type => of(map.get(type)));
 	}));
 
 	beforeEach(() => {

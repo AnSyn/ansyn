@@ -63,6 +63,7 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 
 	@AutoSubscription
 	onHoverFootprintOrTimeline = this.store$.select(selectDropMarkup).pipe(
+		filter(drops => Boolean(drops)),
 		map((drops) => drops.get(MarkUpClass.hover)),
 		filter(hovers => Boolean(this.overlaysAngles && this.overlaysAngles.length)),
 		tap(hovers => this.hoverOverlay = hovers.overlaysIds[0])

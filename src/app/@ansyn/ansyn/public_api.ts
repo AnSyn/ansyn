@@ -1,3 +1,9 @@
+export {
+	AnaglyphConfig,
+	IAnaglyphConfig
+} from './modules/plugins/openlayers/plugins/anaglyph-sensor/models/anaglyph.model';
+export { AnaglyphSensorService } from './modules/plugins/openlayers/plugins/anaglyph-sensor/service/anaglyph-sensor.service';
+
 export { CredentialsService } from './modules/core/services/credentials/credentials.service';
 export { credentialsConfig, ICredentialsConfig } from './modules/core/services/credentials/config';
 

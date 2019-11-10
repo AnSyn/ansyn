@@ -84,7 +84,7 @@ describe('AngleFilterComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AngleFilterComponent);
 		component = fixture.componentInstance;
-		component.show({ type: '', payload: PAYLOAD });
+		component.show([{ type: '', payload: PAYLOAD }, 0]);
 		fixture.detectChanges();
 	});
 

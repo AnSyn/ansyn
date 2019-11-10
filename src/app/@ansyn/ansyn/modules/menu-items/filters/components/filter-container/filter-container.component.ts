@@ -48,6 +48,7 @@ import { FilterType } from '../../models/filter-type';
 })
 export class FilterContainerComponent implements OnInit, OnDestroy {
 
+	public show = true;
 	public isLongFiltersList = false;
 	public showOnlyFavorite = false;
 	public isGotSmallListFromProvider = true;
@@ -120,11 +121,5 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 
 	toggleShowMoreLess(): void {
 		this.isLongFiltersList = !this.isLongFiltersList;
-	}
-
-	toggleVisible(): void {
-		const newMetadata = clone(this.metadataFromState);
-		newMetadata.collapse = !newMetadata.collapse;
-		this.store.dispatch(new UpdateFilterAction({filter: this.filter, newMetadata}));
 	}
 }

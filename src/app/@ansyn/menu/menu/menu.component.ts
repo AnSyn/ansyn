@@ -89,19 +89,25 @@ export class MenuComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	selectedMenuItem$: Observable<any> = combineLatest(this.store.select(selectSelectedMenuItem), this.store.select(selectIsPinned), this.store.select(selectEntitiesMenuItems))
+	getMenuEntities: Observable<any> = this.store.select(selectEntitiesMenuItems)
 		.pipe(
-			filter(([_selectedMenuItemName, isPinned, menuItems]) => {
-				return Boolean(menuItems);
-			}),
-			distinctUntilChanged(),
-			tap(([_selectedMenuItemName, isPinned, menuEntities]) => this.entities = menuEntities),
-			tap(([_selectedMenuItemName, isPinned, menuEntities]) => {
-				this.isPinned = isPinned;
-				this.onIsPinnedChange();
-			}),
-			tap(this.setSelectedMenuItem.bind(this))
+			filter(Boolean),
+			tap((menuEntities) => this.entities = menuEntities)
 		);
+
+	@AutoSubscription
+	selectIsPinned$ =  this.store.select(selectIsPinned).pipe(
+		distinctUntilChanged(),
+		tap((isPinned) => {
+			this.isPinned = isPinned;
+			this.onIsPinnedChange();
+		})
+	);
+
+	@AutoSubscription
+	selectMenuItem$ = this.store.select(selectSelectedMenuItem).pipe(
+		tap(this.setSelectedMenuItem.bind(this))
+	);
 
 	selectedMenuItemName: string;
 	entities: Dictionary<IMenuItem> = {};
@@ -170,6 +176,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 		if (!this.container) {
 			return;
 		}
+		this.isBuildNeeded = false;
 		if (this.isPinned) {
 			this.renderer.addClass(this.container.nativeElement, 'pinned');
 		} else {
@@ -177,19 +184,15 @@ export class MenuComponent implements OnInit, OnDestroy {
 		}
 
 		this.animatedElement.style.animation = this.isPinned ? 'pinned .4s' : 'unPinned .4s';
-
-		this.forceRedraw()
-			.then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
+		requestAnimationFrame(() => this.store.dispatch(new ContainerChangedTriggerAction()));
 	}
 
-	setSelectedMenuItem([_selectedMenuItemName, isPinned, menuEntities]) {
+	setSelectedMenuItem(_selectedMenuItemName) {
 		this.selectedMenuItemName = _selectedMenuItemName;
 		this.expand = Boolean(this.selectedMenuItemName);
 
 		if (this.anyMenuItemSelected()) {
 			this.componentChanges();
-		} else {
-			this.store.dispatch(new ToggleIsPinnedAction(Boolean(isPinned)));
 		}
 	}
 

@@ -37,6 +37,7 @@ import { IMenuConfig } from '../models/menu-config.model';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, filter, tap, withLatestFrom } from 'rxjs/operators';
+import { LoadDefaultCaseAction } from '../../ansyn/modules/menu-items/cases/actions/cases.actions';
 
 const animations: any[] = [
 	trigger(
@@ -277,6 +278,10 @@ export class MenuComponent implements OnInit, OnDestroy {
 
 		this.animatedElement.style.animation = this.collapse ? 'collapsed .3s' : 'unCollapsed .6s';
 
+	}
+
+	resetApp() {
+		this.store.dispatch(new LoadDefaultCaseAction());
 	}
 
 	ngOnInit() {

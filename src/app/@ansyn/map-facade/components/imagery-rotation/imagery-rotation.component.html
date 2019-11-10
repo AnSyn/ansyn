@@ -12,9 +12,12 @@
 <div class="img-container"
 	 [attr.tooltip-value]="geoRegisteredProperties.tooltip | translate"
 	 tooltip-class="bottom left">
-	<img [src]="geoRegisteredProperties.compass"
-		 (click)="toggleNorth()"
-		 (mousedown)="stopPropagation($event)"
-		 [style.transform]="'rotate(' + this[geoRegisteredProperties.rotatePointer] + 'rad)'"
-		 [style.cursor]="isRotating ? '' : 'pointer'"/>
+	<img
+		tabindex="0"
+		#northDiv
+		[src]="geoRegisteredProperties.compass"
+		(click)="toggleNorth()"
+		(mousedown)="stopPropagation($event)"
+		[style.transform]="'rotate(' + this[geoRegisteredProperties.rotatePointer] + 'rad)'"
+		[style.cursor]="isRotating ? '' : 'pointer'"/>
 </div>

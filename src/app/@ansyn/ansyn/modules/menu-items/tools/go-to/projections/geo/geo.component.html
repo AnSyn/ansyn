@@ -2,7 +2,7 @@
 <div class="inputs">
 	<ng-template [ngIf]="coordinates">
 		<div class="input-box">
-			<label for="geo-lng-input">lat</label>
+			<label for="geo-lng-input">lat (N/S)</label>
 			<input id="geo-lat-input" type="number"
 				   [(ngModel)]="coordinates[1]"
 				   name="lat"
@@ -14,7 +14,7 @@
 		</div>
 
 		<div class="input-box">
-			<label for="geo-lng-input">long</label>
+			<label for="geo-lng-input">long (E/W)</label>
 			<input id="geo-lng-input"
 				   type="number"
 				   [(ngModel)]="coordinates[0]"

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import { PointToRealNorthAction } from '../../actions/map.actions';
@@ -19,6 +19,7 @@ export interface IsGeoRegisteredProperties {
 })
 export class ImageryRotationComponent {
 	@Input() mapState: IMapSettings;
+	@ViewChild('northImg') northImgElement: ElementRef;
 
 	protected thresholdDegrees = 0.1;
 
@@ -79,6 +80,7 @@ export class ImageryRotationComponent {
 	stopPropagation($event: Event) {
 		$event.stopPropagation();
 		$event.preventDefault(); // prevents the dragging of the image.
+		this.northImgElement.nativeElement.focus();
 	}
 
 	protected setRotation(radians: number) {
@@ -94,10 +96,12 @@ export class ImageryRotationComponent {
 		} else {
 			this.store.dispatch(new PointToRealNorthAction(this.mapState.id));
 		}
+		this.northImgElement.nativeElement.focus();
 	}
 
 	startRotating($event) {
 		$event.preventDefault();
+		this.northImgElement.nativeElement.focus();
 
 		this.isRotating = true;
 

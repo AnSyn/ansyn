@@ -19,7 +19,7 @@ export class AnaglyphSensorService {
 		return of(result);
 	}
 
-	displayAnaglyph(mapSettings: IMapSettings): Observable<boolean> {
+	displayAnaglyph(mapSettings: IMapSettings): Observable<{} | boolean> {
 		const communicator = this.communicatorService.provide(mapSettings.id);
 		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({
 			sourceType: OpenLayersStaticImageSourceProviderSourceType,
@@ -35,7 +35,7 @@ export class AnaglyphSensorService {
 		return this.innerChangeImage(sourceLoader, clonedMapSettings.data.overlay, communicator, clonedMapSettings);
 	}
 
-	displayOriginalOverlay(mapSettings: IMapSettings): Observable<boolean> {
+	displayOriginalOverlay(mapSettings: IMapSettings): Observable<{} | boolean> {
 		const communicator = this.communicatorService.provide(mapSettings.id);
 		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({
 			sourceType: OpenLayersStaticImageSourceProviderSourceType,
@@ -45,7 +45,7 @@ export class AnaglyphSensorService {
 		return this.innerChangeImage(sourceLoader, mapSettings.data.overlay, communicator, mapSettings);
 	}
 
-	innerChangeImage(sourceLoader, overlay: IOverlay, communicator: CommunicatorEntity, mapSettings: IMapSettings): Observable<boolean> {
+	innerChangeImage(sourceLoader, overlay: IOverlay, communicator: CommunicatorEntity, mapSettings: IMapSettings): Observable<{} | boolean> {
 		const getLayerObservable = fromPromise(sourceLoader.createAsync(mapSettings));
 
 		const changeActiveMap = mergeMap((layer) => {

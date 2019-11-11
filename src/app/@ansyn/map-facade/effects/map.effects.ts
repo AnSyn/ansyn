@@ -97,7 +97,7 @@ export class MapEffects {
 	newInstanceInitPosition$: Observable<any> = this.actions$.pipe(
 		ofType<ImageryCreatedAction>(MapActionTypes.IMAGERY_CREATED),
 		withLatestFrom(this.store$.select(mapStateSelector)),
-		filter(([{ payload }, { entities }]: [ImageryCreatedAction, IMapState]) => !MapFacadeService.mapById(Object.values(entities), payload.id).data.position),
+		filter(([{ payload }, { entities }]: [ImageryCreatedAction, IMapState]) => Boolean(entities) && !MapFacadeService.mapById(Object.values(entities), payload.id).data.position),
 		switchMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			const communicator = this.communicatorsService.provide(payload.id);

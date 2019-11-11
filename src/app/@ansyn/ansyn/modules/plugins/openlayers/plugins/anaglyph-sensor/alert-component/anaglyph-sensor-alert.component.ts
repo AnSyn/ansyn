@@ -1,11 +1,12 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { getPolygonIntersectionRatioWithMultiPolygon, IMapSettings } from '@ansyn/imagery';
-import { take, tap } from 'rxjs/operators';
-import { IEntryComponent, selectMapStateById } from '@ansyn/map-facade';
+import { catchError, take, tap } from 'rxjs/operators';
+import { IEntryComponent, selectMapStateById, SetToastMessageAction } from '@ansyn/map-facade';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
 import { Store, select } from '@ngrx/store';
 import { AnaglyphSensorService } from '../service/anaglyph-sensor.service';
 import { isFullOverlay } from '../../../../../core/utils/overlays';
+import { EMPTY } from 'rxjs';
 
 export enum AnaglyphComponentMode {
 	ShowAnaglyph,
@@ -49,7 +50,17 @@ export class AnaglyphSensorAlertComponent implements OnInit, OnDestroy, IEntryCo
 	}
 
 	ShowAnaglyph(): void {
-		this.anaglyphSensorService.displayAnaglyph(this.mapState).pipe(take(1)).subscribe((res) => {
+		this.anaglyphSensorService.displayAnaglyph(this.mapState).pipe(
+			take(1),
+			catchError((error) => {
+				console.warn(error); // todo: log service
+				this.store.dispatch(new SetToastMessageAction({
+					toastText: error.error ? error.error : error.message ? error.message : error.statusText ? error.statusText : 'stereo failed',
+					showWarningIcon: true
+				}));
+				return EMPTY;
+			})
+		).subscribe((res) => {
 			if (res) {
 				this.mode = AnaglyphComponentMode.ShowOriginal;
 			}

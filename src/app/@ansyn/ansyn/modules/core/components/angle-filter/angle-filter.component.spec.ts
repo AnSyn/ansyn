@@ -1,12 +1,13 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
 import { AngleFilterComponent } from './angle-filter.component';
 import { GeoRegisteration, IOverlay } from '../../../overlays/models/overlay.model';
 import { Point } from 'geojson';
-import { DisplayOverlayAction, DisplayOverlayFromStoreAction } from '../../../overlays/actions/overlays.actions';
+import { DisplayOverlayFromStoreAction } from '../../../overlays/actions/overlays.actions';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 
 const POINT: Point = {
 	coordinates: [-122.4093246459961, 37.59727478027344],
@@ -71,6 +72,7 @@ describe('AngleFilterComponent', () => {
 				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer })
 			],
 			providers: [
+				ImageryCommunicatorService,
 				provideMockActions(() => actions)
 			]
 		})
@@ -79,12 +81,15 @@ describe('AngleFilterComponent', () => {
 
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
+		const map = new Map();
+		map.set('selectActiveMapId', '1');
+		spyOn(store, 'select').and.callFake(type => of(map.get(type)));
 	}));
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AngleFilterComponent);
 		component = fixture.componentInstance;
-		component.show({ type: '', payload: PAYLOAD });
+		component.show([{ type: '', payload: PAYLOAD }, 0]);
 		fixture.detectChanges();
 	});
 

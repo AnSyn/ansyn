@@ -47,6 +47,10 @@ export class MapFacadeService {
 	}
 
 	static mapById(mapsList: IMapSettings[], mapId: string): IMapSettings {
+		if (!Boolean(mapsList)) {
+			return undefined;
+		}
+
 		return mapsList.find(({ id }: IMapSettings) => {
 			return id === mapId;
 		});
@@ -84,8 +88,10 @@ export class MapFacadeService {
 	}
 
 	positionChanged($event: { id: string, position: ImageryMapPosition }) {
-		const mapInstance = <IMapSettings>MapFacadeService.mapById(this.mapsList, $event.id);
-		this.store.dispatch(new PositionChangedAction({ ...$event, mapInstance }));
+		if (Boolean(this.mapsList)) {
+			const mapInstance = <IMapSettings>MapFacadeService.mapById(this.mapsList, $event.id);
+			this.store.dispatch(new PositionChangedAction({ ...$event, mapInstance }));
+		}
 	}
 
 	exportMapsToPng() {

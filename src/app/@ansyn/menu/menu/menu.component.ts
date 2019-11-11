@@ -184,7 +184,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 		}
 
 		this.animatedElement.style.animation = this.isPinned ? 'pinned .4s' : 'unPinned .4s';
-		requestAnimationFrame(() => this.store.dispatch(new ContainerChangedTriggerAction()));
+		this.forceRedraw().then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
 	}
 
 	setSelectedMenuItem(_selectedMenuItemName) {

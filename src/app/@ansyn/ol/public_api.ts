@@ -1,3 +1,5 @@
+export { IAirbusOverlaySourceConfig, OpenLayersAirbusSourceProvider } from './mapSourceProviders/open-layers-Airbus-source-provider';
+
 export { removeWorkers } from './maps/open-layers-map/shared/openlayers-shared';
 
 export { ANNOTATION_MODE_LIST } from './plugins/annotations/annotations.model';

@@ -185,6 +185,9 @@
   	}
   },
   "mapSourceProvidersConfig": {
+  "AIRBUS": {
+    		"baseUrl": "{{ getv "/ansyn/airbus/baseurl" "http://localhost:8100" }}"
+     },
     "SENTINEL":{
     	"baseUrl": "{{ getv "/ansyn/sentinel/baseurl" "http://ansyn.webiks.com:89/api"}}"
     },
@@ -1180,6 +1183,80 @@
 						  "sensorType": "S2L2A"
 						}
 					  }
+					]
+			  }
+		},
+		"AIRBUS": {
+			"inActive": {{ getv "/ansyn/overlay/airbus/inactive" "true" }},
+			"whitelist": [
+				{
+					"name": "Entire Earth",
+					"dates": [
+						{
+							"start": null,
+							"end": null
+						}
+					],
+					"sensorNames": [ null ],
+					"coverage": [
+						[
+							[
+								[
+									-180,
+									-90
+								],
+								[
+									-180,
+									90
+								],
+								[
+									180,
+									90
+								],
+								[
+									180,
+									-90
+								],
+								[
+									-180,
+									-90
+								]
+							]
+						]
+					]
+				}
+			],
+			"blacklist": [],
+			"dataInputFiltersConfig": {
+				"text": "Airbus",
+				"value": 1,
+					"indeterminate": true,
+					"collapsed": true,
+					"children": [
+						  {
+							"text": "PHR1A",
+							"value": {
+							  "sensorType": "PHR1A"
+							}
+						  },
+						  {
+							"text": "PHR1B",
+							"value": {
+							  "sensorType": "PHR1B"
+							}
+						  },
+						  {
+							"text": "SPOT6",
+							"value": {
+							  "sensorType": "SPOT6"
+							}
+						  },
+						  {
+							"text": "SPOT7",
+							"value": {
+							  "sensorType": "SPOT7"
+							}
+						  }
 					]
 			  }
 		}

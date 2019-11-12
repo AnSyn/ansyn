@@ -30,7 +30,8 @@
 					 [style.border]="'1px sollid' + menuConfig.color"
 				>{{menuConfig.mode}}
 				</div>
-				<img [src]="menuConfig.path" [alt]="version" [title]="version">
+				<img [src]="menuConfig.path" [alt]="version" [title]="version" (click)="resetApp()">
+
 			</div>
 
 		</div>

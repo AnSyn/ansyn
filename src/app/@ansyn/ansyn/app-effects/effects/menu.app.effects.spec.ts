@@ -9,11 +9,13 @@ import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/re
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
-import { UpdateMapSizeAction } from '@ansyn/map-facade';
+import { RemovePendingOverlayAction, UpdateMapSizeAction } from '@ansyn/map-facade';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { RedrawTimelineAction } from '../../modules/overlays/actions/overlays.actions';
+import { DisplayOverlaySuccessAction, RedrawTimelineAction } from '../../modules/overlays/actions/overlays.actions';
+import { ResetAppAction } from '../../../menu/actions/menu.actions';
+import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
@@ -58,6 +60,16 @@ describe('MenuAppEffects', () => {
 		actions = hot('--a--', { a: new ContainerChangedTriggerAction() });
 		const expectedResults = cold('--(ab)--', { a: new UpdateMapSizeAction(), b: new RedrawTimelineAction() });
 		expect(menuAppEffects.onContainerChanged$).toBeObservable(expectedResults);
+	});
+
+	it(`onResetApp$ should call LoadDefaultCaseAction`, () => {
+		actions = hot('--a--', {
+			a: new ResetAppAction()
+		});
+		const expectedResults = cold('--b--', {
+			b: new LoadDefaultCaseAction()
+		});
+		expect(menuAppEffects.onResetApp$).toBeObservable(expectedResults);
 	});
 
 });

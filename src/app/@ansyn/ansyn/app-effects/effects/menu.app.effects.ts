@@ -8,6 +8,7 @@ import { MenuActionTypes, SetAutoClose } from '@ansyn/menu';
 import { selectSubMenu } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import { map, mergeMap } from 'rxjs/operators';
 import { RedrawTimelineAction } from '../../modules/overlays/actions/overlays.actions';
+import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 
 @Injectable()
 export class MenuAppEffects {
@@ -28,6 +29,13 @@ export class MenuAppEffects {
 		.pipe(
 			select(selectSubMenu),
 			map((subMenu) => new SetAutoClose(typeof subMenu !== 'number'))
+		);
+
+	@Effect()
+	onResetApp$: Observable<LoadDefaultCaseAction> = this.actions$
+		.pipe(
+			ofType(MenuActionTypes.RESET_APP),
+			map(() => new LoadDefaultCaseAction())
 		);
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>) {

@@ -3,7 +3,12 @@ import { MenuComponent } from './menu.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { IMenuState, menuFeatureKey, MenuReducer } from '../reducers/menu.reducer';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ContainerChangedTriggerAction, SelectMenuItemAction, UnSelectMenuItemAction } from '../actions/menu.actions';
+import {
+	ContainerChangedTriggerAction,
+	ResetAppAction,
+	SelectMenuItemAction,
+	UnSelectMenuItemAction
+} from '../actions/menu.actions';
 import { MenuConfig } from '../models/menuConfig';
 import { IMenuItem } from '../models/menu-item.model';
 import { TranslateModule } from '@ngx-translate/core';
@@ -125,4 +130,9 @@ describe('MenuComponent', () => {
 		expect(menuComponent.hideBadge('★')).toBeFalsy();
 	});
 
+	it('reset app will dispatch ResetAppAction', () => {
+		spyOn(store, 'dispatch');
+		menuComponent.resetApp();
+		expect(store.dispatch).toHaveBeenCalledWith(new ResetAppAction());
+	});
 });

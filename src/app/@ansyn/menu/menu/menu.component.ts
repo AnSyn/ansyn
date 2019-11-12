@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import {
 	ContainerChangedTriggerAction,
+	ResetAppAction,
 	SelectMenuItemAction,
 	ToggleIsPinnedAction,
 	ToggleMenuCollapse,
@@ -280,6 +281,10 @@ export class MenuComponent implements OnInit, OnDestroy {
 
 		this.animatedElement.style.animation = this.collapse ? 'collapsed .3s' : 'unCollapsed .6s';
 
+	}
+
+	resetApp() {
+		this.store.dispatch(new ResetAppAction());
 	}
 
 	ngOnInit() {

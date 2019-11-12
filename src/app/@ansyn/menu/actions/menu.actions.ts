@@ -12,8 +12,16 @@ export const MenuActionTypes = {
 		CONTAINER_CHANGED: 'CONTAINER_CHANGED'
 	},
 	SET_AUTO_CLOSE: 'SET_AUTO_CLOSE',
-	MENU_COLLAPSE: 'MENU_COLLAPSE'
+	MENU_COLLAPSE: 'MENU_COLLAPSE',
+	RESET_APP: 'RESET_APP'
 };
+
+export class ResetAppAction implements Action {
+	type = MenuActionTypes.RESET_APP;
+
+	constructor() {
+	}
+}
 
 export class InitializeMenuItemsAction implements Action {
 	type = MenuActionTypes.INITIALIZE_MENU_ITEMS;

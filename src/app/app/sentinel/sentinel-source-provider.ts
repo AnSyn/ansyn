@@ -4,6 +4,7 @@ import {
 	bboxFromGeoJson,
 	geojsonMultiPolygonToFirstPolygon,
 	geojsonPolygonToMultiPolygon,
+	getPointByGeometry,
 	getPolygonByPointAndRadius,
 	IMapSourceProvidersConfig,
 	MAP_SOURCE_PROVIDERS_CONFIG,
@@ -21,10 +22,12 @@ import {
 	ErrorHandlerService,
 	GeoRegisteration,
 	IFetchParams,
+	IMultipleOverlaysSourceConfig,
 	IOverlay,
 	IStartAndEndDate,
 	limitArray,
 	LoggerService,
+	MultipleOverlaysSourceConfig,
 	Overlay,
 	OverlaySourceProvider,
 	sortByDateDesc
@@ -51,6 +54,7 @@ export class SentinelSourceProvider extends BaseOverlaySourceProvider {
 				protected loggerService: LoggerService,
 				protected http: HttpClient,
 				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig,
+				@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				protected store: Store<any>) {
 		super(loggerService);
 		proj4.defs('EPSG:32636', '+proj=utm +zone=36 +ellps=WGS84 +datum=WGS84 +units=m +no_defs');
@@ -156,7 +160,8 @@ export class SentinelSourceProvider extends BaseOverlaySourceProvider {
 			azimuth: toRadians(180),
 			sourceType: this.sourceType,
 			isGeoRegistered: GeoRegisteration.geoRegistered,
-			tag: sentinelElement
+			tag: sentinelElement,
+			sensorLocation: this.multipleOverlaysSourceConfig.useAngleDebugMode ? getPointByGeometry(geometry) : undefined
 		});
 	}
 }

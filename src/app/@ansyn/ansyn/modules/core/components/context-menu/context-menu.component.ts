@@ -103,8 +103,22 @@ export class ContextMenuComponent implements OnInit {
 		return this._nextfilteredOverlays;
 	}
 
+	/*
+	Note: 'best' and 'angle' are first in the list, in order that they do not hide the tooltips
+	that stem from 'first' and 'last', which are under them on the screen
+	* */
 
 	overlayButtons: IOverlayButton[] = [
+		{
+			name: 'best',
+			subList: 'allSensors',
+			action: this.clickBest.bind(this)
+		},
+		{
+			name: 'angle',
+			subList: 'angleFilter',
+			action: this.clickAngle.bind(this)
+		},
 		{
 			name: 'last',
 			subList: 'nextSensors',
@@ -124,16 +138,6 @@ export class ContextMenuComponent implements OnInit {
 			name: 'prev',
 			subList: 'prevSensors',
 			action: this.clickPrev.bind(this)
-		},
-		{
-			name: 'best',
-			subList: 'allSensors',
-			action: this.clickBest.bind(this)
-		},
-		{
-			name: 'angle',
-			subList: 'angleFilter',
-			action: this.clickAngle.bind(this)
 		}
 	];
 

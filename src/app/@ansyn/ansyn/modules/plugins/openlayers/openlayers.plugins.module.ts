@@ -38,6 +38,7 @@ import {
 } from '@ansyn/ol';
 import { ScannedAreaVisualizer } from './plugins/visualizers/scanned-area/scanned-area.visualizer';
 import { OpenlayersAnaglyphSensorModule } from './plugins/anaglyph-sensor/anaglyph-sensor.module';
+import { OpenLayersAirbusSourceProvider } from '@ansyn/ol';
 
 @NgModule({
 	imports: [
@@ -78,7 +79,8 @@ import { OpenlayersAnaglyphSensorModule } from './plugins/anaglyph-sensor/anagly
 				OpenLayerESRI4326SourceProvider,
 				OpenLayerOpenAerialSourceProvider,
 				OpenLayersStaticImageSourceProvider,
-				OpenLayerMarcoSourceProvider
+				OpenLayerMarcoSourceProvider,
+				OpenLayersAirbusSourceProvider
 			]
 		}),
 		AnnotationsContextMenuModule,

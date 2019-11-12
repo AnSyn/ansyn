@@ -35,5 +35,7 @@ keys = [
 	"/ansyn/anaglyph/sensornames",
 	"/ansyn/logger/component/name",
 	"/ansyn/logger/active",
-	"/ansyn/logger/disconnection/minutes"
+	"/ansyn/logger/disconnection/minutes",
+	"/ansyn/airbus/baseurl",
+    "/ansyn/overlay/airbus/inactive",
 ]

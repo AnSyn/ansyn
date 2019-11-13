@@ -1,3 +1,5 @@
+export { IStroke } from './model/visualizers/visualizer-style';
+
 export { ICanvasExportData } from './model/base-imagery-map';
 export {
 	ImageryMapExtent, ImageryMapExtentPolygon, ImageryMapProjectedState, ImageryMapPosition, IMousePointerMove

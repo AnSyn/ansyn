@@ -82,10 +82,11 @@ describe('AnnotationsControlComponent', () => {
 	});
 
 	it('select line width', () => {
-		const width = 5;
-		component.selectLineWidth({ width });
+		const style = {name: 'stylename', width: 5, dash: 0};
+		component.selectLineStyle( style );
 		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties({
-			'stroke-width': width
+			'stroke-width': style.width,
+			'stroke-dasharray': style.dash
 		}));
 	});
 

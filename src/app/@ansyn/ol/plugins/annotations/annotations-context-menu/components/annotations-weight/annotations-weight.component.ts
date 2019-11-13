@@ -1,8 +1,58 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { IStroke } from '@ansyn/imagery';
 
-export interface IAnnotationWeightProps {
-	'stroke-width': number;
+export interface IStyleWeight {
+	name: string;
+	width: number;
+	dash: number;
 }
+export const StyleDictionary: IStyleWeight[] = [
+	{
+		name: 'solid1',
+		width: 1,
+		dash: 0
+	},
+	{
+		name: 'solid2',
+		width: 2,
+		dash: 0
+	},
+	{
+		name: 'solid3',
+		width: 3,
+		dash: 0
+	},
+	{
+		name: 'solid4',
+		width: 4,
+		dash: 0
+	},
+	{
+		name: 'solid5',
+		width: 5,
+		dash: 0
+	},
+	{
+		name: 'solid6',
+		width: 6,
+		dash: 0
+	},
+	{
+		name: 'solid7',
+		width: 7,
+		dash: 0
+	},
+	{
+		name: 'dash1',
+		width: 4,
+		dash: 2
+	},
+	{
+		name: 'dash2',
+		width: 4,
+		dash: 4
+	}
+];
 
 @Component({
 	selector: 'ansyn-annotations-weight',
@@ -11,10 +61,9 @@ export interface IAnnotationWeightProps {
 })
 export class AnnotationsWeightComponent implements OnInit {
 	@Input() show;
-	@Input() properties: IAnnotationWeightProps;
-
-	@Output() selectLineWidth = new EventEmitter();
-	lineWidthList: number[] = [1, 2, 3, 4, 5, 6, 7];
+	@Input() properties: IStroke;
+	@Output() selectLineStyle = new EventEmitter<IStyleWeight>();
+	styleList: IStyleWeight[] = StyleDictionary;
 
 	constructor() {
 	}
@@ -22,4 +71,16 @@ export class AnnotationsWeightComponent implements OnInit {
 	ngOnInit() {
 	}
 
+	isSelect(style: IStyleWeight) {
+		return style.width === this.properties['stroke-width'] && style.dash === this.properties['stroke-dasharray'];
+	}
+
+	getWidth(style: IStyleWeight) {
+		return style.width;
+	}
+
+
+	getDashLine(style: IStyleWeight) {
+		return style.dash;
+	}
 }

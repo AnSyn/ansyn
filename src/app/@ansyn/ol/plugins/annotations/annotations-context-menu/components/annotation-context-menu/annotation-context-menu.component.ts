@@ -2,6 +2,7 @@ import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnI
 import { CommunicatorEntity, ImageryCommunicatorService, IMapInstanceChanged } from '@ansyn/imagery';
 import { filter, take, tap } from 'rxjs/operators';
 import { AnnotationsVisualizer } from '../../../annotations.visualizer';
+import { IStyleWeight } from '../annotations-weight/annotations-weight.component';
 
 enum AnnotationsContextmenuTabs {
 	Colors,
@@ -125,13 +126,14 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		this.annotations.updateFeature(featureId, { showMeasures: !showMeasures });
 	}
 
-	selectLineWidth(w: number, featureId: string) {
+	selectLineWidth(s: IStyleWeight, featureId: string) {
 		const { style } = this.getFeatureProps(featureId);
 		const updateStyle = {
 			...style,
 			initial: {
 				...style.initial,
-				'stroke-width': w
+				'stroke-width': s.width,
+				'stroke-dasharray': s.dash
 			}
 		};
 

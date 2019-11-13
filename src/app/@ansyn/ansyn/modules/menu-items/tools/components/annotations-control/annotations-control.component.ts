@@ -11,6 +11,7 @@ import { selectActiveAnnotationLayer, selectLayers } from '../../../layers-manag
 import { ILayer, LayerType } from '../../../layers-manager/models/layers.model';
 import { SetActiveAnnotationLayer } from '../../../layers-manager/actions/layers.actions';
 import { ANNOTATION_MODE_LIST, AnnotationMode } from '@ansyn/ol';
+import { IStyleWeight } from '@ansyn/ol';
 
 export enum SelectionBoxTypes {
 	None,
@@ -127,8 +128,8 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	selectLineWidth($event) {
-		this.store.dispatch(new AnnotationSetProperties({ 'stroke-width': $event.width }));
+	selectLineStyle(style: IStyleWeight) {
+			this.store.dispatch(new AnnotationSetProperties({ 'stroke-width': style.width, 'stroke-dasharray': style.dash }));
 	}
 
 	activeChange($event) {

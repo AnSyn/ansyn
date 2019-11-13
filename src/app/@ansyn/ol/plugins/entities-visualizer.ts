@@ -43,7 +43,8 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		initial: {
 			fill: 'transparent',
 			stroke: 'blue',
-			'stroke-width': 3
+			'stroke-width': 3,
+			'stroke-dasharray': 0
 		}
 	};
 
@@ -145,7 +146,11 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 		if (styleSettings.stroke) {
 			const color = this.colorWithAlpha(styleSettings.stroke, styleSettings['stroke-opacity']);
-			firstStyle.stroke = new Stroke({ color, width: styleSettings['stroke-width'] });
+			const dash = styleSettings['stroke-dasharray'];
+			const lineDash = dash > 0 ? [dash , 10] : undefined;
+			const width =  styleSettings['stroke-width'];
+
+			firstStyle.stroke = new Stroke({ color, lineDash, width });
 		}
 
 		if (styleSettings.fill) {

@@ -59,7 +59,7 @@
 						<ansyn-annotations-weight
 							[show]="selectedTab[featureId] === Tabs.Weight"
 							[properties]="getFeatureProps(featureId)?.style?.initial"
-							(selectLineWidth)="selectLineWidth($event.width, featureId)">
+							(selectLineStyle)="selectLineWidth($event, featureId)">
 						</ansyn-annotations-weight>
 					</p>
 				</li>

@@ -83,7 +83,7 @@ describe('AnnotationsControlComponent', () => {
 
 	it('select line width', () => {
 		const width = 5;
-		component.selectLineWidth({ width });
+		component.selectLineStyle({ width });
 		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties({
 			'stroke-width': width
 		}));

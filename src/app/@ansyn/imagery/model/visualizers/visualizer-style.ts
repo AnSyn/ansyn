@@ -4,6 +4,7 @@ export interface IStroke {
 	stroke?: string | any;
 	'stroke-width'?: number | any;
 	'stroke-opacity'?: number | any;
+	'stroke-dasharray'?: number | any;
 }
 
 export interface IFill {

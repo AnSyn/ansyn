@@ -42,6 +42,7 @@ export const toolsInitialState: IToolsState = {
 		'stroke-width': 1,
 		'fill-opacity': 0.4,
 		'stroke-opacity': 1,
+		'stroke-dasharray': 0,
 		stroke: '#27b2cf',
 		fill: '#ffffff'
 	},

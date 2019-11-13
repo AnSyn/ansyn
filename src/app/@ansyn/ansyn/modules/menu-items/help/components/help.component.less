@@ -21,6 +21,16 @@
 
 		&.rtl {
 		    direction: rtl;
+			/deep/ .carousel-control-prev {
+				right: 0;
+				left: initial;
+				transform: rotate(180deg);
+			}
+			/deep/ .carousel-control-next {
+				left: 0;
+				right: initial;
+				transform: rotate(180deg);
+			}
 		}
 
 		.help-slide {

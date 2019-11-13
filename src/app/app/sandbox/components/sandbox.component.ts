@@ -149,6 +149,11 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		this.ansynApi.setOverlaysCriteria(criteria);
 	}
 
+	showDefaultLayer() {
+		this.needToShowLayer = !this.needToShowLayer;
+		this.ansynApi.showLayer(this.ansynApi.defaultLayerId, this.needToShowLayer);
+	}
+
 	displayOverlay() {
 		this.ansynApi.displayOverLay(this.overlays[0]);
 	}

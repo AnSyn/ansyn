@@ -65,6 +65,7 @@ export class AnsynApi {
 	activeMapId;
 	mapsEntities;
 	activeAnnotationLayer;
+	defaultLayerId: string;
 	events = {
 		onReady: new EventEmitter<boolean>(),
 		overlaysLoadedSuccess: new EventEmitter<IOverlay[] | false>(),
@@ -97,6 +98,7 @@ export class AnsynApi {
 			map(([activeAnnotationLayerId, entities]) => entities[activeAnnotationLayerId]),
 			tap((activeAnnotationLayer) => {
 				this.activeAnnotationLayer = activeAnnotationLayer;
+				this.defaultLayerId = this.activeAnnotationLayer ? this.activeAnnotationLayer.id : undefined;
 			})
 		);
 

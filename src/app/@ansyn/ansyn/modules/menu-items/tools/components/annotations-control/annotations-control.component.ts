@@ -11,7 +11,7 @@ import { selectActiveAnnotationLayer, selectLayers } from '../../../layers-manag
 import { ILayer, LayerType } from '../../../layers-manager/models/layers.model';
 import { SetActiveAnnotationLayer } from '../../../layers-manager/actions/layers.actions';
 import { ANNOTATION_MODE_LIST, AnnotationMode } from '@ansyn/ol';
-import { IStyleWeight } from '../../../../../../ol/plugins/annotations/annotations-context-menu/components/annotations-weight/annotations-weight.component';
+import { IStyleWeight } from '@ansyn/ol';
 
 export enum SelectionBoxTypes {
 	None,

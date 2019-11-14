@@ -3,5 +3,5 @@
 	[attr.tooltip-class]="mapsAmount === 1 ? 'top left': 'bottom left'"
 	(click)="backToExtent()">
 	<span class="indicator" [style.background-color]="color"></span>
-	{{'Image is out of bounds' | translate}}
+	<span class="text">{{'Image is out of bounds' | translate}}</span>
 </button>

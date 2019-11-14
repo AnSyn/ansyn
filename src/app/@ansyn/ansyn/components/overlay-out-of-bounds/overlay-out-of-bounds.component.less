@@ -1,7 +1,11 @@
 @import 'ansyn/less/colors';
 
 :host {
+	flex: 1;
+	min-width: 0;
+
 	button {
+		max-width: 100%;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -24,6 +28,11 @@
 			height: 10px;
 			border-radius: 100%;
 			margin-right: 2px;
+		}
+
+		span.text {
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 	}
 }

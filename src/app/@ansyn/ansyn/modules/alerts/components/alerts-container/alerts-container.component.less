@@ -1,15 +1,14 @@
 @import 'ansyn/less/colors';
 
 :host {
-	position: absolute;
-	right: 0;
 	display: flex;
 	height: 100%;
 	align-items: center;
 	justify-content: flex-end;
-	max-width: 33%;
 
-	div {
+	& > div {
+		flex: 1;
+		min-width: 0;
 		background: @background-color-6;
 		border-radius: 5px;
 		margin: 0 2.5px;
@@ -33,11 +32,13 @@
 		}
 	}
 }
+
 @media screen and (max-width: 1366px) {
 	:host {
 		max-width: 37%;
 	}
 }
+
 @media screen and (max-width: 1024px) {
 	:host {
 		div span.text{

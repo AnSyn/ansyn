@@ -44,6 +44,7 @@ import { SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.a
 import { toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import { ICase } from '../../modules/menu-items/cases/models/case.model';
+import { LoggerService } from '../../modules/core/services/logger.service';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;
@@ -168,6 +169,12 @@ describe('ToolsAppEffects', () => {
 									max: 100
 								}
 							]
+					}
+				},
+				{
+					provide: LoggerService, useValue: {
+						error: (some) => null, info: () => {
+						}
 					}
 				}
 			]

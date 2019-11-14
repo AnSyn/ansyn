@@ -92,6 +92,8 @@ export class MapAppEffects {
 			MapActionTypes.SET_LAYOUT_SUCCESS,
 			MapActionTypes.POSITION_CHANGED,
 			MapActionTypes.SYNCHRONIZE_MAPS,
+			MapActionTypes.EXPORT_MAPS_TO_PNG_SUCCESS,
+			MapActionTypes.EXPORT_MAPS_TO_PNG_FAILED,
 			OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW,
 			OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS,
 			OverlayStatusActionsTypes.BACK_TO_WORLD_FAILED

@@ -77,7 +77,9 @@ export const MapActionTypes = {
 	TOGGLE_MAP_LAYERS: 'TOGGLE_MAP_LAYERS',
 	SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG: 'SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG',
 	SET_TOAST_MESSAGE: 'SET_TOAST_MESSAGE',
-	FOOTER_COLLAPSE: 'FOOTER_COLLAPSE'
+	FOOTER_COLLAPSE: 'FOOTER_COLLAPSE',
+	EXPORT_MAPS_TO_PNG_SUCCESS: 'EXPORT_MAPS_TO_PNG_SUCCESS',
+	EXPORT_MAPS_TO_PNG_FAILED: 'EXPORT_MAPS_TO_PNG_FAILED'
 };
 
 export interface IContextMenuShowPayload {
@@ -88,8 +90,22 @@ export interface IContextMenuShowPayload {
 
 export type MapActions = any;
 
+export class ExportMapsToPngActionFailed implements Action {
+	readonly type = MapActionTypes.EXPORT_MAPS_TO_PNG_FAILED;
+
+	constructor(error: any) {
+	}
+}
+
+export class ExportMapsToPngActionSuccess implements Action {
+	readonly type = MapActionTypes.EXPORT_MAPS_TO_PNG_SUCCESS;
+
+	constructor() {
+	}
+}
+
 export class SetProgressBarAction implements Action {
-	type = MapActionTypes.VIEW.SET_PROGRESS_BAR;
+	readonly type = MapActionTypes.VIEW.SET_PROGRESS_BAR;
 
 	constructor(public payload: IMapProgress) {
 	}

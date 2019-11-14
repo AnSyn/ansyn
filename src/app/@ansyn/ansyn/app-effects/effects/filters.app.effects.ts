@@ -9,7 +9,7 @@ import {
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../app.effects.module';
 import { SetBadgeAction } from '@ansyn/menu';
-import { filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
 import { BooleanFilterMetadata } from '../../modules/menu-items/filters/models/metadata/boolean-filter-metadata';
 import {
 	EnableOnlyFavoritesSelectionAction,
@@ -54,6 +54,8 @@ import { ICaseFacetsState } from '../../modules/menu-items/cases/models/case.mod
 import { IOverlay, IOverlaySpecialObject } from '../../modules/overlays/models/overlay.model';
 import { get as _get } from 'lodash';
 import { TranslateService } from '@ngx-translate/core';
+import { LoggerService } from '../../modules/core/services/logger.service';
+import { isEqual } from 'lodash';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -72,6 +74,20 @@ export class FiltersAppEffects {
 	forOverlayDrops$: Observable<[Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean]> = combineLatest(
 		this.overlaysMap$, this.filteredOverlays$, this.specialObjects$, this.favoriteOverlays$, this.showOnlyFavorite$);
 	facets$: Observable<ICaseFacetsState> = this.store$.select(selectFacets);
+	onFiltersChangesForLog$: Observable<[Filters, boolean, string[], boolean]> = combineLatest(this.filters$, this.showOnlyFavorite$, this.removedOverlays$, this.removedOverlaysVisibility$);
+
+	@Effect({ dispatch: false })
+	filtersLogger$: Observable<any> = this.onFiltersChangesForLog$.pipe(
+		filter(([filters, showOnlyFavorites, removedOverlays, removedOverlaysVisibality]: [Filters, boolean, string[], boolean]) => Boolean(filters) && filters.size !== 0),
+		map(([filters, showOnlyFavorites, removedOverlays, removedOverlaysVisibality]: [Filters, boolean, string[], boolean]) => {
+			const filtersState = `showOnlyFavorites: ${showOnlyFavorites}, removedOverlays: ${JSON.stringify(removedOverlays)}, removedOverlaysVisibality: ${removedOverlaysVisibality} filters: ${Boolean(filters) ? JSON.stringify(Array.from(filters.entries())) : filters}`;
+			return filtersState;
+		}),
+		distinctUntilChanged(isEqual),
+		tap((message: string) => {
+			this.loggerService.info(message, 'Filters', 'Filtered Data Changed');
+		})
+	);
 
 	@Effect()
 	updateOverlayFilters$ = this.onCriterialFiltersChanges$.pipe(
@@ -168,6 +184,7 @@ export class FiltersAppEffects {
 				protected store$: Store<IAppState>,
 				protected genericTypeResolverService: GenericTypeResolverService,
 				public translate: TranslateService,
+				protected loggerService: LoggerService,
 				@Inject(filtersConfig) protected config: IFiltersConfig) {
 	}
 

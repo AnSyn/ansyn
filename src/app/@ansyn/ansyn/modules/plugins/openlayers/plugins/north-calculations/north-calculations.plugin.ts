@@ -187,8 +187,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		return this.getCorrectedNorth(mapObject).pipe(
 			catchError(reason => {
 				const error = `setCorrectedNorth failed ${ reason }`;
-				this.loggerService.warn(error);
-				console.warn('pointNorth failed: ', error);
+				this.loggerService.warn(error, 'map', 'north_plugin');
 				return throwError(error);
 			})
 		);

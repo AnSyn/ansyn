@@ -40,15 +40,12 @@ export class CasesAppEffects {
 			CasesActionTypes.DELETE_CASE,
 			CasesActionTypes.LOAD_CASE,
 			CasesActionTypes.LOAD_CASES,
-			CasesActionTypes.ADD_CASES,
-			CasesActionTypes.SAVE_CASE_AS,
+			CasesActionTypes.LOAD_DEFAULT_CASE,
 			CasesActionTypes.SAVE_CASE_AS_SUCCESS,
-			CasesActionTypes.UPDATE_CASE,
-			CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS,
-			CasesActionTypes.SELECT_CASE
+			CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS
 		),
 		tap((action) => {
-			this.loggerService.info(JSON.stringify(action));
+			this.loggerService.info(JSON.stringify(action), 'Cases', action.type);
 		}));
 
 	@Effect()

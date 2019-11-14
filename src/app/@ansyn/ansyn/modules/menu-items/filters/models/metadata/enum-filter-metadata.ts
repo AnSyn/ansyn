@@ -50,7 +50,7 @@ export class EnumFilterMetadata extends FilterMetadata {
 	initializeFilter(overlays: IOverlay[], modelName: string, caseFilter?: ICaseFilter<ICaseEnumFilterMetadata>, visibility?: boolean): void {
 		super.initializeFilter(overlays, modelName, caseFilter, visibility);
 		this.enumsFields = new Map<string, IEnumFiled>();
-		// @todo: think of a way ot override all Map<> and Set<> objects 'toJSON' method
+		// @todo: think of a way to override all Map<> and Set<> objects 'toJSON' method
 		(<any>this.enumsFields).toJSON = () => {
 			return '{enumsFields: ' + this.enumsFields ? JSON.stringify(Array.from(this.enumsFields.entries())) : this.enumsFields + '}';
 		};

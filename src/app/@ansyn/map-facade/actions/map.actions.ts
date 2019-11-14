@@ -69,6 +69,7 @@ export const MapActionTypes = {
 	UPDATE_MAP: 'UPDATE_MAP',
 	CHANGE_IMAGERY_MAP: '[Maps] CHANGE_IMAGERY_MAP',
 	CHANGE_IMAGERY_MAP_SUCCESS: '[Maps] CHANGE_IMAGERY_MAP_SUCCESS',
+	CHANGE_IMAGERY_MAP_FAILED: '[Maps] CHANGE_IMAGERY_MAP_FAILED',
 	SET_MAP_POSITION_BY_RECT: '[Maps] SET_MAP_POSITION_BY_RECT',
 	SET_MAP_POSITION_BY_RADIUS: '[Maps] SET_MAP_POSITION_BY_RADIUS',
 	SET_LAYOUT: 'SET_LAYOUT',
@@ -266,6 +267,12 @@ export class ChangeImageryMapSuccess implements Action {
 	}
 }
 
+export class ChangeImageryMapFailed implements Action {
+	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP_FAILED;
+
+	constructor(public payload: { id: string, error: any}) {
+	}
+}
 
 export class SetMapsDataActionStore implements Action {
 	type = MapActionTypes.SET_MAPS_DATA;

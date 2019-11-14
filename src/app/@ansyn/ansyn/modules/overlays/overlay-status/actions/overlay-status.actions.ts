@@ -8,6 +8,7 @@ import { IScannedArea } from '../reducers/overlay-status.reducer';
 export enum OverlayStatusActionsTypes {
 	BACK_TO_WORLD_VIEW = 'BACK_TO_WORLD_VIEW',
 	BACK_TO_WORLD_SUCCESS = 'BACK_TO_WORLD_SUCCESS',
+	BACK_TO_WORLD_FAILED = 'BACK_TO_WORLD_FAILED',
 	SET_FAVORITE_OVERLAYS = 'SET_FAVORITE_OVERLAYS',
 	TOGGLE_OVERLAY_FAVORITE = 'TOGGLE_OVERLAY_FAVORITE',
 	SET_REMOVED_OVERLAY_IDS = 'SET_REMOVED_OVERLAY_IDS',
@@ -31,6 +32,7 @@ export enum OverlayStatusActionsTypes {
 export type OverlayStatusActions =
 	BackToWorldView
 	| BackToWorldSuccess
+	| BackToWorldFailed
 	| ToggleFavoriteAction
 	|
 	SetFavoriteOverlaysAction
@@ -76,6 +78,14 @@ export class BackToWorldView implements Action {
 
 export class BackToWorldSuccess extends BackToWorldView {
 	type = OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS;
+}
+
+export class BackToWorldFailed extends BackToWorldView {
+	type = OverlayStatusActionsTypes.BACK_TO_WORLD_FAILED;
+
+	constructor(public payload: { mapId: string, error: any }) {
+		super(payload)
+	}
 }
 
 export class ToggleFavoriteAction implements Action {

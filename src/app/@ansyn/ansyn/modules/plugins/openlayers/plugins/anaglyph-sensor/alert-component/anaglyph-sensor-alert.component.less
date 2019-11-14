@@ -1,7 +1,12 @@
 @import 'ansyn/less/colors';
 
 :host {
+	flex: 1;
+	min-width: 0;
+	margin: 0 2.5px;
+
 	button {
+		max-width: 100%;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -11,7 +16,6 @@
 		border: none;
 		padding: 0 5px;
 		font-size: 12px;
-		margin: 0 2.5px;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		background: @background-color-6;
@@ -24,6 +28,11 @@
 			height: 10px;
 			border-radius: 100%;
 			margin-right: 2px;
+		}
+
+		span.text {
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 
 		&:hover:not(:disabled) {

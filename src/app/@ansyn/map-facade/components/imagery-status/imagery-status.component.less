@@ -16,7 +16,6 @@
 	width: 100%;
 	line-height: 24px;
 	color: white;
-	justify-content: center;
 	align-items: center;
 
 	&.with-background {
@@ -30,8 +29,6 @@
 	}
 
 	.buttons {
-		position: absolute;
-		left: 0;
 		height: @status-bar-height;
 		display: flex;
 
@@ -70,11 +67,17 @@
 	}
 
 	.description {
+		flex: 1;
+		min-width: 0;
 		height: 100%;
 		padding: 0 10px;
 		justify-content: center;
 		align-items: center;
 		display: flex;
+
+		ansyn-popover {
+			min-width: 0;
+		}
 
 		button.share-link {
 			&:extend(.base-share-link);

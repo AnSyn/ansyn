@@ -58,7 +58,7 @@ describe('ErrorHandlerService', () => {
 		});
 		it('should get an error, and pass it to loggerService', () => {
 			service.httpErrorHandle(new Error(message));
-			expect(service.loggerService.error).toHaveBeenCalledWith(message)
+			expect(service.loggerService.error).toHaveBeenCalledWith(message, 'network');
 		});
 		it('should pass the given toast message via store action', () => {
 			service.httpErrorHandle(new Error(message), toastMessage);

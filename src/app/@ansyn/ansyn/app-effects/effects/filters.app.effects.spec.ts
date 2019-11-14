@@ -84,7 +84,12 @@ describe('Filters app effects', () => {
 			providers: [
 				FiltersAppEffects,
 				GenericTypeResolverService,
-				LoggerService,
+				{
+					provide: LoggerService, useValue: {
+						error: (some) => null, info: () => {
+						}
+					}
+				},
 				{ provide: filtersConfig, useValue: {} },
 				provideMockActions(() => actions),
 				{ provide: USE_DEFAULT_LANG },

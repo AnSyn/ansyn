@@ -13,9 +13,9 @@ import {
 	MapFacadeService,
 	mapStateSelector
 } from '@ansyn/map-facade';
-import { filter, map, withLatestFrom } from 'rxjs/operators';
+import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import {
-	CopySelectedCaseLinkAction,
+	CopySnapshotShareLinkAction,
 	GoAdjacentOverlay,
 	GoNextPresetOverlay,
 	StatusBarActionsTypes,
@@ -25,13 +25,28 @@ import { SearchModeEnum } from '../../modules/status-bar/models/search-mode.enum
 import { selectGeoFilterSearchMode } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { CopyCaseLinkAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
-import { DisplayOverlayAction, DisplayOverlayFromStoreAction } from '../../modules/overlays/actions/overlays.actions';
+import {
+	DisplayOverlayAction,
+	DisplayOverlayFromStoreAction,
+	OverlaysActionTypes
+} from '../../modules/overlays/actions/overlays.actions';
 import { selectDropsWithoutSpecialObjects } from '../../modules/overlays/reducers/overlays.reducer';
 import { IOverlay, IOverlayDrop } from '../../modules/overlays/models/overlay.model';
-
+import { LoggerService } from '../../modules/core/services/logger.service';
 
 @Injectable()
 export class StatusBarAppEffects {
+
+	@Effect({ dispatch: false })
+	actionsLogger$: Observable<any> = this.actions$.pipe(
+		ofType(
+			StatusBarActionsTypes.COPY_SNAPSHOT_SHARE_LINK,
+			StatusBarActionsTypes.GO_ADJACENT_OVERLAY,
+			StatusBarActionsTypes.SET_IMAGE_OPENING_ORIENTATION
+		),
+		tap((action) => {
+			this.loggerService.info(JSON.stringify(action), 'Status_Bar', action.type);
+		}));
 
 	@Effect()
 	onAdjacentOverlay$: Observable<any> = this.actions$.pipe(
@@ -74,8 +89,8 @@ export class StatusBarAppEffects {
 
 	@Effect()
 	onCopySelectedCaseLink$ = this.actions$.pipe(
-		ofType<CopySelectedCaseLinkAction>(StatusBarActionsTypes.COPY_SELECTED_CASE_LINK),
-		withLatestFrom(this.store.select(casesStateSelector), (action: CopySelectedCaseLinkAction, state: ICasesState) => {
+		ofType<CopySnapshotShareLinkAction>(StatusBarActionsTypes.COPY_SNAPSHOT_SHARE_LINK),
+		withLatestFrom(this.store.select(casesStateSelector), (action: CopySnapshotShareLinkAction, state: ICasesState) => {
 			return state.selectedCase.id;
 		}),
 		map((caseId: string) => {
@@ -102,7 +117,8 @@ export class StatusBarAppEffects {
 
 	constructor(protected actions$: Actions,
 				protected store: Store<IAppState>,
-				public overlaysService: OverlaysService) {
+				public overlaysService: OverlaysService,
+				protected loggerService: LoggerService) {
 	}
 
 }

@@ -42,7 +42,8 @@ export class CasesAppEffects {
 			CasesActionTypes.LOAD_CASES,
 			CasesActionTypes.LOAD_DEFAULT_CASE,
 			CasesActionTypes.SAVE_CASE_AS_SUCCESS,
-			CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS
+			CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS,
+			CasesActionTypes.COPY_CASE_LINK
 		),
 		tap((action) => {
 			this.loggerService.info(JSON.stringify(action), 'Cases', action.type);

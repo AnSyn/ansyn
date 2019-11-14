@@ -66,7 +66,7 @@ export class ToolsAppEffects {
 	drawInterrupted$: Observable<any> = this.actions$.pipe(
 		ofType<Action>(
 			MenuActionTypes.SELECT_MENU_ITEM,
-			StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES,
+			StatusBarActionsTypes.SET_IMAGE_OPENING_ORIENTATION,
 			MapActionTypes.SET_LAYOUT,
 			ToolsActionsTypes.SET_SUB_MENU),
 		withLatestFrom(this.isPolygonSearch$),

@@ -31,7 +31,7 @@ import {
 import { selectRemovedOverlays } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../app.effects.module';
 
-import { CommunicatorEntity, ImageryCommunicatorService, ImageryMapPosition } from '@ansyn/imagery';
+import { ImageryMapPosition } from '@ansyn/imagery';
 import {
 	catchError,
 	distinctUntilChanged,
@@ -41,6 +41,7 @@ import {
 	pairwise,
 	startWith,
 	switchMap,
+	tap,
 	withLatestFrom
 } from 'rxjs/operators';
 import { isEqual } from 'lodash';
@@ -72,6 +73,7 @@ import { Position } from 'geojson';
 import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { Dictionary } from '@ngrx/entity';
+import { LoggerService } from '../../modules/core/services/logger.service';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -83,6 +85,24 @@ export class OverlaysAppEffects {
 		map((region) => region.type === CaseGeoFilter.PinPoint),
 		distinctUntilChanged()
 	);
+
+	@Effect({ dispatch: false })
+	actionsLogger$: Observable<any> = this.actions$.pipe(
+		ofType(
+			OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS,
+			OverlaysActionTypes.LOAD_OVERLAYS,
+			OverlaysActionTypes.LOAD_OVERLAYS_FAIL,
+			OverlaysActionTypes.SET_OVERLAYS_CRITERIA,
+			OverlayStatusActionsTypes.ACTIVATE_SCANNED_AREA,
+			OverlayStatusActionsTypes.TOGGLE_OVERLAY_FAVORITE,
+			OverlayStatusActionsTypes.ADD_ALERT_MSG,
+			OverlayStatusActionsTypes.REMOVE_ALERT_MSG,
+			OverlayStatusActionsTypes.TOGGLE_DRAGGED_MODE,
+			OverlayStatusActionsTypes.TOGGLE_OVERLAY_PRESET
+		),
+		tap((action) => {
+			this.loggerService.info(JSON.stringify(action), 'Overlays', action.type);
+		}));
 
 	@Effect()
 	removedOverlaysCount$ = combineLatest(this.store$.select(selectRemovedOverlays), this.store$.select(selectOverlaysMap)).pipe(
@@ -174,7 +194,12 @@ export class OverlaysAppEffects {
 		map(([{ payload }, overlays, { activeMapId }]: [DisplayOverlayFromStoreAction, Map<string, IOverlay>, IMapState]) => {
 			const mapId = payload.mapId || activeMapId;
 			const overlay = overlays.get(payload.id);
-			return new DisplayOverlayAction({ overlay, mapId, extent: payload.extent, openWithAngle: payload.openWithAngle });
+			return new DisplayOverlayAction({
+				overlay,
+				mapId,
+				extent: payload.extent,
+				openWithAngle: payload.openWithAngle
+			});
 		})
 	);
 
@@ -276,7 +301,7 @@ export class OverlaysAppEffects {
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,
 				public overlaysService: OverlaysService,
-				public imageryCommunicatorService: ImageryCommunicatorService) {
+				protected loggerService: LoggerService) {
 	}
 
 }

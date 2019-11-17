@@ -37,6 +37,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ImageryZoomerComponent } from './modules/plugins/components/imagery-zoomer/imagery-zoomer.component';
 import { ImageryDimensionModeComponent } from './modules/plugins/components/imagery-dimension-mode/imagery-dimension-mode.component';
 import { TasksService } from './modules/menu-items/algorithms/services/tasks.service';
+import { ImageryVideoModule } from './modules/imagery-video/imagery-video.module';
 
 @NgModule({
 	imports: [
@@ -67,7 +68,8 @@ import { TasksService } from './modules/menu-items/algorithms/services/tasks.ser
 		ImageryModule,
 		StatusBarModule,
 		RouterModule,
-		HelpModule
+		HelpModule,
+		ImageryVideoModule
 	],
 	providers: [
 		{

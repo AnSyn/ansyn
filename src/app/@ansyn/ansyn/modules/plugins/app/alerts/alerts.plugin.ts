@@ -1,6 +1,6 @@
 import {
 	BaseImageryPlugin,
-	getPolygonIntersectionRatioWithMultiPolygon,
+	getPolygonIntersectionRatio,
 	ImageryMapPosition,
 	ImageryPlugin
 } from '@ansyn/imagery';
@@ -55,7 +55,7 @@ export class AlertsPlugin extends BaseImageryPlugin {
 		let isInBound;
 		if (!isWorldView) {
 			const viewExtent = position.extentPolygon;
-			const intersection = getPolygonIntersectionRatioWithMultiPolygon(viewExtent, overlay.footprint);
+			const intersection = getPolygonIntersectionRatio(viewExtent, overlay.footprint);
 			isInBound = Boolean(intersection);
 		}
 		const payload = { key: AlertMsgTypesEnum.OverlaysOutOfBounds, value: this.mapId };

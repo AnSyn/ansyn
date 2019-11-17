@@ -39,6 +39,7 @@ import {
 import { ScannedAreaVisualizer } from './plugins/visualizers/scanned-area/scanned-area.visualizer';
 import { OpenlayersAnaglyphSensorModule } from './plugins/anaglyph-sensor/anaglyph-sensor.module';
 import { OpenLayersAirbusSourceProvider } from '@ansyn/ol';
+import { ImageryFootprintVisualizer } from './plugins/visualizers/overlays/imagery-footprint-visualizer';
 
 @NgModule({
 	imports: [
@@ -66,7 +67,8 @@ import { OpenLayersAirbusSourceProvider } from '@ansyn/ol';
 				PolygonSearchVisualizer,
 				OpenlayersGeoJsonLayersVisualizer,
 				TaskRegionVisualizer,
-				ScannedAreaVisualizer
+				ScannedAreaVisualizer,
+				ImageryFootprintVisualizer
 			],
 			maps: [OpenLayersMap, OpenLayersDisabledMap],
 			mapSourceProviders: [

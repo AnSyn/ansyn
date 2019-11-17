@@ -10,7 +10,7 @@ import { ILayer, layerPluginTypeEnum } from '../../../../menu-items/layers-manag
 import { selectLayers, selectSelectedLayersIds } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
 import { booleanContains, intersect } from '@turf/turf';
 import {
-	getPolygonIntersectionRatioWithMultiPolygon,
+	getPolygonIntersectionRatio,
 	ImageryMapPosition,
 	ImageryPlugin,
 	IVisualizerEntity
@@ -102,7 +102,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 						return Boolean(intersection);
 					}
 					case 'MultiPolygon': {
-						const intersection = getPolygonIntersectionRatioWithMultiPolygon(this.currentExtent, entity.featureJson.geometry);
+						const intersection = getPolygonIntersectionRatio(this.currentExtent, entity.featureJson.geometry);
 						return Boolean(intersection);
 					}
 					default: {

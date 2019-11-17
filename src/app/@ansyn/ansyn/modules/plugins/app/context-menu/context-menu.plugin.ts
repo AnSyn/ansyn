@@ -2,7 +2,7 @@ import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { Point as GeoPoint } from 'geojson';
 import * as turf from '@turf/turf';
-import { inside } from '@turf/turf';
+import { inside, booleanContains } from '@turf/turf';
 import { areCoordinatesNumeric, BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';
 import { fromEvent, Observable, pipe, UnaryFunction } from 'rxjs';
 import { ContextMenuDisplayAction, ContextMenuShowAction, MapActionTypes, selectActiveMapId } from '@ansyn/map-facade';
@@ -64,7 +64,7 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 			tap(([point, overlaysState]) => {
 				const overlays = overlaysState.filteredOverlays
 					.map((id: string): IOverlay => overlaysState.entities[id])
-					.filter(({ footprint }) => inside(point, footprint));
+					.filter(({ footprint }) => booleanContains(footprint, point));
 
 				this.store$.dispatch(new ContextMenuShowAction({ point, event, overlays }));
 			}))

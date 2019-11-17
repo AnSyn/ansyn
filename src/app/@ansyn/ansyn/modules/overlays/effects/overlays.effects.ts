@@ -30,7 +30,7 @@ import {
 } from '../reducers/overlays.reducer';
 import { OverlaysService } from '../services/overlays.service';
 import { rxPreventCrash } from '../../core/utils/rxjs/operators/rxPreventCrash';
-import { getPolygonIntersectionRatioWithMultiPolygon, isPointContainedInMultiPolygon } from '@ansyn/imagery';
+import { getPolygonIntersectionRatio, isPointContainedInMultiPolygon } from '@ansyn/imagery';
 
 @Injectable()
 export class OverlaysEffects {
@@ -47,7 +47,7 @@ export class OverlaysEffects {
 						const isContained = isPointContainedInMultiPolygon(criteria.region, overlay.footprint);
 						overlay.containedInSearchPolygon = isContained ? RegionContainment.contained : RegionContainment.notContained;
 					} else {
-						const ratio = getPolygonIntersectionRatioWithMultiPolygon(criteria.region, overlay.footprint);
+						const ratio = getPolygonIntersectionRatio(criteria.region, overlay.footprint);
 						if (!Boolean(ratio)) {
 							overlay.containedInSearchPolygon = RegionContainment.notContained;
 						} else if (ratio === 1) {

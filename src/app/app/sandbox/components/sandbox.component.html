@@ -1,47 +1,49 @@
-<h1>Sandbox</h1>
+<div class="all-options scrolled">
+	<h1>Sandbox</h1>
 
-<button (click)="showDefaultLayer()">Show/Hide Default Layer</button>
+	<button (click)="showDefaultLayer()">Show/Hide Default Layer</button>
 
-<button (click)="setPositionByRadius()">Set Position by radius</button>
+	<button (click)="setPositionByRadius()">Set Position by radius</button>
 
-<button (click)="setPositionByRect()">Set Position by rect</button>
+	<button (click)="setPositionByRect()">Set Position by rect</button>
 
-<button (click)="setOverlayCriteria()">Set overlays criteria</button>
+	<button (click)="setOverlayCriteria()">Set overlays criteria</button>
 
-<button (click)="setOverlays()">Set overlays in timeline</button>
+	<button (click)="setOverlays()">Set overlays in timeline</button>
 
-<button (click)="displayOverlay()">Display overlay - active map</button>
+	<button (click)="displayOverlay()">Display overlay - active map</button>
 
-<button (click)="setLayout2maps()">Set layout 2 maps</button>
+	<button (click)="setLayout2maps()">Set layout 2 maps</button>
 
-<button (click)="displayOverlaysOnTwoMaps()">Display overlays on two maps</button>
+	<button (click)="displayOverlaysOnTwoMaps()">Display overlays on two maps</button>
 
-<button (click)="setMarcoOverlays()">Display Marco overlays in timeline</button>
+	<button (click)="setMarcoOverlays()">Display Marco overlays in timeline</button>
 
-<button (click)="loadImageToCesium()">load Image To Cesium</button>
+	<button (click)="loadImageToCesium()">load Image To Cesium</button>
 
-<button (click)="setMiscOverlays()">set Misc Overlays</button>
+	<button (click)="setMiscOverlays()">set Misc Overlays</button>
 
-<button (click)="setAnnotationsWithIcons()"> Set Annotations with icons</button>
+	<button (click)="setAnnotationsWithIcons()"> Set Annotations with icons</button>
 
-<button (click)="getOverlayData()">Get overlay data</button>
+	<button (click)="getOverlayData()">Get overlay data</button>
 
-<button (click)="getAllOverlaysData()">Get Timeline overlay's data</button>
+	<button (click)="getAllOverlaysData()">Get Timeline overlay's data</button>
 
-<button (click)="setRotation()">Set rotation</button>
+	<button (click)="setRotation()">Set rotation</button>
 
-<label>collapse footer
-	<select (change)="footerCollapse($event.target.value)">
-		<option value="false" selected>false</option>
-		<option value="true">true</option>
-	</select>
-</label>
+	<label>collapse footer
+		<select (change)="footerCollapse($event.target.value)">
+			<option value="false" selected>false</option>
+			<option value="true">true</option>
+		</select>
+	</label>
 
-<button (click)="undeletableAnnotations()">Add undeletable annotation</button>
-<button (click)="collapseAll()">Collapse All</button>
-<button (click)="unCollapseAll()">Un-Collapse All</button>
-<button (click)="insertLayer()">Insert Layer</button>
-<button (click)="removeLayer()">Remove Layer</button>
-<button (click)="showLayer()">Show/Hide Layer</button>
-<button (click)="startDrag()">Start Drag</button>
-<button (click)="stopDrag()">Stop Drag</button>
+	<button (click)="undeletableAnnotations()">Add undeletable annotation</button>
+	<button (click)="collapseAll()">Collapse All</button>
+	<button (click)="unCollapseAll()">Un-Collapse All</button>
+	<button (click)="insertLayer()">Insert Layer</button>
+	<button (click)="removeLayer()">Remove Layer</button>
+	<button (click)="showLayer()">Show/Hide Layer</button>
+	<button (click)="startDrag()">Start Drag</button>
+	<button (click)="stopDrag()">Stop Drag</button>
+</div>

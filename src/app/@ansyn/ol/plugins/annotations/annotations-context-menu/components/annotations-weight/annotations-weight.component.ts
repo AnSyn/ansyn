@@ -5,6 +5,7 @@ export interface IStyleWeight {
 	name: string;
 	width: number;
 	dash: number;
+	preview?: number;
 }
 export const StyleDictionary: IStyleWeight[] = [
 	{
@@ -44,13 +45,15 @@ export const StyleDictionary: IStyleWeight[] = [
 	},
 	{
 		name: 'dash1',
-		width: 4,
-		dash: 2
+		width: 3,
+		dash: 1,
+		preview: 2
 	},
 	{
 		name: 'dash2',
-		width: 4,
-		dash: 4
+		width: 3,
+		dash: 25,
+		preview: 5
 	}
 ];
 
@@ -76,11 +79,11 @@ export class AnnotationsWeightComponent implements OnInit {
 	}
 
 	getWidth(style: IStyleWeight) {
-		return style.width;
+		return style.preview ? style.preview : style.width;
 	}
 
 
 	getDashLine(style: IStyleWeight) {
-		return style.dash;
+		return style.preview ? style.preview : style.dash % 4;
 	}
 }

@@ -4,10 +4,10 @@
 		*ngFor="let style of styleList"
 		[class.selected]="isSelect(style)"
 		(click)="selectLineStyle.emit(style)">
-		<svg height="20" width="20">
+		<svg height="20" width="25">
 			<line [style.stroke-width]="getWidth(style)"
 				  [style.stroke-dasharray]="getDashLine(style)"
-				  style="stroke:white" x1="0" x2="20" y1="10" y2="10"></line>
+				  style="stroke:white" x1="0" x2="25" y1="10" y2="10"></line>
 		</svg>
 	</div>
 </div>

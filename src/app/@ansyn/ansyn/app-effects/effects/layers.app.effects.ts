@@ -46,7 +46,7 @@ export class LayersAppEffects {
 			LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_SUCCESS_ACTION
 		),
 		tap((action) => {
-			this.loggerService.info(JSON.stringify(action), 'Overlays', action.type);
+			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Layers', action.type);
 		}));
 
 	@Effect()

@@ -84,14 +84,13 @@ export class ToolsAppEffects {
 			ToolsActionsTypes.SET_SUB_MENU
 		),
 		tap((action) => {
-			this.loggerService.info(JSON.stringify(action), 'Tools', action.type);
+			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Tools', action.type);
 		}));
 
 	@Effect()
 	drawInterrupted$: Observable<any> = this.actions$.pipe(
 		ofType<Action>(
 			MenuActionTypes.SELECT_MENU_ITEM,
-			StatusBarActionsTypes.SET_IMAGE_OPENING_ORIENTATION,
 			MapActionTypes.SET_LAYOUT,
 			ToolsActionsTypes.SET_SUB_MENU),
 		withLatestFrom(this.isPolygonSearch$),

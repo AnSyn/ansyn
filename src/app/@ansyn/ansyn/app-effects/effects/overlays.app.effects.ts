@@ -101,7 +101,7 @@ export class OverlaysAppEffects {
 			OverlayStatusActionsTypes.TOGGLE_OVERLAY_PRESET
 		),
 		tap((action) => {
-			this.loggerService.info(JSON.stringify(action), 'Overlays', action.type);
+			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Overlays', action.type);
 		}));
 
 	@Effect()

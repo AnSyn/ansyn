@@ -46,7 +46,7 @@ export class CasesAppEffects {
 			CasesActionTypes.COPY_CASE_LINK
 		),
 		tap((action) => {
-			this.loggerService.info(JSON.stringify(action), 'Cases', action.type);
+			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Cases', action.type);
 		}));
 
 	@Effect()

@@ -99,7 +99,7 @@ export class MapAppEffects {
 			OverlayStatusActionsTypes.BACK_TO_WORLD_FAILED
 		),
 		tap((action) => {
-			this.loggerService.info(JSON.stringify(action), 'Map', action.type);
+			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Map', action.type);
 		}));
 
 	onDisplayOverlay$: Observable<any> = this.actions$

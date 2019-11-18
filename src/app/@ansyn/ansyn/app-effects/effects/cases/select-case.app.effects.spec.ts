@@ -145,7 +145,7 @@ describe('SelectCaseAppEffects', () => {
 				a: new SetMapsDataActionStore({ mapsList: maps.data }),
 				b: new SetActiveMapId(maps.activeMapId),
 				c: new SetLayoutAction(<any>maps.layout),
-				d: new SetImageOpeningOrientation({ orientation, timeFilter }),
+				d: new SetImageOpeningOrientation({ orientation }),
 				e: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
 				f: new SetFavoriteOverlaysAction(favoriteOverlays),
 				g: new SetPresetOverlaysAction(presetOverlays),

@@ -19,6 +19,7 @@ import {
 import { EnumFilterMetadata } from '../../modules/menu-items/filters/models/metadata/enum-filter-metadata';
 import { FilterMetadata } from '../../modules/menu-items/filters/models/metadata/filter-metadata.interface';
 import {
+	filtersToString,
 	Filters,
 	filtersStateSelector,
 	IFiltersState,
@@ -80,7 +81,8 @@ export class FiltersAppEffects {
 	filtersLogger$: Observable<any> = this.onFiltersChangesForLog$.pipe(
 		filter(([filters, showOnlyFavorites, removedOverlays, removedOverlaysVisibality]: [Filters, boolean, string[], boolean]) => Boolean(filters) && filters.size !== 0),
 		map(([filters, showOnlyFavorites, removedOverlays, removedOverlaysVisibality]: [Filters, boolean, string[], boolean]) => {
-			const filtersState = `showOnlyFavorites: ${showOnlyFavorites}, removedOverlays: ${JSON.stringify(removedOverlays)}, removedOverlaysVisibality: ${removedOverlaysVisibality} filters: ${Boolean(filters) ? JSON.stringify(Array.from(filters.entries())) : filters}`;
+			const filtersData = filtersToString(filters);
+			const filtersState = `{"showOnlyFavorites": "${ showOnlyFavorites }", "removedOverlays": "${ JSON.stringify(removedOverlays) }", "removedOverlaysVisibality": "${ removedOverlaysVisibality }", "filters": ${ Boolean(filters) ? filtersData : filters }}`;
 			return filtersState;
 		}),
 		distinctUntilChanged(isEqual),

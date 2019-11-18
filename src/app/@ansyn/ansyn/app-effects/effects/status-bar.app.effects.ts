@@ -45,7 +45,7 @@ export class StatusBarAppEffects {
 			StatusBarActionsTypes.SET_IMAGE_OPENING_ORIENTATION
 		),
 		tap((action) => {
-			this.loggerService.info(JSON.stringify(action), 'Status_Bar', action.type);
+			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Status_Bar', action.type);
 		}));
 
 	@Effect()

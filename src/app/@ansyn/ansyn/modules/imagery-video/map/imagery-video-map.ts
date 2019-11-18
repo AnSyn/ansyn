@@ -1,12 +1,9 @@
-import { BaseImageryMap, ImageryMap, ImageryMapExtent, ImageryMapPosition } from '@ansyn/imagery';
+import { BaseImageryMap, ICanvasExportData, ImageryMap, ImageryMapExtent, ImageryMapPosition } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
 import { GeoJsonObject, Point } from 'geojson';
 import { HttpClient } from '@angular/common/http';
 import { get as _get } from 'lodash';
-import {
-	IMAGERY_VIDEO_COMPONENT_SELECTOR,
-	ImageryVideoComponent
-} from '../components/imagery-video/imagery-video.component';
+import { ImageryVideoComponent } from '../components/imagery-video/imagery-video.component';
 import * as turf from '@turf/turf';
 import { ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
 
@@ -43,7 +40,7 @@ export class ImageryVideoMap extends BaseImageryMap<any> {
 		throw new Error('Method not implemented.');
 	}
 
-	getExportData(): import('C:/Users/Tzahi/Projects/AnsynIo/ansyn/src/app/@ansyn/imagery/public_api').ICanvasExportData {
+	getExportData(): ICanvasExportData {
 		throw new Error('Method not implemented.');
 	}
 
@@ -120,7 +117,7 @@ export class ImageryVideoMap extends BaseImageryMap<any> {
 		// target.appendChild(<any>this.videoComponent);
 		const comp = this.componentFactoryResolver.resolveComponentFactory(ImageryVideoComponent);
 		const ref = viewContainerRef.createComponent<ImageryVideoComponent>(comp);
-		this.videoComponent = ref.instance
+		this.videoComponent = ref.instance;
 		return of(true);
 	}
 

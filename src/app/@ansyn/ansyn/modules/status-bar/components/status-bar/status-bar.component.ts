@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { Observable } from 'rxjs';
-import { CopySelectedCaseLinkAction } from '../../actions/status-bar.actions';
+import { CopySnapshotShareLinkAction } from '../../actions/status-bar.actions';
 import { tap } from 'rxjs/operators';
 import { LayoutKey, layoutOptions, selectLayout } from '@ansyn/map-facade';
 import { IMapSettings } from '@ansyn/imagery';
@@ -30,7 +30,7 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 	}
 
 	copyLink(): void {
-		this.store.dispatch(new CopySelectedCaseLinkAction());
+		this.store.dispatch(new CopySnapshotShareLinkAction());
 	}
 
 	ngOnInit(): void {

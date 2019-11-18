@@ -195,7 +195,12 @@ describe('MapAppEffects', () => {
 				})
 			],
 			providers: [
-				{ provide: LoggerService, useValue: { error: (some) => null } },
+				{
+					provide: LoggerService, useValue: {
+						error: (some) => null, info: () => {
+						}
+					}
+				},
 				{
 					provide: CacheService,
 					useClass: CacheService,

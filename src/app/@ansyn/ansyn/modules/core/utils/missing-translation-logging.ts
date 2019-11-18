@@ -11,7 +11,7 @@ export class MissingTranslationLogging implements MissingTranslationHandler {
 	}
 
 	handle(params: MissingTranslationHandlerParams) {
-		this.logger.warn(`Cannot find ${ params.key }`);
+		this.logger.warn(`Can't find translation for ${ params.key }`, 'TRANSLATION');
 		return params.key;
 	}
 }

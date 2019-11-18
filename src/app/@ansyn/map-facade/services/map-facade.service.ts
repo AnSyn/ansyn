@@ -9,9 +9,14 @@ import {
 } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { saveAs } from 'file-saver';
-import { Observable } from 'rxjs';
-import { switchMap, take, tap } from 'rxjs/operators';
-import { MapInstanceChangedAction, PositionChangedAction } from '../actions/map.actions';
+import { EMPTY, Observable } from 'rxjs';
+import { catchError, switchMap, take, tap } from 'rxjs/operators';
+import {
+	ExportMapsToPngActionFailed,
+	ExportMapsToPngActionSuccess,
+	MapInstanceChangedAction,
+	PositionChangedAction
+} from '../actions/map.actions';
 import { LayoutKey } from '../models/maps-layout';
 import { IMapState, selectLayout, selectMapsIds, selectMapsList } from '../reducers/map.reducer';
 import { mapsToPng } from '../utils/exportMaps';
@@ -106,7 +111,14 @@ export class MapFacadeService {
 				});
 				return mapsToPng(_maps, this.layout)
 			}),
-			tap(blob => saveAs(blob, 'map.jpeg'))
+			tap(blob => saveAs(blob, 'map.jpeg')),
+			tap(() => {
+				this.store.dispatch(new ExportMapsToPngActionSuccess());
+			}),
+			catchError((err) => {
+				this.store.dispatch(new ExportMapsToPngActionFailed(err));
+				return EMPTY;
+			})
 		).subscribe();
 	}
 }

@@ -6,6 +6,7 @@ import { StoreModule, Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AnaglyphSensorService } from '../service/anaglyph-sensor.service';
 import { AnaglyphConfig } from '../models/anaglyph.model';
+import { LoggerService } from '../../../../../core/services/logger.service';
 
 describe('AnaglyphSensorAlertComponent', () => {
 	let component: AnaglyphSensorAlertComponent;
@@ -17,6 +18,7 @@ describe('AnaglyphSensorAlertComponent', () => {
 		TestBed.configureTestingModule({
 			providers: [
 				ImageryCommunicatorService,
+				{ provide: LoggerService, useValue: { error: (some) => null } },
 				AnaglyphSensorService,
 				{
 					provide: AnaglyphConfig,

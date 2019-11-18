@@ -20,5 +20,4 @@ export const comboBoxesOptions: IComboBoxesOptions = { timeFilters, orientations
 
 export interface IComboBoxesProperties {
 	orientation?: CaseOrientation;
-	timeFilter?: CaseTimeFilter;
 }

@@ -73,9 +73,35 @@ import {
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { isEqual } from 'lodash';
 import { selectGeoRegisteredOptionsEnabled } from '../../modules/menu-items/tools/reducers/tools.reducer';
+import { LoggerService } from '../../modules/core/services/logger.service';
 
 @Injectable()
 export class MapAppEffects {
+
+	@Effect({ dispatch: false })
+	actionsLogger$: Observable<any> = this.actions$.pipe(
+		ofType(
+			OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
+			OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
+			MapActionTypes.MAP_INSTANCE_CHANGED_ACTION,
+			MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS,
+			MapActionTypes.CHANGE_IMAGERY_MAP_FAILED,
+			MapActionTypes.CHANGE_IMAGERY_MAP,
+			MapActionTypes.CONTEXT_MENU.SHOW,
+			MapActionTypes.CONTEXT_MENU.ANGLE_FILTER_SHOW,
+			MapActionTypes.SET_LAYOUT_SUCCESS,
+			MapActionTypes.POSITION_CHANGED,
+			MapActionTypes.SYNCHRONIZE_MAPS,
+			MapActionTypes.EXPORT_MAPS_TO_PNG_SUCCESS,
+			MapActionTypes.EXPORT_MAPS_TO_PNG_FAILED,
+			OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW,
+			OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS,
+			OverlayStatusActionsTypes.BACK_TO_WORLD_FAILED
+		),
+		tap((action) => {
+			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Map', action.type);
+		}));
+
 	onDisplayOverlay$: Observable<any> = this.actions$
 		.pipe(
 			ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY),
@@ -248,6 +274,7 @@ export class MapAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
+				protected loggerService: LoggerService,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
 	}
 

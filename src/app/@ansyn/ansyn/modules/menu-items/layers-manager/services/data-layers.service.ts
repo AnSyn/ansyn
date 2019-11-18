@@ -11,6 +11,17 @@ import { ICase } from '../../cases/models/case.model';
 import { selectSelectedCase } from '../../cases/reducers/cases.reducer';
 import { ILayersManagerConfig } from '../models/layers-manager-config';
 import { ILayer, layerPluginTypeEnum, LayerType } from '../models/layers.model';
+import {
+	AddLayerOnBackendFailedAction,
+	AddLayerOnBackendSuccessAction,
+	RemoveCaseLayersFromBackendAction,
+	RemoveCaseLayersFromBackendFailedAction,
+	RemoveCaseLayersFromBackendSuccessAction,
+	RemoveLayerOnBackendFailedAction,
+	RemoveLayerOnBackendSuccessAction,
+	UpdateLayerOnBackendFailedAction,
+	UpdateLayerOnBackendSuccessAction
+} from '../actions/layers.actions';
 
 export const layersConfig = 'layersManagerConfig';
 
@@ -71,23 +82,52 @@ export class DataLayersService implements OnInit, OnDestroy {
 	}
 
 	addLayer(layer: ILayer): Observable<any> {
-		return this.storageService.create('layers', { preview: layer })
-			.pipe(catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Failed to create layer')));
+		return this.storageService.create('layers', { preview: layer }).pipe(
+			tap(() => {
+				this.store.dispatch(new AddLayerOnBackendSuccessAction(layer.id));
+			}),
+			catchError((err) => {
+				this.store.dispatch(new AddLayerOnBackendFailedAction(layer, err));
+				return this.errorHandlerService.httpErrorHandle(err, 'Failed to create layer');
+			})
+		)
 	}
 
 	updateLayer(layer: ILayer): Observable<any> {
-		return this.storageService
-			.update('layers', { preview: layer, data: null })
-			.pipe(catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Can\'t find layer to update')));
+		return this.storageService.update('layers', { preview: layer, data: null }).pipe(
+			tap(() => {
+				this.store.dispatch(new UpdateLayerOnBackendSuccessAction(layer.id));
+			}),
+			catchError((err) => {
+				this.store.dispatch(new UpdateLayerOnBackendFailedAction(layer, err));
+				return this.errorHandlerService.httpErrorHandle(err, 'Can\'t find layer to update');
+			})
+		)
 	}
 
 	removeLayer(layerId: string): Observable<any> {
-		return this.storageService
-			.delete('layers', layerId)
-			.pipe(catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Failed to remove layer')));
+		return this.storageService.delete('layers', layerId)
+			.pipe(
+				tap(() => {
+					this.store.dispatch(new RemoveLayerOnBackendSuccessAction(layerId));
+				}),
+				catchError((err) => {
+					this.store.dispatch(new RemoveLayerOnBackendFailedAction(layerId, err));
+					return this.errorHandlerService.httpErrorHandle(err, 'Failed to remove layer');
+				})
+			)
 	}
 
 	removeCaseLayers(caseId: string): Observable<any> {
-		return this.storageService.deleteByCase('layers', { caseId });
+		this.store.dispatch(new RemoveCaseLayersFromBackendAction(caseId));
+		return this.storageService.deleteByCase('layers', { caseId }).pipe(
+			tap(() => {
+				this.store.dispatch(new RemoveCaseLayersFromBackendSuccessAction(caseId))
+			}),
+			catchError((err) => {
+				this.store.dispatch(new RemoveCaseLayersFromBackendFailedAction(caseId, err));
+				return this.errorHandlerService.httpErrorHandle(err, 'Failed to remove case layers');
+			})
+		);
 	}
 }

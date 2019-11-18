@@ -14,6 +14,7 @@ import {
 	bbox,
 	bboxPolygon,
 	booleanContains,
+	booleanEqual,
 	centerOfMass,
 	circle,
 	feature,
@@ -22,8 +23,7 @@ import {
 	point,
 	polygon,
 	union,
-	unkinkPolygon,
-    booleanEqual
+	unkinkPolygon
 } from '@turf/turf';
 
 export type BBOX = [number, number, number, number] | [number, number, number, number, number, number];

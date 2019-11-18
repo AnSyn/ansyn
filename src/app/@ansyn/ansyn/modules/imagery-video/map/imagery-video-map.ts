@@ -6,10 +6,12 @@ import { get as _get } from 'lodash';
 import { ImageryVideoComponent } from '../components/imagery-video/imagery-video.component';
 import * as turf from '@turf/turf';
 import { ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
+import { point, BBox } from '@turf/turf';
 
+export const ImageryVideoMapType = 'VIDEO_MAP';
 // @dynamic
 @ImageryMap({
-	mapType: 'VIDEO_MAP',
+	mapType: ImageryVideoMapType,
 	deps: [HttpClient, ComponentFactoryResolver]
 })
 export class ImageryVideoMap extends BaseImageryMap<any> {
@@ -21,27 +23,27 @@ export class ImageryVideoMap extends BaseImageryMap<any> {
 	}
 
 	zoomIn(): void {
-		throw new Error('Method not implemented.');
+
 	}
 
 	zoomOut(): void {
-		throw new Error('Method not implemented.');
 	}
 
 	one2one(): void {
-		throw new Error('Method not implemented.');
 	}
 
-	getCoordinateFromScreenPixel(screenPixel: { x: any; y: any; }): [number, number, number] {
-		throw new Error('Method not implemented.');
-	}
+	getCoordinateFromScreenPixel(screenPixel: { x: any; y: any; }): [number, number, number] { return [0, 0, 0]}
 
 	getHtmlContainer(): HTMLElement {
-		throw new Error('Method not implemented.');
+		return this.videoComponent.video.nativeElement;
 	}
 
 	getExportData(): ICanvasExportData {
-		throw new Error('Method not implemented.');
+		return {
+			width: 200,
+			height: 200,
+			data: 'unsupported'
+		}
 	}
 
 	addGeojsonLayer(data: GeoJsonObject) {
@@ -123,12 +125,12 @@ export class ImageryVideoMap extends BaseImageryMap<any> {
 
 	private _getCenter(): Point {
 		const line = turf.feature(_get(this.mainLayer, 'data.overlay.footprint'));
-		return turf.center(line).geometry
+		return turf.center(line? line : point([0, 0])).geometry
 	}
 
 	private _getPosition(): ImageryMapPosition {
 		const line = turf.feature(_get(this.mainLayer, 'data.overlay.footprint'));
-		const bbox = turf.bbox(line);
+		const bbox: BBox = line ? turf.bbox(line) : [0, 0, 0, 0];
 		const extentPolygon: any = turf.bboxPolygon(bbox).geometry;
 		return { extentPolygon };
 	}

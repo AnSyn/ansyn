@@ -73,6 +73,7 @@ import {
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { isEqual } from 'lodash';
 import { selectGeoRegisteredOptionsEnabled } from '../../modules/menu-items/tools/reducers/tools.reducer';
+import { ImageryVideoMapType } from '../../modules/imagery-video/map/imagery-video-map';
 
 @Injectable()
 export class MapAppEffects {
@@ -252,14 +253,13 @@ export class MapAppEffects {
 	}
 
 	changeImageryMap(overlay, communicator): string | null {
-		const VideoMapName = 'VIDEO_MAP'
-		if (overlay.sensorType.toLowerCase().includes('video')) {
-			return communicator.activeMapName !== VideoMapName && VideoMapName;
+		if (overlay.sensorType.toLowerCase().includes('video') && communicator.activeMapName !== ImageryVideoMapType) {
+			return ImageryVideoMapType;
 		}
-		if (overlay.isGeoRegistered !== GeoRegisteration.notGeoRegistered && (communicator.activeMapName === DisabledOpenLayersMapName || communicator.activeMapName === VideoMapName)) {
+		if (overlay.isGeoRegistered !== GeoRegisteration.notGeoRegistered && (communicator.activeMapName === DisabledOpenLayersMapName || communicator.activeMapName === ImageryVideoMapType)) {
 			return OpenlayersMapName;
 		}
-		if (overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered && (communicator.activeMapName === OpenlayersMapName || communicator.activeMapName === CesiumMapName || communicator.activeMapName === VideoMapName)) {
+		if (overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered && (communicator.activeMapName === OpenlayersMapName || communicator.activeMapName === CesiumMapName || communicator.activeMapName === ImageryVideoMapType)) {
 			return DisabledOpenLayersMapName;
 		}
 		return null;
@@ -276,7 +276,7 @@ export class MapAppEffects {
 		const { sourceType } = overlay;
 		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({
 			sourceType,
-			mapType: sourceType.toLowerCase().includes('video') ? 'VIDEO_MAP' : caseMapState.worldView.mapType
+			mapType: sourceType.toLowerCase().includes('video') ? ImageryVideoMapType : caseMapState.worldView.mapType
 		});
 
 		if (!sourceLoader) {

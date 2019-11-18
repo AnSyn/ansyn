@@ -1,13 +1,4 @@
-import {
-	Feature,
-	FeatureCollection,
-	GeometryObject,
-	LineString,
-	MultiPolygon,
-	Point,
-	Polygon,
-	Polygon as geoPolygon
-} from 'geojson';
+import { Feature, FeatureCollection, GeometryObject, LineString, MultiPolygon, Point, Polygon } from 'geojson';
 import {
 	AllGeoJSON,
 	area,
@@ -15,6 +6,7 @@ import {
 	bboxPolygon,
 	booleanContains,
 	booleanEqual,
+	booleanPointInPolygon,
 	centerOfMass,
 	circle,
 	feature,
@@ -80,21 +72,23 @@ export function areCoordinatesNumeric(coord) {
 	return coord && !isNaN(coord[0]) && !isNaN(coord[1]) && (Math.abs(coord[0]) !== 999999) && (Math.abs(coord[1]) !== 999999);
 }
 
-export function getPolygonIntersectionRatio(extent: geoPolygon, footprint: MultiPolygon | Point | LineString) {
+export function getPolygonIntersectionRatio(extent: Polygon, footprint: MultiPolygon | Point | LineString) : number {
 	let intersection = 0;
 	switch (footprint.type) {
 		case 'MultiPolygon':
 			intersection = getPolygonIntersectionRatioWithMultiPolygon(extent, footprint);
 			break;
 		case 'LineString':
-		case 'Point':
 			intersection = +booleanContains(extent, footprint);
+			break;
+		case 'Point':
+			intersection = +booleanPointInPolygon(footprint, extent);
 			break
 	}
 	return intersection
 }
 
-export function getPolygonIntersectionRatioWithMultiPolygon(extent: geoPolygon, footprint: MultiPolygon): number {
+export function getPolygonIntersectionRatioWithMultiPolygon(extent: Polygon, footprint: MultiPolygon): number {
 	let intersectionArea = 0;
 	let extentArea = 1;
 	try {
@@ -115,7 +109,7 @@ export function getPolygonIntersectionRatioWithMultiPolygon(extent: geoPolygon, 
 	return intersectionArea / extentArea > 0.99 ? 1 : intersectionArea / extentArea;
 }
 
-export function isPointContainedInMultiPolygon(point: Point, footprint: MultiPolygon | Point | LineString): boolean {
+export function isPointContainedInGeometry(point: Point, footprint: MultiPolygon | Point | LineString): boolean {
 	if (!Boolean(footprint) || !Boolean(point)) {
 		console.error('isPointContainedInMultiPolygon invalid params');
 		return false;
@@ -129,7 +123,7 @@ export function isPointContainedInMultiPolygon(point: Point, footprint: MultiPol
 			break;
 		case 'MultiPolygon':
 			for (let i = 0; i < footprint.coordinates.length; i++) {
-				const contained = booleanContains(polygon(footprint.coordinates[i]), point);
+				const contained = booleanPointInPolygon(point, polygon(footprint.coordinates[i]));
 				if (contained) {
 					return true;
 				}

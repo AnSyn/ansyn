@@ -41,7 +41,7 @@ export {
 	getPolygonByPoint,
 	getPolygonByPointAndRadius,
 	getPolygonIntersectionRatio,
-	isPointContainedInMultiPolygon,
+	isPointContainedInGeometry,
 	unifyPolygons
 } from './utils/geo';
 

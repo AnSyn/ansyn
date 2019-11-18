@@ -1,5 +1,5 @@
 import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
-import { Point, MultiPolygon, LineString } from 'geojson';
+import { GeoJsonObject, LineString, MultiPolygon, Point } from 'geojson';
 
 export interface IOverlaysFetchData {
 	data: IOverlay[],
@@ -40,7 +40,7 @@ export enum RegionContainment {
 }
 
 export interface IOverlay extends IDilutedOverlay {
-	footprint?: Point | MultiPolygon | LineString;
+	footprint?: Point | MultiPolygon | LineString; // @TODO: change to GeoJsonObject
 	sensorType?: string;
 	sensorName?: string;
 	creditName?: string;

@@ -1,5 +1,5 @@
 <div class="overlay-overview" (dblclick)="onDblClick()">
-	<header>
+	<header [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''">
 		<div class="name">{{ sensorType | translate }} ({{sensorName | translate}})</div>
 		<div>{{formattedTime}}</div>
 	</header>

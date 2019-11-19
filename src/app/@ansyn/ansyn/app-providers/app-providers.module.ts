@@ -10,6 +10,7 @@ import { SliderFilterMetadata } from '../modules/menu-items/filters/models/metad
 import { OverlaysModule } from '../modules/overlays/overlays.module';
 import { ArrayFilterMetadata } from '../modules/menu-items/filters/models/metadata/array-filter-metadata';
 import { AirbusSourceProvider } from './overlay-source-providers/airbus/airbus-source-provider';
+import { Pic4cartoSourceProvider } from './overlay-source-providers/pic4carto-source-provider';
 
 @NgModule({
 	imports: [
@@ -19,7 +20,8 @@ import { AirbusSourceProvider } from './overlay-source-providers/airbus/airbus-s
 				PlanetSourceProvider,
 				OpenAerialSourceProvider,
 				IdahoSourceProvider,
-				AirbusSourceProvider
+				AirbusSourceProvider,
+				Pic4cartoSourceProvider
 			]
 		})
 	],

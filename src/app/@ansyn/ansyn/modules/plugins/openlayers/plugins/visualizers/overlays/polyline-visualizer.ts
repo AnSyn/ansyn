@@ -210,7 +210,7 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 	private getFeatureType(feature: Feature): 'MultiLineString' | 'Point' | 'LineString' | 'MultiPolygon' {
 		const type = feature && feature.getGeometry().getType();
 		if (type && !['MultiLineString', 'Point', 'LineString', 'MultiPolygon'].includes(type)) {
-			console.warn('undefined type');
+			console.warn(`polyline-visualizer.ts getFeatureType - unsupported type ${type}`);
 		}
 		return type;
 	}

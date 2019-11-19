@@ -1,4 +1,4 @@
-export { IStroke } from './model/visualizers/visualizer-style';
+export { IStroke, IIcon } from './model/visualizers/visualizer-style';
 
 export { ICanvasExportData } from './model/base-imagery-map';
 export {
@@ -40,8 +40,8 @@ export {
 	getPointByGeometry,
 	getPolygonByPoint,
 	getPolygonByPointAndRadius,
-	getPolygonIntersectionRatioWithMultiPolygon,
-	isPointContainedInMultiPolygon,
+	getPolygonIntersectionRatio,
+	isPointContainedInGeometry,
 	unifyPolygons
 } from './utils/geo';
 

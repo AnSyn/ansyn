@@ -164,6 +164,20 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			firstStyle.image = new Icon(styleSettings.icon);
 		}
 
+		if (styleSettings.circle) {
+			const radius = styleSettings.circle;
+			firstStyle.image = new Circle({
+				radius,
+				fill: firstStyle.fill,
+				stroke: firstStyle.stroke
+			});
+		}
+
+		if (styleSettings.geometry) {
+			secondaryStyle.image = firstStyle.image;
+			secondaryStyle.geometry = styleSettings.geometry
+		}
+
 		if (styleSettings.label) {
 			const fill = new Fill({ color: styleSettings.label.fill });
 			const stroke = new Stroke({

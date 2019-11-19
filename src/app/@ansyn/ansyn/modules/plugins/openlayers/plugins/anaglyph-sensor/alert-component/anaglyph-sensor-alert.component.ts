@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { getPolygonIntersectionRatioWithMultiPolygon, IMapSettings } from '@ansyn/imagery';
+import { getPolygonIntersectionRatio, IMapSettings } from '@ansyn/imagery';
 import { catchError, take, tap } from 'rxjs/operators';
 import { IEntryComponent, selectMapStateById, SetToastMessageAction } from '@ansyn/map-facade';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
@@ -47,7 +47,7 @@ export class AnaglyphSensorAlertComponent implements OnInit, OnDestroy, IEntryCo
 		}
 
 		const viewExtent = this.mapState.data.position.extentPolygon;
-		const intersection = getPolygonIntersectionRatioWithMultiPolygon(viewExtent, overlay.footprint);
+		const intersection = getPolygonIntersectionRatio(viewExtent, overlay.footprint);
 		return !Boolean(intersection);
 	}
 

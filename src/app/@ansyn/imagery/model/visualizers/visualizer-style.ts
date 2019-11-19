@@ -21,19 +21,22 @@ export interface ILabel extends IStroke {
 	overflow?: boolean;
 }
 
+export interface IIcon {
+	scale: number;
+	src: string;
+	anchor?: number[];
+	rotation?: number;
+	rotateWithView?: boolean;
+}
+
 export interface IVisualizerStyle extends IStroke, IFill {
 	zIndex?: number;
-	fill?: string;
-	'fill-opacity'?: number;
 	'marker-color'?: string;
 	'marker-size'?: MarkerSize;
 	shadow?: IStroke;
-	icon?: {
-		scale: number;
-		src: string;
-		anchor?: number[];
-	};
+	icon?: IIcon | any;
 	geometry?: any;
+	circle?: number | any;
 	label?: ILabel;
 }
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
-	getPolygonIntersectionRatioWithMultiPolygon,
+	getPolygonIntersectionRatio,
 	ICanvasExportData,
 	ImageryCommunicatorService,
 	ImageryMapPosition,
@@ -35,7 +35,7 @@ export class MapFacadeService {
 	layout$ = this.store.select(selectLayout);
 
 	static isNotIntersect(extentPolygon, footprint, overlayCoverage): boolean {
-		const intersection = getPolygonIntersectionRatioWithMultiPolygon(extentPolygon, footprint);
+		const intersection = getPolygonIntersectionRatio(extentPolygon, footprint);
 		return intersection < overlayCoverage;
 	}
 

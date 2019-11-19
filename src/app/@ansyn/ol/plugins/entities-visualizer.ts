@@ -80,7 +80,8 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			style: this.featureStyle.bind(this),
 			opacity: this.visualizerStyle.opacity,
 			renderBuffer: 5000,
-			zIndex: 10
+			zIndex: 10,
+			extent: this.iMap.getMainLayer().getExtent()
 		});
 
 		if (!this.isHidden) {
@@ -161,6 +162,20 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 		if (styleSettings.icon) {
 			firstStyle.image = new Icon(styleSettings.icon);
+		}
+
+		if (styleSettings.circle) {
+			const radius = styleSettings.circle;
+			firstStyle.image = new Circle({
+				radius,
+				fill: firstStyle.fill,
+				stroke: firstStyle.stroke
+			});
+		}
+
+		if (styleSettings.geometry) {
+			secondaryStyle.image = firstStyle.image;
+			secondaryStyle.geometry = styleSettings.geometry
 		}
 
 		if (styleSettings.label) {

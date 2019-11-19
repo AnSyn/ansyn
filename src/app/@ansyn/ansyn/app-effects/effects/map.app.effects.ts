@@ -73,6 +73,7 @@ import {
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { isEqual } from 'lodash';
 import { selectGeoRegisteredOptionsEnabled } from '../../modules/menu-items/tools/reducers/tools.reducer';
+import { ImageryVideoMapType } from '../../modules/imagery-video/map/imagery-video-map';
 import { LoggerService } from '../../modules/core/services/logger.service';
 
 @Injectable()
@@ -278,6 +279,19 @@ export class MapAppEffects {
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
 	}
 
+	changeImageryMap(overlay, communicator): string | null {
+		if (overlay.sensorType.toLowerCase().includes('video') && communicator.activeMapName !== ImageryVideoMapType) {
+			return ImageryVideoMapType;
+		}
+		if (overlay.isGeoRegistered !== GeoRegisteration.notGeoRegistered && (communicator.activeMapName === DisabledOpenLayersMapName || communicator.activeMapName === ImageryVideoMapType)) {
+			return OpenlayersMapName;
+		}
+		if (overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered && (communicator.activeMapName === OpenlayersMapName || communicator.activeMapName === CesiumMapName || communicator.activeMapName === ImageryVideoMapType)) {
+			return DisabledOpenLayersMapName;
+		}
+		return null;
+	}
+
 	onDisplayOverlay([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		const { overlay, extent: payloadExtent } = payload;
 		const mapId = payload.mapId || mapState.activeMapId;
@@ -289,7 +303,7 @@ export class MapAppEffects {
 		const { sourceType } = overlay;
 		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({
 			sourceType,
-			mapType: caseMapState.worldView.mapType
+			mapType: sourceType.toLowerCase().includes('video') ? ImageryVideoMapType : caseMapState.worldView.mapType
 		});
 
 		if (!sourceLoader) {
@@ -316,9 +330,7 @@ export class MapAppEffects {
 		/* -2- */
 		const changeActiveMap = mergeMap((layer) => {
 			let observable = of(true);
-			const moveToGeoRegisteredMap = overlay.isGeoRegistered !== GeoRegisteration.notGeoRegistered && communicator.activeMapName === DisabledOpenLayersMapName;
-			const moveToNotGeoRegisteredMap = overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered && (communicator.activeMapName === OpenlayersMapName || communicator.activeMapName === CesiumMapName);
-			const newActiveMapName = moveToGeoRegisteredMap ? OpenlayersMapName : moveToNotGeoRegisteredMap ? DisabledOpenLayersMapName : '';
+			let newActiveMapName = this.changeImageryMap(overlay, communicator);
 
 			if (newActiveMapName) {
 				observable = fromPromise(communicator.setActiveMap(newActiveMapName, mapData.position, undefined, layer));

@@ -4,7 +4,6 @@ import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { from, Observable } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { LoggerService } from '../../core/services/logger.service';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
@@ -30,8 +29,9 @@ import {
 } from '../reducers/overlays.reducer';
 import { OverlaysService } from '../services/overlays.service';
 import { rxPreventCrash } from '../../core/utils/rxjs/operators/rxPreventCrash';
-import { getPolygonIntersectionRatioWithMultiPolygon, isPointContainedInMultiPolygon } from '@ansyn/imagery';
+import { getPolygonIntersectionRatio, isPointContainedInGeometry } from '@ansyn/imagery';
 import { getErrorLogFromException } from '../../core/utils/logs/timer-logs';
+import { LoggerService } from '../../core/services/logger.service';
 
 @Injectable()
 export class OverlaysEffects {
@@ -45,10 +45,10 @@ export class OverlaysEffects {
 			overlays.forEach((overlay: IOverlay) => {
 				try {
 					if (criteria.region.type === 'Point') {
-						const isContained = isPointContainedInMultiPolygon(criteria.region, overlay.footprint);
+						const isContained = isPointContainedInGeometry(criteria.region, overlay.footprint);
 						overlay.containedInSearchPolygon = isContained ? RegionContainment.contained : RegionContainment.notContained;
 					} else {
-						const ratio = getPolygonIntersectionRatioWithMultiPolygon(criteria.region, overlay.footprint);
+						const ratio = getPolygonIntersectionRatio(criteria.region, overlay.footprint);
 						if (!Boolean(ratio)) {
 							overlay.containedInSearchPolygon = RegionContainment.notContained;
 						} else if (ratio === 1) {

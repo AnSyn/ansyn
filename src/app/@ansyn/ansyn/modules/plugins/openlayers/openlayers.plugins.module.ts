@@ -66,7 +66,7 @@ import { OpenLayersAirbusSourceProvider } from '@ansyn/ol';
 				PolygonSearchVisualizer,
 				OpenlayersGeoJsonLayersVisualizer,
 				TaskRegionVisualizer,
-				ScannedAreaVisualizer,
+				ScannedAreaVisualizer
 			],
 			maps: [OpenLayersMap, OpenLayersDisabledMap],
 			mapSourceProviders: [

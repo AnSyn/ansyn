@@ -15,7 +15,9 @@ import {
 	point,
 	polygon,
 	union,
-	unkinkPolygon
+	unkinkPolygon,
+    lineIntersect,
+    booleanPointOnLine
 } from '@turf/turf';
 
 export type BBOX = [number, number, number, number] | [number, number, number, number, number, number];
@@ -79,7 +81,8 @@ export function getPolygonIntersectionRatio(extent: Polygon, footprint: MultiPol
 			intersection = getPolygonIntersectionRatioWithMultiPolygon(extent, footprint);
 			break;
 		case 'LineString':
-			intersection = +booleanContains(extent, footprint);
+			const intersectPoints = lineIntersect(footprint, <any>extent);
+			intersection = intersectPoints.features.length / footprint.coordinates.length;
 			break;
 		case 'Point':
 			intersection = +booleanPointInPolygon(footprint, extent);
@@ -117,10 +120,8 @@ export function isPointContainedInGeometry(point: Point, footprint: MultiPolygon
 	switch (footprint.type) {
 		case 'Point':
 			return booleanEqual(point, footprint);
-			break;
 		case 'LineString':
-			return booleanContains(footprint, point);
-			break;
+			return booleanPointOnLine(point, footprint);
 		case 'MultiPolygon':
 			for (let i = 0; i < footprint.coordinates.length; i++) {
 				const contained = booleanPointInPolygon(point, polygon(footprint.coordinates[i]));

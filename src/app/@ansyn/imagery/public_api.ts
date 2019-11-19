@@ -1,4 +1,4 @@
-export { IStroke } from './model/visualizers/visualizer-style';
+export { IStroke, IIcon } from './model/visualizers/visualizer-style';
 
 export { ICanvasExportData } from './model/base-imagery-map';
 export {

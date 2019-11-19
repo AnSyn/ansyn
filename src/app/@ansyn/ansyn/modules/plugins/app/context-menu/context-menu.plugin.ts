@@ -2,7 +2,6 @@ import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { Point as GeoPoint } from 'geojson';
 import * as turf from '@turf/turf';
-import { booleanContains, booleanPointInPolygon, polygon } from '@turf/turf';
 import { areCoordinatesNumeric, BaseImageryPlugin, ImageryPlugin, isPointContainedInGeometry } from '@ansyn/imagery';
 import { fromEvent, Observable, pipe, UnaryFunction } from 'rxjs';
 import { ContextMenuDisplayAction, ContextMenuShowAction, MapActionTypes, selectActiveMapId } from '@ansyn/map-facade';

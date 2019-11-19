@@ -101,7 +101,13 @@ describe('StatusBarAppEffects', () => {
 						'limit': 500
 					}
 				},
-				{ provide: MultipleOverlaysSourceProvider, useClass: OverlaySourceProviderMock }
+				{ provide: MultipleOverlaysSourceProvider, useClass: OverlaySourceProviderMock },
+				{
+					provide: LoggerService, useValue: {
+						error: (some) => null, info: () => {
+						}
+					}
+				}
 			]
 		}).compileComponents();
 	}));

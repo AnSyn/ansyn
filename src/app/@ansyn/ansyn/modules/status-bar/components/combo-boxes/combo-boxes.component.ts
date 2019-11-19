@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 import { GEO_FILTERS, IComboBoxesProperties, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
 import { CaseDataFilterTitle } from '../../models/data-input-filters.model';
 import { Actions, ofType } from '@ngrx/effects';
-import { SetComboBoxesProperties, UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
+import { SetImageOpeningOrientation, UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations/src/animation_metadata';
 import { SearchMode, SearchModeEnum } from '../../models/search-mode.enum';
@@ -164,7 +164,7 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	}
 
 	comboBoxesChange(payload: IComboBoxesProperties) {
-		this.store.dispatch(new SetComboBoxesProperties(payload));
+		this.store.dispatch(new SetImageOpeningOrientation(payload));
 	}
 
 	geoFilterChanged(geoFilter?: SearchMode) {

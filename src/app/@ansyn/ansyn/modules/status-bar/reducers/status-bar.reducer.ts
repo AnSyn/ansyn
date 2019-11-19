@@ -26,7 +26,7 @@ export const statusBarStateSelector: MemoizedSelector<any, IStatusBarState> = cr
 
 export function StatusBarReducer(state = StatusBarInitialState, action: StatusBarActions | any): IStatusBarState {
 	switch (action.type) {
-		case StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES:
+		case StatusBarActionsTypes.SET_IMAGE_OPENING_ORIENTATION:
 			return { ...state, comboBoxesProperties: { ...state.comboBoxesProperties, ...action.payload } };
 
 		case StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS:

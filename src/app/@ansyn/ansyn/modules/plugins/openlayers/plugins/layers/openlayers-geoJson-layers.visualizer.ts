@@ -15,10 +15,12 @@ import {
 	ImageryPlugin,
 	IVisualizerEntity
 } from '@ansyn/imagery';
+import { LoggerService } from '../../../../core/services/logger.service';
+import { getErrorLogFromException } from '../../../../core/utils/logs/timer-logs';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
-	deps: [Store, HttpClient]
+	deps: [Store, HttpClient, LoggerService]
 })
 export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	layersDictionary: { [key: string]: IVisualizerEntity[] };
@@ -55,7 +57,8 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	);
 
 	constructor(protected store$: Store<any>,
-				protected http: HttpClient) {
+				protected http: HttpClient,
+				protected loggerService: LoggerService) {
 		super({
 			initial: {
 				'fill-opacity': 0
@@ -140,9 +143,8 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 					}),
 					catchError((e) => {
 						this.store$.dispatch(new SetToastMessageAction({ toastText: `Failed to load layer` }));
-
-						// @todo: add Logger service call
-						console.log(`Failed to load layer${ (e && e.statusText) ? ' ,' + e.statusText : '' }`);
+						const message = getErrorLogFromException(e, `Failed to load layer ${JSON.stringify(layer)}`);
+						this.loggerService.error(message, 'layers', 'GeoJson_Layer');
 						return of(true);
 					})
 				);

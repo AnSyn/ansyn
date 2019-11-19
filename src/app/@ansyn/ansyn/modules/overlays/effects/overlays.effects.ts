@@ -4,7 +4,6 @@ import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { from, Observable } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { LoggerService } from '../../core/services/logger.service';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
@@ -31,6 +30,8 @@ import {
 import { OverlaysService } from '../services/overlays.service';
 import { rxPreventCrash } from '../../core/utils/rxjs/operators/rxPreventCrash';
 import { getPolygonIntersectionRatio, isPointContainedInGeometry } from '@ansyn/imagery';
+import { getErrorLogFromException } from '../../core/utils/logs/timer-logs';
+import { LoggerService } from '../../core/services/logger.service';
 
 @Injectable()
 export class OverlaysEffects {
@@ -113,9 +114,8 @@ export class OverlaysEffects {
 					forceFirstDisplay: true
 				})),
 				catchError((exception) => {
-					let errMsg = exception.message ? exception.message : exception.toString();
-					this.loggerService.error(errMsg);
-					console.error(exception);
+					const errMsg = getErrorLogFromException(exception, `Failed to get overlay id=${action.payload.overlayId} sourceType=${action.payload.sourceType}`);
+					this.loggerService.error(errMsg, 'overlays', 'Overlay_By_ID');
 					return from([
 						new DisplayOverlayFailedAction({ id: action.payload.overlayId, mapId: action.payload.mapId }),
 						new BackToWorldView({ mapId: action.payload.mapId })

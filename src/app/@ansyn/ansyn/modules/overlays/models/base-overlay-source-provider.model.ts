@@ -11,6 +11,7 @@ import { IDateRange } from '../../core/models/multiple-overlays-source-config';
 import { LoggerService } from '../../core/services/logger.service';
 import { IOverlay, IOverlaysFetchData } from './overlay.model';
 import { IDataInputFilterValue } from '../../menu-items/cases/models/case.model';
+import { getErrorLogFromException } from '../../core/utils/logs/timer-logs';
 
 export interface IFetchParams {
 	limit: number;
@@ -107,8 +108,8 @@ export abstract class BaseOverlaySourceProvider {
 				}
 
 				return this.fetch(newFetchParams).pipe(catchError(err => {
-					let errMsg = err.message ? err.message : err.toString();
-					this.loggerService.error(err);
+					const errMsg = getErrorLogFromException(err, `Failed to fetch overlay's newFetchParams=${JSON.stringify(newFetchParams)}`);
+					this.loggerService.error(errMsg, 'overlays');
 					return of({
 						data: null,
 						limited: -1,

@@ -11,8 +11,35 @@ import {
 	ICaseSliderFilterMetadata
 } from '../../cases/models/case.model';
 import { IFilterSearchResults } from '../models/filter-search-results';
+import { EnumFilterMetadata } from '../models/metadata/enum-filter-metadata';
 
 export type Filters = Map<IFilter, FilterMetadata>;
+
+export function filtersToString(filters: Filters): string {
+	let result = (Boolean(filters) ? '' : '"null"');
+	if (!Boolean(filters)) {
+		return result;
+	}
+	const entriesArray = Array.from(filters.entries());
+	result += '[';
+	entriesArray.forEach((entry) => {
+		result += '{"filterData": [' + JSON.stringify(entry[0]) + ',';
+		if (entry[1] instanceof EnumFilterMetadata) {
+			const enumData = <EnumFilterMetadata>entry[1];
+			result += '{"collapse": ' + `"${ enumData.collapse }",`;
+			result += ' "type": ' + `"${ enumData.type }",`;
+			result += ' "visible": ' + `"${ enumData.visible }",`;
+			result += ' "enumsFields": ' + JSON.stringify(Array.from(enumData.enumsFields.entries())) + '}';
+		} else {
+			result += ' ' + JSON.stringify(entry[1]);
+		}
+		result += ']},';
+	});
+	result = result.substring(0, result.length - 1);
+	result += '';
+	result += ']';
+	return result;
+}
 
 export interface IFiltersState {
 	filters: Map<IFilter, FilterMetadata>;

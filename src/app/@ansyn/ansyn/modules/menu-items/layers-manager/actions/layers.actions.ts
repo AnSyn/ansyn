@@ -10,8 +10,17 @@ export enum LayersActionTypes {
 	SET_LAYER_SELECTION = '[Layers] Set layer selection',
 	SELECT_ONLY = '[Layers] Select only',
 	ADD_LAYER = '[Layers] Add layer',
+	ADD_LAYER_ON_BACKEND_FAILED_ACTION = '[Layers] Add layer to backend failed',
+	ADD_LAYER_ON_BACKEND_SUCCESS_ACTION = '[Layers] Add layer to backend success',
 	UPDATE_LAYER = '[Layers] Update layer',
+	UPDATE_LAYER_ON_BACKEND_FAILED_ACTION = '[Layers] Update layer to backend failed',
+	UPDATE_LAYER_ON_BACKEND_SUCCESS_ACTION = '[Layers] Update layer to backend success',
 	REMOVE_LAYER = '[Layers] Remove layer',
+	REMOVE_LAYER_ON_BACKEND_FAILED_ACTION = '[Layers] Remove layer to backend failed',
+	REMOVE_LAYER_ON_BACKEND_SUCCESS_ACTION = '[Layers] Remove layer to backend success',
+	REMOVE_CASE_LAYERS_FROM_BACKEND_ACTION = '[Layers] Remove case layers from backend',
+	REMOVE_CASE_LAYERS_FROM_BACKEND_SUCCESS_ACTION = '[Layers] Remove case layers from backend success',
+	REMOVE_CASE_LAYERS_FROM_BACKEND_FAILED_ACTION = '[Layers] Remove case layers from backend failed',
 	SET_ACTIVE_ANNOTATION_LAYER = '[Layers] Set active annotation layer',
 	SET_MODAL = '[Layers] Set modal value',
 	SHOW_ALL_LAYERS = '[Layers] Show all layers'
@@ -72,24 +81,87 @@ export class SelectOnlyLayer implements Action {
 }
 
 export class AddLayer implements Action {
-	readonly type = LayersActionTypes.ADD_LAYER;
+	type = LayersActionTypes.ADD_LAYER;
 
 	constructor(public payload: ILayer) {
+	}
+}
+
+export class AddLayerOnBackendFailedAction extends AddLayer {
+	readonly type = LayersActionTypes.ADD_LAYER_ON_BACKEND_FAILED_ACTION;
+
+	constructor(public payload: ILayer, error: any) {
+		super(payload)
+	}
+}
+
+export class AddLayerOnBackendSuccessAction implements Action {
+	readonly type = LayersActionTypes.ADD_LAYER_ON_BACKEND_SUCCESS_ACTION;
+
+	constructor(public payload: string) {
 	}
 }
 
 export class UpdateLayer implements Action {
-	readonly type = LayersActionTypes.UPDATE_LAYER;
+	type = LayersActionTypes.UPDATE_LAYER;
 
 	constructor(public payload: ILayer) {
 	}
 }
 
+export class UpdateLayerOnBackendFailedAction extends UpdateLayer {
+	readonly type = LayersActionTypes.UPDATE_LAYER_ON_BACKEND_FAILED_ACTION;
+
+	constructor(public payload: ILayer, error: any) {
+		super(payload)
+	}
+}
+
+export class UpdateLayerOnBackendSuccessAction implements Action {
+	readonly type = LayersActionTypes.UPDATE_LAYER_ON_BACKEND_SUCCESS_ACTION;
+
+	constructor(public payload: string) {
+	}
+}
+
 export class RemoveLayer implements Action {
-	readonly type = LayersActionTypes.REMOVE_LAYER;
+	type = LayersActionTypes.REMOVE_LAYER;
 
 	constructor(public payload: string) {
 
+	}
+}
+
+export class RemoveLayerOnBackendFailedAction extends RemoveLayer {
+	readonly type = LayersActionTypes.REMOVE_LAYER_ON_BACKEND_FAILED_ACTION;
+
+	constructor(public payload: string, error: any) {
+		super(payload);
+	}
+}
+
+export class RemoveLayerOnBackendSuccessAction implements Action {
+	readonly type = LayersActionTypes.REMOVE_LAYER_ON_BACKEND_SUCCESS_ACTION;
+
+	constructor(public payload: string) {
+	}
+}
+
+export class RemoveCaseLayersFromBackendAction implements Action {
+	type = LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_ACTION;
+
+	constructor(public caseId: string) {
+	}
+}
+
+export class RemoveCaseLayersFromBackendSuccessAction extends RemoveCaseLayersFromBackendAction {
+	readonly type = LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_SUCCESS_ACTION;
+}
+export class RemoveCaseLayersFromBackendFailedAction extends RemoveCaseLayersFromBackendAction {
+	readonly type = LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_FAILED_ACTION;
+
+	constructor(public caseId: string, error: any) {
+		super(caseId);
 	}
 }
 

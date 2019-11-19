@@ -149,8 +149,9 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			const dash = styleSettings['stroke-dasharray'];
 			const lineDash = dash > 0 ? [dash , 10] : undefined;
 			const width =  styleSettings['stroke-width'];
+			const lineCap = dash > 0 ? 'square' : undefined;
 
-			firstStyle.stroke = new Stroke({ color, lineDash, width });
+			firstStyle.stroke = new Stroke({ color, lineDash, width, lineCap, lineDashOffset: 5 });
 		}
 
 		if (styleSettings.fill) {

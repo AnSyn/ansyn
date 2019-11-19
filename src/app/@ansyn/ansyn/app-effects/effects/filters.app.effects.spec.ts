@@ -39,6 +39,7 @@ import { imageryStatusFeatureKey, ImageryStatusReducer } from '@ansyn/map-facade
 import { FilterType } from '../../modules/menu-items/filters/models/filter-type';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { MissingTranslationHandler, TranslateLoader, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
+import { LoggerService } from '../../modules/core/services/logger.service';
 
 class MockLoader implements TranslateLoader {
 	getTranslation(lang: string): Observable<any> {
@@ -83,6 +84,12 @@ describe('Filters app effects', () => {
 			providers: [
 				FiltersAppEffects,
 				GenericTypeResolverService,
+				{
+					provide: LoggerService, useValue: {
+						error: (some) => null, info: () => {
+						}
+					}
+				},
 				{ provide: filtersConfig, useValue: {} },
 				provideMockActions(() => actions),
 				{ provide: USE_DEFAULT_LANG },

@@ -12,6 +12,9 @@ export interface ILogObject {
 	msg: string;
 }
 
+const defaultActionType = 'GLOBAL';
+const defaultSubType = '';
+
 @Injectable()
 export class LoggerService implements ErrorHandler {
 	env = 'ENV'; // default (unknown environment)
@@ -47,30 +50,30 @@ export class LoggerService implements ErrorHandler {
 	}
 
 	get standardPrefix() {
-		return `Ansyn[${ this.env }, ${this.componentName}]`;
+		return `Ansyn[${ this.env }, ${ this.componentName }]`;
 	}
 
-	critical(msg: string) {
-		this.log('CRITICAL', msg, true);
+	critical(msg: string, actionType = defaultActionType, subType = defaultSubType) {
+		this.log('CRITICAL', actionType, subType, msg, true);
 	}
 
-	error(msg: string) {
-		this.log('ERROR', msg, true);
+	error(msg: string, actionType = defaultActionType, subType = defaultSubType) {
+		this.log('ERROR', actionType, subType, msg, true);
 	}
 
-	warn(msg: string) {
-		this.log('WARNING', msg);
+	warn(msg: string, actionType = defaultActionType, subType = defaultSubType) {
+		this.log('WARNING', actionType, subType, msg);
 	}
 
-	info(msg: string) {
-		this.log('INFO', msg);
+	info(msg: string, actionType = defaultActionType, subType = defaultSubType) {
+		this.log('INFO', actionType, subType, msg);
 	}
 
-	debug(msg: string) {
-		this.log('DEBUG', msg);
+	debug(msg: string, actionType = defaultActionType, subType = defaultSubType) {
+		this.log('DEBUG', actionType, subType, msg);
 	}
 
-	protected log(severity: Severity, msg: string, includeBrowserData?: boolean) {
+	protected log(severity: Severity, actionType: string, subType: string, msg: string, includeBrowserData?: boolean) {
 		if (!this.loggerConfig.active) {
 			return;
 		}
@@ -79,7 +82,7 @@ export class LoggerService implements ErrorHandler {
 		if (includeBrowserData) {
 			prefix += `[window:${ window.innerWidth }x${ window.innerHeight }][userAgent: ${ navigator.userAgent }]`;
 		}
-		const str = `${ prefix }[${ severity }] ${ msg }`;
+		const str = `${ prefix }[${ severity }] [${ actionType.toUpperCase() }] ${subType !== '' ? '[' + subType.toUpperCase() + ']' : ''} ${ msg }`;
 		this.stack.push({ severity, msg: str });
 		this.output();
 	}

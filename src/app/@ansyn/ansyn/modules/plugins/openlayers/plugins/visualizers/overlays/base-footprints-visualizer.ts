@@ -42,7 +42,7 @@ export class BaseFootprintsVisualizer extends EntitiesVisualizer {
 	}
 
 	geometryToEntity(id, geometry): IVisualizerEntity {
-		if( geometry.type === 'MultiPolygon') {
+		if ( geometry.type === 'MultiPolygon') {
 			const numOfPoints = geometry.coordinates[0][0].length;
 
 			if (this.fpConfig.minSimplifyVertexCountLimit < numOfPoints) {

@@ -4,20 +4,19 @@ import {
 	area,
 	bbox,
 	bboxPolygon,
-	booleanContains,
 	booleanEqual,
 	booleanPointInPolygon,
+	booleanPointOnLine,
 	centerOfMass,
 	circle,
 	feature,
 	geometry,
 	intersect,
+	lineIntersect,
 	point,
 	polygon,
 	union,
-	unkinkPolygon,
-    lineIntersect,
-    booleanPointOnLine
+	unkinkPolygon
 } from '@turf/turf';
 
 export type BBOX = [number, number, number, number] | [number, number, number, number, number, number];
@@ -74,7 +73,7 @@ export function areCoordinatesNumeric(coord) {
 	return coord && !isNaN(coord[0]) && !isNaN(coord[1]) && (Math.abs(coord[0]) !== 999999) && (Math.abs(coord[1]) !== 999999);
 }
 
-export function getPolygonIntersectionRatio(extent: Polygon, footprint: MultiPolygon | Point | LineString) : number {
+export function getPolygonIntersectionRatio(extent: Polygon, footprint: MultiPolygon | Point | LineString): number {
 	let intersection = 0;
 	switch (footprint.type) {
 		case 'MultiPolygon':

@@ -1,4 +1,8 @@
 <div class="overlay-overview" (dblclick)="onDblClick()">
+	<header>
+		<div dir="rtl">{{ sensorType | translate }} ({{sensorName | translate}})</div>
+		<div>{{formattedTime}}</div>
+	</header>
 	<main>
 		<img
             #img
@@ -9,9 +13,5 @@
 		<p class="error-text" *ngIf="img.src.includes(errorSrc)">{{"Preview is not available" | translate}}</p>
 		<ansyn-loader [show]="loadingImage"></ansyn-loader>
 	</main>
-	<footer>
-		<div dir="rtl">{{sensorName | translate}}</div>
-		<div>{{formattedTime}}</div>
-	</footer>
 </div>
 <div class="transparent" [id]="const.TRANSPARENT_DIV_ID"></div>

@@ -125,7 +125,7 @@ export class ImageryVideoMap extends BaseImageryMap<any> {
 
 	private _getCenter(): Point {
 		const line = turf.feature(_get(this.mainLayer, 'data.overlay.footprint'));
-		return turf.center(line? line : point([0, 0])).geometry
+		return turf.center(line ? line : point([0, 0])).geometry
 	}
 
 	private _getPosition(): ImageryMapPosition {

@@ -1,0 +1,11 @@
+<div class="video-display">
+
+	<video controls autoplay #video [style.transform]="sanitization.bypassSecurityTrustStyle('rotate(' + rotation + 'rad)')"
+	[src]="src">
+	</video>
+
+	<p *ngIf="error">
+		<ansyn-animated-ellipsis text="Something went wrong"></ansyn-animated-ellipsis>
+	</p>
+
+</div>

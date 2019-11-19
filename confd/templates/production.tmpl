@@ -1259,9 +1259,66 @@
 						  }
 					]
 			  }
-		}
-	}
-  },
+		},
+			"IMAGERY_VIDEO": {
+        		"inActive": false,
+        		"whitelist": [
+        			{
+        				"name": "Entire Earth",
+        				"dates": [
+        					{
+        						"start": null,
+        						"end": null
+        					}
+        				],
+        				"sensorNames": [ null ],
+        				"coverage": [
+        					[
+        						[
+        							[
+        								-180,
+        								-90
+        							],
+        							[
+        								-180,
+        								90
+        							],
+        							[
+        								180,
+        								90
+        							],
+        							[
+        								180,
+        								-90
+        							],
+        							[
+        								-180,
+        								-90
+        							]
+        						]
+        					]
+        				]
+        			}
+        		],
+        		"blacklist": [],
+        		"dataInputFiltersConfig": {
+        			"text": "Video",
+        			"value": 1,
+        				"indeterminate": true,
+        				"collapsed": true,
+        				"children": [
+        					  {
+        						"text": "Video",
+        						"value": {
+        						  "sensorType": "Video"
+        						}
+        					  }
+        				]
+        		  }
+              }
+          }
+	},
+
   "idahoOverlaysSourceConfig": {
     "defaultApi": "{{getv "/ansyn/overlay/api/default" "overlays" }}",
     "baseUrl": "{{ getv "/ansyn/overlay/baseurl" "http://platform.ansyn.io:9001/api/v1/" }}",

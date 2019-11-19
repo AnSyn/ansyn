@@ -43,6 +43,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		);
 
 	public sensorName: string;
+	public sensorType: string;
 	public formattedTime: string;
 	public overlayId: string;
 	public loadingImage = false;
@@ -101,7 +102,8 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 			this.left = hoveredElementBounds.left - 50;
 			this.top = hoveredElementBounds.top;
 			this.showOverview();
-			this.sensorName = overlay.thumbnailName;
+			this.sensorName = overlay.sensorName;
+			this.sensorType = overlay.sensorType;
 			if (fetching) {
 				this.img.nativeElement.removeAttribute('src');
 			} else {

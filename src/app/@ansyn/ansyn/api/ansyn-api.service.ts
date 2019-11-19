@@ -1,5 +1,11 @@
 import { EventEmitter, Inject, Injectable, NgModuleRef } from '@angular/core';
-import { ImageryCommunicatorService, ImageryMapPosition, IMapSettings } from '@ansyn/imagery';
+import {
+	getPolygonByPointAndRadius,
+	getPolygonByBufferRadius,
+	ImageryCommunicatorService,
+	ImageryMapPosition,
+	IMapSettings
+} from '@ansyn/imagery';
 import {
 	ICoordinatesSystem,
 	LayoutKey,
@@ -19,7 +25,7 @@ import { Dictionary } from '@ngrx/entity/src/models';
 import { select, Store } from '@ngrx/store';
 import { featureCollection } from '@turf/turf';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { FeatureCollection, Point, Polygon } from 'geojson';
+import { Feature, FeatureCollection, Point, Polygon } from 'geojson';
 import { cloneDeep } from 'lodash';
 import { combineLatest, Observable } from 'rxjs';
 import { map, take, tap, withLatestFrom } from 'rxjs/operators';
@@ -306,10 +312,24 @@ export class AnsynApi {
 		}
 	}
 
-	setOverlaysCriteria(criteria: IOverlaysCriteria) {
+	setOverlaysCriteria(criteria: IOverlaysCriteria, radiusInMetersBuffer ?: number) {
 		if (!Boolean(criteria)) {
 			console.error('failed to set overlays criteria to undefined');
 			return null;
+		}
+		if (Boolean(criteria.region) && (radiusInMetersBuffer !== undefined && radiusInMetersBuffer !== 0)) {
+			switch (criteria.region.type.toLowerCase()) {
+				case 'point':
+					const polygonByPointAndRadius: Feature<Polygon> = getPolygonByPointAndRadius(criteria.region.coordinates, radiusInMetersBuffer / 1000);
+					criteria.region = polygonByPointAndRadius.geometry;
+					break;
+				case 'polygon':
+					criteria.region = getPolygonByBufferRadius(criteria.region, radiusInMetersBuffer).geometry;
+					break;
+				default:
+					console.error('not supported type: ' + criteria.region.type);
+					return null;
+			}
 		}
 		this.store.dispatch(new SetOverlaysCriteriaAction(criteria));
 	}

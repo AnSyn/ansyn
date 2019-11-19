@@ -139,14 +139,55 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		this.ansynApi.setMapPositionByRect(rect);
 	}
 
-	setOverlayCriteria() {
-		let criteria: IOverlaysCriteria = {
-			region: {
-				type: 'Point',
-				coordinates: [-118.29, 33.60]
-			}
+	setOverlayCriteriaPoint(radius: number = 0) {
+		const point: Point = {
+			type: 'Point',
+			coordinates: [-118.02, 33.69]
 		};
-		this.ansynApi.setOverlaysCriteria(criteria);
+		this.ansynApi.setMapPositionByRadius(point, 2000, false);
+		let criteria: IOverlaysCriteria = {
+			region: point
+		};
+		this.ansynApi.setOverlaysCriteria(criteria, radius);
+	}
+
+	setOverlayCriteriaPolygon(radius: number = 0) {
+		const point: Point = {
+			type: 'Point',
+			coordinates: [-118.02, 33.69]
+		};
+		this.ansynApi.setMapPositionByRadius(point, 2000, false);
+		const rectangle: Polygon = {
+			'type': 'Polygon',
+			'coordinates': [
+				[
+					[
+						-118.02150428295135,
+						33.69001239538193
+					],
+					[
+						-118.02152037620544,
+						33.69126230478287
+					],
+					[
+						-118.01999688148499,
+						33.69127303361893
+					],
+					[
+						-118.02000761032104,
+						33.69001239538193
+					],
+					[
+						-118.02150428295135,
+						33.69001239538193
+					]
+				]
+			]
+		};
+		let criteria: IOverlaysCriteria = {
+			region: rectangle
+		};
+		this.ansynApi.setOverlaysCriteria(criteria, radius);
 	}
 
 	showDefaultLayer() {

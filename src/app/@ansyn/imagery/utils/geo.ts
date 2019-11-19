@@ -43,23 +43,11 @@ export function getPolygonByBufferRadius(polygonSource: Polygon, radiusInMeteres
 
 	bboxedPolygon.coordinates[0].forEach((coordinate) => {
 		const pointByCoordinate = point(coordinate);
-		const distance = radiusInMeteres;
-
-		let bearing = 0;
-		let destinationPoint = destination(pointByCoordinate, distance, bearing, { units: 'meters' });
-		possiblePointsInRadius.features.push(destinationPoint);
-
-		bearing = 90;
-		destinationPoint = destination(pointByCoordinate, distance, bearing, { units: 'meters' });
-		possiblePointsInRadius.features.push(destinationPoint);
-
-		bearing = 180;
-		destinationPoint = destination(pointByCoordinate, distance, bearing, { units: 'meters' });
-		possiblePointsInRadius.features.push(destinationPoint);
-
-		bearing = 270;
-		destinationPoint = destination(pointByCoordinate, distance, bearing, { units: 'meters' });
-		possiblePointsInRadius.features.push(destinationPoint);
+		const bearings = [0, 90, 180, 270];
+		bearings.forEach((bearing: number) => {
+			let destinationPoint = destination(pointByCoordinate, radiusInMeteres, bearing, { units: 'meters' });
+			possiblePointsInRadius.features.push(destinationPoint);
+		});
 	});
 	const result: Feature<Polygon> = envelope(possiblePointsInRadius);
 	return result;

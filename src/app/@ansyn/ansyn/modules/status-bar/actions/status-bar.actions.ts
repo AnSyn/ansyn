@@ -5,16 +5,16 @@ import { SearchModeEnum } from '../models/search-mode.enum';
 
 export const StatusBarActionsTypes = {
 	SHOW_LINK_COPY_TOAST: 'SHOW_LINK_COPY_TOAST',
-	COPY_SELECTED_CASE_LINK: 'COPY_SELECTED_CASE_LINK',
+	COPY_SNAPSHOT_SHARE_LINK: 'COPY_SNAPSHOT_SHARE_LINK',
 	EXPAND: 'EXPAND',
-	SET_COMBOBOXES_PROPERTIES: 'SET_COMBOBOXES_PROPERTIES',
+	SET_IMAGE_OPENING_ORIENTATION: 'SET_IMAGE_OPENING_ORIENTATION',
 	UPDATE_GEO_FILTER_STATUS: 'UPDATE_GEO_FILTER_STATUS',
 	GO_ADJACENT_OVERLAY: 'GO_ADJACENT_OVERLAY',
 	GO_NEXT_PRESET_OVERLAY: 'GO_NEXT_PRESET_OVERLAY'
 };
 
-export class CopySelectedCaseLinkAction implements Action {
-	type: string = StatusBarActionsTypes.COPY_SELECTED_CASE_LINK;
+export class CopySnapshotShareLinkAction implements Action {
+	type: string = StatusBarActionsTypes.COPY_SNAPSHOT_SHARE_LINK;
 
 	constructor() {
 	}
@@ -28,8 +28,8 @@ export class ExpandAction implements Action {
 }
 
 
-export class SetComboBoxesProperties implements Action {
-	type = StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES;
+export class SetImageOpeningOrientation implements Action {
+	type = StatusBarActionsTypes.SET_IMAGE_OPENING_ORIENTATION;
 
 	constructor(public payload: IComboBoxesProperties) {
 	}
@@ -57,7 +57,7 @@ export class GoNextPresetOverlay implements Action {
 }
 
 export type StatusBarActions =
-	CopySelectedCaseLinkAction
+	CopySnapshotShareLinkAction
 	| UpdateGeoFilterStatus
 	| ExpandAction
-	| SetComboBoxesProperties;
+	| SetImageOpeningOrientation;

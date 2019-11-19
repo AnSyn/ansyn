@@ -15,6 +15,7 @@ import {
 	ActiveImageryMouseEnter,
 	ActiveImageryMouseLeave,
 	ChangeImageryMap,
+	ChangeImageryMapFailed,
 	ChangeImageryMapSuccess,
 	DecreasePendingMapsCountAction,
 	ImageryCreatedAction,
@@ -177,11 +178,11 @@ export class MapEffects {
 					return new ChangeImageryMapSuccess({ id, worldView });
 				}),
 				catchError((err) => {
-					console.error('CHANGE_IMAGERY_MAP ', err);
 					this.store$.dispatch(new SetToastMessageAction({
 						toastText: 'Failed to change map',
 						showWarningIcon: true
 					}));
+					this.store$.dispatch(new ChangeImageryMapFailed({ id, error: err }));
 					return EMPTY;
 				})
 			);

@@ -47,8 +47,8 @@ export {
 	selectGeoFilterSearchMode
 } from './modules/status-bar/reducers/status-bar.reducer';
 export {
-	CopySelectedCaseLinkAction,
-	SetComboBoxesProperties,
+	CopySnapshotShareLinkAction,
+	SetImageOpeningOrientation,
 	StatusBarActionsTypes,
 	UpdateGeoFilterStatus,
 	StatusBarActions,

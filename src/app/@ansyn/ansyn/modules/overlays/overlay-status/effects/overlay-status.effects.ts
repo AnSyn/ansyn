@@ -23,6 +23,7 @@ import { EMPTY, Observable } from 'rxjs';
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { catchError, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
+	BackToWorldFailed,
 	BackToWorldSuccess,
 	BackToWorldView,
 	OverlayStatusActionsTypes,
@@ -64,11 +65,11 @@ export class OverlayStatusEffects {
 					.pipe(
 						map(() => new BackToWorldSuccess(payload)),
 						catchError((err) => {
-							console.error(OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW, err);
 							this.store$.dispatch(new SetToastMessageAction({
 								toastText: 'Failed to load map',
 								showWarningIcon: true
 							}));
+							this.store$.dispatch(new BackToWorldFailed({ mapId: payload.mapId, error: err }));
 							return EMPTY;
 						})
 					);

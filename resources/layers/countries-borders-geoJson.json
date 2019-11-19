@@ -1,11 +1,11 @@
 {
   "preview": {
-    "id": "b33674fa-9e43-4da2-8cf2-aa1d9b3e4c5b",
+    "id": "63fec41f-d15b-4c2a-b65c-623c7fa5c6a4",
     "name": "countriesGeoJson",
-    "url": "http://openlayers.org/en/latest/examples/data/geojson/countries.geojson",
+    "url": "https://openlayers.org/en/latest/examples/data/geojson/countries.geojson",
     "type": "Demo",
     "layerPluginType": "geoJson"
   },
-  "data":{
+  "data": {
   }
 }

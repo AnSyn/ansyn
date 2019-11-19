@@ -16,7 +16,7 @@ import {
 import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
 import { differenceWith, isEqual } from 'lodash';
-import { filter, map, mergeMap, pluck, switchMap, withLatestFrom } from 'rxjs/operators';
+import { filter, map, mergeMap, pluck, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { OverlayStatusActionsTypes } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { IAppState } from '../app.effects.module';
 import { selectGeoFilterSearchMode } from '../../modules/status-bar/reducers/status-bar.reducer';
@@ -50,23 +50,47 @@ import {
 	toolsStateSelector
 } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
+import { LoggerService } from '../../modules/core/services/logger.service';
 
 @Injectable()
 export class ToolsAppEffects {
+
 	isPolygonSearch$ = this.store$.select(selectGeoFilterSearchMode).pipe(
 		map((geoFilterSearchMode: CaseGeoFilter) => geoFilterSearchMode === CaseGeoFilter.Polygon)
 	);
+
 	activeMap$ = this.store$.pipe(
 		select(mapStateSelector),
 		map((mapState) => MapFacadeService.activeMap(mapState)),
 		filter(Boolean)
 	);
+
 	isShadowMouseActiveByDefault = this.config.ShadowMouse && this.config.ShadowMouse.activeByDefault;
+
+	@Effect({ dispatch: false })
+	actionsLogger$: Observable<any> = this.actions$.pipe(
+		ofType(
+			ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING,
+			ToolsActionsTypes.UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS,
+			ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS,
+			ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING,
+			ToolsActionsTypes.START_MOUSE_SHADOW,
+			ToolsActionsTypes.STOP_MOUSE_SHADOW,
+			ToolsActionsTypes.GO_TO,
+			ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE,
+			ToolsActionsTypes.UPDATE_TOOLS_FLAGS,
+			ToolsActionsTypes.SET_MEASURE_TOOL_STATE,
+			ToolsActionsTypes.STORE.SET_ANNOTATION_MODE,
+			ToolsActionsTypes.SET_SUB_MENU
+		),
+		tap((action) => {
+			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Tools', action.type);
+		}));
+
 	@Effect()
 	drawInterrupted$: Observable<any> = this.actions$.pipe(
 		ofType<Action>(
 			MenuActionTypes.SELECT_MENU_ITEM,
-			StatusBarActionsTypes.SET_COMBOBOXES_PROPERTIES,
 			MapActionTypes.SET_LAYOUT,
 			ToolsActionsTypes.SET_SUB_MENU),
 		withLatestFrom(this.isPolygonSearch$),
@@ -224,8 +248,11 @@ export class ToolsAppEffects {
 		map(() => new SetPinLocationModeAction(false))
 	);
 
-	constructor(protected actions$: Actions, protected store$: Store<IAppState>, protected imageryCommunicatorService: ImageryCommunicatorService,
-				@Inject(toolsConfig) protected config: IToolsConfig) {
+	constructor(protected actions$: Actions,
+				protected store$: Store<IAppState>,
+				protected imageryCommunicatorService: ImageryCommunicatorService,
+				@Inject(toolsConfig) protected config: IToolsConfig,
+				protected loggerService: LoggerService) {
 	}
 
 	get params(): Array<IImageProcParam> {

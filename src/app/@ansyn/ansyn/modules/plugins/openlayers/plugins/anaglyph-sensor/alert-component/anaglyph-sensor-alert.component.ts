@@ -7,6 +7,8 @@ import { Store, select } from '@ngrx/store';
 import { AnaglyphSensorService } from '../service/anaglyph-sensor.service';
 import { isFullOverlay } from '../../../../../core/utils/overlays';
 import { EMPTY } from 'rxjs';
+import { getErrorLogFromException, getErrorMessageFromException } from '../../../../../core/utils/logs/timer-logs';
+import { LoggerService } from '../../../../../core/services/logger.service';
 
 export enum AnaglyphComponentMode {
 	ShowAnaglyph,
@@ -53,9 +55,9 @@ export class AnaglyphSensorAlertComponent implements OnInit, OnDestroy, IEntryCo
 		this.anaglyphSensorService.displayAnaglyph(this.mapState).pipe(
 			take(1),
 			catchError((error) => {
-				console.warn(error); // todo: log service
+				this.loggerService.error(getErrorLogFromException(error, 'stereo failed'), 'Anaglyph');
 				this.store.dispatch(new SetToastMessageAction({
-					toastText: error.error ? error.error : error.message ? error.message : error.statusText ? error.statusText : 'stereo failed',
+					toastText: getErrorMessageFromException(error, 'stereo failed'),
 					showWarningIcon: true
 				}));
 				return EMPTY;
@@ -82,7 +84,8 @@ export class AnaglyphSensorAlertComponent implements OnInit, OnDestroy, IEntryCo
 	}
 
 	constructor(public store: Store<any>,
-				protected anaglyphSensorService: AnaglyphSensorService) {
+				protected anaglyphSensorService: AnaglyphSensorService,
+				protected loggerService: LoggerService) {
 		this.mode = AnaglyphComponentMode.ShowAnaglyph;
 		this.isDisabled = true;
 	}

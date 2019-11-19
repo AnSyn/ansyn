@@ -15,13 +15,16 @@ import {
 	booleanContains,
 	centerOfMass,
 	circle,
+	destination,
 	feature,
 	geometry,
 	intersect,
 	point,
 	polygon,
 	union,
-	unkinkPolygon
+	unkinkPolygon,
+	featureCollection,
+	envelope
 } from '@turf/turf';
 
 export type BBOX = [number, number, number, number] | [number, number, number, number, number, number];
@@ -33,6 +36,38 @@ export function getPolygonByPoint(lonLat: number[]): Feature<Polygon> {
 export function getPolygonByPointAndRadius(lonLat: number[], radius = 0.001): Feature<Polygon> {
 	const tPoint = point(lonLat);
 	return bboxPolygon(bbox(circle(tPoint, radius)));
+}
+
+export function getPolygonByBufferRadius(polygonSource: Polygon, radiusInMeteres: number): Feature<Polygon> {
+	if (radiusInMeteres <= 0) {
+		return polygon(polygonSource.coordinates);
+	}
+	const bbox = bboxFromGeoJson(polygonSource);
+	const bboxedPolygon = polygonFromBBOX(bbox);
+	const possiblePointsInRadius = featureCollection([]);
+
+	bboxedPolygon.coordinates[0].forEach((coordinate) => {
+		const pointByCoordinate = point(coordinate);
+		const distance = radiusInMeteres;
+
+		let bearing = 0;
+		let destinationPoint = destination(pointByCoordinate, distance, bearing, { units: 'meters' });
+		possiblePointsInRadius.features.push(destinationPoint);
+
+		bearing = 90;
+		destinationPoint = destination(pointByCoordinate, distance, bearing, { units: 'meters' });
+		possiblePointsInRadius.features.push(destinationPoint);
+
+		bearing = 180;
+		destinationPoint = destination(pointByCoordinate, distance, bearing, { units: 'meters' });
+		possiblePointsInRadius.features.push(destinationPoint);
+
+		bearing = 270;
+		destinationPoint = destination(pointByCoordinate, distance, bearing, { units: 'meters' });
+		possiblePointsInRadius.features.push(destinationPoint);
+	});
+	const result: Feature<Polygon> = envelope(possiblePointsInRadius);
+	return result;
 }
 
 export function getPointByGeometry(geometry: GeometryObject | FeatureCollection<any>): Point {

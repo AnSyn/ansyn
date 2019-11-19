@@ -40,6 +40,7 @@ export {
 	getPointByGeometry,
 	getPolygonByPoint,
 	getPolygonByPointAndRadius,
+	getPolygonByBufferRadius,
 	getPolygonIntersectionRatioWithMultiPolygon,
 	isPointContainedInMultiPolygon,
 	unifyPolygons

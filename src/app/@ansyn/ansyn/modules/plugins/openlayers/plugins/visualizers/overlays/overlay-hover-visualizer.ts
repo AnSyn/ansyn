@@ -5,14 +5,16 @@ import { Actions } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { selectActiveMapId } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
-import { filter, map, tap } from 'rxjs/operators';
+import { map, tap, withLatestFrom } from 'rxjs/operators';
 import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
 import { ExtendMap } from "../../../../../overlays/reducers/extendedMap.class";
 import { IMarkUpData, MarkUpClass, selectDropMarkup } from "../../../../../overlays/reducers/overlays.reducer";
+import { OverlaysService } from "../../../../../overlays/services/overlays.service";
+import { IOverlay } from "../../../../../overlays/models/overlay.model";
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, Actions, VisualizersConfig]
+	deps: [Store, Actions, VisualizersConfig, OverlaysService]
 })
 export class OverlayHoverVisualizer extends EntitiesVisualizer {
 	public isActive = false;
@@ -28,16 +30,24 @@ export class OverlayHoverVisualizer extends EntitiesVisualizer {
 	markups: ExtendMap<MarkUpClass, IMarkUpData>;
 
 	@AutoSubscription
-	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, IMarkUpData>> = this.store$.pipe(
+	hoveredOverlay$: Observable<IOverlay> = this.store$.pipe(
 		select(selectDropMarkup),
-		filter(Boolean),
-		tap((markups) => this.markups = markups),
-		tap(this.onMarkupsChange.bind(this))
+		map((markups: ExtendMap<MarkUpClass, IMarkUpData>) => markups && markups.get(MarkUpClass.hover)),
+		map((markUpData: IMarkUpData) => markUpData && markUpData.overlaysIds[0]),
+		withLatestFrom(this.overlaysService.getAllOverlays$),
+		map(([overlayId, overlays]: [string, Map<string, IOverlay>]) => overlayId && overlays.get(overlayId)),
+		tap((overlay: IOverlay) => {
+				this.onMarkupsChange(overlay);
+			}
+		)
 	);
 
-	constructor(public store$: Store<any>,
-				public actions$: Actions,
-				@Inject(VisualizersConfig) config: IVisualizersConfig) {
+	constructor(
+		public store$: Store<any>,
+		public actions$: Actions,
+		@Inject(VisualizersConfig) config: IVisualizersConfig,
+		public overlaysService: OverlaysService
+	) {
 		super(config.FrameVisualizer);
 		this.updateStyle({
 			opacity: 0.5,
@@ -65,11 +75,11 @@ export class OverlayHoverVisualizer extends EntitiesVisualizer {
 		return;
 	}
 
-	private onMarkupsChange() {
-		const hover = this.markups.get(MarkUpClass.hover);
-		const overlayId = hover ? hover.overlaysIds[0] : null;
-		if (overlayId) {
-			console.log('detected hover on overlay', overlayId);
+	private onMarkupsChange(hoveredOverlay: IOverlay) {
+		if (hoveredOverlay) {
+			console.log('detected hover on overlay', hoveredOverlay);
+		} else {
+			console.log('detected no hover on overlay');
 		}
 	}
 

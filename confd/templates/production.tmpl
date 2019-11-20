@@ -350,7 +350,7 @@
 	   	}
     },
 	 "httpTimeout": "3000",
-	 "isFooterCollapsible": {{ getv "/ansyn/iscollapsible" "false" }},
+	 "isFooterCollapsible": {{ getv "/ansyn/iscollapsible" "true" }},
 	 "enable3D": {{ getv "/ansyn/3d/enable" "true" }}
   },
   "olConfig": {
@@ -377,7 +377,7 @@
     	"title": "Fork me on github",
 		"href": "{{ getv "/ansyn/menu/forkme/url" "https://github.com/ansyn/ansyn" }}"
     },
-    "iscollapsible": {{ getv "/ansyn/iscollapsible" "false" }}
+    "iscollapsible": {{ getv "/ansyn/iscollapsible" "true" }}
   },
   "loginConfig": {
   	"baseUrl": "{{ getv "/ansyn/login/baseurl" "http://platform.ansyn.io:9001/api/v1/login" }}",
@@ -387,7 +387,7 @@
   },
   "credentialsConfig": {
   	"baseUrl": "assets/config/credentials.json",
-  	"active":  {{ getv "/ansyn/credentials/active" "false" }},
+  	"active":  {{ getv "/ansyn/credentials/active" "true" }},
   	"noCredentialsMessage": "invalid credentials"
   },
   "visualizersConfig": {

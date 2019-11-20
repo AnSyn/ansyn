@@ -1,12 +1,12 @@
 import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { ChangeImageryMap, IEntryComponent } from '@ansyn/map-facade';
-import { AutoSubscriptions } from 'auto-subscriptions';
+import { ChangeImageryMap, IEntryComponent, selectIsMinimalistViewMode } from '@ansyn/map-facade';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { get as _get } from 'lodash';
 import { Store } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
 import { CesiumMap, CesiumMapName } from '@ansyn/imagery-cesium';
-import { take } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import { CoreConfig } from '../../../core/models/core.config';
 import { ICoreConfig } from '../../../core/models/core.config.model';
 
@@ -27,7 +27,15 @@ export class ImageryDimensionModeComponent implements OnInit, OnDestroy, IEntryC
 	@HostBinding('hidden') hidden = false;
 
 	mode: string;
+	show: boolean;
 	@Input() mapId: string;
+
+	@AutoSubscription
+	isInExportMode$ = this.store$.select(selectIsMinimalistViewMode).pipe(
+		tap(isInExportMode => {
+			this.show = !isInExportMode;
+		})
+	);
 
 	constructor(protected store$: Store<any>,
 				protected communicators: ImageryCommunicatorService,

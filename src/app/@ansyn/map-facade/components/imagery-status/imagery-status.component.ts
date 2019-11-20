@@ -53,6 +53,9 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		tap((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
 	);
 
+	@Input()
+	isMinimalistViewMode: boolean;
+
 	constructor(protected store$: Store<any>,
 				protected communicators: ImageryCommunicatorService,
 				protected translate: TranslateService,

@@ -58,7 +58,7 @@ import { selectFilteredOveralys, selectOverlaysArray } from '../modules/overlays
 import { ToggleMenuCollapse } from '@ansyn/menu';
 import { UUID } from 'angular2-uuid';
 import { DataLayersService } from '../modules/menu-items/layers-manager/services/data-layers.service';
-import { SetExportModeAction } from '../modules/core/actions/core.actions';
+import { SetMinimalistViewModeAction } from '../../map-facade/actions/map.actions';
 
 @Injectable({
 	providedIn: 'root'
@@ -346,10 +346,10 @@ export class AnsynApi {
 		this.store.dispatch(new ToggleMenuCollapse(collapse));
 	}
 
-	setAppExportMode(collapse: boolean) {
+	setMinimalistViewMode(collapse: boolean) {
 		this.collapseFooter(collapse);
 		this.collapseMenu(collapse);
-		this.store.dispatch(new SetExportModeAction(collapse));
+		this.store.dispatch(new SetMinimalistViewModeAction(collapse));
 	}
 
 	insertLayer(layerName: string, layerData: FeatureCollection<any>): string {

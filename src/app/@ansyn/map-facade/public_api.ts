@@ -24,7 +24,8 @@ export {
 	selectMapPositionByMapId,
 	selectMapsStateByIds,
 	selectOverlayDisplayModeByMapId,
-	selectOverlayOfActiveMap
+	selectOverlayOfActiveMap,
+	selectIsMinimalistViewMode
 } from './reducers/map.reducer';
 
 export {

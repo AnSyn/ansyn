@@ -61,9 +61,6 @@ export { StatusBarConfig } from './modules/status-bar/models/statusBar.config';
 export { StatusBarModule } from './modules/status-bar/status-bar.module';
 export { orientations, ORIENTATIONS } from './modules/status-bar/models/combo-boxes.model';
 
-
-export { SetExportModeAction } from './modules/core/actions/core.actions';
-
 // menuItems
 export { ClearActiveInteractionsAction } from './modules/menu-items/tools/actions/tools.actions';
 export { selectAutoSave } from './modules/menu-items/cases/reducers/cases.reducer';

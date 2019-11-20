@@ -42,7 +42,6 @@ import {
 } from '../modules/menu-items/layers-manager/reducers/layers.reducer';
 import {
 	GoToAction,
-	HideMeasurePanel,
 	SetActiveCenter,
 	ToolsActionsTypes
 } from '../modules/menu-items/tools/actions/tools.actions';
@@ -59,6 +58,7 @@ import { selectFilteredOveralys, selectOverlaysArray } from '../modules/overlays
 import { ToggleMenuCollapse } from '@ansyn/menu';
 import { UUID } from 'angular2-uuid';
 import { DataLayersService } from '../modules/menu-items/layers-manager/services/data-layers.service';
+import { SetExportModeAction } from '../modules/core/actions/core.actions';
 
 @Injectable({
 	providedIn: 'root'
@@ -346,8 +346,10 @@ export class AnsynApi {
 		this.store.dispatch(new ToggleMenuCollapse(collapse));
 	}
 
-	hideMeasurePanel(collapse: boolean) {
-		this.store.dispatch(new HideMeasurePanel(collapse));
+	setAppExportMode(collapse: boolean) {
+		this.collapseFooter(collapse);
+		this.collapseMenu(collapse);
+		this.store.dispatch(new SetExportModeAction(collapse));
 	}
 
 	insertLayer(layerName: string, layerData: FeatureCollection<any>): string {

@@ -149,13 +149,6 @@ export class SetAutoImageProcessingSuccess implements Action {
 	}
 }
 
-export class HideMeasurePanel implements Action {
-	type = ToolsActionsTypes.HIDE_MEASURE_PANEL;
-
-	constructor(public payload: boolean) {
-	}
-}
-
 export class SetMeasureDistanceToolState implements Action {
 	type = ToolsActionsTypes.SET_MEASURE_TOOL_STATE;
 

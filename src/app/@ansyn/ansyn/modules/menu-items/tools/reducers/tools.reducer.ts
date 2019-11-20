@@ -4,6 +4,7 @@ import { IVisualizerStyle } from '@ansyn/imagery';
 import { ImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 import { AnnotationMode } from '@ansyn/ol';
+import { CoreActionsTypes } from '../../../core/actions/core.actions';
 
 export enum toolsFlags {
 	geoRegisteredOptionsEnabled = 'geoRegisteredOptionsEnabled',
@@ -151,7 +152,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 		case ToolsActionsTypes.SET_SUB_MENU:
 			return { ...state, subMenu: action.payload };
 
-		case ToolsActionsTypes.HIDE_MEASURE_PANEL:
+		case CoreActionsTypes.SET_EXPORT_MODE:
 			tmpMap = new Map(state.flags);
 			tmpMap.set(toolsFlags.hideMeasure, action.payload);
 			return { ...state, flags: tmpMap };

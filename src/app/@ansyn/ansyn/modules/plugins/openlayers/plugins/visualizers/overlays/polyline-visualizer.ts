@@ -165,20 +165,6 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 		return isActive ? 4 : isFavorites ? 3 : isDisplayed ? 2 : 1;
 	}
 
-	private getFillOpacity(feature: Feature, hover = false) {
-		switch (this.getFeatureType(feature)) {
-			case 'MultiLineString':
-			case 'MultiPolygon':
-				return hover ? 0.4 : 1;
-			case 'Point' :
-				return hover ? 1 : 0.8;
-			case 'LineString':
-				return undefined;
-			default:
-				return hover;
-		}
-	}
-
 	private getFillColor(feature: Feature, hover = false) {
 		const { active, display, favorite, inactive } = this.visualizerStyle.colors;
 		const { isActive, isFavorites, isDisplayed } = this.propsByFeature(feature);
@@ -201,7 +187,7 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 			case 'MultiLineString':
 			case 'MultiPolygon':
 			case 'LineString':
-				return isActive ? active : isDisplayed ? display : inactive;
+				return isFavorites ? favorite : isDisplayed ? display : isActive ? active : inactive;
 			case 'Point' :
 				return display;
 		}

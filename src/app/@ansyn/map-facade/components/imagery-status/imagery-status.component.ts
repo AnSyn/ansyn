@@ -63,7 +63,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		/* force angular to rerender the *ngFor content that binding to this arrays
 		 * so they get the new mapId	 */
 		this._entryComponents = { status: [], container: [], floating_menu: [] };
-		this.translate.get(this.overlay && this.overlay.sensorName || 'sensorName')
+		this.translate.get(this.overlay && this.overlay.sensorName || 'unknown')
 			.subscribe(translatedOverlaySensorName => this.translatedOverlaySensorName = translatedOverlaySensorName);
 		setTimeout(() => this._entryComponents = { ...this.entryComponents })
 	}

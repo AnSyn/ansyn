@@ -69,7 +69,7 @@ export class OverlayHoverVisualizer extends EntitiesVisualizer {
 		}
 	}
 
-	// Start: code partly shared with polyline-visualizer
+	// Start: code duplicated from polyline-visualizer
 
 	private propsByFeature(feature: Feature) {
 		const classes = this.markups.findKeysByValue(<string>feature.getId(), 'overlaysIds');
@@ -106,7 +106,7 @@ export class OverlayHoverVisualizer extends EntitiesVisualizer {
 			case 'LineString':
 				return undefined;
 			default:
-				return hover;
+				return 1;
 		}
 	}
 
@@ -132,7 +132,7 @@ export class OverlayHoverVisualizer extends EntitiesVisualizer {
 			case 'MultiLineString':
 			case 'MultiPolygon':
 			case 'LineString':
-				return isActive ? active : isDisplayed ? display : inactive;
+				return isFavorites ? favorite : isDisplayed ? display : isActive ? active : inactive;
 			case 'Point' :
 				return display;
 		}
@@ -177,5 +177,5 @@ export class OverlayHoverVisualizer extends EntitiesVisualizer {
 		return Math.atan2(dx, dy);
 	}
 
-	// End: code partly shared with polyline-visualizer
+	// End: code duplicated from polyline-visualizer
 }

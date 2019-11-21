@@ -14,6 +14,7 @@ export interface IVisualizerStateStyle {
 	entities?: {
 		[key: string]: Partial<IVisualizerStyle>;
 	};
+	extra?: any;
 }
 
 export enum VisualizerStates {

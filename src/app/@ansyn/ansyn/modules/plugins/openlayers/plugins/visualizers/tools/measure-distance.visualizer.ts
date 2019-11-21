@@ -15,9 +15,9 @@ import { UUID } from 'angular2-uuid';
 import {
 	getPointByGeometry,
 	ImageryVisualizer,
-	IVisualizerEntity,
+	IVisualizerEntity, IVisualizersConfig,
 	MarkerSize,
-	VisualizerInteractions,
+	VisualizerInteractions, VisualizersConfig,
 	VisualizerStates
 } from '@ansyn/imagery';
 import { FeatureCollection, GeometryObject } from 'geojson';
@@ -28,12 +28,15 @@ import { AutoSubscription } from 'auto-subscriptions';
 import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
 import { distinctUntilChanged, map, pluck, tap } from 'rxjs/operators';
 import { IToolsState, toolsFlags, toolsStateSelector } from '../../../../../menu-items/tools/reducers/tools.reducer';
+import { Inject } from '@angular/core';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, OpenLayersProjectionService]
+	deps: [Store, OpenLayersProjectionService, VisualizersConfig]
 })
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
+
+	isTotalMeasureActive: boolean;
 
 	isActiveMap$: Observable<boolean> = this.store$.select(selectActiveMapId).pipe(
 		map((activeMapId) => activeMapId === this.mapId),
@@ -110,8 +113,10 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	constructor(protected store$: Store<any>, protected projectionService: OpenLayersProjectionService) {
-		super(null, {
+	constructor(protected store$: Store<any>,
+				protected projectionService: OpenLayersProjectionService,
+				@Inject(VisualizersConfig) config: IVisualizersConfig) {
+		super(config.MeasureDistanceVisualizer, {
 			initial: {
 				stroke: '#3399CC',
 				'stroke-width': 2,
@@ -121,7 +126,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 				zIndex: 5
 			}
 		});
-
+		this.isTotalMeasureActive = config.MeasureDistanceVisualizer.extra.isTotalMeasureActive;
 		this.geoJsonFormat = new GeoJSON();
 	}
 
@@ -230,21 +235,6 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		const view = (<any>this.iMap.mapObject).getView();
 		const projection = view.getProjection();
 
-		// all line string
-		const allLengthText = this.formatLength(geometry, projection);
-		this.allLengthTextStyle.setText(allLengthText);
-		let allLinePoint = new Point(geometry.getCoordinates()[0]);
-
-		if (calculateCenterOfMass) {
-			const featureId = <string>feature.getId();
-			const entityMap = this.idToEntity.get(featureId);
-			if (entityMap) {
-				const featureGeoJson = <any>this.geoJsonFormat.writeFeatureObject(entityMap.feature);
-				const centroid = getPointByGeometry(featureGeoJson.geometry);
-				allLinePoint = new Point(<[number, number]>centroid.coordinates);
-			}
-		}
-
 		// text points
 		const length = geometry.getCoordinates().length;
 		if (length > 2) {
@@ -264,10 +254,27 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			});
 		}
 
-		styles.push(new Style({
-			geometry: allLinePoint,
-			text: this.allLengthTextStyle
-		}));
+		if (this.isTotalMeasureActive) {
+			// all line string
+			const allLengthText = this.formatLength(geometry, projection);
+			this.allLengthTextStyle.setText(allLengthText);
+			let allLinePoint = new Point(geometry.getCoordinates()[0]);
+
+			if (calculateCenterOfMass) {
+				const featureId = <string>feature.getId();
+				const entityMap = this.idToEntity.get(featureId);
+				if (entityMap) {
+					const featureGeoJson = <any>this.geoJsonFormat.writeFeatureObject(entityMap.feature);
+					const centroid = getPointByGeometry(featureGeoJson.geometry);
+					allLinePoint = new Point(<[number, number]>centroid.coordinates);
+				}
+			}
+
+			styles.push(new Style({
+				geometry: allLinePoint,
+				text: this.allLengthTextStyle
+			}));
+		}
 		return styles;
 	}
 

@@ -1,7 +1,11 @@
+import { SetMinimalistViewModeAction } from './actions/map.actions';
+
 export { ImageryZoomerService } from './services/imagery-zoomer.service';
 export { IEd50Notification } from './models/map-config.model';
 
 export { IEntryComponent } from './directives/entry-component.directive';
+
+
 
 export {
 	initialMapState,
@@ -29,6 +33,7 @@ export {
 } from './reducers/map.reducer';
 
 export {
+	SetMinimalistViewModeAction,
 	ImageryCreatedAction,
 	ImageryRemovedAction,
 	PinLocationModeTriggerAction,

@@ -8,7 +8,6 @@ import {
 	IWorldViewMapState
 } from '@ansyn/imagery';
 import { LayoutKey } from '../models/maps-layout';
-import { type } from '../../ansyn/modules/core/utils/type';
 
 export interface IAngleFilterClick { // @TODO: map-facade should not know IOverlay
 	click: { x: number, y: number };
@@ -81,7 +80,7 @@ export const MapActionTypes = {
 	FOOTER_COLLAPSE: 'FOOTER_COLLAPSE',
 	EXPORT_MAPS_TO_PNG_SUCCESS: 'EXPORT_MAPS_TO_PNG_SUCCESS',
 	EXPORT_MAPS_TO_PNG_FAILED: 'EXPORT_MAPS_TO_PNG_FAILED',
-	SET_MINIMALIST_VIEW_MODE: type('[Maps] Set Minimalist View Mode'),
+	SET_MINIMALIST_VIEW_MODE: '[Maps] Set Minimalist View Mode',
 };
 
 export interface IContextMenuShowPayload {

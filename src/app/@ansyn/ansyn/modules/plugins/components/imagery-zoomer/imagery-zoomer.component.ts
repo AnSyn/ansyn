@@ -16,9 +16,9 @@ export class ImageryZoomerComponent implements OnInit, OnDestroy, IEntryComponen
 	show: boolean;
 
 	@AutoSubscription
-	isInExportMode$ = this.store$.select(selectIsMinimalistViewMode).pipe(
-		tap(isInExportMode => {
-			this.show = !isInExportMode;
+	isMinimalistViewMode$ = this.store$.select(selectIsMinimalistViewMode).pipe(
+		tap(isMinimalistViewMode => {
+			this.show = !isMinimalistViewMode;
 		})
 	);
 

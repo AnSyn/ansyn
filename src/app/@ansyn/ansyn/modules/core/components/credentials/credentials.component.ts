@@ -17,9 +17,9 @@ export class CredentialsComponent implements OnInit, OnDestroy {
 	credentialsMessage: any;
 
 	@AutoSubscription
-	isInExportMode$ = this.store$.select(selectIsMinimalistViewMode).pipe(
-		tap(isInExportMode => {
-			this.show = !isInExportMode;
+	isMinimalistViewMode$ = this.store$.select(selectIsMinimalistViewMode).pipe(
+		tap(isMinimalistViewMode => {
+			this.show = !isMinimalistViewMode;
 		})
 	);
 

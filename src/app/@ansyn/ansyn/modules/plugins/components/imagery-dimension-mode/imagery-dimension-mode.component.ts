@@ -31,9 +31,9 @@ export class ImageryDimensionModeComponent implements OnInit, OnDestroy, IEntryC
 	@Input() mapId: string;
 
 	@AutoSubscription
-	isInExportMode$ = this.store$.select(selectIsMinimalistViewMode).pipe(
-		tap(isInExportMode => {
-			this.show = !isInExportMode;
+	isMinimalistViewMode$ = this.store$.select(selectIsMinimalistViewMode).pipe(
+		tap(isMinimalistViewMode => {
+			this.show = !isMinimalistViewMode;
 		})
 	);
 

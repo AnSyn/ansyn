@@ -58,7 +58,7 @@ import { selectFilteredOveralys, selectOverlaysArray } from '../modules/overlays
 import { ToggleMenuCollapse } from '@ansyn/menu';
 import { UUID } from 'angular2-uuid';
 import { DataLayersService } from '../modules/menu-items/layers-manager/services/data-layers.service';
-import { SetMinimalistViewModeAction } from '../../map-facade/actions/map.actions';
+import { SetMinimalistViewModeAction } from '@ansyn/map-facade';
 
 @Injectable({
 	providedIn: 'root'

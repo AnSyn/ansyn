@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatInputModule, MatSelectModule } from '@angular/material';
 
 import { AnnotationLabelComponent } from './annotation-label.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AnnotationLabelComponent', () => {
 	let component: AnnotationLabelComponent;
@@ -8,7 +12,8 @@ describe('AnnotationLabelComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [AnnotationLabelComponent]
+			declarations: [AnnotationLabelComponent],
+			imports: [BrowserAnimationsModule, FormsModule, MatInputModule, MatSelectModule, TranslateModule.forRoot()]
 		})
 			.compileComponents();
 	}));

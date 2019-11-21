@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { credentialsConfig } from '../../services/credentials/config';
 import { of } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
+import { Store, StoreModule } from '@ngrx/store';
 
 describe('CredentialsComponent', () => {
 	let component: CredentialsComponent;
@@ -13,24 +14,29 @@ describe('CredentialsComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpClientModule,
-			TranslateModule.forRoot()
+			imports: [
+				HttpClientModule,
+				TranslateModule.forRoot(),
+				StoreModule.forRoot({})
 			],
 			declarations: [CredentialsComponent],
-			providers: [
-				{
-					provide: CredentialsService,
-					useValue: {
-						getCredentials: () => { return of(true)}
+			providers:
+				[
+					{
+						provide: CredentialsService,
+						useValue: {
+							getCredentials: () => {
+								return of(true)
+							}
+						}
+					},
+					{
+						provide: credentialsConfig,
+						useValue: {
+							noCredentialsMessage: 'TEST'
+						}
 					}
-				},
-				{
-					provide: credentialsConfig,
-					useValue: {
-						noCredentialsMessage: 'TEST'
-					}
-				}
-			]
+				]
 		}).compileComponents();
 	}));
 

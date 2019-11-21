@@ -1,4 +1,4 @@
-<div class="buttons" *ngIf="coreConfig.enable3D" [class.show]="coreConfig.enable3D">
+<div class="buttons" *ngIf="coreConfig.enable3D && show" [class.show]="coreConfig.enable3D">
 	<button class="small-icon-button"
 			(click)="toggleMapDimentions()"
 			tooltip-value="2D / 3D"

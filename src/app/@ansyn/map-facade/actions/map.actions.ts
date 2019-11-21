@@ -79,7 +79,8 @@ export const MapActionTypes = {
 	SET_TOAST_MESSAGE: 'SET_TOAST_MESSAGE',
 	FOOTER_COLLAPSE: 'FOOTER_COLLAPSE',
 	EXPORT_MAPS_TO_PNG_SUCCESS: 'EXPORT_MAPS_TO_PNG_SUCCESS',
-	EXPORT_MAPS_TO_PNG_FAILED: 'EXPORT_MAPS_TO_PNG_FAILED'
+	EXPORT_MAPS_TO_PNG_FAILED: 'EXPORT_MAPS_TO_PNG_FAILED',
+	SET_MINIMALIST_VIEW_MODE: '[Maps] Set Minimalist View Mode',
 };
 
 export interface IContextMenuShowPayload {
@@ -94,6 +95,13 @@ export class ExportMapsToPngActionFailed implements Action {
 	readonly type = MapActionTypes.EXPORT_MAPS_TO_PNG_FAILED;
 
 	constructor(error: any) {
+	}
+}
+
+export class SetMinimalistViewModeAction implements Action {
+	type = MapActionTypes.SET_MINIMALIST_VIEW_MODE;
+
+	constructor(public payload: boolean) {
 	}
 }
 

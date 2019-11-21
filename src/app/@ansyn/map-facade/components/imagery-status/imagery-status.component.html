@@ -1,4 +1,4 @@
-<div class="buttons">
+<div class="buttons" *ngIf="!isMinimalistViewMode">
 
 	<ng-container
 		*ngFor="let component of _entryComponents.status">
@@ -56,10 +56,12 @@
 </div>
 
 
-<ng-container
-	*ngFor="let component of entryComponents.status">
+<div *ngIf="!isMinimalistViewMode">
 	<ng-container
-		*ngIf="component.prototype.getType() === 'notification'"
-		[ansynEntryComponent]="{ component: component , mapId: mapId }">
+		*ngFor="let component of entryComponents.status">
+		<ng-container
+			*ngIf="component.prototype.getType() === 'notification'"
+			[ansynEntryComponent]="{ component: component , mapId: mapId }">
+		</ng-container>
 	</ng-container>
-</ng-container>
+</div>

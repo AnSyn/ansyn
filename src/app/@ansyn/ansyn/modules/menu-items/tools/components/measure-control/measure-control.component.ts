@@ -1,11 +1,16 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { IEntryComponent, selectActiveMapId, selectOverlayByMapId } from '@ansyn/map-facade';
+import {
+	IEntryComponent,
+	selectActiveMapId,
+	selectIsMinimalistViewMode,
+	selectOverlayByMapId
+} from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { combineLatest } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { SetMeasureDistanceToolState } from '../../actions/tools.actions';
-import { selectIsMeasureToolActive, selectIsMeasureToolHidden } from '../../reducers/tools.reducer';
+import { selectIsMeasureToolActive } from '../../reducers/tools.reducer';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
 
 @Component({
@@ -23,7 +28,7 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 	show$ = () => combineLatest(
 		this.store$.select(selectIsMeasureToolActive),
 		this.store$.select(selectActiveMapId),
-		this.store$.select(selectIsMeasureToolHidden),
+		this.store$.select(selectIsMinimalistViewMode),
 		this.store$.select(selectOverlayByMapId(this.mapId))).pipe(
 		tap(([isActive, activeMapId, isHidden, overlay]) => {
 			const differentOverlay = this.isDifferentOverlay(this.currentOverlay, overlay);

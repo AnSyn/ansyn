@@ -1,19 +1,35 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { IEntryComponent, ImageryZoomerService } from '@ansyn/map-facade';
+import { Store } from '@ngrx/store';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { tap } from 'rxjs/operators';
+import { selectIsMinimalistViewMode } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-imagery-zoomer',
 	templateUrl: './imagery-zoomer.component.html',
 	styleUrls: ['./imagery-zoomer.component.less']
 })
-export class ImageryZoomerComponent implements OnInit, IEntryComponent {
+@AutoSubscriptions()
+export class ImageryZoomerComponent implements OnInit, OnDestroy, IEntryComponent {
 	@Input() mapId;
+	show: boolean;
 
+	@AutoSubscription
+	isMinimalistViewMode$ = this.store$.select(selectIsMinimalistViewMode).pipe(
+		tap(isMinimalistViewMode => {
+			this.show = !isMinimalistViewMode;
+		})
+	);
 
-	constructor(protected imageryZoomerService: ImageryZoomerService) {
+	constructor(protected imageryZoomerService: ImageryZoomerService,
+				protected store$: Store<any>) {
 	}
 
 	ngOnInit() {
+	}
+
+	ngOnDestroy(): void {
 	}
 
 	getType(): string {

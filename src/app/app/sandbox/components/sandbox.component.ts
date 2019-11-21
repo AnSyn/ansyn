@@ -413,15 +413,11 @@ export class SandboxComponent implements OnInit, OnDestroy {
 	}
 
 	collapseAll() {
-		this.ansynApi.collapseFooter(true);
-		this.ansynApi.collapseMenu(true);
-		this.ansynApi.hideMeasurePanel(true);
+		this.ansynApi.setMinimalistViewMode(true);
 	}
 
 	unCollapseAll() {
-		this.ansynApi.collapseFooter(false);
-		this.ansynApi.collapseMenu(false);
-		this.ansynApi.hideMeasurePanel(false);
+		this.ansynApi.setMinimalistViewMode(false);
 	}
 
 	insertLayer() {

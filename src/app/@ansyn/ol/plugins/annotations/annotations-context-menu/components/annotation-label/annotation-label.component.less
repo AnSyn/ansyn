@@ -1,0 +1,62 @@
+@import 'ansyn/less/colors';
+
+:host {
+
+	span.annotation-label {
+		height: 32px;
+		position: absolute;
+		font-size: 17px;
+		color: white;
+		text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+		top: calc(~'100% + 20px');
+	}
+	form.annotation-label-edit {
+		background: @background-color-3;
+		width: 140px;
+		height: 120px;
+		position: absolute;
+		top: 100%;
+		z-index: 1;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		padding: 5px 15px;
+		box-sizing: border-box;
+
+		mat-form-field.label-form-field {
+			width: 100%
+		}
+		mat-form-field.label-font-size {
+			width: 100%;
+		}
+	}
+	@white-inactive: rgba(255, 255, 255, 0.8);
+	.mat-form-field {
+		input {
+			caret-color: white;
+			color: white;
+		}
+
+		/deep/ .mat-select-arrow {
+			color: white;
+		}
+
+		/deep/ .mat-form-field-label, /deep/ .mat-select-value-text  {
+			color: @white-inactive !important;
+		}
+
+		/deep/ .mat-form-field-underline {
+			background-color: @white-inactive !important;
+		}
+
+		/deep/ .mat-focused .mat-form-field-label {
+			color: white !important;
+		}
+
+		/deep/ .mat-form-field-ripple {
+			background-color: white !important;
+		}
+
+	}
+}

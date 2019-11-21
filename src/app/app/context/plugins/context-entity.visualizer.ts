@@ -42,7 +42,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 				},
 				geometry: this.getGeometry.bind(this),
 				label: {
-					font: '12px Calibri,sans-serif',
+					font: 12,
 					fill: '#fff',
 					stroke: '#000',
 					'stroke-width': 3,

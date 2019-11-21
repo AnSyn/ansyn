@@ -113,7 +113,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				showMeasures: feature.properties.showMeasures,
 				label: feature.properties.label,
 				icon: feature.properties.icon,
-				undeletable: feature.properties.undeletable
+				undeletable: feature.properties.undeletable,
+				labelSize: feature.properties.labelSize
 			};
 		});
 	}
@@ -132,7 +133,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				'marker-color': `#ffffff`,
 				label: {
 					overflow: true,
-					font: '27px Calibri,sans-serif',
+					font: (feature) => {
+						const entity = this.idToEntity.get(feature.getId());
+						const labelSize = entity && entity.originalEntity && entity.originalEntity.labelSize;
+						return labelSize || 28;
+					},
 					stroke: '#000',
 					fill: 'white',
 					offsetY: (feature: olFeature) => {
@@ -156,7 +161,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			this.updateStyle({
 				initial: {
 					label: {
-						font: '12px Calibri,sans-serif',
+						font: 12,
 						fill: '#fff',
 						'stroke-width': 3,
 						text: (feature) => feature.getId() || ''
@@ -310,6 +315,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	onDrawEndEvent({ feature }) {
 		const { mode } = this;
 		this.setMode(undefined, true);
+		const id = UUID.UUID();
 		const geometry = feature.getGeometry();
 		let cloneGeometry = <any>geometry.clone();
 		if (cloneGeometry instanceof olCircle) {
@@ -320,14 +326,16 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 		feature.setGeometry(cloneGeometry);
 		feature.setProperties({
-			id: UUID.UUID(),
+			id,
 			style: cloneDeep(this.visualizerStyle),
 			showMeasures: false,
 			label: '',
+			labelSize: 28,
 			icon: this.iconSrc,
 			undeletable: false,
 			mode
 		});
+		feature.setId(id);
 		this.projectionService
 			.projectCollectionAccurately([feature], this.iMap.mapObject)
 			.pipe(

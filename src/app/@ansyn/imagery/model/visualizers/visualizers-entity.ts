@@ -4,6 +4,7 @@ import { Feature } from 'geojson';
 export interface IVisualizerEntity {
 	id: string;
 	label?: string;
+	labelSize?: number;
 	featureJson: Feature<any>;
 	icon?: any;
 	type?: string;

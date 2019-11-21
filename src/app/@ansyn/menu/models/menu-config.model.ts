@@ -12,5 +12,5 @@ export interface IMenuConfig {
 	background: string;
 	forkMe: IForkMe;
 	menuItems?: string[];
-	iscollapsible?: boolean;
+	isCollapsible?: boolean;
 }

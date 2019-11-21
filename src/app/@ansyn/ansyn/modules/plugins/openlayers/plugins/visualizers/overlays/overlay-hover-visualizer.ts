@@ -131,18 +131,14 @@ export class OverlayHoverVisualizer extends EntitiesVisualizer {
 		switch (this.getFeatureType(feature)) {
 			case 'MultiLineString':
 			case 'MultiPolygon':
+			case 'LineString':
 				return isActive ? active : isDisplayed ? display : inactive;
 			case 'Point' :
 				return display;
-			case 'LineString':
-				return isFavorites ? favorite : isActive ? active : display;
 		}
 	}
 
 	private getStrokeOpacity(feature: Feature, hover = true) {
-		if (this.getFeatureType(feature) === 'LineString') {
-			return hover ? 1 : 0.5
-		}
 		return 1;
 	}
 

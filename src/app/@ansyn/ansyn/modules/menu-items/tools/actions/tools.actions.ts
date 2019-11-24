@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { IVisualizerStyle } from '@ansyn/imagery';
+import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { SubMenuEnum, toolsFlags } from '../reducers/tools.reducer';
 import { type } from '../../../core/utils/type';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
@@ -20,13 +20,18 @@ export const ToolsActionsTypes = {
 	SET_AUTO_IMAGE_PROCESSING: type('SET_AUTO_IMAGE_PROCESSING'),
 	SET_MANUAL_IMAGE_PROCESSING: type('SET_MANUAL_IMAGE_PROCESSING'),
 	SET_AUTO_IMAGE_PROCESSING_SUCCESS: type('SET_AUTO_IMAGE_PROCESSING_SUCCESS'),
-	SET_MEASURE_TOOL_STATE: type('[tools] SET_MEASURE_TOOL_STATE'),
 	ENABLE_IMAGE_PROCESSING: type('ENABLE_IMAGE_PROCESSING'),
 	DISABLE_IMAGE_PROCESSING: type('DISABLE_IMAGE_PROCESSING'),
 	MAP_GEO_ENABLED_MODE_CHANGED: type('MAP_GEO_ENABLED_MODE_CHANGED'),
 	ANNOTATION_SET_PROPERTIES: type('ANNOTATION_SET_PROPERTIES'),
 	UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS: type('UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS'),
 	SET_SUB_MENU: type('SET_SUB_MENU'),
+	MEASURES: {
+		SET_MEASURE_TOOL_STATE: type('[tools] SET_MEASURE_TOOL_STATE'),
+		CREATE_MEASURE_DATA: type('[tools] CREATE_MEASURE_DATA'),
+		REMOVE_MEASURE_DATA: type('[tools] REMOVE_MEASURE_DATA'),
+		UPDATE_MEASURE_DATA: type('[tools] UPDATE_MEASURE_DATA')
+	},
 	STORE: {
 		SET_ANNOTATION_MODE: type('SET_ANNOTATION_MODE')
 	},
@@ -150,9 +155,36 @@ export class SetAutoImageProcessingSuccess implements Action {
 }
 
 export class SetMeasureDistanceToolState implements Action {
-	type = ToolsActionsTypes.SET_MEASURE_TOOL_STATE;
+	type = ToolsActionsTypes.MEASURES.SET_MEASURE_TOOL_STATE;
 
 	constructor(public payload: boolean) {
+	}
+}
+
+export class CreateMeasureDataAction implements Action {
+	type = ToolsActionsTypes.MEASURES.CREATE_MEASURE_DATA;
+
+	constructor(public payload: { mapId: string }) {
+	}
+}
+
+export class RemoveMeasureDataAction implements Action {
+	type = ToolsActionsTypes.MEASURES.REMOVE_MEASURE_DATA;
+
+	constructor(public payload: { mapId: string }) {
+	}
+}
+
+export class UpdateMeasureDataAction implements Action {
+	type = ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATA;
+
+	constructor(public payload: {
+		mapId: string, measureData: {
+			meausres?: IVisualizerEntity[],
+			isLayerShowed?: boolean,
+			isToolActive?: boolean
+		}
+	}) {
 	}
 }
 

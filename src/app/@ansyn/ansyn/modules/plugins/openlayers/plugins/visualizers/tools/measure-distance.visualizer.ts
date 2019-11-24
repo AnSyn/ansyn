@@ -26,38 +26,24 @@ import { selectActiveMapId } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
 import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
-import { distinctUntilChanged, map, pluck, tap } from 'rxjs/operators';
-import { IToolsState, toolsFlags, toolsStateSelector } from '../../../../../menu-items/tools/reducers/tools.reducer';
+import { distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
+import {
+	IMeasureData,
+	selectIsMeasureToolActive,
+	selectMeasureDataByMapId
+} from '../../../../../menu-items/tools/reducers/tools.reducer';
 import { Inject } from '@angular/core';
+import { UpdateMeasureDataAction } from '../../../../../menu-items/tools/actions/tools.actions';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, OpenLayersProjectionService, VisualizersConfig]
+	deps: [Store, OpenLayersProjectionService, VisualizersConfig],
+	isHideable: true
 })
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 	isTotalMeasureActive: boolean;
-
-	isActiveMap$: Observable<boolean> = this.store$.select(selectActiveMapId).pipe(
-		map((activeMapId) => activeMapId === this.mapId),
-		distinctUntilChanged()
-	);
-
-	isMeasureToolActive$: Observable<boolean> = this.store$.select(toolsStateSelector).pipe(
-		pluck<IToolsState, Map<toolsFlags, boolean>>('flags'),
-		map((flags) => flags.get(toolsFlags.isMeasureToolActive)),
-		distinctUntilChanged()
-	);
-
-	@AutoSubscription
-	onChanges$ = combineLatest(this.isActiveMap$, this.isMeasureToolActive$).pipe(
-		tap(([isActiveMap, isMeasureToolActive]) => {
-			if (isActiveMap && isMeasureToolActive) {
-				this.createInteraction();
-			} else {
-				this.clearInteractionAndEntities();
-			}
-		}));
+	measureData: IMeasureData;
 
 	protected allLengthTextStyle = new Text({
 		font: '16px Calibri,sans-serif',
@@ -94,6 +80,27 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 	geoJsonFormat: GeoJSON;
 	interactionSource: VectorSource;
+
+	@AutoSubscription
+	show$ = () => combineLatest(
+		this.store$.select(selectActiveMapId),
+		this.store$.select(selectMeasureDataByMapId(this.mapId)),
+		this.store$.select(selectIsMeasureToolActive)).pipe(
+		distinctUntilChanged(),
+		filter(([activeMapId, measureData, isMeasureToolActive]) => Boolean(measureData)),
+		tap(([activeMapId, measureData, isMeasureToolActive]) => {
+			this.measureData = measureData;
+			this.setVisibility(measureData.isLayerShowed);
+			if (isMeasureToolActive && activeMapId && measureData.isToolActive) {
+				this.createInteraction();
+			} else {
+				this.removeDrawInteraction();
+			}
+		}),
+		switchMap(([activeMapId, measureData, isMeasureToolActive]) => {
+			return this.setEntities(measureData.meausres);
+		})
+	);
 
 	get drawInteractionHandler() {
 		return this.interactions.get(VisualizerInteractions.drawInteractionHandler);
@@ -139,11 +146,6 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			}));
 	}
 
-	clearInteractionAndEntities() {
-		this.removeDrawInteraction();
-		this.clearEntities();
-	}
-
 	createInteraction(type = 'LineString') {
 		this.removeDrawInteraction();
 
@@ -172,7 +174,15 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 					id: UUID.UUID(),
 					featureJson
 				};
-				this.addOrUpdateEntities([newEntity]).subscribe();
+				this.measureData.meausres.push(newEntity);
+				this.store$.dispatch(
+					new UpdateMeasureDataAction({
+						mapId: this.mapId,
+						measureData: {
+							meausres: this.measureData.meausres
+						}
+					})
+				);
 			});
 	}
 

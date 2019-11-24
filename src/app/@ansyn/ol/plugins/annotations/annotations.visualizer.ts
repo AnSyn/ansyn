@@ -556,8 +556,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	}
 
-	toggleVisibility() {
-		super.toggleVisibility();
+	setVisibility(isVisible: boolean) {
+		super.setVisibility(isVisible);
 		this.events.onSelect.next([]);
 	}
 

@@ -28,6 +28,7 @@ import { TranslateService } from '@ngx-translate/core';
 	destroy: 'ngOnDestroy'
 })
 export class ImageryStatusComponent implements OnInit, OnDestroy {
+	isMapLayersVisible = true;
 	mapsAmount = 1;
 	_map: IMapSettings;
 	_entryComponents: IEntryComponentsEntities;
@@ -155,6 +156,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	toggleMapLayers() {
-		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId }));
+		this.isMapLayersVisible = !this.isMapLayersVisible;
+		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId, isVisible: this.isMapLayersVisible }));
 	}
 }

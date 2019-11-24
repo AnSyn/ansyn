@@ -93,12 +93,12 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 	}
 
-	toggleVisibility() {
+	setVisibility(isVisible: boolean) {
 		if (!this.isHideable) {
 			return;
 		}
 
-		this.isHidden = !this.isHidden;
+		this.isHidden = !isVisible;
 		if (this.isHidden) {
 			this.iMap.removeLayer(this.vector);
 		} else {

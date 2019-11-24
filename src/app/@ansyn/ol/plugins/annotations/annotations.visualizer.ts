@@ -13,6 +13,7 @@ import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { cloneDeep, merge } from 'lodash';
 import { platformModifierKeyOnly } from 'ol/events/condition';
 import olFeature from 'ol/Feature';
+import olCollection from 'ol/Collection';
 import OLGeoJSON from 'ol/format/GeoJSON';
 import olCircle from 'ol/geom/Circle';
 import olLineString from 'ol/geom/LineString';
@@ -20,6 +21,7 @@ import olMultiLineString from 'ol/geom/MultiLineString';
 import olPoint from 'ol/geom/Point';
 import olPolygon, { fromCircle } from 'ol/geom/Polygon';
 import DragBox from 'ol/interaction/DragBox';
+import olTranslate from 'ol/interaction/Translate';
 import Draw from 'ol/interaction/Draw';
 import * as Sphere from 'ol/sphere';
 import olFill from 'ol/style/Fill';
@@ -36,6 +38,13 @@ import { IOLPluginsConfig, OL_PLUGINS_CONFIG } from '../plugins.config';
 import { AnnotationMode, IAnnotationBoundingRect, IDrawEndEvent } from './annotations.model';
 import { DragPixelsInteraction } from './dragPixelsInteraction';
 
+export interface IEditMode {
+	feature: olFeature,
+	interaction: { translate: any },
+	label: { feature: olFeature }
+};
+
+
 // @dynamic
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -48,10 +57,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	public mode: AnnotationMode;
 	mapSearchIsActive = false;
 	selected: string[] = [];
-	private iconSrc = '';
 	geoJsonFormat: OLGeoJSON;
 	dragBox = new DragBox({ condition: platformModifierKeyOnly });
 	translationSubscriptions = [];
+	edited: IEditMode;
 
 	protected measuresTextStyle = {
 		font: '16px Calibri,sans-serif',
@@ -64,7 +73,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}),
 		offsetY: 30
 	};
-
 	events = {
 		onClick: new Subject(),
 		onSelect: new Subject<string[]>(),
@@ -73,11 +81,19 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		onDrawEnd: new Subject<IDrawEndEvent>(),
 		removeEntity: new Subject<string>(),
 		updateEntity: new Subject<IVisualizerEntity>(),
-		offsetEntity: new Subject<any>()
+		offsetEntity: new Subject<any>(),
+		onEditStart: new Subject<IEditMode>(),
+		onEditEnd: new Subject()
 	};
-
+	clearModified: any = tap(() => {
+		if (this.edited) {
+			this.editFeature(this.edited.feature.getId())
+		}
+	});
 	@AutoSubscription
-	selected$ = this.events.onSelect.pipe(tap((selected) => this.selected = selected));
+	selected$ = this.events.onSelect.pipe(this.clearModified, tap((selected: any) => this.selected = selected));
+	@AutoSubscription
+	edited$ = this.events.onEditStart.pipe(tap((edited) => this.edited = edited));
 
 	modeDictionary = {
 		Arrow: {
@@ -89,34 +105,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			geometryFunction: this.rectangleGeometryFunction.bind(this)
 		}
 	};
-
-	findFeatureWithMinimumArea(featuresArray: any[]) {
-		return featuresArray.reduce((prevResult, currFeature) => {
-			const currGeometry = currFeature.getGeometry();
-			const currArea = currGeometry.getArea ? currGeometry.getArea() : 0;
-			if (currArea < prevResult.area) {
-				return { feature: currFeature, area: currArea };
-			} else {
-				return prevResult;
-			}
-		}, { feature: null, area: Infinity }).feature;
-	}
-
-	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
-		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => {
-			const featureJson = { ...feature };
-			delete featureJson.properties.featureJson;
-			return {
-				featureJson,
-				id: feature.properties.id,
-				style: feature.properties.style,
-				showMeasures: feature.properties.showMeasures,
-				label: feature.properties.label,
-				icon: feature.properties.icon,
-				undeletable: feature.properties.undeletable
-			};
-		});
-	}
+	private iconSrc = '';
 
 	constructor(protected projectionService: OpenLayersProjectionService,
 				@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig) {
@@ -136,8 +125,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					stroke: '#000',
 					fill: 'white',
 					offsetY: (feature: olFeature) => {
-						const { mode } = feature.getProperties();
-						return mode === 'Point' ? 30 : 0;
+						const { mode, style } = feature.getProperties();
+						return mode === 'Point' && !style.initial.label.geometry ? 30 : 0;
 					},
 					text: (feature: olFeature) => {
 						const entity = this.idToEntity.get(feature.getId());
@@ -165,6 +154,35 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			});
 		}
 		this.geoJsonFormat = new OLGeoJSON();
+	}
+
+	findFeatureWithMinimumArea(featuresArray: any[]) {
+		return featuresArray.reduce((prevResult, currFeature) => {
+			const currGeometry = currFeature.getGeometry();
+			const currArea = currGeometry.getArea ? currGeometry.getArea() : 0;
+			if (currArea < prevResult.area) {
+				return { feature: currFeature, area: currArea };
+			} else {
+				return prevResult;
+			}
+		}, { feature: null, area: Infinity }).feature;
+	}
+
+	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
+		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => {
+			const featureJson = { ...feature };
+			delete featureJson.properties.featureJson;
+			return {
+				featureJson,
+				id: feature.properties.id,
+				style: feature.properties.style,
+				showMeasures: feature.properties.showMeasures,
+				label: feature.properties.label,
+				icon: feature.properties.icon,
+				undeletable: feature.properties.undeletable,
+				editMode: feature.properties.editMode
+			};
+		});
 	}
 
 	setMode(mode, forceBroadcast: boolean) {
@@ -216,20 +234,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return { left, top, width, height };
 	}
 
-	private isNumArray([first, second]) {
-		return typeof first === 'number' && typeof second === 'number';
-	}
-
-	private findMinMaxHelper(array, prev = { maxX: -Infinity, maxY: -Infinity, minX: Infinity, minY: Infinity }) {
-		const [x, y] = this.iMap.mapObject.getPixelFromCoordinate(array);
-		return {
-			maxX: Math.max(x, prev.maxX),
-			maxY: Math.max(y, prev.maxY),
-			minX: Math.min(x, prev.minX),
-			minY: Math.min(y, prev.minY)
-		};
-	}
-
 	findMinMax(array) {
 		if (this.isNumArray(array)) {
 			return this.findMinMaxHelper(array);
@@ -248,46 +252,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		}, undefined);
 	}
-
-	protected mapClick = (event) => {
-		if (this.mapSearchIsActive || this.mode || this.isHidden) {
-			return;
-		}
-		const { shiftKey: multi } = event.originalEvent;
-		const selectedFeature = this.featureAtPixel(event.pixel);
-		let ids = [];
-		if (selectedFeature) {
-			const featureId = selectedFeature.getId();
-			ids = multi ? this.selected.includes(featureId) ? this.selected.filter(id => id !== featureId) : [...this.selected, featureId] : [featureId];
-		} else {
-			ids = multi ? this.selected : [];
-		}
-		this.events.onSelect.next(ids);
-	};
-
-	protected mapPointermove = (event) => {
-		if (this.mapSearchIsActive || this.mode) {
-			return;
-		}
-		const selectedFeature = this.featureAtPixel(event.pixel);
-		this.events.onHover.next(selectedFeature ? selectedFeature.getId() : null);
-	};
-
-	protected mapBoxstart = () => {
-		this.events.onSelect.next([]);
-	};
-
-	protected mapBoxdrag = ({ target }) => {
-		if (this.isHidden) {
-			return;
-		}
-		const extent = target.getGeometry().getExtent();
-		const selected = [];
-		this.vector.getSource().forEachFeatureIntersectingExtent(extent, (feature) => {
-			selected.push(feature.getId());
-		});
-		this.events.onSelect.next(selected);
-	};
 
 	onInit() {
 		super.onInit();
@@ -326,6 +290,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			label: '',
 			icon: this.iconSrc,
 			undeletable: false,
+			editMode: false,
 			mode
 		});
 		this.projectionService
@@ -485,13 +450,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	getCenterIndicationStyle(feature: olFeature): olStyle {
-		const featureGeoJson = <any>this.geoJsonFormat.writeFeatureObject(feature);
-		const centerPoint = getPointByGeometry(featureGeoJson.geometry);
+		const centerPoint = this.getCenterOfFeature(feature);
 		return new olStyle({
 			geometry: new olPoint(centerPoint.coordinates),
 			image: new olIcon({
 				scale: 1,
-				src: featureGeoJson.properties.icon
+				src: feature.getProperties().icon
 			})
 
 		});
@@ -563,5 +527,116 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	public setIconSrc(src: string) {
 		this.iconSrc = src;
+	}
+
+	editFeature(featureId: any) {
+		let oldFeature = null;
+		let event = null;
+
+		if (this.edited) {
+			const { feature: modifiedFeature } = this.edited;
+			this.iMap.mapObject.removeInteraction('translateInteractionHandler');
+			oldFeature = modifiedFeature;
+		}
+
+		if (!oldFeature || featureId !== oldFeature.getId()) { // start editing
+			const feature: olFeature = this.source.getFeatureById(featureId);
+			this.updateFeature(feature.getId(), {editMode: true});
+			const center = this.getCenterOfFeature(feature);
+			const entity = this.getEntity(feature);
+			const { mode: entityMode } = feature.getProperties(feature);
+			const labelGeometry = entity.style.initial.label.geometry;
+			const labelFeature = new olFeature({
+				geometry: new olPoint(labelGeometry ? labelGeometry : center.coordinates),
+			});
+			labelFeature.setStyle( new olStyle({
+				text: new olText( {
+					font: entity.style.initial.label.font,
+					fill: new olFill({color: entity.style.initial.label.fill}),
+					text: feature.getProperties().label,
+					offsetY: entityMode  === 'Point' ? 30 : 0
+				})
+			}));
+
+			const translate = new olTranslate({
+				features: new olCollection([labelFeature]),
+				hitTolerance: 2
+			});
+			translate.on('translateend', (translateend) => {
+				entity.style.initial.label.geometry = translateend.coordinate;
+				feature.styleCache = this.createStyle(feature, true, entity.style.initial);
+			});
+			this.purgeCache(feature);
+			this.addInteraction('translateInteractionHandler', translate);
+			event = {
+				feature,
+				label: {
+					feature: labelFeature,
+				},
+				interaction: {
+					translate
+				}
+			};
+			this.source.addFeature(labelFeature);
+		} else {
+			this.updateFeature(featureId, {editMode: false});
+			this.source.removeFeature(this.edited.label.feature);
+		}
+		this.source.refresh();
+		this.events.onEditStart.next(event);
+	}
+
+	protected mapClick = (event) => {
+		if (this.mapSearchIsActive || this.mode || this.isHidden) {
+			return;
+		}
+		const { shiftKey: multi } = event.originalEvent;
+		const selectedFeature = this.featureAtPixel(event.pixel);
+		let ids = [];
+		if (selectedFeature) {
+			const featureId = selectedFeature.getId();
+			ids = multi ? this.selected.includes(featureId) ? this.selected.filter(id => id !== featureId) : [...this.selected, featureId] : [featureId];
+		} else {
+			ids = multi ? this.selected : [];
+		}
+		this.events.onSelect.next(ids);
+	};
+
+	protected mapPointermove = (event) => {
+		if (this.mapSearchIsActive || this.mode) {
+			return;
+		}
+		const selectedFeature = this.featureAtPixel(event.pixel);
+		this.events.onHover.next(selectedFeature ? selectedFeature.getId() : null);
+	};
+
+	protected mapBoxstart = () => {
+		this.events.onSelect.next([]);
+	};
+
+	protected mapBoxdrag = ({ target }) => {
+		if (this.isHidden) {
+			return;
+		}
+		const extent = target.getGeometry().getExtent();
+		const selected = [];
+		this.vector.getSource().forEachFeatureIntersectingExtent(extent, (feature) => {
+			selected.push(feature.getId());
+		});
+		this.events.onSelect.next(selected);
+	};
+
+	private isNumArray([first, second]) {
+		return typeof first === 'number' && typeof second === 'number';
+	}
+
+	private findMinMaxHelper(array, prev = { maxX: -Infinity, maxY: -Infinity, minX: Infinity, minY: Infinity }) {
+		const [x, y] = this.iMap.mapObject.getPixelFromCoordinate(array);
+		return {
+			maxX: Math.max(x, prev.maxX),
+			maxY: Math.max(y, prev.maxY),
+			minX: Math.min(x, prev.minX),
+			minY: Math.min(y, prev.minY)
+		};
 	}
 }

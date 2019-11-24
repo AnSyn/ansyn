@@ -13,9 +13,9 @@ export interface IFill {
 }
 
 export interface ILabel extends IStroke {
+	geometry?: [number, number];
 	font?: string,
 	fill?: string;
-	offsetX?: number;
 	offsetY?: FeatureField<number>;
 	text?: FeatureField<string>;
 	overflow?: boolean;

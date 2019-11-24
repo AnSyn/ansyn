@@ -7,11 +7,13 @@ import Circle from 'ol/style/Circle';
 import Fill from 'ol/style/Fill';
 import Text from 'ol/style/Text';
 import Icon from 'ol/style/Icon';
+import Point from 'ol/geom/Point';
 import VectorLayer from 'ol/layer/Vector';
 import ol_Layer from 'ol/layer/Layer';
+import OLGeoJSON from 'ol/format/GeoJSON';
 
 import {
-	BaseImageryVisualizer,
+	BaseImageryVisualizer, getPointByGeometry,
 	IVisualizerEntity,
 	IVisualizerStateStyle,
 	IVisualizerStyle,
@@ -178,32 +180,32 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			secondaryStyle.geometry = styleSettings.geometry
 		}
 
-		if (styleSettings.label) {
+		if (styleSettings.label.text && !feature.getProperties().editMode) {
 			const fill = new Fill({ color: styleSettings.label.fill });
 			const stroke = new Stroke({
 				color: styleSettings.label.stroke ? styleSettings.label.stroke : '#fff',
 				width: styleSettings.label.stroke ? 4 : 0
 			});
+			const { label } = styleSettings;
 
 			textStyle.text = new Text({
-				font: styleSettings.label.font,
-				offsetX: styleSettings.label.offsetX,
+				font: label.font,
+				overflow: label.overflow,
 				offsetY: <any>styleSettings.label.offsetY,
-				overflow: styleSettings.label.overflow,
-				text: <any>styleSettings.label.text,
+				text: <any>label.text,
 				fill,
-				stroke
+				stroke,
 			});
-			if (feature.getProperties().mode === 'Arrow') {
-				textStyle.geometry = (feature) => {
-					if (feature.getGeometry().getLineString) {
-						return feature.getGeometry().getLineString(0)
-					}
-					else { // for kml import
-						return feature.getGeometry().getGeometries()[0];
-					}
+			textStyle.geometry = (feature) => {
+				if ( label.geometry) {
+					return new Point(label.geometry);
 				}
-			}
+				else {
+					return new Point(this.getCenterOfFeature(feature).coordinates)
+				}
+			};
+
+			firstStyle.geometry = (feature) => feature.getGeometry();
 		}
 
 		if (styleSettings['marker-color'] || styleSettings['marker-size']) {
@@ -377,6 +379,11 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			properties: {}
 		};
 		return { id, featureJson };
+	}
+
+	protected getCenterOfFeature(feature: Feature) {
+		const featureGeoJson = new OLGeoJSON().writeFeatureObject(feature);
+		return getPointByGeometry(featureGeoJson.geometry);
 	}
 
 }

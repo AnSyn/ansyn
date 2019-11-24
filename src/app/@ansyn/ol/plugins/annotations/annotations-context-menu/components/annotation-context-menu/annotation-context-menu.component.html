@@ -5,6 +5,19 @@
 
 		<div class="context-menu" [style.outline-color]="getFeatureProps(featureId)?.style?.initial?.stroke">
 			<ul class="buttons">
+				<li *ngIf="getFeatureProps(featureId).label.length">
+					<button [class.active]="annotations.edited?.feature?.getId() === featureId"
+							(click)="annotations.editFeature(featureId)"
+							>
+						<i [attr.tooltip-value]="'Edit' | translate" tooltip-class="bottom">
+							<svg>
+								<path d="m21.7519,11.8105l-2.66813,-3.27l-8.22673,10.0825l2.66813,3.27l8.22673,-10.0825zm1.24513,-1.5805c0.57809,-0.872 0.53363,-2.2345 -0.13341,-3.052c-0.7115,-0.8175 -1.77875,-0.872 -2.53472,-0.1635l2.66813,3.2155zm-10.80593,13.1345l-2.53472,-3.161l-0.31128,3.488l2.846,-0.327zm6.71479,-17.7125c1.423,-1.744 3.77985,-1.744 5.20285,0s1.423,4.578 0,6.322l-10.9838,13.4615l-5.78095,0.7085l0.62256,-7.085l10.93933,-13.407z"/>
+							</svg>
+						</i>
+					</button>
+
+
+				</li>
 				<li>
 					<button [class.active]="getFeatureProps(featureId)?.showMeasures"
 							(click)="toggleMeasures(featureId)">

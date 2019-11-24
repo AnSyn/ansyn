@@ -362,6 +362,10 @@ export class AnsynApi {
 			return null;
 		}
 
+		layerData.features.forEach((feature) => {
+			feature.properties.isNonEditable = isNonEditable;
+		});
+
 		this.generateFeaturesIds(layerData);
 		const layer = this.dataLayersService.generateAnnotationLayer(layerName, layerData, isNonEditable);
 		this.store.dispatch(new AddLayer(layer));

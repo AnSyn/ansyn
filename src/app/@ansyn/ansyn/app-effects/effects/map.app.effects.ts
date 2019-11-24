@@ -252,9 +252,9 @@ export class MapAppEffects {
 	toggleLayersGroupLayer$: Observable<any> = this.actions$
 		.pipe(
 			ofType<ToggleMapLayersAction>(MapActionTypes.TOGGLE_MAP_LAYERS),
-			map(({ payload }) => this.imageryCommunicatorService.provide(payload.mapId)),
-			tap((communicator: CommunicatorEntity) => {
-				communicator.visualizers.forEach(v => v.toggleVisibility());
+			tap(({ payload }) => {
+				const communicator = this.imageryCommunicatorService.provide(payload.mapId);
+				communicator.visualizers.forEach(v => v.setVisibility(payload.isVisible));
 			})
 		);
 

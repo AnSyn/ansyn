@@ -63,7 +63,7 @@ export abstract class BaseImageryVisualizer extends BaseImageryPlugin implements
 	 * @description This function is called for Manually hover
 	 */
 
-	abstract toggleVisibility(): void;
+	abstract setVisibility(isVisible: boolean): void;
 
 	/**
 	 * @description This function is called for adding interactions ( mapObject and interactions )

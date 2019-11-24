@@ -5,6 +5,18 @@
 	<p>{{'Measure Distance' | translate}}</p>
 
 	<div class="buttons">
+		<button id="showLayerBtn"
+				[class.active]="measureData?.isLayerShowed"
+				(click)="toggleShowLayer()">
+			<span class="bold-on-hover">{{'Hide / Show Layer' | translate}}</span>
+		</button>
+
+		<button id="startMeasureBtn"
+				[class.active]="measureData?.isToolActive"
+				(click)="toggleMeasureToolActivation()">
+			<span class="bold-on-hover">{{'Stop / Start Measure' | translate}}</span>
+		</button>
+
 		<button id="clearBtn"
 				(click)="clearMeasure()">
 			<span class="bold-on-hover">{{'Clear' | translate}}</span>

@@ -352,7 +352,7 @@ export class AnsynApi {
 		this.store.dispatch(new SetMinimalistViewModeAction(collapse));
 	}
 
-	insertLayer(layerName: string, layerData: FeatureCollection<any>): string {
+	insertLayer(layerName: string, layerData: FeatureCollection<any>, isNonEditable: boolean = false): string {
 		if (!(layerName && layerName.length)) {
 			console.error('failed to add layer without a name', layerName);
 			return null;
@@ -363,7 +363,7 @@ export class AnsynApi {
 		}
 
 		this.generateFeaturesIds(layerData);
-		const layer = this.dataLayersService.generateAnnotationLayer(layerName, layerData);
+		const layer = this.dataLayersService.generateAnnotationLayer(layerName, layerData, isNonEditable);
 		this.store.dispatch(new AddLayer(layer));
 		return layer.id;
 	}

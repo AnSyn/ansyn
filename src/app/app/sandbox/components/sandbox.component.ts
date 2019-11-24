@@ -51,11 +51,39 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		tap((x: IOverlay[]) => this.currentOverlays = x)
 	);
 
+	pointGeometry = {
+		"type": "Point",
+		"coordinates": [
+			-117.90630340576172,
+			33.81583213806152
+		]
+	};
+
+	lineGeometry = {
+		"type": "LineString",
+		"coordinates": [
+			[
+				-117.91295528411865,
+				33.81085395812988
+			],
+			[
+				-117.90703296661377,
+				33.808021545410156
+			],
+			[
+				-117.90248394012451,
+				33.81063938140869
+			]
+		]
+	};
+
 	overlays = [
 		this.overlay('000', OpenLayersStaticImageSourceProviderSourceType, 'https://upload.wikimedia.org/wikipedia/commons/e/e2/Reeipublic_Banana.gif', null, GeoRegisteration.notGeoRegistered, 'vis', null, 576, 1024),
 		this.overlay('111', OpenLayersStaticImageSourceProviderSourceType, 'https://image.shutterstock.com/image-vector/cool-comic-book-bubble-text-450w-342092249.jpg', null, GeoRegisteration.notGeoRegistered, 'vis', null, 470, 450),
 		this.overlay('222', OpenLayersStaticImageSourceProviderSourceType, 'https://imgs.xkcd.com/comics/online_communities.png', null, GeoRegisteration.notGeoRegistered, 'vis', null, 1024, 968),
-		this.overlay('333', OpenLayersStaticImageSourceProviderSourceType, 'https://image.shutterstock.com/z/stock-vector-cool-milkshake-190524542.jpg', null, GeoRegisteration.notGeoRegistered, 'vis', null, 1600, 1500)
+		this.overlay('333', OpenLayersStaticImageSourceProviderSourceType, 'https://image.shutterstock.com/z/stock-vector-cool-milkshake-190524542.jpg', null, GeoRegisteration.notGeoRegistered, 'vis', null, 1600, 1500),
+		this.overlay('444', OpenLayersStaticImageSourceProviderSourceType, 'https://image.shutterstock.com/z/stock-vector-cool-milkshake-190524542.jpg', this.pointGeometry, GeoRegisteration.notGeoRegistered, 'vis', null, 1600, 1500),
+		this.overlay('555', OpenLayersStaticImageSourceProviderSourceType, 'https://image.shutterstock.com/z/stock-vector-cool-milkshake-190524542.jpg', this.lineGeometry, GeoRegisteration.notGeoRegistered, 'vis', null, 1600, 1500)
 	];
 
 	overlay(id: string, sourceType: string, imageUrl: string, footprint: any, geoRegistered: GeoRegisteration = GeoRegisteration.notGeoRegistered, sensorType: string = 'mySensorType', sensorName: string = 'mySensorName', imageWidth?: number, imageHeight?: number): IOverlay {

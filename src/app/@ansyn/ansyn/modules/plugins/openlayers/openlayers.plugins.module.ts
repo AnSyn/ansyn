@@ -39,6 +39,7 @@ import {
 import { ScannedAreaVisualizer } from './plugins/visualizers/scanned-area/scanned-area.visualizer';
 import { OpenlayersAnaglyphSensorModule } from './plugins/anaglyph-sensor/anaglyph-sensor.module';
 import { OpenLayersAirbusSourceProvider } from '@ansyn/ol';
+import { OverlayHoverVisualizer } from "./plugins/visualizers/overlays/overlay-hover-visualizer";
 
 @NgModule({
 	imports: [
@@ -56,6 +57,7 @@ import { OpenLayersAirbusSourceProvider } from '@ansyn/ol';
 				// Visualizers
 				FootprintHeatmapVisualizer,
 				FrameVisualizer,
+				OverlayHoverVisualizer,
 				FootprintPolylineVisualizer,
 				AnnotationsVisualizer,
 				AnsynAnnotationsVisualizer,

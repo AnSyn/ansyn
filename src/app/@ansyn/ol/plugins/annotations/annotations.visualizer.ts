@@ -1,6 +1,5 @@
 import { Inject } from '@angular/core';
 import {
-	getPointByGeometry,
 	ImageryVisualizer,
 	IVisualizerEntity,
 	MarkerSize,
@@ -29,6 +28,7 @@ import olIcon from 'ol/style/Icon';
 import olStroke from 'ol/style/Stroke';
 import olStyle from 'ol/style/Style';
 import olText from 'ol/style/Text';
+import * as proj from 'ol/proj';
 import { Subject } from 'rxjs';
 import { mergeMap, take, tap } from 'rxjs/operators';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
@@ -38,11 +38,10 @@ import { IOLPluginsConfig, OL_PLUGINS_CONFIG } from '../plugins.config';
 import { AnnotationMode, IAnnotationBoundingRect, IDrawEndEvent } from './annotations.model';
 import { DragPixelsInteraction } from './dragPixelsInteraction';
 
-export interface IEditMode {
-	feature: olFeature,
-	interaction: { translate: any },
-	label: { feature: olFeature }
-};
+export interface ILabelEditMode {
+	originalFeature: olFeature,
+	labelFeature: olFeature
+}
 
 
 // @dynamic
@@ -60,19 +59,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	geoJsonFormat: OLGeoJSON;
 	dragBox = new DragBox({ condition: platformModifierKeyOnly });
 	translationSubscriptions = [];
-	edited: IEditMode;
-
-	protected measuresTextStyle = {
-		font: '16px Calibri,sans-serif',
-		fill: new olFill({
-			color: '#fff'
-		}),
-		stroke: new olStroke({
-			color: '#000',
-			width: 3
-		}),
-		offsetY: 30
-	};
+	edited: ILabelEditMode;
 	events = {
 		onClick: new Subject(),
 		onSelect: new Subject<string[]>(),
@@ -82,16 +69,17 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		removeEntity: new Subject<string>(),
 		updateEntity: new Subject<IVisualizerEntity>(),
 		offsetEntity: new Subject<any>(),
-		onEditStart: new Subject<IEditMode>(),
+		onEditStart: new Subject<ILabelEditMode>(),
 		onEditEnd: new Subject()
 	};
 	clearModified: any = tap(() => {
 		if (this.edited) {
-			this.editFeature(this.edited.feature.getId())
+			this.editFeature(this.edited.originalFeature.getId())
 		}
 	});
 	@AutoSubscription
 	selected$ = this.events.onSelect.pipe(this.clearModified, tap((selected: any) => this.selected = selected));
+
 	@AutoSubscription
 	edited$ = this.events.onEditStart.pipe(tap((edited) => this.edited = edited));
 
@@ -105,6 +93,19 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			geometryFunction: this.rectangleGeometryFunction.bind(this)
 		}
 	};
+
+	protected measuresTextStyle = {
+		font: '16px Calibri,sans-serif',
+		fill: new olFill({
+			color: '#fff'
+		}),
+		stroke: new olStroke({
+			color: '#000',
+			width: 3
+		}),
+		offsetY: 30
+	};
+
 	private iconSrc = '';
 
 	constructor(protected projectionService: OpenLayersProjectionService,
@@ -534,53 +535,56 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		let event = null;
 
 		if (this.edited) {
-			const { feature: modifiedFeature } = this.edited;
+			const { originalFeature } = this.edited;
 			this.iMap.mapObject.removeInteraction('translateInteractionHandler');
-			oldFeature = modifiedFeature;
+			oldFeature = originalFeature;
 		}
 
 		if (!oldFeature || featureId !== oldFeature.getId()) { // start editing
-			const feature: olFeature = this.source.getFeatureById(featureId);
-			this.updateFeature(feature.getId(), {editMode: true});
-			const center = this.getCenterOfFeature(feature);
-			const entity = this.getEntity(feature);
-			const { mode: entityMode } = feature.getProperties(feature);
-			const labelGeometry = entity.style.initial.label.geometry;
+			const originalFeature: olFeature = this.source.getFeatureById(featureId);
+			this.updateFeature(originalFeature.getId(), { editMode: true });
+			const center = this.getCenterOfFeature(originalFeature);
+			const entity = this.getEntity(originalFeature);
+			const { mode: entityMode } = originalFeature.getProperties(originalFeature);
+			let labelGeometry = undefined;
+			const translate = originalFeature.get('translateLabel');
+			if (translate) {
+				const { geometry, projection } = translate;
+				labelGeometry = proj.transform(geometry, projection, this.iMap.mapObject.getView().getProjection());
+			}
 			const labelFeature = new olFeature({
 				geometry: new olPoint(labelGeometry ? labelGeometry : center.coordinates),
 			});
-			labelFeature.setStyle( new olStyle({
-				text: new olText( {
+			labelFeature.setStyle(new olStyle({
+				text: new olText({
 					font: entity.style.initial.label.font,
-					fill: new olFill({color: entity.style.initial.label.fill}),
-					text: feature.getProperties().label,
-					offsetY: entityMode  === 'Point' ? 30 : 0
+					fill: new olFill({ color: entity.style.initial.label.fill }),
+					text: originalFeature.getProperties().label,
+					offsetY: entityMode === 'Point' ? 30 : 0
 				})
 			}));
 
-			const translate = new olTranslate({
+			const translateInteraction = new olTranslate({
 				features: new olCollection([labelFeature]),
 				hitTolerance: 2
 			});
-			translate.on('translateend', (translateend) => {
-				entity.style.initial.label.geometry = translateend.coordinate;
-				feature.styleCache = this.createStyle(feature, true, entity.style.initial);
+			translateInteraction.on('translateend', (translateend) => {
+				this.updateFeature(originalFeature.getId(), {'translateLabel': {
+					geometry: translateend.features.item(0).getGeometry().getCoordinates(),
+					projection: this.iMap.mapObject.getView().getProjection()
+				}});
+				this.purgeCache(originalFeature);
+				this.featureStyle(originalFeature);
 			});
-			this.purgeCache(feature);
-			this.addInteraction('translateInteractionHandler', translate);
+			this.addInteraction('translateInteractionHandler', translateInteraction);
 			event = {
-				feature,
-				label: {
-					feature: labelFeature,
-				},
-				interaction: {
-					translate
-				}
+				originalFeature,
+				labelFeature
 			};
 			this.source.addFeature(labelFeature);
 		} else {
-			this.updateFeature(featureId, {editMode: false});
-			this.source.removeFeature(this.edited.label.feature);
+			this.updateFeature(featureId, { editMode: false });
+			this.source.removeFeature(this.edited.labelFeature);
 		}
 		this.source.refresh();
 		this.events.onEditStart.next(event);

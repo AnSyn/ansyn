@@ -11,7 +11,7 @@ import Point from 'ol/geom/Point';
 import VectorLayer from 'ol/layer/Vector';
 import ol_Layer from 'ol/layer/Layer';
 import OLGeoJSON from 'ol/format/GeoJSON';
-
+import * as proj from 'ol/proj';
 import {
 	BaseImageryVisualizer, getPointByGeometry,
 	IVisualizerEntity,
@@ -180,7 +180,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			secondaryStyle.geometry = styleSettings.geometry
 		}
 
-		if (styleSettings.label.text && !feature.getProperties().editMode) {
+		if ((styleSettings.label && styleSettings.label.text) && !feature.getProperties().editMode) {
 			const fill = new Fill({ color: styleSettings.label.fill });
 			const stroke = new Stroke({
 				color: styleSettings.label.stroke ? styleSettings.label.stroke : '#fff',
@@ -194,11 +194,13 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 				offsetY: <any>styleSettings.label.offsetY,
 				text: <any>label.text,
 				fill,
-				stroke,
+				stroke
 			});
 			textStyle.geometry = (feature) => {
-				if ( label.geometry) {
-					return new Point(label.geometry);
+				const translate = feature.get('translateLabel');
+				if ( translate) {
+					const currentProj = this.iMap.mapObject.getView().getProjection();
+					return new Point(proj.transform(translate.geometry, translate.projection, currentProj));
 				}
 				else {
 					return new Point(this.getCenterOfFeature(feature).coordinates)

@@ -62,6 +62,11 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		return entity && entity.originalEntity;
 	}
 
+	getFeatureById(featureId: string): Feature {
+		const entity = this.idToEntity.get(featureId);
+		return entity && entity.feature;
+	}
+
 	onInit() {
 		this.initLayers();
 	}

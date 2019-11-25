@@ -8,6 +8,7 @@ import { fromEvent, Observable } from 'rxjs';
 import { UUID } from 'angular2-uuid';
 import { SetToastMessageAction } from '@ansyn/map-facade';
 import { tap } from 'rxjs/operators';
+import { FeatureCollection } from "geojson";
 
 @Component({
 	selector: 'ansyn-import-layer',
@@ -46,7 +47,8 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 
 				if (this.isFeatureCollection(layerData)) {
 					this.generateFeaturesIds(layerData);
-					const layer = this.dataLayersService.generateAnnotationLayer(layerName, layerData);
+					const isNonEditable = this.isNonEditable(layerData);
+					const layer = this.dataLayersService.generateAnnotationLayer(layerName, layerData, isNonEditable);
 					this.store.dispatch(new AddLayer(layer));
 				} else {
 					throw new Error('Not a feature collection');
@@ -78,11 +80,15 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 		return json && json.type === 'FeatureCollection' && Array.isArray(json.features);
 	}
 
-	generateFeaturesIds(annotationsLayer): void {
+	generateFeaturesIds(featureCollection: FeatureCollection): void {
 		/* reference */
-		annotationsLayer.features.forEach((feature) => {
+		featureCollection.features.forEach((feature) => {
 			feature.properties = { ...feature.properties, id: UUID.UUID() };
 		});
+	}
+
+	isNonEditable(featureCollection: FeatureCollection): boolean {
+		return featureCollection.features.some((feature) => feature.properties.isNonEditable);
 	}
 
 	simpleStyleToVisualizer(annotationsLayer): void {

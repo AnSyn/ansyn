@@ -334,7 +334,7 @@ export class AnsynApi {
 		this.store.dispatch(new SetOverlaysCriteriaAction(criteria));
 	}
 
-	getOverlayData(mapId: string = this.activeMapId) {
+	getOverlayData(mapId: string = this.activeMapId): IOverlay {
 		return this.mapsEntities[mapId].data.overlay;
 	}
 

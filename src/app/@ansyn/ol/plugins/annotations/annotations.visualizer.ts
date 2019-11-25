@@ -133,7 +133,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				'marker-color': `#ffffff`,
 				label: {
 					overflow: true,
-					font: (feature) => {
+					fontSize: (feature) => {
 						const entity = this.idToEntity.get(feature.getId());
 						const labelSize = entity && entity.originalEntity && entity.originalEntity.labelSize;
 						return labelSize || 28;
@@ -161,7 +161,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			this.updateStyle({
 				initial: {
 					label: {
-						font: 12,
+						fontSize: 12,
 						fill: '#fff',
 						'stroke-width': 3,
 						text: (feature) => feature.getId() || ''

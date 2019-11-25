@@ -584,7 +584,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return labelFeature;
 	}
 
-	private moveLabelInteraction(originalFeature: olFeature, labelFeature: olFeature): olTranslate{
+	private moveLabelInteraction(originalFeature: olFeature, labelFeature: olFeature): olTranslate {
 		const translateInteraction = new olTranslate({
 			features: new olCollection([labelFeature]),
 			hitTolerance: 2

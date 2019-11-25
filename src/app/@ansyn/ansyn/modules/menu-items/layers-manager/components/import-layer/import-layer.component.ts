@@ -8,7 +8,7 @@ import { fromEvent, Observable } from 'rxjs';
 import { UUID } from 'angular2-uuid';
 import { SetToastMessageAction } from '@ansyn/map-facade';
 import { tap } from 'rxjs/operators';
-import { FeatureCollection } from "geojson";
+import { FeatureCollection } from 'geojson';
 
 @Component({
 	selector: 'ansyn-import-layer',

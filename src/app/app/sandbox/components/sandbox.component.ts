@@ -448,7 +448,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		this.ansynApi.setMinimalistViewMode(false);
 	}
 
-	insertLayer(isNonEditable: boolean = false) {
+	insertLayer(isEditable: boolean = true) {
 		const layer: FeatureCollection = {
 			'type': 'FeatureCollection',
 			'features': [{
@@ -578,7 +578,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 				}
 			}]
 		};
-		this.layerId = this.ansynApi.insertLayer(`test${isNonEditable ? '_nonedit' : ''}`, layer, isNonEditable);
+		this.layerId = this.ansynApi.insertLayer(`test${!isEditable ? '_nonedit' : ''}`, layer, isEditable);
 	}
 
 	removeLayer() {

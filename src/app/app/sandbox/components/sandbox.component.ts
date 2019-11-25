@@ -1,14 +1,21 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	AnsynApi,
+	FilterMetadata,
+	FiltersService,
 	GeoRegisteration,
+	ICaseFacetsState,
+	IFilter,
 	IOverlay,
 	IOverlaysCriteria,
 	PhotoAngle,
 	RegionContainment,
+	selectFacets,
+	selectFilters,
 	selectMiscOverlays,
 	selectOverlaysArray,
-	SetMiscOverlay
+	SetMiscOverlay,
+	UpdateFilterAction
 } from '@ansyn/ansyn';
 import { FeatureCollection, Point, Polygon } from 'geojson';
 import {
@@ -18,7 +25,7 @@ import {
 	OpenLayersStaticImageSourceProviderSourceType
 } from '@ansyn/ol';
 import * as momentNs from 'moment';
-import { take, tap } from 'rxjs/operators';
+import { take, tap, withLatestFrom } from 'rxjs/operators';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
@@ -52,16 +59,16 @@ export class SandboxComponent implements OnInit, OnDestroy {
 	);
 
 	pointGeometry = {
-		"type": "Point",
-		"coordinates": [
+		'type': 'Point',
+		'coordinates': [
 			-117.90630340576172,
 			33.81583213806152
 		]
 	};
 
 	lineGeometry = {
-		"type": "LineString",
-		"coordinates": [
+		'type': 'LineString',
+		'coordinates': [
 			[
 				-117.91295528411865,
 				33.81085395812988
@@ -598,5 +605,23 @@ export class SandboxComponent implements OnInit, OnDestroy {
 	stopDrag() {
 		const plugin: AnnotationsVisualizer = this.imageryCommunicatorService.communicatorsAsArray()[0].getPlugin(AnnotationsVisualizer);
 		plugin.setMode(null, false);
+	}
+
+	updateOverlayAsPartiallyRegistered() {
+		const overlay = this.ansynApi.getOverlayData();
+		if (overlay) {
+			overlay.isGeoRegistered = GeoRegisteration.poorGeoRegistered;
+			this.store$.select(selectFilters).pipe(
+				take(1),
+				withLatestFrom(this.store$.select(selectOverlaysArray), this.store$.select(selectFacets)),
+				tap(([filters, overlays, facets]: [Map<IFilter, FilterMetadata>, IOverlay[], ICaseFacetsState]) => {
+					const data = FiltersService.getRefreshedFilterDataByFilterModel('isGeoRegistered', filters, facets, overlays);
+					this.store$.dispatch(new UpdateFilterAction({
+						filter: data.filter,
+						newMetadata: data.filterMetadata
+					}));
+				})
+			).subscribe();
+		}
 	}
 }

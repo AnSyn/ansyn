@@ -543,40 +543,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (!oldFeature || featureId !== oldFeature.getId()) { // start editing
 			const originalFeature: olFeature = this.source.getFeatureById(featureId);
 			this.updateFeature(originalFeature.getId(), { editMode: true });
-			const center = this.getCenterOfFeature(originalFeature);
-			const entity = this.getEntity(originalFeature);
-			const { mode: entityMode } = originalFeature.getProperties(originalFeature);
-			let labelGeometry = undefined;
-			const translate = originalFeature.get('translateLabel');
-			if (translate) {
-				const { geometry, projection } = translate;
-				labelGeometry = proj.transform(geometry, projection, this.iMap.mapObject.getView().getProjection());
-			}
-			const labelFeature = new olFeature({
-				geometry: new olPoint(labelGeometry ? labelGeometry : center.coordinates),
-			});
-			labelFeature.setStyle(new olStyle({
-				text: new olText({
-					font: entity.style.initial.label.font,
-					fill: new olFill({ color: entity.style.initial.label.fill }),
-					text: originalFeature.getProperties().label,
-					offsetY: entityMode === 'Point' ? 30 : 0
-				})
-			}));
+			const labelFeature = this.createLabelFeature(originalFeature);
 
-			const translateInteraction = new olTranslate({
-				features: new olCollection([labelFeature]),
-				hitTolerance: 2
-			});
-			translateInteraction.on('translateend', (translateend) => {
-				this.updateFeature(originalFeature.getId(), {'translateLabel': {
-					geometry: translateend.features.item(0).getGeometry().getCoordinates(),
-					projection: this.iMap.mapObject.getView().getProjection()
-				}});
-				this.purgeCache(originalFeature);
-				this.featureStyle(originalFeature);
-			});
-			this.addInteraction('translateInteractionHandler', translateInteraction);
+			this.addInteraction('translateInteractionHandler', this.moveLabelInteraction(originalFeature, labelFeature));
 			event = {
 				originalFeature,
 				labelFeature
@@ -588,6 +557,48 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 		this.source.refresh();
 		this.events.onEditStart.next(event);
+	}
+
+	private createLabelFeature(feature: olFeature): olFeature {
+		const center = this.getCenterOfFeature(feature);
+		const entity = this.getEntity(feature);
+		const { mode: entityMode } = feature.getProperties();
+		let labelGeometry = undefined;
+		const translate = feature.get('translateLabel');
+		if (translate) {
+			const { geometry, projection } = translate;
+			labelGeometry = proj.transform(geometry, projection, this.iMap.mapObject.getView().getProjection());
+		}
+		const labelFeature = new olFeature({
+			geometry: new olPoint(labelGeometry ? labelGeometry : center.coordinates),
+		});
+		labelFeature.setStyle(new olStyle({
+			text: new olText({
+				font: entity.style.initial.label.font,
+				fill: new olFill({ color: entity.style.initial.label.fill }),
+				text: feature.getProperties().label,
+				offsetY: entityMode === 'Point' ? 30 : 0
+			})
+		}));
+
+		return labelFeature;
+	}
+
+	private moveLabelInteraction(originalFeature: olFeature, labelFeature: olFeature): olTranslate{
+		const translateInteraction = new olTranslate({
+			features: new olCollection([labelFeature]),
+			hitTolerance: 2
+		});
+		translateInteraction.on('translateend', (translateend) => {
+			this.updateFeature(originalFeature.getId(), {'translateLabel': {
+					geometry: translateend.features.item(0).getGeometry().getCoordinates(),
+					projection: this.iMap.mapObject.getView().getProjection()
+				}});
+			this.purgeCache(originalFeature);
+			this.featureStyle(originalFeature);
+		});
+
+		return translateInteraction;
 	}
 
 	protected mapClick = (event) => {

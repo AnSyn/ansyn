@@ -1,8 +1,8 @@
 <form class="annotation-label-edit"
-	  (ngSubmit)="labelForm.blur()">
+	  (ngSubmit)="labelInput.blur()">
 
 	<mat-form-field class="label-font-size"
-	#labelForm>
+	>
 		<mat-select [placeholder]="'Label size' | translate"
 					[ngModel]="labelSize"
 					(ngModelChange)="onChangeSize.emit($event)"

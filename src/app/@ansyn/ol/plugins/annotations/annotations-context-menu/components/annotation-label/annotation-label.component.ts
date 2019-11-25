@@ -17,8 +17,4 @@ export class AnnotationLabelComponent implements OnInit {
 
 	ngOnInit() {
 	}
-
-	change($event) {
-		console.log({ $event })
-	}
 }

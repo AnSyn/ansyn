@@ -43,7 +43,7 @@ export class DataLayersService implements OnInit, OnDestroy {
 		);
 
 
-	generateAnnotationLayer(name = 'Default', data: any = featureCollection([])): ILayer {
+	generateAnnotationLayer(name = 'Default', data: any = featureCollection([]), isNonEditable: boolean = false): ILayer {
 		return {
 			id: UUID.UUID(),
 			creationTime: new Date(),
@@ -51,7 +51,8 @@ export class DataLayersService implements OnInit, OnDestroy {
 			name,
 			caseId: this.caseId,
 			type: LayerType.annotation,
-			data
+			data,
+			isNonEditable
 		};
 	}
 

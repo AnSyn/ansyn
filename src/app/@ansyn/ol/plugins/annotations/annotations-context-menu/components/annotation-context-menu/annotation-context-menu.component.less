@@ -75,6 +75,11 @@ i {
 					&.active, &:hover {
 						background-color: @application-primary-color;
 					}
+
+					&.disabled {
+						opacity: 0.6;
+						pointer-events: none;
+					}
 				}
 
 				li.expanded-selection {

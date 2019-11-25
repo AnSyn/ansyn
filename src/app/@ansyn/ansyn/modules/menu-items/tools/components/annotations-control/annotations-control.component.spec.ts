@@ -11,7 +11,7 @@ import { MockComponent } from '../../../../core/test/mock-component';
 
 const mockComboBoxOptionComponent = MockComponent({
 	selector: 'ansyn-combo-box-option',
-	inputs: ['value'],
+	inputs: ['value', 'disabled'],
 	outputs: []
 });
 

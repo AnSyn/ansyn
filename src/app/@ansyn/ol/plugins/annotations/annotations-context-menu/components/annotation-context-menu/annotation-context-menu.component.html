@@ -62,6 +62,7 @@
 				<li>
 					<p>
 						<button [class.active]="selectedTab[featureId] === Tabs.Colors"
+								[class.disabled]="isFeatureNonEditable(featureId)"
 								(click)="selectTab(featureId, Tabs.Colors)">
 							<i [attr.tooltip-value]="'Color' | translate" tooltip-class="bottom">
 								<svg >
@@ -78,7 +79,9 @@
 					</p>
 				</li>
 				<li *ngIf="!getFeatureProps(featureId)?.undeletable">
-					<button class='removeFeature' (click)="removeFeature(featureId)">
+					<button class='removeFeature' (click)="removeFeature(featureId)"
+							[class.disabled]="isFeatureNonEditable(featureId)"
+					>
 						<i [attr.tooltip-value]="'Delete' | translate" tooltip-class="bottom">
 							<svg >
 								<path d="M12 11.296h2.656c0.384 0 0.672-0.288 0.672-0.64v-0.672h1.344v-0.64h-1.344v0.64h1.344v0.672c0 0.352 0.288 0.64 0.672 0.64h-5.344v10.688h8v-10.688h-8zM20.672 9.984v0h1.344c0.864 0 0.864 1.312 0 1.312h-0.672v11.36c0 0.352-0.32 0.64-0.672 0.64h-9.344c-0.352 0-0.672-0.288-0.672-0.64v-11.36h-0.64v-1.312h1.312c-0.352 0-0.672 0.288-0.672 0.672v0.64h-0.64c-0.896 0-0.896-1.312 0-1.312h4v-1.312c0-0.384 0.288-0.672 0.64-0.672h2.688c0.352 0 0.672 0.288 0.672 0.672v1.312h4v1.312h-0.672v-0.64c0-0.384-0.32-0.672-0.672-0.672zM14.016 13.984c0-0.352 0.288-0.64 0.64-0.64 0.384 0 0.672 0.288 0.672 0.64v5.344c0 0.384-0.288 0.672-0.672 0.672-0.352 0-0.64-0.288-0.64-0.672v-5.344zM18.016 19.328c0 0.384-0.32 0.672-0.672 0.672-0.384 0-0.672-0.288-0.672-0.672v-5.344c0-0.352 0.288-0.64 0.672-0.64 0.352 0 0.672 0.288 0.672 0.64v5.344z"></path>

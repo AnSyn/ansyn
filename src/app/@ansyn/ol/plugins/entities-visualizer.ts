@@ -58,8 +58,17 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	}
 
 	getEntity(feature: Feature): IVisualizerEntity {
-		const entity = this.idToEntity.get(<string>feature.getId());
+		return this.getEntityById(<string>feature.getId());
+	}
+
+	getEntityById(featureId: string): IVisualizerEntity {
+		const entity = this.idToEntity.get(featureId);
 		return entity && entity.originalEntity;
+	}
+
+	getJsonFeatureById(featureId: string): Feature {
+		const originalEntity = this.getEntityById(featureId);
+		return originalEntity && originalEntity.featureJson;
 	}
 
 	onInit() {

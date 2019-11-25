@@ -41,7 +41,7 @@ const mockAnsynComboBox = MockComponent({
 
 const mockComboBoxOptionComponent = MockComponent({
 	selector: 'ansyn-combo-box-option',
-	inputs: ['value'],
+	inputs: ['value', 'disabled'],
 	outputs: []
 });
 

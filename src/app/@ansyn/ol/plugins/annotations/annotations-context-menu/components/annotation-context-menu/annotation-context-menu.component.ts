@@ -174,4 +174,9 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	getType(): string {
 		return '';
 	}
+
+	isFeatureNonEditable(featureId: string) {
+		const feature = this.annotations.getJsonFeatureById(featureId);
+		return feature && feature.properties.isNonEditable;
+	}
 }

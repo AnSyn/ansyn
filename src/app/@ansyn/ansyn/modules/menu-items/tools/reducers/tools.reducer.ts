@@ -139,14 +139,19 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 
 			tmpMap = new Map(state.flags);
 			tmpMap.set(toolsFlags.isMeasureToolActive, action.payload);
+			const mapsMeasures = new Map(state.mapsMeasures);
 			if (!action.payload) {
-				const mapsMeasures = new Map(state.mapsMeasures);
 				Array.from(mapsMeasures.keys()).forEach((key: string) => {
 					mapsMeasures.set(key, createNewMeasureData());
 				});
-
 				return { ...state, flags: tmpMap, mapsMeasures };
 			} else {
+				Array.from(mapsMeasures.keys()).forEach((key: string) => {
+					const measureData = mapsMeasures.get(key);
+					measureData.isToolActive = true;
+					measureData.isLayerShowed = true;
+					mapsMeasures.set(key, measureData);
+				});
 				return { ...state, flags: tmpMap };
 			}
 

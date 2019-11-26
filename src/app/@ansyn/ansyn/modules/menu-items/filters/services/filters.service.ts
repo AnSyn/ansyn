@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IFilter } from '../models/IFilter';
-import { cloneDeep, get as _get } from 'lodash';
+import { clone, cloneDeep, get as _get } from 'lodash';
 import { Filters, IFiltersState } from '../reducer/filters.reducer';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { EnumFilterMetadata, IEnumFiled } from '../models/metadata/enum-filter-metadata';
@@ -9,7 +9,7 @@ import { buildFilteredOverlays } from '../../../core/utils/overlays';
 import { mapValuesToArray } from '../../../core/utils/misc';
 import { IFilterModel } from '../../../core/models/IFilterModel';
 import { FilterType } from '../models/filter-type';
-import { ICaseEnumFilterMetadata, ICaseFilter } from '../../cases/models/case.model';
+import { ICaseEnumFilterMetadata, ICaseFacetsState, ICaseFilter } from '../../cases/models/case.model';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 
 export const filtersConfig = 'filtersConfig';
@@ -83,4 +83,23 @@ export class FiltersService {
 			.forEach((overlay) => metadata.incrementFilteredCount(_get(overlay, metadataKey.modelName)));
 	}
 
+	static getFilterByFilterModel(filterModel: string, filters: Filters): IFilter {
+		const filtersArray = Array.from(filters.keys());
+		const resultFilter = filtersArray.find((filter: IFilter) => {
+			return filter.modelName === filterModel;
+		});
+		return resultFilter;
+	}
+
+	static getRefreshedFilterDataByFilterModel(filterModel: string, filters: Filters, facets: ICaseFacetsState, overlays: IOverlay[]): { filter: IFilter, filterMetadata: FilterMetadata } {
+		const filter: IFilter = FiltersService.getFilterByFilterModel(filterModel, filters);
+		if (!filter) {
+			return null;
+		}
+		const metadata: FilterMetadata = filters.get(filter);
+		const filterMetadata = clone(metadata)
+		const selectedFilter: ICaseFilter = facets.filters.find(({ fieldName }) => fieldName === filter.modelName);
+		filterMetadata.initializeFilter(overlays, filter.modelName, selectedFilter, filter.visibility);
+		return { filter, filterMetadata };
+	}
 }

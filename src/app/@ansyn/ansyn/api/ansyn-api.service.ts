@@ -334,7 +334,7 @@ export class AnsynApi {
 		this.store.dispatch(new SetOverlaysCriteriaAction(criteria));
 	}
 
-	getOverlayData(mapId: string = this.activeMapId) {
+	getOverlayData(mapId: string = this.activeMapId): IOverlay {
 		return this.mapsEntities[mapId].data.overlay;
 	}
 
@@ -352,7 +352,7 @@ export class AnsynApi {
 		this.store.dispatch(new SetMinimalistViewModeAction(collapse));
 	}
 
-	insertLayer(layerName: string, layerData: FeatureCollection<any>): string {
+	insertLayer(layerName: string, layerData: FeatureCollection<any>, isEditable: boolean = true): string {
 		if (!(layerName && layerName.length)) {
 			console.error('failed to add layer without a name', layerName);
 			return null;
@@ -362,8 +362,12 @@ export class AnsynApi {
 			return null;
 		}
 
+		layerData.features.forEach((feature) => {
+			feature.properties.isNonEditable = !isEditable;
+		});
+
 		this.generateFeaturesIds(layerData);
-		const layer = this.dataLayersService.generateAnnotationLayer(layerName, layerData);
+		const layer = this.dataLayersService.generateAnnotationLayer(layerName, layerData, !isEditable);
 		this.store.dispatch(new AddLayer(layer));
 		return layer.id;
 	}

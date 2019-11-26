@@ -1,0 +1,24 @@
+<form class="annotation-label-edit"
+	  (ngSubmit)="labelInput.blur()">
+
+	<mat-form-field class="label-font-size"
+	>
+		<mat-select [placeholder]="'Label size' | translate"
+					[ngModel]="labelSize"
+					(ngModelChange)="onChangeSize.emit($event)"
+		name="labelSize">
+			<mat-option *ngFor="let size of optionalSize" [value]="size" >{{size}}</mat-option>
+		</mat-select>
+	</mat-form-field>
+	<mat-form-field class="label-form-field">
+		<input matInput
+			   type="text"
+               #labelInput
+			   autofocus
+			   [placeholder]="'Label' | translate"
+			   name="EditLabel"
+			   [ngModel]="label"
+			   (ngModelChange)="onChangeText.emit($event)">
+	</mat-form-field>
+</form>
+

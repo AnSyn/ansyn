@@ -10,8 +10,9 @@ import { ColorPickerComponent } from '../color-picker/color-picker.component';
 import { AnnotationsWeightComponent } from '../annotations-weight/annotations-weight.component';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { MatInputModule } from '@angular/material';
+import { MatInputModule, MatSelectModule } from '@angular/material';
 import { TranslateModule } from '@ngx-translate/core';
+import { AnnotationLabelComponent } from '../annotation-label/annotation-label.component';
 
 describe('AnnotationContextMenuComponent', () => {
 	let component: AnnotationContextMenuComponent;
@@ -27,12 +28,14 @@ describe('AnnotationContextMenuComponent', () => {
 				AnnotationContextMenuComponent,
 				AnnotationsWeightComponent,
 				AnnotationsColorComponent,
+				AnnotationLabelComponent,
 				ColorPickerComponent
 			],
 			imports: [
 				FormsModule,
 				ColorPickerModule,
 				MatInputModule,
+				MatSelectModule,
 				TranslateModule.forRoot()
 			]
 		}).compileComponents();
@@ -44,7 +47,10 @@ describe('AnnotationContextMenuComponent', () => {
 		component.mapId = 'mapId';
 		spyOn(component, 'calcBoundingRect').and.returnValue({ top: `0px`, left: `0px`, width: `0px`, height: `0px` });
 		spyOn(component, 'getFeatureProps').and.returnValue({});
-		component.annotations = <any>{ idToEntity: new Map() };
+		component.annotations = <any>{
+			idToEntity: new Map(),
+			getJsonFeatureById: () => ({ properties: {} })
+		};
 		fixture.detectChanges();
 	});
 

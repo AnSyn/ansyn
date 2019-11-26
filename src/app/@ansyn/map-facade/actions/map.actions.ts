@@ -350,7 +350,7 @@ export class SetLayoutSuccessAction implements Action {
 export class ToggleMapLayersAction implements Action {
 	type = MapActionTypes.TOGGLE_MAP_LAYERS;
 
-	constructor(public payload: { mapId: string }) {
+	constructor(public payload: { mapId: string, isVisible: boolean}) {
 	}
 }
 

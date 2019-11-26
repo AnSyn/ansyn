@@ -59,8 +59,17 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	}
 
 	getEntity(feature: Feature): IVisualizerEntity {
-		const entity = this.idToEntity.get(<string>feature.getId());
+		return this.getEntityById(<string>feature.getId());
+	}
+
+	getEntityById(featureId: string): IVisualizerEntity {
+		const entity = this.idToEntity.get(featureId);
 		return entity && entity.originalEntity;
+	}
+
+	getJsonFeatureById(featureId: string): Feature {
+		const originalEntity = this.getEntityById(featureId);
+		return originalEntity && originalEntity.featureJson;
 	}
 
 	onInit() {
@@ -94,12 +103,12 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 	}
 
-	toggleVisibility() {
+	setVisibility(isVisible: boolean) {
 		if (!this.isHideable) {
 			return;
 		}
 
-		this.isHidden = !this.isHidden;
+		this.isHidden = !isVisible;
 		if (this.isHidden) {
 			this.iMap.removeLayer(this.vector);
 		} else {
@@ -188,8 +197,8 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			const { label } = styleSettings;
 
 			textStyle.text = new Text({
-				font: label.font,
 				overflow: label.overflow,
+				font: `${styleSettings.label.fontSize}px Calibri,sans-serif`,
 				offsetY: <any>styleSettings.label.offsetY,
 				text: <any>label.text,
 				fill,

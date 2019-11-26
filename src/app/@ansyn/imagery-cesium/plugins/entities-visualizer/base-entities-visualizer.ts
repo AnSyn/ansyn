@@ -107,6 +107,6 @@ export abstract class BaseEntitiesVisualizer extends BaseImageryVisualizer {
 		return this.addOrUpdateEntities(logicalEntities);
 	}
 
-	toggleVisibility(): void {
+	setVisibility(isVisible: boolean): void {
 	}
 }

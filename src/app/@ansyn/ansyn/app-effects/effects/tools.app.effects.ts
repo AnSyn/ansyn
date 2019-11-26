@@ -4,6 +4,8 @@ import { Action, select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import {
+	ImageryCreatedAction,
+	ImageryRemovedAction,
 	IMapState,
 	MapActionTypes,
 	MapFacadeService,
@@ -24,9 +26,11 @@ import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/stat
 import { CasesActionTypes } from '../../modules/menu-items/cases/actions/cases.actions';
 import {
 	ClearActiveInteractionsAction,
+	CreateMeasureDataAction,
 	DisableImageProcessing,
 	EnableImageProcessing,
 	GoToAction,
+	RemoveMeasureDataAction,
 	SetActiveCenter,
 	SetActiveOverlaysFootprintModeAction,
 	SetAnnotationMode,
@@ -79,13 +83,25 @@ export class ToolsAppEffects {
 			ToolsActionsTypes.GO_TO,
 			ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE,
 			ToolsActionsTypes.UPDATE_TOOLS_FLAGS,
-			ToolsActionsTypes.SET_MEASURE_TOOL_STATE,
+			ToolsActionsTypes.MEASURES.SET_MEASURE_TOOL_STATE,
 			ToolsActionsTypes.STORE.SET_ANNOTATION_MODE,
 			ToolsActionsTypes.SET_SUB_MENU
 		),
 		tap((action) => {
 			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Tools', action.type);
 		}));
+
+	@Effect()
+	onImageriesChanged: Observable<any> = this.actions$.pipe(
+		ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED),
+		map((action: ImageryCreatedAction | ImageryRemovedAction) => {
+			if (action instanceof ImageryCreatedAction) {
+				return new CreateMeasureDataAction({ mapId: action.payload.id });
+			} else { // instanceof ImageryRemovedAction
+				return new RemoveMeasureDataAction({ mapId: action.payload.id });
+			}
+		})
+	);
 
 	@Effect()
 	drawInterrupted$: Observable<any> = this.actions$.pipe(

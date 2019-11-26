@@ -1,14 +1,21 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	AnsynApi,
+	FilterMetadata,
+	FiltersService,
 	GeoRegisteration,
+	ICaseFacetsState,
+	IFilter,
 	IOverlay,
 	IOverlaysCriteria,
 	PhotoAngle,
 	RegionContainment,
+	selectFacets,
+	selectFilters,
 	selectMiscOverlays,
 	selectOverlaysArray,
-	SetMiscOverlay
+	SetMiscOverlay,
+	UpdateFilterAction
 } from '@ansyn/ansyn';
 import { FeatureCollection, Point, Polygon } from 'geojson';
 import {
@@ -18,7 +25,7 @@ import {
 	OpenLayersStaticImageSourceProviderSourceType
 } from '@ansyn/ol';
 import * as momentNs from 'moment';
-import { take, tap } from 'rxjs/operators';
+import { take, tap, withLatestFrom } from 'rxjs/operators';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
@@ -51,11 +58,39 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		tap((x: IOverlay[]) => this.currentOverlays = x)
 	);
 
+	pointGeometry = {
+		'type': 'Point',
+		'coordinates': [
+			-117.90630340576172,
+			33.81583213806152
+		]
+	};
+
+	lineGeometry = {
+		'type': 'LineString',
+		'coordinates': [
+			[
+				-117.91295528411865,
+				33.81085395812988
+			],
+			[
+				-117.90703296661377,
+				33.808021545410156
+			],
+			[
+				-117.90248394012451,
+				33.81063938140869
+			]
+		]
+	};
+
 	overlays = [
 		this.overlay('000', OpenLayersStaticImageSourceProviderSourceType, 'https://upload.wikimedia.org/wikipedia/commons/e/e2/Reeipublic_Banana.gif', null, GeoRegisteration.notGeoRegistered, 'vis', null, 576, 1024),
 		this.overlay('111', OpenLayersStaticImageSourceProviderSourceType, 'https://image.shutterstock.com/image-vector/cool-comic-book-bubble-text-450w-342092249.jpg', null, GeoRegisteration.notGeoRegistered, 'vis', null, 470, 450),
 		this.overlay('222', OpenLayersStaticImageSourceProviderSourceType, 'https://imgs.xkcd.com/comics/online_communities.png', null, GeoRegisteration.notGeoRegistered, 'vis', null, 1024, 968),
-		this.overlay('333', OpenLayersStaticImageSourceProviderSourceType, 'https://image.shutterstock.com/z/stock-vector-cool-milkshake-190524542.jpg', null, GeoRegisteration.notGeoRegistered, 'vis', null, 1600, 1500)
+		this.overlay('333', OpenLayersStaticImageSourceProviderSourceType, 'https://image.shutterstock.com/z/stock-vector-cool-milkshake-190524542.jpg', null, GeoRegisteration.notGeoRegistered, 'vis', null, 1600, 1500),
+		this.overlay('444', OpenLayersStaticImageSourceProviderSourceType, 'https://image.shutterstock.com/z/stock-vector-cool-milkshake-190524542.jpg', this.pointGeometry, GeoRegisteration.notGeoRegistered, 'vis', null, 1600, 1500),
+		this.overlay('555', OpenLayersStaticImageSourceProviderSourceType, 'https://image.shutterstock.com/z/stock-vector-cool-milkshake-190524542.jpg', this.lineGeometry, GeoRegisteration.notGeoRegistered, 'vis', null, 1600, 1500)
 	];
 
 	overlay(id: string, sourceType: string, imageUrl: string, footprint: any, geoRegistered: GeoRegisteration = GeoRegisteration.notGeoRegistered, sensorType: string = 'mySensorType', sensorName: string = 'mySensorName', imageWidth?: number, imageHeight?: number): IOverlay {
@@ -420,7 +455,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		this.ansynApi.setMinimalistViewMode(false);
 	}
 
-	insertLayer() {
+	insertLayer(isEditable: boolean = true) {
 		const layer: FeatureCollection = {
 			'type': 'FeatureCollection',
 			'features': [{
@@ -550,7 +585,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 				}
 			}]
 		};
-		this.layerId = this.ansynApi.insertLayer('test', layer);
+		this.layerId = this.ansynApi.insertLayer(`test${!isEditable ? '_nonedit' : ''}`, layer, isEditable);
 	}
 
 	removeLayer() {
@@ -570,5 +605,23 @@ export class SandboxComponent implements OnInit, OnDestroy {
 	stopDrag() {
 		const plugin: AnnotationsVisualizer = this.imageryCommunicatorService.communicatorsAsArray()[0].getPlugin(AnnotationsVisualizer);
 		plugin.setMode(null, false);
+	}
+
+	updateOverlayAsPartiallyRegistered() {
+		const overlay = this.ansynApi.getOverlayData();
+		if (overlay) {
+			overlay.isGeoRegistered = GeoRegisteration.poorGeoRegistered;
+			this.store$.select(selectFilters).pipe(
+				take(1),
+				withLatestFrom(this.store$.select(selectOverlaysArray), this.store$.select(selectFacets)),
+				tap(([filters, overlays, facets]: [Map<IFilter, FilterMetadata>, IOverlay[], ICaseFacetsState]) => {
+					const data = FiltersService.getRefreshedFilterDataByFilterModel('isGeoRegistered', filters, facets, overlays);
+					this.store$.dispatch(new UpdateFilterAction({
+						filter: data.filter,
+						newMetadata: data.filterMetadata
+					}));
+				})
+			).subscribe();
+		}
 	}
 }

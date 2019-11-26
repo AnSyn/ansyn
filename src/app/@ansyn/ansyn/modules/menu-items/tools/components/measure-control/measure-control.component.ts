@@ -9,8 +9,8 @@ import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { combineLatest } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { SetMeasureDistanceToolState } from '../../actions/tools.actions';
-import { selectIsMeasureToolActive } from '../../reducers/tools.reducer';
+import { SetMeasureDistanceToolState, UpdateMeasureDataAction } from '../../actions/tools.actions';
+import { IMeasureData, selectIsMeasureToolActive, selectMeasureDataByMapId } from '../../reducers/tools.reducer';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
 
 @Component({
@@ -23,6 +23,7 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 	@Input() mapId: string;
 	show: boolean;
 	currentOverlay: IOverlay = undefined;
+	measureData: IMeasureData;
 
 	@AutoSubscription
 	show$ = () => combineLatest(
@@ -37,6 +38,13 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 				this.done();
 			}
 			this.show = isActive && activeMapId === this.mapId && !isHidden;
+		})
+	);
+
+	@AutoSubscription
+	measureData$ = () => this.store$.select(selectMeasureDataByMapId(this.mapId)).pipe(
+		tap((measureData: IMeasureData) => {
+			this.measureData = measureData;
 		})
 	);
 
@@ -68,9 +76,22 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 		return 'container';
 	}
 
+	toggleShowLayer() {
+		this.store$.dispatch(new UpdateMeasureDataAction({
+			mapId: this.mapId,
+			measureData: { isLayerShowed: !this.measureData.isLayerShowed }
+		}));
+	}
+
+	toggleMeasureToolActivation() {
+		this.store$.dispatch(new UpdateMeasureDataAction({
+			mapId: this.mapId,
+			measureData: { isToolActive: !this.measureData.isToolActive }
+		}));
+	}
+
 	clearMeasure() {
-		this.done();
-		this.store$.dispatch(new SetMeasureDistanceToolState(true));
+		this.store$.dispatch(new UpdateMeasureDataAction({ mapId: this.mapId, measureData: { meausres: [] } }));
 	}
 
 	done() {

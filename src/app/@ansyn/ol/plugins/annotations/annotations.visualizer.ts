@@ -28,7 +28,6 @@ import olIcon from 'ol/style/Icon';
 import olStroke from 'ol/style/Stroke';
 import olStyle from 'ol/style/Style';
 import olText from 'ol/style/Text';
-import * as proj from 'ol/proj';
 import { Subject } from 'rxjs';
 import { mergeMap, take, tap } from 'rxjs/operators';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
@@ -122,7 +121,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				'marker-color': `#ffffff`,
 				label: {
 					overflow: true,
-					font: '27px Calibri,sans-serif',
+					fontSize: (feature) => {
+						const entity = this.idToEntity.get(feature.getId());
+						const labelSize = entity && entity.originalEntity && entity.originalEntity.labelSize;
+						return labelSize || 28;
+					},
 					stroke: '#000',
 					fill: 'white',
 					offsetY: (feature: olFeature) => {
@@ -146,7 +149,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			this.updateStyle({
 				initial: {
 					label: {
-						font: '12px Calibri,sans-serif',
+						fontSize: 12,
 						fill: '#fff',
 						'stroke-width': 3,
 						text: (feature) => feature.getId() || ''
@@ -275,6 +278,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	onDrawEndEvent({ feature }) {
 		const { mode } = this;
 		this.setMode(undefined, true);
+		const id = UUID.UUID();
 		const geometry = feature.getGeometry();
 		let cloneGeometry = <any>geometry.clone();
 		if (cloneGeometry instanceof olCircle) {
@@ -285,15 +289,17 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 		feature.setGeometry(cloneGeometry);
 		feature.setProperties({
-			id: UUID.UUID(),
+			id,
 			style: cloneDeep(this.visualizerStyle),
 			showMeasures: false,
 			label: {text: '' , geometry: null},
+			labelSize: 28,
 			icon: this.iconSrc,
 			undeletable: false,
 			editMode: false,
 			mode
 		});
+		feature.setId(id);
 		this.projectionService
 			.projectCollectionAccurately([feature], this.iMap.mapObject)
 			.pipe(
@@ -520,8 +526,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	}
 
-	toggleVisibility() {
-		super.toggleVisibility();
+	setVisibility(isVisible: boolean) {
+		super.setVisibility(isVisible);
 		this.events.onSelect.next([]);
 	}
 

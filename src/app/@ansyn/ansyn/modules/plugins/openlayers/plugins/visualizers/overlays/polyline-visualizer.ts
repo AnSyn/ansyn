@@ -4,8 +4,7 @@ import {
 	IVisualizerEntity,
 	IVisualizersConfig,
 	VisualizerInteractions,
-	VisualizersConfig,
-	VisualizerStates
+	VisualizersConfig
 } from '@ansyn/imagery';
 import { cloneDeep as _cloneDeep } from 'lodash';
 import Feature from 'ol/Feature';
@@ -13,8 +12,6 @@ import Style from 'ol/style/Style';
 import Point from 'ol/geom/Point';
 import * as condition from 'ol/events/condition';
 import Select from 'ol/interaction/Select';
-import SourceVector from 'ol/source/Vector';
-import VectorLayer from 'ol/layer/Vector';
 import { Inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -45,10 +42,8 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, IMarkUpData>> = this.overlaysState$.pipe(
 		pluck<IOverlaysState, ExtendMap<MarkUpClass, IMarkUpData>>('dropsMarkUp'),
 		distinctUntilChanged(),
-		tap((markups) => this.markups = markups),
-		tap(this.onMarkupsChange.bind(this))
+		tap((markups) => this.markups = markups)
 	);
-	protected hoverLayer: VectorLayer;
 	protected disableCache = true;
 
 	constructor(public store: Store<any>,
@@ -70,16 +65,6 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 				circle: this.getRadius.bind(this),
 				icon: this.getImage.bind(this),
 				geometry: this.getGeometry.bind(this)
-			},
-			hover: {
-				zIndex: 4,
-				circle: (feature) => this.getRadius(feature, true),
-				fill: (feature) => this.getFillColor(feature, true),
-				'fill-opacity': (feature) => this.getFillOpacity(feature, true),
-				'stroke-width': (feature) => this.getStrokeWidth(feature, true),
-				'stroke': (feature) => this.getStrokeColor(feature, true),
-				'stroke-opacity': (feature) => this.getStrokeOpacity(feature, true),
-				icon: (feature) => this.getImage(feature, true),
 			}
 		});
 	}
@@ -119,17 +104,6 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 		return doubleClick;
 	}
 
-	setHoverFeature(featureId: string) {
-		this.hoverLayer.getSource().clear();
-
-		if (featureId) {
-			const feature = this.source.getFeatureById(featureId);
-			if (feature) {
-				this.createHoverFeature(feature);
-			}
-		}
-	}
-
 	onDispose(): void {
 		this.removeInteraction(VisualizerInteractions.doubleClick);
 		this.removeInteraction(VisualizerInteractions.pointerMove);
@@ -138,10 +112,7 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 	onSelectFeature($event) {
 		if ($event.selected.length > 0) {
 			const id = $event.selected[0].getId();
-			const hoverFeature = this.hoverLayer.getSource().getFeatureById(id);
-			if (!hoverFeature || hoverFeature.getId() !== id) {
-				this.store.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [id] } }));
-			}
+			this.store.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [id] } }));
 		} else {
 			this.store.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
 		}
@@ -152,16 +123,8 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 			delete (<any>feature).styleCache;
 		} else if (this.source) {
 			let features = this.source.getFeatures();
-			if (this.hoverLayer && this.hoverLayer.getSource()) {
-				features = features.concat(this.hoverLayer.getSource().getFeatures());
-			}
 			features.forEach(f => this.purgeCache(f));
 		}
-	}
-
-	protected initLayers() {
-		super.initLayers();
-		this.createHoverLayer();
 	}
 
 	protected resetInteractions(): void {
@@ -169,32 +132,6 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 		this.removeInteraction(VisualizerInteractions.pointerMove);
 		this.addInteraction(VisualizerInteractions.pointerMove, this.createPointerMoveInteraction());
 		this.addInteraction(VisualizerInteractions.doubleClick, this.createDoubleClickInteraction());
-	}
-
-	protected createHoverLayer() {
-		if (this.hoverLayer) {
-			this.iMap.removeLayer(this.hoverLayer);
-		}
-
-		this.hoverLayer = new VectorLayer({
-			source: new SourceVector(),
-			style: (feature: Feature) => this.featureStyle(feature, VisualizerStates.HOVER)
-		});
-
-		this.iMap.addLayer(this.hoverLayer);
-	}
-
-	private onMarkupsChange() {
-		const hover = this.markups.get(MarkUpClass.hover);
-		const overlayId = hover ? hover.overlaysIds[0] : null;
-		this.setHoverFeature(overlayId);
-
-		if (this.hoverLayer) {
-			this.hoverLayer.getSource().refresh();
-		}
-		if (this.source) {
-			this.source.refresh();
-		}
 	}
 
 	private propsByFeature(feature: Feature) {
@@ -210,7 +147,7 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 	private getFeatureType(feature: Feature): 'MultiLineString' | 'Point' | 'LineString' | 'MultiPolygon' {
 		const type = feature && feature.getGeometry().getType();
 		if (type && !['MultiLineString', 'Point', 'LineString', 'MultiPolygon'].includes(type)) {
-			console.warn(`polyline-visualizer.ts getFeatureType - unsupported type ${type}`);
+			console.warn(`polyline-visualizer.ts getFeatureType - unsupported type ${ type }`);
 		}
 		return type;
 	}
@@ -226,20 +163,6 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 		const { isActive, isFavorites, isDisplayed } = this.propsByFeature(feature);
 
 		return isActive ? 4 : isFavorites ? 3 : isDisplayed ? 2 : 1;
-	}
-
-	private getFillOpacity(feature: Feature, hover = false) {
-		switch (this.getFeatureType(feature)) {
-			case 'MultiLineString':
-			case 'MultiPolygon':
-				return hover ? 0.4 : 1;
-			case 'Point' :
-				return hover ? 1 : 0.8;
-			case 'LineString':
-				return undefined;
-			default:
-				return hover;
-		}
 	}
 
 	private getFillColor(feature: Feature, hover = false) {
@@ -263,18 +186,14 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 		switch (this.getFeatureType(feature)) {
 			case 'MultiLineString':
 			case 'MultiPolygon':
-				return isActive ? active : isDisplayed ? display : inactive;
+			case 'LineString':
+				return isFavorites ? favorite : isDisplayed ? display : isActive ? active : inactive;
 			case 'Point' :
 				return display;
-			case 'LineString':
-				return isFavorites ? favorite : isActive ? active : display;
 		}
 	}
 
 	private getStrokeOpacity(feature: Feature, hover = false) {
-		if (this.getFeatureType(feature) === 'LineString') {
-			return hover ? 1 : 0.5
-		}
 		return 1;
 	}
 
@@ -344,10 +263,5 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 				geometry.coordinates = <any>geometry.coordinates[0];
 			});
 		return clonedLogicalEntities;
-	}
-
-	private createHoverFeature(selectedFeature: Feature): void {
-		const hoverFeature = selectedFeature.clone();
-		this.hoverLayer.getSource().addFeature(hoverFeature);
 	}
 }

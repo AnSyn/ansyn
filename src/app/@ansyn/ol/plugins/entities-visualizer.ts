@@ -21,7 +21,7 @@ import {
 	VisualizerInteractionTypes,
 	VisualizerStates
 } from '@ansyn/imagery';
-import { Observable, of } from 'rxjs';
+import { Observable, of, combineLatest } from 'rxjs';
 import * as ol_color from 'ol/color';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { map } from 'rxjs/operators';
@@ -197,14 +197,8 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 				stroke
 			});
 			textStyle.geometry = (feature) => {
-				const translate = feature.get('translateLabel');
-				if ( translate) {
-					const currentProj = this.iMap.mapObject.getView().getProjection();
-					return new Point(proj.transform(translate.geometry, translate.projection, currentProj));
-				}
-				else {
-					return new Point(this.getCenterOfFeature(feature).coordinates)
-				}
+				const { label } = feature.getProperties();
+				return label.geometry ? label.geometry : new Point(this.getCenterOfFeature(feature).coordinates)
 			};
 
 			firstStyle.geometry = (feature) => feature.getGeometry();
@@ -261,22 +255,35 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		if (filteredLogicalEntities.length <= 0) {
 			return of(true);
 		}
-		const features = filteredLogicalEntities.map(entity => ({ ...entity.featureJson, id: entity.id }));
+		const features = [];
+		const labels  = [];
+		filteredLogicalEntities.forEach( entity => {
+			features.push({...entity.featureJson, id: entity.id});
+			if (entity.label && entity.label.geometry) {
+				const temp = this.geometryToEntity(entity.id, entity.label.geometry);
+				labels.push({...temp.featureJson, id: temp.id});
+			}
+		});
 
 		const featuresCollectionToAdd: any = featureCollection(features);
-
+		const labelCollectionToAdd: any = featureCollection(labels);
 		filteredLogicalEntities.forEach((entity: IVisualizerEntity) => {
 			this.removeEntity(entity.id, true);
 		});
 
-		return (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap.mapObject)
-			.pipe(map((features: Feature[]) => {
+		const featuresProject = (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap.mapObject);
+		const labelsProject = (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(labelCollectionToAdd, this.iMap.mapObject);
+		return combineLatest(featuresProject, labelsProject)
+			.pipe(map(([features, labels]: [Feature[], Feature[]]) => {
 				features.forEach((feature: Feature) => {
 					const _id: string = <string>feature.getId();
-					this.idToEntity.set(_id, <any>{
+					const label = labels.find( label => label.getId() === _id);
+					const entity: IFeatureIdentifier = {
 						originalEntity: filteredLogicalEntities.find(({ id }) => id === _id),
 						feature: feature
-					});
+					};
+					entity.feature.set('label', {...feature.get('label') , geometry: label && label.getGeometry()});
+					this.idToEntity.set(_id, entity);
 					const featureWithTheSameId = this.source.getFeatureById(_id);
 					if (featureWithTheSameId) {
 						this.source.removeFeature(featureWithTheSameId);

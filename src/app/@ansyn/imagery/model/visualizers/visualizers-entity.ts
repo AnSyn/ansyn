@@ -3,8 +3,7 @@ import { Feature } from 'geojson';
 
 export interface IVisualizerEntity {
 	id: string;
-	label?: string;
-	translateLabel?: {geometry: any, projection: any};
+	label?: {text?: string, geometry?: any};
 	featureJson: Feature<any>;
 	icon?: any;
 	type?: string;

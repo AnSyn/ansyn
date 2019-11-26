@@ -169,8 +169,8 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		this.annotations.updateFeature(featureId, { style: updatedStyle });
 	}
 
-	updateLabel(label, featureId: string) {
-		this.annotations.updateFeature(featureId, { label });
+	updateLabel(text, featureId: string) {
+		this.annotations.updateFeature(featureId, { label: {text} });
 	}
 
 	getType(): string {

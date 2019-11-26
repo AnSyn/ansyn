@@ -133,7 +133,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						const entity = this.idToEntity.get(feature.getId());
 						if (entity) {
 							const { label } = entity.originalEntity;
-							return label || '';
+							return label.text || '';
 						}
 						return '';
 					}
@@ -288,7 +288,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			id: UUID.UUID(),
 			style: cloneDeep(this.visualizerStyle),
 			showMeasures: false,
-			label: '',
+			label: {text: '' , geometry: null},
 			icon: this.iconSrc,
 			undeletable: false,
 			editMode: false,
@@ -512,7 +512,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	updateFeature(featureId, props: Partial<IVisualizerEntity>) {
 		const entity = this.idToEntity.get(featureId);
-
 		if (entity) {
 			entity.originalEntity = merge({}, entity.originalEntity, props);
 			this.events.updateEntity.next(entity.originalEntity);
@@ -536,7 +535,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		if (this.edited) {
 			const { originalFeature } = this.edited;
-			this.iMap.mapObject.removeInteraction('translateInteractionHandler');
+			this.removeInteraction('translateInteractionHandler');
 			oldFeature = originalFeature;
 		}
 
@@ -564,19 +563,18 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const entity = this.getEntity(feature);
 		const { mode: entityMode } = feature.getProperties();
 		let labelGeometry = undefined;
-		const translate = feature.get('translateLabel');
-		if (translate) {
-			const { geometry, projection } = translate;
-			labelGeometry = proj.transform(geometry, projection, this.iMap.mapObject.getView().getProjection());
+		const { initial } = feature.get('style');
+		if (initial.label.geometry) {
+			labelGeometry = initial.label.geometry;
 		}
 		const labelFeature = new olFeature({
-			geometry: new olPoint(labelGeometry ? labelGeometry : center.coordinates),
+			geometry: new olPoint(labelGeometry ? labelGeometry.coordinates : center.coordinates),
 		});
 		labelFeature.setStyle(new olStyle({
 			text: new olText({
 				font: entity.style.initial.label.font,
 				fill: new olFill({ color: entity.style.initial.label.fill }),
-				text: feature.getProperties().label,
+				text: feature.getProperties().label.text,
 				offsetY: entityMode === 'Point' ? 30 : 0
 			})
 		}));
@@ -590,12 +588,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			hitTolerance: 2
 		});
 		translateInteraction.on('translateend', (translateend) => {
-			this.updateFeature(originalFeature.getId(), {'translateLabel': {
-					geometry: translateend.features.item(0).getGeometry().getCoordinates(),
-					projection: this.iMap.mapObject.getView().getProjection()
-				}});
-			this.purgeCache(originalFeature);
-			this.featureStyle(originalFeature);
+			const newCoord = this.geoJsonFormat.writeGeometryObject(translateend.features.item(0).getGeometry());
+			this.projectionService.projectAccurately(newCoord, this.iMap.mapObject).subscribe( (accuracyPoint) => {
+				this.updateFeature(originalFeature.getId(), { label: { text: originalFeature.get('label').text, geometry: accuracyPoint}});
+				this.purgeCache(originalFeature);
+				this.featureStyle(originalFeature);
+			})
+
 		});
 
 		return translateInteraction;

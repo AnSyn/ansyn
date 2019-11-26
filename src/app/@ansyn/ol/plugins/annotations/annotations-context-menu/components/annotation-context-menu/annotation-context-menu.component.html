@@ -5,7 +5,7 @@
 
 		<div class="context-menu" [style.outline-color]="getFeatureProps(featureId)?.style?.initial?.stroke">
 			<ul class="buttons">
-				<li *ngIf="getFeatureProps(featureId)?.label?.length">
+				<li *ngIf="getFeatureProps(featureId)?.label?.text.length">
 					<button [class.active]="annotations.edited?.originalFeature?.getId() === featureId"
 							(click)="annotations.editFeature(featureId)"
 							>
@@ -49,7 +49,7 @@
 								   autofocus
 								   [placeholder]="'Label' | translate"
 								   name="EditLabel"
-								   [ngModel]="getFeatureProps(featureId)?.label"
+								   [ngModel]="getFeatureProps(featureId)?.label?.text"
 								   (ngModelChange)="updateLabel($event, featureId)">
 						</mat-form-field>
 

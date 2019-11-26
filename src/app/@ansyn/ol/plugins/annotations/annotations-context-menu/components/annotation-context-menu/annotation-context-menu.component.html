@@ -25,22 +25,11 @@
 						</i>
 					</button>
 
-					<form class="annotation-label-edit"
-						  *ngIf="selectedTab[featureId] === Tabs.Label"
-						  (ngSubmit)="labelInput.blur()">
-
-						<mat-form-field class="label-form-field">
-							<input matInput
-								   type="text"
-                                   #labelInput
-								   autofocus
-								   [placeholder]="'Label' | translate"
-								   name="EditLabel"
-								   [ngModel]="getFeatureProps(featureId)?.label"
-								   (ngModelChange)="updateLabel($event, featureId)">
-						</mat-form-field>
-
-					</form>
+					<ansyn-annotation-label *ngIf="selectedTab[featureId] === Tabs.Label"
+					[label]="getFeatureProps(featureId)?.label"
+					[labelSize]="annotations.idToEntity.get(featureId)?.originalEntity.labelSize"
+					(onChangeText)="updateLabel($event, featureId)"
+					(onChangeSize)="updateLabelSize($event, featureId)"></ansyn-annotation-label>
 				</li>
 				<li class="expanded-selection line-width-selection">
 					<p>

@@ -193,9 +193,8 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 				color: styleSettings.label.stroke ? styleSettings.label.stroke : '#fff',
 				width: styleSettings.label.stroke ? 4 : 0
 			});
-
 			textStyle.text = new Text({
-				font: styleSettings.label.font,
+				font: `${styleSettings.label.fontSize}px Calibri,sans-serif`,
 				offsetX: styleSettings.label.offsetX,
 				offsetY: <any>styleSettings.label.offsetY,
 				overflow: styleSettings.label.overflow,

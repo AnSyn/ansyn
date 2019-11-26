@@ -11,7 +11,6 @@ import Point from 'ol/geom/Point';
 import VectorLayer from 'ol/layer/Vector';
 import ol_Layer from 'ol/layer/Layer';
 import OLGeoJSON from 'ol/format/GeoJSON';
-import * as proj from 'ol/proj';
 import {
 	BaseImageryVisualizer, getPointByGeometry,
 	IVisualizerEntity,

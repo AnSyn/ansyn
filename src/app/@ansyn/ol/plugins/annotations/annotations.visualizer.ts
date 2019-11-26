@@ -562,19 +562,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const center = this.getCenterOfFeature(feature);
 		const entity = this.getEntity(feature);
 		const { mode: entityMode } = feature.getProperties();
-		let labelGeometry = undefined;
-		const { initial } = feature.get('style');
-		if (initial.label.geometry) {
-			labelGeometry = initial.label.geometry;
-		}
+		const { label } = feature.getProperties();
 		const labelFeature = new olFeature({
-			geometry: new olPoint(labelGeometry ? labelGeometry.coordinates : center.coordinates),
+			geometry: label.geometry ? label.geometry : new olPoint(center.coordinates),
 		});
 		labelFeature.setStyle(new olStyle({
 			text: new olText({
 				font: entity.style.initial.label.font,
 				fill: new olFill({ color: entity.style.initial.label.fill }),
-				text: feature.getProperties().label.text,
+				text: label.text,
 				offsetY: entityMode === 'Point' ? 30 : 0
 			})
 		}));

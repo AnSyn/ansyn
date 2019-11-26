@@ -17,7 +17,7 @@
 			   autofocus
 			   [placeholder]="'Label' | translate"
 			   name="EditLabel"
-			   [ngModel]="label"
+			   [ngModel]="label.text"
 			   (ngModelChange)="onChangeText.emit($event)">
 	</mat-form-field>
 </form>

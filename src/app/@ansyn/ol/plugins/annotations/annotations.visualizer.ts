@@ -28,8 +28,8 @@ import olIcon from 'ol/style/Icon';
 import olStroke from 'ol/style/Stroke';
 import olStyle from 'ol/style/Style';
 import olText from 'ol/style/Text';
-import { Subject } from 'rxjs';
-import { mergeMap, take, tap } from 'rxjs/operators';
+import { Subject, Observable, of } from 'rxjs';
+import { mergeMap, take, tap, switchMap } from 'rxjs/operators';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
 import { EntitiesVisualizer } from '../entities-visualizer';
@@ -184,6 +184,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				label: feature.properties.label,
 				icon: feature.properties.icon,
 				undeletable: feature.properties.undeletable,
+				labelSize: feature.properties.labelSize,
 				editMode: feature.properties.editMode
 			};
 		});
@@ -574,7 +575,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		});
 		labelFeature.setStyle(new olStyle({
 			text: new olText({
-				font: entity.style.initial.label.font,
+				font: `${entity.labelSize + 2}px Calibri,sans-serif`,
 				fill: new olFill({ color: entity.style.initial.label.fill }),
 				text: label.text,
 				offsetY: entityMode === 'Point' ? 30 : 0
@@ -591,7 +592,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		});
 		translateInteraction.on('translateend', (translateend) => {
 			const newCoord = this.geoJsonFormat.writeGeometryObject(translateend.features.item(0).getGeometry());
-			this.projectionService.projectAccurately(newCoord, this.iMap.mapObject).subscribe( (accuracyPoint) => {
+			this.projectionService.projectAccurately(newCoord, this.iMap.mapObject).pipe(
+				switchMap(accuracyPoint => of(accuracyPoint))
+			).subscribe( (accuracyPoint) => {
 				this.updateFeature(originalFeature.getId(), { label: { text: originalFeature.get('label').text, geometry: accuracyPoint}});
 				this.purgeCache(originalFeature);
 				this.featureStyle(originalFeature);
@@ -600,6 +603,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		});
 
 		return translateInteraction;
+	}
+
+	onResetView(): Observable<boolean> {
+		if (this.edited) {
+			this.removeInteraction('translateInteractionHandler');
+			this.removeFeature(this.edited.labelFeature);
+			this.edited = null;
+		}
+		return super.onResetView();
 	}
 
 	protected mapClick = (event) => {

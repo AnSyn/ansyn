@@ -29,7 +29,7 @@ import olStroke from 'ol/style/Stroke';
 import olStyle from 'ol/style/Style';
 import olText from 'ol/style/Text';
 import { Subject, Observable, of } from 'rxjs';
-import { mergeMap, take, tap, switchMap, debounceTime, delay } from 'rxjs/operators';
+import { mergeMap, take, tap } from 'rxjs/operators';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
 import { EntitiesVisualizer } from '../entities-visualizer';

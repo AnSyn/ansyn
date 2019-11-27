@@ -9,6 +9,8 @@ import { UUID } from 'angular2-uuid';
 import { SetToastMessageAction } from '@ansyn/map-facade';
 import { tap } from 'rxjs/operators';
 import { FeatureCollection } from 'geojson';
+import KMLFORMAT from 'ol/format/KML';
+import GEOJSONFORMAT from 'ol/format/GeoJSON';
 
 @Component({
 	selector: 'ansyn-import-layer',
@@ -33,7 +35,8 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 				const readerResult: string = <string>this.reader.result;
 				switch (fileType.toLowerCase()) {
 					case 'kml':
-						layerData = toGeoJSON.kml((new DOMParser()).parseFromString(readerResult, 'text/xml'));
+						const features = new KMLFORMAT().readFeatures(readerResult);
+						layerData = JSON.parse(new GEOJSONFORMAT().writeFeatures(features)); //toGeoJSON.kml((new DOMParser()).parseFromString(readerResult, 'text/xml'));
 						this.simpleStyleToVisualizer(layerData);
 						break;
 					case 'json':
@@ -94,12 +97,16 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	simpleStyleToVisualizer(annotationsLayer): void {
 		/* reference */
 		annotationsLayer.features.forEach((feature) => {
-			const { id, label, showMeasures, mode, ...initial } = feature.properties;
+			const { id, label, showMeasures, mode, editMode, icon, labelSize, undeletable, ...initial } = feature.properties;
 			feature.properties = {
 				id,
-				label,
+				label: label ? JSON.parse(label) : {text: '', geometry: null},
 				showMeasures: JSON.parse(showMeasures ? showMeasures : null),
 				mode,
+				editMode: JSON.parse(editMode ? editMode : false),
+				icon,
+				labelSize,
+				undeletable,
 				style: { initial }
 			};
 		});

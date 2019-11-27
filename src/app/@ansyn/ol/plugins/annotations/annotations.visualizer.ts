@@ -1,6 +1,5 @@
 import { Inject } from '@angular/core';
 import {
-	getPointByGeometry,
 	ImageryVisualizer,
 	IVisualizerEntity,
 	MarkerSize,
@@ -13,6 +12,7 @@ import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { cloneDeep, merge } from 'lodash';
 import { platformModifierKeyOnly } from 'ol/events/condition';
 import olFeature from 'ol/Feature';
+import olCollection from 'ol/Collection';
 import OLGeoJSON from 'ol/format/GeoJSON';
 import olCircle from 'ol/geom/Circle';
 import olLineString from 'ol/geom/LineString';
@@ -20,6 +20,7 @@ import olMultiLineString from 'ol/geom/MultiLineString';
 import olPoint from 'ol/geom/Point';
 import olPolygon, { fromCircle } from 'ol/geom/Polygon';
 import DragBox from 'ol/interaction/DragBox';
+import olTranslate from 'ol/interaction/Translate';
 import Draw from 'ol/interaction/Draw';
 import * as Sphere from 'ol/sphere';
 import olFill from 'ol/style/Fill';
@@ -27,7 +28,7 @@ import olIcon from 'ol/style/Icon';
 import olStroke from 'ol/style/Stroke';
 import olStyle from 'ol/style/Style';
 import olText from 'ol/style/Text';
-import { Subject } from 'rxjs';
+import { Subject, Observable, of } from 'rxjs';
 import { mergeMap, take, tap } from 'rxjs/operators';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
@@ -35,6 +36,12 @@ import { EntitiesVisualizer } from '../entities-visualizer';
 import { IOLPluginsConfig, OL_PLUGINS_CONFIG } from '../plugins.config';
 import { AnnotationMode, IAnnotationBoundingRect, IDrawEndEvent } from './annotations.model';
 import { DragPixelsInteraction } from './dragPixelsInteraction';
+
+export interface ILabelEditMode {
+	originalFeature: olFeature,
+	labelFeature: olFeature
+}
+
 
 // @dynamic
 @ImageryVisualizer({
@@ -48,10 +55,43 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	public mode: AnnotationMode;
 	mapSearchIsActive = false;
 	selected: string[] = [];
-	private iconSrc = '';
 	geoJsonFormat: OLGeoJSON;
 	dragBox = new DragBox({ condition: platformModifierKeyOnly });
 	translationSubscriptions = [];
+	edited: ILabelEditMode;
+	events = {
+		onClick: new Subject(),
+		onSelect: new Subject<string[]>(),
+		onHover: new Subject<string>(),
+		onChangeMode: new Subject<{ mode: AnnotationMode, forceBroadcast: boolean }>(),
+		onDrawEnd: new Subject<IDrawEndEvent>(),
+		removeEntity: new Subject<string>(),
+		updateEntity: new Subject<IVisualizerEntity>(),
+		offsetEntity: new Subject<any>(),
+		onEditStart: new Subject<ILabelEditMode>(),
+		onEditEnd: new Subject()
+	};
+	clearModified: any = tap(() => {
+		if (this.edited) {
+			this.editFeature(this.edited.originalFeature.getId())
+		}
+	});
+	@AutoSubscription
+	selected$ = this.events.onSelect.pipe(this.clearModified, tap((selected: any) => this.selected = selected));
+
+	@AutoSubscription
+	edited$ = this.events.onEditStart.pipe(tap((edited) => this.edited = edited));
+
+	modeDictionary = {
+		Arrow: {
+			type: 'LineString',
+			geometryFunction: this.arrowGeometryFunction.bind(this)
+		},
+		Rectangle: {
+			type: 'Circle',
+			geometryFunction: this.rectangleGeometryFunction.bind(this)
+		}
+	};
 
 	protected measuresTextStyle = {
 		font: '16px Calibri,sans-serif',
@@ -65,30 +105,60 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		offsetY: 30
 	};
 
-	events = {
-		onClick: new Subject(),
-		onSelect: new Subject<string[]>(),
-		onHover: new Subject<string>(),
-		onChangeMode: new Subject<{ mode: AnnotationMode, forceBroadcast: boolean }>(),
-		onDrawEnd: new Subject<IDrawEndEvent>(),
-		removeEntity: new Subject<string>(),
-		updateEntity: new Subject<IVisualizerEntity>(),
-		offsetEntity: new Subject<any>()
-	};
+	private iconSrc = '';
 
-	@AutoSubscription
-	selected$ = this.events.onSelect.pipe(tap((selected) => this.selected = selected));
+	constructor(protected projectionService: OpenLayersProjectionService,
+				@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig) {
 
-	modeDictionary = {
-		Arrow: {
-			type: 'LineString',
-			geometryFunction: this.arrowGeometryFunction.bind(this)
-		},
-		Rectangle: {
-			type: 'Circle',
-			geometryFunction: this.rectangleGeometryFunction.bind(this)
+		super(null, {
+			initial: {
+				stroke: '#27b2cfe6',
+				'stroke-width': 1,
+				fill: `white`,
+				'fill-opacity': AnnotationsVisualizer.fillAlpha,
+				'stroke-opacity': 1,
+				'marker-size': MarkerSize.medium,
+				'marker-color': `#ffffff`,
+				label: {
+					overflow: true,
+					fontSize: (feature) => {
+						const entity = this.idToEntity.get(feature.getId());
+						const labelSize = entity && entity.originalEntity && entity.originalEntity.labelSize;
+						return labelSize || 28;
+					},
+					stroke: '#000',
+					fill: 'white',
+					offsetY: (feature: olFeature) => {
+						const { mode, style } = feature.getProperties();
+						return mode === 'Point' && !style.initial.label.geometry ? 30 : 0;
+					},
+					text: (feature: olFeature) => {
+						const entity = this.idToEntity.get(feature.getId());
+						if (entity) {
+							const { label } = entity.originalEntity;
+							return label.text || '';
+						}
+						return '';
+					}
+				}
+			}
+		});
+
+		//  0 or 1
+		if (Number(olPluginsConfig.Annotations.displayId)) {
+			this.updateStyle({
+				initial: {
+					label: {
+						fontSize: 12,
+						fill: '#fff',
+						'stroke-width': 3,
+						text: (feature) => feature.getId() || ''
+					}
+				}
+			});
 		}
-	};
+		this.geoJsonFormat = new OLGeoJSON();
+	}
 
 	findFeatureWithMinimumArea(featuresArray: any[]) {
 		return featuresArray.reduce((prevResult, currFeature) => {
@@ -113,58 +183,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				showMeasures: feature.properties.showMeasures,
 				label: feature.properties.label,
 				icon: feature.properties.icon,
-				undeletable: feature.properties.undeletable
+				undeletable: feature.properties.undeletable,
+				labelSize: feature.properties.labelSize,
+				editMode: feature.properties.editMode
 			};
 		});
-	}
-
-	constructor(protected projectionService: OpenLayersProjectionService,
-				@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig) {
-
-		super(null, {
-			initial: {
-				stroke: '#27b2cfe6',
-				'stroke-width': 1,
-				fill: `white`,
-				'fill-opacity': AnnotationsVisualizer.fillAlpha,
-				'stroke-opacity': 1,
-				'marker-size': MarkerSize.medium,
-				'marker-color': `#ffffff`,
-				label: {
-					overflow: true,
-					font: '27px Calibri,sans-serif',
-					stroke: '#000',
-					fill: 'white',
-					offsetY: (feature: olFeature) => {
-						const { mode } = feature.getProperties();
-						return mode === 'Point' ? 30 : 0;
-					},
-					text: (feature: olFeature) => {
-						const entity = this.idToEntity.get(feature.getId());
-						if (entity) {
-							const { label } = entity.originalEntity;
-							return label || '';
-						}
-						return '';
-					}
-				}
-			}
-		});
-
-		//  0 or 1
-		if (Number(olPluginsConfig.Annotations.displayId)) {
-			this.updateStyle({
-				initial: {
-					label: {
-						font: '12px Calibri,sans-serif',
-						fill: '#fff',
-						'stroke-width': 3,
-						text: (feature) => feature.getId() || ''
-					}
-				}
-			});
-		}
-		this.geoJsonFormat = new OLGeoJSON();
 	}
 
 	setMode(mode, forceBroadcast: boolean) {
@@ -216,20 +239,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return { left, top, width, height };
 	}
 
-	private isNumArray([first, second]) {
-		return typeof first === 'number' && typeof second === 'number';
-	}
-
-	private findMinMaxHelper(array, prev = { maxX: -Infinity, maxY: -Infinity, minX: Infinity, minY: Infinity }) {
-		const [x, y] = this.iMap.mapObject.getPixelFromCoordinate(array);
-		return {
-			maxX: Math.max(x, prev.maxX),
-			maxY: Math.max(y, prev.maxY),
-			minX: Math.min(x, prev.minX),
-			minY: Math.min(y, prev.minY)
-		};
-	}
-
 	findMinMax(array) {
 		if (this.isNumArray(array)) {
 			return this.findMinMaxHelper(array);
@@ -248,46 +257,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		}, undefined);
 	}
-
-	protected mapClick = (event) => {
-		if (this.mapSearchIsActive || this.mode || this.isHidden) {
-			return;
-		}
-		const { shiftKey: multi } = event.originalEvent;
-		const selectedFeature = this.featureAtPixel(event.pixel);
-		let ids = [];
-		if (selectedFeature) {
-			const featureId = selectedFeature.getId();
-			ids = multi ? this.selected.includes(featureId) ? this.selected.filter(id => id !== featureId) : [...this.selected, featureId] : [featureId];
-		} else {
-			ids = multi ? this.selected : [];
-		}
-		this.events.onSelect.next(ids);
-	};
-
-	protected mapPointermove = (event) => {
-		if (this.mapSearchIsActive || this.mode) {
-			return;
-		}
-		const selectedFeature = this.featureAtPixel(event.pixel);
-		this.events.onHover.next(selectedFeature ? selectedFeature.getId() : null);
-	};
-
-	protected mapBoxstart = () => {
-		this.events.onSelect.next([]);
-	};
-
-	protected mapBoxdrag = ({ target }) => {
-		if (this.isHidden) {
-			return;
-		}
-		const extent = target.getGeometry().getExtent();
-		const selected = [];
-		this.vector.getSource().forEachFeatureIntersectingExtent(extent, (feature) => {
-			selected.push(feature.getId());
-		});
-		this.events.onSelect.next(selected);
-	};
 
 	onInit() {
 		super.onInit();
@@ -310,6 +279,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	onDrawEndEvent({ feature }) {
 		const { mode } = this;
 		this.setMode(undefined, true);
+		const id = UUID.UUID();
 		const geometry = feature.getGeometry();
 		let cloneGeometry = <any>geometry.clone();
 		if (cloneGeometry instanceof olCircle) {
@@ -320,14 +290,17 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 		feature.setGeometry(cloneGeometry);
 		feature.setProperties({
-			id: UUID.UUID(),
+			id,
 			style: cloneDeep(this.visualizerStyle),
 			showMeasures: false,
-			label: '',
+			label: {text: '' , geometry: null},
+			labelSize: 28,
 			icon: this.iconSrc,
 			undeletable: false,
+			editMode: false,
 			mode
 		});
+		feature.setId(id);
 		this.projectionService
 			.projectCollectionAccurately([feature], this.iMap.mapObject)
 			.pipe(
@@ -485,13 +458,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	getCenterIndicationStyle(feature: olFeature): olStyle {
-		const featureGeoJson = <any>this.geoJsonFormat.writeFeatureObject(feature);
-		const centerPoint = getPointByGeometry(featureGeoJson.geometry);
+		const centerPoint = this.getCenterOfFeature(feature);
 		return new olStyle({
 			geometry: new olPoint(centerPoint.coordinates),
 			image: new olIcon({
 				scale: 1,
-				src: featureGeoJson.properties.icon
+				src: feature.getProperties().icon
 			})
 
 		});
@@ -547,7 +519,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	updateFeature(featureId, props: Partial<IVisualizerEntity>) {
 		const entity = this.idToEntity.get(featureId);
-
 		if (entity) {
 			entity.originalEntity = merge({}, entity.originalEntity, props);
 			this.events.updateEntity.next(entity.originalEntity);
@@ -563,5 +534,143 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	public setIconSrc(src: string) {
 		this.iconSrc = src;
+	}
+
+	editFeature(featureId: any) {
+		let oldFeature = null;
+		let event = null;
+
+		if (this.edited) {
+			const { originalFeature } = this.edited;
+			this.removeInteraction('translateInteractionHandler');
+			oldFeature = originalFeature;
+		}
+
+		if (!oldFeature || featureId !== oldFeature.getId()) { // start editing
+			const originalFeature: olFeature = this.source.getFeatureById(featureId);
+			this.updateFeature(originalFeature.getId(), { editMode: true });
+			const labelFeature = this.createLabelFeature(originalFeature);
+
+			this.addInteraction('translateInteractionHandler', this.moveLabelInteraction(originalFeature, labelFeature));
+			event = {
+				originalFeature,
+				labelFeature
+			};
+			this.source.addFeature(labelFeature);
+		} else {
+			this.updateFeature(featureId, { editMode: false });
+			this.source.removeFeature(this.edited.labelFeature);
+		}
+		this.source.refresh();
+		this.events.onEditStart.next(event);
+	}
+
+	private createLabelFeature(feature: olFeature): olFeature {
+		const center = this.getCenterOfFeature(feature);
+		const entity = this.getEntity(feature);
+		const { mode: entityMode } = feature.getProperties();
+		const { label } = feature.getProperties();
+		const labelFeature = new olFeature({
+			geometry: label.geometry ? label.geometry : new olPoint(center.coordinates),
+		});
+		labelFeature.setStyle(new olStyle({
+			text: new olText({
+				font: `${entity.labelSize + 2}px Calibri,sans-serif`,
+				fill: new olFill({ color: entity.style.initial.label.fill }),
+				text: label.text,
+				offsetY: entityMode === 'Point' ? 30 : 0
+			})
+		}));
+
+		return labelFeature;
+	}
+
+	private moveLabelInteraction(originalFeature: olFeature, labelFeature: olFeature): olTranslate {
+		const translateInteraction = new olTranslate({
+			features: new olCollection([labelFeature]),
+			hitTolerance: 2
+		});
+		translateInteraction.on('translateend', (translateend) => {
+			const newCoord = this.geoJsonFormat.writeGeometryObject(translateend.features.item(0).getGeometry());
+			this.projectionService.projectAccurately(newCoord, this.iMap.mapObject).subscribe( (accuracyPoint) => {
+				this.updateFeature(originalFeature.getId(), { label: { text: originalFeature.get('label').text, geometry: accuracyPoint}});
+				this.purgeCache(originalFeature);
+				this.featureStyle(originalFeature);
+			})
+		});
+
+		return translateInteraction;
+	}
+
+	private clearEditMode() {
+		if (this.edited) {
+			this.updateFeature(this.edited.originalFeature.getId(), {editMode: false});
+			this.removeInteraction('translateInteractionHandler');
+			this.removeFeature(this.edited.labelFeature);
+			this.edited = null;
+		}
+	}
+	onResetView(): Observable<boolean> {
+		this.clearEditMode();
+		return super.onResetView();
+	}
+
+	dispose() {
+		this.clearEditMode();
+		super.dispose();
+	}
+
+	protected mapClick = (event) => {
+		if (this.mapSearchIsActive || this.mode || this.isHidden) {
+			return;
+		}
+		const { shiftKey: multi } = event.originalEvent;
+		const selectedFeature = this.featureAtPixel(event.pixel);
+		let ids = [];
+		if (selectedFeature) {
+			const featureId = selectedFeature.getId();
+			ids = multi ? this.selected.includes(featureId) ? this.selected.filter(id => id !== featureId) : [...this.selected, featureId] : [featureId];
+		} else {
+			ids = multi ? this.selected : [];
+		}
+		this.events.onSelect.next(ids);
+	};
+
+	protected mapPointermove = (event) => {
+		if (this.mapSearchIsActive || this.mode) {
+			return;
+		}
+		const selectedFeature = this.featureAtPixel(event.pixel);
+		this.events.onHover.next(selectedFeature ? selectedFeature.getId() : null);
+	};
+
+	protected mapBoxstart = () => {
+		this.events.onSelect.next([]);
+	};
+
+	protected mapBoxdrag = ({ target }) => {
+		if (this.isHidden) {
+			return;
+		}
+		const extent = target.getGeometry().getExtent();
+		const selected = [];
+		this.vector.getSource().forEachFeatureIntersectingExtent(extent, (feature) => {
+			selected.push(feature.getId());
+		});
+		this.events.onSelect.next(selected);
+	};
+
+	private isNumArray([first, second]) {
+		return typeof first === 'number' && typeof second === 'number';
+	}
+
+	private findMinMaxHelper(array, prev = { maxX: -Infinity, maxY: -Infinity, minX: Infinity, minY: Infinity }) {
+		const [x, y] = this.iMap.mapObject.getPixelFromCoordinate(array);
+		return {
+			maxX: Math.max(x, prev.maxX),
+			maxY: Math.max(y, prev.maxY),
+			minX: Math.min(x, prev.minX),
+			minY: Math.min(y, prev.minY)
+		};
 	}
 }

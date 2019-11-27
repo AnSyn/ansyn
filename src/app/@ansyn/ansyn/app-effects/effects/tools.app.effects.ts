@@ -44,6 +44,7 @@ import {
 	StartMouseShadow,
 	StopMouseShadow,
 	ToolsActionsTypes,
+	UpdateMeasureDataAction,
 	UpdateToolsFlags
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
@@ -55,6 +56,7 @@ import {
 } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
+import { selectMapsIds } from '@ansyn/map-facade';
 
 @Injectable()
 export class ToolsAppEffects {
@@ -241,14 +243,22 @@ export class ToolsAppEffects {
 	@Effect()
 	clearActiveInteractions$ = this.actions$.pipe(
 		ofType<ClearActiveInteractionsAction>(ToolsActionsTypes.CLEAR_ACTIVE_TOOLS),
-		mergeMap(action => {
-			// reset the following interactions: Measure Distance, Annotation, Pinpoint search, Pin location
-			let clearActions = [
-				new SetMeasureDistanceToolState(false),
+		withLatestFrom(this.store$.select(selectMapsIds)),
+		mergeMap(([action, mapIds]: [ClearActiveInteractionsAction, string[]]) => {
+			// reset the following interactions: Annotation, Pinpoint search, Pin location
+			let clearActions: Action[] = [
 				new SetAnnotationMode(null),
 				new UpdateGeoFilterStatus(),
 				new SetPinLocationModeAction(false)
 			];
+			// set measure tool as inactive
+			mapIds.forEach((mapId) => {
+				const updateMeasureAction = new UpdateMeasureDataAction({
+					mapId: mapId,
+					measureData: { isToolActive: false }
+				});
+				clearActions.push(updateMeasureAction);
+			});
 			// return defaultClearActions without skipClearFor
 			if (action.payload && action.payload.skipClearFor) {
 				clearActions = differenceWith(clearActions, action.payload.skipClearFor,

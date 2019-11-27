@@ -38,13 +38,15 @@ import {
 	SetMeasureDistanceToolState,
 	SetPinLocationModeAction,
 	SetSubMenu,
-	ShowOverlaysFootprintAction
+	ShowOverlaysFootprintAction,
+	UpdateMeasureDataAction
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
-import { ICase } from '../../modules/menu-items/cases/models/case.model';
+import { ICase, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
+import { selectMapsIds } from '../../../map-facade/reducers/map.reducer';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;
@@ -187,12 +189,17 @@ describe('ToolsAppEffects', () => {
 		icaseState = cloneDeep({ cases, selectedCase }) as any;
 		imapState.entities = selectedCase.state.maps.data.reduce((obj, map) => ({ ...obj, [map.id]: map }), {});
 		imapState.activeMapId = selectedCase.state.maps.activeMapId;
+		const mapIds: string[] = [];
+		selectedCase.state.maps.data.forEach((data: ICaseMapState) => {
+			mapIds.push(data.id);
+		});
 
 		const fakeStore = new Map<any, any>([
 			[casesStateSelector, icaseState],
 			[mapStateSelector, imapState],
 			[layersStateSelector, layerState],
-			[toolsStateSelector, toolsState]
+			[toolsStateSelector, toolsState],
+			[selectMapsIds, mapIds],
 		]);
 		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
 	}));
@@ -316,11 +323,14 @@ describe('ToolsAppEffects', () => {
 	it('clearActiveInteractions$ should clear active interactions', () => {
 		actions = hot('--a--', { a: new ClearActiveInteractionsAction() });
 
-		const expectedResult = cold('--(abcd)--', {
-			a: new SetMeasureDistanceToolState(false),
+		const expectedResult = cold('--(bcde)--', {
 			b: new SetAnnotationMode(null),
 			c: new UpdateGeoFilterStatus(),
-			d: new SetPinLocationModeAction(false)
+			d: new SetPinLocationModeAction(false),
+			e: new UpdateMeasureDataAction({
+				mapId: 'imagery1',
+				measureData: { isToolActive: false }
+			})
 		});
 
 		expect(toolsAppEffects.clearActiveInteractions$).toBeObservable(expectedResult);
@@ -329,14 +339,17 @@ describe('ToolsAppEffects', () => {
 	it('clearActiveInteractions$ should clear active interactions without SetMeasureDistanceToolState', () => {
 		actions = hot('--a--', {
 			a: new ClearActiveInteractionsAction({
-				skipClearFor: [SetMeasureDistanceToolState]
+				skipClearFor: [SetAnnotationMode]
 			})
 		});
 
-		const expectedResult = cold('--(bce)--', {
-			b: new SetAnnotationMode(null),
-			c: new UpdateGeoFilterStatus(),
-			e: new SetPinLocationModeAction(false)
+		const expectedResult = cold('--(bcd)--', {
+			b: new UpdateGeoFilterStatus(),
+			c: new SetPinLocationModeAction(false),
+			d: new UpdateMeasureDataAction({
+				mapId: 'imagery1',
+				measureData: { isToolActive: false }
+			})
 		});
 
 		expect(toolsAppEffects.clearActiveInteractions$).toBeObservable(expectedResult);

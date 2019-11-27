@@ -108,7 +108,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 
 	toggleMeasureDistanceTool() {
 		const value = this.onMeasureTool;
-		this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetMeasureDistanceToolState] }));
+		this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [] }));
 		this.store.dispatch(new SetMeasureDistanceToolState(!value));
 	}
 

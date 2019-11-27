@@ -56,7 +56,7 @@
 </div>
 
 
-<div *ngIf="!isMinimalistViewMode">
+<ng-container *ngIf="!isMinimalistViewMode">
 	<ng-container
 		*ngFor="let component of entryComponents.status">
 		<ng-container
@@ -64,4 +64,4 @@
 			[ansynEntryComponent]="{ component: component , mapId: mapId }">
 		</ng-container>
 	</ng-container>
-</div>
+</ng-container>

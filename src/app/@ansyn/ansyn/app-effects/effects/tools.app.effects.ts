@@ -56,7 +56,7 @@ import {
 } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
-import { selectMapsIds } from '../../../map-facade/reducers/map.reducer';
+import { selectMapsIds } from '@ansyn/map-facade';
 
 @Injectable()
 export class ToolsAppEffects {

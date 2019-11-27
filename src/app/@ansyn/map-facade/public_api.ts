@@ -13,6 +13,7 @@ export {
 	MapReducer,
 	IMapState,
 	mapStateSelector,
+	selectMapsIds,
 	selectActiveMapId,
 	selectMapsList,
 	selectMapsTotal,

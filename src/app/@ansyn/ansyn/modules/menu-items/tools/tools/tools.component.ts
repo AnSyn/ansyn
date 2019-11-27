@@ -6,7 +6,7 @@ import {
 	SetMeasureDistanceToolState,
 	SetSubMenu,
 	StartMouseShadow,
-	StopMouseShadow, UpdateMeasureDataAction
+	StopMouseShadow
 } from '../actions/tools.actions';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -108,7 +108,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 
 	toggleMeasureDistanceTool() {
 		const value = this.onMeasureTool;
-		this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateMeasureDataAction] }));
+		this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [] }));
 		this.store.dispatch(new SetMeasureDistanceToolState(!value));
 	}
 

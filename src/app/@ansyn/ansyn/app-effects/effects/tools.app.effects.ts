@@ -43,7 +43,8 @@ import {
 	ShowOverlaysFootprintAction,
 	StartMouseShadow,
 	StopMouseShadow,
-	ToolsActionsTypes, UpdateMeasureDataAction,
+	ToolsActionsTypes,
+	UpdateMeasureDataAction,
 	UpdateToolsFlags
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
@@ -244,13 +245,13 @@ export class ToolsAppEffects {
 		ofType<ClearActiveInteractionsAction>(ToolsActionsTypes.CLEAR_ACTIVE_TOOLS),
 		withLatestFrom(this.store$.select(selectMapsIds)),
 		mergeMap(([action, mapIds]: [ClearActiveInteractionsAction, string[]]) => {
-			// reset the following interactions: Measure Distance, Annotation, Pinpoint search, Pin location
+			// reset the following interactions: Annotation, Pinpoint search, Pin location
 			let clearActions: Action[] = [
-				// new SetMeasureDistanceToolState(false),
 				new SetAnnotationMode(null),
 				new UpdateGeoFilterStatus(),
 				new SetPinLocationModeAction(false)
 			];
+			// set measure tool as inactive
 			mapIds.forEach((mapId) => {
 				const updateMeasureAction = new UpdateMeasureDataAction({
 					mapId: mapId,

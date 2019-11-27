@@ -7,11 +7,13 @@ import Circle from 'ol/style/Circle';
 import Fill from 'ol/style/Fill';
 import Text from 'ol/style/Text';
 import Icon from 'ol/style/Icon';
+import Point from 'ol/geom/Point';
 import VectorLayer from 'ol/layer/Vector';
 import ol_Layer from 'ol/layer/Layer';
-
+import OLGeoJSON from 'ol/format/GeoJSON';
 import {
 	BaseImageryVisualizer,
+	getPointByGeometry,
 	IVisualizerEntity,
 	IVisualizerStateStyle,
 	IVisualizerStyle,
@@ -19,7 +21,7 @@ import {
 	VisualizerInteractionTypes,
 	VisualizerStates
 } from '@ansyn/imagery';
-import { Observable, of } from 'rxjs';
+import { Observable, of, forkJoin } from 'rxjs';
 import * as ol_color from 'ol/color';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { map } from 'rxjs/operators';
@@ -33,11 +35,12 @@ export interface IFeatureIdentifier {
 export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	isHidden = false;
 	public source: SourceVector;
-	protected featuresCollection: Feature[];
 	vector: ol_Layer;
 	public idToEntity: Map<string, IFeatureIdentifier> = new Map<string, { feature: null, originalEntity: null }>();
+	offset: [number, number] = [0, 0];
+	interactions: Map<VisualizerInteractionTypes, any> = new Map<VisualizerInteractionTypes, any>();
+	protected featuresCollection: Feature[];
 	protected disableCache = false;
-
 	protected visualizerStyle: IVisualizerStateStyle = {
 		opacity: 1,
 		initial: {
@@ -47,10 +50,6 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			'stroke-dasharray': 0
 		}
 	};
-
-	offset: [number, number] = [0, 0];
-
-	interactions: Map<VisualizerInteractionTypes, any> = new Map<VisualizerInteractionTypes, any>();
 
 	constructor(visualizerStyle: Partial<IVisualizerStateStyle> = {}, defaultStyle: Partial<IVisualizerStateStyle> = {}) {
 		super();
@@ -187,31 +186,28 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			secondaryStyle.geometry = styleSettings.geometry
 		}
 
-		if (styleSettings.label) {
+		if ((styleSettings.label && styleSettings.label.text) && !feature.getProperties().editMode) {
 			const fill = new Fill({ color: styleSettings.label.fill });
 			const stroke = new Stroke({
 				color: styleSettings.label.stroke ? styleSettings.label.stroke : '#fff',
 				width: styleSettings.label.stroke ? 4 : 0
 			});
+			const { label } = styleSettings;
+
 			textStyle.text = new Text({
+				overflow: label.overflow,
 				font: `${styleSettings.label.fontSize}px Calibri,sans-serif`,
-				offsetX: styleSettings.label.offsetX,
 				offsetY: <any>styleSettings.label.offsetY,
-				overflow: styleSettings.label.overflow,
-				text: <any>styleSettings.label.text,
+				text: <any>label.text,
 				fill,
 				stroke
 			});
-			if (feature.getProperties().mode === 'Arrow') {
-				textStyle.geometry = (feature) => {
-					if (feature.getGeometry().getLineString) {
-						return feature.getGeometry().getLineString(0)
-					}
-					else { // for kml import
-						return feature.getGeometry().getGeometries()[0];
-					}
-				}
-			}
+			textStyle.geometry = (feature) => {
+				const { label } = feature.getProperties();
+				return label.geometry ? label.geometry : new Point(this.getCenterOfFeature(feature).coordinates)
+			};
+
+			firstStyle.geometry = (feature) => feature.getGeometry();
 		}
 
 		if (styleSettings['marker-color'] || styleSettings['marker-size']) {
@@ -265,22 +261,35 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		if (filteredLogicalEntities.length <= 0) {
 			return of(true);
 		}
-		const features = filteredLogicalEntities.map(entity => ({ ...entity.featureJson, id: entity.id }));
+		const features = [];
+		const labels = [];
+		filteredLogicalEntities.forEach(entity => {
+			features.push({ ...entity.featureJson, id: entity.id });
+			if (entity.label && entity.label.geometry) {
+				const temp = this.geometryToEntity(entity.id, entity.label.geometry);
+				labels.push({ ...temp.featureJson, id: temp.id });
+			}
+		});
 
 		const featuresCollectionToAdd: any = featureCollection(features);
-
+		const labelCollectionToAdd: any = featureCollection(labels);
 		filteredLogicalEntities.forEach((entity: IVisualizerEntity) => {
 			this.removeEntity(entity.id, true);
 		});
 
-		return (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap.mapObject)
-			.pipe(map((features: Feature[]) => {
+		const featuresProject = (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap.mapObject);
+		const labelsProject = (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(labelCollectionToAdd, this.iMap.mapObject);
+		return forkJoin(featuresProject, labelsProject)
+			.pipe(map(([features, labels]: [Feature[], Feature[]]) => {
 				features.forEach((feature: Feature) => {
 					const _id: string = <string>feature.getId();
-					this.idToEntity.set(_id, <any>{
+					const label = labels.find(label => label.getId() === _id);
+					const entity: IFeatureIdentifier = {
 						originalEntity: filteredLogicalEntities.find(({ id }) => id === _id),
 						feature: feature
-					});
+					};
+					entity.feature.set('label', { ...feature.get('label'), geometry: label && label.getGeometry() });
+					this.idToEntity.set(_id, entity);
 					const featureWithTheSameId = this.source.getFeatureById(_id);
 					if (featureWithTheSameId) {
 						this.source.removeFeature(featureWithTheSameId);
@@ -385,6 +394,11 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			properties: {}
 		};
 		return { id, featureJson };
+	}
+
+	protected getCenterOfFeature(feature: Feature) {
+		const featureGeoJson = new OLGeoJSON().writeFeatureObject(feature);
+		return getPointByGeometry(featureGeoJson.geometry);
 	}
 
 }

@@ -21,6 +21,7 @@ describe('AnnotationLabelComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AnnotationLabelComponent);
 		component = fixture.componentInstance;
+		component.label = {text: 'label'};
 		fixture.detectChanges();
 	});
 

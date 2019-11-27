@@ -3,6 +3,7 @@ import { CommunicatorEntity, ImageryCommunicatorService, IMapInstanceChanged } f
 import { filter, take, tap } from 'rxjs/operators';
 import { AnnotationsVisualizer } from '../../../annotations.visualizer';
 import { IStyleWeight } from '../annotations-weight/annotations-weight.component';
+import * as SVG from './icons-svg';
 
 enum AnnotationsContextmenuTabs {
 	Colors,
@@ -16,6 +17,7 @@ enum AnnotationsContextmenuTabs {
 	styleUrls: ['./annotation-context-menu.component.less']
 })
 export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
+	SVGICON = SVG;
 	annotations: AnnotationsVisualizer;
 	communicator: CommunicatorEntity;
 	Tabs = AnnotationsContextmenuTabs;
@@ -167,8 +169,8 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		this.annotations.updateFeature(featureId, { style: updatedStyle });
 	}
 
-	updateLabel(label, featureId: string) {
-		this.annotations.updateFeature(featureId, { label });
+	updateLabel(text, featureId: string) {
+		this.annotations.updateFeature(featureId, { label: {text} });
 	}
 
 	updateLabelSize(labelSize, featureId: string) {

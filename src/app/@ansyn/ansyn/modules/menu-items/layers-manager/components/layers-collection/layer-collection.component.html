@@ -26,12 +26,12 @@
 
 	</div>
 
-	<ansyn-layer *ngFor="let layer of collection.data"
+	<ansyn-layer *ngFor="let layer of collection.data; let index = index"
 				 [@layersTrigger]="show"
 				 [layer]="layer"
 				 [showOnly]="collection.data.length < 2">
 
-		<ansyn-layer-menu [disabledRemove]="collection.data?.length < 2"
+		<ansyn-layer-menu [disabledRemove]="shouldDisableRemoveLayer(index)"
 						  (openModal)="openModal($event, layer)">
 		</ansyn-layer-menu>
 

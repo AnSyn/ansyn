@@ -3,7 +3,7 @@
 
 @circle-diameter: 150px;
 @point-size: 25px;
-@arrow-height: 70px;
+@arrow-height: 73.5px;
 @arrow-width: 5px;
 @background-color: rgba(205, 205, 205, 0.7);
 @border-color: rgb(165, 165, 165);
@@ -104,27 +104,7 @@
 						z-index: 2;
 					}
 
-					&:after {
-						box-sizing: content-box;
-						content: "";
-						display: block;
-						position: absolute;
-						top: 0;
-						left: 50%;
-						width: 57%;
-						height: 0;
-						padding-bottom: 57%;
-						border-color: @application-primary-color;
-						border-width: 1px 0 0 1px;
-						border-style: solid;
-						transform: translate(0, 0) rotate(45deg);
-						transform-origin: 0% 0%;
-						border-radius: 0;
-						zoom: 2;
-						//background: rgba(0,255,0,.5);
-					}
-
-					&.active:after, &:hover {
+					&:hover {
 						border-color: @application-contrast-color;
 						z-index: 2;
 					}

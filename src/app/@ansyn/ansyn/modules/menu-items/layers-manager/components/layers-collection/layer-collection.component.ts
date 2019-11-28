@@ -61,4 +61,8 @@ export class LayerCollectionComponent {
 	openModal(type: SelectedModalEnum, layer?: ILayer): void {
 		this.store.dispatch(new SetLayersModal({ type, layer }));
 	}
+
+	shouldDisableRemoveLayer(layerIndexToRemove: number): boolean {
+		return this.collection.data.length < 2 || this.collection.data.every((layer, index) => layer.isNonEditable || index === layerIndexToRemove);
+	}
 }

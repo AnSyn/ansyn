@@ -357,7 +357,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	}
 
 	private setLabelsFeature() {
-		if (!this.measureData.meausres.length){
+		if (!this.measureData.meausres.length) {
 			this.source.clear();
 			const it = this.labelToMeasures.values();
 			let val = it.next().value;

@@ -19,7 +19,8 @@ import {
 	union,
 	unkinkPolygon,
 	featureCollection,
-	envelope
+	envelope,
+	distance
 } from '@turf/turf';
 
 export type BBOX = [number, number, number, number] | [number, number, number, number, number, number];
@@ -158,4 +159,12 @@ export function isPointContainedInGeometry(point: Point, footprint: MultiPolygon
 
 export function unifyPolygons(features: Feature<Polygon>[]): Feature<MultiPolygon | Polygon> {
 	return union(...features);
+}
+
+export function calculateLineDistance(aPoint: [number, number], bPoint: [number, number]) {
+	return distance(point(aPoint), point(bPoint));
+}
+
+export function calculateGeometryArea(coordinates: number[][][]) {
+	return area(polygon(coordinates));
 }

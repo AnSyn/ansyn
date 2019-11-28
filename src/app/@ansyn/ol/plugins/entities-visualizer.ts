@@ -11,8 +11,9 @@ import Point from 'ol/geom/Point';
 import VectorLayer from 'ol/layer/Vector';
 import ol_Layer from 'ol/layer/Layer';
 import OLGeoJSON from 'ol/format/GeoJSON';
+import Geometry from 'ol/geom/Geometry';
 import {
-	BaseImageryVisualizer,
+	BaseImageryVisualizer, calculateGeometryArea, calculateLineDistance,
 	getPointByGeometry,
 	IVisualizerEntity,
 	IVisualizerStateStyle,
@@ -400,5 +401,28 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		const featureGeoJson = new OLGeoJSON().writeFeatureObject(feature);
 		return getPointByGeometry(featureGeoJson.geometry);
 	}
+
+	formatLength(geometry: Geometry) {
+		const coordinates = geometry.getCoordinates();
+		const length = coordinates.reduce( (length, coord, index, arr) => {
+				if (arr[index + 1] === undefined) {
+					return length;
+				}
+				return length + calculateLineDistance(coord, arr[index + 1])
+			}, 0 );
+
+		if ( length < 1) {
+			return (length * 1000).toFixed(2) + 'm';
+		}
+		else {
+			return length.toFixed(2) + 'km';
+		}
+	}
+
+	formatArea(geometry) {
+		return (calculateGeometryArea(geometry.getCoordinates()) / 1000000).toFixed(2) + 'km2'
+	}
+
+
 
 }

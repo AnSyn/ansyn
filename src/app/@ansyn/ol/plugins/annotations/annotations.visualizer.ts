@@ -22,13 +22,12 @@ import olPolygon, { fromCircle } from 'ol/geom/Polygon';
 import DragBox from 'ol/interaction/DragBox';
 import olTranslate from 'ol/interaction/Translate';
 import Draw from 'ol/interaction/Draw';
-import * as Sphere from 'ol/sphere';
 import olFill from 'ol/style/Fill';
 import olIcon from 'ol/style/Icon';
 import olStroke from 'ol/style/Stroke';
 import olStyle from 'ol/style/Style';
 import olText from 'ol/style/Text';
-import { Subject, Observable, of } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { mergeMap, take, tap } from 'rxjs/operators';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
@@ -293,7 +292,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			id,
 			style: cloneDeep(this.visualizerStyle),
 			showMeasures: false,
-			label: {text: '' , geometry: null},
+			label: { text: '', geometry: null },
 			labelSize: 28,
 			icon: this.iconSrc,
 			undeletable: false,
@@ -393,7 +392,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						geometry: line,
 						text: new olText({
 							...this.measuresTextStyle,
-							text: this.formatLength(Sphere.getLength(line, { projection }))
+							text: this.formatLength(line)
 						})
 					}));
 				}
@@ -408,7 +407,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						geometry: line,
 						text: new olText({
 							...this.measuresTextStyle,
-							text: this.formatLength(Sphere.getLength(line, { projection }))
+							text: this.formatLength(line)
 						})
 					}));
 				}
@@ -421,7 +420,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						geometry: line,
 						text: new olText({
 							...this.measuresTextStyle,
-							text: this.formatLength(Sphere.getLength(line, { projection }))
+							text: this.formatLength(line)
 						})
 					}));
 				}
@@ -448,12 +447,14 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						}),
 						text: new olText({
 							...this.measuresTextStyle,
-							text: this.formatLength(Sphere.getLength(line, { projection }))
+							text: this.formatLength(line)
 						})
 					}));
 				break;
 		}
-		moreStyles.push(...this.areaCircumferenceStyles(feature, projection));
+		if (mode === 'Rectangle' || mode === 'Circle') {
+			moreStyles.push(...this.areaCircumferenceStyles(feature));
+		}
 		return moreStyles;
 	}
 
@@ -469,40 +470,23 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	formatArea(calcArea: number): string {
-		return Math.round(calcArea * 100) / 100 + ' Km²';
-	};
-
-	formatLength(calcLength): string {
-		let output;
-		if (calcLength >= 1000) {
-			output = (Math.round(calcLength / 1000 * 100) / 100) + ' Km';
-		} else {
-			output = (Math.round(calcLength * 100) / 100) + ' m';
-		}
-		return output;
-	};
-
-	areaCircumferenceStyles(feature: any, projection: any): olStyle[] {
-
-		const calcCircumference = Sphere.getLength(feature.getGeometry(), { projection });
-		const calcArea = Sphere.getArea(feature.getGeometry(), { projection });
+	areaCircumferenceStyles(feature: any): olStyle[] {
+		const geometry = feature.getGeometry();
+		const calcCircumference = this.formatLength(geometry);
+		const calcArea = this.formatArea(geometry);
 		const { height } = this.getFeatureBoundingRect(feature);
-		if (!calcArea || !calcCircumference) {
-			return [];
-		}
 		return [
 			new olStyle({
 				text: new olText({
 					...this.measuresTextStyle,
-					text: `Circumference: ${ this.formatLength(calcCircumference) }`,
+					text: `Circumference: ${ calcCircumference }`,
 					offsetY: -height / 2 - 44
 				})
 			}),
 			new olStyle({
 				text: new olText({
 					...this.measuresTextStyle,
-					text: `Area: ${ this.formatArea(calcArea / 1000000) }`,
+					text: `Area: ${ calcArea }`,
 					offsetY: -height / 2 - 25
 				})
 			})
@@ -575,7 +559,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		});
 		labelFeature.setStyle(new olStyle({
 			text: new olText({
-				font: `${entity.labelSize + 2}px Calibri,sans-serif`,
+				font: `${ entity.labelSize + 2 }px Calibri,sans-serif`,
 				fill: new olFill({ color: entity.style.initial.label.fill }),
 				text: label.text,
 				offsetY: entityMode === 'Point' ? 30 : 0
@@ -592,8 +576,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		});
 		translateInteraction.on('translateend', (translateend) => {
 			const newCoord = this.geoJsonFormat.writeGeometryObject(translateend.features.item(0).getGeometry());
-			this.projectionService.projectAccurately(newCoord, this.iMap.mapObject).subscribe( (accuracyPoint) => {
-				this.updateFeature(originalFeature.getId(), { label: { text: originalFeature.get('label').text, geometry: accuracyPoint}});
+			this.projectionService.projectAccurately(newCoord, this.iMap.mapObject).subscribe((accuracyPoint) => {
+				this.updateFeature(originalFeature.getId(), {
+					label: {
+						text: originalFeature.get('label').text,
+						geometry: accuracyPoint
+					}
+				});
 				this.purgeCache(originalFeature);
 				this.featureStyle(originalFeature);
 			})
@@ -604,7 +593,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	private clearEditMode() {
 		if (this.edited) {
-			this.updateFeature(this.edited.originalFeature.getId(), {editMode: false});
+			this.updateFeature(this.edited.originalFeature.getId(), { editMode: false });
 			this.removeInteraction('translateInteractionHandler');
 			this.removeFeature(this.edited.labelFeature);
 			this.edited = null;

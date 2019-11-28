@@ -253,7 +253,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 					type: lineString.getType(),
 					coordinates: lineString.getCoordinates()
 				});
-				const segmentLengthText = this.formatLength(lineString, projection);
+				const segmentLengthText = this.formatLength(lineString);
 				const singlePointLengthTextStyle = this.getSinglePointLengthTextStyle();
 				singlePointLengthTextStyle.setText(segmentLengthText);
 				styles.push(new Style({
@@ -265,7 +265,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 		if (this.isTotalMeasureActive) {
 			// all line string
-			const allLengthText = this.formatLength(geometry, projection);
+			const allLengthText = this.formatLength(geometry);
 			this.allLengthTextStyle.setText(allLengthText);
 			let allLinePoint = new Point(geometry.getCoordinates()[0]);
 
@@ -287,24 +287,6 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		return styles;
 	}
 
-	/**
-	 * Format length output.
-	 * @param line The line.
-	 * @param projection The Projection.
-	 */
-	formatLength(line, projection): string {
-		const length = Sphere.getLength(line, { projection: projection });
-		let output;
-		if (length >= 1000) {
-			output = (Math.round(length / 1000 * 100) / 100) +
-				' ' + 'km';
-		} else {
-			output = (Math.round(length * 100) / 100) +
-				' ' + 'm';
-		}
-		return output;
-	};
-
 	private createMeasureLabelsFeatures(feature) {
 		// @TODO: try to make this and getMeasureTextStyle one function
 		const features = [];
@@ -319,7 +301,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 					type: lineString.getType(),
 					coordinates: lineString.getCoordinates()
 				});
-				const segmentLengthText = this.formatLength(lineString, projection);
+				const segmentLengthText = this.formatLength(lineString);
 				const singlePointLengthTextStyle = this.getSinglePointLengthTextStyle();
 				singlePointLengthTextStyle.setText(segmentLengthText);
 				const labelFeature = new Feature({
@@ -334,7 +316,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 		if (this.isTotalMeasureActive) {
 			// all line string
-			const allLengthText = this.formatLength(geometry, projection);
+			const allLengthText = this.formatLength(geometry);
 			const lengthText = this.allLengthTextStyle.clone();
 			lengthText.setText(allLengthText);
 			let allLinePoint = new Point(geometry.getCoordinates()[0]);
@@ -378,8 +360,6 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	}
 
 	private defineLabelsTranslate(labelsFeatures: Feature[]) {
-		const translateHandlers = labelsFeatures.map(feature => new Translate({ features: new Collection([feature]) }));
-		return translateHandlers;
-
+		return labelsFeatures.map(feature => new Translate({ features: new Collection([feature]) }));
 	}
 }

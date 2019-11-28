@@ -45,7 +45,7 @@ import { UpdateMeasureDataAction } from '../../../../../menu-items/tools/actions
 	isHideable: true
 })
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
-	labelToMeasures: Map<string, {features: Feature[], handlers: Translate[]}> = new Map();
+	labelToMeasures: Map<string, { features: Feature[], handlers: Translate[] }> = new Map();
 	isTotalMeasureActive: boolean;
 	measureData: IMeasureData;
 	geoJsonFormat: GeoJSON;
@@ -123,7 +123,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			return this.setEntities(measureData.meausres);
 		}),
 		filter(Boolean),
-		tap( () => this.setLabelsFeature())
+		tap(() => this.setLabelsFeature())
 	);
 
 	getSinglePointLengthTextStyle(): Text {
@@ -362,7 +362,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			const it = this.labelToMeasures.values();
 			let val = it.next().value;
 			while (val) {
-				val.handlers.forEach( handler => this.iMap.mapObject.removeInteraction(handler));
+				val.handlers.forEach(handler => this.iMap.mapObject.removeInteraction(handler));
 				val = it.next().value;
 			}
 			this.labelToMeasures.clear();
@@ -371,14 +371,14 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			const feature = this.source.getFeatureById(measure.id);
 			const labelsFeatures = this.createMeasureLabelsFeatures(feature);
 			const translateHandlers = this.defineLabelsTranslate(labelsFeatures);
-			translateHandlers.forEach( handler => this.iMap.mapObject.addInteraction(handler));
-			this.labelToMeasures.set(measure.id, {features: labelsFeatures, handlers: translateHandlers});
+			translateHandlers.forEach(handler => this.iMap.mapObject.addInteraction(handler));
+			this.labelToMeasures.set(measure.id, { features: labelsFeatures, handlers: translateHandlers });
 			this.source.addFeatures(labelsFeatures);
 		})
 	}
 
 	private defineLabelsTranslate(labelsFeatures: Feature[]) {
-		const translateHandlers = labelsFeatures.map( feature => new Translate({features: new Collection([feature])}));
+		const translateHandlers = labelsFeatures.map(feature => new Translate({ features: new Collection([feature]) }));
 		return translateHandlers;
 
 	}

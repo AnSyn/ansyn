@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { saveAs } from 'file-saver';
-import tokml from 'tokml';
 import { cloneDeep } from 'lodash';
 import { Store } from '@ngrx/store';
 import { ILayerState } from '../../../reducers/layers.reducer';
@@ -9,7 +8,6 @@ import { UUID } from 'angular2-uuid';
 import { ILayer } from '../../../models/layers.model';
 import GeoJsonFormat from 'ol/format/GeoJSON';
 import KMLFormat from 'ol/format/KML';
-import VectorSource from 'ol/source/Vector';
 
 @Component({
 	selector: 'ansyn-download-layers',
@@ -20,6 +18,7 @@ export class DownloadLayersComponent {
 	@Input() layer: ILayer;
 	geoJsonFormat: GeoJsonFormat;
 	kmlFormat: KMLFormat;
+
 	constructor(protected store: Store<ILayerState>) {
 		this.geoJsonFormat = new GeoJsonFormat();
 		this.kmlFormat = new KMLFormat();
@@ -56,7 +55,7 @@ export class DownloadLayersComponent {
 		/* reference */
 		annotationsLayer.features.forEach((feature) => {
 			const { style, label, ...props } = feature.properties;
-			feature.properties = { ...style.initial, label: JSON.stringify(label), ...props };
+			feature.properties = { style: JSON.stringify(style), label: JSON.stringify(label), ...props };
 		});
 	}
 

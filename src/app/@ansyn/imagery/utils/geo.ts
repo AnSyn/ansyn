@@ -161,10 +161,10 @@ export function unifyPolygons(features: Feature<Polygon>[]): Feature<MultiPolygo
 	return union(...features);
 }
 
-export function calculateLineDistance(aPoint: [number, number], bPoint: [number, number]) {
-	return distance(point(aPoint), point(bPoint));
+export function calculateLineDistance(aPoint: Point, bPoint: Point) {
+	return distance(aPoint, bPoint);
 }
 
-export function calculateGeometryArea(coordinates: number[][][]) {
-	return area(polygon(coordinates));
+export function calculateGeometryArea(polygon: Polygon) {
+	return area(polygon);
 }

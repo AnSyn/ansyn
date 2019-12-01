@@ -26,7 +26,7 @@ import { Observable, of, forkJoin } from 'rxjs';
 import * as ol_color from 'ol/color';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { map } from 'rxjs/operators';
-import { featureCollection } from '@turf/turf';
+import { featureCollection, point } from '@turf/turf';
 
 export interface IFeatureIdentifier {
 	feature: Feature,
@@ -403,12 +403,14 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	}
 
 	formatLength(geometry: Geometry) {
-		const coordinates = geometry.getCoordinates();
-		const length = coordinates.reduce( (length, coord, index, arr) => {
+		const coordinates: number[][] = geometry.getCoordinates();
+		const length = coordinates.reduce( (length: number, coord, index, arr) => {
 				if (arr[index + 1] === undefined) {
 					return length;
 				}
-				return length + calculateLineDistance(coord, arr[index + 1])
+				const aPoint = new OLGeoJSON().writeGeometryObject(new Point(coord));
+				const bPoint = new OLGeoJSON().writeGeometryObject(new Point(arr[index + 1]));
+				return length + calculateLineDistance(aPoint, bPoint);
 			}, 0 );
 
 		if ( length < 1) {
@@ -420,7 +422,8 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	}
 
 	formatArea(geometry) {
-		return (calculateGeometryArea(geometry.getCoordinates()) / 1000000).toFixed(2) + 'km2'
+		const polygon = new OLGeoJSON().writeGeometryObject(geometry);
+		return (calculateGeometryArea(polygon) / 1000000).toFixed(2) + 'km2'
 	}
 
 

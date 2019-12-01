@@ -31,9 +31,7 @@
 		"ngx-bootstrap": "^2.0.4",
 		"proj4": "^2.5.0",
 		"rison": "^0.1.1",
-		"togeojson": "^0.16.0",
-		"auto-subscriptions": "^2.0.5",
-		"tokml": "^0.4.0"
+		"auto-subscriptions": "^2.0.5"
 	},
 	"license": "MIT"
 }

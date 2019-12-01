@@ -3,12 +3,14 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
 import { DataLayersService } from '../../services/data-layers.service';
 import { AddLayer } from '../../actions/layers.actions';
-import * as toGeoJSON from 'togeojson';
 import { fromEvent, Observable } from 'rxjs';
 import { UUID } from 'angular2-uuid';
 import { SetToastMessageAction } from '@ansyn/map-facade';
 import { tap } from 'rxjs/operators';
 import { FeatureCollection } from 'geojson';
+import KmlFormat from 'ol/format/KML';
+import GeoJSONFormat from 'ol/format/GeoJSON';
+import { getErrorMessageFromException } from '../../../../core/utils/logs/timer-logs';
 
 @Component({
 	selector: 'ansyn-import-layer',
@@ -21,6 +23,8 @@ import { FeatureCollection } from 'geojson';
 })
 export class ImportLayerComponent implements OnInit, OnDestroy {
 	reader = new FileReader();
+	kmlFormat = new KmlFormat();
+	geoJsonFormat = new GeoJSONFormat();
 	file: File;
 
 	@AutoSubscription
@@ -33,7 +37,8 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 				const readerResult: string = <string>this.reader.result;
 				switch (fileType.toLowerCase()) {
 					case 'kml':
-						layerData = toGeoJSON.kml((new DOMParser()).parseFromString(readerResult, 'text/xml'));
+						const features = this.kmlFormat.readFeatures(readerResult);
+						layerData = JSON.parse(this.geoJsonFormat.writeFeatures(features));
 						this.simpleStyleToVisualizer(layerData);
 						break;
 					case 'json':
@@ -53,10 +58,10 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 				} else {
 					throw new Error('Not a feature collection');
 				}
-			} catch (toastText) {
+			} catch (error) {
 				this.store.dispatch(new SetToastMessageAction({
 					showWarningIcon: true,
-					toastText: toastText || 'Failed to import file'
+					toastText: getErrorMessageFromException(error, 'Failed to import file')
 				}));
 			}
 		})
@@ -94,13 +99,19 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	simpleStyleToVisualizer(annotationsLayer): void {
 		/* reference */
 		annotationsLayer.features.forEach((feature) => {
-			const { id, label, showMeasures, mode, ...initial } = feature.properties;
+			const { id, showMeasures, mode, icon, labelSize, undeletable, name, style } = feature.properties;
+			let { label } = feature.properties;
+			label = typeof label === 'object' ? label : {text: label, geometry: null};
 			feature.properties = {
 				id,
-				label,
+				label: label ? JSON.parse(label) : { text: name ? JSON.parse(name) : '', geometry: null },
 				showMeasures: JSON.parse(showMeasures ? showMeasures : null),
 				mode,
-				style: { initial }
+				editMode: false,
+				icon,
+				labelSize: isNaN(labelSize) ? 28 : parseInt(labelSize, 10),
+				undeletable,
+				style: JSON.parse(style)
 			};
 		});
 	}

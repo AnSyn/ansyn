@@ -19,9 +19,7 @@
     "lodash-decorators",
     "ngx-bootstrap",
     "proj4",
-    "rison",
-    "togeojson",
-    "tokml"
+    "rison"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

@@ -101,7 +101,7 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 		annotationsLayer.features.forEach((feature) => {
 			const { id, showMeasures, mode, icon, labelSize, undeletable, name, style } = feature.properties;
 			let { label } = feature.properties;
-			label = typeof label === 'object' ? label : {text: label, geometry: null}
+			label = typeof label === 'object' ? label : {text: label, geometry: null};
 			feature.properties = {
 				id,
 				label: label ? JSON.parse(label) : { text: name ? JSON.parse(name) : '', geometry: null },

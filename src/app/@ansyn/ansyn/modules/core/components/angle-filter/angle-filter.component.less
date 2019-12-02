@@ -22,6 +22,21 @@
 		box-sizing: border-box;
 	}
 
+	div.north-container{
+		width: @circle-diameter;
+		height: @circle-diameter;
+		position: absolute;
+	.north {
+		position: absolute;
+		transform: translate(-50%);
+		background: @background-color-3;
+		padding: 0 2px;
+		top: -25px;
+		left: 75px;
+		font-weight: bold;
+		z-index: @z-index-map-rotation + 1;
+	}
+	}
 	&:focus {
 		div.angle-filter {
 			visibility: visible;
@@ -116,6 +131,7 @@
 			display: flex;
 			justify-content: center;
 			width: @circle-diameter;
+			margin-top: 15px;
 
 			button {
 				width: 30px;

@@ -291,7 +291,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		// @TODO: try to make this and getMeasureTextStyle one function
 		const features = [];
 		const geometry = <LineString>feature.getGeometry();
-		const projection = (<any>this.iMap.mapObject).getView().getProjection();
+
 		// text points
 		const length = geometry.getCoordinates().length;
 		if (length > 2) {
@@ -341,11 +341,11 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	private setLabelsFeature() {
 		if (!this.measureData.meausres.length) {
 			this.source.clear();
-			const it = this.labelToMeasures.values();
-			let val = it.next().value;
+			const labelToMeasureIterator = this.labelToMeasures.values();
+			let val = labelToMeasureIterator.next().value;
 			while (val) {
 				val.handlers.forEach(handler => this.iMap.mapObject.removeInteraction(handler));
-				val = it.next().value;
+				val = labelToMeasureIterator.next().value;
 			}
 			this.labelToMeasures.clear();
 		}

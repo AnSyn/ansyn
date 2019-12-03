@@ -137,6 +137,10 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 
 	}
 
+	get rotation() {
+		const map = this.communicatorService.provide(this.mapId);
+		return map ? map.getRotation() : 0;
+	}
 
 	getType(): string {
 		return '';

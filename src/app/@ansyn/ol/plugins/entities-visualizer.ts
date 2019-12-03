@@ -11,8 +11,9 @@ import Point from 'ol/geom/Point';
 import VectorLayer from 'ol/layer/Vector';
 import ol_Layer from 'ol/layer/Layer';
 import OLGeoJSON from 'ol/format/GeoJSON';
+import Geometry from 'ol/geom/Geometry';
 import {
-	BaseImageryVisualizer,
+	BaseImageryVisualizer, calculateGeometryArea, calculateLineDistance,
 	getPointByGeometry,
 	IVisualizerEntity,
 	IVisualizerStateStyle,
@@ -25,7 +26,7 @@ import { Observable, of, forkJoin } from 'rxjs';
 import * as ol_color from 'ol/color';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { map } from 'rxjs/operators';
-import { featureCollection } from '@turf/turf';
+import { featureCollection, point } from '@turf/turf';
 
 export interface IFeatureIdentifier {
 	feature: Feature,
@@ -400,5 +401,31 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		const featureGeoJson = new OLGeoJSON().writeFeatureObject(feature);
 		return getPointByGeometry(featureGeoJson.geometry);
 	}
+
+	formatLength(geometry: Geometry) {
+		const coordinates: number[][] = geometry.getCoordinates();
+		const length = coordinates.reduce( (length: number, coord, index, arr) => {
+				if (arr[index + 1] === undefined) {
+					return length;
+				}
+				const aPoint = new OLGeoJSON().writeGeometryObject(new Point(coord));
+				const bPoint = new OLGeoJSON().writeGeometryObject(new Point(arr[index + 1]));
+				return length + calculateLineDistance(aPoint, bPoint);
+			}, 0 );
+
+		if ( length < 1) {
+			return (length * 1000).toFixed(2) + 'm';
+		}
+		else {
+			return length.toFixed(2) + 'km';
+		}
+	}
+
+	formatArea(geometry) {
+		const polygon = new OLGeoJSON().writeGeometryObject(geometry);
+		return (calculateGeometryArea(polygon) / 1000000).toFixed(2) + 'km2'
+	}
+
+
 
 }

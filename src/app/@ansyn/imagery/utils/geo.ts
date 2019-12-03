@@ -122,9 +122,10 @@ export function getPolygonIntersectionRatioWithMultiPolygon(extent: Polygon, foo
 		extentArea = area(extentPolygons);
 
 		footprint.coordinates.forEach(coordinates => {
-			const intersection = intersect(extentPolygon, polygon(coordinates));
+			const tempPoly = polygon(coordinates);
+			const intersection = intersect(extentPolygon, tempPoly);
 			if (intersection) {
-				intersectionArea += area(intersection);
+				intersectionArea = booleanEqual(intersection, tempPoly) ? extentArea : intersectionArea + area(intersection);
 			}
 		});
 	} catch (e) {

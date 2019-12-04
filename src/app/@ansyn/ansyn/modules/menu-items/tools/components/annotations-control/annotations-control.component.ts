@@ -154,4 +154,7 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 
 	}
 
+	isActive(annotationMode) {
+		return annotationMode !== AnnotationMode.Translate && this.mode === annotationMode;
+	}
 }

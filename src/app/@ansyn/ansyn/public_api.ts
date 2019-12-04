@@ -1,3 +1,4 @@
+export { ImageryVideoMapType } from './modules/imagery-video/map/imagery-video-map';
 export {
 	AnaglyphConfig,
 	IAnaglyphConfig

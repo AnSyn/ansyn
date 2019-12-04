@@ -550,12 +550,18 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	private createLabelFeature(feature: olFeature): olFeature {
-		const center = this.getCenterOfFeature(feature);
+		let labelPostion = this.getCenterOfFeature(feature);
 		const entity = this.getEntity(feature);
 		const { mode: entityMode } = feature.getProperties();
 		const { label } = feature.getProperties();
+		if (label.geometry) {
+			const labelPoint = this.geoJsonFormat.writeGeometryObject(label.geometry);
+			labelPoint.coordinates[0] += this.offset[0];
+			labelPoint.coordinates[1] += this.offset[1];
+			labelPostion = labelPoint;
+		}
 		const labelFeature = new olFeature({
-			geometry: label.geometry ? label.geometry : new olPoint(center.coordinates),
+			geometry: new olPoint(labelPostion.coordinates),
 		});
 		labelFeature.setStyle(new olStyle({
 			text: new olText({
@@ -576,6 +582,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		});
 		translateInteraction.on('translateend', (translateend) => {
 			const newCoord = this.geoJsonFormat.writeGeometryObject(translateend.features.item(0).getGeometry());
+			newCoord.coordinates[0] -= this.offset[0];
+			newCoord.coordinates[1] -= this.offset[1];
 			this.projectionService.projectAccurately(newCoord, this.iMap.mapObject).subscribe((accuracyPoint) => {
 				this.updateFeature(originalFeature.getId(), {
 					label: {

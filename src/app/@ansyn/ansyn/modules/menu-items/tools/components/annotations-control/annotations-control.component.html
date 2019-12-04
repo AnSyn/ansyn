@@ -23,7 +23,7 @@
 <ul class="annotations-options">
 
 	<li *ngFor="let annotationMode of ANNOTATION_MODE_LIST"
-		[class.mode-on]="mode === annotationMode"
+		[class.mode-on]="isActive(annotationMode)"
 		(click)="setAnnotationMode(annotationMode)"
 		[class.disabled]="!isAnnotationEnable(annotationMode)">
 		<span

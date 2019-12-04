@@ -205,7 +205,12 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			});
 			textStyle.geometry = (feature) => {
 				const { label } = feature.getProperties();
-				return label.geometry ? label.geometry : new Point(this.getCenterOfFeature(feature).coordinates)
+				if (label.geometry) {
+					const oldCoordinates = label.geometry.getCoordinates();
+					const newCoordinates = [this.offset[0] + oldCoordinates[0] , this.offset[1] + oldCoordinates[1]];
+					return new Point(newCoordinates);
+				}
+				return new Point(this.getCenterOfFeature(feature).coordinates)
 			};
 
 			firstStyle.geometry = (feature) => feature.getGeometry();

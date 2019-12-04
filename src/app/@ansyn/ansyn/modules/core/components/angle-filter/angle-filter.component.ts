@@ -45,6 +45,7 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 	overlaysAngles: IAngle[];
 	hoverOverlay: string;
 	point: Point;
+	_show: boolean;
 
 	@AutoSubscription
 	showAngleFilter$ = this.actions$.pipe(
@@ -128,11 +129,11 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 		this.renderer.setStyle(this.elem.nativeElement, 'top', `${ action.payload.click.y }px`);
 		this.renderer.setStyle(this.elem.nativeElement, 'left', `${ action.payload.click.x }px`);
 		this.elem.nativeElement.focus();
+		this._show = true;
 	}
 
 	hide() {
-		this.renderer.setStyle(this.elem.nativeElement, 'top', `-1px`);
-		this.renderer.setStyle(this.elem.nativeElement, 'left', `-1px`);
+		this._show = false;
 		this.elem.nativeElement.blur();
 
 	}

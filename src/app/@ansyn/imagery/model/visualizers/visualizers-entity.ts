@@ -11,5 +11,6 @@ export interface IVisualizerEntity {
 	style?: Partial<IVisualizerStateStyle>;
 	showMeasures?: boolean;
 	undeletable?: boolean;
-	editMode?: boolean;
+	// editMode?: boolean;
+	labelTranslateOn?: boolean;
 }

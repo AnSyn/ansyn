@@ -5,10 +5,8 @@
 
 		<div class="context-menu" [style.outline-color]="getFeatureProps(featureId)?.style?.initial?.stroke">
 			<ul class="buttons">
-				<li *ngIf="getFeatureProps(featureId)?.label?.text.length">
-					<button [class.active]="annotations.edited?.originalFeature?.getId() === featureId"
-							(click)="annotations.editFeature(featureId)"
-							>
+				<li>
+					<button>
 						<i [attr.tooltip-value]="'Edit' | translate" tooltip-class="bottom">
 							<svg>
 								<path [attr.d]="SVGICON.editModeSvg"></path>
@@ -41,8 +39,11 @@
 					<ansyn-annotation-label *ngIf="selectedTab[featureId] === Tabs.Label"
 					[label]="getFeatureProps(featureId)?.label"
 					[labelSize]="annotations.idToEntity.get(featureId)?.originalEntity.labelSize"
+					[translateOn]="getFeatureProps(featureId)?.labelTranslateOn"
 					(onChangeText)="updateLabel($event, featureId)"
-					(onChangeSize)="updateLabelSize($event, featureId)"></ansyn-annotation-label>
+					(onChangeSize)="updateLabelSize($event, featureId)"
+					(onDragClick)="annotations.labelTranslateMode(featureId)">
+					</ansyn-annotation-label>
 				</li>
 				<li class="expanded-selection line-width-selection">
 					<p>

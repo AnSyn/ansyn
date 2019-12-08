@@ -1,8 +1,14 @@
-<form class="annotation-label-edit"
+<div class="annotation-label-form">
+	<button
+		class="drag-annotation"
+		[disabled]="label?.text.length === 0"
+		(click)="onDragClick.emit()"
+		[attr.tooltip-value]="'Move Label' | translate" tooltip-class="bottom">
+		<i class="icon icon-drag" [class.active]="translateOn"></i>
+	</button>
+	<form class="annotation-label-edit"
 	  (ngSubmit)="labelInput.blur()">
-
-	<mat-form-field class="label-font-size"
-	>
+	<mat-form-field class="label-font-size">
 		<mat-select [placeholder]="'Label size' | translate"
 					[ngModel]="labelSize"
 					(ngModelChange)="onChangeSize.emit($event)"
@@ -21,4 +27,4 @@
 			   (ngModelChange)="onChangeText.emit($event)">
 	</mat-form-field>
 </form>
-
+</div>

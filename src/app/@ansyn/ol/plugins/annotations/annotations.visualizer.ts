@@ -36,7 +36,7 @@ import { IOLPluginsConfig, OL_PLUGINS_CONFIG } from '../plugins.config';
 import { AnnotationMode, IAnnotationBoundingRect, IDrawEndEvent } from './annotations.model';
 import { DragPixelsInteraction } from './dragPixelsInteraction';
 
-export interface ILabelEditMode {
+export interface ILabelTranslateMode {
 	originalFeature: olFeature,
 	labelFeature: olFeature
 }
@@ -57,7 +57,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	geoJsonFormat: OLGeoJSON;
 	dragBox = new DragBox({ condition: platformModifierKeyOnly });
 	translationSubscriptions = [];
-	edited: ILabelEditMode;
+	labelTranslate: ILabelTranslateMode;
 	events = {
 		onClick: new Subject(),
 		onSelect: new Subject<string[]>(),
@@ -67,19 +67,19 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		removeEntity: new Subject<string>(),
 		updateEntity: new Subject<IVisualizerEntity>(),
 		offsetEntity: new Subject<any>(),
-		onEditStart: new Subject<ILabelEditMode>(),
-		onEditEnd: new Subject()
+		onLabelTranslateStart: new Subject<ILabelTranslateMode>(),
+		onLabelTranslateEnd: new Subject()
 	};
-	clearModified: any = tap(() => {
-		if (this.edited) {
-			this.editFeature(this.edited.originalFeature.getId())
+	clearLabelTranslate: any = tap(() => {
+		if (this.labelTranslate) {
+			this.labelTranslateMode(this.labelTranslate.originalFeature.getId())
 		}
 	});
 	@AutoSubscription
-	selected$ = this.events.onSelect.pipe(this.clearModified, tap((selected: any) => this.selected = selected));
+	selected$ = this.events.onSelect.pipe(this.clearLabelTranslate, tap((selected: any) => this.selected = selected));
 
 	@AutoSubscription
-	edited$ = this.events.onEditStart.pipe(tap((edited) => this.edited = edited));
+	edited$ = this.events.onLabelTranslateStart.pipe(tap((edited) => this.labelTranslate = edited));
 
 	modeDictionary = {
 		Arrow: {
@@ -184,7 +184,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				icon: feature.properties.icon || '',
 				undeletable: feature.properties.undeletable || false,
 				labelSize: feature.properties.labelSize || 28,
-				editMode: feature.properties.editMode || false
+				labelTranslateOn: feature.properties.labelTranslateOn || false
 			};
 		});
 	}
@@ -520,33 +520,33 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.iconSrc = src;
 	}
 
-	editFeature(featureId: any) {
+	labelTranslateMode(featureId: any) {
 		let oldFeature = null;
 		let event = null;
 
-		if (this.edited) {
-			const { originalFeature } = this.edited;
-			this.removeInteraction('translateInteractionHandler');
+		if (this.labelTranslate) {
+			const { originalFeature } = this.labelTranslate;
+			this.removeInteraction(VisualizerInteractions.labelTranslateHandler);
 			oldFeature = originalFeature;
 		}
 
 		if (!oldFeature || featureId !== oldFeature.getId()) { // start editing
 			const originalFeature: olFeature = this.source.getFeatureById(featureId);
-			this.updateFeature(originalFeature.getId(), { editMode: true });
+			this.updateFeature(originalFeature.getId(), { labelTranslateOn: true });
 			const labelFeature = this.createLabelFeature(originalFeature);
 
-			this.addInteraction('translateInteractionHandler', this.moveLabelInteraction(originalFeature, labelFeature));
+			this.addInteraction(VisualizerInteractions.labelTranslateHandler, this.moveLabelInteraction(originalFeature, labelFeature));
 			event = {
 				originalFeature,
 				labelFeature
 			};
 			this.source.addFeature(labelFeature);
 		} else {
-			this.updateFeature(featureId, { editMode: false });
-			this.source.removeFeature(this.edited.labelFeature);
+			this.updateFeature(featureId, { labelTranslateOn: false });
+			this.source.removeFeature(this.labelTranslate.labelFeature);
 		}
 		this.source.refresh();
-		this.events.onEditStart.next(event);
+		this.events.onLabelTranslateStart.next(event);
 	}
 
 	private createLabelFeature(feature: olFeature): olFeature {
@@ -599,21 +599,21 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return translateInteraction;
 	}
 
-	private clearEditMode() {
-		if (this.edited) {
-			this.updateFeature(this.edited.originalFeature.getId(), { editMode: false });
-			this.removeInteraction('translateInteractionHandler');
-			this.removeFeature(this.edited.labelFeature);
-			this.edited = null;
+	private clearLabelTranslateMode() {
+		if (this.labelTranslate) {
+			this.updateFeature(this.labelTranslate.originalFeature.getId(), { labelTranslateOn: false });
+			this.removeInteraction(VisualizerInteractions.labelTranslateHandler);
+			this.removeFeature(this.labelTranslate.labelFeature);
+			this.labelTranslate = null;
 		}
 	}
 	onResetView(): Observable<boolean> {
-		this.clearEditMode();
+		this.clearLabelTranslateMode();
 		return super.onResetView();
 	}
 
 	dispose() {
-		this.clearEditMode();
+		this.clearLabelTranslateMode();
 		super.dispose();
 	}
 

@@ -1,6 +1,26 @@
 @import 'ansyn/less/colors';
 
 :host {
+	div.annotation-label-form {
+		button.drag-annotation {
+			position: absolute;
+			top: 35px;
+			right: 0;
+			background-color: transparent;
+			z-index: 2;
+			color: white;
+			border: none;
+			outline: none;
+			padding: 0;
+
+			&:disabled {
+				opacity: 0.5;
+			}
+
+			i.active {
+				color: @application-primary-color;
+			}
+		}
 
 	span.annotation-label {
 		height: 32px;
@@ -10,6 +30,7 @@
 		text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 		top: calc(~'100% + 20px');
 	}
+
 	form.annotation-label-edit {
 		background: @background-color-3;
 		width: 140px;
@@ -27,11 +48,14 @@
 		mat-form-field.label-form-field {
 			width: 100%
 		}
+
 		mat-form-field.label-font-size {
 			width: 100%;
 		}
 	}
+
 	@white-inactive: rgba(255, 255, 255, 0.8);
+
 	.mat-form-field {
 		input {
 			caret-color: white;
@@ -42,7 +66,7 @@
 			color: white;
 		}
 
-		/deep/ .mat-form-field-label, /deep/ .mat-select-value-text  {
+		/deep/ .mat-form-field-label, /deep/ .mat-select-value-text {
 			color: @white-inactive !important;
 		}
 
@@ -59,4 +83,6 @@
 		}
 
 	}
+}
+
 }

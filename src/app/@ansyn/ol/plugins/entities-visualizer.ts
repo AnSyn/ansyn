@@ -190,7 +190,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			secondaryStyle.geometry = styleSettings.geometry
 		}
 
-		if ((styleSettings.label && styleSettings.label.text) && !feature.getProperties().editMode) {
+		if ((styleSettings.label && styleSettings.label.text) && !feature.getProperties().labelTranslateOn) {
 			const fill = new Fill({ color: styleSettings.label.fill });
 			const stroke = new Stroke({
 				color: styleSettings.label.stroke ? styleSettings.label.stroke : '#fff',

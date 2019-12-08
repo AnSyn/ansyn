@@ -86,13 +86,14 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		this.featuresCollection = [];
 		this.source = new SourceVector({ features: this.featuresCollection, wrapX: false });
 
+		let extent = !this.dontRestrictToExtent ? this.iMap.getMainLayer().getExtent() : undefined;
 		this.vector = new VectorLayer(<any>{
 			source: this.source,
 			style: this.featureStyle.bind(this),
 			opacity: this.visualizerStyle.opacity,
 			renderBuffer: 5000,
 			zIndex: 10,
-			extent: this.iMap.getMainLayer().getExtent()
+			extent: extent
 		});
 
 		if (!this.isHidden) {

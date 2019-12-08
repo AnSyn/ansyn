@@ -2,22 +2,29 @@
 
 	<div class="title-row">
 
-		<span class="title" [class.title-disabled]="showOnlyFavorite">{{ filter.displayName | translate }}</span>
+		<div class="filter-title" [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''">
+			<span class="title" [class.title-disabled]="showOnlyFavorite">{{ filter.displayName | translate }}</span>
 
-		<span *ngIf="metadataFromState && metadataFromState.collapse && metadataFromState.isFiltered() && !showOnlyFavorite"
-			  class="filtered">{{"(filtered)" | translate}}</span>
+			<span
+				*ngIf="metadataFromState && metadataFromState.collapse && metadataFromState.isFiltered() && !showOnlyFavorite"
+			  	class="filtered">{{"(filtered)" | translate}}</span>
+		</div>
 
-		<button [@rotateArrow]="!metadataFromState.collapse" #downArrow class="down-arrow" [disabled]="disabledShowAll"
-				(click)="toggleVisible()">
-		</button>
+		<div class="filter-title-buttons">
+			<button [@rotateArrow]="!metadataFromState.collapse" #downArrow class="down-arrow"
+					[disabled]="disabledShowAll"
+					(click)="toggleVisible()">
+			</button>
 
-		<div *ngIf="!showOnlyFavorite" class="show-all">
-			<span (click)="showAll()">{{'Show all' | translate}}</span>
+			<div *ngIf="!showOnlyFavorite" class="show-all">
+				<span (click)="showAll()">{{'Show all' | translate}}</span>
+			</div>
 		</div>
 	</div>
 
 	<div *ngIf="(isLoading$ | async); else filterBody">
-		<ansyn-animated-ellipsis [text]="'Loading' | translate" [rtl]="'rtl' === ('direction' | translate)"></ansyn-animated-ellipsis>
+		<ansyn-animated-ellipsis [text]="'Loading' | translate"
+								 [rtl]="'rtl' === ('direction' | translate)"></ansyn-animated-ellipsis>
 	</div>
 
 	<ng-template #filterBody>

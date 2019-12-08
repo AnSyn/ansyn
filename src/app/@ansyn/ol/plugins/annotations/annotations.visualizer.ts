@@ -179,12 +179,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				featureJson,
 				id: feature.properties.id,
 				style: feature.properties.style,
-				showMeasures: feature.properties.showMeasures,
-				label: feature.properties.label,
-				icon: feature.properties.icon,
-				undeletable: feature.properties.undeletable,
-				labelSize: feature.properties.labelSize,
-				editMode: feature.properties.editMode
+				showMeasures: feature.properties.showMeasures || false,
+				label: feature.properties.label || {text: '', geometry: null},
+				icon: feature.properties.icon || '',
+				undeletable: feature.properties.undeletable || false,
+				labelSize: feature.properties.labelSize || 28,
+				editMode: feature.properties.editMode || false
 			};
 		});
 	}

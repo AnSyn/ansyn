@@ -12,7 +12,8 @@ import { CaseGeoFilter, CaseRegionState } from '../../../../../menu-items/cases/
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, Actions, OpenLayersProjectionService]
+	deps: [Store, Actions, OpenLayersProjectionService],
+	dontRestrictToExtent: true
 })
 export class PolygonSearchVisualizer extends RegionVisualizer {
 	constructor(public store$: Store<any>,

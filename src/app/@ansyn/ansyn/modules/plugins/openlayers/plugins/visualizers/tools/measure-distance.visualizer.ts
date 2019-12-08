@@ -263,7 +263,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			});
 		}
 
-		if (this.isTotalMeasureActive) {
+		if (this.isTotalMeasureActive || length === 2) {
 			// all line string
 			const allLengthText = this.formatLength(geometry);
 			this.allLengthTextStyle.setText(allLengthText);
@@ -314,7 +314,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			});
 		}
 
-		if (this.isTotalMeasureActive) {
+		if (this.isTotalMeasureActive || length === 2) {
 			// all line string
 			const allLengthText = this.formatLength(geometry);
 			const lengthText = this.allLengthTextStyle.clone();

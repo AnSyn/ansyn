@@ -134,13 +134,14 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 
 	hide() {
 		this._show = false;
+		this.overlayHover();
 		this.elem.nativeElement.blur();
 
 	}
 
 	get rotation() {
 		const map = this.communicatorService.provide(this.mapId);
-		return map ? map.getRotation() : 0;
+		return map ? ((map.getRotation() || 0) - (map.getVirtualNorth() || 0)) : 0;
 	}
 
 	getType(): string {

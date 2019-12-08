@@ -9,7 +9,7 @@ export type Severity = 'CRITICAL' | 'ERROR' | 'WARNING' | 'INFO' | 'DEBUG'
 
 export interface ILogObject {
 	severity: string;
-	msg: string;
+	msg: string | object;
 }
 
 const defaultActionType = 'GLOBAL';
@@ -80,7 +80,7 @@ export class LoggerService implements ErrorHandler {
 		this.updateLogTimeForDisconnect();
 		let prefix = `${ this.standardPrefix }[${ Date() }]`;
 		if (includeBrowserData) {
-			prefix += `[window:${ window.innerWidth }x${ window.innerHeight }][userAgent: ${ navigator.userAgent }]`;
+			prefix += this.getBrowserData();
 		}
 		const str = `${ prefix }[${ severity }] [${ actionType.toUpperCase() }] ${subType !== '' ? '[' + subType.toUpperCase() + ']' : ''} ${ msg }`;
 		this.stack.push({ severity, msg: str });
@@ -107,6 +107,9 @@ export class LoggerService implements ErrorHandler {
 		this.stack = [];
 	}
 
+	getBrowserData() {
+		return `[window:${ window.innerWidth }x${ window.innerHeight }][userAgent: ${ navigator.userAgent }]`
+	}
 	setClientAsConnected() {
 		this.isConnected = true;
 	}
@@ -115,7 +118,7 @@ export class LoggerService implements ErrorHandler {
 		this.isConnected = false;
 	}
 
-	private updateLogTimeForDisconnect() {
+	protected updateLogTimeForDisconnect() {
 		if (!this.isConnected) {
 			this.setClientAsConnected();
 		}

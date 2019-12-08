@@ -21,10 +21,12 @@ export const VisualizerInteractions: { [key: string]: VisualizerInteractionTypes
 
 export interface IImageryVisualizerMetaData extends IImageryPluginMetaData {
 	readonly isHideable?: boolean;
+	readonly dontRestrictToExtent?: boolean;
 }
 
 export abstract class BaseImageryVisualizer extends BaseImageryPlugin implements IImageryVisualizerMetaData {
 	readonly isHideable?: boolean;
+	readonly dontRestrictToExtent?: boolean;
 	type: string;
 	source: any;
 	vector: any;

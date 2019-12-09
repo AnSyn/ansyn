@@ -23,6 +23,8 @@ import { DragDropMapService } from './providers/drag-drop-map.service';
 import { IMapsLayout, LayoutKey, layoutOptions } from '../../models/maps-layout';
 import { IMapSettings } from '@ansyn/imagery';
 
+import html2canvas from 'html2canvas';
+import { saveAs } from 'file-saver';
 // @dynamic
 @Component({
 	selector: 'ansyn-imageries-manager',
@@ -134,6 +136,11 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 	dbclick() {
 		window.clearTimeout(this.clickTimeout);
 		this.preventDbClick = true;
+		html2canvas(this.imageriesContainer.nativeElement).then(function(canvas: HTMLCanvasElement) {
+			canvas.toBlob(function(blob) {
+				saveAs(blob, "map (HTML2Canvas).png");
+			});
+		});
 	}
 
 	trackByFun(index, item) {

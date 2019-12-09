@@ -64,6 +64,7 @@
     "font-awesome": "^4.7.0",
     "geojson": "^0.5.0",
     "gl-matrix": "^2.8.1",
+    "html2canvas": "^1.0.0-rc.5",
     "lodash": "^4.17.15",
     "lodash-decorators": "^4.5.0",
     "mathjs": "^5.4.1",

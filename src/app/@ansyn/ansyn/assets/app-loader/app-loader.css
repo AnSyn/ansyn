@@ -42,6 +42,7 @@
 
 .time-part.hundredths.ones .digit-wrapper {
 	animation-name: hundredths-ones;
+	animation-fill-mode: forwards;
 	animation-duration: 0.2s;
 	animation-iteration-count: 10
 }

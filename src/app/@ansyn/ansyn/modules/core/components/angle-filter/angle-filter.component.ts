@@ -1,6 +1,5 @@
 import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import {
-	CommunicatorEntity,
 	ImageryCommunicatorService,
 	toDegrees,
 	toRadians
@@ -45,19 +44,19 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 	overlaysAngles: IAngle[];
 	hoverOverlay: string;
 	point: Point;
+	mapRotation = 0;
 	_show: boolean;
 
 	@AutoSubscription
 	showAngleFilter$ = this.actions$.pipe(
 		ofType(MapActionTypes.CONTEXT_MENU.ANGLE_FILTER_SHOW),
 		debounceTime(200),
-		withLatestFrom(this.store$.select(selectActiveMapId), (action: ContextMenuShowAngleFilter, mapId: string): [ContextMenuShowAngleFilter, number] => {
+		withLatestFrom(this.store$.select(selectActiveMapId), (action: ContextMenuShowAngleFilter, mapId: string): [ContextMenuShowAngleFilter] => {
 			const communicator = this.communicatorService.provide(mapId);
-			let mapRotationDegree = 0;
 			if (Boolean(communicator)) {
-				mapRotationDegree = toDegrees(communicator.getRotation() - communicator.getVirtualNorth());
+				this.mapRotation  = toDegrees(communicator.getRotation() - communicator.getVirtualNorth());
 			}
-			return [action, mapRotationDegree];
+			return [action];
 		}),
 		tap(this.show.bind(this))
 	);
@@ -87,7 +86,7 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 		return this.hide;
 	}
 
-	setAnglesToOverlays(overlays: IOverlay[], mapRotationDegree: number) {
+	setAnglesToOverlays(overlays: IOverlay[]) {
 		const pointLat = this.getLatFromPoint(this.point, true);
 		const pointLong = this.getLongFromPoint(this.point, true);
 		this.overlaysAngles = overlays.map((overlay) => {
@@ -104,7 +103,7 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 			const brng = 360 - (toDegrees(Math.atan2(y, x)));
 			return {
 				overlay: overlay,
-				degreeFromPoint: brng + mapRotationDegree,
+				degreeFromPoint: brng + this.mapRotation,
 				distanceFromPoint: d / (10 ** Math.log2(d))
 			}
 		});
@@ -122,10 +121,10 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 	ngOnDestroy(): void {
 	}
 
-	show([action, mapRotationDegree]: [ContextMenuShowAngleFilter, number]) {
+	show([action]: [ContextMenuShowAngleFilter, number]) {
 		this.point = action.payload.point;
 		this.overlay = action.payload.displayedOverlay;
-		this.setAnglesToOverlays(action.payload.overlays, mapRotationDegree);
+		this.setAnglesToOverlays(action.payload.overlays);
 		this.renderer.setStyle(this.elem.nativeElement, 'top', `${ action.payload.click.y }px`);
 		this.renderer.setStyle(this.elem.nativeElement, 'left', `${ action.payload.click.x }px`);
 		this.elem.nativeElement.focus();
@@ -137,11 +136,6 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 		this.overlayHover();
 		this.elem.nativeElement.blur();
 
-	}
-
-	get rotation() {
-		const map = this.communicatorService.provide(this.mapId);
-		return map ? ((map.getRotation() || 0) - (map.getVirtualNorth() || 0)) : 0;
 	}
 
 	getType(): string {

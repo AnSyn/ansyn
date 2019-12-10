@@ -318,7 +318,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 		if (this.isTotalMeasureActive || length === 2) {
 			// all line string
-			const allLengthText = this.formatLength([featureGeoJson.coordinates[0], featureGeoJson.coordinates[featureGeoJson.coordinates.length - 1]]);
+			const allLengthText = this.formatLength(featureGeoJson.coordinates);
 			const lengthText = this.allLengthTextStyle.clone();
 			lengthText.setText(allLengthText);
 			let allLinePoint = new Point(geometry.getCoordinates()[0]);

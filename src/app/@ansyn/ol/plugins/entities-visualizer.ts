@@ -11,7 +11,6 @@ import Point from 'ol/geom/Point';
 import VectorLayer from 'ol/layer/Vector';
 import ol_Layer from 'ol/layer/Layer';
 import OLGeoJSON from 'ol/format/GeoJSON';
-import Geometry from 'ol/geom/Geometry';
 import {
 	BaseImageryVisualizer,
 	calculateGeometryArea,
@@ -410,8 +409,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		return getPointByGeometry(featureGeoJson.geometry);
 	}
 
-	formatLength(geometry: Geometry) {
-		const coordinates: number[][] = geometry.getCoordinates();
+	formatLength(coordinates: number[][]) {
 		const length = coordinates.reduce((length: number, coord, index, arr) => {
 			if (arr[index + 1] === undefined) {
 				return length;

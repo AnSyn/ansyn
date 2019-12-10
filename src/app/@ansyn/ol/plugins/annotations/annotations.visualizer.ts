@@ -378,21 +378,21 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	getMeasuresAsStyles(feature: olFeature): olStyle[] {
-		const { mode } = feature.getProperties();
-		const view = (<any>this.iMap.mapObject).getView();
-		const projection = view.getProjection();
+		const { mode, id } = feature.getProperties();
+		const visualizerEntity = this.getEntityById(id);
 		const moreStyles: olStyle[] = [];
 		let coordinates: any[] = [];
 		switch (mode) {
 			case 'LineString': {
 				coordinates = (<olLineString>feature.getGeometry()).getCoordinates();
 				for (let i = 0; i < coordinates.length - 1; i++) {
+					const originalCoordinates: number[][] = [visualizerEntity.featureJson.geometry.coordinates[i], visualizerEntity.featureJson.geometry.coordinates[i + 1]];
 					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
 					moreStyles.push(new olStyle({
 						geometry: line,
 						text: new olText({
 							...this.measuresTextStyle,
-							text: this.formatLength(line)
+							text: this.formatLength(originalCoordinates)
 						})
 					}));
 				}
@@ -402,12 +402,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			case 'Arrow':
 				coordinates = (<olLineString>feature.getGeometry()).getCoordinates()[0];
 				for (let i = 0; i < coordinates.length - 1; i++) {
+					const originalCoordinates: number[][] = [visualizerEntity.featureJson.geometry.coordinates[0][i], visualizerEntity.featureJson.geometry.coordinates[0][i + 1]];
 					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
 					moreStyles.push(new olStyle({
 						geometry: line,
 						text: new olText({
 							...this.measuresTextStyle,
-							text: this.formatLength(line)
+							text: this.formatLength(originalCoordinates)
 						})
 					}));
 				}
@@ -415,12 +416,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			case 'Rectangle': {
 				coordinates = (<olLineString>feature.getGeometry()).getCoordinates()[0];
 				for (let i = 0; i < 2; i++) {
+					const originalCoordinates: number[][] = [visualizerEntity.featureJson.geometry.coordinates[0][i], visualizerEntity.featureJson.geometry.coordinates[0][i + 1]];
 					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
 					moreStyles.push(new olStyle({
 						geometry: line,
 						text: new olText({
 							...this.measuresTextStyle,
-							text: this.formatLength(line)
+							text: this.formatLength(originalCoordinates)
 						})
 					}));
 				}
@@ -428,15 +430,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				break;
 			case 'Circle':
 				coordinates = (<olLineString>feature.getGeometry()).getCoordinates()[0];
-				const leftright = coordinates.reduce((prevResult, currCoord) => {
-					if (currCoord[0] > prevResult.right[0]) {
-						return { left: prevResult.left, right: currCoord };
-					} else if (currCoord[0] < prevResult.left[0]) {
-						return { left: currCoord, right: prevResult.right };
-					} else {
-						return prevResult;
-					}
-				}, { left: [Infinity, 0], right: [-Infinity, 0] });
+				const originalC = visualizerEntity.featureJson.geometry.coordinates[0];
+				const leftright = this.getLeftRightResult(coordinates);
+				const originalLeftRight = this.getLeftRightResult(originalC);
 				const line: olLineString = new olLineString([leftright.left, leftright.right]);
 				moreStyles.push(
 					new olStyle({
@@ -447,15 +443,28 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						}),
 						text: new olText({
 							...this.measuresTextStyle,
-							text: this.formatLength(line)
+							text: this.formatLength([originalLeftRight.left, originalLeftRight.right])
 						})
 					}));
 				break;
 		}
 		if (mode === 'Rectangle' || mode === 'Circle') {
-			moreStyles.push(...this.areaCircumferenceStyles(feature));
+			// moreStyles.push(...this.areaCircumferenceStyles(feature));
 		}
 		return moreStyles;
+	}
+
+	getLeftRightResult(coordinates) {
+		const leftRight = coordinates.reduce((prevResult, currCoord) => {
+			if (currCoord[0] > prevResult.right[0]) {
+				return { left: prevResult.left, right: currCoord };
+			} else if (currCoord[0] < prevResult.left[0]) {
+				return { left: currCoord, right: prevResult.right };
+			} else {
+				return prevResult;
+			}
+		}, { left: [Infinity, 0], right: [-Infinity, 0] });
+		return leftRight;
 	}
 
 	getCenterIndicationStyle(feature: olFeature): olStyle {

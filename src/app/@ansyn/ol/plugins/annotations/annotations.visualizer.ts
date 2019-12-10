@@ -68,7 +68,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		updateEntity: new Subject<IVisualizerEntity>(),
 		offsetEntity: new Subject<any>(),
 		onLabelTranslateStart: new Subject<ILabelTranslateMode>(),
-		onLabelTranslateEnd: new Subject()
+		onLabelTranslateEnd: new Subject(),
+		onAnnotationTranslateEnd: new Subject<IDrawEndEvent>()
 	};
 	clearLabelTranslate: any = tap(() => {
 		if (this.labelTranslate) {
@@ -79,7 +80,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	selected$ = this.events.onSelect.pipe(this.clearLabelTranslate, tap((selected: any) => this.selected = selected));
 
 	@AutoSubscription
-	edited$ = this.events.onLabelTranslateStart.pipe(tap((edited) => this.labelTranslate = edited));
+	labelTranslate$ = this.events.onLabelTranslateStart.pipe(tap((edited) => this.labelTranslate = edited));
 
 	modeDictionary = {
 		Arrow: {
@@ -184,7 +185,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				icon: feature.properties.icon || '',
 				undeletable: feature.properties.undeletable || false,
 				labelSize: feature.properties.labelSize || 28,
-				labelTranslateOn: feature.properties.labelTranslateOn || false
+				labelTranslateOn: feature.properties.labelTranslateOn || false,
+				editMode: feature.properties.editMode || false
 			};
 		});
 	}
@@ -304,11 +306,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			.projectCollectionAccurately([feature], this.iMap.mapObject)
 			.pipe(
 				take(1),
-				mergeMap((GeoJSON: FeatureCollection<GeometryObject>) => {
-					return this.addOrUpdateEntities(this.annotationsLayerToEntities(GeoJSON)).pipe(
-						tap(() => this.events.onDrawEnd.next({ GeoJSON, feature }))
-					);
-				})
+				tap((GeoJSON: FeatureCollection<GeometryObject>) => this.events.onDrawEnd.next({ GeoJSON, feature })),
 			).subscribe();
 
 	}
@@ -549,6 +547,37 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.events.onLabelTranslateStart.next(event);
 	}
 
+	editAnnotationMode(featureId: string) {
+		const entity = this.idToEntity.get(featureId);
+		const editMode = !entity.originalEntity.editMode;
+		const mode = entity.feature.get('mode');
+		this.updateFeature(featureId, { editMode: editMode });
+		if (editMode) {
+			this.addInteraction('translateInteractionHandler', this.addAnnotationEditTranslateInteraction(featureId));
+		}
+		else {
+			this.removeInteraction('translateInteractionHandler');
+		}
+	}
+
+	private addAnnotationEditTranslateInteraction(featureId: string) {
+		const feature = this.source.getFeatureById(featureId);
+		const translate = new olTranslate({
+			features: new olCollection([feature])
+		});
+		translate.on('translateend', (event) => {
+			this.projectionService.projectCollectionAccurately(event.features.getArray(), this.iMap.mapObject).pipe(
+				take(1),
+				tap((GeoJSON: FeatureCollection<GeometryObject>) => {
+					this.removeInteraction('translateInteractionHandler');
+					this.events.onAnnotationTranslateEnd.next({ GeoJSON, feature });
+					this.addInteraction('translateInteractionHandler', this.addAnnotationEditTranslateInteraction(feature.getId()))
+				})
+			).subscribe();
+		});
+
+		return translate;
+	}
 	private createLabelFeature(feature: olFeature): olFeature {
 		let labelPostion = this.getCenterOfFeature(feature);
 		const entity = this.getEntity(feature);

@@ -6,7 +6,8 @@
 		<div class="context-menu" [style.outline-color]="getFeatureProps(featureId)?.style?.initial?.stroke">
 			<ul class="buttons">
 				<li>
-					<button>
+					<button [class.active]="getFeatureProps(featureId)?.editMode"
+					(click)="annotations.editAnnotationMode(featureId)">
 						<i [attr.tooltip-value]="'Edit' | translate" tooltip-class="bottom">
 							<svg>
 								<path [attr.d]="SVGICON.editModeSvg"></path>

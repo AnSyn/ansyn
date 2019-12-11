@@ -515,7 +515,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (entity) {
 			entity.originalEntity = merge({}, entity.originalEntity, props);
 			this.events.updateEntity.next(entity.originalEntity);
-			this.source.refresh();
+			this.source.changed();
 		}
 
 	}
@@ -554,7 +554,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			this.updateFeature(featureId, { editMode: false });
 			this.source.removeFeature(this.edited.labelFeature);
 		}
-		this.source.refresh();
+		this.source.changed();
 		this.events.onEditStart.next(event);
 	}
 

@@ -25,8 +25,10 @@ import olPolygon from 'ol/geom/Polygon';
 import * as olInteraction from 'ol/interaction'
 import Group from 'ol/layer/Group';
 import Layer from 'ol/layer/Layer';
-import VectorLayer from 'ol/layer/Vector';
-import OLMap from 'ol/Map';
+import {Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
+import { OSM, Vector as VectorSource } from 'ol/source';
+import {default as OLMap } from 'ol/Map';
+
 import Vector from 'ol/source/Vector';
 import View from 'ol/View';
 import { Observable, of, Subject, timer } from 'rxjs';
@@ -173,14 +175,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 				collapsible: true
 			})
 		];
+
 		const renderer = 'canvas';
 		this._mapObject = new OLMap({
 			target,
 			renderer,
 			controls,
 			interaction: olInteraction.defaults({ doubleClickZoom: false }),
-			loadTilesWhileInteracting: true,
-			loadTilesWhileAnimating: true
 		});
 		this.initListeners();
 		this._backgroundMapParams = {
@@ -304,7 +305,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	setMainLayerToBackgroundMap(layer: Layer) {
 		layer.set(ImageryLayerProperties.NAME, IMAGERY_MAIN_LAYER_NAME);
 		this.backgroundMapObject.getLayers().clear();
-		this.backgroundMapObject.addLayer(layer);
+		const clonedLayer = Object.create(layer);
+		this.backgroundMapObject.addLayer(clonedLayer);
 	}
 
 	getMainLayer(): Layer {
@@ -333,6 +335,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	public removeAllLayers() {
 		this.showGroups.forEach((show, group) => {
 			if (show && this._mapObject) {
+				// TODO: Should we remove the layer from the background map too?
 				this._mapObject.removeLayer(OpenLayersMap.groupLayers.get(group));
 			}
 		});
@@ -351,6 +354,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		olShare.removeWorkers(layer);
 		this._mapLayers = this._mapLayers.filter((mapLayer) => mapLayer !== layer);
 		this._mapObject.removeLayer(layer);
+		// TODO: Should we remove the layer from the background map too?
+
 		this._mapObject.renderSync();
 	}
 

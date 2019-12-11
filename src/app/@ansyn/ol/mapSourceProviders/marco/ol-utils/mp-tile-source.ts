@@ -69,7 +69,7 @@ export class MpTileSource extends XYZ {
 			tileUrlFunction: function (tileCoord, pixelRatio, proj) {
 				const z = tileCoord[0];
 				const x = tileCoord[1];
-				const y = -tileCoord[2] - 1;
+				const y = tileCoord[2];
 				return url + urlTemplate.replace('{z}', z.toString())
 					.replace('{y}', y.toString())
 					.replace('{x}', x.toString());

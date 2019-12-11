@@ -342,6 +342,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 	private setLabelsFeature() {
 		if (!this.measureData.meausres.length) {
+			// TODO: Do we want to get data from the server here? if so, use refresh()
 			this.source.clear();
 			const labelToMeasureIterator = this.labelToMeasures.values();
 			let val = labelToMeasureIterator.next().value;

@@ -25,8 +25,7 @@ import olPolygon from 'ol/geom/Polygon';
 import * as olInteraction from 'ol/interaction'
 import Group from 'ol/layer/Group';
 import Layer from 'ol/layer/Layer';
-import {Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
-import { OSM, Vector as VectorSource } from 'ol/source';
+import {Vector as VectorLayer } from 'ol/layer';
 import {default as OLMap } from 'ol/Map';
 
 import Vector from 'ol/source/Vector';
@@ -305,6 +304,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	setMainLayerToBackgroundMap(layer: Layer) {
 		layer.set(ImageryLayerProperties.NAME, IMAGERY_MAIN_LAYER_NAME);
 		this.backgroundMapObject.getLayers().clear();
+		// TODO: Do we need to deep-copy the layer? Object.create does not do it...
 		const clonedLayer = Object.create(layer);
 		this.backgroundMapObject.addLayer(clonedLayer);
 	}

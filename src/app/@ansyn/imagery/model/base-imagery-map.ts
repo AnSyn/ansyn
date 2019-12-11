@@ -40,6 +40,10 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract getCenter(): Observable<Point>;
 
+	public getTargetElement(): HTMLElement {
+		return null;
+	}
+
 	abstract setCenter(center: Point, animation: boolean): Observable<boolean>;
 
 	abstract toggleGroup(groupName: string, newState: boolean);

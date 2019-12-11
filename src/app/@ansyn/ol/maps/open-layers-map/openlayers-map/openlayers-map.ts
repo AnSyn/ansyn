@@ -121,14 +121,17 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	constructor(protected http: HttpClient,
 				public projectionService: OpenLayersProjectionService,
-				@Inject(OL_CONFIG) public olConfig: IOlConfig
-	) {
+				@Inject(OL_CONFIG) public olConfig: IOlConfig) {
 		super();
 		// todo: a more orderly way to give default values to config params
 		this.olConfig.tilesLoadingDoubleBuffer = this.olConfig.tilesLoadingDoubleBuffer || {
 			debounceTimeInMs: 500,
 			timeoutInMs: 3000
 		};
+	}
+
+	public getTargetElement(): HTMLElement {
+		return this.targetElement;
 	}
 
 	/**

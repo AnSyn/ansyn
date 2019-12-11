@@ -1,7 +1,7 @@
+import { CommunicatorEntity } from './../../imagery/communicator-service/communicator.entity';
 import { Injectable } from '@angular/core';
 import {
 	getPolygonIntersectionRatio,
-	ICanvasExportData,
 	ImageryCommunicatorService,
 	ImageryMapPosition,
 	IMapInstanceChanged,
@@ -19,7 +19,7 @@ import {
 } from '../actions/map.actions';
 import { LayoutKey } from '../models/maps-layout';
 import { IMapState, selectLayout, selectMapsIds, selectMapsList } from '../reducers/map.reducer';
-import { mapsToPng } from '../utils/exportMaps';
+import domtoimage from 'dom-to-image';
 
 // @dynamic
 @Injectable({
@@ -102,16 +102,21 @@ export class MapFacadeService {
 	exportMapsToPng() {
 		this.store.select(selectMapsIds).pipe(
 			take(1),
-			switchMap((mapsIds: string[]) => {
-				const _maps = [];
-				mapsIds.forEach((mapId) => {
-					const provider = this.imageryCommunicatorService.provide(mapId);
-					const exportData: ICanvasExportData = provider.ActiveMap.getExportData();
-					_maps.push(exportData);
+			switchMap(async (mapsIds: string[]) => {
+				const mapManagers: Set<any> = new Set<any>();
+
+				mapsIds.forEach(currentMapId => {
+					const currentProvider: CommunicatorEntity = this.imageryCommunicatorService.provide(currentMapId);
+					const currentTargetElement: HTMLElement = currentProvider.ActiveMap.getTargetElement();
+					const currentMapManager: HTMLElement = this.findParentMapManagerComponent(currentTargetElement);
+					mapManagers.add(currentMapManager);
 				});
-				return mapsToPng(_maps, this.layout)
+
+			mapManagers.forEach((mapManager: HTMLElement ) => {
+				domtoimage.toBlob(mapManager).then ((blob) => { saveAs(blob, 'map.jpeg'); })
+											.catch((err) => { console.error(`could not export map: '${err}'`); });
+				});
 			}),
-			tap(blob => saveAs(blob, 'map.jpeg')),
 			tap(() => {
 				this.store.dispatch(new ExportMapsToPngActionSuccess());
 			}),
@@ -120,5 +125,12 @@ export class MapFacadeService {
 				return EMPTY;
 			})
 		).subscribe();
+	}
+
+	private findParentMapManagerComponent (el): HTMLElement {
+		const CONTAINER_SELECTOR = 'ansyn-imageries-manager';
+		while ((el = el.parentElement)
+				&& !((el.matches || el.matchesSelector).call(el, CONTAINER_SELECTOR ))) {}
+		return el;
 	}
 }

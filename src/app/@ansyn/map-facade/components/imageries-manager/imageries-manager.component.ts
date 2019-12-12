@@ -22,8 +22,6 @@ import { filter, map, tap } from 'rxjs/operators';
 import { DragDropMapService } from './providers/drag-drop-map.service';
 import { IMapsLayout, LayoutKey, layoutOptions } from '../../models/maps-layout';
 import { IMapSettings } from '@ansyn/imagery';
-import domtoimage from 'dom-to-image';
-import { saveAs } from 'file-saver';
 
 // @dynamic
 @Component({
@@ -136,12 +134,6 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 	dbclick() {
 		window.clearTimeout(this.clickTimeout);
 		this.preventDbClick = true;
-		domtoimage.toBlob(this.imageriesContainer.nativeElement)
-					.then((result: Blob) => {
-						saveAs(result, "test.png");
-					}).catch((err) => {
-
-					});
 	}
 
 	trackByFun(index, item) {

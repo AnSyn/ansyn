@@ -15,7 +15,8 @@ import {
 	ExportMapsToPngActionFailed,
 	ExportMapsToPngActionSuccess,
 	MapInstanceChangedAction,
-	PositionChangedAction
+	PositionChangedAction,
+	SetMinimalistViewModeAction
 } from '../actions/map.actions';
 import { LayoutKey } from '../models/maps-layout';
 import { IMapState, selectLayout, selectMapsIds, selectMapsList } from '../reducers/map.reducer';
@@ -61,7 +62,8 @@ export class MapFacadeService {
 		});
 	}
 
-	constructor(protected store: Store<IMapState>, protected imageryCommunicatorService: ImageryCommunicatorService) {
+	constructor(protected store: Store<IMapState>,
+				protected imageryCommunicatorService: ImageryCommunicatorService) {
 		(<Observable<any>>this.mapsList$).subscribe((mapsList) => this.mapsList = mapsList);
 		(<Observable<any>>this.layout$).subscribe((layout) => this.layout = layout);
 	}
@@ -99,38 +101,28 @@ export class MapFacadeService {
 		}
 	}
 
-	exportMapsToPng() {
-		this.store.select(selectMapsIds).pipe(
-			take(1),
-			switchMap(async (mapsIds: string[]) => {
-				const mapManagers: Set<any> = new Set<any>();
+	async exportMapsToPng(element: Element | string = null) {
+		this.store.dispatch(new SetMinimalistViewModeAction(true));
+		await setTimeout(async () => {
+		try {
+			if (element === null) {
+				const ELEMENT_SELECTOR = 'ansyn-imageries-manager';
+				element = document.getElementsByTagName(ELEMENT_SELECTOR).item(0);
+			} else if (typeof element === 'string') {
+				element = document.getElementsByTagName(element).item(0);
+			}
+			if (element === null) {
+				this.store.dispatch(new ExportMapsToPngActionFailed(`source for maps export could not be found.`));
+				return;
+			}
 
-				mapsIds.forEach(currentMapId => {
-					const currentProvider: CommunicatorEntity = this.imageryCommunicatorService.provide(currentMapId);
-					const currentTargetElement: HTMLElement = currentProvider.ActiveMap.getTargetElement();
-					const currentMapManager: HTMLElement = this.findParentMapManagerComponent(currentTargetElement);
-					mapManagers.add(currentMapManager);
-				});
-
-			mapManagers.forEach((mapManager: HTMLElement ) => {
-				domtoimage.toBlob(mapManager).then ((blob) => { saveAs(blob, 'map.jpeg'); })
-											.catch((err) => { console.error(`could not export map: '${err}'`); });
-				});
-			}),
-			tap(() => {
-				this.store.dispatch(new ExportMapsToPngActionSuccess());
-			}),
-			catchError((err) => {
-				this.store.dispatch(new ExportMapsToPngActionFailed(err));
-				return EMPTY;
-			})
-		).subscribe();
-	}
-
-	private findParentMapManagerComponent (el): HTMLElement {
-		const CONTAINER_SELECTOR = 'ansyn-imageries-manager';
-		while ((el = el.parentElement)
-				&& !((el.matches || el.matchesSelector).call(el, CONTAINER_SELECTOR ))) {}
-		return el;
+			const blob: Blob = await domtoimage.toBlob(element);
+			saveAs(blob, 'map.jpeg');
+			this.store.dispatch(new SetMinimalistViewModeAction(false));
+			this.store.dispatch(new ExportMapsToPngActionSuccess());
+		} catch (err) {
+			this.store.dispatch(new ExportMapsToPngActionFailed(err));
+		}
+	}, 100);
 	}
 }

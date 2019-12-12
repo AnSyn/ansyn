@@ -10,6 +10,7 @@ import Circle from 'ol/style/Circle';
 import Point from 'ol/geom/Point';
 import MultiPoint from 'ol/geom/MultiPoint';
 import LineString from 'ol/geom/LineString';
+import { LineString as geoJsonLineString } from 'geojson';
 import VectorSource from 'ol/source/Vector';
 import * as Sphere from 'ol/sphere';
 import GeoJSON from 'ol/format/GeoJSON';
@@ -253,7 +254,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 					type: lineString.getType(),
 					coordinates: lineString.getCoordinates()
 				});
-				const segmentLengthText = this.formatLength(lineString);
+				const segmentLengthText = this.measureApproximateLength(lineString, projection);
 				const singlePointLengthTextStyle = this.getSinglePointLengthTextStyle();
 				singlePointLengthTextStyle.setText(segmentLengthText);
 				styles.push(new Style({
@@ -265,7 +266,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 		if (this.isTotalMeasureActive || length === 2) {
 			// all line string
-			const allLengthText = this.formatLength(geometry);
+			const allLengthText = this.measureApproximateLength(geometry, projection);
 			this.allLengthTextStyle.setText(allLengthText);
 			let allLinePoint = new Point(geometry.getCoordinates()[0]);
 
@@ -287,21 +288,22 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		return styles;
 	}
 
-	private createMeasureLabelsFeatures(feature) {
+	private createMeasureLabelsFeatures(feature, featureGeoJson: geoJsonLineString) {
 		// @TODO: try to make this and getMeasureTextStyle one function
 		const features = [];
 		const geometry = <LineString>feature.getGeometry();
 
 		// text points
-		const length = geometry.getCoordinates().length;
+		const coordinates = geometry.getCoordinates();
+		const length = coordinates.length;
 		if (length > 2) {
-			geometry.forEachSegment((start, end) => {
-				const lineString = new LineString([start, end]);
+			for (let i = 0; i < featureGeoJson.coordinates.length - 1; i++) {
+				const lineString = new LineString([coordinates[i], coordinates[i + 1]]);
 				const centroid = getPointByGeometry(<any>{
 					type: lineString.getType(),
 					coordinates: lineString.getCoordinates()
 				});
-				const segmentLengthText = this.formatLength(lineString);
+				const segmentLengthText = this.formatLength([featureGeoJson.coordinates[i], featureGeoJson.coordinates[i + 1]]);
 				const singlePointLengthTextStyle = this.getSinglePointLengthTextStyle();
 				singlePointLengthTextStyle.setText(segmentLengthText);
 				const labelFeature = new Feature({
@@ -311,12 +313,12 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 					text: singlePointLengthTextStyle
 				}));
 				features.push(labelFeature);
-			});
+			}
 		}
 
 		if (this.isTotalMeasureActive || length === 2) {
 			// all line string
-			const allLengthText = this.formatLength(geometry);
+			const allLengthText = this.formatLength(featureGeoJson.coordinates);
 			const lengthText = this.allLengthTextStyle.clone();
 			lengthText.setText(allLengthText);
 			let allLinePoint = new Point(geometry.getCoordinates()[0]);
@@ -349,9 +351,9 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			}
 			this.labelToMeasures.clear();
 		}
-		this.measureData.meausres.filter(measure => !this.labelToMeasures.has(measure.id)).forEach(measure => {
+		this.measureData.meausres.filter((measure: IVisualizerEntity) => !this.labelToMeasures.has(measure.id)).forEach((measure: IVisualizerEntity) => {
 			const feature = this.source.getFeatureById(measure.id);
-			const labelsFeatures = this.createMeasureLabelsFeatures(feature);
+			const labelsFeatures = this.createMeasureLabelsFeatures(feature, measure.featureJson.geometry);
 			const translateHandlers = this.defineLabelsTranslate(labelsFeatures);
 			translateHandlers.forEach(handler => this.iMap.mapObject.addInteraction(handler));
 			this.labelToMeasures.set(measure.id, { features: labelsFeatures, handlers: translateHandlers });
@@ -362,4 +364,22 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	private defineLabelsTranslate(labelsFeatures: Feature[]) {
 		return labelsFeatures.map(feature => new Translate({ features: new Collection([feature]) }));
 	}
+
+	/**
+	 * Format length output.
+	 * @param line The line.
+	 * @param projection The Projection.
+	 */
+	measureApproximateLength(line, projection): string {
+		const length = Sphere.getLength(line, { projection: projection });
+		let output;
+		if (length >= 1000) {
+			output = (Math.round(length / 1000 * 100) / 100) +
+				' ' + 'km';
+		} else {
+			output = (Math.round(length * 100) / 100) +
+				' ' + 'm';
+		}
+		return output;
+	};
 }

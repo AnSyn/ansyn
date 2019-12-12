@@ -57,6 +57,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	geoJsonFormat: OLGeoJSON;
 	dragBox = new DragBox({ condition: platformModifierKeyOnly });
 	translationSubscriptions = [];
+	currentAnnotationEdit: string;
 	labelTranslate: ILabelTranslateMode;
 	events = {
 		onClick: new Subject(),
@@ -77,11 +78,17 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			this.labelTranslateMode(this.labelTranslate.originalFeature.getId())
 		}
 	});
-	@AutoSubscription
-	selected$ = this.events.onSelect.pipe(this.clearLabelTranslate, tap((selected: any) => this.selected = selected));
+	clearAnnotationEditMode = tap( () => {
+		if (this.currentAnnotationEdit) {
+			this.editAnnotationMode(this.currentAnnotationEdit)
+		}
+	});
 
 	@AutoSubscription
-	labelTranslate$ = this.events.onLabelTranslateStart.pipe(tap((edited) => this.labelTranslate = edited));
+	selected$ = this.events.onSelect.pipe(this.clearAnnotationEditMode, this.clearLabelTranslate, tap((selected: any) => this.selected = selected));
+
+	@AutoSubscription
+	labelTranslate$ = this.events.onLabelTranslateStart.pipe(tap((labelTranslate ) => this.labelTranslate = labelTranslate ));
 
 	modeDictionary = {
 		Arrow: {

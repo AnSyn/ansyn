@@ -69,7 +69,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		offsetEntity: new Subject<any>(),
 		onLabelTranslateStart: new Subject<ILabelTranslateMode>(),
 		onLabelTranslateEnd: new Subject(),
-		onAnnotationTranslateEnd: new Subject<IDrawEndEvent>()
+		onAnnotationTranslateEnd: new Subject<IDrawEndEvent>(),
+		editAnnotationUpdate: new Subject<string>()
 	};
 	clearLabelTranslate: any = tap(() => {
 		if (this.labelTranslate) {
@@ -559,14 +560,17 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	editAnnotationMode(featureId: string) {
 		const entity = this.idToEntity.get(featureId);
 		const editMode = !entity.originalEntity.editMode;
-		const mode = entity.feature.get('mode');
 		this.updateFeature(featureId, { editMode: editMode });
 		if (editMode) {
-			this.addInteraction('translateInteractionHandler', this.addAnnotationEditTranslateInteraction(featureId));
+			this.setMode(undefined, true);
+			this.addInteraction(VisualizerInteractions.editAnnotationTranslateHandler, this.addAnnotationEditTranslateInteraction(featureId));
 		}
 		else {
-			this.removeInteraction('translateInteractionHandler');
+			this.removeInteraction(VisualizerInteractions.editAnnotationTranslateHandler);
+			featureId = undefined;
 		}
+
+		this.events.editAnnotationUpdate.next(featureId);
 	}
 
 	private addAnnotationEditTranslateInteraction(featureId: string) {
@@ -578,9 +582,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			this.projectionService.projectCollectionAccurately(event.features.getArray(), this.iMap.mapObject).pipe(
 				take(1),
 				tap((GeoJSON: FeatureCollection<GeometryObject>) => {
-					this.removeInteraction('translateInteractionHandler');
+					this.removeInteraction(VisualizerInteractions.editAnnotationTranslateHandler);
 					this.events.onAnnotationTranslateEnd.next({ GeoJSON, feature });
-					this.addInteraction('translateInteractionHandler', this.addAnnotationEditTranslateInteraction(feature.getId()))
+					this.addInteraction(VisualizerInteractions.editAnnotationTranslateHandler, this.addAnnotationEditTranslateInteraction(feature.getId()))
 				})
 			).subscribe();
 		});

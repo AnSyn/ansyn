@@ -10,6 +10,7 @@ export type VisualizerInteractionTypes =
 	| 'drawInteractionHandler'
 	| 'translateInteractionHandler'
 	| 'labelTranslateHandler'
+	| 'editAnnotationTranslateHandler'
 	| 'modifyInteractionHandler';
 
 export const VisualizerInteractions: { [key: string]: VisualizerInteractionTypes } = {
@@ -20,6 +21,7 @@ export const VisualizerInteractions: { [key: string]: VisualizerInteractionTypes
 	drawInteractionHandler: 'drawInteractionHandler',
 	translateInteractionHandler: 'translateInteractionHandler',
 	labelTranslateHandler: 'labelTranslateHandler',
+	editAnnotationTranslateHandler: 'editAnnotationTranslateHandler',
 	modifyInteractionHandler: 'modifyInteractionHandler'
 };
 

@@ -49,6 +49,7 @@ import { Actions, ofType } from '@ngrx/effects';
 })
 export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	annotationsVisualizer: AnnotationsVisualizer;
+	currentAnnotationEdit: string;
 	overlay: IOverlay;
 
 	activeAnnotationLayer$: Observable<ILayer> = combineLatest(
@@ -145,6 +146,9 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 				annotationMode: newMode,
 				mapId: arg.forceBroadcast ? null : this.mapId
 			}));
+			if (this.currentAnnotationEdit) {
+				this.annotationsVisualizer.editAnnotationMode(this.currentAnnotationEdit);
+			}
 		})
 	);
 
@@ -224,6 +228,11 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 				}));
 			}
 		})
+	);
+
+	@AutoSubscription
+	onEditAnnotationUpdate$ = () => this.annotationsVisualizer.events.editAnnotationUpdate.pipe(
+		tap( annotationId => this.currentAnnotationEdit = annotationId)
 	);
 
 	onAnnotationsChange([entities, annotationFlag, selectedLayersIds, isActiveMap, activeAnnotationLayer]: [{ [key: string]: ILayer }, boolean, string[], boolean, string]): Observable<any> {

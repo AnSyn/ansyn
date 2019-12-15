@@ -536,6 +536,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	labelTranslateMode(featureId: any) {
+		this.clearAnnotaionEdit();
 		let oldFeature = null;
 		let event = null;
 
@@ -565,6 +566,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	editAnnotationMode(featureId: string) {
+		this.clearLabelTranslateMode();
 		const entity = this.idToEntity.get(featureId);
 		const editMode = !entity.originalEntity.editMode;
 		this.updateFeature(featureId, { editMode: editMode });
@@ -586,7 +588,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			features: new olCollection([feature])
 		});
 		translate.on('translateend', (event) => {
-			this.projectionService.projectCollectionAccurately(event.features.getArray(), this.iMap.mapObject).pipe(
+			const features = event.features.getArray();
+			const label = features[0].get('label');
+			if (label.geometry) {
+				features.push(new olFeature(label.geometry));
+			}
+			this.projectionService.projectCollectionAccurately(features, this.iMap.mapObject).pipe(
 				take(1),
 				tap((GeoJSON: FeatureCollection<GeometryObject>) => {
 					this.removeInteraction(VisualizerInteractions.editAnnotationTranslateHandler);
@@ -652,17 +659,27 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (this.labelTranslate) {
 			this.updateFeature(this.labelTranslate.originalFeature.getId(), { labelTranslateOn: false });
 			this.removeInteraction(VisualizerInteractions.labelTranslateHandler);
-			this.removeFeature(this.labelTranslate.labelFeature);
+			this.source.removeFeature(this.labelTranslate.labelFeature);
 			this.labelTranslate = null;
 		}
 	}
+
+	private clearAnnotaionEdit() {
+		if (this.currentAnnotationEdit) {
+			this.updateFeature(this.currentAnnotationEdit, {editMode: false});
+			this.removeInteraction(VisualizerInteractions.editAnnotationTranslateHandler);
+		}
+	};
+
 	onResetView(): Observable<boolean> {
 		this.clearLabelTranslateMode();
+		this.clearAnnotaionEdit();
 		return super.onResetView();
 	}
 
 	dispose() {
 		this.clearLabelTranslateMode();
+		this.clearAnnotaionEdit();
 		super.dispose();
 	}
 

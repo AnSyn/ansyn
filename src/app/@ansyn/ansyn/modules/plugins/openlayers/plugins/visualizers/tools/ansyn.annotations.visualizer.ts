@@ -183,7 +183,9 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 					...this.projectionService.getProjectionProperties(this.communicator, data, feature, this.overlay)
 				};
 			}
-			geoJsonFeature.properties = { ...geoJsonFeature.properties };
+			const label = geoJsonFeature.properties.label.geometry ?
+				{...geoJsonFeature.properties.label, geometry: GeoJSON.features[1].geometry} : geoJsonFeature.properties.label;
+			geoJsonFeature.properties = { ...geoJsonFeature.properties , label};
 			this.store$.dispatch(new UpdateLayer(<ILayer>{ ...activeAnnotationLayer, data }));
 			})
 	);

@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash';
 import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
 import {
@@ -180,7 +181,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			target,
 			renderer,
 			controls,
-			interaction: olInteraction.defaults({ doubleClickZoom: false }),
+			interactions: olInteraction.defaults({ doubleClickZoom: false }),
+			preload: Infinity
 		});
 		this.initListeners();
 		this._backgroundMapParams = {
@@ -304,8 +306,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	setMainLayerToBackgroundMap(layer: Layer) {
 		layer.set(ImageryLayerProperties.NAME, IMAGERY_MAIN_LAYER_NAME);
 		this.backgroundMapObject.getLayers().clear();
-		// TODO: Do we need to deep-copy the layer? Object.create does not do it...
-		const clonedLayer = Object.create(layer);
+		const clonedLayer = cloneDeep(layer);
 		this.backgroundMapObject.addLayer(clonedLayer);
 	}
 
@@ -335,7 +336,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	public removeAllLayers() {
 		this.showGroups.forEach((show, group) => {
 			if (show && this._mapObject) {
-				// TODO: Should we remove the layer from the background map too?
 				this._mapObject.removeLayer(OpenLayersMap.groupLayers.get(group));
 			}
 		});
@@ -354,8 +354,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		olShare.removeWorkers(layer);
 		this._mapLayers = this._mapLayers.filter((mapLayer) => mapLayer !== layer);
 		this._mapObject.removeLayer(layer);
-		// TODO: Should we remove the layer from the background map too?
-
 		this._mapObject.renderSync();
 	}
 
@@ -571,6 +569,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	public addGeojsonLayer(data: GeoJsonObject): void {
 		let layer: VectorLayer = new VectorLayer({
+			updateWhileAnimating: true,
+			updateWhileInteracting: true,
 			source: new Vector({
 				features: new olGeoJSON().readFeatures(data)
 			})

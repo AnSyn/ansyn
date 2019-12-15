@@ -50,7 +50,7 @@ export class FrameVisualizer extends EntitiesVisualizer {
 			if (features && features[0]) {
 				delete (<any>features[0]).styleCache;
 				// TODO: Do we want to re-render the layer? if so, use changed().
-				this.source.refresh();
+				this.source.changed();
 			}
 		}
 		return;

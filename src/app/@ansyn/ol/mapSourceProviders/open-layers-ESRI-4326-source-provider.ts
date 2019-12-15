@@ -42,6 +42,7 @@ export class OpenLayerESRI4326SourceProvider extends OpenLayersMapSourceProvider
 		const [x1, y1] = proj.transform([180, 90], 'EPSG:4326', config.projection);
 
 		const esriLayer = new TileLayer({
+			preload: Infinity,
 			source: source,
 			visible: true,
 			extent: [x, y, x1, y1]

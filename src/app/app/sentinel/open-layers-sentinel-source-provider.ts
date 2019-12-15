@@ -59,6 +59,7 @@ export class OpenLayersSentinelSourceProvider extends OpenLayersMapSourceProvide
 				});
 
 				return new TileLayer({
+					preload: Infinity,
 					projection,
 					source: source,
 					extent: bbox

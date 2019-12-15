@@ -26,7 +26,9 @@ export class OpenLayerTileWMSSourceProvider extends OpenLayersMapSourceProvider 
 			projection: config.projection
 		});
 
-		const tiled = new TileLayer({ visible: true, source });
+		const tiled = new TileLayer({
+										preload: Infinity,
+										visible: true, source });
 		return Promise.resolve(tiled);
 	}
 }

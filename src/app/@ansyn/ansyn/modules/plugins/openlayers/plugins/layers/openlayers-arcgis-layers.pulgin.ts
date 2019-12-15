@@ -24,6 +24,7 @@ export class OpenlayersArcgisLayersPulgin extends OpenlayersBaseLayersPlugins {
 	createLayer(layer: ILayer): Observable<TileLayer> {
 		const extent: any = proj.transformExtent(layer.extent, 'EPSG:4326', this.iMap.mapObject.getView().getProjection());
 		const vector = new TileLayer({
+			preload: Infinity,
 			zIndex: 100,
 			extent,
 			source: new XYZ({

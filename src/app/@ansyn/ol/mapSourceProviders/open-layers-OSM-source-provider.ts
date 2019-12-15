@@ -15,6 +15,7 @@ export const OpenLayerOSMSourceProviderSourceType = 'OSM';
 export class OpenLayerOSMSourceProvider extends OpenLayersMapSourceProvider {
 	create(metaData: IMapSettings): Promise<any> {
 		const osmLayer = new TileLayer({
+			preload: Infinity,
 			source: new OSM()
 		});
 		// const source = new OSM(<any>{

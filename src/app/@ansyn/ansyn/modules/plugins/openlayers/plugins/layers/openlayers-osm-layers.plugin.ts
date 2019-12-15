@@ -23,6 +23,7 @@ export class OpenlayersOsmLayersPlugin extends OpenlayersBaseLayersPlugins {
 
 	createLayer(layer: ILayer): Observable<TileLayer> {
 		const vector = new TileLayer({
+			preload: Infinity,
 			zIndex: 100,
 			source: new OSM({
 				attributions: [

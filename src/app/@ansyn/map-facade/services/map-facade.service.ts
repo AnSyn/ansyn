@@ -1,4 +1,3 @@
-import { CommunicatorEntity } from './../../imagery/communicator-service/communicator.entity';
 import { Injectable } from '@angular/core';
 import {
 	getPolygonIntersectionRatio,
@@ -9,8 +8,7 @@ import {
 } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { saveAs } from 'file-saver';
-import { EMPTY, Observable } from 'rxjs';
-import { catchError, switchMap, take, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import {
 	ExportMapsToPngActionFailed,
 	ExportMapsToPngActionSuccess,
@@ -19,7 +17,7 @@ import {
 	SetMinimalistViewModeAction
 } from '../actions/map.actions';
 import { LayoutKey } from '../models/maps-layout';
-import { IMapState, selectLayout, selectMapsIds, selectMapsList } from '../reducers/map.reducer';
+import { IMapState, selectLayout, selectMapsList } from '../reducers/map.reducer';
 import domtoimage from 'dom-to-image';
 
 // @dynamic

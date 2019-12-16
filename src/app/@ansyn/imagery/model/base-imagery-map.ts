@@ -40,10 +40,6 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract getCenter(): Observable<Point>;
 
-	public getTargetElement(): HTMLElement {
-		return null;
-	}
-
 	abstract setCenter(center: Point, animation: boolean): Observable<boolean>;
 
 	abstract toggleGroup(groupName: string, newState: boolean);
@@ -96,8 +92,6 @@ export abstract class BaseImageryMap<T = any> {
 	abstract getCoordinateFromScreenPixel(screenPixel: { x, y }): [number, number, number];
 
 	abstract getHtmlContainer(): HTMLElement;
-
-	abstract getExportData(): ICanvasExportData;
 
 	fitToExtent(extent: any): Observable<any> {
 		throw new Error('Method not implemented.');

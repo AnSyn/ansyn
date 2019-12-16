@@ -56,6 +56,7 @@ export interface IMapState extends EntityState<IMapSettings> {
 	toastMessage: IToastMessage;
 	footerCollapse: boolean;
 	minimalistViewMode: boolean;
+	isExportingMaps: boolean;
 }
 
 
@@ -69,7 +70,8 @@ export const initialMapState: IMapState = mapsAdapter.getInitialState({
 	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
 	toastMessage: null,
 	footerCollapse: false,
-	minimalistViewMode: false
+	minimalistViewMode: false,
+	isExportingMaps: false
 });
 
 export const mapFeatureKey = 'map';
@@ -194,6 +196,15 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		case MapActionTypes.SET_MINIMALIST_VIEW_MODE:
 			return { ...state, minimalistViewMode: action.payload };
 
+		case MapActionTypes.EXPORT_MAPS_TO_PNG_REQUESTED:
+			return {...state, isExportingMaps: true}
+
+		case MapActionTypes.EXPORT_MAPS_TO_PNG_SUCCESS:
+			return {...state, isExportingMaps: false}
+
+		case MapActionTypes.EXPORT_MAPS_TO_PNG_FAILED:
+			return {...state, isExportingMaps: false}
+
 		default:
 			return state;
 	}
@@ -210,6 +221,8 @@ export const selectWasWelcomeNotificationShown = createSelector(mapStateSelector
 export const selectToastMessage = createSelector(mapStateSelector, (state) => state.toastMessage);
 export const selectFooterCollapse = createSelector(mapStateSelector, (state) => state.footerCollapse);
 export const selectIsMinimalistViewMode = createSelector(mapStateSelector, (state) => state && state.minimalistViewMode);
+export const selectIsExportingMaps = createSelector(mapStateSelector, (state) => state && state.isExportingMaps);
+
 export const selectOverlaysWithMapIds = createSelector(selectMapsList, selectActiveMapId, (mapsList, activeMapId) => {
 	const overlayAndMapId = mapsList.map( map => map.data.overlay ? ({overlay: map.data.overlay, mapId: map.id, isActive: map.id === activeMapId}) : ({}));
 	return overlayAndMapId;

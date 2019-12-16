@@ -130,10 +130,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		};
 	}
 
-	public getTargetElement(): HTMLElement {
-		return this.targetElement;
-	}
-
 	/**
 	 * add layer to the map if it is not already exists the layer must have an id set
 	 * @param layer
@@ -587,24 +583,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	getHtmlContainer(): HTMLElement {
 		return this.targetElement;
-	}
-
-	getExportData(): ICanvasExportData {
-		const c: HTMLCanvasElement = this.mapObject.getViewport().firstChild;
-		let exportData: ICanvasExportData = {
-			width: c.width,
-			height: c.height,
-			data: null
-		};
-		try {
-			exportData = {
-				width: c.width,
-				height: c.height,
-				data: c.toDataURL('image/jpeg', 1.0)
-			}
-		} catch (e) {
-		}
-		return exportData;
 	}
 
 	// BaseImageryMap End

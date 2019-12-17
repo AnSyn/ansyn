@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { credentialsConfig, ICredentialsConfig } from './config';
-import { catchError, map } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
+import { of, Observable } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
@@ -20,8 +20,8 @@ export class CredentialsService {
 		return this.config.baseUrl;
 	}
 
-	parseResponse(response: any): string {
-		return response;
+	parseResponse(response: any): Observable<string> {
+		return of(response);
 	}
 
 	getCredentials() {
@@ -30,7 +30,7 @@ export class CredentialsService {
 		const options = { headers };
 		return this.httpClient.get(url, options)
 			.pipe(
-				map((data: any) => this.parseResponse(data)),
+				mergeMap((data: any) => this.parseResponse(data)),
 				map((data: any) => {
 					this.credentials = data ? data : this.config.noCredentialsMessage;
 				}),

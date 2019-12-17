@@ -43,7 +43,9 @@ export {
 	getPolygonByBufferRadius,
 	getPolygonIntersectionRatio,
 	isPointContainedInGeometry,
-	unifyPolygons
+	unifyPolygons,
+	calculateLineDistance,
+	calculateGeometryArea
 } from './utils/geo';
 
 export { IVisualizersConfig, VisualizersConfig } from './model/visualizers-config.token';

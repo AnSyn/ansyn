@@ -19,7 +19,8 @@ import {
 	union,
 	unkinkPolygon,
 	featureCollection,
-	envelope
+	envelope,
+	distance
 } from '@turf/turf';
 
 export type BBOX = [number, number, number, number] | [number, number, number, number, number, number];
@@ -122,9 +123,10 @@ export function getPolygonIntersectionRatioWithMultiPolygon(extent: Polygon, foo
 		extentArea = area(extentPolygons);
 
 		footprint.coordinates.forEach(coordinates => {
-			const intersection = intersect(extentPolygon, polygon(coordinates));
+			const tempPoly = polygon(coordinates);
+			const intersection = intersect(extentPolygon, tempPoly);
 			if (intersection) {
-				intersectionArea += area(intersection);
+				intersectionArea = booleanEqual(intersection, tempPoly) ? extentArea : intersectionArea + area(intersection);
 			}
 		});
 	} catch (e) {
@@ -158,4 +160,12 @@ export function isPointContainedInGeometry(point: Point, footprint: MultiPolygon
 
 export function unifyPolygons(features: Feature<Polygon>[]): Feature<MultiPolygon | Polygon> {
 	return union(...features);
+}
+
+export function calculateLineDistance(aPoint: Point, bPoint: Point) {
+	return distance(aPoint, bPoint);
+}
+
+export function calculateGeometryArea(polygon: Polygon) {
+	return area(polygon);
 }

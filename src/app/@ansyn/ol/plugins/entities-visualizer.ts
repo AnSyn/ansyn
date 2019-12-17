@@ -13,6 +13,8 @@ import ol_Layer from 'ol/layer/Layer';
 import OLGeoJSON from 'ol/format/GeoJSON';
 import {
 	BaseImageryVisualizer,
+	calculateGeometryArea,
+	calculateLineDistance,
 	getPointByGeometry,
 	IVisualizerEntity,
 	IVisualizerStateStyle,
@@ -21,7 +23,7 @@ import {
 	VisualizerInteractionTypes,
 	VisualizerStates
 } from '@ansyn/imagery';
-import { Observable, of, forkJoin } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import * as ol_color from 'ol/color';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { map } from 'rxjs/operators';
@@ -83,13 +85,14 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		this.featuresCollection = [];
 		this.source = new SourceVector({ features: this.featuresCollection, wrapX: false });
 
+		let extent = !this.dontRestrictToExtent ? this.iMap.getMainLayer().getExtent() : undefined;
 		this.vector = new VectorLayer(<any>{
 			source: this.source,
 			style: this.featureStyle.bind(this),
 			opacity: this.visualizerStyle.opacity,
 			renderBuffer: 5000,
 			zIndex: 10,
-			extent: this.iMap.getMainLayer().getExtent()
+			extent: extent
 		});
 
 		if (!this.isHidden) {
@@ -204,7 +207,12 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			});
 			textStyle.geometry = (feature) => {
 				const { label } = feature.getProperties();
-				return label.geometry ? label.geometry : new Point(this.getCenterOfFeature(feature).coordinates)
+				if (label.geometry) {
+					const oldCoordinates = label.geometry.getCoordinates();
+					const newCoordinates = [this.offset[0] + oldCoordinates[0] , this.offset[1] + oldCoordinates[1]];
+					return new Point(newCoordinates);
+				}
+				return new Point(this.getCenterOfFeature(feature).coordinates)
 			};
 
 			firstStyle.geometry = (feature) => feature.getGeometry();
@@ -400,5 +408,29 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		const featureGeoJson = new OLGeoJSON().writeFeatureObject(feature);
 		return getPointByGeometry(featureGeoJson.geometry);
 	}
+
+	formatLength(coordinates: number[][]) {
+		const length = coordinates.reduce((length: number, coord, index, arr) => {
+			if (arr[index + 1] === undefined) {
+				return length;
+			}
+			const aPoint = new OLGeoJSON().writeGeometryObject(new Point(coord));
+			const bPoint = new OLGeoJSON().writeGeometryObject(new Point(arr[index + 1]));
+			return length + calculateLineDistance(aPoint, bPoint);
+		}, 0);
+
+		if (length < 1) {
+			return (length * 1000).toFixed(2) + 'm';
+		} else {
+			return length.toFixed(2) + 'km';
+		}
+	}
+
+	formatArea(geometry) {
+		const polygon = new OLGeoJSON().writeGeometryObject(geometry);
+		return (calculateGeometryArea(polygon) / 1000000).toFixed(2) + 'km2'
+	}
+
+
 
 }

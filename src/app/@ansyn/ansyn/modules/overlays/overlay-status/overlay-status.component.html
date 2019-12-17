@@ -22,7 +22,6 @@
 </button>
 
 <button class="small-icon-button drag-mode" *ngIf="overlay"
-
 		(click)="toggleDragged()"
 		[disabled]="!isLayersVisible || noGeoRegistration"
 		[attr.tooltip-value]="this.draggedButtonText | translate"

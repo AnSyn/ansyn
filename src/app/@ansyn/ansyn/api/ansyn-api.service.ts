@@ -364,6 +364,8 @@ export class AnsynApi {
 
 		layerData.features.forEach((feature) => {
 			feature.properties.isNonEditable = !isEditable;
+			const { label } = feature.properties;
+			feature.properties.label = label && typeof label === 'object' ? label : {text: label, geometry: null};
 		});
 
 		this.generateFeaturesIds(layerData);

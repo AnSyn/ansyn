@@ -7,7 +7,7 @@
 			<ul class="buttons">
 				<li>
 					<button [class.active]="getFeatureProps(featureId)?.editMode"
-					(click)="annotations.editAnnotationMode(featureId)">
+					(click)="toggleEditMode(featureId)">
 						<i [attr.tooltip-value]="'Edit' | translate" tooltip-class="bottom">
 							<svg>
 								<path [attr.d]="SVGICON.editModeSvg"></path>

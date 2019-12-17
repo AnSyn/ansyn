@@ -145,9 +145,6 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 				annotationMode: newMode,
 				mapId: arg.forceBroadcast ? null : this.mapId
 			}));
-			if (this.annotationsVisualizer.currentAnnotationEdit) {
-				this.annotationsVisualizer.editAnnotationMode(this.annotationsVisualizer.currentAnnotationEdit);
-			}
 		})
 	);
 

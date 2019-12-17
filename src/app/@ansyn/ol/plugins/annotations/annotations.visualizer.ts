@@ -584,15 +584,30 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	private addAnnotationEditTranslateInteraction(featureId: string) {
 		const feature = this.source.getFeatureById(featureId);
+		const { geometry } = feature.get('label');
 		const translate = new olTranslate({
 			features: new olCollection([feature])
 		});
+		translate.on('translatestart', (event) => {
+			const lastCoordinate = event.coordinate;
+			feature.set('lastCoordinate', lastCoordinate);
+		});
+		translate.on('translating', (event) => {
+			if (geometry) {
+				const currentCoordinates = event.coordinate;
+				const lastCoordinates = feature.get('lastCoordinate');
+				const deltaX = currentCoordinates[0] - lastCoordinates[0];
+				const deltaY = currentCoordinates[1] - lastCoordinates[1];
+				geometry.translate(deltaX, deltaY);
+				feature.set('lastCoordinate', currentCoordinates);
+			}
+		});
 		translate.on('translateend', (event) => {
 			const features = event.features.getArray();
-			const label = features[0].get('label');
-			if (label.geometry) {
-				features.push(new olFeature(label.geometry));
+			if (geometry) {
+				features.push(new olFeature(geometry));
 			}
+			feature.unset('lastCoordinate');
 			this.projectionService.projectCollectionAccurately(features, this.iMap.mapObject).pipe(
 				take(1),
 				tap((GeoJSON: FeatureCollection<GeometryObject>) => {

@@ -3,7 +3,13 @@ import { combineLatest, EMPTY, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject, Position } from 'geojson';
-import { ContextMenuTriggerAction, MapActionTypes, selectActiveMapId, SetToastMessageAction } from '@ansyn/map-facade';
+import {
+	ContextMenuTriggerAction,
+	MapActionTypes,
+	selectActiveMapId,
+	selectIsMinimalistViewMode,
+	SetToastMessageAction
+} from '@ansyn/map-facade';
 import { VisualizerInteractions } from '@ansyn/imagery';
 import Draw from 'ol/interaction/Draw';
 import { AutoSubscription } from 'auto-subscriptions';
@@ -60,15 +66,15 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	);
 
 	@AutoSubscription
-	drawChanges$ = combineLatest(this.geoFilter$, this.region$, this.geoFilterIndicator$, this.geoFilterSearch$).pipe(
+	drawChanges$ = combineLatest(this.geoFilter$, this.region$, this.geoFilterIndicator$, this.geoFilterSearch$, this.store$.select(selectIsMinimalistViewMode)).pipe(
 		mergeMap(this.drawChanges.bind(this)));
 
 	constructor(public store$: Store<any>, public actions$: Actions, public projectionService: OpenLayersProjectionService, public geoFilter: CaseGeoFilter) {
 		super();
 	}
 
-	drawChanges([geoFilter, region, geoFilterIndicator, geoFilterSearch]) {
-		if (!geoFilterIndicator || geoFilterSearch !== SearchModeEnum.none) {
+	drawChanges([geoFilter, region, geoFilterIndicator, geoFilterSearch, isMinimalistViewMode]) {
+		if (!geoFilterIndicator || geoFilterSearch !== SearchModeEnum.none || isMinimalistViewMode) {
 			this.clearEntities();
 			return EMPTY;
 		}

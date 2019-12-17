@@ -604,6 +604,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		});
 		translate.on('translateend', (event) => {
 			const features = event.features.getArray();
+			features[0].getGeometry().translate(-this.offset[0], -this.offset[1]);
 			if (geometry) {
 				features.push(new olFeature(geometry));
 			}

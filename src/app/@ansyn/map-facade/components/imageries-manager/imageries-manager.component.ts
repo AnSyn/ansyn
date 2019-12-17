@@ -1,4 +1,3 @@
-import { IMenuState } from '@ansyn/menu';
 import { AfterContentChecked, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MapEffects } from '../../effects/map.effects';
 import { selectIsExportingMaps } from '../../reducers/map.reducer';
@@ -21,7 +20,7 @@ import {
 	ToggleFooter,
 	SetMinimalistViewModeAction,
 	ExportMapsToPngActionSuccess,
-	ExportMapsToPngActionFailed} from '../../actions/map.actions';
+	ExportMapsToPngActionFailed } from '../../actions/map.actions';
 import { DOCUMENT } from '@angular/common';
 import { filter, map, tap, take } from 'rxjs/operators';
 import { DragDropMapService } from './providers/drag-drop-map.service';
@@ -40,18 +39,19 @@ import { saveAs } from 'file-saver';
 })
 
 export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
-	public selectedLayout$: Observable<IMapsLayout> = this.mapStore.pipe(
+	public selectedLayout$: Observable<IMapsLayout> = this.store.pipe(
 		select(selectLayout),
 		map((layout: LayoutKey) => <IMapsLayout>layoutOptions.get(layout))
 	);
-	public activeMapId$: Observable<string> = this.mapStore.select(selectActiveMapId);
-	public mapsEntities$: Observable<IMapSettings[]> = this.mapStore.select(selectMapsList);
-	public ids$ = this.mapStore.select(selectMapsIds);
-	public footerCollapse$ = this.mapStore.select(selectFooterCollapse);
-	private export$ = this.mapStore.select(selectIsExportingMaps)
+	public isExporting = false;
+	public activeMapId$: Observable<string> = this.store.select(selectActiveMapId);
+	public mapsEntities$: Observable<IMapSettings[]> = this.store.select(selectMapsList);
+	public ids$ = this.store.select(selectMapsIds);
+	public footerCollapse$ = this.store.select(selectFooterCollapse);
+	private export$ = this.store.select(selectIsExportingMaps)
 								.pipe(filter(val => val === true));
 
-	public showWelcomeNotification$ = this.mapStore.pipe(
+	public showWelcomeNotification$ = this.store.pipe(
 		select(selectWasWelcomeNotificationShown),
 		map(bool => !bool)
 	);
@@ -72,8 +72,7 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 	collapsable: boolean;
 
 	constructor(protected mapEffects: MapEffects,
-				protected readonly mapStore: Store<IMapState>,
-				protected readonly menuStore: Store<IMenuState>,
+				protected readonly store: Store<any>,
 				@Inject(DOCUMENT) protected document: Document,
 				public dragDropMapService: DragDropMapService)
 	{
@@ -93,7 +92,7 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 		fromEvent(this.document, 'click').pipe(
 			filter((event: any) => !event.path.some(element => this.imageriesContainer.nativeElement === element)),
 			filter((event: any) => !event.path.some((element) => element.id === 'editGeoFilter' || element.id === 'contextGeoFilter')),
-			tap((event: MouseEvent) => this.mapStore.dispatch(new ClickOutsideMap(event)))
+			tap((event: MouseEvent) => this.store.dispatch(new ClickOutsideMap(event)))
 		).subscribe();
 	}
 
@@ -111,7 +110,7 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 			this.imageriesContainer.nativeElement.classList.remove(oldClass);
 		}
 		this.imageriesContainer.nativeElement.classList.add(newClass);
-		this.mapStore.dispatch(new UpdateMapSizeAction());
+		this.store.dispatch(new UpdateMapSizeAction());
 	}
 
 	setSelectedLayout(_selectedLayout: IMapsLayout) {
@@ -136,8 +135,8 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 
 	changeActiveImagery(value) {
 		if (this.activeMapId !== value) {
-			this.mapStore.dispatch(new SetActiveMapId(value));
-			this.mapStore.dispatch(new ActiveImageryMouseEnter());
+			this.store.dispatch(new SetActiveMapId(value));
+			this.store.dispatch(new ActiveImageryMouseEnter());
 		}
 	}
 
@@ -154,23 +153,21 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 	}
 
 	private onExportMapRequested(): void {
-		const currentMapState: IMapState = this.getState(this.mapStore);
-		const currentMenuState: IMenuState = this.getState(this.menuStore);
+		const currentMapState: IMapState = this.getState(this.store);
 		const initialMinimal = currentMapState.minimalistViewMode;
 		const initialFooterCollapsed = currentMapState.footerCollapse;
-		const initialMenuCollapsed = currentMenuState.menuCollapse;
 
-		this.switchToExportMode(true, initialFooterCollapsed, initialMenuCollapsed, initialMinimal);
+		this.switchToExportMode(true, initialFooterCollapsed, initialMinimal);
 
 		const minimizetimer$ = timer(0).pipe(take(1))
 		.subscribe(async () => {
 
 		const exported: {result: boolean, msg: string} = await this.exportElement(this.imageriesContainer.nativeElement.parentElement);
-		this.switchToExportMode(false, initialFooterCollapsed, initialMenuCollapsed, initialMinimal);
+		this.switchToExportMode(false, initialFooterCollapsed, initialMinimal);
 		if (exported.result) {
-			this.mapStore.dispatch(new ExportMapsToPngActionSuccess());
+			this.store.dispatch(new ExportMapsToPngActionSuccess());
 		} else {
-			this.mapStore.dispatch(new ExportMapsToPngActionFailed(exported.msg));
+			this.store.dispatch(new ExportMapsToPngActionFailed(exported.msg));
 		}
 	});
 	}
@@ -187,16 +184,14 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 		}
 	}
 
-	private switchToExportMode(exportMode: boolean, initialFooterCollapsed: boolean, initialMenuCollapsed: boolean, initialMinimal: boolean) {
+	private switchToExportMode(exportMode: boolean, initialFooterCollapsed: boolean, initialMinimal: boolean) {
+		this.isExporting = exportMode;
 		if (!initialFooterCollapsed) {
-			this.mapStore.dispatch(new ToggleFooter(exportMode));
-		}
-		if (!initialMenuCollapsed) {
-			this.menuStore.dispatch(new ToggleFooter(exportMode));
+			this.store.dispatch(new ToggleFooter(exportMode));
 		}
 
 		if (!initialMinimal) {
-			this.mapStore.dispatch(new SetMinimalistViewModeAction(exportMode));
+			this.store.dispatch(new SetMinimalistViewModeAction(exportMode));
 		}
 	}
 

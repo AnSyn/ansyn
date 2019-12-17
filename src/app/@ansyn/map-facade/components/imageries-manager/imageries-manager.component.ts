@@ -174,7 +174,9 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 
 	private async exportElement(element: Element): Promise<{result: boolean, msg: string}> {
 		try {
-			const blob: Blob = await domtoimage.toBlob(element);
+			const blob: Blob = await domtoimage.toBlob(element,
+								{filter: (node) => {
+									return (node.id !== 'loader'); }});
 			saveAs(blob, 'map.jpeg');
 			return {result: true, msg: null};
 		}

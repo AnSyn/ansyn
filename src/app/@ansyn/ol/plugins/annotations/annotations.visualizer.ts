@@ -71,21 +71,19 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		onLabelTranslateStart: new Subject<ILabelTranslateMode>(),
 		onLabelTranslateEnd: new Subject(),
 		onAnnotationTranslateEnd: new Subject<IDrawEndEvent>(),
-		editAnnotationUpdate: new Subject<string>()
+		updateEditAnnotationId: new Subject<string>()
 	};
-	clearLabelTranslate: any = tap(() => {
+	clearLabelTranslate$: any = tap(() => {
 		if (this.labelTranslate) {
 			this.labelTranslateMode(this.labelTranslate.originalFeature.getId())
 		}
 	});
-	clearAnnotationEditMode = tap( () => {
-		if (this.currentAnnotationEdit) {
-			this.editAnnotationMode(this.currentAnnotationEdit)
-		}
+	clearAnnotationEditMode$ = tap( () => {
+		this.clearAnnotationEditMode();
 	});
 
 	@AutoSubscription
-	selected$ = this.events.onSelect.pipe(this.clearAnnotationEditMode, this.clearLabelTranslate, tap((selected: any) => this.selected = selected));
+	selected$ = this.events.onSelect.pipe(this.clearAnnotationEditMode$, this.clearLabelTranslate$, tap((selected: any) => this.selected = selected));
 
 	@AutoSubscription
 	labelTranslate$ = this.events.onLabelTranslateStart.pipe(tap((labelTranslate ) => this.labelTranslate = labelTranslate ));
@@ -536,7 +534,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	labelTranslateMode(featureId: any) {
-		this.clearAnnotaionEdit();
 		let oldFeature = null;
 		let event = null;
 
@@ -547,6 +544,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 
 		if (!oldFeature || featureId !== oldFeature.getId()) { // start editing
+			this.clearAnnotationEditMode();
 			const originalFeature: olFeature = this.source.getFeatureById(featureId);
 			this.updateFeature(originalFeature.getId(), { labelTranslateOn: true });
 			const labelFeature = this.createLabelFeature(originalFeature);
@@ -561,7 +559,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			this.updateFeature(featureId, { labelTranslateOn: false });
 			this.source.removeFeature(this.labelTranslate.labelFeature);
 		}
-		this.source.refresh();
 		this.events.onLabelTranslateStart.next(event);
 	}
 
@@ -569,7 +566,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.clearLabelTranslateMode();
 		const entity = this.idToEntity.get(featureId);
 		const editMode = !entity.originalEntity.editMode;
-		this.updateFeature(featureId, { editMode: editMode });
+		this.updateFeature(featureId, { editMode: editMode, showMeasures: false });
 		if (editMode) {
 			this.addInteraction(VisualizerInteractions.editAnnotationTranslateHandler, this.addAnnotationEditTranslateInteraction(featureId));
 		}
@@ -578,7 +575,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			featureId = undefined;
 		}
 
-		this.events.editAnnotationUpdate.next(featureId);
+		this.events.updateEditAnnotationId.next(featureId);
 	}
 
 	private addAnnotationEditTranslateInteraction(featureId: string) {
@@ -679,22 +676,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 	}
 
-	private clearAnnotaionEdit() {
-		if (this.currentAnnotationEdit) {
-			this.updateFeature(this.currentAnnotationEdit, {editMode: false});
-			this.removeInteraction(VisualizerInteractions.editAnnotationTranslateHandler);
-		}
-	};
-
 	onResetView(): Observable<boolean> {
 		this.clearLabelTranslateMode();
-		this.clearAnnotaionEdit();
+		this.clearAnnotationEditMode();
 		return super.onResetView();
 	}
 
 	dispose() {
 		this.clearLabelTranslateMode();
-		this.clearAnnotaionEdit();
+		this.clearAnnotationEditMode();
 		super.dispose();
 	}
 
@@ -750,5 +740,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			minX: Math.min(x, prev.minX),
 			minY: Math.min(y, prev.minY)
 		};
+	}
+
+	clearAnnotationEditMode() {
+		if (this.currentAnnotationEdit) {
+			this.editAnnotationMode(this.currentAnnotationEdit)
+		}
 	}
 }

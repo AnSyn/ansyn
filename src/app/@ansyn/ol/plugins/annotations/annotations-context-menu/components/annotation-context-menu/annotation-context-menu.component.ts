@@ -128,6 +128,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 
 	toggleMeasures(featureId) {
 		const { showMeasures } = this.getFeatureProps(featureId);
+		this.annotations.clearAnnotationEditMode();
 		this.annotations.updateFeature(featureId, { showMeasures: !showMeasures });
 	}
 

@@ -230,7 +230,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	onEditAnnotationUpdate$ = () => this.annotationsVisualizer.events.editAnnotationUpdate.pipe(
+	onEditAnnotationUpdate$ = () => this.annotationsVisualizer.events.updateEditAnnotationId.pipe(
 		tap( annotationId => this.annotationsVisualizer.currentAnnotationEdit = annotationId)
 	);
 

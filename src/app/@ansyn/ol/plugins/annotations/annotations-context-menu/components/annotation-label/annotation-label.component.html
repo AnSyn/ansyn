@@ -2,7 +2,7 @@
 	<button
 		class="drag-annotation"
 		[disabled]="label?.text.length === 0"
-		(click)="onDragClick.emit()"
+		(click)="onTranslateClick.emit()"
 		[attr.tooltip-value]="'Move Label' | translate" tooltip-class="bottom">
 		<i class="icon icon-drag" [class.active]="translateOn"></i>
 	</button>

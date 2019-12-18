@@ -121,9 +121,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 
 	selectTab(id: string, tab: AnnotationsContextmenuTabs) {
 		this.selectedTab = { ...this.selectedTab, [id]: this.selectedTab[id] === tab ? null : tab };
-		if (this.annotations.currentAnnotationEdit) {
-			this.annotations.editAnnotationMode(this.annotations.currentAnnotationEdit);
-		}
+		this.annotations.clearAnnotationEditMode();
 	}
 
 	toggleMeasures(featureId) {

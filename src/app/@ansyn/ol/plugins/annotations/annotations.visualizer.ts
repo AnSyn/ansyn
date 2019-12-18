@@ -83,7 +83,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	});
 
 	@AutoSubscription
-	selected$ = this.events.onSelect.pipe(this.clearAnnotationEditMode$, this.clearLabelTranslate$, tap((selected: any) => this.selected = selected));
+	selected$ = this.events.onSelect.pipe(
+		this.clearAnnotationEditMode$,
+		this.clearLabelTranslate$,
+		tap((selected: any) => this.selected = selected));
 
 	@AutoSubscription
 	labelTranslate$ = this.events.onLabelTranslateStart.pipe(tap((labelTranslate ) => this.labelTranslate = labelTranslate ));

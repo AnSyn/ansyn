@@ -8,7 +8,7 @@
 				<li>
 					<button [class.active]="getFeatureProps(featureId)?.editMode"
 							[class.disabled]="isFeatureNonEditable(featureId)"
-							(click)="annotations.editFeature(featureId)">
+							(click)="annotations.editAnnotationMode(featureId)">
 						<i [attr.tooltip-value]="'Edit' | translate" tooltip-class="bottom">
 							<svg>
 								<path [attr.d]="SVGICON.editModeSvg"></path>
@@ -44,7 +44,7 @@
 					[translateOn]="getFeatureProps(featureId)?.labelTranslateOn"
 					(onChangeText)="updateLabel($event, featureId)"
 					(onChangeSize)="updateLabelSize($event, featureId)"
-					(onDragClick)="annotations.labelTranslateMode(featureId)">
+					(onTranslateClick)="annotations.labelTranslateMode(featureId)">
 					</ansyn-annotation-label>
 				</li>
 				<li class="expanded-selection line-width-selection">

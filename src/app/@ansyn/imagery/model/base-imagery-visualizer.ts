@@ -19,9 +19,9 @@ export const VisualizerInteractions: { [key: string]: VisualizerInteractionTypes
 	doubleClick: 'doubleClick',
 	contextMenu: 'contextMenu',
 	drawInteractionHandler: 'drawInteractionHandler',
-	translateInteractionHandler: 'translateInteractionHandler',
+	translateInteractionHandler: 'translateInteractionHandler', // for pixel offset translate
 	labelTranslateHandler: 'labelTranslateHandler',
-	editAnnotationTranslateHandler: 'editAnnotationTranslateHandler',
+	editAnnotationTranslateHandler: 'editAnnotationTranslateHandler', // for actual geometry change
 	modifyInteractionHandler: 'modifyInteractionHandler'
 };
 

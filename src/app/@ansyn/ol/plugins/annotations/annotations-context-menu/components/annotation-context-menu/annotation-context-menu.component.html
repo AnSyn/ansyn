@@ -7,6 +7,7 @@
 			<ul class="buttons">
 				<li *ngIf="getFeatureProps(featureId)?.label?.text.length">
 					<button [class.active]="annotations.edited?.originalFeature?.getId() === featureId"
+							[class.disabled]="isFeatureNonEditable(featureId)"
 							(click)="annotations.editFeature(featureId)"
 							>
 						<i [attr.tooltip-value]="'Edit' | translate" tooltip-class="bottom">

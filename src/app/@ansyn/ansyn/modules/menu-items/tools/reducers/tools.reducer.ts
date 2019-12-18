@@ -23,12 +23,14 @@ export interface IMeasureData {
 	meausres: IVisualizerEntity[];
 	isLayerShowed: boolean;
 	isToolActive: boolean;
+	isRemoveMeasureModeActive: boolean;
 }
 
 export function createNewMeasureData(): IMeasureData {
 	return {
 		isLayerShowed: true,
 		isToolActive: true,
+		isRemoveMeasureModeActive: false,
 		meausres: []
 	}
 }

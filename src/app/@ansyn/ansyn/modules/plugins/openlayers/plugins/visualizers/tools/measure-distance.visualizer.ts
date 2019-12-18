@@ -14,6 +14,10 @@ import { LineString as geoJsonLineString } from 'geojson';
 import VectorSource from 'ol/source/Vector';
 import * as Sphere from 'ol/sphere';
 import GeoJSON from 'ol/format/GeoJSON';
+import * as condition from 'ol/events/condition';
+import VectorLayer from 'ol/layer/Vector';
+import SourceVector from 'ol/source/Vector';
+import Select from 'ol/interaction/Select';
 import { UUID } from 'angular2-uuid';
 import {
 	getPointByGeometry,
@@ -51,6 +55,8 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	measureData: IMeasureData;
 	geoJsonFormat: GeoJSON;
 	interactionSource: VectorSource;
+	protected hoverLayer: VectorLayer;
+
 	protected allLengthTextStyle = new Text({
 		font: '16px Calibri,sans-serif',
 		fill: new Fill({
@@ -94,6 +100,14 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 				'marker-size': MarkerSize.small,
 				'marker-color': '#FFFFFF',
 				zIndex: 5
+			},
+			hover: {
+				stroke: '#ccb918',
+				'stroke-width': 2,
+				fill: '#61ff55',
+				'marker-size': MarkerSize.small,
+				'marker-color': '#ff521a',
+				zIndex: 5
 			}
 		});
 		this.isTotalMeasureActive = config.MeasureDistanceVisualizer.extra.isTotalMeasureActive;
@@ -115,9 +129,14 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			this.measureData = measureData;
 			this.setVisibility(measureData.isLayerShowed);
 			if (isMeasureToolActive && activeMapId && measureData.isToolActive) {
-				this.createInteraction();
+				this.createDrawInteraction();
 			} else {
 				this.removeDrawInteraction();
+			}
+			if (isMeasureToolActive && activeMapId && measureData.isRemoveMeasureModeActive) {
+				this.createDeleteInteraction();
+			} else {
+				this.removeDeleteInteraction();
 			}
 		}),
 		switchMap(([activeMapId, measureData, isMeasureToolActive]) => {
@@ -145,12 +164,72 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		return super.onResetView()
 			.pipe(tap(() => {
 				if (this.drawInteractionHandler) {
-					this.createInteraction();
+					this.createDrawInteraction();
 				}
 			}));
 	}
 
-	createInteraction(type = 'LineString') {
+	createDeleteInteraction() {
+		this.removeDeleteInteraction();
+		const pointerMove = new Select({
+			condition: condition.pointerMove,
+			style: () => new Style(),
+			layers: [this.vector]
+		});
+		pointerMove.on('select', this.onHoveredFeature.bind(this));
+		this.addInteraction(VisualizerInteractions.pointerMove, pointerMove);
+	}
+
+	removeDeleteInteraction() {
+		this.removeInteraction(VisualizerInteractions.pointerMove);
+	}
+
+	onHoveredFeature($event) {
+		if ($event.selected.length > 0) {
+			const id = $event.selected[0].getId();
+			this.setHoverFeature(id);
+		} else {
+			this.setHoverFeature();
+		}
+	}
+
+	setHoverFeature(featureId?: string) {
+		this.hoverLayer.getSource().clear();
+
+		if (featureId) {
+			const feature = this.source.getFeatureById(featureId);
+			if (feature) {
+				this.createHoverFeature(feature);
+			}
+		}
+	}
+
+	private createHoverFeature(selectedFeature: Feature): void {
+		const hoverFeature = selectedFeature.clone();
+		const styles = this.hoverStyle(hoverFeature);
+		hoverFeature.setStyle(styles);
+		this.hoverLayer.getSource().addFeature(hoverFeature);
+	}
+
+	protected initLayers() {
+		super.initLayers();
+		this.createHoverLayer();
+	}
+
+	protected createHoverLayer() {
+		if (this.hoverLayer) {
+			this.iMap.removeLayer(this.hoverLayer);
+		}
+
+		this.hoverLayer = new VectorLayer({
+			source: new SourceVector(),
+			style: (feature: Feature) => this.featureStyle(feature, VisualizerStates.HOVER)
+		});
+
+		this.iMap.addLayer(this.hoverLayer);
+	}
+
+	createDrawInteraction(type = 'LineString') {
 		this.removeDrawInteraction();
 
 		this.interactionSource = new VectorSource({ wrapX: false });
@@ -192,7 +271,12 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 	// override base entities visualizer style
 	featureStyle(feature: Feature, state: string = VisualizerStates.INITIAL) {
-		const styles = this.mainStyle(feature);
+		let styles;
+		if (typeof state === 'object' && state === 'hover') {
+			styles = this.hoverStyle(feature);
+		} else {
+			styles = this.mainStyle(feature)
+		}
 		return styles;
 	}
 
@@ -223,6 +307,33 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 					width: this.visualizerStyle.initial['stroke-width']
 				}),
 				fill: new Fill({ color: this.visualizerStyle.initial.fill })
+			}),
+			geometry: function (feature) {
+				// return the coordinates of the first ring of the polygon
+				const coordinates = (<LineString>feature.getGeometry()).getCoordinates();
+				return new MultiPoint(coordinates);
+			}
+		});
+		styles.push(pointsStyle);
+		return styles;
+	}
+
+	hoverStyle(feature) {
+		const styles = [new Style({
+			stroke: new Stroke({
+				color: this.visualizerStyle.hover.stroke,
+				width: this.visualizerStyle.hover['stroke-width']
+			})
+		})];
+		// Points
+		const pointsStyle = new Style({
+			image: new Circle({
+				radius: 5,
+				stroke: new Stroke({
+					color: this.visualizerStyle.hover.stroke,
+					width: this.visualizerStyle.hover['stroke-width']
+				}),
+				fill: new Fill({ color: this.visualizerStyle.hover.fill })
 			}),
 			geometry: function (feature) {
 				// return the coordinates of the first ring of the polygon
@@ -382,4 +493,10 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		}
 		return output;
 	};
+
+	onDispose(): void {
+		this.removeInteraction(VisualizerInteractions.drawInteractionHandler);
+		this.removeInteraction(VisualizerInteractions.pointerMove);
+		super.onDispose();
+	}
 }

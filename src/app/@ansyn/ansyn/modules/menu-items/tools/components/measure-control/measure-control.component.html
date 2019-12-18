@@ -5,26 +5,36 @@
 	<p>{{'Measure Distance' | translate}}</p>
 
 	<div class="buttons">
-		<button id="showLayerBtn"
+		<button id="showLayerBtn" class="bold-on-hover"
 				[class.active]="measureData?.isLayerShowed"
 				(click)="toggleShowLayer()">
-			<span class="bold-on-hover">{{'Hide / Show Layer' | translate}}</span>
+			{{'Hide / Show Layer' | translate}}
+			<!--<span class="bold-on-hover">{{'Hide / Show Layer' | translate}}</span>-->
 		</button>
 
-		<button id="startMeasureBtn"
+		<button id="startMeasureBtn" class="bold-on-hover"
 				[class.active]="measureData?.isToolActive"
 				(click)="toggleMeasureToolActivation()">
-			<span class="bold-on-hover">{{'Stop / Start Measure' | translate}}</span>
+			<!--<span class="bold-on-hover">{{'Stop / Start Measure' | translate}}</span>-->
+			{{'Stop / Start Measure' | translate}}
 		</button>
 
-		<button id="clearBtn"
+		<button id="removeSingleMeasureBtn" class="bold-on-hover"
+				[class.active]="measureData?.isRemoveMeasureModeActive"
+				(click)="toggleRemoveSingleMeasure()">
+			{{'Remove One Measurement' | translate}}
+			<!--<span class="bold-on-hover">{{'Remove One Measurement' | translate}}</span>-->
+		</button>
+
+		<button id="clearBtn" class="bold-on-hover"
 				(click)="clearMeasure()">
-			<span class="bold-on-hover">{{'Clear' | translate}}</span>
+			{{'Clear' | translate}}
+			<!--<span class="bold-on-hover">{{'Clear' | translate}}</span>-->
 		</button>
 
-		<button id="doneBtn"
-				(click)="done()">
-			<span class="bold-on-hover">{{'Done' | translate}}</span>
+		<button id="doneBtn" class="bold-on-hover"
+				(click)="done()">{{'Done' | translate}}
+			<!--<span class="bold-on-hover">{{'Done' | translate}}</span>-->
 		</button>
 	</div>
 </div>

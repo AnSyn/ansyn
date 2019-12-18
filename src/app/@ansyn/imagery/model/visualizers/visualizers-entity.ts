@@ -12,4 +12,5 @@ export interface IVisualizerEntity {
 	showMeasures?: boolean;
 	undeletable?: boolean;
 	editMode?: boolean;
+	labelTranslateOn?: boolean;
 }

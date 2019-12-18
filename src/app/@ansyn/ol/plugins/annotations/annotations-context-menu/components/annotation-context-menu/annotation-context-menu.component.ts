@@ -121,10 +121,12 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 
 	selectTab(id: string, tab: AnnotationsContextmenuTabs) {
 		this.selectedTab = { ...this.selectedTab, [id]: this.selectedTab[id] === tab ? null : tab };
+		this.annotations.clearAnnotationEditMode();
 	}
 
 	toggleMeasures(featureId) {
 		const { showMeasures } = this.getFeatureProps(featureId);
+		this.annotations.clearAnnotationEditMode();
 		this.annotations.updateFeature(featureId, { showMeasures: !showMeasures });
 	}
 
@@ -184,5 +186,10 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	isFeatureNonEditable(featureId: string) {
 		const feature = this.annotations.getJsonFeatureById(featureId);
 		return feature && feature.properties.isNonEditable;
+	}
+
+	toggleEditMode(featureId: any) {
+		this.selectedTab = { ...this.selectedTab, [featureId]: null};
+		this.annotations.editAnnotationMode(featureId);
 	}
 }

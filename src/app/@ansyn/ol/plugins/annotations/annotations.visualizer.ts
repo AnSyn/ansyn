@@ -36,7 +36,7 @@ import { IOLPluginsConfig, OL_PLUGINS_CONFIG } from '../plugins.config';
 import { AnnotationMode, IAnnotationBoundingRect, IDrawEndEvent } from './annotations.model';
 import { DragPixelsInteraction } from './dragPixelsInteraction';
 
-export interface ILabelEditMode {
+export interface ILabelTranslateMode {
 	originalFeature: olFeature,
 	labelFeature: olFeature
 }
@@ -57,7 +57,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	geoJsonFormat: OLGeoJSON;
 	dragBox = new DragBox({ condition: platformModifierKeyOnly });
 	translationSubscriptions = [];
-	edited: ILabelEditMode;
+	currentAnnotationEdit: string;
+	labelTranslate: ILabelTranslateMode;
 	events = {
 		onClick: new Subject(),
 		onSelect: new Subject<string[]>(),
@@ -67,19 +68,28 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		removeEntity: new Subject<string>(),
 		updateEntity: new Subject<IVisualizerEntity>(),
 		offsetEntity: new Subject<any>(),
-		onEditStart: new Subject<ILabelEditMode>(),
-		onEditEnd: new Subject()
+		onLabelTranslateStart: new Subject<ILabelTranslateMode>(),
+		onLabelTranslateEnd: new Subject(),
+		onAnnotationTranslateEnd: new Subject<IDrawEndEvent>(),
+		updateEditAnnotationId: new Subject<string>()
 	};
-	clearModified: any = tap(() => {
-		if (this.edited) {
-			this.editFeature(this.edited.originalFeature.getId())
+	clearLabelTranslate$: any = tap(() => {
+		if (this.labelTranslate) {
+			this.labelTranslateMode(this.labelTranslate.originalFeature.getId())
 		}
 	});
-	@AutoSubscription
-	selected$ = this.events.onSelect.pipe(this.clearModified, tap((selected: any) => this.selected = selected));
+	clearAnnotationEditMode$ = tap( () => {
+		this.clearAnnotationEditMode();
+	});
 
 	@AutoSubscription
-	edited$ = this.events.onEditStart.pipe(tap((edited) => this.edited = edited));
+	selected$ = this.events.onSelect.pipe(
+		this.clearAnnotationEditMode$,
+		this.clearLabelTranslate$,
+		tap((selected: any) => this.selected = selected));
+
+	@AutoSubscription
+	labelTranslate$ = this.events.onLabelTranslateStart.pipe(tap((labelTranslate ) => this.labelTranslate = labelTranslate ));
 
 	modeDictionary = {
 		Arrow: {
@@ -184,6 +194,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				icon: feature.properties.icon || '',
 				undeletable: feature.properties.undeletable || false,
 				labelSize: feature.properties.labelSize || 28,
+				labelTranslateOn: feature.properties.labelTranslateOn || false,
 				editMode: feature.properties.editMode || false
 			};
 		});
@@ -304,11 +315,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			.projectCollectionAccurately([feature], this.iMap.mapObject)
 			.pipe(
 				take(1),
-				mergeMap((GeoJSON: FeatureCollection<GeometryObject>) => {
-					return this.addOrUpdateEntities(this.annotationsLayerToEntities(GeoJSON)).pipe(
-						tap(() => this.events.onDrawEnd.next({ GeoJSON, feature }))
-					);
-				})
+				tap((GeoJSON: FeatureCollection<GeometryObject>) => this.events.onDrawEnd.next({ GeoJSON, feature })),
 			).subscribe();
 
 	}
@@ -529,35 +536,90 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.iconSrc = src;
 	}
 
-	editFeature(featureId: any) {
+	labelTranslateMode(featureId: any) {
 		let oldFeature = null;
 		let event = null;
 
-		if (this.edited) {
-			const { originalFeature } = this.edited;
-			this.removeInteraction('translateInteractionHandler');
+		if (this.labelTranslate) {
+			const { originalFeature } = this.labelTranslate;
+			this.removeInteraction(VisualizerInteractions.labelTranslateHandler);
 			oldFeature = originalFeature;
 		}
 
 		if (!oldFeature || featureId !== oldFeature.getId()) { // start editing
+			this.clearAnnotationEditMode();
 			const originalFeature: olFeature = this.source.getFeatureById(featureId);
-			this.updateFeature(originalFeature.getId(), { editMode: true });
+			this.updateFeature(originalFeature.getId(), { labelTranslateOn: true });
 			const labelFeature = this.createLabelFeature(originalFeature);
 
-			this.addInteraction('translateInteractionHandler', this.moveLabelInteraction(originalFeature, labelFeature));
+			this.addInteraction(VisualizerInteractions.labelTranslateHandler, this.moveLabelInteraction(originalFeature, labelFeature));
 			event = {
 				originalFeature,
 				labelFeature
 			};
 			this.source.addFeature(labelFeature);
 		} else {
-			this.updateFeature(featureId, { editMode: false });
-			this.source.removeFeature(this.edited.labelFeature);
+			this.updateFeature(featureId, { labelTranslateOn: false });
+			this.source.removeFeature(this.labelTranslate.labelFeature);
 		}
-		this.source.refresh();
-		this.events.onEditStart.next(event);
+		this.events.onLabelTranslateStart.next(event);
 	}
 
+	editAnnotationMode(featureId: string) {
+		this.clearLabelTranslateMode();
+		const entity = this.idToEntity.get(featureId);
+		const editMode = !entity.originalEntity.editMode;
+		this.updateFeature(featureId, { editMode: editMode, showMeasures: false });
+		if (editMode) {
+			this.addInteraction(VisualizerInteractions.editAnnotationTranslateHandler, this.addAnnotationEditTranslateInteraction(featureId));
+		}
+		else {
+			this.removeInteraction(VisualizerInteractions.editAnnotationTranslateHandler);
+			featureId = undefined;
+		}
+
+		this.events.updateEditAnnotationId.next(featureId);
+	}
+
+	private addAnnotationEditTranslateInteraction(featureId: string) {
+		const feature = this.source.getFeatureById(featureId);
+		const { geometry } = feature.get('label');
+		const translate = new olTranslate({
+			features: new olCollection([feature])
+		});
+		translate.on('translatestart', (event) => {
+			const lastCoordinate = event.coordinate;
+			feature.set('lastCoordinate', lastCoordinate);
+		});
+		translate.on('translating', (event) => {
+			if (geometry) {
+				const currentCoordinates = event.coordinate;
+				const lastCoordinates = feature.get('lastCoordinate');
+				const deltaX = currentCoordinates[0] - lastCoordinates[0];
+				const deltaY = currentCoordinates[1] - lastCoordinates[1];
+				geometry.translate(deltaX, deltaY);
+				feature.set('lastCoordinate', currentCoordinates);
+			}
+		});
+		translate.on('translateend', (event) => {
+			const features = event.features.getArray();
+			features[0].getGeometry().translate(-this.offset[0], -this.offset[1]);
+			if (geometry) {
+				features.push(new olFeature(geometry));
+			}
+			feature.unset('lastCoordinate');
+			this.projectionService.projectCollectionAccurately(features, this.iMap.mapObject).pipe(
+				take(1),
+				tap((GeoJSON: FeatureCollection<GeometryObject>) => {
+					this.removeInteraction(VisualizerInteractions.editAnnotationTranslateHandler);
+					this.events.onAnnotationTranslateEnd.next({ GeoJSON, feature });
+					this.addInteraction(VisualizerInteractions.editAnnotationTranslateHandler, this.addAnnotationEditTranslateInteraction(feature.getId()))
+				})
+			).subscribe();
+		});
+
+		return translate;
+	}
 	private createLabelFeature(feature: olFeature): olFeature {
 		let labelPostion = this.getCenterOfFeature(feature);
 		const entity = this.getEntity(feature);
@@ -608,21 +670,24 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return translateInteraction;
 	}
 
-	private clearEditMode() {
-		if (this.edited) {
-			this.updateFeature(this.edited.originalFeature.getId(), { editMode: false });
-			this.removeInteraction('translateInteractionHandler');
-			this.removeFeature(this.edited.labelFeature);
-			this.edited = null;
+	private clearLabelTranslateMode() {
+		if (this.labelTranslate) {
+			this.updateFeature(this.labelTranslate.originalFeature.getId(), { labelTranslateOn: false });
+			this.removeInteraction(VisualizerInteractions.labelTranslateHandler);
+			this.source.removeFeature(this.labelTranslate.labelFeature);
+			this.labelTranslate = null;
 		}
 	}
+
 	onResetView(): Observable<boolean> {
-		this.clearEditMode();
+		this.clearLabelTranslateMode();
+		this.clearAnnotationEditMode();
 		return super.onResetView();
 	}
 
 	dispose() {
-		this.clearEditMode();
+		this.clearLabelTranslateMode();
+		this.clearAnnotationEditMode();
 		super.dispose();
 	}
 
@@ -678,5 +743,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			minX: Math.min(x, prev.minX),
 			minY: Math.min(y, prev.minY)
 		};
+	}
+
+	clearAnnotationEditMode() {
+		if (this.currentAnnotationEdit) {
+			this.editAnnotationMode(this.currentAnnotationEdit)
+		}
 	}
 }

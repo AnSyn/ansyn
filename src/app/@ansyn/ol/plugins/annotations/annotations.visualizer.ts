@@ -571,7 +571,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const editMode = !entity.originalEntity.editMode;
 		this.updateFeature(featureId, { editMode: editMode });
 		if (editMode) {
-			this.setMode(undefined, true);
 			this.addInteraction(VisualizerInteractions.editAnnotationTranslateHandler, this.addAnnotationEditTranslateInteraction(featureId));
 		}
 		else {

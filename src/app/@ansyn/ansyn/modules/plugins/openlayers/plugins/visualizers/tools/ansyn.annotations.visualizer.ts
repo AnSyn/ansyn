@@ -95,7 +95,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 				const annotationMode = Boolean(action.payload) ? action.payload.annotationMode : null;
 				const useMapId = action.payload && Boolean(action.payload.mapId);
 				if (!useMapId || (useMapId && action.payload.mapId === this.mapId)) {
-					this.annotationsVisualizer.setMode(annotationMode, !useMapId)
+					this.annotationsVisualizer.setMode(annotationMode, !useMapId);
 				}
 			}));
 
@@ -145,6 +145,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 				annotationMode: newMode,
 				mapId: arg.forceBroadcast ? null : this.mapId
 			}));
+			this.annotationsVisualizer.events.onSelect.next([]);
 		})
 	);
 

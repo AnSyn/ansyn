@@ -1,7 +1,8 @@
+import { selectIsMinimalistViewMode } from './../../reducers/map.reducer';
 import { AfterContentChecked, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MapEffects } from '../../effects/map.effects';
 import { selectIsExportingMaps } from '../../reducers/map.reducer';
-import { Observable, fromEvent, timer } from 'rxjs';
+import { Observable, fromEvent, timer, combineLatest } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import {
 	IMapState,
@@ -22,7 +23,7 @@ import {
 	ExportMapsToPngActionSuccess,
 	ExportMapsToPngActionFailed } from '../../actions/map.actions';
 import { DOCUMENT } from '@angular/common';
-import { filter, map, tap, take } from 'rxjs/operators';
+import { filter, map, tap, take, withLatestFrom } from 'rxjs/operators';
 import { DragDropMapService } from './providers/drag-drop-map.service';
 
 import { IMapsLayout, LayoutKey, layoutOptions } from '../../models/maps-layout';
@@ -30,7 +31,7 @@ import { IMapSettings } from '@ansyn/imagery';
 import domtoimage from 'dom-to-image';
 import { saveAs } from 'file-saver';
 
-// @dynamic./providers/export-map.service
+// @dynamic
 @Component({
 	selector: 'ansyn-imageries-manager',
 	templateUrl: './imageries-manager.component.html',
@@ -49,7 +50,7 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 	public ids$ = this.store.select(selectMapsIds);
 	public footerCollapse$ = this.store.select(selectFooterCollapse);
 	private export$ = this.store.select(selectIsExportingMaps)
-								.pipe(filter(val => val === true));
+								.pipe(filter(isExporting => isExporting === true));
 
 	public showWelcomeNotification$ = this.store.pipe(
 		select(selectWasWelcomeNotificationShown),
@@ -63,6 +64,7 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 
 
 	@ViewChild('imageriesContainer') imageriesContainer: ElementRef;
+	@ViewChild('loader', { read: ElementRef } ) loader: ElementRef;
 
 	pinLocationMode: boolean;
 	ids: string[] = [];
@@ -74,8 +76,7 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 	constructor(protected mapEffects: MapEffects,
 				protected readonly store: Store<any>,
 				@Inject(DOCUMENT) protected document: Document,
-				public dragDropMapService: DragDropMapService)
-	{
+				public dragDropMapService: DragDropMapService) {
 	}
 
 	ngOnInit() {
@@ -102,7 +103,14 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 		this.mapsEntities$.subscribe((mapsEntities) => this.mapsEntities = mapsEntities);
 		this.ids$.subscribe((ids: string[]) => this.ids = ids);
 		this.footerCollapse$.subscribe(collapse => this.footerCollapse = collapse);
-		this.export$.subscribe(() => { this.onExportMapRequested(); });
+		this.export$
+			.pipe(
+				withLatestFrom(this.store.select(selectIsMinimalistViewMode)),
+				withLatestFrom(this.store.select(selectFooterCollapse))
+			).subscribe (([[exporting, initialMinimal], initialFooterCollapsed]) => {
+							this.onExportMapRequested(initialMinimal, initialFooterCollapsed);
+						}
+					);
 	}
 
 	setClassImageriesContainer(newClass, oldClass?) {
@@ -145,18 +153,14 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 		this.preventDbClick = true;
 	}
 
-	trackByFun(item) {
+	trackByFun(index, item) {
 		if (!item) {
 			return null;
 		}
 		return item.id;
 	}
 
-	private onExportMapRequested(): void {
-		const currentMapState: IMapState = this.getState(this.store);
-		const initialMinimal = currentMapState.minimalistViewMode;
-		const initialFooterCollapsed = currentMapState.footerCollapse;
-
+	private onExportMapRequested(initialMinimal: boolean, initialFooterCollapsed: boolean): void {
 		this.switchToExportMode(true, initialFooterCollapsed, initialMinimal);
 
 		const minimizetimer$ = timer(0).pipe(take(1))
@@ -176,12 +180,11 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 		try {
 			const blob: Blob = await domtoimage.toBlob(element,
 								{filter: (node) => {
-									return (node.id !== 'loader'); }});
+									return (node.id !== this.loader.nativeElement.id); }});
 			saveAs(blob, 'map.jpeg');
 			return {result: true, msg: null};
 		}
 		catch (err) {
-			console.error(err);
 			return {result: true, msg: err};
 		}
 	}
@@ -195,12 +198,5 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 		if (!initialMinimal) {
 			this.store.dispatch(new SetMinimalistViewModeAction(exportMode));
 		}
-	}
-
-	private getState<T>(store: Store<T>): T {
-		let state: T;
-		store.pipe(take(1))
-					.subscribe(s => state = s);
-		return state;
 	}
 }

@@ -29,5 +29,5 @@
 	</ng-template>
 </div>
 
-<ansyn-loader id="loader" [show]="isExporting" [loaderText]="'Exporting Maps' | translate" [rtl]="'rtl' === ('direction' | translate)">
+<ansyn-loader id="loader" #loader [show]="isExporting" [loaderText]="'Exporting Maps' | translate" [rtl]="'rtl' === ('direction' | translate)">
 <ansyn-welcome-notification *ngIf="showWelcomeNotification$ | async"></ansyn-welcome-notification>

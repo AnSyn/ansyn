@@ -196,7 +196,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		case MapActionTypes.SET_MINIMALIST_VIEW_MODE:
 			return { ...state, minimalistViewMode: action.payload };
 
-		case MapActionTypes.EXPORT_MAPS_TO_PNG_REQUESTED:
+		case MapActionTypes.EXPORT_MAPS_TO_PNG_REQUEST:
 			return {...state, isExportingMaps: true}
 
 		case MapActionTypes.EXPORT_MAPS_TO_PNG_SUCCESS:

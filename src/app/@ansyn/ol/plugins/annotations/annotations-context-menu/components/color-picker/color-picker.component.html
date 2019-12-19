@@ -12,7 +12,9 @@
 		<div class="color" [style.background]="color"></div>
 	</label>
 
-	<button class="no-fill" [disabled]="activeDisabled" (click)="changeActive()">
+	<button class="no-fill"
+			[class.disabled]="!active"
+			[disabled]="activeDisabled || !canToggle" (click)="this.activeChange.emit(!this.active)">
 		<i *ngIf="active; else notactive">
 			<svg fill="#fff" width="32" height="32" viewBox="0 0 1024 1024">
 				<path

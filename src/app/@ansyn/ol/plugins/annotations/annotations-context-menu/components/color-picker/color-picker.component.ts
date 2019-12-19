@@ -16,9 +16,4 @@ export class ColorPickerComponent {
 	@Input() canToggle = true;
 
 	@Output() activeChange = new EventEmitter();
-	public changeActive() {
-		if (this.canToggle) {
-			this.activeChange.emit(!this.active)
-		}
-	}
 }

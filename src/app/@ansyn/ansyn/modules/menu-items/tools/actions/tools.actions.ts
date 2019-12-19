@@ -182,7 +182,8 @@ export class UpdateMeasureDataAction implements Action {
 		mapId: string, measureData: {
 			meausres?: IVisualizerEntity[],
 			isLayerShowed?: boolean,
-			isToolActive?: boolean
+			isToolActive?: boolean,
+			isRemoveMeasureModeActive?: boolean
 		}
 	}) {
 	}

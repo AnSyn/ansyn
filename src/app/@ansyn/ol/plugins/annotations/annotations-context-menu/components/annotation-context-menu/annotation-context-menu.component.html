@@ -75,8 +75,10 @@
 						<ansyn-annotations-color
 							[show]="selectedTab[featureId] === Tabs.Colors"
 							[properties]="getFeatureProps(featureId)?.style?.initial"
-							[canDisableFill] = "getFeatureProps(featureId)?.mode !== 'Point'"
-							[canDisableStroke] = "getFeatureProps(featureId)?.mode !== 'Arrow' && getFeatureProps(featureId)?.mode !== 'LineString'"
+							[fillActive]="getFeatureProps(featureId)?.mode !== 'Arrow' && getFeatureProps(featureId)?.mode !== 'LineString'"
+							[canToggleFill]="getFeatureProps(featureId)?.mode !== 'Point'"
+							[strokeActive]="getFeatureProps(featureId)?.mode !== 'Point'"
+							[canToggleStroke]="getFeatureProps(featureId)?.mode !== 'Arrow' && getFeatureProps(featureId)?.mode !== 'LineString'"
 							(colorChange)="colorChange($event, featureId)"
 							(activeChange)="activeChange($event, featureId)"
 						></ansyn-annotations-color>

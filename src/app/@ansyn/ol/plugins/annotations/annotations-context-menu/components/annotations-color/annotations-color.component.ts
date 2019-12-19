@@ -14,8 +14,10 @@ export interface IAnnotationColorProps {
 })
 export class AnnotationsColorComponent implements OnInit {
 	@Input() show: boolean;
-	@Input() canDisableStroke = true;
-	@Input() canDisableFill = true;
+	@Input() strokeActive = true;
+	@Input() fillActive = true;
+	@Input() canToggleStroke = true;
+	@Input() canToggleFill = true;
 	@Input() properties: IAnnotationColorProps;
 	@Output() activeChange = new EventEmitter();
 	@Output() colorChange = new EventEmitter();

@@ -13,11 +13,11 @@ export class ColorPickerComponent {
 	@Input() label: string;
 	@Input() active: boolean;
 	@Input() activeDisabled: boolean;
-	@Input() canDisable = true;
+	@Input() canToggle = true;
 
 	@Output() activeChange = new EventEmitter();
 	public changeActive() {
-		if (this.canDisable) {
+		if (this.canToggle) {
 			this.activeChange.emit(!this.active)
 		}
 	}

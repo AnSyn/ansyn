@@ -8,7 +8,10 @@ export type VisualizerInteractionTypes =
 	| 'doubleClick'
 	| 'contextMenu'
 	| 'drawInteractionHandler'
-	| 'translateInteractionHandler';
+	| 'translateInteractionHandler'
+	| 'labelTranslateHandler'
+	| 'editAnnotationTranslateHandler'
+	| 'modifyInteractionHandler';
 
 export const VisualizerInteractions: { [key: string]: VisualizerInteractionTypes } = {
 	click: 'click',
@@ -16,7 +19,10 @@ export const VisualizerInteractions: { [key: string]: VisualizerInteractionTypes
 	doubleClick: 'doubleClick',
 	contextMenu: 'contextMenu',
 	drawInteractionHandler: 'drawInteractionHandler',
-	translateInteractionHandler: 'translateInteractionHandler'
+	translateInteractionHandler: 'translateInteractionHandler', // for pixel offset translate
+	labelTranslateHandler: 'labelTranslateHandler',
+	editAnnotationTranslateHandler: 'editAnnotationTranslateHandler', // for actual geometry change
+	modifyInteractionHandler: 'modifyInteractionHandler'
 };
 
 export interface IImageryVisualizerMetaData extends IImageryPluginMetaData {

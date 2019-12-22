@@ -122,6 +122,8 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		const candidateLeftPos = hoveredElementPos - 50;
 		const myCurrentWidth = (this.el.nativeElement as HTMLElement).offsetWidth;
 		const ansynWidth = this.topElement.getBoundingClientRect().width;
+		// ^ Ansyn component is not a block element, therefore it doesn't have offsetWidth
+		// Therefore I used getBoundingClientRect()
 		return Math.min(candidateLeftPos, ansynWidth - myCurrentWidth);
 	}
 

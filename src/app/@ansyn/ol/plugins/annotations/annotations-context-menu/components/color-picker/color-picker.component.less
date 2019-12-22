@@ -58,11 +58,12 @@ i {
 		opacity: .9;
 		outline: none;
 
-		&:disabled {
+		&.disabled {
 			opacity: .5;
+			cursor: unset;
 		}
 
-		&:hover:not(.active):not(:disabled) {
+		&:hover:not(.active):not(.disabled) {
 			opacity: 1;
 		}
 	}

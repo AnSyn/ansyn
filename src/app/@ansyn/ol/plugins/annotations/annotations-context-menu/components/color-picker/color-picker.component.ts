@@ -13,7 +13,7 @@ export class ColorPickerComponent {
 	@Input() label: string;
 	@Input() active: boolean;
 	@Input() activeDisabled: boolean;
+	@Input() canToggle = true;
 
 	@Output() activeChange = new EventEmitter();
-
 }

@@ -8,7 +8,7 @@ import * as SVG from './icons-svg';
 enum AnnotationsContextmenuTabs {
 	Colors,
 	Weight,
-	Label,
+	Label
 }
 
 @Component({

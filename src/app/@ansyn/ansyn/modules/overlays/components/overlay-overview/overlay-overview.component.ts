@@ -99,7 +99,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 				return;
 			}
 			const hoveredElementBounds: ClientRect = hoveredElement.getBoundingClientRect();
-			this.left = hoveredElementBounds.left - 50;
+			this.left = this.getLeftPosition(hoveredElementBounds.left);
 			this.top = hoveredElementBounds.top;
 			this.showOverview();
 			this.sensorName = overlay.sensorName;
@@ -116,6 +116,15 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		} else {
 			this.hideOverview();
 		}
+	}
+
+	getLeftPosition(hoveredElementPos: number): number {
+		const candidateLeftPos = hoveredElementPos - 50;
+		const myCurrentWidth = (this.el.nativeElement as HTMLElement).offsetWidth;
+		const ansynWidth = this.topElement.getBoundingClientRect().width;
+		// ^ Ansyn component is not a block element, therefore it doesn't have offsetWidth
+		// Therefore I used getBoundingClientRect()
+		return Math.min(candidateLeftPos, ansynWidth - myCurrentWidth);
 	}
 
 	showOverview() {

@@ -86,7 +86,20 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 	toggleMeasureToolActivation() {
 		this.store$.dispatch(new UpdateMeasureDataAction({
 			mapId: this.mapId,
-			measureData: { isToolActive: !this.measureData.isToolActive }
+			measureData: {
+				isToolActive: !this.measureData.isToolActive,
+				isRemoveMeasureModeActive: false,
+			}
+		}));
+	}
+
+	toggleRemoveSingleMeasure() {
+		this.store$.dispatch(new UpdateMeasureDataAction({
+			mapId: this.mapId,
+			measureData: {
+				isRemoveMeasureModeActive: !this.measureData.isRemoveMeasureModeActive,
+				isToolActive: false
+			}
 		}));
 	}
 

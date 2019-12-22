@@ -32,6 +32,7 @@ import {
 	ICaseTimeState
 } from '../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../overlays/models/overlay.model';
+import { ClearActiveInteractionsAction } from '../../../menu-items/tools/actions/tools.actions';
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [
@@ -51,19 +52,19 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	animations: [fadeAnimations]
 })
 export class ComboBoxesComponent implements OnInit, OnDestroy {
-	comboBoxesProperties$: Observable<IComboBoxesProperties> = this.store.select(selectComboBoxesProperties);
-	geoFilterStatus$ = this.store.select(selectGeoFilterStatus).pipe(tap((geoFilterStatus: IGeoFilterStatus) => this.geoFilterStatus = geoFilterStatus));
+	comboBoxesProperties$: Observable<IComboBoxesProperties> = this.store$.select(selectComboBoxesProperties);
+	geoFilterStatus$ = this.store$.select(selectGeoFilterStatus).pipe(tap((geoFilterStatus: IGeoFilterStatus) => this.geoFilterStatus = geoFilterStatus));
 
-	regionType$ = this.store.select(selectRegion).pipe(
+	regionType$ = this.store$.select(selectRegion).pipe(
 		filter(Boolean),
 		map((region) => region.type),
 		tap((regionType) => this.regionType = regionType)
 	);
 
-	time$: Observable<ICaseTimeState> = this.store.select(selectTime);
-	layout$: Observable<LayoutKey> = this.store.select(selectLayout);
+	time$: Observable<ICaseTimeState> = this.store$.select(selectTime);
+	layout$: Observable<LayoutKey> = this.store$.select(selectLayout);
 
-	dataInputFilters$ = this.store.select(selectDataInputFilter).pipe(
+	dataInputFilters$ = this.store$.select(selectDataInputFilter).pipe(
 		filter((caseDataInputFiltersState: ICaseDataInputFiltersState) => Boolean(caseDataInputFiltersState) && Boolean(caseDataInputFiltersState.filters)),
 		tap((caseDataInputFiltersState: ICaseDataInputFiltersState) => {
 			this.dataInputFiltersTitle = !caseDataInputFiltersState.active ? CaseDataFilterTitle.Disabled : caseDataInputFiltersState.fullyChecked ? CaseDataFilterTitle.Full : CaseDataFilterTitle.Partial;
@@ -106,7 +107,7 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 		return Array.from(layoutOptions.keys());
 	}
 
-	constructor(protected store: Store<IStatusBarState>,
+	constructor(protected store$: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) protected statusBarConfig: IStatusBarConfig,
 				@Inject(ORIENTATIONS) public orientations: CaseOrientation[],
 				@Inject(TIME_FILTERS) public timeFilters: CaseTimeFilter[],
@@ -146,12 +147,12 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	}
 
 	applyTimelinePickerResult(time: ICaseTimeState) {
-		this.store.dispatch(new SetOverlaysCriteriaAction({ time }));
+		this.store$.dispatch(new SetOverlaysCriteriaAction({ time }));
 		this.toggleTimelineStartEndSearch();
 	}
 
 	layoutSelectChange(layout: LayoutKey): void {
-		this.store.dispatch(new SetLayoutAction(layout));
+		this.store$.dispatch(new SetLayoutAction(layout));
 	}
 
 	toggleMapSearch() {
@@ -160,11 +161,11 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	}
 
 	toggleIndicatorView() {
-		this.store.dispatch(new UpdateGeoFilterStatus({ indicator: !this.geoFilterStatus.indicator }));
+		this.store$.dispatch(new UpdateGeoFilterStatus({ indicator: !this.geoFilterStatus.indicator }));
 	}
 
 	comboBoxesChange(payload: IComboBoxesProperties) {
-		this.store.dispatch(new SetImageOpeningOrientation(payload));
+		this.store$.dispatch(new SetImageOpeningOrientation(payload));
 	}
 
 	geoFilterChanged(geoFilter?: SearchMode) {
@@ -174,7 +175,8 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 			payload.indicator = true;
 		}
 
-		this.store.dispatch(new UpdateGeoFilterStatus({ searchMode: geoFilter }));
+		this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateGeoFilterStatus] }));
+		this.store$.dispatch(new UpdateGeoFilterStatus({ searchMode: geoFilter }));
 	}
 
 	ngOnDestroy() {

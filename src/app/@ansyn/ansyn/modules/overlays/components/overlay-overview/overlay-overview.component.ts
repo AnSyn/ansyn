@@ -122,11 +122,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		const candidateLeftPos = hoveredElementPos - 50;
 		const myCurrentWidth = (this.el.nativeElement as HTMLElement).offsetWidth;
 		const ansynWidth = this.topElement.getBoundingClientRect().width;
-		if (candidateLeftPos + myCurrentWidth < ansynWidth) {
-			return candidateLeftPos;
-		} else {
-			return ansynWidth - myCurrentWidth;
-		}
+		return Math.min(candidateLeftPos, ansynWidth - myCurrentWidth);
 	}
 
 	showOverview() {

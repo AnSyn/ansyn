@@ -24,7 +24,6 @@ const animations: any[] = [
 	])
 ];
 
-
 @Component({
 	selector: 'ansyn-edit-case',
 	templateUrl: './edit-case.component.html',
@@ -75,7 +74,10 @@ export class EditCaseComponent implements OnInit {
 	}
 
 	getEmptyCase(selectedCase: ICase): ICase {
-		const activeMap = selectedCase.state.maps.data.find(({ id }) => id === selectedCase.state.maps.activeMapId);
+		let activeMap = selectedCase.state.maps.data.find(({ id }) => id === selectedCase.state.maps.activeMapId);
+		if (!Boolean(activeMap)) {
+			activeMap = selectedCase.state.maps.data[0];
+		}
 
 		return {
 			name: '',
@@ -111,7 +113,6 @@ export class EditCaseComponent implements OnInit {
 		this.contextsList$.subscribe((_contextsList: any[]) => {
 			this.contextsList = _contextsList;
 		});
-
 	}
 
 	close(): void {
@@ -131,5 +132,4 @@ export class EditCaseComponent implements OnInit {
 		}
 		this.close();
 	}
-
 }

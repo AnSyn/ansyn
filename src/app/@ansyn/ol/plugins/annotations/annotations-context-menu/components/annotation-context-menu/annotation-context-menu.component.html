@@ -76,7 +76,6 @@
 							[show]="selectedTab[featureId] === Tabs.Colors"
 							[properties]="getFeatureProps(featureId)?.style?.initial"
 							[fillModeActive]="getFeatureProps(featureId)?.mode !== 'Arrow' && getFeatureProps(featureId)?.mode !== 'LineString'"
-							[canToggle]="getFeatureProps(featureId)?.mode !== 'Point' && getFeatureProps(featureId)?.mode !== 'Arrow' && getFeatureProps(featureId)?.mode !== 'LineString'"
 							[strokeModeActive]="getFeatureProps(featureId)?.mode !== 'Point'"
 							(colorChange)="colorChange($event, featureId)"
 							(activeChange)="activeChange($event, featureId)"

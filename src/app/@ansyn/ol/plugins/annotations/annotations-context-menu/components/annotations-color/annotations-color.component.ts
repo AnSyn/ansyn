@@ -16,7 +16,6 @@ export class AnnotationsColorComponent {
 	@Input() show: boolean;
 	@Input() strokeModeActive = true;
 	@Input() fillModeActive = true;
-	@Input() canToggle = true;
 	@Input() properties: IAnnotationColorProps;
 	@Output() activeChange = new EventEmitter();
 	@Output() colorChange = new EventEmitter();

@@ -13,7 +13,7 @@
 	</label>
 
 	<button class="no-fill"
-			[class.disabled]="!active"
+			[class.disabled]="(!canToggle) || (!active && (!canToggle)) || activeDisabled"
 			[disabled]="activeDisabled || !canToggle" (click)="this.activeChange.emit(!this.active)">
 		<i *ngIf="active; else notactive">
 			<svg fill="#fff" width="32" height="32" viewBox="0 0 1024 1024">

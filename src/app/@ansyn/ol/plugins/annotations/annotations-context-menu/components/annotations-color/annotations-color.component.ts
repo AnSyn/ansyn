@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 export interface IAnnotationColorProps {
 	fill: string;
@@ -12,12 +12,11 @@ export interface IAnnotationColorProps {
 	templateUrl: './annotations-color.component.html',
 	styleUrls: ['./annotations-color.component.less']
 })
-export class AnnotationsColorComponent implements OnInit {
+export class AnnotationsColorComponent {
 	@Input() show: boolean;
 	@Input() strokeModeActive = true;
 	@Input() fillModeActive = true;
-	@Input() canToggleStrokeMode = true;
-	@Input() canToggleFillMode = true;
+	@Input() canToggle = true;
 	@Input() properties: IAnnotationColorProps;
 	@Output() activeChange = new EventEmitter();
 	@Output() colorChange = new EventEmitter();
@@ -25,9 +24,4 @@ export class AnnotationsColorComponent implements OnInit {
 
 	constructor() {
 	}
-
-	ngOnInit() {
-
-	}
-
 }

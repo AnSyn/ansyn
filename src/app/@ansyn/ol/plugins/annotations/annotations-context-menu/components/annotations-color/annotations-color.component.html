@@ -5,7 +5,7 @@
 		[color]="properties.fill"
 		[active]="properties['fill-opacity'] && fillModeActive"
 		[activeDisabled]="!(properties['stroke-opacity'])"
-		[canToggle]="canToggleFillMode"
+		[canToggle]="this.canToggle"
 		(activeChange)="activeChange.emit({event: $event, label: 'fill'})"
 		(colorChange)="colorChange.emit([{event: $event, label: 'fill'}, {event: $event, label: 'marker-color'}])">
 	</ansyn-color-picker>
@@ -15,7 +15,7 @@
 		[color]="properties.stroke"
 		[active]="properties['stroke-opacity'] && strokeModeActive"
 		[activeDisabled]= "!(properties['fill-opacity'])"
-		[canToggle]="canToggleStrokeMode"
+		[canToggle]="canToggle"
 		(colorChange)="colorChange.emit([{event: $event, label: 'stroke'}])"
 		(activeChange)="activeChange.emit({event: $event, label: 'stroke'})">
 	</ansyn-color-picker>

@@ -41,7 +41,7 @@ i {
 			transform-origin: left top;
 			left: 0;
 
-			ul.buttons {
+			.buttons {
 				position: absolute;
 				outline: none;
 				pointer-events: all;
@@ -56,10 +56,6 @@ i {
 				margin: 0;
 				padding: 2px;
 				transform: translate(calc(~'100% + 15px'), -12px);
-
-				li {
-					list-style-type: none;
-				}
 
 				button {
 					background-color: @background-color-3;
@@ -82,7 +78,7 @@ i {
 					}
 				}
 
-				li.expanded-selection {
+				span.expanded-selection {
 					position: relative;
 
 					button.expand {

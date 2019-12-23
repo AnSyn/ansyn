@@ -4,8 +4,8 @@
 		 [ngStyle]="calcBoundingRect(featureId)">
 
 		<div class="context-menu" [style.outline-color]="getFeatureProps(featureId)?.style?.initial?.stroke">
-			<ul class="buttons">
-				<li>
+			<div class="buttons">
+				<span>
 					<button [class.active]="annotations?.currentAnnotationEdit?.originalFeature?.getId() === featureId"
 							[class.disabled]="isFeatureNonEditable(featureId)"
 							(click)="toggleEditMode(featureId)">
@@ -17,8 +17,8 @@
 					</button>
 
 
-				</li>
-				<li>
+				</span>
+				<span>
 					<button [class.active]="getFeatureProps(featureId)?.showMeasures"
 							(click)="toggleMeasures(featureId)">
 						<i [attr.tooltip-value]="'Measures' | translate" tooltip-class="bottom">
@@ -27,8 +27,8 @@
 							</svg>
 						</i>
 					</button>
-				</li>
-				<li>
+				</span>
+				<span>
 					<button [class.active]="selectedTab[featureId] === Tabs.Label"
 							(click)="selectTab(featureId, Tabs.Label)">
 						<i [attr.tooltip-value]="'Label' | translate" tooltip-class="bottom">
@@ -46,8 +46,8 @@
 					(onChangeSize)="updateLabelSize($event, featureId)"
 					(onTranslateClick)="annotations.labelTranslateMode(featureId)">
 					</ansyn-annotation-label>
-				</li>
-				<li class="expanded-selection line-width-selection">
+				</span>
+				<span class="expanded-selection line-width-selection">
 					<p>
 						<button [class.active]="selectedTab[featureId] === Tabs.Weight"
 								(click)="selectTab(featureId, Tabs.Weight)">
@@ -63,8 +63,8 @@
 							(selectLineStyle)="selectLineWidth($event, featureId)">
 						</ansyn-annotations-weight>
 					</p>
-				</li>
-				<li>
+				</span>
+				<span>
 					<p>
 						<button [class.active]="selectedTab[featureId] === Tabs.Colors"
 								[class.disabled]="isFeatureNonEditable(featureId)"
@@ -84,8 +84,8 @@
 							(activeChange)="activeChange($event, featureId)"
 						></ansyn-annotations-color>
 					</p>
-				</li>
-				<li *ngIf="!getFeatureProps(featureId)?.undeletable">
+				</span>
+				<span *ngIf="!getFeatureProps(featureId)?.undeletable">
 					<button class='removeFeature' (click)="removeFeature(featureId)"
 							[class.disabled]="isFeatureNonEditable(featureId)"
 					>
@@ -95,8 +95,8 @@
 							</svg>
 						</i>
 					</button>
-				</li>
-			</ul>
+				</span>
+			</div>
 		</div>
 
 	</div>

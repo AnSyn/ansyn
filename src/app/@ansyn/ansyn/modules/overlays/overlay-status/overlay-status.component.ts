@@ -9,7 +9,7 @@ import {
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { combineLatest, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 import { GeoRegisteration, IOverlay } from '../models/overlay.model';
 import {
 	SetRemovedOverlaysIdAction,
@@ -27,6 +27,7 @@ import { AnnotationMode } from '@ansyn/ol';
 import { ITranslationData } from '../../menu-items/cases/models/case.model';
 import { Actions, ofType } from '@ngrx/effects';
 import { SetAnnotationMode, ToolsActionsTypes } from '../../menu-items/tools/actions/tools.actions';
+import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-manager/reducers/layers.reducer';
 
 @Component({
 	selector: 'ansyn-overlay-status',
@@ -114,14 +115,46 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	@AutoSubscription
-	layersVisibility$: () => Observable<boolean> = () => this.store$.select(selectHideLayersOnMap(this.mapId)).pipe(
-		tap((isLayersHidden) => {
-			this.isLayersVisible = !Boolean(isLayersHidden);
-			if (this.isDragged) {
-				this.toggleDragged();
-			}
-		})
-	);
+	layersVisibility$: () => Observable<boolean> =
+						() => combineLatest(this.store$.select(selectSelectedLayersIds),
+											this.store$.select(selectHideLayersOnMap(this.mapId)),
+											this.store$.select(selectLayers)
+											)
+											.pipe(
+												map(([selectedLayerIds, areLayersHidden, layers]) => {
+													const featuredLayers = [];
+													for (let i = 0; i < layers.length; i++) {
+														let currentLayer = layers[i];
+														if (currentLayer.data === undefined) {
+															continue;
+														}
+
+														if (currentLayer.data.features.length > 0) {
+															featuredLayers.push(currentLayer);
+															}
+													}
+													return [selectedLayerIds, areLayersHidden, featuredLayers];
+												}),
+												map(([selectedLayerIds, areLayersHidden, layers]) => {
+													for (let i = 0; i < layers.length; i++) {
+														let currentLayer = layers[i];
+														if ((currentLayer.type === "Annotation")	&&
+															(selectedLayerIds.includes(currentLayer.id))) {
+																return [true, areLayersHidden]
+															}
+														}
+														return [false, areLayersHidden]
+												}),
+												map(([areLayersSelected, areLayersHidden]) => {
+														return ((Boolean(areLayersHidden)) || (Boolean(!areLayersSelected)));
+													}),
+													tap((areLayersHidden) => {
+															this.isLayersVisible = !areLayersHidden;
+															if (this.isDragged) {
+															this.toggleDragged();
+															}
+														})
+												)
 
 	@AutoSubscription
 	overlay$ = () => this.store$.pipe(

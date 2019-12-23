@@ -1,4 +1,13 @@
-import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+	AfterViewInit,
+	Component,
+	ElementRef,
+	HostBinding,
+	HostListener,
+	Input,
+	OnDestroy,
+	OnInit
+} from '@angular/core';
 import { CommunicatorEntity, ImageryCommunicatorService, IMapInstanceChanged } from '@ansyn/imagery';
 import { filter, take, tap } from 'rxjs/operators';
 import { AnnotationsVisualizer } from '../../../annotations.visualizer';
@@ -16,7 +25,7 @@ enum AnnotationsContextmenuTabs {
 	templateUrl: './annotation-context-menu.component.html',
 	styleUrls: ['./annotation-context-menu.component.less']
 })
-export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
+export class AnnotationContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 	SVGICON = SVG;
 	annotations: AnnotationsVisualizer;
 	communicator: CommunicatorEntity;
@@ -25,6 +34,8 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 
 	selection: string[];
 	hoverFeatureId: string;
+	imageryElement: HTMLElement;
+	buttonsPanel: Element;
 
 	@Input() mapId: string;
 	@HostBinding('attr.tabindex') tabindex = 0;
@@ -42,6 +53,13 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	calcBoundingRect(id) {
 		const { feature } = this.annotations.idToEntity.get(id);
 		return this.annotations.getFeatureBoundingRect(feature);
+	}
+
+	calcButtonsPanelRight() {
+		this.buttonsPanel = (this.host.nativeElement as HTMLElement).getElementsByClassName('buttons')[0];
+		const buttonsRect = this.buttonsPanel.getBoundingClientRect();
+		const imageryRect = this.imageryElement.getBoundingClientRect();
+		return Math.max(0, buttonsRect.left - imageryRect.left + buttonsRect.width - imageryRect.width);
 	}
 
 	getFeatureProps(id) {
@@ -77,6 +95,10 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 			}),
 			take(1)
 		).subscribe();
+	}
+
+	ngAfterViewInit(): void {
+		this.imageryElement = this.host.nativeElement.parentElement;
 	}
 
 	subscribeVisualizerEvents() {
@@ -172,11 +194,11 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	}
 
 	updateLabel(text, featureId: string) {
-		this.annotations.updateFeature(featureId, { label: {text} });
+		this.annotations.updateFeature(featureId, { label: { text } });
 	}
 
 	updateLabelSize(labelSize, featureId: string) {
-		this.annotations.updateFeature(featureId, {labelSize});
+		this.annotations.updateFeature(featureId, { labelSize });
 	}
 
 	getType(): string {
@@ -189,7 +211,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	}
 
 	toggleEditMode(featureId: any) {
-		this.selectedTab = { ...this.selectedTab, [featureId]: null};
+		this.selectedTab = { ...this.selectedTab, [featureId]: null };
 		this.annotations.editAnnotationMode(featureId);
 	}
 }

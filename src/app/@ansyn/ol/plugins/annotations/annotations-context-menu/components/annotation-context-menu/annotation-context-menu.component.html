@@ -4,7 +4,7 @@
 		 [ngStyle]="calcBoundingRect(featureId)">
 
 		<div class="context-menu" [style.outline-color]="getFeatureProps(featureId)?.style?.initial?.stroke">
-			<ul class="buttons">
+			<ul class="buttons" [style.right.px]="calcButtonsPanelRight()">
 				<li>
 					<button [class.active]="getFeatureProps(featureId)?.editMode"
 							[class.disabled]="isFeatureNonEditable(featureId)"

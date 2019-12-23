@@ -190,6 +190,8 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 
 	toggleEditMode(featureId: any) {
 		this.selectedTab = { ...this.selectedTab, [featureId]: null};
-		this.annotations.editAnnotationMode(featureId);
+		const currentFeatureId = this.annotations.currentAnnotationEdit && this.annotations.currentAnnotationEdit.originalFeature;
+		const enable = !(currentFeatureId && currentFeatureId.getId() === featureId);
+		this.annotations.setEditAnnotationMode(featureId, enable);
 	}
 }

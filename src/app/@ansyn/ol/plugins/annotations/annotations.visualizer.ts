@@ -1,6 +1,5 @@
 import { Inject } from '@angular/core';
 import {
-	getPolygonByPointAndRadius,
 	ImageryVisualizer,
 	IVisualizerEntity,
 	MarkerSize,
@@ -99,7 +98,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	labelTranslate$ = this.events.onLabelTranslateStart.pipe(tap((labelTranslate ) => this.labelTranslate = labelTranslate ));
 
 	@AutoSubscription
-	editAnnotation$ = this.events.onAnnotationEditStart.pipe( tap(annotationEdit => this.currentAnnotationEdit = annotationEdit));
+	editAnnotation$ = this.events.onAnnotationEditStart.pipe(tap(annotationEdit => this.currentAnnotationEdit = annotationEdit));
 
 	modeDictionary = {
 		Arrow: {
@@ -573,16 +572,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.events.onLabelTranslateStart.next(event);
 	}
 
-	editAnnotationMode(featureId: string) {
+	setEditAnnotationMode(featureId: string, enable: boolean) {
 		this.clearLabelTranslateMode();
 		let event = undefined;
 		let centerFeature;
 		let feature;
-		if (this.currentAnnotationEdit) {
-			feature = this.currentAnnotationEdit.originalFeature;
-			centerFeature = this.currentAnnotationEdit.centerFeature;
-		}
-		if (!feature || feature.getId() !== featureId ) {
+		if (enable ) {
 			feature = this.source.getFeatureById(featureId);
 			if (centerFeature) {
 				this.source.removeFeature(centerFeature);
@@ -600,6 +595,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		}
 		else {
+			centerFeature = this.currentAnnotationEdit.centerFeature;
 			this.removeInteraction(VisualizerInteractions.editAnnotationTranslateHandler);
 			this.removeInteraction(VisualizerInteractions.modifyInteractionHandler);
 			if (centerFeature) {
@@ -684,9 +680,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	private annotationEditEnd(GeoJSON: FeatureCollection<GeometryObject>, feature: olFeature) {
 		this.events.onAnnotationEditEnd.next({ GeoJSON, feature });
-		// reset all interactions
-		this.editAnnotationMode(feature.getId());
-		this.editAnnotationMode(feature.getId());
+		// reset all -edit annotation- interactions so the annotation will response to the interaction after it update.
+		this.setEditAnnotationMode(feature.getId(), false);
+		this.setEditAnnotationMode(feature.getId(), true);
 	}
 
 	private createLabelFeature(feature: olFeature): olFeature {
@@ -816,7 +812,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	clearAnnotationEditMode() {
 		if (this.currentAnnotationEdit) {
-			this.editAnnotationMode(this.currentAnnotationEdit.originalFeature.getId())
+			this.setEditAnnotationMode(this.currentAnnotationEdit.originalFeature.getId(), false)
 		}
 	}
 }

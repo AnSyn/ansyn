@@ -105,7 +105,6 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 				label: this.extractLabel(label),
 				showMeasures: JSON.parse(showMeasures ? showMeasures : null),
 				mode,
-				editMode: false,
 				icon,
 				labelSize: isNaN(labelSize) ? 28 : parseInt(labelSize, 10),
 				undeletable: JSON.parse(undeletable),

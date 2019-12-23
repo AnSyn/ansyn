@@ -115,46 +115,26 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	@AutoSubscription
-	layersVisibility$: () => Observable<boolean> =
-						() => combineLatest(this.store$.select(selectSelectedLayersIds),
-											this.store$.select(selectHideLayersOnMap(this.mapId)),
-											this.store$.select(selectLayers)
-											)
-											.pipe(
-												map(([selectedLayerIds, areLayersHidden, layers]) => {
-													const featuredLayers = [];
-													for (let i = 0; i < layers.length; i++) {
-														let currentLayer = layers[i];
-														if (currentLayer.data === undefined) {
-															continue;
-														}
-
-														if (currentLayer.data.features.length > 0) {
-															featuredLayers.push(currentLayer);
-															}
-													}
-													return [selectedLayerIds, areLayersHidden, featuredLayers];
-												}),
-												map(([selectedLayerIds, areLayersHidden, layers]) => {
-													for (let i = 0; i < layers.length; i++) {
-														let currentLayer = layers[i];
-														if ((currentLayer.type === "Annotation")	&&
-															(selectedLayerIds.includes(currentLayer.id))) {
-																return [true, areLayersHidden]
-															}
-														}
-														return [false, areLayersHidden]
-												}),
-												map(([areLayersSelected, areLayersHidden]) => {
-														return ((Boolean(areLayersHidden)) || (Boolean(!areLayersSelected)));
-													}),
-													tap((areLayersHidden) => {
-															this.isLayersVisible = !areLayersHidden;
-															if (this.isDragged) {
-															this.toggleDragged();
-															}
-														})
-												)
+	layersVisibility$ = () => combineLatest(
+			this.store$.select(selectSelectedLayersIds),
+			this.store$.select(selectHideLayersOnMap(this.mapId)),
+			this.store$.select(selectLayers))
+		.pipe(
+			map(([selectedLayerIds, areLayersHidden, layers]) => {
+				layers = layers.filter((currentLayer) =>
+					Boolean(currentLayer.data) &&
+					currentLayer.type === "Annotation" &&
+					currentLayer.data.features.length > 0 &&
+					selectedLayerIds.includes(currentLayer.id));
+				return [areLayersHidden, layers];
+			}),
+			tap(([areLayersHidden, layers]) => {
+				this.isLayersVisible = !((Boolean(areLayersHidden)) || (Boolean(layers.length === 0)));
+				if (this.isDragged) {
+					this.toggleDragged();
+				}
+			})
+		);
 
 	@AutoSubscription
 	overlay$ = () => this.store$.pipe(

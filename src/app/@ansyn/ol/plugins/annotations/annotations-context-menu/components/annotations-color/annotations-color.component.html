@@ -3,8 +3,9 @@
 	<ansyn-color-picker
 		[label]="'Fill' | translate"
 		[color]="properties.fill"
-		[active]="properties['fill-opacity']"
+		[active]="properties['fill-opacity'] && fillModeActive"
 		[activeDisabled]="!(properties['stroke-opacity'])"
+		[canToggle]="fillModeActive && strokeModeActive"
 		(activeChange)="activeChange.emit({event: $event, label: 'fill'})"
 		(colorChange)="colorChange.emit([{event: $event, label: 'fill'}, {event: $event, label: 'marker-color'}])">
 	</ansyn-color-picker>
@@ -12,8 +13,9 @@
 	<ansyn-color-picker
 		[label]="'Stroke' | translate"
 		[color]="properties.stroke"
-		[active]="properties['stroke-opacity']"
+		[active]="properties['stroke-opacity'] && strokeModeActive"
 		[activeDisabled]="!(properties['fill-opacity'])"
+		[canToggle]="fillModeActive && strokeModeActive"
 		(colorChange)="colorChange.emit([{event: $event, label: 'stroke'}])"
 		(activeChange)="activeChange.emit({event: $event, label: 'stroke'})">
 	</ansyn-color-picker>

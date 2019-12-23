@@ -168,7 +168,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	onAnnotationTranslateEnd$ = () => this.annotationsVisualizer.events.onAnnotationTranslateEnd.pipe(
+	onAnnotationEditEnd$ = () => this.annotationsVisualizer.events.onAnnotationEditEnd.pipe(
 		withLatestFrom(this.activeAnnotationLayer$),
 		tap(([{ GeoJSON, feature }, activeAnnotationLayer]: [IDrawEndEvent, ILayer]) => {
 			const [geoJsonFeature] = GeoJSON.features;
@@ -227,11 +227,6 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 				}));
 			}
 		})
-	);
-
-	@AutoSubscription
-	onEditAnnotationUpdate$ = () => this.annotationsVisualizer.events.updateEditAnnotationId.pipe(
-		tap( annotationId => this.annotationsVisualizer.currentAnnotationEdit = annotationId)
 	);
 
 	onAnnotationsChange([entities, annotationFlag, selectedLayersIds, isActiveMap, activeAnnotationLayer]: [{ [key: string]: ILayer }, boolean, string[], boolean, string]): Observable<any> {

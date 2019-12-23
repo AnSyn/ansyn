@@ -589,7 +589,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			}
 			centerFeature = this.createCenterFeatureToDrag(feature);
 			if (feature.get('mode') !== 'Point') {
-				this.addInteraction(VisualizerInteractions.modifyInteractionHandler, this.createModifyInteraction(feature, centerFeature));
+				this.addInteraction(VisualizerInteractions.modifyInteractionHandler, this.createModifyInteraction(feature));
 			}
 			this.addInteraction(VisualizerInteractions.editAnnotationTranslateHandler, this.createAnnotationTranslateInteraction(feature, centerFeature));
 			this.source.addFeature(centerFeature);
@@ -622,16 +622,21 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	}
 
-	private createModifyInteraction(feature: olFeature, center: olFeature) {
+	private createModifyInteraction(feature: olFeature) {
 		const modify = new olModify({
 			features: new olCollection([feature])
 		});
 
 		modify.on('modifyend', (event) => {
+			const features = [feature];
 			feature.getGeometry().translate(-this.offset[0], -this.offset[1]);
-			this.projectionService.projectCollectionAccurately(event.features.getArray(), this.iMap.mapObject).pipe(
+			const { geometry } = feature.get('label');
+			if (geometry) {
+				features.push(new olFeature(geometry));
+			}
+			this.projectionService.projectCollectionAccurately(features, this.iMap.mapObject).pipe(
 				take(1),
-				tap((GeoJSON: FeatureCollection<GeometryObject>) => this.annotationEditEnd(GeoJSON, feature, center))
+				tap((GeoJSON: FeatureCollection<GeometryObject>) => this.annotationEditEnd(GeoJSON, feature))
 			).subscribe();
 		});
 
@@ -669,14 +674,14 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			center.unset('lastCoordinate');
 			this.projectionService.projectCollectionAccurately(features, this.iMap.mapObject).pipe(
 				take(1),
-				tap((GeoJSON: FeatureCollection<GeometryObject>) => this.annotationEditEnd(GeoJSON, feature, center))
+				tap((GeoJSON: FeatureCollection<GeometryObject>) => this.annotationEditEnd(GeoJSON, feature))
 			).subscribe();
 		});
 
 		return translate;
 	}
 
-	private annotationEditEnd(GeoJSON: FeatureCollection<GeometryObject>, feature: olFeature, center: olFeature) {
+	private annotationEditEnd(GeoJSON: FeatureCollection<GeometryObject>, feature: olFeature) {
 		this.events.onAnnotationEditEnd.next({ GeoJSON, feature });
 		// reset all interactions
 		this.editAnnotationMode(feature.getId());

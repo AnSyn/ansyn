@@ -124,13 +124,6 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		})
 	);
 
-	handleAlignNorthOriantation(): Observable<any> {
-	}
-
-	handleImageryPerspectiveOriantation(): Observable<any> {
-
-	}
-
 	@AutoSubscription
 	backToWorldSuccessSetNorth$ = this.actions$.pipe(
 		ofType<BackToWorldSuccess>(OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS),

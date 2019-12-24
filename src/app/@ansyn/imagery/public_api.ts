@@ -45,7 +45,8 @@ export {
 	isPointContainedInGeometry,
 	unifyPolygons,
 	calculateLineDistance,
-	calculateGeometryArea
+	calculateGeometryArea,
+	getDistanceBetweenPoints
 } from './utils/geo';
 
 export { IVisualizersConfig, VisualizersConfig } from './model/visualizers-config.token';
@@ -70,5 +71,5 @@ export { IMAGERY_CONFIG } from './model/configuration.token';
 export { ImageryLayerProperties, IMAGERY_MAIN_LAYER_NAME } from './model/imagery-layer.model';
 
 export { IMapSettings, IMapSettingsData, IWorldViewMapState } from './model/map-settings';
-export { toDegrees, toRadians } from './utils/math';
+export { toDegrees, toRadians, getAngleDegreeBetweenPoints } from './utils/math';
 export { ExtentCalculator } from './utils/extent-calculator';

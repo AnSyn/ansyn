@@ -8,6 +8,7 @@ import {
 	areCoordinatesNumeric,
 	BaseImageryPlugin,
 	CommunicatorEntity,
+	getAngleDegreeBetweenPoints,
 	ImageryMapPosition,
 	ImageryPlugin,
 	toDegrees,
@@ -92,24 +93,28 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
 		filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.mapId),
 		withLatestFrom(this.store$.select(statusBarStateSelector), ({ payload }: DisplayOverlaySuccessAction, { comboBoxesProperties }: IStatusBarState) => {
-			return [payload.forceFirstDisplay, comboBoxesProperties.orientation, payload.overlay, payload.openWithAngle];
+			return [payload.forceFirstDisplay, comboBoxesProperties.orientation, payload.overlay, payload.customOriantation];
 		}),
-		filter(([forceFirstDisplay, orientation, overlay, openWithAngle]: [boolean, CaseOrientation, IOverlay, number]) => {
+		filter(([forceFirstDisplay, orientation, overlay, customOriantation]: [boolean, CaseOrientation, IOverlay, string]) => {
 			return comboBoxesOptions.orientations.includes(orientation);
 		}),
-		switchMap(([forceFirstDisplay, orientation, overlay, openWithAngle]: [boolean, CaseOrientation, IOverlay, number]) => {
-			if (orientation === 'Align North' && !forceFirstDisplay && openWithAngle === undefined) {
+		switchMap(([forceFirstDisplay, orientation, overlay, customOriantation]: [boolean, CaseOrientation, IOverlay, string]) => {
+			if ((orientation === 'Align North' || customOriantation === 'Align North') && !forceFirstDisplay) {
 				return this.setActualNorth();
 			}
 			return this.getVirtualNorth(this.iMap.mapObject).pipe(take(1)).pipe(
 				tap((virtualNorth: number) => {
 					this.communicator.setVirtualNorth(virtualNorth);
-					if (openWithAngle !== undefined) {
-						this.communicator.setRotation(toRadians(openWithAngle) - virtualNorth);
-						return EMPTY;
-					}
-					if (!forceFirstDisplay && orientation === 'Imagery Perspective') {
-						this.communicator.setRotation(overlay.azimuth);
+					if (!forceFirstDisplay && (orientation === 'Imagery Perspective' || customOriantation === 'Imagery Perspective')) {
+						if (overlay.sensorLocation) {
+							this.communicator.getCenter().pipe(take(1)).subscribe(point => {
+								const brng = getAngleDegreeBetweenPoints(overlay.sensorLocation, point);
+								const resultBearings = 360 - (brng + toDegrees(-this.communicator.getVirtualNorth()));
+								this.communicator.setRotation(toRadians(resultBearings));
+							});
+						} else {
+							this.communicator.setRotation(overlay.azimuth);
+						}
 					}
 				}));
 		})

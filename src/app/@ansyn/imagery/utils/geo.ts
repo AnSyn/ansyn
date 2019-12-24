@@ -169,3 +169,13 @@ export function calculateLineDistance(aPoint: Point, bPoint: Point) {
 export function calculateGeometryArea(polygon: Polygon) {
 	return area(polygon);
 }
+
+export function getDistanceBetweenPoints(source: Point, destination: Point): number {
+	let distanceInKilometers = 0;
+	try {
+		distanceInKilometers = distance(source, destination, { units: 'kilometers' });
+	} catch (e) {
+		console.warn('getDistanceBetweenPoints: turf exception', e);
+	}
+	return distanceInKilometers;
+}

@@ -1,6 +1,6 @@
 <div>
 	<button [class.active]="annotations?.currentAnnotationEdit?.originalFeature?.getId() === featureId"
-			[class.disabled]="isFeatureNonEditable(featureId)"
+			[class.disabled]="isFeatureNonEditable"
 			(click)="toggleEditMode(featureId)">
 		<i [attr.tooltip-value]="'Edit' | translate" tooltip-class="bottom">
 			<svg>
@@ -12,7 +12,7 @@
 
 </div>
 <div>
-	<button [class.active]="getFeatureProps(featureId)?.showMeasures"
+	<button [class.active]="featureProps?.showMeasures"
 			(click)="toggleMeasures(featureId)">
 		<i [attr.tooltip-value]="'Measures' | translate" tooltip-class="bottom">
 			<svg fill="#fff">
@@ -32,9 +32,9 @@
 	</button>
 
 	<ansyn-annotation-label *ngIf="selectedTab[featureId] === Tabs.Label"
-							[label]="getFeatureProps(featureId)?.label"
+							[label]="featureProps?.label"
 							[labelSize]="annotations.idToEntity.get(featureId)?.originalEntity.labelSize"
-							[translateOn]="getFeatureProps(featureId)?.labelTranslateOn"
+							[translateOn]="featureProps?.labelTranslateOn"
 							(onChangeText)="updateLabel($event, featureId)"
 							(onChangeSize)="updateLabelSize($event, featureId)"
 							(onTranslateClick)="annotations.labelTranslateMode(featureId)">
@@ -52,7 +52,7 @@
 		</button>
 		<ansyn-annotations-weight
 			[show]="selectedTab[featureId] === Tabs.Weight"
-			[properties]="getFeatureProps(featureId)?.style?.initial"
+			[properties]="featureProps?.style?.initial"
 			(selectLineStyle)="selectLineWidth($event, featureId)">
 		</ansyn-annotations-weight>
 	</p>
@@ -60,7 +60,7 @@
 <div>
 	<p>
 		<button [class.active]="selectedTab[featureId] === Tabs.Colors"
-				[class.disabled]="isFeatureNonEditable(featureId)"
+				[class.disabled]="isFeatureNonEditable"
 				(click)="selectTab(featureId, Tabs.Colors)">
 			<i [attr.tooltip-value]="'Color' | translate" tooltip-class="bottom">
 				<svg>
@@ -70,17 +70,17 @@
 		</button>
 		<ansyn-annotations-color
 			[show]="selectedTab[featureId] === Tabs.Colors"
-			[properties]="getFeatureProps(featureId)?.style?.initial"
-			[fillModeActive]="getFeatureProps(featureId)?.mode !== 'Arrow' && getFeatureProps(featureId)?.mode !== 'LineString'"
-			[strokeModeActive]="getFeatureProps(featureId)?.mode !== 'Point'"
+			[properties]="featureProps?.style?.initial"
+			[fillModeActive]="featureProps?.mode !== 'Arrow' && featureProps?.mode !== 'LineString'"
+			[strokeModeActive]="featureProps?.mode !== 'Point'"
 			(colorChange)="colorChange($event, featureId)"
 			(activeChange)="activeChange($event, featureId)"
 		></ansyn-annotations-color>
 	</p>
 </div>
-<div *ngIf="!getFeatureProps(featureId)?.undeletable">
+<div *ngIf="!featureProps?.undeletable">
 	<button class='removeFeature' (click)="removeFeature(featureId)"
-			[class.disabled]="isFeatureNonEditable(featureId)"
+			[class.disabled]="isFeatureNonEditable"
 	>
 		<i [attr.tooltip-value]="'Delete' | translate" tooltip-class="bottom">
 			<svg>

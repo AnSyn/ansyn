@@ -3,6 +3,12 @@ import { AnnotationsVisualizer } from '../../../annotations.visualizer';
 import { AnnotationsContextmenuTabs } from '../annotation-context-menu/annotation-context-menu.component';
 import * as SVG from '../annotation-context-menu/icons-svg';
 import { IStyleWeight } from '../annotations-weight/annotations-weight.component';
+import { IVisualizerEntity } from '@ansyn/imagery';
+import { AnnotationMode } from '../../../annotations.model';
+
+interface IFeatureProperties extends IVisualizerEntity {
+	mode: AnnotationMode
+}
 
 @Component({
 	selector: 'ansyn-annotations-context-menu-buttons',
@@ -17,15 +23,16 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit {
 	SVGICON = SVG;
 	Tabs = AnnotationsContextmenuTabs;
 
+	isFeatureNonEditable: boolean;
+	featureProps: IFeatureProperties;
+
 	constructor() {
 	}
 
 	ngOnInit() {
-	}
-
-	isFeatureNonEditable(featureId: string) {
-		const feature = this.annotations.getJsonFeatureById(featureId);
-		return feature && feature.properties.isNonEditable;
+		const feature = this.annotations.getJsonFeatureById(this.featureId);
+		this.isFeatureNonEditable = feature && feature.properties.isNonEditable;
+		this.featureProps = this.getFeatureProps(this.featureId) as IFeatureProperties;
 	}
 
 	toggleEditMode(featureId: any) {
@@ -35,8 +42,8 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit {
 		this.annotations.setEditAnnotationMode(featureId, enable);
 	}
 
-	getFeatureProps(id) {
-		const { originalEntity: { featureJson: { properties } } } = this.annotations.idToEntity.get(id);
+	getFeatureProps(featureId) {
+		const { originalEntity: { featureJson: { properties } } } = this.annotations.idToEntity.get(featureId);
 		return properties;
 	}
 
@@ -60,7 +67,7 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit {
 	}
 
 	selectLineWidth(s: IStyleWeight, featureId: string) {
-		const { style } = this.getFeatureProps(featureId);
+		const { style } = this.featureProps;
 		const updateStyle = {
 			...style,
 			initial: {
@@ -74,7 +81,7 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit {
 	}
 
 	colorChange($event: [{ label: 'stroke' | 'fill' | 'marker-color', event: string }], featureId: string) {
-		const { style } = this.getFeatureProps(featureId);
+		const { style } = this.featureProps;
 		const updatedStyle = {
 			...style,
 			initial: {
@@ -89,7 +96,7 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit {
 
 	activeChange($event: { label: 'stroke' | 'fill', event: string }, featureId: string) {
 		let opacity = { stroke: 1, fill: 0.4 };
-		const { style } = this.getFeatureProps(featureId);
+		const { style } = this.featureProps;
 		const updatedStyle = {
 			...style,
 			initial: {

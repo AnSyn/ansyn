@@ -99,12 +99,15 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			return comboBoxesOptions.orientations.includes(orientation);
 		}),
 		switchMap(([forceFirstDisplay, orientation, overlay, customOriantation]: [boolean, CaseOrientation, IOverlay, string]) => {
-			if ((orientation === 'Align North' || customOriantation === 'Align North') && !forceFirstDisplay) {
+			if (!forceFirstDisplay &&
+				((orientation === 'Align North' && !Boolean(customOriantation)) || customOriantation === 'Align North')) {
 				return this.setActualNorth();
 			}
+			// for 'Imagery Perspective' or 'User Perspective'
 			return this.getVirtualNorth(this.iMap.mapObject).pipe(take(1)).pipe(
 				tap((virtualNorth: number) => {
 					this.communicator.setVirtualNorth(virtualNorth);
+
 					if (!forceFirstDisplay && (orientation === 'Imagery Perspective' || customOriantation === 'Imagery Perspective')) {
 						if (overlay.sensorLocation) {
 							this.communicator.getCenter().pipe(take(1)).subscribe(point => {
@@ -116,9 +119,17 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 							this.communicator.setRotation(overlay.azimuth);
 						}
 					}
+					// if 'User Perspective' do nothing
 				}));
 		})
 	);
+
+	handleAlignNorthOriantation(): Observable<any> {
+	}
+
+	handleImageryPerspectiveOriantation(): Observable<any> {
+
+	}
 
 	@AutoSubscription
 	backToWorldSuccessSetNorth$ = this.actions$.pipe(

@@ -26,7 +26,7 @@ import {
 import { AnnotationMode } from '@ansyn/ol';
 import { ITranslationData } from '../../menu-items/cases/models/case.model';
 import { Actions, ofType } from '@ngrx/effects';
-import { SetAnnotationMode, ToolsActionsTypes } from '../../menu-items/tools/actions/tools.actions';
+import { SetAnnotationMode, ToolsActionsTypes, ClearActiveInteractionsAction } from '../../menu-items/tools/actions/tools.actions';
 import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-manager/reducers/layers.reducer';
 
 @Component({
@@ -212,6 +212,9 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 			overlayId: this.overlay.id,
 			dragged: !this.isDragged
 		}))
+		if (this.isDragged) {
+			this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetAnnotationMode] }));
+		}
 	}
 
 	removeOverlay() {

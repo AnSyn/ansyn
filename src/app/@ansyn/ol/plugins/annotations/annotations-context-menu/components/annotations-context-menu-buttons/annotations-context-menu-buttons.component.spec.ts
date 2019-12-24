@@ -62,7 +62,7 @@ describe('AnnotationsContextMenuButtonsComponent', () => {
 		spyOn(component, 'removeFeature');
 		const de: DebugElement = fixture.debugElement.query(By.css('button.removeFeature'));
 		de.triggerEventHandler('click', {});
-		expect(component.removeFeature).toHaveBeenCalledWith('featureId');
+		expect(component.removeFeature).toHaveBeenCalled();
 	});
 
 });

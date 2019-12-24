@@ -271,32 +271,44 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		}
 		const features = [];
 		const labels = [];
+		const measures = [];
 		filteredLogicalEntities.forEach(entity => {
 			features.push({ ...entity.featureJson, id: entity.id });
 			if (entity.label && entity.label.geometry) {
 				const temp = this.geometryToEntity(entity.id, entity.label.geometry);
 				labels.push({ ...temp.featureJson, id: temp.id });
 			}
+			if (entity.measuresGeometry && entity.measuresGeometry.length) {
+				entity.measuresGeometry.forEach( (measure, index) => {
+					const temp = this.geometryToEntity(entity.id, {type: 'Point' , coordinates: measure}, {order: index})
+					measures.push({...temp.featureJson, id: temp.id});
+				})
+			}
 		});
 
 		const featuresCollectionToAdd: any = featureCollection(features);
 		const labelCollectionToAdd: any = featureCollection(labels);
+		const measuresCollectionToAdd: any = featureCollection(measures);
 		filteredLogicalEntities.forEach((entity: IVisualizerEntity) => {
 			this.removeEntity(entity.id, true);
 		});
 
 		const featuresProject = (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap.mapObject);
 		const labelsProject = (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(labelCollectionToAdd, this.iMap.mapObject);
-		return forkJoin(featuresProject, labelsProject)
-			.pipe(map(([features, labels]: [Feature[], Feature[]]) => {
+		const measuresProject = (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(measuresCollectionToAdd, this.iMap.mapObject);
+		return forkJoin(featuresProject, labelsProject, measuresProject)
+			.pipe(map(([features, labels, measures]: [Feature[], Feature[], Feature[]]) => {
 				features.forEach((feature: Feature) => {
 					const _id: string = <string>feature.getId();
 					const label = labels.find(label => label.getId() === _id);
+					const measureForFeature = measures.filter( measure => measure.getId() === _id);
+					const measuresGeometry = measureForFeature.map(measure => measure.getGeometry().getCoordinates());
 					const entity: IFeatureIdentifier = {
 						originalEntity: filteredLogicalEntities.find(({ id }) => id === _id),
 						feature: feature
 					};
 					entity.feature.set('label', { ...feature.get('label'), geometry: label && label.getGeometry() });
+					entity.feature.set('measuresGeometry', measuresGeometry)
 					this.idToEntity.set(_id, entity);
 					const featureWithTheSameId = this.source.getFeatureById(_id);
 					if (featureWithTheSameId) {
@@ -395,11 +407,11 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		}
 	}
 
-	geometryToEntity(id, geometry): IVisualizerEntity {
+	geometryToEntity(id, geometry, props: object = {}): IVisualizerEntity {
 		const featureJson: GeoJSON.Feature<any> = {
 			type: 'Feature',
 			geometry,
-			properties: {}
+			properties: props
 		};
 		return { id, featureJson };
 	}

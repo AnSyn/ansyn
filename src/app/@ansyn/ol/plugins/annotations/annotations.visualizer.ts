@@ -9,7 +9,7 @@ import {
 import { UUID } from 'angular2-uuid';
 import { AutoSubscription } from 'auto-subscriptions';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
-import { cloneDeep, merge } from 'lodash';
+import { cloneDeep, merge, get } from 'lodash';
 import { platformModifierKeyOnly } from 'ol/events/condition';
 import olFeature from 'ol/Feature';
 import olCollection from 'ol/Collection';
@@ -45,6 +45,7 @@ export interface ILabelTranslateMode {
 export interface IEditAnnotationMode {
 	originalFeature: olFeature,
 	centerFeature: olFeature,
+	measureFeatures: olFeature[]
 }
 
 
@@ -199,6 +200,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				id: feature.properties.id,
 				style: feature.properties.style,
 				showMeasures: feature.properties.showMeasures || false,
+				measuresGeometry: feature.properties.measuresGeometry || [],
 				label: feature.properties.label || {text: '', geometry: null},
 				icon: feature.properties.icon || '',
 				undeletable: feature.properties.undeletable || false,
@@ -315,6 +317,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			labelSize: 28,
 			icon: this.iconSrc,
 			undeletable: false,
+			measuresGeometry: [],
 			mode
 		});
 		feature.setId(id);
@@ -381,7 +384,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		let superStyle = super.featureStyle(feature, state);
 		let styles: olStyle[] = Array.isArray(superStyle) ? superStyle : [superStyle];
 		const entity = this.getEntity(feature);
-		if (entity && entity.showMeasures) {
+		if (entity && entity.showMeasures && (!feature.get('measureAsFeature') || feature.get('mode') === 'Circle') ) {
 			styles.push(...this.getMeasuresAsStyles(feature));
 		}
 		if (entity && entity.icon) {
@@ -392,7 +395,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	getMeasuresAsStyles(feature: olFeature): olStyle[] {
-		const { mode, id } = feature.getProperties();
+		const { mode, id, measuresGeometry } = feature.getProperties();
 		const visualizerEntity = this.getEntityById(id);
 		const moreStyles: olStyle[] = [];
 		let coordinates: any[] = [];
@@ -401,7 +404,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				coordinates = (<olLineString>feature.getGeometry()).getCoordinates();
 				for (let i = 0; i < coordinates.length - 1; i++) {
 					const originalCoordinates: number[][] = [visualizerEntity.featureJson.geometry.coordinates[i], visualizerEntity.featureJson.geometry.coordinates[i + 1]];
-					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
+					const line: olLineString | olPoint = (measuresGeometry && measuresGeometry.length) ? new olPoint(measuresGeometry[i]) : new olLineString([coordinates[i], coordinates[i + 1]]);
 					moreStyles.push(new olStyle({
 						geometry: line,
 						text: new olText({
@@ -417,7 +420,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				coordinates = (<olLineString>feature.getGeometry()).getCoordinates()[0];
 				for (let i = 0; i < coordinates.length - 1; i++) {
 					const originalCoordinates: number[][] = [visualizerEntity.featureJson.geometry.coordinates[0][i], visualizerEntity.featureJson.geometry.coordinates[0][i + 1]];
-					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
+					const line: olLineString | olPoint = (measuresGeometry && measuresGeometry.length) ? new olPoint(measuresGeometry[i]) : new olLineString([coordinates[i], coordinates[i + 1]]);
 					moreStyles.push(new olStyle({
 						geometry: line,
 						text: new olText({
@@ -431,7 +434,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				coordinates = (<olLineString>feature.getGeometry()).getCoordinates()[0];
 				for (let i = 0; i < 2; i++) {
 					const originalCoordinates: number[][] = [visualizerEntity.featureJson.geometry.coordinates[0][i], visualizerEntity.featureJson.geometry.coordinates[0][i + 1]];
-					const line: olLineString = new olLineString([coordinates[i], coordinates[i + 1]]);
+					const line: olLineString | olPoint = (measuresGeometry && measuresGeometry.length) ? new olPoint(measuresGeometry[i]) : new olLineString([coordinates[i], coordinates[i + 1]]);
 					moreStyles.push(new olStyle({
 						geometry: line,
 						text: new olText({
@@ -448,18 +451,20 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				const leftright = this.getLeftRightResult(coordinates);
 				const originalLeftRight = this.getLeftRightResult(originalC);
 				const line: olLineString = new olLineString([leftright.left, leftright.right]);
-				moreStyles.push(
-					new olStyle({
-						geometry: line,
-						stroke: new olStroke({
-							color: '#27b2cfe6',
-							width: 1
-						}),
-						text: new olText({
-							...this.measuresTextStyle,
-							text: this.formatLength([originalLeftRight.left, originalLeftRight.right])
-						})
-					}));
+				const isMeasureAsFeature = feature.get('measureAsFeature');
+				const circleStyles = [new olStyle({
+					geometry: line,
+					stroke: new olStroke({
+						color: '#27b2cfe6',
+						width: 1
+					})}), new olStyle({
+					geometry: (measuresGeometry && measuresGeometry.length) ? new olPoint(measuresGeometry[0]) : line,
+					text: isMeasureAsFeature ? undefined : new olText({
+						...this.measuresTextStyle,
+						text: this.formatLength([originalLeftRight.left, originalLeftRight.right])
+					})})
+				];
+				moreStyles.push(...circleStyles);
 				break;
 		}
 		if (mode === 'Rectangle' || mode === 'Circle') {
@@ -576,9 +581,14 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.clearLabelTranslateMode();
 		let event = undefined;
 		let centerFeature;
+		let measureFeatures: olFeature[];
 		let feature;
 		if (enable ) {
 			feature = this.source.getFeatureById(featureId);
+			const showMeasures = feature.get('showMeasures');
+			if (showMeasures) {
+				measureFeatures = this.createMeasureFeature(feature);
+			}
 			if (centerFeature) {
 				this.source.removeFeature(centerFeature);
 			}
@@ -586,21 +596,25 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			if (feature.get('mode') !== 'Point') {
 				this.addInteraction(VisualizerInteractions.modifyInteractionHandler, this.createModifyInteraction(feature));
 			}
-			this.addInteraction(VisualizerInteractions.editAnnotationTranslateHandler, this.createAnnotationTranslateInteraction(feature, centerFeature));
+			this.addInteraction(VisualizerInteractions.editAnnotationTranslateHandler, this.createAnnotationTranslateInteraction(feature, centerFeature, measureFeatures));
 			this.source.addFeature(centerFeature);
 			event = {
 				originalFeature: feature,
-				centerFeature
+				centerFeature,
+				measureFeatures
 			}
-
 		}
 		else {
+			feature = this.source.getFeatureById(this.currentAnnotationEdit.originalFeature.getId());
 			centerFeature = this.currentAnnotationEdit.centerFeature;
+			feature.set('measureAsFeature', false);
 			this.removeInteraction(VisualizerInteractions.editAnnotationTranslateHandler);
 			this.removeInteraction(VisualizerInteractions.modifyInteractionHandler);
 			if (centerFeature) {
 				this.source.removeFeature(centerFeature);
 			}
+			this.removeMeasureFeature();
+
 		}
 		this.events.onAnnotationEditStart.next(event);
 	}
@@ -612,21 +626,53 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		centerFeature.setStyle(new olStyle({
 			image: new olIcon({
 				src: 'assets/icons/dragIcon.svg'
-			})
+			}),
+			zIndex: 10
 		}));
 		return centerFeature;
 
 	}
 
+	private removeMeasureFeature() {
+		const measureFeatures = this.currentAnnotationEdit && this.currentAnnotationEdit.measureFeatures;
+		if (measureFeatures) {
+			// this.currentAnnotationEdit.originalFeature.set('measuresGeometry', []);
+			measureFeatures.forEach( measureFeature => {
+				const handler = measureFeature.get('measureHandler');
+				if (handler) {
+					this.iMap.mapObject.removeInteraction(handler);
+				}
+				this.source.removeFeature(measureFeature);
+			});
+		}
+	}
+
+	private createMeasureFeature(feature: olFeature) {
+		const measureFeatures = this.createFeatureWithTranslate(feature);
+		feature.set('measureAsFeature', true);
+		measureFeatures.forEach( measureFeature => {
+			const handler = measureFeature.get('measureHandler');
+			if (handler) {
+				this.iMap.mapObject.addInteraction(handler);
+			}
+		});
+		this.source.addFeatures(measureFeatures);
+		return measureFeatures;
+	}
 	private createModifyInteraction(feature: olFeature) {
 		const modify = new olModify({
 			features: new olCollection([feature])
 		});
 
 		modify.on('modifyend', (event) => {
-			const features = [feature];
-			feature.getGeometry().translate(-this.offset[0], -this.offset[1]);
-			const { geometry } = feature.get('label');
+			// let measureFeatures = this.currentAnnotationEdit.measureFeatures;
+			const oldMode = feature.get('mode');
+			if (!['LineString', 'Polygon', 'Arrow'].includes(oldMode)) {
+				feature.set('mode', 'Polygon');
+			}
+			const features = event.features.getArray();
+			features[0].getGeometry().translate(-this.offset[0], -this.offset[1]);
+			const { geometry } = features[0].get('label');
 			if (geometry) {
 				features.push(new olFeature(geometry));
 			}
@@ -639,7 +685,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return modify;
 	}
 
-	private createAnnotationTranslateInteraction(feature: olFeature, center: olFeature) {
+	private createAnnotationTranslateInteraction(feature: olFeature, center: olFeature, measureFeatures: olFeature[]) {
 		const { geometry } = feature.get('label');
 		const translate = new olTranslate({
 			features: new olCollection([center]),
@@ -660,6 +706,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			if (geometry) {
 				geometry.translate(deltaX, deltaY);
 			}
+			if (measureFeatures) {
+				measureFeatures.forEach(measureFeature => measureFeature.getGeometry().translate(deltaX, deltaY));
+			}
 
 		});
 		translate.on('translateend', (event) => {
@@ -667,6 +716,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			feature.getGeometry().translate(-this.offset[0], -this.offset[1]);
 			if (geometry) {
 				features.push(new olFeature(geometry));
+			}
+			if (measureFeatures) {
+				features.push(...measureFeatures);
 			}
 			center.unset('lastCoordinate');
 			this.projectionService.projectCollectionAccurately(features, this.iMap.mapObject).pipe(
@@ -680,9 +732,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	private annotationEditEnd(GeoJSON: FeatureCollection<GeometryObject>, feature: olFeature) {
 		this.events.onAnnotationEditEnd.next({ GeoJSON, feature });
-		// reset all -edit annotation- interactions so the annotation will response to the interaction after it update.
-		this.setEditAnnotationMode(feature.getId(), false);
-		this.setEditAnnotationMode(feature.getId(), true);
+		this.resetAnnotationEditMode(feature.getId());
 	}
 
 	private createLabelFeature(feature: olFeature): olFeature {
@@ -707,7 +757,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				offsetY: entityMode === 'Point' ? 30 : 0
 			})
 		}));
-
+		labelFeature.setId('labelFeature');
 		return labelFeature;
 	}
 
@@ -735,6 +785,45 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return translateInteraction;
 	}
 
+	private createFeatureWithTranslate(feature: olFeature) {
+		const { measuresGeometry } = feature.getProperties();
+		const styles = this.getMeasuresAsStyles(feature);
+		const measureFeatures = [];
+		styles.forEach ( (style, index) => {
+			const text = style.getText();
+			const geometry = style.getGeometry();
+			const center = measuresGeometry.length ? {coordinates: measuresGeometry[index] } : this.getCenterOfFeature(new olFeature(geometry));
+			const measureFeature = new olFeature(new olPoint(center.coordinates));
+			measureFeature.setStyle(new olStyle({
+				text
+			}));
+			measureFeature.setId(`measureFeature${index}`);
+			measureFeature.set('measureNumber' , index);
+			measureFeatures.push(measureFeature);
+		});
+
+		measureFeatures.forEach( (measureFeature, index, measuresArr) => {
+			const translate = new olTranslate({
+				features: new olCollection([measureFeature])
+			});
+
+			translate.on('translateend', (event) => {
+				const features = [feature];
+				const measureBeTranslate = event.features.getArray()[0];
+				const otherMeasureFeatures = measuresArr.filter( otherMeasureFeature => otherMeasureFeature.getId() !== measureBeTranslate.getId());
+				const measureBeTranslateLocation = measuresArr.findIndex( predicateFeature => predicateFeature.get('measureNumber') >= measureBeTranslate.get('measureNumber'));
+				otherMeasureFeatures.splice(measureBeTranslateLocation, 0, measureBeTranslate);
+				features.push(...otherMeasureFeatures);
+				this.projectionService.projectCollectionAccurately(features, this.iMap.mapObject).pipe(
+					take(1),
+					tap((GeoJSON: FeatureCollection<GeometryObject>) => this.annotationEditEnd(GeoJSON, feature))
+				).subscribe();
+			});
+
+			measureFeature.set('measureHandler' , translate);
+		});
+		return measureFeatures;
+	}
 	private clearLabelTranslateMode() {
 		if (this.labelTranslate) {
 			this.updateFeature(this.labelTranslate.originalFeature.getId(), { labelTranslateOn: false });
@@ -813,6 +902,14 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	clearAnnotationEditMode() {
 		if (this.currentAnnotationEdit) {
 			this.setEditAnnotationMode(this.currentAnnotationEdit.originalFeature.getId(), false)
+		}
+	}
+
+	resetAnnotationEditMode(featureId: string) {
+		// reset all -edit annotation- interactions so the annotation will response to the interaction after it update.
+		if (Boolean(this.currentAnnotationEdit)) {
+			this.setEditAnnotationMode(featureId, false);
+			this.setEditAnnotationMode(featureId, true);
 		}
 	}
 }

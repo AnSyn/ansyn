@@ -7,7 +7,7 @@ import { Inject } from '@angular/core';
 import { distinctUntilChanged, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { selectGeoFilterSearchMode } from '../../../../../status-bar/reducers/status-bar.reducer';
-import { featureCollection, FeatureCollection } from '@turf/turf';
+import { featureCollection, FeatureCollection, Point } from '@turf/turf';
 import {
 	AnnotationMode,
 	AnnotationsVisualizer,
@@ -181,9 +181,11 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 					...this.projectionService.getProjectionProperties(this.communicator, data, feature, this.overlay)
 				};
 			}
+			const labelGeometry = GeoJSON.features.find( feature => feature.id === 'labelFeature');
+			const measuresGeometry = GeoJSON.features.filter( feature => (<string>feature.id).startsWith('measureFeature')).map( feature => (<Point>feature.geometry).coordinates);
 			const label = geoJsonFeature.properties.label.geometry ?
-				{...geoJsonFeature.properties.label, geometry: GeoJSON.features[1].geometry} : geoJsonFeature.properties.label;
-			geoJsonFeature.properties = { ...geoJsonFeature.properties , label};
+				{...geoJsonFeature.properties.label, geometry: labelGeometry.geometry} : geoJsonFeature.properties.label;
+			geoJsonFeature.properties = { ...geoJsonFeature.properties , label, measuresGeometry };
 			this.store$.dispatch(new UpdateLayer(<ILayer>{ ...activeAnnotationLayer, data }));
 			})
 	);

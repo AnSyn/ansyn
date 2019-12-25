@@ -51,7 +51,7 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 	calcPosition() {
 		const myRect = this.myElement.nativeElement.getBoundingClientRect();
 		const imageryRect = this.imageryElement.getBoundingClientRect() as DOMRect;
-		const delta = myRect.left - imageryRect.left + myRect.width - imageryRect.width;
+		const delta = myRect.left - imageryRect.left + myRect.width - imageryRect.width + 3;
 		if (delta > 0) {
 			this.right += delta;
 		} else {

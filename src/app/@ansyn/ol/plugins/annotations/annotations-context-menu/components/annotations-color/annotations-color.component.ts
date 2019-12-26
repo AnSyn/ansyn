@@ -31,7 +31,7 @@ export class AnnotationsColorComponent implements AfterViewInit, OnDestroy {
 	ngAfterViewInit(): void {
 		this.imageryElement = (this.myElement.nativeElement as HTMLElement).closest('.imagery');
 		if (this.imageryElement) {
-			this.timerId = window.setInterval(this.calcPosition.bind(this), 300);
+			this.timerId = window.setInterval(this.calcPositionToStayInsideImagery.bind(this), 300);
 		}
 	}
 
@@ -41,7 +41,7 @@ export class AnnotationsColorComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 
-	calcPosition() {
+	calcPositionToStayInsideImagery() {
 		const myDiv = (this.myElement.nativeElement as HTMLElement).firstElementChild;
 		if (!myDiv) {
 			return;

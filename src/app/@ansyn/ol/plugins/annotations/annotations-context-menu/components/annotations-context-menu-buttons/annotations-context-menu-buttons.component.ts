@@ -41,14 +41,14 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 
 	ngAfterViewInit(): void {
 		this.imageryElement = (this.myElement.nativeElement as HTMLElement).closest('.imagery');
-		this.timerId = window.setInterval(this.calcPosition.bind(this), 300);
+		this.timerId = window.setInterval(this.calcPositionToStayInsideImagery.bind(this), 300);
 	}
 
 	ngOnDestroy(): void {
 		window.clearInterval(this.timerId);
 	}
 
-	calcPosition() {
+	calcPositionToStayInsideImagery() {
 		const myRect = this.myElement.nativeElement.getBoundingClientRect();
 		const imageryRect = this.imageryElement.getBoundingClientRect() as DOMRect;
 		const delta = myRect.left - imageryRect.left + myRect.width - imageryRect.width + 3;

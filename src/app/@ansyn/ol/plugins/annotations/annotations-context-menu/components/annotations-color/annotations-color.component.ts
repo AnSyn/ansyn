@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 
 export interface IAnnotationColorProps {
 	fill: string;
@@ -12,7 +12,7 @@ export interface IAnnotationColorProps {
 	templateUrl: './annotations-color.component.html',
 	styleUrls: ['./annotations-color.component.less']
 })
-export class AnnotationsColorComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AnnotationsColorComponent implements AfterViewInit, OnDestroy {
 	@Input() show: boolean;
 	@Input() strokeModeActive = true;
 	@Input() fillModeActive = true;
@@ -26,9 +26,6 @@ export class AnnotationsColorComponent implements OnInit, AfterViewInit, OnDestr
 	moveLeft = 0;
 
 	constructor(protected myElement: ElementRef) {
-	}
-
-	ngOnInit(): void {
 	}
 
 	ngAfterViewInit(): void {
@@ -45,7 +42,11 @@ export class AnnotationsColorComponent implements OnInit, AfterViewInit, OnDestr
 	}
 
 	calcPosition() {
-		const myRect = this.myElement.nativeElement.getBoundingClientRect();
+		const myDiv = (this.myElement.nativeElement as HTMLElement).firstElementChild;
+		if (!myDiv) {
+			return;
+		}
+		const myRect = myDiv.getBoundingClientRect();
 		const imageryRect = this.imageryElement.getBoundingClientRect() as DOMRect;
 		const delta = myRect.left - imageryRect.left + myRect.width - imageryRect.width + 3;
 		if (delta > 0) {

@@ -73,7 +73,6 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 
 	toggleMeasures() {
 		const { showMeasures } = this.getFeatureProps();
-		this.annotations.clearAnnotationEditMode();
 		this.annotations.updateFeature(this.featureId, { showMeasures: !showMeasures });
 	}
 

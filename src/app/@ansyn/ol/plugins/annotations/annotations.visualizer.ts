@@ -120,7 +120,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			color: '#000',
 			width: 3
 		}),
-		offsetY: 30
+		textBaseline: 'top',
+		placement: 'line'
 	};
 
 	private iconSrc = '';

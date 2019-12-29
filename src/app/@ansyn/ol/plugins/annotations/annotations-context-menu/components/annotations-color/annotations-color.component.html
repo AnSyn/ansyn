@@ -1,4 +1,4 @@
-<div class="list color-selection-expand" *ngIf="show">
+<div class="list color-selection-expand" *ngIf="show" [ngStyle]="getStyle()">
 
 	<ansyn-color-picker
 		[label]="'Fill' | translate"

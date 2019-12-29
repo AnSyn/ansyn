@@ -14,7 +14,7 @@ import { CaseDataFilterTitle } from '../../models/data-input-filters.model';
 import { Actions, ofType } from '@ngrx/effects';
 import { SetImageOpeningOrientation, UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { AnimationTriggerMetadata } from '@angular/animations/src/animation_metadata';
+import { AnimationTriggerMetadata } from '@angular/animations';
 import { SearchMode, SearchModeEnum } from '../../models/search-mode.enum';
 import { filter, map, tap } from 'rxjs/operators';
 import { LayoutKey, layoutOptions, selectLayout, SetLayoutAction } from '@ansyn/map-facade';
@@ -57,8 +57,8 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 
 	regionType$ = this.store$.select(selectRegion).pipe(
 		filter(Boolean),
-		map((region) => region.type),
-		tap((regionType) => this.regionType = regionType)
+		map<any, boolean>((region) => region.type),
+		tap<any>((regionType) => this.regionType = regionType)
 	);
 
 	time$: Observable<ICaseTimeState> = this.store$.select(selectTime);

@@ -82,7 +82,7 @@ export class OverlaysAppEffects {
 
 	isPinPointSearch$ = this.region$.pipe(
 		filter(Boolean),
-		map((region) => region.type === CaseGeoFilter.PinPoint),
+		map<any,Boolean>((region) => region.type === CaseGeoFilter.PinPoint),
 		distinctUntilChanged()
 	);
 

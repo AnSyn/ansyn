@@ -55,7 +55,7 @@ export class ContextMenuComponent implements OnInit {
 
 	geoFilter$: Observable<CaseGeoFilter> = this.store.select(selectRegion).pipe(
 		filter(Boolean),
-		tap((region) => this.geoFilter = region.type)
+		tap<any>((region) => this.geoFilter = region.type)
 	);
 
 	geoFilter;

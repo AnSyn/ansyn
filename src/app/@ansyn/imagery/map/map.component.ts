@@ -11,10 +11,10 @@ import { ImageryMapPosition } from '../model/case-map-position.model';
 	styleUrls: ['./map.component.less']
 })
 export class MapComponent implements OnInit, OnDestroy {
-	@ViewChild('mapElement') protected mapElement: ElementRef;
-	@ViewChild('mapElementShadowNorth') protected mapElementShadowNorth: ElementRef;
-	@ViewChild('mapElementShadowDoubleBuffer') protected mapElementShadowDoubleBuffer: ElementRef;
-	@ViewChild('mapViewContainerRef', { read: ViewContainerRef }) mapViewContainerRef: ViewContainerRef;
+	@ViewChild('mapElement', {static: true}) protected mapElement: ElementRef;
+	@ViewChild('mapElementShadowNorth', {static: true}) protected mapElementShadowNorth: ElementRef;
+	@ViewChild('mapElementShadowDoubleBuffer', {static: true}) protected mapElementShadowDoubleBuffer: ElementRef;
+	@ViewChild('mapViewContainerRef', { read: ViewContainerRef, static: true }) mapViewContainerRef: ViewContainerRef;
 
 	constructor(public map: BaseImageryMap, @Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
 	}

@@ -37,7 +37,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	public imageProcessingDisabled$: Observable<boolean> =
 		this.store.select(selectToolFlag(toolsFlags.imageProcessingDisabled)).pipe(
-			filter(Boolean),
+			filter<boolean>(Boolean),
 			tap(this.closeManualProcessingMenu.bind(this))
 		);
 

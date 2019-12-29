@@ -19,7 +19,7 @@ export interface IsGeoRegisteredProperties {
 })
 export class ImageryRotationComponent {
 	@Input() mapState: IMapSettings;
-	@ViewChild('northImg') northImgElement: ElementRef;
+	@ViewChild('northImg', {static: true}) northImgElement: ElementRef;
 
 	protected thresholdDegrees = 0.1;
 

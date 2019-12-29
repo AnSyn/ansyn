@@ -77,9 +77,9 @@ export class MenuComponent implements OnInit, OnDestroy {
 	currentComponent: ComponentRef<any>;
 	collapse: boolean;
 	@Input() animatedElement: HTMLElement;
-	@ViewChild('menuWrapper') menuWrapperElement: ElementRef;
-	@ViewChild('menu') menuElement: ElementRef;
-	@ViewChild('container') container: ElementRef;
+	@ViewChild('menuWrapper', {static: true}) menuWrapperElement: ElementRef;
+	@ViewChild('menu', {static: true}) menuElement: ElementRef;
+	@ViewChild('container', {static: true}) container: ElementRef;
 	@Input() version;
 
 	menuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(select(selectAllMenuItems));
@@ -130,7 +130,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 		return this._componentElem;
 	}
 
-	@ViewChild('componentElem', { read: ViewContainerRef })
+	@ViewChild('componentElem', { read: ViewContainerRef, static: true })
 	set componentElem(value) {
 		this._componentElem = value;
 		if (this.isBuildNeeded) {

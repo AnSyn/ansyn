@@ -23,8 +23,8 @@ export class TimelineTimepickerComponent implements OnInit, OnDestroy {
 	startDatePickerInstance: any;
 	error: string;
 
-	@ViewChild('startDatePicker') startDatePicker: ElementRef;
-	@ViewChild('endDatePicker') endDatePicker: ElementRef;
+	@ViewChild('startDatePicker', {static: true}) startDatePicker: ElementRef;
+	@ViewChild('endDatePicker', {static: true}) endDatePicker: ElementRef;
 
 	@Output() applyDate = new EventEmitter<ICaseTimeState>();
 	@Output('closeComponent') closeComponent = new EventEmitter();

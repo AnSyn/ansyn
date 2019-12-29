@@ -31,7 +31,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	onDataInputFilterChange$ = this.dataInputFilter$.pipe(
 		filter(Boolean),
-		tap(_preFilter => {
+		tap<any>(_preFilter => {
 			this._selectedFilters = _preFilter.filters;
 			this.dataInputFiltersActive = _preFilter.active;
 			if (Boolean(this._selectedFilters)) {

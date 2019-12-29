@@ -52,7 +52,7 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 	preventDbClick: boolean;
 
 
-	@ViewChild('imageriesContainer') imageriesContainer: ElementRef;
+	@ViewChild('imageriesContainer', {static: true}) imageriesContainer: ElementRef;
 
 	pinLocationMode: boolean;
 	ids: string[] = [];

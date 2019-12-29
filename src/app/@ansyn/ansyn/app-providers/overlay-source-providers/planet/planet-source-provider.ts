@@ -7,7 +7,7 @@ import {
 	getPointByGeometry,
 	toRadians
 } from '@ansyn/imagery';
-import { HttpResponseBase } from '@angular/common/http/src/response';
+import { HttpResponseBase } from '@angular/common/http';
 import { IOverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
 import { catchError, debounceTime, map } from 'rxjs/operators';
 /* Do not change this ( rollup issue ) */

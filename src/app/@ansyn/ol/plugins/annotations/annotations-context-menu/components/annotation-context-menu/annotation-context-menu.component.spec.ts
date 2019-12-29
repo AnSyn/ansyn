@@ -1,22 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AnnotationContextMenuComponent } from './annotation-context-menu.component';
-import { DebugElement, EventEmitter } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 import { Actions } from '@ngrx/effects';
-import { By } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
-
-import { AnnotationsColorComponent } from '../annotations-color/annotations-color.component';
-import { ColorPickerComponent } from '../color-picker/color-picker.component';
-import { AnnotationsWeightComponent } from '../annotations-weight/annotations-weight.component';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { ColorPickerModule } from 'ngx-color-picker';
-import { MatInputModule, MatSelectModule } from '@angular/material';
-import { TranslateModule } from '@ngx-translate/core';
-import { AnnotationLabelComponent } from '../annotation-label/annotation-label.component';
+import { MockComponent } from '../../../../../../ansyn/modules/core/test/mock-component';
 
 describe('AnnotationContextMenuComponent', () => {
 	let component: AnnotationContextMenuComponent;
 	let fixture: ComponentFixture<AnnotationContextMenuComponent>;
+	const mockAnnotationsContextMenuButtonsComponent = MockComponent({
+		selector: 'ansyn-annotations-context-menu-buttons',
+		inputs: ['annotations', 'featureId', 'selectedTab']
+	});
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
@@ -26,17 +21,7 @@ describe('AnnotationContextMenuComponent', () => {
 			],
 			declarations: [
 				AnnotationContextMenuComponent,
-				AnnotationsWeightComponent,
-				AnnotationsColorComponent,
-				AnnotationLabelComponent,
-				ColorPickerComponent
-			],
-			imports: [
-				FormsModule,
-				ColorPickerModule,
-				MatInputModule,
-				MatSelectModule,
-				TranslateModule.forRoot()
+				mockAnnotationsContextMenuButtonsComponent
 			]
 		}).compileComponents();
 	});
@@ -57,16 +42,5 @@ describe('AnnotationContextMenuComponent', () => {
 	it('should create', () => {
 		expect(component).toBeTruthy();
 	});
-
-	it('click on remove feature button', () => {
-		component.selection = ['featureId'];
-		component.annotations.idToEntity.set('featureId', <any>{ fake: true });
-		fixture.detectChanges();
-		spyOn(component, 'removeFeature');
-		const de: DebugElement = fixture.debugElement.query(By.css('button.removeFeature'));
-		de.triggerEventHandler('click', {});
-		expect(component.removeFeature).toHaveBeenCalledWith('featureId');
-	});
-
 
 });

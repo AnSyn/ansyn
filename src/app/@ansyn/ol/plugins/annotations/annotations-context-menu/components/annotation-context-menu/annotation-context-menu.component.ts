@@ -2,10 +2,8 @@ import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnI
 import { CommunicatorEntity, ImageryCommunicatorService, IMapInstanceChanged } from '@ansyn/imagery';
 import { filter, take, tap } from 'rxjs/operators';
 import { AnnotationsVisualizer } from '../../../annotations.visualizer';
-import { IStyleWeight } from '../annotations-weight/annotations-weight.component';
-import * as SVG from './icons-svg';
 
-enum AnnotationsContextmenuTabs {
+export enum AnnotationsContextmenuTabs {
 	Colors,
 	Weight,
 	Label
@@ -17,10 +15,8 @@ enum AnnotationsContextmenuTabs {
 	styleUrls: ['./annotation-context-menu.component.less']
 })
 export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
-	SVGICON = SVG;
 	annotations: AnnotationsVisualizer;
 	communicator: CommunicatorEntity;
-	Tabs = AnnotationsContextmenuTabs;
 	selectedTab: { [id: string]: AnnotationsContextmenuTabs } = {};
 
 	selection: string[];
@@ -110,87 +106,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		this.unSubscribeVisualizerEvents();
 	}
 
-	removeFeature(featureId) {
-		this.annotations.removeFeature(featureId);
-		// this.annotations.events.onSelect.next({
-		// 	mapId: this.mapState.id,
-		// 	multi: true,
-		// 	data: { [featureId]: { featureId } }
-		// })
-	}
-
-	selectTab(id: string, tab: AnnotationsContextmenuTabs) {
-		this.selectedTab = { ...this.selectedTab, [id]: this.selectedTab[id] === tab ? null : tab };
-		this.annotations.clearAnnotationEditMode();
-	}
-
-	toggleMeasures(featureId) {
-		const { showMeasures } = this.getFeatureProps(featureId);
-		this.annotations.updateFeature(featureId, { showMeasures: !showMeasures });
-	}
-
-	selectLineWidth(s: IStyleWeight, featureId: string) {
-		const { style } = this.getFeatureProps(featureId);
-		const updateStyle = {
-			...style,
-			initial: {
-				...style.initial,
-				'stroke-width': s.width,
-				'stroke-dasharray': s.dash
-			}
-		};
-
-		this.annotations.updateFeature(featureId, { style: updateStyle });
-	}
-
-	activeChange($event: { label: 'stroke' | 'fill', event: string }, featureId: string) {
-		let opacity = { stroke: 1, fill: 0.4 };
-		const { style } = this.getFeatureProps(featureId);
-		const updatedStyle = {
-			...style,
-			initial: {
-				...style.initial,
-				[`${ $event.label }-opacity`]: $event.event ? opacity[$event.label] : 0
-			}
-		};
-		this.annotations.updateFeature(featureId, { style: updatedStyle });
-	}
-
-	colorChange($event: [{ label: 'stroke' | 'fill' | 'marker-color', event: string }], featureId: string) {
-		const { style } = this.getFeatureProps(featureId);
-		const updatedStyle = {
-			...style,
-			initial: {
-				...style.initial,
-			}
-		};
-		$event.forEach((entity) => {
-			updatedStyle.initial[entity.label] = entity.event;
-		});
-		this.annotations.updateFeature(featureId, { style: updatedStyle });
-	}
-
-	updateLabel(text, featureId: string) {
-		this.annotations.updateFeature(featureId, { label: {text} });
-	}
-
-	updateLabelSize(labelSize, featureId: string) {
-		this.annotations.updateFeature(featureId, {labelSize});
-	}
-
 	getType(): string {
 		return '';
-	}
-
-	isFeatureNonEditable(featureId: string) {
-		const feature = this.annotations.getJsonFeatureById(featureId);
-		return feature && feature.properties.isNonEditable;
-	}
-
-	toggleEditMode(featureId: any) {
-		this.selectedTab = { ...this.selectedTab, [featureId]: null};
-		const currentFeatureId = this.annotations.currentAnnotationEdit && this.annotations.currentAnnotationEdit.originalFeature;
-		const enable = !(currentFeatureId && currentFeatureId.getId() === featureId);
-		this.annotations.setEditAnnotationMode(featureId, enable);
 	}
 }

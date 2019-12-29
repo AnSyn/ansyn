@@ -4,9 +4,10 @@ import { select, Store } from '@ngrx/store';
 import { selectActiveMapId, selectOverlayByMapId } from '@ansyn/map-facade';
 import { combineLatest, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
-import { distinctUntilChanged, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, map, mergeMap, tap, withLatestFrom, take } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { selectGeoFilterSearchMode } from '../../../../../status-bar/reducers/status-bar.reducer';
+import { selectAnnotationMode } from '../../../../../menu-items/tools/reducers/tools.reducer';
 import { featureCollection, FeatureCollection } from '@turf/turf';
 import {
 	AnnotationMode,
@@ -121,7 +122,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 				protected projectionService: OpenLayersProjectionService,
 				@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig) {
 		super();
-	}
+}
 
 	get offset() {
 		return this.annotationsVisualizer.offset;
@@ -265,6 +266,11 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	onInit() {
 		super.onInit();
 		this.annotationsVisualizer = this.communicator.getPlugin(AnnotationsVisualizer);
+		this.store$.select(selectAnnotationMode)
+			.pipe(take(1))
+			.subscribe((annotationMode) => {
+				this.annotationsVisualizer.setMode(annotationMode, false);
+			});
 	}
 
 }

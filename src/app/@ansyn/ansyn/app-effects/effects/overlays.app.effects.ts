@@ -198,7 +198,7 @@ export class OverlaysAppEffects {
 				overlay,
 				mapId,
 				extent: payload.extent,
-				openWithAngle: payload.openWithAngle
+				customOriantation: payload.customOriantation
 			});
 		})
 	);

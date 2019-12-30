@@ -70,6 +70,10 @@ export class NavigationBarComponent {
 
 	@HostListener('window:keypress', ['$event'])
 	onkeypress($event: KeyboardEvent) {
+		if ((<Window>$event.currentTarget).document.activeElement instanceof HTMLInputElement) {
+			return;
+		}
+
 		if (this._scannedAreaKey.indexOf($event.which) !== -1) {
 			this.clickScannedArea();
 		}

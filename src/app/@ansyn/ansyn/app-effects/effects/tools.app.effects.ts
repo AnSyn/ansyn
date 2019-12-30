@@ -211,17 +211,19 @@ export class ToolsAppEffects {
 		withLatestFrom(this.store$.select(selectToolFlag(toolsFlags.shadowMouseActiveForManyScreens))),
 		mergeMap(([[mapsList, activeMapId], shadowMouseActiveForManyScreens]: [[IMapSettings[], string], boolean]) => {
 			const registredMapsCount = mapsList.reduce((count, map) => (!map.data.overlay || map.data.overlay.isGeoRegistered) ? count + 1 : count, 0);
+			const forceShadowMouse = this.config && this.config.ShadowMouse.forceSendShadowMousePosition;
 			const activeMap = MapFacadeService.mapById(mapsList, activeMapId);
 			const isActiveMapRegistred = !activeMap || (activeMap.data.overlay && !activeMap.data.overlay.isGeoRegistered);
-			if (registredMapsCount < 2 || isActiveMapRegistred) {
+			const isShadowMouseShouldBeDisabled = forceShadowMouse && registredMapsCount === 1;
+			if ((registredMapsCount < 2 || isActiveMapRegistred) && !forceShadowMouse) {
 				return [
 					new StopMouseShadow(),
-					new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: true }])
+					new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: isShadowMouseShouldBeDisabled }])
 				];
 			}
 			return [
-				new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: false }]),
-				shadowMouseActiveForManyScreens ? new StartMouseShadow() : undefined
+				new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: isShadowMouseShouldBeDisabled }]),
+				shadowMouseActiveForManyScreens || forceShadowMouse ? new StartMouseShadow() : undefined
 			].filter(Boolean);
 		}));
 

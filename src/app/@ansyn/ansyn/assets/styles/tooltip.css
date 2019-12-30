@@ -30,7 +30,7 @@
 }
 
 [tooltip-value]:not(.active):not(:disabled)[tooltip-class*="bottom"]:after {
-	left: auto;
+	/*left: auto;*/
 	top: auto;
 	bottom: 0;
 	transform: translateY(100%);

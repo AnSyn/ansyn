@@ -57,6 +57,7 @@ import {
 import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { selectMapsIds } from '@ansyn/map-facade';
+import { GeoRegisteration, IOverlay } from '../../modules/overlays/models/overlay.model';
 
 @Injectable()
 export class ToolsAppEffects {
@@ -214,16 +215,15 @@ export class ToolsAppEffects {
 			const forceShadowMouse = this.config && this.config.ShadowMouse.forceSendShadowMousePosition;
 			const activeMap = MapFacadeService.mapById(mapsList, activeMapId);
 			const isActiveMapRegistred = !activeMap || (activeMap.data.overlay && !activeMap.data.overlay.isGeoRegistered);
-			const isShadowMouseShouldBeDisabled = forceShadowMouse && registredMapsCount === 1;
 			if ((registredMapsCount < 2 || isActiveMapRegistred) && !forceShadowMouse) {
 				return [
 					new StopMouseShadow(),
-					new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: isShadowMouseShouldBeDisabled }])
+					new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: true }])
 				];
 			}
 			return [
-				new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: isShadowMouseShouldBeDisabled }]),
-				shadowMouseActiveForManyScreens || forceShadowMouse ? new StartMouseShadow() : undefined
+				new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: false }]),
+				shadowMouseActiveForManyScreens || forceShadowMouse  ? new StartMouseShadow() : undefined
 			].filter(Boolean);
 		}));
 

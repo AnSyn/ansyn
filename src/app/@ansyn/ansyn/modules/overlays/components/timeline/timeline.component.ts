@@ -62,7 +62,7 @@ export interface IEventDropsEvent {
 
 export class TimelineComponent implements OnInit, OnDestroy {
 
-	@ViewChild('context', {static:false}) context: ElementRef;
+	@ViewChild('context', { static: true }) context: ElementRef;
 
 	configuration = {
 		range: {

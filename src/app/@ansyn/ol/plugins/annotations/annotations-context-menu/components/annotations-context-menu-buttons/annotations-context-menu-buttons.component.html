@@ -12,7 +12,8 @@
 
 <div>
 	<button [class.active]="getFeatureProps()?.showMeasures"
-			(click)="toggleMeasures()">
+			(click)="toggleMeasures()"
+			[class.disabled]="getFeatureProps()?.mode === 'Point'">
 		<i [attr.tooltip-value]="'Measures' | translate" tooltip-class="bottom">
 			<svg fill="#fff">
 				<path [attr.d]="SVGICON.measureSvg"></path>

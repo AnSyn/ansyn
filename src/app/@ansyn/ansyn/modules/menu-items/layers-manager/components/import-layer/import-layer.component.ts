@@ -88,7 +88,9 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	generateFeaturesIds(featureCollection: FeatureCollection): void {
 		/* reference */
 		featureCollection.features.forEach((feature) => {
-			feature.properties = { ...feature.properties, id: UUID.UUID() };
+			const newId = UUID.UUID();
+			feature.id = newId;
+			feature.properties = { ...feature.properties, id: newId };
 		});
 	}
 

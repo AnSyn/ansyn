@@ -57,6 +57,7 @@ import {
 import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { selectMapsIds } from '@ansyn/map-facade';
+import { GeoRegisteration, IOverlay } from '../../modules/overlays/models/overlay.model';
 
 @Injectable()
 export class ToolsAppEffects {
@@ -211,9 +212,10 @@ export class ToolsAppEffects {
 		withLatestFrom(this.store$.select(selectToolFlag(toolsFlags.shadowMouseActiveForManyScreens))),
 		mergeMap(([[mapsList, activeMapId], shadowMouseActiveForManyScreens]: [[IMapSettings[], string], boolean]) => {
 			const registredMapsCount = mapsList.reduce((count, map) => (!map.data.overlay || map.data.overlay.isGeoRegistered) ? count + 1 : count, 0);
+			const forceShadowMouse = this.config && this.config.ShadowMouse.forceSendShadowMousePosition;
 			const activeMap = MapFacadeService.mapById(mapsList, activeMapId);
 			const isActiveMapRegistred = !activeMap || (activeMap.data.overlay && !activeMap.data.overlay.isGeoRegistered);
-			if (registredMapsCount < 2 || isActiveMapRegistred) {
+			if ((registredMapsCount < 2 || isActiveMapRegistred) && !forceShadowMouse) {
 				return [
 					new StopMouseShadow(),
 					new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: true }])
@@ -221,7 +223,7 @@ export class ToolsAppEffects {
 			}
 			return [
 				new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: false }]),
-				shadowMouseActiveForManyScreens ? new StartMouseShadow() : undefined
+				shadowMouseActiveForManyScreens || forceShadowMouse  ? new StartMouseShadow() : undefined
 			].filter(Boolean);
 		}));
 

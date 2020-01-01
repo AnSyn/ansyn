@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { Injector, ModuleWithProviders, NgModule } from '@angular/core';
+import { createCustomElement } from '@angular/elements';
 import { FormsModule } from '@angular/forms';
 import { AlertsModule } from './modules/alerts/alerts.module';
 import { DefaultUrlSerializer, RouterModule, UrlSerializer } from '@angular/router';
@@ -80,10 +81,16 @@ import { ImageryVideoModule } from './modules/imagery-video/imagery-video.module
 			provide: COMPONENT_MODE,
 			useValue: false
 		},
-		{ provide: UrlSerializer, useClass: DefaultUrlSerializer }
+		{ 
+			provide: UrlSerializer, 
+			useClass: DefaultUrlSerializer 
+		}
 	],
 	entryComponents: [
-		OverlayOutOfBoundsComponent, ImageryZoomerComponent, ImageryDimensionModeComponent
+		AnsynComponent, 
+		OverlayOutOfBoundsComponent, 
+		ImageryZoomerComponent, 
+		ImageryDimensionModeComponent
 	],
 	declarations: [
 		AnsynComponent,
@@ -113,7 +120,9 @@ export class AnsynModule {
 		};
 	}
 
-	constructor(public translate: TranslateService) {
+	constructor(public translate: TranslateService, private injector: Injector) {
 		translate.setDefaultLang('default');
+		const element = createCustomElement(AnsynComponent, { injector: this.injector });
+		customElements.define('ansyn-element', element);
 	}
 }

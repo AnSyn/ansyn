@@ -304,9 +304,7 @@
             "styles": [
               "src/app/@ansyn/ansyn/assets/styles/styles.css"
             ],
-            "scripts": [
-
-            ]
+            "scripts": []
           },
           "configurations": {
             "dev": {

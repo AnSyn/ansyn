@@ -51,16 +51,19 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 	calcPositionToStayInsideImagery() {
 		const myRect = this.myElement.nativeElement.getBoundingClientRect();
 		const imageryRect = this.imageryElement.getBoundingClientRect() as DOMRect;
-		const delta = myRect.left - imageryRect.left + myRect.width - imageryRect.width + 3;
-		if (delta > 0) {
-			this.right += delta;
-		} else {
-			this.right = Math.max(0, this.right + delta);
+		const deltaForRightEdge = myRect.left - imageryRect.left + myRect.width - imageryRect.width + 3;
+		const deltaForLeftEdge = myRect.left - imageryRect.left;
+		if (deltaForRightEdge > 0) {
+			this.right += deltaForRightEdge;
+		} else if (deltaForLeftEdge < 0) {
+			this.right += deltaForLeftEdge;
+		} else if (deltaForLeftEdge > 0) {
+			this.right = Math.max(0, this.right + deltaForRightEdge);
 		}
 	}
 
 	toggleEditMode() {
-		this.selectedTab = { ...this.selectedTab, [this.featureId]: null};
+		this.selectedTab = { ...this.selectedTab, [this.featureId]: null };
 		const currentFeatureId = this.annotations.currentAnnotationEdit && this.annotations.currentAnnotationEdit.originalFeature;
 		const enable = !(currentFeatureId && currentFeatureId.getId() === this.featureId);
 		this.annotations.setEditAnnotationMode(this.featureId, enable);
@@ -77,16 +80,19 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 	}
 
 	selectTab(tab: AnnotationsContextmenuTabs) {
-		this.selectedTab = { ...this.selectedTab, [this.featureId]: this.selectedTab[this.featureId] === tab ? null : tab };
+		this.selectedTab = {
+			...this.selectedTab,
+			[this.featureId]: this.selectedTab[this.featureId] === tab ? null : tab
+		};
 		this.annotations.clearAnnotationEditMode();
 	}
 
 	updateLabel(text) {
-		this.annotations.updateFeature(this.featureId, { label: {text} });
+		this.annotations.updateFeature(this.featureId, { label: { text } });
 	}
 
 	updateLabelSize(labelSize) {
-		this.annotations.updateFeature(this.featureId, {labelSize});
+		this.annotations.updateFeature(this.featureId, { labelSize });
 	}
 
 	selectLineWidth(s: IStyleWeight, featureId: string) {

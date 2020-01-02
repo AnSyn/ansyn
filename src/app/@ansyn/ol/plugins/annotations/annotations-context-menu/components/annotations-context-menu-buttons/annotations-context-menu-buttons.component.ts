@@ -53,14 +53,14 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 		const myRect = this.myElement.nativeElement.getBoundingClientRect();
 		const imageryRect = this.imageryElement.getBoundingClientRect() as DOMRect;
 
-		const deltaForRightEdge = myRect.left - imageryRect.left + myRect.width - imageryRect.width + 3;
+		const deltaForRightEdge = myRect.right - imageryRect.right;
 		const deltaForLeftEdge = myRect.left - imageryRect.left;
 		if (deltaForRightEdge > 0) {
 			this.right += deltaForRightEdge;
 		} else if (deltaForLeftEdge < 0) {
 			this.right += deltaForLeftEdge;
-		} else if (deltaForLeftEdge > 0) {
-			this.right = Math.max(0, this.right + deltaForRightEdge);
+		} else if (deltaForRightEdge !== 0 && deltaForLeftEdge !== 0) {
+			this.right = 0;
 		}
 
 		const deltaForBottomEdge = myRect.bottom - imageryRect.bottom;
@@ -69,7 +69,7 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 			this.top -= deltaForBottomEdge;
 		} else if (deltaForTopEdge > 0) {
 			this.top += deltaForTopEdge;
-		} else if (deltaForTopEdge < 0) {
+		} else if (deltaForTopEdge !== 0 && deltaForBottomEdge !== 0) {
 			this.top = 0;
 		}
 	}

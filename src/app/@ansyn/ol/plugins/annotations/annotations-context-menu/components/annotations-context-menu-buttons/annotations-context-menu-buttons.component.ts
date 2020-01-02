@@ -5,6 +5,7 @@ import * as SVG from '../annotation-context-menu/icons-svg';
 import { IStyleWeight } from '../annotations-weight/annotations-weight.component';
 import { IVisualizerEntity } from '@ansyn/imagery';
 import { AnnotationMode } from '../../../annotations.model';
+import { STATUS_BAR_HEIGHT } from '../../../../../utils/utils';
 
 interface IFeatureProperties extends IVisualizerEntity {
 	mode: AnnotationMode
@@ -63,8 +64,8 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 			this.right = 0;
 		}
 
-		const deltaForBottomEdge = myRect.bottom - imageryRect.bottom;
-		const deltaForTopEdge = imageryRect.top - myRect.top;
+		const deltaForBottomEdge = myRect.bottom - imageryRect.bottom + STATUS_BAR_HEIGHT;
+		const deltaForTopEdge = imageryRect.top - myRect.top + STATUS_BAR_HEIGHT;
 		if (deltaForBottomEdge > 0) {
 			this.top -= deltaForBottomEdge;
 		} else if (deltaForTopEdge > 0) {

@@ -21,6 +21,7 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 	@Input() selectedTab: { [id: string]: AnnotationsContextmenuTabs } = {};
 
 	@HostBinding('style.right.px') right = 0;
+	@HostBinding('style.top.px') top = 0;
 
 	SVGICON = SVG;
 	Tabs = AnnotationsContextmenuTabs;
@@ -51,6 +52,7 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 	calcPositionToStayInsideImagery() {
 		const myRect = this.myElement.nativeElement.getBoundingClientRect();
 		const imageryRect = this.imageryElement.getBoundingClientRect() as DOMRect;
+
 		const deltaForRightEdge = myRect.left - imageryRect.left + myRect.width - imageryRect.width + 3;
 		const deltaForLeftEdge = myRect.left - imageryRect.left;
 		if (deltaForRightEdge > 0) {
@@ -59,6 +61,16 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 			this.right += deltaForLeftEdge;
 		} else if (deltaForLeftEdge > 0) {
 			this.right = Math.max(0, this.right + deltaForRightEdge);
+		}
+
+		const deltaForBottomEdge = myRect.bottom - imageryRect.bottom;
+		const deltaForTopEdge = imageryRect.top - myRect.top;
+		if (deltaForBottomEdge > 0) {
+			this.top -= deltaForBottomEdge;
+		} else if (deltaForTopEdge > 0) {
+			this.top += deltaForTopEdge;
+		} else if (deltaForTopEdge < 0) {
+			this.top = 0;
 		}
 	}
 

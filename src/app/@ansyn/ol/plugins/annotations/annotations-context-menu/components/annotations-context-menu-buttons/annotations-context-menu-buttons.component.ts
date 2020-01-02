@@ -5,7 +5,7 @@ import * as SVG from '../annotation-context-menu/icons-svg';
 import { IStyleWeight } from '../annotations-weight/annotations-weight.component';
 import { IVisualizerEntity } from '@ansyn/imagery';
 import { AnnotationMode } from '../../../annotations.model';
-import { STATUS_BAR_HEIGHT } from '../../../../../utils/utils';
+import { StayInImageryService } from '../../../../../helpers/stay-in-imagery.service';
 
 interface IFeatureProperties extends IVisualizerEntity {
 	mode: AnnotationMode
@@ -21,18 +21,26 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 	@Input() featureId: string;
 	@Input() selectedTab: { [id: string]: AnnotationsContextmenuTabs } = {};
 
-	@HostBinding('style.right.px') right = 0;
-	@HostBinding('style.top.px') top = 0;
+	@HostBinding('style.right.px')
+	get right() {
+		return this.stayInImageryService.moveLeft;
+	}
+
+	@HostBinding('style.top.px')
+	get top() {
+		return this.stayInImageryService.moveDown;
+	}
 
 	SVGICON = SVG;
 	Tabs = AnnotationsContextmenuTabs;
 
 	isFeatureNonEditable: boolean;
 	featureProps: IFeatureProperties;
-	timerId: number;
-	imageryElement: Element;
 
-	constructor(protected myElement: ElementRef) {
+	constructor(
+		protected myElement: ElementRef,
+		protected stayInImageryService: StayInImageryService
+	) {
 	}
 
 	ngOnInit() {
@@ -42,37 +50,11 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 	}
 
 	ngAfterViewInit(): void {
-		this.imageryElement = (this.myElement.nativeElement as HTMLElement).closest('.imagery');
-		this.timerId = window.setInterval(this.calcPositionToStayInsideImagery.bind(this), 300);
+		this.stayInImageryService.init(this.myElement.nativeElement);
 	}
 
 	ngOnDestroy(): void {
-		window.clearInterval(this.timerId);
-	}
-
-	calcPositionToStayInsideImagery() {
-		const myRect = this.myElement.nativeElement.getBoundingClientRect();
-		const imageryRect = this.imageryElement.getBoundingClientRect() as DOMRect;
-
-		const deltaForRightEdge = myRect.right - imageryRect.right;
-		const deltaForLeftEdge = myRect.left - imageryRect.left;
-		if (deltaForRightEdge > 0) {
-			this.right += deltaForRightEdge;
-		} else if (deltaForLeftEdge < 0) {
-			this.right += deltaForLeftEdge;
-		} else if (deltaForRightEdge !== 0 && deltaForLeftEdge !== 0) {
-			this.right = 0;
-		}
-
-		const deltaForBottomEdge = myRect.bottom - imageryRect.bottom + STATUS_BAR_HEIGHT;
-		const deltaForTopEdge = imageryRect.top - myRect.top + STATUS_BAR_HEIGHT;
-		if (deltaForBottomEdge > 0) {
-			this.top -= deltaForBottomEdge;
-		} else if (deltaForTopEdge > 0) {
-			this.top += deltaForTopEdge;
-		} else if (deltaForTopEdge !== 0 && deltaForBottomEdge !== 0) {
-			this.top = 0;
-		}
+		this.stayInImageryService.destroy();
 	}
 
 	toggleEditMode() {

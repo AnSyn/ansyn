@@ -69,7 +69,7 @@
 				 "flags": {},
 				 "worldView": {
 				   "mapType": "openLayersMap",
-				   "sourceType": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}"
+				   "sourceType": "BING"
 				 },
 				 "id": "af3b94d2-03ff-44e6-9f73-10d386aff493"
 			   }
@@ -168,7 +168,7 @@
 		"url": "http://dev.virtualearth.net/REST/v1/Locations?locality=$searchString&maxResults=1&key=$apiKey",
 		"apiKey": "AofqJGk-uEej_Pv7hkbpXh6H3pb54luGZj6lfe90ksZEoBY-JmgTwGE2s9TF6peC"
 	},
-	"floatingPositionSuffix": "{{ getv "/ansyn/floation/position/suffix" "" }}",
+	"floatingPositionSuffix": "",
 	"floatingPositionSystem" : "WGS84",
 	"Proj4": {
 	  "ed50": "+proj=utm +datum=ed50 +zone=${zone} +ellps=intl +units=m + no_defs",
@@ -178,7 +178,7 @@
   },
   "mapProvidersConfig": {
   	"openLayersMap": {
-  		"defaultMapSource": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}"
+  		"defaultMapSource": "ESRI_4326"
   	},
   	"CesiumMap": {
   		"defaultMapSource": "CESIUM_BING"
@@ -186,10 +186,10 @@
   },
   "mapSourceProvidersConfig": {
   "AIRBUS": {
-    		"baseUrl": "{{ getv "/ansyn/airbus/baseurl" "http://localhost:8100" }}"
+    		"baseUrl": "http://localhost:8100"
      },
     "SENTINEL":{
-    	"baseUrl": "{{ getv "/ansyn/sentinel/baseurl" "http://ansyn.webiks.com:89/api"}}"
+    	"baseUrl": "http://ansyn.webiks.com:89/api"
     },
   	"BING": {
     	"key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
@@ -303,15 +303,15 @@
       }
     ],
     "ShadowMouse": {
-    	"activeByDefault": {{ getv "/ansyn/is/shadow/active" "false"}},
-    	"forceSendShadowMousePosition": {{ getv "/ansyn/force/send/shadow/mouse/position" "false"}}
+    	"activeByDefault": false,
+    	"forceSendShadowMousePosition": false
     }
   },
   "loggerConfig": {
     "env": "PROD",
-    "active": {{ getv "/ansyn/logger/active" "false"}},
-    "componentName": "{{ getv "/ansyn/logger/component/name" "app_client" }}",
-    "disconnectionTimeoutInMinutes": {{ getv "/ansyn/logger/disconnection/minutes" "15"}}
+    "active": false,
+    "componentName": "app_client",
+    "disconnectionTimeoutInMinutes": 15
   },
   "statusBarConfig": {
     "toolTips": {
@@ -333,7 +333,7 @@
   },
   "coreConfig": {
     "storageService": {
-      "baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://platform.ansyn.io:8081/api/store" }}"
+      "baseUrl": "http://platform.ansyn.io:8081/api/store"
     },
     "translation": {
     	"default": {
@@ -350,8 +350,8 @@
 	   	}
     },
 	 "httpTimeout": "3000",
-	 "isFooterCollapsible": {{ getv "/ansyn/iscollapsible" "false" }},
-	 "enable3D": {{ getv "/ansyn/3d/enable" "true" }}
+	 "isFooterCollapsible": false,
+	 "enable3D": true
   },
   "olConfig": {
   	 "needToUseLayerExtent": false,
@@ -362,32 +362,32 @@
   },
   "olPluginsConfig": {
   	"Annotations": {
-  		"displayId":  "{{ getv "/ansyn/tools/displayid" "0" }}"
+  		"displayId":  "0"
   	}
   },
   "menuConfig": {
-    "menuItems": {{ getv "/ansyn/menu/items" "null" }},
+    "menuItems": null,
     "path": "assets/logo.svg",
-    "color": "{{ getv "/ansyn/menu/color" "white" }}",
-    "background": "{{ getv "/ansyn/menu/background" "red" }}",
-    "mode": "{{ getv "/ansyn/menu/mode" "" }}",
+    "color": "white",
+    "background": "red",
+    "mode": "",
     "forkMe": {
-    	"active": {{ getv "/ansyn/menu/forkme" "true" }},
+    	"active": true,
     	"image": "assets/icons/forkme.svg",
     	"title": "Fork me on github",
-		"href": "{{ getv "/ansyn/menu/forkme/url" "https://github.com/ansyn/ansyn" }}"
+		"href": "https://github.com/ansyn/ansyn"
     },
-    "isCollapsible": {{ getv "/ansyn/iscollapsible" "false" }}
+    "isCollapsible": false
   },
   "loginConfig": {
-  	"baseUrl": "{{ getv "/ansyn/login/baseurl" "http://platform.ansyn.io:9001/api/v1/login" }}",
-  	"title": "{{ getv "/ansyn/login/title" "AnSyn" }}",
-  	"active":  {{ getv "/ansyn/login/active" "false" }},
+  	"baseUrl": "http://platform.ansyn.io:9001/api/v1/login",
+  	"title": "AnSyn",
+  	"active":  false,
   	"authorizedPath": "/"
   },
   "credentialsConfig": {
   	"baseUrl": "assets/config/credentials.json",
-  	"active":  {{ getv "/ansyn/credentials/active" "false" }},
+  	"active":  false,
   	"noCredentialsMessage": "invalid credentials"
   },
   "visualizersConfig": {
@@ -460,7 +460,7 @@
     }
   },
   "multipleOverlaysSourceConfig": {
-  "useAngleDebugMode":  {{ getv "/ansyn/angle/debug/mode" "false" }},
+  "useAngleDebugMode":  false,
 	 "defaultProvider": {
 	 	"inActive": false,
 		"whitelist": [
@@ -506,7 +506,7 @@
 	"diagonalSensorNames": [],
 	"indexProviders": {
 		"IDAHO": {
-		  "inActive": {{ getv "/ansyn/overlay/idaho/inactive" "true" }},
+		  "inActive": true,
 		  "whitelist": [
 			{
 			  "name": "Entire Earth",
@@ -548,7 +548,7 @@
 		  "blacklist": []
 		},
 		"PLANET": {
-		  "inActive": {{ getv "/ansyn/overlay/planet/inactive" "true" }},
+		  "inActive": true,
 		  "whitelist": [
 			  {
 				"name": "Entire Earth",
@@ -1033,7 +1033,7 @@
 			}
 		},
 		"OPEN_AERIAL": {
-			"inActive": {{ getv "/ansyn/overlay/open/aerial/inactive" "false" }},
+			"inActive": false,
 			"whitelist": [
 				{
 					"name": "Entire Earth",
@@ -1089,7 +1089,7 @@
 			  }
 		},
 		"IMISIGHT": {
-			"inActive": {{ getv "/ansyn/overlay/imisight/inactive" "true" }},
+			"inActive": true,
 			"whitelist": [
 				{
 					"name": "Entire Earth",
@@ -1144,7 +1144,7 @@
 				  }
 		},
 		"SENTINEL": {
-			"inActive": {{ getv "/ansyn/overlay/sentinel/inactive" "false" }},
+			"inActive": false,
 			"whitelist": [
 				{
 					"name": "Entire Earth",
@@ -1200,7 +1200,7 @@
 			  }
 		},
 		"AIRBUS": {
-			"inActive": {{ getv "/ansyn/overlay/airbus/inactive" "true" }},
+			"inActive": true,
 			"whitelist": [
 				{
 					"name": "Entire Earth",
@@ -1274,7 +1274,7 @@
 			  }
 		},
 			"IMAGERY_VIDEO": {
-        		"inActive": {{ getv "/ansyn/overlay/imageryvideo/inactive" "true" }},
+        		"inActive": true,
         		"whitelist": [
         			{
         				"name": "Entire Earth",
@@ -1333,9 +1333,9 @@
 	},
 
   "idahoOverlaysSourceConfig": {
-    "defaultApi": "{{getv "/ansyn/overlay/api/default" "overlays" }}",
-    "baseUrl": "{{ getv "/ansyn/overlay/baseurl" "http://platform.ansyn.io:9001/api/v1/" }}",
-    "overlaysByTimeAndPolygon": "{{ getv "/ansyn/overlay/api/find" "overlays/find" }}"
+    "defaultApi": "overlays",
+    "baseUrl": "http://platform.ansyn.io:9001/api/v1/",
+    "overlaysByTimeAndPolygon": "overlays/find"
   },
   "openAerialOverlaysSourceConfig": {
   	"baseUrl": "https://api.openaerialmap.org/meta"
@@ -1359,13 +1359,13 @@
     "delayMultiple": 300
   },
   "auth0Config": {
-      "auth0Active": {{ getv "/ansyn/auth0/auth0Active" "false" }},
-      "clientID":"{{ getv "/ansyn/auth0/clientId" "KXLTbs08LtLqrbPwSgn7Ioej0aMB7tf6" }}",
-      "domain": "{{ getv "/ansyn/auth0/domain" "imisight-sat.auth0.com" }}",
-      "responseType": "{{ getv "/ansyn/auth0/responseType" "token id_token" }}",
-      "audience": "{{ getv "/ansyn/auth0/audience" "https://gw.sat.imisight.net" }}",
-      "callbackURL": "{{ getv "/ansyn/auth0/callbackURL" "http://localhost:4200/#/callback/" }}",
-      "scope": "{{ getv "/ansyn/auth0/scope" "openid" }}"
+      "auth0Active": false,
+      "clientID":"KXLTbs08LtLqrbPwSgn7Ioej0aMB7tf6",
+      "domain": "imisight-sat.auth0.com",
+      "responseType": "token id_token",
+      "audience": "https://gw.sat.imisight.net",
+      "callbackURL": "http://localhost:4200/#/callback/",
+      "scope": "openid"
   },
   "ORIENTATIONS": ["Align North", "User Perspective", "Imagery Perspective"],
   "algorithmsConfig": {
@@ -1388,6 +1388,6 @@
   },
   "anaglyphConfig": {
   	"getStereoUrl": "needed test",
-  	"sensorNames": {{ getv "/ansyn/anaglyph/sensornames" "null" }}
+  	"sensorNames": null
   }
 }

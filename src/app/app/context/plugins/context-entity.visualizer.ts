@@ -64,7 +64,8 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 			tap((referenceDate) => {
 				this.referenceDate = referenceDate;
 				this.purgeCache();
-				this.source.changed();
+				// TODO: Do we want to re-render the layer? if so, use changed().
+				this.source.refresh();
 			})
 		);
 

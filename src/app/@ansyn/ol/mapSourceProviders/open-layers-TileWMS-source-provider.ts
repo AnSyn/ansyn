@@ -17,6 +17,7 @@ export class OpenLayerTileWMSSourceProvider extends OpenLayersMapSourceProvider 
 		const layers = config.layers.join(',');
 
 		const source = new TileWMS(<any>{
+			preload: Infinity,
 			url: config.url,
 			params: {
 				'VERSION': '1.1.1',

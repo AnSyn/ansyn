@@ -255,6 +255,10 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 
 		const entitiesToAdd = annotationsLayerEntities
 			.filter((entity) => {
+				if (entity.featureJson.geometry.type === "MultiPolygon") {
+					return false;
+				}
+
 				const oldEntity = this.annotationsVisualizer.idToEntity.get(entity.id);
 				if (oldEntity) {
 					const isShowMeasuresDiff = oldEntity.originalEntity.showMeasures !== entity.showMeasures;

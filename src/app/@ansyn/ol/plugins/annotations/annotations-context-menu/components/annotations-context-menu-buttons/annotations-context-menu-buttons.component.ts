@@ -14,7 +14,8 @@ interface IFeatureProperties extends IVisualizerEntity {
 @Component({
 	selector: 'ansyn-annotations-context-menu-buttons',
 	templateUrl: './annotations-context-menu-buttons.component.html',
-	styleUrls: ['./annotations-context-menu-buttons.component.less']
+	styleUrls: ['./annotations-context-menu-buttons.component.less'],
+	providers: [StayInImageryService]
 })
 export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterViewInit, OnDestroy {
 	@Input() annotations: AnnotationsVisualizer;

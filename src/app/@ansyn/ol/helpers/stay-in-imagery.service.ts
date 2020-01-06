@@ -1,19 +1,15 @@
 import { Injectable } from '@angular/core';
 import { STATUS_BAR_HEIGHT } from './const';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class StayInImageryService {
-	targetElement: Element;
-	imageryElement: Element;
+	getElementFunc: Function;
 	timerId: number;
 	public moveLeft = 0;
 	public moveDown = 0;
 
-	init(targetElement: Element) {
-		this.targetElement = targetElement;
-		this.imageryElement = targetElement.closest('.imagery');
+	init(funcOrElement: Function | Element) {
+		this.getElementFunc = funcOrElement instanceof Function ? funcOrElement : () => funcOrElement;
 		this.timerId = window.setInterval(this.calcPositionToStayInsideImagery.bind(this), 300);
 	}
 
@@ -22,8 +18,14 @@ export class StayInImageryService {
 	}
 
 	calcPositionToStayInsideImagery() {
-		const myRect = this.targetElement.getBoundingClientRect();
-		const imageryRect = this.imageryElement.getBoundingClientRect() as DOMRect;
+		const targetElement = this.getElementFunc();
+		if (!targetElement) {
+			return;
+		}
+		const imageryElement = targetElement.closest('.imagery');
+
+		const myRect = targetElement.getBoundingClientRect();
+		const imageryRect = imageryElement.getBoundingClientRect() as DOMRect;
 
 		const deltaForRightEdge = myRect.right - imageryRect.right;
 		const deltaForLeftEdge = myRect.left - imageryRect.left;

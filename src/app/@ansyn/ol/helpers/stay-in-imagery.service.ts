@@ -4,12 +4,14 @@ import { STATUS_BAR_HEIGHT } from './const';
 @Injectable()
 export class StayInImageryService {
 	getElementFunc: Function;
+	timerCallback: Function;
 	timerId: number;
 	public moveLeft = 0;
 	public moveDown = 0;
 
-	init(funcOrElement: Function | Element) {
+	init(funcOrElement: Function | Element, timerCallback: Function = null) {
 		this.getElementFunc = funcOrElement instanceof Function ? funcOrElement : () => funcOrElement;
+		this.timerCallback = timerCallback;
 		this.timerId = window.setInterval(this.calcPositionToStayInsideImagery.bind(this), 300);
 	}
 
@@ -45,6 +47,10 @@ export class StayInImageryService {
 			this.moveDown += deltaForTopEdge;
 		} else if (deltaForTopEdge !== 0 && deltaForBottomEdge !== 0) {
 			this.moveDown = 0;
+		}
+
+		if (this.timerCallback) {
+			this.timerCallback();
 		}
 	}
 

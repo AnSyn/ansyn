@@ -199,7 +199,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			return {
 				featureJson,
 				id: feature.properties.id,
-				style: feature.properties.style,
+				style: feature.properties.style || this.visualizerStyle,
 				showMeasures: feature.properties.showMeasures || false,
 				label: feature.properties.label || {text: '', geometry: null},
 				icon: feature.properties.icon || '',

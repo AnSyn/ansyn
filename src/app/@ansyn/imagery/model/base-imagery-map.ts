@@ -93,8 +93,6 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract getHtmlContainer(): HTMLElement;
 
-	abstract getExportData(): ICanvasExportData;
-
 	fitToExtent(extent: any): Observable<any> {
 		throw new Error('Method not implemented.');
 	};

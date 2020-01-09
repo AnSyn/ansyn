@@ -45,6 +45,13 @@ const mockComboBoxOptionComponent = MockComponent({
 	outputs: []
 });
 
+
+const mockAnsynLoaderComponent = MockComponent({
+	selector: 'ansyn-loader',
+	inputs: ['show', 'loaderText', 'rtl'],
+	outputs: []
+});
+
 describe('ImageriesManagerComponent', () => {
 	let component: ImageriesManagerComponent;
 	let fixture: ComponentFixture<ImageriesManagerComponent>;
@@ -75,6 +82,7 @@ describe('ImageriesManagerComponent', () => {
 				mockAnnotationContextMenu,
 				mockAnsynWelcomeNotification,
 				mockAnsynPopoverComponent,
+				mockAnsynLoaderComponent,
 				EntryComponentDirective
 			]
 

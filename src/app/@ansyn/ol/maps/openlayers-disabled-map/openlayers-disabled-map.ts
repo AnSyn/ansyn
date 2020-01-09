@@ -171,24 +171,6 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		return <HTMLElement>this.element;
 	}
 
-	getExportData(): ICanvasExportData {
-		const c = this.mapObject.getViewport().firstChild;
-		let exportData: ICanvasExportData = {
-			width: c.width,
-			height: c.height,
-			data: null
-		};
-		try {
-			exportData = {
-				width: c.width,
-				height: c.height,
-				data: c.toDataURL('image/jpeg', 1.0)
-			}
-		} catch (e) {
-		}
-		return exportData;
-	}
-
 	dispose() {
 		if (this.mapObject) {
 			this.removeMainLayer();

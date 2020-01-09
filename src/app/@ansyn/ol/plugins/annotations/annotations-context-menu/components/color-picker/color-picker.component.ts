@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { UUID } from 'angular2-uuid';
-import { StayInImageryService } from '../../../../../helpers/stay-in-imagery.service';
+import { StayInImageryService } from '@ansyn/imagery';
 
 @Component({
 	selector: 'ansyn-color-picker',

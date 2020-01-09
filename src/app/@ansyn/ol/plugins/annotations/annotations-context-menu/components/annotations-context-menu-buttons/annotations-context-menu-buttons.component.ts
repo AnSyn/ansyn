@@ -3,9 +3,8 @@ import { AnnotationsVisualizer } from '../../../annotations.visualizer';
 import { AnnotationsContextmenuTabs } from '../annotation-context-menu/annotation-context-menu.component';
 import * as SVG from '../annotation-context-menu/icons-svg';
 import { IStyleWeight } from '../annotations-weight/annotations-weight.component';
-import { IVisualizerEntity } from '@ansyn/imagery';
+import { IVisualizerEntity, StayInImageryService } from '@ansyn/imagery';
 import { AnnotationMode } from '../../../annotations.model';
-import { StayInImageryService } from '../../../../../helpers/stay-in-imagery.service';
 
 interface IFeatureProperties extends IVisualizerEntity {
 	mode: AnnotationMode

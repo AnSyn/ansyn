@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
-import { IMAGERY_CONFIG } from '@ansyn/imagery';
-import { IImageryConfig } from '../../imagery/model/iimagery-config';
+import { IImageryConfig } from '../model/iimagery-config';
+import { IMAGERY_CONFIG } from '../model/configuration.token';
 
 @Injectable()
 export class StayInImageryService {

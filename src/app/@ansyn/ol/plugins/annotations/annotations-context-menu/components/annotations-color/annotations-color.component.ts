@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import { StayInImageryService } from '../../../../../helpers/stay-in-imagery.service';
+import { StayInImageryService } from '@ansyn/imagery';
 
 export interface IAnnotationColorProps {
 	fill: string;

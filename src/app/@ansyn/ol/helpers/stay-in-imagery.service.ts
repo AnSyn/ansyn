@@ -7,7 +7,7 @@ export class StayInImageryService {
 	getElementFunc: Function;
 	timerCallback: Function;
 	timerId: number;
-	verticalPadding = this.imageryConfig.stayInImageryVerticalPadding || 35;
+	verticalPadding = this.imageryConfig.stayInImageryVerticalPadding || 0;
 	public moveLeft = 0;
 	public moveDown = 0;
 

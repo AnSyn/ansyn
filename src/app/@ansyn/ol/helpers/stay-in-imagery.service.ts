@@ -1,13 +1,18 @@
-import { Injectable } from '@angular/core';
-import { STATUS_BAR_HEIGHT } from './const';
+import { Inject, Injectable } from '@angular/core';
+import { IMAGERY_CONFIG } from '@ansyn/imagery';
+import { IImageryConfig } from '../../imagery/model/iimagery-config';
 
 @Injectable()
 export class StayInImageryService {
 	getElementFunc: Function;
 	timerCallback: Function;
 	timerId: number;
+	verticalPadding = this.imageryConfig.stayInImageryVerticalPadding || 35;
 	public moveLeft = 0;
 	public moveDown = 0;
+
+	constructor(@Inject(IMAGERY_CONFIG) protected imageryConfig: IImageryConfig) {
+	}
 
 	init(funcOrElement: Function | Element, timerCallback: Function = null) {
 		this.getElementFunc = funcOrElement instanceof Function ? funcOrElement : () => funcOrElement;
@@ -39,8 +44,8 @@ export class StayInImageryService {
 			this.moveLeft = 0;
 		}
 
-		const deltaForBottomEdge = myRect.bottom - imageryRect.bottom + STATUS_BAR_HEIGHT;
-		const deltaForTopEdge = imageryRect.top - myRect.top + STATUS_BAR_HEIGHT;
+		const deltaForBottomEdge = myRect.bottom - imageryRect.bottom + this.verticalPadding;
+		const deltaForTopEdge = imageryRect.top - myRect.top + this.verticalPadding;
 		if (deltaForBottomEdge > 0) {
 			this.moveDown -= deltaForBottomEdge;
 		} else if (deltaForTopEdge > 0) {

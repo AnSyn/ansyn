@@ -90,7 +90,7 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 		if ($event.selected.length > 0) {
 			const feature = $event.selected[0];
 			const id = feature.getId();
-			this.store.dispatch(new DisplayOverlayFromStoreAction({ id }));
+			this.store.dispatch(DisplayOverlayFromStoreAction({ id }));
 		}
 	}
 
@@ -112,9 +112,9 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 	onSelectFeature($event) {
 		if ($event.selected.length > 0) {
 			const id = $event.selected[0].getId();
-			this.store.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [id] } }));
+			this.store.dispatch(SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [id] } }));
 		} else {
-			this.store.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
+			this.store.dispatch(SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
 		}
 	}
 

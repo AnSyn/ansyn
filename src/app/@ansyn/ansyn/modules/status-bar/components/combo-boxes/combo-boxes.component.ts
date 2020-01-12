@@ -147,12 +147,12 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	}
 
 	applyTimelinePickerResult(time: ICaseTimeState) {
-		this.store$.dispatch(new SetOverlaysCriteriaAction({ time }));
+		this.store$.dispatch(SetOverlaysCriteriaAction({ time }));
 		this.toggleTimelineStartEndSearch();
 	}
 
 	layoutSelectChange(layout: LayoutKey): void {
-		this.store$.dispatch(new SetLayoutAction(layout));
+		this.store$.dispatch(SetLayoutAction(layout));
 	}
 
 	toggleMapSearch() {
@@ -161,11 +161,11 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	}
 
 	toggleIndicatorView() {
-		this.store$.dispatch(new UpdateGeoFilterStatus({ indicator: !this.geoFilterStatus.indicator }));
+		this.store$.dispatch(UpdateGeoFilterStatus({ indicator: !this.geoFilterStatus.indicator }));
 	}
 
 	comboBoxesChange(payload: IComboBoxesProperties) {
-		this.store$.dispatch(new SetImageOpeningOrientation(payload));
+		this.store$.dispatch(SetImageOpeningOrientation(payload));
 	}
 
 	geoFilterChanged(geoFilter?: SearchMode) {
@@ -175,8 +175,8 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 			payload.indicator = true;
 		}
 
-		this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateGeoFilterStatus] }));
-		this.store$.dispatch(new UpdateGeoFilterStatus({ searchMode: geoFilter }));
+		this.store$.dispatch(ClearActiveInteractionsAction({ skipClearFor: [UpdateGeoFilterStatus] }));
+		this.store$.dispatch(UpdateGeoFilterStatus({ searchMode: geoFilter }));
 	}
 
 	ngOnDestroy() {

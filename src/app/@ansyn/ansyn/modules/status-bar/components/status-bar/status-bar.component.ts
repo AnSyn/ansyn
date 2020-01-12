@@ -30,7 +30,7 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 	}
 
 	copyLink(): void {
-		this.store.dispatch(new CopySnapshotShareLinkAction());
+		this.store.dispatch(CopySnapshotShareLinkAction());
 	}
 
 	ngOnInit(): void {

@@ -1,8 +1,9 @@
+import { MapInstanceChangedAction } from './../../../map-facade/actions/map.actions';
 import { Inject, Injectable } from '@angular/core';
 import { CesiumMapName } from '@ansyn/imagery-cesium';
 import { DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
 import { Action, Store } from '@ngrx/store';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, Effect, ofType, createEffect } from '@ngrx/effects';
 import { combineLatest, EMPTY, from, Observable, of, pipe } from 'rxjs';
 import {
 	ImageryCreatedAction,
@@ -20,7 +21,8 @@ import {
 	SetIsLoadingAcion,
 	SetToastMessageAction,
 	ToggleMapLayersAction,
-	UpdateMapAction
+	UpdateMapAction,
+	SetLayoutSuccessAction,
 } from '@ansyn/map-facade';
 import {
 	BaseMapSourceProvider,
@@ -47,7 +49,7 @@ import {
 import { toastMessages } from '../../modules/core/models/toast-messages';
 import { endTimingLog, startTimingLog } from '../../modules/core/utils/logs/timer-logs';
 import { isFullOverlay } from '../../modules/core/utils/overlays';
-import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
+import { ICaseMapState, ImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
 import { MarkUpClass } from '../../modules/overlays/reducers/overlays.reducer';
 import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity/src/models';
@@ -68,149 +70,151 @@ import {
 import { GeoRegisteration, IOverlay } from '../../modules/overlays/models/overlay.model';
 import {
 	BackToWorldView,
-	OverlayStatusActionsTypes
+	OverlayStatusActionsTypes,
+	BackToWorldSuccess,
+	BackToWorldFailed
 } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { isEqual } from 'lodash';
 import { selectGeoRegisteredOptionsEnabled } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import { ImageryVideoMapType } from '../../modules/imagery-video/map/imagery-video-map';
 import { LoggerService } from '../../modules/core/services/logger.service';
+import { SynchronizeMapsAction, ExportMapsToPngActionSuccess, ExportMapsToPngActionFailed, ContextMenuShowAngleFilter, ContextMenuShowAction, ChangeImageryMap, ChangeImageryMapFailed, ChangeImageryMapSuccess } from 'src/app/@ansyn/map-facade/actions/map.actions';
 
 @Injectable()
 export class MapAppEffects {
 
-	@Effect({ dispatch: false })
-	actionsLogger$: Observable<any> = this.actions$.pipe(
+	actionsLogger$ = createEffect(() => this.actions$.pipe(
 		ofType(
-			OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
-			OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
-			MapActionTypes.MAP_INSTANCE_CHANGED_ACTION,
-			MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS,
-			MapActionTypes.CHANGE_IMAGERY_MAP_FAILED,
-			MapActionTypes.CHANGE_IMAGERY_MAP,
-			MapActionTypes.CONTEXT_MENU.SHOW,
-			MapActionTypes.CONTEXT_MENU.ANGLE_FILTER_SHOW,
-			MapActionTypes.SET_LAYOUT_SUCCESS,
-			MapActionTypes.POSITION_CHANGED,
-			MapActionTypes.SYNCHRONIZE_MAPS,
-			MapActionTypes.EXPORT_MAPS_TO_PNG_SUCCESS,
-			MapActionTypes.EXPORT_MAPS_TO_PNG_FAILED,
-			OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW,
-			OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS,
-			OverlayStatusActionsTypes.BACK_TO_WORLD_FAILED
+			DisplayOverlaySuccessAction,
+			DisplayOverlayFailedAction,
+			MapInstanceChangedAction,
+			ChangeImageryMapSuccess,
+			ChangeImageryMapFailed,
+			ChangeImageryMap,
+			ContextMenuShowAction,
+			ContextMenuShowAngleFilter,
+			SetLayoutSuccessAction,
+			PositionChangedAction,
+			SynchronizeMapsAction,
+			ExportMapsToPngActionSuccess,
+			ExportMapsToPngActionFailed,
+			BackToWorldView,
+			BackToWorldSuccess,
+			BackToWorldFailed
 		),
-		tap((action) => {
-			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Map', action.type);
-		}));
+		tap((payload) => {
+			this.loggerService.info(payload ? JSON.stringify(payload) : '', 'Map', payload.type); // TODO : payload doesn't have a type
+		})),
+		{ dispatch: false }
+	);
 
 	onDisplayOverlay$: Observable<any> = this.actions$
 		.pipe(
-			ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY),
+			ofType(DisplayOverlayAction),
 			startWith(null),
 			pairwise(),
 			withLatestFrom(this.store$.select(mapStateSelector)),
 			filter(this.onDisplayOverlayFilter.bind(this))
 		);
 
-
 	onDisplayOverlaySwitchMap$ = this.onDisplayOverlay$
 		.pipe(
 			filter((data) => this.displayShouldSwitch(data))
 		);
 
-	@Effect()
-	onDisplayOverlaySwitchMapWithDebounce$ = this.onDisplayOverlaySwitchMap$
+	onDisplayOverlaySwitchMapWithDebounce$ = createEffect(() => this.onDisplayOverlaySwitchMap$
 		.pipe(
 			debounceTime(this.config.displayDebounceTime),
 			filter(this.onDisplayOverlayFilter.bind(this)),
 			switchMap(this.onDisplayOverlay.bind(this))
-		);
+		)
+	);
 
-	@Effect()
-	onDisplayOverlayMergeMap$ = this.onDisplayOverlay$
+	onDisplayOverlayMergeMap$ = createEffect(() => this.onDisplayOverlay$
 		.pipe(
 			filter((data) => !this.displayShouldSwitch(data)),
 			mergeMap(this.onDisplayOverlay.bind(this))
-		);
+		)
+	);
 
-	@Effect()
-	onDisplayOverlayHideLoader$ = this.actions$
+	onDisplayOverlayHideLoader$ = createEffect(() => this.actions$
 		.pipe(
-			ofType<DisplayOverlayAction>(
-				OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
-				OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
-				OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW
+			ofType(
+				DisplayOverlaySuccessAction,
+				DisplayOverlayFailedAction,
+				BackToWorldView
 			),
-			map(({ payload }: DisplayOverlayAction) => new SetIsLoadingAcion({ mapId: payload.mapId, show: false }))
-		);
+			map(payload => SetIsLoadingAcion({ mapId: payload.mapId, show: false }))
+		)
+	);
 
-	@Effect()
-	onSetManualImageProcessing$: Observable<any> = this.actions$
+	onSetManualImageProcessing$ = createEffect(() => this.actions$
 		.pipe(
-			ofType<SetManualImageProcessing>(ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING),
+			ofType(SetManualImageProcessing),
 			withLatestFrom(this.store$.select(mapStateSelector)),
-			map(([action, mapState]: [SetManualImageProcessing, IMapState]) => [MapFacadeService.activeMap(mapState), action, mapState]),
-			filter(([activeMap]: [ICaseMapState, SetManualImageProcessing, IMapState]) => Boolean(activeMap.data.overlay)),
-			mergeMap(([activeMap, action]: [ICaseMapState, SetManualImageProcessing, IMapState]) => {
-				const imageManualProcessArgs = action.payload;
+			map(([payload, mapState]: [ImageManualProcessArgs, IMapState]) => [MapFacadeService.activeMap(mapState), payload, mapState]),
+			filter(([activeMap]: [ICaseMapState, ImageManualProcessArgs, IMapState]) => Boolean(activeMap.data.overlay)),
+			mergeMap(([activeMap, payload]: [ICaseMapState, ImageManualProcessArgs, IMapState]) => {
+				const imageManualProcessArgs = payload;
 				const overlayId = activeMap.data.overlay.id;
 				return [
-					new UpdateMapAction({
+					UpdateMapAction({
 						id: activeMap.id,
 						changes: { data: { ...activeMap.data, imageManualProcessArgs } }
 					}),
-					new UpdateOverlaysManualProcessArgs({ data: { [overlayId]: action.payload } })
+					UpdateOverlaysManualProcessArgs({ data: { [overlayId]: payload } })
 				];
-			}));
+			}))
+	);
 
-	@Effect()
-	displayOverlayOnNewMapInstance$: Observable<any> = this.actions$
+	displayOverlayOnNewMapInstance$ = createEffect(() => this.actions$
 		.pipe(
-			ofType(MapActionTypes.IMAGERY_CREATED),
+			ofType(ImageryCreatedAction),
 			withLatestFrom(this.store$.select(selectMaps)),
-			filter(([action, entities]: [ImageryCreatedAction, Dictionary<ICaseMapState>]) => entities && Object.values(entities).length > 0),
-			map(([action, entities]: [ImageryCreatedAction, Dictionary<ICaseMapState>]) => entities[action.payload.id]),
+			filter(([, entities]: [any, Dictionary<ICaseMapState>]) => entities && Object.values(entities).length > 0),
+			map(([payload, entities]: [{payload: string}, Dictionary<ICaseMapState>]) => entities[payload.payload.id]),
 			filter((caseMapState: ICaseMapState) => Boolean(caseMapState && caseMapState.data.overlay)),
 			map((caseMapState: ICaseMapState) => {
 				startTimingLog(`LOAD_OVERLAY_${ caseMapState.data.overlay.id }`);
-				return new DisplayOverlayAction({
+				return DisplayOverlayAction({
 					overlay: caseMapState.data.overlay,
 					mapId: caseMapState.id,
 					forceFirstDisplay: true
 				});
 			})
-		);
+		)
+	);
 
-	@Effect()
-	onOverlayFromURL$: Observable<any> = this.actions$
+	onOverlayFromURL$ = createEffect(() => this.actions$
 		.pipe(
-			ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY),
-			filter((action: DisplayOverlayAction) => !isFullOverlay(action.payload.overlay)),
-			mergeMap((action: DisplayOverlayAction) => {
+			ofType(DisplayOverlayAction),
+			filter((payload) => !isFullOverlay(payload.overlay)),
+			mergeMap((payload) => {
 				return [
-					new RequestOverlayByIDFromBackendAction({
-						overlayId: action.payload.overlay.id,
-						sourceType: action.payload.overlay.sourceType,
-						mapId: action.payload.mapId
+					RequestOverlayByIDFromBackendAction({
+						overlayId: payload.overlay.id,
+						sourceType: payload.overlay.sourceType,
+						mapId: payload.mapId
 					}),
-					new SetIsLoadingAcion({ mapId: action.payload.mapId, show: true, text: 'Loading Overlay' })
+					SetIsLoadingAcion({ mapId: payload.mapId, show: true, text: 'Loading Overlay' })
 				];
 			})
-		);
+		)
+	);
 
-	@Effect()
-	overlayLoadingFailed$: Observable<any> = this.actions$
+	overlayLoadingFailed$ = createEffect(() => this.actions$
 		.pipe(
-			ofType<DisplayOverlayFailedAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED),
-			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${ action.payload.id }`)),
-			map(() => new SetToastMessageAction({
+			ofType(DisplayOverlayFailedAction),
+			tap((payload) => endTimingLog(`LOAD_OVERLAY_FAILED${ payload.id }`)),
+			map(() => SetToastMessageAction({
 				toastText: toastMessages.showOverlayErrorToast,
 				showWarningIcon: true
 			}))
-		);
+		)
+	);
 
-	@Effect()
-	markupOnMapsDataChanges$ = this.store$.select(selectOverlaysWithMapIds)
+	markupOnMapsDataChanges$ = createEffect(() => this.store$.select(selectOverlaysWithMapIds)
 		.pipe(
 			distinctUntilChanged((dataA, dataB) => isEqual(dataA, dataB)),
 			map((overlayWithMapIds: { overlay: any, mapId: string, isActive: boolean }[]) => {
@@ -231,14 +235,14 @@ export class MapAppEffects {
 				}
 			),
 			mergeMap(({ actives, displayed }) => [
-					new SetMarkUp({
+					SetMarkUp({
 							classToSet: MarkUpClass.active,
 							dataToSet: {
 								overlaysIds: actives
 							}
 						}
 					),
-					new SetMarkUp({
+					SetMarkUp({
 						classToSet: MarkUpClass.displayed,
 						dataToSet: {
 							overlaysIds: displayed
@@ -246,31 +250,30 @@ export class MapAppEffects {
 					})
 				]
 			)
-		);
+		));
 
-	@Effect({ dispatch: false })
-	toggleLayersGroupLayer$: Observable<any> = this.actions$
+	toggleLayersGroupLayer$ = createEffect(() => this.actions$
 		.pipe(
-			ofType<ToggleMapLayersAction>(MapActionTypes.TOGGLE_MAP_LAYERS),
-			tap(({ payload }) => {
+			ofType(ToggleMapLayersAction),
+			tap((payload) => {
 				const communicator = this.imageryCommunicatorService.provide(payload.mapId);
 				communicator.visualizers.forEach(v => v.setVisibility(payload.isVisible));
-			})
+			})),
+			{ dispatch: false }
 		);
 
-	@Effect()
-	activeMapGeoRegistrationChanged$: Observable<any> = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectOverlayOfActiveMap))
+	activeMapGeoRegistrationChanged$ = createEffect(() => combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectOverlayOfActiveMap))
 		.pipe(
 			withLatestFrom(this.store$.select(selectGeoRegisteredOptionsEnabled)),
 			filter(([[activeMapId, overlay], isGeoRegisteredOptionsEnabled]: [[string, IOverlay], boolean]) => Boolean(activeMapId)),
 			switchMap(([[activeMapId, overlay], isGeoRegisteredOptionsEnabled]: [[string, IOverlay], boolean]) => {
 				const isGeoRegistered = MapFacadeService.isOverlayGeoRegistered(overlay);
 				if (!!isGeoRegistered !== isGeoRegisteredOptionsEnabled) {
-					return [new SetMapGeoEnabledModeToolsActionStore(!!isGeoRegistered)];
+					return [SetMapGeoEnabledModeToolsActionStore({payload: !!isGeoRegistered})];
 				}
 				return [];
 			})
-		);
+		));
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
@@ -307,7 +310,7 @@ export class MapAppEffects {
 		});
 
 		if (!sourceLoader) {
-			return of(new SetToastMessageAction({
+			return of(SetToastMessageAction({
 				toastText: 'No source loader for ' + overlay.sourceType,
 				showWarningIcon: true
 			}));
@@ -350,9 +353,9 @@ export class MapAppEffects {
 				// in order to set the new map position for unregistered overlays maps
 				if (overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered && wasOverlaySetAsExtent) {
 					const position: ImageryMapPosition = { extentPolygon: polygonFromBBOX(bboxFromGeoJson(overlay.footprint)) };
-					actionsArray.push(new PositionChangedAction({ id: mapId, position, mapInstance: caseMapState }));
+					actionsArray.push(PositionChangedAction({ id: mapId, position, mapInstance: caseMapState }));
 				}
-				actionsArray.push(new DisplayOverlaySuccessAction(payload));
+				actionsArray.push(DisplayOverlaySuccessAction());
 				return actionsArray;
 			})
 		);
@@ -360,8 +363,8 @@ export class MapAppEffects {
 		const onError = catchError((exception) => {
 			console.error(exception);
 			return from([
-				new DisplayOverlayFailedAction({ id: overlay.id, mapId }),
-				prevOverlay ? new DisplayOverlayAction({ mapId, overlay: prevOverlay }) : new BackToWorldView({ mapId })
+				DisplayOverlayFailedAction({ id: overlay.id, mapId }),
+				prevOverlay ? DisplayOverlayAction({ mapId, overlay: prevOverlay }) : BackToWorldView({ mapId })
 			]);
 		});
 
@@ -375,9 +378,9 @@ export class MapAppEffects {
 
 	setIsLoadingSpinner(mapId, sourceLoader, sourceProviderMetaData) {
 		if (sourceLoader.existsInCache(sourceProviderMetaData)) {
-			this.store$.dispatch(new SetIsLoadingAcion({ mapId, show: false }));
+			this.store$.dispatch(SetIsLoadingAcion({ mapId, show: false }));
 		} else {
-			this.store$.dispatch(new SetIsLoadingAcion({ mapId, show: true, text: 'Loading Overlay' }));
+			this.store$.dispatch(SetIsLoadingAcion({ mapId, show: true, text: 'Loading Overlay' }));
 		}
 	}
 

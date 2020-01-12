@@ -44,7 +44,7 @@ export class SaveCaseComponent {
 	}
 
 	close(): void {
-		this.store.dispatch(new CloseModalAction());
+		this.store.dispatch(CloseModalAction());
 	}
 
 	onSubmitCase() {
@@ -61,7 +61,7 @@ export class SaveCaseComponent {
 							selectedCase.state.maps.activeMapId = map.id;
 						}
 					});
-					this.store.dispatch(new SaveCaseAsAction({ ...selectedCase, name: this.caseName }));
+					this.store.dispatch(SaveCaseAsAction({ ...selectedCase, name: this.caseName }));
 					this.close();
 				})
 			).subscribe();

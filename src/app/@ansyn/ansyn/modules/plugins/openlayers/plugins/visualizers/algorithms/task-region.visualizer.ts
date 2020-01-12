@@ -96,7 +96,7 @@ export class TaskRegionVisualizer extends EntitiesVisualizer {
 	}
 
 	onDrawEndEvent({ feature }) {
-		this.store$.dispatch(new SetTaskDrawIndicator(false));
+		this.store$.dispatch(SetTaskDrawIndicator({payload: false}));
 
 		this.projectionService
 			.projectCollectionAccurately([feature], this.iMap.mapObject).pipe(
@@ -104,7 +104,7 @@ export class TaskRegionVisualizer extends EntitiesVisualizer {
 			tap((featureCollection: FeatureCollection<GeometryObject>) => {
 				const [geoJsonFeature] = featureCollection.features;
 				const region = this.createRegion(geoJsonFeature);
-				this.store$.dispatch(new SetCurrentTaskRegion(region));
+				this.store$.dispatch(SetCurrentTaskRegion(region));
 			})
 		).subscribe();
 	}
@@ -126,7 +126,7 @@ export class TaskRegionVisualizer extends EntitiesVisualizer {
 
 	resetInteractions() {
 		super.resetInteractions();
-		this.store$.dispatch(new SetTaskDrawIndicator(false));
+		this.store$.dispatch(SetTaskDrawIndicator({payload: false}));
 	}
 
 	interactionChanges([isActiveMap, drawIndicator]: [boolean, boolean]): void {

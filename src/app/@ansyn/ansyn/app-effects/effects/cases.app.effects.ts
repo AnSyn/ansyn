@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, Effect, ofType, createEffect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { IMapState, mapStateSelector, SetToastMessageAction, UpdateMapAction } from '@ansyn/map-facade';
@@ -49,34 +49,31 @@ export class CasesAppEffects {
 			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Cases', action.type);
 		}));
 
-	@Effect()
-	onDisplayOverlay$: Observable<any> = this.actions$.pipe(
-		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
+	onDisplayOverlay$ = createEffect(() => this.actions$.pipe(
+		ofType(DisplayOverlaySuccessAction),
 		withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(toolsStateSelector)),
-		map(([action, mapState, toolsState]: [DisplayOverlaySuccessAction, IMapState, IToolsState]) => {
-			const mapId = action.payload.mapId || mapState.activeMapId;
+		map(([{payload}, mapState, toolsState]: [any, IMapState, IToolsState]) => {
+			const mapId = payload.mapId || mapState.activeMapId;
 			const currentMap = mapState.entities[mapId];
-			const imageManualProcessArgs = (Boolean(toolsState && toolsState.overlaysManualProcessArgs) && toolsState.overlaysManualProcessArgs[action.payload.overlay.id]) || this.defaultImageManualProcessArgs;
+			const imageManualProcessArgs = (Boolean(toolsState && toolsState.overlaysManualProcessArgs) && toolsState.overlaysManualProcessArgs[payload.overlay.id]) || this.defaultImageManualProcessArgs;
 
-			return new UpdateMapAction({
+			return UpdateMapAction({
 				id: mapId,
 				changes: {
 					data: {
 						...currentMap.data,
-						overlay: action.payload.overlay,
+						overlay: payload.overlay,
 						isAutoImageProcessingActive: false,
 						imageManualProcessArgs
 					}
 				}
 			});
-		})
+		}))
 	);
 
-	@Effect()
-	loadCase$: Observable<any> = this.actions$
+	loadCase$ = createEffect(() => this.actions$
 		.pipe(
-			ofType<SelectDilutedCaseAction>(CasesActionTypes.SELECT_DILUTED_CASE),
-			map(({ payload }: SelectDilutedCaseAction) => payload),
+			ofType(SelectDilutedCaseAction),
 			mergeMap((caseValue: IDilutedCase) => {
 				const ids: IOverlayByIdMetaData[] = uniqBy(caseValue.state.maps.data.filter(mapData => Boolean(mapData.data.overlay))
 						.map((mapData) => mapData.data.overlay)
@@ -105,18 +102,18 @@ export class CasesAppEffects {
 								.filter(mapData => Boolean(Boolean(mapData.data.overlay)))
 								.forEach((map) => map.data.overlay = mapOverlay.get(map.data.overlay.id));
 
-							return new SelectCaseAction(caseValue);
+							return SelectCaseAction(caseValue);
 						}),
 						catchError<any, any>((result: HttpErrorResponse) => {
 							console.warn(result);
-							return [new SetToastMessageAction({
+							return [SetToastMessageAction({
 								toastText: `Failed to load case ${ result.status ? `(${ result.status })` : '' }`,
 								showWarningIcon: true
 							}),
-								new LoadDefaultCaseIfNoActiveCaseAction()];
+								LoadDefaultCaseIfNoActiveCaseAction()];
 						})
 					);
-			})
+			}))
 		);
 
 

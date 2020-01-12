@@ -20,7 +20,7 @@ export class ErrorHandlerService {
 		this.loggerService.error(errMsg, 'network');
 
 		if (toastMessage !== null) {
-			this.store.dispatch(new SetToastMessageAction({
+			this.store.dispatch(SetToastMessageAction({
 				toastText: toastMessage || 'Connection Problem',
 				showWarningIcon: true
 			}));

@@ -111,7 +111,7 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	}
 
 	setSelectedAnnotationLayer(id) {
-		this.store.dispatch(new SetActiveAnnotationLayer(id));
+		this.store.dispatch(SetActiveAnnotationLayer({payload: id}));
 	}
 
 	toggleSelection(selected: SelectionBoxTypes = SelectionBoxTypes.None) {
@@ -121,22 +121,22 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	setAnnotationMode(mode?: AnnotationMode) {
 		const dispatchValue = this.mode === mode ? undefined : mode;
 		if (dispatchValue) {
-			this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetAnnotationMode] }));
-			this.store.dispatch(new SetAnnotationMode({ annotationMode: dispatchValue }));
+			this.store.dispatch(ClearActiveInteractionsAction({ skipClearFor: [SetAnnotationMode] }));
+			this.store.dispatch(SetAnnotationMode({ annotationMode: dispatchValue }));
 		} else {
-			this.store.dispatch(new SetAnnotationMode(null));
+			this.store.dispatch(SetAnnotationMode(null));
 		}
 	}
 
 	selectLineStyle(style: IStyleWeight) {
-			this.store.dispatch(new AnnotationSetProperties({ 'stroke-width': style.width, 'stroke-dasharray': style.dash }));
+			this.store.dispatch(AnnotationSetProperties({ 'stroke-width': style.width, 'stroke-dasharray': style.dash }));
 	}
 
 	activeChange($event) {
 		if ($event.label === 'fill') {
-			this.store.dispatch(new AnnotationSetProperties({ 'fill-opacity': $event.event ? this.fillAlpah : 0 }));
+			this.store.dispatch(AnnotationSetProperties({ 'fill-opacity': $event.event ? this.fillAlpah : 0 }));
 		} else {
-			this.store.dispatch(new AnnotationSetProperties({ 'stroke-opacity': $event.event ? this.strokeAlpah : 0 }));
+			this.store.dispatch(AnnotationSetProperties({ 'stroke-opacity': $event.event ? this.strokeAlpah : 0 }));
 
 		}
 	}
@@ -146,7 +146,7 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		changesArray.forEach((colorData) => {
 			style[colorData.label] = colorData.event;
 		});
-		this.store.dispatch(new AnnotationSetProperties(style));
+		this.store.dispatch(AnnotationSetProperties(style));
 	}
 
 	isAnnotationEnable(annotation) {

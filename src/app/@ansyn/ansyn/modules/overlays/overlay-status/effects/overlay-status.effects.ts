@@ -16,7 +16,7 @@ import {
 	UpdateMapAction
 } from '@ansyn/map-facade';
 import { AnnotationMode, DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, Effect, ofType, createEffect } from '@ngrx/effects';
 import { Dictionary } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
 import { EMPTY, Observable } from 'rxjs';
@@ -28,7 +28,8 @@ import {
 	BackToWorldView,
 	OverlayStatusActionsTypes,
 	SetOverlayScannedAreaDataAction,
-	ToggleDraggedModeAction
+	ToggleDraggedModeAction,
+	ActivateScannedAreaAction
 } from '../actions/overlay-status.actions';
 import { SetAnnotationMode } from '../../../menu-items/tools/actions/tools.actions';
 import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '../../actions/overlays.actions';
@@ -40,69 +41,68 @@ import { feature } from '@turf/turf';
 
 @Injectable()
 export class OverlayStatusEffects {
-	@Effect()
-	backToWorldView$: Observable<any> = this.actions$
+	backToWorldView$ = createEffect(() => this.actions$
 		.pipe(
-			ofType(OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW),
+			ofType(BackToWorldView),
 			withLatestFrom(this.store$.select(selectMaps)),
-			filter(([action, entities]: [BackToWorldView, Dictionary<IMapSettings>]) => Boolean(entities[action.payload.mapId])),
-			map(([action, entities]: [BackToWorldView, Dictionary<IMapSettings>]) => {
-				const mapId = action.payload.mapId;
+			filter(([payload, entities]: [{ mapId: string }, Dictionary<IMapSettings>]) => Boolean(entities[payload.mapId])),
+			map(([payload, entities]: [{ mapId: string }, Dictionary<IMapSettings>]) => {
+				const mapId = payload.mapId;
 				const selectedMap = entities[mapId];
 				const communicator = this.communicatorsService.provide(mapId);
 				const { position } = selectedMap.data;
-				return [action.payload, selectedMap, communicator, position];
+				return [payload, selectedMap, communicator, position];
 			}),
 			filter(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => Boolean(communicator)),
 			switchMap(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => {
 				const disabledMap = communicator.activeMapName === DisabledOpenLayersMapName;
-				this.store$.dispatch(new UpdateMapAction({
+				this.store$.dispatch(UpdateMapAction({
 					id: communicator.id,
 					changes: { data: { ...selectedMap.data, overlay: null, isAutoImageProcessingActive: false } }
 				}));
 
 				return fromPromise(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
 					.pipe(
-						map(() => new BackToWorldSuccess(payload)),
+						map(() => BackToWorldSuccess()),
 						catchError((err) => {
-							this.store$.dispatch(new SetToastMessageAction({
+							this.store$.dispatch(SetToastMessageAction({
 								toastText: 'Failed to load map',
 								showWarningIcon: true
 							}));
-							this.store$.dispatch(new BackToWorldFailed({ mapId: payload.mapId, error: err }));
+							this.store$.dispatch(BackToWorldFailed({ mapId: payload.mapId, error: err }));
 							return EMPTY;
 						})
 					);
 			})
-		);
+		)
+	);
 
 	@Effect()
-	toggleTranslate$: Observable<any> = this.actions$.pipe(
-		ofType(OverlayStatusActionsTypes.TOGGLE_DRAGGED_MODE),
+	toggleTranslate$ = createEffect(() => this.actions$.pipe(
+		ofType(ToggleDraggedModeAction),
 		withLatestFrom(this.store$.select(selectMapsList)),
-		mergeMap(([action, maps]: [ToggleDraggedModeAction, IMapSettings[]]) => {
+		mergeMap(([payload, maps]: [{ mapId: string, overlayId: string, dragged: boolean }, IMapSettings[]]) => {
 			let annotationMode = null;
 
 			const resultActions = [];
-			if (action.payload.dragged) {
+			if (payload.dragged) {
 				annotationMode = AnnotationMode.Translate;
 			}
-			const filteredMaps = maps.filter((mapSettings) => mapSettings.id !== action.payload.mapId &&
-				Boolean(mapSettings.data.overlay) && mapSettings.data.overlay.id === action.payload.overlayId);
+			const filteredMaps = maps.filter((mapSettings) => mapSettings.id !== payload.mapId &&
+				Boolean(mapSettings.data.overlay) && mapSettings.data.overlay.id === payload.overlayId);
 			filteredMaps.forEach((mapSettings) => {
-				resultActions.push(new SetAnnotationMode({
+				resultActions.push(SetAnnotationMode({
 					annotationMode: annotationMode,
 					mapId: mapSettings.id
 				}));
 			});
-			resultActions.push(new SetAnnotationMode({ annotationMode: annotationMode, mapId: action.payload.mapId }));
+			resultActions.push(SetAnnotationMode({ annotationMode: annotationMode, mapId: payload.mapId }));
 			return resultActions;
-		})
+		}))
 	);
 
-	@Effect()
-	onScannedAreaActivation$: Observable<any> = this.actions$.pipe(
-		ofType(OverlayStatusActionsTypes.ACTIVATE_SCANNED_AREA),
+	onScannedAreaActivation$ = createEffect(() => this.actions$.pipe(
+		ofType(ActivateScannedAreaAction),
 		withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(selectScannedAreaData)),
 		map(([action, mapState, overlaysScannedAreaData]) => {
 			const mapSettings: IMapSettings = MapFacadeService.activeMap(mapState);
@@ -132,7 +132,8 @@ export class OverlayStatusEffects {
 				}
 			}
 			return new SetOverlayScannedAreaDataAction({ id: overlay.id, area: scannedArea });
-		}));
+		}))
+	);
 
 	constructor(protected actions$: Actions,
 				protected communicatorsService: ImageryCommunicatorService,

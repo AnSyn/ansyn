@@ -36,7 +36,7 @@ export class AnsynRouterService {
 				const caseId = activated.snapshot.paramMap.get('caseId');
 				return { caseId, queryParams };
 			}),
-			tap(state => this.store.dispatch(new SetStateAction(state)))
+			tap(state => this.store.dispatch(SetStateAction(state)))
 		)
 	}
 

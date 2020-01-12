@@ -136,10 +136,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		if (this.enableCopyOriginalOverlayData && this.overlay.tag) {
 			const tagJson = JSON.stringify(this.overlay.tag);
 			copyFromContent(tagJson);
-			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay original data copied to clipboard' }));
+			this.store$.dispatch(SetToastMessageAction({ toastText: 'Overlay original data copied to clipboard' }));
 		} else {
 			copyFromContent(this.overlayDescription);
-			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay description copied to clipboard' }));
+			this.store$.dispatch(SetToastMessageAction({ toastText: 'Overlay description copied to clipboard' }));
 		}
 	}
 
@@ -151,6 +151,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	toggleMapLayers() {
 		this.isMapLayersVisible = !this.isMapLayersVisible;
-		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId, isVisible: this.isMapLayersVisible }));
+		this.store$.dispatch(ToggleMapLayersAction({ mapId: this.mapId, isVisible: this.isMapLayersVisible }));
 	}
 }

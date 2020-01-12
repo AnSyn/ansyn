@@ -83,7 +83,7 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 		fromEvent(this.document, 'click').pipe(
 			filter((event: any) => !event.path.some(element => this.imageriesContainer.nativeElement === element)),
 			filter((event: any) => !event.path.some((element) => element.id === 'editGeoFilter' || element.id === 'contextGeoFilter')),
-			tap((event: MouseEvent) => this.store.dispatch(new ClickOutsideMap(event)))
+			tap((event: MouseEvent) => this.store.dispatch(ClickOutsideMap({payload: event})))
 		).subscribe();
 	}
 
@@ -101,7 +101,7 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 			this.imageriesContainer.nativeElement.classList.remove(oldClass);
 		}
 		this.imageriesContainer.nativeElement.classList.add(newClass);
-		this.store.dispatch(new UpdateMapSizeAction());
+		this.store.dispatch(UpdateMapSizeAction());
 	}
 
 	setSelectedLayout(_selectedLayout: IMapsLayout) {
@@ -126,8 +126,8 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 
 	changeActiveImagery(value) {
 		if (this.activeMapId !== value) {
-			this.store.dispatch(new SetActiveMapId(value));
-			this.store.dispatch(new ActiveImageryMouseEnter());
+			this.store.dispatch(SetActiveMapId(value));
+			this.store.dispatch(ActiveImageryMouseEnter());
 		}
 	}
 

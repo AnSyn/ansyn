@@ -68,13 +68,13 @@ export class AnsynComponent implements OnInit {
 
 	ngOnInit(): void {
 		if (this.componentMode) {
-			this.store$.dispatch(new LoadDefaultCaseAction());
+			this.store$.dispatch(LoadDefaultCaseAction({payload: {}}));
 		}
 
-		this.store$.dispatch(new UpdateToolsFlags([{
+		this.store$.dispatch(UpdateToolsFlags({payload: [{
 			key: toolsFlags.shadowMouseActiveForManyScreens,
 			value: this.toolsConfigData.ShadowMouse && this.toolsConfigData.ShadowMouse.activeByDefault
-		}]));
+		}]}));
 
 		setTimeout(() => {
 			this.renderContextMenu = true;

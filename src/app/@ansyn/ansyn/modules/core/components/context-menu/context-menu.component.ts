@@ -259,18 +259,18 @@ export class ContextMenuComponent implements OnInit {
 
 	clickAngle($event: MouseEvent) {
 		event.stopPropagation();
-		this.store.dispatch(new ContextMenuShowAngleFilter(this.angleFilter));
+		this.store.dispatch(ContextMenuShowAngleFilter(this.angleFilter));
 	}
 
 	displayOverlayEvent(event$: MouseEvent, overlay?) {
 		event$.stopPropagation();
 		if (overlay) {
-			this.store.dispatch(new ContextMenuDisplayAction(overlay.id));
+			this.store.dispatch(ContextMenuDisplayAction({payload: overlay.id}));
 		}
 	}
 
 	setPinPoint() {
-		this.store.dispatch(new ContextMenuTriggerAction(this.point.coordinates));
+		this.store.dispatch(ContextMenuTriggerAction({payload: this.point.coordinates}));
 	}
 
 	getSensorType(sensorType: string) {

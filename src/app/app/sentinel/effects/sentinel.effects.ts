@@ -1,5 +1,5 @@
 import { ISentinelState } from '../reducers/sentinel.reducer';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, Effect, ofType, createEffect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { SentinelLayersService } from '../services/sentinel-layers.service';
@@ -11,15 +11,14 @@ import { DisplayOverlayAction } from '@ansyn/ansyn';
 @Injectable()
 export class SentinelEffects {
 
-	@Effect()
-	displaySentinelLayer$ = this.actions$.pipe(
-		ofType<SetSentinelLayerOnMap>(SentinelActionTypes.SET_LAYER_ON_MAP),
+	displaySentinelLayer$ = createEffect(() => this.actions$.pipe(
+		ofType(SetSentinelLayerOnMap),
 		withLatestFrom(this.store$.select(selectMaps)),
-		map(([{ payload }, maps]) => new DisplayOverlayAction({
+		map(([payload, maps]) => DisplayOverlayAction({
 			overlay: maps[payload.id].data.overlay,
 			mapId: payload.id,
 			force: true
-		}))
+		})))
 	);
 
 	constructor(protected actions$: Actions,

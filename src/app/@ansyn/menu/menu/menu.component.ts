@@ -185,7 +185,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 		}
 
 		this.animatedElement.style.animation = this.isPinned ? 'pinned .4s' : 'unPinned .4s';
-		this.forceRedraw().then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
+		this.forceRedraw().then(() => this.store.dispatch(ContainerChangedTriggerAction()));
 	}
 
 	setSelectedMenuItem(_selectedMenuItemName) {
@@ -237,11 +237,11 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	openMenu(key: string) {
-		this.store.dispatch(new SelectMenuItemAction(key));
+		this.store.dispatch(SelectMenuItemAction({payload: key}));
 	}
 
 	closeMenu(): void {
-		this.store.dispatch(new UnSelectMenuItemAction());
+		this.store.dispatch(UnSelectMenuItemAction());
 	}
 
 	onExpandStart() {
@@ -259,11 +259,11 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	toggleIsPinned() {
-		this.store.dispatch(new ToggleIsPinnedAction(!this.isPinned));
+		this.store.dispatch(ToggleIsPinnedAction({payload: !this.isPinned}));
 	}
 
 	toggleCollapse() {
-		this.store.dispatch(new ToggleMenuCollapse(!this.collapse));
+		this.store.dispatch(ToggleMenuCollapse({payload: !this.collapse}));
 	}
 
 	startToggleMenuCollapse(collapse: boolean) {
@@ -277,21 +277,21 @@ export class MenuComponent implements OnInit, OnDestroy {
 		this.menuWrapperElement.nativeElement.classList.toggle('collapsed');
 
 		this.forceRedraw()
-			.then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
+			.then(() => this.store.dispatch(ContainerChangedTriggerAction()));
 
 		this.animatedElement.style.animation = this.collapse ? 'collapsed .3s' : 'unCollapsed .6s';
 
 	}
 
 	resetApp() {
-		this.store.dispatch(new ResetAppAction());
+		this.store.dispatch(ResetAppAction());
 	}
 
 	ngOnInit() {
 		new MutationObserver(() => {
 			const conPosition = getComputedStyle(this.container.nativeElement).position;
 			if (conPosition !== 'absolute') {
-				this.store.dispatch(new ContainerChangedTriggerAction());
+				this.store.dispatch(ContainerChangedTriggerAction());
 			}
 		}).observe(this.container.nativeElement, { childList: true });
 

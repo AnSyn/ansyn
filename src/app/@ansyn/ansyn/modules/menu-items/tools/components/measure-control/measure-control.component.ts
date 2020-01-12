@@ -81,15 +81,15 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 	}
 
 	toggleShowLayer() {
-		this.store$.dispatch(new UpdateMeasureDataAction({
+		this.store$.dispatch(UpdateMeasureDataAction({
 			mapId: this.mapId,
 			measureData: { isLayerShowed: !this.measureData.isLayerShowed }
 		}));
 	}
 
 	toggleMeasureToolActivation() {
-		this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateMeasureDataAction] }));
-		this.store$.dispatch(new UpdateMeasureDataAction({
+		this.store$.dispatch(ClearActiveInteractionsAction({ skipClearFor: [UpdateMeasureDataAction] }));
+		this.store$.dispatch(UpdateMeasureDataAction({
 			mapId: this.mapId,
 			measureData: {
 				isToolActive: !this.measureData.isToolActive,
@@ -99,7 +99,7 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 	}
 
 	toggleRemoveSingleMeasure() {
-		this.store$.dispatch(new UpdateMeasureDataAction({
+		this.store$.dispatch(UpdateMeasureDataAction({
 			mapId: this.mapId,
 			measureData: {
 				isRemoveMeasureModeActive: !this.measureData.isRemoveMeasureModeActive,
@@ -109,10 +109,10 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 	}
 
 	clearMeasure() {
-		this.store$.dispatch(new UpdateMeasureDataAction({ mapId: this.mapId, measureData: { meausres: [] } }));
+		this.store$.dispatch(UpdateMeasureDataAction({ mapId: this.mapId, measureData: { meausres: [] } }));
 	}
 
 	done() {
-		this.store$.dispatch(new SetMeasureDistanceToolState(false));
+		this.store$.dispatch(SetMeasureDistanceToolState({payload: false}));
 	}
 }

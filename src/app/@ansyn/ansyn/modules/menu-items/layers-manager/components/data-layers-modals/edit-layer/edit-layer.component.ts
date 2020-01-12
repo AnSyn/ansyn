@@ -18,16 +18,16 @@ export class EditLayerComponent {
 
 	addLayer(name) {
 		const layer = this.dataLayersService.generateAnnotationLayer(name);
-		this.store.dispatch(new AddLayer(layer));
+		this.store.dispatch(AddLayer({payload: layer}));
 		this.closeModal();
 	}
 
 	closeModal() {
-		this.store.dispatch(new CloseLayersModal());
+		this.store.dispatch(CloseLayersModal());
 	}
 
 	editLayer(name) {
-		this.store.dispatch(new UpdateLayer({ ...this.layer, name }));
+		this.store.dispatch(UpdateLayer({ ...this.layer, name }));
 		this.closeModal();
 	}
 

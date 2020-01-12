@@ -1,4 +1,4 @@
-import { Action } from '@ngrx/store';
+import { Action, createAction, props } from '@ngrx/store';
 import { Point, Polygon, Position } from 'geojson';
 import {
 	ImageryMapPosition,
@@ -91,287 +91,200 @@ export interface IContextMenuShowPayload {
 
 export type MapActions = any;
 
-export class ExportMapsToPngActionFailed implements Action {
-	readonly type = MapActionTypes.EXPORT_MAPS_TO_PNG_FAILED;
-
-	constructor(error: any) {
-	}
-}
-
-export class SetMinimalistViewModeAction implements Action {
-	type = MapActionTypes.SET_MINIMALIST_VIEW_MODE;
-
-	constructor(public payload: boolean) {
-	}
-}
-
-export class ExportMapsToPngActionSuccess implements Action {
-	readonly type = MapActionTypes.EXPORT_MAPS_TO_PNG_SUCCESS;
-
-	constructor() {
-	}
-}
-
-export class SetProgressBarAction implements Action {
-	readonly type = MapActionTypes.VIEW.SET_PROGRESS_BAR;
-
-	constructor(public payload: IMapProgress) {
-	}
-}
-
-export class PointToRealNorthAction implements Action {
-	type = MapActionTypes.POINT_TO_REAL_NORTH;
-
-	constructor(public payload: string) {
-	}
-}
-
-export class PositionChangedAction implements Action {
-	type = MapActionTypes.POSITION_CHANGED;
-
-	constructor(public payload: { id: string, position: ImageryMapPosition, mapInstance: IMapSettings }) {
-	}
-}
-
-export class UpdateMapSizeAction implements Action {
-	type = MapActionTypes.UPDATE_MAP_SIZE;
-
-	constructor() {
-	}
-}
-
-export class ImageryCreatedAction implements Action {
-	type = MapActionTypes.IMAGERY_CREATED;
-
-	constructor(public payload: { id: string }) {
-	}
-}
-
-export class ImageryRemovedAction implements Action {
-	type = MapActionTypes.IMAGERY_REMOVED;
-
-	constructor(public payload: { id: string }) {
-	}
-}
-
-export class MapInstanceChangedAction implements Action {
-	type = MapActionTypes.MAP_INSTANCE_CHANGED_ACTION;
-
-	constructor(public payload: IMapInstanceChanged) {
-	}
-}
-
-export class SynchronizeMapsAction implements Action {
-	type = MapActionTypes.SYNCHRONIZE_MAPS;
-
-	constructor(public payload: { mapId: string }) {
-	}
-}
-
-export class ContextMenuTriggerAction implements Action {
-	type = MapActionTypes.TRIGGER.CONTEXT_MENU;
-
-	constructor(public payload: Position) {
-	}
-}
-
-export class ContextMenuShowAction implements Action {
-	type = MapActionTypes.CONTEXT_MENU.SHOW;
-
-	constructor(public payload: IContextMenuShowPayload) {
-	}
-}
-
-export class ContextMenuDisplayAction implements Action {
-	type = MapActionTypes.CONTEXT_MENU.DISPLAY;
-
-	constructor(public payload: string) {
-	}
-}
-
-export class ContextMenuShowAngleFilter implements Action {
-	type = MapActionTypes.CONTEXT_MENU.ANGLE_FILTER_SHOW;
-
-	constructor(public payload: IAngleFilterClick) {
-	}
-}
-
-export class PinLocationModeTriggerAction implements Action {
-	type = MapActionTypes.TRIGGER.PIN_LOCATION_MODE;
-
-	constructor(public payload: boolean) {
-	}
-}
-
-export class DecreasePendingMapsCountAction implements Action {
-	type: string = MapActionTypes.DECREASE_PENDING_MAPS_COUNT;
-
-	constructor() {
-	}
-}
-
-export class SetPendingOverlaysAction implements Action {
-	type: string = MapActionTypes.SET_PENDING_OVERLAYS;
-
-	constructor(public payload: IPendingOverlay[]) {
-	}
-}
-
-export class RemovePendingOverlayAction implements Action {
-	type: string = MapActionTypes.REMOVE_PENDING_OVERLAY;
-
-	constructor(public payload: string) {
-	}
-}
-
-export class ActiveImageryMouseEnter implements Action {
-	type = MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_ENTER;
-}
-
-export class ActiveImageryMouseLeave implements Action {
-	type = MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_LEAVE;
-}
-
-export class SetIsLoadingAcion implements Action {
-	type = MapActionTypes.VIEW.SET_IS_LOADING;
-
-	constructor(public payload: { mapId: string, show: boolean, text?: string }) {
-
-	}
-}
-
-export class SetIsVisibleAcion implements Action {
-	type = MapActionTypes.VIEW.SET_IS_VISIBLE;
-
-	constructor(public payload: { mapId: string, isVisible: boolean }) {
-
-	}
-}
-
-export class ClickOutsideMap implements Action {
-	readonly type = MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP;
-
-	constructor(public payload: any) {
-	}
-}
-
-export class ShadowMouseProducer implements Action {
-	readonly type = MapActionTypes.SHADOW_MOUSE_PRODUCER;
-
-	constructor(public payload: { point: { coordinates: Position, type: string }, outsideSource?: boolean }) {
-
-	}
-}
-
-export class ImageryMouseEnter implements Action {
-	type = MapActionTypes.TRIGGER.IMAGERY_MOUSE_ENTER;
-
-	constructor(public payload: string) {
-	}
-}
-
-export class ImageryMouseLeave implements Action {
-	type = MapActionTypes.TRIGGER.IMAGERY_MOUSE_LEAVE;
-
-	constructor(public payload: string) {
-	}
-}
-
-export class ChangeImageryMap implements Action {
-	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP;
-
-	constructor(public payload: { id: string, mapType: string, sourceType?: string }) {
-	}
-}
-
-export class ChangeImageryMapSuccess implements Action {
-	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS;
-
-	constructor(public payload: { id: string, worldView: IWorldViewMapState }) {
-	}
-}
-
-export class ChangeImageryMapFailed implements Action {
-	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP_FAILED;
-
-	constructor(public payload: { id: string, error: any}) {
-	}
-}
-
-export class SetMapsDataActionStore implements Action {
-	type = MapActionTypes.SET_MAPS_DATA;
-
-	constructor(public payload: { mapsList: IMapSettings[] }) {
-	}
-}
-
-export class SetActiveMapId implements Action {
-	type = MapActionTypes.SET_ACTIVE_MAP_ID;
-
-	constructor(public payload: string) {
-	}
-}
-
-export class UpdateMapAction implements Action {
-	type = MapActionTypes.UPDATE_MAP;
-
-	constructor(public payload: { id: string, changes?: Partial<IMapSettings>, silence?: boolean, }) {
-	}
-}
-
-export class SetMapPositionByRectAction implements Action {
-	type = MapActionTypes.SET_MAP_POSITION_BY_RECT;
-
-	constructor(public payload: { id: string; rect: Polygon }) {
-	}
-}
-
-export class SetMapPositionByRadiusAction implements Action {
-	type = MapActionTypes.SET_MAP_POSITION_BY_RADIUS;
-
-	constructor(public payload: { id: string; center: Point; radiusInMeters: number }) {
-	}
-}
-
-export class SetLayoutAction implements Action {
-	type = MapActionTypes.SET_LAYOUT;
-
-	constructor(public payload: LayoutKey) {
-	}
-}
-
-export class SetLayoutSuccessAction implements Action {
-	type = MapActionTypes.SET_LAYOUT_SUCCESS;
-
-	constructor() {
-	}
-}
-
-export class ToggleMapLayersAction implements Action {
-	type = MapActionTypes.TOGGLE_MAP_LAYERS;
-
-	constructor(public payload: { mapId: string, isVisible: boolean}) {
-	}
-}
-
-export class SetWasWelcomeNotificationShownFlagAction implements Action {
-	type = MapActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG;
-
-	constructor(public payload: boolean) {
-
-	}
-}
-
-export class SetToastMessageAction implements Action {
-	type = MapActionTypes.SET_TOAST_MESSAGE;
-
-	constructor(public payload?: IToastMessage) {
-	}
-}
-
-export class ToggleFooter implements Action {
-	type = MapActionTypes.FOOTER_COLLAPSE;
-
-	constructor(public payload: boolean) {
-	}
-}
+export const ExportMapsToPngActionFailed = createAction(
+											MapActionTypes.EXPORT_MAPS_TO_PNG_FAILED,
+											);
+
+export const SetMinimalistViewModeAction = createAction(
+											MapActionTypes.SET_MINIMALIST_VIEW_MODE,
+											props<{payload: boolean}>()
+											);
+
+export const ExportMapsToPngActionSuccess = createAction(
+											MapActionTypes.EXPORT_MAPS_TO_PNG_SUCCESS
+											);
+
+export const SetProgressBarAction = createAction(
+									MapActionTypes.VIEW.SET_PROGRESS_BAR,
+									props<IMapProgress>()
+									);
+
+export const PointToRealNorthAction = createAction(
+										MapActionTypes.POINT_TO_REAL_NORTH,
+										props<{mapId: string}>()
+										);
+
+export const PositionChangedAction = createAction(
+									MapActionTypes.POSITION_CHANGED,
+									props<{ id: string, position: ImageryMapPosition, mapInstance: IMapSettings }>()
+);
+
+export const UpdateMapSizeAction = createAction(
+									MapActionTypes.UPDATE_MAP_SIZE
+									);
+
+export const ImageryCreatedAction = createAction(
+									MapActionTypes.IMAGERY_CREATED,
+									props<{payload: string}>()
+									);
+
+export const ImageryRemovedAction = createAction(
+									MapActionTypes.IMAGERY_REMOVED,
+									props<{payload: string}>()
+									);
+
+export const MapInstanceChangedAction = createAction(
+										MapActionTypes.MAP_INSTANCE_CHANGED_ACTION,
+										props<IMapInstanceChanged>()
+										);
+
+export const SynchronizeMapsAction = createAction(
+										MapActionTypes.SYNCHRONIZE_MAPS,
+										props<String>()
+										);
+
+export const ContextMenuTriggerAction = createAction(
+										MapActionTypes.TRIGGER.CONTEXT_MENU,
+										props<{payload: Position}>()
+										);
+
+export const ContextMenuShowAction = createAction(
+										MapActionTypes.CONTEXT_MENU.SHOW,
+										props<IContextMenuShowPayload>()
+										);
+
+export const ContextMenuDisplayAction = createAction(
+										MapActionTypes.CONTEXT_MENU.DISPLAY,
+										props<{payload: string}>()
+										);
+
+export const ContextMenuShowAngleFilter = createAction(
+											MapActionTypes.CONTEXT_MENU.ANGLE_FILTER_SHOW,
+											props<IAngleFilterClick>()
+											);
+
+export const PinLocationModeTriggerAction = createAction(
+											MapActionTypes.TRIGGER.PIN_LOCATION_MODE,
+											props<Boolean>()
+											);
+
+export const DecreasePendingMapsCountAction = createAction(
+												MapActionTypes.DECREASE_PENDING_MAPS_COUNT
+												);
+
+export const SetPendingOverlaysAction = createAction(
+										MapActionTypes.SET_PENDING_OVERLAYS,
+										props<{payload: IPendingOverlay[]}>()
+										);
+
+export const RemovePendingOverlayAction = createAction(
+										MapActionTypes.REMOVE_PENDING_OVERLAY,
+										props<String>()
+										);
+
+export const ActiveImageryMouseEnter = createAction(
+										MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_ENTER
+										);
+
+export const ActiveImageryMouseLeave = createAction(
+										MapActionTypes.TRIGGER.ACTIVE_IMAGERY_MOUSE_LEAVE
+										);
+
+export const SetIsLoadingAcion = createAction(
+									MapActionTypes.VIEW.SET_IS_LOADING,
+									props<{ mapId: string, show: boolean, text?: string }>()
+								);
+
+export const SetIsVisibleAcion = createAction(
+									MapActionTypes.VIEW.SET_IS_VISIBLE,
+									props<{ mapId: string, isVisible: boolean }>()
+								);
+
+export const ClickOutsideMap = createAction(
+								MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP,
+								props<{ payload: any}>()
+								);
+
+export const ShadowMouseProducer = createAction(
+									MapActionTypes.SHADOW_MOUSE_PRODUCER,
+									props<{ point: { coordinates: Position, type: string }, outsideSource?: boolean }>()
+									);
+
+export const ImageryMouseEnter = createAction(
+								MapActionTypes.TRIGGER.IMAGERY_MOUSE_ENTER,
+								props<String>()
+								);
+
+export const ImageryMouseLeave = createAction(
+								MapActionTypes.TRIGGER.IMAGERY_MOUSE_LEAVE,
+								props<String>()
+								);
+
+export const ChangeImageryMap = createAction(
+								MapActionTypes.CHANGE_IMAGERY_MAP,
+								props<{ id: string, mapType: string, sourceType?: string }>()
+								);
+
+export const ChangeImageryMapSuccess = createAction(
+										MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS,
+										props<{ id: string, worldView: IWorldViewMapState }>()
+										);
+
+export const ChangeImageryMapFailed = createAction(
+										MapActionTypes.CHANGE_IMAGERY_MAP_FAILED,
+										props<{ id: string, error: any}>()
+									);
+
+export const SetMapsDataActionStore = createAction(
+										MapActionTypes.SET_MAPS_DATA,
+										props<{ mapsList: IMapSettings[] }>()
+);
+
+export const SetActiveMapId = createAction(
+								MapActionTypes.SET_ACTIVE_MAP_ID,
+								props<String>()
+							);
+
+export const UpdateMapAction = createAction(
+								MapActionTypes.UPDATE_MAP,
+								props<{ id: string, changes?: Partial<IMapSettings>, silence?: boolean, }>()
+								);
+
+export const SetMapPositionByRectAction = createAction(
+											MapActionTypes.SET_MAP_POSITION_BY_RECT,
+											props<{ id: string; rect: Polygon }>()
+										);
+
+export const SetMapPositionByRadiusAction = createAction(
+											MapActionTypes.SET_MAP_POSITION_BY_RADIUS,
+											props<{ id: string; center: Point; radiusInMeters: number }>()
+											);
+
+export const SetLayoutAction = createAction(
+								MapActionTypes.SET_LAYOUT,
+								props<{ key: LayoutKey}>()
+								);
+
+export const SetLayoutSuccessAction = createAction(
+										MapActionTypes.SET_LAYOUT_SUCCESS
+										);
+
+export const ToggleMapLayersAction = createAction(
+										MapActionTypes.TOGGLE_MAP_LAYERS,
+										props<{ mapId: string, isVisible: boolean}>()
+										);
+
+export const SetWasWelcomeNotificationShownFlagAction = createAction(
+													MapActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG,
+													props<Boolean>()
+													);
+
+export const SetToastMessageAction = createAction(
+									MapActionTypes.SET_TOAST_MESSAGE,
+									props<IToastMessage>()
+									);
+
+export const ToggleFooter = createAction(
+							MapActionTypes.FOOTER_COLLAPSE,
+							props<{payload: boolean}>()
+							);

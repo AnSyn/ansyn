@@ -1,3 +1,4 @@
+import { createAction, props } from '@ngrx/store';
 import { IContext } from '@ansyn/ansyn';
 import { IContextParams } from '../reducers/context.reducer';
 
@@ -6,18 +7,14 @@ export enum ContextActionTypes {
 	SET_CONTEXT_PARAMS = '[Context] Set context params'
 }
 
-export class AddAllContextsAction {
-	readonly type = ContextActionTypes.ADD_ALL_CONTEXT;
+export const AddAllContextsAction = createAction(
+										ContextActionTypes.ADD_ALL_CONTEXT,
+										props<{payload: IContext[]}>()
+);
 
-	constructor(public payload: IContext[]) {
-	}
-}
-
-export class SetContextParamsAction {
-	readonly type = ContextActionTypes.SET_CONTEXT_PARAMS;
-
-	constructor(public payload: Partial<IContextParams>) {
-	}
-}
+export const SetContextParamsAction = createAction(
+										ContextActionTypes.SET_CONTEXT_PARAMS,
+										props<{payload: Partial<IContextParams>}>()
+);
 
 export type ContextActions = AddAllContextsAction | SetContextParamsAction;

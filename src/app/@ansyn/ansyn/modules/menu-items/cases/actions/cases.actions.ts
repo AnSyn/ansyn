@@ -1,4 +1,4 @@
-import { Action } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 import { Params } from '@angular/router';
 import { IStoredEntity } from '../../../core/services/storage/storage.service';
 import { ICase, ICasePreview, IDilutedCase, IDilutedCaseState } from '../models/case.model';
@@ -44,139 +44,99 @@ export const CasesActionTypes = {
 
 export type CasesActions = any;
 
-export class LoadDefaultCaseIfNoActiveCaseAction implements Action {
-	type = CasesActionTypes.LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE;
-}
 
-export class LoadCasesAction implements Action {
-	type = CasesActionTypes.LOAD_CASES;
+export const LoadDefaultCaseIfNoActiveCaseAction = createAction(
+													CasesActionTypes.LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE
+													);
 
-	constructor(public payload?: ICase[]) {
-	}
-}
+export const LoadCasesAction = createAction(
+								CasesActionTypes.LOAD_CASES,
+								props<{cases: ICase[]}>()
+);
 
-export class AddCasesAction implements Action {
-	type = CasesActionTypes.ADD_CASES;
+export const AddCasesAction = createAction(
+								CasesActionTypes.ADD_CASES,
+								props<{cases: ICase[]}>()
+);
 
-	constructor(public payload: ICase[]) {
-	}
-}
+export const AddCaseAction = createAction(
+							CasesActionTypes.ADD_CASE,
+							props<ICase>()
+							);
 
-export class AddCaseAction implements Action {
-	type = CasesActionTypes.ADD_CASE;
+export const UpdateCaseAction = createAction(
+								CasesActionTypes.UPDATE_CASE,
+								props<{ updatedCase: ICase, forceUpdate?: boolean}>()
+								);
 
-	constructor(public payload: ICase) {
-	}
-}
+export const UpdateCaseBackendAction = createAction(
+									CasesActionTypes.UPDATE_CASE_BACKEND,
+									props<ICase>()
+									);
 
-export class UpdateCaseAction implements Action {
-	type = CasesActionTypes.UPDATE_CASE;
+export const UpdateCaseBackendSuccessAction = createAction(
+										CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS,
+										props<IStoredEntity<ICasePreview, IDilutedCaseState>>()
+										);
 
-	constructor(public payload: { updatedCase: ICase, forceUpdate?: boolean }) {
-	}
-}
+export const DeleteCaseAction = createAction(CasesActionTypes.DELETE_CASE,
+											props<{payload: string}>()
+										);
 
-export class UpdateCaseBackendAction implements Action {
-	type = CasesActionTypes.UPDATE_CASE_BACKEND;
+export const OpenModalAction = createAction(CasesActionTypes.OPEN_MODAL,
+											props<{ component: any, caseId?: string }>()
+											);
 
-	constructor(public payload: ICase) {
-	}
-}
+export const CloseModalAction = createAction(
+								CasesActionTypes.CLOSE_MODAL,
+								props<{payload: any}>()
+								);
 
-export class UpdateCaseBackendSuccessAction implements Action {
-	type = CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS;
+export const SelectCaseAction = createAction(
+								CasesActionTypes.SELECT_CASE,
+								props<ICase>()
+								);
 
-	constructor(public payload: IStoredEntity<ICasePreview, IDilutedCaseState>) {
-	}
-}
+export const SelectCaseSuccessAction = createAction(
+										CasesActionTypes.SELECT_CASE_SUCCESS,
+										props<ICase>()
+										);
 
-export class DeleteCaseAction implements Action {
-	type = CasesActionTypes.DELETE_CASE;
+export const SelectDilutedCaseAction = createAction(
+										CasesActionTypes.SELECT_DILUTED_CASE,
+										props<IDilutedCase>()
+										);
 
-	constructor(public payload: string) {
-	}
-}
+export const LoadCaseAction = createAction(
+								CasesActionTypes.LOAD_CASE,
+								props<{payload: string}>()
+								);
 
-export class OpenModalAction implements Action {
-	type = CasesActionTypes.OPEN_MODAL;
+export const LoadDefaultCaseAction = createAction(
+										CasesActionTypes.LOAD_DEFAULT_CASE,
+										props<{payload: Params}>() // payload default = {}
+										);
 
-	constructor(public payload: { component: any, caseId?: string }) {
-	}
-}
+export const SaveCaseAsAction = createAction(
+								CasesActionTypes.SAVE_CASE_AS,
+								props<ICase>()
+								);
 
-export class CloseModalAction implements Action {
-	type = CasesActionTypes.CLOSE_MODAL;
+export const SaveCaseAsSuccessAction = createAction(
+										CasesActionTypes.SAVE_CASE_AS_SUCCESS,
+										props<ICase>()
+										);
 
-	constructor(public payload?: any) {
-	}
-}
+export const CopyCaseLinkAction = createAction(
+									CasesActionTypes.COPY_CASE_LINK,
+									props<{ caseId: string, shareCaseAsQueryParams?: boolean }>()
+								);
 
-export class SelectCaseAction implements Action {
-	type = CasesActionTypes.SELECT_CASE;
+export const ManualSaveAction = createAction(
+									CasesActionTypes.MANUAL_SAVE,
+									props<ICase>()
+									);
 
-	constructor(public payload: ICase) {
-	}
-}
-
-export class SelectCaseSuccessAction implements Action {
-	type = CasesActionTypes.SELECT_CASE_SUCCESS;
-
-	constructor(public payload: ICase) {
-	}
-}
-
-export class SelectDilutedCaseAction implements Action {
-	type = CasesActionTypes.SELECT_DILUTED_CASE;
-
-	constructor(public payload: IDilutedCase) {
-	}
-}
-
-export class LoadCaseAction implements Action {
-	type = CasesActionTypes.LOAD_CASE;
-
-	constructor(public payload: string) {
-	}
-}
-
-export class LoadDefaultCaseAction implements Action {
-	type = CasesActionTypes.LOAD_DEFAULT_CASE;
-
-	constructor(public payload: Params = {}) {
-	}
-}
-
-export class SaveCaseAsAction implements Action {
-	type = CasesActionTypes.SAVE_CASE_AS;
-
-	constructor(public payload: ICase) {
-	}
-}
-
-export class SaveCaseAsSuccessAction implements Action {
-	type = CasesActionTypes.SAVE_CASE_AS_SUCCESS;
-
-	constructor(public payload: ICase) {
-	}
-}
-
-export class CopyCaseLinkAction implements Action {
-	type = CasesActionTypes.COPY_CASE_LINK;
-
-	constructor(public payload: { caseId: string, shareCaseAsQueryParams?: boolean }) {
-	}
-}
-
-export class ManualSaveAction implements Action {
-	readonly type = CasesActionTypes.MANUAL_SAVE;
-
-	constructor(public payload: ICase) {
-	}
-}
-
-export class SetAutoSave implements Action {
-	readonly type = CasesActionTypes.SET_AUTO_SAVE;
-
-	constructor(public payload: boolean) {
-	}
-}
+export const SetAutoSave = createAction(CasesActionTypes.SET_AUTO_SAVE,
+										props<{payload: boolean}>()
+										);

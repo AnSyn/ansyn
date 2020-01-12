@@ -92,11 +92,11 @@ export class DragDropMapService {
 				ids[indexOf1] = id2;
 				ids[indexOf2] = id1;
 				const mapsList = ids.map((id) => entities.find(entity => entity.id === id));
-				this.store.dispatch(new SetMapsDataActionStore({ mapsList }));
+				this.store.dispatch(SetMapsDataActionStore({ mapsList }));
 				dropElement.style.width = null;
 				dropElement.style.height = null;
 				setTimeout(() => {
-					this.store.dispatch(new UpdateMapSizeAction());
+					this.store.dispatch(UpdateMapSizeAction());
 				}, 0);
 			}
 		});
@@ -114,7 +114,7 @@ export class DragDropMapService {
 			dragElement.style.height = `${ dropHeight }px`;
 			dropElement.style.width = `${ dragWidth }px`;
 			dropElement.style.height = `${ dragHeight }px`;
-			this.store.dispatch(new UpdateMapSizeAction());
+			this.store.dispatch(UpdateMapSizeAction());
 		} else {
 			forkJoin([dragEnd]).pipe(transitionsEnd).subscribe();
 			dragElement.style.transform = `translate(0, 0)`;

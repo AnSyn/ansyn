@@ -76,8 +76,8 @@ export class GoToVisualizer extends EntitiesVisualizer {
 			.projectAccurately({ type: 'Point', coordinates: e.coordinate }, this.iMap.mapObject)
 			.pipe(take(1))
 			.subscribe((point: Point) => {
-				this.store$.dispatch(new SetPinLocationModeAction(false));
-				this.store$.dispatch(new SetActiveCenter(point.coordinates));
+				this.store$.dispatch(SetPinLocationModeAction({payload: false}));
+				this.store$.dispatch(SetActiveCenter({payload: point.coordinates}));
 			});
 	};
 

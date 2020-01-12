@@ -46,8 +46,8 @@ export class SelectCaseAppEffects {
 
 	@Effect()
 	selectCase$: Observable<any> = this.actions$.pipe(
-		ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE),
-		concatMap<any, any>(({ payload }: SelectCaseAction) => this.selectCaseActions(payload, this.coreConfig.noInitialSearch))
+		ofType(SelectCaseAction),
+		concatMap<any, any>(payload => this.selectCaseActions(payload, this.coreConfig.noInitialSearch))
 	);
 
 	constructor(protected actions$: Actions,
@@ -92,28 +92,28 @@ export class SelectCaseAppEffects {
 		const { facets } = state;
 
 		const selectCaseAction = [
-			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),
-			new SetActiveMapId(state.maps.activeMapId),
-			new SetLayoutAction(<any>layout),
-			new SetImageOpeningOrientation({ orientation }),
-			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
-			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
-			new SetPresetOverlaysAction((presetOverlays || []).map(this.parseOverlay.bind(this))),
-			new SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this)) }),
-			new SetOverlaysTranslationDataAction(overlaysTranslationData),
-			new SetOverlaysScannedAreaDataAction(overlaysScannedAreaData),
-			new BeginLayerCollectionLoadAction({ caseId: payload.id }),
-			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
-			new UpdateFacetsAction(facets),
-			new UpdateSelectedLayersIds(activeLayersIds),
+			SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),
+			SetActiveMapId(state.maps.activeMapId),
+			SetLayoutAction(<any>layout),
+			SetImageOpeningOrientation({ orientation }),
+			SetOverlaysCriteriaAction({payload: { time, region, dataInputFilters }, options: { noInitialSearch }}),
+			SetFavoriteOverlaysAction({payload: favoriteOverlays.map(this.parseOverlay.bind(this))}),
+			SetPresetOverlaysAction({payload: (presetOverlays || []).map(this.parseOverlay.bind(this))}),
+			SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this)) }),
+			SetOverlaysTranslationDataAction({payload: overlaysTranslationData}),
+			SetOverlaysScannedAreaDataAction(overlaysScannedAreaData),
+			BeginLayerCollectionLoadAction({ caseId: payload.id }),
+			UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
+			UpdateFacetsAction(facets),
+			UpdateSelectedLayersIds({payload: activeLayersIds}),
 			// @todo refactor
 			<any>{ type: '[Context] Set context params', payload: { contextEntities } },
-			new SetAutoSave(autoSave),
-			new SetRemovedOverlaysIdsAction(removedOverlaysIds),
-			new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
-			new SetAnnotationMode(null),
-			new SetMeasureDistanceToolState(false),
-			new SelectCaseSuccessAction(payload)
+			SetAutoSave(autoSave),
+			SetRemovedOverlaysIdsAction({payload: removedOverlaysIds}),
+			SetRemovedOverlaysVisibilityAction({payload: removedOverlaysVisibility}),
+			SetAnnotationMode(null),
+			SetMeasureDistanceToolState({payload: false}),
+			SelectCaseSuccessAction(payload)
 		];
 
 		return selectCaseAction;

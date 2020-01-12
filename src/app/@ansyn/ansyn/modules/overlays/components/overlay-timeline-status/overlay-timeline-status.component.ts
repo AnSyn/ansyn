@@ -65,6 +65,6 @@ export class OverlayTimelineStatusComponent implements OnInit, OnDestroy {
 	}
 
 	close() {
-		this.store$.dispatch(new SetOverlaysStatusMessage(null));
+		this.store$.dispatch(SetOverlaysStatusMessage(null));
 	}
 }

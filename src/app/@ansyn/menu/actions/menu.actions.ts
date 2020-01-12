@@ -1,4 +1,4 @@
-import { Action } from '@ngrx/store';
+import { Action, createAction, props } from '@ngrx/store';
 import { IMenuItem } from '../models/menu-item.model';
 
 export const MenuActionTypes = {
@@ -16,72 +16,51 @@ export const MenuActionTypes = {
 	RESET_APP: 'RESET_APP'
 };
 
-export class ResetAppAction implements Action {
-	type = MenuActionTypes.RESET_APP;
+export const ResetAppAction = createAction(
+								MenuActionTypes.RESET_APP
+);
 
-	constructor() {
-	}
-}
+export const InitializeMenuItemsAction = createAction(
+											MenuActionTypes.INITIALIZE_MENU_ITEMS,
+											props<{payload: IMenuItem[]}>()
+);
 
-export class InitializeMenuItemsAction implements Action {
-	type = MenuActionTypes.INITIALIZE_MENU_ITEMS;
+export const AddMenuItemAction = createAction(
+									MenuActionTypes.ADD_MENU_ITEM,
+									props<IMenuItem>()
+);
 
-	constructor(public payload: IMenuItem[]) {
-	}
-}
+export const SelectMenuItemAction = createAction(
+										MenuActionTypes.SELECT_MENU_ITEM,
+										props<{payload: string}>()
+);
 
-export class AddMenuItemAction implements Action {
-	type = MenuActionTypes.ADD_MENU_ITEM;
+export const UnSelectMenuItemAction = createAction(
+										MenuActionTypes.UNSELECT_MENU_ITEM,
+										props<{payload?: any}>()
+);
 
-	constructor(public payload: IMenuItem) {
-	}
-}
+export const SetBadgeAction = createAction(
+								MenuActionTypes.SET_BADGE,
+								props<{ key: string, badge: string }>()
+);
 
-export class SelectMenuItemAction implements Action {
-	type = MenuActionTypes.SELECT_MENU_ITEM;
+export const ToggleIsPinnedAction = createAction(
+										MenuActionTypes.TOGGLE_IS_PINNED,
+										props<{payload: boolean}>()
+);
 
-	constructor(public payload: string) {
-	}
-}
+export const ContainerChangedTriggerAction = createAction(
+												MenuActionTypes.TRIGGER.CONTAINER_CHANGED,
+												props<{payload?: any}>()
+);
 
-export class UnSelectMenuItemAction implements Action {
-	type = MenuActionTypes.UNSELECT_MENU_ITEM;
+export const SetAutoClose = createAction(
+								MenuActionTypes.SET_AUTO_CLOSE,
+								props<{payload: boolean}>()
+);
 
-	constructor(public payload?: any) {
-	}
-}
-
-export class SetBadgeAction implements Action {
-	type = MenuActionTypes.SET_BADGE;
-
-	constructor(public payload: { key: string, badge: string }) {
-	}
-}
-
-export class ToggleIsPinnedAction implements Action {
-	type = MenuActionTypes.TOGGLE_IS_PINNED;
-
-	constructor(public payload: boolean) {
-	}
-}
-
-export class ContainerChangedTriggerAction implements Action {
-	type = MenuActionTypes.TRIGGER.CONTAINER_CHANGED;
-
-	constructor(public payload?: any) {
-	}
-}
-
-export class SetAutoClose implements Action {
-	type = MenuActionTypes.SET_AUTO_CLOSE;
-
-	constructor(public payload: boolean) {
-	}
-}
-
-export class ToggleMenuCollapse implements Action {
-	type = MenuActionTypes.MENU_COLLAPSE;
-
-	constructor(public payload: boolean) {
-	}
-}
+export const ToggleMenuCollapse = createAction(
+									MenuActionTypes.MENU_COLLAPSE,
+									props<{payload: boolean}>()
+);

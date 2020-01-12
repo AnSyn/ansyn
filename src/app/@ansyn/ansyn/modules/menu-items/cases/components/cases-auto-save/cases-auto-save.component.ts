@@ -34,7 +34,7 @@ export class CasesAutoSaveComponent implements OnInit, OnDestroy {
 	}
 
 	onChange(autoSave) {
-		this.store$.dispatch(new SetAutoSave(autoSave));
+		this.store$.dispatch(SetAutoSave({payload: autoSave}));
 	}
 
 	ngOnInit(): void {

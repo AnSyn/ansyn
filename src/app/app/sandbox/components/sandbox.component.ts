@@ -273,7 +273,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 
 	setMiscOverlays() {
 		if (this.currentOverlays.length > 0) {
-			this.store$.dispatch(new SetMiscOverlay({ key: 'example', overlay: this.currentOverlays[0] }))
+			this.store$.dispatch(SetMiscOverlay({ key: 'example', overlay: this.currentOverlays[0] }))
 		} else {
 			console.warn('Cannot set misc overlays because there are no query overlays');
 		}
@@ -616,7 +616,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 				withLatestFrom(this.store$.select(selectOverlaysArray), this.store$.select(selectFacets)),
 				tap(([filters, overlays, facets]: [Map<IFilter, FilterMetadata>, IOverlay[], ICaseFacetsState]) => {
 					const data = FiltersService.getRefreshedFilterDataByFilterModel('isGeoRegistered', filters, facets, overlays);
-					this.store$.dispatch(new UpdateFilterAction({
+					this.store$.dispatch(UpdateFilterAction({
 						filter: data.filter,
 						newMetadata: data.filterMetadata
 					}));

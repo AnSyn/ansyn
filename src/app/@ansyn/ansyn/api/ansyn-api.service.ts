@@ -50,7 +50,8 @@ import {
 	DisplayOverlaySuccessAction,
 	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
-	SetOverlaysCriteriaAction
+	SetOverlaysCriteriaAction,
+	DisplayOverlayFailedAction
 } from '../modules/overlays/actions/overlays.actions';
 import { IOverlay, IOverlaysCriteria } from '../modules/overlays/models/overlay.model';
 import { ANSYN_ID } from './ansyn-id.provider';
@@ -121,16 +122,16 @@ export class AnsynApi {
 
 	@AutoSubscription
 	overlaysSearchEnd$ = this.actions$.pipe(
-		ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
-		tap(({ payload }) => {
+		ofType(LoadOverlaysSuccessAction),
+		tap(({payload}) => {
 			this.events.overlaysLoadedSuccess.emit(payload.length > 0 ? payload : false);
 		})
 	);
 
 	@AutoSubscription
 	displayOverlaySuccess$ = this.actions$.pipe(
-		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
-		tap(({ payload }) => this.events.displayOverlaySuccess.emit({
+		ofType(DisplayOverlaySuccessAction),
+		tap(payload => this.events.displayOverlaySuccess.emit({
 			overlay: payload.overlay,
 			mapId: payload.mapId
 		}))
@@ -138,8 +139,8 @@ export class AnsynApi {
 
 	@AutoSubscription
 	displayOverlayFailed$ = this.actions$.pipe(
-		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED),
-		tap(({ payload }) => this.events.displayOverlaySuccess.emit({
+		ofType(DisplayOverlayFailedAction),
+		tap(payload => this.events.displayOverlaySuccess.emit({
 			overlay: false,
 			mapId: payload.mapId
 		}))
@@ -187,7 +188,7 @@ export class AnsynApi {
 			console.error('can\'t set undefined point to shadow mouse');
 			return null;
 		}
-		this.store.dispatch(new ShadowMouseProducer({
+		this.store.dispatch(ShadowMouseProducer({
 			point: { coordinates: geoPoint.coordinates, type: 'point' },
 			outsideSource: true
 		}));
@@ -207,7 +208,7 @@ export class AnsynApi {
 			if (mapNumber >= 0 && mapNumber < mapsList.length) {
 				mapId = mapsList[mapNumber].id;
 			}
-			this.store.dispatch(new DisplayOverlayAction({ overlay, mapId: mapId, forceFirstDisplay: true }));
+			this.store.dispatch(DisplayOverlayAction({ overlay, mapId: mapId, forceFirstDisplay: true }));
 		});
 	}
 
@@ -220,10 +221,10 @@ export class AnsynApi {
 			console.error('feature collection must have FeatureCollection type');
 			return null;
 		}
-		this.store.dispatch(new UpdateLayer(<ILayer>{
+		this.store.dispatch(UpdateLayer({payload: {
 			...this.activeAnnotationLayer,
 			data: cloneDeep(featureCollection)
-		}));
+		}}));
 	}
 
 	deleteAllAnnotations(): void {
@@ -235,7 +236,7 @@ export class AnsynApi {
 			console.error('can\'t set undefined overlays');
 			return null;
 		}
-		this.store.dispatch(new LoadOverlaysSuccessAction(overlays, true));
+		this.store.dispatch(LoadOverlaysSuccessAction({payload: overlays, clearExistingOverlays: true}));
 	}
 
 	changeMapLayout(layout: LayoutKey): Observable<any> {
@@ -243,7 +244,7 @@ export class AnsynApi {
 			console.error('can\'t change layout to undefined');
 			return null;
 		}
-		this.store.dispatch(new SetLayoutAction(layout));
+		this.store.dispatch(SetLayoutAction({key: layout}));
 		return this.onSetLayoutSuccess$;
 	}
 
@@ -263,7 +264,7 @@ export class AnsynApi {
 			console.error('can\'t go to undefined point');
 			return null;
 		}
-		this.store.dispatch(new GoToAction(geoPoint.coordinates));
+		this.store.dispatch(GoToAction({payload: geoPoint.coordinates}));
 	}
 
 	setMapPositionByRect(rect: Polygon) {
@@ -271,7 +272,7 @@ export class AnsynApi {
 			console.error('can\'t set position to undefined rect');
 			return null;
 		}
-		this.store.dispatch(new SetMapPositionByRectAction({ id: this.activeMapId, rect }));
+		this.store.dispatch(SetMapPositionByRectAction({ id: this.activeMapId, rect }));
 	}
 
 	getOverlays(): Observable<IOverlay[]> {
@@ -303,12 +304,12 @@ export class AnsynApi {
 			console.error('can\'t set position to undefined point');
 			return null;
 		}
-		this.store.dispatch(new SetMapPositionByRadiusAction({ id: this.activeMapId, center, radiusInMeters }));
+		this.store.dispatch(SetMapPositionByRadiusAction({ id: this.activeMapId, center, radiusInMeters }));
 		if (search) {
 			const criteria: IOverlaysCriteria = {
 				region: center
 			};
-			this.store.dispatch(new SetOverlaysCriteriaAction(criteria));
+			this.store.dispatch(SetOverlaysCriteriaAction(criteria));
 		}
 	}
 
@@ -331,7 +332,7 @@ export class AnsynApi {
 					return null;
 			}
 		}
-		this.store.dispatch(new SetOverlaysCriteriaAction(criteria));
+		this.store.dispatch(SetOverlaysCriteriaAction(criteria));
 	}
 
 	getOverlayData(mapId: string = this.activeMapId): IOverlay {
@@ -339,17 +340,17 @@ export class AnsynApi {
 	}
 
 	collapseFooter(collapse: boolean) {
-		this.store.dispatch(new ToggleFooter(collapse));
+		this.store.dispatch(ToggleFooter({payload: collapse}));
 	}
 
 	collapseMenu(collapse: boolean) {
-		this.store.dispatch(new ToggleMenuCollapse(collapse));
+		this.store.dispatch(ToggleMenuCollapse({payload: collapse}));
 	}
 
 	setMinimalistViewMode(collapse: boolean) {
 		this.collapseFooter(collapse);
 		this.collapseMenu(collapse);
-		this.store.dispatch(new SetMinimalistViewModeAction(collapse));
+		this.store.dispatch(SetMinimalistViewModeAction({payload: collapse}));
 	}
 
 	insertLayer(layerName: string, layerData: FeatureCollection<any>, isEditable: boolean = true): string {
@@ -370,7 +371,7 @@ export class AnsynApi {
 
 		this.generateFeaturesIds(layerData);
 		const layer = this.dataLayersService.generateAnnotationLayer(layerName, layerData, !isEditable);
-		this.store.dispatch(new AddLayer(layer));
+		this.store.dispatch(AddLayer({payload: layer}));
 		return layer.id;
 	}
 
@@ -379,7 +380,7 @@ export class AnsynApi {
 			console.error('failed to remove layer - invalid layerId ', layerId);
 			return;
 		}
-		this.store.dispatch(new RemoveLayer(layerId));
+		this.store.dispatch(RemoveLayer({payload: layerId}));
 	}
 
 	showLayer(layerId: string, show: boolean): void {
@@ -387,7 +388,7 @@ export class AnsynApi {
 			console.error('failed to show layer - invalid layerId ', layerId);
 			return;
 		}
-		this.store.dispatch(new SetLayerSelection({ id: layerId, value: show }));
+		this.store.dispatch(SetLayerSelection({ id: layerId, value: show }));
 	}
 
 	init(): void {

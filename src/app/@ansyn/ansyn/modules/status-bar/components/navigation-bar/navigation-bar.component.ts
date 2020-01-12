@@ -45,7 +45,7 @@ export class NavigationBarComponent {
 		}
 
 		if (this._overlayHack.indexOf($event.which) !== -1) {
-			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(false));
+			this.store.dispatch(EnableCopyOriginalOverlayDataAction({payload: false}));
 		}
 	}
 
@@ -64,7 +64,7 @@ export class NavigationBarComponent {
 		}
 
 		if (this._overlayHack.indexOf($event.which) !== -1) {
-			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(true));
+			this.store.dispatch(EnableCopyOriginalOverlayDataAction({payload: true}));
 		}
 	}
 
@@ -80,21 +80,21 @@ export class NavigationBarComponent {
 	}
 
 	clickGoAdjacent(isNext): void {
-		this.store.dispatch(new GoAdjacentOverlay({ isNext }));
+		this.store.dispatch(GoAdjacentOverlay({ isNext }));
 	}
 
 	clickScannedArea(): void {
-		this.store.dispatch(new ActivateScannedAreaAction());
+		this.store.dispatch(ActivateScannedAreaAction());
 	}
 
 	clickGoNextPresetOverlay(): void {
-		this.store.dispatch(new GoNextPresetOverlay());
+		this.store.dispatch(GoNextPresetOverlay());
 	}
 
 	clickTime(): void {
 	}
 
 	clickExpand(): void {
-		this.store.dispatch(new ExpandAction());
+		this.store.dispatch(ExpandAction());
 	}
 }

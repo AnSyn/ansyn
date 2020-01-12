@@ -117,7 +117,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 		return this.projectionService.projectApproximately(point, this.iMap.mapObject).pipe(
 			take(1),
 			tap((projectedPoint) => {
-				this.store$.dispatch(new ShadowMouseProducer({ point: projectedPoint }));
+				this.store$.dispatch(ShadowMouseProducer({ point: projectedPoint }));
 			}))
 			.subscribe();
 	};

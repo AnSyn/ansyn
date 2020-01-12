@@ -38,15 +38,15 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		map(([overlay, activeMapId]: [IOverlay, string]) => {
 			// @todo: use real projection
 			const currentRotation = this.communicator.getRotation();
-			this.store$.dispatch(new ChangeOverlayPreviewRotationAction(currentRotation));
+			this.store$.dispatch(ChangeOverlayPreviewRotationAction(currentRotation));
 		})
 	);
 
 	@AutoSubscription
 	pointToRealNorth$ = this.actions$.pipe(
-		ofType<PointToRealNorthAction>(MapActionTypes.POINT_TO_REAL_NORTH),
-		filter((action: PointToRealNorthAction) => action.payload === this.mapId),
-		tap((action: PointToRealNorthAction) => {
+		ofType(PointToRealNorthAction),
+		filter((payload) => payload.mapId === this.mapId),
+		tap((payload) => {
 			// @todo: use image data
 			return this.communicator.ActiveMap.setRotation(0);
 		})

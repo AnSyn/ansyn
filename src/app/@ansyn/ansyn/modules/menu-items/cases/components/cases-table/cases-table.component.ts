@@ -71,7 +71,7 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 	}
 
 	loadCases() {
-		this.store$.dispatch(new LoadCasesAction());
+		this.store$.dispatch(LoadCasesAction());
 	}
 
 	onCasesAdded() {
@@ -97,20 +97,20 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 	}
 
 	removeCase(caseId: string): void {
-		this.store$.dispatch(new OpenModalAction({ component: DeleteCaseComponent, caseId }));
+		this.store$.dispatch(OpenModalAction({ component: DeleteCaseComponent, caseId }));
 	}
 
 	editCase(caseId: string) {
-		this.store$.dispatch(new OpenModalAction({ component: EditCaseComponent, caseId }));
+		this.store$.dispatch(OpenModalAction({ component: EditCaseComponent, caseId }));
 	}
 
 	shareCase(caseId: string) {
-		this.store$.dispatch(new CopyCaseLinkAction({ caseId: caseId }));
+		this.store$.dispatch(CopyCaseLinkAction({ caseId: caseId }));
 	}
 
 	selectCase(caseId: string): void {
 		if (this.selectedCaseId !== caseId) {
-			this.store$.dispatch(new LoadCaseAction(caseId));
+			this.store$.dispatch(LoadCaseAction({payload: caseId}));
 		}
 	}
 

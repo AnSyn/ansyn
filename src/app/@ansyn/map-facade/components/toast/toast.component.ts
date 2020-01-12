@@ -46,6 +46,6 @@ export class ToastComponent implements OnInit {
 	}
 
 	closeToast() {
-		this.store$.dispatch(new SetToastMessageAction());
+		this.store$.dispatch(SetToastMessageAction());
 	}
 }

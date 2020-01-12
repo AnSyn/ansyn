@@ -20,7 +20,7 @@ import {
 	SetFilteredOverlaysAction,
 	SetSpecialObjectsActionStore
 } from '@ansyn/ansyn';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, Effect, ofType, createEffect } from '@ngrx/effects';
 import { catchError, filter, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
 import { Action, Store } from '@ngrx/store';
 import {
@@ -34,17 +34,18 @@ import { ContextService } from '../services/context.service';
 import { get } from 'lodash';
 import { bbox, transformScale } from '@turf/turf';
 import { SetToastMessageAction } from '@ansyn/map-facade';
+import { Params } from '@angular/router';
 
 @Injectable()
 export class ContextAppEffects {
 
-	loadDefaultCaseContext$: Observable<any> = this.actions$.pipe(
-		ofType<LoadDefaultCaseAction>(CasesActionTypes.LOAD_DEFAULT_CASE),
-		filter((action: LoadDefaultCaseAction) => action.payload.context),
+	loadDefaultCaseContext$ = this.actions$.pipe(
+		ofType(LoadDefaultCaseAction),
+		filter(payload => payload.payload.context),
 		withLatestFrom(this.store.select(selectContextsArray), this.store.select(selectContextsParams)),
-		map(([action, contexts, params]: [LoadDefaultCaseAction, any[], IContextParams]) => {
-			const context = contexts.find(({ id }) => action.payload.context === id);
-			return [action, context, params];
+		map(([payload, contexts, params]: [{payload: Params}, any[], IContextParams]) => {
+			const context = contexts.find(({ id }) => payload.payload.context === id);
+			return [payload, context, params];
 		})
 	);
 
@@ -59,8 +60,8 @@ export class ContextAppEffects {
 		const defaultCaseQueryParams = this.casesService.updateCaseViaContext(context, this.casesService.defaultCase, action.payload);
 		return this.getCaseForContext(defaultCaseQueryParams, context, paramsPayload).pipe(
 			mergeMap((selectedCase) => [
-					new SetContextParamsAction(paramsPayload),
-					new SelectCaseAction(selectedCase)
+					SetContextParamsAction({payload: paramsPayload}),
+					SelectCaseAction(selectedCase)
 				]
 			));
 	});
@@ -88,35 +89,33 @@ export class ContextAppEffects {
 			catchError((err) => {
 				console.warn('Error loading context as case', err);
 				const defaultCaseParams = this.casesService.updateCaseViaQueryParmas({}, this.casesService.defaultCase);
-				return from([new SelectCaseAction(defaultCaseParams),
-					new SetToastMessageAction({
+				return from([SelectCaseAction(defaultCaseParams),
+					SetToastMessageAction({
 						toastText: 'Failed to load context',
 						showWarningIcon: true
 					})]);
 			})
 		);
 
-	@Effect()
-	displayLatestOverlay$: Observable<any> = this.actions$.pipe(
-		ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS),
+	displayLatestOverlay$ = createEffect(() => this.actions$.pipe(
+		ofType(SetFilteredOverlaysAction),
 		withLatestFrom(this.store.select(selectContextsParams), this.store.select(overlaysStateSelector)),
-		filter(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => params && params.defaultOverlay === DisplayedOverlay.latest && filteredOverlays.length > 0),
-		mergeMap(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => {
+		filter(([, params, { filteredOverlays }]: [any, IContextParams, IOverlaysState]) => params && params.defaultOverlay === DisplayedOverlay.latest && filteredOverlays.length > 0),
+		mergeMap(([, params, { filteredOverlays }]: [any, IContextParams, IOverlaysState]) => {
 			const id = filteredOverlays[filteredOverlays.length - 1];
 			return [
-				new SetContextParamsAction({ defaultOverlay: null }),
-				new DisplayOverlayFromStoreAction({ id })
+				SetContextParamsAction({ defaultOverlay: null }),
+				DisplayOverlayFromStoreAction({ id })
 			];
 		}),
 		share()
-	);
+	));
 
-	@Effect()
-	displayTwoNearestOverlay$: Observable<any> = this.actions$.pipe(
-		ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS),
+	displayTwoNearestOverlay$: Observable<any> = createEffect(() => this.actions$.pipe(
+		ofType(SetFilteredOverlaysAction),
 		withLatestFrom(this.store.select(selectContextsParams), this.store.select(overlaysStateSelector)),
-		filter(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => params && params.defaultOverlay === DisplayedOverlay.nearest && filteredOverlays.length > 0),
-		mergeMap(([action, params, { entities: overlays, filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => {
+		filter(([, params, { filteredOverlays }]: [{payload: string[]}, IContextParams, IOverlaysState]) => params && params.defaultOverlay === DisplayedOverlay.nearest && filteredOverlays.length > 0),
+		mergeMap(([, params, { entities: overlays, filteredOverlays }]: [{payload: string[]}, IContextParams, IOverlaysState]) => {
 			const overlaysBeforeId = [...filteredOverlays].reverse().find(overlayId => overlays[overlayId].photoTime < params.time);
 			const overlaysBefore = overlays[overlaysBeforeId];
 			const overlaysAfterId = filteredOverlays.find(overlayId => overlays[overlayId].photoTime > params.time);
@@ -134,15 +133,14 @@ export class ContextAppEffects {
 				extent
 			}].filter(({ overlay }) => Boolean(overlay));
 			return [
-				new DisplayMultipleOverlaysFromStoreAction(payload),
-				new SetContextParamsAction({ defaultOverlay: null })
+				DisplayMultipleOverlaysFromStoreAction(payload),
+				SetContextParamsAction({ defaultOverlay: null })
 			];
 		}),
 		share()
-	);
+	));
 
-	@Effect()
-	setSpecialObjectsFromContextEntities$: Observable<any> = this.store.select(selectContextEntities).pipe(
+	setSpecialObjectsFromContextEntities$  = createEffect(() => this.store.select(selectContextEntities).pipe(
 		filter((contextEntities: IContextEntity[]) => Boolean(contextEntities)),
 		map((contextEntities: IContextEntity[]): Action => {
 			const specialObjects = contextEntities.map(contextEntity => ({
@@ -150,8 +148,8 @@ export class ContextAppEffects {
 				date: contextEntity.date,
 				shape: 'star'
 			} as IOverlaySpecialObject));
-			return new SetSpecialObjectsActionStore(specialObjects);
-		})
+			return SetSpecialObjectsActionStore({payload: specialObjects});
+		}))
 	);
 
 	constructor(protected actions$: Actions,
@@ -159,7 +157,6 @@ export class ContextAppEffects {
 				protected casesService: CasesService,
 				protected overlaysService: OverlaysService,
 				protected contextService: ContextService) {
-
 	}
 
 	getCaseForContext(defaultCaseQueryParams: ICase, context: IContext, params: IContextParams): Observable<ICase> {
@@ -197,5 +194,4 @@ export class ContextAppEffects {
 		}
 		return case$;
 	}
-
 }

@@ -48,7 +48,7 @@ export class SentinelComboBoxComponent implements OnInit, OnDestroy, IEntryCompo
 	}
 
 	changeLayer(layer) {
-		this.store.dispatch(new SetSentinelLayerOnMap({ id: this.mapId, layer }));
+		this.store.dispatch(SetSentinelLayerOnMap({ id: this.mapId, layer }));
 	}
 
 	ngOnInit(): void {

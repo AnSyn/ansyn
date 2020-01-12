@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, Effect, ofType, createEffect } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectPresetOverlays } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
@@ -48,10 +48,9 @@ export class StatusBarAppEffects {
 			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Status_Bar', action.type);
 		}));
 
-	@Effect()
-	onAdjacentOverlay$: Observable<any> = this.actions$.pipe(
-		ofType<GoAdjacentOverlay>(StatusBarActionsTypes.GO_ADJACENT_OVERLAY),
-		withLatestFrom(this.store.select(mapStateSelector), ({ payload }, mapState: IMapState): { isNext, overlayId } => {
+	onAdjacentOverlay$ = createEffect(() => this.actions$.pipe(
+		ofType(GoAdjacentOverlay),
+		withLatestFrom(this.store.select(mapStateSelector), (payload, mapState: IMapState): { isNext, overlayId } => {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			const overlayId = activeMap.data.overlay && activeMap.data.overlay.id;
 			const { isNext } = payload;
@@ -64,12 +63,12 @@ export class StatusBarAppEffects {
 			return drops[index + adjacent];
 		}),
 		filter(Boolean),
-		map(({ id }) => new DisplayOverlayFromStoreAction({ id })));
+		map(({ id }) => DisplayOverlayFromStoreAction({ id })))
+	);
 
 
-	@Effect()
-	onNextPresetOverlay$: Observable<any> = this.actions$.pipe(
-		ofType<GoNextPresetOverlay>(StatusBarActionsTypes.GO_NEXT_PRESET_OVERLAY),
+	onNextPresetOverlay$ = createEffect(() => this.actions$.pipe(
+		ofType(GoNextPresetOverlay),
 		withLatestFrom(this.store.select(mapStateSelector), (Action, mapState: IMapState): { overlayId: string, mapId: string } => {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			return { overlayId: activeMap.data.overlay && activeMap.data.overlay.id, mapId: mapState.activeMapId };
@@ -84,35 +83,28 @@ export class StatusBarAppEffects {
 			return { overlay: presetOverlays[nextIndex], mapId };
 		}),
 		filter(Boolean),
-		map(({ overlay, mapId }) => new DisplayOverlayAction({ overlay, mapId }))
+		map(({ overlay, mapId }) => DisplayOverlayAction({ overlay, mapId })))
 	);
 
-	@Effect()
-	onCopySelectedCaseLink$ = this.actions$.pipe(
-		ofType<CopySnapshotShareLinkAction>(StatusBarActionsTypes.COPY_SNAPSHOT_SHARE_LINK),
-		withLatestFrom(this.store.select(casesStateSelector), (action: CopySnapshotShareLinkAction, state: ICasesState) => {
-			return state.selectedCase.id;
-		}),
+	onCopySelectedCaseLink$ = createEffect(() => this.actions$.pipe(
+		ofType(CopySnapshotShareLinkAction),
+		withLatestFrom(this.store.select(casesStateSelector), (payload, state: ICasesState) => state.selectedCase.id),
 		map((caseId: string) => {
-			return new CopyCaseLinkAction({ caseId: caseId, shareCaseAsQueryParams: true });
+			return CopyCaseLinkAction({ caseId: caseId, shareCaseAsQueryParams: true });
 		})
-	);
+	));
 
-
-	@Effect({ dispatch: false })
-	onExpand$: Observable<void> = this.actions$.pipe(
+	onExpand$ = createEffect(() => this.actions$.pipe(
 		ofType(StatusBarActionsTypes.EXPAND),
-		map(() => {
-			console.log('onExpand$');
-		})
+		tap(() => console.log('onExpand$'))),
+		{ dispatch: false }
 	);
 
-	@Effect()
-	onClickOutsideMap$ = this.actions$.pipe(
-		ofType<ClickOutsideMap | ContextMenuShowAction>(MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP, MapActionTypes.CONTEXT_MENU.SHOW),
+	onClickOutsideMap$ = createEffect(() => this.actions$.pipe(
+		ofType(ClickOutsideMap, ContextMenuShowAction),
 		withLatestFrom(this.store.select(selectGeoFilterSearchMode)),
-		filter(([action, searchMode]) => searchMode !== SearchModeEnum.none),
-		map(() => new UpdateGeoFilterStatus())
+		filter(([payload, searchMode]) => searchMode !== SearchModeEnum.none),
+		map(() => UpdateGeoFilterStatus()))
 	);
 
 	constructor(protected actions$: Actions,

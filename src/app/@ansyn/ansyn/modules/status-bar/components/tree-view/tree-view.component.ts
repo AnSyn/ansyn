@@ -134,11 +134,11 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	dataInputFiltersOk(): void {
 		if (this._selectedFilters.length === 0 && this.dataInputFiltersActive) {
-			this.store.dispatch(new SetToastMessageAction({
+			this.store.dispatch(SetToastMessageAction({
 				toastText: 'Please select at least one sensor'
 			}));
 		} else {
-			this.store.dispatch(new SetOverlaysCriteriaAction({
+			this.store.dispatch(SetOverlaysCriteriaAction({
 				dataInputFilters: {
 					fullyChecked: this.leavesCount <= this._selectedFilters.length,
 					filters: this._selectedFilters,

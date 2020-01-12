@@ -65,7 +65,7 @@ export class TasksTableComponent implements OnInit, OnDestroy {
 	}
 
 	loadTasks() {
-		this.store$.dispatch(new LoadTasksAction());
+		this.store$.dispatch(LoadTasksAction({payload: []}));
 	}
 
 	onTasksAdded() {
@@ -91,8 +91,8 @@ export class TasksTableComponent implements OnInit, OnDestroy {
 	}
 
 	selectTask(taskId: string): void {
-		this.store$.dispatch(new SelectTaskAction(taskId));
-		this.store$.dispatch(new SetTasksPageToShow(TasksPageToShow.TASK_FORM));
+		this.store$.dispatch(SelectTaskAction({payload: taskId}));
+		this.store$.dispatch(SetTasksPageToShow({payload: TasksPageToShow.TASK_FORM}));
 	}
 
 	formatTime(timeToFormat: Date): string {
@@ -119,6 +119,6 @@ export class TasksTableComponent implements OnInit, OnDestroy {
 	}
 
 	removeTask(id) {
-		this.store$.dispatch(new DeleteTaskAction(id));
+		this.store$.dispatch(DeleteTaskAction({payload: id}));
 	}
 }

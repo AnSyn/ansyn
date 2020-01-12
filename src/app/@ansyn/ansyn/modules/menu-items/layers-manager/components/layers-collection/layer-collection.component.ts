@@ -55,11 +55,11 @@ export class LayerCollectionComponent {
 	}
 
 	showAll() {
-		this.store.dispatch(new ShowAllLayers(this.collection.type));
+		this.store.dispatch(ShowAllLayers({payload: this.collection.type}));
 	}
 
 	openModal(type: SelectedModalEnum, layer?: ILayer): void {
-		this.store.dispatch(new SetLayersModal({ type, layer }));
+		this.store.dispatch(SetLayersModal({ type, layer }));
 	}
 
 	shouldDisableRemoveLayer(layerIndexToRemove: number): boolean {

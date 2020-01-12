@@ -134,7 +134,7 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 	showOverlay(event: MouseEvent, angleData: any) {
 		event.stopPropagation();
 		this.overlay = angleData.overlay;
-		this.store$.dispatch(new DisplayOverlayFromStoreAction({
+		this.store$.dispatch(DisplayOverlayFromStoreAction({
 			id: angleData.overlay.id,
 			customOriantation: 'Imagery Perspective'
 		}));
@@ -152,7 +152,7 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 			index = anglesSize - 1;
 		}
 		const overlayToDisplay = this.overlaysAngles[index].overlay;
-		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id: overlayToDisplay.id }));
+		this.store$.dispatch(DisplayOverlayFromStoreAction({ id: overlayToDisplay.id }));
 	}
 
 	isActive(overlay: any) {
@@ -160,11 +160,11 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 	}
 
 	overlayHover(overlay?: any) {
-		this.store$.dispatch(new SetMarkUp({
+		this.store$.dispatch(SetMarkUp({
 			classToSet: MarkUpClass.hover, dataToSet: {
 				overlaysIds: overlay ? [overlay.id] : []
 			}
 		}));
-		this.store$.dispatch(new SetHoveredOverlayAction(overlay));
+		this.store$.dispatch(SetHoveredOverlayAction(overlay));
 	}
 }

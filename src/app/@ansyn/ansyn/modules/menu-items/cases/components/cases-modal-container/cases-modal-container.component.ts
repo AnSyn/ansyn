@@ -36,7 +36,7 @@ export class CasesModalContainerComponent implements OnInit, OnDestroy {
 	}
 
 	close() {
-		this.store.dispatch(new CloseModalAction());
+		this.store.dispatch(CloseModalAction());
 	}
 
 	ngOnInit() {

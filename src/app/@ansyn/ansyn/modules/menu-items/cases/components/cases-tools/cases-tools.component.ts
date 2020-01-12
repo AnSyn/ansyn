@@ -39,15 +39,15 @@ export class CasesToolsComponent implements OnInit, OnDestroy {
 	}
 
 	showEditCaseModal(): void {
-		this.store.dispatch(new OpenModalAction({ component: EditCaseComponent }));
+		this.store.dispatch(OpenModalAction({ component: EditCaseComponent }));
 	}
 
 	showSaveCaseModal(): void {
-		this.store.dispatch(new OpenModalAction({ component: SaveCaseComponent }));
+		this.store.dispatch(OpenModalAction({ component: SaveCaseComponent }));
 	}
 
 	manualSave(): void {
-		this.store.dispatch(new ManualSaveAction(this._selectedCase));
+		this.store.dispatch(ManualSaveAction(this._selectedCase));
 	}
 
 	ngOnInit(): void {

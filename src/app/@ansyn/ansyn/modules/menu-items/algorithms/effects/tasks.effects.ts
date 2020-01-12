@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable } from 'rxjs';
+import { Actions, Effect, ofType, createEffect } from '@ngrx/effects';
 import {
 	ITasksState,
 	selectAlgorithmTasksAreLoaded,
@@ -28,61 +27,54 @@ import { ErrorHandlerService } from '../../../core/services/error-handler.servic
 @Injectable()
 export class TasksEffects {
 
-	@Effect()
-	loadTasks$: Observable<LoadTasksFinishedAction> = this.actions$.pipe(
-		ofType(TasksActionTypes.LOAD_TASKS),
+	loadTasks$ = createEffect(() => this.actions$.pipe(
+		ofType(LoadTasksFinishedAction),
 		withLatestFrom(this.store.select(selectAlgorithmTasksAreLoaded), this.store.select(selectTaskTotal)),
-		filter(([action, loaded, total]) => !loaded),
-		mergeMap(([action, loaded, total]: [LoadTasksFinishedAction, boolean, number]) => {
+		filter(([payload, loaded, total]) => !loaded),
+		mergeMap(([payload, loaded, total]: [any, boolean, number]) => {
 			return this.tasksService.loadTasks(total).pipe(
-				map(tasks => new LoadTasksFinishedAction(tasks))
+				map(tasks => LoadTasksFinishedAction({payload: tasks}))
 			);
-		})
+		}))
 	);
 
-	@Effect()
-	onLoadTasksFinished$: Observable<AddTasksAction> = this.actions$.pipe(
+	onLoadTasksFinished$ = createEffect(() => this.actions$.pipe(
 		ofType(TasksActionTypes.LOAD_TASKS_FINISHED),
-		map(({ payload }: LoadTasksFinishedAction) => new AddTasksAction(payload))
-	);
+		map(payload => AddTasksAction(payload))
+	));
 
-	@Effect()
-	onRunTask$: Observable<RunTaskFinishedAction> = this.actions$.pipe(
-		ofType<RunTaskAction>(TasksActionTypes.RUN_TASK),
+	onRunTask$ = createEffect(() => this.actions$.pipe(
+		ofType(RunTaskAction),
 		withLatestFrom(this.store.select(selectCurrentAlgorithmTask)),
-		mergeMap(([action, task]: [RunTaskAction, AlgorithmTask]) => (
+		mergeMap(([payload, task]: [any, AlgorithmTask]) => (
 			this.tasksRemoteService.runTask(task).pipe(
-				map(() => new RunTaskFinishedAction(task))
+				map(() => RunTaskFinishedAction(task))
 			)
-		))
+		)))
 	);
 
-	@Effect()
-	onRunTaskFinished$: Observable<any> = this.actions$.pipe(
-		ofType<RunTaskFinishedAction>(TasksActionTypes.RUN_TASK_FINISHED),
-		map(({ payload }: RunTaskFinishedAction) => payload),
+	onRunTaskFinished$ = createEffect(() => this.actions$.pipe(
+		ofType(RunTaskFinishedAction),
 		mergeMap((task: AlgorithmTask) => {
 			return [
-				new SetCurrentTaskStatus(AlgorithmTaskStatus.SENT),
-				new AddTaskAction({ ...task, status: AlgorithmTaskStatus.SENT, runTime: new Date() })
+				SetCurrentTaskStatus({payload: AlgorithmTaskStatus.SENT}),
+				AddTaskAction({ ...task, status: AlgorithmTaskStatus.SENT, runTime: new Date() })
 			];
-		})
+		}))
 	);
 
-	@Effect()
-	onAddTask$: Observable<SelectTaskAction> = this.actions$.pipe(
-		ofType<AddTaskAction>(TasksActionTypes.ADD_TASK),
-		mergeMap((action: AddTaskAction) => this.tasksService.createTask(action.payload)),
+	onAddTask$ = createEffect(() => this.actions$.pipe(
+		ofType(AddTaskAction),
+		mergeMap(payload => this.tasksService.createTask(payload)),
 		map((task: AlgorithmTask) => {
-			return new SelectTaskAction(task.id)
-		})
+			return SelectTaskAction({payload: task.id})
+		}))
 	);
 
-	@Effect()
-	onDeleteTask$: Observable<SelectTaskAction> = this.actions$.pipe(
-		ofType<DeleteTaskAction>(TasksActionTypes.DELETE_TASK),
-		mergeMap((action: DeleteTaskAction) => this.tasksService.removeTask(action.payload)),
-		map(() => new SelectTaskAction(null))
+	onDeleteTask$ = createEffect(() => this.actions$.pipe(
+		ofType(DeleteTaskAction),
+		mergeMap(selectedTaskId => this.tasksService.removeTask(selectedTaskId.payload)),
+		map(() => SelectTaskAction(null)))
 	);
 
 	constructor(
@@ -94,4 +86,3 @@ export class TasksEffects {
 	) {
 	}
 }
-

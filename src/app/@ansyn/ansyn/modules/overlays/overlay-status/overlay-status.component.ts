@@ -195,30 +195,30 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		const overlay = this.overlay;
 		const { id } = overlay;
 		const value = !this.isFavorite;
-		this.store$.dispatch(new ToggleFavoriteAction({ value, id, overlay }));
+		this.store$.dispatch(ToggleFavoriteAction({ value, id, overlay }));
 	}
 
 	togglePreset() {
 		const overlay = this.overlay;
 		const { id } = overlay;
 		const value = !this.isPreset;
-		this.store$.dispatch(new TogglePresetOverlayAction({ value, id, overlay }));
+		this.store$.dispatch(TogglePresetOverlayAction({ value, id, overlay }));
 
 	}
 
 	toggleDragged() {
-		this.store$.dispatch(new ToggleDraggedModeAction({
+		this.store$.dispatch(ToggleDraggedModeAction({
 			mapId: this.mapId,
 			overlayId: this.overlay.id,
 			dragged: !this.isDragged
 		}))
 		if (this.isDragged) {
-			this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetAnnotationMode] }));
+			this.store$.dispatch(ClearActiveInteractionsAction({ skipClearFor: [SetAnnotationMode] }));
 		}
 	}
 
 	removeOverlay() {
-		this.store$.dispatch(new SetRemovedOverlaysIdAction({
+		this.store$.dispatch(SetRemovedOverlaysIdAction({
 			mapId: this.mapId,
 			id: this.overlay.id,
 			value: !this.isRemoved

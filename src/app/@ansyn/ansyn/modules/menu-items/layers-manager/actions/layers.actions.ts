@@ -1,4 +1,4 @@
-import { Action } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 import { ILayer, LayerType } from '../models/layers.model';
 import { ILayerModal, SelectedModalEnum } from '../reducers/layers-modal';
 
@@ -25,172 +25,114 @@ export enum LayersActionTypes {
 	SET_MODAL = '[Layers] Set modal value',
 	SHOW_ALL_LAYERS = '[Layers] Show all layers'
 }
+export const BeginLayerCollectionLoadAction = createAction(
+												LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD,
+												props<{ caseId: string }>()
+);
 
-export type LayersActions =
-	| BeginLayerCollectionLoadAction
-	| LayerCollectionLoadedAction
-	| ErrorLoadingLayersAction
-	| UpdateSelectedLayersIds
-	| SetLayerSelection
-	| SelectOnlyLayer
-	| AddLayer
-	| UpdateLayer
-	| SetLayersModal
-	| CloseLayersModal;
+export const LayerCollectionLoadedAction = createAction(
+											LayersActionTypes.LAYER_COLLECTION_LOADED,
+											props<{payload: ILayer[]}>()
+);
 
-export class BeginLayerCollectionLoadAction implements Action {
-	type = LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD;
+export const UpdateSelectedLayersIds = createAction(
+										LayersActionTypes.UPDATE_SELECTED_LAYERS_IDS,
+										props<{payload: string[]}>()
+);
 
-	constructor(public payload: { caseId: string }) {
-	}
-}
+export const ErrorLoadingLayersAction = createAction(
+											LayersActionTypes.ERROR_LOADING_LAYERS,
+											props<{payload: string}>()
+);
 
-export class LayerCollectionLoadedAction implements Action {
-	type = LayersActionTypes.LAYER_COLLECTION_LOADED;
+export const SetLayerSelection = createAction(
+									LayersActionTypes.SET_LAYER_SELECTION,
+									props<{ id: string, value: boolean }>()
+);
 
-	constructor(public payload: ILayer[]) {
-	}
-}
+export const SelectOnlyLayer = createAction(
+								LayersActionTypes.SELECT_ONLY,
+								props<{payload: string}>()
+);
 
-export class UpdateSelectedLayersIds implements Action {
-	type = LayersActionTypes.UPDATE_SELECTED_LAYERS_IDS;
+export const AddLayer = createAction(
+							LayersActionTypes.ADD_LAYER,
+							props<{payload: ILayer}>()
+);
 
-	constructor(public payload: string[]) {
-	}
-}
+export const AddLayerOnBackendFailedAction = createAction(
+												LayersActionTypes.ADD_LAYER_ON_BACKEND_FAILED_ACTION,
+												props<{payload: ILayer, error: any}>()
+);
 
-export class ErrorLoadingLayersAction implements Action {
-	type = LayersActionTypes.ERROR_LOADING_LAYERS;
+export const AddLayerOnBackendSuccessAction = createAction(
+												LayersActionTypes.ADD_LAYER_ON_BACKEND_SUCCESS_ACTION,
+												props<{payload: string}>()
+);
 
-	constructor(public payload: string) {
-	}
-}
+export const UpdateLayer = createAction(
+								LayersActionTypes.UPDATE_LAYER,
+								props<{payload: ILayer}>()
+);
 
-export class SetLayerSelection implements Action {
-	readonly type = LayersActionTypes.SET_LAYER_SELECTION;
+export const UpdateLayerOnBackendFailedAction = createAction(
+													LayersActionTypes.UPDATE_LAYER_ON_BACKEND_FAILED_ACTION,
+													props<{payload: ILayer, error: any}>()
+);
 
-	constructor(public payload: { id: string, value: boolean }) {
-	}
-}
+export const UpdateLayerOnBackendSuccessAction = createAction(
+													LayersActionTypes.UPDATE_LAYER_ON_BACKEND_SUCCESS_ACTION,
+													props<{payload: string}>()
+);
 
-export class SelectOnlyLayer implements Action {
-	readonly type = LayersActionTypes.SELECT_ONLY;
+export const RemoveLayer = createAction(
+								LayersActionTypes.REMOVE_LAYER,
+								props<{payload: string}>()
+);
 
-	constructor(public payload: string) {
-	}
-}
+export const RemoveLayerOnBackendFailedAction = createAction(
+													LayersActionTypes.REMOVE_LAYER_ON_BACKEND_FAILED_ACTION,
+													props<{payload: string, error: any}>()
+);
 
-export class AddLayer implements Action {
-	type = LayersActionTypes.ADD_LAYER;
+export const RemoveLayerOnBackendSuccessAction = createAction(
+													LayersActionTypes.REMOVE_LAYER_ON_BACKEND_SUCCESS_ACTION,
+													props<{payload: string}>()
+);
 
-	constructor(public payload: ILayer) {
-	}
-}
+export const RemoveCaseLayersFromBackendAction = createAction(
+													LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_ACTION,
+													props<{caseId: string}>()
+);
 
-export class AddLayerOnBackendFailedAction extends AddLayer {
-	readonly type = LayersActionTypes.ADD_LAYER_ON_BACKEND_FAILED_ACTION;
+export const RemoveCaseLayersFromBackendSuccessAction = createAction(
+															LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_SUCCESS_ACTION
+);
 
-	constructor(public payload: ILayer, error: any) {
-		super(payload)
-	}
-}
+export const RemoveCaseLayersFromBackendFailedAction = createAction(
+														LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_FAILED_ACTION,
+														props<{caseId: string, error: any}>()
+);
 
-export class AddLayerOnBackendSuccessAction implements Action {
-	readonly type = LayersActionTypes.ADD_LAYER_ON_BACKEND_SUCCESS_ACTION;
 
-	constructor(public payload: string) {
-	}
-}
+export const SetActiveAnnotationLayer = createAction(
+											LayersActionTypes.SET_ACTIVE_ANNOTATION_LAYER,
+											props<{payload: string}>()
+);
 
-export class UpdateLayer implements Action {
-	type = LayersActionTypes.UPDATE_LAYER;
+export const SetLayersModal = createAction(
+								LayersActionTypes.SET_MODAL,
+								props<{payload: ILayerModal}>()
+);
 
-	constructor(public payload: ILayer) {
-	}
-}
+// TODO : DO
+// export class CloseLayersModal extends SetLayersModal {
+// 	constructor() {
+// 		super({ type: SelectedModalEnum.none, layer: null });
+// 	}
+// }
 
-export class UpdateLayerOnBackendFailedAction extends UpdateLayer {
-	readonly type = LayersActionTypes.UPDATE_LAYER_ON_BACKEND_FAILED_ACTION;
-
-	constructor(public payload: ILayer, error: any) {
-		super(payload)
-	}
-}
-
-export class UpdateLayerOnBackendSuccessAction implements Action {
-	readonly type = LayersActionTypes.UPDATE_LAYER_ON_BACKEND_SUCCESS_ACTION;
-
-	constructor(public payload: string) {
-	}
-}
-
-export class RemoveLayer implements Action {
-	type = LayersActionTypes.REMOVE_LAYER;
-
-	constructor(public payload: string) {
-
-	}
-}
-
-export class RemoveLayerOnBackendFailedAction extends RemoveLayer {
-	readonly type = LayersActionTypes.REMOVE_LAYER_ON_BACKEND_FAILED_ACTION;
-
-	constructor(public payload: string, error: any) {
-		super(payload);
-	}
-}
-
-export class RemoveLayerOnBackendSuccessAction implements Action {
-	readonly type = LayersActionTypes.REMOVE_LAYER_ON_BACKEND_SUCCESS_ACTION;
-
-	constructor(public payload: string) {
-	}
-}
-
-export class RemoveCaseLayersFromBackendAction implements Action {
-	type = LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_ACTION;
-
-	constructor(public caseId: string) {
-	}
-}
-
-export class RemoveCaseLayersFromBackendSuccessAction extends RemoveCaseLayersFromBackendAction {
-	readonly type = LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_SUCCESS_ACTION;
-}
-export class RemoveCaseLayersFromBackendFailedAction extends RemoveCaseLayersFromBackendAction {
-	readonly type = LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_FAILED_ACTION;
-
-	constructor(public caseId: string, error: any) {
-		super(caseId);
-	}
-}
-
-export class SetActiveAnnotationLayer implements Action {
-	type = LayersActionTypes.SET_ACTIVE_ANNOTATION_LAYER;
-
-	constructor(public payload: string) {
-
-	}
-}
-
-export class SetLayersModal implements Action {
-	type = LayersActionTypes.SET_MODAL;
-
-	constructor(public payload: ILayerModal) {
-
-	}
-}
-
-export class CloseLayersModal extends SetLayersModal {
-	constructor() {
-		super({ type: SelectedModalEnum.none, layer: null });
-	}
-}
-
-export class ShowAllLayers implements Action {
-	type = LayersActionTypes.SHOW_ALL_LAYERS;
-
-	constructor(public payload: LayerType) {
-
-	}
-}
+export const ShowAllLayers = createAction(
+								LayersActionTypes.SHOW_ALL_LAYERS,
+								props<{payload: LayerType}>()
+);

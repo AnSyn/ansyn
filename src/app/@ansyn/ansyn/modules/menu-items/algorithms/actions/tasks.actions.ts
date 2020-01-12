@@ -1,4 +1,4 @@
-import { Action } from '@ngrx/store';
+import { Action, createAction, props } from '@ngrx/store';
 import { GeometryObject } from 'geojson';
 import { AlgorithmTask, AlgorithmTaskStatus, TasksPageToShow } from '../models/tasks.model';
 import { IOverlay } from '../../../overlays/models/overlay.model';
@@ -33,121 +33,86 @@ export type TasksActions =
 	| SetCurrentTaskRegion
 	;
 
-export class SetTaskDrawIndicator implements Action {
-	type = TasksActionTypes.SET_DRAW_INDICATOR;
+export const SetTaskDrawIndicator = createAction(
+										TasksActionTypes.SET_DRAW_INDICATOR,
+										props<{payload: boolean}>()
+);
 
-	constructor(public payload: boolean) {
-	}
-}
+export const LoadTasksAction = createAction(
+								TasksActionTypes.LOAD_TASKS,
+								props<{payload?: AlgorithmTask[]}>()
+);
 
-export class LoadTasksAction implements Action {
-	type = TasksActionTypes.LOAD_TASKS;
+export const LoadTasksFinishedAction = createAction(
+										TasksActionTypes.LOAD_TASKS_FINISHED,
+										props<{payload?: AlgorithmTask[]}>()
+);
 
-	constructor(public payload?: AlgorithmTask[]) {
-	}
-}
+export const AddTasksAction = createAction(
+								TasksActionTypes.ADD_TASKS,
+								props<{payload?: AlgorithmTask[]}>()
+);
 
-export class LoadTasksFinishedAction implements Action {
-	type = TasksActionTypes.LOAD_TASKS_FINISHED;
+export const AddTaskAction = createAction(
+								TasksActionTypes.ADD_TASK,
+								props<AlgorithmTask>()
+);
 
-	constructor(public payload: AlgorithmTask[]) {
-	}
-}
+export const RunTaskAction = createAction(
+								TasksActionTypes.RUN_TASK
+);
 
-export class AddTasksAction implements Action {
-	type = TasksActionTypes.ADD_TASKS;
+export const RunTaskFinishedAction = createAction(
+										TasksActionTypes.RUN_TASK_FINISHED,
+										props<AlgorithmTask>()
+);
 
-	constructor(public payload: AlgorithmTask[]) {
-	}
-}
+export const DeleteTaskAction = createAction(
+									TasksActionTypes.DELETE_TASK,
+									props<{payload: string}>()
+);
 
-export class AddTaskAction implements Action {
-	type = TasksActionTypes.ADD_TASK;
+export const SelectTaskAction = createAction(
+									TasksActionTypes.SELECT_TASK,
+									props<{payload: string}>()
+);
 
-	constructor(public payload: AlgorithmTask) {
-	}
-}
+export const SetTasksPageToShow = createAction(
+									TasksActionTypes.SET_PAGE_TO_SHOW,
+									props<{payload: TasksPageToShow}>()
+);
 
-export class RunTaskAction implements Action {
-	type = TasksActionTypes.RUN_TASK;
+export const SetCurrentTask = createAction(
+								TasksActionTypes.SET_CURRENT_TASK,
+								props<AlgorithmTask>()
+);
 
-	constructor() {
-	}
-}
+export const SetCurrentTaskName = createAction(
+									TasksActionTypes.SET_CURRENT_TASK_NAME,
+									props<{payload: string}>()
+);
 
-export class RunTaskFinishedAction implements Action {
-	type = TasksActionTypes.RUN_TASK_FINISHED;
+export const SetCurrentTaskStatus = createAction(
+										TasksActionTypes.SET_CURRENT_TASK_STATUS,
+										props<{payload: AlgorithmTaskStatus}>()
+);
 
-	constructor(public payload: AlgorithmTask) {
-	}
-}
+export const SetCurrentTaskMasterOverlay = createAction(
+											TasksActionTypes.SET_CURRENT_TASK_MASTER_OVERLAY,
+											props<IOverlay>()
+);
 
-export class DeleteTaskAction implements Action {
-	type = TasksActionTypes.DELETE_TASK;
+export const SetCurrentTaskOverlays = createAction(
+										TasksActionTypes.SET_CURRENT_TASK_OVERLAYS,
+										props<{payload: IOverlay[]}>()
+);
 
-	constructor(public payload: string) {
-	}
-}
+export const SetCurrentTaskRegion = createAction(
+										TasksActionTypes.SET_CURRENT_TASK_REGION,
+										props<{payload: GeometryObject}>()
+);
 
-export class SelectTaskAction implements Action {
-	type = TasksActionTypes.SELECT_TASK;
-
-	constructor(public payload: string) {
-	}
-}
-
-export class SetTasksPageToShow implements Action {
-	type = TasksActionTypes.SET_PAGE_TO_SHOW;
-
-	constructor(public payload: TasksPageToShow) {
-	}
-}
-
-export class SetCurrentTask implements Action {
-	type = TasksActionTypes.SET_CURRENT_TASK;
-
-	constructor(public payload: AlgorithmTask) {
-	}
-}
-
-export class SetCurrentTaskName implements Action {
-	type = TasksActionTypes.SET_CURRENT_TASK_NAME;
-
-	constructor(public payload: string) {
-	}
-}
-
-export class SetCurrentTaskStatus implements Action {
-	type = TasksActionTypes.SET_CURRENT_TASK_STATUS;
-
-	constructor(public payload: AlgorithmTaskStatus) {
-	}
-}
-
-export class SetCurrentTaskMasterOverlay implements Action {
-	type = TasksActionTypes.SET_CURRENT_TASK_MASTER_OVERLAY;
-
-	constructor(public payload: IOverlay) {
-	}
-}
-
-export class SetCurrentTaskOverlays implements Action {
-	type = TasksActionTypes.SET_CURRENT_TASK_OVERLAYS;
-
-	constructor(public payload: IOverlay[]) {
-	}
-}
-
-export class SetCurrentTaskRegion implements Action {
-	type = TasksActionTypes.SET_CURRENT_TASK_REGION;
-
-	constructor(public payload: GeometryObject) {
-	}
-}
-
-export class SetCurrentTaskAlgorithmName implements Action {
-	type = TasksActionTypes.SET_CURRENT_TASK_ALGORITHM_NAME;
-
-	constructor(public payload: string) {
-	}
-}
+export const SetCurrentTaskAlgorithmName = createAction(
+											TasksActionTypes.SET_CURRENT_TASK_ALGORITHM_NAME,
+											props<{payload: string}>()
+);

@@ -47,11 +47,11 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 	updateParam(value, key) {
 		const imageManualProcessArgs = { ...this.imageManualProcessArgs };
 		imageManualProcessArgs[key] = value;
-		this.store$.dispatch(new SetManualImageProcessing(imageManualProcessArgs));
+		this.store$.dispatch(SetManualImageProcessing(imageManualProcessArgs));
 	}
 
 	resetParams() {
-		this.store$.dispatch(new SetManualImageProcessing({ ...this.defaultImageManualProcessArgs }));
+		this.store$.dispatch(SetManualImageProcessing({ ...this.defaultImageManualProcessArgs }));
 	}
 
 	ngOnInit(): void {

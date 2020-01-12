@@ -75,7 +75,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				.pipe(catchError(() => of(0)));
 		}),
 		tap((north: number) => {
-			this.store$.dispatch(new ChangeOverlayPreviewRotationAction(-north));
+			this.store$.dispatch(ChangeOverlayPreviewRotationAction(-north));
 		})
 	);
 
@@ -90,8 +90,8 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 
 	@AutoSubscription
 	calcNorthAfterDisplayOverlaySuccess$ = this.actions$.pipe(
-		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
-		filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.mapId),
+		ofType(DisplayOverlaySuccessAction),
+		filter(payload => payload.mapId === this.mapId),
 		withLatestFrom(this.store$.select(statusBarStateSelector), ({ payload }: DisplayOverlaySuccessAction, { comboBoxesProperties }: IStatusBarState) => {
 			return [payload.forceFirstDisplay, comboBoxesProperties.orientation, payload.overlay, payload.customOriantation];
 		}),
@@ -126,8 +126,8 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 
 	@AutoSubscription
 	backToWorldSuccessSetNorth$ = this.actions$.pipe(
-		ofType<BackToWorldSuccess>(OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS),
-		filter((action: BackToWorldSuccess) => action.payload.mapId === this.communicator.id),
+		ofType(BackToWorldSuccess),
+		filter(payload => payload.mapId === this.communicator.id),
 		withLatestFrom(this.store$.select(statusBarStateSelector)),
 		tap(([action, { comboBoxesProperties }]: [BackToWorldView, IStatusBarState]) => {
 			this.communicator.setVirtualNorth(0);

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, Effect, ofType, createEffect } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { from, Observable } from 'rxjs';
@@ -66,97 +66,91 @@ export class OverlaysEffects {
 		rxPreventCrash()
 	);
 
-	@Effect()
-	setOverlaysCriteria$ = this.actions$.pipe(
-		ofType<SetOverlaysCriteriaAction>(OverlaysActionTypes.SET_OVERLAYS_CRITERIA),
+	setOverlaysCriteria$ = createEffect(() => this.actions$.pipe(
+		ofType(SetOverlaysCriteriaAction),
 		filter(action => !(action.options && action.options.noInitialSearch)),
 		withLatestFrom(this.store$.select(overlaysStateSelector)),
-		map(([{ payload }, { overlaysCriteria }]) => new LoadOverlaysAction(overlaysCriteria)));
+		map(([{ payload }, { overlaysCriteria }]) => LoadOverlaysAction(overlaysCriteria)))
+	);
 
-	@Effect()
-	loadOverlays$: Observable<LoadOverlaysSuccessAction> = this.actions$.pipe(
-		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
-		switchMap((action: LoadOverlaysAction) => {
-			return this.overlaysService.search(action.payload).pipe(
+	loadOverlays$ = createEffect(() => this.actions$.pipe(
+		ofType(LoadOverlaysAction),
+		switchMap(payload => {
+			return this.overlaysService.search(payload).pipe(
 				withLatestFrom(this.translate.get(overlaysStatusMessages.noOverLayMatchQuery), this.translate.get(overlaysStatusMessages.overLoad), this.translate.get('Error on overlays request')),
 				mergeMap(([overlays, noOverlayMatchQuery, overLoad, error]: [IOverlaysFetchData, string, string, string]) => {
 					const overlaysResult = Array.isArray(overlays.data) ? overlays.data : [];
 
 					if (!Array.isArray(overlays.data) && Array.isArray(overlays.errors) && overlays.errors.length >= 0) {
-						return [new LoadOverlaysSuccessAction(overlaysResult),
-							new SetOverlaysStatusMessage(error)];
+						return [LoadOverlaysSuccessAction({payload: overlaysResult}),
+							SetOverlaysStatusMessage({payload: error})];
 					}
 
-					const actions: Array<any> = [new LoadOverlaysSuccessAction(overlaysResult)];
+					const actions: Array<any> = [LoadOverlaysSuccessAction({payload: overlaysResult})];
 
 					// if data.length != fetchLimit that means only duplicate overlays removed
 					if (!overlays.data || overlays.data.length === 0) {
-						actions.push(new SetOverlaysStatusMessage(noOverlayMatchQuery));
+						actions.push(SetOverlaysStatusMessage({payload: noOverlayMatchQuery}));
 					} else if (overlays.limited > 0 && overlays.data.length === this.overlaysService.fetchLimit) {
 						// TODO: replace when design is available
-						actions.push(new SetOverlaysStatusMessage(overLoad.replace('$overLoad', overlays.data.length.toString())));
+						actions.push(SetOverlaysStatusMessage({payload: overLoad.replace('$overLoad', overlays.data.length.toString())}));
 					}
 					return actions;
 				}),
-				catchError(() => from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessage('Error on overlays request')]))
+				catchError(() => from([LoadOverlaysSuccessAction({payload: []}), new SetOverlaysStatusMessage('Error on overlays request')]))
 			);
-		})
+		}))
 	);
 
-	@Effect()
-	onRequestOverlayByID$: Observable<any> = this.actions$.pipe(
-		ofType<RequestOverlayByIDFromBackendAction>(OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND),
-		mergeMap((action: RequestOverlayByIDFromBackendAction) => {
-			return this.overlaysService.getOverlayById(action.payload.overlayId, action.payload.sourceType).pipe(
-				map((overlay: IOverlay) => new DisplayOverlayAction({
+	onRequestOverlayByID$ = createEffect(() => this.actions$.pipe(
+		ofType(RequestOverlayByIDFromBackendAction),
+		mergeMap((payload) => {
+			return this.overlaysService.getOverlayById(payload.overlayId, payload.sourceType).pipe(
+				map((overlay: IOverlay) => DisplayOverlayAction({
 					overlay,
-					mapId: action.payload.mapId,
+					mapId: payload.mapId,
 					forceFirstDisplay: true
 				})),
 				catchError((exception) => {
 					const errMsg = getErrorLogFromException(exception, `Failed to get overlay id=${action.payload.overlayId} sourceType=${action.payload.sourceType}`);
 					this.loggerService.error(errMsg, 'overlays', 'Overlay_By_ID');
 					return from([
-						new DisplayOverlayFailedAction({ id: action.payload.overlayId, mapId: action.payload.mapId }),
-						new BackToWorldView({ mapId: action.payload.mapId })
+						DisplayOverlayFailedAction({ id: payload.overlayId, mapId: payload.mapId }),
+						BackToWorldView({ mapId: payload.mapId })
 					]);
 				})
 			);
-		})
+		}))
 	);
 
-
-	@Effect()
-	setFavoriteOverlaysUpdateCase$: Observable<any> = this.store$.pipe(
+	setFavoriteOverlaysUpdateCase$ = createEffect(() => this.store$.pipe(
 		select(selectFavoriteOverlays),
 		map((favoriteOverlays: IOverlay[]) => favoriteOverlays.map(overlay => overlay.id)),
-		map((overlayIds) => new SetMarkUp({
+		map((overlayIds) => SetMarkUp({
 				classToSet: MarkUpClass.favorites,
 				dataToSet: {
 					overlaysIds: overlayIds
 				}
 			}
-		))
+		)))
 	);
 
-	@Effect()
-	setPresetOverlaysUpdateCase$: Observable<any> = this.store$.pipe(
+	setPresetOverlaysUpdateCase$ = createEffect(() => this.store$.pipe(
 		select(selectPresetOverlays),
 		map((presetOverlays: IOverlay[]) => presetOverlays.map(overlay => overlay.id)),
-		map((overlayIds) => new SetMarkUp({
+		map((overlayIds) => SetMarkUp({
 				classToSet: MarkUpClass.presets,
 				dataToSet: {
 					overlaysIds: overlayIds
 				}
 			}
-		))
+		)))
 	);
 
-	@Effect()
-	dropsCount$ = this.store$.select(selectDrops).pipe(
+	dropsCount$ = createEffect(() => this.store$.select(selectDrops).pipe(
 		filter(Boolean),
-		map<any,UpdateOverlaysCountAction>(drops => new UpdateOverlaysCountAction(drops.length)));
-
+		map<any, any>(drops => UpdateOverlaysCountAction(drops.length)))
+	);
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<any>,

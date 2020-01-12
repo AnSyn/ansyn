@@ -20,12 +20,12 @@ export class MonitorPlugin extends BaseImageryPlugin {
 		this.subscriptions.push(
 			this.communicator.ActiveMap.tilesLoadProgressEventEmitter.pipe(
 				tap(({ progress }: IMapProgress) => {
-					this.store$.dispatch(new SetProgressBarAction({ progress, mapId: this.mapId }));
+					this.store$.dispatch(SetProgressBarAction({ progress, mapId: this.mapId }));
 				})
 			).subscribe(),
 			this.communicator.ActiveMap.tilesLoadErrorEventEmitter.pipe(
 				tap(({ message }: IMapErrorMessage) => {
-					this.store$.dispatch(new SetToastMessageAction({
+					this.store$.dispatch(SetToastMessageAction({
 						toastText: message,
 						showWarningIcon: true
 					}));

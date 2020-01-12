@@ -1,5 +1,5 @@
 import { IPendingOverlay } from '@ansyn/map-facade';
-import { Action } from '@ngrx/store';
+import { Action, createAction, props } from '@ngrx/store';
 import { type } from '../../core/utils/type';
 import {
 	IOverlay,
@@ -44,219 +44,139 @@ export const OverlaysActionTypes = {
 	SET_MISC_OVERLAY: 'SET_MISC_OVERLAY',
 };
 
-export class SelectOverlayAction implements Action {
-	type = OverlaysActionTypes.SELECT_OVERLAY;
+export const SelectOverlayAction = createAction(
+									OverlaysActionTypes.SELECT_OVERLAY,
+									props<{payload: string}>()
+);
 
-	constructor(public payload: string) {
-	}
-}
+export const SetMarkUp = createAction(
+							OverlaysActionTypes.SET_OVERLAYS_MARKUPS,
+							props<{ classToSet: MarkUpClass, dataToSet: IMarkUpData }>()
+);
 
-export class SetMarkUp implements Action {
-	type = OverlaysActionTypes.SET_OVERLAYS_MARKUPS;
+export const AddMarkUp = createAction(
+							OverlaysActionTypes.ADD_OVERLAYS_MARKUPS,
+							props<{payload: Array<IOverlayDropMarkUp>}>()
+);
 
-	constructor(public payload: { classToSet: MarkUpClass, dataToSet: IMarkUpData }) {
-	};
-}
+export const RemoveMarkUp = createAction(
+							OverlaysActionTypes.REMOVE_OVERLAYS_MARKUPS,
+							props<{ overlayIds?: Array<string>, markupToRemove?: Array<IOverlayDropMarkUp> }>()
+);
 
-export class AddMarkUp implements Action {
-	type = OverlaysActionTypes.ADD_OVERLAYS_MARKUPS;
+export const UnSelectOverlayAction = createAction(
+									OverlaysActionTypes.UNSELECT_OVERLAY,
+									props<{payload: string}>()
+);
 
-	constructor(public payload: Array<IOverlayDropMarkUp>) {
-	};
-}
+export const LoadOverlaysAction = createAction(
+									OverlaysActionTypes.LOAD_OVERLAYS,
+									props<IOverlaysCriteria>()
+);
 
+export const RequestOverlayByIDFromBackendAction = createAction(
+													OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND,
+													props<{ overlayId: string, sourceType: string, mapId?: string }>()
+);
 
-export class RemoveMarkUp implements Action {
-	type = OverlaysActionTypes.REMOVE_OVERLAYS_MARKUPS;
+export const LoadOverlaysSuccessAction = createAction(
+											OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS,
+											props<{payload: IOverlay[], clearExistingOverlays: boolean}>() // clearExistingOverlays = false
+);
 
-	// array of overlay ids
-	constructor(public payload: { overlayIds?: Array<string>, markupToRemove?: Array<IOverlayDropMarkUp> }) {
-	};
-}
+export const LoadOverlaysFailAction = createAction(
+										OverlaysActionTypes.LOAD_OVERLAYS_FAIL,
+										props<{payload: IOverlay[]}>()
+);
 
+export const ClearFilterAction = createAction(
+									OverlaysActionTypes.CLEAR_FILTER,
+									props<{payload: any}>()
+);
 
-export class UnSelectOverlayAction implements Action {
-	type = OverlaysActionTypes.UNSELECT_OVERLAY;
+export const DisplayOverlayFromStoreAction = createAction(
+											OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE,
+											props<{ id: string, mapId?: string, extent?: any, customOriantation?: string }>()
+);
 
-	constructor(public payload: string) {
-	}
-}
+export const DisplayMultipleOverlaysFromStoreAction = createAction(
+														OverlaysActionTypes.DISPLAY_MULTIPLE_OVERLAYS_FROM_STORE,
+														props<{payload: IPendingOverlay[] }>()
+);
 
-export class LoadOverlaysAction implements Action {
-	type = OverlaysActionTypes.LOAD_OVERLAYS;
+export const DisplayOverlayAction = createAction(
+										OverlaysActionTypes.DISPLAY_OVERLAY,
+										props<{ overlay: IOverlay, mapId: string, extent?: any,
+												forceFirstDisplay?: boolean, force?: boolean,
+												customOriantation?: string }>()
+);
 
-	constructor(public payload: IOverlaysCriteria) {
-	}
-}
+export const DisplayOverlaySuccessAction = createAction(
+											OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS
+);
 
-export class RequestOverlayByIDFromBackendAction implements Action {
-	type = OverlaysActionTypes.REQUEST_OVERLAY_FROM_BACKEND;
+export const DisplayOverlayFailedAction = createAction(
+											OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
+											props<{ id: string, mapId?: string }>()
+);
 
-	constructor(public payload: { overlayId: string, sourceType: string, mapId?: string }) {
-	}
-}
+export const SetFilteredOverlaysAction = createAction(
+											OverlaysActionTypes.SET_FILTERED_OVERLAYS,
+											props<{payload: string[]}>()
+											);
 
-export class LoadOverlaysSuccessAction implements Action {
-	type = OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS;
+export const SetTimelineStateAction = createAction(
+										OverlaysActionTypes.SET_TIMELINE_STATE,
+										props<{ timeLineRange: ITimelineRange }>()
+);
 
-	constructor(public payload: IOverlay[], public clearExistingOverlays = false) {
-	}
-}
+export const SetSpecialObjectsActionStore = createAction(
+											OverlaysActionTypes.SET_SPECIAL_OBJECTS,
+											props<{payload: IOverlaySpecialObject[]}>()
+);
 
-export class LoadOverlaysFailAction implements Action {
-	type = OverlaysActionTypes.LOAD_OVERLAYS_FAIL;
+export const SetDropsAction = createAction(
+								OverlaysActionTypes.SET_DROPS,
+								props<{payload: Array<IOverlayDrop>}>()
+);
 
-	constructor(public payload: IOverlay[]) {
-	}
-}
+export const SetOverlaysStatusMessage = createAction(
+										OverlaysActionTypes.SET_OVERLAYS_STATUS_MESSAGE,
+										props<{payload: string}>()
+);
 
-export class ClearFilterAction implements Action {
-	type = OverlaysActionTypes.CLEAR_FILTER;
+export const RedrawTimelineAction = createAction(
+										OverlaysActionTypes.REDRAW_TIMELINE,
+										props<{payload: string}>()
+);
 
-	constructor(public payload?: any) {
-	}
-}
+export const SetHoveredOverlayAction = createAction(
+										OverlaysActionTypes.SET_HOVERED_OVERLAY,
+										props<{payload: IOverlay}>()
+);
 
-export class DisplayOverlayFromStoreAction implements Action {
-	type = OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE;
+export const ChangeOverlayPreviewRotationAction = createAction(
+												OverlaysActionTypes.CHANGE_OVERLAY_PREVIEW_ROTATION,
+												props<{payload: number}>()
+												);
 
-	constructor(public payload: { id: string, mapId?: string, extent?: any, customOriantation?: string }) {
-	}
-}
+export const SetOverlaysCriteriaAction = createAction(
+											OverlaysActionTypes.SET_OVERLAYS_CRITERIA,
+											props<{payload: IOverlaysCriteria,
+													options: IOverlaysCriteriaOptions}>() // options = null
+);
 
-export class DisplayMultipleOverlaysFromStoreAction implements Action {
-	type = OverlaysActionTypes.DISPLAY_MULTIPLE_OVERLAYS_FROM_STORE;
+export const UpdateOverlaysCountAction = createAction(
+											OverlaysActionTypes.UPDATE_OVERLAY_COUNT,
+											props<{payload: number}>()
+);
 
-	constructor(public payload: IPendingOverlay[]) {
-	}
-}
+export const SetMiscOverlays = createAction(
+								OverlaysActionTypes.SET_MISC_OVERLAYS,
+								props<{ miscOverlays: IOverlaysHash }>()
+);
 
-export class DisplayOverlayAction implements Action {
-	type = OverlaysActionTypes.DISPLAY_OVERLAY;
-
-	constructor(public payload: { overlay: IOverlay, mapId: string, extent?: any, forceFirstDisplay?: boolean, force?: boolean, customOriantation?: string }) {
-	}
-}
-
-export class DisplayOverlaySuccessAction extends DisplayOverlayAction {
-	type = OverlaysActionTypes.DISPLAY_OVERLAY;
-}
-
-export class DisplayOverlayFailedAction implements Action {
-	type = OverlaysActionTypes.DISPLAY_OVERLAY_FAILED;
-
-	constructor(public payload: { id: string, mapId?: string }) {
-	}
-}
-
-export class SetFilteredOverlaysAction implements Action {
-	type = OverlaysActionTypes.SET_FILTERED_OVERLAYS;
-
-	constructor(public payload: string[]) {
-	}
-}
-
-export class SetTimelineStateAction implements Action {
-	type = OverlaysActionTypes.SET_TIMELINE_STATE;
-
-	constructor(public payload: { timeLineRange: ITimelineRange }) {
-	}
-}
-
-export class SetSpecialObjectsActionStore implements Action {
-	type = OverlaysActionTypes.SET_SPECIAL_OBJECTS;
-
-	constructor(public payload: Array<IOverlaySpecialObject>) {
-	};
-}
-
-export class SetDropsAction implements Action {
-	type = OverlaysActionTypes.SET_DROPS;
-
-	constructor(public payload: Array<IOverlayDrop>) {
-	};
-}
-
-export class SetOverlaysStatusMessage implements Action {
-	type = OverlaysActionTypes.SET_OVERLAYS_STATUS_MESSAGE;
-
-	constructor(public payload: string) {
-	}
-}
-
-export class RedrawTimelineAction implements Action {
-	type = OverlaysActionTypes.REDRAW_TIMELINE;
-
-	constructor(public payload?: string) {
-	}
-}
-
-export class SetHoveredOverlayAction implements Action {
-	type = OverlaysActionTypes.SET_HOVERED_OVERLAY;
-
-	constructor(public payload?: IOverlay) {
-
-	}
-}
-
-export class ChangeOverlayPreviewRotationAction implements Action {
-	type = OverlaysActionTypes.CHANGE_OVERLAY_PREVIEW_ROTATION;
-
-	constructor(public payload: number) {
-
-	}
-}
-
-export class SetOverlaysCriteriaAction implements Action {
-	type = OverlaysActionTypes.SET_OVERLAYS_CRITERIA;
-
-	constructor(public payload: IOverlaysCriteria,
-				public options: IOverlaysCriteriaOptions = null) {
-	}
-}
-
-export class UpdateOverlaysCountAction {
-	type = OverlaysActionTypes.UPDATE_OVERLAY_COUNT;
-
-	constructor(public payload: number) {
-	}
-}
-
-export class SetMiscOverlays implements Action {
-	type: string = OverlaysActionTypes.SET_MISC_OVERLAYS;
-
-	constructor(public payload: { miscOverlays: IOverlaysHash }) {
-	}
-}
-
-export class SetMiscOverlay implements Action {
-	type: string = OverlaysActionTypes.SET_MISC_OVERLAY;
-
-	constructor(public payload: { key: string, overlay: IOverlay }) {
-	}
-}
-
-export type OverlaysActions
-	= DisplayOverlayFromStoreAction
-	| DisplayMultipleOverlaysFromStoreAction
-	| DisplayOverlayAction
-	| DisplayOverlaySuccessAction
-	| DisplayOverlayFailedAction
-	| SelectOverlayAction
-	| UnSelectOverlayAction
-	| RequestOverlayByIDFromBackendAction
-	| LoadOverlaysAction
-	| LoadOverlaysSuccessAction
-	| LoadOverlaysFailAction
-	| ClearFilterAction
-	| SetFilteredOverlaysAction
-	| SetOverlaysStatusMessage
-	| AddMarkUp
-	| RemoveMarkUp
-	| SetHoveredOverlayAction
-	| ChangeOverlayPreviewRotationAction
-	| SetSpecialObjectsActionStore
-	| SetDropsAction
-	| SetOverlaysCriteriaAction
-	| SetMiscOverlays
-	| SetMiscOverlay
+export const SetMiscOverlay = createAction(
+									OverlaysActionTypes.SET_MISC_OVERLAY,
+									props<{ key: string, overlay: IOverlay }>()
+);

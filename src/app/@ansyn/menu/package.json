@@ -5,8 +5,8 @@
 		"@angular/common": "~8.2.14",
 		"@angular/core": "~8.2.14",
 		"@ngrx/core": "^1.2.0",
-		"@ngrx/store": "^7.2.0",
-		"@ngrx/entity": "^7.2.0",
+		"@ngrx/store": "^8.6.0",
+		"@ngrx/entity": "^8.6.0",
 		"@ngx-translate/core": "^10.0.2"
 	},
 	"dependencies": {

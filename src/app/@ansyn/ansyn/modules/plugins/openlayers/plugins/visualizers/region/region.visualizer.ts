@@ -93,10 +93,10 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 				const [geoJsonFeature] = featureCollection.features;
 				const region = this.createRegion(geoJsonFeature);
 				if (region.type === 'Point' || turf.kinks(region).features.length === 0) {  // turf way to check if there are any self-intersections
-					this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
-					this.store$.dispatch(new UpdateGeoFilterStatus());
+					this.store$.dispatch(SetOverlaysCriteriaAction({ region }));
+					this.store$.dispatch(UpdateGeoFilterStatus());
 				} else {
-					this.store$.dispatch(new SetToastMessageAction({
+					this.store$.dispatch(SetToastMessageAction({
 						toastText: this.selfIntersectMessage
 					}));
 				}
@@ -121,7 +121,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	resetInteractions() {
 		super.resetInteractions();
-		this.store$.dispatch(new UpdateGeoFilterStatus());
+		this.store$.dispatch(UpdateGeoFilterStatus());
 	}
 
 	interactionChanges([onSearchMode, isActiveMap]: [boolean, boolean]): void {

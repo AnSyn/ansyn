@@ -142,7 +142,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 						return this.drawLayer(layer.name);
 					}),
 					catchError((e) => {
-						this.store$.dispatch(new SetToastMessageAction({ toastText: `Failed to load layer` }));
+						this.store$.dispatch(SetToastMessageAction({ toastText: `Failed to load layer` }));
 						const message = getErrorLogFromException(e, `Failed to load layer ${JSON.stringify(layer)}`);
 						this.loggerService.error(message, 'layers', 'GeoJson_Layer');
 						return of(true);

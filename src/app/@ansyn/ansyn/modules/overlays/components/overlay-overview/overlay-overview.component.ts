@@ -35,7 +35,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		.pipe(
 			takeWhile(() => this.isHoveringOverDrop),
 			tap(() => {
-				this.store$.dispatch(new SetMarkUp({
+				this.store$.dispatch(SetMarkUp({
 					classToSet: MarkUpClass.hover,
 					dataToSet: { overlaysIds: [] }
 				}));
@@ -137,7 +137,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	onDblClick() {
-		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id: this.overlayId }));
+		this.store$.dispatch(DisplayOverlayFromStoreAction({ id: this.overlayId }));
 	}
 
 	startedLoadingImage() {

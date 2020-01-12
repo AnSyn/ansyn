@@ -18,8 +18,8 @@ export class TasksTablePageHeaderComponent implements OnInit {
 	}
 
 	onNewTask() {
-		this.store$.dispatch(new SelectTaskAction(null));
-		this.store$.dispatch(new SetTasksPageToShow(TasksPageToShow.TASK_FORM));
+		this.store$.dispatch(SelectTaskAction(null));
+		this.store$.dispatch(SetTasksPageToShow({payload: TasksPageToShow.TASK_FORM}));
 	}
 
 }

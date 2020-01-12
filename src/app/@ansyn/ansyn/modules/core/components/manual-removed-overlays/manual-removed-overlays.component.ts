@@ -50,10 +50,10 @@ export class ManualRemovedOverlaysComponent implements OnInit, OnDestroy {
 	}
 
 	showRemoved() {
-		this.store.dispatch(new SetRemovedOverlaysVisibilityAction(!this.removedOverlaysVisibility));
+		this.store.dispatch(SetRemovedOverlaysVisibilityAction({payload: !this.removedOverlaysVisibility}));
 	}
 
 	showAll() {
-		this.store.dispatch(new ResetRemovedOverlaysIdsAction());
+		this.store.dispatch(ResetRemovedOverlaysIdsAction());
 	}
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Effect } from '@ngrx/effects';
+import { Effect, createEffect } from '@ngrx/effects';
 import { createFeatureSelector, createSelector, Store } from '@ngrx/store';
 import { combineLatest, Observable, pipe } from 'rxjs';
 import { selectActiveMapId, selectLayout, selectMapsList } from '@ansyn/map-facade';
@@ -54,8 +54,7 @@ export class UpdateCaseAppEffects {
 		.map(event => event.pipe(this.clearIsAutoSave))
 		.concat([this.store$.select(selectAutoSave).pipe(this.setIsAutoSave)]);
 
-	@Effect()
-	shouldUpdateCase$: Observable<UpdateCaseAction> = combineLatest(this.events).pipe(
+	shouldUpdateCase$ = createEffect(() => combineLatest(this.events).pipe(
 		withLatestFrom(this.store$.select(selectSelectedCase)),
 		filter(([events, selectedCase]) => Boolean(selectedCase)), /* SelectCaseAction(selectedCase) already triggered */
 		map(([events, selectedCase]: [any, any]) => {
@@ -114,8 +113,8 @@ export class UpdateCaseAppEffects {
 				}
 			};
 
-			return new UpdateCaseAction({ updatedCase, forceUpdate: this.isAutoSaveTriggered });
-		})
+			return UpdateCaseAction({ updatedCase, forceUpdate: this.isAutoSaveTriggered });
+		}))
 	);
 
 	constructor(protected store$: Store<IAppState>) {

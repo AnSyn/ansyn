@@ -94,7 +94,7 @@ export class ImageryRotationComponent {
 				this.setRotation(overlay.azimuth);
 			}
 		} else {
-			this.store.dispatch(new PointToRealNorthAction(this.mapState.id));
+			this.store.dispatch(PointToRealNorthAction({mapId: this.mapState.id}));
 		}
 		this.northImgElement.nativeElement.focus();
 	}

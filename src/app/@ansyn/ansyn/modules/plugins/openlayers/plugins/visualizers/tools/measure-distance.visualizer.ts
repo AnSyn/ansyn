@@ -185,7 +185,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			const entity = this.getEntity(feature);
 			if (entity) {
 				this.measureData.meausres = this.measureData.meausres.filter((measureEntity) => measureEntity.id !== entity.id);
-				this.store$.dispatch(new UpdateMeasureDataAction({
+				this.store$.dispatch(UpdateMeasureDataAction({
 					mapId: this.mapId,
 					measureData: { meausres: this.measureData.meausres }
 				}));

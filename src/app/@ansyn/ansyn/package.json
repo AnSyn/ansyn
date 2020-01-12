@@ -3,8 +3,8 @@
 	"version": "0.6.2",
 	"peerDependencies": {
 		"@ngrx/core": "^1.2.0",
-		"@ngrx/store": "^7.2.0",
-		"@ngrx/effects": "^7.2.0",
+		"@ngrx/store": "^8.6.0",
+		"@ngrx/effects": "^8.6.0",
 		"@angular/common": "~8.2.14",
 		"@angular/core": "~8.2.14",
 		"@ansyn/imagery": "0.6.2",

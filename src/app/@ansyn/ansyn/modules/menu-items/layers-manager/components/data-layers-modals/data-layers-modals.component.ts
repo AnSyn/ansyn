@@ -21,7 +21,7 @@ export class DataLayersModalsComponent {
 	}
 
 	closeModal(): void {
-		this.store.dispatch(new CloseLayersModal());
+		this.store.dispatch(CloseLayersModal());
 	}
 
 

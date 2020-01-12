@@ -100,30 +100,30 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		const value = this.onShadowMouse;
 
 		if (value) {
-			this.store.dispatch(new StopMouseShadow({ fromUser: true }));
+			this.store.dispatch(StopMouseShadow({ fromUser: true }));
 		} else {
-			this.store.dispatch(new StartMouseShadow({ fromUser: true }));
+			this.store.dispatch(StartMouseShadow({ fromUser: true }));
 		}
 	}
 
 	toggleMeasureDistanceTool() {
 		const value = this.onMeasureTool;
-		this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [] }));
-		this.store.dispatch(new SetMeasureDistanceToolState(!value));
+		this.store.dispatch(ClearActiveInteractionsAction({ skipClearFor: [] }));
+		this.store.dispatch(SetMeasureDistanceToolState({payload: !value}));
 	}
 
 	toggleAutoImageProcessing() {
-		this.store.dispatch(new SetAutoImageProcessing());
+		this.store.dispatch(SetAutoImageProcessing());
 		this.closeManualProcessingMenu();
 	}
 
 	toggleSubMenu(subMenu: SubMenuEnum) {
 		const value = (subMenu !== this.subMenu) ? subMenu : null;
-		this.store.dispatch(new SetSubMenu(value));
+		this.store.dispatch(SetSubMenu({payload: value}));
 	}
 
 	onAnimation() {
-		this.store.dispatch(new SetSubMenu(null));
+		this.store.dispatch(SetSubMenu(null));
 	}
 
 	isExpand(subMenu: SubMenuEnum): boolean {

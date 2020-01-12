@@ -1,6 +1,6 @@
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { IFilter } from '../models/IFilter';
-import { Action } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 import { Filters } from '../reducer/filters.reducer';
 import { ICaseFacetsState } from '../../cases/models/case.model';
 import { IFilterSearchResults } from '../models/filter-search-results';
@@ -18,58 +18,37 @@ export const FiltersActionTypes = {
 	SET_FILTERS_SEARCH_RESULTS: 'SET_FILTERS_SEARCH_RESULTS'
 };
 
-export class InitializeFiltersAction implements Action {
-	type = FiltersActionTypes.INITIALIZE_FILTERS;
+export const InitializeFiltersAction = createAction(
+										FiltersActionTypes.INITIALIZE_FILTERS,
+										props<{payload?: any}>()
+);
 
-	constructor(public payload?: any) {
-	}
-}
+export const InitializeFiltersSuccessAction = createAction(
+												FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS,
+												props<Filters>()
+);
 
-export class InitializeFiltersSuccessAction implements Action {
-	type = FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS;
+export const UpdateFilterAction = createAction(
+									FiltersActionTypes.UPDATE_FILTER_METADATA,
+									props<{ filter: IFilter, newMetadata: FilterMetadata }>()
+);
 
-	constructor(public payload: Filters) {
-	}
-}
+export const EnableOnlyFavoritesSelectionAction = createAction(
+													FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION,
+													props<{payload: any}>()
+);
 
-export class UpdateFilterAction implements Action {
-	type = FiltersActionTypes.UPDATE_FILTER_METADATA;
+export const UpdateFacetsAction = createAction(
+									FiltersActionTypes.UPDATE_FACETS,
+									props<ICaseFacetsState>()
+);
 
-	constructor(public payload?: { filter: IFilter, newMetadata: FilterMetadata }) {
-	}
-}
+export const SetFilterSearch = createAction(
+								FiltersActionTypes.SET_FILTER_SEARCH,
+								props<{payload: string}>()
+);
 
-export class EnableOnlyFavoritesSelectionAction implements Action {
-	type = FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION;
-
-	constructor(public payload?: any) {
-	}
-}
-
-export class UpdateFacetsAction implements Action {
-	readonly type = FiltersActionTypes.UPDATE_FACETS;
-
-	constructor(public payload: ICaseFacetsState) {
-
-	}
-}
-
-export class SetFilterSearch implements Action {
-	readonly type = FiltersActionTypes.SET_FILTER_SEARCH;
-
-	constructor(public payload: string) {
-	}
-}
-
-export class SetFiltersSearchResults implements Action {
-	readonly type = FiltersActionTypes.SET_FILTERS_SEARCH_RESULTS;
-
-	constructor(public payload: IFilterSearchResults) {
-	}
-}
-
-export type FiltersActions = InitializeFiltersAction
-	| InitializeFiltersSuccessAction
-	| UpdateFilterAction
-	| EnableOnlyFavoritesSelectionAction
-	| UpdateFacetsAction;
+export const SetFiltersSearchResults = createAction(
+										FiltersActionTypes.SET_FILTERS_SEARCH_RESULTS,
+										props<IFilterSearchResults>()
+);

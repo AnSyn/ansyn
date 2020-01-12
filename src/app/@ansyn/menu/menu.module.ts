@@ -57,6 +57,6 @@ export class MenuModule {
 				.filter(Boolean);
 		}
 
-		store.dispatch(new InitializeMenuItemsAction(menuItems));
+		store.dispatch(InitializeMenuItemsAction({payload: menuItems}));
 	}
 }

@@ -107,7 +107,7 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	}
 
 	onMetadataChange(metadata: any): void {
-		this.store.dispatch(new UpdateFilterAction({ filter: this.filter, newMetadata: clone(metadata) }));
+		this.store.dispatch(UpdateFilterAction({ filter: this.filter, newMetadata: clone(metadata) }));
 	}
 
 	showAll(): void {
@@ -125,6 +125,6 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	toggleVisible(): void {
 		const newMetadata = clone(this.metadataFromState);
 		newMetadata.collapse = !newMetadata.collapse;
-		this.store.dispatch(new UpdateFilterAction({filter: this.filter, newMetadata}));
+		this.store.dispatch(UpdateFilterAction({filter: this.filter, newMetadata}));
 	}
 }

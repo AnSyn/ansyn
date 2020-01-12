@@ -142,7 +142,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	onChangeMode$ = () => this.annotationsVisualizer.events.onChangeMode.pipe(
 		tap((arg: { mode: AnnotationMode, forceBroadcast: boolean }) => {
 			const newMode = !Boolean(arg.mode) ? undefined : arg.mode; // prevent infinite loop
-			this.store$.dispatch(new SetAnnotationMode({
+			this.store$.dispatch(SetAnnotationMode({
 				annotationMode: newMode,
 				mapId: arg.forceBroadcast ? null : this.mapId
 			}));
@@ -164,7 +164,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 				};
 			}
 			geoJsonFeature.properties = { ...geoJsonFeature.properties };
-			this.store$.dispatch(new UpdateLayer(<ILayer>{ ...activeAnnotationLayer, data }));
+			this.store$.dispatch(UpdateLayer(<ILayer>{ ...activeAnnotationLayer, data }));
 		})
 	);
 
@@ -185,7 +185,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			const label = geoJsonFeature.properties.label.geometry ?
 				{...geoJsonFeature.properties.label, geometry: GeoJSON.features[1].geometry} : geoJsonFeature.properties.label;
 			geoJsonFeature.properties = { ...geoJsonFeature.properties , label};
-			this.store$.dispatch(new UpdateLayer(<ILayer>{ ...activeAnnotationLayer, data }));
+			this.store$.dispatch(UpdateLayer(<ILayer>{ ...activeAnnotationLayer, data }));
 			})
 	);
 
@@ -204,7 +204,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	@AutoSubscription
 	removeEntity$ = () => this.annotationsVisualizer.events.removeEntity.pipe(
 		tap((featureId) => {
-			this.store$.dispatch(new AnnotationRemoveFeature(featureId));
+			this.store$.dispatch(AnnotationRemoveFeature({payload: featureId}));
 		})
 	);
 
@@ -212,7 +212,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	@AutoSubscription
 	updateEntity$ = (): Observable<IVisualizerEntity> => this.annotationsVisualizer.events.updateEntity.pipe(
 		tap((feature) => {
-			this.store$.dispatch(new AnnotationUpdateFeature({
+			this.store$.dispatch(AnnotationUpdateFeature({
 				featureId: feature.id,
 				properties: { ...feature }
 			}));
@@ -223,7 +223,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	onDraggEnd$ = () => this.annotationsVisualizer.events.offsetEntity.pipe(
 		tap((offset: any) => {
 			if (this.overlay) {
-				this.store$.dispatch(new SetOverlayTranslationDataAction({
+				this.store$.dispatch(SetOverlayTranslationDataAction({
 					overlayId: this.overlay.id, offset
 				}));
 			}

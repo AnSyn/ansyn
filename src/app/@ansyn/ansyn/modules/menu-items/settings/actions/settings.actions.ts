@@ -1,15 +1,12 @@
-import { Action } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 
 export enum SettingsActionsTypes {
 	SET_ANAGLYPH_STATE = '[Settings] Set Anaglyph State'
 }
 
-export class SetAnaglyphStateAction implements Action {
-	readonly type = SettingsActionsTypes.SET_ANAGLYPH_STATE;
-
-	constructor(public payload: boolean) {
-	}
-
-}
+export const SetAnaglyphStateAction = createAction(
+										SettingsActionsTypes.SET_ANAGLYPH_STATE,
+										props<{payload: boolean}>()
+);
 
 export type SettingsActions = SetAnaglyphStateAction;

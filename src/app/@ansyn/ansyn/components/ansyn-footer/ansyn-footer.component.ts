@@ -46,7 +46,7 @@ export class AnsynFooterComponent implements OnInit, OnDestroy {
 	}
 
 	toggle() {
-		this.store.dispatch(new ToggleFooter(!this.collapse));
+		this.store.dispatch(ToggleFooter({payload: !this.collapse}));
 	}
 
 	startToggleCollapse(collapse: boolean) {
@@ -59,7 +59,7 @@ export class AnsynFooterComponent implements OnInit, OnDestroy {
 		this.wrapperElement.nativeElement.classList.toggle('collapsed');
 
 		this.forceRedraw()
-			.then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
+			.then(() => this.store.dispatch(ContainerChangedTriggerAction({})));
 
 		this.animatedElement.style.opacity = '1';
 		this.animatedElement.style.animation = this.collapse ? 'collapsedVertical .3s' : 'unCollapsedVertical .6s';

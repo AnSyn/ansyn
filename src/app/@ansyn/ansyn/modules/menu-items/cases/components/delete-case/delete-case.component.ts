@@ -49,13 +49,13 @@ export class DeleteCaseComponent implements OnInit {
 	}
 
 	close(): void {
-		this.store.dispatch(new CloseModalAction());
+		this.store.dispatch(CloseModalAction());
 	}
 
 	onSubmitRemove() {
 		(<Observable<any>>this.casesService.removeCase(this.activeCase.id))
 			.pipe(
-				tap(() => this.store.dispatch(new DeleteCaseAction(this.activeCase.id))),
+				tap(() => this.store.dispatch(DeleteCaseAction({payload: this.activeCase.id}))),
 				catchError(() => of(false)),
 				tap(() => this.close())
 			)

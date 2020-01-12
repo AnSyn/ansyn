@@ -65,7 +65,7 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 					.map((id: string): IOverlay => overlaysState.entities[id])
 					.filter(({ footprint }) => isPointContainedInGeometry(point, footprint));
 
-				this.store$.dispatch(new ContextMenuShowAction({ point, event, overlays }));
+				this.store$.dispatch(ContextMenuShowAction({ point, event, overlays }));
 			}))
 			.subscribe();
 	}

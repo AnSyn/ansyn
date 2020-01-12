@@ -56,7 +56,7 @@ export class AnaglyphSensorAlertComponent implements OnInit, OnDestroy, IEntryCo
 			take(1),
 			catchError((error) => {
 				this.loggerService.error(getErrorLogFromException(error, 'stereo failed'), 'Anaglyph');
-				this.store.dispatch(new SetToastMessageAction({
+				this.store.dispatch(SetToastMessageAction({
 					toastText: getErrorMessageFromException(error, 'stereo failed'),
 					showWarningIcon: true
 				}));

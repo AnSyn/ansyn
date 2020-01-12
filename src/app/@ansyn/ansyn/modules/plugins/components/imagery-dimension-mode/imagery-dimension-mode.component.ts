@@ -50,16 +50,16 @@ export class ImageryDimensionModeComponent implements OnInit, OnDestroy, IEntryC
 
 	toggleMapDimentions() {
 		if (this.selectedMap === DimensionMode.D2) {
-			this.store$.dispatch(new ChangeImageryMap({ id: this.mapId, mapType: CesiumMapName }));
+			this.store$.dispatch(ChangeImageryMap({ id: this.mapId, mapType: CesiumMapName }));
 		} else if (this.selectedMap === DimensionMode.D3) {
 			(<CesiumMap>this.communicators.provide(this.mapId).ActiveMap).set2DPosition().pipe(take(1)).subscribe((result) => {
-				this.store$.dispatch(new ChangeImageryMap({ id: this.mapId, mapType: OpenlayersMapName }));
+				this.store$.dispatch(ChangeImageryMap({ id: this.mapId, mapType: OpenlayersMapName }));
 			})
 		}
 	}
 
 	changeActiveMap(mapType: string) {
-		this.store$.dispatch(new ChangeImageryMap({ id: this.mapId, mapType }));
+		this.store$.dispatch(ChangeImageryMap({ id: this.mapId, mapType }));
 	}
 
 	get selectedMap() {

@@ -1,5 +1,5 @@
-import { CasesActions, CasesActionTypes } from '../actions/cases.actions';
-import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
+import { CasesActions, CasesActionTypes, SaveCaseAsAction, AddCasesAction, UpdateCaseAction, UpdateCaseBackendSuccessAction, DeleteCaseAction, OpenModalAction } from '../actions/cases.actions';
+import { createFeatureSelector, createSelector, MemoizedSelector, createReducer, on } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { ICase, ICasePreview } from '../models/case.model';
@@ -26,6 +26,29 @@ export const initialCasesState: ICasesState = casesAdapter.getInitialState(<ICas
 });
 
 export const casesStateSelector: MemoizedSelector<any, ICasesState> = createFeatureSelector<ICasesState>(casesFeatureKey);
+
+const reducerFunction = createReducer(initialCasesState,
+	on(SaveCaseAsAction, (state, selectedCase) => casesAdapter.addOne(selectedCase, state)),
+	on(AddCasesAction, (state, selectedCase) => casesAdapter.addOne(selectedCase, state)),
+	on(UpdateCaseAction, (state, payload) => {
+		const caseToUpdate = payload.updatedCase;
+		const selectedCase = caseToUpdate.id === state.selectedCase.id ? caseToUpdate : state.selectedCase;
+		return casesAdapter.updateOne({ id: caseToUpdate.id, changes: caseToUpdate }, { ...state, selectedCase });
+	}),
+	on(UpdateCaseBackendSuccessAction, (state, payload) => {
+		const lastModified = new Date();
+		const selectedCase = { ...state.selectedCase, lastModified };
+		return casesAdapter.updateOne({ id: payload._id, changes: { lastModified } }, {
+			...state,
+			selectedCase
+		});	}
+	),
+	 on(DeleteCaseAction, (state, selectedCase) => casesAdapter.removeOne(selectedCase, state)),
+	 on(AddCasesAction, (state, payload) => casesAdapter.addOne(payload.cases, state) ),
+	//  on(OpenModalAction,)
+);
+
+
 
 export function CasesReducer(state: ICasesState = initialCasesState, action: any | CasesActions) {
 

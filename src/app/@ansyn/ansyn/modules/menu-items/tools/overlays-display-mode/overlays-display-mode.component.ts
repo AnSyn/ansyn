@@ -37,7 +37,7 @@ export class OverlaysDisplayModeComponent {
 		if (this._visualizerType !== value) {
 			this._visualizerType = value;
 			if (this.needToDispatchAction) {
-				this.store$.dispatch(new ShowOverlaysFootprintAction(value));
+				this.store$.dispatch(ShowOverlaysFootprintAction({payload: value}));
 			}
 		}
 		// Refresh the parent, need to be outside of if, because load bug

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, Effect, ofType, createEffect } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
 import { EMPTY, forkJoin, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -31,30 +31,32 @@ import {
 	SetToastMessageAction,
 	SetWasWelcomeNotificationShownFlagAction,
 	SynchronizeMapsAction,
-	UpdateMapAction
+	UpdateMapAction,
+	UpdateMapSizeAction
 } from '../actions/map.actions';
 import { catchError, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { IMapFacadeConfig } from '../models/map-config.model';
 import { updateSession } from '../models/core-session-state.model';
+import { Polygon, Point } from 'geojson';
 
 @Injectable()
 export class MapEffects {
 
-	@Effect({ dispatch: false })
-	onUpdateSize$: Observable<void> = this.actions$.pipe(
-		ofType(MapActionTypes.UPDATE_MAP_SIZE),
+	onUpdateSize$ = createEffect(() => this.actions$.pipe(
+		ofType(UpdateMapSizeAction),
 		map(() => {
 			// @TODO move this to service we will need it pass function name and send it to all the maps
-			Object.keys(this.communicatorsService.communicators).forEach((imageryId: string) => {
-				this.communicatorsService.provide(imageryId).updateSize();
+			Object.keys(this.communicatorsService.communicators)
+				.forEach((imageryId: string) => {
+					this.communicatorsService.provide(imageryId).updateSize();
 			});
-		})
+		})),
+		{ dispatch: false }
 	);
 
-	@Effect({ dispatch: false })
-	onCommunicatorChange$: Observable<any> = this.actions$.pipe(
+	onCommunicatorChange$ = createEffect(() => this.actions$.pipe(
 		ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED, MapActionTypes.MAP_INSTANCE_CHANGED_ACTION),
 		withLatestFrom(this.store$.select(mapStateSelector)),
 		tap(([action, mapState]: [ImageryCreatedAction | ImageryRemovedAction | MapInstanceChangedAction, IMapState]) => {
@@ -63,7 +65,8 @@ export class MapEffects {
 			} else {
 				this.mapFacadeService.removeEmitters(action.payload.id);
 			}
-		})
+		})),
+		{ dispatch: false }
 	);
 
 	@Effect({ dispatch: false })
@@ -72,51 +75,48 @@ export class MapEffects {
 		share()
 	);
 
-	@Effect()
-	onMapCreatedDecreasePendingCount$: Observable<any> = this.actions$.pipe(
-		ofType(MapActionTypes.IMAGERY_CREATED),
+	onMapCreatedDecreasePendingCount$ = createEffect(() =>this.actions$.pipe(
+		ofType(ImageryCreatedAction),
 		withLatestFrom(this.store$.select(mapStateSelector)),
-		filter(([action, mapState]) => mapState.pendingMapsCount > 0),
-		map(() => new DecreasePendingMapsCountAction())
+		filter(([, mapState]) => mapState.pendingMapsCount > 0),
+		map(() => DecreasePendingMapsCountAction()))
 	);
 
-	@Effect()
-	onMapPendingCountReachedZero$: Observable<any> = this.actions$.pipe(
-		ofType(MapActionTypes.DECREASE_PENDING_MAPS_COUNT),
+	onMapPendingCountReachedZero$ = createEffect(() => this.actions$.pipe(
+		ofType(DecreasePendingMapsCountAction),
 		withLatestFrom(this.store$.select(mapStateSelector)),
-		filter(([action, mapState]) => mapState.pendingMapsCount === 0),
-		map(() => new SetLayoutSuccessAction())
+		filter(([, mapState]) => mapState.pendingMapsCount === 0),
+		map(() => SetLayoutSuccessAction()))
 	);
 
-	@Effect({ dispatch: false })
-	pinLocationModeTriggerAction$: Observable<boolean> = this.actions$.pipe(
-		ofType<PinLocationModeTriggerAction>(MapActionTypes.TRIGGER.PIN_LOCATION_MODE),
-		map(({ payload }) => payload)
+	pinLocationModeTriggerAction$ = createEffect(() => this.actions$.pipe(
+		ofType(PinLocationModeTriggerAction),
+		map(payload => payload)),
+	{ dispatch: false }
 	);
 
-	@Effect()
-	newInstanceInitPosition$: Observable<any> = this.actions$.pipe(
-		ofType<ImageryCreatedAction>(MapActionTypes.IMAGERY_CREATED),
+	newInstanceInitPosition$ = createEffect(() => this.actions$.pipe(
+		ofType(ImageryCreatedAction),
 		withLatestFrom(this.store$.select(mapStateSelector)),
-		filter(([{ payload }, { entities }]: [ImageryCreatedAction, IMapState]) => Boolean(entities) && !MapFacadeService.mapById(Object.values(entities), payload.id).data.position),
-		switchMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
+		filter(([{ payload }, { entities }]: [{payload: string}, IMapState]) => Boolean(entities) && !MapFacadeService.mapById(Object.values(entities), payload.id).data.position),
+		switchMap(([{ payload }, mapState]: [{payload: string}, IMapState]) => {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			const communicator = this.communicatorsService.provide(payload.id);
 			return communicator.setPosition(activeMap.data.position).pipe(map(() => [{ payload }, mapState]));
 		}),
-		mergeMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
+		mergeMap(([payload, mapState]: [{payload: string}, IMapState]) => {
 			const activeMap = MapFacadeService.activeMap(mapState);
 			const actions = [];
 			const updatedMap = mapState.entities[payload.id];
-			actions.push(new UpdateMapAction({
+			actions.push(UpdateMapAction({
 				id: payload.id,
 				changes: { data: { ...updatedMap.data, position: activeMap.data.position } }
 			}));
 			if (mapState.pendingMapsCount > 0) {
-				actions.push(new DecreasePendingMapsCountAction());
+				actions.push(DecreasePendingMapsCountAction());
 			}
 			return actions;
-		})
+		}))
 	);
 
 
@@ -140,34 +140,31 @@ export class MapEffects {
 		})
 	);
 
-	@Effect()
-	imageryCreated$ = this.communicatorsService
-		.instanceCreated.pipe(map((payload) => new ImageryCreatedAction(payload)));
+	imageryCreated$ = createEffect(() => this.communicatorsService
+		.instanceCreated.pipe(map(payload => ImageryCreatedAction({ payload: payload.id })))
+	);
 
-	@Effect()
-	imageryRemoved$ = this.communicatorsService
+	imageryRemoved$ = createEffect(() => this.communicatorsService
 		.instanceRemoved.pipe(
-			map((payload) => new ImageryRemovedAction(payload)));
+			map(payload => ImageryRemovedAction({ payload: payload.id })))
+	);
 
-	@Effect()
-	activeMapEnter$ = this.actions$.pipe(
+	activeMapEnter$ = createEffect(() => this.actions$.pipe(
 		ofType(MapActionTypes.TRIGGER.IMAGERY_MOUSE_ENTER),
 		withLatestFrom(this.store$.select(selectActiveMapId)),
 		filter(([action, activeMapId]: [ImageryMouseEnter, string]) => action.payload === activeMapId),
-		map(() => new ActiveImageryMouseEnter())
-	);
+		map(() => ActiveImageryMouseEnter())
+	));
 
-	@Effect()
-	activeMapLeave$ = this.actions$.pipe(
+	activeMapLeave$ =  createEffect(() => this.actions$.pipe(
 		ofType(MapActionTypes.TRIGGER.IMAGERY_MOUSE_LEAVE),
 		withLatestFrom(this.store$.select(selectActiveMapId)),
 		filter(([action, activeMapId]: [ImageryMouseLeave, string]) => action.payload === activeMapId),
-		map(() => new ActiveImageryMouseLeave())
+		map(() => ActiveImageryMouseLeave()))
 	);
 
-	@Effect()
-	changeImageryMap$ = this.actions$.pipe(
-		ofType<ChangeImageryMap>(MapActionTypes.CHANGE_IMAGERY_MAP),
+	changeImageryMap$ = createEffect(() => this.actions$.pipe(
+		ofType(ChangeImageryMap),
 		withLatestFrom(this.store$.select(selectMaps)),
 		mergeMap(([{ payload: { id, mapType, sourceType } }, mapsEntities]) => {
 			const communicator = this.communicatorsService.provide(id);
@@ -175,50 +172,50 @@ export class MapEffects {
 				map(() => {
 					sourceType = sourceType || communicator.mapSettings.worldView.sourceType;
 					const worldView: IWorldViewMapState = { mapType, sourceType };
-					return new ChangeImageryMapSuccess({ id, worldView });
+					return ChangeImageryMapSuccess({ id, worldView });
 				}),
 				catchError((err) => {
-					this.store$.dispatch(new SetToastMessageAction({
+					this.store$.dispatch(SetToastMessageAction({
 						toastText: 'Failed to change map',
 						showWarningIcon: true
 					}));
-					this.store$.dispatch(new ChangeImageryMapFailed({ id, error: err }));
+					this.store$.dispatch(ChangeImageryMapFailed({ id, error: err }));
 					return EMPTY;
 				})
 			);
-		})
+		}))
 	);
 
-	@Effect({ dispatch: false })
-	setMapPositionByRect$ = this.actions$.pipe(
-		ofType<SetMapPositionByRectAction>(MapActionTypes.SET_MAP_POSITION_BY_RECT),
-		switchMap(({ payload: { id, rect } }: SetMapPositionByRectAction) => {
-			const communicator = this.communicatorsService.provide(id);
-			const result$ = communicator ? communicator.setPositionByRect(rect) : EMPTY;
+	setMapPositionByRect$ = createEffect(() => this.actions$.pipe(
+		ofType(SetMapPositionByRectAction),
+		switchMap((payload: { id: string; rect: Polygon }) => {
+			const communicator = this.communicatorsService.provide(payload.id);
+			const result$ = communicator ? communicator.setPositionByRect(payload.rect) : EMPTY;
 			return result$;
-		})
+		})),
+		{ dispatch: false }
 	);
 
-	@Effect({ dispatch: false })
-	setMapPositionByRadius$ = this.actions$.pipe(
-		ofType<SetMapPositionByRadiusAction>(MapActionTypes.SET_MAP_POSITION_BY_RADIUS),
-		switchMap(({ payload: { id, center, radiusInMeters } }: SetMapPositionByRadiusAction) => {
-			const communicator = this.communicatorsService.provide(id);
-			const result$ = communicator ? communicator.setPositionByRadius(center, radiusInMeters) : EMPTY;
+	setMapPositionByRadius$ = createEffect(()  => this.actions$.pipe(
+		ofType(SetMapPositionByRadiusAction),
+		switchMap((payload: { id: string; center: Point; radiusInMeters: number }) => {
+			const communicator = this.communicatorsService.provide(payload.id);
+			const result$ = communicator ? communicator.setPositionByRadius(payload.center, payload.radiusInMeters) : EMPTY;
 			return result$;
-		})
+		})),
+		{ dispatch: false }
 	);
 
-	@Effect({ dispatch: false })
-	onWelcomeNotification$: Observable<any> = this.actions$
+	onWelcomeNotification$ = createEffect(() => this.actions$
 		.pipe(
-			ofType(MapActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG),
-			tap((action: SetWasWelcomeNotificationShownFlagAction) => {
-				const payloadObj = { wasWelcomeNotificationShown: action.payload };
+			ofType(SetWasWelcomeNotificationShownFlagAction),
+			tap((payload) => {
+				const payloadObj = { wasWelcomeNotificationShown: payload };
 				updateSession(payloadObj);
 			})
-		);
-
+		),
+		{ dispatch: false }
+	);
 
 	constructor(protected actions$: Actions,
 				protected mapFacadeService: MapFacadeService,
@@ -231,7 +228,7 @@ export class MapEffects {
 		if (mapItem.data.overlay) {
 			const isNotIntersect = MapFacadeService.isNotIntersect(position.extentPolygon, mapItem.data.overlay.footprint, this.config.overlayCoverage);
 			if (isNotIntersect) {
-				this.store$.dispatch(new SetToastMessageAction({
+				this.store$.dispatch(SetToastMessageAction({
 					toastText: 'At least one map couldn\'t be synchronized',
 					showWarningIcon: true
 				}));
@@ -240,5 +237,4 @@ export class MapEffects {
 		}
 		return comm.setPosition(position);
 	}
-
 }

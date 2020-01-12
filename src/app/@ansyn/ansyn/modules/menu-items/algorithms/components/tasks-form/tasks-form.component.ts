@@ -126,7 +126,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 			} else {
 				task = new AlgorithmTask();
 			}
-			this.store$.dispatch(new SetCurrentTask(task));
+			this.store$.dispatch(SetCurrentTask(task));
 		})
 	);
 	@AutoSubscription
@@ -147,7 +147,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 			return result;
 		})),
 		tap((overlays: IOverlay[]) => {
-			this.store$.dispatch(new SetCurrentTaskOverlays(overlays || []));
+			this.store$.dispatch(SetCurrentTaskOverlays({payload: overlays || []}));
 		})
 	);
 	@AutoSubscription
@@ -164,7 +164,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		}),
 		tap(([activeOverlay, overlays]: [IOverlay, IOverlay[]]) => {
 			if (!activeOverlay || overlays.find(({ id }) => id === activeOverlay.id)) {
-				this.store$.dispatch(new SetCurrentTaskMasterOverlay(activeOverlay));
+				this.store$.dispatch(SetCurrentTaskMasterOverlay(activeOverlay));
 				return activeOverlay;
 			} else {
 				this.showError('The active overlay is not one of the chosen overlays for the task');
@@ -216,8 +216,8 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		this.store$.dispatch(new SetCurrentTask(null));
-		this.store$.dispatch(new SetTaskDrawIndicator(false));
+		this.store$.dispatch(SetCurrentTask(null));
+		this.store$.dispatch(SetTaskDrawIndicator({payload: false}));
 	}
 
 	showError(msg: string) {
@@ -229,20 +229,20 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmit() {
-		this.store$.dispatch(new RunTaskAction());
+		this.store$.dispatch(RunTaskAction());
 	}
 
 	startDrawMode() {
-		this.store$.dispatch(new ToggleIsPinnedAction(true));
-		this.store$.dispatch(new SetTaskDrawIndicator(true));
+		this.store$.dispatch(ToggleIsPinnedAction({payload: true}));
+		this.store$.dispatch(SetTaskDrawIndicator({payload: true}));
 	}
 
 	onTaskNameChange() {
-		this.store$.dispatch(new SetCurrentTaskName(this.taskName));
+		this.store$.dispatch(SetCurrentTaskName({payload: this.taskName}));
 	}
 
 	onAlgorithmNameChange() {
-		this.store$.dispatch(new SetCurrentTaskAlgorithmName(this.algName));
+		this.store$.dispatch(SetCurrentTaskAlgorithmName({payload: this.algName}));
 	}
 
 }

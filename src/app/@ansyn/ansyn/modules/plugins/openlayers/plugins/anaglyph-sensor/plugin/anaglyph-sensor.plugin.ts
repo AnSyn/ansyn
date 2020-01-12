@@ -27,31 +27,31 @@ export class AnaglyphSensorPlugin extends BaseImageryPlugin {
 				this.anaglyphSensorService.isSupprotedOverlay(overlay).pipe(take(1)).subscribe((isSupproted: boolean) => {
 					this.isEnabled = isSupproted;
 					if (isSupproted) {
-						this.store$.dispatch(new AddAlertMsg({
+						this.store$.dispatch(AddAlertMsg({
 							key: anaglyphSensorAlertKey,
 							value: this.mapId
 						}));
 					} else {
-						this.store$.dispatch(new RemoveAlertMsg({
+						this.store$.dispatch(RemoveAlertMsg({
 							key: anaglyphSensorAlertKey,
 							value: this.mapId
 						}));
 					}
 				});
 			} else {
-				this.store$.dispatch(new RemoveAlertMsg({ key: anaglyphSensorAlertKey, value: this.mapId }));
+				this.store$.dispatch(RemoveAlertMsg({ key: anaglyphSensorAlertKey, value: this.mapId }));
 			}
 
 		})
 	);
 
 	onResetView() {
-		this.store$.dispatch(new RemoveAlertMsg({ key: anaglyphSensorAlertKey, value: this.mapId }));
+		this.store$.dispatch(RemoveAlertMsg({ key: anaglyphSensorAlertKey, value: this.mapId }));
 		return super.onResetView();
 	}
 
 	onDispose(): void {
-		this.store$.dispatch(new RemoveAlertMsg({ key: anaglyphSensorAlertKey, value: this.mapId }));
+		this.store$.dispatch(RemoveAlertMsg({ key: anaglyphSensorAlertKey, value: this.mapId }));
 		super.onDispose();
 
 	}

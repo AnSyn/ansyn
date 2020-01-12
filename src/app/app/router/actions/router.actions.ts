@@ -1,4 +1,4 @@
-import { Action } from '@ngrx/store';
+import { Action, createAction, props } from '@ngrx/store';
 import { Params } from '@angular/router';
 
 export type RouterActions = any;
@@ -13,16 +13,12 @@ export interface ISetStatePayload {
 	queryParams: Params;
 }
 
-export class SetStateAction implements Action {
-	type = RouterActionTypes.SET_STATE;
+export const SetStateAction = createAction(
+								RouterActionTypes.SET_STATE,
+								props<ISetStatePayload>()
+);
 
-	constructor(public payload: ISetStatePayload) {
-	}
-}
-
-export class NavigateCaseTriggerAction implements Action {
-	type = RouterActionTypes.NAVIGATE_CASE;
-
-	constructor(public payload?: string) {
-	}
-}
+export const NavigateCaseTriggerAction = createAction(
+											RouterActionTypes.NAVIGATE_CASE,
+											props<{payload?: string}>()
+);

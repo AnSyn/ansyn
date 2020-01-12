@@ -1,9 +1,7 @@
-import { MapActionTypes } from '@ansyn/map-facade';
 import { createEntityAdapter, Dictionary, EntityAdapter, EntityState } from '@ngrx/entity';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
 import { ICaseDataInputFiltersState } from '../../menu-items/cases/models/case.model';
-import { OverlaysActions, OverlaysActionTypes, SetMiscOverlay, SetMiscOverlays } from '../actions/overlays.actions';
 import {
 	IOverlay,
 	IOverlayDrop,
@@ -11,7 +9,6 @@ import {
 	IOverlaysHash,
 	IOverlaySpecialObject
 } from '../models/overlay.model';
-import { OverlayStatusActionsTypes } from '../overlay-status/actions/overlay-status.actions';
 import { ExtendMap } from './extendedMap.class';
 
 export interface ITimelineRange {
@@ -102,210 +99,214 @@ export const overlaysStatusMessages = {
 	nullify: null
 };
 
-export function OverlayReducer(state = overlaysInitialState, action: OverlaysActions): IOverlaysState {
-	switch (action.type) {
-		case OverlaysActionTypes.SET_OVERLAYS_CRITERIA: {
-			const overlaysCriteria = { ...state.overlaysCriteria, ...action.payload };
+// const reducerFunction = createReducer(overlaysInitialState,
+// 	on(SetOverlaysCriteriaAction, () )
+// );
 
-			const { options } = <any>action;
-			if (options && options.noInitialSearch) {
-				return { ...state, loading: false, displayOverlayHistory: {}, overlaysCriteria };
-			}
-			return { ...state, displayOverlayHistory: {}, overlaysCriteria };
-		}
-		case OverlaysActionTypes.SELECT_OVERLAY:
+// export function OverlayReducer(state = overlaysInitialState, action: OverlaysActions): IOverlaysState {
+// 	switch (action.type) {
+// 		case OverlaysActionTypes.SET_OVERLAYS_CRITERIA: {
+// 			const overlaysCriteria = { ...state.overlaysCriteria, ...action.payload };
 
-			const selected = state.selectedOverlays.slice();
-			if (!selected.includes(action.payload)) {
-				selected.push(action.payload);
-			}
-			return Object.assign({}, state, {
-				selectedOverlays: selected
-			});
+// 			const { options } = <any>action;
+// 			if (options && options.noInitialSearch) {
+// 				return { ...state, loading: false, displayOverlayHistory: {}, overlaysCriteria };
+// 			}
+// 			return { ...state, displayOverlayHistory: {}, overlaysCriteria };
+// 		}
+// 		case OverlaysActionTypes.SELECT_OVERLAY:
 
-		case OverlaysActionTypes.UNSELECT_OVERLAY:
-			const selected1 = state.selectedOverlays.slice();
-			const index = selected1.indexOf(action.payload);
-			if (index > -1) {
-				selected1.splice(index, 1);
-				return Object.assign({}, state, {
-					selectedOverlays: selected1
-				});
-			} else {
-				return state;
-			}
+// 			const selected = state.selectedOverlays.slice();
+// 			if (!selected.includes(action.payload)) {
+// 				selected.push(action.payload);
+// 			}
+// 			return Object.assign({}, state, {
+// 				selectedOverlays: selected
+// 			});
 
-		case OverlaysActionTypes.LOAD_OVERLAYS: {
-			return overlaysAdapter.addAll([], {
-				...state,
-				loading: true,
-				loaded: false,
-				overlays: new Map(),
-				filteredOverlays: []
-			});
-		}
+// 		case OverlaysActionTypes.UNSELECT_OVERLAY:
+// 			const selected1 = state.selectedOverlays.slice();
+// 			const index = selected1.indexOf(action.payload);
+// 			if (index > -1) {
+// 				selected1.splice(index, 1);
+// 				return Object.assign({}, state, {
+// 					selectedOverlays: selected1
+// 				});
+// 			} else {
+// 				return state;
+// 			}
 
-		case OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS: {
-			const newState = {
-				...state,
-				loading: false,
-				loaded: true,
-				filteredOverlays: []
-			};
-			if (!(<any>action).clearExistingOverlays) {
-				return overlaysAdapter.addMany(action.payload, newState);
-			}
-			return overlaysAdapter.addAll(action.payload, newState);
-		}
+// 		case OverlaysActionTypes.LOAD_OVERLAYS: {
+// 			return overlaysAdapter.addAll([], {
+// 				...state,
+// 				loading: true,
+// 				loaded: false,
+// 				overlays: new Map(),
+// 				filteredOverlays: []
+// 			});
+// 		}
 
-		case OverlaysActionTypes.LOAD_OVERLAYS_FAIL:
-			return Object.assign({}, state, {
-				loading: false,
-				loaded: false
-			});
+// 		case OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS: {
+// 			const newState = {
+// 				...state,
+// 				loading: false,
+// 				loaded: true,
+// 				filteredOverlays: []
+// 			};
+// 			if (!(<any>action).clearExistingOverlays) {
+// 				return overlaysAdapter.addMany(action.payload, newState);
+// 			}
+// 			return overlaysAdapter.addAll(action.payload, newState);
+// 		}
 
-		case OverlaysActionTypes.SET_FILTERED_OVERLAYS: {
-			const filteredOverlays = action.payload.filter((id) => state.entities[id]);
-			return { ...state, filteredOverlays };
-		}
+// 		case OverlaysActionTypes.LOAD_OVERLAYS_FAIL:
+// 			return Object.assign({}, state, {
+// 				loading: false,
+// 				loaded: false
+// 			});
 
-		case OverlaysActionTypes.SET_SPECIAL_OBJECTS: {
-			const specialObjects = new Map<string, IOverlaySpecialObject>();
-			action.payload.forEach((i: IOverlaySpecialObject) => {
-				specialObjects.set(i.id, i);
-			});
-			return { ...state, specialObjects };
-		}
+// 		case OverlaysActionTypes.SET_FILTERED_OVERLAYS: {
+// 			const filteredOverlays = action.payload.filter((id) => state.entities[id]);
+// 			return { ...state, filteredOverlays };
+// 		}
 
-		case OverlaysActionTypes.SET_DROPS: {
-			return { ...state, drops: action.payload };
-		}
+// 		case OverlaysActionTypes.SET_SPECIAL_OBJECTS: {
+// 			const specialObjects = new Map<string, IOverlaySpecialObject>();
+// 			action.payload.forEach((i: IOverlaySpecialObject) => {
+// 				specialObjects.set(i.id, i);
+// 			});
+// 			return { ...state, specialObjects };
+// 		}
 
-		case OverlaysActionTypes.SET_TIMELINE_STATE:
-			const { start, end } = action.payload.timeLineRange;
-			const startTime = start.getTime();
-			const endTime = end.getTime();
-			if (state.timeLineRange.start.getTime() !== startTime ||
-				state.timeLineRange.end.getTime() !== endTime
-			) {
-				const result: number = startTime - endTime;
-				return (result > 0) ? state : { ...state, timeLineRange: action.payload.timeLineRange };
-			} else {
-				return state;
-			}
+// 		case OverlaysActionTypes.SET_DROPS: {
+// 			return { ...state, drops: action.payload };
+// 		}
 
-		case OverlaysActionTypes.SET_OVERLAYS_STATUS_MESSAGE:
-			return {
-				...state,
-				statusMessage: action.payload
-			};
+// 		case OverlaysActionTypes.SET_TIMELINE_STATE:
+// 			const { start, end } = action.payload.timeLineRange;
+// 			const startTime = start.getTime();
+// 			const endTime = end.getTime();
+// 			if (state.timeLineRange.start.getTime() !== startTime ||
+// 				state.timeLineRange.end.getTime() !== endTime
+// 			) {
+// 				const result: number = startTime - endTime;
+// 				return (result > 0) ? state : { ...state, timeLineRange: action.payload.timeLineRange };
+// 			} else {
+// 				return state;
+// 			}
 
-		case OverlaysActionTypes.SET_OVERLAYS_MARKUPS:
-			let dropsMarkUpCloneToSet = new ExtendMap(state.dropsMarkUp);
-			dropsMarkUpCloneToSet.set(action.payload.classToSet, action.payload.dataToSet);
-			return {
-				...state, dropsMarkUp: dropsMarkUpCloneToSet
-			};
+// 		case OverlaysActionTypes.SET_OVERLAYS_STATUS_MESSAGE:
+// 			return {
+// 				...state,
+// 				statusMessage: action.payload
+// 			};
 
-		case OverlaysActionTypes.REMOVE_OVERLAYS_MARKUPS:
-			// currently out of use
-			let dropsMarkUpClone = _.clone(state.dropsMarkUp);
-			if (action.payload.overlayIds) {
-				action.payload.overlayIds.forEach(overlayId => {
-					const markUpClassList = dropsMarkUpClone.findKeysByValue(overlayId, 'overlaysIds');
-					if (markUpClassList && markUpClassList.length) {
-						markUpClassList.forEach(markUpClass =>
-							dropsMarkUpClone.removeValueFromMap(markUpClass, overlayId, 'overlaysIds')
-						);
-					}
-				});
-			}
-			if (action.payload.markupToRemove) {
-				action.payload.markupToRemove.forEach(markUpDrop => {
-					markUpDrop.markUpClassList.forEach(markUpClass => {
-						dropsMarkUpClone.removeValueFromMap(markUpClass, markUpDrop.id, 'overlaysIds');
-					});
-				});
-			}
+// 		case OverlaysActionTypes.SET_OVERLAYS_MARKUPS:
+// 			let dropsMarkUpCloneToSet = new ExtendMap(state.dropsMarkUp);
+// 			dropsMarkUpCloneToSet.set(action.payload.classToSet, action.payload.dataToSet);
+// 			return {
+// 				...state, dropsMarkUp: dropsMarkUpCloneToSet
+// 			};
 
-			return { ...state, dropsMarkUp: dropsMarkUpClone };
+// 		case OverlaysActionTypes.REMOVE_OVERLAYS_MARKUPS:
+// 			// currently out of use
+// 			let dropsMarkUpClone = _.clone(state.dropsMarkUp);
+// 			if (action.payload.overlayIds) {
+// 				action.payload.overlayIds.forEach(overlayId => {
+// 					const markUpClassList = dropsMarkUpClone.findKeysByValue(overlayId, 'overlaysIds');
+// 					if (markUpClassList && markUpClassList.length) {
+// 						markUpClassList.forEach(markUpClass =>
+// 							dropsMarkUpClone.removeValueFromMap(markUpClass, overlayId, 'overlaysIds')
+// 						);
+// 					}
+// 				});
+// 			}
+// 			if (action.payload.markupToRemove) {
+// 				action.payload.markupToRemove.forEach(markUpDrop => {
+// 					markUpDrop.markUpClassList.forEach(markUpClass => {
+// 						dropsMarkUpClone.removeValueFromMap(markUpClass, markUpDrop.id, 'overlaysIds');
+// 					});
+// 				});
+// 			}
+
+// 			return { ...state, dropsMarkUp: dropsMarkUpClone };
 
 
-		case OverlaysActionTypes.ADD_OVERLAYS_MARKUPS:
-			// currently out of use
-			let dropsMarkUp = _.clone(state.dropsMarkUp);
-			action.payload.forEach(dropMarkUp =>
-				dropMarkUp.markUpClassList.forEach(markUpClass => {
-					let markUpData = dropsMarkUp.get(markUpClass);
-					markUpData.overlaysIds.push(dropMarkUp.id);
-					dropsMarkUp.set(markUpClass, markUpData);
-				})
-			);
-			return {
-				...state,
-				dropsMarkUp
+// 		case OverlaysActionTypes.ADD_OVERLAYS_MARKUPS:
+// 			// currently out of use
+// 			let dropsMarkUp = _.clone(state.dropsMarkUp);
+// 			action.payload.forEach(dropMarkUp =>
+// 				dropMarkUp.markUpClassList.forEach(markUpClass => {
+// 					let markUpData = dropsMarkUp.get(markUpClass);
+// 					markUpData.overlaysIds.push(dropMarkUp.id);
+// 					dropsMarkUp.set(markUpClass, markUpData);
+// 				})
+// 			);
+// 			return {
+// 				...state,
+// 				dropsMarkUp
 
-			};
+// 			};
 
-		case OverlaysActionTypes.SET_HOVERED_OVERLAY:
-			return {
-				...state,
-				hoveredOverlay: action.payload
-			};
+// 		case OverlaysActionTypes.SET_HOVERED_OVERLAY:
+// 			return {
+// 				...state,
+// 				hoveredOverlay: action.payload
+// 			};
 
-		case OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS:
-			const { mapId, overlay } = action.payload;
-			const mapHistory = state.displayOverlayHistory[mapId] || [];
-			return {
-				...state,
-				displayOverlayHistory: {
-					...state.displayOverlayHistory,
-					[mapId]: [...mapHistory, overlay.id]
-				}
-			};
+// 		case OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS:
+// 			const { mapId, overlay } = action.payload;
+// 			const mapHistory = state.displayOverlayHistory[mapId] || [];
+// 			return {
+// 				...state,
+// 				displayOverlayHistory: {
+// 					...state.displayOverlayHistory,
+// 					[mapId]: [...mapHistory, overlay.id]
+// 				}
+// 			};
 
-		case OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_ID:
-			if (action.payload.value) {
-				const displayOverlayHistory = { ...state.displayOverlayHistory };
-				Object.entries(displayOverlayHistory).forEach(([key, value]) => {
-					displayOverlayHistory[key] = value.filter((id) => id !== action.payload.id);
-				});
-				return { ...state, displayOverlayHistory };
-			}
-			return state;
+// 		case OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_ID:
+// 			if (action.payload.value) {
+// 				const displayOverlayHistory = { ...state.displayOverlayHistory };
+// 				Object.entries(displayOverlayHistory).forEach(([key, value]) => {
+// 					displayOverlayHistory[key] = value.filter((id) => id !== action.payload.id);
+// 				});
+// 				return { ...state, displayOverlayHistory };
+// 			}
+// 			return state;
 
-		case MapActionTypes.SET_MAPS_DATA:
-			const { mapsList } = action.payload;
-			if (mapsList) {
-				const { displayOverlayHistory } = state;
-				Object.keys(displayOverlayHistory).forEach((key) => {
-					if (!mapsList.some((map) => map.id === key)) {
-						delete displayOverlayHistory[key];
-					}
-				});
-				return { ...state, displayOverlayHistory };
-			}
-			return state;
+// 		case MapActionTypes.SET_MAPS_DATA:
+// 			const { mapsList } = action.payload;
+// 			if (mapsList) {
+// 				const { displayOverlayHistory } = state;
+// 				Object.keys(displayOverlayHistory).forEach((key) => {
+// 					if (!mapsList.some((map) => map.id === key)) {
+// 						delete displayOverlayHistory[key];
+// 					}
+// 				});
+// 				return { ...state, displayOverlayHistory };
+// 			}
+// 			return state;
 
-		case OverlaysActionTypes.SET_MISC_OVERLAYS:
-			const { miscOverlays } = (<SetMiscOverlays>action).payload;
-			return { ...state, miscOverlays };
+// 		case OverlaysActionTypes.SET_MISC_OVERLAYS:
+// 			const { miscOverlays } = (<SetMiscOverlays>action).payload;
+// 			return { ...state, miscOverlays };
 
-		case OverlaysActionTypes.SET_MISC_OVERLAY: {
-			const { key, overlay } = (<SetMiscOverlay>action).payload;
-			return {
-				...state, miscOverlays: {
-					...state.miscOverlays,
-					[key]: overlay
-				}
-			};
-		}
+// 		case OverlaysActionTypes.SET_MISC_OVERLAY: {
+// 			const { key, overlay } = (<SetMiscOverlay>action).payload;
+// 			return {
+// 				...state, miscOverlays: {
+// 					...state.miscOverlays,
+// 					[key]: overlay
+// 				}
+// 			};
+// 		}
 
-		default :
-			return state;
-	}
+// 		default :
+// 			return state;
+// 	}
 
-}
+// }
 
 export const { selectEntities, selectAll, selectTotal, selectIds } = overlaysAdapter.getSelectors();
 

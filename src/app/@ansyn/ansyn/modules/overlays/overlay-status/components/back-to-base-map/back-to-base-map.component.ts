@@ -52,6 +52,6 @@ export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	backToWorldView() {
-		this.store$.dispatch(new BackToWorldView({ mapId: this.mapId }));
+		this.store$.dispatch(BackToWorldView({ mapId: this.mapId }));
 	}
 }

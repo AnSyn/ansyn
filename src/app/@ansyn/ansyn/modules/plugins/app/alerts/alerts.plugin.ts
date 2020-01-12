@@ -59,12 +59,12 @@ export class AlertsPlugin extends BaseImageryPlugin {
 			isInBound = Boolean(intersection);
 		}
 		const payload = { key: AlertMsgTypesEnum.OverlaysOutOfBounds, value: this.mapId };
-		return isWorldView || isInBound ? new RemoveAlertMsg(payload) : new AddAlertMsg(payload);
+		return isWorldView || isInBound ? RemoveAlertMsg(payload) : AddAlertMsg(payload);
 	}
 
 	onResetView() {
-		this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypesEnum.OverlaysOutOfBounds, value: this.mapId }));
-		this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypesEnum.overlayIsNotPartOfQuery, value: this.mapId }));
+		this.store$.dispatch(RemoveAlertMsg({ key: AlertMsgTypesEnum.OverlaysOutOfBounds, value: this.mapId }));
+		this.store$.dispatch(RemoveAlertMsg({ key: AlertMsgTypesEnum.overlayIsNotPartOfQuery, value: this.mapId }));
 		return super.onResetView();
 	}
 }

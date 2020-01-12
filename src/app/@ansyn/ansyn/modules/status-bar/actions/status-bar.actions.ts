@@ -1,4 +1,4 @@
-import { Action } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 import { IComboBoxesProperties } from '../models/combo-boxes.model';
 import { IGeoFilterStatus } from '../reducers/status-bar.reducer';
 import { SearchModeEnum } from '../models/search-mode.enum';
@@ -13,48 +13,32 @@ export const StatusBarActionsTypes = {
 	GO_NEXT_PRESET_OVERLAY: 'GO_NEXT_PRESET_OVERLAY'
 };
 
-export class CopySnapshotShareLinkAction implements Action {
-	type: string = StatusBarActionsTypes.COPY_SNAPSHOT_SHARE_LINK;
+export const CopySnapshotShareLinkAction = createAction(
+											StatusBarActionsTypes.COPY_SNAPSHOT_SHARE_LINK
+);
 
-	constructor() {
-	}
-}
+export const ExpandAction = createAction(
+								StatusBarActionsTypes.EXPAND
+);
 
-export class ExpandAction implements Action {
-	type: string = StatusBarActionsTypes.EXPAND;
+export const SetImageOpeningOrientation = createAction(
+											StatusBarActionsTypes.SET_IMAGE_OPENING_ORIENTATION,
+											props<IComboBoxesProperties>()
+											);
 
-	constructor() {
-	}
-}
+export const UpdateGeoFilterStatus = createAction(
+										StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS,
+										props<Partial<IGeoFilterStatus>>() // = { searchMode: SearchModeEnum.none }
+);
 
+export const GoAdjacentOverlay = createAction(
+									StatusBarActionsTypes.GO_ADJACENT_OVERLAY,
+									props<{ isNext: boolean }>()
+);
 
-export class SetImageOpeningOrientation implements Action {
-	type = StatusBarActionsTypes.SET_IMAGE_OPENING_ORIENTATION;
-
-	constructor(public payload: IComboBoxesProperties) {
-	}
-}
-
-export class UpdateGeoFilterStatus implements Action {
-	readonly type = StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS;
-
-	constructor(public payload: Partial<IGeoFilterStatus> = { searchMode: SearchModeEnum.none }) {
-	}
-}
-
-export class GoAdjacentOverlay implements Action {
-	type: string = StatusBarActionsTypes.GO_ADJACENT_OVERLAY;
-
-	constructor(public payload: { isNext: boolean }) {
-	}
-}
-
-export class GoNextPresetOverlay implements Action {
-	type: string = StatusBarActionsTypes.GO_NEXT_PRESET_OVERLAY;
-
-	constructor() {
-	}
-}
+export const GoNextPresetOverlay = createAction(
+									StatusBarActionsTypes.GO_NEXT_PRESET_OVERLAY
+);
 
 export type StatusBarActions =
 	CopySnapshotShareLinkAction

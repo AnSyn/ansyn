@@ -92,7 +92,7 @@ export class GoToComponent implements OnInit {
 		this.gotoExpand$.subscribe((_gotoExpand) => {
 			this.expand = _gotoExpand;
 			if (this.expand) {
-				this.store$.dispatch(new PullActiveCenter());
+				this.store$.dispatch(PullActiveCenter());
 			}
 		});
 	}
@@ -107,13 +107,13 @@ export class GoToComponent implements OnInit {
 		const conversionValid = this.projectionConverterService.isValidConversion(this.inputs.from, this.from);
 		if (conversionValid) {
 			const goToInput = this.projectionConverterService.convertByProjectionDatum(this.inputs.from, this.from, this.activeCenterProjDatum);
-			this.store$.dispatch(new GoToAction(goToInput));
+			this.store$.dispatch(GoToAction({payload: goToInput}));
 		}
 	}
 
 	copyToClipBoard(value: string) {
 		copyFromContent(value);
-		this.store$.dispatch(new SetToastMessageAction({ toastText: 'Copy to clipboard' }));
+		this.store$.dispatch(SetToastMessageAction({ toastText: 'Copy to clipboard' }));
 	}
 
 	convert(coords, convertFrom: any, convertTo: any, inputKey: string) {
@@ -125,19 +125,19 @@ export class GoToComponent implements OnInit {
 	}
 
 	togglePinLocation() {
-		this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetPinLocationModeAction] }));
-		this.store$.dispatch(new SetPinLocationModeAction(!this.pinLocationMode));
+		this.store$.dispatch(ClearActiveInteractionsAction({ skipClearFor: [SetPinLocationModeAction] }));
+		this.store$.dispatch(SetPinLocationModeAction({payload: !this.pinLocationMode}));
 	}
 
 	close() {
-		this.store$.dispatch(new SetSubMenu(null));
+		this.store$.dispatch(SetSubMenu(null));
 	}
 
 	private dispatchInputUpdated(coords: number[], convertFrom: ICoordinatesSystem) {
 		const conversionValid = this.projectionConverterService.isValidConversion(coords, convertFrom);
 		if (conversionValid) {
 			const toWgs84 = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.activeCenterProjDatum);
-			this.store$.dispatch(new GoToInputChangeAction(toWgs84));
+			this.store$.dispatch(GoToInputChangeAction({payload: toWgs84}));
 		}
 	}
 }

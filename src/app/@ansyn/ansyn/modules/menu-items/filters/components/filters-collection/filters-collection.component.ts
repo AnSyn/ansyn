@@ -62,11 +62,11 @@ export class FiltersCollectionComponent implements OnDestroy, OnInit {
 	}
 
 	showOnlyFavorites($event) {
-		this.store.dispatch(new UpdateFacetsAction({ showOnlyFavorites: !this.onlyFavorite }));
+		this.store.dispatch(UpdateFacetsAction({ showOnlyFavorites: !this.onlyFavorite }));
 	}
 
 	setFiltersSearch($event: string) {
-		this.store.dispatch(new SetFilterSearch($event));
+		this.store.dispatch(SetFilterSearch({payload: $event}));
 	}
 
 	ngOnDestroy() {

@@ -22,7 +22,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 	}
 
 	enableAnaglyph(isChecked) {
-		this.store.dispatch(new SetAnaglyphStateAction(isChecked));
+		this.store.dispatch(SetAnaglyphStateAction({payload: isChecked}));
 	}
 
 }

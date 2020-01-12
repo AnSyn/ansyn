@@ -29,7 +29,7 @@ export class SentinelLayersService {
 					const tmp = sentinelLayers[0];
 					sentinelLayers[0] = sentinelLayers[true_color_index];
 					sentinelLayers[true_color_index] = tmp;
-					this.store.dispatch(new SetSentinelLayers(sentinelLayers));
+					this.store.dispatch(SetSentinelLayers(sentinelLayers));
 				})
 			).subscribe();
 		}

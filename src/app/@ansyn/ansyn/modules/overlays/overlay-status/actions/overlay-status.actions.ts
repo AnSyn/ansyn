@@ -1,4 +1,4 @@
-import { Action } from '@ngrx/store';
+import { Action, props, createAction } from '@ngrx/store';
 import { AlertMsgTypes } from '../../../alerts/model';
 import { IOverlay } from '../../models/overlay.model';
 import { IOverlaysScannedAreaData, IOverlaysTranslationData, } from '../../../menu-items/cases/models/case.model';
@@ -47,141 +47,99 @@ export type OverlayStatusActions =
 	SetOverlaysTranslationDataAction
 	| ToggleDraggedModeAction;
 
-export class ActivateScannedAreaAction implements Action {
-	type: string = OverlayStatusActionsTypes.ACTIVATE_SCANNED_AREA;
+export const ActivateScannedAreaAction = createAction(
+											OverlayStatusActionsTypes.ACTIVATE_SCANNED_AREA
+);
 
-	constructor() {
-	}
-}
+export const SetOverlayScannedAreaDataAction = createAction(
+													OverlayStatusActionsTypes.SET_OVERLAY_SCANNED_AREA_DATA,
+													props<IScannedArea>()
+);
 
-export class SetOverlayScannedAreaDataAction implements Action {
-	type: string = OverlayStatusActionsTypes.SET_OVERLAY_SCANNED_AREA_DATA;
+export const SetOverlaysScannedAreaDataAction = createAction(
+													OverlayStatusActionsTypes.SET_OVERLAYS_SCANNED_AREA_DATA,
+													props<IOverlaysScannedAreaData>()
+);
 
-	constructor(public payload: IScannedArea) {
-	}
-}
+export const BackToWorldView = createAction(
+									OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW,
+									props<{ mapId: string }>()
+);
 
-export class SetOverlaysScannedAreaDataAction implements Action {
-	type: string = OverlayStatusActionsTypes.SET_OVERLAYS_SCANNED_AREA_DATA;
+export const BackToWorldSuccess = createAction(
+									OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS
+);
 
-	constructor(public payload: IOverlaysScannedAreaData) {
-	}
-}
+export const BackToWorldFailed = createAction(
+									OverlayStatusActionsTypes.BACK_TO_WORLD_FAILED,
+									props<{ mapId: string, error: any }>()
+);
 
-export class BackToWorldView implements Action {
-	type = OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW;
+export const ToggleFavoriteAction = createAction(
+										OverlayStatusActionsTypes.TOGGLE_OVERLAY_FAVORITE,
+										props<{ id: string, value: boolean, overlay?: IOverlay }>()
+);
 
-	constructor(public payload: { mapId: string }) {
+export const SetFavoriteOverlaysAction = createAction(
+											OverlayStatusActionsTypes.SET_FAVORITE_OVERLAYS,
+											props<{payload: IOverlay[]}>()
+);
 
-	}
-}
+export const SetRemovedOverlaysIdsAction = createAction(
+											OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_IDS,
+											props<{payload: string[]}>()
+);
 
-export class BackToWorldSuccess extends BackToWorldView {
-	type = OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS;
-}
+export const ResetRemovedOverlaysIdsAction = createAction(
+												OverlayStatusActionsTypes.RESET_REMOVED_OVERLAY_IDS
+);
 
-export class BackToWorldFailed extends BackToWorldView {
-	type = OverlayStatusActionsTypes.BACK_TO_WORLD_FAILED;
+export const SetRemovedOverlaysIdAction = createAction(
+											OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_ID,
+											props<{ mapId: string, id: string, value: boolean }>()
+);
 
-	constructor(public payload: { mapId: string, error: any }) {
-		super(payload)
-	}
-}
+export const SetRemovedOverlaysVisibilityAction = createAction(
+													OverlayStatusActionsTypes.SET_REMOVED_OVERLAYS_VISIBILITY,
+													props<{payload: boolean}>()
+);
 
-export class ToggleFavoriteAction implements Action {
-	type: string = OverlayStatusActionsTypes.TOGGLE_OVERLAY_FAVORITE;
+export const SetRemovedOverlayIdsCount  = createAction(
+											OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_IDS_COUNT,
+											props<{payload: number}>()
+);
 
-	constructor(public payload: { id: string, value: boolean, overlay?: IOverlay }) {
-	}
-}
+export const TogglePresetOverlayAction = createAction(
+											OverlayStatusActionsTypes.TOGGLE_OVERLAY_PRESET,
+											props<{ id: string, value: boolean, overlay?: any }>()
+);
 
-export class SetFavoriteOverlaysAction implements Action {
-	type = OverlayStatusActionsTypes.SET_FAVORITE_OVERLAYS;
+export const SetPresetOverlaysAction = createAction(
+										OverlayStatusActionsTypes.SET_PRESET_OVERLAYS,
+										props<{payload: any[]}>()
+);
 
-	constructor(public payload: IOverlay[]) {
-	}
-}
+export const AddAlertMsg = createAction(
+							OverlayStatusActionsTypes.ADD_ALERT_MSG,
+							props<{ value: string, key: AlertMsgTypes }>()
+);
 
-export class SetRemovedOverlaysIdsAction implements Action {
-	type = OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_IDS;
+export const RemoveAlertMsg = createAction(
+								OverlayStatusActionsTypes.REMOVE_ALERT_MSG,
+								props<{ value: string, key: AlertMsgTypes }>()
+);
 
-	constructor(public payload: string[]) {
+export const ToggleDraggedModeAction = createAction(
+										OverlayStatusActionsTypes.TOGGLE_DRAGGED_MODE,
+										props<{ mapId: string, overlayId: string, dragged: boolean }>()
+);
 
-	}
-}
+export const SetOverlayTranslationDataAction = createAction(
+												OverlayStatusActionsTypes.SET_OVERLAY_TRANSLATION_DATA,
+												props<{ overlayId: string, offset: [number, number] }>()
+);
 
-export class ResetRemovedOverlaysIdsAction implements Action {
-	type = OverlayStatusActionsTypes.RESET_REMOVED_OVERLAY_IDS;
-}
-
-export class SetRemovedOverlaysIdAction implements Action {
-	type = OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_ID;
-
-	constructor(public payload: { mapId: string, id: string, value: boolean }) {
-
-	}
-}
-
-export class SetRemovedOverlaysVisibilityAction implements Action {
-	type = OverlayStatusActionsTypes.SET_REMOVED_OVERLAYS_VISIBILITY;
-
-	constructor(public payload: boolean) {
-
-	}
-}
-
-export class SetRemovedOverlayIdsCount implements Action {
-	readonly type = OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_IDS_COUNT;
-
-	constructor(public payload: number) {
-	}
-}
-
-export class TogglePresetOverlayAction implements Action {
-	type: string = OverlayStatusActionsTypes.TOGGLE_OVERLAY_PRESET;
-
-	constructor(public payload: { id: string, value: boolean, overlay?: any }) {
-	}
-}
-
-export class SetPresetOverlaysAction implements Action {
-	type = OverlayStatusActionsTypes.SET_PRESET_OVERLAYS;
-
-	constructor(public payload: any[]) {
-	}
-}
-
-export class AddAlertMsg implements Action {
-	type = OverlayStatusActionsTypes.ADD_ALERT_MSG;
-
-	constructor(public payload: { value: string, key: AlertMsgTypes }) {
-	}
-}
-
-export class RemoveAlertMsg implements Action {
-	type = OverlayStatusActionsTypes.REMOVE_ALERT_MSG;
-
-	constructor(public payload: { value: string, key: AlertMsgTypes }) {
-	}
-}
-
-export class ToggleDraggedModeAction implements Action {
-	type = OverlayStatusActionsTypes.TOGGLE_DRAGGED_MODE;
-
-	constructor(public payload: { mapId: string, overlayId: string, dragged: boolean }) {
-	}
-}
-
-export class SetOverlayTranslationDataAction implements Action {
-	type = OverlayStatusActionsTypes.SET_OVERLAY_TRANSLATION_DATA;
-
-	constructor(public payload: { overlayId: string, offset: [number, number] }) {
-	}
-}
-
-export class SetOverlaysTranslationDataAction implements Action {
-	type = OverlayStatusActionsTypes.SET_OVERLAYS_TRANSLATION_DATA;
-
-	constructor(public payload: IOverlaysTranslationData) {
-	}
-}
+export const SetOverlaysTranslationDataAction = createAction(
+													OverlayStatusActionsTypes.SET_OVERLAYS_TRANSLATION_DATA,
+													props<{payload: IOverlaysTranslationData}>()
+);

@@ -194,12 +194,12 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	}
 
 	onMouseOver({ id }: IEventDropsEvent) {
-		this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [id] } }));
+		this.store$.dispatch(SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [id] } }));
 	}
 
 	onMouseOut({ id }: IEventDropsEvent) {
 		if (!d3.event.toElement || (d3.event.toElement && d3.event.toElement.id !== overlayOverviewComponentConstants.TRANSPARENT_DIV_ID)) {
-			this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
+			this.store$.dispatch(SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
 		}
 	}
 
@@ -226,14 +226,14 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	}
 
 	onDblClick({ id }) {
-		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id }));
+		this.store$.dispatch(DisplayOverlayFromStoreAction({ id }));
 	}
 
 	onClick() {
 	}
 
 	onZoomEnd() {
-		this.store$.dispatch(new SetTimelineStateAction({
+		this.store$.dispatch(SetTimelineStateAction({
 			timeLineRange: {
 				start: this.chart.scale().domain()[0],
 				end: this.chart.scale().domain()[1]

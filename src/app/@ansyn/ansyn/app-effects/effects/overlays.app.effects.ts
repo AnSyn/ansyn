@@ -1,4 +1,4 @@
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, Effect, ofType, createEffect } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { combineLatest, Observable, of, pipe } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -86,7 +86,7 @@ export class OverlaysAppEffects {
 		distinctUntilChanged()
 	);
 
-	@Effect({ dispatch: false })
+	@Effect({ dispatch: false }) // TODO: leaving as it is for now, because we also nned to the action type.
 	actionsLogger$: Observable<any> = this.actions$.pipe(
 		ofType(
 			OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS,
@@ -104,45 +104,38 @@ export class OverlaysAppEffects {
 			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Overlays', action.type);
 		}));
 
-	@Effect()
-	removedOverlaysCount$ = combineLatest(this.store$.select(selectRemovedOverlays), this.store$.select(selectOverlaysMap)).pipe(
+	removedOverlaysCount$ = createEffect(() => combineLatest(this.store$.select(selectRemovedOverlays), this.store$.select(selectOverlaysMap)).pipe(
 		map(([removedOverlaysIds, overlays]: [string[], Map<string, IOverlay>]) => {
 			const removedOverlaysCount = removedOverlaysIds.filter((removedId) => overlays.has(removedId)).length;
-			return new SetRemovedOverlayIdsCount(removedOverlaysCount);
-		})
+			return SetRemovedOverlayIdsCount({payload: removedOverlaysCount});
+		}))
 	);
 
-	@Effect()
-	clearPresetsOnClearOverlays$: Observable<any> = this.actions$.pipe(
-		ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
+	clearPresetsOnClearOverlays$ = createEffect(() => this.actions$.pipe(
+		ofType(LoadOverlaysSuccessAction),
 		filter(({ clearExistingOverlays }) => clearExistingOverlays),
-		map(() => new SetPresetOverlaysAction([]))
+		map(() => SetPresetOverlaysAction({ payload: [] })))
 	);
 
-	@Effect()
-	clearPresets$: Observable<any> = this.actions$.pipe(
-		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
-		map(() => new SetPresetOverlaysAction([]))
-	);
+	clearPresets$ = createEffect(() => this.actions$.pipe(
+		ofType(LoadOverlaysAction),
+		map(() => SetPresetOverlaysAction({ payload: [] }))
+	));
 
-
-	@Effect()
-	onPinPointSearch$: Observable<SetOverlaysCriteriaAction | any> = this.actions$.pipe(
-		ofType<ContextMenuTriggerAction>(MapActionTypes.TRIGGER.CONTEXT_MENU),
+	onPinPointSearch$ = createEffect(() => this.actions$.pipe(
+		ofType(ContextMenuTriggerAction),
 		withLatestFrom(this.isPinPointSearch$),
-		filter(([{ payload }, isPinPointSearch]: [ContextMenuTriggerAction, boolean]) => isPinPointSearch),
-		map(([{ payload }, isPinPointSearch]: [ContextMenuTriggerAction, boolean]) => payload),
+		filter(([{ payload }, isPinPointSearch]: [any, boolean]) => isPinPointSearch),
+		map(([{ payload }, isPinPointSearch]: [any, boolean]) => payload),
 		map((payload: Position) => {
 			const region = turf.geometry('Point', payload);
-			return new SetOverlaysCriteriaAction({ region });
-		})
+			return  SetOverlaysCriteriaAction({ region });
+		}))
 	);
 
-
-	@Effect()
-	displayMultipleOverlays$: Observable<any> = this.actions$.pipe(
-		ofType(OverlaysActionTypes.DISPLAY_MULTIPLE_OVERLAYS_FROM_STORE),
-		filter((action: DisplayMultipleOverlaysFromStoreAction) => action.payload.length > 0),
+	displayMultipleOverlays$ = createEffect(() => this.actions$.pipe(
+		ofType(DisplayMultipleOverlaysFromStoreAction),
+		filter((payload) => payload.payload.length > 0),
 		withLatestFrom(this.store$.select(selectMapsList)),
 		mergeMap(([action, mapsList]: [DisplayMultipleOverlaysFromStoreAction, ICaseMapState[]]): any => {
 			const validPendingOverlays = action.payload;
@@ -151,7 +144,7 @@ export class OverlaysAppEffects {
 				return validPendingOverlays.map((pendingOverlay: IPendingOverlay, index: number) => {
 					let { overlay, extent } = pendingOverlay;
 					let mapId = mapsList[index].id;
-					return new DisplayOverlayAction({ overlay, mapId, extent });
+					return DisplayOverlayAction({ overlay, mapId, extent });
 				});
 			}
 
@@ -159,54 +152,50 @@ export class OverlaysAppEffects {
 				const layout = layoutOptions.get(key);
 				return layout.mapsCount === validPendingOverlays.length;
 			});
-			return [new SetPendingOverlaysAction(validPendingOverlays), new SetLayoutAction(layout)];
+			return [SetPendingOverlaysAction(validPendingOverlays), SetLayoutAction({ key: layout})];
 		})
-	);
+	));
 
-	@Effect()
-	displayPendingOverlaysOnChangeLayoutSuccess$: Observable<any> = this.actions$.pipe(
+	displayPendingOverlaysOnChangeLayoutSuccess$ = createEffect(() => this.actions$.pipe(
 		ofType(MapActionTypes.SET_LAYOUT_SUCCESS),
 		withLatestFrom(this.store$.select(mapStateSelector)),
-		filter(([action, mapState]) => mapState.pendingOverlays.length > 0),
-		mergeMap(([action, mapState]: [SetLayoutSuccessAction, IMapState]) => {
+		filter(([payload, mapState]) => mapState.pendingOverlays.length > 0),
+		mergeMap(([payload, mapState]: [any, IMapState]) => {
 			return mapState.pendingOverlays.map((pendingOverlay: any, index: number) => {
 				const { overlay, extent } = pendingOverlay;
 				const mapId = Object.values(mapState.entities)[index].id;
-				return new DisplayOverlayAction({ overlay, mapId, extent });
+				return DisplayOverlayAction({ overlay, mapId, extent });
 			});
-		})
+		}))
 	);
 
-	@Effect()
-	removePendingOverlayOnDisplay$: Observable<any> = this.actions$.pipe(
+	removePendingOverlayOnDisplay$ = createEffect(() => this.actions$.pipe(
 		ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
 		withLatestFrom(this.store$.select(mapStateSelector)),
-		filter(([action, mapState]: [DisplayOverlaySuccessAction, IMapState]) => mapState.pendingOverlays.some((pending) => pending.overlay.id === action.payload.overlay.id)),
-		map(([action, mapState]: [DisplayOverlaySuccessAction, IMapState]) => {
-			return new RemovePendingOverlayAction(action.payload.overlay.id);
-		})
+		filter(([payload, mapState]: [any, IMapState]) => mapState.pendingOverlays.some((pending) => pending.overlay.id === payload.payload.overlay.id)),
+		map(([payload, mapState]: [any, IMapState]) => {
+			return RemovePendingOverlayAction(payload.payload.overlay.id);
+		}))
 	);
 
-	@Effect()
-	onDisplayOverlayFromStore$: Observable<DisplayOverlayAction> = this.actions$.pipe(
-		ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE),
+	onDisplayOverlayFromStore$ = createEffect(() => this.actions$.pipe(
+		ofType(DisplayOverlayFromStoreAction),
 		withLatestFrom(this.overlaysService.getAllOverlays$, this.store$.select(mapStateSelector)),
-		map(([{ payload }, overlays, { activeMapId }]: [DisplayOverlayFromStoreAction, Map<string, IOverlay>, IMapState]) => {
+		map(([payload, overlays, { activeMapId }]: [{ id: string, mapId?: string, extent?: any, customOriantation?: string }, Map<string, IOverlay>, IMapState]) => {
 			const mapId = payload.mapId || activeMapId;
 			const overlay = overlays.get(payload.id);
-			return new DisplayOverlayAction({
+			return DisplayOverlayAction({
 				overlay,
 				mapId,
 				extent: payload.extent,
 				customOriantation: payload.customOriantation
 			});
-		})
+		}))
 	);
 
-	@Effect()
-	onSetRemovedOverlaysIdAction$: Observable<any> = this.actions$.pipe(
-		ofType<SetRemovedOverlaysIdAction>(OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_ID),
-		filter(({ payload }) => payload.value),
+	onSetRemovedOverlaysIdAction$ = createEffect(this.actions$.pipe(
+		ofType(SetRemovedOverlaysIdAction),
+		filter(payload => payload.value),
 		withLatestFrom(this.store$.select(selectdisplayOverlayHistory), this.store$.select(selectMapsList)),
 		mergeMap(([{ payload }, displayOverlayHistory, mapsList]) => {
 			const mapActions = mapsList
@@ -215,18 +204,17 @@ export class OverlaysAppEffects {
 					const mapId = map.id;
 					const id = (displayOverlayHistory[mapId] || []).pop();
 					if (Boolean(id)) {
-						return new DisplayOverlayFromStoreAction({ mapId, id });
+						return DisplayOverlayFromStoreAction({ mapId, id });
 					}
-					return new BackToWorldView({ mapId });
+					return BackToWorldView({ mapId });
 				});
 			return [
-				new ToggleFavoriteAction({ value: false, id: payload.id }),
-				new TogglePresetOverlayAction({ value: false, id: payload.id }),
+				ToggleFavoriteAction({ value: false, id: payload.id }),
+				TogglePresetOverlayAction({ value: false, id: payload.id }),
 				...mapActions
 			];
-		})
+		}))
 	);
-
 
 	private getOverlayFromDropMarkup = map(([markupMap, overlays]: [ExtendMap<MarkUpClass, IMarkUpData>, Map<any, any>]) =>
 		overlays.get(markupMap && markupMap.get(MarkUpClass.hover) && markupMap.get(MarkUpClass.hover).overlaysIds[0])
@@ -246,7 +234,7 @@ export class OverlaysAppEffects {
 		if (!overlay) {
 			return [overlay];
 		}
-		this.store$.dispatch(new SetHoveredOverlayAction(<IOverlay>{
+		this.store$.dispatch(SetHoveredOverlayAction({
 			...overlay,
 			thumbnailUrl: overlayOverviewComponentConstants.FETCHING_OVERLAY_DATA
 		}));
@@ -263,7 +251,7 @@ export class OverlaysAppEffects {
 	});
 
 	private getHoveredOverlayAction = map((overlay: IOverlay) => {
-		return new SetHoveredOverlayAction(overlay);
+		return SetHoveredOverlayAction({payload: overlay});
 	});
 
 	@Effect()
@@ -287,11 +275,10 @@ export class OverlaysAppEffects {
 			})
 		);
 
-	@Effect()
-	activeMapLeave$ = this.actions$.pipe(
+	activeMapLeave$ = createEffect(() => this.actions$.pipe(
 		ofType(MapActionTypes.TRIGGER.IMAGERY_MOUSE_LEAVE),
-		map(() => new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }))
-	);
+		map(() => SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }))
+	));
 
 	onDropMarkupFilter([prevAction, currentAction]): boolean {
 		const isEquel = !isEqual(prevAction, currentAction);
@@ -303,5 +290,4 @@ export class OverlaysAppEffects {
 				public overlaysService: OverlaysService,
 				protected loggerService: LoggerService) {
 	}
-
 }

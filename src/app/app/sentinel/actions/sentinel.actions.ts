@@ -1,4 +1,4 @@
-import { Action } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 import { ISentinelLayer } from '../reducers/sentinel.reducer';
 
 export enum SentinelActionTypes {
@@ -6,18 +6,13 @@ export enum SentinelActionTypes {
 	SET_LAYER_ON_MAP = '[Sentinel] SET_LAYER_ON_MAP'
 }
 
-export type SentinelActions = SetSentinelLayerOnMap | SetSentinelLayers;
 
-export class SetSentinelLayerOnMap implements Action {
-	type: string = SentinelActionTypes.SET_LAYER_ON_MAP;
+export const SetSentinelLayerOnMap = createAction(
+										SentinelActionTypes.SET_LAYER_ON_MAP,
+										props<{ id: string, layer: string }>()
+);
 
-	constructor(public payload: { id: string, layer: string }) {
-	}
-}
-
-export class SetSentinelLayers implements Action {
-	type: string = SentinelActionTypes.SET_ALL_LAYERS;
-
-	constructor(public payload: ISentinelLayer[]) {
-	}
-}
+export const SetSentinelLayers = createAction(
+									SentinelActionTypes.SET_ALL_LAYERS,
+									props<{payload: ISentinelLayer[]}>()
+);

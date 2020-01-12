@@ -18,7 +18,7 @@ export class TasksFormPageHeaderComponent implements OnInit {
 	}
 
 	backToTable() {
-		this.store$.dispatch(new SetTasksPageToShow(TasksPageToShow.TASKS_TABLE));
+		this.store$.dispatch(SetTasksPageToShow({payload: TasksPageToShow.TASKS_TABLE}));
 	}
 
 }

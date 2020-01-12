@@ -32,7 +32,7 @@ export class ContextModule {
 
 	constructor(protected store: Store<IContextState>, protected contextService: ContextService) {
 		contextService.loadContexts().subscribe((contexts: IContext[]) => {
-			this.store.dispatch(new AddAllContextsAction(contexts));
+			this.store.dispatch(AddAllContextsAction({payload: contexts}));
 		});
 	}
 }

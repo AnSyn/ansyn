@@ -33,7 +33,7 @@ export class WelcomeNotificationComponent implements AfterViewInit, OnDestroy {
 	@HostListener('blur')
 	onBlur() {
 		setTimeout(() => {
-			this.store$.dispatch(new SetWasWelcomeNotificationShownFlagAction(true));
+			this.store$.dispatch(SetWasWelcomeNotificationShownFlagAction(true));
 		}, 1000);
 	}
 

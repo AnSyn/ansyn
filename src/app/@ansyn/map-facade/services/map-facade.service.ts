@@ -89,13 +89,13 @@ export class MapFacadeService {
 	}
 
 	mapInstanceChanged($event: IMapInstanceChanged) {
-		this.store.dispatch(new MapInstanceChangedAction($event));
+		this.store.dispatch(MapInstanceChangedAction($event));
 	}
 
 	positionChanged($event: { id: string, position: ImageryMapPosition }) {
 		if (Boolean(this.mapsList)) {
 			const mapInstance = <IMapSettings>MapFacadeService.mapById(this.mapsList, $event.id);
-			this.store.dispatch(new PositionChangedAction({ ...$event, mapInstance }));
+			this.store.dispatch(PositionChangedAction({ ...$event, mapInstance }));
 		}
 	}
 
@@ -113,10 +113,10 @@ export class MapFacadeService {
 			}),
 			tap(blob => saveAs(blob, 'map.jpeg')),
 			tap(() => {
-				this.store.dispatch(new ExportMapsToPngActionSuccess());
+				this.store.dispatch(ExportMapsToPngActionSuccess());
 			}),
 			catchError((err) => {
-				this.store.dispatch(new ExportMapsToPngActionFailed(err));
+				this.store.dispatch(ExportMapsToPngActionFailed(err));
 				return EMPTY;
 			})
 		).subscribe();

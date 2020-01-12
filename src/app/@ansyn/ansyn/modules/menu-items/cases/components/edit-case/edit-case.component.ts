@@ -116,18 +116,18 @@ export class EditCaseComponent implements OnInit {
 	}
 
 	close(): void {
-		this.store.dispatch(new CloseModalAction());
+		this.store.dispatch(CloseModalAction());
 	}
 
 	onSubmitCase(contextIndex: number) {
 		if (this.editMode) {
-			this.store.dispatch(new UpdateCaseAction({ updatedCase: this.caseModel, forceUpdate: true }));
+			this.store.dispatch(UpdateCaseAction({ updatedCase: this.caseModel, forceUpdate: true }));
 		} else {
 			const selectContext = this.contextsList[contextIndex];
 			this.caseModel = cloneDeep(this.casesService.updateCaseViaContext(selectContext, this.caseModel));
 			this.casesService.createCase(this.caseModel)
 				.subscribe((addedCase: ICase) => {
-					this.store.dispatch(new AddCaseAction(addedCase));
+					this.store.dispatch(AddCaseAction(addedCase));
 				});
 		}
 		this.close();

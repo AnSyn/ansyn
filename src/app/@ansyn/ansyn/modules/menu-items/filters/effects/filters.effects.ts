@@ -3,7 +3,7 @@ import { select, Store } from '@ngrx/store';
 import { IFiltersState, selectFilters, selectFiltersSearch } from '../reducer/filters.reducer';
 import { combineLatest } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { Effect } from '@ngrx/effects';
+import { createEffect } from '@ngrx/effects';
 import { TranslateService } from '@ngx-translate/core';
 import { FilterType } from '../models/filter-type';
 import { SetFiltersSearchResults } from '../actions/filters.actions';
@@ -13,11 +13,12 @@ import { fromPromise } from 'rxjs/internal-compatibility';
 @Injectable()
 export class FiltersEffects {
 
-	@Effect()
-	onFilterSearch$ = combineLatest(this.store$.pipe(select(selectFiltersSearch)), this.store$.pipe(select(selectFilters))).pipe(
+	onFilterSearch$ = createEffect(() => combineLatest(this.store$.pipe(select(selectFiltersSearch)),
+														this.store$.pipe(select(selectFilters)))
+														.pipe(
 		mergeMap(([filtersSearch, filters]) => fromPromise(this.getFiltersSearchResults([filtersSearch, filters]))),
-		map((filtersSearchResults) => new SetFiltersSearchResults(filtersSearchResults))
-	);
+		map((filtersSearchResults) => SetFiltersSearchResults(filtersSearchResults))
+	));
 
 	private async getIncludedKeys([filtersSearch, filterKey, filterVal]) {
 		if (filterKey.displayName.toLowerCase().includes(filtersSearch)) {
@@ -48,7 +49,5 @@ export class FiltersEffects {
 
 	constructor(protected store$: Store<IFiltersState>, protected translate: TranslateService) {
 	}
-
-
 }
 

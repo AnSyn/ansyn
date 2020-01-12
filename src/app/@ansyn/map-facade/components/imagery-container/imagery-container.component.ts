@@ -46,17 +46,17 @@ export class ImageryContainerComponent implements OnInit, OnDestroy {
 	}
 
 	toggleMapSynchronization() {
-		this.store.dispatch(new SynchronizeMapsAction({ mapId: this.mapState.id }));
+		this.store.dispatch(SynchronizeMapsAction({ mapId: this.mapState.id }));
 	}
 
 	mouseLeave() {
 		this.isInImagery = false;
-		this.store.dispatch(new ImageryMouseLeave(this.mapState.id));
+		this.store.dispatch(ImageryMouseLeave(this.mapState.id));
 	}
 
 	mouseEnter() {
 		this.isInImagery = true;
-		this.store.dispatch(new ImageryMouseEnter(this.mapState.id));
+		this.store.dispatch(ImageryMouseEnter(this.mapState.id));
 	}
 
 	ngOnInit(): void {

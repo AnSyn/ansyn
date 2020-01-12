@@ -4,7 +4,7 @@ import { IMAGERY_CONFIG } from '../model/configuration.token';
 
 @Injectable()
 export class StayInImageryService {
-	getElementFunc: Function;
+	elementCallback: Function;
 	timerCallback: Function;
 	timerId: number;
 	verticalPadding = this.imageryConfig.stayInImageryVerticalPadding || 0;
@@ -14,8 +14,8 @@ export class StayInImageryService {
 	constructor(@Inject(IMAGERY_CONFIG) protected imageryConfig: IImageryConfig) {
 	}
 
-	init(funcOrElement: Function | Element, timerCallback: Function = null) {
-		this.getElementFunc = funcOrElement instanceof Function ? funcOrElement : () => funcOrElement;
+	init(elementOrElementCallback: Function | Element, timerCallback: Function = null) {
+		this.elementCallback = elementOrElementCallback instanceof Function ? elementOrElementCallback : () => elementOrElementCallback;
 		this.timerCallback = timerCallback;
 		this.timerId = window.setInterval(this.calcPositionToStayInsideImagery.bind(this), 300);
 	}
@@ -25,7 +25,7 @@ export class StayInImageryService {
 	}
 
 	calcPositionToStayInsideImagery() {
-		const targetElement = this.getElementFunc();
+		const targetElement = this.elementCallback();
 		if (!targetElement) {
 			return;
 		}

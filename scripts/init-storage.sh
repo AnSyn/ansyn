@@ -1,6 +1,6 @@
 #!/bin/bash
 url=$1
-[ -z "$url" ] && url="http://platform.ansyn.io:8081"
+[ -z "$url" ] && url="http://platform.ansyn.io:8888"
 echo "Initial schemas..."
 status=$(curl -s -o /dev/null -w "%{http_code}" "$url/api/store/layers")
 if [ "$status" = 200 ]; then echo "layers Ok"; else curl -XPOST -s "$url/api/store/layers"; fi

@@ -433,6 +433,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			}));
 			features.push(labelFeature);
 		}
+		features.forEach(feature => feature.setId(UUID.UUID()));
 		return features;
 	}
 
@@ -490,7 +491,11 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	}
 
 	private defineLabelsTranslate(labelsFeatures: Feature[]) {
-		return labelsFeatures.map(feature => new Translate({ features: new Collection([feature]) }));
+		return labelsFeatures.map(feature => new MeasureTranslate({
+			features: new Collection([feature]),
+			hitToTolerance: 2
+			})
+		);
 	}
 
 	/**
@@ -517,5 +522,35 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		this.removeInteraction(VisualizerInteractions.pointerMove);
 		this.removeInteraction(VisualizerInteractions.click);
 		super.onDispose();
+	}
+}
+
+
+class MeasureTranslate extends Translate {
+	constructor(opt) {
+		super(opt);
+	}
+
+	handleMoveEvent(event) {
+		const map = event.map;
+		if (map.hasFeatureAtPixel(event.pixel)) {
+			const elem = event.map.getViewport();
+			const interactions = event.map.getInteractions().getArray();
+			const measureInteractions = interactions && interactions.filter(interaction => interaction instanceof MeasureTranslate);
+			let isMeasureHover = false;
+			map.forEachFeatureAtPixel(event.pixel, (feature) => {
+				measureInteractions.forEach(interaction => {
+					const measureFeature = interaction.features_.item(0);
+					isMeasureHover = isMeasureHover || feature.getId() === measureFeature.getId();
+				})
+			});
+
+			if (isMeasureHover) {
+				elem.classList.remove((<Translate>this).lastCoordinate_ ? 'ol-grab' : 'ol-grabbing');
+				elem.classList.add((<Translate>this).lastCoordinate_ ? 'ol-grabbing' : 'ol-grab');
+			} else {
+				elem.classList.remove('ol-grab', 'ol-grabbing');
+			}
+		}
 	}
 }

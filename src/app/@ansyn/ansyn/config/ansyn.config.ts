@@ -10,6 +10,8 @@ import { HelpComponent } from '../modules/menu-items/help/components/help.compon
 import { TasksComponent } from '../modules/menu-items/algorithms/components/tasks/tasks.component';
 import { anaglyphSensorAlertKey } from '../modules/plugins/openlayers/plugins/anaglyph-sensor/plugin/anaglyph-sensor.plugin';
 import { AnaglyphSensorAlertComponent } from '../modules/plugins/openlayers/plugins/anaglyph-sensor/alert-component/anaglyph-sensor-alert.component';
+import { CredentialsComponent } from '../modules/core/components/credentials/credentials.component';
+import { sessionData } from '@ansyn/map-facade';
 
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
 	ansynAlerts: [
@@ -72,6 +74,12 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			name: 'Help',
 			component: HelpComponent,
 			iconClass: 'icon-main-help'
+		},
+		{
+			name: 'Permissions',
+			component: CredentialsComponent,
+			iconClass: 'icon-credentials',
+			isOnBottom: true
 		}
 	]
 };

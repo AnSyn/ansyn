@@ -18,7 +18,6 @@ import { IToolsConfig, toolsConfig } from '../modules/menu-items/tools/models/to
 import { UpdateToolsFlags } from '../modules/menu-items/tools/actions/tools.actions';
 import { toolsFlags } from '../modules/menu-items/tools/reducers/tools.reducer';
 import { LoggerService } from '../modules/core/services/logger.service';
-import { credentialsConfig, ICredentialsConfig } from '../modules/core/services/credentials/config';
 import { IOverlay } from '../modules/overlays/models/overlay.model';
 
 @Component({
@@ -29,7 +28,6 @@ import { IOverlay } from '../modules/overlays/models/overlay.model';
 
 export class AnsynComponent implements OnInit {
 	renderContextMenu: boolean;
-	renderCredentials: boolean;
 
 	selectedCaseName$: Observable<string> = this.store$
 		.pipe(
@@ -61,7 +59,6 @@ export class AnsynComponent implements OnInit {
 
 	constructor(protected store$: Store<any>,
 				@Inject(COMPONENT_MODE) public componentMode: boolean,
-				@Inject(credentialsConfig) public config: ICredentialsConfig,
 				@Inject(toolsConfig) public toolsConfigData: IToolsConfig,
 				public loggerService: LoggerService) {
 	}
@@ -78,7 +75,6 @@ export class AnsynComponent implements OnInit {
 
 		setTimeout(() => {
 			this.renderContextMenu = true;
-			this.renderCredentials = this.config.active;
 		}, 1000);
 
 	}

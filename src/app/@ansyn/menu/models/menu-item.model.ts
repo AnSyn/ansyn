@@ -4,4 +4,6 @@ export interface IMenuItem {
 	iconClass: string;
 	badge?: number;
 	production?: boolean;
+	isOnBottom?: boolean;
+	containerClass?: string;
 }

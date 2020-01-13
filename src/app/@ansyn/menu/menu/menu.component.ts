@@ -37,7 +37,8 @@ import { MenuConfig } from '../models/menuConfig';
 import { IMenuConfig } from '../models/menu-config.model';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { distinctUntilChanged, filter, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, filter, tap, withLatestFrom, map } from 'rxjs/operators';
+import { getMenuSessionData, setMenuSessionData } from '../helpers/menu-session.helper';
 
 const animations: any[] = [
 	trigger(
@@ -73,6 +74,7 @@ const animations: any[] = [
 */
 
 export class MenuComponent implements OnInit, OnDestroy {
+	isUserFirstEntrance: boolean;
 	_componentElem;
 	currentComponent: ComponentRef<any>;
 	collapse: boolean;
@@ -82,7 +84,15 @@ export class MenuComponent implements OnInit, OnDestroy {
 	@ViewChild('container') container: ElementRef;
 	@Input() version;
 
-	menuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(select(selectAllMenuItems));
+	topMenuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(
+		select(selectAllMenuItems),
+		map( menuItems => menuItems.filter((menuItem: IMenuItem) => !menuItem.isOnBottom))
+	);
+
+	bottomMenuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(
+		select(selectAllMenuItems),
+		map( menuItems => menuItems.filter((menuItem: IMenuItem) => menuItem.isOnBottom))
+	);
 
 	@AutoSubscription
 	collapse$ = this.store.select(selectMenuCollapse).pipe(
@@ -124,6 +134,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 				protected elementRef: ElementRef,
 				@Inject(DOCUMENT) protected document: Document,
 				@Inject(MenuConfig) public menuConfig: IMenuConfig) {
+		this.isUserFirstEntrance = getMenuSessionData().isUserFirstEntrance || true;
 	}
 
 	get componentElem() {
@@ -222,6 +233,10 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	toggleItem(key: string): void {
+		if (this.isUserFirstEntrance && key === 'Permissions') {
+			this.isUserFirstEntrance = false;
+			setMenuSessionData({isUserFirstEntrance: this.isUserFirstEntrance});
+		}
 		if (this.onAnimation) {
 			return;
 		}

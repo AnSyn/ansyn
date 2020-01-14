@@ -1,6 +1,6 @@
 <div class="imagery" #imageryViewContainer (mouseleave)="mouseLeave()" (mouseenter)="mouseEnter()"
 	 [style.visibility]="(isHidden$ | async) ? 'hidden' : 'visible'">
-	<ansyn-imagery-status *ngIf="showStatus || isMinimalistViewMode"
+	<ansyn-imagery-status
 						  class="with-background"
 						  [map]="mapState"
 						  [isMinimalistViewMode]="isMinimalistViewMode"

@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { StayInImageryService } from '@ansyn/imagery';
 
 export interface IAnnotationColorProps {
 	fill: string;
@@ -10,9 +11,10 @@ export interface IAnnotationColorProps {
 @Component({
 	selector: 'ansyn-annotations-color',
 	templateUrl: './annotations-color.component.html',
-	styleUrls: ['./annotations-color.component.less']
+	styleUrls: ['./annotations-color.component.less'],
+	providers: [StayInImageryService]
 })
-export class AnnotationsColorComponent implements AfterViewInit, OnDestroy {
+export class AnnotationsColorComponent implements AfterViewInit {
 	@Input() show: boolean;
 	@Input() strokeModeActive = true;
 	@Input() fillModeActive = true;
@@ -20,43 +22,22 @@ export class AnnotationsColorComponent implements AfterViewInit, OnDestroy {
 	@Output() activeChange = new EventEmitter();
 	@Output() colorChange = new EventEmitter();
 
-
-	timerId: number;
-	imageryElement: Element;
-	moveLeft = 0;
-
-	constructor(protected myElement: ElementRef) {
+	constructor(
+		protected myElement: ElementRef,
+		protected stayInImageryService: StayInImageryService
+	) {
 	}
 
 	ngAfterViewInit(): void {
-		this.imageryElement = (this.myElement.nativeElement as HTMLElement).closest('.imagery');
-		if (this.imageryElement) {
-			this.timerId = window.setInterval(this.calcPositionToStayInsideImagery.bind(this), 300);
-		}
+		this.stayInImageryService.init(this.getElement.bind(this));
 	}
 
-	ngOnDestroy(): void {
-		if (this.timerId) {
-			window.clearInterval(this.timerId);
-		}
-	}
-
-	calcPositionToStayInsideImagery() {
-		const myDiv = (this.myElement.nativeElement as HTMLElement).firstElementChild;
-		if (!myDiv) {
-			return;
-		}
-		const myRect = myDiv.getBoundingClientRect();
-		const imageryRect = this.imageryElement.getBoundingClientRect() as DOMRect;
-		const delta = myRect.left - imageryRect.left + myRect.width - imageryRect.width + 3;
-		if (delta > 0) {
-			this.moveLeft += delta;
-		} else {
-			this.moveLeft = Math.max(0, this.moveLeft + delta);
-		}
+	getElement() {
+		const elements = (this.myElement.nativeElement as Element).getElementsByClassName('list');
+		return elements && elements[0];
 	}
 
 	getStyle() {
-		return { 'transform': `translate(-${ this.moveLeft }px)` };
+		return { 'transform': `translate(-${ this.stayInImageryService.moveLeft }px, ${ this.stayInImageryService.moveDown }px)` };
 	}
 }

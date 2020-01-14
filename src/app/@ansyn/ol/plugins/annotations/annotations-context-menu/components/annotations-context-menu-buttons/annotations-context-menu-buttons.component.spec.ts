@@ -5,6 +5,8 @@ import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { TranslateModule } from '@ngx-translate/core';
 import { MockComponent } from '../../../../../../ansyn/modules/core/test/mock-component';
+import { mockStayInImageryService } from '../../../../../../imagery/stay-in-imagery-service/stay-in-imagery.service.mock';
+import { mockAnnotationsColorComponent } from '../annotations-color/annotations-color.component.mock';
 
 describe('AnnotationsContextMenuButtonsComponent', () => {
 	let component: AnnotationsContextMenuButtonsComponent;
@@ -22,16 +24,12 @@ describe('AnnotationsContextMenuButtonsComponent', () => {
 		outputs: ['selectLineStyle']
 	});
 
-	const mockAnnotationsColorComponent = MockComponent({
-		selector: 'ansyn-annotations-color',
-		inputs: ['show', 'properties', 'fillModeActive', 'strokeModeActive'],
-		outputs: ['colorChange', 'activeChange']
-	});
+	const myComponent = AnnotationsContextMenuButtonsComponent;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [
-				AnnotationsContextMenuButtonsComponent,
+				myComponent,
 				mockAnnotationLabelComponent,
 				mockAnnotationsWeightComponent,
 				mockAnnotationsColorComponent
@@ -40,6 +38,11 @@ describe('AnnotationsContextMenuButtonsComponent', () => {
 				TranslateModule.forRoot()
 			]
 		})
+			.overrideComponent(myComponent, {
+				set: {
+					providers: [mockStayInImageryService]
+				}
+			})
 			.compileComponents();
 	}));
 

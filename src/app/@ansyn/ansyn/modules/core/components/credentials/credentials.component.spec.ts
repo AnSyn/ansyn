@@ -25,9 +25,8 @@ describe('CredentialsComponent', () => {
 					{
 						provide: CredentialsService,
 						useValue: {
-							getCredentials: () => {
-								return of(true)
-							}
+							user: {name: 'user'},
+							error: {message: ''}
 						}
 					},
 					{

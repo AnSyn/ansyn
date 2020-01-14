@@ -44,7 +44,9 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 
 		case MenuActionTypes.SELECT_MENU_ITEM:
 			const selectedMenuItem = action.payload;
-			setMenuSessionData({ selectedMenuItem });
+			if (selectedMenuItem !== 'Permissions') {
+				setMenuSessionData({ selectedMenuItem });
+			}
 			return { ...state, selectedMenuItem };
 
 		case MenuActionTypes.UNSELECT_MENU_ITEM: {

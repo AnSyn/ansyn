@@ -1,22 +1,39 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { credentialsConfig, ICredentialsConfig } from './config';
-import { catchError, map, mergeMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, tap, delay } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
 
+interface ICredentialsResponse {
+	location: {name: string}[];
+	not: {name: string}[];
+}
 @Injectable({
 	providedIn: 'root'
 })
 export class CredentialsService {
-	approveArea: {name: string}[];
-	notApproveArea: {name: string}[];
-	error: {message: string};
+	data: ICredentialsResponse;
+	error: {message: string} = {message: 'loading'};
 	user: {name: string};
 
 	constructor(protected httpClient: HttpClient,
 				@Inject(credentialsConfig) public config: ICredentialsConfig) {
 		this.getCredentials().subscribe();
 		this.user = {name: 'Tzahi Levi'};
+	}
+
+	get approveArea() {
+		if (!this.data.not.length) {
+			return [{name: 'You have permissions for everything'}];
+		}
+		return this.data.location;
+	}
+
+	get notApproveArea() {
+		if (!this.data.location.length) {
+			return [{name: 'No permissions'}];
+		}
+		return  this.data.not;
 	}
 
 	getUrl(): string {
@@ -41,20 +58,19 @@ export class CredentialsService {
 		const options = { headers };
 		return this.httpClient.get(url, options)
 			.pipe(
+				delay(2000),
 				mergeMap((data: any) => this.parseResponse(data)),
 				tap((data: any) => {
 					if (data) {
-						this.approveArea = data.location
-						this.notApproveArea = data.not;
+						this.data = data;
+						this.error = undefined;
 					}
 					else {
-						this.error.message = this.config.noCredentialsMessage;
+						this.error = {message: this.config.noCredentialsMessage}
 					}
 				}),
 				catchError((err) => {
-					this.error.message = this.config.noCredentialsMessage;
-					this.approveArea = [];
-					this.notApproveArea = []
+					this.error = {message: this.config.noCredentialsMessage};
 					return of(true);
 				}));
 	}

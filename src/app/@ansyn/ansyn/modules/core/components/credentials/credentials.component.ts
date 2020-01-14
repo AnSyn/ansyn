@@ -1,9 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CredentialsService } from '../../services/credentials/credentials.service';
-import { tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { UnSelectMenuItemAction } from '@ansyn/menu';
-import { sessionData } from '../../../../../map-facade/models/core-session-state.model';
 
 @Component({
 	selector: 'ansyn-credentials',

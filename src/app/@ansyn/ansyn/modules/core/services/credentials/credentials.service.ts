@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { credentialsConfig, ICredentialsConfig } from './config';
-import { catchError, map, mergeMap, tap, delay } from 'rxjs/operators';
+import { catchError, mergeMap, tap } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
 
 interface ICredentialsResponse {
@@ -58,7 +58,6 @@ export class CredentialsService {
 		const options = { headers };
 		return this.httpClient.get(url, options)
 			.pipe(
-				delay(2000),
 				mergeMap((data: any) => this.parseResponse(data)),
 				tap((data: any) => {
 					if (data) {

@@ -11,7 +11,6 @@ import { TasksComponent } from '../modules/menu-items/algorithms/components/task
 import { anaglyphSensorAlertKey } from '../modules/plugins/openlayers/plugins/anaglyph-sensor/plugin/anaglyph-sensor.plugin';
 import { AnaglyphSensorAlertComponent } from '../modules/plugins/openlayers/plugins/anaglyph-sensor/alert-component/anaglyph-sensor-alert.component';
 import { CredentialsComponent } from '../modules/core/components/credentials/credentials.component';
-import { sessionData } from '@ansyn/map-facade';
 
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
 	ansynAlerts: [

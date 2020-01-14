@@ -1,5 +1,3 @@
-export { sessionData } from './models/core-session-state.model';
-
 export { ImageryZoomerService } from './services/imagery-zoomer.service';
 export { IEd50Notification } from './models/map-config.model';
 

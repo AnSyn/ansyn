@@ -1,9 +1,9 @@
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { IImageryConfig } from '../model/iimagery-config';
 import { IMAGERY_CONFIG } from '../model/configuration.token';
 
 @Injectable()
-export class StayInImageryService {
+export class StayInImageryService implements OnDestroy {
 	elementCallback: Function;
 	timerCallback: Function;
 	timerId: number;
@@ -20,8 +20,10 @@ export class StayInImageryService {
 		this.timerId = window.setInterval(this.calcPositionToStayInsideImagery.bind(this), 300);
 	}
 
-	destroy() {
-		window.clearInterval(this.timerId);
+	ngOnDestroy(): void {
+		if (this.timerId) {
+			window.clearInterval(this.timerId);
+		}
 	}
 
 	calcPositionToStayInsideImagery() {

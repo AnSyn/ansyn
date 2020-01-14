@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { UUID } from 'angular2-uuid';
 import { StayInImageryService } from '@ansyn/imagery';
 
@@ -8,7 +8,7 @@ import { StayInImageryService } from '@ansyn/imagery';
 	styleUrls: ['./color-picker.component.less'],
 	providers: [StayInImageryService]
 })
-export class ColorPickerComponent implements AfterViewInit, OnDestroy {
+export class ColorPickerComponent implements AfterViewInit {
 	id = UUID.UUID();
 	@Input() color: string;
 	@Output() colorChange = new EventEmitter();
@@ -32,10 +32,6 @@ export class ColorPickerComponent implements AfterViewInit, OnDestroy {
 	getElement() {
 		const elements = (this.myElement.nativeElement as Element).getElementsByClassName('color-picker');
 		return elements && elements[0];
-	}
-
-	ngOnDestroy(): void {
-		this.stayInImageryService.destroy();
 	}
 
 	timerCallback() {

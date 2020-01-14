@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { StayInImageryService } from '@ansyn/imagery';
 
 export interface IAnnotationColorProps {
@@ -14,7 +14,7 @@ export interface IAnnotationColorProps {
 	styleUrls: ['./annotations-color.component.less'],
 	providers: [StayInImageryService]
 })
-export class AnnotationsColorComponent implements AfterViewInit, OnDestroy {
+export class AnnotationsColorComponent implements AfterViewInit {
 	@Input() show: boolean;
 	@Input() strokeModeActive = true;
 	@Input() fillModeActive = true;
@@ -35,10 +35,6 @@ export class AnnotationsColorComponent implements AfterViewInit, OnDestroy {
 	getElement() {
 		const elements = (this.myElement.nativeElement as Element).getElementsByClassName('list');
 		return elements && elements[0];
-	}
-
-	ngOnDestroy(): void {
-		this.stayInImageryService.destroy();
 	}
 
 	getStyle() {

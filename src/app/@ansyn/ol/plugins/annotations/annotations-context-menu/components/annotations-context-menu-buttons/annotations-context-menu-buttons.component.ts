@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostBinding, Input, OnInit } from '@angular/core';
 import { AnnotationsVisualizer } from '../../../annotations.visualizer';
 import { AnnotationsContextmenuTabs } from '../annotation-context-menu/annotation-context-menu.component';
 import * as SVG from '../annotation-context-menu/icons-svg';
@@ -16,7 +16,7 @@ interface IFeatureProperties extends IVisualizerEntity {
 	styleUrls: ['./annotations-context-menu-buttons.component.less'],
 	providers: [StayInImageryService]
 })
-export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterViewInit {
 	@Input() annotations: AnnotationsVisualizer;
 	@Input() featureId: string;
 	@Input() selectedTab: { [id: string]: AnnotationsContextmenuTabs } = {};
@@ -51,10 +51,6 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 
 	ngAfterViewInit(): void {
 		this.stayInImageryService.init(this.myElement.nativeElement);
-	}
-
-	ngOnDestroy(): void {
-		this.stayInImageryService.destroy();
 	}
 
 	toggleEditMode() {

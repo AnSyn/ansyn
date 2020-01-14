@@ -129,8 +129,7 @@ export const SetLayersModal = createAction(
 );
 
 export const CloseLayersModal = createAction(
-								LayersActionTypes.CLOSE_MODAL,
-								props<{layer?: ILayerModal}>()
+								LayersActionTypes.CLOSE_MODAL
 );
 
 export const ShowAllLayers = createAction(

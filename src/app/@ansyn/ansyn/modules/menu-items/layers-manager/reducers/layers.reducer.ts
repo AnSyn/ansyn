@@ -1,4 +1,4 @@
-import { LayerCollectionLoadedAction, SetLayerSelection, SelectOnlyLayer, UpdateSelectedLayersIds, AddLayer, UpdateLayer, RemoveLayer, SetActiveAnnotationLayer, SetLayersModal, ShowAllLayers } from './../actions/layers.actions';
+import { LayerCollectionLoadedAction, SetLayerSelection, SelectOnlyLayer, UpdateSelectedLayersIds, AddLayer, UpdateLayer, RemoveLayer, SetActiveAnnotationLayer, SetLayersModal, ShowAllLayers, CloseLayersModal } from './../actions/layers.actions';
 import { ILayerState } from './layers.reducer';
 import { createFeatureSelector, createSelector, MemoizedSelector, createReducer, on, Action } from '@ngrx/store';
 import { uniq } from 'lodash';
@@ -82,6 +82,10 @@ const reducerFunction = createReducer(initialLayersState,
 	on(SetLayersModal, (state, payload) => {
 		return { ...state, modal: payload.layer };
 	}),
+	on(CloseLayersModal, (state, payload) => {
+		return { ...state, modal: { type: SelectedModalEnum.none, layer: null } };
+	}),
+
 	on(ShowAllLayers, (state, payload) => {
 		const selectedLayersIds = state.selectedLayersIds;
 		const layersToShow = (<string[]>state.ids).filter((id) => state.entities[id].type === payload.layerType);

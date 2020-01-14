@@ -23,7 +23,7 @@ export class EditLayerComponent {
 	}
 
 	closeModal() {
-		this.store.dispatch(CloseLayersModal({}));
+		this.store.dispatch(CloseLayersModal());
 	}
 
 	editLayer(name) {

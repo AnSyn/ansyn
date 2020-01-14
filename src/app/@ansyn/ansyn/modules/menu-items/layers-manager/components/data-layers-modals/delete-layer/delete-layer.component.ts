@@ -18,7 +18,7 @@ export class DeleteLayerComponent {
 	}
 
 	closeModal() {
-		this.store.dispatch(CloseLayersModal({}));
+		this.store.dispatch(CloseLayersModal());
 	}
 
 	constructor(protected store: Store<ILayerState>) {

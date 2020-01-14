@@ -38,14 +38,6 @@ export class ImageryVideoMap extends BaseImageryMap<any> {
 		return this.videoComponent.video.nativeElement;
 	}
 
-	getExportData(): ICanvasExportData {
-		return {
-			width: 200,
-			height: 200,
-			data: 'unsupported'
-		}
-	}
-
 	addGeojsonLayer(data: GeoJsonObject) {
 	}
 

@@ -121,8 +121,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	constructor(protected http: HttpClient,
 				public projectionService: OpenLayersProjectionService,
-				@Inject(OL_CONFIG) public olConfig: IOlConfig
-	) {
+				@Inject(OL_CONFIG) public olConfig: IOlConfig) {
 		super();
 		// todo: a more orderly way to give default values to config params
 		this.olConfig.tilesLoadingDoubleBuffer = this.olConfig.tilesLoadingDoubleBuffer || {
@@ -584,24 +583,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	getHtmlContainer(): HTMLElement {
 		return this.targetElement;
-	}
-
-	getExportData(): ICanvasExportData {
-		const c: HTMLCanvasElement = this.mapObject.getViewport().firstChild;
-		let exportData: ICanvasExportData = {
-			width: c.width,
-			height: c.height,
-			data: null
-		};
-		try {
-			exportData = {
-				width: c.width,
-				height: c.height,
-				data: c.toDataURL('image/jpeg', 1.0)
-			}
-		} catch (e) {
-		}
-		return exportData;
 	}
 
 	// BaseImageryMap End

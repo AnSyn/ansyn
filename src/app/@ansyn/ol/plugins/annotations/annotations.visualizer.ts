@@ -120,8 +120,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			color: '#000',
 			width: 3
 		}),
-		textBaseline: 'top',
-		placement: 'line'
+		placement: 'line',
+		overflow: true,
+		rotateWithView: true
 	};
 
 	private iconSrc = '';
@@ -198,7 +199,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			return {
 				featureJson,
 				id: feature.properties.id,
-				style: feature.properties.style,
+				style: feature.properties.style || this.visualizerStyle,
 				showMeasures: feature.properties.showMeasures || false,
 				label: feature.properties.label || {text: '', geometry: null},
 				icon: feature.properties.icon || '',
@@ -456,11 +457,17 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 							color: '#27b2cfe6',
 							width: 1
 						}),
+					}),
+					new olStyle({
+						geometry: new olPoint(leftright.right),
 						text: new olText({
 							...this.measuresTextStyle,
-							text: this.formatLength([originalLeftRight.left, originalLeftRight.right])
+							text: this.formatLength([originalLeftRight.left, originalLeftRight.right]),
+							placement: 'point',
+							offsetX: 20
 						})
-					}));
+					})
+				);
 				break;
 		}
 		if (mode === 'Rectangle' || mode === 'Circle') {
@@ -622,6 +629,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	private createModifyInteraction(feature: olFeature) {
 		const modify = new olModify({
 			features: new olCollection([feature])
+		});
+
+		modify.on('modifystart', () => {
+			if (['Rectangle'].includes(feature.get('mode'))) {
+				feature.set('mode', 'Polygon');
+			}
 		});
 
 		modify.on('modifyend', (event) => {

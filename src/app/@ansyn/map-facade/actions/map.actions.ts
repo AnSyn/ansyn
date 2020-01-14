@@ -78,6 +78,7 @@ export const MapActionTypes = {
 	SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG: 'SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG',
 	SET_TOAST_MESSAGE: 'SET_TOAST_MESSAGE',
 	FOOTER_COLLAPSE: 'FOOTER_COLLAPSE',
+	EXPORT_MAPS_TO_PNG_REQUEST: 'EXPORT_MAPS_TO_PNG_REQUEST',
 	EXPORT_MAPS_TO_PNG_SUCCESS: 'EXPORT_MAPS_TO_PNG_SUCCESS',
 	EXPORT_MAPS_TO_PNG_FAILED: 'EXPORT_MAPS_TO_PNG_FAILED',
 	SET_MINIMALIST_VIEW_MODE: '[Maps] Set Minimalist View Mode',
@@ -102,6 +103,13 @@ export class SetMinimalistViewModeAction implements Action {
 	type = MapActionTypes.SET_MINIMALIST_VIEW_MODE;
 
 	constructor(public payload: boolean) {
+	}
+}
+
+export class ExportMapsToPngRequestedAction implements Action {
+	readonly type = MapActionTypes.EXPORT_MAPS_TO_PNG_REQUEST;
+
+	constructor() {
 	}
 }
 

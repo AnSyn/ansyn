@@ -172,26 +172,6 @@ export class CesiumMap extends BaseImageryMap<any> {
 		return <HTMLElement>this.element;
 	}
 
-	getExportData(): ICanvasExportData {
-		// @TODO: get cesium real map image.
-		this.mapObject.render();
-		const c = this.mapObject.canvas;
-		let exportData: ICanvasExportData = {
-			width: c.width,
-			height: c.height,
-			data: null
-		};
-		try {
-			exportData = {
-				width: c.width,
-				height: c.height,
-				data: c.toDataURL('image/jpeg', 1.0)
-			}
-		} catch (e) {
-		}
-		return exportData;
-	}
-
 	createMapObject(layer: CesiumLayer): Observable<boolean> {
 		let cesiumSceneMode = this.getCesiumSceneMode(layer.sceneMode);
 		if (this.mapObject) {

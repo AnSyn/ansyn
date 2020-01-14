@@ -40,14 +40,18 @@ import {
 } from '../../../../../menu-items/tools/reducers/tools.reducer';
 import { Inject } from '@angular/core';
 import { UpdateMeasureDataAction } from '../../../../../menu-items/tools/actions/tools.actions';
-import { MeasureTranslateInteraction as MeasureTranslate } from './measureTranslateInteraction'
+
+interface ILabelHandler {
+	select: Select;
+	translate: Translate;
+}
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store, OpenLayersProjectionService, VisualizersConfig],
 	isHideable: true
 })
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
-	labelToMeasures: Map<string, { features: Feature[], handlers: Translate[] }> = new Map();
+	labelToMeasures: Map<string, { features: Feature[], handler: ILabelHandler }> = new Map();
 	isTotalMeasureActive: boolean;
 	measureData: IMeasureData;
 	geoJsonFormat: GeoJSON;
@@ -184,6 +188,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			const feature = $event.selected[0];
 			const entity = this.getEntity(feature);
 			if (entity) {
+				this.clearLabelInteractionsAndFeaturesById(entity.id);
 				this.measureData.meausres = this.measureData.meausres.filter((measureEntity) => measureEntity.id !== entity.id);
 				this.store$.dispatch(new UpdateMeasureDataAction({
 					mapId: this.mapId,
@@ -442,7 +447,8 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			const labelToMeasureIterator = this.labelToMeasures.values();
 			let val = labelToMeasureIterator.next().value;
 			while (val) {
-				val.handlers.forEach(handler => this.iMap.mapObject.removeInteraction(handler));
+				this.iMap.mapObject.removeInteraction(val.handler.select);
+				this.iMap.mapObject.removeInteraction(val.handler.translate);
 				val = labelToMeasureIterator.next().value;
 			}
 		}
@@ -454,7 +460,8 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		}
 
 		const measureLabels = this.labelToMeasures.get(id);
-		measureLabels.handlers.forEach(handler => this.iMap.mapObject.removeInteraction(handler));
+		this.iMap.mapObject.removeInteraction(measureLabels.handler.translate);
+		this.iMap.mapObject.removeInteraction(measureLabels.handler.select);
 		measureLabels.features.forEach((feature) => {
 			this.source.removeFeature(feature);
 		})
@@ -467,34 +474,39 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			this.labelToMeasures.clear();
 		}
 
-		// remove old measures
-		Array.from(this.labelToMeasures.keys())
-			.filter((measureLabels: string) => {
-				return this.measureData.meausres.find((measure: IVisualizerEntity) => measureLabels !== measure.id)
-			})
-			.forEach((key: string) => {
-				this.clearLabelInteractionsAndFeaturesById(key);
-				this.labelToMeasures.delete(key);
-			});
-
 		// add new measures
 		this.measureData.meausres
 			.filter((measure: IVisualizerEntity) => !this.labelToMeasures.has(measure.id))
 			.forEach((measure: IVisualizerEntity) => {
 				const feature = this.source.getFeatureById(measure.id);
 				const labelsFeatures = this.createMeasureLabelsFeatures(feature, measure.featureJson.geometry);
-				const translateHandlers = this.defineLabelsTranslate(labelsFeatures);
-				translateHandlers.forEach(handler => this.iMap.mapObject.addInteraction(handler));
-				this.labelToMeasures.set(measure.id, { features: labelsFeatures, handlers: translateHandlers });
+				const labelHandler: ILabelHandler = this.defineLabelsTranslate(labelsFeatures);
+				this.iMap.mapObject.addInteraction(labelHandler.select);
+				this.iMap.mapObject.addInteraction(labelHandler.translate);
+				this.labelToMeasures.set(measure.id, { features: labelsFeatures, handler: labelHandler });
 				this.source.addFeatures(labelsFeatures);
 			})
 	}
 
-	private defineLabelsTranslate(labelsFeatures: Feature[]) {
-		return labelsFeatures.map(feature => new MeasureTranslate({
-			features: new Collection([feature])
-			})
-		);
+	private defineLabelsTranslate(labelsFeatures: Feature[]): ILabelHandler {
+		const handler: ILabelHandler = {select: undefined, translate: undefined};
+		handler.select = new Select({
+			condition: (event) => event.type === "pointermove" && !event.dragging,
+			style: (event) => {
+				if (event.getGeometry().getType() === 'LineString') {
+					return event.styleCache;
+				}
+				return new Style({})
+			},
+			filter: (feature, layer) => {
+				return labelsFeatures.indexOf(feature) >= 0 || Array.from(this.labelToMeasures).some( (labelMeasure => labelMeasure[1].features.indexOf(feature) >= 0));
+			}
+		});
+		handler.translate = new Translate({
+			features: handler.select.getFeatures()
+		});
+
+		return handler;
 	}
 
 	/**

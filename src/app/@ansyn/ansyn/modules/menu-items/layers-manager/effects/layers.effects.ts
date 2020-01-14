@@ -3,9 +3,8 @@ import {
 	AddLayer,
 	BeginLayerCollectionLoadAction,
 	LayerCollectionLoadedAction,
-	LayersActions,
-	LayersActionTypes,
-	UpdateLayer
+	UpdateLayer,
+	RemoveLayer
 } from '../actions/layers.actions';
 import { Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';

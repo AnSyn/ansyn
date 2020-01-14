@@ -98,7 +98,7 @@ export class ToolsAppEffects {
 	onImageriesCreated = createEffect(() => this.actions$.pipe(
 		ofType(ImageryCreatedAction),
 		map((payload) => {
-			return CreateMeasureDataAction({ mapId: payload });
+			return CreateMeasureDataAction({ mapId: payload.payload });
 			}
 		)
 	));
@@ -106,7 +106,7 @@ export class ToolsAppEffects {
 	onImageriesRemoved = createEffect(() => this.actions$.pipe(
 		ofType(ImageryRemovedAction),
 		map((payload) => {
-			return RemoveMeasureDataAction({ mapId: payload });
+			return RemoveMeasureDataAction({ mapId: payload.payload });
 		})
 	));
 

@@ -51,7 +51,7 @@ export const LoadDefaultCaseIfNoActiveCaseAction = createAction(
 
 export const LoadCasesAction = createAction(
 								CasesActionTypes.LOAD_CASES,
-								props<{cases: ICase[]}>()
+								props<{cases?: ICase[]}>()
 );
 
 export const AddCasesAction = createAction(
@@ -89,7 +89,7 @@ export const OpenModalAction = createAction(CasesActionTypes.OPEN_MODAL,
 
 export const CloseModalAction = createAction(
 								CasesActionTypes.CLOSE_MODAL,
-								props<{payload: any}>()
+								props<{payload?: any}>()
 								);
 
 export const SelectCaseAction = createAction(

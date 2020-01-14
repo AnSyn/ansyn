@@ -185,7 +185,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 		}
 
 		this.animatedElement.style.animation = this.isPinned ? 'pinned .4s' : 'unPinned .4s';
-		this.forceRedraw().then(() => this.store.dispatch(ContainerChangedTriggerAction()));
+		this.forceRedraw().then(() => this.store.dispatch(ContainerChangedTriggerAction({})));
 	}
 
 	setSelectedMenuItem(_selectedMenuItemName) {
@@ -241,7 +241,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	closeMenu(): void {
-		this.store.dispatch(UnSelectMenuItemAction());
+		this.store.dispatch(UnSelectMenuItemAction({}));
 	}
 
 	onExpandStart() {
@@ -277,7 +277,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 		this.menuWrapperElement.nativeElement.classList.toggle('collapsed');
 
 		this.forceRedraw()
-			.then(() => this.store.dispatch(ContainerChangedTriggerAction()));
+			.then(() => this.store.dispatch(ContainerChangedTriggerAction({})));
 
 		this.animatedElement.style.animation = this.collapse ? 'collapsed .3s' : 'unCollapsed .6s';
 
@@ -291,7 +291,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 		new MutationObserver(() => {
 			const conPosition = getComputedStyle(this.container.nativeElement).position;
 			if (conPosition !== 'absolute') {
-				this.store.dispatch(ContainerChangedTriggerAction());
+				this.store.dispatch(ContainerChangedTriggerAction({}));
 			}
 		}).observe(this.container.nativeElement, { childList: true });
 

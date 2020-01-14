@@ -82,7 +82,7 @@ export class OverlaysAppEffects {
 
 	isPinPointSearch$ = this.region$.pipe(
 		filter(Boolean),
-		map<any,Boolean>((region) => region.type === CaseGeoFilter.PinPoint),
+		map<any, Boolean>((region) => region.type === CaseGeoFilter.PinPoint),
 		distinctUntilChanged()
 	);
 
@@ -129,16 +129,45 @@ export class OverlaysAppEffects {
 		map(([{ payload }, isPinPointSearch]: [any, boolean]) => payload),
 		map((payload: Position) => {
 			const region = turf.geometry('Point', payload);
-			return  SetOverlaysCriteriaAction({ region });
+			return  SetOverlaysCriteriaAction({ payload: { region },
+												options: {}});
 		}))
 	);
 
+
+
+	// @Effect()
+	// displayMultipleOverlays$ = this.actions$.pipe(
+	// 	ofType(DisplayMultipleOverlaysFromStoreAction),
+	// 	filter((action) => action.payload.length > 0),
+	// 	withLatestFrom(this.store$.select(selectMapsList)),
+	// 	mergeMap(([action, mapsList]: [any, ICaseMapState[]]): any => {
+	// 		const validPendingOverlays = action.payload;
+	// 		/* theoretical situation */
+	// 		if (validPendingOverlays.length <= mapsList.length) {
+	// 			return validPendingOverlays.map((pendingOverlay: IPendingOverlay, index: number) => {
+	// 				let { overlay, extent } = pendingOverlay;
+	// 				let mapId = mapsList[index].id;
+	// 				return DisplayOverlayAction({ overlay, mapId, extent });
+	// 			});
+	// 		}
+
+	// 		const layout = Array.from(layoutOptions.keys()).find((key: LayoutKey) => {
+	// 			const layout = layoutOptions.get(key);
+	// 			return layout.mapsCount === validPendingOverlays.length;
+	// 		});
+	// 		return [new SetPendingOverlaysAction(validPendingOverlays), new SetLayoutAction(layout)];
+	// 	})
+	// );
+
+
+
 	displayMultipleOverlays$ = createEffect(() => this.actions$.pipe(
 		ofType(DisplayMultipleOverlaysFromStoreAction),
-		filter((payload) => payload.payload.length > 0),
+		filter(payload => payload.payload.length > 0),
 		withLatestFrom(this.store$.select(selectMapsList)),
-		mergeMap(([action, mapsList]: [DisplayMultipleOverlaysFromStoreAction, ICaseMapState[]]): any => {
-			const validPendingOverlays = action.payload;
+		mergeMap(([payload, mapsList]: [any, ICaseMapState[]]): any => {
+			const validPendingOverlays = payload.payload;
 			/* theoretical situation */
 			if (validPendingOverlays.length <= mapsList.length) {
 				return validPendingOverlays.map((pendingOverlay: IPendingOverlay, index: number) => {
@@ -197,7 +226,7 @@ export class OverlaysAppEffects {
 		ofType(SetRemovedOverlaysIdAction),
 		filter(payload => payload.value),
 		withLatestFrom(this.store$.select(selectdisplayOverlayHistory), this.store$.select(selectMapsList)),
-		mergeMap(([{ payload }, displayOverlayHistory, mapsList]) => {
+		mergeMap(([payload, displayOverlayHistory, mapsList]) => {
 			const mapActions = mapsList
 				.filter((map) => map.data.overlay && (map.data.overlay.id === payload.id) && (map.id === payload.mapId))
 				.map((map) => {
@@ -234,9 +263,10 @@ export class OverlaysAppEffects {
 		if (!overlay) {
 			return [overlay];
 		}
-		this.store$.dispatch(SetHoveredOverlayAction({
+		this.store$.dispatch(SetHoveredOverlayAction({ payload: {
 			...overlay,
 			thumbnailUrl: overlayOverviewComponentConstants.FETCHING_OVERLAY_DATA
+			}
 		}));
 		return this.overlaysService.getThumbnailUrl(overlay, position).pipe(
 			map(thumbnailUrl => ({

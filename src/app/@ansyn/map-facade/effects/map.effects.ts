@@ -150,29 +150,29 @@ export class MapEffects {
 	);
 
 	activeMapEnter$ = createEffect(() => this.actions$.pipe(
-		ofType(MapActionTypes.TRIGGER.IMAGERY_MOUSE_ENTER),
+		ofType(ImageryMouseEnter),
 		withLatestFrom(this.store$.select(selectActiveMapId)),
-		filter(([action, activeMapId]: [ImageryMouseEnter, string]) => action.payload === activeMapId),
+		filter(([payload, activeMapId]: [{payload: string}, string]) => payload.payload === activeMapId),
 		map(() => ActiveImageryMouseEnter())
 	));
 
 	activeMapLeave$ =  createEffect(() => this.actions$.pipe(
-		ofType(MapActionTypes.TRIGGER.IMAGERY_MOUSE_LEAVE),
+		ofType(ImageryMouseLeave),
 		withLatestFrom(this.store$.select(selectActiveMapId)),
-		filter(([action, activeMapId]: [ImageryMouseLeave, string]) => action.payload === activeMapId),
+		filter(([payload, activeMapId]: [{payload: string}, string]) => payload.payload === activeMapId),
 		map(() => ActiveImageryMouseLeave()))
 	);
 
 	changeImageryMap$ = createEffect(() => this.actions$.pipe(
 		ofType(ChangeImageryMap),
 		withLatestFrom(this.store$.select(selectMaps)),
-		mergeMap(([{ payload: { id, mapType, sourceType } }, mapsEntities]) => {
-			const communicator = this.communicatorsService.provide(id);
-			return fromPromise(communicator.setActiveMap(mapType, mapsEntities[id].data.position, sourceType)).pipe(
+		mergeMap(([payload, mapsEntities]) => {
+			const communicator = this.communicatorsService.provide(payload.id);
+			return fromPromise(communicator.setActiveMap(payload.mapType, mapsEntities[payload.id].data.position, payload.sourceType)).pipe(
 				map(() => {
-					sourceType = sourceType || communicator.mapSettings.worldView.sourceType;
-					const worldView: IWorldViewMapState = { mapType, sourceType };
-					return ChangeImageryMapSuccess({ id, worldView });
+					const sourceType = payload.sourceType || communicator.mapSettings.worldView.sourceType;
+					const worldView: IWorldViewMapState = { mapType: payload.mapType, sourceType };
+					return ChangeImageryMapSuccess({ id: payload.id, worldView });
 				}),
 				catchError((err) => {
 					this.store$.dispatch(SetToastMessageAction({

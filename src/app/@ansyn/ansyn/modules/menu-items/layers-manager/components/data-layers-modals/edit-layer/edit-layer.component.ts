@@ -27,7 +27,7 @@ export class EditLayerComponent {
 	}
 
 	editLayer(name) {
-		this.store.dispatch(UpdateLayer({ ...this.layer, name }));
+		this.store.dispatch(UpdateLayer({payload: { ...this.layer, name }}));
 		this.closeModal();
 	}
 

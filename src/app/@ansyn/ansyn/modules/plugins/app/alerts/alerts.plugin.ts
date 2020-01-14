@@ -47,7 +47,7 @@ export class AlertsPlugin extends BaseImageryPlugin {
 	setOverlaysNotInCase([overlays, filteredOverlays]: [Map<string, IOverlay>, string[]]): RemoveAlertMsg | AddAlertMsg {
 		const shouldRemoved = !this.overlay || filteredOverlays.some((id: string) => id === this.overlay.id);
 		const payload = { key: AlertMsgTypesEnum.overlayIsNotPartOfQuery, value: this.mapId };
-		return shouldRemoved ? new RemoveAlertMsg(payload) : new AddAlertMsg(payload);
+		return shouldRemoved ? RemoveAlertMsg(payload) : AddAlertMsg(payload);
 	}
 
 	positionChanged(position: ImageryMapPosition, overlay: IOverlay): RemoveAlertMsg | AddAlertMsg {

@@ -75,15 +75,15 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				.pipe(catchError(() => of(0)));
 		}),
 		tap((north: number) => {
-			this.store$.dispatch(ChangeOverlayPreviewRotationAction(-north));
+			this.store$.dispatch(ChangeOverlayPreviewRotationAction({payload: -north}));
 		})
 	);
 
 	@AutoSubscription
 	pointToRealNorth$ = this.actions$.pipe(
-		ofType<PointToRealNorthAction>(MapActionTypes.POINT_TO_REAL_NORTH),
-		filter((action: PointToRealNorthAction) => action.payload === this.mapId),
-		switchMap((action: PointToRealNorthAction) => {
+		ofType(PointToRealNorthAction),
+		filter(payload => payload.mapId === this.mapId),
+		switchMap(payload => {
 			return this.setActualNorth();
 		})
 	);

@@ -1,5 +1,5 @@
 import { ITasksState } from './tasks.reducer';
-import { TasksActions, TasksActionTypes } from '../actions/tasks.actions';
+import { TasksActionTypes } from '../actions/tasks.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { AlgorithmsTaskState, AlgorithmTask, AlgorithmTaskPreview, TasksPageToShow } from '../models/tasks.model';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
@@ -30,85 +30,85 @@ export const initialTasksState: ITasksState = tasksAdapter.getInitialState(<ITas
 export const tasksFeatureKey = 'tasks';
 export const tasksStateSelector: MemoizedSelector<any, ITasksState> = createFeatureSelector<ITasksState>(tasksFeatureKey);
 
-export function TasksReducer(state: ITasksState = initialTasksState, action: TasksActions | any): ITasksState {
-	switch (action.type) {
+// export function TasksReducer(state: ITasksState = initialTasksState, action: TasksActions | any): ITasksState {
+// 	switch (action.type) {
 
-		case TasksActionTypes.SET_DRAW_INDICATOR: {
-			return { ...state, drawIndicator: action.payload };
-		}
+// 		case TasksActionTypes.SET_DRAW_INDICATOR: {
+// 			return { ...state, drawIndicator: action.payload };
+// 		}
 
-		case TasksActionTypes.SELECT_TASK: {
-			return { ...state, selectedTaskId: action.payload };
-		}
+// 		case TasksActionTypes.SELECT_TASK: {
+// 			return { ...state, selectedTaskId: action.payload };
+// 		}
 
-		case TasksActionTypes.SET_PAGE_TO_SHOW: {
-			return { ...state, pageToShow: action.payload };
-		}
+// 		case TasksActionTypes.SET_PAGE_TO_SHOW: {
+// 			return { ...state, pageToShow: action.payload };
+// 		}
 
-		case TasksActionTypes.LOAD_TASKS: {
-			return { ...state, loading: !state.loaded };
-		}
+// 		case TasksActionTypes.LOAD_TASKS: {
+// 			return { ...state, loading: !state.loaded };
+// 		}
 
-		case TasksActionTypes.LOAD_TASKS_FINISHED: {
-			return { ...state, loading: false, loaded: true };
-		}
+// 		case TasksActionTypes.LOAD_TASKS_FINISHED: {
+// 			return { ...state, loading: false, loaded: true };
+// 		}
 
-		case TasksActionTypes.SET_CURRENT_TASK: {
-			return { ...state, currentTask: action.payload };
-		}
+// 		case TasksActionTypes.SET_CURRENT_TASK: {
+// 			return { ...state, currentTask: action.payload };
+// 		}
 
-		case TasksActionTypes.SET_CURRENT_TASK_ALGORITHM_NAME: {
-			return { ...state, currentTask: { ...state.currentTask, algorithmName: action.payload } };
-		}
+// 		case TasksActionTypes.SET_CURRENT_TASK_ALGORITHM_NAME: {
+// 			return { ...state, currentTask: { ...state.currentTask, algorithmName: action.payload } };
+// 		}
 
-		case TasksActionTypes.SET_CURRENT_TASK_NAME: {
-			return { ...state, currentTask: { ...state.currentTask, name: action.payload } };
-		}
+// 		case TasksActionTypes.SET_CURRENT_TASK_NAME: {
+// 			return { ...state, currentTask: { ...state.currentTask, name: action.payload } };
+// 		}
 
-		case TasksActionTypes.SET_CURRENT_TASK_STATUS: {
-			return { ...state, currentTask: { ...state.currentTask, status: action.payload } };
-		}
+// 		case TasksActionTypes.SET_CURRENT_TASK_STATUS: {
+// 			return { ...state, currentTask: { ...state.currentTask, status: action.payload } };
+// 		}
 
-		case TasksActionTypes.SET_CURRENT_TASK_REGION: {
-			return {
-				...state,
-				currentTask: { ...state.currentTask, state: { ...state.currentTask.state, region: action.payload } }
-			};
-		}
+// 		case TasksActionTypes.SET_CURRENT_TASK_REGION: {
+// 			return {
+// 				...state,
+// 				currentTask: { ...state.currentTask, state: { ...state.currentTask.state, region: action.payload } }
+// 			};
+// 		}
 
-		case TasksActionTypes.SET_CURRENT_TASK_OVERLAYS: {
-			return {
-				...state,
-				currentTask: { ...state.currentTask, state: { ...state.currentTask.state, overlays: action.payload } }
-			};
-		}
+// 		case TasksActionTypes.SET_CURRENT_TASK_OVERLAYS: {
+// 			return {
+// 				...state,
+// 				currentTask: { ...state.currentTask, state: { ...state.currentTask.state, overlays: action.payload } }
+// 			};
+// 		}
 
-		case TasksActionTypes.SET_CURRENT_TASK_MASTER_OVERLAY: {
-			return {
-				...state,
-				currentTask: {
-					...state.currentTask, state: { ...state.currentTask.state, masterOverlay: action.payload }
-				}
-			};
-		}
+// 		case TasksActionTypes.SET_CURRENT_TASK_MASTER_OVERLAY: {
+// 			return {
+// 				...state,
+// 				currentTask: {
+// 					...state.currentTask, state: { ...state.currentTask.state, masterOverlay: action.payload }
+// 				}
+// 			};
+// 		}
 
-		case TasksActionTypes.ADD_TASK:
-			let task: AlgorithmTask = action.payload;
-			task.id = UUID.UUID();
-			task.creationTime = new Date();
-			return tasksAdapter.addOne(task, state);
+// 		case TasksActionTypes.ADD_TASK:
+// 			let task: AlgorithmTask = action.payload;
+// 			task.id = UUID.UUID();
+// 			task.creationTime = new Date();
+// 			return tasksAdapter.addOne(task, state);
 
-		case TasksActionTypes.DELETE_TASK:
-			return tasksAdapter.removeOne(action.payload, state);
+// 		case TasksActionTypes.DELETE_TASK:
+// 			return tasksAdapter.removeOne(action.payload, state);
 
-		case TasksActionTypes.ADD_TASKS:
-			return tasksAdapter.addMany(action.payload, state);
+// 		case TasksActionTypes.ADD_TASKS:
+// 			return tasksAdapter.addMany(action.payload, state);
 
-		default:
-			return state;
-	}
+// 		default:
+// 			return state;
+// 	}
 
-}
+// }
 
 export const { selectEntities, selectAll, selectTotal, selectIds } = tasksAdapter.getSelectors();
 export const selectTaskTotal = createSelector(tasksStateSelector, selectTotal);

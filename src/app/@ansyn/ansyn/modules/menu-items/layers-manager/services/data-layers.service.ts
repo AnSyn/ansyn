@@ -123,7 +123,7 @@ export class DataLayersService implements OnInit, OnDestroy {
 		this.store.dispatch(RemoveCaseLayersFromBackendAction({caseId: caseId}));
 		return this.storageService.deleteByCase('layers', { caseId }).pipe(
 			tap(() => {
-				this.store.dispatch(RemoveCaseLayersFromBackendSuccessAction(caseId))
+				this.store.dispatch(RemoveCaseLayersFromBackendSuccessAction({caseId}))
 			}),
 			catchError((err) => {
 				this.store.dispatch(RemoveCaseLayersFromBackendFailedAction({caseId, error: err}));

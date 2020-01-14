@@ -8,7 +8,8 @@ import {
 	ContextMenuShowAngleFilter,
 	IEntryComponent,
 	MapActionTypes,
-	selectActiveMapId
+	selectActiveMapId,
+	IAngleFilterClick
 } from '@ansyn/map-facade';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
@@ -48,14 +49,14 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 
 	@AutoSubscription
 	showAngleFilter$ = this.actions$.pipe(
-		ofType(MapActionTypes.CONTEXT_MENU.ANGLE_FILTER_SHOW),
+		ofType(ContextMenuShowAngleFilter),
 		debounceTime(200),
-		withLatestFrom(this.store$.select(selectActiveMapId), (action: ContextMenuShowAngleFilter, mapId: string): [ContextMenuShowAngleFilter] => {
+		withLatestFrom(this.store$.select(selectActiveMapId), (payload: IAngleFilterClick, mapId: string) => {
 			const communicator = this.communicatorService.provide(mapId);
 			if (Boolean(communicator)) {
 				this.mapRotation  = toDegrees(communicator.getRotation() - communicator.getVirtualNorth());
 			}
-			return [action];
+			return [payload];
 		}),
 		tap(this.show.bind(this))
 	);

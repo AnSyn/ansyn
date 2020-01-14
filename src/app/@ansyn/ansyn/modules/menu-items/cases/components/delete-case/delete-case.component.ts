@@ -49,7 +49,7 @@ export class DeleteCaseComponent implements OnInit {
 	}
 
 	close(): void {
-		this.store.dispatch(CloseModalAction());
+		this.store.dispatch(CloseModalAction({}));
 	}
 
 	onSubmitRemove() {

@@ -70,7 +70,7 @@ export class CasesEffects {
 
 	onDeleteCase$ = createEffect(() => this.actions$.pipe(
 		ofType(DeleteCaseAction),
-		mergeMap((caseId) => this.dataLayersService.removeCaseLayers(caseId).pipe(map(() => action))),
+		mergeMap(payload => this.dataLayersService.removeCaseLayers(payload.payload).pipe(map(() => payload))),
 		withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState) => [state.modal.id, state.selectedCase.id]),
 		filter(([modalCaseId, selectedCaseId]) => modalCaseId === selectedCaseId),
 		map(() => LoadDefaultCaseAction({})),
@@ -87,7 +87,8 @@ export class CasesEffects {
 
 	onUpdateCase$ = createEffect(() => this.actions$.pipe(
 		ofType(UpdateCaseAction),
-		filter(payload => payload.updatedCase.id !== defaultCaseId && (payload.updatedCase.autoSave || payload.forceUpdate)),
+		map(payload => [payload, this.casesService.defaultCase.id]),
+		filter(([payload, defaultCaseId]: [any, string]) => payload.updatedCase.id !== defaultCaseId && (payload.updatedCase.autoSave || payload.forceUpdate)),
 		map(payload => UpdateCaseBackendAction(payload.updatedCase)),
 		share())
 	);
@@ -155,7 +156,7 @@ export class CasesEffects {
 	onSaveCaseAsSuccess$ = createEffect(() => this.actions$.pipe(
 		ofType(SaveCaseAsSuccessAction),
 		concatMap(savedCase => [
-			SetAutoSave(true),
+			SetAutoSave({payload: true}),
 			SetMapsDataActionStore({ mapsList: savedCase.state.maps.data }),
 		]))
 	);
@@ -174,7 +175,7 @@ export class CasesEffects {
 		ofType(LoadDefaultCaseIfNoActiveCaseAction),
 		withLatestFrom(this.store.select(casesStateSelector)),
 		filter(([action, casesState]: [Action, ICasesState]) => !Boolean(casesState.selectedCase)),
-		map(() => LoadDefaultCaseAction({})))
+		map(() => LoadDefaultCaseAction({payload: {}})))
 		);
 
 	loadCase$ = createEffect(() => this.actions$
@@ -200,9 +201,9 @@ export class CasesEffects {
 
 	manualSave$ = createEffect(() => this.actions$.pipe(
 		ofType(ManualSaveAction),
-		filter((selectedCase) => selectedCase.id !== this.casesService.defaultCase.id),
+		filter(selectedCase => selectedCase.id !== this.casesService.defaultCase.id),
 		this.saveLayers,
-		mergeMap(payload => [
+		mergeMap((payload: ICase) => [
 			UpdateCaseAction({ updatedCase: payload, forceUpdate: true }),
 			SetToastMessageAction({ toastText: 'Case saved successfully' })
 		]),

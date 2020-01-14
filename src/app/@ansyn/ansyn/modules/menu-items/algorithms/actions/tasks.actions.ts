@@ -28,11 +28,6 @@ export enum TasksActionTypes {
 	SET_CURRENT_TASK_MASTER_OVERLAY = '[Algorithms] SET_CURRENT_TASK_MASTER_OVERLAY'
 }
 
-export type TasksActions =
-	SetTaskDrawIndicator
-	| SetCurrentTaskRegion
-	;
-
 export const SetTaskDrawIndicator = createAction(
 										TasksActionTypes.SET_DRAW_INDICATOR,
 										props<{payload: boolean}>()

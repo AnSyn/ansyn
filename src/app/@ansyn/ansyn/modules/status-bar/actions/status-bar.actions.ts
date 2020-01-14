@@ -28,7 +28,8 @@ export const SetImageOpeningOrientation = createAction(
 
 export const UpdateGeoFilterStatus = createAction(
 										StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS,
-										props<Partial<IGeoFilterStatus>>() // = { searchMode: SearchModeEnum.none }
+										(status: Partial<IGeoFilterStatus> = { searchMode: SearchModeEnum.none }) => (status)
+										// props<Partial<IGeoFilterStatus>>() // = { searchMode: SearchModeEnum.none }
 );
 
 export const GoAdjacentOverlay = createAction(

@@ -53,8 +53,8 @@ export class LayersAppEffects {
 		.pipe(
 			ofType(SaveCaseAsSuccessAction),
 			mergeMap(payload => [
-					BeginLayerCollectionLoadAction({ caseId: payload.payload.id }),
-					UpdateSelectedLayersIds(payload.payload.state.layers.activeLayersIds)
+					BeginLayerCollectionLoadAction({ caseId: payload.id }),
+					UpdateSelectedLayersIds({payload: payload.state.layers.activeLayersIds})
 				]
 			))
 		);
@@ -62,16 +62,17 @@ export class LayersAppEffects {
 	removeAnnotationFeature$ = createEffect(() => this.actions$.pipe(
 		ofType(AnnotationRemoveFeature),
 		withLatestFrom(this.store$.select(selectLayers)),
-		mergeMap(([payload, layers]: [_, ILayer[]]) => {
+		mergeMap(([payload, layers]: [{payload: string}, ILayer[]]) => {
 			const layer = layers
 				.filter(({ type }) => type === LayerType.annotation)
 				.find((layer: ILayer) => layer.data.features.some(({ properties }: Feature<any>) => properties.id === payload.payload));
 			if (layer) {
-				return of(UpdateLayer({
-					...layer,
-					data: {
-						...layer.data,
-						features: layer.data.features.filter(({ properties }) => properties.id !== payload.payload)
+				return of(UpdateLayer({ payload: {
+						...layer,
+						data: {
+							...layer.data,
+							features: layer.data.features.filter(({ properties }) => properties.id !== payload.payload)
+						}
 					}
 				}));
 			}
@@ -86,13 +87,14 @@ export class LayersAppEffects {
 			const layer = layers
 				.filter(({ type }) => type === LayerType.annotation)
 				.find((layer: ILayer) => layer.data.features.some(({ properties }: Feature<any>) => properties.id === payload.payload.featureId));
-			return UpdateLayer({
+			return UpdateLayer({payload: {
 				...layer,
-				data: {
-					...layer.data,
-					features: layer.data.features.map((feature) => feature.properties.id === payload.payload.featureId ?
-						{ ...feature, properties: { ...feature.properties, ...payload.properties } } :
-						feature)
+					data: {
+						...layer.data,
+						features: layer.data.features.map((feature) => feature.properties.id === payload.payload.featureId ?
+							{ ...feature, properties: { ...feature.properties, ...payload.properties } } :
+							feature)
+					}
 				}
 			});
 		}))

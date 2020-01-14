@@ -71,7 +71,7 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 	}
 
 	loadCases() {
-		this.store$.dispatch(LoadCasesAction());
+		this.store$.dispatch(LoadCasesAction({}));
 	}
 
 	onCasesAdded() {

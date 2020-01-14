@@ -73,8 +73,8 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	);
 
 	overlaysCount$: Observable<number> = this.actions$.pipe(
-		ofType(OverlaysActionTypes.UPDATE_OVERLAY_COUNT),
-		map(({ payload }: UpdateOverlaysCountAction) => payload)
+		ofType(UpdateOverlaysCountAction),
+		map(payload => payload.payload)
 	);
 
 	geoFilterStatus: IGeoFilterStatus;
@@ -147,12 +147,13 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	}
 
 	applyTimelinePickerResult(time: ICaseTimeState) {
-		this.store$.dispatch(SetOverlaysCriteriaAction({ time }));
+		this.store$.dispatch(SetOverlaysCriteriaAction({payload: { time },
+														options: {} }));
 		this.toggleTimelineStartEndSearch();
 	}
 
 	layoutSelectChange(layout: LayoutKey): void {
-		this.store$.dispatch(SetLayoutAction(layout));
+		this.store$.dispatch(SetLayoutAction({key: layout}));
 	}
 
 	toggleMapSearch() {

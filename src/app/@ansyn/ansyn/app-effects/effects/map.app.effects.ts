@@ -173,7 +173,7 @@ export class MapAppEffects {
 			ofType(ImageryCreatedAction),
 			withLatestFrom(this.store$.select(selectMaps)),
 			filter(([, entities]: [any, Dictionary<ICaseMapState>]) => entities && Object.values(entities).length > 0),
-			map(([payload, entities]: [{payload: string}, Dictionary<ICaseMapState>]) => entities[payload.payload.id]),
+			map(([payload, entities]: [{id: string}, Dictionary<ICaseMapState>]) => entities[payload.id]),
 			filter((caseMapState: ICaseMapState) => Boolean(caseMapState && caseMapState.data.overlay)),
 			map((caseMapState: ICaseMapState) => {
 				startTimingLog(`LOAD_OVERLAY_${ caseMapState.data.overlay.id }`);

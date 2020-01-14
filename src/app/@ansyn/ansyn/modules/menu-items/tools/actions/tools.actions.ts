@@ -1,4 +1,4 @@
-import { Action, createAction, props } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { SubMenuEnum, toolsFlags } from '../reducers/tools.reducer';
 import { type } from '../../../core/utils/type';
@@ -70,7 +70,7 @@ export const UpdateToolsFlags = createAction(
 
 export const PullActiveCenter = createAction(
 									ToolsActionsTypes.PULL_ACTIVE_CENTER,
-									props<{payload: any}>()
+									props<{payload?: any}>()
 );
 
 export const SetActiveCenter = createAction(
@@ -147,7 +147,7 @@ export const UpdateMeasureDataAction = createAction(
 
 export const DisableImageProcessing = createAction(
 										ToolsActionsTypes.DISABLE_IMAGE_PROCESSING,
-										props<{payload?: any}>()
+										({payload} = {}) => (payload)
 );
 
 export const EnableImageProcessing = createAction(
@@ -185,25 +185,3 @@ export const AnnotationUpdateFeature = createAction(
 										ToolsActionsTypes.ANNOTATION_UPDATE_FEATURE,
 										props<IUpdateFeatureEvent>()
 );
-
-export type ToolsActions =
-	UpdateOverlaysManualProcessArgs
-	| StartMouseShadow
-	| StopMouseShadow
-	| UpdateToolsFlags
-	| PullActiveCenter
-	| SetActiveCenter
-	| SetPinLocationModeAction
-	| GoToAction
-	| ShowOverlaysFootprintAction
-	| SetActiveOverlaysFootprintModeAction
-	| SetAutoImageProcessing
-	| DisableImageProcessing
-	| EnableImageProcessing
-	| SetAutoImageProcessingSuccess
-	| SetMapGeoEnabledModeToolsActionStore
-	| SetAnnotationMode
-	| SetMapGeoEnabledModeToolsActionStore
-	| SetMeasureDistanceToolState
-	| SetSubMenu
-	| ClearActiveInteractionsAction;

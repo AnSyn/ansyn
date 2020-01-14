@@ -112,7 +112,10 @@ export const DisplayOverlayAction = createAction(
 );
 
 export const DisplayOverlaySuccessAction = createAction(
-											OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS
+											OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
+											props<{ overlay: IOverlay, mapId: string, extent?: any,
+												forceFirstDisplay?: boolean, force?: boolean,
+												customOriantation?: string }>()
 );
 
 export const DisplayOverlayFailedAction = createAction(
@@ -147,7 +150,7 @@ export const SetOverlaysStatusMessage = createAction(
 
 export const RedrawTimelineAction = createAction(
 										OverlaysActionTypes.REDRAW_TIMELINE,
-										props<{payload: string}>()
+										(payload = {payload: null}) => ({payload})
 );
 
 export const SetHoveredOverlayAction = createAction(

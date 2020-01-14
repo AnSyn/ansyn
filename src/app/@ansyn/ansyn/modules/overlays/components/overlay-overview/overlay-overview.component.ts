@@ -68,8 +68,8 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	rotationChanged$: Observable<any> = this.actions$.pipe(
-		ofType<ChangeOverlayPreviewRotationAction>(OverlaysActionTypes.CHANGE_OVERLAY_PREVIEW_ROTATION),
-		tap(({ payload }) => this.rotation = payload)
+		ofType(ChangeOverlayPreviewRotationAction),
+		tap(payload => this.rotation = payload)
 	);
 
 	@AutoSubscription

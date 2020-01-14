@@ -1,6 +1,6 @@
 import { createEntityAdapter } from '@ngrx/entity';
 import { EntityAdapter, EntityState } from '@ngrx/entity/src/models';
-import { ContextActions, ContextActionTypes } from '../actions/context.actions';
+import { ContextActionTypes } from '../actions/context.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { DisplayedOverlay, IContext, IContextEntity } from '@ansyn/ansyn';
 
@@ -25,18 +25,18 @@ export const contextInitialState: IContextState = contextAdapter.getInitialState
 	}
 });
 
-export function ContextReducer(state: IContextState = contextInitialState, action: ContextActions) {
-	switch (action.type) {
-		case ContextActionTypes.ADD_ALL_CONTEXT:
-			return contextAdapter.addAll(<IContext[]>action.payload, state);
+// export function ContextReducer(state: IContextState = contextInitialState, action: ContextActions) {
+// 	switch (action.type) {
+// 		case ContextActionTypes.ADD_ALL_CONTEXT:
+// 			return contextAdapter.addAll(<IContext[]>action.payload, state);
 
-		case ContextActionTypes.SET_CONTEXT_PARAMS:
-			return { ...state, params: { ...state.params, ...action.payload } };
+// 		case ContextActionTypes.SET_CONTEXT_PARAMS:
+// 			return { ...state, params: { ...state.params, ...action.payload } };
 
-		default:
-			return state;
-	}
-}
+// 		default:
+// 			return state;
+// 	}
+// }
 
 export const contextFeatureSelector: MemoizedSelector<any, IContextState> = createFeatureSelector(contextFeatureKey);
 export const selectContextsArray = createSelector(contextFeatureSelector, contextAdapter.getSelectors().selectAll);

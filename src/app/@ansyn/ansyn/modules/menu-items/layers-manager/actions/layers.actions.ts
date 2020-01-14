@@ -23,6 +23,7 @@ export enum LayersActionTypes {
 	REMOVE_CASE_LAYERS_FROM_BACKEND_FAILED_ACTION = '[Layers] Remove case layers from backend failed',
 	SET_ACTIVE_ANNOTATION_LAYER = '[Layers] Set active annotation layer',
 	SET_MODAL = '[Layers] Set modal value',
+	CLOSE_MODAL = '[Layers] Close modal value',
 	SHOW_ALL_LAYERS = '[Layers] Show all layers'
 }
 export const BeginLayerCollectionLoadAction = createAction(
@@ -106,7 +107,8 @@ export const RemoveCaseLayersFromBackendAction = createAction(
 );
 
 export const RemoveCaseLayersFromBackendSuccessAction = createAction(
-															LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_SUCCESS_ACTION
+															LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_SUCCESS_ACTION,
+															props<{caseId: string}>()
 );
 
 export const RemoveCaseLayersFromBackendFailedAction = createAction(
@@ -125,12 +127,11 @@ export const SetLayersModal = createAction(
 								props<{payload: ILayerModal}>()
 );
 
-// TODO : DO
-// export class CloseLayersModal extends SetLayersModal {
-// 	constructor() {
-// 		super({ type: SelectedModalEnum.none, layer: null });
-// 	}
-// }
+export const CloseLayersModal = createAction(
+								LayersActionTypes.CLOSE_MODAL,
+								props<{payload: ILayerModal}>()
+);
+
 
 export const ShowAllLayers = createAction(
 								LayersActionTypes.SHOW_ALL_LAYERS,

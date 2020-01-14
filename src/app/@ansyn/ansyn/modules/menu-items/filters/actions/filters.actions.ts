@@ -20,7 +20,7 @@ export const FiltersActionTypes = {
 
 export const InitializeFiltersAction = createAction(
 										FiltersActionTypes.INITIALIZE_FILTERS,
-										props<{payload?: any}>()
+										(payload: any = {}) => (payload)
 );
 
 export const InitializeFiltersSuccessAction = createAction(

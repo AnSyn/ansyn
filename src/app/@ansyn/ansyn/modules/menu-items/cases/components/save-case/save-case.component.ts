@@ -44,7 +44,7 @@ export class SaveCaseComponent {
 	}
 
 	close(): void {
-		this.store.dispatch(CloseModalAction());
+		this.store.dispatch(CloseModalAction({}));
 	}
 
 	onSubmitCase() {

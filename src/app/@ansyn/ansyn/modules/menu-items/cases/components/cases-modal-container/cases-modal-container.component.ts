@@ -23,7 +23,7 @@ const animations: any[] = [
 	animations
 })
 export class CasesModalContainerComponent implements OnInit, OnDestroy {
-	@ViewChild('modalContent', { read: ViewContainerRef, static:false }) modalContent: ViewContainerRef;
+	@ViewChild('modalContent', { read: ViewContainerRef, static: false }) modalContent: ViewContainerRef;
 	show$: Observable<boolean> = this.store.select(casesStateSelector).pipe(
 		pluck<ICasesState, ICaseModal>('modal'),
 		map((modal: ICaseModal) => modal.show),
@@ -36,7 +36,7 @@ export class CasesModalContainerComponent implements OnInit, OnDestroy {
 	}
 
 	close() {
-		this.store.dispatch(CloseModalAction());
+		this.store.dispatch(CloseModalAction({}));
 	}
 
 	ngOnInit() {

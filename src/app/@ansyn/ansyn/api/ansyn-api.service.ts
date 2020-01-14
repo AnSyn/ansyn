@@ -149,10 +149,8 @@ export class AnsynApi {
 	/** Events **/
 
 	onShadowMouseProduce$: Observable<any> = this.actions$.pipe(
-		ofType(MapActionTypes.SHADOW_MOUSE_PRODUCER),
-		map(({ payload }: ShadowMouseProducer) => {
-			return payload.point.coordinates;
-		})
+		ofType(ShadowMouseProducer),
+		map(payload => payload.point.coordinates)
 	);
 
 	onSetLayoutSuccess$: Observable<any> = this.actions$.pipe(
@@ -160,10 +158,8 @@ export class AnsynApi {
 	);
 
 	getActiveCenter$: Observable<any> = this.actions$.pipe(
-		ofType(ToolsActionsTypes.SET_ACTIVE_CENTER),
-		map(({ payload }: SetActiveCenter) => {
-			return payload;
-		})
+		ofType(SetActiveCenter),
+		map(payload => payload)
 	);
 
 	constructor(private store: Store<any>,
@@ -309,7 +305,9 @@ export class AnsynApi {
 			const criteria: IOverlaysCriteria = {
 				region: center
 			};
-			this.store.dispatch(SetOverlaysCriteriaAction(criteria));
+			this.store.dispatch(SetOverlaysCriteriaAction({ payload: criteria,
+															options: {}
+														}));
 		}
 	}
 
@@ -332,7 +330,8 @@ export class AnsynApi {
 					return null;
 			}
 		}
-		this.store.dispatch(SetOverlaysCriteriaAction(criteria));
+		this.store.dispatch(SetOverlaysCriteriaAction({payload: criteria,
+														options: {}}));
 	}
 
 	getOverlayData(mapId: string = this.activeMapId): IOverlay {

@@ -16,5 +16,3 @@ export const SetContextParamsAction = createAction(
 										ContextActionTypes.SET_CONTEXT_PARAMS,
 										props<{payload: Partial<IContextParams>}>()
 );
-
-export type ContextActions = AddAllContextsAction | SetContextParamsAction;

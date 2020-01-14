@@ -139,11 +139,14 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 			}));
 		} else {
 			this.store.dispatch(SetOverlaysCriteriaAction({
-				dataInputFilters: {
-					fullyChecked: this.leavesCount <= this._selectedFilters.length,
-					filters: this._selectedFilters,
-					active: this.dataInputFiltersActive
-				}
+				payload: {
+					dataInputFilters: {
+						fullyChecked: this.leavesCount <= this._selectedFilters.length,
+						filters: this._selectedFilters,
+						active: this.dataInputFiltersActive
+					},
+				},
+				options: {}
 			}));
 			this.closeTreeView.emit();
 		}

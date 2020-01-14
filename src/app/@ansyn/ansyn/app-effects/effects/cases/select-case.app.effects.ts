@@ -108,7 +108,7 @@ export class SelectCaseAppEffects {
 			UpdateSelectedLayersIds({payload: activeLayersIds}),
 			// @todo refactor
 			<any>{ type: '[Context] Set context params', payload: { contextEntities } },
-			SetAutoSave(autoSave),
+			SetAutoSave({payload: autoSave}),
 			SetRemovedOverlaysIdsAction({payload: removedOverlaysIds}),
 			SetRemovedOverlaysVisibilityAction({payload: removedOverlaysVisibility}),
 			SetAnnotationMode(null),

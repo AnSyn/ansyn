@@ -255,7 +255,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 				};
 				this.measureData.meausres.push(newEntity);
 				this.store$.dispatch(
-					new UpdateMeasureDataAction({
+					UpdateMeasureDataAction({
 						mapId: this.mapId,
 						measureData: {
 							meausres: this.measureData.meausres

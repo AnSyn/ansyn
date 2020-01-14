@@ -120,9 +120,9 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	redraw$: Observable<any> = this.actions$
 		.pipe(
-			ofType<RedrawTimelineAction>(OverlaysActionTypes.REDRAW_TIMELINE),
+			ofType(RedrawTimelineAction),
 			withLatestFrom(this.store$.select(selectDrops)),
-			tap(([action, drops]) => this.initEventDropsSequence(drops))
+			tap(([, drops]) => this.initEventDropsSequence(drops))
 		);
 
 	timeLineRange$: Observable<ITimelineRange> = this.store$

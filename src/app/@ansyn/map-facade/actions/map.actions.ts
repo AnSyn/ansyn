@@ -93,7 +93,8 @@ export type MapActions = any;
 
 export const ExportMapsToPngActionFailed = createAction(
 											MapActionTypes.EXPORT_MAPS_TO_PNG_FAILED,
-											);
+											props<{error: any}>()
+);
 
 export const SetMinimalistViewModeAction = createAction(
 											MapActionTypes.SET_MINIMALIST_VIEW_MODE,
@@ -125,7 +126,7 @@ export const UpdateMapSizeAction = createAction(
 
 export const ImageryCreatedAction = createAction(
 									MapActionTypes.IMAGERY_CREATED,
-									props<{payload: string}>()
+									props<{ id: string }>()
 									);
 
 export const ImageryRemovedAction = createAction(
@@ -140,7 +141,7 @@ export const MapInstanceChangedAction = createAction(
 
 export const SynchronizeMapsAction = createAction(
 										MapActionTypes.SYNCHRONIZE_MAPS,
-										props<String>()
+										props<{mapId: string}>()
 										);
 
 export const ContextMenuTriggerAction = createAction(
@@ -212,12 +213,12 @@ export const ShadowMouseProducer = createAction(
 
 export const ImageryMouseEnter = createAction(
 								MapActionTypes.TRIGGER.IMAGERY_MOUSE_ENTER,
-								props<String>()
+								props<{payload: string}>()
 								);
 
 export const ImageryMouseLeave = createAction(
 								MapActionTypes.TRIGGER.IMAGERY_MOUSE_LEAVE,
-								props<String>()
+								props<{payload: string}>()
 								);
 
 export const ChangeImageryMap = createAction(

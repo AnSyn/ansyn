@@ -91,11 +91,11 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	@AutoSubscription
 	annoatationModeChange$: any = this.actions$
 		.pipe(
-			ofType(ToolsActionsTypes.STORE.SET_ANNOTATION_MODE),
-			tap((action: SetAnnotationMode) => {
-				const annotationMode = Boolean(action.payload) ? action.payload.annotationMode : null;
-				const useMapId = action.payload && Boolean(action.payload.mapId);
-				if (!useMapId || (useMapId && action.payload.mapId === this.mapId)) {
+			ofType(SetAnnotationMode),
+			tap(payload => {
+				const annotationMode = Boolean(payload) ? payload.annotationMode : null;
+				const useMapId = payload && Boolean(payload.mapId);
+				if (!useMapId || (useMapId && payload.mapId === this.mapId)) {
 					this.annotationsVisualizer.setMode(annotationMode, !useMapId);
 				}
 			}));

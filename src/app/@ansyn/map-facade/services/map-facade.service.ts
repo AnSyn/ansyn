@@ -116,7 +116,7 @@ export class MapFacadeService {
 				this.store.dispatch(ExportMapsToPngActionSuccess());
 			}),
 			catchError((err) => {
-				this.store.dispatch(ExportMapsToPngActionFailed(err));
+				this.store.dispatch(ExportMapsToPngActionFailed({error: err}));
 				return EMPTY;
 			})
 		).subscribe();

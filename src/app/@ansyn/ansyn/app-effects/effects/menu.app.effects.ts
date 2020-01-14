@@ -18,7 +18,7 @@ export class MenuAppEffects {
 			ofType(MenuActionTypes.TRIGGER.CONTAINER_CHANGED),
 			mergeMap(() => [
 				UpdateMapSizeAction(),
-				RedrawTimelineAction()
+				RedrawTimelineAction({})
 			]))
 		);
 
@@ -32,7 +32,7 @@ export class MenuAppEffects {
 	onResetApp$ = createEffect(() => this.actions$
 		.pipe(
 			ofType(MenuActionTypes.RESET_APP),
-			map(() => LoadDefaultCaseAction())
+			map(() => LoadDefaultCaseAction({payload: {}}))
 		));
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>) {

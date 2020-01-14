@@ -1,9 +1,9 @@
-import { AfterViewInit, Component, ElementRef, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostBinding, Input, OnInit } from '@angular/core';
 import { AnnotationsVisualizer } from '../../../annotations.visualizer';
 import { AnnotationsContextmenuTabs } from '../annotation-context-menu/annotation-context-menu.component';
 import * as SVG from '../annotation-context-menu/icons-svg';
 import { IStyleWeight } from '../annotations-weight/annotations-weight.component';
-import { IVisualizerEntity } from '@ansyn/imagery';
+import { IVisualizerEntity, StayInImageryService } from '@ansyn/imagery';
 import { AnnotationMode } from '../../../annotations.model';
 
 interface IFeatureProperties extends IVisualizerEntity {
@@ -13,24 +13,34 @@ interface IFeatureProperties extends IVisualizerEntity {
 @Component({
 	selector: 'ansyn-annotations-context-menu-buttons',
 	templateUrl: './annotations-context-menu-buttons.component.html',
-	styleUrls: ['./annotations-context-menu-buttons.component.less']
+	styleUrls: ['./annotations-context-menu-buttons.component.less'],
+	providers: [StayInImageryService]
 })
-export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterViewInit {
 	@Input() annotations: AnnotationsVisualizer;
 	@Input() featureId: string;
 	@Input() selectedTab: { [id: string]: AnnotationsContextmenuTabs } = {};
 
-	@HostBinding('style.right.px') right = 0;
+	@HostBinding('style.right.px')
+	get right() {
+		return this.stayInImageryService.moveLeft;
+	}
+
+	@HostBinding('style.top.px')
+	get top() {
+		return this.stayInImageryService.moveDown;
+	}
 
 	SVGICON = SVG;
 	Tabs = AnnotationsContextmenuTabs;
 
 	isFeatureNonEditable: boolean;
 	featureProps: IFeatureProperties;
-	timerId: number;
-	imageryElement: Element;
 
-	constructor(protected myElement: ElementRef) {
+	constructor(
+		protected myElement: ElementRef,
+		protected stayInImageryService: StayInImageryService
+	) {
 	}
 
 	ngOnInit() {
@@ -40,27 +50,11 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 	}
 
 	ngAfterViewInit(): void {
-		this.imageryElement = (this.myElement.nativeElement as HTMLElement).closest('.imagery');
-		this.timerId = window.setInterval(this.calcPositionToStayInsideImagery.bind(this), 300);
-	}
-
-	ngOnDestroy(): void {
-		window.clearInterval(this.timerId);
-	}
-
-	calcPositionToStayInsideImagery() {
-		const myRect = this.myElement.nativeElement.getBoundingClientRect();
-		const imageryRect = this.imageryElement.getBoundingClientRect() as DOMRect;
-		const delta = myRect.left - imageryRect.left + myRect.width - imageryRect.width + 3;
-		if (delta > 0) {
-			this.right += delta;
-		} else {
-			this.right = Math.max(0, this.right + delta);
-		}
+		this.stayInImageryService.init(this.myElement.nativeElement);
 	}
 
 	toggleEditMode() {
-		this.selectedTab = { ...this.selectedTab, [this.featureId]: null};
+		this.selectedTab = { ...this.selectedTab, [this.featureId]: null };
 		const currentFeatureId = this.annotations.currentAnnotationEdit && this.annotations.currentAnnotationEdit.originalFeature;
 		const enable = !(currentFeatureId && currentFeatureId.getId() === this.featureId);
 		this.annotations.setEditAnnotationMode(this.featureId, enable);
@@ -77,16 +71,19 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 	}
 
 	selectTab(tab: AnnotationsContextmenuTabs) {
-		this.selectedTab = { ...this.selectedTab, [this.featureId]: this.selectedTab[this.featureId] === tab ? null : tab };
+		this.selectedTab = {
+			...this.selectedTab,
+			[this.featureId]: this.selectedTab[this.featureId] === tab ? null : tab
+		};
 		this.annotations.clearAnnotationEditMode();
 	}
 
 	updateLabel(text) {
-		this.annotations.updateFeature(this.featureId, { label: {text} });
+		this.annotations.updateFeature(this.featureId, { label: { text } });
 	}
 
 	updateLabelSize(labelSize) {
-		this.annotations.updateFeature(this.featureId, {labelSize});
+		this.annotations.updateFeature(this.featureId, { labelSize });
 	}
 
 	selectLineWidth(s: IStyleWeight, featureId: string) {

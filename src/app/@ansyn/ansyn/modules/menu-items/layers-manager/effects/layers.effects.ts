@@ -3,14 +3,13 @@ import {
 	AddLayer,
 	BeginLayerCollectionLoadAction,
 	LayerCollectionLoadedAction,
-	LayersActions,
-	LayersActionTypes,
-	UpdateLayer
+	UpdateLayer,
+	RemoveLayer
 } from '../actions/layers.actions';
 import { Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { EMPTY, Observable, of } from 'rxjs';
+import { Actions, ofType, createEffect } from '@ngrx/effects';
+import { EMPTY, of } from 'rxjs';
 import { catchError, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { DataLayersService } from '../services/data-layers.service';
 import { ILayer, LayerType } from '../models/layers.model';
@@ -20,56 +19,53 @@ import { selectAutoSave } from '../../../menu-items/cases/reducers/cases.reducer
 @Injectable()
 export class LayersEffects {
 
-	@Effect()
-	beginLayerTreeLoad$: Observable<LayersActions> = this.actions$
+	beginLayerTreeLoad$ = createEffect(() => this.actions$
 		.pipe(
-			ofType<BeginLayerCollectionLoadAction>(LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD),
-			mergeMap(({ payload }) => this.dataLayersService.getAllLayersInATree(payload)),
-			map((layers: ILayer[]) => new LayerCollectionLoadedAction(layers)),
-			catchError(() => of(new LayerCollectionLoadedAction([])))
-		);
+			ofType(BeginLayerCollectionLoadAction),
+			mergeMap(payload => this.dataLayersService.getAllLayersInATree(payload)),
+			map((layers: ILayer[]) => LayerCollectionLoadedAction({ layers })),
+			catchError(() => of(LayerCollectionLoadedAction({layers: []})))
+		));
 
-	@Effect()
-	onLayerCollectionLoaded$ = this.actions$.pipe(
-		ofType<LayerCollectionLoadedAction>(LayersActionTypes.LAYER_COLLECTION_LOADED),
-		filter((action) => !action.payload.some(({ type }) => type === LayerType.annotation)),
+	onLayerCollectionLoaded$ = createEffect(() => this.actions$.pipe(
+		ofType(LayerCollectionLoadedAction),
+		filter((payload) => !payload.layers.some(({ type }) => type === LayerType.annotation)),
 		map(() => {
 			const annotationLayer = this.dataLayersService.generateAnnotationLayer();
-			return new AddLayer(annotationLayer);
-		})
+			return AddLayer({layer: annotationLayer});
+		}))
 	);
 
-	@Effect({ dispatch: false })
-	addLayer$: Observable<any> = this.actions$.pipe(
-		ofType<AddLayer>(LayersActionTypes.ADD_LAYER),
+	addLayer$ = createEffect(() => this.actions$.pipe(
+		ofType(AddLayer),
 		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
-		filter(([action, autoSave]) => autoSave),
-		mergeMap(([action]) => this.dataLayersService.addLayer(action.payload)),
-		rxPreventCrash()
-	);
+		filter(([, autoSave]) => autoSave),
+		mergeMap(([payload]) => this.dataLayersService.addLayer(payload.layer)),
+		rxPreventCrash()),
+		{ dispatch: false });
 
-	@Effect({ dispatch: false })
-	updateLayer$: Observable<any> = this.actions$.pipe(
-		ofType<UpdateLayer>(LayersActionTypes.UPDATE_LAYER),
+	updateLayer$ = createEffect(() => this.actions$.pipe(
+		ofType(UpdateLayer),
 		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
-		filter(([action, autoSave]) => autoSave),
-		mergeMap(([action]) => this.dataLayersService.updateLayer(action.payload)
+		filter(([, autoSave]) => autoSave),
+		mergeMap(([payload]) => this.dataLayersService.updateLayer(payload.layer)
 			.pipe(
 				catchError(() => of(true))
 			)
-		)
+		)),
+		{ dispatch: false }
 	);
 
-	@Effect({ dispatch: false })
-	removeLayer$ = this.actions$.pipe(
-		ofType<UpdateLayer>(LayersActionTypes.REMOVE_LAYER),
+	removeLayer$ = createEffect(() => this.actions$.pipe(
+		ofType(RemoveLayer),
 		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
-		filter(([action, autoSave]) => autoSave),
-		mergeMap(([action]: [any, boolean]) => this.dataLayersService.removeLayer(action.payload)
+		filter(([, autoSave]) => autoSave),
+		mergeMap(([payload]: [any, boolean]) => this.dataLayersService.removeLayer(payload.payload)
 			.pipe(
 				catchError(() => EMPTY)
 			)
-		)
+		)),
+		{ dispatch: false }
 	);
 
 	constructor(protected actions$: Actions,

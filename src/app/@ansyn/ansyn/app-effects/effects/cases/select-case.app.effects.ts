@@ -102,10 +102,10 @@ export class SelectCaseAppEffects {
 			new SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this)) }),
 			new SetOverlaysTranslationDataAction(overlaysTranslationData),
 			new SetOverlaysScannedAreaDataAction(overlaysScannedAreaData),
-			new BeginLayerCollectionLoadAction({ caseId: payload.id }),
+			BeginLayerCollectionLoadAction({ caseId: payload.id }),
 			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 			new UpdateFacetsAction(facets),
-			new UpdateSelectedLayersIds(activeLayersIds),
+			UpdateSelectedLayersIds({layerIds: activeLayersIds}),
 			// @todo refactor
 			<any>{ type: '[Context] Set context params', payload: { contextEntities } },
 			new SetAutoSave(autoSave),

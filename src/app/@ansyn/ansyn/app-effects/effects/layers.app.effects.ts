@@ -54,8 +54,8 @@ export class LayersAppEffects {
 		.pipe(
 			ofType<SaveCaseAsSuccessAction>(CasesActionTypes.SAVE_CASE_AS_SUCCESS),
 			mergeMap((action: SaveCaseAsSuccessAction) => [
-					new BeginLayerCollectionLoadAction({ caseId: action.payload.id }),
-					new UpdateSelectedLayersIds(action.payload.state.layers.activeLayersIds)
+					BeginLayerCollectionLoadAction({ caseId: action.payload.id }),
+					UpdateSelectedLayersIds({layerIds: action.payload.state.layers.activeLayersIds})
 				]
 			)
 		);
@@ -69,13 +69,14 @@ export class LayersAppEffects {
 				.filter(({ type }) => type === LayerType.annotation)
 				.find((layer: ILayer) => layer.data.features.some(({ properties }: Feature<any>) => properties.id === action.payload));
 			if (layer) {
-				return of(new UpdateLayer({
-					...layer,
-					data: {
-						...layer.data,
-						features: layer.data.features.filter(({ properties }) => properties.id !== action.payload)
-					}
-				}));
+				return of(UpdateLayer({layer: {
+									...layer,
+									data: {
+										...layer.data,
+										features: layer.data.features.filter(({ properties }) => properties.id !== action.payload)
+									}
+								}
+						}));
 			}
 			return EMPTY;
 		})
@@ -89,13 +90,14 @@ export class LayersAppEffects {
 			const layer = layers
 				.filter(({ type }) => type === LayerType.annotation)
 				.find((layer: ILayer) => layer.data.features.some(({ properties }: Feature<any>) => properties.id === action.payload.featureId));
-			return new UpdateLayer({
+			return UpdateLayer({ layer: {
 				...layer,
-				data: {
-					...layer.data,
-					features: layer.data.features.map((feature) => feature.properties.id === action.payload.featureId ?
-						{ ...feature, properties: { ...feature.properties, ...action.payload.properties } } :
-						feature)
+					data: {
+						...layer.data,
+						features: layer.data.features.map((feature) => feature.properties.id === action.payload.featureId ?
+							{ ...feature, properties: { ...feature.properties, ...action.payload.properties } } :
+							feature)
+					}
 				}
 			});
 		})

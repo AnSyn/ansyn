@@ -111,7 +111,7 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	}
 
 	setSelectedAnnotationLayer(id) {
-		this.store.dispatch(new SetActiveAnnotationLayer(id));
+		this.store.dispatch(SetActiveAnnotationLayer({layerId: id}));
 	}
 
 	toggleSelection(selected: SelectionBoxTypes = SelectionBoxTypes.None) {

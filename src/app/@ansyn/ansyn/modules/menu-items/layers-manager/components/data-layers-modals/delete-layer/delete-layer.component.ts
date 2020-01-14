@@ -13,12 +13,12 @@ export class DeleteLayerComponent {
 	@Input() layer: ILayer;
 
 	removeLayer() {
-		this.store.dispatch(new RemoveLayer(this.layer.id));
+		this.store.dispatch(RemoveLayer({layerId: this.layer.id}));
 		this.closeModal();
 	}
 
 	closeModal() {
-		this.store.dispatch(new CloseLayersModal());
+		this.store.dispatch(CloseLayersModal({}));
 	}
 
 	constructor(protected store: Store<ILayerState>) {

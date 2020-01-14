@@ -29,7 +29,7 @@ export class DownloadLayersComponent {
 		this.generateFeaturesIds(annotationsLayer);
 		const blob = new Blob([JSON.stringify(annotationsLayer)], { type: 'application/geo+json' });
 		saveAs(blob, `${ this.layer.name }.geojson`);
-		this.store.dispatch(new CloseLayersModal());
+		this.store.dispatch(CloseLayersModal({}));
 	}
 
 	downloadKml() {
@@ -40,7 +40,7 @@ export class DownloadLayersComponent {
 		const kml = this.kmlFormat.writeFeatures(features);
 		const blob = new Blob([kml], { type: 'application/vnd.google-earth.kml+xml' });
 		saveAs(blob, `${ this.layer.name }.kml`);
-		this.store.dispatch(new CloseLayersModal());
+		this.store.dispatch(CloseLayersModal({}));
 	}
 
 	generateFeaturesIds(annotationsLayer): void {

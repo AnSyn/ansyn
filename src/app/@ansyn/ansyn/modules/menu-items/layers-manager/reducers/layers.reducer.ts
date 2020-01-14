@@ -1,6 +1,6 @@
+import { LayerCollectionLoadedAction, SetLayerSelection, SelectOnlyLayer, UpdateSelectedLayersIds, AddLayer, UpdateLayer, RemoveLayer, SetActiveAnnotationLayer, SetLayersModal, ShowAllLayers } from './../actions/layers.actions';
 import { ILayerState } from './layers.reducer';
-import { LayersActions, LayersActionTypes } from '../actions/layers.actions';
-import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector, MemoizedSelector, createReducer, on, Action } from '@ngrx/store';
 import { uniq } from 'lodash';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary, EntitySelectors } from '@ngrx/entity/src/models';
@@ -27,77 +27,71 @@ export const initialLayersState: ILayerState = layersAdapter.getInitialState({
 export const layersFeatureKey = 'layers';
 export const layersStateSelector: MemoizedSelector<any, ILayerState> = createFeatureSelector<ILayerState>(layersFeatureKey);
 
-export function LayersReducer(state: ILayerState = initialLayersState, action: LayersActions | any): ILayerState {
-	switch (action.type) {
-		case LayersActionTypes.LAYER_COLLECTION_LOADED:
-			let annotationLayer = action.payload.find(({ type }) => type === LayerType.annotation);
-			let selectedLayersIds = state.selectedLayersIds;
-			let activeAnnotationLayer = state.activeAnnotationLayer;
-			let layers = action.payload;
-			activeAnnotationLayer = annotationLayer && annotationLayer.id;
-			return layersAdapter.addAll(layers, { ...state, selectedLayersIds, activeAnnotationLayer });
-
-		case LayersActionTypes.SET_LAYER_SELECTION: {
-			const id = action.payload.id, ids = state.selectedLayersIds;
-			const selectedLayersIds = action.payload.value ? uniq([...ids, id]) : ids.filter(layerId => id !== layerId);
-			return { ...state, selectedLayersIds };
+const reducerFunction = createReducer(initialLayersState,
+	on(LayerCollectionLoadedAction, (state, payload) => {
+		let annotationLayer = payload.layers.find(({ type }) => type === LayerType.annotation);
+		let selectedLayersIds = state.selectedLayersIds;
+		let activeAnnotationLayer = state.activeAnnotationLayer;
+		let layers = payload.layers;
+		activeAnnotationLayer = annotationLayer && annotationLayer.id;
+		return layersAdapter.addAll(layers, { ...state, selectedLayersIds, activeAnnotationLayer });
+	}),
+	on(SetLayerSelection, (state, payload) => {
+		const id = payload.id, ids = state.selectedLayersIds;
+		const selectedLayersIds = payload.value ? uniq([...ids, id]) : ids.filter(layerId => id !== layerId);
+		return { ...state, selectedLayersIds };
+	}),
+	on(SelectOnlyLayer, (state, payload) => {
+		const layer = state.entities[payload.id];
+		let selectedLayersIds = uniq([...state.selectedLayersIds, layer.id]);
+		selectedLayersIds = selectedLayersIds.filter((layerId) => {
+			const checkLayer = state.entities[layerId];
+			return checkLayer && (checkLayer.type !== layer.type || checkLayer.id === layer.id);
+		});
+		return { ...state, selectedLayersIds };
+	}),
+	on(UpdateSelectedLayersIds, (state, payload) => {
+		return { ...state, selectedLayersIds: payload.layerIds };
+	}),
+	on(AddLayer, (state, payload) => {
+		let activeAnnotationLayer = state.activeAnnotationLayer;
+		if (!activeAnnotationLayer && payload.layer.type === LayerType.annotation) {
+			activeAnnotationLayer = payload.layer.id;
 		}
-
-		case LayersActionTypes.SELECT_ONLY: {
-			const layer = state.entities[action.payload];
-			let selectedLayersIds = uniq([...state.selectedLayersIds, layer.id]);
-			selectedLayersIds = selectedLayersIds.filter((layerId) => {
-				const checkLayer = state.entities[layerId];
-				return checkLayer && (checkLayer.type !== layer.type || checkLayer.id === layer.id);
-			});
-			return { ...state, selectedLayersIds };
+		return layersAdapter.addOne(payload.layer, {
+			...state,
+			selectedLayersIds: uniq([...state.selectedLayersIds, payload.layer.id]),
+			activeAnnotationLayer
+		});
+	}),
+	on(UpdateLayer, (state, payload) => {
+		return layersAdapter.updateOne({ id: payload.layer.id, changes: payload.layer }, state);
+	}),
+	on(RemoveLayer, (state, payload) => {
+		const selectedLayersIds = state.selectedLayersIds.filter(id => id !== payload.layerId);
+		let activeAnnotationLayer = state.activeAnnotationLayer;
+		if (payload.layerId === state.activeAnnotationLayer) {
+			activeAnnotationLayer = (<string[]>state.ids).find((id) => (id !== payload.layerId) && (state.entities[id].type === LayerType.annotation));
+			activeAnnotationLayer = (<string[]>state.ids).find((id) => (id !== payload.layerId) && (state.entities[id].type === LayerType.annotation));
 		}
+		return layersAdapter.removeOne(payload.layerId, { ...state, selectedLayersIds, activeAnnotationLayer });
+	}),
+	on(SetActiveAnnotationLayer, (state, payload) => {
+		return { ...state, activeAnnotationLayer: payload.layerId };
+	}),
+	on(SetLayersModal, (state, payload) => {
+		return { ...state, modal: payload.layer };
+	}),
+	on(ShowAllLayers, (state, payload) => {
+		const selectedLayersIds = state.selectedLayersIds;
+		const layersToShow = (<string[]>state.ids).filter((id) => state.entities[id].type === payload.layerType);
+		return { ...state, selectedLayersIds: uniq([...selectedLayersIds, ...layersToShow]) };
+	} )
 
-		case LayersActionTypes.UPDATE_SELECTED_LAYERS_IDS:
-			return { ...state, selectedLayersIds: action.payload };
+);
 
-		case LayersActionTypes.ADD_LAYER: {
-			let activeAnnotationLayer = state.activeAnnotationLayer;
-			if (!activeAnnotationLayer && action.payload.type === LayerType.annotation) {
-				activeAnnotationLayer = action.payload.id;
-			}
-			return layersAdapter.addOne(action.payload, {
-				...state,
-				selectedLayersIds: uniq([...state.selectedLayersIds, action.payload.id]),
-				activeAnnotationLayer
-			});
-		}
-
-		case LayersActionTypes.UPDATE_LAYER: {
-			return layersAdapter.updateOne({ id: action.payload.id, changes: action.payload }, state);
-		}
-
-		case LayersActionTypes.REMOVE_LAYER: {
-			const selectedLayersIds = state.selectedLayersIds.filter((id) => id !== action.payload);
-			let activeAnnotationLayer = state.activeAnnotationLayer;
-			if (action.payload === state.activeAnnotationLayer) {
-				activeAnnotationLayer = (<string[]>state.ids).find((id) => (id !== action.payload) && (state.entities[id].type === LayerType.annotation));
-				activeAnnotationLayer = (<string[]>state.ids).find((id) => (id !== action.payload) && (state.entities[id].type === LayerType.annotation));
-			}
-			return layersAdapter.removeOne(action.payload, { ...state, selectedLayersIds, activeAnnotationLayer });
-		}
-
-		case LayersActionTypes.SET_ACTIVE_ANNOTATION_LAYER:
-			return { ...state, activeAnnotationLayer: action.payload };
-
-		case LayersActionTypes.SET_MODAL:
-			return { ...state, modal: action.payload };
-
-		case LayersActionTypes.SHOW_ALL_LAYERS: {
-			const selectedLayersIds = state.selectedLayersIds;
-			const layersToShow = (<string[]>state.ids).filter((id) => state.entities[id].type === action.payload);
-			return { ...state, selectedLayersIds: uniq([...selectedLayersIds, ...layersToShow]) };
-		}
-
-		default:
-			return state;
-	}
-
+export function LayersReducer(state: ILayerState = initialLayersState, action: Action) {
+	return reducerFunction(state, action);
 }
 
 export const { selectAll, selectEntities }: EntitySelectors<ILayer, ILayerState> = layersAdapter.getSelectors();

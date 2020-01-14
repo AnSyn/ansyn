@@ -39,6 +39,8 @@
 	<li class="expanded-selection line-width-selection">
 
 		<button (click)="toggleSelection(SelectionBoxTypes.LineWidth)"
+				[disabled]="this.mode === 'Point'"
+				[class.disabled]="this.mode === 'Point'"
 				[class.expand]="selectedBox === SelectionBoxTypes.LineWidth">
 			<span class="icon-annotation-weight" [attr.tooltip-value]="'Width' | translate"
 				  tooltip-class="bottom"></span>

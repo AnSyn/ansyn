@@ -16,7 +16,6 @@ import { selectIsPinned } from '@ansyn/menu';
 export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponent {
 	static showFirst = true;
 	@Input() mapId: string;
-	mapsAmount: number;
 	overlay: any;
 	isPinned: boolean;
 
@@ -24,12 +23,6 @@ export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponen
 	isPinned$: Observable<boolean> = this.store$.pipe(
 		select(selectIsPinned),
 		tap(isPinned => this.isPinned = isPinned)
-	);
-
-	@AutoSubscription
-	mapsAmount$ = this.store$.pipe(
-		select(selectMapsTotal),
-		tap((mapsAmount) => this.mapsAmount = mapsAmount)
 	);
 
 	constructor(protected store$: Store<any>) {

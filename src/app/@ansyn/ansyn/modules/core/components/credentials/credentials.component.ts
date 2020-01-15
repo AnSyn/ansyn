@@ -9,7 +9,7 @@ import { UnSelectMenuItemAction } from '@ansyn/menu';
 	styleUrls: ['./credentials.component.less']
 })
 export class CredentialsComponent  {
-	constructor(protected credentialsService: CredentialsService,
+	constructor(public credentialsService: CredentialsService,
 				protected store$: Store<any>) {
 	}
 

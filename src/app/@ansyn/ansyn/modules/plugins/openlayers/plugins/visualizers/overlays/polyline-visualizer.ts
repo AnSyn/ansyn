@@ -110,7 +110,7 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 	}
 
 	onSelectFeature($event) {
-		if ($event.selected.length > 0) {
+		if ($event.selected.length > 0 && this.isMouseEventInExtent($event)) {
 			const id = $event.selected[0].getId();
 			this.store.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [id] } }));
 		} else {

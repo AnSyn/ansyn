@@ -44,7 +44,8 @@
 <div class="expanded-selection line-width-selection">
 	<p>
 		<button [class.active]="selectedTab[featureId] === Tabs.Weight"
-				(click)="selectTab(Tabs.Weight)">
+				(click)="selectTab(Tabs.Weight)"
+				[class.disabled]="getFeatureProps()?.mode === 'Point'">
 			<i [attr.tooltip-value]="'Width' | translate" tooltip-class="bottom">
 				<svg>
 					<path [attr.d]="SVGICON.editWeightSvg"></path>

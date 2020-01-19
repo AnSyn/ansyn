@@ -1,7 +1,7 @@
 <div class="buttons" *ngIf="!isMinimalistViewMode">
 
 	<ng-container
-		*ngFor="let component of _entryComponents.status">
+		*ngFor="let component of entryComponents.status">
 		<ng-container
 			*ngIf="component.showFirst && component.prototype.getType() === 'buttons'"
 			[ansynEntryComponent]="{ component: component , mapId: mapId }">
@@ -36,7 +36,7 @@
 	</button>
 
 	<ng-container
-		*ngFor="let component of _entryComponents.status">
+		*ngFor="let component of entryComponents.status">
 		<ng-container
 			*ngIf="!component.showFirst && component.prototype.getType() === 'buttons'"
 			[ansynEntryComponent]="{ component: component , mapId: mapId }">

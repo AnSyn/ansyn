@@ -25,7 +25,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	isMapLayersVisible = true;
 	mapsAmount = 1;
 	_map: IMapSettings;
-	_entryComponents: IEntryComponentsEntities;
 	@HostBinding('class.active') isActiveMap: boolean;
 	hideLayers: boolean;
 	@AutoSubscription
@@ -64,12 +63,8 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	@Input()
 	set map(value: IMapSettings) {
 		this._map = value;
-		/* force angular to rerender the *ngFor content that binding to this arrays
-		 * so they get the new mapId	 */
-		this._entryComponents = { status: [], container: [], floating_menu: [] };
 		this.translate.get(this.overlay && this.overlay.sensorName || 'unknown')
 			.subscribe(translatedOverlaySensorName => this.translatedOverlaySensorName = translatedOverlaySensorName);
-		setTimeout(() => this._entryComponents = { ...this.entryComponents })
 	}
 
 	// @TODO: eject to ansyn

@@ -26,7 +26,7 @@ const MAP: IMapSettings = {
 		sourceType: 'sourceType'
 	}
 };
-fdescribe('ImageryStatusComponent', () => {
+describe('ImageryStatusComponent', () => {
 	let component: ImageryStatusComponent;
 	let fixture: ComponentFixture<ImageryStatusComponent>;
 	let communicatorService: ImageryCommunicatorService;

@@ -32,7 +32,7 @@ import {
 import { select, Store } from '@ngrx/store';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
-import { IMenuItem } from '../models/menu-item.model';
+import { IMenuItem, MenuName } from '../models/menu-item.model';
 import { MenuConfig } from '../models/menuConfig';
 import { IMenuConfig } from '../models/menu-config.model';
 import { Dictionary } from '@ngrx/entity/src/models';
@@ -86,12 +86,12 @@ export class MenuComponent implements OnInit, OnDestroy {
 
 	topMenuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(
 		select(selectAllMenuItems),
-		map( menuItems => menuItems.filter((menuItem: IMenuItem) => !menuItem.isOnBottom))
+		map( menuItems => menuItems.filter((menuItem: IMenuItem) => !menuItem.dockedToBottom))
 	);
 
 	bottomMenuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(
 		select(selectAllMenuItems),
-		map( menuItems => menuItems.filter((menuItem: IMenuItem) => menuItem.isOnBottom))
+		map( menuItems => menuItems.filter((menuItem: IMenuItem) => menuItem.dockedToBottom))
 	);
 
 	@AutoSubscription
@@ -134,7 +134,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 				protected elementRef: ElementRef,
 				@Inject(DOCUMENT) protected document: Document,
 				@Inject(MenuConfig) public menuConfig: IMenuConfig) {
-		this.isUserFirstEntrance = getMenuSessionData().isUserFirstEntrance || true;
+		this.isUserFirstEntrance = getMenuSessionData().isUserFirstEntrance === undefined ? true : getMenuSessionData().isUserFirstEntrance;
 	}
 
 	get componentElem() {
@@ -233,9 +233,9 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	toggleItem(key: string): void {
-		if (this.isUserFirstEntrance && key === 'Permissions') {
+		if (this.isUserFirstEntrance && key === MenuName.Permissions) {
 			this.isUserFirstEntrance = false;
-			setMenuSessionData({isUserFirstEntrance: this.isUserFirstEntrance});
+			setMenuSessionData({isUserFirstEntrance: false});
 		}
 		if (this.onAnimation) {
 			return;

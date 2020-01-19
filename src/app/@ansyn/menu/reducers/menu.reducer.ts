@@ -7,7 +7,7 @@ import {
 } from '../actions/menu.actions';
 import { getMenuSessionData, setMenuSessionData } from '../helpers/menu-session.helper';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { IMenuItem } from '../models/menu-item.model';
+import { IMenuItem, MenuName } from '../models/menu-item.model';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary, EntitySelectors } from '@ngrx/entity/src/models';
 
@@ -44,7 +44,7 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 
 		case MenuActionTypes.SELECT_MENU_ITEM:
 			const selectedMenuItem = action.payload;
-			if (selectedMenuItem !== 'Permissions') {
+			if (selectedMenuItem !== MenuName.Permissions) {
 				setMenuSessionData({ selectedMenuItem });
 			}
 			return { ...state, selectedMenuItem };

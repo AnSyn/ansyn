@@ -2,38 +2,39 @@ import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { credentialsConfig, ICredentialsConfig } from './config';
 import { catchError, mergeMap, tap } from 'rxjs/operators';
-import { of, Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 interface ICredentialsResponse {
-	location: {name: string}[];
-	not: {name: string}[];
+	authorizedArea: { name: string }[];
+	unauthorizedArea: { name: string }[];
 }
+
 @Injectable({
 	providedIn: 'root'
 })
 export class CredentialsService {
 	data: ICredentialsResponse;
-	error: {message: string} = {message: 'loading'};
-	user: {name: string};
+	error: { message: string } = { message: 'loading' };
+	user: { name: string };
 
 	constructor(protected httpClient: HttpClient,
 				@Inject(credentialsConfig) public config: ICredentialsConfig) {
 		this.getCredentials().subscribe();
-		this.user = {name: 'Tzahi Levi'};
+		this.user = { name: 'Unknown' };
 	}
 
-	get approveArea() {
-		if (!this.data.not.length) {
-			return [{name: 'You have permissions for everything'}];
+	get authorizedArea() {
+		if (!this.data.unauthorizedArea.length) {
+			return [{ name: 'You have permissions for everything' }];
 		}
-		return this.data.location;
+		return this.data.authorizedArea;
 	}
 
-	get notApproveArea() {
-		if (!this.data.location.length) {
-			return [{name: 'No permissions'}];
+	get unauthorizedArea() {
+		if (!this.data.authorizedArea.length) {
+			return [{ name: 'No permissions' }];
 		}
-		return  this.data.not;
+		return this.data.unauthorizedArea;
 	}
 
 	getUrl(): string {
@@ -45,11 +46,11 @@ export class CredentialsService {
 	}
 
 	openPermissionSite() {
-		window.open(this.config.permissionSite, "_blank");
+		window.open(this.config.authorizationSiteURL, '_blank');
 	}
 
 	downloadGuide() {
-		window.open(this.config.permissionGuid, "_blank");
+		window.open(this.config.authorizationInfoURL, '_blank');
 	}
 
 	getCredentials() {
@@ -63,13 +64,12 @@ export class CredentialsService {
 					if (data) {
 						this.data = data;
 						this.error = undefined;
-					}
-					else {
-						this.error = {message: this.config.noCredentialsMessage}
+					} else {
+						this.error = { message: this.config.noCredentialsMessage }
 					}
 				}),
 				catchError((err) => {
-					this.error = {message: this.config.noCredentialsMessage};
+					this.error = { message: this.config.noCredentialsMessage };
 					return of(true);
 				}));
 	}

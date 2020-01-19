@@ -1,4 +1,4 @@
-import { IMenuItem } from '@ansyn/menu';
+import { IMenuItem, MenuName } from '@ansyn/menu';
 import { OverlayOutOfBoundsComponent } from '../components/overlay-out-of-bounds/overlay-out-of-bounds.component';
 import { IAlert } from '../modules/alerts/alerts.model';
 import { CasesComponent } from '../modules/menu-items/cases/components/cases/cases.component';
@@ -40,45 +40,45 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 	],
 	ansynMenuItems: [
 		{
-			name: 'Cases',
+			name: MenuName.Cases,
 			component: CasesComponent,
 			iconClass: 'icon-main-cases'
 		},
 		{
-			name: 'Filters',
+			name: MenuName.Filters,
 			component: FiltersCollectionComponent,
 			iconClass: 'icon-main-filters'
 		},
 		{
-			name: 'Data Layers',
+			name: MenuName.DataLayers,
 			component: LayersManagerComponent,
 			iconClass: 'icon-main-data-layers'
 		},
 		{
-			name: 'Tools',
+			name: MenuName.Tools,
 			component: ToolsComponent,
 			iconClass: 'icon-main-tools'
 		},
 		{
-			name: 'Algorithms',
+			name: MenuName.Algorithms,
 			component: TasksComponent,
 			iconClass: 'icon-main-algorithms'
 		},
 		{
-			name: 'Settings',
+			name: MenuName.Settings,
 			component: SettingsComponent,
 			iconClass: 'icon-main-settings'
 		},
 		{
-			name: 'Help',
+			name: MenuName.Help,
 			component: HelpComponent,
 			iconClass: 'icon-main-help'
 		},
 		{
-			name: 'Permissions',
+			name: MenuName.Permissions,
 			component: CredentialsComponent,
 			iconClass: 'icon-credentials',
-			isOnBottom: true
+			dockedToBottom: true
 		}
 	]
 };

@@ -45,6 +45,7 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 		tap((markups) => this.markups = markups)
 	);
 	protected disableCache = true;
+	ghostId: string;
 
 	constructor(public store: Store<any>,
 				@Inject(VisualizersConfig) public config: IVisualizersConfig,
@@ -110,11 +111,23 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 	}
 
 	onSelectFeature($event) {
-		if ($event.selected.length > 0 && this.isMouseEventInExtent($event)) {
+		if ($event.selected.length > 0) {
 			const id = $event.selected[0].getId();
-			this.store.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [id] } }));
+			if (this.isMouseEventInExtent($event)) {
+				this.store.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [id] } }));
+				console.log('selected', 1) // todo: remove
+			} else {
+				this.ghostId = id;
+				console.log('selected', 2) // todo: remove
+			}
 		} else {
-			this.store.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
+			if (this.ghostId) {
+				console.log('unselected', 2);
+				this.ghostId = undefined;
+			} else {
+				console.log('unselected', 1);
+				this.store.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
+			}
 		}
 	}
 

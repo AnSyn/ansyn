@@ -1,5 +1,4 @@
-<ng-container *ngFor="let alert of alerts">
-	<ng-container *ngIf="showAlert(alert.key)">
+<ng-container *ngFor="let alert of alertMsg">
 
 		<ng-container
 			*ngIf="alert.component; else textAlert"
@@ -14,6 +13,4 @@
 				<span class="text">{{ alert.text | translate}}</span>
 			</div>
 		</ng-template>
-
-	</ng-container>
 </ng-container>

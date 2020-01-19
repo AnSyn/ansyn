@@ -5,7 +5,7 @@ import {
 	ImageryPlugin
 } from '@ansyn/imagery';
 import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ol';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
 import { selectMapPositionByMapId, selectOverlayByMapId } from '@ansyn/map-facade';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
@@ -46,7 +46,7 @@ export class AlertsPlugin extends BaseImageryPlugin {
 
 	setOverlaysNotInCase([overlays, filteredOverlays]: [Map<string, IOverlay>, string[]]): RemoveAlertMsg | AddAlertMsg {
 		const shouldRemoved = !this.overlay || filteredOverlays.some((id: string) => id === this.overlay.id);
-		const payload = { key: AlertMsgTypesEnum.overlayIsNotPartOfQuery, value: this.mapId };
+		const payload = { key: AlertMsgTypesEnum.overlayIsNotPartOfQuery, overlayId: this.overlay && this.overlay.id};
 		return shouldRemoved ? new RemoveAlertMsg(payload) : new AddAlertMsg(payload);
 	}
 
@@ -58,13 +58,7 @@ export class AlertsPlugin extends BaseImageryPlugin {
 			const intersection = getPolygonIntersectionRatio(viewExtent, overlay.footprint);
 			isInBound = Boolean(intersection);
 		}
-		const payload = { key: AlertMsgTypesEnum.OverlaysOutOfBounds, value: this.mapId };
+		const payload = { key: AlertMsgTypesEnum.OverlaysOutOfBounds, mapId: this.mapId, overlayId: overlay.id };
 		return isWorldView || isInBound ? new RemoveAlertMsg(payload) : new AddAlertMsg(payload);
-	}
-
-	onResetView() {
-		this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypesEnum.OverlaysOutOfBounds, value: this.mapId }));
-		this.store$.dispatch(new RemoveAlertMsg({ key: AlertMsgTypesEnum.overlayIsNotPartOfQuery, value: this.mapId }));
-		return super.onResetView();
 	}
 }

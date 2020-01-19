@@ -3,11 +3,10 @@ import { selectMapsTotal, selectOverlayByMapId } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { combineLatest, Observable } from 'rxjs';
-import { distinctUntilChanged, tap } from 'rxjs/operators';
+import { distinctUntilChanged, tap, filter } from 'rxjs/operators';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { selectAlertMsg } from '../../../overlays/overlay-status/reducers/overlay-status.reducer';
 import { ALERTS, IAlert } from '../../alerts.model';
-import { AlertMsg } from '../../model';
 
 @Component({
 	selector: 'ansyn-alerts-container',
@@ -17,45 +16,23 @@ import { AlertMsg } from '../../model';
 @AutoSubscriptions()
 export class AlertsContainerComponent implements OnInit, OnDestroy {
 
-	alertMsg: AlertMsg;
+	alertMsg: IAlert[];
 	overlay: IOverlay;
 	@Input() mapId: string;
 
 	@AutoSubscription
 	alertMsg$: () => Observable<any> = () => combineLatest(this.store$.select(selectAlertMsg), this.store$.select(selectOverlayByMapId(this.mapId))).pipe(
 		distinctUntilChanged(),
+		filter(([alertMsg, overlay]) => Boolean(alertMsg) && Boolean(overlay)),
 		tap(([alertMsg, overlay]) => {
-			this.alertMsg = alertMsg;
+			const overlayAlerts = alertMsg.get(overlay && overlay.id);
+			this.alertMsg = this.alerts.filter( alert => overlayAlerts && overlayAlerts.has(alert.key));
 			this.overlay = overlay;
 		})
 	);
 
 	constructor(protected store$: Store<any>,
 				@Inject(ALERTS) public alerts: IAlert[]) {
-	}
-
-	showAlert(alertKey) {
-		const ids = this.alertMsg.get(alertKey);
-		if (ids) {
-			return ids.has(this.mapId);
-		} else {
-			return this[alertKey];
-		}
-	}
-
-	get noGeoRegistration() {
-		if (!this.overlay) {
-			return false;
-		}
-
-		return this.overlay.isGeoRegistered === 'notGeoRegistered';
-	}
-
-	get poorGeoRegistered() {
-		if (!this.overlay) {
-			return false;
-		}
-		return this.overlay.isGeoRegistered === 'poorGeoRegistered';
 	}
 
 	ngOnInit() {

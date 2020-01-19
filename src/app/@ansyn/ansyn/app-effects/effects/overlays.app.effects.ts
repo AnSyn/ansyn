@@ -20,6 +20,7 @@ import {
 	SetPendingOverlaysAction
 } from '@ansyn/map-facade';
 import {
+	AddAlertMsg,
 	BackToWorldView,
 	OverlayStatusActionsTypes,
 	SetPresetOverlaysAction,
@@ -71,7 +72,7 @@ import { OverlaysService } from '../../modules/overlays/services/overlays.servic
 import * as turf from '@turf/turf';
 import { Position } from 'geojson';
 import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
-import { IOverlay } from '../../modules/overlays/models/overlay.model';
+import { GeoRegisteration, IOverlay } from '../../modules/overlays/models/overlay.model';
 import { Dictionary } from '@ngrx/entity';
 import { LoggerService } from '../../modules/core/services/logger.service';
 
@@ -184,6 +185,17 @@ export class OverlaysAppEffects {
 		filter(([action, mapState]: [DisplayOverlaySuccessAction, IMapState]) => mapState.pendingOverlays.some((pending) => pending.overlay.id === action.payload.overlay.id)),
 		map(([action, mapState]: [DisplayOverlaySuccessAction, IMapState]) => {
 			return new RemovePendingOverlayAction(action.payload.overlay.id);
+		})
+	);
+
+	@Effect({dispatch: false})
+	checkOverlayRegistered$ = this.actions$.pipe(
+		ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
+		tap((action: DisplayOverlaySuccessAction) => {
+			const { overlay } = action.payload;
+			if (overlay.isGeoRegistered !== GeoRegisteration.geoRegistered) {
+				return this.store$.dispatch(new AddAlertMsg({key: overlay.isGeoRegistered, overlayId: overlay.id}));
+			}
 		})
 	);
 

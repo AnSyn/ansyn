@@ -29,32 +29,18 @@ export class AnaglyphSensorPlugin extends BaseImageryPlugin {
 					if (isSupproted) {
 						this.store$.dispatch(new AddAlertMsg({
 							key: anaglyphSensorAlertKey,
-							value: this.mapId
+							overlayId: overlay.id
 						}));
 					} else {
 						this.store$.dispatch(new RemoveAlertMsg({
 							key: anaglyphSensorAlertKey,
-							value: this.mapId
+							overlayId: overlay.id
 						}));
 					}
 				});
-			} else {
-				this.store$.dispatch(new RemoveAlertMsg({ key: anaglyphSensorAlertKey, value: this.mapId }));
 			}
-
 		})
 	);
-
-	onResetView() {
-		this.store$.dispatch(new RemoveAlertMsg({ key: anaglyphSensorAlertKey, value: this.mapId }));
-		return super.onResetView();
-	}
-
-	onDispose(): void {
-		this.store$.dispatch(new RemoveAlertMsg({ key: anaglyphSensorAlertKey, value: this.mapId }));
-		super.onDispose();
-
-	}
 
 	constructor(public store$: Store<any>,
 				protected anaglyphSensorService: AnaglyphSensorService) {

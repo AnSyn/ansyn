@@ -154,14 +154,14 @@ export class SetPresetOverlaysAction implements Action {
 export class AddAlertMsg implements Action {
 	type = OverlayStatusActionsTypes.ADD_ALERT_MSG;
 
-	constructor(public payload: { value: string, key: AlertMsgTypes }) {
+	constructor(public payload: { overlayId: string, key: AlertMsgTypes }) {
 	}
 }
 
 export class RemoveAlertMsg implements Action {
 	type = OverlayStatusActionsTypes.REMOVE_ALERT_MSG;
 
-	constructor(public payload: { value: string, key: AlertMsgTypes }) {
+	constructor(public payload: { overlayId: string, key: AlertMsgTypes }) {
 	}
 }
 

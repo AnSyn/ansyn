@@ -34,13 +34,13 @@ describe('AlertsPlugin', () => {
 
 	describe('setOverlaysNotInCase', () => {
 		it('should add alert if not null and not include on filteredOverlays)', () => {
-			const all: any = [{ id: '1' }, { id: '2' }, { id: '3' }];
+			const all: any = [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }];
 			const filtered: string[] = ['1', '2', '3'];
 			alertsPlugin.overlay = <any>{ id: '4' };
 			const result = alertsPlugin.setOverlaysNotInCase([all, filtered]);
 			expect(result).toEqual(new AddAlertMsg({
 				key: AlertMsgTypesEnum.overlayIsNotPartOfQuery,
-				value: 'mapId'
+				overlayId: alertsPlugin.overlay.id
 			}));
 		});
 
@@ -52,7 +52,7 @@ describe('AlertsPlugin', () => {
 				const result = alertsPlugin.setOverlaysNotInCase([all, filtered]);
 				expect(result).toEqual(new RemoveAlertMsg({
 					key: AlertMsgTypesEnum.overlayIsNotPartOfQuery,
-					value: 'mapId'
+					overlayId: alertsPlugin.overlay.id
 				}));
 			});
 
@@ -63,7 +63,7 @@ describe('AlertsPlugin', () => {
 				const result = alertsPlugin.setOverlaysNotInCase([all, filtered]);
 				expect(result).toEqual(new RemoveAlertMsg({
 					key: AlertMsgTypesEnum.overlayIsNotPartOfQuery,
-					value: 'mapId'
+					overlayId: undefined
 				}));
 			});
 

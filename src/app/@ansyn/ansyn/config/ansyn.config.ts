@@ -14,7 +14,7 @@ import { AnaglyphSensorAlertComponent } from '../modules/plugins/openlayers/plug
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
 	ansynAlerts: [
 		{
-			key: 'noGeoRegistration',
+			key: 'notGeoRegistered',
 			background: '#a70b0b',
 			text: 'This Image Has No Geo-Registration'
 		},

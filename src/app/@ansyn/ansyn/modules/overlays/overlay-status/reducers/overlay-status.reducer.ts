@@ -80,21 +80,28 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 
 		case OverlayStatusActionsTypes.ADD_ALERT_MSG: {
 			const alertKey = action.payload.key;
-			const mapId = action.payload.value;
+			const overlayId = action.payload.overlayId;
 			const alertMsg = new Map(state.alertMsg);
-			const updatedSet = new Set(alertMsg.get(alertKey));
-			updatedSet.add(mapId);
-			alertMsg.set(alertKey, updatedSet);
+			const updatedSet = new Set(alertMsg.get(overlayId));
+			updatedSet.add(alertKey);
+			alertMsg.set(overlayId, updatedSet);
 			return { ...state, alertMsg };
 		}
 
 		case OverlayStatusActionsTypes.REMOVE_ALERT_MSG: {
 			const alertKey = action.payload.key;
-			const mapId = action.payload.value;
+			const overlayId = action.payload.overlayId;
 			const alertMsg = new Map(state.alertMsg);
-			const updatedSet = new Set(alertMsg.get(alertKey));
-			updatedSet.delete(mapId);
-			alertMsg.set(alertKey, updatedSet);
+			if (overlayId && alertMsg.has(overlayId)) {
+				const updatedSet = new Set(alertMsg.get(overlayId));
+				updatedSet.delete(alertKey);
+				if (updatedSet.size) {
+					alertMsg.set(overlayId, updatedSet);
+				}
+				else {
+					alertMsg.delete(overlayId);
+				}
+			}
 			return { ...state, alertMsg };
 		}
 

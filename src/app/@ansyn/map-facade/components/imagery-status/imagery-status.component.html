@@ -20,7 +20,7 @@
 	<button *ngIf="mapsAmount > 1"
 			class="small-icon-button link-maps"
 			[attr.tooltip-value]="'Momentarily link screens' | translate"
-			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'"
+			tooltip-class="bottom right"
 			[disabled]="noGeoRegistration"
 			(click)="toggleMapSynchronization.emit()">
 		<i class="icon icon-temporary-link"></i>
@@ -30,7 +30,7 @@
 			[disabled]="noGeoRegistration"
 			(click)="toggleMapLayers()"
 			[attr.tooltip-value]="'Show/ Hide layers' | translate"
-			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
+			tooltip-class="bottom right">
 		<i [class.icon-layers-show]="!hideLayers"
 		   [class.icon-layers-hide]="hideLayers"></i>
 	</button>
@@ -46,7 +46,7 @@
 
 <div class="description">
 	<ansyn-popover *ngIf="overlay" [text]="overlayDescription"
-				   [popDirection]="mapsAmount > 1 ? 'bottom wrap' : 'top wrap'">
+				   [popDirection]="'bottom wrap'">
 		<button class="share-link" (click)="copyOverlayDescription()">
 			<span>{{overlayDescription | translate}}</span>
 		</button>

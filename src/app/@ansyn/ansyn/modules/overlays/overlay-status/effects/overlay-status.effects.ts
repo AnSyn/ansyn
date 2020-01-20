@@ -36,7 +36,7 @@ import { IOverlaysScannedAreaData, IOverlaysTranslationData } from '../../../men
 import { selectScannedAreaData, selectTranslationData } from '../reducers/overlay-status.reducer';
 import { IOverlay } from '../../models/overlay.model';
 import { feature } from '@turf/turf';
-
+import { ImageryVideoMapType } from '@ansyn/imagery-video';
 
 @Injectable()
 export class OverlayStatusEffects {
@@ -55,7 +55,7 @@ export class OverlayStatusEffects {
 			}),
 			filter(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => Boolean(communicator)),
 			switchMap(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => {
-				const disabledMap = communicator.activeMapName === DisabledOpenLayersMapName;
+				const disabledMap = communicator.activeMapName === DisabledOpenLayersMapName || communicator.activeMapName === ImageryVideoMapType;
 				this.store$.dispatch(new UpdateMapAction({
 					id: communicator.id,
 					changes: { data: { ...selectedMap.data, overlay: null, isAutoImageProcessingActive: false } }

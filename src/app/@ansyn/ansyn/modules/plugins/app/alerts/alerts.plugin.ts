@@ -5,14 +5,14 @@ import {
 	ImageryPlugin
 } from '@ansyn/imagery';
 import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ol';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { combineLatest, Observable, of } from 'rxjs';
 import { selectMapPositionByMapId, selectOverlayByMapId } from '@ansyn/map-facade';
-import { filter, map, switchMap, tap, startWith } from 'rxjs/operators';
+import { filter, map, switchMap, tap, startWith  } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
-import { AlertMsg, AlertMsgTypesEnum } from '../../../alerts/model';
+import { AlertMsgTypesEnum } from '../../../alerts/model';
 import { AddAlertMsg, RemoveAlertMsg } from '../../../overlays/overlay-status/actions/overlay-status.actions';
-import { selectFilteredOveralys, selectOverlaysMap } from '../../../overlays/reducers/overlays.reducer';
+import { selectFilteredOveralys } from '../../../overlays/reducers/overlays.reducer';
 import { isFullOverlay } from '../../../core/utils/overlays';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { CesiumMap } from '@ansyn/imagery-cesium';
@@ -26,6 +26,7 @@ export class AlertsPlugin extends BaseImageryPlugin {
 	notInQueryMsg: boolean;
 	outOfBound: boolean;
 	filteredOverlay$ = this.store$.select(selectFilteredOveralys);
+
 	@AutoSubscription
 	selectAlertMsg$ = this.store$.select(selectAlertMsg).pipe(
 		tap( alertMsg => {
@@ -37,6 +38,7 @@ export class AlertsPlugin extends BaseImageryPlugin {
 	);
 
 	overlayByMap$ = (mapId) => this.store$.select(selectOverlayByMapId(mapId));
+
 	@AutoSubscription
 	setOverlaysNotInCase$ = () => combineLatest(
 		this.overlayByMap$(this.mapId).pipe(startWith(null)),

@@ -40,7 +40,7 @@ import { ScannedAreaVisualizer } from './plugins/visualizers/scanned-area/scanne
 import { OpenlayersAnaglyphSensorModule } from './plugins/anaglyph-sensor/anaglyph-sensor.module';
 import { OpenLayersAirbusSourceProvider } from '@ansyn/ol';
 import { OverlayHoverVisualizer } from "./plugins/visualizers/overlays/overlay-hover-visualizer";
-import { OpenLayerPic4CartoSourceProvider } from '../../../../ol/mapSourceProviders/open-layers-Pic4Carto-source-provider';
+import { OpenLayerPic4CartoSourceProvider } from '@ansyn/ol';
 
 @NgModule({
 	imports: [

@@ -73,7 +73,7 @@ import {
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { isEqual } from 'lodash';
 import { selectGeoRegisteredOptionsEnabled } from '../../modules/menu-items/tools/reducers/tools.reducer';
-import { ImageryVideoMapType } from '../../modules/imagery-video/map/imagery-video-map';
+import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import { LoggerService } from '../../modules/core/services/logger.service';
 
 @Injectable()

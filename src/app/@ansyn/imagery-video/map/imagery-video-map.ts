@@ -1,4 +1,4 @@
-import { BaseImageryMap, ICanvasExportData, ImageryMap, ImageryMapExtent, ImageryMapPosition } from '@ansyn/imagery';
+import { BaseImageryMap, ImageryMap, ImageryMapExtent, ImageryMapPosition } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
 import { GeoJsonObject, Point } from 'geojson';
 import { HttpClient } from '@angular/common/http';

@@ -1,0 +1,19 @@
+{
+	"name": "@ansyn/imagery-video",
+	"version": "0.6.3",
+	"peerDependencies": {
+		"@angular/core": "^7.2.2",
+		"@angular/common": "^7.2.2",
+		"@angular/platform-browser": "^7.2.2",
+		"@ansyn/imagery": "0.6.3",
+		"@ansyn/map-facade": "0.6.3",
+		"rxjs": "^6.4.0"
+	},
+	"dependencies": {
+		"auto-subscriptions": "^2.0.5",
+		"@turf/turf": "^5.1.6",
+		"ngx-color-picker": "^7.5.0",
+		"angular2-uuid": "^1.1.1"
+	},
+	"license": "MIT"
+}

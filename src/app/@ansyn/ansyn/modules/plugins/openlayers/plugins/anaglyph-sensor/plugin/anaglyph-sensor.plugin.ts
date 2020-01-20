@@ -49,7 +49,7 @@ export class AnaglyphSensorPlugin extends BaseImageryPlugin {
 					}
 				});
 			}
-			else if (this.anglyphMsg){
+			else if (this.anglyphMsg) {
 				this.store$.dispatch(new RemoveAlertMsg({ key: anaglyphSensorAlertKey, value: this.mapId }));
 			}
 

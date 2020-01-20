@@ -1,12 +1,13 @@
 import { Component, Input } from '@angular/core';
 import { saveAs } from 'file-saver';
-import tokml from 'tokml';
 import { cloneDeep } from 'lodash';
 import { Store } from '@ngrx/store';
 import { ILayerState } from '../../../reducers/layers.reducer';
 import { CloseLayersModal } from '../../../actions/layers.actions';
 import { UUID } from 'angular2-uuid';
 import { ILayer } from '../../../models/layers.model';
+import GeoJsonFormat from 'ol/format/GeoJSON';
+import KMLFormat from 'ol/format/KML';
 
 @Component({
 	selector: 'ansyn-download-layers',
@@ -15,8 +16,12 @@ import { ILayer } from '../../../models/layers.model';
 })
 export class DownloadLayersComponent {
 	@Input() layer: ILayer;
+	geoJsonFormat: GeoJsonFormat;
+	kmlFormat: KMLFormat;
 
 	constructor(protected store: Store<ILayerState>) {
+		this.geoJsonFormat = new GeoJsonFormat();
+		this.kmlFormat = new KMLFormat();
 	}
 
 	downloadGeojson() {
@@ -31,10 +36,9 @@ export class DownloadLayersComponent {
 		const annotationsLayer = cloneDeep(this.layer.data);
 		this.generateFeaturesIds(annotationsLayer);
 		this.visualizerToSimpleStyle(annotationsLayer);
-		const blob = new Blob([tokml(annotationsLayer, {
-			simplestyle: true,
-			name: 'label'
-		})], { type: 'application/vnd.google-earth.kml+xml' });
+		const features = this.geoJsonFormat.readFeatures(annotationsLayer);
+		const kml = this.kmlFormat.writeFeatures(features);
+		const blob = new Blob([kml], { type: 'application/vnd.google-earth.kml+xml' });
 		saveAs(blob, `${ this.layer.name }.kml`);
 		this.store.dispatch(new CloseLayersModal());
 	}
@@ -50,8 +54,8 @@ export class DownloadLayersComponent {
 	visualizerToSimpleStyle(annotationsLayer): void {
 		/* reference */
 		annotationsLayer.features.forEach((feature) => {
-			const { style, ...props } = feature.properties;
-			feature.properties = { ...style.initial, ...props };
+			const { style, label, ...props } = feature.properties;
+			feature.properties = { style: JSON.stringify(style), label: JSON.stringify(label), ...props };
 		});
 	}
 

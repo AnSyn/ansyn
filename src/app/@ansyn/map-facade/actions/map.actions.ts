@@ -78,8 +78,10 @@ export const MapActionTypes = {
 	SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG: 'SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG',
 	SET_TOAST_MESSAGE: 'SET_TOAST_MESSAGE',
 	FOOTER_COLLAPSE: 'FOOTER_COLLAPSE',
+	EXPORT_MAPS_TO_PNG_REQUEST: 'EXPORT_MAPS_TO_PNG_REQUEST',
 	EXPORT_MAPS_TO_PNG_SUCCESS: 'EXPORT_MAPS_TO_PNG_SUCCESS',
-	EXPORT_MAPS_TO_PNG_FAILED: 'EXPORT_MAPS_TO_PNG_FAILED'
+	EXPORT_MAPS_TO_PNG_FAILED: 'EXPORT_MAPS_TO_PNG_FAILED',
+	SET_MINIMALIST_VIEW_MODE: '[Maps] Set Minimalist View Mode',
 };
 
 export interface IContextMenuShowPayload {
@@ -94,6 +96,20 @@ export class ExportMapsToPngActionFailed implements Action {
 	readonly type = MapActionTypes.EXPORT_MAPS_TO_PNG_FAILED;
 
 	constructor(error: any) {
+	}
+}
+
+export class SetMinimalistViewModeAction implements Action {
+	type = MapActionTypes.SET_MINIMALIST_VIEW_MODE;
+
+	constructor(public payload: boolean) {
+	}
+}
+
+export class ExportMapsToPngRequestedAction implements Action {
+	readonly type = MapActionTypes.EXPORT_MAPS_TO_PNG_REQUEST;
+
+	constructor() {
 	}
 }
 
@@ -342,7 +358,7 @@ export class SetLayoutSuccessAction implements Action {
 export class ToggleMapLayersAction implements Action {
 	type = MapActionTypes.TOGGLE_MAP_LAYERS;
 
-	constructor(public payload: { mapId: string }) {
+	constructor(public payload: { mapId: string, isVisible: boolean}) {
 	}
 }
 

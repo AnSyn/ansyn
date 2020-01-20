@@ -1,4 +1,4 @@
-import { BaseImageryMap, ICanvasExportData, ImageryMap, ImageryMapExtent, ImageryMapPosition } from '@ansyn/imagery';
+import { BaseImageryMap, ImageryMap, ImageryMapExtent, ImageryMapPosition } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
 import { GeoJsonObject, Point } from 'geojson';
 import { HttpClient } from '@angular/common/http';
@@ -36,14 +36,6 @@ export class ImageryVideoMap extends BaseImageryMap<any> {
 
 	getHtmlContainer(): HTMLElement {
 		return this.videoComponent.video.nativeElement;
-	}
-
-	getExportData(): ICanvasExportData {
-		return {
-			width: 200,
-			height: 200,
-			data: 'unsupported'
-		}
 	}
 
 	addGeojsonLayer(data: GeoJsonObject) {

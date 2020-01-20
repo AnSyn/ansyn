@@ -41,7 +41,14 @@ const mockAnsynComboBox = MockComponent({
 
 const mockComboBoxOptionComponent = MockComponent({
 	selector: 'ansyn-combo-box-option',
-	inputs: ['value'],
+	inputs: ['value', 'disabled'],
+	outputs: []
+});
+
+
+const mockAnsynLoaderComponent = MockComponent({
+	selector: 'ansyn-loader',
+	inputs: ['show', 'loaderText', 'rtl'],
 	outputs: []
 });
 
@@ -75,6 +82,7 @@ describe('ImageriesManagerComponent', () => {
 				mockAnnotationContextMenu,
 				mockAnsynWelcomeNotification,
 				mockAnsynPopoverComponent,
+				mockAnsynLoaderComponent,
 				EntryComponentDirective
 			]
 

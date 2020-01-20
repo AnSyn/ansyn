@@ -3,11 +3,14 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
 import { DataLayersService } from '../../services/data-layers.service';
 import { AddLayer } from '../../actions/layers.actions';
-import * as toGeoJSON from 'togeojson';
 import { fromEvent, Observable } from 'rxjs';
 import { UUID } from 'angular2-uuid';
 import { SetToastMessageAction } from '@ansyn/map-facade';
 import { tap } from 'rxjs/operators';
+import { FeatureCollection } from 'geojson';
+import KmlFormat from 'ol/format/KML';
+import GeoJSONFormat from 'ol/format/GeoJSON';
+import { getErrorMessageFromException } from '../../../../core/utils/logs/timer-logs';
 
 @Component({
 	selector: 'ansyn-import-layer',
@@ -20,6 +23,8 @@ import { tap } from 'rxjs/operators';
 })
 export class ImportLayerComponent implements OnInit, OnDestroy {
 	reader = new FileReader();
+	kmlFormat = new KmlFormat();
+	geoJsonFormat = new GeoJSONFormat();
 	file: File;
 
 	@AutoSubscription
@@ -32,7 +37,8 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 				const readerResult: string = <string>this.reader.result;
 				switch (fileType.toLowerCase()) {
 					case 'kml':
-						layerData = toGeoJSON.kml((new DOMParser()).parseFromString(readerResult, 'text/xml'));
+						const features = this.kmlFormat.readFeatures(readerResult);
+						layerData = JSON.parse(this.geoJsonFormat.writeFeatures(features));
 						this.simpleStyleToVisualizer(layerData);
 						break;
 					case 'json':
@@ -46,15 +52,16 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 
 				if (this.isFeatureCollection(layerData)) {
 					this.generateFeaturesIds(layerData);
-					const layer = this.dataLayersService.generateAnnotationLayer(layerName, layerData);
+					const isNonEditable = this.isNonEditable(layerData);
+					const layer = this.dataLayersService.generateAnnotationLayer(layerName, layerData, isNonEditable);
 					this.store.dispatch(new AddLayer(layer));
 				} else {
 					throw new Error('Not a feature collection');
 				}
-			} catch (toastText) {
+			} catch (error) {
 				this.store.dispatch(new SetToastMessageAction({
 					showWarningIcon: true,
-					toastText: toastText || 'Failed to import file'
+					toastText: getErrorMessageFromException(error, 'Failed to import file')
 				}));
 			}
 		})
@@ -78,25 +85,46 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 		return json && json.type === 'FeatureCollection' && Array.isArray(json.features);
 	}
 
-	generateFeaturesIds(annotationsLayer): void {
+	generateFeaturesIds(featureCollection: FeatureCollection): void {
 		/* reference */
-		annotationsLayer.features.forEach((feature) => {
-			feature.properties = { ...feature.properties, id: UUID.UUID() };
+		featureCollection.features.forEach((feature) => {
+			const newId = UUID.UUID();
+			feature.id = newId;
+			feature.properties = { ...feature.properties, id: newId };
 		});
+	}
+
+	isNonEditable(featureCollection: FeatureCollection): boolean {
+		return featureCollection.features.some((feature) => feature.properties.isNonEditable);
 	}
 
 	simpleStyleToVisualizer(annotationsLayer): void {
 		/* reference */
 		annotationsLayer.features.forEach((feature) => {
-			const { id, label, showMeasures, mode, ...initial } = feature.properties;
+			const { id, showMeasures, mode, icon, labelSize, undeletable, label, style, isNonEditable } = feature.properties;
 			feature.properties = {
 				id,
-				label,
+				label: this.extractLabel(label),
 				showMeasures: JSON.parse(showMeasures ? showMeasures : null),
 				mode,
-				style: { initial }
+				icon,
+				labelSize: isNaN(labelSize) ? 28 : parseInt(labelSize, 10),
+				undeletable: JSON.parse(undeletable),
+				style: JSON.parse(style),
+				isNonEditable: JSON.parse(isNonEditable || false)
 			};
 		});
+	}
+
+	extractLabel(label: string): {text: string, geometry: any} {
+		let newLabel = {text: '', geometry: null};
+		try {
+			newLabel = JSON.parse(label);
+		}catch (e) {
+			newLabel.text = label;
+		}finally {
+			return newLabel;
+		}
 	}
 
 }

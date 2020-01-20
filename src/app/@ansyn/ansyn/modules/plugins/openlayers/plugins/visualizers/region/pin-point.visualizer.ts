@@ -13,7 +13,8 @@ import { CaseGeoFilter, CaseRegionState } from '../../../../../menu-items/cases/
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, Actions, OpenLayersProjectionService]
+	deps: [Store, Actions, OpenLayersProjectionService],
+	dontRestrictToExtent: true
 })
 export class PinPointVisualizer extends RegionVisualizer {
 	_iconSrc: Style = new Style({

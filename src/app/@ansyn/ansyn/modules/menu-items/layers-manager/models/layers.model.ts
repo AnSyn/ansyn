@@ -24,4 +24,5 @@ export interface ILayer extends IEntity {
 	data?: any;
 	caseId?: string;
 	extent?: [number, number, number, number];
+	isNonEditable?: boolean;
 }

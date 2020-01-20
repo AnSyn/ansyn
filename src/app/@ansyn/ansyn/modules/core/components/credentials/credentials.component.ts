@@ -1,17 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CredentialsService } from '../../services/credentials/credentials.service';
 import { tap } from 'rxjs/operators';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { Store } from '@ngrx/store';
+import { selectIsMinimalistViewMode } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-credentials',
 	templateUrl: './credentials.component.html',
 	styleUrls: ['./credentials.component.less']
 })
-export class CredentialsComponent implements OnInit {
+@AutoSubscriptions()
+export class CredentialsComponent implements OnInit, OnDestroy {
 	isOpen: boolean;
+	show: boolean;
 	credentialsMessage: any;
 
-	constructor(protected credentialsService: CredentialsService) {
+	@AutoSubscription
+	isMinimalistViewMode$ = this.store$.select(selectIsMinimalistViewMode).pipe(
+		tap(isMinimalistViewMode => {
+			this.show = !isMinimalistViewMode;
+		})
+	);
+
+	constructor(protected credentialsService: CredentialsService,
+				protected store$: Store<any>) {
 		this.isOpen = false;
 	}
 
@@ -21,6 +34,10 @@ export class CredentialsComponent implements OnInit {
 				this.credentialsMessage = this.credentialsService.credentials;
 			})
 		).subscribe();
+	}
+
+	ngOnDestroy() {
+
 	}
 
 	openCredentials() {

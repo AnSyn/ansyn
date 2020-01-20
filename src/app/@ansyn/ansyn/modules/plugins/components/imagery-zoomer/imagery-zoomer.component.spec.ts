@@ -4,6 +4,7 @@ import { ImageryZoomerComponent } from './imagery-zoomer.component';
 import { of } from 'rxjs';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { TranslateModule } from '@ngx-translate/core';
+import { StoreModule } from '@ngrx/store';
 
 describe('ImageryZoomerComponent', () => {
 	let component: ImageryZoomerComponent;
@@ -23,7 +24,7 @@ describe('ImageryZoomerComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ImageryZoomerComponent],
-			imports: [TranslateModule.forRoot()],
+			imports: [TranslateModule.forRoot(), StoreModule.forRoot({})],
 			providers: [
 				{
 					provide: ImageryCommunicatorService,

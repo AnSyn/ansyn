@@ -7,11 +7,15 @@ import Circle from 'ol/style/Circle';
 import Fill from 'ol/style/Fill';
 import Text from 'ol/style/Text';
 import Icon from 'ol/style/Icon';
+import Point from 'ol/geom/Point';
 import VectorLayer from 'ol/layer/Vector';
 import ol_Layer from 'ol/layer/Layer';
-
+import OLGeoJSON from 'ol/format/GeoJSON';
 import {
 	BaseImageryVisualizer,
+	calculateGeometryArea,
+	calculateLineDistance,
+	getPointByGeometry,
 	IVisualizerEntity,
 	IVisualizerStateStyle,
 	IVisualizerStyle,
@@ -19,7 +23,7 @@ import {
 	VisualizerInteractionTypes,
 	VisualizerStates
 } from '@ansyn/imagery';
-import { Observable, of } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import * as ol_color from 'ol/color';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { map } from 'rxjs/operators';
@@ -33,11 +37,12 @@ export interface IFeatureIdentifier {
 export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	isHidden = false;
 	public source: SourceVector;
-	protected featuresCollection: Feature[];
 	vector: ol_Layer;
 	public idToEntity: Map<string, IFeatureIdentifier> = new Map<string, { feature: null, originalEntity: null }>();
+	offset: [number, number] = [0, 0];
+	interactions: Map<VisualizerInteractionTypes, any> = new Map<VisualizerInteractionTypes, any>();
+	protected featuresCollection: Feature[];
 	protected disableCache = false;
-
 	protected visualizerStyle: IVisualizerStateStyle = {
 		opacity: 1,
 		initial: {
@@ -48,18 +53,23 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		}
 	};
 
-	offset: [number, number] = [0, 0];
-
-	interactions: Map<VisualizerInteractionTypes, any> = new Map<VisualizerInteractionTypes, any>();
-
 	constructor(visualizerStyle: Partial<IVisualizerStateStyle> = {}, defaultStyle: Partial<IVisualizerStateStyle> = {}) {
 		super();
 		merge(this.visualizerStyle, defaultStyle, visualizerStyle);
 	}
 
 	getEntity(feature: Feature): IVisualizerEntity {
-		const entity = this.idToEntity.get(<string>feature.getId());
+		return this.getEntityById(<string>feature.getId());
+	}
+
+	getEntityById(featureId: string): IVisualizerEntity {
+		const entity = this.idToEntity.get(featureId);
 		return entity && entity.originalEntity;
+	}
+
+	getJsonFeatureById(featureId: string): Feature {
+		const originalEntity = this.getEntityById(featureId);
+		return originalEntity && originalEntity.featureJson;
 	}
 
 	onInit() {
@@ -75,13 +85,14 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		this.featuresCollection = [];
 		this.source = new SourceVector({ features: this.featuresCollection, wrapX: false });
 
+		let extent = !this.dontRestrictToExtent ? this.iMap.getMainLayer().getExtent() : undefined;
 		this.vector = new VectorLayer(<any>{
 			source: this.source,
 			style: this.featureStyle.bind(this),
 			opacity: this.visualizerStyle.opacity,
 			renderBuffer: 5000,
 			zIndex: 10,
-			extent: this.iMap.getMainLayer().getExtent()
+			extent: extent
 		});
 
 		if (!this.isHidden) {
@@ -93,12 +104,12 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 	}
 
-	toggleVisibility() {
+	setVisibility(isVisible: boolean) {
 		if (!this.isHideable) {
 			return;
 		}
 
-		this.isHidden = !this.isHidden;
+		this.isHidden = !isVisible;
 		if (this.isHidden) {
 			this.iMap.removeLayer(this.vector);
 		} else {
@@ -178,32 +189,33 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			secondaryStyle.geometry = styleSettings.geometry
 		}
 
-		if (styleSettings.label) {
+		if ((styleSettings.label && styleSettings.label.text) && !feature.getProperties().labelTranslateOn) {
 			const fill = new Fill({ color: styleSettings.label.fill });
 			const stroke = new Stroke({
 				color: styleSettings.label.stroke ? styleSettings.label.stroke : '#fff',
 				width: styleSettings.label.stroke ? 4 : 0
 			});
+			const { label } = styleSettings;
 
 			textStyle.text = new Text({
-				font: styleSettings.label.font,
-				offsetX: styleSettings.label.offsetX,
+				overflow: label.overflow,
+				font: `${styleSettings.label.fontSize}px Calibri,sans-serif`,
 				offsetY: <any>styleSettings.label.offsetY,
-				overflow: styleSettings.label.overflow,
-				text: <any>styleSettings.label.text,
+				text: <any>label.text,
 				fill,
 				stroke
 			});
-			if (feature.getProperties().mode === 'Arrow') {
-				textStyle.geometry = (feature) => {
-					if (feature.getGeometry().getLineString) {
-						return feature.getGeometry().getLineString(0)
-					}
-					else { // for kml import
-						return feature.getGeometry().getGeometries()[0];
-					}
+			textStyle.geometry = (feature) => {
+				const { label } = feature.getProperties();
+				if (label.geometry) {
+					const oldCoordinates = label.geometry.getCoordinates();
+					const newCoordinates = [this.offset[0] + oldCoordinates[0] , this.offset[1] + oldCoordinates[1]];
+					return new Point(newCoordinates);
 				}
-			}
+				return new Point(this.getCenterOfFeature(feature).coordinates)
+			};
+
+			firstStyle.geometry = (feature) => feature.getGeometry();
 		}
 
 		if (styleSettings['marker-color'] || styleSettings['marker-size']) {
@@ -257,22 +269,35 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		if (filteredLogicalEntities.length <= 0) {
 			return of(true);
 		}
-		const features = filteredLogicalEntities.map(entity => ({ ...entity.featureJson, id: entity.id }));
+		const features = [];
+		const labels = [];
+		filteredLogicalEntities.forEach(entity => {
+			features.push({ ...entity.featureJson, id: entity.id });
+			if (entity.label && entity.label.geometry) {
+				const temp = this.geometryToEntity(entity.id, entity.label.geometry);
+				labels.push({ ...temp.featureJson, id: temp.id });
+			}
+		});
 
 		const featuresCollectionToAdd: any = featureCollection(features);
-
+		const labelCollectionToAdd: any = featureCollection(labels);
 		filteredLogicalEntities.forEach((entity: IVisualizerEntity) => {
 			this.removeEntity(entity.id, true);
 		});
 
-		return (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap.mapObject)
-			.pipe(map((features: Feature[]) => {
+		const featuresProject = (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap.mapObject);
+		const labelsProject = (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(labelCollectionToAdd, this.iMap.mapObject);
+		return forkJoin(featuresProject, labelsProject)
+			.pipe(map(([features, labels]: [Feature[], Feature[]]) => {
 				features.forEach((feature: Feature) => {
 					const _id: string = <string>feature.getId();
-					this.idToEntity.set(_id, <any>{
+					const label = labels.find(label => label.getId() === _id);
+					const entity: IFeatureIdentifier = {
 						originalEntity: filteredLogicalEntities.find(({ id }) => id === _id),
 						feature: feature
-					});
+					};
+					entity.feature.set('label', { ...feature.get('label'), geometry: label && label.getGeometry() });
+					this.idToEntity.set(_id, entity);
 					const featureWithTheSameId = this.source.getFeatureById(_id);
 					if (featureWithTheSameId) {
 						this.source.removeFeature(featureWithTheSameId);
@@ -378,5 +403,34 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		};
 		return { id, featureJson };
 	}
+
+	protected getCenterOfFeature(feature: Feature) {
+		const featureGeoJson = new OLGeoJSON().writeFeatureObject(feature);
+		return getPointByGeometry(featureGeoJson.geometry);
+	}
+
+	formatLength(coordinates: number[][]) {
+		const length = coordinates.reduce((length: number, coord, index, arr) => {
+			if (arr[index + 1] === undefined) {
+				return length;
+			}
+			const aPoint = new OLGeoJSON().writeGeometryObject(new Point(coord));
+			const bPoint = new OLGeoJSON().writeGeometryObject(new Point(arr[index + 1]));
+			return length + calculateLineDistance(aPoint, bPoint);
+		}, 0);
+
+		if (length < 1) {
+			return (length * 1000).toFixed(2) + 'm';
+		} else {
+			return length.toFixed(2) + 'km';
+		}
+	}
+
+	formatArea(geometry) {
+		const polygon = new OLGeoJSON().writeGeometryObject(geometry);
+		return (calculateGeometryArea(polygon) / 1000000).toFixed(2) + 'km2'
+	}
+
+
 
 }

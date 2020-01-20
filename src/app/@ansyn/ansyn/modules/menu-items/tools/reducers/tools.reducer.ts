@@ -1,9 +1,10 @@
 import { StartMouseShadow, StopMouseShadow, ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { IVisualizerStyle } from '@ansyn/imagery';
+import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { ImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 import { AnnotationMode } from '@ansyn/ol';
+import { selectActiveMapId } from '@ansyn/map-facade';
 
 export enum toolsFlags {
 	geoRegisteredOptionsEnabled = 'geoRegisteredOptionsEnabled',
@@ -13,11 +14,26 @@ export enum toolsFlags {
 	pinLocation = 'pinLocation',
 	autoImageProcessing = 'autoImageProcessing',
 	imageProcessingDisabled = 'imageProcessingDisabled',
-	isMeasureToolActive = 'isMeasureToolActive',
-	hideMeasure = 'hideMeasure'
+	isMeasureToolActive = 'isMeasureToolActive'
 }
 
 export enum SubMenuEnum { goTo, manualImageProcessing, overlays, annotations }
+
+export interface IMeasureData {
+	meausres: IVisualizerEntity[];
+	isLayerShowed: boolean;
+	isToolActive: boolean;
+	isRemoveMeasureModeActive: boolean;
+}
+
+export function createNewMeasureData(): IMeasureData {
+	return {
+		isLayerShowed: true,
+		isToolActive: true,
+		isRemoveMeasureModeActive: false,
+		meausres: []
+	}
+}
 
 export interface IToolsState {
 	flags: Map<toolsFlags, boolean>;
@@ -29,6 +45,7 @@ export interface IToolsState {
 	manualImageProcessingParams: ImageManualProcessArgs;
 	overlaysManualProcessArgs: IOverlaysManualProcessArgs;
 	activeAnnotationLayer: string;
+	mapsMeasures: Map<string, IMeasureData>;
 }
 
 export const toolsInitialState: IToolsState = {
@@ -48,7 +65,8 @@ export const toolsInitialState: IToolsState = {
 	},
 	manualImageProcessingParams: undefined,
 	overlaysManualProcessArgs: {},
-	activeAnnotationLayer: null
+	activeAnnotationLayer: null,
+	mapsMeasures: new Map<string, IMeasureData>()
 };
 
 export const toolsFeatureKey = 'tools';
@@ -68,7 +86,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 
 		case ToolsActionsTypes.STORE.SET_ANNOTATION_MODE:
 			const annotationMode = action.payload ? action.payload.annotationMode : null;
-			return { ...state, annotationMode: annotationMode};
+			return { ...state, annotationMode: annotationMode };
 
 		case ToolsActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED:
 			tmpMap = new Map(state.flags);
@@ -119,11 +137,44 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			tmpMap.set(toolsFlags.autoImageProcessing, action.payload);
 			return { ...state, flags: tmpMap };
 
-		case ToolsActionsTypes.SET_MEASURE_TOOL_STATE:
+		case ToolsActionsTypes.MEASURES.SET_MEASURE_TOOL_STATE:
 
 			tmpMap = new Map(state.flags);
 			tmpMap.set(toolsFlags.isMeasureToolActive, action.payload);
-			return { ...state, flags: tmpMap };
+			const mapsMeasures = new Map(state.mapsMeasures);
+			Array.from(mapsMeasures.keys()).forEach((key: string) => {
+				mapsMeasures.set(key, createNewMeasureData());
+			});
+			return { ...state, flags: tmpMap, mapsMeasures };
+
+		case ToolsActionsTypes.MEASURES.CREATE_MEASURE_DATA: {
+
+			const mapsMeasures = new Map(state.mapsMeasures);
+			if (!mapsMeasures.has(action.payload.mapId)) {
+				mapsMeasures.set(action.payload.mapId, createNewMeasureData());
+			}
+			return { ...state, mapsMeasures };
+		}
+
+		case ToolsActionsTypes.MEASURES.REMOVE_MEASURE_DATA: {
+
+			const mapsMeasures = new Map(state.mapsMeasures);
+			if (mapsMeasures.has(action.payload.mapId)) {
+				mapsMeasures.delete(action.payload.mapId);
+			}
+			return { ...state, mapsMeasures };
+		}
+
+		case ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATA: {
+			const payloadMeasureData: IMeasureData = action.payload.measureData;
+			const mapsMeasures = new Map(state.mapsMeasures);
+			if (mapsMeasures.has(action.payload.mapId)) {
+				let data: IMeasureData = mapsMeasures.get(action.payload.mapId);
+				data = { ...data, ...payloadMeasureData };
+				mapsMeasures.set(action.payload.mapId, { ...data });
+			}
+			return { ...state, mapsMeasures };
+		}
 
 		case ToolsActionsTypes.ENABLE_IMAGE_PROCESSING:
 
@@ -151,11 +202,6 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 		case ToolsActionsTypes.SET_SUB_MENU:
 			return { ...state, subMenu: action.payload };
 
-		case ToolsActionsTypes.HIDE_MEASURE_PANEL:
-			tmpMap = new Map(state.flags);
-			tmpMap.set(toolsFlags.hideMeasure, action.payload);
-			return { ...state, flags: tmpMap };
-
 		default:
 			return state;
 
@@ -169,6 +215,8 @@ export const selectAnnotationProperties = createSelector(toolsStateSelector, (to
 export const selectToolFlags = createSelector(toolsStateSelector, (tools: IToolsState) => tools.flags);
 export const selectToolFlag = (flag: toolsFlags) => createSelector(selectToolFlags, (flags: Map<toolsFlags, boolean>) => flags.get(flag));
 export const selectIsMeasureToolActive = createSelector(selectToolFlags, (_toolsFlags) => _toolsFlags.get(toolsFlags.isMeasureToolActive));
-export const selectIsMeasureToolHidden = createSelector(selectToolFlags, (_toolsFlags) => _toolsFlags.get(toolsFlags.hideMeasure));
 export const selectGeoRegisteredOptionsEnabled = createSelector(selectToolFlags, (_toolsFlags) => _toolsFlags.get(toolsFlags.geoRegisteredOptionsEnabled));
-export const selectOverlayFootprintMode = createSelector(toolsStateSelector, (tools: IToolsState) => tools.activeOverlaysFootprintMode)
+export const selectOverlayFootprintMode = createSelector(toolsStateSelector, (tools: IToolsState) => tools.activeOverlaysFootprintMode);
+export const selectMeasureDataByMapId = (mapId: string) => createSelector(toolsStateSelector, (tools: IToolsState) => {
+	return tools && tools.mapsMeasures && tools.mapsMeasures.get(mapId);
+});

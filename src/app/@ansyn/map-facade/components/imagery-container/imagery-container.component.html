@@ -1,15 +1,16 @@
 <div class="imagery" #imageryViewContainer (mouseleave)="mouseLeave()" (mouseenter)="mouseEnter()"
 	 [style.visibility]="(isHidden$ | async) ? 'hidden' : 'visible'">
-	<ansyn-imagery-status *ngIf="showStatus"
+	<ansyn-imagery-status
 						  class="with-background"
 						  [map]="mapState"
+						  [isMinimalistViewMode]="isMinimalistViewMode"
 						  (onMove)="onMove.emit($event)"
 						  (toggleMapSynchronization)="toggleMapSynchronization()">
 	</ansyn-imagery-status>
 
 	<ansyn-imagery-tile-progress [mapId]="mapState.id" [lowered]="showStatus && active"></ansyn-imagery-tile-progress>
 
-	<ansyn-floating-menu [mapState]="mapState"></ansyn-floating-menu>
+	<ansyn-floating-menu [isMinimalistViewMode]="isMinimalistViewMode" [mapState]="mapState"></ansyn-floating-menu>
 
 	<ansyn-imagery-view [settings]="mapState"></ansyn-imagery-view>
 
@@ -18,7 +19,7 @@
 	<ansyn-map-search-box *ngIf="packageConfig?.mapSearch?.active && !overlay"
 						  [mapId]="mapState.id"></ansyn-map-search-box>
 
-	<ansyn-imagery-mouse-coordinates [mapId]="mapState.id" [isVisible]="isInImagery"></ansyn-imagery-mouse-coordinates>
+	<ansyn-imagery-mouse-coordinates [mapId]="mapState.id" [isVisible]="isInImagery && !isMinimalistViewMode"></ansyn-imagery-mouse-coordinates>
 
 	<ng-container
 		*ngFor="let component of entryComponents.container"

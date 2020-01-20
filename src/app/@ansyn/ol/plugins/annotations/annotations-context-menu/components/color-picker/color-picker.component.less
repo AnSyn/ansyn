@@ -58,11 +58,12 @@ i {
 		opacity: .9;
 		outline: none;
 
-		&:disabled {
+		&.disabled {
 			opacity: .5;
+			cursor: unset;
 		}
 
-		&:hover:not(.active):not(:disabled) {
+		&:hover:not(.active):not(.disabled) {
 			opacity: 1;
 		}
 	}
@@ -75,6 +76,10 @@ i {
 		padding: 0;
 		margin: 0;
 		border: none;
+	}
+
+	/deep/ .color-picker {
+		transition: transform 0.2s;
 	}
 
 }

@@ -1,7 +1,11 @@
+import { SetMinimalistViewModeAction } from './actions/map.actions';
+
 export { ImageryZoomerService } from './services/imagery-zoomer.service';
 export { IEd50Notification } from './models/map-config.model';
 
 export { IEntryComponent } from './directives/entry-component.directive';
+
+
 
 export {
 	initialMapState,
@@ -9,6 +13,7 @@ export {
 	MapReducer,
 	IMapState,
 	mapStateSelector,
+	selectMapsIds,
 	selectActiveMapId,
 	selectMapsList,
 	selectMapsTotal,
@@ -24,10 +29,12 @@ export {
 	selectMapPositionByMapId,
 	selectMapsStateByIds,
 	selectOverlayDisplayModeByMapId,
-	selectOverlayOfActiveMap
+	selectOverlayOfActiveMap,
+	selectIsMinimalistViewMode
 } from './reducers/map.reducer';
 
 export {
+	SetMinimalistViewModeAction,
 	ImageryCreatedAction,
 	ImageryRemovedAction,
 	PinLocationModeTriggerAction,

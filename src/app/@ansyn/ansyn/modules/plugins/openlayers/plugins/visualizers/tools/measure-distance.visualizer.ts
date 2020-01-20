@@ -1,5 +1,7 @@
 import Feature from 'ol/Feature';
+import Collection from 'ol/Collection';
 import Draw from 'ol/interaction/Draw';
+import Translate from 'ol/interaction/Translate';
 import Text from 'ol/style/Text';
 import Fill from 'ol/style/Fill';
 import Style from 'ol/style/Style';
@@ -8,17 +10,21 @@ import Circle from 'ol/style/Circle';
 import Point from 'ol/geom/Point';
 import MultiPoint from 'ol/geom/MultiPoint';
 import LineString from 'ol/geom/LineString';
+import { LineString as geoJsonLineString } from 'geojson';
 import VectorSource from 'ol/source/Vector';
 import * as Sphere from 'ol/sphere';
 import GeoJSON from 'ol/format/GeoJSON';
+import * as condition from 'ol/events/condition';
+import Select from 'ol/interaction/Select';
 import { UUID } from 'angular2-uuid';
 import {
 	getPointByGeometry,
 	ImageryVisualizer,
 	IVisualizerEntity,
+	IVisualizersConfig,
 	MarkerSize,
 	VisualizerInteractions,
-	VisualizerStates
+	VisualizersConfig
 } from '@ansyn/imagery';
 import { FeatureCollection, GeometryObject } from 'geojson';
 import { combineLatest, Observable } from 'rxjs';
@@ -26,35 +32,31 @@ import { selectActiveMapId } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
 import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
-import { distinctUntilChanged, map, pluck, tap } from 'rxjs/operators';
-import { IToolsState, toolsFlags, toolsStateSelector } from '../../../../../menu-items/tools/reducers/tools.reducer';
+import { distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
+import {
+	IMeasureData,
+	selectIsMeasureToolActive,
+	selectMeasureDataByMapId
+} from '../../../../../menu-items/tools/reducers/tools.reducer';
+import { Inject } from '@angular/core';
+import { UpdateMeasureDataAction } from '../../../../../menu-items/tools/actions/tools.actions';
 
+interface ILabelHandler {
+	select: Select;
+	translate: Translate;
+}
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, OpenLayersProjectionService]
+	deps: [Store, OpenLayersProjectionService, VisualizersConfig],
+	isHideable: true
 })
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
-
-	isActiveMap$: Observable<boolean> = this.store$.select(selectActiveMapId).pipe(
-		map((activeMapId) => activeMapId === this.mapId),
-		distinctUntilChanged()
-	);
-
-	isMeasureToolActive$: Observable<boolean> = this.store$.select(toolsStateSelector).pipe(
-		pluck<IToolsState, Map<toolsFlags, boolean>>('flags'),
-		map((flags) => flags.get(toolsFlags.isMeasureToolActive)),
-		distinctUntilChanged()
-	);
-
-	@AutoSubscription
-	onChanges$ = combineLatest(this.isActiveMap$, this.isMeasureToolActive$).pipe(
-		tap(([isActiveMap, isMeasureToolActive]) => {
-			if (isActiveMap && isMeasureToolActive) {
-				this.createInteraction();
-			} else {
-				this.clearInteractionAndEntities();
-			}
-		}));
+	labelToMeasures: Map<string, { features: Feature[], handler: ILabelHandler }> = new Map();
+	isTotalMeasureActive: boolean;
+	measureData: IMeasureData;
+	geoJsonFormat: GeoJSON;
+	interactionSource: VectorSource;
+	hoveredMeasureId: string;
 
 	protected allLengthTextStyle = new Text({
 		font: '16px Calibri,sans-serif',
@@ -67,7 +69,6 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		}),
 		offsetY: 30
 	});
-
 	protected editDistanceStyle = new Style({
 		fill: new Fill({
 			color: 'rgba(255, 255, 255, 0.2)'
@@ -89,11 +90,117 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		zIndex: 3
 	});
 
-	geoJsonFormat: GeoJSON;
-	interactionSource: VectorSource;
+	constructor(protected store$: Store<any>,
+				protected projectionService: OpenLayersProjectionService,
+				@Inject(VisualizersConfig) config: IVisualizersConfig) {
+		super(config.MeasureDistanceVisualizer, {
+			initial: {
+				stroke: '#3399CC',
+				'stroke-width': 2,
+				fill: '#FFFFFF',
+				'marker-size': MarkerSize.small,
+				'marker-color': '#FFFFFF',
+				zIndex: 5
+			},
+			hover: {
+				stroke: '#ccb918',
+				'stroke-width': 2,
+				fill: '#61ff55',
+				'marker-size': MarkerSize.small,
+				'marker-color': '#ff521a',
+				zIndex: 5
+			}
+		});
+		this.isTotalMeasureActive = config.MeasureDistanceVisualizer.extra.isTotalMeasureActive;
+		this.geoJsonFormat = new GeoJSON();
+	}
 
 	get drawInteractionHandler() {
 		return this.interactions.get(VisualizerInteractions.drawInteractionHandler);
+	}
+
+	@AutoSubscription
+	show$ = () => combineLatest(
+		this.store$.select(selectActiveMapId),
+		this.store$.select(selectMeasureDataByMapId(this.mapId)),
+		this.store$.select(selectIsMeasureToolActive)).pipe(
+		distinctUntilChanged(),
+		filter(([activeMapId, measureData, isMeasureToolActive]) => Boolean(measureData)),
+		tap(([activeMapId, measureData, isMeasureToolActive]) => {
+			this.measureData = measureData;
+			this.setVisibility(measureData.isLayerShowed);
+			if (isMeasureToolActive && activeMapId && measureData.isToolActive) {
+				this.createDrawInteraction();
+			} else {
+				this.removeDrawInteraction();
+			}
+			if (isMeasureToolActive && activeMapId && measureData.isRemoveMeasureModeActive) {
+				this.createHoverForDeleteInteraction();
+				this.createClickDeleteInteraction();
+			} else {
+				this.removeHoverForDeleteInteraction();
+				this.removeClickDeleteInteraction();
+			}
+		}),
+		switchMap(([activeMapId, measureData, isMeasureToolActive]) => {
+			return this.setEntities(measureData.meausres);
+		}),
+		filter(Boolean),
+		tap(() => this.setLabelsFeature())
+	);
+
+	createHoverForDeleteInteraction() {
+		this.removeHoverForDeleteInteraction();
+		const pointerMove = new Select({
+			condition: condition.pointerMove,
+			style: this.hoverStyle.bind(this),
+			layers: [this.vector]
+		});
+		pointerMove.on('select', this.onHoveredFeature.bind(this));
+		this.addInteraction(VisualizerInteractions.pointerMove, pointerMove);
+	}
+
+	onHoveredFeature($event) {
+		if ($event.selected.length > 0) {
+			this.hoveredMeasureId = $event.selected[0].getId();
+		} else {
+			this.hoveredMeasureId = null;
+		}
+	}
+
+	removeHoverForDeleteInteraction() {
+		this.removeInteraction(VisualizerInteractions.pointerMove);
+	}
+
+	createClickDeleteInteraction() {
+		this.removeClickDeleteInteraction();
+		const click = new Select({
+			condition: condition.click,
+			style: () => new Style({}),
+			layers: [this.vector]
+		});
+		click.on('select', this.onClickDeleteFeature.bind(this));
+		this.addInteraction(VisualizerInteractions.click, click);
+	}
+
+	onClickDeleteFeature($event) {
+		if ($event.selected.length > 0 && this.hoveredMeasureId === $event.selected[0].getId()) {
+			const feature = $event.selected[0];
+			const entity = this.getEntity(feature);
+			if (entity) {
+				this.clearLabelInteractionsAndFeaturesById(entity.id);
+				this.measureData.meausres = this.measureData.meausres.filter((measureEntity) => measureEntity.id !== entity.id);
+				this.store$.dispatch(new UpdateMeasureDataAction({
+					mapId: this.mapId,
+					measureData: { meausres: this.measureData.meausres }
+				}));
+				this.hoveredMeasureId = null;
+			}
+		}
+	}
+
+	removeClickDeleteInteraction() {
+		this.removeInteraction(VisualizerInteractions.click);
 	}
 
 	getSinglePointLengthTextStyle(): Text {
@@ -110,36 +217,20 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	constructor(protected store$: Store<any>, protected projectionService: OpenLayersProjectionService) {
-		super(null, {
-			initial: {
-				stroke: '#3399CC',
-				'stroke-width': 2,
-				fill: '#FFFFFF',
-				'marker-size': MarkerSize.small,
-				'marker-color': '#FFFFFF',
-				zIndex: 5
-			}
-		});
-
-		this.geoJsonFormat = new GeoJSON();
-	}
-
 	onResetView(): Observable<boolean> {
 		return super.onResetView()
 			.pipe(tap(() => {
 				if (this.drawInteractionHandler) {
-					this.createInteraction();
+					this.createDrawInteraction();
 				}
 			}));
 	}
 
-	clearInteractionAndEntities() {
-		this.removeDrawInteraction();
-		this.clearEntities();
+	protected initLayers() {
+		super.initLayers();
 	}
 
-	createInteraction(type = 'LineString') {
+	createDrawInteraction(type = 'LineString') {
 		this.removeDrawInteraction();
 
 		this.interactionSource = new VectorSource({ wrapX: false });
@@ -167,18 +258,16 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 					id: UUID.UUID(),
 					featureJson
 				};
-				this.addOrUpdateEntities([newEntity]).subscribe();
+				this.measureData.meausres.push(newEntity);
+				this.store$.dispatch(
+					new UpdateMeasureDataAction({
+						mapId: this.mapId,
+						measureData: {
+							meausres: this.measureData.meausres
+						}
+					})
+				);
 			});
-	}
-
-	// override base entities visualizer style
-	featureStyle(feature: Feature, state: string = VisualizerStates.INITIAL) {
-		const styles = this.mainStyle(feature);
-		const measureStyles = this.getMeasureTextStyle(feature, true);
-		measureStyles.forEach((style) => {
-			styles.push(style);
-		});
-		return styles;
 	}
 
 	// draw style (temp until DBClick)
@@ -219,6 +308,33 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		return styles;
 	}
 
+	hoverStyle(feature) {
+		const styles = [new Style({
+			stroke: new Stroke({
+				color: this.visualizerStyle.hover.stroke,
+				width: this.visualizerStyle.hover['stroke-width']
+			})
+		})];
+		// Points
+		const pointsStyle = new Style({
+			image: new Circle({
+				radius: 5,
+				stroke: new Stroke({
+					color: this.visualizerStyle.hover.stroke,
+					width: this.visualizerStyle.hover['stroke-width']
+				}),
+				fill: new Fill({ color: this.visualizerStyle.hover.fill })
+			}),
+			geometry: function (feature) {
+				// return the coordinates of the first ring of the polygon
+				const coordinates = (<LineString>feature.getGeometry()).getCoordinates();
+				return new MultiPoint(coordinates);
+			}
+		});
+		styles.push(pointsStyle);
+		return styles;
+	}
+
 	// points string styles
 	getMeasureTextStyle(feature: Feature, calculateCenterOfMass = false) {
 		const styles = [];
@@ -230,21 +346,6 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		const view = (<any>this.iMap.mapObject).getView();
 		const projection = view.getProjection();
 
-		// all line string
-		const allLengthText = this.formatLength(geometry, projection);
-		this.allLengthTextStyle.setText(allLengthText);
-		let allLinePoint = new Point(geometry.getCoordinates()[0]);
-
-		if (calculateCenterOfMass) {
-			const featureId = <string>feature.getId();
-			const entityMap = this.idToEntity.get(featureId);
-			if (entityMap) {
-				const featureGeoJson = <any>this.geoJsonFormat.writeFeatureObject(entityMap.feature);
-				const centroid = getPointByGeometry(featureGeoJson.geometry);
-				allLinePoint = new Point(<[number, number]>centroid.coordinates);
-			}
-		}
-
 		// text points
 		const length = geometry.getCoordinates().length;
 		if (length > 2) {
@@ -254,7 +355,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 					type: lineString.getType(),
 					coordinates: lineString.getCoordinates()
 				});
-				const segmentLengthText = this.formatLength(lineString, projection);
+				const segmentLengthText = this.measureApproximateLength(lineString, projection);
 				const singlePointLengthTextStyle = this.getSinglePointLengthTextStyle();
 				singlePointLengthTextStyle.setText(segmentLengthText);
 				styles.push(new Style({
@@ -264,11 +365,148 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			});
 		}
 
-		styles.push(new Style({
-			geometry: allLinePoint,
-			text: this.allLengthTextStyle
-		}));
+		if (this.isTotalMeasureActive || length === 2) {
+			// all line string
+			const allLengthText = this.measureApproximateLength(geometry, projection);
+			this.allLengthTextStyle.setText(allLengthText);
+			let allLinePoint = new Point(geometry.getCoordinates()[0]);
+
+			if (calculateCenterOfMass) {
+				const featureId = <string>feature.getId();
+				const entityMap = this.idToEntity.get(featureId);
+				if (entityMap) {
+					const featureGeoJson = <any>this.geoJsonFormat.writeFeatureObject(entityMap.feature);
+					const centroid = getPointByGeometry(featureGeoJson.geometry);
+					allLinePoint = new Point(<[number, number]>centroid.coordinates);
+				}
+			}
+
+			styles.push(new Style({
+				geometry: allLinePoint,
+				text: this.allLengthTextStyle
+			}));
+		}
 		return styles;
+	}
+
+	private createMeasureLabelsFeatures(feature, featureGeoJson: geoJsonLineString) {
+		// @TODO: try to make this and getMeasureTextStyle one function
+		const features = [];
+		const geometry = <LineString>feature.getGeometry();
+
+		// text points
+		const coordinates = geometry.getCoordinates();
+		const length = coordinates.length;
+		if (length > 2) {
+			for (let i = 0; i < featureGeoJson.coordinates.length - 1; i++) {
+				const lineString = new LineString([coordinates[i], coordinates[i + 1]]);
+				const centroid = getPointByGeometry(<any>{
+					type: lineString.getType(),
+					coordinates: lineString.getCoordinates()
+				});
+				const segmentLengthText = this.formatLength([featureGeoJson.coordinates[i], featureGeoJson.coordinates[i + 1]]);
+				const singlePointLengthTextStyle = this.getSinglePointLengthTextStyle();
+				singlePointLengthTextStyle.setText(segmentLengthText);
+				const labelFeature = new Feature({
+					geometry: new Point(<[number, number]>centroid.coordinates),
+				});
+				labelFeature.setStyle(new Style({
+					text: singlePointLengthTextStyle
+				}));
+				features.push(labelFeature);
+			}
+		}
+
+		if (this.isTotalMeasureActive || length === 2) {
+			// all line string
+			const allLengthText = this.formatLength(featureGeoJson.coordinates);
+			const lengthText = this.allLengthTextStyle.clone();
+			lengthText.setText(allLengthText);
+			let allLinePoint = new Point(geometry.getCoordinates()[0]);
+			const featureId = <string>feature.getId();
+			const entityMap = this.idToEntity.get(featureId);
+			if (entityMap) {
+				const featureGeoJson = <any>this.geoJsonFormat.writeFeatureObject(entityMap.feature);
+				const centroid = getPointByGeometry(featureGeoJson.geometry);
+				allLinePoint = new Point(<[number, number]>centroid.coordinates);
+			}
+			const labelFeature = new Feature({
+				geometry: allLinePoint
+			});
+			labelFeature.setStyle(new Style({
+				text: lengthText
+			}));
+			features.push(labelFeature);
+		}
+		features.forEach(feature => feature.setId(UUID.UUID()));
+		return features;
+	}
+
+	clearLabelInteractions() {
+		if (this.labelToMeasures && this.labelToMeasures.size) {
+			const labelToMeasureIterator = this.labelToMeasures.values();
+			let val = labelToMeasureIterator.next().value;
+			while (val) {
+				this.iMap.mapObject.removeInteraction(val.handler.select);
+				this.iMap.mapObject.removeInteraction(val.handler.translate);
+				val = labelToMeasureIterator.next().value;
+			}
+		}
+	}
+
+	clearLabelInteractionsAndFeaturesById(id: string) {
+		if (!this.labelToMeasures.has(id)) {
+			return;
+		}
+
+		const measureLabels = this.labelToMeasures.get(id);
+		this.iMap.mapObject.removeInteraction(measureLabels.handler.translate);
+		this.iMap.mapObject.removeInteraction(measureLabels.handler.select);
+		measureLabels.features.forEach((feature) => {
+			this.source.removeFeature(feature);
+		})
+	}
+
+	private setLabelsFeature() {
+		if (!this.measureData.meausres.length) {
+			this.source.clear();
+			this.clearLabelInteractions();
+			this.labelToMeasures.clear();
+		}
+
+		// add new measures
+		this.measureData.meausres
+			.filter((measure: IVisualizerEntity) => !this.labelToMeasures.has(measure.id))
+			.forEach((measure: IVisualizerEntity) => {
+				const feature = this.source.getFeatureById(measure.id);
+				const labelsFeatures = this.createMeasureLabelsFeatures(feature, measure.featureJson.geometry);
+				const labelHandler: ILabelHandler = this.defineLabelsTranslate(labelsFeatures);
+				this.iMap.mapObject.addInteraction(labelHandler.select);
+				this.iMap.mapObject.addInteraction(labelHandler.translate);
+				this.labelToMeasures.set(measure.id, { features: labelsFeatures, handler: labelHandler });
+				this.source.addFeatures(labelsFeatures);
+			})
+	}
+
+	private defineLabelsTranslate(labelsFeatures: Feature[]): ILabelHandler {
+		const handler: ILabelHandler = {select: undefined, translate: undefined};
+		handler.select = new Select({
+			condition: (event) => event.type === "pointermove" && !event.dragging,
+			style: (event) => {
+				if (event.getGeometry().getType() === 'LineString') {
+					return event.styleCache;
+				}
+				return new Style({})
+			},
+			filter: (feature, layer) => {
+				return labelsFeatures.indexOf(feature) >= 0 || Array.from(this.labelToMeasures).some( (labelMeasure => labelMeasure[1].features.indexOf(feature) >= 0));
+			}
+		});
+		handler.translate = new Translate({
+			features: handler.select.getFeatures()
+		});
+
+		return handler;
 	}
 
 	/**
@@ -276,7 +514,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	 * @param line The line.
 	 * @param projection The Projection.
 	 */
-	formatLength(line, projection): string {
+	measureApproximateLength(line, projection): string {
 		const length = Sphere.getLength(line, { projection: projection });
 		let output;
 		if (length >= 1000) {
@@ -288,4 +526,13 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		}
 		return output;
 	};
+
+	onDispose(): void {
+		this.clearLabelInteractions();
+		this.removeInteraction(VisualizerInteractions.drawInteractionHandler);
+		this.removeInteraction(VisualizerInteractions.pointerMove);
+		this.removeInteraction(VisualizerInteractions.click);
+		super.onDispose();
+	}
 }
+

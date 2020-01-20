@@ -1,5 +1,11 @@
 import { EventEmitter, Inject, Injectable, NgModuleRef } from '@angular/core';
-import { ImageryCommunicatorService, ImageryMapPosition, IMapSettings } from '@ansyn/imagery';
+import {
+	getPolygonByPointAndRadius,
+	getPolygonByBufferRadius,
+	ImageryCommunicatorService,
+	ImageryMapPosition,
+	IMapSettings
+} from '@ansyn/imagery';
 import {
 	ICoordinatesSystem,
 	LayoutKey,
@@ -19,7 +25,7 @@ import { Dictionary } from '@ngrx/entity/src/models';
 import { select, Store } from '@ngrx/store';
 import { featureCollection } from '@turf/turf';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { FeatureCollection, Point, Polygon } from 'geojson';
+import { Feature, FeatureCollection, Point, Polygon } from 'geojson';
 import { cloneDeep } from 'lodash';
 import { combineLatest, Observable } from 'rxjs';
 import { map, take, tap, withLatestFrom } from 'rxjs/operators';
@@ -36,7 +42,6 @@ import {
 } from '../modules/menu-items/layers-manager/reducers/layers.reducer';
 import {
 	GoToAction,
-	HideMeasurePanel,
 	SetActiveCenter,
 	ToolsActionsTypes
 } from '../modules/menu-items/tools/actions/tools.actions';
@@ -53,6 +58,7 @@ import { selectFilteredOveralys, selectOverlaysArray } from '../modules/overlays
 import { ToggleMenuCollapse } from '@ansyn/menu';
 import { UUID } from 'angular2-uuid';
 import { DataLayersService } from '../modules/menu-items/layers-manager/services/data-layers.service';
+import { SetMinimalistViewModeAction } from '@ansyn/map-facade';
 
 @Injectable({
 	providedIn: 'root'
@@ -306,15 +312,29 @@ export class AnsynApi {
 		}
 	}
 
-	setOverlaysCriteria(criteria: IOverlaysCriteria) {
+	setOverlaysCriteria(criteria: IOverlaysCriteria, radiusInMetersBuffer ?: number) {
 		if (!Boolean(criteria)) {
 			console.error('failed to set overlays criteria to undefined');
 			return null;
 		}
+		if (Boolean(criteria.region) && (radiusInMetersBuffer !== undefined && radiusInMetersBuffer !== 0)) {
+			switch (criteria.region.type.toLowerCase()) {
+				case 'point':
+					const polygonByPointAndRadius: Feature<Polygon> = getPolygonByPointAndRadius(criteria.region.coordinates, radiusInMetersBuffer / 1000);
+					criteria.region = polygonByPointAndRadius.geometry;
+					break;
+				case 'polygon':
+					criteria.region = getPolygonByBufferRadius(criteria.region, radiusInMetersBuffer).geometry;
+					break;
+				default:
+					console.error('not supported type: ' + criteria.region.type);
+					return null;
+			}
+		}
 		this.store.dispatch(new SetOverlaysCriteriaAction(criteria));
 	}
 
-	getOverlayData(mapId: string = this.activeMapId) {
+	getOverlayData(mapId: string = this.activeMapId): IOverlay {
 		return this.mapsEntities[mapId].data.overlay;
 	}
 
@@ -326,11 +346,13 @@ export class AnsynApi {
 		this.store.dispatch(new ToggleMenuCollapse(collapse));
 	}
 
-	hideMeasurePanel(collapse: boolean) {
-		this.store.dispatch(new HideMeasurePanel(collapse));
+	setMinimalistViewMode(collapse: boolean) {
+		this.collapseFooter(collapse);
+		this.collapseMenu(collapse);
+		this.store.dispatch(new SetMinimalistViewModeAction(collapse));
 	}
 
-	insertLayer(layerName: string, layerData: FeatureCollection<any>): string {
+	insertLayer(layerName: string, layerData: FeatureCollection<any>, isEditable: boolean = true): string {
 		if (!(layerName && layerName.length)) {
 			console.error('failed to add layer without a name', layerName);
 			return null;
@@ -340,8 +362,14 @@ export class AnsynApi {
 			return null;
 		}
 
+		layerData.features.forEach((feature) => {
+			feature.properties.isNonEditable = !isEditable;
+			const { label } = feature.properties;
+			feature.properties.label = label && typeof label === 'object' ? label : {text: label, geometry: null};
+		});
+
 		this.generateFeaturesIds(layerData);
-		const layer = this.dataLayersService.generateAnnotationLayer(layerName, layerData);
+		const layer = this.dataLayersService.generateAnnotationLayer(layerName, layerData, !isEditable);
 		this.store.dispatch(new AddLayer(layer));
 		return layer.id;
 	}

@@ -17,9 +17,9 @@
 	transition: opacity @animation-duration, visibility calc(~"@{animation-duration} + 0.1s");
 
 	.overlay-overview {
-		background-color: white;
+		background-color: @background-color-1;
 		box-shadow: 0 0 15px 0 #2e2d46;
-		border: 2px white solid;
+		border: 2px @background-color-1 solid;
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-start;
@@ -72,8 +72,24 @@ img {
 	}
 }
 
-footer {
+header {
 	width: 100%;
+	padding-bottom: 2px;
+	color: white;
 	display: flex;
 	justify-content: space-between;
+
+	.name {
+		flex: 1;
+		margin-right: 5px;
+		margin-left: 0;
+	}
+
+	&.rtl {
+		direction: rtl;
+		.name {
+			margin-right: 0;
+			margin-left: 5px;
+		}
+	}
 }

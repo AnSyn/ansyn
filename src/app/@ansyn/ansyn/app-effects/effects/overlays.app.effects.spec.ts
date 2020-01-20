@@ -335,11 +335,11 @@ describe('OverlaysAppEffects', () => {
 				a: new DisplayOverlayFromStoreAction({
 					id: firstOverlayId,
 					mapId: '4444',
-					openWithAngle: 0
+					customOriantation: null
 				})
 			});
 			const expectedResults = cold('--b--', {
-				b: new DisplayOverlayAction({ overlay: <any>firstOverlay, mapId: '4444', extent: undefined, openWithAngle: 0 })
+				b: new DisplayOverlayAction({ overlay: <any>firstOverlay, mapId: '4444', extent: undefined, customOriantation: null })
 			});
 			expect(overlaysAppEffects.onDisplayOverlayFromStore$).toBeObservable(expectedResults);
 		});
@@ -352,12 +352,12 @@ describe('OverlaysAppEffects', () => {
 			actions = hot('--a--', {
 				a: new DisplayOverlayFromStoreAction({
 					id: lastOverlayId,
-					openWithAngle: 0
+					customOriantation: null
 				})
 			});
 
 			const expectedResults = cold('--b--', {
-				b: new DisplayOverlayAction({ overlay: <any>lastOverlay, mapId: 'activeMapId', extent: undefined, openWithAngle: 0 })
+				b: new DisplayOverlayAction({ overlay: <any>lastOverlay, mapId: 'activeMapId', extent: undefined, customOriantation: null })
 			});
 			expect(overlaysAppEffects.onDisplayOverlayFromStore$).toBeObservable(expectedResults);
 		});

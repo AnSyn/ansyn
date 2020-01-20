@@ -9,7 +9,7 @@ import {
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { combineLatest, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 import { GeoRegisteration, IOverlay } from '../models/overlay.model';
 import {
 	SetRemovedOverlaysIdAction,
@@ -26,7 +26,8 @@ import {
 import { AnnotationMode } from '@ansyn/ol';
 import { ITranslationData } from '../../menu-items/cases/models/case.model';
 import { Actions, ofType } from '@ngrx/effects';
-import { SetAnnotationMode, ToolsActionsTypes } from '../../menu-items/tools/actions/tools.actions';
+import { SetAnnotationMode, ToolsActionsTypes, ClearActiveInteractionsAction } from '../../menu-items/tools/actions/tools.actions';
+import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-manager/reducers/layers.reducer';
 
 @Component({
 	selector: 'ansyn-overlay-status',
@@ -39,7 +40,6 @@ import { SetAnnotationMode, ToolsActionsTypes } from '../../menu-items/tools/act
 })
 export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent {
 	@Input() mapId: string;
-	mapsAmount = 1;
 	overlay: IOverlay;
 	isActiveMap: boolean;
 	favoriteOverlays: IOverlay[];
@@ -54,12 +54,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	isDragged: boolean;
 	draggedButtonText: string;
 	isLayersVisible: boolean;
-
-	@AutoSubscription
-	mapsAmount$: Observable<number> = this.store$.pipe(
-		select(selectMapsTotal),
-		tap((mapsAmount) => this.mapsAmount = mapsAmount)
-	);
 
 	@AutoSubscription
 	favoriteOverlays$: Observable<any[]> = this.store$.select(selectFavoriteOverlays).pipe(
@@ -114,14 +108,26 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	@AutoSubscription
-	layersVisibility$: () => Observable<boolean> = () => this.store$.select(selectHideLayersOnMap(this.mapId)).pipe(
-		tap((isLayersHidden) => {
-			this.isLayersVisible = !Boolean(isLayersHidden);
-			if (this.isDragged) {
-				this.toggleDragged();
-			}
-		})
-	);
+	layersVisibility$ = () => combineLatest(
+			this.store$.select(selectSelectedLayersIds),
+			this.store$.select(selectHideLayersOnMap(this.mapId)),
+			this.store$.select(selectLayers))
+		.pipe(
+			map(([selectedLayerIds, areLayersHidden, layers]) => {
+				layers = layers.filter((currentLayer) =>
+					Boolean(currentLayer.data) &&
+					currentLayer.type === "Annotation" &&
+					currentLayer.data.features.length > 0 &&
+					selectedLayerIds.includes(currentLayer.id));
+				return [areLayersHidden, layers];
+			}),
+			tap(([areLayersHidden, layers]) => {
+				this.isLayersVisible = !((Boolean(areLayersHidden)) || (Boolean(layers.length === 0)));
+				if (this.isDragged) {
+					this.toggleDragged();
+				}
+			})
+		);
 
 	@AutoSubscription
 	overlay$ = () => this.store$.pipe(
@@ -199,6 +205,9 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 			overlayId: this.overlay.id,
 			dragged: !this.isDragged
 		}))
+		if (this.isDragged) {
+			this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetAnnotationMode] }));
+		}
 	}
 
 	removeOverlay() {

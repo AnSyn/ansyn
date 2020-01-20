@@ -1,16 +1,21 @@
 @import "ansyn/less/colors";
 @import "ansyn/less/z-index-globals";
+@import "ansyn/less/globals";
 
 @size: 84px;
 
 :host {
 	position: absolute;
 	z-index: @z-index-map-rotation;
-	top: 20px;
+	top: @status-bar-height + 25;
 	right: 20px;
 	text-align: center;
 	user-select: none;
 	width: @size;
+
+	&.isMinimalistViewModeClass {
+		top: 60px;
+	}
 
 	div {
 		display: flex;

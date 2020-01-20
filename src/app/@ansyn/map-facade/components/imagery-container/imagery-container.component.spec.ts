@@ -28,7 +28,7 @@ describe('ImageryContainerComponent', () => {
 				EntryComponentDirective,
 				MockComponent({
 					selector: 'ansyn-imagery-status',
-					inputs: ['map'],
+					inputs: ['map', 'isMinimalistViewMode'],
 					outputs: ['onMove', 'toggleMapSynchronization']
 				}),
 				MockComponent({
@@ -37,7 +37,7 @@ describe('ImageryContainerComponent', () => {
 				}),
 				MockComponent({
 					selector: 'ansyn-floating-menu',
-					inputs: ['mapState']
+					inputs: ['mapState', 'isMinimalistViewMode'],
 				}),
 				MockComponent({
 					selector: 'ansyn-annotations-context-menu', inputs: ['mapId', 'interactionType']
@@ -59,7 +59,7 @@ describe('ImageryContainerComponent', () => {
 				}),
 				MockComponent({
 					selector: 'ansyn-imagery-mouse-coordinates',
-					inputs: ['mapId', 'isVisible']
+					inputs: ['mapId', 'isVisible', 'isMinimalistViewMode'],
 				}),
 			]
 		}).compileComponents();

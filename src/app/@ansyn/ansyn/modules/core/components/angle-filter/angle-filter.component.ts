@@ -1,6 +1,5 @@
 import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import {
-	CommunicatorEntity,
 	ImageryCommunicatorService,
 	toDegrees,
 	toRadians
@@ -23,14 +22,13 @@ import {
 } from '../../../overlays/actions/overlays.actions';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { MarkUpClass, selectDropMarkup } from '../../../overlays/reducers/overlays.reducer';
+import { getAngleDegreeBetweenPoints, getDistanceBetweenPoints } from '@ansyn/imagery';
 
 export interface IAngle {
 	overlay: IOverlay;
 	degreeFromPoint: number;
 	distanceFromPoint: number;
 }
-
-const WORLD_RADIUS = 6371e3;
 
 @Component({
 	selector: 'ansyn-angle-filter',
@@ -45,18 +43,19 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 	overlaysAngles: IAngle[];
 	hoverOverlay: string;
 	point: Point;
+	mapRotation = 0;
+	_show: boolean;
 
 	@AutoSubscription
 	showAngleFilter$ = this.actions$.pipe(
 		ofType(MapActionTypes.CONTEXT_MENU.ANGLE_FILTER_SHOW),
 		debounceTime(200),
-		withLatestFrom(this.store$.select(selectActiveMapId), (action: ContextMenuShowAngleFilter, mapId: string): [ContextMenuShowAngleFilter, number] => {
+		withLatestFrom(this.store$.select(selectActiveMapId), (action: ContextMenuShowAngleFilter, mapId: string): [ContextMenuShowAngleFilter] => {
 			const communicator = this.communicatorService.provide(mapId);
-			let mapRotationDegree = 0;
 			if (Boolean(communicator)) {
-				mapRotationDegree = toDegrees(communicator.getRotation() - communicator.getVirtualNorth());
+				this.mapRotation  = toDegrees(communicator.getRotation() - communicator.getVirtualNorth());
 			}
-			return [action, mapRotationDegree];
+			return [action];
 		}),
 		tap(this.show.bind(this))
 	);
@@ -86,26 +85,16 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 		return this.hide;
 	}
 
-	setAnglesToOverlays(overlays: IOverlay[], mapRotationDegree: number) {
-		const pointLat = this.getLatFromPoint(this.point, true);
-		const pointLong = this.getLongFromPoint(this.point, true);
+	setAnglesToOverlays(overlays: IOverlay[]) {
 		this.overlaysAngles = overlays.map((overlay) => {
-			const center = overlay.sensorLocation;
-			const centerLat = this.getLatFromPoint(center, true);
-			const centerLong = this.getLongFromPoint(center, true);
-			const longDelta = centerLong - pointLong;
-			const latDelta = centerLat - pointLat;
-			const a = Math.sin(latDelta / 2) * Math.sin(latDelta / 2) + Math.cos(pointLat) * Math.cos(centerLat) * Math.sin(longDelta / 2) * Math.sin(longDelta / 2);
-			const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-			const d = WORLD_RADIUS * c;
-			const y = Math.sin(longDelta) * Math.cos(centerLat);
-			const x = Math.cos(pointLat) * Math.sin(centerLat) - Math.sin(pointLat) * Math.cos(centerLat) * Math.cos(longDelta);
-			const brng = 360 - (toDegrees(Math.atan2(y, x)));
-			return {
+			const brng = getAngleDegreeBetweenPoints(overlay.sensorLocation, this.point);
+			const distance = getDistanceBetweenPoints(overlay.sensorLocation, this.point);
+			const data: IAngle = {
+				degreeFromPoint: brng + this.mapRotation,
 				overlay: overlay,
-				degreeFromPoint: brng + mapRotationDegree,
-				distanceFromPoint: d / (10 ** Math.log2(d))
-			}
+				distanceFromPoint: distance
+			};
+			return data;
 		});
 		this.overlaysAngles.sort((a, b) => a.degreeFromPoint - b.degreeFromPoint)
 	}
@@ -121,22 +110,22 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 	ngOnDestroy(): void {
 	}
 
-	show([action, mapRotationDegree]: [ContextMenuShowAngleFilter, number]) {
+	show([action]: [ContextMenuShowAngleFilter, number]) {
 		this.point = action.payload.point;
 		this.overlay = action.payload.displayedOverlay;
-		this.setAnglesToOverlays(action.payload.overlays, mapRotationDegree);
+		this.setAnglesToOverlays(action.payload.overlays);
 		this.renderer.setStyle(this.elem.nativeElement, 'top', `${ action.payload.click.y }px`);
 		this.renderer.setStyle(this.elem.nativeElement, 'left', `${ action.payload.click.x }px`);
 		this.elem.nativeElement.focus();
+		this._show = true;
 	}
 
 	hide() {
-		this.renderer.setStyle(this.elem.nativeElement, 'top', `-1px`);
-		this.renderer.setStyle(this.elem.nativeElement, 'left', `-1px`);
+		this._show = false;
+		this.overlayHover();
 		this.elem.nativeElement.blur();
 
 	}
-
 
 	getType(): string {
 		return '';
@@ -147,11 +136,10 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 		this.overlay = angleData.overlay;
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({
 			id: angleData.overlay.id,
-			openWithAngle: 360 - angleData.degreeFromPoint
+			customOriantation: 'Imagery Perspective'
 		}));
 		this.hide();
 	}
-
 
 	nextOverlay(event: MouseEvent, isNext: boolean) {
 		event.stopPropagation();
@@ -178,19 +166,5 @@ export class AngleFilterComponent implements OnInit, OnDestroy, IEntryComponent 
 			}
 		}));
 		this.store$.dispatch(new SetHoveredOverlayAction(overlay));
-	}
-
-	private getLatFromPoint(point: Point, convert?: boolean) {
-		if (convert) {
-			toRadians(point.coordinates[1]);
-		}
-		return point.coordinates[1];
-	}
-
-	private getLongFromPoint(point: Point, convert?: boolean) {
-		if (convert) {
-			toRadians(point.coordinates[0]);
-		}
-		return point.coordinates[0];
 	}
 }

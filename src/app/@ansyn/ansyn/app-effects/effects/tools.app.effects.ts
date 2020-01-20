@@ -4,6 +4,8 @@ import { Action, select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import {
+	ImageryCreatedAction,
+	ImageryRemovedAction,
 	IMapState,
 	MapActionTypes,
 	MapFacadeService,
@@ -24,9 +26,11 @@ import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/stat
 import { CasesActionTypes } from '../../modules/menu-items/cases/actions/cases.actions';
 import {
 	ClearActiveInteractionsAction,
+	CreateMeasureDataAction,
 	DisableImageProcessing,
 	EnableImageProcessing,
 	GoToAction,
+	RemoveMeasureDataAction,
 	SetActiveCenter,
 	SetActiveOverlaysFootprintModeAction,
 	SetAnnotationMode,
@@ -40,6 +44,7 @@ import {
 	StartMouseShadow,
 	StopMouseShadow,
 	ToolsActionsTypes,
+	UpdateMeasureDataAction,
 	UpdateToolsFlags
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
@@ -51,6 +56,8 @@ import {
 } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
+import { selectMapsIds } from '@ansyn/map-facade';
+import { GeoRegisteration, IOverlay } from '../../modules/overlays/models/overlay.model';
 
 @Injectable()
 export class ToolsAppEffects {
@@ -79,13 +86,25 @@ export class ToolsAppEffects {
 			ToolsActionsTypes.GO_TO,
 			ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE,
 			ToolsActionsTypes.UPDATE_TOOLS_FLAGS,
-			ToolsActionsTypes.SET_MEASURE_TOOL_STATE,
+			ToolsActionsTypes.MEASURES.SET_MEASURE_TOOL_STATE,
 			ToolsActionsTypes.STORE.SET_ANNOTATION_MODE,
 			ToolsActionsTypes.SET_SUB_MENU
 		),
 		tap((action) => {
 			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Tools', action.type);
 		}));
+
+	@Effect()
+	onImageriesChanged: Observable<any> = this.actions$.pipe(
+		ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED),
+		map((action: ImageryCreatedAction | ImageryRemovedAction) => {
+			if (action instanceof ImageryCreatedAction) {
+				return new CreateMeasureDataAction({ mapId: action.payload.id });
+			} else { // instanceof ImageryRemovedAction
+				return new RemoveMeasureDataAction({ mapId: action.payload.id });
+			}
+		})
+	);
 
 	@Effect()
 	drawInterrupted$: Observable<any> = this.actions$.pipe(
@@ -193,9 +212,10 @@ export class ToolsAppEffects {
 		withLatestFrom(this.store$.select(selectToolFlag(toolsFlags.shadowMouseActiveForManyScreens))),
 		mergeMap(([[mapsList, activeMapId], shadowMouseActiveForManyScreens]: [[IMapSettings[], string], boolean]) => {
 			const registredMapsCount = mapsList.reduce((count, map) => (!map.data.overlay || map.data.overlay.isGeoRegistered) ? count + 1 : count, 0);
+			const forceShadowMouse = this.config && this.config.ShadowMouse.forceSendShadowMousePosition;
 			const activeMap = MapFacadeService.mapById(mapsList, activeMapId);
 			const isActiveMapRegistred = !activeMap || (activeMap.data.overlay && !activeMap.data.overlay.isGeoRegistered);
-			if (registredMapsCount < 2 || isActiveMapRegistred) {
+			if ((registredMapsCount < 2 || isActiveMapRegistred) && !forceShadowMouse) {
 				return [
 					new StopMouseShadow(),
 					new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: true }])
@@ -203,7 +223,7 @@ export class ToolsAppEffects {
 			}
 			return [
 				new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: false }]),
-				shadowMouseActiveForManyScreens ? new StartMouseShadow() : undefined
+				shadowMouseActiveForManyScreens || forceShadowMouse  ? new StartMouseShadow() : undefined
 			].filter(Boolean);
 		}));
 
@@ -225,14 +245,22 @@ export class ToolsAppEffects {
 	@Effect()
 	clearActiveInteractions$ = this.actions$.pipe(
 		ofType<ClearActiveInteractionsAction>(ToolsActionsTypes.CLEAR_ACTIVE_TOOLS),
-		mergeMap(action => {
-			// reset the following interactions: Measure Distance, Annotation, Pinpoint search, Pin location
-			let clearActions = [
-				new SetMeasureDistanceToolState(false),
+		withLatestFrom(this.store$.select(selectMapsIds)),
+		mergeMap(([action, mapIds]: [ClearActiveInteractionsAction, string[]]) => {
+			// reset the following interactions: Annotation, Pinpoint search, Pin location
+			let clearActions: Action[] = [
 				new SetAnnotationMode(null),
 				new UpdateGeoFilterStatus(),
 				new SetPinLocationModeAction(false)
 			];
+			// set measure tool as inactive
+			mapIds.forEach((mapId) => {
+				const updateMeasureAction = new UpdateMeasureDataAction({
+					mapId: mapId,
+					measureData: { isToolActive: false }
+				});
+				clearActions.push(updateMeasureAction);
+			});
 			// return defaultClearActions without skipClearFor
 			if (action.payload && action.payload.skipClearFor) {
 				clearActions = differenceWith(clearActions, action.payload.skipClearFor,

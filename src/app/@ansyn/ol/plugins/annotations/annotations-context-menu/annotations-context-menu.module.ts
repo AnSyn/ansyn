@@ -6,15 +6,19 @@ import { AnnotationsWeightComponent } from './components/annotations-weight/anno
 import { AnnotationsColorComponent } from './components/annotations-color/annotations-color.component';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { MatInputModule } from '@angular/material';
+import { MatInputModule, MatSelectModule } from '@angular/material';
 import { TranslateModule } from '@ngx-translate/core';
+import { AnnotationLabelComponent } from './components/annotation-label/annotation-label.component';
+import { AnnotationsContextMenuButtonsComponent } from './components/annotations-context-menu-buttons/annotations-context-menu-buttons.component';
 
 @NgModule({
 	declarations: [
 		AnnotationContextMenuComponent,
 		AnnotationsWeightComponent,
 		AnnotationsColorComponent,
-		ColorPickerComponent
+		ColorPickerComponent,
+		AnnotationLabelComponent,
+		AnnotationsContextMenuButtonsComponent
 	],
 	entryComponents: [AnnotationContextMenuComponent],
 	exports: [
@@ -28,6 +32,7 @@ import { TranslateModule } from '@ngx-translate/core';
 		FormsModule,
 		ColorPickerModule,
 		MatInputModule,
+		MatSelectModule,
 		TranslateModule
 	]
 })

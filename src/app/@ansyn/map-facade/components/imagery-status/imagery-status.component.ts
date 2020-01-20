@@ -3,19 +3,13 @@ import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { get as _get } from 'lodash'
-import { map, tap, filter, switchMap, withLatestFrom } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
 import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../models/entry-components-provider';
 import { selectEnableCopyOriginalOverlayDataFlag } from '../../reducers/imagery-status.reducer';
-import {
-	selectActiveMapId,
-	selectHideLayersOnMap,
-	selectMapsTotal,
-	selectOverlayByMapId
-} from '../../reducers/map.reducer';
+import { selectActiveMapId, selectHideLayersOnMap, selectMapsTotal } from '../../reducers/map.reducer';
 import { copyFromContent } from '../../utils/clipboard';
 import { getTimeFormat } from '../../utils/time';
-import { combineLatest, Observable, of } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -28,9 +22,9 @@ import { TranslateService } from '@ngx-translate/core';
 	destroy: 'ngOnDestroy'
 })
 export class ImageryStatusComponent implements OnInit, OnDestroy {
+	isMapLayersVisible = true;
 	mapsAmount = 1;
 	_map: IMapSettings;
-	_entryComponents: IEntryComponentsEntities;
 	@HostBinding('class.active') isActiveMap: boolean;
 	hideLayers: boolean;
 	@AutoSubscription
@@ -53,6 +47,9 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		tap((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
 	);
 
+	@Input()
+	isMinimalistViewMode: boolean;
+
 	constructor(protected store$: Store<any>,
 				protected communicators: ImageryCommunicatorService,
 				protected translate: TranslateService,
@@ -66,12 +63,8 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	@Input()
 	set map(value: IMapSettings) {
 		this._map = value;
-		/* force angular to rerender the *ngFor content that binding to this arrays
-		 * so they get the new mapId	 */
-		this._entryComponents = { status: [], container: [], floating_menu: [] };
-		this.translate.get(this.overlay ? this.overlay.sensorName : 'sensorName')
+		this.translate.get(this.overlay && this.overlay.sensorName || 'unknown')
 			.subscribe(translatedOverlaySensorName => this.translatedOverlaySensorName = translatedOverlaySensorName);
-		setTimeout(() => this._entryComponents = { ...this.entryComponents })
 	}
 
 	// @TODO: eject to ansyn
@@ -152,6 +145,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	toggleMapLayers() {
-		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId }));
+		this.isMapLayersVisible = !this.isMapLayersVisible;
+		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId, isVisible: this.isMapLayersVisible }));
 	}
 }

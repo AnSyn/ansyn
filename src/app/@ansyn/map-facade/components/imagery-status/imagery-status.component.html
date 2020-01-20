@@ -1,7 +1,7 @@
-<div class="buttons">
+<div class="buttons" *ngIf="!isMinimalistViewMode">
 
 	<ng-container
-		*ngFor="let component of _entryComponents.status">
+		*ngFor="let component of entryComponents.status">
 		<ng-container
 			*ngIf="component.showFirst && component.prototype.getType() === 'buttons'"
 			[ansynEntryComponent]="{ component: component , mapId: mapId }">
@@ -12,7 +12,7 @@
 		*ngIf="mapsAmount > 1"
 		class="small-icon-button drag-me"
 		[attr.tooltip-value]="'Move' | translate"
-		tooltip-class="bottom"
+		tooltip-class="bottom right"
 		(mousedown)="onMove.emit($event)">
 		<i class="icon-drag"></i>
 	</button>
@@ -20,22 +20,23 @@
 	<button *ngIf="mapsAmount > 1"
 			class="small-icon-button link-maps"
 			[attr.tooltip-value]="'Momentarily link screens' | translate"
-			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'"
+			tooltip-class="bottom right"
 			[disabled]="noGeoRegistration"
 			(click)="toggleMapSynchronization.emit()">
 		<i class="icon icon-temporary-link"></i>
 	</button>
 
 	<button class="small-icon-button hide-layers"
+			[disabled]="noGeoRegistration"
 			(click)="toggleMapLayers()"
 			[attr.tooltip-value]="'Show/ Hide layers' | translate"
-			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'">
+			tooltip-class="bottom right">
 		<i [class.icon-layers-show]="!hideLayers"
 		   [class.icon-layers-hide]="hideLayers"></i>
 	</button>
 
 	<ng-container
-		*ngFor="let component of _entryComponents.status">
+		*ngFor="let component of entryComponents.status">
 		<ng-container
 			*ngIf="!component.showFirst && component.prototype.getType() === 'buttons'"
 			[ansynEntryComponent]="{ component: component , mapId: mapId }">
@@ -45,7 +46,7 @@
 
 <div class="description">
 	<ansyn-popover *ngIf="overlay" [text]="overlayDescription"
-				   [popDirection]="mapsAmount > 1 ? 'bottom wrap' : 'top wrap'">
+				   [popDirection]="'bottom wrap'">
 		<button class="share-link" (click)="copyOverlayDescription()">
 			<span>{{overlayDescription | translate}}</span>
 		</button>
@@ -56,10 +57,12 @@
 </div>
 
 
-<ng-container
-	*ngFor="let component of entryComponents.status">
+<ng-container *ngIf="!isMinimalistViewMode">
 	<ng-container
-		*ngIf="component.prototype.getType() === 'notification'"
-		[ansynEntryComponent]="{ component: component , mapId: mapId }">
+		*ngFor="let component of entryComponents.status">
+		<ng-container
+			*ngIf="component.prototype.getType() === 'notification'"
+			[ansynEntryComponent]="{ component: component , mapId: mapId }">
+		</ng-container>
 	</ng-container>
 </ng-container>

@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, HostBinding, Inject, Input, OnInit } from '@angular/core';
 import { IMapSettings } from '@ansyn/imagery';
 import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../models/entry-components-provider';
 
@@ -9,7 +9,13 @@ import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../model
 })
 export class FloatingMenuComponent implements OnInit {
 
+	@Input() isMinimalistViewMode: boolean;
 	@Input() mapState: IMapSettings;
+
+	@HostBinding('class.isMinimalistViewModeClass')
+	get isMinimalistViewModeClass() {
+		return this.isMinimalistViewMode;
+	}
 
 	constructor(@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities) {
 	}

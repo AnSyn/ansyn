@@ -1,13 +1,17 @@
 <div class="all-options scrolled">
 	<h1>Sandbox</h1>
 
+	<button (click)="updateOverlayAsPartiallyRegistered()">Update active overlay As partially registered</button>
 	<button (click)="showDefaultLayer()">Show/Hide Default Layer</button>
 
 	<button (click)="setPositionByRadius()">Set Position by radius</button>
 
 	<button (click)="setPositionByRect()">Set Position by rect</button>
 
-	<button (click)="setOverlayCriteria()">Set overlays criteria</button>
+	<button (click)="setOverlayCriteriaPoint()">Set overlays criteria point with radius 0 m</button>
+	<button (click)="setOverlayCriteriaPoint(500)">Set overlays criteria point with radius 500 m</button>
+	<button (click)="setOverlayCriteriaPolygon()">Set overlays criteria polygon with radius 0 m</button>
+	<button (click)="setOverlayCriteriaPolygon(500)">Set overlays criteria polygon with radius 500 m</button>
 
 	<button (click)="setOverlays()">Set overlays in timeline</button>
 
@@ -42,6 +46,7 @@
 	<button (click)="collapseAll()">Collapse All</button>
 	<button (click)="unCollapseAll()">Un-Collapse All</button>
 	<button (click)="insertLayer()">Insert Layer</button>
+	<button (click)="insertLayer(false)">Insert non-editable Layer</button>
 	<button (click)="removeLayer()">Remove Layer</button>
 	<button (click)="showLayer()">Show/Hide Layer</button>
 	<button (click)="startDrag()">Start Drag</button>

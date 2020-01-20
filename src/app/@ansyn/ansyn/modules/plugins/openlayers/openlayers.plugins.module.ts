@@ -39,6 +39,7 @@ import {
 import { ScannedAreaVisualizer } from './plugins/visualizers/scanned-area/scanned-area.visualizer';
 import { OpenlayersAnaglyphSensorModule } from './plugins/anaglyph-sensor/anaglyph-sensor.module';
 import { OpenLayersAirbusSourceProvider } from '@ansyn/ol';
+import { OverlayHoverVisualizer } from "./plugins/visualizers/overlays/overlay-hover-visualizer";
 import { OpenLayerPic4CartoSourceProvider } from '../../../../ol/mapSourceProviders/open-layers-Pic4Carto-source-provider';
 
 @NgModule({
@@ -57,6 +58,7 @@ import { OpenLayerPic4CartoSourceProvider } from '../../../../ol/mapSourceProvid
 				// Visualizers
 				FootprintHeatmapVisualizer,
 				FrameVisualizer,
+				OverlayHoverVisualizer,
 				FootprintPolylineVisualizer,
 				AnnotationsVisualizer,
 				AnsynAnnotationsVisualizer,

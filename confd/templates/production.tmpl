@@ -341,7 +341,7 @@
   },
   "coreConfig": {
     "storageService": {
-      "baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://platform.ansyn.io:8081/api/store" }}"
+      "baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://platform.ansyn.io:8888/api/store" }}"
     },
     "translation": {
     	"default": {
@@ -399,6 +399,11 @@
   	"noCredentialsMessage": "invalid credentials"
   },
   "visualizersConfig": {
+  	"MeasureDistanceVisualizer": {
+  		"extra": {
+  			"isTotalMeasureActive": true
+  		}
+    },
     "FrameVisualizer": {
       "colors": {
         "active": "#27b2cf",
@@ -407,6 +412,14 @@
     },
     "FootprintPolylineVisualizer": {
       "minSimplifyVertexCountLimit": 100,
+      "colors": {
+        "active": "#fb634e",
+        "inactive": "#0091ff",
+        "display": "#8cceff",
+        "favorite": "yellow"
+      }
+    },
+    "OverlayHoverVisualizer": {
       "colors": {
         "active": "#fb634e",
         "inactive": "#0091ff",
@@ -1327,7 +1340,7 @@
 			  }
 		},
 			"IMAGERY_VIDEO": {
-        		"inActive": false,
+        		"inActive": {{ getv "/ansyn/overlay/imageryvideo/inactive" "true" }},
         		"whitelist": [
         			{
         				"name": "Entire Earth",

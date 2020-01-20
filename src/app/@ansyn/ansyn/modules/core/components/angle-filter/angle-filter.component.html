@@ -1,5 +1,10 @@
-<div class="angle-filter">
-
+<div class="angle-filter" *ngIf="_show">
+	<div class="north-container"
+		 [style.transform]="'rotate(' + mapRotation + 'deg)'">
+		<div class="north">
+			N
+		</div>
+	</div>
 	<div class="circle">
 		<p class="point">
 			<i class="icon-pin-point"></i>
@@ -16,7 +21,7 @@
 	</div>
 	<div class="rectangles">
 		<button (click)="nextOverlay($event, true)"
-			[disabled]="!overlay">
+				[disabled]="!overlay">
 			<i class="icon-angle-next"></i>
 		</button>
 		<button (click)="nextOverlay($event, false)"

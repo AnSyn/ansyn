@@ -6,6 +6,7 @@
     "@ansyn/imagery",
     "@ansyn/map-facade",
     "@ansyn/imagery-cesium",
+    "@ansyn/imagery-video",
     "@ansyn/menu",
     "@turf/turf",
     "geojson",
@@ -19,9 +20,7 @@
     "lodash-decorators",
     "ngx-bootstrap",
     "proj4",
-    "rison",
-    "togeojson",
-    "tokml"
+    "rison"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

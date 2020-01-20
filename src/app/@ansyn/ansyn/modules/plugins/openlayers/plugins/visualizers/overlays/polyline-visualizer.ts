@@ -110,6 +110,21 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 		this.removeInteraction(VisualizerInteractions.pointerMove);
 	}
 
+	/**
+	 * Explanation:
+	 * 1. This is a callback function, which may get either a select event or an unselect event
+	 * 2. Our features are clipped to the extent. But we get events also from outside the extent,
+	 * so we need to handle those.
+	 * 3. If we get a select event, we check whether it comes from within the extent. If yes, we
+	 * fire an action to update the store. If not, we just assign the feature's id to an internal var, ghostId.
+	 * 4. If we get an unselect event, we check whether the associated feature's id is equal to ghostId. If yes,
+	 * it means that a "ghost" feature outside the extent was unselected. In that case, we just clear the ghostId var.
+	 * Otherwise, we fire an action to update the store.
+	 * 5. Note that, in the case of an unselect event, we should not check whether it comes from within the
+	 * extent or not. Because we may can a real (not ghost) unselect event simply by moving the mouse from the extent
+	 * outside. In that case the location of the event will be outside the extent, but it will be a unselect event of
+	 * a feature which is inside the extent.
+	 */
 	onSelectFeature($event) {
 		if ($event.selected.length > 0) {
 			const id = $event.selected[0].getId();

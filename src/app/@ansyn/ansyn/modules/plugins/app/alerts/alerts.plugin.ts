@@ -65,8 +65,8 @@ export class AlertsPlugin extends BaseImageryPlugin {
 		const shouldRemoved = !overlay || filteredOverlays.some((id: string) => id === overlay.id);
 		const payload = { key: AlertMsgTypesEnum.overlayIsNotPartOfQuery, value: this.mapId };
 		return shouldRemoved ?
-			this.notInQueryMsg ?
-				new RemoveAlertMsg(payload) : null : new AddAlertMsg(payload);
+			(this.notInQueryMsg ?
+				new RemoveAlertMsg(payload) : null) : new AddAlertMsg(payload);
 	}
 
 	positionChanged([position, overlay]: [ImageryMapPosition, IOverlay]): Observable<RemoveAlertMsg | AddAlertMsg | null> {

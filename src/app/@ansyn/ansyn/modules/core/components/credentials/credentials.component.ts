@@ -1,49 +1,25 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CredentialsService } from '../../services/credentials/credentials.service';
-import { tap } from 'rxjs/operators';
-import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
-import { selectIsMinimalistViewMode } from '@ansyn/map-facade';
+import { getMenuSessionData, UnSelectMenuItemAction } from '@ansyn/menu';
+import { SetUserEnter } from '@ansyn/menu';
 
 @Component({
 	selector: 'ansyn-credentials',
 	templateUrl: './credentials.component.html',
 	styleUrls: ['./credentials.component.less']
 })
-@AutoSubscriptions()
-export class CredentialsComponent implements OnInit, OnDestroy {
-	isOpen: boolean;
-	show: boolean;
-	credentialsMessage: any;
-
-	@AutoSubscription
-	isMinimalistViewMode$ = this.store$.select(selectIsMinimalistViewMode).pipe(
-		tap(isMinimalistViewMode => {
-			this.show = !isMinimalistViewMode;
-		})
-	);
-
-	constructor(protected credentialsService: CredentialsService,
+export class CredentialsComponent {
+	constructor(public credentialsService: CredentialsService,
 				protected store$: Store<any>) {
-		this.isOpen = false;
+		const menuSession = getMenuSessionData();
+		if (menuSession.isUserFirstEntrance) {
+			store$.dispatch(new SetUserEnter());
+		}
 	}
 
-	ngOnInit() {
-		this.credentialsService.getCredentials().pipe(
-			tap(() => {
-				this.credentialsMessage = this.credentialsService.credentials;
-			})
-		).subscribe();
+	closeWindow() {
+		this.store$.dispatch(new UnSelectMenuItemAction())
 	}
 
-	ngOnDestroy() {
-
-	}
-
-	openCredentials() {
-	}
-
-	setIsOpenMode() {
-		this.isOpen = !this.isOpen;
-	}
 }

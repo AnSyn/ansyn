@@ -5,8 +5,8 @@ import { catchError, mergeMap, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 
 interface ICredentialsResponse {
-	authorizedArea: { name: string }[];
-	unauthorizedArea: { name: string }[];
+	authorizedAreas: { name: string }[];
+	unauthorizedAreas: { name: string }[];
 }
 
 @Injectable({
@@ -23,18 +23,18 @@ export class CredentialsService {
 		this.user = { name: 'Unknown' };
 	}
 
-	get authorizedArea() {
-		if (!this.data.unauthorizedArea.length) {
+	get authorizedAreas() {
+		if (!this.data.unauthorizedAreas.length) {
 			return [{ name: 'You have permissions for everything' }];
 		}
-		return this.data.authorizedArea;
+		return this.data.authorizedAreas;
 	}
 
-	get unauthorizedArea() {
-		if (!this.data.authorizedArea.length) {
+	get unauthorizedAreas() {
+		if (!this.data.authorizedAreas.length) {
 			return [{ name: 'No permissions' }];
 		}
-		return this.data.unauthorizedArea;
+		return this.data.unauthorizedAreas;
 	}
 
 	getUrl(): string {

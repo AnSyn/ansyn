@@ -32,7 +32,7 @@ import {
 import { select, Store } from '@ngrx/store';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
-import { IMenuItem, MenuName } from '../models/menu-item.model';
+import { IMenuItem } from '../models/menu-item.model';
 import { MenuConfig } from '../models/menuConfig';
 import { IMenuConfig } from '../models/menu-config.model';
 import { Dictionary } from '@ngrx/entity/src/models';
@@ -233,7 +233,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	toggleItem(key: string): void {
-		if (this.isUserFirstEntrance && key === MenuName.Permissions) {
+		if (this.isUserFirstEntrance && key === 'Permissions') {
 			this.isUserFirstEntrance = false;
 			setMenuSessionData({isUserFirstEntrance: false});
 		}

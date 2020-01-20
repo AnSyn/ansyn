@@ -1,5 +1,5 @@
 export { IMenuConfig } from './models/menu-config.model';
-export { IMenuItem, MenuName } from './models/menu-item.model';
+export { IMenuItem } from './models/menu-item.model';
 export { IMenuState } from './reducers/menu.reducer';
 export { MenuConfig } from './models/menuConfig';
 export {

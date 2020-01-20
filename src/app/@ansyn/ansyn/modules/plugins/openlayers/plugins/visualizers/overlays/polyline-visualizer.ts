@@ -115,17 +115,13 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 			const id = $event.selected[0].getId();
 			if (this.isMouseEventInExtent($event)) {
 				this.store.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [id] } }));
-				console.log('selected', 1) // todo: remove
 			} else {
 				this.ghostId = id;
-				console.log('selected', 2) // todo: remove
 			}
 		} else {
 			if (this.ghostId) {
-				console.log('unselected', 2);
 				this.ghostId = undefined;
 			} else {
-				console.log('unselected', 1);
 				this.store.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
 			}
 		}

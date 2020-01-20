@@ -38,7 +38,6 @@ import { IMenuConfig } from '../models/menu-config.model';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, filter, tap, withLatestFrom, map } from 'rxjs/operators';
-import { getMenuSessionData, setMenuSessionData } from '../helpers/menu-session.helper';
 
 const animations: any[] = [
 	trigger(

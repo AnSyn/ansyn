@@ -20,13 +20,13 @@ export interface IMenuState extends EntityState<IMenuItem> {
 	menuCollapse: boolean;
 	isUserFirstEntrance: boolean;
 }
-
+const menuSession = getMenuSessionData();
 export const initialMenuState: IMenuState = menuItemsAdapter.getInitialState({
-	selectedMenuItem: getMenuSessionData() ? getMenuSessionData().selectedMenuItem : '',
-	isPinned: getMenuSessionData() ? getMenuSessionData().isPinned : false,
+	selectedMenuItem: menuSession.selectedMenuItem,
+	isPinned: menuSession.isPinned,
 	autoClose: true,
 	menuCollapse: false,
-	isUserFirstEntrance: getMenuSessionData() ? getMenuSessionData().isUserFirstEntrance : true
+	isUserFirstEntrance: menuSession.isUserFirstEntrance
 });
 
 export const menuFeatureKey = 'menu';

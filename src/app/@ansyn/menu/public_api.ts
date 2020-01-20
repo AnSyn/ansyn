@@ -1,5 +1,3 @@
-import { SetUserEnter } from './actions/menu.actions';
-
 export { MenuSession } from './models/menu-session-state.model';
 export { IMenuConfig } from './models/menu-config.model';
 export { IMenuItem } from './models/menu-item.model';

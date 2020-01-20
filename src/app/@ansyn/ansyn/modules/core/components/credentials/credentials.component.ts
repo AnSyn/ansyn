@@ -12,8 +12,8 @@ import { SetUserEnter } from '@ansyn/menu';
 export class CredentialsComponent {
 	constructor(public credentialsService: CredentialsService,
 				protected store$: Store<any>) {
-		const isUserFirstEnter = getMenuSessionData().isUserFirstEntrance;
-		if (isUserFirstEnter) {
+		const menuSession = getMenuSessionData();
+		if (menuSession.isUserFirstEntrance) {
 			store$.dispatch(new SetUserEnter());
 		}
 	}

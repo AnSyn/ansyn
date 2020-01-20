@@ -12,14 +12,13 @@ import { Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../maps/openlayers-disabled-map/openlayers-disabled-map';
-import { ImageryVideoMap } from '../../ansyn/modules/imagery-video/map/imagery-video-map';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 
 export const OpenLayerPic4CartoSourceProviderSourceType = 'PIC4CARTO';
 
 @ImageryMapSource({
 	sourceType: OpenLayerPic4CartoSourceProviderSourceType,
-	supported: [OpenLayersMap, OpenLayersDisabledMap, ImageryVideoMap]
+	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayerPic4CartoSourceProvider extends OpenLayersMapSourceProvider {
 	readonly sourceType;

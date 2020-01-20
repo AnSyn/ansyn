@@ -18,13 +18,15 @@ export interface IMenuState extends EntityState<IMenuItem> {
 	isPinned: boolean;
 	autoClose: boolean;
 	menuCollapse: boolean;
+	isUserFirstEntrance: boolean;
 }
 
 export const initialMenuState: IMenuState = menuItemsAdapter.getInitialState({
 	selectedMenuItem: getMenuSessionData() ? getMenuSessionData().selectedMenuItem : '',
 	isPinned: getMenuSessionData() ? getMenuSessionData().isPinned : false,
 	autoClose: true,
-	menuCollapse: false
+	menuCollapse: false,
+	isUserFirstEntrance: getMenuSessionData() ? getMenuSessionData().isUserFirstEntrance : true
 });
 
 export const menuFeatureKey = 'menu';
@@ -67,6 +69,9 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 		case MenuActionTypes.MENU_COLLAPSE:
 			return { ...state, menuCollapse: action.payload };
 
+		case MenuActionTypes.SET_USER_ENTER:
+			setMenuSessionData({isUserFirstEntrance: false});
+			return { ...state, isUserFirstEntrance: false};
 		default:
 			return state;
 	}
@@ -81,3 +86,4 @@ export const selectIsPinned = createSelector(menuStateSelector, (menu) => menu &
 export const selectAutoClose = createSelector(menuStateSelector, (menu) => menu.autoClose);
 export const selectSelectedMenuItem = createSelector(menuStateSelector, (menu) => menu.selectedMenuItem);
 export const selectMenuCollapse = createSelector(menuStateSelector, (menu) => menu.menuCollapse);
+export const selectUserFirstEnter = createSelector(menuStateSelector, (menu) => menu.isUserFirstEntrance);

@@ -1,23 +1,11 @@
-import { IMenuSessionState } from '../models/menu-session-state.model';
+import { MenuSession } from '../models/menu-session-state.model';
 
-class MenuSession {
-	selectedMenuItem: string;
-	isPinned?: boolean;
-	isUserFirstEntrance: boolean;
-
-	constructor() {
-		this.selectedMenuItem = '';
-		this.isPinned = false;
-		this.isUserFirstEntrance = true;
-	}
-}
-
-export function getMenuSessionData(): IMenuSessionState {
+export function getMenuSessionData(): MenuSession {
 	const menuSession = JSON.parse(sessionStorage.getItem('menuState'));
 	return menuSession ? menuSession : new MenuSession();
 }
 
-export function setMenuSessionData(data: IMenuSessionState) {
+export function setMenuSessionData(data: Partial<MenuSession>) {
 	const sessionState = getMenuSessionData();
 	const updatedSessionState = JSON.stringify({ ...sessionState, ...data });
 	sessionStorage.setItem('menuState', updatedSessionState);

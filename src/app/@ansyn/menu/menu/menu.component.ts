@@ -27,7 +27,7 @@ import {
 	selectEntitiesMenuItems,
 	selectIsPinned,
 	selectMenuCollapse,
-	selectSelectedMenuItem
+	selectSelectedMenuItem, selectUserFirstEnter
 } from '../reducers/menu.reducer';
 import { select, Store } from '@ngrx/store';
 import { animate, state, style, transition, trigger } from '@angular/animations';
@@ -120,6 +120,11 @@ export class MenuComponent implements OnInit, OnDestroy {
 		tap(this.setSelectedMenuItem.bind(this))
 	);
 
+	@AutoSubscription
+	isUserFirstEntrance$ = this.store.select(selectUserFirstEnter).pipe(
+		tap((isUserFirstEntrance) => this.isUserFirstEntrance = isUserFirstEntrance)
+	);
+
 	selectedMenuItemName: string;
 	entities: Dictionary<IMenuItem> = {};
 
@@ -134,7 +139,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 				protected elementRef: ElementRef,
 				@Inject(DOCUMENT) protected document: Document,
 				@Inject(MenuConfig) public menuConfig: IMenuConfig) {
-		this.isUserFirstEntrance = getMenuSessionData().isUserFirstEntrance === undefined ? true : getMenuSessionData().isUserFirstEntrance;
+
 	}
 
 	get componentElem() {
@@ -233,10 +238,6 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	toggleItem(key: string): void {
-		if (this.isUserFirstEntrance && key === 'Permissions') {
-			this.isUserFirstEntrance = false;
-			setMenuSessionData({isUserFirstEntrance: false});
-		}
 		if (this.onAnimation) {
 			return;
 		}

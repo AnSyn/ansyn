@@ -1,15 +1,17 @@
-import { empty, Observable, of, EMPTY } from 'rxjs';
-import { IMAGERY_VIDEO_SOURCE_TYPE } from './imagery-video-provider';
-import { OverlaySourceProvider } from '../../overlays/models/overlays-source-providers';
+import { Observable, of, EMPTY } from 'rxjs';
+import { IMAGERY_VIDEO_SOURCE_TYPE } from '@ansyn/imagery-video';
+
+
+import { map } from 'rxjs/operators';
 import {
 	BaseOverlaySourceProvider,
 	IFetchParams,
 	IStartAndEndDate
-} from '../../overlays/models/base-overlay-source-provider.model';
-import { IOverlay, Overlay } from '../../overlays/models/overlay.model';
-import { limitArray } from '../../core/utils/i-limited-array';
-import { sortByDateDesc } from '../../core/utils/sorting';
-import { map } from 'rxjs/operators';
+} from '../../../modules/overlays/models/base-overlay-source-provider.model';
+import { IOverlay, Overlay } from '../../../modules/overlays/models/overlay.model';
+import { sortByDateDesc } from '../../../modules/core/utils/sorting';
+import { limitArray } from '../../../modules/core/utils/i-limited-array';
+import { OverlaySourceProvider } from '../../../modules/overlays/models/overlays-source-providers';
 
 const DATA = {
 	'4eeb061d-f8a6-4a0a-86cf-8d97c71a62c6': {

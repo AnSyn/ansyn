@@ -1,5 +1,5 @@
 #!/bin/bash
-BUILDS=("menu" "imagery" "map-facade" "ol" "imagery-cesium" "ansyn")
+BUILDS=("menu" "imagery" "map-facade" "ol" "imagery-cesium" "imagery-video" "ansyn")
 len=${#BUILDS[*]}
 for (( i=0; i<len; i++ ))
 do

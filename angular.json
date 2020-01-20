@@ -471,6 +471,26 @@
         }
       }
     },
+    "@ansyn/imagery-video": {
+      "root": "src/app/@ansyn/imagery-video",
+      "sourceRoot": "projects/ansyn/imagery-video/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "src/app/@ansyn/imagery-video/tsconfig.lib.json",
+            "project": "src/app/@ansyn/imagery-video/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "src/app/@ansyn/imagery-video/ng-package.json"
+            }
+          }
+        }
+      }
+    },
     "@ansyn/imagery": {
       "root": "src/app/@ansyn/imagery",
       "sourceRoot": "src/app/@ansyn/imagery",

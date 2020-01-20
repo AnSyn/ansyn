@@ -74,7 +74,11 @@ export class AnsynComponent implements OnInit {
 		this.store$.dispatch(new UpdateToolsFlags([{
 			key: toolsFlags.shadowMouseActiveForManyScreens,
 			value: this.toolsConfigData.ShadowMouse && this.toolsConfigData.ShadowMouse.activeByDefault
-		}]));
+		}, {
+			key: toolsFlags.forceShadowMouse,
+			value: this.toolsConfigData.ShadowMouse && this.toolsConfigData.ShadowMouse.forceSendShadowMousePosition
+		}
+		]));
 
 		setTimeout(() => {
 			this.renderContextMenu = true;

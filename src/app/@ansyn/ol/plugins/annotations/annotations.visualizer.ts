@@ -149,8 +149,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					stroke: '#000',
 					fill: 'white',
 					offsetY: (feature: olFeature) => {
-						const { mode, label } = feature.getProperties();
-						return mode === 'Point' && !label.geometry ? 30 : 0;
+						const { label } = feature.getProperties();
+						return label && !label.geometry ? 30 : 0;
 					},
 					text: (feature: olFeature) => {
 						const entity = this.idToEntity.get(feature.getId());

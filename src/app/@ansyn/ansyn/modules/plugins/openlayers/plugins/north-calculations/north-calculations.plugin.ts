@@ -48,10 +48,14 @@ import {
 	BackToWorldView,
 	OverlayStatusActionsTypes
 } from '../../../../overlays/overlay-status/actions/overlay-status.actions';
+import { CoreConfig } from '../../../../core/models/core.config';
+import { Inject } from '@angular/core';
+import { ICoreConfig } from '../../../../core/models/core.config.model';
+import { PointToImageOrientationAction } from '../../../../../../map-facade/actions/map.actions';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
-	deps: [Actions, LoggerService, Store, OpenLayersProjectionService]
+	deps: [Actions, LoggerService, Store, CoreConfig, OpenLayersProjectionService]
 })
 export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	communicator: CommunicatorEntity;
@@ -89,6 +93,15 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
+	pointToImageOrientation$ = this.actions$.pipe(
+		ofType<PointToImageOrientationAction>(MapActionTypes.POINT_TO_IMAGE_ORIENTATION),
+		filter((action: PointToImageOrientationAction) => action.payload.mapId === this.mapId),
+		tap((action: PointToImageOrientationAction) => {
+			this.setImageryOrientation(action.payload.overlay);
+		})
+	);
+
+	@AutoSubscription
 	calcNorthAfterDisplayOverlaySuccess$ = this.actions$.pipe(
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
 		filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.mapId),
@@ -104,25 +117,33 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				return this.setActualNorth();
 			}
 			// for 'Imagery Perspective' or 'User Perspective'
-			return this.getVirtualNorth(this.iMap.mapObject).pipe(take(1)).pipe(
+			return this.positionChangedCalcNorthAccurately$().pipe(take(1)).pipe(
 				tap((virtualNorth: number) => {
 					this.communicator.setVirtualNorth(virtualNorth);
 
 					if (!forceFirstDisplay && (orientation === 'Imagery Perspective' || customOriantation === 'Imagery Perspective')) {
-						if (overlay.sensorLocation) {
-							this.communicator.getCenter().pipe(take(1)).subscribe(point => {
-								const brng = getAngleDegreeBetweenPoints(overlay.sensorLocation, point);
-								const resultBearings = 360 - (brng + toDegrees(-this.communicator.getVirtualNorth()));
-								this.communicator.setRotation(toRadians(resultBearings));
-							});
-						} else {
-							this.communicator.setRotation(overlay.azimuth);
-						}
+						this.setImageryOrientation(overlay);
 					}
-					// if 'User Perspective' do nothing
+					// else if 'User Perspective' do nothing
 				}));
 		})
 	);
+
+	setImageryOrientation(overlay: IOverlay) {
+		if (!overlay) {
+			return;
+		}
+
+		if (overlay.sensorLocation && !this.config.northCalcImagerySensorNamesIgnoreList.includes(overlay.sensorName)) {
+			this.communicator.getCenter().pipe(take(1)).subscribe(point => {
+				const brng = getAngleDegreeBetweenPoints(overlay.sensorLocation, point);
+				const resultBearings = (360 - (brng + toDegrees(-this.communicator.getVirtualNorth()))) % 360;
+				this.communicator.setRotation(toRadians(resultBearings));
+			});
+		} else {
+			this.communicator.setRotation(overlay.azimuth);
+		}
+	}
 
 	@AutoSubscription
 	backToWorldSuccessSetNorth$ = this.actions$.pipe(
@@ -174,6 +195,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	constructor(protected actions$: Actions,
 				public loggerService: LoggerService,
 				public store$: Store<any>,
+				@Inject(CoreConfig) public config: ICoreConfig,
 				protected projectionService: OpenLayersProjectionService) {
 		super();
 	}
@@ -237,33 +259,6 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				const northOffsetRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
 				return northOffsetRad;
 			})
-		);
-	}
-
-	getVirtualNorth(mapObject: OLMap, sourceProjection?: string, destProjection?: string) {
-		return this.getProjectedCenters(mapObject, sourceProjection, destProjection).pipe(
-			map((projectedCenters: Point[]): number => {
-				const projectedCenterView = projectedCenters[0].coordinates;
-				const projectedCenterViewWithOffset = projectedCenters[1].coordinates;
-				const northOffsetRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
-				const northRad = northOffsetRad * -1;
-				const communicatorRad = this.communicator.getRotation();
-				let currentRotationDegrees = toDegrees(communicatorRad);
-				if (currentRotationDegrees < 0) {
-					currentRotationDegrees = 360 + currentRotationDegrees;
-				}
-				currentRotationDegrees = currentRotationDegrees % 360;
-				let northDeg = toDegrees(northRad);
-				if (northDeg < 0) {
-					northDeg = 360 + northDeg;
-				}
-				northDeg = northDeg % 360;
-				if (this.thresholdDegrees > Math.abs(currentRotationDegrees - northDeg)) {
-					return 0;
-				}
-				return (this.communicator.getRotation() - northRad) % (Math.PI * 2);
-			}),
-			catchError(() => of(0))
 		);
 	}
 

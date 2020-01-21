@@ -23,7 +23,7 @@
 				(click)="toggleItem(menuItem.name)">
 
 				<i [ngClass]="menuItem.iconClass"></i>
-				<span class="badge" [hidden]="!isUserFirstEntrance" > </span>
+				<span class="badge bottom" [hidden]="!isUserFirstEntrance" > </span>
 				{{menuItem.name | translate}}
 			</div>
 			<div class="logo" *ngIf="menuConfig?.forkMe?.active">

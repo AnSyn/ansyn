@@ -17,37 +17,14 @@
 			i {
 				font-size: @icon-size;
 			}
-
-			&.menu-pinned {
-				font-size: 0;
-				overflow: hidden;
-			}
 		}
 	}
 }
 
-.imageries-container {
-	&.layout2, &.layout4, &.layout6, &.layout5 {
-		:host {
-			div.back-to-world-view {
-				button {
-					font-size: 0;
-					overflow: hidden;
-					padding: 0;
-
-					&.small-icon-button {
-						margin: 0;
-					}
-				}
-			}
-		}
-	}
-}
-
-@media screen and (max-width: 1820px) {
+@media screen and (max-width: 1440px) {
 	:host {
 		div.back-to-world-view {
-			button {
+			button.menu-pinned {
 				font-size: 0;
 				overflow: hidden;
 				padding: 0;

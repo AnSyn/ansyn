@@ -4,60 +4,26 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, timeout, map } from 'rxjs/operators';
 import { getPolygonByPointAndRadius, IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/imagery';
 import { Point } from 'geojson';
-import { OverlaySourceProvider } from '../../modules/overlays/models/overlays-source-providers';
+import { OverlaySourceProvider } from '../../../modules/overlays/models/overlays-source-providers';
 import {
 	BaseOverlaySourceProvider,
 	IFetchParams,
 	IStartAndEndDate
-} from '../../modules/overlays/models/base-overlay-source-provider.model';
-import { ErrorHandlerService } from '../../modules/core/services/error-handler.service';
-import { LoggerService } from '../../modules/core/services/logger.service';
+} from '../../../modules/overlays/models/base-overlay-source-provider.model';
+import { ErrorHandlerService } from '../../../modules/core/services/error-handler.service';
+import { LoggerService } from '../../../modules/core/services/logger.service';
 import {
 	IMultipleOverlaysSourceConfig,
 	MultipleOverlaysSourceConfig
-} from '../../modules/core/models/multiple-overlays-source-config';
+} from '../../../modules/core/models/multiple-overlays-source-config';
 import { bbox } from '@turf/turf';
-import { IOverlay, Overlay, GeoRegisteration } from '../../modules/overlays/models/overlay.model';
-import { limitArray } from '../../modules/core/utils/i-limited-array';
-import { sortByDateDesc } from '../../modules/core/utils/sorting';
-import { IOverlayByIdMetaData } from '../../modules/overlays/services/overlays.service';
-import { forkJoinSafe } from '../../modules/core/utils/rxjs/observables/fork-join-safe';
+import { IOverlay, Overlay, GeoRegisteration } from '../../../modules/overlays/models/overlay.model';
+import { limitArray } from '../../../modules/core/utils/i-limited-array';
+import { sortByDateDesc } from '../../../modules/core/utils/sorting';
+import { IOverlayByIdMetaData } from '../../../modules/overlays/services/overlays.service';
+import { forkJoinSafe } from '../../../modules/core/utils/rxjs/observables/fork-join-safe';
+import { IPic4CartoConfig, IPic4CartoParams, IPic4CartoPicture, Pic4CartoSourceType } from './pic4carto.model';
 
-export const Pic4CartoSourceType = 'PIC4CARTO';
-
-export interface IPic4CartoConfig {
-	baseUrl: string;
-	pointToGeojsonRadius: number;
-	providers: string[];
-	imageWidth: number,
-	imageHeight: number,
-	timeLimit: number
-}
-
-export interface IPic4CartoParams {
-	west: string,		// minX
-	north: string,		// maxY
-	east: string,		// maxX
-	south: string,		// minY
-	mindate: string,
-	maxdate: string,
-	ignore?: string,
-	[field: string]: string
-}
-
-export interface IPic4CartoPicture {
-	pictureUrl: string;
-	date: number;
-	coordinates: {
-		lat: number;
-		lng: number;
-	},
-	provider: string;
-	author: string;
-	license: string;
-	detailsUrl: string;
-	direction: any;
-}
 
 @OverlaySourceProvider({
 	sourceType: Pic4CartoSourceType

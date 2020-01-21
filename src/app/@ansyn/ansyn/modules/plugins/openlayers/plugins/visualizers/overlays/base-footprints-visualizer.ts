@@ -8,11 +8,19 @@ import { selectDrops } from '../../../../../overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../../../../overlays/services/overlays.service';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
 import { EntitiesVisualizer } from '@ansyn/ol';
-import { selectOverlayFootprintMode } from '../../../../../menu-items/tools/reducers/tools.reducer';
 import { OverlayDisplayMode } from '../../../../../menu-items/tools/overlays-display-mode/overlays-display-mode.component';
 import { selectOverlayDisplayModeByMapId } from '@ansyn/map-facade';
 
 export class BaseFootprintsVisualizer extends EntitiesVisualizer {
+
+	constructor(public store: Store<any>,
+				public overlaysService: OverlaysService,
+				public overlayDisplayMode: string,
+				public fpConfig: Partial<IVisualizerStateStyle>,
+				...superArgs
+	) {
+		super(fpConfig, ...superArgs);
+	}
 
 	@AutoSubscription
 	drawOverlaysOnMap$: () => Observable<any> = () => combineLatest(this.store.select(selectOverlayDisplayModeByMapId(this.mapId)), this.store.select(selectDrops))
@@ -31,15 +39,6 @@ export class BaseFootprintsVisualizer extends EntitiesVisualizer {
 				return EMPTY;
 			})
 		);
-
-	constructor(public store: Store<any>,
-				public overlaysService: OverlaysService,
-				public overlayDisplayMode: string,
-				public fpConfig: Partial<IVisualizerStateStyle>,
-				...superArgs
-	) {
-		super(fpConfig, ...superArgs);
-	}
 
 	geometryToEntity(id, geometry): IVisualizerEntity {
 		if ( geometry.type === 'MultiPolygon') {

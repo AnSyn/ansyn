@@ -128,6 +128,21 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		})
 	);
 
+	@AutoSubscription
+	backToWorldSuccessSetNorth$ = this.actions$.pipe(
+		ofType<BackToWorldSuccess>(OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS),
+		filter((action: BackToWorldSuccess) => action.payload.mapId === this.communicator.id),
+		withLatestFrom(this.store$.select(statusBarStateSelector)),
+		tap(([action, { comboBoxesProperties }]: [BackToWorldView, IStatusBarState]) => {
+			this.communicator.setVirtualNorth(0);
+			switch (comboBoxesProperties.orientation) {
+				case 'Align North':
+				case 'Imagery Perspective':
+					this.communicator.setRotation(0);
+			}
+		})
+	);
+
 	setImageryOrientation(overlay: IOverlay) {
 		if (!overlay) {
 			return;
@@ -143,21 +158,6 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			this.communicator.setRotation(overlay.azimuth);
 		}
 	}
-
-	@AutoSubscription
-	backToWorldSuccessSetNorth$ = this.actions$.pipe(
-		ofType<BackToWorldSuccess>(OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS),
-		filter((action: BackToWorldSuccess) => action.payload.mapId === this.communicator.id),
-		withLatestFrom(this.store$.select(statusBarStateSelector)),
-		tap(([action, { comboBoxesProperties }]: [BackToWorldView, IStatusBarState]) => {
-			this.communicator.setVirtualNorth(0);
-			switch (comboBoxesProperties.orientation) {
-				case 'Align North':
-				case 'Imagery Perspective':
-					this.communicator.setRotation(0);
-			}
-		})
-	);
 
 	@AutoSubscription
 	positionChangedCalcNorthAccurately$ = () => this.store$.select(selectMapPositionByMapId(this.mapId)).pipe(

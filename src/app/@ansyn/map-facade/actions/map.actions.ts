@@ -28,6 +28,7 @@ export interface IToastMessage {
 }
 
 export const MapActionTypes = {
+	POINT_TO_IMAGE_ORIENTATION: 'POINT_TO_IMAGE_ORIENTATION',
 	POINT_TO_REAL_NORTH: 'POINT_TO_REAL_NORTH',
 	POSITION_CHANGED: 'POSITION_CHANGED',
 	UPDATE_MAP_SIZE: 'UPDATE_MAP_SIZE',
@@ -131,6 +132,14 @@ export class PointToRealNorthAction implements Action {
 	type = MapActionTypes.POINT_TO_REAL_NORTH;
 
 	constructor(public payload: string) {
+	}
+}
+
+export class PointToImageOrientationAction implements Action {
+	type = MapActionTypes.POINT_TO_IMAGE_ORIENTATION;
+
+	// todo: remove overlay from mapFacade
+	constructor(public payload: { mapId: string, overlay: any }) {
 	}
 }
 
@@ -302,7 +311,7 @@ export class ChangeImageryMapSuccess implements Action {
 export class ChangeImageryMapFailed implements Action {
 	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP_FAILED;
 
-	constructor(public payload: { id: string, error: any}) {
+	constructor(public payload: { id: string, error: any }) {
 	}
 }
 
@@ -358,7 +367,7 @@ export class SetLayoutSuccessAction implements Action {
 export class ToggleMapLayersAction implements Action {
 	type = MapActionTypes.TOGGLE_MAP_LAYERS;
 
-	constructor(public payload: { mapId: string, isVisible: boolean}) {
+	constructor(public payload: { mapId: string, isVisible: boolean }) {
 	}
 }
 

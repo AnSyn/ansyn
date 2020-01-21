@@ -48,6 +48,7 @@ export {
 	ContextMenuTriggerAction,
 	ShadowMouseProducer,
 	PointToRealNorthAction,
+	PointToImageOrientationAction,
 	MapActionTypes,
 	SetActiveMapId,
 	SetMapsDataActionStore,

@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
-import { PointToRealNorthAction } from '../../actions/map.actions';
+import { PointToImageOrientationAction, PointToRealNorthAction } from '../../actions/map.actions';
 
 export interface IsGeoRegisteredProperties {
 	letter: 'N' | '?';
@@ -91,7 +91,7 @@ export class ImageryRotationComponent {
 		if (Math.abs(this.toDegrees(this.rotationAngle)) < this.thresholdDegrees) {
 			const overlay = this.mapState.data.overlay;
 			if (overlay) {
-				this.setRotation(overlay.azimuth);
+				this.store.dispatch(new PointToImageOrientationAction({ mapId: this.mapState.id, overlay}));
 			}
 		} else {
 			this.store.dispatch(new PointToRealNorthAction(this.mapState.id));

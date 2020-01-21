@@ -318,7 +318,7 @@
   "loggerConfig": {
     "env": "PROD",
     "active": {{ getv "/ansyn/logger/active" "false"}},
-    "componentName": "{{ getv "/ansyn/logger/component/name" "app_client" }}",
+    "component": "{{ getv "/ansyn/logger/component/name" "app_client" }}",
     "disconnectionTimeoutInMinutes": {{ getv "/ansyn/logger/disconnection/minutes" "15"}}
   },
   "statusBarConfig": {
@@ -359,7 +359,8 @@
     },
 	 "httpTimeout": "3000",
 	 "isFooterCollapsible": {{ getv "/ansyn/iscollapsible" "false" }},
-	 "enable3D": {{ getv "/ansyn/3d/enable" "true" }}
+	 "enable3D": {{ getv "/ansyn/3d/enable" "true" }},
+	 "northCalcImagerySensorNamesIgnoreList": []
   },
   "olConfig": {
   	 "needToUseLayerExtent": false,

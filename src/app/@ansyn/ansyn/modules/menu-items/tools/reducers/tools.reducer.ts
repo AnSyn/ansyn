@@ -11,6 +11,7 @@ export enum toolsFlags {
 	shadowMouse = 'shadowMouse',
 	shadowMouseDisabled = 'shadowMouseDisabled',
 	shadowMouseActiveForManyScreens = 'shadowMouseActiveForManyScreens',
+	forceShadowMouse = 'forceShadowMouse',
 	pinLocation = 'pinLocation',
 	autoImageProcessing = 'autoImageProcessing',
 	imageProcessingDisabled = 'imageProcessingDisabled',
@@ -112,6 +113,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			tmpMap.set(toolsFlags.shadowMouse, false);
 			if (action.payload && (<StopMouseShadow>action).payload.fromUser) {
 				tmpMap.set(toolsFlags.shadowMouseActiveForManyScreens, false);
+				tmpMap.set(toolsFlags.forceShadowMouse, false);
 			}
 			return { ...state, flags: tmpMap };
 

@@ -15,7 +15,7 @@ import {
 	toRadians
 } from '@ansyn/imagery';
 import { IStatusBarState, statusBarStateSelector } from '../../../../status-bar/reducers/status-bar.reducer';
-import { MapActionTypes, PointToRealNorthAction, selectActiveMapId, selectMapPositionByMapId } from '@ansyn/map-facade';
+import { MapActionTypes, PointToRealNorthAction, selectActiveMapId, selectMapPositionByMapId, PointToImageOrientationAction } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
 import {
@@ -51,7 +51,6 @@ import {
 import { CoreConfig } from '../../../../core/models/core.config';
 import { Inject } from '@angular/core';
 import { ICoreConfig } from '../../../../core/models/core.config.model';
-import { PointToImageOrientationAction } from '../../../../../../map-facade/actions/map.actions';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],

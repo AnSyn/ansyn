@@ -12,6 +12,7 @@ import { ArrayFilterMetadata } from '../modules/menu-items/filters/models/metada
 import { AirbusSourceProvider } from './overlay-source-providers/airbus/airbus-source-provider';
 import { ImageryVideoOverlaySourceProvider } from './overlay-source-providers/video/imagery-video-overlay-source-provider';
 import { ImageryVideoModule } from '@ansyn/imagery-video';
+import { Pic4cartoSourceProvider } from './overlay-source-providers/pic4carto/pic4carto-source-provider';
 
 @NgModule({
 	providers: [
@@ -30,7 +31,8 @@ import { ImageryVideoModule } from '@ansyn/imagery-video';
 				PlanetSourceProvider,
 				OpenAerialSourceProvider,
 				IdahoSourceProvider,
-				AirbusSourceProvider
+				AirbusSourceProvider,
+				Pic4cartoSourceProvider
 			]
 		})
 	]

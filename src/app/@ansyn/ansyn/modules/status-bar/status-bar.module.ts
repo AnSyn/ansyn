@@ -13,6 +13,7 @@ import { NavigationBarComponent } from './components/navigation-bar/navigation-b
 import { ComboBoxesComponent } from './components/combo-boxes/combo-boxes.component';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { ClickOutsideModule } from '../core/click-outside/click-outside.module';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 
 @NgModule({
 	imports: [
@@ -22,7 +23,9 @@ import { ClickOutsideModule } from '../core/click-outside/click-outside.module';
 		MapFacadeModule,
 		TreeviewModule.forRoot(),
 		StoreModule.forFeature(statusBarFeatureKey, StatusBarReducer),
-		ClickOutsideModule
+		ClickOutsideModule,
+		OwlDateTimeModule,
+		OwlNativeDateTimeModule
 	],
 	declarations: [StatusBarComponent, TimelineTimepickerComponent, TreeViewComponent, NavigationBarComponent, ComboBoxesComponent],
 	providers: [

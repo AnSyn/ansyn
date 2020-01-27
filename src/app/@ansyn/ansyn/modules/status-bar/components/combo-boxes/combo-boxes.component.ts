@@ -86,6 +86,7 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	favoriteOverlays: IOverlay[];
 	layout: LayoutKey;
 	time: ICaseTimeState;
+	timeRange: Date[];
 
 	dataInputFilters: ICaseDataInputFiltersState;
 	dataInputFiltersTitle: CaseDataFilterTitle = CaseDataFilterTitle.Disabled;
@@ -121,6 +122,7 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 
 			this.time$.subscribe(_time => {
 				this.time = _time;
+				this.timeRange = _time && [_time.from, _time.to];
 			}),
 
 			this.comboBoxesProperties$.subscribe((comboBoxesProperties) => {

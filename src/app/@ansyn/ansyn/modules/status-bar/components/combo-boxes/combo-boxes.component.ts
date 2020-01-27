@@ -142,15 +142,24 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 		this.dataInputFilterExpand = !this.dataInputFilterExpand;
 	}
 
-	toggleTimelineStartEndSearch($event?: any) {
-		if (!$event || !$event.path.map(({ classList }) => classList).filter(Boolean).some((classList) => classList.contains('flatpickr-calendar'))) {
-			this.timeSelectionEditIcon = !this.timeSelectionEditIcon;
-		}
-	}
+	// toggleTimelineStartEndSearch($event?: any) {
+	// 	if (!$event || !$event.path.map(({ classList }) => classList).filter(Boolean).some((classList) => classList.contains('flatpickr-calendar'))) {
+	// 		this.timeSelectionEditIcon = !this.timeSelectionEditIcon;
+	// 	}
+	// }
+	//
+	// applyTimelinePickerResult(time: ICaseTimeState) {
+	// 	this.store$.dispatch(new SetOverlaysCriteriaAction({ time }));
+	// 	this.toggleTimelineStartEndSearch();
+	// }
 
-	applyTimelinePickerResult(time: ICaseTimeState) {
+	onTimeRangeChange(event) {
+		const time: ICaseTimeState = {
+			from: event.value[0],
+			to: event.value[1],
+			type: 'absolute'
+		};
 		this.store$.dispatch(new SetOverlaysCriteriaAction({ time }));
-		this.toggleTimelineStartEndSearch();
 	}
 
 	layoutSelectChange(layout: LayoutKey): void {

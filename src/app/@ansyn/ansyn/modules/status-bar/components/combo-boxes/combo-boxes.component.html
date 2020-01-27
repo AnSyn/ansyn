@@ -92,18 +92,19 @@
 		<input [owlDateTime]="dt10"
 			   [selectMode]="'range'"
 			   [(ngModel)]="timeRange"
+			   (dateTimeChange)="onTimeRangeChange($event)"
 			   class="time-picker-input">
 		<owl-date-time #dt10></owl-date-time>
 
-		<ansyn-timeline-timepicker
-			*ngIf="timeSelectionEditIcon"
-			(ansynClickOutside)="toggleTimelineStartEndSearch($event)"
-			[trigger]="timePickerTrigger.optionsTrigger.nativeElement"
-			[startDatePickerValue]="(time)?.from"
-			[endDatePickerValue]="(time)?.to"
-			(closeComponent)="toggleTimelineStartEndSearch()"
-			(applyDate)="applyTimelinePickerResult($event)">
-		</ansyn-timeline-timepicker>
+<!--		<ansyn-timeline-timepicker-->
+<!--			*ngIf="timeSelectionEditIcon"-->
+<!--			(ansynClickOutside)="toggleTimelineStartEndSearch($event)"-->
+<!--			[trigger]="timePickerTrigger.optionsTrigger.nativeElement"-->
+<!--			[startDatePickerValue]="(time)?.from"-->
+<!--			[endDatePickerValue]="(time)?.to"-->
+<!--			(closeComponent)="toggleTimelineStartEndSearch()"-->
+<!--			(applyDate)="applyTimelinePickerResult($event)">-->
+<!--		</ansyn-timeline-timepicker>-->
 	</div>
 
 	<!-- Layout -->

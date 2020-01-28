@@ -228,6 +228,10 @@ div.pin-location {
 	height: 33px;
 }
 
+.time-picker-backdrop-undo {
+	display: none;
+}
+
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
 	-webkit-appearance: none;

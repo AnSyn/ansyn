@@ -2,6 +2,7 @@
 @import "~flatpickr/dist/flatpickr.css";
 @import "~@ansyn/event-drops/style.css";
 @import "bootstrap/carousel.css";
+@import "bootstrap/ngx-datetime-range-picker.css";
 @import 'icons.css';
 @import 'tooltip.css';
 @import "~primeng/resources/primeng.min.css";

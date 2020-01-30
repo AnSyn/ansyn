@@ -1,4 +1,4 @@
-import { BaseImageryMap, ICanvasExportData, ImageryMap, ImageryMapExtent, ImageryMapPosition } from '@ansyn/imagery';
+import { BaseImageryMap, ImageryMap, ImageryMapExtent, ImageryMapPosition } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
 import { GeoJsonObject, Point } from 'geojson';
 import { HttpClient } from '@angular/common/http';
@@ -32,18 +32,12 @@ export class ImageryVideoMap extends BaseImageryMap<any> {
 	one2one(): void {
 	}
 
-	getCoordinateFromScreenPixel(screenPixel: { x: any; y: any; }): [number, number, number] { return [0, 0, 0]}
+	getCoordinateFromScreenPixel(screenPixel: { x: any; y: any; }): [number, number, number] {
+		return [0, 0, 0];
+	}
 
 	getHtmlContainer(): HTMLElement {
 		return this.videoComponent.video.nativeElement;
-	}
-
-	getExportData(): ICanvasExportData {
-		return {
-			width: 200,
-			height: 200,
-			data: 'unsupported'
-		}
 	}
 
 	addGeojsonLayer(data: GeoJsonObject) {
@@ -83,7 +77,11 @@ export class ImageryVideoMap extends BaseImageryMap<any> {
 
 	resetView(layer: any, position?: ImageryMapPosition, extent?: ImageryMapExtent, useDoubleBuffer?: boolean): Observable<boolean> {
 		this.setMainLayer(layer);
-		this.positionChanged.emit(this._getPosition());
+
+		const currentPosition = this._getPosition();
+		if (currentPosition) {
+			this.positionChanged.emit(currentPosition);
+		}
 		return of(true);
 	}
 
@@ -129,7 +127,12 @@ export class ImageryVideoMap extends BaseImageryMap<any> {
 	}
 
 	private _getPosition(): ImageryMapPosition {
-		const line = turf.feature(_get(this.mainLayer, 'data.overlay.footprint'));
+		const position = _get(this.mainLayer, 'data.overlay.footprint');
+		if (!position) {
+			return null;
+		}
+
+		const line = turf.feature(position);
 		const bbox: BBox = line ? turf.bbox(line) : [0, 0, 0, 0];
 		const extentPolygon: any = turf.bboxPolygon(bbox).geometry;
 		return { extentPolygon };

@@ -88,7 +88,9 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	generateFeaturesIds(featureCollection: FeatureCollection): void {
 		/* reference */
 		featureCollection.features.forEach((feature) => {
-			feature.properties = { ...feature.properties, id: UUID.UUID() };
+			const newId = UUID.UUID();
+			feature.id = newId;
+			feature.properties = { ...feature.properties, id: newId };
 		});
 	}
 
@@ -99,17 +101,17 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	simpleStyleToVisualizer(annotationsLayer): void {
 		/* reference */
 		annotationsLayer.features.forEach((feature) => {
-			const { id, showMeasures, mode, icon, labelSize, undeletable, label, style } = feature.properties;
+			const { id, showMeasures, mode, icon, labelSize, undeletable, label, style, isNonEditable } = feature.properties;
 			feature.properties = {
 				id,
 				label: this.extractLabel(label),
 				showMeasures: JSON.parse(showMeasures ? showMeasures : null),
 				mode,
-				editMode: false,
 				icon,
 				labelSize: isNaN(labelSize) ? 28 : parseInt(labelSize, 10),
 				undeletable: JSON.parse(undeletable),
-				style: JSON.parse(style)
+				style: JSON.parse(style),
+				isNonEditable: JSON.parse(isNonEditable || false)
 			};
 		});
 	}

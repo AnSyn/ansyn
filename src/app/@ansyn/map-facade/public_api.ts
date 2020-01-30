@@ -1,5 +1,3 @@
-import { SetMinimalistViewModeAction } from './actions/map.actions';
-
 export { ImageryZoomerService } from './services/imagery-zoomer.service';
 export { IEd50Notification } from './models/map-config.model';
 
@@ -50,6 +48,7 @@ export {
 	ContextMenuTriggerAction,
 	ShadowMouseProducer,
 	PointToRealNorthAction,
+	PointToImageOrientationAction,
 	MapActionTypes,
 	SetActiveMapId,
 	SetMapsDataActionStore,

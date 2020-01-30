@@ -7,6 +7,7 @@ import { take, tap } from 'rxjs/operators';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
 import { AnaglyphSensorService } from '../service/anaglyph-sensor.service';
 import { AddAlertMsg, RemoveAlertMsg } from '../../../../../overlays/overlay-status/actions/overlay-status.actions';
+import { selectAlertMsg } from '../../../../../overlays/overlay-status/reducers/overlay-status.reducer';
 
 export const anaglyphSensorAlertKey = 'anaglyphSensor';
 
@@ -15,8 +16,17 @@ export const anaglyphSensorAlertKey = 'anaglyphSensor';
 	deps: [Store, AnaglyphSensorService]
 })
 export class AnaglyphSensorPlugin extends BaseImageryPlugin {
-
+	anglyphMsg: boolean;
 	overlay: IOverlay = null;
+
+
+	@AutoSubscription
+	anaglyphSensorAlert$ = this.store$.select(selectAlertMsg).pipe(
+		tap( alertMsg => {
+			const anglyphMsgs = alertMsg.get(anaglyphSensorAlertKey);
+			this.anglyphMsg = anglyphMsgs && anglyphMsgs.has(this.mapId);
+		})
+	);
 
 	@AutoSubscription
 	overlay$ = () => this.store$.pipe(
@@ -31,30 +41,20 @@ export class AnaglyphSensorPlugin extends BaseImageryPlugin {
 							key: anaglyphSensorAlertKey,
 							value: this.mapId
 						}));
-					} else {
+					} else if (this.anglyphMsg) {
 						this.store$.dispatch(new RemoveAlertMsg({
 							key: anaglyphSensorAlertKey,
 							value: this.mapId
 						}));
 					}
 				});
-			} else {
+			}
+			else if (this.anglyphMsg) {
 				this.store$.dispatch(new RemoveAlertMsg({ key: anaglyphSensorAlertKey, value: this.mapId }));
 			}
 
 		})
 	);
-
-	onResetView() {
-		this.store$.dispatch(new RemoveAlertMsg({ key: anaglyphSensorAlertKey, value: this.mapId }));
-		return super.onResetView();
-	}
-
-	onDispose(): void {
-		this.store$.dispatch(new RemoveAlertMsg({ key: anaglyphSensorAlertKey, value: this.mapId }));
-		super.onDispose();
-
-	}
 
 	constructor(public store$: Store<any>,
 				protected anaglyphSensorService: AnaglyphSensorService) {

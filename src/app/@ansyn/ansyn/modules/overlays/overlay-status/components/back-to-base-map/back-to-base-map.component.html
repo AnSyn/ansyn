@@ -2,7 +2,7 @@
 	<button (click)="backToWorldView()"
 			class="small-icon-button"
 			[class.menu-pinned]="isPinned"
-			[attr.tooltip-class]="mapsAmount > 1 ? 'bottom right' : 'top right'"
+			tooltip-class="bottom right"
 			[attr.tooltip-value]="'Back to base map' | translate">
 		<i class="icon-back-to-base-map"></i>
 		{{'Back to base map' | translate}}

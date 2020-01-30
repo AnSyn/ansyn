@@ -8,13 +8,14 @@ import {
 	areCoordinatesNumeric,
 	BaseImageryPlugin,
 	CommunicatorEntity,
+	getAngleDegreeBetweenPoints,
 	ImageryMapPosition,
 	ImageryPlugin,
 	toDegrees,
 	toRadians
 } from '@ansyn/imagery';
 import { IStatusBarState, statusBarStateSelector } from '../../../../status-bar/reducers/status-bar.reducer';
-import { MapActionTypes, PointToRealNorthAction, selectActiveMapId, selectMapPositionByMapId } from '@ansyn/map-facade';
+import { MapActionTypes, PointToRealNorthAction, selectActiveMapId, selectMapPositionByMapId, PointToImageOrientationAction } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
 import {
@@ -47,10 +48,13 @@ import {
 	BackToWorldView,
 	OverlayStatusActionsTypes
 } from '../../../../overlays/overlay-status/actions/overlay-status.actions';
+import { CoreConfig } from '../../../../core/models/core.config';
+import { Inject } from '@angular/core';
+import { ICoreConfig } from '../../../../core/models/core.config.model';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
-	deps: [Actions, LoggerService, Store, OpenLayersProjectionService]
+	deps: [Actions, LoggerService, Store, CoreConfig, OpenLayersProjectionService]
 })
 export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	communicator: CommunicatorEntity;
@@ -88,29 +92,38 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
+	pointToImageOrientation$ = this.actions$.pipe(
+		ofType<PointToImageOrientationAction>(MapActionTypes.POINT_TO_IMAGE_ORIENTATION),
+		filter((action: PointToImageOrientationAction) => action.payload.mapId === this.mapId),
+		tap((action: PointToImageOrientationAction) => {
+			this.setImageryOrientation(action.payload.overlay);
+		})
+	);
+
+	@AutoSubscription
 	calcNorthAfterDisplayOverlaySuccess$ = this.actions$.pipe(
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
 		filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.mapId),
 		withLatestFrom(this.store$.select(statusBarStateSelector), ({ payload }: DisplayOverlaySuccessAction, { comboBoxesProperties }: IStatusBarState) => {
-			return [payload.forceFirstDisplay, comboBoxesProperties.orientation, payload.overlay, payload.openWithAngle];
+			return [payload.forceFirstDisplay, comboBoxesProperties.orientation, payload.overlay, payload.customOriantation];
 		}),
-		filter(([forceFirstDisplay, orientation, overlay, openWithAngle]: [boolean, CaseOrientation, IOverlay, number]) => {
+		filter(([forceFirstDisplay, orientation, overlay, customOriantation]: [boolean, CaseOrientation, IOverlay, string]) => {
 			return comboBoxesOptions.orientations.includes(orientation);
 		}),
-		switchMap(([forceFirstDisplay, orientation, overlay, openWithAngle]: [boolean, CaseOrientation, IOverlay, number]) => {
-			if (orientation === 'Align North' && !forceFirstDisplay && openWithAngle === undefined) {
+		switchMap(([forceFirstDisplay, orientation, overlay, customOriantation]: [boolean, CaseOrientation, IOverlay, string]) => {
+			if (!forceFirstDisplay &&
+				((orientation === 'Align North' && !Boolean(customOriantation)) || customOriantation === 'Align North')) {
 				return this.setActualNorth();
 			}
-			return this.getVirtualNorth(this.iMap.mapObject).pipe(take(1)).pipe(
+			// for 'Imagery Perspective' or 'User Perspective'
+			return this.positionChangedCalcNorthAccurately$().pipe(take(1)).pipe(
 				tap((virtualNorth: number) => {
 					this.communicator.setVirtualNorth(virtualNorth);
-					if (openWithAngle !== undefined) {
-						this.communicator.setRotation(toRadians(openWithAngle) - virtualNorth);
-						return EMPTY;
+
+					if (!forceFirstDisplay && (orientation === 'Imagery Perspective' || customOriantation === 'Imagery Perspective')) {
+						this.setImageryOrientation(overlay);
 					}
-					if (!forceFirstDisplay && orientation === 'Imagery Perspective') {
-						this.communicator.setRotation(overlay.azimuth);
-					}
+					// else if 'User Perspective' do nothing
 				}));
 		})
 	);
@@ -129,6 +142,22 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			}
 		})
 	);
+
+	setImageryOrientation(overlay: IOverlay) {
+		if (!overlay) {
+			return;
+		}
+
+		if (overlay.sensorLocation && !this.config.northCalcImagerySensorNamesIgnoreList.includes(overlay.sensorName)) {
+			this.communicator.getCenter().pipe(take(1)).subscribe(point => {
+				const brng = getAngleDegreeBetweenPoints(overlay.sensorLocation, point);
+				const resultBearings = (360 - (brng + toDegrees(-this.communicator.getVirtualNorth()))) % 360;
+				this.communicator.setRotation(toRadians(resultBearings));
+			});
+		} else {
+			this.communicator.setRotation(overlay.azimuth);
+		}
+	}
 
 	@AutoSubscription
 	positionChangedCalcNorthAccurately$ = () => this.store$.select(selectMapPositionByMapId(this.mapId)).pipe(
@@ -165,6 +194,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	constructor(protected actions$: Actions,
 				public loggerService: LoggerService,
 				public store$: Store<any>,
+				@Inject(CoreConfig) public config: ICoreConfig,
 				protected projectionService: OpenLayersProjectionService) {
 		super();
 	}
@@ -228,33 +258,6 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				const northOffsetRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
 				return northOffsetRad;
 			})
-		);
-	}
-
-	getVirtualNorth(mapObject: OLMap, sourceProjection?: string, destProjection?: string) {
-		return this.getProjectedCenters(mapObject, sourceProjection, destProjection).pipe(
-			map((projectedCenters: Point[]): number => {
-				const projectedCenterView = projectedCenters[0].coordinates;
-				const projectedCenterViewWithOffset = projectedCenters[1].coordinates;
-				const northOffsetRad = Math.atan2((projectedCenterViewWithOffset[0] - projectedCenterView[0]), (projectedCenterViewWithOffset[1] - projectedCenterView[1]));
-				const northRad = northOffsetRad * -1;
-				const communicatorRad = this.communicator.getRotation();
-				let currentRotationDegrees = toDegrees(communicatorRad);
-				if (currentRotationDegrees < 0) {
-					currentRotationDegrees = 360 + currentRotationDegrees;
-				}
-				currentRotationDegrees = currentRotationDegrees % 360;
-				let northDeg = toDegrees(northRad);
-				if (northDeg < 0) {
-					northDeg = 360 + northDeg;
-				}
-				northDeg = northDeg % 360;
-				if (this.thresholdDegrees > Math.abs(currentRotationDegrees - northDeg)) {
-					return 0;
-				}
-				return (this.communicator.getRotation() - northRad) % (Math.PI * 2);
-			}),
-			catchError(() => of(0))
 		);
 	}
 

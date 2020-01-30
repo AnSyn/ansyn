@@ -27,7 +27,7 @@ import {
 	selectEntitiesMenuItems,
 	selectIsPinned,
 	selectMenuCollapse,
-	selectSelectedMenuItem
+	selectSelectedMenuItem, selectUserFirstEnter
 } from '../reducers/menu.reducer';
 import { select, Store } from '@ngrx/store';
 import { animate, state, style, transition, trigger } from '@angular/animations';
@@ -37,7 +37,7 @@ import { MenuConfig } from '../models/menuConfig';
 import { IMenuConfig } from '../models/menu-config.model';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { distinctUntilChanged, filter, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, filter, tap, withLatestFrom, map } from 'rxjs/operators';
 
 const animations: any[] = [
 	trigger(
@@ -73,6 +73,7 @@ const animations: any[] = [
 */
 
 export class MenuComponent implements OnInit, OnDestroy {
+	isUserFirstEntrance: boolean;
 	_componentElem;
 	currentComponent: ComponentRef<any>;
 	collapse: boolean;
@@ -82,7 +83,15 @@ export class MenuComponent implements OnInit, OnDestroy {
 	@ViewChild('container') container: ElementRef;
 	@Input() version;
 
-	menuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(select(selectAllMenuItems));
+	topMenuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(
+		select(selectAllMenuItems),
+		map( menuItems => menuItems.filter((menuItem: IMenuItem) => !menuItem.dockedToBottom))
+	);
+
+	bottomMenuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(
+		select(selectAllMenuItems),
+		map( menuItems => menuItems.filter((menuItem: IMenuItem) => menuItem.dockedToBottom))
+	);
 
 	@AutoSubscription
 	collapse$ = this.store.select(selectMenuCollapse).pipe(
@@ -110,6 +119,11 @@ export class MenuComponent implements OnInit, OnDestroy {
 		tap(this.setSelectedMenuItem.bind(this))
 	);
 
+	@AutoSubscription
+	isUserFirstEntrance$ = this.store.select(selectUserFirstEnter).pipe(
+		tap((isUserFirstEntrance) => this.isUserFirstEntrance = isUserFirstEntrance)
+	);
+
 	selectedMenuItemName: string;
 	entities: Dictionary<IMenuItem> = {};
 
@@ -124,6 +138,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 				protected elementRef: ElementRef,
 				@Inject(DOCUMENT) protected document: Document,
 				@Inject(MenuConfig) public menuConfig: IMenuConfig) {
+
 	}
 
 	get componentElem() {

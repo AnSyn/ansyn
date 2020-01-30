@@ -11,6 +11,8 @@ import Point from 'ol/geom/Point';
 import VectorLayer from 'ol/layer/Vector';
 import ol_Layer from 'ol/layer/Layer';
 import OLGeoJSON from 'ol/format/GeoJSON';
+import SelectEvent from 'ol/interaction/Select';
+import * as olExtent from 'ol/extent';
 import {
 	BaseImageryVisualizer,
 	calculateGeometryArea,
@@ -159,8 +161,8 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		if (styleSettings.stroke) {
 			const color = this.colorWithAlpha(styleSettings.stroke, styleSettings['stroke-opacity']);
 			const dash = styleSettings['stroke-dasharray'];
-			const lineDash = dash > 0 ? [dash , 10] : undefined;
-			const width =  styleSettings['stroke-width'];
+			const lineDash = dash > 0 ? [dash, 10] : undefined;
+			const width = styleSettings['stroke-width'];
 			const lineCap = dash > 0 ? 'square' : undefined;
 
 			firstStyle.stroke = new Stroke({ color, lineDash, width, lineCap, lineDashOffset: 5 });
@@ -189,7 +191,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 			secondaryStyle.geometry = styleSettings.geometry
 		}
 
-		if ((styleSettings.label && styleSettings.label.text) && !feature.getProperties().editMode) {
+		if ((styleSettings.label && styleSettings.label.text) && !feature.getProperties().labelTranslateOn) {
 			const fill = new Fill({ color: styleSettings.label.fill });
 			const stroke = new Stroke({
 				color: styleSettings.label.stroke ? styleSettings.label.stroke : '#fff',
@@ -199,7 +201,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 			textStyle.text = new Text({
 				overflow: label.overflow,
-				font: `${styleSettings.label.fontSize}px Calibri,sans-serif`,
+				font: `${ styleSettings.label.fontSize }px Calibri,sans-serif`,
 				offsetY: <any>styleSettings.label.offsetY,
 				text: <any>label.text,
 				fill,
@@ -209,7 +211,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 				const { label } = feature.getProperties();
 				if (label.geometry) {
 					const oldCoordinates = label.geometry.getCoordinates();
-					const newCoordinates = [this.offset[0] + oldCoordinates[0] , this.offset[1] + oldCoordinates[1]];
+					const newCoordinates = [this.offset[0] + oldCoordinates[0], this.offset[1] + oldCoordinates[1]];
 					return new Point(newCoordinates);
 				}
 				return new Point(this.getCenterOfFeature(feature).coordinates)
@@ -431,6 +433,11 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		return (calculateGeometryArea(polygon) / 1000000).toFixed(2) + 'km2'
 	}
 
-
+	isMouseEventInExtent(event: SelectEvent): boolean {
+		const coordinate = event.mapBrowserEvent.coordinate;
+		const extent = this.vector.getExtent();
+		const result =  olExtent.containsCoordinate(extent, coordinate);
+		return result;
+	}
 
 }

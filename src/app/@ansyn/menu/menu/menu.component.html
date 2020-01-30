@@ -3,37 +3,46 @@
 	<div class="menu" #menu [class.expanded]="expand">
 		<div class="menu-content">
 
+			<div class="menu-items">
+				<div
+					*ngFor="let menuItem of topMenuItemsAsArray$ | async"
+					class="menu-btn"
+					[class.active]="isActive(menuItem.name)"
+					(click)="toggleItem(menuItem.name)">
+
+					<i [ngClass]="menuItem.iconClass"></i>
+					<span class="badge" [hidden]="hideBadge(menuItem.badge)">{{menuItem.badge}}</span>
+					{{menuItem.name | translate}}
+				</div>
+			</div>
 			<div
-				*ngFor="let menuItem of menuItemsAsArray$ | async"
-				class="menu-btn"
+				*ngFor="let menuItem of bottomMenuItemsAsArray$ | async"
+				class="menu-btn bottom"
+				[class.first-start]="isUserFirstEntrance"
 				[class.active]="isActive(menuItem.name)"
 				(click)="toggleItem(menuItem.name)">
 
 				<i [ngClass]="menuItem.iconClass"></i>
-				<span class="badge" [hidden]="hideBadge(menuItem.badge)">{{menuItem.badge}}</span>
+				<span class="badge bottom" [hidden]="!isUserFirstEntrance" > </span>
 				{{menuItem.name | translate}}
 			</div>
+			<div class="logo" *ngIf="menuConfig?.forkMe?.active">
 
-			<div class="logo">
-
-				<ng-container *ngIf="menuConfig?.forkMe?.active">
+				<ng-container>
 					<a class="forkMe" [href]="menuConfig.forkMe?.href" target="_blank">
 						<img [src]="menuConfig.forkMe?.image" [alt]="menuConfig.forkMe?.title"
 							 [title]="menuConfig.forkMe?.title">
 					</a>
 				</ng-container>
-
-				<div class="mode"
-					 *ngIf="menuConfig?.mode"
-					 [style.color]="menuConfig.color"
-					 [style.background]="menuConfig.background"
-					 [style.border]="'1px sollid' + menuConfig.color"
-				>{{menuConfig.mode}}
-				</div>
-				<img [src]="menuConfig.path" [alt]="version" [title]="version" (click)="resetApp()">
-
 			</div>
-
+			<div class="mode"
+				 *ngIf="menuConfig?.mode"
+				 [style.color]="menuConfig.color"
+				 [style.background]="menuConfig.background"
+				 [style.border]="'1px sollid' + menuConfig.color"
+			>{{menuConfig.mode}}
+			</div>
+			<img [src]="menuConfig.path" [alt]="version" [title]="version" (click)="resetApp()">
 		</div>
 
 		<button

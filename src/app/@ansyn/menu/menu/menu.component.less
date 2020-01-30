@@ -43,7 +43,7 @@ div.menu-wrapper {
 		height: 100%;
 		transition: transform .5s;
 
-		&.expanded {
+		&.expanded:not('.bottom') {
 			button.hide-menu {
 				transition: 0s;
 				transform: translateX(0);
@@ -55,48 +55,92 @@ div.menu-wrapper {
 			}
 		}
 
-		div.menu-btn {
-			position: relative;
-			text-align: center;
-			color: white;
-			text-decoration: none;
-			padding: 14px 0;
-			cursor: pointer;
-			font-size: 0.9rem;
+		div.menu-content {
+			display: flex;
+			flex: 1;
+			flex-direction: column;
+			justify-content: space-between;
 
-			i {
-				display: block;
-				font-size: 3em;
+			div.menu-items {
+				flex: 1;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
 			}
 
-			@media screen and (max-height: 700px) {
+			div.menu-btn {
+				position: relative;
+				text-align: center;
+				color: white;
+				text-decoration: none;
+				padding: 14px 0;
+				cursor: pointer;
+				font-size: 0.9rem;
+
 				i {
-					font-size: calc(~"((100vh - 94px) / @{number-of-menu-item}) - 45px");
+					display: block;
+					font-size: 3em;
+				}
+
+				span.badge {
+					position: absolute;
+					background: @application-secondary-color;
+					right: 20px;
+					top: 10px;
+					width: 18px;
+					height: 17px;
+					font-size: 12px;
+					border-radius: 50%;
+				}
+
+				img {
+					margin: 0 auto 5px auto;
+					display: block;
+				}
+
+				&:hover {
+					background-color: @background-color-3;
+				}
+
+				&.active {
+					background-color: @application-primary-color;
+				}
+
+				&.first-start {
+					background-color: #3d1a1a;
+				}
+
+				@media screen and (max-height: 700px) {
+					i {
+						font-size: calc(~"((100vh - 94px) / @{number-of-menu-item}) - 45px");
+					}
+					span.badge.bottom {
+						width: 10px;
+						height: 10px;
+					}
 				}
 			}
 
-			span.badge {
-				position: absolute;
-				background: @application-secondary-color;
-				right: 20px;
-				top: 10px;
-				width: 18px;
-				height: 17px;
-				font-size: 12px;
-				border-radius: 50%;
-			}
+			div.logo {
+				width: 100%;
+				text-align: center;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
 
-			img {
-				margin: 0 auto 5px auto;
-				display: block;
-			}
+				a.forkMe {
+					margin-bottom: 15px;
+				}
 
-			&:hover {
-				background-color: @background-color-3;
-			}
+				div.mode {
+					width: 80%;
+					margin-bottom: 5px;
+				}
 
-			&.active {
-				background-color: @application-primary-color;
+				img {
+					cursor: pointer;
+				}
+
 			}
 		}
 	}
@@ -142,30 +186,6 @@ div.menu-wrapper {
 			font-size: 24px;
 			box-sizing: border-box;
 		}
-	}
-
-	div.logo {
-		position: absolute;
-		bottom: 10px;
-		width: 100%;
-		text-align: center;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-
-		a.forkMe {
-			margin-bottom: 15px;
-		}
-
-		div.mode {
-			width: 80%;
-			margin-bottom: 5px;
-		}
-
-		img {
-			cursor: pointer;
-		}
-
 	}
 
 	div.show-menu {

@@ -34,10 +34,10 @@ describe('AlertsPlugin', () => {
 
 	describe('setOverlaysNotInCase', () => {
 		it('should add alert if not null and not include on filteredOverlays)', () => {
-			const all: any = [{ id: '1' }, { id: '2' }, { id: '3' }];
 			const filtered: string[] = ['1', '2', '3'];
-			alertsPlugin.overlay = <any>{ id: '4' };
-			const result = alertsPlugin.setOverlaysNotInCase([all, filtered]);
+			alertsPlugin.notInQueryMsg = false;
+			const overlay = <any>{ id: '4' };
+			const result = alertsPlugin.setOverlaysNotInCase([overlay, filtered]);
 			expect(result).toEqual(new AddAlertMsg({
 				key: AlertMsgTypesEnum.overlayIsNotPartOfQuery,
 				value: 'mapId'
@@ -46,21 +46,21 @@ describe('AlertsPlugin', () => {
 
 		describe('should remove alert if null or include on filteredOverlays', () => {
 			it('not include', () => {
-				const all: any = [{ id: '1' }, { id: '2' }, { id: '3' }];
 				const filtered: string[] = ['1', '2', '3'];
-				alertsPlugin.overlay = <any>{ id: '3' };
-				const result = alertsPlugin.setOverlaysNotInCase([all, filtered]);
+				const overlay = <any>{ id: '3' };
+				alertsPlugin.notInQueryMsg = true;
+				const result = alertsPlugin.setOverlaysNotInCase([overlay, filtered]);
 				expect(result).toEqual(new RemoveAlertMsg({
 					key: AlertMsgTypesEnum.overlayIsNotPartOfQuery,
 					value: 'mapId'
 				}));
 			});
 
-			it('null', () => {
-				const all: any = [{ id: 1 }, { id: 2 }, { id: 3 }];
+			it('undefined', () => {
 				const filtered: string[] = ['1', '2', '3'];
-				alertsPlugin.overlay = null;
-				const result = alertsPlugin.setOverlaysNotInCase([all, filtered]);
+				const overlay = undefined;
+				alertsPlugin.notInQueryMsg = true;
+				const result = alertsPlugin.setOverlaysNotInCase([overlay, filtered]);
 				expect(result).toEqual(new RemoveAlertMsg({
 					key: AlertMsgTypesEnum.overlayIsNotPartOfQuery,
 					value: 'mapId'

@@ -9,7 +9,11 @@ import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { combineLatest } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { SetMeasureDistanceToolState, UpdateMeasureDataAction } from '../../actions/tools.actions';
+import {
+	ClearActiveInteractionsAction,
+	SetMeasureDistanceToolState,
+	UpdateMeasureDataAction
+} from '../../actions/tools.actions';
 import { IMeasureData, selectIsMeasureToolActive, selectMeasureDataByMapId } from '../../reducers/tools.reducer';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
 
@@ -84,9 +88,23 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 	}
 
 	toggleMeasureToolActivation() {
+		this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateMeasureDataAction] }));
 		this.store$.dispatch(new UpdateMeasureDataAction({
 			mapId: this.mapId,
-			measureData: { isToolActive: !this.measureData.isToolActive }
+			measureData: {
+				isToolActive: !this.measureData.isToolActive,
+				isRemoveMeasureModeActive: false,
+			}
+		}));
+	}
+
+	toggleRemoveSingleMeasure() {
+		this.store$.dispatch(new UpdateMeasureDataAction({
+			mapId: this.mapId,
+			measureData: {
+				isRemoveMeasureModeActive: !this.measureData.isRemoveMeasureModeActive,
+				isToolActive: false
+			}
 		}));
 	}
 

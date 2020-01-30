@@ -120,7 +120,7 @@ export class ClearFilterAction implements Action {
 export class DisplayOverlayFromStoreAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE;
 
-	constructor(public payload: { id: string, mapId?: string, extent?: any, openWithAngle?: number }) {
+	constructor(public payload: { id: string, mapId?: string, extent?: any, customOriantation?: string }) {
 	}
 }
 
@@ -134,7 +134,7 @@ export class DisplayMultipleOverlaysFromStoreAction implements Action {
 export class DisplayOverlayAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY;
 
-	constructor(public payload: { overlay: IOverlay, mapId: string, extent?: any, forceFirstDisplay?: boolean, force?: boolean, openWithAngle?: number }) {
+	constructor(public payload: { overlay: IOverlay, mapId: string, extent?: any, forceFirstDisplay?: boolean, force?: boolean, customOriantation?: string }) {
 	}
 }
 

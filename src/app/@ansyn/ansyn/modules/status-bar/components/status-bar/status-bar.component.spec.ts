@@ -11,11 +11,6 @@ describe('StatusBarComponent', () => {
 	let component: StatusBarComponent;
 	let fixture: ComponentFixture<StatusBarComponent>;
 	let store: Store<IStatusBarState>;
-	const mockImageryStatusComponent = MockComponent({
-		selector: 'ansyn-imagery-status',
-		inputs: ['map'],
-		outputs: []
-	});
 	const mockSelectedCaseBarComponent = MockComponent({
 		selector: 'ansyn-popover',
 		inputs: ['text', 'icon']
@@ -33,7 +28,6 @@ describe('StatusBarComponent', () => {
 			],
 			declarations: [StatusBarComponent,
 				/* mock */
-				mockImageryStatusComponent,
 				mockSelectedCaseBarComponent,
 				mockComboBoxes,
 				mockNavigationBar

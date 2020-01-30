@@ -18,6 +18,9 @@
       "@ansyn/imagery-cesium": [
         "src/app/@ansyn/imagery-cesium/public_api"
       ],
+      "@ansyn/imagery-video": [
+        "src/app/@ansyn/imagery-video/public_api"
+      ],
       "@ansyn/menu": [
         "src/app/@ansyn/menu/public_api"
       ],

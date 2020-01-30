@@ -75,7 +75,7 @@ export class AnsynApi {
 	events = {
 		onReady: new EventEmitter<boolean>(),
 		overlaysLoadedSuccess: new EventEmitter<IOverlay[] | false>(),
-		displayOverlaySuccess: new EventEmitter<{overlay: IOverlay | false, mapId: string}>()
+		displayOverlaySuccess: new EventEmitter<{ overlay: IOverlay | false, mapId: string }>()
 	};
 	/** @deprecated onReady as own events was deprecated use events.onReady instead */
 	onReady = new EventEmitter<boolean>(true);
@@ -165,7 +165,7 @@ export class AnsynApi {
 		})
 	);
 
-	constructor(private store: Store<any>,
+	constructor(protected store: Store<any>,
 				protected actions$: Actions,
 				protected projectionConverterService: ProjectionConverterService,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
@@ -365,7 +365,7 @@ export class AnsynApi {
 		layerData.features.forEach((feature) => {
 			feature.properties.isNonEditable = !isEditable;
 			const { label } = feature.properties;
-			feature.properties.label = label && typeof label === 'object' ? label : {text: label, geometry: null};
+			feature.properties.label = label && typeof label === 'object' ? label : { text: label, geometry: null };
 		});
 
 		this.generateFeaturesIds(layerData);

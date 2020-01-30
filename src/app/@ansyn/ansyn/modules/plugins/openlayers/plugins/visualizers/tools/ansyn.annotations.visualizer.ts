@@ -1,12 +1,18 @@
 import { BaseImageryPlugin, ImageryPlugin, IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { uniq } from 'lodash';
 import { select, Store } from '@ngrx/store';
-import { MapActionTypes, selectActiveMapId, selectOverlayByMapId } from '@ansyn/map-facade';
+import { selectActiveMapId, selectOverlayByMapId } from '@ansyn/map-facade';
 import { combineLatest, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
-import { distinctUntilChanged, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { selectGeoFilterSearchMode } from '../../../../../status-bar/reducers/status-bar.reducer';
+import {
+	selectAnnotationMode,
+	selectAnnotationProperties,
+	selectSubMenu,
+	SubMenuEnum
+} from '../../../../../menu-items/tools/reducers/tools.reducer';
 import { featureCollection, FeatureCollection } from '@turf/turf';
 import {
 	AnnotationMode,
@@ -20,19 +26,15 @@ import {
 import { ILayer, LayerType } from '../../../../../menu-items/layers-manager/models/layers.model';
 import {
 	selectActiveAnnotationLayer,
+	selectLayers,
 	selectLayersEntities,
 	selectSelectedLayersIds
 } from '../../../../../menu-items/layers-manager/reducers/layers.reducer';
 import {
-	selectAnnotationMode,
-	selectAnnotationProperties,
-	selectSubMenu,
-	SubMenuEnum
-} from '../../../../../menu-items/tools/reducers/tools.reducer';
-import {
 	AnnotationRemoveFeature,
 	AnnotationUpdateFeature,
-	SetAnnotationMode, ToolsActionsTypes
+	SetAnnotationMode,
+	ToolsActionsTypes
 } from '../../../../../menu-items/tools/actions/tools.actions';
 import { UpdateLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
 import { SearchMode, SearchModeEnum } from '../../../../../status-bar/models/search-mode.enum';
@@ -60,13 +62,9 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 		})
 	);
 
-	get offset() {
-		return this.annotationsVisualizer.offset;
-	}
-
-	set offset(offset: [number, number]) {
-		this.annotationsVisualizer.offset = offset;
-	}
+	getAllAnotationLayers$: Observable<any> = this.store$.select(selectLayers).pipe(
+		map( (layers: ILayer[]) => layers.filter(layer => layer.type === LayerType.annotation))
+	);
 
 	annotationFlag$ = this.store$.select(selectSubMenu).pipe(
 		map((subMenu: SubMenuEnum) => subMenu === SubMenuEnum.annotations),
@@ -104,7 +102,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 				const annotationMode = Boolean(action.payload) ? action.payload.annotationMode : null;
 				const useMapId = action.payload && Boolean(action.payload.mapId);
 				if (!useMapId || (useMapId && action.payload.mapId === this.mapId)) {
-					this.annotationsVisualizer.setMode(annotationMode, !useMapId)
+					this.annotationsVisualizer.setMode(annotationMode, !useMapId);
 				}
 			}));
 
@@ -125,6 +123,21 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 		mergeMap(this.onAnnotationsChange.bind(this))
 	);
 
+	constructor(public store$: Store<any>,
+				protected actions$: Actions,
+				protected projectionService: OpenLayersProjectionService,
+				@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig) {
+		super();
+}
+
+	get offset() {
+		return this.annotationsVisualizer.offset;
+	}
+
+	set offset(offset: [number, number]) {
+		this.annotationsVisualizer.offset = offset;
+	}
+
 	@AutoSubscription
 	currentOverlay$ = () => this.store$.pipe(
 		select(selectOverlayByMapId(this.mapId)),
@@ -133,9 +146,13 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 
 	@AutoSubscription
 	onChangeMode$ = () => this.annotationsVisualizer.events.onChangeMode.pipe(
-		tap((arg: {mode: AnnotationMode, forceBroadcast: boolean}) => {
+		tap((arg: { mode: AnnotationMode, forceBroadcast: boolean }) => {
 			const newMode = !Boolean(arg.mode) ? undefined : arg.mode; // prevent infinite loop
-			this.store$.dispatch(new SetAnnotationMode({ annotationMode: newMode, mapId: arg.forceBroadcast ? null : this.mapId}));
+			this.store$.dispatch(new SetAnnotationMode({
+				annotationMode: newMode,
+				mapId: arg.forceBroadcast ? null : this.mapId
+			}));
+			this.annotationsVisualizer.events.onSelect.next([]);
 		})
 	);
 
@@ -155,6 +172,28 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			geoJsonFeature.properties = { ...geoJsonFeature.properties };
 			this.store$.dispatch(new UpdateLayer(<ILayer>{ ...activeAnnotationLayer, data }));
 		})
+	);
+
+	@AutoSubscription
+	onAnnotationEditEnd$ = () => this.annotationsVisualizer.events.onAnnotationEditEnd.pipe(
+		withLatestFrom(this.getAllAnotationLayers$),
+		tap(([{ GeoJSON, feature }, AnnotationLayers]: [IDrawEndEvent, ILayer[]]) => {
+			const [geoJsonFeature] = GeoJSON.features;
+			const layerToUpdate = AnnotationLayers.find((layer: ILayer) => layer.data.features.some(({ id }) => id === geoJsonFeature.id));
+			const data = <FeatureCollection<any>>{ ...layerToUpdate.data };
+			const annotationToChangeIndex = data.features.findIndex((feature) => feature.id === geoJsonFeature.id);
+			data.features[annotationToChangeIndex] = geoJsonFeature;
+			if (this.overlay) {
+				geoJsonFeature.properties = {
+					...geoJsonFeature.properties,
+					...this.projectionService.getProjectionProperties(this.communicator, data, feature, this.overlay)
+				};
+			}
+			const label = geoJsonFeature.properties.label.geometry ?
+				{...geoJsonFeature.properties.label, geometry: GeoJSON.features[1].geometry} : geoJsonFeature.properties.label;
+			geoJsonFeature.properties = { ...geoJsonFeature.properties , label};
+			this.store$.dispatch(new UpdateLayer(<ILayer>{ ...layerToUpdate, data }));
+			})
 	);
 
 	@AutoSubscription
@@ -231,16 +270,14 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 		return this.annotationsVisualizer.addOrUpdateEntities(entitiesToAdd);
 	}
 
-	constructor(public store$: Store<any>,
-				protected actions$: Actions,
-				protected projectionService: OpenLayersProjectionService,
-				@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig) {
-		super();
-	}
-
 	onInit() {
 		super.onInit();
 		this.annotationsVisualizer = this.communicator.getPlugin(AnnotationsVisualizer);
+		this.store$.select(selectAnnotationMode)
+			.pipe(take(1))
+			.subscribe((annotationMode) => {
+				this.annotationsVisualizer.setMode(annotationMode, false);
+			});
 	}
 
 }

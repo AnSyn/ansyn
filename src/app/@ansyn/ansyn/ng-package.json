@@ -6,6 +6,7 @@
     "@ansyn/imagery",
     "@ansyn/map-facade",
     "@ansyn/imagery-cesium",
+    "@ansyn/imagery-video",
     "@ansyn/menu",
     "@turf/turf",
     "geojson",

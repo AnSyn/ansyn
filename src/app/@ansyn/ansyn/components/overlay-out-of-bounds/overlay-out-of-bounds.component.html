@@ -1,6 +1,6 @@
 <button
 	[attr.tooltip-value]="'Back to overlay extent' | translate"
-	[attr.tooltip-class]="mapsAmount === 1 ? 'top left': 'bottom left'"
+	tooltip-class="bottom left"
 	(click)="backToExtent()">
 	<span class="indicator" [style.background-color]="color"></span>
 	<span class="text">{{'Image is out of bounds' | translate}}</span>

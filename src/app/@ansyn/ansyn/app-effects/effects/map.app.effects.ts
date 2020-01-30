@@ -73,7 +73,7 @@ import {
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { isEqual } from 'lodash';
 import { selectGeoRegisteredOptionsEnabled } from '../../modules/menu-items/tools/reducers/tools.reducer';
-import { ImageryVideoMapType } from '../../modules/imagery-video/map/imagery-video-map';
+import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import { LoggerService } from '../../modules/core/services/logger.service';
 
 @Injectable()
@@ -93,6 +93,7 @@ export class MapAppEffects {
 			MapActionTypes.SET_LAYOUT_SUCCESS,
 			MapActionTypes.POSITION_CHANGED,
 			MapActionTypes.SYNCHRONIZE_MAPS,
+			MapActionTypes.EXPORT_MAPS_TO_PNG_REQUEST,
 			MapActionTypes.EXPORT_MAPS_TO_PNG_SUCCESS,
 			MapActionTypes.EXPORT_MAPS_TO_PNG_FAILED,
 			OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW,

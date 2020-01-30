@@ -1,0 +1,19 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "paths": {
+      "@ansyn/imagery": [
+        "src/app/@ansyn/imagery/public_api"
+      ],
+      "@ansyn/map-facade": [
+        "src/app/@ansyn/map-facade/public_api"
+      ]
+    },
+    "target": "es5",
+    "sourceMap": true
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

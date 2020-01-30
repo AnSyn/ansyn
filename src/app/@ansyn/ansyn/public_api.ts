@@ -1,8 +1,10 @@
-export { ImageryVideoMapType } from './modules/imagery-video/map/imagery-video-map';
+export { AddLayer } from './modules/menu-items/layers-manager/actions/layers.actions';
+
 export {
 	AnaglyphConfig,
 	IAnaglyphConfig
 } from './modules/plugins/openlayers/plugins/anaglyph-sensor/models/anaglyph.model';
+
 export { AnaglyphSensorService } from './modules/plugins/openlayers/plugins/anaglyph-sensor/service/anaglyph-sensor.service';
 
 export { CredentialsService } from './modules/core/services/credentials/credentials.service';

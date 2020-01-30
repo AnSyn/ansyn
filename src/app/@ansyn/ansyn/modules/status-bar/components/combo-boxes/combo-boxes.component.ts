@@ -33,6 +33,8 @@ import {
 } from '../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { ClearActiveInteractionsAction } from '../../../menu-items/tools/actions/tools.actions';
+import * as momentNs from 'moment';
+const moment = momentNs;
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [
@@ -90,6 +92,26 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	dataInputFilters: ICaseDataInputFiltersState;
 	dataInputFiltersTitle: CaseDataFilterTitle = CaseDataFilterTitle.Disabled;
 	private subscriptions = [];
+
+	dateRangePickerOptions = {};
+	dateTimeRangePickerSettings = {
+		retailCalendar: false,
+		timezoneSupport: false,
+		timePicker: true,
+		type: 'daily',
+		viewDateFormat: 'MMM D, YYYY',
+		placeholder: 'Date Time Range',
+	};
+	dateTimeRange = {
+		daily: {
+			startDate: '2017-01-01',
+			endDate: moment().format('YYYY-MM-DD'),
+			minDate: '2017-01-01',
+			maxDate: '2018-12-31',
+			startTime: '13:00',
+			endTime: '18:00',
+		},
+	};
 
 	get SearchModeEnum() {
 		return SearchModeEnum;
@@ -181,5 +203,9 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy() {
 		this.subscriptions.forEach((sub) => sub.unsubscribe());
+	}
+
+	onTimeRangeChanged(event) {
+		console.log('event', event);
 	}
 }

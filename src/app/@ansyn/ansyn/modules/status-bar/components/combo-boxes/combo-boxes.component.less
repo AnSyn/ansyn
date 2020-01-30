@@ -89,6 +89,14 @@
 			background: rgba(0, 0, 0, 1);
 			background-clip: padding-box;
 		}
+
+		ngx-datetime-range-picker {
+			position: absolute;
+			width: 100%;
+			/deep/ .date-input {
+				opacity: 0;
+			}
+		}
 	}
 }
 

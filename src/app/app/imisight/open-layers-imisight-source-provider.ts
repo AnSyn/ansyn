@@ -57,8 +57,10 @@ export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvide
 			}
 		});
 
-		return Promise.resolve(new TileLayer({   preload: Infinity,
-												 source }));
+		return Promise.resolve(new TileLayer({
+			preload: Infinity,
+			source
+		}));
 	}
 
 	getImageURL(url: string): Observable<any> {

@@ -26,8 +26,9 @@ export class OpenLayerTileWMSSourceProvider extends OpenLayersMapSourceProvider 
 		});
 
 		const tiled = new TileLayer({
-										preload: Infinity,
-										visible: true, source });
+			preload: Infinity,
+			visible: true, source
+		});
 		return Promise.resolve(tiled);
 	}
 }

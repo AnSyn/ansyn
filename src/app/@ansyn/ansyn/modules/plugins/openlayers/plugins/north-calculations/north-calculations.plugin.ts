@@ -1,4 +1,5 @@
 import { EMPTY, forkJoin, Observable, Observer, of, throwError } from 'rxjs';
+import { cloneDeep } from 'lodash';
 import * as turf from '@turf/turf';
 import * as GeoJSON from 'geojson';
 import { Point } from 'geojson';
@@ -327,7 +328,8 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		this.shadowMapObjectView = new View({
 			projection: mainLayer.getSource().getProjection()
 		});
-		this.shadowMapObject.addLayer(mainLayer);
+		const clonedLayer = cloneDeep(mainLayer);
+		this.shadowMapObject.addLayer(clonedLayer);
 		this.shadowMapObject.setView(this.shadowMapObjectView);
 
 		const { center, zoom, rotation } = projectedState;

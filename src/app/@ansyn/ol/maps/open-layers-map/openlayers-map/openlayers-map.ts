@@ -1,4 +1,3 @@
-import { cloneDeep } from 'lodash';
 import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
 import {
@@ -305,8 +304,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	setMainLayerToBackgroundMap(layer: Layer) {
 		layer.set(ImageryLayerProperties.NAME, IMAGERY_MAIN_LAYER_NAME);
 		this.backgroundMapObject.getLayers().clear();
-		const clonedLayer = cloneDeep(layer);
-		this.backgroundMapObject.addLayer(clonedLayer);
+		this.backgroundMapObject.addLayer(layer);
 	}
 
 	getMainLayer(): Layer {

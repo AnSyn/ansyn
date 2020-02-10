@@ -5,8 +5,8 @@ import { catchError, mergeMap, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 
 interface ICredentialsResponse {
-	authorizedAreas: { name: string }[];
-	unauthorizedAreas: { name: string }[];
+	authorizedAreas: { Name: string }[];
+	unauthorizedAreas: { Name: string }[];
 }
 
 @Injectable({
@@ -15,25 +15,20 @@ interface ICredentialsResponse {
 export class CredentialsService {
 	data: ICredentialsResponse;
 	error: { message: string } = { message: 'loading' };
-	user: { name: string };
 
 	constructor(protected httpClient: HttpClient,
 				@Inject(credentialsConfig) public config: ICredentialsConfig) {
-		this.getCredentials().subscribe();
-		this.user = { name: 'Unknown' };
+	}
+
+	get user() {
+		return 'unknown';
 	}
 
 	get authorizedAreas() {
-		if (!this.data.unauthorizedAreas.length) {
-			return [{ name: 'You have permissions for everything' }];
-		}
 		return this.data.authorizedAreas;
 	}
 
 	get unauthorizedAreas() {
-		if (!this.data.authorizedAreas.length) {
-			return [{ name: 'No permissions' }];
-		}
 		return this.data.unauthorizedAreas;
 	}
 

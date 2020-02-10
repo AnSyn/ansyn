@@ -52,7 +52,7 @@ describe('MenuAppEffects', () => {
 			iconClass: null
 
 		}));
-		store.dispatch(new SelectMenuItemAction('Cases'));
+		store.dispatch(new SelectMenuItemAction({ menuKey: 'Cases' }));
 
 	}));
 

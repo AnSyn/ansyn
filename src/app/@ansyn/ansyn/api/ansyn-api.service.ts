@@ -54,7 +54,11 @@ import {
 } from '../modules/overlays/actions/overlays.actions';
 import { IOverlay, IOverlaysCriteria } from '../modules/overlays/models/overlay.model';
 import { ANSYN_ID } from './ansyn-id.provider';
-import { selectFilteredOveralys, selectOverlaysArray } from '../modules/overlays/reducers/overlays.reducer';
+import {
+	selectFilteredOveralys,
+	selectOverlaysArray,
+	selectOverlaysCriteria
+} from '../modules/overlays/reducers/overlays.reducer';
 import { ToggleMenuCollapse } from '@ansyn/menu';
 import { UUID } from 'angular2-uuid';
 import { DataLayersService } from '../modules/menu-items/layers-manager/services/data-layers.service';
@@ -332,6 +336,10 @@ export class AnsynApi {
 			}
 		}
 		this.store.dispatch(new SetOverlaysCriteriaAction(criteria));
+	}
+
+	getOverlayCriteria(): Observable<IOverlaysCriteria> {
+		return this.store.select(selectOverlaysCriteria);
 	}
 
 	getOverlayData(mapId: string = this.activeMapId): IOverlay {

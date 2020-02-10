@@ -41,7 +41,7 @@ export class AddMenuItemAction implements Action {
 export class SelectMenuItemAction implements Action {
 	type = MenuActionTypes.SELECT_MENU_ITEM;
 
-	constructor(public payload: string) {
+	constructor(public payload: { menuKey: string, skipSession?: boolean }) {
 	}
 }
 

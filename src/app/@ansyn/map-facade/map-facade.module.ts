@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ImageryModule } from '@ansyn/imagery';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
@@ -32,6 +32,7 @@ import { ImageryMouseCoordinatesComponent } from './components/imagery-mouse-coo
 import { GeoHolderComponent } from './components/imagery-mouse-coordinates/holders/geo-holder/geo-holder.component';
 import { UtmHolderComponent } from './components/imagery-mouse-coordinates/holders/utm-holder/utm-holder.component';
 import { FloatingMenuComponent } from './components/floating-menu/floating-menu.component';
+import { MatAutocompleteModule, MatInputModule } from '@angular/material';
 
 @NgModule({
 	imports: [
@@ -41,7 +42,10 @@ import { FloatingMenuComponent } from './components/floating-menu/floating-menu.
 		ImageryModule,
 		CommonModule,
 		FormsModule,
-		TranslateModule
+		TranslateModule,
+		ReactiveFormsModule,
+		MatInputModule,
+		MatAutocompleteModule
 	],
 	providers: [
 		GeocoderService,

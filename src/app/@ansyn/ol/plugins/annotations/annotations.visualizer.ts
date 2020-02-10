@@ -450,11 +450,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				const leftright = this.getLeftRightResult(coordinates);
 				const originalLeftRight = this.getLeftRightResult(originalC);
 				const line: olLineString = new olLineString([leftright.left, leftright.right]);
+				const color = feature.values_.style.initial.stroke;
 				moreStyles.push(
 					new olStyle({
 						geometry: line,
 						stroke: new olStroke({
-							color: '#27b2cfe6',
+							color,
 							width: 1
 						}),
 					}),

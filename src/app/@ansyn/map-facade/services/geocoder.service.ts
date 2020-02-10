@@ -5,6 +5,7 @@ import { IMapFacadeConfig, IMapSearchConfig } from '../models/map-config.model';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { catchError, map } from 'rxjs/operators';
 import { SetToastMessageAction } from '../actions/map.actions';
+import { Point } from 'geojson';
 
 @Injectable()
 export class GeocoderService {
@@ -16,16 +17,20 @@ export class GeocoderService {
 		this.config = this.packageConfig.mapSearch;
 	}
 
-	getLocation$(searchString): Observable<any> {
+	getLocation$(searchString): Observable<{ name: string, point: Point }[]> {
 		const url = this.config.url.replace('$searchString', searchString).replace('$apiKey', this.config.apiKey);
 		return this.http.get<any>(url).pipe(
-			map(res => res.resourceSets[0].resources[0]),
-			map(res => res ? { ...res.point, coordinates: res.point.coordinates.reverse() } : null),
+			map(res => res.resourceSets[0]),
+			map((resources: any[]) => resources ?
+				resources.map(resource =>
+					({
+						name: resource.name,
+						point: { ...resource.point, coordinates: resource.point.coordinates.reverse() }
+					})) : []),
 			catchError((error: Response | any) => {
 				console.warn(error);
-				return of(new SetToastMessageAction({ toastText: 'Connection Problem', showWarningIcon: true }));
+				return of([{ name: 'No results', point: undefined }]);
 			})
 		);
 	}
-
 }

@@ -185,27 +185,13 @@
   	}
   },
   "mapSourceProvidersConfig": {
-  "AIRBUS": {
-    		"baseUrl": "{{ getv "/ansyn/airbus/baseurl" "http://localhost:8100" }}"
-     },
-    "SENTINEL":{
-    	"baseUrl": "{{ getv "/ansyn/sentinel/baseurl" "http://ansyn.webiks.com:89/api"}}"
-    },
-  	"BING": {
-    	"key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
-    	"styles": [ "AerialWithLabels" ]
-    },
+  "BING": {
+		"key": "AsVccaM44P5n-GYKXaV0oVGdTI665Qx_sMgYBSYRxryH2pLe92iVxUgEtwIt8des",
+		"styles": [ "AerialWithLabels" ]
+	},
     "TileWMS": {
 
     },
-    "PIC4CARTO": {
-		"baseUrl": "http://api-pic4carto.openstreetmap.fr/search/bbox",
-		 "pointToGeojsonRadius": 1,
-		 "providers": ["mapillary", "flickr", "openstreetcam", "wikicommons"],
-		 "imageWidth": 2048,
-		 "imageHeight": 1200,
-		 "timeLimit": 15000
-	},
     "MARCO_WMTS": {
 		"imageUrl": "wmts?format=png&request=GetTile&layer={imagePath}&style=band&tileMatrixSet=Pixel&service=WMTS&version=1.0.0",
 		"thumbnailImageUrl": "wms?layers={url}&request=GetMap&format=png&width=256&height=256&bbox={bbox}",
@@ -1427,6 +1413,20 @@
     "tilesUrl": "https://tiles.planet.com/data/v1/",
     "delayMultiple": 300
   },
+  "sentinelOverlaysSourceConfig":{
+      "baseUrl": "http://ansyn.webiks.com:89/api"
+    },
+   "airbusOverlaysSourceConfig": {
+        		"baseUrl": "{{ getv "/ansyn/airbus/baseurl" "http://localhost:8100" }}"
+  },
+  "pic4cartoOverlaySourceConfig": {
+  		"baseUrl": "http://api-pic4carto.openstreetmap.fr/search/bbox",
+  		 "pointToGeojsonRadius": 1,
+  		 "providers": ["mapillary", "flickr", "openstreetcam", "wikicommons"],
+  		 "imageWidth": 2048,
+  		 "imageHeight": 1200,
+  		 "timeLimit": 15000
+  	},
   "auth0Config": {
       "auth0Active": {{ getv "/ansyn/auth0/auth0Active" "false" }},
       "clientID":"{{ getv "/ansyn/auth0/clientId" "KXLTbs08LtLqrbPwSgn7Ioej0aMB7tf6" }}",

@@ -1,5 +1,6 @@
 export interface IMapProviderConfig {
-	defaultMapSource: string
+	defaultMapSource: string;
+	sources: any;
 }
 
 export interface IMapProvidersConfig {

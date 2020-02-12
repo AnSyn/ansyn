@@ -36,6 +36,8 @@ import {
 const DEFAULT_OVERLAYS_LIMIT = 50;
 export const SentinelOverlaySourceType = 'SENTINEL';
 
+export const SentinelOverlaySourceConfig = 'sentinelOverlaysSourceConfig';
+
 export interface ISentinelOverlaySourceConfig {
 	baseUrl: string;
 }
@@ -46,14 +48,10 @@ export interface ISentinelOverlaySourceConfig {
 export class SentinelSourceProvider extends BaseOverlaySourceProvider {
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
 
-	get config(): ISentinelOverlaySourceConfig {
-		return this.mapSourceProvidersConfig[this.sourceType];
-	}
-
 	constructor(public errorHandlerService: ErrorHandlerService,
 				protected loggerService: LoggerService,
 				protected http: HttpClient,
-				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig,
+				@Inject(SentinelOverlaySourceConfig) protected config: ISentinelOverlaySourceConfig,
 				@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				protected store: Store<any>) {
 		super(loggerService);

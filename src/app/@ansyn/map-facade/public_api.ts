@@ -1,3 +1,5 @@
+import { ChangeMainLayer } from './actions/map.actions';
+
 export { ImageryZoomerService } from './services/imagery-zoomer.service';
 export { IEd50Notification } from './models/map-config.model';
 
@@ -28,7 +30,8 @@ export {
 	selectMapsStateByIds,
 	selectOverlayDisplayModeByMapId,
 	selectOverlayOfActiveMap,
-	selectIsMinimalistViewMode
+	selectIsMinimalistViewMode,
+	selectMapTypeById
 } from './reducers/map.reducer';
 
 export {
@@ -65,7 +68,8 @@ export {
 	IPendingOverlay,
 	ToggleFooter,
 	ContextMenuShowAngleFilter,
-	IAngleFilterClick
+	IAngleFilterClick,
+	ChangeMainLayer
 } from './actions/map.actions';
 
 export {

@@ -24,7 +24,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ImageryMapSources } from '../providers/map-source-providers';
 import { get as _get } from 'lodash';
 import { ImageryMapExtent, ImageryMapPosition } from '../model/case-map-position.model';
-import { getPolygonByPointAndRadius } from '../utils/geo';
+import { bboxFromGeoJson, getPolygonByPointAndRadius } from '../utils/geo';
 import { IMapProviderConfig, IMapProvidersConfig, MAP_PROVIDERS_CONFIG } from '../model/map-providers-config';
 import { IMapSettings } from '../model/map-settings';
 
@@ -93,6 +93,15 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 
 	public get activeMapName() {
 		return this.ActiveMap && this.ActiveMap.mapType;
+	}
+
+	public changeMapMainLayer(sourceType: string) {
+		const newSourceType = this.createMapSourceForMapType(this.mapSettings.worldView.mapType, sourceType);
+		return newSourceType.then( layer => {
+			const position = this.mapSettings.data.position;
+			const bbox = bboxFromGeoJson(position.extentPolygon);
+			this.resetView(layer, position, [bbox[0], bbox[1], bbox[2], bbox[3]]);
+		})
 	}
 
 	public setActiveMap(mapType: string, position: ImageryMapPosition, sourceType?, layer?: any): Promise<any> {

@@ -38,6 +38,7 @@ import { ImageryZoomerComponent } from './modules/plugins/components/imagery-zoo
 import { ImageryDimensionModeComponent } from './modules/plugins/components/imagery-dimension-mode/imagery-dimension-mode.component';
 import { TasksService } from './modules/menu-items/algorithms/services/tasks.service';
 import { ImageryVideoModule } from '@ansyn/imagery-video';
+import { ImageryChangeMapComponent } from './modules/plugins/components/imagery-change-map/imagery-change-map.component';
 
 @NgModule({
 	imports: [
@@ -62,7 +63,7 @@ import { ImageryVideoModule } from '@ansyn/imagery-video';
 			entryComponents: {
 				container: [AnnotationContextMenuComponent, AngleFilterComponent],
 				status: [],
-				floating_menu: [ImageryZoomerComponent, ImageryDimensionModeComponent]
+				floating_menu: [ImageryZoomerComponent, ImageryDimensionModeComponent, ImageryChangeMapComponent]
 			}
 		}),
 		ImageryModule,

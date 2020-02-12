@@ -16,7 +16,7 @@ import {
 	ActiveImageryMouseLeave,
 	ChangeImageryMap,
 	ChangeImageryMapFailed,
-	ChangeImageryMapSuccess,
+	ChangeImageryMapSuccess, ChangeMainLayer,
 	DecreasePendingMapsCountAction,
 	ImageryCreatedAction,
 	ImageryMouseEnter,
@@ -187,6 +187,16 @@ export class MapEffects {
 				})
 			);
 		})
+	);
+
+	@Effect({dispatch: false})
+	setMapMainLayer$ = this.actions$.pipe(
+		ofType<ChangeMainLayer>(MapActionTypes.CHANGE_MAP_MAIN_LAYER),
+			map(( {payload}) => {
+				const { id, sourceType } = payload;
+				const communicator = this.communicatorsService.provide(id);
+				return fromPromise(communicator.changeMapMainLayer(sourceType));
+			})
 	);
 
 	@Effect({ dispatch: false })

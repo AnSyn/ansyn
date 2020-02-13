@@ -148,10 +148,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					},
 					stroke: '#000',
 					fill: 'white',
-					offsetY: (feature: olFeature) => {
-						const { label } = feature.getProperties();
-						return label && !label.geometry ? 30 : 0;
-					},
+					offsetY: 30,
 					text: (feature: olFeature) => {
 						const entity = this.idToEntity.get(feature.getId());
 						if (entity) {
@@ -719,7 +716,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				font: `${ entity.labelSize + 2 }px Calibri,sans-serif`,
 				fill: new olFill({ color: entity.style.initial.label.fill }),
 				text: label.text,
-				offsetY: entityMode === 'Point' ? 30 : 0
+				offsetY: entityMode === 30
 			})
 		}));
 

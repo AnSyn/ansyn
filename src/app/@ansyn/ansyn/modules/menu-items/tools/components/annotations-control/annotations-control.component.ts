@@ -115,7 +115,7 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	}
 
 	toggleSelection(selected: SelectionBoxTypes = SelectionBoxTypes.None) {
-		this.selectedBox = selected;
+		this.selectedBox = this.selectedBox === selected ? SelectionBoxTypes.None : selected;
 	}
 
 	setAnnotationMode(mode?: AnnotationMode) {

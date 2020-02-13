@@ -35,7 +35,7 @@
 .icon-main-algorithms:before { content: '\e823'; } /* '' */
 .icon-copy-coords:before { content: '\e824'; } /* '' */
 .icon-label:before { content: '\e825'; } /* '' */
-.icon-drag-layer-copy:before { content: '\e826'; } /* '' */
+.icon-drag-map:before { content: '\e826'; } /* '' */
 .icon-angle-prev:before { content: '\e827'; } /* '' */
 .icon-angle-next:before { content: '\e828'; } /* '' */
 .icon-shadow-mouse:before { content: '\e829'; } /* '' */
@@ -71,6 +71,6 @@
 .icon-drag:before { content: '\e847'; } /* '' */
 .icon-main-settings:before { content: '\e848'; } /* '' */
 .icon-credentials-request:before { content: '\e849'; } /* '' */
-.icon-unpin:before { content: '\e84a'; } /* '' */
-.icon-pin:before { content: '\e84b'; } /* '' */
+.icon-pin:before { content: '\e84a'; } /* '' */
+.icon-unpin:before { content: '\e84b'; } /* '' */
 .icon-status-bar-orientation:before { content: '\e90d'; } /* '' */

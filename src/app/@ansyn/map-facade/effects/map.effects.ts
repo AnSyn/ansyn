@@ -5,9 +5,7 @@ import { EMPTY, forkJoin, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMaps } from '../reducers/map.reducer';
 import {
-	geojsonMultiPolygonToBBOXPolygon,
 	ImageryCommunicatorService,
-	ImageryMapPosition,
 	IMapSettings,
 	IWorldViewMapState
 } from '@ansyn/imagery';
@@ -130,9 +128,9 @@ export class MapEffects {
 			const mapPosition = mapSettings.data.position;
 			const setPositionObservables = [];
 			Object.values(mapState.entities).forEach((mapItem: IMapSettings) => {
-				if (mapId !== mapItem.id) {
+				if (mapId !== mapItem.id && !mapItem.data.overlay) {
 					const comm = this.communicatorsService.provide(mapItem.id);
-					setPositionObservables.push(this.setPosition(mapPosition, comm, mapItem));
+					setPositionObservables.push(comm.setPosition(mapPosition));
 				}
 			});
 
@@ -226,19 +224,4 @@ export class MapEffects {
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				protected store$: Store<any>) {
 	}
-
-	setPosition(position: ImageryMapPosition, comm, mapItem): Observable<any> {
-		if (mapItem.data.overlay) {
-			const isNotIntersect = MapFacadeService.isNotIntersect(position.extentPolygon, mapItem.data.overlay.footprint, this.config.overlayCoverage);
-			if (isNotIntersect) {
-				this.store$.dispatch(new SetToastMessageAction({
-					toastText: 'At least one map couldn\'t be synchronized',
-					showWarningIcon: true
-				}));
-				return EMPTY;
-			}
-		}
-		return comm.setPosition(position);
-	}
-
 }

@@ -65,7 +65,8 @@ export {
 	IPendingOverlay,
 	ToggleFooter,
 	ContextMenuShowAngleFilter,
-	IAngleFilterClick
+	IAngleFilterClick,
+	SynchronizeMapsAction
 } from './actions/map.actions';
 
 export {

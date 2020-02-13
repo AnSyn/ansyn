@@ -21,12 +21,12 @@ export class GeocoderService {
 		const url = this.config.url.replace('$searchString', searchString).replace('$apiKey', this.config.apiKey);
 		return this.http.get<any>(url).pipe(
 			map(res => res.resourceSets[0]),
-			map((resources: any[]) => resources ?
+			map((resources: any[]) => resources && resources.length > 0 ?
 				resources.map(resource =>
 					({
 						name: resource.name,
 						point: { ...resource.point, coordinates: resource.point.coordinates.reverse() }
-					})) : []),
+					})) : [{ name: 'No results', point: undefined }]),
 			catchError((error: Response | any) => {
 				console.warn(error);
 				return of([{ name: 'No results', point: undefined }]);

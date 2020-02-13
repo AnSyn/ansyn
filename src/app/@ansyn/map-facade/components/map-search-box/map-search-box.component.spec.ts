@@ -6,6 +6,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { GeocoderService } from '../../services/geocoder.service';
 import { asyncData } from '../../test/async-observable-helpers';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatAutocompleteModule, MatInputModule } from '@angular/material';
 
 describe('MapSearchBoxComponent', () => {
 	let component: MapSearchBoxComponent;
@@ -14,7 +15,12 @@ describe('MapSearchBoxComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [MapSearchBoxComponent],
-			imports: [FormsModule, TranslateModule.forRoot()],
+			imports: [
+				FormsModule,
+				TranslateModule.forRoot(),
+				MatInputModule,
+				MatAutocompleteModule
+			],
 			providers: [
 				{
 					provide: ImageryCommunicatorService, useValue: {
@@ -38,6 +44,7 @@ describe('MapSearchBoxComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(MapSearchBoxComponent);
 		component = fixture.componentInstance;
+		component.mapId = 'testMapId';
 		fixture.detectChanges();
 	});
 
@@ -53,36 +60,33 @@ describe('MapSearchBoxComponent', () => {
 		});
 
 		it('should call getLocation$() and then setCenter()', fakeAsync(() => {
-			component.searchString = 'hehe';
-			spyOn(geocoderService, 'getLocation$').and.returnValue(asyncData('blablabla'));
-			component.onSubmit();
-			expect(component._communicator).toBeDefined();
+			spyOn(geocoderService, 'getLocation$').and.returnValue(asyncData([{ name: 'blablabla', point: 'test' }]));
+			component.control.setValue('hehe');
+			tick();
 			spyOn(component._communicator, 'setCenter').and.returnValue(asyncData({}));
+			component.onSubmit();
 			tick();
 			expect(geocoderService.getLocation$).toHaveBeenCalledWith('hehe');
-			expect(component._communicator.setCenter).toHaveBeenCalledWith('blablabla', false);
+			expect(component._communicator.setCenter).toHaveBeenCalledWith('test', true);
 		}));
 
 		it('should halt the flow, when given an empty string', fakeAsync(() => {
-			component.searchString = '';
+			component.control.setValue('');
 			component.onSubmit();
-			expect(component._communicator).toBeDefined();
 			spyOn(component._communicator, 'setCenter').and.returnValue(asyncData({}));
 			tick();
 			expect(component._communicator.setCenter).not.toHaveBeenCalled();
 		}));
 
-		it('should signal when the requested location was not found', fakeAsync(() => {
+		it('should halt the flow, when the requested location was not found', fakeAsync(() => {
 			component.error = false;
-			component.searchString = 'hehe';
-			spyOn(geocoderService, 'getLocation$').and.returnValue(asyncData(null));
+			spyOn(geocoderService, 'getLocation$').and.returnValue(asyncData([{ name: 'No results', point: undefined }]));
+			component.control.setValue('hehe');
 			component.onSubmit();
-			expect(component._communicator).toBeDefined();
 			spyOn(component._communicator, 'setCenter').and.returnValue(asyncData({}));
 			tick();
 			expect(geocoderService.getLocation$).toHaveBeenCalledWith('hehe');
 			expect(component._communicator.setCenter).not.toHaveBeenCalled();
-			expect(component.error).toBeTruthy();
 		}));
 	});
 });

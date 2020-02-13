@@ -14,7 +14,17 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 })
 @AutoSubscriptions()
 export class MapSearchBoxComponent implements OnInit, OnDestroy {
-	@Input() mapId: string;
+
+	@Input()
+	set mapId(mapId: string) {
+		this._mapId = mapId;
+		this._communicator = this.imageryCommunicatorService.provide(mapId);
+	}
+	get mapId() {
+		return this._mapId;
+	}
+
+	_mapId: string;
 	control = new FormControl();
 	_communicator: CommunicatorEntity;
 	autoCompleteWidth = 108;

@@ -53,29 +53,40 @@
 		position: absolute;
 		display: flex;
 		flex-flow: row wrap;
-		align-items: center;
+		align-items: flex-start;
 		width: 250px;
 		height: 150px;
-		top: 0px;
+		top: 0;
 		right: 50px;
 		background-color: @background-color-1;
 		overflow-y: auto;
 
 		.map {
-			overflow: hidden;
+			width: 33%;
+			position: relative;
 			box-sizing: content-box;
 
 			button {
-				position: relative;
 				flex: 1;
 				flex-direction: column;
-				align-items: center;
+				align-items: flex-start;
 				justify-content: space-between;
-				width: inherit;
 				cursor: pointer;
 				background-color: transparent;
 				border: none;
 				color: white;
+
+				img {
+					width: 40px;
+					height: 40px;
+				}
+				p {
+					width:65px;
+					font-size: 10px;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+				}
 			}
 		}
 	}

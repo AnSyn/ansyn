@@ -25,7 +25,7 @@ import { ImageryMapSources } from '../providers/map-source-providers';
 import { get as _get } from 'lodash';
 import { ImageryMapExtent, ImageryMapPosition } from '../model/case-map-position.model';
 import { bboxFromGeoJson, getPolygonByPointAndRadius } from '../utils/geo';
-import { IMapProviderConfig, IMapProvidersConfig, MAP_PROVIDERS_CONFIG } from '../model/map-providers-config';
+import { IMapProviderConfig, IMapProvidersConfig, IMapSource, MAP_PROVIDERS_CONFIG } from '../model/map-providers-config';
 import { IMapSettings } from '../model/map-settings';
 
 export interface IMapInstanceChanged {
@@ -96,6 +96,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	public changeMapMainLayer(sourceType: string) {
+		this.mapSettings.worldView.sourceType = sourceType;
 		const newSourceType = this.createMapSourceForMapType(this.mapSettings.worldView.mapType, sourceType);
 		return newSourceType.then( layer => {
 			const position = this.mapSettings.data.position;
@@ -307,10 +308,12 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	private createMapSourceForMapType(mapType: string, sourceType: string): Promise<any> {
+		const { sources } = this.mapProvidersConfig[mapType];
+		const mapSource: IMapSource = sources[sourceType];
 		const sourceProvider = this.getMapSourceProvider({
-			mapType, sourceType
+			mapType, sourceType: mapSource.sourceType
 		});
-		return sourceProvider.createAsync({ ...this.mapSettings, data: { ...this.mapSettings.data, overlay: null } });
+		return sourceProvider.createAsync({ ...this.mapSettings, data: { ...this.mapSettings.data, overlay: null, config: mapSource.config } });
 	}
 
 	private destroyCurrentComponent(): void {

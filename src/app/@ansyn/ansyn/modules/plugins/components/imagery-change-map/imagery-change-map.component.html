@@ -1,4 +1,4 @@
-<div class="buttons">
+<div class="buttons" [class.active]="showPopup">
 	<button class="small-icon-button"
 			(click)="togglePopup()"
 			[attr.tooltip-value]="'Change map' | translate"
@@ -8,7 +8,8 @@
 </div>
 <div class="popup scrolled" *ngIf="showPopup">
 	<div *ngFor="let source of mapSources"
-		 class="map">
+		 class="map"
+	[class.active]="currentSourceType === source.key">
 		<button
 			(click)="changeMap(source.key)"
 			[attr.tooltip-value]="source.displayName"

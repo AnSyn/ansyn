@@ -14,8 +14,12 @@
 		left: 5px;
 		top: 6px;
 
-		&:hover:not(:disabled) {
+		&:hover:not(.active) {
 			background: rgba(0, 0, 0, 0.5);
+		}
+
+		&.active {
+			background: @application-primary-color;
 		}
 
 		button {
@@ -66,6 +70,9 @@
 			position: relative;
 			box-sizing: content-box;
 
+			&.active {
+				border: @application-primary-color solid 1px;
+			}
 			button {
 				flex: 1;
 				flex-direction: column;

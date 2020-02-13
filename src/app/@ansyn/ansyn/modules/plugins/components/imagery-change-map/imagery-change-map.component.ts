@@ -18,13 +18,12 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	showPopup: boolean;
 	currentSourceType: string;
 	mapSources: IMapSource[];
-	@ViewChild('popup') popup: ElementRef;
 
 	@AutoSubscription
 	onClickOutside$ = fromEvent(window, 'click').pipe(
 		filter(() => Boolean(this.showPopup)),
 		tap((event: any) => {
-			if (event.path && !event.path.lastChild === this.popup.nativeElement) {
+			if (event.path && !event.path.includes(this.element.nativeElement)) {
 				this.showPopup = false;
 			}
 		})
@@ -32,6 +31,7 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 
 	constructor(protected store$: Store<any>,
 				protected communicator: ImageryCommunicatorService,
+				protected element: ElementRef,
 				protected logger: LoggerService,
 				@Inject(MAP_PROVIDERS_CONFIG) protected mapProvidersConfig: IMapProviderConfig) {
 	}
@@ -63,7 +63,8 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 		this.store$.dispatch(new ChangeMainLayer({
 			id: this.mapId,
 			sourceType: type
-		}))
+		}));
+		this.showPopup = false;
 	}
 
 

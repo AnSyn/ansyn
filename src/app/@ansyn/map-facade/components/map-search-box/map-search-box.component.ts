@@ -29,7 +29,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 	_communicator: CommunicatorEntity;
 	autoCompleteWidth = 108;
 	locations: { name: string, point: Point }[] = [];
-	public error: string | false = false;
+	public error: string = null;
 	loading: boolean;
 
 	@AutoSubscription
@@ -39,7 +39,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		tap((value: string) => this.loading = true),
 		switchMap((value: string) => this.geocoderService.getLocation$(value)),
 		tap((allLocations: Array<any>) => {
-			this.error = false;
+			this.error = null;
 			this.locations = allLocations.filter((loc, index) => index < 5);
 			this.autoCompleteWidth = this.locations.reduce<number>((acc, next) => {
 				return acc > next.name.length ? acc : next.name.length;
@@ -49,7 +49,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		retryWhen((err) => {
 			return err.pipe(
 				tap(error => {
-					this.error = error[0].name;
+					this.error = error ? error[0].name : '';
 					this.autoCompleteWidth = (<string>this.error).length * 5;
 					this.loading = false;
 				})
@@ -63,7 +63,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 
 	resetSearch(point) {
 		this.locations = [];
-		this.error = false;
+		this.error = null;
 	}
 
 	goToLocation(point) {

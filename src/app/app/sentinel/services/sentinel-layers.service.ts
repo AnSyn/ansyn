@@ -1,14 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { IMultipleOverlaysSourceConfig, MultipleOverlaysSourceConfig } from '@ansyn/ansyn';
-import { IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { WMSCapabilities } from 'ol/format';
 import { map } from 'rxjs/operators';
 import { SetSentinelLayers } from '../actions/sentinel.actions';
 import {
 	ISentinelOverlaySourceConfig,
-	SentinelOverlaySourceConfig,
+	sentinelOverlaySourceConfig,
 	SentinelOverlaySourceType
 } from '../sentinel-source-provider';
 import { get as _get } from 'lodash';
@@ -20,7 +19,7 @@ export class SentinelLayersService {
 
 	constructor(protected http: HttpClient,
 				protected store: Store<any>,
-				@Inject(SentinelOverlaySourceConfig) protected config: ISentinelOverlaySourceConfig,
+				@Inject(sentinelOverlaySourceConfig) protected config: ISentinelOverlaySourceConfig,
 				@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig) {
 		if (!this.multipleOverlaysSourceConfig.indexProviders[SentinelOverlaySourceType].inActive) {
 			this.getAllLayers().pipe(

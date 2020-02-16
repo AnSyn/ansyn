@@ -36,7 +36,7 @@ import {
 const DEFAULT_OVERLAYS_LIMIT = 50;
 export const SentinelOverlaySourceType = 'SENTINEL';
 
-export const SentinelOverlaySourceConfig = 'sentinelOverlaysSourceConfig';
+export const sentinelOverlaySourceConfig = 'sentinelOverlaysSourceConfig';
 
 export interface ISentinelOverlaySourceConfig {
 	baseUrl: string;
@@ -51,7 +51,7 @@ export class SentinelSourceProvider extends BaseOverlaySourceProvider {
 	constructor(public errorHandlerService: ErrorHandlerService,
 				protected loggerService: LoggerService,
 				protected http: HttpClient,
-				@Inject(SentinelOverlaySourceConfig) protected config: ISentinelOverlaySourceConfig,
+				@Inject(sentinelOverlaySourceConfig) protected config: ISentinelOverlaySourceConfig,
 				@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				protected store: Store<any>) {
 		super(loggerService);

@@ -1,7 +1,7 @@
-import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, OnDestroy, OnInit } from '@angular/core';
 import { ChangeMainLayer, IEntryComponent, selectMapTypeById, selectOverlayByMapId } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
-import { ImageryCommunicatorService, IMapProviderConfig, IMapSource, MAP_PROVIDERS_CONFIG } from '@ansyn/imagery';
+import { IMapProviderConfig, IMapSource, MAP_PROVIDERS_CONFIG } from '@ansyn/imagery';
 import { fromEvent } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -38,7 +38,6 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	);
 
 	constructor(protected store$: Store<any>,
-				protected communicator: ImageryCommunicatorService,
 				protected element: ElementRef,
 				protected logger: LoggerService,
 				@Inject(MAP_PROVIDERS_CONFIG) protected mapProvidersConfig: IMapProviderConfig) {

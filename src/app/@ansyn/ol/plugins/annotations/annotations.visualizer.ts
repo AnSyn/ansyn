@@ -148,10 +148,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					},
 					stroke: '#000',
 					fill: 'white',
-					offsetY: (feature: olFeature) => {
-						const { label } = feature.getProperties();
-						return label && !label.geometry ? 30 : 0;
-					},
+					offsetY: 30,
 					text: (feature: olFeature) => {
 						const entity = this.idToEntity.get(feature.getId());
 						if (entity) {
@@ -450,11 +447,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				const leftright = this.getLeftRightResult(coordinates);
 				const originalLeftRight = this.getLeftRightResult(originalC);
 				const line: olLineString = new olLineString([leftright.left, leftright.right]);
+				const color = feature.values_.style.initial.stroke;
 				moreStyles.push(
 					new olStyle({
 						geometry: line,
 						stroke: new olStroke({
-							color: '#27b2cfe6',
+							color,
 							width: 1
 						}),
 					}),
@@ -718,7 +716,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				font: `${ entity.labelSize + 2 }px Calibri,sans-serif`,
 				fill: new olFill({ color: entity.style.initial.label.fill }),
 				text: label.text,
-				offsetY: entityMode === 'Point' ? 30 : 0
+				offsetY: entityMode === 30
 			})
 		}));
 

@@ -1,9 +1,9 @@
+export { GeocoderService } from './services/geocoder.service';
+
 export { ImageryZoomerService } from './services/imagery-zoomer.service';
 export { IEd50Notification } from './models/map-config.model';
 
 export { IEntryComponent } from './directives/entry-component.directive';
-
-
 
 export {
 	initialMapState,
@@ -65,7 +65,8 @@ export {
 	IPendingOverlay,
 	ToggleFooter,
 	ContextMenuShowAngleFilter,
-	IAngleFilterClick
+	IAngleFilterClick,
+	SynchronizeMapsAction
 } from './actions/map.actions';
 
 export {

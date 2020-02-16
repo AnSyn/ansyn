@@ -70,7 +70,7 @@ describe('MenuComponent', () => {
 		menuComponent.toggleItem('fakeMenuItem');
 		expect(menuComponent.closeMenu).toHaveBeenCalled();
 		menuComponent.toggleItem('fakeMenuItem2');
-		expect(menuComponent.openMenu).toHaveBeenCalledWith('fakeMenuItem2');
+		expect(menuComponent.openMenu).toHaveBeenCalledWith('fakeMenuItem2', false);
 	});
 
 	it('isActive should get key and check if selectedMenuItem equal to the key', () => {
@@ -88,8 +88,8 @@ describe('MenuComponent', () => {
 
 	it('openMenu should call store.dispatch with SelectMenuItemAction', () => {
 		spyOn(store, 'dispatch');
-		menuComponent.openMenu('one');
-		expect(store.dispatch).toHaveBeenCalledWith(new SelectMenuItemAction('one'));
+		menuComponent.openMenu('one', false);
+		expect(store.dispatch).toHaveBeenCalledWith(new SelectMenuItemAction({ menuKey: 'one', skipSession: false}));
 	});
 
 	it('onExpandDone should call componentChanges if anySelectItem is "false"', () => {

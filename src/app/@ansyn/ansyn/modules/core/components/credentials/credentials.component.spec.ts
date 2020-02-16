@@ -7,6 +7,7 @@ import { credentialsConfig } from '../../services/credentials/config';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { UnSelectMenuItemAction } from '@ansyn/menu';
+import { EMPTY } from 'rxjs';
 
 describe('CredentialsComponent', () => {
 	let component: CredentialsComponent;
@@ -27,7 +28,10 @@ describe('CredentialsComponent', () => {
 						provide: CredentialsService,
 						useValue: {
 							user: {name: 'user'},
-							error: {message: ''}
+							error: {message: ''},
+							getCredentials() {
+								return EMPTY;
+							}
 						}
 					},
 					{

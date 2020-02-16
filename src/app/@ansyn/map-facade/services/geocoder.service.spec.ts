@@ -53,11 +53,7 @@ describe('GeocoderService', () => {
 		it('should call http, extract the point, and return it', fakeAsync(() => {
 			spyOn(httpClient, 'get').and.returnValue(asyncData({
 				resourceSets: [
-					{
-						resources: [
-							{ point: { type: 'Point', coordinates: [3, 4] } }
-						]
-					}
+					[{ name: 'TestLocation', point: { type: 'Point', coordinates: [3, 4] } }]
 				]
 			}));
 			result$ = me.getLocation$('hehe');
@@ -66,26 +62,22 @@ describe('GeocoderService', () => {
 				endResult = res;
 			});
 			tick();
-			expect(endResult).toEqual({ type: 'Point', coordinates: [4, 3] });
+			expect(endResult).toEqual([{ name: 'TestLocation', point: { type: 'Point', coordinates: [4, 3] } }]);
 		}));
 
-		it('should return null, if there are no results', fakeAsync(() => {
+		it('should return [{ name: \'No results\', point: undefined }], if there are no results', fakeAsync(() => {
 			spyOn(httpClient, 'get').and.returnValue(asyncData({
-				resourceSets: [
-					{
-						resources: []
-					}
-				]
+				resourceSets: [[]]
 			}));
 			result$ = me.getLocation$('hehe');
 			result$.subscribe(res => {
 				endResult = res;
 			});
 			tick();
-			expect(endResult).toBeFalsy();
+			expect(endResult).toEqual([{ name: 'No results', point: undefined }]);
 		}));
 
-		it('should return (SetToastMessageAction), if there is an error, or unexpected format', fakeAsync(() => {
+		it('should return ([{ name: \'No results\', point: undefined }]), if there is an error, or unexpected format', fakeAsync(() => {
 			spyOn(console, 'warn');
 			spyOn(httpClient, 'get').and.returnValue(asyncData({}));
 			result$ = me.getLocation$('hehe');
@@ -94,10 +86,7 @@ describe('GeocoderService', () => {
 			});
 			tick();
 			expect(console.warn).toHaveBeenCalled();
-			expect(endResult).toEqual(new SetToastMessageAction({
-				toastText: 'Connection Problem',
-				showWarningIcon: true
-			}));
+			expect(endResult).toEqual([{ name: 'No results', point: undefined }]);
 		}));
 	});
 });

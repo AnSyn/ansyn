@@ -102,12 +102,12 @@ describe('MapEffects', () => {
 			mapState.entities = { [fakeMap.id]: fakeMap, [fakeMap2.id]: fakeMap2 };
 			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
 			spyOn(communicator, 'getPosition').and.callFake(() => of(true));
-			spyOn(mapEffects, 'setPosition').and.callFake(() => of(true));
+			spyOn(communicator, 'setPosition').and.callFake(() => of(true));
 			const action = new SynchronizeMapsAction({ mapId: 'imagery2' });
 			actions = hot('--a--', { a: action });
 			const expectedResults = cold('--b--', { b: [action, mapState] });
 			expect(mapEffects.onSynchronizeAppMaps$).toBeObservable(expectedResults);
-			expect(mapEffects.setPosition).toHaveBeenCalled();
+			expect(communicator.setPosition).toHaveBeenCalled();
 		});
 	});
 

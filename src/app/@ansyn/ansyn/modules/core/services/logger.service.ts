@@ -109,7 +109,7 @@ export class LoggerService implements ErrorHandler {
 	}
 
 	getBrowserData() {
-		return `[window:${ window.innerWidth }x${ window.innerHeight }][userAgent: ${ navigator.userAgent }]`
+		return `[window:${ window.innerWidth }x${ window.innerHeight }][userAgent: ${ navigator.userAgent }]`;
 	}
 
 	setClientAsConnected() {

@@ -74,12 +74,16 @@ export class OverlaysEffects {
 		map(([{ payload }, { overlaysCriteria }]) => new LoadOverlaysAction(overlaysCriteria)));
 
 	@Effect()
-	loadOverlays$: Observable<LoadOverlaysSuccessAction> = this.actions$.pipe(
+	loadOverlays$: Observable<{} | LoadOverlaysSuccessAction> = this.actions$.pipe(
 		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
 		switchMap((action: LoadOverlaysAction) => {
 			return this.overlaysService.search(action.payload).pipe(
-				withLatestFrom(this.translate.get(overlaysStatusMessages.noOverLayMatchQuery), this.translate.get(overlaysStatusMessages.overLoad), this.translate.get('Error on overlays request')),
-				mergeMap(([overlays, noOverlayMatchQuery, overLoad, error]: [IOverlaysFetchData, string, string, string]) => {
+				// We use (map + translate.instant) instead of withLatestFrom + translate.get
+				// Because of a bug: sometimes when starting the app the withLatestFrom that was here did not return,
+				// and the timeline was stuck and not updated. After this fix the pipe works, but once in a while the
+				// translations that are called here fail, and return the keys instead.
+				map((overlays) => [overlays, this.translate.instant(overlaysStatusMessages.noOverLayMatchQuery), this.translate.instant(overlaysStatusMessages.overLoad), this.translate.instant('Error on overlays request')] ),
+				mergeMap<any, any>(([overlays, noOverlayMatchQuery, overLoad, error]: [IOverlaysFetchData, string, string, string]) => {
 					const overlaysResult = Array.isArray(overlays.data) ? overlays.data : [];
 
 					if (!Array.isArray(overlays.data) && Array.isArray(overlays.errors) && overlays.errors.length >= 0) {

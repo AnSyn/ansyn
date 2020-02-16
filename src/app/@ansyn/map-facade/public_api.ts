@@ -1,5 +1,3 @@
-import { ChangeMainLayer } from './actions/map.actions';
-
 export { ImageryZoomerService } from './services/imagery-zoomer.service';
 export { IEd50Notification } from './models/map-config.model';
 

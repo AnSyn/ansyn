@@ -68,13 +68,12 @@
 		overflow-y: auto;
 
 		.map {
-			width: 33%;
+			width: 30%;
 			position: relative;
 			box-sizing: content-box;
+			margin: 3px;
 
-			&.active {
-				border: @application-primary-color solid 1px;
-			}
+
 			button {
 				flex: 1;
 				flex-direction: column;
@@ -83,6 +82,7 @@
 				cursor: pointer;
 				background-color: transparent;
 				border: none;
+				outline: none;
 				color: white;
 
 				img {
@@ -95,6 +95,14 @@
 					overflow: hidden;
 					text-overflow: ellipsis;
 					white-space: nowrap;
+				}
+			}
+
+			&.active {
+				border: @application-primary-color solid 1px;
+
+				button {
+					cursor: default;
 				}
 			}
 		}

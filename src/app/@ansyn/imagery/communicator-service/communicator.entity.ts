@@ -96,13 +96,15 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	public changeMapMainLayer(sourceType: string) {
-		this.mapSettings.worldView.sourceType = sourceType;
-		const newSourceType = this.createMapSourceForMapType(this.mapSettings.worldView.mapType, sourceType);
-		return newSourceType.then( layer => {
-			const position = this.mapSettings.data.position;
-			const bbox = bboxFromGeoJson(position.extentPolygon);
-			this.resetView(layer, position, [bbox[0], bbox[1], bbox[2], bbox[3]]);
-		})
+		if (this.imageryMapSources[this.mapSettings.worldView.mapType][sourceType]) {
+			this.mapSettings.worldView.sourceType = sourceType;
+			const newSourceType = this.createMapSourceForMapType(this.mapSettings.worldView.mapType, sourceType);
+			return newSourceType.then( layer => {
+				const position = this.mapSettings.data.position;
+				const bbox = bboxFromGeoJson(position.extentPolygon);
+				this.resetView(layer, position, [bbox[0], bbox[1], bbox[2], bbox[3]]);
+			})
+		}
 	}
 
 	public setActiveMap(mapType: string, position: ImageryMapPosition, sourceType?, layer?: any): Promise<any> {

@@ -30,18 +30,18 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 		})
 	);
 
-	@AutoSubscription
-	onDisplayChange$ = () => this.store$.select(selectOverlayByMapId(this.mapId)).pipe(
-		tap( overlay => {
-			this.overlayDisplay = Boolean(overlay);
-		})
-	);
-
 	constructor(protected store$: Store<any>,
 				protected element: ElementRef,
 				protected logger: LoggerService,
 				@Inject(MAP_PROVIDERS_CONFIG) protected mapProvidersConfig: IMapProviderConfig) {
 	}
+
+	@AutoSubscription
+	onDisplayChange$ = () => this.store$.select(selectOverlayByMapId(this.mapId)).pipe(
+		tap(overlay => {
+			this.overlayDisplay = Boolean(overlay);
+		})
+	);
 
 	@AutoSubscription
 	mapTypeChange$ = () => this.store$.select(selectMapTypeById(this.mapId)).pipe(
@@ -65,13 +65,15 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	}
 
 	changeMap(type: string) {
-		this.logger.info(`change map from ${this.currentSourceType} to ${type}`);
-		this.currentSourceType = type;
-		this.store$.dispatch(new ChangeMainLayer({
-			id: this.mapId,
-			sourceType: type
-		}));
-		this.showPopup = false;
+		if (this.currentSourceType !== type) {
+			this.logger.info(`change map from ${ this.currentSourceType } to ${ type }`);
+			this.currentSourceType = type;
+			this.store$.dispatch(new ChangeMainLayer({
+				id: this.mapId,
+				sourceType: type
+			}));
+			this.showPopup = false;
+		}
 	}
 
 

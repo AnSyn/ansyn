@@ -1,5 +1,5 @@
 import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ChangeMainLayer, IEntryComponent, selectMapTypeById } from '@ansyn/map-facade';
+import { ChangeMainLayer, IEntryComponent, selectMapTypeById, selectOverlayByMapId } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { ImageryCommunicatorService, IMapProviderConfig, IMapSource, MAP_PROVIDERS_CONFIG } from '@ansyn/imagery';
 import { fromEvent } from 'rxjs';
@@ -15,6 +15,7 @@ import { LoggerService } from '../../../core/services/logger.service';
 @AutoSubscriptions()
 export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryComponent {
 	mapId: string;
+	overlayDisplay: boolean;
 	showPopup: boolean;
 	currentSourceType: string;
 	mapSources: IMapSource[];
@@ -26,6 +27,13 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 			if (event.path && !event.path.includes(this.element.nativeElement)) {
 				this.showPopup = false;
 			}
+		})
+	);
+
+	@AutoSubscription
+	onDisplayChange$ = () => this.store$.select(selectOverlayByMapId(this.mapId)).pipe(
+		tap( overlay => {
+			this.overlayDisplay = Boolean(overlay);
 		})
 	);
 

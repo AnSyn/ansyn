@@ -14,12 +14,18 @@
 		left: 5px;
 		top: 6px;
 
-		&:hover:not(.active) {
+		&:hover:not(.active):not(.disabled) {
 			background: rgba(0, 0, 0, 0.5);
 		}
 
 		&.active {
 			background: @application-primary-color;
+		}
+
+		&.disabled {
+			opacity: 0.3;
+			cursor: not-allowed;
+			pointer-events: none;
 		}
 
 		button {
@@ -39,10 +45,6 @@
 				z-index: 1;
 				height: 25px;
 
-
-				&:disabled {
-					opacity: .6;
-				}
 			}
 
 			.icon::before {

@@ -6,7 +6,7 @@
 		<mat-option *ngIf="loading; else loaded;" disabled>
 			{{'loading results' | translate}}
 		</mat-option>
-		<ng-container #loaded>
+		<ng-template #loaded>
 			<ng-template *ngIf="!error; else catchError">
 				<mat-option *ngFor="let location of locations | slice:0:5"
 							(onSelectionChange)="goToLocation(location.point)"
@@ -14,11 +14,11 @@
 					{{location.name}}
 				</mat-option>
 			</ng-template>
-		</ng-container>
-		<ng-template #catchError>
-			<mat-option disabled>
-				{{error | translate}}
-			</mat-option>
+			<ng-template #catchError>
+				<mat-option disabled>
+					{{error | translate}}
+				</mat-option>
+			</ng-template>
 		</ng-template>
 	</mat-autocomplete>
 

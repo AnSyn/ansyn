@@ -68,9 +68,6 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 
 	goToLocation(point) {
 		if (point) {
-			if (!this._communicator) {
-				this._communicator = this.imageryCommunicatorService.provide(this.mapId);
-			}
 			this._communicator.setCenter(point, true).pipe(take(1)).subscribe();
 		}
 	}

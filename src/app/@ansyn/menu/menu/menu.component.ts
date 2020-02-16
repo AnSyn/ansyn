@@ -236,14 +236,14 @@ export class MenuComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	toggleItem(key: string): void {
+	toggleItem(key: string, skipSession: boolean = false): void {
 		if (this.onAnimation) {
 			return;
 		}
 		if (this.selectedMenuItemName === key) {
 			this.closeMenu();
 		} else {
-			this.openMenu(key);
+			this.openMenu(key, skipSession);
 		}
 	}
 
@@ -251,8 +251,8 @@ export class MenuComponent implements OnInit, OnDestroy {
 		return Boolean(this.selectedMenuItem);
 	}
 
-	openMenu(key: string) {
-		this.store.dispatch(new SelectMenuItemAction(key));
+	openMenu(key: string, skipSession: boolean) {
+		this.store.dispatch(new SelectMenuItemAction({ menuKey: key, skipSession}));
 	}
 
 	closeMenu(): void {

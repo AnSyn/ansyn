@@ -43,6 +43,7 @@ export {
 	getPolygonByPointAndRadius,
 	getPolygonByBufferRadius,
 	getPolygonIntersectionRatio,
+	polygonsDontIntersect,
 	isPointContainedInGeometry,
 	unifyPolygons,
 	calculateLineDistance,

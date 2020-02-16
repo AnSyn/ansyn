@@ -20,6 +20,7 @@ export interface IMenuState extends EntityState<IMenuItem> {
 	menuCollapse: boolean;
 	isUserFirstEntrance: boolean;
 }
+
 const menuSession = getMenuSessionData();
 export const initialMenuState: IMenuState = menuItemsAdapter.getInitialState({
 	selectedMenuItem: menuSession.selectedMenuItem,
@@ -45,8 +46,10 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 			return menuItemsAdapter.addOne(action.payload, state);
 
 		case MenuActionTypes.SELECT_MENU_ITEM:
-			const selectedMenuItem = action.payload;
-			setMenuSessionData({ selectedMenuItem });
+			const selectedMenuItem = action.payload.menuKey;
+			if (!action.payload.skipSession) {
+				setMenuSessionData({ selectedMenuItem });
+			}
 			return { ...state, selectedMenuItem };
 
 		case MenuActionTypes.UNSELECT_MENU_ITEM: {
@@ -70,8 +73,8 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 			return { ...state, menuCollapse: action.payload };
 
 		case MenuActionTypes.SET_USER_ENTER:
-			setMenuSessionData({isUserFirstEntrance: false});
-			return { ...state, isUserFirstEntrance: false};
+			setMenuSessionData({ isUserFirstEntrance: false });
+			return { ...state, isUserFirstEntrance: false };
 		default:
 			return state;
 	}

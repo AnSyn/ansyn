@@ -24,6 +24,7 @@ import {
 	IVisualizersConfig,
 	MarkerSize,
 	VisualizerInteractions,
+	VisualizerStates,
 	VisualizersConfig
 } from '@ansyn/imagery';
 import { FeatureCollection, GeometryObject } from 'geojson';
@@ -45,6 +46,7 @@ interface ILabelHandler {
 	select: Select;
 	translate: Translate;
 }
+
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store, OpenLayersProjectionService, VisualizersConfig],
@@ -270,33 +272,15 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			});
 	}
 
-	// draw style (temp until DBClick)
-	drawFeatureStyle(feature: Feature) {
-		const styles = [this.editDistanceStyle];
-		const measureStyles = this.getMeasureTextStyle(feature);
-		measureStyles.forEach((style) => {
-			styles.push(style);
-		});
-		return styles;
-	}
-
-	// Line style (after DBClick)
-	mainStyle(feature) {
-		const styles = [new Style({
-			stroke: new Stroke({
-				color: this.visualizerStyle.initial.stroke,
-				width: this.visualizerStyle.initial['stroke-width']
-			})
-		})];
-		// Points
+	featurePointStyle(initial) {
 		const pointsStyle = new Style({
 			image: new Circle({
 				radius: 5,
 				stroke: new Stroke({
-					color: this.visualizerStyle.initial.stroke,
-					width: this.visualizerStyle.initial['stroke-width']
+					color: initial.stroke,
+					width: initial['stroke-width']
 				}),
-				fill: new Fill({ color: this.visualizerStyle.initial.fill })
+				fill: new Fill({ color: initial.fill })
 			}),
 			geometry: function (feature) {
 				// return the coordinates of the first ring of the polygon
@@ -304,7 +288,35 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 				return new MultiPoint(coordinates);
 			}
 		});
-		styles.push(pointsStyle);
+		return pointsStyle;
+	}
+
+	featureStrokeStyle(initial) {
+		const stroke = [new Style({
+			stroke: new Stroke({
+				color: initial.stroke,
+				width: initial['stroke-width']
+			})
+		})];
+		return stroke;
+	}
+
+	// The feature after created
+	featureStyle(feature: Feature, state: string = VisualizerStates.INITIAL) {
+		return this.measurementMainStyle();
+	}
+
+	// Style in draw mode
+	drawFeatureStyle(feature: Feature) {
+		const styles = this.getMeasureTextStyle(feature);
+		styles.push(this.editDistanceStyle);
+		return styles;
+	}
+
+	measurementMainStyle() {
+		const { initial } = this.visualizerStyle;
+		const styles = [this.featureStrokeStyle(initial)];
+		styles.push(this.featurePointStyle(initial));
 		return styles;
 	}
 
@@ -489,9 +501,9 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	}
 
 	private defineLabelsTranslate(labelsFeatures: Feature[]): ILabelHandler {
-		const handler: ILabelHandler = {select: undefined, translate: undefined};
+		const handler: ILabelHandler = { select: undefined, translate: undefined };
 		handler.select = new Select({
-			condition: (event) => event.type === "pointermove" && !event.dragging,
+			condition: (event) => event.type === 'pointermove' && !event.dragging,
 			style: (event) => {
 				if (event.getGeometry().getType() === 'LineString') {
 					return event.styleCache;
@@ -499,7 +511,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 				return new Style({})
 			},
 			filter: (feature, layer) => {
-				return labelsFeatures.indexOf(feature) >= 0 || Array.from(this.labelToMeasures).some( (labelMeasure => labelMeasure[1].features.indexOf(feature) >= 0));
+				return labelsFeatures.indexOf(feature) >= 0 || Array.from(this.labelToMeasures).some((labelMeasure => labelMeasure[1].features.indexOf(feature) >= 0));
 			}
 		});
 		handler.translate = new Translate({

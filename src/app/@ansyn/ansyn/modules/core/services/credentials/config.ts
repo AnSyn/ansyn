@@ -6,5 +6,5 @@ export interface ICredentialsConfig {
 	noCredentialsMessage: string;
 	authorizationSiteURL: string;
 	authorizationInfoURL: string;
-	allLocation: string;
+	allLocation: string[];
 }

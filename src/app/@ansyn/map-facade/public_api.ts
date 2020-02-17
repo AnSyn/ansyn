@@ -28,7 +28,9 @@ export {
 	selectMapsStateByIds,
 	selectOverlayDisplayModeByMapId,
 	selectOverlayOfActiveMap,
-	selectIsMinimalistViewMode
+	selectIsMinimalistViewMode,
+	selectMapTypeById,
+	selectSourceTypeById
 } from './reducers/map.reducer';
 
 export {
@@ -66,6 +68,9 @@ export {
 	ToggleFooter,
 	ContextMenuShowAngleFilter,
 	IAngleFilterClick,
+	ChangeMainLayer,
+	ChangeMainLayerSuccess,
+	ChangeMainLayerFailed,
 	SynchronizeMapsAction
 } from './actions/map.actions';
 

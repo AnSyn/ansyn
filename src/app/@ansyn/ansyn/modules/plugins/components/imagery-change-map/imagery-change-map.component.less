@@ -1,0 +1,112 @@
+@import "ansyn/less/common";
+@import "ansyn/less/z-index-globals";
+
+:host {
+	position: relative;
+	background-color: rgba(0, 0, 0, 0.3);
+	color: white;
+	left: 20px;
+	width: 40px;
+	margin-bottom: 5px;
+
+	.buttons {
+		line-height: 0;
+		left: 5px;
+		top: 6px;
+
+		&:hover:not(.active):not(.disabled) {
+			background: rgba(0, 0, 0, 0.5);
+		}
+
+		&.active {
+			background: @application-primary-color;
+		}
+
+		&.disabled {
+			opacity: 0.3;
+			cursor: not-allowed;
+			pointer-events: none;
+		}
+
+		button {
+			position: relative;
+			padding: 4px 6px;
+			vertical-align: middle;
+			color: white;
+			line-height: 0;
+
+			&.small-icon-button {
+				font-size: 17px;
+				background: transparent;
+				border: none;
+				outline: none;
+				padding: 4px 7px;
+				align-items: center;
+				z-index: 1;
+				height: 25px;
+
+			}
+
+			.icon::before {
+				font-size: 18px;
+				vertical-align: middle;
+				display: block;
+			}
+		}
+	}
+
+	.popup {
+		position: absolute;
+		display: flex;
+		flex-flow: row wrap;
+		align-items: flex-start;
+		width: 250px;
+		height: 150px;
+		top: 0;
+		right: 50px;
+		background-color: @background-color-1;
+		overflow-y: auto;
+
+		.map {
+			width: 30%;
+			position: relative;
+			box-sizing: content-box;
+			margin: 3px;
+
+
+			button {
+				flex: 1;
+				flex-direction: column;
+				align-items: flex-start;
+				justify-content: space-between;
+				cursor: pointer;
+				background-color: transparent;
+				border: none;
+				outline: none;
+				color: white;
+
+				img {
+					width: 40px;
+					height: 40px;
+				}
+				p {
+					width:65px;
+					font-size: 10px;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+				}
+			}
+
+			&.active {
+				border: @application-primary-color solid 1px;
+
+				button {
+					cursor: default;
+				}
+			}
+		}
+	}
+}
+
+

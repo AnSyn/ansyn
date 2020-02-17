@@ -105,6 +105,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 				this.resetView(layer, position, [bbox[0], bbox[1], bbox[2], bbox[3]]);
 			})
 		}
+		return Promise.resolve(true);
 	}
 
 	public setActiveMap(mapType: string, position: ImageryMapPosition, sourceType?, layer?: any): Promise<any> {

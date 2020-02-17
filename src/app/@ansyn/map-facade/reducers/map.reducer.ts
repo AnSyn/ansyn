@@ -187,7 +187,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			}, state);
 		}
 
-		case MapActionTypes.CHANGE_MAP_MAIN_LAYER: {
+		case MapActionTypes.CHANGE_MAP_MAIN_LAYER_SUCCESS: {
 			const {id, sourceType } = action.payload;
 			const worldView = {...state.entities[id].worldView, sourceType};
 			return mapsAdapter.updateOne({
@@ -206,13 +206,13 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return { ...state, minimalistViewMode: action.payload };
 
 		case MapActionTypes.EXPORT_MAPS_TO_PNG_REQUEST:
-			return {...state, isExportingMaps: true}
+			return {...state, isExportingMaps: true};
 
 		case MapActionTypes.EXPORT_MAPS_TO_PNG_SUCCESS:
-			return {...state, isExportingMaps: false}
+			return {...state, isExportingMaps: false};
 
 		case MapActionTypes.EXPORT_MAPS_TO_PNG_FAILED:
-			return {...state, isExportingMaps: false}
+			return {...state, isExportingMaps: false};
 
 		default:
 			return state;
@@ -246,4 +246,6 @@ export const selectOverlayByMapId = (mapId: string) => createSelector(selectMapS
 export const selectHideLayersOnMap = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.flags.hideLayers);
 export const selectMapPositionByMapId: (mapId: string) => MemoizedSelector<any, ImageryMapPosition> = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.position);
 export const selectMapTypeById: (mapId: string) => MemoizedSelector<any, string> = (mapId => createSelector(selectMapStateById(mapId), (mapState) => mapState.worldView.mapType));
+export const selectSourceTypeById: (mapId: string) => MemoizedSelector<any, string> = (mapId => createSelector(selectMapStateById(mapId), (mapState) => mapState.worldView.sourceType));
+
 export const selectOverlayDisplayModeByMapId: (mapId: string) => MemoizedSelector<any, any> = (mapId: string) => createSelector(selectMapStateById(mapId) , (mapState) => mapState && mapState.data && mapState.data.overlayDisplayMode);

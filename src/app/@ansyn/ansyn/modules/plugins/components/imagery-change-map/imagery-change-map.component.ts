@@ -1,5 +1,11 @@
 import { Component, ElementRef, Inject, OnDestroy, OnInit } from '@angular/core';
-import { ChangeMainLayer, IEntryComponent, selectMapTypeById, selectOverlayByMapId } from '@ansyn/map-facade';
+import {
+	ChangeMainLayer,
+	IEntryComponent,
+	selectMapTypeById,
+	selectOverlayByMapId,
+	selectSourceTypeById
+} from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { IMapProviderConfig, IMapSource, MAP_PROVIDERS_CONFIG } from '@ansyn/imagery';
 import { fromEvent } from 'rxjs';
@@ -47,8 +53,13 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	mapTypeChange$ = () => this.store$.select(selectMapTypeById(this.mapId)).pipe(
 		tap(mapType => {
 			this.currentSourceType = this.mapProvidersConfig[mapType].defaultMapSource;
-			this.mapSources = Object.values(this.mapProvidersConfig[mapType].sources);
+			this.mapSources = this.mapProvidersConfig[mapType].sources;
 		})
+	);
+
+	@AutoSubscription
+	sourceTypeChange$ = () => this.store$.select(selectSourceTypeById(this.mapId)).pipe(
+		tap( sourceType => this.currentSourceType = sourceType)
 	);
 
 	ngOnInit() {
@@ -67,7 +78,6 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	changeMap(type: string) {
 		if (this.currentSourceType !== type) {
 			this.logger.info(`change map from ${ this.currentSourceType } to ${ type }`);
-			this.currentSourceType = type;
 			this.store$.dispatch(new ChangeMainLayer({
 				id: this.mapId,
 				sourceType: type

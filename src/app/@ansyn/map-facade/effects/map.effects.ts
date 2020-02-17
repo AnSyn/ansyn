@@ -4,17 +4,14 @@ import { MapFacadeService } from '../services/map-facade.service';
 import { EMPTY, forkJoin, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMaps } from '../reducers/map.reducer';
-import {
-	ImageryCommunicatorService,
-	IMapSettings,
-	IWorldViewMapState
-} from '@ansyn/imagery';
+import { ImageryCommunicatorService, IMapSettings, IWorldViewMapState } from '@ansyn/imagery';
 import {
 	ActiveImageryMouseEnter,
 	ActiveImageryMouseLeave,
 	ChangeImageryMap,
 	ChangeImageryMapFailed,
-	ChangeImageryMapSuccess, ChangeMainLayer,
+	ChangeImageryMapSuccess,
+	ChangeMainLayer, ChangeMainLayerFailed, ChangeMainLayerSuccess,
 	DecreasePendingMapsCountAction,
 	ImageryCreatedAction,
 	ImageryMouseEnter,
@@ -187,14 +184,19 @@ export class MapEffects {
 		})
 	);
 
+	// TODO: fix the effect after fix promise to observable on the communicator/source providers
 	@Effect({dispatch: false})
 	setMapMainLayer$ = this.actions$.pipe(
 		ofType<ChangeMainLayer>(MapActionTypes.CHANGE_MAP_MAIN_LAYER),
-			map(( {payload}) => {
-				const { id, sourceType } = payload;
-				const communicator = this.communicatorsService.provide(id);
-				return fromPromise(communicator.changeMapMainLayer(sourceType));
-			})
+		switchMap(({ payload }) => {
+			const { id, sourceType } = payload;
+			const communicator = this.communicatorsService.provide(id);
+			return fromPromise(communicator.changeMapMainLayer(sourceType)).pipe(
+				map(change => change.pipe(
+					map(c => c ? this.store$.dispatch(new ChangeMainLayerSuccess(payload)) :
+						this.store$.dispatch(new ChangeMainLayerFailed())))),
+			)
+		}),
 	);
 
 	@Effect({ dispatch: false })

@@ -83,7 +83,9 @@ export const MapActionTypes = {
 	EXPORT_MAPS_TO_PNG_SUCCESS: 'EXPORT_MAPS_TO_PNG_SUCCESS',
 	EXPORT_MAPS_TO_PNG_FAILED: 'EXPORT_MAPS_TO_PNG_FAILED',
 	SET_MINIMALIST_VIEW_MODE: '[Maps] Set Minimalist View Mode',
-	CHANGE_MAP_MAIN_LAYER: '[Maps] Change Main Layer'
+	CHANGE_MAP_MAIN_LAYER: '[Maps] Change Main Layer',
+	CHANGE_MAP_MAIN_LAYER_SUCCESS: '[Maps] Change Main Layer success',
+	CHANGE_MAP_MAIN_LAYER_FAILED: '[Maps] Change Main Layer success'
 };
 
 export interface IContextMenuShowPayload {
@@ -319,6 +321,15 @@ export class ChangeImageryMapFailed implements Action {
 export class ChangeMainLayer implements Action {
 	readonly type = MapActionTypes.CHANGE_MAP_MAIN_LAYER;
 	constructor( public payload: { id: string, sourceType: string }) { }
+}
+
+export class ChangeMainLayerSuccess implements Action {
+	readonly type = MapActionTypes.CHANGE_MAP_MAIN_LAYER_SUCCESS;
+	constructor( public payload: { id: string, sourceType: string }) { }
+}
+
+export class ChangeMainLayerFailed implements Action {
+	readonly type = MapActionTypes.CHANGE_MAP_MAIN_LAYER_FAILED;
 }
 
 export class SetMapsDataActionStore implements Action {

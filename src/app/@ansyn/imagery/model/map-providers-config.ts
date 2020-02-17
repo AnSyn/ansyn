@@ -10,9 +10,7 @@ export interface IMapSource {
 
 export interface IMapProviderConfig {
 	defaultMapSource: string;
-	sources: {
-		[key: string]: IMapSource
-	};
+	sources: IMapSource[];
 }
 
 export interface IMapProvidersConfig {

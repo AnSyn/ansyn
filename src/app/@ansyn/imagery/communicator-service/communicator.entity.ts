@@ -323,12 +323,13 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		const sources: IMapSource[] = this.mapProvidersConfig[mapType].sources;
 		const mapSource: IMapSource = sources.find(source => source.key === sourceType);
 		const sourceProvider = this.getMapSourceProvider({
-			mapType, sourceType: mapSource.sourceType
+			mapType, sourceType: mapSource.sourceType || ''
 		});
 		if (sourceProvider) {
 			return sourceProvider.createAsync({
 				...this.mapSettings,
-				data: { ...this.mapSettings.data, overlay: null, config: mapSource.config }
+				worldView: {...this.mapSettings.worldView, sourceType: mapSource.sourceType},
+				data: { ...this.mapSettings.data, overlay: null, config: mapSource.config, key: mapSource.key }
 			});
 		}
 		else {

@@ -4,7 +4,6 @@ import { Observable, of } from 'rxjs';
 import { IMapFacadeConfig, IMapSearchConfig } from '../models/map-config.model';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { catchError, map } from 'rxjs/operators';
-import { SetToastMessageAction } from '../actions/map.actions';
 import { Point } from 'geojson';
 
 @Injectable()

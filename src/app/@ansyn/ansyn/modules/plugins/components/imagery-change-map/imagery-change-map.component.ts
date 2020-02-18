@@ -51,7 +51,8 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 
 	@AutoSubscription
 	mapTypeChange$ = () => this.store$.select(selectMapTypeById(this.mapId)).pipe(
-		tap(mapType => {
+		filter((mapType: string) => Boolean(mapType)),
+		tap((mapType: string) => {
 			this.currentSourceType = this.mapProvidersConfig[mapType].defaultMapSource;
 			this.mapSources = this.mapProvidersConfig[mapType].sources;
 		})
@@ -59,7 +60,7 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 
 	@AutoSubscription
 	sourceTypeChange$ = () => this.store$.select(selectSourceTypeById(this.mapId)).pipe(
-		tap( sourceType => this.currentSourceType = sourceType)
+		tap(sourceType => this.currentSourceType = sourceType)
 	);
 
 	ngOnInit() {

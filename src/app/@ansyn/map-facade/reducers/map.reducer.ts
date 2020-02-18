@@ -245,7 +245,7 @@ export const selectMapsStateByIds: (mapIds: string[]) => MemoizedSelector<any, I
 export const selectOverlayByMapId = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data && mapState.data.overlay);
 export const selectHideLayersOnMap = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.flags.hideLayers);
 export const selectMapPositionByMapId: (mapId: string) => MemoizedSelector<any, ImageryMapPosition> = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.position);
-export const selectMapTypeById: (mapId: string) => MemoizedSelector<any, string> = (mapId => createSelector(selectMapStateById(mapId), (mapState) => mapState.worldView.mapType));
-export const selectSourceTypeById: (mapId: string) => MemoizedSelector<any, string> = (mapId => createSelector(selectMapStateById(mapId), (mapState) => mapState.worldView.sourceType));
+export const selectMapTypeById: (mapId: string) => MemoizedSelector<any, string> = (mapId => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.worldView.mapType));
+export const selectSourceTypeById: (mapId: string) => MemoizedSelector<any, string> = (mapId => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.worldView.sourceType));
 
 export const selectOverlayDisplayModeByMapId: (mapId: string) => MemoizedSelector<any, any> = (mapId: string) => createSelector(selectMapStateById(mapId) , (mapState) => mapState && mapState.data && mapState.data.overlayDisplayMode);

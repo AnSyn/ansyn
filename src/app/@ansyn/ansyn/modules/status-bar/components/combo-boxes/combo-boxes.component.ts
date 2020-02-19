@@ -33,6 +33,7 @@ import {
 } from '../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { ClearActiveInteractionsAction } from '../../../menu-items/tools/actions/tools.actions';
+import { IOverlaysSourceProvider } from '../../../core/models/multiple-overlays-source-config';
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [
@@ -86,6 +87,7 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	layout: LayoutKey;
 	time: ICaseTimeState;
 
+	dataInputFilterTitle: string;
 	dataInputFilters: ICaseDataInputFiltersState;
 	private subscriptions = [];
 
@@ -181,5 +183,8 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 		this.subscriptions.forEach((sub) => sub.unsubscribe());
 	}
 
+	updateDataInputTitle(title) {
+		this.dataInputFilterTitle = title;
+	}
 
 }

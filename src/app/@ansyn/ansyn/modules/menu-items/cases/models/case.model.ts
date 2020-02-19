@@ -99,7 +99,6 @@ export interface IDataInputFilterValue {
 export interface ICaseDataInputFiltersState {
 	fullyChecked?: boolean;
 	filters: IDataInputFilterValue[];
-	title?: string;
 }
 
 export interface ICaseTimeState {

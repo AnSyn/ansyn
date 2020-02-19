@@ -27,9 +27,11 @@ import { CustomTreeviewI18n } from './custom-treeview-i18n';
 })
 export class TreeViewComponent implements OnInit, OnDestroy {
 	@Output() closeTreeView = new EventEmitter<any>();
+	@Output() dataInputTitleChange = new EventEmitter<string>();
 	_selectedFilters: IDataInputFilterValue[];
 	dataInputFiltersItems: TreeviewItem[] = [];
 	leavesCount: number;
+	dataFilters: TreeviewItem[];
 
 	dataInputFilter$: Observable<any> = this.store.select(selectDataInputFilter);
 
@@ -37,6 +39,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		filter(Boolean),
 		tap(_preFilter => {
 			this._selectedFilters = _preFilter.fullyChecked ? this.selectAll() : _preFilter.filters;
+			this.dataInputTitleChange.emit(`${this._selectedFilters.length}/${this.leavesCount}`);
 			if (Boolean(this._selectedFilters)) {
 				this.dataInputFiltersItems.forEach(root => this.updateInputDataFilterMenu(root));
 			}
@@ -57,6 +60,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 				public store: Store<IStatusBarState>,
 				private translate: TranslateService) {
 
+		this.dataFilters = this.getAllDataInputFilter();
 		this.dataFilters.forEach((f) => {
 			translate.get(f.text).subscribe((res: string) => {
 				f.text = res;
@@ -69,7 +73,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		this._selectedFilters = value;
 	}
 
-	get dataFilters(): TreeviewItem[] {
+	getAllDataInputFilter(): TreeviewItem[] {
 		this.leavesCount = 0;
 		return Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
 			.filter(([providerName, { inActive, dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => !inActive && dataInputFiltersConfig)
@@ -133,10 +137,10 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 			this.store.dispatch(new SetOverlaysCriteriaAction({
 				dataInputFilters: {
 					fullyChecked: this.leavesCount <= this._selectedFilters.length,
-					filters: this._selectedFilters,
-					title: `${this._selectedFilters.length}/${this.leavesCount}`
+					filters: this._selectedFilters
 				}
 			}));
+			this.dataInputTitleChange.emit(`${this._selectedFilters.length}/${this.leavesCount}`);
 			this.closeTreeView.emit();
 		}
 	}

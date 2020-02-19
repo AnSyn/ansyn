@@ -292,12 +292,12 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	}
 
 	featureStrokeStyle(initial) {
-		const stroke = [new Style({
+		const stroke = new Style({
 			stroke: new Stroke({
 				color: initial.stroke,
 				width: initial['stroke-width']
 			})
-		})];
+		});
 		return stroke;
 	}
 

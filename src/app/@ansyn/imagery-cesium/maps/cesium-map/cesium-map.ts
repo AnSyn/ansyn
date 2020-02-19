@@ -514,6 +514,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 			this.mapObject.camera.moveEnd.removeEventListener(this._moveEndListener);
 			this.unregisterScreenEvents(this._mouseMoveHandler);
 			this.mapObject.destroy();
+			this.mapObject = null;
 		}
 	}
 

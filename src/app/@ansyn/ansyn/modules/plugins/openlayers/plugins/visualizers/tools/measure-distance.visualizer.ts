@@ -272,7 +272,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			});
 	}
 
-	featurePointStyle(initial) {
+	featurePointsStyle(initial) {
 		const pointsStyle = new Style({
 			image: new Circle({
 				radius: 5,
@@ -316,7 +316,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	measurementMainStyle() {
 		const { initial } = this.visualizerStyle;
 		const styles = [this.featureStrokeStyle(initial)];
-		styles.push(this.featurePointStyle(initial));
+		styles.push(this.featurePointsStyle(initial));
 		return styles;
 	}
 

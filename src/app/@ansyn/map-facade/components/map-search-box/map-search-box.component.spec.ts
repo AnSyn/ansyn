@@ -1,7 +1,7 @@
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { MapSearchBoxComponent } from './map-search-box.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { GeocoderService } from '../../services/geocoder.service';
 import { asyncData } from '../../test/async-observable-helpers';
@@ -19,7 +19,8 @@ describe('MapSearchBoxComponent', () => {
 				FormsModule,
 				TranslateModule.forRoot(),
 				MatInputModule,
-				MatAutocompleteModule
+				MatAutocompleteModule,
+				ReactiveFormsModule
 			],
 			providers: [
 				{

@@ -716,7 +716,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				font: `${ entity.labelSize + 2 }px Calibri,sans-serif`,
 				fill: new olFill({ color: entity.style.initial.label.fill }),
 				text: label.text,
-				offsetY: entityMode === 30
+				offsetY: 30
 			})
 		}));
 

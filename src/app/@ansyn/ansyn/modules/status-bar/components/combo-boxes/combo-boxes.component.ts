@@ -67,7 +67,6 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	dataInputFilters$ = this.store$.select(selectDataInputFilter).pipe(
 		filter((caseDataInputFiltersState: ICaseDataInputFiltersState) => Boolean(caseDataInputFiltersState) && Boolean(caseDataInputFiltersState.filters)),
 		tap((caseDataInputFiltersState: ICaseDataInputFiltersState) => {
-			this.dataInputFiltersTitle = !caseDataInputFiltersState.active ? CaseDataFilterTitle.Disabled : caseDataInputFiltersState.fullyChecked ? CaseDataFilterTitle.Full : CaseDataFilterTitle.Partial;
 			this.dataInputFilters = caseDataInputFiltersState;
 		})
 	);
@@ -88,7 +87,6 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	time: ICaseTimeState;
 
 	dataInputFilters: ICaseDataInputFiltersState;
-	dataInputFiltersTitle: CaseDataFilterTitle = CaseDataFilterTitle.Disabled;
 	private subscriptions = [];
 
 	get SearchModeEnum() {
@@ -182,4 +180,6 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 		this.subscriptions.forEach((sub) => sub.unsubscribe());
 	}
+
+
 }

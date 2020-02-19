@@ -8,7 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 @NgModule({
 	imports: [
 		CommonModule,
-		TranslateModule.forRoot(),
+		TranslateModule,
 		OpenlayersPluginsModule,
 		CesiumPluginsModule
 	],

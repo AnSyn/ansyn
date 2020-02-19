@@ -70,8 +70,7 @@ export class OverlaysEffects {
 	setOverlaysCriteria$ = this.actions$.pipe(
 		ofType<SetOverlaysCriteriaAction>(OverlaysActionTypes.SET_OVERLAYS_CRITERIA),
 		filter(action => !(action.options && action.options.noInitialSearch)),
-		withLatestFrom(this.store$.select(overlaysStateSelector)),
-		map(([{ payload }, { overlaysCriteria }]) => new LoadOverlaysAction(overlaysCriteria)));
+		map(({ payload }) => new LoadOverlaysAction(payload)));
 
 	@Effect()
 	loadOverlays$: Observable<{} | LoadOverlaysSuccessAction> = this.actions$.pipe(

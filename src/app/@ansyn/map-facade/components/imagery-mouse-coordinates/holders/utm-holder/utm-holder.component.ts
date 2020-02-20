@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'ansyn-utm-holder',
+	selector: 'ansyn-utm-ed50-holder',
 	templateUrl: './utm-holder.component.html',
 	styleUrls: ['./utm-holder.component.less']
 })

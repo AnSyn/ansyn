@@ -13,6 +13,10 @@ const utm: ICoordinatesSystem = {
 	datum: 'ed50',
 	projection: 'utm'
 };
+const utmWgs84: ICoordinatesSystem = {
+	datum: 'wgs84',
+	projection: 'utm'
+};
 
 @Component({
 	selector: 'ansyn-imagery-mouse-coordinates',

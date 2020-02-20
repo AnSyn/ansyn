@@ -12,27 +12,25 @@ import { ProjectionConverterService } from '@ansyn/map-facade';
 
 
 @Component({
-	selector: 'ansyn-geo-wgs',
-	templateUrl: './geo.component.html',
-	styleUrls: ['./geo.component.less'],
+	selector: 'ansyn-utm-wgs',
+	templateUrl: './utm-wgs.component.html',
+	styleUrls: ['./utm-wgs.component.less'],
 	providers: [
 		{
 			provide: NG_VALUE_ACCESSOR,
-			useExisting: forwardRef(() => GeoComponent),
+			useExisting: forwardRef(() => UtmWgsComponent),
 			multi: true
 		},
 		{
 			provide: NG_VALIDATORS,
-			useExisting: forwardRef(() => GeoComponent),
+			useExisting: forwardRef(() => UtmWgsComponent),
 			multi: true
 		}
 	]
 })
-
-export class GeoComponent implements ControlValueAccessor, Validator {
+export class UtmWgsComponent implements ControlValueAccessor, Validator {
 	@Output() copyToClipBoardHandler = new EventEmitter();
-
-	coordinates: number[] = [0, 0];
+	coordinates: number[] = [0, 0, 0];
 	validationErr: ValidationErrors = null;
 
 	onChanges = (value) => {
@@ -43,7 +41,7 @@ export class GeoComponent implements ControlValueAccessor, Validator {
 
 	writeValue(newValue: number[]): void {
 		if (newValue && !_isEqual(newValue, this.coordinates)) {
-			this.coordinates = newValue.map((num) => +num.toFixed(5));
+			this.coordinates = newValue.map(num => Math.floor(num));
 		}
 	}
 
@@ -60,7 +58,7 @@ export class GeoComponent implements ControlValueAccessor, Validator {
 	}
 
 	copyToClipBoard() {
-		this.copyToClipBoardHandler.emit(`${ this.coordinates[1] } ${ this.coordinates[0] }`);
+		this.copyToClipBoardHandler.emit(this.coordinates.join(' '));
 	}
 
 	validate(c: AbstractControl): ValidationErrors {
@@ -68,15 +66,17 @@ export class GeoComponent implements ControlValueAccessor, Validator {
 			this.validationErr = { empty: true };
 			return this.validationErr;
 		}
-		const lng = c.value[0];
-		const lat = c.value[1];
-		if ((lng === null || lng === undefined) || (lat === null || lat === undefined)) {
+		const someNotNumber = c.value.some(value => typeof value !== 'number');
+		if (someNotNumber) {
 			this.validationErr = { empty: true };
-		} else if (!ProjectionConverterService.isValidGeoWGS84(c.value)) {
+		} else if (!ProjectionConverterService.isValidUTMWGS84(c.value)) {
 			this.validationErr = { invalid: true };
 		} else {
 			this.validationErr = null;
 		}
 		return this.validationErr;
+	}
+
+	constructor() {
 	}
 }

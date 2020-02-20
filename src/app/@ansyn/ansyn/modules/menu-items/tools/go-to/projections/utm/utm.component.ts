@@ -11,7 +11,7 @@ import { isEqual as _isEqual } from 'lodash';
 import { IEd50Notification, ProjectionConverterService } from '@ansyn/map-facade';
 
 @Component({
-	selector: 'ansyn-utm',
+	selector: 'ansyn-utm-ed50',
 	templateUrl: './utm.component.html',
 	styleUrls: ['./utm.component.less'],
 	providers: [
@@ -71,7 +71,7 @@ export class UtmComponent implements ControlValueAccessor, Validator {
 		const someNotNumber = c.value.some(value => typeof value !== 'number');
 		if (someNotNumber) {
 			this.validationErr = { empty: true };
-		} else if (!ProjectionConverterService.isValidUTM(c.value)) {
+		} else if (!ProjectionConverterService.isValidUTMED50(c.value)) {
 			this.validationErr = { invalid: true };
 		} else {
 			this.validationErr = null;

@@ -2,15 +2,15 @@
 	 class="mouse-coordinate"
 	 [ngSwitch]="floationgSystem">
 
-	<ansyn-geo-holder *ngSwitchCase="'WGS84'"
+	<ansyn-geo-wgs-holder *ngSwitchCase="'WGS84'"
 					  [lat]="lat"
 					  [long]="long"
-					  [height]="height"></ansyn-geo-holder>
-	<ansyn-utm-holder *ngSwitchCase="'UTM'"
+					  [height]="height"></ansyn-geo-wgs-holder>
+	<ansyn-utm-ed50-holder *ngSwitchCase="'UTM'"
 					  [x]="long"
 					  [y]="lat"
 					  [zone]="zone"
-					  [height]="height"></ansyn-utm-holder>
+					  [height]="height"></ansyn-utm-ed50-holder>
 	&nbsp;{{floatingPositionSuffix}}
 </div>
 

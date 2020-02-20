@@ -22,21 +22,29 @@ export class ProjectionConverterService {
 		return coords.length >= minLength && coords.every(c => typeof c === 'number');
 	}
 
-	// WGS84 ranges: -90 < lat < 90  -180 < lon <180
-	static isValidWGS84(coords: number[]): boolean {
+	// GEO WGS84 ranges: -90 < lat < 90  -180 < lon <180
+	static isValidGeoWGS84(coords: number[]): boolean {
 		const coordinatesValid = ProjectionConverterService.isValidCoordinates(coords, 2);
-		const validLong = coordinatesValid && inRange(coords[0], -179.9999, 180);
-		const validLat = coordinatesValid && inRange(coords[1], -89.9999, 90);
-		return validLat && validLong;
+		const validLong = inRange(coords[0], -179.9999, 180);
+		const validLat = inRange(coords[1], -89.9999, 90);
+		return coordinatesValid && validLat && validLong;
 	}
 
-	// UTM ranges: -16198192 <= x < 17198193, 0 < zone <= 60
-	static isValidUTM(coords: number[]): boolean {
+	// UTM ED50 ranges: -16198192 <= x < 17198193, 0 < zone <= 60
+	static isValidUTMED50(coords: number[]): boolean {
 		const coordinatesValid = ProjectionConverterService.isValidCoordinates(coords, 3);
-		const validX = coordinatesValid && inRange(coords[0], -16198192, 17198193);
-		const validY = coordinatesValid && typeof coords[1] === 'number';
-		const validZone = coordinatesValid && inRange(coords[2], 0, 61);
-		return validX && validY && validZone;
+		const validX = inRange(coords[0], -16198192, 17198193);
+		const validY = typeof coords[1] === 'number';
+		const validZone = inRange(coords[2], 0, 61);
+		return coordinatesValid && validX && validY && validZone;
+	}
+
+	static isValidUTMWGS84(coords: number[]): boolean {
+		const coordinatesValid = ProjectionConverterService.isValidCoordinates(coords, 3);
+		const validX = inRange(coords[0], -16198192, 17198193);
+		const validY = typeof coords[1] === 'number';
+		const validZone = inRange(coords[2], 0, 61);
+		return coordinatesValid && validX && validY && validZone;
 	}
 
 	constructor(@Inject(mapFacadeConfig) protected mapfacadeConfigProj: IMapFacadeConfig) {
@@ -47,15 +55,21 @@ export class ProjectionConverterService {
 		let isValid = Boolean(coords);
 
 		const fromWgs84Geo = from.datum === 'wgs84' && from.projection === 'geo';
+		const fromWgs84Utm = from.datum === 'wgs84' && from.projection === 'utm';
 		const fromEd50Utm = from.datum === 'ed50' && from.projection === 'utm';
 
 		if (isValid && fromWgs84Geo) {
-			isValid = ProjectionConverterService.isValidWGS84(coords);
+			isValid = ProjectionConverterService.isValidGeoWGS84(coords);
 		}
 
 		if (isValid && fromEd50Utm) {
-			isValid = ProjectionConverterService.isValidUTM(coords);
+			isValid = ProjectionConverterService.isValidUTMED50(coords);
 		}
+
+		if (isValid && fromWgs84Utm) {
+			isValid = ProjectionConverterService.isValidUTMWGS84(coords);
+		}
+
 		return isValid;
 	}
 
@@ -68,12 +82,11 @@ export class ProjectionConverterService {
 		const fromWgs84Geo = from.datum === 'wgs84' && from.projection === 'geo';
 		const toWgs84Geo = to.datum === 'wgs84' && to.projection === 'geo';
 
-		const toWgs84Utm = to.datum === 'wgs84' && to.projection === 'utm';
 		const fromWgs84Utm = from.datum === 'wgs84' && from.projection === 'utm';
+		const toWgs84Utm = to.datum === 'wgs84' && to.projection === 'utm';
 
 		const fromEd50Utm = from.datum === 'ed50' && from.projection === 'utm';
 		const toEd50Utm = to.datum === 'ed50' && to.projection === 'utm';
-
 
 		if (fromWgs84Geo && toEd50Utm) {
 			const lng = coords[0];

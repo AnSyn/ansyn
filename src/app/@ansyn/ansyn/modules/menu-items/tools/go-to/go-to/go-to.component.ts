@@ -43,8 +43,9 @@ export class GoToComponent implements OnInit {
 	activeCenterProjDatum: ICoordinatesSystem = { datum: 'wgs84', projection: 'geo' };
 
 	inputs = {
-		from: [0, 0],
-		to: []
+		geoWgs84: [0, 0],
+		utmEd50: [],
+		utmWgs84: []
 	};
 
 	pinLocationMode$: Observable<boolean> = this.store$.select(toolsStateSelector).pipe(
@@ -63,12 +64,16 @@ export class GoToComponent implements OnInit {
 		return this._expand;
 	}
 
-	get from(): ICoordinatesSystem {
-		return this.config.GoTo.from;
+	get geoWgs84(): ICoordinatesSystem {
+		return this.config.GoTo.geoWgs84;
 	}
 
-	get to(): ICoordinatesSystem {
-		return this.config.GoTo.to;
+	get utmEd50(): ICoordinatesSystem {
+		return this.config.GoTo.utmEd50;
+	}
+
+	get utmWgs84(): ICoordinatesSystem {
+		return this.config.GoTo.utmWgs84;
 	}
 
 	get notification(): IEd50Notification {
@@ -79,8 +84,8 @@ export class GoToComponent implements OnInit {
 		this.activeCenter$.subscribe((_activeCenter) => {
 			this.activeCenter = _activeCenter;
 			if (this.projectionConverterService.isValidConversion(this.activeCenter, this.activeCenterProjDatum)) {
-				this.inputs.from = this.projectionConverterService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.from);
-				this.inputs.to = this.projectionConverterService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.to);
+				this.inputs.geoWgs84 = this.projectionConverterService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.geoWgs84);
+				this.inputs.utmEd50 = this.projectionConverterService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.utmEd50);
 				this.dispatchInputUpdated(this.activeCenter, this.activeCenterProjDatum);
 			}
 		});
@@ -104,9 +109,9 @@ export class GoToComponent implements OnInit {
 	}
 
 	submitGoTo(): void {
-		const conversionValid = this.projectionConverterService.isValidConversion(this.inputs.from, this.from);
+		const conversionValid = this.projectionConverterService.isValidConversion(this.inputs.geoWgs84, this.geoWgs84);
 		if (conversionValid) {
-			const goToInput = this.projectionConverterService.convertByProjectionDatum(this.inputs.from, this.from, this.activeCenterProjDatum);
+			const goToInput = this.projectionConverterService.convertByProjectionDatum(this.inputs.geoWgs84, this.geoWgs84, this.activeCenterProjDatum);
 			this.store$.dispatch(new GoToAction(goToInput));
 		}
 	}

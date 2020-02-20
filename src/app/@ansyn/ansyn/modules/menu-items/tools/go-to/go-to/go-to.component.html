@@ -2,22 +2,22 @@
 
 <form #form="ngForm" (ngSubmit)="submitGoTo()">
 
-	<div [ngSwitch]="from.projection">
+	<div [ngSwitch]="geoWgs84.projection">
 		<ansyn-geo
 			*ngSwitchCase="'geo'"
-			name="from"
-			[(ngModel)]="inputs.from"
-			(ngModelChange)="convert($event, from, to, 'to')"
+			name="geoWgs84"
+			[(ngModel)]="inputs.geoWgs84"
+			(ngModelChange)="convert($event, geoWgs84, utmEd50, 'utmEd50')"
 			(copyToClipBoardHandler)="copyToClipBoard($event)"
 			required>
 		</ansyn-geo>
 
 		<ansyn-utm
 			*ngSwitchCase="'utm'"
-			name="to"
+			name="utmEd50"
 			[notification]="notification"
-			[(ngModel)]="inputs.from"
-			(ngModelChange)="convert($event, from, to, 'to')"
+			[(ngModel)]="inputs.geoWgs84"
+			(ngModelChange)="convert($event, geoWgs84, utmEd50, 'utmEd50')"
 			(copyToClipBoardHandler)="copyToClipBoard($event)"
 			required>
 		</ansyn-utm>
@@ -25,27 +25,36 @@
 	</div>
 
 
-	<div [ngSwitch]="to.projection">
+	<div [ngSwitch]="utmEd50.projection">
 		<ansyn-utm
 			*ngSwitchCase="'utm'"
-			name="to"
+			name="utmEd50"
 			[notification]="notification"
-			[(ngModel)]="inputs.to"
-			(ngModelChange)="convert($event, to, from, 'from')"
+			[(ngModel)]="inputs.utmEd50"
+			(ngModelChange)="convert($event, utmEd50, geoWgs84, 'geoWgs84')"
 			(copyToClipBoardHandler)="copyToClipBoard($event)"
 			required>
 		</ansyn-utm>
 
 		<ansyn-geo
 			*ngSwitchCase="'geo'"
-			name="from"
-			[(ngModel)]="inputs.to"
-			(ngModelChange)="convert($event, to, from, 'from')"
+			name="geoWgs84"
+			[(ngModel)]="inputs.utmEd50"
+			(ngModelChange)="convert($event, utmEd50, geoWgs84, 'geoWgs84')"
 			(copyToClipBoardHandler)="copyToClipBoard($event)"
 			required>
 		</ansyn-geo>
 
 	</div>
+
+	<ansyn-utm
+		name="utmWgs84"
+		[notification]="notification"
+		[(ngModel)]="inputs.geoWgs84"
+		(ngModelChange)="convert($event, geoWgs84, utmWgs84, 'utmWgs84')"
+		(copyToClipBoardHandler)="copyToClipBoard($event)"
+		required>
+	</ansyn-utm>
 
 	<div class="buttons-area">
 

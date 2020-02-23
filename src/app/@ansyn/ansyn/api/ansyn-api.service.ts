@@ -338,7 +338,7 @@ export class AnsynApi {
 		this.store.dispatch(new SetOverlaysCriteriaAction(criteria));
 	}
 
-	getOverlayCriteria(): Observable<IOverlaysCriteria> {
+	getOverlaysCriteria(): Observable<IOverlaysCriteria> {
 		return this.store.select(selectOverlaysCriteria);
 	}
 

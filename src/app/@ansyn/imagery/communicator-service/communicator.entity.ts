@@ -24,8 +24,13 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ImageryMapSources } from '../providers/map-source-providers';
 import { get as _get } from 'lodash';
 import { ImageryMapExtent, ImageryMapPosition } from '../model/case-map-position.model';
-import { getPolygonByPointAndRadius } from '../utils/geo';
-import { IMapProviderConfig, IMapProvidersConfig, MAP_PROVIDERS_CONFIG } from '../model/map-providers-config';
+import { bboxFromGeoJson, getPolygonByPointAndRadius } from '../utils/geo';
+import {
+	IMapProviderConfig,
+	IMapProvidersConfig,
+	IMapSource,
+	MAP_PROVIDERS_CONFIG
+} from '../model/map-providers-config';
 import { IMapSettings } from '../model/map-settings';
 
 export interface IMapInstanceChanged {
@@ -47,29 +52,6 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	private _virtualNorth = 0;
 	public mapInstanceChanged: EventEmitter<IMapInstanceChanged> = new EventEmitter<IMapInstanceChanged>();
 
-	@AutoSubscription
-	activeMap$ = () => merge(this.imageryCommunicatorService.instanceCreated, this.mapInstanceChanged)
-		.pipe(
-			filter(({ id }) => id === this.id),
-			tap(this.initPlugins.bind(this))
-		);
-
-	get plugins() {
-		return _get(this._mapComponentRef, 'instance.plugins') || [];
-	}
-
-	get visualizers(): BaseImageryVisualizer[] {
-		return <any>this.plugins.filter(plugin => plugin instanceof BaseImageryVisualizer);
-	}
-
-	getMapSourceProvider({ mapType, sourceType }: { mapType?: string, sourceType: string }): BaseMapSourceProvider {
-		return this.imageryMapSources[mapType][sourceType];
-	}
-
-	get positionChanged() {
-		return this.ActiveMap.positionChanged;
-	}
-
 	constructor(protected injector: Injector,
 				@Inject(IMAGERY_MAPS) protected imageryMaps: ImageryMaps,
 				protected componentFactoryResolver: ComponentFactoryResolver,
@@ -79,8 +61,16 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	) {
 	}
 
-	initPlugins() {
-		this.plugins.forEach((plugin) => plugin.init(this as any));
+	get plugins() {
+		return _get(this._mapComponentRef, 'instance.plugins') || [];
+	}
+
+	get visualizers(): BaseImageryVisualizer[] {
+		return <any>this.plugins.filter(plugin => plugin instanceof BaseImageryVisualizer);
+	}
+
+	get positionChanged() {
+		return this.ActiveMap.positionChanged;
 	}
 
 	get id() {
@@ -93,6 +83,35 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 
 	public get activeMapName() {
 		return this.ActiveMap && this.ActiveMap.mapType;
+	}
+
+	@AutoSubscription
+	activeMap$ = () => merge(this.imageryCommunicatorService.instanceCreated, this.mapInstanceChanged)
+		.pipe(
+			filter(({ id }) => id === this.id),
+			tap(this.initPlugins.bind(this))
+		);
+
+	getMapSourceProvider({ mapType, sourceType }: { mapType?: string, sourceType: string }): BaseMapSourceProvider {
+		return this.imageryMapSources[mapType][sourceType];
+	}
+
+	initPlugins() {
+		this.plugins.forEach((plugin) => plugin.init(this as any));
+	}
+
+	public changeMapMainLayer(sourceType: string): Promise<Observable<boolean>> { // TODO: change all promise to observable
+		const newSourceType = this.createMapSourceForMapType(this.mapSettings.worldView.mapType, sourceType);
+		return newSourceType.then(layer => {
+			if (!Boolean(layer)) {
+				return of(false);
+			}
+			this.mapSettings.worldView.sourceType = sourceType;
+			const position = this.mapSettings.data.position;
+			const bbox = bboxFromGeoJson(position.extentPolygon);
+			return this.resetView(layer, position, [bbox[0], bbox[1], bbox[2], bbox[3]]);
+		})
+
 	}
 
 	public setActiveMap(mapType: string, position: ImageryMapPosition, sourceType?, layer?: any): Promise<any> {
@@ -136,17 +155,6 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		});
 	}
 
-	private onMapCreated(map: BaseImageryMap, activeMapName, oldMapName) {
-		this._activeMap = map;
-		if (activeMapName !== oldMapName && Boolean(oldMapName)) {
-			this.mapInstanceChanged.emit({
-				id: this.id,
-				newMapInstanceName: activeMapName,
-				oldMapInstanceName: oldMapName
-			});
-		}
-	};
-
 	loadInitialMapSource(position?: ImageryMapPosition): Promise<any> {
 		return new Promise(resolve => {
 			if (!this._activeMap) {
@@ -188,7 +196,6 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	getVirtualNorth() {
 		return this._virtualNorth;
 	}
-
 
 	public setCenter(center: Point, animation: boolean = true): Observable<boolean> {
 		if (this.ActiveMap) {
@@ -289,6 +296,21 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		this.destroyCurrentComponent();
 	}
 
+	destroyPlugins(): void {
+		this.plugins.forEach((plugin) => plugin.dispose());
+	}
+
+	private onMapCreated(map: BaseImageryMap, activeMapName, oldMapName) {
+		this._activeMap = map;
+		if (activeMapName !== oldMapName && Boolean(oldMapName)) {
+			this.mapInstanceChanged.emit({
+				id: this.id,
+				newMapInstanceName: activeMapName,
+				oldMapInstanceName: oldMapName
+			});
+		}
+	};
+
 	private resetPlugins(): Observable<boolean> {
 		if (!this.plugins || this.plugins.length === 0) {
 			return of(true);
@@ -298,10 +320,21 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	private createMapSourceForMapType(mapType: string, sourceType: string): Promise<any> {
+		const sources: IMapSource[] = this.mapProvidersConfig[mapType].sources;
+		const mapSource: IMapSource = sources.find(source => source.key === sourceType);
 		const sourceProvider = this.getMapSourceProvider({
-			mapType, sourceType
+			mapType, sourceType: mapSource.sourceType || ''
 		});
-		return sourceProvider.createAsync({ ...this.mapSettings, data: { ...this.mapSettings.data, overlay: null } });
+		if (sourceProvider) {
+			return sourceProvider.createAsync({
+				...this.mapSettings,
+				worldView: {...this.mapSettings.worldView, sourceType: mapSource.sourceType},
+				data: { ...this.mapSettings.data, overlay: null, config: mapSource.config, key: mapSource.key }
+			});
+		}
+		else {
+			return Promise.resolve(false);
+		}
 	}
 
 	private destroyCurrentComponent(): void {
@@ -313,10 +346,6 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 			this._mapComponentRef.destroy();
 			this._mapComponentRef = undefined;
 		}
-	}
-
-	destroyPlugins(): void {
-		this.plugins.forEach((plugin) => plugin.dispose());
 	}
 
 }

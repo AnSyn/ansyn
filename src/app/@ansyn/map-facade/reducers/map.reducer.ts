@@ -170,14 +170,14 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			}
 			return { ...state, layout: action.payload };
 
-		case MapActionTypes.CHANGE_IMAGERY_MAP: {
+		/*case MapActionTypes.CHANGE_IMAGERY_MAP: {
 			const { id, mapType, sourceType } = action.payload;
 			const worldView = { mapType, sourceType };
 			return mapsAdapter.updateOne({
 				id,
 				changes: { worldView }
 			}, state);
-		}
+		}*/ // duplicate with MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS
 
 		case MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS: {
 			const { id, worldView } = action.payload;
@@ -185,6 +185,15 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 				id,
 				changes: { worldView }
 			}, state);
+		}
+
+		case MapActionTypes.CHANGE_MAP_MAIN_LAYER_SUCCESS: {
+			const {id, sourceType } = action.payload;
+			const worldView = {...state.entities[id].worldView, sourceType};
+			return mapsAdapter.updateOne({
+				id,
+				changes: {worldView}
+			}, state)
 		}
 
 		case MapActionTypes.SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG:
@@ -197,13 +206,13 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return { ...state, minimalistViewMode: action.payload };
 
 		case MapActionTypes.EXPORT_MAPS_TO_PNG_REQUEST:
-			return {...state, isExportingMaps: true}
+			return {...state, isExportingMaps: true};
 
 		case MapActionTypes.EXPORT_MAPS_TO_PNG_SUCCESS:
-			return {...state, isExportingMaps: false}
+			return {...state, isExportingMaps: false};
 
 		case MapActionTypes.EXPORT_MAPS_TO_PNG_FAILED:
-			return {...state, isExportingMaps: false}
+			return {...state, isExportingMaps: false};
 
 		default:
 			return state;
@@ -236,4 +245,7 @@ export const selectMapsStateByIds: (mapIds: string[]) => MemoizedSelector<any, I
 export const selectOverlayByMapId = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data && mapState.data.overlay);
 export const selectHideLayersOnMap = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.flags.hideLayers);
 export const selectMapPositionByMapId: (mapId: string) => MemoizedSelector<any, ImageryMapPosition> = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.position);
+export const selectMapTypeById: (mapId: string) => MemoizedSelector<any, string> = (mapId => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.worldView.mapType));
+export const selectSourceTypeById: (mapId: string) => MemoizedSelector<any, string> = (mapId => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.worldView.sourceType));
+
 export const selectOverlayDisplayModeByMapId: (mapId: string) => MemoizedSelector<any, any> = (mapId: string) => createSelector(selectMapStateById(mapId) , (mapState) => mapState && mapState.data && mapState.data.overlayDisplayMode);

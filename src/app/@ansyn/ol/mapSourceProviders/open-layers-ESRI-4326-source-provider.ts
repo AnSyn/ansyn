@@ -22,7 +22,7 @@ export const OpenLayerESRI_4326SourceProviderSourceType = 'ESRI_4326';
 })
 export class OpenLayerESRI4326SourceProvider extends OpenLayersMapSourceProvider<IESRI4326Config> {
 	create(metaData: IMapSettings): Promise<any> {
-		const { config } = this;
+		const config = {...this.config, ...metaData.data.config};
 		const source = new XYZ({
 			attributions: config.attributions,
 			maxZoom: config.maxZoom,

@@ -6,6 +6,7 @@ import { StoreModule } from '@ngrx/store';
 import { sentinelFeatureKey, SentinelReducer } from '../reducers/sentinel.reducer';
 import { SentinelLayersService } from './sentinel-layers.service';
 import { of } from 'rxjs';
+import { sentinelOverlaySourceConfig } from '../sentinel-source-provider';
 
 describe('SentinelLayersService', () => {
 	let httpClient: HttpClient;
@@ -15,8 +16,8 @@ describe('SentinelLayersService', () => {
 		imports: [HttpClientModule,
 			StoreModule.forRoot({ [sentinelFeatureKey]: SentinelReducer })],
 		providers: [{
-			provide: MAP_SOURCE_PROVIDERS_CONFIG,
-			useValue: { SENTINEL: {} }
+			provide: sentinelOverlaySourceConfig,
+			useValue: { }
 		},
 			{
 				provide: MultipleOverlaysSourceConfig,

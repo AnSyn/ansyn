@@ -18,7 +18,7 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 		if (metaData.data.overlay) {
 			return `${ metaData.worldView.mapType }/${ JSON.stringify(metaData.data.overlay) }`;
 		}
-		return `${ metaData.worldView.mapType }/${ metaData.worldView.sourceType }`;
+		return `${ metaData.worldView.mapType }/${ metaData.data.key }`;
 	}
 
 	removeExtraData(layer: any) {

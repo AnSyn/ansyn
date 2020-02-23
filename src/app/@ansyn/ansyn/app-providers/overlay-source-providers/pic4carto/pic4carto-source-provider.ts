@@ -24,22 +24,17 @@ import { IOverlayByIdMetaData } from '../../../modules/overlays/services/overlay
 import { forkJoinSafe } from '../../../modules/core/utils/rxjs/observables/fork-join-safe';
 import { IPic4CartoConfig, IPic4CartoParams, IPic4CartoPicture, Pic4CartoSourceType } from './pic4carto.model';
 
-
+export const pic4cartoOverlaySourceConfig = 'pic4cartoOverlaySourceConfig';
 @OverlaySourceProvider({
 	sourceType: Pic4CartoSourceType
 })
 export class Pic4cartoSourceProvider extends BaseOverlaySourceProvider {
-	readonly sourceType;
-
-	get config(): IPic4CartoConfig {
-		return this.mapSourceProvidersConfig[this.sourceType];
-	}
 
 	constructor(
 		public errorHandlerService: ErrorHandlerService,
 		protected loggerService: LoggerService,
 		protected http: HttpClient,
-		@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig,
+		@Inject(pic4cartoOverlaySourceConfig) protected config: IPic4CartoConfig,
 		@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig) {
 		super(loggerService);
 	}

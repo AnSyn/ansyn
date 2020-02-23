@@ -1,6 +1,6 @@
 <form (reset)="control.setValue('')" (submit)="onSubmit()">
 	<input type="text" [placeholder]="'Search' | translate"
-		   [formAction]="control"
+		   [formControl]="control"
 		   [matAutocomplete]="auto">
 	<mat-autocomplete #auto="matAutocomplete" [panelWidth]="autoCompleteWidth + 'px'">
 		<mat-option *ngIf="loading; else loaded;" disabled>

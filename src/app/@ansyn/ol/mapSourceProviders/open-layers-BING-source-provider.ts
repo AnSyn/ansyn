@@ -19,10 +19,10 @@ export const OpenLayerBingSourceProviderSourceType = 'BING';
 })
 export class OpenLayerBingSourceProvider extends OpenLayersMapSourceProvider<IBingMapsConfig> {
 	create(metaData: IMapSettings): Promise<any> {
-		const { config } = this;
+		const config = {...this.config, ...metaData.data.config};
 		const source = new BingMaps({
 			key: config.key,
-			imagerySet: config.styles[0],
+			imagerySet: config.style,
 			maxZoom: 19
 		});
 

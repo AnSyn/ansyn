@@ -40,7 +40,7 @@ export class GoToComponent implements OnInit {
 		distinctUntilChanged()
 	);
 
-	activeCenterProjDatum: ICoordinatesSystem = { datum: 'wgs84', projection: 'geo' };
+	activeCenterProjDatum: ICoordinatesSystem = {datum: 'wgs84', projection: 'geo'};
 
 	inputs = {
 		geoWgs84: [0, 0],
@@ -67,6 +67,7 @@ export class GoToComponent implements OnInit {
 	get utmWgs84(): ICoordinatesSystem {
 		return this.config.GoTo.utmWgs84;
 	}
+
 	get geoWgs84(): ICoordinatesSystem {
 		return this.config.GoTo.geoWgs84;
 	}
@@ -85,6 +86,7 @@ export class GoToComponent implements OnInit {
 			if (this.projectionConverterService.isValidConversion(this.activeCenter, this.activeCenterProjDatum)) {
 				this.inputs.geoWgs84 = this.projectionConverterService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.geoWgs84);
 				this.inputs.utmEd50 = this.projectionConverterService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.utmEd50);
+				this.inputs.utmWgs84 = this.projectionConverterService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.utmWgs84);
 				this.dispatchInputUpdated(this.activeCenter, this.activeCenterProjDatum);
 			}
 		});
@@ -117,19 +119,37 @@ export class GoToComponent implements OnInit {
 
 	copyToClipBoard(value: string) {
 		copyFromContent(value);
-		this.store$.dispatch(new SetToastMessageAction({ toastText: 'Copy to clipboard' }));
+		this.store$.dispatch(new SetToastMessageAction({toastText: 'Copy to clipboard'}));
 	}
 
-	convert(coords, convertFrom: any, convertTo: any, inputKey: string) {
+	convert(coords, convertFrom: any) {
 		const conversionValid = this.projectionConverterService.isValidConversion(coords, convertFrom);
 		if (conversionValid) {
-			this.inputs[inputKey] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, convertTo);
+			const fromWgs84Geo = convertFrom.datum === 'wgs84' && convertFrom.projection === 'geo';
+			const fromWgs84Utm = convertFrom.datum === 'wgs84' && convertFrom.projection === 'utm';
+			const fromEd50Utm = convertFrom.datum === 'ed50' && convertFrom.projection === 'utm';
+
+			if (fromWgs84Geo) {
+				this.inputs['utmEd50'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.utmEd50);
+				this.inputs['utmWgs84'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.utmWgs84);
+			}
+
+			if (fromEd50Utm) {
+				this.inputs['geoWgs84'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.geoWgs84);
+				this.inputs['utmWgs84'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.utmWgs84);
+			}
+
+			if (fromWgs84Utm) {
+				this.inputs['utmEd50'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.utmEd50);
+				this.inputs['geoWgs84'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.geoWgs84);
+			}
+
 			this.dispatchInputUpdated(coords, convertFrom);
 		}
 	}
 
 	togglePinLocation() {
-		this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetPinLocationModeAction] }));
+		this.store$.dispatch(new ClearActiveInteractionsAction({skipClearFor: [SetPinLocationModeAction]}));
 		this.store$.dispatch(new SetPinLocationModeAction(!this.pinLocationMode));
 	}
 

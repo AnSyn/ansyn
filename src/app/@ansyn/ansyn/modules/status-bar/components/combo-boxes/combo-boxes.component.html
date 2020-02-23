@@ -16,7 +16,7 @@
 		<ansyn-tree-view
 			[style.visibility]="dataInputFilterExpand ? 'visible' : 'collapse'"
 			(ansynClickOutside)="toggleDataInputFilterIcon()"
-			[trigger]="trigger.optionsTrigger.nativeElement"
+			[trigger]="trigger?.optionsTrigger?.nativeElement"
 			(closeTreeView)="toggleDataInputFilterIcon()"
 			(dataInputTitleChange)="updateDataInputTitle($event)"
 			class="ansyn-tree-view"></ansyn-tree-view>

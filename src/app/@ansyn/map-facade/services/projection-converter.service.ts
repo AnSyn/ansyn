@@ -175,7 +175,7 @@ export class ProjectionConverterService {
 	getZoneUtmProj(lng: number, hemisphere: number): IUtmZone {
 		// source of calculation: https://www.uwgb.edu/dutchs/UsefulData/UTMFormulas.HTM
 		const zone = (Math.floor((lng + 180) / 6) % 60) + 1;
-		return { zone: zone, utmProj: this.getUtmFromConf(zone) };
+		return {zone: zone, utmProj: this.getUtmFromConf(zone)};
 	}
 
 	getUtmFromConf(zone: number): string {

@@ -10,22 +10,24 @@
 		required>
 	</ansyn-geo-wgs>
 
-	<ansyn-utm-ed50
+	<ansyn-utm
+		title="UTM ED50"
 		name="utmEd50"
 		[notification]="notification"
 		[(ngModel)]="inputs.utmEd50"
 		(ngModelChange)="convert($event, utmEd50)"
 		(copyToClipBoardHandler)="copyToClipBoard($event)"
 		required>
-	</ansyn-utm-ed50>
+	</ansyn-utm>
 
-	<ansyn-utm-wgs
+	<ansyn-utm
+		title="UTM WGS84"
 		name="utmWgs84"
 		[(ngModel)]="inputs.utmWgs84"
 		(ngModelChange)="convert($event, utmWgs84)"
 		(copyToClipBoardHandler)="copyToClipBoard($event)"
 		required>
-	</ansyn-utm-wgs>
+	</ansyn-utm>
 
 	<div class="buttons-area">
 

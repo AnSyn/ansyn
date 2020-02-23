@@ -6,11 +6,10 @@ import { GeoComponent } from './projections/geo/geo.component';
 import { UtmComponent } from './projections/utm/utm.component';
 import { AnsynFormsModule } from '../../../core/forms/ansyn-forms.module';
 import { TranslateModule } from '@ngx-translate/core';
-import { UtmWgsComponent } from './projections/utm-wgs/utm-wgs.component';
 
 @NgModule({
 	imports: [CommonModule, FormsModule, AnsynFormsModule, TranslateModule],
-	declarations: [GoToComponent, GeoComponent, UtmComponent, UtmWgsComponent],
+	declarations: [GoToComponent, GeoComponent, UtmComponent],
 	exports: [GoToComponent, FormsModule]
 })
 export class GoToModule {

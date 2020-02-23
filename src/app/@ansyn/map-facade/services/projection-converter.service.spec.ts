@@ -71,16 +71,16 @@ describe('ProjectionConverterService', () => {
 			expect(result1).toBeFalsy();
 			expect(result2).toBeFalsy();
 		});
-		// ------ isValidUTMED50 ------ //
-		it('isValidUTMED50 should pass]', () => {
-			const result1 = ProjectionConverterService.isValidUTMED50([10000, -80000, 36]);
-			const result2 = ProjectionConverterService.isValidUTMED50([0, 0, 24]);
+		// ------ isValidUTM ------ //
+		it('isValidUTM should pass]', () => {
+			const result1 = ProjectionConverterService.isValidUTM([10000, -80000, 36]);
+			const result2 = ProjectionConverterService.isValidUTM([0, 0, 24]);
 			expect(result1).toBeTruthy();
 			expect(result2).toBeTruthy();
 		});
 		it('isValidCoordinates should fail', () => {
-			const result1 = ProjectionConverterService.isValidUTMED50([10000, -80000, 70]);
-			const result2 = ProjectionConverterService.isValidUTMED50([9999999999, 0, 24]);
+			const result1 = ProjectionConverterService.isValidUTM([10000, -80000, 70]);
+			const result2 = ProjectionConverterService.isValidUTM([9999999999, 0, 24]);
 			expect(result1).toBeFalsy();
 			expect(result2).toBeFalsy();
 		});

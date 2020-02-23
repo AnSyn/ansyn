@@ -11,7 +11,7 @@ import { isEqual as _isEqual } from 'lodash';
 import { IEd50Notification, ProjectionConverterService } from '@ansyn/map-facade';
 
 @Component({
-	selector: 'ansyn-utm-ed50',
+	selector: 'ansyn-utm',
 	templateUrl: './utm.component.html',
 	styleUrls: ['./utm.component.less'],
 	providers: [
@@ -31,6 +31,7 @@ import { IEd50Notification, ProjectionConverterService } from '@ansyn/map-facade
 export class UtmComponent implements ControlValueAccessor, Validator {
 	@Output() copyToClipBoardHandler = new EventEmitter();
 	@Input() notification: IEd50Notification;
+	@Input() title: string;
 
 	coordinates: number[] = [0, 0, 0];
 	validationErr: ValidationErrors = null;
@@ -71,7 +72,7 @@ export class UtmComponent implements ControlValueAccessor, Validator {
 		const someNotNumber = c.value.some(value => typeof value !== 'number');
 		if (someNotNumber) {
 			this.validationErr = { empty: true };
-		} else if (!ProjectionConverterService.isValidUTMED50(c.value)) {
+		} else if (!ProjectionConverterService.isValidUTM(c.value)) {
 			this.validationErr = { invalid: true };
 		} else {
 			this.validationErr = null;

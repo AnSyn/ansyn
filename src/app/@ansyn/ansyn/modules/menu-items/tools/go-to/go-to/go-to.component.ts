@@ -40,7 +40,7 @@ export class GoToComponent implements OnInit {
 		distinctUntilChanged()
 	);
 
-	activeCenterProjDatum: ICoordinatesSystem = {datum: 'wgs84', projection: 'geo'};
+	activeCenterProjDatum: ICoordinatesSystem = { datum: 'wgs84', projection: 'geo' };
 
 	inputs = {
 		geoWgs84: [0, 0],
@@ -65,15 +65,15 @@ export class GoToComponent implements OnInit {
 	}
 
 	get utmWgs84(): ICoordinatesSystem {
-		return this.config.GoTo.utmWgs84;
+		return { datum: 'wgs84', projection: 'utm' };
 	}
 
 	get geoWgs84(): ICoordinatesSystem {
-		return this.config.GoTo.geoWgs84;
+		return { datum: 'wgs84', projection: 'geo' };
 	}
 
 	get utmEd50(): ICoordinatesSystem {
-		return this.config.GoTo.utmEd50;
+		return { datum: 'ed50', projection: 'utm' };
 	}
 
 	get notification(): IEd50Notification {
@@ -119,37 +119,51 @@ export class GoToComponent implements OnInit {
 
 	copyToClipBoard(value: string) {
 		copyFromContent(value);
-		this.store$.dispatch(new SetToastMessageAction({toastText: 'Copy to clipboard'}));
+		this.store$.dispatch(new SetToastMessageAction({ toastText: 'Copy to clipboard' }));
 	}
 
+	// TODO: Add refactor when adding more projections
 	convert(coords, convertFrom: any) {
 		const conversionValid = this.projectionConverterService.isValidConversion(coords, convertFrom);
 		if (conversionValid) {
-			const fromWgs84Geo = convertFrom.datum === 'wgs84' && convertFrom.projection === 'geo';
-			const fromWgs84Utm = convertFrom.datum === 'wgs84' && convertFrom.projection === 'utm';
-			const fromEd50Utm = convertFrom.datum === 'ed50' && convertFrom.projection === 'utm';
-
-			if (fromWgs84Geo) {
-				this.inputs['utmEd50'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.utmEd50);
-				this.inputs['utmWgs84'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.utmWgs84);
+			const conversionTypes = {
+				geoWgs84: {
+					projection: "geo",
+					datum: "wgs84"
+				},
+				utmEd50: {
+					projection: "utm",
+					datum: "ed50"
+				},
+				utmWgs84: {
+					projection: "utm",
+					datum: "wgs84"
+				}
+			};
+			const conversionEnum = Object.freeze(conversionTypes);
+			switch (convertFrom) {
+				case conversionEnum.geoWgs84: {
+					this.inputs['utmEd50'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.utmEd50);
+					this.inputs['utmWgs84'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.utmWgs84);
+					break;
+				}
+				case conversionEnum.utmEd50: {
+					this.inputs['geoWgs84'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.geoWgs84);
+					this.inputs['utmWgs84'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.utmWgs84);
+					break;
+				}
+				case conversionEnum.utmWgs84: {
+					this.inputs['utmEd50'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.utmEd50);
+					this.inputs['geoWgs84'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.geoWgs84);
+					break;
+				}
 			}
-
-			if (fromEd50Utm) {
-				this.inputs['geoWgs84'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.geoWgs84);
-				this.inputs['utmWgs84'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.utmWgs84);
-			}
-
-			if (fromWgs84Utm) {
-				this.inputs['utmEd50'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.utmEd50);
-				this.inputs['geoWgs84'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.geoWgs84);
-			}
-
 			this.dispatchInputUpdated(coords, convertFrom);
 		}
 	}
 
 	togglePinLocation() {
-		this.store$.dispatch(new ClearActiveInteractionsAction({skipClearFor: [SetPinLocationModeAction]}));
+		this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetPinLocationModeAction] }));
 		this.store$.dispatch(new SetPinLocationModeAction(!this.pinLocationMode));
 	}
 

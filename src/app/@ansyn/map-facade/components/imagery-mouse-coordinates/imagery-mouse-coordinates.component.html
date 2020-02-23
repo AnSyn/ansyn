@@ -6,11 +6,11 @@
 					  [lat]="lat"
 					  [long]="long"
 					  [height]="height"></ansyn-geo-wgs-holder>
-	<ansyn-utm-ed50-holder *ngSwitchCase="'UTM'"
+	<ansyn-utm-holder *ngSwitchCase="'UTM'"
 					  [x]="long"
 					  [y]="lat"
 					  [zone]="zone"
-					  [height]="height"></ansyn-utm-ed50-holder>
+					  [height]="height"></ansyn-utm-holder>
 	&nbsp;{{floatingPositionSuffix}}
 </div>
 

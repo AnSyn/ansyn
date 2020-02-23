@@ -27,50 +27,43 @@ export class ProjectionConverterService {
 	// GEO WGS84 ranges: -90 < lat < 90  -180 < lon <180
 	static isValidGeoWGS84(coords: number[]): boolean {
 		const coordinatesValid = ProjectionConverterService.isValidCoordinates(coords, 2);
-		const validLong = inRange(coords[0], -179.9999, 180);
-		const validLat = inRange(coords[1], -89.9999, 90);
-		return coordinatesValid && validLat && validLong;
+		if (coordinatesValid) {
+			const validLong = coordinatesValid &&  inRange(coords[0], -179.9999, 180);
+			const validLat = coordinatesValid &&  inRange(coords[1], -89.9999, 90);
+			return validLat && validLong;
+		}
+
+		return false;
 	}
 
 	// UTM ED50 ranges: -16198192 <= x < 17198193, 0 < zone <= 60
-	static isValidUTMED50(coords: number[]): boolean {
+	static isValidUTM(coords: number[]): boolean {
 		const coordinatesValid = ProjectionConverterService.isValidCoordinates(coords, 3);
-		const validX = inRange(coords[0], -16198192, 17198193);
-		const validY = typeof coords[1] === 'number';
-		const validZone = inRange(coords[2], 0, 61);
-		return coordinatesValid && validX && validY && validZone;
-	}
+		if (coordinatesValid) {
+			const validX = coordinatesValid && inRange(coords[0], -16198192, 17198193);
+			const validY = coordinatesValid && typeof coords[1] === 'number';
+			const validZone = coordinatesValid && inRange(coords[2], 0, 61);
+			return validX && validY && validZone;
+		}
 
-	// UTM WGS84 ranges: -16198192 <= x < 17198193, 0 < zone <= 60
-	static isValidUTMWGS84(coords: number[]): boolean {
-		const coordinatesValid = ProjectionConverterService.isValidCoordinates(coords, 3);
-		const validX = inRange(coords[0], -16198192, 17198193);
-		const validY = typeof coords[1] === 'number';
-		const validZone = inRange(coords[2], 0, 61);
-		return coordinatesValid && validX && validY && validZone;
+		return false;
 	}
 
 	constructor(@Inject(mapFacadeConfig) protected mapfacadeConfigProj: IMapFacadeConfig) {
 	}
 
-	// isValidConversion
 	isValidConversion(coords: number[], from: ICoordinatesSystem): boolean {
 		let isValid = Boolean(coords);
 
 		const fromWgs84Geo = from.datum === 'wgs84' && from.projection === 'geo';
-		const fromWgs84Utm = from.datum === 'wgs84' && from.projection === 'utm';
-		const fromEd50Utm = from.datum === 'ed50' && from.projection === 'utm';
+		const fromUtm = from.projection === 'utm';
 
 		if (isValid && fromWgs84Geo) {
 			isValid = ProjectionConverterService.isValidGeoWGS84(coords);
 		}
 
-		if (isValid && fromEd50Utm) {
-			isValid = ProjectionConverterService.isValidUTMED50(coords);
-		}
-
-		if (isValid && fromWgs84Utm) {
-			isValid = ProjectionConverterService.isValidUTMWGS84(coords);
+		if (isValid && fromUtm) {
+			isValid = ProjectionConverterService.isValidUTM(coords);
 		}
 
 		return isValid;

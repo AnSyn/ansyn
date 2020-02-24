@@ -84,13 +84,21 @@ export class GoToComponent implements OnInit {
 		return this.mapfacadeConfig.Proj4.ed50Notification;
 	}
 
+	initInputs() {
+		for (const key in this.inputs) {
+			if (!this.inputs.hasOwnProperty(key)) {
+				continue;
+			}
+
+			this.inputs[key] = this.projectionConverterService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.convertTo[key]);
+		}
+	}
+
 	ngOnInit(): void {
 		this.activeCenter$.subscribe((_activeCenter) => {
 			this.activeCenter = _activeCenter;
 			if (this.projectionConverterService.isValidConversion(this.activeCenter, this.activeCenterProjDatum)) {
-				this.inputs.geoWgs84 = this.projectionConverterService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.geoWgs84);
-				this.inputs.utmEd50 = this.projectionConverterService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.utmEd50);
-				this.inputs.utmWgs84 = this.projectionConverterService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.utmWgs84);
+				this.initInputs()
 				this.dispatchInputUpdated(this.activeCenter, this.activeCenterProjDatum);
 			}
 		});

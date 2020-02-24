@@ -64,6 +64,10 @@ export class GoToComponent implements OnInit {
 		return this._expand;
 	}
 
+	get convertTo() {
+		return { geoWgs84: this.geoWgs84, utmEd50: this.utmEd50, utmWgs84: this.utmWgs84 };
+	}
+
 	get utmWgs84(): ICoordinatesSystem {
 		return { datum: 'wgs84', projection: 'utm' };
 	}
@@ -122,43 +126,25 @@ export class GoToComponent implements OnInit {
 		this.store$.dispatch(new SetToastMessageAction({ toastText: 'Copy to clipboard' }));
 	}
 
-	// TODO: Add refactor when adding more projections
 	convert(coords, convertFrom: any) {
 		const conversionValid = this.projectionConverterService.isValidConversion(coords, convertFrom);
 		if (conversionValid) {
-			const conversionTypes = {
-				geoWgs84: {
-					projection: "geo",
-					datum: "wgs84"
-				},
-				utmEd50: {
-					projection: "utm",
-					datum: "ed50"
-				},
-				utmWgs84: {
-					projection: "utm",
-					datum: "wgs84"
-				}
-			};
-			const conversionEnum = Object.freeze(conversionTypes);
-			switch (convertFrom) {
-				case conversionEnum.geoWgs84: {
-					this.inputs['utmEd50'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.utmEd50);
-					this.inputs['utmWgs84'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.utmWgs84);
-					break;
-				}
-				case conversionEnum.utmEd50: {
-					this.inputs['geoWgs84'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.geoWgs84);
-					this.inputs['utmWgs84'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.utmWgs84);
-					break;
-				}
-				case conversionEnum.utmWgs84: {
-					this.inputs['utmEd50'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.utmEd50);
-					this.inputs['geoWgs84'] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.geoWgs84);
-					break;
-				}
-			}
+			this.updateInputs(coords, convertFrom);
 			this.dispatchInputUpdated(coords, convertFrom);
+		}
+	}
+
+	updateInputs(coords, convertFrom) {
+		const inputIndex = convertFrom.projection + convertFrom.datum.charAt(0).toUpperCase() + convertFrom.datum.slice(1);
+		for (const key in this.inputs) {
+			if (!this.inputs.hasOwnProperty(key)) {
+				continue;
+			}
+
+			if (key !== inputIndex) {
+				this.inputs[key] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.convertTo[key]);
+			}
+
 		}
 	}
 

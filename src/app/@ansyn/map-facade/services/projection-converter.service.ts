@@ -28,21 +28,21 @@ export class ProjectionConverterService {
 	static isValidGeoWGS84(coords: number[]): boolean {
 		const coordinatesValid = ProjectionConverterService.isValidCoordinates(coords, 2);
 		if (coordinatesValid) {
-			const validLong = coordinatesValid &&  inRange(coords[0], -179.9999, 180);
-			const validLat = coordinatesValid &&  inRange(coords[1], -89.9999, 90);
+			const validLong = inRange(coords[0], -179.9999, 180);
+			const validLat = inRange(coords[1], -89.9999, 90);
 			return validLat && validLong;
 		}
 
 		return false;
 	}
 
-	// UTM ED50 ranges: -16198192 <= x < 17198193, 0 < zone <= 60
+	// UTM ED50 && UTM WGS84 ranges: -16198192 <= x < 17198193, 0 < zone <= 60
 	static isValidUTM(coords: number[]): boolean {
 		const coordinatesValid = ProjectionConverterService.isValidCoordinates(coords, 3);
 		if (coordinatesValid) {
-			const validX = coordinatesValid && inRange(coords[0], -16198192, 17198193);
-			const validY = coordinatesValid && typeof coords[1] === 'number';
-			const validZone = coordinatesValid && inRange(coords[2], 0, 61);
+			const validX = inRange(coords[0], -16198192, 17198193);
+			const validY = typeof coords[1] === 'number';
+			const validZone = inRange(coords[2], 0, 61);
 			return validX && validY && validZone;
 		}
 
@@ -97,8 +97,8 @@ export class ProjectionConverterService {
 		if (y > 5000000) {
 			y -= 10000000;
 		}
-		const utmEd50Proj = `+proj=utm +zone=${zone} +datum=WGS84`;
-		const conv = proj4(utmEd50Proj, this.wgs84Projection, [x, y]);
+		const utmWgs84Proj = `+proj=utm +zone=${ zone } +datum=WGS84`;
+		const conv = proj4(utmWgs84Proj, this.wgs84Projection, [x, y]);
 
 		return [...conv];
 	}
@@ -106,7 +106,7 @@ export class ProjectionConverterService {
 	convertGeoWgs84ToUtmWgs84(coords) {
 		const lng = coords[0];
 		const zone = (Math.floor((lng + 180) / 6) % 60) + 1;
-		const projection = `+proj=utm +zone=${zone} +datum=WGS84`;
+		const projection = `+proj=utm +zone=${ zone } +datum=WGS84`;
 		const conv = proj4(this.wgs84Projection, projection, coords);
 		if (conv[1] < 0) {
 			conv[1] += 10000000;
@@ -168,7 +168,7 @@ export class ProjectionConverterService {
 	getZoneUtmProj(lng: number, hemisphere: number): IUtmZone {
 		// source of calculation: https://www.uwgb.edu/dutchs/UsefulData/UTMFormulas.HTM
 		const zone = (Math.floor((lng + 180) / 6) % 60) + 1;
-		return {zone: zone, utmProj: this.getUtmFromConf(zone)};
+		return { zone: zone, utmProj: this.getUtmFromConf(zone) };
 	}
 
 	getUtmFromConf(zone: number): string {

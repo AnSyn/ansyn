@@ -55,5 +55,4 @@ describe('AnnotationsVisualizer', () => {
 		annotationsVisualizer.setVisibility(false);
 		expect(annotationsVisualizer.selected.length).toBe(0);
 	})
-
 });

@@ -258,12 +258,13 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 				const oldEntity = this.annotationsVisualizer.idToEntity.get(entity.id);
 				if (oldEntity) {
 					const isShowMeasuresDiff = oldEntity.originalEntity.showMeasures !== entity.showMeasures;
+					const isShowAreaDiff = oldEntity.originalEntity.showArea !== entity.showArea;
 					const isLabelDiff = oldEntity.originalEntity.label !== entity.label;
 					const isFillDiff = oldEntity.originalEntity.style.initial.fill !== entity.style.initial.fill;
 					const isStrokeWidthDiff = oldEntity.originalEntity.style.initial['stroke-width'] !== entity.style.initial['stroke-width'];
 					const isStrokeDiff = oldEntity.originalEntity.style.initial['stroke'] !== entity.style.initial['stroke'];
 					const isOpacityDiff = ['fill-opacity', 'stroke-opacity'].filter((o) => oldEntity.originalEntity.style.initial[o] !== entity.style.initial[o]);
-					return isShowMeasuresDiff || isLabelDiff || isFillDiff || isStrokeWidthDiff || isStrokeDiff || isOpacityDiff;
+					return isShowMeasuresDiff || isLabelDiff || isFillDiff || isStrokeWidthDiff || isStrokeDiff || isOpacityDiff || isShowAreaDiff;
 				}
 				return true;
 			});

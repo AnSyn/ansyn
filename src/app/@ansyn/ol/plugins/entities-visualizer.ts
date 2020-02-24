@@ -436,7 +436,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	isMouseEventInExtent(event: SelectEvent): boolean {
 		const coordinate = event.mapBrowserEvent.coordinate;
 		const extent = this.vector.getExtent();
-		const result =  olExtent.containsCoordinate(extent, coordinate);
+		const result = olExtent.containsCoordinate(extent, coordinate);
 		return result;
 	}
 

@@ -43,8 +43,9 @@ export class GoToComponent implements OnInit {
 	activeCenterProjDatum: ICoordinatesSystem = { datum: 'wgs84', projection: 'geo' };
 
 	inputs = {
-		from: [0, 0],
-		to: []
+		geoWgs84: [0, 0],
+		utmEd50: [],
+		utmWgs84: []
 	};
 
 	pinLocationMode$: Observable<boolean> = this.store$.select(toolsStateSelector).pipe(
@@ -63,24 +64,41 @@ export class GoToComponent implements OnInit {
 		return this._expand;
 	}
 
-	get from(): ICoordinatesSystem {
-		return this.config.GoTo.from;
+	get convertTo() {
+		return { geoWgs84: this.geoWgs84, utmEd50: this.utmEd50, utmWgs84: this.utmWgs84 };
 	}
 
-	get to(): ICoordinatesSystem {
-		return this.config.GoTo.to;
+	get utmWgs84(): ICoordinatesSystem {
+		return { datum: 'wgs84', projection: 'utm' };
+	}
+
+	get geoWgs84(): ICoordinatesSystem {
+		return { datum: 'wgs84', projection: 'geo' };
+	}
+
+	get utmEd50(): ICoordinatesSystem {
+		return { datum: 'ed50', projection: 'utm' };
 	}
 
 	get notification(): IEd50Notification {
 		return this.mapfacadeConfig.Proj4.ed50Notification;
 	}
 
+	initInputs() {
+		for (const inputIndex in this.inputs) {
+			if (!this.inputs.hasOwnProperty(inputIndex)) {
+				continue;
+			}
+
+			this.inputs[inputIndex] = this.projectionConverterService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.convertTo[inputIndex]);
+		}
+	}
+
 	ngOnInit(): void {
 		this.activeCenter$.subscribe((_activeCenter) => {
 			this.activeCenter = _activeCenter;
 			if (this.projectionConverterService.isValidConversion(this.activeCenter, this.activeCenterProjDatum)) {
-				this.inputs.from = this.projectionConverterService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.from);
-				this.inputs.to = this.projectionConverterService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.to);
+				this.initInputs()
 				this.dispatchInputUpdated(this.activeCenter, this.activeCenterProjDatum);
 			}
 		});
@@ -104,9 +122,9 @@ export class GoToComponent implements OnInit {
 	}
 
 	submitGoTo(): void {
-		const conversionValid = this.projectionConverterService.isValidConversion(this.inputs.from, this.from);
+		const conversionValid = this.projectionConverterService.isValidConversion(this.inputs.geoWgs84, this.geoWgs84);
 		if (conversionValid) {
-			const goToInput = this.projectionConverterService.convertByProjectionDatum(this.inputs.from, this.from, this.activeCenterProjDatum);
+			const goToInput = this.projectionConverterService.convertByProjectionDatum(this.inputs.geoWgs84, this.geoWgs84, this.activeCenterProjDatum);
 			this.store$.dispatch(new GoToAction(goToInput));
 		}
 	}
@@ -116,11 +134,25 @@ export class GoToComponent implements OnInit {
 		this.store$.dispatch(new SetToastMessageAction({ toastText: 'Copy to clipboard' }));
 	}
 
-	convert(coords, convertFrom: any, convertTo: any, inputKey: string) {
+	convert(coords, convertFrom: any) {
 		const conversionValid = this.projectionConverterService.isValidConversion(coords, convertFrom);
 		if (conversionValid) {
-			this.inputs[inputKey] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, convertTo);
+			this.updateInputs(coords, convertFrom);
 			this.dispatchInputUpdated(coords, convertFrom);
+		}
+	}
+
+	updateInputs(coords, convertFrom) {
+		const inputType = convertFrom.projection + convertFrom.datum.charAt(0).toUpperCase() + convertFrom.datum.slice(1);
+		for (const inputIndex in this.inputs) {
+			if (!this.inputs.hasOwnProperty(inputIndex)) {
+				continue;
+			}
+
+			if (inputIndex !== inputType) {
+				this.inputs[inputIndex] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.convertTo[inputIndex]);
+			}
+
 		}
 	}
 

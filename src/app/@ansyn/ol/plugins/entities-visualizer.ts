@@ -1,5 +1,6 @@
 import { merge } from 'lodash';
 import SourceVector from 'ol/source/Vector';
+import { getArea, getLength } from 'ol/sphere';
 import Feature from 'ol/Feature';
 import Style from 'ol/style/Style';
 import Stroke from 'ol/style/Stroke';

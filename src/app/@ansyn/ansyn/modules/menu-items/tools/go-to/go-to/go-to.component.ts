@@ -85,12 +85,12 @@ export class GoToComponent implements OnInit {
 	}
 
 	initInputs() {
-		for (const key in this.inputs) {
-			if (!this.inputs.hasOwnProperty(key)) {
+		for (const inputIndex in this.inputs) {
+			if (!this.inputs.hasOwnProperty(inputIndex)) {
 				continue;
 			}
 
-			this.inputs[key] = this.projectionConverterService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.convertTo[key]);
+			this.inputs[inputIndex] = this.projectionConverterService.convertByProjectionDatum(this.activeCenter, this.activeCenterProjDatum, this.convertTo[inputIndex]);
 		}
 	}
 
@@ -143,14 +143,14 @@ export class GoToComponent implements OnInit {
 	}
 
 	updateInputs(coords, convertFrom) {
-		const inputIndex = convertFrom.projection + convertFrom.datum.charAt(0).toUpperCase() + convertFrom.datum.slice(1);
-		for (const key in this.inputs) {
-			if (!this.inputs.hasOwnProperty(key)) {
+		const inputType = convertFrom.projection + convertFrom.datum.charAt(0).toUpperCase() + convertFrom.datum.slice(1);
+		for (const inputIndex in this.inputs) {
+			if (!this.inputs.hasOwnProperty(inputIndex)) {
 				continue;
 			}
 
-			if (key !== inputIndex) {
-				this.inputs[key] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.convertTo[key]);
+			if (inputIndex !== inputType) {
+				this.inputs[inputIndex] = this.projectionConverterService.convertByProjectionDatum(coords, convertFrom, this.convertTo[inputIndex]);
 			}
 
 		}

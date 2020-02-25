@@ -170,15 +170,6 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			}
 			return { ...state, layout: action.payload };
 
-		/*case MapActionTypes.CHANGE_IMAGERY_MAP: {
-			const { id, mapType, sourceType } = action.payload;
-			const worldView = { mapType, sourceType };
-			return mapsAdapter.updateOne({
-				id,
-				changes: { worldView }
-			}, state);
-		}*/ // duplicate with MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS
-
 		case MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS: {
 			const { id, worldView } = action.payload;
 			return mapsAdapter.updateOne({

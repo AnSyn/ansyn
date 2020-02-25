@@ -31,7 +31,12 @@ export class CacheService {
 	addLayerToCache(cacheId: string, layer: any) {
 		if (this.cachedLayersMap.size >= this.cacheSize) {
 			const key = this.cachedLayersMap.keys().next();
+			let disposedLayer = this.cachedLayersMap.get(key.value);
+			if (disposedLayer && disposedLayer.disposeLayer) {
+				disposedLayer.disposeLayer(disposedLayer)
+			}
 			this.cachedLayersMap.delete(key.value);
+			disposedLayer = undefined;
 		}
 		if (layer.set) {
 			layer.set(ImageryLayerProperties.CACHE_ID, cacheId)

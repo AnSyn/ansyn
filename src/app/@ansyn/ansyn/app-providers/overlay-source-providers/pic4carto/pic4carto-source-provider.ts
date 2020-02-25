@@ -2,7 +2,7 @@ import { Inject } from '@angular/core';
 import { EMPTY, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError, timeout, map } from 'rxjs/operators';
-import { getPolygonByPointAndRadius, IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/imagery';
+import { getPolygonByPointAndRadius } from '@ansyn/imagery';
 import { Point } from 'geojson';
 import { OverlaySourceProvider } from '../../../modules/overlays/models/overlays-source-providers';
 import {
@@ -12,10 +12,6 @@ import {
 } from '../../../modules/overlays/models/base-overlay-source-provider.model';
 import { ErrorHandlerService } from '../../../modules/core/services/error-handler.service';
 import { LoggerService } from '../../../modules/core/services/logger.service';
-import {
-	IMultipleOverlaysSourceConfig,
-	MultipleOverlaysSourceConfig
-} from '../../../modules/core/models/multiple-overlays-source-config';
 import { bbox } from '@turf/turf';
 import { IOverlay, Overlay, GeoRegisteration } from '../../../modules/overlays/models/overlay.model';
 import { limitArray } from '../../../modules/core/utils/i-limited-array';
@@ -34,8 +30,7 @@ export class Pic4cartoSourceProvider extends BaseOverlaySourceProvider {
 		public errorHandlerService: ErrorHandlerService,
 		protected loggerService: LoggerService,
 		protected http: HttpClient,
-		@Inject(pic4cartoOverlaySourceConfig) protected config: IPic4CartoConfig,
-		@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig) {
+		@Inject(pic4cartoOverlaySourceConfig) protected config: IPic4CartoConfig) {
 		super(loggerService);
 	}
 

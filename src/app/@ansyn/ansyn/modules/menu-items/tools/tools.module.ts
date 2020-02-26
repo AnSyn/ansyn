@@ -13,6 +13,11 @@ import { IToolsConfig, toolsConfig } from './models/tools-config';
 import { AnnotationsContextMenuModule } from '@ansyn/ol';
 import { MeasureControlComponent } from './components/measure-control/measure-control.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { ExportMapsPopupComponent } from './export-maps-popup/export-maps-popup.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 // @dynamic
 @NgModule({
@@ -29,11 +34,15 @@ import { TranslateModule } from '@ngx-translate/core';
 		StoreModule.forFeature(toolsFeatureKey, ToolsReducer),
 		AnnotationsContextMenuModule,
 		TranslateModule,
-		CoreModule
+		CoreModule,
+		MatDialogModule,
+		MatButtonModule,
+		MatProgressBarModule,
+		MatFormFieldModule
 	],
 	providers: [ProjectionConverterService],
-	declarations: [ToolsComponent, ImageProcessingControlComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent, MeasureControlComponent],
-	entryComponents: [ToolsComponent, MeasureControlComponent],
+	declarations: [ToolsComponent, ImageProcessingControlComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent, MeasureControlComponent, ExportMapsPopupComponent],
+	entryComponents: [ToolsComponent, MeasureControlComponent, ExportMapsPopupComponent],
 	exports: [ToolsComponent]
 })
 

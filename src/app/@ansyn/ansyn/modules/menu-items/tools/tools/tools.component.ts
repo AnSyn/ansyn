@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MapFacadeService } from '@ansyn/map-facade';
 import {
 	ClearActiveInteractionsAction,
 	SetAutoImageProcessing,
@@ -14,17 +13,20 @@ import { selectSubMenu, selectToolFlag, selectToolFlags, SubMenuEnum, toolsFlags
 import { filter, map, tap } from 'rxjs/operators';
 import { selectActiveAnnotationLayer } from '../../layers-manager/reducers/layers.reducer';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { MatDialog } from '@angular/material/dialog';
+import { ExportMapsPopupComponent } from '../export-maps-popup/export-maps-popup.component';
 
 @Component({
 	selector: 'ansyn-tools',
 	templateUrl: './tools.component.html',
-	styleUrls: ['./tools.component.less']
+	styleUrls: ['./tools.component.less'],
 })
 @AutoSubscriptions({
 	init: 'ngOnInit',
 	destroy: 'ngOnDestroy'
 })
 export class ToolsComponent implements OnInit, OnDestroy {
+	isDialogShowing = false;
 	isImageControlActive = false;
 	public displayModeOn = false;
 	public flags: Map<toolsFlags, boolean>;
@@ -85,7 +87,8 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	}
 
 	// @TODO display the shadow mouse only if there more then one map .
-	constructor(protected store: Store<any>, protected mapFacadeService: MapFacadeService) {
+	constructor(protected store: Store<any>,
+				public dialog: MatDialog) {
 
 	}
 
@@ -136,7 +139,11 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	exportMapsToPng() {
-		this.mapFacadeService.exportMapsToPng();
+	toggleExportMapsDialog() {
+		if (!this.isDialogShowing) {
+			const dialogRef = this.dialog.open(ExportMapsPopupComponent, {panelClass: 'custom-dialog'});
+			dialogRef.afterClosed().subscribe();
+			this.isDialogShowing = !this.isDialogShowing;
+		}
 	}
 }

@@ -15,6 +15,22 @@ circle.drop.selected {
 	fill: black;
 }
 
+
+.custom-dialog .mat-dialog-container {
+		padding: 0;
+		width: 600px;
+		overflow: hidden;
+}
+
+.close.mat-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 5px;
+	line-height: 14px;
+	min-width: auto;
+}
+
 .main-timeline {
 	padding: 0 10px;
 	width: 100%;

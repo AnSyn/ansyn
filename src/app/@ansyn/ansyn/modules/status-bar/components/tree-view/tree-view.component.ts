@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
-import { TreeviewConfig, TreeviewItem } from 'ngx-treeview';
+import { TreeviewConfig, TreeviewItem, TreeviewI18n } from 'ngx-treeview';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { Store } from '@ngrx/store';
 import { isEqual } from 'lodash';
@@ -15,25 +15,31 @@ import {
 	MultipleOverlaysSourceConfig
 } from '../../../core/models/multiple-overlays-source-config';
 import { IDataInputFilterValue } from '../../../menu-items/cases/models/case.model';
+import { CustomTreeviewI18n } from './custom-treeview-i18n';
 
 @Component({
 	selector: 'ansyn-tree-view',
 	templateUrl: './tree-view.component.html',
-	styleUrls: ['./tree-view.component.less']
+	styleUrls: ['./tree-view.component.less'],
+	providers: [
+		{provide: TreeviewI18n, useClass: CustomTreeviewI18n}
+	]
 })
 export class TreeViewComponent implements OnInit, OnDestroy {
 	@Output() closeTreeView = new EventEmitter<any>();
+	@Output() dataInputTitleChange = new EventEmitter<string>();
 	_selectedFilters: IDataInputFilterValue[];
 	dataInputFiltersItems: TreeviewItem[] = [];
 	leavesCount: number;
+	dataFilters: TreeviewItem[];
 
 	dataInputFilter$: Observable<any> = this.store.select(selectDataInputFilter);
 
 	onDataInputFilterChange$ = this.dataInputFilter$.pipe(
 		filter(Boolean),
 		tap(_preFilter => {
-			this._selectedFilters = _preFilter.filters;
-			this.dataInputFiltersActive = _preFilter.active;
+			this._selectedFilters = _preFilter.fullyChecked ? this.selectAll() : _preFilter.filters;
+			this.dataInputTitleChange.emit(`${this._selectedFilters.length}/${this.leavesCount}`);
 			if (Boolean(this._selectedFilters)) {
 				this.dataInputFiltersItems.forEach(root => this.updateInputDataFilterMenu(root));
 			}
@@ -41,7 +47,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	);
 
 	dataInputFiltersConfig = TreeviewConfig.create({
-		hasAllCheckBox: false,
+		hasAllCheckBox: true,
 		hasFilter: false,
 		hasCollapseExpand: false, // Collapse (show all filters).
 		decoupleChildFromParent: false,
@@ -49,12 +55,12 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	});
 
 	private subscribers = [];
-	public dataInputFiltersActive: boolean;
 
 	constructor(@Inject(MultipleOverlaysSourceConfig) public multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				public store: Store<IStatusBarState>,
 				private translate: TranslateService) {
 
+		this.dataFilters = this.getAllDataInputFilter();
 		this.dataFilters.forEach((f) => {
 			translate.get(f.text).subscribe((res: string) => {
 				f.text = res;
@@ -67,7 +73,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		this._selectedFilters = value;
 	}
 
-	get dataFilters(): TreeviewItem[] {
+	getAllDataInputFilter(): TreeviewItem[] {
 		this.leavesCount = 0;
 		return Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
 			.filter(([providerName, { inActive, dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => !inActive && dataInputFiltersConfig)
@@ -93,16 +99,6 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		}
 		cb(curr);
 	}
-
-	updateFiltersTreeActivation(disabled: boolean = !this.dataInputFiltersActive): void {
-		this.dataInputFiltersItems.forEach((dataInputItem) => {
-			dataInputItem.disabled = disabled;
-			dataInputItem.children.forEach((sensor) => {
-				sensor.disabled = disabled;
-			});
-		});
-	}
-
 
 	setSubscribers() {
 		this.subscribers.push(
@@ -133,7 +129,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	}
 
 	dataInputFiltersOk(): void {
-		if (this._selectedFilters.length === 0 && this.dataInputFiltersActive) {
+		if (this._selectedFilters.length === 0) {
 			this.store.dispatch(new SetToastMessageAction({
 				toastText: 'Please select at least one sensor'
 			}));
@@ -141,17 +137,23 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 			this.store.dispatch(new SetOverlaysCriteriaAction({
 				dataInputFilters: {
 					fullyChecked: this.leavesCount <= this._selectedFilters.length,
-					filters: this._selectedFilters,
-					active: this.dataInputFiltersActive
+					filters: this._selectedFilters
 				}
 			}));
+			this.dataInputTitleChange.emit(`${this._selectedFilters.length}/${this.leavesCount}`);
 			this.closeTreeView.emit();
 		}
 	}
 
+	selectAll() {
+		return this.dataFilters.reduce((filters, dataFilter, index ) => {
+			filters.push(...dataFilter.children.map(c => c.value));
+			return filters;
+		}, [])
+	}
+
 	ngOnInit(): void {
 		this.setSubscribers();
-		this.updateFiltersTreeActivation();
 	}
 
 	ngOnDestroy(): void {
@@ -160,10 +162,5 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	onTreeViewClose(): void {
 		this.closeTreeView.emit();
-	}
-
-	activateDataInputFilters($event) {
-		this.dataInputFiltersActive = !this.dataInputFiltersActive;
-		this.updateFiltersTreeActivation();
 	}
 }

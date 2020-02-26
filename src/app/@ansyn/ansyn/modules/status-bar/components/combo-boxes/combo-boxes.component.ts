@@ -33,6 +33,7 @@ import {
 } from '../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { ClearActiveInteractionsAction } from '../../../menu-items/tools/actions/tools.actions';
+import { IOverlaysSourceProvider } from '../../../core/models/multiple-overlays-source-config';
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [
@@ -67,7 +68,6 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	dataInputFilters$ = this.store$.select(selectDataInputFilter).pipe(
 		filter((caseDataInputFiltersState: ICaseDataInputFiltersState) => Boolean(caseDataInputFiltersState) && Boolean(caseDataInputFiltersState.filters)),
 		tap((caseDataInputFiltersState: ICaseDataInputFiltersState) => {
-			this.dataInputFiltersTitle = !caseDataInputFiltersState.active ? CaseDataFilterTitle.Disabled : caseDataInputFiltersState.fullyChecked ? CaseDataFilterTitle.Full : CaseDataFilterTitle.Partial;
 			this.dataInputFilters = caseDataInputFiltersState;
 		})
 	);
@@ -87,8 +87,8 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	layout: LayoutKey;
 	time: ICaseTimeState;
 
+	dataInputFilterTitle: string;
 	dataInputFilters: ICaseDataInputFiltersState;
-	dataInputFiltersTitle: CaseDataFilterTitle = CaseDataFilterTitle.Disabled;
 	private subscriptions = [];
 
 	get SearchModeEnum() {
@@ -182,4 +182,9 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 		this.subscriptions.forEach((sub) => sub.unsubscribe());
 	}
+
+	updateDataInputTitle(title) {
+		this.dataInputFilterTitle = title;
+	}
+
 }

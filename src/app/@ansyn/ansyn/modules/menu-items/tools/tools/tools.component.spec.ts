@@ -8,6 +8,7 @@ import { ToolsComponent } from './tools.component';
 import { SubMenuEnum, toolsFeatureKey, toolsFlags, ToolsReducer } from '../reducers/tools.reducer';
 import { MockComponent } from '../../../core/test/mock-component';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatDialogRef, MatDialog } from '@angular/material';
 
 
 describe('ToolsComponent', () => {
@@ -40,7 +41,7 @@ describe('ToolsComponent', () => {
 				[mapFeatureKey]: MapReducer
 			}), TranslateModule.forRoot()],
 			declarations: [ToolsComponent, mockGoTo, mockOverlaysDisplayMode, mockAnnotationsControl, mockImageManualProcessing],
-			providers: [ImageryCommunicatorService]
+			providers: [ImageryCommunicatorService, { provide: MatDialogRef, useValue: {} }, { provide: MatDialog, useValue: {} }]
 		})
 			.compileComponents();
 	}));

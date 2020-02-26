@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CoreModule } from '../../core/core.module';
 import { ToolsComponent } from './tools/tools.component';
@@ -14,7 +14,7 @@ import { AnnotationsContextMenuModule } from '@ansyn/ol';
 import { MeasureControlComponent } from './components/measure-control/measure-control.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { ExportMapsPopupComponent } from './export-maps-popup/export-maps-popup.component';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -36,14 +36,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 		TranslateModule,
 		CoreModule,
 		MatDialogModule,
-		MatButtonModule,
 		MatProgressBarModule,
+		MatButtonModule,
 		MatFormFieldModule
 	],
-	providers: [ProjectionConverterService],
+	providers: [ProjectionConverterService, MatDialogModule, { provide: MatDialogRef, useValue: {} }],
 	declarations: [ToolsComponent, ImageProcessingControlComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent, MeasureControlComponent, ExportMapsPopupComponent],
 	entryComponents: [ToolsComponent, MeasureControlComponent, ExportMapsPopupComponent],
-	exports: [ToolsComponent]
+	exports: [ToolsComponent, MatDialogModule]
 })
 
 export class ToolsModule {

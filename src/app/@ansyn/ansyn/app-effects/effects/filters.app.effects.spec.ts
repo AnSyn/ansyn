@@ -41,14 +41,6 @@ import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { MissingTranslationHandler, TranslateLoader, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
 import { LoggerService } from '../../modules/core/services/logger.service';
 
-class MockLoader implements TranslateLoader {
-	getTranslation(lang: string): Observable<any> {
-		return of({
-			'No overlays match your query, please try another search': 'No overlays match your query, please try another search'
-		})
-	}
-}
-
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
 	let actions: Observable<any>;
@@ -77,9 +69,7 @@ describe('Filters app effects', () => {
 					[imageryStatusFeatureKey]: ImageryStatusReducer,
 					[overlayStatusFeatureKey]: OverlayStatusReducer
 				}),
-				TranslateModule.forRoot({
-					loader: { provide: TranslateLoader, useClass: MockLoader }
-				})
+				TranslateModule.forRoot()
 			],
 			providers: [
 				FiltersAppEffects,
@@ -91,13 +81,7 @@ describe('Filters app effects', () => {
 					}
 				},
 				{ provide: filtersConfig, useValue: {} },
-				provideMockActions(() => actions),
-				{ provide: USE_DEFAULT_LANG },
-				{
-					provide: MissingTranslationHandler, useValue: {
-						handle: () => ''
-					}
-				}
+				provideMockActions(() => actions)
 			]
 		}).compileComponents();
 	}));

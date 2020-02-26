@@ -1,4 +1,4 @@
-import { ExportMapsToPngRequestedAction } from './../actions/map.actions';
+import { ExportMapsToPngRequestedAction } from '../actions/map.actions';
 import { Injectable } from '@angular/core';
 import {
 	ImageryCommunicatorService,

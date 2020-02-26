@@ -183,14 +183,17 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			const data = <FeatureCollection<any>>{ ...layerToUpdate.data };
 			const annotationToChangeIndex = data.features.findIndex((feature) => feature.id === geoJsonFeature.id);
 			data.features[annotationToChangeIndex] = geoJsonFeature;
+			let label = geoJsonFeature.properties.label;
+			if (geoJsonFeature.properties.label.geometry) {
+				label = {...geoJsonFeature.properties.label, geometry: GeoJSON.features[1].geometry}
+			}
+			feature.set('label', label);
 			if (this.overlay) {
 				geoJsonFeature.properties = {
 					...geoJsonFeature.properties,
 					...this.projectionService.getProjectionProperties(this.communicator, data, feature, this.overlay)
 				};
 			}
-			const label = geoJsonFeature.properties.label.geometry ?
-				{...geoJsonFeature.properties.label, geometry: GeoJSON.features[1].geometry} : geoJsonFeature.properties.label;
 			geoJsonFeature.properties = { ...geoJsonFeature.properties , label};
 			this.store$.dispatch(new UpdateLayer(<ILayer>{ ...layerToUpdate, data }));
 			})

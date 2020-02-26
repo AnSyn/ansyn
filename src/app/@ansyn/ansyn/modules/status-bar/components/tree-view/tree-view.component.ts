@@ -39,7 +39,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		filter(Boolean),
 		tap(_preFilter => {
 			this._selectedFilters = _preFilter.fullyChecked ? this.selectAll() : _preFilter.filters;
-			this.dataInputTitleChange.emit(`${this._selectedFilters.length}/${this.leavesCount}`);
+			this.dataInputTitleChange.emit(_preFilter.fullyChecked ? 'All' : `${this._selectedFilters.length}/${this.leavesCount}`);
 			if (Boolean(this._selectedFilters)) {
 				this.dataInputFiltersItems.forEach(root => this.updateInputDataFilterMenu(root));
 			}
@@ -134,13 +134,14 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 				toastText: 'Please select at least one sensor'
 			}));
 		} else {
+			const isFullCheck = this.leavesCount <= this._selectedFilters.length;
 			this.store.dispatch(new SetOverlaysCriteriaAction({
 				dataInputFilters: {
-					fullyChecked: this.leavesCount <= this._selectedFilters.length,
+					fullyChecked: isFullCheck,
 					filters: this._selectedFilters
 				}
 			}));
-			this.dataInputTitleChange.emit(`${this._selectedFilters.length}/${this.leavesCount}`);
+			this.dataInputTitleChange.emit(isFullCheck ? 'All' : `${this._selectedFilters.length}/${this.leavesCount}`);
 			this.closeTreeView.emit();
 		}
 	}

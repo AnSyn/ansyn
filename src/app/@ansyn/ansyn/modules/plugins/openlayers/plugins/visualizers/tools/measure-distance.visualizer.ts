@@ -28,7 +28,7 @@ import {
 	VisualizersConfig
 } from '@ansyn/imagery';
 import { FeatureCollection, GeometryObject } from 'geojson';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, Subject } from 'rxjs';
 import { selectActiveMapId } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
@@ -59,6 +59,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	geoJsonFormat: GeoJSON;
 	interactionSource: VectorSource;
 	hoveredMeasureId: string;
+	onHiddenStateChanged = new Subject();
 
 	protected allLengthTextStyle = new Text({
 		font: '16px Calibri,sans-serif',
@@ -117,6 +118,11 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		this.geoJsonFormat = new GeoJSON();
 	}
 
+	onInitSubscriptions() {
+		super.onInitSubscriptions();
+		this.onHiddenStateChanged.next();
+	}
+
 	get drawInteractionHandler() {
 		return this.interactions.get(VisualizerInteractions.drawInteractionHandler);
 	}
@@ -125,23 +131,28 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	show$ = () => combineLatest(
 		this.store$.select(selectActiveMapId),
 		this.store$.select(selectMeasureDataByMapId(this.mapId)),
-		this.store$.select(selectIsMeasureToolActive)).pipe(
+		this.store$.select(selectIsMeasureToolActive),
+		this.onHiddenStateChanged).pipe(
 		distinctUntilChanged(),
-		filter(([activeMapId, measureData, isMeasureToolActive]) => Boolean(measureData)),
+		filter(([activeMapId, measureData, isMeasureToolActive]) => !this.isHidden && Boolean(measureData)),
 		tap(([activeMapId, measureData, isMeasureToolActive]) => {
 			this.measureData = measureData;
-			this.setVisibility(measureData.isLayerShowed);
-			if (isMeasureToolActive && activeMapId && measureData.isToolActive) {
-				this.createDrawInteraction();
+			if (!measureData.isLayerShowed) {
+				this.iMap.removeLayer(this.vector);
 			} else {
-				this.removeDrawInteraction();
-			}
-			if (isMeasureToolActive && activeMapId && measureData.isRemoveMeasureModeActive) {
-				this.createHoverForDeleteInteraction();
-				this.createClickDeleteInteraction();
-			} else {
-				this.removeHoverForDeleteInteraction();
-				this.removeClickDeleteInteraction();
+				this.iMap.addLayer(this.vector);
+				if (isMeasureToolActive && activeMapId && measureData.isToolActive) {
+					this.createDrawInteraction();
+				} else {
+					this.removeDrawInteraction();
+				}
+				if (isMeasureToolActive && activeMapId && measureData.isRemoveMeasureModeActive) {
+					this.createHoverForDeleteInteraction();
+					this.createClickDeleteInteraction();
+				} else {
+					this.removeHoverForDeleteInteraction();
+					this.removeClickDeleteInteraction();
+				}
 			}
 		}),
 		switchMap(([activeMapId, measureData, isMeasureToolActive]) => {
@@ -150,6 +161,12 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		filter(Boolean),
 		tap(() => this.setLabelsFeature())
 	);
+
+	// override base method
+	setVisibility(isVisible: boolean) {
+		super.setVisibility(isVisible);
+		this.onHiddenStateChanged.next();
+	}
 
 	createHoverForDeleteInteraction() {
 		this.removeHoverForDeleteInteraction();

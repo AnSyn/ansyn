@@ -63,9 +63,7 @@ export class AnsynComponent implements OnInit {
 				public loggerService: LoggerService) {
 	}
 
-	ngOnInit()
-		:
-		void {
+	ngOnInit(): void {
 		if (this.componentMode
 		) {
 			this.store$.dispatch(new LoadDefaultCaseAction());

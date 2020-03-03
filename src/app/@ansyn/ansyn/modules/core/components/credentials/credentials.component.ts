@@ -32,7 +32,6 @@ export class CredentialsComponent implements OnInit, OnDestroy{
 	}
 
 	ngOnInit() {
-		this.credentialsService.getCredentials().subscribe();
 		this.onClickOutside$ = fromEvent(this.element.nativeElement, 'click').pipe(
 			tap((event: any) => {
 				if ((event.path && !event.path.includes(this.element.nativeElement.lastChild))) {

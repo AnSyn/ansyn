@@ -66,7 +66,6 @@ export class AnsynComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.credentialsService.getCredentials().subscribe();
 		if (this.componentMode) {
 			this.store$.dispatch(new LoadDefaultCaseAction());
 		}

@@ -18,6 +18,7 @@ export class CredentialsService {
 
 	constructor(protected httpClient: HttpClient,
 				@Inject(credentialsConfig) public config: ICredentialsConfig) {
+		this.getCredentials().subscribe();
 	}
 
 	get user() {

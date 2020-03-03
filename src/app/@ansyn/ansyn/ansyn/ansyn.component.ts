@@ -19,6 +19,7 @@ import { UpdateToolsFlags } from '../modules/menu-items/tools/actions/tools.acti
 import { toolsFlags } from '../modules/menu-items/tools/reducers/tools.reducer';
 import { LoggerService } from '../modules/core/services/logger.service';
 import { IOverlay } from '../modules/overlays/models/overlay.model';
+import { CredentialsService } from '../modules/core/services/credentials/credentials.service';
 
 @Component({
 	selector: 'ansyn-app',
@@ -57,13 +58,15 @@ export class AnsynComponent implements OnInit {
 		return true;
 	}
 
-	constructor(protected store$: Store<any>,
+	constructor(public credentialsService: CredentialsService,
+				protected store$: Store<any>,
 				@Inject(COMPONENT_MODE) public componentMode: boolean,
 				@Inject(toolsConfig) public toolsConfigData: IToolsConfig,
 				public loggerService: LoggerService) {
 	}
 
 	ngOnInit(): void {
+		this.credentialsService.getCredentials().subscribe();
 		if (this.componentMode) {
 			this.store$.dispatch(new LoadDefaultCaseAction());
 		}

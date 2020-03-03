@@ -64,8 +64,7 @@ export class AnsynComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		if (this.componentMode
-		) {
+		if (this.componentMode) {
 			this.store$.dispatch(new LoadDefaultCaseAction());
 		}
 

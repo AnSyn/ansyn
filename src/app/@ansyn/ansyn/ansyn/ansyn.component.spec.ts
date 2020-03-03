@@ -10,6 +10,8 @@ import { mapStateSelector } from '@ansyn/map-facade';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
 import { toolsConfig } from '../modules/menu-items/tools/models/tools-config';
 import { LoggerService } from '../modules/core/services/logger.service';
+import { credentialsConfig } from '../modules/core/services/credentials/config';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
@@ -73,9 +75,16 @@ describe('AnsynComponent', () => {
 				{
 					provide: toolsConfig,
 					useValue: {}
+				},
+				{
+					provide: credentialsConfig,
+					useValue: {
+						noCredentialsMessage: 'TEST'
+					}
 				}
 			],
 			imports: [
+				HttpClientModule,
 				RouterTestingModule,
 				StoreModule.forRoot({})]
 		}).compileComponents();

@@ -7,6 +7,7 @@
 	flex-flow: wrap;
 	align-items: center;
 	border-left: 1px solid @status-bar-delimiter;
+	user-select: none;
 
 	.top {
 		display: flex;
@@ -23,6 +24,10 @@
 		div {
 			display: flex;
 			align-items: center;
+		}
+
+		.share {
+			cursor: pointer;
 		}
 	}
 }

@@ -13,7 +13,7 @@
 			(ngModelChange)="layoutSelectChange($event)">
 
 			<ansyn-combo-box-option *ngFor="let layout of layouts; index as index" [value]="layout">
-				<i class="icon icon-screen-{{index + 1}}"></i> <span>{{'Screens' | translate}}</span>
+				<i class="icon icon-screen-{{index + 1}}"></i> <span class="for-title-only">{{'Screens' | translate}}</span>
 			</ansyn-combo-box-option>
 
 

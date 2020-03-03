@@ -37,18 +37,21 @@
 		box-sizing: border-box;
 		width: 100%;
 		white-space: nowrap;
-		text-overflow-ellipsis: active;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		border: none;
 		text-align: left;
-		display: block;
 		align-items: center;
 
 		i {
 			align-text: center;
 			opacity: .8;
 			font-size: 16px;
+		}
+
+		/deep/ span.for-title-only {
+			visibility: hidden;
+			width: 0;
 		}
 	}
 }

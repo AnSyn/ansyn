@@ -1,0 +1,28 @@
+@import "ansyn/less/colors";
+@import "ansyn/less/globals";
+
+:host {
+	display: flex;
+	flex: 1;
+	flex-flow: wrap;
+	align-items: center;
+	border-left: 1px solid @status-bar-delimiter;
+
+	.top {
+		display: flex;
+		flex: 0 0 100%;
+		padding: 3px 5px;
+		border-bottom: 1px solid @status-bar-delimiter;
+	}
+
+	.bottom {
+		display: flex;
+		flex: 0 0 100%;
+		justify-content: space-around;
+
+		div {
+			display: flex;
+			align-items: center;
+		}
+	}
+}

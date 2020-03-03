@@ -1,9 +1,11 @@
 <div class="combo-container" [ngClass]="[direction, color]">
 	<button ansynComboBoxTrigger
+			[ngClass]="buttonClass"
 			type="button"
 			[disabled]="disabled"
 			[isActive]="optionsVisible"
 			[attr.tooltip-value]="comboBoxToolTipDescription || null"
+			[withArrow]="withArrow"
 			tooltip-class="top"
 			[icon]="icon"
 			(click)="toggleShow()">

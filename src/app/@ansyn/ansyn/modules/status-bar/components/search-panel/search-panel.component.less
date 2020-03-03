@@ -1,0 +1,54 @@
+@import "ansyn/less/colors";
+@import "ansyn/less/globals";
+
+@panel-radius: 10px;
+:host {
+	display: flex;
+	align-items: center;
+	flex-grow: 3;
+	margin: 5px;
+
+	.search-panel {
+		display: flex;
+		flex-direction: row;
+		padding-left: 5px;
+		padding-right: 5px;
+		width: fit-content;
+
+		div.search-title {
+			background: #2d2d2d;
+			display: flex;
+			align-items: center;
+			border: 1px solid @status-bar-background;
+			border-bottom-left-radius: @panel-radius;
+			border-top-left-radius: @panel-radius;
+			margin-right: 1px;
+			padding: 6.5px;
+			user-select: none;
+		}
+
+		.box {
+			margin: 0 1px;
+
+			/deep/ button.search-panel-button {
+				padding: 5px 11px 5px 0px;
+				background: @status-bar-panels;
+
+				&.active {
+					background-color: @status-bar-active;
+				}
+
+				&:hover:not(.active) {
+					background: @status-bar-hover;
+				}
+			}
+
+			&:last-child {
+				.search-panel-button {
+					border-bottom-right-radius: @panel-radius;
+					border-top-right-radius: @panel-radius;
+				}
+			}
+		}
+	}
+}

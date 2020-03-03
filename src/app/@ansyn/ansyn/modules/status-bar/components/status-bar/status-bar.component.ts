@@ -29,10 +29,6 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 	constructor(public store: Store<IStatusBarState>) {
 	}
 
-	copyLink(): void {
-		this.store.dispatch(new CopySnapshotShareLinkAction());
-	}
-
 	ngOnInit(): void {
 		this.subscribers.push(this.layout$.subscribe());
 	}

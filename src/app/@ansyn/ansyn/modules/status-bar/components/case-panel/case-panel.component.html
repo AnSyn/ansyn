@@ -1,0 +1,16 @@
+<div class="top">
+	{{caseName}}
+</div>
+<div class="bottom">
+	<!-- Overlays -->
+	<div class="box"
+		 [attr.tooltip-value]="toolTips.overlayCount | translate"
+		 tooltip-class="top right">
+		<i class="block-icon icon-status-bar-imagery-count"></i>
+		<span>{{overlaysCount$ | async}}</span>
+	</div>
+	<div class="box" (click)="copyLink()">
+		<i class="icon-share"></i>
+		<span>{{'Share' | translate}}</span>
+	</div>
+</div>

@@ -1,0 +1,71 @@
+<div class="search-panel" [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''">
+
+	<div class="search-title">Search:</div>
+	<!-- Time -->
+	<div class="box">
+		<button ansynComboBoxTrigger
+				#timePickerTrigger
+				(click)="toggleTimelineStartEndSearch()"
+				[attr.tooltip-value]="toolTips.timeFilterEdit | translate"
+				[isActive]="timeSelectionExpand"
+				[withArrow]="false"
+				icon="icon icon-status-bar-time"
+				tooltip-class="top"
+		class="search-panel-button">
+			<span class="title">{{timeSelectionTitle}}</span>
+		</button>
+
+		<ansyn-timeline-timepicker
+			*ngIf="timeSelectionExpand"
+			(ansynClickOutside)="toggleTimelineStartEndSearch($event)"
+			[trigger]="timePickerTrigger.optionsTrigger.nativeElement"
+			[startDatePickerValue]="(time)?.from"
+			[endDatePickerValue]="(time)?.to"
+			(closeComponent)="toggleTimelineStartEndSearch()"
+			(applyDate)="applyTimelinePickerResult($event)">
+		</ansyn-timeline-timepicker>
+	</div>
+
+	<!-- Geo filter -->
+	<div class="box" id="editGeoFilter">
+
+		<ansyn-combo-box
+			[buttonClass]="'search-panel-button'"
+			direction="top"
+			name="GeoFilter"
+			[comboBoxToolTipDescription]="toolTips.geoFilter | translate"
+			[withArrow]="false"
+			icon="icon icon-status-bar-geo"
+			[ngModel]="geoFilter"
+			(ngModelChange)="geoFilterChanged($event)">
+
+			<ansyn-combo-box-option *ngFor="let _geoFilter of geoFilters" [value]="_geoFilter">
+				{{ _geoFilter | translate}}
+			</ansyn-combo-box-option>
+
+		</ansyn-combo-box>
+	</div>
+
+	<!-- data input filter-->
+	<div class="box">
+		<button ansynComboBoxTrigger
+				#trigger
+				(click)="toggleDataInputFilterIcon()"
+				icon="icon icon-input-filter"
+				[isActive]="dataInputFilterExpand"
+				[withArrow]="false"
+				[attr.tooltip-value]="toolTips.dataInputFilter | translate"
+				tooltip-class="top"
+				class="search-panel-button">
+			<span class="title">{{ dataInputFilterTitle | translate }}</span>
+		</button>
+
+		<ansyn-tree-view
+			*ngIf="dataInputFilterExpand"
+			(ansynClickOutside)="toggleDataInputFilterIcon()"
+			[trigger]="trigger?.optionsTrigger?.nativeElement"
+			(closeTreeView)="toggleDataInputFilterIcon()"
+			(dataInputTitleChange)="updateDataInputTitle($event)"
+			class="ansyn-tree-view"></ansyn-tree-view>
+	</div>
+</div>

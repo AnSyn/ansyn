@@ -1,15 +1,8 @@
-<div class="status-bar" [class.separated-state]="!hideOverlay">
-	<div class="selected-case">
-		<ansyn-popover class="default-case" [text]="selectedCaseName" [icon]="icon">
-			<button class="share-link" (click)="copyLink()">
-				<i class="icon-status-bar-share-link"></i>
-				<span>{{'Share link' | translate}}</span>
-			</button>
-		</ansyn-popover>
-	</div>
-	<div class="status">
-		<ansyn-combo-boxes></ansyn-combo-boxes>
-		<ansyn-navigation-bar></ansyn-navigation-bar>
-	</div>
+<div class="status-bar" [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''">
+
+	<ansyn-search-panel></ansyn-search-panel>
+	<ansyn-display-panel></ansyn-display-panel>
+	<ansyn-case-panel
+	[caseName]="selectedCaseName"></ansyn-case-panel>
 
 </div>

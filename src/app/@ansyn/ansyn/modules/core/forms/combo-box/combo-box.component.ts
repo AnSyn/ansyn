@@ -27,6 +27,8 @@ export class ComboBoxComponent implements ControlValueAccessor {
 	@Input() comboBoxToolTipDescription: string;
 	@Input() direction: 'top' | 'bottom' = 'bottom';
 	@Input() color: 'black' | 'transparent' = 'black';
+	@Input() withArrow = true;
+	@Input() buttonClass: string;
 
 	@Input() placeholder: string;
 	@Input() required: boolean;

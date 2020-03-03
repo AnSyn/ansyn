@@ -32,6 +32,9 @@ export class StayInImageryService implements OnDestroy {
 			return;
 		}
 		const imageryElement = targetElement.closest('.imagery');
+		if (!imageryElement) {
+			return;
+		}
 
 		const myRect = targetElement.getBoundingClientRect();
 		const imageryRect = imageryElement.getBoundingClientRect() as DOMRect;

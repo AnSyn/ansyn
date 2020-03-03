@@ -125,8 +125,7 @@ describe('OverlaysService', () => {
 		},
 		dataInputFilters: {
 			fullyChecked: true,
-			filters: [],
-			active: true
+			filters: []
 		}
 	};
 
@@ -308,8 +307,7 @@ describe('OverlaysService', () => {
 			},
 			dataInputFilters: {
 				fullyChecked: true,
-				filters: [],
-				active: true
+				filters: []
 			}
 		};
 		overlaysService.search(params).subscribe((result: any) => {

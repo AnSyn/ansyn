@@ -12,7 +12,7 @@ import { ProjectionConverterService } from '@ansyn/map-facade';
 
 
 @Component({
-	selector: 'ansyn-geo',
+	selector: 'ansyn-geo-wgs',
 	templateUrl: './geo.component.html',
 	styleUrls: ['./geo.component.less'],
 	providers: [
@@ -72,7 +72,7 @@ export class GeoComponent implements ControlValueAccessor, Validator {
 		const lat = c.value[1];
 		if ((lng === null || lng === undefined) || (lat === null || lat === undefined)) {
 			this.validationErr = { empty: true };
-		} else if (!ProjectionConverterService.isValidWGS84(c.value)) {
+		} else if (!ProjectionConverterService.isValidGeoWGS84(c.value)) {
 			this.validationErr = { invalid: true };
 		} else {
 			this.validationErr = null;

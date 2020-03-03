@@ -25,6 +25,8 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	isMapLayersVisible = true;
 	mapsAmount = 1;
 	_map: IMapSettings;
+	baseMapDescription = 'Base Map';
+	formattedOverlayTime: string = null;
 	@HostBinding('class.active') isActiveMap: boolean;
 	hideLayers: boolean;
 	@AutoSubscription
@@ -63,6 +65,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	@Input()
 	set map(value: IMapSettings) {
 		this._map = value;
+		this.formattedOverlayTime = this.overlay ? this.getFormattedTime(this.overlay.photoTime) : null;
 		this.translate.get(this.overlay && this.overlay.sensorName || 'unknown')
 			.subscribe(translatedOverlaySensorName => this.translatedOverlaySensorName = translatedOverlaySensorName);
 	}
@@ -84,11 +87,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	get overlayTimeDate() {
 		const ActiveMap = _get(this.communicators.provide(this.mapId), 'ActiveMap');
 		const { description } = (ActiveMap && ActiveMap.getExtraData()) || <any>{};
-		return description ? description : this.overlay ? this.getFormattedTime(this.overlay.photoTime) : null;
-	}
-
-	get baseMapDescription() {
-		return 'Base Map';
+		return description ? description : this.overlay ? this.formattedOverlayTime : null;
 	}
 
 	// @todo refactor

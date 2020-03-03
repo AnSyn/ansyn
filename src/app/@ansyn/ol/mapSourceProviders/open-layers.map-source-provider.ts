@@ -7,7 +7,7 @@ import XYZ from 'ol/source/XYZ';
 import { ProjectableRaster } from '../maps/open-layers-map/models/projectable-raster';
 
 export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSourceProvider<CONF> {
-	create(metaData: IMapSettings): Promise<any[]> {
+	create(metaData: IMapSettings): Promise<any> {
 		const source = this.getXYZSource(metaData.data.overlay.imageUrl);
 		const extent = this.getExtent(metaData.data.overlay.footprint);
 		const tileLayer = this.getTileLayer(source, extent);
@@ -18,7 +18,7 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 		if (metaData.data.overlay) {
 			return `${ metaData.worldView.mapType }/${ JSON.stringify(metaData.data.overlay) }`;
 		}
-		return `${ metaData.worldView.mapType }/${ metaData.worldView.sourceType }`;
+		return `${ metaData.worldView.mapType }/${ metaData.data.key }`;
 	}
 
 	removeExtraData(layer: any) {

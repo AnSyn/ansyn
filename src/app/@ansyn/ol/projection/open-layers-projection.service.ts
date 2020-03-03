@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { FeatureCollection, GeometryObject, Point } from 'geojson';
 import * as proj from 'ol/proj';
 import OLGeoJSON from 'ol/format/GeoJSON';
+import './free-layer-projection';
 
 @Injectable({
 	providedIn: 'root'

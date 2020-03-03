@@ -43,7 +43,7 @@ div.menu-wrapper {
 		height: 100%;
 		transition: transform .5s;
 
-		&.expanded:not('.bottom') {
+		&.expanded {
 			button.hide-menu {
 				transition: 0s;
 				transform: translateX(0);
@@ -110,13 +110,20 @@ div.menu-wrapper {
 					background-color: #3d1a1a;
 				}
 
+				&.bottom {
+					span.badge {
+						width: 10px;
+						height: 10px;
+					}
+					i.icon-credentials {
+						font-size: 2em;
+						margin-bottom: 5px;
+					}
+				}
+
 				@media screen and (max-height: 700px) {
 					i {
 						font-size: calc(~"((100vh - 94px) / @{number-of-menu-item}) - 45px");
-					}
-					span.badge.bottom {
-						width: 10px;
-						height: 10px;
 					}
 				}
 			}
@@ -127,6 +134,7 @@ div.menu-wrapper {
 				display: flex;
 				flex-direction: column;
 				align-items: center;
+				margin-bottom: 5px;
 
 				a.forkMe {
 					margin-bottom: 15px;

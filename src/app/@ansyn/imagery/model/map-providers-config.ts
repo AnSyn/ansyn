@@ -1,5 +1,16 @@
+export interface IMapSource {
+	key: string;
+	displayName: string;
+	thumbnail: string;
+	sourceType: string;
+	config: {
+		[key: string]: any
+	}
+}
+
 export interface IMapProviderConfig {
-	defaultMapSource: string
+	defaultMapSource: string;
+	sources: IMapSource[];
 }
 
 export interface IMapProvidersConfig {

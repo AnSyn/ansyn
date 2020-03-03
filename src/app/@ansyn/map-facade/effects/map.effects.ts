@@ -4,19 +4,14 @@ import { MapFacadeService } from '../services/map-facade.service';
 import { EMPTY, forkJoin, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMaps } from '../reducers/map.reducer';
-import {
-	geojsonMultiPolygonToBBOXPolygon,
-	ImageryCommunicatorService,
-	ImageryMapPosition,
-	IMapSettings,
-	IWorldViewMapState
-} from '@ansyn/imagery';
+import { ImageryCommunicatorService, IMapSettings, IWorldViewMapState } from '@ansyn/imagery';
 import {
 	ActiveImageryMouseEnter,
 	ActiveImageryMouseLeave,
 	ChangeImageryMap,
 	ChangeImageryMapFailed,
 	ChangeImageryMapSuccess,
+	ChangeMainLayer, ChangeMainLayerFailed, ChangeMainLayerSuccess,
 	DecreasePendingMapsCountAction,
 	ImageryCreatedAction,
 	ImageryMouseEnter,
@@ -130,9 +125,9 @@ export class MapEffects {
 			const mapPosition = mapSettings.data.position;
 			const setPositionObservables = [];
 			Object.values(mapState.entities).forEach((mapItem: IMapSettings) => {
-				if (mapId !== mapItem.id) {
+				if (mapId !== mapItem.id && !mapItem.data.overlay) {
 					const comm = this.communicatorsService.provide(mapItem.id);
-					setPositionObservables.push(this.setPosition(mapPosition, comm, mapItem));
+					setPositionObservables.push(comm.setPosition(mapPosition));
 				}
 			});
 
@@ -189,6 +184,21 @@ export class MapEffects {
 		})
 	);
 
+	// TODO: fix the effect after fix promise to observable on the communicator/source providers
+	@Effect({dispatch: false})
+	setMapMainLayer$ = this.actions$.pipe(
+		ofType<ChangeMainLayer>(MapActionTypes.CHANGE_MAP_MAIN_LAYER),
+		switchMap(({ payload }) => {
+			const { id, sourceType } = payload;
+			const communicator = this.communicatorsService.provide(id);
+			return fromPromise(communicator.changeMapMainLayer(sourceType)).pipe(
+				map(change => change.pipe(
+					map(c => c ? this.store$.dispatch(new ChangeMainLayerSuccess(payload)) :
+						this.store$.dispatch(new ChangeMainLayerFailed())))),
+			)
+		}),
+	);
+
 	@Effect({ dispatch: false })
 	setMapPositionByRect$ = this.actions$.pipe(
 		ofType<SetMapPositionByRectAction>(MapActionTypes.SET_MAP_POSITION_BY_RECT),
@@ -226,19 +236,4 @@ export class MapEffects {
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				protected store$: Store<any>) {
 	}
-
-	setPosition(position: ImageryMapPosition, comm, mapItem): Observable<any> {
-		if (mapItem.data.overlay) {
-			const isNotIntersect = MapFacadeService.isNotIntersect(position.extentPolygon, mapItem.data.overlay.footprint, this.config.overlayCoverage);
-			if (isNotIntersect) {
-				this.store$.dispatch(new SetToastMessageAction({
-					toastText: 'At least one map couldn\'t be synchronized',
-					showWarningIcon: true
-				}));
-				return EMPTY;
-			}
-		}
-		return comm.setPosition(position);
-	}
-
 }

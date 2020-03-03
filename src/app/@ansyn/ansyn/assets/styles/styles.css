@@ -16,6 +16,24 @@ circle.drop.selected {
 	fill: black;
 }
 
+
+.custom-dialog .mat-dialog-container {
+		padding: 0;
+		width: 600px;
+		overflow: hidden;
+}
+
+.close.mat-button {
+	cursor: pointer;
+	float: right;
+	marginTop: 5px;
+	width: 20px;
+}
+
+.main-progress .mat-progress-bar-fill::after {
+	background-color: #0091ff !important;
+}
+
 .main-timeline {
 	padding: 0 10px;
 	width: 100%;

@@ -84,7 +84,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			this.labelTranslateMode(this.labelTranslate.originalFeature.getId())
 		}
 	});
-	clearAnnotationEditMode$ = tap( () => {
+	clearAnnotationEditMode$ = tap(() => {
 		this.clearAnnotationEditMode();
 	});
 
@@ -95,7 +95,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		tap((selected: any) => this.selected = selected));
 
 	@AutoSubscription
-	labelTranslate$ = this.events.onLabelTranslateStart.pipe(tap((labelTranslate ) => this.labelTranslate = labelTranslate ));
+	labelTranslate$ = this.events.onLabelTranslateStart.pipe(tap((labelTranslate) => this.labelTranslate = labelTranslate));
 
 	@AutoSubscription
 	editAnnotation$ = this.events.onAnnotationEditStart.pipe(tap(annotationEdit => this.currentAnnotationEdit = annotationEdit));
@@ -148,10 +148,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					},
 					stroke: '#000',
 					fill: 'white',
-					offsetY: (feature: olFeature) => {
-						const { label } = feature.getProperties();
-						return label && !label.geometry ? 30 : 0;
-					},
+					offsetY: 30,
 					text: (feature: olFeature) => {
 						const entity = this.idToEntity.get(feature.getId());
 						if (entity) {
@@ -201,7 +198,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				id: feature.properties.id,
 				style: feature.properties.style || this.visualizerStyle,
 				showMeasures: feature.properties.showMeasures || false,
-				label: feature.properties.label || {text: '', geometry: null},
+				showArea: feature.properties.showArea || false,
+				label: feature.properties.label || { text: '', geometry: null },
 				icon: feature.properties.icon || '',
 				undeletable: feature.properties.undeletable || false,
 				labelSize: feature.properties.labelSize || 28,
@@ -313,6 +311,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			id,
 			style: cloneDeep(this.visualizerStyle),
 			showMeasures: false,
+			showArea: false,
 			label: { text: '', geometry: null },
 			labelSize: 28,
 			icon: this.iconSrc,
@@ -386,6 +385,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (entity && entity.showMeasures) {
 			styles.push(...this.getMeasuresAsStyles(feature));
 		}
+		if (entity && entity.showArea) {
+			styles.push(...this.areaCircumferenceStyles(feature));
+		}
 		if (entity && entity.icon) {
 			styles.push(this.getCenterIndicationStyle(feature));
 		}
@@ -450,11 +452,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				const leftright = this.getLeftRightResult(coordinates);
 				const originalLeftRight = this.getLeftRightResult(originalC);
 				const line: olLineString = new olLineString([leftright.left, leftright.right]);
+				const color = feature.values_.style.initial.stroke;
 				moreStyles.push(
 					new olStyle({
 						geometry: line,
 						stroke: new olStroke({
-							color: '#27b2cfe6',
+							color,
 							width: 1
 						}),
 					}),
@@ -503,22 +506,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	areaCircumferenceStyles(feature: any): olStyle[] {
 		const geometry = feature.getGeometry();
-		const calcCircumference = this.formatLength(geometry);
 		const calcArea = this.formatArea(geometry);
-		const { height } = this.getFeatureBoundingRect(feature);
+
 		return [
 			new olStyle({
 				text: new olText({
 					...this.measuresTextStyle,
-					text: `Circumference: ${ calcCircumference }`,
-					offsetY: -height / 2 - 44
-				})
-			}),
-			new olStyle({
-				text: new olText({
-					...this.measuresTextStyle,
 					text: `Area: ${ calcArea }`,
-					offsetY: -height / 2 - 25
 				})
 			})
 		];
@@ -585,7 +579,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		let event = undefined;
 		let centerFeature;
 		let feature;
-		if (enable ) {
+		if (enable) {
 			feature = this.source.getFeatureById(featureId);
 			if (centerFeature) {
 				this.source.removeFeature(centerFeature);
@@ -601,8 +595,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				centerFeature
 			}
 
-		}
-		else {
+		} else {
 			centerFeature = this.currentAnnotationEdit.centerFeature;
 			this.removeInteraction(VisualizerInteractions.editAnnotationTranslateHandler);
 			this.removeInteraction(VisualizerInteractions.modifyInteractionHandler);
@@ -718,7 +711,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				font: `${ entity.labelSize + 2 }px Calibri,sans-serif`,
 				fill: new olFill({ color: entity.style.initial.label.fill }),
 				text: label.text,
-				offsetY: entityMode === 'Point' ? 30 : 0
+				offsetY: 30
 			})
 		}));
 

@@ -1,6 +1,27 @@
-<form (submit)="onSubmit()" (reset)="resetError()">
-	<input type="text" [placeholder]="'Search' | translate" [(ngModel)]="searchString" name="searchString" (input)="resetError()">
+<form (reset)="control.setValue('')" (submit)="onSubmit()">
+	<input type="text" [placeholder]="'Search' | translate"
+		   [formControl]="control"
+		   [matAutocomplete]="auto">
+	<mat-autocomplete #auto="matAutocomplete" [panelWidth]="autoCompleteWidth + 'px'">
+		<mat-option *ngIf="loading; else loaded;" disabled>
+			{{'loading results' | translate}}
+		</mat-option>
+		<ng-template #loaded>
+			<ng-template *ngIf="!error; else catchError">
+				<mat-option *ngFor="let location of locations | slice:0:5"
+							(onSelectionChange)="goToLocation(location.point)"
+							[value]="location.name">
+					{{location.name}}
+				</mat-option>
+			</ng-template>
+			<ng-template #catchError>
+				<mat-option disabled>
+					{{error | translate}}
+				</mat-option>
+			</ng-template>
+		</ng-template>
+	</mat-autocomplete>
+
 	<button type="submit"><i class="fa fa-search"></i></button>
-	<button type="reset" [hidden]="!searchString"><i class="fa fa-times"></i></button>
+	<button type="reset" [hidden]="!control.value"><i class="fa fa-times"></i></button>
 </form>
-<div class="error" *ngIf="error">not found</div>

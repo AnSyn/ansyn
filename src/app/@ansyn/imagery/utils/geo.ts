@@ -114,6 +114,11 @@ export function getPolygonIntersectionRatio(extent: Polygon, footprint: MultiPol
 	return intersection
 }
 
+export function polygonsDontIntersect(extentPolygon, footprint, overlayCoverage): boolean {
+	const intersection = getPolygonIntersectionRatio(extentPolygon, footprint);
+	return intersection < overlayCoverage;
+}
+
 export function getPolygonIntersectionRatioWithMultiPolygon(extent: Polygon, footprint: MultiPolygon): number {
 	let intersectionArea = 0;
 	let extentArea = 1;

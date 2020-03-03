@@ -31,6 +31,7 @@ import { IEd50Notification, ProjectionConverterService } from '@ansyn/map-facade
 export class UtmComponent implements ControlValueAccessor, Validator {
 	@Output() copyToClipBoardHandler = new EventEmitter();
 	@Input() notification: IEd50Notification;
+	@Input() title: string;
 
 	coordinates: number[] = [0, 0, 0];
 	validationErr: ValidationErrors = null;

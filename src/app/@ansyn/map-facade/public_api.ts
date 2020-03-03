@@ -1,9 +1,9 @@
+export { GeocoderService } from './services/geocoder.service';
+
 export { ImageryZoomerService } from './services/imagery-zoomer.service';
 export { IEd50Notification } from './models/map-config.model';
 
 export { IEntryComponent } from './directives/entry-component.directive';
-
-
 
 export {
 	initialMapState,
@@ -28,7 +28,9 @@ export {
 	selectMapsStateByIds,
 	selectOverlayDisplayModeByMapId,
 	selectOverlayOfActiveMap,
-	selectIsMinimalistViewMode
+	selectIsMinimalistViewMode,
+	selectMapTypeById,
+	selectSourceTypeById
 } from './reducers/map.reducer';
 
 export {
@@ -65,7 +67,11 @@ export {
 	IPendingOverlay,
 	ToggleFooter,
 	ContextMenuShowAngleFilter,
-	IAngleFilterClick
+	IAngleFilterClick,
+	ChangeMainLayer,
+	ChangeMainLayerSuccess,
+	ChangeMainLayerFailed,
+	SynchronizeMapsAction
 } from './actions/map.actions';
 
 export {

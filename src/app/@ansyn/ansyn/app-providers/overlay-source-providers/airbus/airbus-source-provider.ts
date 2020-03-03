@@ -19,23 +19,24 @@ import { LoggerService } from '../../../modules/core/services/logger.service';
 import { GeoRegisteration, IOverlay, Overlay } from '../../../modules/overlays/models/overlay.model';
 import { limitArray } from '../../../modules/core/utils/i-limited-array';
 import { sortByDateDesc } from '../../../modules/core/utils/sorting';
-import { IAirbusOverlaySourceConfig } from '@ansyn/ol';
 
 const DEFAULT_OVERLAYS_LIMIT = 200;
 export const AirbusSourceProviderType = 'AIRBUS';
 
+export const airbusOverlaySourceConfig = 'airbusOverlaysSourceConfig';
+
+export interface IAirbusOverlaySourceConfig {
+	baseUrl: string;
+}
 @OverlaySourceProvider({
 	sourceType: AirbusSourceProviderType
 })
 export class AirbusSourceProvider extends BaseOverlaySourceProvider {
-	get config(): IAirbusOverlaySourceConfig {
-		return this.mapSourceProvidersConfig[this.sourceType];
-	}
 
 	constructor(public errorHandlerService: ErrorHandlerService,
 				protected loggerService: LoggerService,
 				protected http: HttpClient,
-				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig) {
+				@Inject(airbusOverlaySourceConfig) protected config: IAirbusOverlaySourceConfig) {
 		super(loggerService);
 	}
 
@@ -108,7 +109,7 @@ export class AirbusSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	protected parseData(airbusElement: any): IOverlay {
-		const base = airbusElement.properties.tileEngineUrl;
+		const url = airbusElement.properties.tileEngineUrl;
 		return new Overlay({
 			id: airbusElement.id,
 			footprint: geojsonPolygonToMultiPolygon(airbusElement.geometry),
@@ -116,8 +117,8 @@ export class AirbusSourceProvider extends BaseOverlaySourceProvider {
 			sensorName: airbusElement.properties.instrument,
 			bestResolution: airbusElement.properties.resolution,
 			name: airbusElement.properties.sourceId,
-			imageUrl: base,
-			thumbnailUrl: this.config.baseUrl + '/xyz?original=' + base.replace('/{z}/{x}/{y}', '/5/16/11'),
+			imageUrl: `${this.config.baseUrl}/xyz?original=${url}`,
+			thumbnailUrl: this.config.baseUrl + '/xyz?original=' + url.replace('/{z}/{x}/{y}', '/5/16/11'),
 			date: new Date(airbusElement.properties.acquisitionDate),
 			photoTime: airbusElement.properties.acquisitionDate,
 			azimuth: toRadians(airbusElement.properties.illuminationAzimuthAngle),

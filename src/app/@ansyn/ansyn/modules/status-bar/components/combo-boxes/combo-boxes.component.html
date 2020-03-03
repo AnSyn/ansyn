@@ -1,7 +1,7 @@
 <div class="combo-boxes">
 
 	<!-- data input filter-->
-	<div class="combo-box-container block hidden-medium-resolution">
+	<div class="combo-box-container block">
 		<button ansynComboBoxTrigger
                 #trigger
 				class="combo-box-width"
@@ -10,14 +10,15 @@
 				[isActive]="dataInputFilterExpand"
 				[attr.tooltip-value]="toolTips.dataInputFilter | translate"
 				tooltip-class="top">
-			<span class="render">{{ dataInputFiltersTitle | translate}}</span>
+			<span class="render">{{ dataInputFilterTitle | translate }}</span>
 		</button>
 
 		<ansyn-tree-view
 			*ngIf="dataInputFilterExpand"
 			(ansynClickOutside)="toggleDataInputFilterIcon()"
-			[trigger]="trigger.optionsTrigger.nativeElement"
+			[trigger]="trigger?.optionsTrigger?.nativeElement"
 			(closeTreeView)="toggleDataInputFilterIcon()"
+			(dataInputTitleChange)="updateDataInputTitle($event)"
 			class="ansyn-tree-view"></ansyn-tree-view>
 	</div>
 

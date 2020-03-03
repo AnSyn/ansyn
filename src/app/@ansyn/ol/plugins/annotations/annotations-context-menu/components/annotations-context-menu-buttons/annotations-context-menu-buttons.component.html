@@ -82,6 +82,20 @@
 	</p>
 </div>
 
+<div>
+	<button [class.active]="getFeatureProps()?.showArea"
+			(click)="toggleArea()"
+			[class.disabled]="getFeatureProps()?.mode === 'Point' ||
+			 				  getFeatureProps()?.mode === 'LineString' ||
+			 				  getFeatureProps()?.mode === 'Arrow'">
+		<i [attr.tooltip-value]="'Area' | translate" tooltip-class="bottom">
+			<svg fill="#fff">
+				<path [attr.d]="SVGICON.measureSvg"></path>
+			</svg>
+		</i>
+	</button>
+</div>
+
 <div *ngIf="!featureProps?.undeletable">
 	<button class='removeFeature' (click)="removeFeature()"
 			[class.disabled]="isFeatureNonEditable"

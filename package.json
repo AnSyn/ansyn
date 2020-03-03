@@ -1,6 +1,6 @@
 {
   "name": "ansyn-src",
-  "version": "0.6.3",
+  "version": "1.6.33",
   "private": true,
   "license": "MIT",
   "repository": {
@@ -49,12 +49,12 @@
     "@ngrx/entity": "^7.2.0",
     "@ngrx/store": "^7.2.0",
     "@ngrx/store-devtools": "^7.2.0",
-    "@ngx-translate/core": "^10.0.2",
+    "@ngx-translate/core": "^11.0.1",
     "@turf/turf": "^5.1.6",
     "angular2-uuid": "^1.1.1",
     "auth0-js": "^9.7.3",
     "auto-subscriptions": "^2.0.5",
-    "cesium": "^1.58.1",
+    "cesium": "^1.66.0",
     "core-js": "^2.5.4",
     "crypto-js": "3.1.9-1",
     "d3": "^5.9.2",

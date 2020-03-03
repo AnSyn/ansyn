@@ -4,7 +4,7 @@ import { IStatusBarConfig, IToolTipsConfig } from '../../models/statusBar-config
 import { IGeoFilterStatus, IStatusBarState, selectGeoFilterStatus } from '../../reducers/status-bar.reducer';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
 import { UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 import { animate, style, transition, trigger } from '@angular/animations';
@@ -22,6 +22,7 @@ import {
 } from '../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { ClearActiveInteractionsAction } from '../../../menu-items/tools/actions/tools.actions';
+import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [
@@ -40,36 +41,68 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	styleUrls: ['./search-panel.component.less'],
 	animations: [fadeAnimations]
 })
+@AutoSubscriptions()
 export class SearchPanelComponent implements OnInit, OnDestroy {
 
-	time$: Observable<ICaseTimeState> = this.store$.select(selectTime);
 	geoFilterStatus: IGeoFilterStatus;
-	geoFilterStatus$ = this.store$.select(selectGeoFilterStatus).pipe(tap((geoFilterStatus: IGeoFilterStatus) => this.geoFilterStatus = geoFilterStatus));
-	regionType: CaseGeoFilter;
-	regionType$ = this.store$.select(selectRegion).pipe(
-		filter(Boolean),
-		map((region) => region.type),
-		tap((regionType) => this.regionType = regionType)
-	);
 	dataInputFilterExpand: boolean;
 	timeSelectionExpand: boolean;
 	favoriteOverlays: IOverlay[];
 	time: ICaseTimeState;
 	dataInputFilterTitle = 'All';
 	timeSelectionTitle: string;
+	geoFilterTitle: string;
 	dataInputFilters: ICaseDataInputFiltersState;
+
+	@AutoSubscription
+	time$: Observable<ICaseTimeState> = this.store$.select(selectTime).pipe(
+		tap(_time => {
+			this.time = _time;
+			if (_time && _time.to && _time.from) {
+				const format = 'DD/MM/YYYY HH:mm';
+				this.timeSelectionTitle = `${ moment(this.time.to).format(format) } - ${ moment(this.time.from).format(format) }`;
+			}
+		})
+	);
+
+	@AutoSubscription
 	dataInputFilters$ = this.store$.select(selectDataInputFilter).pipe(
 		filter((caseDataInputFiltersState: ICaseDataInputFiltersState) => Boolean(caseDataInputFiltersState) && Boolean(caseDataInputFiltersState.filters)),
 		tap((caseDataInputFiltersState: ICaseDataInputFiltersState) => {
 			this.dataInputFilters = caseDataInputFiltersState;
 		})
 	);
-	private subscriptions = [];
+
+	/*@AutoSubscription
+	geoFilterStatus$ = this.store$.select(selectGeoFilterStatus).pipe(
+		tap((geoFilterStatus: IGeoFilterStatus) => {
+			this.geoFilterStatus = geoFilterStatus;
+			this.geoFilterTitle = 'none';
+		})
+	);
+
+	@AutoSubscription
+	regionType$ = this.store$.select(selectRegion).pipe(
+		filter(Boolean),
+		map((region) => region.type),
+		tap((regionType) => this.regionType = regionType)
+	);*/
+
+	@AutoSubscription
+	geoFilter$ = combineLatest(
+		this.store$.select(selectGeoFilterStatus),
+		this.store$.select(selectRegion)
+	).pipe(
+		tap(([geoFilterStatus, region]) => {
+			this.geoFilterStatus = geoFilterStatus;
+			const regionType = region && region.type;
+			this.geoFilterTitle = geoFilterStatus.searchMode !== SearchModeEnum.none ? geoFilterStatus.searchMode : regionType;
+		})
+	);
 
 	constructor(protected store$: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) protected statusBarConfig: IStatusBarConfig,
 				@Inject(ORIENTATIONS) public orientations: CaseOrientation[],
-				@Inject(TIME_FILTERS) public timeFilters: CaseTimeFilter[],
 				@Inject(GEO_FILTERS) public geoFilters: CaseGeoFilter[]) {
 	}
 
@@ -77,28 +110,9 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		return this.geoFilterStatus.searchMode !== SearchModeEnum.none ? this.geoFilterStatus.searchMode : this.regionType;
 	}
 
-	get toolTips(): IToolTipsConfig {
-		return this.statusBarConfig.toolTips || {};
-	}
 
-	ngOnInit() {
-		this.subscriptions.push(
-			this.time$.subscribe(_time => {
-				this.time = _time;
-				if (_time && _time.to && _time.from) {
-					const format = 'DD/MM/YYYY HH:mm';
-					this.timeSelectionTitle = `${ moment(this.time.to).format(format) } - ${ moment(this.time.from).format(format) }`;
-				}
-			}),
 
-			this.dataInputFilters$.subscribe(),
-
-			this.geoFilterStatus$.subscribe(),
-
-			this.regionType$.subscribe()
-		);
-
-	}
+	ngOnInit() { }
 
 	toggleDataInputFilterIcon() {
 		this.dataInputFilterExpand = !this.dataInputFilterExpand;
@@ -115,15 +129,6 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		this.toggleTimelineStartEndSearch();
 	}
 
-	toggleMapSearch() {
-		const value = this.geoFilterStatus.searchMode !== SearchModeEnum.none ? SearchModeEnum.none : this.regionType;
-		this.geoFilterChanged(value);
-	}
-
-	toggleIndicatorView() {
-		this.store$.dispatch(new UpdateGeoFilterStatus({ indicator: !this.geoFilterStatus.indicator }));
-	}
-
 	geoFilterChanged(geoFilter?: SearchMode) {
 		const payload: Partial<IGeoFilterStatus> = { searchMode: geoFilter };
 
@@ -135,9 +140,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		this.store$.dispatch(new UpdateGeoFilterStatus({ searchMode: geoFilter }));
 	}
 
-	ngOnDestroy() {
-		this.subscriptions.forEach((sub) => sub.unsubscribe());
-	}
+	ngOnDestroy() {	}
 
 	updateDataInputTitle(title) {
 		this.dataInputFilterTitle = title;

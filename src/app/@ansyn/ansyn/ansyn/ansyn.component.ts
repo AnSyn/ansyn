@@ -61,29 +61,28 @@ export class AnsynComponent implements OnInit {
 				@Inject(COMPONENT_MODE) public componentMode: boolean,
 				@Inject(toolsConfig) public toolsConfigData: IToolsConfig,
 				public loggerService: LoggerService) {
-}
+	}
 
-ngOnInit()
-:
-void {
-	if(this.componentMode
-)
-{
-	this.store$.dispatch(new LoadDefaultCaseAction());
-}
+	ngOnInit()
+		:
+		void {
+		if (this.componentMode
+		) {
+			this.store$.dispatch(new LoadDefaultCaseAction());
+		}
 
-this.store$.dispatch(new UpdateToolsFlags([{
-	key: toolsFlags.shadowMouseActiveForManyScreens,
-	value: this.toolsConfigData.ShadowMouse && this.toolsConfigData.ShadowMouse.activeByDefault
-}, {
-	key: toolsFlags.forceShadowMouse,
-	value: this.toolsConfigData.ShadowMouse && this.toolsConfigData.ShadowMouse.forceSendShadowMousePosition
-}
-]));
+		this.store$.dispatch(new UpdateToolsFlags([{
+			key: toolsFlags.shadowMouseActiveForManyScreens,
+			value: this.toolsConfigData.ShadowMouse && this.toolsConfigData.ShadowMouse.activeByDefault
+		}, {
+			key: toolsFlags.forceShadowMouse,
+			value: this.toolsConfigData.ShadowMouse && this.toolsConfigData.ShadowMouse.forceSendShadowMousePosition
+		}
+		]));
 
-setTimeout(() => {
-	this.renderContextMenu = true;
-}, 1000);
+		setTimeout(() => {
+			this.renderContextMenu = true;
+		}, 1000);
 
-}
+	}
 }

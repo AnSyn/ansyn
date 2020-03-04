@@ -14,7 +14,6 @@ import { IMapSettings } from '@ansyn/imagery';
 })
 
 export class StatusBarComponent implements OnInit, OnDestroy {
-	icon = 'block-icon icon-status-bar-case';
 	@Input() selectedCaseName: string;
 	@Input() activeMap: IMapSettings;
 	layout$: Observable<LayoutKey> = this.store.select(selectLayout).pipe(

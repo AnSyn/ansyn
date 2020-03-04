@@ -22,6 +22,11 @@ describe('ToolsComponent', () => {
 		inputs: ['expand', 'disabled'],
 		outputs: ['onGoTo', 'expandChange']
 	});
+	const mockOverlaysDisplayMode = MockComponent({
+		selector: 'ansyn-overlays-display-mode',
+		inputs: ['expand', 'disabled', 'modeOn'],
+		outputs: ['expandChange', 'modeOnChange']
+	});
 	const mockImageManualProcessing = MockComponent({
 		selector: 'ansyn-image-processing-control',
 		inputs: ['expand', 'initParams'],
@@ -35,7 +40,7 @@ describe('ToolsComponent', () => {
 				[layersFeatureKey]: LayersReducer,
 				[mapFeatureKey]: MapReducer
 			}), TranslateModule.forRoot()],
-			declarations: [ToolsComponent, mockGoTo, mockAnnotationsControl, mockImageManualProcessing],
+			declarations: [ToolsComponent, mockGoTo, mockOverlaysDisplayMode, mockAnnotationsControl, mockImageManualProcessing],
 			providers: [ImageryCommunicatorService, { provide: MatDialogRef, useValue: {} }, { provide: MatDialog, useValue: {} }]
 		})
 			.compileComponents();

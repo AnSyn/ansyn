@@ -68,6 +68,7 @@ export { orientations, ORIENTATIONS } from './modules/status-bar/models/combo-bo
 export { ClearActiveInteractionsAction } from './modules/menu-items/tools/actions/tools.actions';
 export { selectAutoSave } from './modules/menu-items/cases/reducers/cases.reducer';
 export { FilterType } from './modules/menu-items/filters/models/filter-type';
+export { OverlayDisplayMode } from './modules/menu-items/tools/overlays-display-mode/overlays-display-mode.component';
 
 export { SelectCaseSuccessAction } from './modules/menu-items/cases/actions/cases.actions';
 export { ILayersManagerConfig } from './modules/menu-items/layers-manager/models/layers-manager-config';

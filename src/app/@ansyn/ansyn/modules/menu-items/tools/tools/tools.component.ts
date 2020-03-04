@@ -24,6 +24,7 @@ import { selectActiveAnnotationLayer } from '../../layers-manager/reducers/layer
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { MatDialog } from '@angular/material/dialog';
 import { ExportMapsPopupComponent } from '../export-maps-popup/export-maps-popup.component';
+import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 
 @Component({
 	selector: 'ansyn-tools',

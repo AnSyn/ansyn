@@ -2,7 +2,8 @@ import { Action } from '@ngrx/store';
 import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { SubMenuEnum, toolsFlags } from '../reducers/tools.reducer';
 import { type } from '../../../core/utils/type';
-import { ImageManualProcessArgs, IOverlaysManualProcessArgs, OverlayDisplayMode } from '../../cases/models/case.model';
+import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
+import { ImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
 import { AnnotationMode, IUpdateFeatureEvent } from '@ansyn/ol';
 
 export const ToolsActionsTypes = {

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CoreModule } from '../../core/core.module';
 import { ToolsComponent } from './tools/tools.component';
 import { GoToModule } from './go-to/go-to.module';
+import { OverlaysDisplayModeComponent } from './overlays-display-mode/overlays-display-mode.component';
 import { AnnotationsControlComponent } from './components/annotations-control/annotations-control.component';
 import { StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from './reducers/tools.reducer';
@@ -40,7 +41,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 		MatFormFieldModule
 	],
 	providers: [ProjectionConverterService, MatDialogModule, { provide: MatDialogRef, useValue: {} }],
-	declarations: [ToolsComponent, ImageProcessingControlComponent, AnnotationsControlComponent, MeasureControlComponent, ExportMapsPopupComponent],
+	declarations: [ToolsComponent, ImageProcessingControlComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent, MeasureControlComponent, ExportMapsPopupComponent],
 	entryComponents: [ToolsComponent, MeasureControlComponent, ExportMapsPopupComponent],
 	exports: [ToolsComponent, MatDialogModule]
 })

@@ -1,7 +1,6 @@
 @import "ansyn/less/colors";
 @import "ansyn/less/globals";
 
-@panel-radius: 10px;
 :host {
 	display: flex;
 	flex: 1;
@@ -32,13 +31,13 @@
 			}
 
 			/deep/ button.search-panel-button-left {
-				border-top-left-radius: @panel-radius;
-				border-bottom-left-radius: @panel-radius;
+				border-top-left-radius: @status-bar-panel-radius;
+				border-bottom-left-radius: @status-bar-panel-radius;
 			}
 
 			/deep/ button.search-panel-button-right {
-				border-top-right-radius: @panel-radius;
-				border-bottom-right-radius: @panel-radius;
+				border-top-right-radius: @status-bar-panel-radius;
+				border-bottom-right-radius: @status-bar-panel-radius;
 			}
 		}
 	}

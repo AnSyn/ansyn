@@ -1,7 +1,6 @@
 @import "ansyn/less/colors";
 @import "ansyn/less/globals";
 
-@panel-radius: 10px;
 :host {
 	display: flex;
 	align-items: center;
@@ -20,8 +19,8 @@
 			display: flex;
 			align-items: center;
 			border: 1px solid @status-bar-background;
-			border-bottom-left-radius: @panel-radius;
-			border-top-left-radius: @panel-radius;
+			border-bottom-left-radius: @status-bar-panel-radius;
+			border-top-left-radius: @status-bar-panel-radius;
 			margin-right: 1px;
 			padding: 6.5px;
 			user-select: none;
@@ -45,10 +44,14 @@
 
 			&:last-child {
 				.search-panel-button {
-					border-bottom-right-radius: @panel-radius;
-					border-top-right-radius: @panel-radius;
+					border-bottom-right-radius: @status-bar-panel-radius;
+					border-top-right-radius: @status-bar-panel-radius;
 				}
 			}
 		}
+	}
+
+	&.rtl {
+
 	}
 }

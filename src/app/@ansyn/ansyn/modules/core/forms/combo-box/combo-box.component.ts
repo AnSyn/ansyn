@@ -23,11 +23,11 @@ export class ComboBoxComponent implements ControlValueAccessor {
 	@Input() icon: string;
 	disabled: boolean;
 	selected: any;
-	@Input() toolTipField: string;
 	@Input() comboBoxToolTipDescription: string;
 	@Input() direction: 'top' | 'bottom' = 'bottom';
 	@Input() color: 'black' | 'transparent' = 'black';
 	@Input() withArrow = true;
+	@Input() alwaysChange: boolean;
 	@Input() buttonClass: string;
 
 	@Input() placeholder: string;
@@ -56,7 +56,7 @@ export class ComboBoxComponent implements ControlValueAccessor {
 	}
 
 	selectOption(selected) {
-		if (selected !== this.selected) {
+		if (selected !== this.selected || this.alwaysChange) {
 			this.selected = selected;
 			this.onChangeCallback(selected);
 		}

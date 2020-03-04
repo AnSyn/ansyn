@@ -49,9 +49,26 @@
 				}
 			}
 		}
-	}
-
-	&.rtl {
-
+		&.rtl {
+			justify-content: flex-end;
+			flex-direction: row-reverse;
+			div.search-title {
+				direction: rtl;
+				border-bottom-left-radius: 0;
+				border-top-left-radius: 0;
+				border-bottom-right-radius: @status-bar-panel-radius;
+				border-top-right-radius: @status-bar-panel-radius;
+			}
+			.box {
+				&:last-child {
+					.search-panel-button {
+						border-bottom-right-radius: 0;
+						border-top-right-radius: 0;
+						border-bottom-left-radius: @status-bar-panel-radius;
+						border-top-left-radius: @status-bar-panel-radius;
+					}
+				}
+			}
+		}
 	}
 }

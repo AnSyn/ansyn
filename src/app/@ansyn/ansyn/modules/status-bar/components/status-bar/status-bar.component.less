@@ -19,6 +19,15 @@
 
 		&.rtl {
 			flex-direction: row-reverse;
+
+			/deep/ ansyn-search-panel {
+				justify-content: flex-end;
+			}
+
+			/deep/ ansyn-case-panel {
+				border-left: none;
+				border-right: 1px solid @status-bar-delimiter;
+			}
 		}
 
 		/deep/ i.icon, span.title{

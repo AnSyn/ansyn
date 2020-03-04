@@ -73,21 +73,6 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		})
 	);
 
-	/*@AutoSubscription
-	geoFilterStatus$ = this.store$.select(selectGeoFilterStatus).pipe(
-		tap((geoFilterStatus: IGeoFilterStatus) => {
-			this.geoFilterStatus = geoFilterStatus;
-			this.geoFilterTitle = 'none';
-		})
-	);
-
-	@AutoSubscription
-	regionType$ = this.store$.select(selectRegion).pipe(
-		filter(Boolean),
-		map((region) => region.type),
-		tap((regionType) => this.regionType = regionType)
-	);*/
-
 	@AutoSubscription
 	geoFilter$ = combineLatest(
 		this.store$.select(selectGeoFilterStatus),

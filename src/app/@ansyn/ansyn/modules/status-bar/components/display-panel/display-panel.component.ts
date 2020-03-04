@@ -35,10 +35,6 @@ export class DisplayPanelComponent implements OnInit, OnDestroy {
 				@Inject(ORIENTATIONS) public orientations: CaseOrientation[]) {
 	}
 
-	get toolTips(): IToolTipsConfig {
-		return this.statusBarConfig.toolTips || {};
-	}
-
 	get layouts(): LayoutKey[] {
 		return Array.from(layoutOptions.keys());
 	}

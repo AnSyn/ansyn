@@ -31,6 +31,7 @@ export interface IContextMenuShowPayload {
 export interface IOverlayButton {
 	name: string;
 	subList: string;
+	disabledToolTip?: string;
 	action: ($event: MouseEvent, subFilter?: string) => void;
 }
 
@@ -112,6 +113,7 @@ export class ContextMenuComponent implements OnInit {
 		{
 			name: 'best',
 			subList: 'allSensors',
+			disabledToolTip: this.config.disableBestResolutionContextMenu ? 'down for maintenance' : null,
 			action: this.clickBest.bind(this)
 		},
 		{
@@ -284,6 +286,11 @@ export class ContextMenuComponent implements OnInit {
 	isDisabled(subList: string) {
 		if (subList === 'angleFilter') {
 			return !this[subList] || this[subList].overlays.length === 0;
+		} else if (subList === 'allSensors') {
+			if (this.config.disableBestResolutionContextMenu) {
+				return true;
+			}
+			return !this[subList] || this[subList].length === 0;
 		} else {
 			return !this[subList] || this[subList].length === 0;
 		}

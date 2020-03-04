@@ -11,7 +11,7 @@ import { tap } from 'rxjs/operators';
 	templateUrl: './credentials.component.html',
 	styleUrls: ['./credentials.component.less']
 })
-export class CredentialsComponent implements OnInit, OnDestroy{
+export class CredentialsComponent implements OnInit, OnDestroy {
 	onClickOutside$: Subscription;
 
 	constructor(public credentialsService: CredentialsService,
@@ -32,7 +32,6 @@ export class CredentialsComponent implements OnInit, OnDestroy{
 	}
 
 	ngOnInit() {
-		this.credentialsService.getCredentials().subscribe();
 		this.onClickOutside$ = fromEvent(this.element.nativeElement, 'click').pipe(
 			tap((event: any) => {
 				if ((event.path && !event.path.includes(this.element.nativeElement.lastChild))) {

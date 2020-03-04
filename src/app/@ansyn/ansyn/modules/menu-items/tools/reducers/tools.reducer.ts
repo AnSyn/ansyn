@@ -1,10 +1,8 @@
 import { StartMouseShadow, StopMouseShadow, ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
-import { ImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
-import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
+import { ImageManualProcessArgs, IOverlaysManualProcessArgs, OverlayDisplayMode } from '../../cases/models/case.model';
 import { AnnotationMode } from '@ansyn/ol';
-import { selectActiveMapId } from '@ansyn/map-facade';
 
 export enum toolsFlags {
 	geoRegisteredOptionsEnabled = 'geoRegisteredOptionsEnabled',

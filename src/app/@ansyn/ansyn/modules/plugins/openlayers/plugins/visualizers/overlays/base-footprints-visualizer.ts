@@ -8,8 +8,8 @@ import { selectDrops } from '../../../../../overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../../../../overlays/services/overlays.service';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
 import { EntitiesVisualizer } from '@ansyn/ol';
-import { OverlayDisplayMode } from '../../../../../menu-items/tools/overlays-display-mode/overlays-display-mode.component';
 import { selectOverlayDisplayModeByMapId } from '@ansyn/map-facade';
+import { OverlayDisplayMode } from '../../../../../menu-items/cases/models/case.model';
 
 export class BaseFootprintsVisualizer extends EntitiesVisualizer {
 

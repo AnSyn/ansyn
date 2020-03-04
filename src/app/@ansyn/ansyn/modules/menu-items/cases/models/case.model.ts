@@ -3,7 +3,8 @@ import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
 import { LayoutKey } from '@ansyn/map-facade';
 import { FilterType } from '../../filters/models/filter-type';
 import { IMapSettings, IMapSettingsData, IVisualizerEntity } from '@ansyn/imagery';
-import { OverlayDisplayMode } from '../../tools/overlays-display-mode/overlays-display-mode.component';
+
+export type OverlayDisplayMode = 'Polygon' | 'None';
 
 export interface ICasePreview {
 	creationTime: Date;

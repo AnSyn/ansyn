@@ -1,5 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { TranslateModule } from '@ngx-translate/core';
+import { HttpClientModule } from '@angular/common/http';
 import { GeoComponent } from './geo.component';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -11,7 +13,10 @@ describe('GeoComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [GeoComponent],
-			imports: [FormsModule]
+			imports: [FormsModule, HttpClientModule, TranslateModule.forRoot()],
+			providers: [
+
+			]
 		})
 			.compileComponents();
 	}));

@@ -91,8 +91,8 @@ export class ImageryRotationComponent {
 		}
 
 		const currentRotationInDegrees = toDegrees(this.rotationAngle) % 360;
-		if ((currentRotationInDegrees > 0 && (currentRotationInDegrees > 360 - this.thresholdDegrees || currentRotationInDegrees < this.thresholdDegrees)) ||
-			(currentRotationInDegrees < 0 && (Math.abs(currentRotationInDegrees) > 360 - this.thresholdDegrees || Math.abs(currentRotationInDegrees) < this.thresholdDegrees))) {
+		if ((currentRotationInDegrees >= 0 && (currentRotationInDegrees >= 360 - this.thresholdDegrees || currentRotationInDegrees <= this.thresholdDegrees)) ||
+			(currentRotationInDegrees < 0 && (Math.abs(currentRotationInDegrees) >= 360 - this.thresholdDegrees || Math.abs(currentRotationInDegrees) <= this.thresholdDegrees))) {
 			this.store.dispatch(new PointToImageOrientationAction({ mapId: this.mapState.id, overlay}));
 		} else {
 			this.store.dispatch(new PointToRealNorthAction(this.mapState.id));

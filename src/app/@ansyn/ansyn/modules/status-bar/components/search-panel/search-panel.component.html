@@ -6,7 +6,7 @@
 		<button ansynComboBoxTrigger
 				#timePickerTrigger
 				(click)="toggleTimelineStartEndSearch()"
-				[attr.tooltip-value]="toolTips.timeFilterEdit | translate"
+				[attr.tooltip-value]="statusBarConfig?.toolTips?.timeFilterEdit | translate"
 				[isActive]="timeSelectionExpand"
 				[withArrow]="false"
 				icon="icon icon-status-bar-time"
@@ -33,10 +33,10 @@
 			[buttonClass]="'search-panel-button'"
 			direction="top"
 			name="GeoFilter"
-			[comboBoxToolTipDescription]="toolTips.geoFilter | translate"
+			[comboBoxToolTipDescription]="statusBarConfig?.toolTips?.geoFilter | translate"
 			[withArrow]="false"
 			icon="icon icon-status-bar-geo"
-			[ngModel]="geoFilter"
+			[ngModel]="geoFilterTitle"
 			(ngModelChange)="geoFilterChanged($event)">
 
 			<ansyn-combo-box-option *ngFor="let _geoFilter of geoFilters" [value]="_geoFilter">
@@ -54,7 +54,7 @@
 				icon="icon icon-input-filter"
 				[isActive]="dataInputFilterExpand"
 				[withArrow]="false"
-				[attr.tooltip-value]="toolTips.dataInputFilter | translate"
+				[attr.tooltip-value]="statusBarConfig?.toolTips?.dataInputFilter | translate"
 				tooltip-class="top"
 				class="search-panel-button">
 			<span class="title">{{ dataInputFilterTitle | translate }}</span>

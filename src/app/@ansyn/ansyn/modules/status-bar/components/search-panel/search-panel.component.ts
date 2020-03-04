@@ -106,10 +106,6 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 				@Inject(GEO_FILTERS) public geoFilters: CaseGeoFilter[]) {
 	}
 
-	get geoFilter() {
-		return this.geoFilterStatus.searchMode !== SearchModeEnum.none ? this.geoFilterStatus.searchMode : this.regionType;
-	}
-
 
 
 	ngOnInit() { }

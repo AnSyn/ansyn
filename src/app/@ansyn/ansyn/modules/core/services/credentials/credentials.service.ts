@@ -1,12 +1,13 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { credentialsConfig, ICredentialsConfig } from './config';
-import { catchError, mergeMap, tap } from 'rxjs/operators';
+import { catchError, mergeMap, take, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 
+interface ICredentialsLocation  {Name: string};
 interface ICredentialsResponse {
-	authorizedAreas: { Name: string }[];
-	unauthorizedAreas: { Name: string }[];
+	authorizedAreas: ICredentialsLocation[];
+	unauthorizedAreas: ICredentialsLocation[];
 }
 
 @Injectable({
@@ -18,18 +19,18 @@ export class CredentialsService {
 
 	constructor(protected httpClient: HttpClient,
 				@Inject(credentialsConfig) public config: ICredentialsConfig) {
-		this.getCredentials().subscribe();
+		this.getCredentials().pipe(take(1)).subscribe();
 	}
 
-	get user() {
+	get user(): string {
 		return 'unknown';
 	}
 
-	get authorizedAreas() {
+	get authorizedAreas(): ICredentialsLocation[] {
 		return this.data.authorizedAreas;
 	}
 
-	get unauthorizedAreas() {
+	get unauthorizedAreas(): ICredentialsLocation[] {
 		return this.data.unauthorizedAreas;
 	}
 
@@ -41,15 +42,15 @@ export class CredentialsService {
 		return of(response);
 	}
 
-	openPermissionSite() {
+	openPermissionSite(): void{
 		window.open(this.config.authorizationSiteURL, '_blank');
 	}
 
-	downloadGuide() {
+	downloadGuide(): void {
 		window.open(this.config.authorizationInfoURL, '_blank');
 	}
 
-	getCredentials() {
+	getCredentials(): Observable<any> {
 		const url = this.getUrl();
 		const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 		const options = { headers };

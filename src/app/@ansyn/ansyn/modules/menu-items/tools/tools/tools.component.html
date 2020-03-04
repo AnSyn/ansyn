@@ -44,19 +44,19 @@
 	</div>
 	<div class="display-overlay-visualizer">
 		<button tooltip-class="right"
-				[attr.tooltip-value]="'Display Overlays' | translate"
-				(click)="toggleSubMenu(subMenuEnum.overlays)"
+				[attr.tooltip-value]="'Overlays Footprint' | translate"
+				(click)="toggleDisplayFootprints()"
 				[disabled]="isGeoOptionsDisabled"
 				[class.mode-on]="displayModeOn && !isGeoOptionsDisabled"
-				[class.active]="isExpand(subMenuEnum.overlays) && !isGeoOptionsDisabled">
+				[class.active]="displayModeOn && !isGeoOptionsDisabled">
 			<i class="icon-frame-mode"></i>
 		</button>
 
-		<ansyn-overlays-display-mode
-			[disabled]="isGeoOptionsDisabled"
-			[expand]="isExpand(subMenuEnum.overlays) && !isGeoOptionsDisabled"
-			[(modeOn)]="displayModeOn">
-		</ansyn-overlays-display-mode>
+		<!--<ansyn-overlays-display-mode-->
+			<!--[disabled]="isGeoOptionsDisabled"-->
+			<!--[expand]="isExpand(subMenuEnum.overlays) && !isGeoOptionsDisabled"-->
+			<!--[(modeOn)]="displayModeOn">-->
+		<!--</ansyn-overlays-display-mode>-->
 	</div>
 
 	<div class="user-annotations" [class.active]="isExpand(subMenuEnum.annotations)">

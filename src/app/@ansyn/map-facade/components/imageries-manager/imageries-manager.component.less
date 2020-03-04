@@ -15,7 +15,7 @@
 			div.map-container-wrapper {
 				&:first-child {
 					/deep/ .ol-attribution {
-						bottom: 60px;
+						bottom: calc(@status-bar-height + 15px)
 					}
 				}
 			}
@@ -25,7 +25,7 @@
 			div.map-container-wrapper {
 				&:first-child {
 					/deep/ .ol-attribution {
-						bottom: 60px;
+						bottom: calc(@status-bar-height + 15px)
 					}
 				}
 			}
@@ -35,7 +35,7 @@
 			div.map-container-wrapper {
 				&:nth-child(2) {
 					/deep/ .ol-attribution {
-						bottom: 60px;
+						bottom: calc(@status-bar-height + 15px)
 					}
 				}
 			}
@@ -45,7 +45,7 @@
 			div.map-container-wrapper {
 				&:nth-child(3) {
 					/deep/ .ol-attribution {
-						bottom: 60px;
+						bottom: calc(@status-bar-height + 20px)
 					}
 				}
 			}
@@ -92,7 +92,7 @@
 		}
 
 		/deep/ .ol-attribution {
-			bottom: 40px;
+			bottom: calc(@status-bar-height + 5px);
 		}
 
 		/deep/ .ol-scale-line {
@@ -164,7 +164,7 @@
 					left: 0;
 
 					/deep/ .ol-attribution {
-						bottom: 40px;
+						bottom: calc(@status-bar-height + 5px);
 					}
 				}
 

@@ -4,7 +4,10 @@ import { credentialsConfig, ICredentialsConfig } from './config';
 import { catchError, mergeMap, take, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 
-interface ICredentialsLocation  {Name: string};
+interface ICredentialsLocation {
+	Name: string
+};
+
 interface ICredentialsResponse {
 	authorizedAreas: ICredentialsLocation[];
 	unauthorizedAreas: ICredentialsLocation[];
@@ -42,7 +45,7 @@ export class CredentialsService {
 		return of(response);
 	}
 
-	openPermissionSite(): void{
+	openPermissionSite(): void {
 		window.open(this.config.authorizationSiteURL, '_blank');
 	}
 

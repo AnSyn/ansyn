@@ -11,7 +11,7 @@ import { tap } from 'rxjs/operators';
 	templateUrl: './credentials.component.html',
 	styleUrls: ['./credentials.component.less']
 })
-export class CredentialsComponent implements OnInit, OnDestroy{
+export class CredentialsComponent implements OnInit, OnDestroy {
 	onClickOutside$: Subscription;
 
 	constructor(public credentialsService: CredentialsService,

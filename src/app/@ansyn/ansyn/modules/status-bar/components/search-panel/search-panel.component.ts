@@ -47,7 +47,6 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	geoFilterStatus: IGeoFilterStatus;
 	dataInputFilterExpand: boolean;
 	timeSelectionExpand: boolean;
-	favoriteOverlays: IOverlay[];
 	time: ICaseTimeState;
 	dataInputFilterTitle = 'All';
 	timeSelectionTitle: string;

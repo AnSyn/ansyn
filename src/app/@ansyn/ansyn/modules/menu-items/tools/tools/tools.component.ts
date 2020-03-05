@@ -24,7 +24,6 @@ import { selectActiveAnnotationLayer } from '../../layers-manager/reducers/layer
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { MatDialog } from '@angular/material/dialog';
 import { ExportMapsPopupComponent } from '../export-maps-popup/export-maps-popup.component';
-import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 
 @Component({
 	selector: 'ansyn-tools',
@@ -54,13 +53,6 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		})
 	);
 
-	@AutoSubscription
-	public imageProcessingDisabled$: Observable<boolean> =
-		this.store$.select(selectToolFlag(toolsFlags.imageProcessingDisabled)).pipe(
-			filter(Boolean),
-			tap(this.closeManualProcessingMenu.bind(this))
-		);
-
 	isActiveAnnotationLayer$ = this.store$.select(selectActiveAnnotationLayer).pipe(
 		map(Boolean)
 	);
@@ -80,24 +72,12 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		return !this.flags.get(toolsFlags.geoRegisteredOptionsEnabled);
 	}
 
-	get imageProcessingDisabled() {
-		return this.flags.get(toolsFlags.imageProcessingDisabled);
-	}
-
 	get shadowMouseDisabled() {
 		return this.flags.get(toolsFlags.shadowMouseDisabled);
 	}
 
 	get onShadowMouse() {
 		return this.flags.get(toolsFlags.shadowMouse);
-	}
-
-	get onAutoImageProcessing() {
-		return this.flags.get(toolsFlags.autoImageProcessing);
-	}
-
-	get imageManualProcessingDisabled() {
-		return this.imageProcessingDisabled || this.onAutoImageProcessing;
 	}
 
 	get onMeasureTool() {
@@ -131,11 +111,6 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		const value = this.onMeasureTool;
 		this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [] }));
 		this.store$.dispatch(new SetMeasureDistanceToolState(!value));
-	}
-
-	toggleAutoImageProcessing() {
-		this.store$.dispatch(new SetAutoImageProcessing());
-		this.closeManualProcessingMenu();
 	}
 
 	toggleDisplayFootprints() {

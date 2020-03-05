@@ -606,4 +606,5 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		const plugin: AnnotationsVisualizer = this.imageryCommunicatorService.communicatorsAsArray()[0].getPlugin(AnnotationsVisualizer);
 		plugin.setMode(null, false);
 	}
+
 }

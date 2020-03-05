@@ -52,7 +52,7 @@ export interface IEditAnnotationMode {
 // @dynamic
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [OpenLayersProjectionService, OL_PLUGINS_CONFIG],
+	deps: [OpenLayersProjectionService, OL_PLUGINS_CONFIG, TranslateService],
 	isHideable: true
 })
 export class AnnotationsVisualizer extends EntitiesVisualizer {

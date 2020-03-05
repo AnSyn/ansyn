@@ -90,10 +90,6 @@
 			<span class="render">{{'Start-End' | translate}}</span>
 		</button>
 
-<!--		(click)="toggleTimelineStartEndSearch()"-->
-
-		<!--		[owlDateTimeTrigger]="dt10"-->
-
 		<input [owlDateTime]="dt10"
 			   [selectMode]="'range'"
 			   [(ngModel)]="timeRange"
@@ -101,15 +97,6 @@
 			   class="time-picker-input">
 		<owl-date-time #dt10 [backdropClass]="'time-picker-backdrop-undo'"></owl-date-time>
 
-<!--		<ansyn-timeline-timepicker-->
-<!--			*ngIf="timeSelectionEditIcon"-->
-<!--			(ansynClickOutside)="toggleTimelineStartEndSearch($event)"-->
-<!--			[trigger]="timePickerTrigger.optionsTrigger.nativeElement"-->
-<!--			[startDatePickerValue]="(time)?.from"-->
-<!--			[endDatePickerValue]="(time)?.to"-->
-<!--			(closeComponent)="toggleTimelineStartEndSearch()"-->
-<!--			(applyDate)="applyTimelinePickerResult($event)">-->
-<!--		</ansyn-timeline-timepicker>-->
 	</div>
 
 	<!-- Layout -->

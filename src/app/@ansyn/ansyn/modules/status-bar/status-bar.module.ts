@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { StatusBarComponent } from './components/status-bar/status-bar.component';
 import { FormsModule } from '@angular/forms';
 import { CoreModule } from '../core/core.module';
-import { TimelineTimepickerComponent } from './components/timeline-timepicker/timeline-timepicker.component';
 import { StoreModule } from '@ngrx/store';
 import { statusBarFeatureKey, StatusBarReducer } from './reducers/status-bar.reducer';
 import { comboBoxesOptions, GEO_FILTERS, TIME_FILTERS } from './models/combo-boxes.model';
@@ -27,7 +26,7 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@ansyn/ng-pick-datet
 		OwlDateTimeModule,
 		OwlNativeDateTimeModule
 	],
-	declarations: [StatusBarComponent, TimelineTimepickerComponent, TreeViewComponent, NavigationBarComponent, ComboBoxesComponent],
+	declarations: [StatusBarComponent, TreeViewComponent, NavigationBarComponent, ComboBoxesComponent],
 	providers: [
 		{
 			provide: TIME_FILTERS,

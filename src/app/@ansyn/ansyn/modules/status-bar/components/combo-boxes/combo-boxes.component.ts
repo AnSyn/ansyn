@@ -10,7 +10,6 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { GEO_FILTERS, IComboBoxesProperties, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
-import { CaseDataFilterTitle } from '../../models/data-input-filters.model';
 import { Actions, ofType } from '@ngrx/effects';
 import { SetImageOpeningOrientation, UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 import { animate, style, transition, trigger } from '@angular/animations';
@@ -140,17 +139,6 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 	toggleDataInputFilterIcon() {
 		this.dataInputFilterExpand = !this.dataInputFilterExpand;
 	}
-
-	// toggleTimelineStartEndSearch($event?: any) {
-	// 	if (!$event || !$event.path.map(({ classList }) => classList).filter(Boolean).some((classList) => classList.contains('flatpickr-calendar'))) {
-	// 		this.timeSelectionEditIcon = !this.timeSelectionEditIcon;
-	// 	}
-	// }
-	//
-	// applyTimelinePickerResult(time: ICaseTimeState) {
-	// 	this.store$.dispatch(new SetOverlaysCriteriaAction({ time }));
-	// 	this.toggleTimelineStartEndSearch();
-	// }
 
 	onTimeRangeChange(event) {
 		const time: ICaseTimeState = {

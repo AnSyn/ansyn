@@ -3,7 +3,11 @@
 @import "ansyn/less/z-index-globals";
 @import "map-facade/less/map-facade";
 
-@height-minus-status: calc(~"100% - @{status-bar-height}");
+@attribute-default: 5px;
+@attribute-minimize: @attribute-default + 10;
+@attribute-on-hide-button: 22px;
+@attribute-on-hide-button-minimize: @attribute-on-hide-button + 10;
+
 
 :host {
 	position: absolute;
@@ -15,7 +19,7 @@
 			div.map-container-wrapper {
 				&:first-child {
 					/deep/ .ol-attribution {
-						bottom: 22px;
+						bottom: @attribute-on-hide-button;
 					}
 				}
 			}
@@ -25,7 +29,7 @@
 			div.map-container-wrapper {
 				&:first-child {
 					/deep/ .ol-attribution {
-						bottom: 22px;
+						bottom:  @attribute-on-hide-button;
 					}
 				}
 			}
@@ -35,7 +39,7 @@
 			div.map-container-wrapper {
 				&:nth-child(2) {
 					/deep/ .ol-attribution {
-						bottom: 22px;
+						bottom:  @attribute-on-hide-button;
 					}
 				}
 			}
@@ -45,7 +49,7 @@
 			div.map-container-wrapper {
 				&:nth-child(3) {
 					/deep/ .ol-attribution {
-						bottom: 22px;
+						bottom:  @attribute-on-hide-button;
 					}
 				}
 			}
@@ -97,7 +101,7 @@
 		}
 
 		/deep/ .ol-attribution {
-			bottom: 5px;
+			bottom: @attribute-default;
 		}
 
 		&.layout2 {
@@ -157,10 +161,6 @@
 				&:nth-child(2) {
 					top: 0;
 					left: 50%;
-
-					/deep/ .ol-attribution {
-						bottom: 5px;
-					}
 				}
 
 				&:nth-child(3) {
@@ -182,10 +182,6 @@
 					left: 0;
 					width: 100%;
 					height: 50%;
-
-					/deep/ .ol-attribution {
-						bottom: 5px;
-					}
 				}
 
 				&:nth-child(2) {
@@ -229,11 +225,10 @@
 	}
 
 	div.footer-collapsed {
-		&.layout1 {
-			/deep/ .ol-attribution {
-				bottom: 15px;
-			}
+		/deep/ .ol-attribution {
+			bottom: @attribute-minimize;
 		}
+
 		&.layout2 {
 			div.map-container-wrapper {
 				width: 50%;
@@ -244,16 +239,13 @@
 					left: 0;
 
 					/deep/ .ol-attribution {
-						bottom: 32px;
+						bottom:  @attribute-on-hide-button-minimize;
 					}
 				}
 
 				&:nth-child(2) {
 					top: 0;
 					left: 50%;
-					/deep/ .ol-attribution {
-						bottom: 15px;
-					}
 				}
 			}
 		}
@@ -268,14 +260,14 @@
 				&:nth-child(1) {
 					top: 0;
 					left: 0;
+					/deep/ .ol-attribution {
+						bottom: @attribute-default;
+					}
 				}
 
 				&:nth-child(2) {
 					top: 50%;
 					left: 0;
-					/deep/ .ol-attribution {
-						bottom: 15px;
-					}
 				}
 			}
 		}
@@ -292,22 +284,21 @@
 					left: 0;
 
 					/deep/ .ol-attribution {
-						bottom: 32px;
+						bottom: @attribute-on-hide-button-minimize;
 					}
 				}
 
 				&:nth-child(2) {
 					top: 0;
 					left: 50%;
+					/deep/ .ol-attribution {
+						bottom: @attribute-default;
+					}
 				}
 
 				&:nth-child(3) {
 					top: 50%;
 					left: 50%;
-
-					/deep/ .ol-attribution {
-						bottom: 15px;
-					}
 				}
 			}
 		}
@@ -322,6 +313,9 @@
 					height: 50%;
 					top: 0;
 					left: 0;
+					/deep/ .ol-attribution {
+						bottom: @attribute-default;
+					}
 				}
 
 				&:nth-child(2) {
@@ -329,17 +323,13 @@
 					left: 0;
 
 					/deep/ .ol-attribution {
-						bottom: 32px;
+						bottom: @attribute-on-hide-button-minimize;
 					}
 				}
 
 				&:nth-child(3) {
 					top: 50%;
 					left: 50%;
-
-					/deep/ .ol-attribution {
-						bottom: 15px;
-					}
 				}
 			}
 		}
@@ -359,21 +349,24 @@
 					left: 50%;
 				}
 
+				&:nth-child(1), &:nth-child(2) {
+					/deep/ .ol-attribution {
+						bottom: @attribute-default;
+					}
+				}
+
 				&:nth-child(3) {
 					top: 50%;
 					left: 0;
 
 					/deep/ .ol-attribution {
-						bottom: 32px;
+						bottom: @attribute-on-hide-button-minimize;
 					}
 				}
 
 				&:nth-child(4) {
 					top: 50%;
 					left: 50%;
-					/deep/ .ol-attribution {
-						bottom: 15px;
-					}
 				}
 			}
 		}

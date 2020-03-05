@@ -17,10 +17,6 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 export class CasePanelComponent implements OnInit {
 	@Input() caseName: string;
 
-	get toolTips(): IToolTipsConfig {
-		return this.statusBarConfig.toolTips || {};
-	}
-
 	overlaysCount$: Observable<number> = this.actions$.pipe(
 		ofType(OverlaysActionTypes.UPDATE_OVERLAY_COUNT),
 		map(({ payload }: UpdateOverlaysCountAction) => payload)

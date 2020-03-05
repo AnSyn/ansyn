@@ -3,7 +3,7 @@
 </div>
 <div class="bottom">
 	<div class="box"
-		 [attr.tooltip-value]="toolTips.overlayCount | translate"
+		 [attr.tooltip-value]="statusBarConfig?.toolTips?.overlayCount | translate"
 		 tooltip-class="top">
 		<i class="block-icon icon-status-bar-imagery-count"></i>
 		<span>{{(overlaysCount$ | async) || 0}}</span>

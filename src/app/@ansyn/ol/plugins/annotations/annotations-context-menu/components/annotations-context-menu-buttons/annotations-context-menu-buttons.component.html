@@ -90,7 +90,7 @@
 			 				  getFeatureProps()?.mode === 'Arrow'">
 		<i [attr.tooltip-value]="'Area' | translate" tooltip-class="bottom">
 			<svg fill="#fff">
-				<path [attr.d]="SVGICON.measureSvg"></path>
+				<path *ngFor="let area of SVGICON.areaSvg" [attr.d]="area"></path>
 			</svg>
 		</i>
 	</button>

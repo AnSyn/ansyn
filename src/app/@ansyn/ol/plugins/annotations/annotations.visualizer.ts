@@ -427,7 +427,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						text: new olText({
 							...this.measuresTextStyle,
 							text: this.formatLength(originalCoordinates)
-						})
+						}),
+						zIndex: 0
 					}));
 				}
 				break;
@@ -704,7 +705,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			labelPostion = labelPoint;
 		}
 		const labelFeature = new olFeature({
-			geometry: new olPoint(labelPostion.coordinates),
+			geometry: new olPoint(labelPostion.coordinates)
 		});
 		labelFeature.setStyle(new olStyle({
 			text: new olText({
@@ -712,7 +713,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				fill: new olFill({ color: entity.style.initial.label.fill }),
 				text: label.text,
 				offsetY: 30
-			})
+			}),
+			zIndex: 3
 		}));
 
 		return labelFeature;

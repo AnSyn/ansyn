@@ -54,12 +54,12 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		})
 	);
 
-	@AutoSubscription
-	public imageProcessingDisabled$: Observable<boolean> =
-		this.store$.select(selectToolFlag(toolsFlags.imageProcessingDisabled)).pipe(
-			filter(Boolean),
-			tap(this.closeManualProcessingMenu.bind(this))
-		);
+	// @AutoSubscription
+	// public imageProcessingDisabled$: Observable<boolean> =
+	// 	this.store$.select(selectToolFlag(toolsFlags.imageProcessingDisabled)).pipe(
+	// 		filter(Boolean),
+	// 		tap(this.closeManualProcessingMenu.bind(this))
+	// 	);
 
 	isActiveAnnotationLayer$ = this.store$.select(selectActiveAnnotationLayer).pipe(
 		map(Boolean)
@@ -80,9 +80,9 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		return !this.flags.get(toolsFlags.geoRegisteredOptionsEnabled);
 	}
 
-	get imageProcessingDisabled() {
-		return this.flags.get(toolsFlags.imageProcessingDisabled);
-	}
+	// get imageProcessingDisabled() {
+	// 	return this.flags.get(toolsFlags.imageProcessingDisabled);
+	// }
 
 	get shadowMouseDisabled() {
 		return this.flags.get(toolsFlags.shadowMouseDisabled);
@@ -96,9 +96,9 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		return this.flags.get(toolsFlags.autoImageProcessing);
 	}
 
-	get imageManualProcessingDisabled() {
-		return this.imageProcessingDisabled || this.onAutoImageProcessing;
-	}
+	// get imageManualProcessingDisabled() {
+	// 	return this.imageProcessingDisabled || this.onAutoImageProcessing;
+	// }
 
 	get onMeasureTool() {
 		return this.flags.get(toolsFlags.isMeasureToolActive);
@@ -133,10 +133,10 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		this.store$.dispatch(new SetMeasureDistanceToolState(!value));
 	}
 
-	toggleAutoImageProcessing() {
-		this.store$.dispatch(new SetAutoImageProcessing());
-		this.closeManualProcessingMenu();
-	}
+	// toggleAutoImageProcessing() {
+	// 	this.store$.dispatch(new SetAutoImageProcessing());
+	// 	this.closeManualProcessingMenu();
+	// }
 
 	toggleDisplayFootprints() {
 		if (this.displayModeOn) {
@@ -159,11 +159,11 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		return this.subMenu === subMenu;
 	}
 
-	closeManualProcessingMenu() {
-		if (this.isExpand(this.subMenuEnum.manualImageProcessing)) {
-			this.toggleSubMenu(this.subMenuEnum.manualImageProcessing);
-		}
-	}
+	// closeManualProcessingMenu() {
+	// 	if (this.isExpand(this.subMenuEnum.manualImageProcessing)) {
+	// 		this.toggleSubMenu(this.subMenuEnum.manualImageProcessing);
+	// 	}
+	// }
 
 	toggleExportMapsDialog() {
 		if (!this.isDialogShowing) {

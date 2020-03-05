@@ -36,7 +36,8 @@ circle.drop.selected {
 	width: 100%;
 	margin: 0 auto;
 	box-sizing: border-box;
-	color: black
+	color: #cbcbcb;
+	background-color: #2e2e2e;
 }
 
 button {

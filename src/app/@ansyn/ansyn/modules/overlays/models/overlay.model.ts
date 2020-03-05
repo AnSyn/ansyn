@@ -23,8 +23,7 @@ export interface IDilutedOverlaysHash {
 
 export enum GeoRegisteration {
 	geoRegistered = 'geoRegistered',
-	notGeoRegistered = 'notGeoRegistered',
-	poorGeoRegistered = 'poorGeoRegistered'
+	notGeoRegistered = 'notGeoRegistered'
 }
 
 export enum PhotoAngle {

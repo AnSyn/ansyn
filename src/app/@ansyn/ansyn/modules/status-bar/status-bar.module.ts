@@ -13,7 +13,7 @@ import { NavigationBarComponent } from './components/navigation-bar/navigation-b
 import { ComboBoxesComponent } from './components/combo-boxes/combo-boxes.component';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { ClickOutsideModule } from '../core/click-outside/click-outside.module';
-import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@ansyn/ng-pick-datetime';
 
 @NgModule({
 	imports: [

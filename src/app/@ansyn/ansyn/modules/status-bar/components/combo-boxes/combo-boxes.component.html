@@ -90,7 +90,8 @@
 			<span class="render">{{'Start-End' | translate}}</span>
 		</button>
 
-		<input [owlDateTime]="dt10"
+		<input timePickerInput
+			   [owlDateTime]="dt10"
 			   [selectMode]="'range'"
 			   [(ngModel)]="timeRange"
 			   (dateTimeChange)="onTimeRangeChange($event)"

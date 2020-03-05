@@ -4,7 +4,6 @@ import { ComboBoxesComponent } from './combo-boxes.component';
 import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { TimelineTimepickerComponent } from '../timeline-timepicker/timeline-timepicker.component';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { IStatusBarState, statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
@@ -31,9 +30,19 @@ describe('ComboBoxesComponent', () => {
 	const ansynTreeView = MockComponent({ selector: 'ansyn-tree-view', outputs: ['closeTreeView'] });
 	const ansynComboTrigger = MockComponent({
 		selector: 'button[ansynComboBoxTrigger]',
-		inputs: ['isActive', 'render', 'ngModel'],
+		inputs: ['isActive', 'render', 'ngModel', 'owlDateTimeTrigger'],
 		outputs: ['ngModelChange']
 	});
+	const mockTimePickerTrigger = MockComponent({
+		selector: 'input[timePickerInput]',
+		inputs: ['selectMode', 'ngModel', 'owlDateTime'],
+		outputs: ['ngModelChange', 'dateTimeChange']
+	});
+	const mockOwlDateTime = MockComponent({
+		selector: 'owl-date-time',
+		inputs: ['backdropClass']
+	});
+
 	let store: Store<IStatusBarState>;
 
 	beforeEach(async(() => {
@@ -42,9 +51,10 @@ describe('ComboBoxesComponent', () => {
 				ComboBoxesComponent,
 				mockComboBoxComponent,
 				mockComboBoxOptionComponent,
-				TimelineTimepickerComponent,
 				ansynTreeView,
 				ansynComboTrigger,
+				mockOwlDateTime,
+				mockTimePickerTrigger,
 				ClickOutsideDirective
 			],
 			imports: [StoreModule.forRoot({

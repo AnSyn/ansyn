@@ -7,7 +7,7 @@
 
 :host {
 	position: absolute;
-	height: 100%;
+	height: calc(100% + 10px);
 	width: 100%;
 
 	div.collapsable {
@@ -15,7 +15,7 @@
 			div.map-container-wrapper {
 				&:first-child {
 					/deep/ .ol-attribution {
-						bottom: calc(@status-bar-height + 15px)
+						bottom: 22px;
 					}
 				}
 			}
@@ -25,7 +25,7 @@
 			div.map-container-wrapper {
 				&:first-child {
 					/deep/ .ol-attribution {
-						bottom: calc(@status-bar-height + 15px)
+						bottom: 22px;
 					}
 				}
 			}
@@ -35,7 +35,7 @@
 			div.map-container-wrapper {
 				&:nth-child(2) {
 					/deep/ .ol-attribution {
-						bottom: calc(@status-bar-height + 15px)
+						bottom: 22px;
 					}
 				}
 			}
@@ -45,7 +45,7 @@
 			div.map-container-wrapper {
 				&:nth-child(3) {
 					/deep/ .ol-attribution {
-						bottom: calc(@status-bar-height + 20px)
+						bottom: 22px;
 					}
 				}
 			}
@@ -63,6 +63,10 @@
 		div.map-container-wrapper {
 			position: absolute;
 			overflow: hidden;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
 		}
 
 		div.active-border {
@@ -78,13 +82,14 @@
 			pointer-events: none;
 
 			&.active {
-				border: solid 3px @background-color-3;
+				border: solid 4px @background-color-3;
 			}
 		}
 
 		/deep/ .ol-scale-line {
 			bottom: 5px;
 			height: @scale-line-height;
+			min-width: 200px;
 		}
 
 		/deep/ .ol-scale-line-inner {
@@ -92,35 +97,11 @@
 		}
 
 		/deep/ .ol-attribution {
-			bottom: calc(@status-bar-height + 5px);
-		}
-
-		/deep/ .ol-scale-line {
-			min-width: 200px;
-		}
-
-		&.layout1 {
-			/deep/ .ol-scale-line {
-				bottom: @status-bar-height;
-			}
-
-
-			div.map-container-wrapper {
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
-
-				div.active-border {
-					display: none;
-				}
-			}
+			bottom: 5px;
 		}
 
 		&.layout2 {
-			/deep/ .ol-scale-line {
-				bottom: @status-bar-height;
-			}
+
 
 			div.map-container-wrapper {
 				width: 50%;
@@ -134,10 +115,6 @@
 				&:nth-child(2) {
 					top: 0;
 					left: 50%;
-				}
-
-				div.active-border {
-					height: @height-minus-status;
 				}
 			}
 
@@ -153,29 +130,11 @@
 				&:nth-child(1) {
 					top: 0;
 					left: 0;
-
-					/deep/ .ol-attribution {
-						bottom: 5px;
-					}
 				}
 
 				&:nth-child(2) {
 					top: 50%;
 					left: 0;
-
-					/deep/ .ol-attribution {
-						bottom: calc(@status-bar-height + 5px);
-					}
-				}
-
-				&:last-child {
-					div.active-border {
-						height: @height-minus-status;
-					}
-
-					/deep/ .ol-scale-line {
-						bottom: @status-bar-height;
-					}
 				}
 			}
 		}
@@ -188,16 +147,6 @@
 				&:first-child {
 					width: 50%;
 					height: 100%;
-				}
-
-				&:first-child, &:last-child {
-					div.active-border {
-						height: @height-minus-status;
-					}
-
-					/deep/ .ol-scale-line {
-						bottom: @status-bar-height;
-					}
 				}
 
 				&:nth-child(1) {
@@ -228,24 +177,11 @@
 				width: 50%;
 				height: 50%;
 
-				&:first-child {
-					width: 100%;
-					height: 50%;
-				}
-
-				&:not(:first-child) {
-					div.active-border {
-						height: @height-minus-status;
-					}
-
-					/deep/ .ol-scale-line {
-						bottom: @status-bar-height;
-					}
-				}
-
 				&:nth-child(1) {
 					top: 0;
 					left: 0;
+					width: 100%;
+					height: 50%;
 
 					/deep/ .ol-attribution {
 						bottom: 5px;
@@ -268,22 +204,6 @@
 			div.map-container-wrapper {
 				width: 50%;
 				height: 50%;
-
-				&:nth-child(1), &:nth-child(2) {
-					/deep/ .ol-attribution {
-						bottom: 5px;
-					}
-				}
-
-				&:nth-child(3), &:nth-child(4) {
-					div.active-border {
-						height: @height-minus-status;
-					}
-
-					/deep/ .ol-scale-line {
-						bottom: @status-bar-height;
-					}
-				}
 
 				&:nth-child(1) {
 					top: 0;
@@ -309,21 +229,12 @@
 	}
 
 	div.footer-collapsed {
-		/deep/ .ol-scale-line {
-			bottom: 5px !important;
-		}
-
 		&.layout1 {
 			/deep/ .ol-attribution {
-				bottom: 5px;
+				bottom: 15px;
 			}
 		}
-
 		&.layout2 {
-			/deep/ .ol-attribution {
-				bottom: 5px;
-			}
-
 			div.map-container-wrapper {
 				width: 50%;
 				height: 100%;
@@ -333,20 +244,18 @@
 					left: 0;
 
 					/deep/ .ol-attribution {
-						bottom: 5px;
+						bottom: 32px;
 					}
 				}
 
 				&:nth-child(2) {
 					top: 0;
 					left: 50%;
-				}
-
-				div.active-border {
-					height: 100%;
+					/deep/ .ol-attribution {
+						bottom: 15px;
+					}
 				}
 			}
-
 		}
 
 		&.layout3 {
@@ -356,10 +265,6 @@
 				width: 100%;
 				height: 50%;
 
-				/deep/ .ol-attribution {
-					bottom: 5px;
-				}
-
 				&:nth-child(1) {
 					top: 0;
 					left: 0;
@@ -368,16 +273,8 @@
 				&:nth-child(2) {
 					top: 50%;
 					left: 0;
-				}
-
-				&:last-child {
-
-					div.active-border {
-						height: 100%;
-					}
-
 					/deep/ .ol-attribution {
-						bottom: 5px;
+						bottom: 15px;
 					}
 				}
 			}
@@ -388,27 +285,14 @@
 				width: 50%;
 				height: 50%;
 
-				&:first-child {
+				&:nth-child(1) {
 					width: 50%;
 					height: 100%;
-				}
-
-				&:first-child, &:last-child {
-					div.active-border {
-						height: 100%;
-					}
-
-					/deep/ .ol-attribution {
-						bottom: 5px;
-					}
-				}
-
-				&:nth-child(1) {
 					top: 0;
 					left: 0;
 
 					/deep/ .ol-attribution {
-						bottom: 5px;
+						bottom: 32px;
 					}
 				}
 
@@ -420,10 +304,12 @@
 				&:nth-child(3) {
 					top: 50%;
 					left: 50%;
+
+					/deep/ .ol-attribution {
+						bottom: 15px;
+					}
 				}
 			}
-
-			flex-direction: column;
 		}
 
 		&.layout5 {
@@ -431,22 +317,9 @@
 				width: 50%;
 				height: 50%;
 
-				&:first-child {
+				&:nth-child(1) {
 					width: 100%;
 					height: 50%;
-				}
-
-				&:not(:first-child) {
-					div.active-border {
-						height: 100%;
-					}
-
-					/deep/ .ol-attribution {
-						bottom: 5px;
-					}
-				}
-
-				&:nth-child(1) {
 					top: 0;
 					left: 0;
 				}
@@ -456,13 +329,17 @@
 					left: 0;
 
 					/deep/ .ol-attribution {
-						bottom: 5px;
+						bottom: 32px;
 					}
 				}
 
 				&:nth-child(3) {
 					top: 50%;
 					left: 50%;
+
+					/deep/ .ol-attribution {
+						bottom: 15px;
+					}
 				}
 			}
 		}
@@ -472,17 +349,6 @@
 				width: 50%;
 				height: 50%;
 
-
-				/deep/ .ol-attribution {
-					bottom: 5px;
-				}
-
-				&:nth-child(3), &:nth-child(4) {
-					div.active-border {
-						height: 100%;
-					}
-				}
-
 				&:nth-child(1) {
 					top: 0;
 					left: 0;
@@ -498,13 +364,16 @@
 					left: 0;
 
 					/deep/ .ol-attribution {
-						bottom: 5px;
+						bottom: 32px;
 					}
 				}
 
 				&:nth-child(4) {
 					top: 50%;
 					left: 50%;
+					/deep/ .ol-attribution {
+						bottom: 15px;
+					}
 				}
 			}
 		}

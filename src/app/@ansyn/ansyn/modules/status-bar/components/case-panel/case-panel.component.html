@@ -6,7 +6,7 @@
 		 [attr.tooltip-value]="toolTips.overlayCount | translate"
 		 tooltip-class="top">
 		<i class="block-icon icon-status-bar-imagery-count"></i>
-		<span>{{overlaysCount$ | async}}</span>
+		<span>{{(overlaysCount$ | async) || 0}}</span>
 	</div>
 	<div class="box share" (click)="copyLink()">
 		<i class="icon-share"></i>

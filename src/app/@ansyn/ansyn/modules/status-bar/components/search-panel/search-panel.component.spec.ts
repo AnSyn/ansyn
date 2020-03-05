@@ -13,7 +13,7 @@ import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/o
 import { ClickOutsideDirective } from '../../../core/click-outside/click-outside.directive';
 import { TranslateModule } from '@ngx-translate/core';
 
-describe('ComboBoxesComponent', () => {
+describe('SearchPanelComponent', () => {
 	let component: SearchPanelComponent;
 	let fixture: ComponentFixture<SearchPanelComponent>;
 
@@ -25,13 +25,13 @@ describe('ComboBoxesComponent', () => {
 
 	const mockComboBoxComponent = MockComponent({
 		selector: 'ansyn-combo-box',
-		inputs: ['options', 'comboBoxToolTipDescription', 'ngModel'],
+		inputs: ['buttonClass', 'options', 'withArrow', 'alwaysChange', 'comboBoxToolTipDescription', 'ngModel'],
 		outputs: ['ngModelChange']
 	});
 	const ansynTreeView = MockComponent({ selector: 'ansyn-tree-view', outputs: ['closeTreeView'] });
 	const ansynComboTrigger = MockComponent({
 		selector: 'button[ansynComboBoxTrigger]',
-		inputs: ['isActive', 'render', 'ngModel'],
+		inputs: ['isActive', 'withArrow', 'render', 'ngModel'],
 		outputs: ['ngModelChange']
 	});
 	let store: Store<IStatusBarState>;
@@ -85,19 +85,4 @@ describe('ComboBoxesComponent', () => {
 	it('should create', () => {
 		expect(component).toBeTruthy();
 	});
-
-	describe('check click on pinPoint flags', () => {
-		beforeEach(() => {
-			spyOn(store, 'dispatch');
-		});
-
-		it('edit-pinpoint', () => {
-			spyOn(component, 'geoFilterChanged');
-			fixture.nativeElement.querySelector('.edit-pinpoint').click();
-			fixture.detectChanges();
-			expect(component.geoFilterChanged).toHaveBeenCalled();
-		});
-	});
-
-
 });

@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DisplayPanelComponent } from './display-panel.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('DisplayPanelComponent', () => {
 	let component: DisplayPanelComponent;
@@ -8,7 +9,8 @@ describe('DisplayPanelComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [DisplayPanelComponent]
+			declarations: [DisplayPanelComponent],
+			imports: [TranslateModule.forRoot()]
 		})
 			.compileComponents();
 	}));

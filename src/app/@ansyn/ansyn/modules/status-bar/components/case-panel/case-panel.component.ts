@@ -4,10 +4,12 @@ import { OverlaysActionTypes, UpdateOverlaysCountAction } from '../../../overlay
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CopySnapshotShareLinkAction } from '../../actions/status-bar.actions';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
-import { IStatusBarConfig, IToolTipsConfig } from '../../models/statusBar-config.model';
+import { IStatusBarConfig } from '../../models/statusBar-config.model';
 import { StatusBarConfig } from '../../models/statusBar.config';
+import { ICase } from '../../../menu-items/cases/models/case.model';
+import { selectSelectedCase } from '../../../menu-items/cases/reducers/cases.reducer';
 
 @Component({
 	selector: 'ansyn-case-panel',
@@ -21,6 +23,12 @@ export class CasePanelComponent implements OnInit {
 		ofType(OverlaysActionTypes.UPDATE_OVERLAY_COUNT),
 		map(({ payload }: UpdateOverlaysCountAction) => payload)
 	);
+
+	selectedCaseName$: Observable<string> = this.store$
+		.pipe(
+			select(selectSelectedCase),
+			map((selectSelected: ICase) => selectSelected ? selectSelected.name : 'Default Case')
+		);
 	constructor(protected actions$: Actions,
 				protected store$: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) protected statusBarConfig: IStatusBarConfig) {

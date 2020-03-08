@@ -55,10 +55,6 @@ describe('SearchPanelComponent', () => {
 				TranslateModule.forRoot()],
 			providers: [
 				{
-					provide: ORIENTATIONS,
-					useValue: comboBoxesOptions.orientations
-				},
-				{
 					provide: TIME_FILTERS,
 					useValue: comboBoxesOptions.timeFilters
 				},

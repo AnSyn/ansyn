@@ -31,7 +31,7 @@ export class NavigationBarComponent implements OnInit, OnDestroy{
 	);
 
 	@AutoSubscription
-	$ = this.store.select(selectPresetOverlays).pipe(
+	hasPresetOverlays$ = this.store.select(selectPresetOverlays).pipe(
 		tap( presetOverlays => this.hasPresetOverlays = presetOverlays.length > 0)
 	);
 

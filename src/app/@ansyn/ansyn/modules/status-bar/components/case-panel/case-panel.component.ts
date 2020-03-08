@@ -17,7 +17,6 @@ import { selectSelectedCase } from '../../../menu-items/cases/reducers/cases.red
 	styleUrls: ['./case-panel.component.less']
 })
 export class CasePanelComponent implements OnInit {
-	@Input() caseName: string;
 
 	overlaysCount$: Observable<number> = this.actions$.pipe(
 		ofType(OverlaysActionTypes.UPDATE_OVERLAY_COUNT),

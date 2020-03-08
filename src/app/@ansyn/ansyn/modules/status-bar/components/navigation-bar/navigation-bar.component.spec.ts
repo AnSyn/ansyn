@@ -2,9 +2,20 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { NavigationBarComponent } from './navigation-bar.component';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store, StoreModule } from '@ngrx/store';
-import { statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
+import {
+	IStatusBarState,
+	selectComboBoxesProperties,
+	statusBarFeatureKey,
+	StatusBarReducer
+} from '../../reducers/status-bar.reducer';
 import { ExpandAction, GoAdjacentOverlay } from '../../actions/status-bar.actions';
 import { TranslateModule } from '@ngx-translate/core';
+import { selectLayout, selectOverlayOfActiveMap } from '@ansyn/map-facade';
+import {
+	overlayStatusFeatureKey, OverlayStatusReducer,
+	selectPresetOverlays
+} from '../../../overlays/overlay-status/reducers/overlay-status.reducer';
+import { of } from 'rxjs';
 
 describe('NavigationBarComponent', () => {
 	let component: NavigationBarComponent;
@@ -14,7 +25,10 @@ describe('NavigationBarComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [NavigationBarComponent],
-			imports: [StoreModule.forRoot({ [statusBarFeatureKey]: StatusBarReducer }), TranslateModule.forRoot()],
+			imports: [StoreModule.forRoot({
+				[statusBarFeatureKey]: StatusBarReducer,
+				[overlayStatusFeatureKey]: OverlayStatusReducer
+			}), TranslateModule.forRoot()],
 			providers: [
 				{
 					provide: StatusBarConfig,
@@ -25,11 +39,20 @@ describe('NavigationBarComponent', () => {
 			.compileComponents();
 	}));
 
-	beforeEach(inject([Store], (_store: Store<any>) => {
+	beforeEach(() => {
 		fixture = TestBed.createComponent(NavigationBarComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
+	});
+
+	beforeEach(inject([Store], (_store: Store<IStatusBarState>) => {
 		store = _store;
+		const mockStore = new Map<any, any>([
+			[selectOverlayOfActiveMap, undefined],
+			[selectPresetOverlays, []]
+		]);
+
+		spyOn(store, 'select').and.callFake(type => of(mockStore.get(type)));
 	}));
 
 	it('should create', () => {

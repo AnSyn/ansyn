@@ -16,7 +16,7 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 
 	generateLayerId(metaData: IMapSettings) {
 		if (metaData.data.overlay) {
-			return `${ metaData.worldView.mapType }/${ JSON.stringify(metaData.data.overlay) }`;
+			return `${ metaData.worldView.mapType }/${ metaData.data.overlay.sourceType }/${ metaData.data.overlay.id }`;
 		}
 		return `${ metaData.worldView.mapType }/${ metaData.data.key }`;
 	}

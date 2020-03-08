@@ -8,7 +8,7 @@ import { Point } from 'geojson';
 
 @Injectable()
 export class GeocoderService {
-
+	placeholder = 'Search';
 	public config: IMapSearchConfig = null;
 
 	constructor(protected http: HttpClient,

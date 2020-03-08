@@ -98,7 +98,7 @@ export class GoToComponent implements OnInit {
 		this.activeCenter$.subscribe((_activeCenter) => {
 			this.activeCenter = _activeCenter;
 			if (this.projectionConverterService.isValidConversion(this.activeCenter, this.activeCenterProjDatum)) {
-				this.initInputs()
+				this.initInputs();
 				this.dispatchInputUpdated(this.activeCenter, this.activeCenterProjDatum);
 			}
 		});

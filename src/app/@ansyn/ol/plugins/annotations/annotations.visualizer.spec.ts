@@ -3,15 +3,7 @@ import { of } from 'rxjs';
 import { AnnotationsVisualizer } from './annotations.visualizer';
 import { OL_PLUGINS_CONFIG } from '../plugins.config';
 import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
-import {
-	MissingTranslationHandler,
-	TranslateCompiler, TranslateDirective, TranslateFakeLoader,
-	TranslateLoader,
-	TranslateModule, TranslateParser, TranslatePipe,
-	TranslateService,
-	TranslateStore
-} from '@ngx-translate/core';
-import { InjectionToken } from '@angular/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 describe('AnnotationsVisualizer', () => {
 	let annotationsVisualizer: AnnotationsVisualizer;
@@ -33,7 +25,7 @@ describe('AnnotationsVisualizer', () => {
 					useValue: { Annotations: { displayId: true } }
 				},
 			],
-			imports: [ TranslateModule]
+			imports: [TranslateModule]
 		});
 	});
 

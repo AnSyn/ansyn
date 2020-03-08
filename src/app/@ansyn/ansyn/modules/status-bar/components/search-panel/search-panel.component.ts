@@ -1,28 +1,21 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import * as momentNs from 'moment';
-import { IStatusBarConfig, IToolTipsConfig } from '../../models/statusBar-config.model';
+import { IStatusBarConfig } from '../../models/statusBar-config.model';
 import { IGeoFilterStatus, IStatusBarState, selectGeoFilterStatus } from '../../reducers/status-bar.reducer';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store } from '@ngrx/store';
-import { Observable, combineLatest } from 'rxjs';
-import { GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
+import { combineLatest, Observable } from 'rxjs';
+import { GEO_FILTERS } from '../../models/combo-boxes.model';
 import { UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations/src/animation_metadata';
 import { SearchMode, SearchModeEnum } from '../../models/search-mode.enum';
-import { filter, map, tap } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { selectDataInputFilter, selectRegion, selectTime } from '../../../overlays/reducers/overlays.reducer';
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
-import {
-	CaseGeoFilter,
-	CaseOrientation,
-	CaseTimeFilter,
-	ICaseDataInputFiltersState,
-	ICaseTimeState
-} from '../../../menu-items/cases/models/case.model';
-import { IOverlay } from '../../../overlays/models/overlay.model';
+import { CaseGeoFilter, ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
 import { ClearActiveInteractionsAction } from '../../../menu-items/tools/actions/tools.actions';
-import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 
 const moment = momentNs;
 
@@ -92,8 +85,8 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	}
 
 
-
-	ngOnInit() { }
+	ngOnInit() {
+	}
 
 	toggleDataInputFilterIcon() {
 		this.dataInputFilterExpand = !this.dataInputFilterExpand;
@@ -121,7 +114,8 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		this.store$.dispatch(new UpdateGeoFilterStatus({ searchMode: geoFilter }));
 	}
 
-	ngOnDestroy() {	}
+	ngOnDestroy() {
+	}
 
 	updateDataInputTitle(title) {
 		this.dataInputFilterTitle = title;

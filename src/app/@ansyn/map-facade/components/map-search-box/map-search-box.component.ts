@@ -29,6 +29,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		tap((value: string) => this.loading = true),
 		switchMap((value: string) => this.geocoderService.getLocation$(value)),
 		tap((allLocations: Array<any>) => {
+			console.log({allLocations});
 			this.error = null;
 			this.locations = allLocations.filter((loc, index) => index < 5);
 			this.autoCompleteWidth = this.locations.reduce<number>((acc, next) => {
@@ -39,6 +40,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		retryWhen((err) => {
 			return err.pipe(
 				tap(error => {
+					console.log({error});
 					this.error = error ? error[0].name : '';
 					this.autoCompleteWidth = (<string>this.error).length * 5;
 					this.loading = false;
@@ -57,7 +59,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 	}
 
 	goToLocation(point) {
-		if (this._communicator) {
+		if (!this._communicator) {
 			this._communicator = this.imageryCommunicatorService.provide(this.mapId);
 		}
 		if (point) {

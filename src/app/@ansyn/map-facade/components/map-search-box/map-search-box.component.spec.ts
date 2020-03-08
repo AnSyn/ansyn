@@ -56,9 +56,11 @@ describe('MapSearchBoxComponent', () => {
 	describe('onSubmit', () => {
 		let geocoderService;
 
-		beforeEach(() => {
+		beforeEach(fakeAsync(() => {
 			geocoderService = TestBed.get(GeocoderService);
-		});
+			component.goToLocation(undefined);
+			tick();
+		}));
 
 		it('should call getLocation$() and then setCenter()', fakeAsync(() => {
 			spyOn(geocoderService, 'getLocation$').and.returnValue(asyncData([{ name: 'blablabla', point: 'test' }]));

@@ -30,7 +30,7 @@ export class CasePanelComponent implements OnInit {
 		);
 	constructor(protected actions$: Actions,
 				protected store$: Store<IStatusBarState>,
-				@Inject(StatusBarConfig) protected statusBarConfig: IStatusBarConfig) {
+				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
 	}
 
 	ngOnInit() {

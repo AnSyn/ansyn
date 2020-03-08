@@ -31,7 +31,7 @@ export class DisplayPanelComponent implements OnInit, OnDestroy {
 		tap( ({orientation}) => this.orientation = orientation)
 	);
 	constructor(protected store$: Store<IStatusBarState>,
-				@Inject(StatusBarConfig) protected statusBarConfig: IStatusBarConfig,
+				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 				@Inject(ORIENTATIONS) public orientations: CaseOrientation[]) {
 	}
 

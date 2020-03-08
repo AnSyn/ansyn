@@ -92,7 +92,7 @@ export class NavigationBarComponent implements OnInit, OnDestroy{
 	}
 
 	constructor(protected store: Store<IStatusBarState>,
-				@Inject(StatusBarConfig) protected statusBarConfig: IStatusBarConfig) {
+				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
 	}
 
 	clickGoAdjacent(isNext): void {

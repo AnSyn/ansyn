@@ -184,3 +184,6 @@ export function getDistanceBetweenPoints(source: Point, destination: Point): num
 	}
 	return distanceInKilometers;
 }
+
+export const EPSG_4326 = 'EPSG:4326';
+export const EPSG_3857 = 'EPSG:3857';

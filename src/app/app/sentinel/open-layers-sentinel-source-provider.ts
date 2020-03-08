@@ -1,5 +1,7 @@
 import {
 	CacheService,
+	EPSG_3857,
+	EPSG_4326,
 	ImageryCommunicatorService,
 	ImageryMapSource,
 	IMapSettings,
@@ -40,9 +42,9 @@ export class OpenLayersSentinelSourceProvider extends OpenLayersMapSourceProvide
 			map(sentinelLayer => {
 				this.layer = sentinelLayer[metaData.id] ? sentinelLayer[metaData.id] : sentinelLayer.defaultLayer;
 
-				const projection = 'EPSG:3857';
+				const projection = EPSG_3857;
 				const footprint = { ...metaData.data.overlay.footprint };
-				footprint.coordinates = [[footprint.coordinates[0][0].map(coordinate => proj.transform(coordinate, 'EPSG:4326', projection))]];
+				footprint.coordinates = [[footprint.coordinates[0][0].map(coordinate => proj.transform(coordinate, EPSG_4326, projection))]];
 				const baseUrl = metaData.data.overlay.imageUrl;
 				const geometry = wellknown.stringify(footprint);
 				const bbox = turf.bbox(turf.feature(footprint));

@@ -1,6 +1,6 @@
 import XYZ from 'ol/source/XYZ';
 import TileLayer from 'ol/layer/Tile';
-import { ImageryMapSource, IMapSettings } from '@ansyn/imagery';
+import { EPSG_3857, ImageryMapSource, IMapSettings } from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../maps/openlayers-disabled-map/openlayers-disabled-map';
@@ -16,7 +16,7 @@ export class OpenLayerMapBoxSourceProvider extends OpenLayersMapSourceProvider {
 		const source = new XYZ({
 			url: metaData.data.overlay.imageUrl,
 			crossOrigin: 'Anonymous',
-			projection: 'EPSG:3857'
+			projection: EPSG_3857
 		});
 
 		const mapBoxLayer = new TileLayer(<any>{

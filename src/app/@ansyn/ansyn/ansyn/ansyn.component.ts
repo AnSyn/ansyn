@@ -29,12 +29,6 @@ import { IOverlay } from '../modules/overlays/models/overlay.model';
 export class AnsynComponent implements OnInit {
 	renderContextMenu: boolean;
 
-	selectedCaseName$: Observable<string> = this.store$
-		.pipe(
-			select(selectSelectedCase),
-			map((selectSelected: ICase) => selectSelected ? selectSelected.name : 'Default Case')
-		);
-
 	isPinnedClass$: Observable<string> = this.store$.select(selectIsPinned).pipe(
 		map((_isPinned) => _isPinned ? 'isPinned' : 'isNotPinned')
 	);

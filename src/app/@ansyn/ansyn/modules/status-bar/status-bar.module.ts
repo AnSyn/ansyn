@@ -10,9 +10,11 @@ import { comboBoxesOptions, GEO_FILTERS, TIME_FILTERS } from './models/combo-box
 import { TreeviewModule } from 'ngx-treeview';
 import { TreeViewComponent } from './components/tree-view/tree-view.component';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
-import { ComboBoxesComponent } from './components/combo-boxes/combo-boxes.component';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { ClickOutsideModule } from '../core/click-outside/click-outside.module';
+import { SearchPanelComponent } from './components/search-panel/search-panel.component';
+import { DisplayPanelComponent } from './components/display-panel/display-panel.component';
+import { CasePanelComponent } from './components/case-panel/case-panel.component';
 
 @NgModule({
 	imports: [
@@ -24,7 +26,7 @@ import { ClickOutsideModule } from '../core/click-outside/click-outside.module';
 		StoreModule.forFeature(statusBarFeatureKey, StatusBarReducer),
 		ClickOutsideModule
 	],
-	declarations: [StatusBarComponent, TimelineTimepickerComponent, TreeViewComponent, NavigationBarComponent, ComboBoxesComponent],
+	declarations: [StatusBarComponent, TimelineTimepickerComponent, TreeViewComponent, NavigationBarComponent, SearchPanelComponent, DisplayPanelComponent, CasePanelComponent],
 	providers: [
 		{
 			provide: TIME_FILTERS,

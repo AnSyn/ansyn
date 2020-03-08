@@ -8,10 +8,9 @@ import { casesStateSelector, ICasesState } from '../../modules/menu-items/cases/
 import {
 	ClickOutsideMap,
 	ContextMenuShowAction,
-	IMapState,
 	MapActionTypes,
-	MapFacadeService,
-	mapStateSelector
+	selectActiveMapId,
+	selectOverlayOfActiveMap
 } from '@ansyn/map-facade';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import {
@@ -51,14 +50,9 @@ export class StatusBarAppEffects {
 	@Effect()
 	onAdjacentOverlay$: Observable<any> = this.actions$.pipe(
 		ofType<GoAdjacentOverlay>(StatusBarActionsTypes.GO_ADJACENT_OVERLAY),
-		withLatestFrom(this.store.select(mapStateSelector), ({ payload }, mapState: IMapState): { isNext, overlayId } => {
-			const activeMap = MapFacadeService.activeMap(mapState);
-			const overlayId = activeMap.data.overlay && activeMap.data.overlay.id;
-			const { isNext } = payload;
-			return { isNext, overlayId };
-		}),
-		filter(({ isNext, overlayId }) => Boolean(overlayId)),
-		withLatestFrom(this.store.select(selectDropsWithoutSpecialObjects), ({ isNext, overlayId }, drops: IOverlayDrop[]): IOverlayDrop => {
+		withLatestFrom(this.store.select(selectOverlayOfActiveMap)),
+		filter(( [isNext, overlay] ) => Boolean(overlay)),
+		withLatestFrom(this.store.select(selectDropsWithoutSpecialObjects), ([ isNext, {id: overlayId} ], drops: IOverlayDrop[]): IOverlayDrop => {
 			const index = drops.findIndex(({ id }) => id === overlayId);
 			const adjacent = isNext ? 1 : -1;
 			return drops[index + adjacent];
@@ -70,9 +64,8 @@ export class StatusBarAppEffects {
 	@Effect()
 	onNextPresetOverlay$: Observable<any> = this.actions$.pipe(
 		ofType<GoNextPresetOverlay>(StatusBarActionsTypes.GO_NEXT_PRESET_OVERLAY),
-		withLatestFrom(this.store.select(mapStateSelector), (Action, mapState: IMapState): { overlayId: string, mapId: string } => {
-			const activeMap = MapFacadeService.activeMap(mapState);
-			return { overlayId: activeMap.data.overlay && activeMap.data.overlay.id, mapId: mapState.activeMapId };
+		withLatestFrom(this.store.select(selectOverlayOfActiveMap), this.store.select(selectActiveMapId), (Action, overlay: IOverlay, activeMapId: string): { overlayId: string, mapId: string } => {
+			return { overlayId: overlay && overlay.id, mapId: activeMapId };
 		}),
 		withLatestFrom(this.store.select(selectPresetOverlays), ({ overlayId, mapId }, presetOverlays): { overlay: IOverlay, mapId: string } => {
 			const length = presetOverlays.length;

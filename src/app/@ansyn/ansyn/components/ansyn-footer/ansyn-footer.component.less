@@ -11,7 +11,7 @@ div.status-timeline-container {
 
 	.status {
 		position: relative;
-		height: 0;
+		bottom: -10px;
 		z-index: @z-index-status-bar-navigation-area;
 	}
 
@@ -22,7 +22,7 @@ div.status-timeline-container {
 
 	button.hide-menu {
 		position: absolute;
-		transform: translateY(calc(~'-100% - @{status-bar-height}'));
+		bottom: calc(100% - 10px);
 		left: calc(~'50% - 30px');
 		width: 60px;
 		background: @background-color-1;
@@ -47,7 +47,7 @@ div.status-timeline-container {
 		}
 
 		button.hide-menu {
-			transform: translateY(-100%);
+			bottom: 100%;
 		}
 	}
 }

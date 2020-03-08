@@ -15,7 +15,6 @@ import { IMapSettings } from '@ansyn/imagery';
 })
 @AutoSubscriptions()
 export class AnsynFooterComponent implements OnInit, OnDestroy {
-	@Input() selectedCaseName: string;
 	@Input() activeMap: IMapSettings;
 	@Input() animatedElement: HTMLElement;
 

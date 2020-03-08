@@ -12,8 +12,7 @@ describe('AnsynFooterComponent', () => {
 	let fixture: ComponentFixture<AnsynFooterComponent>;
 
 	const mockStatusBar = MockComponent({
-		selector: 'ansyn-status-bar',
-		inputs: ['selectedCaseName', 'activeMap']
+		selector: 'ansyn-status-bar'
 	});
 	const mockOverlays = MockComponent({
 		selector: 'ansyn-overlays-container'

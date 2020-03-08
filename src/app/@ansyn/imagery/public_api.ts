@@ -48,7 +48,9 @@ export {
 	unifyPolygons,
 	calculateLineDistance,
 	calculateGeometryArea,
-	getDistanceBetweenPoints
+	getDistanceBetweenPoints,
+	EPSG_4326,
+	EPSG_3857
 } from './utils/geo';
 
 export { IVisualizersConfig, VisualizersConfig } from './model/visualizers-config.token';

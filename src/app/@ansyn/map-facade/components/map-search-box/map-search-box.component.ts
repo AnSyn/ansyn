@@ -50,7 +50,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 	);
 
 	constructor(protected imageryCommunicatorService: ImageryCommunicatorService,
-				protected geocoderService: GeocoderService) {
+				public geocoderService: GeocoderService) {
 	}
 
 	resetSearch(point) {

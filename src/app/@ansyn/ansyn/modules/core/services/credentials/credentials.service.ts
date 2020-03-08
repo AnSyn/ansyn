@@ -38,7 +38,7 @@ export class CredentialsService {
 	}
 
 	getUrl(): string {
-		return this.config.baseUrl;
+		return this.config.userCredentialsBaseUrl;
 	}
 
 	parseResponse(response: any): Observable<string> {

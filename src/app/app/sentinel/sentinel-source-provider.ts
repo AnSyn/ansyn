@@ -75,7 +75,7 @@ export class SentinelSourceProvider extends BaseOverlaySourceProvider {
 		} else {
 			bbox = bboxFromGeoJson(fetchParams.region as GeoJSON.Polygon);
 		}
-		// bbox = proj.transform(bbox, 'EPSG:4326', 'EPSG:3857');
+		// bbox = proj.transform(bbox, EPSG_4326, EPSG_3857);
 		const { start, end } = fetchParams.timeRange;
 		const params = {
 			region: fetchParams.region,

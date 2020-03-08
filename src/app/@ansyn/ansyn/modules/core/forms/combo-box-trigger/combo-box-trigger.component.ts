@@ -9,6 +9,7 @@ export class ComboBoxTriggerComponent {
 	@Input() icon: string;
 	@HostBinding('class.active')
 	@Input() isActive: boolean;
+	@Input() withArrow = true;
 
 	constructor(public optionsTrigger: ElementRef) {
 	}

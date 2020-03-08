@@ -10,12 +10,13 @@ import { TranslateModule } from '@ngx-translate/core';
 describe('StatusBarComponent', () => {
 	let component: StatusBarComponent;
 	let fixture: ComponentFixture<StatusBarComponent>;
-	let store: Store<IStatusBarState>;
 	const mockSelectedCaseBarComponent = MockComponent({
 		selector: 'ansyn-popover',
 		inputs: ['text', 'icon']
 	});
-	const mockComboBoxes = MockComponent({ selector: 'ansyn-combo-boxes' });
+	const mockSearchPanel = MockComponent({ selector: 'ansyn-search-panel' });
+	const mockDisplayPanel = MockComponent({ selector: 'ansyn-display-panel' });
+	const mockCasePanel = MockComponent({ selector: 'ansyn-case-panel' });
 	const mockNavigationBar = MockComponent({ selector: 'ansyn-navigation-bar' });
 
 	beforeEach(async(() => {
@@ -29,19 +30,20 @@ describe('StatusBarComponent', () => {
 			declarations: [StatusBarComponent,
 				/* mock */
 				mockSelectedCaseBarComponent,
-				mockComboBoxes,
+				mockSearchPanel,
+				mockDisplayPanel,
+				mockCasePanel,
 				mockNavigationBar
 			]
 		})
 			.compileComponents();
 	}));
 
-	beforeEach(inject([Store], (_store: Store<IStatusBarState>) => {
+	beforeEach( () => {
 		fixture = TestBed.createComponent(StatusBarComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
-		store = _store;
-	}));
+	});
 
 	it('should be created', () => {
 		expect(component).toBeTruthy();

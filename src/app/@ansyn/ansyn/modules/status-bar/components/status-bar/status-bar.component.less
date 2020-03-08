@@ -6,81 +6,33 @@
 @popup-padding-bottom: 15px;
 
 :host {
-	background-color: @background-color-1;
+	background-color: @status-bar-background;
 	height: @status-bar-height;
 	box-shadow: 0 -10px 20px 0 rgba(0, 0, 0, 0.3);
 	display: flex;
+	flex-direction: column;
 	justify-content: flex-end;
-	transform: translate(0, -100%);
 
 	.status-bar {
-		height: 100%;
-		color: white;
 		display: flex;
-		flex-shrink: 1;
-		justify-content: flex-end;
+		flex: 1;
 
-		.selected-case {
-			button.share-link {
-				&:extend(.base-share-link);
-				height: 34px;
+		&.rtl {
+			flex-direction: row-reverse;
 
-				span.icon-status-bar-share-link {
-					margin-right: 3px;
-				}
+			/deep/ ansyn-search-panel {
+				justify-content: flex-end;
+			}
 
-				&:hover {
-					border-top-color: white;
-					border-bottom-color: white;
-				}
+			/deep/ ansyn-case-panel {
+				border-left: none;
+				border-right: 1px solid @status-bar-delimiter;
 			}
 		}
 
-		.selected-case, .status {
-			display: flex;
-			align-items: center;
-		}
-
-		.status {
-			justify-content: flex-end;
+		/deep/ i.icon, span.title{
+			margin: 0 5px;
 		}
 	}
-}
 
-
-/*@screens-list: 1800px, 1700px, 1600px, 1500px;
-@screen-list-width: 120px, 120px, 120px, 120px;
-
-.screens(@list, @i: 1) when (@i <= length(@list)) {
-	@screen-size: extract(@list, @i);
-
-	@media screen and (max-width: @screen-size) {
-		:host {
-			.status-bar {
-				/deep/ .selectedCase {
-					font-size: 12px;
-				}
-
-				/deep/ .combo-box-width {
-					width: extract(@screen-list-width, @i) !important;
-				}
-			}
-		}
-	}
-	.screens(@list, @i + 1);
-}
-
-.screens(@screens-list);*/
-
-@media screen and (max-width: 1600px) {
-	:host {
-		/deep/ .buttons button.back-to-world-view {
-			font-size: 0;
-			overflow: visible;
-
-			i {
-				font-size: 13.33px;
-			}
-		}
-	}
 }

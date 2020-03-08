@@ -14,7 +14,6 @@ export interface ICanvasExportData {
 	width: number;
 	height: number;
 	data: string;
-
 }
 
 export interface IBaseImageryMapConstructor {

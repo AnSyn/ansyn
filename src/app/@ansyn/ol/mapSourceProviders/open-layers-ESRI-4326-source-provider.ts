@@ -1,6 +1,6 @@
 import XYZ from 'ol/source/XYZ';
 import TileLayer from 'ol/layer/Tile';
-import { ImageryMapSource, IMapSettings } from '@ansyn/imagery';
+import { EPSG_4326, ImageryMapSource, IMapSettings } from '@ansyn/imagery';
 import * as proj from 'ol/proj';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
@@ -38,8 +38,8 @@ export class OpenLayerESRI4326SourceProvider extends OpenLayersMapSourceProvider
 			wrapX: true
 		});
 
-		const [x, y] = proj.transform([-180, -90], 'EPSG:4326', config.projection);
-		const [x1, y1] = proj.transform([180, 90], 'EPSG:4326', config.projection);
+		const [x, y] = proj.transform([-180, -90], EPSG_4326, config.projection);
+		const [x1, y1] = proj.transform([180, 90], EPSG_4326, config.projection);
 
 		const esriLayer = new TileLayer({
 			source: source,

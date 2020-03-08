@@ -109,7 +109,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 			this.mapSettings.worldView.sourceType = sourceType;
 			const position = this.mapSettings.data.position;
 			const bbox = bboxFromGeoJson(position.extentPolygon);
-			return this.resetView(layer, position, [bbox[0], bbox[1], bbox[2], bbox[3]]);
+			return this.resetView(layer, position, [bbox[0], bbox[1], bbox[2], bbox[3]]).toPromise().then(() => this.resetPlugins());
 		})
 
 	}

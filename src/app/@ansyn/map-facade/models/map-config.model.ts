@@ -13,6 +13,7 @@ export interface IMapSearchConfig {
 export interface IMapFacadeConfig {
 	displayDebounceTime: number;
 	overlayCoverage: number;
+	disableBestResolutionContextMenu: boolean;
 	sensorTypeShortcuts: Object;
 	contextMenu: {
 		filterField: string;

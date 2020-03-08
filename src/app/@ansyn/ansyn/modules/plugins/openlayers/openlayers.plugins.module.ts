@@ -48,7 +48,7 @@ import { OpenLayerPic4CartoSourceProvider } from '@ansyn/ol';
 		ImageryModule.provide({
 			plugins: [
 				NorthCalculationsPlugin,
-				CenterMarkerPlugin,
+				// CenterMarkerPlugin,
 				ImageProcessingPlugin,
 				MonitorPlugin,
 				ContextMenuPlugin,
@@ -56,7 +56,7 @@ import { OpenLayerPic4CartoSourceProvider } from '@ansyn/ol';
 				OpenlayersArcgisLayersPulgin,
 				AlertsPlugin,
 				// Visualizers
-				FootprintHeatmapVisualizer,
+				// FootprintHeatmapVisualizer,
 				FrameVisualizer,
 				OverlayHoverVisualizer,
 				FootprintPolylineVisualizer,

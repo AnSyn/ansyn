@@ -2,8 +2,8 @@
 <div class="inputs">
 	<ng-template [ngIf]="coordinates">
 		<div class="input-box">
-			<label for="geo-lng-input">lat (N/S)</label>
-			<input id="geo-lat-input" type="number"
+			<label>lat (N/S)
+			<input type="number"
 				   [(ngModel)]="coordinates[1]"
 				   name="lat"
 				   (ngModelChange)="onInputs(coordinates)"
@@ -11,11 +11,12 @@
 				   (mousewheel)="$event.preventDefault()"
 				   autocomplete="false"
 				   required/>
+			</label>
 		</div>
 
 		<div class="input-box">
-			<label for="geo-lng-input">long (E/W)</label>
-			<input id="geo-lng-input"
+			<label>long (E/W)
+			<input
 				   type="number"
 				   [(ngModel)]="coordinates[0]"
 				   name="lng"
@@ -23,6 +24,7 @@
 				   (blur)="onBlur()"
 				   (mousewheel)="$event.preventDefault()"
 				   autocomplete="false" required/>
+			</label>
 		</div>
 		<div class="geo-copy-to-clipboard" (click)="copyToClipBoard()">
 			<span class="icon-copy-coords"></span>

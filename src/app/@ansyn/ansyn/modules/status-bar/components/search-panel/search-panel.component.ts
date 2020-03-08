@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import * as moment from 'moment';
+import * as momentNs from 'moment';
 import { IStatusBarConfig, IToolTipsConfig } from '../../models/statusBar-config.model';
 import { IGeoFilterStatus, IStatusBarState, selectGeoFilterStatus } from '../../reducers/status-bar.reducer';
 import { StatusBarConfig } from '../../models/statusBar.config';
@@ -23,6 +23,8 @@ import {
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { ClearActiveInteractionsAction } from '../../../menu-items/tools/actions/tools.actions';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
+
+const moment = momentNs;
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [

@@ -1,5 +1,5 @@
 <form (reset)="control.setValue('')" (submit)="onSubmit()">
-	<input type="text" [placeholder]="'Search' | translate"
+	<input type="text" [placeholder]="'Search locations or enter coordinates' | translate"
 		   [formControl]="control"
 		   [matAutocomplete]="auto">
 	<mat-autocomplete #auto="matAutocomplete" [panelWidth]="autoCompleteWidth + 'px'">

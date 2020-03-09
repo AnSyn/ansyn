@@ -17,6 +17,7 @@ import { selectLayout } from '@ansyn/map-facade';
 import { casesFeatureKey, CasesReducer, selectSelectedCase } from '../../../menu-items/cases/reducers/cases.reducer';
 import { of } from 'rxjs';
 import { OverlaysEffects } from '../../../overlays/effects/overlays.effects';
+import { OverlaysConfig } from '../../../overlays/services/overlays.service';
 
 describe('CasePanelComponent', () => {
 	let component: CasePanelComponent;
@@ -36,6 +37,12 @@ describe('CasePanelComponent', () => {
 				{
 					provide: StatusBarConfig,
 					useValue: { toolTips: {} }
+				},
+				{
+					provide: OverlaysConfig,
+					useValue: {
+						limit: 500
+					}
 				}
 			]
 		})
@@ -61,7 +68,7 @@ describe('CasePanelComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('click on share shold fire CopySnapshotShareLinkAction action', () => {
+	it('click on share should fire CopySnapshotShareLinkAction action', () => {
 		spyOn(store, 'dispatch');
 		fixture.nativeElement.querySelector('.share').click();
 		expect(store.dispatch).toHaveBeenCalledWith(new CopySnapshotShareLinkAction());

@@ -115,7 +115,7 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 				protected actions$: Actions,
 				dateTimeAdapter: DateTimeAdapter<any>
 				) {
-		dateTimeAdapter.setLocale('he');
+		dateTimeAdapter.setLocale(statusBarConfig.locale);
 	}
 
 	ngOnInit() {

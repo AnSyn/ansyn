@@ -11,6 +11,7 @@ import { MockComponent } from '../../../core/test/mock-component';
 import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
 import { ClickOutsideDirective } from '../../../core/click-outside/click-outside.directive';
 import { TranslateModule } from '@ngx-translate/core';
+import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 
 describe('ComboBoxesComponent', () => {
 	let component: ComboBoxesComponent;
@@ -79,7 +80,8 @@ describe('ComboBoxesComponent', () => {
 				{
 					provide: StatusBarConfig,
 					useValue: { toolTips: {} }
-				}
+				},
+				DateTimeAdapter
 			]
 		})
 			.compileComponents();

@@ -531,7 +531,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		return [
 			new olStyle({
 				text: new olText({
-					// ...this.measuresTextStyle,
 					font: '16px Calibri,sans-serif',
 					fill: new olFill({
 						color: '#fff'

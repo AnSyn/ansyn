@@ -3,7 +3,7 @@ import { OwlDateTimeIntl } from '@ansyn/ng-pick-datetime';
 import { TranslateService } from '@ngx-translate/core';
 
 /*
-	Link the translation provider of the time picker to the app's translation service (and config)
+	Link the translation provider of the time picker to Ansyn's translation service (and config)
  */
 
 @Injectable({

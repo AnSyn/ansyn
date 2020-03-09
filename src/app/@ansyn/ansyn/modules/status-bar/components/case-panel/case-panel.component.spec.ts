@@ -18,6 +18,7 @@ import { casesFeatureKey, CasesReducer, selectSelectedCase } from '../../../menu
 import { of } from 'rxjs';
 import { OverlaysEffects } from '../../../overlays/effects/overlays.effects';
 import { OverlaysConfig } from '../../../overlays/services/overlays.service';
+import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
 
 describe('CasePanelComponent', () => {
 	let component: CasePanelComponent;
@@ -43,7 +44,15 @@ describe('CasePanelComponent', () => {
 					useValue: {
 						limit: 500
 					}
-				}
+				},
+				{
+					provide: MultipleOverlaysSourceConfig,
+					useValue: {
+						defaultProvider: {},
+						indexProviders: {
+						}
+					}
+				},
 			]
 		})
 			.compileComponents();

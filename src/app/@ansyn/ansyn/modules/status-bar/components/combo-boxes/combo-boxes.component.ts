@@ -32,6 +32,7 @@ import {
 } from '../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { ClearActiveInteractionsAction } from '../../../menu-items/tools/actions/tools.actions';
+import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [
@@ -111,7 +112,10 @@ export class ComboBoxesComponent implements OnInit, OnDestroy {
 				@Inject(ORIENTATIONS) public orientations: CaseOrientation[],
 				@Inject(TIME_FILTERS) public timeFilters: CaseTimeFilter[],
 				@Inject(GEO_FILTERS) public geoFilters: CaseGeoFilter[],
-				protected actions$: Actions) {
+				protected actions$: Actions,
+				dateTimeAdapter: DateTimeAdapter<any>
+				) {
+		dateTimeAdapter.setLocale('he');
 	}
 
 	ngOnInit() {

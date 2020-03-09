@@ -12,7 +12,7 @@ import { NavigationBarComponent } from './components/navigation-bar/navigation-b
 import { ComboBoxesComponent } from './components/combo-boxes/combo-boxes.component';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { ClickOutsideModule } from '../core/click-outside/click-outside.module';
-import { OWL_DATE_TIME_LOCALE, OwlDateTimeModule, OwlNativeDateTimeModule } from '@ansyn/ng-pick-datetime';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@ansyn/ng-pick-datetime';
 
 @NgModule({
 	imports: [
@@ -35,10 +35,6 @@ import { OWL_DATE_TIME_LOCALE, OwlDateTimeModule, OwlNativeDateTimeModule } from
 		{
 			provide: GEO_FILTERS,
 			useValue: comboBoxesOptions.geoFilters
-		},
-		{
-			provide: OWL_DATE_TIME_LOCALE,
-			useValue: 'he'
 		}
 	],
 

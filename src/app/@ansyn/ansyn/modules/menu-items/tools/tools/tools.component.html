@@ -20,43 +20,43 @@
 		<ansyn-go-to [disabled]="isGeoOptionsDisabled"></ansyn-go-to>
 	</div>
 
-	<div class="image-auto-processing">
-		<button tooltip-class="right"
-				[attr.tooltip-value]="'Automatic Processing - Grayscale Images Only' | translate"
-				(click)="toggleAutoImageProcessing()"
-				[class.mode-on]="onAutoImageProcessing && !imageProcessingDisabled"
-				[disabled]="imageProcessingDisabled">
-			<i class="icon-automatic-image-processing"></i>
-		</button>
-	</div>
+<!--	<div class="image-auto-processing">-->
+<!--		<button tooltip-class="right"-->
+<!--				[attr.tooltip-value]="'Automatic Processing - Grayscale Images Only' | translate"-->
+<!--				(click)="toggleAutoImageProcessing()"-->
+<!--				[class.mode-on]="onAutoImageProcessing && !imageProcessingDisabled"-->
+<!--				[disabled]="imageProcessingDisabled">-->
+<!--			<i class="icon-automatic-image-processing"></i>-->
+<!--		</button>-->
+<!--	</div>-->
 
-	<div class="image-manual-processing">
-		<button tooltip-class="right"
-				[attr.tooltip-value]="'Manual Image Enhancement' | translate"
-				(click)="toggleSubMenu(subMenuEnum.manualImageProcessing)"
-				[class.mode-on]="isImageControlActive && !imageManualProcessingDisabled"
-				[class.active]="isExpand(subMenuEnum.manualImageProcessing) && !imageManualProcessingDisabled"
-				[disabled]="imageManualProcessingDisabled">
-			<i class="icon-tools-image-processing"></i>
-		</button>
-		<ansyn-image-processing-control
-			[expand]="isExpand(subMenuEnum.manualImageProcessing) && !onAutoImageProcessing "></ansyn-image-processing-control>
-	</div>
+<!--	<div class="image-manual-processing">-->
+<!--		<button tooltip-class="right"-->
+<!--				[attr.tooltip-value]="'Manual Image Enhancement' | translate"-->
+<!--				(click)="toggleSubMenu(subMenuEnum.manualImageProcessing)"-->
+<!--				[class.mode-on]="isImageControlActive && !imageManualProcessingDisabled"-->
+<!--				[class.active]="isExpand(subMenuEnum.manualImageProcessing) && !imageManualProcessingDisabled"-->
+<!--				[disabled]="imageManualProcessingDisabled">-->
+<!--			<i class="icon-tools-image-processing"></i>-->
+<!--		</button>-->
+<!--		<ansyn-image-processing-control-->
+<!--			[expand]="isExpand(subMenuEnum.manualImageProcessing) && !onAutoImageProcessing "></ansyn-image-processing-control>-->
+<!--	</div>-->
 	<div class="display-overlay-visualizer">
 		<button tooltip-class="right"
-				[attr.tooltip-value]="'Display Overlays' | translate"
-				(click)="toggleSubMenu(subMenuEnum.overlays)"
+				[attr.tooltip-value]="'Overlays Footprint' | translate"
+				(click)="toggleDisplayFootprints()"
 				[disabled]="isGeoOptionsDisabled"
 				[class.mode-on]="displayModeOn && !isGeoOptionsDisabled"
-				[class.active]="isExpand(subMenuEnum.overlays) && !isGeoOptionsDisabled">
+				[class.active]="displayModeOn && !isGeoOptionsDisabled">
 			<i class="icon-frame-mode"></i>
 		</button>
 
-		<ansyn-overlays-display-mode
-			[disabled]="isGeoOptionsDisabled"
-			[expand]="isExpand(subMenuEnum.overlays) && !isGeoOptionsDisabled"
-			[(modeOn)]="displayModeOn">
-		</ansyn-overlays-display-mode>
+		<!--<ansyn-overlays-display-mode-->
+			<!--[disabled]="isGeoOptionsDisabled"-->
+			<!--[expand]="isExpand(subMenuEnum.overlays) && !isGeoOptionsDisabled"-->
+			<!--[(modeOn)]="displayModeOn">-->
+		<!--</ansyn-overlays-display-mode>-->
 	</div>
 
 	<div class="user-annotations" [class.active]="isExpand(subMenuEnum.annotations)">

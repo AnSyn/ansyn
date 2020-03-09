@@ -29,11 +29,6 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			component: OverlayOutOfBoundsComponent
 		},
 		{
-			key: 'poorGeoRegistered',
-			background: '#cf802a',
-			text: 'This Image Has Poor Geo-Registration'
-		},
-		{
 			key: anaglyphSensorAlertKey,
 			component: AnaglyphSensorAlertComponent
 		}

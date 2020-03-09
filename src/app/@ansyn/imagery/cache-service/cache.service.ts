@@ -30,17 +30,34 @@ export class CacheService {
 
 	addLayerToCache(cacheId: string, layer: any) {
 		if (this.cachedLayersMap.size >= this.cacheSize) {
-			const key = this.cachedLayersMap.keys().next();
-			let disposedLayer = this.cachedLayersMap.get(key.value);
-			if (disposedLayer && disposedLayer.disposeLayer) {
-				disposedLayer.disposeLayer(disposedLayer)
-			}
-			this.cachedLayersMap.delete(key.value);
-			disposedLayer = undefined;
+			this.removeLayerFromCache();
 		}
 		if (layer.set) {
 			layer.set(ImageryLayerProperties.CACHE_ID, cacheId)
 		}
 		this.cachedLayersMap.set(cacheId, layer);
+	}
+
+	private removeLayerFromCache() {
+		const keys = Array.from(this.cachedLayersMap.keys());
+		let key: string;
+		for ( let i = 0; i < keys.length; i++) {
+			const isLayerDisplayed = this.isDisplayedLayer(keys[i]);
+			if (!isLayerDisplayed) {
+				key = keys[i];
+				break;
+			}
+		}
+		if (Boolean(key)) {
+			let disposedLayer = this.cachedLayersMap.get(key);
+			if (disposedLayer && disposedLayer.disposeLayer) {
+				disposedLayer.disposeLayer(disposedLayer);
+			}
+			this.cachedLayersMap.delete(key);
+			disposedLayer = undefined;
+			if (this.cachedLayersMap.size > this.cacheSize) {
+				this.removeLayerFromCache();
+			}
+		}
 	}
 }

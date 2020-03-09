@@ -23,12 +23,14 @@ circle.drop.selected {
 }
 
 .close.mat-button {
-	position: absolute;
-	top: 0;
-	right: 0;
-	padding: 5px;
-	line-height: 14px;
-	min-width: auto;
+	cursor: pointer;
+	float: right;
+	marginTop: 5px;
+	width: 20px;
+}
+
+.main-progress .mat-progress-bar-fill::after {
+	background-color: #0091ff !important;
 }
 
 .main-timeline {
@@ -36,7 +38,8 @@ circle.drop.selected {
 	width: 100%;
 	margin: 0 auto;
 	box-sizing: border-box;
-	color: black
+	color: #cbcbcb;
+	background-color: #2e2e2e;
 }
 
 button {

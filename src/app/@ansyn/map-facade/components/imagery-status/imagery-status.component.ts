@@ -107,14 +107,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		return this.overlay.isGeoRegistered === 'notGeoRegistered';
 	}
 
-	// @todo refactor
-	get poorGeoRegistered() {
-		if (!this.overlay) {
-			return false;
-		}
-		return this.overlay.isGeoRegistered === 'poorGeoRegistered';
-	}
-
 	@AutoSubscription
 	hideLayers$ = () => this.store$.pipe(
 		select(selectHideLayersOnMap(this.mapId)),

@@ -1,22 +1,22 @@
 <div class="dialog-area">
 	<div mat-dialog-content>
 		<div mat-dialog-title>
-			<h1 mat-dialog-title>Notice!</h1>
+			<button class="close" mat-button (click)="closeModal()">X</button>
+			<h1 mat-dialog-title>!{{title | translate}}, {{credentialsService?.user}}</h1>
 		</div>
-		<mat-progress-bar color="primary" mode="indeterminate"></mat-progress-bar>
+		<mat-progress-bar class="main-progress" color="primary" mode="indeterminate"></mat-progress-bar>
 		<br>
-		<i class="icon-credentials-request"></i>
-		<p mat-dialog-title class="info"> Your image is in process, <br>
-			Keep in mind that the image may be protected.
+		<p mat-dialog-title class="info">
+			{{description | translate}}
 		</p>
 		<div class="btn-area">
 			<div class="download-btn">
 				<button mat-button (click)="exportMapsToPng()">
 					<i class="fa fa-cloud-download" aria-hidden="true"></i>
-					Download</button>
+					{{'Download' | translate}}</button>
 			</div>
 			<div class="cancel-btn">
-				<button mat-button (click)="closeModal()">Cancel</button>
+				<button mat-button (click)="closeModal()">{{'Cancel' | translate}}</button>
 			</div>
 		</div>
 	</div>

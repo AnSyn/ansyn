@@ -1,0 +1,103 @@
+/*
+	for static tooltips - use tooltip-disabled-value and tooltip-class attributes:
+	<button tooltip-disabled-value="click me" [disabled]="true" tooltip-class="right">Hello</button>
+
+	for dynamic tooltips use [attr.tooltip-disabled-value]
+	<button [attr.tooltip-disabled-value]="myString" [disabled]="true" tooltip-class="right">Hello</button>
+*/
+[tooltip-disabled-value]:not(.active):after {
+	content: attr(tooltip-disabled-value);
+}
+
+[tooltip-disabled-value]:not(.active):disabled[tooltip-class*="top"]:after {
+	/*left: auto;*/
+	bottom: auto;
+	transform: translateY(-100%);
+}
+
+[tooltip-disabled-value]:not(.active):disabled[tooltip-class*="top"][tooltip-class*="right"]:after {
+	left: 0;
+	right: auto;
+}
+
+[tooltip-disabled-value]:not(.active):disabled[tooltip-class*="top"][tooltip-class*="left"]:after {
+	left: auto;
+	right: 0;
+}
+
+[tooltip-disabled-value]:not(.active):disabled[tooltip-class*="top"]:hover:after {
+	transform: translateY(calc(-100% - 15px));
+}
+
+[tooltip-disabled-value]:not(.active):disabled[tooltip-class*="bottom"]:after {
+	left: auto;
+	top: auto;
+	bottom: 0;
+	transform: translateY(100%);
+}
+
+[tooltip-disabled-value]:not(.active):disabled[tooltip-class*="bottom"][tooltip-class*="right"]:after {
+	left: 0;
+	right: auto;
+}
+
+[tooltip-disabled-value]:not(.active):disabled[tooltip-class*="bottom"][tooltip-class*="left"]:after {
+	right: 0;
+}
+
+[tooltip-disabled-value]:not(.active):disabled[tooltip-class*="bottom"]:hover:after {
+	transform: translate(0, calc(100% + 15px));
+}
+
+[tooltip-disabled-value]:not(.active):disabled[tooltip-class*="right"]:not([tooltip-class*="top"]):not([tooltip-class*="bottom"]):after {
+	right: 0;
+	transform: translate(100%, 0);
+}
+
+[tooltip-disabled-value]:not(.active):disabled[tooltip-class*="right"]:not([tooltip-class*="top"]):not([tooltip-class*="bottom"]):hover:after {
+	left: auto;
+	transform: translate(calc(100% + 15px), 0);
+}
+
+[tooltip-disabled-value]:not(.active):disabled[tooltip-class*="left"]:not([tooltip-class*="top"]):not([tooltip-class*="bottom"]):after {
+	left: 0;
+	right: auto;
+	transform: translate(-100%, 0);
+}
+
+[tooltip-disabled-value]:not(.active):disabled[tooltip-class*="left"]:not([tooltip-class*="top"]):not([tooltip-class*="bottom"]):hover:after {
+	transform: translateX(calc(-100% - 15px));
+}
+
+[tooltip-disabled-value]:not(.active):disabled[tooltip-class*="wrap"]:after {
+	white-space: normal;
+	height: initial;
+	padding: 5px 10px;
+}
+
+[tooltip-disabled-value]:not(.active):disabled:after {
+	font-family: 'Lato', sans-serif;
+	font-size: small;
+	opacity: 0;
+	position: absolute;
+	padding: 0 10px;
+	left: 0;
+	top: 0;
+	background: black;
+	transition: visibility .3s, transform .3s, opacity .3s;
+	visibility: hidden;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	z-index: 2;
+	white-space: nowrap;
+	pointer-events: none;
+	height: 34px;
+	display: flex;
+	align-items: center;
+}
+
+[tooltip-disabled-value]:not(.active):disabled:hover:after {
+	opacity: 1;
+	visibility: visible;
+}

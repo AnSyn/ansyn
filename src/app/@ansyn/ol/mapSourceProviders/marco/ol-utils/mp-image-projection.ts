@@ -3,6 +3,7 @@ import { Utils } from './utils';
 import * as proj from 'ol/proj';
 import * as Extent from 'ol/extent';
 import Projection from 'ol/proj/Projection';
+import { EPSG_4326, EPSG_3857 } from '@ansyn/imagery';
 
 export class MpImageProjection extends Projection {
 
@@ -47,7 +48,7 @@ export class MpImageProjection extends Projection {
 		Utils.m4Invert(that.matrix, that.inversMatrix); // Invert matrix ans set to inversMatrix
 
 		// add transform to open layers //source   //destination
-		proj.addCoordinateTransforms('EPSG:4326', this,
+		proj.addCoordinateTransforms(EPSG_4326, this,
 			// forward  from the source projection to the destination projection
 			function (coordinate) {
 				const res = Utils.m4MultVec3Projective(that.inversMatrix, [coordinate[0], coordinate[1], 0], []);
@@ -62,10 +63,10 @@ export class MpImageProjection extends Projection {
 				return res;
 			});
 
-		proj.addCoordinateTransforms('EPSG:3857', this,
+		proj.addCoordinateTransforms(EPSG_3857, this,
 			// forward  from the source projection to the destination projection
 			function (coordinate) {
-				let coord4326 = proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
+				let coord4326 = proj.transform(coordinate, EPSG_3857, EPSG_4326);
 				const res = Utils.m4MultVec3Projective(that.inversMatrix, [coord4326[0], coord4326[1], 0], []);
 				res[1] = tileSizeAtLevel0 - res[1];
 				return res;
@@ -75,7 +76,7 @@ export class MpImageProjection extends Projection {
 				let y = coordinate[1];
 				y = tileSizeAtLevel0 - y;
 				const res = Utils.m4MultVec3Projective(that.matrix, [coordinate[0], y, 0], []);
-				let coord3857 = proj.transform(res, 'EPSG:4326', 'EPSG:3857');
+				let coord3857 = proj.transform(res, EPSG_4326, EPSG_3857);
 				return coord3857;
 			});
 	}
@@ -96,7 +97,7 @@ export class MpImageProjection extends Projection {
 		proj.addCoordinateTransforms(source, this,
 			// forward  from the source projection to the destination projection
 			function (coordinate) {
-				let coord = proj.transform(coordinate, source, 'EPSG:4326');
+				let coord = proj.transform(coordinate, source, EPSG_4326);
 				const res = Utils.m4MultVec3Projective(that.inversMatrix, [coord[0], coord[1], 0], []);
 				res[1] = that._tileSizeAtLevel0 - res[1];
 				return res;
@@ -106,7 +107,7 @@ export class MpImageProjection extends Projection {
 				let y = coordinate[1];
 				y = that._tileSizeAtLevel0 - y;
 				let res = Utils.m4MultVec3Projective(that.matrix, [coordinate[0], y, 0], []);
-				res = proj.transform(res, 'EPSG:4326', source);
+				res = proj.transform(res, EPSG_4326, source);
 				return res;
 			});
 	}

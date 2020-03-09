@@ -607,21 +607,4 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		plugin.setMode(null, false);
 	}
 
-	updateOverlayAsPartiallyRegistered() {
-		const overlay = this.ansynApi.getOverlayData();
-		if (overlay) {
-			overlay.isGeoRegistered = GeoRegisteration.poorGeoRegistered;
-			this.store$.select(selectFilters).pipe(
-				take(1),
-				withLatestFrom(this.store$.select(selectOverlaysArray), this.store$.select(selectFacets)),
-				tap(([filters, overlays, facets]: [Map<IFilter, FilterMetadata>, IOverlay[], ICaseFacetsState]) => {
-					const data = FiltersService.getRefreshedFilterDataByFilterModel('isGeoRegistered', filters, facets, overlays);
-					this.store$.dispatch(new UpdateFilterAction({
-						filter: data.filter,
-						newMetadata: data.filterMetadata
-					}));
-				})
-			).subscribe();
-		}
-	}
 }

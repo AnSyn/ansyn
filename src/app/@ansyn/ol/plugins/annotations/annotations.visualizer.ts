@@ -36,6 +36,7 @@ import { EntitiesVisualizer } from '../entities-visualizer';
 import { IOLPluginsConfig, OL_PLUGINS_CONFIG } from '../plugins.config';
 import { AnnotationMode, IAnnotationBoundingRect, IDrawEndEvent } from './annotations.model';
 import { DragPixelsInteraction } from './dragPixelsInteraction';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface ILabelTranslateMode {
 	originalFeature: olFeature,
@@ -51,7 +52,7 @@ export interface IEditAnnotationMode {
 // @dynamic
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [OpenLayersProjectionService, OL_PLUGINS_CONFIG],
+	deps: [OpenLayersProjectionService, OL_PLUGINS_CONFIG, TranslateService],
 	isHideable: true
 })
 export class AnnotationsVisualizer extends EntitiesVisualizer {
@@ -128,7 +129,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	private iconSrc = '';
 
 	constructor(protected projectionService: OpenLayersProjectionService,
-				@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig) {
+				@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig,
+				protected translator: TranslateService) {
 
 		super(null, {
 			initial: {
@@ -507,12 +509,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	areaCircumferenceStyles(feature: any): olStyle[] {
 		const geometry = feature.getGeometry();
 		const calcArea = this.formatArea(geometry);
-
+		const areaText = this.translator.instant('Area');
 		return [
 			new olStyle({
 				text: new olText({
 					...this.measuresTextStyle,
-					text: `Area: ${ calcArea }`,
+					text: `${ calcArea } :${ areaText }`,
 				})
 			})
 		];

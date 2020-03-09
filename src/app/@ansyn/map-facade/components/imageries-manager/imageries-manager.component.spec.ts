@@ -35,7 +35,7 @@ const mockAnsynPopoverComponent = MockComponent({
 
 const mockAnsynComboBox = MockComponent({
 	selector: 'ansyn-combo-box',
-	inputs: ['ngModel', 'toolTipField', 'comboBoxToolTipDescription', 'direction', 'color', 'icon'],
+	inputs: ['ngModel', 'comboBoxToolTipDescription', 'direction', 'color', 'icon'],
 	outputs: ['ngModelChange']
 });
 

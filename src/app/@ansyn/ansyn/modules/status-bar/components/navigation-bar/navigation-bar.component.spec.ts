@@ -10,7 +10,14 @@ import {
 } from '../../reducers/status-bar.reducer';
 import { ExpandAction, GoAdjacentOverlay } from '../../actions/status-bar.actions';
 import { TranslateModule } from '@ngx-translate/core';
-import { selectLayout, selectOverlayOfActiveMap } from '@ansyn/map-facade';
+import {
+	mapFeatureKey,
+	MapReducer,
+	selectActiveMapId,
+	selectLayout,
+	selectMapsList,
+	selectOverlayOfActiveMap
+} from '@ansyn/map-facade';
 import {
 	overlayStatusFeatureKey, OverlayStatusReducer,
 	selectPresetOverlays
@@ -26,6 +33,7 @@ describe('NavigationBarComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [NavigationBarComponent],
 			imports: [StoreModule.forRoot({
+				[mapFeatureKey]: MapReducer,
 				[statusBarFeatureKey]: StatusBarReducer,
 				[overlayStatusFeatureKey]: OverlayStatusReducer
 			}), TranslateModule.forRoot()],
@@ -48,6 +56,8 @@ describe('NavigationBarComponent', () => {
 	beforeEach(inject([Store], (_store: Store<IStatusBarState>) => {
 		store = _store;
 		const mockStore = new Map<any, any>([
+			[selectMapsList, [{id: 'activeMap'}]],
+			[ selectActiveMapId, 'activeMap'],
 			[selectOverlayOfActiveMap, undefined],
 			[selectPresetOverlays, []]
 		]);

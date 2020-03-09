@@ -12,6 +12,7 @@ import { MockComponent } from '../../../core/test/mock-component';
 import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
 import { ClickOutsideDirective } from '../../../core/click-outside/click-outside.directive';
 import { TranslateModule } from '@ngx-translate/core';
+import { toolsFeatureKey, ToolsReducer } from '../../../menu-items/tools/reducers/tools.reducer';
 
 describe('SearchPanelComponent', () => {
 	let component: SearchPanelComponent;
@@ -50,8 +51,9 @@ describe('SearchPanelComponent', () => {
 			imports: [StoreModule.forRoot({
 				[statusBarFeatureKey]: StatusBarReducer,
 				[overlaysFeatureKey]: OverlayReducer,
-				[mapFeatureKey]: MapReducer
-			}), EffectsModule.forRoot([]),
+				[mapFeatureKey]: MapReducer,
+				[toolsFeatureKey]: ToolsReducer
+			}),
 				TranslateModule.forRoot()],
 			providers: [
 				{

@@ -14,8 +14,9 @@ import { CopySnapshotShareLinkAction } from '../../actions/status-bar.actions';
 import { cold } from 'jasmine-marbles';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { selectLayout } from '@ansyn/map-facade';
-import { selectSelectedCase } from '../../../menu-items/cases/reducers/cases.reducer';
+import { casesFeatureKey, CasesReducer, selectSelectedCase } from '../../../menu-items/cases/reducers/cases.reducer';
 import { of } from 'rxjs';
+import { OverlaysEffects } from '../../../overlays/effects/overlays.effects';
 
 describe('CasePanelComponent', () => {
 	let component: CasePanelComponent;
@@ -26,8 +27,11 @@ describe('CasePanelComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [CasePanelComponent],
 			imports: [TranslateModule.forRoot(),
-			EffectsModule.forRoot([]),
-			StoreModule.forRoot({[statusBarFeatureKey]: StatusBarReducer})],
+			EffectsModule.forRoot([OverlaysEffects]),
+			StoreModule.forRoot({
+				[statusBarFeatureKey]: StatusBarReducer,
+				[casesFeatureKey]: CasesReducer
+			})],
 			providers: [
 				{
 					provide: StatusBarConfig,

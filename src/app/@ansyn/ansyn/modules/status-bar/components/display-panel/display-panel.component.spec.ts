@@ -10,11 +10,10 @@ import {
 	statusBarFeatureKey,
 	StatusBarReducer
 } from '../../reducers/status-bar.reducer';
-import { selectLayout, SetLayoutAction } from '@ansyn/map-facade';
+import { mapFeatureKey, MapReducer, selectLayout, SetLayoutAction } from '@ansyn/map-facade';
 import { of } from 'rxjs';
-import { cold } from 'jasmine-marbles';
 import { SetImageOpeningOrientation } from '../../actions/status-bar.actions';
-import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
+import { comboBoxesOptions, ORIENTATIONS } from '../../models/combo-boxes.model';
 import { StatusBarConfig } from '../../models/statusBar.config';
 
 describe('DisplayPanelComponent', () => {
@@ -39,7 +38,10 @@ describe('DisplayPanelComponent', () => {
 			declarations: [DisplayPanelComponent,
 			mockComboBoxComponent,
 			mockComboBoxOptionComponent],
-			imports: [StoreModule.forRoot({[statusBarFeatureKey]: StatusBarReducer}),
+			imports: [StoreModule.forRoot({
+				[statusBarFeatureKey]: StatusBarReducer,
+				[mapFeatureKey]: MapReducer
+			}),
 				TranslateModule.forRoot()],
 			providers: [
 				{

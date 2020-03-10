@@ -40,6 +40,11 @@
 				&:hover:not(.active) {
 					background: @status-bar-hover;
 				}
+
+				i.small { // until we get new small icons
+					font-size: 1em;
+
+				}
 			}
 
 			&:last-child {
@@ -49,9 +54,11 @@
 				}
 			}
 		}
+
 		&.rtl {
 			justify-content: flex-end;
 			flex-direction: row-reverse;
+
 			div.search-title {
 				direction: rtl;
 				border-bottom-left-radius: 0;
@@ -59,6 +66,7 @@
 				border-bottom-right-radius: @status-bar-panel-radius;
 				border-top-right-radius: @status-bar-panel-radius;
 			}
+
 			.box {
 				&:last-child {
 					.search-panel-button {

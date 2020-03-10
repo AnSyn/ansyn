@@ -8,9 +8,9 @@ import { Point } from 'geojson';
 
 @Injectable()
 export class GeocoderService {
-
+	placeholder = 'Search';
 	public config: IMapSearchConfig = null;
-
+	onlyCoordinates = false;
 	constructor(protected http: HttpClient,
 				@Inject(mapFacadeConfig) public packageConfig: IMapFacadeConfig) {
 		this.config = this.packageConfig.mapSearch;

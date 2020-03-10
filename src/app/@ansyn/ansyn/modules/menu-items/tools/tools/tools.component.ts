@@ -29,7 +29,7 @@ import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mo
 @Component({
 	selector: 'ansyn-tools',
 	templateUrl: './tools.component.html',
-	styleUrls: ['./tools.component.less'],
+	styleUrls: ['./tools.component.less']
 })
 @AutoSubscriptions({
 	init: 'ngOnInit',

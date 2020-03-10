@@ -433,7 +433,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		const fractionDigits = 2;
 		const area = calculateGeometryArea(polygon);
 
-		if (area > 1000) {
+		if (area >= 1000) {
 			return (area / 1000).toFixed(fractionDigits) + 'km2';
 		}
 

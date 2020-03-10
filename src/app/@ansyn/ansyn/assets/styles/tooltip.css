@@ -5,12 +5,15 @@
 	for dynamic tooltips use [attr.tooltip-value]
 	<button [attr.tooltip-value]="myString" tooltip-class="right">Hello</button>
 */
+
+@import "./disabled-tooltip.css";
+
 [tooltip-value]:not(.active):not(:disabled):after {
 	content: attr(tooltip-value);
 }
 
 [tooltip-value]:not(.active):not(:disabled)[tooltip-class*="top"]:after {
-	/*left: auto;*/
+	left: auto;
 	bottom: auto;
 	transform: translateY(-100%);
 }

@@ -3,6 +3,7 @@ import { of } from 'rxjs';
 import { AnnotationsVisualizer } from './annotations.visualizer';
 import { OL_PLUGINS_CONFIG } from '../plugins.config';
 import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 describe('AnnotationsVisualizer', () => {
 	let annotationsVisualizer: AnnotationsVisualizer;
@@ -10,6 +11,10 @@ describe('AnnotationsVisualizer', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [
+				{
+					provide: TranslateService,
+					useValue: {}
+				},
 				AnnotationsVisualizer,
 				{
 					provide: OpenLayersProjectionService,
@@ -18,9 +23,9 @@ describe('AnnotationsVisualizer', () => {
 				{
 					provide: OL_PLUGINS_CONFIG,
 					useValue: { Annotations: { displayId: true } }
-				}
+				},
 			],
-			imports: []
+			imports: [TranslateModule]
 		});
 	});
 

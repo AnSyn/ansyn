@@ -22,7 +22,7 @@ describe('AnsynComponent', () => {
 	const mockToast = MockComponent({ selector: 'ansyn-toast', inputs: ['duration'] });
 	const mockFooter = MockComponent({
 		selector: 'ansyn-footer',
-		inputs: ['selectedCaseName', 'activeMap', 'animatedElement']
+		inputs: ['activeMap', 'animatedElement']
 	});
 	const mockOverlaysContainer = MockComponent({ selector: 'ansyn-overlays-container' });
 	const mockEmptyComponent = MockComponent({ selector: 'ansyn-empty' });

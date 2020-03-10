@@ -1,27 +1,39 @@
-import { Component, HostListener, Inject } from '@angular/core';
+import { Component, HostListener, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { ExpandAction } from '../../actions/status-bar.actions';
 import { IStatusBarConfig, IToolTipsConfig } from '../../models/statusBar-config.model';
 import { StatusBarConfig } from '../../models/statusBar.config';
-import { GoAdjacentOverlay, GoNextPresetOverlay } from '../../../status-bar/actions/status-bar.actions';
-import { EnableCopyOriginalOverlayDataAction } from '@ansyn/map-facade';
+import { GoAdjacentOverlay, GoNextPresetOverlay } from '../../actions/status-bar.actions';
+import { EnableCopyOriginalOverlayDataAction, selectOverlayOfActiveMap } from '@ansyn/map-facade';
 import { ActivateScannedAreaAction } from '../../../overlays/overlay-status/actions/overlay-status.actions';
+import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
+import { tap } from 'rxjs/operators';
+import { selectPresetOverlays } from '../../../overlays/overlay-status/reducers/overlay-status.reducer';
 
 @Component({
 	selector: 'ansyn-navigation-bar',
 	templateUrl: './navigation-bar.component.html',
 	styleUrls: ['./navigation-bar.component.less']
 })
-export class NavigationBarComponent {
+@AutoSubscriptions()
+export class NavigationBarComponent implements OnInit, OnDestroy{
 	goPrevActive = false;
 	goNextActive = false;
 	goNextQuickLoop = false;
 	scanAreaActive = false;
+	hasPresetOverlays: boolean;
+	hasOverlayDisplay: boolean;
 
-	get toolTips(): IToolTipsConfig {
-		return this.statusBarConfig.toolTips || {};
-	}
+	@AutoSubscription
+	hasOverlayDisplay$ = this.store.select(selectOverlayOfActiveMap).pipe(
+		tap( overlay => this.hasOverlayDisplay = Boolean(overlay))
+	);
+
+	@AutoSubscription
+	hasPresetOverlays$ = this.store.select(selectPresetOverlays).pipe(
+		tap( presetOverlays => this.hasPresetOverlays = presetOverlays.length > 0)
+	);
 
 	private _nextPresetOverlayKeys = 'qQ/'.split('').map(char => char.charCodeAt(0));
 	private _scannedAreaKey = '`~;'.split('').map(char => char.charCodeAt(0));
@@ -80,7 +92,7 @@ export class NavigationBarComponent {
 	}
 
 	constructor(protected store: Store<IStatusBarState>,
-				@Inject(StatusBarConfig) protected statusBarConfig: IStatusBarConfig) {
+				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
 	}
 
 	clickGoAdjacent(isNext): void {
@@ -100,5 +112,11 @@ export class NavigationBarComponent {
 
 	clickExpand(): void {
 		this.store.dispatch(new ExpandAction());
+	}
+
+	ngOnInit(): void {
+	}
+
+	ngOnDestroy(): void {
 	}
 }

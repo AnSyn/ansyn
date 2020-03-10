@@ -12,7 +12,9 @@
 			class="menu-item"
 			[ngClass]="data.name"
 			[disabled]="isDisabled(data.subList)"
-			(mousedown)="isClick($event) && data.action($event)">
+			(mousedown)="isClick($event) && data.action($event)"
+			tooltip-class="top"
+			[attr.tooltip-disabled-value]="data.disabledToolTip | translate">
 			<i class="icon-context-menu-{{data.name}}"></i>
 			<span>{{data.name | translate  | titlecase}}</span>
 			<div class="sub-buttons-list" *ngIf="asList(data.subList)">

@@ -1,10 +1,12 @@
 @import "ansyn/less/z-index-globals";
 @import 'ansyn/less/colors';
+@import "ansyn/less/common";
 
 :host {
-	display: block;
-	position: relative;
-	height: 100%;
+	display: flex;
+	position: absolute;
+	align-self: center;
+	top: @status-bar-height;
 }
 
 .navigation {
@@ -19,6 +21,7 @@
 
 	i {
 		font-size: 25px;
+		color: white;
 	}
 
 	button {
@@ -30,20 +33,19 @@
 		padding: 0;
 		margin: 2px;
 		border-radius: 5px;
-		background: @background-color-11;
+		background: #494949;
 
+		&:disabled {
+			opacity: 0.3;
+		}
 		&.transparent {
 			background: transparent;
 		}
 
-		&.active {
+		&.active:not(:disabled), &:active:not(:disabled) {
 			box-shadow: 0 0 2px 2px #666;
 		}
-	}
-}
 
-@media screen and (max-width: 959px) {
-	div.navigation {
-		display: none;
+
 	}
 }

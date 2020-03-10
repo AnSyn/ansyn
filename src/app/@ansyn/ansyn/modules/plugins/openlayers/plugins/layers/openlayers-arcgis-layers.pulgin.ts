@@ -1,7 +1,7 @@
 import { Store } from '@ngrx/store';
 import XYZ from 'ol/source/XYZ';
 import TileLayer from 'ol/layer/Tile';
-import { ImageryPlugin } from '@ansyn/imagery';
+import { EPSG_4326, ImageryPlugin } from '@ansyn/imagery';
 import { OpenLayersMap } from '@ansyn/ol';
 import * as proj from 'ol/proj';
 import { OpenlayersBaseLayersPlugins } from './openlayers-base-layers.plugins';
@@ -22,7 +22,7 @@ export class OpenlayersArcgisLayersPulgin extends OpenlayersBaseLayersPlugins {
 	}
 
 	createLayer(layer: ILayer): Observable<TileLayer> {
-		const extent: any = proj.transformExtent(layer.extent, 'EPSG:4326', this.iMap.mapObject.getView().getProjection());
+		const extent: any = proj.transformExtent(layer.extent, EPSG_4326, this.iMap.mapObject.getView().getProjection());
 		const vector = new TileLayer({
 			zIndex: 100,
 			extent,

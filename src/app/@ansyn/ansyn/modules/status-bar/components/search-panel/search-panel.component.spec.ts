@@ -1,6 +1,6 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 
-import { ComboBoxesComponent } from './combo-boxes.component';
+import { SearchPanelComponent } from './search-panel.component';
 import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -11,11 +11,12 @@ import { MockComponent } from '../../../core/test/mock-component';
 import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
 import { ClickOutsideDirective } from '../../../core/click-outside/click-outside.directive';
 import { TranslateModule } from '@ngx-translate/core';
+import { toolsFeatureKey, ToolsReducer } from '../../../menu-items/tools/reducers/tools.reducer';
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 
-describe('ComboBoxesComponent', () => {
-	let component: ComboBoxesComponent;
-	let fixture: ComponentFixture<ComboBoxesComponent>;
+describe('SearchPanelComponent', () => {
+	let component: SearchPanelComponent;
+	let fixture: ComponentFixture<SearchPanelComponent>;
 
 	const mockComboBoxOptionComponent = MockComponent({
 		selector: 'ansyn-combo-box-option',
@@ -25,13 +26,13 @@ describe('ComboBoxesComponent', () => {
 
 	const mockComboBoxComponent = MockComponent({
 		selector: 'ansyn-combo-box',
-		inputs: ['options', 'comboBoxToolTipDescription', 'ngModel'],
+		inputs: ['buttonClass', 'options', 'withArrow', 'alwaysChange', 'comboBoxToolTipDescription', 'ngModel'],
 		outputs: ['ngModelChange']
 	});
 	const ansynTreeView = MockComponent({ selector: 'ansyn-tree-view', outputs: ['closeTreeView'] });
 	const ansynComboTrigger = MockComponent({
 		selector: 'button[ansynComboBoxTrigger]',
-		inputs: ['isActive', 'render', 'ngModel', 'owlDateTimeTrigger'],
+		inputs: ['isActive', 'render', 'ngModel', 'owlDateTimeTrigger', 'withArrow'],
 		outputs: ['ngModelChange']
 	});
 	const mockTimePickerTrigger = MockComponent({
@@ -49,7 +50,7 @@ describe('ComboBoxesComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [
-				ComboBoxesComponent,
+				SearchPanelComponent,
 				mockComboBoxComponent,
 				mockComboBoxOptionComponent,
 				ansynTreeView,
@@ -61,14 +62,11 @@ describe('ComboBoxesComponent', () => {
 			imports: [StoreModule.forRoot({
 				[statusBarFeatureKey]: StatusBarReducer,
 				[overlaysFeatureKey]: OverlayReducer,
-				[mapFeatureKey]: MapReducer
-			}), EffectsModule.forRoot([]),
+				[mapFeatureKey]: MapReducer,
+				[toolsFeatureKey]: ToolsReducer
+			}),
 				TranslateModule.forRoot()],
 			providers: [
-				{
-					provide: ORIENTATIONS,
-					useValue: comboBoxesOptions.orientations
-				},
 				{
 					provide: TIME_FILTERS,
 					useValue: comboBoxesOptions.timeFilters
@@ -88,7 +86,7 @@ describe('ComboBoxesComponent', () => {
 	}));
 
 	beforeEach(inject([Store], (_store: Store<IStatusBarState>) => {
-		fixture = TestBed.createComponent(ComboBoxesComponent);
+		fixture = TestBed.createComponent(SearchPanelComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 		store = _store;
@@ -97,19 +95,4 @@ describe('ComboBoxesComponent', () => {
 	it('should create', () => {
 		expect(component).toBeTruthy();
 	});
-
-	describe('check click on pinPoint flags', () => {
-		beforeEach(() => {
-			spyOn(store, 'dispatch');
-		});
-
-		it('edit-pinpoint', () => {
-			spyOn(component, 'geoFilterChanged');
-			fixture.nativeElement.querySelector('.edit-pinpoint').click();
-			fixture.detectChanges();
-			expect(component.geoFilterChanged).toHaveBeenCalled();
-		});
-	});
-
-
 });

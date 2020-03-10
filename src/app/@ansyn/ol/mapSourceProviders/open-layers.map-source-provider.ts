@@ -1,4 +1,11 @@
-import { BaseMapSourceProvider, bboxFromGeoJson, ImageryLayerProperties, IMapSettings } from '@ansyn/imagery';
+import {
+	BaseMapSourceProvider,
+	bboxFromGeoJson,
+	EPSG_3857,
+	EPSG_4326,
+	ImageryLayerProperties,
+	IMapSettings
+} from '@ansyn/imagery';
 import Layer from 'ol/layer/Layer';
 import ImageLayer from 'ol/layer/Image';
 import TileLayer from 'ol/layer/Tile';
@@ -16,7 +23,7 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 
 	generateLayerId(metaData: IMapSettings) {
 		if (metaData.data.overlay) {
-			return `${ metaData.worldView.mapType }/${ JSON.stringify(metaData.data.overlay) }`;
+			return `${ metaData.worldView.mapType }/${ metaData.data.overlay.sourceType }/${ metaData.data.overlay.id }`;
 		}
 		return `${ metaData.worldView.mapType }/${ metaData.data.key }`;
 	}
@@ -57,10 +64,10 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 		return imageLayer;
 	}
 
-	getExtent(footprint, destinationProjCode = 'EPSG:3857') {
+	getExtent(footprint, destinationProjCode = EPSG_3857) {
 		let extent: [number, number, number, number] = <[number, number, number, number]>bboxFromGeoJson(footprint);
-		[extent[0], extent[1]] = proj.transform([extent[0], extent[1]], 'EPSG:4326', destinationProjCode);
-		[extent[2], extent[3]] = proj.transform([extent[2], extent[3]], 'EPSG:4326', destinationProjCode);
+		[extent[0], extent[1]] = proj.transform([extent[0], extent[1]], EPSG_4326, destinationProjCode);
+		[extent[2], extent[3]] = proj.transform([extent[2], extent[3]], EPSG_4326, destinationProjCode);
 		return extent;
 	}
 
@@ -68,7 +75,7 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 		const source = new XYZ({
 			url: url,
 			crossOrigin: 'Anonymous',
-			projection: 'EPSG:3857'
+			projection: EPSG_3857
 		});
 		return source;
 	}

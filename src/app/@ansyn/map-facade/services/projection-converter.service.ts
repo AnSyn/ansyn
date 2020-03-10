@@ -3,6 +3,7 @@ import proj4 from 'proj4';
 import { Inject, Injectable } from '@angular/core';
 import { IMapFacadeConfig } from '../models/map-config.model';
 import { mapFacadeConfig } from '../models/map-facade.config';
+import { EPSG_4326 } from '@ansyn/imagery';
 
 export interface IUtmZone {
 	zone: number;
@@ -18,7 +19,6 @@ export interface ICoordinatesSystem {
 // @dynamic
 @Injectable()
 export class ProjectionConverterService {
-	wgs84Projection = 'EPSG:4326';
 
 	static isValidCoordinates(coords: number[], minLength: number) {
 		return coords.length >= minLength && coords.every(c => typeof c === 'number');
@@ -73,7 +73,7 @@ export class ProjectionConverterService {
 		const lng = coords[0];
 		const hemisphere = coords[1];
 		const zoneUtmEd50Proj = this.getZoneUtmProj(lng, hemisphere);
-		const conv = proj4(this.wgs84Projection, zoneUtmEd50Proj.utmProj, coords);
+		const conv = proj4(EPSG_4326, zoneUtmEd50Proj.utmProj, coords);
 		if (conv[1] < 0) {
 			conv[1] += 10000000;
 		}
@@ -87,7 +87,7 @@ export class ProjectionConverterService {
 			y -= 10000000;
 		}
 		const utmEd50Proj = this.getUtmFromConf(zone);
-		const conv = proj4(utmEd50Proj, this.wgs84Projection, [x, y]);
+		const conv = proj4(utmEd50Proj, EPSG_4326, [x, y]);
 
 		return [...conv];
 	}
@@ -98,7 +98,7 @@ export class ProjectionConverterService {
 			y -= 10000000;
 		}
 		const utmWgs84Proj = `+proj=utm +zone=${ zone } +datum=WGS84`;
-		const conv = proj4(utmWgs84Proj, this.wgs84Projection, [x, y]);
+		const conv = proj4(utmWgs84Proj, EPSG_4326, [x, y]);
 
 		return [...conv];
 	}
@@ -107,7 +107,7 @@ export class ProjectionConverterService {
 		const lng = coords[0];
 		const zone = (Math.floor((lng + 180) / 6) % 60) + 1;
 		const projection = `+proj=utm +zone=${ zone } +datum=WGS84`;
-		const conv = proj4(this.wgs84Projection, projection, coords);
+		const conv = proj4(EPSG_4326, projection, coords);
 		if (conv[1] < 0) {
 			conv[1] += 10000000;
 		}

@@ -15,6 +15,7 @@ import { selectDataInputFilter, selectRegion, selectTime } from '../../../overla
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import { CaseGeoFilter, ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
 import { ClearActiveInteractionsAction } from '../../../menu-items/tools/actions/tools.actions';
+import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 
 const moment = momentNs;
@@ -43,6 +44,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	dataInputFilterExpand: boolean;
 	timeSelectionExpand: boolean;
 	time: ICaseTimeState;
+	timeRange: Date[];
 	dataInputFilterTitle = 'All';
 	timeSelectionTitle: string;
 	geoFilterTitle: string;
@@ -52,6 +54,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	time$: Observable<ICaseTimeState> = this.store$.select(selectTime).pipe(
 		tap(_time => {
 			this.time = _time;
+			this.timeRange = _time && [_time.from, _time.to];
 			if (_time && _time.to && _time.from) {
 				const format = 'DD/MM/YYYY HH:mm';
 				this.timeSelectionTitle = `${ moment(this.time.to).format(format) } - ${ moment(this.time.from).format(format) }`;
@@ -81,7 +84,10 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	constructor(protected store$: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
-				@Inject(GEO_FILTERS) public geoFilters: CaseGeoFilter[]) {
+				@Inject(GEO_FILTERS) public geoFilters: CaseGeoFilter[],
+				dateTimeAdapter: DateTimeAdapter<any>
+	) {
+		dateTimeAdapter.setLocale(statusBarConfig.locale);
 	}
 
 
@@ -92,15 +98,13 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		this.dataInputFilterExpand = !this.dataInputFilterExpand;
 	}
 
-	toggleTimelineStartEndSearch($event?: any) {
-		if (!$event || !$event.path.map(({ classList }) => classList).filter(Boolean).some((classList) => classList.contains('flatpickr-calendar'))) {
-			this.timeSelectionExpand = !this.timeSelectionExpand;
-		}
-	}
-
-	applyTimelinePickerResult(time: ICaseTimeState) {
+	onTimeRangeChange(event) {
+		const time: ICaseTimeState = {
+			from: event.value[0],
+			to: event.value[1],
+			type: 'absolute'
+		};
 		this.store$.dispatch(new SetOverlaysCriteriaAction({ time }));
-		this.toggleTimelineStartEndSearch();
 	}
 
 	geoFilterChanged(geoFilter?: SearchMode) {

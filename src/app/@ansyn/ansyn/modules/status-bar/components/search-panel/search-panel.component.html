@@ -8,10 +8,11 @@
 				[owlDateTimeTrigger]="dt10"
 				[attr.tooltip-value]="statusBarConfig?.toolTips?.timeFilterEdit | translate"
 				[isActive]="timeSelectionExpand"
-				icon="icon-status-bar-time"
+				[withArrow]="false"
+				icon="icon icon-status-bar-time"
 				tooltip-class="top"
-				class="combo-box-width">
-			<span class="render">{{'Start-End' | translate}}</span>
+				class="search-panel-button">
+			<span class="title">{{timeSelectionTitle}}</span>
 		</button>
 
 		<input timePickerInput

@@ -150,7 +150,10 @@
 	right: 7px;
 }
 
-// font setting for time picker
+// time picker: vertical position & font
+/deep/ .owl-dt-popup {
+	transform: translateY(calc(~"4px - @{status-bar-height}"));
+}
 /deep/ .owl-dt-container {
 	font-family: @app-font;
 }

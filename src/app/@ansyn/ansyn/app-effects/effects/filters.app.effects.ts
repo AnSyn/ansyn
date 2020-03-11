@@ -36,11 +36,12 @@ import { IFilterModel } from '../../modules/core/models/IFilterModel';
 import { InjectionResolverFilter } from '../../modules/core/services/generic-type-resolver';
 import { mapValuesToArray } from '../../modules/core/utils/misc';
 import {
+	CheckTrianglesAction,
 	LoadOverlaysAction,
 	OverlaysActionTypes,
 	SetDropsAction,
 	SetFilteredOverlaysAction,
-	SetOverlaysStatusMessage
+	SetOverlaysStatusMessageAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	overlaysStatusMessages,
@@ -100,7 +101,7 @@ export class FiltersAppEffects {
 			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : this.translate.instant(overlaysStatusMessages.noOverLayMatchFilters);
 			return [
 				new SetFilteredOverlaysAction(filteredOverlays),
-				new SetOverlaysStatusMessage(message)
+				new SetOverlaysStatusMessageAction(message)
 			];
 		}));
 
@@ -120,8 +121,13 @@ export class FiltersAppEffects {
 
 	@Effect()
 	initializeFilters$: Observable<any> = this.actions$.pipe(
-		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
+		ofType<CheckTrianglesAction>(OverlaysActionTypes.CHECK_TRIANGLES),
 		map(() => new InitializeFiltersAction()));
+
+	// @Effect()
+	// initializeFilters$: Observable<any> = this.actions$.pipe(
+	// 	ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
+	// 	map(() => new InitializeFiltersAction()));
 
 	@Effect()
 	onInitializeFilters$: Observable<InitializeFiltersSuccessAction> = this.actions$.pipe(

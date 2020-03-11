@@ -90,6 +90,7 @@ export class OverlaysAppEffects {
 	actionsLogger$: Observable<any> = this.actions$.pipe(
 		ofType(
 			OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS,
+			OverlaysActionTypes.CHECK_TRIANGLES,
 			OverlaysActionTypes.LOAD_OVERLAYS,
 			OverlaysActionTypes.LOAD_OVERLAYS_FAIL,
 			OverlaysActionTypes.SET_OVERLAYS_CRITERIA,

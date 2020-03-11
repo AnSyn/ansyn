@@ -4,6 +4,7 @@ import { credentialsConfig, ICredentialsConfig } from "./config";
 import { Observable, of } from "rxjs";
 import { GeoJSON } from "geojson";
 import { catchError, map, mergeMap } from "rxjs/operators";
+import * as wellknown from 'wellknown';
 
 @Injectable()
 export class AreaToCredentialsService{
@@ -18,22 +19,25 @@ export class AreaToCredentialsService{
 		return this.config.classificationsOfAreaBaseUrl;
 	}
 
-	// right now we are only about the triangle number, not the publish procedure.
-	// we let the user know that he doesn't have the right triangle for the area, with no regards to the clearance level
-
-	getAreaTriangles(area: GeoJSON) {
-		const url = this.getUrl();
-		const headers = new HttpHeaders({'Content-Type': 'application/json'});
-		const body = '"${wellknown.stringify(area)}"';
-		const options = {headers};
-		return this.httpClient.post(url, body, options)
+	createRequest(url, body, options): Observable<any> {
+		return this.httpClient.get(url, options)
 			.pipe(
 				mergeMap((data: any) => this.parseResponse(data)),
 				map((data: any) => {
 					return data;
 				}),
 				catchError((err) => {
-				return of(false);
+					return of(false);
 				}));
+	}
+
+	// right now we are only about the triangle number, not the publish procedure.
+	// we let the user know that he doesn't have the right triangle for the area, with no regards to the clearance level
+	getAreaTriangles(area: GeoJSON): Observable<any> {
+		const url = this.getUrl();
+		const headers = new HttpHeaders({'Content-Type': 'application/json'});
+		const body = `"${wellknown.stringify(area)}"`;
+		const options = {headers};
+		return this.createRequest(url, body, options);
 	}
 }

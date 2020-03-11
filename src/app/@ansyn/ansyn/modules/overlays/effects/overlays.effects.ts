@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { from, Observable } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import {
+	CheckTrianglesAction,
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
 	LoadOverlaysAction,
@@ -13,7 +14,7 @@ import {
 	RequestOverlayByIDFromBackendAction,
 	SetMarkUp,
 	SetOverlaysCriteriaAction,
-	SetOverlaysStatusMessage,
+	SetOverlaysStatusMessageAction,
 	UpdateOverlaysCountAction
 } from '../actions/overlays.actions';
 import { IOverlay, IOverlaysCriteria, IOverlaysFetchData, RegionContainment } from '../models/overlay.model';
@@ -32,6 +33,8 @@ import { rxPreventCrash } from '../../core/utils/rxjs/operators/rxPreventCrash';
 import { getPolygonIntersectionRatio, isPointContainedInGeometry } from '@ansyn/imagery';
 import { getErrorLogFromException } from '../../core/utils/logs/timer-logs';
 import { LoggerService } from '../../core/services/logger.service';
+import { AreaToCredentialsService } from "../../core/services/credentials/area-to-credentials-service";
+import { CredentialsService, ICredentialsResponse } from "../../core/services/credentials/credentials.service";
 
 @Injectable()
 export class OverlaysEffects {
@@ -71,7 +74,34 @@ export class OverlaysEffects {
 		ofType<SetOverlaysCriteriaAction>(OverlaysActionTypes.SET_OVERLAYS_CRITERIA),
 		filter(action => !(action.options && action.options.noInitialSearch)),
 		withLatestFrom(this.store$.select(overlaysStateSelector)),
-		map(([{ payload }, { overlaysCriteria }]) => new LoadOverlaysAction(overlaysCriteria)));
+		map(([{ payload }, { overlaysCriteria }]) => new CheckTrianglesAction(overlaysCriteria)));
+
+	userAuthorizedAreas$: Observable<any> = this.credentialsService.getCredentials().pipe(
+		map((credentials: ICredentialsResponse) => {
+			return credentials.authorizedAreas
+		}));
+
+	// todo: try commas https://medium.com/@amcdnl/dispatching-multiple-actions-from-ngrx-effects-c1447ceb6b22
+	@Effect()
+	checkTrianglesBeforeSearch$ = this.actions$.pipe(
+		ofType<CheckTrianglesAction>(OverlaysActionTypes.CHECK_TRIANGLES),
+		map((action) => {
+			this.userAuthorizedAreas$.pipe(
+				tap((userAuthorizedAreas) => {
+					this.areaToCredentialsService.getAreaTriangles(action.payload.region).pipe(
+						tap((areaTriangles) => {
+							if (areaTriangles.some(userAuthorizedAreas)) {
+								map(([{payload}, {overlaysCriteria}]) => new LoadOverlaysAction(overlaysCriteria))
+							}
+							else {
+								return new SetOverlaysStatusMessageAction(this.translate.instant(overlaysStatusMessages.noPermissionsForArea))
+							}
+						})
+					)
+				})
+			)
+		})
+	);
 
 	@Effect()
 	loadOverlays$: Observable<{} | LoadOverlaysSuccessAction> = this.actions$.pipe(
@@ -88,21 +118,21 @@ export class OverlaysEffects {
 
 					if (!Array.isArray(overlays.data) && Array.isArray(overlays.errors) && overlays.errors.length >= 0) {
 						return [new LoadOverlaysSuccessAction(overlaysResult),
-							new SetOverlaysStatusMessage(error)];
+							new SetOverlaysStatusMessageAction(error)];
 					}
 
 					const actions: Array<any> = [new LoadOverlaysSuccessAction(overlaysResult)];
 
 					// if data.length != fetchLimit that means only duplicate overlays removed
 					if (!overlays.data || overlays.data.length === 0) {
-						actions.push(new SetOverlaysStatusMessage(noOverlayMatchQuery));
+						actions.push(new SetOverlaysStatusMessageAction(noOverlayMatchQuery));
 					} else if (overlays.limited > 0 && overlays.data.length === this.overlaysService.fetchLimit) {
 						// TODO: replace when design is available
-						actions.push(new SetOverlaysStatusMessage(overLoad.replace('$overLoad', overlays.data.length.toString())));
+						actions.push(new SetOverlaysStatusMessageAction(overLoad.replace('$overLoad', overlays.data.length.toString())));
 					}
 					return actions;
 				}),
-				catchError(() => from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessage('Error on overlays request')]))
+				catchError(() => from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessageAction('Error on overlays request')]))
 			);
 		})
 	);
@@ -166,7 +196,9 @@ export class OverlaysEffects {
 				protected store$: Store<any>,
 				protected translate: TranslateService,
 				protected overlaysService: OverlaysService,
-				protected loggerService: LoggerService) {
+				protected loggerService: LoggerService,
+				protected credentialsService: CredentialsService,
+				protected areaToCredentialsService: AreaToCredentialsService) {
 	}
 
 

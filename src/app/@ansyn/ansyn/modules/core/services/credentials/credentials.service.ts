@@ -8,7 +8,7 @@ interface ICredentialsLocation {
 	Name: string
 };
 
-interface ICredentialsResponse {
+export interface ICredentialsResponse {
 	authorizedAreas: ICredentialsLocation[];
 	unauthorizedAreas: ICredentialsLocation[];
 }

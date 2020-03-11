@@ -428,11 +428,23 @@
   	"authorizedPath": "/"
   },
   "credentialsConfig": {
-  	"baseUrl": "assets/config/credentials.json",
+  	"userCredentialsBaseUrl": "assets/config/credentials.json",
   	"authorizationSiteURL": "https://localhost:4200",
   	"authorizationInfoURL": "/assets/config/app.config.json",
   	"active":  {{ getv "/ansyn/credentials/active" "false" }},
-  	"noCredentialsMessage": "invalid credentials"
+  	"noCredentialsMessage": "invalid credentials",
+  	"classificationsOfAreaBaseUrl": "assets/config/triangles.json",
+  	"allLocation": [
+  		{"Name" : "הרשאה לדוגמא 1",
+  		 "Id" : 1
+  		},
+  		{"Name" : "הרשאה לדוגמא 2",
+  		 "Id" : 2
+  		},
+  		{"Name" : "הרשאה לדוגמא 3",
+  		 "Id" : 3
+  		}
+  	]
   },
   "visualizersConfig": {
   	"MeasureDistanceVisualizer": {

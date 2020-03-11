@@ -10,8 +10,8 @@
 			name="annotations-layer"
 			[ngModel]="activeAnnotationId"
 			[comboBoxToolTipDescription]="'choose annotation layer' | translate"
-			(ngModelChange)="setSelectedAnnotationLayer($event)">
-			[disabledg]="isGeoOptionsDisabled"
+			(ngModelChange)="setSelectedAnnotationLayer($event)"
+			[disabled]="isGeoOptionsDisabled">
 			<ansyn-combo-box-option *ngFor="let layer of annotationLayer$ | async" [value]="layer.id" [disabled]="layer.isNonEditable">
 				{{ layer.name }}
 			</ansyn-combo-box-option>

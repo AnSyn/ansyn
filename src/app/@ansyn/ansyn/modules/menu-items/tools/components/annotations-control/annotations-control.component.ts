@@ -32,6 +32,7 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	fillAlpah = 0.4;
 	strokeAlpah = 1;
 	activeAnnotationId: string;
+	@Input() isGeoOptionsDisabled: boolean;
 
 
 	private _expand: boolean;

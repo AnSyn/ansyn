@@ -38,7 +38,7 @@ export class MpTileSource extends XYZ {
 	// ol.DEFAULT_MAX_ZOOM = 42; //by src/ol/index
 	// ol.DEFAULT_TILE_SIZE = 256; //by src/ol/index
 	static resolutionsFromExtent(extent, opt_maxZoom, opt_tileSize) {
-		const maxZoom = opt_maxZoom !== undefined ? opt_maxZoom : 42;
+		const maxZoom = opt_maxZoom !== undefined ? opt_maxZoom : 30;
 
 		const height = Extent.getHeight(extent);
 		const width = Extent.getWidth(extent);

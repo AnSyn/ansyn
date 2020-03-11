@@ -29,11 +29,10 @@ export enum SelectionBoxTypes {
 	destroy: 'ngOnDestroy'
 })
 export class AnnotationsControlComponent implements OnInit, OnDestroy {
+	@Input() isGeoOptionsDisabled: boolean;
 	fillAlpah = 0.4;
 	strokeAlpah = 1;
 	activeAnnotationId: string;
-	@Input() isGeoOptionsDisabled: boolean;
-
 
 	private _expand: boolean;
 	public selectedBox: SelectionBoxTypes;

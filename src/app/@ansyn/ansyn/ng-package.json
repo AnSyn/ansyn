@@ -13,6 +13,7 @@
     "lodash",
     "moment",
     "wellknown",
+    "@ansyn/ng-pick-datetime",
     "font-awesome",
     "primeng",
     "file-saver",

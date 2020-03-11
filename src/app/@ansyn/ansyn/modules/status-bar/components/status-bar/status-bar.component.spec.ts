@@ -21,12 +21,7 @@ describe('StatusBarComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StoreModule.forRoot({
-				[statusBarFeatureKey]: StatusBarReducer,
-				[mapFeatureKey]: MapReducer
-			}), EffectsModule.forRoot([]),
-			TranslateModule.forRoot()
-			],
+			imports: [TranslateModule.forRoot()],
 			declarations: [StatusBarComponent,
 				/* mock */
 				mockSelectedCaseBarComponent,

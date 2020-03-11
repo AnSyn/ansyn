@@ -36,7 +36,7 @@
 			[comboBoxToolTipDescription]="statusBarConfig?.toolTips?.geoFilter | translate"
 			[withArrow]="false"
 			[alwaysChange]="true"
-			icon="icon icon-status-bar-geo"
+			icon="icon icon-status-bar-geo small"
 			[ngModel]="geoFilterTitle"
 			(ngModelChange)="geoFilterChanged($event)">
 
@@ -52,7 +52,7 @@
 		<button ansynComboBoxTrigger
 				#trigger
 				(click)="toggleDataInputFilterIcon()"
-				icon="icon icon-input-filter"
+				icon="icon icon-input-filter small"
 				[isActive]="dataInputFilterExpand"
 				[withArrow]="false"
 				[attr.tooltip-value]="statusBarConfig?.toolTips?.dataInputFilter | translate"

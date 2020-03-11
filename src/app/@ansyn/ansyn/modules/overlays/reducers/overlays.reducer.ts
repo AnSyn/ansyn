@@ -2,7 +2,7 @@ import { MapActionTypes } from '@ansyn/map-facade';
 import { createEntityAdapter, Dictionary, EntityAdapter, EntityState } from '@ngrx/entity';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
-import { ICaseDataInputFiltersState } from '../../menu-items/cases/models/case.model';
+import { ICaseDataInputFiltersState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
 import { OverlaysActions, OverlaysActionTypes, SetMiscOverlay, SetMiscOverlays } from '../actions/overlays.actions';
 import {
 	IOverlay,
@@ -334,7 +334,7 @@ export const selectStatusMessage = createSelector(overlaysStateSelector, (overla
 export const selectOverlaysCriteria: MemoizedSelector<any, IOverlaysCriteria> = createSelector(overlaysStateSelector, (overlays) => overlays.overlaysCriteria);
 export const selectDataInputFilter: MemoizedSelector<any, ICaseDataInputFiltersState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.dataInputFilters);
 export const selectRegion: MemoizedSelector<any, any> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);
-export const selectTime: MemoizedSelector<any, any> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.time);
+export const selectTime: MemoizedSelector<any, ICaseTimeState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.time);
 
 export const selectMiscOverlays: MemoizedSelector<any, any> = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays ? overlays.miscOverlays : {});
 export const selectMiscOverlay = (key: string) => createSelector(selectMiscOverlays, (miscOverlays: any) => miscOverlays[key]);

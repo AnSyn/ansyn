@@ -7,7 +7,13 @@ import {
 	selectSourceTypeById
 } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
-import { IMapProviderConfig, IMapSource, MAP_PROVIDERS_CONFIG } from '@ansyn/imagery';
+import {
+	CommunicatorEntity,
+	ImageryCommunicatorService,
+	IMapProviderConfig,
+	IMapSource,
+	MAP_PROVIDERS_CONFIG
+} from '@ansyn/imagery';
 import { fromEvent } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -25,6 +31,7 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	showPopup: boolean;
 	currentSourceType: string;
 	mapSources: IMapSource[];
+	communicator: CommunicatorEntity;
 
 	@AutoSubscription
 	onClickOutside$ = fromEvent(window, 'click').pipe(
@@ -39,6 +46,7 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	constructor(protected store$: Store<any>,
 				protected element: ElementRef,
 				protected logger: LoggerService,
+				protected imageryCommunicatorService: ImageryCommunicatorService,
 				@Inject(MAP_PROVIDERS_CONFIG) protected mapProvidersConfig: IMapProviderConfig) {
 	}
 
@@ -77,13 +85,15 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	}
 
 	changeMap(type: string) {
+		if (!this.communicator) {
+			this.communicator = this.imageryCommunicatorService.provide(this.mapId);
+		}
 		if (this.currentSourceType !== type) {
 			this.logger.info(`change map from ${ this.currentSourceType } to ${ type }`);
-			this.store$.dispatch(new ChangeMainLayer({
-				id: this.mapId,
-				sourceType: type
-			}));
 			this.showPopup = false;
+			this.communicator.changeMapMainLayer(type).then(() => {
+				this.store$.dispatch(new ChangeMainLayer({id: this.mapId, sourceType: type}))
+			});
 		}
 	}
 

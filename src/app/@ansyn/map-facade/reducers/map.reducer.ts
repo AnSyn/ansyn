@@ -178,7 +178,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			}, state);
 		}
 
-		case MapActionTypes.CHANGE_MAP_MAIN_LAYER_SUCCESS: {
+		case MapActionTypes.CHANGE_MAP_MAIN_LAYER: {
 			const {id, sourceType } = action.payload;
 			const worldView = {...state.entities[id].worldView, sourceType};
 			return mapsAdapter.updateOne({

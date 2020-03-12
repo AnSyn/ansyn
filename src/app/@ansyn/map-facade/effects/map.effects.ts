@@ -11,7 +11,6 @@ import {
 	ChangeImageryMap,
 	ChangeImageryMapFailed,
 	ChangeImageryMapSuccess,
-	ChangeMainLayer, ChangeMainLayerFailed, ChangeMainLayerSuccess,
 	DecreasePendingMapsCountAction,
 	ImageryCreatedAction,
 	ImageryMouseEnter,
@@ -182,21 +181,6 @@ export class MapEffects {
 				})
 			);
 		})
-	);
-
-	// TODO: fix the effect after fix promise to observable on the communicator/source providers
-	@Effect({dispatch: false})
-	setMapMainLayer$ = this.actions$.pipe(
-		ofType<ChangeMainLayer>(MapActionTypes.CHANGE_MAP_MAIN_LAYER),
-		switchMap(({ payload }) => {
-			const { id, sourceType } = payload;
-			const communicator = this.communicatorsService.provide(id);
-			return fromPromise(communicator.changeMapMainLayer(sourceType)).pipe(
-				map(change => change.pipe(
-					map(c => c ? this.store$.dispatch(new ChangeMainLayerSuccess(payload)) :
-						this.store$.dispatch(new ChangeMainLayerFailed())))),
-			)
-		}),
 	);
 
 	@Effect({ dispatch: false })

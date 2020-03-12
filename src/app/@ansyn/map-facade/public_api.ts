@@ -69,8 +69,6 @@ export {
 	ContextMenuShowAngleFilter,
 	IAngleFilterClick,
 	ChangeMainLayer,
-	ChangeMainLayerSuccess,
-	ChangeMainLayerFailed,
 	SynchronizeMapsAction
 } from './actions/map.actions';
 

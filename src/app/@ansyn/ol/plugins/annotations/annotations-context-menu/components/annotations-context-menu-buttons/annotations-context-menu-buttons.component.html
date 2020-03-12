@@ -23,6 +23,20 @@
 </div>
 
 <div>
+	<button [class.active]="getFeatureProps()?.showArea"
+			(click)="toggleArea()"
+			[class.disabled]="getFeatureProps()?.mode === 'Point' ||
+			 				  getFeatureProps()?.mode === 'LineString' ||
+			 				  getFeatureProps()?.mode === 'Arrow'">
+		<i [attr.tooltip-value]="'Area' | translate" tooltip-class="bottom">
+			<svg fill="#fff">
+				<path *ngFor= "let area of SVGICON.areaSvg" [attr.d]="area"></path>
+			</svg>
+		</i>
+	</button>
+</div>
+
+<div>
 	<button [class.active]="selectedTab[featureId] === Tabs.Label"
 			(click)="selectTab(Tabs.Label)">
 		<i [attr.tooltip-value]="'Label' | translate" tooltip-class="bottom">
@@ -80,20 +94,6 @@
 			(activeChange)="activeChange($event)"
 		></ansyn-annotations-color>
 	</p>
-</div>
-
-<div>
-	<button [class.active]="getFeatureProps()?.showArea"
-			(click)="toggleArea()"
-			[class.disabled]="getFeatureProps()?.mode === 'Point' ||
-			 				  getFeatureProps()?.mode === 'LineString' ||
-			 				  getFeatureProps()?.mode === 'Arrow'">
-		<i [attr.tooltip-value]="'Area' | translate" tooltip-class="bottom">
-			<svg fill="#fff">
-				<path *ngFor= "let area of SVGICON.areaSvg" [attr.d]="area"></path>
-			</svg>
-		</i>
-	</button>
 </div>
 
 <div *ngIf="!featureProps?.undeletable">

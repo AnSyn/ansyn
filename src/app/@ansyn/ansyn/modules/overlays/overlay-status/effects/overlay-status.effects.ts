@@ -9,11 +9,13 @@ import {
 	unifyPolygons
 } from '@ansyn/imagery';
 import {
+	MapActionTypes,
 	MapFacadeService,
 	mapStateSelector,
-	selectMaps, selectMapsList,
+	selectMaps, selectMapsIds, selectMapsList,
 	SetToastMessageAction,
-	UpdateMapAction
+	UpdateMapAction,
+	SetLayoutSuccessAction, selectActiveMapId
 } from '@ansyn/map-facade';
 import { AnnotationMode, DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
 import { Actions, Effect, ofType } from '@ngrx/effects';
@@ -21,7 +23,7 @@ import { Dictionary } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
 import { EMPTY, Observable } from 'rxjs';
 import { fromPromise } from 'rxjs/internal-compatibility';
-import { catchError, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, switchMap, withLatestFrom, tap } from 'rxjs/operators';
 import {
 	BackToWorldFailed,
 	BackToWorldSuccess,
@@ -31,9 +33,8 @@ import {
 	ToggleDraggedModeAction
 } from '../actions/overlay-status.actions';
 import { SetAnnotationMode } from '../../../menu-items/tools/actions/tools.actions';
-import { DisplayOverlaySuccessAction, OverlaysActionTypes } from '../../actions/overlays.actions';
-import { IOverlaysScannedAreaData, IOverlaysTranslationData } from '../../../menu-items/cases/models/case.model';
-import { selectScannedAreaData, selectTranslationData } from '../reducers/overlay-status.reducer';
+import { IOverlaysScannedAreaData } from '../../../menu-items/cases/models/case.model';
+import { ITranslationsData, selectScannedAreaData, selectTranslationData } from '../reducers/overlay-status.reducer';
 import { IOverlay } from '../../models/overlay.model';
 import { feature } from '@turf/turf';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
@@ -133,6 +134,19 @@ export class OverlayStatusEffects {
 			}
 			return new SetOverlayScannedAreaDataAction({ id: overlay.id, area: scannedArea });
 		}));
+
+	@Effect()
+	onSetLayoutDisableTranslateMode$ = this.actions$.pipe(
+		ofType<SetLayoutSuccessAction>(MapActionTypes.SET_LAYOUT_SUCCESS),
+		withLatestFrom(this.store$.select(selectTranslationData), this.store$.select(selectActiveMapId)),
+		filter(([action, translateData, activeMap]: [SetLayoutSuccessAction, ITranslationsData, string]) => Boolean(translateData && Object.keys(translateData).length)),
+		mergeMap( ([action, translateData, activeMap]: [SetLayoutSuccessAction, ITranslationsData, string]) => {
+			const actions = Object.keys(translateData)
+				.filter(id => Boolean(translateData[id].dragged))
+				.map(id => new ToggleDraggedModeAction({mapId: activeMap, overlayId: id, dragged: false}));
+			return actions
+		})
+	);
 
 	constructor(protected actions$: Actions,
 				protected communicatorsService: ImageryCommunicatorService,

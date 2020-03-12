@@ -27,6 +27,7 @@
 		}
 
 		.box {
+			position: relative;
 			margin: 0 1px;
 
 			/deep/ button.search-panel-button {
@@ -77,6 +78,20 @@
 					}
 				}
 			}
+		}
+		input.time-picker-input {
+			position: absolute;
+			top: 0;
+			padding-left: 28px;
+			width: 100%;
+			height: 100%;
+			border: none;
+			background-color: transparent;
+			color: white;
+			opacity: 0;
+			pointer-events: none;
+			font-family: @app-font;
+			font-size: 14px;
 		}
 	}
 }

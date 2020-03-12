@@ -4,7 +4,6 @@ import { SearchPanelComponent } from './search-panel.component';
 import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { TimelineTimepickerComponent } from '../timeline-timepicker/timeline-timepicker.component';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { IStatusBarState, statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
@@ -13,6 +12,7 @@ import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/o
 import { ClickOutsideDirective } from '../../../core/click-outside/click-outside.directive';
 import { TranslateModule } from '@ngx-translate/core';
 import { toolsFeatureKey, ToolsReducer } from '../../../menu-items/tools/reducers/tools.reducer';
+import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 
 describe('SearchPanelComponent', () => {
 	let component: SearchPanelComponent;
@@ -32,9 +32,19 @@ describe('SearchPanelComponent', () => {
 	const ansynTreeView = MockComponent({ selector: 'ansyn-tree-view', outputs: ['closeTreeView'] });
 	const ansynComboTrigger = MockComponent({
 		selector: 'button[ansynComboBoxTrigger]',
-		inputs: ['isActive', 'withArrow', 'render', 'ngModel'],
+		inputs: ['isActive', 'render', 'ngModel', 'owlDateTimeTrigger', 'withArrow'],
 		outputs: ['ngModelChange']
 	});
+	const mockTimePickerTrigger = MockComponent({
+		selector: 'input[timePickerInput]',
+		inputs: ['selectMode', 'ngModel', 'owlDateTime'],
+		outputs: ['ngModelChange', 'dateTimeChange']
+	});
+	const mockOwlDateTime = MockComponent({
+		selector: 'owl-date-time',
+		inputs: ['backdropClass']
+	});
+
 	let store: Store<IStatusBarState>;
 
 	beforeEach(async(() => {
@@ -43,9 +53,10 @@ describe('SearchPanelComponent', () => {
 				SearchPanelComponent,
 				mockComboBoxComponent,
 				mockComboBoxOptionComponent,
-				TimelineTimepickerComponent,
 				ansynTreeView,
 				ansynComboTrigger,
+				mockOwlDateTime,
+				mockTimePickerTrigger,
 				ClickOutsideDirective
 			],
 			imports: [StoreModule.forRoot({
@@ -67,7 +78,8 @@ describe('SearchPanelComponent', () => {
 				{
 					provide: StatusBarConfig,
 					useValue: { toolTips: {} }
-				}
+				},
+				DateTimeAdapter
 			]
 		})
 			.compileComponents();

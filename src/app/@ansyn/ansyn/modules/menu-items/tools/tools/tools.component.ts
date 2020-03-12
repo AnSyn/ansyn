@@ -168,6 +168,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	toggleExportMapsDialog() {
 		if (!this.isDialogShowing) {
 			const dialogRef = this.dialog.open(ExportMapsPopupComponent, { panelClass: 'custom-dialog' });
+			dialogRef.afterClosed().subscribe(() => this.isDialogShowing = false);
 			this.isDialogShowing = !this.isDialogShowing;
 		}
 	}

@@ -17,10 +17,10 @@ circle.drop.selected {
 
 
 .custom-dialog .mat-dialog-container {
-		padding: 0;
-		width: 600px;
-		overflow: hidden;
-		text-align: center;
+	padding: 0;
+	width: 600px;
+	overflow: hidden;
+	text-align: center;
 }
 
 .close.mat-button {

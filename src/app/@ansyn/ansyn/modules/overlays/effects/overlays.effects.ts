@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { from, Observable } from 'rxjs';
-import { catchError, filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { combineLatest, forkJoin, from, Observable, zip, EMPTY } from 'rxjs';
+import { catchError, combineAll, filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	CheckTrianglesAction,
 	DisplayOverlayAction,
@@ -77,30 +77,30 @@ export class OverlaysEffects {
 		map(([{ payload }, { overlaysCriteria }]) => new CheckTrianglesAction(overlaysCriteria)));
 
 	userAuthorizedAreas$: Observable<any> = this.credentialsService.getCredentials().pipe(
-		map((credentials: ICredentialsResponse) => {
-			return credentials.authorizedAreas
-		}));
+		map((userCredentials: ICredentialsResponse) => userCredentials.authorizedAreas.map(
+			area => area.Id
+			)
+		));
 
-	// todo: try commas https://medium.com/@amcdnl/dispatching-multiple-actions-from-ngrx-effects-c1447ceb6b22
 	@Effect()
 	checkTrianglesBeforeSearch$ = this.actions$.pipe(
 		ofType<CheckTrianglesAction>(OverlaysActionTypes.CHECK_TRIANGLES),
-		map((action) => {
-			this.userAuthorizedAreas$.pipe(
-				tap((userAuthorizedAreas) => {
-					this.areaToCredentialsService.getAreaTriangles(action.payload.region).pipe(
-						tap((areaTriangles) => {
-							if (areaTriangles.some(userAuthorizedAreas)) {
-								map(([{payload}, {overlaysCriteria}]) => new LoadOverlaysAction(overlaysCriteria))
-							}
-							else {
-								return new SetOverlaysStatusMessageAction(this.translate.instant(overlaysStatusMessages.noPermissionsForArea))
-							}
-						})
-					)
+		switchMap((action: CheckTrianglesAction) => {
+			return forkJoin([this.areaToCredentialsService.getAreaTriangles(action.payload.region), this.userAuthorizedAreas$]).pipe(
+				mergeMap<any, any>(([trianglesOfArea, userAuthorizedAreas]: [any, any]) => {
+
+					if (userAuthorizedAreas.some( area => trianglesOfArea.includes(area))) {
+						return [new LoadOverlaysAction(action.payload)];
+					}
+					return [new LoadOverlaysSuccessAction([]),
+						new SetOverlaysStatusMessageAction(this.translate.instant(overlaysStatusMessages.noPermissionsForArea))];
+				}),
+				catchError( () => {
+					return [new LoadOverlaysAction(action.payload)]
 				})
 			)
 		})
+
 	);
 
 	@Effect()

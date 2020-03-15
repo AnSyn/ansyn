@@ -5,7 +5,8 @@ import { catchError, mergeMap, take, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 
 interface ICredentialsLocation {
-	Name: string
+	Name: string,
+	Id: number
 };
 
 export interface ICredentialsResponse {
@@ -54,23 +55,26 @@ export class CredentialsService {
 	}
 
 	getCredentials(): Observable<any> {
-		const url = this.getUrl();
-		const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-		const options = { headers };
-		return this.httpClient.get(url, options)
-			.pipe(
-				mergeMap((data: any) => this.parseResponse(data)),
-				tap((data: any) => {
-					if (data) {
-						this.data = data;
-						this.error = undefined;
-					} else {
-						this.error = { message: this.config.noCredentialsMessage }
-					}
-				}),
-				catchError((err) => {
-					this.error = { message: this.config.noCredentialsMessage };
-					return of(true);
-				}));
+		if (!this.data) {
+			const url = this.getUrl();
+			const headers = new HttpHeaders({'Content-Type': 'application/json'});
+			const options = {headers};
+			return this.httpClient.get(url, options)
+				.pipe(
+					mergeMap((data: any) => this.parseResponse(data)),
+					tap((data: any) => {
+						if (data) {
+							this.data = data;
+							this.error = undefined;
+						} else {
+							this.error = {message: this.config.noCredentialsMessage}
+						}
+					}),
+					catchError((err) => {
+						this.error = {message: this.config.noCredentialsMessage};
+						return of(true);
+					}));
+		}
+		return of(this.data)
 	}
 }

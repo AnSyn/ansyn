@@ -16,7 +16,7 @@ describe('ToolsComponent', () => {
 	let fixture: ComponentFixture<ToolsComponent>;
 	let store: Store<any>;
 
-	const mockAnnotationsControl = MockComponent({ selector: 'ansyn-annotations-control', inputs: ['expand'] });
+	const mockAnnotationsControl = MockComponent({ selector: 'ansyn-annotations-control', inputs: ['expand', 'isGeoOptionsDisabled'] });
 	const mockGoTo = MockComponent({
 		selector: 'ansyn-go-to',
 		inputs: ['expand', 'disabled'],

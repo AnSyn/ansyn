@@ -16,6 +16,7 @@ import { TimePickerTranslateService } from './services/time-picker-translate.ser
 import { SearchPanelComponent } from './components/search-panel/search-panel.component';
 import { DisplayPanelComponent } from './components/display-panel/display-panel.component';
 import { CasePanelComponent } from './components/case-panel/case-panel.component';
+import { TimePickerComponent } from './components/timepicker/time-picker.component';
 
 @NgModule({
 	imports: [
@@ -29,7 +30,7 @@ import { CasePanelComponent } from './components/case-panel/case-panel.component
 		OwlDateTimeModule,
 		OwlNativeDateTimeModule
 	],
-	declarations: [StatusBarComponent, TreeViewComponent, NavigationBarComponent, SearchPanelComponent, DisplayPanelComponent, CasePanelComponent],
+	declarations: [StatusBarComponent, TreeViewComponent, NavigationBarComponent, SearchPanelComponent, DisplayPanelComponent, CasePanelComponent, TimePickerComponent],
 	providers: [
 		{
 			provide: TIME_FILTERS,

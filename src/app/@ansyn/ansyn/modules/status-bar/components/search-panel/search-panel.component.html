@@ -5,9 +5,9 @@
 	<div class="box">
 		<button ansynComboBoxTrigger
 				#timePickerTrigger
-				[owlDateTimeTrigger]="dt10"
+				(click)="toggleTimePicker()"
 				[attr.tooltip-value]="statusBarConfig?.toolTips?.timeFilterEdit | translate"
-				[isActive]="timeSelectionExpand"
+				[isActive]="timePickerExpand"
 				[withArrow]="false"
 				icon="icon icon-status-bar-time"
 				tooltip-class="top"
@@ -15,13 +15,14 @@
 			<span class="title">{{timeSelectionTitle}}</span>
 		</button>
 
-		<input timePickerInput
-			   [owlDateTime]="dt10"
-			   [selectMode]="'range'"
-			   [(ngModel)]="timeRange"
-			   (dateTimeChange)="onTimeRangeChange($event)"
-			   class="time-picker-input">
-		<owl-date-time #dt10 [backdropClass]="'time-picker-backdrop-undo'"></owl-date-time>	</div>
+		<ansyn-timepicker *ngIf="timePickerExpand"
+						  [timeRange]="timeRange"
+						  (ansynClickOutside)="toggleTimePicker()"
+						  [extraClass]="'owl-dt-container'"
+						  (closeTimePicker)="toggleTimePicker()"
+						  [trigger]="timePickerTrigger?.optionsTrigger?.nativeElement"
+		></ansyn-timepicker>
+	</div>
 
 	<!-- Geo filter -->
 	<div class="box" id="editGeoFilter">

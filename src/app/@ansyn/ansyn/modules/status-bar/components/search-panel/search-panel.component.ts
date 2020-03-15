@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import * as momentNs from 'moment';
 import { IStatusBarConfig } from '../../models/statusBar-config.model';
 import { IGeoFilterStatus, IStatusBarState, selectGeoFilterStatus } from '../../reducers/status-bar.reducer';
@@ -12,7 +12,6 @@ import { AnimationTriggerMetadata } from '@angular/animations/src/animation_meta
 import { SearchMode, SearchModeEnum } from '../../models/search-mode.enum';
 import { filter, tap } from 'rxjs/operators';
 import { selectDataInputFilter, selectRegion, selectTime } from '../../../overlays/reducers/overlays.reducer';
-import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import { CaseGeoFilter, ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
 import { ClearActiveInteractionsAction } from '../../../menu-items/tools/actions/tools.actions';
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
@@ -42,8 +41,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	geoFilterStatus: IGeoFilterStatus;
 	dataInputFilterExpand: boolean;
-	timeSelectionExpand: boolean;
-	time: ICaseTimeState;
+	timePickerExpand: boolean;
 	timeRange: Date[];
 	dataInputFilterTitle = 'All';
 	timeSelectionTitle: string;
@@ -53,11 +51,10 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	time$: Observable<ICaseTimeState> = this.store$.select(selectTime).pipe(
 		tap(_time => {
-			this.time = _time;
 			this.timeRange = _time && [_time.from, _time.to];
 			if (_time && _time.to && _time.from) {
 				const format = 'DD/MM/YYYY HH:mm';
-				this.timeSelectionTitle = `${ moment(this.time.to).format(format) } - ${ moment(this.time.from).format(format) }`;
+				this.timeSelectionTitle = `${ moment(this.timeRange[0]).format(format) } - ${ moment(this.timeRange[1]).format(format) }`;
 			}
 		})
 	);
@@ -98,13 +95,8 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		this.dataInputFilterExpand = !this.dataInputFilterExpand;
 	}
 
-	onTimeRangeChange(event) {
-		const time: ICaseTimeState = {
-			from: event.value[0],
-			to: event.value[1],
-			type: 'absolute'
-		};
-		this.store$.dispatch(new SetOverlaysCriteriaAction({ time }));
+	toggleTimePicker() {
+		this.timePickerExpand = !this.timePickerExpand;
 	}
 
 	geoFilterChanged(geoFilter?: SearchMode) {

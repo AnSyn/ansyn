@@ -30,6 +30,10 @@ export class CredentialsService {
 		return 'unknown';
 	}
 
+	get titleUser(): string {
+		return '';
+	}
+
 	get authorizedAreas(): ICredentialsLocation[] {
 		return this.data.authorizedAreas;
 	}

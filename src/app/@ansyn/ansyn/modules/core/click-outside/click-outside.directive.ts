@@ -10,8 +10,13 @@ import { tap } from 'rxjs/operators';
 export class ClickOutsideDirective implements OnInit, OnDestroy {
 	@Output() ansynClickOutside = new EventEmitter();
 	@Input() trigger: any;
+	@Input()
+	set extraClass(val: string) {
+		this._extraClass = val ? val.split(" ") : [];
+	}
 	@Input() clickEventType: string | string[] = 'click';
 
+	_extraClass: string[];
 	@AutoSubscription
 	$event: () => any = () => {
 		let eventSource$: Observable<any> = this.clickEventType instanceof Array ?
@@ -21,8 +26,10 @@ export class ClickOutsideDirective implements OnInit, OnDestroy {
 			tap(($event: any) => {
 				setTimeout(() => {
 					const self = $event.path.includes(this.elementRef.nativeElement);
-					const trigger = $event.path.includes(this.trigger);
-					if (!self && !trigger) {
+					const trigger = this.trigger ? $event.path.includes(this.trigger) : false;
+					const inExtra = this._extraClass ?
+						this._extraClass.some( cls => $event.path.some( p => p && p.classList && p.classList.contains(cls))) : false;
+					if (!self && !trigger && !inExtra) {
 						this.ansynClickOutside.emit($event);
 					}
 				}, 0);

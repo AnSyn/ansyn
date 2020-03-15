@@ -17,16 +17,18 @@ circle.drop.selected {
 
 
 .custom-dialog .mat-dialog-container {
-		padding: 0;
-		width: 600px;
-		overflow: hidden;
+	padding: 0;
+	width: 600px;
+	overflow: hidden;
+	text-align: center;
 }
 
 .close.mat-button {
 	cursor: pointer;
 	float: right;
+	padding: 0;
 	marginTop: 5px;
-	width: 20px;
+	min-width: 25px;
 }
 
 .main-progress .mat-progress-bar-fill::after {

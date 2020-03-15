@@ -35,14 +35,10 @@ describe('SearchPanelComponent', () => {
 		inputs: ['isActive', 'render', 'ngModel', 'owlDateTimeTrigger', 'withArrow'],
 		outputs: ['ngModelChange']
 	});
-	const mockTimePickerTrigger = MockComponent({
-		selector: 'input[timePickerInput]',
-		inputs: ['selectMode', 'ngModel', 'owlDateTime'],
-		outputs: ['ngModelChange', 'dateTimeChange']
-	});
-	const mockOwlDateTime = MockComponent({
-		selector: 'owl-date-time',
-		inputs: ['backdropClass']
+	const ansynTimePicker = MockComponent({
+		selector: 'ansyn-timepicker',
+		inputs: ['timeRange', 'extraClass', 'trigger'],
+		outputs: ['closeTimePicker', 'ansynClickOutside']
 	});
 
 	let store: Store<IStatusBarState>;
@@ -55,8 +51,7 @@ describe('SearchPanelComponent', () => {
 				mockComboBoxOptionComponent,
 				ansynTreeView,
 				ansynComboTrigger,
-				mockOwlDateTime,
-				mockTimePickerTrigger,
+				ansynTimePicker,
 				ClickOutsideDirective
 			],
 			imports: [StoreModule.forRoot({

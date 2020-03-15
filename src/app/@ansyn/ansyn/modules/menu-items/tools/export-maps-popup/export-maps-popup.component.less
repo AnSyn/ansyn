@@ -2,14 +2,21 @@
 @import 'ansyn/less/common';
 
 :host {
- 	.mat-dialog-content {
+	.mat-dialog-content {
 		background-color: @background-color-2;
-		text-align: center;
 		color: white;
 
 		.mat-dialog-title {
 			background-color: @background-color-4;
 			color: white;
+
+			.title-message {
+				margin-left: 10px;
+			}
+
+			.close ::ng-deep .mat-button-focus-overlay {
+				display: none;
+			}
 		}
 
 		.info {

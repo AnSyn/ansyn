@@ -12,7 +12,7 @@ import {
 	selectMapStateById,
 	selectMapTypeById
 } from '@ansyn/map-facade';
-import { MAP_PROVIDERS_CONFIG } from '@ansyn/imagery';
+import { ImageryCommunicatorService, MAP_PROVIDERS_CONFIG } from '@ansyn/imagery';
 import { LoggerService } from '../../../core/services/logger.service';
 import { LoggerConfig } from '../../../core/models/logger.config';
 
@@ -21,6 +21,7 @@ const MAPID = 'mapId';
 describe('ImageryChangeMapComponent', () => {
 	let component: ImageryChangeMapComponent;
 	let fixture: ComponentFixture<ImageryChangeMapComponent>;
+	let imageryCommunicatorService: ImageryCommunicatorService;
 	let store: Store<any>;
 
 	beforeEach(async(() => {
@@ -29,6 +30,7 @@ describe('ImageryChangeMapComponent', () => {
 			imports: [StoreModule.forRoot({ [mapFeatureKey]: MapReducer }),
 				TranslateModule.forRoot()],
 			providers: [
+				ImageryCommunicatorService,
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: LoggerService, useValue: { info: (some) => null } },
 				{
@@ -47,7 +49,8 @@ describe('ImageryChangeMapComponent', () => {
 		fixture.detectChanges();
 	});
 
-	beforeEach(inject([Store], (_store: Store<any>) => {
+	beforeEach(inject([Store, ImageryCommunicatorService], (_store: Store<any>, _imageryCommunicatorService: ImageryCommunicatorService) => {
+		imageryCommunicatorService = _imageryCommunicatorService
 		store = _store;
 		const mockStore = new Map<any, any>([
 			[selectMaps, {}],
@@ -56,6 +59,7 @@ describe('ImageryChangeMapComponent', () => {
 
 		]);
 		spyOn(store, 'select').and.callFake(type => of(mockStore.get(type)));
+		spyOn(imageryCommunicatorService, 'provide').and.returnValues({changeMapMainLayer: (type) => Promise.resolve()})
 	}));
 
 	it('should create', () => {
@@ -63,8 +67,10 @@ describe('ImageryChangeMapComponent', () => {
 	});
 
 	it('should fire ChangeMainLayer action', () => {
+		component.communicator = imageryCommunicatorService.provide(MAPID);
+		spyOn(component.communicator, 'changeMapMainLayer').and.returnValues(Promise.resolve());
 		spyOn(store, 'dispatch');
-		component.changeMap('sourceType');
-		expect(store.dispatch).toHaveBeenCalledWith(new ChangeMainLayer({ id: MAPID, sourceType: SOURCETYPE }));
+		component.changeMap(SOURCETYPE);
+		expect(component.communicator.changeMapMainLayer).toHaveBeenCalledWith(SOURCETYPE);
 	})
 });

@@ -10,7 +10,7 @@ import { CredentialsService } from '../../../core/services/credentials/credentia
 })
 export class ExportMapsPopupComponent {
 	title = "Notice";
-	description = "Your image is in process Keep in mind that the image may be protected.";
+	description = "Your image is in process, keep in mind that the image may be protected.";
 
 	constructor(
 		public credentialsService: CredentialsService,

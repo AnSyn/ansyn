@@ -10,6 +10,7 @@ import { OverlaysConfig, OverlaysService } from '../../services/overlays.service
 import { MultipleOverlaysSourceProvider } from '../../services/multiple-source-provider';
 import { createStore, IStoreFixture } from '../../../core/test/mock-store';
 import { LoggerService } from '../../../core/services/logger.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 describe('TimelineComponent', () => {
 	let component: TimelineComponent;
@@ -21,6 +22,7 @@ describe('TimelineComponent', () => {
 	let overlaysService: OverlaysService;
 	let getState: () => IOverlaysState;
 	let de: DebugElement;
+	let translate: TranslateService;
 	let config: {
 		locale: {
 			'dateTime': '%x, %X',
@@ -64,14 +66,14 @@ describe('TimelineComponent', () => {
 			'id': 'ad4a690c2708e11156e24534e01238df16b07f23',
 			'otherData': {
 				'message': 'Merge-pull-request-19-from-marmelab-jpetitcolas-patch-1',
-				'author': { 'name': 'Francois Zaninotto', 'email': 'fzaninotto@gmail.com' }
+				'author': {'name': 'Francois Zaninotto', 'email': 'fzaninotto@gmail.com'}
 			},
 			'date': 'Wed, 7 Sep 2016 12:04:14 +0200'
 		}, {
 			'id': '8110e85434d4cc87212dc5d8534e3e1069e174c2',
 			'otherData': {
 				'message': 'Doc-how-to-use-dev-version-in-real-world-project',
-				'author': { 'name': 'Jonathan Petitcolas', 'email': 'petitcolas.jonathan@gmail.com' }
+				'author': {'name': 'Jonathan Petitcolas', 'email': 'petitcolas.jonathan@gmail.com'}
 			},
 			'date': 'Wed, 7 Sep 2016 11:16:40 +0200'
 		}
@@ -82,28 +84,28 @@ describe('TimelineComponent', () => {
 			'id': '412a71481f94e845cb1e920616136a9221b91c17',
 			'otherData': {
 				'message': 'Update-watch-target',
-				'author': { 'name': 'Robin Bressan', 'email': 'robin@buddey.net' }
+				'author': {'name': 'Robin Bressan', 'email': 'robin@buddey.net'}
 			},
 			'date': 'Thu, 22 Jan 2015 13:13:56 +0100'
 		}, {
 			'id': 'ae145441f60e9475e19de37d44b4842260af7d08',
 			'otherData': {
 				'message': 'Use-browserify',
-				'author': { 'name': 'Robin Bressan', 'email': 'robin@buddey.net' }
+				'author': {'name': 'Robin Bressan', 'email': 'robin@buddey.net'}
 			},
 			'date': 'Thu, 22 Jan 2015 12:28:22 +0100'
 		}, {
 			'id': '2040299a8fe6c586a702382b50a63d7abb8fcff3',
 			'otherData': {
 				'message': 'Rename-to-restful.js',
-				'author': { 'name': 'Robin Bressan', 'email': 'robin@buddey.net' }
+				'author': {'name': 'Robin Bressan', 'email': 'robin@buddey.net'}
 			},
 			'date': 'Thu, 22 Jan 2015 09:03:39 +0100'
 		}, {
 			'id': 'eea59ff38abb348fd71ec4716250f21fc94edd0f',
 			'otherData': {
 				'message': 'first-commit',
-				'author': { 'name': 'Robin Bressan', 'email': 'robin@buddey.net' }
+				'author': {'name': 'Robin Bressan', 'email': 'robin@buddey.net'}
 			},
 			'date': 'Wed, 21 Jan 2015 14:07:20 +0100'
 		}
@@ -114,28 +116,34 @@ describe('TimelineComponent', () => {
 	const dropsData = [{
 		name: rawData[0].name,
 		data: rawData[0].data.map(testDrop => {
-			return { ...testDrop, date: new Date(testDrop.date) };
+			return {...testDrop, date: new Date(testDrop.date)};
 		})
 	}
 	];
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			providers: [OverlaysService, OverlaysEffects, Actions, {
-				provide: MultipleOverlaysSourceProvider,
-				useValue: {}
-			}, {
-				provide: OverlaysConfig,
-				useValue: {}
-			},
+			providers: [OverlaysService, OverlaysEffects, Actions,
+				{
+					provide: TranslateService,
+					useValue: {}
+				},
+				{
+					provide: MultipleOverlaysSourceProvider,
+					useValue: {}
+				}, {
+					provide: OverlaysConfig,
+					useValue: {}
+				},
 				{
 					provide: LoggerService,
-					useValue: { error: (some) => null }
+					useValue: {error: (some) => null}
 				}
 			],
 			declarations: [TimelineComponent],
 			imports: [
-				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer })
+				StoreModule.forRoot({[overlaysFeatureKey]: OverlayReducer}),
+				TranslateModule.forRoot()
 			]
 		})
 			.compileComponents();

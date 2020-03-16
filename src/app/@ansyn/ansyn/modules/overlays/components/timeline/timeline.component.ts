@@ -39,6 +39,7 @@ import { ExtendMap } from '../../reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../overlay-overview/overlay-overview.component.const';
 import { DOCUMENT } from '@angular/common';
 import { IOverlayDrop } from '../../models/overlay.model';
+import { TranslateService } from '@ngx-translate/core';
 
 export const BASE_DROP_COLOR = '#8cceff';
 selection.prototype.moveToFront = function () {
@@ -114,6 +115,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		d3: d3
 	};
 
+
 	private chart: any;
 	private element: any;
 	private oldActiveId: string;
@@ -169,7 +171,8 @@ export class TimelineComponent implements OnInit, OnDestroy {
 				protected elementRef: ElementRef,
 				@Inject(DOCUMENT) protected document: any,
 				protected store$: Store<IOverlaysState>,
-				protected actions$: Actions) {
+				protected actions$: Actions,
+				protected translator: TranslateService) {
 	}
 
 	addRStyle() {
@@ -180,6 +183,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.addRStyle();
+		this.translateDates();
 		this.subscribers = [this.dropsChange$.subscribe(),
 			this.dropsMarkUp$.subscribe(),
 			this.timeLineRange$.subscribe(),
@@ -188,18 +192,28 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		];
 	}
 
+	translateDates() {
+		this.configuration.locale.date = this.translator.instant(this.configuration.locale.date);
+		this.translateDatesList(this.configuration.locale.days);
+		this.translateDatesList(this.configuration.locale.shortDays);
+		this.translateDatesList(this.configuration.locale.months);
+		this.translateDatesList(this.configuration.locale.shortMonths);
+	}
+	translateDatesList(datesList) {
+		datesList.forEach(date => this.translator.instant(date));
+	}
+
 	ngOnDestroy() {
 		this.subscribers.forEach(subscriber => subscriber.unsubscribe());
-
 	}
 
-	onMouseOver({ id }: IEventDropsEvent) {
-		this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [id] } }));
+	onMouseOver({id}: IEventDropsEvent) {
+		this.store$.dispatch(new SetMarkUp({classToSet: MarkUpClass.hover, dataToSet: {overlaysIds: [id]}}));
 	}
 
-	onMouseOut({ id }: IEventDropsEvent) {
+	onMouseOut({id}: IEventDropsEvent) {
 		if (!d3.event.toElement || (d3.event.toElement && d3.event.toElement.id !== overlayOverviewComponentConstants.TRANSPARENT_DIV_ID)) {
-			this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
+			this.store$.dispatch(new SetMarkUp({classToSet: MarkUpClass.hover, dataToSet: {overlaysIds: []}}));
 		}
 	}
 
@@ -225,8 +239,8 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		};
 	}
 
-	onDblClick({ id }) {
-		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id }));
+	onDblClick({id}) {
+		this.store$.dispatch(new DisplayOverlayFromStoreAction({id}));
 	}
 
 	onClick() {
@@ -279,7 +293,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		this.chart = eventDrops(this.configuration);
 		this.element = d3.select(this.context.nativeElement);
 		this.element
-			.data([[{ data: drops }]])
+			.data([[{data: drops}]])
 			.call(this.chart);
 
 		this.element.clone().select('.drops').append('g').classed('textContainer', true);

@@ -126,7 +126,9 @@ describe('TimelineComponent', () => {
 			providers: [OverlaysService, OverlaysEffects, Actions,
 				{
 					provide: TranslateService,
-					useValue: {}
+					useValue: {
+						instant: () => ''
+					}
 				},
 				{
 					provide: MultipleOverlaysSourceProvider,
@@ -142,8 +144,8 @@ describe('TimelineComponent', () => {
 			],
 			declarations: [TimelineComponent],
 			imports: [
-				StoreModule.forRoot({[overlaysFeatureKey]: OverlayReducer}),
-				TranslateModule.forRoot()
+				TranslateModule.forRoot(),
+				StoreModule.forRoot({[overlaysFeatureKey]: OverlayReducer})
 			]
 		})
 			.compileComponents();

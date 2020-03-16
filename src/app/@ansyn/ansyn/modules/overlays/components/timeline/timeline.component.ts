@@ -64,11 +64,25 @@ export interface IEventDropsEvent {
 export class TimelineComponent implements OnInit, OnDestroy {
 
 	@ViewChild('context') context: ElementRef;
+	
+	defaultDate = new Date(Date.now());
 
 	configuration = {
 		range: {
-			start: new Date(Date.now()),
-			end: new Date(Date.now())
+			start: this.defaultDate,
+			end: this.defaultDate
+		},
+		axis: {
+			formats: {
+				milliseconds: '%L',
+				seconds: ':%S',
+				minutes: '%I:%M',
+				hours: '%I %p',
+				days: '%a %d',
+				weeks: '%b %d',
+				months: '%B',
+				year: '%Y'
+			}
 		},
 		locale: {
 			'dateTime': '%x, %X',
@@ -80,7 +94,9 @@ export class TimelineComponent implements OnInit, OnDestroy {
 			'months': ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
 			'shortMonths': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 		},
+
 		bound: {
+			format: d3.timeFormat(`%d ${this.translator.instant('%B')} %Y`),
 			location: '-35'
 		},
 		margin: {
@@ -105,7 +121,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		zoom: {
 			onZoom: this.drawMarkup.bind(this),
 			onZoomStart: null,
-			onZoomEnd: this.onZoomEnd.bind(this)
+			onZoomEnd: this.onZoomEnd.bind(this),
 		},
 		label: {
 			width: 0,
@@ -194,11 +210,14 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	translateDates() {
 		this.configuration.locale.date = this.translator.instant(this.configuration.locale.date);
+		this.configuration.locale.time = this.translator.instant(this.configuration.locale.time);
+		this.configuration.locale.time = this.translator.instant(this.configuration.locale.dateTime);
 		this.translateDatesList(this.configuration.locale.days);
 		this.translateDatesList(this.configuration.locale.shortDays);
 		this.translateDatesList(this.configuration.locale.months);
 		this.translateDatesList(this.configuration.locale.shortMonths);
 	}
+
 	translateDatesList(datesList) {
 		datesList.forEach(date => this.translator.instant(date));
 	}

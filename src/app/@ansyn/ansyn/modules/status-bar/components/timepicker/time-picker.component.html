@@ -1,0 +1,9 @@
+<input timePickerInput
+	   #trigger
+	   [owlDateTime]="dt"
+	   [selectMode]="'range'"
+	   [(ngModel)]="timeRange"
+	   (dateTimeChange)="onTimeRangeChange($event)"
+	   class="time-picker-input">
+<owl-date-time #dt [backdropClass]="'time-picker-backdrop-undo'"
+(afterPickerClosed)="closeTimePicker.emit()"></owl-date-time>

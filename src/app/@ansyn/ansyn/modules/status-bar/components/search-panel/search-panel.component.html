@@ -5,25 +5,23 @@
 	<div class="box">
 		<button ansynComboBoxTrigger
 				#timePickerTrigger
-				(click)="toggleTimelineStartEndSearch()"
+				(click)="toggleTimePicker()"
 				[attr.tooltip-value]="statusBarConfig?.toolTips?.timeFilterEdit | translate"
-				[isActive]="timeSelectionExpand"
+				[isActive]="timePickerExpand"
 				[withArrow]="false"
 				icon="icon icon-status-bar-time"
 				tooltip-class="top"
-		class="search-panel-button">
+				class="search-panel-button">
 			<span class="title">{{timeSelectionTitle}}</span>
 		</button>
 
-		<ansyn-timeline-timepicker
-			*ngIf="timeSelectionExpand"
-			(ansynClickOutside)="toggleTimelineStartEndSearch($event)"
-			[trigger]="timePickerTrigger.optionsTrigger.nativeElement"
-			[startDatePickerValue]="(time)?.from"
-			[endDatePickerValue]="(time)?.to"
-			(closeComponent)="toggleTimelineStartEndSearch()"
-			(applyDate)="applyTimelinePickerResult($event)">
-		</ansyn-timeline-timepicker>
+		<ansyn-timepicker *ngIf="timePickerExpand"
+						  [timeRange]="timeRange"
+						  (ansynClickOutside)="toggleTimePicker()"
+						  [extraClass]="'owl-dt-container'"
+						  (closeTimePicker)="toggleTimePicker()"
+						  [trigger]="timePickerTrigger?.optionsTrigger?.nativeElement"
+		></ansyn-timepicker>
 	</div>
 
 	<!-- Geo filter -->

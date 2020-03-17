@@ -9,7 +9,9 @@ import { MultiPolygon } from 'geojson';
 export const overlayStatusFeatureKey = 'overlayStatus';
 export const overlayStatusStateSelector: MemoizedSelector<any, IOverlayStatusState> = createFeatureSelector<IOverlayStatusState>(overlayStatusFeatureKey);
 
-
+export interface ITranslationsData {
+	[key: string]: ITranslationData;
+}
 export interface IScannedArea {
 	id: string;
 	area: MultiPolygon;
@@ -22,9 +24,7 @@ export interface IOverlayStatusState {
 	removedOverlaysIdsCount: number;
 	presetOverlays: IOverlay[];
 	alertMsg: AlertMsg;
-	overlaysTranslationData: {
-		[key: string]: ITranslationData;
-	},
+	overlaysTranslationData: ITranslationsData,
 	overlaysScannedAreaData: {
 		[key: string]: MultiPolygon;
 	}
@@ -151,5 +151,5 @@ export const selectRemovedOverlaysIdsCount: MemoizedSelector<any, number> = crea
 export const selectRemovedOverlays: MemoizedSelector<any, string[]> = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.removedOverlaysIds);
 export const selectPresetOverlays: MemoizedSelector<any, IOverlay[]> = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.presetOverlays);
 export const selectAlertMsg = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.alertMsg);
-export const selectTranslationData = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.overlaysTranslationData);
-export const selectScannedAreaData = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.overlaysScannedAreaData);
+export const selectTranslationData = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus && overlayStatus.overlaysTranslationData);
+export const selectScannedAreaData = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus && overlayStatus.overlaysScannedAreaData);

@@ -147,6 +147,7 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		if (dispatchValue) {
 			this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetAnnotationMode] }));
 			this.store.dispatch(new SetAnnotationMode({ annotationMode: dispatchValue }));
+			this.hideMe.emit();
 		} else {
 			this.store.dispatch(new SetAnnotationMode(null));
 		}

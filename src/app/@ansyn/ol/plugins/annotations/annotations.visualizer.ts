@@ -388,7 +388,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			styles.push(...this.getMeasuresAsStyles(feature));
 		}
 		if (entity && entity.showArea) {
-			styles.push(...this.areaCircumferenceStyles(feature));
+			styles.push(...this.areaStyles(feature));
 		}
 		if (entity && entity.icon) {
 			styles.push(this.getCenterIndicationStyle(feature));
@@ -506,15 +506,42 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	areaCircumferenceStyles(feature: any): olStyle[] {
+	convertPixelStringToNumeric(pixelString) {
+		pixelString.substring(0, pixelString.length - 2);
+		return parseInt(pixelString, 10);
+	}
+
+	getFeatureWidth(feature) {
+		const WidthString = this.getFeatureBoundingRect(feature).width;
+		return this.convertPixelStringToNumeric(WidthString);
+	}
+
+	getFeatureHeight(feature) {
+		const heightString = this.getFeatureBoundingRect(feature).height;
+		return this.convertPixelStringToNumeric(heightString);
+	}
+
+	areaStyles(feature: any): olStyle[] {
 		const geometry = feature.getGeometry();
+		const height = this.getFeatureHeight(feature);
+		const width = this.getFeatureWidth(feature);
 		const calcArea = this.formatArea(geometry);
 		const areaText = this.translator.instant('Area');
+
 		return [
 			new olStyle({
 				text: new olText({
-					...this.measuresTextStyle,
+					font: '16px Calibri,sans-serif',
+					fill: new olFill({
+						color: '#fff'
+					}),
+					stroke: new olStroke({
+						color: '#000',
+						width: 3
+					}),
 					text: `${ calcArea } :${ areaText }`,
+					offsetY: height / 2,
+					offsetX: - (width / 2)
 				})
 			})
 		];

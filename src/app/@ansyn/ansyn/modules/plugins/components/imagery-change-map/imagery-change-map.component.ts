@@ -4,7 +4,7 @@ import {
 	IEntryComponent,
 	selectMapTypeById,
 	selectOverlayByMapId,
-	selectSourceTypeById
+	selectSourceTypeById, selectIsMinimalistViewMode
 } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import {
@@ -28,6 +28,7 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	mapId: string;
 	overlayDisplay: boolean;
 	showPopup: boolean;
+	show: boolean;
 	currentSourceType: string;
 	mapSources: IMapSource[];
 	communicator: CommunicatorEntity;
@@ -39,6 +40,13 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 			if (event.path && !event.path.includes(this.element.nativeElement)) {
 				this.showPopup = false;
 			}
+		})
+	);
+
+	@AutoSubscription
+	isMinimalistViewMode$ = this.store$.select(selectIsMinimalistViewMode).pipe(
+		tap(isMinimalistViewMode => {
+			this.show = !isMinimalistViewMode;
 		})
 	);
 

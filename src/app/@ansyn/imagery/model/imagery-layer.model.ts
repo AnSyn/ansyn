@@ -10,3 +10,5 @@ export enum ImageryLayerProperties {
 
 export const IMAGERY_MAIN_LAYER_NAME = 'main';
 
+export const IMAGERY_BASE_MAP_LAYER = 'base_map_layer';
+

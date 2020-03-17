@@ -69,7 +69,7 @@
 				 "flags": {},
 				 "worldView": {
 				   "mapType": "openLayersMap",
-				   "sourceType": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}"
+				   "sourceType": "{{ getv "/ansyn/imagery/mapsource" "OSM" }}"
 				 },
 				 "id": "af3b94d2-03ff-44e6-9f73-10d386aff493"
 			   }
@@ -179,21 +179,8 @@
   },
   "mapProvidersConfig": {
   	"openLayersMap": {
-  		"defaultMapSource": "{{ getv "/ansyn/imagery/mapsource" "ESRI_4326" }}",
+  		"defaultMapSource": "{{ getv "/ansyn/imagery/mapsource" "OSM" }}",
   		"sources": [
-  			{
-  				"key": "ESRI_4326",
-  				"displayName": "ESRI 4326",
-  				"thumbnail": "https://services.arcgisonline.com/arcgis/rest/services/ESRI_Imagery_World_2D/MapServer/tile/0/0/0.png",
-  				"sourceType": "ESRI_4326",
-  				"config": {
-					"baseUrl": "https://services.arcgisonline.com/arcgis/rest/services/ESRI_Imagery_World_2D/MapServer/tile/{z}/{y}/{x}",
-					"projection": "EPSG:4326",
-					"maxZoom": 16,
-					"tileSize": 256,
-					"attributions": "Copyright:© 2013 ESRI, i-cubed, GeoEye"
-				}
-  			},
   			{
   				"key": "OSM",
   				"displayName": "Open Street Map",

@@ -32,6 +32,7 @@ import {
 	MAP_PROVIDERS_CONFIG
 } from '../model/map-providers-config';
 import { IMapSettings } from '../model/map-settings';
+import { IMAGERY_BASE_MAP_LAYER, ImageryLayerProperties } from '../model/imagery-layer.model';
 
 export interface IMapInstanceChanged {
 	id: string;
@@ -100,18 +101,14 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		this.plugins.forEach((plugin) => plugin.init(this as any));
 	}
 
-	public changeMapMainLayer(sourceType: string): Promise<Observable<boolean>> { // TODO: change all promise to observable
-		const newSourceType = this.createMapSourceForMapType(this.mapSettings.worldView.mapType, sourceType);
-		return newSourceType.then(layer => {
-			if (!Boolean(layer)) {
-				return of(false);
-			}
-			this.mapSettings.worldView.sourceType = sourceType;
-			const position = this.mapSettings.data.position;
-			const bbox = bboxFromGeoJson(position.extentPolygon);
-			return this.resetView(layer, position, [bbox[0], bbox[1], bbox[2], bbox[3]]);
-		})
-
+	public async replaceMapMainLayer(sourceType: string): Promise<boolean> { // TODO: change all promise to observable
+		const newSourceTypeLayer = await this.createMapSourceForMapType(this.mapSettings.worldView.mapType, sourceType);
+		newSourceTypeLayer.set(ImageryLayerProperties.NAME, IMAGERY_BASE_MAP_LAYER);
+		if (newSourceTypeLayer) {
+			this._activeMap.addMapLayer(newSourceTypeLayer);
+			return true;
+		}
+		return false;
 	}
 
 	public setActiveMap(mapType: string, position: ImageryMapPosition, sourceType?, layer?: any): Promise<any> {

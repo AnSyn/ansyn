@@ -430,7 +430,14 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 	formatArea(geometry) {
 		const polygon = new OLGeoJSON().writeGeometryObject(geometry);
-		return (calculateGeometryArea(polygon) / 1000000).toFixed(2) + 'km2'
+		const fractionDigits = 2;
+		const area = calculateGeometryArea(polygon);
+
+		if (area >= 1000) {
+			return (area / 1000).toFixed(fractionDigits) + 'km2';
+		}
+
+		return (area).toFixed(fractionDigits) + 'm2';
 	}
 
 	isMouseEventInExtent(event: SelectEvent): boolean {

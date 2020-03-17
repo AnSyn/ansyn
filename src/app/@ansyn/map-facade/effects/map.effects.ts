@@ -10,7 +10,7 @@ import {
 	ActiveImageryMouseLeave,
 	ChangeImageryMap,
 	ChangeImageryMapFailed,
-	ChangeImageryMapSuccess,
+	ChangeImageryMapSuccess, ReplaceMainLayer,
 	DecreasePendingMapsCountAction,
 	ImageryCreatedAction,
 	ImageryMouseEnter,
@@ -25,7 +25,9 @@ import {
 	SetToastMessageAction,
 	SetWasWelcomeNotificationShownFlagAction,
 	SynchronizeMapsAction,
-	UpdateMapAction
+	UpdateMapAction,
+	ReplaceMainLayerSuccess,
+	ReplaceMainLayerFailed
 } from '../actions/map.actions';
 import { catchError, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { fromPromise } from 'rxjs/internal-compatibility';
@@ -179,6 +181,17 @@ export class MapEffects {
 					this.store$.dispatch(new ChangeImageryMapFailed({ id, error: err }));
 					return EMPTY;
 				})
+			);
+		})
+	);
+
+	@Effect()
+	changeImageryLayer$ = this.actions$.pipe(
+		ofType<ReplaceMainLayer>(MapActionTypes.REPLACE_MAP_MAIN_LAYER),
+		switchMap( ({payload}) => {
+			const communicator = this.communicatorsService.provide(payload.id);
+			return fromPromise(communicator.replaceMapMainLayer(payload.sourceType)).pipe(
+				map( change => change ? new ReplaceMainLayerSuccess(payload) : new ReplaceMainLayerFailed())
 			);
 		})
 	);

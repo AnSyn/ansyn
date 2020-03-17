@@ -1,6 +1,6 @@
 import { Component, ElementRef, Inject, OnDestroy, OnInit } from '@angular/core';
 import {
-	ChangeMainLayer,
+	ReplaceMainLayer,
 	IEntryComponent,
 	selectMapTypeById,
 	selectOverlayByMapId,
@@ -9,7 +9,6 @@ import {
 import { Store } from '@ngrx/store';
 import {
 	CommunicatorEntity,
-	ImageryCommunicatorService,
 	IMapProviderConfig,
 	IMapSource,
 	MAP_PROVIDERS_CONFIG
@@ -46,7 +45,6 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	constructor(protected store$: Store<any>,
 				protected element: ElementRef,
 				protected logger: LoggerService,
-				protected imageryCommunicatorService: ImageryCommunicatorService,
 				@Inject(MAP_PROVIDERS_CONFIG) protected mapProvidersConfig: IMapProviderConfig) {
 	}
 
@@ -85,15 +83,10 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	}
 
 	changeMap(type: string) {
-		if (!this.communicator) {
-			this.communicator = this.imageryCommunicatorService.provide(this.mapId);
-		}
 		if (this.currentSourceType !== type) {
 			this.logger.info(`change map from ${ this.currentSourceType } to ${ type }`);
+			this.store$.dispatch(new ReplaceMainLayer({id: this.mapId, sourceType: type}));
 			this.showPopup = false;
-			this.communicator.changeMapMainLayer(type).then(() => {
-				this.store$.dispatch(new ChangeMainLayer({id: this.mapId, sourceType: type}))
-			});
 		}
 	}
 

@@ -101,12 +101,14 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		this.plugins.forEach((plugin) => plugin.init(this as any));
 	}
 
-	public async changeMapMainLayer(sourceType: string): Promise<void> { // TODO: change all promise to observable
+	public async replaceMapMainLayer(sourceType: string): Promise<boolean> { // TODO: change all promise to observable
 		const newSourceTypeLayer = await this.createMapSourceForMapType(this.mapSettings.worldView.mapType, sourceType);
 		newSourceTypeLayer.set(ImageryLayerProperties.NAME, IMAGERY_BASE_MAP_LAYER);
 		if (newSourceTypeLayer) {
 			this._activeMap.addMapLayer(newSourceTypeLayer);
+			return true;
 		}
+		return false;
 	}
 
 	public setActiveMap(mapType: string, position: ImageryMapPosition, sourceType?, layer?: any): Promise<any> {

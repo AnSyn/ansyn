@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { of } from 'rxjs';
 import {
-	ChangeMainLayer,
+	ReplaceMainLayer,
 	mapFeatureKey,
 	MapReducer,
 	selectMaps,
@@ -30,7 +30,6 @@ describe('ImageryChangeMapComponent', () => {
 			imports: [StoreModule.forRoot({ [mapFeatureKey]: MapReducer }),
 				TranslateModule.forRoot()],
 			providers: [
-				ImageryCommunicatorService,
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: LoggerService, useValue: { info: (some) => null } },
 				{
@@ -46,11 +45,11 @@ describe('ImageryChangeMapComponent', () => {
 		fixture = TestBed.createComponent(ImageryChangeMapComponent);
 		component = fixture.componentInstance;
 		component.mapId = MAPID;
+		component.currentSourceType = `other${SOURCETYPE}`;
 		fixture.detectChanges();
 	});
 
-	beforeEach(inject([Store, ImageryCommunicatorService], (_store: Store<any>, _imageryCommunicatorService: ImageryCommunicatorService) => {
-		imageryCommunicatorService = _imageryCommunicatorService
+	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
 		const mockStore = new Map<any, any>([
 			[selectMaps, {}],
@@ -59,7 +58,6 @@ describe('ImageryChangeMapComponent', () => {
 
 		]);
 		spyOn(store, 'select').and.callFake(type => of(mockStore.get(type)));
-		spyOn(imageryCommunicatorService, 'provide').and.returnValues({changeMapMainLayer: (type) => Promise.resolve()})
 	}));
 
 	it('should create', () => {
@@ -67,10 +65,8 @@ describe('ImageryChangeMapComponent', () => {
 	});
 
 	it('should fire ChangeMainLayer action', () => {
-		component.communicator = imageryCommunicatorService.provide(MAPID);
-		spyOn(component.communicator, 'changeMapMainLayer').and.returnValues(Promise.resolve());
 		spyOn(store, 'dispatch');
 		component.changeMap(SOURCETYPE);
-		expect(component.communicator.changeMapMainLayer).toHaveBeenCalledWith(SOURCETYPE);
+		expect(store.dispatch).toHaveBeenCalledWith(new ReplaceMainLayer({id: MAPID, sourceType: SOURCETYPE}));
 	})
 });

@@ -143,7 +143,12 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	toggleSubMenu(subMenu: SubMenuEnum) {
+	toggleSubMenu(subMenu: SubMenuEnum, event: MouseEvent = null) {
+		if (event) {
+			// In order that the sub menu will not recognize the click on the
+			// button as a "click outside" and close itself
+			event.stopPropagation();
+		}
 		const value = (subMenu !== this.subMenu) ? subMenu : null;
 		this.store$.dispatch(new SetSubMenu(value));
 	}
@@ -168,9 +173,5 @@ export class ToolsComponent implements OnInit, OnDestroy {
 			dialogRef.afterClosed().subscribe(() => this.isDialogShowing = false);
 			this.isDialogShowing = !this.isDialogShowing;
 		}
-	}
-
-	stam() {
-		console.log('hideMe called');
 	}
 }

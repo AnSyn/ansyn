@@ -89,6 +89,7 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	onClickOutside$ = fromEvent(window, 'click').pipe(
+		filter(() => this.expand),
 		tap((event: any) => {
 			if (event.path && !event.path.includes(this.element.nativeElement)) {
 				this.hideMe.emit();

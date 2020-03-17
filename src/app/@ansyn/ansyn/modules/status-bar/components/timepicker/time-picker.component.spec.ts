@@ -1,15 +1,12 @@
 import { async, ComponentFixture, TestBed, inject, tick, fakeAsync } from '@angular/core/testing';
 
 import { TimePickerComponent } from './time-picker.component';
-import {
-	ICaseTimeState,
-	MockComponent,
-	OverlayReducer,
-	overlaysFeatureKey,
-	SetOverlaysCriteriaAction
-} from '@ansyn/ansyn';
 import { StoreModule, Store } from '@ngrx/store';
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
+import { MockComponent } from '../../../core/test/mock-component';
+import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
+import { ICaseTimeState } from '../../../menu-items/cases/models/case.model';
+import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 
 const mockTimePickerTrigger = MockComponent({
 	selector: 'input[timePickerInput]',
@@ -20,7 +17,7 @@ const mockOwlDateTime = MockComponent({
 	selector: 'owl-date-time',
 	inputs: ['backdropClass'],
 	outputs: ['afterPickerClosed']
-});
+}, ['open']);
 
 describe('TimepickerComponent', () => {
 	let component: TimePickerComponent;
@@ -28,7 +25,10 @@ describe('TimepickerComponent', () => {
 	let store: Store<any>;
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [TimePickerComponent, mockOwlDateTime, mockTimePickerTrigger],
+			declarations: [
+				TimePickerComponent,
+				mockOwlDateTime,
+				mockTimePickerTrigger],
 			imports: [StoreModule.forRoot({
 				[overlaysFeatureKey]: OverlayReducer
 			})],

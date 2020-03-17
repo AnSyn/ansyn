@@ -10,8 +10,7 @@ import {
 	ActiveImageryMouseLeave,
 	ChangeImageryMap,
 	ChangeImageryMapFailed,
-	ChangeImageryMapSuccess,
-	ChangeMainLayer, ChangeMainLayerFailed, ChangeMainLayerSuccess,
+	ChangeImageryMapSuccess, ReplaceMainLayer,
 	DecreasePendingMapsCountAction,
 	ImageryCreatedAction,
 	ImageryMouseEnter,
@@ -26,7 +25,9 @@ import {
 	SetToastMessageAction,
 	SetWasWelcomeNotificationShownFlagAction,
 	SynchronizeMapsAction,
-	UpdateMapAction
+	UpdateMapAction,
+	ReplaceMainLayerSuccess,
+	ReplaceMainLayerFailed
 } from '../actions/map.actions';
 import { catchError, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { fromPromise } from 'rxjs/internal-compatibility';
@@ -184,19 +185,15 @@ export class MapEffects {
 		})
 	);
 
-	// TODO: fix the effect after fix promise to observable on the communicator/source providers
-	@Effect({dispatch: false})
-	setMapMainLayer$ = this.actions$.pipe(
-		ofType<ChangeMainLayer>(MapActionTypes.CHANGE_MAP_MAIN_LAYER),
-		switchMap(({ payload }) => {
-			const { id, sourceType } = payload;
-			const communicator = this.communicatorsService.provide(id);
-			return fromPromise(communicator.changeMapMainLayer(sourceType)).pipe(
-				map(change => change.pipe(
-					map(c => c ? this.store$.dispatch(new ChangeMainLayerSuccess(payload)) :
-						this.store$.dispatch(new ChangeMainLayerFailed())))),
-			)
-		}),
+	@Effect()
+	changeImageryLayer$ = this.actions$.pipe(
+		ofType<ReplaceMainLayer>(MapActionTypes.REPLACE_MAP_MAIN_LAYER),
+		switchMap( ({payload}) => {
+			const communicator = this.communicatorsService.provide(payload.id);
+			return fromPromise(communicator.replaceMapMainLayer(payload.sourceType)).pipe(
+				map( change => change ? new ReplaceMainLayerSuccess(payload) : new ReplaceMainLayerFailed())
+			);
+		})
 	);
 
 	@Effect({ dispatch: false })

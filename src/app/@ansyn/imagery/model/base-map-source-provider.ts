@@ -49,6 +49,7 @@ export abstract class BaseMapSourceProvider<CONF = any> implements IImageryMapSo
 		}
 
 		return this.create(metaData).then((layer) => {
+			layer.set(ImageryLayerProperties.ID, cacheId);
 			this.cacheService.addLayerToCache(cacheId, layer);
 			const extraData = this.generateExtraData(metaData);
 			this.setExtraData(layer, extraData);

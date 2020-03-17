@@ -23,7 +23,8 @@ export class OpenLayerBingSourceProvider extends OpenLayersMapSourceProvider<IBi
 		const source = new BingMaps({
 			key: config.key,
 			imagerySet: config.style,
-			maxZoom: 19
+			maxZoom: 19,
+			wrapX: false
 		});
 
 		const [x, y] = proj.transform([-180, -90], EPSG_4326, EPSG_3857);

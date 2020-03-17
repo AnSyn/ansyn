@@ -1,13 +1,18 @@
 import { Component, ElementRef, Inject, OnDestroy, OnInit } from '@angular/core';
 import {
-	ChangeMainLayer,
+	ReplaceMainLayer,
 	IEntryComponent,
 	selectMapTypeById,
 	selectOverlayByMapId,
 	selectSourceTypeById
 } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
-import { IMapProviderConfig, IMapSource, MAP_PROVIDERS_CONFIG } from '@ansyn/imagery';
+import {
+	CommunicatorEntity,
+	IMapProviderConfig,
+	IMapSource,
+	MAP_PROVIDERS_CONFIG
+} from '@ansyn/imagery';
 import { fromEvent } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -25,6 +30,7 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	showPopup: boolean;
 	currentSourceType: string;
 	mapSources: IMapSource[];
+	communicator: CommunicatorEntity;
 
 	@AutoSubscription
 	onClickOutside$ = fromEvent(window, 'click').pipe(
@@ -79,10 +85,7 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	changeMap(type: string) {
 		if (this.currentSourceType !== type) {
 			this.logger.info(`change map from ${ this.currentSourceType } to ${ type }`);
-			this.store$.dispatch(new ChangeMainLayer({
-				id: this.mapId,
-				sourceType: type
-			}));
+			this.store$.dispatch(new ReplaceMainLayer({id: this.mapId, sourceType: type}));
 			this.showPopup = false;
 		}
 	}

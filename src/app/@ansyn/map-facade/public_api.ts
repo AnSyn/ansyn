@@ -68,9 +68,9 @@ export {
 	ToggleFooter,
 	ContextMenuShowAngleFilter,
 	IAngleFilterClick,
-	ChangeMainLayer,
-	ChangeMainLayerSuccess,
-	ChangeMainLayerFailed,
+	ReplaceMainLayer,
+	ReplaceMainLayerSuccess,
+	ReplaceMainLayerFailed,
 	SynchronizeMapsAction
 } from './actions/map.actions';
 

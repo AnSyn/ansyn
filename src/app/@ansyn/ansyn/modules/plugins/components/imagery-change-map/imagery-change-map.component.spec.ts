@@ -5,14 +5,14 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { of } from 'rxjs';
 import {
-	ChangeMainLayer,
+	ReplaceMainLayer,
 	mapFeatureKey,
 	MapReducer,
 	selectMaps,
 	selectMapStateById,
 	selectMapTypeById
 } from '@ansyn/map-facade';
-import { MAP_PROVIDERS_CONFIG } from '@ansyn/imagery';
+import { ImageryCommunicatorService, MAP_PROVIDERS_CONFIG } from '@ansyn/imagery';
 import { LoggerService } from '../../../core/services/logger.service';
 import { LoggerConfig } from '../../../core/models/logger.config';
 
@@ -21,6 +21,7 @@ const MAPID = 'mapId';
 describe('ImageryChangeMapComponent', () => {
 	let component: ImageryChangeMapComponent;
 	let fixture: ComponentFixture<ImageryChangeMapComponent>;
+	let imageryCommunicatorService: ImageryCommunicatorService;
 	let store: Store<any>;
 
 	beforeEach(async(() => {
@@ -44,6 +45,7 @@ describe('ImageryChangeMapComponent', () => {
 		fixture = TestBed.createComponent(ImageryChangeMapComponent);
 		component = fixture.componentInstance;
 		component.mapId = MAPID;
+		component.currentSourceType = `other${SOURCETYPE}`;
 		fixture.detectChanges();
 	});
 
@@ -64,7 +66,7 @@ describe('ImageryChangeMapComponent', () => {
 
 	it('should fire ChangeMainLayer action', () => {
 		spyOn(store, 'dispatch');
-		component.changeMap('sourceType');
-		expect(store.dispatch).toHaveBeenCalledWith(new ChangeMainLayer({ id: MAPID, sourceType: SOURCETYPE }));
+		component.changeMap(SOURCETYPE);
+		expect(store.dispatch).toHaveBeenCalledWith(new ReplaceMainLayer({id: MAPID, sourceType: SOURCETYPE}));
 	})
 });

@@ -13,7 +13,7 @@ class Name {
 	}
 }
 
-export function MockComponent(options: Component): Component {
+export function MockComponent(options: Component, methodsNames: string[] = null): Component {
 	const metadata: Component = {
 		selector: options.selector,
 		template: options.template || '',
@@ -27,6 +27,11 @@ export function MockComponent(options: Component): Component {
 					options.outputs.forEach((output: string) => {
 						this[output] = new EventEmitter();
 					});
+				}
+				if (methodsNames) {
+					methodsNames.forEach((methodName: string) => {
+						this[methodName] = () => {};
+					})
 				}
 			}
 		} as any);

@@ -63,13 +63,16 @@
 		<button tooltip-class="right"
 				[attr.tooltip-value]="'Annotations' | translate"
 				[class.active]="isExpand(subMenuEnum.annotations) && !isGeoOptionsDisabled"
-				(click)="toggleSubMenu(subMenuEnum.annotations)"
+				(click)="toggleSubMenu(subMenuEnum.annotations, $event)"
 				[disabled]="!(isActiveAnnotationLayer$ | async) || isGeoOptionsDisabled">
 			<span class="icon-annotations"></span>
 		</button>
 		<ansyn-annotations-control
 			[isGeoOptionsDisabled]="isGeoOptionsDisabled"
-			[expand]="isExpand(subMenuEnum.annotations) && !isGeoOptionsDisabled"></ansyn-annotations-control>
+			[expand]="isExpand(subMenuEnum.annotations) && !isGeoOptionsDisabled"
+			(hideMe)="toggleSubMenu(subMenuEnum.annotations)"
+		></ansyn-annotations-control>
+
 	</div>
 
 	<div class="distance-measure-tool">

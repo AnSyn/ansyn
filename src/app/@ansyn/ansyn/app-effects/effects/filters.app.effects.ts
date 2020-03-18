@@ -124,11 +124,6 @@ export class FiltersAppEffects {
 		ofType<CheckTrianglesAction>(OverlaysActionTypes.CHECK_TRIANGLES),
 		map(() => new InitializeFiltersAction()));
 
-	// @Effect()
-	// initializeFilters$: Observable<any> = this.actions$.pipe(
-	// 	ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
-	// 	map(() => new InitializeFiltersAction()));
-
 	@Effect()
 	onInitializeFilters$: Observable<InitializeFiltersSuccessAction> = this.actions$.pipe(
 		ofType<InitializeFiltersAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),

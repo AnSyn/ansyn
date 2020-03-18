@@ -231,7 +231,13 @@ export class SandboxComponent implements OnInit, OnDestroy {
 	}
 
 	displayOverlay() {
-		this.ansynApi.displayOverLay(this.overlays[0]);
+		this.ansynApi.displayOverLay({...this.overlays[0], imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Unequalized_Hawkes_Bay_NZ.jpg', tag: {
+			imageData: {
+				imageHeight: 1024,
+				imageWidth: 683
+			}
+			}
+		});
 	}
 
 	displayOverlaysOnTwoMaps() {

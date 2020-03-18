@@ -125,7 +125,14 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 			return;
 		}
 		const mainLayer = this.getMainLayer();
-		const imageLayer = mainLayer.get('imageLayer');
+		const imageLayer = new ImageLayer({
+			source: new ProjectableRaster({
+				sources: [mainLayer.getSource()],
+				operationType: 'image'
+			}),
+				extent: mainLayer.getExtent()
+		});
+		// const imageLayer = mainLayer.get('imageLayer');
 		if (!imageLayer) {
 			return;
 		}

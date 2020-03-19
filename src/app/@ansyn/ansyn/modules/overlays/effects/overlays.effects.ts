@@ -33,7 +33,7 @@ import { rxPreventCrash } from '../../core/utils/rxjs/operators/rxPreventCrash';
 import { getPolygonIntersectionRatio, isPointContainedInGeometry } from '@ansyn/imagery';
 import { getErrorLogFromException } from '../../core/utils/logs/timer-logs';
 import { LoggerService } from '../../core/services/logger.service';
-import { AreaToCredentialsService } from "../../core/services/credentials/area-to-credentials-service";
+import { AreaToCredentialsService } from "../../core/services/credentials/area-to-credentials.service";
 import { CredentialsService, ICredentialsResponse } from "../../core/services/credentials/credentials.service";
 
 @Injectable()

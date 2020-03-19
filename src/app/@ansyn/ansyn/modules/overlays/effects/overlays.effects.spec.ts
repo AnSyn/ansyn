@@ -25,6 +25,11 @@ import { OverlaySourceProvider } from '../models/overlays-source-providers';
 import { imageryStatusFeatureKey, imageryStatusInitialState } from '@ansyn/map-facade';
 import { IOverlay } from '../models/overlay.model';
 import { MissingTranslationHandler, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
+import { AreaToCredentialsService } from "../../core/services/credentials/area-to-credentials.service";
+import { CredentialsService } from "../../core/services/credentials/credentials.service";
+import { Area } from "d3-shape";
+import { credentialsConfig } from "../../core/services/credentials/config";
+import { HttpClientModule } from "@angular/common/http";
 
 @OverlaySourceProvider({
 	sourceType: 'Mock'
@@ -50,6 +55,8 @@ class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 
 describe('Overlays Effects ', () => {
 	let store: Store<any>;
+	let credentialsService: CredentialsService;
+	let areaToCredentialsService: AreaToCredentialsService;
 	let actions: Observable<any>;
 	let overlaysEffects: OverlaysEffects;
 	let overlaysService: OverlaysService | any;
@@ -72,6 +79,7 @@ describe('Overlays Effects ', () => {
 	];
 	beforeEach(() => TestBed.configureTestingModule({
 		imports: [
+			HttpClientModule,
 			StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer }),
 			TranslateModule.forRoot()
 		],
@@ -87,13 +95,35 @@ describe('Overlays Effects ', () => {
 				provide: OverlaysService,
 				useValue: jasmine.createSpyObj('overlaysService', ['getByCase', 'search', 'getTimeStateByOverlay', 'getOverlayById'])
 			},
+			{
+				provide: CredentialsService,
+				useValue: {
+					user: {name: 'user'},
+					error: {message: ''},
+					getCredentials() {
+						return EMPTY;
+					}
+				}
+			},
+			{
+				provide: AreaToCredentialsService,
+				useValue: jasmine.createSpyObj('areaToCredentialsService', ['getUrl', 'createRequest', 'getAreaTriangles', 'parseResponse'])
+			},
+			{
+				provide: credentialsConfig,
+				useValue: {
+					noCredentialsMessage: 'TEST'
+				}
+			},
 			provideMockActions(() => actions),
 			{ provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock }
 		]
 	}));
 
-	beforeEach(inject([Store], (_store: Store<any>) => {
+	beforeEach(inject([CredentialsService, AreaToCredentialsService, Store], (_credentialsService: CredentialsService, _areaToCredentialsService: AreaToCredentialsService, _store: Store<any>) => {
 		store = _store;
+		credentialsService = _credentialsService;
+		areaToCredentialsService = _areaToCredentialsService;
 		const imageryStatusState = { ...imageryStatusInitialState };
 		let overlayState = cloneDeep(overlaysInitialState);
 		overlayState = overlaysAdapter.addAll(overlays, overlayState);
@@ -105,8 +135,10 @@ describe('Overlays Effects ', () => {
 		spyOn(store, 'select').and.callFake((selector) => of(fakeStore.get(selector)));
 	}));
 
-	beforeEach(inject([Store, OverlaysEffects, OverlaysService], (_store: Store<any>, _overlaysEffects: OverlaysEffects, _overlaysService: OverlaysService) => {
+	beforeEach(inject([Store, OverlaysEffects, OverlaysService, AreaToCredentialsService, CredentialsService], (_store: Store<any>, _overlaysEffects: OverlaysEffects, _overlaysService: OverlaysService, _areaToCredentialsService: AreaToCredentialsService,_credentialsService: CredentialsService) => {
 		store = _store;
+		credentialsService = _credentialsService;
+		areaToCredentialsService = _areaToCredentialsService;
 		overlaysEffects = _overlaysEffects;
 		overlaysService = _overlaysService;
 	}));

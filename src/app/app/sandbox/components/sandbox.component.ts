@@ -29,7 +29,7 @@ import { take, tap, withLatestFrom } from 'rxjs/operators';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
-import { AreaToCredentialsService } from "../../../@ansyn/ansyn/modules/core/services/credentials/area-to-credentials-service";
+import { AreaToCredentialsService } from "../../../@ansyn/ansyn/modules/core/services/credentials/area-to-credentials.service";
 
 const moment = momentNs;
 

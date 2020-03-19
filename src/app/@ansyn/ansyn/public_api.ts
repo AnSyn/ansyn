@@ -6,7 +6,7 @@ export {
 } from './modules/plugins/openlayers/plugins/anaglyph-sensor/models/anaglyph.model';
 
 export { AnaglyphSensorService } from './modules/plugins/openlayers/plugins/anaglyph-sensor/service/anaglyph-sensor.service';
-export { AreaToCredentialsService } from './modules/core/services/credentials/area-to-credentials-service';
+export { AreaToCredentialsService } from './modules/core/services/credentials/area-to-credentials.service';
 export { CredentialsService } from './modules/core/services/credentials/credentials.service';
 export { credentialsConfig, ICredentialsConfig } from './modules/core/services/credentials/config';
 

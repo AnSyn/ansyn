@@ -13,7 +13,8 @@ export const MenuActionTypes = {
 	},
 	SET_AUTO_CLOSE: 'SET_AUTO_CLOSE',
 	MENU_COLLAPSE: 'MENU_COLLAPSE',
-	RESET_APP: 'RESET_APP'
+	RESET_APP: 'RESET_APP',
+	SET_USER_ENTER: 'SET_USER_ENTER'
 };
 
 export class ResetAppAction implements Action {
@@ -40,7 +41,7 @@ export class AddMenuItemAction implements Action {
 export class SelectMenuItemAction implements Action {
 	type = MenuActionTypes.SELECT_MENU_ITEM;
 
-	constructor(public payload: string) {
+	constructor(public payload: { menuKey: string, skipSession?: boolean }) {
 	}
 }
 
@@ -84,4 +85,8 @@ export class ToggleMenuCollapse implements Action {
 
 	constructor(public payload: boolean) {
 	}
+}
+
+export class SetUserEnter implements Action {
+	type = MenuActionTypes.SET_USER_ENTER;
 }

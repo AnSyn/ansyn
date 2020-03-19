@@ -10,7 +10,6 @@ import { mapStateSelector } from '@ansyn/map-facade';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
 import { toolsConfig } from '../modules/menu-items/tools/models/tools-config';
 import { LoggerService } from '../modules/core/services/logger.service';
-import { credentialsConfig } from '../modules/core/services/credentials/config';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
@@ -19,12 +18,11 @@ describe('AnsynComponent', () => {
 	let handler: Subject<any>;
 
 	const mockContextMenu = MockComponent({ selector: 'ansyn-context-menu' });
-	const mockCredentials = MockComponent({ selector: 'ansyn-credentials' });
 	const mockMenu = MockComponent({ selector: 'ansyn-menu', inputs: ['version', 'animatedElement'] });
 	const mockToast = MockComponent({ selector: 'ansyn-toast', inputs: ['duration'] });
 	const mockFooter = MockComponent({
 		selector: 'ansyn-footer',
-		inputs: ['selectedCaseName', 'activeMap', 'animatedElement']
+		inputs: ['activeMap', 'animatedElement']
 	});
 	const mockOverlaysContainer = MockComponent({ selector: 'ansyn-overlays-container' });
 	const mockEmptyComponent = MockComponent({ selector: 'ansyn-empty' });
@@ -54,7 +52,6 @@ describe('AnsynComponent', () => {
 			declarations: [
 				AnsynComponent,
 				mockContextMenu,
-				mockCredentials,
 				mockImageryView,
 				mockMenu,
 				mockToast,
@@ -75,10 +72,6 @@ describe('AnsynComponent', () => {
 				},
 				{
 					provide: toolsConfig,
-					useValue: {}
-				},
-				{
-					provide: credentialsConfig,
 					useValue: {}
 				}
 			],

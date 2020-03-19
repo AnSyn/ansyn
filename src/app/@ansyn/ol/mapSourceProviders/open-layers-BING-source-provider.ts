@@ -1,6 +1,6 @@
 import TileLayer from 'ol/layer/Tile';
 import BingMaps from 'ol/source/BingMaps';
-import { ImageryMapSource, IMapSettings } from '@ansyn/imagery';
+import { EPSG_3857, EPSG_4326, ImageryMapSource, IMapSettings } from '@ansyn/imagery';
 import * as proj from 'ol/proj';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
@@ -19,15 +19,16 @@ export const OpenLayerBingSourceProviderSourceType = 'BING';
 })
 export class OpenLayerBingSourceProvider extends OpenLayersMapSourceProvider<IBingMapsConfig> {
 	create(metaData: IMapSettings): Promise<any> {
-		const { config } = this;
+		const config = {...this.config, ...metaData.data.config};
 		const source = new BingMaps({
 			key: config.key,
-			imagerySet: config.styles[0],
-			maxZoom: 19
+			imagerySet: config.style,
+			maxZoom: 19,
+			wrapX: false
 		});
 
-		const [x, y] = proj.transform([-180, -90], 'EPSG:4326', 'EPSG:3857');
-		const [x1, y1] = proj.transform([180, 90], 'EPSG:4326', 'EPSG:3857');
+		const [x, y] = proj.transform([-180, -90], EPSG_4326, EPSG_3857);
+		const [x1, y1] = proj.transform([180, 90], EPSG_4326, EPSG_3857);
 		const extent = [x, y, x1, y1];
 
 		const result = new TileLayer(<any>{

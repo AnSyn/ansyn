@@ -1,9 +1,11 @@
 <div class="combo-container" [ngClass]="[direction, color]">
 	<button ansynComboBoxTrigger
+			[ngClass]="buttonClass"
 			type="button"
 			[disabled]="disabled"
 			[isActive]="optionsVisible"
 			[attr.tooltip-value]="comboBoxToolTipDescription || null"
+			[withArrow]="withArrow"
 			tooltip-class="top"
 			[icon]="icon"
 			(click)="toggleShow()">
@@ -12,7 +14,6 @@
 	</button>
 
 	<div class="options-container scrolled"
-		 *ngIf="!disabled"
          #optionsContainer [style.visibility]="optionsVisible ? 'visible' : 'hidden'"
 		 tabindex="0" (blur)="onBlurOptionsContainer($event)">
 		<ng-content></ng-content>

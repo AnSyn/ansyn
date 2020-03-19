@@ -164,7 +164,7 @@ export class MultipleOverlaysSourceProvider {
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		const mergedSortedOverlays: Observable<IOverlaysFetchData> = forkJoin(this.sourceConfigs
-			.filter(s => !Boolean(fetchParams.dataInputFilters) ? true : fetchParams.dataInputFilters.some((dataInputFilter: IDataInputFilterValue) => dataInputFilter.providerName === s.provider.sourceType))
+			.filter(s => !Boolean(fetchParams.dataInputFilters.length) ? true : fetchParams.dataInputFilters.some((dataInputFilter: IDataInputFilterValue) => dataInputFilter.providerName === s.provider.sourceType))
 			.map(s => {
 				const dataFiltersOfProvider = Boolean(fetchParams.dataInputFilters) ?
 					fetchParams.dataInputFilters.filter((f) => f.providerName === s.provider.sourceType) : [];

@@ -54,7 +54,11 @@ import {
 } from '../modules/overlays/actions/overlays.actions';
 import { IOverlay, IOverlaysCriteria } from '../modules/overlays/models/overlay.model';
 import { ANSYN_ID } from './ansyn-id.provider';
-import { selectFilteredOveralys, selectOverlaysArray } from '../modules/overlays/reducers/overlays.reducer';
+import {
+	selectFilteredOveralys,
+	selectOverlaysArray,
+	selectOverlaysCriteria
+} from '../modules/overlays/reducers/overlays.reducer';
 import { ToggleMenuCollapse } from '@ansyn/menu';
 import { UUID } from 'angular2-uuid';
 import { DataLayersService } from '../modules/menu-items/layers-manager/services/data-layers.service';
@@ -75,7 +79,7 @@ export class AnsynApi {
 	events = {
 		onReady: new EventEmitter<boolean>(),
 		overlaysLoadedSuccess: new EventEmitter<IOverlay[] | false>(),
-		displayOverlaySuccess: new EventEmitter<{overlay: IOverlay | false, mapId: string}>()
+		displayOverlaySuccess: new EventEmitter<{ overlay: IOverlay | false, mapId: string }>()
 	};
 	/** @deprecated onReady as own events was deprecated use events.onReady instead */
 	onReady = new EventEmitter<boolean>(true);
@@ -165,7 +169,7 @@ export class AnsynApi {
 		})
 	);
 
-	constructor(private store: Store<any>,
+	constructor(protected store: Store<any>,
 				protected actions$: Actions,
 				protected projectionConverterService: ProjectionConverterService,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
@@ -334,6 +338,10 @@ export class AnsynApi {
 		this.store.dispatch(new SetOverlaysCriteriaAction(criteria));
 	}
 
+	getOverlaysCriteria(): Observable<IOverlaysCriteria> {
+		return this.store.select(selectOverlaysCriteria);
+	}
+
 	getOverlayData(mapId: string = this.activeMapId): IOverlay {
 		return this.mapsEntities[mapId].data.overlay;
 	}
@@ -365,7 +373,7 @@ export class AnsynApi {
 		layerData.features.forEach((feature) => {
 			feature.properties.isNonEditable = !isEditable;
 			const { label } = feature.properties;
-			feature.properties.label = label && typeof label === 'object' ? label : {text: label, geometry: null};
+			feature.properties.label = label && typeof label === 'object' ? label : { text: label, geometry: null };
 		});
 
 		this.generateFeaturesIds(layerData);

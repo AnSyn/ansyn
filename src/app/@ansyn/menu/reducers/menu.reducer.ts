@@ -18,13 +18,16 @@ export interface IMenuState extends EntityState<IMenuItem> {
 	isPinned: boolean;
 	autoClose: boolean;
 	menuCollapse: boolean;
+	isUserFirstEntrance: boolean;
 }
 
+const menuSession = getMenuSessionData();
 export const initialMenuState: IMenuState = menuItemsAdapter.getInitialState({
-	selectedMenuItem: getMenuSessionData() ? getMenuSessionData().selectedMenuItem : '',
-	isPinned: getMenuSessionData() ? getMenuSessionData().isPinned : false,
+	selectedMenuItem: menuSession.selectedMenuItem,
+	isPinned: menuSession.isPinned,
 	autoClose: true,
-	menuCollapse: false
+	menuCollapse: false,
+	isUserFirstEntrance: menuSession.isUserFirstEntrance
 });
 
 export const menuFeatureKey = 'menu';
@@ -43,8 +46,10 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 			return menuItemsAdapter.addOne(action.payload, state);
 
 		case MenuActionTypes.SELECT_MENU_ITEM:
-			const selectedMenuItem = action.payload;
-			setMenuSessionData({ selectedMenuItem });
+			const selectedMenuItem = action.payload.menuKey;
+			if (!action.payload.skipSession) {
+				setMenuSessionData({ selectedMenuItem });
+			}
 			return { ...state, selectedMenuItem };
 
 		case MenuActionTypes.UNSELECT_MENU_ITEM: {
@@ -67,6 +72,9 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 		case MenuActionTypes.MENU_COLLAPSE:
 			return { ...state, menuCollapse: action.payload };
 
+		case MenuActionTypes.SET_USER_ENTER:
+			setMenuSessionData({ isUserFirstEntrance: false });
+			return { ...state, isUserFirstEntrance: false };
 		default:
 			return state;
 	}
@@ -81,3 +89,4 @@ export const selectIsPinned = createSelector(menuStateSelector, (menu) => menu &
 export const selectAutoClose = createSelector(menuStateSelector, (menu) => menu.autoClose);
 export const selectSelectedMenuItem = createSelector(menuStateSelector, (menu) => menu.selectedMenuItem);
 export const selectMenuCollapse = createSelector(menuStateSelector, (menu) => menu.menuCollapse);
+export const selectUserFirstEnter = createSelector(menuStateSelector, (menu) => menu.isUserFirstEntrance);

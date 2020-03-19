@@ -1,3 +1,4 @@
+export { MenuSession } from './models/menu-session-state.model';
 export { IMenuConfig } from './models/menu-config.model';
 export { IMenuItem } from './models/menu-item.model';
 export { IMenuState } from './reducers/menu.reducer';
@@ -9,4 +10,4 @@ export { getMenuSessionData } from './helpers/menu-session.helper';
 export { selectEntitiesMenuItems, selectIsPinned } from './reducers/menu.reducer';
 export { MenuModule } from './menu.module';
 export { menuFeatureKey, MenuReducer } from './reducers/menu.reducer';
-export { AddMenuItemAction, ContainerChangedTriggerAction, ToggleMenuCollapse } from './actions/menu.actions';
+export { AddMenuItemAction, ContainerChangedTriggerAction, ToggleMenuCollapse, UnSelectMenuItemAction, SetUserEnter } from './actions/menu.actions';

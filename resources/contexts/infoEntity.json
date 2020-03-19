@@ -36,6 +36,7 @@
 		"imageryCountBefore": 30,
 		"timeFilter": "start/end",
 		"geoFilter": "Point",
+    "orientation": "Align North",
 		"requirements": [
 			"geometry",
 			"time"

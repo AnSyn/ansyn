@@ -4,5 +4,6 @@
   "map-facade",
   "menu",
   "imagery-cesium",
+  "imagery-video",
   "ol"
 ]

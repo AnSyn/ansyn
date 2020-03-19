@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { CommunicatorEntity, ProjectionService } from '@ansyn/imagery';
+import { CommunicatorEntity, EPSG_4326, ProjectionService } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
 import { FeatureCollection, GeometryObject, Point } from 'geojson';
 import * as proj from 'ol/proj';
 import OLGeoJSON from 'ol/format/GeoJSON';
+import './free-layer-projection';
 
 @Injectable({
 	providedIn: 'root'
@@ -39,8 +40,8 @@ export class OpenLayersProjectionService extends ProjectionService {
 			return of(point);
 		}
 		// there is no direct proj transform from 2 pixel's projections
-		point.coordinates = proj.transform(<[number, number]>point.coordinates, sourceProjection, 'EPSG:4326');
-		point.coordinates = proj.transform(<[number, number]>point.coordinates, 'EPSG:4326', destProjection);
+		point.coordinates = proj.transform(<[number, number]>point.coordinates, sourceProjection, EPSG_4326);
+		point.coordinates = proj.transform(<[number, number]>point.coordinates, EPSG_4326, destProjection);
 		return of(point);
 	}
 
@@ -58,7 +59,7 @@ export class OpenLayersProjectionService extends ProjectionService {
 	projectCollectionApproximatelyToImage<olFeature>(featureCollection: FeatureCollection<GeometryObject>, mapObject: any): Observable<olFeature[]> {
 		const view = mapObject.getView();
 		const featureProjection = view.getProjection();
-		const dataProjection = 'EPSG:4326';
+		const dataProjection = EPSG_4326;
 		const options = { featureProjection, dataProjection };
 		const features: olFeature[] = <any>this.olGeoJSON.readFeatures(featureCollection, options);
 		return of(features);
@@ -66,7 +67,7 @@ export class OpenLayersProjectionService extends ProjectionService {
 
 	projectCollectionApproximately<olFeature>(features: olFeature[] | any, mapObject: any): Observable<FeatureCollection<GeometryObject>> {
 		const featureProjection = mapObject.getView().getProjection();
-		const dataProjection = 'EPSG:4326';
+		const dataProjection = EPSG_4326;
 		const options = { featureProjection, dataProjection };
 		const geoJsonFeature = <any>this.olGeoJSON.writeFeaturesObject(features, options);
 		return of(geoJsonFeature);

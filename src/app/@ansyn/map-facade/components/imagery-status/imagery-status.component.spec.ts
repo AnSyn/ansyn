@@ -53,7 +53,7 @@ describe('ImageryStatusComponent', () => {
 			],
 			providers: [
 				ImageryCommunicatorService,
-				{ provide: ENTRY_COMPONENTS_PROVIDER, useValue: [] }
+				{ provide: ENTRY_COMPONENTS_PROVIDER, useValue: {status: [], container: [], floating_menu: []} }
 			]
 		}).compileComponents();
 	}));
@@ -63,7 +63,6 @@ describe('ImageryStatusComponent', () => {
 		fixture = TestBed.createComponent(ImageryStatusComponent);
 		component = fixture.componentInstance;
 		component._map = MAP;
-		component._entryComponents = {status: [], container: [], floating_menu: []};
 		component.hideLayers = true;
 		component.mapsAmount = 2;
 		fixture.detectChanges();

@@ -1,25 +1,19 @@
+import { ExportMapsToPngRequestedAction } from '../actions/map.actions';
 import { Injectable } from '@angular/core';
 import {
-	getPolygonIntersectionRatio,
-	ICanvasExportData,
 	ImageryCommunicatorService,
 	ImageryMapPosition,
 	IMapInstanceChanged,
 	IMapSettings
 } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
-import { saveAs } from 'file-saver';
-import { EMPTY, Observable } from 'rxjs';
-import { catchError, switchMap, take, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import {
-	ExportMapsToPngActionFailed,
-	ExportMapsToPngActionSuccess,
 	MapInstanceChangedAction,
-	PositionChangedAction
+	PositionChangedAction,
 } from '../actions/map.actions';
 import { LayoutKey } from '../models/maps-layout';
-import { IMapState, selectLayout, selectMapsIds, selectMapsList } from '../reducers/map.reducer';
-import { mapsToPng } from '../utils/exportMaps';
+import { IMapState, selectLayout, selectMapsList } from '../reducers/map.reducer';
 
 // @dynamic
 @Injectable({
@@ -33,11 +27,6 @@ export class MapFacadeService {
 
 	layout: LayoutKey;
 	layout$ = this.store.select(selectLayout);
-
-	static isNotIntersect(extentPolygon, footprint, overlayCoverage): boolean {
-		const intersection = getPolygonIntersectionRatio(extentPolygon, footprint);
-		return intersection < overlayCoverage;
-	}
 
 	// @todo IOveraly
 	static isOverlayGeoRegistered(overlay: any): boolean {
@@ -61,7 +50,8 @@ export class MapFacadeService {
 		});
 	}
 
-	constructor(protected store: Store<IMapState>, protected imageryCommunicatorService: ImageryCommunicatorService) {
+	constructor(protected store: Store<IMapState>,
+				protected imageryCommunicatorService: ImageryCommunicatorService) {
 		(<Observable<any>>this.mapsList$).subscribe((mapsList) => this.mapsList = mapsList);
 		(<Observable<any>>this.layout$).subscribe((layout) => this.layout = layout);
 	}
@@ -99,26 +89,7 @@ export class MapFacadeService {
 		}
 	}
 
-	exportMapsToPng() {
-		this.store.select(selectMapsIds).pipe(
-			take(1),
-			switchMap((mapsIds: string[]) => {
-				const _maps = [];
-				mapsIds.forEach((mapId) => {
-					const provider = this.imageryCommunicatorService.provide(mapId);
-					const exportData: ICanvasExportData = provider.ActiveMap.getExportData();
-					_maps.push(exportData);
-				});
-				return mapsToPng(_maps, this.layout)
-			}),
-			tap(blob => saveAs(blob, 'map.jpeg')),
-			tap(() => {
-				this.store.dispatch(new ExportMapsToPngActionSuccess());
-			}),
-			catchError((err) => {
-				this.store.dispatch(new ExportMapsToPngActionFailed(err));
-				return EMPTY;
-			})
-		).subscribe();
+	public exportMapsToPng(): void {
+		this.store.dispatch(new ExportMapsToPngRequestedAction());
 	}
 }

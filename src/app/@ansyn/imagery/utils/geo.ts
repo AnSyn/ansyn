@@ -114,6 +114,11 @@ export function getPolygonIntersectionRatio(extent: Polygon, footprint: MultiPol
 	return intersection
 }
 
+export function polygonsDontIntersect(extentPolygon, footprint, overlayCoverage): boolean {
+	const intersection = getPolygonIntersectionRatio(extentPolygon, footprint);
+	return intersection < overlayCoverage;
+}
+
 export function getPolygonIntersectionRatioWithMultiPolygon(extent: Polygon, footprint: MultiPolygon): number {
 	let intersectionArea = 0;
 	let extentArea = 1;
@@ -179,3 +184,6 @@ export function getDistanceBetweenPoints(source: Point, destination: Point): num
 	}
 	return distanceInKilometers;
 }
+
+export const EPSG_4326 = 'EPSG:4326';
+export const EPSG_3857 = 'EPSG:3857';

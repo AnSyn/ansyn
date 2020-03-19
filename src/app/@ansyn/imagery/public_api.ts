@@ -1,3 +1,4 @@
+export { IMapSource } from './model/map-providers-config';
 export { IStroke, IIcon } from './model/visualizers/visualizer-style';
 
 export { ICanvasExportData } from './model/base-imagery-map';
@@ -42,11 +43,14 @@ export {
 	getPolygonByPointAndRadius,
 	getPolygonByBufferRadius,
 	getPolygonIntersectionRatio,
+	polygonsDontIntersect,
 	isPointContainedInGeometry,
 	unifyPolygons,
 	calculateLineDistance,
 	calculateGeometryArea,
-	getDistanceBetweenPoints
+	getDistanceBetweenPoints,
+	EPSG_4326,
+	EPSG_3857
 } from './utils/geo';
 
 export { IVisualizersConfig, VisualizersConfig } from './model/visualizers-config.token';
@@ -66,9 +70,10 @@ export { CacheService } from './cache-service/cache.service';
 export { ImageryCommunicatorService } from './communicator-service/communicator.service';
 export { CommunicatorEntity } from './communicator-service/communicator.entity';
 export { ProjectionService } from './projection-service/projection.service';
+export { StayInImageryService } from './stay-in-imagery-service/stay-in-imagery.service';
 export { ImageryModule } from './imagery.module';
 export { IMAGERY_CONFIG } from './model/configuration.token';
-export { ImageryLayerProperties, IMAGERY_MAIN_LAYER_NAME } from './model/imagery-layer.model';
+export { ImageryLayerProperties, IMAGERY_MAIN_LAYER_NAME, IMAGERY_BASE_MAP_LAYER } from './model/imagery-layer.model';
 
 export { IMapSettings, IMapSettingsData, IWorldViewMapState } from './model/map-settings';
 export { toDegrees, toRadians, getAngleDegreeBetweenPoints } from './utils/math';

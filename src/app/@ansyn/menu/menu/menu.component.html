@@ -3,17 +3,29 @@
 	<div class="menu" #menu [class.expanded]="expand">
 		<div class="menu-content">
 
+			<div class="menu-items">
+				<div
+					*ngFor="let menuItem of topMenuItemsAsArray$ | async"
+					class="menu-btn"
+					[class.active]="isActive(menuItem.name)"
+					(click)="toggleItem(menuItem.name)">
+
+					<i [ngClass]="menuItem.iconClass"></i>
+					<span class="badge" [hidden]="hideBadge(menuItem.badge)">{{menuItem.badge}}</span>
+					{{menuItem.name | translate}}
+				</div>
+			</div>
 			<div
-				*ngFor="let menuItem of menuItemsAsArray$ | async"
-				class="menu-btn"
+				*ngFor="let menuItem of bottomMenuItemsAsArray$ | async"
+				class="menu-btn bottom"
+				[class.first-start]="isUserFirstEntrance"
 				[class.active]="isActive(menuItem.name)"
-				(click)="toggleItem(menuItem.name)">
+				(click)="toggleItem(menuItem.name, true)">
 
 				<i [ngClass]="menuItem.iconClass"></i>
-				<span class="badge" [hidden]="hideBadge(menuItem.badge)">{{menuItem.badge}}</span>
+				<span class="badge bottom" [hidden]="!isUserFirstEntrance"> </span>
 				{{menuItem.name | translate}}
 			</div>
-
 			<div class="logo">
 
 				<ng-container *ngIf="menuConfig?.forkMe?.active">
@@ -27,13 +39,11 @@
 					 *ngIf="menuConfig?.mode"
 					 [style.color]="menuConfig.color"
 					 [style.background]="menuConfig.background"
-					 [style.border]="'1px sollid' + menuConfig.color"
-				>{{menuConfig.mode}}
+					 [style.border]="'1px sollid' + menuConfig.color">
+					{{menuConfig.mode}}
 				</div>
 				<img [src]="menuConfig.path" [alt]="version" [title]="version" (click)="resetApp()">
-
 			</div>
-
 		</div>
 
 		<button
@@ -54,7 +64,7 @@
 		<button class="pin"
 				(click)="toggleIsPinned()"
 				[attr.tooltip-value]="pinText | translate" tooltip-class="right">
-			<i [ngClass]="isPinned? 'icon-unpin' : 'icon-pin'"></i>
+			<i [ngClass]="isPinned? 'icon-pin' : 'icon-unpin'"></i>
 		</button>
 		<ng-template #componentElem></ng-template>
 	</div>

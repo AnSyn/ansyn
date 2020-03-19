@@ -10,7 +10,8 @@
 			name="annotations-layer"
 			[ngModel]="activeAnnotationId"
 			[comboBoxToolTipDescription]="'choose annotation layer' | translate"
-			(ngModelChange)="setSelectedAnnotationLayer($event)">
+			(ngModelChange)="setSelectedAnnotationLayer($event)"
+			[disabled]="isGeoOptionsDisabled">
 
 			<ansyn-combo-box-option *ngFor="let layer of annotationLayer$ | async" [value]="layer.id" [disabled]="layer.isNonEditable">
 				{{ layer.name }}
@@ -39,6 +40,8 @@
 	<li class="expanded-selection line-width-selection">
 
 		<button (click)="toggleSelection(SelectionBoxTypes.LineWidth)"
+				[disabled]="this.mode === 'Point'"
+				[class.disabled]="this.mode === 'Point'"
 				[class.expand]="selectedBox === SelectionBoxTypes.LineWidth">
 			<span class="icon-annotation-weight" [attr.tooltip-value]="'Width' | translate"
 				  tooltip-class="bottom"></span>

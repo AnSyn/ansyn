@@ -25,7 +25,8 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	isMapLayersVisible = true;
 	mapsAmount = 1;
 	_map: IMapSettings;
-	_entryComponents: IEntryComponentsEntities;
+	baseMapDescription = 'Base Map';
+	formattedOverlayTime: string = null;
 	@HostBinding('class.active') isActiveMap: boolean;
 	hideLayers: boolean;
 	@AutoSubscription
@@ -64,12 +65,9 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	@Input()
 	set map(value: IMapSettings) {
 		this._map = value;
-		/* force angular to rerender the *ngFor content that binding to this arrays
-		 * so they get the new mapId	 */
-		this._entryComponents = { status: [], container: [], floating_menu: [] };
+		this.formattedOverlayTime = this.overlay ? this.getFormattedTime(this.overlay.photoTime) : null;
 		this.translate.get(this.overlay && this.overlay.sensorName || 'unknown')
 			.subscribe(translatedOverlaySensorName => this.translatedOverlaySensorName = translatedOverlaySensorName);
-		setTimeout(() => this._entryComponents = { ...this.entryComponents })
 	}
 
 	// @TODO: eject to ansyn
@@ -89,11 +87,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	get overlayTimeDate() {
 		const ActiveMap = _get(this.communicators.provide(this.mapId), 'ActiveMap');
 		const { description } = (ActiveMap && ActiveMap.getExtraData()) || <any>{};
-		return description ? description : this.overlay ? this.getFormattedTime(this.overlay.photoTime) : null;
-	}
-
-	get baseMapDescription() {
-		return 'Base Map';
+		return description ? description : this.overlay ? this.formattedOverlayTime : null;
 	}
 
 	// @todo refactor
@@ -111,14 +105,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 			return false;
 		}
 		return this.overlay.isGeoRegistered === 'notGeoRegistered';
-	}
-
-	// @todo refactor
-	get poorGeoRegistered() {
-		if (!this.overlay) {
-			return false;
-		}
-		return this.overlay.isGeoRegistered === 'poorGeoRegistered';
 	}
 
 	@AutoSubscription

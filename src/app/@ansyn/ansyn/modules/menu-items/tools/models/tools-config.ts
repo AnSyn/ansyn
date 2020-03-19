@@ -6,10 +6,6 @@ export interface IShadowMouseConfig {
 }
 
 export interface IToolsConfig {
-	GoTo: {
-		from: ICoordinatesSystem;
-		to: ICoordinatesSystem;
-	},
 	ImageProcParams: Array<IImageProcParam>,
 	ShadowMouse?: IShadowMouseConfig
 }

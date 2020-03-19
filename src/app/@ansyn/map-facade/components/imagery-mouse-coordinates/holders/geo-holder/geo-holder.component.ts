@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'ansyn-geo-holder',
+	selector: 'ansyn-geo-wgs-holder',
 	templateUrl: './geo-holder.component.html',
 	styleUrls: ['./geo-holder.component.less']
 })

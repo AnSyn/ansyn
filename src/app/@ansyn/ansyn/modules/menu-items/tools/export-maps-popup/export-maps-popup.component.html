@@ -1,0 +1,24 @@
+<div class="dialog-area">
+	<div mat-dialog-content>
+		<div mat-dialog-title>
+			<button class="close" mat-button (click)="closeModal()">X</button>
+			<h1 mat-dialog-title class="title-message">{{title | translate}} {{credentialsService?.titleUser}}</h1>
+		</div>
+<!--		<mat-progress-bar class="main-progress" color="primary" mode="indeterminate"></mat-progress-bar>-->
+		<br>
+		<p mat-dialog-title class="info">
+			{{description | translate}}
+		</p>
+		<div class="btn-area">
+			<div class="download-btn">
+				<button mat-button (click)="exportMapsToPng()">
+					<i class="fa fa-cloud-download" aria-hidden="true"></i>
+					{{'Download' | translate}}</button>
+			</div>
+			<div class="cancel-btn">
+				<button mat-button (click)="closeModal()">{{'Cancel' | translate}}</button>
+			</div>
+		</div>
+	</div>
+</div>
+

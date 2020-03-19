@@ -35,13 +35,20 @@ const mockAnsynPopoverComponent = MockComponent({
 
 const mockAnsynComboBox = MockComponent({
 	selector: 'ansyn-combo-box',
-	inputs: ['ngModel', 'toolTipField', 'comboBoxToolTipDescription', 'direction', 'color', 'icon'],
+	inputs: ['ngModel', 'comboBoxToolTipDescription', 'direction', 'color', 'icon'],
 	outputs: ['ngModelChange']
 });
 
 const mockComboBoxOptionComponent = MockComponent({
 	selector: 'ansyn-combo-box-option',
 	inputs: ['value', 'disabled'],
+	outputs: []
+});
+
+
+const mockAnsynLoaderComponent = MockComponent({
+	selector: 'ansyn-loader',
+	inputs: ['show', 'loaderText', 'rtl'],
 	outputs: []
 });
 
@@ -75,6 +82,7 @@ describe('ImageriesManagerComponent', () => {
 				mockAnnotationContextMenu,
 				mockAnsynWelcomeNotification,
 				mockAnsynPopoverComponent,
+				mockAnsynLoaderComponent,
 				EntryComponentDirective
 			]
 

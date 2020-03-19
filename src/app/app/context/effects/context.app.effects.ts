@@ -6,6 +6,7 @@ import {
 	DisplayedOverlay,
 	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayFromStoreAction,
+	GeoRegisteration,
 	ICase,
 	IContext,
 	IContextEntity,
@@ -38,6 +39,10 @@ import { SetToastMessageAction } from '@ansyn/map-facade';
 @Injectable()
 export class ContextAppEffects {
 
+	mapNotRegisteredOverlayFromFilter$ = map(([action, params, overlayState]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => {
+		const newOverlayState = this.filterNotRegisteredFromFilterOverlay(overlayState);
+		return [action, params, newOverlayState]
+	});
 	loadDefaultCaseContext$: Observable<any> = this.actions$.pipe(
 		ofType<LoadDefaultCaseAction>(CasesActionTypes.LOAD_DEFAULT_CASE),
 		filter((action: LoadDefaultCaseAction) => action.payload.context),
@@ -100,6 +105,7 @@ export class ContextAppEffects {
 	displayLatestOverlay$: Observable<any> = this.actions$.pipe(
 		ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS),
 		withLatestFrom(this.store.select(selectContextsParams), this.store.select(overlaysStateSelector)),
+		this.mapNotRegisteredOverlayFromFilter$,
 		filter(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => params && params.defaultOverlay === DisplayedOverlay.latest && filteredOverlays.length > 0),
 		mergeMap(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => {
 			const id = filteredOverlays[filteredOverlays.length - 1];
@@ -115,6 +121,7 @@ export class ContextAppEffects {
 	displayTwoNearestOverlay$: Observable<any> = this.actions$.pipe(
 		ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS),
 		withLatestFrom(this.store.select(selectContextsParams), this.store.select(overlaysStateSelector)),
+		this.mapNotRegisteredOverlayFromFilter$,
 		filter(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => params && params.defaultOverlay === DisplayedOverlay.nearest && filteredOverlays.length > 0),
 		mergeMap(([action, params, { entities: overlays, filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => {
 			const overlaysBeforeId = [...filteredOverlays].reverse().find(overlayId => overlays[overlayId].photoTime < params.time);
@@ -160,6 +167,13 @@ export class ContextAppEffects {
 				protected overlaysService: OverlaysService,
 				protected contextService: ContextService) {
 
+	}
+
+	filterNotRegisteredFromFilterOverlay(overlayState: IOverlaysState): IOverlaysState {
+		const newOverlayState = {...overlayState};
+		newOverlayState.filteredOverlays = newOverlayState.filteredOverlays.filter( filterOverlay =>
+			overlayState.entities[filterOverlay].isGeoRegistered !== GeoRegisteration.notGeoRegistered);
+		return newOverlayState;
 	}
 
 	getCaseForContext(defaultCaseQueryParams: ICase, context: IContext, params: IContextParams): Observable<ICase> {

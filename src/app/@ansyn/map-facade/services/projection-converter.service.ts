@@ -3,6 +3,7 @@ import proj4 from 'proj4';
 import { Inject, Injectable } from '@angular/core';
 import { IMapFacadeConfig } from '../models/map-config.model';
 import { mapFacadeConfig } from '../models/map-facade.config';
+import { EPSG_4326 } from '@ansyn/imagery';
 
 export interface IUtmZone {
 	zone: number;
@@ -18,47 +19,111 @@ export interface ICoordinatesSystem {
 // @dynamic
 @Injectable()
 export class ProjectionConverterService {
+
 	static isValidCoordinates(coords: number[], minLength: number) {
 		return coords.length >= minLength && coords.every(c => typeof c === 'number');
 	}
 
-	// WGS84 ranges: -90 < lat < 90  -180 < lon <180
-	static isValidWGS84(coords: number[]): boolean {
+	// GEO WGS84 ranges: -90 < lat < 90  -180 < lon <180
+	static isValidGeoWGS84(coords: number[]): boolean {
 		const coordinatesValid = ProjectionConverterService.isValidCoordinates(coords, 2);
-		const validLong = coordinatesValid && inRange(coords[0], -179.9999, 180);
-		const validLat = coordinatesValid && inRange(coords[1], -89.9999, 90);
-		return validLat && validLong;
+		if (coordinatesValid) {
+			const validLong = inRange(coords[0], -179.9999, 180);
+			const validLat = inRange(coords[1], -89.9999, 90);
+			return validLat && validLong;
+		}
+
+		return false;
 	}
 
-	// UTM ranges: -16198192 <= x < 17198193, 0 < zone <= 60
+	// UTM ED50 && UTM WGS84 ranges: -16198192 <= x < 17198193, 0 < zone <= 60
 	static isValidUTM(coords: number[]): boolean {
 		const coordinatesValid = ProjectionConverterService.isValidCoordinates(coords, 3);
-		const validX = coordinatesValid && inRange(coords[0], -16198192, 17198193);
-		const validY = coordinatesValid && typeof coords[1] === 'number';
-		const validZone = coordinatesValid && inRange(coords[2], 0, 61);
-		return validX && validY && validZone;
+		if (coordinatesValid) {
+			const validX = inRange(coords[0], -16198192, 17198193);
+			const validY = typeof coords[1] === 'number';
+			const validZone = inRange(coords[2], 0, 61);
+			return validX && validY && validZone;
+		}
+
+		return false;
 	}
 
 	constructor(@Inject(mapFacadeConfig) protected mapfacadeConfigProj: IMapFacadeConfig) {
 	}
 
-	// isValidConversion
 	isValidConversion(coords: number[], from: ICoordinatesSystem): boolean {
 		let isValid = Boolean(coords);
 
 		const fromWgs84Geo = from.datum === 'wgs84' && from.projection === 'geo';
-		const fromEd50Utm = from.datum === 'ed50' && from.projection === 'utm';
+		const fromUtm = from.projection === 'utm';
 
 		if (isValid && fromWgs84Geo) {
-			isValid = ProjectionConverterService.isValidWGS84(coords);
+			isValid = ProjectionConverterService.isValidGeoWGS84(coords);
 		}
 
-		if (isValid && fromEd50Utm) {
+		if (isValid && fromUtm) {
 			isValid = ProjectionConverterService.isValidUTM(coords);
 		}
+
 		return isValid;
 	}
 
+	convertGeoWgs84ToUtmEd50(coords) {
+		const lng = coords[0];
+		const hemisphere = coords[1];
+		const zoneUtmEd50Proj = this.getZoneUtmProj(lng, hemisphere);
+		const conv = proj4(EPSG_4326, zoneUtmEd50Proj.utmProj, coords);
+		if (conv[1] < 0) {
+			conv[1] += 10000000;
+		}
+
+		return [...conv, zoneUtmEd50Proj.zone];
+	}
+
+	convertUtmEd50ToWgs84Geo(coords) {
+		let [x, y, zone] = coords;
+		if (y > 5000000) {
+			y -= 10000000;
+		}
+		const utmEd50Proj = this.getUtmFromConf(zone);
+		const conv = proj4(utmEd50Proj, EPSG_4326, [x, y]);
+
+		return [...conv];
+	}
+
+	convertUtmWgs84ToGeoWgs84(coords) {
+		let [x, y, zone] = coords;
+		if (y > 5000000) {
+			y -= 10000000;
+		}
+		const utmWgs84Proj = `+proj=utm +zone=${ zone } +datum=WGS84`;
+		const conv = proj4(utmWgs84Proj, EPSG_4326, [x, y]);
+
+		return [...conv];
+	}
+
+	convertGeoWgs84ToUtmWgs84(coords) {
+		const lng = coords[0];
+		const zone = (Math.floor((lng + 180) / 6) % 60) + 1;
+		const projection = `+proj=utm +zone=${ zone } +datum=WGS84`;
+		const conv = proj4(EPSG_4326, projection, coords);
+		if (conv[1] < 0) {
+			conv[1] += 10000000;
+		}
+
+		return [...conv, zone];
+	}
+
+	convertUtmEd50ToUtmWgs84(coords) {
+		const geoWgs84Coords = this.convertUtmEd50ToWgs84Geo(coords);
+		return this.convertGeoWgs84ToUtmWgs84(geoWgs84Coords);
+	}
+
+	convertUtmWgs84ToUtmEd50(coords) {
+		const geoWgs84Coords = this.convertUtmWgs84ToGeoWgs84(coords);
+		return this.convertGeoWgs84ToUtmEd50(geoWgs84Coords);
+	}
 
 	convertByProjectionDatum(coords: number[], from: ICoordinatesSystem, to: ICoordinatesSystem) {
 
@@ -68,53 +133,34 @@ export class ProjectionConverterService {
 		const fromWgs84Geo = from.datum === 'wgs84' && from.projection === 'geo';
 		const toWgs84Geo = to.datum === 'wgs84' && to.projection === 'geo';
 
-		const toWgs84Utm = to.datum === 'wgs84' && to.projection === 'utm';
 		const fromWgs84Utm = from.datum === 'wgs84' && from.projection === 'utm';
+		const toWgs84Utm = to.datum === 'wgs84' && to.projection === 'utm';
 
 		const fromEd50Utm = from.datum === 'ed50' && from.projection === 'utm';
 		const toEd50Utm = to.datum === 'ed50' && to.projection === 'utm';
 
-
 		if (fromWgs84Geo && toEd50Utm) {
-			const lng = coords[0];
-			const hemisphere = coords[1];
-			const zoneUtmProj = this.getZoneUtmProj(lng, hemisphere);
-			const conv = proj4('EPSG:4326', zoneUtmProj.utmProj, coords);
-			if (conv[1] < 0) {
-				conv[1] += 10000000;
-			}
-			return [...conv, zoneUtmProj.zone];
+			return this.convertGeoWgs84ToUtmEd50(coords);
 		}
 
 		if (fromEd50Utm && toWgs84Geo) {
-			let [x, y, zone] = coords;
-			if (y > 5000000) {
-				y -= 10000000;
-			}
-			const utmProj = this.getUtmFromConf(zone);
-			const conv = proj4(utmProj, 'EPSG:4326', [x, y]);
-			return [...conv];
+			return this.convertUtmEd50ToWgs84Geo(coords);
+		}
+
+		if (fromEd50Utm && toWgs84Utm) {
+			return this.convertUtmEd50ToUtmWgs84(coords);
 		}
 
 		if (fromWgs84Geo && toWgs84Utm) {
-			const lng = coords[0];
-			const zone = (Math.floor((lng + 180) / 6) % 60) + 1;
-			const projection = '+proj=utm +zone$(zone) +datum=WGS84'.replace('$(zone)', zone.toString());
-			const conv = proj4('EPSG:4326', projection, coords);
-			if (conv[1] < 0) {
-				conv[1] += 10000000;
-			}
-			return [...conv, zone];
+			return this.convertGeoWgs84ToUtmWgs84(coords);
 		}
 
 		if (fromWgs84Utm && toWgs84Geo) {
-			let [x, y, zone] = coords;
-			if (y > 5000000) {
-				y -= 10000000;
-			}
-			const utmProj = '+proj=utm +zone$(zone) +datum=WGS84'.replace('$(zone)', zone.toString());
-			const conv = proj4(utmProj, 'EPSG:4326', [x, y]);
-			return [...conv];
+			return this.convertUtmWgs84ToGeoWgs84(coords);
+		}
+
+		if (fromWgs84Utm && toEd50Utm) {
+			return this.convertUtmWgs84ToUtmEd50(coords);
 		}
 	}
 

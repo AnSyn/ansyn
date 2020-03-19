@@ -4,104 +4,15 @@
 		 [ngStyle]="calcBoundingRect(featureId)">
 
 		<div class="context-menu" [style.outline-color]="getFeatureProps(featureId)?.style?.initial?.stroke">
-			<ul class="buttons">
-				<li>
-					<button [class.active]="annotations?.currentAnnotationEdit?.originalFeature?.getId() === featureId"
-							[class.disabled]="isFeatureNonEditable(featureId)"
-							(click)="toggleEditMode(featureId)">
-						<i [attr.tooltip-value]="'Edit' | translate" tooltip-class="bottom">
-							<svg>
-								<path [attr.d]="SVGICON.editModeSvg"></path>
-							</svg>
-						</i>
-					</button>
-
-
-				</li>
-				<li>
-					<button [class.active]="getFeatureProps(featureId)?.showMeasures"
-							(click)="toggleMeasures(featureId)">
-						<i [attr.tooltip-value]="'Measures' | translate" tooltip-class="bottom">
-							<svg fill="#fff">
-								<path [attr.d]="SVGICON.measureSvg"></path>
-							</svg>
-						</i>
-					</button>
-				</li>
-				<li>
-					<button [class.active]="selectedTab[featureId] === Tabs.Label"
-							(click)="selectTab(featureId, Tabs.Label)">
-						<i [attr.tooltip-value]="'Label' | translate" tooltip-class="bottom">
-							<svg >
-								<path [attr.d]="SVGICON.labelSvg"></path>
-							</svg>
-						</i>
-					</button>
-
-					<ansyn-annotation-label *ngIf="selectedTab[featureId] === Tabs.Label"
-					[label]="getFeatureProps(featureId)?.label"
-					[labelSize]="annotations.idToEntity.get(featureId)?.originalEntity.labelSize"
-					[translateOn]="getFeatureProps(featureId)?.labelTranslateOn"
-					(onChangeText)="updateLabel($event, featureId)"
-					(onChangeSize)="updateLabelSize($event, featureId)"
-					(onTranslateClick)="annotations.labelTranslateMode(featureId)">
-					</ansyn-annotation-label>
-				</li>
-				<li class="expanded-selection line-width-selection">
-					<p>
-						<button [class.active]="selectedTab[featureId] === Tabs.Weight"
-								(click)="selectTab(featureId, Tabs.Weight)">
-							<i [attr.tooltip-value]="'Width' | translate" tooltip-class="bottom">
-								<svg>
-									<path [attr.d]="SVGICON.editWeightSvg"></path>
-								</svg>
-							</i>
-						</button>
-						<ansyn-annotations-weight
-							[show]="selectedTab[featureId] === Tabs.Weight"
-							[properties]="getFeatureProps(featureId)?.style?.initial"
-							(selectLineStyle)="selectLineWidth($event, featureId)">
-						</ansyn-annotations-weight>
-					</p>
-				</li>
-				<li>
-					<p>
-						<button [class.active]="selectedTab[featureId] === Tabs.Colors"
-								[class.disabled]="isFeatureNonEditable(featureId)"
-								(click)="selectTab(featureId, Tabs.Colors)">
-							<i [attr.tooltip-value]="'Color' | translate" tooltip-class="bottom">
-								<svg >
-									<path [attr.d]="SVGICON.editColorSvg"></path>
-								</svg>
-							</i>
-						</button>
-						<ansyn-annotations-color
-							[show]="selectedTab[featureId] === Tabs.Colors"
-							[properties]="getFeatureProps(featureId)?.style?.initial"
-							[fillModeActive]="getFeatureProps(featureId)?.mode !== 'Arrow' && getFeatureProps(featureId)?.mode !== 'LineString'"
-							[strokeModeActive]="getFeatureProps(featureId)?.mode !== 'Point'"
-							(colorChange)="colorChange($event, featureId)"
-							(activeChange)="activeChange($event, featureId)"
-						></ansyn-annotations-color>
-					</p>
-				</li>
-				<li *ngIf="!getFeatureProps(featureId)?.undeletable">
-					<button class='removeFeature' (click)="removeFeature(featureId)"
-							[class.disabled]="isFeatureNonEditable(featureId)"
-					>
-						<i [attr.tooltip-value]="'Delete' | translate" tooltip-class="bottom">
-							<svg >
-								<path [attr.d]="SVGICON.deleteSvg"></path>
-							</svg>
-						</i>
-					</button>
-				</li>
-			</ul>
+			<ansyn-annotations-context-menu-buttons
+				[annotations]="annotations"
+				[featureId]="featureId"
+				[selectedTab]="selectedTab">
+			</ansyn-annotations-context-menu-buttons>
 		</div>
-
 	</div>
 </ng-container>
-<div class="context-menu-wrapper"
+<div class="context-menu-wrapper hover"
 	 *ngIf="annotations?.idToEntity?.has(hoverFeatureId)"
 	 [ngStyle]="calcBoundingRect(hoverFeatureId)">
 	<div class="context-menu" [style.outline-color]="getFeatureProps(hoverFeatureId)?.style?.initial?.stroke"></div>

@@ -2,6 +2,6 @@
 
 <ng-content></ng-content>
 
-<span class="arrow">
+<span *ngIf="withArrow" class="arrow">
 	{{ !isActive ? '▼' : '▲'}}
 </span>

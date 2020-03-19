@@ -36,6 +36,7 @@ import { EntitiesVisualizer } from '../entities-visualizer';
 import { IOLPluginsConfig, OL_PLUGINS_CONFIG } from '../plugins.config';
 import { AnnotationMode, IAnnotationBoundingRect, IDrawEndEvent } from './annotations.model';
 import { DragPixelsInteraction } from './dragPixelsInteraction';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface ILabelTranslateMode {
 	originalFeature: olFeature,
@@ -51,7 +52,7 @@ export interface IEditAnnotationMode {
 // @dynamic
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [OpenLayersProjectionService, OL_PLUGINS_CONFIG],
+	deps: [OpenLayersProjectionService, OL_PLUGINS_CONFIG, TranslateService],
 	isHideable: true
 })
 export class AnnotationsVisualizer extends EntitiesVisualizer {
@@ -84,7 +85,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			this.labelTranslateMode(this.labelTranslate.originalFeature.getId())
 		}
 	});
-	clearAnnotationEditMode$ = tap( () => {
+	clearAnnotationEditMode$ = tap(() => {
 		this.clearAnnotationEditMode();
 	});
 
@@ -95,7 +96,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		tap((selected: any) => this.selected = selected));
 
 	@AutoSubscription
-	labelTranslate$ = this.events.onLabelTranslateStart.pipe(tap((labelTranslate ) => this.labelTranslate = labelTranslate ));
+	labelTranslate$ = this.events.onLabelTranslateStart.pipe(tap((labelTranslate) => this.labelTranslate = labelTranslate));
 
 	@AutoSubscription
 	editAnnotation$ = this.events.onAnnotationEditStart.pipe(tap(annotationEdit => this.currentAnnotationEdit = annotationEdit));
@@ -120,13 +121,16 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			color: '#000',
 			width: 3
 		}),
-		offsetY: 30
+		placement: 'line',
+		overflow: true,
+		rotateWithView: true
 	};
 
 	private iconSrc = '';
 
 	constructor(protected projectionService: OpenLayersProjectionService,
-				@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig) {
+				@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig,
+				protected translator: TranslateService) {
 
 		super(null, {
 			initial: {
@@ -146,10 +150,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					},
 					stroke: '#000',
 					fill: 'white',
-					offsetY: (feature: olFeature) => {
-						const { mode, label } = feature.getProperties();
-						return mode === 'Point' && !label.geometry ? 30 : 0;
-					},
+					offsetY: 30,
 					text: (feature: olFeature) => {
 						const entity = this.idToEntity.get(feature.getId());
 						if (entity) {
@@ -197,9 +198,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			return {
 				featureJson,
 				id: feature.properties.id,
-				style: feature.properties.style,
+				style: feature.properties.style || this.visualizerStyle,
 				showMeasures: feature.properties.showMeasures || false,
-				label: feature.properties.label || {text: '', geometry: null},
+				showArea: feature.properties.showArea || false,
+				label: feature.properties.label || { text: '', geometry: null },
 				icon: feature.properties.icon || '',
 				undeletable: feature.properties.undeletable || false,
 				labelSize: feature.properties.labelSize || 28,
@@ -311,6 +313,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			id,
 			style: cloneDeep(this.visualizerStyle),
 			showMeasures: false,
+			showArea: false,
 			label: { text: '', geometry: null },
 			labelSize: 28,
 			icon: this.iconSrc,
@@ -384,6 +387,9 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		if (entity && entity.showMeasures) {
 			styles.push(...this.getMeasuresAsStyles(feature));
 		}
+		if (entity && entity.showArea) {
+			styles.push(...this.areaStyles(feature));
+		}
 		if (entity && entity.icon) {
 			styles.push(this.getCenterIndicationStyle(feature));
 		}
@@ -448,18 +454,25 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				const leftright = this.getLeftRightResult(coordinates);
 				const originalLeftRight = this.getLeftRightResult(originalC);
 				const line: olLineString = new olLineString([leftright.left, leftright.right]);
+				const color = feature.values_.style.initial.stroke;
 				moreStyles.push(
 					new olStyle({
 						geometry: line,
 						stroke: new olStroke({
-							color: '#27b2cfe6',
+							color,
 							width: 1
 						}),
+					}),
+					new olStyle({
+						geometry: new olPoint(leftright.right),
 						text: new olText({
 							...this.measuresTextStyle,
-							text: this.formatLength([originalLeftRight.left, originalLeftRight.right])
+							text: this.formatLength([originalLeftRight.left, originalLeftRight.right]),
+							placement: 'point',
+							offsetX: 20
 						})
-					}));
+					})
+				);
 				break;
 		}
 		if (mode === 'Rectangle' || mode === 'Circle') {
@@ -493,24 +506,42 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		});
 	}
 
-	areaCircumferenceStyles(feature: any): olStyle[] {
+	convertPixelStringToNumeric(pixelString) {
+		pixelString.substring(0, pixelString.length - 2);
+		return parseInt(pixelString, 10);
+	}
+
+	getFeatureWidth(feature) {
+		const WidthString = this.getFeatureBoundingRect(feature).width;
+		return this.convertPixelStringToNumeric(WidthString);
+	}
+
+	getFeatureHeight(feature) {
+		const heightString = this.getFeatureBoundingRect(feature).height;
+		return this.convertPixelStringToNumeric(heightString);
+	}
+
+	areaStyles(feature: any): olStyle[] {
 		const geometry = feature.getGeometry();
-		const calcCircumference = this.formatLength(geometry);
+		const height = this.getFeatureHeight(feature);
+		const width = this.getFeatureWidth(feature);
 		const calcArea = this.formatArea(geometry);
-		const { height } = this.getFeatureBoundingRect(feature);
+		const areaText = this.translator.instant('Area');
+
 		return [
 			new olStyle({
 				text: new olText({
-					...this.measuresTextStyle,
-					text: `Circumference: ${ calcCircumference }`,
-					offsetY: -height / 2 - 44
-				})
-			}),
-			new olStyle({
-				text: new olText({
-					...this.measuresTextStyle,
-					text: `Area: ${ calcArea }`,
-					offsetY: -height / 2 - 25
+					font: '16px Calibri,sans-serif',
+					fill: new olFill({
+						color: '#fff'
+					}),
+					stroke: new olStroke({
+						color: '#000',
+						width: 3
+					}),
+					text: `${ calcArea } :${ areaText }`,
+					offsetY: height / 2,
+					offsetX: - (width / 2)
 				})
 			})
 		];
@@ -577,7 +608,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		let event = undefined;
 		let centerFeature;
 		let feature;
-		if (enable ) {
+		if (enable) {
 			feature = this.source.getFeatureById(featureId);
 			if (centerFeature) {
 				this.source.removeFeature(centerFeature);
@@ -593,8 +624,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				centerFeature
 			}
 
-		}
-		else {
+		} else {
 			centerFeature = this.currentAnnotationEdit.centerFeature;
 			this.removeInteraction(VisualizerInteractions.editAnnotationTranslateHandler);
 			this.removeInteraction(VisualizerInteractions.modifyInteractionHandler);
@@ -621,6 +651,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	private createModifyInteraction(feature: olFeature) {
 		const modify = new olModify({
 			features: new olCollection([feature])
+		});
+
+		modify.on('modifystart', () => {
+			if (['Rectangle'].includes(feature.get('mode'))) {
+				feature.set('mode', 'Polygon');
+			}
 		});
 
 		modify.on('modifyend', (event) => {
@@ -704,7 +740,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				font: `${ entity.labelSize + 2 }px Calibri,sans-serif`,
 				fill: new olFill({ color: entity.style.initial.label.fill }),
 				text: label.text,
-				offsetY: entityMode === 'Point' ? 30 : 0
+				offsetY: 30
 			})
 		}));
 

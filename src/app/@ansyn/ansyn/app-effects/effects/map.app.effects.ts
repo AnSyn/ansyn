@@ -3,7 +3,7 @@ import { CesiumMapName } from '@ansyn/imagery-cesium';
 import { DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { combineLatest, EMPTY, from, Observable, of, pipe } from 'rxjs';
+import { combineLatest, EMPTY, forkJoin, from, Observable, of, pipe } from 'rxjs';
 import {
 	ImageryCreatedAction,
 	IMapFacadeConfig,
@@ -19,17 +19,18 @@ import {
 	selectOverlaysWithMapIds,
 	SetIsLoadingAcion,
 	SetToastMessageAction,
+	SynchronizeMapsAction,
 	ToggleMapLayersAction,
 	UpdateMapAction
 } from '@ansyn/map-facade';
 import {
 	BaseMapSourceProvider,
 	bboxFromGeoJson,
-	CommunicatorEntity,
 	ImageryCommunicatorService,
 	ImageryMapPosition,
 	IMapSettings,
-	polygonFromBBOX
+	polygonFromBBOX,
+	polygonsDontIntersect
 } from '@ansyn/imagery';
 import {
 	catchError,
@@ -73,7 +74,7 @@ import {
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { isEqual } from 'lodash';
 import { selectGeoRegisteredOptionsEnabled } from '../../modules/menu-items/tools/reducers/tools.reducer';
-import { ImageryVideoMapType } from '../../modules/imagery-video/map/imagery-video-map';
+import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import { LoggerService } from '../../modules/core/services/logger.service';
 
 @Injectable()
@@ -93,6 +94,7 @@ export class MapAppEffects {
 			MapActionTypes.SET_LAYOUT_SUCCESS,
 			MapActionTypes.POSITION_CHANGED,
 			MapActionTypes.SYNCHRONIZE_MAPS,
+			MapActionTypes.EXPORT_MAPS_TO_PNG_REQUEST,
 			MapActionTypes.EXPORT_MAPS_TO_PNG_SUCCESS,
 			MapActionTypes.EXPORT_MAPS_TO_PNG_FAILED,
 			OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW,
@@ -198,6 +200,27 @@ export class MapAppEffects {
 			})
 		);
 
+	@Effect({ dispatch: false })
+	onSynchronizeAppMaps$: Observable<any> = this.actions$.pipe(
+		ofType(MapActionTypes.SYNCHRONIZE_MAPS),
+		withLatestFrom(this.store$.select(mapStateSelector)),
+		switchMap(([action, mapState]: [SynchronizeMapsAction, IMapState]) => {
+			const mapId = action.payload.mapId;
+			const mapSettings: IMapSettings = mapState.entities[mapId];
+			const mapPosition = mapSettings.data.position;
+			const setPositionObservables = [];
+			// handles only maps with overlays
+			Object.values(mapState.entities).forEach((mapItem: IMapSettings) => {
+				if (mapId !== mapItem.id && mapItem.data.overlay) {
+					const comm = this.imageryCommunicatorService.provide(mapItem.id);
+					setPositionObservables.push(this.setPosition(mapPosition, comm, mapItem));
+				}
+			});
+			return forkJoin(setPositionObservables).pipe(map(() => [action, mapState]));
+		})
+	);
+
+
 	@Effect()
 	overlayLoadingFailed$: Observable<any> = this.actions$
 		.pipe(
@@ -298,7 +321,7 @@ export class MapAppEffects {
 		const caseMapState = mapState.entities[payload.mapId || mapState.activeMapId];
 		const mapData = caseMapState.data;
 		const prevOverlay = mapData.overlay;
-		const isNotIntersect = MapFacadeService.isNotIntersect(mapData.position.extentPolygon, overlay.footprint, this.config.overlayCoverage);
+		const isNotIntersect = polygonsDontIntersect(mapData.position.extentPolygon, overlay.footprint, this.config.overlayCoverage);
 		const communicator = this.imageryCommunicatorService.provide(mapId);
 		const { sourceType } = overlay;
 		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({
@@ -408,5 +431,24 @@ export class MapAppEffects {
 
 	displayShouldSwitch([[prevAction, action]]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		return (action && prevAction) && (prevAction.payload.mapId === action.payload.mapId);
+	}
+
+	setPosition(position: ImageryMapPosition, comm, mapItem): Observable<any> {
+		if (mapItem.data.overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered) {
+			return this.cantSyncMessage();
+		}
+		const isNotIntersect = polygonsDontIntersect(position.extentPolygon, mapItem.data.overlay.footprint, this.config.overlayCoverage);
+		if (isNotIntersect) {
+			return this.cantSyncMessage();
+		}
+		return comm.setPosition(position);
+	}
+
+	cantSyncMessage(): Observable<any> {
+		this.store$.dispatch(new SetToastMessageAction({
+			toastText: 'At least one map couldn\'t be synchronized',
+			showWarningIcon: true
+		}));
+		return EMPTY;
 	}
 }

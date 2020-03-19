@@ -4,7 +4,7 @@
 		[disabled]="label?.text.length === 0"
 		(click)="onTranslateClick.emit()"
 		[attr.tooltip-value]="'Move Label' | translate" tooltip-class="bottom">
-		<i class="icon icon-drag" [class.active]="translateOn"></i>
+		<i class="icon icon-drag-annotations" [class.active]="translateOn"></i>
 	</button>
 	<form class="annotation-label-edit"
 	  (ngSubmit)="labelInput.blur()">

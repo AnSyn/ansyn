@@ -1,0 +1,97 @@
+@import "ansyn/less/colors";
+@import "ansyn/less/z-index-globals";
+
+:host {
+	position: absolute;
+	outline: none;
+	pointer-events: all;
+	border: 1px solid white;
+	box-sizing: border-box;
+	background-color: @background-color-3;
+	color: white;
+	display: flex;
+	align-items: center;
+	right: 0;
+	top: 0;
+	margin: 0;
+	padding: 2px;
+	transform: translate(calc(~'100% + 15px'), -12px);
+	transition: right 0.2s, top 0.2s;
+	z-index: @z-index-annotation-cotext-menu-buttons;
+
+	button {
+		background-color: @background-color-3;
+		color: white;
+		border: none;
+		outline: none;
+		padding: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 28px;
+
+		&.active, &:hover {
+			background-color: @application-primary-color;
+		}
+
+		&.disabled {
+			opacity: 0.6;
+			pointer-events: none;
+		}
+	}
+
+	div.expanded-selection {
+		position: relative;
+
+		button.expand {
+			background-color: #297f9b;
+		}
+
+		div.list {
+			display: flex;
+			flex-direction: column;
+			position: absolute;
+			top: 35px;
+			left: 0;
+			overflow: hidden;
+			padding: 0;
+			margin: 0;
+			text-align: center;
+			transition: height 0.3s;
+			background: @background-color-3;
+
+			.item {
+				cursor: pointer;
+
+				&:hover, &.selected {
+					background-color: #297f9b;
+				}
+			}
+
+			&.line-width-expand {
+				width: 100%;
+				outline: none;
+			}
+
+			&.color-selection-expand.open {
+				visibility: visible;
+			}
+		}
+	}
+
+	p {
+		margin: 0;
+	}
+
+	svg {
+		width: 32px;
+		height: 32px;
+		fill: #ffffff;
+	}
+
+	i {
+		font-style: normal;
+		display: inherit;
+	}
+
+}

@@ -1,49 +1,52 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { CredentialsService } from '../../services/credentials/credentials.service';
-import { tap } from 'rxjs/operators';
-import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
-import { selectIsMinimalistViewMode } from '@ansyn/map-facade';
+import { getMenuSessionData, UnSelectMenuItemAction } from '@ansyn/menu';
+import { SetUserEnter } from '@ansyn/menu';
+import { fromEvent, Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-credentials',
 	templateUrl: './credentials.component.html',
 	styleUrls: ['./credentials.component.less']
 })
-@AutoSubscriptions()
 export class CredentialsComponent implements OnInit, OnDestroy {
-	isOpen: boolean;
-	show: boolean;
-	credentialsMessage: any;
+	onClickOutside$: Subscription;
 
-	@AutoSubscription
-	isMinimalistViewMode$ = this.store$.select(selectIsMinimalistViewMode).pipe(
-		tap(isMinimalistViewMode => {
-			this.show = !isMinimalistViewMode;
-		})
-	);
+	constructor(public credentialsService: CredentialsService,
+				protected store$: Store<any>,
+				protected element: ElementRef) {
+		const menuSession = getMenuSessionData();
+		if (menuSession.isUserFirstEntrance) {
+			store$.dispatch(new SetUserEnter());
+		}
+	}
 
-	constructor(protected credentialsService: CredentialsService,
-				protected store$: Store<any>) {
-		this.isOpen = false;
+	hasAuthorized() {
+		return this.credentialsService.authorizedAreas.length > 0;
+	}
+
+	hasNoAuthorized() {
+		return this.credentialsService.unauthorizedAreas.length > 0;
 	}
 
 	ngOnInit() {
-		this.credentialsService.getCredentials().pipe(
-			tap(() => {
-				this.credentialsMessage = this.credentialsService.credentials;
+		this.onClickOutside$ = fromEvent(this.element.nativeElement, 'click').pipe(
+			tap((event: any) => {
+				if ((event.path && !event.path.includes(this.element.nativeElement.lastChild))) {
+					this.closeWindow();
+				}
 			})
 		).subscribe();
 	}
 
-	ngOnDestroy() {
-
+	ngOnDestroy(): void {
+		this.onClickOutside$.unsubscribe();
 	}
 
-	openCredentials() {
+	closeWindow() {
+		this.store$.dispatch(new UnSelectMenuItemAction())
 	}
 
-	setIsOpenMode() {
-		this.isOpen = !this.isOpen;
-	}
 }

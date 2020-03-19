@@ -4,7 +4,7 @@ import {
 	areCoordinatesNumeric,
 	BaseImageryMap,
 	ExtentCalculator,
-	ICanvasExportData,
+	IMAGERY_BASE_MAP_LAYER,
 	IMAGERY_MAIN_LAYER_NAME,
 	ImageryLayerProperties,
 	ImageryMap,
@@ -51,52 +51,43 @@ export enum StaticGroupsKeys {
 export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	static groupsKeys = StaticGroupsKeys;
 	static groupLayers = new Map<StaticGroupsKeys, Group>(Object.values(StaticGroupsKeys).map((key) => [key, new Group()]) as any);
-	private showGroups = new Map<StaticGroupsKeys, boolean>();
 	private _mapObject: OLMap;
 	private _backgroundMapObject: OLMap;
-	private _backgroundMapParams: object;
-	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
-	private _mapLayers = [];
 	public isValidPosition;
 	targetElement: HTMLElement = null;
 	public shadowNorthElement = null;
+	getMoveEndPositionObservable = new Subject<ImageryMapPosition>();
+	getMoveStartPositionObservable = new Subject<ImageryMapPosition>();
+	subscribers = [];
+	private showGroups = new Map<StaticGroupsKeys, boolean>();
+	private _backgroundMapParams: object;
+	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
+	private _mapLayers = [];
 	private isLoading$: Subject<boolean> = new Subject();
-
 	private monitor: OpenLayersMonitor = new OpenLayersMonitor(
 		this.tilesLoadProgressEventEmitter,
 		this.tilesLoadErrorEventEmitter,
 		this.http
 	);
 
-	getMoveEndPositionObservable = new Subject<ImageryMapPosition>();
-	getMoveStartPositionObservable = new Subject<ImageryMapPosition>();
-	subscribers = [];
+	constructor(protected http: HttpClient,
+				public projectionService: OpenLayersProjectionService,
+				@Inject(OL_CONFIG) public olConfig: IOlConfig) {
+		super();
+		// todo: a more orderly way to give default values to config params
+		this.olConfig.tilesLoadingDoubleBuffer = this.olConfig.tilesLoadingDoubleBuffer || {
+			debounceTimeInMs: 500,
+			timeoutInMs: 3000
+		};
+	}
 
-	private _moveEndListener: () => void = () => {
-		this.getMoveEndPositionObservable.next(null);
-	};
+	public get mapObject() {
+		return this._mapObject;
+	}
 
-	private _pointerMoveListener: (args) => void = (args) => {
-		const point = <GeoPoint>turf.geometry('Point', args.coordinate);
-		return this.projectionService.projectApproximately(point, this.mapObject).pipe(
-			take(1),
-			tap((projectedPoint) => {
-				if (areCoordinatesNumeric(projectedPoint.coordinates)) {
-					this.mousePointerMoved.emit({
-						long: projectedPoint.coordinates[0],
-						lat: projectedPoint.coordinates[1],
-						height: NaN
-					});
-				} else {
-					this.mousePointerMoved.emit({ long: NaN, lat: NaN, height: NaN });
-				}
-			}))
-			.subscribe();
-	};
-
-	private _moveStartListener: () => void = () => {
-		this.getMoveStartPositionObservable.next(null);
-	};
+	public get backgroundMapObject() {
+		return this._backgroundMapObject;
+	}
 
 	signalWhenTilesLoadingEnds() {
 		this.isLoading$.next(true);
@@ -113,22 +104,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			}),
 			take(1)
 		).subscribe();
-	}
-
-	private _pointerDownListener: (args) => void = () => {
-		(<any>document.activeElement).blur();
-	};
-
-	constructor(protected http: HttpClient,
-				public projectionService: OpenLayersProjectionService,
-				@Inject(OL_CONFIG) public olConfig: IOlConfig
-	) {
-		super();
-		// todo: a more orderly way to give default values to config params
-		this.olConfig.tilesLoadingDoubleBuffer = this.olConfig.tilesLoadingDoubleBuffer || {
-			debounceTimeInMs: 500,
-			timeoutInMs: 3000
-		};
 	}
 
 	/**
@@ -266,21 +241,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		}
 	}
 
-	// Used by resetView()
-	private _setMapPositionOrExtent(map: OLMap, position: ImageryMapPosition, extent: ImageryMapExtent, rotation: number): Observable<boolean> {
-		if (extent) {
-			this.fitToExtent(extent, map).subscribe();
-			if (rotation) {
-				this.setRotation(rotation, map);
-			}
-			this.isValidPosition = true;
-		} else if (position) {
-			return this.setPosition(position, map);
-		}
-
-		return of(true);
-	}
-
 	public getLayerById(id: string): Layer {
 		return <Layer>this.mapObject.getLayers().getArray().find(item => item.get(ImageryLayerProperties.ID) === id);
 	}
@@ -322,6 +282,17 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		);
 	}
 
+	public addMapLayer(layer: any) {
+		const main = this.getMainLayer();
+		const baseMapLayer = this._mapLayers.find((layer: Layer) => layer.get(ImageryLayerProperties.NAME) === IMAGERY_BASE_MAP_LAYER);
+		if (baseMapLayer) {
+			this.removeLayer(baseMapLayer);
+		}
+		if (layer.get(ImageryLayerProperties.ID) !== main.get(ImageryLayerProperties.ID)) {
+			this.addLayer(layer);
+		}
+	}
+
 	public addLayer(layer: any) {
 
 		if (!this._mapLayers.includes(layer)) {
@@ -352,14 +323,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this._mapLayers = this._mapLayers.filter((mapLayer) => mapLayer !== layer);
 		this._mapObject.removeLayer(layer);
 		this._mapObject.renderSync();
-	}
-
-	public get mapObject() {
-		return this._mapObject;
-	}
-
-	public get backgroundMapObject() {
-		return this._backgroundMapObject;
 	}
 
 	public setCenter(center: GeoPoint, animation: boolean): Observable<boolean> {
@@ -555,7 +518,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		view.setZoom(current + 1);
 	}
 
-
 	flyTo(location: [number, number]) {
 		const view = this._mapObject.getView();
 		view.animate({
@@ -586,24 +548,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return this.targetElement;
 	}
 
-	getExportData(): ICanvasExportData {
-		const c: HTMLCanvasElement = this.mapObject.getViewport().firstChild;
-		let exportData: ICanvasExportData = {
-			width: c.width,
-			height: c.height,
-			data: null
-		};
-		try {
-			exportData = {
-				width: c.width,
-				height: c.height,
-				data: c.toDataURL('image/jpeg', 1.0)
-			}
-		} catch (e) {
-		}
-		return exportData;
-	}
-
 	// BaseImageryMap End
 	public dispose() {
 		this.removeAllLayers();
@@ -626,5 +570,50 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		}
 
 		this.monitor.dispose();
+	}
+
+	private _moveEndListener: () => void = () => {
+		this.getMoveEndPositionObservable.next(null);
+	};
+
+	private _pointerMoveListener: (args) => void = (args) => {
+		const point = <GeoPoint>turf.geometry('Point', args.coordinate);
+		return this.projectionService.projectApproximately(point, this.mapObject).pipe(
+			take(1),
+			tap((projectedPoint) => {
+				if (areCoordinatesNumeric(projectedPoint.coordinates)) {
+					this.mousePointerMoved.emit({
+						long: projectedPoint.coordinates[0],
+						lat: projectedPoint.coordinates[1],
+						height: NaN
+					});
+				} else {
+					this.mousePointerMoved.emit({ long: NaN, lat: NaN, height: NaN });
+				}
+			}))
+			.subscribe();
+	};
+
+	private _moveStartListener: () => void = () => {
+		this.getMoveStartPositionObservable.next(null);
+	};
+
+	private _pointerDownListener: (args) => void = () => {
+		(<any>document.activeElement).blur();
+	};
+
+	// Used by resetView()
+	private _setMapPositionOrExtent(map: OLMap, position: ImageryMapPosition, extent: ImageryMapExtent, rotation: number): Observable<boolean> {
+		if (extent) {
+			this.fitToExtent(extent, map).subscribe();
+			if (rotation) {
+				this.setRotation(rotation, map);
+			}
+			this.isValidPosition = true;
+		} else if (position) {
+			return this.setPosition(position, map);
+		}
+
+		return of(true);
 	}
 }

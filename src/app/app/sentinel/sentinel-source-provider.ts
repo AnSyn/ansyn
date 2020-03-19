@@ -36,6 +36,8 @@ import {
 const DEFAULT_OVERLAYS_LIMIT = 50;
 export const SentinelOverlaySourceType = 'SENTINEL';
 
+export const sentinelOverlaySourceConfig = 'sentinelOverlaysSourceConfig';
+
 export interface ISentinelOverlaySourceConfig {
 	baseUrl: string;
 }
@@ -46,14 +48,10 @@ export interface ISentinelOverlaySourceConfig {
 export class SentinelSourceProvider extends BaseOverlaySourceProvider {
 	private olGeoJSON: OLGeoJSON = new OLGeoJSON();
 
-	get config(): ISentinelOverlaySourceConfig {
-		return this.mapSourceProvidersConfig[this.sourceType];
-	}
-
 	constructor(public errorHandlerService: ErrorHandlerService,
 				protected loggerService: LoggerService,
 				protected http: HttpClient,
-				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig,
+				@Inject(sentinelOverlaySourceConfig) protected config: ISentinelOverlaySourceConfig,
 				@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				protected store: Store<any>) {
 		super(loggerService);
@@ -77,7 +75,7 @@ export class SentinelSourceProvider extends BaseOverlaySourceProvider {
 		} else {
 			bbox = bboxFromGeoJson(fetchParams.region as GeoJSON.Polygon);
 		}
-		// bbox = proj.transform(bbox, 'EPSG:4326', 'EPSG:3857');
+		// bbox = proj.transform(bbox, EPSG_4326, EPSG_3857);
 		const { start, end } = fetchParams.timeRange;
 		const params = {
 			region: fetchParams.region,

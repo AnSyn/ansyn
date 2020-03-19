@@ -28,6 +28,7 @@ export interface IToastMessage {
 }
 
 export const MapActionTypes = {
+	POINT_TO_IMAGE_ORIENTATION: 'POINT_TO_IMAGE_ORIENTATION',
 	POINT_TO_REAL_NORTH: 'POINT_TO_REAL_NORTH',
 	POSITION_CHANGED: 'POSITION_CHANGED',
 	UPDATE_MAP_SIZE: 'UPDATE_MAP_SIZE',
@@ -78,9 +79,13 @@ export const MapActionTypes = {
 	SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG: 'SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG',
 	SET_TOAST_MESSAGE: 'SET_TOAST_MESSAGE',
 	FOOTER_COLLAPSE: 'FOOTER_COLLAPSE',
+	EXPORT_MAPS_TO_PNG_REQUEST: 'EXPORT_MAPS_TO_PNG_REQUEST',
 	EXPORT_MAPS_TO_PNG_SUCCESS: 'EXPORT_MAPS_TO_PNG_SUCCESS',
 	EXPORT_MAPS_TO_PNG_FAILED: 'EXPORT_MAPS_TO_PNG_FAILED',
 	SET_MINIMALIST_VIEW_MODE: '[Maps] Set Minimalist View Mode',
+	REPLACE_MAP_MAIN_LAYER: '[Maps] replace Main Layer',
+	REPLACE_MAP_MAIN_LAYER_SUCCESS: '[Maps] replace Main Layer success',
+	REPLACE_MAP_MAIN_LAYER_FAILED: '[Maps] replace Main Layer failed'
 };
 
 export interface IContextMenuShowPayload {
@@ -105,6 +110,13 @@ export class SetMinimalistViewModeAction implements Action {
 	}
 }
 
+export class ExportMapsToPngRequestedAction implements Action {
+	readonly type = MapActionTypes.EXPORT_MAPS_TO_PNG_REQUEST;
+
+	constructor() {
+	}
+}
+
 export class ExportMapsToPngActionSuccess implements Action {
 	readonly type = MapActionTypes.EXPORT_MAPS_TO_PNG_SUCCESS;
 
@@ -123,6 +135,14 @@ export class PointToRealNorthAction implements Action {
 	type = MapActionTypes.POINT_TO_REAL_NORTH;
 
 	constructor(public payload: string) {
+	}
+}
+
+export class PointToImageOrientationAction implements Action {
+	type = MapActionTypes.POINT_TO_IMAGE_ORIENTATION;
+
+	// todo: remove overlay from mapFacade
+	constructor(public payload: { mapId: string, overlay: any }) {
 	}
 }
 
@@ -294,9 +314,25 @@ export class ChangeImageryMapSuccess implements Action {
 export class ChangeImageryMapFailed implements Action {
 	readonly type = MapActionTypes.CHANGE_IMAGERY_MAP_FAILED;
 
-	constructor(public payload: { id: string, error: any}) {
+	constructor(public payload: { id: string, error: any }) {
 	}
 }
+
+export class ReplaceMainLayer implements Action {
+	readonly type = MapActionTypes.REPLACE_MAP_MAIN_LAYER;
+	constructor( public payload: { id: string, sourceType: string }) { }
+}
+
+export class ReplaceMainLayerSuccess implements Action {
+	readonly type = MapActionTypes.REPLACE_MAP_MAIN_LAYER_SUCCESS;
+	constructor( public payload: { id: string, sourceType: string }) { }
+}
+
+export class ReplaceMainLayerFailed implements Action {
+	readonly type = MapActionTypes.REPLACE_MAP_MAIN_LAYER_FAILED;
+
+}
+
 
 export class SetMapsDataActionStore implements Action {
 	type = MapActionTypes.SET_MAPS_DATA;
@@ -350,7 +386,7 @@ export class SetLayoutSuccessAction implements Action {
 export class ToggleMapLayersAction implements Action {
 	type = MapActionTypes.TOGGLE_MAP_LAYERS;
 
-	constructor(public payload: { mapId: string, isVisible: boolean}) {
+	constructor(public payload: { mapId: string, isVisible: boolean }) {
 	}
 }
 

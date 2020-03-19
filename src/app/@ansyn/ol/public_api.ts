@@ -1,6 +1,8 @@
-export { IStyleWeight } from './plugins/annotations/annotations-context-menu/components/annotations-weight/annotations-weight.component';
+export { OpenLayerESRI_4326SourceProviderSourceType } from './mapSourceProviders/open-layers-ESRI-4326-source-provider';
 
-export { IAirbusOverlaySourceConfig, OpenLayersAirbusSourceProvider } from './mapSourceProviders/open-layers-Airbus-source-provider';
+export { OpenLayerPic4CartoSourceProvider } from './mapSourceProviders/open-layers-Pic4Carto-source-provider';
+export { IStyleWeight } from './plugins/annotations/annotations-context-menu/components/annotations-weight/annotations-weight.component';
+export { OpenLayersAirbusSourceProvider } from './mapSourceProviders/open-layers-Airbus-source-provider';
 
 export { removeWorkers } from './maps/open-layers-map/shared/openlayers-shared';
 

@@ -19,13 +19,7 @@ export class AlertsContainerComponent implements OnInit, OnDestroy {
 
 	alertMsg: AlertMsg;
 	overlay: IOverlay;
-	mapsAmount: number;
 	@Input() mapId: string;
-
-	@AutoSubscription
-	mapsAmount$ = this.store$.select(selectMapsTotal).pipe(
-		tap((mapsAmount) => this.mapsAmount = mapsAmount)
-	);
 
 	@AutoSubscription
 	alertMsg$: () => Observable<any> = () => combineLatest(this.store$.select(selectAlertMsg), this.store$.select(selectOverlayByMapId(this.mapId))).pipe(
@@ -55,13 +49,6 @@ export class AlertsContainerComponent implements OnInit, OnDestroy {
 		}
 
 		return this.overlay.isGeoRegistered === 'notGeoRegistered';
-	}
-
-	get poorGeoRegistered() {
-		if (!this.overlay) {
-			return false;
-		}
-		return this.overlay.isGeoRegistered === 'poorGeoRegistered';
 	}
 
 	ngOnInit() {

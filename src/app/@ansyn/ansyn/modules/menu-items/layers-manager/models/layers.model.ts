@@ -19,7 +19,7 @@ export enum layerPluginTypeEnum {
 export interface ILayer extends IEntity {
 	url?: string;
 	name: string;
-	type: LayerType;
+	type: LayerType | string;
 	layerPluginType: layerPluginType;
 	data?: any;
 	caseId?: string;

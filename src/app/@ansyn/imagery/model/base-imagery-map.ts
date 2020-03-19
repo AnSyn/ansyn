@@ -14,7 +14,6 @@ export interface ICanvasExportData {
 	width: number;
 	height: number;
 	data: string;
-
 }
 
 export interface IBaseImageryMapConstructor {
@@ -59,6 +58,10 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract addLayer(layer: any): void;
 
+	addMapLayer(layer: any): void {
+		throw new Error('Method not implemented.');
+	};
+
 	getMainLayer(): any {
 		throw new Error('Method not implemented.');
 	}
@@ -92,8 +95,6 @@ export abstract class BaseImageryMap<T = any> {
 	abstract getCoordinateFromScreenPixel(screenPixel: { x, y }): [number, number, number];
 
 	abstract getHtmlContainer(): HTMLElement;
-
-	abstract getExportData(): ICanvasExportData;
 
 	fitToExtent(extent: any): Observable<any> {
 		throw new Error('Method not implemented.');

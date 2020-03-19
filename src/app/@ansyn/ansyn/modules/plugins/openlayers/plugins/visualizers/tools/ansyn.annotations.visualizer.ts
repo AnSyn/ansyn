@@ -4,10 +4,15 @@ import { select, Store } from '@ngrx/store';
 import { selectActiveMapId, selectOverlayByMapId } from '@ansyn/map-facade';
 import { combineLatest, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
-import { distinctUntilChanged, map, mergeMap, tap, withLatestFrom, take } from 'rxjs/operators';
+import { distinctUntilChanged, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { selectGeoFilterSearchMode } from '../../../../../status-bar/reducers/status-bar.reducer';
-import { selectAnnotationMode } from '../../../../../menu-items/tools/reducers/tools.reducer';
+import {
+	selectAnnotationMode,
+	selectAnnotationProperties,
+	selectSubMenu,
+	SubMenuEnum
+} from '../../../../../menu-items/tools/reducers/tools.reducer';
 import { featureCollection, FeatureCollection } from '@turf/turf';
 import {
 	AnnotationMode,
@@ -21,14 +26,10 @@ import {
 import { ILayer, LayerType } from '../../../../../menu-items/layers-manager/models/layers.model';
 import {
 	selectActiveAnnotationLayer,
+	selectLayers,
 	selectLayersEntities,
 	selectSelectedLayersIds
 } from '../../../../../menu-items/layers-manager/reducers/layers.reducer';
-import {
-	selectAnnotationProperties,
-	selectSubMenu,
-	SubMenuEnum
-} from '../../../../../menu-items/tools/reducers/tools.reducer';
 import {
 	AnnotationRemoveFeature,
 	AnnotationUpdateFeature,
@@ -60,6 +61,11 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			return entities[activeAnnotationLayerId];
 		})
 	);
+
+	getAllAnotationLayers$: Observable<any> = this.store$.select(selectLayers).pipe(
+		map( (layers: ILayer[]) => layers.filter(layer => layer.type === LayerType.annotation))
+	);
+
 	annotationFlag$ = this.store$.select(selectSubMenu).pipe(
 		map((subMenu: SubMenuEnum) => subMenu === SubMenuEnum.annotations),
 		distinctUntilChanged());
@@ -170,22 +176,26 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 
 	@AutoSubscription
 	onAnnotationEditEnd$ = () => this.annotationsVisualizer.events.onAnnotationEditEnd.pipe(
-		withLatestFrom(this.activeAnnotationLayer$),
-		tap(([{ GeoJSON, feature }, activeAnnotationLayer]: [IDrawEndEvent, ILayer]) => {
+		withLatestFrom(this.getAllAnotationLayers$),
+		tap(([{ GeoJSON, feature }, AnnotationLayers]: [IDrawEndEvent, ILayer[]]) => {
 			const [geoJsonFeature] = GeoJSON.features;
-			const data = <FeatureCollection<any>>{ ...activeAnnotationLayer.data };
+			const layerToUpdate = AnnotationLayers.find((layer: ILayer) => layer.data.features.some(({ id }) => id === geoJsonFeature.id));
+			const data = <FeatureCollection<any>>{ ...layerToUpdate.data };
 			const annotationToChangeIndex = data.features.findIndex((feature) => feature.id === geoJsonFeature.id);
 			data.features[annotationToChangeIndex] = geoJsonFeature;
+			let label = geoJsonFeature.properties.label;
+			if (geoJsonFeature.properties.label.geometry) {
+				label = {...geoJsonFeature.properties.label, geometry: GeoJSON.features[1].geometry}
+			}
+			feature.set('label', label);
 			if (this.overlay) {
 				geoJsonFeature.properties = {
 					...geoJsonFeature.properties,
 					...this.projectionService.getProjectionProperties(this.communicator, data, feature, this.overlay)
 				};
 			}
-			const label = geoJsonFeature.properties.label.geometry ?
-				{...geoJsonFeature.properties.label, geometry: GeoJSON.features[1].geometry} : geoJsonFeature.properties.label;
 			geoJsonFeature.properties = { ...geoJsonFeature.properties , label};
-			this.store$.dispatch(new UpdateLayer(<ILayer>{ ...activeAnnotationLayer, data }));
+			this.store$.dispatch(new UpdateLayer(<ILayer>{ ...layerToUpdate, data }));
 			})
 	);
 
@@ -251,12 +261,13 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 				const oldEntity = this.annotationsVisualizer.idToEntity.get(entity.id);
 				if (oldEntity) {
 					const isShowMeasuresDiff = oldEntity.originalEntity.showMeasures !== entity.showMeasures;
+					const isShowAreaDiff = oldEntity.originalEntity.showArea !== entity.showArea;
 					const isLabelDiff = oldEntity.originalEntity.label !== entity.label;
 					const isFillDiff = oldEntity.originalEntity.style.initial.fill !== entity.style.initial.fill;
 					const isStrokeWidthDiff = oldEntity.originalEntity.style.initial['stroke-width'] !== entity.style.initial['stroke-width'];
 					const isStrokeDiff = oldEntity.originalEntity.style.initial['stroke'] !== entity.style.initial['stroke'];
 					const isOpacityDiff = ['fill-opacity', 'stroke-opacity'].filter((o) => oldEntity.originalEntity.style.initial[o] !== entity.style.initial[o]);
-					return isShowMeasuresDiff || isLabelDiff || isFillDiff || isStrokeWidthDiff || isStrokeDiff || isOpacityDiff;
+					return isShowMeasuresDiff || isLabelDiff || isFillDiff || isStrokeWidthDiff || isStrokeDiff || isOpacityDiff || isShowAreaDiff;
 				}
 				return true;
 			});

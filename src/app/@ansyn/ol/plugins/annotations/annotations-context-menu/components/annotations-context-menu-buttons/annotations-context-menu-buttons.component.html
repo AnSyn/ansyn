@@ -1,0 +1,109 @@
+<div>
+	<button [class.active]="annotations?.currentAnnotationEdit?.originalFeature?.getId() === featureId"
+			[class.disabled]="isFeatureNonEditable"
+			(click)="toggleEditMode()">
+		<i [attr.tooltip-value]="'Edit' | translate" tooltip-class="bottom">
+			<svg>
+				<path [attr.d]="SVGICON.editModeSvg"></path>
+			</svg>
+		</i>
+	</button>
+</div>
+
+<div>
+	<button [class.active]="getFeatureProps()?.showMeasures"
+			(click)="toggleMeasures()"
+			[class.disabled]="getFeatureProps()?.mode === 'Point'">
+		<i [attr.tooltip-value]="'Measures' | translate" tooltip-class="bottom">
+			<svg fill="#fff">
+				<path [attr.d]="SVGICON.measureSvg"></path>
+			</svg>
+		</i>
+	</button>
+</div>
+
+<div>
+	<button [class.active]="getFeatureProps()?.showArea"
+			(click)="toggleArea()"
+			[class.disabled]="getFeatureProps()?.mode === 'Point' ||
+			 				  getFeatureProps()?.mode === 'LineString' ||
+			 				  getFeatureProps()?.mode === 'Arrow'">
+		<i [attr.tooltip-value]="'Area' | translate" tooltip-class="bottom">
+			<svg fill="#fff">
+				<path *ngFor= "let area of SVGICON.areaSvg" [attr.d]="area"></path>
+			</svg>
+		</i>
+	</button>
+</div>
+
+<div>
+	<button [class.active]="selectedTab[featureId] === Tabs.Label"
+			(click)="selectTab(Tabs.Label)">
+		<i [attr.tooltip-value]="'Label' | translate" tooltip-class="bottom">
+			<svg>
+				<path [attr.d]="SVGICON.labelSvg"></path>
+			</svg>
+		</i>
+	</button>
+	<ansyn-annotation-label *ngIf="selectedTab[featureId] === Tabs.Label"
+							[label]="getFeatureProps()?.label"
+							[labelSize]="annotations.idToEntity.get(featureId)?.originalEntity.labelSize"
+							[translateOn]="getFeatureProps()?.labelTranslateOn"
+							(onChangeText)="updateLabel($event)"
+							(onChangeSize)="updateLabelSize($event)"
+							(onTranslateClick)="annotations.labelTranslateMode(featureId)">
+	</ansyn-annotation-label>
+</div>
+
+<div class="expanded-selection line-width-selection">
+	<p>
+		<button [class.active]="selectedTab[featureId] === Tabs.Weight"
+				(click)="selectTab(Tabs.Weight)"
+				[class.disabled]="getFeatureProps()?.mode === 'Point'">
+			<i [attr.tooltip-value]="'Width' | translate" tooltip-class="bottom">
+				<svg>
+					<path [attr.d]="SVGICON.editWeightSvg"></path>
+				</svg>
+			</i>
+		</button>
+		<ansyn-annotations-weight
+			[show]="selectedTab[featureId] === Tabs.Weight"
+			[properties]="getFeatureProps()?.style?.initial"
+			(selectLineStyle)="selectLineWidth($event, featureId)">
+		</ansyn-annotations-weight>
+	</p>
+</div>
+
+<div>
+	<p>
+		<button [class.active]="selectedTab[featureId] === Tabs.Colors"
+				[class.disabled]="isFeatureNonEditable"
+				(click)="selectTab(Tabs.Colors)">
+			<i [attr.tooltip-value]="'Color' | translate" tooltip-class="bottom">
+				<svg>
+					<path [attr.d]="SVGICON.editColorSvg"></path>
+				</svg>
+			</i>
+		</button>
+		<ansyn-annotations-color
+			[show]="selectedTab[featureId] === Tabs.Colors"
+			[properties]="getFeatureProps()?.style?.initial"
+			[fillModeActive]="featureProps?.mode !== 'Arrow' && featureProps?.mode !== 'LineString'"
+			[strokeModeActive]="featureProps?.mode !== 'Point'"
+			(colorChange)="colorChange($event)"
+			(activeChange)="activeChange($event)"
+		></ansyn-annotations-color>
+	</p>
+</div>
+
+<div *ngIf="!featureProps?.undeletable">
+	<button class='removeFeature' (click)="removeFeature()"
+			[class.disabled]="isFeatureNonEditable"
+	>
+		<i [attr.tooltip-value]="'Delete' | translate" tooltip-class="bottom">
+			<svg>
+				<path [attr.d]="SVGICON.deleteSvg"></path>
+			</svg>
+		</i>
+	</button>
+</div>

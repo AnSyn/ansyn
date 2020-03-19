@@ -1,19 +1,27 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MapFacadeService } from '@ansyn/map-facade';
 import {
 	ClearActiveInteractionsAction,
-	SetAutoImageProcessing,
 	SetMeasureDistanceToolState,
 	SetSubMenu,
+	ShowOverlaysFootprintAction,
 	StartMouseShadow,
 	StopMouseShadow
 } from '../actions/tools.actions';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { selectSubMenu, selectToolFlag, selectToolFlags, SubMenuEnum, toolsFlags } from '../reducers/tools.reducer';
+import {
+	IToolsState,
+	selectSubMenu,
+	selectToolFlags,
+	SubMenuEnum,
+	toolsFlags,
+	toolsStateSelector
+} from '../reducers/tools.reducer';
 import { filter, map, tap } from 'rxjs/operators';
 import { selectActiveAnnotationLayer } from '../../layers-manager/reducers/layers.reducer';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { MatDialog } from '@angular/material/dialog';
+import { ExportMapsPopupComponent } from '../export-maps-popup/export-maps-popup.component';
 
 @Component({
 	selector: 'ansyn-tools',
@@ -25,28 +33,37 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 	destroy: 'ngOnDestroy'
 })
 export class ToolsComponent implements OnInit, OnDestroy {
+	isDialogShowing = false;
 	isImageControlActive = false;
 	public displayModeOn = false;
 	public flags: Map<toolsFlags, boolean>;
 
 	@AutoSubscription
-	public flags$: Observable<Map<toolsFlags, boolean>> = this.store.select(selectToolFlags).pipe(
+	public flags$: Observable<Map<toolsFlags, boolean>> = this.store$.select(selectToolFlags).pipe(
 		tap((flags: Map<toolsFlags, boolean>) => this.flags = flags)
 	);
 
 	@AutoSubscription
+	public selectedMapOverlaysMode$: Observable<IToolsState> = this.store$.pipe(
+		select(toolsStateSelector),
+		tap((state: IToolsState) => {
+			this.displayModeOn = state.activeOverlaysFootprintMode === 'Polygon';
+		})
+	);
+
+	@AutoSubscription
 	public imageProcessingDisabled$: Observable<boolean> =
-		this.store.select(selectToolFlag(toolsFlags.imageProcessingDisabled)).pipe(
+		this.store$.select(selectToolFlag(toolsFlags.imageProcessingDisabled)).pipe(
 			filter<boolean>(Boolean),
 			tap(this.closeManualProcessingMenu.bind(this))
 		);
 
-	isActiveAnnotationLayer$ = this.store.select(selectActiveAnnotationLayer).pipe(
+	isActiveAnnotationLayer$ = this.store$.select(selectActiveAnnotationLayer).pipe(
 		map(Boolean)
 	);
 
 	@AutoSubscription
-	subMenu$ = this.store.select(selectSubMenu).pipe(
+	subMenu$ = this.store$.select(selectSubMenu).pipe(
 		tap((subMenu) => this.subMenu = subMenu)
 	);
 
@@ -85,7 +102,8 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	}
 
 	// @TODO display the shadow mouse only if there more then one map .
-	constructor(protected store: Store<any>, protected mapFacadeService: MapFacadeService) {
+	constructor(protected store$: Store<any>,
+				public dialog: MatDialog) {
 
 	}
 
@@ -100,30 +118,43 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		const value = this.onShadowMouse;
 
 		if (value) {
-			this.store.dispatch(new StopMouseShadow({ fromUser: true }));
+			this.store$.dispatch(new StopMouseShadow({ fromUser: true }));
 		} else {
-			this.store.dispatch(new StartMouseShadow({ fromUser: true }));
+			this.store$.dispatch(new StartMouseShadow({ fromUser: true }));
 		}
 	}
 
 	toggleMeasureDistanceTool() {
 		const value = this.onMeasureTool;
-		this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [] }));
-		this.store.dispatch(new SetMeasureDistanceToolState(!value));
+		this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [] }));
+		this.store$.dispatch(new SetMeasureDistanceToolState(!value));
 	}
 
-	toggleAutoImageProcessing() {
-		this.store.dispatch(new SetAutoImageProcessing());
-		this.closeManualProcessingMenu();
+	// toggleAutoImageProcessing() {
+	// 	this.store$.dispatch(new SetAutoImageProcessing());
+	// 	this.closeManualProcessingMenu();
+	// }
+
+	toggleDisplayFootprints() {
+		if (this.displayModeOn) {
+			this.store$.dispatch(new ShowOverlaysFootprintAction('None'));
+		} else {
+			this.store$.dispatch(new ShowOverlaysFootprintAction('Polygon'));
+		}
 	}
 
-	toggleSubMenu(subMenu: SubMenuEnum) {
+	toggleSubMenu(subMenu: SubMenuEnum, event: MouseEvent = null) {
+		if (event) {
+			// In order that the sub menu will not recognize the click on the
+			// button as a "click outside" and close itself
+			event.stopPropagation();
+		}
 		const value = (subMenu !== this.subMenu) ? subMenu : null;
-		this.store.dispatch(new SetSubMenu(value));
+		this.store$.dispatch(new SetSubMenu(value));
 	}
 
 	onAnimation() {
-		this.store.dispatch(new SetSubMenu(null));
+		this.store$.dispatch(new SetSubMenu(null));
 	}
 
 	isExpand(subMenu: SubMenuEnum): boolean {
@@ -136,7 +167,11 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	exportMapsToPng() {
-		this.mapFacadeService.exportMapsToPng();
+	toggleExportMapsDialog() {
+		if (!this.isDialogShowing) {
+			const dialogRef = this.dialog.open(ExportMapsPopupComponent, { panelClass: 'custom-dialog' });
+			dialogRef.afterClosed().subscribe(() => this.isDialogShowing = false);
+			this.isDialogShowing = !this.isDialogShowing;
+		}
 	}
 }

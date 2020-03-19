@@ -3,6 +3,7 @@ import { LoggerConfig } from '../models/logger.config';
 import { ILoggerConfig } from '../models/logger-config.model';
 import { Debounce } from 'lodash-decorators';
 import * as momentNs from 'moment';
+
 const moment = momentNs;
 
 export type Severity = 'CRITICAL' | 'ERROR' | 'WARNING' | 'INFO' | 'DEBUG'
@@ -18,7 +19,7 @@ const defaultSubType = '';
 @Injectable()
 export class LoggerService implements ErrorHandler {
 	env = 'ENV'; // default (unknown environment)
-	componentName = 'app';
+	component = 'app';
 	stack: ILogObject[] = [];
 	disconnectionInMilliseconds: number;
 	timeoutCookie;
@@ -41,7 +42,7 @@ export class LoggerService implements ErrorHandler {
 
 	constructor(@Inject(LoggerConfig) public loggerConfig: ILoggerConfig) {
 		this.env = loggerConfig.env;
-		this.componentName = loggerConfig.componentName;
+		this.component = loggerConfig.component;
 		this.disconnectionInMilliseconds = new Date().getTime() - moment().subtract(this.loggerConfig.disconnectionTimeoutInMinutes, 'minutes').toDate().getTime();
 		this.isConnected = false;
 		window.onerror = (e) => {
@@ -50,7 +51,7 @@ export class LoggerService implements ErrorHandler {
 	}
 
 	get standardPrefix() {
-		return `Ansyn[${ this.env }, ${ this.componentName }]`;
+		return `Ansyn[${ this.env }, ${ this.component }]`;
 	}
 
 	critical(msg: string, actionType = defaultActionType, subType = defaultSubType) {
@@ -82,7 +83,7 @@ export class LoggerService implements ErrorHandler {
 		if (includeBrowserData) {
 			prefix += this.getBrowserData();
 		}
-		const str = `${ prefix }[${ severity }] [${ actionType.toUpperCase() }] ${subType !== '' ? '[' + subType.toUpperCase() + ']' : ''} ${ msg }`;
+		const str = `${ prefix }[${ severity }] [${ actionType.toUpperCase() }] ${ subType !== '' ? '[' + subType.toUpperCase() + ']' : '' } ${ msg }`;
 		this.stack.push({ severity, msg: str });
 		this.output();
 	}
@@ -108,8 +109,9 @@ export class LoggerService implements ErrorHandler {
 	}
 
 	getBrowserData() {
-		return `[window:${ window.innerWidth }x${ window.innerHeight }][userAgent: ${ navigator.userAgent }]`
+		return `[window:${ window.innerWidth }x${ window.innerHeight }][userAgent: ${ navigator.userAgent }]`;
 	}
+
 	setClientAsConnected() {
 		this.isConnected = true;
 	}

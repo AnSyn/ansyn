@@ -1,14 +1,14 @@
 {
 	"name": "@ansyn/map-facade",
-	"version": "0.6.2",
+	"version": "1.6.33",
 	"peerDependencies": {
 		"@angular/common": "~8.2.14",
 		"@angular/core": "~8.2.14",
 		"@ngrx/core": "^1.2.0",
 		"@ngrx/store": "^7.2.0",
 		"@ngrx/effects": "^7.2.0",
-		"@ngx-translate/core": "^10.0.2",
-		"@ansyn/imagery": "0.6.2"
+		"@ngx-translate/core": "^11.0.1",
+		"@ansyn/imagery": "1.6.33"
 	},
 	"dependencies": {
 		"@turf/turf": "^5.1.6",

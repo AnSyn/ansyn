@@ -40,7 +40,6 @@ import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-m
 })
 export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent {
 	@Input() mapId: string;
-	mapsAmount = 1;
 	overlay: IOverlay;
 	isActiveMap: boolean;
 	favoriteOverlays: IOverlay[];
@@ -55,12 +54,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	isDragged: boolean;
 	draggedButtonText: string;
 	isLayersVisible: boolean;
-
-	@AutoSubscription
-	mapsAmount$: Observable<number> = this.store$.pipe(
-		select(selectMapsTotal),
-		tap((mapsAmount) => this.mapsAmount = mapsAmount)
-	);
 
 	@AutoSubscription
 	favoriteOverlays$: Observable<any[]> = this.store$.select(selectFavoriteOverlays).pipe(

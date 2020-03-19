@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { Injector, ModuleWithProviders, NgModule } from '@angular/core';
-import { createCustomElement } from '@angular/elements';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AlertsModule } from './modules/alerts/alerts.module';
 import { DefaultUrlSerializer, RouterModule, UrlSerializer } from '@angular/router';
@@ -38,7 +37,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { ImageryZoomerComponent } from './modules/plugins/components/imagery-zoomer/imagery-zoomer.component';
 import { ImageryDimensionModeComponent } from './modules/plugins/components/imagery-dimension-mode/imagery-dimension-mode.component';
 import { TasksService } from './modules/menu-items/algorithms/services/tasks.service';
-import { ImageryVideoModule } from './modules/imagery-video/imagery-video.module';
+import { ImageryVideoModule } from '@ansyn/imagery-video';
+import { ImageryChangeMapComponent } from './modules/plugins/components/imagery-change-map/imagery-change-map.component';
 
 @NgModule({
 	imports: [
@@ -63,14 +63,14 @@ import { ImageryVideoModule } from './modules/imagery-video/imagery-video.module
 			entryComponents: {
 				container: [AnnotationContextMenuComponent, AngleFilterComponent],
 				status: [],
-				floating_menu: [ImageryZoomerComponent, ImageryDimensionModeComponent]
+				floating_menu: [ImageryZoomerComponent, ImageryDimensionModeComponent, ImageryChangeMapComponent]
 			}
 		}),
 		ImageryModule,
+		ImageryVideoModule,
 		StatusBarModule,
 		RouterModule,
-		HelpModule,
-		ImageryVideoModule
+		HelpModule
 	],
 	providers: [
 		{
@@ -81,16 +81,10 @@ import { ImageryVideoModule } from './modules/imagery-video/imagery-video.module
 			provide: COMPONENT_MODE,
 			useValue: false
 		},
-		{ 
-			provide: UrlSerializer, 
-			useClass: DefaultUrlSerializer 
-		}
+		{ provide: UrlSerializer, useClass: DefaultUrlSerializer }
 	],
 	entryComponents: [
-		AnsynComponent, 
-		OverlayOutOfBoundsComponent, 
-		ImageryZoomerComponent, 
-		ImageryDimensionModeComponent
+		OverlayOutOfBoundsComponent, ImageryZoomerComponent, ImageryDimensionModeComponent
 	],
 	declarations: [
 		AnsynComponent,
@@ -120,9 +114,7 @@ export class AnsynModule {
 		};
 	}
 
-	constructor(public translate: TranslateService, private injector: Injector) {
+	constructor(public translate: TranslateService) {
 		translate.setDefaultLang('default');
-		const element = createCustomElement(AnsynComponent, { injector: this.injector });
-		customElements.define('ansyn-element', element);
 	}
 }

@@ -11,7 +11,7 @@ import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import {
 	IToolsState,
-	selectSubMenu,
+	selectSubMenu, selectToolFlag,
 	selectToolFlags,
 	SubMenuEnum,
 	toolsFlags,

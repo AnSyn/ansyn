@@ -27,7 +27,7 @@ import {
 	LoadOverlaysAction,
 	SetDropsAction,
 	SetFilteredOverlaysAction,
-	SetOverlaysStatusMessage
+	SetOverlaysStatusMessageAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	OverlayReducer,
@@ -99,7 +99,7 @@ describe('Filters app effects', () => {
 		store.dispatch(new InitializeFiltersSuccessAction(new Map()));
 		const expectedResults = cold('(bc)', {
 			b: new SetFilteredOverlaysAction([]),
-			c: new SetOverlaysStatusMessage(overlaysStatusMessages.noOverLayMatchFilters)
+			c: new SetOverlaysStatusMessageAction(overlaysStatusMessages.noOverLayMatchFilters)
 		});
 		expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
 	});

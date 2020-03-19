@@ -99,6 +99,7 @@ export const overlaysStatusMessages = {
 	noOverLayMatchQuery: 'No overlays match your query, please try another search',
 	overLoad: 'Query exceeds limit, only $overLoad overlays are presented',
 	noOverLayMatchFilters: 'No overlays match your query, please try another search',
+	noPermissionsForArea: 'You do not have permissions to see overlays in this area',
 	nullify: null
 };
 
@@ -142,6 +143,14 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				loaded: false,
 				overlays: new Map(),
 				filteredOverlays: []
+			});
+		}
+
+		case OverlaysActionTypes.CHECK_TRIANGLES: {
+			return overlaysAdapter.addAll([], {
+				...state,
+				loading: true,
+				loaded: false
 			});
 		}
 

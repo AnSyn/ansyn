@@ -15,6 +15,7 @@ export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
 	UNSELECT_OVERLAY: type('[Overlay] Unselect Overlay'),
 	LOAD_OVERLAYS: type('[Overlay] Load Overlays'),
+	CHECK_TRIANGLES: type('[Overlay] Check Triangles Before Overlay Search'),
 	REQUEST_OVERLAY_FROM_BACKEND: type('[Overlay] Load Overlay By Id'),
 	LOAD_OVERLAYS_SUCCESS: type('[Overlay] Load Overlays Success'),
 	LOAD_OVERLAYS_FAIL: type('[Overlay] Load Overlays Failed'),
@@ -84,6 +85,13 @@ export class UnSelectOverlayAction implements Action {
 
 export class LoadOverlaysAction implements Action {
 	type = OverlaysActionTypes.LOAD_OVERLAYS;
+
+	constructor(public payload: IOverlaysCriteria) {
+	}
+}
+
+export class CheckTrianglesAction implements Action {
+	type = OverlaysActionTypes.CHECK_TRIANGLES;
 
 	constructor(public payload: IOverlaysCriteria) {
 	}
@@ -177,7 +185,7 @@ export class SetDropsAction implements Action {
 	};
 }
 
-export class SetOverlaysStatusMessage implements Action {
+export class SetOverlaysStatusMessageAction implements Action {
 	type = OverlaysActionTypes.SET_OVERLAYS_STATUS_MESSAGE;
 
 	constructor(public payload: string) {
@@ -246,11 +254,12 @@ export type OverlaysActions
 	| UnSelectOverlayAction
 	| RequestOverlayByIDFromBackendAction
 	| LoadOverlaysAction
+	| CheckTrianglesAction
 	| LoadOverlaysSuccessAction
 	| LoadOverlaysFailAction
 	| ClearFilterAction
 	| SetFilteredOverlaysAction
-	| SetOverlaysStatusMessage
+	| SetOverlaysStatusMessageAction
 	| AddMarkUp
 	| RemoveMarkUp
 	| SetHoveredOverlayAction

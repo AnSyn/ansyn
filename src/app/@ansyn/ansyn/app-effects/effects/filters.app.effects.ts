@@ -40,7 +40,7 @@ import {
 	OverlaysActionTypes,
 	SetDropsAction,
 	SetFilteredOverlaysAction,
-	SetOverlaysStatusMessage
+	SetOverlaysStatusMessageAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	overlaysStatusMessages,
@@ -100,7 +100,7 @@ export class FiltersAppEffects {
 			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : this.translate.instant(overlaysStatusMessages.noOverLayMatchFilters);
 			return [
 				new SetFilteredOverlaysAction(filteredOverlays),
-				new SetOverlaysStatusMessage(message)
+				new SetOverlaysStatusMessageAction(message)
 			];
 		}));
 

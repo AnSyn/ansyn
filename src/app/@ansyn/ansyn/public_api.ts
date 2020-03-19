@@ -6,7 +6,7 @@ export {
 } from './modules/plugins/openlayers/plugins/anaglyph-sensor/models/anaglyph.model';
 
 export { AnaglyphSensorService } from './modules/plugins/openlayers/plugins/anaglyph-sensor/service/anaglyph-sensor.service';
-
+export { AreaToCredentialsService } from './modules/core/services/credentials/area-to-credentials.service';
 export { CredentialsService } from './modules/core/services/credentials/credentials.service';
 export { credentialsConfig, ICredentialsConfig } from './modules/core/services/credentials/config';
 
@@ -338,10 +338,11 @@ export {
 	DisplayOverlayFromStoreAction,
 	DisplayOverlaySuccessAction,
 	LoadOverlaysAction,
+	CheckTrianglesAction,
 	OverlaysActionTypes,
 	RedrawTimelineAction, RequestOverlayByIDFromBackendAction,
 	SetFilteredOverlaysAction, SetHoveredOverlayAction, SetMarkUp,
-	SetOverlaysStatusMessage, SetSpecialObjectsActionStore, SetDropsAction
+	SetOverlaysStatusMessageAction, SetSpecialObjectsActionStore, SetDropsAction
 } from './modules/overlays/actions/overlays.actions';
 export {
 	MarkUpClass,

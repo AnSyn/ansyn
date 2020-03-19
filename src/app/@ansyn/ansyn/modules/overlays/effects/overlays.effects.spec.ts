@@ -84,6 +84,7 @@ describe('Overlays Effects ', () => {
 			TranslateModule.forRoot()
 		],
 		providers: [
+			AreaToCredentialsService,
 			{ provide: USE_DEFAULT_LANG },
 			{
 				provide: MissingTranslationHandler, useValue: {
@@ -104,10 +105,6 @@ describe('Overlays Effects ', () => {
 						return EMPTY;
 					}
 				}
-			},
-			{
-				provide: AreaToCredentialsService,
-				useValue: jasmine.createSpyObj('areaToCredentialsService', ['getUrl', 'createRequest', 'getAreaTriangles', 'parseResponse'])
 			},
 			{
 				provide: credentialsConfig,

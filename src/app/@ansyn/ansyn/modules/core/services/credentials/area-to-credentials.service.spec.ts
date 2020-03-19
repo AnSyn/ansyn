@@ -9,10 +9,10 @@ describe('AreaToCredentialsService', () => {
 		TestBed.configureTestingModule({
 			imports: [HttpClientModule],
 			providers: [
+				AreaToCredentialsService,
 				{
 					provide: credentialsConfig,
 					useValue: {
-						noCredentialsMessage: 'TEST'
 					}
 				}
 			]

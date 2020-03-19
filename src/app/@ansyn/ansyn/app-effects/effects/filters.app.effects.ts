@@ -36,7 +36,6 @@ import { IFilterModel } from '../../modules/core/models/IFilterModel';
 import { InjectionResolverFilter } from '../../modules/core/services/generic-type-resolver';
 import { mapValuesToArray } from '../../modules/core/utils/misc';
 import {
-	CheckTrianglesAction,
 	LoadOverlaysAction,
 	OverlaysActionTypes,
 	SetDropsAction,
@@ -121,7 +120,7 @@ export class FiltersAppEffects {
 
 	@Effect()
 	initializeFilters$: Observable<any> = this.actions$.pipe(
-		ofType<CheckTrianglesAction>(OverlaysActionTypes.CHECK_TRIANGLES),
+		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
 		map(() => new InitializeFiltersAction()));
 
 	@Effect()

@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule, MatSelectModule } from '@angular/material';
 
 import { AnnotationLabelComponent } from './annotation-label.component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -22,7 +21,7 @@ describe('AnnotationLabelComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AnnotationLabelComponent);
 		component = fixture.componentInstance;
-		component.label = {text: 'label'};
+		component.label = { text: 'label' };
 		fixture.detectChanges();
 	});
 

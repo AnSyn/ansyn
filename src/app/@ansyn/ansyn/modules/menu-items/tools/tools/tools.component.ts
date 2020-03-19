@@ -11,13 +11,13 @@ import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import {
 	IToolsState,
-	selectSubMenu,
+	selectSubMenu, selectToolFlag,
 	selectToolFlags,
 	SubMenuEnum,
 	toolsFlags,
 	toolsStateSelector
 } from '../reducers/tools.reducer';
-import { map, tap } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { selectActiveAnnotationLayer } from '../../layers-manager/reducers/layers.reducer';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { MatDialog } from '@angular/material/dialog';

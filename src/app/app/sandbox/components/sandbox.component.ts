@@ -231,10 +231,10 @@ export class SandboxComponent implements OnInit, OnDestroy {
 	}
 
 	displayOverlay() {
-		this.ansynApi.displayOverLay({...this.overlays[0], imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Unequalized_Hawkes_Bay_NZ.jpg', tag: {
+		this.ansynApi.displayOverLay({...this.overlays[0], imageUrl: '/assets/config/doll.jpg', tag: {
 			imageData: {
-				imageHeight: 1024,
-				imageWidth: 683
+				imageHeight: 550,
+				imageWidth: 369
 			}
 			}
 		});
@@ -613,4 +613,24 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		plugin.setMode(null, false);
 	}
 
+	testImageProcess() {
+		this.ansynApi.changeMapLayout('layout2').pipe(
+			tap(() => {
+
+				this.ansynApi.displayOverLay({...this.overlays[1], imageUrl: '/assets/config/doll.jpg', tag: {
+					imageData: {
+						imageWidth: 369,
+						imageHeight: 550
+					}
+					}}, 0);
+				this.ansynApi.displayOverLay({...this.overlays[2], imageUrl: '/assets/config/doll-auto.jpg', tag: {
+						imageData: {
+							imageWidth: 369,
+							imageHeight: 550
+						}
+					}}, 1);
+			}),
+			take(1)
+		).subscribe();
+	}
 }

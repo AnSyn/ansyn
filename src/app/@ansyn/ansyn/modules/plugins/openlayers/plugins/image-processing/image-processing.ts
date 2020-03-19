@@ -1,10 +1,24 @@
 import { ProjectableRaster } from '@ansyn/ol';
-export  interface IPixel {
+
+export interface IRGBPixel {
 	r: number;
 	g: number;
 	b: number;
-	a: number;
+	a?: number;
 }
+
+export interface IHSLPixel {
+	h: number;
+	s: number;
+	l: number;
+}
+
+export interface IYCbCrPixel {
+	y: number;
+	cb: number;
+	cr: number;
+}
+
 // skipOnValue is the value which the image do not require any processing (e.i. the natural/default value)
 export const IMG_PROCESS_ORDER = [
 	{ ArgumentName: 'Histogram', skipOnValue: 0 },
@@ -166,10 +180,14 @@ function getFunctionByArgument(arg) {
 // ------ Histogram Start ------ //
 
 function rgb2YCbCr(rgb): { y: number, cb, cr } {
-	const y = 16 + 0.257 * rgb.r + 0.504 * rgb.g + 0.098 * rgb.b;
-	const cb = 128 - 0.148 * rgb.r - 0.291 * rgb.g + 0.439 * rgb.b;
-	const cr = 128 + 0.439 * rgb.r - 0.368 * rgb.g - 0.071 * rgb.b;
-
+	const {r, g, b} = rgb;
+	const y = Math.round(16 + 0.257 * r + 0.504 * g + 0.098 * b);
+	const cb = Math.round(128 - 0.148 * r - 0.291 * g + 0.439 * b);
+	const cr =  Math.round(128 + 0.439 * r - 0.368 * g - 0.071 * b);
+/*
+const y = Math.round((0.299 * r) + (0.587 * g) + (0.114 * b));
+const cb = Math.round(128 - (0.168736 * r) - (0.331264 * g) + (0.5 * b));
+const cr = Math.round(128 + (0.5 * r) - (0.418688 * g) - (0.081312 * b));*/
 	return { y, cb, cr };
 }
 
@@ -178,128 +196,174 @@ function yCbCr2RGB(yCbCr): any {
 	const cbNorm = yCbCr.cb - 128;
 	const crNorm = yCbCr.cr - 128;
 
-	const r = 1.164 * yNorm + 1.596 * crNorm;
-	const g = 1.164 * yNorm - 0.392 * cbNorm - 0.813 * crNorm;
-	const b = 1.164 * yNorm + 2.017 * cbNorm;
-
+	const r = Math.round(1.164 * yNorm + 1.596 * crNorm);
+	const g = Math.round(1.164 * yNorm - 0.392 * cbNorm - 0.813 * crNorm);
+	const b = Math.round(1.164 * yNorm + 2.017 * cbNorm);
+	/*const {y, cb, cr} = yCbCr;
+	const r = Math.round(y + 1.402 * (cr - 128));
+	const g = Math.round(y - 0.344136 * (cb - 128) - 0.714136 * (cr - 128));
+	const b = Math.round(y + 1.772 * (cb - 128));*/
 	return { r, g, b };
 }
 
-function buildHistogramLut(imageData) {
-	/*const totalHistLut = [];
-
-	for (let index = 16; index < 236; index++) {
-		totalHistLut[index] = 0;
+function rgb2Hsl(pixel: IRGBPixel): IHSLPixel {
+	const r = pixel.r / 255, g = pixel.g / 255, b = pixel.b / 255;
+	const max = Math.max(r, g, b);
+	const min = Math.min(r, g, b);
+	let delta = max - min;
+	let l = (max + min) / 2;
+	let h, s;
+	if (delta === 0) {
+		h = s = 0;
 	}
+	else {
+		if ( l < 0.5 ) {
+			s = delta / (max + min);
+		}else {
+			s = delta / ( 2 - max - min);
+		}
+		let deltaR = (((max - r) / 6) + (delta / 2)) / delta;
+		let deltaG = (((max - g) / 6 ) + (delta / 2)) / delta;
+		let deltaB = (((max - b) / 6) + (delta / 2)) / delta;
+		if ( r === max) {
+			h = deltaB - deltaG;
+		}
+		else if ( g === max ) {
+			h = (1 / 3) + deltaR - deltaB;
+		}
+		else if ( b === max) {
+			h = (2 / 3) + deltaG - deltaR;
+		}
+		h = h < 0 ? h + 1 : h > 1 ? h - 1 : h;
+	}
+	return {h, s, l};
+}
+
+function hsl2RGB(pixel: IHSLPixel): IRGBPixel {
+	const {h, s, l} = pixel;
+	let r, g, b;
+	if (s === 0) {
+		r = g = b = 1;
+	}else {
+		const hue2rgb = (p, q, t) => {
+			t = t < 0 ? t + 1 : t > 1 ? t - 1 : t;
+			return t < 1 / 6 ?
+				p + (q - p) * 6 * t :
+				t < 1 / 2 ?
+					q : t < 2 / 3 ? p + (q - p) * (2 / 3 - t) * 6 :
+					p
+		};
+		let q = l < 0.5 ? l * (1 + s) : (l + s) - (l * s);
+		let p = 2 * l - q;
+		r = hue2rgb(p, q, h + 1 / 3);
+		g = hue2rgb(p, q, h);
+		b = hue2rgb(p, q, h - 1 / 3)
+	}
+	return {r: normalizeColor(r * 255), g: normalizeColor(g * 255), b: normalizeColor(b * 255)};
+}
+
+function buildHistogramLut(imageData) {
+	debugger;
+	/*const MAX = 234, MIN = 16;
+	const totalHistLut = [];
+	let min = 255, max = 0;
 
 	for (let index = 0; index < imageData.data.length; index += 4) {
+
 		const r = imageData.data[index];
 		const g = imageData.data[index + 1];
 		const b = imageData.data[index + 2];
 
-		const yCbCr = this['rgb2YCbCr']({ r, g, b });
+		const yCbCr: IYCbCrPixel = this['rgb2YCbCr']({ r, g, b });
 
-		const val = Math.floor(yCbCr.y);
+		const val = yCbCr.y;
+		min = min < val ? min : val;
+		max = max > val ? max : val;
 		if (totalHistLut[val] === undefined) {
 			totalHistLut[val] = 1;
 		} else {
 			totalHistLut[val] = totalHistLut[val] + 1;
 		}
 	}
+	console.log({ min, max });
 
 	const cumulativeHist = [];
-
-	cumulativeHist[16] = totalHistLut[16];
-
-	for (let index = 17; index < totalHistLut.length; index++) {
-		let tempTotalHist = totalHistLut[index] === undefined ? 0 : totalHistLut[index];
-		cumulativeHist[index] = cumulativeHist[index - 1] + tempTotalHist;
-	}
+	let tempCumHist = 0;
+	totalHistLut.forEach((val, index) => {
+		tempCumHist += val;
+		cumulativeHist[index] = tempCumHist;
+	})
 
 	let pixelsNum = 0;
 	totalHistLut.forEach((hist) => pixelsNum += hist);
 
-	const minCumProbability = cumulativeHist[16];
+	const minCumProbability = cumulativeHist[min];
 	const finalHist = [];
 
-	for (let index = 16; index < cumulativeHist.length; index++) {
+	const delimter = pixelsNum - minCumProbability;
+	for (let index = min; index < cumulativeHist.length; index++) {
 		const diff = cumulativeHist[index] - minCumProbability;
 
-		finalHist[index] = Math.floor((diff / (pixelsNum - 1)) * (235 - 16 - 1) + 16);
-	}
-
-	return finalHist;*/
-
-	const keys = ['r', 'g', 'b'];
-	const pixelsNum = imageData.data.length / 4;
-	const totalHistLut = { r: [], g: [], b: [] };
-	let min = { r: 255, g: 255, b: 255 }, max = { r: 0, g: 0, b: 0 };
+		finalHist[index] = Math.round((diff / delimter * (MAX - MIN))) + MIN;
+	}*/
+	/*const keys = ['r', 'g', 'b'];
+	let min = {r: 255, g: 255, b: 255}, max = {r: 0, g: 0, b: 0};
 	for (let index = 0; index < imageData.data.length; index += 4) {
 		const pixel = {
 			r: imageData.data[index],
 			g: imageData.data[index + 1],
 			b: imageData.data[index + 2]
 		};
-		keys.forEach(color => {
-			min[color] = pixel[color] < min[color] ? pixel[color] : min[color];
-			max[color] = pixel[color] > max[color] ? pixel[color] : max[color];
-		});
-		keys.forEach(color => {
-			if (totalHistLut[color][pixel[color]] === undefined) {
-				totalHistLut[color][pixel[color]] = 1;
-			} else {
-				totalHistLut[color][pixel[color]] += 1;
-			}
+		keys.forEach( band => {
+			min[band] = min[band] < pixel[band] ? min[band] : pixel[band];
+			max[band] = max[band] > pixel[band] ? max[band] : pixel[band];
 		});
 	}
-	const cumulativeHist = {
-		r: [],
-		g: [],
-		b: []
+	const finalHist = [];
+	const delta = 35;
+	for (let index = 0; index < imageData.data.length; index += 4) {
+		const pixel = {
+			r: imageData.data[index],
+			g: imageData.data[index + 1],
+			b: imageData.data[index + 2]
+		};
+		const ycbcr = this['rgb2YCbCr'](pixel);
+		finalHist[ycbcr.y] = ycbcr.y > (MAX - delta) ? MAX : ycbcr.y < (MIN + delta) ? MIN : ycbcr.y;
+	}*/
+
+	const MAX = 235, MIN = 16;
+	const totalHistLut = [];
+	let min = MAX, max = MIN;
+
+	for (let index = 0; index < imageData.data.length; index += 4) {
+
+		const r = imageData.data[index];
+		const g = imageData.data[index + 1];
+		const b = imageData.data[index + 2];
+
+		const yCbCr: IYCbCrPixel = this['rgb2YCbCr']({ r, g, b });
+
+		const val = yCbCr.y;
+		min = min < val ? min : val;
+		max = max > val ? max : val;
 	};
 
-	cumulativeHist.r[min.r] = totalHistLut.r[min.r];
-	cumulativeHist.g[min.g] = totalHistLut.g[min.g];
-	cumulativeHist.b[min.b] = totalHistLut.b[min.b];
+	const finalHist = [];
 
-	keys.forEach(color => {
-		for (let index = min[color] + 1; index < max[color]; index++) {
-			let tempTotalHist = totalHistLut[color][index] === undefined ? 0 : totalHistLut[color][index];
-			cumulativeHist[color][index] = cumulativeHist[color][index - 1] + tempTotalHist;
-		}
-	});
+	for (let index = MIN; index < MAX; index ++) {
+		finalHist[index] = Math.round( ((index - min) / (max - min)) * (MAX - MIN ) + MIN );
+	}
 
-	const minCumProbability = {
-		r: cumulativeHist.r[min.r],
-		g: cumulativeHist.g[min.g],
-		b: cumulativeHist.b[min.b]
-	};
-	const finalHist = { r: [], g: [], b: [] };
-
-	keys.forEach(color => {
-		for (let index = min[color]; index < max[color]; index++) {
-			if (!cumulativeHist[color][index]) {
-				continue;
-			}
-			const diff = cumulativeHist[color][index] - minCumProbability[color];
-			finalHist[color][index] = Math.round((diff / (pixelsNum - minCumProbability[color])) * 255);
-		}
-	});
 	return finalHist;
 }
 
 function performHistogram(pixel, histogramLut) {
-	/*const yCbCr = this['rgb2YCbCr'](pixel);
-	yCbCr.y = histogramLut[Math.round(yCbCr.y)];
+	const yCbCr: IYCbCrPixel = this['rgb2YCbCr'](pixel);
+	yCbCr.y = histogramLut[yCbCr.y];
 
 	const resultPixel = this['yCbCr2RGB'](yCbCr);
-	resultPixel.a = pixel.a;*/
-	const resultPixel = {
-		r: histogramLut.r[pixel.r],
-		g: histogramLut.g[pixel.g],
-		b: histogramLut.b[pixel.b],
-		a: pixel.a
-	};
+	// const resultPixel = {r: histogramLut.r[pixel.r], g: histogramLut.g[pixel.g], b: histogramLut.b[pixel.b], a: pixel.a};
+	resultPixel.a = pixel.a;
 	return resultPixel;
 }
 

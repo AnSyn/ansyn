@@ -53,7 +53,7 @@ export class CasesAppEffects {
 	onDisplayOverlay$: Observable<any> = this.actions$.pipe(
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
 		withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(toolsStateSelector)),
-		map(([action, mapState, toolsState]: [DisplayOverlaySuccessAction, IMapState, IToolsState]) => {
+		map(([action, mapState, toolsState]: [DisplayOverlayAction, IMapState, IToolsState]) => {
 			const mapId = action.payload.mapId || mapState.activeMapId;
 			const currentMap = mapState.entities[mapId];
 			const imageManualProcessArgs = (Boolean(toolsState && toolsState.overlaysManualProcessArgs) && toolsState.overlaysManualProcessArgs[action.payload.overlay.id]) || this.defaultImageManualProcessArgs;

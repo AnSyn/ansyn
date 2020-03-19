@@ -132,7 +132,7 @@ describe('Overlays Effects ', () => {
 		spyOn(store, 'select').and.callFake((selector) => of(fakeStore.get(selector)));
 	}));
 
-	beforeEach(inject([Store, OverlaysEffects, OverlaysService, AreaToCredentialsService, CredentialsService], (_store: Store<any>, _overlaysEffects: OverlaysEffects, _overlaysService: OverlaysService, _areaToCredentialsService: AreaToCredentialsService,_credentialsService: CredentialsService) => {
+	beforeEach(inject([Store, OverlaysEffects, OverlaysService, AreaToCredentialsService, CredentialsService], (_store: Store<any>, _overlaysEffects: OverlaysEffects, _overlaysService: OverlaysService, _areaToCredentialsService: AreaToCredentialsService, _credentialsService: CredentialsService) => {
 		store = _store;
 		credentialsService = _credentialsService;
 		areaToCredentialsService = _areaToCredentialsService;

@@ -1,10 +1,10 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 
 import { SandboxComponent } from './sandbox.component';
 import {
 	AnsynApi,
 	AreaToCredentialsService,
-	credentialsConfig,
+	credentialsConfig, CredentialsService,
 	OverlayReducer,
 	overlaysFeatureKey
 } from '@ansyn/ansyn';
@@ -23,6 +23,12 @@ describe('SandboxComponent', () => {
 			providers: [
 				ImageryCommunicatorService,
 				AreaToCredentialsService,
+				{
+					provide: AreaToCredentialsService,
+					useValue: {getAreaTriangles: (area) => {
+						}
+					}
+				},
 				{
 					provide: AnsynApi,
 					useValue: {}
@@ -45,11 +51,11 @@ describe('SandboxComponent', () => {
 			.compileComponents();
 	}));
 
-	beforeEach(() => {
+	beforeEach(inject([AreaToCredentialsService], (_areaToCredentialsService: AreaToCredentialsService) => {
 		fixture = TestBed.createComponent(SandboxComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
-	});
+	}));
 
 	it('should create', () => {
 		expect(component).toBeTruthy();

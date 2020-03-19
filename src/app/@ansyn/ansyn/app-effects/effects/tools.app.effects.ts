@@ -12,6 +12,7 @@ import {
 	mapStateSelector,
 	PinLocationModeTriggerAction,
 	selectActiveMapId,
+	selectMapsIds,
 	selectMapsList,
 	UpdateMapAction
 } from '@ansyn/map-facade';
@@ -22,7 +23,7 @@ import { filter, map, mergeMap, pluck, switchMap, tap, withLatestFrom } from 'rx
 import { OverlayStatusActionsTypes } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { IAppState } from '../app.effects.module';
 import { selectGeoFilterSearchMode } from '../../modules/status-bar/reducers/status-bar.reducer';
-import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
+import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import { CasesActionTypes } from '../../modules/menu-items/cases/actions/cases.actions';
 import {
 	ClearActiveInteractionsAction,
@@ -37,7 +38,6 @@ import {
 	SetAutoImageProcessing,
 	SetAutoImageProcessingSuccess,
 	SetManualImageProcessing,
-	SetMeasureDistanceToolState,
 	SetPinLocationModeAction,
 	SetSubMenu,
 	ShowOverlaysFootprintAction,
@@ -56,7 +56,6 @@ import {
 } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
-import { selectMapsIds } from '@ansyn/map-facade';
 
 @Injectable()
 export class ToolsAppEffects {
@@ -115,6 +114,7 @@ export class ToolsAppEffects {
 		filter(([action, isPolygonSearch]: [SelectMenuItemAction, boolean]) => isPolygonSearch),
 		map(() => new UpdateGeoFilterStatus())
 	);
+
 	@Effect()
 	onActiveMapChangesSetOverlaysFootprintMode$: Observable<any> = this.store$.select(selectActiveMapId).pipe(
 		filter(Boolean),
@@ -128,23 +128,26 @@ export class ToolsAppEffects {
 			return actions;
 		})
 	);
+
 	@Effect()
 	onShowOverlayFootprint$: Observable<any> = this.actions$.pipe(
 		ofType<ShowOverlaysFootprintAction>(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT),
 		map((action) => new SetActiveOverlaysFootprintModeAction(action.payload))
 	);
+
 	@Effect()
 	updateImageProcessingOnTools$: Observable<any> = this.activeMap$.pipe(
-		filter<any>((map) => Boolean(map.data.overlay)),
+		filter((map) => Boolean(map.data.overlay)),
 		withLatestFrom(this.store$.select(toolsStateSelector).pipe(pluck<IToolsState, ImageManualProcessArgs>('manualImageProcessingParams'))),
 		mergeMap<any, any>(([map, manualImageProcessingParams]: [ICaseMapState, ImageManualProcessArgs]) => {
 			const actions = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess(map.data.isAutoImageProcessingActive)];
 			if (!isEqual(map.data.imageManualProcessArgs, manualImageProcessingParams)) {
-				actions.push(new SetAutoImageProcessingSuccess(map.data !=null && map.data.imageManualProcessArgs != null || this.defaultImageManualProcessArgs != null));
+				actions.push(new SetManualImageProcessing(map.data && map.data.imageManualProcessArgs || this.defaultImageManualProcessArgs));
 			}
 			return actions;
 		})
 	);
+
 	@Effect()
 	backToWorldView$: Observable<DisableImageProcessing> = this.actions$
 		.pipe(
@@ -153,10 +156,12 @@ export class ToolsAppEffects {
 			filter(communicator => Boolean(communicator)),
 			map(() => new DisableImageProcessing())
 		);
+
 	@Effect()
 	onSelectCase$: Observable<DisableImageProcessing> = this.actions$.pipe(
 		ofType(CasesActionTypes.SELECT_CASE),
 		map(() => new DisableImageProcessing()));
+
 	@Effect()
 	toggleAutoImageProcessing$: Observable<any> = this.actions$.pipe(
 		ofType(ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING),
@@ -173,6 +178,7 @@ export class ToolsAppEffects {
 			];
 		})
 	);
+
 	@Effect()
 	getActiveCenter$: Observable<SetActiveCenter> = this.actions$.pipe(
 		ofType(ToolsActionsTypes.PULL_ACTIVE_CENTER),
@@ -180,6 +186,7 @@ export class ToolsAppEffects {
 		filter(communicator => Boolean(communicator)),
 		mergeMap((communicator: CommunicatorEntity) => communicator.getCenter()),
 		map((activeMapCenter: Point) => new SetActiveCenter(activeMapCenter.coordinates)));
+
 	@Effect()
 	onGoTo$: Observable<SetActiveCenter> = this.actions$.pipe(
 		ofType<GoToAction>(ToolsActionsTypes.GO_TO),
@@ -199,21 +206,24 @@ export class ToolsAppEffects {
 			}));
 		}),
 		map(({ action, communicator }) => new SetActiveCenter(action.payload)));
+
 	@Effect()
 	updatePinLocationState$: Observable<PinLocationModeTriggerAction> = this.actions$.pipe(
 		ofType<SetPinLocationModeAction>(ToolsActionsTypes.SET_PIN_LOCATION_MODE),
 		map(({ payload }) => new PinLocationModeTriggerAction(payload)));
+
 	@Effect()
 	onLayoutsChangeSetMouseShadowEnable$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.SET_LAYOUT),
 		withLatestFrom(this.store$.select(selectMapsList), this.store$.select(selectActiveMapId), (action, mapsList: IMapSettings[], activeMapId: string) => [mapsList, activeMapId]),
 		filter(([mapsList, activeMapId]) => Boolean(mapsList && mapsList.length && activeMapId)),
-		withLatestFrom(this.store$.select(selectToolFlag(toolsFlags.shadowMouseActiveForManyScreens))),
-		mergeMap(([[mapsList, activeMapId], shadowMouseActiveForManyScreens]: [[IMapSettings[], string], boolean]) => {
+		withLatestFrom(this.store$.select(selectToolFlag(toolsFlags.shadowMouseActiveForManyScreens)), this.store$.select(selectToolFlag(toolsFlags.forceShadowMouse))),
+		mergeMap(([[mapsList, activeMapId], shadowMouseActiveForManyScreens, forceShadowMouse]: [[IMapSettings[], string], boolean, boolean]) => {
 			const registredMapsCount = mapsList.reduce((count, map) => (!map.data.overlay || map.data.overlay.isGeoRegistered) ? count + 1 : count, 0);
+			forceShadowMouse = forceShadowMouse === undefined ? (this.config && this.config.ShadowMouse.forceSendShadowMousePosition) : forceShadowMouse;
 			const activeMap = MapFacadeService.mapById(mapsList, activeMapId);
 			const isActiveMapRegistred = !activeMap || (activeMap.data.overlay && !activeMap.data.overlay.isGeoRegistered);
-			if (registredMapsCount < 2 || isActiveMapRegistred) {
+			if ((registredMapsCount < 2 || isActiveMapRegistred) && !forceShadowMouse) {
 				return [
 					new StopMouseShadow(),
 					new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: true }])
@@ -221,7 +231,7 @@ export class ToolsAppEffects {
 			}
 			return [
 				new UpdateToolsFlags([{ key: toolsFlags.shadowMouseDisabled, value: false }]),
-				shadowMouseActiveForManyScreens ? new StartMouseShadow() : undefined
+				shadowMouseActiveForManyScreens || forceShadowMouse ? new StartMouseShadow() : undefined
 			].filter(Boolean);
 		}));
 
@@ -240,6 +250,7 @@ export class ToolsAppEffects {
 				});
 			})
 		);
+
 	@Effect()
 	clearActiveInteractions$ = this.actions$.pipe(
 		ofType<ClearActiveInteractionsAction>(ToolsActionsTypes.CLEAR_ACTIVE_TOOLS),

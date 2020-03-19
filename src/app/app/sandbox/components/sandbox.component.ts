@@ -1,21 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	AnsynApi,
-	FilterMetadata,
-	FiltersService,
 	GeoRegisteration,
-	ICaseFacetsState,
-	IFilter,
 	IOverlay,
 	IOverlaysCriteria,
 	PhotoAngle,
 	RegionContainment,
-	selectFacets,
-	selectFilters,
 	selectMiscOverlays,
 	selectOverlaysArray,
 	SetMiscOverlay,
-	UpdateFilterAction
 } from '@ansyn/ansyn';
 import { FeatureCollection, Point, Polygon } from 'geojson';
 import {
@@ -25,11 +18,11 @@ import {
 	OpenLayersStaticImageSourceProviderSourceType
 } from '@ansyn/ol';
 import * as momentNs from 'moment';
-import { take, tap, withLatestFrom } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
-import { AreaToCredentialsService } from "../../../@ansyn/ansyn/modules/core/services/credentials/area-to-credentials.service";
+import { AreaToCredentialsService } from "@ansyn/ansyn";
 
 const moment = momentNs;
 

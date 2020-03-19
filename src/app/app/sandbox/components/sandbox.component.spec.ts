@@ -4,7 +4,7 @@ import { SandboxComponent } from './sandbox.component';
 import {
 	AnsynApi,
 	AreaToCredentialsService,
-	credentialsConfig, CredentialsService,
+	credentialsConfig,
 	OverlayReducer,
 	overlaysFeatureKey
 } from '@ansyn/ansyn';
@@ -22,7 +22,6 @@ describe('SandboxComponent', () => {
 			declarations: [SandboxComponent],
 			providers: [
 				ImageryCommunicatorService,
-				AreaToCredentialsService,
 				{
 					provide: AreaToCredentialsService,
 					useValue: {getAreaTriangles: (area) => {

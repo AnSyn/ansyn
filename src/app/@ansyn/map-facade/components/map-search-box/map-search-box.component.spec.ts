@@ -87,7 +87,10 @@ describe('MapSearchBoxComponent', () => {
 
 		it('should halt the flow, when the requested location was not found', fakeAsync(() => {
 			component.error = null;
-			spyOn(geocoderService, 'getLocation$').and.returnValue(asyncData([{ name: 'No results', point: undefined }]));
+			spyOn(geocoderService, 'getLocation$').and.returnValue(asyncData([{
+				name: 'No results',
+				point: undefined
+			}]));
 			component.control.setValue('hehe');
 			component.onSubmit();
 			spyOn(component._communicator, 'setCenter').and.returnValue(asyncData({}));

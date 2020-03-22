@@ -49,7 +49,7 @@ describe('OverlayOutOfBoundsComponent', () => {
 		};
 		component.mapId = 'mapId';
 		const ActiveMap = jasmine.createSpyObj({ fitToExtent: of(true) });
-		spyOn(imageryCommunicatorService, 'provide').and.returnValue({ ActiveMap, mapSettings });
+		spyOn(imageryCommunicatorService, 'provide').and.returnValue(<any>{ ActiveMap, mapSettings });
 		component.backToExtent();
 		const extent = bboxFromGeoJson(imageryCommunicatorService.provide(component.mapId).mapSettings.data.overlay.footprint);
 		expect(ActiveMap.fitToExtent).toHaveBeenCalledWith(extent);

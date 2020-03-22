@@ -1,7 +1,6 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { inject, TestBed } from '@angular/core/testing';
 import { MultipleOverlaysSourceConfig } from '@ansyn/ansyn';
-import { MAP_SOURCE_PROVIDERS_CONFIG } from '@ansyn/imagery';
 import { StoreModule } from '@ngrx/store';
 import { sentinelFeatureKey, SentinelReducer } from '../reducers/sentinel.reducer';
 import { SentinelLayersService } from './sentinel-layers.service';
@@ -29,7 +28,7 @@ describe('SentinelLayersService', () => {
 
 	beforeEach(inject([HttpClient], (_httpClient: HttpClient) => {
 		httpClient = _httpClient;
-		spyOn(httpClient, 'get').and.callFake(() => of(''));
+		spyOn(httpClient, 'get').and.callFake(() => of(<any>{}));
 	}));
 
 	beforeEach(inject([SentinelLayersService], (_sentinelLayersService: SentinelLayersService) => {

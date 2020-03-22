@@ -55,7 +55,7 @@ describe('MenuComponent', () => {
 		} as IMenuItem;
 		const fakeFactory = 'fakeFactory';
 		spyOnProperty(menuComponent, 'selectedMenuItem', 'get').and.returnValue(mockMenuItem);
-		spyOn(menuComponent.componentFactoryResolver, 'resolveComponentFactory').and.callFake(() => fakeFactory);
+		spyOn(menuComponent.componentFactoryResolver, 'resolveComponentFactory').and.callFake(() => <any>fakeFactory);
 		spyOn(menuComponent.componentElem, 'createComponent');
 		menuComponent.buildCurrentComponent();
 		expect(menuComponent.componentFactoryResolver.resolveComponentFactory).toHaveBeenCalledWith(mockMenuItem.component);
@@ -109,7 +109,7 @@ describe('MenuComponent', () => {
 
 	it('onIsPinnedChange should toggle "pinned" class on container element and should send ContainerChangedTriggerAction', () => {
 		spyOn(store, 'dispatch');
-		spyOn(menuComponent, 'forceRedraw').and.callFake(() => ({ then: (c) => c() }));
+		spyOn(menuComponent, 'forceRedraw').and.callFake(() => (<any>{ then: (c) => c() }));
 
 		menuComponent.isPinned = true;
 		menuComponent.onIsPinnedChange();

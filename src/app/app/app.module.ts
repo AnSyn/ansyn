@@ -16,6 +16,7 @@ import { ContextModule } from './context/context.module';
 import { DeviceDetectorModule } from 'ngx-device-detector';
 import { SentinelModule } from './sentinel/sentinel.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AddressModule } from "./addresses/addresses.module";
 
 @NgModule({
 	imports: [
@@ -25,6 +26,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 		// StoreDevtoolsModule.instrument({ maxAge: 200, logOnly: configuration.production }),
 		AnsynModule,
 		LoginModule,
+		AddressModule,
 		ImisightModule,
 		AnsynRouterModule,
 		AppRoutingModule,

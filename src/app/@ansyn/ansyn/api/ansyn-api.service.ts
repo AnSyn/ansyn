@@ -63,6 +63,7 @@ import { ToggleMenuCollapse } from '@ansyn/menu';
 import { UUID } from 'angular2-uuid';
 import { DataLayersService } from '../modules/menu-items/layers-manager/services/data-layers.service';
 import { SetMinimalistViewModeAction } from '@ansyn/map-facade';
+import { AddressesService } from "../../../app/addresses/services/addresses.service";
 
 @Injectable({
 	providedIn: 'root'
@@ -175,6 +176,7 @@ export class AnsynApi {
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected moduleRef: NgModuleRef<any>,
 				private dataLayersService: DataLayersService,
+				protected addressesService: AddressesService,
 				@Inject(ANSYN_ID) public id: string) {
 		this.init();
 	}
@@ -409,8 +411,12 @@ export class AnsynApi {
 	private generateFeaturesIds(annotationsLayer): void {
 		/* reference */
 		annotationsLayer.features.forEach((feature) => {
-			feature.properties = { ...feature.properties, id: UUID.UUID() };
+			feature.properties = {...feature.properties, id: UUID.UUID()};
 		});
 
+	}
+
+	loadAddresses(environment: string) {
+		const addresses = this.addressesService.loadAddresses(environment);
 	}
 }

@@ -326,9 +326,9 @@ describe('MapAppEffects', () => {
 				}
 			});
 
-			spyOn(extentFromGeojson, 'bboxFromGeoJson').and.returnValue(fakeExtent);
+			spyOn(extentFromGeojson, 'bboxFromGeoJson').and.returnValue(<any>fakeExtent);
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommunicator);
-			spyOn(baseSourceProviders, 'find').and.returnValue(fakeSourceLoader);
+			spyOn(baseSourceProviders, 'find').and.returnValue(<any>fakeSourceLoader);
 			spyOn(fakeCommunicator, 'resetView');
 		});
 

@@ -65,6 +65,7 @@ describe('DataLayersService', () => {
 				id: 'caseId',
 				name: 'caseId',
 				type: 'Static',
+				creationTime: new Date(),
 				dataLayers: [
 					{
 						'id': 'layerId_1234',

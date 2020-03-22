@@ -107,7 +107,7 @@ describe('CasesService', () => {
 		let fakeId = 'fakerId';
 		let selectedCase: ICase = { ...caseMock, name: 'fakerName' };
 		let fakeResponse = { selectedCase };
-		spyOn(storageService, 'create').and.callFake(() => of(fakeResponse));
+		spyOn(storageService, 'create').and.callFake(() => <any>of(fakeResponse));
 		spyOn(UUID, 'UUID').and.callFake(() => fakeId);
 		casesService.createCase(selectedCase);
 		expect(storageService.create).toHaveBeenCalledWith(casesService.config.schema,
@@ -128,7 +128,7 @@ describe('CasesService', () => {
 		spyOn(casesService, 'isStoreEntitiesEqual').and.callFake(() => false);
 		let selectedCase: ICase = { ...caseMock, id: 'fakerId', name: 'fakerOtherName' };
 		let fakeResponse = { selectedCase };
-		spyOn(storageService, 'update').and.callFake(() => of(fakeResponse));
+		spyOn(storageService, 'update').and.callFake(() => <any>of(fakeResponse));
 		casesService.updateCase(selectedCase);
 		expect(storageService.update).toHaveBeenCalledWith(casesService.config.schema,
 			{
@@ -155,7 +155,7 @@ describe('CasesService', () => {
 
 	it('loadCase should get single case from ajax("get")', () => {
 		const caseId = '12345';
-		spyOn(storageService, 'get').and.returnValue(of([]));
+		spyOn(storageService, 'get').and.returnValue(<any>of([]));
 		casesService.loadCase(caseId);
 		expect(storageService.get).toHaveBeenCalledWith(casesService.config.schema, caseId);
 	});

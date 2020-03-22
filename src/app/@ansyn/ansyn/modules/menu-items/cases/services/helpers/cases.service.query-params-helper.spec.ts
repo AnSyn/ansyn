@@ -70,7 +70,7 @@ describe('CasesService', () => {
 
 		it('generateQueryParamsViaCase should parse url to qParams object (after parsing) ', () => {
 			spyOn(queryParamsHelper, 'encodeCaseObjects').and.callFake((key, val) => val);
-			spyOn(urlSerializer, 'parse').and.returnValue({ queryParams: {} });
+			spyOn(urlSerializer, 'parse').and.returnValue(<any>{ queryParams: {} });
 
 			let fakeCase: ICase = {
 				id: '12345678',

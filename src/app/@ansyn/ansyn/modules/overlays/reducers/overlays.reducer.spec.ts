@@ -11,6 +11,7 @@ import {
 } from '../actions/overlays.actions';
 import { cloneDeep } from 'lodash';
 import { IOverlaySpecialObject } from '../models/overlay.model';
+import { Action } from '@ngrx/store';
 
 describe('Overlay Reducer', () => {
 	let o1, o2, o3, o4;
@@ -126,8 +127,8 @@ describe('Overlay Reducer', () => {
 			start: new Date(Date.now() - (1000 * 60 * 60 * 24 * 30)),
 			end: new Date(Date.now())
 		};
-		const action = new SetTimelineStateAction({ timeLineRange: data1 });
-		const result = OverlayReducer(overlaysInitialState, action);
+		const action: Action = new SetTimelineStateAction({ timeLineRange: data1 });
+		const result = OverlayReducer(overlaysInitialState, <any>action);
 		expect(result.timeLineRange.start.getTime()).toBe(data1.start.getTime());
 		expect(result.timeLineRange.end.getTime()).toBe(data1.end.getTime());
 	});

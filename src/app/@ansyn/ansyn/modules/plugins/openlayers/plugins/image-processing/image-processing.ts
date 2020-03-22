@@ -181,28 +181,27 @@ function getFunctionByArgument(arg) {
 
 function rgb2YCbCr(rgb): { y: number, cb, cr } {
 	const {r, g, b} = rgb;
-	const y = Math.round(16 + 0.257 * r + 0.504 * g + 0.098 * b);
+	/*const y = Math.round(16 + 0.257 * r + 0.504 * g + 0.098 * b);
 	const cb = Math.round(128 - 0.148 * r - 0.291 * g + 0.439 * b);
-	const cr =  Math.round(128 + 0.439 * r - 0.368 * g - 0.071 * b);
-/*
+	const cr =  Math.round(128 + 0.439 * r - 0.368 * g - 0.071 * b);*/
 const y = Math.round((0.299 * r) + (0.587 * g) + (0.114 * b));
 const cb = Math.round(128 - (0.168736 * r) - (0.331264 * g) + (0.5 * b));
-const cr = Math.round(128 + (0.5 * r) - (0.418688 * g) - (0.081312 * b));*/
+const cr = Math.round(128 + (0.5 * r) - (0.418688 * g) - (0.081312 * b));
 	return { y, cb, cr };
 }
 
 function yCbCr2RGB(yCbCr): any {
-	const yNorm = yCbCr.y - 16;
+	/*const yNorm = yCbCr.y - 16;
 	const cbNorm = yCbCr.cb - 128;
 	const crNorm = yCbCr.cr - 128;
 
 	const r = Math.round(1.164 * yNorm + 1.596 * crNorm);
 	const g = Math.round(1.164 * yNorm - 0.392 * cbNorm - 0.813 * crNorm);
-	const b = Math.round(1.164 * yNorm + 2.017 * cbNorm);
-	/*const {y, cb, cr} = yCbCr;
+	const b = Math.round(1.164 * yNorm + 2.017 * cbNorm);*/
+	const {y, cb, cr} = yCbCr;
 	const r = Math.round(y + 1.402 * (cr - 128));
 	const g = Math.round(y - 0.344136 * (cb - 128) - 0.714136 * (cr - 128));
-	const b = Math.round(y + 1.772 * (cb - 128));*/
+	const b = Math.round(y + 1.772 * (cb - 128));
 	return { r, g, b };
 }
 
@@ -263,10 +262,10 @@ function hsl2RGB(pixel: IHSLPixel): IRGBPixel {
 }
 
 function buildHistogramLut(imageData) {
-	debugger;
-	/*const MAX = 234, MIN = 16;
+
+	/*const MAX = 255, MIN = 0;
 	const totalHistLut = [];
-	let min = 255, max = 0;
+	let min = MAX, max = MIN;
 
 	for (let index = 0; index < imageData.data.length; index += 4) {
 
@@ -331,8 +330,8 @@ function buildHistogramLut(imageData) {
 		finalHist[ycbcr.y] = ycbcr.y > (MAX - delta) ? MAX : ycbcr.y < (MIN + delta) ? MIN : ycbcr.y;
 	}*/
 
-	const keys = ['r', 'g', 'b'];
-	const MAX = 235, MIN = 16;
+	/*const keys = ['r', 'g', 'b'];
+	const MAX = 255, MIN = 0;
 	let min = {r: MAX, g: MAX, b: MAX}, max = {r: MIN, g: MIN, b: MIN};
 
 	for (let index = 0; index < imageData.data.length; index += 4) {
@@ -359,16 +358,54 @@ function buildHistogramLut(imageData) {
 	};
 
 	keys.forEach(band => {
-		for (let index = MIN; index < MAX; index ++) {
+		for (let index = MIN; index <= MAX; index ++) {
 			finalHist[band][index] = Math.round( ((index - min[band]) / (max[band] - min[band])) * (MAX - MIN ) + MIN );
 		}
-	});
+	});*/
+	debugger;
+	const BANDS = 4;
+	const { width, height, data } = imageData;
 
+	const row2remove = Math.max(1, Math.round(width * 0.12));
+	const col2remove = Math.max(1, Math.round(height * 0.12));
+	const newImage = [];
+	for (let i = row2remove; i < width - row2remove; i++  ) {
+		for (let j = col2remove; j < height - col2remove; j++) {
+			const pixelStartIndex = i * (width * BANDS) + (j * BANDS);
+			for ( let p = pixelStartIndex; p < pixelStartIndex + BANDS; p++) {
+				newImage.push(data[p])
+			}
+		}
+	}
+	let min = 255, max = 0;
+	const gHis = new Array(256).fill(0);
+	for ( let i = 0 ; i < newImage.length ; i += BANDS) {
+		const g = newImage[i + 1];
+		gHis[g]++;
+	}
+	const pixels = newImage.length / BANDS;
+	const probHist = gHis.map( val => val / pixels);
+	const valueInUse = gHis.filter(val => val > 0).length;
+	const sortedValue = gHis.filter( val => val > 0).sort( (a, b) => a - b);
+	const midTone = sortedValue[sortedValue.length / 2];
+
+	probHist.filter(val => val > 0).forEach( (val, index) => {
+		if (min > val) {
+			min = val;
+		}
+		if ( max < val) {
+			max = val;
+		}
+	});
+	const finalHist = [];
+	probHist.forEach((val, index) => {
+		finalHist[index] = this['normalizeColor'](Math.round((val - min) * 255 / (max - min)));
+	});
 	return finalHist;
 }
 
 function performHistogram(pixel, histogramLut) {
-	const rPixel = {r: pixel.r, g: 0, b: 0};
+	/*const rPixel = {r: pixel.r, g: 0, b: 0};
 	const gPixel = {r: 0, g: pixel.g, b: 0};
 	const bPixel = {r: 0, g: 0, b: pixel.b};
 	const yCbCr = {
@@ -381,7 +418,18 @@ function performHistogram(pixel, histogramLut) {
 		yCbCr[band].y = histogramLut[band][yCbCr[band].y];
 		const newRgb = this['yCbCr2RGB'](yCbCr[band]);
 		resultPixel[band] = newRgb[band];
-	});
+	});*/
+	/*const yCbCr = this['rgb2YCbCr'](pixel);
+	yCbCr.y = histogramLut[yCbCr.y];
+	const resultPixel = this['yCbCr2RGB'](yCbCr);
+	resultPixel.a = 255;*/
+	const resultPixel = {
+		r: histogramLut[pixel.r],
+		g: histogramLut[pixel.g],
+		b: histogramLut[pixel.b],
+		a: pixel.a
+	};
+
 	return resultPixel;
 }
 

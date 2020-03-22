@@ -1,4 +1,4 @@
-<form (reset)="control.setValue('')" (submit)="onSubmit()">
+<form *ngIf="show" (reset)="control.setValue('')" (submit)="onSubmit()">
 	<input *ngIf="geocoderService.onlyCoordinates; else fullSearch"
 		type="text" [placeholder]="geocoderService.placeholder | translate"
 		   [formControl]="control">

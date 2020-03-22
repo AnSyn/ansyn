@@ -331,39 +331,57 @@ function buildHistogramLut(imageData) {
 		finalHist[ycbcr.y] = ycbcr.y > (MAX - delta) ? MAX : ycbcr.y < (MIN + delta) ? MIN : ycbcr.y;
 	}*/
 
+	const keys = ['r', 'g', 'b'];
 	const MAX = 235, MIN = 16;
-	const totalHistLut = [];
-	let min = MAX, max = MIN;
+	let min = {r: MAX, g: MAX, b: MAX}, max = {r: MIN, g: MIN, b: MIN};
 
 	for (let index = 0; index < imageData.data.length; index += 4) {
-
 		const r = imageData.data[index];
 		const g = imageData.data[index + 1];
 		const b = imageData.data[index + 2];
 
-		const yCbCr: IYCbCrPixel = this['rgb2YCbCr']({ r, g, b });
+		const ycbcr = {
+			r: this['rgb2YCbCr']({ r, g: 0, b: 0 }),
+			g: this['rgb2YCbCr']({ r: 0, g, b: 0 }),
+			b: this['rgb2YCbCr']({ r: 0, g: 0, b })
+		};
 
-		const val = yCbCr.y;
-		min = min < val ? min : val;
-		max = max > val ? max : val;
+		keys.forEach( band => {
+			min[band] = min[band] < ycbcr[band].y ? min[band] : ycbcr[band].y;
+			max[band] = max[band] > ycbcr[band].y ? max[band] : ycbcr[band].y;
+		});
+	}
+
+	const finalHist = {
+		r: [],
+		g: [],
+		b: []
 	};
 
-	const finalHist = [];
-
-	for (let index = MIN; index < MAX; index ++) {
-		finalHist[index] = Math.round( ((index - min) / (max - min)) * (MAX - MIN ) + MIN );
-	}
+	keys.forEach(band => {
+		for (let index = MIN; index < MAX; index ++) {
+			finalHist[band][index] = Math.round( ((index - min[band]) / (max[band] - min[band])) * (MAX - MIN ) + MIN );
+		}
+	});
 
 	return finalHist;
 }
 
 function performHistogram(pixel, histogramLut) {
-	const yCbCr: IYCbCrPixel = this['rgb2YCbCr'](pixel);
-	yCbCr.y = histogramLut[yCbCr.y];
-
-	const resultPixel = this['yCbCr2RGB'](yCbCr);
-	// const resultPixel = {r: histogramLut.r[pixel.r], g: histogramLut.g[pixel.g], b: histogramLut.b[pixel.b], a: pixel.a};
-	resultPixel.a = pixel.a;
+	const rPixel = {r: pixel.r, g: 0, b: 0};
+	const gPixel = {r: 0, g: pixel.g, b: 0};
+	const bPixel = {r: 0, g: 0, b: pixel.b};
+	const yCbCr = {
+		r: this['rgb2YCbCr'](rPixel),
+		g: this['rgb2YCbCr'](gPixel),
+		b: this['rgb2YCbCr'](bPixel)
+	};
+	const resultPixel = {r: 0, g: 0, b: 0, a: pixel.a};
+	['r', 'g', 'b'].forEach( band => {
+		yCbCr[band].y = histogramLut[band][yCbCr[band].y];
+		const newRgb = this['yCbCr2RGB'](yCbCr[band]);
+		resultPixel[band] = newRgb[band];
+	});
 	return resultPixel;
 }
 

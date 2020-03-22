@@ -90,7 +90,7 @@ describe('ImageryStatusComponent', () => {
 
 	it('should return map extra description, if exists', () => {
 		const myDescription = 'hehe';
-		spyOn(communicatorService, 'provide').and.returnValue({
+		spyOn(communicatorService, 'provide').and.returnValue(<any>{
 			ActiveMap: {
 				getExtraData: () => ({
 					description: myDescription

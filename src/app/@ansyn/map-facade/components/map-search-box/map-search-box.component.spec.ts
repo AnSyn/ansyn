@@ -66,7 +66,7 @@ describe('MapSearchBoxComponent', () => {
 			spyOn(geocoderService, 'getLocation$').and.returnValue(asyncData([{ name: 'blablabla', point: 'test' }]));
 			component.control.setValue('hehe');
 			tick();
-			spyOn(component._communicator, 'setCenter').and.returnValue(asyncData({}));
+			spyOn(component._communicator, 'setCenter').and.returnValue(asyncData(true));
 			component.onSubmit();
 			tick();
 			expect(geocoderService.getLocation$).toHaveBeenCalledWith('hehe');
@@ -76,7 +76,7 @@ describe('MapSearchBoxComponent', () => {
 		it('should halt the flow, when given an empty string', fakeAsync(() => {
 			component.control.setValue('');
 			component.onSubmit();
-			spyOn(component._communicator, 'setCenter').and.returnValue(asyncData({}));
+			spyOn(component._communicator, 'setCenter').and.returnValue(asyncData(true));
 			tick();
 			expect(component._communicator.setCenter).not.toHaveBeenCalled();
 		}));
@@ -86,7 +86,7 @@ describe('MapSearchBoxComponent', () => {
 			spyOn(geocoderService, 'getLocation$').and.returnValue(asyncData([{ name: 'No results', point: undefined }]));
 			component.control.setValue('hehe');
 			component.onSubmit();
-			spyOn(component._communicator, 'setCenter').and.returnValue(asyncData({}));
+			spyOn(component._communicator, 'setCenter').and.returnValue(asyncData(true));
 			tick();
 			expect(geocoderService.getLocation$).toHaveBeenCalledWith('hehe');
 			expect(component._communicator.setCenter).not.toHaveBeenCalled();

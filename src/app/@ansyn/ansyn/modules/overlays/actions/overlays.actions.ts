@@ -139,7 +139,7 @@ export class DisplayOverlayAction implements Action {
 }
 
 export class DisplayOverlaySuccessAction extends DisplayOverlayAction {
-	type = OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS;
+	type = <any>OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS;
 }
 
 export class DisplayOverlayFailedAction implements Action {

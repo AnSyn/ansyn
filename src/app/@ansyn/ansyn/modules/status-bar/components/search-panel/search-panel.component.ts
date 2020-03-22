@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import * as momentNs from 'moment';
 import { IStatusBarConfig } from '../../models/statusBar-config.model';
 import { IGeoFilterStatus, IStatusBarState, selectGeoFilterStatus } from '../../reducers/status-bar.reducer';
@@ -7,8 +7,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
 import { GEO_FILTERS } from '../../models/combo-boxes.model';
 import { UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
-import { animate, style, transition, trigger } from '@angular/animations';
-import { AnimationTriggerMetadata } from '@angular/animations/src/animation_metadata';
+import { animate, style, transition, trigger, AnimationTriggerMetadata } from '@angular/animations';
 import { SearchMode, SearchModeEnum } from '../../models/search-mode.enum';
 import { filter, tap } from 'rxjs/operators';
 import { selectDataInputFilter, selectRegion, selectTime } from '../../../overlays/reducers/overlays.reducer';

@@ -13,8 +13,8 @@ export class TimePickerComponent implements OnInit, OnDestroy {
 	requestAnimation;
 	@Input() timeRange: Date[];
 	@Output() closeTimePicker = new EventEmitter();
-	@ViewChild('dt') datePicker: OwlDateTimeComponent<any>;
-	@ViewChild('trigger') trigger: any;
+	@ViewChild('dt', { static: false }) datePicker: OwlDateTimeComponent<any>;
+	@ViewChild('trigger', { static: false }) trigger: any;
 	constructor(protected store$: Store<any>) {
 	}
 

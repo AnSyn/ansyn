@@ -21,7 +21,9 @@ describe('SentinelLayersService', () => {
 			{
 				provide: MultipleOverlaysSourceConfig,
 				useValue: {
-					indexProviders: { SENTINEL: {} }
+					indexProviders: { SENTINEL: {
+							inActive: true
+						} }
 				}
 			}]
 	}));

@@ -432,7 +432,6 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	formatArea(geometry) {
 		const fractionDigits = 2;
 		const area = getArea(geometry);
-		console.log("area: ", area);
 
 		if (area >= 1000) {
 			return (area / 1000).toFixed(fractionDigits) + 'km2';

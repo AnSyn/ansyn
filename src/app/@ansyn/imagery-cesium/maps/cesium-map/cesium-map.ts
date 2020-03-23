@@ -179,7 +179,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 	}
 
 	createMapObject(layer: CesiumLayer): Observable<boolean> {
-		layer.set(IMAGERY_MAIN_LAYER_NAME, true);
+		layer.set(ImageryLayerProperties.NAME, IMAGERY_MAIN_LAYER_NAME);
 		this.mainLayer = layer;
 		let cesiumSceneMode = this.getCesiumSceneMode(layer.sceneMode);
 		if (this.mapObject) {

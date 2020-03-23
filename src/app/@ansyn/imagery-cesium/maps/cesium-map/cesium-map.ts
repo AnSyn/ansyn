@@ -2,6 +2,9 @@ import {
 	BaseImageryMap,
 	ExtentCalculator,
 	ICanvasExportData,
+	IMAGERY_BASE_MAP_LAYER,
+	IMAGERY_MAIN_LAYER_NAME,
+	ImageryLayerProperties,
 	ImageryMap,
 	ImageryMapExtent,
 	ImageryMapPosition,
@@ -38,9 +41,12 @@ export class CesiumMap extends BaseImageryMap<any> {
 	_moveEndListener;
 	_mouseMoveHandler;
 	lastRotation = 0;
+	mainLayer: CesiumLayer;
+	layersToCesiumLayer: Map<CesiumLayer, any>;
 
 	constructor(public projectionService: CesiumProjectionService) {
 		super();
+		this.layersToCesiumLayer = new Map<CesiumLayer, any>();
 	}
 
 	initMap(element: HTMLElement, shadowElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: any, position?: ImageryMapPosition): Observable<boolean> {
@@ -173,6 +179,8 @@ export class CesiumMap extends BaseImageryMap<any> {
 	}
 
 	createMapObject(layer: CesiumLayer): Observable<boolean> {
+		layer.set(ImageryLayerProperties.NAME, IMAGERY_MAIN_LAYER_NAME);
+		this.mainLayer = layer;
 		let cesiumSceneMode = this.getCesiumSceneMode(layer.sceneMode);
 		if (this.mapObject) {
 			if (!layer.sceneMode) {
@@ -330,12 +338,33 @@ export class CesiumMap extends BaseImageryMap<any> {
 		return this.internalSetPosition((<any>polygon.geometry));
 	}
 
+	getMainLayer(): any {
+		return this.mainLayer;
+	}
+
+	public addMapLayer(layer: any) {
+		const main = this.getMainLayer();
+		const mainLayerId = main.get(ImageryLayerProperties.ID);
+		const baseMapLayer = Array.from(this.layersToCesiumLayer.keys()).find((currentLayer: CesiumLayer) => currentLayer.get(ImageryLayerProperties.NAME) === IMAGERY_BASE_MAP_LAYER && currentLayer.get(ImageryLayerProperties.ID) !== mainLayerId);
+		if (baseMapLayer) {
+			this.removeLayer(baseMapLayer);
+		}
+		if (layer.get(ImageryLayerProperties.ID) !== mainLayerId) {
+			this.addLayer(layer);
+		}
+	}
+
 	addLayer(layer: any): void {
-		throw new Error('Method not implemented.');
+		const actualCesiumLayer = this.mapObject.imageryLayers.addImageryProvider(layer.layer);
+		this.layersToCesiumLayer.set(layer, actualCesiumLayer);
 	}
 
 	removeLayer(layer: any): void {
-		throw new Error('Method not implemented.');
+		const actualCesiumLayer = this.layersToCesiumLayer.get(layer);
+		if (actualCesiumLayer) {
+			this.mapObject.imageryLayers.remove(actualCesiumLayer);
+			this.layersToCesiumLayer.delete(layer);
+		}
 	}
 
 	setCameraView(heading: number, pitch: number, roll: number, destination: Cartesian3) {

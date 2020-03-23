@@ -169,7 +169,7 @@ describe('CasesEffects', () => {
 			.returnValue(caseMock);
 		const queryParmas: Params = { foo: 'bar' };
 		actions = hot('--a--', { a: new LoadDefaultCaseAction(queryParmas) });
-		const expectedResults = cold('--b--', { b: new SelectDilutedCaseAction('updateCaseViaQueryParmasResult' as any) });
+		const expectedResults = cold('--b--', { b: new SelectDilutedCaseAction(caseMock) });
 		expect(casesEffects.loadDefaultCase$).toBeObservable(expectedResults);
 	});
 

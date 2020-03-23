@@ -63,7 +63,10 @@ import { ToggleMenuCollapse } from '@ansyn/menu';
 import { UUID } from 'angular2-uuid';
 import { DataLayersService } from '../modules/menu-items/layers-manager/services/data-layers.service';
 import { SetMinimalistViewModeAction } from '@ansyn/map-facade';
-import { AddressesService } from "../../../app/addresses/services/addresses.service";
+import { AddressesService } from "../addresses/services/addresses.service";
+import { IConfigModel } from "../config.model";
+import { fetchConfigProviders } from "../public_api";
+import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 
 @Injectable({
 	providedIn: 'root'
@@ -411,12 +414,13 @@ export class AnsynApi {
 	private generateFeaturesIds(annotationsLayer): void {
 		/* reference */
 		annotationsLayer.features.forEach((feature) => {
-			feature.properties = {...feature.properties, id: UUID.UUID()};
+			feature.properties = { ...feature.properties, id: UUID.UUID() };
 		});
 
 	}
 
 	loadAddresses(environment: string) {
-		const addresses = this.addressesService.loadAddresses(environment);
+		// const addresses = this.addressesService.loadAddresses$(environment).subscribe(addresses => addresses);
+		// fetchConfigProviders('assets/config/app.config.json', addresses).then(providers => console.log(providers));
 	}
 }

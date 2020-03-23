@@ -4,8 +4,8 @@ import { AddressesConfigService } from "./addresses-config.service";
 import { IAddressesConfig } from "../models/addresses.config";
 import { AutoSubscriptions } from "auto-subscriptions";
 import { catchError, map } from "rxjs/operators";
-import { ErrorHandlerService } from "@ansyn/ansyn";
-import { Observable } from "rxjs";
+import { Observable, throwError } from "rxjs";
+import { fetchConfigProviders } from "../../fetch-config-providers";
 
 @Injectable()
 @AutoSubscriptions({
@@ -14,6 +14,7 @@ import { Observable } from "rxjs";
 })
 
 export class AddressesService implements OnInit, OnDestroy {
+	addresses;
 
 	get config(): IAddressesConfig {
 		return this.addressesConfigService.config;
@@ -25,7 +26,7 @@ export class AddressesService implements OnInit, OnDestroy {
 
 	constructor(protected httpClient: HttpClient,
 				protected addressesConfigService: AddressesConfigService) {
-		this.loadAddresses('dev').subscribe(data => console.log(data));
+		this.loadAddresses$('prod');
 		this.ngOnInit();
 	}
 
@@ -35,19 +36,15 @@ export class AddressesService implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 	}
 
-	public loadAddresses(environment: string): Observable<any> {
-		const url = `${this.url}/address/${environment}`;
+	public loadAddresses$(environment: string): Observable<any> {
+		// const url = `${this.url}/address/${environment}`;
+		const url = `http://localhost:8080/address/${environment}`;
 
-		return this.httpClient.get('http://localhost:8081/config').pipe(
-			map(addresses => {
-				console.log(addresses);
-				return addresses;
-			}),
-			catchError((error: any) => {
-				// return this.errorHandlerService.httpErrorHandle(error);
-				console.log(error);
-				return error;
-			})
+		const addressesObservable = this.httpClient.get<any>(url).pipe(
+			map(addresses =>  addresses),
+			catchError((error: any) => throwError(error))
 		);
+
+		return addressesObservable;
 	}
 }

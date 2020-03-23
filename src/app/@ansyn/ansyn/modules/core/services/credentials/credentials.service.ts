@@ -23,6 +23,7 @@ export class CredentialsService {
 
 	constructor(protected httpClient: HttpClient,
 				@Inject(credentialsConfig) public config: ICredentialsConfig) {
+		console.log(this.config)
 		this.getCredentials().pipe(take(1)).subscribe();
 	}
 

@@ -14,8 +14,19 @@ export const mergeConfig = (sectionInConfig, mergeChanges) => {
 	}
 };
 
-export const fetchConfigProviders = (configPath = 'assets/config/app.config.json', mergeChanges: IConfigModel | any = null) => fetch(configPath)
-	.then(response => response.json())
-	.then(jsonConfig => mergeWith(jsonConfig, mergeChanges, mergeConfig))
-	.then(getProviders);
+export const fetchConfigProviders = (configPath = 'assets/config/app.config.json', mergeChanges: IConfigModel | any = null, environment = 'dev') => {
+	fetch(configPath)
+		.then(response => response.json())
+		.then(jsonConfig => mergeWith(jsonConfig, mergeChanges, mergeConfig))
+		.then(getProviders);
+
+	const url = `http://localhost:8080/address/${environment}`;
+
+	return fetch(configPath)
+		.then(response => response.json())
+		.then(jsonConfig => fetch(url)
+			.then(response => response.json())
+			.then(addresses => mergeWith(jsonConfig, addresses, mergeConfig)))
+		.then(getProviders);
+};
 

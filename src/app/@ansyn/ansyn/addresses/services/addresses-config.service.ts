@@ -11,6 +11,7 @@ export class AddressesConfigService {
 	}
 
 	constructor(@Inject(AddressesConfig) protected _config: IAddressesConfig) {
+		console.log(this.config);
 	}
 
 }

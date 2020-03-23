@@ -1,4 +1,4 @@
-import { ErrorHandler, NgModule } from '@angular/core';
+import { ErrorHandler, ModuleWithProviders, NgModule } from '@angular/core';
 import { AppAnsynComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AnsynModule, LoggerService } from '@ansyn/ansyn';
@@ -16,7 +16,9 @@ import { ContextModule } from './context/context.module';
 import { DeviceDetectorModule } from 'ngx-device-detector';
 import { SentinelModule } from './sentinel/sentinel.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AddressModule } from "./addresses/addresses.module";
+import { AddressModule } from "../@ansyn/ansyn/addresses/addresses.module";
+import { IAddressesConfig } from "../@ansyn/ansyn/addresses/models/addresses.config";
+import { AddressesConfig, AddressesConfigService } from "../@ansyn/ansyn/addresses/services/addresses-config.service";
 
 @NgModule({
 	imports: [
@@ -39,7 +41,8 @@ import { AddressModule } from "./addresses/addresses.module";
 		{
 			provide: ErrorHandler,
 			useClass: LoggerService
-		}
+		},
+		{ provide: AddressesConfig, useValue: {} }
 	],
 	declarations: [AppAnsynComponent, AnsynHostComponent, PlaceholderComponent],
 	exports: [AppAnsynComponent],
@@ -47,4 +50,12 @@ import { AddressModule } from "./addresses/addresses.module";
 })
 
 export class AppAnsynModule {
+	static forRoot(config: IAddressesConfig): ModuleWithProviders {
+		return {
+			ngModule: AddressModule,
+			providers: [
+				{ provide: AddressesConfig, useValue: config }
+			]
+		};
+	}
 }

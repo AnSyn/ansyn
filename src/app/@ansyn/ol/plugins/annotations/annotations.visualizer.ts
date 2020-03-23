@@ -559,10 +559,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		const entity = this.idToEntity.get(featureId);
 		if (entity) {
 			entity.originalEntity = merge({}, entity.originalEntity, props);
+			if (entity.originalEntity.featureJson && entity.originalEntity.featureJson.properties) {
+				entity.originalEntity.featureJson.properties = merge({}, entity.originalEntity.featureJson.properties, props);
+			}
 			this.events.updateEntity.next(entity.originalEntity);
 			this.source.refresh();
 		}
-
 	}
 
 	setVisibility(isVisible: boolean) {

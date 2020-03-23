@@ -60,7 +60,6 @@ export class DataLayersService implements OnInit, OnDestroy {
 				protected storageService: StorageService,
 				protected store: Store<any>,
 				@Inject(layersConfig) public config: ILayersManagerConfig) {
-		console.log(layersConfig);
 		this.ngOnInit();
 	}
 

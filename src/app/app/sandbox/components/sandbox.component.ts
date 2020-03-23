@@ -617,18 +617,8 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		this.ansynApi.changeMapLayout('layout2').pipe(
 			tap(() => {
 
-				this.ansynApi.displayOverLay({...this.overlays[1], imageUrl: '/assets/config/doll.jpg', tag: {
-					imageData: {
-						imageWidth: 369,
-						imageHeight: 550
-					}
-					}}, 0);
-				this.ansynApi.displayOverLay({...this.overlays[2], imageUrl: '/assets/config/doll-auto.jpg', tag: {
-						imageData: {
-							imageWidth: 369,
-							imageHeight: 550
-						}
-					}}, 1);
+				this.ansynApi.displayOverLay(this.overlay('mmm', OpenLayersStaticImageSourceProviderSourceType, '/assets/config/doll.jpg', null, GeoRegisteration.notGeoRegistered, 'ssss', 'wwww', 369, 550), 0);
+				this.ansynApi.displayOverLay(this.overlay('mmm11', OpenLayersStaticImageSourceProviderSourceType, '/assets/config/doll-auto.jpg', null, GeoRegisteration.notGeoRegistered, 'ssss', 'wwww', 369, 550), 1)
 			}),
 			take(1)
 		).subscribe();

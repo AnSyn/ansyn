@@ -18,12 +18,12 @@
 			<div
 				*ngFor="let menuItem of bottomMenuItemsAsArray$ | async"
 				class="menu-btn bottom"
-				[class.first-start]="isUserFirstEntrance"
+				[class.draw-user-attention]="isUserFirstEntrance || !doesUserHaveCredentials"
 				[class.active]="isActive(menuItem.name)"
 				(click)="toggleItem(menuItem.name, true)">
 
 				<i [ngClass]="menuItem.iconClass"></i>
-				<span class="badge bottom" [hidden]="!isUserFirstEntrance"> </span>
+				<span class="badge bottom" [hidden]="!isUserFirstEntrance && doesUserHaveCredentials"> </span>
 				{{menuItem.name | translate}}
 			</div>
 			<div class="logo">

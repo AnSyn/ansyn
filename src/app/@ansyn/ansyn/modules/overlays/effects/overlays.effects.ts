@@ -35,6 +35,7 @@ import { getErrorLogFromException } from '../../core/utils/logs/timer-logs';
 import { LoggerService } from '../../core/services/logger.service';
 import { AreaToCredentialsService } from "../../core/services/credentials/area-to-credentials.service";
 import { CredentialsService, ICredentialsResponse } from "../../core/services/credentials/credentials.service";
+import { SetDoesUserHaveCredentials } from "../../../../menu/actions/menu.actions";
 
 @Injectable()
 export class OverlaysEffects {
@@ -90,13 +91,16 @@ export class OverlaysEffects {
 				mergeMap<any, any>(([trianglesOfArea, userAuthorizedAreas]: [any, any]) => {
 
 					if (userAuthorizedAreas.some( area => trianglesOfArea.includes(area))) {
-						return [new LoadOverlaysAction(action.payload)];
+						return [new LoadOverlaysAction(action.payload),
+							new SetDoesUserHaveCredentials(true)];
 					}
 					return [new LoadOverlaysSuccessAction([]),
-						new SetOverlaysStatusMessageAction(this.translate.instant(overlaysStatusMessages.noPermissionsForArea))];
+						new SetOverlaysStatusMessageAction(this.translate.instant(overlaysStatusMessages.noPermissionsForArea)),
+						new SetDoesUserHaveCredentials(false)];
 				}),
 				catchError( () => {
-					return [new LoadOverlaysAction(action.payload)]
+					return [new LoadOverlaysAction(action.payload),
+						new SetDoesUserHaveCredentials(true)];
 				})
 			)
 		})

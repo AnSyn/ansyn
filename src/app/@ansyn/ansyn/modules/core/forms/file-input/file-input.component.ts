@@ -16,7 +16,7 @@ import { UUID } from 'angular2-uuid';
 	]
 })
 export class FileInputComponent implements ControlValueAccessor {
-	@ViewChild('input', {static:false}) public input: ElementRef<any>;
+	@ViewChild('input', {static: false}) public input: ElementRef<any>;
 	@Input() placeholder = 'Choose file';
 	@Input() accept = '';
 	@Input() multiple = false;

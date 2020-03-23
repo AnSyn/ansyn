@@ -1,4 +1,4 @@
-import { ImageryMapPosition, IMapSettings } from '@ansyn/imagery';
+import { IImageryMapPosition, IMapSettings } from '@ansyn/imagery';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { range } from 'lodash';
@@ -235,7 +235,7 @@ export const selectMapStateById = (id: string) => createSelector(selectMaps, (ma
 export const selectMapsStateByIds: (mapIds: string[]) => MemoizedSelector<any, IMapSettings[]> = (mapIds: string[]) => createSelector(selectMaps, (maps) => mapIds.map(id => maps[id]));
 export const selectOverlayByMapId = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data && mapState.data.overlay);
 export const selectHideLayersOnMap = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.flags.hideLayers);
-export const selectMapPositionByMapId: (mapId: string) => MemoizedSelector<any, ImageryMapPosition> = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.position);
+export const selectMapPositionByMapId: (mapId: string) => MemoizedSelector<any, IImageryMapPosition> = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.position);
 export const selectMapTypeById: (mapId: string) => MemoizedSelector<any, string> = (mapId => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.worldView.mapType));
 export const selectSourceTypeById: (mapId: string) => MemoizedSelector<any, string> = (mapId => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.worldView.sourceType));
 

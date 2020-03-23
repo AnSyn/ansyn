@@ -301,7 +301,7 @@ export {
 	ICaseBooleanFilterMetadata, ICaseState, IOverlaysManualProcessArgs
 }from './modules/menu-items/cases/models/case.model';
 export {
-	ICaseMapsState, IDilutedCaseState, ImageManualProcessArgs
+	ICaseMapsState, IDilutedCaseState, IImageManualProcessArgs
 }from './modules/menu-items/cases/models/case.model';
 export { ICaseEnumFilterMetadata } from './modules/menu-items/cases/models/case.model';
 export { ICaseMapState } from './modules/menu-items/cases/models/case.model';

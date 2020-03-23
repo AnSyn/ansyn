@@ -1,10 +1,9 @@
 import { StartMouseShadow, StopMouseShadow, ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
-import { ImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
+import { IImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 import { AnnotationMode } from '@ansyn/ol';
-import { selectActiveMapId } from '@ansyn/map-facade';
 
 export enum toolsFlags {
 	geoRegisteredOptionsEnabled = 'geoRegisteredOptionsEnabled',
@@ -43,7 +42,7 @@ export interface IToolsState {
 	activeOverlaysFootprintMode?: OverlayDisplayMode;
 	annotationMode: AnnotationMode;
 	annotationProperties: Partial<IVisualizerStyle>;
-	manualImageProcessingParams: ImageManualProcessArgs;
+	manualImageProcessingParams: IImageManualProcessArgs;
 	overlaysManualProcessArgs: IOverlaysManualProcessArgs;
 	activeAnnotationLayer: string;
 	mapsMeasures: Map<string, IMeasureData>;

@@ -34,7 +34,7 @@ const animations: any[] = [
 	destroy: 'ngOnDestroy'
 })
 export class TasksTableComponent implements OnInit, OnDestroy {
-	@ViewChild('tbodyElement', {static:false}) tbodyElement: ElementRef;
+	@ViewChild('tbodyElement', {static: false}) tbodyElement: ElementRef;
 
 	ids$: Observable<string[] | number[]> = this.store$.select(selectTasksIds);
 	entities$: Observable<Dictionary<AlgorithmTaskPreview>> = this.store$.select(selectTaskEntities);

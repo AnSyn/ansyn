@@ -11,7 +11,7 @@ import { selectLayers, selectSelectedLayersIds } from '../../../../menu-items/la
 import { booleanContains, intersect } from '@turf/turf';
 import {
 	getPolygonIntersectionRatio,
-	ImageryMapPosition,
+	IImageryMapPosition,
 	ImageryPlugin,
 	IVisualizerEntity
 } from '@ansyn/imagery';
@@ -44,7 +44,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	updateLayerScale$ = () => this.store$.select(selectMapPositionByMapId(this.mapId)).pipe(
 		debounceTime(500),
 		filter(Boolean),
-		mergeMap((position: ImageryMapPosition) => {
+		mergeMap((position: IImageryMapPosition) => {
 			// used squareGrid to get the extent grid
 			this.currentExtent = position.extentPolygon;
 			const entities = [];

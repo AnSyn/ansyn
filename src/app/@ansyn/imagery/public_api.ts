@@ -3,7 +3,7 @@ export { IStroke, IIcon } from './model/visualizers/visualizer-style';
 
 export { ICanvasExportData } from './model/base-imagery-map';
 export {
-	ImageryMapExtent, ImageryMapExtentPolygon, ImageryMapProjectedState, ImageryMapPosition, IMousePointerMove
+	ImageryMapExtent, ImageryMapExtentPolygon, IImageryMapProjectedState, IImageryMapPosition, IMousePointerMove
 }from './model/case-map-position.model';
 
 export { MAP_SOURCE_PROVIDERS_CONFIG, IMapSourceProvidersConfig } from './model/base-map-source-provider';
@@ -19,7 +19,7 @@ export {
 	IMapProvidersConfig,
 	MAP_PROVIDERS_CONFIG
 } from './model/map-providers-config';
-export { ImageryMapSources } from './providers/map-source-providers';
+export { IImageryMapSources } from './providers/map-source-providers';
 export { IMapInstanceChanged } from './communicator-service/communicator.entity';
 export { IBaseMapSourceProviderConstructor } from './model/base-map-source-provider';
 export { VisualizerInteractions } from './model/base-imagery-visualizer';

@@ -3,7 +3,7 @@ import {
 	getPolygonByPointAndRadius,
 	getPolygonByBufferRadius,
 	ImageryCommunicatorService,
-	ImageryMapPosition,
+	IImageryMapPosition,
 	IMapSettings
 } from '@ansyn/imagery';
 import {
@@ -258,7 +258,7 @@ export class AnsynApi {
 		}
 	}
 
-	getMapPosition(): ImageryMapPosition {
+	getMapPosition(): IImageryMapPosition {
 		return this.mapsEntities[this.activeMapId].data.position;
 	}
 

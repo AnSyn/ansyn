@@ -90,6 +90,4 @@ export abstract class BaseImageryVisualizer extends BaseImageryPlugin implements
 	abstract removeInteraction(type: VisualizerInteractionTypes, interactionInstance: any): void;
 }
 
-export interface IBaseImageryVisualizerClass {
-	new(...args): BaseImageryVisualizer;
-}
+export type IBaseImageryVisualizerClass = new(...args) => BaseImageryVisualizer;

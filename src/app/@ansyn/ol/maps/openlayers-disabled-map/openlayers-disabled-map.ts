@@ -1,10 +1,9 @@
 import {
 	BaseImageryMap,
-	ICanvasExportData,
 	IMAGERY_MAIN_LAYER_NAME,
 	ImageryLayerProperties,
 	ImageryMap,
-	ImageryMapPosition
+	IImageryMapPosition
 } from '@ansyn/imagery';
 import { GeoJsonObject, Point } from 'geojson';
 import Layer from 'ol/layer/Layer';
@@ -22,7 +21,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	mainLayer: Layer;
 	element: HTMLElement;
 
-	initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, mainLayer: any, position?: ImageryMapPosition): Observable<boolean> {
+	initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, mainLayer: any, position?: IImageryMapPosition): Observable<boolean> {
 		this.element = element;
 		this.mapObject = new Map({
 			target: element,
@@ -52,12 +51,12 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	}
 
 
-	resetView(layer: any, position?: ImageryMapPosition): Observable<boolean> {
+	resetView(layer: any, position?: IImageryMapPosition): Observable<boolean> {
 		this.setMainLayer(layer, position);
 		return of(true);
 	}
 
-	setMainLayer(layer: Layer, position?: ImageryMapPosition) {
+	setMainLayer(layer: Layer, position?: IImageryMapPosition) {
 		this.removeMainLayer();
 		const view = this.generateNewView(layer, position);
 		this.mapObject.setView(view);
@@ -74,7 +73,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		return this.mainLayer;
 	}
 
-	generateNewView(layer: Layer, position?: ImageryMapPosition): View {
+	generateNewView(layer: Layer, position?: IImageryMapPosition): View {
 		const newProjection = layer.getSource().getProjection();
 
 		// for outside only
@@ -116,11 +115,11 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		this.mapObject.renderSync();
 	}
 
-	setPosition(position: ImageryMapPosition): Observable<boolean> {
+	setPosition(position: IImageryMapPosition): Observable<boolean> {
 		return of(true);
 	}
 
-	getPosition(): Observable<ImageryMapPosition> {
+	getPosition(): Observable<IImageryMapPosition> {
 		return of(undefined);
 	}
 

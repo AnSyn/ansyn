@@ -1,11 +1,10 @@
 import {
 	BaseImageryMap,
 	ExtentCalculator,
-	ICanvasExportData,
 	ImageryMap,
 	ImageryMapExtent,
-	ImageryMapPosition,
-	ImageryMapProjectedState,
+	IImageryMapPosition,
+	IImageryMapProjectedState,
 	toDegrees
 } from '@ansyn/imagery';
 import { featureCollection } from '@turf/helpers';
@@ -43,7 +42,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		super();
 	}
 
-	initMap(element: HTMLElement, shadowElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: any, position?: ImageryMapPosition): Observable<boolean> {
+	initMap(element: HTMLElement, shadowElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: any, position?: IImageryMapPosition): Observable<boolean> {
 		this.element = element;
 
 		return this.resetView(layer, position);
@@ -255,7 +254,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		}
 	}
 
-	resetView(layer: CesiumLayer, position: ImageryMapPosition, extent ?: ImageryMapExtent): Observable<boolean> {
+	resetView(layer: CesiumLayer, position: IImageryMapPosition, extent ?: ImageryMapExtent): Observable<boolean> {
 		if (!this.mapObject || (layer.mapProjection && (<any>this.mapObject.scene.mapProjection).projectionName !== layer.mapProjection.projectionName)) {
 			return this.createMapObject(layer).pipe(
 				mergeMap((isReady) => {
@@ -349,7 +348,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		});
 	}
 
-	setPosition(position: ImageryMapPosition): Observable<boolean> {
+	setPosition(position: IImageryMapPosition): Observable<boolean> {
 		if (position.projectedState && position.projectedState.projection &&
 			position.projectedState.projection.code === 'cesium_WGS84') {
 			this.setCameraView(position.projectedState.rotation, position.projectedState.pitch, position.projectedState.roll, position.projectedState.cameraPosition);
@@ -388,10 +387,10 @@ export class CesiumMap extends BaseImageryMap<any> {
 		}
 	}
 
-	getPosition(): Observable<ImageryMapPosition> {
+	getPosition(): Observable<IImageryMapPosition> {
 		try {
 			const center = this.getInnerCenter();
-			const projectedState: ImageryMapProjectedState = {
+			const projectedState: IImageryMapProjectedState = {
 				center: [center.coordinates[0], center.coordinates[1], center.coordinates[2]],
 				cameraPosition: this.mapObject.camera.position,
 				rotation: +this.mapObject.camera.heading.toFixed(7),

@@ -1,14 +1,14 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { ImageryCommunicatorService } from './communicator.service';
 import { EventEmitter } from '@angular/core';
-import { ImageryMapPosition } from '../model/case-map-position.model';
+import { IImageryMapPosition } from '../model/case-map-position.model';
 import { CommunicatorEntity, IMapInstanceChanged } from './communicator.entity';
 
 describe('ImageryCommunicatorService', () => {
 	let imageryCommunicatorService: ImageryCommunicatorService;
 	const componentManager1: CommunicatorEntity = <any>{
 		id: '1',
-		positionChanged: new EventEmitter<{ id: string, position: ImageryMapPosition }>(),
+		positionChanged: new EventEmitter<{ id: string, position: IImageryMapPosition }>(),
 		pointerMove: new EventEmitter<any>(),
 		contextMenu: new EventEmitter<any>(),
 		imageryCommunicatorService: { instanceCreated: new EventEmitter<any>() },
@@ -18,7 +18,7 @@ describe('ImageryCommunicatorService', () => {
 
 	const componentManager2: CommunicatorEntity = <any>{
 		id: '2',
-		positionChanged: new EventEmitter<{ id: string, position: ImageryMapPosition }>(),
+		positionChanged: new EventEmitter<{ id: string, position: IImageryMapPosition }>(),
 		imageryCommunicatorService: { instanceCreated: new EventEmitter<any>() },
 		mapInstanceChanged: new EventEmitter<IMapInstanceChanged>(),
 		plugins: []

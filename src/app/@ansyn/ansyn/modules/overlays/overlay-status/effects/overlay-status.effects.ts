@@ -4,7 +4,7 @@ import {
 	geojsonMultiPolygonToPolygons,
 	geojsonPolygonToMultiPolygon,
 	ImageryCommunicatorService,
-	ImageryMapPosition,
+	IImageryMapPosition,
 	IMapSettings,
 	unifyPolygons
 } from '@ansyn/imagery';
@@ -12,7 +12,7 @@ import {
 	MapActionTypes,
 	MapFacadeService,
 	mapStateSelector,
-	selectMaps, selectMapsIds, selectMapsList,
+	selectMaps, selectMapsList,
 	SetToastMessageAction,
 	UpdateMapAction,
 	SetLayoutSuccessAction, selectActiveMapId
@@ -23,7 +23,7 @@ import { Dictionary } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
 import { EMPTY, Observable } from 'rxjs';
 import { fromPromise } from 'rxjs/internal-compatibility';
-import { catchError, filter, map, mergeMap, switchMap, withLatestFrom, tap } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
 	BackToWorldFailed,
 	BackToWorldSuccess,
@@ -54,8 +54,8 @@ export class OverlayStatusEffects {
 				const { position } = selectedMap.data;
 				return [action.payload, selectedMap, communicator, position];
 			}),
-			filter(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => Boolean(communicator)),
-			switchMap(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => {
+			filter(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, IImageryMapPosition]) => Boolean(communicator)),
+			switchMap(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, IImageryMapPosition]) => {
 				const disabledMap = communicator.activeMapName === DisabledOpenLayersMapName || communicator.activeMapName === ImageryVideoMapType;
 				this.store$.dispatch(new UpdateMapAction({
 					id: communicator.id,
@@ -109,8 +109,8 @@ export class OverlayStatusEffects {
 			const mapSettings: IMapSettings = MapFacadeService.activeMap(mapState);
 			return [mapSettings.data.position, mapSettings.data.overlay, overlaysScannedAreaData];
 		}),
-		filter(([position, overlay, overlaysScannedAreaData]: [ImageryMapPosition, IOverlay, IOverlaysScannedAreaData]) => Boolean(position) && Boolean(overlay)),
-		map(([position, overlay, overlaysScannedAreaData]: [ImageryMapPosition, IOverlay, IOverlaysScannedAreaData]) => {
+		filter(([position, overlay, overlaysScannedAreaData]: [IImageryMapPosition, IOverlay, IOverlaysScannedAreaData]) => Boolean(position) && Boolean(overlay)),
+		map(([position, overlay, overlaysScannedAreaData]: [IImageryMapPosition, IOverlay, IOverlaysScannedAreaData]) => {
 			let scannedArea = overlaysScannedAreaData && overlaysScannedAreaData[overlay.id];
 			if (!scannedArea) {
 				scannedArea = geojsonPolygonToMultiPolygon(position.extentPolygon);

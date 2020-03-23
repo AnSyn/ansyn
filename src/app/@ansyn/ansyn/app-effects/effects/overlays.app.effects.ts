@@ -31,7 +31,7 @@ import {
 import { selectRemovedOverlays } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../app.effects.module';
 
-import { ImageryMapPosition } from '@ansyn/imagery';
+import { IImageryMapPosition } from '@ansyn/imagery';
 import {
 	catchError,
 	distinctUntilChanged,
@@ -82,7 +82,7 @@ export class OverlaysAppEffects {
 
 	isPinPointSearch$ = this.region$.pipe(
 		filter(Boolean),
-		map<any,Boolean>((region) => region.type === CaseGeoFilter.PinPoint),
+		map<any, Boolean>((region) => region.type === CaseGeoFilter.PinPoint),
 		distinctUntilChanged()
 	);
 
@@ -243,7 +243,7 @@ export class OverlaysAppEffects {
 		})
 	);
 
-	private getOverlayWithNewThumbnail: any = switchMap(([overlay, position]: [IOverlay, ImageryMapPosition]) => {
+	private getOverlayWithNewThumbnail: any = switchMap(([overlay, position]: [IOverlay, IImageryMapPosition]) => {
 		if (!overlay) {
 			return [overlay];
 		}

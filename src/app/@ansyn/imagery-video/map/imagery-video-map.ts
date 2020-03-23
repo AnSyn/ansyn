@@ -1,4 +1,4 @@
-import { BaseImageryMap, ImageryMap, ImageryMapExtent, ImageryMapPosition } from '@ansyn/imagery';
+import { BaseImageryMap, ImageryMap, ImageryMapExtent, IImageryMapPosition } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
 import { GeoJsonObject, Point } from 'geojson';
 import { HttpClient } from '@angular/common/http';
@@ -62,7 +62,7 @@ export class ImageryVideoMap extends BaseImageryMap<any> {
 		return [this.mainLayer];
 	}
 
-	getPosition(): Observable<ImageryMapPosition> {
+	getPosition(): Observable<IImageryMapPosition> {
 		const _position = this._getPosition();
 		return of(_position);
 	}
@@ -75,7 +75,7 @@ export class ImageryVideoMap extends BaseImageryMap<any> {
 		this.mainLayer = null;
 	}
 
-	resetView(layer: any, position?: ImageryMapPosition, extent?: ImageryMapExtent, useDoubleBuffer?: boolean): Observable<boolean> {
+	resetView(layer: any, position?: IImageryMapPosition, extent?: ImageryMapExtent, useDoubleBuffer?: boolean): Observable<boolean> {
 		this.setMainLayer(layer);
 
 		const currentPosition = this._getPosition();
@@ -98,7 +98,7 @@ export class ImageryVideoMap extends BaseImageryMap<any> {
 		return this.mainLayer;
 	}
 
-	setPosition(position: ImageryMapPosition): Observable<boolean> {
+	setPosition(position: IImageryMapPosition): Observable<boolean> {
 		return of(undefined);
 	}
 
@@ -112,7 +112,7 @@ export class ImageryVideoMap extends BaseImageryMap<any> {
 	updateSize(): void {
 	}
 
-	initMap(target: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: any, position?: ImageryMapPosition, viewContainerRef?: ViewContainerRef): Observable<boolean> {
+	initMap(target: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: any, position?: IImageryMapPosition, viewContainerRef?: ViewContainerRef): Observable<boolean> {
 		// this.videoComponent = <any>document.createElement(IMAGERY_VIDEO_COMPONENT_SELECTOR);
 		// target.appendChild(<any>this.videoComponent);
 		const comp = this.componentFactoryResolver.resolveComponentFactory(ImageryVideoComponent);
@@ -126,7 +126,7 @@ export class ImageryVideoMap extends BaseImageryMap<any> {
 		return turf.center(line ? line : point([0, 0])).geometry
 	}
 
-	private _getPosition(): ImageryMapPosition {
+	private _getPosition(): IImageryMapPosition {
 		const position = _get(this.mainLayer, 'data.overlay.footprint');
 		if (!position) {
 			return null;

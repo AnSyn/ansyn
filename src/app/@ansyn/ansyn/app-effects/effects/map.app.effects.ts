@@ -27,7 +27,7 @@ import {
 	BaseMapSourceProvider,
 	bboxFromGeoJson,
 	ImageryCommunicatorService,
-	ImageryMapPosition,
+	IImageryMapPosition,
 	IMapSettings,
 	polygonFromBBOX,
 	polygonsDontIntersect
@@ -372,7 +372,7 @@ export class MapAppEffects {
 				const actionsArray: Action[] = [];
 				// in order to set the new map position for unregistered overlays maps
 				if (overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered && wasOverlaySetAsExtent) {
-					const position: ImageryMapPosition = { extentPolygon: polygonFromBBOX(bboxFromGeoJson(overlay.footprint)) };
+					const position: IImageryMapPosition = { extentPolygon: polygonFromBBOX(bboxFromGeoJson(overlay.footprint)) };
 					actionsArray.push(new PositionChangedAction({ id: mapId, position, mapInstance: caseMapState }));
 				}
 				actionsArray.push(new DisplayOverlaySuccessAction(payload));
@@ -433,7 +433,7 @@ export class MapAppEffects {
 		return (action && prevAction) && (prevAction.payload.mapId === action.payload.mapId);
 	}
 
-	setPosition(position: ImageryMapPosition, comm, mapItem): Observable<any> {
+	setPosition(position: IImageryMapPosition, comm, mapItem): Observable<any> {
 		if (mapItem.data.overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered) {
 			return this.cantSyncMessage();
 		}

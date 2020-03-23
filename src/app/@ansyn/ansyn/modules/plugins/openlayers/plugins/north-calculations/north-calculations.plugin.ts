@@ -9,7 +9,7 @@ import {
 	BaseImageryPlugin,
 	CommunicatorEntity,
 	getAngleDegreeBetweenPoints,
-	ImageryMapPosition,
+	IImageryMapPosition,
 	ImageryPlugin,
 	toDegrees,
 	toRadians
@@ -163,7 +163,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	positionChangedCalcNorthAccurately$ = () => this.store$.select(selectMapPositionByMapId(this.mapId)).pipe(
 		debounceTime(50),
 		filter(Boolean),
-		switchMap((position: ImageryMapPosition) => {
+		switchMap((position: IImageryMapPosition) => {
 			const view = this.iMap.mapObject.getView();
 			const projection = view.getProjection();
 			if (projection.getUnits() === 'pixels' && position) {

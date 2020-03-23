@@ -17,7 +17,7 @@ export class ComboBoxOptionComponent implements OnInit, OnDestroy {
 	@Input() value;
 
 	@HostBinding('class.disabled')
-	@Input('disabled') disabled = false;
+	@Input() disabled = false;
 
 
 	@AutoSubscription

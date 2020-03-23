@@ -23,13 +23,13 @@ import {
 } from '../../modules/overlays/actions/overlays.actions';
 import { IOverlayByIdMetaData, OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { LoggerService } from '../../modules/core/services/logger.service';
-import { IDilutedCase, ImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
+import { IDilutedCase, IImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 
 @Injectable()
 export class CasesAppEffects {
-	get defaultImageManualProcessArgs(): ImageManualProcessArgs {
-		return this.config.ImageProcParams.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam) => {
+	get defaultImageManualProcessArgs(): IImageManualProcessArgs {
+		return this.config.ImageProcParams.reduce<IImageManualProcessArgs>((initialObject: any, imageProcParam) => {
 			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
 		}, {});
 	}

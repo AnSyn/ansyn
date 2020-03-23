@@ -18,8 +18,8 @@ import { noop } from 'rxjs';
 export class ComboBoxComponent implements ControlValueAccessor {
 	onTouchedCallback: () => void = noop;
 	onChangeCallback: (_: any) => void = noop;
-	@ViewChild(ComboBoxTriggerComponent, {static:false}) trigger: ComboBoxTriggerComponent;
-	@ViewChild('optionsContainer', {static:false}) optionsContainer: ElementRef;
+	@ViewChild(ComboBoxTriggerComponent, {static: false}) trigger: ComboBoxTriggerComponent;
+	@ViewChild('optionsContainer', {static: false}) optionsContainer: ElementRef;
 	@Input() icon: string;
 	disabled: boolean;
 	selected: any;

@@ -9,7 +9,7 @@ export const IMAGERY_VIDEO_COMPONENT_SELECTOR = 'ansyn-imagery-video';
 	styleUrls: ['./imagery-video.component.less']
 })
 export class ImageryVideoComponent {
-	@ViewChild('video', {static:false}) video: ElementRef<HTMLVideoElement>;
+	@ViewChild('video', {static: false}) video: ElementRef<HTMLVideoElement>;
 
 	error: boolean;
 	_src: string;

@@ -1,9 +1,7 @@
 import { FactoryProvider, Injectable, InjectionToken, Provider } from '@angular/core';
 import { BaseOverlaySourceProvider } from './base-overlay-source-provider.model';
 
-export interface IOverlaySourceProviderConstructor {
-	new(...args): BaseOverlaySourceProvider;
-}
+export type IOverlaySourceProviderConstructor = new(...args) => BaseOverlaySourceProvider;
 
 export const MultipleOverlaysSource: InjectionToken<IMultipleOverlaysSource> = new InjectionToken('multiple-overlays-sources');
 

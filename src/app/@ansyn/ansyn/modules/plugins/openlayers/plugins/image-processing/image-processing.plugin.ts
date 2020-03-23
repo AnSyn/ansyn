@@ -10,7 +10,7 @@ import { isEqual } from 'lodash';
 import { Inject } from '@angular/core';
 import { selectMaps } from '@ansyn/map-facade';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '../../../../menu-items/tools/models/tools-config';
-import { ICaseMapState, ImageManualProcessArgs } from '../../../../menu-items/cases/models/case.model';
+import { ICaseMapState, IImageManualProcessArgs } from '../../../../menu-items/cases/models/case.model';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],
@@ -43,7 +43,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 
 	@AutoSubscription
 	onAutoImageProcessingAndManualImageProcessActive$ = combineLatest(this.isAutoImageProcessingActive$, this.imageManualProcessArgs$).pipe(
-		tap(([isAutoImageProcessingActive, imageManualProcessArgs]: [boolean, ImageManualProcessArgs]) => {
+		tap(([isAutoImageProcessingActive, imageManualProcessArgs]: [boolean, IImageManualProcessArgs]) => {
 			const isImageProcessActive = this.isImageProcessActive(isAutoImageProcessingActive, imageManualProcessArgs);
 			if (!isImageProcessActive) {
 				this.removeImageLayer();
@@ -71,13 +71,13 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		super();
 	}
 
-	defaultImageManualProcessArgs(): ImageManualProcessArgs {
-		return this.params.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam: IImageProcParam) => {
+	defaultImageManualProcessArgs(): IImageManualProcessArgs {
+		return this.params.reduce<IImageManualProcessArgs>((initialObject: any, imageProcParam: IImageProcParam) => {
 			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
 		}, {});
 	}
 
-	isImageProcessActive(isAutoImageProcessingActive: boolean, imageManualProcessArgs: ImageManualProcessArgs) {
+	isImageProcessActive(isAutoImageProcessingActive: boolean, imageManualProcessArgs: IImageManualProcessArgs) {
 		const defaultManualParams = this.defaultImageManualProcessArgs();
 		const result = isAutoImageProcessingActive || (Boolean(imageManualProcessArgs) && !isEqual(defaultManualParams, imageManualProcessArgs));
 		return result;
@@ -119,7 +119,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		}
 	}
 
-	createImageLayer([isAutoImageProcessingActive, imageManualProcessArgs]: [boolean, ImageManualProcessArgs]) {
+	createImageLayer([isAutoImageProcessingActive, imageManualProcessArgs]: [boolean, IImageManualProcessArgs]) {
 		this.imageLayer = this.getExistingRasterLayer();
 		if (this.imageLayer) {
 			return;

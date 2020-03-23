@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { Point, Polygon, Position } from 'geojson';
 import {
-	ImageryMapPosition,
+	IImageryMapPosition,
 	IMapInstanceChanged,
 	IMapProgress,
 	IMapSettings,
@@ -149,7 +149,7 @@ export class PointToImageOrientationAction implements Action {
 export class PositionChangedAction implements Action {
 	type = MapActionTypes.POSITION_CHANGED;
 
-	constructor(public payload: { id: string, position: ImageryMapPosition, mapInstance: IMapSettings }) {
+	constructor(public payload: { id: string, position: IImageryMapPosition, mapInstance: IMapSettings }) {
 	}
 }
 

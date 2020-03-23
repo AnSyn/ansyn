@@ -3,7 +3,7 @@ import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { SubMenuEnum, toolsFlags } from '../reducers/tools.reducer';
 import { type } from '../../../core/utils/type';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
-import { ImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
+import { IImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
 import { AnnotationMode, IUpdateFeatureEvent } from '@ansyn/ol';
 
 export const ToolsActionsTypes = {
@@ -206,7 +206,7 @@ export class EnableImageProcessing implements Action {
 export class SetManualImageProcessing implements Action {
 	type = ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING;
 
-	constructor(public payload: ImageManualProcessArgs) {
+	constructor(public payload: IImageManualProcessArgs) {
 	};
 }
 
@@ -267,7 +267,6 @@ export type ToolsActions =
 	| SetAutoImageProcessingSuccess
 	| SetMapGeoEnabledModeToolsActionStore
 	| SetAnnotationMode
-	| SetMapGeoEnabledModeToolsActionStore
 	| SetMeasureDistanceToolState
 	| SetSubMenu
 	| ClearActiveInteractionsAction;

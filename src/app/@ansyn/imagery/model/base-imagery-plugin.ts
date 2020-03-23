@@ -8,9 +8,7 @@ export interface IImageryPluginMetaData {
 	readonly deps?: any[];
 }
 
-export interface IBaseImageryPluginConstructor {
-	new(...args): BaseImageryPlugin;
-}
+export type IBaseImageryPluginConstructor = new(...args) => BaseImageryPlugin;
 
 export class BaseImageryPlugin implements IImageryPluginMetaData {
 	readonly supported?: IBaseImageryMapConstructor[];

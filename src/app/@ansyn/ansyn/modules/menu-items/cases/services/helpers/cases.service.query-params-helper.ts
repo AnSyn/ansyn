@@ -14,7 +14,7 @@ import {
 	ICaseMapsState,
 	ICaseMapState,
 	ICaseState,
-	ImageManualProcessArgs,
+	IImageManualProcessArgs,
 	IOverlaysManualProcessArgs
 } from '../../models/case.model';
 import { IDilutedOverlaysHash, IOverlay, IOverlaysHash } from '../../../../overlays/models/overlay.model';
@@ -165,7 +165,7 @@ export class QueryParamsHelper {
 				if (caseState) {
 					const keys = Object.keys(caseState.overlaysManualProcessArgs);
 					keys.forEach((overlayId) => {
-						const processArgs: ImageManualProcessArgs = caseState.overlaysManualProcessArgs[overlayId];
+						const processArgs: IImageManualProcessArgs = caseState.overlaysManualProcessArgs[overlayId];
 						const loadedOverlay = caseState.maps.data.find((caseMapState: ICaseMapState) => {
 							return caseMapState.data.overlay && caseMapState.data.overlay.id === overlayId;
 						});

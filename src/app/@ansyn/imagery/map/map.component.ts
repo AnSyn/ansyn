@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 import { filter, map, take, tap } from 'rxjs/operators';
 import { BaseImageryMap } from '../model/base-imagery-map';
-import { ImageryMapPosition } from '../model/case-map-position.model';
+import { IImageryMapPosition } from '../model/case-map-position.model';
 
 @Component({
 	selector: 'ansyn-map',
@@ -19,7 +19,7 @@ export class MapComponent implements OnInit, OnDestroy {
 	constructor(public map: BaseImageryMap, @Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
 	}
 
-	createMap(layer: any, position?: ImageryMapPosition): Observable<BaseImageryMap> {
+	createMap(layer: any, position?: IImageryMapPosition): Observable<BaseImageryMap> {
 		return this.map
 			.initMap(this.mapElement.nativeElement, this.mapElementShadowNorth.nativeElement, this.mapElementShadowDoubleBuffer.nativeElement, layer, position, this.mapViewContainerRef)
 			.pipe(

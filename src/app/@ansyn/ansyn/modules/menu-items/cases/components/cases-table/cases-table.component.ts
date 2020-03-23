@@ -37,7 +37,7 @@ const animations: any[] = [
 	destroy: 'ngOnDestroy'
 })
 export class CasesTableComponent implements OnInit, OnDestroy {
-	@ViewChild('tbodyElement', {static:false}) tbodyElement: ElementRef;
+	@ViewChild('tbodyElement', {static: false}) tbodyElement: ElementRef;
 
 	caseState$: Observable<ICasesState> = this.store$.select(casesStateSelector);
 

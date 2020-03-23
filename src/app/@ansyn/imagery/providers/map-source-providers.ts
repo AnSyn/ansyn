@@ -5,7 +5,7 @@ import {
 } from '../model/base-map-source-provider';
 import { FactoryProvider, Provider } from '@angular/core';
 
-export interface ImageryMapSources {
+export interface IImageryMapSources {
 	[mapType: string]: { [sourceType: string]: BaseMapSourceProvider }
 }
 

@@ -54,7 +54,7 @@ import {
 	toolsFlags,
 	toolsStateSelector
 } from '../../modules/menu-items/tools/reducers/tools.reducer';
-import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
+import { CaseGeoFilter, ICaseMapState, IImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
 
 @Injectable()
@@ -138,8 +138,8 @@ export class ToolsAppEffects {
 	@Effect()
 	updateImageProcessingOnTools$: Observable<any> = this.activeMap$.pipe(
 		filter((map: IMapSettings) => Boolean(map.data.overlay)),
-		withLatestFrom(this.store$.select(toolsStateSelector).pipe(pluck<IToolsState, ImageManualProcessArgs>('manualImageProcessingParams'))),
-		mergeMap<any, any>(([map, manualImageProcessingParams]: [ICaseMapState, ImageManualProcessArgs]) => {
+		withLatestFrom(this.store$.select(toolsStateSelector).pipe(pluck<IToolsState, IImageManualProcessArgs>('manualImageProcessingParams'))),
+		mergeMap<any, any>(([map, manualImageProcessingParams]: [ICaseMapState, IImageManualProcessArgs]) => {
 			const actions: Action[] = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess(map.data.isAutoImageProcessingActive)];
 			if (!isEqual(map.data.imageManualProcessArgs, manualImageProcessingParams)) {
 				actions.push(new SetManualImageProcessing(map.data && map.data.imageManualProcessArgs || this.defaultImageManualProcessArgs));
@@ -296,8 +296,8 @@ export class ToolsAppEffects {
 		return this.config.ImageProcParams;
 	}
 
-	get defaultImageManualProcessArgs(): ImageManualProcessArgs {
-		return this.params.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam) => {
+	get defaultImageManualProcessArgs(): IImageManualProcessArgs {
+		return this.params.reduce<IImageManualProcessArgs>((initialObject: any, imageProcParam) => {
 			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
 		}, {});
 	}

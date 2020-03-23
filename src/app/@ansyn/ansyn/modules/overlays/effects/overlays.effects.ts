@@ -159,7 +159,7 @@ export class OverlaysEffects {
 	@Effect()
 	dropsCount$ = this.store$.select(selectDrops).pipe(
 		filter(Boolean),
-		map<any,UpdateOverlaysCountAction>(drops => new UpdateOverlaysCountAction(drops.length)));
+		map<any, UpdateOverlaysCountAction>(drops => new UpdateOverlaysCountAction(drops.length)));
 
 
 	constructor(protected actions$: Actions,

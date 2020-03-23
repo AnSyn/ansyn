@@ -4,7 +4,7 @@ import Point from 'ol/geom/Point';
 import Style from 'ol/style/Style';
 import Icon from 'ol/style/Icon';
 import VectorLayer from 'ol/layer/Vector';
-import { BaseImageryMap, BaseImageryPlugin, ImageryMapPosition, ImageryPlugin } from '@ansyn/imagery';
+import { BaseImageryMap, BaseImageryPlugin, IImageryMapPosition, ImageryPlugin } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '@ansyn/ol';
@@ -36,7 +36,7 @@ export class CenterMarkerPlugin extends BaseImageryPlugin {
 	}
 
 	@AutoSubscription
-	positionChanged$ = () => this.communicator.positionChanged.subscribe((position: ImageryMapPosition) => {
+	positionChanged$ = () => this.communicator.positionChanged.subscribe((position: IImageryMapPosition) => {
 		if (this.isEnabled) {
 			this.tryDrawCenter();
 		} else {

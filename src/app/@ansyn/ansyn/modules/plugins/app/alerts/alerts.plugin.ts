@@ -1,7 +1,7 @@
 import {
 	BaseImageryPlugin,
 	getPolygonIntersectionRatio,
-	ImageryMapPosition,
+	IImageryMapPosition,
 	ImageryPlugin
 } from '@ansyn/imagery';
 import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ol';
@@ -69,7 +69,7 @@ export class AlertsPlugin extends BaseImageryPlugin {
 				new RemoveAlertMsg(payload) : null) : new AddAlertMsg(payload);
 	}
 
-	positionChanged([position, overlay]: [ImageryMapPosition, IOverlay]): Observable<RemoveAlertMsg | AddAlertMsg | null> {
+	positionChanged([position, overlay]: [IImageryMapPosition, IOverlay]): Observable<RemoveAlertMsg | AddAlertMsg | null> {
 		let action;
 		const payload = { key: AlertMsgTypesEnum.OverlaysOutOfBounds, value: this.mapId };
 		const isWorldView = !isFullOverlay(overlay);

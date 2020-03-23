@@ -5,7 +5,7 @@ import { SetManualImageProcessing } from '../../actions/tools.actions';
 import { IImageProcParam, IToolsConfig, toolsConfig } from '../../models/tools-config';
 import { Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
-import { ImageManualProcessArgs } from '../../../cases/models/case.model';
+import { IImageManualProcessArgs } from '../../../cases/models/case.model';
 
 @Component({
 	selector: 'ansyn-image-processing-control',
@@ -27,13 +27,13 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 		return this.config.ImageProcParams;
 	}
 
-	get defaultImageManualProcessArgs(): ImageManualProcessArgs {
-		return this.params.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam) => {
+	get defaultImageManualProcessArgs(): IImageManualProcessArgs {
+		return this.params.reduce<IImageManualProcessArgs>((initialObject: any, imageProcParam) => {
 			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
 		}, {});
 	}
 
-	imageManualProcessArgs: ImageManualProcessArgs = this.defaultImageManualProcessArgs;
+	imageManualProcessArgs: IImageManualProcessArgs = this.defaultImageManualProcessArgs;
 
 	@HostBinding('class.expand') @Input() expand;
 

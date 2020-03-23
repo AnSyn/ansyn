@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings, toDegrees } from '@ansyn/imagery';
 import { PointToImageOrientationAction, PointToRealNorthAction } from '../../actions/map.actions';
 
-export interface IsGeoRegisteredProperties {
+export interface IIsGeoRegisteredProperties {
 	letter: 'N' | '?';
 	color: '#6e6e7f' | 'red';
 	tooltipNorth: 'Drag to Change Orientation' | 'Press Alt+Shift and drag to rotate';
@@ -23,7 +23,7 @@ export class ImageryRotationComponent {
 
 	protected thresholdDegrees = 5;
 
-	isGeoRegisteredProperties: IsGeoRegisteredProperties = {
+	isGeoRegisteredProperties: IIsGeoRegisteredProperties = {
 		letter: 'N',
 		color: 'red',
 		tooltipNorth: 'Drag to Change Orientation',
@@ -32,7 +32,7 @@ export class ImageryRotationComponent {
 		rotatePointer: 'rotationAngle'
 	};
 
-	notGeoRegisteredProperties: IsGeoRegisteredProperties = {
+	notGeoRegisteredProperties: IIsGeoRegisteredProperties = {
 		letter: '?',
 		color: '#6e6e7f',
 		tooltipNorth: 'Drag to Change Orientation',
@@ -43,7 +43,7 @@ export class ImageryRotationComponent {
 
 	isRotating = false;
 
-	get geoRegisteredProperties(): IsGeoRegisteredProperties {
+	get geoRegisteredProperties(): IIsGeoRegisteredProperties {
 		return this.isGeoRegistered() ? this.isGeoRegisteredProperties : this.notGeoRegisteredProperties;
 	}
 

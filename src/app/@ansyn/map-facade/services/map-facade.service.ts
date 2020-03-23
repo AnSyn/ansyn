@@ -2,7 +2,7 @@ import { ExportMapsToPngRequestedAction } from '../actions/map.actions';
 import { Injectable } from '@angular/core';
 import {
 	ImageryCommunicatorService,
-	ImageryMapPosition,
+	IImageryMapPosition,
 	IMapInstanceChanged,
 	IMapSettings
 } from '@ansyn/imagery';
@@ -82,7 +82,7 @@ export class MapFacadeService {
 		this.store.dispatch(new MapInstanceChangedAction($event));
 	}
 
-	positionChanged($event: { id: string, position: ImageryMapPosition }) {
+	positionChanged($event: { id: string, position: IImageryMapPosition }) {
 		if (Boolean(this.mapsList)) {
 			const mapInstance = <IMapSettings>MapFacadeService.mapById(this.mapsList, $event.id);
 			this.store.dispatch(new PositionChangedAction({ ...$event, mapInstance }));

@@ -5,9 +5,7 @@ export interface IAlert {
 	key: string;
 	background?: string;
 	text?: string;
-	component?: {
-		new(...args): IEntryComponent
-	};
+	component?: new(...args) => IEntryComponent
 }
 
 export const ALERTS = new InjectionToken<IAlert[]>('Alerts');

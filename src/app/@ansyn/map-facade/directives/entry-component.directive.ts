@@ -29,7 +29,7 @@ export interface IEntryComponentSettings extends IEntryComponent {
 })
 export class EntryComponentDirective implements OnDestroy, OnInit {
 	componentRef: ComponentRef<any>;
-	@Input('ansynEntryComponent') ansynEntryComponent: IEntryComponentSettings;
+	@Input() ansynEntryComponent: IEntryComponentSettings;
 
 	constructor(public viewContainerRef: ViewContainerRef, public componentFactoryResolver: ComponentFactoryResolver) {
 	}

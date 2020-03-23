@@ -36,7 +36,7 @@ export enum CaseGeoFilter {
 	Polygon = 'Polygon'
 }
 
-export interface ImageManualProcessArgs {
+export interface IImageManualProcessArgs {
 	Brightness?: number;
 	Contrast?: number;
 	Gamma?: number;
@@ -45,7 +45,7 @@ export interface ImageManualProcessArgs {
 }
 
 export interface IOverlaysManualProcessArgs {
-	[key: string]: ImageManualProcessArgs;
+	[key: string]: IImageManualProcessArgs;
 }
 
 export interface ITranslationData {
@@ -163,7 +163,7 @@ export interface IDilutedCaseMapData extends IMapSettingsData {
 	overlay?: IDilutedOverlay;
 	isAutoImageProcessingActive?: boolean;
 	overlayDisplayMode?: OverlayDisplayMode;
-	imageManualProcessArgs?: ImageManualProcessArgs;
+	imageManualProcessArgs?: IImageManualProcessArgs;
 	translationData: ITranslationData;
 }
 

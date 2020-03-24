@@ -104,7 +104,8 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		zoom: {
 			onZoom: this.drawMarkup.bind(this),
 			onZoomStart: null,
-			onZoomEnd: this.onZoomEnd.bind(this)
+			onZoomEnd: this.onZoomEnd.bind(this),
+			minimumScale: 0
 		},
 		label: {
 			width: 0,

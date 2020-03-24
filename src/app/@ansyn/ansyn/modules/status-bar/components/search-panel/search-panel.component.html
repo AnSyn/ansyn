@@ -3,17 +3,34 @@
 	<div class="search-title">{{'Search' | translate}}:</div>
 	<!-- Time -->
 	<div class="box">
-		<button ansynComboBoxTrigger
-				#timePickerTrigger
-				(click)="toggleTimePicker()"
-				[attr.tooltip-value]="statusBarConfig?.toolTips?.timeFilterEdit | translate"
-				[isActive]="timePickerExpand"
-				[withArrow]="false"
-				icon="icon icon-status-bar-time"
-				tooltip-class="top"
-				class="search-panel-button">
-			<span class="title">{{timeSelectionTitle}}</span>
-		</button>
+<!--		<button ansynComboBoxTrigger-->
+<!--				#timePickerTrigger-->
+<!--				(click)="toggleTimePickerPreset()"-->
+<!--				[attr.tooltip-value]="statusBarConfig?.toolTips?.timeFilterEdit | translate"-->
+<!--				[isActive]="timePickerExpand"-->
+<!--				[withArrow]="false"-->
+<!--				icon="icon icon-status-bar-time"-->
+<!--				tooltip-class="top"-->
+<!--				class="search-panel-button">-->
+<!--			<span class="title">{{timeSelectionTitle}}</span>-->
+<!--		</button>-->
+
+		<ansyn-combo-box
+			#timePickerTrigger
+			ansynComboBoxTrigger
+			direction="top"
+			name="GeoFilter"
+			class="search-panel-button"
+			[comboBoxToolTipDescription]="statusBarConfig?.toolTips?.timeFilterEdit | translate"
+			[withArrow]="false"
+			[alwaysChange]="false"
+			[placeholder]="timeSelectionTitle"
+			[ngModel]="timeSelectionTitle"
+			(ngModelChange)="selectPreset($event)">
+			<ansyn-combo-box-option *ngFor="let presetDay of presetDays" [value]="presetDay">
+				{{ presetDay | translate}}
+			</ansyn-combo-box-option>
+		</ansyn-combo-box>
 
 		<ansyn-timepicker *ngIf="timePickerExpand"
 						  [timeRange]="timeRange"

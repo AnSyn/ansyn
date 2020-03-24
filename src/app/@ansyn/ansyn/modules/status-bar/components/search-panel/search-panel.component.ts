@@ -42,11 +42,20 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	geoFilterStatus: IGeoFilterStatus;
 	dataInputFilterExpand: boolean;
 	timePickerExpand: boolean;
+	timePickerPresetExpand: boolean;
 	timeRange: Date[];
 	dataInputFilterTitle = 'All';
 	timeSelectionTitle: string;
 	geoFilterTitle: string;
+	timePickerPresetTitle: string;
 	dataInputFilters: ICaseDataInputFiltersState;
+
+	presetDays = [
+		"7 days ago",
+		"30 days ago",
+		"60 days ago",
+		"custom"];
+
 
 	@AutoSubscription
 	time$: Observable<ICaseTimeState> = this.store$.select(selectTime).pipe(
@@ -99,6 +108,10 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		this.timePickerExpand = !this.timePickerExpand;
 	}
 
+	toggleTimePickerPreset() {
+		this.timePickerPresetExpand = !this.timePickerPresetExpand;
+	}
+
 	geoFilterChanged(geoFilter?: SearchMode) {
 		const payload: Partial<IGeoFilterStatus> = { searchMode: geoFilter };
 
@@ -115,6 +128,15 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	updateDataInputTitle(title) {
 		this.dataInputFilterTitle = title;
+	}
+
+	selectPreset(preset?: string) {
+		console.log("preset: ", preset === "custom");
+		if (preset === "custom") {
+			this.timePickerExpand = true;
+			console.log(this.timePickerExpand);
+			// this.toggleTimePicker();
+		}
 	}
 
 }

@@ -17,6 +17,7 @@ import { SearchPanelComponent } from './components/search-panel/search-panel.com
 import { DisplayPanelComponent } from './components/display-panel/display-panel.component';
 import { CasePanelComponent } from './components/case-panel/case-panel.component';
 import { TimePickerComponent } from './components/timepicker/time-picker.component';
+import { TimepickerPresetsComponent } from './components/timepicker-presets/timepicker-presets.component';
 
 @NgModule({
 	imports: [
@@ -30,7 +31,7 @@ import { TimePickerComponent } from './components/timepicker/time-picker.compone
 		OwlDateTimeModule,
 		OwlNativeDateTimeModule
 	],
-	declarations: [StatusBarComponent, TreeViewComponent, NavigationBarComponent, SearchPanelComponent, DisplayPanelComponent, CasePanelComponent, TimePickerComponent],
+	declarations: [StatusBarComponent, TreeViewComponent, NavigationBarComponent, SearchPanelComponent, DisplayPanelComponent, CasePanelComponent, TimePickerComponent, TimepickerPresetsComponent],
 	providers: [
 		{
 			provide: TIME_FILTERS,

@@ -104,7 +104,8 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		zoom: {
 			onZoom: this.drawMarkup.bind(this),
 			onZoomStart: null,
-			onZoomEnd: this.onZoomEnd.bind(this)
+			onZoomEnd: this.onZoomEnd.bind(this),
+			minimumScale: 1
 		},
 		label: {
 			width: 0,
@@ -136,7 +137,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		.pipe(
 			select(selectDropMarkup),
 			withLatestFrom(this.store$.pipe(select(selectDrops))),
-			tap(this.checkDiffranceInTimeRange.bind(this)),
+			tap(this.checkDifferenceInTimeRange.bind(this)),
 			tap(([value]: [ExtendMap<MarkUpClass, IMarkUpData>, any]) => {
 				this.markup = value;
 				this.drawMarkup();
@@ -256,7 +257,16 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	checkDiffranceInTimeRange([newMarkUp, drops]: [ExtendMap<MarkUpClass, IMarkUpData>, any]) {
+	isTimeChanged(timeRange) {
+		const currentStartDate = this.configuration.range.start;
+		const currentEndDate = this.configuration.range.end;
+		const newStartDate = timeRange.start;
+		const newSendDate = timeRange.end;
+
+		return (newStartDate.getTime() !== currentStartDate.getTime()) || (newSendDate.getTime() !== currentEndDate.getTime());
+	}
+
+	checkDifferenceInTimeRange([newMarkUp, drops]: [ExtendMap<MarkUpClass, IMarkUpData>, any]) {
 		const newActive = newMarkUp.get(MarkUpClass.active).overlaysIds;
 		if (!newActive || !newActive.length) {
 			return;
@@ -265,9 +275,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		const isExist = Boolean(this.dropsIdMap.get(newActiveId));
 		if (isExist && (!this.oldActiveId || this.oldActiveId !== newActiveId)) {
 			const timeLineRange = this.overlaysService.getTimeStateByOverlay(this.dropsIdMap.get(newActiveId), this.configuration.range);
-			if (timeLineRange.start.getTime() !== this.configuration.range.start.getTime() ||
-				timeLineRange.end.getTime() !== this.configuration.range.end.getTime()
-			) {
+			if (this.isTimeChanged(timeLineRange)) {
 				this.configuration.range = timeLineRange;
 				this.initEventDropsSequence(drops);
 			}
@@ -277,6 +285,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	initEventDrop(drops): void {
 		this.chart = eventDrops(this.configuration);
+		d3.zoom().scaleExtent([1, 10]);
 		this.element = d3.select(this.context.nativeElement);
 		this.element
 			.data([[{ data: drops }]])

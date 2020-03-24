@@ -28,7 +28,8 @@
     "test": "ng test",
     "test:e2e": "node scripts/generate-config.js && ng e2e ansyn-e2e",
     "test:single-run": "ng test ansyn --watch=false",
-    "testCompile": "cd build && gulp testCompile"
+    "testCompile": "cd build && gulp testCompile",
+    "try": "try 1"
   },
   "dependencies": {
     "@angular/animations": "~8.2.14",

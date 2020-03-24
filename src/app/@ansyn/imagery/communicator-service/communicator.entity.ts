@@ -102,7 +102,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	public async replaceMapMainLayer(sourceType: string): Promise<boolean> { // TODO: change all promise to observable
-		const newSourceTypeLayer = await this.createMapSourceForMapType(this.mapSettings.worldView.mapType, sourceType);
+		const newSourceTypeLayer = await this.createMapSourceForMapType(this.ActiveMap.mapType, sourceType);
 		newSourceTypeLayer.set(ImageryLayerProperties.NAME, IMAGERY_BASE_MAP_LAYER);
 		if (newSourceTypeLayer) {
 			this._activeMap.addMapLayer(newSourceTypeLayer);

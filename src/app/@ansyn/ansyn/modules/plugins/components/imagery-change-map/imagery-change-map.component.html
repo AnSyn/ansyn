@@ -1,4 +1,4 @@
-<div class="buttons" [class.active]="showPopup" [class.disabled]="overlayDisplay">
+<div class="buttons" *ngIf="show" [class.active]="showPopup" [class.disabled]="overlayDisplay">
 	<button class="small-icon-button"
 			(click)="togglePopup()"
 			[attr.tooltip-value]="'Change map' | translate"

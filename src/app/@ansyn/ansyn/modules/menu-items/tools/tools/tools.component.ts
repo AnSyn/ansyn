@@ -1,7 +1,6 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	ClearActiveInteractionsAction,
-	SetAutoImageProcessing,
 	SetMeasureDistanceToolState,
 	SetSubMenu,
 	ShowOverlaysFootprintAction,
@@ -12,8 +11,7 @@ import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import {
 	IToolsState,
-	selectSubMenu,
-	selectToolFlag,
+	selectSubMenu, selectToolFlag,
 	selectToolFlags,
 	SubMenuEnum,
 	toolsFlags,
@@ -24,7 +22,6 @@ import { selectActiveAnnotationLayer } from '../../layers-manager/reducers/layer
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { MatDialog } from '@angular/material/dialog';
 import { ExportMapsPopupComponent } from '../export-maps-popup/export-maps-popup.component';
-import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 
 @Component({
 	selector: 'ansyn-tools',
@@ -146,7 +143,12 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	toggleSubMenu(subMenu: SubMenuEnum) {
+	toggleSubMenu(subMenu: SubMenuEnum, event: MouseEvent = null) {
+		if (event) {
+			// In order that the sub menu will not recognize the click on the
+			// button as a "click outside" and close itself
+			event.stopPropagation();
+		}
 		const value = (subMenu !== this.subMenu) ? subMenu : null;
 		this.store$.dispatch(new SetSubMenu(value));
 	}

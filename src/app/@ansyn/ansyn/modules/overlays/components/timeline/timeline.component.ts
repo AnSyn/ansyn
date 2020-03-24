@@ -191,7 +191,6 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy() {
 		this.subscribers.forEach(subscriber => subscriber.unsubscribe());
-
 	}
 
 	onMouseOver({ id }: IEventDropsEvent) {

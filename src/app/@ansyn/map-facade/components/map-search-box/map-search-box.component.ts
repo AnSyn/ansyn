@@ -6,6 +6,8 @@ import { Observable } from 'rxjs';
 import { filter, retryWhen, switchMap, take, tap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { selectIsMinimalistViewMode } from "../../reducers/map.reducer";
+import { Store } from "@ngrx/store";
 
 @Component({
 	selector: 'ansyn-map-search-box',
@@ -15,12 +17,20 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 @AutoSubscriptions()
 export class MapSearchBoxComponent implements OnInit, OnDestroy {
 	@Input() mapId: string;
+	show: boolean;
 	control = new FormControl();
 	_communicator: CommunicatorEntity;
 	autoCompleteWidth = 108;
 	locations: { name: string, point: Point }[] = [];
 	public error: string = null;
 	loading: boolean;
+
+	@AutoSubscription
+	isMinimalistViewMode$ = this.store$.select(selectIsMinimalistViewMode).pipe(
+		tap(isMinimalistViewMode => {
+			this.show = !isMinimalistViewMode;
+		})
+	);
 
 	@AutoSubscription
 	filteredLocations$: Observable<any> = this.control.valueChanges.pipe(
@@ -49,7 +59,8 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		})
 	);
 
-	constructor(protected imageryCommunicatorService: ImageryCommunicatorService,
+	constructor(protected store$: Store<any>,
+				protected imageryCommunicatorService: ImageryCommunicatorService,
 				public geocoderService: GeocoderService) {
 	}
 

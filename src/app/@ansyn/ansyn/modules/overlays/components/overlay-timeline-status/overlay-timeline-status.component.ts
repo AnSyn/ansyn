@@ -3,7 +3,7 @@ import { combineLatest, fromEvent, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { IOverlaysState, selectLoading, selectStatusMessage } from '../../reducers/overlays.reducer';
-import { SetOverlaysStatusMessage } from '../../actions/overlays.actions';
+import { SetOverlaysStatusMessageAction } from '../../actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, map, takeWhile, tap } from 'rxjs/operators';
 
@@ -65,6 +65,6 @@ export class OverlayTimelineStatusComponent implements OnInit, OnDestroy {
 	}
 
 	close() {
-		this.store$.dispatch(new SetOverlaysStatusMessage(null));
+		this.store$.dispatch(new SetOverlaysStatusMessageAction(null));
 	}
 }

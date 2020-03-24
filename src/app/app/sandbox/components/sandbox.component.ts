@@ -1,21 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	AnsynApi,
-	FilterMetadata,
-	FiltersService,
 	GeoRegisteration,
-	ICaseFacetsState,
-	IFilter,
 	IOverlay,
 	IOverlaysCriteria,
 	PhotoAngle,
 	RegionContainment,
-	selectFacets,
-	selectFilters,
 	selectMiscOverlays,
 	selectOverlaysArray,
 	SetMiscOverlay,
-	UpdateFilterAction
 } from '@ansyn/ansyn';
 import { FeatureCollection, Point, Polygon } from 'geojson';
 import {
@@ -25,10 +18,11 @@ import {
 	OpenLayersStaticImageSourceProviderSourceType
 } from '@ansyn/ol';
 import * as momentNs from 'moment';
-import { take, tap, withLatestFrom } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
+import { AreaToCredentialsService } from "@ansyn/ansyn";
 
 const moment = momentNs;
 
@@ -141,7 +135,8 @@ export class SandboxComponent implements OnInit, OnDestroy {
 
 	constructor(protected ansynApi: AnsynApi,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				protected store$: Store<any>) {
+				protected store$: Store<any>,
+				protected areaToCredentials: AreaToCredentialsService) {
 	}
 
 	ngOnInit() {
@@ -150,6 +145,13 @@ export class SandboxComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 	}
 
+	checkCredentialsByArea() {
+		let area = this.areaToCredentials.getAreaTriangles({
+			type: 'Point',
+			coordinates: [47.4744411831745, 33.4504920101187]
+		});
+		area.subscribe((triangels) => console.log(triangels))
+	}
 	setPositionByRadius() {
 		let center: Point = {
 			type: 'Point',

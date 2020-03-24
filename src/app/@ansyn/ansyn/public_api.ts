@@ -1,5 +1,4 @@
 export { AddLayer } from './modules/menu-items/layers-manager/actions/layers.actions';
-
 export {
 	AnaglyphConfig,
 	IAnaglyphConfig

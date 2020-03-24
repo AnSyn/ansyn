@@ -14,7 +14,8 @@ export const MenuActionTypes = {
 	SET_AUTO_CLOSE: 'SET_AUTO_CLOSE',
 	MENU_COLLAPSE: 'MENU_COLLAPSE',
 	RESET_APP: 'RESET_APP',
-	SET_USER_ENTER: 'SET_USER_ENTER'
+	SET_USER_ENTER: 'SET_USER_ENTER',
+	SET_DOES_USER_HAVE_CREDENTIALS: 'SET_DOES_USER_HAVE_CREDENTIALS'
 };
 
 export class ResetAppAction implements Action {
@@ -89,4 +90,11 @@ export class ToggleMenuCollapse implements Action {
 
 export class SetUserEnter implements Action {
 	type = MenuActionTypes.SET_USER_ENTER;
+}
+
+export class SetDoesUserHaveCredentials implements Action {
+	type = MenuActionTypes.SET_DOES_USER_HAVE_CREDENTIALS;
+
+	constructor(public payload: boolean) {
+	}
 }

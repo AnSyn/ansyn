@@ -35,7 +35,7 @@ import { getErrorLogFromException } from '../../core/utils/logs/timer-logs';
 import { LoggerService } from '../../core/services/logger.service';
 import { AreaToCredentialsService } from "../../core/services/credentials/area-to-credentials.service";
 import { CredentialsService, ICredentialsResponse } from "../../core/services/credentials/credentials.service";
-import { SetDoesUserHaveCredentials } from "../../../../menu/actions/menu.actions";
+import { SetDoesUserHaveCredentials } from "@ansyn/menu";
 
 @Injectable()
 export class OverlaysEffects {

@@ -65,8 +65,8 @@ export class OpenLayersImageProcessing {
 			// general functions
 			buildHistogramLut: buildHistogramLut,
 			normalizeColor: normalizeColor,
-			rgb2YCbCr: rgb2yiq,
-			yCbCr2RGB: yiq2rgb,
+			rgb2YCbCr: rgb2YCbCr,
+			yCbCr2RGB: yCbCr2RGB,
 			forEachRGBPixel: forEachRGBPixel,
 			getFunctionByArgument: getFunctionByArgument,
 			// per pixel operations
@@ -279,7 +279,8 @@ function hsl2RGB(pixel: IHSLPixel): IRGBPixel {
 
 function buildHistogramLut(imageData) {
 
-	/*const MAX = 255, MIN = 0;
+	// old alg
+	const MAX = 255, MIN = 0;
 	const totalHistLut = [];
 	let min = MAX, max = MIN;
 
@@ -320,102 +321,15 @@ function buildHistogramLut(imageData) {
 		const diff = cumulativeHist[index] - minCumProbability;
 
 		finalHist[index] = Math.round((diff / delimter * (MAX - MIN))) + MIN;
-	}*/
-	/*const pixels = imageData.data.length / 4;
-	const totalHist = new Array(256).fill(0);
-	for (let index = 0; index < imageData.data.length; index += 4) {
-		const pixel = {
-			r: imageData.data[index],
-			g: imageData.data[index + 1],
-			b: imageData.data[index + 2]
-		};
-		const yCbCr: IYCbCrPixel = this['rgb2YCbCr'](pixel);
-
-		const val = yCbCr.y;
-		totalHist[val]++;
-	}
-	let off = 0, i, min, max;
-	const probHist = totalHist;
-	const toCutOff =  Math.round(pixels * 0.12 / 100);
-	debugger;
-	for (i = 0; i < 256 && off < toCutOff; i++) {
-		let his = probHist[i];
-		probHist[i] -= his;
-		off += his;
-	}
-	if ( off > toCutOff) {
-		probHist[i - 1] += off - toCutOff;
-		min = i - 1;
-	}else {
-		min = i;
 	}
 
-	off = 0;
-
-	for (i = 255; i >=  0 && off < toCutOff; i--) {
-		let his = probHist[i];
-		probHist[i] -= his;
-		off += his;
-	}
-
-	if ( off > toCutOff) {
-		probHist[i + 1] += off - toCutOff;
-		max = i + 1;
-	} else {
-		max = i;
-	}
-	const cdf = new Array(256).fill(0);
-	let temp = 0;
-
-	probHist.forEach( (val, index) => {
-		temp += val;
-		cdf[index] = temp;
-	});
-	const finalHist = [];
-	const diff = pixels - cdf[min];
-	cdf.forEach( (val, index) => {
-		finalHist[index] = Math.round((val - cdf[min]) / diff * 255);
-	});*/
-
-	/*const keys = ['r', 'g', 'b'];
-	const MAX = 255, MIN = 0;
-	let min = {r: MAX, g: MAX, b: MAX}, max = {r: MIN, g: MIN, b: MIN};
-
-	for (let index = 0; index < imageData.data.length; index += 4) {
-		const r = imageData.data[index];
-		const g = imageData.data[index + 1];
-		const b = imageData.data[index + 2];
-
-		const ycbcr = {
-			r: this['rgb2YCbCr']({ r, g: 0, b: 0 }),
-			g: this['rgb2YCbCr']({ r: 0, g, b: 0 }),
-			b: this['rgb2YCbCr']({ r: 0, g: 0, b })
-		};
-
-		keys.forEach( band => {
-			min[band] = min[band] < ycbcr[band].y ? min[band] : ycbcr[band].y;
-			max[band] = max[band] > ycbcr[band].y ? max[band] : ycbcr[band].y;
-		});
-	}
-
-	const finalHist = {
-		r: [],
-		g: [],
-		b: []
-	};
-
-	keys.forEach(band => {
-		for (let index = MIN; index <= MAX; index ++) {
-			finalHist[band][index] = Math.round( ((index - min[band]) / (max[band] - min[band])) * (MAX - MIN ) + MIN );
-		}
-	});*/
-	 debugger;
-	const totalHistLut = new Array(256).fill(0);
+	// new alg
+	/*const totalHistLut = new Array(256).fill(0);
 	for (let index = 0; index < imageData.data.length; index += 4) {
 		const [r, g, b] = imageData.data.slice(index , index + 4);
-		/*if ( r === g && r === b && g === b) {
+		/!*if ( r === g && r === b && g === b) {
 			continue;
-		}*/
+		}*!/
 		if (totalHistLut[g] === undefined) {
 			totalHistLut[g] = 1;
 		} else {
@@ -424,31 +338,9 @@ function buildHistogramLut(imageData) {
 	}
 	let pixels = totalHistLut.reduce((cumm, val ) => cumm += val, 0);
 	let off = 0, i;
-	// cut off the edges
-	/*for (i = 0; i < 256 && off < toCutOff; i++) {
-		let his = totalHistLut[i];
-		totalHistLut[i] -= his;
-		off += his;
-	}
-	if ( off > toCutOff) {
-		totalHistLut[i - 1] += off - toCutOff;
-	}
-	off = 0;
-	debugger;
-	for (i = 255; i >=  0 && off < toCutOff; i--) {
-		let his = totalHistLut[i];
-		totalHistLut[i] -= his;
-		off += his;
-	}
-
-	if ( off > toCutOff) {
-		totalHistLut[i + 1] += off - toCutOff;
-	}*/
-
-	// end of cut off
 	let min = 1, max = 0;
 	const probHist = totalHistLut.map( val => val / pixels);
-	const toCutOff =  0.06 / 100;
+	const toCutOff =  0.12 / 100;
 
 	for (i = 0; i < 256 && off < toCutOff; i++) {
 		let his = probHist[i];
@@ -475,37 +367,25 @@ function buildHistogramLut(imageData) {
 	});
 	const finalHist = [];
 	probHist.forEach((val, index) => {
-		finalHist[index] = this['normalizeColor'](Math.round((val - min) * 1 / (max - min)) * 255);
-	});
-	console.log({finalHist});
+		finalHist[index] = this['normalizeColor'](Math.round((val - min) * 255 / (max - min)) );
+	});*/
 	return finalHist;
 }
 
 function performHistogram(pixel, histogramLut) {
-	/*const rPixel = {r: pixel.r, g: 0, b: 0};
-	const gPixel = {r: 0, g: pixel.g, b: 0};
-	const bPixel = {r: 0, g: 0, b: pixel.b};
-	const yCbCr = {
-		r: this['rgb2YCbCr'](rPixel),
-		g: this['rgb2YCbCr'](gPixel),
-		b: this['rgb2YCbCr'](bPixel)
-	};
-	const resultPixel = {r: 0, g: 0, b: 0, a: pixel.a};
-	['r', 'g', 'b'].forEach( band => {
-		yCbCr[band].y = histogramLut[band][yCbCr[band].y];
-		const newRgb = this['yCbCr2RGB'](yCbCr[band]);
-		resultPixel[band] = newRgb[band];
-	});*/
-	/*const yCbCr = this['rgb2YCbCr'](pixel);
+	// old alg
+	const yCbCr = this['rgb2YCbCr'](pixel);
 	yCbCr.y = histogramLut[yCbCr.y];
 	const resultPixel = this['yCbCr2RGB'](yCbCr);
-	resultPixel.a = 255;*/
-	const resultPixel = {
+	resultPixel.a = pixel.a;
+
+	// new alg
+	/*const resultPixel = {
 		r: histogramLut[pixel.r],
 		g: histogramLut[pixel.g],
 		b: histogramLut[pixel.b],
 		a: pixel.a
-	};
+	};*/
 	return resultPixel;
 }
 

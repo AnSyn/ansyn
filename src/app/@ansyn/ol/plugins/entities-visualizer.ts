@@ -11,6 +11,7 @@ import Point from 'ol/geom/Point';
 import VectorLayer from 'ol/layer/Vector';
 import ol_Layer from 'ol/layer/Layer';
 import OLGeoJSON from 'ol/format/GeoJSON';
+import { getArea } from 'ol/sphere';
 import SelectEvent from 'ol/interaction/Select';
 import * as olExtent from 'ol/extent';
 import {
@@ -429,9 +430,8 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	}
 
 	formatArea(geometry) {
-		const polygon = new OLGeoJSON().writeGeometryObject(geometry);
 		const fractionDigits = 2;
-		const area = calculateGeometryArea(polygon);
+		const area = getArea(geometry);
 
 		if (area >= 1000) {
 			return (area / 1000).toFixed(fractionDigits) + 'km2';

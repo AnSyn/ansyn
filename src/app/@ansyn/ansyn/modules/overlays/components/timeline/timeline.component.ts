@@ -285,7 +285,6 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	initEventDrop(drops): void {
 		this.chart = eventDrops(this.configuration);
-		d3.zoom().scaleExtent([1, 10]);
 		this.element = d3.select(this.context.nativeElement);
 		this.element
 			.data([[{ data: drops }]])

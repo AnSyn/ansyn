@@ -4,7 +4,7 @@
 :host {
 	&.component {
 		.app {
-			/deep/ ansyn-popover.default-case div.pop-hover .pop-content {
+			::ng-deep ansyn-popover.default-case div.pop-hover .pop-content {
 				visibility: hidden !important;
 			}
 
@@ -106,7 +106,7 @@
 
 				}
 
-				.ansynToolsAlone /deep/ .tools-menu-item-container {
+				.ansynToolsAlone ::ng-deep .tools-menu-item-container {
 					padding: 0;
 				}
 
@@ -151,7 +151,7 @@
 }
 
 // time picker: set font
-/deep/ .owl-dt-container {
+::ng-deep .owl-dt-container {
 	font-family: @app-font;
 }
 

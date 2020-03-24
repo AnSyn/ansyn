@@ -17,7 +17,7 @@
 		.box {
 			margin: 0 1px;
 
-			/deep/ [class*="search-panel-button"] {
+			::ng-deep [class*="search-panel-button"] {
 				padding: 5px 11px 5px 0px;
 				background: @status-bar-panels;
 
@@ -35,12 +35,12 @@
 				}
 			}
 
-			/deep/ button.search-panel-button-left {
+			::ng-deep button.search-panel-button-left {
 				border-top-left-radius: @status-bar-panel-radius;
 				border-bottom-left-radius: @status-bar-panel-radius;
 			}
 
-			/deep/ button.search-panel-button-right {
+			::ng-deep button.search-panel-button-right {
 				border-top-right-radius: @status-bar-panel-radius;
 				border-bottom-right-radius: @status-bar-panel-radius;
 			}

@@ -18,7 +18,7 @@
 		&.layout2 {
 			div.map-container-wrapper {
 				&:first-child {
-					/deep/ .ol-attribution {
+					::ng-deep .ol-attribution {
 						bottom: @attribute-on-hide-button;
 					}
 				}
@@ -28,7 +28,7 @@
 		&.layout4 {
 			div.map-container-wrapper {
 				&:first-child {
-					/deep/ .ol-attribution {
+					::ng-deep .ol-attribution {
 						bottom:  @attribute-on-hide-button;
 					}
 				}
@@ -38,7 +38,7 @@
 		&.layout5 {
 			div.map-container-wrapper {
 				&:nth-child(2) {
-					/deep/ .ol-attribution {
+					::ng-deep .ol-attribution {
 						bottom:  @attribute-on-hide-button;
 					}
 				}
@@ -48,7 +48,7 @@
 		&.layout6 {
 			div.map-container-wrapper {
 				&:nth-child(3) {
-					/deep/ .ol-attribution {
+					::ng-deep .ol-attribution {
 						bottom:  @attribute-on-hide-button;
 					}
 				}
@@ -59,14 +59,14 @@
 	div.imageries-container:not(.footer-collapsed) {
 		&.layout3, &.layout5 {
 			:nth-child(2) {
-				/deep/ ansyn-imagery-status > div.buttons {
+				::ng-deep ansyn-imagery-status > div.buttons {
 					margin-left: 15px;
 				}
 			}
 		}
 		&.layout6 {
 			:nth-child(3) {
-				/deep/ ansyn-imagery-status > div.buttons {
+				::ng-deep ansyn-imagery-status > div.buttons {
 					margin-left: 15px;
 				}
 			}
@@ -106,17 +106,17 @@
 			}
 		}
 
-		/deep/ .ol-scale-line {
+		::ng-deep .ol-scale-line {
 			bottom: 5px;
 			height: @scale-line-height;
 			min-width: 200px;
 		}
 
-		/deep/ .ol-scale-line-inner {
+		::ng-deep .ol-scale-line-inner {
 			margin-top: 16px;
 		}
 
-		/deep/ .ol-attribution {
+		::ng-deep .ol-attribution {
 			bottom: @attribute-default;
 		}
 
@@ -241,7 +241,7 @@
 	}
 
 	div.footer-collapsed {
-		/deep/ .ol-attribution {
+		::ng-deep .ol-attribution {
 			bottom: @attribute-minimize;
 		}
 
@@ -254,7 +254,7 @@
 					top: 0;
 					left: 0;
 
-					/deep/ .ol-attribution {
+					::ng-deep .ol-attribution {
 						bottom:  @attribute-on-hide-button-minimize;
 					}
 				}
@@ -276,7 +276,7 @@
 				&:nth-child(1) {
 					top: 0;
 					left: 0;
-					/deep/ .ol-attribution {
+					::ng-deep .ol-attribution {
 						bottom: @attribute-default;
 					}
 				}
@@ -299,7 +299,7 @@
 					top: 0;
 					left: 0;
 
-					/deep/ .ol-attribution {
+					::ng-deep .ol-attribution {
 						bottom: @attribute-on-hide-button-minimize;
 					}
 				}
@@ -307,7 +307,7 @@
 				&:nth-child(2) {
 					top: 0;
 					left: 50%;
-					/deep/ .ol-attribution {
+					::ng-deep .ol-attribution {
 						bottom: @attribute-default;
 					}
 				}
@@ -329,7 +329,7 @@
 					height: 50%;
 					top: 0;
 					left: 0;
-					/deep/ .ol-attribution {
+					::ng-deep .ol-attribution {
 						bottom: @attribute-default;
 					}
 				}
@@ -338,7 +338,7 @@
 					top: 50%;
 					left: 0;
 
-					/deep/ .ol-attribution {
+					::ng-deep .ol-attribution {
 						bottom: @attribute-on-hide-button-minimize;
 					}
 				}
@@ -366,7 +366,7 @@
 				}
 
 				&:nth-child(1), &:nth-child(2) {
-					/deep/ .ol-attribution {
+					::ng-deep .ol-attribution {
 						bottom: @attribute-default;
 					}
 				}
@@ -375,7 +375,7 @@
 					top: 50%;
 					left: 0;
 
-					/deep/ .ol-attribution {
+					::ng-deep .ol-attribution {
 						bottom: @attribute-on-hide-button-minimize;
 					}
 				}
@@ -393,7 +393,7 @@
 	:host {
 		div.imageries-container {
 			&.layout2, &.layout4, &.layout6, &.layout5 div.map-container-wrapper:not(:first-child) {
-				/deep/ ansyn-imagery-status {
+				::ng-deep ansyn-imagery-status {
 					.buttons button.back-to-world-view {
 						font-size: 0;
 						overflow: visible;

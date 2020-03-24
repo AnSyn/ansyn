@@ -2,7 +2,7 @@
 @import 'ansyn/less/common';
 
 :host {
-	&.combo-center .combo-container .options-container /deep/ .option {
+	&.combo-center .combo-container .options-container ::ng-deep .option {
 		justify-content: center;
 		text-align: center;
 	}
@@ -41,7 +41,7 @@
 		&.transparent {
 			@transparent-color: rgba(255, 255, 255, 0.4);
 
-			/deep/ button[ansynComboBoxTrigger] {
+			::ng-deep button[ansynComboBoxTrigger] {
 				background: transparent;
 				border: none;
 				border-bottom: 1px solid @transparent-color;
@@ -52,7 +52,7 @@
 				box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.2);
 				border-color: @transparent-color;
 
-				/deep/ .option {
+				::ng-deep .option {
 					font-weight: 500;
 
 					&:hover {
@@ -62,7 +62,7 @@
 			}
 
 			&.top {
-				/deep/ button[ansynComboBoxTrigger] {
+				::ng-deep button[ansynComboBoxTrigger] {
 					border-bottom: 1px solid @transparent-color;
 					border-top: none;
 				}
@@ -108,7 +108,7 @@ div.render {
 	height: 19px;
 }
 
-/deep/ div.option {
+::ng-deep div.option {
 	display: flex;
 	align-items: center;
 }

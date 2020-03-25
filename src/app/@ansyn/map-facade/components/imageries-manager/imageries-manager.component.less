@@ -8,7 +8,6 @@
 @attribute-on-hide-button: 22px;
 @attribute-on-hide-button-minimize: @attribute-on-hide-button + 10;
 
-
 :host {
 	position: absolute;
 	height: calc(100% + 10px);
@@ -56,22 +55,6 @@
 		}
 	}
 
-	div.imageries-container:not(.footer-collapsed) {
-		&.layout3, &.layout5 {
-			:nth-child(2) {
-				/deep/ ansyn-imagery-status > div.buttons {
-					margin-left: 15px;
-				}
-			}
-		}
-		&.layout6 {
-			:nth-child(3) {
-				/deep/ ansyn-imagery-status > div.buttons {
-					margin-left: 15px;
-				}
-			}
-		}
-	}
 	div.imageries-container {
 		position: relative;
 		display: flex;
@@ -383,6 +366,27 @@
 				&:nth-child(4) {
 					top: 50%;
 					left: 50%;
+				}
+			}
+		}
+	}
+}
+
+div.app.animations.isNotPinned {
+	:host {
+		div.imageries-container:not(.footer-collapsed) {
+			&.layout3, &.layout5 {
+				:nth-child(2) {
+					/deep/ ansyn-imagery-status > div.buttons {
+						margin-left: 15px;
+					}
+				}
+			}
+			&.layout6 {
+				:nth-child(3) {
+					/deep/ ansyn-imagery-status > div.buttons {
+						margin-left: 15px;
+					}
 				}
 			}
 		}

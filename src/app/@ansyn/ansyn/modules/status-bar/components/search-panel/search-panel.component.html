@@ -27,7 +27,25 @@
 	<!-- Geo filter -->
 	<div class="box" id="editGeoFilter">
 
-		<ansyn-combo-box
+		<button ansynComboBoxTrigger
+				#locationPickerTrigger
+				(click)="toggleLocationPicker()"
+				[attr.tooltip-value]="statusBarConfig?.toolTips?.geoFilter | translate"
+				[isActive]="locationPickerExpand"
+				[withArrow]="false"
+				icon="icon icon-status-bar-geo small"
+				tooltip-class="top"
+				class="search-panel-button">
+			<span class="title">{{geoFilterTitle}}</span>
+		</button>
+
+		<ansyn-location-picker
+			*ngIf="locationPickerExpand"
+			(ansynClickOutside)="toggleLocationPicker()"
+			[extraClass]="'ol-viewport'"
+			[trigger]="locationPickerTrigger?.optionsTrigger?.nativeElement">
+		</ansyn-location-picker>
+		<!--<ansyn-combo-box
 			[buttonClass]="'search-panel-button'"
 			direction="top"
 			name="GeoFilter"
@@ -42,7 +60,7 @@
 				{{ _geoFilter | translate}}
 			</ansyn-combo-box-option>
 
-		</ansyn-combo-box>
+		</ansyn-combo-box>-->
 	</div>
 
 	<!-- data input filter-->

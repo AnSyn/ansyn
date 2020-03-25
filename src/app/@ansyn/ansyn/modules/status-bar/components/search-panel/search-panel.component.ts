@@ -42,6 +42,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	geoFilterStatus: IGeoFilterStatus;
 	dataInputFilterExpand: boolean;
 	timePickerExpand: boolean;
+	locationPickerExpand: boolean;
 	timeRange: Date[];
 	dataInputFilterTitle = 'All';
 	timeSelectionTitle: string;
@@ -81,7 +82,6 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	constructor(protected store$: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
-				@Inject(GEO_FILTERS) public geoFilters: CaseGeoFilter[],
 				dateTimeAdapter: DateTimeAdapter<any>
 	) {
 		dateTimeAdapter.setLocale(statusBarConfig.locale);
@@ -99,15 +99,8 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		this.timePickerExpand = !this.timePickerExpand;
 	}
 
-	geoFilterChanged(geoFilter?: SearchMode) {
-		const payload: Partial<IGeoFilterStatus> = { searchMode: geoFilter };
-
-		if (Boolean(geoFilter)) {
-			payload.indicator = true;
-		}
-
-		this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateGeoFilterStatus] }));
-		this.store$.dispatch(new UpdateGeoFilterStatus({ searchMode: geoFilter }));
+	toggleLocationPicker() {
+		this.locationPickerExpand = !this.locationPickerExpand;
 	}
 
 	ngOnDestroy() {

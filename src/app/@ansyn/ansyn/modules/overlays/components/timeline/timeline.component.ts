@@ -232,10 +232,18 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	onClick() {
 	}
 
+	isTimeLineEnd() {
+		const datesArray = this.chart.filteredData()[0].fullData;
+		const currentMinimumDate = this.chart.scale().domain()[0];
+		const currentMaximumDate = this.chart.scale().domain()[1];
+		const minimumDate = datesArray[0].date;
+		const maximumDate = datesArray[datesArray.length - 1].date;
+
+		return ((currentMaximumDate < minimumDate) || (currentMinimumDate > maximumDate));
+	}
+
 	onZoomEnd() {
-		const currentDropsOnTimeline = this.chart.filteredData()[0].data.length;
-		console.log(currentDropsOnTimeline);
-		const errorMessage = currentDropsOnTimeline < 1 ? 'No overlays left there' : null;
+		const errorMessage = this.isTimeLineEnd() ? 'No overlays left there' : null;
 		this.store$.dispatch(new SetOverlaysStatusMessageAction(errorMessage));
 
 		this.store$.dispatch(new SetTimelineStateAction({

@@ -39,6 +39,7 @@ import { ExtendMap } from '../../reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../overlay-overview/overlay-overview.component.const';
 import { DOCUMENT } from '@angular/common';
 import { IOverlayDrop } from '../../models/overlay.model';
+import { TranslateService } from "@ngx-translate/core";
 
 export const BASE_DROP_COLOR = '#8cceff';
 selection.prototype.moveToFront = function () {
@@ -170,7 +171,8 @@ export class TimelineComponent implements OnInit, OnDestroy {
 				protected elementRef: ElementRef,
 				@Inject(DOCUMENT) protected document: any,
 				protected store$: Store<IOverlaysState>,
-				protected actions$: Actions) {
+				protected actions$: Actions,
+				protected translator: TranslateService) {
 	}
 
 	addRStyle() {
@@ -243,7 +245,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	}
 
 	onZoomEnd() {
-		const errorMessage = this.isNoOverlaysLeft() ? 'No overlays left there' : null;
+		const errorMessage = this.isNoOverlaysLeft() ? this.translator.instant('No overlays left there') : null;
 		this.store$.dispatch(new SetOverlaysStatusMessageAction(errorMessage));
 
 		this.store$.dispatch(new SetTimelineStateAction({

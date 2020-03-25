@@ -232,7 +232,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	onClick() {
 	}
 
-	isTimeLineEnd() {
+	isNoOverlaysLeft() {
 		const datesArray = this.chart.filteredData()[0].fullData;
 		const currentMinimumDate = this.chart.scale().domain()[0];
 		const currentMaximumDate = this.chart.scale().domain()[1];
@@ -243,7 +243,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	}
 
 	onZoomEnd() {
-		const errorMessage = this.isTimeLineEnd() ? 'No overlays left there' : null;
+		const errorMessage = this.isNoOverlaysLeft() ? 'No overlays left there' : null;
 		this.store$.dispatch(new SetOverlaysStatusMessageAction(errorMessage));
 
 		this.store$.dispatch(new SetTimelineStateAction({

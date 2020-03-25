@@ -192,11 +192,6 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 	}
 
 	private switchToExportMode(exportMode: boolean, initialFooterCollapsed: boolean, initialMinimal: boolean) {
-		// this.isExporting = exportMode;
-		// if (!initialFooterCollapsed) {
-		// 	this.store.dispatch(new ToggleFooter(exportMode));
-		// }
-		//
 		if (!initialMinimal) {
 			this.store.dispatch(new SetMinimalistViewModeAction(exportMode));
 		}

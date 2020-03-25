@@ -29,11 +29,11 @@ import {
 	DisplayOverlayFromStoreAction,
 	OverlaysActionTypes,
 	RedrawTimelineAction,
-	SetMarkUp,
-	SetTimelineStateAction
+	SetMarkUp, SetOverlaysStatusMessageAction,
+	SetTimelineStateAction, UpdateOverlaysCountAction
 } from '../../actions/overlays.actions';
 import { schemeCategory10 } from 'd3-scale-chromatic';
-import { distinctUntilChanged, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, map, tap, withLatestFrom } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import { ExtendMap } from '../../reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../overlay-overview/overlay-overview.component.const';
@@ -233,12 +233,18 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	}
 
 	onZoomEnd() {
+		const currentDropsOnTimeline = this.chart.filteredData()[0].data.length;
+		console.log(currentDropsOnTimeline);
+		const errorMessage = currentDropsOnTimeline < 1 ? 'No overlays left there' : null;
+		this.store$.dispatch(new SetOverlaysStatusMessageAction(errorMessage));
+
 		this.store$.dispatch(new SetTimelineStateAction({
 			timeLineRange: {
 				start: this.chart.scale().domain()[0],
 				end: this.chart.scale().domain()[1]
 			}
 		}));
+
 	}
 
 	initEventDropsSequence(drops) {

@@ -10,6 +10,7 @@ import { OverlaysConfig, OverlaysService } from '../../services/overlays.service
 import { MultipleOverlaysSourceProvider } from '../../services/multiple-source-provider';
 import { createStore, IStoreFixture } from '../../../core/test/mock-store';
 import { LoggerService } from '../../../core/services/logger.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 describe('TimelineComponent', () => {
 	let component: TimelineComponent;
@@ -131,11 +132,16 @@ describe('TimelineComponent', () => {
 				{
 					provide: LoggerService,
 					useValue: { error: (some) => null }
+				},
+				{
+					provide: TranslateService,
+					useValue: {}
 				}
 			],
 			declarations: [TimelineComponent],
 			imports: [
-				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer })
+				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer }),
+				TranslateModule
 			]
 		})
 			.compileComponents();

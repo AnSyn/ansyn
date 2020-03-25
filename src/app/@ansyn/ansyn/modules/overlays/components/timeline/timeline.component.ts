@@ -29,16 +29,17 @@ import {
 	DisplayOverlayFromStoreAction,
 	OverlaysActionTypes,
 	RedrawTimelineAction,
-	SetMarkUp,
-	SetTimelineStateAction
+	SetMarkUp, SetOverlaysStatusMessageAction,
+	SetTimelineStateAction, UpdateOverlaysCountAction
 } from '../../actions/overlays.actions';
 import { schemeCategory10 } from 'd3-scale-chromatic';
-import { distinctUntilChanged, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, map, tap, withLatestFrom } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import { ExtendMap } from '../../reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../overlay-overview/overlay-overview.component.const';
 import { DOCUMENT } from '@angular/common';
 import { IOverlayDrop } from '../../models/overlay.model';
+import { TranslateService } from "@ngx-translate/core";
 
 export const BASE_DROP_COLOR = '#8cceff';
 selection.prototype.moveToFront = function () {
@@ -104,7 +105,8 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		zoom: {
 			onZoom: this.drawMarkup.bind(this),
 			onZoomStart: null,
-			onZoomEnd: this.onZoomEnd.bind(this)
+			onZoomEnd: this.onZoomEnd.bind(this),
+			minimumScale: 1
 		},
 		label: {
 			width: 0,
@@ -136,7 +138,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		.pipe(
 			select(selectDropMarkup),
 			withLatestFrom(this.store$.pipe(select(selectDrops))),
-			tap(this.checkDiffranceInTimeRange.bind(this)),
+			tap(this.checkDifferenceInTimeRange.bind(this)),
 			tap(([value]: [ExtendMap<MarkUpClass, IMarkUpData>, any]) => {
 				this.markup = value;
 				this.drawMarkup();
@@ -169,7 +171,8 @@ export class TimelineComponent implements OnInit, OnDestroy {
 				protected elementRef: ElementRef,
 				@Inject(DOCUMENT) protected document: any,
 				protected store$: Store<IOverlaysState>,
-				protected actions$: Actions) {
+				protected actions$: Actions,
+				protected translator: TranslateService) {
 	}
 
 	addRStyle() {
@@ -190,7 +193,6 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy() {
 		this.subscribers.forEach(subscriber => subscriber.unsubscribe());
-
 	}
 
 	onMouseOver({ id }: IEventDropsEvent) {
@@ -232,13 +234,27 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	onClick() {
 	}
 
+	isNoOverlaysLeft() {
+		const datesArray = this.chart.filteredData()[0].fullData;
+		const currentMinimumDate = this.chart.scale().domain()[0];
+		const currentMaximumDate = this.chart.scale().domain()[1];
+		const minimumDate = datesArray[0].date;
+		const maximumDate = datesArray[datesArray.length - 1].date;
+
+		return ((currentMaximumDate < minimumDate) || (currentMinimumDate > maximumDate));
+	}
+
 	onZoomEnd() {
+		const errorMessage = this.isNoOverlaysLeft() ? this.translator.instant('No overlays left there') : null;
+		this.store$.dispatch(new SetOverlaysStatusMessageAction(errorMessage));
+
 		this.store$.dispatch(new SetTimelineStateAction({
 			timeLineRange: {
 				start: this.chart.scale().domain()[0],
 				end: this.chart.scale().domain()[1]
 			}
 		}));
+
 	}
 
 	initEventDropsSequence(drops) {
@@ -256,7 +272,16 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	checkDiffranceInTimeRange([newMarkUp, drops]: [ExtendMap<MarkUpClass, IMarkUpData>, any]) {
+	isTimeChanged(timeRange) {
+		const currentStartDate = this.configuration.range.start;
+		const currentEndDate = this.configuration.range.end;
+		const newStartDate = timeRange.start;
+		const newSendDate = timeRange.end;
+
+		return (newStartDate.getTime() !== currentStartDate.getTime()) || (newSendDate.getTime() !== currentEndDate.getTime());
+	}
+
+	checkDifferenceInTimeRange([newMarkUp, drops]: [ExtendMap<MarkUpClass, IMarkUpData>, any]) {
 		const newActive = newMarkUp.get(MarkUpClass.active).overlaysIds;
 		if (!newActive || !newActive.length) {
 			return;
@@ -265,9 +290,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		const isExist = Boolean(this.dropsIdMap.get(newActiveId));
 		if (isExist && (!this.oldActiveId || this.oldActiveId !== newActiveId)) {
 			const timeLineRange = this.overlaysService.getTimeStateByOverlay(this.dropsIdMap.get(newActiveId), this.configuration.range);
-			if (timeLineRange.start.getTime() !== this.configuration.range.start.getTime() ||
-				timeLineRange.end.getTime() !== this.configuration.range.end.getTime()
-			) {
+			if (this.isTimeChanged(timeLineRange)) {
 				this.configuration.range = timeLineRange;
 				this.initEventDropsSequence(drops);
 			}

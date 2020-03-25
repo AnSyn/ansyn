@@ -1,12 +1,11 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { GEO_FILTERS } from '../../models/combo-boxes.model';
 import { CaseGeoFilter } from '../../../menu-items/cases/models/case.model';
-import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
 import { IStatusBarState, selectGeoFilterSearchMode } from '../../reducers/status-bar.reducer';
 import { tap } from 'rxjs/operators';
-import { SearchMode } from '../../models/search-mode.enum';
-import { ClearActiveInteractionsAction } from '../../../menu-items/tools/actions/tools.actions';
+import { SearchMode, SearchModeEnum } from '../../models/search-mode.enum';
 import { UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 
 @Component({
@@ -17,9 +16,13 @@ import { UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 @AutoSubscriptions()
 export class LocationPickerComponent implements OnInit, OnDestroy {
 	_currentGeoFilter: SearchMode;
+	private lastGeo: CaseGeoFilter;
 	set currentGeoFilter(value: SearchMode) {
-		this._currentGeoFilter = value;
-		this.store$.dispatch(new UpdateGeoFilterStatus({ searchMode: value, active: true }));
+		this._currentGeoFilter = value === SearchModeEnum.none ? this.lastGeo : value;
+		this.lastGeo = this._currentGeoFilter;
+		requestAnimationFrame(() => {
+			this.store$.dispatch(new UpdateGeoFilterStatus({ searchMode: this._currentGeoFilter, indicator: value !== SearchModeEnum.none }));
+		})
 	}
 
 	get currentGeoFilter(): SearchMode {
@@ -35,13 +38,14 @@ export class LocationPickerComponent implements OnInit, OnDestroy {
 
 	constructor(protected store$: Store<IStatusBarState>,
 				@Inject(GEO_FILTERS) public geoFilters: CaseGeoFilter[]) {
+		this.lastGeo = geoFilters[0];
 	}
 
 	ngOnInit() {
 	}
 
 	ngOnDestroy(): void {
-		this.store$.dispatch(new UpdateGeoFilterStatus({ active: false }));
+		this.store$.dispatch(new UpdateGeoFilterStatus({ indicator: false }));
 	}
 
 }

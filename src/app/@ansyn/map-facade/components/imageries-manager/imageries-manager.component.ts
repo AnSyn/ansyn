@@ -21,7 +21,8 @@ import {
 	ToggleFooter,
 	SetMinimalistViewModeAction,
 	ExportMapsToPngActionSuccess,
-	ExportMapsToPngActionFailed } from '../../actions/map.actions';
+	ExportMapsToPngActionFailed
+} from '../../actions/map.actions';
 import { DOCUMENT } from '@angular/common';
 import { filter, map, tap, withLatestFrom, mergeMap, catchError, debounceTime } from 'rxjs/operators';
 import { DragDropMapService } from './providers/drag-drop-map.service';
@@ -60,7 +61,7 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 		mergeMap(([exporting, initialMinimal, initialFooterCollapsed]: [boolean, boolean, boolean]) => {
 			return fromPromise(this.exportElement(this.imageriesContainer.nativeElement.parentElement, initialMinimal, initialFooterCollapsed));
 		}),
-		tap((value: {result: boolean, msg: string, initialMinimal: boolean, initialFooterCollapsed: boolean}) => {
+		tap((value: { result: boolean, msg: string, initialMinimal: boolean, initialFooterCollapsed: boolean }) => {
 			this.switchToExportMode(false, value.initialFooterCollapsed, value.initialMinimal);
 			if (value.result) {
 				this.store.dispatch(new ExportMapsToPngActionSuccess());
@@ -86,7 +87,7 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 
 
 	@ViewChild('imageriesContainer') imageriesContainer: ElementRef;
-	@ViewChild('loader', { read: ElementRef } ) loader: ElementRef;
+	@ViewChild('loader', { read: ElementRef }) loader: ElementRef;
 
 	pinLocationMode: boolean;
 	ids: string[] = [];
@@ -175,25 +176,22 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 		return item.id;
 	}
 
-	private async exportElement(element: Element, initialMinimal: boolean, initialFooterCollapsed: boolean): Promise<{result: boolean, msg: string, initialMinimal: boolean, initialFooterCollapsed: boolean}> {
+	private async exportElement(element: Element, initialMinimal: boolean, initialFooterCollapsed: boolean): Promise<{ result: boolean, msg: string, initialMinimal: boolean, initialFooterCollapsed: boolean }> {
 		try {
 			const blob: Blob = await domtoimage.toBlob(element,
-								{filter: (node) => {
-									return (node.id !== this.loader.nativeElement.id); }});
+				{
+					filter: (node) => {
+						return (node !== this.loader.nativeElement.id || (Boolean(node.ol_lm)));
+					}
+				});
 			saveAs(blob, 'map.jpeg');
-			return {result: true, msg: null, initialMinimal, initialFooterCollapsed};
-		}
-		catch (err) {
-			return {result: true, msg: err, initialMinimal, initialFooterCollapsed};
+			return { result: true, msg: null, initialMinimal, initialFooterCollapsed };
+		} catch (err) {
+			return { result: true, msg: err, initialMinimal, initialFooterCollapsed };
 		}
 	}
 
 	private switchToExportMode(exportMode: boolean, initialFooterCollapsed: boolean, initialMinimal: boolean) {
-		this.isExporting = exportMode;
-		if (!initialFooterCollapsed) {
-			this.store.dispatch(new ToggleFooter(exportMode));
-		}
-
 		if (!initialMinimal) {
 			this.store.dispatch(new SetMinimalistViewModeAction(exportMode));
 		}

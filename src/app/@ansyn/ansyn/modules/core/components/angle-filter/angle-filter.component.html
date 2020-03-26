@@ -20,13 +20,13 @@
 		</div>
 	</div>
 	<div class="rectangles">
-		<button (click)="nextOverlay($event, true)"
-				[disabled]="!overlay">
-			<i class="icon-angle-prev"></i>
-		</button>
 		<button (click)="nextOverlay($event, false)"
 				[disabled]="!overlay">
-			<i class="icon-angle-next"></i>
+			<i class="icon-app-prev"></i>
+		</button>
+		<button (click)="nextOverlay($event, true)"
+				[disabled]="!overlay">
+			<i class="icon-app-next"></i>
 		</button>
 	</div>
 </div>

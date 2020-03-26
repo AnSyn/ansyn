@@ -29,7 +29,7 @@
     "test:e2e": "node scripts/generate-config.js && ng e2e ansyn-e2e",
     "test:single-run": "ng test ansyn --watch=false",
     "testCompile": "cd build && gulp testCompile",
-    "try": "try 1"
+    "update": "ng update @angular/core @angular/cli"
   },
   "dependencies": {
     "@angular/animations": "~8.2.14",
@@ -44,7 +44,7 @@
     "@angular/platform-browser-dynamic": "~8.2.14",
     "@angular/router": "~8.2.14",
     "@ansyn/event-drops": "^0.2.8-1.9",
-    "@ansyn/ng-pick-datetime": "^7.0.1",
+    "@ansyn/ng-pick-datetime": "^7.1.0",
     "@auth0/angular-jwt": "^2.0.0",
     "@ngrx/core": "^1.2.0",
     "@ngrx/effects": "^7.2.0",

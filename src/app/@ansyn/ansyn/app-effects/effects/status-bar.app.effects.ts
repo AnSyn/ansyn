@@ -54,7 +54,8 @@ export class StatusBarAppEffects {
 		filter(( [isNext, overlay] ) => Boolean(overlay)),
 		withLatestFrom(this.store.select(selectDropsWithoutSpecialObjects), ([ isNext, {id: overlayId} ], drops: IOverlayDrop[]): IOverlayDrop => {
 			const index = drops.findIndex(({ id }) => id === overlayId);
-			const adjacent = isNext ? 1 : -1;
+			const isNextOverlay = isNext.payload.isNext;
+			const adjacent = isNextOverlay ? 1 : -1;
 			return drops[index + adjacent];
 		}),
 		filter(Boolean),

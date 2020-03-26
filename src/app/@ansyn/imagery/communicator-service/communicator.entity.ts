@@ -102,7 +102,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	public async replaceMapMainLayer(sourceType: string): Promise<boolean> { // TODO: change all promise to observable
-		const newSourceTypeLayer = await this.createMapSourceForMapType(this.ActiveMap.mapType, sourceType);
+		const newSourceTypeLayer = await this.createMapSourceForMapType(this.activeMapName, sourceType);
 		newSourceTypeLayer.set(ImageryLayerProperties.NAME, IMAGERY_BASE_MAP_LAYER);
 		if (newSourceTypeLayer) {
 			this._activeMap.addMapLayer(newSourceTypeLayer);
@@ -325,11 +325,10 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		if (sourceProvider) {
 			return sourceProvider.createAsync({
 				...this.mapSettings,
-				worldView: {...this.mapSettings.worldView, sourceType: mapSource.sourceType},
+				worldView: { ...this.mapSettings.worldView, sourceType: mapSource.sourceType },
 				data: { ...this.mapSettings.data, overlay: null, config: mapSource.config, key: mapSource.key }
 			});
-		}
-		else {
+		} else {
 			return Promise.resolve(false);
 		}
 	}

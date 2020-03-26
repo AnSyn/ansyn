@@ -51,10 +51,11 @@ export class StatusBarAppEffects {
 	onAdjacentOverlay$: Observable<any> = this.actions$.pipe(
 		ofType<GoAdjacentOverlay>(StatusBarActionsTypes.GO_ADJACENT_OVERLAY),
 		withLatestFrom(this.store.select(selectOverlayOfActiveMap)),
-		filter(( [isNext, overlay] ) => Boolean(overlay)),
-		withLatestFrom(this.store.select(selectDropsWithoutSpecialObjects), ([ isNext, {id: overlayId} ], drops: IOverlayDrop[]): IOverlayDrop => {
+		filter(( [action, overlay] ) => Boolean(overlay)),
+		withLatestFrom(this.store.select(selectDropsWithoutSpecialObjects), ([ action, {id: overlayId} ], drops: IOverlayDrop[]): IOverlayDrop => {
 			const index = drops.findIndex(({ id }) => id === overlayId);
-			const adjacent = isNext ? 1 : -1;
+			const isNextOverlay = action.payload.isNext;
+			const adjacent = isNextOverlay ? 1 : -1;
 			return drops[index + adjacent];
 		}),
 		filter(Boolean),

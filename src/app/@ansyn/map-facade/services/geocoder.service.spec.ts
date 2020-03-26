@@ -55,11 +55,12 @@ describe('GeocoderService', () => {
 			spyOn(httpClient, 'get').and.returnValue(asyncData({
 				resourceSets: [
 					{
-						resources:
+						resources: [
 							{
 								name: 'TestLocation',
 								point: { type: 'Point', coordinates: [3, 4] }
 							}
+						]
 					}
 				]
 			}));

@@ -127,7 +127,7 @@ export class OverlaysAppEffects {
 	);
 
 
-	@Effect()
+	/*@Effect()
 	onPinPointSearch$: Observable<SetOverlaysCriteriaAction | any> = this.actions$.pipe(
 		ofType<ContextMenuTriggerAction>(MapActionTypes.TRIGGER.CONTEXT_MENU),
 		withLatestFrom(this.isPinPointSearch$),
@@ -137,7 +137,7 @@ export class OverlaysAppEffects {
 			const region = turf.geometry('Point', payload);
 			return new SetOverlaysCriteriaAction({ region });
 		})
-	);
+	);*/
 
 
 	@Effect()

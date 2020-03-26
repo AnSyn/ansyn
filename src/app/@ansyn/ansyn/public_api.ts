@@ -45,8 +45,8 @@ export { comboBoxesOptions } from './modules/status-bar/models/combo-boxes.model
 export {
 	IStatusBarState,
 	selectComboBoxesProperties,
-	selectGeoFilterIndicator,
-	selectGeoFilterSearchMode
+	selectGeoFilterActive,
+	selectGeoFilterType
 } from './modules/status-bar/reducers/status-bar.reducer';
 export {
 	CopySnapshotShareLinkAction,

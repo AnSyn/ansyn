@@ -41,26 +41,8 @@
 
 		<ansyn-location-picker
 			*ngIf="locationPickerExpand"
-			(ansynClickOutside)="toggleLocationPicker()"
-			[extraClass]="'ol-viewport'"
-			[trigger]="locationPickerTrigger?.optionsTrigger?.nativeElement">
+			[geoFilter]="geoFilterTitle">
 		</ansyn-location-picker>
-		<!--<ansyn-combo-box
-			[buttonClass]="'search-panel-button'"
-			direction="top"
-			name="GeoFilter"
-			[comboBoxToolTipDescription]="statusBarConfig?.toolTips?.geoFilter | translate"
-			[withArrow]="false"
-			[alwaysChange]="true"
-			icon="icon icon-status-bar-geo small"
-			[ngModel]="geoFilterTitle"
-			(ngModelChange)="geoFilterChanged($event)">
-
-			<ansyn-combo-box-option *ngFor="let _geoFilter of geoFilters" [value]="_geoFilter">
-				{{ _geoFilter | translate}}
-			</ansyn-combo-box-option>
-
-		</ansyn-combo-box>-->
 	</div>
 
 	<!-- data input filter-->

@@ -6,7 +6,7 @@ import { combineLatest, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
 import { distinctUntilChanged, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
-import { selectGeoFilterSearchMode } from '../../../../../status-bar/reducers/status-bar.reducer';
+import { selectGeoFilterType } from '../../../../../status-bar/reducers/status-bar.reducer';
 import {
 	selectAnnotationMode,
 	selectAnnotationProperties,
@@ -88,7 +88,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 
 	@AutoSubscription
 	geoFilterSearchMode$ = this.store$.pipe(
-		select(selectGeoFilterSearchMode),
+		select(selectGeoFilterType),
 		tap((searchMode: SearchMode) => {
 			this.annotationsVisualizer.mapSearchIsActive = searchMode !== SearchModeEnum.none;
 		})

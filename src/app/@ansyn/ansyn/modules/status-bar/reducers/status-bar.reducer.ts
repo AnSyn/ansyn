@@ -1,11 +1,11 @@
 import { StatusBarActions, StatusBarActionsTypes } from '../actions/status-bar.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { IComboBoxesProperties } from '../models/combo-boxes.model';
-import { SearchMode, SearchModeEnum } from '../models/search-mode.enum';
+import { CaseGeoFilter } from '../../menu-items/cases/models/case.model';
 
 export interface IGeoFilterStatus {
-	searchMode: SearchMode;
-	indicator: boolean;
+	type: CaseGeoFilter;
+	active: boolean;
 }
 
 export interface IStatusBarState {
@@ -15,8 +15,8 @@ export interface IStatusBarState {
 
 export const StatusBarInitialState: IStatusBarState = {
 	geoFilterStatus: {
-		searchMode: SearchModeEnum.none,
-		indicator: true
+		type: CaseGeoFilter.PinPoint,
+		active: false
 	},
 	comboBoxesProperties: {}
 };
@@ -40,5 +40,5 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 
 export const selectComboBoxesProperties = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.comboBoxesProperties : StatusBarInitialState.comboBoxesProperties);
 export const selectGeoFilterStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.geoFilterStatus : StatusBarInitialState.geoFilterStatus);
-export const selectGeoFilterIndicator = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.indicator);
-export const selectGeoFilterSearchMode = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.searchMode);
+export const selectGeoFilterActive = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.active);
+export const selectGeoFilterType = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.type);

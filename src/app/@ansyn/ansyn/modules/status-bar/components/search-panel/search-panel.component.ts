@@ -1,19 +1,18 @@
 import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import * as momentNs from 'moment';
 import { IStatusBarConfig } from '../../models/statusBar-config.model';
-import { IGeoFilterStatus, IStatusBarState, selectGeoFilterStatus } from '../../reducers/status-bar.reducer';
+import {
+	IStatusBarState, selectGeoFilterActive,
+	selectGeoFilterType
+} from '../../reducers/status-bar.reducer';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
-import { GEO_FILTERS } from '../../models/combo-boxes.model';
-import { UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations/src/animation_metadata';
-import { SearchMode, SearchModeEnum } from '../../models/search-mode.enum';
 import { filter, tap } from 'rxjs/operators';
-import { selectDataInputFilter, selectRegion, selectTime } from '../../../overlays/reducers/overlays.reducer';
-import { CaseGeoFilter, ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
-import { ClearActiveInteractionsAction } from '../../../menu-items/tools/actions/tools.actions';
+import { selectDataInputFilter, selectTime } from '../../../overlays/reducers/overlays.reducer';
+import { ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 
@@ -39,7 +38,6 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 @AutoSubscriptions()
 export class SearchPanelComponent implements OnInit, OnDestroy {
 
-	geoFilterStatus: IGeoFilterStatus;
 	dataInputFilterExpand: boolean;
 	timePickerExpand: boolean;
 	locationPickerExpand: boolean;
@@ -70,13 +68,12 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	geoFilter$ = combineLatest(
-		this.store$.select(selectGeoFilterStatus),
-		this.store$.select(selectRegion)
+		this.store$.select(selectGeoFilterType),
+		this.store$.select(selectGeoFilterActive)
 	).pipe(
-		tap(([geoFilterStatus, region]) => {
-			this.geoFilterStatus = geoFilterStatus;
-			const regionType = region && region.type;
-			this.geoFilterTitle = geoFilterStatus.searchMode !== SearchModeEnum.none ? geoFilterStatus.searchMode : regionType;
+		tap(([geoFilterType, active]) => {
+			this.geoFilterTitle = geoFilterType;
+			this.locationPickerExpand = !active ? active : this.locationPickerExpand;
 		})
 	);
 

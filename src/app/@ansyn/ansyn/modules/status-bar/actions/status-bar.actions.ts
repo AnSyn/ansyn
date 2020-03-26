@@ -38,7 +38,7 @@ export class SetImageOpeningOrientation implements Action {
 export class UpdateGeoFilterStatus implements Action {
 	readonly type = StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS;
 
-	constructor(public payload: Partial<IGeoFilterStatus> = { searchMode: SearchModeEnum.none }) {
+	constructor(public payload: Partial<IGeoFilterStatus> = {active: false}) {
 	}
 }
 

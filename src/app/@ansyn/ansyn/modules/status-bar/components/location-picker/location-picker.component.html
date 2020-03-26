@@ -1,12 +1,13 @@
 <span class="title">{{'Select search area over the map' | translate}}</span>
 <div class="buttons">
 	<ansyn-radio
-		*ngFor="let geoFilter of geoFilters"
-		[(ngModel)]="currentGeoFilter"
-		[value]="geoFilter"
-		[name]="geoFilter"
+		*ngFor="let _geoFilter of geoFilters"
+		[(ngModel)]="geoFilter"
+		[value]="_geoFilter"
+		[name]="_geoFilter"
+		(change)="change(_geoFilter)"
 		>
-		{{geoFilter | translate }}
+		{{_geoFilter | translate }}
 	</ansyn-radio>
 </div>
 

@@ -6,8 +6,6 @@ import { HttpClient } from '@angular/common/http';
 import { defer, Observable } from 'rxjs';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { IMapFacadeConfig } from '../models/map-config.model';
-import { SetToastMessageAction } from '../actions/map.actions';
-import { switchMap, tap } from "rxjs/operators";
 
 function asyncData<T>(data: T): Observable<T> {
 	return defer(() => Promise.resolve(data));

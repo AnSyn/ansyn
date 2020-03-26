@@ -5,8 +5,8 @@
 		"@angular/common": "~8.2.14",
 		"@angular/core": "~8.2.14",
 		"@ngrx/core": "^1.2.0",
-		"@ngrx/store": "^7.2.0",
-		"@ngrx/effects": "^7.2.0",
+		"@ngrx/store": "^9.0.0",
+		"@ngrx/effects": "^9.0.0",
 		"@ngx-translate/core": "^11.0.1",
 		"@ansyn/imagery": "1.6.33"
 	},

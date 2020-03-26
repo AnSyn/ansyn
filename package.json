@@ -45,7 +45,7 @@
     "@angular/router": "~8.2.14",
     "@ansyn/event-drops": "^0.2.8-1.9",
     "@ansyn/ng-pick-datetime": "^7.1.0",
-    "@auth0/angular-jwt": "^2.0.0",
+    "@auth0/angular-jwt": "^4.0.0",
     "@ngrx/core": "^1.2.0",
     "@ngrx/effects": "^9.0.0",
     "@ngrx/entity": "^9.0.0",

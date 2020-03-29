@@ -1,5 +1,4 @@
 import Feature from 'ol/Feature';
-import Collection from 'ol/Collection';
 import Draw from 'ol/interaction/Draw';
 import Translate from 'ol/interaction/Translate';
 import Text from 'ol/style/Text';
@@ -35,12 +34,12 @@ import { AutoSubscription } from 'auto-subscriptions';
 import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
 import { distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 import {
-	IMeasureData,
 	selectIsMeasureToolActive,
 	selectMeasureDataByMapId
 } from '../../../../../menu-items/tools/reducers/tools.reducer';
 import { Inject } from '@angular/core';
 import { UpdateMeasureDataAction } from '../../../../../menu-items/tools/actions/tools.actions';
+import { IMeasureData } from '../../../../../menu-items/tools/models/measure-data';
 
 interface ILabelHandler {
 	select: Select;

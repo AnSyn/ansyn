@@ -1,10 +1,11 @@
 import { Action } from '@ngrx/store';
-import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
+import { IVisualizerStyle } from '@ansyn/imagery';
 import { SubMenuEnum, toolsFlags } from '../reducers/tools.reducer';
 import { type } from '../../../core/utils/type';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 import { IImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
 import { AnnotationMode, IUpdateFeatureEvent } from '@ansyn/ol';
+import { IMeasureData } from '../models/measure-data';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),
@@ -179,12 +180,7 @@ export class UpdateMeasureDataAction implements Action {
 	type = ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATA;
 
 	constructor(public payload: {
-		mapId: string, measureData: {
-			meausres?: IVisualizerEntity[],
-			isLayerShowed?: boolean,
-			isToolActive?: boolean,
-			isRemoveMeasureModeActive?: boolean
-		}
+		mapId: string, measureData: Partial<IMeasureData>
 	}) {
 	}
 }

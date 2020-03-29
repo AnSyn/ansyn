@@ -14,8 +14,9 @@ import {
 	SetMeasureDistanceToolState,
 	UpdateMeasureDataAction
 } from '../../actions/tools.actions';
-import { IMeasureData, selectIsMeasureToolActive, selectMeasureDataByMapId } from '../../reducers/tools.reducer';
+import { selectIsMeasureToolActive, selectMeasureDataByMapId } from '../../reducers/tools.reducer';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
+import { IMeasureData } from '../../models/measure-data';
 
 @Component({
 	selector: 'ansyn-measure-control',

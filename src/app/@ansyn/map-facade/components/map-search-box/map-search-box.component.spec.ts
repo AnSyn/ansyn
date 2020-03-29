@@ -6,7 +6,8 @@ import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { GeocoderService } from '../../services/geocoder.service';
 import { asyncData } from '../../test/async-observable-helpers';
 import { TranslateModule } from '@ngx-translate/core';
-import { MatAutocompleteModule, MatInputModule } from '@angular/material';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
 import { StoreModule } from "@ngrx/store";
 import { mapFeatureKey, MapReducer } from "../../reducers/map.reducer";
 

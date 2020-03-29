@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatInputModule, MatSelectModule } from '@angular/material';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 import { AnnotationLabelComponent } from './annotation-label.component';
 import { TranslateModule } from '@ngx-translate/core';

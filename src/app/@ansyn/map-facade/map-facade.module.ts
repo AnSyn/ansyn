@@ -32,7 +32,8 @@ import { ImageryMouseCoordinatesComponent } from './components/imagery-mouse-coo
 import { GeoHolderComponent } from './components/imagery-mouse-coordinates/holders/geo-holder/geo-holder.component';
 import { UtmHolderComponent } from './components/imagery-mouse-coordinates/holders/utm-holder/utm-holder.component';
 import { FloatingMenuComponent } from './components/floating-menu/floating-menu.component';
-import { MatAutocompleteModule, MatInputModule } from '@angular/material';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
 	imports: [

@@ -49,7 +49,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 export class ToolsModule {
 
 
-	static forRoot(config: IToolsConfig): ModuleWithProviders {
+	static forRoot(config: IToolsConfig): ModuleWithProviders<ToolsModule> {
 		return {
 			ngModule: ToolsModule,
 			providers: [

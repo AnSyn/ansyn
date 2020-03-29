@@ -4,6 +4,7 @@ import { ICaseEnumFilterMetadata, ICaseFilter } from '../../../cases/models/case
 import { FilterType } from '../filter-type';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
 import { get as _get } from 'lodash';
+import { Injectable } from "@angular/core";
 
 export interface IEnumFiled {
 	key: string;
@@ -13,6 +14,7 @@ export interface IEnumFiled {
 	disabled?: boolean;
 }
 
+@Injectable()
 export class EnumFilterMetadata extends FilterMetadata {
 	enumsFields: Map<string, IEnumFiled> = new Map<string, IEnumFiled>();
 	type: FilterType = FilterType.Enum;

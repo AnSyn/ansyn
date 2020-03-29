@@ -23,7 +23,7 @@ export const MENU_ITEMS = new InjectionToken<IMenuItem[]>('MENU_ITEMS');
 })
 export class MenuModule {
 
-	static provideMenuItems(menuItems: any[]): ModuleWithProviders {
+	static provideMenuItems(menuItems: any[]): ModuleWithProviders<MenuModule> {
 		return {
 			ngModule: MenuModule,
 			providers: [

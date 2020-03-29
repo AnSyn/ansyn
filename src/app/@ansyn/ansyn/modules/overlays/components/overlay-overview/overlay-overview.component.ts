@@ -29,7 +29,7 @@ export interface IOverviewOverlay extends IOverlay {
 	destroy: 'ngOnDestroy'
 })
 export class OverlayOverviewComponent implements OnInit, OnDestroy {
-	@ViewChild('img', {static: false}) img: ElementRef;
+	@ViewChild('img') img: ElementRef;
 
 	public mouseLeave$: Observable<any> = fromEvent(this.el.nativeElement, 'mouseleave')
 		.pipe(

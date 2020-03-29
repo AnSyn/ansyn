@@ -2,7 +2,9 @@ import { FilterMetadata } from './filter-metadata.interface';
 import { FilterType } from '../filter-type';
 import { ICaseFilter, ICaseSliderFilterMetadata } from '../../../cases/models/case.model';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
+import { Injectable } from "@angular/core";
 
+@Injectable()
 export class SliderFilterMetadata extends FilterMetadata {
 	count = 0;
 	filteredCount = 0;

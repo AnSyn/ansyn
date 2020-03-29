@@ -38,7 +38,7 @@ export class AnsynInputComponent implements ControlValueAccessor, OnInit {
 		}
 	}
 
-	@ViewChild('input', {static: false}) input: ElementRef;
+	@ViewChild('input') input: ElementRef;
 
 	constructor(@Attribute('select') public selectAttr: string) {
 	}

@@ -2,6 +2,7 @@ import { FilterMetadata } from './filter-metadata.interface';
 import { FilterType } from '../filter-type';
 import { ICaseBooleanFilterMetadata, ICaseFilter } from '../../../cases/models/case.model';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
+import { Injectable } from "@angular/core";
 
 export interface IBooleanProperty {
 	name: 'true' | 'false';
@@ -17,6 +18,7 @@ export interface IBooleanProperties {
 	false: IBooleanProperty;
 }
 
+@Injectable()
 export class BooleanFilterMetadata extends FilterMetadata {
 	type: FilterType = FilterType.Boolean;
 	properties: IBooleanProperties = {

@@ -31,7 +31,7 @@ import { CoreModule } from '../../core/core.module';
 	providers: [CasesService]
 })
 export class CasesModule {
-	static forRoot(config: ICasesConfig): ModuleWithProviders {
+	static forRoot(config: ICasesConfig): ModuleWithProviders<CasesModule> {
 		return {
 			ngModule: CasesModule,
 			providers: [

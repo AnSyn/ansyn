@@ -98,7 +98,7 @@ import { ImageryChangeMapComponent } from './modules/plugins/components/imagery-
 })
 
 export class AnsynModule {
-	static component(id?: string): ModuleWithProviders {
+	static component(id?: string): ModuleWithProviders<AnsynModule> {
 		return {
 			ngModule: AnsynModule,
 			providers: [

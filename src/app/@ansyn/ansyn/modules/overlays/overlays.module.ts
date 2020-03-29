@@ -57,7 +57,7 @@ import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer'
 
 })
 export class OverlaysModule {
-	static provide(metadata: IOverlaysMetadata): ModuleWithProviders {
+	static provide(metadata: IOverlaysMetadata): ModuleWithProviders<OverlaysModule> {
 		return {
 			ngModule: OverlaysModule,
 			providers: [

@@ -1,5 +1,7 @@
 import { IHelpLocalStorageState } from '../models/help.local-storage-state.model';
+import { Injectable } from "@angular/core";
 
+@Injectable()
 export class HelpLocalStorageService {
 	getHelpLocalStorageData(): IHelpLocalStorageState {
 		const helpState: IHelpLocalStorageState = JSON.parse(localStorage.getItem('ansynHelpState'));

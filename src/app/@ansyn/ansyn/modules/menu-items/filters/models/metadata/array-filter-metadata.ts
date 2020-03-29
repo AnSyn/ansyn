@@ -2,7 +2,9 @@ import { FilterMetadata } from './filter-metadata.interface';
 import { FilterType } from '../filter-type';
 import { ICaseFilter } from '../../../cases/models/case.model';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
+import { Injectable } from "@angular/core";
 
+@Injectable()
 export class ArrayFilterMetadata extends FilterMetadata {
 	fields = new Map<string, boolean>();
 	type: FilterType = FilterType.Array;

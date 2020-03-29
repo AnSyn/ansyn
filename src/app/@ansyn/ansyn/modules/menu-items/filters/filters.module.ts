@@ -48,7 +48,7 @@ import { ArrayFilterContainerComponent } from './components/array-filter-contain
 })
 export class FiltersModule {
 
-	static forRoot(config: IFiltersConfig): ModuleWithProviders {
+	static forRoot(config: IFiltersConfig): ModuleWithProviders<FiltersModule> {
 		return {
 			ngModule: FiltersModule,
 			providers: [

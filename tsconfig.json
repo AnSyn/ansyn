@@ -2,6 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
+    "module": "esnext",
     "paths": {
       "@ansyn/ansyn": [
         "src/app/@ansyn/ansyn/public_api"

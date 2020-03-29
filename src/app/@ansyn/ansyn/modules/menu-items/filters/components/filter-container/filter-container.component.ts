@@ -56,7 +56,7 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	filtersSearchResults = {};
 
 	@Input() filter;
-	@ViewChild('fields', {static: false}) fields: ElementRef;
+	@ViewChild('fields') fields: ElementRef;
 	public isLoading$: Observable<boolean> = this.store.select(selectIsLoading);
 
 	filterSearchResults$: Observable<any> = this.store.pipe(

@@ -2,8 +2,8 @@
 	"name": "@ansyn/map-facade",
 	"version": "1.6.33",
 	"peerDependencies": {
-		"@angular/common": "~8.2.14",
-		"@angular/core": "~8.2.14",
+		"@angular/common": "~9.1.0",
+		"@angular/core": "~9.1.0",
 		"@ngrx/core": "^1.2.0",
 		"@ngrx/store": "^9.0.0",
 		"@ngrx/effects": "^9.0.0",

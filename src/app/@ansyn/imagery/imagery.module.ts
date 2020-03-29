@@ -42,7 +42,7 @@ export interface IImageryMetaData {
 })
 export class ImageryModule {
 
-	static provide(metadata: IImageryMetaData): ModuleWithProviders {
+	static provide(metadata: IImageryMetaData): ModuleWithProviders<ImageryModule> {
 		return {
 			ngModule: ImageryModule,
 			providers: [
@@ -53,7 +53,7 @@ export class ImageryModule {
 		};
 	}
 
-	static provideConfig(config: IImageryConfig): ModuleWithProviders {
+	static provideConfig(config: IImageryConfig): ModuleWithProviders<ImageryModule> {
 		return {
 			ngModule: ImageryModule,
 			providers: [createConfig(config)]

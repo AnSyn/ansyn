@@ -20,7 +20,7 @@ import { ILoginConfig } from './models/login.config';
 })
 
 export class LoginModule {
-	static forRoot(config: ILoginConfig): ModuleWithProviders {
+	static forRoot(config: ILoginConfig): ModuleWithProviders<LoginModule> {
 		return {
 			ngModule: LoginModule,
 			providers: [

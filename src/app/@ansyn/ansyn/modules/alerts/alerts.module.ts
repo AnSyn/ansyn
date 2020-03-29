@@ -25,7 +25,7 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class AlertsModule {
 
-	static provideAlerts(alerts: IAlert[]): ModuleWithProviders {
+	static provideAlerts(alerts: IAlert[]): ModuleWithProviders<AlertsModule> {
 		return {
 			ngModule: AlertsModule,
 			providers: [

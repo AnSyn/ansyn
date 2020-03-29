@@ -88,7 +88,7 @@ import { MatAutocompleteModule, MatInputModule } from '@angular/material';
 
 export class MapFacadeModule {
 
-	static provide(metadata: { entryComponents: IEntryComponentsEntities }): ModuleWithProviders {
+	static provide(metadata: { entryComponents: IEntryComponentsEntities }): ModuleWithProviders<MapFacadeModule> {
 		return {
 			ngModule: MapFacadeModule,
 			providers: [

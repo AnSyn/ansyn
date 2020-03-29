@@ -18,7 +18,7 @@ export class AnsynFooterComponent implements OnInit, OnDestroy {
 	@Input() activeMap: IMapSettings;
 	@Input() animatedElement: HTMLElement;
 
-	@ViewChild('footerWrapper', {static: false}) wrapperElement: ElementRef;
+	@ViewChild('footerWrapper') wrapperElement: ElementRef;
 
 	collapse: boolean;
 

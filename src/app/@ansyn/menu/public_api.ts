@@ -11,3 +11,4 @@ export { selectEntitiesMenuItems, selectIsPinned } from './reducers/menu.reducer
 export { MenuModule } from './menu.module';
 export { menuFeatureKey, MenuReducer } from './reducers/menu.reducer';
 export { AddMenuItemAction, ContainerChangedTriggerAction, ToggleMenuCollapse, UnSelectMenuItemAction, SetUserEnter } from './actions/menu.actions';
+export { MenuComponent } from './menu/menu.component';

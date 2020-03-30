@@ -38,14 +38,6 @@
 	color: white;
 
 	div.image-processing-container {
-		padding: 0 20px;
-		visibility: visible;
-		transition-delay: 0.1s;
-		display: flex;
-		flex-direction: column;
-	}
-
-	div.image-processing-container {
 		transition-delay: 0.05s;
 		visibility: visible;
 		padding: 0 20px;
@@ -53,7 +45,7 @@
 		flex-direction: column;
 
 		.title-wrapper {
-			display: flex;
+			display: block;
 			margin: 10px 0;
 
 			.title {
@@ -64,7 +56,9 @@
 			.resetAll {
 				margin-left: auto;
 				color: @background-color-7;
-				margin-top: 5px;
+				margin-top: 24px;
+				margin-left: 152px;
+				width: 100%;
 				font-size: 9px;
 				cursor: pointer;
 
@@ -83,6 +77,10 @@
 				font-size: 12px;
 				height: 20px;
 				margin-bottom: 16px;
+				padding-bottom: 10px;
+				.param-info {
+					height: 10px;
+				}
 
 				.input-wrapper {
 					display: flex;

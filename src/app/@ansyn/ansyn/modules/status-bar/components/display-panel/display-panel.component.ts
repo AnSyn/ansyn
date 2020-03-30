@@ -49,7 +49,6 @@ export class DisplayPanelComponent implements OnInit, OnDestroy {
 	}
 
 	comboBoxesChange(payload: IComboBoxesProperties) {
-		console.log('payload: ', payload);
 		this.store$.dispatch(new SetImageOpeningOrientation(payload));
 	}
 

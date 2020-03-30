@@ -1,4 +1,4 @@
-<div [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''">
+<div [class.rtl]="'rtl' === ('direction' | translate)">
 
 	<carousel [interval]="0">
 		<slide *ngFor="let slide of const.SLIDES_DATA">

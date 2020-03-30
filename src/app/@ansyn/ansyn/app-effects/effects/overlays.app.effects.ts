@@ -276,7 +276,7 @@ export class OverlaysAppEffects {
 			pairwise(),
 			filter(this.onDropMarkupFilter.bind(this)),
 			map(([prevAction, currentAction]) => currentAction),
-			withLatestFrom(this.overlaysService.getAllOverlays$, ([drop, footer], overlays) => [drop, overlays]),
+			withLatestFrom<any, any>(this.overlaysService.getAllOverlays$, ([drop, footer], overlays) => [drop, overlays]),
 			this.getOverlayFromDropMarkup,
 			this.getPositionForActiveMap,
 			this.getOverlayWithNewThumbnail,

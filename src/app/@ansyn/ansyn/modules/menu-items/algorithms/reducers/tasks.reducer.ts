@@ -1,4 +1,3 @@
-import { ITasksState } from './tasks.reducer';
 import { TasksActions, TasksActionTypes } from '../actions/tasks.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { AlgorithmsTaskState, AlgorithmTask, AlgorithmTaskPreview, TasksPageToShow } from '../models/tasks.model';

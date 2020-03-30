@@ -8,6 +8,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { overlayStatusFeatureKey, OverlayStatusReducer } from './reducers/overlay-status.reducer';
 import { TranslateModule } from '@ngx-translate/core';
+import { ToolsModule } from "../../menu-items/tools/tools.module";
 
 @NgModule({
 	declarations: [OverlayStatusComponent, BackToBaseMapComponent],
@@ -23,7 +24,8 @@ import { TranslateModule } from '@ngx-translate/core';
 				floating_menu: []
 			}
 		}),
-		TranslateModule
+		TranslateModule,
+		ToolsModule
 	]
 })
 export class OverlayStatusModule {

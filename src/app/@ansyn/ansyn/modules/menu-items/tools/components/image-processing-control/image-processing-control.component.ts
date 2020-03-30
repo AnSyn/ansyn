@@ -35,7 +35,6 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 
 	imageManualProcessArgs: ImageManualProcessArgs = this.defaultImageManualProcessArgs;
 
-	@HostBinding('class.expand') @Input() expand;
 
 	constructor(public store$: Store<IToolsState>, @Inject(toolsConfig) protected config: IToolsConfig) {
 	}

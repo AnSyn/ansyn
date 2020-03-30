@@ -4,7 +4,7 @@ import {
 	selectActiveMapId,
 	selectHideLayersOnMap,
 	selectMapsTotal,
-	selectOverlayByMapId,
+	selectOverlayByMapId, ToggleMapLayersAction,
 } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -24,10 +24,17 @@ import {
 	selectTranslationData
 } from './reducers/overlay-status.reducer';
 import { AnnotationMode } from '@ansyn/ol';
-import { ITranslationData } from '../../menu-items/cases/models/case.model';
+import { CaseOrientation, ITranslationData } from '../../menu-items/cases/models/case.model';
 import { Actions, ofType } from '@ngrx/effects';
-import { SetAnnotationMode, ToolsActionsTypes, ClearActiveInteractionsAction } from '../../menu-items/tools/actions/tools.actions';
+import {
+	SetAnnotationMode,
+	ToolsActionsTypes,
+	ClearActiveInteractionsAction,
+	SetSubMenu, SetAutoImageProcessing
+} from '../../menu-items/tools/actions/tools.actions';
 import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-manager/reducers/layers.reducer';
+import { selectToolFlags, SubMenuEnum, toolsFlags } from "../../menu-items/tools/reducers/tools.reducer";
+import { SetImageOpeningOrientation } from "../../status-bar/actions/status-bar.actions";
 
 @Component({
 	selector: 'ansyn-overlay-status',
@@ -40,6 +47,10 @@ import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-m
 })
 export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent {
 	@Input() mapId: string;
+	isAutoProcessing: boolean;
+	isManualProcessing: boolean;
+	perspective: boolean;
+	moreButtons: boolean;
 	overlay: IOverlay;
 	isActiveMap: boolean;
 	favoriteOverlays: IOverlay[];
@@ -52,8 +63,16 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	presetsButtonText: string;
 	isRemoved: boolean;
 	isDragged: boolean;
+	isImageControlActive = false;
+	subMenu: SubMenuEnum;
 	draggedButtonText: string;
 	isLayersVisible: boolean;
+	public flags: Map<toolsFlags, boolean>;
+
+	@AutoSubscription
+	public flags$: Observable<Map<toolsFlags, boolean>> = this.store$.select(selectToolFlags).pipe(
+		tap((flags: Map<toolsFlags, boolean>) => this.flags = flags)
+	);
 
 	@AutoSubscription
 	favoriteOverlays$: Observable<any[]> = this.store$.select(selectFavoriteOverlays).pipe(
@@ -109,9 +128,9 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 
 	@AutoSubscription
 	layersVisibility$ = () => combineLatest(
-			this.store$.select(selectSelectedLayersIds),
-			this.store$.select(selectHideLayersOnMap(this.mapId)),
-			this.store$.select(selectLayers))
+		this.store$.select(selectSelectedLayersIds),
+		this.store$.select(selectHideLayersOnMap(this.mapId)),
+		this.store$.select(selectLayers))
 		.pipe(
 			map(([selectedLayerIds, areLayersHidden, layers]) => {
 				layers = layers.filter((currentLayer) =>
@@ -236,5 +255,59 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 			return false;
 		}
 		return this.overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered;
+	}
+
+	isExpand(subMenu: SubMenuEnum): boolean {
+		return this.subMenu === subMenu;
+	}
+
+	get imageProcessingDisabled() {
+		return this.flags.get(toolsFlags.imageProcessingDisabled);
+	}
+
+	get imageManualProcessingDisabled() {
+		return this.imageProcessingDisabled || this.onAutoImageProcessing;
+	}
+
+	get onAutoImageProcessing() {
+		return this.flags.get(toolsFlags.autoImageProcessing);
+	}
+
+	get subMenuEnum() {
+		return SubMenuEnum;
+	}
+
+	toggleSubMenu(subMenu: SubMenuEnum, event: MouseEvent = null) {
+		this.isManualProcessing = !this.isManualProcessing;
+		if (event) {
+			// In order that the sub menu will not recognize the click on the
+			// button as a "click outside" and close itself
+			event.stopPropagation();
+		}
+		const value = this.isManualProcessing ? subMenu : null;
+		this.store$.dispatch(new SetSubMenu(value));
+	}
+
+	toggleAutoImageProcessing() {
+		this.isAutoProcessing = !this.isAutoProcessing;
+		this.isManualProcessing = false;
+		this.store$.dispatch(new SetAutoImageProcessing());
+		this.closeManualProcessingMenu();
+	}
+
+	toggleMoreButtons() {
+		this.moreButtons = !this.moreButtons;
+	}
+
+	toggleImageryPerspective() {
+		this.perspective = !this.perspective;
+		const orientation: CaseOrientation = this.perspective ? 'Imagery Perspective' : 'User Perspective';
+		this.store$.dispatch(new SetImageOpeningOrientation({ orientation }));
+	}
+
+	closeManualProcessingMenu() {
+		if (this.isExpand(this.subMenuEnum.manualImageProcessing)) {
+			this.toggleSubMenu(this.subMenuEnum.manualImageProcessing);
+		}
 	}
 }

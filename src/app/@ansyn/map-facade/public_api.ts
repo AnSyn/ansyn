@@ -100,3 +100,11 @@ export { MapFacadeModule } from './map-facade.module';
 
 
 export { LayoutKey, layoutOptions, IMapsLayout } from './models/maps-layout';
+export { UtmHolderComponent } from './components/imagery-mouse-coordinates/holders/utm-holder/utm-holder.component';
+export { GeoHolderComponent } from './components/imagery-mouse-coordinates/holders/geo-holder/geo-holder.component';
+export { ImageriesManagerComponent } from './components/imageries-manager/imageries-manager.component';
+export { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
+export { WelcomeNotificationComponent } from './components/welcome-notification/welcome-notification.component';
+export { ToastComponent } from './components/toast/toast.component';
+export { AnsynLoaderComponent } from './components/ansyn-loader/ansyn-loader.component';
+export { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.component';

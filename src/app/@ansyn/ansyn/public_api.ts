@@ -383,3 +383,18 @@ export {
 	ToggleDraggedModeAction,
 	TogglePresetOverlayAction
 } from './modules/overlays/overlay-status/actions/overlay-status.actions';
+
+// ng9 upgrade - missing exports
+export { UnsupportedDevicesComponent } from './components/unsupported-devices/unsupported-devices.component';
+export { StatusBarComponent } from './modules/status-bar/components/status-bar/status-bar.component';
+export { AnsynButtonComponent } from './modules/core/forms/ansyn-button/ansyn-button.component';
+export { AnsynRadioComponent } from './modules/core/forms/ansyn-radio/ansyn-radio.component';
+export { ComboBoxComponent } from './modules/core/forms/combo-box/combo-box.component';
+export { ComboBoxTriggerComponent } from './modules/core/forms/combo-box-trigger/combo-box-trigger.component';
+export { ComboBoxOptionComponent } from './modules/core/forms/combo-box-option/combo-box-option.component';
+export { ManualRemovedOverlaysComponent } from './modules/core/components/manual-removed-overlays/manual-removed-overlays.component';
+export { ContextMenuComponent } from './modules/core/components/context-menu/context-menu.component';
+export { CredentialsComponent } from './modules/core/components/credentials/credentials.component';
+export { OverlaysContainerComponent } from './modules/overlays/components/container/overlays-container.component';
+export { TimelineComponent } from './modules/overlays/components/timeline/timeline.component';
+export { OverlayOverviewComponent } from './modules/overlays/components/overlay-overview/overlay-overview.component';

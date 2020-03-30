@@ -40,8 +40,8 @@ describe('PolygonSearchVisualizer', () => {
 		spyOn(store, 'dispatch');
 		polygonSearchVisualizer.onContextMenu(fakePoint);
 		expect(store.dispatch).toHaveBeenCalledWith(new UpdateGeoFilterStatus({
-			searchMode: polygonSearchVisualizer.geoFilter,
-			indicator: true
+			type: polygonSearchVisualizer.geoFilter,
+			active: true
 		}));
 	});
 

@@ -56,6 +56,13 @@
 					border-top-right-radius: @status-bar-panel-radius;
 				}
 			}
+
+			&#editGeoFilter {
+				width: 80px;
+				button {
+					justify-content: flex-start;
+				}
+			}
 		}
 
 		&.rtl {
@@ -77,6 +84,11 @@
 						border-top-right-radius: 0;
 						border-bottom-left-radius: @status-bar-panel-radius;
 						border-top-left-radius: @status-bar-panel-radius;
+					}
+				}
+				&#editGeoFilter {
+					button {
+						justify-content: flex-end;
 					}
 				}
 			}

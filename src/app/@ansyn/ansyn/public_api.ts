@@ -40,13 +40,12 @@ export {
 	StatusBarReducer
 } from './modules/status-bar/reducers/status-bar.reducer';
 export { statusBarStateSelector } from './modules/status-bar/reducers/status-bar.reducer';
-export { SearchMode } from './modules/status-bar/models/search-mode.enum';
 export { comboBoxesOptions } from './modules/status-bar/models/combo-boxes.model';
 export {
 	IStatusBarState,
 	selectComboBoxesProperties,
-	selectGeoFilterIndicator,
-	selectGeoFilterSearchMode
+	selectGeoFilterActive,
+	selectGeoFilterType
 } from './modules/status-bar/reducers/status-bar.reducer';
 export {
 	CopySnapshotShareLinkAction,
@@ -58,7 +57,6 @@ export {
 	ExpandAction,
 	GoNextPresetOverlay
 } from './modules/status-bar/actions/status-bar.actions';
-export { SearchModeEnum } from './modules/status-bar/models/search-mode.enum';
 export { StatusBarConfig } from './modules/status-bar/models/statusBar.config';
 export { StatusBarModule } from './modules/status-bar/status-bar.module';
 export { orientations, ORIENTATIONS } from './modules/status-bar/models/combo-boxes.model';

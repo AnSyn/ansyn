@@ -11,6 +11,13 @@ import { selectActiveMapId, selectHideLayersOnMap, selectMapsTotal } from '../..
 import { copyFromContent } from '../../utils/clipboard';
 import { getTimeFormat } from '../../utils/time';
 import { TranslateService } from '@ngx-translate/core';
+import { SetAutoImageProcessing, SetSubMenu } from "../../../ansyn/modules/menu-items/tools/actions/tools.actions";
+import {
+	selectToolFlags,
+	SubMenuEnum,
+	toolsFlags
+} from "../../../ansyn/modules/menu-items/tools/reducers/tools.reducer";
+import { Observable } from "rxjs";
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -25,10 +32,19 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	isMapLayersVisible = true;
 	mapsAmount = 1;
 	_map: IMapSettings;
+	isImageControlActive = false;
 	baseMapDescription = 'Base Map';
 	formattedOverlayTime: string = null;
+	subMenu: SubMenuEnum;
 	@HostBinding('class.active') isActiveMap: boolean;
 	hideLayers: boolean;
+	public flags: Map<toolsFlags, boolean>;
+
+	@AutoSubscription
+	public flags$: Observable<Map<toolsFlags, boolean>> = this.store$.select(selectToolFlags).pipe(
+		tap((flags: Map<toolsFlags, boolean>) => this.flags = flags)
+	);
+
 	@AutoSubscription
 	active$ = this.store$.pipe(
 		select(selectActiveMapId),
@@ -138,5 +154,39 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	toggleMapLayers() {
 		this.isMapLayersVisible = !this.isMapLayersVisible;
 		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId, isVisible: this.isMapLayersVisible }));
+	}
+
+	get imageProcessingDisabled() {
+		return this.flags.get(toolsFlags.imageProcessingDisabled);
+	}
+
+	get imageManualProcessingDisabled() {
+		return this.imageProcessingDisabled || this.onAutoImageProcessing;
+	}
+
+	get onAutoImageProcessing() {
+		return this.flags.get(toolsFlags.autoImageProcessing);
+	}
+
+	get subMenuEnum() {
+		return SubMenuEnum;
+	}
+
+	toggleSubMenu(subMenu: SubMenuEnum, event: MouseEvent = null) {
+		if (event) {
+			// In order that the sub menu will not recognize the click on the
+			// button as a "click outside" and close itself
+			event.stopPropagation();
+		}
+		const value = (subMenu !== this.subMenu) ? subMenu : null;
+		this.store$.dispatch(new SetSubMenu(value));
+	}
+
+	toggleAutoImageProcessing() {
+		this.store$.dispatch(new SetAutoImageProcessing());
+		this.closeManualProcessingMenu();
+	}
+
+	closeManualProcessingMenu() {
 	}
 }

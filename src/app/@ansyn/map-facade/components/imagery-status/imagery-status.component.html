@@ -35,6 +35,28 @@
 		   [class.icon-layers-hide]="hideLayers"></i>
 	</button>
 
+	<button tooltip-class="bottom right"
+			class="small-icon-button link-maps"
+			[attr.tooltip-value]="'Automatic Processing - Grayscale Images Only' | translate"
+			(click)="toggleAutoImageProcessing()"
+			[class.mode-on]="onAutoImageProcessing && !imageProcessingDisabled"
+			[disabled]="imageProcessingDisabled">
+		<i class="icon-automatic-image-processing"></i>
+	</button>
+
+	<div class="image-manual-processing">
+		<button tooltip-class="right"
+				[attr.tooltip-value]="'Manual Image Enhancement' | translate"
+				(click)="toggleSubMenu(subMenuEnum.manualImageProcessing)"
+				[class.mode-on]="isImageControlActive && !imageManualProcessingDisabled"
+				[class.active]="isExpand(subMenuEnum.manualImageProcessing) && !imageManualProcessingDisabled"
+				[disabled]="imageManualProcessingDisabled">
+			<i class="icon-tools-image-processing"></i>
+		</button>
+		<ansyn-image-processing-control
+			[expand]="isExpand(subMenuEnum.manualImageProcessing) && !onAutoImageProcessing "></ansyn-image-processing-control>
+	</div>
+
 	<ng-container
 		*ngFor="let component of entryComponents.status">
 		<ng-container

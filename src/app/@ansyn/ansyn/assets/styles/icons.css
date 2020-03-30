@@ -39,8 +39,8 @@
 .icon-copy-coords:before { content: '\e825'; } /* '' */
 .icon-label:before { content: '\e826'; } /* '' */
 .icon-drag-annotations:before { content: '\e827'; } /* '' */
-.icon-navigation-next:before { content: '\e828'; } /* '' */
-.icon-navigation-prev:before { content: '\e829'; } /* '' */
+.icon-app-next:before { content: '\e828'; } /* '' */
+.icon-app-prev:before { content: '\e829'; } /* '' */
 .icon-shadow-mouse:before { content: '\e82a'; } /* '' */
 .icon-share:before { content: '\e82b'; } /* '' */
 .icon-status-bar-case:before { content: '\e82c'; } /* '' */

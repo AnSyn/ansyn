@@ -6,7 +6,6 @@ import { HttpClient } from '@angular/common/http';
 import { defer, Observable } from 'rxjs';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { IMapFacadeConfig } from '../models/map-config.model';
-import { SetToastMessageAction } from '../actions/map.actions';
 
 function asyncData<T>(data: T): Observable<T> {
 	return defer(() => Promise.resolve(data));
@@ -53,7 +52,14 @@ describe('GeocoderService', () => {
 		it('should call http, extract the point, and return it', fakeAsync(() => {
 			spyOn(httpClient, 'get').and.returnValue(asyncData({
 				resourceSets: [
-					[{ name: 'TestLocation', point: { type: 'Point', coordinates: [3, 4] } }]
+					{
+						resources: [
+							{
+								name: 'TestLocation',
+								point: { type: 'Point', coordinates: [3, 4] }
+							}
+						]
+					}
 				]
 			}));
 			result$ = me.getLocation$('hehe');
@@ -69,7 +75,7 @@ describe('GeocoderService', () => {
 			spyOn(httpClient, 'get').and.returnValue(asyncData({
 				resourceSets: [[]]
 			}));
-			result$ = me.getLocation$('hehe');
+			result$ = me.getLocation$('abcd');
 			result$.subscribe(res => {
 				endResult = res;
 			});

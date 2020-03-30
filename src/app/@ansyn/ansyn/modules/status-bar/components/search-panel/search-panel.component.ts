@@ -73,7 +73,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	).pipe(
 		tap(([geoFilterType, active]) => {
 			this.geoFilterTitle = geoFilterType;
-			this.locationPickerExpand = !active ? active : this.locationPickerExpand;
+			this.locationPickerExpand = active;
 		})
 	);
 

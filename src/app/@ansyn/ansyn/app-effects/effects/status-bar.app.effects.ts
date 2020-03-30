@@ -24,10 +24,12 @@ import { selectGeoFilterActive, selectGeoFilterType } from '../../modules/status
 import { CopyCaseLinkAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { DisplayOverlayAction, DisplayOverlayFromStoreAction } from '../../modules/overlays/actions/overlays.actions';
-import { selectDropsWithoutSpecialObjects } from '../../modules/overlays/reducers/overlays.reducer';
+import {
+	selectDropsWithoutSpecialObjects,
+	selectRegion
+} from '../../modules/overlays/reducers/overlays.reducer';
 import { IOverlay, IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
-import { CaseGeoFilter } from '../../modules/menu-items/cases/models/case.model';
 
 @Injectable()
 export class StatusBarAppEffects {
@@ -99,12 +101,17 @@ export class StatusBarAppEffects {
 	@Effect()
 	onClickOutsideMap$ = this.actions$.pipe(
 		ofType<ClickOutsideMap | ContextMenuShowAction>(MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP, MapActionTypes.CONTEXT_MENU.SHOW),
-		withLatestFrom(this.store.select(selectGeoFilterActive), this.store.select(selectGeoFilterType)),
-		filter(([action, active, type]) => active),
-		map(([action, active, type]) => {
-			const oldValue = type === CaseGeoFilter.PinPoint ? CaseGeoFilter.Polygon : CaseGeoFilter.PinPoint;
-			return new UpdateGeoFilterStatus({type: oldValue, active: false});
-		})
+		withLatestFrom(this.store.select(selectGeoFilterActive)),
+		filter(([action, active]) => active),
+		map(([action, active]) => new UpdateGeoFilterStatus())
+	);
+
+	@Effect()
+	onCancelGeoFilter$ = this.actions$.pipe(
+		ofType<UpdateGeoFilterStatus>(StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS),
+		filter(action => action.payload === undefined),
+		withLatestFrom(this.store.select(selectRegion)),
+		map( ([action , {type}]) => new UpdateGeoFilterStatus({type, active: false}))
 	);
 
 	constructor(protected actions$: Actions,

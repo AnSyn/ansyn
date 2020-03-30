@@ -4,6 +4,7 @@ import { CaseGeoFilter } from '../../../menu-items/cases/models/case.model';
 import { Store } from '@ngrx/store';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
+import { ClearActiveInteractionsAction } from '../../../menu-items/tools/actions/tools.actions';
 
 @Component({
 	selector: 'ansyn-location-picker',
@@ -11,6 +12,7 @@ import { UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 	styleUrls: ['./location-picker.component.less']
 })
 export class LocationPickerComponent implements OnInit, OnDestroy {
+	animation: number;
 	@Input() geoFilter: CaseGeoFilter;
 
 	constructor(protected store$: Store<IStatusBarState>,
@@ -22,10 +24,15 @@ export class LocationPickerComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
+		this.animation =
+			requestAnimationFrame(() =>
+				this.store$.dispatch(new ClearActiveInteractionsAction({skipClearFor: [UpdateGeoFilterStatus]}))
+			);
 		this.store$.dispatch(new UpdateGeoFilterStatus({ active: true }));
 	}
 
 	ngOnDestroy(): void {
-		this.store$.dispatch(new UpdateGeoFilterStatus());
+		cancelAnimationFrame(this.animation);
+		this.store$.dispatch(new UpdateGeoFilterStatus({active: false}));
 	}
 }

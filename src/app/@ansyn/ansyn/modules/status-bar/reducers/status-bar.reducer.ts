@@ -30,7 +30,12 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 			return { ...state, comboBoxesProperties: { ...state.comboBoxesProperties, ...action.payload } };
 
 		case StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS:
-			return { ...state, geoFilterStatus: { ...state.geoFilterStatus, ...action.payload } };
+			const { payload } = action;
+			if ( payload ) {
+				return { ...state, geoFilterStatus: { ...state.geoFilterStatus, ...payload } };
+			} else {
+				return state;
+			}
 
 		default:
 			return state;

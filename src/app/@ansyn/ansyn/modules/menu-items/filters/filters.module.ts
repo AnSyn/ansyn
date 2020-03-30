@@ -11,7 +11,7 @@ import { SortPipe } from './pipes/sort.pipe';
 import { FiltersEffects } from './effects/filters.effects';
 import { StoreModule } from '@ngrx/store';
 import { filtersFeatureKey, FiltersReducer } from './reducer/filters.reducer';
-import { SliderModule } from 'primeng/primeng';
+import { SliderModule } from 'primeng/slider';
 import { FormsModule } from '@angular/forms';
 import { SliderFilterContainerComponent } from './components/slider-filter-container/slider-filter-container.component';
 import { BooleanFilterContainerComponent } from './components/boolean-filter-container/boolean-filter-container.component';

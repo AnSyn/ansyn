@@ -1,7 +1,6 @@
 import { Action } from '@ngrx/store';
 import { IComboBoxesProperties } from '../models/combo-boxes.model';
 import { IGeoFilterStatus } from '../reducers/status-bar.reducer';
-import { SearchModeEnum } from '../models/search-mode.enum';
 
 export const StatusBarActionsTypes = {
 	SHOW_LINK_COPY_TOAST: 'SHOW_LINK_COPY_TOAST',

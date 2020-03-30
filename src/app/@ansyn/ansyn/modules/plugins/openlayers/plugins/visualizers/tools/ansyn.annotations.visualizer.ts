@@ -6,7 +6,7 @@ import { combineLatest, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
 import { distinctUntilChanged, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
-import { selectGeoFilterType } from '../../../../../status-bar/reducers/status-bar.reducer';
+import { selectGeoFilterType, selectGeoFilterActive } from '../../../../../status-bar/reducers/status-bar.reducer';
 import {
 	selectAnnotationMode,
 	selectAnnotationProperties,
@@ -37,7 +37,6 @@ import {
 	ToolsActionsTypes
 } from '../../../../../menu-items/tools/actions/tools.actions';
 import { UpdateLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
-import { SearchMode, SearchModeEnum } from '../../../../../status-bar/models/search-mode.enum';
 import { IOverlaysTranslationData } from '../../../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
 import { selectTranslationData } from '../../../../../overlays/overlay-status/reducers/overlay-status.reducer';
@@ -88,9 +87,9 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 
 	@AutoSubscription
 	geoFilterSearchMode$ = this.store$.pipe(
-		select(selectGeoFilterType),
-		tap((searchMode: SearchMode) => {
-			this.annotationsVisualizer.mapSearchIsActive = searchMode !== SearchModeEnum.none;
+		select(selectGeoFilterActive),
+		tap((active: boolean) => {
+			this.annotationsVisualizer.mapSearchIsActive = active;
 		})
 	);
 

@@ -257,10 +257,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		return this.overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered;
 	}
 
-	isExpand(subMenu: SubMenuEnum): boolean {
-		return this.subMenu === subMenu;
-	}
-
 	get imageProcessingDisabled() {
 		return this.flags.get(toolsFlags.imageProcessingDisabled);
 	}
@@ -277,15 +273,15 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		return SubMenuEnum;
 	}
 
-	toggleSubMenu(subMenu: SubMenuEnum, event: MouseEvent = null) {
+	toggleManualImageProcessing(event: MouseEvent = null) {
 		this.isManualProcessing = !this.isManualProcessing;
 		if (event) {
 			// In order that the sub menu will not recognize the click on the
 			// button as a "click outside" and close itself
 			event.stopPropagation();
 		}
-		const value = this.isManualProcessing ? subMenu : null;
-		this.store$.dispatch(new SetSubMenu(value));
+		const { manualImageProcessing } = this.subMenuEnum;
+		this.store$.dispatch(new SetSubMenu(manualImageProcessing));
 	}
 
 	toggleAutoImageProcessing() {
@@ -306,8 +302,8 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	closeManualProcessingMenu() {
-		if (this.isExpand(this.subMenuEnum.manualImageProcessing)) {
-			this.toggleSubMenu(this.subMenuEnum.manualImageProcessing);
+		if (this.subMenu === this.subMenuEnum.manualImageProcessing) {
+			this.toggleAutoImageProcessing();
 		}
 	}
 }

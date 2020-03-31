@@ -8,7 +8,7 @@
 
 <button tooltip-class="bottom right"
 		*ngIf="overlay"
-		class="small-icon-button"
+		class="small-icon-button auto-image-processing"
 		[attr.tooltip-value]="'Automatic Processing - Grayscale Images Only' | translate"
 		(click)="toggleAutoImageProcessing()"
 		[class.mode-on]="onAutoImageProcessing && !imageProcessingDisabled"
@@ -18,11 +18,11 @@
 
 <button tooltip-class="bottom right"
 		*ngIf="overlay"
-		class="small-icon-button"
+		class="small-icon-button manual-image-processing"
 		[attr.tooltip-value]="'Manual Image Enhancement' | translate"
-		(click)="toggleSubMenu(subMenuEnum.manualImageProcessing)"
+		(click)="toggleManualImageProcessing()"
 		[class.mode-on]="isImageControlActive && !imageManualProcessingDisabled"
-		[class.active]="isExpand(subMenuEnum.manualImageProcessing) && !imageManualProcessingDisabled"
+		[class.active]="!imageManualProcessingDisabled"
 		[disabled]="imageManualProcessingDisabled">
 	<i class="icon-tools-image-processing" [class.active]="isManualProcessing"></i>
 </button>
@@ -37,28 +37,12 @@
 	<i class="icon-status-bar-orientation small" [class.active]="perspective"></i>
 </button>
 
-<button class="small-icon-button" *ngIf="overlay"
+<button class="small-icon-button more-btn" *ngIf="overlay"
 		(click)="toggleMoreButtons()"
 		[attr.tooltip-value]="'More buttons' | translate"
 		tooltip-class="bottom right">
 	<i class="icon icon-app-next" [class.active]="moreButtons"></i>
 </button>
-
-<!--<ansyn-combo-box-->
-<!--	[buttonClass]="'rtl' === ('direction' | translate) ? 'search-panel-button-left' : 'search-panel-button-right'"-->
-<!--	icon="icon icon-status-bar-orientation small"-->
-<!--	direction="top"-->
-<!--	name="orientation"-->
-<!--	[withArrow]="false"-->
-<!--	[ngModel]="orientation"-->
-<!--	[comboBoxToolTipDescription]="statusBarConfig?.toolTips?.orientation | translate"-->
-<!--	(ngModelChange)="comboBoxesChange({ orientation: $event })">-->
-
-<!--	<ansyn-combo-box-option *ngFor="let orientation of orientations" [value]="orientation">-->
-<!--		{{ orientation | translate}}-->
-<!--	</ansyn-combo-box-option>-->
-
-<!--</ansyn-combo-box>-->
 
 <div class="more-buttons" *ngIf="moreButtons">
 	<button class="small-icon-button set-preset" *ngIf="overlay && moreButtons"

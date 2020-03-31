@@ -1,11 +1,11 @@
-import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { SetManualImageProcessing } from '../../actions/tools.actions';
-import { IImageProcParam, IToolsConfig, toolsConfig } from '../../models/tools-config';
 import { Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
-import { ImageManualProcessArgs } from '../../../cases/models/case.model';
+import { IToolsState, toolsStateSelector } from "../../../../menu-items/tools/reducers/tools.reducer";
+import { IImageProcParam, IToolsConfig, toolsConfig } from "../../../../menu-items/tools/models/tools-config";
+import { ImageManualProcessArgs } from "../../../../menu-items/cases/models/case.model";
+import { SetManualImageProcessing } from "../../../../menu-items/tools/actions/tools.actions";
 
 @Component({
 	selector: 'ansyn-image-processing-control',

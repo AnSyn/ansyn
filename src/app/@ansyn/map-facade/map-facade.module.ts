@@ -33,6 +33,7 @@ import { GeoHolderComponent } from './components/imagery-mouse-coordinates/holde
 import { UtmHolderComponent } from './components/imagery-mouse-coordinates/holders/utm-holder/utm-holder.component';
 import { FloatingMenuComponent } from './components/floating-menu/floating-menu.component';
 import { MatAutocompleteModule, MatInputModule } from '@angular/material';
+import { ImageProcessingControlComponent } from "../ansyn/modules/overlays/overlay-status/components/image-processing-control/image-processing-control.component";
 
 @NgModule({
 	imports: [
@@ -69,7 +70,8 @@ import { MatAutocompleteModule, MatInputModule } from '@angular/material';
 		ImageryMouseCoordinatesComponent,
 		GeoHolderComponent,
 		UtmHolderComponent,
-		FloatingMenuComponent
+		FloatingMenuComponent,
+		ImageProcessingControlComponent
 	],
 	exports: [
 		ImageriesManagerComponent,
@@ -82,7 +84,8 @@ import { MatAutocompleteModule, MatInputModule } from '@angular/material';
 		AnsynPopoverComponent,
 		EntryComponentDirective,
 		GeoHolderComponent,
-		UtmHolderComponent
+		UtmHolderComponent,
+		ImageProcessingControlComponent
 	]
 })
 

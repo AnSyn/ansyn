@@ -45,19 +45,19 @@
 </button>
 
 <div class="more-buttons" *ngIf="moreButtons">
-	<button class="small-icon-button set-preset" *ngIf="overlay && moreButtons"
+	<button class="small-icon-button set-preset"
 			(click)="togglePreset()"
 			[disabled]="noGeoRegistration">
 		<i class="icon icon-quick-loop-add" [class.active]="isPreset"></i>
 		{{presetsButtonText | translate}}
 	</button>
 
-	<button class="small-icon-button remove-overlay" *ngIf="overlay && moreButtons"
+	<button class="small-icon-button remove-overlay"
 			(click)="removeOverlay()">
 		<i class="icon" [ngClass]="isRemoved ? 'icon-restore-overlay' : 'icon-remove-overlay'"></i>
 		{{isRemoved ? ('Restore overlay' | translate) : ('Remove overlay' | translate)}}
 	</button>
-	<button class="small-icon-button set-favorite" *ngIf="overlay && moreButtons"
+	<button class="small-icon-button set-favorite"
 			(click)="toggleFavorite()">
 		<i class="icon" [ngClass]="!isFavorite? 'icon-favorite-empty' : 'icon-favorite-full'"
 		   [class.active]="isFavorite"></i>

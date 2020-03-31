@@ -61,13 +61,4 @@ describe('OverlayStatusComponent', () => {
 	it('should create', () => {
 		expect(component).toBeTruthy();
 	});
-
-	it('check click on toggleMoreButtons', () => {
-		component.overlay = <any>{ id: 'overlayId' };
-		fixture.detectChanges();
-		spyOn(component, 'toggleMoreButtons');
-		fixture.nativeElement.querySelector('.more-btn').click();
-		expect(component.toggleMoreButtons).toHaveBeenCalled();
-	});
-
 });

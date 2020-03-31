@@ -12,12 +12,13 @@ import TileLayer from 'ol/layer/Tile';
 import * as proj from 'ol/proj';
 import XYZ from 'ol/source/XYZ';
 import { ProjectableRaster } from '../maps/open-layers-map/models/projectable-raster';
-
+export const IMAGE_PROCESS_ATTRIBUTE = 'imageLayer';
 export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSourceProvider<CONF> {
 	create(metaData: IMapSettings): Promise<any> {
 		const source = this.getXYZSource(metaData.data.overlay.imageUrl);
 		const extent = this.getExtent(metaData.data.overlay.footprint);
 		const tileLayer = this.getTileLayer(source, extent);
+		tileLayer.set(IMAGE_PROCESS_ATTRIBUTE, this.getImageLayer(source, extent)); // for image process work;
 		return Promise.resolve(tileLayer);
 	}
 
@@ -48,7 +49,7 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 		});
 		const imageLayer = this.getImageLayer(source, extent);
 		this.removeExtraData(imageLayer);
-		tileLayer.set('imageLayer', imageLayer);
+		tileLayer.set(IMAGE_PROCESS_ATTRIBUTE, imageLayer);
 		return tileLayer;
 	}
 

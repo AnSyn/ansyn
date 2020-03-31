@@ -18,7 +18,7 @@ import { Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectSentinelselectedLayers } from './reducers/sentinel.reducer';
 import { map, take } from 'rxjs/operators';
-import { OpenLayersDisabledMap, OpenLayersMap, OpenLayersMapSourceProvider } from '@ansyn/ol';
+import { IMAGE_PROCESS_ATTRIBUTE, OpenLayersDisabledMap, OpenLayersMap, OpenLayersMapSourceProvider } from '@ansyn/ol';
 
 export const OpenLayerSentinelSourceProviderSourceType = 'SENTINEL';
 
@@ -60,13 +60,15 @@ export class OpenLayersSentinelSourceProvider extends OpenLayersMapSourceProvide
 					}
 				});
 
-				return new TileLayer({
+				const layer = new TileLayer({
 					projection,
 					source: source,
 					extent: bbox
-
 				});
 
+				layer.set(IMAGE_PROCESS_ATTRIBUTE, this.getImageLayer(source, bbox) );
+
+				return layer;
 			})).toPromise();
 	}
 

@@ -3,7 +3,7 @@ import ImageLayer from 'ol/layer/Image';
 import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersDisabledMap, OpenLayersMap, ProjectableRaster } from '@ansyn/ol';
+import { IMAGE_PROCESS_ATTRIBUTE, OpenLayersDisabledMap, OpenLayersMap, ProjectableRaster } from '@ansyn/ol';
 import { OpenLayersImageProcessing } from './image-processing';
 import { distinctUntilChanged, filter, map, take, tap } from 'rxjs/operators';
 import { isEqual } from 'lodash';
@@ -125,7 +125,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 			return;
 		}
 		const mainLayer = this.getMainLayer();
-		const imageLayer = mainLayer.get('imageLayer');
+		const imageLayer = mainLayer.get(IMAGE_PROCESS_ATTRIBUTE);
 		if (!imageLayer) {
 			return;
 		}

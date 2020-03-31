@@ -33,7 +33,7 @@ import {
 	SetSubMenu, SetAutoImageProcessing
 } from '../../menu-items/tools/actions/tools.actions';
 import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-manager/reducers/layers.reducer';
-import { selectToolFlags, SubMenuEnum, toolsFlags } from "../../menu-items/tools/reducers/tools.reducer";
+import { SubMenuEnum } from "../../menu-items/tools/reducers/tools.reducer";
 import { SetImageOpeningOrientation } from "../../status-bar/actions/status-bar.actions";
 
 @Component({
@@ -50,6 +50,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	isAutoProcessing: boolean;
 	isManualProcessing: boolean;
 	perspective: boolean;
+	orientation: CaseOrientation
 	moreButtons: boolean;
 	overlay: IOverlay;
 	isActiveMap: boolean;
@@ -67,12 +68,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	subMenu: SubMenuEnum;
 	draggedButtonText: string;
 	isLayersVisible: boolean;
-	public flags: Map<toolsFlags, boolean>;
-
-	@AutoSubscription
-	public flags$: Observable<Map<toolsFlags, boolean>> = this.store$.select(selectToolFlags).pipe(
-		tap((flags: Map<toolsFlags, boolean>) => this.flags = flags)
-	);
 
 	@AutoSubscription
 	favoriteOverlays$: Observable<any[]> = this.store$.select(selectFavoriteOverlays).pipe(
@@ -243,7 +238,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 			mapId: this.mapId,
 			overlayId: this.overlay.id,
 			dragged: !this.isDragged
-		}))
+		}));
 		if (this.isDragged) {
 			this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetAnnotationMode] }));
 		}
@@ -277,16 +272,8 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		return this.overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered;
 	}
 
-	get imageProcessingDisabled() {
-		return this.flags.get(toolsFlags.imageProcessingDisabled);
-	}
-
-	get imageManualProcessingDisabled() {
-		return this.imageProcessingDisabled || this.onAutoImageProcessing;
-	}
-
 	get onAutoImageProcessing() {
-		return this.flags.get(toolsFlags.autoImageProcessing);
+		return this.isAutoProcessing;
 	}
 
 	get subMenuEnum() {
@@ -312,8 +299,8 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 
 	toggleImageryPerspective() {
 		this.perspective = !this.perspective;
-		const orientation: CaseOrientation = this.perspective ? 'Imagery Perspective' : 'User Perspective';
-		this.store$.dispatch(new SetImageOpeningOrientation({ orientation }));
+		this.orientation = this.perspective ? 'Imagery Perspective' : 'User Perspective';
+		this.store$.dispatch(new SetImageOpeningOrientation({ orientation: this.orientation }));
 	}
 
 	closeManualProcessingMenu() {

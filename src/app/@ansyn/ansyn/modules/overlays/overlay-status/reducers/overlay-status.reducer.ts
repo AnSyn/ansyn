@@ -3,8 +3,16 @@ import { uniq } from 'lodash';
 import { AlertMsg } from '../../../alerts/model';
 import { IOverlay } from '../../models/overlay.model'
 import { OverlayStatusActions, OverlayStatusActionsTypes } from '../actions/overlay-status.actions';
-import { ITranslationData } from '../../../menu-items/cases/models/case.model';
+import {
+	ImageManualProcessArgs,
+	IOverlaysManualProcessArgs,
+	ITranslationData
+} from '../../../menu-items/cases/models/case.model';
 import { MultiPolygon } from 'geojson';
+import { OverlayDisplayMode } from "../../../menu-items/tools/overlays-display-mode/overlays-display-mode.component";
+import { AnnotationMode } from "@ansyn/ol";
+import { IVisualizerStyle } from "@ansyn/imagery";
+import { IMeasureData, SubMenuEnum, toolsFlags } from "../../../menu-items/tools/reducers/tools.reducer";
 
 export const overlayStatusFeatureKey = 'overlayStatus';
 export const overlayStatusStateSelector: MemoizedSelector<any, IOverlayStatusState> = createFeatureSelector<IOverlayStatusState>(overlayStatusFeatureKey);
@@ -28,6 +36,19 @@ export interface IOverlayStatusState {
 	overlaysScannedAreaData: {
 		[key: string]: MultiPolygon;
 	}
+}
+
+export interface IImageProcessState {
+	flags: Map<toolsFlags, boolean>;
+	subMenu: SubMenuEnum;
+	activeCenter: number[];
+	activeOverlaysFootprintMode?: OverlayDisplayMode;
+	annotationMode: AnnotationMode;
+	annotationProperties: Partial<IVisualizerStyle>;
+	manualImageProcessingParams: ImageManualProcessArgs;
+	overlaysManualProcessArgs: IOverlaysManualProcessArgs;
+	activeAnnotationLayer: string;
+	mapsMeasures: Map<string, IMeasureData>;
 }
 
 export const overlayStatusInitialState: IOverlayStatusState = {

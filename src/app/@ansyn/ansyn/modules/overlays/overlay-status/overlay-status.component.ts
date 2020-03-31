@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import {
 	IEntryComponent,
 	selectActiveMapId,
@@ -8,8 +8,8 @@ import {
 } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { combineLatest, Observable } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { combineLatest, fromEvent, Observable } from 'rxjs';
+import { tap, map, filter } from 'rxjs/operators';
 import { GeoRegisteration, IOverlay } from '../models/overlay.model';
 import {
 	SetRemovedOverlaysIdAction,
@@ -107,6 +107,26 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	);
 
 	@AutoSubscription
+	onClickOutsideMoreButtons$ = fromEvent(window, 'click').pipe(
+		filter(() => this.moreButtons),
+		tap((event: any) => {
+			if (event.path && !event.path.includes(this.element.nativeElement)) {
+				this.moreButtons = false
+			}
+		})
+	);
+
+	@AutoSubscription
+	onClickOutsideManualProcessing$ = fromEvent(window, 'click').pipe(
+		filter(() => this.isManualProcessing),
+		tap((event: any) => {
+			if (event.path && !event.path.includes(this.element.nativeElement)) {
+				this.isManualProcessing = false;
+			}
+		})
+	);
+
+	@AutoSubscription
 	annoatationModeChange$: any = this.actions$
 		.pipe(
 			ofType(ToolsActionsTypes.STORE.SET_ANNOTATION_MODE),
@@ -121,7 +141,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 				}
 			}));
 
-	constructor(public store$: Store<any>, protected actions$: Actions) {
+	constructor(public store$: Store<any>, protected actions$: Actions, protected element: ElementRef) {
 		this.isPreset = true;
 		this.isFavorite = true;
 	}
@@ -273,13 +293,8 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		return SubMenuEnum;
 	}
 
-	toggleManualImageProcessing(event: MouseEvent = null) {
+	toggleManualImageProcessing() {
 		this.isManualProcessing = !this.isManualProcessing;
-		if (event) {
-			// In order that the sub menu will not recognize the click on the
-			// button as a "click outside" and close itself
-			event.stopPropagation();
-		}
 		const { manualImageProcessing } = this.subMenuEnum;
 		this.store$.dispatch(new SetSubMenu(manualImageProcessing));
 	}
@@ -287,8 +302,8 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	toggleAutoImageProcessing() {
 		this.isAutoProcessing = !this.isAutoProcessing;
 		this.isManualProcessing = false;
-		this.store$.dispatch(new SetAutoImageProcessing());
 		this.closeManualProcessingMenu();
+		this.store$.dispatch(new SetAutoImageProcessing());
 	}
 
 	toggleMoreButtons() {

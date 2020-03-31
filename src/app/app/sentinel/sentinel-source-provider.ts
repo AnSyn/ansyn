@@ -6,8 +6,6 @@ import {
 	geojsonPolygonToMultiPolygon,
 	getPointByGeometry,
 	getPolygonByPointAndRadius,
-	IMapSourceProvidersConfig,
-	MAP_SOURCE_PROVIDERS_CONFIG,
 	toRadians,
 } from '@ansyn/imagery';
 import { empty, Observable } from 'rxjs';

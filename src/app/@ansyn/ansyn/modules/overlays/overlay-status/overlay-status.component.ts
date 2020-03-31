@@ -3,8 +3,7 @@ import {
 	IEntryComponent,
 	selectActiveMapId,
 	selectHideLayersOnMap,
-	selectMapsTotal,
-	selectOverlayByMapId, ToggleMapLayersAction,
+	selectOverlayByMapId,
 } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';

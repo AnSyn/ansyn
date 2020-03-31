@@ -51,7 +51,7 @@
     "@ngrx/entity": "^9.0.0",
     "@ngrx/store": "^9.0.0",
     "@ngrx/store-devtools": "^9.0.0",
-    "@ngx-translate/core": "^11.0.1",
+    "@ngx-translate/core": "^12.1.2",
     "@turf/turf": "^5.1.6",
     "angular2-uuid": "^1.1.1",
     "auth0-js": "^9.7.3",

@@ -11,13 +11,6 @@ import { selectActiveMapId, selectHideLayersOnMap, selectMapsTotal } from '../..
 import { copyFromContent } from '../../utils/clipboard';
 import { getTimeFormat } from '../../utils/time';
 import { TranslateService } from '@ngx-translate/core';
-import { SetAutoImageProcessing, SetSubMenu } from "../../../ansyn/modules/menu-items/tools/actions/tools.actions";
-import {
-	selectToolFlags,
-	SubMenuEnum,
-	toolsFlags
-} from "../../../ansyn/modules/menu-items/tools/reducers/tools.reducer";
-import { Observable } from "rxjs";
 
 @Component({
 	selector: 'ansyn-imagery-status',

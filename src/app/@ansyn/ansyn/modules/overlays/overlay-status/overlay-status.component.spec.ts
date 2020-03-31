@@ -23,7 +23,7 @@ describe('OverlayStatusComponent', () => {
 	let actions: Observable<any>;
 
 	const mockImageManualProcessing = MockComponent({
-		selector: 'ansyn-image-processing-control'
+		selector: 'ansyn-image-processing-control',
 	});
 
 	beforeEach(async(() => {
@@ -61,5 +61,5 @@ describe('OverlayStatusComponent', () => {
 	it('should create', () => {
 		expect(component).toBeTruthy();
 	});
-	
+
 });

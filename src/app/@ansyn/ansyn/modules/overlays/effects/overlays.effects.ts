@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { select, Store } from '@ngrx/store';
+import { Action, select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, forkJoin, from, Observable, zip, EMPTY } from 'rxjs';
-import { catchError, combineAll, filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { forkJoin, from, Observable } from 'rxjs';
+import { catchError, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
 	CheckTrianglesAction,
 	DisplayOverlayAction,
@@ -15,6 +15,7 @@ import {
 	SetMarkUp,
 	SetOverlaysCriteriaAction,
 	SetOverlaysStatusMessageAction,
+	UpdateOverlay,
 	UpdateOverlaysCountAction
 } from '../actions/overlays.actions';
 import { IOverlay, IOverlaysCriteria, IOverlaysFetchData, RegionContainment } from '../models/overlay.model';
@@ -33,8 +34,8 @@ import { rxPreventCrash } from '../../core/utils/rxjs/operators/rxPreventCrash';
 import { getPolygonIntersectionRatio, isPointContainedInGeometry } from '@ansyn/imagery';
 import { getErrorLogFromException } from '../../core/utils/logs/timer-logs';
 import { LoggerService } from '../../core/services/logger.service';
-import { AreaToCredentialsService } from "../../core/services/credentials/area-to-credentials.service";
-import { CredentialsService, ICredentialsResponse } from "../../core/services/credentials/credentials.service";
+import { AreaToCredentialsService } from '../../core/services/credentials/area-to-credentials.service';
+import { CredentialsService, ICredentialsResponse } from '../../core/services/credentials/credentials.service';
 
 @Injectable()
 export class OverlaysEffects {
@@ -44,27 +45,34 @@ export class OverlaysEffects {
 		ofType(OverlaysActionTypes.SET_OVERLAYS_CRITERIA, OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
 		withLatestFrom(this.store$.select(selectOverlaysCriteria), this.store$.select(selectOverlaysArray)),
 		filter(([action, criteria, overlays]: [any, IOverlaysCriteria, IOverlay[]]) => Boolean(overlays) && overlays.length > 0),
-		tap(([action, criteria, overlays]: [any, IOverlaysCriteria, IOverlay[]]) => {
+		mergeMap(([action, criteria, overlays]: [any, IOverlaysCriteria, IOverlay[]]) => {
+			let actions: Action[];
 			overlays.forEach((overlay: IOverlay) => {
+				let containedInSearchPolygon;
 				try {
 					if (criteria.region.type === 'Point') {
 						const isContained = isPointContainedInGeometry(criteria.region, overlay.footprint);
-						overlay.containedInSearchPolygon = isContained ? RegionContainment.contained : RegionContainment.notContained;
+						containedInSearchPolygon = isContained ? RegionContainment.contained : RegionContainment.notContained;
 					} else {
 						const ratio = getPolygonIntersectionRatio(criteria.region, overlay.footprint);
 						if (!Boolean(ratio)) {
-							overlay.containedInSearchPolygon = RegionContainment.notContained;
+							containedInSearchPolygon = RegionContainment.notContained;
 						} else if (ratio === 1) {
-							overlay.containedInSearchPolygon = RegionContainment.contained;
+							containedInSearchPolygon = RegionContainment.contained;
 						} else {
-							overlay.containedInSearchPolygon = RegionContainment.intersect;
+							containedInSearchPolygon = RegionContainment.intersect;
 						}
 					}
 				} catch (e) {
 					console.error('failed to calc overlay intersection ratio of ', overlay, ' error ', e);
-					overlay.containedInSearchPolygon = RegionContainment.unknown;
+					containedInSearchPolygon = RegionContainment.unknown;
 				}
+				actions.push(new UpdateOverlay({
+					id: overlay.id,
+					changes: { containedInSearchPolygon }
+				}));
 			});
+			return actions;
 		}),
 		rxPreventCrash()
 	);
@@ -89,18 +97,18 @@ export class OverlaysEffects {
 			return forkJoin([this.areaToCredentialsService.getAreaTriangles(action.payload.region), this.userAuthorizedAreas$]).pipe(
 				mergeMap<any, any>(([trianglesOfArea, userAuthorizedAreas]: [any, any]) => {
 
-					if (userAuthorizedAreas.some( area => trianglesOfArea.includes(area))) {
+					if (userAuthorizedAreas.some(area => trianglesOfArea.includes(area))) {
 						return [new LoadOverlaysAction(action.payload)];
 					}
 					return [new LoadOverlaysSuccessAction([]),
-						new SetOverlaysStatusMessageAction(this.translate.instant(overlaysStatusMessages.noPermissionsForArea))];
+						new SetOverlaysStatusMessageAction(this.translate.instant(overlaysStatusMessages.noPermissionsForArea))
+					];
 				}),
-				catchError( () => {
-					return [new LoadOverlaysAction(action.payload)]
+				catchError(() => {
+					return [new LoadOverlaysAction(action.payload)];
 				})
-			)
+			);
 		})
-
 	);
 
 	@Effect()
@@ -112,13 +120,14 @@ export class OverlaysEffects {
 				// Because of a bug: sometimes when starting the app the withLatestFrom that was here did not return,
 				// and the timeline was stuck and not updated. After this fix the pipe works, but once in a while the
 				// translations that are called here fail, and return the keys instead.
-				map((overlays) => [overlays, this.translate.instant(overlaysStatusMessages.noOverLayMatchQuery), this.translate.instant(overlaysStatusMessages.overLoad), this.translate.instant('Error on overlays request')] ),
+				map((overlays) => [overlays, this.translate.instant(overlaysStatusMessages.noOverLayMatchQuery), this.translate.instant(overlaysStatusMessages.overLoad), this.translate.instant('Error on overlays request')]),
 				mergeMap<any, any>(([overlays, noOverlayMatchQuery, overLoad, error]: [IOverlaysFetchData, string, string, string]) => {
 					const overlaysResult = Array.isArray(overlays.data) ? overlays.data : [];
 
 					if (!Array.isArray(overlays.data) && Array.isArray(overlays.errors) && overlays.errors.length >= 0) {
 						return [new LoadOverlaysSuccessAction(overlaysResult),
-							new SetOverlaysStatusMessageAction(error)];
+							new SetOverlaysStatusMessageAction(error)
+						];
 					}
 
 					const actions: Array<any> = [new LoadOverlaysSuccessAction(overlaysResult)];

@@ -10,6 +10,7 @@ import {
 	IOverlaySpecialObject,
 } from '../models/overlay.model';
 import { IMarkUpData, IOverlayDropMarkUp, ITimelineRange, MarkUpClass } from '../reducers/overlays.reducer';
+import { Update } from '@ngrx/entity';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
@@ -43,6 +44,7 @@ export const OverlaysActionTypes = {
 	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT',
 	SET_MISC_OVERLAYS: 'SET_MISC_OVERLAYS',
 	SET_MISC_OVERLAY: 'SET_MISC_OVERLAY',
+	UPDATE_OVERLAY: 'UPDATE_OVERLAY'
 };
 
 export class SelectOverlayAction implements Action {
@@ -244,6 +246,13 @@ export class SetMiscOverlay implements Action {
 	}
 }
 
+export class UpdateOverlay implements Action {
+	type: string = OverlaysActionTypes.UPDATE_OVERLAY;
+
+	constructor(public payload: Update<IOverlay>) {
+	}
+}
+
 export type OverlaysActions
 	= DisplayOverlayFromStoreAction
 	| DisplayMultipleOverlaysFromStoreAction
@@ -269,3 +278,4 @@ export type OverlaysActions
 	| SetOverlaysCriteriaAction
 	| SetMiscOverlays
 	| SetMiscOverlay
+	| UpdateOverlay

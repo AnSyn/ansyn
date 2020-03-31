@@ -3,7 +3,13 @@ import { createEntityAdapter, Dictionary, EntityAdapter, EntityState } from '@ng
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
 import { ICaseDataInputFiltersState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
-import { OverlaysActions, OverlaysActionTypes, SetMiscOverlay, SetMiscOverlays } from '../actions/overlays.actions';
+import {
+	OverlaysActions,
+	OverlaysActionTypes,
+	SetMiscOverlay,
+	SetMiscOverlays,
+	UpdateOverlay
+} from '../actions/overlays.actions';
 import {
 	IOverlay,
 	IOverlayDrop,
@@ -308,6 +314,10 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 					[key]: overlay
 				}
 			};
+		}
+
+		case OverlaysActionTypes.UPDATE_OVERLAY: {
+			return overlaysAdapter.updateOne((<UpdateOverlay>action).payload, state);
 		}
 
 		default :

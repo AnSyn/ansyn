@@ -13,8 +13,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { FormsModule } from '@angular/forms';
-import { ImageProcessingControlComponent } from "./components/image-processing-control/image-processing-control.component";
 import { MockComponent } from "../../core/test/mock-component";
+import { ImageProcessingControlComponent } from "./components/image-processing-control/image-processing-control.component";
 
 describe('OverlayStatusComponent', () => {
 	let component: OverlayStatusComponent;
@@ -28,7 +28,7 @@ describe('OverlayStatusComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [OverlayStatusComponent, mockImageManualProcessing],
+			declarations: [OverlayStatusComponent, ImageProcessingControlComponent],
 			providers: [provideMockActions(() => actions),
 				{ provide: mapFacadeConfig, useValue: {} },
 			],
@@ -61,4 +61,14 @@ describe('OverlayStatusComponent', () => {
 	it('should create', () => {
 		expect(component).toBeTruthy();
 	});
+
+	it('check click on toggleMoreButtons', () => {
+		component.overlay = <any>{ id: 'overlayId' };
+		fixture.detectChanges();
+		spyOn(component, 'toggleMoreButtons');
+		fixture.nativeElement.querySelector('.more-btn').click();
+		console.log(fixture);
+		expect(component.toggleMoreButtons).toHaveBeenCalled();
+	});
+
 });

@@ -90,22 +90,46 @@ export class CasesAppEffects {
 					.pipe(
 						map(overlays => new Map(overlays.map((overlay): [string, IOverlay] => [overlay.id, overlay]))),
 						map((mapOverlay: Map<string, IOverlay>) => {
-							caseValue.state.favoriteOverlays = caseValue.state.favoriteOverlays
-								.map((favOverlay: IOverlay) => mapOverlay.get(favOverlay.id));
+							let newCaseValue: IDilutedCase = { ...caseValue, state: {
+								...caseValue.state,
+									favoriteOverlays: caseValue.state.favoriteOverlays
+										.map((favOverlay: IOverlay) => mapOverlay.get(favOverlay.id)),
+									presetOverlays: (caseValue.state.presetOverlays || [])
+										.map((preOverlay: IOverlay) => mapOverlay.get(preOverlay.id)),
+									miscOverlays: mapValues(caseValue.state.miscOverlays || {},
+										(prevOverlay: IOverlay) => {
+											return prevOverlay && mapOverlay.get(prevOverlay.id);
+										}),
+									maps: {
+									...caseValue.state.maps,
+										data: caseValue.state.maps.data
+											.filter(mapData => Boolean(Boolean(mapData.data.overlay)))
+											.map(mapData => ({
+												...mapData,
+												data: {
+													...mapData.data,
+													overlay: mapOverlay.get(mapData.data.overlay.id)
+												}
+											}))
+									}
+								} };
 
-							caseValue.state.presetOverlays = (caseValue.state.presetOverlays || [])
-								.map((preOverlay: IOverlay) => mapOverlay.get(preOverlay.id));
+							// caseValue.state.favoriteOverlays = caseValue.state.favoriteOverlays
+							// 	.map((favOverlay: IOverlay) => mapOverlay.get(favOverlay.id));
+							//
+							// caseValue.state.presetOverlays = (caseValue.state.presetOverlays || [])
+							// 	.map((preOverlay: IOverlay) => mapOverlay.get(preOverlay.id));
+							//
+							// caseValue.state.miscOverlays = mapValues(caseValue.state.miscOverlays || {},
+							// 	(prevOverlay: IOverlay) => {
+							// 		return prevOverlay && mapOverlay.get(prevOverlay.id);
+							// 	});
+							//
+							// caseValue.state.maps.data
+							// 	.filter(mapData => Boolean(Boolean(mapData.data.overlay)))
+							// 	.forEach((map) => map.data.overlay = mapOverlay.get(map.data.overlay.id));
 
-							caseValue.state.miscOverlays = mapValues(caseValue.state.miscOverlays || {},
-								(prevOverlay: IOverlay) => {
-									return prevOverlay && mapOverlay.get(prevOverlay.id);
-								});
-
-							caseValue.state.maps.data
-								.filter(mapData => Boolean(Boolean(mapData.data.overlay)))
-								.forEach((map) => map.data.overlay = mapOverlay.get(map.data.overlay.id));
-
-							return new SelectCaseAction(caseValue);
+							return new SelectCaseAction(newCaseValue);
 						}),
 						catchError<any, any>((result: HttpErrorResponse) => {
 							console.warn(result);

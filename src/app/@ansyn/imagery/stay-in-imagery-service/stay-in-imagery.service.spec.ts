@@ -15,7 +15,7 @@ describe('StayInImageryService', () => {
 	}));
 
 	it('should be created', () => {
-		const service: StayInImageryService = TestBed.get(StayInImageryService);
+		const service: StayInImageryService = TestBed.inject(StayInImageryService);
 		expect(service).toBeTruthy();
 	});
 });

@@ -20,7 +20,7 @@ describe('AreaToCredentialsService', () => {
 	});
 
 	it('should be created', () => {
-		const service: AreaToCredentialsService = TestBed.get(AreaToCredentialsService);
+		const service: AreaToCredentialsService = TestBed.inject(AreaToCredentialsService);
 		expect(service).toBeTruthy();
 	});
 });

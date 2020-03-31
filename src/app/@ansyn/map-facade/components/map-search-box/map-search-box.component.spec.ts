@@ -62,7 +62,7 @@ describe('MapSearchBoxComponent', () => {
 		let geocoderService;
 
 		beforeEach(fakeAsync(() => {
-			geocoderService = TestBed.get(GeocoderService);
+			geocoderService = TestBed.inject(GeocoderService);
 			component.goToLocation(undefined);
 			tick();
 		}));

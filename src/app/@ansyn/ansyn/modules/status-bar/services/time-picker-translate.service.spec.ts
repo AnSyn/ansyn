@@ -15,7 +15,7 @@ describe('TimePickerTranslateService', () => {
 	}));
 
 	it('should be created', () => {
-		const service: TimePickerTranslateService = TestBed.get(TimePickerTranslateService);
+		const service: TimePickerTranslateService = TestBed.inject(TimePickerTranslateService);
 		expect(service).toBeTruthy();
 	});
 });

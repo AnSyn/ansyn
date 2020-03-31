@@ -47,7 +47,7 @@ describe('GeocoderService', () => {
 		let endResult = null;
 
 		beforeEach(() => {
-			httpClient = TestBed.get(HttpClient);
+			httpClient = TestBed.inject(HttpClient);
 		});
 
 		it('should call http, extract the point, and return it', fakeAsync(() => {

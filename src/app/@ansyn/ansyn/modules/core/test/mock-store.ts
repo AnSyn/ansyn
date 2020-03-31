@@ -10,8 +10,8 @@ export interface IStoreFixture<T> {
 
 export function createStore<T>(reducer: ActionReducer<T>, options: any = {}): IStoreFixture<T> {
 	const testbed: TestBed = getTestBed();
-	const store: Store<T> = testbed.get(Store);
-	const state: State<T> = testbed.get(State);
+	const store: Store<T> = TestBed.inject(Store);
+	const state: State<T> = TestBed.inject(State);
 	let value: T;
 	const getState = (): T => value;
 	const cleanup = () => {

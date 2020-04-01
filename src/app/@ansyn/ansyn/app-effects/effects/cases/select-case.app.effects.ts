@@ -65,16 +65,27 @@ export class SelectCaseAppEffects {
 		// map
 		const { data, activeMapId: currentActiveMapID } = state.maps;
 		const defaultMapIndex = data.findIndex(map => map.id === this.caseConfig.defaultCase.state.maps.activeMapId);
+
+		let newData = data;
+		let newMaps = state.maps;
+
 		if (defaultMapIndex !== -1) {
-			data[defaultMapIndex].id = UUID.UUID();
+			newData = data.map((element, index) =>
+				index === defaultMapIndex ? { ...element, id: UUID.UUID() } : element
+			);
+			// data[defaultMapIndex].id = UUID.UUID();
 			if (currentActiveMapID === this.caseConfig.defaultCase.state.maps.activeMapId) {
-				state.maps.activeMapId = data[defaultMapIndex].id;
+				newMaps = {
+					...state.maps,
+					activeMapId: newData[defaultMapIndex].id
+				};
+				// state.maps.activeMapId = data[defaultMapIndex].id;
 			}
 		}
 		// context
 		const { favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, presetOverlays, region, dataInputFilters, contextEntities, miscOverlays } = state;
 		let { time } = state;
-		const { layout } = state.maps;
+		const { layout } = newMaps;
 
 		if (!time) {
 			time = this.casesService.defaultTime;
@@ -92,8 +103,8 @@ export class SelectCaseAppEffects {
 		const { facets } = state;
 
 		const selectCaseAction = [
-			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),
-			new SetActiveMapId(state.maps.activeMapId),
+			new SetMapsDataActionStore({ mapsList: newData.map(this.parseMapData.bind(this)) }),
+			new SetActiveMapId(newMaps.activeMapId),
 			new SetLayoutAction(<any>layout),
 			new SetImageOpeningOrientation({ orientation }),
 			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),

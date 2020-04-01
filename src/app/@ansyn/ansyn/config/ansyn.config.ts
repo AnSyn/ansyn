@@ -11,6 +11,7 @@ import { TasksComponent } from '../modules/menu-items/algorithms/components/task
 import { anaglyphSensorAlertKey } from '../modules/plugins/openlayers/plugins/anaglyph-sensor/plugin/anaglyph-sensor.plugin';
 import { AnaglyphSensorAlertComponent } from '../modules/plugins/openlayers/plugins/anaglyph-sensor/alert-component/anaglyph-sensor-alert.component';
 import { CredentialsComponent } from '../modules/core/components/credentials/credentials.component';
+import { ResultsComponent } from "../modules/menu-items/cases/components/results/results.component";
 
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
 	ansynAlerts: [
@@ -37,6 +38,11 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 		{
 			name: 'Cases',
 			component: CasesComponent,
+			iconClass: 'icon-main-cases'
+		},
+		{
+			name: 'Results table',
+			component: ResultsComponent,
 			iconClass: 'icon-main-cases'
 		},
 		{

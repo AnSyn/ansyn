@@ -16,6 +16,9 @@ import { StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from './reducers/cases.reducer';
 import { CasesAutoSaveComponent } from './components/cases-auto-save/cases-auto-save.component';
 import { CoreModule } from '../../core/core.module';
+import { ResultsTableComponent } from './components/results-table/results-table.component';
+import { ResultsTableHeaderComponent } from './components/results-table-header/results-table-header.component';
+import { ResultsComponent } from './components/results/results.component';
 
 // @dynamic
 @NgModule({
@@ -26,7 +29,7 @@ import { CoreModule } from '../../core/core.module';
 		FormsModule,
 		EffectsModule.forFeature([CasesEffects])
 	],
-	declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent, CasesAutoSaveComponent],
+	declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent, CasesAutoSaveComponent, ResultsTableComponent, ResultsTableHeaderComponent, ResultsComponent],
 	entryComponents: [CasesComponent, EditCaseComponent, SaveCaseComponent, DeleteCaseComponent],
 	providers: [CasesService]
 })

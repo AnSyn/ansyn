@@ -41,6 +41,7 @@ import { IOverlayByIdMetaData, OverlaysService } from '../../modules/overlays/se
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { ICase } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
+import { overlayStatusConfig } from "../../modules/overlays/overlay-status/config/overlay-status-config";
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -94,6 +95,10 @@ describe('CasesAppEffects', () => {
 						info: () => {
 						}
 					}
+				},
+				{
+					provide: overlayStatusConfig,
+					useValue: {}
 				},
 				{
 					provide: OverlaysService,

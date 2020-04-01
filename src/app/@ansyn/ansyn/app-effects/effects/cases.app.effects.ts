@@ -103,12 +103,11 @@ export class CasesAppEffects {
 									maps: {
 									...caseValue.state.maps,
 										data: caseValue.state.maps.data
-											.filter(mapData => Boolean(Boolean(mapData.data.overlay)))
 											.map(mapData => ({
 												...mapData,
 												data: {
 													...mapData.data,
-													overlay: mapOverlay.get(mapData.data.overlay.id)
+													overlay: mapData.data.overlay && mapOverlay.get(mapData.data.overlay.id)
 												}
 											}))
 									}

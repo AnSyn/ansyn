@@ -40,16 +40,9 @@ export interface IOverlayStatusState {
 }
 
 export interface IImageProcessState {
-	flags: Map<toolsFlags, boolean>;
 	subMenu: SubMenuEnum;
-	activeCenter: number[];
-	activeOverlaysFootprintMode?: OverlayDisplayMode;
-	annotationMode: AnnotationMode;
-	annotationProperties: Partial<IVisualizerStyle>;
 	manualImageProcessingParams: ImageManualProcessArgs;
 	overlaysManualProcessArgs: IOverlaysManualProcessArgs;
-	activeAnnotationLayer: string;
-	mapsMeasures: Map<string, IMeasureData>;
 }
 
 export const overlayStatusInitialState: IOverlayStatusState = {
@@ -94,6 +87,9 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 
 		case OverlayStatusActionsTypes.RESET_REMOVED_OVERLAY_IDS:
 			return { ...state, removedOverlaysIds: [] };
+
+		case OverlayStatusActionsTypes.SET_MANUAL_IMAGE_PROCESSING:
+			return { ...state, manualImageProcessingParams: action.payload };
 
 		case OverlayStatusActionsTypes.SET_REMOVED_OVERLAYS_VISIBILITY:
 			return { ...state, removedOverlaysVisibility: action.payload };

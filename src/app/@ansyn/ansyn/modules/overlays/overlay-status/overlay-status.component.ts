@@ -29,10 +29,9 @@ import {
 	SetAnnotationMode,
 	ToolsActionsTypes,
 	ClearActiveInteractionsAction,
-	SetSubMenu, SetAutoImageProcessing
+	SetAutoImageProcessing
 } from '../../menu-items/tools/actions/tools.actions';
 import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-manager/reducers/layers.reducer';
-import { SubMenuEnum } from "../../menu-items/tools/reducers/tools.reducer";
 import { SetImageOpeningOrientation } from "../../status-bar/actions/status-bar.actions";
 
 @Component({
@@ -64,7 +63,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	isRemoved: boolean;
 	isDragged: boolean;
 	isImageControlActive = false;
-	subMenu: SubMenuEnum;
 	draggedButtonText: string;
 	isLayersVisible: boolean;
 
@@ -277,20 +275,13 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		return this.isAutoProcessing;
 	}
 
-	get subMenuEnum() {
-		return SubMenuEnum;
-	}
-
 	toggleManualImageProcessing() {
 		this.isManualProcessing = !this.isManualProcessing;
-		const { manualImageProcessing } = this.subMenuEnum;
-		this.store$.dispatch(new SetSubMenu(manualImageProcessing));
 	}
 
 	toggleAutoImageProcessing() {
 		this.isAutoProcessing = !this.isAutoProcessing;
 		this.isManualProcessing = false;
-		this.closeManualProcessingMenu();
 		this.store$.dispatch(new SetAutoImageProcessing());
 	}
 
@@ -302,11 +293,5 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		this.perspective = !this.perspective;
 		this.orientation = this.perspective ? 'User Perspective' : 'Imagery Perspective';
 		this.store$.dispatch(new SetImageOpeningOrientation({ orientation: this.orientation }));
-	}
-
-	closeManualProcessingMenu() {
-		if (this.subMenu === this.subMenuEnum.manualImageProcessing) {
-			this.toggleAutoImageProcessing();
-		}
 	}
 }

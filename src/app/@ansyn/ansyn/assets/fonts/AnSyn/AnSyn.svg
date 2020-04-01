@@ -3,7 +3,7 @@
 <svg xmlns="http://www.w3.org/2000/svg">
 <metadata>Copyright (C) 2020 by original authors @ fontello.com</metadata>
 <defs>
-<font id="fontello" horiz-adv-x="1000" >
+<font id="AnSyn" horiz-adv-x="1000" >
 <font-face font-family="fontello" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
 <missing-glyph horiz-adv-x="1000" />
 <glyph glyph-name="layer-add" unicode="&#xe800;" d="M520 371l125 0c12 0 21-9 21-21 0-11-9-20-21-20l-125 0 0-125c0-12-9-21-20-21-12 0-21 9-21 21l0 125-125 0c-11 0-21 9-21 20 0 12 10 21 21 21l125 0 0 125c0 12 9 21 21 21 11 0 20-9 20-21l0-125z" horiz-adv-x="1000" />

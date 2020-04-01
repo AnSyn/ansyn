@@ -98,7 +98,41 @@ describe('CasesAppEffects', () => {
 				},
 				{
 					provide: overlayStatusConfig,
-					useValue: {}
+					useValue: {
+						ImageProcParams:
+							[
+								{
+									name: 'Sharpness',
+									defaultValue: 0,
+									min: 0,
+									max: 100
+								},
+								{
+									name: 'Contrast',
+									defaultValue: 0,
+									min: -100,
+									max: 100
+								},
+								{
+									name: 'Brightness',
+									defaultValue: 100,
+									min: -100,
+									max: 100
+								},
+								{
+									name: 'Gamma',
+									defaultValue: 100,
+									min: 1,
+									max: 200
+								},
+								{
+									name: 'Saturation',
+									defaultValue: 0,
+									min: 1,
+									max: 100
+								}
+							]
+					}
 				},
 				{
 					provide: OverlaysService,
@@ -137,41 +171,7 @@ describe('CasesAppEffects', () => {
 				provideMockActions(() => actions),
 				{ provide: casesConfig, useValue: { schema: null } },
 				{
-					provide: toolsConfig, useValue: {
-						ImageProcParams:
-							[
-								{
-									name: 'Sharpness',
-									defaultValue: 0,
-									min: 0,
-									max: 100
-								},
-								{
-									name: 'Contrast',
-									defaultValue: 0,
-									min: -100,
-									max: 100
-								},
-								{
-									name: 'Brightness',
-									defaultValue: 100,
-									min: -100,
-									max: 100
-								},
-								{
-									name: 'Gamma',
-									defaultValue: 100,
-									min: 1,
-									max: 200
-								},
-								{
-									name: 'Saturation',
-									defaultValue: 0,
-									min: 1,
-									max: 100
-								}
-							]
-					}
+					provide: toolsConfig, useValue: {}
 				}
 			]
 		}).compileComponents();

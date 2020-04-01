@@ -2,7 +2,7 @@ import { ProjectableRaster } from '@ansyn/ol';
 
 // skipOnValue is the value which the image do not require any processing (e.i. the natural/default value)
 export const IMG_PROCESS_ORDER = [
-	{ ArgumentName: 'Histogram', skipOnValue: 0 },
+	{ ArgumentName: 'Histogram', skipOnValue: 0, perImage: true},
 	{ ArgumentName: 'Gamma', skipOnValue: 100 },
 	{ ArgumentName: 'Contrast', skipOnValue: 0 },
 	{ ArgumentName: 'Saturation', skipOnValue: 100 },
@@ -46,6 +46,7 @@ export class OpenLayersImageProcessing {
 			// general functions
 			buildHistogramLut: buildHistogramLut,
 			normalizeColor: normalizeColor,
+			clahe: clahe,
 			rgb2YCbCr: rgb2YCbCr,
 			yCbCr2RGB: yCbCr2RGB,
 			forEachRGBPixel: forEachRGBPixel,
@@ -141,7 +142,7 @@ function cascadeOperations(pixels, data) {
 function getFunctionByArgument(arg) {
 	switch (arg) {
 		case 'Histogram':
-			return this['performHistogram'];
+			return this['clahe'];
 		case 'Gamma':
 			return this['performGamma'];
 		case 'Contrast':
@@ -217,6 +218,87 @@ function performHistogram(pixel, histogramLut) {
 		b: histogramLut[pixel.b],
 		a: pixel.a
 	};
+}
+
+
+function clahe(imageData) {
+	const calculateGrid = (width, height): number => {
+		return Math.max(Math.round(width / 2), Math.round(height / 2));
+	};
+	const { width, height, data } = imageData;
+	const BANDS = 4, GRID = calculateGrid(width, height);
+	const totalPixels = width * height;
+	const gridX = Math.ceil((GRID * width) / Math.pow(GRID, 2));
+	const gridY = Math.ceil((GRID * height) / Math.pow(GRID, 2));
+	const firstImageRowEnd = BANDS * width;
+	const firstGridRowEnd = firstImageRowEnd * GRID;
+	const gridRowEnd = BANDS * GRID;
+	const calculateGridIndex = (pixel) => {
+		let x = 0, y = 0;
+		while (pixel >= firstGridRowEnd) {
+			x++;
+			pixel -= firstGridRowEnd;
+		}
+		while (pixel >= firstImageRowEnd) {
+			pixel -= firstImageRowEnd;
+		}
+		while ( pixel >= gridRowEnd) {
+			y++;
+			pixel -= gridRowEnd;
+		}
+
+		return gridX * x + y;
+	};
+	const calculateGridWidhtHeight = (grid): [number, number] => {
+		let gridCol = grid;
+		let row = 0;
+		while (gridCol >= gridX) {
+			gridCol -= gridX;
+			row++;
+		}
+		const h = Math.min(GRID, height - (row * GRID));
+		const w = Math.min(GRID, width - (gridCol * GRID));
+
+		return [w, h];
+	};
+	const grids = [];
+	for ( let i = 0; i < data.length ; i +=  BANDS) {
+		const grid = calculateGridIndex(i);
+		if ( !grids[grid]) {
+			grids[grid] = {data: [], lastIndex: 0, maps: {}};
+			const [w, h ] = calculateGridWidhtHeight(grid);
+			grids[grid].width = w;
+			grids[grid].height = h;
+		}
+
+		const startIndex = grids[grid].lastIndex;
+		grids[grid].maps[startIndex] = i;
+		grids[grid].data[startIndex] = data[i];
+		grids[grid].data[startIndex + 1] = data[i + 1];
+		grids[grid].data[startIndex + 2] = data[i + 2];
+		grids[grid].data[startIndex + 3] = data[i + 3];
+		grids[grid].lastIndex = startIndex + 4;
+		// grids[grid].push(...data.slice(i , i + BANDS));
+	}
+	grids.forEach( (grid, index) => {
+		const _imageData = new ImageData(new Uint8ClampedArray(grid.data), grid.width, grid.height);
+		const histGrid = this['buildHistogramLut'](_imageData);
+		for ( let i = 0; i < _imageData.data.length; i += BANDS) {
+			const pixel = {
+				r: _imageData.data[i],
+				g: _imageData.data[i + 1],
+				b: _imageData.data[i + 2],
+				a: _imageData.data[i + 3]
+			};
+			const newPixel = this['performHistogram'](pixel, histGrid);
+			const pixelInRealImage =  grid.maps[i]; // calculateRealIndex(index, i);
+			imageData.data[pixelInRealImage] = newPixel.r;
+			imageData.data[pixelInRealImage + 1] = newPixel.g;
+			imageData.data[pixelInRealImage + 2] = newPixel.b;
+			imageData.data[pixelInRealImage + 3] = newPixel.a;
+		}
+	});
+	return imageData;
 }
 
 // ------ Histogram Equalization End ------ //

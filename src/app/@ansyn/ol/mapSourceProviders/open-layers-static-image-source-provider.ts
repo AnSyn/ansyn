@@ -13,7 +13,7 @@ import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../maps/openlayers-disabled-map/openlayers-disabled-map';
-import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
+import { IMAGE_PROCESS_ATTRIBUTE, OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 
 export const OpenLayersStaticImageSourceProviderSourceType = 'STATIC_IMAGE';
 
@@ -52,6 +52,8 @@ export class OpenLayersStaticImageSourceProvider extends OpenLayersMapSourceProv
 			source,
 			extent
 		});
+
+		layer.set(IMAGE_PROCESS_ATTRIBUTE, this.getImageLayer(source, extent));
 
 		return Promise.resolve(layer);
 	}

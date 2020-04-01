@@ -32,6 +32,7 @@ export interface IOverlayStatusState {
 	removedOverlaysIdsCount: number;
 	presetOverlays: IOverlay[];
 	alertMsg: AlertMsg;
+	manualImageProcessingParams: ImageManualProcessArgs;
 	overlaysTranslationData: ITranslationsData,
 	overlaysScannedAreaData: {
 		[key: string]: MultiPolygon;
@@ -59,7 +60,8 @@ export const overlayStatusInitialState: IOverlayStatusState = {
 	removedOverlaysIdsCount: 0,
 	alertMsg: new Map([]),
 	overlaysTranslationData: {},
-	overlaysScannedAreaData: {}
+	overlaysScannedAreaData: {},
+	manualImageProcessingParams: {}
 };
 
 export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusInitialState, action: OverlayStatusActions | any): IOverlayStatusState {

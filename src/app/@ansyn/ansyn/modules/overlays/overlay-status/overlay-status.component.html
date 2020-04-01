@@ -29,7 +29,7 @@
 	*ngIf="isManualProcessing">
 </ansyn-image-processing-control>
 
-<button class="small-icon-button" *ngIf="overlay"
+<button class="small-icon-button perspective" *ngIf="overlay"
 		(click)="toggleImageryPerspective()"
 		[attr.tooltip-value]="orientation | translate"
 		tooltip-class="bottom right">
@@ -40,7 +40,7 @@
 		(click)="toggleMoreButtons()"
 		[attr.tooltip-value]="'More buttons' | translate"
 		tooltip-class="bottom right">
-	<i class="icon icon-app-next" [class.active]="moreButtons"></i>
+	<i class="icon icon-more" [class.active]="moreButtons"></i>
 </button>
 
 <div class="more-buttons" *ngIf="moreButtons">
@@ -48,18 +48,24 @@
 			(click)="togglePreset()"
 			[disabled]="noGeoRegistration">
 		<i class="icon icon-quick-loop-add" [class.active]="isPreset"></i>
-		{{presetsButtonText | translate}}
+		<div class="button-title">
+			{{presetsButtonText | translate}}
+		</div>
 	</button>
 
 	<button class="small-icon-button remove-overlay"
 			(click)="removeOverlay()">
 		<i class="icon" [ngClass]="isRemoved ? 'icon-restore-overlay' : 'icon-remove-overlay'"></i>
-		{{isRemoved ? ('Restore overlay' | translate) : ('Remove overlay' | translate)}}
+		<div class="button-title">
+			{{isRemoved ? ('Restore overlay' | translate) : ('Remove overlay' | translate)}}
+		</div>
 	</button>
 	<button class="small-icon-button set-favorite"
 			(click)="toggleFavorite()">
 		<i class="icon" [ngClass]="!isFavorite? 'icon-favorite-empty' : 'icon-favorite-full'"
 		   [class.active]="isFavorite"></i>
-		{{favoritesButtonText | translate}}
+		<div class="button-title">
+			{{favoritesButtonText | translate}}
+		</div>
 	</button>
 </div>

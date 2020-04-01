@@ -138,6 +138,8 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	constructor(public store$: Store<any>, protected actions$: Actions, protected element: ElementRef) {
 		this.isPreset = true;
 		this.isFavorite = true;
+		this.orientation = 'Imagery Perspective';
+		this.store$.dispatch(new SetImageOpeningOrientation({ orientation: this.orientation }));
 	}
 
 	@AutoSubscription
@@ -298,7 +300,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 
 	toggleImageryPerspective() {
 		this.perspective = !this.perspective;
-		this.orientation = this.perspective ? 'Imagery Perspective' : 'User Perspective';
+		this.orientation = this.perspective ? 'User Perspective' : 'Imagery Perspective';
 		this.store$.dispatch(new SetImageOpeningOrientation({ orientation: this.orientation }));
 	}
 

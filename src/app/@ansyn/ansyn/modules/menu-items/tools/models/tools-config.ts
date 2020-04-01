@@ -6,16 +6,16 @@ export interface IShadowMouseConfig {
 }
 
 export interface IToolsConfig {
-	ImageProcParams: Array<IImageProcParam>,
+	// ImageProcParams: Array<IImageProcParam>,
 	ShadowMouse?: IShadowMouseConfig
 }
 
-export interface IImageProcParam {
-	name: string,
-	defaultValue: number,
-	min: number,
-	max: number
-}
+// export interface IImageProcParam {
+// 	name: string,
+// 	defaultValue: number,
+// 	min: number,
+// 	max: number
+// }
 
 export const toolsConfig = 'toolsConfig';
 

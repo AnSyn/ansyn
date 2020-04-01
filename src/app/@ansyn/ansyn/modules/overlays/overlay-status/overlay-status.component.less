@@ -6,6 +6,7 @@
 	left: 5px;
 	top: 6px;
 	display: flex;
+	width: 150px;
 
 	button {
 		position: relative;
@@ -23,6 +24,12 @@
 			display: flex;
 			align-items: center;
 			z-index: 1;
+			margin-left: 6px;
+
+			&.perspective {
+				margin-left: 11px;
+			}
+
 
 			&:hover:not(:disabled) {
 				background: rgba(0, 0, 0, 0.5);
@@ -54,7 +61,13 @@
 		width: 220px;
 		height: 75px;
 		margin-top: 35px;
+		padding-right: 25px;
 		z-index: 0;
+
+		.button-title {
+			width: 150px;
+			margin-left: 20px;
+		}
 
 		button {
 			font-size: 13px;

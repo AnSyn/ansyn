@@ -79,3 +79,5 @@
 .icon-status-bar-geo:before { content: '\e84d'; } /* '' */
 .icon-method-draw-image:before { content: '\e84e'; } /* '' */
 .icon-credentials-request:before { content: '\e84f'; } /* '' */
+.icon-autoimage:before { content: '\e854'; } /* '' */
+.icon-more:before { content: '\e855'; } /* '' */

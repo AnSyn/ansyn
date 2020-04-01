@@ -26,6 +26,14 @@
 		   [class.icon-layers-hide]="hideLayers"></i>
 	</button>
 
+	<ng-container
+		*ngFor="let component of entryComponents.status">
+		<ng-container
+			*ngIf="!component.showFirst && component.prototype.getType() === 'buttons'"
+			[ansynEntryComponent]="{ component: component , mapId: mapId }">
+		</ng-container>
+	</ng-container>
+
 	<button
 		*ngIf="mapsAmount > 1"
 		class="small-icon-button drag-me"
@@ -34,14 +42,6 @@
 		(mousedown)="onMove.emit($event)">
 		<i class="icon-drag-maps"></i>
 	</button>
-
-	<ng-container
-		*ngFor="let component of entryComponents.status">
-		<ng-container
-			*ngIf="!component.showFirst && component.prototype.getType() === 'buttons'"
-			[ansynEntryComponent]="{ component: component , mapId: mapId }">
-		</ng-container>
-	</ng-container>
 </div>
 
 <div class="description">
@@ -56,7 +56,6 @@
 	</div>
 </div>
 
-
 <ng-container *ngIf="!isMinimalistViewMode">
 	<ng-container
 		*ngFor="let component of entryComponents.status">
@@ -66,3 +65,4 @@
 		</ng-container>
 	</ng-container>
 </ng-container>
+

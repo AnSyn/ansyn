@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { selectMapsTotal, selectOverlayByMapId } from '@ansyn/map-facade';
+import { selectOverlayByMapId } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { combineLatest, Observable } from 'rxjs';
@@ -35,7 +35,7 @@ export class AlertsContainerComponent implements OnInit, OnDestroy {
 	}
 
 	showAlert(alertKey) {
-		const ids = this.alertMsg.get(alertKey);
+		const ids = this.alertMsg?.get(alertKey);
 		if (ids) {
 			return ids.has(this.mapId);
 		} else {

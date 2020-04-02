@@ -9,10 +9,6 @@ import {
 	ITranslationData
 } from '../../../menu-items/cases/models/case.model';
 import { MultiPolygon } from 'geojson';
-import { OverlayDisplayMode } from "../../../menu-items/tools/overlays-display-mode/overlays-display-mode.component";
-import { AnnotationMode } from "@ansyn/ol";
-import { IVisualizerStyle } from "@ansyn/imagery";
-import { IMeasureData, SubMenuEnum, toolsFlags } from "../../../menu-items/tools/reducers/tools.reducer";
 
 export const overlayStatusFeatureKey = 'overlayStatus';
 export const overlayStatusStateSelector: MemoizedSelector<any, IOverlayStatusState> = createFeatureSelector<IOverlayStatusState>(overlayStatusFeatureKey);
@@ -40,7 +36,6 @@ export interface IOverlayStatusState {
 }
 
 export interface IImageProcessState {
-	subMenu: SubMenuEnum;
 	manualImageProcessingParams: ImageManualProcessArgs;
 	overlaysManualProcessArgs: IOverlaysManualProcessArgs;
 }

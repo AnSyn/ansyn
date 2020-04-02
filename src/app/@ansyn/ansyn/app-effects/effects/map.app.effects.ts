@@ -322,10 +322,6 @@ export class MapAppEffects {
 		return null;
 	}
 
-	get params(): Array<IImageProcParam> {
-		return this.overlayStatusConfig.ImageProcParams;
-	}
-
 	onDisplayOverlay([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		const { overlay, extent: payloadExtent } = payload;
 		const mapId = payload.mapId || mapState.activeMapId;

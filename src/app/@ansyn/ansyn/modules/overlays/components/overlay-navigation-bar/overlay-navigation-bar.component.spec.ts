@@ -87,16 +87,16 @@ describe('OverlyaNavigationBarComponent', () => {
 		});
 	});
 
-	[{ k: 39, n: 'goNextActive', f: 'clickGoAdjacent' }, {
-		k: 37,
+	[{ k: 'ArrowRight', n: 'goNextActive', f: 'clickGoAdjacent' }, {
+		k: 'ArrowLeft',
 		n: 'goPrevActive',
 		f: 'clickGoAdjacent'
 	}].forEach(key => {
-		it(`onkeyup should call ${ key.n } when keycode = "${ key.k }"`, () => {
+		it(`onkeyup should call ${ key.n } when key = "${ key.k }"`, () => {
 			spyOn(component, <'clickGoAdjacent'>key.f);
 			expect(component[key.n]).toEqual(false);
 			const $event = {
-				which: key.k,
+				key: key.k,
 				currentTarget: { document: { activeElement: {} } }
 			};
 			component.onkeydown(<any>$event);

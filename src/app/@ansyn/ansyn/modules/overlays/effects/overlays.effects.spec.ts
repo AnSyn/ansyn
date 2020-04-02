@@ -85,7 +85,7 @@ describe('Overlays Effects ', () => {
 		],
 		providers: [
 			AreaToCredentialsService,
-			{ provide: USE_DEFAULT_LANG },
+			{ provide: USE_DEFAULT_LANG, useValue: undefined },
 			{
 				provide: MissingTranslationHandler, useValue: {
 					handle: () => ''

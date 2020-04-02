@@ -1,7 +1,7 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 
 import { DataLayersModalsComponent } from './data-layers-modals.component';
-import { StoreModule } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from '../../reducers/layers.reducer';
 import { DownloadLayersComponent } from './download-layers/download-layers.component';
 import { EditLayerComponent } from './edit-layer/edit-layer.component';
@@ -16,6 +16,7 @@ import { TranslateModule } from '@ngx-translate/core';
 describe('DataLayersModalsComponent', () => {
 	let component: DataLayersModalsComponent;
 	let fixture: ComponentFixture<DataLayersModalsComponent>;
+	let store: Store<any>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -23,6 +24,11 @@ describe('DataLayersModalsComponent', () => {
 			imports: [MatInputModule, MatFormFieldModule, FormsModule, StoreModule.forRoot({ [layersFeatureKey]: LayersReducer }), TranslateModule.forRoot()]
 		})
 			.compileComponents();
+	}));
+
+	beforeEach(inject([Store], (_store: Store<any>) => {
+		store = _store;
+		spyOn(_store, 'select').and.returnValue(null);
 	}));
 
 	beforeEach(() => {

@@ -8,7 +8,6 @@ import {
 import { casesAdapter, CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
 import { ICase } from '../models/case.model';
 
-
 describe('CasesReducer', () => {
 	const caseMock: ICase = {
 		id: 'fakeId',
@@ -62,13 +61,13 @@ describe('CasesReducer', () => {
 
 	it('UPDATE_CASE action should update existing case from payload(by "id") ', () => {
 		let state: ICasesState = { ...initialCasesState };
-		state = casesAdapter.addAll(<any>[
+		state = casesAdapter.setAll(<any>[
 			{ id: 'id1', name: 'name1' },
 			{ id: 'id2', name: 'name2' },
 			{ id: 'id3', name: 'name3' }
 		], state);
 
-		state.modal.id = 'id2';
+		state.modal = {...state.modal, id: 'id2'};
 		state.selectedCase = { ...caseMock, id: 'id2' };
 
 		let newCase: ICase = {

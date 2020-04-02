@@ -30,7 +30,7 @@ describe('TreeViewComponent', () => {
 				}),
 				TreeviewModule.forRoot()],
 			providers: [
-				{ provide: USE_DEFAULT_LANG },
+				{ provide: USE_DEFAULT_LANG, useValue: undefined },
 				{
 					provide: MissingTranslationHandler, useValue: {
 						handle: () => ''

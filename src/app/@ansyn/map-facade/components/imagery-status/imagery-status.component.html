@@ -35,6 +35,13 @@
 		   [class.icon-layers-hide]="hideLayers"></i>
 	</button>
 
+	<button class="small-icon-button perspective"
+			(click)="toggleImageryPerspective()"
+			[attr.tooltip-value]="orientation | translate"
+			tooltip-class="bottom right">
+		<i class="icon-status-bar-orientation small" [class.active]="perspective"></i>
+	</button>
+
 	<ng-container
 		*ngFor="let component of entryComponents.status">
 		<ng-container

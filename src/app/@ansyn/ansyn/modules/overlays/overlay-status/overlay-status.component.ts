@@ -23,7 +23,7 @@ import {
 	selectTranslationData
 } from './reducers/overlay-status.reducer';
 import { AnnotationMode } from '@ansyn/ol';
-import { CaseOrientation, ITranslationData } from '../../menu-items/cases/models/case.model';
+import { ITranslationData } from '../../menu-items/cases/models/case.model';
 import { Actions, ofType } from '@ngrx/effects';
 import {
 	SetAnnotationMode,
@@ -32,7 +32,6 @@ import {
 	SetAutoImageProcessing
 } from '../../menu-items/tools/actions/tools.actions';
 import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-manager/reducers/layers.reducer';
-import { SetImageOpeningOrientation } from "../../status-bar/actions/status-bar.actions";
 
 @Component({
 	selector: 'ansyn-overlay-status',
@@ -47,8 +46,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	@Input() mapId: string;
 	isAutoProcessing: boolean;
 	isManualProcessing: boolean;
-	perspective: boolean;
-	orientation: CaseOrientation
 	moreButtons: boolean;
 	overlay: IOverlay;
 	isActiveMap: boolean;
@@ -136,8 +133,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	constructor(public store$: Store<any>, protected actions$: Actions, protected element: ElementRef) {
 		this.isPreset = true;
 		this.isFavorite = true;
-		this.orientation = 'Imagery Perspective';
-		this.store$.dispatch(new SetImageOpeningOrientation({ orientation: this.orientation }));
 	}
 
 	@AutoSubscription
@@ -287,11 +282,5 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 
 	toggleMoreButtons() {
 		this.moreButtons = !this.moreButtons;
-	}
-
-	toggleImageryPerspective() {
-		this.perspective = !this.perspective;
-		this.orientation = this.perspective ? 'User Perspective' : 'Imagery Perspective';
-		this.store$.dispatch(new SetImageOpeningOrientation({ orientation: this.orientation }));
 	}
 }

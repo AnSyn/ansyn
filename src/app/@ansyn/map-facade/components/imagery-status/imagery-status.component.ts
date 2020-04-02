@@ -11,6 +11,8 @@ import { selectActiveMapId, selectHideLayersOnMap, selectMapsTotal } from '../..
 import { copyFromContent } from '../../utils/clipboard';
 import { getTimeFormat } from '../../utils/time';
 import { TranslateService } from '@ngx-translate/core';
+import { SetImageOpeningOrientation } from "../../../ansyn/modules/status-bar/actions/status-bar.actions";
+import { CaseOrientation } from "../../../ansyn/modules/menu-items/cases/models/case.model";
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -25,6 +27,8 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	isMapLayersVisible = true;
 	mapsAmount = 1;
 	_map: IMapSettings;
+	perspective: boolean;
+	orientation: CaseOrientation;
 	baseMapDescription = 'Base Map';
 	formattedOverlayTime: string = null;
 	@HostBinding('class.active') isActiveMap: boolean;
@@ -139,5 +143,11 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	toggleMapLayers() {
 		this.isMapLayersVisible = !this.isMapLayersVisible;
 		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId, isVisible: this.isMapLayersVisible }));
+	}
+
+	toggleImageryPerspective() {
+		this.perspective = !this.perspective;
+		this.orientation = this.perspective ? 'User Perspective' : 'Imagery Perspective';
+		this.store$.dispatch(new SetImageOpeningOrientation({ orientation: this.orientation }));
 	}
 }

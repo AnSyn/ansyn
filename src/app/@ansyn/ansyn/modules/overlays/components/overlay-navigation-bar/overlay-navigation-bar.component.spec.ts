@@ -1,14 +1,14 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { NavigationBarComponent } from './navigation-bar.component';
-import { StatusBarConfig } from '../../models/statusBar.config';
+import { OverlayNavigationBarComponent } from './overlay-navigation-bar.component';
+import { StatusBarConfig } from '../../../status-bar/models/statusBar.config';
 import { Store, StoreModule } from '@ngrx/store';
 import {
 	IStatusBarState,
 	selectComboBoxesProperties,
 	statusBarFeatureKey,
 	StatusBarReducer
-} from '../../reducers/status-bar.reducer';
-import { ExpandAction, GoAdjacentOverlay } from '../../actions/status-bar.actions';
+} from '../../../status-bar/reducers/status-bar.reducer';
+import { ExpandAction, GoAdjacentOverlay } from '../../../status-bar/actions/status-bar.actions';
 import { TranslateModule } from '@ngx-translate/core';
 import {
 	mapFeatureKey,
@@ -21,17 +21,17 @@ import {
 import {
 	overlayStatusFeatureKey, OverlayStatusReducer,
 	selectPresetOverlays
-} from '../../../overlays/overlay-status/reducers/overlay-status.reducer';
+} from '../../overlay-status/reducers/overlay-status.reducer';
 import { of } from 'rxjs';
 
-describe('NavigationBarComponent', () => {
-	let component: NavigationBarComponent;
-	let fixture: ComponentFixture<NavigationBarComponent>;
+describe('OverlyaNavigationBarComponent', () => {
+	let component: OverlayNavigationBarComponent;
+	let fixture: ComponentFixture<OverlayNavigationBarComponent>;
 	let store: Store<any>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [NavigationBarComponent],
+			declarations: [OverlayNavigationBarComponent],
 			imports: [StoreModule.forRoot({
 				[mapFeatureKey]: MapReducer,
 				[statusBarFeatureKey]: StatusBarReducer,
@@ -48,7 +48,7 @@ describe('NavigationBarComponent', () => {
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(NavigationBarComponent);
+		fixture = TestBed.createComponent(OverlayNavigationBarComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

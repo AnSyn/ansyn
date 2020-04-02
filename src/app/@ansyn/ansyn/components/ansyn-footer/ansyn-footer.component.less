@@ -11,7 +11,12 @@ div.status-timeline-container {
 
 	.app-timeline-container {
 		height: @timeline-area-height;
-		background-color: white;
+
+		ansyn-overlay-navigation-bar {
+			position: absolute;
+			top: 12.5px;
+			left: calc(~'50% - 50px');
+		}
 	}
 
 	button.hide-menu {

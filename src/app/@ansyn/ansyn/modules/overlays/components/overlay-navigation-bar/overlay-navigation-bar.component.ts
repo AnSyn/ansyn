@@ -1,23 +1,23 @@
 import { Component, HostListener, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { IStatusBarState } from '../../reducers/status-bar.reducer';
-import { ExpandAction } from '../../actions/status-bar.actions';
-import { IStatusBarConfig, IToolTipsConfig } from '../../models/statusBar-config.model';
-import { StatusBarConfig } from '../../models/statusBar.config';
-import { GoAdjacentOverlay, GoNextPresetOverlay } from '../../actions/status-bar.actions';
+import { IStatusBarState } from '../../../status-bar/reducers/status-bar.reducer';
+import { ExpandAction } from '../../../status-bar/actions/status-bar.actions';
+import { IStatusBarConfig, IToolTipsConfig } from '../../../status-bar/models/statusBar-config.model';
+import { StatusBarConfig } from '../../../status-bar/models/statusBar.config';
+import { GoAdjacentOverlay, GoNextPresetOverlay } from '../../../status-bar/actions/status-bar.actions';
 import { EnableCopyOriginalOverlayDataAction, selectOverlayOfActiveMap } from '@ansyn/map-facade';
-import { ActivateScannedAreaAction } from '../../../overlays/overlay-status/actions/overlay-status.actions';
+import { ActivateScannedAreaAction } from '../../overlay-status/actions/overlay-status.actions';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
-import { selectPresetOverlays } from '../../../overlays/overlay-status/reducers/overlay-status.reducer';
+import { selectPresetOverlays } from '../../overlay-status/reducers/overlay-status.reducer';
 
 @Component({
-	selector: 'ansyn-navigation-bar',
-	templateUrl: './navigation-bar.component.html',
-	styleUrls: ['./navigation-bar.component.less']
+	selector: 'ansyn-overlay-navigation-bar',
+	templateUrl: './overlay-navigation-bar.component.html',
+	styleUrls: ['./overlay-navigation-bar.component.less']
 })
 @AutoSubscriptions()
-export class NavigationBarComponent implements OnInit, OnDestroy{
+export class OverlayNavigationBarComponent implements OnInit, OnDestroy{
 	goPrevActive = false;
 	goNextActive = false;
 	goNextQuickLoop = false;
@@ -63,6 +63,7 @@ export class NavigationBarComponent implements OnInit, OnDestroy{
 
 	@HostListener('window:keydown', ['$event'])
 	onkeydown($event: KeyboardEvent) {
+		console.log($event);
 		if ((<Window>$event.currentTarget).document.activeElement instanceof HTMLInputElement) {
 			return;
 		}

@@ -3,7 +3,6 @@
 
 :host {
 	display: flex;
-	flex: 1;
 	align-items: center;
 	margin: 5px;
 
@@ -14,41 +13,19 @@
 		padding-right: 5px;
 		width: fit-content;
 
-		.box {
-			margin: 0 1px;
+		margin: 0 1px;
 
-			/deep/ [class*="search-panel-button"] {
-				padding: 5px 11px 5px 0px;
-				background: @status-bar-panels;
+		/deep/ [class*="button"] {
+			padding: 5px 11px 5px 0;
+			background: @status-bar-panels;
 
 				&.active {
 					background-color: @status-bar-active;
 				}
 
-				&:hover:not(.active) {
-					background: @status-bar-hover;
-				}
-
-				i.small { // until we get new small icons
-					font-size: 1em;
-
-				}
+			&:hover:not(.active) {
+				background: @status-bar-hover;
 			}
-
-			/deep/ button.search-panel-button-left {
-				padding: 9px 11px 8px 0px;
-				border-top-left-radius: @status-bar-panel-radius;
-				border-bottom-left-radius: @status-bar-panel-radius;
-			}
-
-			/deep/ button.search-panel-button-right {
-				padding: 9px 11px 8px 0px;
-				border-top-right-radius: @status-bar-panel-radius;
-				border-bottom-right-radius: @status-bar-panel-radius;
-			}
-		}
-		&.rtl {
-			flex-direction: row-reverse;
 		}
 	}
 }

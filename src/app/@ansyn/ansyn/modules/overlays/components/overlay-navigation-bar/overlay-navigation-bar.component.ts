@@ -35,9 +35,9 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy{
 		tap( presetOverlays => this.hasPresetOverlays = presetOverlays.length > 0)
 	);
 
-	private _nextPresetOverlayKeys = 'qQ/'.split('').map(char => char.charCodeAt(0));
-	private _scannedAreaKey = '`~;'.split('').map(char => char.charCodeAt(0));
-	private _overlayHack = 'Eeק'.split('').map(char => char.charCodeAt(0));
+	private _nextPresetOverlayKeys = 'qQ/'.split('');
+	private _scannedAreaKey = '`~;'.split('');
+	private _overlayHack = 'Eeק'.split('');
 
 	@HostListener('window:keyup', ['$event'])
 	onkeyup($event: KeyboardEvent) {
@@ -45,18 +45,18 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy{
 			return;
 		}
 
-		if ($event.which === 39) { // ArrowRight
+		if (this.isArrowRight($event)) { // ArrowRight
 			this.clickGoAdjacent(true);
 			this.goNextActive = false;
-		} else if ($event.which === 37) { // ArrowLeft
+		} else if (this.isArrowLeft($event)) { // ArrowLeft
 			this.clickGoAdjacent(false);
 			this.goPrevActive = false;
-		} else if (this._nextPresetOverlayKeys.indexOf($event.which) !== -1) {
+		} else if (this._nextPresetOverlayKeys.indexOf($event.key) !== -1) {
 			this.clickGoNextPresetOverlay();
 			this.goNextQuickLoop = false;
 		}
 
-		if (this._overlayHack.indexOf($event.which) !== -1) {
+		if (this._overlayHack.indexOf($event.key) !== -1) {
 			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(false));
 		}
 	}
@@ -68,15 +68,15 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy{
 			return;
 		}
 
-		if ($event.which === 39) { // ArrowRight
+		if (this.isArrowRight($event)) { // ArrowRight
 			this.goNextActive = true;
-		} else if ($event.which === 37) { // ArrowLeft
+		} else if (this.isArrowLeft($event)) { // ArrowLeft
 			this.goPrevActive = true;
-		} else if (this._nextPresetOverlayKeys.indexOf($event.which) !== -1) {
+		} else if (this._nextPresetOverlayKeys.indexOf($event.key) !== -1) {
 			this.goNextQuickLoop = true;
 		}
 
-		if (this._overlayHack.indexOf($event.which) !== -1) {
+		if (this._overlayHack.indexOf($event.key) !== -1) {
 			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(true));
 		}
 	}
@@ -87,13 +87,21 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy{
 			return;
 		}
 
-		if (this._scannedAreaKey.indexOf($event.which) !== -1) {
+		if (this._scannedAreaKey.indexOf($event.key) !== -1) {
 			this.clickScannedArea();
 		}
 	}
 
 	constructor(protected store: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
+	}
+
+	private isArrowRight(event) {
+		return event.key === 'ArrowRight';
+	}
+
+	private isArrowLeft(event) {
+		return event.key === 'ArrowLeft';
 	}
 
 	clickGoAdjacent(isNext): void {

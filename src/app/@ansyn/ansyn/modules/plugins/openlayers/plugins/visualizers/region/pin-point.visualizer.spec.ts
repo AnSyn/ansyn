@@ -1,6 +1,6 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
+import { Actions } from '@ngrx/effects';
 import { PinPointVisualizer } from './pin-point.visualizer';
 import { OpenLayersProjectionService } from '@ansyn/ol';
 
@@ -10,8 +10,12 @@ describe('PinPointVisualizer', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			providers: [PinPointVisualizer, { provide: OpenLayersProjectionService, useValue: {} }],
-			imports: [StoreModule.forRoot({}), EffectsModule.forRoot([])]
+			providers: [
+				PinPointVisualizer,
+				{ provide: OpenLayersProjectionService, useValue: {} },
+				Actions
+			],
+			imports: [StoreModule.forRoot({})]
 		});
 	});
 

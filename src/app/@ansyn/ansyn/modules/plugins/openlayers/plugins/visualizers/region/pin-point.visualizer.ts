@@ -10,12 +10,14 @@ import { Position } from 'geojson';
 import { OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
 import { RegionVisualizer } from './region.visualizer';
 import { CaseGeoFilter, CaseRegionState } from '../../../../../menu-items/cases/models/case.model';
+import { Injectable } from '@angular/core';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store, Actions, OpenLayersProjectionService],
 	dontRestrictToExtent: true
 })
+@Injectable()
 export class PinPointVisualizer extends RegionVisualizer {
 	_iconSrc: Style = new Style({
 		image: new Icon({

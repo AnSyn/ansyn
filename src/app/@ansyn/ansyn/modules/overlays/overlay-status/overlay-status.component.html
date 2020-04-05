@@ -21,7 +21,7 @@
 		[attr.tooltip-value]="'Manual Image Enhancement' | translate"
 		(click)="toggleManualImageProcessing()"
 		[class.mode-on]="isImageControlActive && !onAutoImageProcessing"
-		[class.active]="!onAutoImageProcessing"
+		[class.active]="onAutoImageProcessing"
 		[disabled]="onAutoImageProcessing">
 	<i class="icon-tools-image-processing" [class.active]="isManualProcessing"></i>
 </button>

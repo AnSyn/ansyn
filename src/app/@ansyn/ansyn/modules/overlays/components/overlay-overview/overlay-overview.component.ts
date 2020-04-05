@@ -14,6 +14,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { takeWhile, tap } from 'rxjs/operators';
 import { Actions, ofType } from '@ngrx/effects';
 import { IOverlay } from '../../models/overlay.model';
+import { ResultsTableComponent } from "../../../menu-items/results/components/results-table/results-table.component";
 
 export interface IOverviewOverlay extends IOverlay {
 	thumbnailName: string;
@@ -51,7 +52,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	protected topElement = this.el.nativeElement.parentElement;
 
 	get dropElement(): Element {
-		return this.topElement.querySelector(`#dropId-${ this.overlayId }`);
+		return this.topElement.querySelector(`#dropId-${this.overlayId}`);
 	}
 
 	public get const() {
@@ -81,7 +82,8 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	constructor(
 		public store$: Store<IOverlaysState>,
 		public actions$: Actions,
-		protected el: ElementRef) {
+		protected el: ElementRef,
+		protected resultsTable: ResultsTableComponent) {
 	}
 
 	ngOnInit() {
@@ -99,8 +101,10 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 				return;
 			}
 			const hoveredElementBounds: ClientRect = hoveredElement.getBoundingClientRect();
-			this.left = this.getLeftPosition(hoveredElementBounds.left);
-			this.top = hoveredElementBounds.top;
+			this.left = this.resultsTable.left ? this.resultsTable.left : this.getLeftPosition(hoveredElementBounds.left);
+			this.top = this.resultsTable.top ? this.resultsTable.top : hoveredElementBounds.top;
+			this.top = 320;
+			this.left = 530;
 			this.showOverview();
 			this.sensorName = overlay.sensorName;
 			this.sensorType = overlay.sensorType;

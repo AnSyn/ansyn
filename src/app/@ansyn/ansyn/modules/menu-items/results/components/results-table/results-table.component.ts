@@ -17,6 +17,8 @@ import { DisplayOverlayFromStoreAction, SetMarkUp } from "../../../../overlays/a
 })
 export class ResultsTableComponent implements OnInit {
 
+	left: number;
+	top: number;
 	overlays = [];
 	selectedOverlayId: string;
 	tableHeaders = [
@@ -54,7 +56,9 @@ export class ResultsTableComponent implements OnInit {
 
 	}
 
-	onMouseOver(id: string) {
+	onMouseOver($event, id: string) {
+		this.top = $event.screenY;
+		this.left = $event.screenX;
 		this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [id] } }));
 	}
 

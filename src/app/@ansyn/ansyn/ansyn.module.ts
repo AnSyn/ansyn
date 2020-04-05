@@ -39,9 +39,11 @@ import { ImageryDimensionModeComponent } from './modules/plugins/components/imag
 import { TasksService } from './modules/menu-items/algorithms/services/tasks.service';
 import { ImageryVideoModule } from '@ansyn/imagery-video';
 import { ImageryChangeMapComponent } from './modules/plugins/components/imagery-change-map/imagery-change-map.component';
+import { ResultsModule } from "./modules/menu-items/results/results.module";
 
 @NgModule({
 	imports: [
+		ResultsModule,
 		CommonModule,
 		AnsynTranslationModule.addLoader([DefaultTranslateLoader, ComponentTranslateLoader]),
 		AppProvidersModule,

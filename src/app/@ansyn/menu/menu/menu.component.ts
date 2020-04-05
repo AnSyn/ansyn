@@ -86,12 +86,12 @@ export class MenuComponent implements OnInit, OnDestroy {
 
 	topMenuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(
 		select(selectAllMenuItems),
-		map( menuItems => menuItems.filter((menuItem: IMenuItem) => !menuItem.dockedToBottom))
+		map(menuItems => menuItems.filter((menuItem: IMenuItem) => !menuItem.dockedToBottom))
 	);
 
 	bottomMenuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(
 		select(selectAllMenuItems),
-		map( menuItems => menuItems.filter((menuItem: IMenuItem) => menuItem.dockedToBottom))
+		map(menuItems => menuItems.filter((menuItem: IMenuItem) => menuItem.dockedToBottom))
 	);
 
 	@AutoSubscription
@@ -107,7 +107,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 		);
 
 	@AutoSubscription
-	selectIsPinned$ =  this.store.select(selectIsPinned).pipe(
+	selectIsPinned$ = this.store.select(selectIsPinned).pipe(
 		distinctUntilChanged(),
 		tap((isPinned) => {
 			this.isPinned = isPinned;
@@ -242,16 +242,14 @@ export class MenuComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	toggleItem(key: string, skipSession: boolean = false, loader: boolean = false): void {
-		if (!loader) {
-			if (this.onAnimation) {
-				return;
-			}
-			if (this.selectedMenuItemName === key) {
-				this.closeMenu();
-			} else {
-				this.openMenu(key, skipSession);
-			}
+	toggleItem(key: string, skipSession: boolean = false): void {
+		if (this.onAnimation) {
+			return;
+		}
+		if (this.selectedMenuItemName === key) {
+			this.closeMenu();
+		} else {
+			this.openMenu(key, skipSession);
 		}
 	}
 
@@ -260,7 +258,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	openMenu(key: string, skipSession: boolean) {
-		this.store.dispatch(new SelectMenuItemAction({ menuKey: key, skipSession}));
+		this.store.dispatch(new SelectMenuItemAction({ menuKey: key, skipSession }));
 	}
 
 	closeMenu(): void {

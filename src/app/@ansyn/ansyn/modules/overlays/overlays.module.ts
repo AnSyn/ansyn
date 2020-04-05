@@ -19,6 +19,7 @@ import {
 } from './models/overlays-source-providers';
 import { OverlayStatusModule } from './overlay-status/overlay-status.module';
 import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer';
+import { ResultsTableComponent } from "../menu-items/results/components/results-table/results-table.component";
 
 @NgModule({
 	imports: [
@@ -42,7 +43,7 @@ import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer'
 		OverlayTimelineStatusComponent,
 		OverlayOverviewComponent,
 		OverlaysLoaderComponent,
-		OverlaySourceTypeNoticeComponent
+		OverlaySourceTypeNoticeComponent,
 	],
 	entryComponents: [OverlaySourceTypeNoticeComponent],
 	exports: [
@@ -52,7 +53,8 @@ import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer'
 	],
 	providers: [
 		createOverlaysSourceProviders([]),
-		BaseOverlaySourceFactoryProvider
+		BaseOverlaySourceFactoryProvider,
+		ResultsTableComponent
 	]
 
 })

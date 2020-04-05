@@ -16,9 +16,6 @@ import { StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from './reducers/cases.reducer';
 import { CasesAutoSaveComponent } from './components/cases-auto-save/cases-auto-save.component';
 import { CoreModule } from '../../core/core.module';
-import { ResultsTableComponent } from './components/results-table/results-table.component';
-import { ResultsTableHeaderComponent } from './components/results-table-header/results-table-header.component';
-import { ResultsComponent } from './components/results/results.component';
 import { OverlaysModule } from "../../overlays/overlays.module";
 
 // @dynamic
@@ -31,7 +28,7 @@ import { OverlaysModule } from "../../overlays/overlays.module";
 		EffectsModule.forFeature([CasesEffects]),
 		OverlaysModule
 	],
-	declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent, CasesAutoSaveComponent, ResultsTableComponent, ResultsTableHeaderComponent, ResultsComponent],
+	declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent, CasesAutoSaveComponent],
 	entryComponents: [CasesComponent, EditCaseComponent, SaveCaseComponent, DeleteCaseComponent],
 	providers: [CasesService]
 })

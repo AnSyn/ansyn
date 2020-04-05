@@ -1,6 +1,4 @@
-<div class="search-panel" [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''">
-
-	<div class="search-title">{{'Search' | translate}}:</div>
+<div class="search-panel">
 	<!-- Time -->
 	<div class="box">
 		<button ansynComboBoxTrigger
@@ -11,7 +9,7 @@
 				[withArrow]="false"
 				icon="icon icon-status-bar-time"
 				tooltip-class="top"
-				class="search-panel-button">
+				class="button">
 			<span class="title">{{timeSelectionTitle}}</span>
 		</button>
 
@@ -35,7 +33,7 @@
 				[withArrow]="false"
 				icon="icon icon-status-bar-geo small"
 				tooltip-class="top"
-				class="search-panel-button">
+				class="button">
 			<span class="title">{{geoFilterTitle}}</span>
 		</button>
 
@@ -55,7 +53,7 @@
 				[withArrow]="false"
 				[attr.tooltip-value]="statusBarConfig?.toolTips?.dataInputFilter | translate"
 				tooltip-class="top"
-				class="search-panel-button">
+				class="button">
 			<span class="title">{{'Data Inputs' | translate}} - {{ dataInputFilterTitle | translate }}</span>
 		</button>
 

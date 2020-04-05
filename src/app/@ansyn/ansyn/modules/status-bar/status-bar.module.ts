@@ -8,7 +8,6 @@ import { statusBarFeatureKey, StatusBarReducer } from './reducers/status-bar.red
 import { comboBoxesOptions, GEO_FILTERS, TIME_FILTERS } from './models/combo-boxes.model';
 import { TreeviewModule } from 'ngx-treeview';
 import { TreeViewComponent } from './components/tree-view/tree-view.component';
-import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { ClickOutsideModule } from '../core/click-outside/click-outside.module';
 import { OwlDateTimeIntl, OwlDateTimeModule, OwlNativeDateTimeModule } from '@ansyn/ng-pick-datetime';
@@ -31,7 +30,7 @@ import { LocationPickerComponent } from './components/location-picker/location-p
 		OwlDateTimeModule,
 		OwlNativeDateTimeModule
 	],
-	declarations: [StatusBarComponent, TreeViewComponent, NavigationBarComponent, SearchPanelComponent, DisplayPanelComponent, CasePanelComponent, TimePickerComponent, LocationPickerComponent],
+	declarations: [StatusBarComponent, TreeViewComponent, SearchPanelComponent, DisplayPanelComponent, CasePanelComponent, TimePickerComponent, LocationPickerComponent],
 	providers: [
 		{
 			provide: TIME_FILTERS,

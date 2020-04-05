@@ -8,6 +8,7 @@ import { IOverlay } from '../../../../../overlays/models/overlay.model';
 import { AnaglyphSensorService } from '../service/anaglyph-sensor.service';
 import { AddAlertMsg, RemoveAlertMsg } from '../../../../../overlays/overlay-status/actions/overlay-status.actions';
 import { selectAlertMsg } from '../../../../../overlays/overlay-status/reducers/overlay-status.reducer';
+import { Injectable } from '@angular/core';
 
 export const anaglyphSensorAlertKey = 'anaglyphSensor';
 
@@ -15,6 +16,7 @@ export const anaglyphSensorAlertKey = 'anaglyphSensor';
 	supported: [OpenLayersMap, OpenLayersDisabledMap],
 	deps: [Store, AnaglyphSensorService]
 })
+@Injectable()
 export class AnaglyphSensorPlugin extends BaseImageryPlugin {
 	anglyphMsg: boolean;
 	overlay: IOverlay = null;

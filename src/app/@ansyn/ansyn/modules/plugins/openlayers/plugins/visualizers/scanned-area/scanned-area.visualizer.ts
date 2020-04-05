@@ -10,12 +10,14 @@ import { IOverlaysScannedAreaData } from '../../../../../menu-items/cases/models
 import { selectScannedAreaData } from '../../../../../overlays/overlay-status/reducers/overlay-status.reducer';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
 import { feature } from '@turf/turf';
+import { Injectable } from '@angular/core';
 
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store, Actions, OpenLayersProjectionService]
 })
+@Injectable()
 export class ScannedAreaVisualizer extends EntitiesVisualizer {
 
 	@AutoSubscription

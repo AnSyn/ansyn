@@ -12,11 +12,13 @@ import { DisplayOverlayFromStoreAction } from '../../../overlays/actions/overlay
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { OpenLayersMap, OpenlayersMapName, OpenLayersProjectionService } from '@ansyn/ol';
 import { CesiumMap, CesiumMapName, CesiumProjectionService } from '@ansyn/imagery-cesium';
+import { Injectable } from '@angular/core';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, CesiumMap],
 	deps: [Store, Actions, OpenLayersProjectionService, CesiumProjectionService]
 })
+@Injectable()
 export class ContextMenuPlugin extends BaseImageryPlugin {
 	isActiveOperators: UnaryFunction<any, any> = pipe(
 		withLatestFrom(this.store$.select(selectActiveMapId).pipe(map((activeMapId: string) => activeMapId === this.mapId))),

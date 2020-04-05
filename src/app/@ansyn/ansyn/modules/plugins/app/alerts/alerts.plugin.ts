@@ -17,11 +17,13 @@ import { isFullOverlay } from '../../../core/utils/overlays';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { CesiumMap } from '@ansyn/imagery-cesium';
 import { selectAlertMsg } from '../../../overlays/overlay-status/reducers/overlay-status.reducer';
+import { Injectable } from '@angular/core';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap, CesiumMap],
 	deps: [Store]
 })
+@Injectable()
 export class AlertsPlugin extends BaseImageryPlugin {
 	notInQueryMsg: boolean;
 	outOfBound: boolean;

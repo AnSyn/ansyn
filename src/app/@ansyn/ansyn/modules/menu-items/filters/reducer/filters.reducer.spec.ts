@@ -19,18 +19,18 @@ describe('FiltersReducer', () => {
 		const metadata3: FilterMetadata = new EnumFilterMetadata();
 		metadata3.initializeFilter([], 'filter3', <any>{ metadata: ['metadata3'] });
 
-		const initialState = new Map<IFilter, FilterMetadata>();
-		initialState.set(filter1, metadata1);
-		initialState.set(filter2, metadata2);
+		const filters = new Map<IFilter, FilterMetadata>();
+		filters.set(filter1, metadata1);
+		filters.set(filter2, metadata2);
 
-		reducer.initialFiltersState.filters = initialState;
+		const state = { ...reducer.initialFiltersState, filters: filters };
 
 		let action: actions.UpdateFilterAction = new actions.UpdateFilterAction({
 			filter: filter2,
 			newMetadata: metadata3
 		});
 
-		let result: reducer.IFiltersState = reducer.FiltersReducer(reducer.initialFiltersState, action);
+		let result: reducer.IFiltersState = reducer.FiltersReducer(state, action);
 
 		expect(result.filters.get(filter1)).toEqual(metadata1);
 		expect(result.filters.get(filter2)).toEqual(metadata3);

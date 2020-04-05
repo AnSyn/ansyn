@@ -1,4 +1,4 @@
-import { Inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
 	ImageryVisualizer,
 	IVisualizerEntity,
@@ -55,6 +55,7 @@ export interface IEditAnnotationMode {
 	deps: [OpenLayersProjectionService, OL_PLUGINS_CONFIG, TranslateService],
 	isHideable: true
 })
+@Injectable()
 export class AnnotationsVisualizer extends EntitiesVisualizer {
 	static fillAlpha = 0.4;
 	disableCache = true;

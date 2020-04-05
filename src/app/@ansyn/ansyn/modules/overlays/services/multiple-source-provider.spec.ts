@@ -129,6 +129,7 @@ const whitelist = [
 const loggerServiceMock = { error: (some) => null };
 
 describe('MultipleSourceProvider', () => {
+	let multipleSourceProvider: MultipleOverlaysSourceProvider;
 
 	describe('MultipleSourceProvider with one truthy provider', () => {
 
@@ -158,19 +159,19 @@ describe('MultipleSourceProvider', () => {
 		});
 
 		beforeEach(inject([MultipleOverlaysSourceProvider], _multipleSourceProvider => {
-			this.multipleSourceProvider = _multipleSourceProvider;
+			multipleSourceProvider = _multipleSourceProvider;
 		}));
 
 		it('should return the correct overlays', () => {
 			const expectedResults = cold('(b|)', { b: overlays });
 
-			expect(this.multipleSourceProvider.fetch(fetchParams)).toBeObservable(expectedResults);
+			expect(multipleSourceProvider.fetch(fetchParams)).toBeObservable(expectedResults);
 		});
 
 		it('should return an empty array if there are no overlays', () => {
 			const expectedResults = cold('(b|)', { b: emptyOverlays });
 
-			expect(this.multipleSourceProvider.fetch(fetchParamsWithLimitZero)).toBeObservable(expectedResults);
+			expect(multipleSourceProvider.fetch(fetchParamsWithLimitZero)).toBeObservable(expectedResults);
 		});
 
 	});
@@ -203,13 +204,13 @@ describe('MultipleSourceProvider', () => {
 		});
 
 		beforeEach(inject([MultipleOverlaysSourceProvider], _multipleSourceProvider => {
-			this.multipleSourceProvider = _multipleSourceProvider;
+			multipleSourceProvider = _multipleSourceProvider;
 		}));
 
 		it('should return an error', () => {
 			const expectedResults = cold('(b|)', { b: { errors: [faultyError], data: null, limited: -1 } });
 
-			expect(this.multipleSourceProvider.fetch(fetchParams)).toBeObservable(expectedResults);
+			expect(multipleSourceProvider.fetch(fetchParams)).toBeObservable(expectedResults);
 		});
 
 	});
@@ -249,19 +250,19 @@ describe('MultipleSourceProvider', () => {
 		});
 
 		beforeEach(inject([MultipleOverlaysSourceProvider], _multipleSourceProvider => {
-			this.multipleSourceProvider = _multipleSourceProvider;
+			multipleSourceProvider = _multipleSourceProvider;
 		}));
 
 		it('should return the expected overlays with one error', () => {
 			const expectedResults = cold('(b|)', { b: { ...overlays, errors: [faultyError] } });
 
-			expect(this.multipleSourceProvider.fetch(fetchParams)).toBeObservable(expectedResults);
+			expect(multipleSourceProvider.fetch(fetchParams)).toBeObservable(expectedResults);
 		});
 
 		it('should return an empty overlays array with one error', () => {
 			const expectedResults = cold('(b|)', { b: { ...emptyOverlays, errors: [faultyError] } });
 
-			expect(this.multipleSourceProvider.fetch(fetchParamsWithLimitZero)).toBeObservable(expectedResults);
+			expect(multipleSourceProvider.fetch(fetchParamsWithLimitZero)).toBeObservable(expectedResults);
 		});
 
 	});

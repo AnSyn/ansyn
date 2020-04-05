@@ -109,16 +109,13 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	@AutoSubscription
 	calcNorthAfterDisplayOverlaySuccess$ = this.actions$.pipe(
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
-		filter((action: DisplayOverlaySuccessAction) => {
-			return action.payload.mapId === this.mapId
-		}),
-		withLatestFrom(this.store$.select(mapStateSelector), ({ payload }, { orientation }: IMapState) => {
-			// console.log("payload", payload);
+		filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.mapId),
+		withLatestFrom(this.store$.select(mapStateSelector), ({ payload }: DisplayOverlaySuccessAction, { orientation }: IMapState) => {
+			const orientationData = payload.orientation ? payload.orientation : orientation;
 
-			return [payload.forceFirstDisplay, payload.orientation, payload.overlay, payload.customOriantation];
+			return [payload.forceFirstDisplay, orientationData , payload.overlay, payload.customOriantation];
 		}),
 		filter(([forceFirstDisplay, orientation, overlay, customOriantation]: [boolean, MapOrientation, IOverlay, string]) => {
-			// console.log(orientation);
 			return comboBoxesOptions.orientations.includes(orientation);
 		}),
 		switchMap(([forceFirstDisplay, orientation, overlay, customOriantation]: [boolean, MapOrientation, IOverlay, string]) => {

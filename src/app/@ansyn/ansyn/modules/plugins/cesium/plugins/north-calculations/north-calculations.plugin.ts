@@ -3,7 +3,13 @@ import { Actions, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
 import { IStatusBarState, statusBarStateSelector } from '../../../../status-bar/reducers/status-bar.reducer';
-import { MapActionTypes, PointToRealNorthAction, selectActiveMapId } from '@ansyn/map-facade';
+import {
+	IMapState,
+	MapActionTypes,
+	mapStateSelector,
+	PointToRealNorthAction,
+	selectActiveMapId
+} from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { comboBoxesOptions } from '../../../../status-bar/models/combo-boxes.model';
@@ -56,8 +62,9 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	calcNorthAfterDisplayOverlaySuccess$ = this.actions$.pipe(
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
 		filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.mapId),
-		withLatestFrom(this.store$.select(statusBarStateSelector), ({ payload }: DisplayOverlaySuccessAction, { comboBoxesProperties }: IStatusBarState) => {
-			return [payload.forceFirstDisplay, comboBoxesProperties.orientation, payload.overlay];
+		withLatestFrom(this.store$.select(mapStateSelector), ({ payload }: DisplayOverlaySuccessAction, { orientation }: IMapState) => {
+			const orientationData = payload.orientation ? payload.orientation : orientation;
+			return [payload.forceFirstDisplay, orientationData, payload.overlay];
 		}),
 		filter(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
 			return comboBoxesOptions.orientations.includes(orientation);

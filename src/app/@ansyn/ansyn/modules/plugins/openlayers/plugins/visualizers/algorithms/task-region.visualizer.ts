@@ -24,11 +24,13 @@ import {
 } from '../../../../../menu-items/algorithms/reducers/tasks.reducer';
 import { SetCurrentTaskRegion, SetTaskDrawIndicator } from '../../../../../menu-items/algorithms/actions/tasks.actions';
 import { TasksService } from '../../../../../menu-items/algorithms/services/tasks.service';
+import { Injectable } from '@angular/core';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store, Actions, OpenLayersProjectionService, TasksService]
 })
+@Injectable()
 export class TaskRegionVisualizer extends EntitiesVisualizer {
 	iconStyle: Style = new Style({
 		image: new Icon({

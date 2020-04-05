@@ -63,7 +63,6 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy{
 
 	@HostListener('window:keydown', ['$event'])
 	onkeydown($event: KeyboardEvent) {
-		console.log($event);
 		if ((<Window>$event.currentTarget).document.activeElement instanceof HTMLInputElement) {
 			return;
 		}

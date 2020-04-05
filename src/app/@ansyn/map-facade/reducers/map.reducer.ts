@@ -1,4 +1,4 @@
-import { ImageryMapPosition, IMapSettings } from '@ansyn/imagery';
+import { ImageryMapPosition, IMapSettings, MapOrientation } from '@ansyn/imagery';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { range } from 'lodash';
@@ -26,6 +26,7 @@ export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId,
 					}
 				},
 				worldView: { ...activeMap.worldView },
+				orientation: 'Imagery Perspective',
 				flags: {
 					hideLayers: false
 				}
@@ -54,6 +55,7 @@ export interface IMapState extends EntityState<IMapSettings> {
 	layout: LayoutKey;
 	wasWelcomeNotificationShown: boolean;
 	toastMessage: IToastMessage;
+	orientation: MapOrientation;
 	footerCollapse: boolean;
 	minimalistViewMode: boolean;
 	isExportingMaps: boolean;
@@ -69,6 +71,7 @@ export const initialMapState: IMapState = mapsAdapter.getInitialState({
 	layout: <LayoutKey>'layout1',
 	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
 	toastMessage: null,
+	orientation: null,
 	footerCollapse: false,
 	minimalistViewMode: false,
 	isExportingMaps: false
@@ -105,6 +108,10 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 				isLoadingMaps.delete(mapId);
 			}
 			return { ...state, isLoadingMaps };
+		}
+
+		case MapActionTypes.SET_MAP_ORIENTATION: {
+			return { ...state, orientation: action.payload  };
 		}
 
 		case MapActionTypes.VIEW.SET_IS_VISIBLE: {

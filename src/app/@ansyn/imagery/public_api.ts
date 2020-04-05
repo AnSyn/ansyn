@@ -1,6 +1,6 @@
+export { MapOrientation } from "./model/map-settings";
 export { IMapSource } from './model/map-providers-config';
 export { IStroke, IIcon } from './model/visualizers/visualizer-style';
-
 export { ICanvasExportData } from './model/base-imagery-map';
 export {
 	ImageryMapExtent, ImageryMapExtentPolygon, ImageryMapProjectedState, ImageryMapPosition, IMousePointerMove

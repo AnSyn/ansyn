@@ -382,6 +382,8 @@ export class MapAppEffects {
 					const position: ImageryMapPosition = { extentPolygon: polygonFromBBOX(bboxFromGeoJson(overlay.footprint)) };
 					actionsArray.push(new PositionChangedAction({ id: mapId, position, mapInstance: caseMapState }));
 				}
+
+				payload.orientation = mapState.orientation;
 				actionsArray.push(new DisplayOverlaySuccessAction(payload));
 				return actionsArray;
 			})

@@ -326,7 +326,8 @@ describe('MapAppEffects', () => {
 				}
 			});
 
-			spyOn(extentFromGeojson, 'bboxFromGeoJson').and.returnValue(<any>fakeExtent);
+			spyOnProperty(extentFromGeojson, 'bboxFromGeoJson', 'get').and.returnValue(<any>fakeExtent);
+
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommunicator);
 			spyOn(baseSourceProviders, 'find').and.returnValue(<any>fakeSourceLoader);
 			spyOn(fakeCommunicator, 'resetView');

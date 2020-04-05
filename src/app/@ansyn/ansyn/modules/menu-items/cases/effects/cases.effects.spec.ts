@@ -148,7 +148,7 @@ describe('CasesEffects', () => {
 
 	it('onDeleteCase$ should call DeleteCaseBackendAction. when deleted case equal to selected case LoadDefaultCaseAction should have been called too', () => {
 		spyOn(dataLayersService, 'removeCaseLayers').and.callFake(() => of('good'));
-		casesState.modal.id = 'delete-case-id';
+		casesState.modal = { ...casesState.modal, id: 'delete-case-id' };
 		casesState.selectedCase = <any>{ id: 'delete-case-id' };
 		actions = hot('--a--', { a: new DeleteCaseAction('') });
 		const expectedResults = cold('--(a)--', { a: new LoadDefaultCaseAction() });

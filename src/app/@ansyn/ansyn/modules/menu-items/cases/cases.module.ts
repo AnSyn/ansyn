@@ -19,6 +19,7 @@ import { CoreModule } from '../../core/core.module';
 import { ResultsTableComponent } from './components/results-table/results-table.component';
 import { ResultsTableHeaderComponent } from './components/results-table-header/results-table-header.component';
 import { ResultsComponent } from './components/results/results.component';
+import { OverlaysModule } from "../../overlays/overlays.module";
 
 // @dynamic
 @NgModule({
@@ -27,7 +28,8 @@ import { ResultsComponent } from './components/results/results.component';
 		CommonModule,
 		CoreModule,
 		FormsModule,
-		EffectsModule.forFeature([CasesEffects])
+		EffectsModule.forFeature([CasesEffects]),
+		OverlaysModule
 	],
 	declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent, CasesAutoSaveComponent, ResultsTableComponent, ResultsTableHeaderComponent, ResultsComponent],
 	entryComponents: [CasesComponent, EditCaseComponent, SaveCaseComponent, DeleteCaseComponent],

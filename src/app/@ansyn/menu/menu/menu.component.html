@@ -8,9 +8,10 @@
 					*ngFor="let menuItem of topMenuItemsAsArray$ | async"
 					class="menu-btn"
 					[class.active]="isActive(menuItem.name)"
-					(click)="toggleItem(menuItem.name)">
+					(click)="toggleItem(menuItem.name,false ,menuItem.loader)">
 
-					<i [ngClass]="menuItem.iconClass"></i>
+					<mat-spinner [diameter]="50" *ngIf="menuItem.loader"></mat-spinner>
+					<i *ngIf="!menuItem.loader" [ngClass]="menuItem.iconClass"></i>
 					<span class="badge" [hidden]="hideBadge(menuItem.badge)">{{menuItem.badge}}</span>
 					{{menuItem.name | translate}}
 				</div>

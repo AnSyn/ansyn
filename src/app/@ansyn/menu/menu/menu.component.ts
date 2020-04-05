@@ -242,14 +242,16 @@ export class MenuComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	toggleItem(key: string, skipSession: boolean = false): void {
-		if (this.onAnimation) {
-			return;
-		}
-		if (this.selectedMenuItemName === key) {
-			this.closeMenu();
-		} else {
-			this.openMenu(key, skipSession);
+	toggleItem(key: string, skipSession: boolean = false, loader: boolean = false): void {
+		if (!loader) {
+			if (this.onAnimation) {
+				return;
+			}
+			if (this.selectedMenuItemName === key) {
+				this.closeMenu();
+			} else {
+				this.openMenu(key, skipSession);
+			}
 		}
 	}
 

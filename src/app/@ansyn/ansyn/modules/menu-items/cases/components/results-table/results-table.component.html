@@ -2,32 +2,22 @@
 	<div class="results-table-head">
 		<div class="results-table-head-row">
 			<div class="results-table-head-row-data">
-				<div class="results-table-head-col">
-					{{'Date & time' | translate}}
-				</div>
-				<div class="results-table-head-col">
-					{{'Sensor' | translate}}
-				</div>
-				<div class="results-table-head-col">
-					{{'Type' | translate}}
+				<div (click)="filterOverlays(header)" *ngFor="let header of tableHeaders" class="results-table-head-col">
+					{{header.headerName | translate}}
 				</div>
 			</div>
 
 		</div>
 	</div>
 
-	<div class="results-table-body scrolled" (ansynInfiniteScroll)="loadResults()" *ngIf="overlays"
-		 #tbodyElement>
+	<div class="results-table-body scrolled" (ansynInfiniteScroll)="loadResults()" *ngIf="overlays">
 
 		<div class="results-table-body-row"
-			 *ngFor="let overlay of overlays">
-<!--			 (click)="selectCase(id)"-->
-<!--			 [class.active]="(modalCaseId$ | async) === id"-->
-<!--			 [class.selected]="selectedCaseId === id"-->
-<!--			 (mouseenter)="onMouseEnterCaseRow(caseMenu, caseRow, tbodyElement)"-->
-<!--			 (mouseleave)="onMouseLeaveCaseRow(caseRow)"-->
-<!--			 [@leaveAnim]-->
-<!--			 #caseRow>-->
+			 *ngFor="let overlay of overlays"
+			 (click)="openOverlay(overlay)"
+			 (mouseenter)="onMouseOver(overlay.id)"
+			 (mouseleave)="onMouseOut()"
+			 [class.selected]="selectedOverlayId === overlay.id">
 
 			<hr>
 
@@ -39,45 +29,18 @@
 				</div>
 
 				<div class="results-table-body-col">
-					{{overlay.sensorName}}
+					{{overlay.sourceType}}
 				</div>
 
 				<div class="results-table-body-col">
-					{{getType(overlay)}}
+					<i class="icon icon-app-next"></i>
 				</div>
 
-				<!--menu-->
-				<div class="results-menu-container">
-					<div class="results-menu" (click)="caseMenuClick($event, caseRow)" #caseMenu>
-						<button (click)="removeCase(id)"
-								[attr.tooltip-value]="'Remove' | translate"
-								tooltip-class="bottom">
-							<i class="icon-delete"></i>
-						</button>
-						<button (click)="shareCase(id)"
-								[attr.tooltip-value]="'Share' | translate"
-								tooltip-class="bottom">
-							<i class="icon-share"></i>
-						</button>
-						<button (click)="editCase(id)"
-								[attr.tooltip-value]="'Edit' | translate"
-								tooltip-class="bottom">
-							<i class="icon-edit"></i>
-						</button>
-					</div>
-				</div>
+				<ansyn-overlay-overview>
 
+				</ansyn-overlay-overview>
 			</div>
 		</div>
 
 	</div>
 </div>
-
-
-<ng-template #noCases>
-
-	<p class="no-cases">
-		{{'No cases' | translate}}
-	</p>
-
-</ng-template>

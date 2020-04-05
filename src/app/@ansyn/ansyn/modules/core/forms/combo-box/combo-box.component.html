@@ -6,7 +6,7 @@
 			[isActive]="optionsVisible"
 			[attr.tooltip-value]="comboBoxToolTipDescription || null"
 			[withArrow]="withArrow"
-			tooltip-class="top"
+			[attr.tooltip-class]="direction"
 			[icon]="icon"
 			(click)="toggleShow()">
 		<div class="render" [innerHTML]="renderSelected"></div>

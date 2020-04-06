@@ -8,7 +8,7 @@
 				[isActive]="timePickerExpand"
 				[withArrow]="false"
 				icon="icon icon-status-bar-time"
-				tooltip-class="top"
+				tooltip-class="bottom"
 				class="button">
 			<span class="title">{{timeSelectionTitle}}</span>
 		</button>
@@ -32,7 +32,7 @@
 				[isActive]="locationPickerExpand"
 				[withArrow]="false"
 				icon="icon icon-status-bar-geo small"
-				tooltip-class="top"
+				tooltip-class="bottom"
 				class="button">
 			<span class="title">{{geoFilterTitle}}</span>
 		</button>
@@ -52,7 +52,7 @@
 				[isActive]="dataInputFilterExpand"
 				[withArrow]="false"
 				[attr.tooltip-value]="statusBarConfig?.toolTips?.dataInputFilter | translate"
-				tooltip-class="top"
+				tooltip-class="bottom"
 				class="button">
 			<span class="title">{{'Data Inputs' | translate}} - {{ dataInputFilterTitle | translate }}</span>
 		</button>

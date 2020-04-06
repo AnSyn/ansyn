@@ -26,7 +26,7 @@ import { OverlaysModule } from "../../overlays/overlays.module";
 		CoreModule,
 		FormsModule,
 		EffectsModule.forFeature([CasesEffects]),
-		OverlaysModule
+		// OverlaysModule
 	],
 	declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent, CasesAutoSaveComponent],
 	entryComponents: [CasesComponent, EditCaseComponent, SaveCaseComponent, DeleteCaseComponent],

@@ -4,7 +4,7 @@
 <div class="bottom">
 	<div class="box"
 		 [attr.tooltip-value]="statusBarConfig?.toolTips?.overlayCount | translate"
-		 tooltip-class="top">
+		 tooltip-class="bottom">
 		<i class="block-icon icon-status-bar-imagery-count"></i>
 		<span>{{(overlaysCount$ | async) || 0}}</span>
 	</div>

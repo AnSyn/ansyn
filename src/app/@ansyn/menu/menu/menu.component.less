@@ -152,8 +152,9 @@ div.menu-wrapper {
 	div.container {
 		position: absolute;
 		left: 90px;
+		top: @status-bar-height;
 		z-index: @z-index-menu-container;
-		height: 100%;
+		height: calc(100% - @status-bar-height);
 		background: fade(@background-color-3, 95%);
 
 		&.pinned {

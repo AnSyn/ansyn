@@ -1,10 +1,9 @@
 import { Observable, of } from 'rxjs';
 import { Actions, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
-import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
+import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin, MapOrientation } from '@ansyn/imagery';
 import { IStatusBarState, statusBarStateSelector } from '../../../../status-bar/reducers/status-bar.reducer';
 import {
-	IMapState,
 	MapActionTypes,
 	mapStateSelector,
 	PointToRealNorthAction,
@@ -20,7 +19,6 @@ import {
 	OverlaysActionTypes
 } from '../../../../overlays/actions/overlays.actions';
 import { selectHoveredOverlay } from '../../../../overlays/reducers/overlays.reducer';
-import { CaseOrientation } from '../../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
 import {
 	BackToWorldSuccess,
@@ -62,19 +60,13 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	calcNorthAfterDisplayOverlaySuccess$ = this.actions$.pipe(
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
 		filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.mapId),
-		withLatestFrom(this.store$.select(mapStateSelector), ({ payload }: DisplayOverlaySuccessAction, { orientation }: IMapState) => {
-			const orientationData = payload.orientation ? payload.orientation : orientation;
-			return [payload.forceFirstDisplay, orientationData, payload.overlay];
+		withLatestFrom(this.store$.select(mapStateSelector), ({ payload }: DisplayOverlaySuccessAction) => {
+			return [payload.forceFirstDisplay, payload.orientation, payload.overlay];
 		}),
-		filter(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
+		filter(([forceFirstDisplay, orientation, overlay]: [boolean, MapOrientation, IOverlay]) => {
 			return comboBoxesOptions.orientations.includes(orientation);
 		}),
-		tap(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
-			if (orientation === 'Align North' && !forceFirstDisplay) {
-				// @todo: use image data
-				return this.communicator.ActiveMap.setRotation(0);
-			}
-
+		tap(([forceFirstDisplay, orientation, overlay]: [boolean, MapOrientation, IOverlay]) => {
 			if (!forceFirstDisplay && orientation === 'Imagery Perspective') {
 				this.communicator.setRotation(overlay.azimuth);
 			}

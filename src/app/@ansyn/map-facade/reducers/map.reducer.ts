@@ -55,7 +55,6 @@ export interface IMapState extends EntityState<IMapSettings> {
 	layout: LayoutKey;
 	wasWelcomeNotificationShown: boolean;
 	toastMessage: IToastMessage;
-	orientation: MapOrientation;
 	footerCollapse: boolean;
 	minimalistViewMode: boolean;
 	isExportingMaps: boolean;
@@ -71,7 +70,6 @@ export const initialMapState: IMapState = mapsAdapter.getInitialState({
 	layout: <LayoutKey>'layout1',
 	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
 	toastMessage: null,
-	orientation: null,
 	footerCollapse: false,
 	minimalistViewMode: false,
 	isExportingMaps: false
@@ -111,7 +109,12 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		}
 
 		case MapActionTypes.SET_MAP_ORIENTATION: {
-			return { ...state, orientation: action.payload  };
+			return mapsAdapter.updateOne({
+				id: state.activeMapId,
+				changes: {
+					orientation: action.payload
+				}
+			}, state);
 		}
 
 		case MapActionTypes.VIEW.SET_IS_VISIBLE: {
@@ -186,11 +189,11 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		}
 
 		case MapActionTypes.REPLACE_MAP_MAIN_LAYER_SUCCESS: {
-			const {id, sourceType } = action.payload;
-			const worldView = {...state.entities[id].worldView, sourceType};
+			const { id, sourceType } = action.payload;
+			const worldView = { ...state.entities[id].worldView, sourceType };
 			return mapsAdapter.updateOne({
 				id,
-				changes: {worldView}
+				changes: { worldView }
 			}, state)
 		}
 
@@ -204,13 +207,13 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return { ...state, minimalistViewMode: action.payload };
 
 		case MapActionTypes.EXPORT_MAPS_TO_PNG_REQUEST:
-			return {...state, isExportingMaps: true};
+			return { ...state, isExportingMaps: true };
 
 		case MapActionTypes.EXPORT_MAPS_TO_PNG_SUCCESS:
-			return {...state, isExportingMaps: false};
+			return { ...state, isExportingMaps: false };
 
 		case MapActionTypes.EXPORT_MAPS_TO_PNG_FAILED:
-			return {...state, isExportingMaps: false};
+			return { ...state, isExportingMaps: false };
 
 		default:
 			return state;
@@ -231,7 +234,11 @@ export const selectIsMinimalistViewMode = createSelector(mapStateSelector, (stat
 export const selectIsExportingMaps = createSelector(mapStateSelector, (state) => state && state.isExportingMaps);
 
 export const selectOverlaysWithMapIds = createSelector(selectMapsList, selectActiveMapId, (mapsList, activeMapId) => {
-	const overlayAndMapId = mapsList.map( map => map.data.overlay ? ({overlay: map.data.overlay, mapId: map.id, isActive: map.id === activeMapId}) : ({}));
+	const overlayAndMapId = mapsList.map(map => map.data.overlay ? ({
+		overlay: map.data.overlay,
+		mapId: map.id,
+		isActive: map.id === activeMapId
+	}) : ({}));
 	return overlayAndMapId;
 });
 export const selectOverlayOfActiveMap = createSelector(selectMapsList, selectActiveMapId, (mapsList, activeMapId) => {
@@ -246,4 +253,4 @@ export const selectMapPositionByMapId: (mapId: string) => MemoizedSelector<any, 
 export const selectMapTypeById: (mapId: string) => MemoizedSelector<any, string> = (mapId => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.worldView.mapType));
 export const selectSourceTypeById: (mapId: string) => MemoizedSelector<any, string> = (mapId => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.worldView.sourceType));
 
-export const selectOverlayDisplayModeByMapId: (mapId: string) => MemoizedSelector<any, any> = (mapId: string) => createSelector(selectMapStateById(mapId) , (mapState) => mapState && mapState.data && mapState.data.overlayDisplayMode);
+export const selectOverlayDisplayModeByMapId: (mapId: string) => MemoizedSelector<any, any> = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data && mapState.data.overlayDisplayMode);

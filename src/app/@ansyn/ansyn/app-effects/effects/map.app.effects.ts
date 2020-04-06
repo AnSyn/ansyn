@@ -179,7 +179,7 @@ export class MapAppEffects {
 			map(([action, entities]: [ImageryCreatedAction, Dictionary<ICaseMapState>]) => entities[action.payload.id]),
 			filter((caseMapState: ICaseMapState) => Boolean(caseMapState && caseMapState.data.overlay)),
 			map((caseMapState: ICaseMapState) => {
-				startTimingLog(`LOAD_OVERLAY_${ caseMapState.data.overlay.id }`);
+				startTimingLog(`LOAD_OVERLAY_${caseMapState.data.overlay.id}`);
 				return new DisplayOverlayAction({
 					overlay: caseMapState.data.overlay,
 					mapId: caseMapState.id,
@@ -230,7 +230,7 @@ export class MapAppEffects {
 	overlayLoadingFailed$: Observable<any> = this.actions$
 		.pipe(
 			ofType<DisplayOverlayFailedAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED),
-			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${ action.payload.id }`)),
+			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${action.payload.id}`)),
 			map(() => new SetToastMessageAction({
 				toastText: toastMessages.showOverlayErrorToast,
 				showWarningIcon: true
@@ -382,8 +382,8 @@ export class MapAppEffects {
 					const position: ImageryMapPosition = { extentPolygon: polygonFromBBOX(bboxFromGeoJson(overlay.footprint)) };
 					actionsArray.push(new PositionChangedAction({ id: mapId, position, mapInstance: caseMapState }));
 				}
-
-				payload.orientation = mapState.orientation;
+				const currentMap = mapState.entities[mapState.activeMapId];
+				payload.orientation = currentMap.orientation;
 				actionsArray.push(new DisplayOverlaySuccessAction(payload));
 				return actionsArray;
 			})

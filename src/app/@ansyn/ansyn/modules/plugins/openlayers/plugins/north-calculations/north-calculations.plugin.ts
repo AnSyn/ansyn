@@ -10,7 +10,7 @@ import {
 	CommunicatorEntity,
 	getAngleDegreeBetweenPoints,
 	ImageryMapPosition,
-	ImageryPlugin, MapOrientation,
+	ImageryPlugin, IMapSettings, MapOrientation,
 	toDegrees,
 	toRadians
 } from '@ansyn/imagery';
@@ -21,7 +21,7 @@ import {
 	selectActiveMapId,
 	selectMapPositionByMapId,
 	PointToImageOrientationAction,
-	mapStateSelector, IMapState
+	mapStateSelector
 } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
@@ -110,19 +110,13 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	calcNorthAfterDisplayOverlaySuccess$ = this.actions$.pipe(
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
 		filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.mapId),
-		withLatestFrom(this.store$.select(mapStateSelector), ({ payload }: DisplayOverlaySuccessAction, { orientation }: IMapState) => {
-			const orientationData = payload.orientation ? payload.orientation : orientation;
-
-			return [payload.forceFirstDisplay, orientationData , payload.overlay, payload.customOriantation];
+		withLatestFrom(this.store$.select(mapStateSelector), ({ payload }: DisplayOverlaySuccessAction) => {
+			return [payload.forceFirstDisplay, payload.orientation , payload.overlay, payload.customOriantation];
 		}),
 		filter(([forceFirstDisplay, orientation, overlay, customOriantation]: [boolean, MapOrientation, IOverlay, string]) => {
 			return comboBoxesOptions.orientations.includes(orientation);
 		}),
 		switchMap(([forceFirstDisplay, orientation, overlay, customOriantation]: [boolean, MapOrientation, IOverlay, string]) => {
-			if (!forceFirstDisplay &&
-				((orientation === 'Align North' && !Boolean(customOriantation)) || customOriantation === 'Align North')) {
-				return this.setActualNorth();
-			}
 			// for 'Imagery Perspective' or 'User Perspective'
 			return this.positionChangedCalcNorthAccurately$().pipe(take(1)).pipe(
 				tap((virtualNorth: number) => {

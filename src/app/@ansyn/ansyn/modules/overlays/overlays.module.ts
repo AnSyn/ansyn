@@ -19,7 +19,6 @@ import {
 } from './models/overlays-source-providers';
 import { OverlayStatusModule } from './overlay-status/overlay-status.module';
 import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer';
-import { ResultsTableComponent } from "../menu-items/results/components/results-table/results-table.component";
 
 @NgModule({
 	imports: [
@@ -54,7 +53,6 @@ import { ResultsTableComponent } from "../menu-items/results/components/results-
 	providers: [
 		createOverlaysSourceProviders([]),
 		BaseOverlaySourceFactoryProvider,
-		ResultsTableComponent
 	]
 
 })

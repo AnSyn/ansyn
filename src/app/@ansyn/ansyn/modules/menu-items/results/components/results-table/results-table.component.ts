@@ -44,14 +44,12 @@ export class ResultsTableComponent implements OnInit {
 			distinctUntilChanged(isEqual),
 			tap((overlays: any) => {
 				this.overlays = this.mapOverlayObjectToArray(overlays);
-				const badge = this.overlays ? this.overlays.length.toString() : '0';
+				const badge = this.getBadge();
 				this.store$.dispatch(new SetBadgeAction({ key: 'Results table', badge }));
 			}));
 
 	constructor(protected store$: Store<IOverlaysState>) {
-		this.loadOverlays$.subscribe((overlaysList) => {
-			console.log(overlaysList);
-		});
+		this.loadOverlays$.subscribe();
 	}
 
 	ngOnInit() {
@@ -61,9 +59,14 @@ export class ResultsTableComponent implements OnInit {
 
 	}
 
+	getBadge() {
+		return this.overlays ? this.overlays.length.toString() : '0';
+	}
+
 	onMouseOver($event, id: string) {
 		const resultsTableLeftBorder = 530;
-		const resultsTableTopBorder = $event.screenY < 900 ? 0 : -30;
+		const lastRowHeight = 900;
+		const resultsTableTopBorder = $event.screenY < lastRowHeight ? 0 : -30;
 		const top = $event.screenY + resultsTableTopBorder;
 
 		this.store$.dispatch(new SetMarkUp({

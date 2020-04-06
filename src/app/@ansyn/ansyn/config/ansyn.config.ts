@@ -45,11 +45,11 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			component: ResultsComponent,
 			iconClass: 'icon-main-cases'
 		},
-		// {
-		// 	name: 'Filters',
-		// 	component: FiltersCollectionComponent,
-		// 	iconClass: 'icon-main-filters'
-		// },
+		{
+			name: 'Filters',
+			component: FiltersCollectionComponent,
+			iconClass: 'icon-main-filters'
+		},
 		{
 			name: 'Data Layers',
 			component: LayersManagerComponent,

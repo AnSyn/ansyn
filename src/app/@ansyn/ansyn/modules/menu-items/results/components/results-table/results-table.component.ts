@@ -9,6 +9,7 @@ import {
 import { distinctUntilChanged, pluck, tap } from "rxjs/operators";
 import { isEqual } from "lodash";
 import { DisplayOverlayFromStoreAction, SetMarkUp } from "../../../../overlays/actions/overlays.actions";
+import { SetBadgeAction } from "@ansyn/menu";
 
 @Component({
 	selector: 'ansyn-results-table',
@@ -41,10 +42,16 @@ export class ResultsTableComponent implements OnInit {
 		.pipe(
 			select(selectOverlays),
 			distinctUntilChanged(isEqual),
-			tap((overlays: any) => this.mapOverlayObjectToArray(overlays)));
+			tap((overlays: any) => {
+				this.overlays = this.mapOverlayObjectToArray(overlays);
+				const badge = this.overlays ? this.overlays.length.toString() : '0';
+				this.store$.dispatch(new SetBadgeAction({ key: 'Results table', badge }));
+			}));
 
 	constructor(protected store$: Store<IOverlaysState>) {
-		this.loadOverlays$.subscribe((overlays) => console.log(overlays));
+		this.loadOverlays$.subscribe((overlaysList) => {
+			console.log(overlaysList);
+		});
 	}
 
 	ngOnInit() {
@@ -59,7 +66,12 @@ export class ResultsTableComponent implements OnInit {
 		const resultsTableTopBorder = $event.screenY < 900 ? 0 : -30;
 		const top = $event.screenY + resultsTableTopBorder;
 
-		this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [id] }, top, left: resultsTableLeftBorder }));
+		this.store$.dispatch(new SetMarkUp({
+			classToSet: MarkUpClass.hover,
+			dataToSet: { overlaysIds: [id] },
+			top,
+			left: resultsTableLeftBorder
+		}));
 	}
 
 	onMouseOut() {
@@ -77,7 +89,8 @@ export class ResultsTableComponent implements OnInit {
 	}
 
 	mapOverlayObjectToArray(overlays) {
-		this.overlays = Object.keys(overlays).map((key, index) => overlays[key]);
+		return Object.keys(overlays).map((key, index) => overlays[key]);
+		// this.overlays = Object.keys(overlays).map((key, index) => overlays[key]);
 	}
 
 	timeFormat(overlayDate: Date) {

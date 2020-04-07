@@ -19,6 +19,7 @@ import {
 } from './models/overlays-source-providers';
 import { OverlayStatusModule } from './overlay-status/overlay-status.module';
 import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer';
+import { OverlayNavigationBarComponent } from './components/overlay-navigation-bar/overlay-navigation-bar.component';
 
 @NgModule({
 	imports: [
@@ -43,12 +44,14 @@ import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer'
 		OverlayOverviewComponent,
 		OverlaysLoaderComponent,
 		OverlaySourceTypeNoticeComponent,
+		OverlayNavigationBarComponent
 	],
 	entryComponents: [OverlaySourceTypeNoticeComponent],
 	exports: [
 		OverlaysContainerComponent,
 		TimelineComponent,
-		OverlayOverviewComponent
+		OverlayOverviewComponent,
+		OverlayNavigationBarComponent
 	],
 	providers: [
 		createOverlaysSourceProviders([]),

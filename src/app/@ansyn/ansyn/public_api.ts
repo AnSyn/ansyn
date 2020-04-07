@@ -395,3 +395,4 @@ export { CredentialsComponent } from './modules/core/components/credentials/cred
 export { OverlaysContainerComponent } from './modules/overlays/components/container/overlays-container.component';
 export { TimelineComponent } from './modules/overlays/components/timeline/timeline.component';
 export { OverlayOverviewComponent } from './modules/overlays/components/overlay-overview/overlay-overview.component';
+export { OverlayNavigationBarComponent } from './modules/overlays/components/overlay-navigation-bar/overlay-navigation-bar.component';

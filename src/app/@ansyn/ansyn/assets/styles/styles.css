@@ -11,11 +11,22 @@
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 @import "~@ansyn/ng-pick-datetime/assets/style/picker.min.css";
 
+/* undo PrimeNG's global change */
+* {
+	-moz-box-sizing: initial;
+	-webkit-box-sizing: initial;
+	box-sizing: initial;
+}
+/* re-apply only for PrimeNG elements */
+[class^="ui-"] {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
 
 circle.drop.selected {
 	fill: black;
 }
-
 
 .custom-dialog .mat-dialog-container {
 	padding: 0;

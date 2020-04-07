@@ -8,10 +8,7 @@ import {
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
-import { GEO_FILTERS } from '../../models/combo-boxes.model';
-import { UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 import { animate, style, transition, trigger, AnimationTriggerMetadata } from '@angular/animations';
-import { SearchMode, SearchModeEnum } from '../../models/search-mode.enum';
 import { filter, tap } from 'rxjs/operators';
 import { selectDataInputFilter, selectTime } from '../../../overlays/reducers/overlays.reducer';
 import { ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';

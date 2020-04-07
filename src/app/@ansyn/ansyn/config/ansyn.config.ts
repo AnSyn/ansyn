@@ -43,13 +43,13 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 		{
 			name: 'Results table',
 			component: ResultsComponent,
-			iconClass: 'icon-main-cases'
+			iconClass: 'icon-table'
 		},
-		{
-			name: 'Filters',
-			component: FiltersCollectionComponent,
-			iconClass: 'icon-main-filters'
-		},
+		// {
+		// 	name: 'Filters',
+		// 	component: FiltersCollectionComponent,
+		// 	iconClass: 'icon-main-filters'
+		// },
 		{
 			name: 'Data Layers',
 			component: LayersManagerComponent,

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Observable } from "rxjs";
 import { IOverlay } from "../../../../overlays/models/overlay.model";
 import { select, Store } from "@ngrx/store";
@@ -6,10 +6,15 @@ import {
 	IOverlaysState, MarkUpClass,
 	selectOverlays
 } from "../../../../overlays/reducers/overlays.reducer";
-import { distinctUntilChanged, pluck, tap } from "rxjs/operators";
+import { distinctUntilChanged, tap } from "rxjs/operators";
 import { isEqual } from "lodash";
-import { DisplayOverlayFromStoreAction, SetMarkUp } from "../../../../overlays/actions/overlays.actions";
+import {
+	DisplayOverlayFromStoreAction,
+	SetMarkUp,
+} from "../../../../overlays/actions/overlays.actions";
 import { SetBadgeAction } from "@ansyn/menu";
+import { StatusBarConfig } from "../../../../status-bar/models/statusBar.config";
+import { IStatusBarConfig } from "../../../../status-bar/models/statusBar-config.model";
 
 @Component({
 	selector: 'ansyn-results-table',
@@ -48,7 +53,7 @@ export class ResultsTableComponent implements OnInit {
 				this.store$.dispatch(new SetBadgeAction({ key: 'Results table', badge }));
 			}));
 
-	constructor(protected store$: Store<IOverlaysState>) {
+	constructor(protected store$: Store<IOverlaysState>, @Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
 		this.loadOverlays$.subscribe();
 	}
 

@@ -1,4 +1,15 @@
 <div class="results-table">
+	<div class="header">
+		<div class="header-title">
+			{{'Search results' | translate}}
+		</div>
+		<div class="box"
+			 [attr.tooltip-value]="statusBarConfig?.toolTips?.overlayCount | translate"
+			 tooltip-class="top">
+			<i class="block-icon icon-status-bar-imagery-count"></i>
+			<span>{{overlays.length || 0}}</span>
+		</div>
+	</div>
 	<div class="results-table-head">
 		<div class="results-table-head-row">
 			<div class="results-table-head-row-data">
@@ -10,7 +21,7 @@
 		</div>
 	</div>
 
-	<div class="results-table-body scrolled" (ansynInfiniteScroll)="loadResults()" *ngIf="overlays">
+	<div class="results-table-body scrolled"  (ansynInfiniteScroll)="loadResults()" *ngIf="overlays">
 
 		<div class="results-table-body-row"
 			 *ngFor="let overlay of overlays"
@@ -24,15 +35,15 @@
 			<div class="results-table-body-row-data">
 				<hr>
 
-				<div class="results-table-case-name-col">
+				<div class="results-table-case-name-col overlay-time">
 					{{timeFormat(overlay.date)}}
 				</div>
 
-				<div class="results-table-body-col">
-					{{overlay.sourceType}}
+				<div class="results-table-body-col source-type">
+					{{overlay.sourceType | translate}}
 				</div>
 
-				<div class="results-table-body-col">
+				<div class="results-table-body-col overlay-type">
 					<i class="icon icon-app-next"></i>
 				</div>
 

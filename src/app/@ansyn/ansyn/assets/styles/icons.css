@@ -79,3 +79,9 @@
 .icon-status-bar-geo:before { content: '\e84d'; } /* '' */
 .icon-method-draw-image:before { content: '\e84e'; } /* '' */
 .icon-credentials-request:before { content: '\e84f'; } /* '' */
+.icon-datetime:before { content: '\e850'; } /* '' */
+.icon-location:before { content: '\e851'; } /* '' */
+.icon-table:before { content: '\e854'; } /* '' */
+.icon-more:before { content: '\e855'; } /* '' */
+.icon-autoimage-new:before { content: '\e856'; } /* '' */
+.icon-autoimage:before { content: '\e857'; } /* '' */

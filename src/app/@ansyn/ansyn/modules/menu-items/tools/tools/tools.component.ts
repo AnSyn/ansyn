@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-	ClearActiveInteractionsAction,
+	ClearActiveInteractionsAction, SetAutoImageProcessing,
 	SetMeasureDistanceToolState,
 	SetSubMenu,
 	ShowOverlaysFootprintAction,
@@ -130,10 +130,10 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		this.store$.dispatch(new SetMeasureDistanceToolState(!value));
 	}
 
-	// toggleAutoImageProcessing() {
-	// 	this.store$.dispatch(new SetAutoImageProcessing());
-	// 	this.closeManualProcessingMenu();
-	// }
+	toggleAutoImageProcessing() {
+		this.store$.dispatch(new SetAutoImageProcessing());
+		this.closeManualProcessingMenu();
+	}
 
 	toggleDisplayFootprints() {
 		if (this.displayModeOn) {

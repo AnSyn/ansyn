@@ -9,15 +9,14 @@ div.status-timeline-container {
 	position: relative;
 	width: 100%;
 
-	.status {
-		position: relative;
-		bottom: -10px;
-		z-index: @z-index-status-bar-navigation-area;
-	}
-
 	.app-timeline-container {
 		height: @timeline-area-height;
-		background-color: white;
+
+		ansyn-overlay-navigation-bar {
+			position: absolute;
+			top: 12.5px;
+			left: calc(~'50% - 50px');
+		}
 	}
 
 	button.hide-menu {
@@ -41,10 +40,6 @@ div.status-timeline-container {
 
 	&.collapsed {
 		position: absolute;
-
-		.status {
-			display: none;
-		}
 
 		button.hide-menu {
 			bottom: 100%;

@@ -1,7 +1,6 @@
 import { Action } from '@ngrx/store';
 import { IComboBoxesProperties } from '../models/combo-boxes.model';
 import { IGeoFilterStatus } from '../reducers/status-bar.reducer';
-import { SearchModeEnum } from '../models/search-mode.enum';
 
 export const StatusBarActionsTypes = {
 	SHOW_LINK_COPY_TOAST: 'SHOW_LINK_COPY_TOAST',
@@ -38,7 +37,7 @@ export class SetImageOpeningOrientation implements Action {
 export class UpdateGeoFilterStatus implements Action {
 	readonly type = StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS;
 
-	constructor(public payload: Partial<IGeoFilterStatus> = { searchMode: SearchModeEnum.none }) {
+	constructor(public payload?: Partial<IGeoFilterStatus>) {
 	}
 }
 

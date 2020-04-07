@@ -68,8 +68,6 @@ import {
 import { ExtendMap } from '../../modules/overlays/reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../../modules/overlays/components/overlay-overview/overlay-overview.component.const';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
-import * as turf from '@turf/turf';
-import { Position } from 'geojson';
 import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { Dictionary } from '@ngrx/entity';
@@ -77,14 +75,6 @@ import { LoggerService } from '../../modules/core/services/logger.service';
 
 @Injectable()
 export class OverlaysAppEffects {
-
-	region$ = this.store$.select(selectRegion);
-
-	isPinPointSearch$ = this.region$.pipe(
-		filter(Boolean),
-		map<any, Boolean>((region) => region.type === CaseGeoFilter.PinPoint),
-		distinctUntilChanged()
-	);
 
 	@Effect({ dispatch: false })
 	actionsLogger$: Observable<any> = this.actions$.pipe(
@@ -125,20 +115,6 @@ export class OverlaysAppEffects {
 		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
 		map(() => new SetPresetOverlaysAction([]))
 	);
-
-
-	@Effect()
-	onPinPointSearch$: Observable<SetOverlaysCriteriaAction | any> = this.actions$.pipe(
-		ofType<ContextMenuTriggerAction>(MapActionTypes.TRIGGER.CONTEXT_MENU),
-		withLatestFrom(this.isPinPointSearch$),
-		filter(([{ payload }, isPinPointSearch]: [ContextMenuTriggerAction, boolean]) => isPinPointSearch),
-		map(([{ payload }, isPinPointSearch]: [ContextMenuTriggerAction, boolean]) => payload),
-		map((payload: Position) => {
-			const region = turf.geometry('Point', payload);
-			return new SetOverlaysCriteriaAction({ region });
-		})
-	);
-
 
 	@Effect()
 	displayMultipleOverlays$: Observable<any> = this.actions$.pipe(

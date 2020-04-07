@@ -106,7 +106,7 @@ div.menu-wrapper {
 					background-color: @application-primary-color;
 				}
 
-				&.first-start {
+				&.draw-user-attention {
 					background-color: #3d1a1a;
 				}
 
@@ -152,8 +152,9 @@ div.menu-wrapper {
 	div.container {
 		position: absolute;
 		left: 90px;
+		top: @status-bar-height;
 		z-index: @z-index-menu-container;
-		height: 100%;
+		height: calc(100% - @status-bar-height);
 		background: fade(@background-color-3, 95%);
 
 		&.pinned {

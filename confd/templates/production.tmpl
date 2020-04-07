@@ -182,6 +182,19 @@
   		"defaultMapSource": "{{ getv "/ansyn/imagery/mapsource" "OSM" }}",
   		"sources": [
   			{
+				"key": "ESRI_4326",
+				"displayName": "ESRI 4326",
+				"thumbnail": "https://services.arcgisonline.com/arcgis/rest/services/ESRI_Imagery_World_2D/MapServer/tile/0/0/0.png",
+				"sourceType": "ESRI_4326",
+				"config": {
+					"baseUrl": "https://services.arcgisonline.com/arcgis/rest/services/ESRI_Imagery_World_2D/MapServer/tile/{z}/{y}/{x}",
+					"projection": "EPSG:4326",
+					"maxZoom": 16,
+					"tileSize": 256,
+					"attributions": "Copyright:© 2013 ESRI, i-cubed, GeoEye"
+				}
+			},
+  			{
   				"key": "OSM",
   				"displayName": "Open Street Map",
   				"thumbnail": "https://a.tile.openstreetmap.org/0/0/0.png",
@@ -1505,5 +1518,8 @@
   "anaglyphConfig": {
   	"getStereoUrl": "needed test",
   	"sensorNames": {{ getv "/ansyn/anaglyph/sensornames" "null" }}
-  }
+  },
+  "addressService": {
+      "url": "assets/config/addresses.json"
+    }
 }

@@ -27,7 +27,7 @@ import {
 	selectEntitiesMenuItems,
 	selectIsPinned,
 	selectMenuCollapse,
-	selectSelectedMenuItem, selectUserFirstEnter
+	selectSelectedMenuItem, selectUserFirstEnter, selectUserHaveCredentials
 } from '../reducers/menu.reducer';
 import { select, Store } from '@ngrx/store';
 import { animate, state, style, transition, trigger } from '@angular/animations';
@@ -74,6 +74,7 @@ const animations: any[] = [
 
 export class MenuComponent implements OnInit, OnDestroy {
 	isUserFirstEntrance: boolean;
+	doesUserHaveCredentials: boolean;
 	_componentElem;
 	currentComponent: ComponentRef<any>;
 	collapse: boolean;
@@ -122,6 +123,11 @@ export class MenuComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	isUserFirstEntrance$ = this.store.select(selectUserFirstEnter).pipe(
 		tap((isUserFirstEntrance) => this.isUserFirstEntrance = isUserFirstEntrance)
+	);
+
+	@AutoSubscription
+	doesUserHaveCredentials$ = this.store.select(selectUserHaveCredentials).pipe(
+		tap((doesUserHaveCredentials) => this.doesUserHaveCredentials = doesUserHaveCredentials)
 	);
 
 	selectedMenuItemName: string;

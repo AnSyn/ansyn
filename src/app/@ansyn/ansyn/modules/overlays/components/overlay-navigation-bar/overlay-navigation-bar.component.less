@@ -4,17 +4,8 @@
 
 :host {
 	display: flex;
-	position: absolute;
-	align-self: center;
-	top: @status-bar-height;
-}
-
-.navigation {
-	display: flex;
-	flex-shrink: 0;
-	align-self: flex-end;
 	align-items: center;
-	height: 100%;
+	width: 100px;
 	padding: 0 10px;
 	box-sizing: border-box;
 	z-index: @z-index-status-bar-navigation-area;
@@ -25,7 +16,6 @@
 	}
 
 	button {
-		position: relative;
 		outline: none;
 		width: 24px;
 		height: 24px;
@@ -45,7 +35,5 @@
 		&.active:not(:disabled), &:active:not(:disabled) {
 			box-shadow: 0 0 2px 2px #666;
 		}
-
-
 	}
 }

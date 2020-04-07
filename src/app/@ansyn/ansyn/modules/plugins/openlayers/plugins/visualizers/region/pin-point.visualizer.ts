@@ -10,6 +10,7 @@ import { Position } from 'geojson';
 import { OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
 import { RegionVisualizer } from './region.visualizer';
 import { CaseGeoFilter, CaseRegionState } from '../../../../../menu-items/cases/models/case.model';
+import { SetOverlaysCriteriaAction } from '../../../../../overlays/actions/overlays.actions';
 import { Injectable } from '@angular/core';
 
 @ImageryVisualizer({
@@ -48,5 +49,7 @@ export class PinPointVisualizer extends RegionVisualizer {
 	}
 
 	onContextMenu(coordinates: Position): void {
+		const region = turf.geometry('Point', coordinates);
+		this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
 	}
 }

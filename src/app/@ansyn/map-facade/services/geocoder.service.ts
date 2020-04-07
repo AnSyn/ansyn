@@ -11,6 +11,7 @@ export class GeocoderService {
 	placeholder = 'Search';
 	public config: IMapSearchConfig = null;
 	onlyCoordinates = false;
+
 	constructor(protected http: HttpClient,
 				@Inject(mapFacadeConfig) public packageConfig: IMapFacadeConfig) {
 		this.config = this.packageConfig.mapSearch;
@@ -18,8 +19,9 @@ export class GeocoderService {
 
 	getLocation$(searchString): Observable<{ name: string, point: Point }[]> {
 		const url = this.config.url.replace('$searchString', searchString).replace('$apiKey', this.config.apiKey);
+
 		return this.http.get<any>(url).pipe(
-			map(res => res.resourceSets[0]),
+			map(res => res.resourceSets[0].resources),
 			map((resources: any[]) => resources && resources.length > 0 ?
 				resources.map(resource =>
 					({

@@ -1,7 +1,10 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import * as momentNs from 'moment';
 import { IStatusBarConfig } from '../../models/statusBar-config.model';
-import { IGeoFilterStatus, IStatusBarState, selectGeoFilterStatus } from '../../reducers/status-bar.reducer';
+import {
+	IStatusBarState, selectGeoFilterActive,
+	selectGeoFilterType
+} from '../../reducers/status-bar.reducer';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
@@ -10,9 +13,8 @@ import { UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 import { animate, style, transition, trigger, AnimationTriggerMetadata } from '@angular/animations';
 import { SearchMode, SearchModeEnum } from '../../models/search-mode.enum';
 import { filter, tap } from 'rxjs/operators';
-import { selectDataInputFilter, selectRegion, selectTime } from '../../../overlays/reducers/overlays.reducer';
-import { CaseGeoFilter, ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
-import { ClearActiveInteractionsAction } from '../../../menu-items/tools/actions/tools.actions';
+import { selectDataInputFilter, selectTime } from '../../../overlays/reducers/overlays.reducer';
+import { ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 
@@ -38,9 +40,9 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 @AutoSubscriptions()
 export class SearchPanelComponent implements OnInit, OnDestroy {
 
-	geoFilterStatus: IGeoFilterStatus;
 	dataInputFilterExpand: boolean;
 	timePickerExpand: boolean;
+	locationPickerExpand: boolean;
 	timeRange: Date[];
 	dataInputFilterTitle = 'All';
 	timeSelectionTitle: string;
@@ -68,19 +70,17 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	geoFilter$ = combineLatest(
-		this.store$.select(selectGeoFilterStatus),
-		this.store$.select(selectRegion)
+		this.store$.select(selectGeoFilterType),
+		this.store$.select(selectGeoFilterActive)
 	).pipe(
-		tap(([geoFilterStatus, region]) => {
-			this.geoFilterStatus = geoFilterStatus;
-			const regionType = region && region.type;
-			this.geoFilterTitle = geoFilterStatus.searchMode !== SearchModeEnum.none ? geoFilterStatus.searchMode : regionType;
+		tap(([geoFilterType, active]) => {
+			this.geoFilterTitle = geoFilterType;
+			this.locationPickerExpand = active;
 		})
 	);
 
 	constructor(protected store$: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
-				@Inject(GEO_FILTERS) public geoFilters: CaseGeoFilter[],
 				dateTimeAdapter: DateTimeAdapter<any>
 	) {
 		dateTimeAdapter.setLocale(statusBarConfig.locale);
@@ -98,15 +98,8 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		this.timePickerExpand = !this.timePickerExpand;
 	}
 
-	geoFilterChanged(geoFilter?: SearchMode) {
-		const payload: Partial<IGeoFilterStatus> = { searchMode: geoFilter };
-
-		if (Boolean(geoFilter)) {
-			payload.indicator = true;
-		}
-
-		this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateGeoFilterStatus] }));
-		this.store$.dispatch(new UpdateGeoFilterStatus({ searchMode: geoFilter }));
+	toggleLocationPicker() {
+		this.locationPickerExpand = !this.locationPickerExpand;
 	}
 
 	ngOnDestroy() {

@@ -93,6 +93,7 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 		if (this.currentSourceType !== type) {
 			this.logger.info(`change map from ${ this.currentSourceType } to ${ type }`);
 			this.store$.dispatch(new ReplaceMainLayer({id: this.mapId, sourceType: type}));
+			this.showPopup = false;
 		}
 	}
 

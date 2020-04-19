@@ -10,7 +10,7 @@ export class ClickOutsideService{
 	}
 
 
-	onClickOutside(targetElement?: any): Observable<boolean> { // classQuery is the class of the element that toggle this.element
+	onClickOutside(targetElement?: any): Observable<boolean> {
 		return fromEvent(targetElement || window, 'click').pipe(
 			map( (event: MouseEvent) => {
 				let shouldNotCallback = this.check(this.element.nativeElement.children, event.target);

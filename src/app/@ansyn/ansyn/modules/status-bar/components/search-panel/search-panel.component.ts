@@ -88,7 +88,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 	}
 
-	toggleDataInputFilterIcon() {
+	toggleDataInputFilter() {
 		this.dataInputFilterExpand = !this.dataInputFilterExpand;
 	}
 

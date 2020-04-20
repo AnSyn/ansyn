@@ -47,21 +47,21 @@
 	<div class="box">
 		<button ansynComboBoxTrigger
 				#trigger
-				(click)="toggleDataInputFilterIcon()"
+				(click)="toggleDataInputFilter()"
 				icon="icon icon-input-filter small"
 				[isActive]="dataInputFilterExpand"
 				[withArrow]="false"
 				[attr.tooltip-value]="statusBarConfig?.toolTips?.dataInputFilter | translate"
 				tooltip-class="bottom"
 				class="button">
-			<span class="title">{{'Data Inputs' | translate}} - {{ dataInputFilterTitle | translate }}</span>
+			<span class="title">{{'Type' | translate}} - {{ dataInputFilterTitle | translate }}</span>
 		</button>
 
 		<ansyn-tree-view
 			*ngIf="dataInputFilterExpand"
-			(ansynClickOutside)="toggleDataInputFilterIcon()"
+			(ansynClickOutside)="toggleDataInputFilter()"
 			[trigger]="trigger?.optionsTrigger?.nativeElement"
-			(closeTreeView)="toggleDataInputFilterIcon()"
+			(closeTreeView)="toggleDataInputFilter()"
 			(dataInputTitleChange)="updateDataInputTitle($event)"
 			class="ansyn-tree-view"></ansyn-tree-view>
 	</div>

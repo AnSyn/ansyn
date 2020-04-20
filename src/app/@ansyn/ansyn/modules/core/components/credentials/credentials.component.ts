@@ -18,7 +18,7 @@ import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
 export class CredentialsComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
-	onClickOutside$ = this.clickOutsideService.onClickOutside(this.element.nativeElement).pipe(
+	onClickOutside$ = () => this.clickOutsideService.onClickOutside(this.element.nativeElement, this.element.nativeElement.lastChild).pipe(
 		filter(Boolean),
 		tap(() => {
 				this.closeWindow();

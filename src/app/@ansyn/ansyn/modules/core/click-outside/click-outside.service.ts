@@ -1,6 +1,21 @@
-import { Injectable, OnDestroy, OnInit, ElementRef } from '@angular/core';
-import { Subscription, fromEvent, Observable } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { Injectable, ElementRef } from '@angular/core';
+import { fromEvent, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+// for chrome44
+function getAllParent(parent: HTMLElement): HTMLElement[] {
+	const allParent = [parent];
+	if (Boolean(parent.parentElement)) {
+		allParent.push(...getAllParent(parent.parentElement))
+	}
+	return allParent;
+}
+MouseEvent.prototype.composedPath = MouseEvent.prototype.composedPath || function () {
+	const currentElement = this.target;
+	const eventTarget = [currentElement];
+	eventTarget.push(...getAllParent(currentElement.parentElement));
+	return eventTarget;
+};
 
 @Injectable({
 	providedIn: 'root'
@@ -9,30 +24,19 @@ export class ClickOutsideService{
 	constructor(protected element: ElementRef) {
 	}
 
-
-	onClickOutside(targetElement?: any): Observable<boolean> {
-		return fromEvent(targetElement || window, 'click').pipe(
+	/**
+	 * listen to click event from target and return true if this click happend outside of the monitor element
+	 * @param targetElement - the element to attach the click event handler to default window.
+	 * @param elementToMonitor - the element we want monitor that the click was outside it default element.nativeElement.
+	 */
+	onClickOutside(targetElement: any = window, elementToMonitor = this.element.nativeElement): Observable<boolean> {
+		return fromEvent(targetElement, 'click').pipe(
 			map( (event: MouseEvent) => {
-				let shouldNotCallback = this.check(this.element.nativeElement.children, event.target);
-				return !shouldNotCallback;
+				const path = event.composedPath();
+				let clickOutsideMonitor = !(path && path.includes(elementToMonitor));
+				return clickOutsideMonitor;
 			})
 		)
-	}
-
-
-	check(children, srcElement): boolean {
-		// we use this loop instead of path.include for chrome 44
-		let shouldNotCallback = false;
-		for (let i = 0; i < children.length && !shouldNotCallback; i++) {
-			const child = children.item(i);
-			if ( child.children.length > 0) {
-				shouldNotCallback = this.check(child.children, srcElement);
-			}
-			shouldNotCallback = shouldNotCallback || srcElement === children.item(i);
-
-		}
-
-		return shouldNotCallback;
 	}
 
 }

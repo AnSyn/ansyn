@@ -2,21 +2,6 @@ import { Injectable, ElementRef } from '@angular/core';
 import { fromEvent, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-// for chrome44
-function getAllParent(parent: HTMLElement): HTMLElement[] {
-	const allParent = [parent];
-	if (Boolean(parent.parentElement)) {
-		allParent.push(...getAllParent(parent.parentElement))
-	}
-	return allParent;
-}
-MouseEvent.prototype.composedPath = MouseEvent.prototype.composedPath || function () {
-	const currentElement = this.target;
-	const eventTarget = [currentElement];
-	eventTarget.push(...getAllParent(currentElement.parentElement));
-	return eventTarget;
-};
-
 @Injectable({
 	providedIn: 'root'
 })
@@ -32,11 +17,26 @@ export class ClickOutsideService{
 	onClickOutside(targetElement: any = window, elementToMonitor = this.element.nativeElement): Observable<boolean> {
 		return fromEvent(targetElement, 'click').pipe(
 			map( (event: MouseEvent) => {
-				const path = event.composedPath();
+				const path = event.composedPath ? event.composedPath() : this.getPath(event);
 				let clickOutsideMonitor = !(path && path.includes(elementToMonitor));
 				return clickOutsideMonitor;
 			})
 		)
 	}
 
+	// for chrome44
+	private getPath(event) {
+		const currentElement = event.target;
+		const eventTarget = [currentElement];
+		eventTarget.push(...this.getAllParent(currentElement.parentElement));
+		return eventTarget;
+	}
+
+	private getAllParent(parent: HTMLElement): HTMLElement[] {
+		const allParent = [parent];
+		if (Boolean(parent.parentElement)) {
+			allParent.push(...this.getAllParent(parent.parentElement))
+		}
+		return allParent;
+	}
 }

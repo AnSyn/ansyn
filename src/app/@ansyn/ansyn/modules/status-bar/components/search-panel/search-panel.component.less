@@ -1,10 +1,10 @@
+@import "ansyn/less/common";
 @import "ansyn/less/colors";
 @import "ansyn/less/globals";
 
 :host {
 	display: flex;
 	align-items: center;
-	flex-grow: 3;
 	margin: 5px;
 
 	.search-panel {
@@ -18,22 +18,8 @@
 			margin: 0 5px;
 
 			.button {
-				margin-top: 1px;
-				background: @status-bar-panels;
-				border-bottom-left-radius: @status-bar-panel-radius;
-				border-top-left-radius: @status-bar-panel-radius;
-				border-bottom-right-radius: @status-bar-panel-radius;
-				border-top-right-radius: @status-bar-panel-radius;
-				padding: 5px 11px 5px 0;
+				&:extend(.status-bar-button);
 				height: 35px;
-
-				&.active {
-					background-color: @status-bar-active;
-				}
-
-				&:hover:not(.active) {
-					background: @status-bar-hover;
-				}
 
 				i.small { // until we get new small icons
 					font-size: 1em;

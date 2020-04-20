@@ -40,11 +40,6 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			iconClass: 'icon-main-cases'
 		},
 		{
-			name: 'Filters',
-			component: FiltersCollectionComponent,
-			iconClass: 'icon-main-filters'
-		},
-		{
 			name: 'Data Layers',
 			component: LayersManagerComponent,
 			iconClass: 'icon-main-data-layers'

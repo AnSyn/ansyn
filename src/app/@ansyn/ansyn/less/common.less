@@ -10,6 +10,24 @@
 	overflow: hidden;
 }
 
+.status-bar-button {
+	margin-top: 1px;
+	background: @status-bar-panels;
+	border-bottom-left-radius: @status-bar-panel-radius;
+	border-top-left-radius: @status-bar-panel-radius;
+	border-bottom-right-radius: @status-bar-panel-radius;
+	border-top-right-radius: @status-bar-panel-radius;
+	padding: 5px 11px 5px 0;
+
+	&.active {
+		background-color: @status-bar-active;
+	}
+
+	&:hover:not(.active) {
+		background: @status-bar-hover;
+	}
+}
+
 .base-share-link {
 	padding: 5px;
 	background: black;

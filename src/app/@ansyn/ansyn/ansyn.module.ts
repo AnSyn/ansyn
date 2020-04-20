@@ -46,7 +46,6 @@ import { ImageryChangeMapComponent } from './modules/plugins/components/imagery-
 		AnsynTranslationModule.addLoader([DefaultTranslateLoader, ComponentTranslateLoader]),
 		AppProvidersModule,
 		CasesModule,
-		FiltersModule,
 		LayersManagerModule,
 		ToolsModule,
 		TasksModule.provideRemote(TasksRemoteDefaultService, TasksService),

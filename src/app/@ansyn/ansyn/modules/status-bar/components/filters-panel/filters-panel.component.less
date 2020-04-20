@@ -1,0 +1,25 @@
+@import "ansyn/less/common";
+
+:host {
+	display: flex;
+	align-items: center;
+	margin: 5px;
+
+	div.filter {
+		margin-left: 5px;
+		button {
+			&:extend(.status-bar-button);
+			padding: 5px 10px;
+
+			i.icon {
+				line-height: 0.1;
+			}
+		}
+
+		div.filter-container {
+			position: absolute;
+			top: @status-bar-height;
+
+		}
+	}
+}

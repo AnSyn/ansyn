@@ -44,6 +44,9 @@ import { ArrayFilterContainerComponent } from './components/array-filter-contain
 		FilterCounterComponent,
 		ArrayFilterContainerComponent
 	],
+	exports: [
+		FilterContainerComponent
+	],
 	entryComponents: [FiltersCollectionComponent]
 })
 export class FiltersModule {

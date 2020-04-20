@@ -112,7 +112,6 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 
 	showAll(): void {
 		if (this.metadataFromState) {
-			// const clonedMetadata: FilterMetadata = Object.assign(Object.create(this.metadataFromState), this.metadataFromState);
 			this.metadataFromState.showAll();
 			this.onMetadataChange(this.metadataFromState);
 		}

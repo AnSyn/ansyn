@@ -1,12 +1,14 @@
 <div class="filter" *ngFor="let filter of filterConfig.filters">
 	<button ansynComboBoxTrigger
 			[disabled]="onlyFavorite"
+			[isActive]="expand[filter.modelName]"
+			[class.filtered]="filtered[filter.modelName]"
 			[withArrow]="false"
 			(click)="expandFilter(filter.modelName)">
 		{{filter.displayName | translate}}
 	</button>
 
-	<div class="filter-container">
+	<div class="filter-container scrolled">
 		<ansyn-filter-container
 			*ngIf="expand[filter.modelName]"
 			[filter]="filter">
@@ -17,6 +19,7 @@
 <div class="filter">
 	<button ansynComboBoxTrigger
 			[withArrow]="false"
+			[disabled]="disableOnlyFavoritesButton"
 			(click)="showOnlyFavorites()">
 		<i class="icon"
 		   [ngClass]="onlyFavorite ? 'icon-favorite-full'  : 'icon-favorite-empty'"></i>{{'Favorites' | translate}}

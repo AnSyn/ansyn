@@ -14,7 +14,7 @@ import {
 } from '../../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../../app.effects.module';
 import { selectSelectedLayersIds } from '../../../modules/menu-items/layers-manager/reducers/layers.reducer';
-import { selectFacets } from '../../../modules/menu-items/filters/reducer/filters.reducer';
+import { selectFacets } from '../../../modules/filters/reducer/filters.reducer';
 import { selectComboBoxesProperties } from '../../../modules/status-bar/reducers/status-bar.reducer';
 import { selectOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/reducers/tools.reducer';
 import { UpdateCaseAction } from '../../../modules/menu-items/cases/actions/cases.actions';

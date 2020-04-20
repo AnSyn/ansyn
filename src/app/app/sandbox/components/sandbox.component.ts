@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	AnsynApi,
+	AreaToCredentialsService,
 	GeoRegisteration,
 	IOverlay,
 	IOverlaysCriteria,
@@ -22,7 +23,7 @@ import { take, tap } from 'rxjs/operators';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
-import { AreaToCredentialsService } from "@ansyn/ansyn";
+import { OpenLayerSentinelSourceProviderSourceType } from '../../sentinel/open-layers-sentinel-source-provider';
 
 const moment = momentNs;
 
@@ -607,6 +608,22 @@ export class SandboxComponent implements OnInit, OnDestroy {
 	stopDrag() {
 		const plugin: AnnotationsVisualizer = this.imageryCommunicatorService.communicatorsAsArray()[0].getPlugin(AnnotationsVisualizer);
 		plugin.setMode(null, false);
+	}
+
+	insertManySensorName() {
+		const overlays = [];
+		for (let i = 0; i < 100; i++) {
+			overlays.push(this.overlay(
+				`${Math.random()}`.split('.')[1],
+				OpenLayersStaticImageSourceProviderSourceType,
+				`https://i.picsum.photos/id/${i}/700/400.jpg`,
+				null,
+				GeoRegisteration.notGeoRegistered,
+				'Sentinel',
+				`very long name${Math.round(Math.random() * 20 + 1)}`,700, 400 ))
+		}
+		this.ansynApi.setOverlays(overlays);
+
 	}
 
 }

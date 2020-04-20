@@ -14,6 +14,16 @@
 			i.icon {
 				line-height: 0.1;
 			}
+
+			&.active {
+				&:extend(.status-bar-button-active);
+			}
+			&:hover:not(.active):not(:disabled) {
+				&:extend(.status-bar-button-hover);
+			}
+			&.filtered {
+				border: 1px solid #f1f1f1
+			}
 		}
 
 		div.filter-container {

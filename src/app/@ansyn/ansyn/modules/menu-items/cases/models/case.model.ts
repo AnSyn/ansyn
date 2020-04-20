@@ -1,7 +1,7 @@
 import { IDilutedOverlay, IDilutedOverlaysHash, IOverlay, IOverlaysHash } from '../../../overlays/models/overlay.model';
 import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
 import { LayoutKey } from '@ansyn/map-facade';
-import { FilterType } from '../../filters/models/filter-type';
+import { FilterType } from '../../../filters/models/filter-type';
 import { IMapSettings, IMapSettingsData, IVisualizerEntity } from '@ansyn/imagery';
 import { OverlayDisplayMode } from '../../tools/overlays-display-mode/overlays-display-mode.component';
 

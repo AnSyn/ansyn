@@ -21,6 +21,12 @@
 				&:extend(.status-bar-button);
 				height: 35px;
 
+				&.active {
+					&:extend(.status-bar-button-active);
+				}
+				&:hover:not(.active) {
+					&:extend(.status-bar-button-hover);
+				}
 				i.small { // until we get new small icons
 					font-size: 1em;
 

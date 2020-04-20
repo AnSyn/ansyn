@@ -18,7 +18,7 @@ import { CasePanelComponent } from './components/case-panel/case-panel.component
 import { TimePickerComponent } from './components/timepicker/time-picker.component';
 import { LocationPickerComponent } from './components/location-picker/location-picker.component';
 import { FiltersPanelComponent } from './components/filters-panel/filters-panel.component';
-import { FiltersModule } from '../menu-items/filters/filters.module';
+import { FiltersModule } from '../filters/filters.module';
 
 @NgModule({
 	imports: [

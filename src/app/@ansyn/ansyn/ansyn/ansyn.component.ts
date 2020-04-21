@@ -1,12 +1,19 @@
-import { Store } from '@ngrx/store';
-import { Component, ElementRef, HostBinding, HostListener, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { Component, HostBinding, HostListener, Inject, Input, OnInit } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
-import { MapFacadeService, selectActiveMapId, selectMapsList, selectOverlayOfActiveMap } from '@ansyn/map-facade';
+import {
+	MapFacadeService,
+	mapStateSelector,
+	selectActiveMapId,
+	selectMapsList,
+	selectOverlayOfActiveMap
+} from '@ansyn/map-facade';
 import { selectIsPinned } from '@ansyn/menu';
 import { filter, map, withLatestFrom } from 'rxjs/operators';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
+import { selectSelectedCase } from '../modules/menu-items/cases/reducers/cases.reducer';
 import { LoadDefaultCaseAction } from '../modules/menu-items/cases/actions/cases.actions';
-import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
+import { ICase, ICaseMapState } from '../modules/menu-items/cases/models/case.model';
 import { IToolsConfig, toolsConfig } from '../modules/menu-items/tools/models/tools-config';
 import { UpdateToolsFlags } from '../modules/menu-items/tools/actions/tools.actions';
 import { toolsFlags } from '../modules/menu-items/tools/reducers/tools.reducer';
@@ -34,8 +41,6 @@ export class AnsynComponent implements OnInit {
 			map(([[activeMapId, overlay], mapList]: [[string, IOverlay], ICaseMapState[]]) => MapFacadeService.mapById(mapList, activeMapId)),
 			filter(Boolean)
 		);
-
-	@ViewChild('animatedElementVertical') animatedElementVertical: ElementRef;
 
 	@HostBinding('class.component') component = this.componentMode;
 	@Input() version;
@@ -65,14 +70,6 @@ export class AnsynComponent implements OnInit {
 			value: this.toolsConfigData.ShadowMouse && this.toolsConfigData.ShadowMouse.forceSendShadowMousePosition
 		}
 		]));
-
-		// Hack
-		// The problem was that the app footer was about 10px too high, and went over
-		// the "i" icon and the map scale
-		this.animatedElementVertical.nativeElement.addEventListener('animationend', () => {
-			(this.animatedElementVertical.nativeElement as HTMLElement).style.animation = 'none';
-			(this.animatedElementVertical.nativeElement as HTMLElement).style.opacity = '1';
-		});
 
 		setTimeout(() => {
 			this.renderContextMenu = true;

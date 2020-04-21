@@ -610,20 +610,4 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		plugin.setMode(null, false);
 	}
 
-	insertManySensorName() {
-		const overlays = [];
-		for (let i = 0; i < 100; i++) {
-			overlays.push(this.overlay(
-				`${Math.random()}`.split('.')[1],
-				OpenLayersStaticImageSourceProviderSourceType,
-				`https://i.picsum.photos/id/${i}/700/400.jpg`,
-				null,
-				GeoRegisteration.notGeoRegistered,
-				'Sentinel',
-				`very long name${Math.round(Math.random() * 20 + 1)}`,700, 400 ))
-		}
-		this.ansynApi.setOverlays(overlays);
-
-	}
-
 }

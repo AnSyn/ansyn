@@ -9,6 +9,12 @@
 				*ngIf="metadataFromState && metadataFromState.collapse && metadataFromState.isFiltered() && !showOnlyFavorite"
 			  	class="filtered">{{"(filtered)" | translate}}</span>
 		</div>
+
+		<div class="filter-title-buttons">
+			<div *ngIf="!showOnlyFavorite" class="show-all">
+				<span (click)="showAll()">{{'Show all' | translate}}</span>
+			</div>
+		</div>
 	</div>
 
 	<div *ngIf="(isLoading$ | async); else filterBody">

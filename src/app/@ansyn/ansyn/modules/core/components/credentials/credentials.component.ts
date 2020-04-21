@@ -4,19 +4,31 @@ import { Store } from '@ngrx/store';
 import { getMenuSessionData, UnSelectMenuItemAction } from '@ansyn/menu';
 import { SetUserEnter } from '@ansyn/menu';
 import { fromEvent, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, filter } from 'rxjs/operators';
+import { ClickOutsideService } from '../../click-outside/click-outside.service';
+import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
 
 @Component({
 	selector: 'ansyn-credentials',
 	templateUrl: './credentials.component.html',
-	styleUrls: ['./credentials.component.less']
+	styleUrls: ['./credentials.component.less'],
+	providers: [ClickOutsideService]
 })
+@AutoSubscriptions()
 export class CredentialsComponent implements OnInit, OnDestroy {
-	onClickOutside$: Subscription;
+
+	@AutoSubscription
+	onClickOutside$ = () => this.clickOutsideService.onClickOutside(this.element.nativeElement, this.element.nativeElement.lastChild).pipe(
+		filter(Boolean),
+		tap(() => {
+				this.closeWindow();
+		})
+	);
 
 	constructor(public credentialsService: CredentialsService,
 				protected store$: Store<any>,
-				protected element: ElementRef) {
+				protected element: ElementRef,
+				protected clickOutsideService: ClickOutsideService) {
 		const menuSession = getMenuSessionData();
 		if (menuSession.isUserFirstEntrance) {
 			store$.dispatch(new SetUserEnter());
@@ -32,17 +44,9 @@ export class CredentialsComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		this.onClickOutside$ = fromEvent(this.element.nativeElement, 'click').pipe(
-			tap((event: any) => {
-				if ((event.path && !event.path.includes(this.element.nativeElement.lastChild))) {
-					this.closeWindow();
-				}
-			})
-		).subscribe();
 	}
 
 	ngOnDestroy(): void {
-		this.onClickOutside$.unsubscribe();
 	}
 
 	closeWindow() {

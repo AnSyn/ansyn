@@ -2,7 +2,7 @@
 
 :host {
 	position: absolute;
-	top: 0;
+	top: @status-bar-height;
 	transform: translateY(-100%);
 
 	input.time-picker-input {
@@ -19,4 +19,9 @@
 		font-family: @app-font;
 		font-size: 14px;
 	}
+}
+
+// time picker: set z-index
+/deep/ .cdk-overlay-container {
+	z-index: 4000;
 }

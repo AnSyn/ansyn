@@ -21,6 +21,7 @@ import { selectActiveAnnotationLayer, selectLayers } from '../../../layers-manag
 import { ILayer, LayerType } from '../../../layers-manager/models/layers.model';
 import { SetActiveAnnotationLayer } from '../../../layers-manager/actions/layers.actions';
 import { ANNOTATION_MODE_LIST, AnnotationMode, IStyleWeight } from '@ansyn/ol';
+import { ClickOutsideService } from '../../../../core/click-outside/click-outside.service';
 
 export enum SelectionBoxTypes {
 	None,
@@ -31,7 +32,8 @@ export enum SelectionBoxTypes {
 @Component({
 	selector: 'ansyn-annotations-control',
 	templateUrl: './annotations-control.component.html',
-	styleUrls: ['./annotations-control.component.less']
+	styleUrls: ['./annotations-control.component.less'],
+	providers: [ClickOutsideService]
 })
 @AutoSubscriptions({
 	init: 'ngOnInit',
@@ -88,12 +90,10 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	public ANNOTATION_MODE_LIST = ANNOTATION_MODE_LIST;
 
 	@AutoSubscription
-	onClickOutside$ = fromEvent(window, 'click').pipe(
-		filter(() => this.expand),
-		tap((event: any) => {
-			if (event.path && !event.path.includes(this.element.nativeElement)) {
-				this.hideMe.emit();
-			}
+	onClickOutside$ = this.clickOutsideService.onClickOutside().pipe(
+		filter((isClickOutside) => isClickOutside && this.expand),
+		tap(() => {
+			this.hideMe.emit();
 		})
 	);
 
@@ -125,6 +125,7 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	constructor(
 		protected element: ElementRef,
 		public store: Store<any>,
+		protected clickOutsideService: ClickOutsideService,
 		@Inject(DOCUMENT) public document: any) {
 	}
 

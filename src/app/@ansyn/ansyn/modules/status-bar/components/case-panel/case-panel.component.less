@@ -1,10 +1,8 @@
-@import "ansyn/less/colors";
-@import "ansyn/less/globals";
+@import "ansyn/less/common";
 
 :host {
-	display: flex;
+	&:extend(.status-bar-panel);
 	flex-flow: wrap;
-	align-items: center;
 	border-left: 1px solid @status-bar-delimiter;
 	user-select: none;
 

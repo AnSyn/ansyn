@@ -2,6 +2,8 @@
 	<button ansynComboBoxTrigger
 			[disabled]="onlyFavorite"
 			[isActive]="expand[filter.modelName]"
+			[attr.tooltip-value]="getFilterTooltip(filter.displayName) | translate"
+			tooltip-class="bottom"
 			[class.filtered]="filtered[filter.modelName]"
 			[withArrow]="false"
 			(click)="expandFilter(filter.modelName)">

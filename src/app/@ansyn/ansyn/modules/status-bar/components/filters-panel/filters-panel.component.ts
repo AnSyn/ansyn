@@ -86,4 +86,8 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 	private closeAllFilter() {
 		this.expandFilter();
 	}
+
+	getFilterTooltip(filterName: string) {
+		return `filter by ${filterName}`;
+	}
 }

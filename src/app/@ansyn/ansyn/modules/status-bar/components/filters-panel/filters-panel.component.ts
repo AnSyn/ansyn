@@ -12,11 +12,13 @@ import { UpdateFacetsAction } from '../../../filters/actions/filters.actions';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
 import { tap, filter } from 'rxjs/operators';
 import { ICaseFacetsState } from '../../../menu-items/cases/models/case.model';
+import { ClickOutsideService } from '../../../core/click-outside/click-outside.service';
 
 @Component({
 	selector: 'ansyn-filters-panel',
 	templateUrl: './filters-panel.component.html',
-	styleUrls: ['./filters-panel.component.less']
+	styleUrls: ['./filters-panel.component.less'],
+	providers: [ClickOutsideService]
 })
 @AutoSubscriptions()
 export class FiltersPanelComponent implements OnInit, OnDestroy {
@@ -46,8 +48,15 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 		})
 	);
 
+	@AutoSubscription
+	isClickOutside$ = this.clickOutside.onClickOutside().pipe(
+		filter(clickOutside => clickOutside && this.isSomeFilterExpand()),
+		tap( this.closeAllFilter.bind(this))
+	);
+
 	constructor(@Inject(filtersConfig) public filterConfig: IFiltersConfig,
-				public store: Store<IFiltersState>) {
+				public store: Store<IFiltersState>,
+				protected clickOutside: ClickOutsideService) {
 		this.filterConfig.filters.forEach( filter => this.expand[filter.modelName] = false);
 	}
 
@@ -58,14 +67,23 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 	}
 
 	showOnlyFavorites() {
-		this.expandFilter('favorite');
+		this.closeAllFilter();
 		this.store.dispatch(new UpdateFacetsAction({ showOnlyFavorites: !this.onlyFavorite }));
 	}
 
-	expandFilter(filter) {
+	expandFilter(filter?) {
 		const newState = !this.expand[filter];
-		this.filterConfig.filters.forEach( filter => this.expand[filter.modelName] = false)
-		this.expand[filter] = newState;
+		this.filterConfig.filters.forEach( filter => this.expand[filter.modelName] = false);
+		if (filter) {
+			this.expand[filter] = newState;
+		}
 	}
 
+	isSomeFilterExpand() {
+		return Object.values(this.expand).some(Boolean);
+	}
+
+	private closeAllFilter() {
+		this.expandFilter();
+	}
 }

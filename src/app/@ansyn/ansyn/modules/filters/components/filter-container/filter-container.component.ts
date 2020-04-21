@@ -10,7 +10,7 @@ import {
 } from '../../reducer/filters.reducer';
 import { Observable } from 'rxjs';
 import { FilterMetadata } from '../../models/metadata/filter-metadata.interface';
-import { Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { clone } from 'lodash';
 import { EnumFilterMetadata } from '../../models/metadata/enum-filter-metadata';
@@ -26,7 +26,7 @@ import { FilterType } from '../../models/filter-type';
 	animations: [
 		trigger('fieldsTrigger', [
 			state('true', style({
-				maxHeight: '350px',
+				maxHeight: '300px',
 				opacity: 1
 			})),
 			state('false', style({
@@ -47,7 +47,7 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	filtersSearchResults = {};
 
 	@Input() filter;
-	@ViewChild('fields') fields: ElementRef;
+
 	public isLoading$: Observable<boolean> = this.store.select(selectIsLoading);
 
 	filterSearchResults$: Observable<any> = this.store.pipe(

@@ -17,7 +17,7 @@
 	</div>
 
 	<ng-template #filterBody>
-		<div class="fields scrolled " *ngIf="!showOnlyFavorite" #fields [@fieldsTrigger]="!metadataFromState.collapse">
+		<div class="fields scrolled " *ngIf="!showOnlyFavorite" [@fieldsTrigger]="!metadataFromState.collapse">
 			<div *ngIf="metadataFromState" [ngSwitch]="metadataFromState?.type">
 
 				<ansyn-enum-filter-container

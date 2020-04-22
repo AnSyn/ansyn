@@ -1,5 +1,5 @@
-sudo: required # is required to use docker service in travis
-
+os: linux
+dist: trusty
 addons:
   chrome: stable
 
@@ -41,12 +41,10 @@ before_deploy:
 deploy:
   - provider: script
     script: sh -x scripts/deploy.sh $REPO_DEV $TRAVIS_COMMIT $CLUSTER $SERVICES_DEV
-    skip_cleanup: true
     on:
       branch: master
   - provider: script
     script: sh -x scripts/deploy.sh $REPO_PROD $TRAVIS_TAG $CLUSTER $SERVICES_PROD
-    skip_cleanup: true
     on:
       tags: true
 

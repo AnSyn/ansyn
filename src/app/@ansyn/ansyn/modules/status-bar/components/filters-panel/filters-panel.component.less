@@ -2,14 +2,15 @@
 
 :host {
 	&:extend(.status-bar-panel);
-
 	div.filter {
-		margin-left: 2px;
+		margin-right: 6px;
 
 		button {
 			&:extend(.status-bar-button-round);
-			padding: 5px 20px;
 
+			span.filter-counter {
+				margin-left: 5px;
+			}
 			i.icon {
 				line-height: 0.1px;
 			}
@@ -25,12 +26,21 @@
 			&.filtered {
 				border: 1px solid #f1f1f1
 			}
+
+			&:not(.favorites) {
+				padding: 5px 20px;
+				justify-content: center;
+			}
 		}
 
 		div.filter-container {
 			position: absolute;
 			top: @status-bar-height;
 
+		}
+
+		&:not(:last-child) {
+			width: 150px;
 		}
 	}
 }

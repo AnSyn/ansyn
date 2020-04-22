@@ -7,7 +7,8 @@
 			[class.filtered]="isFilter(filter.modelName)"
 			[withArrow]="false"
 			(click)="expandFilter(filter.modelName)">
-		<span class="title">{{filter.displayName | translate}} {{getTitle(filter.modelName)}}</span>
+		<span class="title">{{filter.displayName | translate}}</span>
+		<span class="filter-counter">{{getTitle(filter.modelName)}}</span>
 	</button>
 
 	<div class="filter-container scrolled">

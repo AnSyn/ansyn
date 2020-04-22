@@ -252,7 +252,6 @@ input[type=number]::-webkit-outer-spin-button {
 	font-family: 'AnSyn';
 	src: url('/assets/fonts/AnSyn/AnSyn.eot?56493936');
 	src: url('/assets/fonts/AnSyn/AnSyn.eot?56493936#iefix') format('embedded-opentype'),
-	url('/assets/fonts/AnSyn/AnSyn.woff2?56493936') format('woff2'),
 	url('/assets/fonts/AnSyn/AnSyn.woff?56493936') format('woff'),
 	url('/assets/fonts/AnSyn/AnSyn.ttf?56493936') format('truetype'),
 	url('/assets/fonts/AnSyn/AnSyn.svg?56493936#AnSyn') format('svg');

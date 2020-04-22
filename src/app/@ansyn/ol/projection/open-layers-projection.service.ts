@@ -5,6 +5,7 @@ import { FeatureCollection, GeometryObject, Point } from 'geojson';
 import * as proj from 'ol/proj';
 import OLGeoJSON from 'ol/format/GeoJSON';
 import './free-layer-projection';
+import { getNewPoint } from '../../imagery/utils/geo';
 
 @Injectable({
 	providedIn: 'root'
@@ -25,8 +26,8 @@ export class OpenLayersProjectionService extends ProjectionService {
 
 	projectApproximatelyToImage<olGeometry>(point: Point, mapObject: any): Observable<Point> {
 		const projection = mapObject.getView().getProjection();
-		point.coordinates = proj.fromLonLat(<[number, number]>point.coordinates, projection);
-		return of(point);
+		const newPoint = getNewPoint(proj.fromLonLat(<[number, number]>point.coordinates, projection));
+		return of(newPoint);
 	}
 
 	projectApproximately(point: Point, mapObject: any): Observable<Point> {

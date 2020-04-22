@@ -13,15 +13,16 @@ import {
 	IMapSource,
 	MAP_PROVIDERS_CONFIG
 } from '@ansyn/imagery';
-import { fromEvent } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { LoggerService } from '../../../core/services/logger.service';
+import { ClickOutsideService } from '../../../core/click-outside/click-outside.service';
 
 @Component({
 	selector: 'ansyn-imagery-change-map',
 	templateUrl: './imagery-change-map.component.html',
-	styleUrls: ['./imagery-change-map.component.less']
+	styleUrls: ['./imagery-change-map.component.less'],
+	providers: [ClickOutsideService]
 })
 @AutoSubscriptions()
 export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryComponent {
@@ -34,16 +35,6 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	communicator: CommunicatorEntity;
 
 	@AutoSubscription
-	onClickOutside$ = fromEvent(window, 'click').pipe(
-		filter(() => Boolean(this.showPopup)),
-		tap((event: any) => {
-			if (event.path && !event.path.includes(this.element.nativeElement)) {
-				this.showPopup = false;
-			}
-		})
-	);
-
-	@AutoSubscription
 	isMinimalistViewMode$ = this.store$.select(selectIsMinimalistViewMode).pipe(
 		tap(isMinimalistViewMode => {
 			this.show = !isMinimalistViewMode;
@@ -51,10 +42,18 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	);
 
 	constructor(protected store$: Store<any>,
-				protected element: ElementRef,
 				protected logger: LoggerService,
+				protected clickOutsideService: ClickOutsideService,
 				@Inject(MAP_PROVIDERS_CONFIG) protected mapProvidersConfig: IMapProviderConfig) {
 	}
+
+	@AutoSubscription
+	onClickOutside$ = () => this.clickOutsideService.onClickOutside().pipe(
+		filter((shouldCallback) => {
+			return shouldCallback && this.showPopup;
+		}),
+		tap(this.togglePopup.bind(this))
+	);
 
 	@AutoSubscription
 	onDisplayChange$ = () => this.store$.select(selectOverlayByMapId(this.mapId)).pipe(

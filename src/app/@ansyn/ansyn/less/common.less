@@ -13,17 +13,20 @@
 .status-bar-panel {
 	display: flex;
 	align-items: center;
-	margin: 5px;
+	margin: 2px;
 }
 
 .status-bar-button {
-	margin-top: 1px;
 	background: @status-bar-panels;
+	padding: 5px 11px 5px 0;
+}
+
+.status-bar-button-round {
+	&:extend(.status-bar-button);
 	border-bottom-left-radius: @status-bar-panel-radius;
 	border-top-left-radius: @status-bar-panel-radius;
 	border-bottom-right-radius: @status-bar-panel-radius;
 	border-top-right-radius: @status-bar-panel-radius;
-	padding: 5px 11px 5px 0;
 }
 
 .status-bar-button-active {

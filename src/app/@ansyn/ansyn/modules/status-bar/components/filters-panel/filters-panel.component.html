@@ -4,10 +4,10 @@
 			[isActive]="expand[filter.modelName]"
 			[attr.tooltip-value]="getFilterTooltip(filter.displayName) | translate"
 			tooltip-class="bottom"
-			[class.filtered]="filtered[filter.modelName]"
+			[class.filtered]="isFilter(filter.modelName)"
 			[withArrow]="false"
 			(click)="expandFilter(filter.modelName)">
-		{{filter.displayName | translate}}
+		<span class="title">{{filter.displayName | translate}} {{getTitle(filter.modelName)}}</span>
 	</button>
 
 	<div class="filter-container scrolled">
@@ -18,12 +18,14 @@
 	</div>
 </div>
 
-<div class="filter favorites">
+<div class="filter">
 	<button ansynComboBoxTrigger
+			class="favorites"
 			[withArrow]="false"
 			[disabled]="disableOnlyFavoritesButton"
 			(click)="showOnlyFavorites()">
 		<i class="icon"
-		   [ngClass]="onlyFavorite ? 'icon-favorite-full'  : 'icon-favorite-empty'"></i>{{'Favorites' | translate}}
+		   [ngClass]="onlyFavorite ? 'icon-favorite-full'  : 'icon-favorite-empty'"></i>&nbsp;
+		<span class="title">{{'Favorites' | translate}}</span>
 	</button>
 </div>

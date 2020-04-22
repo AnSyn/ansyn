@@ -10,9 +10,9 @@ import {
 import { Store } from '@ngrx/store';
 import { UpdateFacetsAction } from '../../../filters/actions/filters.actions';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
-import { tap, filter } from 'rxjs/operators';
-import { ICaseFacetsState } from '../../../menu-items/cases/models/case.model';
+import { tap, filter, withLatestFrom } from 'rxjs/operators';
 import { ClickOutsideService } from '../../../core/click-outside/click-outside.service';
+import { EnumFilterMetadata } from '../../../filters/models/metadata/enum-filter-metadata';
 
 @Component({
 	selector: 'ansyn-filters-panel',
@@ -24,7 +24,7 @@ import { ClickOutsideService } from '../../../core/click-outside/click-outside.s
 export class FiltersPanelComponent implements OnInit, OnDestroy {
 
 	expand: {[filter: string]: boolean} = {};
-	filtered: {[filter: string]: boolean} = {};
+	filters: {[filter: string]: {active: boolean, title: string}} = {};
 	onlyFavorite: boolean;
 	disableOnlyFavoritesButton: boolean;
 
@@ -39,11 +39,22 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	selectFacets = this.store.select(selectFacets).pipe(
-		filter((facets: ICaseFacetsState) => facets.filters.length > 0),
-		tap(facets => {
-			facets.filters.forEach( (filter: any) => {
-				this.filtered[filter.fieldName] = filter.metadata.unCheckedEnums && filter.metadata.unCheckedEnums.length > 0
+	updateFilters$ = this.store.select(selectFilters).pipe(
+		filter(filters => filters && filters.size > 0 ),
+		withLatestFrom(this.store.select(selectFacets)),
+		tap(([filters, facets]) => {
+			filters.forEach( (metadata, filter ) => {
+				let title = '';
+				if ( metadata instanceof EnumFilterMetadata) {
+					const facetMetadata: any = facets.filters.find( f => f.fieldName === filter.modelName).metadata;
+					const all = metadata.enumsFields.size;
+					const unChecked = facetMetadata.unCheckedEnums && facetMetadata.unCheckedEnums.length
+					title = unChecked === 0 ? '' : `${all - unChecked}/${all}`;
+				}
+				this.filters[filter.modelName] = {
+					active: metadata.isFiltered(),
+					title: title
+				}
 			})
 		})
 	);
@@ -69,6 +80,14 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 	showOnlyFavorites() {
 		this.closeAllFilter();
 		this.store.dispatch(new UpdateFacetsAction({ showOnlyFavorites: !this.onlyFavorite }));
+	}
+
+	isFilter(filter) {
+		return this.filters[filter] && this.filters[filter].active || false;
+	}
+
+	getTitle(filter) {
+		return this.filters[filter] && this.filters[filter].title || '';
 	}
 
 	expandFilter(filter?) {

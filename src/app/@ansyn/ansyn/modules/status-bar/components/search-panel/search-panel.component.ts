@@ -10,8 +10,8 @@ import { Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations/src/animation_metadata';
-import { filter, tap } from 'rxjs/operators';
-import { selectDataInputFilter, selectTime } from '../../../overlays/reducers/overlays.reducer';
+import { filter, tap, withLatestFrom } from 'rxjs/operators';
+import { selectDataInputFilter, selectRegion, selectTime } from '../../../overlays/reducers/overlays.reducer';
 import { ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -71,8 +71,9 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		this.store$.select(selectGeoFilterType),
 		this.store$.select(selectGeoFilterActive)
 	).pipe(
-		tap(([geoFilterType, active]) => {
-			this.geoFilterTitle = geoFilterType;
+		withLatestFrom(this.store$.select(selectRegion)),
+		tap(([[geoFilterType, active], region]) => {
+			this.geoFilterTitle = `${geoFilterType} (${region.coordinates.toString()})`;
 			this.locationPickerExpand = active;
 		})
 	);

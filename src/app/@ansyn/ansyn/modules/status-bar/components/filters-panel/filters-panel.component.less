@@ -4,21 +4,24 @@
 	&:extend(.status-bar-panel);
 
 	div.filter {
-		margin-left: 5px;
+		margin-left: 2px;
+
 		button {
-			&:extend(.status-bar-button);
-			padding: 5px 10px;
+			&:extend(.status-bar-button-round);
+			padding: 5px 20px;
 
 			i.icon {
-				line-height: 0.1;
+				line-height: 0.1px;
 			}
 
 			&.active {
 				&:extend(.status-bar-button-active);
 			}
+
 			&:hover:not(.active):not(:disabled) {
 				&:extend(.status-bar-button-hover);
 			}
+
 			&.filtered {
 				border: 1px solid #f1f1f1
 			}
@@ -30,4 +33,18 @@
 
 		}
 	}
+}
+
+@media screen and (max-width: 1200px) {
+	:host {
+		div.filter {
+			button.favorites {
+				padding: 5px;
+				span.title {
+					font-size: 0;
+				}
+			}
+		}
+	}
+
 }

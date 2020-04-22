@@ -5,17 +5,11 @@
 :host {
 	&:extend(.status-bar-panel);
 
-	display: flex;
-	flex-direction: row;
-	padding-left: 5px;
-	padding-right: 5px;
-	width: fit-content;
-
 	.box {
-		margin: 0 5px;
+		margin: 0 1.5px;
 
 		.button {
-			&:extend(.status-bar-button);
+			&:extend(.status-bar-button-round);
 			height: 35px;
 
 			&.active {
@@ -25,18 +19,13 @@
 			&:hover:not(.active) {
 				&:extend(.status-bar-button-hover);
 			}
-
-			i.small { // until we get new small icons
-				font-size: 1em;
-
-			}
 		}
 
 		&#editGeoFilter {
-			width: 85px;
-
-			button {
-				justify-content: flex-start;
+			width: 150px;
+			span {
+				overflow: hidden;
+				text-overflow: ellipsis;
 			}
 		}
 	}

@@ -1,3 +1,25 @@
+
+<!-- Geo filter -->
+<div class="box" id="editGeoFilter">
+
+	<button ansynComboBoxTrigger
+			#locationPickerTrigger
+			(click)="toggleLocationPicker()"
+			[attr.tooltip-value]="statusBarConfig?.toolTips?.geoFilter | translate"
+			[isActive]="locationPickerExpand"
+			[withArrow]="false"
+			icon="icon icon-status-bar-geo"
+			tooltip-class="bottom"
+			class="button">
+		<span class="title">{{geoFilterTitle}}</span>
+	</button>
+
+	<ansyn-location-picker
+		*ngIf="locationPickerExpand"
+		[geoFilter]="geoFilterTitle">
+	</ansyn-location-picker>
+</div>
+
 <!-- Time -->
 <div class="box">
 	<button ansynComboBoxTrigger
@@ -19,27 +41,6 @@
 					  (closeTimePicker)="toggleTimePicker()"
 					  [trigger]="timePickerTrigger?.optionsTrigger?.nativeElement"
 	></ansyn-timepicker>
-</div>
-
-<!-- Geo filter -->
-<div class="box" id="editGeoFilter">
-
-	<button ansynComboBoxTrigger
-			#locationPickerTrigger
-			(click)="toggleLocationPicker()"
-			[attr.tooltip-value]="statusBarConfig?.toolTips?.geoFilter | translate"
-			[isActive]="locationPickerExpand"
-			[withArrow]="false"
-			icon="icon icon-status-bar-geo small"
-			tooltip-class="bottom"
-			class="button">
-		<span class="title">{{geoFilterTitle}}</span>
-	</button>
-
-	<ansyn-location-picker
-		*ngIf="locationPickerExpand"
-		[geoFilter]="geoFilterTitle">
-	</ansyn-location-picker>
 </div>
 
 <!-- data input filter-->

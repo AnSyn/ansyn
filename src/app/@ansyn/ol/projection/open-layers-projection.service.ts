@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { CommunicatorEntity, EPSG_4326, ProjectionService } from '@ansyn/imagery';
+import { CommunicatorEntity, EPSG_4326, getNewPoint, ProjectionService } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
 import { FeatureCollection, GeometryObject, Point } from 'geojson';
 import * as proj from 'ol/proj';
 import OLGeoJSON from 'ol/format/GeoJSON';
 import './free-layer-projection';
-import { getNewPoint } from '../../imagery/utils/geo';
 
 @Injectable({
 	providedIn: 'root'

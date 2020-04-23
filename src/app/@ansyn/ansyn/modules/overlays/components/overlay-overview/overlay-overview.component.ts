@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild, Inject } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { fromEvent, Observable } from 'rxjs';
 import { getTimeFormat } from '@ansyn/map-facade';
@@ -14,6 +14,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { takeWhile, tap } from 'rxjs/operators';
 import { Actions, ofType } from '@ngrx/effects';
 import { IOverlay } from '../../models/overlay.model';
+import { DOCUMENT } from '@angular/common';
 
 export interface IOverviewOverlay extends IOverlay {
 	thumbnailName: string;
@@ -51,7 +52,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	protected topElement = this.el.nativeElement.parentElement;
 
 	get dropElement(): Element {
-		return this.topElement.querySelector(`#dropId-${ this.overlayId }`);
+		return this.el.nativeElement.ownerDocument.getElementById(`dropId-${ this.overlayId }`);
 	}
 
 	public get const() {

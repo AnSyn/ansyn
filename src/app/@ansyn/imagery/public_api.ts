@@ -49,6 +49,7 @@ export {
 	calculateLineDistance,
 	calculateGeometryArea,
 	getDistanceBetweenPoints,
+	getNewPoint,
 	EPSG_4326,
 	EPSG_3857
 } from './utils/geo';

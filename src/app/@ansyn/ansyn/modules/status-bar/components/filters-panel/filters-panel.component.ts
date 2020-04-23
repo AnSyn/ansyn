@@ -107,6 +107,6 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 	}
 
 	getFilterTooltip(filterName: string) {
-		return `filter by ${filterName}`;
+		return `Filter by ${filterName}`;
 	}
 }

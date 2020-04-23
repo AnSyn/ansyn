@@ -11,9 +11,7 @@
 			span.filter-counter {
 				margin-left: 5px;
 			}
-			i.icon {
-				line-height: 0.1px;
-			}
+
 
 			&.active {
 				&:extend(.status-bar-button-active);
@@ -30,6 +28,13 @@
 			&:not(.favorites) {
 				padding: 5px 20px;
 				justify-content: center;
+			}
+
+			&.favorites {
+				i.icon {
+					font-size: 20px;
+					line-height: unset;
+				}
 			}
 		}
 

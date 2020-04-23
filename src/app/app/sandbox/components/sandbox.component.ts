@@ -23,7 +23,6 @@ import { take, tap } from 'rxjs/operators';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
-import { OpenLayerSentinelSourceProviderSourceType } from '../../sentinel/open-layers-sentinel-source-provider';
 
 const moment = momentNs;
 

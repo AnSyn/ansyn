@@ -14,7 +14,7 @@ import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { IFiltersConfig } from '../../models/filters-config';
 import { IFilterSearchResults } from '../../models/filter-search-results';
-/** deprected **/
+
 @Component({
 	selector: 'ansyn-filters',
 	templateUrl: './filters-collection.component.html',

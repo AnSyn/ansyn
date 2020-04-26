@@ -90,15 +90,11 @@ export interface ICaseState extends IDilutedCaseState {
 
 export type CaseRegionState = any | Feature<Polygon> | Point | Polygon | Position;
 
-export interface IDataInputFilterValue {
-	providerName: string;
-	sensorType: string;
-	sensorName: string;
-}
+export type DataInputFilterValue = string
 
 export interface ICaseDataInputFiltersState {
 	fullyChecked?: boolean;
-	filters: IDataInputFilterValue[];
+	filters: DataInputFilterValue[];
 }
 
 export interface ICaseTimeState {

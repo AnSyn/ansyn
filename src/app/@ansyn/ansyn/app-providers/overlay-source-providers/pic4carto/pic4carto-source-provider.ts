@@ -55,17 +55,6 @@ export class Pic4cartoSourceProvider extends BaseOverlaySourceProvider {
 			maxdate: `${fetchParams.timeRange.end.getTime()}`
 		};
 
-		if (Array.isArray(fetchParams.dataInputFilters) && fetchParams.dataInputFilters.length > 0) {
-			const providers = this.config.providers;
-			const providerFilter = fetchParams.dataInputFilters.map(({ sensorType }) => sensorType);
-			ignore = providers.filter(provider => !providerFilter.includes(provider)).toString();
-
-			params = {
-				...params,
-				ignore
-			}
-		}
-
 		return this.fetchRequest(params, fetchParams);
 	}
 

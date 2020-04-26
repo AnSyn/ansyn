@@ -3,7 +3,6 @@ import { TreeviewConfig, TreeviewItem, TreeviewI18n } from 'ngx-treeview';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { Store } from '@ngrx/store';
 import { isEqual } from 'lodash';
-import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, take, tap } from 'rxjs/operators';
 import { SetToastMessageAction } from '@ansyn/map-facade';
@@ -14,9 +13,9 @@ import {
 	IOverlaysSourceProvider,
 	MultipleOverlaysSourceConfig
 } from '../../../core/models/multiple-overlays-source-config';
-import { IDataInputFilterValue } from '../../../menu-items/cases/models/case.model';
 import { CustomTreeviewI18n } from './custom-treeview-i18n';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
+import { DataInputFilterValue } from '../../../menu-items/cases/models/case.model';
 
 @Component({
 	selector: 'ansyn-tree-view',
@@ -30,7 +29,7 @@ import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
 export class TreeViewComponent implements OnInit, OnDestroy {
 	@Output() closeTreeView = new EventEmitter<any>();
 	@Output() dataInputTitleChange = new EventEmitter<string>();
-	_selectedFilters: IDataInputFilterValue[];
+	_selectedFilters: DataInputFilterValue[];
 	dataInputFiltersItems: TreeviewItem[] = [];
 	leavesCount: number;
 	dataFilters: TreeviewItem[];
@@ -45,7 +44,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 			this.lastTitle = this.updateTitle();
 			if (Boolean(this._selectedFilters)) {
 				this.dataInputFiltersItems.forEach(item => {
-					item.checked = this._selectedFilters.some(selectedFilter => isEqual(selectedFilter, item.value));
+					item.checked = _preFilter.fullyChecked || this._selectedFilters.some(selectedFilter => isEqual(selectedFilter, item.value));
 				});
 			}
 		})
@@ -110,7 +109,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	}
 
 	selectAll() {
-		return this.dataFilters.map( filter => filter.text);
+		return this.dataFilters.map( filter => filter.value);
 	}
 
 	ngOnInit(): void {

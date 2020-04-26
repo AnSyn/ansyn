@@ -18,7 +18,7 @@ import { ImageProcessingControlComponent } from "./components/image-processing-c
 
 describe('OverlayStatusComponent', () => {
 	let component: OverlayStatusComponent;
-	let  fixture: ComponentFixture<OverlayStatusComponent>;
+	let fixture: ComponentFixture<OverlayStatusComponent>;
 	let store: Store<any>;
 	let actions: Observable<any>;
 

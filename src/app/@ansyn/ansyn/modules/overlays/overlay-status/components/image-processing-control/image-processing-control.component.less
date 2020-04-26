@@ -24,39 +24,28 @@
 @contrast: 5%;
 
 :host {
-	width: 0;
+	width: @tools-box-width;
 	height: @tools-box-height;
 	position: absolute;
-	top: -7px;
-	right: 0;
+	top: 51px;
+	left: -178px;
 	transform: translateX(100%);
 	background: @background-color-3;
 	transition-property: width;
 	transition-duration: 0.1s;
 	transition-delay: 0s;
-	z-index: @z-index-image-processing-control;
+	z-index: 0;
 	color: white;
-
-	&.expand {
-		width: @tools-box-width;
-		height: @tools-box-height;
-		transition-delay: 0.1s;
-
-		div.image-processing-container {
-			padding: 0 20px;
-			visibility: visible;
-			transition-delay: 0.1s;
-			display: flex;
-			flex-direction: column;
-		}
-	}
 
 	div.image-processing-container {
 		transition-delay: 0.05s;
-		visibility: hidden;
+		visibility: visible;
+		padding: 0 20px;
+		display: flex;
+		flex-direction: column;
 
 		.title-wrapper {
-			display: flex;
+			display: block;
 			margin: 10px 0;
 
 			.title {
@@ -67,7 +56,9 @@
 			.resetAll {
 				margin-left: auto;
 				color: @background-color-7;
-				margin-top: 5px;
+				margin-top: 24px;
+				margin-left: 152px;
+				width: 100%;
 				font-size: 9px;
 				cursor: pointer;
 
@@ -84,7 +75,12 @@
 			li {
 				list-style-type: none;
 				font-size: 12px;
+				height: 20px;
 				margin-bottom: 16px;
+				padding-bottom: 10px;
+				.param-info {
+					height: 10px;
+				}
 
 				.input-wrapper {
 					display: flex;

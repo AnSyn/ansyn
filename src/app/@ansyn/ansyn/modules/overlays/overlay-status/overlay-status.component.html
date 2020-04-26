@@ -1,26 +1,3 @@
-<button class="small-icon-button set-preset" *ngIf="overlay "
-
-		(click)="togglePreset()"
-		[disabled]="noGeoRegistration"
-		[attr.tooltip-value]="presetsButtonText | translate"
-		tooltip-class="bottom right">
-	<i class="icon icon-quick-loop-add" [class.active]="isPreset"></i>
-</button>
-
-<button class="small-icon-button remove-overlay" *ngIf="overlay "
-		(click)="removeOverlay()"
-		[attr.tooltip-value]="isRemoved ? ('Restore overlay' | translate) : ('Remove overlay' | translate)"
-		tooltip-class="bottom right">
-	<i class="icon" [ngClass]="isRemoved ? 'icon-restore-overlay' : 'icon-remove-overlay'"></i>
-</button>
-<button class="small-icon-button set-favorite" *ngIf="overlay"
-		(click)="toggleFavorite()"
-		[attr.tooltip-value]="favoritesButtonText | translate"
-		tooltip-class="bottom right">
-	<i class="icon" [ngClass]="!isFavorite? 'icon-favorite-empty' : 'icon-favorite-full'"
-	   [class.active]="isFavorite"></i>
-</button>
-
 <button class="small-icon-button drag-mode" *ngIf="overlay"
 		(click)="toggleDragged()"
 		[disabled]="!isLayersVisible || noGeoRegistration"
@@ -28,3 +5,59 @@
 		tooltip-class="bottom right">
 	<i class="icon-drag-annotations" [class.active]="isDragged"></i>
 </button>
+
+<button tooltip-class="bottom right"
+		*ngIf="overlay"
+		class="small-icon-button auto-image-processing"
+		[attr.tooltip-value]="'Automatic Processing' | translate"
+		(click)="toggleAutoImageProcessing()"
+		[class.mode-on]="onAutoImageProcessing">
+	<i class="icon-automatic-image-processing" [class.active]="isAutoProcessing"></i>
+</button>
+
+<button tooltip-class="bottom right"
+		*ngIf="overlay"
+		class="small-icon-button"
+		[attr.tooltip-value]="'Manual Image Enhancement' | translate"
+		(click)="toggleManualImageProcessing()"
+		[class.mode-on]="isImageControlActive && !onAutoImageProcessing"
+		[disabled]="onAutoImageProcessing">
+	<i class="icon-tools-image-processing" [class.active]="isManualProcessing"></i>
+</button>
+<ansyn-image-processing-control
+	*ngIf="isManualProcessing">
+</ansyn-image-processing-control>
+
+<button class="small-icon-button more-btn" *ngIf="overlay"
+		(click)="toggleMoreButtons()"
+		[attr.tooltip-value]="'More buttons' | translate"
+		tooltip-class="bottom right">
+	<i class="icon icon-more" [class.active]="moreButtons"></i>
+</button>
+
+<div class="more-buttons" *ngIf="moreButtons">
+	<button class="small-icon-button set-preset"
+			(click)="togglePreset()"
+			[disabled]="noGeoRegistration">
+		<i class="icon icon-quick-loop-add" [class.active]="isPreset"></i>
+		<div class="button-title preset-title">
+			{{presetsButtonText | translate}}
+		</div>
+	</button>
+
+	<button class="small-icon-button remove-overlay"
+			(click)="removeOverlay()">
+		<i class="icon" [ngClass]="isRemoved ? 'icon-restore-overlay' : 'icon-remove-overlay'"></i>
+		<div class="button-title">
+			{{isRemoved ? ('Restore overlay' | translate) : ('Remove overlay' | translate)}}
+		</div>
+	</button>
+	<button class="small-icon-button set-favorite"
+			(click)="toggleFavorite()">
+		<i class="icon" [ngClass]="!isFavorite? 'icon-favorite-empty' : 'icon-favorite-full'"
+		   [class.active]="isFavorite"></i>
+		<div class="button-title">
+			{{favoritesButtonText | translate}}
+		</div>
+	</button>
+</div>

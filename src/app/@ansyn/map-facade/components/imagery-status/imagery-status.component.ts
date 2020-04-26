@@ -1,10 +1,10 @@
 import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output, } from '@angular/core';
-import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
+import { ImageryCommunicatorService, IMapSettings, MapOrientation } from '@ansyn/imagery';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { get as _get } from 'lodash'
 import { map, tap } from 'rxjs/operators';
-import { SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
+import { SetMapOrientation, SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
 import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../models/entry-components-provider';
 import { selectEnableCopyOriginalOverlayDataFlag } from '../../reducers/imagery-status.reducer';
 import { selectActiveMapId, selectHideLayersOnMap, selectMapsTotal } from '../../reducers/map.reducer';
@@ -25,10 +25,13 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	isMapLayersVisible = true;
 	mapsAmount = 1;
 	_map: IMapSettings;
+	perspective: boolean;
+	orientation: MapOrientation;
 	baseMapDescription = 'Base Map';
 	formattedOverlayTime: string = null;
 	@HostBinding('class.active') isActiveMap: boolean;
 	hideLayers: boolean;
+
 	@AutoSubscription
 	active$ = this.store$.pipe(
 		select(selectActiveMapId),
@@ -56,6 +59,9 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 				protected communicators: ImageryCommunicatorService,
 				protected translate: TranslateService,
 				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities) {
+
+		this.orientation = 'Imagery Perspective';
+		this.store$.dispatch(new SetMapOrientation(this.orientation));
 	}
 
 	get map() {
@@ -138,5 +144,11 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	toggleMapLayers() {
 		this.isMapLayersVisible = !this.isMapLayersVisible;
 		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId, isVisible: this.isMapLayersVisible }));
+	}
+
+	toggleImageryPerspective() {
+		this.perspective = !this.perspective;
+		this.orientation = this.perspective ? 'User Perspective' : 'Imagery Perspective';
+		this.store$.dispatch(new SetMapOrientation(this.orientation));
 	}
 }

@@ -80,6 +80,7 @@ import {
 	RegionContainment
 } from '../../modules/overlays/models/overlay.model';
 import { ICase } from '../../modules/menu-items/cases/models/case.model';
+import { overlayStatusConfig } from "../../modules/overlays/overlay-status/config/overlay-status-config";
 
 @ImageryMapSource({
 	sourceType: 'sourceType1',
@@ -212,6 +213,9 @@ describe('MapAppEffects', () => {
 				OverlaysService,
 				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
 				{
+					provide: overlayStatusConfig,
+					useValue: {}
+				},	{
 					provide: mapFacadeConfig,
 					useValue: {}
 				},

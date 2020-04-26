@@ -8,6 +8,7 @@ import {
 	IWorldViewMapState
 } from '@ansyn/imagery';
 import { LayoutKey } from '../models/maps-layout';
+import { MapOrientation } from "@ansyn/imagery";
 
 export interface IAngleFilterClick { // @TODO: map-facade should not know IOverlay
 	click: { x: number, y: number };
@@ -63,6 +64,7 @@ export const MapActionTypes = {
 	SET_PENDING_MAPS_COUNT: 'SET_PENDING_MAPS_COUNT',
 	DECREASE_PENDING_MAPS_COUNT: 'DECREASE_PENDING_MAPS_COUNT',
 	SET_PENDING_OVERLAYS: 'SET_PENDING_OVERLAYS',
+	SET_MAP_ORIENTATION: 'SET_IMAGE_OPENING_ORIENTATION',
 	REMOVE_PENDING_OVERLAY: 'REMOVE_PENDING_OVERLAY',
 	SHADOW_MOUSE_PRODUCER: 'SHADOW_MOUSE_PRODUCER',
 	SET_MAPS_DATA: 'SET_MAPS_DATA',
@@ -107,6 +109,12 @@ export class SetMinimalistViewModeAction implements Action {
 	type = MapActionTypes.SET_MINIMALIST_VIEW_MODE;
 
 	constructor(public payload: boolean) {
+	}
+}
+
+export class SetMapOrientation implements Action {
+	type = MapActionTypes.SET_MAP_ORIENTATION;
+	constructor(public payload: MapOrientation) {
 	}
 }
 

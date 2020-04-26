@@ -10,12 +10,18 @@ import {
 	CommunicatorEntity,
 	getAngleDegreeBetweenPoints,
 	ImageryMapPosition,
-	ImageryPlugin,
+	ImageryPlugin, IMapSettings, MapOrientation,
 	toDegrees,
 	toRadians
 } from '@ansyn/imagery';
 import { IStatusBarState, statusBarStateSelector } from '../../../../status-bar/reducers/status-bar.reducer';
-import { MapActionTypes, PointToRealNorthAction, selectActiveMapId, selectMapPositionByMapId, PointToImageOrientationAction } from '@ansyn/map-facade';
+import {
+	MapActionTypes,
+	PointToRealNorthAction,
+	selectActiveMapId,
+	selectMapPositionByMapId,
+	PointToImageOrientationAction,
+} from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
 import {
@@ -41,7 +47,6 @@ import {
 	OverlaysActionTypes
 } from '../../../../overlays/actions/overlays.actions';
 import { selectHoveredOverlay } from '../../../../overlays/reducers/overlays.reducer';
-import { CaseOrientation } from '../../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
 import {
 	BackToWorldSuccess,
@@ -104,17 +109,13 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	calcNorthAfterDisplayOverlaySuccess$ = this.actions$.pipe(
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
 		filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.mapId),
-		withLatestFrom(this.store$.select(statusBarStateSelector), ({ payload }: DisplayOverlaySuccessAction, { comboBoxesProperties }: IStatusBarState) => {
-			return [payload.forceFirstDisplay, comboBoxesProperties.orientation, payload.overlay, payload.customOriantation];
+		withLatestFrom(({ payload }: DisplayOverlaySuccessAction) => {
+			return [payload.forceFirstDisplay, payload.orientation , payload.overlay, payload.customOriantation];
 		}),
-		filter(([forceFirstDisplay, orientation, overlay, customOriantation]: [boolean, CaseOrientation, IOverlay, string]) => {
+		filter(([forceFirstDisplay, orientation, overlay, customOriantation]: [boolean, MapOrientation, IOverlay, string]) => {
 			return comboBoxesOptions.orientations.includes(orientation);
 		}),
-		switchMap(([forceFirstDisplay, orientation, overlay, customOriantation]: [boolean, CaseOrientation, IOverlay, string]) => {
-			if (!forceFirstDisplay &&
-				((orientation === 'Align North' && !Boolean(customOriantation)) || customOriantation === 'Align North')) {
-				return this.setActualNorth();
-			}
+		switchMap(([forceFirstDisplay, orientation, overlay, customOriantation]: [boolean, MapOrientation, IOverlay, string]) => {
 			// for 'Imagery Perspective' or 'User Perspective'
 			return this.positionChangedCalcNorthAccurately$().pipe(take(1)).pipe(
 				tap((virtualNorth: number) => {
@@ -216,7 +217,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		mapObject.renderSync();
 		return this.getCorrectedNorth(mapObject).pipe(
 			catchError(reason => {
-				const error = `setCorrectedNorth failed ${ reason }`;
+				const error = `setCorrectedNorth failed ${reason}`;
 				this.loggerService.warn(error, 'map', 'north_plugin');
 				return throwError(error);
 			})

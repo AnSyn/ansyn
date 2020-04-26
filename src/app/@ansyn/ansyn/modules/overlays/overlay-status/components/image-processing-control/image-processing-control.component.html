@@ -5,7 +5,9 @@
 	</div>
 	<ul class="image-processing-options">
 		<li *ngFor="let param of params">
-			<label [for]="'image-processing-' + param">{{param.name | translate}}</label><br>
+			<div class="param-info">
+				<label  [for]="'image-processing-' + param">{{param.name | translate}}</label><br><br><br>
+			</div>
 			<div class="input-wrapper">
 				<input [id]="'image-processing-' + param"
 					   type="range"

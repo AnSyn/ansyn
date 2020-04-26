@@ -1,11 +1,15 @@
-import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { IToolsState, toolsStateSelector } from '../../reducers/tools.reducer';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { SetManualImageProcessing } from '../../actions/tools.actions';
-import { IImageProcParam, IToolsConfig, toolsConfig } from '../../models/tools-config';
 import { Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
-import { ImageManualProcessArgs } from '../../../cases/models/case.model';
+import { ImageManualProcessArgs } from "../../../../menu-items/cases/models/case.model";
+import {
+	IImageProcessState,
+	IOverlayStatusState,
+	overlayStatusStateSelector
+} from "../../reducers/overlay-status.reducer";
+import { SetManualImageProcessing } from "../../actions/overlay-status.actions";
+import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from "../../config/overlay-status-config";
 
 @Component({
 	selector: 'ansyn-image-processing-control',
@@ -16,8 +20,8 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 
 	private subscriptions: Subscription[] = [];
 
-	public manualImageProcessingParams$: Observable<Object> = this.store$.select(toolsStateSelector).pipe(
-		map((tools: IToolsState) => tools.manualImageProcessingParams),
+	public manualImageProcessingParams$: Observable<Object> = this.store$.select(overlayStatusStateSelector).pipe(
+		map((overlayStatusState: IOverlayStatusState) => overlayStatusState.manualImageProcessingParams),
 		distinctUntilChanged(),
 		filter(Boolean),
 		tap((imageManualProcessArgs) => this.imageManualProcessArgs = imageManualProcessArgs)
@@ -35,9 +39,8 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 
 	imageManualProcessArgs: ImageManualProcessArgs = this.defaultImageManualProcessArgs;
 
-	@HostBinding('class.expand') @Input() expand;
 
-	constructor(public store$: Store<IToolsState>, @Inject(toolsConfig) protected config: IToolsConfig) {
+	constructor(public store$: Store<IImageProcessState>, @Inject(overlayStatusConfig) protected config: IOverlayStatusConfig) {
 	}
 
 	resetOne(paramToReset) {

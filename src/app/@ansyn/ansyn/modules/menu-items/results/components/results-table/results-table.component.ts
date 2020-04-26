@@ -93,7 +93,7 @@ export class ResultsTableComponent implements OnInit {
 	}
 
 	getType(overlay: IOverlay): string {
-		return "icon icon-matos"
+		return "icon icon-lavian"
 	}
 
 	mapOverlayObjectToArray(overlays) {

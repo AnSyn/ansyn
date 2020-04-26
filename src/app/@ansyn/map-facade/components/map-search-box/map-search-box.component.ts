@@ -49,7 +49,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		retryWhen((err) => {
 			return err.pipe(
 				tap(error => {
-					this.error = error ? error[0].name : '';
+					this.error = error ? Array.isArray(error) ? error[0].name : error.name : '';
 					this.autoCompleteWidth = (<string>this.error).length * 5;
 					this.loading = false;
 				})

@@ -15,10 +15,13 @@ import { ProjectableRaster } from '../maps/open-layers-map/models/projectable-ra
 export const IMAGE_PROCESS_ATTRIBUTE = 'imageLayer';
 export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSourceProvider<CONF> {
 	create(metaData: IMapSettings): Promise<any> {
-		const source = this.getXYZSource(metaData.data.overlay.imageUrl);
-		const extent = this.getExtent(metaData.data.overlay.footprint);
-		const tileLayer = this.getTileLayer(source, extent);
-		tileLayer.set(IMAGE_PROCESS_ATTRIBUTE, this.getImageLayer(source, extent)); // for image process work;
+		const extent = this.createExtent(metaData);
+		const source = this.createSource(metaData);
+		const tileLayer = this.createLayer(source, extent);
+		if (metaData.data.overlay) {
+			// for image process;
+			tileLayer.set(IMAGE_PROCESS_ATTRIBUTE, this.getImageLayer(source, extent));
+		}
 		return Promise.resolve(tileLayer);
 	}
 
@@ -40,7 +43,7 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 		return layer instanceof Layer && layer.getSource() instanceof ProjectableRaster;
 	}
 
-	getTileLayer(source, extent: [number, number, number, number]): TileLayer {
+	createLayer(source, extent: [number, number, number, number]): Layer {
 		const tileLayer = new TileLayer(<any>{
 			visible: true,
 			preload: Infinity,
@@ -65,16 +68,17 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 		return imageLayer;
 	}
 
-	getExtent(footprint, destinationProjCode = EPSG_3857) {
-		let extent: [number, number, number, number] = <[number, number, number, number]>bboxFromGeoJson(footprint);
-		[extent[0], extent[1]] = proj.transform([extent[0], extent[1]], EPSG_4326, destinationProjCode);
-		[extent[2], extent[3]] = proj.transform([extent[2], extent[3]], EPSG_4326, destinationProjCode);
+	createExtent(metaData: IMapSettings, destinationProjCode = EPSG_3857) {
+		const sourceProjection = metaData.data.config.projection ? metaData.data.config.projection : EPSG_4326;
+		let extent: [number, number, number, number] = metaData.data.overlay ? <[number, number, number, number]>bboxFromGeoJson(metaData.data.overlay.footprint) : [-180, -90, 180, 90];
+		[extent[0], extent[1]] = proj.transform([extent[0], extent[1]], sourceProjection, destinationProjCode);
+		[extent[2], extent[3]] = proj.transform([extent[2], extent[3]], sourceProjection, destinationProjCode);
 		return extent;
 	}
 
-	getXYZSource(url: string) {
+	createSource(metaData: IMapSettings) {
 		const source = new XYZ({
-			url: url,
+			url: metaData.data.overlay.imageUrl,
 			crossOrigin: 'Anonymous',
 			projection: EPSG_3857
 		});

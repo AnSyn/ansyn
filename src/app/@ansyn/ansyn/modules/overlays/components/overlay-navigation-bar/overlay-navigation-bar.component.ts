@@ -1,13 +1,12 @@
 import { Component, HostListener, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState } from '../../../status-bar/reducers/status-bar.reducer';
-import { ExpandAction } from '../../../status-bar/actions/status-bar.actions';
+import { ExpandAction, GoAdjacentOverlay, GoNextPresetOverlay } from '../../../status-bar/actions/status-bar.actions';
 import { IStatusBarConfig } from '../../../status-bar/models/statusBar-config.model';
 import { StatusBarConfig } from '../../../status-bar/models/statusBar.config';
-import { GoAdjacentOverlay, GoNextPresetOverlay } from '../../../status-bar/actions/status-bar.actions';
 import { EnableCopyOriginalOverlayDataAction, selectOverlayOfActiveMap } from '@ansyn/map-facade';
 import { ActivateScannedAreaAction } from '../../overlay-status/actions/overlay-status.actions';
-import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
 import { selectPresetOverlays } from '../../overlay-status/reducers/overlay-status.reducer';
 
@@ -17,7 +16,7 @@ import { selectPresetOverlays } from '../../overlay-status/reducers/overlay-stat
 	styleUrls: ['./overlay-navigation-bar.component.less']
 })
 @AutoSubscriptions()
-export class OverlayNavigationBarComponent implements OnInit, OnDestroy{
+export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	goPrevActive = false;
 	goNextActive = false;
 	goNextQuickLoop = false;
@@ -27,12 +26,12 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy{
 
 	@AutoSubscription
 	hasOverlayDisplay$ = this.store.select(selectOverlayOfActiveMap).pipe(
-		tap( overlay => this.hasOverlayDisplay = Boolean(overlay))
+		tap(overlay => this.hasOverlayDisplay = Boolean(overlay))
 	);
 
 	@AutoSubscription
 	hasPresetOverlays$ = this.store.select(selectPresetOverlays).pipe(
-		tap( presetOverlays => this.hasPresetOverlays = presetOverlays.length > 0)
+		tap(presetOverlays => this.hasPresetOverlays = presetOverlays.length > 0)
 	);
 
 	private _nextPresetOverlayKeys = 'qQ/'.split('');
@@ -45,13 +44,13 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy{
 			return;
 		}
 
-		if (this.isArrowRight($event)) { // ArrowRight
+		if (this.keyWasUsed($event, 'ArrowRight', 39)) {
 			this.clickGoAdjacent(true);
 			this.goNextActive = false;
-		} else if (this.isArrowLeft($event)) { // ArrowLeft
+		} else if (this.keyWasUsed($event, 'ArrowLeft', 37)) {
 			this.clickGoAdjacent(false);
 			this.goPrevActive = false;
-		} else if (this._nextPresetOverlayKeys.indexOf($event.key) !== -1) {
+		} else if (this.keysWereUsed($event, this._nextPresetOverlayKeys)) {
 			this.clickGoNextPresetOverlay();
 			this.goNextQuickLoop = false;
 		}
@@ -67,11 +66,11 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy{
 			return;
 		}
 
-		if (this.isArrowRight($event)) { // ArrowRight
+		if (this.keyWasUsed($event, 'ArrowRight', 39)) {
 			this.goNextActive = true;
-		} else if (this.isArrowLeft($event)) { // ArrowLeft
+		} else if (this.keyWasUsed($event, 'ArrowLeft', 37)) {
 			this.goPrevActive = true;
-		} else if (this._nextPresetOverlayKeys.indexOf($event.key) !== -1) {
+		} else if (this.keysWereUsed($event, this._nextPresetOverlayKeys)) {
 			this.goNextQuickLoop = true;
 		}
 
@@ -95,14 +94,13 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy{
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
 	}
 
-	private isArrowRight(event: KeyboardEvent) {
-		return event.key === 'ArrowRight' || event.which === 39;
+	private keyWasUsed(event: KeyboardEvent, key: string, keycode: number = key.charCodeAt(0)): boolean {
+		return event.key === key || event.which === keycode;
 		// We need to check also on the old field event.which, for Chrome 44
 	}
 
-	private isArrowLeft(event: KeyboardEvent) {
-		return event.key === 'ArrowLeft' || event.which === 37;
-		// We need to check also on the old field event.which, for Chrome 44
+	private keysWereUsed(event: KeyboardEvent, keys: string[]): boolean {
+		return keys.some(key => this.keyWasUsed(event, key));
 	}
 
 	clickGoAdjacent(isNext): void {

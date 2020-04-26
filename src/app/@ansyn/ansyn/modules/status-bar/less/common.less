@@ -1,0 +1,29 @@
+@import "ansyn/less/globals";
+@import "ansyn/less/colors";
+
+.status-bar-panel {
+	display: flex;
+	align-items: center;
+	margin: 2px;
+}
+
+.status-bar-button {
+	background: @status-bar-panels;
+	padding: 5px;
+}
+
+.status-bar-button-round {
+	&:extend(.status-bar-button);
+	border-bottom-left-radius: @status-bar-panel-radius;
+	border-top-left-radius: @status-bar-panel-radius;
+	border-bottom-right-radius: @status-bar-panel-radius;
+	border-top-right-radius: @status-bar-panel-radius;
+}
+
+.status-bar-button-active {
+	background-color: @status-bar-active;
+}
+
+.status-bar-button-hover {
+	background: @status-bar-hover;
+}

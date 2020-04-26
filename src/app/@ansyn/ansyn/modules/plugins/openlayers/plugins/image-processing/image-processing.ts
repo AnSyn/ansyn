@@ -181,7 +181,6 @@ function yCbCr2RGB(yCbCr): any {
 }
 
 function buildHistogramLut(imageData) {
-	debugger;
 	const BANDS = 4, CUTEDGE = 85, MAXBIT = 256;
 	const histogram = [];
 	for (let i = 0; i < MAXBIT; i++) {

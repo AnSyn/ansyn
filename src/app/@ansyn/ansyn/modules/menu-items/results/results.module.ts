@@ -17,11 +17,4 @@ import { IResultsConfig } from "./models/results-config";
 	exports: [ResultsTableComponent]
 })
 export class ResultsModule {
-	// static forRoot(config: IResultsConfig): ModuleWithProviders {
-	// 	return {
-	// 		ngModule: ResultsModule,
-	// 		providers: []
-	// 	};
-	// }
-
 }

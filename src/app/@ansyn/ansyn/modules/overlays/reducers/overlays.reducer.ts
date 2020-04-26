@@ -94,7 +94,7 @@ export const overlaysInitialState: IOverlaysState = overlaysAdapter.getInitialSt
 	overlaysCriteria: {},
 	miscOverlays: {},
 	top: 0,
-	left: 0,
+	left: 0
 });
 
 export const overlaysFeatureKey = 'overlays';

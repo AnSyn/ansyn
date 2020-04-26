@@ -92,13 +92,12 @@ export class ResultsTableComponent implements OnInit {
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id }));
 	}
 
-	getType(overlay: IOverlay) {
-
+	getType(overlay: IOverlay): string {
+		return "icon icon-matos"
 	}
 
 	mapOverlayObjectToArray(overlays) {
 		return Object.keys(overlays).map((key, index) => overlays[key]);
-		// this.overlays = Object.keys(overlays).map((key, index) => overlays[key]);
 	}
 
 	timeFormat(overlayDate: Date) {

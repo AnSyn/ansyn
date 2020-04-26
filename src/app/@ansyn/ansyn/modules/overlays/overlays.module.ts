@@ -55,7 +55,7 @@ import { OverlayNavigationBarComponent } from './components/overlay-navigation-b
 	],
 	providers: [
 		createOverlaysSourceProviders([]),
-		BaseOverlaySourceFactoryProvider,
+		BaseOverlaySourceFactoryProvider
 	]
 
 })

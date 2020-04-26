@@ -17,7 +17,7 @@ import {
 	TogglePresetOverlayAction
 } from './actions/overlay-status.actions';
 import {
-	selectFavoriteOverlays,
+	selectFavoriteOverlays, 
 	selectPresetOverlays,
 	selectRemovedOverlays,
 	selectTranslationData

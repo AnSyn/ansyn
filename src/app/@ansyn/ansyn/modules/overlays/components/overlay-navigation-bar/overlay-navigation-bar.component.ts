@@ -2,7 +2,7 @@ import { Component, HostListener, Inject, OnDestroy, OnInit } from '@angular/cor
 import { Store } from '@ngrx/store';
 import { IStatusBarState } from '../../../status-bar/reducers/status-bar.reducer';
 import { ExpandAction } from '../../../status-bar/actions/status-bar.actions';
-import { IStatusBarConfig, IToolTipsConfig } from '../../../status-bar/models/statusBar-config.model';
+import { IStatusBarConfig } from '../../../status-bar/models/statusBar-config.model';
 import { StatusBarConfig } from '../../../status-bar/models/statusBar.config';
 import { GoAdjacentOverlay, GoNextPresetOverlay } from '../../../status-bar/actions/status-bar.actions';
 import { EnableCopyOriginalOverlayDataAction, selectOverlayOfActiveMap } from '@ansyn/map-facade';
@@ -95,12 +95,14 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy{
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
 	}
 
-	private isArrowRight(event) {
-		return event.key === 'ArrowRight';
+	private isArrowRight(event: KeyboardEvent) {
+		return event.key === 'ArrowRight' || event.which === 39;
+		// We need to check also on the old field event.which, for Chrome 44
 	}
 
-	private isArrowLeft(event) {
-		return event.key === 'ArrowLeft';
+	private isArrowLeft(event: KeyboardEvent) {
+		return event.key === 'ArrowLeft' || event.which === 37;
+		// We need to check also on the old field event.which, for Chrome 44
 	}
 
 	clickGoAdjacent(isNext): void {

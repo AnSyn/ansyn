@@ -12,19 +12,4 @@ export const OpenLayerMapBoxSourceProviderSourceType = 'MapBox';
 	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayerMapBoxSourceProvider extends OpenLayersMapSourceProvider {
-	create(metaData: IMapSettings): Promise<any> {
-		const source = new XYZ({
-			url: metaData.data.overlay.imageUrl,
-			crossOrigin: 'Anonymous',
-			projection: EPSG_3857
-		});
-
-		const mapBoxLayer = new TileLayer(<any>{
-			source: source,
-			visible: true,
-			preload: Infinity
-		});
-
-		return Promise.resolve(mapBoxLayer);
-	}
 }

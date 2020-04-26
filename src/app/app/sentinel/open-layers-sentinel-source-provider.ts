@@ -8,7 +8,6 @@ import {
 	IMapSourceProvidersConfig,
 	MAP_SOURCE_PROVIDERS_CONFIG
 } from '@ansyn/imagery';
-import TileLayer from 'ol/layer/Tile';
 import * as wellknown from 'wellknown';
 import * as turf from '@turf/turf';
 import * as proj from 'ol/proj';
@@ -19,6 +18,7 @@ import { Store } from '@ngrx/store';
 import { selectSentinelselectedLayers } from './reducers/sentinel.reducer';
 import { map, take } from 'rxjs/operators';
 import { OpenLayersDisabledMap, OpenLayersMap, OpenLayersMapSourceProvider } from '@ansyn/ol';
+import { BBox2d } from '@turf/helpers/lib/geojson';
 
 export const OpenLayerSentinelSourceProviderSourceType = 'SENTINEL';
 
@@ -28,6 +28,7 @@ export const OpenLayerSentinelSourceProviderSourceType = 'SENTINEL';
 })
 export class OpenLayersSentinelSourceProvider extends OpenLayersMapSourceProvider {
 	layer: string;
+	geometry: any;
 
 	constructor(protected store: Store<any>,
 				protected cacheService: CacheService,
@@ -36,37 +37,35 @@ export class OpenLayersSentinelSourceProvider extends OpenLayersMapSourceProvide
 		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
 	}
 
+	createExtent(metaData: IMapSettings, destinationProjCode: string = EPSG_3857): [number, number, number, number] {
+		const footprint = { ...metaData.data.overlay.footprint };
+		footprint.coordinates = [[footprint.coordinates[0][0].map(coordinate => proj.transform(coordinate, EPSG_4326, destinationProjCode))]];
+		this.geometry = wellknown.stringify(footprint);
+		return <BBox2d>turf.bbox(turf.feature(footprint));
+	}
+
+	createSource(metaData: IMapSettings): any {
+		const baseUrl = metaData.data.overlay.imageUrl;
+		const { date } = metaData.data.overlay;
+		const source = new TileWMS({
+			crossOrigin: 'Anonymous',
+			url: baseUrl,
+			params: {
+				LAYERS: this.layer,
+				GEOMETRY: this.geometry,
+				TIME: this.createDateString(date),
+				MAXCC: 100
+			}
+		});
+		return source;
+	}
+
 	public create(metaData: IMapSettings): any {
 		return this.store.select(selectSentinelselectedLayers).pipe(
 			take(1),
 			map(sentinelLayer => {
 				this.layer = sentinelLayer[metaData.id] ? sentinelLayer[metaData.id] : sentinelLayer.defaultLayer;
-
-				const projection = EPSG_3857;
-				const footprint = { ...metaData.data.overlay.footprint };
-				footprint.coordinates = [[footprint.coordinates[0][0].map(coordinate => proj.transform(coordinate, EPSG_4326, projection))]];
-				const baseUrl = metaData.data.overlay.imageUrl;
-				const geometry = wellknown.stringify(footprint);
-				const bbox = turf.bbox(turf.feature(footprint));
-				const { date } = metaData.data.overlay;
-				const source = new TileWMS({
-					crossOrigin: 'Anonymous',
-					url: baseUrl,
-					params: {
-						LAYERS: sentinelLayer[metaData.id] ? sentinelLayer[metaData.id] : sentinelLayer.defaultLayer,
-						GEOMETRY: geometry,
-						TIME: this.createDateString(date),
-						MAXCC: 100
-					}
-				});
-
-				return new TileLayer({
-					projection,
-					source: source,
-					extent: bbox
-
-				});
-
+				return super.create(metaData);
 			})).toPromise();
 	}
 

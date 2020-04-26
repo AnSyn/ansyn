@@ -1,23 +1,22 @@
 import { Component, HostListener, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { IStatusBarState } from '../../reducers/status-bar.reducer';
-import { ExpandAction } from '../../actions/status-bar.actions';
-import { IStatusBarConfig, IToolTipsConfig } from '../../models/statusBar-config.model';
-import { StatusBarConfig } from '../../models/statusBar.config';
-import { GoAdjacentOverlay, GoNextPresetOverlay } from '../../actions/status-bar.actions';
+import { IStatusBarState } from '../../../status-bar/reducers/status-bar.reducer';
+import { ExpandAction, GoAdjacentOverlay, GoNextPresetOverlay } from '../../../status-bar/actions/status-bar.actions';
+import { IStatusBarConfig } from '../../../status-bar/models/statusBar-config.model';
+import { StatusBarConfig } from '../../../status-bar/models/statusBar.config';
 import { EnableCopyOriginalOverlayDataAction, selectOverlayOfActiveMap } from '@ansyn/map-facade';
-import { ActivateScannedAreaAction } from '../../../overlays/overlay-status/actions/overlay-status.actions';
-import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
+import { ActivateScannedAreaAction } from '../../overlay-status/actions/overlay-status.actions';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
-import { selectPresetOverlays } from '../../../overlays/overlay-status/reducers/overlay-status.reducer';
+import { selectPresetOverlays } from '../../overlay-status/reducers/overlay-status.reducer';
 
 @Component({
-	selector: 'ansyn-navigation-bar',
-	templateUrl: './navigation-bar.component.html',
-	styleUrls: ['./navigation-bar.component.less']
+	selector: 'ansyn-overlay-navigation-bar',
+	templateUrl: './overlay-navigation-bar.component.html',
+	styleUrls: ['./overlay-navigation-bar.component.less']
 })
 @AutoSubscriptions()
-export class NavigationBarComponent implements OnInit, OnDestroy{
+export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	goPrevActive = false;
 	goNextActive = false;
 	goNextQuickLoop = false;
@@ -27,17 +26,17 @@ export class NavigationBarComponent implements OnInit, OnDestroy{
 
 	@AutoSubscription
 	hasOverlayDisplay$ = this.store.select(selectOverlayOfActiveMap).pipe(
-		tap( overlay => this.hasOverlayDisplay = Boolean(overlay))
+		tap(overlay => this.hasOverlayDisplay = Boolean(overlay))
 	);
 
 	@AutoSubscription
 	hasPresetOverlays$ = this.store.select(selectPresetOverlays).pipe(
-		tap( presetOverlays => this.hasPresetOverlays = presetOverlays.length > 0)
+		tap(presetOverlays => this.hasPresetOverlays = presetOverlays.length > 0)
 	);
 
-	private _nextPresetOverlayKeys = 'qQ/'.split('').map(char => char.charCodeAt(0));
-	private _scannedAreaKey = '`~;'.split('').map(char => char.charCodeAt(0));
-	private _overlayHack = 'Eeק'.split('').map(char => char.charCodeAt(0));
+	private _nextPresetOverlayKeys = 'qQ/'.split('');
+	private _scannedAreaKeys = '`~;'.split('');
+	private _overlayHackKeys = 'Eeק'.split('');
 
 	@HostListener('window:keyup', ['$event'])
 	onkeyup($event: KeyboardEvent) {
@@ -45,18 +44,18 @@ export class NavigationBarComponent implements OnInit, OnDestroy{
 			return;
 		}
 
-		if ($event.which === 39) { // ArrowRight
+		if (this.keyWasUsed($event, 'ArrowRight', 39)) {
 			this.clickGoAdjacent(true);
 			this.goNextActive = false;
-		} else if ($event.which === 37) { // ArrowLeft
+		} else if (this.keyWasUsed($event, 'ArrowLeft', 37)) {
 			this.clickGoAdjacent(false);
 			this.goPrevActive = false;
-		} else if (this._nextPresetOverlayKeys.indexOf($event.which) !== -1) {
+		} else if (this.keysWereUsed($event, this._nextPresetOverlayKeys)) {
 			this.clickGoNextPresetOverlay();
 			this.goNextQuickLoop = false;
 		}
 
-		if (this._overlayHack.indexOf($event.which) !== -1) {
+		if (this.keysWereUsed($event, this._overlayHackKeys)) {
 			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(false));
 		}
 	}
@@ -67,15 +66,15 @@ export class NavigationBarComponent implements OnInit, OnDestroy{
 			return;
 		}
 
-		if ($event.which === 39) { // ArrowRight
+		if (this.keyWasUsed($event, 'ArrowRight', 39)) {
 			this.goNextActive = true;
-		} else if ($event.which === 37) { // ArrowLeft
+		} else if (this.keyWasUsed($event, 'ArrowLeft', 37)) {
 			this.goPrevActive = true;
-		} else if (this._nextPresetOverlayKeys.indexOf($event.which) !== -1) {
+		} else if (this.keysWereUsed($event, this._nextPresetOverlayKeys)) {
 			this.goNextQuickLoop = true;
 		}
 
-		if (this._overlayHack.indexOf($event.which) !== -1) {
+		if (this.keysWereUsed($event, this._overlayHackKeys)) {
 			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(true));
 		}
 	}
@@ -86,13 +85,22 @@ export class NavigationBarComponent implements OnInit, OnDestroy{
 			return;
 		}
 
-		if (this._scannedAreaKey.indexOf($event.which) !== -1) {
+		if (this.keysWereUsed($event, this._scannedAreaKeys)) {
 			this.clickScannedArea();
 		}
 	}
 
 	constructor(protected store: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
+	}
+
+	private keyWasUsed(event: KeyboardEvent, key: string, keycode: number = key.charCodeAt(0)): boolean {
+		return event.key === key || event.which === keycode;
+		// We need to check also on the old field event.which, for Chrome 44
+	}
+
+	private keysWereUsed(event: KeyboardEvent, keys: string[]): boolean {
+		return keys.some(key => this.keyWasUsed(event, key));
 	}
 
 	clickGoAdjacent(isNext): void {

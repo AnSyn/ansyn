@@ -1,6 +1,4 @@
-<div class="search-panel" [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''">
-
-	<div class="search-title">{{'Search' | translate}}:</div>
+<div class="search-panel">
 	<!-- Time -->
 	<div class="box">
 		<button ansynComboBoxTrigger
@@ -10,8 +8,8 @@
 				[isActive]="timePickerExpand"
 				[withArrow]="false"
 				icon="icon icon-status-bar-time"
-				tooltip-class="top"
-				class="search-panel-button">
+				tooltip-class="bottom"
+				class="button">
 			<span class="title">{{timeSelectionTitle}}</span>
 		</button>
 
@@ -27,22 +25,22 @@
 	<!-- Geo filter -->
 	<div class="box" id="editGeoFilter">
 
-		<ansyn-combo-box
-			[buttonClass]="'search-panel-button'"
-			direction="top"
-			name="GeoFilter"
-			[comboBoxToolTipDescription]="statusBarConfig?.toolTips?.geoFilter | translate"
-			[withArrow]="false"
-			[alwaysChange]="true"
-			icon="icon icon-status-bar-geo small"
-			[ngModel]="geoFilterTitle"
-			(ngModelChange)="geoFilterChanged($event)">
+		<button ansynComboBoxTrigger
+				#locationPickerTrigger
+				(click)="toggleLocationPicker()"
+				[attr.tooltip-value]="statusBarConfig?.toolTips?.geoFilter | translate"
+				[isActive]="locationPickerExpand"
+				[withArrow]="false"
+				icon="icon icon-status-bar-geo small"
+				tooltip-class="bottom"
+				class="button">
+			<span class="title">{{geoFilterTitle}}</span>
+		</button>
 
-			<ansyn-combo-box-option *ngFor="let _geoFilter of geoFilters" [value]="_geoFilter">
-				{{ _geoFilter | translate}}
-			</ansyn-combo-box-option>
-
-		</ansyn-combo-box>
+		<ansyn-location-picker
+			*ngIf="locationPickerExpand"
+			[geoFilter]="geoFilterTitle">
+		</ansyn-location-picker>
 	</div>
 
 	<!-- data input filter-->
@@ -54,8 +52,8 @@
 				[isActive]="dataInputFilterExpand"
 				[withArrow]="false"
 				[attr.tooltip-value]="statusBarConfig?.toolTips?.dataInputFilter | translate"
-				tooltip-class="top"
-				class="search-panel-button">
+				tooltip-class="bottom"
+				class="button">
 			<span class="title">{{'Data Inputs' | translate}} - {{ dataInputFilterTitle | translate }}</span>
 		</button>
 

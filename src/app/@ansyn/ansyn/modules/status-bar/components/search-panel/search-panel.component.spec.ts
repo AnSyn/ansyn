@@ -41,6 +41,11 @@ describe('SearchPanelComponent', () => {
 		outputs: ['closeTimePicker', 'ansynClickOutside']
 	});
 
+	const ansynLocationPicker = MockComponent({
+		selector: 'ansyn-location-picker',
+		inputs: ['geoFilter']
+	});
+
 	let store: Store<IStatusBarState>;
 
 	beforeEach(async(() => {
@@ -52,6 +57,7 @@ describe('SearchPanelComponent', () => {
 				ansynTreeView,
 				ansynComboTrigger,
 				ansynTimePicker,
+				ansynLocationPicker,
 				ClickOutsideDirective
 			],
 			imports: [StoreModule.forRoot({

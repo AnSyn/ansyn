@@ -28,20 +28,33 @@
 		height: 100%;
 		width: 100%;
 		overflow: hidden;
+		flex-direction: row;
 		background: @background-color-0;
+
+		div.menu {
+			flex-shrink: 1;
+		}
+		div.status {
+			position: absolute;
+			top: 0;
+			left: @menu-width;
+			width: calc(100% - @menu-width);
+			height: @status-bar-height;
+			z-index: @z-index-status-bar-navigation-area;
+		}
 
 		div.layer {
 			width: 100%;
-			height: 100%;
+			height: calc(100% - @status-bar-height);
+			top: @status-bar-height;
 			color: white;
 			display: flex;
 			flex-direction: column;
 			overflow: hidden;
 			position: relative;
-
 			.maps-container {
 				position: relative;
-				flex: 1;
+				flex-grow: 1;
 			}
 
 		}
@@ -154,4 +167,5 @@
 /deep/ .owl-dt-container {
 	font-family: @app-font;
 }
+
 

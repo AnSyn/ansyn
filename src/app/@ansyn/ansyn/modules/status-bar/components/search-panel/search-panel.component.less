@@ -14,26 +14,17 @@
 		padding-right: 5px;
 		width: fit-content;
 
-		div.search-title {
-			background: #2d2d2d;
-			display: flex;
-			align-items: center;
-			border: 1px solid @status-bar-background;
-			border-bottom-left-radius: @status-bar-panel-radius;
-			border-top-left-radius: @status-bar-panel-radius;
-			margin-right: 1px;
-			padding: 9px;
-			user-select: none;
-		}
-
 		.box {
-			position: relative;
-			margin: 0 1px;
+			margin: 0 5px;
 
-			/deep/ button.search-panel-button {
+			.button {
 				margin-top: 1px;
 				background: @status-bar-panels;
-				padding: 5px 11px 5px 0px;
+				border-bottom-left-radius: @status-bar-panel-radius;
+				border-top-left-radius: @status-bar-panel-radius;
+				border-bottom-right-radius: @status-bar-panel-radius;
+				border-top-right-radius: @status-bar-panel-radius;
+				padding: 5px 11px 5px 0;
 				height: 35px;
 
 				&.active {
@@ -50,37 +41,15 @@
 				}
 			}
 
-			&:last-child {
-				.search-panel-button {
-					border-bottom-right-radius: @status-bar-panel-radius;
-					border-top-right-radius: @status-bar-panel-radius;
+			&#editGeoFilter {
+				width: 85px;
+
+				button {
+					justify-content: flex-start;
 				}
 			}
 		}
 
-		&.rtl {
-			justify-content: flex-end;
-			flex-direction: row-reverse;
-
-			div.search-title {
-				direction: rtl;
-				border-bottom-left-radius: 0;
-				border-top-left-radius: 0;
-				border-bottom-right-radius: @status-bar-panel-radius;
-				border-top-right-radius: @status-bar-panel-radius;
-			}
-
-			.box {
-				&:last-child {
-					.search-panel-button {
-						border-bottom-right-radius: 0;
-						border-top-right-radius: 0;
-						border-bottom-left-radius: @status-bar-panel-radius;
-						border-top-left-radius: @status-bar-panel-radius;
-					}
-				}
-			}
-		}
 		input.time-picker-input {
 			position: absolute;
 			top: 0;

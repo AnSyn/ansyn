@@ -11,19 +11,20 @@ describe('AnsynFooterComponent', () => {
 	let component: AnsynFooterComponent;
 	let fixture: ComponentFixture<AnsynFooterComponent>;
 
-	const mockStatusBar = MockComponent({
-		selector: 'ansyn-status-bar'
-	});
 	const mockOverlays = MockComponent({
 		selector: 'ansyn-overlays-container'
+	});
+
+	const mockOverlayNavigationBar = MockComponent({
+		selector: 'ansyn-overlay-navigation-bar'
 	});
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [
 				AnsynFooterComponent,
-				mockStatusBar,
-				mockOverlays
+				mockOverlays,
+				mockOverlayNavigationBar
 			],
 			imports: [
 				StoreModule.forRoot({ [mapFeatureKey]: MapReducer }),

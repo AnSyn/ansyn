@@ -20,16 +20,14 @@ import {
 	StatusBarActionsTypes,
 	UpdateGeoFilterStatus
 } from '../../modules/status-bar/actions/status-bar.actions';
-import { SearchModeEnum } from '../../modules/status-bar/models/search-mode.enum';
-import { selectGeoFilterSearchMode } from '../../modules/status-bar/reducers/status-bar.reducer';
+import { selectGeoFilterActive, selectGeoFilterType } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { CopyCaseLinkAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
+import { DisplayOverlayAction, DisplayOverlayFromStoreAction } from '../../modules/overlays/actions/overlays.actions';
 import {
-	DisplayOverlayAction,
-	DisplayOverlayFromStoreAction,
-	OverlaysActionTypes
-} from '../../modules/overlays/actions/overlays.actions';
-import { selectDropsWithoutSpecialObjects } from '../../modules/overlays/reducers/overlays.reducer';
+	selectDropsWithoutSpecialObjects,
+	selectRegion
+} from '../../modules/overlays/reducers/overlays.reducer';
 import { IOverlay, IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
 
@@ -104,9 +102,17 @@ export class StatusBarAppEffects {
 	@Effect()
 	onClickOutsideMap$ = this.actions$.pipe(
 		ofType<ClickOutsideMap | ContextMenuShowAction>(MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP, MapActionTypes.CONTEXT_MENU.SHOW),
-		withLatestFrom(this.store.select(selectGeoFilterSearchMode)),
-		filter(([action, searchMode]) => searchMode !== SearchModeEnum.none),
-		map(() => new UpdateGeoFilterStatus())
+		withLatestFrom(this.store.select(selectGeoFilterActive)),
+		filter(([action, active]) => active),
+		map(([action, active]) => new UpdateGeoFilterStatus())
+	);
+
+	@Effect()
+	onCancelGeoFilter$ = this.actions$.pipe(
+		ofType<UpdateGeoFilterStatus>(StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS),
+		filter(action => action.payload === undefined),
+		withLatestFrom(this.store.select(selectRegion)),
+		map( ([action , {type}]) => new UpdateGeoFilterStatus({type, active: false}))
 	);
 
 	constructor(protected actions$: Actions,

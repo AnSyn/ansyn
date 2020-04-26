@@ -13,19 +13,7 @@ export const OpenLayerOSMSourceProviderSourceType = 'OSM';
 	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayerOSMSourceProvider extends OpenLayersMapSourceProvider {
-	create(metaData: IMapSettings): Promise<any> {
-		const osmLayer = new TileLayer({
-			source: new OSM({wrapX: false})
-		});
-		// const source = new OSM(<any>{
-		// 	attributions: [
-		// 		'All maps © <a href="http://www.openseamap.org/">OpenSeaMap</a>',
-		// 		OSM.ATTRIBUTION
-		// 	],
-		// 	opaque: false,
-		// 	url: 'https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png'
-		// });
-		// const openSeaMapLayer = new TileLayer({ source });
-		return Promise.resolve(osmLayer);
+	createSource(metaData: IMapSettings): any {
+		return new OSM({wrapX: false});
 	}
 }

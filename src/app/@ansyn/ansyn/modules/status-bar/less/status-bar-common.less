@@ -9,15 +9,12 @@
 
 .status-bar-button {
 	background: @status-bar-panels;
-	padding: 5px;
+	padding: 5px 10px;
 }
 
 .status-bar-button-round {
 	&:extend(.status-bar-button);
-	border-bottom-left-radius: @status-bar-panel-radius;
-	border-top-left-radius: @status-bar-panel-radius;
-	border-bottom-right-radius: @status-bar-panel-radius;
-	border-top-right-radius: @status-bar-panel-radius;
+	border-radius: @status-bar-panel-radius;
 }
 
 .status-bar-button-active {

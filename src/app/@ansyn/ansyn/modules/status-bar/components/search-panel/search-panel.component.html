@@ -1,14 +1,14 @@
 <div class="search-panel">
 	<!-- Time -->
-	<div class="box">
+	<div class="box"
+		 [attr.tooltip-value]="statusBarConfig?.toolTips?.timeFilterEdit | translate"
+		 tooltip-class="bottom">
 		<button ansynComboBoxTrigger
 				#timePickerTrigger
 				(click)="toggleTimePicker()"
-				[attr.tooltip-value]="statusBarConfig?.toolTips?.timeFilterEdit | translate"
 				[isActive]="timePickerExpand"
 				[withArrow]="false"
 				icon="icon icon-status-bar-time"
-				tooltip-class="bottom"
 				class="button">
 			<span class="title">{{timeSelectionTitle}}</span>
 		</button>
@@ -23,16 +23,15 @@
 	</div>
 
 	<!-- Geo filter -->
-	<div class="box" id="editGeoFilter">
-
+	<div class="box" id="editGeoFilter"
+		 [attr.tooltip-value]="statusBarConfig?.toolTips?.geoFilter | translate"
+		 tooltip-class="bottom">
 		<button ansynComboBoxTrigger
 				#locationPickerTrigger
 				(click)="toggleLocationPicker()"
-				[attr.tooltip-value]="statusBarConfig?.toolTips?.geoFilter | translate"
 				[isActive]="locationPickerExpand"
 				[withArrow]="false"
 				icon="icon icon-status-bar-geo small"
-				tooltip-class="bottom"
 				class="button">
 			<span class="title">{{geoFilterTitle}}</span>
 		</button>
@@ -44,15 +43,15 @@
 	</div>
 
 	<!-- data input filter-->
-	<div class="box">
+	<div class="box"
+		 [attr.tooltip-value]="statusBarConfig?.toolTips?.dataInputFilter | translate"
+		 tooltip-class="bottom">
 		<button ansynComboBoxTrigger
 				#trigger
 				(click)="toggleDataInputFilterIcon()"
 				icon="icon icon-input-filter small"
 				[isActive]="dataInputFilterExpand"
 				[withArrow]="false"
-				[attr.tooltip-value]="statusBarConfig?.toolTips?.dataInputFilter | translate"
-				tooltip-class="bottom"
 				class="button">
 			<span class="title">{{'Data Inputs' | translate}} - {{ dataInputFilterTitle | translate }}</span>
 		</button>

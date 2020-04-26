@@ -15,6 +15,7 @@ import {
 import { SetBadgeAction } from "@ansyn/menu";
 import { StatusBarConfig } from "../../../../status-bar/models/statusBar.config";
 import { IStatusBarConfig } from "../../../../status-bar/models/statusBar-config.model";
+import { AutoSubscription } from "auto-subscriptions";
 
 @Component({
 	selector: 'ansyn-results-table',
@@ -43,6 +44,7 @@ export class ResultsTableComponent implements OnInit {
 		}
 	];
 
+	@AutoSubscription
 	loadOverlays$: Observable<IOverlay[]> = this.store$
 		.pipe(
 			select(selectOverlays),

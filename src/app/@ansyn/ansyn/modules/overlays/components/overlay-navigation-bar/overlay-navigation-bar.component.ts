@@ -85,7 +85,7 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 			return;
 		}
 
-		if (this._scannedAreaKey.indexOf($event.key) !== -1) {
+		if (this.keysWereUsed($event, this._scannedAreaKey)) {
 			this.clickScannedArea();
 		}
 	}

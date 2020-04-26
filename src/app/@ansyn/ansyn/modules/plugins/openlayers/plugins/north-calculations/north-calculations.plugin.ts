@@ -21,7 +21,6 @@ import {
 	selectActiveMapId,
 	selectMapPositionByMapId,
 	PointToImageOrientationAction,
-	mapStateSelector
 } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
@@ -110,7 +109,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	calcNorthAfterDisplayOverlaySuccess$ = this.actions$.pipe(
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
 		filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.mapId),
-		withLatestFrom(this.store$.select(mapStateSelector), ({ payload }: DisplayOverlaySuccessAction) => {
+		withLatestFrom(({ payload }: DisplayOverlaySuccessAction) => {
 			return [payload.forceFirstDisplay, payload.orientation , payload.overlay, payload.customOriantation];
 		}),
 		filter(([forceFirstDisplay, orientation, overlay, customOriantation]: [boolean, MapOrientation, IOverlay, string]) => {

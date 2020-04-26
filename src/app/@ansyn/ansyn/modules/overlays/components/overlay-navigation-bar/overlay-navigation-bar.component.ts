@@ -35,8 +35,8 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	);
 
 	private _nextPresetOverlayKeys = 'qQ/'.split('');
-	private _scannedAreaKey = '`~;'.split('');
-	private _overlayHack = 'Eeק'.split('');
+	private _scannedAreaKeys = '`~;'.split('');
+	private _overlayHackKeys = 'Eeק'.split('');
 
 	@HostListener('window:keyup', ['$event'])
 	onkeyup($event: KeyboardEvent) {
@@ -55,7 +55,7 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 			this.goNextQuickLoop = false;
 		}
 
-		if (this._overlayHack.indexOf($event.key) !== -1) {
+		if (this.keysWereUsed($event, this._overlayHackKeys)) {
 			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(false));
 		}
 	}
@@ -74,7 +74,7 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 			this.goNextQuickLoop = true;
 		}
 
-		if (this._overlayHack.indexOf($event.key) !== -1) {
+		if (this.keysWereUsed($event, this._overlayHackKeys)) {
 			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(true));
 		}
 	}
@@ -85,7 +85,7 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 			return;
 		}
 
-		if (this.keysWereUsed($event, this._scannedAreaKey)) {
+		if (this.keysWereUsed($event, this._scannedAreaKeys)) {
 			this.clickScannedArea();
 		}
 	}

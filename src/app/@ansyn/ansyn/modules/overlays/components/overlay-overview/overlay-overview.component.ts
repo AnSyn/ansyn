@@ -14,7 +14,6 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { takeWhile, tap } from 'rxjs/operators';
 import { Actions, ofType } from '@ngrx/effects';
 import { IOverlay } from '../../models/overlay.model';
-import { DOCUMENT } from '@angular/common';
 
 export interface IOverviewOverlay extends IOverlay {
 	thumbnailName: string;

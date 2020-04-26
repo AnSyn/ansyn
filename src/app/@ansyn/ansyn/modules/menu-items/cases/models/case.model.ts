@@ -89,7 +89,12 @@ export interface ICaseState extends IDilutedCaseState {
 }
 
 export type CaseRegionState = any | Feature<Polygon> | Point | Polygon | Position;
-
+// in case we return to prefilter sourceType
+/*export interface IDataInputFilterValue {
+	providerName: string;
+	sensorType: string;
+	sensorName: string;
+}*/
 export type DataInputFilterValue = string
 
 export interface ICaseDataInputFiltersState {

@@ -95,6 +95,29 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		return `${ url }?api_key=${ this.planetOverlaysSourceConfig.apiKey }`;
 	}
 
+	// in case we return to prefilter sourceType
+	/*buildDataInputFilter(dataInputFilters: IDataInputFilterValue[]): IPlanetFilter {
+		return {
+			type: 'OrFilter',
+			config: dataInputFilters.map((aFilter: IDataInputFilterValue) => {
+				const sensorTypeFilter = {
+					type: 'StringInFilter',
+					field_name: 'item_type',
+					config: [aFilter.sensorType]
+				};
+				if (Boolean(aFilter.sensorName)) {
+					return {
+						type: 'AndFilter', config: [
+							sensorTypeFilter,
+							{ type: 'StringInFilter', field_name: 'satellite_id', config: [aFilter.sensorName] }
+						]
+					};
+				}
+				return sensorTypeFilter;
+			})
+		};
+	}*/
+
 	buildFetchObservables(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<any>[] {
 		const regionFeature = feature(<any>fetchParams.region);
 		const fetchParamsTimeRange = {
@@ -176,7 +199,16 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		// add 1 to limit - so we'll know if provider have more then X overlays
 		const _page_size = `${ fetchParams.limit + 1 }`;
 		let sensors = Array.isArray(fetchParams.sensors) ? fetchParams.sensors : this.planetOverlaysSourceConfig.itemTypes;
-
+		// in case we return to prefilter sourceType
+		/*if (Array.isArray(fetchParams.dataInputFilters) && fetchParams.dataInputFilters.length > 0) {
+			const parsedDataInput = fetchParams.dataInputFilters.map(({ sensorType }) => sensorType).filter(Boolean);
+			if (fetchParams.dataInputFilters.some(({ sensorType }) => sensorType === 'others')) {
+				const allDataInput = this.multipleOverlaysSourceConfig.indexProviders[this.sourceType].dataInputFiltersConfig.children.map(({ value }) => value.sensorType);
+				sensors = sensors.filter((sens) => parsedDataInput.includes(sens) || !allDataInput.includes(sens));
+			} else {
+				sensors = parsedDataInput;
+			}
+		}*/
 		const { baseUrl } = this.planetOverlaysSourceConfig;
 		const body = this.buildFilters({ config: planetFilters, sensors, type: 'OrFilter' });
 		const options = { headers: this.httpHeaders, params: { _page_size } };

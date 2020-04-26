@@ -109,8 +109,8 @@ export class ResultsTableComponent implements OnInit {
 		this.overlays.sort(function (a, b) {
 			const dataA = a[headerData];
 			const dataB = b[headerData];
-			const score = dataB - dataA;
-			return isSorted ? score : score * (-1);
+			const result = dataB - dataA;
+			return isSorted ? result : result * (-1);
 		});
 
 		header.isSorted = !header.isSorted;

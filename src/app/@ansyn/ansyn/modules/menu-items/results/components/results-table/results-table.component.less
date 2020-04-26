@@ -27,8 +27,13 @@
 
 			div.box {
 				position: absolute;
-				margin-left: 300px;
+				margin-left: 290px;
 				flex: 1;
+
+				.overlay-count {
+					font-size: 20px;
+					position: absolute;
+				}
 			}
 		}
 
@@ -51,8 +56,22 @@
 					box-sizing: border-box;
 
 					div.results-table-head-col {
-						margin-left: 35px;
+						margin-left: 29px;
+						width: 200px;
 						flex: 1;
+
+						i.icon-arrow {
+							margin-top: -2px;
+							position: absolute;
+						}
+					}
+
+					.Sensor {
+						margin-left: 77px !important;
+					}
+
+					.Type {
+						margin-right: 10px !important;
 					}
 				}
 			}
@@ -157,10 +176,15 @@
 						flex: 1;
 					}
 
+					div.source-type {
+						margin-left: 43px !important;
+					}
+
 					div.results-table-case-name-col {
 						flex: 1.5;
 						overflow: hidden;
 						text-overflow: ellipsis;
+						margin-left: 17px;
 					}
 
 					.results-table-auto-save-col {

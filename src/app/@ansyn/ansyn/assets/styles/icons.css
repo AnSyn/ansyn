@@ -1,4 +1,7 @@
 
+.icon-arrow:before {
+	content: "\e904";
+}
 .icon-matos:before {
 	content: "\e900";
 }

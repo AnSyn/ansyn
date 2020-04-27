@@ -24,7 +24,7 @@ import { CoreModule } from '../../core/core.module';
 		CommonModule,
 		CoreModule,
 		FormsModule,
-		EffectsModule.forFeature([CasesEffects]),
+		EffectsModule.forFeature([CasesEffects])
 	],
 	declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent, CasesAutoSaveComponent],
 	entryComponents: [CasesComponent, EditCaseComponent, SaveCaseComponent, DeleteCaseComponent],

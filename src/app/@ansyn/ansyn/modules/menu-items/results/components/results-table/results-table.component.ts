@@ -106,7 +106,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		return overlayDate.toLocaleString('he-IL', { hour12: false });
 	}
 
-	filterOverlays(header): void {
+	sortOverlays(header): void {
 		let { headerData, isSorted } = header;
 		this.overlays.sort(function (a, b) {
 			const dataA = a[headerData];

@@ -73,10 +73,6 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 
 	}
 
-	loadResults() {
-		this.store$.dispatch(new LoadOverlaysAction({}));
-	}
-
 	getBadge(): string {
 		return this.overlays ? this.overlays.length.toString() : '0';
 	}

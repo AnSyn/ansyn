@@ -70,7 +70,10 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
+	}
 
+	loadResults() {
+		// TODO: add infinite scroll functionallity when directive is fixed
 	}
 
 	getBadge(): string {

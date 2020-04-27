@@ -4,18 +4,18 @@ import { ResultsTableComponent } from './results-table.component';
 import { TranslateModule } from "@ngx-translate/core";
 import { Store, StoreModule } from "@ngrx/store";
 import { StatusBarConfig } from "../../../../status-bar/models/statusBar.config";
-import { LoadCasesAction } from "../../../cases/actions/cases.actions";
-import { store } from "@angular/core/src/render3";
 import {
 	IOverlaysState,
 	MarkUpClass,
 	OverlayReducer,
 	overlaysFeatureKey
 } from "../../../../overlays/reducers/overlays.reducer";
-import { DisplayOverlayFromStoreAction, SetMarkUp } from "../../../../overlays/actions/overlays.actions";
+import {
+	DisplayOverlayFromStoreAction,
+	LoadOverlaysAction,
+	SetMarkUp
+} from "../../../../overlays/actions/overlays.actions";
 import { IOverlay } from "../../../../overlays/models/overlay.model";
-import { ICasesState } from "../../../cases/reducers/cases.reducer";
-import { CasesTableComponent } from "../../../cases/components/cases-table/cases-table.component";
 
 describe('ResultsTableComponent', () => {
 	let component: ResultsTableComponent;
@@ -45,6 +45,11 @@ describe('ResultsTableComponent', () => {
 
 	it('should create', () => {
 		expect(component).toBeTruthy();
+	});
+
+	it('loadResults should dispatch LoadOverlaysAction', () => {
+		component.loadResults();
+		expect(store.dispatch).toHaveBeenCalledWith(new LoadOverlaysAction({}));
 	});
 
 	it('openOverlay should dispatch DisplayOverlayFromStoreAction', () => {

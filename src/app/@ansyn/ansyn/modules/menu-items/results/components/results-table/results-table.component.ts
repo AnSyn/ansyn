@@ -9,7 +9,7 @@ import {
 import { distinctUntilChanged, tap } from "rxjs/operators";
 import { isEqual } from "lodash";
 import {
-	DisplayOverlayFromStoreAction,
+	DisplayOverlayFromStoreAction, LoadOverlaysAction,
 	SetMarkUp,
 } from "../../../../overlays/actions/overlays.actions";
 import { SetBadgeAction } from "@ansyn/menu";
@@ -74,7 +74,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	loadResults() {
-
+		this.store$.dispatch(new LoadOverlaysAction({}));
 	}
 
 	getBadge(): string {

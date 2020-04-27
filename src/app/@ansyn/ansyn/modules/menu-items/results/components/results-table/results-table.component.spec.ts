@@ -47,11 +47,6 @@ describe('ResultsTableComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('loadResults should dispatch LoadOverlaysAction', () => {
-		component.loadResults();
-		expect(store.dispatch).toHaveBeenCalledWith(new LoadOverlaysAction({}));
-	});
-
 	it('openOverlay should dispatch DisplayOverlayFromStoreAction', () => {
 		const overlay: IOverlay = {
 			azimuth: 0,

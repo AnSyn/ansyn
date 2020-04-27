@@ -1,5 +1,8 @@
 <div class="top">
-	{{selectedCaseName$ | async}}
+	<span [attr.tooltip-value]="selectedCaseName$ | async"
+	tooltip-class="bottom">
+		{{selectedCaseName$ | async}}
+	</span>
 </div>
 <div class="bottom">
 	<div class="box"

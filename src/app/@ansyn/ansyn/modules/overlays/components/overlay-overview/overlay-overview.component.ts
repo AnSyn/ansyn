@@ -1,11 +1,11 @@
 import { Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { fromEvent, Observable } from 'rxjs';
-import { ContextMenuShowAction, getTimeFormat } from '@ansyn/map-facade';
+import { getTimeFormat } from '@ansyn/map-facade';
 import {
 	IOverlaysState,
 	MarkUpClass,
-	overlaysStateSelector, selectCustomOverviewElement,
+	selectCustomOverviewElement,
 	selectHoveredOverlay
 } from '../../reducers/overlays.reducer';
 import { overlayOverviewComponentConstants } from './overlay-overview.component.const';
@@ -19,8 +19,6 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { takeWhile, tap, withLatestFrom } from 'rxjs/operators';
 import { Actions, ofType } from '@ngrx/effects';
 import { IOverlay } from '../../models/overlay.model';
-import { ResultsTableComponent } from "../../../menu-items/results/components/results-table/results-table.component";
-import { isPointContainedInGeometry } from "@ansyn/imagery";
 
 export interface IOverviewOverlay extends IOverlay {
 	thumbnailName: string;
@@ -56,8 +54,6 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	public loadingImage = false;
 	public rotation = 0;
 	protected topElement = this.el.nativeElement.parentElement;
-
-	overlayState$ = this.store$.select(selectCustomOverviewElement);
 
 	get dropElement(): Element {
 		return this.topElement.querySelector(`#dropId-${this.overlayId}`);
@@ -109,13 +105,6 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 				return;
 			}
 			const hoveredElementBounds: ClientRect = hoveredElement.getBoundingClientRect();
-			/*this.overlayState$.subscribe((state) => {
-				const resultsTableLeftBorder = 530;
-				this.left = state.left ? resultsTableLeftBorder : this.getLeftPosition(hoveredElementBounds.left);
-				const resultsTableTopBorder = state.top < 900 ? 80 : -50;
-				this.top = state.top ? state.top + resultsTableTopBorder : hoveredElementBounds.top;
-
-			});*/
 			this.left = customElement ? hoveredElementBounds.right : this.getLeftPosition(hoveredElementBounds.left);
 			this.top = hoveredElementBounds.top + (customElement ? hoveredElementBounds.height : 0);
 			this.showOverview();

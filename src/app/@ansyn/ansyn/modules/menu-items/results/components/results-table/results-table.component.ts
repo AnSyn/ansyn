@@ -4,7 +4,7 @@ import { IOverlay } from "../../../../overlays/models/overlay.model";
 import { select, Store } from "@ngrx/store";
 import {
 	IOverlaysState, MarkUpClass,
-	selectOverlays
+	selectOverlaysArray
 } from "../../../../overlays/reducers/overlays.reducer";
 import { distinctUntilChanged, tap } from "rxjs/operators";
 import { isEqual } from "lodash";
@@ -25,7 +25,7 @@ import { AutoSubscription, AutoSubscriptions } from "auto-subscriptions";
 
 @AutoSubscriptions()
 export class ResultsTableComponent implements OnInit, OnDestroy {
-
+	requestAnimation;
 	overlays = [];
 	selectedOverlayId: string;
 	tableHeaders = [
@@ -46,18 +46,24 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		}
 	];
 
+	@AutoSubscription
 	loadOverlays$: Observable<IOverlay[]> = this.store$
 		.pipe(
-			select(selectOverlays),
+			select(selectOverlaysArray),
 			distinctUntilChanged(isEqual),
 			tap((overlays: any) => {
-				this.overlays = this.mapOverlayObjectToArray(overlays);
-				const badge = this.getBadge();
-				this.store$.dispatch(new SetBadgeAction({ key: 'Results table', badge }));
+				this.overlays = overlays;
+				if (this.requestAnimation) {
+					cancelAnimationFrame(this.requestAnimation);
+				}
+				requestAnimationFrame(() => {
+					const badge = this.getBadge();
+					this.store$.dispatch(new SetBadgeAction({ key: 'Results table', badge }));
+				});
+
 			}));
 
 	constructor(protected store$: Store<IOverlaysState>, @Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
-		this.loadOverlays$.subscribe();
 	}
 
 	ngOnDestroy(): void {
@@ -71,16 +77,11 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 
 	}
 
-	getBadge() {
+	getBadge(): string {
 		return this.overlays ? this.overlays.length.toString() : '0';
 	}
 
-	onMouseOver($event, id: string) {
-		const resultsTableLeftBorder = 530;
-		const lastRowHeight = 900;
-		const resultsTableTopBorder = $event.screenY < lastRowHeight ? 0 : -30;
-		const top = $event.screenY + resultsTableTopBorder;
-
+	onMouseOver($event, id: string): void {
 		this.store$.dispatch(new SetMarkUp({
 			classToSet: MarkUpClass.hover,
 			dataToSet: { overlaysIds: [id] },
@@ -88,11 +89,11 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		}));
 	}
 
-	onMouseOut() {
+	onMouseOut(): void {
 		this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
 	}
 
-	openOverlay(overlay) {
+	openOverlay(overlay: IOverlay): void {
 		const { id } = overlay;
 		this.selectedOverlayId = id;
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id }));
@@ -102,15 +103,11 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		return "icon icon-lavian"
 	}
 
-	mapOverlayObjectToArray(overlays) {
-		return Object.keys(overlays).map((key, index) => overlays[key]);
-	}
-
-	timeFormat(overlayDate: Date) {
+	timeFormat(overlayDate: Date): string {
 		return overlayDate.toLocaleString('he-IL', { hour12: false });
 	}
 
-	filterOverlays(header) {
+	filterOverlays(header): void {
 		let { headerData, isSorted } = header;
 		this.overlays.sort(function (a, b) {
 			const dataA = a[headerData];

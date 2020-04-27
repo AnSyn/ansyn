@@ -16,7 +16,6 @@ import { StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from './reducers/cases.reducer';
 import { CasesAutoSaveComponent } from './components/cases-auto-save/cases-auto-save.component';
 import { CoreModule } from '../../core/core.module';
-import { OverlaysModule } from "../../overlays/overlays.module";
 
 // @dynamic
 @NgModule({
@@ -26,7 +25,6 @@ import { OverlaysModule } from "../../overlays/overlays.module";
 		CoreModule,
 		FormsModule,
 		EffectsModule.forFeature([CasesEffects]),
-		// OverlaysModule
 	],
 	declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent, CasesAutoSaveComponent],
 	entryComponents: [CasesComponent, EditCaseComponent, SaveCaseComponent, DeleteCaseComponent],

@@ -1,10 +1,11 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from "rxjs";
 import { IOverlay } from "../../../../overlays/models/overlay.model";
 import { select, Store } from "@ngrx/store";
 import {
+	ICustomOrientation,
 	IOverlaysState, MarkUpClass,
-	selectOverlays
+	selectOverlaysArray
 } from "../../../../overlays/reducers/overlays.reducer";
 import { distinctUntilChanged, tap } from "rxjs/operators";
 import { isEqual } from "lodash";
@@ -15,14 +16,16 @@ import {
 import { SetBadgeAction } from "@ansyn/menu";
 import { StatusBarConfig } from "../../../../status-bar/models/statusBar.config";
 import { IStatusBarConfig } from "../../../../status-bar/models/statusBar-config.model";
-import { AutoSubscription } from "auto-subscriptions";
+import { AutoSubscription, AutoSubscriptions } from "auto-subscriptions";
 
 @Component({
 	selector: 'ansyn-results-table',
 	templateUrl: './results-table.component.html',
 	styleUrls: ['./results-table.component.less']
 })
-export class ResultsTableComponent implements OnInit {
+
+@AutoSubscriptions()
+export class ResultsTableComponent implements OnInit, OnDestroy {
 
 	overlays = [];
 	selectedOverlayId: string;
@@ -47,19 +50,31 @@ export class ResultsTableComponent implements OnInit {
 	@AutoSubscription
 	loadOverlays$: Observable<IOverlay[]> = this.store$
 		.pipe(
-			select(selectOverlays),
+			select(selectOverlaysArray),
 			distinctUntilChanged(isEqual),
-			tap((overlays: any) => {
-				this.overlays = this.mapOverlayObjectToArray(overlays);
+			tap((overlays: IOverlay[]) => {
+				this.overlays = overlays;
 				const badge = this.getBadge();
 				this.store$.dispatch(new SetBadgeAction({ key: 'Results table', badge }));
+			}));
+
+	@AutoSubscription
+	loadOverlaysArray$: Observable<IOverlay[]> = this.store$
+		.pipe(
+			select(selectOverlaysArray),
+			distinctUntilChanged(isEqual),
+			tap((overlays: IOverlay[]) => {
+				return overlays;
 			}));
 
 	constructor(protected store$: Store<IOverlaysState>, @Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
 		this.loadOverlays$.subscribe();
 	}
 
-	ngOnInit() {
+	ngOnDestroy(): void {
+	}
+
+	ngOnInit(): void {
 	}
 
 	loadResults() {
@@ -75,12 +90,15 @@ export class ResultsTableComponent implements OnInit {
 		const lastRowHeight = 900;
 		const resultsTableTopBorder = $event.screenY < lastRowHeight ? 0 : -30;
 		const top = $event.screenY + resultsTableTopBorder;
+		const customOrientation: ICustomOrientation = {
+			top,
+			left: resultsTableLeftBorder
+		};
 
 		this.store$.dispatch(new SetMarkUp({
 			classToSet: MarkUpClass.hover,
 			dataToSet: { overlaysIds: [id] },
-			top,
-			left: resultsTableLeftBorder
+			customOrientation
 		}));
 	}
 
@@ -98,12 +116,8 @@ export class ResultsTableComponent implements OnInit {
 		return "icon icon-lavian"
 	}
 
-	mapOverlayObjectToArray(overlays) {
-		return Object.keys(overlays).map((key, index) => overlays[key]);
-	}
-
 	timeFormat(overlayDate: Date) {
-		return overlayDate.toLocaleString('en-GB', { hour12: false });
+		return overlayDate.toLocaleString('he-IL', { hour12: false });
 	}
 
 	filterOverlays(header) {

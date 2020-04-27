@@ -69,14 +69,18 @@ export interface IOverlaysState extends EntityState<IOverlay> {
 	hoveredOverlay: IOverlay;
 	overlaysCriteria: IOverlaysCriteria;
 	miscOverlays: IOverlaysHash;
-	top: number;
-	left: number;
+	customOrientation: ICustomOrientation;
 }
 
 let initDropsMarkUp: ExtendMap<MarkUpClass, IMarkUpData> = new ExtendMap<MarkUpClass, IMarkUpData>();
 Object.keys(MarkUpClass).forEach(key => {
 	initDropsMarkUp.set(MarkUpClass[key], { overlaysIds: [] });
 });
+
+export interface ICustomOrientation {
+	top: number;
+	left: number;
+}
 
 export const overlaysInitialState: IOverlaysState = overlaysAdapter.getInitialState({
 	loaded: false,
@@ -93,8 +97,7 @@ export const overlaysInitialState: IOverlaysState = overlaysAdapter.getInitialSt
 	hoveredOverlay: null,
 	overlaysCriteria: {},
 	miscOverlays: {},
-	top: 0,
-	left: 0
+	customOrientation: { top: 0, left: 0}
 });
 
 export const overlaysFeatureKey = 'overlays';
@@ -216,10 +219,10 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 		case OverlaysActionTypes.SET_OVERLAYS_MARKUPS:
 			let dropsMarkUpCloneToSet = new ExtendMap(state.dropsMarkUp);
 			dropsMarkUpCloneToSet.set(action.payload.classToSet, action.payload.dataToSet);
-			const { top, left } = action.payload;
+			const { customOrientation } = action.payload;
 
 			return {
-				...state, dropsMarkUp: dropsMarkUpCloneToSet, top, left
+				...state, dropsMarkUp: dropsMarkUpCloneToSet, customOrientation
 			};
 
 		case OverlaysActionTypes.REMOVE_OVERLAYS_MARKUPS:

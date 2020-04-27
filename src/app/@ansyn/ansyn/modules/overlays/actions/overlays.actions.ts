@@ -9,7 +9,13 @@ import {
 	IOverlaysHash,
 	IOverlaySpecialObject,
 } from '../models/overlay.model';
-import { IMarkUpData, IOverlayDropMarkUp, ITimelineRange, MarkUpClass } from '../reducers/overlays.reducer';
+import {
+	ICustomOrientation,
+	IMarkUpData,
+	IOverlayDropMarkUp,
+	ITimelineRange,
+	MarkUpClass
+} from '../reducers/overlays.reducer';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
@@ -55,7 +61,7 @@ export class SelectOverlayAction implements Action {
 export class SetMarkUp implements Action {
 	type = OverlaysActionTypes.SET_OVERLAYS_MARKUPS;
 
-	constructor(public payload: { classToSet: MarkUpClass, dataToSet: IMarkUpData, top?: number, left?: number }) {
+	constructor(public payload: { classToSet: MarkUpClass, dataToSet: IMarkUpData, customOrientation?: ICustomOrientation }) {
 	};
 }
 

@@ -19,8 +19,6 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { takeWhile, tap } from 'rxjs/operators';
 import { Actions, ofType } from '@ngrx/effects';
 import { IOverlay } from '../../models/overlay.model';
-import { ResultsTableComponent } from "../../../menu-items/results/components/results-table/results-table.component";
-import { isPointContainedInGeometry } from "@ansyn/imagery";
 
 export interface IOverviewOverlay extends IOverlay {
 	thumbnailName: string;
@@ -110,11 +108,11 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 			}
 			const hoveredElementBounds: ClientRect = hoveredElement.getBoundingClientRect();
 			this.overlayState$.subscribe((state) => {
+				const { top, left } = state.customOrientation ? state.customOrientation : {top: 0, left: 0};
 				const resultsTableLeftBorder = 530;
-				this.left = state.left ? resultsTableLeftBorder : this.getLeftPosition(hoveredElementBounds.left);
-				const resultsTableTopBorder = state.top < 900 ? 80 : -50;
-				this.top = state.top ? state.top + resultsTableTopBorder : hoveredElementBounds.top;
-
+				this.left = left ? resultsTableLeftBorder : this.getLeftPosition(hoveredElementBounds.left);
+				const resultsTableTopBorder = top < 900 ? 80 : -50;
+				this.top = top ? top + resultsTableTopBorder : hoveredElementBounds.top;
 			});
 			this.showOverview();
 			this.sensorName = overlay.sensorName;

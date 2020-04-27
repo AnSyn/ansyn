@@ -5,7 +5,7 @@ import { ContextMenuShowAction, getTimeFormat } from '@ansyn/map-facade';
 import {
 	IOverlaysState,
 	MarkUpClass,
-	overlaysStateSelector,
+	overlaysStateSelector, selectCustomOverviewElement,
 	selectHoveredOverlay
 } from '../../reducers/overlays.reducer';
 import { overlayOverviewComponentConstants } from './overlay-overview.component.const';
@@ -16,9 +16,11 @@ import {
 	SetMarkUp
 } from '../../actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { takeWhile, tap } from 'rxjs/operators';
+import { takeWhile, tap, withLatestFrom } from 'rxjs/operators';
 import { Actions, ofType } from '@ngrx/effects';
 import { IOverlay } from '../../models/overlay.model';
+import { ResultsTableComponent } from "../../../menu-items/results/components/results-table/results-table.component";
+import { isPointContainedInGeometry } from "@ansyn/imagery";
 
 export interface IOverviewOverlay extends IOverlay {
 	thumbnailName: string;
@@ -55,8 +57,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	public rotation = 0;
 	protected topElement = this.el.nativeElement.parentElement;
 
-	overlayState$ = this.store$.select(overlaysStateSelector).pipe(
-		tap((state) => state));
+	overlayState$ = this.store$.select(selectCustomOverviewElement);
 
 	get dropElement(): Element {
 		return this.topElement.querySelector(`#dropId-${this.overlayId}`);
@@ -83,6 +84,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	hoveredOverlay$: Observable<any> = this.store$.pipe(
 		select(selectHoveredOverlay),
+		withLatestFrom(this.store$.select(selectCustomOverviewElement)),
 		tap(this.onHoveredOverlay.bind(this))
 	);
 
@@ -98,22 +100,24 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 	}
 
-	onHoveredOverlay(overlay: IOverviewOverlay) {
+	onHoveredOverlay([overlay, customElement]: [IOverviewOverlay, any]) {
 		if (overlay) {
 			const fetching = overlay.thumbnailUrl === this.const.FETCHING_OVERLAY_DATA;
 			this.overlayId = overlay.id;
-			const hoveredElement: Element = this.dropElement;
+			const hoveredElement: Element = customElement || this.dropElement;
 			if (!hoveredElement) {
 				return;
 			}
 			const hoveredElementBounds: ClientRect = hoveredElement.getBoundingClientRect();
-			this.overlayState$.subscribe((state) => {
-				const { top, left } = state.customOrientation ? state.customOrientation : {top: 0, left: 0};
+			/*this.overlayState$.subscribe((state) => {
 				const resultsTableLeftBorder = 530;
-				this.left = left ? resultsTableLeftBorder : this.getLeftPosition(hoveredElementBounds.left);
-				const resultsTableTopBorder = top < 900 ? 80 : -50;
-				this.top = top ? top + resultsTableTopBorder : hoveredElementBounds.top;
-			});
+				this.left = state.left ? resultsTableLeftBorder : this.getLeftPosition(hoveredElementBounds.left);
+				const resultsTableTopBorder = state.top < 900 ? 80 : -50;
+				this.top = state.top ? state.top + resultsTableTopBorder : hoveredElementBounds.top;
+
+			});*/
+			this.left = customElement ? hoveredElementBounds.right : this.getLeftPosition(hoveredElementBounds.left);
+			this.top = hoveredElementBounds.top + (customElement ? hoveredElementBounds.height : 0);
 			this.showOverview();
 			this.sensorName = overlay.sensorName;
 			this.sensorType = overlay.sensorType;

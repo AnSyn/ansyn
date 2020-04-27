@@ -3,9 +3,8 @@ import { Observable } from "rxjs";
 import { IOverlay } from "../../../../overlays/models/overlay.model";
 import { select, Store } from "@ngrx/store";
 import {
-	ICustomOrientation,
 	IOverlaysState, MarkUpClass,
-	selectOverlaysArray
+	selectOverlays
 } from "../../../../overlays/reducers/overlays.reducer";
 import { distinctUntilChanged, tap } from "rxjs/operators";
 import { isEqual } from "lodash";
@@ -47,24 +46,14 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		}
 	];
 
-	@AutoSubscription
 	loadOverlays$: Observable<IOverlay[]> = this.store$
 		.pipe(
-			select(selectOverlaysArray),
+			select(selectOverlays),
 			distinctUntilChanged(isEqual),
-			tap((overlays: IOverlay[]) => {
-				this.overlays = overlays;
+			tap((overlays: any) => {
+				this.overlays = this.mapOverlayObjectToArray(overlays);
 				const badge = this.getBadge();
 				this.store$.dispatch(new SetBadgeAction({ key: 'Results table', badge }));
-			}));
-
-	@AutoSubscription
-	loadOverlaysArray$: Observable<IOverlay[]> = this.store$
-		.pipe(
-			select(selectOverlaysArray),
-			distinctUntilChanged(isEqual),
-			tap((overlays: IOverlay[]) => {
-				return overlays;
 			}));
 
 	constructor(protected store$: Store<IOverlaysState>, @Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
@@ -75,6 +64,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
+
 	}
 
 	loadResults() {
@@ -90,15 +80,11 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		const lastRowHeight = 900;
 		const resultsTableTopBorder = $event.screenY < lastRowHeight ? 0 : -30;
 		const top = $event.screenY + resultsTableTopBorder;
-		const customOrientation: ICustomOrientation = {
-			top,
-			left: resultsTableLeftBorder
-		};
 
 		this.store$.dispatch(new SetMarkUp({
 			classToSet: MarkUpClass.hover,
 			dataToSet: { overlaysIds: [id] },
-			customOrientation
+			customOverviewElement: $event.currentTarget
 		}));
 	}
 
@@ -114,6 +100,10 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 
 	getType(overlay: IOverlay): string {
 		return "icon icon-lavian"
+	}
+
+	mapOverlayObjectToArray(overlays) {
+		return Object.keys(overlays).map((key, index) => overlays[key]);
 	}
 
 	timeFormat(overlayDate: Date) {

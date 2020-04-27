@@ -69,18 +69,13 @@ export interface IOverlaysState extends EntityState<IOverlay> {
 	hoveredOverlay: IOverlay;
 	overlaysCriteria: IOverlaysCriteria;
 	miscOverlays: IOverlaysHash;
-	customOrientation: ICustomOrientation;
+	customOverviewElement: any;
 }
 
 let initDropsMarkUp: ExtendMap<MarkUpClass, IMarkUpData> = new ExtendMap<MarkUpClass, IMarkUpData>();
 Object.keys(MarkUpClass).forEach(key => {
 	initDropsMarkUp.set(MarkUpClass[key], { overlaysIds: [] });
 });
-
-export interface ICustomOrientation {
-	top: number;
-	left: number;
-}
 
 export const overlaysInitialState: IOverlaysState = overlaysAdapter.getInitialState({
 	loaded: false,
@@ -97,7 +92,7 @@ export const overlaysInitialState: IOverlaysState = overlaysAdapter.getInitialSt
 	hoveredOverlay: null,
 	overlaysCriteria: {},
 	miscOverlays: {},
-	customOrientation: { top: 0, left: 0}
+	customOverviewElement: null
 });
 
 export const overlaysFeatureKey = 'overlays';
@@ -219,10 +214,10 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 		case OverlaysActionTypes.SET_OVERLAYS_MARKUPS:
 			let dropsMarkUpCloneToSet = new ExtendMap(state.dropsMarkUp);
 			dropsMarkUpCloneToSet.set(action.payload.classToSet, action.payload.dataToSet);
-			const { customOrientation } = action.payload;
+			const { customOverviewElement } = action.payload;
 
 			return {
-				...state, dropsMarkUp: dropsMarkUpCloneToSet, customOrientation
+				...state, dropsMarkUp: dropsMarkUpCloneToSet, customOverviewElement
 			};
 
 		case OverlaysActionTypes.REMOVE_OVERLAYS_MARKUPS:
@@ -246,7 +241,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				});
 			}
 
-			return { ...state, dropsMarkUp: dropsMarkUpClone };
+			return { ...state, dropsMarkUp: dropsMarkUpClone, customOverviewElement: null };
 
 
 		case OverlaysActionTypes.ADD_OVERLAYS_MARKUPS:
@@ -347,3 +342,4 @@ export const selectTime: MemoizedSelector<any, ICaseTimeState> = createSelector(
 
 export const selectMiscOverlays: MemoizedSelector<any, any> = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays ? overlays.miscOverlays : {});
 export const selectMiscOverlay = (key: string) => createSelector(selectMiscOverlays, (miscOverlays: any) => miscOverlays[key]);
+export const selectCustomOverviewElement = createSelector(overlaysStateSelector, (state) => state && state.customOverviewElement)

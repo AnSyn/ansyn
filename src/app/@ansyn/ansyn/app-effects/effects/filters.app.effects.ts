@@ -10,14 +10,14 @@ import {
 import { IAppState } from '../app.effects.module';
 import { SetBadgeAction } from '@ansyn/menu';
 import { distinctUntilChanged, filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
-import { BooleanFilterMetadata } from '../../modules/menu-items/filters/models/metadata/boolean-filter-metadata';
+import { BooleanFilterMetadata } from '../../modules/filters/models/metadata/boolean-filter-metadata';
 import {
 	EnableOnlyFavoritesSelectionAction,
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction
-} from '../../modules/menu-items/filters/actions/filters.actions';
-import { EnumFilterMetadata } from '../../modules/menu-items/filters/models/metadata/enum-filter-metadata';
-import { FilterMetadata } from '../../modules/menu-items/filters/models/metadata/filter-metadata.interface';
+} from '../../modules/filters/actions/filters.actions';
+import { EnumFilterMetadata } from '../../modules/filters/models/metadata/enum-filter-metadata';
+import { FilterMetadata } from '../../modules/filters/models/metadata/filter-metadata.interface';
 import {
 	filtersToString,
 	Filters,
@@ -26,10 +26,10 @@ import {
 	selectFacets,
 	selectFilters,
 	selectShowOnlyFavorites
-} from '../../modules/menu-items/filters/reducer/filters.reducer';
-import { filtersConfig, FiltersService } from '../../modules/menu-items/filters/services/filters.service';
-import { IFilter } from '../../modules/menu-items/filters/models/IFilter';
-import { IFiltersConfig } from '../../modules/menu-items/filters/models/filters-config';
+} from '../../modules/filters/reducer/filters.reducer';
+import { filtersConfig, FiltersService } from '../../modules/filters/services/filters.service';
+import { IFilter } from '../../modules/filters/models/IFilter';
+import { IFiltersConfig } from '../../modules/filters/models/filters-config';
 import { buildFilteredOverlays } from '../../modules/core/utils/overlays';
 import { GenericTypeResolverService } from '../../modules/core/services/generic-type-resolver.service';
 import { IFilterModel } from '../../modules/core/models/IFilterModel';
@@ -50,7 +50,7 @@ import {
 	selectSpecialObjects
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
-import { FilterType } from '../../modules/menu-items/filters/models/filter-type';
+import { FilterType } from '../../modules/filters/models/filter-type';
 import { ICaseFacetsState } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay, IOverlaySpecialObject } from '../../modules/overlays/models/overlay.model';
 import { get as _get } from 'lodash';

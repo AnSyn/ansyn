@@ -26,7 +26,7 @@ import {
 	SelectCaseSuccessAction,
 	SetAutoSave
 } from '../../../modules/menu-items/cases/actions/cases.actions';
-import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
+import { UpdateFacetsAction } from '../../../modules/filters/actions/filters.actions';
 import {
 	SetAnnotationMode,
 	SetMeasureDistanceToolState,

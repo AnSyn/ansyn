@@ -22,8 +22,8 @@ import {
 	IOverlaysSourceProvider,
 	MultipleOverlaysSourceConfig
 } from '../../core/models/multiple-overlays-source-config';
-import { IDataInputFilterValue } from '../../menu-items/cases/models/case.model';
 import { IOverlay, IOverlaysFetchData } from '../models/overlay.model';
+import { DataInputFilterValue } from '../../menu-items/cases/models/case.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -164,12 +164,9 @@ export class MultipleOverlaysSourceProvider {
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		const mergedSortedOverlays: Observable<IOverlaysFetchData> = forkJoin(this.sourceConfigs
-			.filter(s => !Boolean(fetchParams.dataInputFilters.length) ? true : fetchParams.dataInputFilters.some((dataInputFilter: IDataInputFilterValue) => dataInputFilter.providerName === s.provider.sourceType))
-			.map(s => {
-				const dataFiltersOfProvider = Boolean(fetchParams.dataInputFilters) ?
-					fetchParams.dataInputFilters.filter((f) => f.providerName === s.provider.sourceType) : [];
-				return s.provider.fetchMultiple({ ...fetchParams, dataInputFilters: dataFiltersOfProvider }, s.filters);
-			})).pipe(
+			.filter(s => !Boolean(fetchParams.dataInputFilters.length) ? true : fetchParams.dataInputFilters.some((dataInputFilter: DataInputFilterValue) => dataInputFilter === s.provider.sourceType))
+			.map(s => s.provider.fetchMultiple( fetchParams, s.filters)
+			)).pipe(
 			map(overlays => {
 				const allFailed = overlays.every(overlay => isFaulty(overlay));
 				const errors = mergeErrors(overlays);

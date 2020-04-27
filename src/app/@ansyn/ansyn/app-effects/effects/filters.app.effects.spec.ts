@@ -14,13 +14,13 @@ import {
 	EnableOnlyFavoritesSelectionAction,
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction
-} from '../../modules/menu-items/filters/actions/filters.actions';
-import { EnumFilterMetadata } from '../../modules/menu-items/filters/models/metadata/enum-filter-metadata';
-import { FilterMetadata } from '../../modules/menu-items/filters/models/metadata/filter-metadata.interface';
-import { filtersConfig } from '../../modules/menu-items/filters/services/filters.service';
-import { filtersFeatureKey, FiltersReducer } from '../../modules/menu-items/filters/reducer/filters.reducer';
-import { IFilter } from '../../modules/menu-items/filters/models/IFilter';
-import { SliderFilterMetadata } from '../../modules/menu-items/filters/models/metadata/slider-filter-metadata';
+} from '../../modules/filters/actions/filters.actions';
+import { EnumFilterMetadata } from '../../modules/filters/models/metadata/enum-filter-metadata';
+import { FilterMetadata } from '../../modules/filters/models/metadata/filter-metadata.interface';
+import { filtersConfig } from '../../modules/filters/services/filters.service';
+import { filtersFeatureKey, FiltersReducer } from '../../modules/filters/reducer/filters.reducer';
+import { IFilter } from '../../modules/filters/models/IFilter';
+import { SliderFilterMetadata } from '../../modules/filters/models/metadata/slider-filter-metadata';
 import { buildFilteredOverlays } from '../../modules/core/utils/overlays';
 import { GenericTypeResolverService } from '../../modules/core/services/generic-type-resolver.service';
 import {
@@ -36,7 +36,7 @@ import {
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { imageryStatusFeatureKey, ImageryStatusReducer } from '@ansyn/map-facade';
-import { FilterType } from '../../modules/menu-items/filters/models/filter-type';
+import { FilterType } from '../../modules/filters/models/filter-type';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { MissingTranslationHandler, TranslateLoader, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
 import { LoggerService } from '../../modules/core/services/logger.service';

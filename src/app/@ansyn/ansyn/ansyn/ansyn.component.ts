@@ -28,10 +28,7 @@ import { IOverlay } from '../modules/overlays/models/overlay.model';
 export class AnsynComponent implements OnInit {
 	renderContextMenu: boolean;
 
-	isMenuCollapse$ = this.store$.select(selectMenuCollapse).pipe(
-		tap( collapse => console.log(collapse)),
-		map( collapse => collapse)
-	);
+	isMenuCollapse$ = this.store$.select(selectMenuCollapse);
 
 	isPinnedClass$: Observable<string> = this.store$.select(selectIsPinned).pipe(
 		map((_isPinned) => _isPinned ? 'isPinned' : 'isNotPinned')

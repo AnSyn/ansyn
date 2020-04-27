@@ -73,7 +73,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	loadResults() {
-		// TODO: add infinite scroll functionallity when directive is fixed
+		// TODO: add infinite scroll functionality when directive is fixed
 	}
 
 	getBadge(): string {

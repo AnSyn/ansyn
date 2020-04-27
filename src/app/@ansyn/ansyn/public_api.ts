@@ -1,3 +1,5 @@
+export { IImageProcParam } from "./modules/overlays/overlay-status/config/overlay-status-config";
+
 export { AddLayer } from './modules/menu-items/layers-manager/actions/layers.actions';
 export {
 	AnaglyphConfig,
@@ -166,7 +168,7 @@ export {
 	FiltersCollectionComponent
 }from './modules/filters/components/filters-collection/filters-collection.component';
 export { CasesComponent } from './modules/menu-items/cases/components/cases/cases.component';
-export { IToolsConfig, toolsConfig, IImageProcParam } from './modules/menu-items/tools/models/tools-config';
+export { IToolsConfig, toolsConfig } from './modules/menu-items/tools/models/tools-config';
 export { CasesModule } from './modules/menu-items/cases/cases.module';
 export { TasksModule } from './modules/menu-items/algorithms/tasks.module';
 export { FiltersModule } from './modules/filters/filters.module';

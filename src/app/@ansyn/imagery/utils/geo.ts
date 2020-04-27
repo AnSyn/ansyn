@@ -1,4 +1,13 @@
-import { Feature, FeatureCollection, GeometryObject, LineString, MultiPolygon, Point, Polygon } from 'geojson';
+import {
+	Feature,
+	FeatureCollection,
+	GeometryObject,
+	LineString,
+	MultiPolygon,
+	Point,
+	Polygon,
+	Position
+} from 'geojson';
 import {
 	AllGeoJSON,
 	area,
@@ -183,6 +192,13 @@ export function getDistanceBetweenPoints(source: Point, destination: Point): num
 		console.warn('getDistanceBetweenPoints: turf exception', e);
 	}
 	return distanceInKilometers;
+}
+
+export function getNewPoint(coordinates: Position): Point {
+	return {
+		type: 'Point',
+		coordinates
+	};
 }
 
 export const EPSG_4326 = 'EPSG:4326';

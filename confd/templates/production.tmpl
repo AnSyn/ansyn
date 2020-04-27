@@ -286,39 +286,41 @@
   "contextConfig": {
     "schema": "contexts"
   },
+  "OverlayStatusConfig": {
+  	"ImageProcParams": [
+	  {
+		"name": "Sharpness",
+		"defaultValue": 0,
+		"min": 0,
+		"max": 100
+	  },
+	  {
+		"name": "Contrast",
+		"defaultValue": 0,
+		"min": -100,
+		"max": 100
+	  },
+	  {
+		"name": "Brightness",
+		"defaultValue": 0,
+		"min": -100,
+		"max": 100
+	  },
+	  {
+		"name": "Gamma",
+		"defaultValue": 100,
+		"min": 1,
+		"max": 200
+	  },
+	  {
+		"name": "Saturation",
+		"defaultValue": 100,
+		"min": 1,
+		"max": 100
+	  }
+	]
+  },
   "toolsConfig": {
-    "ImageProcParams": [
-      {
-        "name": "Sharpness",
-        "defaultValue": 0,
-        "min": 0,
-        "max": 100
-      },
-      {
-        "name": "Contrast",
-        "defaultValue": 0,
-        "min": -100,
-        "max": 100
-      },
-      {
-        "name": "Brightness",
-        "defaultValue": 0,
-        "min": -100,
-        "max": 100
-      },
-      {
-        "name": "Gamma",
-        "defaultValue": 100,
-        "min": 1,
-        "max": 200
-      },
-      {
-        "name": "Saturation",
-        "defaultValue": 100,
-        "min": 1,
-        "max": 100
-      }
-    ],
     "ShadowMouse": {
     	"activeByDefault": {{ getv "/ansyn/is/shadow/active" "false"}},
     	"forceSendShadowMousePosition": {{ getv "/ansyn/force/send/shadow/mouse/position" "false"}}

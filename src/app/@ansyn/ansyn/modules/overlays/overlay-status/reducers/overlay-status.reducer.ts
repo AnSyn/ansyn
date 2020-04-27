@@ -3,7 +3,11 @@ import { uniq } from 'lodash';
 import { AlertMsg } from '../../../alerts/model';
 import { IOverlay } from '../../models/overlay.model'
 import { OverlayStatusActions, OverlayStatusActionsTypes } from '../actions/overlay-status.actions';
-import { ITranslationData } from '../../../menu-items/cases/models/case.model';
+import {
+	ImageManualProcessArgs,
+	IOverlaysManualProcessArgs,
+	ITranslationData
+} from '../../../menu-items/cases/models/case.model';
 import { MultiPolygon } from 'geojson';
 
 export const overlayStatusFeatureKey = 'overlayStatus';
@@ -24,10 +28,16 @@ export interface IOverlayStatusState {
 	removedOverlaysIdsCount: number;
 	presetOverlays: IOverlay[];
 	alertMsg: AlertMsg;
+	manualImageProcessingParams: ImageManualProcessArgs;
 	overlaysTranslationData: ITranslationsData,
 	overlaysScannedAreaData: {
 		[key: string]: MultiPolygon;
 	}
+}
+
+export interface IImageProcessState {
+	manualImageProcessingParams: ImageManualProcessArgs;
+	overlaysManualProcessArgs: IOverlaysManualProcessArgs;
 }
 
 export const overlayStatusInitialState: IOverlayStatusState = {
@@ -38,7 +48,8 @@ export const overlayStatusInitialState: IOverlayStatusState = {
 	removedOverlaysIdsCount: 0,
 	alertMsg: new Map([]),
 	overlaysTranslationData: {},
-	overlaysScannedAreaData: {}
+	overlaysScannedAreaData: {},
+	manualImageProcessingParams: {}
 };
 
 export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusInitialState, action: OverlayStatusActions | any): IOverlayStatusState {
@@ -71,6 +82,9 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 
 		case OverlayStatusActionsTypes.RESET_REMOVED_OVERLAY_IDS:
 			return { ...state, removedOverlaysIds: [] };
+
+		case OverlayStatusActionsTypes.SET_MANUAL_IMAGE_PROCESSING:
+			return { ...state, manualImageProcessingParams: action.payload };
 
 		case OverlayStatusActionsTypes.SET_REMOVED_OVERLAYS_VISIBILITY:
 			return { ...state, removedOverlaysVisibility: action.payload };

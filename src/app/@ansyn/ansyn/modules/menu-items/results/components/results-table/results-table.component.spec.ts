@@ -3,7 +3,6 @@ import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing'
 import { ResultsTableComponent } from './results-table.component';
 import { TranslateModule } from "@ngx-translate/core";
 import { Store, StoreModule } from "@ngrx/store";
-import { StatusBarConfig } from "../../../../status-bar/models/statusBar.config";
 import {
 	IOverlaysState,
 	MarkUpClass,
@@ -27,10 +26,7 @@ describe('ResultsTableComponent', () => {
 			imports: [TranslateModule.forRoot(),
 				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer })],
 			declarations: [ResultsTableComponent],
-			providers: [{
-				provide: StatusBarConfig,
-				useValue: { toolTips: {} }
-			}]
+			providers: []
 		})
 			.compileComponents();
 	}));

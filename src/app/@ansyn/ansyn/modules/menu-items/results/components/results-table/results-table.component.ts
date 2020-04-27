@@ -13,8 +13,6 @@ import {
 	SetMarkUp,
 } from "../../../../overlays/actions/overlays.actions";
 import { SetBadgeAction } from "@ansyn/menu";
-import { StatusBarConfig } from "../../../../status-bar/models/statusBar.config";
-import { IStatusBarConfig } from "../../../../status-bar/models/statusBar-config.model";
 import { AutoSubscription, AutoSubscriptions } from "auto-subscriptions";
 
 @Component({
@@ -63,7 +61,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 
 			}));
 
-	constructor(protected store$: Store<IOverlaysState>, @Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
+	constructor(protected store$: Store<IOverlaysState>) {
 	}
 
 	ngOnDestroy(): void {

@@ -3,7 +3,7 @@
 		<ansyn-menu [version]="version" [animatedElement]="animatedElementHorizontal"></ansyn-menu>
 	</div>
 
-	<div class="status">
+	<div class="status" [class.expand]="(isMenuCollapse$ | async)">
 		<ansyn-status-bar></ansyn-status-bar>
 	</div>
 

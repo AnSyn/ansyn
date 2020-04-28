@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from "rxjs";
 import { IOverlay } from "../../../../overlays/models/overlay.model";
-import { select, Store } from "@ngrx/store";
+import { Store } from "@ngrx/store";
 import {
 	IOverlaysState, MarkUpClass, selectFilteredOveralys,
 	selectOverlaysArray
 } from "../../../../overlays/reducers/overlays.reducer";
-import { distinctUntilChanged, filter, tap, withLatestFrom } from "rxjs/operators";
+import { tap, withLatestFrom } from "rxjs/operators";
 import {
 	DisplayOverlayFromStoreAction,
 	SetMarkUp,
@@ -45,23 +45,10 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	loadOverlays$: Observable<[IOverlaysState, string[], IOverlay[]]> = this.store$
 		.pipe(
 			withLatestFrom(this.store$.select(selectFilteredOveralys), this.store$.select(selectOverlaysArray)),
-			filter(([overlayState, filteredOverlays, overlays]: [IOverlaysState, string[], IOverlay[]]) => {
-				return Boolean(filteredOverlays.length);
-			}),
 			tap(([overlayState, filteredOverlays, overlays]: [IOverlaysState, string[], IOverlay[]]) => {
-				this.overlays = overlays;
-			}));
-
-	@AutoSubscription
-	loadFilteredOverlays$: Observable<string[]> = this.store$
-		.pipe(
-			select(selectFilteredOveralys),
-			tap((overlays: string[]) => {
-				const filteredOverlays = this.overlays.filter(overlay => {
-					return overlays.includes(overlay.id);
+				this.overlays = overlays.filter(overlay => {
+					return filteredOverlays.includes(overlay.id);
 				});
-
-				this.overlays = filteredOverlays;
 			}));
 
 	constructor(protected store$: Store<IOverlaysState>) {

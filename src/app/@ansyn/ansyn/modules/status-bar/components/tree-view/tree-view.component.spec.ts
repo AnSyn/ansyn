@@ -1,5 +1,4 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MissingTranslationHandler, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
@@ -8,10 +7,10 @@ import { TreeviewModule } from 'ngx-treeview';
 import { Observable, of } from 'rxjs';
 import { SliderCheckboxComponent } from '../../../core/forms/slider-checkbox/slider-checkbox.component';
 import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
-import { IOverlaysCriteria } from '../../../overlays/models/overlay.model';
-import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
+import { OverlayReducer, overlaysFeatureKey, selectDataInputFilter } from '../../../overlays/reducers/overlays.reducer';
 import { IStatusBarState, StatusBarInitialState, statusBarStateSelector } from '../../reducers/status-bar.reducer';
 import { TreeViewComponent } from './tree-view.component';
+import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 
 describe('TreeViewComponent', () => {
 	let component: TreeViewComponent;
@@ -48,46 +47,12 @@ describe('TreeViewComponent', () => {
 			.compileComponents();
 	}));
 
-	let searchParams: IOverlaysCriteria = {
-		region: {
-			'type': 'Polygon',
-			'coordinates': [
-				[
-					[
-						-14.4140625,
-						59.99349233206085
-					],
-					[
-						37.96875,
-						59.99349233206085
-					],
-					[
-						37.96875,
-						35.915747419499695
-					],
-					[
-						-14.4140625,
-						35.915747419499695
-					],
-					[
-						-14.4140625,
-						59.99349233206085
-					]
-				]
-			]
-		},
-		time: {
-			type: 'absolute',
-			from: new Date(2020),
-			to: new Date()
-		}
-	};
-
 	beforeEach(inject([Store], (_store) => {
 		store = _store;
 		statusBarState = cloneDeep(StatusBarInitialState);
 		const fakeStore = new Map<any, any>([
-			[statusBarStateSelector, statusBarState]
+			[statusBarStateSelector, statusBarState],
+			[selectDataInputFilter, ['dataInput1', 'dataInput2']]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
@@ -103,12 +68,15 @@ describe('TreeViewComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('ok button shall invoke the dataInputFiltersOk function', () => {
-		const element = fixture.debugElement.query(By.css('.ok-button')).nativeElement;
-		spyOn(component, 'dataInputFiltersOk');
+	it('on check/unCheck should SetOverlaysCriteriaAction', () => {
+		spyOn(store, 'dispatch');
+		const selectFilter = [...component._selectedFilters];
+		selectFilter.pop();
+		component.selectedFilters = selectFilter;
 		fixture.detectChanges();
-		element.click();
-		expect(component.dataInputFiltersOk).toHaveBeenCalled();
-		fixture.detectChanges();
+		expect(store.dispatch).toHaveBeenCalledWith(new SetOverlaysCriteriaAction({dataInputFilters: {
+				fullyChecked: false,
+				filters: selectFilter
+			}}));
 	});
 });

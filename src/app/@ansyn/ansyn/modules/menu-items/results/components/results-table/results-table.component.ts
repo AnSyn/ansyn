@@ -1,20 +1,18 @@
-import { Component, Inject, OnDestroy, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from "rxjs";
 import { IOverlay } from "../../../../overlays/models/overlay.model";
 import { select, Store } from "@ngrx/store";
 import {
-	IOverlaysState, MarkUpClass,
+	IOverlaysState, MarkUpClass, selectFilteredOveralys,
 	selectOverlaysArray
 } from "../../../../overlays/reducers/overlays.reducer";
 import { distinctUntilChanged, tap } from "rxjs/operators";
 import { isEqual } from "lodash";
 import {
-	DisplayOverlayFromStoreAction, LoadOverlaysAction,
+	DisplayOverlayFromStoreAction,
 	SetMarkUp,
 } from "../../../../overlays/actions/overlays.actions";
-import { SetBadgeAction } from "@ansyn/menu";
 import { AutoSubscription, AutoSubscriptions } from "auto-subscriptions";
-import { Effect } from '@ngrx/effects';
 
 @Component({
 	selector: 'ansyn-results-table',
@@ -49,8 +47,21 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		.pipe(
 			select(selectOverlaysArray),
 			distinctUntilChanged(isEqual),
-			tap((overlays: any) => {
+			tap((overlays: IOverlay[]) => {
 				this.overlays = overlays;
+			}));
+
+	@AutoSubscription
+	loadFilteredOverlays$: Observable<string[]> = this.store$
+		.pipe(
+			select(selectFilteredOveralys),
+			distinctUntilChanged(isEqual),
+			tap((overlays: string[]) => {
+				const filteredOverlays = this.overlays.filter(overlay => {
+					return overlays.includes(overlay.id);
+				});
+
+				this.overlays = filteredOverlays;
 			}));
 
 	constructor(protected store$: Store<IOverlaysState>) {

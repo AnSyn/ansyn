@@ -52,7 +52,7 @@ import {
 	DisplayOverlaySuccessAction,
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
-	OverlaysActionTypes,
+	OverlaysActionTypes, SetFilteredOverlaysAction,
 	SetHoveredOverlayAction,
 	SetMarkUp,
 	SetOverlaysCriteriaAction
@@ -274,10 +274,9 @@ export class OverlaysAppEffects {
 
 	@Effect()
 	updateResultTableBadge$: Observable<SetBadgeAction> = this.actions$.pipe(
-		ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
-		filter( ({payload: overlays}) => Boolean(overlays && overlays.length)),
+		ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS),
 		map( ({payload: overlays}) => {
-			return new SetBadgeAction({key: 'Results table', badge: `${overlays.length}`})
+			return new SetBadgeAction({key: 'Results table', badge: `${overlays.length}` })
 		})
 	);
 

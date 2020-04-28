@@ -227,8 +227,8 @@ export class MenuComponent implements OnInit, OnDestroy {
 		this.buildCurrentComponent();
 	}
 
-	hideBadge(badge: string): boolean {
-		return badge !== '★' && !Number(badge);
+	hideBadge(badge: string, showZeroBadge: boolean): boolean {
+		return badge !== '★' && (showZeroBadge ? Number(badge) < 0 : !Number(badge));
 	}
 
 	isActive(key: string): boolean {

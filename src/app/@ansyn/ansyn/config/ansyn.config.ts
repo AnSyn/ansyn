@@ -42,7 +42,8 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 		{
 			name: 'Results table',
 			component: ResultsComponent,
-			iconClass: 'icon-table'
+			iconClass: 'icon-table',
+			showZeroBadge: true
 		},
 		{
 			name: 'Data Layers',

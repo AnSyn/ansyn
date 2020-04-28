@@ -48,7 +48,7 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 				if ( metadata instanceof EnumFilterMetadata) {
 					const facetMetadata: any = facets.filters.find( f => f.fieldName === filter.modelName).metadata;
 					const all = metadata.enumsFields.size;
-					const unChecked = facetMetadata.unCheckedEnums && facetMetadata.unCheckedEnums.length
+					const unChecked = facetMetadata.unCheckedEnums && facetMetadata.unCheckedEnums.filter( filteredName => metadata.enumsFields.has(filteredName)).length;
 					title = unChecked === 0 ? '' : `${all - unChecked}/${all}`;
 				}
 				this.filters[filter.modelName] = {

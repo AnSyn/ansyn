@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, EventEmitter } from '@angular/core';
 import { Observable } from "rxjs";
 import { IOverlay } from "../../../../overlays/models/overlay.model";
 import { select, Store } from "@ngrx/store";
@@ -14,6 +14,7 @@ import {
 } from "../../../../overlays/actions/overlays.actions";
 import { SetBadgeAction } from "@ansyn/menu";
 import { AutoSubscription, AutoSubscriptions } from "auto-subscriptions";
+import { Effect } from '@ngrx/effects';
 
 @Component({
 	selector: 'ansyn-results-table',
@@ -23,7 +24,6 @@ import { AutoSubscription, AutoSubscriptions } from "auto-subscriptions";
 
 @AutoSubscriptions()
 export class ResultsTableComponent implements OnInit, OnDestroy {
-	requestAnimation;
 	overlays = [];
 	selectedOverlayId: string;
 	tableHeaders = [
@@ -51,14 +51,6 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			distinctUntilChanged(isEqual),
 			tap((overlays: any) => {
 				this.overlays = overlays;
-				if (this.requestAnimation) {
-					cancelAnimationFrame(this.requestAnimation);
-				}
-				requestAnimationFrame(() => {
-					const badge = this.getBadge();
-					this.store$.dispatch(new SetBadgeAction({ key: 'Results table', badge }));
-				});
-
 			}));
 
 	constructor(protected store$: Store<IOverlaysState>) {
@@ -72,10 +64,6 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 
 	loadResults() {
 		// TODO: add infinite scroll functionality when directive is fixed
-	}
-
-	getBadge(): string {
-		return this.overlays ? this.overlays.length.toString() : '0';
 	}
 
 	onMouseOver($event, id: string): void {

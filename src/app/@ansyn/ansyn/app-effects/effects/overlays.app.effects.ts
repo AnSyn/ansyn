@@ -72,6 +72,7 @@ import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/mod
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { Dictionary } from '@ngrx/entity';
 import { LoggerService } from '../../modules/core/services/logger.service';
+import { SetBadgeAction } from '@ansyn/menu';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -269,6 +270,15 @@ export class OverlaysAppEffects {
 	activeMapLeave$ = this.actions$.pipe(
 		ofType(MapActionTypes.TRIGGER.IMAGERY_MOUSE_LEAVE),
 		map(() => new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }))
+	);
+
+	@Effect()
+	updateResultTableBadge$: Observable<SetBadgeAction> = this.actions$.pipe(
+		ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
+		filter( ({payload: overlays}) => Boolean(overlays && overlays.length)),
+		map( ({payload: overlays}) => {
+			return new SetBadgeAction({key: 'Results table', badge: `${overlays.length}`})
+		})
 	);
 
 	onDropMarkupFilter([prevAction, currentAction]): boolean {

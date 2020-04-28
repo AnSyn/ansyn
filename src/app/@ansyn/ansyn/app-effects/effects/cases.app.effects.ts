@@ -25,11 +25,15 @@ import { IOverlayByIdMetaData, OverlaysService } from '../../modules/overlays/se
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { IDilutedCase, ImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
+import {
+	IOverlayStatusConfig,
+	overlayStatusConfig
+} from "../../modules/overlays/overlay-status/config/overlay-status-config";
 
 @Injectable()
 export class CasesAppEffects {
 	get defaultImageManualProcessArgs(): ImageManualProcessArgs {
-		return this.config.ImageProcParams.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam) => {
+		return this.overlayStatusConfig.ImageProcParams.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam) => {
 			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
 		}, {});
 	}
@@ -124,6 +128,7 @@ export class CasesAppEffects {
 				protected store$: Store<IAppState>,
 				protected overlaysService: OverlaysService,
 				@Inject(toolsConfig) protected config: IToolsConfig,
+				@Inject(overlayStatusConfig) protected overlayStatusConfig: IOverlayStatusConfig,
 				protected loggerService: LoggerService,
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}

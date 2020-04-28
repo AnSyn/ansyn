@@ -1,11 +1,20 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { OverlayStatusComponent } from './overlay-status.component';
 import { Store, StoreModule } from '@ngrx/store';
-import { imageryStatusFeatureKey, ImageryStatusReducer, mapFeatureKey, MapReducer } from '@ansyn/map-facade';
+import {
+	imageryStatusFeatureKey,
+	ImageryStatusReducer,
+	mapFacadeConfig,
+	mapFeatureKey,
+	MapReducer
+} from '@ansyn/map-facade';
 import { overlayStatusFeatureKey, OverlayStatusReducer } from './reducers/overlay-status.reducer';
 import { TranslateModule } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
+import { FormsModule } from '@angular/forms';
+import { MockComponent } from "../../core/test/mock-component";
+import { ImageProcessingControlComponent } from "./components/image-processing-control/image-processing-control.component";
 
 describe('OverlayStatusComponent', () => {
 	let component: OverlayStatusComponent;
@@ -13,17 +22,25 @@ describe('OverlayStatusComponent', () => {
 	let store: Store<any>;
 	let actions: Observable<any>;
 
+	const mockImageManualProcessing = MockComponent({
+		selector: 'ansyn-image-processing-control',
+	});
+
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [OverlayStatusComponent],
-			providers: [provideMockActions(() => actions)],
+			declarations: [OverlayStatusComponent, ImageProcessingControlComponent],
+			providers: [provideMockActions(() => actions),
+				{ provide: mapFacadeConfig, useValue: {} },
+			],
 			imports: [
+				FormsModule,
 				StoreModule.forRoot({
 					[mapFeatureKey]: MapReducer,
 					[imageryStatusFeatureKey]: ImageryStatusReducer,
 					[overlayStatusFeatureKey]: OverlayStatusReducer
 				}),
-				TranslateModule.forRoot()]
+				TranslateModule.forRoot(),
+			]
 		})
 			.compileComponents();
 	}));
@@ -45,19 +62,4 @@ describe('OverlayStatusComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('check click on toggleFavorite', () => {
-		component.overlay = <any>{ id: 'overlayId' };
-		fixture.detectChanges();
-		spyOn(component, 'toggleFavorite');
-		fixture.nativeElement.querySelector('.set-favorite').click();
-		expect(component.toggleFavorite).toHaveBeenCalled();
-	});
-
-	it('check click on togglePreset', () => {
-		component.overlay = <any>{ id: 'overlayId' };
-		fixture.detectChanges();
-		spyOn(component, 'togglePreset');
-		fixture.debugElement.nativeElement.querySelector('.set-preset').click();
-		expect(component.togglePreset).toHaveBeenCalled();
-	});
 });

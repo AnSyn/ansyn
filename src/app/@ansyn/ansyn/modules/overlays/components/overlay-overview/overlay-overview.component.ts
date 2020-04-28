@@ -2,12 +2,7 @@ import { Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild } from
 import { select, Store } from '@ngrx/store';
 import { fromEvent, Observable } from 'rxjs';
 import { getTimeFormat } from '@ansyn/map-facade';
-import {
-	IOverlaysState,
-	MarkUpClass,
-	selectCustomOverviewElement,
-	selectHoveredOverlay
-} from '../../reducers/overlays.reducer';
+import { IOverlaysState, MarkUpClass, selectCustomOverviewElement, selectHoveredOverlay } from '../../reducers/overlays.reducer';
 import { overlayOverviewComponentConstants } from './overlay-overview.component.const';
 import {
 	ChangeOverlayPreviewRotationAction,
@@ -56,7 +51,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	protected topElement = this.el.nativeElement.parentElement;
 
 	get dropElement(): Element {
-		return this.topElement.querySelector(`#dropId-${this.overlayId}`);
+		return this.el.nativeElement.ownerDocument.getElementById(`dropId-${ this.overlayId }`);
 	}
 
 	public get const() {

@@ -6,6 +6,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { overlayStatusFeatureKey, OverlayStatusReducer } from '../reducers/overlay-status.reducer';
 import { OverlayStatusEffects } from './overlay-status.effects';
+import { overlayStatusConfig } from "../config/overlay-status-config";
 
 
 const fakeMaps = {
@@ -29,7 +30,11 @@ describe('OverlayStatusEffects', () => {
 			providers: [
 				OverlayStatusEffects,
 				provideMockActions(() => actions),
-				ImageryCommunicatorService
+				ImageryCommunicatorService,
+				{
+					provide: overlayStatusConfig,
+					useValue: {}
+				}
 			]
 		}).compileComponents();
 	}));

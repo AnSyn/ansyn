@@ -1,54 +1,53 @@
-<div class="search-panel">
-	<!-- Time -->
-	<div class="box"
-		 [attr.tooltip-value]="statusBarConfig?.toolTips?.timeFilterEdit | translate"
-		 tooltip-class="bottom">
-		<button ansynComboBoxTrigger
-				#timePickerTrigger
-				(click)="toggleTimePicker()"
-				[isActive]="timePickerExpand"
-				[withArrow]="false"
-				icon="icon icon-status-bar-time"
-				class="button">
-			<span class="title">{{timeSelectionTitle}}</span>
-		</button>
 
-		<ansyn-timepicker *ngIf="timePickerExpand"
-						  [timeRange]="timeRange"
-						  (ansynClickOutside)="toggleTimePicker()"
-						  [extraClass]="'owl-dt-container'"
-						  (closeTimePicker)="toggleTimePicker()"
-						  [trigger]="timePickerTrigger?.optionsTrigger?.nativeElement"
-		></ansyn-timepicker>
-	</div>
+<!-- Geo filter -->
+<div class="box" id="geoPreSearch"
+	 [attr.tooltip-value]="statusBarConfig?.toolTips?.geoFilter | translate"
+	 tooltip-class="bottom">
+	<button ansynComboBoxTrigger
+			(click)="toggleLocationPicker()"
+			[isActive]="locationPickerExpand"
+			[withArrow]="false"
+			icon="icon icon-status-bar-geo"
+			class="button">
+		<span class="title">{{geoFilterTitle}}</span>
+	</button>
 
-	<!-- Geo filter -->
-	<div class="box" id="editGeoFilter"
-		 [attr.tooltip-value]="statusBarConfig?.toolTips?.geoFilter | translate"
-		 tooltip-class="bottom">
-		<button ansynComboBoxTrigger
-				#locationPickerTrigger
-				(click)="toggleLocationPicker()"
-				[isActive]="locationPickerExpand"
-				[withArrow]="false"
-				icon="icon icon-status-bar-geo small"
-				class="button">
-			<span class="title">{{geoFilterTitle}}</span>
-		</button>
+	<ansyn-location-picker
+		*ngIf="locationPickerExpand"
+		[geoFilter]="geoFilterTitle">
+	</ansyn-location-picker>
+</div>
 
-		<ansyn-location-picker
-			*ngIf="locationPickerExpand"
-			[geoFilter]="geoFilterTitle">
-		</ansyn-location-picker>
-	</div>
+<!-- Time -->
+<div class="box"
+	 [attr.tooltip-value]="statusBarConfig?.toolTips?.timeFilterEdit | translate"
+	 tooltip-class="bottom">
+	<button ansynComboBoxTrigger
+			#timePickerTrigger
+			(click)="toggleTimePicker()"
+			[isActive]="timePickerExpand"
+			[withArrow]="false"
+			icon="icon icon-status-bar-time"
+			class="button">
+		<span class="title">{{timeSelectionTitle}}</span>
+	</button>
+
+	<ansyn-timepicker *ngIf="timePickerExpand"
+					  [timeRange]="timeRange"
+					  (ansynClickOutside)="toggleTimePicker()"
+					  [extraClass]="'owl-dt-container'"
+					  (closeTimePicker)="toggleTimePicker()"
+					  [trigger]="timePickerTrigger?.optionsTrigger?.nativeElement"
+	></ansyn-timepicker>
+</div>
 
 	<!-- data input filter-->
-	<div class="box"
+	<div class="box id="dataInputsPreSearch""
 		 [attr.tooltip-value]="statusBarConfig?.toolTips?.dataInputFilter | translate"
 		 tooltip-class="bottom">
 		<button ansynComboBoxTrigger
 				#trigger
-				(click)="toggleDataInputFilterIcon()"
+				(click)="toggleDataInputFilter()"
 				icon="icon icon-input-filter small"
 				[isActive]="dataInputFilterExpand"
 				[withArrow]="false"
@@ -56,12 +55,11 @@
 			<span class="title">{{'Data Inputs' | translate}} - {{ dataInputFilterTitle | translate }}</span>
 		</button>
 
-		<ansyn-tree-view
-			*ngIf="dataInputFilterExpand"
-			(ansynClickOutside)="toggleDataInputFilterIcon()"
-			[trigger]="trigger?.optionsTrigger?.nativeElement"
-			(closeTreeView)="toggleDataInputFilterIcon()"
-			(dataInputTitleChange)="updateDataInputTitle($event)"
-			class="ansyn-tree-view"></ansyn-tree-view>
-	</div>
+	<ansyn-tree-view
+		*ngIf="dataInputFilterExpand"
+		(ansynClickOutside)="toggleDataInputFilter()"
+		[trigger]="trigger?.optionsTrigger?.nativeElement"
+		(closeTreeView)="toggleDataInputFilter()"
+		(dataInputTitleChange)="updateDataInputTitle($event)"
+		class="ansyn-tree-view"></ansyn-tree-view>
 </div>

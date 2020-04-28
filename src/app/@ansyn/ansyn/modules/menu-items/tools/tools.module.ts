@@ -7,7 +7,6 @@ import { OverlaysDisplayModeComponent } from './overlays-display-mode/overlays-d
 import { AnnotationsControlComponent } from './components/annotations-control/annotations-control.component';
 import { StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from './reducers/tools.reducer';
-import { ImageProcessingControlComponent } from './components/image-processing-control/image-processing-control.component';
 import { MapFacadeModule, ProjectionConverterService } from '@ansyn/map-facade';
 import { IToolsConfig, toolsConfig } from './models/tools-config';
 import { AnnotationsContextMenuModule } from '@ansyn/ol';
@@ -41,7 +40,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 		MatFormFieldModule
 	],
 	providers: [ProjectionConverterService, MatDialogModule, { provide: MatDialogRef, useValue: {} }],
-	declarations: [ToolsComponent, ImageProcessingControlComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent, MeasureControlComponent, ExportMapsPopupComponent],
+	declarations: [ToolsComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent, MeasureControlComponent, ExportMapsPopupComponent],
 	entryComponents: [ToolsComponent, MeasureControlComponent, ExportMapsPopupComponent],
 	exports: [ToolsComponent, MatDialogModule]
 })

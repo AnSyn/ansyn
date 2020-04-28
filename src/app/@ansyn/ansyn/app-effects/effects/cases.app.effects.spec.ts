@@ -41,6 +41,7 @@ import { IOverlayByIdMetaData, OverlaysService } from '../../modules/overlays/se
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { ICase } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
+import { overlayStatusConfig } from "../../modules/overlays/overlay-status/config/overlay-status-config";
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -96,6 +97,44 @@ describe('CasesAppEffects', () => {
 					}
 				},
 				{
+					provide: overlayStatusConfig,
+					useValue: {
+						ImageProcParams:
+							[
+								{
+									name: 'Sharpness',
+									defaultValue: 0,
+									min: 0,
+									max: 100
+								},
+								{
+									name: 'Contrast',
+									defaultValue: 0,
+									min: -100,
+									max: 100
+								},
+								{
+									name: 'Brightness',
+									defaultValue: 100,
+									min: -100,
+									max: 100
+								},
+								{
+									name: 'Gamma',
+									defaultValue: 100,
+									min: 1,
+									max: 200
+								},
+								{
+									name: 'Saturation',
+									defaultValue: 0,
+									min: 1,
+									max: 100
+								}
+							]
+					}
+				},
+				{
 					provide: OverlaysService,
 					useValue: {
 						getOverlayById: (id: string) => {
@@ -132,41 +171,7 @@ describe('CasesAppEffects', () => {
 				provideMockActions(() => actions),
 				{ provide: casesConfig, useValue: { schema: null } },
 				{
-					provide: toolsConfig, useValue: {
-						ImageProcParams:
-							[
-								{
-									name: 'Sharpness',
-									defaultValue: 0,
-									min: 0,
-									max: 100
-								},
-								{
-									name: 'Contrast',
-									defaultValue: 0,
-									min: -100,
-									max: 100
-								},
-								{
-									name: 'Brightness',
-									defaultValue: 100,
-									min: -100,
-									max: 100
-								},
-								{
-									name: 'Gamma',
-									defaultValue: 100,
-									min: 1,
-									max: 200
-								},
-								{
-									name: 'Saturation',
-									defaultValue: 0,
-									min: 1,
-									max: 100
-								}
-							]
-					}
+					provide: toolsConfig, useValue: {}
 				}
 			]
 		}).compileComponents();

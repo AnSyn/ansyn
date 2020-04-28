@@ -1,31 +1,32 @@
-@import "ansyn/less/colors";
-@import "ansyn/less/globals";
+@import "ansyn/less/common";
+@import "../../less/status-bar-common";
+
 
 :host {
-	display: flex;
-	align-items: center;
-	margin: 5px;
+	&:extend(.status-bar-panel);
+	flex-direction: row;
+	padding-left: 5px;
+	padding-right: 5px;
+	width: fit-content;
 
-	.display-panel {
-		display: flex;
-		flex-direction: row;
-		padding-left: 5px;
-		padding-right: 5px;
-		width: fit-content;
+	margin: 0 1px;
 
-		margin: 0 1px;
+	/deep/ ansyn-combo-box {
+		height: initial;
 
-		/deep/ [class*="button"] {
-			padding: 5px 11px 5px 0;
-			background: @status-bar-panels;
+		.display-button {
+			&:extend(.status-bar-button);
+			border: 1px solid #746666;
 
-				&.active {
-					background-color: @status-bar-active;
-				}
+
+			&.active {
+				&:extend(.status-bar-button-active);
+			}
 
 			&:hover:not(.active) {
-				background: @status-bar-hover;
+				&:extend(.status-bar-button-hover);
 			}
 		}
 	}
+
 }

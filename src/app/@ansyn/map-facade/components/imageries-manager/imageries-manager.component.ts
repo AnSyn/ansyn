@@ -115,7 +115,7 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 	initClickOutside() {
 		fromEvent(this.document, 'click').pipe(
 			filter((event: any) => !event.path.some(element => this.imageriesContainer.nativeElement === element)),
-			filter((event: any) => !event.path.some((element) => element.id === 'editGeoFilter' || element.id === 'contextGeoFilter')),
+			filter((event: any) => !event.path.some((element) => element.id === 'geoPreSearch' || element.id === 'contextGeoFilter')),
 			tap((event: MouseEvent) => this.store.dispatch(new ClickOutsideMap(event)))
 		).subscribe();
 	}

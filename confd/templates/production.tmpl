@@ -272,78 +272,55 @@
   	"shortFilterListLength": 8,
     "filters": [
       {
-        "modelName": "sensorType",
-        "displayName": "Sensor Type",
-        "type": "Enum"
-      },
-      {
         "modelName": "sensorName",
-        "displayName": "Sensor Name",
-        "type": "Enum"
-      },
-      {
-        "modelName": "sourceType",
-        "displayName": "Source Type",
+        "displayName": "Sensor",
         "type": "Enum"
       },
       {
         "modelName": "isGeoRegistered",
         "displayName": "Geo Registration",
         "type": "Enum"
-      },
-      {
-      	"modelName": "containedInSearchPolygon",
-        "displayName": "Contains Region",
-        "type": "Enum"
-      },
-      {
-        "modelName": "bestResolution",
-        "displayName": "Resolution",
-        "type": "Slider"
-      },
-      {
-        "modelName": "cloudCoverage",
-        "displayName": "Cloud Coverage",
-        "type": "Slider"
       }
     ]
   },
   "contextConfig": {
     "schema": "contexts"
   },
+  "OverlayStatusConfig": {
+  	"ImageProcParams": [
+	  {
+		"name": "Sharpness",
+		"defaultValue": 0,
+		"min": 0,
+		"max": 100
+	  },
+	  {
+		"name": "Contrast",
+		"defaultValue": 0,
+		"min": -100,
+		"max": 100
+	  },
+	  {
+		"name": "Brightness",
+		"defaultValue": 0,
+		"min": -100,
+		"max": 100
+	  },
+	  {
+		"name": "Gamma",
+		"defaultValue": 100,
+		"min": 1,
+		"max": 200
+	  },
+	  {
+		"name": "Saturation",
+		"defaultValue": 100,
+		"min": 1,
+		"max": 100
+	  }
+	]
+  },
   "toolsConfig": {
-    "ImageProcParams": [
-      {
-        "name": "Sharpness",
-        "defaultValue": 0,
-        "min": 0,
-        "max": 100
-      },
-      {
-        "name": "Contrast",
-        "defaultValue": 0,
-        "min": -100,
-        "max": 100
-      },
-      {
-        "name": "Brightness",
-        "defaultValue": 0,
-        "min": -100,
-        "max": 100
-      },
-      {
-        "name": "Gamma",
-        "defaultValue": 100,
-        "min": 1,
-        "max": 200
-      },
-      {
-        "name": "Saturation",
-        "defaultValue": 100,
-        "min": 1,
-        "max": 100
-      }
-    ],
     "ShadowMouse": {
     	"activeByDefault": {{ getv "/ansyn/is/shadow/active" "false"}},
     	"forceSendShadowMousePosition": {{ getv "/ansyn/force/send/shadow/mouse/position" "false"}}
@@ -1035,58 +1012,58 @@
 		  "blacklist": [],
 		  "dataInputFiltersConfig": {
 			"text": "Planet",
-			"value": 1,
-				"collapsed": true,
-				"children": [
-				  {
-					"text": "REScene",
-					"value": {
-					  "sensorType": "REScene"
-					}
-				  },
-				  {
-					"text": "PSScene3Band",
-					"value": {
-					  "sensorType": "PSScene3Band"
-					}
-				  },
-				  {
-					"text": "PSOrthoTile",
-					"value": {
-					  "sensorType": "PSOrthoTile"
-					}
-				  },
-				  {
-					"text": "REOrthoTile",
-					"value": {
-					  "sensorType": "REOrthoTile"
-					}
-				  },
-				  {
-					"text": "SkySatScene",
-					"value": {
-					  "sensorType": "SkySatScene"
-					}
-				  },
-				  {
-					"text": "Landsat8L1G",
-					"value": {
-					  "sensorType": "Landsat8L1G"
-					}
-				  },
-				  {
-					"text": "Sentinel2L1C",
-					"value": {
-					  "sensorType": "Sentinel2L1C"
-					}
-				  },
-				  {
-					  "text": "Others",
-					  "value": {
-						"sensorType": "others"
-					  }
-					}
-				]
+			"value": "PLANET",
+			"collapsed": true,
+			"children": [
+			  {
+				"text": "REScene",
+				"value": {
+				  "sensorType": "REScene"
+				}
+			  },
+			  {
+				"text": "PSScene3Band",
+				"value": {
+				  "sensorType": "PSScene3Band"
+				}
+			  },
+			  {
+				"text": "PSOrthoTile",
+				"value": {
+				  "sensorType": "PSOrthoTile"
+				}
+			  },
+			  {
+				"text": "REOrthoTile",
+				"value": {
+				  "sensorType": "REOrthoTile"
+				}
+			  },
+			  {
+				"text": "SkySatScene",
+				"value": {
+				  "sensorType": "SkySatScene"
+				}
+			  },
+			  {
+				"text": "Landsat8L1G",
+				"value": {
+				  "sensorType": "Landsat8L1G"
+				}
+			  },
+			  {
+				"text": "Sentinel2L1C",
+				"value": {
+				  "sensorType": "Sentinel2L1C"
+				}
+			  },
+			  {
+				  "text": "Others",
+				  "value": {
+					"sensorType": "others"
+				  }
+				}
+			]
 			}
 		},
 		"PIC4CARTO": {
@@ -1117,7 +1094,7 @@
 			"blacklist":[],
 			"dataInputFiltersConfig":{
 				"text":"Open Street Images",
-				"value":1,
+				"value":"PIC4CARTO",
 				"collapsed":true,
 				"children":[
 					{
@@ -1190,7 +1167,7 @@
 			"blacklist": [],
 			"dataInputFiltersConfig": {
 				"text": "OpenAerial",
-				"value": 1,
+				"value": "OPEN_AERIAL",
 					"indeterminate": true,
 					"collapsed": true,
 					"children": [
@@ -1246,7 +1223,7 @@
 			"blacklist": [],
 			"dataInputFiltersConfig": {
 				  "text":"Imisight",
-				  "value": 1,
+				  "value": "IMISIGHT",
 				  "collapsed": true,
 				  "children": [
 					 {
@@ -1301,7 +1278,7 @@
 			"blacklist": [],
 			"dataInputFiltersConfig": {
 				"text": "Sentinel",
-				"value": 1,
+				"value": "SENTINEL",
 					"indeterminate": true,
 					"collapsed": true,
 					"children": [
@@ -1357,7 +1334,7 @@
 			"blacklist": [],
 			"dataInputFiltersConfig": {
 				"text": "Airbus",
-				"value": 1,
+				"value": "AIRBUS",
 					"indeterminate": true,
 					"collapsed": true,
 					"children": [
@@ -1431,7 +1408,7 @@
         		"blacklist": [],
         		"dataInputFiltersConfig": {
         			"text": "Video",
-        			"value": 1,
+        			"value": "IMAGERY_VIDEO",
         				"indeterminate": true,
         				"collapsed": true,
         				"children": [

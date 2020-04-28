@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	AnsynApi,
+	AreaToCredentialsService,
 	GeoRegisteration,
 	IOverlay,
 	IOverlaysCriteria,
@@ -22,7 +23,6 @@ import { take, tap } from 'rxjs/operators';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
-import { AreaToCredentialsService } from "@ansyn/ansyn";
 
 const moment = momentNs;
 

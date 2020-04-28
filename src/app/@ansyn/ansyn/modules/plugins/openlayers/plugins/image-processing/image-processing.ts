@@ -156,6 +156,17 @@ function getFunctionByArgument(arg) {
 	return null;
 }
 
+function fillArray(size, item) {
+	if (Array.prototype.fill) {
+		return new Array(size).fill(item);
+	}
+	const array = [];
+	for (let i = 0; i < size; i++) {
+		array[i] = item;
+	}
+	return array;
+}
+
 // ------ General Operation End ------ //
 
 // ------ Histogram Start ------ //
@@ -182,10 +193,10 @@ function yCbCr2RGB(yCbCr): any {
 
 function buildHistogramLut(imageData) {
 	const BANDS = 4, CUTEDGE = 85, MAXBIT = 256;
-	const histogram = new Array(MAXBIT).fill(0);
+	const histogram = fillArray(MAXBIT, 0);
 	const { width, height, data } = imageData;
 	for ( let i = 0; i < data.length; i += BANDS) {
-		const [r, g, b] = data.slice(i, i + BANDS);
+		const [r, g, b] = data.subarray(i, i + BANDS);
 		histogram[g]++;
 	}
 	const totalPixels = width * height;
@@ -205,7 +216,7 @@ function buildHistogramLut(imageData) {
 			break;
 		}
 	}
-	return new Array(MAXBIT).fill(0).map( (val, index) => {
+	return fillArray(MAXBIT, 0).map( (val, index) => {
 		return this['normalizeColor'](255 * (index - minPixel) / (maxPixel - minPixel));
 	});
 }

@@ -1,11 +1,8 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { StatusBarComponent } from './status-bar.component';
-import { Store, StoreModule } from '@ngrx/store';
-import { IStatusBarState, statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
-import { EffectsModule } from '@ngrx/effects';
 import { MockComponent } from '../../../core/test/mock-component';
-import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { TranslateModule } from '@ngx-translate/core';
+import { FiltersModule } from '../../../filters/filters.module';
 
 describe('StatusBarComponent', () => {
 	let component: StatusBarComponent;
@@ -17,6 +14,7 @@ describe('StatusBarComponent', () => {
 	const mockSearchPanel = MockComponent({ selector: 'ansyn-search-panel' });
 	const mockDisplayPanel = MockComponent({ selector: 'ansyn-display-panel' });
 	const mockCasePanel = MockComponent({ selector: 'ansyn-case-panel' });
+	const mockFiltersPanel = MockComponent( {selector: 'ansyn-filters-panel'});
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -26,7 +24,8 @@ describe('StatusBarComponent', () => {
 				mockSelectedCaseBarComponent,
 				mockSearchPanel,
 				mockDisplayPanel,
-				mockCasePanel
+				mockCasePanel,
+				mockFiltersPanel
 			]
 		})
 			.compileComponents();

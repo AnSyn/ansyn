@@ -3,7 +3,6 @@ import { TreeviewConfig, TreeviewItem, TreeviewI18n } from 'ngx-treeview';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { Store } from '@ngrx/store';
 import { isEqual } from 'lodash';
-import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, take, tap } from 'rxjs/operators';
 import { SetToastMessageAction } from '@ansyn/map-facade';
@@ -14,8 +13,9 @@ import {
 	IOverlaysSourceProvider,
 	MultipleOverlaysSourceConfig
 } from '../../../core/models/multiple-overlays-source-config';
-import { IDataInputFilterValue } from '../../../menu-items/cases/models/case.model';
 import { CustomTreeviewI18n } from './custom-treeview-i18n';
+import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
+import { DataInputFilterValue } from '../../../menu-items/cases/models/case.model';
 
 @Component({
 	selector: 'ansyn-tree-view',
@@ -25,23 +25,27 @@ import { CustomTreeviewI18n } from './custom-treeview-i18n';
 		{provide: TreeviewI18n, useClass: CustomTreeviewI18n}
 	]
 })
+@AutoSubscriptions()
 export class TreeViewComponent implements OnInit, OnDestroy {
 	@Output() closeTreeView = new EventEmitter<any>();
 	@Output() dataInputTitleChange = new EventEmitter<string>();
-	_selectedFilters: IDataInputFilterValue[];
+	_selectedFilters: DataInputFilterValue[];
 	dataInputFiltersItems: TreeviewItem[] = [];
 	leavesCount: number;
 	dataFilters: TreeviewItem[];
+	closeWithOk: boolean;
+	lastTitle: string;
 
-	dataInputFilter$: Observable<any> = this.store.select(selectDataInputFilter);
-
-	onDataInputFilterChange$ = this.dataInputFilter$.pipe(
+	@AutoSubscription
+	onDataInputFilterChange$ = this.store.select(selectDataInputFilter).pipe(
 		filter(Boolean),
 		tap(_preFilter => {
 			this._selectedFilters = _preFilter.fullyChecked ? this.selectAll() : _preFilter.filters;
-			this.dataInputTitleChange.emit(_preFilter.fullyChecked ? 'All' : `${this._selectedFilters.length}/${this.leavesCount}`);
+			this.lastTitle = this.updateTitle();
 			if (Boolean(this._selectedFilters)) {
-				this.dataInputFiltersItems.forEach(root => this.updateInputDataFilterMenu(root));
+				this.dataInputFiltersItems.forEach(item => {
+					item.checked = _preFilter.fullyChecked || this._selectedFilters.some(selectedFilter => isEqual(selectedFilter, item.value));
+				});
 			}
 		})
 	);
@@ -54,7 +58,6 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		maxHeight: 400
 	});
 
-	private subscribers = [];
 
 	constructor(@Inject(MultipleOverlaysSourceConfig) public multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				public store: Store<IStatusBarState>,
@@ -71,62 +74,21 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	set selectedFilters(value) {
 		this._selectedFilters = value;
+		this.updateTitle();
 	}
 
 	getAllDataInputFilter(): TreeviewItem[] {
 		this.leavesCount = 0;
 		return Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
-			.filter(([providerName, { inActive, dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => !inActive && dataInputFiltersConfig)
+			.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive)
 			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
-					this.visitLeafes(dataInputFiltersConfig, (leaf) => {
-						this.leavesCount++;
-						leaf.value.providerName = providerName;
-						if (leaf.text) {
-							this.translate.get(leaf.text).pipe(take(1)).subscribe((res: string) => {
-								leaf.text = res;
-							});
-						}
-					});
-					return dataInputFiltersConfig;
+					this.leavesCount++;
+					const onlyParentDataInputFilter = {...dataInputFiltersConfig, children: []};
+					return onlyParentDataInputFilter;
 				}
 			);
 	}
 
-	visitLeafes(curr: TreeviewItem, cb: (leaf: TreeviewItem) => void) {
-		if (Boolean(curr.children)) {
-			curr.children.forEach(c => this.visitLeafes(c, cb));
-			return;
-		}
-		cb(curr);
-	}
-
-	setSubscribers() {
-		this.subscribers.push(
-			this.dataInputFilter$.subscribe(),
-			this.onDataInputFilterChange$.subscribe()
-		);
-	}
-
-	updateInputDataFilterMenu(curr: TreeviewItem): void {
-		if (!Boolean(this._selectedFilters)) {
-			return;
-		}
-
-		if (this.isLeaf(curr)) {
-			curr.checked = this._selectedFilters.some(selectedFilter => isEqual(selectedFilter, curr.value));
-			return;
-		}
-		curr.children.forEach(c => this.updateInputDataFilterMenu(c));
-		curr.checked = this.treeViewNodeStatus(curr);
-	}
-
-	isLeaf(node: TreeviewItem) {
-		return !(Array.isArray(node.children) && node.children.length > 0);
-	}
-
-	treeViewNodeStatus(node: TreeviewItem): boolean {
-		return node.children.every(child => child.checked) ? true : node.children.some(child => child.checked || child.checked === undefined) ? undefined : false;
-	}
 
 	dataInputFiltersOk(): void {
 		if (this._selectedFilters.length === 0) {
@@ -141,26 +103,31 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 					filters: this._selectedFilters
 				}
 			}));
-			this.dataInputTitleChange.emit(isFullCheck ? 'All' : `${this._selectedFilters.length}/${this.leavesCount}`);
+			this.closeWithOk = true;
 			this.closeTreeView.emit();
 		}
 	}
 
 	selectAll() {
-		return this.dataFilters.reduce((filters, dataFilter, index ) => {
-			filters.push(...dataFilter.children.map(c => c.value));
-			return filters;
-		}, [])
+		return this.dataFilters.map( filter => filter.value);
 	}
 
 	ngOnInit(): void {
-		this.setSubscribers();
 	}
 
 	ngOnDestroy(): void {
-		this.subscribers.forEach(sub => sub.unsubscribe());
+		if (this.closeWithOk) {
+			this.updateTitle();
+		} else {
+			this.dataInputTitleChange.emit(this.lastTitle);
+		}
 	}
 
+	updateTitle(): string {
+		const title = this._selectedFilters.length / this.leavesCount === 1 ? 'All' : `${this._selectedFilters.length} / ${this.leavesCount}`;
+		this.dataInputTitleChange.emit(title);
+		return title;
+	}
 	onTreeViewClose(): void {
 		this.closeTreeView.emit();
 	}

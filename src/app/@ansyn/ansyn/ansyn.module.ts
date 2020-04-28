@@ -25,7 +25,6 @@ import { DefaultTranslateLoader } from './modules/core/translation/default-trans
 import { TasksRemoteDefaultService } from './modules/menu-items/algorithms/services/tasks-remote-default.service';
 import { TasksModule } from './modules/menu-items/algorithms/tasks.module';
 import { CasesModule } from './modules/menu-items/cases/cases.module';
-import { FiltersModule } from './modules/menu-items/filters/filters.module';
 import { HelpModule } from './modules/menu-items/help/help.module';
 import { LayersManagerModule } from './modules/menu-items/layers-manager/layers-manager.module';
 import { SettingsModule } from './modules/menu-items/settings/settings.module';
@@ -46,7 +45,6 @@ import { ImageryChangeMapComponent } from './modules/plugins/components/imagery-
 		AnsynTranslationModule.addLoader([DefaultTranslateLoader, ComponentTranslateLoader]),
 		AppProvidersModule,
 		CasesModule,
-		FiltersModule,
 		LayersManagerModule,
 		ToolsModule,
 		TasksModule.provideRemote(TasksRemoteDefaultService, TasksService),

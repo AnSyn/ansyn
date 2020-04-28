@@ -8,19 +8,18 @@
 :host {
 	background-color: @status-bar-background;
 	height: @status-bar-height;
-	box-shadow: 0 -10px 20px 0 rgba(0, 0, 0, 0.3);
 	display: flex;
-	flex-direction: column;
-	justify-content: flex-end;
 	color: white;
 
-	.status-bar {
+	div.search {
 		display: flex;
-		flex: 1;
-
-		/deep/ i.icon, span.title {
-			margin: 0 5px;
-		}
+		flex-grow: 1;
+		border-right: 1px solid @status-bar-delimiter;
 	}
+
+	/deep/ i.icon {
+		margin-right: 5px;
+	}
+
 
 }

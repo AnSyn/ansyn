@@ -1,0 +1,53 @@
+<div class="results-table">
+	<div class="header">
+		<div class="header-title">
+			{{'Search results' | translate}}
+		</div>
+		<div class="box">
+			<i class="block-icon icon-status-bar-imagery-count"></i>
+			<span class="overlay-count">{{overlays.length || 0}}</span>
+		</div>
+	</div>
+	<div class="results-table-head">
+		<div class="results-table-head-row">
+			<div class="results-table-head-row-data">
+				<div (click)="sortOverlays(header)" *ngFor="let header of tableHeaders" class="results-table-head-col  {{header.headerName}}">
+					{{header.headerName | translate}}
+					<i class="icon icon-arrow"></i>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="results-table-body scrolled"  (ansynInfiniteScroll)="loadResults()" *ngIf="overlays">
+
+		<div class="results-table-body-row"
+			 *ngFor="let overlay of overlays"
+			 (click)="openOverlay(overlay)"
+			 (mouseenter)="onMouseOver($event, overlay.id)"
+			 (mouseleave)="onMouseOut()"
+			 [class.selected]="selectedOverlayId === overlay.id">
+
+			<hr>
+
+			<div class="results-table-body-row-data">
+				<hr>
+
+				<div class="results-table-case-name-col overlay-time">
+					{{timeFormat(overlay.date)}}
+				</div>
+
+				<div class="results-table-body-col source-type">
+					{{overlay.sourceType | translate}}
+				</div>
+
+				<div class="results-table-body-col overlay-type">
+					<i class="{{getType(overlay)}}"></i>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+</div>

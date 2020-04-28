@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from "rxjs";
 import { IOverlay } from "../../../../overlays/models/overlay.model";
-import { Store } from "@ngrx/store";
+import { Store, select } from "@ngrx/store";
 import {
 	IOverlaysState, MarkUpClass, selectFilteredOveralys,
 	selectOverlaysArray
@@ -42,10 +42,11 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	];
 
 	@AutoSubscription
-	loadOverlays$: Observable<[IOverlaysState, string[], IOverlay[]]> = this.store$
+	loadOverlays$: Observable<[IOverlay[], string[]]> = this.store$
 		.pipe(
-			withLatestFrom(this.store$.select(selectFilteredOveralys), this.store$.select(selectOverlaysArray)),
-			tap(([overlayState, filteredOverlays, overlays]: [IOverlaysState, string[], IOverlay[]]) => {
+			select(selectOverlaysArray),
+			withLatestFrom(this.store$.select(selectFilteredOveralys)),
+			tap(([overlays, filteredOverlays ]: [IOverlay[], string[]]) => {
 				this.overlays = overlays.filter(overlay => {
 					return filteredOverlays.includes(overlay.id);
 				});

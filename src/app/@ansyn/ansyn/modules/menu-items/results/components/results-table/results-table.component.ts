@@ -6,8 +6,7 @@ import {
 	IOverlaysState, MarkUpClass, selectFilteredOveralys,
 	selectOverlaysArray
 } from "../../../../overlays/reducers/overlays.reducer";
-import { distinctUntilChanged, tap } from "rxjs/operators";
-import { isEqual } from "lodash";
+import { distinctUntilChanged, filter, tap, withLatestFrom } from "rxjs/operators";
 import {
 	DisplayOverlayFromStoreAction,
 	SetMarkUp,
@@ -43,11 +42,13 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	];
 
 	@AutoSubscription
-	loadOverlays$: Observable<IOverlay[]> = this.store$
+	loadOverlays$: Observable<[IOverlaysState, string[], IOverlay[]]> = this.store$
 		.pipe(
-			select(selectOverlaysArray),
-			distinctUntilChanged(isEqual),
-			tap((overlays: IOverlay[]) => {
+			withLatestFrom(this.store$.select(selectFilteredOveralys), this.store$.select(selectOverlaysArray)),
+			filter(([overlayState, filteredOverlays, overlays]: [IOverlaysState, string[], IOverlay[]]) => {
+				return Boolean(filteredOverlays.length);
+			}),
+			tap(([overlayState, filteredOverlays, overlays]: [IOverlaysState, string[], IOverlay[]]) => {
 				this.overlays = overlays;
 			}));
 
@@ -55,7 +56,6 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	loadFilteredOverlays$: Observable<string[]> = this.store$
 		.pipe(
 			select(selectFilteredOveralys),
-			distinctUntilChanged(isEqual),
 			tap((overlays: string[]) => {
 				const filteredOverlays = this.overlays.filter(overlay => {
 					return overlays.includes(overlay.id);

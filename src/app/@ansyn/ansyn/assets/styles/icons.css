@@ -1,12 +1,20 @@
-
-.icon-arrow:before {
-	content: "\e904";
+.icon-table:before {
+	content: "\e854";
 }
 .icon-matos:before {
 	content: "\e900";
 }
 .icon-lavian:before {
 	content: "\e901";
+}
+.icon-home:before {
+	content: "\e902";
+}
+.icon-home2:before {
+	content: "\e903";
+}
+.icon-arrow:before {
+	content: "\e904";
 }
 .icon-layer-add:before {
 	content: "\e800";
@@ -104,9 +112,6 @@
 .icon-main-uploads:before {
 	content: "\e81f";
 }
-.icon-download:before {
-	content: "\e820";
-}
 .icon-download-guid:before {
 	content: "\e821";
 }
@@ -128,10 +133,10 @@
 .icon-drag-annotations:before {
 	content: "\e827";
 }
-.icon-app-next:before {
+.icon-next:before {
 	content: "\e828";
 }
-.icon-app-prev:before {
+.icon-prev:before {
 	content: "\e829";
 }
 .icon-shadow-mouse:before {
@@ -152,9 +157,6 @@
 .icon-area-big:before {
 	content: "\e82f";
 }
-.icon-status-bar-time:before {
-	content: "\e830";
-}
 .icon-temporary-link:before {
 	content: "\e831";
 }
@@ -169,9 +171,6 @@
 }
 .icon-tools-ruler:before {
 	content: "\e835";
-}
-.icon-down-circled2:before {
-	content: "\e836";
 }
 .icon-upload:before {
 	content: "\e837";
@@ -239,23 +238,11 @@
 .icon-credentials:before {
 	content: "\e84c";
 }
-.icon-status-bar-geo:before {
-	content: "\e84d";
-}
 .icon-method-draw-image:before {
 	content: "\e84e";
 }
 .icon-credentials-request:before {
 	content: "\e84f";
-}
-.icon-datetime:before {
-	content: "\e850";
-}
-.icon-location:before {
-	content: "\e851";
-}
-.icon-table:before {
-	content: "\e854";
 }
 .icon-more:before {
 	content: "\e855";
@@ -263,12 +250,9 @@
 .icon-autoimage-new:before {
 	content: "\e856";
 }
-.icon-autoimage:before {
-	content: "\e857";
+.icon-status-bar-time:before {
+	content: "\e905";
 }
-.icon-home:before {
-	content: "\e902";
-}
-.icon-home2:before {
-	content: "\e903";
+.icon-status-bar-geo:before {
+	content: "\e906";
 }

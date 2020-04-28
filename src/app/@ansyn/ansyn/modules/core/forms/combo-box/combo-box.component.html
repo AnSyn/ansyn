@@ -1,12 +1,12 @@
-<div class="combo-container" [ngClass]="[direction, color]">
+<div class="combo-container" [ngClass]="[direction, color]"
+	 [attr.tooltip-value]="comboBoxToolTipDescription || null"
+	 [attr.tooltip-class]="direction">
 	<button ansynComboBoxTrigger
 			[ngClass]="buttonClass"
 			type="button"
 			[disabled]="disabled"
 			[isActive]="optionsVisible"
-			[attr.tooltip-value]="comboBoxToolTipDescription || null"
 			[withArrow]="withArrow"
-			[attr.tooltip-class]="direction"
 			[icon]="icon"
 			(click)="toggleShow()">
 		<div class="render" [innerHTML]="renderSelected"></div>

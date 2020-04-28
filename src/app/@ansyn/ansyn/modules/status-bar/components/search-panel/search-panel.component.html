@@ -1,14 +1,13 @@
 
 <!-- Geo filter -->
-<div class="box" id="geoPreSearch">
-
+<div class="box" id="geoPreSearch"
+	 [attr.tooltip-value]="statusBarConfig?.toolTips?.geoFilter | translate"
+	 tooltip-class="bottom">
 	<button ansynComboBoxTrigger
 			(click)="toggleLocationPicker()"
-			[attr.tooltip-value]="statusBarConfig?.toolTips?.geoFilter | translate"
 			[isActive]="locationPickerExpand"
 			[withArrow]="false"
 			icon="icon icon-status-bar-geo"
-			tooltip-class="bottom"
 			class="button">
 		<span class="title">{{geoFilterTitle}}</span>
 	</button>
@@ -20,15 +19,15 @@
 </div>
 
 <!-- Time -->
-<div class="box">
+<div class="box"
+	 [attr.tooltip-value]="statusBarConfig?.toolTips?.timeFilterEdit | translate"
+	 tooltip-class="bottom">
 	<button ansynComboBoxTrigger
 			#timePickerTrigger
 			(click)="toggleTimePicker()"
-			[attr.tooltip-value]="statusBarConfig?.toolTips?.timeFilterEdit | translate"
 			[isActive]="timePickerExpand"
 			[withArrow]="false"
 			icon="icon icon-status-bar-time"
-			tooltip-class="bottom"
 			class="button">
 		<span class="title">{{timeSelectionTitle}}</span>
 	</button>
@@ -42,19 +41,19 @@
 	></ansyn-timepicker>
 </div>
 
-<!-- data input filter-->
-<div class="box" id="dataInputsPreSearch">
-	<button ansynComboBoxTrigger
-			#trigger
-			(click)="toggleDataInputFilter()"
-			icon="icon icon-input-filter small"
-			[isActive]="dataInputFilterExpand"
-			[withArrow]="false"
-			[attr.tooltip-value]="statusBarConfig?.toolTips?.dataInputFilter | translate"
-			tooltip-class="bottom"
-			class="button">
-		<span class="title">{{'Type' | translate}} - {{ dataInputFilterTitle | translate }}</span>
-	</button>
+	<!-- data input filter-->
+	<div class="box" id="dataInputsPreSearch"
+		 [attr.tooltip-value]="statusBarConfig?.toolTips?.dataInputFilter | translate"
+		 tooltip-class="bottom">
+		<button ansynComboBoxTrigger
+				#trigger
+				(click)="toggleDataInputFilter()"
+				icon="icon icon-input-filter small"
+				[isActive]="dataInputFilterExpand"
+				[withArrow]="false"
+				class="button">
+			<span class="title">{{'Data Inputs' | translate}} - {{ dataInputFilterTitle | translate }}</span>
+		</button>
 
 	<ansyn-tree-view
 		*ngIf="dataInputFilterExpand"

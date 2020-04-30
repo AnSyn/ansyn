@@ -86,12 +86,12 @@ export class MenuComponent implements OnInit, OnDestroy {
 
 	topMenuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(
 		select(selectAllMenuItems),
-		map( menuItems => menuItems.filter((menuItem: IMenuItem) => !menuItem.dockedToBottom))
+		map(menuItems => menuItems.filter((menuItem: IMenuItem) => !menuItem.dockedToBottom))
 	);
 
 	bottomMenuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(
 		select(selectAllMenuItems),
-		map( menuItems => menuItems.filter((menuItem: IMenuItem) => menuItem.dockedToBottom))
+		map(menuItems => menuItems.filter((menuItem: IMenuItem) => menuItem.dockedToBottom))
 	);
 
 	@AutoSubscription
@@ -107,7 +107,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 		);
 
 	@AutoSubscription
-	selectIsPinned$ =  this.store.select(selectIsPinned).pipe(
+	selectIsPinned$ = this.store.select(selectIsPinned).pipe(
 		distinctUntilChanged(),
 		tap((isPinned) => {
 			this.isPinned = isPinned;
@@ -227,8 +227,8 @@ export class MenuComponent implements OnInit, OnDestroy {
 		this.buildCurrentComponent();
 	}
 
-	hideBadge(badge: string): boolean {
-		return badge !== '★' && !Number(badge);
+	hideBadge(badge: string, showZeroBadge?: boolean): boolean {
+		return badge !== '★' && (showZeroBadge ? Number(badge) < 0 : !Number(badge));
 	}
 
 	isActive(key: string): boolean {
@@ -258,7 +258,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	openMenu(key: string, skipSession: boolean) {
-		this.store.dispatch(new SelectMenuItemAction({ menuKey: key, skipSession}));
+		this.store.dispatch(new SelectMenuItemAction({ menuKey: key, skipSession }));
 	}
 
 	closeMenu(): void {

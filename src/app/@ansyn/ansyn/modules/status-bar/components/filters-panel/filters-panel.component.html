@@ -24,6 +24,8 @@
 			class="favorites"
 			[withArrow]="false"
 			[disabled]="disableOnlyFavoritesButton"
+			[attr.tooltip-value]="'Displays favorites overlays only' | translate"
+			tooltip-class="bottom"
 			(click)="showOnlyFavorites()">
 		<i class="icon"
 		   [ngClass]="onlyFavorite ? 'icon-favorite-full'  : 'icon-favorite-empty'"></i>

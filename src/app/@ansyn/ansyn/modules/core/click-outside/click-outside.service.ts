@@ -28,15 +28,13 @@ export class ClickOutsideService {
 	private getPath(event) {
 		const currentElement = event.target;
 		const eventTarget = [currentElement];
-		if (currentElement.parentElement) {
-			eventTarget.push(...this.getAllParent(currentElement.parentElement));
-		}
+		eventTarget.push(...this.getAllParent(currentElement.parentElement));
 		return eventTarget;
 	}
 
 	private getAllParent(parent: HTMLElement): HTMLElement[] {
 		const allParent = [parent];
-		if (Boolean(parent.parentElement)) {
+		if (Boolean(parent && parent.parentElement)) {
 			allParent.push(...this.getAllParent(parent.parentElement))
 		}
 		return allParent;

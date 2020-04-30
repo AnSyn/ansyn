@@ -2,7 +2,6 @@
 @import 'ansyn/less/globals';
 
 :host {
-	line-height: 0;
 	left: 5px;
 	top: 6px;
 	display: flex;
@@ -29,7 +28,6 @@
 			&.perspective {
 				margin-left: 11px;
 			}
-
 
 			&:hover:not(:disabled) {
 				background: rgba(0, 0, 0, 0.5);
@@ -58,23 +56,30 @@
 
 	div.more-buttons {
 		background: @background-color-3;
-		width: 220px;
 		height: 75px;
 		margin-top: 35px;
-		padding-right: 25px;
+		padding-right: 10px;
 		z-index: 0;
 		text-align: left;
+		white-space: nowrap;
 
 		.button-title {
-			width: 150px;
+			margin-left: 10px;
 		}
 
-		.preset-title {
-			margin-left: 28px;
-		}
-
-		button {
+		.button {
 			font-size: 13px;
+			display: flex;
+			cursor: pointer;
+
+			&:hover:not(:disabled) {
+				background: rgba(0, 0, 0, 0.5);
+			}
+
+			&:disabled {
+				opacity: .6;
+				pointer-events: none;
+			}
 		}
 	}
 }

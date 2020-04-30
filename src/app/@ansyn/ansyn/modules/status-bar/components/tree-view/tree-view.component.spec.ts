@@ -7,11 +7,39 @@ import { TreeviewModule } from 'ngx-treeview';
 import { Observable, of } from 'rxjs';
 import { SliderCheckboxComponent } from '../../../core/forms/slider-checkbox/slider-checkbox.component';
 import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
-import { OverlayReducer, overlaysFeatureKey, selectDataInputFilter } from '../../../overlays/reducers/overlays.reducer';
+import {
+	OverlayReducer,
+	overlaysFeatureKey,
+	selectDataInputFilter,
+	selectOverlaysCriteria,
+	selectRegion,
+	selectTime
+} from '../../../overlays/reducers/overlays.reducer';
 import { IStatusBarState, StatusBarInitialState, statusBarStateSelector } from '../../reducers/status-bar.reducer';
 import { TreeViewComponent } from './tree-view.component';
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
+import { IOverlaysCriteria } from '../../../overlays/models/overlay.model';
 
+function buildIndexProviders(providersName: string[]) {
+	const indexProviders = providersName.reduce((providers, provideName) => {
+		return {
+			...providers,
+			[provideName]: {
+				dataInputFiltersConfig: {
+					text: provideName,
+					value: provideName
+				}
+			}
+		}
+	}, {});
+	return indexProviders;
+}
+
+const overlaysCriteria: IOverlaysCriteria = {
+	time: { from: new Date(), to: new Date(), type: 'absolute' },
+	region: { type: 'Point', coordinates: [122.00, 44.122] },
+	dataInputFilters: { fullyChecked: true, filters: [] }
+};
 describe('TreeViewComponent', () => {
 	let component: TreeViewComponent;
 	let fixture: ComponentFixture<TreeViewComponent>;
@@ -38,7 +66,7 @@ describe('TreeViewComponent', () => {
 				{
 					provide: MultipleOverlaysSourceConfig,
 					useValue: {
-						indexProviders: {}
+						indexProviders: buildIndexProviders(['provide1', 'provide2', 'provide3'])
 					}
 				},
 				provideMockActions(() => actions)
@@ -52,7 +80,10 @@ describe('TreeViewComponent', () => {
 		statusBarState = cloneDeep(StatusBarInitialState);
 		const fakeStore = new Map<any, any>([
 			[statusBarStateSelector, statusBarState],
-			[selectDataInputFilter, ['dataInput1', 'dataInput2']]
+			[selectOverlaysCriteria, overlaysCriteria],
+			[selectRegion, overlaysCriteria.region],
+			[selectTime, overlaysCriteria.time],
+			[selectDataInputFilter, overlaysCriteria.dataInputFilters]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
@@ -74,9 +105,11 @@ describe('TreeViewComponent', () => {
 		selectFilter.pop();
 		component.selectedFilters = selectFilter;
 		fixture.detectChanges();
-		expect(store.dispatch).toHaveBeenCalledWith(new SetOverlaysCriteriaAction({dataInputFilters: {
+		expect(store.dispatch).toHaveBeenCalledWith(new SetOverlaysCriteriaAction({
+			dataInputFilters: {
 				fullyChecked: false,
 				filters: selectFilter
-			}}));
+			}
+		}));
 	});
 });

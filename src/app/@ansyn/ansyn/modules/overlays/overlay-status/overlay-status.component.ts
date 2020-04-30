@@ -26,7 +26,7 @@ import { AnnotationMode } from '@ansyn/ol';
 import { ITranslationData } from '../../menu-items/cases/models/case.model';
 import { Actions, ofType } from '@ngrx/effects';
 import {
-	SetAnnotationMode, 
+	SetAnnotationMode,
 	ToolsActionsTypes,
 	ClearActiveInteractionsAction,
 	SetAutoImageProcessing
@@ -190,6 +190,8 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		this.updatePresetStatus();
 		this.updateFavoriteStatus();
 		this.updateDraggedStatus();
+		this.moreButtons = false;
+		this.isManualProcessing = false;
 	}
 
 	updateFavoriteStatus() {

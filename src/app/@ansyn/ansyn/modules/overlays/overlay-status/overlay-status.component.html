@@ -1,3 +1,4 @@
+<div class="overlay-status-button">
 <button class="small-icon-button drag-mode" *ngIf="overlay"
 		(click)="toggleDragged()"
 		[disabled]="!isLayersVisible || noGeoRegistration"
@@ -5,7 +6,8 @@
 		tooltip-class="bottom right">
 	<i class="icon-drag-annotations" [class.active]="isDragged"></i>
 </button>
-
+</div>
+<div class="overlay-status-button">
 <button tooltip-class="bottom right"
 		*ngIf="overlay"
 		class="small-icon-button auto-image-processing"
@@ -14,7 +16,8 @@
 		[class.mode-on]="onAutoImageProcessing">
 	<i class="icon-automatic-image-processing" [class.active]="isAutoProcessing"></i>
 </button>
-
+</div>
+<div class="overlay-status-button">
 <button tooltip-class="bottom right"
 		*ngIf="overlay"
 		class="small-icon-button"
@@ -27,37 +30,33 @@
 <ansyn-image-processing-control
 	*ngIf="isManualProcessing">
 </ansyn-image-processing-control>
+</div>
+<div class="overlay-status-button">
+	<button class="small-icon-button more-btn" *ngIf="overlay"
+			(click)="toggleMoreButtons()"
+			[attr.tooltip-value]="'More buttons' | translate"
+			tooltip-class="bottom right">
+		<i class="icon icon-more" [class.active]="moreButtons"></i>
+	</button>
 
-<button class="small-icon-button more-btn" *ngIf="overlay"
-		(click)="toggleMoreButtons()"
-		[attr.tooltip-value]="'More buttons' | translate"
-		tooltip-class="bottom right">
-	<i class="icon icon-more" [class.active]="moreButtons"></i>
-</button>
-
-<div class="more-buttons" *ngIf="moreButtons">
-	<button class="small-icon-button set-preset"
-			(click)="togglePreset()"
-			[disabled]="noGeoRegistration">
-		<i class="icon icon-quick-loop-add" [class.active]="isPreset"></i>
-		<div class="button-title preset-title">
+	<div class="more-buttons" *ngIf="moreButtons">
+		<button class="small-icon-button set-preset"
+				(click)="togglePreset()"
+				[disabled]="noGeoRegistration">
+			<i class="icon icon-quick-loop-add" [class.active]="isPreset"></i>
 			{{presetsButtonText | translate}}
-		</div>
-	</button>
+		</button>
 
-	<button class="small-icon-button remove-overlay"
-			(click)="removeOverlay()">
-		<i class="icon" [ngClass]="isRemoved ? 'icon-restore-overlay' : 'icon-remove-overlay'"></i>
-		<div class="button-title">
+		<button class="small-icon-button remove-overlay"
+				(click)="removeOverlay()">
+			<i class="icon" [ngClass]="isRemoved ? 'icon-restore-overlay' : 'icon-remove-overlay'"></i>
 			{{isRemoved ? ('Restore overlay' | translate) : ('Remove overlay' | translate)}}
-		</div>
-	</button>
-	<button class="small-icon-button set-favorite"
-			(click)="toggleFavorite()">
-		<i class="icon" [ngClass]="!isFavorite? 'icon-favorite-empty' : 'icon-favorite-full'"
-		   [class.active]="isFavorite"></i>
-		<div class="button-title">
+		</button>
+		<button class="small-icon-button set-favorite"
+				(click)="toggleFavorite()">
+			<i class="icon" [ngClass]="!isFavorite? 'icon-favorite-empty' : 'icon-favorite-full'"
+			   [class.active]="isFavorite"></i>
 			{{favoritesButtonText | translate}}
-		</div>
-	</button>
+		</button>
+	</div>
 </div>

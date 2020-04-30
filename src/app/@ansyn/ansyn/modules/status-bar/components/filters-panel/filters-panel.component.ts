@@ -13,6 +13,13 @@ import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
 import { tap, filter, withLatestFrom } from 'rxjs/operators';
 import { ClickOutsideService } from '../../../core/click-outside/click-outside.service';
 import { EnumFilterMetadata } from '../../../filters/models/metadata/enum-filter-metadata';
+import { IFilter } from '../../../filters/models/IFilter';
+import { FilterMetadata } from '../../../filters/models/metadata/filter-metadata.interface';
+import {
+	ICaseEnumFilterMetadata,
+	ICaseFacetsState,
+	ICaseFilter
+} from '../../../menu-items/cases/models/case.model';
 
 @Component({
 	selector: 'ansyn-filters-panel',
@@ -42,13 +49,14 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 	updateFilters$ = this.store.select(selectFilters).pipe(
 		filter(filters => filters && filters.size > 0 ),
 		withLatestFrom(this.store.select(selectFacets)),
-		tap(([filters, facets]) => {
-			filters.forEach( (metadata, filter ) => {
+		tap(([filters, facets]: [Map<IFilter, FilterMetadata>, ICaseFacetsState]) => {
+			filters.forEach( (metadata: FilterMetadata, filter: IFilter ) => {
 				let title = '';
 				if ( metadata instanceof EnumFilterMetadata) {
-					const facetMetadata: any = facets.filters.find( f => f.fieldName === filter.modelName).metadata;
+					const facetFilter: ICaseFilter = facets.filters.find( f => f.fieldName === filter.modelName);
+					const facetMetadata: ICaseEnumFilterMetadata = facetFilter && <ICaseEnumFilterMetadata>facetFilter.metadata;
 					const all = metadata.enumsFields.size;
-					const unChecked = facetMetadata.unCheckedEnums && facetMetadata.unCheckedEnums.length
+					const unChecked = facetMetadata && facetMetadata.unCheckedEnums && facetMetadata.unCheckedEnums.length
 					title = unChecked === 0 ? '' : `${all - unChecked}/${all}`;
 				}
 				this.filters[filter.modelName] = {

@@ -54,7 +54,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 					this.overlays = overlays.filter(overlay => {
 						return filteredOverlays.includes(overlay.id);
 					});
-				} else {
+				} else { 
 					this.overlays = overlays;
 				}
 

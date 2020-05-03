@@ -35,7 +35,7 @@ export class AlertsContainerComponent implements OnInit, OnDestroy {
 	}
 
 	showAlert(alertKey) {
-		if (this.overlay){
+		if (this.overlay) {
 			const ids = this.alertMsg.get(alertKey);
 			if (ids) {
 				return ids.has(this.mapId);

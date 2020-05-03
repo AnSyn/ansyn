@@ -1,3 +1,4 @@
+@import "ansyn/less/colors";
 @color-half-white: rgba(255, 255, 255, 0.7);
 :host {
 	label {
@@ -14,7 +15,7 @@
 			height: 15px;
 			border-radius: 50%;
 			border: 2px solid @color-half-white;
-			margin-right: 10px;
+			margin-right: 12px;
 
 			.inner-circle {
 				opacity: 0;
@@ -22,9 +23,9 @@
 				transition: .2s;
 				width: 7px;
 				height: 7px;
-				box-shadow: 0 0 1px 2px white;
+				box-shadow: 0 0 1px 2px @application-primary-color;
 				border-radius: 50%;
-				background-color: white;
+				background-color: @application-primary-color;
 			}
 		}
 
@@ -42,10 +43,10 @@
 		display: none;
 
 		&:checked + label {
-			color: white;
+			color: @application-primary-color;
 
 			.outer-circle {
-				border-color: white;
+				border-color: @application-primary-color;
 
 				.inner-circle {
 					visibility: visible;

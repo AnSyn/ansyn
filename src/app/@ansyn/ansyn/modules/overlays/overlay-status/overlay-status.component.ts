@@ -181,6 +181,8 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		this.updatePresetStatus();
 		this.updateFavoriteStatus();
 		this.updateDraggedStatus();
+		this.moreButtons = false;
+		this.isManualProcessing = false;
 	}
 
 	updateFavoriteStatus() {

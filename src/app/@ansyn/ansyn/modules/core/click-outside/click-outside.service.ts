@@ -1,11 +1,11 @@
-import { Injectable, ElementRef } from '@angular/core';
+import { ElementRef, Injectable } from '@angular/core';
 import { fromEvent, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({
 	providedIn: 'root'
 })
-export class ClickOutsideService{
+export class ClickOutsideService {
 	constructor(protected element: ElementRef) {
 	}
 
@@ -16,7 +16,7 @@ export class ClickOutsideService{
 	 */
 	onClickOutside(targetElement: any = window, elementToMonitor = this.element.nativeElement): Observable<boolean> {
 		return fromEvent(targetElement, 'click').pipe(
-			map( (event: MouseEvent) => {
+			map((event: MouseEvent) => {
 				const path = event.composedPath ? event.composedPath() : this.getPath(event);
 				let clickOutsideMonitor = !(path && path.includes(elementToMonitor));
 				return clickOutsideMonitor;
@@ -34,7 +34,7 @@ export class ClickOutsideService{
 
 	private getAllParent(parent: HTMLElement): HTMLElement[] {
 		const allParent = [parent];
-		if (Boolean(parent.parentElement)) {
+		if (Boolean(parent && parent.parentElement)) {
 			allParent.push(...this.getAllParent(parent.parentElement))
 		}
 		return allParent;

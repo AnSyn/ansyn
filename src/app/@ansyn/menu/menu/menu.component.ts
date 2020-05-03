@@ -14,7 +14,7 @@ import {
 import {
 	ContainerChangedTriggerAction,
 	ResetAppAction,
-	SelectMenuItemAction, SetBadgeAction,
+	SelectMenuItemAction,
 	ToggleIsPinnedAction,
 	ToggleMenuCollapse,
 	UnSelectMenuItemAction
@@ -230,10 +230,9 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	hideBadge(badge: string, showZeroBadge?: boolean): boolean {
-		if (this.selectedMenuItem && this.selectedMenuItem.name === 'Results table') {
+		if (showZeroBadge) {
 			return this.hideBadgeResult;
 		}
-
 		return badge !== '★' && (showZeroBadge ? Number(badge) < 0 : !Number(badge));
 	}
 
@@ -269,6 +268,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	closeMenu(): void {
+		this.hideBadgeResult = false;
 		this.store.dispatch(new UnSelectMenuItemAction());
 	}
 

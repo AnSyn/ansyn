@@ -248,7 +248,6 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	toggleItem(key: string, skipSession: boolean = false): void {
-		this.hideBadgeResult = !this.hideBadgeResult;
 		if (this.onAnimation) {
 			return;
 		}
@@ -264,10 +263,12 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	openMenu(key: string, skipSession: boolean) {
+		this.hideBadgeResult = true;
 		this.store.dispatch(new SelectMenuItemAction({ menuKey: key, skipSession }));
 	}
 
 	closeMenu(): void {
+		this.hideBadgeResult = false;
 		this.store.dispatch(new UnSelectMenuItemAction());
 	}
 

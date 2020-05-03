@@ -230,7 +230,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	hideBadge(badge: string, showZeroBadge?: boolean): boolean {
-		if (this.selectedMenuItem && this.selectedMenuItem.name === 'Results table') {
+		if (showZeroBadge) {
 			return this.hideBadgeResult;
 		}
 		return badge !== '★' && (showZeroBadge ? Number(badge) < 0 : !Number(badge));
@@ -248,6 +248,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	toggleItem(key: string, skipSession: boolean = false): void {
+		this.hideBadgeResult = !this.hideBadgeResult;
 		if (this.onAnimation) {
 			return;
 		}
@@ -263,7 +264,6 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	openMenu(key: string, skipSession: boolean) {
-		this.hideBadgeResult = true;
 		this.store.dispatch(new SelectMenuItemAction({ menuKey: key, skipSession }));
 	}
 

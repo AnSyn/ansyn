@@ -26,17 +26,19 @@ import { AnnotationMode } from '@ansyn/ol';
 import { ITranslationData } from '../../menu-items/cases/models/case.model';
 import { Actions, ofType } from '@ngrx/effects';
 import {
-	SetAnnotationMode, 
+	SetAnnotationMode,
 	ToolsActionsTypes,
 	ClearActiveInteractionsAction,
 	SetAutoImageProcessing
 } from '../../menu-items/tools/actions/tools.actions';
 import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-manager/reducers/layers.reducer';
+import { ClickOutsideService } from '../../core/click-outside/click-outside.service';
 
 @Component({
 	selector: 'ansyn-overlay-status',
 	templateUrl: './overlay-status.component.html',
-	styleUrls: ['./overlay-status.component.less']
+	styleUrls: ['./overlay-status.component.less'],
+	providers: [ClickOutsideService]
 })
 @AutoSubscriptions({
 	init: 'ngOnInit',
@@ -96,22 +98,11 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	);
 
 	@AutoSubscription
-	onClickOutsideMoreButtons$ = fromEvent(window, 'click').pipe(
-		filter(() => this.moreButtons),
-		tap((event: any) => {
-			if (event.path && !event.path.includes(this.element.nativeElement)) {
-				this.moreButtons = false
-			}
-		})
-	);
-
-	@AutoSubscription
-	onClickOutsideManualProcessing$ = fromEvent(window, 'click').pipe(
-		filter(() => this.isManualProcessing),
-		tap((event: any) => {
-			if (event.path && !event.path.includes(this.element.nativeElement)) {
-				this.isManualProcessing = false;
-			}
+	onClickOutSide$ = this.clickOutsideService.onClickOutside().pipe(
+		filter(Boolean),
+		tap( () => {
+			this.moreButtons = false;
+			this.isManualProcessing = false;
 		})
 	);
 
@@ -130,7 +121,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 				}
 			}));
 
-	constructor(public store$: Store<any>, protected actions$: Actions, protected element: ElementRef) {
+	constructor(public store$: Store<any>, protected actions$: Actions, protected element: ElementRef, protected clickOutsideService: ClickOutsideService) {
 		this.isPreset = true;
 		this.isFavorite = true;
 	}
@@ -271,6 +262,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	toggleManualImageProcessing() {
+		this.moreButtons = false;
 		this.isManualProcessing = !this.isManualProcessing;
 	}
 
@@ -281,6 +273,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	toggleMoreButtons() {
+		this.isManualProcessing = false;
 		this.moreButtons = !this.moreButtons;
 	}
 }

@@ -46,6 +46,7 @@ export class OpenLayersImageProcessing {
 			// general functions
 			buildHistogramLut: buildHistogramLut,
 			normalizeColor: normalizeColor,
+			fillArray: fillArray,
 			rgb2YCbCr: rgb2YCbCr,
 			yCbCr2RGB: yCbCr2RGB,
 			forEachRGBPixel: forEachRGBPixel,
@@ -193,7 +194,7 @@ function yCbCr2RGB(yCbCr): any {
 
 function buildHistogramLut(imageData) {
 	const BANDS = 4, CUTEDGE = 85, MAXBIT = 256;
-	const histogram = fillArray(MAXBIT, 0);
+	const histogram = this['fillArray'](MAXBIT, 0);
 	const { width, height, data } = imageData;
 	for ( let i = 0; i < data.length; i += BANDS) {
 		const [r, g, b] = data.subarray(i, i + BANDS);
@@ -216,7 +217,7 @@ function buildHistogramLut(imageData) {
 			break;
 		}
 	}
-	return fillArray(MAXBIT, 0).map( (val, index) => {
+	return this['fillArray'](MAXBIT, 0).map( (val, index) => {
 		return this['normalizeColor'](255 * (index - minPixel) / (maxPixel - minPixel));
 	});
 }

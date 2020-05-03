@@ -2,7 +2,9 @@
 <!-- Geo filter -->
 <div class="box" id="geoPreSearch"
 	 [attr.tooltip-value]="statusBarConfig?.toolTips?.geoFilter | translate"
-	 tooltip-class="bottom">
+	 tooltip-class="bottom"
+	 [class.active]="locationPickerExpand"
+>
 	<button ansynComboBoxTrigger
 			(click)="toggleLocationPicker()"
 			[isActive]="locationPickerExpand"
@@ -21,7 +23,9 @@
 <!-- Time -->
 <div class="box"
 	 [attr.tooltip-value]="statusBarConfig?.toolTips?.timeFilterEdit | translate"
-	 tooltip-class="bottom">
+	 tooltip-class="bottom"
+	 [class.active]="timePickerExpand"
+>
 	<button ansynComboBoxTrigger
 			#timePickerTrigger
 			(click)="toggleTimePicker()"
@@ -44,7 +48,9 @@
 	<!-- data input filter-->
 	<div class="box" id="dataInputsPreSearch"
 		 [attr.tooltip-value]="statusBarConfig?.toolTips?.dataInputFilter | translate"
-		 tooltip-class="bottom">
+		 tooltip-class="bottom"
+		 [class.active]="dataInputFilterExpand"
+	>
 		<button ansynComboBoxTrigger
 				#trigger
 				(click)="toggleDataInputFilter()"

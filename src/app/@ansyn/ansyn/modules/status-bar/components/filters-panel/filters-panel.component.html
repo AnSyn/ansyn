@@ -1,9 +1,11 @@
-<div class="filter" *ngFor="let filter of filterConfig.filters">
+<div class="filter" *ngFor="let filter of filterConfig.filters"
+	 [attr.tooltip-value]="getFilterTooltip(filter.displayName) | translate"
+	 tooltip-class="bottom"
+	 [class.active]="expand[filter.modelName]"
+>
 	<button ansynComboBoxTrigger
 			[disabled]="onlyFavorite"
 			[isActive]="expand[filter.modelName]"
-			[attr.tooltip-value]="getFilterTooltip(filter.displayName) | translate"
-			tooltip-class="bottom"
 			[class.filtered]="isFilter(filter.modelName)"
 			[withArrow]="false"
 			(click)="expandFilter(filter.modelName)">
@@ -19,13 +21,14 @@
 	</div>
 </div>
 
-<div class="filter">
+<div class="filter"
+	 [attr.tooltip-value]="'Displays favorites overlays only' | translate"
+	 tooltip-class="bottom"
+>
 	<button ansynComboBoxTrigger
 			class="favorites"
 			[withArrow]="false"
 			[disabled]="disableOnlyFavoritesButton"
-			[attr.tooltip-value]="'Displays favorites overlays only' | translate"
-			tooltip-class="bottom"
 			(click)="showOnlyFavorites()">
 		<i class="icon"
 		   [ngClass]="onlyFavorite ? 'icon-favorite-full'  : 'icon-favorite-empty'"></i>

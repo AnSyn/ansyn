@@ -1,0 +1,232 @@
+@import "ansyn/less/z-index-globals";
+@import "ansyn/less/colors";
+@import 'ansyn/less/common';
+
+@footer-height: 58px;
+@header-size: calc(~"(100vh - @{footer-height}) * 0.025");
+
+:host {
+	&:extend(.default-menu-item);
+
+	div.results-table {
+		width: 100%;
+		color: white;
+		font-size: 13px;
+		padding: 0 5px;
+		box-sizing: border-box;
+
+		div.header {
+			color: white;
+			display: flex;
+			font-family: @app-font;
+			flex-direction: column;
+			font-size: @header-size;
+			margin-top: 17px;
+			margin-left: 23px;
+			margin-bottom: 15px;
+
+			div.box {
+				position: absolute;
+				margin-left: 290px;
+				flex: 1;
+
+				.overlay-count {
+					font-size: 20px;
+					position: absolute;
+				}
+			}
+		}
+
+		div.results-table-head {
+			display: flex;
+
+			div.results-table-head-row {
+				margin-bottom: -5px;
+				padding: 0 15px;
+				width: 100%;
+
+				div.results-table-head-row-data {
+					display: flex;
+					align-items: center;
+					position: relative;
+					width: 100%;
+					height: 57px;
+					text-align: left;
+					cursor: pointer;
+					box-sizing: border-box;
+
+					div.results-table-head-col {
+						margin-left: 29px;
+						width: 200px;
+						flex: 1;
+
+						i.icon-arrow {
+							margin-top: -2px;
+							position: absolute;
+						}
+					}
+
+					.Sensor {
+						margin-left: 77px !important;
+					}
+
+					.Type {
+						margin-right: 10px !important;
+					}
+				}
+			}
+		}
+
+		div.results-table-body {
+			direction: rtl;
+			display: block;
+			overflow-y: auto;
+			height: 80vh;
+
+			div.results-table-body-row-data:hover {
+				background-color: @background-color-7;
+			}
+
+			div.results-table-body-row:hover + div.results-table-body-row div.cases-table-body-row-data hr  {
+				top: -2px;
+			}
+
+			div.results-table-body-row-data.selected + div.results-table-body-row div.cases-table-body-row-data hr {
+				top: -2px;
+			}
+
+			div.results-table-body-row:first-child div.results-table-body-row-data {
+				//border-top: 1px solid #EBF8FA;
+			}
+
+			div.results-table-body-row {
+				display: block;
+				margin: 0px 0px 0px 16px;
+				transition: background .3s, color .3s;
+				overflow: hidden;
+				height: 57px;
+				position: relative;
+
+				&.mouse-enter {
+					color: #156879;
+					background: #EBF8FA;
+
+					div.results-table-body-row-data div.-menu-container div.results-menu {
+						transform: translate(10%, 50%);
+						opacity: 1;
+						visibility: visible;
+						pointer-events: auto;
+					}
+
+				}
+
+				&.active {
+					pointer-events:none;
+					background: #9deeff;
+					color: #156879;
+				}
+
+				&.selected {
+					pointer-events:none;
+					color: #156879;
+					background: #EBF8FA;
+				}
+
+				hr {
+					display: none;
+					position: absolute;
+					margin: 0;
+					width: 100%;
+					border: solid 1px #EBF8FA;
+					top: -1px;
+					left: 0;
+					color: #ebf8fa;
+				}
+
+				/deep/ .slider-text {
+					color: inherit;
+				}
+
+				div.results-table-body-row-data {
+					position: relative;
+					display: flex;
+					align-items: center;
+					text-align: left;
+					direction: ltr;
+					cursor: pointer;
+					box-sizing: border-box;
+					height: 100%;
+
+					div.overlay-type {
+						margin-left: 30px;
+					}
+
+					hr {
+						display: block;
+						position: absolute;
+						margin: 0;
+						width: 100%;
+						border: solid 1px #EBF8FA;
+						top: -1px;
+						left: 0;
+						color: #ebf8fa;
+					}
+
+					div.results-table-body-col {
+						flex: 1;
+					}
+
+					div.source-type {
+						margin-left: 43px !important;
+					}
+
+					div.results-table-case-name-col {
+						flex: 1.5;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						margin-left: 19px;
+					}
+
+					.results-table-auto-save-col {
+						padding-top: 20px;
+						flex: 2;
+					}
+
+					div.results-menu-container {
+						flex: 0;
+
+						div.results-menu {
+							display: flex;
+							transition: visibility .3s, transform .3s, opacity .3s;
+							opacity: 0;
+							visibility: hidden;
+							z-index: @z-index-case-menu;
+							position: fixed;
+							border: 0.5px solid #404040;
+							box-sizing: border-box;
+							box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24), 0 0 2px rgba(0, 0, 0, 0.12);
+							border-radius: 4px;
+							background: #FFFFFF;
+							transform: translate(-50%, 50%);
+							pointer-events: none;
+
+							button {
+								background: transparent;
+								border: 1px solid transparent;
+								font-size: 20px;
+
+								&:hover {
+									box-sizing: border-box;
+									border: 1px solid #7b7b7b;
+								}
+							}
+						}
+					}
+
+				}
+			}
+		}
+	}
+
+}
+

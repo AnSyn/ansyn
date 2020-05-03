@@ -1,6 +1,8 @@
 <div class="combo-container" [ngClass]="[direction, color]"
 	 [attr.tooltip-value]="comboBoxToolTipDescription || null"
-	 [attr.tooltip-class]="direction">
+	 [attr.tooltip-class]="direction"
+	 [class.active]="optionsVisible"
+>
 	<button ansynComboBoxTrigger
 			[ngClass]="buttonClass"
 			type="button"

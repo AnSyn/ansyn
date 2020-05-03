@@ -39,24 +39,29 @@
 		<i class="icon icon-more" [class.active]="moreButtons"></i>
 	</button>
 
-	<div class="more-buttons" *ngIf="moreButtons">
-		<button class="small-icon-button set-preset"
-				(click)="togglePreset()"
-				[disabled]="noGeoRegistration">
-			<i class="icon icon-quick-loop-add" [class.active]="isPreset"></i>
+<div class="more-buttons" *ngIf="moreButtons">
+	<div class="button small-icon-button set-preset"
+			(click)="togglePreset()"
+			[class.disabled]="noGeoRegistration">
+		<i class="icon icon-quick-loop-add" [class.active]="isPreset"></i>
+		<div class="button-title">
 			{{presetsButtonText | translate}}
-		</button>
+		</div>
+	</div>
 
-		<button class="small-icon-button remove-overlay"
-				(click)="removeOverlay()">
-			<i class="icon" [ngClass]="isRemoved ? 'icon-restore-overlay' : 'icon-remove-overlay'"></i>
+	<div class="button small-icon-button remove-overlay"
+			(click)="removeOverlay()">
+		<i class="icon" [ngClass]="isRemoved ? 'icon-restore-overlay' : 'icon-remove-overlay'"></i>
+		<div class="button-title">
 			{{isRemoved ? ('Restore overlay' | translate) : ('Remove overlay' | translate)}}
-		</button>
-		<button class="small-icon-button set-favorite"
-				(click)="toggleFavorite()">
-			<i class="icon" [ngClass]="!isFavorite? 'icon-favorite-empty' : 'icon-favorite-full'"
-			   [class.active]="isFavorite"></i>
+		</div>
+	</div>
+	<div class="button small-icon-button set-favorite"
+			(click)="toggleFavorite()">
+		<i class="icon" [ngClass]="!isFavorite? 'icon-favorite-empty' : 'icon-favorite-full'"
+		   [class.active]="isFavorite"></i>
+		<div class="button-title">
 			{{favoritesButtonText | translate}}
-		</button>
+		</div>
 	</div>
 </div>

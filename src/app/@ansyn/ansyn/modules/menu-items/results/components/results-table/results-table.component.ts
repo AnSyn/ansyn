@@ -1,17 +1,20 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from "rxjs";
-import { IOverlay } from "../../../../overlays/models/overlay.model";
-import { Store, select } from "@ngrx/store";
+import { Observable } from 'rxjs';
+import { IOverlay } from '../../../../overlays/models/overlay.model';
+import { select, Store } from '@ngrx/store';
 import {
-	IOverlaysState, MarkUpClass, selectFilteredOveralys,
+	IMarkUpData,
+	IOverlaysState,
+	MarkUpClass,
+	selectDropMarkup,
+	selectDrops,
+	selectFilteredOveralys,
 	selectOverlaysArray
-} from "../../../../overlays/reducers/overlays.reducer";
-import { tap, withLatestFrom } from "rxjs/operators";
-import {
-	DisplayOverlayFromStoreAction,
-	SetMarkUp,
-} from "../../../../overlays/actions/overlays.actions";
-import { AutoSubscription, AutoSubscriptions } from "auto-subscriptions";
+} from '../../../../overlays/reducers/overlays.reducer';
+import { tap, withLatestFrom } from 'rxjs/operators';
+import { DisplayOverlayFromStoreAction, SetMarkUp, } from '../../../../overlays/actions/overlays.actions';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
 
 @Component({
 	selector: 'ansyn-results-table',
@@ -46,11 +49,22 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		.pipe(
 			select(selectOverlaysArray),
 			withLatestFrom(this.store$.select(selectFilteredOveralys)),
-			tap(([overlays, filteredOverlays ]: [IOverlay[], string[]]) => {
+			tap(([overlays, filteredOverlays]: [IOverlay[], string[]]) => {
 				this.overlays = overlays.filter(overlay => {
 					return filteredOverlays.includes(overlay.id);
 				});
 			}));
+
+	@AutoSubscription
+	dropsMarkUp$: Observable<[ExtendMap<MarkUpClass, IMarkUpData>, any]> = this.store$
+		.pipe(
+			select(selectDropMarkup),
+			withLatestFrom(this.store$.pipe(select(selectDrops))),
+			tap(([value]: [ExtendMap<MarkUpClass, IMarkUpData>, any]) => {
+				const activeMapData = value.get(MarkUpClass.active);
+				this.selectedOverlayId = activeMapData.overlaysIds[0];
+			})
+		);
 
 	constructor(protected store$: Store<IOverlaysState>) {
 	}
@@ -84,7 +98,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	getType(overlay: IOverlay): string {
-		return "icon icon-lavian"
+		return 'icon icon-lavian';
 	}
 
 	timeFormat(overlayDate: Date): string {

@@ -2,7 +2,6 @@
 @import 'ansyn/less/globals';
 
 :host {
-	line-height: 0;
 	left: 5px;
 	top: 6px;
 	display: flex;
@@ -57,17 +56,31 @@
 			}
 		}
 
-		div.more-buttons {
-			position: absolute;
-			background: @background-color-3;
-			top: @imagery-status-height;;
-			width: 220px;
-			padding: 10px 2px;
-			z-index: 0;
-			text-align: left;
+	div.more-buttons {
+		background: @background-color-3;
+		height: 75px;
+		margin-top: 35px;
+		z-index: 0;
+		text-align: left;
+		white-space: nowrap;
 
-			button {
-				font-size: 13px;
+		.button-title {
+			margin-left: 10px;
+		}
+
+		.button {
+			font-size: 13px;
+			padding-right: 10px;
+			display: flex;
+			cursor: pointer;
+
+			&:hover:not(:disabled) {
+				background: rgba(0, 0, 0, 0.5);
+			}
+
+			&.disabled {
+				opacity: .6;
+				pointer-events: none;
 			}
 		}
 	}

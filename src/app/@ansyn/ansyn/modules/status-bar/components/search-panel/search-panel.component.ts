@@ -45,6 +45,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	dataInputFilterTitle = 'All';
 	timeSelectionTitle: string;
 	geoFilterTitle: string;
+	geoFilterCoordinates: string;
 	dataInputFilters: ICaseDataInputFiltersState;
 
 	@AutoSubscription
@@ -73,8 +74,8 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	).pipe(
 		withLatestFrom(this.store$.select(selectRegion)),
 		tap(([[geoFilterType, active], region]) => {
-			const sCoordinates = region ? ` (${region.coordinates.toString()})` : '';
-			this.geoFilterTitle = `${geoFilterType}${sCoordinates}`;
+			this.geoFilterTitle = `${geoFilterType}`;
+			this.geoFilterCoordinates = region ? `${region.coordinates.toString()}` : '';
 			this.locationPickerExpand = active;
 		})
 	);

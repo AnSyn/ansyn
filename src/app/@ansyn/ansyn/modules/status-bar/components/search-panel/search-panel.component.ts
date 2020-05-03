@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import * as momentNs from 'moment';
 import { IStatusBarConfig } from '../../models/statusBar-config.model';
 import {
@@ -75,7 +75,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		withLatestFrom(this.store$.select(selectRegion)),
 		tap(([[geoFilterType, active], region]) => {
 			this.geoFilterTitle = `${geoFilterType}`;
-			this.geoFilterCoordinates = `${region.coordinates.toString()}`;
+			this.geoFilterCoordinates = region ? `${region.coordinates.toString()}` : '';
 			this.locationPickerExpand = active;
 		})
 	);

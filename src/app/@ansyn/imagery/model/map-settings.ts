@@ -1,5 +1,5 @@
 import { ImageryMapPosition } from './case-map-position.model';
-export type MapOrientation = 'Align North' | 'User Perspective' | 'Imagery Perspective';
+export type MapOrientation = 'User Perspective' | 'Imagery Perspective';
 
 export interface IWorldViewMapState {
 	mapType: string;

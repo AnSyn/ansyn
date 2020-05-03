@@ -15,7 +15,6 @@ import {
 import { IAppState } from '../../app.effects.module';
 import { selectSelectedLayersIds } from '../../../modules/menu-items/layers-manager/reducers/layers.reducer';
 import { selectFacets } from '../../../modules/filters/reducer/filters.reducer';
-import { selectComboBoxesProperties } from '../../../modules/status-bar/reducers/status-bar.reducer';
 import { selectOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/reducers/tools.reducer';
 import { UpdateCaseAction } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { selectAutoSave, selectSelectedCase } from '../../../modules/menu-items/cases/reducers/cases.reducer';
@@ -40,7 +39,6 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectRemovedOverlays),
 		this.store$.select(selectRemovedOverlaysVisibility),
 		this.store$.select(selectPresetOverlays),
-		this.store$.select(selectComboBoxesProperties),
 		this.store$.select(selectActiveMapId),
 		this.store$.select(selectMapsList),
 		this.store$.select(selectLayout),
@@ -66,7 +64,6 @@ export class UpdateCaseAppEffects {
 				removedOverlaysIds,
 				removedOverlaysVisibility,
 				presetOverlays,
-				{ timeFilter, orientation }, /* -> comboBoxesProperties */
 				activeMapId,
 				mapsList,
 				layout,
@@ -88,8 +85,6 @@ export class UpdateCaseAppEffects {
 				lastModified,
 				autoSave,
 				state: {
-					timeFilter,
-					orientation,
 					maps: {
 						layout,
 						data: mapsList,

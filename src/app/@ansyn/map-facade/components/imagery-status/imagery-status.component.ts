@@ -3,11 +3,16 @@ import { ImageryCommunicatorService, IMapSettings, MapOrientation } from '@ansyn
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { get as _get } from 'lodash'
-import { map, tap } from 'rxjs/operators';
+import { map, tap, filter } from 'rxjs/operators';
 import { SetMapOrientation, SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
 import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../models/entry-components-provider';
 import { selectEnableCopyOriginalOverlayDataFlag } from '../../reducers/imagery-status.reducer';
-import { selectActiveMapId, selectHideLayersOnMap, selectMapsTotal } from '../../reducers/map.reducer';
+import {
+	selectActiveMapId,
+	selectHideLayersOnMap,
+	selectMapOrientation,
+	selectMapsTotal
+} from '../../reducers/map.reducer';
 import { copyFromContent } from '../../utils/clipboard';
 import { getTimeFormat } from '../../utils/time';
 import { TranslateService } from '@ngx-translate/core';
@@ -30,6 +35,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	baseMapDescription = 'Base Map';
 	formattedOverlayTime: string = null;
 	@HostBinding('class.active') isActiveMap: boolean;
+	@Input() isMinimalistViewMode: boolean;
 	hideLayers: boolean;
 
 	@AutoSubscription
@@ -52,16 +58,21 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		tap((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
 	);
 
-	@Input()
-	isMinimalistViewMode: boolean;
+	@AutoSubscription
+	getMapOrientation$ = () => this.store$.select(selectMapOrientation(this.mapId)).pipe(
+		filter(Boolean),
+		tap( (orientation) => {
+			this.orientation = orientation;
+			this.perspective = this.orientation === 'User Perspective';
+		})
+	);
+
+
 
 	constructor(protected store$: Store<any>,
 				protected communicators: ImageryCommunicatorService,
 				protected translate: TranslateService,
 				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities) {
-
-		this.orientation = 'Imagery Perspective';
-		this.store$.dispatch(new SetMapOrientation(this.orientation));
 	}
 
 	get map() {
@@ -147,8 +158,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	toggleImageryPerspective() {
-		this.perspective = !this.perspective;
-		this.orientation = this.perspective ? 'User Perspective' : 'Imagery Perspective';
-		this.store$.dispatch(new SetMapOrientation(this.orientation));
+		const newMapOrientation = this.orientation === 'Imagery Perspective' ? 'User Perspective' : 'Imagery Perspective';
+		this.store$.dispatch(new SetMapOrientation({orientation: newMapOrientation, mapId: this.mapId}));
 	}
 }

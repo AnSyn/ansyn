@@ -144,7 +144,6 @@ export class DisplayOverlayAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY;
 
 	constructor(public payload: {
-		orientation?: MapOrientation,
 		overlay: IOverlay, mapId: string, extent?: any, forceFirstDisplay?: boolean, force?: boolean, customOriantation?: string
 	}) {
 	}

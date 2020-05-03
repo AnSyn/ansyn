@@ -233,7 +233,6 @@ export class MenuComponent implements OnInit, OnDestroy {
 		if (this.selectedMenuItem && this.selectedMenuItem.name === 'Results table') {
 			return this.hideBadgeResult;
 		}
-
 		return badge !== '★' && (showZeroBadge ? Number(badge) < 0 : !Number(badge));
 	}
 

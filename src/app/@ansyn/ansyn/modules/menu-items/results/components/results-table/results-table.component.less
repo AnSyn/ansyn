@@ -25,13 +25,18 @@
 			margin-left: 23px;
 			margin-bottom: 15px;
 
+			div.header-title {
+				font-size: 24px;
+			}
+
 			div.box {
 				position: absolute;
 				margin-left: 290px;
 				flex: 1;
 
 				.overlay-count {
-					font-size: 20px;
+					font-size: 17px;
+					margin-top: 3px;
 					position: absolute;
 				}
 			}
@@ -89,11 +94,9 @@
 
 			div.results-table-body-row:hover + div.results-table-body-row div.cases-table-body-row-data hr  {
 				top: -2px;
-				background-color: red;
 			}
 
 			div.results-table-body-row-data.selected + div.results-table-body-row div.cases-table-body-row-data hr {
-				background-color: red;
 				top: -2px;
 			}
 
@@ -103,7 +106,7 @@
 
 			div.results-table-body-row {
 				display: block;
-				padding: 0px 0px 0px 16px;
+				margin: 0px 0px 0px 16px;
 				transition: background .3s, color .3s;
 				overflow: hidden;
 				height: 57px;
@@ -123,11 +126,13 @@
 				}
 
 				&.active {
+					pointer-events:none;
 					background: #9deeff;
 					color: #156879;
 				}
 
 				&.selected {
+					pointer-events:none;
 					color: #156879;
 					background: #EBF8FA;
 				}

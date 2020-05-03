@@ -137,6 +137,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 	expand: boolean;
 	onAnimation: boolean;
 	isBuildNeeded: boolean;
+	hideBadgeResult: boolean;
 
 	constructor(public componentFactoryResolver: ComponentFactoryResolver,
 				protected store: Store<IMenuState>,
@@ -144,6 +145,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 				protected elementRef: ElementRef,
 				@Inject(DOCUMENT) protected document: Document,
 				@Inject(MenuConfig) public menuConfig: IMenuConfig) {
+		this.hideBadgeResult = false;
 
 	}
 
@@ -228,6 +230,9 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	hideBadge(badge: string, showZeroBadge?: boolean): boolean {
+		if (showZeroBadge) {
+			return this.hideBadgeResult;
+		}
 		return badge !== '★' && (showZeroBadge ? Number(badge) < 0 : !Number(badge));
 	}
 
@@ -258,10 +263,12 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	openMenu(key: string, skipSession: boolean) {
+		this.hideBadgeResult = true;
 		this.store.dispatch(new SelectMenuItemAction({ menuKey: key, skipSession }));
 	}
 
 	closeMenu(): void {
+		this.hideBadgeResult = false;
 		this.store.dispatch(new UnSelectMenuItemAction());
 	}
 

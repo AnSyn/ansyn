@@ -41,6 +41,11 @@ describe('SearchPanelComponent', () => {
 		outputs: ['closeTimePicker', 'ansynClickOutside']
 	});
 
+	const ansynTimePickerPreset = MockComponent({
+		selector: 'ansyn-timepicker-presets',
+		outputs: ['hideMe']
+	});
+
 	const ansynLocationPicker = MockComponent({
 		selector: 'ansyn-location-picker',
 		inputs: ['geoFilter']
@@ -58,6 +63,7 @@ describe('SearchPanelComponent', () => {
 				ansynComboTrigger,
 				ansynTimePicker,
 				ansynLocationPicker,
+				ansynTimePickerPreset,
 				ClickOutsideDirective
 			],
 			imports: [StoreModule.forRoot({

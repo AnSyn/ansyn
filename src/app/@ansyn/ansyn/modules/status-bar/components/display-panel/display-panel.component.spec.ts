@@ -6,14 +6,12 @@ import { MockComponent } from '../../../core/test/mock-component';
 import { Store, StoreModule } from '@ngrx/store';
 import {
 	IStatusBarState,
-	selectComboBoxesProperties,
 	statusBarFeatureKey,
 	StatusBarReducer
 } from '../../reducers/status-bar.reducer';
 import { mapFeatureKey, MapReducer, selectLayout, SetLayoutAction } from '@ansyn/map-facade';
 import { of } from 'rxjs';
-import { SetImageOpeningOrientation } from '../../actions/status-bar.actions';
-import { comboBoxesOptions, ORIENTATIONS } from '../../models/combo-boxes.model';
+import { comboBoxesOptions } from '../../models/combo-boxes.model';
 import { StatusBarConfig } from '../../models/statusBar.config';
 
 describe('DisplayPanelComponent', () => {
@@ -47,10 +45,6 @@ describe('DisplayPanelComponent', () => {
 				{
 					provide: StatusBarConfig,
 					useValue: { toolTips: {} }
-				},
-				{
-					provide: ORIENTATIONS,
-					useValue: comboBoxesOptions.orientations
 				}
 			]
 		})
@@ -67,7 +61,6 @@ describe('DisplayPanelComponent', () => {
 		store = _store;
 		const mockStore = new Map<any, any>([
 			[selectLayout, 'layout3'],
-			[selectComboBoxesProperties, {orientation: 'Align North'}]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => of(mockStore.get(type)));
@@ -82,10 +75,4 @@ describe('DisplayPanelComponent', () => {
 		component.layoutSelectChange('layout3');
 		expect(store.dispatch).toHaveBeenCalledWith(new SetLayoutAction('layout3'))
 	});
-
-	it('on select orientation fire SetImageOpeningOrientation action ', () => {
-		spyOn(store, 'dispatch');
-		component.comboBoxesChange({orientation: 'Align North'});
-		expect(store.dispatch).toHaveBeenCalledWith(new SetImageOpeningOrientation({orientation: 'Align North'}));
-	})
 });

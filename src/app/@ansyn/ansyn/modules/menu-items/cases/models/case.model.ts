@@ -67,9 +67,7 @@ export interface IDilutedCaseState {
 	facets?: ICaseFacetsState;
 	region: CaseRegionState;
 	contextEntities?: IContextEntity[];
-	orientation: CaseOrientation;
 	dataInputFilters: ICaseDataInputFiltersState;
-	timeFilter: CaseTimeFilter;
 	favoriteOverlays?: IDilutedOverlay[];
 	miscOverlays?: IDilutedOverlaysHash;
 	removedOverlaysIds?: string[];

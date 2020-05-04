@@ -13,7 +13,6 @@ import {
 	SetRemovedOverlaysIdsAction,
 	SetRemovedOverlaysVisibilityAction
 } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
-import { SetImageOpeningOrientation } from '../../../modules/status-bar/actions/status-bar.actions';
 import { SelectCaseAppEffects } from './select-case.app.effects';
 import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '@ansyn/map-facade';
 import {
@@ -141,11 +140,10 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijklmnopqrstx)--', {
+			const expectedResult = cold('--(abcefghijklmnopqrstx)--', {
 				a: new SetMapsDataActionStore({ mapsList: maps.data }),
 				b: new SetActiveMapId(maps.activeMapId),
 				c: new SetLayoutAction(<any>maps.layout),
-				d: new SetImageOpeningOrientation({ orientation }),
 				e: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
 				f: new SetFavoriteOverlaysAction(favoriteOverlays),
 				g: new SetPresetOverlaysAction(presetOverlays),

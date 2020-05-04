@@ -4,7 +4,6 @@ import { StatusBarConfig } from '../../../status-bar/models/statusBar.config';
 import { Store, StoreModule } from '@ngrx/store';
 import {
 	IStatusBarState,
-	selectComboBoxesProperties,
 	statusBarFeatureKey,
 	StatusBarReducer
 } from '../../../status-bar/reducers/status-bar.reducer';

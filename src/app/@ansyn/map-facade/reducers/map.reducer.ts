@@ -26,7 +26,7 @@ export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId,
 					}
 				},
 				worldView: { ...activeMap.worldView },
-				orientation: 'Imagery Perspective',
+				orientation: activeMap.orientation,
 				flags: {
 					hideLayers: false
 				}
@@ -110,9 +110,9 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 
 		case MapActionTypes.SET_MAP_ORIENTATION: {
 			return mapsAdapter.updateOne({
-				id: state.activeMapId,
+				id: action.payload.mapId || state.activeMapId,
 				changes: {
-					orientation: action.payload
+					orientation: action.payload.orientation
 				}
 			}, state);
 		}
@@ -254,3 +254,4 @@ export const selectMapTypeById: (mapId: string) => MemoizedSelector<any, string>
 export const selectSourceTypeById: (mapId: string) => MemoizedSelector<any, string> = (mapId => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.worldView.sourceType));
 
 export const selectOverlayDisplayModeByMapId: (mapId: string) => MemoizedSelector<any, any> = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data && mapState.data.overlayDisplayMode);
+export const selectMapOrientation = (mapId: string) => createSelector(selectMapStateById(mapId) , (mapState) => mapState && mapState.orientation);

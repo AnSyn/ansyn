@@ -8,6 +8,7 @@ import { take, tap } from 'rxjs/operators';
 import { cloneDeep } from '../../../../core/utils/rxjs/operators/cloneDeep';
 import { ICase } from '../../models/case.model';
 import { UUID } from 'angular2-uuid';
+import { SetActiveMapId } from '@ansyn/map-facade';
 
 const animationsDuring = '0.2s';
 
@@ -54,13 +55,15 @@ export class SaveCaseComponent {
 				cloneDeep(),
 				tap((selectedCase: ICase) => {
 					const currentActive = selectedCase.state.maps.activeMapId;
+					let newActiveMapId = currentActive;
 					selectedCase.state.maps.data.forEach( map => {
 						const mapId = map.id;
 						map.id = UUID.UUID();
 						if (mapId === currentActive) {
-							selectedCase.state.maps.activeMapId = map.id;
+							newActiveMapId = map.id;
 						}
 					});
+					this.store.dispatch(new SetActiveMapId(newActiveMapId));
 					this.store.dispatch(new SaveCaseAsAction({ ...selectedCase, name: this.caseName }));
 					this.close();
 				})

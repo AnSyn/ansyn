@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Observable } from 'rxjs';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
 import { select, Store } from '@ngrx/store';
@@ -16,31 +17,52 @@ import { DisplayOverlayFromStoreAction, SetMarkUp, } from '../../../../overlays/
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
 
+interface ITableHeader {
+	headerName: string;
+	headerData: string;
+	isAscending: boolean;
+	sortFn: (a, b) => number;
+}
 @Component({
 	selector: 'ansyn-results-table',
 	templateUrl: './results-table.component.html',
-	styleUrls: ['./results-table.component.less']
+	styleUrls: ['./results-table.component.less'],
+	animations: [
+		trigger('isDescending', [
+			state('true', style({
+				transform: 'rotate(180deg)',
+			})),
+			state('false', style({
+				transform: 'rotate(0deg)',
+			})),
+			transition('false <=> true', animate('0.2s'))
+		])
+	]
 })
 
 @AutoSubscriptions()
 export class ResultsTableComponent implements OnInit, OnDestroy {
 	overlays = [];
 	selectedOverlayId: string;
-	tableHeaders = [
+	sortedBy  = 'date';
+	tableHeaders: ITableHeader[] = [
 		{
 			headerName: 'Date & time',
 			headerData: 'date',
-			isSorted: false
+			isAscending: true,
+			sortFn: (a: number, b: number) => a - b
 		},
 		{
 			headerName: 'Sensor',
 			headerData: 'sourceType',
-			isSorted: false
+			isAscending: true,
+			sortFn: (a: string, b: string) => a.localeCompare(b)
 		},
 		{
 			headerName: 'Type',
 			headerData: 'type',
-			isSorted: false
+			isAscending: true,
+			sortFn: (a, b) => 0
 		}
 	];
 
@@ -110,15 +132,16 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		return overlayDate.toLocaleString('he-IL', { hour12: false });
 	}
 
-	sortOverlays(header): void {
-		let { headerData, isSorted } = header;
+	sortOverlays(header: ITableHeader): void {
+		let { headerData, isAscending, sortFn } = header;
+		this.sortedBy = headerData;
 		this.overlays.sort(function (a, b) {
 			const dataA = a[headerData];
 			const dataB = b[headerData];
-			const result = dataB - dataA;
-			return isSorted ? result : result * (-1);
+			return isAscending ? sortFn(dataB, dataA) : sortFn(dataA, dataB);
+
 		});
 
-		header.isSorted = !header.isSorted;
+		header.isAscending = !header.isAscending;
 	}
 }

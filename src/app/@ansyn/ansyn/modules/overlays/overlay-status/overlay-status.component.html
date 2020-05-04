@@ -1,3 +1,4 @@
+<div class="overlay-status-button">
 <button class="small-icon-button drag-mode" *ngIf="overlay"
 		(click)="toggleDragged()"
 		[disabled]="!isLayersVisible || noGeoRegistration"
@@ -5,7 +6,8 @@
 		tooltip-class="bottom right">
 	<i class="icon-drag-annotations" [class.active]="isDragged"></i>
 </button>
-
+</div>
+<div class="overlay-status-button">
 <button tooltip-class="bottom right"
 		*ngIf="overlay"
 		class="small-icon-button auto-image-processing"
@@ -14,7 +16,8 @@
 		[class.mode-on]="onAutoImageProcessing">
 	<i class="icon-automatic-image-processing" [class.active]="isAutoProcessing"></i>
 </button>
-
+</div>
+<div class="overlay-status-button">
 <button tooltip-class="bottom right"
 		*ngIf="overlay"
 		class="small-icon-button"
@@ -27,13 +30,14 @@
 <ansyn-image-processing-control
 	*ngIf="isManualProcessing">
 </ansyn-image-processing-control>
-
-<button class="small-icon-button more-btn" *ngIf="overlay"
-		(click)="toggleMoreButtons()"
-		[attr.tooltip-value]="'More buttons' | translate"
-		tooltip-class="bottom right">
-	<i class="icon icon-more" [class.active]="moreButtons"></i>
-</button>
+</div>
+<div class="overlay-status-button">
+	<button class="small-icon-button more-btn" *ngIf="overlay"
+			(click)="toggleMoreButtons()"
+			[attr.tooltip-value]="'More buttons' | translate"
+			tooltip-class="bottom right">
+		<i class="icon icon-more" [class.active]="moreButtons"></i>
+	</button>
 
 <div class="more-buttons" *ngIf="moreButtons">
 	<div class="button small-icon-button set-preset"

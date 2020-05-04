@@ -72,12 +72,16 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		this.store$.select(selectGeoFilterType),
 		this.store$.select(selectGeoFilterActive)
 	).pipe(
-		withLatestFrom(this.store$.select(selectRegion)),
-		tap(([[geoFilterType, active], region]) => {
+		tap(([geoFilterType, active]) => {
 			this.geoFilterTitle = `${geoFilterType}`;
-			this.geoFilterCoordinates = region ? `${region.coordinates.toString()}` : '';
 			this.locationPickerExpand = active;
 		})
+	);
+
+	@AutoSubscription
+	updateGeoFilterCoordinates$ = this.store$.select(selectRegion).pipe(
+		filter(Boolean),
+		tap( ({coordinates}) => this.geoFilterCoordinates = coordinates.toString() )
 	);
 
 	constructor(protected store$: Store<IStatusBarState>,

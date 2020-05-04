@@ -10,11 +10,12 @@ import { Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations/src/animation_metadata';
-import { filter, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { selectDataInputFilter, selectRegion, selectTime } from '../../../overlays/reducers/overlays.reducer';
 import { ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { ClickOutsideService } from '../../../core/click-outside/click-outside.service';
 
 const moment = momentNs;
 
@@ -33,7 +34,8 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	selector: 'ansyn-search-panel',
 	templateUrl: './search-panel.component.html',
 	styleUrls: ['./search-panel.component.less'],
-	animations: [fadeAnimations]
+	animations: [fadeAnimations],
+	providers: [ClickOutsideService]
 })
 @AutoSubscriptions()
 export class SearchPanelComponent implements OnInit, OnDestroy {
@@ -68,6 +70,14 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
+	onClickOutSide$ = this.clickOutsideService.onClickOutside().pipe(
+		filter(Boolean),
+		tap( () => {
+			this.timePickerExpand = false;
+		})
+	);
+
+	@AutoSubscription
 	geoFilter$ = combineLatest(
 		this.store$.select(selectGeoFilterType),
 		this.store$.select(selectGeoFilterActive)
@@ -86,7 +96,8 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	constructor(protected store$: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
-				dateTimeAdapter: DateTimeAdapter<any>
+				dateTimeAdapter: DateTimeAdapter<any>,
+				protected clickOutsideService: ClickOutsideService
 	) {
 		dateTimeAdapter.setLocale(statusBarConfig.locale);
 	}

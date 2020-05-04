@@ -27,7 +27,6 @@
 	 [class.active]="timePickerExpand"
 >
 	<button ansynComboBoxTrigger
-			#timePickerTrigger
 			(click)="toggleTimePicker()"
 			[isActive]="timePickerExpand"
 			[withArrow]="false"
@@ -36,13 +35,8 @@
 		<span class="title">{{timeSelectionTitle}}</span>
 	</button>
 
-	<ansyn-timepicker *ngIf="timePickerExpand"
-					  [timeRange]="timeRange"
-					  (ansynClickOutside)="toggleTimePicker()"
-					  [extraClass]="'owl-dt-container'"
-					  (closeTimePicker)="toggleTimePicker()"
-					  [trigger]="timePickerTrigger?.optionsTrigger?.nativeElement"
-	></ansyn-timepicker>
+	<ansyn-timepicker-presets *ngIf="timePickerExpand" (hideMe)="toggleTimePicker()"></ansyn-timepicker-presets>
+
 </div>
 
 	<!-- data input filter-->

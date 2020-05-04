@@ -50,9 +50,14 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			select(selectOverlaysArray),
 			withLatestFrom(this.store$.select(selectFilteredOveralys)),
 			tap(([overlays, filteredOverlays]: [IOverlay[], string[]]) => {
-				this.overlays = overlays.filter(overlay => {
-					return filteredOverlays.includes(overlay.id);
-				});
+				if (Boolean(filteredOverlays.length)) {
+					this.overlays = overlays.filter(overlay => {
+						return filteredOverlays.includes(overlay.id);
+					});
+				} else { 
+					this.overlays = overlays;
+				}
+
 			}));
 
 	@AutoSubscription

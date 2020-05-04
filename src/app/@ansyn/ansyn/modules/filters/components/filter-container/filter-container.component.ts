@@ -43,6 +43,7 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	public showOnlyFavorite = false;
 	public isGotSmallListFromProvider = true;
 	public metadataFromState: FilterMetadata;
+	hasResults: boolean;
 	subscribers = [];
 	filtersSearchResults = {};
 
@@ -59,6 +60,8 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 		map((filters: Filters) => filters.get(this.filter)),
 		tap((metadata: FilterMetadata) => {
 			this.metadataFromState = metadata;
+			const hasResultsEnum: boolean = Boolean(<EnumFilterMetadata>metadata) && Boolean((<EnumFilterMetadata>metadata).enumsFields.size);
+			this.hasResults = this.filter.type === 'Enum' ? hasResultsEnum : true;
 		})
 	);
 

@@ -1,20 +1,18 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import * as momentNs from 'moment';
 import { IStatusBarConfig } from '../../models/statusBar-config.model';
-import {
-	IStatusBarState, selectGeoFilterActive,
-	selectGeoFilterType
-} from '../../reducers/status-bar.reducer';
+import { IStatusBarState, selectGeoFilterActive, selectGeoFilterType } from '../../reducers/status-bar.reducer';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store } from '@ngrx/store';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, fromEvent } from 'rxjs';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations/src/animation_metadata';
-import { filter, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { selectDataInputFilter, selectRegion, selectTime } from '../../../overlays/reducers/overlays.reducer';
 import { ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { SetToastMessageAction } from '@ansyn/map-facade';
 
 const moment = momentNs;
 
@@ -29,6 +27,8 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	])
 ]);
 
+type SearchPanelTitle = 'DataInputs' | 'TimePicker' | 'LocationPicker';
+
 @Component({
 	selector: 'ansyn-search-panel',
 	templateUrl: './search-panel.component.html',
@@ -37,7 +37,7 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 })
 @AutoSubscriptions()
 export class SearchPanelComponent implements OnInit, OnDestroy {
-
+	popupExpanded = new Map<SearchPanelTitle, boolean>([['DataInputs', false], ['TimePicker', false], ['LocationPicker', false]]);
 	dataInputFilterExpand: boolean;
 	timePickerExpand: boolean;
 	locationPickerExpand: boolean;
@@ -47,6 +47,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	geoFilterTitle: string;
 	geoFilterCoordinates: string;
 	dataInputFilters: ICaseDataInputFiltersState;
+	isDataInputsOk = true;
 
 	@AutoSubscription
 	time$: Observable<ICaseTimeState> = this.store$.select(selectTime).pipe(
@@ -73,7 +74,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		this.store$.select(selectGeoFilterActive)
 	).pipe(
 		tap(([geoFilterType, active]) => {
-			this.geoFilterTitle = `${geoFilterType}`;
+			this.geoFilterTitle = `${ geoFilterType }`;
 			this.locationPickerExpand = active;
 		})
 	);
@@ -81,7 +82,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	updateGeoFilterCoordinates$ = this.store$.select(selectRegion).pipe(
 		filter(Boolean),
-		tap( ({coordinates}) => this.geoFilterCoordinates = coordinates.toString() )
+		tap(({ coordinates }) => this.geoFilterCoordinates = coordinates.toString())
 	);
 
 	constructor(protected store$: Store<IStatusBarState>,
@@ -105,6 +106,29 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	toggleLocationPicker() {
 		this.locationPickerExpand = !this.locationPickerExpand;
+	}
+
+	toggleExpander(popup: SearchPanelTitle) {
+		if (this.isDataInputsOk) {
+			const newState = !this.popupExpanded.get(popup);
+			const isExpandIterator = this.popupExpanded.keys();
+			let isExpand = isExpandIterator.next();
+			while (!isExpand.done) {
+				if (isExpand.value !== popup) {
+					this.popupExpanded.set(isExpand.value, false);
+				}
+				isExpand = isExpandIterator.next();
+			}
+			this.popupExpanded.set(popup, newState);
+		}
+		else {
+			this.store$.dispatch(new SetToastMessageAction({toastText: 'Please select at least one type', showWarningIcon: true}));
+
+		}
+	}
+
+	isActive(popup: SearchPanelTitle) {
+		return this.popupExpanded.get(popup);
 	}
 
 	ngOnDestroy() {

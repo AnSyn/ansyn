@@ -5,7 +5,10 @@ import { Store } from '@ngrx/store';
 import { isEqual } from 'lodash';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, tap } from 'rxjs/operators';
-import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
+import {
+	LoadOverlaysSuccessAction,
+	SetOverlaysCriteriaAction
+} from '../../../overlays/actions/overlays.actions';
 import { selectDataInputFilter } from '../../../overlays/reducers/overlays.reducer';
 import {
 	IMultipleOverlaysSourceConfig,
@@ -28,6 +31,7 @@ import { DataInputFilterValue } from '../../../menu-items/cases/models/case.mode
 export class TreeViewComponent implements OnInit, OnDestroy {
 	@Output() closeTreeView = new EventEmitter<any>();
 	@Output() dataInputTitleChange = new EventEmitter<string>();
+	@Output() isSomeDataInputsCheck = new EventEmitter<boolean>();
 	_selectedFilters: DataInputFilterValue[];
 	dataInputFiltersItems: TreeviewItem[] = [];
 	leavesCount: number;
@@ -89,13 +93,16 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	dataInputFiltersChange(): void {
 		const isFullCheck = this.leavesCount <= this._selectedFilters.length;
-		this.store.dispatch(new SetOverlaysCriteriaAction({
-			dataInputFilters: {
-				fullyChecked: isFullCheck,
-				filters: this._selectedFilters
-			}
-		}));
-
+		const isSomeCheck = this._selectedFilters.length !== 0;
+		if (isSomeCheck) {
+			this.store.dispatch(new SetOverlaysCriteriaAction({
+				dataInputFilters: {
+					fullyChecked: isFullCheck,
+					filters: this._selectedFilters
+				}
+			}));
+		}
+		this.isSomeDataInputsCheck.emit(isSomeCheck);
 	}
 
 	selectAll() {

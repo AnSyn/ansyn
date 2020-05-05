@@ -31,7 +31,6 @@ import { DataInputFilterValue } from '../../../menu-items/cases/models/case.mode
 export class TreeViewComponent implements OnInit, OnDestroy {
 	@Output() closeTreeView = new EventEmitter<any>();
 	@Output() dataInputTitleChange = new EventEmitter<string>();
-	@Output() isSomeDataInputsCheck = new EventEmitter<boolean>();
 	_selectedFilters: DataInputFilterValue[];
 	dataInputFiltersItems: TreeviewItem[] = [];
 	leavesCount: number;
@@ -93,16 +92,14 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	dataInputFiltersChange(): void {
 		const isFullCheck = this.leavesCount <= this._selectedFilters.length;
-		const isSomeCheck = this._selectedFilters.length !== 0;
-		if (isSomeCheck) {
+		const isNoneCheck = this._selectedFilters.length === 0;
+
 			this.store.dispatch(new SetOverlaysCriteriaAction({
 				dataInputFilters: {
 					fullyChecked: isFullCheck,
 					filters: this._selectedFilters
 				}
-			}));
-		}
-		this.isSomeDataInputsCheck.emit(isSomeCheck);
+			}, {noInitialSearch: !isFullCheck && isNoneCheck}));
 	}
 
 	selectAll() {

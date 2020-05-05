@@ -47,7 +47,6 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	geoFilterTitle: string;
 	geoFilterCoordinates: string;
 	dataInputFilters: ICaseDataInputFiltersState;
-	isDataInputsOk = true;
 
 	@AutoSubscription
 	time$: Observable<ICaseTimeState> = this.store$.select(selectTime).pipe(
@@ -109,7 +108,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	}
 
 	toggleExpander(popup: SearchPanelTitle) {
-		if (this.isDataInputsOk) {
+		if (this.isDataInputsOk()) {
 			const newState = !this.popupExpanded.get(popup);
 			const isExpandIterator = this.popupExpanded.keys();
 			let isExpand = isExpandIterator.next();
@@ -136,6 +135,10 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	updateDataInputTitle(title) {
 		this.dataInputFilterTitle = title;
+	}
+
+	isDataInputsOk() {
+		return this.dataInputFilters.fullyChecked || this.dataInputFilters.filters.length > 0;
 	}
 
 }

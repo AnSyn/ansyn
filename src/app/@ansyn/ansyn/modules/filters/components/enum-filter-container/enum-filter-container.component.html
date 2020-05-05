@@ -26,4 +26,4 @@
 
 </div>
 
-<span *ngIf="!fields.length" class="field-name enum-fields-enumerator">{{'No Results' | translate }}</span>
+<span *ngIf="!metadata.hasResults()" class="field-name enum-fields-enumerator">{{'No Results' | translate }}</span>

@@ -18,10 +18,11 @@
 </button>
 </div>
 <div class="overlay-status-button">
-<button tooltip-class="bottom"
-		*ngIf="overlay"
+<button *ngIf="overlay"
 		class="small-icon-button"
+		[class.active]="isManualProcessing"
 		[attr.tooltip-value]="'Manual Image Enhancement' | translate"
+		tooltip-class="bottom"
 		(click)="toggleManualImageProcessing()"
 		[class.mode-on]="isImageControlActive && !onAutoImageProcessing"
 		[disabled]="onAutoImageProcessing">
@@ -34,6 +35,7 @@
 <div class="overlay-status-button">
 	<button class="small-icon-button more-btn" *ngIf="overlay"
 			(click)="toggleMoreButtons()"
+			[class.active]="moreButtons"
 			[attr.tooltip-value]="'More buttons' | translate"
 			tooltip-class="bottom">
 		<i class="icon icon-more" [class.active]="moreButtons"></i>

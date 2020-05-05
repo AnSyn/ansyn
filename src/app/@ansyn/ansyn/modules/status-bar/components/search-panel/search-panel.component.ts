@@ -15,7 +15,6 @@ import { selectDataInputFilter, selectRegion, selectTime } from '../../../overla
 import { ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { ClickOutsideService } from '../../../core/click-outside/click-outside.service';
 
 const moment = momentNs;
 
@@ -35,13 +34,13 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	templateUrl: './search-panel.component.html',
 	styleUrls: ['./search-panel.component.less'],
 	animations: [fadeAnimations],
-	providers: [ClickOutsideService]
 })
 @AutoSubscriptions()
 export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	dataInputFilterExpand: boolean;
 	timePickerExpand: boolean;
+	timePickerPresetsExpand: boolean;
 	locationPickerExpand: boolean;
 	timeRange: Date[];
 	dataInputFilterTitle = 'All';
@@ -70,14 +69,6 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	onClickOutSide$ = this.clickOutsideService.onClickOutside().pipe(
-		filter(Boolean),
-		tap( () => {
-			this.timePickerExpand = false;
-		})
-	);
-
-	@AutoSubscription
 	geoFilter$ = combineLatest(
 		this.store$.select(selectGeoFilterType),
 		this.store$.select(selectGeoFilterActive)
@@ -96,8 +87,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	constructor(protected store$: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
-				dateTimeAdapter: DateTimeAdapter<any>,
-				protected clickOutsideService: ClickOutsideService
+				dateTimeAdapter: DateTimeAdapter<any>
 	) {
 		dateTimeAdapter.setLocale(statusBarConfig.locale);
 	}
@@ -112,6 +102,15 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	toggleTimePicker() {
 		this.timePickerExpand = !this.timePickerExpand;
+	}
+
+	closeTimePicker() {
+		this.timePickerExpand = false;
+		this.timePickerPresetsExpand = false;
+	}
+
+	toggleTimePickerPresets() {
+		this.timePickerPresetsExpand = !this.timePickerPresetsExpand;
 	}
 
 	toggleLocationPicker() {

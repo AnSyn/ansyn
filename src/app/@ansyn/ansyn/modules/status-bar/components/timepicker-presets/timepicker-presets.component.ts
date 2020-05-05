@@ -10,14 +10,14 @@ import { tap } from 'rxjs/operators';
 @Component({
 	selector: 'ansyn-timepicker-presets',
 	templateUrl: './timepicker-presets.component.html',
-	styleUrls: ['./timepicker-presets.component.less']
+	styleUrls: ['./timepicker-presets.component.less'],
 })
 
 @AutoSubscriptions()
 export class TimepickerPresetsComponent implements OnInit, OnDestroy {
 
 	@Output() hideMe = new EventEmitter<boolean>();
-	timePickerExpand: boolean;
+	@Output() openTimePicker = new EventEmitter<boolean>();
 	timeRange: Date[];
 	presetsData = [
 		{
@@ -42,7 +42,6 @@ export class TimepickerPresetsComponent implements OnInit, OnDestroy {
 	);
 
 	constructor(protected store$: Store<any>) {
-		this.timePickerExpand = false;
 	}
 
 	setPreset(days: number) {
@@ -65,7 +64,7 @@ export class TimepickerPresetsComponent implements OnInit, OnDestroy {
 	}
 
 	toggleTimePicker() {
-		this.timePickerExpand = !this.timePickerExpand;
+		this.openTimePicker.emit();
 	}
 
 	ngOnInit() {

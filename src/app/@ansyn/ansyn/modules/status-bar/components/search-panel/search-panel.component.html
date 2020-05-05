@@ -1,4 +1,3 @@
-
 <!-- Geo filter -->
 <div class="box" id="geoPreSearch"
 	 [attr.tooltip-value]="statusBarConfig?.toolTips?.geoFilter | translate"
@@ -25,35 +24,46 @@
 	 [attr.tooltip-value]="statusBarConfig?.toolTips?.timeFilterEdit | translate"
 	 tooltip-class="bottom"
 	 [class.active]="timePickerExpand"
+	 (ansynClickOutside)="closeTimePicker()"
+	 [extraClass]="'owl-dt-container presets'"
+	 [trigger]="timePickerTrigger?.optionsTrigger?.nativeElement"
 >
 	<button ansynComboBoxTrigger
-			(click)="toggleTimePicker()"
-			[isActive]="timePickerExpand"
+			#timePickerTrigger
+			(click)="toggleTimePickerPresets()"
+			[isActive]="timePickerPresetsExpand"
 			[withArrow]="false"
 			icon="icon icon-status-bar-time"
 			class="button">
 		<span class="title">{{timeSelectionTitle}}</span>
 	</button>
 
-	<ansyn-timepicker-presets *ngIf="timePickerExpand" (hideMe)="toggleTimePicker()"></ansyn-timepicker-presets>
+	<ansyn-timepicker-presets *ngIf="timePickerPresetsExpand"
+							  (hideMe)="toggleTimePickerPresets()"
+							  (openTimePicker)="toggleTimePicker()"></ansyn-timepicker-presets>
+
+	<ansyn-timepicker *ngIf="timePickerExpand"
+					  [timeRange]="timeRange"
+					  (closeTimePicker)="closeTimePicker()"
+	></ansyn-timepicker>
 
 </div>
 
-	<!-- data input filter-->
-	<div class="box" id="dataInputsPreSearch"
-		 [attr.tooltip-value]="statusBarConfig?.toolTips?.dataInputFilter | translate"
-		 tooltip-class="bottom"
-		 [class.active]="dataInputFilterExpand"
-	>
-		<button ansynComboBoxTrigger
-				#trigger
-				(click)="toggleDataInputFilter()"
-				icon="icon icon-input-filter small"
-				[isActive]="dataInputFilterExpand"
-				[withArrow]="false"
-				class="button">
-			<span class="title">{{'Type' | translate}} - {{ dataInputFilterTitle | translate }}</span>
-		</button>
+<!-- data input filter-->
+<div class="box" id="dataInputsPreSearch"
+	 [attr.tooltip-value]="statusBarConfig?.toolTips?.dataInputFilter | translate"
+	 tooltip-class="bottom"
+	 [class.active]="dataInputFilterExpand"
+>
+	<button ansynComboBoxTrigger
+			#trigger
+			(click)="toggleDataInputFilter()"
+			icon="icon icon-input-filter small"
+			[isActive]="dataInputFilterExpand"
+			[withArrow]="false"
+			class="button">
+		<span class="title">{{'Type' | translate}} - {{ dataInputFilterTitle | translate }}</span>
+	</button>
 
 	<ansyn-tree-view
 		*ngIf="dataInputFilterExpand"

@@ -2,19 +2,10 @@
 	<div *ngFor="let preset of presetsData">
 		<button (click)="setPreset(preset.days)">{{preset.title | translate}}</button>
 	</div>
-	<button ansynComboBoxTrigger
-			#timePickerTrigger
-			(click)="toggleTimePicker()"
-			[isActive]="timePickerExpand"
-			[withArrow]="false">custom
+	<button
+		type="submit"
+		(click)="toggleTimePicker()">
+		{{'Custom' | translate}}
 	</button>
 
-
-	<ansyn-timepicker *ngIf="timePickerExpand"
-					  [timeRange]="timeRange"
-					  (ansynClickOutside)="toggleTimePicker()"
-					  [extraClass]="'owl-dt-container'"
-					  (closeTimePicker)="toggleTimePicker()"
-					  [trigger]="timePickerTrigger?.optionsTrigger?.nativeElement"
-	></ansyn-timepicker>
 </div>

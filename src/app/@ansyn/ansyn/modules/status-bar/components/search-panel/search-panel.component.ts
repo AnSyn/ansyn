@@ -33,7 +33,7 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	selector: 'ansyn-search-panel',
 	templateUrl: './search-panel.component.html',
 	styleUrls: ['./search-panel.component.less'],
-	animations: [fadeAnimations],
+	animations: [fadeAnimations]
 })
 @AutoSubscriptions()
 export class SearchPanelComponent implements OnInit, OnDestroy {

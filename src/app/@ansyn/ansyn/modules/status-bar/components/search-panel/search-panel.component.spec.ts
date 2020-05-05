@@ -43,7 +43,7 @@ describe('SearchPanelComponent', () => {
 
 	const ansynTimePickerPreset = MockComponent({
 		selector: 'ansyn-timepicker-presets',
-		outputs: ['hideMe']
+		outputs: ['hideMe', 'openTimePicker']
 	});
 
 	const ansynLocationPicker = MockComponent({

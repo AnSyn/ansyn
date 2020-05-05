@@ -21,7 +21,7 @@
 
 <!-- Time -->
 <div class="box"
-	 [attr.tooltip-value]="statusBarConfig?.toolTips?.timeFilterEdit | translate"
+	 [attr.tooltip-value]="this.timePickerPresetsExpand ? null : statusBarConfig?.toolTips?.timeFilterEdit | translate"
 	 tooltip-class="bottom"
 	 [class.active]="timePickerExpand"
 	 (ansynClickOutside)="closeTimePicker()"

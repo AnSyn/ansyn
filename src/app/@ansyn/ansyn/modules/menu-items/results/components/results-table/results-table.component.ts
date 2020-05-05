@@ -12,9 +12,14 @@ import {
 	selectOverlaysArray
 } from '../../../../overlays/reducers/overlays.reducer';
 import { tap, withLatestFrom } from 'rxjs/operators';
-import { DisplayOverlayFromStoreAction, SetMarkUp, } from '../../../../overlays/actions/overlays.actions';
+import {
+	DisplayOverlayFromStoreAction,
+	SetFavoriteOverlaysAction,
+	SetMarkUp,
+} from '../../../../overlays/actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
+import { selectFavoriteOverlays } from '../../../../overlays/overlay-status/reducers/overlay-status.reducer';
 
 @Component({
 	selector: 'ansyn-results-table',
@@ -45,19 +50,20 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	];
 
 	@AutoSubscription
-	loadOverlays$: Observable<[IOverlay[], string[]]> = this.store$
+	loadOverlays$: Observable<[IOverlay[], string[], IOverlay[]]> = this.store$
 		.pipe(
 			select(selectOverlaysArray),
-			withLatestFrom(this.store$.select(selectFilteredOveralys)),
-			tap(([overlays, filteredOverlays]: [IOverlay[], string[]]) => {
-				if (Boolean(filteredOverlays.length)) {
+			withLatestFrom(this.store$.select(selectFilteredOveralys), this.store$.select(selectFavoriteOverlays)),
+			tap(([overlays, filteredOverlays, favoriteOverlays]: [IOverlay[], string[], IOverlay[]]) => {
+
+				if (Boolean(favoriteOverlays.length)) {
+					this.store$.dispatch(new SetFavoriteOverlaysAction(favoriteOverlays));
+					this.overlays = favoriteOverlays;
+				} else {
 					this.overlays = overlays.filter(overlay => {
 						return filteredOverlays.includes(overlay.id);
 					});
-				} else {
-					this.overlays = overlays;
 				}
-
 			}));
 
 	@AutoSubscription

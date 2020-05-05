@@ -52,7 +52,7 @@ import {
 	DisplayOverlaySuccessAction,
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
-	OverlaysActionTypes, SetFilteredOverlaysAction,
+	OverlaysActionTypes, SetFavoriteOverlaysAction, SetFilteredOverlaysAction,
 	SetHoveredOverlayAction,
 	SetMarkUp,
 	SetOverlaysCriteriaAction
@@ -277,6 +277,17 @@ export class OverlaysAppEffects {
 		ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS),
 		map( ({payload: overlays}) => {
 			return new SetBadgeAction({key: 'Results table', badge: `${overlays.length}` })
+		})
+	);
+
+	@Effect()
+	updateResultTableFavoritesBadge$: Observable<SetBadgeAction> = this.actions$.pipe(
+		ofType<SetFavoriteOverlaysAction>(OverlaysActionTypes.SET_FAVORITE_OVERLAYS),
+		map( ({payload: favoriteOverlays}) => {
+			console.log('fave', favoriteOverlays);
+			if (favoriteOverlays.length) {
+				return new SetBadgeAction({key: 'Results table', badge: `${favoriteOverlays.length}` })
+			}
 		})
 	);
 

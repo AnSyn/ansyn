@@ -35,7 +35,6 @@ export { IConfigModel } from './config.model';
 
 // // statusBar
 export { IStatusBarConfig } from './modules/status-bar/models/statusBar-config.model';
-export { IComboBoxesProperties } from './modules/status-bar/models/combo-boxes.model';
 export {
 	statusBarFeatureKey,
 	StatusBarInitialState,
@@ -45,13 +44,11 @@ export { statusBarStateSelector } from './modules/status-bar/reducers/status-bar
 export { comboBoxesOptions } from './modules/status-bar/models/combo-boxes.model';
 export {
 	IStatusBarState,
-	selectComboBoxesProperties,
 	selectGeoFilterActive,
 	selectGeoFilterType
 } from './modules/status-bar/reducers/status-bar.reducer';
 export {
 	CopySnapshotShareLinkAction,
-	SetImageOpeningOrientation,
 	StatusBarActionsTypes,
 	UpdateGeoFilterStatus,
 	StatusBarActions,
@@ -61,7 +58,6 @@ export {
 } from './modules/status-bar/actions/status-bar.actions';
 export { StatusBarConfig } from './modules/status-bar/models/statusBar.config';
 export { StatusBarModule } from './modules/status-bar/status-bar.module';
-export { orientations, ORIENTATIONS } from './modules/status-bar/models/combo-boxes.model';
 
 // menuItems
 export { ClearActiveInteractionsAction } from './modules/menu-items/tools/actions/tools.actions';

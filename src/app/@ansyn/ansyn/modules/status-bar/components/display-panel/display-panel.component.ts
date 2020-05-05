@@ -1,15 +1,13 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { LayoutKey, layoutOptions, selectLayout, SetLayoutAction } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
-import { IStatusBarState, selectComboBoxesProperties } from '../../reducers/status-bar.reducer';
+import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { StatusBarConfig } from '../../models/statusBar.config';
-import { IStatusBarConfig, IToolTipsConfig } from '../../models/statusBar-config.model';
-import { IComboBoxesProperties, ORIENTATIONS } from '../../models/combo-boxes.model';
+import { IStatusBarConfig } from '../../models/statusBar-config.model';
 import { CaseOrientation } from '../../../menu-items/cases/models/case.model';
-import { SetImageOpeningOrientation } from '../../actions/status-bar.actions';
 
 @Component({
 	selector: 'ansyn-display-panel',
@@ -26,13 +24,9 @@ export class DisplayPanelComponent implements OnInit, OnDestroy {
 		tap( layout => this.layout = layout)
 	);
 
-	@AutoSubscription
-	orientation$: Observable<IComboBoxesProperties> = this.store$.select(selectComboBoxesProperties).pipe(
-		tap( ({orientation}) => this.orientation = orientation)
-	);
+
 	constructor(protected store$: Store<IStatusBarState>,
-				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
-				@Inject(ORIENTATIONS) public orientations: CaseOrientation[]) {
+				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
 	}
 
 	get layouts(): LayoutKey[] {
@@ -46,10 +40,6 @@ export class DisplayPanelComponent implements OnInit, OnDestroy {
 
 	layoutSelectChange(layout: LayoutKey): void {
 		this.store$.dispatch(new SetLayoutAction(layout));
-	}
-
-	comboBoxesChange(payload: IComboBoxesProperties) {
-		this.store$.dispatch(new SetImageOpeningOrientation(payload));
 	}
 
 }

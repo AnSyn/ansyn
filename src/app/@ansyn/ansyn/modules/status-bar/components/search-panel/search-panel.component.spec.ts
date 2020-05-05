@@ -1,9 +1,8 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 
 import { SearchPanelComponent } from './search-panel.component';
-import { comboBoxesOptions, GEO_FILTERS, ORIENTATIONS, TIME_FILTERS } from '../../models/combo-boxes.model';
+import { comboBoxesOptions, GEO_FILTERS, TIME_FILTERS } from '../../models/combo-boxes.model';
 import { Store, StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { IStatusBarState, statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';

@@ -35,6 +35,10 @@ export class SliderFilterMetadata extends FilterMetadata {
 		this.count++;
 	}
 
+	hasResults(): boolean {
+		return true;
+	}
+
 	incrementFilteredCount(value: number): void {
 		this.filteredCount++;
 	}

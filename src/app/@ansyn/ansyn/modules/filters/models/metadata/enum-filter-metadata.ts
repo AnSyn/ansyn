@@ -47,6 +47,10 @@ export class EnumFilterMetadata extends FilterMetadata {
 		});
 	}
 
+	hasResults(): boolean {
+		return Boolean(this.enumsFields.size);
+	}
+
 	initializeFilter(overlays: IOverlay[], modelName: string, caseFilter?: ICaseFilter<ICaseEnumFilterMetadata>, visibility?: boolean): void {
 		super.initializeFilter(overlays, modelName, caseFilter, visibility);
 		this.enumsFields = new Map<string, IEnumFiled>();

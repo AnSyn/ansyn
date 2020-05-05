@@ -47,6 +47,10 @@ export class BooleanFilterMetadata extends FilterMetadata {
 		this.properties.false.filteredCount = 0;
 	}
 
+	hasResults(): boolean {
+		return true;
+	}
+
 	selectOnly(key: string): void {
 		this.properties.true.value = false;
 		this.properties.false.value = false;

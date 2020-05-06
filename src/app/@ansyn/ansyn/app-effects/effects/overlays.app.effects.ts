@@ -52,7 +52,7 @@ import {
 	DisplayOverlaySuccessAction,
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
-	OverlaysActionTypes, SetFilteredOverlaysAction,
+	OverlaysActionTypes,
 	SetHoveredOverlayAction,
 	SetMarkUp,
 	SetTotalOverlaysAction

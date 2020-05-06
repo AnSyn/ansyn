@@ -90,9 +90,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	filterOverlays(overlays: IOverlay[], filteredOverlays: string[]): IOverlay[] {
-		return overlays.filter(overlay => {
-			return filteredOverlays.includes(overlay.id);
-		});
+		return overlays.filter(overlay => filteredOverlays.includes(overlay.id));
 	}
 
 

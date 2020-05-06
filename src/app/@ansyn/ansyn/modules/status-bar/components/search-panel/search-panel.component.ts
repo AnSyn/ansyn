@@ -27,7 +27,7 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	])
 ]);
 
-type SearchPanelTitle = 'DataInputs' | 'TimePicker' | 'LocationPicker';
+type SearchPanelTitle = 'DataInputs' | 'TimePicker' | 'TimePickerPreset' | 'LocationPicker';
 
 @Component({
 	selector: 'ansyn-search-panel',
@@ -37,8 +37,7 @@ type SearchPanelTitle = 'DataInputs' | 'TimePicker' | 'LocationPicker';
 })
 @AutoSubscriptions()
 export class SearchPanelComponent implements OnInit, OnDestroy {
-	popupExpanded = new Map<SearchPanelTitle, boolean>([['DataInputs', false], ['TimePicker', false], ['LocationPicker', false]]);
-	dataInputFilterExpand: boolean;
+	popupExpanded = new Map<SearchPanelTitle, boolean>([['DataInputs', false], ['TimePicker', false], ['LocationPicker', false], ['TimePickerPreset', false]]);
 	timePickerExpand: boolean;
 	timePickerPresetsExpand: boolean;
 	locationPickerExpand: boolean;
@@ -75,7 +74,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	).pipe(
 		tap(([geoFilterType, active]) => {
 			this.geoFilterTitle = `${ geoFilterType }`;
-			this.locationPickerExpand = active;
+			this.popupExpanded.set('LocationPicker', active);
 		})
 	);
 
@@ -96,25 +95,9 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 	}
 
-	toggleDataInputFilter() {
-		this.dataInputFilterExpand = !this.dataInputFilterExpand;
-	}
-
-	toggleTimePicker() {
-		this.timePickerExpand = !this.timePickerExpand;
-	}
-
 	closeTimePicker() {
-		this.timePickerExpand = false;
-		this.timePickerPresetsExpand = false;
-	}
-
-	toggleTimePickerPresets() {
-		this.timePickerPresetsExpand = !this.timePickerPresetsExpand;
-	}
-
-	toggleLocationPicker() {
-		this.locationPickerExpand = !this.locationPickerExpand;
+		this.popupExpanded.set('TimePicker', false);
+		this.popupExpanded.set('TimePickerPreset', false);
 	}
 
 	toggleExpander(popup: SearchPanelTitle) {

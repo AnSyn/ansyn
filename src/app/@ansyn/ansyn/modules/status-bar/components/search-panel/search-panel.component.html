@@ -46,7 +46,6 @@
 					  [timeRange]="timeRange"
 					  (closeTimePicker)="closeTimePicker()"
 	></ansyn-timepicker>
-
 </div>
 
 	<!-- data input filter-->
@@ -54,10 +53,10 @@
 		<button ansynComboBoxTrigger
 				#trigger
 				(click)="toggleDataInputFilter()"
-				icon="icon icon-input-filter small"
 				[attr.tooltip-value]="statusBarConfig?.toolTips?.dataInputFilter | translate"
 				tooltip-class="bottom"
 				[class.active]="dataInputFilterExpand"
+				icon="icon icon-input-filter"
 				[isActive]="dataInputFilterExpand"
 				[withArrow]="false"
 				class="button">

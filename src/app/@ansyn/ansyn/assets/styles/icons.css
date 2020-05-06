@@ -1,21 +1,3 @@
-.icon-table:before {
-	content: "\e854";
-}
-.icon-matos:before {
-	content: "\e900";
-}
-.icon-lavian:before {
-	content: "\e901";
-}
-.icon-home:before {
-	content: "\e902";
-}
-.icon-home2:before {
-	content: "\e903";
-}
-.icon-arrow:before {
-	content: "\e904";
-}
 .icon-layer-add:before {
 	content: "\e800";
 }
@@ -46,9 +28,6 @@
 .icon-annotations:before {
 	content: "\e809";
 }
-.icon-automatic-image-processing:before {
-	content: "\e80a";
-}
 .icon-back-to-base-map:before {
 	content: "\e80b";
 }
@@ -76,14 +55,14 @@
 .icon-layer-import:before {
 	content: "\e813";
 }
-.icon-status-bar-orientation:before {
-	content: "\e814";
-}
 .icon-layers-hide:before {
 	content: "\e815";
 }
 .icon-layers-show:before {
 	content: "\e816";
+}
+.icon-status-bar-orientation:before {
+	content: "\e901";
 }
 .icon-change-map:before {
 	content: "\e817";
@@ -150,9 +129,6 @@
 }
 .icon-status-bar-imagery-count:before {
 	content: "\e82d";
-}
-.icon-input-filter:before {
-	content: "\e82e";
 }
 .icon-area-big:before {
 	content: "\e82f";
@@ -244,15 +220,36 @@
 .icon-credentials-request:before {
 	content: "\e84f";
 }
+.icon-table:before {
+	content: "\e854";
+}
 .icon-more:before {
 	content: "\e855";
 }
-.icon-autoimage-new:before {
-	content: "\e856";
+.icon-home:before {
+	content: "\e902";
+}
+.icon-home2:before {
+	content: "\e903";
+}
+.icon-arrow:before {
+	content: "\e904";
 }
 .icon-status-bar-time:before {
 	content: "\e905";
 }
 .icon-status-bar-geo:before {
 	content: "\e906";
+}
+.icon-input-filter:before {
+	content: "\e900";
+}
+.icon-lavian:before {
+	content: "\e907";
+}
+.icon-matos:before {
+	content: "\e908";
+}
+.icon-automatic-image-processing:before {
+	content: "\e909";
 }

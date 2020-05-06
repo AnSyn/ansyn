@@ -102,6 +102,7 @@ describe('Filters app effects', () => {
 			c: new SetTotalOverlaysAction(0),
 			d: new SetOverlaysStatusMessageAction(overlaysStatusMessages.noOverLayMatchFilters)
 		});
+
 		expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
 	});
 

@@ -94,10 +94,6 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 		return this.filters[filter] && this.filters[filter].active || false;
 	}
 
-	getTitle(filter) {
-		return this.filters[filter] && this.filters[filter].title || '';
-	}
-
 	expandFilter(filter?) {
 		const newState = !this.expand[filter];
 		this.filterConfig.filters.forEach( filter => this.expand[filter.modelName] = false);

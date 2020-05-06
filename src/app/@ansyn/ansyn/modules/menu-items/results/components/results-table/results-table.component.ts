@@ -21,7 +21,8 @@ import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
 import {
 	selectFavoriteOverlays
 } from '../../../../overlays/overlay-status/reducers/overlay-status.reducer';
-import { filtersStateSelector, IFiltersState } from '../../../../filters/reducer/filters.reducer';
+import { selectFacets } from '../../../../filters/reducer/filters.reducer';
+import { ICaseFacetsState } from '../../../cases/models/case.model';
 
 @Component({
 	selector: 'ansyn-results-table',
@@ -55,9 +56,9 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	loadOverlays$ = () => combineLatest(this.store$.select(selectFilteredOveralys),
 		this.store$.select(selectFavoriteOverlays),
 		this.store$.select(selectOverlaysArray),
-		this.store$.select(filtersStateSelector)).pipe(
-		mergeMap(([filteredOverlays, favoriteOverlays, overlays, filterState]: [string[], IOverlay[], IOverlay[], IFiltersState]) => {
-			const { showOnlyFavorites } = filterState.facets;
+		this.store$.select(selectFacets)).pipe(
+		mergeMap(([filteredOverlays, favoriteOverlays, overlays, facets]: [string[], IOverlay[], IOverlay[], ICaseFacetsState]) => {
+			const { showOnlyFavorites } = facets;
 			if (showOnlyFavorites) {
 				this.overlays = favoriteOverlays;
 			} else {

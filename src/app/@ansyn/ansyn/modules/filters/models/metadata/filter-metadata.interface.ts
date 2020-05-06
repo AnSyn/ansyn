@@ -29,5 +29,7 @@ export abstract class FilterMetadata {
 	abstract showAll(): void;
 
 	abstract shouldBeHidden(): boolean;
+
+	abstract hasResults(): boolean;
 }
 

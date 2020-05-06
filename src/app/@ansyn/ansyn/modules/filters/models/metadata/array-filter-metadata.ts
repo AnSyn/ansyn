@@ -30,6 +30,10 @@ export class ArrayFilterMetadata extends FilterMetadata {
 		this.filteredCount = 0;
 	}
 
+	hasResults(): boolean {
+		return true;
+	}
+
 	initializeFilter(overlays: IOverlay[], modelName: string, caseFilter?: ICaseFilter<[string, boolean][]>, visibility?: boolean): void {
 		super.initializeFilter(overlays, modelName, caseFilter, visibility);
 		this.fields = new Map<string, boolean>();

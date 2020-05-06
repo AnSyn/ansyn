@@ -93,11 +93,11 @@ export type CaseRegionState = any | Feature<Polygon> | Point | Polygon | Positio
 	sensorType: string;
 	sensorName: string;
 }*/
-export type DataInputFilterValue = string
+export interface IDataInputFilterValue {name: string}
 
 export interface ICaseDataInputFiltersState {
 	fullyChecked?: boolean;
-	filters: DataInputFilterValue[];
+	filters: IDataInputFilterValue[];
 }
 
 export interface ICaseTimeState {

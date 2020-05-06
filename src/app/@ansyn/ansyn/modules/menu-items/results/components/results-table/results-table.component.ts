@@ -61,7 +61,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			const { showOnlyFavorites } = facets;
 			this.overlays = showOnlyFavorites ? favoriteOverlays : this.filterOverlays(overlays, filteredOverlays);
 			this.store$.dispatch(new SetTotalOverlaysAction(this.overlays));
-			
+
 			return this.overlays;
 		})
 	);

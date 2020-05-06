@@ -10,7 +10,7 @@ import {
 	IOverlaySpecialObject,
 } from '../models/overlay.model';
 import { IMarkUpData, IOverlayDropMarkUp, ITimelineRange, MarkUpClass } from '../reducers/overlays.reducer';
-import { MapOrientation } from "@ansyn/imagery";
+import { MapOrientation } from '@ansyn/imagery';
 import { OverlayStatusActionsTypes } from '../overlay-status/actions/overlay-status.actions';
 
 export const OverlaysActionTypes = {

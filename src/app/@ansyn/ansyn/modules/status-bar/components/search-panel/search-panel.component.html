@@ -1,4 +1,3 @@
-
 <!-- Geo filter -->
 <div class="box" id="geoPreSearch"
 	 [attr.tooltip-value]="statusBarConfig?.toolTips?.geoFilter | translate"
@@ -45,21 +44,21 @@
 	></ansyn-timepicker>
 </div>
 
-	<!-- data input filter-->
-	<div class="box" id="dataInputsPreSearch"
-		 [attr.tooltip-value]="statusBarConfig?.toolTips?.dataInputFilter | translate"
-		 tooltip-class="bottom"
-		 [class.active]="dataInputFilterExpand"
-	>
-		<button ansynComboBoxTrigger
-				#trigger
-				(click)="toggleDataInputFilter()"
-				icon="icon icon-input-filter small"
-				[isActive]="dataInputFilterExpand"
-				[withArrow]="false"
-				class="button">
-			<span class="title">{{'Type' | translate}} - {{ dataInputFilterTitle | translate }}</span>
-		</button>
+<!-- data input filter-->
+<div class="box" id="dataInputsPreSearch"
+	 [attr.tooltip-value]="statusBarConfig?.toolTips?.dataInputFilter | translate"
+	 tooltip-class="bottom"
+	 [class.active]="dataInputFilterExpand"
+>
+	<button ansynComboBoxTrigger
+			#trigger
+			(click)="toggleDataInputFilter()"
+			icon="icon icon-input-filter small"
+			[isActive]="dataInputFilterExpand"
+			[withArrow]="false"
+			class="button">
+		<span class="title">{{'Type' | translate}} - {{ dataInputFilterTitle | translate }}</span>
+	</button>
 
 	<ansyn-tree-view
 		*ngIf="dataInputFilterExpand"

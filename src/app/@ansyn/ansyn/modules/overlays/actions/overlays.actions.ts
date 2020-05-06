@@ -15,7 +15,7 @@ import { OverlayStatusActionsTypes } from '../overlay-status/actions/overlay-sta
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
-	SET_FAVORITE_OVERLAYS: type('[Overlay] Load Favorite Overlay'),
+	SET_TOTAL_OVERLAYS: type('[Overlay] Set Selected Overlay'),
 	UNSELECT_OVERLAY: type('[Overlay] Unselect Overlay'),
 	LOAD_OVERLAYS: type('[Overlay] Load Overlays'),
 	CHECK_TRIANGLES: type('[Overlay] Check Triangles Before Overlay Search'),
@@ -162,8 +162,8 @@ export class DisplayOverlayFailedAction implements Action {
 	}
 }
 
-export class SetFavoriteOverlaysAction implements Action {
-	type = OverlaysActionTypes.SET_FAVORITE_OVERLAYS;
+export class SetTotalOverlaysAction implements Action {
+	type = OverlaysActionTypes.SET_TOTAL_OVERLAYS;
 
 	constructor(public payload: IOverlay[]) {
 	}

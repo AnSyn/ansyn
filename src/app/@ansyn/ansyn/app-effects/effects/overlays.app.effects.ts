@@ -52,10 +52,10 @@ import {
 	DisplayOverlaySuccessAction,
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
-	OverlaysActionTypes, SetFavoriteOverlaysAction, SetFilteredOverlaysAction,
+	OverlaysActionTypes, SetFilteredOverlaysAction,
 	SetHoveredOverlayAction,
 	SetMarkUp,
-	SetOverlaysCriteriaAction
+	SetOverlaysCriteriaAction, SetTotalOverlaysAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	IMarkUpData,
@@ -274,20 +274,9 @@ export class OverlaysAppEffects {
 
 	@Effect()
 	updateResultTableBadge$: Observable<SetBadgeAction> = this.actions$.pipe(
-		ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS),
-		map( ({payload: overlays}) => {
-			return new SetBadgeAction({key: 'Results table', badge: `${overlays.length}` })
-		})
-	);
-
-	@Effect()
-	updateResultTableFavoritesBadge$: Observable<SetBadgeAction> = this.actions$.pipe(
-		ofType<SetFavoriteOverlaysAction>(OverlaysActionTypes.SET_FAVORITE_OVERLAYS),
-		map( ({payload: favoriteOverlays}) => {
-			console.log('fave', favoriteOverlays);
-			if (favoriteOverlays.length) {
-				return new SetBadgeAction({key: 'Results table', badge: `${favoriteOverlays.length}` })
-			}
+		ofType<SetFilteredOverlaysAction | SetTotalOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS, OverlaysActionTypes.SET_TOTAL_OVERLAYS),
+		map((action) => {
+			return new SetBadgeAction({ key: 'Results table', badge: `${ action.payload.length }` })
 		})
 	);
 

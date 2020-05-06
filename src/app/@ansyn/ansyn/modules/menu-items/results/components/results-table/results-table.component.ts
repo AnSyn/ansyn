@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
 import { select, Store } from '@ngrx/store';
 import {
@@ -11,15 +11,17 @@ import {
 	selectFilteredOveralys,
 	selectOverlaysArray
 } from '../../../../overlays/reducers/overlays.reducer';
-import { tap, withLatestFrom } from 'rxjs/operators';
+import { mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	DisplayOverlayFromStoreAction,
-	SetFavoriteOverlaysAction,
-	SetMarkUp,
+	SetMarkUp, SetTotalOverlaysAction,
 } from '../../../../overlays/actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
-import { selectFavoriteOverlays } from '../../../../overlays/overlay-status/reducers/overlay-status.reducer';
+import {
+	selectFavoriteOverlays
+} from '../../../../overlays/overlay-status/reducers/overlay-status.reducer';
+import { filtersStateSelector, IFiltersState } from '../../../../filters/reducer/filters.reducer';
 
 @Component({
 	selector: 'ansyn-results-table',
@@ -49,22 +51,25 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		}
 	];
 
-	@AutoSubscription
-	loadOverlays$: Observable<[IOverlay[], string[], IOverlay[]]> = this.store$
-		.pipe(
-			select(selectOverlaysArray),
-			withLatestFrom(this.store$.select(selectFilteredOveralys), this.store$.select(selectFavoriteOverlays)),
-			tap(([overlays, filteredOverlays, favoriteOverlays]: [IOverlay[], string[], IOverlay[]]) => {
 
-				if (Boolean(favoriteOverlays.length)) {
-					this.store$.dispatch(new SetFavoriteOverlaysAction(favoriteOverlays));
-					this.overlays = favoriteOverlays;
-				} else {
-					this.overlays = overlays.filter(overlay => {
-						return filteredOverlays.includes(overlay.id);
-					});
-				}
-			}));
+	loadOverlays$ = () => combineLatest(this.store$.select(selectFilteredOveralys),
+		this.store$.select(selectFavoriteOverlays),
+		this.store$.select(selectOverlaysArray),
+		this.store$.select(filtersStateSelector)).pipe(
+		mergeMap(([filteredOverlays, favoriteOverlays, overlays, filterState]: [string[], IOverlay[], IOverlay[], IFiltersState]) => {
+			const { showOnlyFavorites } = filterState.facets;
+			if (showOnlyFavorites) {
+				this.overlays = favoriteOverlays;
+			} else {
+				this.overlays = overlays.filter(overlay => {
+					return filteredOverlays.includes(overlay.id);
+				});
+			}
+
+			this.store$.dispatch(new SetTotalOverlaysAction(this.overlays));
+			return this.overlays;
+		})
+	);
 
 	@AutoSubscription
 	dropsMarkUp$: Observable<[ExtendMap<MarkUpClass, IMarkUpData>, any]> = this.store$
@@ -78,6 +83,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		);
 
 	constructor(protected store$: Store<IOverlaysState>) {
+		this.loadOverlays$().subscribe();
 	}
 
 	ngOnDestroy(): void {

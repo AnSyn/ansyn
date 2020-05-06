@@ -1,0 +1,11 @@
+<div class="presets">
+	<div *ngFor="let preset of presetsData">
+		<button (click)="setPreset(preset.days)">{{preset.title | translate}}</button>
+	</div>
+	<button
+		type="submit"
+		(click)="toggleTimePicker()">
+		{{'Custom' | translate}}
+	</button>
+
+</div>

@@ -58,7 +58,7 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	metadataFromState$: Observable<any> = this.store.select(selectFilters).pipe(
 		map((filters: Filters) => filters.get(this.filter)),
 		tap((metadata: FilterMetadata) => {
-			this.metadataFromState = metadata
+			this.metadataFromState = metadata;
 		})
 	);
 

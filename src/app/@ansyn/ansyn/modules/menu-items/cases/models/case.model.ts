@@ -93,6 +93,11 @@ export type CaseRegionState = any | Feature<Polygon> | Point | Polygon | Positio
 	sensorType: string;
 	sensorName: string;
 }*/
+/**
+ * we use {name: string} instead of a simple string.
+ * because there is a problem in the storage service when we pass
+ * a string and not an object.
+ */
 export interface IDataInputFilterValue {name: string}
 
 export interface ICaseDataInputFiltersState {

@@ -55,7 +55,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 			this.timeRange = _time && [_time.from, _time.to];
 			if (_time && _time.to && _time.from) {
 				const format = 'DD/MM/YYYY HH:mm';
-				this.timeSelectionTitle = `${ moment(this.timeRange[0]).format(format) } - ${ moment(this.timeRange[1]).format(format) }`;
+				this.timeSelectionTitle = `${ moment(this.timeRange[0]).format(format) }&nbsp;&nbsp;-&nbsp;&nbsp;${ moment(this.timeRange[1]).format(format) }`;
 			}
 		})
 	);

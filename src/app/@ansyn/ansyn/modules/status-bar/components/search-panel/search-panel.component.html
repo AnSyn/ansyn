@@ -20,7 +20,7 @@
 </div>
 
 <!-- Time -->
-<div class="box"
+<div class="box timePickerBox"
 	 (ansynClickOutside)="closeTimePicker()"
 	 [extraClass]="'owl-dt-container presets'"
 	 [trigger]="timePickerTrigger?.optionsTrigger?.nativeElement"
@@ -35,7 +35,7 @@
 			[withArrow]="false"
 			icon="icon icon-status-bar-time"
 			class="button">
-		<span class="title">{{timeSelectionTitle}}</span>
+		<span class="title" [innerHTML]="timeSelectionTitle"></span>
 	</button>
 
 	<ansyn-timepicker-presets *ngIf="timePickerPresetsExpand"

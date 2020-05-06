@@ -165,7 +165,7 @@ export class DisplayOverlayFailedAction implements Action {
 export class SetTotalOverlaysAction implements Action {
 	type = OverlaysActionTypes.SET_TOTAL_OVERLAYS;
 
-	constructor(public payload: IOverlay[]) {
+	constructor(public payload: number) {
 	}
 }
 

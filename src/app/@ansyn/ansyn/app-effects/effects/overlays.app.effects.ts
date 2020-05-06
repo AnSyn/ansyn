@@ -274,8 +274,8 @@ export class OverlaysAppEffects {
 
 	@Effect()
 	updateResultTableBadge$: Observable<SetBadgeAction> = this.actions$.pipe(
-		ofType<SetFilteredOverlaysAction | SetTotalOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS, OverlaysActionTypes.SET_TOTAL_OVERLAYS),
-		map((action) => new SetBadgeAction({ key: 'Results table', badge: `${ action.payload.length }` })));
+		ofType<SetTotalOverlaysAction>(OverlaysActionTypes.SET_TOTAL_OVERLAYS),
+		map((action) => new SetBadgeAction({ key: 'Results table', badge: `${ action.payload }` })));
 
 	onDropMarkupFilter([prevAction, currentAction]): boolean {
 		const isEquel = !isEqual(prevAction, currentAction);

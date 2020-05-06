@@ -21,7 +21,7 @@ import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
 import {
 	selectFavoriteOverlays
 } from '../../../../overlays/overlay-status/reducers/overlay-status.reducer';
-import { selectFacets } from '../../../../filters/reducer/filters.reducer';
+import { selectFacets, selectShowOnlyFavorites } from '../../../../filters/reducer/filters.reducer';
 import { ICaseFacetsState } from '../../../cases/models/case.model';
 
 @Component({
@@ -67,11 +67,10 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	loadOverlays$ = () => combineLatest(this.store$.select(selectFilteredOveralys),
 		this.store$.select(selectFavoriteOverlays),
 		this.store$.select(selectOverlaysArray),
-		this.store$.select(selectFacets)).pipe(
-		mergeMap(([filteredOverlays, favoriteOverlays, overlays, facets]: [string[], IOverlay[], IOverlay[], ICaseFacetsState]) => {
-			const { showOnlyFavorites } = facets;
+		this.store$.select(selectShowOnlyFavorites)).pipe(
+		mergeMap(([filteredOverlays, favoriteOverlays, overlays, showOnlyFavorites]: [string[], IOverlay[], IOverlay[], boolean]) => {
 			this.overlays = showOnlyFavorites ? favoriteOverlays : this.filterOverlays(overlays, filteredOverlays);
-			this.store$.dispatch(new SetTotalOverlaysAction(this.overlays));
+			this.store$.dispatch(new SetTotalOverlaysAction(this.overlays.length));
 
 			return this.overlays;
 		})

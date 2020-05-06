@@ -70,7 +70,7 @@ export interface IOverlaysState extends EntityState<IOverlay> {
 	overlaysCriteria: IOverlaysCriteria;
 	miscOverlays: IOverlaysHash;
 	customOverviewElement: any;
-	totalOverlays: IOverlay[];
+	totalOverlaysLength: number;
 }
 
 let initDropsMarkUp: ExtendMap<MarkUpClass, IMarkUpData> = new ExtendMap<MarkUpClass, IMarkUpData>();
@@ -94,7 +94,7 @@ export const overlaysInitialState: IOverlaysState = overlaysAdapter.getInitialSt
 	overlaysCriteria: {},
 	miscOverlays: {},
 	customOverviewElement: null,
-	totalOverlays: []
+	totalOverlaysLength: 0
 });
 
 export const overlaysFeatureKey = 'overlays';
@@ -151,7 +151,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 		}
 
 		case OverlaysActionTypes.SET_TOTAL_OVERLAYS: {
-			return { ...state, totalOverlays: action.payload };
+			return { ...state, totalOverlaysLength: action.payload };
 		}
 
 		case OverlaysActionTypes.CHECK_TRIANGLES: {

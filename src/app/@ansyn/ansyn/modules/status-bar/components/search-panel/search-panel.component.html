@@ -48,20 +48,20 @@
 	></ansyn-timepicker>
 </div>
 
-	<!-- data input filter-->
-	<div class="box" id="dataInputsPreSearch">
-		<button ansynComboBoxTrigger
-				#trigger
-				(click)="toggleDataInputFilter()"
-				[attr.tooltip-value]="statusBarConfig?.toolTips?.dataInputFilter | translate"
-				tooltip-class="bottom"
-				[class.active]="dataInputFilterExpand"
-				icon="icon icon-input-filter"
-				[isActive]="dataInputFilterExpand"
-				[withArrow]="false"
-				class="button">
-			<span class="title">{{'Type' | translate}} - {{ dataInputFilterTitle | translate }}</span>
-		</button>
+<!-- data input filter-->
+<div class="box" id="dataInputsPreSearch">
+	<button ansynComboBoxTrigger
+			#trigger
+			(click)="toggleDataInputFilter()"
+			icon="icon icon-input-filter small"
+			[attr.tooltip-value]="statusBarConfig?.toolTips?.dataInputFilter | translate"
+			tooltip-class="bottom"
+			[class.active]="dataInputFilterExpand"
+			[isActive]="dataInputFilterExpand"
+			[withArrow]="false"
+			class="button">
+		<span class="title">{{'Type' | translate}} - {{ dataInputFilterTitle | translate }}</span>
+	</button>
 
 	<ansyn-tree-view
 		*ngIf="dataInputFilterExpand"

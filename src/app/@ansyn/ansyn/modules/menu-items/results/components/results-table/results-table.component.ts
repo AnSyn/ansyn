@@ -59,15 +59,9 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		this.store$.select(selectFacets)).pipe(
 		mergeMap(([filteredOverlays, favoriteOverlays, overlays, facets]: [string[], IOverlay[], IOverlay[], ICaseFacetsState]) => {
 			const { showOnlyFavorites } = facets;
-			if (showOnlyFavorites) {
-				this.overlays = favoriteOverlays;
-			} else {
-				this.overlays = overlays.filter(overlay => {
-					return filteredOverlays.includes(overlay.id);
-				});
-			}
-
+			this.overlays = showOnlyFavorites ? favoriteOverlays : this.filterOverlays(overlays, filteredOverlays);
 			this.store$.dispatch(new SetTotalOverlaysAction(this.overlays));
+			
 			return this.overlays;
 		})
 	);
@@ -95,6 +89,13 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	loadResults() {
 		// TODO: add infinite scroll functionality when directive is fixed
 	}
+
+	filterOverlays(overlays: IOverlay[], filteredOverlays: string[]): IOverlay[] {
+		return overlays.filter(overlay => {
+			return filteredOverlays.includes(overlay.id);
+		});
+	}
+
 
 	onMouseOver($event, id: string): void {
 		this.store$.dispatch(new SetMarkUp({

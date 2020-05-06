@@ -53,6 +53,17 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	];
 
 	@AutoSubscription
+	dropsMarkUp$: Observable<[ExtendMap<MarkUpClass, IMarkUpData>, any]> = this.store$
+		.pipe(
+			select(selectDropMarkup),
+			withLatestFrom(this.store$.pipe(select(selectDrops))),
+			tap(([value]: [ExtendMap<MarkUpClass, IMarkUpData>, any]) => {
+				const activeMapData = value.get(MarkUpClass.active);
+				this.selectedOverlayId = activeMapData.overlaysIds[0];
+			})
+		);
+
+	@AutoSubscription
 	loadOverlays$ = () => combineLatest(this.store$.select(selectFilteredOveralys),
 		this.store$.select(selectFavoriteOverlays),
 		this.store$.select(selectOverlaysArray),
@@ -65,17 +76,6 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			return this.overlays;
 		})
 	);
-
-	@AutoSubscription
-	dropsMarkUp$: Observable<[ExtendMap<MarkUpClass, IMarkUpData>, any]> = this.store$
-		.pipe(
-			select(selectDropMarkup),
-			withLatestFrom(this.store$.pipe(select(selectDrops))),
-			tap(([value]: [ExtendMap<MarkUpClass, IMarkUpData>, any]) => {
-				const activeMapData = value.get(MarkUpClass.active);
-				this.selectedOverlayId = activeMapData.overlaysIds[0];
-			})
-		);
 
 	constructor(protected store$: Store<IOverlaysState>) {
 	}

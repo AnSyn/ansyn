@@ -214,6 +214,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		const overlay = this.overlay;
 		const { id } = overlay;
 		const value = !this.isFavorite;
+		console.log('favorite', this.isFavorite);
 		this.store$.dispatch(new ToggleFavoriteAction({ value, id, overlay }));
 	}
 

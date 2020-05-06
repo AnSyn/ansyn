@@ -5,13 +5,12 @@
 	</span>
 </div>
 <div class="bottom">
-	<div class="box"
-		 [attr.tooltip-value]="statusBarConfig?.toolTips?.overlayCount | translate"
+	<div [attr.tooltip-value]="statusBarConfig?.toolTips?.overlayCount | translate"
 		 tooltip-class="bottom">
 		<i class="block-icon icon-status-bar-imagery-count"></i>
 		<span>{{(overlaysCount$ | async) || 0}}</span>
 	</div>
-	<div class="box share" (click)="copyLink()">
+	<div class="share" (click)="copyLink()">
 		<i class="icon-share"></i>
 		<span>{{'Share' | translate}}</span>
 	</div>

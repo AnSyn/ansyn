@@ -40,6 +40,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	popupExpanded = new Map<SearchPanelTitle, boolean>([['DataInputs', false], ['TimePicker', false], ['LocationPicker', false]]);
 	dataInputFilterExpand: boolean;
 	timePickerExpand: boolean;
+	timePickerPresetsExpand: boolean;
 	locationPickerExpand: boolean;
 	timeRange: Date[];
 	dataInputFilterTitle = 'All';
@@ -101,6 +102,15 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	toggleTimePicker() {
 		this.timePickerExpand = !this.timePickerExpand;
+	}
+
+	closeTimePicker() {
+		this.timePickerExpand = false;
+		this.timePickerPresetsExpand = false;
+	}
+
+	toggleTimePickerPresets() {
+		this.timePickerPresetsExpand = !this.timePickerPresetsExpand;
 	}
 
 	toggleLocationPicker() {

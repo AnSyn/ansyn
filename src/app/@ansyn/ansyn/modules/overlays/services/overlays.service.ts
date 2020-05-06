@@ -145,7 +145,14 @@ export class OverlaysService {
 			start = drop.date < start ? drop.date : start;
 			end = drop.date > end ? drop.date : end;
 		});
-		return this.expendByTenth({ start, end });
+		if (start && end) {
+			return this.expendByTenth({ start, end });
+		}
+
+		return this.expendByTenth({
+			start: new Date(),
+			end: new Date()
+		});
 
 	}
 

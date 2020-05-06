@@ -52,7 +52,7 @@ import {
 	DisplayOverlaySuccessAction,
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
-	OverlaysActionTypes,
+	OverlaysActionTypes, SetFilteredOverlaysAction,
 	SetHoveredOverlayAction,
 	SetMarkUp,
 	SetTotalOverlaysAction
@@ -274,7 +274,7 @@ export class OverlaysAppEffects {
 
 	@Effect()
 	updateResultTableBadge$: Observable<SetBadgeAction> = this.actions$.pipe(
-		ofType<SetTotalOverlaysAction>(OverlaysActionTypes.SET_TOTAL_OVERLAYS),
+		ofType<SetFilteredOverlaysAction | SetTotalOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS, OverlaysActionTypes.SET_TOTAL_OVERLAYS),
 		map((action) => new SetBadgeAction({ key: 'Results table', badge: `${ action.payload.length }` })));
 
 	onDropMarkupFilter([prevAction, currentAction]): boolean {

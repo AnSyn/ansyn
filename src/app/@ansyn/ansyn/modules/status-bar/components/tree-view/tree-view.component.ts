@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output, Input } from '@angular/core';
 import { TreeviewConfig, TreeviewI18n, TreeviewItem } from 'ngx-treeview';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { Store } from '@ngrx/store';
@@ -28,6 +28,7 @@ import { IDataInputFilterValue } from '../../../menu-items/cases/models/case.mod
 export class TreeViewComponent implements OnInit, OnDestroy {
 	@Output() closeTreeView = new EventEmitter<any>();
 	@Output() dataInputTitleChange = new EventEmitter<string>();
+	@Input() dataInputItems: any[];
 	_selectedFilters: IDataInputFilterValue[];
 	dataInputFiltersItems: TreeviewItem[] = [];
 	leavesCount: number;
@@ -45,7 +46,6 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		filter(Boolean),
 		tap(_preFilter => {
 			this._selectedFilters = _preFilter.fullyChecked ? this.selectAll() : _preFilter.filters;
-			this.updateTitle();
 			if (Boolean(this._selectedFilters)) {
 				this.dataInputFiltersItems.forEach(item => {
 					item.checked = _preFilter.fullyChecked || this._selectedFilters.some(selectedFilter => selectedFilter.name === item.value);
@@ -109,8 +109,4 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 	}
 
-	updateTitle(): void {
-		const title = this._selectedFilters.length / this.leavesCount === 1 ? 'All' : `${ this._selectedFilters.length } / ${ this.leavesCount }`;
-		this.dataInputTitleChange.emit(title);
-	}
 }

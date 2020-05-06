@@ -15,6 +15,10 @@ import { selectDataInputFilter, selectRegion, selectTime } from '../../../overla
 import { ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import {
+	IMultipleOverlaysSourceConfig, IOverlaysSourceProvider,
+	MultipleOverlaysSourceConfig
+} from '../../../core/models/multiple-overlays-source-config';
 
 const moment = momentNs;
 
@@ -37,13 +41,12 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 })
 @AutoSubscriptions()
 export class SearchPanelComponent implements OnInit, OnDestroy {
-
 	dataInputFilterExpand: boolean;
 	timePickerExpand: boolean;
 	timePickerPresetsExpand: boolean;
 	locationPickerExpand: boolean;
 	timeRange: Date[];
-	dataInputFilterTitle = 'All';
+	dataInputFilterTitle: string;
 	timeSelectionTitle: string;
 	geoFilterTitle: string;
 	geoFilterCoordinates: string;
@@ -65,6 +68,10 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		filter((caseDataInputFiltersState: ICaseDataInputFiltersState) => Boolean(caseDataInputFiltersState) && Boolean(caseDataInputFiltersState.filters)),
 		tap((caseDataInputFiltersState: ICaseDataInputFiltersState) => {
 			this.dataInputFilters = caseDataInputFiltersState;
+			const selectedFiltersSize = this.dataInputFilters.filters.length;
+			const dataInputsSize = Object.values(this.multipleOverlaysSourceConfig.indexProviders).filter(({inActive}: IOverlaysSourceProvider) => !inActive).length;
+			this.dataInputFilterTitle = this.dataInputFilters.fullyChecked ? 'All' : `${selectedFiltersSize}/${dataInputsSize}`;
+
 		})
 	);
 
@@ -87,6 +94,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	constructor(protected store$: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
+				@Inject(MultipleOverlaysSourceConfig) private multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				dateTimeAdapter: DateTimeAdapter<any>
 	) {
 		dateTimeAdapter.setLocale(statusBarConfig.locale);
@@ -118,10 +126,6 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
-	}
-
-	updateDataInputTitle(title) {
-		this.dataInputFilterTitle = title;
 	}
 
 }

@@ -67,9 +67,8 @@
 
 	<ansyn-tree-view
 		*ngIf="dataInputFilterExpand"
-		(ansynClickOutside)="toggleDataInputFilter()"
 		[trigger]="trigger?.optionsTrigger?.nativeElement"
+		(ansynClickOutside)="toggleDataInputFilter()"
 		(closeTreeView)="toggleDataInputFilter()"
-		(dataInputTitleChange)="updateDataInputTitle($event)"
 		class="ansyn-tree-view"></ansyn-tree-view>
 </div>

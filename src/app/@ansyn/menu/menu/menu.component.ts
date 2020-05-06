@@ -148,7 +148,6 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 				@Inject(MenuConfig) public menuConfig: IMenuConfig,
 				private cdref: ChangeDetectorRef) {
 		this.hideBadgeResult = false;
-
 	}
 
 	get componentElem() {

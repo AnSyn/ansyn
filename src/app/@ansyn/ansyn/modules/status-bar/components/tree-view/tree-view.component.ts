@@ -14,7 +14,7 @@ import {
 } from '../../../core/models/multiple-overlays-source-config';
 import { CustomTreeviewI18n } from './custom-treeview-i18n';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { DataInputFilterValue } from '../../../menu-items/cases/models/case.model';
+import { IDataInputFilterValue } from '../../../menu-items/cases/models/case.model';
 
 @Component({
 	selector: 'ansyn-tree-view',
@@ -28,7 +28,7 @@ import { DataInputFilterValue } from '../../../menu-items/cases/models/case.mode
 export class TreeViewComponent implements OnInit, OnDestroy {
 	@Output() closeTreeView = new EventEmitter<any>();
 	@Output() dataInputTitleChange = new EventEmitter<string>();
-	_selectedFilters: DataInputFilterValue[];
+	_selectedFilters: IDataInputFilterValue[];
 	dataInputFiltersItems: TreeviewItem[] = [];
 	leavesCount: number;
 	dataFilters: TreeviewItem[];
@@ -48,7 +48,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 			this.updateTitle();
 			if (Boolean(this._selectedFilters)) {
 				this.dataInputFiltersItems.forEach(item => {
-					item.checked = _preFilter.fullyChecked || this._selectedFilters.some(selectedFilter => isEqual(selectedFilter, item.value));
+					item.checked = _preFilter.fullyChecked || this._selectedFilters.some(selectedFilter => selectedFilter.name === item.value);
 				});
 			}
 		})
@@ -68,8 +68,9 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	}
 
 	set selectedFilters(value) {
-		if (!isEqual(value, this._selectedFilters)) {
-			this._selectedFilters = value;
+		const newFilters = value.map(v => ({name: v}));
+		if (!isEqual(newFilters, this._selectedFilters)) {
+			this._selectedFilters = newFilters;
 			this.dataInputFiltersChange();
 		}
 	}
@@ -99,7 +100,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	}
 
 	selectAll() {
-		return this.dataFilters.map(filter => filter.value);
+		return this.dataFilters.map(filter => ({name: filter.value}));
 	}
 
 	ngOnInit(): void {

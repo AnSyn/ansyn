@@ -51,7 +51,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		}
 	];
 
-
+	@AutoSubscription
 	loadOverlays$ = () => combineLatest(this.store$.select(selectFilteredOveralys),
 		this.store$.select(selectFavoriteOverlays),
 		this.store$.select(selectOverlaysArray),
@@ -83,7 +83,6 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		);
 
 	constructor(protected store$: Store<IOverlaysState>) {
-		this.loadOverlays$().subscribe();
 	}
 
 	ngOnDestroy(): void {

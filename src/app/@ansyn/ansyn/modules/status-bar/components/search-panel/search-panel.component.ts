@@ -10,7 +10,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations/src/animation_metadata';
-import { filter, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { selectDataInputFilter, selectRegion, selectTime } from '../../../overlays/reducers/overlays.reducer';
 import { ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
@@ -40,6 +40,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	dataInputFilterExpand: boolean;
 	timePickerExpand: boolean;
+	timePickerPresetsExpand: boolean;
 	locationPickerExpand: boolean;
 	timeRange: Date[];
 	dataInputFilterTitle = 'All';
@@ -101,6 +102,15 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	toggleTimePicker() {
 		this.timePickerExpand = !this.timePickerExpand;
+	}
+
+	closeTimePicker() {
+		this.timePickerExpand = false;
+		this.timePickerPresetsExpand = false;
+	}
+
+	toggleTimePickerPresets() {
+		this.timePickerPresetsExpand = !this.timePickerPresetsExpand;
 	}
 
 	toggleLocationPicker() {

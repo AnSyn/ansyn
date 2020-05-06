@@ -3,12 +3,12 @@
 		(click)="toggleDragged()"
 		[disabled]="!isLayersVisible || noGeoRegistration"
 		[attr.tooltip-value]="this.draggedButtonText | translate"
-		tooltip-class="bottom right">
+		tooltip-class="bottom">
 	<i class="icon-drag-annotations" [class.active]="isDragged"></i>
 </button>
 </div>
 <div class="overlay-status-button">
-<button tooltip-class="bottom right"
+<button tooltip-class="bottom"
 		*ngIf="overlay"
 		class="small-icon-button auto-image-processing"
 		[attr.tooltip-value]="'Automatic Processing' | translate"
@@ -18,10 +18,11 @@
 </button>
 </div>
 <div class="overlay-status-button">
-<button tooltip-class="bottom right"
-		*ngIf="overlay"
+<button *ngIf="overlay"
 		class="small-icon-button"
+		[class.active]="isManualProcessing"
 		[attr.tooltip-value]="'Manual Image Enhancement' | translate"
+		tooltip-class="bottom"
 		(click)="toggleManualImageProcessing()"
 		[class.mode-on]="isImageControlActive && !onAutoImageProcessing"
 		[disabled]="onAutoImageProcessing">
@@ -34,8 +35,9 @@
 <div class="overlay-status-button">
 	<button class="small-icon-button more-btn" *ngIf="overlay"
 			(click)="toggleMoreButtons()"
+			[class.active]="moreButtons"
 			[attr.tooltip-value]="'More buttons' | translate"
-			tooltip-class="bottom right">
+			tooltip-class="bottom">
 		<i class="icon icon-more" [class.active]="moreButtons"></i>
 	</button>
 </div>

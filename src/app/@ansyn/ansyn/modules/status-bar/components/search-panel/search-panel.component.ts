@@ -38,9 +38,6 @@ type SearchPanelTitle = 'DataInputs' | 'TimePicker' | 'TimePickerPreset' | 'Loca
 @AutoSubscriptions()
 export class SearchPanelComponent implements OnInit, OnDestroy {
 	popupExpanded = new Map<SearchPanelTitle, boolean>([['DataInputs', false], ['TimePicker', false], ['LocationPicker', false], ['TimePickerPreset', false]]);
-	timePickerExpand: boolean;
-	timePickerPresetsExpand: boolean;
-	locationPickerExpand: boolean;
 	timeRange: Date[];
 	dataInputFilterTitle = 'All';
 	timeSelectionTitle: string;
@@ -103,15 +100,9 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	toggleExpander(popup: SearchPanelTitle) {
 		if (this.isDataInputsOk()) {
 			const newState = !this.popupExpanded.get(popup);
-			const isExpandIterator = this.popupExpanded.keys();
-			let isExpand = isExpandIterator.next();
-			while (!isExpand.done) {
-				if (isExpand.value !== popup) {
-					this.popupExpanded.set(isExpand.value, false);
-				}
-				isExpand = isExpandIterator.next();
-			}
-			this.popupExpanded.set(popup, newState);
+			this.popupExpanded.forEach((_, key, map) => {
+				map.set(key , key === popup ? newState : false)
+			});
 		}
 		else {
 			this.store$.dispatch(new SetToastMessageAction({toastText: 'Please select at least one type', showWarningIcon: true}));

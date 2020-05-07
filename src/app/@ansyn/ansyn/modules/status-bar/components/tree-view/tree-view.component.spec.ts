@@ -116,16 +116,12 @@ describe('TreeViewComponent', () => {
 
 	it('on uncheck all should fire SetOverlaysCriteriaAction with noInitialSearch true', () => {
 		spyOn(store, 'dispatch');
-		const selectFilter = [...component._selectedFilters];
-		while (selectFilter.length > 0) {
-			selectFilter.pop();
-		}
-		component.selectedFilters = selectFilter;
+		component.selectedFilters = [];
 		fixture.detectChanges();
 		expect(store.dispatch).toHaveBeenCalledWith(new SetOverlaysCriteriaAction({
 				dataInputFilters: {
 					fullyChecked: false,
-					filters: selectFilter
+					filters: []
 				}
 			}, { noInitialSearch: true }
 		));

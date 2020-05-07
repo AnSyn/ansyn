@@ -1,4 +1,4 @@
-<div class="filter" *ngFor="let filter of filterConfig.filters">
+<div class="filter" *ngFor="let filter of statusBarConfig.filters">
 	<button ansynComboBoxTrigger
 			[disabled]="onlyFavorite"
 			[attr.tooltip-value]="getFilterTooltip(filter.displayName) | translate"

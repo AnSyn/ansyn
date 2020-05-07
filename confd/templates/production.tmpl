@@ -269,10 +269,10 @@
 		  "type": "Enum"
 		},
 		{
-		  "modelName": "sensorName",
-		  "displayName": "Sensor Name",
-		  "type": "Enum"
-		},
+			"modelName": "sensorName",
+			"displayName": "Sensor",
+			"type": "Enum"
+	  	},
 		{
 		  "modelName": "sourceType",
 		  "displayName": "Source Type",
@@ -366,18 +366,7 @@
       "enlarge": "Expand timeline",
       "quickloop": "Next overlay from the quick loop (key: Q)"
     },
-    "filters": [
-	  {
-		"modelName": "sensorName",
-		"displayName": "Sensor",
-		"type": "Enum"
-	  },
-	  {
-		"modelName": "isGeoRegistered",
-		"displayName": "Geo Registration",
-		"type": "Enum"
-	  }
-	],
+    "filters": ["sensorName", "isGeoRegistered"],
     "locale": "en-GB"
   },
   "coreConfig": {

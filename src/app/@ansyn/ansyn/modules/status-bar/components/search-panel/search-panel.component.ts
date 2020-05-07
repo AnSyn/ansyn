@@ -1,13 +1,10 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import * as momentNs from 'moment';
 import { IStatusBarConfig } from '../../models/statusBar-config.model';
-import {
-	IStatusBarState, selectGeoFilterActive,
-	selectGeoFilterType
-} from '../../reducers/status-bar.reducer';
+import { IStatusBarState, selectGeoFilterActive, selectGeoFilterType } from '../../reducers/status-bar.reducer';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store } from '@ngrx/store';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, fromEvent } from 'rxjs';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations/src/animation_metadata';
 import { filter, tap } from 'rxjs/operators';
@@ -15,6 +12,7 @@ import { selectDataInputFilter, selectRegion, selectTime } from '../../../overla
 import { ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { SetToastMessageAction } from '@ansyn/map-facade';
 
 const moment = momentNs;
 
@@ -29,6 +27,8 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	])
 ]);
 
+type SearchPanelTitle = 'DataInputs' | 'TimePicker' | 'TimePickerPreset' | 'LocationPicker';
+
 @Component({
 	selector: 'ansyn-search-panel',
 	templateUrl: './search-panel.component.html',
@@ -37,11 +37,7 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 })
 @AutoSubscriptions()
 export class SearchPanelComponent implements OnInit, OnDestroy {
-
-	dataInputFilterExpand: boolean;
-	timePickerExpand: boolean;
-	timePickerPresetsExpand: boolean;
-	locationPickerExpand: boolean;
+	popupExpanded = new Map<SearchPanelTitle, boolean>([['DataInputs', false], ['TimePicker', false], ['LocationPicker', false], ['TimePickerPreset', false]]);
 	timeRange: Date[];
 	dataInputFilterTitle = 'All';
 	timeSelectionTitle: string;
@@ -74,15 +70,15 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		this.store$.select(selectGeoFilterActive)
 	).pipe(
 		tap(([geoFilterType, active]) => {
-			this.geoFilterTitle = `${geoFilterType}`;
-			this.locationPickerExpand = active;
+			this.geoFilterTitle = `${ geoFilterType }`;
+			this.popupExpanded.set('LocationPicker', active);
 		})
 	);
 
 	@AutoSubscription
 	updateGeoFilterCoordinates$ = this.store$.select(selectRegion).pipe(
 		filter(Boolean),
-		tap( ({coordinates}) => this.geoFilterCoordinates = coordinates.toString() )
+		tap(({ coordinates }) => this.geoFilterCoordinates = coordinates.toString())
 	);
 
 	constructor(protected store$: Store<IStatusBarState>,
@@ -96,25 +92,26 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 	}
 
-	toggleDataInputFilter() {
-		this.dataInputFilterExpand = !this.dataInputFilterExpand;
-	}
-
-	toggleTimePicker() {
-		this.timePickerExpand = !this.timePickerExpand;
-	}
-
 	closeTimePicker() {
-		this.timePickerExpand = false;
-		this.timePickerPresetsExpand = false;
+		this.popupExpanded.set('TimePicker', false);
+		this.popupExpanded.set('TimePickerPreset', false);
 	}
 
-	toggleTimePickerPresets() {
-		this.timePickerPresetsExpand = !this.timePickerPresetsExpand;
+	toggleExpander(popup: SearchPanelTitle) {
+		if (this.isDataInputsOk()) {
+			const newState = !this.popupExpanded.get(popup);
+			this.popupExpanded.forEach((_, key, map) => {
+				map.set(key , key === popup ? newState : false)
+			});
+		}
+		else {
+			this.store$.dispatch(new SetToastMessageAction({toastText: 'Please select at least one type', showWarningIcon: true}));
+
+		}
 	}
 
-	toggleLocationPicker() {
-		this.locationPickerExpand = !this.locationPickerExpand;
+	isActive(popup: SearchPanelTitle) {
+		return this.popupExpanded.get(popup);
 	}
 
 	ngOnDestroy() {
@@ -122,6 +119,10 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	updateDataInputTitle(title) {
 		this.dataInputFilterTitle = title;
+	}
+
+	isDataInputsOk() {
+		return this.dataInputFilters.fullyChecked || this.dataInputFilters.filters.length > 0;
 	}
 
 }

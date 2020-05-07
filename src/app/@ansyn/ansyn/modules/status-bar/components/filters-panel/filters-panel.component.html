@@ -1,4 +1,4 @@
-<div class="filter" *ngFor="let filter of filterConfig.filters">
+<div class="filter" [ngClass]="filter.modelName" *ngFor="let filter of filterConfig.filters">
 	<button ansynComboBoxTrigger
 			[disabled]="onlyFavorite"
 			[attr.tooltip-value]="getFilterTooltip(filter.displayName) | translate"
@@ -9,7 +9,7 @@
 			[withArrow]="false"
 			(click)="expandFilter(filter.modelName)">
 		<span class="title">{{filter.displayName | translate}}</span>
-		<span class="filter-counter" *ngIf="filters[filter.modelName]?.title?.lenght">{{filters[filter.modelName]?.title}}</span>
+		<span class="filter-counter" [class.hide]="filters[filter.modelName]?.title?.length === 0">{{filters[filter.modelName]?.title}}</span>
 	</button>
 
 	<div class="filter-container scrolled">

@@ -11,6 +11,10 @@
 
 			span.filter-counter {
 				margin-left: 5px;
+
+				&.hide {
+					display: none;
+				}
 			}
 
 
@@ -61,11 +65,18 @@
 	:host {
 		div.filter {
 			button.favorites {
-				padding: 5px;
+				padding: 5px 6px;
+				i {
+					margin-right: auto;
+				}
 				span.title {
-					font-size: 0;
+					display: none;
 				}
 			}
+			&.sensorName {
+				width: 114px;
+			}
+
 		}
 	}
 

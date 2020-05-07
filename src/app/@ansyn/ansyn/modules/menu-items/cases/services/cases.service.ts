@@ -190,6 +190,7 @@ export class CasesService {
 	updateCase(selectedCase: ICase): Observable<IStoredEntity<ICasePreview, IDilutedCaseState>> {
 		const storeEntity = this.convertToStoredEntity(selectedCase);
 		// because bad mapping in elastic
+		// TODO: fix when we fix the elastic mapping
 		if (typeof storeEntity.data.dataInputFilters.filters[0] === 'string') {
 			storeEntity.data.dataInputFilters.filters = <any>storeEntity.data.dataInputFilters.filters.map( (filter: any) => {
 				return {providerName: filter};
@@ -214,6 +215,7 @@ export class CasesService {
 			.pipe(
 				map( (entity: any) => {
 					// because bad mapping in elastic
+					// TODO: fix when we fix the elastic mapping
 					const newCase = {...entity};
 					if ( typeof entity.data.dataInputFilters.filters[0] !== 'string') {
 						newCase.data.dataInputFilters.filters = entity.data.dataInputFilters.filters

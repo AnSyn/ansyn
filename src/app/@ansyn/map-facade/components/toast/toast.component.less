@@ -3,21 +3,30 @@
 @import "ansyn/less/z-index-globals";
 
 div.toast {
-	background: rgba(0, 0, 0, 0.7);
+	background: rgba(0, 0, 0, 1);
 	position: fixed;
-	z-index: @z-index-toast;
 	color: white;
-	left: calc(@menu-width + 10px);
-	bottom: 10px;
-	padding: 10px 20px;
+	right: 14px;
+	top: calc(@status-bar-height + 60px);
+	padding: 0 16px;
+	height: 48px;
+	width: 300px;
 	transform: translate(0, 0);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 
-	span {
+	span.message {
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	span.close {
 		cursor: pointer;
-		padding-left: 15px;
+		font-size: 28px;
 
 		&:hover {
-			color: black;
+			color: cyan;
 		}
 	}
 }

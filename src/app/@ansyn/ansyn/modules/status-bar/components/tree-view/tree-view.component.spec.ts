@@ -92,7 +92,7 @@ describe('TreeViewComponent', () => {
 		expect(store.dispatch).toHaveBeenCalledWith(new SetOverlaysCriteriaAction({
 			dataInputFilters: {
 				fullyChecked: false,
-				filters: [{name: 'provide2'}]
+				filters: ['provide2']
 			}
 		}));
 	});

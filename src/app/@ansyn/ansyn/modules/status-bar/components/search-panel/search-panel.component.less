@@ -6,6 +6,7 @@
 :host {
 	&:extend(.status-bar-panel);
 
+
 	.box {
 		margin: 0 3px;
 
@@ -22,15 +23,22 @@
 			}
 		}
 
+		&.timePickerBox {
+			font-size: 13px;
+
+			span {
+				margin-right: 5px;
+			}
+		}
 		&#geoPreSearch {
-			width: 150px;
+			width: 155px;
 			span {
 				overflow: hidden;
 				text-overflow: ellipsis;
 			}
 		}
 		&#dataInputsPreSearch {
-			width: 105px;
+			width: 110px;
 		}
 	}
 
@@ -46,7 +54,7 @@
 		opacity: 0;
 		pointer-events: none;
 		font-family: @app-font;
-		font-size: 14px;
+		font-size: 13px;
 	}
 
 }

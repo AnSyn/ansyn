@@ -1,11 +1,13 @@
 @import "ansyn/less/colors";
 @import "ansyn/less/common";
 @import "ansyn/less/z-index-globals";
+@import "../../less/status-bar-common";
 
 :host {
 	position: absolute;
 	min-width: 170px;
-	transform: translateY(8px);
+	top: @search-panel-popup-top;
+
 
 	/deep/ .treeview-container {
 		overflow-y: hidden !important;

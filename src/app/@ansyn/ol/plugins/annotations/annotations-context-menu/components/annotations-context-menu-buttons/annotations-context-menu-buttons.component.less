@@ -95,3 +95,13 @@
 	}
 
 }
+
+// for chrome 44
+@supports not (display: grid) {
+	div.color {
+		// Prevent a stacking context (z-index) problem.
+		// The delete button (which got position relative in chrome 44)
+		// appeared over the color window.
+		z-index: @z-index-annotation-context-menu-color-button;
+	}
+}

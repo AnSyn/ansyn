@@ -1,6 +1,4 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { filtersConfig } from '../../../filters/services/filters.service';
-import { IFiltersConfig } from '../../../filters/models/filters-config';
 import {
 	IFiltersState, selectEnableOnlyFavorites,
 	selectFacets,
@@ -20,6 +18,8 @@ import {
 	ICaseFacetsState,
 	ICaseFilter
 } from '../../../menu-items/cases/models/case.model';
+import { StatusBarConfig } from '../../models/statusBar.config';
+import { IStatusBarConfig } from '../../models/statusBar-config.model';
 
 @Component({
 	selector: 'ansyn-filters-panel',
@@ -56,7 +56,7 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 					const facetFilter: ICaseFilter = facets.filters.find( f => f.fieldName === filter.modelName);
 					const facetMetadata: ICaseEnumFilterMetadata = facetFilter && <ICaseEnumFilterMetadata>facetFilter.metadata;
 					const all = metadata.enumsFields.size;
-					const unChecked = facetMetadata.unCheckedEnums && facetMetadata.unCheckedEnums.filter( filteredName => metadata.enumsFields.has(filteredName)).length;
+					const unChecked = facetMetadata && facetMetadata.unCheckedEnums && facetMetadata.unCheckedEnums.filter( filteredName => metadata.enumsFields.has(filteredName)).length;
 					title = unChecked === 0 ? '' : `${all - unChecked}/${all}`;
 				}
 				this.filters[filter.modelName] = {
@@ -73,10 +73,10 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 		tap( this.closeAllFilter.bind(this))
 	);
 
-	constructor(@Inject(filtersConfig) public filterConfig: IFiltersConfig,
+	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 				public store: Store<IFiltersState>,
 				protected clickOutside: ClickOutsideService) {
-		this.filterConfig.filters.forEach( filter => this.expand[filter.modelName] = false);
+		this.statusBarConfig.filters.forEach( filter => this.expand[filter.modelName] = false);
 	}
 
 	ngOnInit() {
@@ -96,7 +96,7 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 
 	expandFilter(filter?) {
 		const newState = !this.expand[filter];
-		this.filterConfig.filters.forEach( filter => this.expand[filter.modelName] = false);
+		this.statusBarConfig.filters.forEach( filter => this.expand[filter.modelName] = false);
 		if (filter) {
 			this.expand[filter] = newState;
 		}

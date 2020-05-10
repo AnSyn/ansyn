@@ -110,8 +110,8 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 }
 
 export const selectFilters = createSelector(filtersStateSelector, ({ filters }) => filters);
-export const selectFacets = createSelector(filtersStateSelector, ({ facets }) => facets);
-export const selectShowOnlyFavorites = createSelector(selectFacets, ({ showOnlyFavorites }: ICaseFacetsState) => showOnlyFavorites);
+export const selectFacets = createSelector(filtersStateSelector, (state) => state && state.facets);
+export const selectShowOnlyFavorites = createSelector(selectFacets, (state) => state && state.showOnlyFavorites);
 export const selectIsLoading = createSelector(filtersStateSelector, ({ isLoading }) => isLoading);
 export const selectFiltersSearch = createSelector(filtersStateSelector, (state) => state && state.filtersSearch);
 export const selectFiltersSearchResults = createSelector(filtersStateSelector, (state) => state && state.filtersSearchResults);

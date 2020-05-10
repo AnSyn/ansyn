@@ -56,7 +56,7 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 					const facetFilter: ICaseFilter = facets.filters.find( f => f.fieldName === filter.modelName);
 					const facetMetadata: ICaseEnumFilterMetadata = facetFilter && <ICaseEnumFilterMetadata>facetFilter.metadata;
 					const all = metadata.enumsFields.size;
-					const unChecked = facetMetadata.unCheckedEnums && facetMetadata.unCheckedEnums.filter( filteredName => metadata.enumsFields.has(filteredName)).length;
+					const unChecked = facetMetadata && facetMetadata.unCheckedEnums && facetMetadata.unCheckedEnums.filter( filteredName => metadata.enumsFields.has(filteredName)).length;
 					title = unChecked === 0 ? '' : `${all - unChecked}/${all}`;
 				}
 				this.filters[filter.modelName] = {

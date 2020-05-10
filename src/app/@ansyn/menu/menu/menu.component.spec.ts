@@ -123,11 +123,26 @@ describe('MenuComponent', () => {
 	});
 
 	it('hideBadge should check if badge need to be hidden', () => {
-		expect(menuComponent.hideBadge('')).toBeTruthy();
-		expect(menuComponent.hideBadge('0')).toBeTruthy();
-		expect(menuComponent.hideBadge('str')).toBeTruthy();
-		expect(menuComponent.hideBadge('1')).toBeFalsy();
-		expect(menuComponent.hideBadge('★')).toBeFalsy();
+		const goodMenuItem: IMenuItem = {
+		name: '',
+		component: null,
+		badge: 2,
+		dockedToBottom: false,
+		iconClass: '',
+		production: false
+		};
+
+		const badMenuItem: IMenuItem = {
+		name: '',
+		component: null,
+		badge: 0,
+		dockedToBottom: false,
+		iconClass: '',
+		production: false
+		};
+
+		expect(menuComponent.hideBadge(goodMenuItem)).toBeTruthy();
+		expect(menuComponent.hideBadge(badMenuItem)).toBeFalsy();
 	});
 
 	it('reset app will dispatch ResetAppAction', () => {

@@ -230,6 +230,7 @@ export { ILoggerConfig } from './modules/core/models/logger-config.model';
 export { AnsynTranslationModule } from './modules/core/translation/ansyn-translation.module';
 export { SliderCheckboxComponent } from './modules/core/forms/slider-checkbox/slider-checkbox.component';
 export { MockComponent } from './modules/core/test/mock-component';
+export { mockIndexProviders } from "./modules/core/test/mock-providers";
 export { createStore, IStoreFixture } from './modules/core/test/mock-store';
 export { AnsynCheckboxComponent } from './modules/core/forms/ansyn-checkbox/ansyn-checkbox.component';
 export { asyncData } from './modules/core/test/async-observable-helpers';

@@ -1,5 +1,3 @@
-import { IFilter } from '../../filters/models/IFilter';
-
 export interface IToolTipsConfig {
 	orientation?: string,
 	geoFilter?: string,
@@ -19,6 +17,6 @@ export interface IToolTipsConfig {
 
 export interface IStatusBarConfig {
 	toolTips: IToolTipsConfig,
-	filters: IFilter[]
+	filters: string[]
 	locale: string
 }

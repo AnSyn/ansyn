@@ -12,6 +12,8 @@ import { ClickOutsideDirective } from '../../../core/click-outside/click-outside
 import { TranslateModule } from '@ngx-translate/core';
 import { toolsFeatureKey, ToolsReducer } from '../../../menu-items/tools/reducers/tools.reducer';
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
+import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
+import { mockIndexProviders } from '../../../core/test/mock-providers';
 
 describe('SearchPanelComponent', () => {
 	let component: SearchPanelComponent;
@@ -84,6 +86,12 @@ describe('SearchPanelComponent', () => {
 				{
 					provide: StatusBarConfig,
 					useValue: { toolTips: {} }
+				},
+				{
+					provide: MultipleOverlaysSourceConfig,
+					useValue: {
+						indexProviders: mockIndexProviders(['provide1', 'provide2', 'provide3'])
+					}
 				},
 				DateTimeAdapter
 			]

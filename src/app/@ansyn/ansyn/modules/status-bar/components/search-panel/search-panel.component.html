@@ -34,7 +34,14 @@
 			[withArrow]="false"
 			icon="icon icon-status-bar-time"
 			class="button">
-		<span class="title">{{timeSelectionTitle}}</span>
+
+		<span #timePickerTitleFrom
+			  contenteditable
+			  class="title">{{timeSelectionTitle?.from}}</span>
+		{{'&nbsp;&nbsp;-&nbsp;&nbsp;'}}
+		<span #timePickerTitleTo
+			  contenteditable
+			  class="title">{{timeSelectionTitle?.to}}</span>
 	</button>
 
 	<ansyn-timepicker-presets *ngIf="isActive('TimePickerPreset')"

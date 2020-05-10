@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { combineLatest, Observable } from 'rxjs';
-import { IOverlay, IOverlayDrop } from '../../../../overlays/models/overlay.model';
+import { IOverlayDrop } from '../../../../overlays/models/overlay.model';
 import { select, Store } from '@ngrx/store';
 import {
 	IMarkUpData,
@@ -17,7 +17,6 @@ import {
 } from '../../../../overlays/actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
-import { SetHideResultsTableBadgeAction } from '../../../../../../menu/actions/menu.actions';
 
 interface ITableHeader {
 	headerName: string;
@@ -114,18 +113,18 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
 	}
 
-	openOverlay(overlay: IOverlay): void {
+	openOverlay(overlay: IOverlayDrop): void {
 		const { id } = overlay;
 		this.selectedOverlayId = id;
 
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id }));
 	}
 
-	getType(overlay: IOverlay): string {
+	getType(overlay: IOverlayDrop): string {
 		return this.isAirplaneOverlay(overlay) ? 'icon icon-matos' : 'icon icon-lavian';
 	}
 
-	isAirplaneOverlay(overlay: IOverlay): boolean {
+	isAirplaneOverlay(overlay: IOverlayDrop): boolean {
 		return overlay && overlay.tag && overlay.tag.properties_list ? Boolean(overlay.tag.properties_list.Leg) : false;
 	}
 

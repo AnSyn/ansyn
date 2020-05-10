@@ -21,8 +21,7 @@ import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
 import {
 	selectFavoriteOverlays
 } from '../../../../overlays/overlay-status/reducers/overlay-status.reducer';
-import { selectFacets, selectShowOnlyFavorites } from '../../../../filters/reducer/filters.reducer';
-import { ICaseFacetsState } from '../../../cases/models/case.model';
+import { selectShowOnlyFavorites } from '../../../../filters/reducer/filters.reducer';
 
 @Component({
 	selector: 'ansyn-results-table',
@@ -113,7 +112,11 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	getType(overlay: IOverlay): string {
-		return 'icon icon-lavian';
+		return this.isAirplaneOverlay(overlay) ? 'icon icon-matos' : 'icon icon-lavian';
+	}
+
+	isAirplaneOverlay(overlay: IOverlay): boolean {
+		return overlay.tag.properties_list ? Boolean(overlay.tag.properties_list.Leg) : false;
 	}
 
 	timeFormat(overlayDate: Date): string {

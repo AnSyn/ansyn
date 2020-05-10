@@ -15,7 +15,7 @@ import {
 import {
 	ContainerChangedTriggerAction,
 	ResetAppAction,
-	SelectMenuItemAction,
+	SelectMenuItemAction, SetHideResultsTableBadgeAction,
 	ToggleIsPinnedAction,
 	ToggleMenuCollapse,
 	UnSelectMenuItemAction
@@ -25,7 +25,7 @@ import {
 	IMenuState,
 	selectAllMenuItems,
 	selectAutoClose,
-	selectEntitiesMenuItems,
+	selectEntitiesMenuItems, selectHideResultsTableBadge,
 	selectIsPinned,
 	selectMenuCollapse,
 	selectSelectedMenuItem, selectUserFirstEnter, selectUserHaveCredentials
@@ -79,6 +79,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	_componentElem;
 	currentComponent: ComponentRef<any>;
 	collapse: boolean;
+	hideResultsTableBadge: boolean;
 	@Input() animatedElement: HTMLElement;
 	@ViewChild('menuWrapper') menuWrapperElement: ElementRef;
 	@ViewChild('menu') menuElement: ElementRef;
@@ -122,6 +123,12 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	);
 
 	@AutoSubscription
+	selectHideResultsTableBadge$ = this.store.select(selectHideResultsTableBadge).pipe(
+		tap(this.setHideResultsTableBadge.bind(this))
+	);
+
+
+	@AutoSubscription
 	isUserFirstEntrance$ = this.store.select(selectUserFirstEnter).pipe(
 		tap((isUserFirstEntrance) => this.isUserFirstEntrance = isUserFirstEntrance)
 	);
@@ -138,7 +145,6 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	expand: boolean;
 	onAnimation: boolean;
 	isBuildNeeded: boolean;
-	hideBadgeResult: boolean;
 
 	constructor(public componentFactoryResolver: ComponentFactoryResolver,
 				protected store: Store<IMenuState>,
@@ -147,7 +153,6 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 				@Inject(DOCUMENT) protected document: Document,
 				@Inject(MenuConfig) public menuConfig: IMenuConfig,
 				private cdref: ChangeDetectorRef) {
-		this.hideBadgeResult = false;
 	}
 
 	get componentElem() {
@@ -221,6 +226,11 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 		}
 	}
 
+	setHideResultsTableBadge(_hideResultsTableBadge) {
+		console.log('hide', _hideResultsTableBadge);
+		this.hideResultsTableBadge = _hideResultsTableBadge;
+	}
+
 	componentChanges(): void {
 		if (!this.componentElem || this.onAnimation) {
 			this.isBuildNeeded = !this.componentElem;
@@ -232,9 +242,10 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 
 	hideBadge(badge: string, showZeroBadge?: boolean): boolean {
 		if (showZeroBadge) {
-			return this.hideBadgeResult;
+			return this.hideResultsTableBadge;
 		}
-		return badge !== '★' && (showZeroBadge ? Number(badge) < 0 : !Number(badge));
+
+		return badge !== '★' && !Number(badge);
 	}
 
 	isActive(key: string): boolean {
@@ -264,12 +275,14 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	}
 
 	openMenu(key: string, skipSession: boolean) {
-		this.hideBadgeResult = true;
+		if (key === 'Results table') {
+			this.store.dispatch(new SetHideResultsTableBadgeAction(true));
+		}
+
 		this.store.dispatch(new SelectMenuItemAction({ menuKey: key, skipSession }));
 	}
 
 	closeMenu(): void {
-		this.hideBadgeResult = false;
 		this.store.dispatch(new UnSelectMenuItemAction());
 	}
 

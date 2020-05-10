@@ -57,6 +57,7 @@ import { get as _get } from 'lodash';
 import { TranslateService } from '@ngx-translate/core';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { isEqual } from 'lodash';
+import { SetHideResultsTableBadgeAction } from '../../../menu/actions/menu.actions';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -101,7 +102,8 @@ export class FiltersAppEffects {
 			return [
 				new SetFilteredOverlaysAction(filteredOverlays),
 				new SetTotalOverlaysAction(filteredOverlays.length),
-				new SetOverlaysStatusMessageAction(message)
+				new SetOverlaysStatusMessageAction(message),
+				new SetHideResultsTableBadgeAction(false)
 			];
 		}));
 
@@ -115,6 +117,7 @@ export class FiltersAppEffects {
 				favoriteOverlays,
 				showOnlyFavorites
 			});
+
 			return new SetDropsAction(drops);
 		})
 	);

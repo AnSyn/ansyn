@@ -1,4 +1,5 @@
 import {
+	AfterViewChecked, ChangeDetectorRef,
 	Component,
 	ComponentFactoryResolver,
 	ComponentRef,
@@ -72,7 +73,7 @@ const animations: any[] = [
 	menu is open -> toggle same menu item ->  dispatch store -> subscribe store -> change expand -> destroy component
 */
 
-export class MenuComponent implements OnInit, OnDestroy {
+export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	isUserFirstEntrance: boolean;
 	doesUserHaveCredentials: boolean;
 	_componentElem;
@@ -144,9 +145,9 @@ export class MenuComponent implements OnInit, OnDestroy {
 				protected renderer: Renderer2,
 				protected elementRef: ElementRef,
 				@Inject(DOCUMENT) protected document: Document,
-				@Inject(MenuConfig) public menuConfig: IMenuConfig) {
+				@Inject(MenuConfig) public menuConfig: IMenuConfig,
+				private cdref: ChangeDetectorRef) {
 		this.hideBadgeResult = false;
-
 	}
 
 	get componentElem() {
@@ -326,6 +327,10 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
+	}
+
+	ngAfterViewChecked() {
+		this.cdref.detectChanges();
 	}
 }
 

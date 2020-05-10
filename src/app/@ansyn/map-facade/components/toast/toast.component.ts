@@ -9,11 +9,11 @@ const animations: any[] = [
 	trigger('toastAnimation', [
 		transition(':enter', [style({
 			opacity: 0,
-			transform: 'translate(0, 100%)'
+			transform: 'translate(100%, 0)'
 		}), animate('0.2s', style({ opacity: 1, transform: 'translate(0, 0)' }))]),
-		transition(':leave', [style({ opacity: 1, transform: 'translate(0, 0)' }), animate('0.2s', style({
+		transition(':leave', [style({ opacity: 1, transform: 'translate(0, 0)' }), animate('0.4s', style({
 			opacity: 0,
-			transform: 'translate(0, 100%)'
+			transform: 'translate(100%, 0)'
 		}))])
 	])
 ];

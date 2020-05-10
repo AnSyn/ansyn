@@ -90,10 +90,24 @@ describe('TreeViewComponent', () => {
 		component.selectedFilters = ['provide2'];
 		fixture.detectChanges();
 		expect(store.dispatch).toHaveBeenCalledWith(new SetOverlaysCriteriaAction({
-			dataInputFilters: {
-				fullyChecked: false,
-				filters: ['provide2']
-			}
-		}));
+				dataInputFilters: {
+					fullyChecked: false,
+					filters: ['provide2']
+				}
+			}, { noInitialSearch: false }
+		));
 	});
+
+	it('on uncheck all should fire SetOverlaysCriteriaAction with noInitialSearch true', () => {
+		spyOn(store, 'dispatch');
+		component.selectedFilters = [];
+		fixture.detectChanges();
+		expect(store.dispatch).toHaveBeenCalledWith(new SetOverlaysCriteriaAction({
+				dataInputFilters: {
+					fullyChecked: false,
+					filters: []
+				}
+			}, { noInitialSearch: true }
+		));
+	})
 });

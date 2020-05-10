@@ -19,7 +19,7 @@
 			color: white;
 			display: flex;
 			font-family: @app-font;
-			flex-direction: column;
+			flex-direction: row;
 			font-size: @header-size;
 			margin-top: 17px;
 			margin-left: 23px;
@@ -30,14 +30,18 @@
 			}
 
 			div.box {
-				position: absolute;
-				margin-left: 290px;
 				flex: 1;
 
+				.icon-status-bar-imagery-count {
+					margin-top: 6px;
+					position: absolute;
+					margin-left: 145px;
+				}
 				.overlay-count {
 					font-size: 17px;
-					margin-top: 3px;
+					margin-top: 7px;
 					position: absolute;
+					margin-left: 170px;
 				}
 			}
 		}
@@ -183,6 +187,8 @@
 
 					div.source-type {
 						margin-left: 43px !important;
+						overflow: hidden;
+						text-overflow: ellipsis;
 					}
 
 					div.results-table-case-name-col {

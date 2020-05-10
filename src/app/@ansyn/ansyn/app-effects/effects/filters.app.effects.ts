@@ -8,7 +8,7 @@ import {
 	selectRemovedOverlaysVisibility
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../app.effects.module';
-import { SetBadgeAction } from '@ansyn/menu';
+import { SetBadgeAction, SetHideResultsTableBadgeAction } from '@ansyn/menu';
 import { distinctUntilChanged, filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
 import { BooleanFilterMetadata } from '../../modules/filters/models/metadata/boolean-filter-metadata';
 import {
@@ -57,7 +57,6 @@ import { get as _get } from 'lodash';
 import { TranslateService } from '@ngx-translate/core';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { isEqual } from 'lodash';
-import { SetHideResultsTableBadgeAction } from '../../../menu/actions/menu.actions';
 
 @Injectable()
 export class FiltersAppEffects {

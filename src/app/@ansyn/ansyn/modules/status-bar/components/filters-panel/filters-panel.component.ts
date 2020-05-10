@@ -1,6 +1,4 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { filtersConfig } from '../../../filters/services/filters.service';
-import { IFiltersConfig } from '../../../filters/models/filters-config';
 import {
 	IFiltersState, selectEnableOnlyFavorites,
 	selectFacets,
@@ -20,6 +18,10 @@ import {
 	ICaseFacetsState,
 	ICaseFilter
 } from '../../../menu-items/cases/models/case.model';
+import { StatusBarConfig } from '../../models/statusBar.config';
+import { IStatusBarConfig } from '../../models/statusBar-config.model';
+import { filtersConfig } from '../../../filters/services/filters.service';
+import { IFiltersConfig } from '../../../filters/models/filters-config';
 
 @Component({
 	selector: 'ansyn-filters-panel',
@@ -31,7 +33,7 @@ import {
 export class FiltersPanelComponent implements OnInit, OnDestroy {
 
 	expand: {[filter: string]: boolean} = {};
-	filters: {[filter: string]: {active: boolean, title: string}} = {};
+	filtersMap: {[filter: string]: {active: boolean, title: string}} = {};
 	onlyFavorite: boolean;
 	disableOnlyFavoritesButton: boolean;
 
@@ -56,10 +58,10 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 					const facetFilter: ICaseFilter = facets.filters.find( f => f.fieldName === filter.modelName);
 					const facetMetadata: ICaseEnumFilterMetadata = facetFilter && <ICaseEnumFilterMetadata>facetFilter.metadata;
 					const all = metadata.enumsFields.size;
-					const unChecked = facetMetadata.unCheckedEnums && facetMetadata.unCheckedEnums.filter( filteredName => metadata.enumsFields.has(filteredName)).length;
+					const unChecked = facetMetadata && facetMetadata.unCheckedEnums && facetMetadata.unCheckedEnums.filter( filteredName => metadata.enumsFields.has(filteredName)).length;
 					title = unChecked === 0 ? '' : `${all - unChecked}/${all}`;
 				}
-				this.filters[filter.modelName] = {
+				this.filtersMap[filter.modelName] = {
 					active: metadata.isFiltered(),
 					title: title
 				}
@@ -73,10 +75,14 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 		tap( this.closeAllFilter.bind(this))
 	);
 
-	constructor(@Inject(filtersConfig) public filterConfig: IFiltersConfig,
+	get filters(): IFilter[] {
+		return this.statusBarConfig.filters.map( filterName => this.filtersConfig.filters.find( filter => filterName === filter.modelName));
+	}
+	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
+				@Inject(filtersConfig) public filtersConfig: IFiltersConfig,
 				public store: Store<IFiltersState>,
 				protected clickOutside: ClickOutsideService) {
-		this.filterConfig.filters.forEach( filter => this.expand[filter.modelName] = false);
+		this.filters.forEach( filter => this.expand[filter.modelName] = false);
 	}
 
 	ngOnInit() {
@@ -91,16 +97,16 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 	}
 
 	isFilter(filter) {
-		return this.filters[filter] && this.filters[filter].active || false;
+		return this.filtersMap[filter] && this.filtersMap[filter].active || false;
 	}
 
 	getTitle(filter) {
-		return this.filters[filter] && this.filters[filter].title || '';
+		return this.filtersMap[filter] && this.filtersMap[filter].title || '';
 	}
 
 	expandFilter(filter?) {
 		const newState = !this.expand[filter];
-		this.filterConfig.filters.forEach( filter => this.expand[filter.modelName] = false);
+		this.filters.forEach( filter => this.expand[filter.modelName] = false);
 		if (filter) {
 			this.expand[filter] = newState;
 		}

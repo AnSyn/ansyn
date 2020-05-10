@@ -1,5 +1,4 @@
 import { Action } from '@ngrx/store';
-import { IComboBoxesProperties } from '../models/combo-boxes.model';
 import { IGeoFilterStatus } from '../reducers/status-bar.reducer';
 
 export const StatusBarActionsTypes = {
@@ -23,14 +22,6 @@ export class ExpandAction implements Action {
 	type: string = StatusBarActionsTypes.EXPAND;
 
 	constructor() {
-	}
-}
-
-
-export class SetImageOpeningOrientation implements Action {
-	type = StatusBarActionsTypes.SET_IMAGE_OPENING_ORIENTATION;
-
-	constructor(public payload: IComboBoxesProperties) {
 	}
 }
 
@@ -59,4 +50,3 @@ export type StatusBarActions =
 	CopySnapshotShareLinkAction
 	| UpdateGeoFilterStatus
 	| ExpandAction
-	| SetImageOpeningOrientation;

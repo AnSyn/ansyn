@@ -9,7 +9,6 @@
 		 "autoSave": false,
 		 "state": {
 		   "timeFilter": "Start - End",
-		   "orientation": "User Perspective",
 		   "maps": {
 			 "layout": "layout1",
 			 "data": [
@@ -66,6 +65,7 @@
 				   },
 				   "isAutoImageProcessingActive": false
 				 },
+				 "orientation": "Imagery Perspective",
 				 "flags": {},
 				 "worldView": {
 				   "mapType": "openLayersMap",
@@ -104,15 +104,7 @@
 			 ]
 		   },
 		   "contextEntities": null,
-		   "overlaysManualProcessArgs": {
-			 "20190412_213505_ssc11d2_0011": {
-			   "Sharpness": 0,
-			   "Contrast": 0,
-			   "Brightness": 0,
-			   "Gamma": 100,
-			   "Saturation": 100
-			 }
-		   }
+		   "overlaysManualProcessArgs": {  }
 		 }
 	   },
     "casesQueryParamsKeys": [
@@ -272,15 +264,40 @@
   	"shortFilterListLength": 8,
     "filters": [
       {
-        "modelName": "sensorName",
-        "displayName": "Sensor",
-        "type": "Enum"
-      },
-      {
-        "modelName": "isGeoRegistered",
-        "displayName": "Geo Registration",
-        "type": "Enum"
-      }
+		  "modelName": "sensorType",
+		  "displayName": "Sensor Type",
+		  "type": "Enum"
+		},
+		{
+			"modelName": "sensorName",
+			"displayName": "Sensor",
+			"type": "Enum"
+	  	},
+		{
+		  "modelName": "sourceType",
+		  "displayName": "Source Type",
+		  "type": "Enum"
+		},
+		{
+		  "modelName": "isGeoRegistered",
+		  "displayName": "Geo Registration",
+		  "type": "Enum"
+		},
+		{
+			"modelName": "containedInSearchPolygon",
+		  "displayName": "Contains Region",
+		  "type": "Enum"
+		},
+		{
+		  "modelName": "bestResolution",
+		  "displayName": "Resolution",
+		  "type": "Slider"
+		},
+		{
+		  "modelName": "cloudCoverage",
+		  "displayName": "Cloud Coverage",
+		  "type": "Slider"
+		}
     ]
   },
   "contextConfig": {
@@ -349,6 +366,7 @@
       "enlarge": "Expand timeline",
       "quickloop": "Next overlay from the quick loop (key: Q)"
     },
+    "filters": ["sensorName", "isGeoRegistered"],
     "locale": "en-GB"
   },
   "coreConfig": {
@@ -1473,7 +1491,7 @@
       "callbackURL": "{{ getv "/ansyn/auth0/callbackURL" "http://localhost:4200/#/callback/" }}",
       "scope": "{{ getv "/ansyn/auth0/scope" "openid" }}"
   },
-  "ORIENTATIONS": ["Align North", "User Perspective", "Imagery Perspective"],
+  "ORIENTATIONS": ["User Perspective", "Imagery Perspective"],
   "algorithmsConfig": {
     "schema": "tasks",
     "paginationLimit": 16,

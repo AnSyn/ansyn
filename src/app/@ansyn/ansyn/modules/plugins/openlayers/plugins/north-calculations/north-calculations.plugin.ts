@@ -39,7 +39,6 @@ import {
 
 import OLMap from 'ol/Map';
 import View from 'ol/View';
-import { comboBoxesOptions } from '../../../../status-bar/models/combo-boxes.model';
 import { LoggerService } from '../../../../core/services/logger.service';
 import {
 	ChangeOverlayPreviewRotationAction,
@@ -56,6 +55,7 @@ import {
 import { CoreConfig } from '../../../../core/models/core.config';
 import { Inject } from '@angular/core';
 import { ICoreConfig } from '../../../../core/models/core.config.model';
+import { selectMapOrientation } from '@ansyn/map-facade';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],
@@ -106,14 +106,11 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	calcNorthAfterDisplayOverlaySuccess$ = this.actions$.pipe(
+	calcNorthAfterDisplayOverlaySuccess$ = () => this.actions$.pipe(
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
 		filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.mapId),
-		withLatestFrom(({ payload }: DisplayOverlaySuccessAction) => {
-			return [payload.forceFirstDisplay, payload.orientation , payload.overlay, payload.customOriantation];
-		}),
-		filter(([forceFirstDisplay, orientation, overlay, customOriantation]: [boolean, MapOrientation, IOverlay, string]) => {
-			return comboBoxesOptions.orientations.includes(orientation);
+		withLatestFrom(this.store$.select(selectMapOrientation(this.mapId)), ({ payload }: DisplayOverlaySuccessAction, orientation: MapOrientation) => {
+			return [payload.forceFirstDisplay, orientation , payload.overlay, payload.customOriantation];
 		}),
 		switchMap(([forceFirstDisplay, orientation, overlay, customOriantation]: [boolean, MapOrientation, IOverlay, string]) => {
 			// for 'Imagery Perspective' or 'User Perspective'
@@ -130,16 +127,14 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	backToWorldSuccessSetNorth$ = this.actions$.pipe(
+	backToWorldSuccessSetNorth$ = () => this.actions$.pipe(
 		ofType<BackToWorldSuccess>(OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS),
 		filter((action: BackToWorldSuccess) => action.payload.mapId === this.communicator.id),
-		withLatestFrom(this.store$.select(statusBarStateSelector)),
-		tap(([action, { comboBoxesProperties }]: [BackToWorldView, IStatusBarState]) => {
+		withLatestFrom(this.store$.select(selectMapOrientation(this.mapId))),
+		tap(([action, orientation]: [BackToWorldView, MapOrientation]) => {
 			this.communicator.setVirtualNorth(0);
-			switch (comboBoxesProperties.orientation) {
-				case 'Align North':
-				case 'Imagery Perspective':
-					this.communicator.setRotation(0);
+			if (orientation === 'Imagery Perspective') {
+				this.communicator.setRotation(0);
 			}
 		})
 	);

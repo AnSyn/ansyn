@@ -19,21 +19,7 @@ import { IStatusBarState, StatusBarInitialState, statusBarStateSelector } from '
 import { TreeViewComponent } from './tree-view.component';
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import { IOverlaysCriteria } from '../../../overlays/models/overlay.model';
-
-function buildIndexProviders(providersName: string[]) {
-	const indexProviders = providersName.reduce((providers, provideName) => {
-		return {
-			...providers,
-			[provideName]: {
-				dataInputFiltersConfig: {
-					text: provideName,
-					value: provideName
-				}
-			}
-		}
-	}, {});
-	return indexProviders;
-}
+import { mockIndexProviders } from '../../../core/test/mock-providers';
 
 const overlaysCriteria: IOverlaysCriteria = {
 	time: { from: new Date(), to: new Date(), type: 'absolute' },
@@ -66,7 +52,7 @@ describe('TreeViewComponent', () => {
 				{
 					provide: MultipleOverlaysSourceConfig,
 					useValue: {
-						indexProviders: buildIndexProviders(['provide1', 'provide2', 'provide3'])
+						indexProviders: mockIndexProviders(['provide1', 'provide2', 'provide3'])
 					}
 				},
 				provideMockActions(() => actions)
@@ -101,14 +87,12 @@ describe('TreeViewComponent', () => {
 
 	it('on check/unCheck should SetOverlaysCriteriaAction', () => {
 		spyOn(store, 'dispatch');
-		const selectFilter = [...component._selectedFilters];
-		selectFilter.pop();
-		component.selectedFilters = selectFilter;
+		component.selectedFilters = ['provide2'];
 		fixture.detectChanges();
 		expect(store.dispatch).toHaveBeenCalledWith(new SetOverlaysCriteriaAction({
 				dataInputFilters: {
 					fullyChecked: false,
-					filters: selectFilter
+					filters: ['provide2']
 				}
 			}, { noInitialSearch: false }
 		));

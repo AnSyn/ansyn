@@ -11,10 +11,10 @@ import {
 } from "../../../../overlays/reducers/overlays.reducer";
 import {
 	DisplayOverlayFromStoreAction,
-	LoadOverlaysAction,
 	SetMarkUp
 } from "../../../../overlays/actions/overlays.actions";
 import { IOverlay } from "../../../../overlays/models/overlay.model";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ResultsTableComponent', () => {
 	let component: ResultsTableComponent;
@@ -24,7 +24,8 @@ describe('ResultsTableComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [TranslateModule.forRoot(),
-				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer })],
+				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer }),
+				BrowserAnimationsModule],
 			declarations: [ResultsTableComponent],
 			providers: []
 		})

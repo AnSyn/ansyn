@@ -239,12 +239,12 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 		this.buildCurrentComponent();
 	}
 
-	hideBadge(menuItem: IMenuItem): boolean {
-		if (this.isMenuItemResultsTable(menuItem.name)) {
+	hideBadge(badge: string, name?: string): boolean {
+		if (this.isMenuItemResultsTable(name)) {
 			return this.hideResultsTableBadge;
 		}
 
-		return String(menuItem.badge) !== '★' && Boolean(menuItem.badge);
+		return badge !== '★' && !Number(badge);
 	}
 
 	isActive(key: string): boolean {

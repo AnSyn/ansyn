@@ -227,7 +227,6 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	}
 
 	setHideResultsTableBadge(_hideResultsTableBadge) {
-		console.log('hide', _hideResultsTableBadge);
 		this.hideResultsTableBadge = _hideResultsTableBadge;
 	}
 

@@ -116,7 +116,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	isAirplaneOverlay(overlay: IOverlay): boolean {
-		return overlay.tag.properties_list ? Boolean(overlay.tag.properties_list.Leg) : false;
+		return overlay && overlay.tag && overlay.tag.properties_list ? Boolean(overlay.tag.properties_list.Leg) : false;
 	}
 
 	timeFormat(overlayDate: Date): string {

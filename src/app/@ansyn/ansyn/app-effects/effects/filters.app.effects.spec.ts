@@ -40,6 +40,7 @@ import { FilterType } from '../../modules/filters/models/filter-type';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { MissingTranslationHandler, TranslateLoader, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
 import { LoggerService } from '../../modules/core/services/logger.service';
+import { SetHideResultsTableBadgeAction } from '../../../menu/actions/menu.actions';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -97,10 +98,11 @@ describe('Filters app effects', () => {
 		};
 		spyOn(fakeObj, 'buildFilteredOverlays').and.callFake(() => []);
 		store.dispatch(new InitializeFiltersSuccessAction(new Map()));
-		const expectedResults = cold('(bcd)', {
+		const expectedResults = cold('(bcde)', {
 			b: new SetFilteredOverlaysAction([]),
 			c: new SetTotalOverlaysAction(0),
-			d: new SetOverlaysStatusMessageAction(overlaysStatusMessages.noOverLayMatchFilters)
+			d: new SetOverlaysStatusMessageAction(overlaysStatusMessages.noOverLayMatchFilters),
+			e: new SetHideResultsTableBadgeAction(false)
 		});
 
 		expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);

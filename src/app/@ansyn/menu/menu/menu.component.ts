@@ -239,12 +239,12 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 		this.buildCurrentComponent();
 	}
 
-	hideBadge(badge: string, showZeroBadge?: boolean): boolean {
-		if (showZeroBadge) {
+	hideBadge(menuItem: IMenuItem): boolean {
+		if (this.isMenuItemResultsTable(menuItem.name)) {
 			return this.hideResultsTableBadge;
 		}
 
-		return badge !== '★' && !Number(badge);
+		return String(menuItem.badge) !== '★' && !Number(menuItem.badge);
 	}
 
 	isActive(key: string): boolean {
@@ -273,8 +273,12 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 		return Boolean(this.selectedMenuItem);
 	}
 
+	isMenuItemResultsTable(menuItemName: string): boolean {
+		return menuItemName === 'Results table';
+	}
+
 	openMenu(key: string, skipSession: boolean) {
-		if (key === 'Results table') {
+		if (this.isMenuItemResultsTable(key)) {
 			this.store.dispatch(new SetHideResultsTableBadgeAction(true));
 		}
 

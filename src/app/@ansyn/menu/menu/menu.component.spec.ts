@@ -89,7 +89,7 @@ describe('MenuComponent', () => {
 	it('openMenu should call store.dispatch with SelectMenuItemAction', () => {
 		spyOn(store, 'dispatch');
 		menuComponent.openMenu('one', false);
-		expect(store.dispatch).toHaveBeenCalledWith(new SelectMenuItemAction({ menuKey: 'one', skipSession: false}));
+		expect(store.dispatch).toHaveBeenCalledWith(new SelectMenuItemAction({ menuKey: 'one', skipSession: false }));
 	});
 
 	it('onExpandDone should call componentChanges if anySelectItem is "false"', () => {
@@ -124,10 +124,10 @@ describe('MenuComponent', () => {
 
 	it('hideBadge should check if badge need to be hidden', () => {
 		expect(menuComponent.hideBadge('')).toBeTruthy();
-			expect(menuComponent.hideBadge('0')).toBeTruthy();
-			expect(menuComponent.hideBadge('str')).toBeTruthy();
-			expect(menuComponent.hideBadge('1')).toBeFalsy();
-			expect(menuComponent.hideBadge('★')).toBeFalsy();
+		expect(menuComponent.hideBadge('0')).toBeTruthy();
+		expect(menuComponent.hideBadge('str')).toBeTruthy();
+		expect(menuComponent.hideBadge('1')).toBeFalsy();
+		expect(menuComponent.hideBadge('★')).toBeFalsy();
 	});
 
 	it('reset app will dispatch ResetAppAction', () => {

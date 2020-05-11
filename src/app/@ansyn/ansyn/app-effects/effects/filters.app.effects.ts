@@ -100,7 +100,6 @@ export class FiltersAppEffects {
 			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : this.translate.instant(overlaysStatusMessages.noOverLayMatchFilters);
 			return [
 				new SetFilteredOverlaysAction(filteredOverlays),
-				new SetTotalOverlaysAction(filteredOverlays.length),
 				new SetOverlaysStatusMessageAction(message),
 				new SetHideResultsTableBadgeAction(false)
 			];
@@ -108,7 +107,7 @@ export class FiltersAppEffects {
 
 	@Effect()
 	updateOverlayDrops$ = this.forOverlayDrops$.pipe(
-		map(([overlaysMap, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites]: [Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean]) => {
+		mergeMap(([overlaysMap, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites]: [Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean]) => {
 			const drops = OverlaysService.parseOverlayDataForDisplay({
 				overlaysArray: mapValuesToArray(overlaysMap),
 				filteredOverlays,
@@ -117,7 +116,7 @@ export class FiltersAppEffects {
 				showOnlyFavorites
 			});
 
-			return new SetDropsAction(drops);
+			return [new SetDropsAction(drops), new SetTotalOverlaysAction(drops.length)];
 		})
 	);
 

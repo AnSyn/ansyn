@@ -26,7 +26,7 @@
 >
 	<button ansynComboBoxTrigger
 			#timePickerTrigger
-			(click)="toggleExpander('TimePickerPreset')"
+			(click)="openTimePickerPreset()"
 			[attr.tooltip-value]="statusBarConfig?.toolTips?.timeFilterEdit | translate"
 			tooltip-class="bottom"
 			[class.active]="isActive('TimePickerPreset')"
@@ -36,11 +36,13 @@
 			class="button">
 
 		<span #timePickerTitleFrom
-			  contenteditable
+			  [attr.contenteditable]="isActive('TimePickerPreset')"
+			  [class.error]="timeError.from"
 			  class="title">{{timeSelectionTitle?.from}}</span>
 		{{'&nbsp;&nbsp;-&nbsp;&nbsp;'}}
 		<span #timePickerTitleTo
-			  contenteditable
+			  [attr.contenteditable]="isActive('TimePickerPreset')"
+			  [class.error]="timeError.to"
 			  class="title">{{timeSelectionTitle?.to}}</span>
 	</button>
 

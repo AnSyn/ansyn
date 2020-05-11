@@ -22,6 +22,17 @@
 			}
 		}
 
+		span.title {
+			outline: none;
+
+			&::selection {
+				background: @status-bar-panels;
+			}
+			&.error {
+				color: red;
+			}
+		}
+
 		&#geoPreSearch {
 			width: 150px;
 			span {

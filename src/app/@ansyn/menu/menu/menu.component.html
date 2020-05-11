@@ -11,7 +11,7 @@
 					(click)="toggleItem(menuItem.name)">
 
 					<i [ngClass]="menuItem.iconClass"></i>
-					<span class="badge" [hidden]="hideBadge(menuItem.badge, menuItem.showZeroBadge)">{{menuItem.badge}}</span>
+					<span class="badge count-badge" [hidden]="hideBadge(menuItem.badge, menuItem.name)">{{menuItem.badge}}</span>
 					{{menuItem.name | translate}}
 				</div>
 			</div>

@@ -1,28 +1,22 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { combineLatest, Observable } from 'rxjs';
-import { IOverlay } from '../../../../overlays/models/overlay.model';
+import { IOverlayDrop } from '../../../../overlays/models/overlay.model';
 import { select, Store } from '@ngrx/store';
 import {
 	IMarkUpData,
 	IOverlaysState,
 	MarkUpClass,
 	selectDropMarkup,
-	selectDrops,
-	selectFilteredOveralys,
-	selectOverlaysArray
+	selectDrops
 } from '../../../../overlays/reducers/overlays.reducer';
-import { mergeMap, tap, withLatestFrom } from 'rxjs/operators';
+import { map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	DisplayOverlayFromStoreAction,
 	SetMarkUp, SetTotalOverlaysAction,
 } from '../../../../overlays/actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
-import {
-	selectFavoriteOverlays
-} from '../../../../overlays/overlay-status/reducers/overlay-status.reducer';
-import { selectShowOnlyFavorites } from '../../../../filters/reducer/filters.reducer';
 
 interface ITableHeader {
 	headerName: string;
@@ -85,15 +79,10 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		);
 
 	@AutoSubscription
-	loadOverlays$ = () => combineLatest(this.store$.select(selectFilteredOveralys),
-		this.store$.select(selectFavoriteOverlays),
-		this.store$.select(selectOverlaysArray),
-		this.store$.select(selectShowOnlyFavorites)).pipe(
-		mergeMap(([filteredOverlays, favoriteOverlays, overlays, showOnlyFavorites]: [string[], IOverlay[], IOverlay[], boolean]) => {
-			this.overlays = showOnlyFavorites ? favoriteOverlays : this.filterOverlays(overlays, filteredOverlays);
+	loadOverlays$ = this.store$.select(selectDrops).pipe(
+		map(( overlays: IOverlayDrop[]) => {
+			this.overlays = overlays;
 			this.store$.dispatch(new SetTotalOverlaysAction(this.overlays.length));
-
-			return this.overlays;
 		})
 	);
 
@@ -110,11 +99,6 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		// TODO: add infinite scroll functionality when directive is fixed
 	}
 
-	filterOverlays(overlays: IOverlay[], filteredOverlays: string[]): IOverlay[] {
-		return overlays.filter(overlay => filteredOverlays.includes(overlay.id));
-	}
-
-
 	onMouseOver($event, id: string): void {
 		this.store$.dispatch(new SetMarkUp({
 			classToSet: MarkUpClass.hover,
@@ -127,17 +111,18 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
 	}
 
-	openOverlay(overlay: IOverlay): void {
+	openOverlay(overlay: IOverlayDrop): void {
 		const { id } = overlay;
 		this.selectedOverlayId = id;
+
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id }));
 	}
 
-	getType(overlay: IOverlay): string {
+	getType(overlay: IOverlayDrop): string {
 		return this.isAirplaneOverlay(overlay) ? 'icon icon-matos' : 'icon icon-lavian';
 	}
 
-	isAirplaneOverlay(overlay: IOverlay): boolean {
+	isAirplaneOverlay(overlay: IOverlayDrop): boolean {
 		return overlay && overlay.tag && overlay.tag.properties_list ? Boolean(overlay.tag.properties_list.Leg) : false;
 	}
 

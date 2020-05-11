@@ -89,7 +89,7 @@ describe('MenuComponent', () => {
 	it('openMenu should call store.dispatch with SelectMenuItemAction', () => {
 		spyOn(store, 'dispatch');
 		menuComponent.openMenu('one', false);
-		expect(store.dispatch).toHaveBeenCalledWith(new SelectMenuItemAction({ menuKey: 'one', skipSession: false}));
+		expect(store.dispatch).toHaveBeenCalledWith(new SelectMenuItemAction({ menuKey: 'one', skipSession: false }));
 	});
 
 	it('onExpandDone should call componentChanges if anySelectItem is "false"', () => {

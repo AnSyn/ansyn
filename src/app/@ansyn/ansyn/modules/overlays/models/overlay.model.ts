@@ -121,6 +121,8 @@ export interface IOverlayDrop {
 	id: string;
 	date: Date;
 	shape?: string;
+	sourceType?: string;
+	tag?: any;
 }
 
 export interface IOverlaySpecialObject extends IOverlayDrop {

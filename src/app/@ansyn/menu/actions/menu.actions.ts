@@ -8,6 +8,7 @@ export const MenuActionTypes = {
 	UNSELECT_MENU_ITEM: 'UNSELECT_MENU_ITEM',
 	SET_BADGE: 'SET_BADGE',
 	TOGGLE_IS_PINNED: 'TOGGLE_IS_PINNED',
+	SET_HIDE_RESULTS_TABLE_BADGE: 'SET_HIDE_RESULTS_TABLE_BADGE',
 	TRIGGER: {
 		CONTAINER_CHANGED: 'CONTAINER_CHANGED'
 	},
@@ -69,6 +70,13 @@ export class ToggleIsPinnedAction implements Action {
 
 export class ContainerChangedTriggerAction implements Action {
 	type = MenuActionTypes.TRIGGER.CONTAINER_CHANGED;
+
+	constructor(public payload?: any) {
+	}
+}
+
+export class SetHideResultsTableBadgeAction implements Action {
+	type = MenuActionTypes.SET_HIDE_RESULTS_TABLE_BADGE;
 
 	constructor(public payload?: any) {
 	}

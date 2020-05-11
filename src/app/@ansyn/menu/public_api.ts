@@ -4,7 +4,7 @@ export { IMenuItem } from './models/menu-item.model';
 export { IMenuState } from './reducers/menu.reducer';
 export { MenuConfig } from './models/menuConfig';
 export {
-	MenuActionTypes, SelectMenuItemAction, SetAutoClose, SetBadgeAction, ToggleIsPinnedAction, SetDoesUserHaveCredentials
+	MenuActionTypes, SelectMenuItemAction, SetAutoClose, SetBadgeAction, ToggleIsPinnedAction, SetDoesUserHaveCredentials, SetHideResultsTableBadgeAction
 }from './actions/menu.actions';
 export { getMenuSessionData } from './helpers/menu-session.helper';
 export { selectEntitiesMenuItems, selectIsPinned } from './reducers/menu.reducer';

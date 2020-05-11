@@ -13,8 +13,7 @@ import { ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import {
-	IMultipleOverlaysSourceConfig,
-	IOverlaysSourceProvider,
+	IMultipleOverlaysSourceConfig, IOverlaysSourceProvider,
 	MultipleOverlaysSourceConfig
 } from '../../../core/models/multiple-overlays-source-config';
 import { SetToastMessageAction } from '@ansyn/map-facade';
@@ -155,13 +154,11 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		if (this.isDataInputsOk()) {
 			const newState = forceState || !this.popupExpanded.get(popup);
 			this.popupExpanded.forEach((_, key, map) => {
-				map.set(key, key === popup ? newState : false)
+				map.set(key , key === popup ? newState : false)
 			});
-		} else {
-			this.store$.dispatch(new SetToastMessageAction({
-				toastText: 'Please select at least one type',
-				showWarningIcon: true
-			}));
+		}
+		else {
+			this.store$.dispatch(new SetToastMessageAction({toastText: 'Please select at least one type', showWarningIcon: true}));
 
 		}
 	}

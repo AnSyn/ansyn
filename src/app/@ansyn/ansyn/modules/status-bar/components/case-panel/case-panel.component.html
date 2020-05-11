@@ -1,10 +1,11 @@
-<div class="top">
+<div class="row top">
 	<span [attr.tooltip-value]="selectedCaseName$ | async"
 	tooltip-class="bottom">
 		{{selectedCaseName$ | async}}
 	</span>
 </div>
-<div class="bottom">
+<hr />
+<div class="bottom row">
 	<div [attr.tooltip-value]="statusBarConfig?.toolTips?.overlayCount | translate"
 		 tooltip-class="bottom">
 		<i class="block-icon icon-status-bar-imagery-count"></i>

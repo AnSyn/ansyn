@@ -8,7 +8,7 @@ import {
 	selectRemovedOverlaysVisibility
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../app.effects.module';
-import { SetBadgeAction } from '@ansyn/menu';
+import { SetBadgeAction, SetHideResultsTableBadgeAction } from '@ansyn/menu';
 import { distinctUntilChanged, filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
 import { BooleanFilterMetadata } from '../../modules/filters/models/metadata/boolean-filter-metadata';
 import {
@@ -100,14 +100,14 @@ export class FiltersAppEffects {
 			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : this.translate.instant(overlaysStatusMessages.noOverLayMatchFilters);
 			return [
 				new SetFilteredOverlaysAction(filteredOverlays),
-				new SetTotalOverlaysAction(filteredOverlays.length),
-				new SetOverlaysStatusMessageAction(message)
+				new SetOverlaysStatusMessageAction(message),
+				new SetHideResultsTableBadgeAction(false)
 			];
 		}));
 
 	@Effect()
 	updateOverlayDrops$ = this.forOverlayDrops$.pipe(
-		map(([overlaysMap, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites]: [Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean]) => {
+		mergeMap(([overlaysMap, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites]: [Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean]) => {
 			const drops = OverlaysService.parseOverlayDataForDisplay({
 				overlaysArray: mapValuesToArray(overlaysMap),
 				filteredOverlays,
@@ -115,7 +115,8 @@ export class FiltersAppEffects {
 				favoriteOverlays,
 				showOnlyFavorites
 			});
-			return new SetDropsAction(drops);
+
+			return [new SetDropsAction(drops), new SetTotalOverlaysAction(drops.length)];
 		})
 	);
 

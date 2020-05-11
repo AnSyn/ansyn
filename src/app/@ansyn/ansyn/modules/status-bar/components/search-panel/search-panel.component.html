@@ -37,12 +37,12 @@
 
 		<span #timePickerTitleFrom
 			  contenteditable
-			  [class.error]="timeError.from"
+			  [class.error]="timeError?.from"
 			  class="title">{{timeSelectionTitle?.from}}</span>
 		{{'&nbsp;&nbsp;-&nbsp;&nbsp;'}}
 		<span #timePickerTitleTo
 			  contenteditable
-			  [class.error]="timeError.to"
+			  [class.error]="timeError?.to"
 			  class="title">{{timeSelectionTitle?.to}}</span>
 	</button>
 

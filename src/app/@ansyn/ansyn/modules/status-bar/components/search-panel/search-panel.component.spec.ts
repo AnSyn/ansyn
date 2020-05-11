@@ -14,6 +14,7 @@ import { toolsFeatureKey, ToolsReducer } from '../../../menu-items/tools/reducer
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
 import { mockIndexProviders } from '../../../core/test/mock-providers';
+import { LoggerService } from '../../../core/services/logger.service';
 
 describe('SearchPanelComponent', () => {
 	let component: SearchPanelComponent;
@@ -91,6 +92,12 @@ describe('SearchPanelComponent', () => {
 					provide: MultipleOverlaysSourceConfig,
 					useValue: {
 						indexProviders: mockIndexProviders(['provide1', 'provide2', 'provide3'])
+					}
+				},
+				{
+					provide: LoggerService,
+					useValue: {
+						info: () => {}
 					}
 				},
 				DateTimeAdapter

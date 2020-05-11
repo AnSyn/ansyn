@@ -247,7 +247,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 			if (contentToRemove.split('').some(letterToRemove => ['/', ':', ' '].includes(letterToRemove))) {
 				const offset = this.findExtentOffset(contentToRemove, !ltr);
 
-				selection.setBaseAndExtent(baseNode, baseOffset, extentNode, ltr ? baseOffset + offset: baseOffset - offset);
+				selection.setBaseAndExtent(baseNode, baseOffset, extentNode, ltr ? baseOffset + offset : baseOffset - offset);
 			}
 		}
 	}

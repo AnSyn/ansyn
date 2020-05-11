@@ -10,7 +10,7 @@ import {
 	selectDropMarkup,
 	selectDrops
 } from '../../../../overlays/reducers/overlays.reducer';
-import { mergeMap, tap, withLatestFrom } from 'rxjs/operators';
+import { map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	DisplayOverlayFromStoreAction,
 	SetMarkUp, SetTotalOverlaysAction,
@@ -79,12 +79,10 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		);
 
 	@AutoSubscription
-	loadOverlays$ = () => combineLatest(this.store$.select(selectDrops)).pipe(
-		mergeMap(( [overlays]: [IOverlayDrop[]]) => {
+	loadOverlays$ = this.store$.select(selectDrops).pipe(
+		map(( overlays: IOverlayDrop[]) => {
 			this.overlays = overlays;
 			this.store$.dispatch(new SetTotalOverlaysAction(this.overlays.length));
-
-			return this.overlays;
 		})
 	);
 

@@ -111,13 +111,13 @@ export class SelectCaseAppEffects {
 	}
 
 	parseMapData(map: ICaseMapState): ICaseMapState {
-		if (map.data.overlay) {
+		if (isFullOverlay(map.data.overlay)) {
 			return { ...map, data: { ...map.data, overlay: this.parseOverlay(map.data.overlay) } };
 		}
 		return map;
 	}
 
 	parseOverlay(overlay: IOverlay): IOverlay {
-		return isFullOverlay(overlay) ? { ...overlay, date: new Date(overlay.date) } : overlay;
+		return isFullOverlay(overlay) ? overlay : { ...overlay, date: new Date() };
 	}
 }

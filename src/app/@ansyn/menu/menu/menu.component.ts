@@ -259,6 +259,10 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	}
 
 	toggleItem(key: string, skipSession: boolean = false): void {
+		if (this.isMenuItemResultsTable(key)) {
+			this.store.dispatch(new SetHideResultsTableBadgeAction(true));
+		}
+
 		if (this.onAnimation) {
 			return;
 		}
@@ -278,10 +282,6 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	}
 
 	openMenu(key: string, skipSession: boolean) {
-		if (this.isMenuItemResultsTable(key)) {
-			this.store.dispatch(new SetHideResultsTableBadgeAction(true));
-		}
-
 		this.store.dispatch(new SelectMenuItemAction({ menuKey: key, skipSession }));
 	}
 

@@ -1,4 +1,4 @@
-<div class="filter" *ngFor="let filter of filterConfig.filters">
+<div class="filter" *ngFor="let filter of filters">
 	<button ansynComboBoxTrigger
 			[disabled]="onlyFavorite"
 			[attr.tooltip-value]="getFilterTooltip(filter.displayName) | translate"
@@ -9,7 +9,7 @@
 			[withArrow]="false"
 			(click)="expandFilter(filter.modelName)">
 		<span class="title">{{filter.displayName | translate}}</span>
-		<span class="filter-counter">{{getTitle(filter.modelName)}}</span>
+		<span class="filter-counter" [class.hide]="filtersMap[filter.modelName]?.title?.length === 0">{{filtersMap[filter.modelName]?.title}}</span>
 	</button>
 
 	<div class="filter-container scrolled">
@@ -24,7 +24,7 @@
 	<button ansynComboBoxTrigger
 			class="favorites"
 			[withArrow]="false"
-			[disabled]="disableOnlyFavoritesButton"
+			[disabled]="disableOnlyFavoritesButton && !onlyFavorite"
 			[attr.tooltip-value]="'Displays favorites overlays only' | translate"
 			tooltip-class="bottom"
 			(click)="showOnlyFavorites()">

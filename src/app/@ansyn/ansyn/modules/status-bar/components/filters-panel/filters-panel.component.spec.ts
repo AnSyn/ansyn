@@ -5,8 +5,9 @@ import { MockComponent } from '../../../core/test/mock-component';
 import { filtersFeatureKey, FiltersReducer } from '../../../filters/reducer/filters.reducer';
 import { StoreModule } from '@ngrx/store';
 import { ClickOutsideService } from '../../../core/click-outside/click-outside.service';
-import { filtersConfig } from '../../../filters/services/filters.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { StatusBarConfig } from '../../models/statusBar.config';
+import { filtersConfig } from '../../../filters/services/filters.service';
 
 const FILTERS = [
 	{
@@ -36,6 +37,12 @@ describe('FiltersPanelComponent', () => {
 			],
 			providers: [
 				ClickOutsideService,
+				{
+					provide: StatusBarConfig,
+					useValue: {
+						filters: ['filter1']
+					}
+				},
 				{
 					provide: filtersConfig,
 					useValue: {

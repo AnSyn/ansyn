@@ -11,6 +11,7 @@ import { anaglyphSensorAlertKey } from '../modules/plugins/openlayers/plugins/an
 import { AnaglyphSensorAlertComponent } from '../modules/plugins/openlayers/plugins/anaglyph-sensor/alert-component/anaglyph-sensor-alert.component';
 import { CredentialsComponent } from '../modules/core/components/credentials/credentials.component';
 import { ResultsComponent } from "../modules/menu-items/results/components/results/results.component";
+import { FiltersCollectionComponent } from '../modules/filters/components/filters-collection/filters-collection.component';
 
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
 	ansynAlerts: [
@@ -40,10 +41,14 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			iconClass: 'icon-main-cases'
 		},
 		{
+			name: 'Filters',
+			component: FiltersCollectionComponent,
+			iconClass: 'icon-main-filters'
+		},
+		{
 			name: 'Results table',
 			component: ResultsComponent,
-			iconClass: 'icon-table',
-			showZeroBadge: true
+			iconClass: 'icon-table'
 		},
 		{
 			name: 'Data Layers',

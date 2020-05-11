@@ -264,15 +264,40 @@
   	"shortFilterListLength": 8,
     "filters": [
       {
-        "modelName": "sensorName",
-        "displayName": "Sensor",
-        "type": "Enum"
-      },
-      {
-        "modelName": "isGeoRegistered",
-        "displayName": "Geo Registration",
-        "type": "Enum"
-      }
+		  "modelName": "sensorType",
+		  "displayName": "Sensor Type",
+		  "type": "Enum"
+		},
+		{
+			"modelName": "sensorName",
+			"displayName": "Sensor",
+			"type": "Enum"
+	  	},
+		{
+		  "modelName": "sourceType",
+		  "displayName": "Source Type",
+		  "type": "Enum"
+		},
+		{
+		  "modelName": "isGeoRegistered",
+		  "displayName": "Geo Registration",
+		  "type": "Enum"
+		},
+		{
+			"modelName": "containedInSearchPolygon",
+		  "displayName": "Contains Region",
+		  "type": "Enum"
+		},
+		{
+		  "modelName": "bestResolution",
+		  "displayName": "Resolution",
+		  "type": "Slider"
+		},
+		{
+		  "modelName": "cloudCoverage",
+		  "displayName": "Cloud Coverage",
+		  "type": "Slider"
+		}
     ]
   },
   "contextConfig": {
@@ -341,6 +366,7 @@
       "enlarge": "Expand timeline",
       "quickloop": "Next overlay from the quick loop (key: Q)"
     },
+    "filters": ["sensorName", "isGeoRegistered"],
     "locale": "en-GB"
   },
   "coreConfig": {

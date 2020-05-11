@@ -5,5 +5,4 @@ export interface IMenuItem {
 	badge?: number;
 	production?: boolean;
 	dockedToBottom?: boolean;
-	showZeroBadge?: boolean;
 }

@@ -1,11 +1,14 @@
-import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output, Input } from '@angular/core';
 import { TreeviewConfig, TreeviewI18n, TreeviewItem } from 'ngx-treeview';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { Store } from '@ngrx/store';
 import { isEqual } from 'lodash';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, tap } from 'rxjs/operators';
-import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
+import {
+	LoadOverlaysSuccessAction,
+	SetOverlaysCriteriaAction
+} from '../../../overlays/actions/overlays.actions';
 import { selectDataInputFilter } from '../../../overlays/reducers/overlays.reducer';
 import {
 	IMultipleOverlaysSourceConfig,
@@ -28,6 +31,7 @@ import { DataInputFilterValue } from '../../../menu-items/cases/models/case.mode
 export class TreeViewComponent implements OnInit, OnDestroy {
 	@Output() closeTreeView = new EventEmitter<any>();
 	@Output() dataInputTitleChange = new EventEmitter<string>();
+	@Input() dataInputItems: any[];
 	_selectedFilters: DataInputFilterValue[];
 	dataInputFiltersItems: TreeviewItem[] = [];
 	leavesCount: number;
@@ -45,10 +49,9 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		filter(Boolean),
 		tap(_preFilter => {
 			this._selectedFilters = _preFilter.fullyChecked ? this.selectAll() : _preFilter.filters;
-			this.updateTitle();
 			if (Boolean(this._selectedFilters)) {
 				this.dataInputFiltersItems.forEach(item => {
-					item.checked = _preFilter.fullyChecked || this._selectedFilters.some(selectedFilter => isEqual(selectedFilter, item.value));
+					item.checked = _preFilter.fullyChecked || this._selectedFilters.some(selectedFilter => selectedFilter === item.value);
 				});
 			}
 		})
@@ -89,13 +92,14 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	dataInputFiltersChange(): void {
 		const isFullCheck = this.leavesCount <= this._selectedFilters.length;
-		this.store.dispatch(new SetOverlaysCriteriaAction({
-			dataInputFilters: {
-				fullyChecked: isFullCheck,
-				filters: this._selectedFilters
-			}
-		}));
+		const isNoneCheck = this._selectedFilters.length === 0;
 
+			this.store.dispatch(new SetOverlaysCriteriaAction({
+				dataInputFilters: {
+					fullyChecked: isFullCheck,
+					filters: this._selectedFilters
+				}
+			}, {noInitialSearch: !isFullCheck && isNoneCheck}));
 	}
 
 	selectAll() {
@@ -108,8 +112,4 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 	}
 
-	updateTitle(): void {
-		const title = this._selectedFilters.length / this.leavesCount === 1 ? 'All' : `${ this._selectedFilters.length } / ${ this.leavesCount }`;
-		this.dataInputTitleChange.emit(title);
-	}
 }

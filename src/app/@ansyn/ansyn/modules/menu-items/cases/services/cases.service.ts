@@ -189,6 +189,13 @@ export class CasesService {
 
 	updateCase(selectedCase: ICase): Observable<IStoredEntity<ICasePreview, IDilutedCaseState>> {
 		const storeEntity = this.convertToStoredEntity(selectedCase);
+		// because bad mapping in elastic
+		// TODO: fix when we fix the elastic mapping
+		if (typeof storeEntity.data.dataInputFilters.filters[0] === 'string') {
+			storeEntity.data.dataInputFilters.filters = <any>storeEntity.data.dataInputFilters.filters.map( (filter: any) => {
+				return {providerName: filter};
+			})
+		}
 		if (this.isStoreEntitiesEqual(storeEntity, this.latestStoredEntity)) {
 			return EMPTY;
 		}
@@ -206,6 +213,17 @@ export class CasesService {
 	loadCase(selectedCaseId: string): Observable<any> {
 		return this.storageService.get<ICasePreview, ICaseState>(this.config.schema, selectedCaseId)
 			.pipe(
+				map( (entity: any) => {
+					// because bad mapping in elastic
+					// TODO: fix when we fix the elastic mapping
+					const newCase = {...entity};
+					if ( typeof entity.data.dataInputFilters.filters[0] !== 'string') {
+						newCase.data.dataInputFilters.filters = entity.data.dataInputFilters.filters
+							.map( filters => filters.providerName )
+							.filter( (item, index, arr) => arr.indexOf(item) === index)
+					}
+					return newCase;
+				}),
 				tap((latestStoredEntity) => this.latestStoredEntity = _cloneDeep(latestStoredEntity)),
 				map(storedEntity =>
 					this.parseCase(<ICase>{ ...storedEntity.preview, state: storedEntity.data }))

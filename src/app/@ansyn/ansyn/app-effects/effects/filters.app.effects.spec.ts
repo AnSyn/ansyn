@@ -27,7 +27,7 @@ import {
 	LoadOverlaysAction,
 	SetDropsAction,
 	SetFilteredOverlaysAction,
-	SetOverlaysStatusMessageAction
+	SetOverlaysStatusMessageAction, SetTotalOverlaysAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	OverlayReducer,
@@ -40,6 +40,7 @@ import { FilterType } from '../../modules/filters/models/filter-type';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { MissingTranslationHandler, TranslateLoader, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
 import { LoggerService } from '../../modules/core/services/logger.service';
+import { SetHideResultsTableBadgeAction } from '../../../menu/actions/menu.actions';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -97,17 +98,20 @@ describe('Filters app effects', () => {
 		};
 		spyOn(fakeObj, 'buildFilteredOverlays').and.callFake(() => []);
 		store.dispatch(new InitializeFiltersSuccessAction(new Map()));
-		const expectedResults = cold('(bc)', {
+		const expectedResults = cold('(bcd)', {
 			b: new SetFilteredOverlaysAction([]),
-			c: new SetOverlaysStatusMessageAction(overlaysStatusMessages.noOverLayMatchFilters)
+			c: new SetOverlaysStatusMessageAction(overlaysStatusMessages.noOverLayMatchFilters),
+			d: new SetHideResultsTableBadgeAction(false)
 		});
+
 		expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
 	});
 
 	it('updateOverlayDrops$ effect', () => {
 		spyOn(OverlaysService, 'parseOverlayDataForDisplay').and.callFake(() => []);
-		const expectedResults = cold('(b)', {
-			b: new SetDropsAction([])
+		const expectedResults = cold('(bc)', {
+			b: new SetDropsAction([]),
+			c: new SetTotalOverlaysAction(0)
 		});
 		expect(filtersAppEffects.updateOverlayDrops$).toBeObservable(expectedResults);
 	});

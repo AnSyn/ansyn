@@ -1,4 +1,5 @@
 import {
+	AfterViewChecked, ChangeDetectorRef,
 	Component,
 	ComponentFactoryResolver,
 	ComponentRef,
@@ -14,7 +15,7 @@ import {
 import {
 	ContainerChangedTriggerAction,
 	ResetAppAction,
-	SelectMenuItemAction,
+	SelectMenuItemAction, SetHideResultsTableBadgeAction,
 	ToggleIsPinnedAction,
 	ToggleMenuCollapse,
 	UnSelectMenuItemAction
@@ -24,7 +25,7 @@ import {
 	IMenuState,
 	selectAllMenuItems,
 	selectAutoClose,
-	selectEntitiesMenuItems,
+	selectEntitiesMenuItems, selectHideResultsTableBadge,
 	selectIsPinned,
 	selectMenuCollapse,
 	selectSelectedMenuItem, selectUserFirstEnter, selectUserHaveCredentials
@@ -72,12 +73,13 @@ const animations: any[] = [
 	menu is open -> toggle same menu item ->  dispatch store -> subscribe store -> change expand -> destroy component
 */
 
-export class MenuComponent implements OnInit, OnDestroy {
+export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	isUserFirstEntrance: boolean;
 	doesUserHaveCredentials: boolean;
 	_componentElem;
 	currentComponent: ComponentRef<any>;
 	collapse: boolean;
+	hideResultsTableBadge: boolean;
 	@Input() animatedElement: HTMLElement;
 	@ViewChild('menuWrapper') menuWrapperElement: ElementRef;
 	@ViewChild('menu') menuElement: ElementRef;
@@ -121,6 +123,12 @@ export class MenuComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
+	selectHideResultsTableBadge$ = this.store.select(selectHideResultsTableBadge).pipe(
+		tap(this.setHideResultsTableBadge.bind(this))
+	);
+
+
+	@AutoSubscription
 	isUserFirstEntrance$ = this.store.select(selectUserFirstEnter).pipe(
 		tap((isUserFirstEntrance) => this.isUserFirstEntrance = isUserFirstEntrance)
 	);
@@ -137,16 +145,14 @@ export class MenuComponent implements OnInit, OnDestroy {
 	expand: boolean;
 	onAnimation: boolean;
 	isBuildNeeded: boolean;
-	hideBadgeResult: boolean;
 
 	constructor(public componentFactoryResolver: ComponentFactoryResolver,
 				protected store: Store<IMenuState>,
 				protected renderer: Renderer2,
 				protected elementRef: ElementRef,
 				@Inject(DOCUMENT) protected document: Document,
-				@Inject(MenuConfig) public menuConfig: IMenuConfig) {
-		this.hideBadgeResult = false;
-
+				@Inject(MenuConfig) public menuConfig: IMenuConfig,
+				private cdref: ChangeDetectorRef) {
 	}
 
 	get componentElem() {
@@ -220,6 +226,10 @@ export class MenuComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	setHideResultsTableBadge(_hideResultsTableBadge) {
+		this.hideResultsTableBadge = _hideResultsTableBadge;
+	}
+
 	componentChanges(): void {
 		if (!this.componentElem || this.onAnimation) {
 			this.isBuildNeeded = !this.componentElem;
@@ -229,11 +239,12 @@ export class MenuComponent implements OnInit, OnDestroy {
 		this.buildCurrentComponent();
 	}
 
-	hideBadge(badge: string, showZeroBadge?: boolean): boolean {
-		if (showZeroBadge) {
-			return this.hideBadgeResult;
+	hideBadge(badge: string, name?: string): boolean {
+		if (this.isMenuItemResultsTable(name)) {
+			return this.hideResultsTableBadge;
 		}
-		return badge !== '★' && (showZeroBadge ? Number(badge) < 0 : !Number(badge));
+
+		return badge !== '★' && !Number(badge);
 	}
 
 	isActive(key: string): boolean {
@@ -248,6 +259,10 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	toggleItem(key: string, skipSession: boolean = false): void {
+		if (this.isMenuItemResultsTable(key)) {
+			this.store.dispatch(new SetHideResultsTableBadgeAction(true));
+		}
+
 		if (this.onAnimation) {
 			return;
 		}
@@ -262,13 +277,15 @@ export class MenuComponent implements OnInit, OnDestroy {
 		return Boolean(this.selectedMenuItem);
 	}
 
+	isMenuItemResultsTable(menuItemName: string): boolean {
+		return menuItemName === 'Results table';
+	}
+
 	openMenu(key: string, skipSession: boolean) {
-		this.hideBadgeResult = true;
 		this.store.dispatch(new SelectMenuItemAction({ menuKey: key, skipSession }));
 	}
 
 	closeMenu(): void {
-		this.hideBadgeResult = false;
 		this.store.dispatch(new UnSelectMenuItemAction());
 	}
 
@@ -326,6 +343,10 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
+	}
+
+	ngAfterViewChecked() {
+		this.cdref.detectChanges();
 	}
 }
 

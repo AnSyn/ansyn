@@ -36,12 +36,12 @@
 			class="button">
 
 		<span #timePickerTitleFrom
-			  [attr.contenteditable]="isActive('TimePickerPreset')"
+			  contenteditable
 			  [class.error]="timeError.from"
 			  class="title">{{timeSelectionTitle?.from}}</span>
 		{{'&nbsp;&nbsp;-&nbsp;&nbsp;'}}
 		<span #timePickerTitleTo
-			  [attr.contenteditable]="isActive('TimePickerPreset')"
+			  contenteditable
 			  [class.error]="timeError.to"
 			  class="title">{{timeSelectionTitle?.to}}</span>
 	</button>

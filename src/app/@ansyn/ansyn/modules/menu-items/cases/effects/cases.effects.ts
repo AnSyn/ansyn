@@ -45,6 +45,7 @@ import { IStoredEntity } from '../../../core/services/storage/storage.service';
 import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCrash';
 import { toastMessages } from '../../../core/models/toast-messages';
 import { ICase, ICasePreview, IDilutedCaseState } from '../models/case.model';
+import { BackToWorldView } from '../../../overlays/overlay-status/actions/overlay-status.actions';
 
 @Injectable()
 export class CasesEffects {
@@ -62,9 +63,14 @@ export class CasesEffects {
 		share());
 
 	@Effect()
-	onAddCase$: Observable<SelectCaseAction> = this.actions$.pipe(
+	onAddCase$: Observable<SelectCaseAction | BackToWorldView> = this.actions$.pipe(
 		ofType<AddCaseAction>(CasesActionTypes.ADD_CASE),
-		map((action: AddCaseAction) => new SelectCaseAction(action.payload)),
+		mergeMap((action: AddCaseAction) => {
+			const mapId = action.payload.state.maps.activeMapId;
+			this.store.dispatch(new BackToWorldView({ mapId }));
+
+			return [new SelectCaseAction(action.payload), new BackToWorldView({ mapId })];
+		}),
 		share());
 
 	@Effect()

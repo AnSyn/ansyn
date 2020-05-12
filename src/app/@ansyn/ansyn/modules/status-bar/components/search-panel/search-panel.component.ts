@@ -13,7 +13,8 @@ import { ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import {
-	IMultipleOverlaysSourceConfig, IOverlaysSourceProvider,
+	IMultipleOverlaysSourceConfig,
+	IOverlaysSourceProvider,
 	MultipleOverlaysSourceConfig
 } from '../../../core/models/multiple-overlays-source-config';
 import { SetToastMessageAction } from '@ansyn/map-facade';
@@ -57,6 +58,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	timeError: { from: boolean, to: boolean };
 	dataInputFilterTitle: string;
 	timeSelectionTitle: { from: string, to: string };
+	timeSelectionOldTitle: { from: string, to: string };
 	geoFilterTitle: string;
 	geoFilterCoordinates: string;
 	dataInputFilters: ICaseDataInputFiltersState;
@@ -72,6 +74,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 					from: moment(this.timeRange[0]).format(DATE_FORMAT),
 					to: moment(this.timeRange[1]).format(DATE_FORMAT)
 				};
+				this.timeSelectionOldTitle = { ...this.timeSelectionTitle };
 				this.timeError = {
 					from: !this.validateDate(this.timeSelectionTitle.from),
 					to: !this.validateDate(this.timeSelectionTitle.to)
@@ -134,7 +137,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		fromEvent(this.timePickerInputTo.nativeElement, 'keyup')
 	).pipe(
 		filter(isDigitKey),
-		tap((event: any) => this.loggerService.info('change From date manually ' + event.target.textContent))
+		tap(this.logTimePickerChange.bind(this))
 	);
 
 	@AutoSubscription
@@ -201,8 +204,11 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 			selection.deleteFromDocument();
 		}
 		if (isDigitKey(event)) {
-			this.loggerService.info('change date manual ' + this.timePickerInputFrom.nativeElement.textContent + ' - ' + this.timePickerInputTo.nativeElement.textContent)
-			return;
+			// we subtracting 1 because we get the event before add the key.
+			const limitLength = window.getSelection().type === 'Range' ? DATE_FORMAT.length : DATE_FORMAT.length - 1;
+			if (event.target.textContent.length <= limitLength) {
+				return;
+			}
 		}
 		if (isEnterKey(event)) {
 			if (!this.setTimeCriteria()) {
@@ -287,6 +293,21 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		this.timePickerInputFrom.nativeElement.textContent = this.timeSelectionTitle.from;
 		this.timeError.from = false;
 		this.timeError.to = false;
+	}
+
+	logTimePickerChange() {
+		const { from: oldFrom, to: oldTo } = this.timeSelectionOldTitle;
+		const from = this.timePickerInputFrom.nativeElement.textContent;
+		const to = this.timePickerInputTo.nativeElement.textContent;
+		if (from !== oldFrom) {
+			this.loggerService.info(`change from time: ${ oldFrom } -> ${ from }`);
+		}
+		if (to !== oldTo) {
+			this.loggerService.info(`change to time: ${ oldTo } -> ${ to }`);
+		}
+
+		this.timeSelectionOldTitle.from = from;
+		this.timeSelectionOldTitle.to = to;
 	}
 
 	private validateDate(date) {

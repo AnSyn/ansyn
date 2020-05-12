@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild, EventEmitter } from '@angular/core';
+import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import * as momentNs from 'moment';
 import { IStatusBarConfig } from '../../models/statusBar-config.model';
 import { IStatusBarState, selectGeoFilterActive, selectGeoFilterType } from '../../reducers/status-bar.reducer';
@@ -7,13 +7,14 @@ import { Store } from '@ngrx/store';
 import { combineLatest, fromEvent, merge, Observable } from 'rxjs';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations/src/animation_metadata';
-import { filter, tap, take } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { selectDataInputFilter, selectRegion, selectTime } from '../../../overlays/reducers/overlays.reducer';
 import { ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import {
-	IMultipleOverlaysSourceConfig, IOverlaysSourceProvider,
+	IMultipleOverlaysSourceConfig,
+	IOverlaysSourceProvider,
 	MultipleOverlaysSourceConfig
 } from '../../../core/models/multiple-overlays-source-config';
 import { SetToastMessageAction } from '@ansyn/map-facade';
@@ -57,6 +58,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	timeError: { from: boolean, to: boolean };
 	dataInputFilterTitle: string;
 	timeSelectionTitle: { from: string, to: string };
+	timeSelectionOldTitle: { from: string, to: string };
 	geoFilterTitle: string;
 	geoFilterCoordinates: string;
 	dataInputFilters: ICaseDataInputFiltersState;
@@ -72,6 +74,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 					from: moment(this.timeRange[0]).format(DATE_FORMAT),
 					to: moment(this.timeRange[1]).format(DATE_FORMAT)
 				};
+				this.timeSelectionOldTitle = { ...this.timeSelectionTitle };
 				this.timeError = {
 					from: !this.validateDate(this.timeSelectionTitle.from),
 					to: !this.validateDate(this.timeSelectionTitle.to)
@@ -86,8 +89,8 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		tap((caseDataInputFiltersState: ICaseDataInputFiltersState) => {
 			this.dataInputFilters = caseDataInputFiltersState;
 			const selectedFiltersSize = this.dataInputFilters.filters.length;
-			const dataInputsSize = Object.values(this.multipleOverlaysSourceConfig.indexProviders).filter(({inActive}: IOverlaysSourceProvider) => !inActive).length;
-			this.dataInputFilterTitle = this.dataInputFilters.fullyChecked ? 'All' : `${selectedFiltersSize}/${dataInputsSize}`;
+			const dataInputsSize = Object.values(this.multipleOverlaysSourceConfig.indexProviders).filter(({ inActive }: IOverlaysSourceProvider) => !inActive).length;
+			this.dataInputFilterTitle = this.dataInputFilters.fullyChecked ? 'All' : `${ selectedFiltersSize }/${ dataInputsSize }`;
 			if (!caseDataInputFiltersState.fullyChecked && caseDataInputFiltersState.filters.length === 0) {
 				this.popupExpanded.set('DataInputs', true)
 			}
@@ -134,7 +137,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		fromEvent(this.timePickerInputTo.nativeElement, 'keyup')
 	).pipe(
 		filter(isDigitKey),
-		tap((event: any) => this.loggerService.info('change From date manually ' + event.target.textContent))
+		tap(this.logTimePickerChange.bind(this))
 	);
 
 	@AutoSubscription
@@ -146,7 +149,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	disableDragText$ = () => merge(fromEvent(this.timePickerInputFrom.nativeElement, 'dragstart'),
 		fromEvent(this.timePickerInputTo.nativeElement, 'dragstart')).pipe(
-		tap( (event: DragEvent) =>  event.preventDefault())
+		tap((event: DragEvent) => event.preventDefault())
 	);
 
 	ngOnInit() {
@@ -156,11 +159,13 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		if (this.isDataInputsOk()) {
 			const newState = forceState || !this.popupExpanded.get(popup);
 			this.popupExpanded.forEach((_, key, map) => {
-				map.set(key , key === popup ? newState : false)
+				map.set(key, key === popup ? newState : false)
 			});
-		}
-		else {
-			this.store$.dispatch(new SetToastMessageAction({toastText: 'Please select at least one type', showWarningIcon: true}));
+		} else {
+			this.store$.dispatch(new SetToastMessageAction({
+				toastText: 'Please select at least one type',
+				showWarningIcon: true
+			}));
 
 		}
 	}
@@ -249,7 +254,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	selectOnlyNumber() {
 		const selection = window.getSelection();
 		if (selection.type === 'Range') {
-			const { baseOffset, extentOffset, baseNode, extentNode} = selection;
+			const { baseOffset, extentOffset, baseNode, extentNode } = selection;
 			const ltr = baseOffset < extentOffset;
 			const minIndex = Math.min(baseOffset, extentOffset);
 			const maxIndex = Math.max(baseOffset, extentOffset);
@@ -278,6 +283,21 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		this.timePickerInputFrom.nativeElement.textContent = this.timeSelectionTitle.from;
 		this.timeError.from = false;
 		this.timeError.to = false;
+	}
+
+	logTimePickerChange() {
+		const { from: oldFrom, to: oldTo } = this.timeSelectionOldTitle;
+		const from = this.timePickerInputFrom.nativeElement.textContent;
+		const to = this.timePickerInputTo.nativeElement.textContent;
+		if (from !== oldFrom) {
+			this.loggerService.info(`change from time: ${ oldFrom } -> ${ from }`);
+		}
+		if (to !== oldTo) {
+			this.loggerService.info(`change to time: ${ oldTo } -> ${ to }`);
+		}
+
+		this.timeSelectionOldTitle.from = from;
+		this.timeSelectionOldTitle.to = to;
 	}
 
 	private validateDate(date) {

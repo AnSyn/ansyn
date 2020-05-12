@@ -9,7 +9,7 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 export class EnumFilterContainerComponent implements OnChanges {
 	@Input() metadata: EnumFilterMetadata;
 	@Input() isLongFiltersList: boolean;
-	@Output() onMetadataChange = new EventEmitter<EnumFilterMetadata>();
+	@Output() onMetadataChange = new EventEmitter<EnumFilterMetadata>(true);
 	@Input() filtersSearchResult: any;
 	fields = [];
 

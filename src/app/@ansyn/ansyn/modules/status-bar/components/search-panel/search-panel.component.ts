@@ -68,7 +68,9 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 			const selectedFiltersSize = this.dataInputFilters.filters.length;
 			const dataInputsSize = Object.values(this.multipleOverlaysSourceConfig.indexProviders).filter(({inActive}: IOverlaysSourceProvider) => !inActive).length;
 			this.dataInputFilterTitle = this.dataInputFilters.fullyChecked ? 'All' : `${selectedFiltersSize}/${dataInputsSize}`;
-
+			if (!caseDataInputFiltersState.fullyChecked && caseDataInputFiltersState.filters.length === 0) {
+				this.popupExpanded.set('DataInputs', true)
+			}
 		})
 	);
 

@@ -10,7 +10,7 @@ import { FilterSearchResult } from '../../models/filter-search-results';
 export class ArrayFilterContainerComponent implements OnChanges {
 	@Input() metadata: ArrayFilterMetadata;
 	@Input() filtersSearchResult: FilterSearchResult;
-	@Output() onMetadataChange = new EventEmitter<ArrayFilterMetadata>();
+	@Output() onMetadataChange = new EventEmitter<ArrayFilterMetadata>(true);
 	fields = [];
 
 	onInputClicked(key: string) {

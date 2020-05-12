@@ -1,3 +1,5 @@
+export { isArrowRightKey, isArrowLeftKey, isBackspaceKey, isDigitKey, isEnterKey, isEscapeKey } from "./modules/core/utils/keyboardKey";
+
 export { IImageProcParam } from "./modules/overlays/overlay-status/config/overlay-status-config";
 
 export { AddLayer } from './modules/menu-items/layers-manager/actions/layers.actions';

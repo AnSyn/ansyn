@@ -26,7 +26,7 @@
 >
 	<button ansynComboBoxTrigger
 			#timePickerTrigger
-			(click)="toggleExpander('TimePickerPreset')"
+			(click)="openTimePickerPreset()"
 			[attr.tooltip-value]="statusBarConfig?.toolTips?.timeFilterEdit | translate"
 			tooltip-class="bottom"
 			[class.active]="isActive('TimePickerPreset')"
@@ -34,7 +34,16 @@
 			[withArrow]="false"
 			icon="icon icon-status-bar-time"
 			class="button">
-		<span class="title" [innerHTML]="timeSelectionTitle"></span>
+
+		<span #timePickerTitleFrom
+			  contenteditable
+			  [class.error]="timeError?.from"
+			  class="title">{{timeSelectionTitle?.from}}</span>
+		{{'&nbsp;&nbsp;-&nbsp;&nbsp;'}}
+		<span #timePickerTitleTo
+			  contenteditable
+			  [class.error]="timeError?.to"
+			  class="title">{{timeSelectionTitle?.to}}</span>
 	</button>
 
 	<ansyn-timepicker-presets *ngIf="isActive('TimePickerPreset')"

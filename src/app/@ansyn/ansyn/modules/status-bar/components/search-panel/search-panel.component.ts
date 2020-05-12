@@ -169,6 +169,12 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		return this.popupExpanded.get(popup);
 	}
 
+	shouldCloseTimePicker() {
+		if (this.popupExpanded.get('TimePicker') || this.popupExpanded.get('TimePickerPreset')) {
+			this.closeTimePicker();
+		}
+	}
+
 	ngOnDestroy() {
 	}
 

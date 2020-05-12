@@ -70,6 +70,11 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 		this.annotations.updateFeature(this.featureId, { showMeasures: !showMeasures });
 	}
 
+	toggleArea() {
+		const { showArea } = this.getFeatureProps();
+		this.annotations.updateFeature(this.featureId, { showArea: !showArea });
+	}
+
 	selectTab(tab: AnnotationsContextmenuTabs) {
 		this.selectedTab = {
 			...this.selectedTab,

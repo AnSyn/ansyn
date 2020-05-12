@@ -5,12 +5,15 @@
 	for dynamic tooltips use [attr.tooltip-value]
 	<button [attr.tooltip-value]="myString" tooltip-class="right">Hello</button>
 */
+
+@import "./disabled-tooltip.css";
+
 [tooltip-value]:not(.active):not(:disabled):after {
 	content: attr(tooltip-value);
 }
 
 [tooltip-value]:not(.active):not(:disabled)[tooltip-class*="top"]:after {
-	/*left: auto;*/
+	left: auto;
 	bottom: auto;
 	transform: translateY(-100%);
 }
@@ -100,4 +103,19 @@
 [tooltip-value]:not(.active):not(:disabled):hover:after {
 	opacity: 1;
 	visibility: visible;
+}
+
+/* for chrome 44
+   chrome 44 does not support left: auto.
+   so instead, we will use left: 0, and also make the trigger element
+   position: relative (the tooltip element is position: absolute)
+ */
+@supports not (display: grid) {
+	[tooltip-value]:not([tooltip-class*="not-relative"]) {
+		position: relative;
+	}
+
+	[tooltip-value]:not(.active):not(:disabled):not([tooltip-class*="left"])[tooltip-class*="bottom"]:after {
+		left: 0;
+	}
 }

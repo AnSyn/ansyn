@@ -1,0 +1,36 @@
+@import "ansyn/less/common";
+@import "../../less/status-bar-common";
+
+
+:host {
+	&:extend(.status-bar-panel);
+	flex-direction: row;
+	padding-left: 5px;
+	padding-right: 5px;
+	width: fit-content;
+
+	margin: 0 1px;
+
+	/deep/ ansyn-combo-box {
+		height: initial;
+
+		.display-button {
+			&:extend(.status-bar-button);
+			border: 1px solid #746666;
+
+
+			&.active {
+				&:extend(.status-bar-button-active);
+			}
+
+			&:hover:not(.active) {
+				&:extend(.status-bar-button-hover);
+			}
+
+			&.screens span {
+				margin-right: 5px;
+			}
+		}
+	}
+
+}

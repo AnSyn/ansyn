@@ -1,0 +1,27 @@
+@import "ansyn/less/globals";
+
+:host {
+	position: absolute;
+	top: @status-bar-height;
+	transform: translateY(-100%);
+
+	input.time-picker-input {
+		position: absolute;
+		top: 0;
+		padding-left: 28px;
+		width: 100%;
+		height: 100%;
+		border: none;
+		background-color: transparent;
+		color: white;
+		opacity: 0;
+		pointer-events: none;
+		font-family: @app-font;
+		font-size: 14px;
+	}
+}
+
+// time picker: set z-index
+/deep/ .cdk-overlay-container {
+	z-index: 4000;
+}

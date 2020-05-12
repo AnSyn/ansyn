@@ -8,10 +8,9 @@ import {
 	selectMapsList,
 	selectOverlayOfActiveMap
 } from '@ansyn/map-facade';
-import { selectIsPinned } from '@ansyn/menu';
-import { filter, map, withLatestFrom } from 'rxjs/operators';
+import { selectIsPinned, selectMenuCollapse } from '@ansyn/menu';
+import { filter, map, withLatestFrom, tap } from 'rxjs/operators';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
-import { selectSelectedCase } from '../modules/menu-items/cases/reducers/cases.reducer';
 import { LoadDefaultCaseAction } from '../modules/menu-items/cases/actions/cases.actions';
 import { ICase, ICaseMapState } from '../modules/menu-items/cases/models/case.model';
 import { IToolsConfig, toolsConfig } from '../modules/menu-items/tools/models/tools-config';
@@ -29,11 +28,7 @@ import { IOverlay } from '../modules/overlays/models/overlay.model';
 export class AnsynComponent implements OnInit {
 	renderContextMenu: boolean;
 
-	selectedCaseName$: Observable<string> = this.store$
-		.pipe(
-			select(selectSelectedCase),
-			map((selectSelected: ICase) => selectSelected ? selectSelected.name : 'Default Case')
-		);
+	isMenuCollapse$ = this.store$.select(selectMenuCollapse);
 
 	isPinnedClass$: Observable<string> = this.store$.select(selectIsPinned).pipe(
 		map((_isPinned) => _isPinned ? 'isPinned' : 'isNotPinned')

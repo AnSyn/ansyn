@@ -55,7 +55,7 @@ import {
 	OverlaysActionTypes,
 	SetHoveredOverlayAction,
 	SetMarkUp,
-	SetOverlaysCriteriaAction
+	SetTotalOverlaysAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	IMarkUpData,
@@ -68,28 +68,20 @@ import {
 import { ExtendMap } from '../../modules/overlays/reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../../modules/overlays/components/overlay-overview/overlay-overview.component.const';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
-import * as turf from '@turf/turf';
-import { Position } from 'geojson';
 import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { Dictionary } from '@ngrx/entity';
 import { LoggerService } from '../../modules/core/services/logger.service';
+import { SetBadgeAction } from '@ansyn/menu';
 
 @Injectable()
 export class OverlaysAppEffects {
-
-	region$ = this.store$.select(selectRegion);
-
-	isPinPointSearch$ = this.region$.pipe(
-		filter(Boolean),
-		map((region) => region.type === CaseGeoFilter.PinPoint),
-		distinctUntilChanged()
-	);
 
 	@Effect({ dispatch: false })
 	actionsLogger$: Observable<any> = this.actions$.pipe(
 		ofType(
 			OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS,
+			OverlaysActionTypes.CHECK_TRIANGLES,
 			OverlaysActionTypes.LOAD_OVERLAYS,
 			OverlaysActionTypes.LOAD_OVERLAYS_FAIL,
 			OverlaysActionTypes.SET_OVERLAYS_CRITERIA,
@@ -124,20 +116,6 @@ export class OverlaysAppEffects {
 		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
 		map(() => new SetPresetOverlaysAction([]))
 	);
-
-
-	@Effect()
-	onPinPointSearch$: Observable<SetOverlaysCriteriaAction | any> = this.actions$.pipe(
-		ofType<ContextMenuTriggerAction>(MapActionTypes.TRIGGER.CONTEXT_MENU),
-		withLatestFrom(this.isPinPointSearch$),
-		filter(([{ payload }, isPinPointSearch]: [ContextMenuTriggerAction, boolean]) => isPinPointSearch),
-		map(([{ payload }, isPinPointSearch]: [ContextMenuTriggerAction, boolean]) => payload),
-		map((payload: Position) => {
-			const region = turf.geometry('Point', payload);
-			return new SetOverlaysCriteriaAction({ region });
-		})
-	);
-
 
 	@Effect()
 	displayMultipleOverlays$: Observable<any> = this.actions$.pipe(
@@ -191,6 +169,7 @@ export class OverlaysAppEffects {
 	onDisplayOverlayFromStore$: Observable<DisplayOverlayAction> = this.actions$.pipe(
 		ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE),
 		withLatestFrom(this.overlaysService.getAllOverlays$, this.store$.select(mapStateSelector)),
+		filter(([{ payload }, overlays, { activeMapId }]: [DisplayOverlayFromStoreAction, Map<string, IOverlay>, IMapState]) => Boolean(overlays.size)),
 		map(([{ payload }, overlays, { activeMapId }]: [DisplayOverlayFromStoreAction, Map<string, IOverlay>, IMapState]) => {
 			const mapId = payload.mapId || activeMapId;
 			const overlay = overlays.get(payload.id);
@@ -292,6 +271,11 @@ export class OverlaysAppEffects {
 		ofType(MapActionTypes.TRIGGER.IMAGERY_MOUSE_LEAVE),
 		map(() => new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }))
 	);
+
+	@Effect()
+	updateResultTableBadge$: Observable<SetBadgeAction> = this.actions$.pipe(
+		ofType<SetTotalOverlaysAction>(OverlaysActionTypes.SET_TOTAL_OVERLAYS),
+		map((action) => new SetBadgeAction({ key: 'Results table', badge: `${ action.payload }` })));
 
 	onDropMarkupFilter([prevAction, currentAction]): boolean {
 		const isEquel = !isEqual(prevAction, currentAction);

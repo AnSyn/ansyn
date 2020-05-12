@@ -1,0 +1,42 @@
+	<button (click)="clickGoAdjacent(false)"
+			[class.active]="goPrevActive"
+			[disabled]="!hasOverlayDisplay"
+			[attr.tooltip-value]="statusBarConfig?.toolTips?.backwards | translate"
+			tooltip-class="top left"
+	>
+		<i class="icon-prev"></i>
+	</button>
+
+	<button (click)="clickGoNextPresetOverlay()"
+			[class.active]="goNextQuickLoop"
+			[disabled]="!hasPresetOverlays"
+			[attr.tooltip-value]="statusBarConfig?.toolTips?.quickloop | translate"
+			tooltip-class="top left"
+	>
+		<i class="icon-quick-loop"></i>
+	</button>
+
+	<button (click)="clickGoAdjacent(true)"
+			[class.active]="goNextActive"
+			[disabled]="!hasOverlayDisplay"
+			[attr.tooltip-value]="statusBarConfig?.toolTips?.forward | translate"
+			tooltip-class="top left"
+	>
+		<i class="icon-next"></i>
+	</button>
+	<!--unUsed stop button - future development -->
+	<button style="display: none" class="transparent"
+			(click)="clickTime()"
+			[attr.tooltip-value]="statusBarConfig?.toolTips?.reset | translate"
+			tooltip-class="top left"
+	>
+		<i class="icon-annotation-square"></i>
+	</button>
+	<!--unUsed expand button - future development -->
+	<button style="display: none" class="transparent"
+			(click)="clickExpand()"
+			[attr.tooltip-value]="statusBarConfig?.toolTips?.enlarge | translate"
+			tooltip-class="top left"
+	>
+		<i class="icon-status-bar-expand"></i>
+	</button>

@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { from, Observable } from 'rxjs';
-import { catchError, filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { combineLatest, forkJoin, from, Observable, zip, EMPTY } from 'rxjs';
+import { catchError, combineAll, filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import {
+	CheckTrianglesAction,
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
 	LoadOverlaysAction,
@@ -13,7 +14,7 @@ import {
 	RequestOverlayByIDFromBackendAction,
 	SetMarkUp,
 	SetOverlaysCriteriaAction,
-	SetOverlaysStatusMessage,
+	SetOverlaysStatusMessageAction,
 	UpdateOverlaysCountAction
 } from '../actions/overlays.actions';
 import { IOverlay, IOverlaysCriteria, IOverlaysFetchData, RegionContainment } from '../models/overlay.model';
@@ -32,6 +33,9 @@ import { rxPreventCrash } from '../../core/utils/rxjs/operators/rxPreventCrash';
 import { getPolygonIntersectionRatio, isPointContainedInGeometry } from '@ansyn/imagery';
 import { getErrorLogFromException } from '../../core/utils/logs/timer-logs';
 import { LoggerService } from '../../core/services/logger.service';
+import { AreaToCredentialsService } from "../../core/services/credentials/area-to-credentials.service";
+import { CredentialsService, ICredentialsResponse } from "../../core/services/credentials/credentials.service";
+import { SetDoesUserHaveCredentials } from "@ansyn/menu";
 
 @Injectable()
 export class OverlaysEffects {
@@ -71,35 +75,48 @@ export class OverlaysEffects {
 		ofType<SetOverlaysCriteriaAction>(OverlaysActionTypes.SET_OVERLAYS_CRITERIA),
 		filter(action => !(action.options && action.options.noInitialSearch)),
 		withLatestFrom(this.store$.select(overlaysStateSelector)),
-		map(([{ payload }, { overlaysCriteria }]) => new LoadOverlaysAction(overlaysCriteria)));
+		map(([{ payload }, { overlaysCriteria }]) => new CheckTrianglesAction(overlaysCriteria)));
+
+	userAuthorizedAreas$: Observable<any> = this.credentialsService.getCredentials().pipe(
+		map((userCredentials: ICredentialsResponse) => userCredentials.authorizedAreas.map(
+			area => area.Id
+			)
+		));
 
 	@Effect()
-	loadOverlays$: Observable<LoadOverlaysSuccessAction> = this.actions$.pipe(
+	checkTrianglesBeforeSearch$ = this.actions$.pipe(
+		ofType<CheckTrianglesAction>(OverlaysActionTypes.CHECK_TRIANGLES),
+		switchMap((action: CheckTrianglesAction) => {
+			return forkJoin([this.areaToCredentialsService.getAreaTriangles(action.payload.region), this.userAuthorizedAreas$]).pipe(
+				mergeMap<any, any>(([trianglesOfArea, userAuthorizedAreas]: [any, any]) => {
+
+					if (userAuthorizedAreas.some( area => trianglesOfArea.includes(area))) {
+						return [new LoadOverlaysAction(action.payload),
+							new SetDoesUserHaveCredentials(true)];
+					}
+					return [new LoadOverlaysSuccessAction([]),
+						new SetOverlaysStatusMessageAction(this.translate.instant(overlaysStatusMessages.noPermissionsForArea)),
+						new SetDoesUserHaveCredentials(false)];
+				}),
+				catchError( () => {
+					return [new LoadOverlaysAction(action.payload),
+						new SetDoesUserHaveCredentials(true)];
+				})
+			)
+		})
+
+	);
+
+	@Effect()
+	loadOverlays$: Observable<{} | LoadOverlaysSuccessAction> = this.actions$.pipe(
 		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
 		switchMap((action: LoadOverlaysAction) => {
-			return this.overlaysService.search(action.payload).pipe(
-				withLatestFrom(this.translate.get(overlaysStatusMessages.noOverLayMatchQuery), this.translate.get(overlaysStatusMessages.overLoad), this.translate.get('Error on overlays request')),
-				mergeMap(([overlays, noOverlayMatchQuery, overLoad, error]: [IOverlaysFetchData, string, string, string]) => {
-					const overlaysResult = Array.isArray(overlays.data) ? overlays.data : [];
-
-					if (!Array.isArray(overlays.data) && Array.isArray(overlays.errors) && overlays.errors.length >= 0) {
-						return [new LoadOverlaysSuccessAction(overlaysResult),
-							new SetOverlaysStatusMessage(error)];
-					}
-
-					const actions: Array<any> = [new LoadOverlaysSuccessAction(overlaysResult)];
-
-					// if data.length != fetchLimit that means only duplicate overlays removed
-					if (!overlays.data || overlays.data.length === 0) {
-						actions.push(new SetOverlaysStatusMessage(noOverlayMatchQuery));
-					} else if (overlays.limited > 0 && overlays.data.length === this.overlaysService.fetchLimit) {
-						// TODO: replace when design is available
-						actions.push(new SetOverlaysStatusMessage(overLoad.replace('$overLoad', overlays.data.length.toString())));
-					}
-					return actions;
-				}),
-				catchError(() => from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessage('Error on overlays request')]))
-			);
+			if (action.payload.dataInputFilters.fullyChecked || action.payload.dataInputFilters.filters.length > 0) {
+				return this.requestOverlays(action.payload);
+			}
+			else {
+				return [new LoadOverlaysSuccessAction([])];
+			}
 		})
 	);
 
@@ -162,8 +179,41 @@ export class OverlaysEffects {
 				protected store$: Store<any>,
 				protected translate: TranslateService,
 				protected overlaysService: OverlaysService,
-				protected loggerService: LoggerService) {
+				protected loggerService: LoggerService,
+				protected credentialsService: CredentialsService,
+				protected areaToCredentialsService: AreaToCredentialsService) {
 	}
 
+	private requestOverlays(criteria: IOverlaysCriteria) {
+		return this.overlaysService.search(criteria).pipe(
+			// We use translate.instant instead of withLatestFrom + translate.get
+			// Because of a bug: sometimes when starting the app the withLatestFrom that was here did not return,
+			// and the timeline was stuck and not updated. After this fix the pipe works, but once in a while the
+			// translations that are called here fail, and return the keys instead.
+			mergeMap<IOverlaysFetchData, any>((overlays: IOverlaysFetchData) => {
+				const noOverlayMatchQuery = this.translate.instant(overlaysStatusMessages.noOverLayMatchQuery);
+				const overLoad = this.translate.instant(overlaysStatusMessages.overLoad);
+				const error = this.translate.instant('Error on overlays request');
+				const overlaysResult = Array.isArray(overlays.data) ? overlays.data : [];
+
+				if (!Array.isArray(overlays.data) && Array.isArray(overlays.errors) && overlays.errors.length >= 0) {
+					return [new LoadOverlaysSuccessAction(overlaysResult),
+						new SetOverlaysStatusMessageAction(error)];
+				}
+
+				const actions: Array<any> = [new LoadOverlaysSuccessAction(overlaysResult)];
+
+				// if data.length != fetchLimit that means only duplicate overlays removed
+				if (!overlays.data || overlays.data.length === 0) {
+					actions.push(new SetOverlaysStatusMessageAction(noOverlayMatchQuery));
+				} else if (overlays.limited > 0 && overlays.data.length === this.overlaysService.fetchLimit) {
+					// TODO: replace when design is available
+					actions.push(new SetOverlaysStatusMessageAction(overLoad.replace('$overLoad', overlays.data.length.toString())));
+				}
+				return actions;
+			}),
+			catchError(() => from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessageAction('Error on overlays request')]))
+		);
+	}
 
 }

@@ -1,7 +1,5 @@
 import XYZ from 'ol/source/XYZ';
-import TileLayer from 'ol/layer/Tile';
 import { ImageryMapSource, IMapSettings } from '@ansyn/imagery';
-import * as proj from 'ol/proj';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../maps/openlayers-disabled-map/openlayers-disabled-map';
@@ -21,8 +19,8 @@ export const OpenLayerESRI_4326SourceProviderSourceType = 'ESRI_4326';
 	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayerESRI4326SourceProvider extends OpenLayersMapSourceProvider<IESRI4326Config> {
-	create(metaData: IMapSettings): Promise<any> {
-		const { config } = this;
+	createSource(metaData: IMapSettings): any {
+		const config = {...this.config, ...metaData.data.config};
 		const source = new XYZ({
 			attributions: config.attributions,
 			maxZoom: config.maxZoom,
@@ -33,21 +31,10 @@ export class OpenLayerESRI4326SourceProvider extends OpenLayersMapSourceProvider
 				return config.baseUrl
 					.replace('{z}', (tileCoord[0] - 1).toString())
 					.replace('{x}', tileCoord[1].toString())
-					.replace('{y}', tileCoord[2].toString());
+					.replace('{y}', (-tileCoord[2] - 1).toString());
 			},
 			wrapX: true
 		});
-
-		const [x, y] = proj.transform([-180, -90], 'EPSG:4326', config.projection);
-		const [x1, y1] = proj.transform([180, 90], 'EPSG:4326', config.projection);
-
-		const esriLayer = new TileLayer({
-			preload: Infinity,
-			source: source,
-			visible: true,
-			extent: [x, y, x1, y1]
-		});
-
-		return Promise.resolve(esriLayer);
+		return source;
 	}
 }

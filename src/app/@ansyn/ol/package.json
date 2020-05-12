@@ -1,12 +1,12 @@
 {
 	"name": "@ansyn/ol",
-	"version": "0.6.3",
+	"version": "1.6.33",
 	"peerDependencies": {
 		"@angular/core": "^7.2.2",
 		"@angular/common": "^7.2.2",
-		"@ansyn/imagery": "0.6.3",
+		"@ansyn/imagery": "1.6.33",
 		"rxjs": "^6.4.0",
-		"@ngx-translate/core": "^10.0.2"
+		"@ngx-translate/core": "^11.0.1"
 	},
 	"dependencies": {
 		"auto-subscriptions": "^2.0.5",

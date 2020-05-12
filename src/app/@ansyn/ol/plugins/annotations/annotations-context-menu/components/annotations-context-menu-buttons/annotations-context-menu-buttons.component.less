@@ -1,4 +1,5 @@
 @import "ansyn/less/colors";
+@import "ansyn/less/z-index-globals";
 
 :host {
 	position: absolute;
@@ -16,6 +17,7 @@
 	padding: 2px;
 	transform: translate(calc(~'100% + 15px'), -12px);
 	transition: right 0.2s, top 0.2s;
+	z-index: @z-index-annotation-cotext-menu-buttons;
 
 	button {
 		background-color: @background-color-3;
@@ -92,4 +94,14 @@
 		display: inherit;
 	}
 
+}
+
+// for chrome 44
+@supports not (display: grid) {
+	div.color {
+		// Prevent a stacking context (z-index) problem.
+		// The delete button (which got position relative in chrome 44)
+		// appeared over the color window.
+		z-index: @z-index-annotation-context-menu-color-button;
+	}
 }

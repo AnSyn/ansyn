@@ -15,7 +15,7 @@ export class HelpEffects {
 		.pipe(
 			filter((menuEntities: Dictionary<IMenuItem>) => Boolean(menuEntities['Help'])),
 			filter(() => !getMenuSessionData() && !this.helpLocalStorageService.getHelpLocalStorageData().dontShowHelpOnStartup),
-			map(() => new SelectMenuItemAction('Help'))
+			map(() => new SelectMenuItemAction({ menuKey: 'Help' }))
 		);
 
 	constructor(protected helpLocalStorageService: HelpLocalStorageService,

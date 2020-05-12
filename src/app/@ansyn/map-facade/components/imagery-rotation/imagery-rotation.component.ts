@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
+import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings, toDegrees } from '@ansyn/imagery';
 import { PointToImageOrientationAction, PointToRealNorthAction } from '../../actions/map.actions';
 
 export interface IsGeoRegisteredProperties {
@@ -21,7 +21,7 @@ export class ImageryRotationComponent {
 	@Input() mapState: IMapSettings;
 	@ViewChild('northImg') northImgElement: ElementRef;
 
-	protected thresholdDegrees = 0.1;
+	protected thresholdDegrees = 5;
 
 	isGeoRegisteredProperties: IsGeoRegisteredProperties = {
 		letter: 'N',
@@ -68,10 +68,6 @@ export class ImageryRotationComponent {
 				protected store: Store<any>) {
 	}
 
-	toDegrees(radians: number): number {
-		return radians * 180 / Math.PI;
-	}
-
 	isGeoRegistered() {
 		// todo: overlay is not known in map facade
 		return !this.mapState.data.overlay || (this.mapState.data.overlay.isGeoRegistered !== 'notGeoRegistered');
@@ -88,11 +84,16 @@ export class ImageryRotationComponent {
 	}
 
 	toggleNorth() {
-		if (Math.abs(this.toDegrees(this.rotationAngle)) < this.thresholdDegrees) {
-			const overlay = this.mapState.data.overlay;
-			if (overlay) {
-				this.store.dispatch(new PointToImageOrientationAction({ mapId: this.mapState.id, overlay}));
-			}
+		const overlay = this.mapState.data.overlay;
+		if (!overlay) {
+			this.store.dispatch(new PointToRealNorthAction(this.mapState.id));
+			return;
+		}
+
+		const currentRotationInDegrees = toDegrees(this.rotationAngle) % 360;
+		if ((currentRotationInDegrees >= 0 && (currentRotationInDegrees >= 360 - this.thresholdDegrees || currentRotationInDegrees <= this.thresholdDegrees)) ||
+			(currentRotationInDegrees < 0 && (Math.abs(currentRotationInDegrees) >= 360 - this.thresholdDegrees || Math.abs(currentRotationInDegrees) <= this.thresholdDegrees))) {
+			this.store.dispatch(new PointToImageOrientationAction({ mapId: this.mapState.id, overlay}));
 		} else {
 			this.store.dispatch(new PointToRealNorthAction(this.mapState.id));
 		}

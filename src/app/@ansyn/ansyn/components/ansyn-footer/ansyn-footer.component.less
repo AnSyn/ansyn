@@ -9,20 +9,19 @@ div.status-timeline-container {
 	position: relative;
 	width: 100%;
 
-	.status {
-		position: relative;
-		height: 0;
-		z-index: @z-index-status-bar-navigation-area;
-	}
-
 	.app-timeline-container {
 		height: @timeline-area-height;
-		background-color: white;
+
+		ansyn-overlay-navigation-bar {
+			position: absolute;
+			top: 12.5px;
+			left: calc(~'50% - 50px');
+		}
 	}
 
 	button.hide-menu {
 		position: absolute;
-		transform: translateY(calc(~'-100% - @{status-bar-height}'));
+		bottom: calc(100% - 10px);
 		left: calc(~'50% - 30px');
 		width: 60px;
 		background: @background-color-1;
@@ -42,12 +41,8 @@ div.status-timeline-container {
 	&.collapsed {
 		position: absolute;
 
-		.status {
-			display: none;
-		}
-
 		button.hide-menu {
-			transform: translateY(-100%);
+			bottom: 100%;
 		}
 	}
 }

@@ -1,5 +1,4 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MissingTranslationHandler, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
@@ -8,11 +7,25 @@ import { TreeviewModule } from 'ngx-treeview';
 import { Observable, of } from 'rxjs';
 import { SliderCheckboxComponent } from '../../../core/forms/slider-checkbox/slider-checkbox.component';
 import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
-import { IOverlaysCriteria } from '../../../overlays/models/overlay.model';
-import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
+import {
+	OverlayReducer,
+	overlaysFeatureKey,
+	selectDataInputFilter,
+	selectOverlaysCriteria,
+	selectRegion,
+	selectTime
+} from '../../../overlays/reducers/overlays.reducer';
 import { IStatusBarState, StatusBarInitialState, statusBarStateSelector } from '../../reducers/status-bar.reducer';
 import { TreeViewComponent } from './tree-view.component';
+import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
+import { IOverlaysCriteria } from '../../../overlays/models/overlay.model';
+import { mockIndexProviders } from '../../../core/test/mock-providers';
 
+const overlaysCriteria: IOverlaysCriteria = {
+	time: { from: new Date(), to: new Date(), type: 'absolute' },
+	region: { type: 'Point', coordinates: [122.00, 44.122] },
+	dataInputFilters: { fullyChecked: true, filters: [] }
+};
 describe('TreeViewComponent', () => {
 	let component: TreeViewComponent;
 	let fixture: ComponentFixture<TreeViewComponent>;
@@ -39,7 +52,7 @@ describe('TreeViewComponent', () => {
 				{
 					provide: MultipleOverlaysSourceConfig,
 					useValue: {
-						indexProviders: {}
+						indexProviders: mockIndexProviders(['provide1', 'provide2', 'provide3'])
 					}
 				},
 				provideMockActions(() => actions)
@@ -48,46 +61,15 @@ describe('TreeViewComponent', () => {
 			.compileComponents();
 	}));
 
-	let searchParams: IOverlaysCriteria = {
-		region: {
-			'type': 'Polygon',
-			'coordinates': [
-				[
-					[
-						-14.4140625,
-						59.99349233206085
-					],
-					[
-						37.96875,
-						59.99349233206085
-					],
-					[
-						37.96875,
-						35.915747419499695
-					],
-					[
-						-14.4140625,
-						35.915747419499695
-					],
-					[
-						-14.4140625,
-						59.99349233206085
-					]
-				]
-			]
-		},
-		time: {
-			type: 'absolute',
-			from: new Date(2020),
-			to: new Date()
-		}
-	};
-
 	beforeEach(inject([Store], (_store) => {
 		store = _store;
 		statusBarState = cloneDeep(StatusBarInitialState);
 		const fakeStore = new Map<any, any>([
-			[statusBarStateSelector, statusBarState]
+			[statusBarStateSelector, statusBarState],
+			[selectOverlaysCriteria, overlaysCriteria],
+			[selectRegion, overlaysCriteria.region],
+			[selectTime, overlaysCriteria.time],
+			[selectDataInputFilter, overlaysCriteria.dataInputFilters]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
@@ -103,12 +85,29 @@ describe('TreeViewComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('ok button shall invoke the dataInputFiltersOk function', () => {
-		const element = fixture.debugElement.query(By.css('.ok-button')).nativeElement;
-		spyOn(component, 'dataInputFiltersOk');
+	it('on check/unCheck should SetOverlaysCriteriaAction', () => {
+		spyOn(store, 'dispatch');
+		component.selectedFilters = ['provide2'];
 		fixture.detectChanges();
-		element.click();
-		expect(component.dataInputFiltersOk).toHaveBeenCalled();
-		fixture.detectChanges();
+		expect(store.dispatch).toHaveBeenCalledWith(new SetOverlaysCriteriaAction({
+				dataInputFilters: {
+					fullyChecked: false,
+					filters: ['provide2']
+				}
+			}, { noInitialSearch: false }
+		));
 	});
+
+	it('on uncheck all should fire SetOverlaysCriteriaAction with noInitialSearch true', () => {
+		spyOn(store, 'dispatch');
+		component.selectedFilters = [];
+		fixture.detectChanges();
+		expect(store.dispatch).toHaveBeenCalledWith(new SetOverlaysCriteriaAction({
+				dataInputFilters: {
+					fullyChecked: false,
+					filters: []
+				}
+			}, { noInitialSearch: true }
+		));
+	})
 });

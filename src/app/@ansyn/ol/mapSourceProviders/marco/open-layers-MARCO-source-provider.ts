@@ -12,7 +12,7 @@ import {
 	IMapSourceProvidersConfig,
 	MAP_SOURCE_PROVIDERS_CONFIG
 } from '@ansyn/imagery';
-import { OpenLayersMapSourceProvider } from '../open-layers.map-source-provider';
+import { IMAGE_PROCESS_ATTRIBUTE, OpenLayersMapSourceProvider } from '../open-layers.map-source-provider';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openlayers-disabled-map';
 import { removeWorkers } from '../../maps/open-layers-map/shared/openlayers-shared';
@@ -93,7 +93,7 @@ export class OpenLayerMarcoSourceProvider extends OpenLayersMapSourceProvider<IM
 			});
 
 			const imageLayer = this.getMImageLayer(capabilitiesMeta, imagePath, approximateTramsforom, layerViewExtent, projectionKey);
-			tileLayer.set('imageLayer', imageLayer);
+			tileLayer.set(IMAGE_PROCESS_ATTRIBUTE, imageLayer);
 			removeWorkers(imageLayer);
 
 			console.log('marco service, layer ready:', tileLayer);

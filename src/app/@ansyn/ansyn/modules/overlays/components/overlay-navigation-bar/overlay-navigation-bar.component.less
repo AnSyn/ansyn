@@ -1,0 +1,39 @@
+@import "ansyn/less/z-index-globals";
+@import 'ansyn/less/colors';
+@import "ansyn/less/common";
+
+:host {
+	display: flex;
+	align-items: center;
+	width: 100px;
+	padding: 0 10px;
+	box-sizing: border-box;
+	z-index: @z-index-status-bar-navigation-area;
+
+	i {
+		font-size: 25px;
+		color: white;
+	}
+
+	button {
+		outline: none;
+		width: 24px;
+		height: 24px;
+		border: none;
+		padding: 0;
+		margin: 2px;
+		border-radius: 5px;
+		background: #494949;
+
+		&:disabled {
+			opacity: 0.3;
+		}
+		&.transparent {
+			background: transparent;
+		}
+
+		&.active:not(:disabled), &:active:not(:disabled) {
+			box-shadow: 0 0 2px 2px #666;
+		}
+	}
+}

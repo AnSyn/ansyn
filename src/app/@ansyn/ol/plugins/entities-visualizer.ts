@@ -11,6 +11,7 @@ import Point from 'ol/geom/Point';
 import VectorLayer from 'ol/layer/Vector';
 import ol_Layer from 'ol/layer/Layer';
 import OLGeoJSON from 'ol/format/GeoJSON';
+import { getArea } from 'ol/sphere';
 import SelectEvent from 'ol/interaction/Select';
 import * as olExtent from 'ol/extent';
 import {
@@ -429,14 +430,20 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 	}
 
 	formatArea(geometry) {
-		const polygon = new OLGeoJSON().writeGeometryObject(geometry);
-		return (calculateGeometryArea(polygon) / 1000000).toFixed(2) + 'km2'
+		const fractionDigits = 2;
+		const area = getArea(geometry);
+
+		if (area >= 1000) {
+			return (area / 1000).toFixed(fractionDigits) + 'km2';
+		}
+
+		return (area).toFixed(fractionDigits) + 'm2';
 	}
 
 	isMouseEventInExtent(event: SelectEvent): boolean {
 		const coordinate = event.mapBrowserEvent.coordinate;
 		const extent = this.vector.getExtent();
-		const result =  olExtent.containsCoordinate(extent, coordinate);
+		const result = olExtent.containsCoordinate(extent, coordinate);
 		return result;
 	}
 

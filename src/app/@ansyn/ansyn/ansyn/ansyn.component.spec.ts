@@ -22,12 +22,15 @@ describe('AnsynComponent', () => {
 	const mockToast = MockComponent({ selector: 'ansyn-toast', inputs: ['duration'] });
 	const mockFooter = MockComponent({
 		selector: 'ansyn-footer',
-		inputs: ['selectedCaseName', 'activeMap', 'animatedElement']
+		inputs: ['activeMap', 'animatedElement']
 	});
 	const mockOverlaysContainer = MockComponent({ selector: 'ansyn-overlays-container' });
 	const mockEmptyComponent = MockComponent({ selector: 'ansyn-empty' });
 	const mockImageryView = MockComponent({ selector: 'ansyn-imageries-manager' });
 	const mockOverlayOverviewComponent = MockComponent({ selector: 'ansyn-overlay-overview' });
+	const mockStatusBar = MockComponent({
+		selector: 'ansyn-status-bar'
+	});
 
 	const mapState = {
 		mapsList: [
@@ -59,6 +62,7 @@ describe('AnsynComponent', () => {
 				mockFooter,
 				mockImageryView,
 				mockEmptyComponent,
+				mockStatusBar,
 				mockOverlayOverviewComponent,
 			],
 			providers: [

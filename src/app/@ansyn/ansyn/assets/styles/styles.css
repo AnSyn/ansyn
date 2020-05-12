@@ -1,5 +1,4 @@
 @import "~ol/ol.css";
-@import "~flatpickr/dist/flatpickr.css";
 @import "~@ansyn/event-drops/style.css";
 @import "bootstrap/carousel.css";
 @import 'icons.css';
@@ -9,10 +8,30 @@
 @import "~font-awesome/css/font-awesome.min.css";
 @import "~cesium/Build/Cesium/Widgets/widgets.css";
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+@import "~@ansyn/ng-pick-datetime/assets/style/picker.min.css";
 
 
 circle.drop.selected {
 	fill: black;
+}
+
+
+.custom-dialog .mat-dialog-container {
+	padding: 0;
+	width: 600px;
+	overflow: hidden;
+	text-align: center;
+}
+
+.close.mat-button {
+	cursor: pointer;
+	float: right;
+	padding: 0;
+	min-width: 25px;
+}
+
+.main-progress .mat-progress-bar-fill::after {
+	background-color: #0091ff !important;
 }
 
 .main-timeline {
@@ -20,7 +39,8 @@ circle.drop.selected {
 	width: 100%;
 	margin: 0 auto;
 	box-sizing: border-box;
-	color: black
+	color: #cbcbcb;
+	background-color: #2e2e2e;
 }
 
 button {
@@ -217,14 +237,8 @@ div.pin-location {
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
 
-.flatpickr-calendar {
-	font-family: 'Lato', sans-serif;
-	font-size: 14px;
-	cursor: pointer;
-}
-
-.flatpickr-calendar .flatpickr-month {
-	height: 33px;
+.time-picker-backdrop-undo {
+	display: none;
 }
 
 input[type=number]::-webkit-inner-spin-button,
@@ -237,7 +251,6 @@ input[type=number]::-webkit-outer-spin-button {
 	font-family: 'AnSyn';
 	src: url('/assets/fonts/AnSyn/AnSyn.eot?56493936');
 	src: url('/assets/fonts/AnSyn/AnSyn.eot?56493936#iefix') format('embedded-opentype'),
-	url('/assets/fonts/AnSyn/AnSyn.woff2?56493936') format('woff2'),
 	url('/assets/fonts/AnSyn/AnSyn.woff?56493936') format('woff'),
 	url('/assets/fonts/AnSyn/AnSyn.ttf?56493936') format('truetype'),
 	url('/assets/fonts/AnSyn/AnSyn.svg?56493936#AnSyn') format('svg');

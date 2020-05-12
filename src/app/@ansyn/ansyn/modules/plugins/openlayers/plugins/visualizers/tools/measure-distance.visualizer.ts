@@ -24,10 +24,11 @@ import {
 	IVisualizersConfig,
 	MarkerSize,
 	VisualizerInteractions,
+	VisualizerStates,
 	VisualizersConfig
 } from '@ansyn/imagery';
 import { FeatureCollection, GeometryObject } from 'geojson';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, Subject } from 'rxjs';
 import { selectActiveMapId } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
@@ -45,6 +46,7 @@ interface ILabelHandler {
 	select: Select;
 	translate: Translate;
 }
+
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store, OpenLayersProjectionService, VisualizersConfig],
@@ -57,6 +59,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	geoJsonFormat: GeoJSON;
 	interactionSource: VectorSource;
 	hoveredMeasureId: string;
+	onHiddenStateChanged = new Subject();
 
 	protected allLengthTextStyle = new Text({
 		font: '16px Calibri,sans-serif',
@@ -115,6 +118,11 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		this.geoJsonFormat = new GeoJSON();
 	}
 
+	onInitSubscriptions() {
+		super.onInitSubscriptions();
+		this.onHiddenStateChanged.next();
+	}
+
 	get drawInteractionHandler() {
 		return this.interactions.get(VisualizerInteractions.drawInteractionHandler);
 	}
@@ -123,23 +131,28 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	show$ = () => combineLatest(
 		this.store$.select(selectActiveMapId),
 		this.store$.select(selectMeasureDataByMapId(this.mapId)),
-		this.store$.select(selectIsMeasureToolActive)).pipe(
+		this.store$.select(selectIsMeasureToolActive),
+		this.onHiddenStateChanged).pipe(
 		distinctUntilChanged(),
-		filter(([activeMapId, measureData, isMeasureToolActive]) => Boolean(measureData)),
+		filter(([activeMapId, measureData, isMeasureToolActive]) => !this.isHidden && Boolean(measureData)),
 		tap(([activeMapId, measureData, isMeasureToolActive]) => {
 			this.measureData = measureData;
-			this.setVisibility(measureData.isLayerShowed);
-			if (isMeasureToolActive && activeMapId && measureData.isToolActive) {
-				this.createDrawInteraction();
+			if (!measureData.isLayerShowed) {
+				this.iMap.removeLayer(this.vector);
 			} else {
-				this.removeDrawInteraction();
-			}
-			if (isMeasureToolActive && activeMapId && measureData.isRemoveMeasureModeActive) {
-				this.createHoverForDeleteInteraction();
-				this.createClickDeleteInteraction();
-			} else {
-				this.removeHoverForDeleteInteraction();
-				this.removeClickDeleteInteraction();
+				this.iMap.addLayer(this.vector);
+				if (isMeasureToolActive && activeMapId && measureData.isToolActive) {
+					this.createDrawInteraction();
+				} else {
+					this.removeDrawInteraction();
+				}
+				if (isMeasureToolActive && activeMapId && measureData.isRemoveMeasureModeActive) {
+					this.createHoverForDeleteInteraction();
+					this.createClickDeleteInteraction();
+				} else {
+					this.removeHoverForDeleteInteraction();
+					this.removeClickDeleteInteraction();
+				}
 			}
 		}),
 		switchMap(([activeMapId, measureData, isMeasureToolActive]) => {
@@ -148,6 +161,12 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		filter(Boolean),
 		tap(() => this.setLabelsFeature())
 	);
+
+	// override base method
+	setVisibility(isVisible: boolean) {
+		super.setVisibility(isVisible);
+		this.onHiddenStateChanged.next();
+	}
 
 	createHoverForDeleteInteraction() {
 		this.removeHoverForDeleteInteraction();
@@ -270,33 +289,15 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			});
 	}
 
-	// draw style (temp until DBClick)
-	drawFeatureStyle(feature: Feature) {
-		const styles = [this.editDistanceStyle];
-		const measureStyles = this.getMeasureTextStyle(feature);
-		measureStyles.forEach((style) => {
-			styles.push(style);
-		});
-		return styles;
-	}
-
-	// Line style (after DBClick)
-	mainStyle(feature) {
-		const styles = [new Style({
-			stroke: new Stroke({
-				color: this.visualizerStyle.initial.stroke,
-				width: this.visualizerStyle.initial['stroke-width']
-			})
-		})];
-		// Points
+	featurePointsStyle(initial) {
 		const pointsStyle = new Style({
 			image: new Circle({
 				radius: 5,
 				stroke: new Stroke({
-					color: this.visualizerStyle.initial.stroke,
-					width: this.visualizerStyle.initial['stroke-width']
+					color: initial.stroke,
+					width: initial['stroke-width']
 				}),
-				fill: new Fill({ color: this.visualizerStyle.initial.fill })
+				fill: new Fill({ color: initial.fill })
 			}),
 			geometry: function (feature) {
 				// return the coordinates of the first ring of the polygon
@@ -304,7 +305,35 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 				return new MultiPoint(coordinates);
 			}
 		});
-		styles.push(pointsStyle);
+		return pointsStyle;
+	}
+
+	featureStrokeStyle(initial) {
+		const stroke = new Style({
+			stroke: new Stroke({
+				color: initial.stroke,
+				width: initial['stroke-width']
+			})
+		});
+		return stroke;
+	}
+
+	// The feature after created
+	featureStyle(feature: Feature, state: string = VisualizerStates.INITIAL) {
+		return this.measurementMainStyle();
+	}
+
+	// Style in draw mode
+	drawFeatureStyle(feature: Feature) {
+		const styles = this.getMeasureTextStyle(feature);
+		styles.push(this.editDistanceStyle);
+		return styles;
+	}
+
+	measurementMainStyle() {
+		const { initial } = this.visualizerStyle;
+		const styles = [this.featureStrokeStyle(initial)];
+		styles.push(this.featurePointsStyle(initial));
 		return styles;
 	}
 
@@ -489,9 +518,9 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	}
 
 	private defineLabelsTranslate(labelsFeatures: Feature[]): ILabelHandler {
-		const handler: ILabelHandler = {select: undefined, translate: undefined};
+		const handler: ILabelHandler = { select: undefined, translate: undefined };
 		handler.select = new Select({
-			condition: (event) => event.type === "pointermove" && !event.dragging,
+			condition: (event) => event.type === 'pointermove' && !event.dragging,
 			style: (event) => {
 				if (event.getGeometry().getType() === 'LineString') {
 					return event.styleCache;
@@ -499,7 +528,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 				return new Style({})
 			},
 			filter: (feature, layer) => {
-				return labelsFeatures.indexOf(feature) >= 0 || Array.from(this.labelToMeasures).some( (labelMeasure => labelMeasure[1].features.indexOf(feature) >= 0));
+				return labelsFeatures.indexOf(feature) >= 0 || Array.from(this.labelToMeasures).some((labelMeasure => labelMeasure[1].features.indexOf(feature) >= 0));
 			}
 		});
 		handler.translate = new Translate({

@@ -1,47 +1,41 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { StatusBarComponent } from './status-bar.component';
-import { Store, StoreModule } from '@ngrx/store';
-import { IStatusBarState, statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
-import { EffectsModule } from '@ngrx/effects';
 import { MockComponent } from '../../../core/test/mock-component';
-import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { TranslateModule } from '@ngx-translate/core';
+import { FiltersModule } from '../../../filters/filters.module';
 
 describe('StatusBarComponent', () => {
 	let component: StatusBarComponent;
 	let fixture: ComponentFixture<StatusBarComponent>;
-	let store: Store<IStatusBarState>;
 	const mockSelectedCaseBarComponent = MockComponent({
 		selector: 'ansyn-popover',
 		inputs: ['text', 'icon']
 	});
-	const mockComboBoxes = MockComponent({ selector: 'ansyn-combo-boxes' });
-	const mockNavigationBar = MockComponent({ selector: 'ansyn-navigation-bar' });
+	const mockSearchPanel = MockComponent({ selector: 'ansyn-search-panel' });
+	const mockDisplayPanel = MockComponent({ selector: 'ansyn-display-panel' });
+	const mockCasePanel = MockComponent({ selector: 'ansyn-case-panel' });
+	const mockFiltersPanel = MockComponent( {selector: 'ansyn-filters-panel'});
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [StoreModule.forRoot({
-				[statusBarFeatureKey]: StatusBarReducer,
-				[mapFeatureKey]: MapReducer
-			}), EffectsModule.forRoot([]),
-			TranslateModule.forRoot()
-			],
+			imports: [TranslateModule.forRoot()],
 			declarations: [StatusBarComponent,
 				/* mock */
 				mockSelectedCaseBarComponent,
-				mockComboBoxes,
-				mockNavigationBar
+				mockSearchPanel,
+				mockDisplayPanel,
+				mockCasePanel,
+				mockFiltersPanel
 			]
 		})
 			.compileComponents();
 	}));
 
-	beforeEach(inject([Store], (_store: Store<IStatusBarState>) => {
+	beforeEach( () => {
 		fixture = TestBed.createComponent(StatusBarComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
-		store = _store;
-	}));
+	});
 
 	it('should be created', () => {
 		expect(component).toBeTruthy();

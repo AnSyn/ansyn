@@ -13,7 +13,6 @@ import {
 	SetRemovedOverlaysIdsAction,
 	SetRemovedOverlaysVisibilityAction
 } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
-import { SetImageOpeningOrientation } from '../../../modules/status-bar/actions/status-bar.actions';
 import { SelectCaseAppEffects } from './select-case.app.effects';
 import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '@ansyn/map-facade';
 import {
@@ -26,7 +25,7 @@ import {
 	SelectCaseSuccessAction,
 	SetAutoSave
 } from '../../../modules/menu-items/cases/actions/cases.actions';
-import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
+import { UpdateFacetsAction } from '../../../modules/filters/actions/filters.actions';
 import {
 	SetAnnotationMode,
 	SetMeasureDistanceToolState,
@@ -90,7 +89,7 @@ describe('SelectCaseAppEffects', () => {
 				timeFilter: CaseTimeFilter = 'Start - End',
 				time: ICaseTimeState = { type: 'absolute', from: new Date(0), to: new Date(0) },
 				region: CaseRegionState = {},
-				dataInputFilters: ICaseDataInputFiltersState = { fullyChecked: true, filters: [], active: true },
+				dataInputFilters: ICaseDataInputFiltersState = { fullyChecked: true, filters: [] },
 				favoriteOverlays: IOverlay[] = [],
 				removedOverlaysIds: string[] = [],
 				removedOverlaysVisibility = true,
@@ -141,11 +140,10 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijklmnopqrstx)--', {
+			const expectedResult = cold('--(abcefghijklmnopqrstx)--', {
 				a: new SetMapsDataActionStore({ mapsList: maps.data }),
 				b: new SetActiveMapId(maps.activeMapId),
 				c: new SetLayoutAction(<any>maps.layout),
-				d: new SetImageOpeningOrientation({ orientation }),
 				e: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
 				f: new SetFavoriteOverlaysAction(favoriteOverlays),
 				g: new SetPresetOverlaysAction(presetOverlays),

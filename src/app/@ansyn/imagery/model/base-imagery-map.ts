@@ -14,7 +14,6 @@ export interface ICanvasExportData {
 	width: number;
 	height: number;
 	data: string;
-
 }
 
 export interface IBaseImageryMapConstructor {
@@ -58,6 +57,10 @@ export abstract class BaseImageryMap<T = any> {
 	abstract resetView(layer: any, position: ImageryMapPosition, extent?: ImageryMapExtent, useDoubleBuffer?: boolean): Observable<boolean>;
 
 	abstract addLayer(layer: any): void;
+
+	addMapLayer(layer: any): void {
+		throw new Error('Method not implemented.');
+	};
 
 	getMainLayer(): any {
 		throw new Error('Method not implemented.');

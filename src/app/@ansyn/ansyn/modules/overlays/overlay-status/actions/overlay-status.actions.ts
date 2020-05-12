@@ -1,11 +1,15 @@
 import { Action } from '@ngrx/store';
 import { AlertMsgTypes } from '../../../alerts/model';
 import { IOverlay } from '../../models/overlay.model';
-import { IOverlaysScannedAreaData, IOverlaysTranslationData, } from '../../../menu-items/cases/models/case.model';
+import {
+	ImageManualProcessArgs,
+	IOverlaysScannedAreaData,
+	IOverlaysTranslationData,
+} from '../../../menu-items/cases/models/case.model';
 import { IScannedArea } from '../reducers/overlay-status.reducer';
 
-
 export enum OverlayStatusActionsTypes {
+	SET_MANUAL_IMAGE_PROCESSING = 'SET_MANUAL_IMAGE_PROCESSING',
 	BACK_TO_WORLD_VIEW = 'BACK_TO_WORLD_VIEW',
 	BACK_TO_WORLD_SUCCESS = 'BACK_TO_WORLD_SUCCESS',
 	BACK_TO_WORLD_FAILED = 'BACK_TO_WORLD_FAILED',
@@ -74,6 +78,13 @@ export class BackToWorldView implements Action {
 	constructor(public payload: { mapId: string }) {
 
 	}
+}
+
+export class SetManualImageProcessing implements Action {
+	type = OverlayStatusActionsTypes.SET_MANUAL_IMAGE_PROCESSING;
+
+	constructor(public payload: ImageManualProcessArgs) {
+	};
 }
 
 export class BackToWorldSuccess extends BackToWorldView {

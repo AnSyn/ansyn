@@ -43,7 +43,7 @@ div.menu-wrapper {
 		height: 100%;
 		transition: transform .5s;
 
-		&.expanded:not('.bottom') {
+		&.expanded {
 			button.hide-menu {
 				transition: 0s;
 				transform: translateX(0);
@@ -87,10 +87,17 @@ div.menu-wrapper {
 					background: @application-secondary-color;
 					right: 20px;
 					top: 10px;
-					width: 18px;
-					height: 17px;
-					font-size: 12px;
-					border-radius: 50%;
+					height: 21px;
+					font-size: 14px;
+					border-radius: 40%;
+
+					&.count-badge {
+						min-width: 30px;
+						border-radius: 40%;
+						padding-top: 2px;
+						padding-right: 2px;
+						padding-left: 2px;
+					}
 				}
 
 				img {
@@ -106,17 +113,20 @@ div.menu-wrapper {
 					background-color: @application-primary-color;
 				}
 
-				&.first-start {
+				&.draw-user-attention {
 					background-color: #3d1a1a;
+				}
+
+				&.bottom {
+					span.badge {
+						width: 10px;
+						height: 10px;
+					}
 				}
 
 				@media screen and (max-height: 700px) {
 					i {
 						font-size: calc(~"((100vh - 94px) / @{number-of-menu-item}) - 45px");
-					}
-					span.badge.bottom {
-						width: 10px;
-						height: 10px;
 					}
 				}
 			}
@@ -127,6 +137,7 @@ div.menu-wrapper {
 				display: flex;
 				flex-direction: column;
 				align-items: center;
+				margin-bottom: 5px;
 
 				a.forkMe {
 					margin-bottom: 15px;
@@ -148,8 +159,9 @@ div.menu-wrapper {
 	div.container {
 		position: absolute;
 		left: 90px;
+		top: @status-bar-height;
 		z-index: @z-index-menu-container;
-		height: 100%;
+		height: calc(100% - @status-bar-height);
 		background: fade(@background-color-3, 95%);
 
 		&.pinned {

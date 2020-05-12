@@ -46,6 +46,7 @@ export class OpenLayersImageProcessing {
 			// general functions
 			buildHistogramLut: buildHistogramLut,
 			normalizeColor: normalizeColor,
+			fillArray: fillArray,
 			rgb2YCbCr: rgb2YCbCr,
 			yCbCr2RGB: yCbCr2RGB,
 			forEachRGBPixel: forEachRGBPixel,
@@ -156,6 +157,17 @@ function getFunctionByArgument(arg) {
 	return null;
 }
 
+function fillArray(size, item) {
+	if (Array.prototype.fill) {
+		return new Array(size).fill(item);
+	}
+	const array = [];
+	for (let i = 0; i < size; i++) {
+		array[i] = item;
+	}
+	return array;
+}
+
 // ------ General Operation End ------ //
 
 // ------ Histogram Start ------ //
@@ -181,58 +193,42 @@ function yCbCr2RGB(yCbCr): any {
 }
 
 function buildHistogramLut(imageData) {
-	const totalHistLut = [];
-
-	for (let index = 16; index < 236; index++) {
-		totalHistLut[index] = 0;
+	const BANDS = 4, CUTEDGE = 85, MAXBIT = 256;
+	const histogram = this['fillArray'](MAXBIT, 0);
+	const { width, height, data } = imageData;
+	for ( let i = 0; i < data.length; i += BANDS) {
+		const [r, g, b] = data.subarray(i, i + BANDS);
+		histogram[g]++;
 	}
-
-	for (let index = 0; index < imageData.data.length; index += 4) {
-		const r = imageData.data[index];
-		const g = imageData.data[index + 1];
-		const b = imageData.data[index + 2];
-
-		const yCbCr = this['rgb2YCbCr']({ r, g, b });
-
-		const val = Math.floor(yCbCr.y);
-		if (totalHistLut[val] === undefined) {
-			totalHistLut[val] = 1;
-		} else {
-			totalHistLut[val] = totalHistLut[val] + 1;
+	const totalPixels = width * height;
+	let minPixel = 0, maxPixel = 0, pixelsSoFar = 0;
+	for (let i = 0; i < MAXBIT; i++) {
+		minPixel = i;
+		pixelsSoFar += histogram[i];
+		if (pixelsSoFar > totalPixels / CUTEDGE) {
+			break;
 		}
 	}
-
-	const cumulativeHist = [];
-
-	cumulativeHist[16] = totalHistLut[16];
-
-	for (let index = 17; index < totalHistLut.length; index++) {
-		let tempTotalHist = totalHistLut[index] === undefined ? 0 : totalHistLut[index];
-		cumulativeHist[index] = cumulativeHist[index - 1] + tempTotalHist;
+	pixelsSoFar = 0;
+	for (let i = 0; i < MAXBIT; i++) {
+		maxPixel = 255 - i;
+		pixelsSoFar += histogram[255 - i];
+		if (pixelsSoFar > totalPixels / CUTEDGE) {
+			break;
+		}
 	}
-
-	let pixelsNum = 0;
-	totalHistLut.forEach((hist) => pixelsNum += hist);
-
-	const minCumProbability = cumulativeHist[16];
-	const finalHist = [];
-
-	for (let index = 16; index < cumulativeHist.length; index++) {
-		const diff = cumulativeHist[index] - minCumProbability;
-
-		finalHist[index] = Math.floor((diff / (pixelsNum - 1)) * (235 - 16 - 1) + 16);
-	}
-
-	return finalHist;
+	return this['fillArray'](MAXBIT, 0).map( (val, index) => {
+		return this['normalizeColor'](255 * (index - minPixel) / (maxPixel - minPixel));
+	});
 }
 
 function performHistogram(pixel, histogramLut) {
-	const yCbCr = this['rgb2YCbCr'](pixel);
-	yCbCr.y = histogramLut[Math.floor(yCbCr.y)];
-
-	const resultPixel = this['yCbCr2RGB'](yCbCr);
-	resultPixel.a = pixel.a;
-	return resultPixel;
+	return {
+		r: histogramLut[pixel.r],
+		g: histogramLut[pixel.g],
+		b: histogramLut[pixel.b],
+		a: pixel.a
+	};
 }
 
 // ------ Histogram Equalization End ------ //

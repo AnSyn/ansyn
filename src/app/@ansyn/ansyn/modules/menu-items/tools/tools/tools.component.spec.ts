@@ -8,6 +8,7 @@ import { ToolsComponent } from './tools.component';
 import { SubMenuEnum, toolsFeatureKey, toolsFlags, ToolsReducer } from '../reducers/tools.reducer';
 import { MockComponent } from '../../../core/test/mock-component';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatDialogRef, MatDialog } from '@angular/material';
 
 
 describe('ToolsComponent', () => {
@@ -15,7 +16,7 @@ describe('ToolsComponent', () => {
 	let fixture: ComponentFixture<ToolsComponent>;
 	let store: Store<any>;
 
-	const mockAnnotationsControl = MockComponent({ selector: 'ansyn-annotations-control', inputs: ['expand'] });
+	const mockAnnotationsControl = MockComponent({ selector: 'ansyn-annotations-control', inputs: ['expand', 'isGeoOptionsDisabled'] });
 	const mockGoTo = MockComponent({
 		selector: 'ansyn-go-to',
 		inputs: ['expand', 'disabled'],
@@ -40,7 +41,7 @@ describe('ToolsComponent', () => {
 				[mapFeatureKey]: MapReducer
 			}), TranslateModule.forRoot()],
 			declarations: [ToolsComponent, mockGoTo, mockOverlaysDisplayMode, mockAnnotationsControl, mockImageManualProcessing],
-			providers: [ImageryCommunicatorService]
+			providers: [ImageryCommunicatorService, { provide: MatDialogRef, useValue: {} }, { provide: MatDialog, useValue: {} }]
 		})
 			.compileComponents();
 	}));

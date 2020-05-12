@@ -2,7 +2,7 @@ import { MapActionTypes } from '@ansyn/map-facade';
 import { createEntityAdapter, Dictionary, EntityAdapter, EntityState } from '@ngrx/entity';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
-import { ICaseDataInputFiltersState } from '../../menu-items/cases/models/case.model';
+import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
 import { OverlaysActions, OverlaysActionTypes, SetMiscOverlay, SetMiscOverlays } from '../actions/overlays.actions';
 import {
 	IOverlay,
@@ -69,6 +69,8 @@ export interface IOverlaysState extends EntityState<IOverlay> {
 	hoveredOverlay: IOverlay;
 	overlaysCriteria: IOverlaysCriteria;
 	miscOverlays: IOverlaysHash;
+	customOverviewElement: any;
+	totalOverlaysLength: number;
 }
 
 let initDropsMarkUp: ExtendMap<MarkUpClass, IMarkUpData> = new ExtendMap<MarkUpClass, IMarkUpData>();
@@ -91,6 +93,8 @@ export const overlaysInitialState: IOverlaysState = overlaysAdapter.getInitialSt
 	hoveredOverlay: null,
 	overlaysCriteria: {},
 	miscOverlays: {},
+	customOverviewElement: null,
+	totalOverlaysLength: 0
 });
 
 export const overlaysFeatureKey = 'overlays';
@@ -99,6 +103,7 @@ export const overlaysStatusMessages = {
 	noOverLayMatchQuery: 'No overlays match your query, please try another search',
 	overLoad: 'Query exceeds limit, only $overLoad overlays are presented',
 	noOverLayMatchFilters: 'No overlays match your query, please try another search',
+	noPermissionsForArea: 'You do not have permissions to see overlays in this area',
 	nullify: null
 };
 
@@ -142,6 +147,18 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				loaded: false,
 				overlays: new Map(),
 				filteredOverlays: []
+			});
+		}
+
+		case OverlaysActionTypes.SET_TOTAL_OVERLAYS: {
+			return { ...state, totalOverlaysLength: action.payload };
+		}
+
+		case OverlaysActionTypes.CHECK_TRIANGLES: {
+			return overlaysAdapter.addAll([], {
+				...state,
+				loading: true,
+				loaded: false
 			});
 		}
 
@@ -203,8 +220,10 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 		case OverlaysActionTypes.SET_OVERLAYS_MARKUPS:
 			let dropsMarkUpCloneToSet = new ExtendMap(state.dropsMarkUp);
 			dropsMarkUpCloneToSet.set(action.payload.classToSet, action.payload.dataToSet);
+			const { customOverviewElement } = action.payload;
+
 			return {
-				...state, dropsMarkUp: dropsMarkUpCloneToSet
+				...state, dropsMarkUp: dropsMarkUpCloneToSet, customOverviewElement
 			};
 
 		case OverlaysActionTypes.REMOVE_OVERLAYS_MARKUPS:
@@ -228,7 +247,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				});
 			}
 
-			return { ...state, dropsMarkUp: dropsMarkUpClone };
+			return { ...state, dropsMarkUp: dropsMarkUpClone, customOverviewElement: null };
 
 
 		case OverlaysActionTypes.ADD_OVERLAYS_MARKUPS:
@@ -322,10 +341,11 @@ export const selectHoveredOverlay = createSelector(overlaysStateSelector, (overl
 export const selectTimelineRange = createSelector(overlaysStateSelector, (overlays: IOverlaysState): ITimelineRange => overlays.timeLineRange);
 export const selectdisplayOverlayHistory = createSelector(overlaysStateSelector, (overlays: IOverlaysState): { [mapId: string]: string[] } => overlays.displayOverlayHistory);
 export const selectStatusMessage = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string => overlays.statusMessage);
-export const selectOverlaysCriteria: MemoizedSelector<any, IOverlaysCriteria> = createSelector(overlaysStateSelector, (overlays) => overlays.overlaysCriteria);
+export const selectOverlaysCriteria: MemoizedSelector<any, IOverlaysCriteria> = createSelector(overlaysStateSelector, (overlays) => overlays && overlays.overlaysCriteria);
 export const selectDataInputFilter: MemoizedSelector<any, ICaseDataInputFiltersState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.dataInputFilters);
-export const selectRegion: MemoizedSelector<any, any> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);
-export const selectTime: MemoizedSelector<any, any> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.time);
+export const selectRegion: MemoizedSelector<any, CaseRegionState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);
+export const selectTime: MemoizedSelector<any, ICaseTimeState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.time);
 
 export const selectMiscOverlays: MemoizedSelector<any, any> = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays ? overlays.miscOverlays : {});
 export const selectMiscOverlay = (key: string) => createSelector(selectMiscOverlays, (miscOverlays: any) => miscOverlays[key]);
+export const selectCustomOverviewElement = createSelector(overlaysStateSelector, (state) => state && state.customOverviewElement)

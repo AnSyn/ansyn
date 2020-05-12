@@ -25,9 +25,7 @@ describe('CasesReducer', () => {
 			},
 			removedOverlaysVisibility: true,
 			removedOverlaysIds: [],
-			orientation: 'Align North',
-			dataInputFilters: { fullyChecked: true, filters: [], active: true },
-			timeFilter: 'Start - End',
+			dataInputFilters: { fullyChecked: true, filters: [] },
 			region: {},
 			overlaysManualProcessArgs: {},
 			overlaysTranslationData: {}

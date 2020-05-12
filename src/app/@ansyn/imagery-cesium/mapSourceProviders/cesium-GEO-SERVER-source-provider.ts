@@ -14,7 +14,7 @@ export class CesiumGeoServerSourceProvider extends BaseMapSourceProvider {
 	readonly supported: IBaseImageryMapConstructor[];
 
 	protected create(metaData: IMapSettings): Promise<any> {
-		const { config } = this;
+		const config = {...this.config, ...metaData.data.config};
 		const layers = config.layers.join(',');
 		const cesiumGeoServerLayer = new Cesium.WebMapServiceImageryProvider({
 			url: config.url,

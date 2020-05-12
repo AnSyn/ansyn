@@ -1,7 +1,5 @@
 import { Observable, of, EMPTY } from 'rxjs';
 import { IMAGERY_VIDEO_SOURCE_TYPE } from '@ansyn/imagery-video';
-
-
 import { map } from 'rxjs/operators';
 import {
 	BaseOverlaySourceProvider,
@@ -12,6 +10,7 @@ import { IOverlay, Overlay } from '../../../modules/overlays/models/overlay.mode
 import { sortByDateDesc } from '../../../modules/core/utils/sorting';
 import { limitArray } from '../../../modules/core/utils/i-limited-array';
 import { OverlaySourceProvider } from '../../../modules/overlays/models/overlays-source-providers';
+import { EPSG_3857 } from '@ansyn/imagery';
 
 const DATA = {
 	'4eeb061d-f8a6-4a0a-86cf-8d97c71a62c6': {
@@ -19,7 +18,7 @@ const DATA = {
 		'sensorName': 'Video',
 		'cloudCoverage': 1,
 		'azimuth': 0,
-		'projection': 'EPSG:3857',
+		'projection': EPSG_3857,
 		'photoAngle': 'verticle',
 		'containedInSearchPolygon': 'contained',
 		'id': '4eeb061d-f8a6-4a0a-86cf-8d97c71a62c6',

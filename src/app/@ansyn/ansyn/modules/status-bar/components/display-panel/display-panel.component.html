@@ -1,0 +1,15 @@
+<ansyn-combo-box
+	buttonClass="display-button screens"
+	direction="bottom"
+	name="layout"
+	[withArrow]="false"
+	[comboBoxToolTipDescription]="statusBarConfig?.toolTips?.screenNumber | translate"
+	[ngModel]="layout"
+	(ngModelChange)="layoutSelectChange($event)">
+
+	<ansyn-combo-box-option *ngFor="let layout of layouts; index as index" [value]="layout">
+		<i class="icon icon-screen-{{index + 1}}"></i> <span class="for-title-only">{{'Screens' | translate}}</span>
+	</ansyn-combo-box-option>
+
+
+</ansyn-combo-box>

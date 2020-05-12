@@ -1,21 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	AnsynApi,
-	FilterMetadata,
-	FiltersService,
+	AreaToCredentialsService,
 	GeoRegisteration,
-	ICaseFacetsState,
-	IFilter,
 	IOverlay,
 	IOverlaysCriteria,
 	PhotoAngle,
 	RegionContainment,
-	selectFacets,
-	selectFilters,
 	selectMiscOverlays,
 	selectOverlaysArray,
 	SetMiscOverlay,
-	UpdateFilterAction
 } from '@ansyn/ansyn';
 import { FeatureCollection, Point, Polygon } from 'geojson';
 import {
@@ -25,7 +19,7 @@ import {
 	OpenLayersStaticImageSourceProviderSourceType
 } from '@ansyn/ol';
 import * as momentNs from 'moment';
-import { take, tap, withLatestFrom } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
@@ -141,7 +135,8 @@ export class SandboxComponent implements OnInit, OnDestroy {
 
 	constructor(protected ansynApi: AnsynApi,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				protected store$: Store<any>) {
+				protected store$: Store<any>,
+				protected areaToCredentials: AreaToCredentialsService) {
 	}
 
 	ngOnInit() {
@@ -150,6 +145,13 @@ export class SandboxComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 	}
 
+	checkCredentialsByArea() {
+		let area = this.areaToCredentials.getAreaTriangles({
+			type: 'Point',
+			coordinates: [47.4744411831745, 33.4504920101187]
+		});
+		area.subscribe((triangels) => console.log(triangels))
+	}
 	setPositionByRadius() {
 		let center: Point = {
 			type: 'Point',
@@ -607,21 +609,4 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		plugin.setMode(null, false);
 	}
 
-	updateOverlayAsPartiallyRegistered() {
-		const overlay = this.ansynApi.getOverlayData();
-		if (overlay) {
-			overlay.isGeoRegistered = GeoRegisteration.poorGeoRegistered;
-			this.store$.select(selectFilters).pipe(
-				take(1),
-				withLatestFrom(this.store$.select(selectOverlaysArray), this.store$.select(selectFacets)),
-				tap(([filters, overlays, facets]: [Map<IFilter, FilterMetadata>, IOverlay[], ICaseFacetsState]) => {
-					const data = FiltersService.getRefreshedFilterDataByFilterModel('isGeoRegistered', filters, facets, overlays);
-					this.store$.dispatch(new UpdateFilterAction({
-						filter: data.filter,
-						newMetadata: data.filterMetadata
-					}));
-				})
-			).subscribe();
-		}
-	}
 }

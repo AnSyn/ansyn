@@ -8,6 +8,7 @@ import {
 	IWorldViewMapState
 } from '@ansyn/imagery';
 import { LayoutKey } from '../models/maps-layout';
+import { MapOrientation } from "@ansyn/imagery";
 
 export interface IAngleFilterClick { // @TODO: map-facade should not know IOverlay
 	click: { x: number, y: number };
@@ -63,6 +64,7 @@ export const MapActionTypes = {
 	SET_PENDING_MAPS_COUNT: 'SET_PENDING_MAPS_COUNT',
 	DECREASE_PENDING_MAPS_COUNT: 'DECREASE_PENDING_MAPS_COUNT',
 	SET_PENDING_OVERLAYS: 'SET_PENDING_OVERLAYS',
+	SET_MAP_ORIENTATION: 'SET_IMAGE_OPENING_ORIENTATION',
 	REMOVE_PENDING_OVERLAY: 'REMOVE_PENDING_OVERLAY',
 	SHADOW_MOUSE_PRODUCER: 'SHADOW_MOUSE_PRODUCER',
 	SET_MAPS_DATA: 'SET_MAPS_DATA',
@@ -83,6 +85,9 @@ export const MapActionTypes = {
 	EXPORT_MAPS_TO_PNG_SUCCESS: 'EXPORT_MAPS_TO_PNG_SUCCESS',
 	EXPORT_MAPS_TO_PNG_FAILED: 'EXPORT_MAPS_TO_PNG_FAILED',
 	SET_MINIMALIST_VIEW_MODE: '[Maps] Set Minimalist View Mode',
+	REPLACE_MAP_MAIN_LAYER: '[Maps] replace Main Layer',
+	REPLACE_MAP_MAIN_LAYER_SUCCESS: '[Maps] replace Main Layer success',
+	REPLACE_MAP_MAIN_LAYER_FAILED: '[Maps] replace Main Layer failed'
 };
 
 export interface IContextMenuShowPayload {
@@ -104,6 +109,12 @@ export class SetMinimalistViewModeAction implements Action {
 	type = MapActionTypes.SET_MINIMALIST_VIEW_MODE;
 
 	constructor(public payload: boolean) {
+	}
+}
+
+export class SetMapOrientation implements Action {
+	type = MapActionTypes.SET_MAP_ORIENTATION;
+	constructor(public payload: {orientation: MapOrientation, mapId?: string}) {
 	}
 }
 
@@ -314,6 +325,22 @@ export class ChangeImageryMapFailed implements Action {
 	constructor(public payload: { id: string, error: any }) {
 	}
 }
+
+export class ReplaceMainLayer implements Action {
+	readonly type = MapActionTypes.REPLACE_MAP_MAIN_LAYER;
+	constructor( public payload: { id: string, sourceType: string }) { }
+}
+
+export class ReplaceMainLayerSuccess implements Action {
+	readonly type = MapActionTypes.REPLACE_MAP_MAIN_LAYER_SUCCESS;
+	constructor( public payload: { id: string, sourceType: string }) { }
+}
+
+export class ReplaceMainLayerFailed implements Action {
+	readonly type = MapActionTypes.REPLACE_MAP_MAIN_LAYER_FAILED;
+
+}
+
 
 export class SetMapsDataActionStore implements Action {
 	type = MapActionTypes.SET_MAPS_DATA;

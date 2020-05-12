@@ -14,7 +14,7 @@
 		[attr.tooltip-value]="'Move' | translate"
 		tooltip-class="bottom right"
 		(mousedown)="onMove.emit($event)">
-		<i class="icon-drag"></i>
+		<i class="icon-drag-maps"></i>
 	</button>
 
 	<button *ngIf="mapsAmount > 1"
@@ -35,6 +35,13 @@
 		   [class.icon-layers-hide]="hideLayers"></i>
 	</button>
 
+	<button class="small-icon-button perspective"
+			(click)="toggleImageryPerspective()"
+			[attr.tooltip-value]="orientation | translate"
+			tooltip-class="bottom right">
+		<i class="icon-status-bar-orientation" [class.active]="perspective"></i>
+	</button>
+
 	<ng-container
 		*ngFor="let component of entryComponents.status">
 		<ng-container
@@ -42,11 +49,12 @@
 			[ansynEntryComponent]="{ component: component , mapId: mapId }">
 		</ng-container>
 	</ng-container>
+
 </div>
 
 <div class="description">
 	<ansyn-popover *ngIf="overlay" [text]="overlayDescription"
-				   [popDirection]="'bottom wrap'">
+				   [popDirection]="'bottom left'">
 		<button class="share-link" (click)="copyOverlayDescription()">
 			<span>{{overlayDescription | translate}}</span>
 		</button>
@@ -55,7 +63,6 @@
 		{{baseMapDescription | translate}}
 	</div>
 </div>
-
 
 <ng-container *ngIf="!isMinimalistViewMode">
 	<ng-container
@@ -66,3 +73,4 @@
 		</ng-container>
 	</ng-container>
 </ng-container>
+

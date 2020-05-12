@@ -8,10 +8,12 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { overlayStatusFeatureKey, OverlayStatusReducer } from './reducers/overlay-status.reducer';
 import { TranslateModule } from '@ngx-translate/core';
+import { ImageProcessingControlComponent } from "./components/image-processing-control/image-processing-control.component";
+import { FormsModule } from "@angular/forms";
 
 @NgModule({
-	declarations: [OverlayStatusComponent, BackToBaseMapComponent],
-	entryComponents: [OverlayStatusComponent, BackToBaseMapComponent],
+	declarations: [OverlayStatusComponent, BackToBaseMapComponent, ImageProcessingControlComponent],
+	entryComponents: [OverlayStatusComponent, BackToBaseMapComponent, ImageProcessingControlComponent],
 	imports: [
 		CommonModule,
 		StoreModule.forFeature(overlayStatusFeatureKey, OverlayStatusReducer),
@@ -23,8 +25,10 @@ import { TranslateModule } from '@ngx-translate/core';
 				floating_menu: []
 			}
 		}),
-		TranslateModule
-	]
+		TranslateModule,
+		FormsModule,
+	],
+	exports: [ImageProcessingControlComponent]
 })
 export class OverlayStatusModule {
 }

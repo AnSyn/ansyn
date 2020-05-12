@@ -1,12 +1,14 @@
 import { Observable, of } from 'rxjs';
 import { Actions, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
-import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
-import { IStatusBarState, statusBarStateSelector } from '../../../../status-bar/reducers/status-bar.reducer';
-import { MapActionTypes, PointToRealNorthAction, selectActiveMapId } from '@ansyn/map-facade';
+import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin, MapOrientation } from '@ansyn/imagery';
+import {
+	MapActionTypes,
+	PointToRealNorthAction,
+	selectActiveMapId
+} from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
-import { comboBoxesOptions } from '../../../../status-bar/models/combo-boxes.model';
 import { LoggerService } from '../../../../core/services/logger.service';
 import {
 	ChangeOverlayPreviewRotationAction,
@@ -14,7 +16,6 @@ import {
 	OverlaysActionTypes
 } from '../../../../overlays/actions/overlays.actions';
 import { selectHoveredOverlay } from '../../../../overlays/reducers/overlays.reducer';
-import { CaseOrientation } from '../../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
 import {
 	BackToWorldSuccess,
@@ -22,6 +23,7 @@ import {
 	OverlayStatusActionsTypes
 } from '../../../../overlays/overlay-status/actions/overlay-status.actions';
 import { CesiumMap, CesiumProjectionService } from '@ansyn/imagery-cesium';
+import { selectMapOrientation } from '@ansyn/map-facade';
 
 @ImageryPlugin({
 	supported: [CesiumMap],
@@ -53,21 +55,13 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	calcNorthAfterDisplayOverlaySuccess$ = this.actions$.pipe(
+	calcNorthAfterDisplayOverlaySuccess$ = () => this.actions$.pipe(
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
 		filter((action: DisplayOverlaySuccessAction) => action.payload.mapId === this.mapId),
-		withLatestFrom(this.store$.select(statusBarStateSelector), ({ payload }: DisplayOverlaySuccessAction, { comboBoxesProperties }: IStatusBarState) => {
-			return [payload.forceFirstDisplay, comboBoxesProperties.orientation, payload.overlay];
+		withLatestFrom(this.store$.select(selectMapOrientation(this.mapId)), ({ payload }: DisplayOverlaySuccessAction, orientation) => {
+			return [payload.forceFirstDisplay, orientation, payload.overlay];
 		}),
-		filter(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
-			return comboBoxesOptions.orientations.includes(orientation);
-		}),
-		tap(([forceFirstDisplay, orientation, overlay]: [boolean, CaseOrientation, IOverlay]) => {
-			if (orientation === 'Align North' && !forceFirstDisplay) {
-				// @todo: use image data
-				return this.communicator.ActiveMap.setRotation(0);
-			}
-
+		tap(([forceFirstDisplay, orientation, overlay]: [boolean, MapOrientation, IOverlay]) => {
 			if (!forceFirstDisplay && orientation === 'Imagery Perspective') {
 				this.communicator.setRotation(overlay.azimuth);
 			}
@@ -75,16 +69,14 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	backToWorldSuccessSetNorth$ = this.actions$.pipe(
+	backToWorldSuccessSetNorth$ = () => this.actions$.pipe(
 		ofType<BackToWorldSuccess>(OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS),
 		filter((action: BackToWorldSuccess) => action.payload.mapId === this.communicator.id),
-		withLatestFrom(this.store$.select(statusBarStateSelector)),
-		tap(([action, { comboBoxesProperties }]: [BackToWorldView, IStatusBarState]) => {
+		withLatestFrom(this.store$.select(selectMapOrientation(this.mapId))),
+		tap(([action, orientation]: [BackToWorldView, MapOrientation]) => {
 			this.communicator.setVirtualNorth(0);
-			switch (comboBoxesProperties.orientation) {
-				case 'Align North':
-				case 'Imagery Perspective':
-					this.communicator.setRotation(0);
+			if (orientation === 'Imagery Perspective') {
+				this.communicator.setRotation(0);
 			}
 		})
 	);

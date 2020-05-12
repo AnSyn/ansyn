@@ -1,0 +1,68 @@
+@import "ansyn/less/common";
+
+:host {
+	&:extend(.status-bar-panel);
+	width: 115px;
+	flex-direction: column;
+	border-left: 1px solid @status-bar-delimiter;
+	user-select: none;
+	margin-right: 12px;
+
+	hr {
+		margin: 0;
+		width: calc(100% + 12px);
+		background-color: @status-bar-delimiter;
+		border-color: @status-bar-delimiter;
+	}
+
+	.row {
+		display: flex;
+		flex: 1;
+		height: calc(@status-bar-height / 2);
+		box-sizing: border-box;
+		justify-content: flex-start;
+		align-items: center;
+
+		&.top {
+			padding: 3px 5px;
+
+			span {
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+		}
+
+		&.bottom {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: baseline;
+			padding: 2px 0;
+
+			div {
+				display: flex;
+				align-items: center;
+
+				&.share {
+					cursor: pointer;
+				}
+			}
+
+
+		}
+	}
+}
+
+
+@media screen and (max-width: 1280px) {
+	:host {
+		width: 95px;
+
+		.bottom {
+			div.share {
+				justify-content: flex-end;
+				font-size: 0;
+			}
+		}
+	}
+}

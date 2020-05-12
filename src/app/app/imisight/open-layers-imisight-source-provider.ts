@@ -5,6 +5,7 @@ import { Inject } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import {
 	CacheService,
+	EPSG_3857,
 	ImageryCommunicatorService,
 	ImageryMapSource,
 	IMapSettings,
@@ -33,7 +34,7 @@ export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvide
 	public create(metaData: IMapSettings): any {
 		const url = metaData.data.overlay.imageUrl;
 		const layers = metaData.data.overlay.tag.urls;
-		const projection = 'EPSG:3857';
+		const projection = EPSG_3857;
 		const token = localStorage.getItem('id_token');
 		const helper = new JwtHelperService();
 		const decodedToken = this.parseTokenObjects(helper.decodeToken(token));

@@ -1,4 +1,5 @@
 import {
+	AfterViewChecked, ChangeDetectorRef,
 	Component,
 	ComponentFactoryResolver,
 	ComponentRef,
@@ -14,7 +15,7 @@ import {
 import {
 	ContainerChangedTriggerAction,
 	ResetAppAction,
-	SelectMenuItemAction,
+	SelectMenuItemAction, SetHideResultsTableBadgeAction,
 	ToggleIsPinnedAction,
 	ToggleMenuCollapse,
 	UnSelectMenuItemAction
@@ -24,10 +25,10 @@ import {
 	IMenuState,
 	selectAllMenuItems,
 	selectAutoClose,
-	selectEntitiesMenuItems,
+	selectEntitiesMenuItems, selectHideResultsTableBadge,
 	selectIsPinned,
 	selectMenuCollapse,
-	selectSelectedMenuItem, selectUserFirstEnter
+	selectSelectedMenuItem, selectUserFirstEnter, selectUserHaveCredentials
 } from '../reducers/menu.reducer';
 import { select, Store } from '@ngrx/store';
 import { animate, state, style, transition, trigger } from '@angular/animations';
@@ -72,11 +73,13 @@ const animations: any[] = [
 	menu is open -> toggle same menu item ->  dispatch store -> subscribe store -> change expand -> destroy component
 */
 
-export class MenuComponent implements OnInit, OnDestroy {
+export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	isUserFirstEntrance: boolean;
+	doesUserHaveCredentials: boolean;
 	_componentElem;
 	currentComponent: ComponentRef<any>;
 	collapse: boolean;
+	hideResultsTableBadge: boolean;
 	@Input() animatedElement: HTMLElement;
 	@ViewChild('menuWrapper') menuWrapperElement: ElementRef;
 	@ViewChild('menu') menuElement: ElementRef;
@@ -85,12 +88,12 @@ export class MenuComponent implements OnInit, OnDestroy {
 
 	topMenuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(
 		select(selectAllMenuItems),
-		map( menuItems => menuItems.filter((menuItem: IMenuItem) => !menuItem.dockedToBottom))
+		map(menuItems => menuItems.filter((menuItem: IMenuItem) => !menuItem.dockedToBottom))
 	);
 
 	bottomMenuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(
 		select(selectAllMenuItems),
-		map( menuItems => menuItems.filter((menuItem: IMenuItem) => menuItem.dockedToBottom))
+		map(menuItems => menuItems.filter((menuItem: IMenuItem) => menuItem.dockedToBottom))
 	);
 
 	@AutoSubscription
@@ -106,7 +109,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 		);
 
 	@AutoSubscription
-	selectIsPinned$ =  this.store.select(selectIsPinned).pipe(
+	selectIsPinned$ = this.store.select(selectIsPinned).pipe(
 		distinctUntilChanged(),
 		tap((isPinned) => {
 			this.isPinned = isPinned;
@@ -120,8 +123,19 @@ export class MenuComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
+	selectHideResultsTableBadge$ = this.store.select(selectHideResultsTableBadge).pipe(
+		tap(this.setHideResultsTableBadge.bind(this))
+	);
+
+
+	@AutoSubscription
 	isUserFirstEntrance$ = this.store.select(selectUserFirstEnter).pipe(
 		tap((isUserFirstEntrance) => this.isUserFirstEntrance = isUserFirstEntrance)
+	);
+
+	@AutoSubscription
+	doesUserHaveCredentials$ = this.store.select(selectUserHaveCredentials).pipe(
+		tap((doesUserHaveCredentials) => this.doesUserHaveCredentials = doesUserHaveCredentials)
 	);
 
 	selectedMenuItemName: string;
@@ -137,8 +151,8 @@ export class MenuComponent implements OnInit, OnDestroy {
 				protected renderer: Renderer2,
 				protected elementRef: ElementRef,
 				@Inject(DOCUMENT) protected document: Document,
-				@Inject(MenuConfig) public menuConfig: IMenuConfig) {
-
+				@Inject(MenuConfig) public menuConfig: IMenuConfig,
+				private cdref: ChangeDetectorRef) {
 	}
 
 	get componentElem() {
@@ -172,6 +186,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 			filter(this.anyMenuItemSelected.bind(this)),
 			withLatestFrom(this.store.select(selectAutoClose)),
 			filter(([click, autoClose]: [any, boolean]) => {
+				this.hideTableBadge();
 				const include = click.path.includes(this.elementRef.nativeElement);
 				return !include && !this.isPinned && autoClose;
 			}),
@@ -212,6 +227,10 @@ export class MenuComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	setHideResultsTableBadge(_hideResultsTableBadge) {
+		this.hideResultsTableBadge = _hideResultsTableBadge;
+	}
+
 	componentChanges(): void {
 		if (!this.componentElem || this.onAnimation) {
 			this.isBuildNeeded = !this.componentElem;
@@ -221,7 +240,11 @@ export class MenuComponent implements OnInit, OnDestroy {
 		this.buildCurrentComponent();
 	}
 
-	hideBadge(badge: string): boolean {
+	hideBadge(badge: string, name?: string): boolean {
+		if (this.isMenuItemResultsTable(name)) {
+			return this.hideResultsTableBadge;
+		}
+
 		return badge !== '★' && !Number(badge);
 	}
 
@@ -236,14 +259,16 @@ export class MenuComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	toggleItem(key: string): void {
+	toggleItem(key: string, skipSession: boolean = false): void {
+		this.hideTableBadge(key);
+
 		if (this.onAnimation) {
 			return;
 		}
 		if (this.selectedMenuItemName === key) {
 			this.closeMenu();
 		} else {
-			this.openMenu(key);
+			this.openMenu(key, skipSession);
 		}
 	}
 
@@ -251,8 +276,18 @@ export class MenuComponent implements OnInit, OnDestroy {
 		return Boolean(this.selectedMenuItem);
 	}
 
-	openMenu(key: string) {
-		this.store.dispatch(new SelectMenuItemAction(key));
+	isMenuItemResultsTable(menuItemName: string): boolean {
+		return menuItemName === 'Results table';
+	}
+
+	hideTableBadge(key?: string): void {
+		if ((key && this.isMenuItemResultsTable(key)) || this.isMenuItemResultsTable(this.selectedMenuItemName)) {
+			this.store.dispatch(new SetHideResultsTableBadgeAction(true));
+		}
+	}
+
+	openMenu(key: string, skipSession: boolean) {
+		this.store.dispatch(new SelectMenuItemAction({ menuKey: key, skipSession }));
 	}
 
 	closeMenu(): void {
@@ -313,6 +348,10 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
+	}
+
+	ngAfterViewChecked() {
+		this.cdref.detectChanges();
 	}
 }
 

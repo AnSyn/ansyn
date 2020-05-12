@@ -1,5 +1,6 @@
 import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
 import { LineString, MultiPolygon, Point } from 'geojson';
+import { EPSG_3857 } from '@ansyn/imagery';
 
 export interface IOverlaysFetchData {
 	data: IOverlay[],
@@ -24,7 +25,6 @@ export interface IDilutedOverlaysHash {
 export enum GeoRegisteration {
 	geoRegistered = 'geoRegistered',
 	notGeoRegistered = 'notGeoRegistered',
-	poorGeoRegistered = 'poorGeoRegistered'
 }
 
 export enum PhotoAngle {
@@ -70,7 +70,7 @@ export interface IOverlay extends IDilutedOverlay {
 export class Overlay implements IOverlay {
 	static UNKNOWN_NAME = 'Unknown';
 	static DEFAULT_CLOUD_COVERAGE = 1;
-	static DEFAULT_PROJECTION = 'EPSG:3857';
+	static DEFAULT_PROJECTION = EPSG_3857;
 	static DEFAULT_AZIMUTH = 0;
 
 	footprint?: any;
@@ -121,6 +121,8 @@ export interface IOverlayDrop {
 	id: string;
 	date: Date;
 	shape?: string;
+	sourceType?: string;
+	tag?: any;
 }
 
 export interface IOverlaySpecialObject extends IOverlayDrop {

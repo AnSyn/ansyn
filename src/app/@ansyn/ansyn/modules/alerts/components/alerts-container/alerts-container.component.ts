@@ -35,11 +35,13 @@ export class AlertsContainerComponent implements OnInit, OnDestroy {
 	}
 
 	showAlert(alertKey) {
-		const ids = this.alertMsg.get(alertKey);
-		if (ids) {
-			return ids.has(this.mapId);
-		} else {
-			return this[alertKey];
+		if (this.overlay) {
+			const ids = this.alertMsg.get(alertKey);
+			if (ids) {
+				return ids.has(this.mapId);
+			} else {
+				return this[alertKey];
+			}
 		}
 	}
 
@@ -49,13 +51,6 @@ export class AlertsContainerComponent implements OnInit, OnDestroy {
 		}
 
 		return this.overlay.isGeoRegistered === 'notGeoRegistered';
-	}
-
-	get poorGeoRegistered() {
-		if (!this.overlay) {
-			return false;
-		}
-		return this.overlay.isGeoRegistered === 'poorGeoRegistered';
 	}
 
 	ngOnInit() {

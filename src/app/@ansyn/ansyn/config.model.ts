@@ -7,7 +7,7 @@ import { IIdahoOverlaySourceConfig } from './app-providers/overlay-source-provid
 import { ICasesConfig } from './modules/menu-items/cases/models/cases-config';
 import { ILayersManagerConfig } from './modules/menu-items/layers-manager/models/layers-manager-config';
 import { IOverlaysConfig } from './modules/overlays/models/overlays.config';
-import { IFiltersConfig } from './modules/menu-items/filters/models/filters-config';
+import { IFiltersConfig } from './modules/filters/models/filters-config';
 import { IToolsConfig } from './modules/menu-items/tools/models/tools-config';
 import { ILoggerConfig } from './modules/core/models/logger-config.model';
 import { IStatusBarConfig } from './modules/status-bar/models/statusBar-config.model';

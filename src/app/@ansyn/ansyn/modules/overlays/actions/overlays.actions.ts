@@ -10,11 +10,15 @@ import {
 	IOverlaySpecialObject,
 } from '../models/overlay.model';
 import { IMarkUpData, IOverlayDropMarkUp, ITimelineRange, MarkUpClass } from '../reducers/overlays.reducer';
+import { MapOrientation } from '@ansyn/imagery';
+import { OverlayStatusActionsTypes } from '../overlay-status/actions/overlay-status.actions';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
+	SET_TOTAL_OVERLAYS: type('[Overlay] Set Selected Overlay'),
 	UNSELECT_OVERLAY: type('[Overlay] Unselect Overlay'),
 	LOAD_OVERLAYS: type('[Overlay] Load Overlays'),
+	CHECK_TRIANGLES: type('[Overlay] Check Triangles Before Overlay Search'),
 	REQUEST_OVERLAY_FROM_BACKEND: type('[Overlay] Load Overlay By Id'),
 	LOAD_OVERLAYS_SUCCESS: type('[Overlay] Load Overlays Success'),
 	LOAD_OVERLAYS_FAIL: type('[Overlay] Load Overlays Failed'),
@@ -54,7 +58,7 @@ export class SelectOverlayAction implements Action {
 export class SetMarkUp implements Action {
 	type = OverlaysActionTypes.SET_OVERLAYS_MARKUPS;
 
-	constructor(public payload: { classToSet: MarkUpClass, dataToSet: IMarkUpData }) {
+	constructor(public payload: { classToSet: MarkUpClass, dataToSet: IMarkUpData, customOverviewElement?: any }) {
 	};
 }
 
@@ -84,6 +88,13 @@ export class UnSelectOverlayAction implements Action {
 
 export class LoadOverlaysAction implements Action {
 	type = OverlaysActionTypes.LOAD_OVERLAYS;
+
+	constructor(public payload: IOverlaysCriteria) {
+	}
+}
+
+export class CheckTrianglesAction implements Action {
+	type = OverlaysActionTypes.CHECK_TRIANGLES;
 
 	constructor(public payload: IOverlaysCriteria) {
 	}
@@ -134,7 +145,9 @@ export class DisplayMultipleOverlaysFromStoreAction implements Action {
 export class DisplayOverlayAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY;
 
-	constructor(public payload: { overlay: IOverlay, mapId: string, extent?: any, forceFirstDisplay?: boolean, force?: boolean, customOriantation?: string }) {
+	constructor(public payload: {
+		overlay: IOverlay, mapId: string, extent?: any, forceFirstDisplay?: boolean, force?: boolean, customOriantation?: string
+	}) {
 	}
 }
 
@@ -146,6 +159,13 @@ export class DisplayOverlayFailedAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY_FAILED;
 
 	constructor(public payload: { id: string, mapId?: string }) {
+	}
+}
+
+export class SetTotalOverlaysAction implements Action {
+	type = OverlaysActionTypes.SET_TOTAL_OVERLAYS;
+
+	constructor(public payload: number) {
 	}
 }
 
@@ -177,7 +197,7 @@ export class SetDropsAction implements Action {
 	};
 }
 
-export class SetOverlaysStatusMessage implements Action {
+export class SetOverlaysStatusMessageAction implements Action {
 	type = OverlaysActionTypes.SET_OVERLAYS_STATUS_MESSAGE;
 
 	constructor(public payload: string) {
@@ -246,11 +266,12 @@ export type OverlaysActions
 	| UnSelectOverlayAction
 	| RequestOverlayByIDFromBackendAction
 	| LoadOverlaysAction
+	| CheckTrianglesAction
 	| LoadOverlaysSuccessAction
 	| LoadOverlaysFailAction
 	| ClearFilterAction
 	| SetFilteredOverlaysAction
-	| SetOverlaysStatusMessage
+	| SetOverlaysStatusMessageAction
 	| AddMarkUp
 	| RemoveMarkUp
 	| SetHoveredOverlayAction

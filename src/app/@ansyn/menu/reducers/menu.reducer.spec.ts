@@ -17,7 +17,7 @@ describe('MenuReducer', () => {
 
 
 	it('SELECT_MENU_ITEM action should set selectedMenuItemIndex with action.payload', () => {
-		let selectAction: SelectMenuItemAction = new SelectMenuItemAction('fakeMenuItem');
+		let selectAction: SelectMenuItemAction = new SelectMenuItemAction({ menuKey: 'fakeMenuItem' });
 		let result: IMenuState = MenuReducer(initialMenuState, selectAction);
 		expect(result.selectedMenuItem).toEqual('fakeMenuItem');
 	});

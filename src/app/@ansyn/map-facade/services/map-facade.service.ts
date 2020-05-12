@@ -1,7 +1,6 @@
-import { ExportMapsToPngRequestedAction } from './../actions/map.actions';
+import { ExportMapsToPngRequestedAction } from '../actions/map.actions';
 import { Injectable } from '@angular/core';
 import {
-	getPolygonIntersectionRatio,
 	ImageryCommunicatorService,
 	ImageryMapPosition,
 	IMapInstanceChanged,
@@ -10,8 +9,6 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import {
-	ExportMapsToPngActionFailed,
-	ExportMapsToPngActionSuccess,
 	MapInstanceChangedAction,
 	PositionChangedAction,
 } from '../actions/map.actions';
@@ -30,11 +27,6 @@ export class MapFacadeService {
 
 	layout: LayoutKey;
 	layout$ = this.store.select(selectLayout);
-
-	static isNotIntersect(extentPolygon, footprint, overlayCoverage): boolean {
-		const intersection = getPolygonIntersectionRatio(extentPolygon, footprint);
-		return intersection < overlayCoverage;
-	}
 
 	// @todo IOveraly
 	static isOverlayGeoRegistered(overlay: any): boolean {

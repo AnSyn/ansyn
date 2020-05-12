@@ -22,7 +22,6 @@
 		span {
 			margin-left: 5px;
 			line-height: 23px;
-			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
 		}
@@ -51,6 +50,11 @@
 
 			&.bottom {
 				transform: translate(0, 100%);
+			}
+
+			&.left {
+				left: unset;
+				right: 0;
 			}
 		}
 	}

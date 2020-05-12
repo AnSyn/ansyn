@@ -1,17 +1,27 @@
-import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+	Component,
+	ElementRef,
+	EventEmitter,
+	HostBinding,
+	Inject,
+	Input,
+	OnDestroy,
+	OnInit,
+	Output
+} from '@angular/core';
 import { fromEvent, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { AnnotationSetProperties, ClearActiveInteractionsAction, SetAnnotationMode } from '../../actions/tools.actions';
 import { DOCUMENT } from '@angular/common';
 import { selectAnnotationMode, selectAnnotationProperties } from '../../reducers/tools.reducer';
 import { IVisualizerStyle } from '@ansyn/imagery';
-import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectActiveAnnotationLayer, selectLayers } from '../../../layers-manager/reducers/layers.reducer';
 import { ILayer, LayerType } from '../../../layers-manager/models/layers.model';
 import { SetActiveAnnotationLayer } from '../../../layers-manager/actions/layers.actions';
-import { ANNOTATION_MODE_LIST, AnnotationMode } from '@ansyn/ol';
-import { IStyleWeight } from '@ansyn/ol';
+import { ANNOTATION_MODE_LIST, AnnotationMode, IStyleWeight } from '@ansyn/ol';
+import { ClickOutsideService } from '../../../../core/click-outside/click-outside.service';
 
 export enum SelectionBoxTypes {
 	None,
@@ -22,17 +32,20 @@ export enum SelectionBoxTypes {
 @Component({
 	selector: 'ansyn-annotations-control',
 	templateUrl: './annotations-control.component.html',
-	styleUrls: ['./annotations-control.component.less']
+	styleUrls: ['./annotations-control.component.less'],
+	providers: [ClickOutsideService]
 })
 @AutoSubscriptions({
 	init: 'ngOnInit',
 	destroy: 'ngOnDestroy'
 })
 export class AnnotationsControlComponent implements OnInit, OnDestroy {
+	@Input() isGeoOptionsDisabled: boolean;
+	@Output() hideMe = new EventEmitter<boolean>();
+
 	fillAlpah = 0.4;
 	strokeAlpah = 1;
 	activeAnnotationId: string;
-
 
 	private _expand: boolean;
 	public selectedBox: SelectionBoxTypes;
@@ -77,6 +90,14 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	public ANNOTATION_MODE_LIST = ANNOTATION_MODE_LIST;
 
 	@AutoSubscription
+	onClickOutside$ = this.clickOutsideService.onClickOutside().pipe(
+		filter((isClickOutside) => isClickOutside && this.expand),
+		tap(() => {
+			this.hideMe.emit();
+		})
+	);
+
+	@AutoSubscription
 	clickOutsideColorOrWeight = () => fromEvent(this.document, 'click')
 		.pipe(
 			filter((event: any) => this.selectedBox !== SelectionBoxTypes.None),
@@ -101,7 +122,11 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		return this._expand;
 	}
 
-	constructor(public store: Store<any>, @Inject(DOCUMENT) public document: any) {
+	constructor(
+		protected element: ElementRef,
+		public store: Store<any>,
+		protected clickOutsideService: ClickOutsideService,
+		@Inject(DOCUMENT) public document: any) {
 	}
 
 	ngOnInit() {
@@ -115,7 +140,7 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	}
 
 	toggleSelection(selected: SelectionBoxTypes = SelectionBoxTypes.None) {
-		this.selectedBox = selected;
+		this.selectedBox = this.selectedBox === selected ? SelectionBoxTypes.None : selected;
 	}
 
 	setAnnotationMode(mode?: AnnotationMode) {
@@ -123,13 +148,17 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		if (dispatchValue) {
 			this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetAnnotationMode] }));
 			this.store.dispatch(new SetAnnotationMode({ annotationMode: dispatchValue }));
+			this.hideMe.emit();
 		} else {
 			this.store.dispatch(new SetAnnotationMode(null));
 		}
 	}
 
 	selectLineStyle(style: IStyleWeight) {
-			this.store.dispatch(new AnnotationSetProperties({ 'stroke-width': style.width, 'stroke-dasharray': style.dash }));
+		this.store.dispatch(new AnnotationSetProperties({
+			'stroke-width': style.width,
+			'stroke-dasharray': style.dash
+		}));
 	}
 
 	activeChange($event) {

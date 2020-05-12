@@ -1,0 +1,71 @@
+@import "ansyn/less/common";
+@import "ansyn/less/colors";
+@import "ansyn/less/globals";
+@import "../../less/status-bar-common";
+
+:host {
+	&:extend(.status-bar-panel);
+
+	.box {
+		margin: 0 3px;
+
+		.button {
+			&:extend(.status-bar-button-round);
+			height: 35px;
+
+			&.active {
+				&:extend(.status-bar-button-active);
+			}
+
+			&:hover:not(.active) {
+				&:extend(.status-bar-button-hover);
+			}
+		}
+
+		&.timePickerBox {
+			font-size: 13px;
+
+			span.title {
+				outline: none;
+				cursor: text;
+
+				&::selection {
+					background: @status-bar-panels;
+				}
+				&.error {
+					color: red;
+				}
+
+				&:last-child {
+					margin-right: 5px;
+				}
+			}
+		}
+		&#geoPreSearch {
+			width: 155px;
+			span {
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+		}
+		&#dataInputsPreSearch {
+			width: 110px;
+		}
+	}
+
+	input.time-picker-input {
+		position: absolute;
+		top: 0;
+		padding-left: 28px;
+		width: 100%;
+		height: 100%;
+		border: none;
+		background-color: transparent;
+		color: white;
+		opacity: 0;
+		pointer-events: none;
+		font-family: @app-font;
+		font-size: 13px;
+	}
+
+}

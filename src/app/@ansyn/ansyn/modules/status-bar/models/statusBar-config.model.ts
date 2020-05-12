@@ -17,4 +17,6 @@ export interface IToolTipsConfig {
 
 export interface IStatusBarConfig {
 	toolTips: IToolTipsConfig,
+	filters: string[]
+	locale: string
 }

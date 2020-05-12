@@ -8,16 +8,16 @@ import {
 	selectRemovedOverlaysVisibility
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../app.effects.module';
-import { SetBadgeAction } from '@ansyn/menu';
+import { SetBadgeAction, SetHideResultsTableBadgeAction } from '@ansyn/menu';
 import { distinctUntilChanged, filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
-import { BooleanFilterMetadata } from '../../modules/menu-items/filters/models/metadata/boolean-filter-metadata';
+import { BooleanFilterMetadata } from '../../modules/filters/models/metadata/boolean-filter-metadata';
 import {
 	EnableOnlyFavoritesSelectionAction,
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction
-} from '../../modules/menu-items/filters/actions/filters.actions';
-import { EnumFilterMetadata } from '../../modules/menu-items/filters/models/metadata/enum-filter-metadata';
-import { FilterMetadata } from '../../modules/menu-items/filters/models/metadata/filter-metadata.interface';
+} from '../../modules/filters/actions/filters.actions';
+import { EnumFilterMetadata } from '../../modules/filters/models/metadata/enum-filter-metadata';
+import { FilterMetadata } from '../../modules/filters/models/metadata/filter-metadata.interface';
 import {
 	filtersToString,
 	Filters,
@@ -26,10 +26,10 @@ import {
 	selectFacets,
 	selectFilters,
 	selectShowOnlyFavorites
-} from '../../modules/menu-items/filters/reducer/filters.reducer';
-import { filtersConfig, FiltersService } from '../../modules/menu-items/filters/services/filters.service';
-import { IFilter } from '../../modules/menu-items/filters/models/IFilter';
-import { IFiltersConfig } from '../../modules/menu-items/filters/models/filters-config';
+} from '../../modules/filters/reducer/filters.reducer';
+import { filtersConfig, FiltersService } from '../../modules/filters/services/filters.service';
+import { IFilter } from '../../modules/filters/models/IFilter';
+import { IFiltersConfig } from '../../modules/filters/models/filters-config';
 import { buildFilteredOverlays } from '../../modules/core/utils/overlays';
 import { GenericTypeResolverService } from '../../modules/core/services/generic-type-resolver.service';
 import { IFilterModel } from '../../modules/core/models/IFilterModel';
@@ -40,7 +40,7 @@ import {
 	OverlaysActionTypes,
 	SetDropsAction,
 	SetFilteredOverlaysAction,
-	SetOverlaysStatusMessage
+	SetOverlaysStatusMessageAction, SetTotalOverlaysAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	overlaysStatusMessages,
@@ -50,7 +50,7 @@ import {
 	selectSpecialObjects
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
-import { FilterType } from '../../modules/menu-items/filters/models/filter-type';
+import { FilterType } from '../../modules/filters/models/filter-type';
 import { ICaseFacetsState } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay, IOverlaySpecialObject } from '../../modules/overlays/models/overlay.model';
 import { get as _get } from 'lodash';
@@ -93,20 +93,21 @@ export class FiltersAppEffects {
 
 	@Effect()
 	updateOverlayFilters$ = this.onCriterialFiltersChanges$.pipe(
-		withLatestFrom(this.overlaysArray$, this.translate.getTranslation('')),
-		mergeMap(([[filters, removedOverlaysIds, removedOverlaysVisibility], overlaysArray, translation]: [[Filters, string[], boolean], IOverlay[], any]) => {
+		withLatestFrom(this.overlaysArray$),
+		mergeMap(([[filters, removedOverlaysIds, removedOverlaysVisibility], overlaysArray]: [[Filters, string[], boolean], IOverlay[]]) => {
 			const filterModels: IFilterModel[] = FiltersService.pluckFilterModels(filters);
 			const filteredOverlays: string[] = buildFilteredOverlays(overlaysArray, filterModels, removedOverlaysIds, removedOverlaysVisibility);
-			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : translation[overlaysStatusMessages.noOverLayMatchFilters];
+			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : this.translate.instant(overlaysStatusMessages.noOverLayMatchFilters);
 			return [
 				new SetFilteredOverlaysAction(filteredOverlays),
-				new SetOverlaysStatusMessage(message)
+				new SetOverlaysStatusMessageAction(message),
+				new SetHideResultsTableBadgeAction(false)
 			];
 		}));
 
 	@Effect()
 	updateOverlayDrops$ = this.forOverlayDrops$.pipe(
-		map(([overlaysMap, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites]: [Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean]) => {
+		mergeMap(([overlaysMap, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites]: [Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean]) => {
 			const drops = OverlaysService.parseOverlayDataForDisplay({
 				overlaysArray: mapValuesToArray(overlaysMap),
 				filteredOverlays,
@@ -114,7 +115,8 @@ export class FiltersAppEffects {
 				favoriteOverlays,
 				showOnlyFavorites
 			});
-			return new SetDropsAction(drops);
+
+			return [new SetDropsAction(drops), new SetTotalOverlaysAction(drops.length)];
 		})
 	);
 

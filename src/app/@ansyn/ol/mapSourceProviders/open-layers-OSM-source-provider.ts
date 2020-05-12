@@ -1,5 +1,4 @@
 import OSM from 'ol/source/OSM';
-import TileLayer from 'ol/layer/Tile';
 import { ImageryMapSource, IMapSettings } from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
@@ -13,20 +12,7 @@ export const OpenLayerOSMSourceProviderSourceType = 'OSM';
 	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayerOSMSourceProvider extends OpenLayersMapSourceProvider {
-	create(metaData: IMapSettings): Promise<any> {
-		const osmLayer = new TileLayer({
-			preload: Infinity,
-			source: new OSM()
-		});
-		// const source = new OSM(<any>{
-		// 	attributions: [
-		// 		'All maps © <a href="http://www.openseamap.org/">OpenSeaMap</a>',
-		// 		OSM.ATTRIBUTION
-		// 	],
-		// 	opaque: false,
-		// 	url: 'https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png'
-		// });
-		// const openSeaMapLayer = new TileLayer({ source });
-		return Promise.resolve(osmLayer);
+	createSource(metaData: IMapSettings): any {
+		return new OSM({wrapX: false});
 	}
 }

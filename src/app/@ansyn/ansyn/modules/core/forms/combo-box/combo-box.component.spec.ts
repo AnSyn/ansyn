@@ -8,7 +8,7 @@ describe('ComboBoxComponent', () => {
 	let fixture: ComponentFixture<ComboBoxComponent>;
 	const mockTrigger = MockComponent({
 		selector: 'button[ansynComboBoxTrigger]',
-		inputs: ['icon', 'isActive', 'comboBoxToolTipDescription', 'render']
+		inputs: ['icon', 'isActive', 'withArrow']
 	});
 
 	beforeEach(async(() => {

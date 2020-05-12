@@ -1,15 +1,6 @@
-<div class="status-bar" [class.separated-state]="!hideOverlay">
-	<div class="selected-case">
-		<ansyn-popover class="default-case" [text]="selectedCaseName" [icon]="icon">
-			<button class="share-link" (click)="copyLink()">
-				<i class="icon-status-bar-share-link"></i>
-				<span>{{'Share link' | translate}}</span>
-			</button>
-		</ansyn-popover>
-	</div>
-	<div class="status">
-		<ansyn-combo-boxes></ansyn-combo-boxes>
-		<ansyn-navigation-bar></ansyn-navigation-bar>
-	</div>
-
+<div class="search">
+	<ansyn-search-panel></ansyn-search-panel>
+	<ansyn-filters-panel></ansyn-filters-panel>
 </div>
+<ansyn-display-panel></ansyn-display-panel>
+<ansyn-case-panel></ansyn-case-panel>

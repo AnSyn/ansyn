@@ -6,81 +6,24 @@
 @popup-padding-bottom: 15px;
 
 :host {
-	background-color: @background-color-1;
+	background-color: @status-bar-background;
 	height: @status-bar-height;
-	box-shadow: 0 -10px 20px 0 rgba(0, 0, 0, 0.3);
 	display: flex;
-	justify-content: flex-end;
-	transform: translate(0, -100%);
+	color: white;
 
-	.status-bar {
-		height: 100%;
-		color: white;
+	div.search {
 		display: flex;
-		flex-shrink: 1;
-		justify-content: flex-end;
+		flex-grow: 1;
+		border-right: 1px solid @status-bar-delimiter;
+	}
 
-		.selected-case {
-			button.share-link {
-				&:extend(.base-share-link);
-				height: 34px;
+	/deep/ i.icon {
+		margin-right: 5px;
 
-				span.icon-status-bar-share-link {
-					margin-right: 3px;
-				}
-
-				&:hover {
-					border-top-color: white;
-					border-bottom-color: white;
-				}
-			}
-		}
-
-		.selected-case, .status {
-			display: flex;
-			align-items: center;
-		}
-
-		.status {
-			justify-content: flex-end;
+		&:before {
+			vertical-align: middle;
 		}
 	}
-}
 
 
-@screens-list: 1800px, 1700px, 1600px, 1500px;
-@screen-list-width: 120px, 100px, 80px, 60px;
-
-.screens(@list, @i: 1) when (@i <= length(@list)) {
-	@screen-size: extract(@list, @i);
-
-	@media screen and (max-width: @screen-size) {
-		:host {
-			.status-bar {
-				/deep/ .selectedCase {
-					font-size: 12px;
-				}
-
-				/deep/ .combo-box-width {
-					width: extract(@screen-list-width, @i) !important;
-				}
-			}
-		}
-	}
-	.screens(@list, @i + 1);
-}
-
-.screens(@screens-list);
-
-@media screen and (max-width: 1600px) {
-	:host {
-		/deep/ .buttons button.back-to-world-view {
-			font-size: 0;
-			overflow: visible;
-
-			i {
-				font-size: 13.33px;
-			}
-		}
-	}
 }

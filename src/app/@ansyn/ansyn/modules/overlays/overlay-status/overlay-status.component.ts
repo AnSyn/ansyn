@@ -1,15 +1,14 @@
-import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import {
 	IEntryComponent,
 	selectActiveMapId,
 	selectHideLayersOnMap,
-	selectMapsTotal,
 	selectOverlayByMapId,
 } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { combineLatest, Observable } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { combineLatest, fromEvent, Observable } from 'rxjs';
+import { tap, map, filter } from 'rxjs/operators';
 import { GeoRegisteration, IOverlay } from '../models/overlay.model';
 import {
 	SetRemovedOverlaysIdAction,
@@ -26,13 +25,20 @@ import {
 import { AnnotationMode } from '@ansyn/ol';
 import { ITranslationData } from '../../menu-items/cases/models/case.model';
 import { Actions, ofType } from '@ngrx/effects';
-import { SetAnnotationMode, ToolsActionsTypes, ClearActiveInteractionsAction } from '../../menu-items/tools/actions/tools.actions';
+import {
+	SetAnnotationMode,
+	ToolsActionsTypes,
+	ClearActiveInteractionsAction,
+	SetAutoImageProcessing
+} from '../../menu-items/tools/actions/tools.actions';
 import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-manager/reducers/layers.reducer';
+import { ClickOutsideService } from '../../core/click-outside/click-outside.service';
 
 @Component({
 	selector: 'ansyn-overlay-status',
 	templateUrl: './overlay-status.component.html',
-	styleUrls: ['./overlay-status.component.less']
+	styleUrls: ['./overlay-status.component.less'],
+	providers: [ClickOutsideService]
 })
 @AutoSubscriptions({
 	init: 'ngOnInit',
@@ -40,6 +46,9 @@ import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-m
 })
 export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent {
 	@Input() mapId: string;
+	isAutoProcessing: boolean;
+	isManualProcessing: boolean;
+	moreButtons: boolean;
 	overlay: IOverlay;
 	isActiveMap: boolean;
 	favoriteOverlays: IOverlay[];
@@ -52,6 +61,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	presetsButtonText: string;
 	isRemoved: boolean;
 	isDragged: boolean;
+	isImageControlActive = false;
 	draggedButtonText: string;
 	isLayersVisible: boolean;
 
@@ -88,6 +98,15 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	);
 
 	@AutoSubscription
+	onClickOutSide$ = this.clickOutsideService.onClickOutside().pipe(
+		filter(Boolean),
+		tap( () => {
+			this.moreButtons = false;
+			this.isManualProcessing = false;
+		})
+	);
+
+	@AutoSubscription
 	annoatationModeChange$: any = this.actions$
 		.pipe(
 			ofType(ToolsActionsTypes.STORE.SET_ANNOTATION_MODE),
@@ -102,16 +121,16 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 				}
 			}));
 
-	constructor(public store$: Store<any>, protected actions$: Actions) {
+	constructor(public store$: Store<any>, protected actions$: Actions, protected element: ElementRef, protected clickOutsideService: ClickOutsideService) {
 		this.isPreset = true;
 		this.isFavorite = true;
 	}
 
 	@AutoSubscription
 	layersVisibility$ = () => combineLatest(
-			this.store$.select(selectSelectedLayersIds),
-			this.store$.select(selectHideLayersOnMap(this.mapId)),
-			this.store$.select(selectLayers))
+		this.store$.select(selectSelectedLayersIds),
+		this.store$.select(selectHideLayersOnMap(this.mapId)),
+		this.store$.select(selectLayers))
 		.pipe(
 			map(([selectedLayerIds, areLayersHidden, layers]) => {
 				layers = layers.filter((currentLayer) =>
@@ -162,6 +181,13 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		this.updatePresetStatus();
 		this.updateFavoriteStatus();
 		this.updateDraggedStatus();
+		this.resetButtons();
+	}
+
+	resetButtons() {
+		this.moreButtons = false;
+		this.isManualProcessing = false;
+		this.isAutoProcessing = false;
 	}
 
 	updateFavoriteStatus() {
@@ -204,7 +230,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 			mapId: this.mapId,
 			overlayId: this.overlay.id,
 			dragged: !this.isDragged
-		}))
+		}));
 		if (this.isDragged) {
 			this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetAnnotationMode] }));
 		}
@@ -236,5 +262,25 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 			return false;
 		}
 		return this.overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered;
+	}
+
+	get onAutoImageProcessing() {
+		return this.isAutoProcessing;
+	}
+
+	toggleManualImageProcessing() {
+		this.moreButtons = false;
+		this.isManualProcessing = !this.isManualProcessing;
+	}
+
+	toggleAutoImageProcessing() {
+		this.isAutoProcessing = !this.isAutoProcessing;
+		this.isManualProcessing = false;
+		this.store$.dispatch(new SetAutoImageProcessing());
+	}
+
+	toggleMoreButtons() {
+		this.isManualProcessing = false;
+		this.moreButtons = !this.moreButtons;
 	}
 }

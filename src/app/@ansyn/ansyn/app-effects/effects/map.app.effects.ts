@@ -3,7 +3,7 @@ import { CesiumMapName } from '@ansyn/imagery-cesium';
 import { DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { combineLatest, EMPTY, from, Observable, of, pipe } from 'rxjs';
+import { combineLatest, EMPTY, forkJoin, from, Observable, of, pipe } from 'rxjs';
 import {
 	ImageryCreatedAction,
 	IMapFacadeConfig,
@@ -19,17 +19,18 @@ import {
 	selectOverlaysWithMapIds,
 	SetIsLoadingAcion,
 	SetToastMessageAction,
+	SynchronizeMapsAction,
 	ToggleMapLayersAction,
 	UpdateMapAction
 } from '@ansyn/map-facade';
 import {
 	BaseMapSourceProvider,
 	bboxFromGeoJson,
-	CommunicatorEntity,
 	ImageryCommunicatorService,
 	ImageryMapPosition,
 	IMapSettings,
-	polygonFromBBOX
+	polygonFromBBOX,
+	polygonsDontIntersect
 } from '@ansyn/imagery';
 import {
 	catchError,
@@ -75,6 +76,11 @@ import { isEqual } from 'lodash';
 import { selectGeoRegisteredOptionsEnabled } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import { LoggerService } from '../../modules/core/services/logger.service';
+import {
+	IImageProcParam,
+	IOverlayStatusConfig,
+	overlayStatusConfig
+} from "../../modules/overlays/overlay-status/config/overlay-status-config";
 
 @Injectable()
 export class MapAppEffects {
@@ -148,7 +154,7 @@ export class MapAppEffects {
 	@Effect()
 	onSetManualImageProcessing$: Observable<any> = this.actions$
 		.pipe(
-			ofType<SetManualImageProcessing>(ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING),
+			ofType<SetManualImageProcessing>(OverlayStatusActionsTypes.SET_MANUAL_IMAGE_PROCESSING),
 			withLatestFrom(this.store$.select(mapStateSelector)),
 			map(([action, mapState]: [SetManualImageProcessing, IMapState]) => [MapFacadeService.activeMap(mapState), action, mapState]),
 			filter(([activeMap]: [ICaseMapState, SetManualImageProcessing, IMapState]) => Boolean(activeMap.data.overlay)),
@@ -173,7 +179,7 @@ export class MapAppEffects {
 			map(([action, entities]: [ImageryCreatedAction, Dictionary<ICaseMapState>]) => entities[action.payload.id]),
 			filter((caseMapState: ICaseMapState) => Boolean(caseMapState && caseMapState.data.overlay)),
 			map((caseMapState: ICaseMapState) => {
-				startTimingLog(`LOAD_OVERLAY_${ caseMapState.data.overlay.id }`);
+				startTimingLog(`LOAD_OVERLAY_${caseMapState.data.overlay.id}`);
 				return new DisplayOverlayAction({
 					overlay: caseMapState.data.overlay,
 					mapId: caseMapState.id,
@@ -199,11 +205,32 @@ export class MapAppEffects {
 			})
 		);
 
+	@Effect({ dispatch: false })
+	onSynchronizeAppMaps$: Observable<any> = this.actions$.pipe(
+		ofType(MapActionTypes.SYNCHRONIZE_MAPS),
+		withLatestFrom(this.store$.select(mapStateSelector)),
+		switchMap(([action, mapState]: [SynchronizeMapsAction, IMapState]) => {
+			const mapId = action.payload.mapId;
+			const mapSettings: IMapSettings = mapState.entities[mapId];
+			const mapPosition = mapSettings.data.position;
+			const setPositionObservables = [];
+			// handles only maps with overlays
+			Object.values(mapState.entities).forEach((mapItem: IMapSettings) => {
+				if (mapId !== mapItem.id && mapItem.data.overlay) {
+					const comm = this.imageryCommunicatorService.provide(mapItem.id);
+					setPositionObservables.push(this.setPosition(mapPosition, comm, mapItem));
+				}
+			});
+			return forkJoin(setPositionObservables).pipe(map(() => [action, mapState]));
+		})
+	);
+
+
 	@Effect()
 	overlayLoadingFailed$: Observable<any> = this.actions$
 		.pipe(
 			ofType<DisplayOverlayFailedAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED),
-			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${ action.payload.id }`)),
+			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${action.payload.id}`)),
 			map(() => new SetToastMessageAction({
 				toastText: toastMessages.showOverlayErrorToast,
 				showWarningIcon: true
@@ -277,7 +304,9 @@ export class MapAppEffects {
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected loggerService: LoggerService,
-				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
+				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
+				@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig
+	) {
 	}
 
 	changeImageryMap(overlay, communicator): string | null {
@@ -299,7 +328,7 @@ export class MapAppEffects {
 		const caseMapState = mapState.entities[payload.mapId || mapState.activeMapId];
 		const mapData = caseMapState.data;
 		const prevOverlay = mapData.overlay;
-		const isNotIntersect = MapFacadeService.isNotIntersect(mapData.position.extentPolygon, overlay.footprint, this.config.overlayCoverage);
+		const isNotIntersect = polygonsDontIntersect(mapData.position.extentPolygon, overlay.footprint, this.config.overlayCoverage);
 		const communicator = this.imageryCommunicatorService.provide(mapId);
 		const { sourceType } = overlay;
 		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({
@@ -409,5 +438,24 @@ export class MapAppEffects {
 
 	displayShouldSwitch([[prevAction, action]]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		return (action && prevAction) && (prevAction.payload.mapId === action.payload.mapId);
+	}
+
+	setPosition(position: ImageryMapPosition, comm, mapItem): Observable<any> {
+		if (mapItem.data.overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered) {
+			return this.cantSyncMessage();
+		}
+		const isNotIntersect = polygonsDontIntersect(position.extentPolygon, mapItem.data.overlay.footprint, this.config.overlayCoverage);
+		if (isNotIntersect) {
+			return this.cantSyncMessage();
+		}
+		return comm.setPosition(position);
+	}
+
+	cantSyncMessage(): Observable<any> {
+		this.store$.dispatch(new SetToastMessageAction({
+			toastText: 'At least one map couldn\'t be synchronized',
+			showWarningIcon: true
+		}));
+		return EMPTY;
 	}
 }

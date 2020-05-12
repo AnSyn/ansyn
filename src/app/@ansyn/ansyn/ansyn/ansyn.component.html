@@ -3,14 +3,18 @@
 		<ansyn-menu [version]="version" [animatedElement]="animatedElementHorizontal"></ansyn-menu>
 	</div>
 
+	<div class="status" [class.expand]="(isMenuCollapse$ | async)">
+		<ansyn-status-bar></ansyn-status-bar>
+	</div>
+
 	<div class="layer" #animatedElementHorizontal>
+
 		<div class="maps-container" #animatedElementVertical>
 			<ansyn-imageries-manager></ansyn-imageries-manager>
 			<ansyn-context-menu *ngIf="renderContextMenu"></ansyn-context-menu>
 		</div>
 
 		<ansyn-footer
-			[selectedCaseName]="(selectedCaseName$ | async)"
 			[activeMap]="(activeMap$ | async)"
 			[animatedElement]="animatedElementVertical"
 		></ansyn-footer>

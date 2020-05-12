@@ -22,7 +22,7 @@ import { differenceWith, isEqual } from 'lodash';
 import { filter, map, mergeMap, pluck, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { OverlayStatusActionsTypes } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { IAppState } from '../app.effects.module';
-import { selectGeoFilterSearchMode } from '../../modules/status-bar/reducers/status-bar.reducer';
+import { selectGeoFilterType } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import { CasesActionTypes } from '../../modules/menu-items/cases/actions/cases.actions';
 import {
@@ -47,7 +47,7 @@ import {
 	UpdateMeasureDataAction,
 	UpdateToolsFlags
 } from '../../modules/menu-items/tools/actions/tools.actions';
-import { IImageProcParam, IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
+import { IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import {
 	IToolsState,
 	selectToolFlag,
@@ -60,7 +60,7 @@ import { LoggerService } from '../../modules/core/services/logger.service';
 @Injectable()
 export class ToolsAppEffects {
 
-	isPolygonSearch$ = this.store$.select(selectGeoFilterSearchMode).pipe(
+	isPolygonSearch$ = this.store$.select(selectGeoFilterType).pipe(
 		map((geoFilterSearchMode: CaseGeoFilter) => geoFilterSearchMode === CaseGeoFilter.Polygon)
 	);
 
@@ -133,19 +133,6 @@ export class ToolsAppEffects {
 	onShowOverlayFootprint$: Observable<any> = this.actions$.pipe(
 		ofType<ShowOverlaysFootprintAction>(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT),
 		map((action) => new SetActiveOverlaysFootprintModeAction(action.payload))
-	);
-
-	@Effect()
-	updateImageProcessingOnTools$: Observable<any> = this.activeMap$.pipe(
-		filter((map) => Boolean(map.data.overlay)),
-		withLatestFrom(this.store$.select(toolsStateSelector).pipe(pluck<IToolsState, ImageManualProcessArgs>('manualImageProcessingParams'))),
-		mergeMap<any, any>(([map, manualImageProcessingParams]: [ICaseMapState, ImageManualProcessArgs]) => {
-			const actions = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess(map.data.isAutoImageProcessingActive)];
-			if (!isEqual(map.data.imageManualProcessArgs, manualImageProcessingParams)) {
-				actions.push(new SetManualImageProcessing(map.data && map.data.imageManualProcessArgs || this.defaultImageManualProcessArgs));
-			}
-			return actions;
-		})
 	);
 
 	@Effect()
@@ -290,15 +277,5 @@ export class ToolsAppEffects {
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				@Inject(toolsConfig) protected config: IToolsConfig,
 				protected loggerService: LoggerService) {
-	}
-
-	get params(): Array<IImageProcParam> {
-		return this.config.ImageProcParams;
-	}
-
-	get defaultImageManualProcessArgs(): ImageManualProcessArgs {
-		return this.params.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam) => {
-			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
-		}, {});
 	}
 }

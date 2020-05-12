@@ -58,16 +58,16 @@ describe('ProjectionConverterService', () => {
 			expect(result).toBeFalsy();
 		});
 
-		// ------ isValidWGS84 ------ //
+		// ------ isValidGeoWGS84 ------ //
 		it('isValidCoordinates should pass', () => {
-			const result1 = ProjectionConverterService.isValidWGS84([100, -80]);
-			const result2 = ProjectionConverterService.isValidWGS84([0, 0]);
+			const result1 = ProjectionConverterService.isValidGeoWGS84([100, -80]);
+			const result2 = ProjectionConverterService.isValidGeoWGS84([0, 0]);
 			expect(result1).toBeTruthy();
 			expect(result2).toBeTruthy();
 		});
 		it('isValidCoordinates should fail', () => {
-			const result1 = ProjectionConverterService.isValidWGS84([1, 91]);
-			const result2 = ProjectionConverterService.isValidWGS84([-181, 1]);
+			const result1 = ProjectionConverterService.isValidGeoWGS84([1, 91]);
+			const result2 = ProjectionConverterService.isValidGeoWGS84([-181, 1]);
 			expect(result1).toBeFalsy();
 			expect(result2).toBeFalsy();
 		});

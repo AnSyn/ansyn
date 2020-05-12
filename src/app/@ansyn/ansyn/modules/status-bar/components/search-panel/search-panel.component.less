@@ -6,7 +6,6 @@
 :host {
 	&:extend(.status-bar-panel);
 
-
 	.box {
 		margin: 0 3px;
 
@@ -26,8 +25,20 @@
 		&.timePickerBox {
 			font-size: 13px;
 
-			span {
-				margin-right: 5px;
+			span.title {
+				outline: none;
+				cursor: text;
+
+				&::selection {
+					background: @status-bar-panels;
+				}
+				&.error {
+					color: red;
+				}
+
+				&:last-child {
+					margin-right: 5px;
+				}
 			}
 		}
 		&#geoPreSearch {

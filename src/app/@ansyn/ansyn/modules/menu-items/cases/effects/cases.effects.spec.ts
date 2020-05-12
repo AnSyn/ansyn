@@ -37,6 +37,7 @@ import { casesFeatureKey, CasesReducer, casesStateSelector, initialCasesState } 
 import { casesConfig, CasesService } from '../services/cases.service';
 import { CasesEffects } from './cases.effects';
 import { SetMapsDataActionStore } from '@ansyn/map-facade';
+import { BackToWorldView } from '../../../overlays/overlay-status/actions/overlay-status.actions';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
@@ -141,7 +142,13 @@ describe('CasesEffects', () => {
 		let newCasePayload: ICase = { ...caseMock, id: 'newCaseId', name: 'newCaseName' };
 		spyOn(casesService, 'createCase').and.callFake(() => of(newCasePayload));
 		actions = hot('--a--', { a: new AddCaseAction(newCasePayload) });
-		const expectedResults = cold('--a--', { a: new SelectCaseAction(newCasePayload) });
+		const mapId = newCasePayload.state.maps.activeMapId;
+
+		const expectedResults = cold('--(bc)--', {
+				b: new SelectCaseAction(newCasePayload),
+				c: new BackToWorldView({ mapId })
+			});
+
 		expect(casesEffects.onAddCase$).toBeObservable(expectedResults);
 
 	});
@@ -210,10 +217,11 @@ describe('CasesEffects', () => {
 	});
 
 	it('onSaveCaseAsSuccess$ should set auto save with "true" and update map', () => {
-		actions = hot('--a--', { a: new SaveCaseAsSuccessAction(<any>{state: {maps: {data: []}}}) });
+		actions = hot('--a--', { a: new SaveCaseAsSuccessAction(<any>{ state: { maps: { data: [] } } }) });
 		const expectedResults = cold('--(bc)--', {
 			b: new SetAutoSave(true),
-			c: new SetMapsDataActionStore({mapsList: []})});
+			c: new SetMapsDataActionStore({ mapsList: [] })
+		});
 		expect(casesEffects.onSaveCaseAsSuccess$).toBeObservable(expectedResults);
 	});
 

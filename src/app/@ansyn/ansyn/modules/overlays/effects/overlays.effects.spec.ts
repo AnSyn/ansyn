@@ -143,7 +143,7 @@ describe('Overlays Effects ', () => {
 
 	it('it should load all the overlays', () => {
 		overlaysService.search.and.returnValue(of({ data: overlays, limited: 0, errors: [] }));
-		actions = hot('--a--', { a: new LoadOverlaysAction({}) });
+		actions = hot('--a--', { a: new LoadOverlaysAction({dataInputFilters: {fullyChecked: true, filters: []}}) });
 		const expectedResults = cold('--(a)--', {
 			a: new LoadOverlaysSuccessAction(overlays)
 		});

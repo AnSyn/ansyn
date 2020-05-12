@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild, EventEmitter } from '@angular/core';
 import * as momentNs from 'moment';
 import { IStatusBarConfig } from '../../models/statusBar-config.model';
 import { IStatusBarState, selectGeoFilterActive, selectGeoFilterType } from '../../reducers/status-bar.reducer';
@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest, fromEvent, merge, Observable } from 'rxjs';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations/src/animation_metadata';
-import { filter, tap } from 'rxjs/operators';
+import { filter, tap, take } from 'rxjs/operators';
 import { selectDataInputFilter, selectRegion, selectTime } from '../../../overlays/reducers/overlays.reducer';
 import { ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
@@ -199,8 +199,11 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 			selection.deleteFromDocument();
 		}
 		if (isDigitKey(event)) {
-			this.loggerService.info('change date manual ' + this.timePickerInputFrom.nativeElement.textContent + ' - ' + this.timePickerInputTo.nativeElement.textContent)
-			return;
+			// we subtracting 1 because we get the event before add the key.
+			const limitLength = window.getSelection().type === 'Range' ? DATE_FORMAT.length : DATE_FORMAT.length - 1;
+			if (event.target.textContent.length <= limitLength) {
+				return;
+			}
 		}
 		if (isEnterKey(event)) {
 			if (!this.setTimeCriteria()) {

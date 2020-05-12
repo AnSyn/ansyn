@@ -67,8 +67,6 @@ export class CasesEffects {
 		ofType<AddCaseAction>(CasesActionTypes.ADD_CASE),
 		mergeMap((action: AddCaseAction) => {
 			const mapId = action.payload.state.maps.activeMapId;
-			this.store.dispatch(new BackToWorldView({ mapId }));
-
 			return [new SelectCaseAction(action.payload), new BackToWorldView({ mapId })];
 		}),
 		share());

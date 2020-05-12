@@ -186,6 +186,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 			filter(this.anyMenuItemSelected.bind(this)),
 			withLatestFrom(this.store.select(selectAutoClose)),
 			filter(([click, autoClose]: [any, boolean]) => {
+				this.hideTableBadge();
 				const include = click.path.includes(this.elementRef.nativeElement);
 				return !include && !this.isPinned && autoClose;
 			}),
@@ -259,9 +260,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	}
 
 	toggleItem(key: string, skipSession: boolean = false): void {
-		if (this.isMenuItemResultsTable(key)) {
-			this.store.dispatch(new SetHideResultsTableBadgeAction(true));
-		}
+		this.hideTableBadge(key);
 
 		if (this.onAnimation) {
 			return;
@@ -279,6 +278,12 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 
 	isMenuItemResultsTable(menuItemName: string): boolean {
 		return menuItemName === 'Results table';
+	}
+
+	hideTableBadge(key?: string): void {
+		if ((key && this.isMenuItemResultsTable(key)) || this.isMenuItemResultsTable(this.selectedMenuItemName)) {
+			this.store.dispatch(new SetHideResultsTableBadgeAction(true));
+		}
 	}
 
 	openMenu(key: string, skipSession: boolean) {

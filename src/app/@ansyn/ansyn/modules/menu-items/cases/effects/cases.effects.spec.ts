@@ -144,10 +144,7 @@ describe('CasesEffects', () => {
 		actions = hot('--a--', { a: new AddCaseAction(newCasePayload) });
 		const mapId = newCasePayload.state.maps.activeMapId;
 
-		const expectedResults = cold('--(bc)--', {
-				b: new SelectCaseAction(newCasePayload),
-				c: new BackToWorldView({ mapId })
-			});
+		const expectedResults = cold('--(b)--', { b: new SelectCaseAction(newCasePayload) });
 
 		expect(casesEffects.onAddCase$).toBeObservable(expectedResults);
 

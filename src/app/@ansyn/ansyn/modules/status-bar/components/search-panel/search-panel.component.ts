@@ -55,7 +55,7 @@ const DATE_FORMAT = 'DD/MM/YYYY HH:mm';
 export class SearchPanelComponent implements OnInit, OnDestroy {
 	popupExpanded = new Map<SearchPanelTitle, boolean>([['DataInputs', false], ['TimePicker', false], ['LocationPicker', false], ['TimePickerPreset', false]]);
 	timeRange: Date[];
-	timeError: { from: boolean, to: boolean };
+	timeError: { from: boolean, to: boolean } = { from: false, to: false };
 	dataInputFilterTitle: string;
 	timeSelectionTitle: { from: string, to: string };
 	timeSelectionOldTitle: { from: string, to: string };
@@ -74,6 +74,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 					from: moment(this.timeRange[0]).format(DATE_FORMAT),
 					to: moment(this.timeRange[1]).format(DATE_FORMAT)
 				};
+				this.revertTime(); // cancel manual editing mode
 				this.timeSelectionOldTitle = { ...this.timeSelectionTitle };
 				this.timeError = {
 					from: !this.validateDate(this.timeSelectionTitle.from),

@@ -170,6 +170,7 @@ export class OverlayStatusEffects {
 		withLatestFrom(this.store$.select(toolsStateSelector).pipe(pluck<IToolsState, ImageManualProcessArgs>('manualImageProcessingParams'))),
 		mergeMap<any, any>(([map, manualImageProcessingParams]: [ICaseMapState, ImageManualProcessArgs]) => {
 			const { overlay, isAutoImageProcessingActive, imageManualProcessArgs } = map.data;
+			
 			const actions = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess(overlay ? isAutoImageProcessingActive : false)];
 			if (!isEqual(imageManualProcessArgs, manualImageProcessingParams)) {
 				actions.push(new SetManualImageProcessing(map.data && imageManualProcessArgs || this.defaultImageManualProcessArgs));

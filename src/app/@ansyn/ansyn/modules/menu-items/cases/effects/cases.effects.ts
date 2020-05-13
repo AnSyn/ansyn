@@ -65,9 +65,10 @@ export class CasesEffects {
 	@Effect()
 	onAddCase$: Observable<SelectCaseAction | BackToWorldView> = this.actions$.pipe(
 		ofType<AddCaseAction>(CasesActionTypes.ADD_CASE),
-		mergeMap((action: AddCaseAction) => {
+		map((action: AddCaseAction) => {
 			const mapId = action.payload.state.maps.activeMapId;
-			return [new SelectCaseAction(action.payload), new BackToWorldView({ mapId })];
+			this.store.dispatch(new BackToWorldView({ mapId }));
+			return new SelectCaseAction(action.payload);
 		}),
 		share());
 

@@ -28,11 +28,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	customMainLayer = null;
 
 	currentMap$ = this.store$.select(selectMaps).pipe(
-		map((mapsEntities) => {
-				// console.log(mapsEntities[this.mapId]);
-				return mapsEntities[this.mapId];
-			}
-		),
+		map((mapsEntities) => mapsEntities[this.mapId]),
 		filter(Boolean)
 	);
 

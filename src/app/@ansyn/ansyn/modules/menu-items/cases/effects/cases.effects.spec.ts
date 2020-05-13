@@ -142,10 +142,7 @@ describe('CasesEffects', () => {
 		let newCasePayload: ICase = { ...caseMock, id: 'newCaseId', name: 'newCaseName' };
 		spyOn(casesService, 'createCase').and.callFake(() => of(newCasePayload));
 		actions = hot('--a--', { a: new AddCaseAction(newCasePayload) });
-		const mapId = newCasePayload.state.maps.activeMapId;
-
 		const expectedResults = cold('--(b)--', { b: new SelectCaseAction(newCasePayload) });
-
 		expect(casesEffects.onAddCase$).toBeObservable(expectedResults);
 
 	});

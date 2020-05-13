@@ -15,7 +15,7 @@ import {
 	IImageProcParam,
 	IOverlayStatusConfig,
 	overlayStatusConfig
-} from "../../../../overlays/overlay-status/config/overlay-status-config";
+} from '../../../../overlays/overlay-status/config/overlay-status-config';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],
@@ -28,7 +28,11 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	customMainLayer = null;
 
 	currentMap$ = this.store$.select(selectMaps).pipe(
-		map((mapsEntities) => mapsEntities[this.mapId]),
+		map((mapsEntities) => {
+				// console.log(mapsEntities[this.mapId]);
+				return mapsEntities[this.mapId];
+			}
+		),
 		filter(Boolean)
 	);
 

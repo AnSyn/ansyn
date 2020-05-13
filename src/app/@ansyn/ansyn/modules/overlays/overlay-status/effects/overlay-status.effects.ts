@@ -12,7 +12,7 @@ import {
 	MapActionTypes,
 	MapFacadeService,
 	mapStateSelector,
-	selectMaps, selectMapsIds, selectMapsList,
+	selectMaps, selectMapsList,
 	SetToastMessageAction,
 	UpdateMapAction,
 	SetLayoutSuccessAction, selectActiveMapId
@@ -46,9 +46,9 @@ import { ITranslationsData, selectScannedAreaData, selectTranslationData } from 
 import { IOverlay } from '../../models/overlay.model';
 import { feature } from '@turf/turf';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
-import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from "../config/overlay-status-config";
-import { IToolsState, toolsStateSelector } from "../../../menu-items/tools/reducers/tools.reducer";
-import { isEqual } from "lodash";
+import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from '../config/overlay-status-config';
+import { IToolsState, toolsStateSelector } from '../../../menu-items/tools/reducers/tools.reducer';
+import { isEqual } from 'lodash';
 
 @Injectable()
 export class OverlayStatusEffects {
@@ -151,10 +151,10 @@ export class OverlayStatusEffects {
 		ofType<SetLayoutSuccessAction>(MapActionTypes.SET_LAYOUT_SUCCESS),
 		withLatestFrom(this.store$.select(selectTranslationData), this.store$.select(selectActiveMapId)),
 		filter(([action, translateData, activeMap]: [SetLayoutSuccessAction, ITranslationsData, string]) => Boolean(translateData && Object.keys(translateData).length)),
-		mergeMap( ([action, translateData, activeMap]: [SetLayoutSuccessAction, ITranslationsData, string]) => {
+		mergeMap(([action, translateData, activeMap]: [SetLayoutSuccessAction, ITranslationsData, string]) => {
 			const actions = Object.keys(translateData)
 				.filter(id => Boolean(translateData[id].dragged))
-				.map(id => new ToggleDraggedModeAction({mapId: activeMap, overlayId: id, dragged: false}));
+				.map(id => new ToggleDraggedModeAction({ mapId: activeMap, overlayId: id, dragged: false }));
 			return actions
 		})
 	);
@@ -167,12 +167,13 @@ export class OverlayStatusEffects {
 
 	@Effect()
 	updateImageProcessingOnTools$: Observable<any> = this.activeMap$.pipe(
-		filter((map) => Boolean(map.data.overlay)),
 		withLatestFrom(this.store$.select(toolsStateSelector).pipe(pluck<IToolsState, ImageManualProcessArgs>('manualImageProcessingParams'))),
 		mergeMap<any, any>(([map, manualImageProcessingParams]: [ICaseMapState, ImageManualProcessArgs]) => {
-			const actions = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess(map.data.isAutoImageProcessingActive)];
-			if (!isEqual(map.data.imageManualProcessArgs, manualImageProcessingParams)) {
-				actions.push(new SetManualImageProcessing(map.data && map.data.imageManualProcessArgs || this.defaultImageManualProcessArgs));
+			const { overlay, isAutoImageProcessingActive, imageManualProcessArgs } = map.data;
+
+			const actions = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess(overlay ? isAutoImageProcessingActive : false)];
+			if (!isEqual(imageManualProcessArgs, manualImageProcessingParams)) {
+				actions.push(new SetManualImageProcessing(map.data && imageManualProcessArgs || this.defaultImageManualProcessArgs));
 			}
 			return actions;
 		})

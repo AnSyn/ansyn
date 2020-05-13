@@ -50,6 +50,7 @@ const animations: any[] = [
 				transform: 'translateX(-100%)'
 			})),
 			transition('1 <=> 0', animate('0.3s ease-in-out'))
+			console.log('1');
 		]
 	)
 ];

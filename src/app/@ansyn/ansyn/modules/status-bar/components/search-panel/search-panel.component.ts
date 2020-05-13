@@ -74,7 +74,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 					from: moment(this.timeRange[0]).format(DATE_FORMAT),
 					to: moment(this.timeRange[1]).format(DATE_FORMAT)
 				};
-				this.revertTime(); // cancel manual editing mode
+				this.revertTime(); // if time was set from outside, cancel manual editing mode
 				this.timeSelectionOldTitle = { ...this.timeSelectionTitle };
 				this.timeError = {
 					from: !this.validateDate(this.timeSelectionTitle.from),

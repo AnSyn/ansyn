@@ -167,12 +167,12 @@ export class OverlayStatusEffects {
 
 	@Effect()
 	updateImageProcessingOnTools$: Observable<any> = this.activeMap$.pipe(
-		filter((map) => Boolean(map.data.overlay)),
 		withLatestFrom(this.store$.select(toolsStateSelector).pipe(pluck<IToolsState, ImageManualProcessArgs>('manualImageProcessingParams'))),
 		mergeMap<any, any>(([map, manualImageProcessingParams]: [ICaseMapState, ImageManualProcessArgs]) => {
-			const actions = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess(map.data.isAutoImageProcessingActive)];
-			if (!isEqual(map.data.imageManualProcessArgs, manualImageProcessingParams)) {
-				actions.push(new SetManualImageProcessing(map.data && map.data.imageManualProcessArgs || this.defaultImageManualProcessArgs));
+			const { overlay, isAutoImageProcessingActive, imageManualProcessArgs } = map.data;
+			const actions = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess(overlay ? isAutoImageProcessingActive : false)];
+			if (!isEqual(imageManualProcessArgs, manualImageProcessingParams)) {
+				actions.push(new SetManualImageProcessing(map.data && imageManualProcessArgs || this.defaultImageManualProcessArgs));
 			}
 			return actions;
 		})

@@ -9,6 +9,7 @@ export const IMAGERY_VIDEO_SOURCE_TYPE = 'IMAGERY_VIDEO';
 })
 export class ImageryVideoProvider extends BaseMapSourceProvider {
 	public create(metaData: IMapSettings): any {
-		return Promise.resolve(metaData);
+		const mapLikeLayer = Object.assign(new Map(), metaData);
+		return Promise.resolve(mapLikeLayer);
 	}
 }

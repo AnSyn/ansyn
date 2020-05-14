@@ -89,9 +89,6 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			const annotationMode = action.payload ? action.payload.annotationMode : null;
 			return { ...state, annotationMode: annotationMode };
 
-		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING:
-			return { ...state, manualImageProcessingParams: action.payload };
-
 		case ToolsActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED:
 			tmpMap = new Map(state.flags);
 			tmpMap.set(toolsFlags.geoRegisteredOptionsEnabled, action.payload);
@@ -194,6 +191,9 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			tmpMap.set(toolsFlags.imageProcessingDisabled, true);
 			tmpMap.set(toolsFlags.autoImageProcessing, false);
 			return { ...state, flags: tmpMap };
+
+		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING:
+			return { ...state, manualImageProcessingParams: action.payload };
 
 		case ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE:
 			return { ...state, activeOverlaysFootprintMode: action.payload };

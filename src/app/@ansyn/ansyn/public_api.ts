@@ -96,7 +96,6 @@ export {
 	SetActiveOverlaysFootprintModeAction,
 	SetAnnotationMode,
 	SetAutoImageProcessingSuccess,
-	SetManualImageProcessing,
 	SetMapGeoEnabledModeToolsActionStore,
 	SetMeasureDistanceToolState,
 	SetPinLocationModeAction,
@@ -380,5 +379,6 @@ export {
 	SetOverlaysTranslationDataAction,
 	SetOverlayTranslationDataAction,
 	ToggleDraggedModeAction,
-	TogglePresetOverlayAction
+	TogglePresetOverlayAction,
+	SetManualImageProcessing
 } from './modules/overlays/overlay-status/actions/overlay-status.actions';

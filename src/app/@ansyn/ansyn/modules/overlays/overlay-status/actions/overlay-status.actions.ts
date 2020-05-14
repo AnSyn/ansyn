@@ -22,6 +22,7 @@ export enum OverlayStatusActionsTypes {
 	SET_REMOVED_OVERLAYS_VISIBILITY = 'SET_REMOVED_OVERLAYS_VISIBILITY',
 	TOGGLE_OVERLAY_PRESET = 'TOGGLE_OVERLAY_PRESET',
 	SET_PRESET_OVERLAYS = 'SET_PRESET_OVERLAYS',
+	SET_AUTO_IMAGE_PROCESSING_SUCCESS = 'SET_AUTO_IMAGE_PROCESSING_SUCCESS',
 	ADD_ALERT_MSG = 'ADD_ALERT_MSG',
 	REMOVE_ALERT_MSG = 'REMOVE_ALERT_MSG',
 	TOGGLE_DRAGGED_MODE = 'TOGGLE_DRAGGED_MODE',
@@ -86,6 +87,14 @@ export class SetManualImageProcessing implements Action {
 	constructor(public payload: ImageManualProcessArgs) {
 	};
 }
+
+export class SetAutoImageProcessingSuccess implements Action {
+	type = OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS;
+
+	constructor(public payload: boolean) {
+	}
+}
+
 
 export class BackToWorldSuccess extends BackToWorldView {
 	type = OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS;

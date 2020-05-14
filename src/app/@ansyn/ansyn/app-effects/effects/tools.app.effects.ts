@@ -37,7 +37,6 @@ import {
 	SetAnnotationMode,
 	SetAutoImageProcessing,
 	SetAutoImageProcessingSuccess,
-	SetManualImageProcessing,
 	SetPinLocationModeAction,
 	SetSubMenu,
 	ShowOverlaysFootprintAction,
@@ -64,21 +63,12 @@ export class ToolsAppEffects {
 		map((geoFilterSearchMode: CaseGeoFilter) => geoFilterSearchMode === CaseGeoFilter.Polygon)
 	);
 
-	activeMap$ = this.store$.pipe(
-		select(mapStateSelector),
-		map((mapState) => MapFacadeService.activeMap(mapState)),
-		filter(Boolean)
-	);
-
-	isShadowMouseActiveByDefault = this.config.ShadowMouse && this.config.ShadowMouse.activeByDefault;
-
 	@Effect({ dispatch: false })
 	actionsLogger$: Observable<any> = this.actions$.pipe(
 		ofType(
 			ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING,
 			ToolsActionsTypes.UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS,
 			ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS,
-			ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING,
 			ToolsActionsTypes.START_MOUSE_SHADOW,
 			ToolsActionsTypes.STOP_MOUSE_SHADOW,
 			ToolsActionsTypes.GO_TO,

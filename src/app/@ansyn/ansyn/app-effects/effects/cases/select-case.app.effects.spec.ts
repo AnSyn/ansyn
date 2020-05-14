@@ -48,6 +48,7 @@ import {
 	IOverlaysManualProcessArgs
 } from '../../../modules/menu-items/cases/models/case.model';
 import { IOverlay, IOverlaysHash } from '../../../modules/overlays/models/overlay.model';
+import { UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/status-bar.actions';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;
@@ -140,11 +141,12 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcefghijklmnopqrstx)--', {
+			const expectedResult = cold('--(abcdefghijklmnopqrstx)--', {
 				a: new SetMapsDataActionStore({ mapsList: maps.data }),
 				b: new SetActiveMapId(maps.activeMapId),
 				c: new SetLayoutAction(<any>maps.layout),
-				e: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
+				d: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
+				e: new UpdateGeoFilterStatus({active: false, type: region.type}),
 				f: new SetFavoriteOverlaysAction(favoriteOverlays),
 				g: new SetPresetOverlaysAction(presetOverlays),
 				h: new SetMiscOverlays({ miscOverlays }),

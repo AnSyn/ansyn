@@ -13,7 +13,7 @@ export interface IBooleanFilterCustomData {
 })
 export class BooleanFilterContainerComponent {
 	@Input() metadata: BooleanFilterMetadata;
-	@Output() onMetadataChange = new EventEmitter<BooleanFilterMetadata>();
+	@Output() onMetadataChange = new EventEmitter<BooleanFilterMetadata>(true);
 
 	@Input()
 	set customData(value: IBooleanFilterCustomData) {

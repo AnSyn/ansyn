@@ -84,9 +84,13 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 				...state,
 				overlaysManualProcessArgs: { ...state.overlaysManualProcessArgs, ...action.payload.data }
 			};
+
 		case ToolsActionsTypes.STORE.SET_ANNOTATION_MODE:
 			const annotationMode = action.payload ? action.payload.annotationMode : null;
 			return { ...state, annotationMode: annotationMode };
+
+		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING:
+			return { ...state, manualImageProcessingParams: action.payload };
 
 		case ToolsActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED:
 			tmpMap = new Map(state.flags);

@@ -13,11 +13,6 @@ import { MultiPolygon } from 'geojson';
 export const overlayStatusFeatureKey = 'overlayStatus';
 export const overlayStatusStateSelector: MemoizedSelector<any, IOverlayStatusState> = createFeatureSelector<IOverlayStatusState>(overlayStatusFeatureKey);
 
-export enum overlayStatusFlags {
-	autoImageProcessing = 'autoImageProcessing',
-	imageProcessingDisabled = 'imageProcessingDisabled',
-}
-
 export interface ITranslationsData {
 	[key: string]: ITranslationData;
 }
@@ -32,7 +27,6 @@ export interface IOverlayStatusState {
 	removedOverlaysVisibility: boolean;
 	removedOverlaysIdsCount: number;
 	presetOverlays: IOverlay[];
-	flags: Map<overlayStatusFlags, boolean>;
 	alertMsg: AlertMsg;
 	manualImageProcessingParams: ImageManualProcessArgs;
 	overlaysTranslationData: ITranslationsData,
@@ -49,7 +43,6 @@ export interface IImageProcessState {
 export const overlayStatusInitialState: IOverlayStatusState = {
 	favoriteOverlays: [],
 	presetOverlays: [],
-	flags: new Map<overlayStatusFlags, boolean>([]),
 	removedOverlaysIds: [],
 	removedOverlaysVisibility: true,
 	removedOverlaysIdsCount: 0,
@@ -60,7 +53,6 @@ export const overlayStatusInitialState: IOverlayStatusState = {
 };
 
 export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusInitialState, action: OverlayStatusActions | any): IOverlayStatusState {
-	let tmpMap: Map<overlayStatusFlags, boolean>;
 	switch (action.type) {
 		case OverlayStatusActionsTypes.SET_FAVORITE_OVERLAYS:
 			return { ...state, favoriteOverlays: action.payload };
@@ -137,17 +129,12 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 			return {
 				...state, overlaysTranslationData: {
 					...state.overlaysTranslationData, [overlayId]: {
-							...state.overlaysTranslationData[overlayId],
-							offset
+						...state.overlaysTranslationData[overlayId],
+						offset
 					}
 				}
 			};
 		}
-
-		case OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS:
-			tmpMap = new Map(state.flags);
-			tmpMap.set(overlayStatusFlags.autoImageProcessing, action.payload);
-			return { ...state, flags: tmpMap };
 
 		case OverlayStatusActionsTypes.SET_OVERLAYS_TRANSLATION_DATA: {
 			return { ...state, overlaysTranslationData: action.payload };
@@ -180,4 +167,3 @@ export const selectPresetOverlays: MemoizedSelector<any, IOverlay[]> = createSel
 export const selectAlertMsg = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.alertMsg);
 export const selectTranslationData = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus && overlayStatus.overlaysTranslationData);
 export const selectScannedAreaData = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus && overlayStatus.overlaysScannedAreaData);
-export const selectManualImageProcessingParams = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus && overlayStatus.manualImageProcessingParams);

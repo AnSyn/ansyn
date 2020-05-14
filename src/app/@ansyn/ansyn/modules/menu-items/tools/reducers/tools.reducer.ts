@@ -84,7 +84,6 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 				...state,
 				overlaysManualProcessArgs: { ...state.overlaysManualProcessArgs, ...action.payload.data }
 			};
-
 		case ToolsActionsTypes.STORE.SET_ANNOTATION_MODE:
 			const annotationMode = action.payload ? action.payload.annotationMode : null;
 			return { ...state, annotationMode: annotationMode };

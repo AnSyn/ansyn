@@ -1,6 +1,7 @@
 @import "ansyn/less/common";
 @import "../../less/status-bar-common";
 
+@more-filter-container-width: 250px;
 :host {
 	&:extend(.status-bar-panel);
 	div.filter {
@@ -30,7 +31,7 @@
 				border: 1px solid #f1f1f1
 			}
 
-			&:not(.favorites) {
+			&:not(.favorites):not(.more-filters) {
 				padding: 5px 20px;
 				justify-content: center;
 			}
@@ -39,11 +40,35 @@
 				i.icon {
 					font-size: 20px;
 					line-height: 0.85;
-					position: relative;
-					top: 1px;
 				}
 				span {
 					margin-right: 10px;
+				}
+			}
+			&.more-filters {
+				padding: 1px;
+				i {
+					margin-right: auto;
+				}
+			}
+		}
+
+		div.more-filters-container {
+			position: absolute;
+			top: @status-bar-height;
+			background: @status-bar-background;
+			width: @more-filter-container-width;
+			transform: translateX(-@more-filter-container-width/2);
+
+			button {
+				width: unset;
+				margin-left: 5px;
+				margin-top: 10px;
+				i {
+					margin-right: 5px;
+				}
+				span.title {
+					display: block !important;
 				}
 			}
 		}
@@ -63,16 +88,22 @@
 
 @media screen and (max-width: 1200px) {
 	:host {
-		div.filter {
-			button.favorites {
-				padding: 5px 6px;
+		div.more-or-favorites {
+			button {
 				i {
 					margin-right: auto;
 				}
-				span.title {
-					display: none;
+				&.favorites {
+					padding: 5px 6px;
+					span.title {
+						display: none;
+					}
+				}
+				&.more-filters {
+					padding: 0 4px;
 				}
 			}
+
 			&.sensorName {
 				width: 114px;
 			}

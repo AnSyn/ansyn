@@ -39,6 +39,7 @@ import { IOverlay } from '../../../modules/overlays/models/overlay.model';
 import { mapValues } from 'lodash';
 import { UUID } from 'angular2-uuid';
 import { ICasesConfig } from '../../../modules/menu-items/cases/models/cases-config';
+import { UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/status-bar.actions';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -88,6 +89,7 @@ export class SelectCaseAppEffects {
 			new SetActiveMapId(state.maps.activeMapId),
 			new SetLayoutAction(<any>layout),
 			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
+			new UpdateGeoFilterStatus({active: false, type: region.type}),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetPresetOverlaysAction((presetOverlays || []).map(this.parseOverlay.bind(this))),
 			new SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this)) }),

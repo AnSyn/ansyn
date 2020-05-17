@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { combineLatest, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { IOverlayDrop } from '../../../../overlays/models/overlay.model';
 import { select, Store } from '@ngrx/store';
 import {
@@ -10,7 +10,7 @@ import {
 	selectDropMarkup,
 	selectDrops
 } from '../../../../overlays/reducers/overlays.reducer';
-import { map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
+import { map, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	DisplayOverlayFromStoreAction,
 	SetMarkUp, SetTotalOverlaysAction,
@@ -43,7 +43,7 @@ interface ITableHeader {
 
 @AutoSubscriptions()
 export class ResultsTableComponent implements OnInit, OnDestroy {
-	overlays = [];
+	overlays: IOverlayDrop[] = [];
 	selectedOverlayId: string;
 	sortedBy  = 'date';
 	tableHeaders: ITableHeader[] = [

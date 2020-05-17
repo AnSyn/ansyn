@@ -31,7 +31,7 @@ import { IFiltersConfig } from '../../../filters/models/filters-config';
 })
 @AutoSubscriptions()
 export class FiltersPanelComponent implements OnInit, OnDestroy {
-
+	MORE_FILTERS = 'MORE_FILTERS';
 	expand: {[filter: string]: boolean} = {};
 	filtersMap: {[filter: string]: {active: boolean, title: string}} = {};
 	onlyFavorite: boolean;
@@ -82,7 +82,14 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 				@Inject(filtersConfig) public filtersConfig: IFiltersConfig,
 				public store: Store<IFiltersState>,
 				protected clickOutside: ClickOutsideService) {
-		this.filters.forEach( filter => this.expand[filter.modelName] = false);
+		if (this.filters.length > 2) {
+			this.expand[this.filters[0].modelName] = false;
+			this.expand[this.filters[1].modelName] = false;
+			this.expand[this.MORE_FILTERS] = false;
+		}
+		else {
+			this.filters.forEach( filter => this.expand[filter.modelName] = false);
+		}
 	}
 
 	ngOnInit() {
@@ -91,8 +98,10 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 	}
 
-	showOnlyFavorites() {
-		this.closeAllFilter();
+	showOnlyFavorites(closeFilter = true) {
+		if (closeFilter) {
+			this.closeAllFilter();
+		}
 		this.store.dispatch(new UpdateFacetsAction({ showOnlyFavorites: !this.onlyFavorite }));
 	}
 
@@ -103,6 +112,7 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 	expandFilter(filter?) {
 		const newState = !this.expand[filter];
 		this.filters.forEach( filter => this.expand[filter.modelName] = false);
+		this.expand[this.MORE_FILTERS] = false;
 		if (filter) {
 			this.expand[filter] = newState;
 		}

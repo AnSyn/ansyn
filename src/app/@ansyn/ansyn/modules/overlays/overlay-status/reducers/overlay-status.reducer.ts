@@ -129,8 +129,8 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 			return {
 				...state, overlaysTranslationData: {
 					...state.overlaysTranslationData, [overlayId]: {
-							...state.overlaysTranslationData[overlayId],
-							offset
+						...state.overlaysTranslationData[overlayId],
+						offset
 					}
 				}
 			};

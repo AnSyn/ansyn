@@ -65,9 +65,9 @@ export class AnsynComponent implements OnInit {
 	}
 
 	browserVersion(): number {
-		const raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
-		const version = parseInt(raw[2], 10);
-		return version;
+		const rawBrowserInfo = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
+		const browserVersion = parseInt(rawBrowserInfo[2], 10);
+		return browserVersion;
 	}
 
 	browserName(): string {

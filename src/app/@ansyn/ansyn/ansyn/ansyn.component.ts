@@ -58,24 +58,6 @@ export class AnsynComponent implements OnInit {
 				public loggerService: LoggerService) {
 	}
 
-	browserLogs(): void {
-		const browserName: string = this.browserName();
-		const browserVersion: number = this.browserVersion();
-		this.loggerService.info(`Browser name: ${browserName}, Browser version: ${browserVersion}`);
-	}
-
-	browserVersion(): number {
-		const rawBrowserInfo = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
-		const browserVersion = parseInt(rawBrowserInfo[2], 10);
-		return browserVersion;
-	}
-
-	browserName(): string {
-		const browsersNames = ['Chrome', 'Opera', 'MSIE', 'Firefox'];
-		const browserName: string = browsersNames.find(browserName => Boolean(navigator.userAgent.indexOf(browserName)));
-		return browserName;
-	}
-
 	ngOnInit(): void {
 		if (this.componentMode) {
 			this.store$.dispatch(new LoadDefaultCaseAction());
@@ -89,8 +71,6 @@ export class AnsynComponent implements OnInit {
 			value: this.toolsConfigData.ShadowMouse && this.toolsConfigData.ShadowMouse.forceSendShadowMousePosition
 		}
 		]));
-
-		this.browserLogs();
 
 		setTimeout(() => {
 			this.renderContextMenu = true;

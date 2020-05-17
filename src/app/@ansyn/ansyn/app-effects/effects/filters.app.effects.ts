@@ -115,9 +115,8 @@ export class FiltersAppEffects {
 				favoriteOverlays,
 				showOnlyFavorites
 			});
-			const initialPagination = 20;
 
-			return [new SetDropsAction(drops), new SetTotalOverlaysAction(drops.length), new UpdatePaginationAction(initialPagination)];
+			return [new SetDropsAction(drops), new SetTotalOverlaysAction(drops.length), new UpdatePaginationAction()];
 		})
 	);
 

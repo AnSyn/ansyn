@@ -96,7 +96,7 @@ export const overlaysInitialState: IOverlaysState = overlaysAdapter.getInitialSt
 	miscOverlays: {},
 	customOverviewElement: null,
 	totalOverlaysLength: 0,
-	pagination: 15
+	pagination: 5
 });
 
 export const overlaysFeatureKey = 'overlays';
@@ -269,9 +269,11 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			};
 
 		case OverlaysActionTypes.UPDATE_PAGINATION:
+			const pagination = Boolean(state.drops.length) ? 15 : 0;
+
 			return {
 				...state,
-				pagination: action.payload
+				pagination: state.pagination + pagination
 			};
 
 		case OverlaysActionTypes.SET_HOVERED_OVERLAY:
@@ -342,7 +344,9 @@ export const selectOverlaysArray = createSelector(overlaysStateSelector, selectA
 export const selectFilteredOveralys = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string[] => overlays.filteredOverlays);
 export const selectSpecialObjects = createSelector(overlaysStateSelector, (overlays: IOverlaysState): Map<string, IOverlaySpecialObject> => overlays.specialObjects);
 export const selectDrops = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays.drops);
+export const selectDropsLength = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays.drops.length);
 export const selectPagination = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays.pagination);
+export const selectPaginatedDrops = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays.drops && overlays.drops.slice(0, overlays.pagination));
 export const selectDropsWithoutSpecialObjects = createSelector(selectDrops, (drops: IOverlayDrop[]) => drops.filter(({ shape }) => !shape));
 export const selectLoading = createSelector(overlaysStateSelector, (overlays: IOverlaysState): boolean => overlays.loading);
 export const selectDropMarkup = createSelector(overlaysStateSelector, (overlayState: IOverlaysState): ExtendMap<MarkUpClass, IMarkUpData> => overlayState.dropsMarkUp);

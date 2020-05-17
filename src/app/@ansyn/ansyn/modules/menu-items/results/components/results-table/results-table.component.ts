@@ -8,9 +8,9 @@ import {
 	IOverlaysState,
 	MarkUpClass,
 	selectDropMarkup,
-	selectDrops, selectPagination
+	selectDrops, selectDropsLength, selectPaginatedDrops, selectPagination
 } from '../../../../overlays/reducers/overlays.reducer';
-import { mergeMap, tap, withLatestFrom } from 'rxjs/operators';
+import { map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	DisplayOverlayFromStoreAction,
 	SetMarkUp, SetTotalOverlaysAction, UpdatePaginationAction,
@@ -46,8 +46,6 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	overlays = [];
 	selectedOverlayId: string;
 	sortedBy  = 'date';
-	initialPagination = 15;
-	currentPagination: number;
 	overlayCount: number;
 	tableHeaders: ITableHeader[] = [
 		{
@@ -58,7 +56,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		},
 		{
 			headerName: 'Sensor',
-			headerData: 'sourceType',
+			headerData: 'sensorName',
 			isAscending: true,
 			sortFn: (a: string, b: string) => a.localeCompare(b)
 		},
@@ -82,10 +80,9 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		);
 
 	@AutoSubscription
-	updateLayersOnMap$ = () => combineLatest(this.store$.select(selectPagination), this.store$.select(selectDrops))
+	updateLayersOnMap$ = () => combineLatest(this.store$.select(selectDrops), this.store$.select(selectPagination))
 		.pipe(
-			mergeMap(([pagination, overlays]: [number, IOverlayDrop[]]) => {
-				this.currentPagination = pagination;
+			mergeMap(([overlays, pagination]: [IOverlayDrop[], number]) => {
 				this.overlays = overlays.slice(0, pagination);
 				this.overlayCount = overlays.length;
 				this.store$.dispatch(new SetTotalOverlaysAction(this.overlayCount));
@@ -103,7 +100,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	loadResults() {
-		this.store$.dispatch(new UpdatePaginationAction(this.currentPagination + this.initialPagination));
+		this.store$.dispatch(new UpdatePaginationAction());
 	}
 
 	onMouseOver($event, id: string): void {

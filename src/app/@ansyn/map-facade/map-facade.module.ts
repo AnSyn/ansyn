@@ -18,7 +18,6 @@ import { MapSearchBoxComponent } from './components/map-search-box/map-search-bo
 import { ToastComponent } from './components/toast/toast.component';
 import { WelcomeNotificationComponent } from './components/welcome-notification/welcome-notification.component';
 import { EntryComponentDirective } from './directives/entry-component.directive';
-import { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
 import { MapEffects } from './effects/map.effects';
 import {
 	EntryComponentsProvider,

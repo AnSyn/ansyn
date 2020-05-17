@@ -16,6 +16,7 @@ import { StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from './reducers/cases.reducer';
 import { CasesAutoSaveComponent } from './components/cases-auto-save/cases-auto-save.component';
 import { CoreModule } from '../../core/core.module';
+import { InfiniteScrollModule } from '../../../../map-facade/directives/infinite-scroll.module';
 
 // @dynamic
 @NgModule({
@@ -24,6 +25,7 @@ import { CoreModule } from '../../core/core.module';
 		CommonModule,
 		CoreModule,
 		FormsModule,
+		InfiniteScrollModule,
 		EffectsModule.forFeature([CasesEffects])
 	],
 	declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent, CasesAutoSaveComponent],

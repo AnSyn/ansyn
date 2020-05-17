@@ -40,7 +40,7 @@ import {
 	OverlaysActionTypes,
 	SetDropsAction,
 	SetFilteredOverlaysAction,
-	SetOverlaysStatusMessageAction, SetTotalOverlaysAction
+	SetOverlaysStatusMessageAction, SetTotalOverlaysAction, UpdatePaginationAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	overlaysStatusMessages,
@@ -115,8 +115,9 @@ export class FiltersAppEffects {
 				favoriteOverlays,
 				showOnlyFavorites
 			});
+			const initialPagination = 20;
 
-			return [new SetDropsAction(drops), new SetTotalOverlaysAction(drops.length)];
+			return [new SetDropsAction(drops), new SetTotalOverlaysAction(drops.length), new UpdatePaginationAction(initialPagination)];
 		})
 	);
 

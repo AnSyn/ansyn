@@ -10,8 +10,6 @@ import {
 	IOverlaySpecialObject,
 } from '../models/overlay.model';
 import { IMarkUpData, IOverlayDropMarkUp, ITimelineRange, MarkUpClass } from '../reducers/overlays.reducer';
-import { MapOrientation } from '@ansyn/imagery';
-import { OverlayStatusActionsTypes } from '../overlay-status/actions/overlay-status.actions';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
@@ -33,6 +31,7 @@ export const OverlaysActionTypes = {
 	REMOVE_OVERLAYS_MARKUPS: type('REMOVE_OVERLAYS_MARKUPS'),
 	SET_OVERLAYS_MARKUPS: type('SET_OVERLAYS_MARKUPS'),
 	UPDATE_OVERLAYS_COUNT: type('UPDATE_OVERLAYS_COUNT'),
+	UPDATE_PAGINATION: type('UPDATE_PAGINATION'),
 	SET_FILTERED_OVERLAYS: type('SET_FILTERED_OVERLAYS'),
 	SET_TIMELINE_STATE: type('SET_TIMELINE_STATE'),
 	SET_SPECIAL_OBJECTS: type('SET_SPECIAL_OBJECTS'),
@@ -69,6 +68,12 @@ export class AddMarkUp implements Action {
 	};
 }
 
+export class UpdatePaginationAction implements Action {
+	type = OverlaysActionTypes.UPDATE_PAGINATION;
+
+	constructor(public payload?: number) {
+	};
+}
 
 export class RemoveMarkUp implements Action {
 	type = OverlaysActionTypes.REMOVE_OVERLAYS_MARKUPS;

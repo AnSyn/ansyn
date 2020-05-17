@@ -71,6 +71,7 @@ export interface IOverlaysState extends EntityState<IOverlay> {
 	miscOverlays: IOverlaysHash;
 	customOverviewElement: any;
 	totalOverlaysLength: number;
+	pagination: number;
 }
 
 let initDropsMarkUp: ExtendMap<MarkUpClass, IMarkUpData> = new ExtendMap<MarkUpClass, IMarkUpData>();
@@ -94,7 +95,8 @@ export const overlaysInitialState: IOverlaysState = overlaysAdapter.getInitialSt
 	overlaysCriteria: {},
 	miscOverlays: {},
 	customOverviewElement: null,
-	totalOverlaysLength: 0
+	totalOverlaysLength: 0,
+	pagination: 15
 });
 
 export const overlaysFeatureKey = 'overlays';
@@ -266,6 +268,12 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 
 			};
 
+		case OverlaysActionTypes.UPDATE_PAGINATION:
+			return {
+				...state,
+				pagination: action.payload
+			};
+
 		case OverlaysActionTypes.SET_HOVERED_OVERLAY:
 			return {
 				...state,
@@ -334,6 +342,7 @@ export const selectOverlaysArray = createSelector(overlaysStateSelector, selectA
 export const selectFilteredOveralys = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string[] => overlays.filteredOverlays);
 export const selectSpecialObjects = createSelector(overlaysStateSelector, (overlays: IOverlaysState): Map<string, IOverlaySpecialObject> => overlays.specialObjects);
 export const selectDrops = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays.drops);
+export const selectPagination = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays.pagination);
 export const selectDropsWithoutSpecialObjects = createSelector(selectDrops, (drops: IOverlayDrop[]) => drops.filter(({ shape }) => !shape));
 export const selectLoading = createSelector(overlaysStateSelector, (overlays: IOverlaysState): boolean => overlays.loading);
 export const selectDropMarkup = createSelector(overlaysStateSelector, (overlayState: IOverlaysState): ExtendMap<MarkUpClass, IMarkUpData> => overlayState.dropsMarkUp);
@@ -348,4 +357,4 @@ export const selectTime: MemoizedSelector<any, ICaseTimeState> = createSelector(
 
 export const selectMiscOverlays: MemoizedSelector<any, any> = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays ? overlays.miscOverlays : {});
 export const selectMiscOverlay = (key: string) => createSelector(selectMiscOverlays, (miscOverlays: any) => miscOverlays[key]);
-export const selectCustomOverviewElement = createSelector(overlaysStateSelector, (state) => state && state.customOverviewElement)
+export const selectCustomOverviewElement = createSelector(overlaysStateSelector, (state) => state && state.customOverviewElement);

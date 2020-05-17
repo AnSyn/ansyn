@@ -8,12 +8,12 @@ import {
 	IOverlaysState,
 	MarkUpClass,
 	selectDropMarkup,
-	selectDrops
+	selectDrops, selectPagination
 } from '../../../../overlays/reducers/overlays.reducer';
-import { map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
+import { mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	DisplayOverlayFromStoreAction,
-	SetMarkUp, SetTotalOverlaysAction,
+	SetMarkUp, SetTotalOverlaysAction, UpdatePaginationAction,
 } from '../../../../overlays/actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
@@ -46,6 +46,9 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	overlays = [];
 	selectedOverlayId: string;
 	sortedBy  = 'date';
+	initialPagination = 15;
+	currentPagination: number;
+	overlayCount: number;
 	tableHeaders: ITableHeader[] = [
 		{
 			headerName: 'Date & time',
@@ -79,12 +82,16 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		);
 
 	@AutoSubscription
-	loadOverlays$ = this.store$.select(selectDrops).pipe(
-		map(( overlays: IOverlayDrop[]) => {
-			this.overlays = overlays;
-			this.store$.dispatch(new SetTotalOverlaysAction(this.overlays.length));
-		})
-	);
+	updateLayersOnMap$ = () => combineLatest(this.store$.select(selectPagination), this.store$.select(selectDrops))
+		.pipe(
+			mergeMap(([pagination, overlays]: [number, IOverlayDrop[]]) => {
+				this.currentPagination = pagination;
+				this.overlays = overlays.slice(0, pagination);
+				this.overlayCount = overlays.length;
+				this.store$.dispatch(new SetTotalOverlaysAction(this.overlayCount));
+				return overlays;
+			})
+		);
 
 	constructor(protected store$: Store<IOverlaysState>) {
 	}
@@ -96,7 +103,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	loadResults() {
-		// TODO: add infinite scroll functionality when directive is fixed
+		this.store$.dispatch(new UpdatePaginationAction(this.currentPagination + this.initialPagination));
 	}
 
 	onMouseOver($event, id: string): void {

@@ -1,3 +1,10 @@
+export interface IMapLike {
+	get(key: any): any;
+	set(key: any): any;
+}
+
+export type ImageryLayer = object & IMapLike;
+
 export enum ImageryLayerProperties {
 	NAME = 'name',
 	ID = 'id',

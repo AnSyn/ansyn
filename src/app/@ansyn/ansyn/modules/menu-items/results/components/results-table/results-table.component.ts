@@ -10,7 +10,7 @@ import {
 	selectDropMarkup,
 	selectDrops, selectPagination
 } from '../../../../overlays/reducers/overlays.reducer';
-import { mergeMap, tap, withLatestFrom } from 'rxjs/operators';
+import { map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	DisplayOverlayFromStoreAction,
 	SetMarkUp, SetTotalOverlaysAction, UpdatePaginationAction,
@@ -44,6 +44,7 @@ interface ITableHeader {
 @AutoSubscriptions()
 export class ResultsTableComponent implements OnInit, OnDestroy {
 	overlays: IOverlayDrop[] = [];
+	totalOverlays: IOverlayDrop[] = [];
 	selectedOverlayId: string;
 	sortedBy  = 'date';
 	overlayCount: number;
@@ -80,13 +81,22 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		);
 
 	@AutoSubscription
-	updateLayersOnMap$ = () => combineLatest(this.store$.select(selectDrops), this.store$.select(selectPagination))
+	loadOverlays$: Observable<any> = this.store$
 		.pipe(
-			mergeMap(([overlays, pagination]: [IOverlayDrop[], number]) => {
-				this.overlays = overlays.slice(0, pagination);
+			select(selectDrops),
+			map((overlays: IOverlayDrop[]) => {
+				this.totalOverlays = overlays;
 				this.overlayCount = overlays.length;
 				this.store$.dispatch(new SetTotalOverlaysAction(this.overlayCount));
-				return overlays;
+			})
+		);
+
+	@AutoSubscription
+	paginateOverlays$: Observable<any> = this.store$
+		.pipe(
+			select(selectPagination),
+			map((pagination: number) => {
+				this.overlays = this.totalOverlays.slice(0, pagination);
 			})
 		);
 

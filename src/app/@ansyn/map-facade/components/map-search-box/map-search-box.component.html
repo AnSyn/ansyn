@@ -1,5 +1,5 @@
 <form *ngIf="show" (reset)="control.setValue('')" (submit)="onSubmit()">
-	<input type="text" [placeholder]="'Search' | translate"
+	<input type="text" [placeholder]="'Search place or coordinates' | translate"
 		   [formControl]="control"
 		   [matAutocomplete]="auto">
 	<mat-autocomplete #auto="matAutocomplete" [panelWidth]="autoCompleteWidth + 'px'">
@@ -9,7 +9,7 @@
 		<mat-option *ngIf="error" disabled>
 			{{'No Results' | translate}}
 		</mat-option>
-		<mat-option *ngFor="let location of locations | slice:0:5"
+		<mat-option *ngFor="let location of locations"
 					(onSelectionChange)="goToLocation(location.point)"
 					[value]="location.name">
 			{{location.name}}

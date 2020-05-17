@@ -38,7 +38,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		filter((value: string) => value.length >= 2),
 		switchMap((value: string) => this.geocoderService.getLocation$(value)),
 		tap((allLocations: Array<any>) => {
-			this.locations = allLocations.filter((loc, index) => index < 5);
+			this.locations = allLocations.slice(0, 10);
 			const newAutoCompleteWidth = this.locations.reduce<number>((acc, next) => {
 				return acc > next.name.length ? acc : next.name.length;
 			}, 0) * 9;

@@ -89,7 +89,6 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 			);
 	}
 
-
 	dataInputFiltersChange(): void {
 		const isFullCheck = this.leavesCount <= this._selectedFilters.length;
 		const isNoneCheck = this._selectedFilters.length === 0;

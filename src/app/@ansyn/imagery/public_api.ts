@@ -74,7 +74,7 @@ export { ProjectionService } from './projection-service/projection.service';
 export { StayInImageryService } from './stay-in-imagery-service/stay-in-imagery.service';
 export { ImageryModule } from './imagery.module';
 export { IMAGERY_CONFIG } from './model/configuration.token';
-export { ImageryLayerProperties, IMAGERY_MAIN_LAYER_NAME, IMAGERY_BASE_MAP_LAYER } from './model/imagery-layer.model';
+export { BaseImageryLayer, ImageryLayerProperties, IMAGERY_MAIN_LAYER_NAME, IMAGERY_BASE_MAP_LAYER } from './model/imagery-layer.model';
 
 export { IMapSettings, IMapSettingsData, IWorldViewMapState } from './model/map-settings';
 export { toDegrees, toRadians, getAngleDegreeBetweenPoints } from './utils/math';

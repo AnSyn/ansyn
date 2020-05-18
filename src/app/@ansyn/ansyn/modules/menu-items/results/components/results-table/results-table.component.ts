@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { combineLatest, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { IOverlayDrop } from '../../../../overlays/models/overlay.model';
 import { select, Store } from '@ngrx/store';
 import {
@@ -10,7 +10,7 @@ import {
 	selectDropMarkup,
 	selectDrops, selectPagination
 } from '../../../../overlays/reducers/overlays.reducer';
-import { map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
+import { map, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	DisplayOverlayFromStoreAction,
 	SetMarkUp, SetTotalOverlaysAction, UpdatePaginationAction,
@@ -78,7 +78,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 				const activeMapData = value.get(MarkUpClass.active);
 				this.selectedOverlayId = activeMapData.overlaysIds[0];
 			})
-		);
+		); 
 
 	@AutoSubscription
 	loadOverlays$: Observable<any> = this.store$
@@ -110,6 +110,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	loadResults() {
+		console.log('paginatig');
 		this.store$.dispatch(new UpdatePaginationAction());
 	}
 

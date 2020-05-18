@@ -346,7 +346,6 @@ export const selectSpecialObjects = createSelector(overlaysStateSelector, (overl
 export const selectDrops = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays.drops);
 export const selectDropsLength = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays.drops.length);
 export const selectPagination = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays.pagination);
-export const selectPaginatedDrops = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays.drops && overlays.drops.slice(0, overlays.pagination));
 export const selectDropsWithoutSpecialObjects = createSelector(selectDrops, (drops: IOverlayDrop[]) => drops.filter(({ shape }) => !shape));
 export const selectLoading = createSelector(overlaysStateSelector, (overlays: IOverlaysState): boolean => overlays.loading);
 export const selectDropMarkup = createSelector(overlaysStateSelector, (overlayState: IOverlaysState): ExtendMap<MarkUpClass, IMarkUpData> => overlayState.dropsMarkUp);

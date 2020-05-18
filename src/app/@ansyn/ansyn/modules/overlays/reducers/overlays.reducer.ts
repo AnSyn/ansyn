@@ -71,7 +71,6 @@ export interface IOverlaysState extends EntityState<IOverlay> {
 	miscOverlays: IOverlaysHash;
 	customOverviewElement: any;
 	totalOverlaysLength: number;
-	pagination: number;
 }
 
 let initDropsMarkUp: ExtendMap<MarkUpClass, IMarkUpData> = new ExtendMap<MarkUpClass, IMarkUpData>();
@@ -96,7 +95,6 @@ export const overlaysInitialState: IOverlaysState = overlaysAdapter.getInitialSt
 	miscOverlays: {},
 	customOverviewElement: null,
 	totalOverlaysLength: 0,
-	pagination: 5
 });
 
 export const overlaysFeatureKey = 'overlays';

@@ -84,8 +84,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		.pipe(
 			select(selectDrops),
 			map((overlays: IOverlayDrop[]) => {
-				const pagination = 15;
-				this.overlays = overlays.slice(0, pagination);
+				this.paginateOverlays(overlays);
 				this.overlayCount = overlays.length;
 				this.store$.dispatch(new SetTotalOverlaysAction(this.overlayCount));
 			})
@@ -100,8 +99,12 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 	}
 
-	loadResults() {
+	paginateOverlays(overlays: IOverlayDrop[]) {
+		const pagination = 15;
+		this.overlays = overlays.slice(0, pagination);
+	}
 
+	loadResults() {
 		this.store$.select(selectPaginatedDrops(this.overlays.length)).pipe(
 			take(1),
 			tap((addedOverlays: IOverlayDrop[]) => this.overlays.push(...addedOverlays))).subscribe();

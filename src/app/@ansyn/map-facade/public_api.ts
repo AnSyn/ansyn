@@ -95,6 +95,7 @@ export { MapFacadeService } from './services/map-facade.service';
 export { IMapFacadeConfig } from './models/map-config.model';
 export { mapFacadeConfig } from './models/map-facade.config';
 export { EntryComponentDirective } from './directives/entry-component.directive';
+export { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
 export { AnimatedEllipsisComponent } from './components/animated-ellipsis/animated-ellipsis.component';
 export { MapFacadeModule } from './map-facade.module';
 

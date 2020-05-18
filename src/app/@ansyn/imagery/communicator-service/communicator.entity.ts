@@ -24,7 +24,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ImageryMapSources } from '../providers/map-source-providers';
 import { get as _get } from 'lodash';
 import { ImageryMapExtent, ImageryMapPosition } from '../model/case-map-position.model';
-import { bboxFromGeoJson, getPolygonByPointAndRadius } from '../utils/geo';
+import { getPolygonByPointAndRadius } from '../utils/geo';
 import {
 	IMapProviderConfig,
 	IMapProvidersConfig,
@@ -32,7 +32,7 @@ import {
 	MAP_PROVIDERS_CONFIG
 } from '../model/map-providers-config';
 import { IMapSettings } from '../model/map-settings';
-import { IMAGERY_BASE_MAP_LAYER, ImageryLayerProperties } from '../model/imagery-layer.model';
+import { BaseImageryLayer, IMAGERY_BASE_MAP_LAYER, ImageryLayerProperties } from '../model/imagery-layer.model';
 
 export interface IMapInstanceChanged {
 	id: string;
@@ -111,7 +111,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return false;
 	}
 
-	public setActiveMap(mapType: string, position: ImageryMapPosition, sourceType?, layer?: any): Promise<any> {
+	public setActiveMap(mapType: string, position: ImageryMapPosition, sourceType?, layer?: BaseImageryLayer): Promise<BaseImageryMap> {
 		if (this._mapComponentRef) {
 			this.destroyCurrentComponent();
 		}
@@ -152,7 +152,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		});
 	}
 
-	loadInitialMapSource(position?: ImageryMapPosition): Promise<any> {
+	loadInitialMapSource(position?: ImageryMapPosition): Promise<BaseImageryLayer> {
 		return new Promise(resolve => {
 			if (!this._activeMap) {
 				resolve();
@@ -250,7 +250,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return <any>this.plugins.find((_plugin) => _plugin instanceof plugin);
 	}
 
-	public resetView(layer: any, position: ImageryMapPosition, extent?: ImageryMapExtent, useDoubleBuffer: boolean = false): Observable<boolean> {
+	public resetView(layer: BaseImageryLayer, position: ImageryMapPosition, extent?: ImageryMapExtent, useDoubleBuffer: boolean = false): Observable<boolean> {
 		this.setVirtualNorth(0);
 		if (this.ActiveMap) {
 			return this.ActiveMap.resetView(layer, position, extent, useDoubleBuffer).pipe(
@@ -260,20 +260,20 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return of(true);
 	}
 
-	public addLayer(layer: any) {
+	public addLayer(layer: BaseImageryLayer) {
 		if (this.ActiveMap) {
 			this.ActiveMap.addLayer(layer);
 		}
 	}
 
-	public getLayers(): any[] {
+	public getLayers(): BaseImageryLayer[] {
 		if (this.ActiveMap) {
 			return this.ActiveMap.getLayers();
 		}
 		return [];
 	}
 
-	public removeLayer(layer: any) {
+	public removeLayer(layer: BaseImageryLayer) {
 		if (this.ActiveMap) {
 			this.ActiveMap.removeLayer(layer);
 		}
@@ -316,7 +316,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return forkJoin(resetObservables).pipe(map(results => results.every(b => b === true)));
 	}
 
-	private createMapSourceForMapType(mapType: string, sourceType: string): Promise<any> {
+	private createMapSourceForMapType(mapType: string, sourceType: string): Promise<BaseImageryLayer> {
 		const sources: IMapSource[] = this.mapProvidersConfig[mapType].sources;
 		const mapSource: IMapSource = sources.find(source => source.key === sourceType);
 		const sourceProvider = this.getMapSourceProvider({
@@ -329,7 +329,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 				data: { ...this.mapSettings.data, overlay: null, config: mapSource.config, key: mapSource.key }
 			});
 		} else {
-			return Promise.resolve(false);
+			return Promise.resolve(null);
 		}
 	}
 

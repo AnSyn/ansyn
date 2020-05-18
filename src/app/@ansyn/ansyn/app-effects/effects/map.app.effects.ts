@@ -24,6 +24,7 @@ import {
 	UpdateMapAction
 } from '@ansyn/map-facade';
 import {
+	BaseImageryLayer,
 	BaseMapSourceProvider,
 	bboxFromGeoJson,
 	ImageryCommunicatorService,
@@ -55,7 +56,6 @@ import { Dictionary } from '@ngrx/entity/src/models';
 import {
 	SetManualImageProcessing,
 	SetMapGeoEnabledModeToolsActionStore,
-	ToolsActionsTypes,
 	UpdateOverlaysManualProcessArgs
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import {
@@ -77,7 +77,6 @@ import { selectGeoRegisteredOptionsEnabled } from '../../modules/menu-items/tool
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import {
-	IImageProcParam,
 	IOverlayStatusConfig,
 	overlayStatusConfig
 } from "../../modules/overlays/overlay-status/config/overlay-status-config";
@@ -348,7 +347,7 @@ export class MapAppEffects {
 
 
 		/* -1- */
-		const isActiveMapAlive = mergeMap((layer) => {
+		const isActiveMapAlive = mergeMap((layer: BaseImageryLayer) => {
 			const checkCommunicator = this.imageryCommunicatorService.provide(communicator.id);
 			if (!checkCommunicator || !checkCommunicator.ActiveMap) {
 				sourceLoader.removeExtraData(layer);
@@ -358,8 +357,8 @@ export class MapAppEffects {
 		});
 
 		/* -2- */
-		const changeActiveMap = mergeMap((layer) => {
-			let observable = of(true);
+		const changeActiveMap = mergeMap((layer: BaseImageryLayer) => {
+			let observable: Observable<any> = of(true);
 			let newActiveMapName = this.changeImageryMap(overlay, communicator);
 
 			if (newActiveMapName) {
@@ -370,7 +369,7 @@ export class MapAppEffects {
 
 		/* -3- */
 		const resetView = pipe(
-			mergeMap((layer) => {
+			mergeMap((layer: BaseImageryLayer) => {
 				const extent = payloadExtent || isNotIntersect && bboxFromGeoJson(overlay.footprint);
 				return communicator.resetView(layer, mapData.position, extent);
 			}),

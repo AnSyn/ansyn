@@ -14,6 +14,7 @@ import { CoreConfig } from '../../../../core/models/core.config';
 import { LoggerConfig } from '../../../../core/models/logger.config';
 import { TranslateModule } from '@ngx-translate/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { mapFacadeConfig } from '@ansyn/map-facade';
 
 describe('SaveCaseComponent', () => {
 	let component: SaveCaseComponent;
@@ -46,7 +47,8 @@ describe('SaveCaseComponent', () => {
 				{ provide: casesConfig, useValue: { schema: null } },
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
-				{ provide: layersConfig, useValue: {} }
+				{ provide: layersConfig, useValue: {} },
+				{ provide: mapFacadeConfig, useValue: {} }
 			]
 		})
 			.compileComponents();

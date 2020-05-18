@@ -8,12 +8,12 @@ import {
 	IOverlaysState,
 	MarkUpClass,
 	selectDropMarkup,
-	selectDrops
+	selectDrops, selectDropsWithoutSpecialObjects, selectPaginatedDrops
 } from '../../../../overlays/reducers/overlays.reducer';
-import { map, tap, withLatestFrom } from 'rxjs/operators';
+import { take, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	DisplayOverlayFromStoreAction,
-	SetMarkUp, SetTotalOverlaysAction,
+	SetMarkUp
 } from '../../../../overlays/actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
@@ -46,6 +46,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	overlays: IOverlayDrop[] = [];
 	selectedOverlayId: string;
 	sortedBy  = 'date';
+	overlayCount: number;
 	tableHeaders: ITableHeader[] = [
 		{
 			headerName: 'Date & time',
@@ -55,7 +56,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		},
 		{
 			headerName: 'Sensor',
-			headerData: 'sourceType',
+			headerData: 'sensorName',
 			isAscending: true,
 			sortFn: (a: string, b: string) => a.localeCompare(b)
 		},
@@ -79,12 +80,14 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		);
 
 	@AutoSubscription
-	loadOverlays$ = this.store$.select(selectDrops).pipe(
-		map(( overlays: IOverlayDrop[]) => {
-			this.overlays = overlays;
-			this.store$.dispatch(new SetTotalOverlaysAction(this.overlays.length));
-		})
-	);
+	loadOverlays$: Observable<any> = this.store$
+		.pipe(
+			select(selectDropsWithoutSpecialObjects),
+			tap((overlays: IOverlayDrop[]) => {
+				this.paginateOverlays(overlays);
+				this.overlayCount = overlays.length;
+			})
+		);
 
 	constructor(protected store$: Store<IOverlaysState>) {
 	}
@@ -95,8 +98,15 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 	}
 
+	paginateOverlays(overlays: IOverlayDrop[]) {
+		const pagination = 15;
+		this.overlays = overlays.slice(0, pagination);
+	}
+
 	loadResults() {
-		// TODO: add infinite scroll functionality when directive is fixed
+		this.store$.select(selectPaginatedDrops(this.overlays.length)).pipe(
+			take(1),
+			tap((addedOverlays: IOverlayDrop[]) => this.overlays.push(...addedOverlays))).subscribe();
 	}
 
 	onMouseOver($event, id: string): void {
@@ -111,10 +121,8 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
 	}
 
-	openOverlay(overlay: IOverlayDrop): void {
-		const { id } = overlay;
+	openOverlay(id: string): void {
 		this.selectedOverlayId = id;
-
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id }));
 	}
 
@@ -123,7 +131,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	isAirplaneOverlay(overlay: IOverlayDrop): boolean {
-		return overlay && overlay.tag && overlay.tag.properties_list ? Boolean(overlay.tag.properties_list.Leg) : false;
+		return overlay && overlay.tag && overlay.tag.properties_list ? Boolean(overlay.tag.properties_list.Sortie) : false;
 	}
 
 	timeFormat(overlayDate: Date): string {

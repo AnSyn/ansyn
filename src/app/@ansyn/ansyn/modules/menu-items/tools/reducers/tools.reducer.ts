@@ -20,8 +20,11 @@ export enum toolsFlags {
 
 export enum SubMenuEnum { goTo, manualImageProcessing, overlays, annotations }
 
-export interface IMeasureData {
+export interface IMeasureData extends IMeasureDataOptions{
 	meausres: IVisualizerEntity[];
+}
+
+export interface IMeasureDataOptions {
 	isLayerShowed: boolean;
 	isToolActive: boolean;
 	isRemoveMeasureModeActive: boolean;
@@ -167,13 +170,33 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			return { ...state, mapsMeasures };
 		}
 
-		case ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATA: {
-			const payloadMeasureData: IMeasureData = action.payload.measureData;
+		case ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS: {
+			const newOptions: IMeasureDataOptions = action.payload.options;
 			const mapsMeasures = new Map(state.mapsMeasures);
-			if (mapsMeasures.has(action.payload.mapId)) {
-				let data: IMeasureData = mapsMeasures.get(action.payload.mapId);
-				data = { ...data, ...payloadMeasureData };
-				mapsMeasures.set(action.payload.mapId, { ...data });
+			const mapMeasure = mapsMeasures.get(action.payload.mapId);
+			if (mapMeasure) {
+				mapsMeasures.set(action.payload.mapId, {...mapMeasure, ...newOptions});
+			}
+			return { ...state, mapsMeasures };
+		}
+
+		case ToolsActionsTypes.MEASURES.ADD_MEASURE: {
+			const { mapId, measure } = action.payload;
+			const mapsMeasures = new Map(state.mapsMeasures);
+			const mapMeasure = mapsMeasures.get(mapId);
+			if (mapMeasure) {
+				mapsMeasures.set(mapId, {...mapMeasure, meausres: [...mapMeasure.meausres, measure]})
+			}
+			return { ...state, mapsMeasures };
+		}
+
+		case ToolsActionsTypes.MEASURES.REMOVE_MEASURE: {
+			const { mapId, measureId } = action.payload;
+			const mapsMeasures = new Map(state.mapsMeasures);
+			if (mapsMeasures.has(mapId)) {
+				const mapMeasure = mapsMeasures.get(mapId);
+				const meausres = measureId ? mapMeasure.meausres.filter( measure => measure.id !== measureId) : [];
+				mapsMeasures.set(mapId, {...mapMeasure, meausres})
 			}
 			return { ...state, mapsMeasures };
 		}

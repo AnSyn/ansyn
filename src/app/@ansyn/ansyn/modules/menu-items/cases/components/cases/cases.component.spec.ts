@@ -22,7 +22,7 @@ describe('CasesComponent', () => {
 			declarations: [CasesComponent, a, b, c],
 			imports: [StoreModule.forRoot({}),
 				MapFacadeModule,
-				EffectsModule.forRoot([]),],
+				EffectsModule.forRoot([])],
 			providers: [{ provide: mapFacadeConfig, useValue: {} }]
 		})
 			.compileComponents();

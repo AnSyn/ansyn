@@ -4,14 +4,14 @@ import { CommonModule } from '@angular/common';
 import { CoreModule } from '../../core/core.module';
 import { ResultsTableComponent } from './components/results-table/results-table.component';
 import { ResultsComponent } from './components/results/results.component';
-import { InfiniteScrollModule } from '../../../../map-facade/directives/infinite-scroll.module';
+import { MapFacadeModule } from '@ansyn/map-facade';
 
 // @dynamic
 @NgModule({
 	imports: [
 		CommonModule,
 		CoreModule,
-		InfiniteScrollModule
+		MapFacadeModule,
 	],
 	declarations: [ResultsComponent, ResultsTableComponent],
 	entryComponents: [ResultsComponent, ResultsTableComponent],

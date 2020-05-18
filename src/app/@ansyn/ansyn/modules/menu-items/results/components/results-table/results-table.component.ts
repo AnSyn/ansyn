@@ -125,10 +125,8 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
 	}
 
-	openOverlay(overlay: IOverlayDrop): void {
-		const { id } = overlay;
+	openOverlay(id: string): void {
 		this.selectedOverlayId = id;
-
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id }));
 	}
 
@@ -137,7 +135,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	isAirplaneOverlay(overlay: IOverlayDrop): boolean {
-		return overlay && overlay.tag && overlay.tag.properties_list ? Boolean(overlay.tag.properties_list.Leg) : false;
+		return overlay && overlay.tag && overlay.tag.properties_list ? Boolean(overlay.tag.properties_list.Sortie) : false;
 	}
 
 	timeFormat(overlayDate: Date): string {

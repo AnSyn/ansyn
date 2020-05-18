@@ -32,6 +32,7 @@ import { GeoHolderComponent } from './components/imagery-mouse-coordinates/holde
 import { UtmHolderComponent } from './components/imagery-mouse-coordinates/holders/utm-holder/utm-holder.component';
 import { FloatingMenuComponent } from './components/floating-menu/floating-menu.component';
 import { MatAutocompleteModule, MatInputModule } from '@angular/material';
+import { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
 
 @NgModule({
 	imports: [
@@ -59,6 +60,7 @@ import { MatAutocompleteModule, MatInputModule } from '@angular/material';
 		MapSearchBoxComponent,
 		ImageryStatusComponent,
 		WelcomeNotificationComponent,
+		InfiniteScrollDirective,
 		ToastComponent,
 		AnimatedEllipsisComponent,
 		AnsynLoaderComponent,
@@ -75,6 +77,7 @@ import { MatAutocompleteModule, MatInputModule } from '@angular/material';
 		WelcomeNotificationComponent,
 		ToastComponent,
 		AnimatedEllipsisComponent,
+		InfiniteScrollDirective,
 		AnsynLoaderComponent,
 		AnsynPopoverComponent,
 		EntryComponentDirective,

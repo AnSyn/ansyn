@@ -10,10 +10,10 @@ import {
 	selectDropMarkup,
 	selectDrops, selectDropsWithoutSpecialObjects, selectPaginatedDrops
 } from '../../../../overlays/reducers/overlays.reducer';
-import { map, take, tap, withLatestFrom } from 'rxjs/operators';
+import { take, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	DisplayOverlayFromStoreAction,
-	SetMarkUp, SetTotalOverlaysAction,
+	SetMarkUp
 } from '../../../../overlays/actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
@@ -83,7 +83,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	loadOverlays$: Observable<any> = this.store$
 		.pipe(
 			select(selectDropsWithoutSpecialObjects),
-			map((overlays: IOverlayDrop[]) => {
+			tap((overlays: IOverlayDrop[]) => {
 				this.paginateOverlays(overlays);
 				this.overlayCount = overlays.length;
 			})

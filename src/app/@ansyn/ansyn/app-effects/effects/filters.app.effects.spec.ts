@@ -27,7 +27,7 @@ import {
 	LoadOverlaysAction,
 	SetDropsAction,
 	SetFilteredOverlaysAction,
-	SetOverlaysStatusMessageAction, SetTotalOverlaysAction, UpdatePaginationAction
+	SetOverlaysStatusMessageAction, SetTotalOverlaysAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	OverlayReducer,
@@ -109,10 +109,9 @@ describe('Filters app effects', () => {
 
 	it('updateOverlayDrops$ effect', () => {
 		spyOn(OverlaysService, 'parseOverlayDataForDisplay').and.callFake(() => []);
-		const expectedResults = cold('(bcd)', {
+		const expectedResults = cold('(bc)', {
 			b: new SetDropsAction([]),
-			c: new SetTotalOverlaysAction(0),
-			d: new UpdatePaginationAction()
+			c: new SetTotalOverlaysAction(0)
 		});
 		expect(filtersAppEffects.updateOverlayDrops$).toBeObservable(expectedResults);
 	});

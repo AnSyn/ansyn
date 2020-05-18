@@ -31,7 +31,6 @@ export const OverlaysActionTypes = {
 	REMOVE_OVERLAYS_MARKUPS: type('REMOVE_OVERLAYS_MARKUPS'),
 	SET_OVERLAYS_MARKUPS: type('SET_OVERLAYS_MARKUPS'),
 	UPDATE_OVERLAYS_COUNT: type('UPDATE_OVERLAYS_COUNT'),
-	UPDATE_PAGINATION: type('UPDATE_PAGINATION'),
 	SET_FILTERED_OVERLAYS: type('SET_FILTERED_OVERLAYS'),
 	SET_TIMELINE_STATE: type('SET_TIMELINE_STATE'),
 	SET_SPECIAL_OBJECTS: type('SET_SPECIAL_OBJECTS'),
@@ -65,13 +64,6 @@ export class AddMarkUp implements Action {
 	type = OverlaysActionTypes.ADD_OVERLAYS_MARKUPS;
 
 	constructor(public payload: Array<IOverlayDropMarkUp>) {
-	};
-}
-
-export class UpdatePaginationAction implements Action {
-	type = OverlaysActionTypes.UPDATE_PAGINATION;
-
-	constructor(public payload?: number) {
 	};
 }
 

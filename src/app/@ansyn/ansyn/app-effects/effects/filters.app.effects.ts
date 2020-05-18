@@ -40,7 +40,7 @@ import {
 	OverlaysActionTypes,
 	SetDropsAction,
 	SetFilteredOverlaysAction,
-	SetOverlaysStatusMessageAction, SetTotalOverlaysAction, UpdatePaginationAction
+	SetOverlaysStatusMessageAction, SetTotalOverlaysAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	overlaysStatusMessages,
@@ -116,7 +116,7 @@ export class FiltersAppEffects {
 				showOnlyFavorites
 			});
 
-			return [new SetDropsAction(drops), new SetTotalOverlaysAction(drops.length), new UpdatePaginationAction()];
+			return [new SetDropsAction(drops), new SetTotalOverlaysAction(drops.length)];
 		})
 	);
 

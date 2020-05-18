@@ -8,12 +8,12 @@ import {
 	IOverlaysState,
 	MarkUpClass,
 	selectDropMarkup,
-	selectDrops, selectPagination
+	selectDrops, selectPaginatedDrops
 } from '../../../../overlays/reducers/overlays.reducer';
-import { map, tap, withLatestFrom } from 'rxjs/operators';
+import { map, take, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	DisplayOverlayFromStoreAction,
-	SetMarkUp, SetTotalOverlaysAction, UpdatePaginationAction,
+	SetMarkUp, SetTotalOverlaysAction,
 } from '../../../../overlays/actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
@@ -44,7 +44,6 @@ interface ITableHeader {
 @AutoSubscriptions()
 export class ResultsTableComponent implements OnInit, OnDestroy {
 	overlays: IOverlayDrop[] = [];
-	totalOverlays: IOverlayDrop[] = [];
 	selectedOverlayId: string;
 	sortedBy  = 'date';
 	overlayCount: number;
@@ -78,25 +77,17 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 				const activeMapData = value.get(MarkUpClass.active);
 				this.selectedOverlayId = activeMapData.overlaysIds[0];
 			})
-		); 
+		);
 
 	@AutoSubscription
 	loadOverlays$: Observable<any> = this.store$
 		.pipe(
 			select(selectDrops),
 			map((overlays: IOverlayDrop[]) => {
-				this.totalOverlays = overlays;
+				const pagination = 15;
+				this.overlays = overlays.slice(0, pagination);
 				this.overlayCount = overlays.length;
 				this.store$.dispatch(new SetTotalOverlaysAction(this.overlayCount));
-			})
-		);
-
-	@AutoSubscription
-	paginateOverlays$: Observable<any> = this.store$
-		.pipe(
-			select(selectPagination),
-			map((pagination: number) => {
-				this.overlays = this.totalOverlays.slice(0, pagination);
 			})
 		);
 
@@ -110,8 +101,10 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	loadResults() {
-		console.log('paginatig');
-		this.store$.dispatch(new UpdatePaginationAction());
+
+		this.store$.select(selectPaginatedDrops(this.overlays.length)).pipe(
+			take(1),
+			tap((addedOverlays: IOverlayDrop[]) => this.overlays.push(...addedOverlays))).subscribe();
 	}
 
 	onMouseOver($event, id: string): void {

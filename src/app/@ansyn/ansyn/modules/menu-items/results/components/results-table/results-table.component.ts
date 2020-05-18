@@ -8,7 +8,7 @@ import {
 	IOverlaysState,
 	MarkUpClass,
 	selectDropMarkup,
-	selectDrops, selectPaginatedDrops
+	selectDrops, selectDropsWithoutSpecialObjects, selectPaginatedDrops
 } from '../../../../overlays/reducers/overlays.reducer';
 import { map, take, tap, withLatestFrom } from 'rxjs/operators';
 import {
@@ -82,11 +82,10 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	loadOverlays$: Observable<any> = this.store$
 		.pipe(
-			select(selectDrops),
+			select(selectDropsWithoutSpecialObjects),
 			map((overlays: IOverlayDrop[]) => {
 				this.paginateOverlays(overlays);
 				this.overlayCount = overlays.length;
-				this.store$.dispatch(new SetTotalOverlaysAction(this.overlayCount));
 			})
 		);
 

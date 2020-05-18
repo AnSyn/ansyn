@@ -334,7 +334,7 @@ export const selectOverlaysArray = createSelector(overlaysStateSelector, selectA
 export const selectFilteredOveralys = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string[] => overlays.filteredOverlays);
 export const selectSpecialObjects = createSelector(overlaysStateSelector, (overlays: IOverlaysState): Map<string, IOverlaySpecialObject> => overlays.specialObjects);
 export const selectDrops = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays.drops);
-export const selectPaginatedDrops = (from, to = 15) => createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays && overlays.drops && overlays.drops.slice(from, from + to));
+export const selectPaginatedDrops = (from, to = 15) => createSelector(selectDropsWithoutSpecialObjects, (drops: IOverlayDrop[]) => drops && drops.slice(from, from + to));
 export const selectDropsWithoutSpecialObjects = createSelector(selectDrops, (drops: IOverlayDrop[]) => drops.filter(({ shape }) => !shape));
 export const selectLoading = createSelector(overlaysStateSelector, (overlays: IOverlaysState): boolean => overlays.loading);
 export const selectDropMarkup = createSelector(overlaysStateSelector, (overlayState: IOverlaysState): ExtendMap<MarkUpClass, IMarkUpData> => overlayState.dropsMarkUp);

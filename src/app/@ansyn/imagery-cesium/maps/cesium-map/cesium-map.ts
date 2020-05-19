@@ -263,8 +263,8 @@ export class CesiumMap extends BaseImageryMap<any> {
 	}
 
 	resetView(layer: CesiumLayer, position: ImageryMapPosition, extent ?: ImageryMapExtent): Observable<boolean> {
-		if (!this.mapObject || ((layer as CesiumLayer).mapProjection && (<any>this.mapObject.scene.mapProjection).projectionName !== (layer as CesiumLayer).mapProjection.projectionName)) {
-			return this.createMapObject(layer as CesiumLayer).pipe(
+		if (!this.mapObject || (layer.mapProjection && (<any>this.mapObject.scene.mapProjection).projectionName !== layer.mapProjection.projectionName)) {
+			return this.createMapObject(layer).pipe(
 				mergeMap((isReady) => {
 					if (extent) {
 						return this.fitToExtent(extent);
@@ -276,17 +276,17 @@ export class CesiumMap extends BaseImageryMap<any> {
 		// else
 		const imageryLayers = this.mapObject.imageryLayers;
 
-		if ((layer as CesiumLayer).removePrevLayers) {
+		if (layer.removePrevLayers) {
 			imageryLayers.removeAll(false);
 		}
 
-		imageryLayers.addImageryProvider((layer as CesiumLayer).layer);
-		if ((layer as CesiumLayer).terrainProvider) {
-			this.mapObject.terrainProvider = (layer as CesiumLayer).terrainProvider;
+		imageryLayers.addImageryProvider(layer.layer);
+		if (layer.terrainProvider) {
+			this.mapObject.terrainProvider = layer.terrainProvider;
 		}
 
-		if ((layer as CesiumLayer).sceneMode) {
-			let cesiumSceneMode = this.getCesiumSceneMode((layer as CesiumLayer).sceneMode);
+		if (layer.sceneMode) {
+			let cesiumSceneMode = this.getCesiumSceneMode(layer.sceneMode);
 			this.mapObject.scene.mode = cesiumSceneMode;
 		}
 

@@ -69,11 +69,10 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	];
 
 	@AutoSubscription
-	dropsMarkUp$: Observable<[ExtendMap<MarkUpClass, IMarkUpData>, any]> = this.store$
+	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, IMarkUpData>> = this.store$
 		.pipe(
 			select(selectDropMarkup),
-			withLatestFrom(this.store$.pipe(select(selectDrops))),
-			tap(([value]: [ExtendMap<MarkUpClass, IMarkUpData>, any]) => {
+			tap((value: ExtendMap<MarkUpClass, IMarkUpData>) => {
 				const activeMapData = value.get(MarkUpClass.active);
 				this.selectedOverlayId = activeMapData.overlaysIds[0];
 			})

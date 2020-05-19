@@ -354,7 +354,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 	}
 
 	addLayer(layer: CesiumLayer): void {
-		const actualCesiumLayer = this.mapObject.imageryLayers.addImageryProvider((layer as unknown as CesiumLayer).layer);
+		const actualCesiumLayer = this.mapObject.imageryLayers.addImageryProvider(layer.layer);
 		this.layersToCesiumLayer.set(layer, actualCesiumLayer);
 	}
 

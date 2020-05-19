@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
-import { SubMenuEnum, toolsFlags } from '../reducers/tools.reducer';
+import { SubMenuEnum, toolsFlags, IMeasureData, IMeasureDataOptions } from '../reducers/tools.reducer';
 import { type } from '../../../core/utils/type';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 import { ImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
@@ -30,7 +30,9 @@ export const ToolsActionsTypes = {
 		SET_MEASURE_TOOL_STATE: type('[tools] SET_MEASURE_TOOL_STATE'),
 		CREATE_MEASURE_DATA: type('[tools] CREATE_MEASURE_DATA'),
 		REMOVE_MEASURE_DATA: type('[tools] REMOVE_MEASURE_DATA'),
-		UPDATE_MEASURE_DATA: type('[tools] UPDATE_MEASURE_DATA')
+		ADD_MEASURE: type('[tools] ADD_MEASURE'),
+		REMOVE_MEASURE: type('[tools] REMOVE_MEASURE'),
+		UPDATE_MEASURE_DATE_OPTIONS: type('[tools] UPDATE_MEASURE_DATA_OPTIONS')
 	},
 	STORE: {
 		SET_ANNOTATION_MODE: type('SET_ANNOTATION_MODE')
@@ -174,17 +176,30 @@ export class RemoveMeasureDataAction implements Action {
 	constructor(public payload: { mapId: string }) {
 	}
 }
+export class UpdateMeasureDataOptionsAction implements Action {
+	type = ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS;
+	constructor(public payload: {
+		mapId: string,
+		options: Partial<IMeasureDataOptions>
+	}) {
+	}
+}
 
-export class UpdateMeasureDataAction implements Action {
-	type = ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATA;
+export class AddMeasureAction implements Action {
+	type = ToolsActionsTypes.MEASURES.ADD_MEASURE;
 
 	constructor(public payload: {
-		mapId: string, measureData: {
-			meausres?: IVisualizerEntity[],
-			isLayerShowed?: boolean,
-			isToolActive?: boolean,
-			isRemoveMeasureModeActive?: boolean
-		}
+		mapId: string,
+		measure: IVisualizerEntity
+	}) {
+	}
+}
+
+export class RemoveMeasureAction implements Action {
+	type = ToolsActionsTypes.MEASURES.REMOVE_MEASURE;
+	constructor(public payload: {
+		mapId: string;
+		measureId?: string;
 	}) {
 	}
 }

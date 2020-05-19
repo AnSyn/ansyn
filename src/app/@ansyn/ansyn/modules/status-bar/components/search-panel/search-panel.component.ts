@@ -237,7 +237,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	}
 
 	setTimeCriteria() {
-		if (this.validateDates()) {
+		if (this.validateDates() && this.checkTimeWasChange()) {
 			const fromText = this.timePickerInputFrom.nativeElement.textContent;
 			const toText = this.timePickerInputTo.nativeElement.textContent;
 
@@ -319,6 +319,10 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		const reg = /[ \/:]/g;
 		const reverse = content.split('').reverse().join('');
 		return fromLast ? reverse.search(reg) : content.search(reg)
+	}
+
+	private checkTimeWasChange() {
+		return this.timePickerInputFrom.nativeElement.textContent !== this.timeSelectionTitle.from || this.timePickerInputTo.nativeElement.textContent !== this.timeSelectionTitle.to
 	}
 
 }

@@ -10,8 +10,6 @@ import {
 	IOverlaySpecialObject,
 } from '../models/overlay.model';
 import { IMarkUpData, IOverlayDropMarkUp, ITimelineRange, MarkUpClass } from '../reducers/overlays.reducer';
-import { MapOrientation } from '@ansyn/imagery';
-import { OverlayStatusActionsTypes } from '../overlay-status/actions/overlay-status.actions';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
@@ -68,7 +66,6 @@ export class AddMarkUp implements Action {
 	constructor(public payload: Array<IOverlayDropMarkUp>) {
 	};
 }
-
 
 export class RemoveMarkUp implements Action {
 	type = OverlaysActionTypes.REMOVE_OVERLAYS_MARKUPS;

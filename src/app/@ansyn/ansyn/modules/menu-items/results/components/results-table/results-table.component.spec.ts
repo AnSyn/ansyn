@@ -1,20 +1,21 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 
 import { ResultsTableComponent } from './results-table.component';
-import { TranslateModule } from "@ngx-translate/core";
-import { Store, StoreModule } from "@ngrx/store";
+import { TranslateModule } from '@ngx-translate/core';
+import { Store, StoreModule } from '@ngrx/store';
 import {
 	IOverlaysState,
 	MarkUpClass,
 	OverlayReducer,
 	overlaysFeatureKey
-} from "../../../../overlays/reducers/overlays.reducer";
+} from '../../../../overlays/reducers/overlays.reducer';
 import {
 	DisplayOverlayFromStoreAction,
 	SetMarkUp
-} from "../../../../overlays/actions/overlays.actions";
-import { IOverlay } from "../../../../overlays/models/overlay.model";
+} from '../../../../overlays/actions/overlays.actions';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { mapFacadeConfig, MapFacadeModule } from '@ansyn/map-facade';
+import { EffectsModule } from '@ngrx/effects';
 
 describe('ResultsTableComponent', () => {
 	let component: ResultsTableComponent;
@@ -24,10 +25,12 @@ describe('ResultsTableComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [TranslateModule.forRoot(),
+				MapFacadeModule,
 				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer }),
+				EffectsModule.forRoot([]),
 				BrowserAnimationsModule],
 			declarations: [ResultsTableComponent],
-			providers: []
+			providers: [{ provide: mapFacadeConfig, useValue: {} }]
 		})
 			.compileComponents();
 	}));
@@ -45,21 +48,14 @@ describe('ResultsTableComponent', () => {
 	});
 
 	it('openOverlay should dispatch DisplayOverlayFromStoreAction', () => {
-		const overlay: IOverlay = {
-			azimuth: 0,
-			date: undefined,
-			id: "",
-			isGeoRegistered: undefined,
-			name: "",
-			photoTime: ""
-		};
-		component.openOverlay(overlay);
-		expect(store.dispatch).toHaveBeenCalledWith(new DisplayOverlayFromStoreAction({ id: overlay.id }));
+		const id = '';
+		component.openOverlay(id);
+		expect(store.dispatch).toHaveBeenCalledWith(new DisplayOverlayFromStoreAction({ id }));
 	});
 
 	it('onMouseOver should dispatch SetMarkUp', () => {
 		const $event = jasmine.createSpyObj({ stopPropagation: () => null });
-		const id = "1";
+		const id = '1';
 		component.onMouseOver($event, id);
 		expect(store.dispatch).toHaveBeenCalledWith(new SetMarkUp({
 			classToSet: MarkUpClass.hover,
@@ -71,6 +67,9 @@ describe('ResultsTableComponent', () => {
 
 	it('onMouseOut should dispatch SetMarkUp', () => {
 		component.onMouseOut();
-		expect(store.dispatch).toHaveBeenCalledWith(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
+		expect(store.dispatch).toHaveBeenCalledWith(new SetMarkUp({
+			classToSet: MarkUpClass.hover,
+			dataToSet: { overlaysIds: [] }
+		}));
 	});
 });

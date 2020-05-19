@@ -121,7 +121,7 @@ export interface IOverlayDrop {
 	id: string;
 	date: Date;
 	shape?: string;
-	sourceType?: string;
+	sensorName?: string;
 	tag?: any;
 }
 

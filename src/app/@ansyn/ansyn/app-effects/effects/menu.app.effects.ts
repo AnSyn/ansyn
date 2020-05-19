@@ -7,8 +7,10 @@ import { UpdateMapSizeAction } from '@ansyn/map-facade';
 import { MenuActionTypes, SetAutoClose } from '@ansyn/menu';
 import { selectSubMenu } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import { map, mergeMap } from 'rxjs/operators';
-import { RedrawTimelineAction } from '../../modules/overlays/actions/overlays.actions';
+import { RedrawTimelineAction, SetTotalOverlaysAction } from '../../modules/overlays/actions/overlays.actions';
 import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
+import { selectDropsWithoutSpecialObjects } from '../../modules/overlays/reducers/overlays.reducer';
+import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 
 @Injectable()
 export class MenuAppEffects {
@@ -22,6 +24,12 @@ export class MenuAppEffects {
 				new RedrawTimelineAction()
 			])
 		);
+
+	@Effect()
+	loadOverlays$: Observable<any> = this.store$
+		.pipe(
+			select(selectDropsWithoutSpecialObjects),
+			map((overlays: IOverlayDrop[]) => new SetTotalOverlaysAction(overlays.length)));
 
 
 	@Effect()

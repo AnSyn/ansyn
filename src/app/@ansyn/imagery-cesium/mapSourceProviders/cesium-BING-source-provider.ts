@@ -1,5 +1,5 @@
 import {
-	BaseImageryLayer,
+	IBaseImageryLayer,
 	BaseMapSourceProvider,
 	IBaseImageryMapConstructor,
 	ImageryMapSource,
@@ -19,7 +19,7 @@ export const CesiumBingSourceProviderSourceType = 'CESIUM_BING';
 export class CesiumBINGSourceProvider extends BaseMapSourceProvider {
 	readonly supported: IBaseImageryMapConstructor[];
 
-	protected create(metaData: IMapSettings): Promise<BaseImageryLayer> {
+	protected create(metaData: IMapSettings): Promise<IBaseImageryLayer> {
 		const cesiumBingLayer = new Cesium.BingMapsImageryProvider({
 			url: 'https://dev.virtualearth.net',
 			key: 'Ag9RlBTbfJQMhFG3fxO9fLAbYMO8d5sevTe-qtDsAg6MjTYYFMFfFFrF2SrPIZNq',

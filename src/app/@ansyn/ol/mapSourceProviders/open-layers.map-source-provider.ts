@@ -1,5 +1,5 @@
 import {
-	BaseImageryLayer,
+	IBaseImageryLayer,
 	BaseMapSourceProvider,
 	bboxFromGeoJson,
 	EPSG_3857,
@@ -15,7 +15,7 @@ import XYZ from 'ol/source/XYZ';
 import { ProjectableRaster } from '../maps/open-layers-map/models/projectable-raster';
 export const IMAGE_PROCESS_ATTRIBUTE = 'imageLayer';
 export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSourceProvider<CONF> {
-	create(metaData: IMapSettings): Promise<BaseImageryLayer> {
+	create(metaData: IMapSettings): Promise<IBaseImageryLayer> {
 		const extent = this.createExtent(metaData);
 		const source = this.createSource(metaData);
 		const tileLayer = this.createLayer(source, extent);
@@ -33,14 +33,14 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 		return `${ metaData.worldView.mapType }/${ metaData.data.key }`;
 	}
 
-	removeExtraData(layer: BaseImageryLayer | ol_Layer) {
+	removeExtraData(layer: IBaseImageryLayer | ol_Layer) {
 		if (this.isRasterLayer(layer)) {
 			layer.getSource().destroy();
 		}
 		super.removeExtraData(layer);
 	}
 
-	protected isRasterLayer(layer: BaseImageryLayer | ol_Layer) {
+	protected isRasterLayer(layer: IBaseImageryLayer | ol_Layer) {
 		return layer instanceof ol_Layer && layer.getSource() instanceof ProjectableRaster;
 	}
 
@@ -93,7 +93,7 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 		return {}
 	}
 
-	setExtraData(layer: BaseImageryLayer, extraData: any): void {
+	setExtraData(layer: IBaseImageryLayer, extraData: any): void {
 		Object.entries(extraData).forEach(([key, value]) => {
 			layer.set(key, value)
 		})

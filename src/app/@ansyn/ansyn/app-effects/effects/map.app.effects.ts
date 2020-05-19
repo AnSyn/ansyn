@@ -24,7 +24,7 @@ import {
 	UpdateMapAction
 } from '@ansyn/map-facade';
 import {
-	BaseImageryLayer,
+	IBaseImageryLayer,
 	BaseMapSourceProvider,
 	bboxFromGeoJson,
 	ImageryCommunicatorService,
@@ -347,7 +347,7 @@ export class MapAppEffects {
 
 
 		/* -1- */
-		const isActiveMapAlive = mergeMap((layer: BaseImageryLayer) => {
+		const isActiveMapAlive = mergeMap((layer: IBaseImageryLayer) => {
 			const checkCommunicator = this.imageryCommunicatorService.provide(communicator.id);
 			if (!checkCommunicator || !checkCommunicator.ActiveMap) {
 				sourceLoader.removeExtraData(layer);
@@ -357,7 +357,7 @@ export class MapAppEffects {
 		});
 
 		/* -2- */
-		const changeActiveMap = mergeMap((layer: BaseImageryLayer) => {
+		const changeActiveMap = mergeMap((layer: IBaseImageryLayer) => {
 			let observable: Observable<any> = of(true);
 			let newActiveMapName = this.changeImageryMap(overlay, communicator);
 
@@ -369,7 +369,7 @@ export class MapAppEffects {
 
 		/* -3- */
 		const resetView = pipe(
-			mergeMap((layer: BaseImageryLayer) => {
+			mergeMap((layer: IBaseImageryLayer) => {
 				const extent = payloadExtent || isNotIntersect && bboxFromGeoJson(overlay.footprint);
 				return communicator.resetView(layer, mapData.position, extent);
 			}),

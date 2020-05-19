@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { GeoRegisteration, IOverlay } from '../../../../../overlays/models/overlay.model';
 import {
-	BaseImageryLayer,
+	IBaseImageryLayer,
 	BaseMapSourceProvider, CommunicatorEntity, ImageryCommunicatorService, IMapSettings
 } from '@ansyn/imagery';
 import { catchError, map, mergeMap } from 'rxjs/operators';
@@ -49,7 +49,7 @@ export class AnaglyphSensorService {
 	innerChangeImage(sourceLoader: BaseMapSourceProvider, overlay: IOverlay, communicator: CommunicatorEntity, mapSettings: IMapSettings): Observable<{} | boolean> {
 		const getLayerObservable = fromPromise(sourceLoader.createAsync(mapSettings));
 
-		const changeActiveMap = mergeMap((layer: BaseImageryLayer) => {
+		const changeActiveMap = mergeMap((layer: IBaseImageryLayer) => {
 			let observable: Observable<any> = of(true);
 			const moveToGeoRegisteredMap = overlay.isGeoRegistered !== GeoRegisteration.notGeoRegistered && communicator.activeMapName === DisabledOpenLayersMapName;
 			const moveToNotGeoRegisteredMap = overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered && (communicator.activeMapName === OpenlayersMapName || communicator.activeMapName === CesiumMapName);
@@ -61,7 +61,7 @@ export class AnaglyphSensorService {
 			return observable.pipe(map(() => layer));
 		});
 
-		const resetView = mergeMap((layer: BaseImageryLayer) => {
+		const resetView = mergeMap((layer: IBaseImageryLayer) => {
 			if (Boolean(layer)) {
 				return communicator.resetView(layer, mapSettings.data.position, null, true);
 			}

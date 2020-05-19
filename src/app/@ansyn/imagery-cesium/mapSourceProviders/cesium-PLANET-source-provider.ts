@@ -1,5 +1,5 @@
 import {
-	BaseImageryLayer,
+	IBaseImageryLayer,
 	BaseMapSourceProvider,
 	IBaseImageryMapConstructor,
 	ImageryMapSource,
@@ -17,7 +17,7 @@ declare const Cesium: any;
 export class CesiumPlanetSourceProvider extends BaseMapSourceProvider {
 	readonly supported: IBaseImageryMapConstructor[];
 
-	protected create(metaData: IMapSettings): Promise<BaseImageryLayer> {
+	protected create(metaData: IMapSettings): Promise<IBaseImageryLayer> {
 		const planetLayer = new Cesium.UrlTemplateImageryProvider({
 			url: metaData.data.overlay.imageUrl,
 			credit: new Cesium.Credit('© Imagery provided by Planet.com', 'https://www.planet.com/assets/logos/logo-dark.png', 'https://www.planet.com')

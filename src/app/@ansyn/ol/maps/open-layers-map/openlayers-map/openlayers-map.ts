@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
 import {
-	areCoordinatesNumeric, BaseImageryLayer,
+	areCoordinatesNumeric, IBaseImageryLayer,
 	BaseImageryMap,
 	ExtentCalculator,
 	IMAGERY_BASE_MAP_LAYER,
@@ -134,11 +134,11 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this.showGroups.set(groupName, newState);
 	}
 
-	getLayers(): BaseImageryLayer[] {
+	getLayers(): IBaseImageryLayer[] {
 		return this.mapObject.getLayers().getArray();
 	}
 
-	initMap(target: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: BaseImageryLayer, position?: ImageryMapPosition): Observable<boolean> {
+	initMap(target: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: IBaseImageryLayer, position?: ImageryMapPosition): Observable<boolean> {
 		this.targetElement = target;
 		this.shadowNorthElement = shadowNorthElement;
 		this._mapLayers = [];
@@ -204,7 +204,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		});
 	}
 
-	public resetView(layer: BaseImageryLayer, position: ImageryMapPosition, extent?: ImageryMapExtent, useDoubleBuffer?: boolean): Observable<boolean> {
+	public resetView(layer: IBaseImageryLayer, position: ImageryMapPosition, extent?: ImageryMapExtent, useDoubleBuffer?: boolean): Observable<boolean> {
 		useDoubleBuffer = useDoubleBuffer && !layer.get(ImageryLayerProperties.FROM_CACHE);
 		if (useDoubleBuffer) {
 			this._backgroundMapObject = new OLMap(this._backgroundMapParams);
@@ -282,7 +282,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		);
 	}
 
-	public addMapLayer(layer: BaseImageryLayer) {
+	public addMapLayer(layer: IBaseImageryLayer) {
 		const main = this.getMainLayer();
 		const baseMapLayer = this._mapLayers.find((layer: Layer) => layer.get(ImageryLayerProperties.NAME) === IMAGERY_BASE_MAP_LAYER);
 		if (baseMapLayer) {
@@ -293,7 +293,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		}
 	}
 
-	public addLayer(layer: BaseImageryLayer) {
+	public addLayer(layer: IBaseImageryLayer) {
 
 		if (!this._mapLayers.includes(layer)) {
 			this._mapLayers.push(layer);
@@ -315,7 +315,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this._mapLayers = [];
 	}
 
-	public removeLayer(layer: BaseImageryLayer): void {
+	public removeLayer(layer: IBaseImageryLayer): void {
 		if (!layer) {
 			return;
 		}

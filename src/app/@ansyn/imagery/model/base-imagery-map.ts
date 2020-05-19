@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { GeoJsonObject, Point } from 'geojson';
 import { ImageryMapExtent, ImageryMapPosition, IMousePointerMove } from './case-map-position.model';
 import { IMapErrorMessage, IMapProgress } from './map-progress.model';
-import { BaseImageryLayer } from './imagery-layer.model';
+import { IBaseImageryLayer } from './imagery-layer.model';
 
 export interface IImageryMapMetaData {
 	deps?: any[];
@@ -18,14 +18,14 @@ export interface ICanvasExportData {
 }
 
 export interface IBaseImageryMapConstructor {
-	groupLayers: Map<string, BaseImageryLayer>;
+	groupLayers: Map<string, IBaseImageryLayer>;
 
 	new(...args): BaseImageryMap;
 }
 
 // @dynamic
 export abstract class BaseImageryMap<T = any> {
-	static groupLayers = new Map<string, BaseImageryLayer>();
+	static groupLayers = new Map<string, IBaseImageryLayer>();
 	readonly deps?: any[];
 	readonly mapType?: string;
 	readonly defaultMapSource?: string;
@@ -44,7 +44,7 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract toggleGroup(groupName: string, newState: boolean);
 
-	abstract initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer?: BaseImageryLayer, position?: ImageryMapPosition, mapViewContainerRef?: ViewContainerRef): Observable<boolean>;
+	abstract initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer?: IBaseImageryLayer, position?: ImageryMapPosition, mapViewContainerRef?: ViewContainerRef): Observable<boolean>;
 
 	// This method is for the use of the @AutoSubscription decorator
 	initMapSubscriptions(): void {
@@ -55,21 +55,21 @@ export abstract class BaseImageryMap<T = any> {
 	 * @param layer The new layer to set the view with. this layer projection will be the views projection
 	 * @param extent The extent (bounding box points) of the map at ESPG:4326
 	 */
-	abstract resetView(layer: BaseImageryLayer, position: ImageryMapPosition, extent?: ImageryMapExtent, useDoubleBuffer?: boolean): Observable<boolean>;
+	abstract resetView(layer: IBaseImageryLayer, position: ImageryMapPosition, extent?: ImageryMapExtent, useDoubleBuffer?: boolean): Observable<boolean>;
 
-	abstract addLayer(layer: BaseImageryLayer): void;
+	abstract addLayer(layer: IBaseImageryLayer): void;
 
-	addMapLayer(layer: BaseImageryLayer): void {
+	addMapLayer(layer: IBaseImageryLayer): void {
 		throw new Error('Method not implemented.');
 	};
 
-	getMainLayer(): BaseImageryLayer {
+	getMainLayer(): IBaseImageryLayer {
 		throw new Error('Method not implemented.');
 	}
 
-	abstract getLayers(): BaseImageryLayer[];
+	abstract getLayers(): IBaseImageryLayer[];
 
-	abstract removeLayer(layer: BaseImageryLayer): void;
+	abstract removeLayer(layer: IBaseImageryLayer): void;
 
 	abstract setPosition(position: ImageryMapPosition): Observable<boolean>;
 
@@ -91,7 +91,7 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract dispose(): void;
 
-	abstract addLayerIfNotExist(layer: BaseImageryLayer);
+	abstract addLayerIfNotExist(layer: IBaseImageryLayer);
 
 	abstract getCoordinateFromScreenPixel(screenPixel: { x, y }): [number, number, number];
 

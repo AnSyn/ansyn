@@ -1,5 +1,5 @@
 import {
-	BaseImageryMap,
+	BaseImageryMap, IBaseImageryLayer,
 	ICanvasExportData,
 	IMAGERY_MAIN_LAYER_NAME,
 	ImageryLayerProperties,
@@ -22,7 +22,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	mainLayer: Layer;
 	element: HTMLElement;
 
-	initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, mainLayer: any, position?: ImageryMapPosition): Observable<boolean> {
+	initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, mainLayer: IBaseImageryLayer, position?: ImageryMapPosition): Observable<boolean> {
 		this.element = element;
 		this.mapObject = new Map({
 			target: element,
@@ -33,13 +33,13 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		return of(true);
 	}
 
-	addLayerIfNotExist(layer: any) {
+	addLayerIfNotExist(layer: IBaseImageryLayer) {
 	}
 
 	toggleGroup(groupName: string, newState: boolean) {
 	}
 
-	getLayers(): any[] {
+	getLayers(): IBaseImageryLayer[] {
 		return this.mapObject.getLayers().getArray();
 	}
 
@@ -52,7 +52,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	}
 
 
-	resetView(layer: any, position?: ImageryMapPosition): Observable<boolean> {
+	resetView(layer: IBaseImageryLayer, position?: ImageryMapPosition): Observable<boolean> {
 		this.setMainLayer(layer, position);
 		return of(true);
 	}
@@ -110,7 +110,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		}
 	}
 
-	removeLayer(layer: any): void {
+	removeLayer(layer: IBaseImageryLayer): void {
 		olShared.removeWorkers(layer);
 		this.mapObject.removeLayer(layer);
 		this.mapObject.renderSync();

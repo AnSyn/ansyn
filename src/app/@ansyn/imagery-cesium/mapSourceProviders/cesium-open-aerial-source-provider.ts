@@ -1,5 +1,5 @@
 import {
-	BaseImageryLayer,
+	IBaseImageryLayer,
 	BaseMapSourceProvider,
 	IBaseImageryMapConstructor,
 	ImageryMapSource,
@@ -17,7 +17,7 @@ declare const Cesium: any;
 export class CesiumOpenAerialSourceProvider extends BaseMapSourceProvider {
 	readonly supported: IBaseImageryMapConstructor[];
 
-	protected create(metaData: IMapSettings): Promise<BaseImageryLayer> {
+	protected create(metaData: IMapSettings): Promise<IBaseImageryLayer> {
 		const openAerialLayer = new Cesium.UrlTemplateImageryProvider({
 			url: metaData.data.overlay.imageUrl
 		});

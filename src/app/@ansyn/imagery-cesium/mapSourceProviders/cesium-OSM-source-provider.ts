@@ -1,5 +1,5 @@
 import {
-	BaseImageryLayer,
+	IBaseImageryLayer,
 	BaseMapSourceProvider,
 	IBaseImageryMapConstructor,
 	ImageryMapSource,
@@ -19,7 +19,7 @@ export const CesiumOSMSourceProviderSourceType = 'CESIUM_OSM';
 export class CesiumOsmSourceProvider extends BaseMapSourceProvider {
 	readonly supported: IBaseImageryMapConstructor[];
 
-	protected create(metaData: IMapSettings): Promise<BaseImageryLayer> {
+	protected create(metaData: IMapSettings): Promise<IBaseImageryLayer> {
 		const cesiumOsmLayer = new Cesium.OpenStreetMapImageryProvider({
 			url : 'https://a.tile.openstreetmap.org/'
 		});

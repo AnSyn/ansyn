@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
 import {
-	areCoordinatesNumeric, IBaseImageryLayer,
+	areCoordinatesNumeric,
 	BaseImageryMap,
 	ExtentCalculator,
 	IMAGERY_BASE_MAP_LAYER,
@@ -24,7 +24,7 @@ import OLGeoJSON from 'ol/format/GeoJSON';
 import olPolygon from 'ol/geom/Polygon';
 import * as olInteraction from 'ol/interaction'
 import Group from 'ol/layer/Group';
-import Layer from 'ol/layer/Layer';
+import ol_Layer from 'ol/layer/Layer';
 import VectorLayer from 'ol/layer/Vector';
 import OLMap from 'ol/Map';
 import Vector from 'ol/source/Vector';
@@ -110,12 +110,12 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	 * add layer to the map if it is not already exists the layer must have an id set
 	 * @param layer
 	 */
-	public addLayerIfNotExist(layer): Layer {
+	public addLayerIfNotExist(layer): ol_Layer {
 		const layerId = layer.get(ImageryLayerProperties.ID);
 		if (!layerId) {
 			return;
 		}
-		const existingLayer: Layer = this.getLayerById(layerId);
+		const existingLayer: ol_Layer = this.getLayerById(layerId);
 		if (!existingLayer) {
 			// layer.set('visible',false);
 			this.addLayer(layer);
@@ -134,11 +134,11 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this.showGroups.set(groupName, newState);
 	}
 
-	getLayers(): IBaseImageryLayer[] {
+	getLayers(): ol_Layer[] {
 		return this.mapObject.getLayers().getArray();
 	}
 
-	initMap(target: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: IBaseImageryLayer, position?: ImageryMapPosition): Observable<boolean> {
+	initMap(target: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: ol_Layer, position?: ImageryMapPosition): Observable<boolean> {
 		this.targetElement = target;
 		this.shadowNorthElement = shadowNorthElement;
 		this._mapLayers = [];
@@ -204,7 +204,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		});
 	}
 
-	public resetView(layer: IBaseImageryLayer, position: ImageryMapPosition, extent?: ImageryMapExtent, useDoubleBuffer?: boolean): Observable<boolean> {
+	public resetView(layer: ol_Layer, position: ImageryMapPosition, extent?: ImageryMapExtent, useDoubleBuffer?: boolean): Observable<boolean> {
 		useDoubleBuffer = useDoubleBuffer && !layer.get(ImageryLayerProperties.FROM_CACHE);
 		if (useDoubleBuffer) {
 			this._backgroundMapObject = new OLMap(this._backgroundMapParams);
@@ -241,8 +241,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		}
 	}
 
-	public getLayerById(id: string): Layer {
-		return <Layer>this.mapObject.getLayers().getArray().find(item => item.get(ImageryLayerProperties.ID) === id);
+	public getLayerById(id: string): ol_Layer {
+		return <ol_Layer>this.mapObject.getLayers().getArray().find(item => item.get(ImageryLayerProperties.ID) === id);
 	}
 
 	setGroupLayers() {
@@ -253,7 +253,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		});
 	}
 
-	setMainLayerToForegroundMap(layer: Layer) {
+	setMainLayerToForegroundMap(layer: ol_Layer) {
 		layer.set(ImageryLayerProperties.NAME, IMAGERY_MAIN_LAYER_NAME);
 		layer.set(ImageryLayerProperties.MAIN_EXTENT, null);
 		this.removeAllLayers();
@@ -261,14 +261,14 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this.setGroupLayers();
 	}
 
-	setMainLayerToBackgroundMap(layer: Layer) {
+	setMainLayerToBackgroundMap(layer: ol_Layer) {
 		layer.set(ImageryLayerProperties.NAME, IMAGERY_MAIN_LAYER_NAME);
 		this.backgroundMapObject.getLayers().clear();
 		this.backgroundMapObject.addLayer(layer);
 	}
 
-	getMainLayer(): Layer {
-		const mainLayer = this._mapLayers.find((layer: Layer) => layer.get(ImageryLayerProperties.NAME) === IMAGERY_MAIN_LAYER_NAME);
+	getMainLayer(): ol_Layer {
+		const mainLayer = this._mapLayers.find((layer: ol_Layer) => layer.get(ImageryLayerProperties.NAME) === IMAGERY_MAIN_LAYER_NAME);
 		return mainLayer;
 	}
 
@@ -282,9 +282,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		);
 	}
 
-	public addMapLayer(layer: IBaseImageryLayer) {
+	public addMapLayer(layer: ol_Layer) {
 		const main = this.getMainLayer();
-		const baseMapLayer = this._mapLayers.find((layer: Layer) => layer.get(ImageryLayerProperties.NAME) === IMAGERY_BASE_MAP_LAYER);
+		const baseMapLayer = this._mapLayers.find((layer: ol_Layer) => layer.get(ImageryLayerProperties.NAME) === IMAGERY_BASE_MAP_LAYER);
 		if (baseMapLayer) {
 			this.removeLayer(baseMapLayer);
 		}
@@ -293,7 +293,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		}
 	}
 
-	public addLayer(layer: IBaseImageryLayer) {
+	public addLayer(layer: ol_Layer) {
 
 		if (!this._mapLayers.includes(layer)) {
 			this._mapLayers.push(layer);
@@ -315,7 +315,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this._mapLayers = [];
 	}
 
-	public removeLayer(layer: IBaseImageryLayer): void {
+	public removeLayer(layer: ol_Layer): void {
 		if (!layer) {
 			return;
 		}

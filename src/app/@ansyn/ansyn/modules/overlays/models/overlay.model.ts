@@ -29,7 +29,7 @@ export enum GeoRegisteration {
 
 export enum PhotoAngle {
 	diagonal = 'diagonal',
-	vertical = 'verticle'
+	vertical = 'vertical'
 }
 
 export enum RegionContainment {

@@ -20,14 +20,14 @@ export enum toolsFlags {
 
 export enum SubMenuEnum { goTo, manualImageProcessing, overlays, annotations }
 
-export interface IMeasureData extends IMeasureDataOptions{
-	meausres: IVisualizerEntity[];
-}
-
 export interface IMeasureDataOptions {
 	isLayerShowed: boolean;
 	isToolActive: boolean;
 	isRemoveMeasureModeActive: boolean;
+}
+
+export interface IMeasureData extends IMeasureDataOptions{
+	meausres: IVisualizerEntity[];
 }
 
 export function createNewMeasureData(): IMeasureData {

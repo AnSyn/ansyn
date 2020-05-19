@@ -35,18 +35,16 @@ import {
 	SetAnnotationMode,
 	SetAutoImageProcessing,
 	SetAutoImageProcessingSuccess,
-	SetMeasureDistanceToolState,
 	SetPinLocationModeAction,
 	SetSubMenu,
-	ShowOverlaysFootprintAction,
-	UpdateMeasureDataAction
+	ShowOverlaysFootprintAction, UpdateMeasureDataOptionsAction
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import { ICase, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
-import { selectMapsIds } from '../../../map-facade/reducers/map.reducer';
+import { selectMapsIds } from '@ansyn/map-facade';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;
@@ -327,9 +325,9 @@ describe('ToolsAppEffects', () => {
 			b: new SetAnnotationMode(null),
 			c: new UpdateGeoFilterStatus(),
 			d: new SetPinLocationModeAction(false),
-			e: new UpdateMeasureDataAction({
+			e: new UpdateMeasureDataOptionsAction({
 				mapId: 'imagery1',
-				measureData: { isToolActive: false }
+				options: { isToolActive: false }
 			})
 		});
 
@@ -346,9 +344,9 @@ describe('ToolsAppEffects', () => {
 		const expectedResult = cold('--(bcd)--', {
 			b: new UpdateGeoFilterStatus(),
 			c: new SetPinLocationModeAction(false),
-			d: new UpdateMeasureDataAction({
+			d: new UpdateMeasureDataOptionsAction({
 				mapId: 'imagery1',
-				measureData: { isToolActive: false }
+				options: { isToolActive: false }
 			})
 		});
 

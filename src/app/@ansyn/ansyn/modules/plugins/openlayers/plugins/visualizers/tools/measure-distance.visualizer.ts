@@ -1,5 +1,4 @@
 import Feature from 'ol/Feature';
-import Collection from 'ol/Collection';
 import Draw from 'ol/interaction/Draw';
 import Translate from 'ol/interaction/Translate';
 import Text from 'ol/style/Text';
@@ -40,7 +39,7 @@ import {
 	selectMeasureDataByMapId
 } from '../../../../../menu-items/tools/reducers/tools.reducer';
 import { Inject } from '@angular/core';
-import { UpdateMeasureDataAction } from '../../../../../menu-items/tools/actions/tools.actions';
+import { AddMeasureAction, RemoveMeasureAction } from '../../../../../menu-items/tools/actions/tools.actions';
 
 interface ILabelHandler {
 	select: Select;
@@ -208,10 +207,9 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			const entity = this.getEntity(feature);
 			if (entity) {
 				this.clearLabelInteractionsAndFeaturesById(entity.id);
-				this.measureData.meausres = this.measureData.meausres.filter((measureEntity) => measureEntity.id !== entity.id);
-				this.store$.dispatch(new UpdateMeasureDataAction({
+				this.store$.dispatch(new RemoveMeasureAction({
 					mapId: this.mapId,
-					measureData: { meausres: this.measureData.meausres }
+					measureId: entity.id
 				}));
 				this.hoveredMeasureId = null;
 			}
@@ -277,13 +275,10 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 					id: UUID.UUID(),
 					featureJson
 				};
-				this.measureData.meausres.push(newEntity);
 				this.store$.dispatch(
-					new UpdateMeasureDataAction({
+					new AddMeasureAction({
 						mapId: this.mapId,
-						measureData: {
-							meausres: this.measureData.meausres
-						}
+						measure: newEntity
 					})
 				);
 			});

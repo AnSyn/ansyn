@@ -10,9 +10,9 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { combineLatest } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import {
-	ClearActiveInteractionsAction,
+	ClearActiveInteractionsAction, RemoveMeasureAction,
 	SetMeasureDistanceToolState,
-	UpdateMeasureDataAction
+	UpdateMeasureDataOptionsAction
 } from '../../actions/tools.actions';
 import { IMeasureData, selectIsMeasureToolActive, selectMeasureDataByMapId } from '../../reducers/tools.reducer';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
@@ -81,17 +81,17 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 	}
 
 	toggleShowLayer() {
-		this.store$.dispatch(new UpdateMeasureDataAction({
+		this.store$.dispatch(new UpdateMeasureDataOptionsAction({
 			mapId: this.mapId,
-			measureData: { isLayerShowed: !this.measureData.isLayerShowed }
+			options: { isLayerShowed: !this.measureData.isLayerShowed }
 		}));
 	}
 
 	toggleMeasureToolActivation() {
-		this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateMeasureDataAction] }));
-		this.store$.dispatch(new UpdateMeasureDataAction({
+		this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateMeasureDataOptionsAction] }));
+		this.store$.dispatch(new UpdateMeasureDataOptionsAction({
 			mapId: this.mapId,
-			measureData: {
+			options: {
 				isToolActive: !this.measureData.isToolActive,
 				isRemoveMeasureModeActive: false,
 			}
@@ -99,9 +99,9 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 	}
 
 	toggleRemoveSingleMeasure() {
-		this.store$.dispatch(new UpdateMeasureDataAction({
+		this.store$.dispatch(new UpdateMeasureDataOptionsAction({
 			mapId: this.mapId,
-			measureData: {
+			options: {
 				isRemoveMeasureModeActive: !this.measureData.isRemoveMeasureModeActive,
 				isToolActive: false
 			}
@@ -109,7 +109,7 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 	}
 
 	clearMeasure() {
-		this.store$.dispatch(new UpdateMeasureDataAction({ mapId: this.mapId, measureData: { meausres: [] } }));
+		this.store$.dispatch(new RemoveMeasureAction({ mapId: this.mapId }));
 	}
 
 	done() {

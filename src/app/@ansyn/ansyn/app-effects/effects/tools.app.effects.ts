@@ -43,18 +43,12 @@ import {
 	ShowOverlaysFootprintAction,
 	StartMouseShadow,
 	StopMouseShadow,
-	ToolsActionsTypes,
-	UpdateMeasureDataAction,
+	ToolsActionsTypes, UpdateMeasureDataOptionsAction,
 	UpdateToolsFlags
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
-import {
-	IToolsState,
-	selectToolFlag,
-	toolsFlags,
-	toolsStateSelector
-} from '../../modules/menu-items/tools/reducers/tools.reducer';
-import { CaseGeoFilter, ICaseMapState, ImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
+import { selectToolFlag, toolsFlags } from '../../modules/menu-items/tools/reducers/tools.reducer';
+import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
 
 @Injectable()
@@ -251,9 +245,9 @@ export class ToolsAppEffects {
 			];
 			// set measure tool as inactive
 			mapIds.forEach((mapId) => {
-				const updateMeasureAction = new UpdateMeasureDataAction({
+				const updateMeasureAction = new UpdateMeasureDataOptionsAction({
 					mapId: mapId,
-					measureData: { isToolActive: false }
+					options: { isToolActive: false }
 				});
 				clearActions.push(updateMeasureAction);
 			});

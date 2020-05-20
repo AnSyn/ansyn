@@ -29,6 +29,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	@Output() closeTreeView = new EventEmitter<any>();
 	@Output() dataInputTitleChange = new EventEmitter<string>();
 	@Input() dataInputItems: any[];
+	_selectedFilters: IDataInputFilterValue[];
 	dataInputFiltersItems: TreeviewItem[] = [];
 	leavesCount: number;
 	dataFilters: TreeviewItem[];
@@ -53,7 +54,6 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	_selectedFilters: IDataInputFilterValue[];
 
 	@AutoSubscription
 	onDataInputFilterChange$ = this.store.select(selectDataInputFilter).pipe(

@@ -93,6 +93,7 @@ export interface IDataInputFilterValue {
 	sensorType: string;
 	sensorName: string;
 }
+
 export interface ICaseDataInputFiltersState {
 	fullyChecked?: boolean;
 	filters: IDataInputFilterValue[];

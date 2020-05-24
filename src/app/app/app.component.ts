@@ -18,7 +18,7 @@ export class AppAnsynComponent implements AfterViewInit {
 
 	browserLogs(): void {
 		const { browser, browser_version } = this.deviceService;
-		this.loggerService.info(`Browser name: ${ browser }, Browser version: ${ browser_version }`);
+		this.loggerService.info(`Browser: ${ browser } ${ browser_version }`);
 	}
 
 	ngAfterViewInit() {

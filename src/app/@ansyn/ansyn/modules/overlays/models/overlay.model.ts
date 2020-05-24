@@ -64,6 +64,7 @@ export interface IOverlay extends IDilutedOverlay {
 	catalogID?: string;
 	photoAngle?: PhotoAngle;
 	sensorLocation?: Point;
+	icon?: string;
 	containedInSearchPolygon?: RegionContainment;
 }
 

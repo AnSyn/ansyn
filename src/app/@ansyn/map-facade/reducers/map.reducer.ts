@@ -1,4 +1,4 @@
-import { IImageryMapPosition, IMapSettings } from '@ansyn/imagery';
+import { IImageryMapPosition, IMapSettings, MapOrientation } from '@ansyn/imagery';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { range } from 'lodash';
@@ -26,6 +26,7 @@ export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId,
 					}
 				},
 				worldView: { ...activeMap.worldView },
+				orientation: activeMap.orientation,
 				flags: {
 					hideLayers: false
 				}
@@ -107,6 +108,15 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return { ...state, isLoadingMaps };
 		}
 
+		case MapActionTypes.SET_MAP_ORIENTATION: {
+			return mapsAdapter.updateOne({
+				id: action.payload.mapId || state.activeMapId,
+				changes: {
+					orientation: action.payload.orientation
+				}
+			}, state);
+		}
+
 		case MapActionTypes.VIEW.SET_IS_VISIBLE: {
 			const isHiddenMaps = new Set(state.isHiddenMaps);
 			const { mapId, isVisible } = action.payload;
@@ -179,11 +189,11 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		}
 
 		case MapActionTypes.REPLACE_MAP_MAIN_LAYER_SUCCESS: {
-			const {id, sourceType } = action.payload;
-			const worldView = {...state.entities[id].worldView, sourceType};
+			const { id, sourceType } = action.payload;
+			const worldView = { ...state.entities[id].worldView, sourceType };
 			return mapsAdapter.updateOne({
 				id,
-				changes: {worldView}
+				changes: { worldView }
 			}, state)
 		}
 
@@ -197,13 +207,13 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return { ...state, minimalistViewMode: action.payload };
 
 		case MapActionTypes.EXPORT_MAPS_TO_PNG_REQUEST:
-			return {...state, isExportingMaps: true};
+			return { ...state, isExportingMaps: true };
 
 		case MapActionTypes.EXPORT_MAPS_TO_PNG_SUCCESS:
-			return {...state, isExportingMaps: false};
+			return { ...state, isExportingMaps: false };
 
 		case MapActionTypes.EXPORT_MAPS_TO_PNG_FAILED:
-			return {...state, isExportingMaps: false};
+			return { ...state, isExportingMaps: false };
 
 		default:
 			return state;
@@ -224,7 +234,11 @@ export const selectIsMinimalistViewMode = createSelector(mapStateSelector, (stat
 export const selectIsExportingMaps = createSelector(mapStateSelector, (state) => state && state.isExportingMaps);
 
 export const selectOverlaysWithMapIds = createSelector(selectMapsList, selectActiveMapId, (mapsList, activeMapId) => {
-	const overlayAndMapId = mapsList.map( map => map.data.overlay ? ({overlay: map.data.overlay, mapId: map.id, isActive: map.id === activeMapId}) : ({}));
+	const overlayAndMapId = mapsList.map(map => map.data.overlay ? ({
+		overlay: map.data.overlay,
+		mapId: map.id,
+		isActive: map.id === activeMapId
+	}) : ({}));
 	return overlayAndMapId;
 });
 export const selectOverlayOfActiveMap = createSelector(selectMapsList, selectActiveMapId, (mapsList, activeMapId) => {
@@ -239,4 +253,5 @@ export const selectMapPositionByMapId: (mapId: string) => MemoizedSelector<any, 
 export const selectMapTypeById: (mapId: string) => MemoizedSelector<any, string> = (mapId => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.worldView.mapType));
 export const selectSourceTypeById: (mapId: string) => MemoizedSelector<any, string> = (mapId => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.worldView.sourceType));
 
-export const selectOverlayDisplayModeByMapId: (mapId: string) => MemoizedSelector<any, any> = (mapId: string) => createSelector(selectMapStateById(mapId) , (mapState) => mapState && mapState.data && mapState.data.overlayDisplayMode);
+export const selectOverlayDisplayModeByMapId: (mapId: string) => MemoizedSelector<any, any> = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data && mapState.data.overlayDisplayMode);
+export const selectMapOrientation = (mapId: string) => createSelector(selectMapStateById(mapId) , (mapState) => mapState && mapState.orientation);

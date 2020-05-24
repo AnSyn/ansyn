@@ -20,6 +20,7 @@ export interface IMenuState extends EntityState<IMenuItem> {
 	menuCollapse: boolean;
 	isUserFirstEntrance: boolean;
 	doesUserHaveCredentials: boolean;
+	hideResultsTableBadge: boolean;
 }
 
 const menuSession = getMenuSessionData();
@@ -29,7 +30,8 @@ export const initialMenuState: IMenuState = menuItemsAdapter.getInitialState({
 	autoClose: true,
 	menuCollapse: false,
 	isUserFirstEntrance: menuSession.isUserFirstEntrance,
-	doesUserHaveCredentials: menuSession.doesUserHaveCredentials
+	doesUserHaveCredentials: menuSession.doesUserHaveCredentials,
+	hideResultsTableBadge: false
 });
 
 export const menuFeatureKey = 'menu';
@@ -74,6 +76,9 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 		case MenuActionTypes.MENU_COLLAPSE:
 			return { ...state, menuCollapse: action.payload };
 
+		case MenuActionTypes.SET_HIDE_RESULTS_TABLE_BADGE:
+			return { ...state, hideResultsTableBadge: action.payload };
+
 		case MenuActionTypes.SET_DOES_USER_HAVE_CREDENTIALS:
 			setMenuSessionData({ doesUserHaveCredentials: action.payload });
 			return { ...state, doesUserHaveCredentials: action.payload };
@@ -92,6 +97,7 @@ export const selectAllMenuItems: MemoizedSelector<IMenuState, IMenuItem[]> = cre
 export const selectEntitiesMenuItems: MemoizedSelector<IMenuState, Dictionary<IMenuItem>> = createSelector(menuStateSelector, selectEntities);
 
 export const selectIsPinned = createSelector(menuStateSelector, (menu) => menu && menu.isPinned);
+export const selectHideResultsTableBadge = createSelector(menuStateSelector, (menu) => menu && menu.hideResultsTableBadge);
 export const selectAutoClose = createSelector(menuStateSelector, (menu) => menu.autoClose);
 export const selectSelectedMenuItem = createSelector(menuStateSelector, (menu) => menu.selectedMenuItem);
 export const selectMenuCollapse = createSelector(menuStateSelector, (menu) => menu.menuCollapse);

@@ -1,13 +1,18 @@
 import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output, } from '@angular/core';
-import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
+import { ImageryCommunicatorService, IMapSettings, MapOrientation } from '@ansyn/imagery';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { get as _get } from 'lodash'
-import { map, tap } from 'rxjs/operators';
-import { SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
+import { map, tap, filter } from 'rxjs/operators';
+import { SetMapOrientation, SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
 import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../models/entry-components-provider';
 import { selectEnableCopyOriginalOverlayDataFlag } from '../../reducers/imagery-status.reducer';
-import { selectActiveMapId, selectHideLayersOnMap, selectMapsTotal } from '../../reducers/map.reducer';
+import {
+	selectActiveMapId,
+	selectHideLayersOnMap,
+	selectMapOrientation,
+	selectMapsTotal
+} from '../../reducers/map.reducer';
 import { copyFromContent } from '../../utils/clipboard';
 import { getTimeFormat } from '../../utils/time';
 import { TranslateService } from '@ngx-translate/core';
@@ -25,10 +30,14 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	isMapLayersVisible = true;
 	mapsAmount = 1;
 	_map: IMapSettings;
+	perspective: boolean;
+	orientation: MapOrientation;
 	baseMapDescription = 'Base Map';
 	formattedOverlayTime: string = null;
 	@HostBinding('class.active') isActiveMap: boolean;
+	@Input() isMinimalistViewMode: boolean;
 	hideLayers: boolean;
+
 	@AutoSubscription
 	active$ = this.store$.pipe(
 		select(selectActiveMapId),
@@ -49,8 +58,16 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		tap((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
 	);
 
-	@Input()
-	isMinimalistViewMode: boolean;
+	@AutoSubscription
+	getMapOrientation$ = () => this.store$.select(selectMapOrientation(this.mapId)).pipe(
+		filter(Boolean),
+		tap( (orientation) => {
+			this.orientation = orientation;
+			this.perspective = this.orientation === 'User Perspective';
+		})
+	);
+
+
 
 	constructor(protected store$: Store<any>,
 				protected communicators: ImageryCommunicatorService,
@@ -138,5 +155,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	toggleMapLayers() {
 		this.isMapLayersVisible = !this.isMapLayersVisible;
 		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId, isVisible: this.isMapLayersVisible }));
+	}
+
+	toggleImageryPerspective() {
+		const newMapOrientation = this.orientation === 'Imagery Perspective' ? 'User Perspective' : 'Imagery Perspective';
+		this.store$.dispatch(new SetMapOrientation({orientation: newMapOrientation, mapId: this.mapId}));
 	}
 }

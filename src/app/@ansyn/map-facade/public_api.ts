@@ -30,7 +30,8 @@ export {
 	selectOverlayOfActiveMap,
 	selectIsMinimalistViewMode,
 	selectMapTypeById,
-	selectSourceTypeById
+	selectSourceTypeById,
+	selectMapOrientation
 } from './reducers/map.reducer';
 
 export {

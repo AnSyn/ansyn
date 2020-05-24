@@ -1,11 +1,11 @@
 import { Action } from '@ngrx/store';
-import { IVisualizerStyle } from '@ansyn/imagery';
+import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { SubMenuEnum, toolsFlags } from '../reducers/tools.reducer';
 import { type } from '../../../core/utils/type';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 import { IImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
 import { AnnotationMode, IUpdateFeatureEvent } from '@ansyn/ol';
-import { IMeasureData } from '../models/measure-data';
+import { IMeasureData, IMeasureDataOptions } from '../models/measure-data';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),
@@ -19,10 +19,10 @@ export const ToolsActionsTypes = {
 	SHOW_OVERLAYS_FOOTPRINT: type('SHOW_OVERLAYS_FOOTPRINT'),
 	SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE: type('SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE'),
 	SET_AUTO_IMAGE_PROCESSING: type('SET_AUTO_IMAGE_PROCESSING'),
-	SET_MANUAL_IMAGE_PROCESSING: type('SET_MANUAL_IMAGE_PROCESSING'),
-	SET_AUTO_IMAGE_PROCESSING_SUCCESS: type('SET_AUTO_IMAGE_PROCESSING_SUCCESS'),
 	ENABLE_IMAGE_PROCESSING: type('ENABLE_IMAGE_PROCESSING'),
 	DISABLE_IMAGE_PROCESSING: type('DISABLE_IMAGE_PROCESSING'),
+	SET_MANUAL_IMAGE_PROCESSING: type('SET_MANUAL_IMAGE_PROCESSING'),
+	SET_AUTO_IMAGE_PROCESSING_SUCCESS: type('SET_AUTO_IMAGE_PROCESSING_SUCCESS'),
 	MAP_GEO_ENABLED_MODE_CHANGED: type('MAP_GEO_ENABLED_MODE_CHANGED'),
 	ANNOTATION_SET_PROPERTIES: type('ANNOTATION_SET_PROPERTIES'),
 	UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS: type('UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS'),
@@ -31,7 +31,9 @@ export const ToolsActionsTypes = {
 		SET_MEASURE_TOOL_STATE: type('[tools] SET_MEASURE_TOOL_STATE'),
 		CREATE_MEASURE_DATA: type('[tools] CREATE_MEASURE_DATA'),
 		REMOVE_MEASURE_DATA: type('[tools] REMOVE_MEASURE_DATA'),
-		UPDATE_MEASURE_DATA: type('[tools] UPDATE_MEASURE_DATA')
+		ADD_MEASURE: type('[tools] ADD_MEASURE'),
+		REMOVE_MEASURE: type('[tools] REMOVE_MEASURE'),
+		UPDATE_MEASURE_DATE_OPTIONS: type('[tools] UPDATE_MEASURE_DATA_OPTIONS')
 	},
 	STORE: {
 		SET_ANNOTATION_MODE: type('SET_ANNOTATION_MODE')
@@ -175,12 +177,30 @@ export class RemoveMeasureDataAction implements Action {
 	constructor(public payload: { mapId: string }) {
 	}
 }
+export class UpdateMeasureDataOptionsAction implements Action {
+	type = ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS;
+	constructor(public payload: {
+		mapId: string,
+		options: Partial<IMeasureDataOptions>
+	}) {
+	}
+}
 
-export class UpdateMeasureDataAction implements Action {
-	type = ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATA;
+export class AddMeasureAction implements Action {
+	type = ToolsActionsTypes.MEASURES.ADD_MEASURE;
 
 	constructor(public payload: {
-		mapId: string, measureData: Partial<IMeasureData>
+		mapId: string,
+		measure: IVisualizerEntity
+	}) {
+	}
+}
+
+export class RemoveMeasureAction implements Action {
+	type = ToolsActionsTypes.MEASURES.REMOVE_MEASURE;
+	constructor(public payload: {
+		mapId: string;
+		measureId?: string;
 	}) {
 	}
 }

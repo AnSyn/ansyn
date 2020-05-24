@@ -1,35 +1,68 @@
-@import "ansyn/less/colors";
-@import "ansyn/less/globals";
+@import "ansyn/less/common";
 
 :host {
-	display: flex;
-	flex: 1;
-	flex-flow: wrap;
-	align-items: center;
+	&:extend(.status-bar-panel);
+	width: 115px;
+	flex-direction: column;
 	border-left: 1px solid @status-bar-delimiter;
 	user-select: none;
+	margin-right: 12px;
 
-	.top {
-		display: flex;
-		flex: 0 0 100%;
-		padding: 3px 5px;
-		box-sizing: border-box;
-		border-bottom: 1px solid @status-bar-delimiter;
+	hr {
+		margin: 0;
+		width: calc(100% + 12px);
+		background-color: @status-bar-delimiter;
+		border-color: @status-bar-delimiter;
 	}
 
-	.bottom {
+	.row {
 		display: flex;
-		flex: 0 0 100%;
-		justify-content: space-between;
+		flex: 1;
+		height: calc(@status-bar-height / 2);
+		box-sizing: border-box;
+		justify-content: flex-start;
+		align-items: center;
 
-		div {
-			display: flex;
-			align-items: center;
+		&.top {
+			padding: 3px 5px;
+
+			span {
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
 		}
 
-		.share {
-			cursor: pointer;
-			margin: 0 10px;
+		&.bottom {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: baseline;
+			padding: 2px 0;
+
+			div {
+				display: flex;
+				align-items: center;
+
+				&.share {
+					cursor: pointer;
+				}
+			}
+
+
+		}
+	}
+}
+
+
+@media screen and (max-width: 1280px) {
+	:host {
+		width: 95px;
+
+		.bottom {
+			div.share {
+				justify-content: flex-end;
+				font-size: 0;
+			}
 		}
 	}
 }

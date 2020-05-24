@@ -17,6 +17,9 @@ import { DisplayPanelComponent } from './components/display-panel/display-panel.
 import { CasePanelComponent } from './components/case-panel/case-panel.component';
 import { TimePickerComponent } from './components/timepicker/time-picker.component';
 import { LocationPickerComponent } from './components/location-picker/location-picker.component';
+import { FiltersPanelComponent } from './components/filters-panel/filters-panel.component';
+import { FiltersModule } from '../filters/filters.module';
+import { TimepickerPresetsComponent } from './components/timepicker-presets/timepicker-presets.component';
 
 @NgModule({
 	imports: [
@@ -28,9 +31,10 @@ import { LocationPickerComponent } from './components/location-picker/location-p
 		StoreModule.forFeature(statusBarFeatureKey, StatusBarReducer),
 		ClickOutsideModule,
 		OwlDateTimeModule,
+		FiltersModule,
 		OwlNativeDateTimeModule
 	],
-	declarations: [StatusBarComponent, TreeViewComponent, SearchPanelComponent, DisplayPanelComponent, CasePanelComponent, TimePickerComponent, LocationPickerComponent],
+	declarations: [StatusBarComponent, TreeViewComponent, SearchPanelComponent, DisplayPanelComponent, CasePanelComponent, TimePickerComponent, LocationPickerComponent, FiltersPanelComponent, TimepickerPresetsComponent],
 	providers: [
 		{
 			provide: TIME_FILTERS,

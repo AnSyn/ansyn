@@ -10,7 +10,6 @@ import {
 	SetRemovedOverlaysIdsAction,
 	SetRemovedOverlaysVisibilityAction
 } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
-import { SetImageOpeningOrientation } from '../../../modules/status-bar/actions/status-bar.actions';
 import { IAppState } from '../../app.effects.module';
 import { concatMap } from 'rxjs/operators';
 import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '@ansyn/map-facade';
@@ -25,7 +24,7 @@ import {
 	SetAutoSave
 } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { casesConfig, CasesService } from '../../../modules/menu-items/cases/services/cases.service';
-import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
+import { UpdateFacetsAction } from '../../../modules/filters/actions/filters.actions';
 import {
 	SetAnnotationMode,
 	SetMeasureDistanceToolState,
@@ -40,6 +39,7 @@ import { IOverlay } from '../../../modules/overlays/models/overlay.model';
 import { mapValues } from 'lodash';
 import { UUID } from 'angular2-uuid';
 import { ICasesConfig } from '../../../modules/menu-items/cases/models/cases-config';
+import { UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/status-bar.actions';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -61,31 +61,13 @@ export class SelectCaseAppEffects {
 	selectCaseActions(payload: ICase, noInitialSearch: boolean): Action[] {
 		const { state, autoSave } = payload;
 		// status-bar
-		const { orientation, overlaysManualProcessArgs, overlaysTranslationData, overlaysScannedAreaData } = state;
+		const { overlaysManualProcessArgs, overlaysTranslationData, overlaysScannedAreaData } = state;
 		// map
-		const { data, activeMapId: currentActiveMapID } = state.maps;
-		const defaultMapIndex = data.findIndex(map => map.id === this.caseConfig.defaultCase.state.maps.activeMapId);
-
-		let newData = data;
-		let newMaps = state.maps;
-
-		if (defaultMapIndex !== -1) {
-			newData = data.map((element, index) =>
-				index === defaultMapIndex ? { ...element, id: UUID.UUID() } : element
-			);
-			// data[defaultMapIndex].id = UUID.UUID();
-			if (currentActiveMapID === this.caseConfig.defaultCase.state.maps.activeMapId) {
-				newMaps = {
-					...state.maps,
-					activeMapId: newData[defaultMapIndex].id
-				};
-				// state.maps.activeMapId = data[defaultMapIndex].id;
-			}
-		}
+		const { data } = state.maps;
 		// context
 		const { favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, presetOverlays, region, dataInputFilters, contextEntities, miscOverlays } = state;
 		let { time } = state;
-		const { layout } = newMaps;
+		const { layout } = state.maps;
 
 		if (!time) {
 			time = this.casesService.defaultTime;
@@ -103,11 +85,11 @@ export class SelectCaseAppEffects {
 		const { facets } = state;
 
 		const selectCaseAction = [
-			new SetMapsDataActionStore({ mapsList: newData.map(this.parseMapData.bind(this)) }),
-			new SetActiveMapId(newMaps.activeMapId),
+			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),
+			new SetActiveMapId(state.maps.activeMapId),
 			new SetLayoutAction(<any>layout),
-			new SetImageOpeningOrientation({ orientation }),
 			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
+			new UpdateGeoFilterStatus({active: false, type: region.type}),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetPresetOverlaysAction((presetOverlays || []).map(this.parseOverlay.bind(this))),
 			new SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this)) }),

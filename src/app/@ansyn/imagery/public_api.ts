@@ -1,6 +1,6 @@
+export { MapOrientation } from "./model/map-settings";
 export { IMapSource } from './model/map-providers-config';
 export { IStroke, IIcon } from './model/visualizers/visualizer-style';
-
 export { ICanvasExportData } from './model/base-imagery-map';
 export {
 	ImageryMapExtent, ImageryMapExtentPolygon, IImageryMapProjectedState, IImageryMapPosition, IMousePointerMove
@@ -49,6 +49,7 @@ export {
 	calculateLineDistance,
 	calculateGeometryArea,
 	getDistanceBetweenPoints,
+	getNewPoint,
 	EPSG_4326,
 	EPSG_3857
 } from './utils/geo';

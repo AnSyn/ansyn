@@ -55,7 +55,7 @@ import {
 	OverlaysActionTypes,
 	SetHoveredOverlayAction,
 	SetMarkUp,
-	SetOverlaysCriteriaAction
+	SetTotalOverlaysAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	IMarkUpData,
@@ -72,6 +72,7 @@ import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/mod
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { Dictionary } from '@ngrx/entity';
 import { LoggerService } from '../../modules/core/services/logger.service';
+import { SetBadgeAction } from '@ansyn/menu';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -270,6 +271,11 @@ export class OverlaysAppEffects {
 		ofType(MapActionTypes.TRIGGER.IMAGERY_MOUSE_LEAVE),
 		map(() => new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }))
 	);
+
+	@Effect()
+	updateResultTableBadge$: Observable<SetBadgeAction> = this.actions$.pipe(
+		ofType<SetTotalOverlaysAction>(OverlaysActionTypes.SET_TOTAL_OVERLAYS),
+		map((action) => new SetBadgeAction({ key: 'Results table', badge: `${ action.payload }` })));
 
 	onDropMarkupFilter([prevAction, currentAction]): boolean {
 		const isEquel = !isEqual(prevAction, currentAction);

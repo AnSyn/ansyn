@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
 	CommunicatorEntity,
 	geojsonMultiPolygonToPolygons,
@@ -20,24 +20,38 @@ import {
 import { AnnotationMode, DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Dictionary } from '@ngrx/entity';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { EMPTY, Observable } from 'rxjs';
 import { fromPromise } from 'rxjs/internal-compatibility';
-import { catchError, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, switchMap, withLatestFrom, tap, pluck } from 'rxjs/operators';
 import {
 	BackToWorldFailed,
 	BackToWorldSuccess,
 	BackToWorldView,
-	OverlayStatusActionsTypes,
+	OverlayStatusActionsTypes, SetManualImageProcessing,
 	SetOverlayScannedAreaDataAction,
 	ToggleDraggedModeAction
 } from '../actions/overlay-status.actions';
-import { SetAnnotationMode } from '../../../menu-items/tools/actions/tools.actions';
-import { IOverlaysScannedAreaData } from '../../../menu-items/cases/models/case.model';
-import { ITranslationsData, selectScannedAreaData, selectTranslationData } from '../reducers/overlay-status.reducer';
+import {
+	EnableImageProcessing,
+	SetAnnotationMode, SetAutoImageProcessingSuccess,
+} from '../../../menu-items/tools/actions/tools.actions';
+import {
+	ICaseMapState,
+	IImageManualProcessArgs,
+	IOverlaysScannedAreaData
+} from '../../../menu-items/cases/models/case.model';
+import {
+	IOverlayStatusState,
+	ITranslationsData, overlayStatusStateSelector,
+	selectScannedAreaData,
+	selectTranslationData
+} from '../reducers/overlay-status.reducer';
 import { IOverlay } from '../../models/overlay.model';
 import { feature } from '@turf/turf';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
+import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from '../config/overlay-status-config';
+import { isEqual } from "lodash";
 
 @Injectable()
 export class OverlayStatusEffects {
@@ -59,7 +73,7 @@ export class OverlayStatusEffects {
 				const disabledMap = communicator.activeMapName === DisabledOpenLayersMapName || communicator.activeMapName === ImageryVideoMapType;
 				this.store$.dispatch(new UpdateMapAction({
 					id: communicator.id,
-					changes: { data: { ...selectedMap.data, overlay: null, isAutoImageProcessingActive: false } }
+					changes: { data: { ...selectedMap.data, overlay: null, isAutoImageProcessingActive: false, imageManualProcessArgs: this.defaultImageManualProcessArgs } }
 				}));
 
 				return fromPromise(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
@@ -140,16 +154,46 @@ export class OverlayStatusEffects {
 		ofType<SetLayoutSuccessAction>(MapActionTypes.SET_LAYOUT_SUCCESS),
 		withLatestFrom(this.store$.select(selectTranslationData), this.store$.select(selectActiveMapId)),
 		filter(([action, translateData, activeMap]: [SetLayoutSuccessAction, ITranslationsData, string]) => Boolean(translateData && Object.keys(translateData).length)),
-		mergeMap( ([action, translateData, activeMap]: [SetLayoutSuccessAction, ITranslationsData, string]) => {
+		mergeMap(([action, translateData, activeMap]: [SetLayoutSuccessAction, ITranslationsData, string]) => {
 			const actions = Object.keys(translateData)
 				.filter(id => Boolean(translateData[id].dragged))
-				.map(id => new ToggleDraggedModeAction({mapId: activeMap, overlayId: id, dragged: false}));
+				.map(id => new ToggleDraggedModeAction({ mapId: activeMap, overlayId: id, dragged: false }));
 			return actions
+		})
+	);
+
+	activeMap$ = this.store$.pipe(
+		select(mapStateSelector),
+		map((mapState) => MapFacadeService.activeMap(mapState)),
+		filter(Boolean)
+	);
+
+	@Effect()
+	updateImageProcessingOnTools$: Observable<any> = this.activeMap$.pipe(
+		withLatestFrom(this.store$.select(overlayStatusStateSelector).pipe(pluck<IOverlayStatusState, IImageManualProcessArgs>('manualImageProcessingParams'))),
+		mergeMap<any, any>(([map, manualImageProcessingParams]: [ICaseMapState, IImageManualProcessArgs]) => {
+			const { overlay, isAutoImageProcessingActive, imageManualProcessArgs } = map.data;
+			const actions = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess(overlay ? isAutoImageProcessingActive : false)];
+			if (!isEqual(imageManualProcessArgs, manualImageProcessingParams)) {
+				actions.push(new SetManualImageProcessing(map.data && imageManualProcessArgs || this.defaultImageManualProcessArgs));
+			}
+			return actions;
 		})
 	);
 
 	constructor(protected actions$: Actions,
 				protected communicatorsService: ImageryCommunicatorService,
-				protected store$: Store<any>) {
+				protected store$: Store<any>,
+				@Inject(overlayStatusConfig) protected config: IOverlayStatusConfig) {
+	}
+
+	get params(): Array<IImageProcParam> {
+		return this.config.ImageProcParams;
+	}
+
+	get defaultImageManualProcessArgs(): IImageManualProcessArgs {
+		return this.params.reduce<IImageManualProcessArgs>((initialObject: any, imageProcParam) => {
+			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
+		}, {});
 	}
 }

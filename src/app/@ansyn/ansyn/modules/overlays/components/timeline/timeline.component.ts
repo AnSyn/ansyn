@@ -316,7 +316,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 			this.markup.keys.forEach(className => {
 				const markUpData = this.markup.get(className);
 				markUpData.overlaysIds.forEach(overlayId => {
-					const dropElement = dropsElements.filter('#dropId-' + overlayId);
+					const dropElement = dropsElements.filter( (d) => d.id === overlayId);
 					if (!dropElement.empty()) {
 						if (markUpData.type === MarkUpTypes.symbole) {
 							this.appendLetters(textContainer, dropElement, markUpData.data);

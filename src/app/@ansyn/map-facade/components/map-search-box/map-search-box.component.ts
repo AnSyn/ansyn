@@ -3,12 +3,12 @@ import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import { GeocoderService } from '../../services/geocoder.service';
 import { Point } from 'geojson';
 import { Observable } from 'rxjs';
-import { filter, retryWhen, switchMap, take, tap } from 'rxjs/operators';
+import { filter, retryWhen, switchMap, take, tap, delay } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectIsMinimalistViewMode } from "../../reducers/map.reducer";
 import { Store } from "@ngrx/store";
-
+const DEFAULT_WIDTH = 150;
 @Component({
 	selector: 'ansyn-map-search-box',
 	templateUrl: './map-search-box.component.html',
@@ -20,9 +20,9 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 	show: boolean;
 	control = new FormControl();
 	_communicator: CommunicatorEntity;
-	autoCompleteWidth = 108;
+	autoCompleteWidth = DEFAULT_WIDTH;
 	locations: { name: string, point: Point }[] = [];
-	public error: string = null;
+	public error: boolean;
 	loading: boolean;
 
 	@AutoSubscription
@@ -36,21 +36,21 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 	filteredLocations$: Observable<any> = this.control.valueChanges.pipe(
 		tap(this.resetSearch.bind(this)),
 		filter((value: string) => value.length >= 2),
-		tap((value: string) => this.loading = true),
 		switchMap((value: string) => this.geocoderService.getLocation$(value)),
 		tap((allLocations: Array<any>) => {
-			this.error = null;
-			this.locations = allLocations.filter((loc, index) => index < 5);
-			this.autoCompleteWidth = this.locations.reduce<number>((acc, next) => {
+			this.locations = allLocations.slice(0, 10);
+			const newAutoCompleteWidth = this.locations.reduce<number>((acc, next) => {
 				return acc > next.name.length ? acc : next.name.length;
 			}, 0) * 9;
+			this.autoCompleteWidth = this.autoCompleteWidth < newAutoCompleteWidth ? newAutoCompleteWidth : this.autoCompleteWidth;
 			this.loading = false;
 		}),
 		retryWhen((err) => {
 			return err.pipe(
 				tap(error => {
-					this.error = error ? error[0].name : '';
-					this.autoCompleteWidth = (<string>this.error).length * 5;
+					this.error = true;
+					this.autoCompleteWidth = DEFAULT_WIDTH;
+					this.locations = [];
 					this.loading = false;
 				})
 			)
@@ -62,9 +62,11 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 				public geocoderService: GeocoderService) {
 	}
 
-	resetSearch(point) {
+	resetSearch() {
 		this.locations = [];
 		this.error = null;
+		this.loading = true;
+		this.autoCompleteWidth = DEFAULT_WIDTH;
 	}
 
 	goToLocation(point) {
@@ -83,15 +85,20 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmit() {
-		const value = this.control.value;
+		const value: string = this.control.value;
 		let point;
-		let index = this.locations.findIndex(loc => loc.name === value);
-		if (index > -1) {
-			point = this.locations[index].point;
-		} else {
-			const bestLocation = this.locations[0];
-			point = bestLocation && bestLocation.point;
-			this.control.setValue(bestLocation ? bestLocation.name : value);
+		if (this.geocoderService.isCoordinates(value)) {
+			point = this.geocoderService.createPoint(value);
+		}
+		else {
+			let index = this.locations.findIndex(loc => loc.name === value);
+			if (index > -1) {
+				point = this.locations[index].point;
+			} else {
+				const bestLocation = this.locations[0];
+				point = bestLocation && bestLocation.point;
+				this.control.setValue(bestLocation ? bestLocation.name : value);
+			}
 		}
 		this.goToLocation(point);
 	}

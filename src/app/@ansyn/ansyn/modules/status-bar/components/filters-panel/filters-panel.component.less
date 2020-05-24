@@ -1,0 +1,114 @@
+@import "ansyn/less/common";
+@import "../../less/status-bar-common";
+
+@more-filter-container-width: 250px;
+:host {
+	&:extend(.status-bar-panel);
+	div.filter {
+		margin-right: 6px;
+
+		button {
+			&:extend(.status-bar-button-round);
+
+			span.filter-counter {
+				margin-left: 5px;
+
+				&.hide {
+					display: none;
+				}
+			}
+
+
+			&.active {
+				&:extend(.status-bar-button-active);
+			}
+
+			&:hover:not(.active):not(:disabled) {
+				&:extend(.status-bar-button-hover);
+			}
+
+			&.filtered {
+				border: 1px solid #f1f1f1
+			}
+
+			&:not(.favorites):not(.more-filters) {
+				padding: 5px 20px;
+				justify-content: center;
+			}
+
+			&.favorites {
+				i.icon {
+					font-size: 20px;
+					line-height: 0.85;
+				}
+				span {
+					margin-right: 10px;
+				}
+			}
+			&.more-filters {
+				padding: 1px;
+				i {
+					margin-right: auto;
+				}
+			}
+		}
+
+		div.more-filters-container {
+			position: absolute;
+			top: @status-bar-height;
+			background: @status-bar-background;
+			width: @more-filter-container-width;
+			transform: translateX(-@more-filter-container-width/2);
+
+			button {
+				width: unset;
+				margin-left: 5px;
+				margin-top: 10px;
+				i {
+					margin-right: 5px;
+				}
+				span.title {
+					display: block !important;
+				}
+			}
+		}
+
+		div.filter-container {
+			position: absolute;
+			top: @status-bar-height;
+			min-width: 250px;
+
+		}
+
+		&:not(:last-child) {
+			width: 150px;
+		}
+	}
+}
+
+@media screen and (max-width: 1200px) {
+	:host {
+		div.more-or-favorites {
+			button {
+				i {
+					margin-right: auto;
+				}
+				&.favorites {
+					padding: 5px 6px;
+					span.title {
+						display: none;
+					}
+				}
+				&.more-filters {
+					padding: 0 4px;
+				}
+			}
+
+			&.sensorName {
+				width: 114px;
+			}
+
+		}
+	}
+
+}

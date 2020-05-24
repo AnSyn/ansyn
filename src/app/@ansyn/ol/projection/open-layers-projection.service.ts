@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CommunicatorEntity, EPSG_4326, ProjectionService } from '@ansyn/imagery';
+import { CommunicatorEntity, EPSG_4326, getNewPoint, ProjectionService } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
 import { FeatureCollection, GeometryObject, Point } from 'geojson';
 import * as proj from 'ol/proj';
@@ -25,8 +25,8 @@ export class OpenLayersProjectionService extends ProjectionService {
 
 	projectApproximatelyToImage<olGeometry>(point: Point, mapObject: any): Observable<Point> {
 		const projection = mapObject.getView().getProjection();
-		point.coordinates = proj.fromLonLat(<[number, number]>point.coordinates, projection);
-		return of(point);
+		const newPoint = getNewPoint(proj.fromLonLat(<[number, number]>point.coordinates, projection));
+		return of(newPoint);
 	}
 
 	projectApproximately(point: Point, mapObject: any): Observable<Point> {

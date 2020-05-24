@@ -13,7 +13,6 @@ import {
 	SetRemovedOverlaysIdsAction,
 	SetRemovedOverlaysVisibilityAction
 } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
-import { SetImageOpeningOrientation } from '../../../modules/status-bar/actions/status-bar.actions';
 import { SelectCaseAppEffects } from './select-case.app.effects';
 import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '@ansyn/map-facade';
 import {
@@ -26,7 +25,7 @@ import {
 	SelectCaseSuccessAction,
 	SetAutoSave
 } from '../../../modules/menu-items/cases/actions/cases.actions';
-import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
+import { UpdateFacetsAction } from '../../../modules/filters/actions/filters.actions';
 import {
 	SetAnnotationMode,
 	SetMeasureDistanceToolState,
@@ -49,6 +48,7 @@ import {
 	IOverlaysManualProcessArgs
 } from '../../../modules/menu-items/cases/models/case.model';
 import { IOverlay, IOverlaysHash } from '../../../modules/overlays/models/overlay.model';
+import { UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/status-bar.actions';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;
@@ -145,8 +145,8 @@ describe('SelectCaseAppEffects', () => {
 				a: new SetMapsDataActionStore({ mapsList: maps.data }),
 				b: new SetActiveMapId(maps.activeMapId),
 				c: new SetLayoutAction(<any>maps.layout),
-				d: new SetImageOpeningOrientation({ orientation }),
-				e: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
+				d: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
+				e: new UpdateGeoFilterStatus({active: false, type: region.type}),
 				f: new SetFavoriteOverlaysAction(favoriteOverlays),
 				g: new SetPresetOverlaysAction(presetOverlays),
 				h: new SetMiscOverlays({ miscOverlays }),

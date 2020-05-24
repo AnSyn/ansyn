@@ -41,6 +41,11 @@
 			width: calc(100% - @menu-width);
 			height: @status-bar-height;
 			z-index: @z-index-status-bar-navigation-area;
+
+			&.expand {
+				left: 0;
+				width: 100%;
+			}
 		}
 
 		div.layer {
@@ -167,4 +172,5 @@
 /deep/ .owl-dt-container {
 	font-family: @app-font;
 }
+
 

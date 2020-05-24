@@ -76,6 +76,11 @@ import { isEqual } from 'lodash';
 import { selectGeoRegisteredOptionsEnabled } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import { LoggerService } from '../../modules/core/services/logger.service';
+import {
+	IImageProcParam,
+	IOverlayStatusConfig,
+	overlayStatusConfig
+} from "../../modules/overlays/overlay-status/config/overlay-status-config";
 
 @Injectable()
 export class MapAppEffects {
@@ -149,7 +154,7 @@ export class MapAppEffects {
 	@Effect()
 	onSetManualImageProcessing$: Observable<any> = this.actions$
 		.pipe(
-			ofType<SetManualImageProcessing>(ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING),
+			ofType<SetManualImageProcessing>(OverlayStatusActionsTypes.SET_MANUAL_IMAGE_PROCESSING),
 			withLatestFrom(this.store$.select(mapStateSelector)),
 			map(([action, mapState]: [SetManualImageProcessing, IMapState]) => [MapFacadeService.activeMap(mapState), action, mapState]),
 			filter(([activeMap]: [ICaseMapState, SetManualImageProcessing, IMapState]) => Boolean(activeMap.data.overlay)),
@@ -174,7 +179,7 @@ export class MapAppEffects {
 			map(([action, entities]: [ImageryCreatedAction, Dictionary<ICaseMapState>]) => entities[action.payload.id]),
 			filter((caseMapState: ICaseMapState) => Boolean(caseMapState && caseMapState.data.overlay)),
 			map((caseMapState: ICaseMapState) => {
-				startTimingLog(`LOAD_OVERLAY_${ caseMapState.data.overlay.id }`);
+				startTimingLog(`LOAD_OVERLAY_${caseMapState.data.overlay.id}`);
 				return new DisplayOverlayAction({
 					overlay: caseMapState.data.overlay,
 					mapId: caseMapState.id,
@@ -225,7 +230,7 @@ export class MapAppEffects {
 	overlayLoadingFailed$: Observable<any> = this.actions$
 		.pipe(
 			ofType<DisplayOverlayFailedAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED),
-			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${ action.payload.id }`)),
+			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${action.payload.id}`)),
 			map(() => new SetToastMessageAction({
 				toastText: toastMessages.showOverlayErrorToast,
 				showWarningIcon: true
@@ -299,7 +304,9 @@ export class MapAppEffects {
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected loggerService: LoggerService,
-				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
+				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
+				@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig
+	) {
 	}
 
 	changeImageryMap(overlay, communicator): string | null {

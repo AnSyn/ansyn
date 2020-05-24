@@ -14,6 +14,7 @@ import { Update } from '@ngrx/entity';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
+	SET_TOTAL_OVERLAYS: type('[Overlay] Set Selected Overlay'),
 	UNSELECT_OVERLAY: type('[Overlay] Unselect Overlay'),
 	LOAD_OVERLAYS: type('[Overlay] Load Overlays'),
 	CHECK_TRIANGLES: type('[Overlay] Check Triangles Before Overlay Search'),
@@ -57,7 +58,7 @@ export class SelectOverlayAction implements Action {
 export class SetMarkUp implements Action {
 	type = OverlaysActionTypes.SET_OVERLAYS_MARKUPS;
 
-	constructor(public payload: { classToSet: MarkUpClass, dataToSet: IMarkUpData }) {
+	constructor(public payload: { classToSet: MarkUpClass, dataToSet: IMarkUpData, customOverviewElement?: any }) {
 	};
 }
 
@@ -67,7 +68,6 @@ export class AddMarkUp implements Action {
 	constructor(public payload: Array<IOverlayDropMarkUp>) {
 	};
 }
-
 
 export class RemoveMarkUp implements Action {
 	type = OverlaysActionTypes.REMOVE_OVERLAYS_MARKUPS;
@@ -144,7 +144,9 @@ export class DisplayMultipleOverlaysFromStoreAction implements Action {
 export class DisplayOverlayAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY;
 
-	constructor(public payload: { overlay: IOverlay, mapId: string, extent?: any, forceFirstDisplay?: boolean, force?: boolean, customOriantation?: string }) {
+	constructor(public payload: {
+		overlay: IOverlay, mapId: string, extent?: any, forceFirstDisplay?: boolean, force?: boolean, customOriantation?: string
+	}) {
 	}
 }
 
@@ -156,6 +158,13 @@ export class DisplayOverlayFailedAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY_FAILED;
 
 	constructor(public payload: { id: string, mapId?: string }) {
+	}
+}
+
+export class SetTotalOverlaysAction implements Action {
+	type = OverlaysActionTypes.SET_TOTAL_OVERLAYS;
+
+	constructor(public payload: number) {
 	}
 }
 

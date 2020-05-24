@@ -1,25 +1,43 @@
 @import "ansyn/less/colors";
 @import "ansyn/less/common";
 @import "ansyn/less/z-index-globals";
+@import "../../less/status-bar-common";
 
 :host {
 	position: absolute;
 	min-width: 170px;
-	transform: translateY(8px);
+	top: @search-panel-popup-top;
+
 
 	/deep/ .treeview-container {
 		overflow-y: hidden !important;
+		padding-right: 0 !important;
 	}
 
-	/deep/ .treeview-container .row-item {
-		display: flex;
+	/deep/ .treeview-container .row-item, /deep/ div.form-check-inline {
+		display: block;
 		color: ghostwhite;
+		padding: 5px 20px;
+		margin-bottom: .3rem;
+
+		.form-check-label {
+			cursor: pointer !important;
+		}
+
+		&:hover {
+			background-color: @background-color-4;
+		}
 	}
 
 	.data-input-filter {
 		background: @background-color-0;
 		background-clip: padding-box;
-		padding: 10px 20px;
+	}
+
+	.data-input-header {
+		font-weight: bold;
+		font-size: 1em;
+		padding: 10px 25px;
 	}
 
 	.tree-view-main {
@@ -32,51 +50,5 @@
 	.tree-view-container {
 		max-height: 300px;
 		overflow-y: auto;
-	}
-
-	div.data-input-filters-buttons {
-		button {
-			background: transparent;
-			border: none;
-			color: @application-primary-color;
-
-			&:disabled {
-				cursor: default;
-				pointer-events: none;
-				opacity: .6;
-			}
-		}
-
-		margin-top: 10px;
-		display: flex;
-		justify-content: space-between;
-		color: @application-primary-color;
-
-		div {
-			button {
-				cursor: pointer;
-
-				&:hover:not(:disabled) {
-					font-weight: bold;
-				}
-
-				&:first-child {
-					width: 42px;
-				}
-
-				&:last-child {
-					width: 17px;
-					margin: 0 9px;
-				}
-			}
-		}
-
-		.error {
-			color: crimson;
-		}
-	}
-
-	.ok-button {
-
 	}
 }

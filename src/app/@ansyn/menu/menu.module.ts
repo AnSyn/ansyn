@@ -8,6 +8,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { InitializeMenuItemsAction } from './actions/menu.actions';
 import { menuFeatureKey, MenuReducer } from './reducers/menu.reducer';
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 export const MENU_ITEMS = new InjectionToken<IMenuItem[]>('MENU_ITEMS');
 
@@ -16,7 +17,8 @@ export const MENU_ITEMS = new InjectionToken<IMenuItem[]>('MENU_ITEMS');
 	imports: [
 		CommonModule,
 		StoreModule.forFeature(menuFeatureKey, MenuReducer),
-		TranslateModule
+		TranslateModule,
+		MatProgressSpinnerModule
 	],
 	declarations: [MenuComponent],
 	exports: [MenuComponent]

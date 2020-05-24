@@ -1,0 +1,27 @@
+@import "ansyn/less/globals";
+@import "ansyn/less/colors";
+
+@search-panel-popup-top: 102%;
+.status-bar-panel {
+	display: flex;
+	align-items: center;
+	margin: 2px;
+}
+
+.status-bar-button {
+	background: @status-bar-panels;
+	padding: 5px 10px;
+}
+
+.status-bar-button-round {
+	&:extend(.status-bar-button);
+	border-radius: @status-bar-panel-radius;
+}
+
+.status-bar-button-active {
+	background-color: @status-bar-active;
+}
+
+.status-bar-button-hover {
+	background: @status-bar-hover;
+}

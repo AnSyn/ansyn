@@ -104,3 +104,18 @@
 	opacity: 1;
 	visibility: visible;
 }
+
+/* for chrome 44
+   chrome 44 does not support left: auto.
+   so instead, we will use left: 0, and also make the trigger element
+   position: relative (the tooltip element is position: absolute)
+ */
+@supports not (display: grid) {
+	[tooltip-value]:not([tooltip-class*="not-relative"]) {
+		position: relative;
+	}
+
+	[tooltip-value]:not(.active):not(:disabled):not([tooltip-class*="left"])[tooltip-class*="bottom"]:after {
+		left: 0;
+	}
+}

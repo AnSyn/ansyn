@@ -9,12 +9,17 @@ import { distinctUntilChanged, filter, map, take, tap } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import { Inject } from '@angular/core';
 import { selectMaps } from '@ansyn/map-facade';
-import { IImageProcParam, IToolsConfig, toolsConfig } from '../../../../menu-items/tools/models/tools-config';
+import { IToolsConfig, toolsConfig } from '../../../../menu-items/tools/models/tools-config';
 import { ICaseMapState, IImageManualProcessArgs } from '../../../../menu-items/cases/models/case.model';
+import {
+	IImageProcParam,
+	IOverlayStatusConfig,
+	overlayStatusConfig
+} from "../../../../overlays/overlay-status/config/overlay-status-config";
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],
-	deps: [Store, toolsConfig]
+	deps: [Store, overlayStatusConfig]
 })
 export class ImageProcessingPlugin extends BaseImageryPlugin {
 	communicator: CommunicatorEntity;
@@ -67,7 +72,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		return this.config.ImageProcParams;
 	}
 
-	constructor(public store$: Store<any>, @Inject(toolsConfig) protected config: IToolsConfig) {
+	constructor(public store$: Store<any>, @Inject(overlayStatusConfig) protected config: IOverlayStatusConfig) {
 		super();
 	}
 

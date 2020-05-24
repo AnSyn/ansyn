@@ -2,7 +2,7 @@ import { Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild } from
 import { select, Store } from '@ngrx/store';
 import { fromEvent, Observable } from 'rxjs';
 import { getTimeFormat } from '@ansyn/map-facade';
-import { IOverlaysState, MarkUpClass, selectHoveredOverlay } from '../../reducers/overlays.reducer';
+import { IOverlaysState, MarkUpClass, selectCustomOverviewElement, selectHoveredOverlay } from '../../reducers/overlays.reducer';
 import { overlayOverviewComponentConstants } from './overlay-overview.component.const';
 import {
 	ChangeOverlayPreviewRotationAction,
@@ -11,7 +11,7 @@ import {
 	SetMarkUp
 } from '../../actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { takeWhile, tap } from 'rxjs/operators';
+import { takeWhile, tap, withLatestFrom } from 'rxjs/operators';
 import { Actions, ofType } from '@ngrx/effects';
 import { IOverlay } from '../../models/overlay.model';
 
@@ -51,7 +51,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	protected topElement = this.el.nativeElement.parentElement;
 
 	get dropElement(): Element {
-		return this.topElement.querySelector(`#dropId-${ this.overlayId }`);
+		return this.el.nativeElement.ownerDocument.getElementById(`dropId-${ this.overlayId }`);
 	}
 
 	public get const() {
@@ -75,6 +75,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	hoveredOverlay$: Observable<any> = this.store$.pipe(
 		select(selectHoveredOverlay),
+		withLatestFrom(this.store$.select(selectCustomOverviewElement)),
 		tap(this.onHoveredOverlay.bind(this))
 	);
 
@@ -90,17 +91,17 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 	}
 
-	onHoveredOverlay(overlay: IOverviewOverlay) {
+	onHoveredOverlay([overlay, customElement]: [IOverviewOverlay, any]) {
 		if (overlay) {
 			const fetching = overlay.thumbnailUrl === this.const.FETCHING_OVERLAY_DATA;
 			this.overlayId = overlay.id;
-			const hoveredElement: Element = this.dropElement;
+			const hoveredElement: Element = customElement || this.dropElement;
 			if (!hoveredElement) {
 				return;
 			}
 			const hoveredElementBounds: ClientRect = hoveredElement.getBoundingClientRect();
-			this.left = this.getLeftPosition(hoveredElementBounds.left);
-			this.top = hoveredElementBounds.top;
+			this.left = customElement ? hoveredElementBounds.right : this.getLeftPosition(hoveredElementBounds.left);
+			this.top = hoveredElementBounds.top + (customElement ? hoveredElementBounds.height : 0);
 			this.showOverview();
 			this.sensorName = overlay.sensorName;
 			this.sensorType = overlay.sensorType;

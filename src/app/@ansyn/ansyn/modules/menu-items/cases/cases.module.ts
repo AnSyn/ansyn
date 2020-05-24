@@ -16,6 +16,7 @@ import { StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from './reducers/cases.reducer';
 import { CasesAutoSaveComponent } from './components/cases-auto-save/cases-auto-save.component';
 import { CoreModule } from '../../core/core.module';
+import { MapFacadeModule } from '@ansyn/map-facade';
 
 // @dynamic
 @NgModule({
@@ -23,6 +24,7 @@ import { CoreModule } from '../../core/core.module';
 		StoreModule.forFeature(casesFeatureKey, CasesReducer),
 		CommonModule,
 		CoreModule,
+		MapFacadeModule,
 		FormsModule,
 		EffectsModule.forFeature([CasesEffects])
 	],

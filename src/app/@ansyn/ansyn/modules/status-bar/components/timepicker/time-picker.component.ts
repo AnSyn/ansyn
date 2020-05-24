@@ -35,4 +35,8 @@ export class TimePickerComponent implements OnInit, OnDestroy {
 	}
 	ngOnDestroy(): void {
 	}
+
+	afterClosed() {
+		this.closeTimePicker.emit();
+	}
 }

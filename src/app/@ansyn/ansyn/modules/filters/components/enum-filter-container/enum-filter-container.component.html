@@ -1,0 +1,29 @@
+<div class="enum-fields-enumerator"
+	 *ngFor="let enumMetadata of fields | sort | showMore:isLongFiltersList ">
+
+	<div class="left-side">
+
+		<ansyn-checkbox
+			[disabled]="enumMetadata.value.disabled"
+			[ngModel]="enumMetadata.value.isChecked"
+			(ngModelChange)="onInputClicked(enumMetadata.key)">
+			<span class="field-name"
+				  [title]="((enumMetadata?.key || 'Unknown')?.toString() | translate) || 'Unknown'">{{((enumMetadata?.key || 'Unknown')?.toString() | translate) || 'Unknown'}}</span>
+		</ansyn-checkbox>
+
+		<span class="only-filter"
+			  [hidden]="enumMetadata.value.disabled"
+			  (click)="selectOnly(enumMetadata.key)">{{'only' | translate}}</span>
+
+	</div>
+
+
+	<ansyn-filter-counter
+		[isChecked]="enumMetadata.value.isChecked"
+		[count]="enumMetadata.value.count"
+		[filteredCount]="enumMetadata.value.filteredCount">
+	</ansyn-filter-counter>
+
+</div>
+
+<span *ngIf="!metadata.hasResults()" class="field-name enum-fields-enumerator">{{'No Results' | translate }}</span>

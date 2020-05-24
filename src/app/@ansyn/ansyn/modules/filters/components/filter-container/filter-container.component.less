@@ -1,0 +1,91 @@
+@import "ansyn/less/common";
+
+div.container {
+	background-color: @background-color-2;
+	margin-bottom: 13px;
+	padding: 13px;
+
+	div.title-row {
+		display: flex;
+		flex-direction: row;
+		padding: 5px 0 10px 0;
+
+		div.filter-title {
+
+			&.rtl {
+				direction: rtl;
+			}
+
+			display: flex;
+			flex-direction: row;
+			font-family: @app-font;
+			line-height: 100%;
+			color: @background-color-12;
+
+			span.title {
+				font-style: normal;
+				font-weight: bold;
+				font-size: 14px;
+				opacity: 1;
+
+				&.title-disabled {
+					opacity: 0.5
+				}
+			}
+
+			span.filtered {
+				font-style: italic;
+				font-weight: normal;
+				font-size: 12px;
+				padding-left: 4px;
+				padding-right: 4px;
+			}
+		}
+
+		div.filter-title-buttons {
+			margin-left: auto;
+
+			button.down-arrow {
+				width: 10px;
+				height: 10px;
+				padding: 0;
+				background: transparent;
+				border: none;
+				border-bottom: 2px solid #FFFFFF;
+				border-left: 2px solid #FFFFFF;
+				float: right;
+				margin-right: 10px;
+				margin-top: 2px;
+				cursor: pointer;
+				outline: none;
+
+				&:disabled {
+					opacity: 0.7;
+				}
+			}
+
+			div.show-all {
+				float: right;
+				font-size: 10px;
+				font-style: normal;
+				color: rgba(255, 255, 255, 0.75);
+				margin-top: 3px;
+				margin-right: 7px;
+				cursor: pointer;
+			}
+		}
+	}
+
+	div.show-more-less {
+		font-size: 12px;
+		font-style: normal;
+		color: rgba(255, 255, 255, 0.75);
+		margin-right: 7px;
+		cursor: pointer;
+	}
+
+	div.fields {
+		overflow: auto;
+
+	}
+}

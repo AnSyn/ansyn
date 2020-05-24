@@ -43,18 +43,12 @@ import {
 	ShowOverlaysFootprintAction,
 	StartMouseShadow,
 	StopMouseShadow,
-	ToolsActionsTypes,
-	UpdateMeasureDataAction,
+	ToolsActionsTypes, UpdateMeasureDataOptionsAction,
 	UpdateToolsFlags
 } from '../../modules/menu-items/tools/actions/tools.actions';
-import { IImageProcParam, IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
-import {
-	IToolsState,
-	selectToolFlag,
-	toolsFlags,
-	toolsStateSelector
-} from '../../modules/menu-items/tools/reducers/tools.reducer';
-import { CaseGeoFilter, ICaseMapState, IImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
+import { IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
+import { selectToolFlag, toolsFlags } from '../../modules/menu-items/tools/reducers/tools.reducer';
+import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
 
 @Injectable()
@@ -133,19 +127,6 @@ export class ToolsAppEffects {
 	onShowOverlayFootprint$: Observable<any> = this.actions$.pipe(
 		ofType<ShowOverlaysFootprintAction>(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT),
 		map((action) => new SetActiveOverlaysFootprintModeAction(action.payload))
-	);
-
-	@Effect()
-	updateImageProcessingOnTools$: Observable<any> = this.activeMap$.pipe(
-		filter((map: IMapSettings) => Boolean(map.data.overlay)),
-		withLatestFrom(this.store$.select(toolsStateSelector).pipe(pluck<IToolsState, IImageManualProcessArgs>('manualImageProcessingParams'))),
-		mergeMap<any, any>(([map, manualImageProcessingParams]: [ICaseMapState, IImageManualProcessArgs]) => {
-			const actions: Action[] = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess(map.data.isAutoImageProcessingActive)];
-			if (!isEqual(map.data.imageManualProcessArgs, manualImageProcessingParams)) {
-				actions.push(new SetManualImageProcessing(map.data && map.data.imageManualProcessArgs || this.defaultImageManualProcessArgs));
-			}
-			return actions;
-		})
 	);
 
 	@Effect()
@@ -264,9 +245,9 @@ export class ToolsAppEffects {
 			];
 			// set measure tool as inactive
 			mapIds.forEach((mapId) => {
-				const updateMeasureAction = new UpdateMeasureDataAction({
+				const updateMeasureAction = new UpdateMeasureDataOptionsAction({
 					mapId: mapId,
-					measureData: { isToolActive: false }
+					options: { isToolActive: false }
 				});
 				clearActions.push(updateMeasureAction);
 			});
@@ -290,15 +271,5 @@ export class ToolsAppEffects {
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				@Inject(toolsConfig) protected config: IToolsConfig,
 				protected loggerService: LoggerService) {
-	}
-
-	get params(): Array<IImageProcParam> {
-		return this.config.ImageProcParams;
-	}
-
-	get defaultImageManualProcessArgs(): IImageManualProcessArgs {
-		return this.params.reduce<IImageManualProcessArgs>((initialObject: any, imageProcParam) => {
-			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
-		}, {});
 	}
 }

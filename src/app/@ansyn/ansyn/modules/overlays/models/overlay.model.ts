@@ -121,6 +121,8 @@ export interface IOverlayDrop {
 	id: string;
 	date: Date;
 	shape?: string;
+	sensorName?: string;
+	tag?: any;
 }
 
 export interface IOverlaySpecialObject extends IOverlayDrop {

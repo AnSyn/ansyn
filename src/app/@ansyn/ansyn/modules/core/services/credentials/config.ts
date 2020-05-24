@@ -7,5 +7,6 @@ export interface ICredentialsConfig {
 	authorizationSiteURL: string;
 	authorizationInfoURL: string;
 	classificationsOfAreaBaseUrl: string;
+	baseUrl: string;
 	allLocation: {Name: string, Id: number}[];
 }

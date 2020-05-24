@@ -1,4 +1,5 @@
 import {
+	AddMeasureAction,
 	CreateMeasureDataAction, RemoveMeasureDataAction,
 	SetActiveCenter, SetActiveOverlaysFootprintModeAction,
 	SetAnnotationMode,
@@ -9,12 +10,12 @@ import {
 	StartMouseShadow,
 	StopMouseShadow,
 	ToolsActions,
-	ToolsActionsTypes, UpdateMeasureDataAction,
+	ToolsActionsTypes, UpdateMeasureDataOptionsAction,
 	UpdateOverlaysManualProcessArgs,
 	UpdateToolsFlags
 } from '../actions/tools.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { IVisualizerStyle } from '@ansyn/imagery';
+import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { IImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 import { AnnotationMode } from '@ansyn/ol';
@@ -33,6 +34,16 @@ export enum toolsFlags {
 }
 
 export enum SubMenuEnum { goTo, manualImageProcessing, overlays, annotations }
+
+export interface IMeasureDataOptions {
+	isLayerShowed: boolean;
+	isToolActive: boolean;
+	isRemoveMeasureModeActive: boolean;
+}
+
+export interface IMeasureData extends IMeasureDataOptions{
+	meausres: IVisualizerEntity[];
+}
 
 export function createNewMeasureData(): IMeasureData {
 	return {
@@ -174,13 +185,33 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			return { ...state, mapsMeasures };
 		}
 
-		case ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATA: {
-			const payloadMeasureData: Partial<IMeasureData> = (<UpdateMeasureDataAction><unknown>action).payload.measureData;
+		case ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS: {
+			const newOptions: IMeasureDataOptions = (action as unknown as UpdateMeasureDataOptionsAction).payload.options;
 			const mapsMeasures = new Map(state.mapsMeasures);
-			if (mapsMeasures.has((<UpdateMeasureDataAction><unknown>action).payload.mapId)) {
-				let data: IMeasureData = mapsMeasures.get((<UpdateMeasureDataAction><unknown>action).payload.mapId);
-				data = { ...data, ...payloadMeasureData };
-				mapsMeasures.set((<UpdateMeasureDataAction><unknown>action).payload.mapId, { ...data });
+			const mapMeasure = mapsMeasures.get((action as unknown as UpdateMeasureDataOptionsAction).payload.mapId);
+			if (mapMeasure) {
+				mapsMeasures.set((action as unknown as UpdateMeasureDataOptionsAction).payload.mapId, {...mapMeasure, ...newOptions});
+			}
+			return { ...state, mapsMeasures };
+		}
+
+		case ToolsActionsTypes.MEASURES.ADD_MEASURE: {
+			const { mapId, measure } = (action as unknown as AddMeasureAction).payload;
+			const mapsMeasures = new Map(state.mapsMeasures);
+			const mapMeasure = mapsMeasures.get(mapId);
+			if (mapMeasure) {
+				mapsMeasures.set(mapId, {...mapMeasure, meausres: [...mapMeasure.meausres, measure]})
+			}
+			return { ...state, mapsMeasures };
+		}
+
+		case ToolsActionsTypes.MEASURES.REMOVE_MEASURE: {
+			const { mapId, measureId } = (action as unknown as RemoveMeasureDataAction).payload;
+			const mapsMeasures = new Map(state.mapsMeasures);
+			if (mapsMeasures.has(mapId)) {
+				const mapMeasure = mapsMeasures.get(mapId);
+				const meausres = measureId ? mapMeasure.meausres.filter( measure => measure.id !== measureId) : [];
+				mapsMeasures.set(mapId, {...mapMeasure, meausres})
 			}
 			return { ...state, mapsMeasures };
 		}

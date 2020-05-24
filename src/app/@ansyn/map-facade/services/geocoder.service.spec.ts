@@ -22,8 +22,7 @@ describe('GeocoderService', () => {
 					provide: mapFacadeConfig,
 					useValue: <IMapFacadeConfig>{
 						mapSearch: {
-							url: 'find/$searchString/key/$apiKey',
-							apiKey: 'myKey',
+							url: 'find/q=',
 							active: true
 						}
 					}
@@ -51,19 +50,18 @@ describe('GeocoderService', () => {
 
 		it('should call http, extract the point, and return it', fakeAsync(() => {
 			spyOn(httpClient, 'get').and.returnValue(asyncData({
-				resourceSets: [
+				type: "FeatureCollection",
+				features: [
 					{
-						resources: [
-							{
-								name: 'TestLocation',
-								point: { type: 'Point', coordinates: [3, 4] }
-							}
-						]
+						properties: {
+							display_name: "TestLocation",
+						},
+						geometry: { type: 'Point', coordinates: [4, 3] }
 					}
 				]
 			}));
 			result$ = me.getLocation$('hehe');
-			expect(httpClient.get).toHaveBeenCalledWith('find/hehe/key/myKey');
+			expect(httpClient.get).toHaveBeenCalledWith('find/q=hehe&format=geojson');
 			result$.subscribe(res => {
 				endResult = res;
 			});
@@ -71,19 +69,19 @@ describe('GeocoderService', () => {
 			expect(endResult).toEqual([{ name: 'TestLocation', point: { type: 'Point', coordinates: [4, 3] } }]);
 		}));
 
-		it('should return [{ name: \'No results\', point: undefined }], if there are no results', fakeAsync(() => {
+		it('should return [], if there are no results', fakeAsync(() => {
 			spyOn(httpClient, 'get').and.returnValue(asyncData({
-				resourceSets: [[]]
+				features: []
 			}));
 			result$ = me.getLocation$('abcd');
 			result$.subscribe(res => {
 				endResult = res;
 			});
 			tick();
-			expect(endResult).toEqual([{ name: 'No results', point: undefined }]);
+			expect(endResult).toEqual([]);
 		}));
 
-		it('should return ([{ name: \'No results\', point: undefined }]), if there is an error, or unexpected format', fakeAsync(() => {
+		it('should return ([{ name: undefined, point: undefined }]), if there is an error, or unexpected format', fakeAsync(() => {
 			spyOn(console, 'warn');
 			spyOn(httpClient, 'get').and.returnValue(asyncData({}));
 			result$ = me.getLocation$('hehe');
@@ -92,7 +90,7 @@ describe('GeocoderService', () => {
 			});
 			tick();
 			expect(console.warn).toHaveBeenCalled();
-			expect(endResult).toEqual([{ name: 'No results', point: undefined }]);
+			expect(endResult).toEqual([{ name: undefined, point: undefined }]);
 		}));
 	});
 });

@@ -69,7 +69,7 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 	}
 
 	createExtent(metaData: IMapSettings, destinationProjCode = EPSG_3857) {
-		const sourceProjection = metaData.data.config.projection ? metaData.data.config.projection : EPSG_4326;
+		const sourceProjection = metaData.data.config && metaData.data.config.projection ? metaData.data.config.projection : EPSG_4326;
 		let extent: [number, number, number, number] = metaData.data.overlay ? <[number, number, number, number]>bboxFromGeoJson(metaData.data.overlay.footprint) : [-180, -90, 180, 90];
 		[extent[0], extent[1]] = proj.transform([extent[0], extent[1]], sourceProjection, destinationProjCode);
 		[extent[2], extent[3]] = proj.transform([extent[2], extent[3]], sourceProjection, destinationProjCode);

@@ -21,6 +21,7 @@ const MAP: IMapSettings = {
 	flags: {
 		hideLayers: true
 	},
+	orientation: 'Imagery Perspective',
 	worldView: {
 		mapType: 'mapType',
 		sourceType: 'sourceType'

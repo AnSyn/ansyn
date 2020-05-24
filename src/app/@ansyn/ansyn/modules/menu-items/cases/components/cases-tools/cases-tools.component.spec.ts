@@ -14,6 +14,7 @@ import { DataLayersService, layersConfig } from '../../../layers-manager/service
 import { CoreConfig } from '../../../../core/models/core.config';
 import { LoggerConfig } from '../../../../core/models/logger.config';
 import { TranslateModule } from '@ngx-translate/core';
+import { mapFacadeConfig } from '@ansyn/map-facade';
 
 describe('CasesToolsComponent', () => {
 	let component: CasesToolsComponent;
@@ -35,7 +36,8 @@ describe('CasesToolsComponent', () => {
 				{ provide: casesConfig, useValue: { schema: null } },
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
-				{ provide: layersConfig, useValue: {} }
+				{ provide: layersConfig, useValue: {} },
+				{ provide: mapFacadeConfig, useValue: {} }
 
 			]
 		})

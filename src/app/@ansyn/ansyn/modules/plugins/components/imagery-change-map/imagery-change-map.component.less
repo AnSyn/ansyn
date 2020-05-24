@@ -62,7 +62,7 @@
 		flex-flow: row wrap;
 		align-items: flex-start;
 		width: 250px;
-		height: 150px;
+		height: 200px;
 		top: 0;
 		right: 50px;
 		background-color: @background-color-1;
@@ -111,3 +111,24 @@
 }
 
 
+.imageries-container {
+	&.layout3, &.layout5, &.layout6 {
+		:host {
+			.popup {
+				top: unset;
+				bottom: 0;
+			}
+		}
+	}
+
+	&.layout4 {
+		div.map-container-wrapper:not(:first-child) {
+			:host {
+				.popup {
+					top: unset;
+					bottom: 0;
+				}
+			}
+		}
+	}
+}

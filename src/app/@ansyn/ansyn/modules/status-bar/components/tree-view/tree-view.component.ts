@@ -41,20 +41,6 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		maxHeight: 400
 	});
 
-	constructor(@Inject(MultipleOverlaysSourceConfig) public multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
-				public store: Store<IStatusBarState>,
-				private translate: TranslateService) {
-
-		this.dataFilters = this.getAllDataInputFilter();
-		this.dataFilters.forEach((f) => {
-			translate.get(f.text).subscribe((res: string) => {
-				f.text = res;
-				this.dataInputFiltersItems.push(new TreeviewItem(f));
-			});
-		});
-	}
-
-
 	@AutoSubscription
 	onDataInputFilterChange$ = this.store.select(selectDataInputFilter).pipe(
 		filter(Boolean),
@@ -68,6 +54,19 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		})
 	);
 
+	constructor(@Inject(MultipleOverlaysSourceConfig) public multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
+				public store: Store<IStatusBarState>,
+				private translate: TranslateService) {
+
+		this.dataFilters = this.getAllDataInputFilter();
+		this.dataFilters.forEach((f) => {
+			translate.get(f.text).subscribe((res: string) => {
+				f.text = res;
+				this.dataInputFiltersItems.push(new TreeviewItem(f));
+			});
+		});
+	}
+
 	set selectedFilters(value) {
 		if (!isEqual(value, this._selectedFilters)) {
 			this._selectedFilters = value;
@@ -79,8 +78,8 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		this.leavesCount = 0;
 		const dataInputs = Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
 			.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive)
-			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
-					if (dataInputFiltersConfig.showOnlyMyChilds) {
+			.map(([providerName, { dataInputFiltersConfig, showOnlyMyChildren }]: [string, IOverlaysSourceProvider]) => {
+					if (showOnlyMyChildren) {
 						return dataInputFiltersConfig.children.map(child => {
 							this.leavesCount++;
 							return this.buildDataFilter(providerName, child);

@@ -125,30 +125,30 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	timeInputChangeFrom$ = () => merge(
-		fromEvent(this.timePickerInputFrom.nativeElement, 'keydown'),
-		fromEvent(this.timePickerInputTo.nativeElement, 'keydown')
+		fromEvent(this.timePickerInputFrom?.nativeElement, 'keydown'),
+		fromEvent(this.timePickerInputTo?.nativeElement, 'keydown')
 	).pipe(
 		tap(this.checkForTimeContentOk.bind(this))
 	);
 
 	@AutoSubscription
 	loggerManualChangeTime$ = () => merge(
-		fromEvent(this.timePickerInputFrom.nativeElement, 'keyup'),
-		fromEvent(this.timePickerInputTo.nativeElement, 'keyup')
+		fromEvent(this.timePickerInputFrom?.nativeElement, 'keyup'),
+		fromEvent(this.timePickerInputTo?.nativeElement, 'keyup')
 	).pipe(
 		filter(isDigitKey),
 		tap(this.logTimePickerChange.bind(this))
 	);
 
 	@AutoSubscription
-	onSelectTitle$ = () => merge(fromEvent(this.timePickerInputFrom.nativeElement, 'mouseup'),
-		fromEvent(this.timePickerInputTo.nativeElement, 'mouseup')).pipe(
+	onSelectTitle$ = () => merge(fromEvent(this.timePickerInputFrom?.nativeElement, 'mouseup'),
+		fromEvent(this.timePickerInputTo?.nativeElement, 'mouseup')).pipe(
 		tap(this.selectOnlyNumber.bind(this))
 	);
 
 	@AutoSubscription
-	disableDragText$ = () => merge(fromEvent(this.timePickerInputFrom.nativeElement, 'dragstart'),
-		fromEvent(this.timePickerInputTo.nativeElement, 'dragstart')).pipe(
+	disableDragText$ = () => merge(fromEvent(this.timePickerInputFrom?.nativeElement, 'dragstart'),
+		fromEvent(this.timePickerInputTo?.nativeElement, 'dragstart')).pipe(
 		tap((event: DragEvent) => event.preventDefault())
 	);
 

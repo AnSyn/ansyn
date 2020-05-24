@@ -431,7 +431,8 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 	formatArea(geometry) {
 		const fractionDigits = 2;
-		const area = getArea(geometry);
+		const projection = this.iMap.getProjectionCode();
+		const area = getArea(geometry, { projection });
 
 		if (area >= 1000) {
 			return (area / 1000).toFixed(fractionDigits) + 'km2';

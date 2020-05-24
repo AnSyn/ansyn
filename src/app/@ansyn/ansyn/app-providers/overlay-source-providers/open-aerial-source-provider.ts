@@ -139,7 +139,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 			sourceType: this.sourceType,
 			isGeoRegistered: GeoRegisteration.geoRegistered,
 			tag: openAerialElement,
-			icon: 'matos',
+			icon: 'drone',
 			sensorLocation: this.multipleOverlays.useAngleDebugMode ? getPointByGeometry(footprint.geometry ? footprint.geometry : footprint) : undefined
 		});
 

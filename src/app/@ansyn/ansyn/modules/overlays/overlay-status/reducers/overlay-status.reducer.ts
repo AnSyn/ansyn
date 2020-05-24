@@ -4,7 +4,7 @@ import { AlertMsg } from '../../../alerts/model';
 import { IOverlay } from '../../models/overlay.model'
 import { OverlayStatusActions, OverlayStatusActionsTypes } from '../actions/overlay-status.actions';
 import {
-	ImageManualProcessArgs,
+	IImageManualProcessArgs,
 	IOverlaysManualProcessArgs,
 	ITranslationData
 } from '../../../menu-items/cases/models/case.model';
@@ -28,7 +28,7 @@ export interface IOverlayStatusState {
 	removedOverlaysIdsCount: number;
 	presetOverlays: IOverlay[];
 	alertMsg: AlertMsg;
-	manualImageProcessingParams: ImageManualProcessArgs;
+	manualImageProcessingParams: IImageManualProcessArgs;
 	overlaysTranslationData: ITranslationsData,
 	overlaysScannedAreaData: {
 		[key: string]: MultiPolygon;
@@ -36,7 +36,7 @@ export interface IOverlayStatusState {
 }
 
 export interface IImageProcessState {
-	manualImageProcessingParams: ImageManualProcessArgs;
+	manualImageProcessingParams: IImageManualProcessArgs;
 	overlaysManualProcessArgs: IOverlaysManualProcessArgs;
 }
 

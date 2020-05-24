@@ -5,10 +5,7 @@ import { Store } from '@ngrx/store';
 import { isEqual } from 'lodash';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, tap } from 'rxjs/operators';
-import {
-	LoadOverlaysSuccessAction,
-	SetOverlaysCriteriaAction
-} from '../../../overlays/actions/overlays.actions';
+import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import { selectDataInputFilter } from '../../../overlays/reducers/overlays.reducer';
 import {
 	IMultipleOverlaysSourceConfig,
@@ -17,7 +14,7 @@ import {
 } from '../../../core/models/multiple-overlays-source-config';
 import { CustomTreeviewI18n } from './custom-treeview-i18n';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { DataInputFilterValue } from '../../../menu-items/cases/models/case.model';
+import { DataInputFilterValue, ICaseDataInputFiltersState } from '../../../menu-items/cases/models/case.model';
 
 @Component({
 	selector: 'ansyn-tree-view',
@@ -47,7 +44,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	onDataInputFilterChange$ = this.store.select(selectDataInputFilter).pipe(
 		filter(Boolean),
-		tap(_preFilter => {
+		tap((_preFilter: ICaseDataInputFiltersState) => {
 			this._selectedFilters = _preFilter.fullyChecked ? this.selectAll() : _preFilter.filters;
 			if (Boolean(this._selectedFilters)) {
 				this.dataInputFiltersItems.forEach(item => {

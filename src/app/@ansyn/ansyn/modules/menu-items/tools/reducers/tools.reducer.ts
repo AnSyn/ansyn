@@ -1,6 +1,6 @@
 import {
 	AddMeasureAction,
-	CreateMeasureDataAction, RemoveMeasureDataAction,
+	CreateMeasureDataAction, RemoveMeasureAction, RemoveMeasureDataAction,
 	SetActiveCenter, SetActiveOverlaysFootprintModeAction,
 	SetAnnotationMode,
 	SetAutoImageProcessingSuccess, SetManualImageProcessing,
@@ -15,11 +15,11 @@ import {
 	UpdateToolsFlags
 } from '../actions/tools.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
+import { IVisualizerStyle } from '@ansyn/imagery';
 import { IImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 import { AnnotationMode } from '@ansyn/ol';
-import { IMeasureData } from '../models/measure-data';
+import { IMeasureData, IMeasureDataOptions } from '../models/measure-data';
 
 export enum toolsFlags {
 	geoRegisteredOptionsEnabled = 'geoRegisteredOptionsEnabled',
@@ -34,16 +34,6 @@ export enum toolsFlags {
 }
 
 export enum SubMenuEnum { goTo, manualImageProcessing, overlays, annotations }
-
-export interface IMeasureDataOptions {
-	isLayerShowed: boolean;
-	isToolActive: boolean;
-	isRemoveMeasureModeActive: boolean;
-}
-
-export interface IMeasureData extends IMeasureDataOptions{
-	meausres: IVisualizerEntity[];
-}
 
 export function createNewMeasureData(): IMeasureData {
 	return {
@@ -186,7 +176,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 		}
 
 		case ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS: {
-			const newOptions: IMeasureDataOptions = (action as unknown as UpdateMeasureDataOptionsAction).payload.options;
+			const newOptions: Partial<IMeasureDataOptions> = (action as unknown as UpdateMeasureDataOptionsAction).payload.options;
 			const mapsMeasures = new Map(state.mapsMeasures);
 			const mapMeasure = mapsMeasures.get((action as unknown as UpdateMeasureDataOptionsAction).payload.mapId);
 			if (mapMeasure) {
@@ -206,7 +196,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 		}
 
 		case ToolsActionsTypes.MEASURES.REMOVE_MEASURE: {
-			const { mapId, measureId } = (action as unknown as RemoveMeasureDataAction).payload;
+			const { mapId, measureId } = (action as unknown as RemoveMeasureAction).payload;
 			const mapsMeasures = new Map(state.mapsMeasures);
 			if (mapsMeasures.has(mapId)) {
 				const mapMeasure = mapsMeasures.get(mapId);

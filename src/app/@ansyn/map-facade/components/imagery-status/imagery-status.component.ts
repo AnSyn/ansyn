@@ -61,7 +61,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	getMapOrientation$ = () => this.store$.select(selectMapOrientation(this.mapId)).pipe(
 		filter(Boolean),
-		tap( (orientation) => {
+		tap( (orientation: MapOrientation) => {
 			this.orientation = orientation;
 			this.perspective = this.orientation === 'User Perspective';
 		})

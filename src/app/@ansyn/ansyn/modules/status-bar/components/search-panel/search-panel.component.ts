@@ -198,7 +198,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		}
 		if (isBackspaceKey(event)) {
 			const selection = window.getSelection();
-			if (selection.type === 'Caret' && !/[ \/:]/g.test(selection.baseNode.textContent.charAt(selection.baseOffset - 1))) {
+			if (selection.type === 'Caret' && !/[ \/:]/g.test(selection.anchorNode.textContent.charAt(selection.anchorOffset - 1))) {
 				return;
 			}
 			selection.deleteFromDocument();
@@ -264,16 +264,16 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	selectOnlyNumber() {
 		const selection = window.getSelection();
 		if (selection.type === 'Range') {
-			const { baseOffset, extentOffset, baseNode, extentNode } = selection;
-			const ltr = baseOffset < extentOffset;
-			const minIndex = Math.min(baseOffset, extentOffset);
-			const maxIndex = Math.max(baseOffset, extentOffset);
-			const textContent = baseNode.textContent;
+			const { anchorOffset, focusOffset, anchorNode, focusNode } = selection;
+			const ltr = anchorOffset < focusOffset;
+			const minIndex = Math.min(anchorOffset, focusOffset);
+			const maxIndex = Math.max(anchorOffset, focusOffset);
+			const textContent = anchorNode.textContent;
 			const contentToRemove = textContent.substring(minIndex, maxIndex);
 			if (contentToRemove.split('').some(letterToRemove => ['/', ':', ' '].includes(letterToRemove))) {
 				const offset = this.findExtentOffset(contentToRemove, !ltr);
 
-				selection.setBaseAndExtent(baseNode, baseOffset, extentNode, ltr ? baseOffset + offset : baseOffset - offset);
+				selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, ltr ? anchorOffset + offset : anchorOffset - offset);
 			}
 		}
 	}

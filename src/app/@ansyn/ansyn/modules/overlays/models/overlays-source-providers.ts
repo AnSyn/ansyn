@@ -12,6 +12,7 @@ export interface IMultipleOverlaysSource {
 }
 
 export function OverlaySourceProvider({ sourceType }: { sourceType: string }) {
+	console.log(sourceType);
 	return function (constructor: IOverlaySourceProviderConstructor) {
 		Injectable()(constructor);
 		constructor.prototype.sourceType = sourceType;
@@ -28,7 +29,7 @@ export function BaseOverlaySourceProvidersFactory(mapSourceProviders): IMultiple
 	return mapSourceProviders
 		.reduce((a, overlaySourceProviders) => [...a, ...overlaySourceProviders], [])
 		.reduce((mapSourceProviders, overlaySourceProvider: BaseOverlaySourceProvider) => {
-			return { ...mapSourceProviders, [overlaySourceProvider.sourceType]: overlaySourceProvider };
+			return { ...mapSourceProviders, [overlaySourceProvider.sourceType]: overlaySourceProvider};
 		}, {});
 }
 

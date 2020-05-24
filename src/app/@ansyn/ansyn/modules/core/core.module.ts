@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { ContextMenuComponent } from './components/context-menu/context-menu.component';
 import { AngleFilterComponent } from './components/angle-filter/angle-filter.component';
 import { CredentialsComponent } from './components/credentials/credentials.component';
+import { AreaToCredentialsService } from './services/credentials/area-to-credentials.service';
 
 @NgModule({
 	imports: [
@@ -25,7 +26,8 @@ import { CredentialsComponent } from './components/credentials/credentials.compo
 		GenericTypeResolverService,
 		LoggerService,
 		ErrorHandlerService,
-		StorageService
+		StorageService,
+		AreaToCredentialsService
 	],
 	exports: [
 		AnsynTranslationModule,

@@ -18,13 +18,6 @@ export const fetchConfigProviders = (configPath = 'assets/config/app.config.json
 	fetch(configPath)
 		.then(response => response.json())
 		.then(jsonConfig => mergeWith(jsonConfig, mergeChanges, mergeConfig))
-		.then(jsonConfig => {
-			const url = `${jsonConfig.addressService.url}/address/${environment}`;
-			return fetch(url)
-				.then(response => response.json())
-				.then(addresses => mergeWith(jsonConfig, addresses, mergeConfig))
-				.catch(() => jsonConfig);
-		})
 		.then(getProviders);
 
 

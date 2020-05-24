@@ -197,8 +197,8 @@ function buildHistogramLut(imageData) {
 	const histogram = this['fillArray'](MAXBIT, 0);
 	const { width, height, data } = imageData;
 	for ( let i = 0; i < data.length; i += BANDS) {
-		const [r, g, b] = data.subarray(i, i + BANDS);
-		histogram[g]++;
+		const pixel = data.subarray(i, i + BANDS);
+		histogram[pixel[0]]++;
 	}
 	const totalPixels = width * height;
 	let minPixel = 0, maxPixel = 0, pixelsSoFar = 0;

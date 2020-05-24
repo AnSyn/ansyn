@@ -68,7 +68,7 @@ describe('MapSearchBoxComponent', () => {
 			tick();
 		}));
 
-		fit('should call getLocation$() and then setCenter()', fakeAsync(() => {
+		it('should call getLocation$() and then setCenter()', fakeAsync(() => {
 			spyOn(geocoderService, 'getLocation$').and.returnValue(asyncData([{ name: 'blablabla', point: 'test' }]));
 			component.control.setValue('hehe');
 			tick();

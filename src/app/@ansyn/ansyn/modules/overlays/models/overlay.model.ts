@@ -29,7 +29,7 @@ export enum GeoRegisteration {
 
 export enum PhotoAngle {
 	diagonal = 'diagonal',
-	vertical = 'verticle'
+	vertical = 'vertical'
 }
 
 export enum RegionContainment {
@@ -64,6 +64,7 @@ export interface IOverlay extends IDilutedOverlay {
 	catalogID?: string;
 	photoAngle?: PhotoAngle;
 	sensorLocation?: Point;
+	icon?: string;
 	containedInSearchPolygon?: RegionContainment;
 }
 
@@ -122,7 +123,7 @@ export interface IOverlayDrop {
 	date: Date;
 	shape?: string;
 	sensorName?: string;
-	tag?: any;
+	icon?: any;
 }
 
 export interface IOverlaySpecialObject extends IOverlayDrop {

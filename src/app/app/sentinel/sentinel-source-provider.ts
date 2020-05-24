@@ -157,6 +157,7 @@ export class SentinelSourceProvider extends BaseOverlaySourceProvider {
 			sourceType: this.sourceType,
 			isGeoRegistered: GeoRegisteration.geoRegistered,
 			tag: sentinelElement,
+			icon: 'satellite',
 			sensorLocation: this.multipleOverlaysSourceConfig.useAngleDebugMode ? getPointByGeometry(geometry) : undefined
 		});
 	}

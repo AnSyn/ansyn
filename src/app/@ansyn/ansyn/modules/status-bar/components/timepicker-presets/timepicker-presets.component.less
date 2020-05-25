@@ -1,5 +1,6 @@
 @import "ansyn/less/colors";
 @import "../../less/status-bar-common";
+
 :host {
 
 	div.presets {
@@ -9,6 +10,10 @@
 		top: @search-panel-popup-top;
 		min-width: 150px;
 		min-height: 110px;
+
+		div.rtl {
+			direction: rtl;
+		}
 
 		button {
 			background-color: black;
@@ -23,5 +28,6 @@
 				background-color: @background-color-7;
 			}
 		}
+
 	}
 }

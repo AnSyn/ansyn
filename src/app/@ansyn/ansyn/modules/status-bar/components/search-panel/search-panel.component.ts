@@ -28,6 +28,7 @@ import {
 } from '../../../core/utils/keyboardKey';
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import { LoggerService } from '../../../core/services/logger.service';
+import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
 
 const moment = momentNs;
 
@@ -90,7 +91,10 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		tap((caseDataInputFiltersState: ICaseDataInputFiltersState) => {
 			this.dataInputFilters = caseDataInputFiltersState;
 			const selectedFiltersSize = this.dataInputFilters.filters.length;
-			const dataInputsSize = Object.values(this.multipleOverlaysSourceConfig.indexProviders).filter(({ inActive }: IOverlaysSourceProvider) => !inActive).length;
+			let dataInputsSize = 0;
+			Object.values(this.multipleOverlaysSourceConfig.indexProviders)
+				.filter(({ inActive }: IOverlaysSourceProvider) => !inActive)
+				.forEach(({ dataInputFiltersConfig }) => dataInputsSize += dataInputFiltersConfig.children.length);
 			this.dataInputFilterTitle = this.dataInputFilters.fullyChecked ? 'All' : `${ selectedFiltersSize }/${ dataInputsSize }`;
 			if (!caseDataInputFiltersState.fullyChecked && caseDataInputFiltersState.filters.length === 0) {
 				this.popupExpanded.set('DataInputs', true)
@@ -119,6 +123,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 				@Inject(MultipleOverlaysSourceConfig) private multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				protected loggerService: LoggerService,
+				@Inject(COMPONENT_MODE) public componentMode: boolean,
 				dateTimeAdapter: DateTimeAdapter<any>
 	) {
 		dateTimeAdapter.setLocale(statusBarConfig.locale);

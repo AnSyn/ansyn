@@ -10,11 +10,10 @@ import {
 	CommunicatorEntity,
 	getAngleDegreeBetweenPoints,
 	ImageryMapPosition,
-	ImageryPlugin, IMapSettings, MapOrientation,
+	ImageryPlugin, MapOrientation,
 	toDegrees,
 	toRadians
 } from '@ansyn/imagery';
-import { IStatusBarState, statusBarStateSelector } from '../../../../status-bar/reducers/status-bar.reducer';
 import {
 	MapActionTypes,
 	PointToRealNorthAction,
@@ -39,6 +38,7 @@ import {
 
 import OLMap from 'ol/Map';
 import View from 'ol/View';
+import ol_Layer from 'ol/layer/Layer';
 import { LoggerService } from '../../../../core/services/logger.service';
 import {
 	ChangeOverlayPreviewRotationAction,
@@ -319,7 +319,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		layers.forEach((layer) => {
 			this.shadowMapObject.removeLayer(layer);
 		});
-		const mainLayer = this.iMap.getMainLayer();
+		const mainLayer = this.iMap.getMainLayer() as ol_Layer;
 		this.shadowMapObjectView = new View({
 			projection: mainLayer.getSource().getProjection()
 		});

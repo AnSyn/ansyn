@@ -60,24 +60,11 @@ export class CredentialsService {
 
 	getCredentials(): Observable<any> {
 		if (!this.data) {
-			const url = this.getUrl();
-			const headers = new HttpHeaders({'Content-Type': 'application/json'});
-			const options = {headers};
-			return this.httpClient.get(url, options)
-				.pipe(
-					mergeMap((data: any) => this.parseResponse(data)),
-					tap((data: any) => {
-						if (data) {
-							this.data = data;
-							this.error = undefined;
-						} else {
-							this.error = {message: this.config.noCredentialsMessage}
-						}
-					}),
-					catchError((err) => {
-						this.error = {message: this.config.noCredentialsMessage};
-						return of(true);
-					}));
+			this.data = {
+				authorizedAreas: [{Name: 'All', Id: 0}],
+				unauthorizedAreas: []
+			};
+			this.error = undefined;
 		}
 		return of(this.data)
 	}

@@ -1,12 +1,13 @@
 import { select, Store } from '@ngrx/store';
-import { Component, HostBinding, HostListener, Inject, Input, OnInit } from '@angular/core';
+import { Component, HostBinding, HostListener, Inject, Input, OnInit, ElementRef } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
 import {
 	MapFacadeService,
 	mapStateSelector,
 	selectActiveMapId,
 	selectMapsList,
-	selectOverlayOfActiveMap
+	selectOverlayOfActiveMap,
+	selectIsMinimalistViewMode
 } from '@ansyn/map-facade';
 import { selectIsPinned, selectMenuCollapse } from '@ansyn/menu';
 import { filter, map, withLatestFrom, tap } from 'rxjs/operators';
@@ -34,6 +35,8 @@ export class AnsynComponent implements OnInit {
 		map((_isPinned) => _isPinned ? 'isPinned' : 'isNotPinned')
 	);
 
+	hideStatus$: Observable<boolean> = this.store$.select(selectIsMinimalistViewMode);
+
 	activeMap$: Observable<any> = combineLatest(
 		this.store$.select(selectActiveMapId), this.store$.select(selectOverlayOfActiveMap))
 		.pipe(
@@ -55,12 +58,16 @@ export class AnsynComponent implements OnInit {
 	constructor(protected store$: Store<any>,
 				@Inject(COMPONENT_MODE) public componentMode: boolean,
 				@Inject(toolsConfig) public toolsConfigData: IToolsConfig,
+				protected ansynApp: ElementRef,
 				public loggerService: LoggerService) {
 	}
 
 	ngOnInit(): void {
 		if (this.componentMode) {
 			this.store$.dispatch(new LoadDefaultCaseAction());
+			requestAnimationFrame(() => {
+				this.ansynApp.nativeElement.style.position = 'relative';
+			})
 		}
 
 		this.store$.dispatch(new UpdateToolsFlags([{

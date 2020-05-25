@@ -1,3 +1,5 @@
+export { selectOverlaysManualProcessArgs } from './modules/overlays/overlay-status/reducers/overlay-status.reducer';
+
 export { isArrowRightKey, isArrowLeftKey, isBackspaceKey, isDigitKey, isEnterKey, isEscapeKey } from "./modules/core/utils/keyboardKey";
 
 export { IImageProcParam } from "./modules/overlays/overlay-status/config/overlay-status-config";
@@ -87,23 +89,18 @@ export {
 export { Filters, IFiltersState } from './modules/filters/reducer/filters.reducer';
 export { IFilter } from './modules/filters/models/IFilter';
 export { ILayer } from './modules/menu-items/layers-manager/models/layers.model';
-export { SetAutoImageProcessing, ShowOverlaysFootprintAction } from './modules/menu-items/tools/actions/tools.actions';
+export { ShowOverlaysFootprintAction } from './modules/menu-items/tools/actions/tools.actions';
 export { TasksComponent } from './modules/menu-items/algorithms/components/tasks/tasks.component';
 export {
-	DisableImageProcessing,
-	EnableImageProcessing,
 	SetActiveCenter,
 	SetActiveOverlaysFootprintModeAction,
 	SetAnnotationMode,
-	SetAutoImageProcessingSuccess,
-	SetManualImageProcessing,
 	SetMapGeoEnabledModeToolsActionStore,
 	SetMeasureDistanceToolState,
 	SetPinLocationModeAction,
 	StartMouseShadow,
 	StopMouseShadow,
 	ToolsActionsTypes,
-	UpdateOverlaysManualProcessArgs,
 	UpdateToolsFlags,
 	AnnotationRemoveFeature,
 	AnnotationUpdateFeature
@@ -116,7 +113,6 @@ export {
 } from './modules/menu-items/cases/actions/cases.actions';
 export {
 	selectAnnotationMode, selectAnnotationProperties,
-	selectOverlaysManualProcessArgs,
 	selectSubMenu,
 	SubMenuEnum,
 	toolsFlags,
@@ -287,7 +283,7 @@ export { ICaseSliderFilterMetadata } from './modules/menu-items/cases/models/cas
 export { ICaseLayersState } from './modules/menu-items/cases/models/case.model';
 export { ICaseFacetsState, ICaseFilter, CaseFilterMetadata } from './modules/menu-items/cases/models/case.model';
 export { ICase, ICasePreview, IDilutedCase } from './modules/menu-items/cases/models/case.model';
-export { CaseRegionState, DataInputFilterValue } from './modules/menu-items/cases/models/case.model';
+export { CaseRegionState, IDataInputFilterValue } from './modules/menu-items/cases/models/case.model';
 export {
 	CaseGeoFilter,
 	CaseOrientation,
@@ -380,5 +376,11 @@ export {
 	SetOverlaysTranslationDataAction,
 	SetOverlayTranslationDataAction,
 	ToggleDraggedModeAction,
-	TogglePresetOverlayAction
+	UpdateOverlaysManualProcessArgs,
+	TogglePresetOverlayAction,
+	SetAutoImageProcessing,
+	SetAutoImageProcessingSuccess,
+	DisableImageProcessing,
+	EnableImageProcessing,
+	SetManualImageProcessing
 } from './modules/overlays/overlay-status/actions/overlay-status.actions';

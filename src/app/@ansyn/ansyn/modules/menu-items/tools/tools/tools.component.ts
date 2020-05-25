@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-	ClearActiveInteractionsAction, SetAutoImageProcessing,
+	ClearActiveInteractionsAction,
 	SetMeasureDistanceToolState,
 	SetSubMenu,
 	ShowOverlaysFootprintAction,
@@ -82,10 +82,6 @@ export class ToolsComponent implements OnInit, OnDestroy {
 
 	get onShadowMouse() {
 		return this.flags.get(toolsFlags.shadowMouse);
-	}
-
-	get onAutoImageProcessing() {
-		return this.flags.get(toolsFlags.autoImageProcessing);
 	}
 
 	get onMeasureTool() {

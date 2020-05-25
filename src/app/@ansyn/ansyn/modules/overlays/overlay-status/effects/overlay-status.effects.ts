@@ -12,15 +12,15 @@ import {
 	MapActionTypes,
 	MapFacadeService,
 	mapStateSelector,
-	selectMaps, selectMapsIds, selectMapsList,
+	selectMaps, selectMapsList,
 	SetToastMessageAction,
 	UpdateMapAction,
-	SetLayoutSuccessAction, selectActiveMapId
+	SetLayoutSuccessAction, selectActiveMapId, IMapState
 } from '@ansyn/map-facade';
 import { AnnotationMode, DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Dictionary } from '@ngrx/entity';
-import { select, Store } from '@ngrx/store';
+import { Action, select, Store } from '@ngrx/store';
 import { EMPTY, Observable } from 'rxjs';
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { catchError, filter, map, mergeMap, switchMap, withLatestFrom, tap, pluck } from 'rxjs/operators';
@@ -28,13 +28,15 @@ import {
 	BackToWorldFailed,
 	BackToWorldSuccess,
 	BackToWorldView,
-	OverlayStatusActionsTypes, SetManualImageProcessing,
+	OverlayStatusActionsTypes, SetAutoImageProcessing, SetAutoImageProcessingSuccess, SetManualImageProcessing,
 	SetOverlayScannedAreaDataAction,
-	ToggleDraggedModeAction
+	ToggleDraggedModeAction,
+	EnableImageProcessing,
+	DisableImageProcessing
 } from '../actions/overlay-status.actions';
 import {
-	EnableImageProcessing,
-	SetAnnotationMode, SetAutoImageProcessingSuccess,
+	SetActiveOverlaysFootprintModeAction,
+	SetAnnotationMode,
 } from '../../../menu-items/tools/actions/tools.actions';
 import {
 	ICaseMapState,
@@ -52,6 +54,7 @@ import { feature } from '@turf/turf';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from '../config/overlay-status-config';
 import { isEqual } from "lodash";
+import { CasesActionTypes } from '../../../menu-items/cases/actions/cases.actions';
 
 @Injectable()
 export class OverlayStatusEffects {
@@ -90,6 +93,43 @@ export class OverlayStatusEffects {
 					);
 			})
 		);
+
+	@Effect()
+	onActiveMapChangesSetOverlaysFootprintMode$: Observable<any> = this.store$.select(selectActiveMapId).pipe(
+		filter(Boolean),
+		withLatestFrom(this.store$.select(mapStateSelector), (activeMapId, mapState: IMapState) => MapFacadeService.activeMap(mapState)),
+		filter((activeMap: ICaseMapState) => Boolean(activeMap)),
+		mergeMap<any, any>((activeMap: ICaseMapState) => {
+			const actions: Action[] = [new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode)];
+			if (!Boolean(activeMap.data.overlay)) {
+				actions.push(new DisableImageProcessing());
+			}
+			return actions;
+		})
+	);
+
+	@Effect()
+	onSelectCase$: Observable<DisableImageProcessing> = this.actions$.pipe(
+		ofType(CasesActionTypes.SELECT_CASE),
+		map(() => new DisableImageProcessing()));
+
+	@Effect()
+	toggleAutoImageProcessing$: Observable<any> = this.actions$.pipe(
+		ofType(OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING),
+		withLatestFrom(this.store$.select(mapStateSelector)),
+		mergeMap<any, any>(([action, mapsState]: [SetAutoImageProcessing, IMapState]) => {
+			const activeMap: IMapSettings = MapFacadeService.activeMap(mapsState);
+			console.log('activeMap in effect', activeMap.id);
+			const isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
+			return [
+				new UpdateMapAction({
+					id: activeMap.id,
+					changes: { data: { ...activeMap.data, isAutoImageProcessingActive } }
+				}),
+				new SetAutoImageProcessingSuccess(isAutoImageProcessingActive)
+			];
+		})
+	);
 
 	@Effect()
 	toggleTranslate$: Observable<any> = this.actions$.pipe(
@@ -169,7 +209,7 @@ export class OverlayStatusEffects {
 	);
 
 	@Effect()
-	updateImageProcessingOnTools$: Observable<any> = this.activeMap$.pipe(
+	updateImageProcessing$: Observable<any> = this.activeMap$.pipe(
 		withLatestFrom(this.store$.select(overlayStatusStateSelector).pipe(pluck<IOverlayStatusState, ImageManualProcessArgs>('manualImageProcessingParams'))),
 		mergeMap<any, any>(([map, manualImageProcessingParams]: [ICaseMapState, ImageManualProcessArgs]) => {
 			const { overlay, isAutoImageProcessingActive, imageManualProcessArgs } = map.data;

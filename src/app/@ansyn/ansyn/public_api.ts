@@ -87,15 +87,12 @@ export {
 export { Filters, IFiltersState } from './modules/filters/reducer/filters.reducer';
 export { IFilter } from './modules/filters/models/IFilter';
 export { ILayer } from './modules/menu-items/layers-manager/models/layers.model';
-export { SetAutoImageProcessing, ShowOverlaysFootprintAction } from './modules/menu-items/tools/actions/tools.actions';
+export { ShowOverlaysFootprintAction } from './modules/menu-items/tools/actions/tools.actions';
 export { TasksComponent } from './modules/menu-items/algorithms/components/tasks/tasks.component';
 export {
-	DisableImageProcessing,
-	EnableImageProcessing,
 	SetActiveCenter,
 	SetActiveOverlaysFootprintModeAction,
 	SetAnnotationMode,
-	SetAutoImageProcessingSuccess,
 	SetManualImageProcessing,
 	SetMapGeoEnabledModeToolsActionStore,
 	SetMeasureDistanceToolState,
@@ -380,5 +377,9 @@ export {
 	SetOverlaysTranslationDataAction,
 	SetOverlayTranslationDataAction,
 	ToggleDraggedModeAction,
-	TogglePresetOverlayAction
+	TogglePresetOverlayAction,
+	SetAutoImageProcessing,
+	SetAutoImageProcessingSuccess,
+	DisableImageProcessing,
+	EnableImageProcessing
 } from './modules/overlays/overlay-status/actions/overlay-status.actions';

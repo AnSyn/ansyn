@@ -14,7 +14,8 @@ import {
 	SetRemovedOverlaysIdAction,
 	ToggleDraggedModeAction,
 	ToggleFavoriteAction,
-	TogglePresetOverlayAction
+	TogglePresetOverlayAction,
+	SetAutoImageProcessing
 } from './actions/overlay-status.actions';
 import {
 	selectFavoriteOverlays,
@@ -28,8 +29,7 @@ import { Actions, ofType } from '@ngrx/effects';
 import {
 	SetAnnotationMode,
 	ToolsActionsTypes,
-	ClearActiveInteractionsAction,
-	SetAutoImageProcessing
+	ClearActiveInteractionsAction
 } from '../../menu-items/tools/actions/tools.actions';
 import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-manager/reducers/layers.reducer';
 import { ClickOutsideService } from '../../core/click-outside/click-outside.service';
@@ -92,6 +92,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	active$ = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectTranslationData)).pipe(
 		tap(([activeMapId, overlaysTranslationData]: [string, { [key: string]: ITranslationData }]) => {
 			this.isActiveMap = activeMapId === this.mapId;
+			console.log('activeMap on component', activeMapId);
 			this.overlaysTranslationData = overlaysTranslationData;
 			this.updateDraggedStatus();
 		})
@@ -124,6 +125,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	constructor(public store$: Store<any>, protected actions$: Actions, protected element: ElementRef, protected clickOutsideService: ClickOutsideService) {
 		this.isPreset = true;
 		this.isFavorite = true;
+		console.log('inited');
 	}
 
 	@AutoSubscription
@@ -274,9 +276,13 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	toggleAutoImageProcessing() {
-		this.isAutoProcessing = !this.isAutoProcessing;
-		this.isManualProcessing = false;
-		this.store$.dispatch(new SetAutoImageProcessing());
+		console.log('mapId after button click', this.mapId);
+		console.log('isActiveMap after button click', this.isActiveMap);
+		if (this.isActiveMap) {
+			this.isAutoProcessing = !this.isAutoProcessing;
+			this.isManualProcessing = false;
+			this.store$.dispatch(new SetAutoImageProcessing());
+		}
 	}
 
 	toggleMoreButtons() {

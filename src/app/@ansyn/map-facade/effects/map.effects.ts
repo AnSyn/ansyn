@@ -101,6 +101,7 @@ export class MapEffects {
 			return communicator.setPosition(activeMap.data.position).pipe(map(() => [{ payload }, mapState]));
 		}),
 		mergeMap(([{ payload }, mapState]: [ImageryCreatedAction, IMapState]) => {
+			console.log('created');
 			const activeMap = MapFacadeService.activeMap(mapState);
 			const actions = [];
 			const updatedMap = mapState.entities[payload.id];

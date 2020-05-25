@@ -1,4 +1,4 @@
-import { ImageryMapPosition, IMapSettings, MapOrientation } from '@ansyn/imagery';
+import { ImageryMapPosition, IMapSettings } from '@ansyn/imagery';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { range } from 'lodash';
@@ -129,6 +129,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		}
 
 		case MapActionTypes.UPDATE_MAP: {
+			console.log("updated");
 			return mapsAdapter.updateOne(action.payload, state);
 		}
 

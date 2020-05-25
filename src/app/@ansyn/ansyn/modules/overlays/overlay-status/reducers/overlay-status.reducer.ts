@@ -13,6 +13,11 @@ import { MultiPolygon } from 'geojson';
 export const overlayStatusFeatureKey = 'overlayStatus';
 export const overlayStatusStateSelector: MemoizedSelector<any, IOverlayStatusState> = createFeatureSelector<IOverlayStatusState>(overlayStatusFeatureKey);
 
+export enum overlayStatusFlags {
+	autoImageProcessing = 'autoImageProcessing',
+	imageProcessingDisabled = 'imageProcessingDisabled',
+}
+
 export interface ITranslationsData {
 	[key: string]: ITranslationData;
 }
@@ -27,6 +32,7 @@ export interface IOverlayStatusState {
 	removedOverlaysVisibility: boolean;
 	removedOverlaysIdsCount: number;
 	presetOverlays: IOverlay[];
+	flags: Map<overlayStatusFlags, boolean>;
 	alertMsg: AlertMsg;
 	manualImageProcessingParams: ImageManualProcessArgs;
 	overlaysTranslationData: ITranslationsData,
@@ -41,6 +47,7 @@ export interface IImageProcessState {
 }
 
 export const overlayStatusInitialState: IOverlayStatusState = {
+	flags: new Map<overlayStatusFlags, boolean>(),
 	favoriteOverlays: [],
 	presetOverlays: [],
 	removedOverlaysIds: [],
@@ -53,6 +60,8 @@ export const overlayStatusInitialState: IOverlayStatusState = {
 };
 
 export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusInitialState, action: OverlayStatusActions | any): IOverlayStatusState {
+	let tmpMap: Map<overlayStatusFlags, boolean>;
+
 	switch (action.type) {
 		case OverlayStatusActionsTypes.SET_FAVORITE_OVERLAYS:
 			return { ...state, favoriteOverlays: action.payload };
@@ -80,6 +89,19 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 			const removedOverlaysIds = value ? uniq([...state.removedOverlaysIds, id]) : state.removedOverlaysIds.filter(_id => id !== _id);
 			return { ...state, removedOverlaysIds };
 
+		case OverlayStatusActionsTypes.ENABLE_IMAGE_PROCESSING:
+
+			tmpMap = new Map(state.flags);
+			tmpMap.set(overlayStatusFlags.imageProcessingDisabled, false);
+			tmpMap.set(overlayStatusFlags.autoImageProcessing, false);
+			return { ...state, flags: tmpMap };
+
+		case OverlayStatusActionsTypes.DISABLE_IMAGE_PROCESSING:
+			tmpMap = new Map(state.flags);
+			tmpMap.set(overlayStatusFlags.imageProcessingDisabled, true);
+			tmpMap.set(overlayStatusFlags.autoImageProcessing, false);
+			return { ...state, flags: tmpMap };
+
 		case OverlayStatusActionsTypes.RESET_REMOVED_OVERLAY_IDS:
 			return { ...state, removedOverlaysIds: [] };
 
@@ -91,6 +113,11 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 
 		case OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_IDS_COUNT:
 			return { ...state, removedOverlaysIdsCount: action.payload };
+
+		case OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS:
+			tmpMap = new Map(state.flags);
+			tmpMap.set(overlayStatusFlags.autoImageProcessing, action.payload);
+			return { ...state, flags: tmpMap };
 
 		case OverlayStatusActionsTypes.ADD_ALERT_MSG: {
 			const alertKey = action.payload.key;

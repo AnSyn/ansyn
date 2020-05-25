@@ -4,7 +4,6 @@ import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { ImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 import { AnnotationMode } from '@ansyn/ol';
-import { selectActiveMapId } from '@ansyn/map-facade';
 
 export enum toolsFlags {
 	geoRegisteredOptionsEnabled = 'geoRegisteredOptionsEnabled',
@@ -13,7 +12,6 @@ export enum toolsFlags {
 	shadowMouseActiveForManyScreens = 'shadowMouseActiveForManyScreens',
 	forceShadowMouse = 'forceShadowMouse',
 	pinLocation = 'pinLocation',
-	autoImageProcessing = 'autoImageProcessing',
 	imageProcessingDisabled = 'imageProcessingDisabled',
 	isMeasureToolActive = 'isMeasureToolActive'
 }
@@ -136,12 +134,6 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			tmpMap.set(toolsFlags.pinLocation, action.payload);
 			return { ...state, flags: tmpMap };
 
-		case ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS:
-
-			tmpMap = new Map(state.flags);
-			tmpMap.set(toolsFlags.autoImageProcessing, action.payload);
-			return { ...state, flags: tmpMap };
-
 		case ToolsActionsTypes.MEASURES.SET_MEASURE_TOOL_STATE:
 
 			tmpMap = new Map(state.flags);
@@ -200,20 +192,6 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			}
 			return { ...state, mapsMeasures };
 		}
-
-		case ToolsActionsTypes.ENABLE_IMAGE_PROCESSING:
-
-			tmpMap = new Map(state.flags);
-			tmpMap.set(toolsFlags.imageProcessingDisabled, false);
-			tmpMap.set(toolsFlags.autoImageProcessing, false);
-			return { ...state, flags: tmpMap };
-
-		case ToolsActionsTypes.DISABLE_IMAGE_PROCESSING:
-
-			tmpMap = new Map(state.flags);
-			tmpMap.set(toolsFlags.imageProcessingDisabled, true);
-			tmpMap.set(toolsFlags.autoImageProcessing, false);
-			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING:
 			return { ...state, manualImageProcessingParams: action.payload };

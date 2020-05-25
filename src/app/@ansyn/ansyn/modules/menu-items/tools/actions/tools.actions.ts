@@ -17,11 +17,8 @@ export const ToolsActionsTypes = {
 	GO_TO_INPUT_CHANGED: type('GO_TO_INPUT_CHANGED'),
 	SHOW_OVERLAYS_FOOTPRINT: type('SHOW_OVERLAYS_FOOTPRINT'),
 	SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE: type('SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE'),
-	SET_AUTO_IMAGE_PROCESSING: type('SET_AUTO_IMAGE_PROCESSING'),
-	ENABLE_IMAGE_PROCESSING: type('ENABLE_IMAGE_PROCESSING'),
 	DISABLE_IMAGE_PROCESSING: type('DISABLE_IMAGE_PROCESSING'),
 	SET_MANUAL_IMAGE_PROCESSING: type('SET_MANUAL_IMAGE_PROCESSING'),
-	SET_AUTO_IMAGE_PROCESSING_SUCCESS: type('SET_AUTO_IMAGE_PROCESSING_SUCCESS'),
 	MAP_GEO_ENABLED_MODE_CHANGED: type('MAP_GEO_ENABLED_MODE_CHANGED'),
 	ANNOTATION_SET_PROPERTIES: type('ANNOTATION_SET_PROPERTIES'),
 	UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS: type('UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS'),
@@ -140,22 +137,6 @@ export class SetMapGeoEnabledModeToolsActionStore implements Action {
 	}
 }
 
-export class SetAutoImageProcessing implements Action {
-	type = ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING;
-
-	constructor(public payload?: any) {
-		// code...
-	}
-}
-
-export class SetAutoImageProcessingSuccess implements Action {
-	type = ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS;
-
-	constructor(public payload: boolean) {
-		// code...
-	}
-}
-
 export class SetMeasureDistanceToolState implements Action {
 	type = ToolsActionsTypes.MEASURES.SET_MEASURE_TOOL_STATE;
 
@@ -202,20 +183,6 @@ export class RemoveMeasureAction implements Action {
 		measureId?: string;
 	}) {
 	}
-}
-
-export class DisableImageProcessing implements Action {
-	type = ToolsActionsTypes.DISABLE_IMAGE_PROCESSING;
-
-	constructor(public payload?: any) {
-	};
-}
-
-export class EnableImageProcessing implements Action {
-	type = ToolsActionsTypes.ENABLE_IMAGE_PROCESSING;
-
-	constructor(public payload?: any) {
-	};
 }
 
 export class SetManualImageProcessing implements Action {
@@ -276,10 +243,6 @@ export type ToolsActions =
 	| GoToAction
 	| ShowOverlaysFootprintAction
 	| SetActiveOverlaysFootprintModeAction
-	| SetAutoImageProcessing
-	| DisableImageProcessing
-	| EnableImageProcessing
-	| SetAutoImageProcessingSuccess
 	| SetMapGeoEnabledModeToolsActionStore
 	| SetAnnotationMode
 	| SetMapGeoEnabledModeToolsActionStore

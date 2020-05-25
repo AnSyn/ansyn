@@ -1,6 +1,7 @@
+<div *ngIf="!componentMode">
 <div class="row top">
 	<span [attr.tooltip-value]="selectedCaseName$ | async"
-	tooltip-class="bottom">
+		tooltip-class="bottom">
 		{{selectedCaseName$ | async}}
 	</span>
 </div>
@@ -14,5 +15,13 @@
 	<div class="share" (click)="copyLink()">
 		<i class="icon-share"></i>
 		<span>{{'Share' | translate}}</span>
+	</div>
+</div>
+</div>
+<div *ngIf="componentMode" class="bottom row component-mode">
+	<div [attr.tooltip-value]="statusBarConfig?.toolTips?.overlayCount | translate"
+		 tooltip-class="bottom">
+		<i class="block-icon icon-status-bar-imagery-count"></i>
+		<span>{{(overlaysCount$ | async) || 0}}</span>
 	</div>
 </div>

@@ -19,7 +19,7 @@ const DATA = {
 		'cloudCoverage': 1,
 		'azimuth': 0,
 		'projection': EPSG_3857,
-		'photoAngle': 'verticle',
+		'photoAngle': 'vertical',
 		'containedInSearchPolygon': 'contained',
 		'id': '4eeb061d-f8a6-4a0a-86cf-8d97c71a62c6',
 		'footprint': {

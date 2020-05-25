@@ -7,7 +7,7 @@ import {
 	selectActiveMapId,
 	selectMapsList,
 	selectOverlayOfActiveMap,
-    selectIsMinimalistViewMode
+	selectIsMinimalistViewMode
 } from '@ansyn/map-facade';
 import { selectIsPinned, selectMenuCollapse } from '@ansyn/menu';
 import { filter, map, withLatestFrom, tap } from 'rxjs/operators';

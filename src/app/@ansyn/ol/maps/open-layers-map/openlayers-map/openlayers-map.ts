@@ -616,4 +616,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 		return of(true);
 	}
+
+	getProjectionCode(): string {
+		return this._mapObject.getView().getProjection().code_;
+	}
 }

@@ -1,5 +1,5 @@
 import { select, Store } from '@ngrx/store';
-import { Component, HostBinding, HostListener, Inject, Input, OnInit } from '@angular/core';
+import { Component, HostBinding, HostListener, Inject, Input, OnInit, ElementRef } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
 import {
 	MapFacadeService,
@@ -55,12 +55,16 @@ export class AnsynComponent implements OnInit {
 	constructor(protected store$: Store<any>,
 				@Inject(COMPONENT_MODE) public componentMode: boolean,
 				@Inject(toolsConfig) public toolsConfigData: IToolsConfig,
+				protected ansynApp: ElementRef,
 				public loggerService: LoggerService) {
 	}
 
 	ngOnInit(): void {
 		if (this.componentMode) {
 			this.store$.dispatch(new LoadDefaultCaseAction());
+			requestAnimationFrame(() => {
+				this.ansynApp.nativeElement.style.position = 'relative';
+			})
 		}
 
 		this.store$.dispatch(new UpdateToolsFlags([{

@@ -89,7 +89,10 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		tap((caseDataInputFiltersState: ICaseDataInputFiltersState) => {
 			this.dataInputFilters = caseDataInputFiltersState;
 			const selectedFiltersSize = this.dataInputFilters.filters.length;
-			const dataInputsSize = Object.values(this.multipleOverlaysSourceConfig.indexProviders).filter(({ inActive }: IOverlaysSourceProvider) => !inActive).length;
+			let dataInputsSize = 0;
+			Object.values(this.multipleOverlaysSourceConfig.indexProviders)
+				.filter(({ inActive }: IOverlaysSourceProvider) => !inActive)
+				.forEach(({ dataInputFiltersConfig }) => dataInputsSize += dataInputFiltersConfig.children.length);
 			this.dataInputFilterTitle = this.dataInputFilters.fullyChecked ? 'All' : `${ selectedFiltersSize }/${ dataInputsSize }`;
 			if (!caseDataInputFiltersState.fullyChecked && caseDataInputFiltersState.filters.length === 0) {
 				this.popupExpanded.set('DataInputs', true)

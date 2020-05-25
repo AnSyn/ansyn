@@ -16,6 +16,7 @@ export interface IOverlaysSourceProvider {
 	inActive?: boolean;
 	whitelist: IFiltersList[];
 	blacklist: IFiltersList[];
+	showOnlyMyChildren?: boolean;
 	dataInputFiltersConfig?: any
 }
 

@@ -6,7 +6,8 @@
     "lodash",
     "angular2-uuid",
     "auto-subscriptions",
-    "file-saver"
+    "file-saver",
+    "dom-to-image"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { defer, Observable } from 'rxjs';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { IMapFacadeConfig } from '../models/map-config.model';
+import { ProjectionConverterService } from './projection-converter.service';
 
 function asyncData<T>(data: T): Observable<T> {
 	return defer(() => Promise.resolve(data));
@@ -26,7 +27,8 @@ describe('GeocoderService', () => {
 							active: true
 						}
 					}
-				}
+				},
+				ProjectionConverterService
 			]
 		});
 	});

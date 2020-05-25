@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output, Input } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { TreeviewConfig, TreeviewI18n, TreeviewItem } from 'ngx-treeview';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { Store } from '@ngrx/store';
-import { isEqual } from 'lodash';
+import { flattenDeep, isEqual } from 'lodash';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, tap } from 'rxjs/operators';
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
@@ -14,7 +14,7 @@ import {
 } from '../../../core/models/multiple-overlays-source-config';
 import { CustomTreeviewI18n } from './custom-treeview-i18n';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { DataInputFilterValue, ICaseDataInputFiltersState } from '../../../menu-items/cases/models/case.model';
+import { ICaseDataInputFiltersState, IDataInputFilterValue } from '../../../menu-items/cases/models/case.model';
 
 @Component({
 	selector: 'ansyn-tree-view',
@@ -29,7 +29,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	@Output() closeTreeView = new EventEmitter<any>();
 	@Output() dataInputTitleChange = new EventEmitter<string>();
 	@Input() dataInputItems: any[];
-	_selectedFilters: DataInputFilterValue[];
+	_selectedFilters: IDataInputFilterValue[];
 	dataInputFiltersItems: TreeviewItem[] = [];
 	leavesCount: number;
 	dataFilters: TreeviewItem[];
@@ -76,26 +76,49 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	getAllDataInputFilter(): TreeviewItem[] {
 		this.leavesCount = 0;
-		return Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
+		const dataInputs = Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
 			.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive)
-			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
-					this.leavesCount++;
-					const onlyParentDataInputFilter = { ...dataInputFiltersConfig, children: [] };
-					return onlyParentDataInputFilter;
+			.map(([providerName, { dataInputFiltersConfig, showOnlyMyChildren }]: [string, IOverlaysSourceProvider]) => {
+					if (showOnlyMyChildren) {
+						return dataInputFiltersConfig.children.map(child => {
+							this.leavesCount++;
+							return this.buildDataFilter(providerName, child);
+						})
+					} else {
+						return {
+							text: providerName,
+							children: dataInputFiltersConfig.children.map(child => this.buildDataFilter(providerName, child))
+						}
+					}
 				}
 			);
+
+		return flattenDeep(dataInputs);
+	}
+
+	buildDataFilter(providerName, filter) {
+		this.leavesCount++;
+		return {
+			text: filter.text,
+			value: {
+				...filter.value,
+				providerName
+			},
+			collapsed: false,
+			children: []
+		}
 	}
 
 	dataInputFiltersChange(): void {
 		const isFullCheck = this.leavesCount <= this._selectedFilters.length;
 		const isNoneCheck = this._selectedFilters.length === 0;
 
-			this.store.dispatch(new SetOverlaysCriteriaAction({
-				dataInputFilters: {
-					fullyChecked: isFullCheck,
-					filters: this._selectedFilters
-				}
-			}, {noInitialSearch: !isFullCheck && isNoneCheck}));
+		this.store.dispatch(new SetOverlaysCriteriaAction({
+			dataInputFilters: {
+				fullyChecked: isFullCheck,
+				filters: this._selectedFilters
+			}
+		}, { noInitialSearch: !isFullCheck && isNoneCheck }));
 	}
 
 	selectAll() {

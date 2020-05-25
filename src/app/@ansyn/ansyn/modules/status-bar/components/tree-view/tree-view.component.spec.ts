@@ -87,12 +87,12 @@ describe('TreeViewComponent', () => {
 
 	it('on check/unCheck should SetOverlaysCriteriaAction', () => {
 		spyOn(store, 'dispatch');
-		component.selectedFilters = ['provide2'];
+		component.selectedFilters = [{providerName: 'provide2', sensorType: 'sensor2', sensorName: 'sensor2'}];
 		fixture.detectChanges();
 		expect(store.dispatch).toHaveBeenCalledWith(new SetOverlaysCriteriaAction({
 				dataInputFilters: {
 					fullyChecked: false,
-					filters: ['provide2']
+					filters: [{providerName: 'provide2', sensorType: 'sensor2', sensorName: 'sensor2'}]
 				}
 			}, { noInitialSearch: false }
 		));

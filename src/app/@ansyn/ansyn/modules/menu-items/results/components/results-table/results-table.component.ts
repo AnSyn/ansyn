@@ -125,14 +125,6 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id }));
 	}
 
-	getType(overlay: IOverlayDrop): string {
-		return this.isAirplaneOverlay(overlay) ? 'icon icon-matos' : 'icon icon-lavian';
-	}
-
-	isAirplaneOverlay(overlay: IOverlayDrop): boolean {
-		return overlay && overlay.tag && overlay.tag.properties_list ? Boolean(overlay.tag.properties_list.Sortie) : false;
-	}
-
 	timeFormat(overlayDate: Date): string {
 		return overlayDate.toLocaleString('he-IL', { hour12: false });
 	}

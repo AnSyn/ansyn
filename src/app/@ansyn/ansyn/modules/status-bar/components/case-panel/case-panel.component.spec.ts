@@ -9,6 +9,7 @@ import { CopySnapshotShareLinkAction } from '../../actions/status-bar.actions';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { casesFeatureKey, CasesReducer, selectSelectedCase } from '../../../menu-items/cases/reducers/cases.reducer';
 import { of } from 'rxjs';
+import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
 
 describe('CasePanelComponent', () => {
 	let component: CasePanelComponent;
@@ -28,6 +29,10 @@ describe('CasePanelComponent', () => {
 				{
 					provide: StatusBarConfig,
 					useValue: { toolTips: {} }
+				},
+				{
+					provide: COMPONENT_MODE,
+					useValue: false
 				}
 			]
 		})

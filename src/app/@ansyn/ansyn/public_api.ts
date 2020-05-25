@@ -287,7 +287,7 @@ export { ICaseSliderFilterMetadata } from './modules/menu-items/cases/models/cas
 export { ICaseLayersState } from './modules/menu-items/cases/models/case.model';
 export { ICaseFacetsState, ICaseFilter, CaseFilterMetadata } from './modules/menu-items/cases/models/case.model';
 export { ICase, ICasePreview, IDilutedCase } from './modules/menu-items/cases/models/case.model';
-export { CaseRegionState, DataInputFilterValue } from './modules/menu-items/cases/models/case.model';
+export { CaseRegionState, IDataInputFilterValue } from './modules/menu-items/cases/models/case.model';
 export {
 	CaseGeoFilter,
 	CaseOrientation,

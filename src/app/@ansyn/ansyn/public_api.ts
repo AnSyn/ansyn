@@ -1,3 +1,5 @@
+export { selectOverlaysManualProcessArgs } from './modules/overlays/overlay-status/reducers/overlay-status.reducer';
+
 export { isArrowRightKey, isArrowLeftKey, isBackspaceKey, isDigitKey, isEnterKey, isEscapeKey } from "./modules/core/utils/keyboardKey";
 
 export { IImageProcParam } from "./modules/overlays/overlay-status/config/overlay-status-config";
@@ -99,7 +101,6 @@ export {
 	StartMouseShadow,
 	StopMouseShadow,
 	ToolsActionsTypes,
-	UpdateOverlaysManualProcessArgs,
 	UpdateToolsFlags,
 	AnnotationRemoveFeature,
 	AnnotationUpdateFeature
@@ -112,7 +113,6 @@ export {
 } from './modules/menu-items/cases/actions/cases.actions';
 export {
 	selectAnnotationMode, selectAnnotationProperties,
-	selectOverlaysManualProcessArgs,
 	selectSubMenu,
 	SubMenuEnum,
 	toolsFlags,
@@ -376,6 +376,7 @@ export {
 	SetOverlaysTranslationDataAction,
 	SetOverlayTranslationDataAction,
 	ToggleDraggedModeAction,
+	UpdateOverlaysManualProcessArgs,
 	TogglePresetOverlayAction,
 	SetAutoImageProcessing,
 	SetAutoImageProcessingSuccess,

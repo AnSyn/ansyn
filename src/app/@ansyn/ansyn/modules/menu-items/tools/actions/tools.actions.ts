@@ -21,7 +21,6 @@ export const ToolsActionsTypes = {
 	SET_MANUAL_IMAGE_PROCESSING: type('SET_MANUAL_IMAGE_PROCESSING'),
 	MAP_GEO_ENABLED_MODE_CHANGED: type('MAP_GEO_ENABLED_MODE_CHANGED'),
 	ANNOTATION_SET_PROPERTIES: type('ANNOTATION_SET_PROPERTIES'),
-	UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS: type('UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS'),
 	SET_SUB_MENU: type('SET_SUB_MENU'),
 	MEASURES: {
 		SET_MEASURE_TOOL_STATE: type('[tools] SET_MEASURE_TOOL_STATE'),
@@ -41,14 +40,6 @@ export const ToolsActionsTypes = {
 	ANNOTATION_REMOVE_FEATURE: 'ANNOTATION_REMOVE_FEATURE',
 	ANNOTATION_UPDATE_FEATURE: 'ANNOTATION_UPDATE_FEATURE'
 };
-
-export class UpdateOverlaysManualProcessArgs implements Action {
-	type = ToolsActionsTypes.UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS;
-
-	constructor(public payload: { override?: boolean, data: IOverlaysManualProcessArgs }) {
-
-	}
-}
 
 export class StartMouseShadow implements Action {
 	type = ToolsActionsTypes.START_MOUSE_SHADOW;
@@ -157,8 +148,10 @@ export class RemoveMeasureDataAction implements Action {
 	constructor(public payload: { mapId: string }) {
 	}
 }
+
 export class UpdateMeasureDataOptionsAction implements Action {
 	type = ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS;
+
 	constructor(public payload: {
 		mapId: string,
 		options: Partial<IMeasureDataOptions>
@@ -178,6 +171,7 @@ export class AddMeasureAction implements Action {
 
 export class RemoveMeasureAction implements Action {
 	type = ToolsActionsTypes.MEASURES.REMOVE_MEASURE;
+
 	constructor(public payload: {
 		mapId: string;
 		measureId?: string;
@@ -226,8 +220,7 @@ export class AnnotationUpdateFeature implements Action {
 }
 
 export type ToolsActions =
-	UpdateOverlaysManualProcessArgs
-	| StartMouseShadow
+	StartMouseShadow
 	| StopMouseShadow
 	| UpdateToolsFlags
 	| PullActiveCenter

@@ -50,13 +50,6 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		})
 	);
 
-	@AutoSubscription
-	public imageProcessingDisabled$: Observable<boolean> =
-		this.store$.select(selectToolFlag(toolsFlags.imageProcessingDisabled)).pipe(
-			filter(Boolean),
-			tap(this.closeManualProcessingMenu.bind(this))
-		);
-
 	isActiveAnnotationLayer$ = this.store$.select(selectActiveAnnotationLayer).pipe(
 		map(Boolean)
 	);
@@ -141,12 +134,6 @@ export class ToolsComponent implements OnInit, OnDestroy {
 
 	isExpand(subMenu: SubMenuEnum): boolean {
 		return this.subMenu === subMenu;
-	}
-
-	closeManualProcessingMenu() {
-		if (this.isExpand(this.subMenuEnum.manualImageProcessing)) {
-			this.toggleSubMenu(this.subMenuEnum.manualImageProcessing);
-		}
 	}
 
 	toggleExportMapsDialog() {

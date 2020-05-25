@@ -54,7 +54,6 @@ import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity/src/models';
 import {
 	SetMapGeoEnabledModeToolsActionStore,
-	UpdateOverlaysManualProcessArgs
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import {
 	DisplayOverlayAction,
@@ -68,7 +67,8 @@ import { GeoRegisteration, IOverlay } from '../../modules/overlays/models/overla
 import {
 	SetManualImageProcessing,
 	BackToWorldView,
-	OverlayStatusActionsTypes
+	OverlayStatusActionsTypes,
+	UpdateOverlaysManualProcessArgs
 } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { isEqual } from 'lodash';
@@ -76,7 +76,6 @@ import { selectGeoRegisteredOptionsEnabled } from '../../modules/menu-items/tool
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import {
-	IImageProcParam,
 	IOverlayStatusConfig,
 	overlayStatusConfig
 } from "../../modules/overlays/overlay-status/config/overlay-status-config";

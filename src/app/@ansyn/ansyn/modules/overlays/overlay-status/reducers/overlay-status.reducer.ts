@@ -9,6 +9,7 @@ import {
 	ITranslationData
 } from '../../../menu-items/cases/models/case.model';
 import { MultiPolygon } from 'geojson';
+import { ToolsActionsTypes } from '../../../menu-items/tools/actions/tools.actions';
 
 export const overlayStatusFeatureKey = 'overlayStatus';
 export const overlayStatusStateSelector: MemoizedSelector<any, IOverlayStatusState> = createFeatureSelector<IOverlayStatusState>(overlayStatusFeatureKey);
@@ -36,6 +37,7 @@ export interface IOverlayStatusState {
 	alertMsg: AlertMsg;
 	manualImageProcessingParams: ImageManualProcessArgs;
 	overlaysTranslationData: ITranslationsData,
+	overlaysManualProcessArgs: IOverlaysManualProcessArgs;
 	overlaysScannedAreaData: {
 		[key: string]: MultiPolygon;
 	}
@@ -56,7 +58,8 @@ export const overlayStatusInitialState: IOverlayStatusState = {
 	alertMsg: new Map([]),
 	overlaysTranslationData: {},
 	overlaysScannedAreaData: {},
-	manualImageProcessingParams: {}
+	manualImageProcessingParams: {},
+	overlaysManualProcessArgs: {}
 };
 
 export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusInitialState, action: OverlayStatusActions | any): IOverlayStatusState {
@@ -101,6 +104,15 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 			tmpMap.set(overlayStatusFlags.imageProcessingDisabled, true);
 			tmpMap.set(overlayStatusFlags.autoImageProcessing, false);
 			return { ...state, flags: tmpMap };
+
+		case OverlayStatusActionsTypes.UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS:
+			if (action.payload.override) {
+				return { ...state, overlaysManualProcessArgs: action.payload.data };
+			}
+			return {
+				...state,
+				overlaysManualProcessArgs: { ...state.overlaysManualProcessArgs, ...action.payload.data }
+			};
 
 		case OverlayStatusActionsTypes.RESET_REMOVED_OVERLAY_IDS:
 			return { ...state, removedOverlaysIds: [] };
@@ -192,5 +204,6 @@ export const selectRemovedOverlaysIdsCount: MemoizedSelector<any, number> = crea
 export const selectRemovedOverlays: MemoizedSelector<any, string[]> = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.removedOverlaysIds);
 export const selectPresetOverlays: MemoizedSelector<any, IOverlay[]> = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.presetOverlays);
 export const selectAlertMsg = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.alertMsg);
+export const selectOverlaysManualProcessArgs = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.overlaysManualProcessArgs);
 export const selectTranslationData = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus && overlayStatus.overlaysTranslationData);
 export const selectScannedAreaData = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus && overlayStatus.overlaysScannedAreaData);

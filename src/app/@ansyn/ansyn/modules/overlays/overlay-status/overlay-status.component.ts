@@ -269,8 +269,10 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	toggleManualImageProcessing() {
-		this.moreButtons = false;
-		this.isManualProcessing = !this.isManualProcessing;
+		if (this.isActiveMap) {
+			this.moreButtons = false;
+			this.isManualProcessing = !this.isManualProcessing;
+		}
 	}
 
 	toggleAutoImageProcessing() {

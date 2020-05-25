@@ -2,11 +2,12 @@ import { Action } from '@ngrx/store';
 import { AlertMsgTypes } from '../../../alerts/model';
 import { IOverlay } from '../../models/overlay.model';
 import {
-	ImageManualProcessArgs,
+	ImageManualProcessArgs, IOverlaysManualProcessArgs,
 	IOverlaysScannedAreaData,
 	IOverlaysTranslationData,
 } from '../../../menu-items/cases/models/case.model';
 import { IScannedArea } from '../reducers/overlay-status.reducer';
+import { ToolsActionsTypes } from '../../../menu-items/tools/actions/tools.actions';
 
 export enum OverlayStatusActionsTypes {
 	SET_MANUAL_IMAGE_PROCESSING = 'SET_MANUAL_IMAGE_PROCESSING',
@@ -33,7 +34,8 @@ export enum OverlayStatusActionsTypes {
 	SET_OVERLAYS_TRANSLATION_DATA = 'SET_OVERLAYS_TRANSLATION_DATA',
 	SET_OVERLAY_SCANNED_AREA_DATA = 'SET_OVERLAY_SCANNED_AREA_DATA',
 	SET_OVERLAYS_SCANNED_AREA_DATA = 'SET_OVERLAYS_SCANNED_AREA_DATA',
-	ACTIVATE_SCANNED_AREA = 'ACTIVATE_SCANNED_AREA'
+	ACTIVATE_SCANNED_AREA = 'ACTIVATE_SCANNED_AREA',
+	UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS = 'UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS'
 }
 
 
@@ -54,6 +56,14 @@ export type OverlayStatusActions =
 	|
 	SetOverlaysTranslationDataAction
 	| ToggleDraggedModeAction;
+
+export class UpdateOverlaysManualProcessArgs implements Action {
+	type = OverlayStatusActionsTypes.UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS;
+
+	constructor(public payload: { override?: boolean, data: IOverlaysManualProcessArgs }) {
+
+	}
+}
 
 export class ActivateScannedAreaAction implements Action {
 	type: string = OverlayStatusActionsTypes.ACTIVATE_SCANNED_AREA;

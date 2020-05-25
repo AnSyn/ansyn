@@ -60,7 +60,6 @@ export class ToolsAppEffects {
 	@Effect({ dispatch: false })
 	actionsLogger$: Observable<any> = this.actions$.pipe(
 		ofType(
-			ToolsActionsTypes.UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS,
 			ToolsActionsTypes.START_MOUSE_SHADOW,
 			ToolsActionsTypes.STOP_MOUSE_SHADOW,
 			ToolsActionsTypes.GO_TO,

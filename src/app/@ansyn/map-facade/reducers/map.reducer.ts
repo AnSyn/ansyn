@@ -129,7 +129,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		}
 
 		case MapActionTypes.UPDATE_MAP: {
-			return mapsAdapter.updateOne(action.payload, state);ma
+			return mapsAdapter.updateOne(action.payload, state);
 		}
 
 		case MapActionTypes.POSITION_CHANGED: {

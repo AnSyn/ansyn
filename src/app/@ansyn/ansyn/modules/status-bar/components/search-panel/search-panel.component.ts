@@ -60,7 +60,6 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	timeSelectionTitle: { from: string, to: string };
 	timeSelectionOldTitle: { from: string, to: string };
 	geoFilterTitle: string;
-	geoFilterCoordinates: string;
 	dataInputFilters: ICaseDataInputFiltersState;
 	@ViewChild('timePickerTitleFrom') timePickerInputFrom: ElementRef;
 	@ViewChild('timePickerTitleTo') timePickerInputTo: ElementRef;
@@ -110,12 +109,6 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 			this.geoFilterTitle = `${ geoFilterType }`;
 			this.popupExpanded.set('LocationPicker', active);
 		})
-	);
-
-	@AutoSubscription
-	updateGeoFilterCoordinates$ = this.store$.select(selectRegion).pipe(
-		filter(Boolean),
-		tap(({ coordinates }) => this.geoFilterCoordinates = coordinates.toString())
 	);
 
 	constructor(protected store$: Store<IStatusBarState>,

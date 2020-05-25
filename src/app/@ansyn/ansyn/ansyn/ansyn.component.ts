@@ -6,7 +6,8 @@ import {
 	mapStateSelector,
 	selectActiveMapId,
 	selectMapsList,
-	selectOverlayOfActiveMap
+	selectOverlayOfActiveMap,
+    selectIsMinimalistViewMode
 } from '@ansyn/map-facade';
 import { selectIsPinned, selectMenuCollapse } from '@ansyn/menu';
 import { filter, map, withLatestFrom, tap } from 'rxjs/operators';
@@ -33,6 +34,8 @@ export class AnsynComponent implements OnInit {
 	isPinnedClass$: Observable<string> = this.store$.select(selectIsPinned).pipe(
 		map((_isPinned) => _isPinned ? 'isPinned' : 'isNotPinned')
 	);
+
+	hideStatus$: Observable<boolean> = this.store$.select(selectIsMinimalistViewMode);
 
 	activeMap$: Observable<any> = combineLatest(
 		this.store$.select(selectActiveMapId), this.store$.select(selectOverlayOfActiveMap))

@@ -1,6 +1,9 @@
 <div class="presets">
-	<div *ngFor="let preset of presetsData">
-		<button (click)="setPreset(preset.days)">{{preset.title | translate}}</button>
+	<div *ngFor="let preset of presetsDays" [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''">
+		<button (click)="setPreset(preset)">
+			<span>{{preset}} </span>
+			<span>{{'days ago' | translate}}</span>
+		</button>
 	</div>
 	<button
 		type="submit"

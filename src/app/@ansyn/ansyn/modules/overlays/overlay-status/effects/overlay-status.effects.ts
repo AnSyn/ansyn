@@ -23,7 +23,7 @@ import { Dictionary } from '@ngrx/entity';
 import { Action, select, Store } from '@ngrx/store';
 import { EMPTY, Observable } from 'rxjs';
 import { fromPromise } from 'rxjs/internal-compatibility';
-import { catchError, filter, map, mergeMap, switchMap, withLatestFrom, tap, pluck } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, switchMap, withLatestFrom, pluck } from 'rxjs/operators';
 import {
 	BackToWorldFailed,
 	BackToWorldSuccess,
@@ -79,7 +79,7 @@ export class OverlayStatusEffects {
 					changes: { data: { ...selectedMap.data, overlay: null, isAutoImageProcessingActive: false, imageManualProcessArgs: this.defaultImageManualProcessArgs } }
 				}));
 
-				return fromPromise(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
+				return fromPromise<any>(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
 					.pipe(
 						map(() => new BackToWorldSuccess(payload)),
 						catchError((err) => {

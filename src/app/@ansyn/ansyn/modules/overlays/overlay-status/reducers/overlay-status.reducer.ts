@@ -92,7 +92,6 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 			return { ...state, removedOverlaysIds };
 
 		case OverlayStatusActionsTypes.ENABLE_IMAGE_PROCESSING:
-
 			tmpMap = new Map(state.flags);
 			tmpMap.set(overlayStatusFlags.imageProcessingDisabled, false);
 			tmpMap.set(overlayStatusFlags.autoImageProcessing, false);

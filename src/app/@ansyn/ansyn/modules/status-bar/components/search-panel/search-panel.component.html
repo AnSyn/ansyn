@@ -1,5 +1,5 @@
 <!-- Geo filter -->
-<div class="box" id="geoPreSearch">
+<div class="box" id="geoPreSearch" [class.component]="componentMode">
 	<button ansynComboBoxTrigger
 			(click)="toggleExpander('LocationPicker')"
 			[attr.tooltip-value]="statusBarConfig?.toolTips?.geoFilter | translate"
@@ -9,7 +9,10 @@
 			[withArrow]="false"
 			icon="icon icon-status-bar-geo"
 			class="button">
-		<span class="title">{{geoFilterTitle | translate}}</span>
+		<div [class.component]="componentMode">
+			<span class="title">{{geoFilterTitle | translate}} </span>
+			<span *ngIf="!componentMode" class="coordinates"> ({{geoFilterCoordinates}})</span>
+		</div>
 	</button>
 
 	<ansyn-location-picker

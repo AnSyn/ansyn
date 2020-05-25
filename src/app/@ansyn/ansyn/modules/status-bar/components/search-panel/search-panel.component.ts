@@ -28,6 +28,7 @@ import {
 } from '../../../core/utils/keyboardKey';
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import { LoggerService } from '../../../core/services/logger.service';
+import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
 
 const moment = momentNs;
 
@@ -60,6 +61,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	timeSelectionTitle: { from: string, to: string };
 	timeSelectionOldTitle: { from: string, to: string };
 	geoFilterTitle: string;
+	geoFilterCoordinates: string;
 	dataInputFilters: ICaseDataInputFiltersState;
 	@ViewChild('timePickerTitleFrom') timePickerInputFrom: ElementRef;
 	@ViewChild('timePickerTitleTo') timePickerInputTo: ElementRef;
@@ -111,10 +113,17 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		})
 	);
 
+	@AutoSubscription
+	updateGeoFilterCoordinates$ = this.store$.select(selectRegion).pipe(
+		filter(Boolean),
+		tap(({ coordinates }) => this.geoFilterCoordinates = coordinates.toString())
+	);
+
 	constructor(protected store$: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 				@Inject(MultipleOverlaysSourceConfig) private multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				protected loggerService: LoggerService,
+				@Inject(COMPONENT_MODE) public componentMode: boolean,
 				dateTimeAdapter: DateTimeAdapter<any>
 	) {
 		dateTimeAdapter.setLocale(statusBarConfig.locale);

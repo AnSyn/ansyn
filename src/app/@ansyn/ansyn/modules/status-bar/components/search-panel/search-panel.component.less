@@ -32,6 +32,7 @@
 				&::selection {
 					background: @status-bar-panels;
 				}
+
 				&.error {
 					color: red;
 				}
@@ -41,9 +42,22 @@
 				}
 			}
 		}
+
 		&#geoPreSearch {
-			width: 95px;
+			width: 150px;
+
+			&.component {
+				width: 95px;
+			}
+			div {
+				width: 100%;
+				&:not(.component){
+				overflow: hidden;
+				text-overflow: ellipsis;
+				}
+			}
 		}
+
 		&#dataInputsPreSearch {
 			width: 110px;
 		}

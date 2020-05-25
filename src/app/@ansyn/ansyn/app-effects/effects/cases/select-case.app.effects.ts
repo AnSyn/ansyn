@@ -8,7 +8,8 @@ import {
 	SetOverlaysTranslationDataAction,
 	SetPresetOverlaysAction,
 	SetRemovedOverlaysIdsAction,
-	SetRemovedOverlaysVisibilityAction
+	SetRemovedOverlaysVisibilityAction,
+	UpdateOverlaysManualProcessArgs
 } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { IAppState } from '../../app.effects.module';
 import { concatMap } from 'rxjs/operators';
@@ -28,7 +29,6 @@ import { UpdateFacetsAction } from '../../../modules/filters/actions/filters.act
 import {
 	SetAnnotationMode,
 	SetMeasureDistanceToolState,
-	UpdateOverlaysManualProcessArgs
 } from '../../../modules/menu-items/tools/actions/tools.actions';
 import { isFullOverlay } from '../../../modules/core/utils/overlays';
 import { ICoreConfig } from '../../../modules/core/models/core.config.model';

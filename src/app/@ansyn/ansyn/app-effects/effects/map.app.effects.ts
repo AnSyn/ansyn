@@ -53,9 +53,7 @@ import { MarkUpClass } from '../../modules/overlays/reducers/overlays.reducer';
 import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity/src/models';
 import {
-	SetManualImageProcessing,
 	SetMapGeoEnabledModeToolsActionStore,
-	ToolsActionsTypes,
 	UpdateOverlaysManualProcessArgs
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import {
@@ -68,6 +66,7 @@ import {
 } from '../../modules/overlays/actions/overlays.actions';
 import { GeoRegisteration, IOverlay } from '../../modules/overlays/models/overlay.model';
 import {
+	SetManualImageProcessing,
 	BackToWorldView,
 	OverlayStatusActionsTypes
 } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';

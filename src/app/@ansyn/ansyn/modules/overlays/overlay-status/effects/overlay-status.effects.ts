@@ -119,7 +119,6 @@ export class OverlayStatusEffects {
 		withLatestFrom(this.store$.select(mapStateSelector)),
 		mergeMap<any, any>(([action, mapsState]: [SetAutoImageProcessing, IMapState]) => {
 			const activeMap: IMapSettings = MapFacadeService.activeMap(mapsState);
-			console.log('activeMap in effect', activeMap.id);
 			const isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
 			return [
 				new UpdateMapAction({

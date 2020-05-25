@@ -92,7 +92,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	active$ = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectTranslationData)).pipe(
 		tap(([activeMapId, overlaysTranslationData]: [string, { [key: string]: ITranslationData }]) => {
 			this.isActiveMap = activeMapId === this.mapId;
-			console.log('activeMap on component', activeMapId);
 			this.overlaysTranslationData = overlaysTranslationData;
 			this.updateDraggedStatus();
 		})
@@ -125,7 +124,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	constructor(public store$: Store<any>, protected actions$: Actions, protected element: ElementRef, protected clickOutsideService: ClickOutsideService) {
 		this.isPreset = true;
 		this.isFavorite = true;
-		console.log('inited');
 	}
 
 	@AutoSubscription
@@ -276,8 +274,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	toggleAutoImageProcessing() {
-		console.log('mapId after button click', this.mapId);
-		console.log('isActiveMap after button click', this.isActiveMap);
 		if (this.isActiveMap) {
 			this.isAutoProcessing = !this.isAutoProcessing;
 			this.isManualProcessing = false;

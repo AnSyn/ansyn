@@ -93,7 +93,6 @@ export {
 	SetActiveCenter,
 	SetActiveOverlaysFootprintModeAction,
 	SetAnnotationMode,
-	SetManualImageProcessing,
 	SetMapGeoEnabledModeToolsActionStore,
 	SetMeasureDistanceToolState,
 	SetPinLocationModeAction,
@@ -381,5 +380,6 @@ export {
 	SetAutoImageProcessing,
 	SetAutoImageProcessingSuccess,
 	DisableImageProcessing,
-	EnableImageProcessing
+	EnableImageProcessing,
+	SetManualImageProcessing
 } from './modules/overlays/overlay-status/actions/overlay-status.actions';

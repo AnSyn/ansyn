@@ -185,13 +185,6 @@ export class RemoveMeasureAction implements Action {
 	}
 }
 
-export class SetManualImageProcessing implements Action {
-	type = ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING;
-
-	constructor(public payload: ImageManualProcessArgs) {
-	};
-}
-
 export class AnnotationSetProperties implements Action {
 	type = ToolsActionsTypes.ANNOTATION_SET_PROPERTIES;
 

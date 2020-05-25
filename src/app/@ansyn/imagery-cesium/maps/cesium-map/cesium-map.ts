@@ -1,7 +1,6 @@
 import {
 	BaseImageryMap,
 	ExtentCalculator,
-	ICanvasExportData,
 	IMAGERY_BASE_MAP_LAYER,
 	IMAGERY_MAIN_LAYER_NAME,
 	ImageryLayerProperties,
@@ -20,7 +19,7 @@ import { fromPromise } from 'rxjs/internal-compatibility';
 import { map, mergeMap, take } from 'rxjs/operators';
 import { CesiumLayer, ISceneMode } from '../../models/cesium-layer';
 import { CesiumProjectionService } from '../../projection/cesium-projection.service';
-import { Cartesian2, Cartesian3, Viewer } from 'cesium';
+import { Cartesian2, Cartesian3, ImageryLayer, Viewer } from 'cesium';
 
 declare const Cesium: any;
 
@@ -35,21 +34,21 @@ export const CesiumMapName = 'CesiumMap';
 	deps: [CesiumProjectionService]
 })
 export class CesiumMap extends BaseImageryMap<any> {
-	static groupLayers = new Map<string, any>();
+	static groupLayers = new Map<string, CesiumLayer>();
 	mapObject: Viewer;
 	element: HTMLElement;
 	_moveEndListener;
 	_mouseMoveHandler;
 	lastRotation = 0;
 	mainLayer: CesiumLayer;
-	layersToCesiumLayer: Map<CesiumLayer, any>;
+	layersToCesiumLayer: Map<CesiumLayer, ImageryLayer>;
 
 	constructor(public projectionService: CesiumProjectionService) {
 		super();
-		this.layersToCesiumLayer = new Map<CesiumLayer, any>();
+		this.layersToCesiumLayer = new Map<CesiumLayer, ImageryLayer>();
 	}
 
-	initMap(element: HTMLElement, shadowElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: any, position?: ImageryMapPosition): Observable<boolean> {
+	initMap(element: HTMLElement, shadowElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: CesiumLayer, position?: ImageryMapPosition): Observable<boolean> {
 		this.element = element;
 
 		return this.resetView(layer, position);
@@ -338,11 +337,11 @@ export class CesiumMap extends BaseImageryMap<any> {
 		return this.internalSetPosition((<any>polygon.geometry));
 	}
 
-	getMainLayer(): any {
+	getMainLayer(): CesiumLayer {
 		return this.mainLayer;
 	}
 
-	public addMapLayer(layer: any) {
+	public addMapLayer(layer: CesiumLayer) {
 		const main = this.getMainLayer();
 		const mainLayerId = main.get(ImageryLayerProperties.ID);
 		const baseMapLayer = Array.from(this.layersToCesiumLayer.keys()).find((currentLayer: CesiumLayer) => currentLayer.get(ImageryLayerProperties.NAME) === IMAGERY_BASE_MAP_LAYER && currentLayer.get(ImageryLayerProperties.ID) !== mainLayerId);
@@ -354,12 +353,12 @@ export class CesiumMap extends BaseImageryMap<any> {
 		}
 	}
 
-	addLayer(layer: any): void {
+	addLayer(layer: CesiumLayer): void {
 		const actualCesiumLayer = this.mapObject.imageryLayers.addImageryProvider(layer.layer);
 		this.layersToCesiumLayer.set(layer, actualCesiumLayer);
 	}
 
-	removeLayer(layer: any): void {
+	removeLayer(layer: CesiumLayer): void {
 		const actualCesiumLayer = this.layersToCesiumLayer.get(layer);
 		if (actualCesiumLayer) {
 			this.mapObject.imageryLayers.remove(actualCesiumLayer);
@@ -506,7 +505,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		return new Observable();
 	}
 
-	getLayers(): any[] {
+	getLayers(): CesiumLayer[] {
 		return [];
 	}
 

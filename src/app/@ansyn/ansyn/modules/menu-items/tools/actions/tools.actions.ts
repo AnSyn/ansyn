@@ -3,7 +3,6 @@ import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { SubMenuEnum, toolsFlags, IMeasureData, IMeasureDataOptions } from '../reducers/tools.reducer';
 import { type } from '../../../core/utils/type';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
-import { ImageManualProcessArgs, IOverlaysManualProcessArgs } from '../../cases/models/case.model';
 import { AnnotationMode, IUpdateFeatureEvent } from '@ansyn/ol';
 
 export const ToolsActionsTypes = {

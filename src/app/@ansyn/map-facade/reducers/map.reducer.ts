@@ -129,7 +129,6 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		}
 
 		case MapActionTypes.UPDATE_MAP: {
-			console.log("updated");
 			return mapsAdapter.updateOne(action.payload, state);
 		}
 

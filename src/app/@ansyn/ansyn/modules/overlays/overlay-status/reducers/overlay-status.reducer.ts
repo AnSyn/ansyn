@@ -9,7 +9,6 @@ import {
 	ITranslationData
 } from '../../../menu-items/cases/models/case.model';
 import { MultiPolygon } from 'geojson';
-import { ToolsActionsTypes } from '../../../menu-items/tools/actions/tools.actions';
 
 export const overlayStatusFeatureKey = 'overlayStatus';
 export const overlayStatusStateSelector: MemoizedSelector<any, IOverlayStatusState> = createFeatureSelector<IOverlayStatusState>(overlayStatusFeatureKey);

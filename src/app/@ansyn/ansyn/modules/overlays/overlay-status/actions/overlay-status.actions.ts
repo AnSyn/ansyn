@@ -7,7 +7,6 @@ import {
 	IOverlaysTranslationData,
 } from '../../../menu-items/cases/models/case.model';
 import { IScannedArea } from '../reducers/overlay-status.reducer';
-import { ToolsActionsTypes } from '../../../menu-items/tools/actions/tools.actions';
 
 export enum OverlayStatusActionsTypes {
 	SET_MANUAL_IMAGE_PROCESSING = 'SET_MANUAL_IMAGE_PROCESSING',

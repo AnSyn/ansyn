@@ -1,4 +1,10 @@
-import { BaseMapSourceProvider, IBaseImageryMapConstructor, ImageryMapSource, IMapSettings } from '@ansyn/imagery';
+import {
+	IBaseImageryLayer,
+	BaseMapSourceProvider,
+	IBaseImageryMapConstructor,
+	ImageryMapSource,
+	IMapSettings
+} from '@ansyn/imagery';
 import { CesiumMap } from '../maps/cesium-map/cesium-map';
 import { CesiumLayer } from '../models/cesium-layer';
 
@@ -13,7 +19,7 @@ export const CesiumGeoServerSourceProviderSourceType = 'CESIUM_GEO_SERVER';
 export class CesiumGeoServerSourceProvider extends BaseMapSourceProvider {
 	readonly supported: IBaseImageryMapConstructor[];
 
-	protected create(metaData: IMapSettings): Promise<any> {
+	protected create(metaData: IMapSettings): Promise<IBaseImageryLayer> {
 		const config = {...this.config, ...metaData.data.config};
 		const layers = config.layers.join(',');
 		const cesiumGeoServerLayer = new Cesium.WebMapServiceImageryProvider({

@@ -1,4 +1,5 @@
 import { combineLatest, Observable, of } from 'rxjs';
+import ol_Layer from 'ol/layer/Layer';
 import ImageLayer from 'ol/layer/Image';
 import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
@@ -9,7 +10,6 @@ import { distinctUntilChanged, filter, map, take, tap } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import { Inject } from '@angular/core';
 import { selectMaps } from '@ansyn/map-facade';
-import { IToolsConfig, toolsConfig } from '../../../../menu-items/tools/models/tools-config';
 import { ICaseMapState, IImageManualProcessArgs } from '../../../../menu-items/cases/models/case.model';
 import {
 	IImageProcParam,
@@ -151,7 +151,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	}
 
 	getExistingRasterLayer(): ImageLayer {
-		const layers = this.communicator.ActiveMap.getLayers();
+		const layers = this.communicator.ActiveMap.getLayers() as ol_Layer[];
 		const imageLayer = layers.find((layer) => {
 			if (layer.type && layer.type === 'IMAGE') { // for component
 				const source = layer.getSource();

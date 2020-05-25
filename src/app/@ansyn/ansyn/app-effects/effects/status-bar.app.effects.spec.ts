@@ -168,7 +168,8 @@ describe('StatusBarAppEffects', () => {
 				id: 'map_1',
 				data: { position: null },
 				worldView: { mapType: null, sourceType: null },
-				flags: null
+				flags: null,
+				orientation: 'Imagery Perspective'
 			}
 			];
 

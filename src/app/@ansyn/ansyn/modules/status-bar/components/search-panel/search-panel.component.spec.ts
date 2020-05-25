@@ -43,6 +43,7 @@ const CRITERIA: IOverlaysCriteria = {
 		coordinates: [41.22, 32.222]
 	}
 };
+
 describe('SearchPanelComponent', () => {
 	let component: SearchPanelComponent;
 	let fixture: ComponentFixture<SearchPanelComponent>;

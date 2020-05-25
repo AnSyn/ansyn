@@ -161,10 +161,13 @@ export { ToolsComponent } from './modules/menu-items/tools/tools/tools.component
 export { layersConfig } from './modules/menu-items/layers-manager/services/data-layers.service';
 export {
 	LayersManagerComponent
-}from './modules/menu-items/layers-manager/components/layers-manager/layers-manager.component';
+} from './modules/menu-items/layers-manager/components/layers-manager/layers-manager.component';
 export {
 	FiltersCollectionComponent
-}from './modules/filters/components/filters-collection/filters-collection.component';
+} from './modules/filters/components/filters-collection/filters-collection.component';
+export {
+	FilterContainerComponent
+} from './modules/filters/components/filter-container/filter-container.component';
 export { CasesComponent } from './modules/menu-items/cases/components/cases/cases.component';
 export { IToolsConfig, toolsConfig } from './modules/menu-items/tools/models/tools-config';
 export { CasesModule } from './modules/menu-items/cases/cases.module';

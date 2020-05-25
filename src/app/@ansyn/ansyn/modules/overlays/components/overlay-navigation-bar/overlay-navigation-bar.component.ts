@@ -38,9 +38,23 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	private _scannedAreaKeys = '`~;'.split('');
 	private _overlayHackKeys = 'Eeק'.split('');
 
+	isElementNotValid($event: KeyboardEvent) {
+		const { activeElement } = (<Window>$event.currentTarget).document;
+		return this.isElementInput(activeElement) || this.isTimePicker(activeElement);
+	}
+
+	isElementInput(activeElement) {
+		return activeElement instanceof HTMLInputElement;
+	}
+
+	isTimePicker(activeElement) {
+		const { className } = activeElement;
+		return className.includes('owl') || className.includes('title');
+	}
+
 	@HostListener('window:keyup', ['$event'])
 	onkeyup($event: KeyboardEvent) {
-		if ((<Window>$event.currentTarget).document.activeElement instanceof HTMLInputElement) {
+		if (this.isElementNotValid($event)) {
 			return;
 		}
 
@@ -62,7 +76,7 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 
 	@HostListener('window:keydown', ['$event'])
 	onkeydown($event: KeyboardEvent) {
-		if ((<Window>$event.currentTarget).document.activeElement instanceof HTMLInputElement) {
+		if (!this.isElementNotValid($event)) {
 			return;
 		}
 
@@ -81,7 +95,7 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 
 	@HostListener('window:keypress', ['$event'])
 	onkeypress($event: KeyboardEvent) {
-		if ((<Window>$event.currentTarget).document.activeElement instanceof HTMLInputElement) {
+		if (!this.isElementNotValid($event)) {
 			return;
 		}
 

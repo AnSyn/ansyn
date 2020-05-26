@@ -1,12 +1,20 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { ImageryCommunicatorService, } from '@ansyn/imagery';
-import { mapFeatureKey, MapReducer, selectMaps } from '@ansyn/map-facade';
+import { MapFacadeService, mapFeatureKey, MapReducer, selectMaps, UpdateMapAction } from '@ansyn/map-facade';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { overlayStatusFeatureKey, OverlayStatusReducer } from '../reducers/overlay-status.reducer';
 import { OverlayStatusEffects } from './overlay-status.effects';
 import { overlayStatusConfig } from "../config/overlay-status-config";
+import {
+	DisableImageProcessing,
+	SetAutoImageProcessing,
+	SetAutoImageProcessingSuccess
+} from '../actions/overlay-status.actions';
+import { cold, hot } from 'jasmine-marbles';
+import { SelectCaseAction } from '../../../menu-items/cases/actions/cases.actions';
+import { ICase } from '../../../menu-items/cases/models/case.model';
 
 
 const fakeMaps = {
@@ -74,6 +82,12 @@ describe('OverlayStatusEffects', () => {
 			});
 			expect(communicator.loadInitialMapSource).toHaveBeenCalled();
 		});*/
+	});
+
+	it('onSelectCase$ should raise DisableImageProcessing', () => {
+		actions = hot('--a--', { a: new SelectCaseAction({} as ICase) });
+		const expectedResults = cold('--b--', { b: new DisableImageProcessing() });
+		expect(overlayStatusEffects.onSelectCase$).toBeObservable(expectedResults);
 	});
 
 });

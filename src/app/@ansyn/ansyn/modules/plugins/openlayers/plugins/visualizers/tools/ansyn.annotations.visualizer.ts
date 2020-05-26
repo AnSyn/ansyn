@@ -6,7 +6,7 @@ import { combineLatest, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
 import { distinctUntilChanged, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
-import { selectGeoFilterType, selectGeoFilterActive } from '../../../../../status-bar/reducers/status-bar.reducer';
+import { selectGeoFilterActive } from '../../../../../status-bar/reducers/status-bar.reducer';
 import {
 	selectAnnotationMode,
 	selectAnnotationProperties,
@@ -62,7 +62,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	);
 
 	getAllAnotationLayers$: Observable<any> = this.store$.select(selectLayers).pipe(
-		map( (layers: ILayer[]) => layers.filter(layer => layer.type === LayerType.annotation))
+		map((layers: ILayer[]) => layers.filter(layer => layer.type === LayerType.annotation))
 	);
 
 	annotationFlag$ = this.store$.select(selectSubMenu).pipe(
@@ -127,7 +127,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 				protected projectionService: OpenLayersProjectionService,
 				@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig) {
 		super();
-}
+	}
 
 	get offset() {
 		return this.annotationsVisualizer.offset;
@@ -179,23 +179,25 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 		tap(([{ GeoJSON, feature }, AnnotationLayers]: [IDrawEndEvent, ILayer[]]) => {
 			const [geoJsonFeature] = GeoJSON.features;
 			const layerToUpdate = AnnotationLayers.find((layer: ILayer) => layer.data.features.some(({ id }) => id === geoJsonFeature.id));
-			const data = <FeatureCollection<any>>{ ...layerToUpdate.data };
-			const annotationToChangeIndex = data.features.findIndex((feature) => feature.id === geoJsonFeature.id);
-			data.features[annotationToChangeIndex] = geoJsonFeature;
-			let label = geoJsonFeature.properties.label;
-			if (geoJsonFeature.properties.label.geometry) {
-				label = {...geoJsonFeature.properties.label, geometry: GeoJSON.features[1].geometry}
+			if (layerToUpdate) {
+				const data = <FeatureCollection<any>>{ ...layerToUpdate.data };
+				const annotationToChangeIndex = data.features.findIndex((feature) => feature.id === geoJsonFeature.id);
+				data.features[annotationToChangeIndex] = geoJsonFeature;
+				let label = geoJsonFeature.properties.label;
+				if (geoJsonFeature.properties.label.geometry) {
+					label = { ...geoJsonFeature.properties.label, geometry: GeoJSON.features[1].geometry }
+				}
+				feature.set('label', label);
+				if (this.overlay) {
+					geoJsonFeature.properties = {
+						...geoJsonFeature.properties,
+						...this.projectionService.getProjectionProperties(this.communicator, data, feature, this.overlay)
+					};
+				}
+				geoJsonFeature.properties = { ...geoJsonFeature.properties, label };
+				this.store$.dispatch(new UpdateLayer(<ILayer>{ ...layerToUpdate, data }));
 			}
-			feature.set('label', label);
-			if (this.overlay) {
-				geoJsonFeature.properties = {
-					...geoJsonFeature.properties,
-					...this.projectionService.getProjectionProperties(this.communicator, data, feature, this.overlay)
-				};
-			}
-			geoJsonFeature.properties = { ...geoJsonFeature.properties , label};
-			this.store$.dispatch(new UpdateLayer(<ILayer>{ ...layerToUpdate, data }));
-			})
+		})
 	);
 
 	@AutoSubscription

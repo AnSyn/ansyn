@@ -5,7 +5,7 @@ import { combineLatest, Observable, pipe } from 'rxjs';
 import { selectActiveMapId, selectLayout, selectMapsList } from '@ansyn/map-facade';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import {
-	selectFavoriteOverlays,
+	selectFavoriteOverlays, selectOverlaysManualProcessArgs,
 	selectPresetOverlays,
 	selectRemovedOverlays,
 	selectRemovedOverlaysVisibility,
@@ -15,7 +15,6 @@ import {
 import { IAppState } from '../../app.effects.module';
 import { selectSelectedLayersIds } from '../../../modules/menu-items/layers-manager/reducers/layers.reducer';
 import { selectFacets } from '../../../modules/filters/reducer/filters.reducer';
-import { selectOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/reducers/tools.reducer';
 import { UpdateCaseAction } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { selectAutoSave, selectSelectedCase } from '../../../modules/menu-items/cases/reducers/cases.reducer';
 import { selectMiscOverlays, selectOverlaysCriteria } from '../../../modules/overlays/reducers/overlays.reducer';

@@ -29,6 +29,10 @@ import {
 	IOverlayStatusConfig,
 	overlayStatusConfig
 } from "../../modules/overlays/overlay-status/config/overlay-status-config";
+import {
+	IOverlayStatusState,
+	overlayStatusStateSelector
+} from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 
 @Injectable()
 export class CasesAppEffects {
@@ -56,11 +60,11 @@ export class CasesAppEffects {
 	@Effect()
 	onDisplayOverlay$: Observable<any> = this.actions$.pipe(
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
-		withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(toolsStateSelector)),
-		map(([action, mapState, toolsState]: [DisplayOverlayAction, IMapState, IToolsState]) => {
+		withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(overlayStatusStateSelector)),
+		map(([action, mapState, overlayStatusState]: [DisplayOverlayAction, IMapState, IOverlayStatusState]) => {
 			const mapId = action.payload.mapId || mapState.activeMapId;
 			const currentMap = mapState.entities[mapId];
-			const imageManualProcessArgs = (Boolean(toolsState && toolsState.overlaysManualProcessArgs) && toolsState.overlaysManualProcessArgs[action.payload.overlay.id]) || this.defaultImageManualProcessArgs;
+			const imageManualProcessArgs = (Boolean(overlayStatusState && overlayStatusState.overlaysManualProcessArgs) && overlayStatusState.overlaysManualProcessArgs[action.payload.overlay.id]) || this.defaultImageManualProcessArgs;
 
 			return new UpdateMapAction({
 				id: mapId,

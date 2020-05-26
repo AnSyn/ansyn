@@ -13,20 +13,7 @@ export class TimepickerPresetsComponent implements OnInit, OnDestroy {
 
 	@Output() hideMe = new EventEmitter<boolean>();
 	@Output() openTimePicker = new EventEmitter<boolean>();
-	presetsData = [
-		{
-			title: '7 days ago',
-			days: 7
-		},
-		{
-			title: '30 days ago',
-			days: 30
-		},
-		{
-			title: '60 days ago',
-			days: 60
-		}
-	];
+	presetsDays = [7, 30, 60];
 
 
 	constructor(protected store$: Store<any>) {

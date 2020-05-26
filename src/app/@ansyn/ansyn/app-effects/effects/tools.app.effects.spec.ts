@@ -28,13 +28,10 @@ import {
 } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import {
 	ClearActiveInteractionsAction,
-	DisableImageProcessing,
 	GoToAction,
 	PullActiveCenter,
 	SetActiveCenter,
 	SetAnnotationMode,
-	SetAutoImageProcessing,
-	SetAutoImageProcessingSuccess,
 	SetPinLocationModeAction,
 	SetSubMenu,
 	ShowOverlaysFootprintAction, UpdateMeasureDataOptionsAction
@@ -266,36 +263,6 @@ describe('ToolsAppEffects', () => {
 			Gamma: 100,
 			Saturation: 0
 		};
-	});
-
-	describe('backToWorldView', () => {
-		it('backToWorldView should raise DisableImageProcessing', () => {
-			const activeCommunicator = {};
-			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => <any>activeCommunicator);
-			actions = hot('--a--', { a: new BackToWorldView({ mapId: 'mapId' }) });
-			const expectedResults = cold('--b--', { b: new DisableImageProcessing() });
-			expect(toolsAppEffects.backToWorldView$).toBeObservable(expectedResults);
-		});
-	});
-
-	it('onSelectCase$ should raise DisableImageProcessing', () => {
-		actions = hot('--a--', { a: new SelectCaseAction({} as ICase) });
-		const expectedResults = cold('--b--', { b: new DisableImageProcessing() });
-		expect(toolsAppEffects.onSelectCase$).toBeObservable(expectedResults);
-	});
-
-	it('toggleAutoImageProcessing with image processing as true should raise ToggleMapAutoImageProcessing, UpdateMapAction and ToggleAutoImageProcessingSuccess accordingly', () => {
-		const activeMap = MapFacadeService.activeMap(imapState);
-		const isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
-		actions = hot('--a--', { a: new SetAutoImageProcessing() });
-		const expectedResults = cold('--(ab)--', {
-			a: new UpdateMapAction({
-				id: activeMap.id,
-				changes: { data: { ...activeMap.data, isAutoImageProcessingActive } }
-			}),
-			b: new SetAutoImageProcessingSuccess(isAutoImageProcessingActive)
-		});
-		expect(toolsAppEffects.toggleAutoImageProcessing$).toBeObservable(expectedResults);
 	});
 
 	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Heatmap"', () => {

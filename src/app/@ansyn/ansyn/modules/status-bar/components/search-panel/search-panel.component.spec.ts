@@ -27,6 +27,7 @@ import { mockIndexProviders } from '../../../core/test/mock-providers';
 import { LoggerService } from '../../../core/services/logger.service';
 import { of } from 'rxjs';
 import { IOverlaysCriteria } from '../../../overlays/models/overlay.model';
+import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
 
 const CRITERIA: IOverlaysCriteria = {
 	dataInputFilters: {
@@ -129,7 +130,11 @@ describe('SearchPanelComponent', () => {
 						}
 					}
 				},
-				DateTimeAdapter
+				DateTimeAdapter,
+				{
+					provide: COMPONENT_MODE,
+					useValue: false
+				}
 			]
 		})
 			.compileComponents();

@@ -2,7 +2,7 @@ import { Action } from '@ngrx/store';
 import { AlertMsgTypes } from '../../../alerts/model';
 import { IOverlay } from '../../models/overlay.model';
 import {
-	IImageManualProcessArgs,
+	IImageManualProcessArgs, IOverlaysManualProcessArgs,
 	IOverlaysScannedAreaData,
 	IOverlaysTranslationData,
 } from '../../../menu-items/cases/models/case.model';
@@ -22,6 +22,10 @@ export enum OverlayStatusActionsTypes {
 	SET_REMOVED_OVERLAYS_VISIBILITY = 'SET_REMOVED_OVERLAYS_VISIBILITY',
 	TOGGLE_OVERLAY_PRESET = 'TOGGLE_OVERLAY_PRESET',
 	SET_PRESET_OVERLAYS = 'SET_PRESET_OVERLAYS',
+	SET_AUTO_IMAGE_PROCESSING = 'SET_AUTO_IMAGE_PROCESSING',
+	SET_AUTO_IMAGE_PROCESSING_SUCCESS = 'SET_AUTO_IMAGE_PROCESSING_SUCCESS',
+	ENABLE_IMAGE_PROCESSING = 'ENABLE_IMAGE_PROCESSING',
+	DISABLE_IMAGE_PROCESSING = 'DISABLE_IMAGE_PROCESSING',
 	ADD_ALERT_MSG = 'ADD_ALERT_MSG',
 	REMOVE_ALERT_MSG = 'REMOVE_ALERT_MSG',
 	TOGGLE_DRAGGED_MODE = 'TOGGLE_DRAGGED_MODE',
@@ -29,7 +33,8 @@ export enum OverlayStatusActionsTypes {
 	SET_OVERLAYS_TRANSLATION_DATA = 'SET_OVERLAYS_TRANSLATION_DATA',
 	SET_OVERLAY_SCANNED_AREA_DATA = 'SET_OVERLAY_SCANNED_AREA_DATA',
 	SET_OVERLAYS_SCANNED_AREA_DATA = 'SET_OVERLAYS_SCANNED_AREA_DATA',
-	ACTIVATE_SCANNED_AREA = 'ACTIVATE_SCANNED_AREA'
+	ACTIVATE_SCANNED_AREA = 'ACTIVATE_SCANNED_AREA',
+	UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS = 'UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS'
 }
 
 
@@ -51,6 +56,14 @@ export type OverlayStatusActions =
 	SetOverlaysTranslationDataAction
 	| ToggleDraggedModeAction;
 
+export class UpdateOverlaysManualProcessArgs implements Action {
+	type = OverlayStatusActionsTypes.UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS;
+
+	constructor(public payload: { override?: boolean, data: IOverlaysManualProcessArgs }) {
+
+	}
+}
+
 export class ActivateScannedAreaAction implements Action {
 	type: string = OverlayStatusActionsTypes.ACTIVATE_SCANNED_AREA;
 
@@ -70,6 +83,34 @@ export class SetOverlaysScannedAreaDataAction implements Action {
 
 	constructor(public payload: IOverlaysScannedAreaData) {
 	}
+}
+
+export class SetAutoImageProcessing implements Action {
+	type = OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING;
+
+	constructor(public payload?: any) {
+	}
+}
+
+export class SetAutoImageProcessingSuccess implements Action {
+	type = OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS;
+
+	constructor(public payload: boolean) {
+	}
+}
+
+export class EnableImageProcessing implements Action {
+	type = OverlayStatusActionsTypes.ENABLE_IMAGE_PROCESSING;
+
+	constructor(public payload?: any) {
+	};
+}
+
+export class DisableImageProcessing implements Action {
+	type = OverlayStatusActionsTypes.DISABLE_IMAGE_PROCESSING;
+
+	constructor(public payload?: any) {
+	};
 }
 
 export class BackToWorldView implements Action {

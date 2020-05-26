@@ -4,6 +4,7 @@ import { GeoJsonObject, Point } from 'geojson';
 import { ImageryMapExtent, IImageryMapPosition, IMousePointerMove } from './case-map-position.model';
 import { IMapErrorMessage, IMapProgress } from './map-progress.model';
 import { IBaseImageryLayer } from './imagery-layer.model';
+import { EPSG_4326 } from '../utils/geo';
 
 export interface IImageryMapMetaData {
 	deps?: any[];
@@ -96,6 +97,10 @@ export abstract class BaseImageryMap<T = any> {
 	abstract getCoordinateFromScreenPixel(screenPixel: { x, y }): [number, number, number];
 
 	abstract getHtmlContainer(): HTMLElement;
+
+	getProjectionCode(): string {
+		return EPSG_4326;
+	}
 
 	fitToExtent(extent: any): Observable<any> {
 		throw new Error('Method not implemented.');

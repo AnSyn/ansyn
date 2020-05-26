@@ -47,9 +47,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		tap((_preFilter: ICaseDataInputFiltersState) => {
 			this._selectedFilters = _preFilter.fullyChecked ? this.selectAll() : _preFilter.filters;
 			if (Boolean(this._selectedFilters)) {
-				this.dataInputFiltersItems.forEach(item => {
-					item.checked = _preFilter.fullyChecked || this._selectedFilters.some(selectedFilter => selectedFilter === item.value);
-				});
+				this.dataInputFiltersItems.forEach(root => this.updateItemState(root, _preFilter.fullyChecked));
 			}
 		})
 	);
@@ -86,7 +84,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 						})
 					} else {
 						return {
-							text: providerName,
+							...dataInputFiltersConfig,
 							children: dataInputFiltersConfig.children.map(child => this.buildDataFilter(providerName, child))
 						}
 					}
@@ -121,8 +119,28 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		}, { noInitialSearch: !isFullCheck && isNoneCheck }));
 	}
 
+	updateItemState(filter, isFullyChecked) {
+		if (this.isChild(filter)) {
+			filter.checked = isFullyChecked || this._selectedFilters.some( _filter => isEqual(_filter, filter.value))
+		}
+		else {
+			filter.children.forEach( child => this.updateItemState(child, isFullyChecked));
+		}
+	}
+
 	selectAll() {
-		return this.dataFilters.map(filter => filter.value);
+		return flattenDeep(this.dataFilters.map(filter => this.selectAllChildren(filter)));
+	}
+
+	selectAllChildren(parent) {
+		if (this.isChild(parent)) {
+			return parent.value;
+		}
+		return parent.children.map( child => this.selectAllChildren(child));
+	}
+
+	private isChild(filter) {
+		return !filter.children || filter.children.length === 0;
 	}
 
 	ngOnInit(): void {

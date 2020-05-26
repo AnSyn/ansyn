@@ -5,7 +5,7 @@
 		</div>
 		<div class="box">
 			<i class="block-icon icon-status-bar-imagery-count"></i>
-			<span class="overlay-count">{{overlays.length || 0}}</span>
+			<span class="overlay-count">{{overlayCount || 0}}</span>
 		</div>
 	</div>
 	<div class="results-table-head">
@@ -24,7 +24,7 @@
 
 		<div class="results-table-body-row"
 			 *ngFor="let overlay of overlays"
-			 (click)="openOverlay(overlay)"
+			 (click)="openOverlay(overlay.id)"
 			 (mouseenter)="onMouseOver($event, overlay.id)"
 			 (mouseleave)="onMouseOut()"
 			 [class.selected]="selectedOverlayId === overlay.id">
@@ -43,7 +43,7 @@
 				</div>
 
 				<div class="results-table-body-col overlay-type">
-					<i class="{{getType(overlay)}}"></i>
+					<i class="icon icon-{{overlay.icon}}"></i>
 				</div>
 
 			</div>

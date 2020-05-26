@@ -20,15 +20,7 @@ export class AreaToCredentialsService{
 	}
 
 	createRequest(url, body, options): Observable<any> {
-		return this.httpClient.get(url, options)
-			.pipe(
-				mergeMap((data: any) => this.parseResponse(data)),
-				map((data: any) => {
-					return data;
-				}),
-				catchError((err) => {
-					return of(false);
-				}));
+		return of([0]);
 	}
 
 	// right now we are only about the triangle number, not the publish procedure.

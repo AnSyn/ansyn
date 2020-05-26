@@ -3,11 +3,11 @@
 		<ansyn-menu [version]="version" [animatedElement]="animatedElementHorizontal"></ansyn-menu>
 	</div>
 
-	<div class="status" [class.expand]="(isMenuCollapse$ | async)">
+	<div class="status" [class.expand]="(isMenuCollapse$ | async)" [class.hide-status-bar]="(hideStatus$ | async)">
 		<ansyn-status-bar></ansyn-status-bar>
 	</div>
 
-	<div class="layer" #animatedElementHorizontal>
+	<div class="layer" #animatedElementHorizontal [class.hide-status-bar]="(hideStatus$ | async)">
 
 		<div class="maps-container" #animatedElementVertical>
 			<ansyn-imageries-manager></ansyn-imageries-manager>

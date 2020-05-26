@@ -18,7 +18,6 @@ import { MapSearchBoxComponent } from './components/map-search-box/map-search-bo
 import { ToastComponent } from './components/toast/toast.component';
 import { WelcomeNotificationComponent } from './components/welcome-notification/welcome-notification.component';
 import { EntryComponentDirective } from './directives/entry-component.directive';
-import { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
 import { MapEffects } from './effects/map.effects';
 import {
 	EntryComponentsProvider,
@@ -33,6 +32,7 @@ import { GeoHolderComponent } from './components/imagery-mouse-coordinates/holde
 import { UtmHolderComponent } from './components/imagery-mouse-coordinates/holders/utm-holder/utm-holder.component';
 import { FloatingMenuComponent } from './components/floating-menu/floating-menu.component';
 import { MatAutocompleteModule, MatInputModule } from '@angular/material';
+import { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
 
 @NgModule({
 	imports: [
@@ -60,8 +60,8 @@ import { MatAutocompleteModule, MatInputModule } from '@angular/material';
 		MapSearchBoxComponent,
 		ImageryStatusComponent,
 		WelcomeNotificationComponent,
-		ToastComponent,
 		InfiniteScrollDirective,
+		ToastComponent,
 		AnimatedEllipsisComponent,
 		AnsynLoaderComponent,
 		AnsynPopoverComponent,
@@ -76,8 +76,8 @@ import { MatAutocompleteModule, MatInputModule } from '@angular/material';
 		ImageryStatusComponent,
 		WelcomeNotificationComponent,
 		ToastComponent,
-		InfiniteScrollDirective,
 		AnimatedEllipsisComponent,
+		InfiniteScrollDirective,
 		AnsynLoaderComponent,
 		AnsynPopoverComponent,
 		EntryComponentDirective,

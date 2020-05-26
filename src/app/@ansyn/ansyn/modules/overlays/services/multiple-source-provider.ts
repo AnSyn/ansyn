@@ -23,7 +23,7 @@ import {
 	MultipleOverlaysSourceConfig
 } from '../../core/models/multiple-overlays-source-config';
 import { IOverlay, IOverlaysFetchData } from '../models/overlay.model';
-import { DataInputFilterValue } from '../../menu-items/cases/models/case.model';
+import { IDataInputFilterValue } from '../../menu-items/cases/models/case.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -164,7 +164,7 @@ export class MultipleOverlaysSourceProvider {
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		const mergedSortedOverlays: Observable<IOverlaysFetchData> = forkJoin(this.sourceConfigs
-			.filter(s => !Boolean(fetchParams.dataInputFilters.length) ? true : fetchParams.dataInputFilters.some((dataInputFilter: DataInputFilterValue) => dataInputFilter === s.provider.sourceType))
+			.filter(s => !Boolean(fetchParams.dataInputFilters.length) ? true : fetchParams.dataInputFilters.some((dataInputFilter: IDataInputFilterValue) => dataInputFilter.providerName === s.provider.sourceType))
 			.map(s => s.provider.fetchMultiple( fetchParams, s.filters)
 			)).pipe(
 			map(overlays => {

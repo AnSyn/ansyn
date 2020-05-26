@@ -16,7 +16,6 @@ import SelectEvent from 'ol/interaction/Select';
 import * as olExtent from 'ol/extent';
 import {
 	BaseImageryVisualizer,
-	calculateGeometryArea,
 	calculateLineDistance,
 	getPointByGeometry,
 	IVisualizerEntity,
@@ -88,7 +87,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		this.featuresCollection = [];
 		this.source = new SourceVector({ features: this.featuresCollection, wrapX: false });
 
-		let extent = !this.dontRestrictToExtent ? this.iMap.getMainLayer().getExtent() : undefined;
+		let extent = !this.dontRestrictToExtent ? (this.iMap.getMainLayer() as ol_Layer).getExtent() : undefined;
 		this.vector = new VectorLayer(<any>{
 			source: this.source,
 			style: this.featureStyle.bind(this),
@@ -431,7 +430,8 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 	formatArea(geometry) {
 		const fractionDigits = 2;
-		const area = getArea(geometry);
+		const projection = this.iMap.getProjectionCode();
+		const area = getArea(geometry, { projection });
 
 		if (area >= 1000) {
 			return (area / 1000).toFixed(fractionDigits) + 'km2';

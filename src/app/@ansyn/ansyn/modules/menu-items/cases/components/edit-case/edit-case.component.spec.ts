@@ -14,6 +14,7 @@ import { CoreConfig } from '../../../../core/models/core.config';
 import { LoggerConfig } from '../../../../core/models/logger.config';
 import { TranslateModule } from '@ngx-translate/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { mapFacadeConfig } from '@ansyn/map-facade';
 
 describe('EditCaseComponent', () => {
 	let component: EditCaseComponent;
@@ -50,7 +51,8 @@ describe('EditCaseComponent', () => {
 				{ provide: casesConfig, useValue: { schema: null, defaultCase: { id: 'defaultCaseId' } } },
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
-				{ provide: layersConfig, useValue: {} }
+				{ provide: layersConfig, useValue: {} },
+				{ provide: mapFacadeConfig, useValue: {} }
 			]
 		}).compileComponents();
 	}));

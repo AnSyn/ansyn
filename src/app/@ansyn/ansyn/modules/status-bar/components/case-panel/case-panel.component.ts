@@ -10,6 +10,7 @@ import { IStatusBarConfig } from '../../models/statusBar-config.model';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { ICase } from '../../../menu-items/cases/models/case.model';
 import { selectSelectedCase } from '../../../menu-items/cases/reducers/cases.reducer';
+import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
 
 @Component({
 	selector: 'ansyn-case-panel',
@@ -30,6 +31,7 @@ export class CasePanelComponent implements OnInit {
 		);
 	constructor(protected actions$: Actions,
 				protected store$: Store<IStatusBarState>,
+				@Inject(COMPONENT_MODE) public componentMode: boolean,
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
 	}
 

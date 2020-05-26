@@ -14,6 +14,7 @@ import { casesConfig } from '../../services/cases.service';
 import { CoreConfig } from '../../../../core/models/core.config';
 import { LoggerConfig } from '../../../../core/models/logger.config';
 import { TranslateModule } from '@ngx-translate/core';
+import { mapFacadeConfig } from '@ansyn/map-facade';
 
 describe('CasesTableComponent', () => {
 	let component: CasesTableComponent;
@@ -35,7 +36,8 @@ describe('CasesTableComponent', () => {
 				{ provide: casesConfig, useValue: { schema: null } },
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
-				{ provide: layersConfig, useValue: {} }
+				{ provide: layersConfig, useValue: {} },
+				{ provide: mapFacadeConfig, useValue: {} }
 			]
 		})
 			.compileComponents();

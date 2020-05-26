@@ -28,25 +28,20 @@ import {
 } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import {
 	ClearActiveInteractionsAction,
-	DisableImageProcessing,
 	GoToAction,
 	PullActiveCenter,
 	SetActiveCenter,
 	SetAnnotationMode,
-	SetAutoImageProcessing,
-	SetAutoImageProcessingSuccess,
-	SetMeasureDistanceToolState,
 	SetPinLocationModeAction,
 	SetSubMenu,
-	ShowOverlaysFootprintAction,
-	UpdateMeasureDataAction
+	ShowOverlaysFootprintAction, UpdateMeasureDataOptionsAction
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import { ICase, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
-import { selectMapsIds } from '../../../map-facade/reducers/map.reducer';
+import { selectMapsIds } from '@ansyn/map-facade';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;
@@ -270,36 +265,6 @@ describe('ToolsAppEffects', () => {
 		};
 	});
 
-	describe('backToWorldView', () => {
-		it('backToWorldView should raise DisableImageProcessing', () => {
-			const activeCommunicator = {};
-			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => activeCommunicator);
-			actions = hot('--a--', { a: new BackToWorldView({ mapId: 'mapId' }) });
-			const expectedResults = cold('--b--', { b: new DisableImageProcessing() });
-			expect(toolsAppEffects.backToWorldView$).toBeObservable(expectedResults);
-		});
-	});
-
-	it('onSelectCase$ should raise DisableImageProcessing', () => {
-		actions = hot('--a--', { a: new SelectCaseAction({} as ICase) });
-		const expectedResults = cold('--b--', { b: new DisableImageProcessing() });
-		expect(toolsAppEffects.onSelectCase$).toBeObservable(expectedResults);
-	});
-
-	it('toggleAutoImageProcessing with image processing as true should raise ToggleMapAutoImageProcessing, UpdateMapAction and ToggleAutoImageProcessingSuccess accordingly', () => {
-		const activeMap = MapFacadeService.activeMap(imapState);
-		const isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
-		actions = hot('--a--', { a: new SetAutoImageProcessing() });
-		const expectedResults = cold('--(ab)--', {
-			a: new UpdateMapAction({
-				id: activeMap.id,
-				changes: { data: { ...activeMap.data, isAutoImageProcessingActive } }
-			}),
-			b: new SetAutoImageProcessingSuccess(isAutoImageProcessingActive)
-		});
-		expect(toolsAppEffects.toggleAutoImageProcessing$).toBeObservable(expectedResults);
-	});
-
 	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Heatmap"', () => {
 		const activeMap = MapFacadeService.activeMap(imapState);
 		const overlayDisplayMode = 'Heatmap';
@@ -327,9 +292,9 @@ describe('ToolsAppEffects', () => {
 			b: new SetAnnotationMode(null),
 			c: new UpdateGeoFilterStatus(),
 			d: new SetPinLocationModeAction(false),
-			e: new UpdateMeasureDataAction({
+			e: new UpdateMeasureDataOptionsAction({
 				mapId: 'imagery1',
-				measureData: { isToolActive: false }
+				options: { isToolActive: false }
 			})
 		});
 
@@ -346,9 +311,9 @@ describe('ToolsAppEffects', () => {
 		const expectedResult = cold('--(bcd)--', {
 			b: new UpdateGeoFilterStatus(),
 			c: new SetPinLocationModeAction(false),
-			d: new UpdateMeasureDataAction({
+			d: new UpdateMeasureDataOptionsAction({
 				mapId: 'imagery1',
-				measureData: { isToolActive: false }
+				options: { isToolActive: false }
 			})
 		});
 

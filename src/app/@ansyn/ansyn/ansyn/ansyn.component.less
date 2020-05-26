@@ -27,6 +27,7 @@
 		display: flex;
 		height: 100%;
 		width: 100%;
+		position: relative;
 		overflow: hidden;
 		flex-direction: row;
 		background: @background-color-0;
@@ -46,6 +47,10 @@
 				left: 0;
 				width: 100%;
 			}
+
+			&.hide-status-bar {
+				display: none;
+			}
 		}
 
 		div.layer {
@@ -62,6 +67,10 @@
 				flex-grow: 1;
 			}
 
+			&.hide-status-bar {
+				top: 0;
+				height: 100%;
+			}
 		}
 
 		&.animations {

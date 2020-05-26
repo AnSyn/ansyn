@@ -36,7 +36,7 @@ import { ICase } from '../models/case.model';
 import { casesFeatureKey, CasesReducer, casesStateSelector, initialCasesState } from '../reducers/cases.reducer';
 import { casesConfig, CasesService } from '../services/cases.service';
 import { CasesEffects } from './cases.effects';
-import { SetMapsDataActionStore } from '@ansyn/map-facade';
+import { SetMapsDataActionStore, selectActiveMapId } from '@ansyn/map-facade';
 import { BackToWorldView } from '../../../overlays/overlay-status/actions/overlay-status.actions';
 
 describe('CasesEffects', () => {
@@ -105,7 +105,8 @@ describe('CasesEffects', () => {
 		store = _store;
 		const fakeStore = new Map<any, any>([
 			[selectLayers, [{ type: LayerType.annotation }]],
-			[casesStateSelector, casesState]
+			[casesStateSelector, casesState],
+			[selectActiveMapId, 'mapId']
 		]);
 		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
 	}));
@@ -175,8 +176,8 @@ describe('CasesEffects', () => {
 			.and
 			.returnValue('updateCaseViaQueryParmasResult');
 		const queryParmas: Params = { foo: 'bar' };
-		actions = hot('--a--', { a: new LoadDefaultCaseAction(queryParmas) });
-		const expectedResults = cold('--b--', { b: new SelectDilutedCaseAction('updateCaseViaQueryParmasResult' as any) });
+		actions = hot('a', { a: new LoadDefaultCaseAction(queryParmas) });
+		const expectedResults = cold('(bc)', { b: new SelectDilutedCaseAction('updateCaseViaQueryParmasResult' as any), c: new BackToWorldView({mapId: 'mapId'})});
 		expect(casesEffects.loadDefaultCase$).toBeObservable(expectedResults);
 	});
 

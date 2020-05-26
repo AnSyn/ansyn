@@ -83,6 +83,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		.pipe(
 			select(selectDropsWithoutSpecialObjects),
 			tap((overlays: IOverlayDrop[]) => {
+				this.resetSort();
 				this.paginateOverlays(overlays);
 				this.overlayCount = overlays.length;
 			})
@@ -100,6 +101,12 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	paginateOverlays(overlays: IOverlayDrop[]) {
 		const pagination = 15;
 		this.overlays = overlays.slice(0, pagination);
+	}
+
+	resetSort() {
+		this.tableHeaders.forEach(tableHeader => {
+			tableHeader.isAscending = true;
+		});
 	}
 
 	loadResults() {

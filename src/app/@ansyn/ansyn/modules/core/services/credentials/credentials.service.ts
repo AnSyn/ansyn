@@ -27,10 +27,6 @@ export class CredentialsService {
 	}
 
 	get user(): string {
-		return 'unknown';
-	}
-
-	get titleUser(): string {
 		return '';
 	}
 

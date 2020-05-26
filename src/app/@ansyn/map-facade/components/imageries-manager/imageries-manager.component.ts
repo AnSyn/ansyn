@@ -29,7 +29,7 @@ import { DragDropMapService } from './providers/drag-drop-map.service';
 
 import { IMapsLayout, LayoutKey, layoutOptions } from '../../models/maps-layout';
 import { IMapSettings } from '@ansyn/imagery';
-import domtoimage from 'dom-to-image';
+import html2canvas from 'html2canvas';
 import { saveAs } from 'file-saver';
 import { fromPromise } from 'rxjs/internal-compatibility';
 
@@ -59,7 +59,7 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 		}),
 		debounceTime(500),
 		mergeMap(([exporting, initialMinimal, initialFooterCollapsed]: [boolean, boolean, boolean]) => {
-			return fromPromise(this.exportElement(this.imageriesContainer.nativeElement.parentElement, initialMinimal, initialFooterCollapsed));
+			return fromPromise(this.exportElement(this.imageriesContainer.nativeElement, initialMinimal, initialFooterCollapsed));
 		}),
 		tap((value: { result: boolean, msg: string, initialMinimal: boolean, initialFooterCollapsed: boolean }) => {
 			this.switchToExportMode(false, value.initialFooterCollapsed, value.initialMinimal);
@@ -176,15 +176,17 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 		return item.id;
 	}
 
-	private async exportElement(element: Element, initialMinimal: boolean, initialFooterCollapsed: boolean): Promise<{ result: boolean, msg: string, initialMinimal: boolean, initialFooterCollapsed: boolean }> {
+	private async exportElement(element: HTMLElement, initialMinimal: boolean, initialFooterCollapsed: boolean): Promise<{ result: boolean, msg: string, initialMinimal: boolean, initialFooterCollapsed: boolean }> {
 		try {
-			const blob: Blob = await domtoimage.toBlob(element,
+			const canvas: HTMLCanvasElement = await html2canvas(element,
 				{
-					filter: (node) => {
+					ignoreElements: (node: unknown) => {
 						return (node !== this.loader.nativeElement.id || (Boolean(node.ol_lm)));
 					}
 				});
-			saveAs(blob, 'map.jpeg');
+			canvas.toBlob( blob => {
+				saveAs(blob, 'map.jpg');
+			});
 			return { result: true, msg: null, initialMinimal, initialFooterCollapsed };
 		} catch (err) {
 			return { result: true, msg: err, initialMinimal, initialFooterCollapsed };

@@ -1,3 +1,4 @@
+export { MeasureRulerVisualizer, ILabelHandler } from './plugins/measure-ruler/measure-ruler.visualizer';
 export { IMAGE_PROCESS_ATTRIBUTE } from './mapSourceProviders/open-layers.map-source-provider';
 
 export { OpenLayerESRI_4326SourceProviderSourceType } from './mapSourceProviders/open-layers-ESRI-4326-source-provider';

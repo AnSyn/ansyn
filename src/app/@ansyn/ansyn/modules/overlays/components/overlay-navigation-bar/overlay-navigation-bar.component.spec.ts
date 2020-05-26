@@ -13,12 +13,12 @@ import {
 	mapFeatureKey,
 	MapReducer,
 	selectActiveMapId,
-	selectLayout,
 	selectMapsList,
 	selectOverlayOfActiveMap
 } from '@ansyn/map-facade';
 import {
-	overlayStatusFeatureKey, OverlayStatusReducer,
+	overlayStatusFeatureKey,
+	OverlayStatusReducer,
 	selectPresetOverlays
 } from '../../overlay-status/reducers/overlay-status.reducer';
 import { of } from 'rxjs';
@@ -55,8 +55,8 @@ describe('OverlyaNavigationBarComponent', () => {
 	beforeEach(inject([Store], (_store: Store<IStatusBarState>) => {
 		store = _store;
 		const mockStore = new Map<any, any>([
-			[selectMapsList, [{id: 'activeMap'}]],
-			[ selectActiveMapId, 'activeMap'],
+			[selectMapsList, [{ id: 'activeMap' }]],
+			[selectActiveMapId, 'activeMap'],
 			[selectOverlayOfActiveMap, undefined],
 			[selectPresetOverlays, []]
 		]);
@@ -96,7 +96,13 @@ describe('OverlyaNavigationBarComponent', () => {
 			expect(component[key.n]).toEqual(false);
 			const $event = {
 				key: key.k,
-				currentTarget: { document: { activeElement: {} } }
+				currentTarget: {
+					document: {
+						activeElement: {
+							className: []
+						}
+					}
+				}
 			};
 			component.onkeydown(<any>$event);
 			expect(component[key.n]).toEqual(true);

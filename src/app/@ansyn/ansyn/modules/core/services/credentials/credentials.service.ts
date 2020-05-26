@@ -58,13 +58,18 @@ export class CredentialsService {
 		window.open(this.config.authorizationInfoURL, '_blank');
 	}
 
+	createRequest(url, options): Observable<any> {
+		this.data = {
+			authorizedAreas: [{Name: 'All', Id: 0}],
+			unauthorizedAreas: []
+		};
+		this.error = undefined;
+		return of( this.data);
+	}
+
 	getCredentials(): Observable<any> {
 		if (!this.data) {
-			this.data = {
-				authorizedAreas: [{Name: 'All', Id: 0}],
-				unauthorizedAreas: []
-			};
-			this.error = undefined;
+			return this.createRequest(this.getUrl(), {});
 		}
 		return of(this.data)
 	}

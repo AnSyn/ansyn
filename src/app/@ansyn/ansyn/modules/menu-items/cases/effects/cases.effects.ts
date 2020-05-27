@@ -154,9 +154,17 @@ export class CasesEffects {
 						.pipe(map((_) => addedCase))
 				),
 				map((addedCase: ICase) => new SaveCaseAsSuccessAction(addedCase)),
-				catchError(() => EMPTY)
+				catchError((err) => {
+					console.warn(err);
+					return EMPTY;
+				})
 			)
-		));
+		),
+		catchError((err) => {
+			console.warn(err);
+			return EMPTY;
+		})
+	);
 
 	@Effect()
 	onSaveCaseAsSuccess$ = this.actions$.pipe(

@@ -11,7 +11,7 @@
 	<div class="results-table-head">
 		<div class="results-table-head-row">
 			<div class="results-table-head-row-data">
-				<div (click)="sortOverlays(header)" *ngFor='let header of tableHeaders | slice:start:end' class="results-table-head-col  {{header.headerName}}">
+				<div (click)="sortOverlays(header)" *ngFor="let header of tableHeaders" class="results-table-head-col  {{header.headerName}}">
 					{{header.headerName | translate}}
 					<i class="icon icon-arrow" [@isDescending]="!header.isAscending" [class.active]="sortedBy === header.headerData"></i>
 				</div>
@@ -23,7 +23,7 @@
 	<div class="results-table-body scrolled"  (ansynInfiniteScroll)="loadResults()" *ngIf="overlays">
 
 		<div class="results-table-body-row"
-			 *ngFor="let overlay of overlays"
+			 *ngFor='let overlay of overlays  | slice:start:end'
 			 (click)="openOverlay(overlay.id)"
 			 (mouseenter)="onMouseOver($event, overlay.id)"
 			 (mouseleave)="onMouseOut()"

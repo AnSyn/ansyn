@@ -337,14 +337,14 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 
 	resetApp() {
 		if (this.componentMode) {
-			this.openAppInTab();
+			this.openAppInNewTab();
 		} else {
 			this.store.dispatch(new ResetAppAction());
 		}
 	}
 
-	openAppInTab() {
-		window.open(window.location.origin, '_blank');
+	openAppInNewTab() {
+		window.open(this.menuConfig.baseUrl, '_blank');
 	}
 
 	ngOnInit() {

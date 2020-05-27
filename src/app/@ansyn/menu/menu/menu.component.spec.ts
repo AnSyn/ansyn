@@ -12,7 +12,6 @@ import {
 import { MenuConfig } from '../models/menuConfig';
 import { IMenuItem } from '../models/menu-item.model';
 import { TranslateModule } from '@ngx-translate/core';
-import { COMPONENT_MODE } from '../../ansyn/app-providers/component-mode';
 
 describe('MenuComponent', () => {
 	let menuComponent: MenuComponent;
@@ -24,10 +23,7 @@ describe('MenuComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [BrowserAnimationsModule, StoreModule.forRoot({ [menuFeatureKey]: MenuReducer }), TranslateModule.forRoot()],
 			declarations: [MenuComponent],
-			providers: [{ provide: MenuConfig, useValue: {} }, {
-				provide: COMPONENT_MODE,
-				useValue: false
-			}]
+			providers: [{ provide: MenuConfig, useValue: {} }]
 		}).compileComponents();
 	}));
 

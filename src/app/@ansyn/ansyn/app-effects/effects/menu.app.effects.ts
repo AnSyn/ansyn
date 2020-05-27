@@ -1,16 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import { IAppState } from '../app.effects.module';
 import { select, Store } from '@ngrx/store';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
-import { MenuActionTypes, SetAutoClose } from '@ansyn/menu';
+import { IMenuConfig, MenuActionTypes, MenuConfig, SetAutoClose } from '@ansyn/menu';
 import { selectSubMenu } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import { map, mergeMap } from 'rxjs/operators';
 import { RedrawTimelineAction, SetTotalOverlaysAction } from '../../modules/overlays/actions/overlays.actions';
 import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { selectDropsWithoutSpecialObjects } from '../../modules/overlays/reducers/overlays.reducer';
 import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
+import { COMPONENT_MODE } from '../../app-providers/component-mode';
 
 @Injectable()
 export class MenuAppEffects {
@@ -43,9 +44,17 @@ export class MenuAppEffects {
 	onResetApp$: Observable<LoadDefaultCaseAction> = this.actions$
 		.pipe(
 			ofType(MenuActionTypes.RESET_APP),
-			map(() => new LoadDefaultCaseAction())
+			map(() => {
+				if (this.componentMode) {
+					window.open(this.menuConfig.baseUrl, '_blank');
+				} else {
+					return new LoadDefaultCaseAction();
+				}
+			})
 		);
 
-	constructor(protected actions$: Actions, protected store$: Store<IAppState>) {
+	constructor(protected actions$: Actions, protected store$: Store<IAppState>,
+				@Inject(COMPONENT_MODE) public componentMode: boolean,
+				@Inject(MenuConfig) public menuConfig: IMenuConfig) {
 	}
 }

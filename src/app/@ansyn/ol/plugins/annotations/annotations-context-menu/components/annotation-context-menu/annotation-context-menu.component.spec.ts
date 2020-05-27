@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AnnotationContextMenuComponent } from './annotation-context-menu.component';
 import { EventEmitter } from '@angular/core';
-import { Actions } from '@ngrx/effects';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { MockComponent } from '../../../../../../ansyn/modules/core/test/mock-component';
 
@@ -16,8 +15,7 @@ describe('AnnotationContextMenuComponent', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [
-				ImageryCommunicatorService,
-				{ provide: Actions, useValue: new EventEmitter() }
+				ImageryCommunicatorService
 			],
 			declarations: [
 				AnnotationContextMenuComponent,

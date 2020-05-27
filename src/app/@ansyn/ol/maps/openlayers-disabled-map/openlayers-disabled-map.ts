@@ -3,7 +3,8 @@ import {
 	IMAGERY_MAIN_LAYER_NAME,
 	ImageryLayerProperties,
 	ImageryMap,
-	IImageryMapPosition
+	IImageryMapPosition,
+	EPSG_4326
 } from '@ansyn/imagery';
 import { GeoJsonObject, Point } from 'geojson';
 import ol_Layer from 'ol/layer/Layer';
@@ -38,7 +39,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	toggleGroup(groupName: string, newState: boolean) {
 	}
 
-	getLayers(): ol_Layer {
+	getLayers(): ol_Layer[] {
 		return this.mapObject.getLayers().getArray();
 	}
 
@@ -168,6 +169,10 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 
 	getHtmlContainer(): HTMLElement {
 		return <HTMLElement>this.element;
+	}
+
+	getProjectionCode(): string {
+		return EPSG_4326;
 	}
 
 	dispose() {

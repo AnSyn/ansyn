@@ -1,4 +1,4 @@
-import { Polygon } from 'geojson';
+import { Point, Polygon } from 'geojson';
 
 export type ImageryMapExtent = [number, number, number, number];
 
@@ -19,6 +19,12 @@ export interface IMousePointerMove {
 	lat: number;
 	long: number;
 	height: number;
+}
+
+export interface IMouseClick {
+	worldLocation: Point;
+	screenPixel: [number, number];
+	originalEvent: MouseEvent;
 }
 
 export type ImageryMapExtentPolygon = Polygon;

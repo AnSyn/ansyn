@@ -11,16 +11,16 @@ import {
 } from '@angular/core';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 import { BaseImageryMap } from '../model/base-imagery-map';
-import { forkJoin, merge, Observable, of, throwError } from 'rxjs';
+import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
 import { ImageryCommunicatorService } from './communicator.service';
 import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';
-import { filter, map, mergeMap, tap } from 'rxjs/operators';
+import { map, mergeMap, tap } from 'rxjs/operators';
 import { IMAGERY_MAPS, IImageryMaps } from '../providers/imagery-map-collection';
 import { BaseMapSourceProvider } from '../model/base-map-source-provider';
 import { MapComponent } from '../map/map.component';
 import { BaseImageryPluginProvider } from '../imagery/providers/imagery.providers';
-import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { AutoSubscriptions } from 'auto-subscriptions';
 import { IImageryMapSources } from '../providers/map-source-providers';
 import { get as _get } from 'lodash';
 import { ImageryMapExtent, IImageryMapPosition } from '../model/case-map-position.model';
@@ -86,13 +86,6 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return this.ActiveMap && this.ActiveMap.mapType;
 	}
 
-	@AutoSubscription
-	activeMap$ = () => merge(this.imageryCommunicatorService.instanceCreated, this.mapInstanceChanged)
-		.pipe(
-			filter(({ id }) => id === this.id),
-			tap(this.initPlugins.bind(this))
-		);
-
 	getMapSourceProvider({ mapType, sourceType }: { mapType?: string, sourceType: string }): BaseMapSourceProvider {
 		return this.imageryMapSources[mapType][sourceType];
 	}
@@ -146,7 +139,13 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 			}
 			return mapComponent.createMap(layer, position)
 				.pipe(
-					tap((map) => this.onMapCreated(map, mapType, this.activeMapName))
+					tap((map: BaseImageryMap) => {
+						this._activeMap = map;
+					}),
+					tap(this.initPlugins.bind(this)),
+					tap(() => {
+						this.raiseMapInstanceChanged(mapType, this.activeMapName)
+					})
 				)
 				.toPromise();
 		});
@@ -297,8 +296,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		this.plugins.forEach((plugin) => plugin.dispose());
 	}
 
-	private onMapCreated(map: BaseImageryMap, activeMapName, oldMapName) {
-		this._activeMap = map;
+	private raiseMapInstanceChanged(activeMapName, oldMapName) {
 		if (activeMapName !== oldMapName && Boolean(oldMapName)) {
 			this.mapInstanceChanged.emit({
 				id: this.id,

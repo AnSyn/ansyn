@@ -8,9 +8,9 @@ import {
 	IOverlaysState,
 	MarkUpClass,
 	selectDropMarkup,
-	selectDrops, selectDropsWithoutSpecialObjects, selectPaginatedDrops
+	selectDropsWithoutSpecialObjects
 } from '../../../../overlays/reducers/overlays.reducer';
-import { take, tap, withLatestFrom } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import {
 	DisplayOverlayFromStoreAction,
 	SetMarkUp
@@ -24,6 +24,7 @@ interface ITableHeader {
 	isAscending: boolean;
 	sortFn: (a, b) => number;
 }
+
 @Component({
 	selector: 'ansyn-results-table',
 	templateUrl: './results-table.component.html',
@@ -45,7 +46,7 @@ interface ITableHeader {
 export class ResultsTableComponent implements OnInit, OnDestroy {
 	overlays: IOverlayDrop[] = [];
 	selectedOverlayId: string;
-	sortedBy  = 'date';
+	sortedBy = 'date';
 	start = 0;
 	end = 15;
 	overlayCount: number;

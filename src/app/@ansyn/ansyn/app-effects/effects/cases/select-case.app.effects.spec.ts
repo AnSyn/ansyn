@@ -11,7 +11,8 @@ import {
 	SetOverlaysTranslationDataAction,
 	SetPresetOverlaysAction,
 	SetRemovedOverlaysIdsAction,
-	SetRemovedOverlaysVisibilityAction
+	SetRemovedOverlaysVisibilityAction,
+	UpdateOverlaysManualProcessArgs
 } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { SelectCaseAppEffects } from './select-case.app.effects';
 import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '@ansyn/map-facade';
@@ -28,8 +29,7 @@ import {
 import { UpdateFacetsAction } from '../../../modules/filters/actions/filters.actions';
 import {
 	SetAnnotationMode,
-	SetMeasureDistanceToolState,
-	UpdateOverlaysManualProcessArgs
+	SetMeasureDistanceToolState
 } from '../../../modules/menu-items/tools/actions/tools.actions';
 import { CoreConfig } from '../../../modules/core/models/core.config';
 import { SetMiscOverlays, SetOverlaysCriteriaAction } from '../../../modules/overlays/actions/overlays.actions';

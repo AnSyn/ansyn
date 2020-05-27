@@ -28,6 +28,7 @@ import {
 } from '../../../core/utils/keyboardKey';
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import { LoggerService } from '../../../core/services/logger.service';
+import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
 
 const moment = momentNs;
 
@@ -122,6 +123,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 				@Inject(MultipleOverlaysSourceConfig) private multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				protected loggerService: LoggerService,
+				@Inject(COMPONENT_MODE) public componentMode: boolean,
 				dateTimeAdapter: DateTimeAdapter<any>
 	) {
 		dateTimeAdapter.setLocale(statusBarConfig.locale);

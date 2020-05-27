@@ -14,7 +14,8 @@ import {
 	SetRemovedOverlaysIdAction,
 	ToggleDraggedModeAction,
 	ToggleFavoriteAction,
-	TogglePresetOverlayAction
+	TogglePresetOverlayAction,
+	SetAutoImageProcessing
 } from './actions/overlay-status.actions';
 import {
 	selectFavoriteOverlays,
@@ -28,8 +29,7 @@ import { Actions, ofType } from '@ngrx/effects';
 import {
 	SetAnnotationMode,
 	ToolsActionsTypes,
-	ClearActiveInteractionsAction,
-	SetAutoImageProcessing
+	ClearActiveInteractionsAction
 } from '../../menu-items/tools/actions/tools.actions';
 import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-manager/reducers/layers.reducer';
 import { ClickOutsideService } from '../../core/click-outside/click-outside.service';
@@ -269,14 +269,18 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	toggleManualImageProcessing() {
-		this.moreButtons = false;
-		this.isManualProcessing = !this.isManualProcessing;
+		if (this.isActiveMap) {
+			this.moreButtons = false;
+			this.isManualProcessing = !this.isManualProcessing;
+		}
 	}
 
 	toggleAutoImageProcessing() {
-		this.isAutoProcessing = !this.isAutoProcessing;
-		this.isManualProcessing = false;
-		this.store$.dispatch(new SetAutoImageProcessing());
+		if (this.isActiveMap) {
+			this.isAutoProcessing = !this.isAutoProcessing;
+			this.isManualProcessing = false;
+			this.store$.dispatch(new SetAutoImageProcessing());
+		}
 	}
 
 	toggleMoreButtons() {

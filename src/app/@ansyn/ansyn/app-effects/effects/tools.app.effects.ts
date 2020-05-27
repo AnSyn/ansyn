@@ -20,24 +20,21 @@ import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
 import { differenceWith, isEqual } from 'lodash';
 import { filter, map, mergeMap, pluck, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { OverlayStatusActionsTypes } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
+import {
+	OverlayStatusActionsTypes,
+	DisableImageProcessing
+} from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { IAppState } from '../app.effects.module';
 import { selectGeoFilterType } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
-import { CasesActionTypes } from '../../modules/menu-items/cases/actions/cases.actions';
 import {
 	ClearActiveInteractionsAction,
 	CreateMeasureDataAction,
-	DisableImageProcessing,
-	EnableImageProcessing,
 	GoToAction,
 	RemoveMeasureDataAction,
 	SetActiveCenter,
 	SetActiveOverlaysFootprintModeAction,
 	SetAnnotationMode,
-	SetAutoImageProcessing,
-	SetAutoImageProcessingSuccess,
-	SetManualImageProcessing,
 	SetPinLocationModeAction,
 	SetSubMenu,
 	ShowOverlaysFootprintAction,
@@ -58,21 +55,11 @@ export class ToolsAppEffects {
 		map((geoFilterSearchMode: CaseGeoFilter) => geoFilterSearchMode === CaseGeoFilter.Polygon)
 	);
 
-	activeMap$ = this.store$.pipe(
-		select(mapStateSelector),
-		map((mapState) => MapFacadeService.activeMap(mapState)),
-		filter(Boolean)
-	);
-
 	isShadowMouseActiveByDefault = this.config.ShadowMouse && this.config.ShadowMouse.activeByDefault;
 
 	@Effect({ dispatch: false })
 	actionsLogger$: Observable<any> = this.actions$.pipe(
 		ofType(
-			ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING,
-			ToolsActionsTypes.UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS,
-			ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS,
-			ToolsActionsTypes.SET_MANUAL_IMAGE_PROCESSING,
 			ToolsActionsTypes.START_MOUSE_SHADOW,
 			ToolsActionsTypes.STOP_MOUSE_SHADOW,
 			ToolsActionsTypes.GO_TO,
@@ -110,20 +97,6 @@ export class ToolsAppEffects {
 	);
 
 	@Effect()
-	onActiveMapChangesSetOverlaysFootprintMode$: Observable<any> = this.store$.select(selectActiveMapId).pipe(
-		filter(Boolean),
-		withLatestFrom(this.store$.select(mapStateSelector), (activeMapId, mapState: IMapState) => MapFacadeService.activeMap(mapState)),
-		filter((activeMap: ICaseMapState) => Boolean(activeMap)),
-		mergeMap<any, any>((activeMap: ICaseMapState) => {
-			const actions: Action[] = [new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode)];
-			if (!Boolean(activeMap.data.overlay)) {
-				actions.push(new DisableImageProcessing());
-			}
-			return actions;
-		})
-	);
-
-	@Effect()
 	onShowOverlayFootprint$: Observable<any> = this.actions$.pipe(
 		ofType<ShowOverlaysFootprintAction>(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT),
 		map((action) => new SetActiveOverlaysFootprintModeAction(action.payload))
@@ -137,28 +110,6 @@ export class ToolsAppEffects {
 			filter(communicator => Boolean(communicator)),
 			map(() => new DisableImageProcessing())
 		);
-
-	@Effect()
-	onSelectCase$: Observable<DisableImageProcessing> = this.actions$.pipe(
-		ofType(CasesActionTypes.SELECT_CASE),
-		map(() => new DisableImageProcessing()));
-
-	@Effect()
-	toggleAutoImageProcessing$: Observable<any> = this.actions$.pipe(
-		ofType(ToolsActionsTypes.SET_AUTO_IMAGE_PROCESSING),
-		withLatestFrom(this.store$.select(mapStateSelector)),
-		mergeMap<any, any>(([action, mapsState]: [SetAutoImageProcessing, IMapState]) => {
-			const activeMap: IMapSettings = MapFacadeService.activeMap(mapsState);
-			const isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
-			return [
-				new UpdateMapAction({
-					id: activeMap.id,
-					changes: { data: { ...activeMap.data, isAutoImageProcessingActive } }
-				}),
-				new SetAutoImageProcessingSuccess(isAutoImageProcessingActive)
-			];
-		})
-	);
 
 	@Effect()
 	getActiveCenter$: Observable<SetActiveCenter> = this.actions$.pipe(

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, HostBinding } from '@angular/core';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import { GeocoderService } from '../../services/geocoder.service';
 import { Point } from 'geojson';
@@ -17,7 +17,7 @@ const DEFAULT_WIDTH = 150;
 @AutoSubscriptions()
 export class MapSearchBoxComponent implements OnInit, OnDestroy {
 	@Input() mapId: string;
-	show: boolean;
+	@HostBinding('class.hide') isMinimalView: boolean;
 	control = new FormControl();
 	_communicator: CommunicatorEntity;
 	autoCompleteWidth = DEFAULT_WIDTH;
@@ -28,7 +28,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	isMinimalistViewMode$ = this.store$.select(selectIsMinimalistViewMode).pipe(
 		tap(isMinimalistViewMode => {
-			this.show = !isMinimalistViewMode;
+			this.isMinimalView = isMinimalistViewMode;
 		})
 	);
 

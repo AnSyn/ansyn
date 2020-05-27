@@ -8,9 +8,9 @@ import {
 	IOverlaysState,
 	MarkUpClass,
 	selectDropMarkup,
-	selectDrops, selectDropsWithoutSpecialObjects, selectPaginatedDrops
+	selectDropsWithoutSpecialObjects
 } from '../../../../overlays/reducers/overlays.reducer';
-import { take, tap, withLatestFrom } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import {
 	DisplayOverlayFromStoreAction,
 	SetMarkUp
@@ -24,6 +24,7 @@ interface ITableHeader {
 	isAscending: boolean;
 	sortFn: (a, b) => number;
 }
+
 @Component({
 	selector: 'ansyn-results-table',
 	templateUrl: './results-table.component.html',
@@ -45,7 +46,9 @@ interface ITableHeader {
 export class ResultsTableComponent implements OnInit, OnDestroy {
 	overlays: IOverlayDrop[] = [];
 	selectedOverlayId: string;
-	sortedBy  = 'date';
+	sortedBy = 'date';
+	start = 0;
+	end = 15;
 	overlayCount: number;
 	tableHeaders: ITableHeader[] = [
 		{
@@ -84,7 +87,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			select(selectDropsWithoutSpecialObjects),
 			tap((overlays: IOverlayDrop[]) => {
 				this.resetSort();
-				this.paginateOverlays(overlays);
+				this.overlays = overlays;
 				this.overlayCount = overlays.length;
 			})
 		);
@@ -98,11 +101,6 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 	}
 
-	paginateOverlays(overlays: IOverlayDrop[]) {
-		const pagination = 15;
-		this.overlays = overlays.slice(0, pagination);
-	}
-
 	resetSort() {
 		this.tableHeaders.forEach(tableHeader => {
 			tableHeader.isAscending = true;
@@ -110,9 +108,8 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	loadResults() {
-		this.store$.select(selectPaginatedDrops(this.overlays.length)).pipe(
-			take(1),
-			tap((addedOverlays: IOverlayDrop[]) => this.overlays.push(...addedOverlays))).subscribe();
+		const pagination = 15;
+		this.end += pagination;
 	}
 
 	onMouseOver($event, id: string): void {

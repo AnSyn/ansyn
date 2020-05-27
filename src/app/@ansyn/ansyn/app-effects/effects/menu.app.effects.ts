@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 import { IAppState } from '../app.effects.module';
 import { select, Store } from '@ngrx/store';
 import { UpdateMapSizeAction } from '@ansyn/map-facade';
@@ -41,17 +41,27 @@ export class MenuAppEffects {
 		);
 
 	@Effect()
-	onResetApp$: Observable<LoadDefaultCaseAction> = this.actions$
+	onResetApp$ = this.actions$
 		.pipe(
 			ofType(MenuActionTypes.RESET_APP),
-			map(() => {
+			mergeMap(() => {
 				if (this.componentMode) {
 					window.open(this.menuConfig.baseUrl, '_blank');
-				} else {
-					return new LoadDefaultCaseAction();
+					return EMPTY;
 				}
+
+				return [new LoadDefaultCaseAction()];
 			})
 		);
+
+	resetApp() {
+		if (!this.componentMode) {
+			window.open(this.menuConfig.baseUrl, '_blank');
+			return new LoadDefaultCaseAction();
+		}
+
+		return EMPTY;
+	}
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>,
 				@Inject(COMPONENT_MODE) public componentMode: boolean,

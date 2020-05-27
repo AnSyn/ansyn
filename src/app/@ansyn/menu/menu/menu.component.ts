@@ -39,6 +39,7 @@ import { IMenuConfig } from '../models/menu-config.model';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, filter, tap, withLatestFrom, map } from 'rxjs/operators';
+import { COMPONENT_MODE } from '../../ansyn/app-providers/component-mode';
 
 const animations: any[] = [
 	trigger(
@@ -150,6 +151,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 				protected store: Store<IMenuState>,
 				protected renderer: Renderer2,
 				protected elementRef: ElementRef,
+				@Inject(COMPONENT_MODE) public componentMode: boolean,
 				@Inject(DOCUMENT) protected document: Document,
 				@Inject(MenuConfig) public menuConfig: IMenuConfig,
 				private cdref: ChangeDetectorRef) {
@@ -334,7 +336,15 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	}
 
 	resetApp() {
-		this.store.dispatch(new ResetAppAction());
+		if (this.componentMode) {
+			this.openAppInTab();
+		} else {
+			this.store.dispatch(new ResetAppAction());
+		}
+	}
+
+	openAppInTab() {
+		window.open(window.location.origin, '_blank');
 	}
 
 	ngOnInit() {

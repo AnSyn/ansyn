@@ -7,12 +7,11 @@ import {
 	ImageryPlugin
 } from '@ansyn/imagery';
 import { OpenLayersImageProcessing } from './image-processing';
-import { distinctUntilChanged, filter, map, take, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { isEqual } from 'lodash';
-import { Inject } from '@angular/core';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openlayers-disabled-map';
-import { getDefaultImageProcParams, IImageProcessingData, IImageProcParam, ImageManualProcessArgs } from './model';
+import { getDefaultImageProcParams, IImageProcParam, IImageManualProcessArgs } from './model';
 import { ProjectableRaster } from '../../maps/open-layers-map/models/projectable-raster';
 import { IMAGE_PROCESS_ATTRIBUTE } from '../../mapSourceProviders/open-layers.map-source-provider';
 
@@ -21,22 +20,29 @@ import { IMAGE_PROCESS_ATTRIBUTE } from '../../mapSourceProviders/open-layers.ma
 	deps: []
 })
 export class ImageProcessingPlugin extends BaseImageryPlugin {
-	communicator: CommunicatorEntity;
 	private _imageProcessing: OpenLayersImageProcessing;
 	private imageLayer: ImageLayer;
+
+	communicator: CommunicatorEntity;
 	customMainLayer = null;
 	mapLayerChangedSubscription;
+	params: Array<IImageProcParam>;
+
+	constructor() {
+		super();
+		this.params = getDefaultImageProcParams();
+	}
 
 	onInit() {
 		super.onInit();
 		this.mapLayerChangedSubscription = this.iMap.mapLayerChangedEventEmitter.pipe(
-			tap(()=> {
+			tap(() => {
 				this.removeImageLayer();
 			})
 		).subscribe();
 	}
 
-	startImageProcessing(isAutoImageProcessingActive: boolean, imageManualProcessArgs: ImageManualProcessArgs) {
+	startImageProcessing(isAutoImageProcessingActive: boolean, imageManualProcessArgs: IImageManualProcessArgs) {
 		const isImageProcessActive = this.isImageProcessActive(isAutoImageProcessingActive, imageManualProcessArgs);
 		if (!isImageProcessActive) {
 			this.removeImageLayer();
@@ -55,20 +61,13 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		}
 	}
 
-	params: Array<IImageProcParam>;
-
-	constructor() {
-		super();
-		this.params = getDefaultImageProcParams();
-	}
-
-	defaultImageManualProcessArgs(): ImageManualProcessArgs {
-		return this.params.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam: IImageProcParam) => {
+	defaultImageManualProcessArgs(): IImageManualProcessArgs {
+		return this.params.reduce<IImageManualProcessArgs>((initialObject: any, imageProcParam: IImageProcParam) => {
 			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
 		}, {});
 	}
 
-	isImageProcessActive(isAutoImageProcessingActive: boolean, imageManualProcessArgs: ImageManualProcessArgs) {
+	isImageProcessActive(isAutoImageProcessingActive: boolean, imageManualProcessArgs: IImageManualProcessArgs) {
 		const defaultManualParams = this.defaultImageManualProcessArgs();
 		const result = isAutoImageProcessingActive || (Boolean(imageManualProcessArgs) && !isEqual(defaultManualParams, imageManualProcessArgs));
 		return result;
@@ -112,7 +111,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		}
 	}
 
-	createImageLayer([isAutoImageProcessingActive, imageManualProcessArgs]: [boolean, ImageManualProcessArgs]) {
+	createImageLayer([isAutoImageProcessingActive, imageManualProcessArgs]: [boolean, IImageManualProcessArgs]) {
 		this.imageLayer = this.getExistingRasterLayer();
 		if (this.imageLayer) {
 			return;

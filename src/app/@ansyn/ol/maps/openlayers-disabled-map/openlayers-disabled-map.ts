@@ -3,8 +3,7 @@ import {
 	IMAGERY_MAIN_LAYER_NAME,
 	ImageryLayerProperties,
 	ImageryMap,
-	IImageryMapPosition,
-	EPSG_4326
+	IImageryMapPosition
 } from '@ansyn/imagery';
 import { GeoJsonObject, Point } from 'geojson';
 import ol_Layer from 'ol/layer/Layer';
@@ -172,7 +171,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	}
 
 	getProjectionCode(): string {
-		return EPSG_4326;
+		throw new Error("Not implemented yet!");
 	}
 
 	dispose() {

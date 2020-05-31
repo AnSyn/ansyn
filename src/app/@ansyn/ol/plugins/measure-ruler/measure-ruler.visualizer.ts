@@ -53,7 +53,7 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 	interactionSource: VectorSource;
 	hoveredMeasureId: string;
 	onHiddenStateChanged = new Subject();
-	azimuthDigitsAfterDot: number = 0;
+	azimuthDigitsAfterDot = 0;
 	measurePositionInEndPoint = true;
 
 	protected allLengthTextStyle = new Text({

@@ -1,4 +1,4 @@
-export { IImageProcParam, ImageManualProcessArgs, getDefaultImageProcParams } from './plugins/image-processing/model';
+export { IImageProcParam, IImageManualProcessArgs, getDefaultImageProcParams } from './plugins/image-processing/model';
 export { ImageProcessingPlugin } from './plugins/image-processing/image-processing.plugin';
 
 export { GridLinesVisualizer } from './plugins/grid-lines/grid-lines.visualizer';

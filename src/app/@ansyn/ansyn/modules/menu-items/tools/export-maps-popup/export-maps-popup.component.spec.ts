@@ -11,6 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { credentialsConfig } from '../../../core/services/credentials/config';
 import { LoggerService } from '../../../core/services/logger.service';
 import { LoggerConfig } from '../../../core/models/logger.config';
+import { toolsConfig } from '../models/tools-config';
 
 
 describe('ExportMapsPopupComponent', () => {
@@ -31,6 +32,15 @@ describe('ExportMapsPopupComponent', () => {
 					provide: credentialsConfig,
 					useValue: {
 						noCredentialsMessage: 'TEST'
+					}
+				},
+				{
+					provide: toolsConfig,
+					useValue: {
+						exportMap: {
+							target: '',
+							excludeClasses: []
+						}
 					}
 				},
 				LoggerService,

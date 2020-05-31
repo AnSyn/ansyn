@@ -9,6 +9,7 @@ import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClientModule } from '@angular/common/http';
 import { credentialsConfig } from '../../../core/services/credentials/config';
+import { LoggerService } from '../../../core/services/logger.service';
 
 
 describe('ExportMapsPopupComponent', () => {
@@ -30,7 +31,9 @@ describe('ExportMapsPopupComponent', () => {
 					useValue: {
 						noCredentialsMessage: 'TEST'
 					}
-				}]
+				},
+				LoggerService
+			]
 		})
 			.compileComponents();
 	}));

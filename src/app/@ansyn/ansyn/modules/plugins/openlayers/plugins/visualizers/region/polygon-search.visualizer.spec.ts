@@ -46,9 +46,8 @@ describe('PolygonSearchVisualizer', () => {
 	});
 
 	it('drawRegionOnMap calls setEntities with Feature', () => {
-		const id = 'fakeId';
+		const id = 'pinPolygon';
 		const fakeGeojson: Polygon = { type: 'Polygon', coordinates: [[[0, 0], [0, 0], [0, 0], [0, 0]]] };
-		spyOn(UUID, 'UUID').and.callFake(() => id);
 		spyOn(polygonSearchVisualizer, 'setEntities').and.callFake(() => EMPTY);
 		const expectFeatureJson: Feature<Polygon> = { type: 'Feature', geometry: fakeGeojson, properties: {} };
 		polygonSearchVisualizer.drawRegionOnMap(fakeGeojson);

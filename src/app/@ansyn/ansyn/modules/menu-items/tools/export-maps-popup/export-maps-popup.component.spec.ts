@@ -10,6 +10,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { HttpClientModule } from '@angular/common/http';
 import { credentialsConfig } from '../../../core/services/credentials/config';
 import { LoggerService } from '../../../core/services/logger.service';
+import { LoggerConfig } from '../../../core/models/logger.config';
 
 
 describe('ExportMapsPopupComponent', () => {
@@ -32,7 +33,11 @@ describe('ExportMapsPopupComponent', () => {
 						noCredentialsMessage: 'TEST'
 					}
 				},
-				LoggerService
+				LoggerService,
+				{
+					provide: LoggerConfig,
+					useValue: {}
+				}
 			]
 		})
 			.compileComponents();

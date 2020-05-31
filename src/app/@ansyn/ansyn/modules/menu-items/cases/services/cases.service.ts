@@ -173,8 +173,7 @@ export class CasesService {
 		};
 	}
 
-	createCase(selectedCase: ICase): Observable<ICase> {
-		const currentTime = new Date();
+	createCase(selectedCase: ICase, currentTime = new Date()): Observable<ICase> {
 		const uuid = UUID.UUID();
 		const newCase: ICase = {
 			...selectedCase,

@@ -296,7 +296,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 		case MapActionTypes.SET_MAPS_DATA:
 			const { mapsList } = action.payload;
 			if (mapsList) {
-				const { displayOverlayHistory } = state;
+				const displayOverlayHistory = { ...state.displayOverlayHistory };
 				Object.keys(displayOverlayHistory).forEach((key) => {
 					if (!mapsList.some((map) => map.id === key)) {
 						delete displayOverlayHistory[key];

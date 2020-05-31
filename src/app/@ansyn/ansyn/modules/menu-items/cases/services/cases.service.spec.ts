@@ -111,17 +111,12 @@ describe('CasesService', () => {
 		spyOn(UUID, 'UUID').and.callFake(() => fakeId);
 		casesService.createCase(selectedCase);
 		expect(storageService.create).toHaveBeenCalledWith(casesService.config.schema,
+			jasmine.objectContaining(
+				// I omitted the preview object, because it contains fields with
+				// new dated, and we don't know these dates
 			{
-				preview: {
-					id: fakeId,
-					name: selectedCase.name,
-					owner: selectedCase.owner,
-					creationTime: selectedCase.creationTime,
-					lastModified: selectedCase.lastModified,
-					autoSave: true
-				},
 				data: casesService.pluckIdSourceType(selectedCase.state)
-			});
+			}));
 	});
 
 	it('updateCase should send the case as body in ajax("put")', () => {

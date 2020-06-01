@@ -8,9 +8,9 @@ import {
 	IOverlaysState,
 	MarkUpClass,
 	selectDropMarkup,
-	selectDrops, selectDropsWithoutSpecialObjects, selectPaginatedDrops
+	selectDropsWithoutSpecialObjects, selectPaginatedDrops
 } from '../../../../overlays/reducers/overlays.reducer';
-import { take, tap, withLatestFrom } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import {
 	DisplayOverlayFromStoreAction,
 	SetMarkUp
@@ -112,8 +112,11 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		this.store$.dispatch(new SetMarkUp({
 			classToSet: MarkUpClass.hover,
 			dataToSet: { overlaysIds: [id] },
-			customOverviewElement: $event.currentTarget
+			customOverviewElementId: $event.currentTarget.id
 		}));
+		// Angular 9: Saving in the store dom element id, instead of the dom element itself,
+		// because it caused the dom element to become freezed, and this caused a crash
+		// in zone.js...
 	}
 
 	onMouseOut(): void {

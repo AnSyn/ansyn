@@ -3,7 +3,14 @@ import { createEntityAdapter, Dictionary, EntityAdapter, EntityState } from '@ng
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
 import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
-import { OverlaysActions, OverlaysActionTypes, SetMiscOverlay, SetMiscOverlays, UpdateOverlay } from '../actions/overlays.actions';
+import {
+	OverlaysActions,
+	OverlaysActionTypes,
+	SetMarkUp,
+	SetMiscOverlay,
+	SetMiscOverlays,
+	UpdateOverlay
+} from '../actions/overlays.actions';
 import {
 	IOverlay,
 	IOverlayDrop,
@@ -69,7 +76,10 @@ export interface IOverlaysState extends EntityState<IOverlay> {
 	hoveredOverlay: IOverlay;
 	overlaysCriteria: IOverlaysCriteria;
 	miscOverlays: IOverlaysHash;
-	customOverviewElement: any;
+	customOverviewElementId: string;
+	// Angular 9: Saving in the store dom element id, instead of the dom element itself,
+	// because it caused the dom element to become freezed, and this caused a crash
+	// in zone.js...
 	totalOverlaysLength: number;
 }
 
@@ -93,7 +103,7 @@ export const overlaysInitialState: IOverlaysState = overlaysAdapter.getInitialSt
 	hoveredOverlay: null,
 	overlaysCriteria: {},
 	miscOverlays: {},
-	customOverviewElement: null,
+	customOverviewElementId: null,
 	totalOverlaysLength: 0
 });
 
@@ -220,10 +230,10 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 		case OverlaysActionTypes.SET_OVERLAYS_MARKUPS:
 			let dropsMarkUpCloneToSet = new ExtendMap(state.dropsMarkUp);
 			dropsMarkUpCloneToSet.set(action.payload.classToSet, action.payload.dataToSet);
-			const { customOverviewElement } = action.payload;
+			const { customOverviewElementId } = (action as unknown as SetMarkUp).payload;
 
 			return {
-				...state, dropsMarkUp: dropsMarkUpCloneToSet, customOverviewElement
+				...state, dropsMarkUp: dropsMarkUpCloneToSet, customOverviewElementId
 			};
 
 		case OverlaysActionTypes.REMOVE_OVERLAYS_MARKUPS:
@@ -247,7 +257,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				});
 			}
 
-			return { ...state, dropsMarkUp: dropsMarkUpClone, customOverviewElement: null };
+			return { ...state, dropsMarkUp: dropsMarkUpClone, customOverviewElementId: null };
 
 
 		case OverlaysActionTypes.ADD_OVERLAYS_MARKUPS:
@@ -353,4 +363,4 @@ export const selectTime: MemoizedSelector<any, ICaseTimeState> = createSelector(
 
 export const selectMiscOverlays: MemoizedSelector<any, any> = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays ? overlays.miscOverlays : {});
 export const selectMiscOverlay = (key: string) => createSelector(selectMiscOverlays, (miscOverlays: any) => miscOverlays[key]);
-export const selectCustomOverviewElement = createSelector(overlaysStateSelector, (state) => state && state.customOverviewElement);
+export const selectCustomOverviewElementId = createSelector(overlaysStateSelector, (state) => state && state.customOverviewElementId);

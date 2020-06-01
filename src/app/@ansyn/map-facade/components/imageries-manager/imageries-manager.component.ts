@@ -53,7 +53,6 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 
 
 	@ViewChild('imageriesContainer') imageriesContainer: ElementRef;
-	@ViewChild('loader', { read: ElementRef }) loader: ElementRef;
 
 	pinLocationMode: boolean;
 	ids: string[] = [];

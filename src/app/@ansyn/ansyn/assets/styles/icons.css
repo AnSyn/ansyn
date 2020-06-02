@@ -1,3 +1,6 @@
+.icon-drone:before {
+	content: "\e90a";
+}
 .icon-layer-add:before {
 	content: "\e800";
 }
@@ -61,21 +64,6 @@
 .icon-layers-show:before {
 	content: "\e816";
 }
-.icon-status-bar-orientation:before {
-	content: "\e901";
-}
-.icon-automatic-image-processing:before {
-	content: "\e909";
-}
-.icon-drag-annotations:before {
-	content: "\e827";
-}
-.icon-more:before {
-	content: "\e855";
-}
-.icon-tools-image-processing:before {
-	content: "\e834";
-}
 .icon-change-map:before {
 	content: "\e817";
 }
@@ -121,6 +109,9 @@
 .icon-label:before {
 	content: "\e826";
 }
+.icon-drag-annotations:before {
+	content: "\e827";
+}
 .icon-next:before {
 	content: "\e828";
 }
@@ -150,6 +141,9 @@
 }
 .icon-tools-go-to:before {
 	content: "\e833";
+}
+.icon-tools-image-processing:before {
+	content: "\e834";
 }
 .icon-tools-ruler:before {
 	content: "\e835";
@@ -229,6 +223,15 @@
 .icon-table:before {
 	content: "\e854";
 }
+.icon-more:before {
+	content: "\e855";
+}
+.icon-input-filter:before {
+	content: "\e900";
+}
+.icon-status-bar-orientation:before {
+	content: "\e901";
+}
 .icon-home:before {
 	content: "\e902";
 }
@@ -244,12 +247,12 @@
 .icon-status-bar-geo:before {
 	content: "\e906";
 }
-.icon-input-filter:before {
-	content: "\e900";
-}
-.icon-lavian:before {
+.icon-satellite:before {
 	content: "\e907";
 }
-.icon-matos:before {
+.icon-airplane:before {
 	content: "\e908";
+}
+.icon-automatic-image-processing:before {
+	content: "\e909";
 }

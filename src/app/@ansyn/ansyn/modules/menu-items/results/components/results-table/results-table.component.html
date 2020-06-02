@@ -23,8 +23,8 @@
 	<div class="results-table-body scrolled"  (ansynInfiniteScroll)="loadResults()" *ngIf="overlays">
 
 		<div class="results-table-body-row"
-			 *ngFor="let overlay of overlays; let i = index"
-			 id="results-table-row-{{i}}"
+			 *ngFor="let overlay of overlays  | slice:start:end; let i = index"
+			 id="ansyn-results-table-row-{{i}}"
 			 (click)="openOverlay(overlay.id)"
 			 (mouseenter)="onMouseOver($event, overlay.id)"
 			 (mouseleave)="onMouseOut()"

@@ -1,9 +1,6 @@
 [
   "ansyn",
-  "imagery",
   "map-facade",
   "menu",
-  "imagery-cesium",
-  "imagery-video",
-  "ol"
+  "imagery-video"
 ]

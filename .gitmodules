@@ -1,0 +1,3 @@
+[submodule "src/app/@ansyn/imagery-submodules"]
+	path = src/app/@ansyn/imagery-submodules
+	url = https://github.com/AnSyn/imagery.git

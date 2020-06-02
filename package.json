@@ -33,6 +33,7 @@
     "update": "ng update @angular/core @angular/cli"
   },
   "dependencies": {
+    "@angular-builders/custom-webpack": "^9.1.0",
     "@angular/animations": "~9.1.0",
     "@angular/cdk": "^9.2.0",
     "@angular/common": "~9.1.0",

@@ -144,9 +144,21 @@ export class CasesEffects {
 							const newId = UUID.UUID();
 							const oldId = layer.id;
 
-							addedCase.state.layers.activeLayersIds = addedCase.state.layers.activeLayersIds.map((id) => {
+							addedCase =
+								{ ...addedCase, state:
+										{ ...addedCase.state, layers:
+												{ ...addedCase.state.layers,
+													activeLayersIds: addedCase.state.layers.activeLayersIds.map((id) => {
 								return id === oldId ? newId : id;
-							});
+							})}}};
+							// addedCase.state.layers.activeLayersIds = addedCase.state.layers.activeLayersIds.map((id) => {
+							// 	return id === oldId ? newId : id;
+							// });
+							// Todo: the new case was created by shallow cloning an existing case.
+							//  The existing case is in the store, so this caused problems, and I
+							//  had to do special cloning, as above. Perhaps it will be better to:
+							//  (1) Do deep clone, rather than shallow clone, in the service, or
+							//  (2) Do clonings only in the store/reducer, and not in service/effect
 
 							return { ...layer, id: newId, caseId: addedCase.id };
 						}).map((layer) => this.dataLayersService.addLayer(layer))
@@ -154,9 +166,17 @@ export class CasesEffects {
 						.pipe(map((_) => addedCase))
 				),
 				map((addedCase: ICase) => new SaveCaseAsSuccessAction(addedCase)),
-				catchError(() => EMPTY)
+				catchError((err) => {
+					console.warn(err);
+					return EMPTY;
+				})
 			)
-		));
+		),
+		catchError((err) => {
+			console.warn(err);
+			return EMPTY;
+		})
+	);
 
 	@Effect()
 	onSaveCaseAsSuccess$ = this.actions$.pipe(

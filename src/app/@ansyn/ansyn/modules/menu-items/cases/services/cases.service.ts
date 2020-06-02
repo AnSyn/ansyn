@@ -173,16 +173,22 @@ export class CasesService {
 		};
 	}
 
-	createCase(selectedCase: ICase): Observable<ICase> {
-		const currentTime = new Date();
+	createCase(selectedCase: ICase, currentTime = new Date()): Observable<ICase> {
 		const uuid = UUID.UUID();
-		selectedCase.id = uuid;
-		selectedCase.creationTime = currentTime;
-		selectedCase.lastModified = currentTime;
-		selectedCase.autoSave = true;
-		return this.storageService.create(this.config.schema, this.convertToStoredEntity(selectedCase))
+		const newCase: ICase = {
+			...selectedCase,
+			id: uuid,
+			creationTime: currentTime,
+			lastModified: currentTime,
+			autoSave: true
+		};
+		// selectedCase.id = uuid;
+		// selectedCase.creationTime = currentTime;
+		// selectedCase.lastModified = currentTime;
+		// selectedCase.autoSave = true;
+		return this.storageService.create(this.config.schema, this.convertToStoredEntity(newCase))
 			.pipe(
-				map(_ => selectedCase),
+				map(_ => newCase),
 				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to create case'))
 			);
 	}

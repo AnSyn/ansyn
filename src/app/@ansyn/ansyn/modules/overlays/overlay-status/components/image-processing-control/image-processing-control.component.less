@@ -2,8 +2,8 @@
 @import "ansyn/less/colors";
 @import "ansyn/less/z-index-globals";
 
-@tools-box-width: 220px;
-@tools-box-height: 275px;
+@tools-box-width: 250px;
+@tools-box-height: 270px;
 
 // input range styles (see https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/)
 @track-progress-color: @application-primary-color;
@@ -27,7 +27,7 @@
 	width: @tools-box-width;
 	height: @tools-box-height;
 	position: absolute;
-	top: 51px;
+	top: 35px;
 	left: -178px;
 	transform: translateX(100%);
 	background: @background-color-3;
@@ -45,33 +45,27 @@
 		flex-direction: column;
 
 		.title-wrapper {
-			display: block;
-			margin: 10px 0;
+			margin-top: 5px;
 
-			.title {
+			p.title {
 				font-size: 13px;
-				width: 100px;
-			}
-
-			.resetAll {
-				margin-left: auto;
-				color: @background-color-7;
-				margin-top: 9px;
-				margin-left: 152px;
-				width: 100%;
-				font-size: 9px;
-				cursor: pointer;
-
-				&:hover {
+				margin: 0;
+				.resetAll {
+					color: @background-color-7;
+					font-size: 9px;
 					cursor: pointer;
-					color: @background-color-11;
+					margin-left: 10px;
+
+					&:hover {
+						cursor: pointer;
+						color: @background-color-11;
+					}
 				}
 			}
 		}
 
 		ul.image-processing-options {
 			padding: 0;
-			margin-top: -20px;
 
 			li {
 				list-style-type: none;

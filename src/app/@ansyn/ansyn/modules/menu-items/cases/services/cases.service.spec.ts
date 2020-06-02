@@ -107,17 +107,18 @@ describe('CasesService', () => {
 		let fakeId = 'fakerId';
 		let selectedCase: ICase = { ...caseMock, name: 'fakerName' };
 		let fakeResponse = { selectedCase };
+		let newDate = new Date();
 		spyOn(storageService, 'create').and.callFake(() => <any>of(fakeResponse));
 		spyOn(UUID, 'UUID').and.callFake(() => fakeId);
-		casesService.createCase(selectedCase);
+		casesService.createCase(selectedCase, newDate);
 		expect(storageService.create).toHaveBeenCalledWith(casesService.config.schema,
 			{
 				preview: {
 					id: fakeId,
 					name: selectedCase.name,
 					owner: selectedCase.owner,
-					creationTime: selectedCase.creationTime,
-					lastModified: selectedCase.lastModified,
+					creationTime: newDate,
+					lastModified: newDate,
 					autoSave: true
 				},
 				data: casesService.pluckIdSourceType(selectedCase.state)

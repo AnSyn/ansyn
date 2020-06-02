@@ -1,6 +1,6 @@
 import {
 	AddMenuItemAction,
-	ContainerChangedTriggerAction,
+	ContainerChangedTriggerAction, MenuConfig,
 	menuFeatureKey,
 	MenuReducer,
 	SelectMenuItemAction
@@ -16,6 +16,7 @@ import { cold, hot } from 'jasmine-marbles';
 import { DisplayOverlaySuccessAction, RedrawTimelineAction } from '../../modules/overlays/actions/overlays.actions';
 import { ResetAppAction } from '../../../menu/actions/menu.actions';
 import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
+import { COMPONENT_MODE } from '../../app-providers/component-mode';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
@@ -27,7 +28,11 @@ describe('MenuAppEffects', () => {
 			imports: [StoreModule.forRoot({ [menuFeatureKey]: MenuReducer, [casesFeatureKey]: CasesReducer })],
 			providers: [
 				provideMockActions(() => actions),
-				MenuAppEffects
+				MenuAppEffects,
+				{ provide: MenuConfig, useValue: {} }, {
+					provide: COMPONENT_MODE,
+					useValue: false
+				}
 			]
 
 		}).compileComponents();

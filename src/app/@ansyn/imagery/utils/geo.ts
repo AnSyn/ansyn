@@ -138,10 +138,13 @@ export function getPolygonIntersectionRatioWithMultiPolygon(extent: Polygon, foo
 
 		footprint.coordinates.forEach(coordinates => {
 			const tempPoly = polygon(coordinates);
-			const intersection = intersect(extentPolygon, tempPoly);
-			if (intersection) {
-				intersectionArea = booleanEqual(intersection, tempPoly) ? extentArea : intersectionArea + area(intersection);
-			}
+			const intersections = extentPolygons.features.map( feature => intersect(feature.geometry, tempPoly));
+			intersectionArea = intersections.reduce( (acc, intersection) => {
+				if (intersection) {
+					acc = booleanEqual(intersection, tempPoly) ? extentArea : acc + area(intersection);
+				}
+				return acc;
+			}, 0)
 		});
 	} catch (e) {
 		console.warn('getPolygonIntersectionRatioWithMultiPolygon: turf exception', e);

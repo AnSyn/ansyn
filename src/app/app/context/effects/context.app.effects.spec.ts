@@ -1,4 +1,4 @@
-import { inject, TestBed } from '@angular/core/testing';
+import { inject, TestBed, fakeAsync } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 
 import { CasesService, ICase, LoadDefaultCaseAction, SelectDilutedCaseAction } from '@ansyn/ansyn';
@@ -17,6 +17,7 @@ import {
 import { ContextConfig, ContextName } from '../models/context.config';
 import { Point } from '@turf/helpers';
 import { TranslateModule } from '@ngx-translate/core';
+import { mapFeatureKey, MapReducer, selectActiveMapId } from '@ansyn/map-facade';
 
 describe('ContextAppEffects', () => {
 	let contextAppEffects: ContextAppEffects;
@@ -24,39 +25,24 @@ describe('ContextAppEffects', () => {
 	let store: Store<any>;
 	let casesService: CasesService;
 	let imageryCommunicatorServiceMock = {
-		provide: () => ({
-			instanceCreated: () => of({ id: 'imagery1' }),
-		})
+		instanceCreated: of({ id: 'imagery1' }),
 	};
 	const caseItem: ICase = {
-		'id': '31b33526-6447-495f-8b52-83be3f6b55bd',
-		'state': {
-			'region': {
-				'type': 'FeatureCollection',
-				'features': [{
-					'type': 'Feature',
-					'properties': {
-						'MUN_HEB': 'Hasharon',
-						'MUN_ENG': 'Hasharon'
-					},
-					'geometry': {
-						'type': 'Polygon',
-						'coordinates': [
-							[
-								[35.71991824722275, 32.709192409794866],
-								[35.54566531753454, 32.393992011030576]
-							]
-
-
-						]
-					}
-				}
+		id: '31b33526-6447-495f-8b52-83be3f6b55bd',
+		state: {
+			region: {
+				type: 'Polygon',
+				coordinates: [
+					[
+						[35.71991824722275, 32.709192409794866],
+						[35.54566531753454, 32.393992011030576]
+					]
 				]
 			},
-			'time': {
-				'type': 'absolute',
-				'from': new Date('2013-06-27T08:43:03.624Z'),
-				'to': new Date('2015-04-17T03:55:12.129Z')
+			time: {
+				type: 'absolute',
+				from: new Date('2013-06-27T08:43:03.624Z'),
+				to: new Date('2015-04-17T03:55:12.129Z')
 			},
 			maps: {
 				data: [
@@ -71,7 +57,8 @@ describe('ContextAppEffects', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				StoreModule.forRoot({
-					[contextFeatureKey]: ContextReducer
+					[contextFeatureKey]: ContextReducer,
+					[mapFeatureKey]: MapReducer
 				}),
 				TranslateModule.forRoot()
 			],
@@ -81,7 +68,7 @@ describe('ContextAppEffects', () => {
 				{
 					provide: CasesService,
 					useValue: {
-						defaultCase: () => caseItem
+						defaultCase: caseItem
 					}
 				},
 				{
@@ -97,10 +84,12 @@ describe('ContextAppEffects', () => {
 		}).compileComponents();
 	});
 
-	beforeEach(inject([Store, CasesService], (_store, _casesService) => {
+	beforeEach(inject([Store, CasesService, ContextAppEffects], (_store, _casesService, _contextAppEffects) => {
+		contextAppEffects = _contextAppEffects;
 		store = _store;
 		casesService = _casesService;
 		const fakeStore = new Map<any, any>([
+			[selectActiveMapId, 'imagery1'],
 			[contextStateSelector, { params: {} }],
 			[selectContextMapPosition, { type: 'Point', coordinates: [31.222, 33.212] }]
 		]);
@@ -112,8 +101,8 @@ describe('ContextAppEffects', () => {
 		expect(contextAppEffects).toBeTruthy();
 	});
 
-	it('on load case with area analysis context fire SelectDilutedCaseAction and update params', () => {
-		actions = hot('-a-', {
+	it('on load case with area analysis context fire SelectDilutedCaseAction and update params', fakeAsync(() => {
+		actions = hot('(a)', {
 			a: new LoadDefaultCaseAction({
 				context: ContextName.AreaAnalysis,
 				geometry: 'POINT(-117.91897 34.81265)'
@@ -129,14 +118,13 @@ describe('ContextAppEffects', () => {
 			time: { ...contextCase.state.time, to, from },
 			region: geo
 		};
-		const expectedResult = cold('-ab-', {
+		const expectedResult = cold('(ab)', {
 				a: new SelectDilutedCaseAction(contextCase),
 				b: new SetContextParamsAction({ position: geo })
 			}
 		);
 
 		expect(contextAppEffects.loadDefaultCaseContext$).toBeObservable(expectedResult);
-	})
-
+	}))
 })
 ;

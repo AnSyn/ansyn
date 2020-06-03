@@ -2,7 +2,6 @@ import { Component, EventEmitter, Inject, OnDestroy, OnInit } from '@angular/cor
 import { MatDialogRef } from '@angular/material/dialog';
 import { CredentialsService } from '../../../core/services/credentials/credentials.service';
 import { DOCUMENT } from '@angular/common';
-import { toBlob } from 'dom-to-image';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap, filter } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
@@ -11,6 +10,7 @@ import { IToolsConfig, toolsConfig } from '../models/tools-config';
 import { Store } from '@ngrx/store';
 import { selectIsMinimalistViewMode, SetMinimalistViewModeAction } from '@ansyn/map-facade';
 import { LoggerService } from '../../../core/services/logger.service';
+import { toBlob } from 'dom-to-image';
 
 const LOGS = {
 	request: 'Request to export maps',

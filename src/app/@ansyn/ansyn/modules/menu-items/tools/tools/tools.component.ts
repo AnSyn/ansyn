@@ -17,7 +17,7 @@ import {
 	toolsFlags,
 	toolsStateSelector
 } from '../reducers/tools.reducer';
-import { filter, map, tap } from 'rxjs/operators';
+import { map, tap, take } from 'rxjs/operators';
 import { selectActiveAnnotationLayer } from '../../layers-manager/reducers/layers.reducer';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { MatDialog } from '@angular/material/dialog';
@@ -139,7 +139,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	toggleExportMapsDialog() {
 		if (!this.isDialogShowing) {
 			const dialogRef = this.dialog.open(ExportMapsPopupComponent, { panelClass: 'custom-dialog' });
-			dialogRef.afterClosed().subscribe(() => this.isDialogShowing = false);
+			dialogRef.afterClosed().pipe(take(1), tap(() => this.isDialogShowing = false));
 			this.isDialogShowing = !this.isDialogShowing;
 		}
 	}

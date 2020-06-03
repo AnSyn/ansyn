@@ -20,11 +20,6 @@ import { selectAutoSave, selectSelectedCase } from '../../../modules/menu-items/
 import { selectMiscOverlays, selectOverlaysCriteria } from '../../../modules/overlays/reducers/overlays.reducer';
 import { ICase } from '../../../modules/menu-items/cases/models/case.model';
 
-// @todo refactor
-const contextFeatureSelector = createFeatureSelector('context');
-const selectContextsParams = createSelector(contextFeatureSelector, (context: any) => context && context.params);
-const selectContextEntities = createSelector(selectContextsParams, (params: any) => params && params.contextEntities);
-
 @Injectable()
 export class UpdateCaseAppEffects {
 	isAutoSaveTriggered: boolean;
@@ -43,7 +38,6 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectLayout),
 		this.store$.select(selectOverlaysCriteria),
 		this.store$.select(selectOverlaysManualProcessArgs),
-		this.store$.select(selectContextEntities),
 		this.store$.select(selectMiscOverlays),
 		this.store$.select(selectTranslationData),
 		this.store$.select(selectScannedAreaData)

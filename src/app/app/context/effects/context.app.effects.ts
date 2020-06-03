@@ -1,215 +1,112 @@
 import { Injectable } from '@angular/core';
-import { from, Observable, of } from 'rxjs';
-import {
-	CasesActionTypes,
-	CasesService,
-	DisplayedOverlay,
-	DisplayMultipleOverlaysFromStoreAction,
-	DisplayOverlayFromStoreAction,
-	GeoRegisteration,
-	ICase,
-	IContext,
-	IContextEntity,
-	IOverlaySpecialObject,
-	IOverlaysState,
-	IStartAndEndDate,
-	LoadDefaultCaseAction,
-	OverlaysActionTypes,
-	OverlaysService,
-	overlaysStateSelector,
-	SelectCaseAction,
-	SetFilteredOverlaysAction,
-	SetSpecialObjectsActionStore
-} from '@ansyn/ansyn';
+import { Observable } from 'rxjs';
+import * as wellknown from 'wellknown';
+import { CasesActionTypes, CasesService, LoadDefaultCaseAction, SelectDilutedCaseAction } from '@ansyn/ansyn';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { catchError, filter, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
-import { Action, Store } from '@ngrx/store';
-import {
-	IContextParams,
-	selectContextEntities,
-	selectContextsArray,
-	selectContextsParams
-} from '../reducers/context.reducer';
+import { concatMap, filter, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import { selectContextMapPosition } from '../reducers/context.reducer';
 import { SetContextParamsAction } from '../actions/context.actions';
-import { ContextService } from '../services/context.service';
-import { get } from 'lodash';
-import { bbox, transformScale } from '@turf/turf';
-import { SetToastMessageAction } from '@ansyn/map-facade';
+import { Geometries, Polygon, Point } from '@turf/turf';
+import {
+	selectActiveMapId,
+	SetMapPositionByRadiusAction,
+	SetMapPositionByRectAction,
+	SetToastMessageAction
+} from '@ansyn/map-facade';
+import { ContextName, RequiredContextParams } from '../models/context.config';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { TranslateService } from '@ngx-translate/core';
+
+const CONTEXT_TOAST = {
+	paramsError: 'params: {0} is require in {1} context',
+	contextError: 'Unknown context {0}',
+	region: 'Unknown geometry'
+};
 
 @Injectable()
 export class ContextAppEffects {
 
-	mapNotRegisteredOverlayFromFilter$ = map(([action, params, overlayState]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => {
-		const newOverlayState = this.filterNotRegisteredFromFilterOverlay(overlayState);
-		return [action, params, newOverlayState]
-	});
+	@Effect()
 	loadDefaultCaseContext$: Observable<any> = this.actions$.pipe(
 		ofType<LoadDefaultCaseAction>(CasesActionTypes.LOAD_DEFAULT_CASE),
 		filter((action: LoadDefaultCaseAction) => action.payload.context),
-		withLatestFrom(this.store.select(selectContextsArray), this.store.select(selectContextsParams)),
-		map(([action, contexts, params]: [LoadDefaultCaseAction, any[], IContextParams]) => {
-			const context = contexts.find(({ id }) => action.payload.context === id);
-			return [action, context, params];
-		})
-	);
-
-	setContext: any = mergeMap(([action, context, contextParams]: [LoadDefaultCaseAction, IContext, IContextParams]) => {
-		const paramsPayload: IContextParams = {};
-		if (context.defaultOverlay) {
-			paramsPayload.defaultOverlay = context.defaultOverlay;
-		}
-		if (context.requirements && context.requirements.includes('time')) {
-			paramsPayload.time = action.payload.time;
-		}
-		const defaultCaseQueryParams = this.casesService.updateCaseViaContext(context, this.casesService.defaultCase, action.payload);
-		return this.getCaseForContext(defaultCaseQueryParams, context, paramsPayload).pipe(
-			mergeMap((selectedCase) => [
-					new SetContextParamsAction(paramsPayload),
-					new SelectCaseAction(selectedCase)
-				]
-			));
-	});
-
-	@Effect()
-	loadExistingDefaultCaseContext$: Observable<SetContextParamsAction | SelectCaseAction> =
-		this.loadDefaultCaseContext$
-			.pipe(
-				filter(([action, context]: [LoadDefaultCaseAction, any, IContextParams]) => Boolean(context)),
-				this.setContext
-			);
-
-	@Effect()
-	loadNotExistingDefaultCaseContext$: Observable<any> =
-		this.loadDefaultCaseContext$.pipe(
-			filter(([action, context]: [LoadDefaultCaseAction, any, IContextParams]) => !(Boolean(context))),
-			mergeMap(([action, context, params]: [LoadDefaultCaseAction, IContext, IContextParams]) => {
-				return this.contextService
-					.loadContext(action.payload.context)
-					.pipe(
-						map((context: IContext) => [action, context, params]),
-						this.setContext
-					);
-			}),
-			catchError((err) => {
-				console.warn('Error loading context as case', err);
-				const defaultCaseParams = this.casesService.updateCaseViaQueryParmas({}, this.casesService.defaultCase);
-				return from([new SelectCaseAction(defaultCaseParams),
-					new SetToastMessageAction({
-						toastText: 'Failed to load context',
-						showWarningIcon: true
-					})]);
-			})
-		);
-
-	@Effect()
-	displayLatestOverlay$: Observable<any> = this.actions$.pipe(
-		ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS),
-		withLatestFrom(this.store.select(selectContextsParams), this.store.select(overlaysStateSelector)),
-		this.mapNotRegisteredOverlayFromFilter$,
-		filter(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => params && params.defaultOverlay === DisplayedOverlay.latest && filteredOverlays.length > 0),
-		mergeMap(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => {
-			const id = filteredOverlays[filteredOverlays.length - 1];
-			return [
-				new SetContextParamsAction({ defaultOverlay: null }),
-				new DisplayOverlayFromStoreAction({ id })
-			];
-		}),
-		share()
+		withLatestFrom(this.store.select(selectActiveMapId)),
+		concatMap(this.parseContextParams.bind(this))
 	);
 
 	@Effect()
-	displayTwoNearestOverlay$: Observable<any> = this.actions$.pipe(
-		ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS),
-		withLatestFrom(this.store.select(selectContextsParams), this.store.select(overlaysStateSelector)),
-		this.mapNotRegisteredOverlayFromFilter$,
-		filter(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => params && params.defaultOverlay === DisplayedOverlay.nearest && filteredOverlays.length > 0),
-		mergeMap(([action, params, { entities: overlays, filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => {
-			const overlaysBeforeId = [...filteredOverlays].reverse().find(overlayId => overlays[overlayId].photoTime < params.time);
-			const overlaysBefore = overlays[overlaysBeforeId];
-			const overlaysAfterId = filteredOverlays.find(overlayId => overlays[overlayId].photoTime > params.time);
-			const overlaysAfter = overlays[overlaysAfterId];
-			const featureJson = get(params, 'contextEntities[0].featureJson');
-			let extent;
-			if (featureJson) {
-				const featureJsonScale = transformScale(featureJson, 1.1);
-				if (featureJsonScale.geometry.type !== 'Point') {
-					extent = bbox(featureJsonScale);
-				}
+	goToPendingContextPosition$ = this.imageryCommunicatorService.instanceCreated.pipe( // wait for map to create
+		withLatestFrom(this.store.select(selectContextMapPosition)),
+		filter(([{ id }, geo]) => Boolean(geo)),
+		mergeMap(([{ id }, geo]) => {
+			const actions: unknown[] = [new SetContextParamsAction({ position: undefined })];
+			if (geo.type === 'Point') {
+				actions.push(new SetMapPositionByRadiusAction({ id, center: geo, radiusInMeters: 100000 }));
+			} else {
+				actions.push(new SetMapPositionByRectAction({ id, rect: geo }));
 			}
-			const payload = [{ overlay: overlaysBefore, extent }, {
-				overlay: overlaysAfter,
-				extent
-			}].filter(({ overlay }) => Boolean(overlay));
-			return [
-				new DisplayMultipleOverlaysFromStoreAction(payload),
-				new SetContextParamsAction({ defaultOverlay: null })
-			];
-		}),
-		share()
-	);
-
-	@Effect()
-	setSpecialObjectsFromContextEntities$: Observable<any> = this.store.select(selectContextEntities).pipe(
-		filter((contextEntities: IContextEntity[]) => Boolean(contextEntities)),
-		map((contextEntities: IContextEntity[]): Action => {
-			const specialObjects = contextEntities.map(contextEntity => ({
-				id: contextEntity.id,
-				date: contextEntity.date,
-				shape: 'star'
-			} as IOverlaySpecialObject));
-			return new SetSpecialObjectsActionStore(specialObjects);
+			return actions;
 		})
 	);
 
 	constructor(protected actions$: Actions,
 				protected store: Store<any>,
 				protected casesService: CasesService,
-				protected overlaysService: OverlaysService,
-				protected contextService: ContextService) {
+				protected translateService: TranslateService,
+				protected imageryCommunicatorService: ImageryCommunicatorService) {
 
 	}
 
-	filterNotRegisteredFromFilterOverlay(overlayState: IOverlaysState): IOverlaysState {
-		const newOverlayState = {...overlayState};
-		newOverlayState.filteredOverlays = newOverlayState.filteredOverlays.filter( filterOverlay =>
-			overlayState.entities[filterOverlay].isGeoRegistered !== GeoRegisteration.notGeoRegistered);
-		return newOverlayState;
-	}
 
-	getCaseForContext(defaultCaseQueryParams: ICase, context: IContext, params: IContextParams): Observable<ICase> {
-		const updatedCase = { ...defaultCaseQueryParams };
-
-		const mapToCase = map(({ startDate, endDate }: IStartAndEndDate): ICase => ({
-				...updatedCase,
-				state: {
-					...updatedCase.state,
-					time: {
-						type: 'absolute',
-						from: new Date(startDate),
-						to: new Date(endDate)
-					}
-				}
-			}
-		));
-
-		let case$: Observable<ICase> = of(defaultCaseQueryParams).pipe(<any>mapToCase);
-
-		if (context.imageryCountBefore && !context.imageryCountAfter) {
-			case$ = <any>this.overlaysService.getStartDateViaLimitFacets({
-				region: updatedCase.state.region,
-				limit: context.imageryCountBefore,
-				facets: updatedCase.state.facets
-			}).pipe(mapToCase);
-		} else if (context.imageryCountBefore && context.imageryCountAfter) {
-			case$ = this.overlaysService.getStartAndEndDateViaRangeFacets({
-				region: updatedCase.state.region,
-				limitBefore: context.imageryCountBefore,
-				limitAfter: context.imageryCountAfter,
-				facets: updatedCase.state.facets,
-				date: params.time
-			}).pipe(mapToCase);
+	parseContextParams([{ payload }, mapId]: [LoadDefaultCaseAction, string]): any[] {
+		const { context, ...params } = payload;
+		const contextCase = { ...this.casesService.defaultCase };
+		const missingParamas = this.isMissingParametersContext(context, params);
+		const actions: unknown[] = [new SelectDilutedCaseAction(contextCase)];
+		if (missingParamas.length > 0) {
+			const toastText = this.buildErrorToastMessage(context, missingParamas);
+			actions.push(new SetToastMessageAction({ toastText }));
+			return actions;
 		}
-		return case$;
+		switch (context) {
+			case ContextName.AreaAnalysis:
+				const geo: Geometries = <Geometries>wellknown.parse(params.geometry);
+				if (!['Point', 'Polygon'].includes(geo.type) ) {
+					actions.push(new SetToastMessageAction({toastText: this.translateService.instant(CONTEXT_TOAST.region)}));
+					break;
+				}
+				const to = new Date();
+				const from = new Date(to);
+				from.setMonth(from.getMonth() - 2);
+				contextCase.state = {
+					...contextCase.state,
+					time: { ...contextCase.state.time, to, from },
+					region: geo
+				};
+				actions.push(new SetContextParamsAction({ position: <Point | Polygon>geo }));
+				break;
+			default:
+				actions.push(new SetToastMessageAction({
+						toastText: this.buildErrorToastMessage(context)
+					})
+				)
+		}
+		return actions;
+	}
+
+	private buildErrorToastMessage(contextName: string, params?: string[]) {
+		if (params) {
+			return this.translateService.instant(CONTEXT_TOAST.paramsError).replace('{0}', params.join(', ')).replace('{1}', contextName);
+		}
+		return this.translateService.instant(CONTEXT_TOAST.contextError.replace('{0}', contextName));
+
+	}
+
+	private isMissingParametersContext(contextName: string, params: { [key: string]: unknown }) {
+		const passParams = Object.keys(params);
+		const allParams = RequiredContextParams[contextName];
+		return allParams.filter(param => !passParams.includes(param))
 	}
 
 }

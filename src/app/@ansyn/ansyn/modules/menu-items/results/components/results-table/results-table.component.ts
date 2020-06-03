@@ -17,6 +17,7 @@ import {
 } from '../../../../overlays/actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
+import { TranslateService } from '@ngx-translate/core';
 
 interface ITableHeader {
 	headerName: string;
@@ -61,13 +62,13 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			headerName: 'Sensor',
 			headerData: 'sensorName',
 			isAscending: true,
-			sortFn: (a: string, b: string) => a.localeCompare(b)
+			sortFn: (a: string, b: string) => this.translateService.instant(a).localeCompare(this.translateService.instant(b))
 		},
 		{
 			headerName: 'Type',
-			headerData: 'type',
+			headerData: 'icon',
 			isAscending: true,
-			sortFn: (a, b) => 0
+			sortFn: (a, b) => a.localeCompare(b)
 		}
 	];
 
@@ -92,7 +93,8 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			})
 		);
 
-	constructor(protected store$: Store<IOverlaysState>) {
+	constructor(protected store$: Store<IOverlaysState>,
+				protected translateService: TranslateService) {
 	}
 
 	ngOnDestroy(): void {

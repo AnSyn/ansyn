@@ -159,17 +159,17 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	onDrawEnd$ = () => this.annotationsVisualizer.events.onDrawEnd.pipe(
 		withLatestFrom(this.activeAnnotationLayer$),
 		tap(([{ GeoJSON, feature }, activeAnnotationLayer]: [IDrawEndEvent, ILayer]) => {
-			const [geoJsonFeature] = GeoJSON.features;
-			const data = <FeatureCollection<any>>{ ...activeAnnotationLayer.data };
-			data.features.push(geoJsonFeature);
+			const data = <FeatureCollection<any>>{
+				...activeAnnotationLayer.data,
+				features: activeAnnotationLayer.data.features.concat(GeoJSON.features)
+			};
 			if (this.overlay) {
-				geoJsonFeature.properties = {
-					...geoJsonFeature.properties,
+				GeoJSON.features[0].properties = {
+					...GeoJSON.features[0].properties,
 					...this.projectionService.getProjectionProperties(this.communicator, data, feature, this.overlay)
 				};
 			}
-			geoJsonFeature.properties = { ...geoJsonFeature.properties };
-			this.store$.dispatch(new UpdateLayer(<ILayer>{ ...activeAnnotationLayer, data }));
+			this.store$.dispatch(new UpdateLayer({ id: activeAnnotationLayer.id, data }));
 		})
 	);
 
@@ -180,12 +180,14 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			const [geoJsonFeature] = GeoJSON.features;
 			const layerToUpdate = AnnotationLayers.find((layer: ILayer) => layer.data.features.some(({ id }) => id === geoJsonFeature.id));
 			if (layerToUpdate) {
-				const data = <FeatureCollection<any>>{ ...layerToUpdate.data };
-				const annotationToChangeIndex = data.features.findIndex((feature) => feature.id === geoJsonFeature.id);
-				data.features[annotationToChangeIndex] = geoJsonFeature;
+				const annotationToChangeIndex = layerToUpdate.data.features.findIndex((feature) => feature.id === geoJsonFeature.id);
+				const data = <FeatureCollection<any>>{ ...layerToUpdate.data,
+					features: layerToUpdate.data.features.map((existingFeature, index) =>
+					index === annotationToChangeIndex ? geoJsonFeature : existingFeature)
+				};
 				let label = geoJsonFeature.properties.label;
 				if (geoJsonFeature.properties.label.geometry) {
-					label = { ...geoJsonFeature.properties.label, geometry: GeoJSON.features[1].geometry }
+					label = { ...geoJsonFeature.properties.label, geometry: GeoJSON.features[1].geometry };
 				}
 				feature.set('label', label);
 				if (this.overlay) {
@@ -195,7 +197,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 					};
 				}
 				geoJsonFeature.properties = { ...geoJsonFeature.properties, label };
-				this.store$.dispatch(new UpdateLayer(<ILayer>{ ...layerToUpdate, data }));
+				this.store$.dispatch(new UpdateLayer({ id: layerToUpdate.id, data }));
 			}
 		})
 	);

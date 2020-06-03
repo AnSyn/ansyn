@@ -65,7 +65,7 @@ export class SelectCaseAppEffects {
 		// map
 		const { data } = state.maps;
 		// context
-		const { favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, presetOverlays, region, dataInputFilters, contextEntities, miscOverlays } = state;
+		const { favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, presetOverlays, region, dataInputFilters, miscOverlays } = state;
 		let { time } = state;
 		const { layout } = state.maps;
 
@@ -99,8 +99,6 @@ export class SelectCaseAppEffects {
 			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 			new UpdateFacetsAction(facets),
 			new UpdateSelectedLayersIds(activeLayersIds),
-			// @todo refactor
-			<any>{ type: '[Context] Set context params', payload: { contextEntities } },
 			new SetAutoSave(autoSave),
 			new SetRemovedOverlaysIdsAction(removedOverlaysIds),
 			new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),

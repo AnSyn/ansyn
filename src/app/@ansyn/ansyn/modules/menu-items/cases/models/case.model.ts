@@ -100,7 +100,6 @@ export interface ICaseDataInputFiltersState {
 }
 
 export interface ICaseTimeState {
-	type: 'absolute';
 	from: Date;
 	to: Date;
 }

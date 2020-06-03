@@ -27,7 +27,6 @@ export class TimepickerPresetsComponent implements OnInit, OnDestroy {
 		const time: ICaseTimeState = {
 			from,
 			to: currentDate,
-			type: 'absolute'
 		};
 
 		this.store$.dispatch(new SetOverlaysCriteriaAction({ time }));

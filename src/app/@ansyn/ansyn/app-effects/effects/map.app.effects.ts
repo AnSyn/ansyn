@@ -14,6 +14,7 @@ import {
 	mapStateSelector,
 	PositionChangedAction,
 	selectActiveMapId,
+	selectMapPositionByMapId,
 	selectMaps,
 	selectOverlayOfActiveMap,
 	selectOverlaysWithMapIds,
@@ -24,9 +25,9 @@ import {
 	UpdateMapAction
 } from '@ansyn/map-facade';
 import {
-	IBaseImageryLayer,
 	BaseMapSourceProvider,
 	bboxFromGeoJson,
+	IBaseImageryLayer,
 	ImageryCommunicatorService,
 	IImageryMapPosition,
 	IMapSettings,
@@ -53,9 +54,7 @@ import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model'
 import { MarkUpClass } from '../../modules/overlays/reducers/overlays.reducer';
 import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity/src/models';
-import {
-	SetMapGeoEnabledModeToolsActionStore
-} from '../../modules/menu-items/tools/actions/tools.actions';
+import { SetMapGeoEnabledModeToolsActionStore } from '../../modules/menu-items/tools/actions/tools.actions';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
@@ -66,9 +65,9 @@ import {
 } from '../../modules/overlays/actions/overlays.actions';
 import { GeoRegisteration, IOverlay } from '../../modules/overlays/models/overlay.model';
 import {
-	SetManualImageProcessing,
 	BackToWorldView,
 	OverlayStatusActionsTypes,
+	SetManualImageProcessing,
 	UpdateOverlaysManualProcessArgs
 } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { fromPromise } from 'rxjs/internal-compatibility';
@@ -79,7 +78,7 @@ import { LoggerService } from '../../modules/core/services/logger.service';
 import {
 	IOverlayStatusConfig,
 	overlayStatusConfig
-} from "../../modules/overlays/overlay-status/config/overlay-status-config";
+} from '../../modules/overlays/overlay-status/config/overlay-status-config';
 
 @Injectable()
 export class MapAppEffects {
@@ -98,9 +97,6 @@ export class MapAppEffects {
 			MapActionTypes.SET_LAYOUT_SUCCESS,
 			MapActionTypes.POSITION_CHANGED,
 			MapActionTypes.SYNCHRONIZE_MAPS,
-			MapActionTypes.EXPORT_MAPS_TO_PNG_REQUEST,
-			MapActionTypes.EXPORT_MAPS_TO_PNG_SUCCESS,
-			MapActionTypes.EXPORT_MAPS_TO_PNG_FAILED,
 			OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW,
 			OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS,
 			OverlayStatusActionsTypes.BACK_TO_WORLD_FAILED
@@ -178,7 +174,7 @@ export class MapAppEffects {
 			map(([action, entities]: [ImageryCreatedAction, Dictionary<ICaseMapState>]) => entities[action.payload.id]),
 			filter((caseMapState: ICaseMapState) => Boolean(caseMapState && caseMapState.data.overlay)),
 			map((caseMapState: ICaseMapState) => {
-				startTimingLog(`LOAD_OVERLAY_${caseMapState.data.overlay.id}`);
+				startTimingLog(`LOAD_OVERLAY_${ caseMapState.data.overlay.id }`);
 				return new DisplayOverlayAction({
 					overlay: caseMapState.data.overlay,
 					mapId: caseMapState.id,
@@ -205,6 +201,23 @@ export class MapAppEffects {
 		);
 
 	@Effect({ dispatch: false })
+	onDisplayOverlayCheckItsExtent$ = this.actions$.pipe(
+		ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
+		mergeMap((action: DisplayOverlaySuccessAction) =>
+			of(action.payload).pipe(
+				withLatestFrom(this.store$.select(selectMapPositionByMapId(action.payload.mapId)))
+			)
+		),
+		tap( ([payload, position]: [any, ImageryMapPosition]) => {
+			const isNotIntersect = polygonsDontIntersect(position.extentPolygon, payload.overlay.footprint, 0.2);
+			if (isNotIntersect) {
+				const comm = this.imageryCommunicatorService.provide(payload.mapId);
+				comm.ActiveMap.fitToExtent(bboxFromGeoJson(payload.overlay.footprint))
+			}
+		})
+	)
+
+	@Effect({ dispatch: false })
 	onSynchronizeAppMaps$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.SYNCHRONIZE_MAPS),
 		withLatestFrom(this.store$.select(mapStateSelector)),
@@ -229,7 +242,7 @@ export class MapAppEffects {
 	overlayLoadingFailed$: Observable<any> = this.actions$
 		.pipe(
 			ofType<DisplayOverlayFailedAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED),
-			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${action.payload.id}`)),
+			tap((action) => endTimingLog(`LOAD_OVERLAY_FAILED${ action.payload.id }`)),
 			map(() => new SetToastMessageAction({
 				toastText: toastMessages.showOverlayErrorToast,
 				showWarningIcon: true

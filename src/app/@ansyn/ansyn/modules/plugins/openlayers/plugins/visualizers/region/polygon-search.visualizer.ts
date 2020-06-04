@@ -36,7 +36,7 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 	}
 
 	drawRegionOnMap(region: CaseRegionState): Observable<boolean> {
-		const id = UUID.UUID();
+		const id = 'pinPolygon';
 		const featureJson = region.type === 'Point' ? getPolygonByPointAndRadius(region.coordinates) : turf.polygon(region.coordinates);
 		const entities = [{ id, featureJson }];
 		return this.setEntities(entities);

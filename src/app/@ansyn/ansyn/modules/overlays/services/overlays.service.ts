@@ -98,14 +98,6 @@ export class OverlaysService {
 		return this._overlaySourceProvider.getByIds(ids);
 	}
 
-	getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<IStartAndEndDate> {
-		return this._overlaySourceProvider.getStartDateViaLimitFacets(params);
-	}
-
-	getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
-		return this._overlaySourceProvider.getStartAndEndDateViaRangeFacets(params);
-	}
-
 	getTimeStateByOverlay(displayedOverlay: IOverlayDrop, timeLineRange: ITimelineRange): ITimelineRange {
 		let { start, end } = timeLineRange;
 		const startTime = start.getTime();

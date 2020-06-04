@@ -255,7 +255,6 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 			this.store$.dispatch(new SetOverlaysCriteriaAction({
 				time: {
-					type: 'absolute',
 					from,
 					to
 				}

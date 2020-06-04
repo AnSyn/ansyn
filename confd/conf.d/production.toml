@@ -38,5 +38,6 @@ keys = [
 	"/ansyn/logger/disconnection/minutes",
 	"/ansyn/airbus/baseurl",
     "/ansyn/overlay/airbus/inactive",
-    "/ansyn/overlay/imageryvideo/inactive"
+    "/ansyn/overlay/imageryvideo/inactive",
+    "/ansyn/show/one2one"
 ]

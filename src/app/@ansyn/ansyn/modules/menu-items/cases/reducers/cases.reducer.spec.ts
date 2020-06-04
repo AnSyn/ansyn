@@ -18,7 +18,6 @@ describe('CasesReducer', () => {
 		autoSave: false,
 		state: {
 			time: {
-				type: 'absolute',
 				from: new Date(),
 				to: new Date()
 			},

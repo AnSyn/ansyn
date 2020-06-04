@@ -103,7 +103,6 @@
 
 			 ]
 		   },
-		   "contextEntities": null,
 		   "overlaysManualProcessArgs": {  }
 		 }
 	   },
@@ -141,6 +140,7 @@
 	}
   },
   "mapFacadeConfig": {
+  	"showOne2One": {{ getv "/ansyn/show/one2one" "true" }},
   	"welcomeNotification": {
 		"headerText": "Welcome to AnSyn!",
 		"mainText": "To get overlays anywhere in the world, just right click on the wanted area and click the central button"
@@ -299,9 +299,6 @@
 		}
     ]
   },
-  "contextConfig": {
-    "schema": "contexts"
-  },
   "OverlayStatusConfig": {
   	"ImageProcParams": [
 	  {
@@ -340,6 +337,10 @@
     "ShadowMouse": {
     	"activeByDefault": {{ getv "/ansyn/is/shadow/active" "false"}},
     	"forceSendShadowMousePosition": {{ getv "/ansyn/force/send/shadow/mouse/position" "false"}}
+    },
+    "exportMap": {
+    	"target": "ansyn-imageries-manager",
+    	"excludeClasses": ["ol-attribution", "sentinel-combo"]
     }
   },
   "loggerConfig": {
@@ -365,7 +366,10 @@
       "enlarge": "Expand timeline",
       "quickloop": "Next overlay from the quick loop (key: Q)"
     },
-    "filters": ["sensorName", "isGeoRegistered"],
+    "filters": {
+    	"filterNames": ["sensorName", "isGeoRegistered"],
+    	"maximumOpen": 2
+    },
     "locale": "en-GB"
   },
   "coreConfig": {

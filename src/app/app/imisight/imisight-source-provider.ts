@@ -119,14 +119,6 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 		);
 	}
 
-	getStartDateViaLimitFacets(params: { facets; limit; region }): Observable<IStartAndEndDate> {
-		return EMPTY;
-	}
-
-	getStartAndEndDateViaRangeFacets(params: { facets; limitBefore; limitAfter; date; region }): Observable<any> {
-		return EMPTY;
-	}
-
 	private extractData(overlays: Array<ImiSightElement>): IOverlay[] {
 		if (!overlays) {
 			return [];

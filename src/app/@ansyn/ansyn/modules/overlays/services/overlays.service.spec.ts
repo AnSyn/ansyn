@@ -23,14 +23,6 @@ import {
 	sourceType: 'Mock'
 })
 export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
-	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {
-		return EMPTY;
-	};
-
-	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
-		return EMPTY;
-	};
-
 	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
 		return of(<any>{});
 	};

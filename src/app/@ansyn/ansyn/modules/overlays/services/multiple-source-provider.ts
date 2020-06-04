@@ -184,46 +184,6 @@ export class MultipleOverlaysSourceProvider {
 
 		return mergedSortedOverlays;
 	}
-
-	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<IStartAndEndDate> {
-		const startEnd = Promise.all(this.sourceConfigs
-			.map(s => s.provider.getStartDateViaLimitFacets(params).toPromise().catch(() => null)))
-			.then(dates => dates.filter(Boolean)
-			// filter(Boolean) prevents crash from providers that do not yet implement the current function
-				.map(d => ({ startDate: new Date(d.startDate), endDate: new Date(d.endDate) })))
-			.then(dates => dates.reduce((d1, d2) => {
-				if (!d1) {
-					return d2;
-				}
-				return {
-					startDate: d1.startDate < d2.startDate ? d1.startDate : d2.startDate,
-					endDate: d1.endDate > d2.startDate ? d1.endDate : d2.endDate
-				};
-			}, null))
-			.then(date => ({ startDate: date.startDate.toISOString(), endDate: date.endDate.toISOString() }));
-
-		return from(startEnd);
-	}
-
-	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
-		const startEnd = Promise.all(this.sourceConfigs
-			.map(s => s.provider.getStartAndEndDateViaRangeFacets(params).toPromise().catch(() => null)))
-			.then(dates => dates.filter(Boolean)
-			// filter(Boolean) prevents crash from providers that do not yet implement the current function
-				.map(d => ({ startDate: new Date(d.startDate), endDate: new Date(d.endDate) })))
-			.then(dates => dates.reduce((d1, d2) => {
-				if (!d1) {
-					return d2;
-				}
-				return {
-					startDate: d1.startDate < d2.startDate ? d1.startDate : d2.startDate,
-					endDate: d1.endDate > d2.startDate ? d1.endDate : d2.endDate
-				};
-			}, null))
-			.then(date => ({ startDate: date.startDate.toISOString(), endDate: date.endDate.toISOString() }));
-
-		return from(startEnd);
-	}
 }
 
 export function filterFilter(whiteFilter: IOverlayFilter, blackFilters: IOverlayFilter[]): IOverlayFilter[] {

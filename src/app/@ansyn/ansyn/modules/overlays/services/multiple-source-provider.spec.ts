@@ -44,14 +44,6 @@ class TruthyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
 		return of(overlays);
 	}
 
-	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {
-		return EMPTY;
-	}
-
-	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
-		return EMPTY;
-	}
-
 	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
 		return EMPTY;
 	}
@@ -63,14 +55,6 @@ class TruthyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
 class FaultyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		return throwError(new Error('Failed to fetch overlays'));
-	}
-
-	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {
-		return EMPTY;
-	}
-
-	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
-		return EMPTY;
 	}
 
 	public getById(id: string, sourceType: string = null): Observable<IOverlay> {

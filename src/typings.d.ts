@@ -10,4 +10,3 @@ declare module '*package.json' {
 	export default value;
 }
 
-declare var Cesium: any;

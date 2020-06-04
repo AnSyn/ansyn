@@ -4,11 +4,10 @@ import { AnnotationsControlComponent } from './annotations-control.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from '../../reducers/tools.reducer';
 import { AnnotationSetProperties, SetAnnotationMode } from '../../actions/tools.actions';
-import { AnnotationMode, AnnotationsWeightComponent, ColorPickerComponent } from '@ansyn/ol';
+import { AnnotationMode, AnnotationsWeightComponent, ColorPickerComponent } from '@ansyn/imagery-ol';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { TranslateModule } from '@ngx-translate/core';
 import { MockComponent } from '../../../../core/test/mock-component';
-import { mockAnnotationsColorComponent } from '../../../../../../ol/plugins/annotations/annotations-context-menu/components/annotations-color/annotations-color.component.mock';
 
 const mockComboBoxOptionComponent = MockComponent({
 	selector: 'ansyn-combo-box-option',
@@ -29,7 +28,7 @@ describe('AnnotationsControlComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [AnnotationsControlComponent, ColorPickerComponent, mockAnnotationsColorComponent, AnnotationsWeightComponent, mockComboBoxComponent, mockComboBoxOptionComponent],
+			declarations: [AnnotationsControlComponent, ColorPickerComponent, AnnotationsWeightComponent, mockComboBoxComponent, mockComboBoxOptionComponent],
 			imports: [
 				FormsModule,
 				StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer }),

@@ -21,8 +21,7 @@ export class TimePickerComponent implements OnInit, OnDestroy {
 	onTimeRangeChange(event) {
 		const time: ICaseTimeState = {
 			from: event.value[0],
-			to: event.value[1],
-			type: 'absolute'
+			to: event.value[1]
 		};
 		this.store$.dispatch(new SetOverlaysCriteriaAction({ time }));
 	}

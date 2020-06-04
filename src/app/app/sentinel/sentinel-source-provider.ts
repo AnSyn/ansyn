@@ -109,14 +109,6 @@ export class SentinelSourceProvider extends BaseOverlaySourceProvider {
 		);
 	}
 
-	getStartDateViaLimitFacets(params: { facets; limit; region }): Observable<IStartAndEndDate> {
-		return empty();
-	}
-
-	getStartAndEndDateViaRangeFacets(params: { facets; limitBefore; limitAfter; date; region }): Observable<any> {
-		return empty();
-	}
-
 	private extractArrayData(overlays: Array<any>): Array<IOverlay> {
 		if (!overlays) {
 			return [];

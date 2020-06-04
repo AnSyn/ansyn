@@ -264,7 +264,6 @@ export { rxPreventCrash } from './modules/core/utils/rxjs/operators/rxPreventCra
 export { IContext } from './modules/core/models/context.model';
 export { mapValuesToArray } from './modules/core/utils/misc';
 export { CoreModule } from './modules/core/core.module';
-export { DisplayedOverlay } from './modules/core/models/context.model';
 export { BaseFetchService } from './modules/core/services/base-fetch-service';
 export { FetchService } from './modules/core/services/fetch.service';
 export { IDeltaTime } from './modules/core/models/time.model';
@@ -291,7 +290,6 @@ export {
 	ICaseDataInputFiltersState,
 	ICaseTimeState
 } from './modules/menu-items/cases/models/case.model';
-export { IContextEntity } from './modules/menu-items/cases/models/case.model';
 export {
 	ICaseBooleanFilterMetadata, ICaseState, IOverlaysManualProcessArgs
 }from './modules/menu-items/cases/models/case.model';

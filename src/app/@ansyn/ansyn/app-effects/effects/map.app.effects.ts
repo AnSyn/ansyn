@@ -208,7 +208,7 @@ export class MapAppEffects {
 				withLatestFrom(this.store$.select(selectMapPositionByMapId(action.payload.mapId)))
 			)
 		),
-		tap( ([payload, position]: [any, ImageryMapPosition]) => {
+		tap( ([payload, position]: [any, IImageryMapPosition]) => {
 			const isNotIntersect = polygonsDontIntersect(position.extentPolygon, payload.overlay.footprint, 0.2);
 			if (isNotIntersect) {
 				const comm = this.imageryCommunicatorService.provide(payload.mapId);

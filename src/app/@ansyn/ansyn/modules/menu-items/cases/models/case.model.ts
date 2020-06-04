@@ -23,10 +23,6 @@ export interface IDilutedCase extends ICasePreview {
 	state: ICaseState;
 }
 
-export interface IContextEntity extends IVisualizerEntity {
-	date: Date;
-}
-
 export type CaseOrientation = 'Align North' | 'User Perspective' | 'Imagery Perspective';
 export type CaseTimeFilter = 'Start - End';
 
@@ -66,7 +62,6 @@ export interface IDilutedCaseState {
 	time: ICaseTimeState;
 	facets?: ICaseFacetsState;
 	region: CaseRegionState;
-	contextEntities?: IContextEntity[];
 	dataInputFilters: ICaseDataInputFiltersState;
 	favoriteOverlays?: IDilutedOverlay[];
 	miscOverlays?: IDilutedOverlaysHash;

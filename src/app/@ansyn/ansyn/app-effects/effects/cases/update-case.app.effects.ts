@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Effect } from '@ngrx/effects';
-import { createFeatureSelector, createSelector, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { combineLatest, Observable, pipe } from 'rxjs';
 import { selectActiveMapId, selectLayout, selectMapsList } from '@ansyn/map-facade';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
@@ -62,14 +62,13 @@ export class UpdateCaseAppEffects {
 				layout,
 				{ time, region, dataInputFilters }, /* overlaysCriteria */
 				overlaysManualProcessArgs,
-				contextEntities,
 				miscOverlays,
 				overlaysTranslationData,
 				overlaysScannedAreaData,
 				autoSave
 			] = events;
 
-			const { id, name, lastModified, creationTime, selectedContextId } = selectedCase;
+			const { id, name, lastModified, creationTime } = selectedCase;
 
 			const updatedCase: ICase = {
 				id,
@@ -94,7 +93,6 @@ export class UpdateCaseAppEffects {
 					dataInputFilters,
 					time,
 					facets,
-					contextEntities,
 					miscOverlays,
 					overlaysManualProcessArgs,
 					overlaysTranslationData,

@@ -119,7 +119,6 @@ describe('OverlaysService', () => {
 			]
 		},
 		time: {
-			type: 'absolute',
 			from: new Date(2020),
 			to: new Date()
 		},
@@ -301,7 +300,6 @@ describe('OverlaysService', () => {
 				]
 			},
 			time: {
-				type: 'absolute',
 				from: new Date(2020),
 				to: new Date()
 			},

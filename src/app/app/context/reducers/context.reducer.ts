@@ -1,15 +1,10 @@
 import { ContextActions, ContextActionTypes } from '../actions/context.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { DisplayedOverlay, IContextEntity } from '@ansyn/ansyn';
-import { Polygon, Point } from '@turf/helpers';
 
 export const contextFeatureKey = 'context';
 
 export interface IContextParams {
-	defaultOverlay?: DisplayedOverlay;
-	contextEntities?: IContextEntity[];
 	time?: any;
-	position?: Point | Polygon;
 }
 
 export interface IContextState {
@@ -19,10 +14,7 @@ export interface IContextState {
 export const contextStateSelector: MemoizedSelector<any, IContextState> = createFeatureSelector<IContextState>(contextFeatureKey);
 export const contextInitialState: IContextState = {
 	params: {
-		defaultOverlay: null,
-		contextEntities: [],
-		time: null,
-		position: undefined
+		time: null
 	}
 };
 
@@ -33,6 +25,5 @@ export function ContextReducer(state: IContextState = contextInitialState, actio
 		return state;
 	}
 }
+
 export const selectContextParams = createSelector(contextStateSelector, (state) => state && state.params);
-export const selectContextEntities = createSelector(selectContextParams, (params: IContextParams) => params && params.contextEntities);
-export const selectContextMapPosition = createSelector(selectContextParams, (params: IContextParams) => params && params.position);

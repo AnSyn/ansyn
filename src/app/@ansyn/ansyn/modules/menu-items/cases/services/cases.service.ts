@@ -16,7 +16,6 @@ import {
 	ICasePreview,
 	ICaseState,
 	ICaseTimeState,
-	IContextEntity,
 	IDilutedCaseState
 } from '../models/case.model';
 

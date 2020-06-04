@@ -1,18 +1,16 @@
 import { inject, TestBed, fakeAsync } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 
-import { CasesService, ICase, LoadDefaultCaseAction, SelectDilutedCaseAction } from '@ansyn/ansyn';
+import { CasesService, ICase, LoadDefaultCaseAction, SelectCaseAction, SelectDilutedCaseAction } from '@ansyn/ansyn';
 import { Observable, of } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { ImageryCommunicatorService, } from '@ansyn/imagery';
 import { ContextAppEffects } from './context.app.effects';
-import { SetContextParamsAction } from '../actions/context.actions';
 import {
 	contextFeatureKey,
 	ContextReducer,
-	contextStateSelector,
-	selectContextMapPosition
+	contextStateSelector
 } from '../reducers/context.reducer';
 import { ContextConfig, ContextName } from '../models/context.config';
 import { Point } from '@turf/helpers';
@@ -24,9 +22,6 @@ describe('ContextAppEffects', () => {
 	let actions: Observable<any>;
 	let store: Store<any>;
 	let casesService: CasesService;
-	let imageryCommunicatorServiceMock = {
-		instanceCreated: of({ id: 'imagery1' }),
-	};
 	const caseItem: ICase = {
 		id: '31b33526-6447-495f-8b52-83be3f6b55bd',
 		state: {
@@ -40,7 +35,6 @@ describe('ContextAppEffects', () => {
 				]
 			},
 			time: {
-				type: 'absolute',
 				from: new Date('2013-06-27T08:43:03.624Z'),
 				to: new Date('2015-04-17T03:55:12.129Z')
 			},
@@ -68,16 +62,13 @@ describe('ContextAppEffects', () => {
 				{
 					provide: CasesService,
 					useValue: {
-						defaultCase: caseItem
+						defaultCase: caseItem,
+						updateCaseViaContext: () => ({})
 					}
 				},
 				{
 					provide: ContextConfig,
 					useValue: {}
-				},
-				{
-					provide: ImageryCommunicatorService,
-					useValue: imageryCommunicatorServiceMock
 				}
 			]
 
@@ -90,8 +81,7 @@ describe('ContextAppEffects', () => {
 		casesService = _casesService;
 		const fakeStore = new Map<any, any>([
 			[selectActiveMapId, 'imagery1'],
-			[contextStateSelector, { params: {} }],
-			[selectContextMapPosition, { type: 'Point', coordinates: [31.222, 33.212] }]
+			[contextStateSelector, { params: {} }]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
@@ -102,28 +92,28 @@ describe('ContextAppEffects', () => {
 	});
 
 	it('on load case with area analysis context fire SelectDilutedCaseAction and update params', fakeAsync(() => {
-		actions = hot('(a)', {
+
+		actions = hot('-a-', {
 			a: new LoadDefaultCaseAction({
 				context: ContextName.AreaAnalysis,
 				geometry: 'POINT(-117.91897 34.81265)'
 			})
 		});
-		const contextCase = { ...casesService.defaultCase };
+		const contextCase = {...casesService.defaultCase,  id: ContextName.AreaAnalysis,  };
 		const to = new Date();
 		const from = new Date(to);
 		const geo: Point = { type: 'Point', coordinates: [-117.91897, 34.81265] };
 		from.setMonth(from.getMonth() - 2);
 		contextCase.state = {
 			...contextCase.state,
-			time: { ...contextCase.state.time, to, from },
+			time: { to, from },
 			region: geo
 		};
-		const expectedResult = cold('(ab)', {
-				a: new SelectDilutedCaseAction(contextCase),
-				b: new SetContextParamsAction({ position: geo })
+		const expectedResult = cold('-a-', {
+				a: new SelectCaseAction(contextCase),
 			}
 		);
-
+		spyOn(casesService, 'updateCaseViaContext').and.callFake((ctx, c , p) => contextCase);
 		expect(contextAppEffects.loadDefaultCaseContext$).toBeObservable(expectedResult);
 	}))
 })

@@ -4,7 +4,7 @@ import {
 	IImageryMapPosition,
 	ImageryPlugin
 } from '@ansyn/imagery';
-import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ol';
+import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/imagery-ol';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable, of } from 'rxjs';
 import { selectMapPositionByMapId, selectOverlayByMapId } from '@ansyn/map-facade';

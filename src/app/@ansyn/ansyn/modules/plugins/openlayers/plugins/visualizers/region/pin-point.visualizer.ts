@@ -7,7 +7,7 @@ import { Actions } from '@ngrx/effects';
 import * as turf from '@turf/turf';
 import { getPointByGeometry, ImageryVisualizer } from '@ansyn/imagery';
 import { Position } from 'geojson';
-import { OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
+import { OpenLayersMap, OpenLayersProjectionService } from '@ansyn/imagery-ol';
 import { RegionVisualizer } from './region.visualizer';
 import { CaseGeoFilter, CaseRegionState } from '../../../../../menu-items/cases/models/case.model';
 import { SetOverlaysCriteriaAction } from '../../../../../overlays/actions/overlays.actions';
@@ -37,7 +37,7 @@ export class PinPointVisualizer extends RegionVisualizer {
 	}
 
 	drawRegionOnMap(region: CaseRegionState): Observable<boolean> {
-		const coordinates = getPointByGeometry(<GeoJSON.GeometryObject>region).coordinates;
+		const coordinates = getPointByGeometry(region).coordinates;
 		const id = 'pinPoint';
 		const featureJson = turf.point(coordinates);
 		const entities = [{ id, featureJson }];

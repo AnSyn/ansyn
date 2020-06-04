@@ -15,6 +15,8 @@ export class AnsynModalComponent {
 		filter(($event: KeyboardEvent) => $event.keyCode === 27),
 		tap(() => this.show = false));
 
+	@Output() showChange = new EventEmitter<boolean>();
+
 	@HostBinding('class.show')
 	@Input()
 	set show(value) {
@@ -31,7 +33,6 @@ export class AnsynModalComponent {
 		return this._show;
 	}
 
-	@Output() showChange = new EventEmitter<boolean>();
 
 	close() {
 		this.show = false;

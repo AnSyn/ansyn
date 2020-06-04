@@ -21,8 +21,7 @@
             "tsConfig": "src/tsconfig.app.json",
             "showCircularDependencies": true,
             "polyfills": "src/polyfills.ts",
-            "assets": [
-              {
+            "assets": [{
                 "glob": "**/*",
                 "input": "src/app/@ansyn/ansyn/assets",
                 "output": "/assets"
@@ -48,23 +47,19 @@
           },
           "configurations": {
             "dev": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
+              "budgets": [{
+                "type": "anyComponentStyle",
+                "maximumWarning": "6kb"
+              }],
               "sourceMap": true,
               "extractCss": true,
               "fileReplacements": []
             },
             "production": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
+              "budgets": [{
+                "type": "anyComponentStyle",
+                "maximumWarning": "6kb"
+              }],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": true,
@@ -74,12 +69,10 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": false,
-              "fileReplacements": [
-                {
-                  "replace": "src/configuration/configuration.ts",
-                  "with": "src/configuration/configuration.prod.ts"
-                }
-              ]
+              "fileReplacements": [{
+                "replace": "src/configuration/configuration.ts",
+                "with": "src/configuration/configuration.prod.ts"
+              }]
             }
           }
         },
@@ -124,8 +117,7 @@
                 "src/app/@ansyn"
               ]
             },
-            "assets": [
-              {
+            "assets": [{
                 "glob": "**/*",
                 "input": "src/app/@ansyn/ansyn/assets",
                 "output": "/assets"
@@ -198,8 +190,7 @@
                 "src/app/@ansyn"
               ]
             },
-            "assets": [
-              {
+            "assets": [{
                 "glob": "**/*",
                 "input": "src/app/@ansyn/ansyn/assets",
                 "output": "/assets"
@@ -213,26 +204,20 @@
           },
           "configurations": {
             "dev": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
-              "fileReplacements": [
-                {
-                  "replace": "src/configuration/configuration.ts",
-                  "with": "src/configuration/configuration.dev.ts"
-                }
-              ]
+              "budgets": [{
+                "type": "anyComponentStyle",
+                "maximumWarning": "6kb"
+              }],
+              "fileReplacements": [{
+                "replace": "src/configuration/configuration.ts",
+                "with": "src/configuration/configuration.dev.ts"
+              }]
             },
             "production": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
+              "budgets": [{
+                "type": "anyComponentStyle",
+                "maximumWarning": "6kb"
+              }],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -242,12 +227,10 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/configuration/configuration.ts",
-                  "with": "src/configuration/configuration.prod.ts"
-                }
-              ]
+              "fileReplacements": [{
+                "replace": "src/configuration/configuration.ts",
+                "with": "src/configuration/configuration.prod.ts"
+              }]
             }
           }
         },
@@ -282,8 +265,7 @@
             "styles": [
               "src/app/@ansyn/ansyn/assets/styles/styles.css"
             ],
-            "assets": [
-              {
+            "assets": [{
                 "glob": "**/*",
                 "input": "src/app/@ansyn/ansyn/assets",
                 "output": "/assets"
@@ -326,8 +308,7 @@
                 "src/app/@ansyn"
               ]
             },
-            "assets": [
-              {
+            "assets": [{
                 "glob": "**/*",
                 "input": "src/app/@ansyn/ansyn/assets",
                 "output": "/assets"
@@ -343,26 +324,20 @@
           },
           "configurations": {
             "dev": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
-              "fileReplacements": [
-                {
-                  "replace": "src/configuration/configuration.ts",
-                  "with": "src/configuration/configuration.dev.ts"
-                }
-              ]
+              "budgets": [{
+                "type": "anyComponentStyle",
+                "maximumWarning": "6kb"
+              }],
+              "fileReplacements": [{
+                "replace": "src/configuration/configuration.ts",
+                "with": "src/configuration/configuration.dev.ts"
+              }]
             },
             "production": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
+              "budgets": [{
+                "type": "anyComponentStyle",
+                "maximumWarning": "6kb"
+              }],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -372,12 +347,10 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/configuration/configuration.ts",
-                  "with": "src/configuration/configuration.prod.ts"
-                }
-              ]
+              "fileReplacements": [{
+                "replace": "src/configuration/configuration.ts",
+                "with": "src/configuration/configuration.prod.ts"
+              }]
             }
           }
         },
@@ -412,8 +385,7 @@
             "styles": [
               "src/app/@ansyn/ansyn/assets/styles/styles.css"
             ],
-            "assets": [
-              {
+            "assets": [{
                 "glob": "**/*",
                 "input": "src/app/@ansyn/ansyn/assets",
                 "output": "/assets"
@@ -450,9 +422,9 @@
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/ansyn/ng-package.json"
-            ,              "tsConfig": "src/app/@ansyn/ansyn/tsconfig.lib.prod.json"
-}
+              "project": "src/app/@ansyn/ansyn/ng-package.json",
+              "tsConfig": "src/app/@ansyn/ansyn/tsconfig.lib.prod.json"
+            }
           }
         }
       }
@@ -471,9 +443,9 @@
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/map-facade/ng-package.json"
-            ,              "tsConfig": "src/app/@ansyn/map-facade/tsconfig.lib.prod.json"
-}
+              "project": "src/app/@ansyn/map-facade/ng-package.json",
+              "tsConfig": "src/app/@ansyn/map-facade/tsconfig.lib.prod.json"
+            }
           }
         }
       }
@@ -492,9 +464,9 @@
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/imagery-submodules/imagery-ol/ng-package.json"
-            ,              "tsConfig": "src/app/@ansyn/imagery-submodules/imagery-ol/tsconfig.lib.prod.json"
-}
+              "project": "src/app/@ansyn/imagery-submodules/imagery-ol/ng-package.json",
+              "tsConfig": "src/app/@ansyn/imagery-submodules/imagery-ol/tsconfig.lib.prod.json"
+            }
           }
         }
       }
@@ -513,9 +485,9 @@
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/imagery-submodules/imagery-cesium/ng-package.json"
-            ,              "tsConfig": "src/app/@ansyn/imagery-submodules/imagery-cesium/tsconfig.lib.prod.json"
-}
+              "project": "src/app/@ansyn/imagery-submodules/imagery-cesium/ng-package.json",
+              "tsConfig": "src/app/@ansyn/imagery-submodules/imagery-cesium/tsconfig.lib.prod.json"
+            }
           }
         }
       }
@@ -534,9 +506,9 @@
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/imagery-submodules/imagery-video/ng-package.json"
-            ,              "tsConfig": "src/app/@ansyn/imagery-submodules/imagery-video/tsconfig.lib.prod.json"
-}
+              "project": "src/app/@ansyn/imagery-submodules/imagery-video/ng-package.json",
+              "tsConfig": "src/app/@ansyn/imagery-submodules/imagery-video/tsconfig.lib.prod.json"
+            }
           }
         }
       }
@@ -555,9 +527,9 @@
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/imagery-submodules/imagery/ng-package.json"
-            ,              "tsConfig": "src/app/@ansyn/imagery-submodules/imagery/tsconfig.lib.prod.json"
-}
+              "project": "src/app/@ansyn/imagery-submodules/imagery/ng-package.json",
+              "tsConfig": "src/app/@ansyn/imagery-submodules/imagery/tsconfig.lib.prod.json"
+            }
           }
         }
       }
@@ -576,9 +548,9 @@
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/menu/ng-package.json"
-            ,              "tsConfig": "src/app/@ansyn/menu/tsconfig.lib.prod.json"
-}
+              "project": "src/app/@ansyn/menu/ng-package.json",
+              "tsConfig": "src/app/@ansyn/menu/tsconfig.lib.prod.json"
+            }
           }
         }
       }

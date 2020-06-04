@@ -17,7 +17,7 @@ import {
 	UpdateMapAction,
 	SetLayoutSuccessAction, selectActiveMapId, IMapState
 } from '@ansyn/map-facade';
-import { AnnotationMode, DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
+import { AnnotationMode, DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/imagery-ol';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Dictionary } from '@ngrx/entity';
 import { Action, select, Store } from '@ngrx/store';

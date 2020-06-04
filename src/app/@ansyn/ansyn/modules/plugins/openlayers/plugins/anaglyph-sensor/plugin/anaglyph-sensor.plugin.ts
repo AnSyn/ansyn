@@ -1,6 +1,6 @@
 import { BaseImageryPlugin, ImageryPlugin } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ol';
+import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/imagery-ol';
 import { selectOverlayByMapId } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { take, tap } from 'rxjs/operators';

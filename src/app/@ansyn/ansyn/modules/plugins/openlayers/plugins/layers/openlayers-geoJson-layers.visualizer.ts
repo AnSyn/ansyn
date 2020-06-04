@@ -5,7 +5,7 @@ import { catchError, debounceTime, filter, map, mergeMap, withLatestFrom } from 
 import { combineLatest, forkJoin, Observable, of, Subscription } from 'rxjs';
 import { selectHideLayersOnMap, selectMapPositionByMapId, SetToastMessageAction } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
-import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
+import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/imagery-ol';
 import { ILayer, layerPluginTypeEnum } from '../../../../menu-items/layers-manager/models/layers.model';
 import { selectLayers, selectSelectedLayersIds } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
 import { booleanContains, intersect } from '@turf/turf';

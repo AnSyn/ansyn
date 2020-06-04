@@ -4,7 +4,7 @@
     "module": "commonjs",
     "paths": {
       "@ansyn/imagery": [
-        "src/app/@ansyn/imagery/public_api"
+        "src/app/@ansyn/imagery-submodules/imagery/public_api"
       ]
     },
     "target": "es5",

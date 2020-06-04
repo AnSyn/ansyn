@@ -5,7 +5,7 @@ import { Actions } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
 import { map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
+import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/imagery-ol';
 import { ExtendMap } from "../../../../../overlays/reducers/extendedMap.class";
 import { IMarkUpData, MarkUpClass, selectDropMarkup } from "../../../../../overlays/reducers/overlays.reducer";
 import { OverlaysService } from "../../../../../overlays/services/overlays.service";

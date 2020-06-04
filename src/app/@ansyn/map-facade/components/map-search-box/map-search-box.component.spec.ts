@@ -77,7 +77,7 @@ describe('MapSearchBoxComponent', () => {
 			component.onSubmit();
 			tick();
 			expect(geocoderService.getLocation$).toHaveBeenCalledWith('hehe');
-			expect(component._communicator.setCenter).toHaveBeenCalledWith('test', true);
+			expect(component._communicator.setCenter).toHaveBeenCalledWith('test' as any, true);
 		}));
 
 		it('should halt the flow, when given an empty string', fakeAsync(() => {

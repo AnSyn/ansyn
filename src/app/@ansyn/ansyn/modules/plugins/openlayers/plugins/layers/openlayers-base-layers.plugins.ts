@@ -5,7 +5,7 @@ import { combineLatest, Observable, Subscription } from 'rxjs';
 import { BaseImageryPlugin } from '@ansyn/imagery';
 import { selectHideLayersOnMap } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '@ansyn/ol';
+import { OpenLayersMap } from '@ansyn/imagery-ol';
 import { ILayer } from '../../../../menu-items/layers-manager/models/layers.model';
 import { selectLayers, selectSelectedLayersIds } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
 

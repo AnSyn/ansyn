@@ -34,13 +34,13 @@ import {
 	OpenLayersDisabledMap,
 	OpenLayersMap,
 	OpenLayersStaticImageSourceProvider,
-	OpenLayerTileWMSSourceProvider
-} from '@ansyn/ol';
+	OpenLayerTileWMSSourceProvider,
+	OpenLayersAirbusSourceProvider,
+	OpenLayerPic4CartoSourceProvider
+} from '@ansyn/imagery-ol';
 import { ScannedAreaVisualizer } from './plugins/visualizers/scanned-area/scanned-area.visualizer';
 import { OpenlayersAnaglyphSensorModule } from './plugins/anaglyph-sensor/anaglyph-sensor.module';
-import { OpenLayersAirbusSourceProvider } from '@ansyn/ol';
 import { OverlayHoverVisualizer } from "./plugins/visualizers/overlays/overlay-hover-visualizer";
-import { OpenLayerPic4CartoSourceProvider } from '@ansyn/ol';
 
 @NgModule({
 	imports: [

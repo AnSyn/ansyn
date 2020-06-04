@@ -10,10 +10,6 @@ import { tap } from 'rxjs/operators';
 export class ClickOutsideDirective implements OnInit, OnDestroy {
 	@Output() ansynClickOutside = new EventEmitter();
 	@Input() trigger: any;
-	@Input()
-	set extraClass(val: string) {
-		this._extraClass = val ? val.split(" ") : [];
-	}
 	@Input() clickEventType: string | string[] = 'click';
 
 	_extraClass: string[];
@@ -38,13 +34,17 @@ export class ClickOutsideDirective implements OnInit, OnDestroy {
 		);
 	};
 
+	@Input()
+	set extraClass(val: string) {
+		this._extraClass = val ? val.split(" ") : [];
+	}
+
+	constructor(public elementRef: ElementRef) {
+	}
 	ngOnDestroy(): void {
 	}
 
 	ngOnInit(): void {
-	}
-
-	constructor(public elementRef: ElementRef) {
 	}
 
 }

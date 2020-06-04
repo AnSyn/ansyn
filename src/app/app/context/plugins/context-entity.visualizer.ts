@@ -10,7 +10,7 @@ import { distinctUntilChanged, filter, map, mergeMap, tap } from 'rxjs/operators
 import { AutoSubscription } from 'auto-subscriptions';
 import { selectContextEntities } from '../reducers/context.reducer';
 import { IContextEntity, IOverlay, } from '@ansyn/ansyn';
-import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
+import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/imagery-ol';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

@@ -21,6 +21,8 @@ export class AnsynInputComponent implements ControlValueAccessor, OnInit {
 	@Input() autocomplete: 'off' | 'on' = 'off';
 	@Input()
 	@HostBinding('class.white') white: boolean;
+	@ViewChild('input') input: ElementRef;
+
 	disabled: boolean;
 
 	private innerValue: any = '';
@@ -38,7 +40,6 @@ export class AnsynInputComponent implements ControlValueAccessor, OnInit {
 		}
 	}
 
-	@ViewChild('input') input: ElementRef;
 
 	constructor(@Attribute('select') public selectAttr: string) {
 	}

@@ -22,7 +22,7 @@ import {
 	PointToImageOrientationAction,
 } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
+import { OpenLayersMap, OpenLayersProjectionService } from '@ansyn/imagery-ol';
 import {
 	catchError,
 	debounceTime,

@@ -15,7 +15,7 @@ import {
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
-import { AnnotationMode } from '@ansyn/ol';
+import { AnnotationMode } from '@ansyn/imagery-ol';
 import { IMeasureData, IMeasureDataOptions } from '../models/measure-data';
 
 export enum toolsFlags {

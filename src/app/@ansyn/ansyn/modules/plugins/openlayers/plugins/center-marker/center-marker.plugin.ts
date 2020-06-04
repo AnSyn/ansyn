@@ -7,7 +7,7 @@ import VectorLayer from 'ol/layer/Vector';
 import { BaseImageryMap, BaseImageryPlugin, IImageryMapPosition, ImageryPlugin } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersMap } from '@ansyn/ol';
+import { OpenLayersMap } from '@ansyn/imagery-ol';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap],

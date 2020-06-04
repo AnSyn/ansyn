@@ -50,18 +50,6 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	public rotation = 0;
 	protected topElement = this.el.nativeElement.parentElement;
 
-	get dropElement(): Element {
-		return this.el.nativeElement.ownerDocument.getElementById(`dropId-${ this.overlayId }`);
-	}
-
-	public get const() {
-		return overlayOverviewComponentConstants;
-	}
-
-	public get errorSrc() {
-		return this.const.OVERLAY_OVERVIEW_FAILED;
-	};
-
 	@HostBinding('class.show') isHoveringOverDrop = false;
 	@HostBinding('style.left.px') left = 0;
 	@HostBinding('style.top.px') top = 0;
@@ -78,6 +66,18 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		withLatestFrom(this.store$.select(selectCustomOverviewElementId)),
 		tap(this.onHoveredOverlay.bind(this))
 	);
+
+	get dropElement(): Element {
+		return this.el.nativeElement.ownerDocument.getElementById(`dropId-${ this.overlayId }`);
+	}
+
+	public get const() {
+		return overlayOverviewComponentConstants;
+	}
+
+	public get errorSrc() {
+		return this.const.OVERLAY_OVERVIEW_FAILED;
+	};
 
 	constructor(
 		public store$: Store<IOverlaysState>,

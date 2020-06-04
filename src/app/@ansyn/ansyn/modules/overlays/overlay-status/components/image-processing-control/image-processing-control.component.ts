@@ -20,6 +20,8 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 
 	private subscriptions: Subscription[] = [];
 
+	imageManualProcessArgs: IImageManualProcessArgs = this.defaultImageManualProcessArgs;
+
 	public manualImageProcessingParams$: Observable<Object> = this.store$.select(overlayStatusStateSelector).pipe(
 		map((overlayStatusState: IOverlayStatusState) => overlayStatusState.manualImageProcessingParams),
 		distinctUntilChanged(),
@@ -36,9 +38,6 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
 		}, {});
 	}
-
-	imageManualProcessArgs: IImageManualProcessArgs = this.defaultImageManualProcessArgs;
-
 
 	constructor(public store$: Store<IImageProcessState>, @Inject(overlayStatusConfig) protected config: IOverlayStatusConfig) {
 	}

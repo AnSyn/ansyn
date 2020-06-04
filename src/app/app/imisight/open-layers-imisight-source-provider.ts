@@ -15,7 +15,7 @@ import {
 import { ImisightOverlaySourceType } from './imisight-source-provider';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { OpenLayersDisabledMap, OpenLayersMap, OpenLayersMapSourceProvider } from '@ansyn/ol';
+import { OpenLayersDisabledMap, OpenLayersMap, OpenLayersMapSourceProvider } from '@ansyn/imagery-ol';
 
 @ImageryMapSource({
 	sourceType: ImisightOverlaySourceType,

@@ -23,7 +23,7 @@ import {
 	selectRemovedOverlays,
 	selectTranslationData
 } from './reducers/overlay-status.reducer';
-import { AnnotationMode } from '@ansyn/ol';
+import { AnnotationMode } from '@ansyn/imagery-ol';
 import { ITranslationData } from '../../menu-items/cases/models/case.model';
 import { Actions, ofType } from '@ngrx/effects';
 import {

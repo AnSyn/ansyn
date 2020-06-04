@@ -22,7 +22,7 @@ import {
 	OL_PLUGINS_CONFIG,
 	OpenLayersMap,
 	OpenLayersProjectionService
-} from '@ansyn/ol';
+} from '@ansyn/imagery-ol';
 import { ILayer, LayerType } from '../../../../../menu-items/layers-manager/models/layers.model';
 import {
 	selectActiveAnnotationLayer,

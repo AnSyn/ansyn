@@ -14,6 +14,8 @@ export class ImageryVideoComponent {
 	error: boolean;
 	_src: string;
 
+	@Input() rotation = 0;
+
 	@Input()
 	set src(value: string) {
 		this.error = false;
@@ -25,7 +27,6 @@ export class ImageryVideoComponent {
 		return this._src;
 	}
 
-	@Input() rotation = 0;
 
 	constructor(public sanitization: DomSanitizer) {
 	}

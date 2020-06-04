@@ -7,7 +7,7 @@ import { Position } from 'geojson';
 import { getPolygonByPointAndRadius, ImageryVisualizer, MarkerSize } from '@ansyn/imagery';
 import { UpdateGeoFilterStatus } from '../../../../../status-bar/actions/status-bar.actions';
 import { RegionVisualizer } from './region.visualizer';
-import { OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
+import { OpenLayersMap, OpenLayersProjectionService } from '@ansyn/imagery-ol';
 import { CaseGeoFilter, CaseRegionState } from '../../../../../menu-items/cases/models/case.model';
 import { Injectable } from '@angular/core';
 

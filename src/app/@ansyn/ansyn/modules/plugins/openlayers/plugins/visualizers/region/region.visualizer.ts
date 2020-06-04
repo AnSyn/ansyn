@@ -14,7 +14,7 @@ import { VisualizerInteractions } from '@ansyn/imagery';
 import Draw from 'ol/interaction/Draw';
 import { AutoSubscription } from 'auto-subscriptions';
 import { distinctUntilChanged, filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
-import { EntitiesVisualizer, OpenLayersProjectionService } from '@ansyn/ol';
+import { EntitiesVisualizer, OpenLayersProjectionService } from '@ansyn/imagery-ol';
 import {
 	selectGeoFilterActive,
 	selectGeoFilterType

@@ -14,6 +14,13 @@ export class ImageryLoaderComponent implements OnInit, OnDestroy {
 	isLoadingMaps: Map<string, string> = new Map<string, string>();
 	subscriptions: Subscription[] = [];
 
+	isLoadingMaps$: Observable<Map<string, string>> = this.store$.select(mapStateSelector).pipe(
+		pluck<IMapState, Map<string, string>>('isLoadingMaps'),
+		distinctUntilChanged(),
+		tap((isLoadingMaps) => this.isLoadingMaps = isLoadingMaps)
+	);
+
+
 	@HostBinding('class.show')
 	get show() {
 		return this.isLoadingMaps.has(this.mapId);
@@ -23,11 +30,6 @@ export class ImageryLoaderComponent implements OnInit, OnDestroy {
 		return this.isLoadingMaps.get(this.mapId);
 	}
 
-	isLoadingMaps$: Observable<Map<string, string>> = this.store$.select(mapStateSelector).pipe(
-		pluck<IMapState, Map<string, string>>('isLoadingMaps'),
-		distinctUntilChanged(),
-		tap((isLoadingMaps) => this.isLoadingMaps = isLoadingMaps)
-	);
 
 	constructor(public store$: Store<IMapState>) {
 	}

@@ -96,7 +96,7 @@ describe('EditCaseComponent', () => {
 			component.contextsList = ['fakeContext' as any];
 			spyOn(casesService, 'createCase').and.callFake((value) => of(value));
 			component.onSubmitCase(0);
-			expect(casesService.queryParamsHelper.updateCaseViaContext).toHaveBeenCalledWith('fakeContext', component.caseModel);
+			expect(casesService.queryParamsHelper.updateCaseViaContext).toHaveBeenCalledWith('fakeContext' as any, component.caseModel);
 			expect(store.dispatch).toHaveBeenCalledWith(new AddCaseAction(component.caseModel));
 			expect(component.close).toHaveBeenCalled();
 		});

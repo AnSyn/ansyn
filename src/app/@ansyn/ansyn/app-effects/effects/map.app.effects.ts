@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { CesiumMapName } from '@ansyn/imagery-cesium';
-import { DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
+import { DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/imagery-ol';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { combineLatest, EMPTY, forkJoin, from, Observable, of, pipe } from 'rxjs';

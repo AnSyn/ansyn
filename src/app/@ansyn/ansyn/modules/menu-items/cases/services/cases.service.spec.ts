@@ -120,7 +120,7 @@ describe('CasesService', () => {
 					creationTime: newDate,
 					lastModified: newDate,
 					autoSave: true
-				},
+				} as any,
 				data: casesService.pluckIdSourceType(selectedCase.state)
 			});
 	});
@@ -140,7 +140,7 @@ describe('CasesService', () => {
 					creationTime: selectedCase.creationTime,
 					lastModified: selectedCase.lastModified,
 					autoSave: true
-				},
+				} as any,
 				data: casesService.pluckIdSourceType(selectedCase.state)
 			});
 	});

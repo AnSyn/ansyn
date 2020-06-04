@@ -5,7 +5,7 @@ import { selectOverlayByMapId } from '@ansyn/map-facade';
 import { ImageryVisualizer, IVisualizerEntity, MarkerSize } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
 import { filter, mergeMap } from 'rxjs/operators';
-import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
+import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/imagery-ol';
 import { IOverlaysScannedAreaData } from '../../../../../menu-items/cases/models/case.model';
 import { selectScannedAreaData } from '../../../../../overlays/overlay-status/reducers/overlay-status.reducer';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';

@@ -17,7 +17,7 @@ import { Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectSentinelselectedLayers } from './reducers/sentinel.reducer';
 import { map, take } from 'rxjs/operators';
-import { OpenLayersDisabledMap, OpenLayersMap, OpenLayersMapSourceProvider } from '@ansyn/ol';
+import { OpenLayersDisabledMap, OpenLayersMap, OpenLayersMapSourceProvider } from '@ansyn/imagery-ol';
 import { BBox2d } from '@turf/helpers/lib/geojson';
 
 export const OpenLayerSentinelSourceProviderSourceType = 'SENTINEL';

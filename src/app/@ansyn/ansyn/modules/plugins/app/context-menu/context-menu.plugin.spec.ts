@@ -6,7 +6,7 @@ import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs';
 import { ContextMenuPlugin } from './context-menu.plugin';
-import { OpenLayersProjectionService } from '@ansyn/ol';
+import { OpenLayersProjectionService } from '@ansyn/imagery-ol';
 import { DisplayOverlayFromStoreAction } from '../../../overlays/actions/overlays.actions';
 import { CesiumProjectionService } from '@ansyn/imagery-cesium';
 

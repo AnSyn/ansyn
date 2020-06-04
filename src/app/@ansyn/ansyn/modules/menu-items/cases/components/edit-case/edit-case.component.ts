@@ -32,10 +32,6 @@ const animations: any[] = [
 })
 
 export class EditCaseComponent implements OnInit {
-	@HostBinding('@modalContent')
-	get modalContent() {
-		return true;
-	};
 
 	casesState$: Observable<ICasesState> = this.store.select(casesStateSelector);
 
@@ -49,6 +45,11 @@ export class EditCaseComponent implements OnInit {
 	contextsList: any[];
 	caseModel: ICase;
 	editMode = false;
+
+	@HostBinding('@modalContent')
+	get modalContent() {
+		return true;
+	};
 
 	constructor(protected store: Store<ICasesState>, protected casesService: CasesService) {
 	}

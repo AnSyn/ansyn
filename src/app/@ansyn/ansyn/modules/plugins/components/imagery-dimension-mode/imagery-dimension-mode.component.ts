@@ -4,7 +4,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { get as _get } from 'lodash';
 import { Store } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
+import { DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/imagery-ol';
 import { CesiumMap, CesiumMapName } from '@ansyn/imagery-cesium';
 import { take, tap } from 'rxjs/operators';
 import { CoreConfig } from '../../../core/models/core.config';

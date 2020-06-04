@@ -6,7 +6,7 @@ import { select, Store } from '@ngrx/store';
 import { selectActiveMapId } from '@ansyn/map-facade';
 import { AutoSubscription } from 'auto-subscriptions';
 import { map, tap } from 'rxjs/operators';
-import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
+import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/imagery-ol';
 import { UUID } from 'angular2-uuid';
 import { feature } from '@turf/turf';
 

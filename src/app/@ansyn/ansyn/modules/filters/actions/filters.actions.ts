@@ -1,9 +1,10 @@
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
 import { IFilter } from '../models/IFilter';
 import { Action } from '@ngrx/store';
-import { Filters } from '../reducer/filters.reducer';
+import { FiltersMetadata, FiltersCounters } from '../reducer/filters.reducer';
 import { ICaseFacetsState } from '../../menu-items/cases/models/case.model';
 import { IFilterSearchResults } from '../models/filter-search-results';
+import { FilterCounters } from '../models/counters/filter-counters.interface';
 
 export const FiltersActionTypes = {
 	INITIALIZE_FILTERS: 'INITIALIZE_FILTERS',
@@ -11,6 +12,7 @@ export const FiltersActionTypes = {
 
 	INITIALIZE_SINGLE_FILTER: 'INITIALIZE_SINGLE_FILTER',
 	UPDATE_FILTER_METADATA: 'UPDATE_FILTER_METADATA',
+	UPDATE_FILTER_COUNTERS: 'UPDATE_FILTER_COUNTERS',
 
 	ENABLE_ONLY_FAVORITES_SELECTION: 'ENABLE_ONLY_FAVORITES_SELECTION',
 	UPDATE_FACETS: 'UPDATE_FACETS',
@@ -28,7 +30,7 @@ export class InitializeFiltersAction implements Action {
 export class InitializeFiltersSuccessAction implements Action {
 	type = FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS;
 
-	constructor(public payload: Filters) {
+	constructor(public payload: { filtersMetadata: FiltersMetadata, filtersCounters: FiltersCounters }) {
 	}
 }
 
@@ -36,6 +38,13 @@ export class UpdateFilterAction implements Action {
 	type = FiltersActionTypes.UPDATE_FILTER_METADATA;
 
 	constructor(public payload?: { filter: IFilter, newMetadata: FilterMetadata }) {
+	}
+}
+
+export class UpdateFilterCounters implements Action {
+	type = FiltersActionTypes.UPDATE_FILTER_COUNTERS;
+
+	constructor(public payload?: { filter: IFilter, newCounters: FilterCounters }) {
 	}
 }
 
@@ -71,5 +80,6 @@ export class SetFiltersSearchResults implements Action {
 export type FiltersActions = InitializeFiltersAction
 	| InitializeFiltersSuccessAction
 	| UpdateFilterAction
+	| UpdateFilterCounters
 	| EnableOnlyFavoritesSelectionAction
 	| UpdateFacetsAction;

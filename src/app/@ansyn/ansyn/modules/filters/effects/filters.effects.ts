@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { IFiltersState, selectFilters, selectFiltersSearch } from '../reducer/filters.reducer';
+import { IFiltersState, selectFiltersMetadata, selectFiltersSearch } from '../reducer/filters.reducer';
 import { combineLatest } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { Effect } from '@ngrx/effects';
@@ -14,7 +14,7 @@ import { fromPromise } from 'rxjs/internal-compatibility';
 export class FiltersEffects {
 
 	@Effect()
-	onFilterSearch$ = combineLatest(this.store$.pipe(select(selectFiltersSearch)), this.store$.pipe(select(selectFilters))).pipe(
+	onFilterSearch$ = combineLatest(this.store$.pipe(select(selectFiltersSearch)), this.store$.pipe(select(selectFiltersMetadata))).pipe(
 		mergeMap(([filtersSearch, filters]) => fromPromise(this.getFiltersSearchResults([filtersSearch, filters]))),
 		map((filtersSearchResults) => new SetFiltersSearchResults(filtersSearchResults))
 	);

@@ -1,7 +1,7 @@
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { IFilter } from '../models/IFilter';
 import { FilterMetadata } from '../models/metadata/filter-metadata.interface';
-import { FiltersActions, FiltersActionTypes } from '../actions/filters.actions';
+import { FiltersActions, FiltersActionTypes, InitializeFiltersSuccessAction } from '../actions/filters.actions';
 import { FiltersService } from '../services/filters.service';
 import {
 	ICaseBooleanFilterMetadata,
@@ -12,15 +12,17 @@ import {
 } from '../../menu-items/cases/models/case.model';
 import { IFilterSearchResults } from '../models/filter-search-results';
 import { EnumFilterMetadata } from '../models/metadata/enum-filter-metadata';
+import { FilterCounters } from '../models/counters/filter-counters.interface';
 
-export type Filters = Map<IFilter, FilterMetadata>;
+export type FiltersMetadata = Map<IFilter, FilterMetadata>;
+export type FiltersCounters = Map<IFilter, FilterCounters>;
 
-export function filtersToString(filters: Filters): string {
-	let result = (Boolean(filters) ? '' : '"null"');
-	if (!Boolean(filters)) {
+export function filtersToString(filtersMetadata: FiltersMetadata): string {
+	let result = (Boolean(filtersMetadata) ? '' : '"null"');
+	if (!Boolean(filtersMetadata)) {
 		return result;
 	}
-	const entriesArray = Array.from(filters.entries());
+	const entriesArray = Array.from(filtersMetadata.entries());
 	result += '[';
 	entriesArray.forEach((entry) => {
 		result += '{"filterData": [' + JSON.stringify(entry[0]) + ',';
@@ -42,7 +44,8 @@ export function filtersToString(filters: Filters): string {
 }
 
 export interface IFiltersState {
-	filters: Map<IFilter, FilterMetadata>;
+	filtersMetadata: FiltersMetadata;
+	filtersCounters: FiltersCounters;
 	isLoading: boolean;
 	facets: ICaseFacetsState;
 	enableOnlyFavoritesSelection: boolean;
@@ -51,7 +54,8 @@ export interface IFiltersState {
 }
 
 export const initialFiltersState: IFiltersState = {
-	filters: new Map<IFilter, FilterMetadata>(),
+	filtersMetadata: new Map<IFilter, FilterMetadata>(),
+	filtersCounters: new Map<IFilter, FilterCounters>(),
 	isLoading: true,
 	facets: {
 		showOnlyFavorites: false,
@@ -70,12 +74,12 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 	switch (action.type) {
 
 		case FiltersActionTypes.INITIALIZE_FILTERS_SUCCESS: {
-			const filters = action.payload;
+			const { filtersMetadata, filtersCounters } = (action as InitializeFiltersSuccessAction).payload;
 			const facets = {
 				...state.facets,
-				filters: <ICaseFilter[]>FiltersService.buildCaseFilters(filters, state.facets.filters)
+				filters: <ICaseFilter[]>FiltersService.buildCaseFilters(filtersMetadata, state.facets.filters)
 			};
-			return { ...state, filters, facets, isLoading: false };
+			return { ...state, filtersMetadata, filtersCounters, facets, isLoading: false };
 		}
 
 		case FiltersActionTypes.INITIALIZE_FILTERS:
@@ -83,14 +87,21 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 
 		case FiltersActionTypes.UPDATE_FILTER_METADATA: {
 			const actionPayload: { filter: IFilter, newMetadata: FilterMetadata } = action.payload;
-			const clonedFilters = new Map(state.filters);
+			const clonedFiltersMetadata = new Map(state.filtersMetadata);
 
-			clonedFilters.set(actionPayload.filter, actionPayload.newMetadata);
+			clonedFiltersMetadata.set(actionPayload.filter, actionPayload.newMetadata);
 			const facets = {
 				...state.facets,
-				filters: <ICaseFilter<ICaseBooleanFilterMetadata | ICaseEnumFilterMetadata | ICaseSliderFilterMetadata>[]>FiltersService.buildCaseFilters(clonedFilters, state.facets.filters)
+				filters: <ICaseFilter<ICaseBooleanFilterMetadata | ICaseEnumFilterMetadata | ICaseSliderFilterMetadata>[]>FiltersService.buildCaseFilters(clonedFiltersMetadata, state.facets.filters)
 			};
-			return { ...state, filters: clonedFilters, facets };
+			return { ...state, filtersMetadata: clonedFiltersMetadata, facets };
+		}
+
+		case FiltersActionTypes.UPDATE_FILTER_COUNTERS: {
+			const actionPayload: { filter: IFilter, newCounters: FilterCounters } = action.payload;
+			const clonedCouters = new Map(state.filtersCounters);
+			clonedCouters.set(actionPayload.filter, actionPayload.newCounters);
+			return { ...state, filtersCounters: clonedCouters };
 		}
 
 		case FiltersActionTypes.ENABLE_ONLY_FAVORITES_SELECTION:
@@ -109,7 +120,8 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 	}
 }
 
-export const selectFilters = createSelector(filtersStateSelector, ({ filters }) => filters);
+export const selectFiltersMetadata = createSelector(filtersStateSelector, (state) => state?.filtersMetadata);
+export const selectFiltersCounters = createSelector(filtersStateSelector, (state) => state?.filtersCounters);
 export const selectFacets = createSelector(filtersStateSelector, (state) => state && state.facets);
 export const selectShowOnlyFavorites = createSelector(selectFacets, (state) => state && state.showOnlyFavorites);
 export const selectIsLoading = createSelector(filtersStateSelector, ({ isLoading }) => isLoading);

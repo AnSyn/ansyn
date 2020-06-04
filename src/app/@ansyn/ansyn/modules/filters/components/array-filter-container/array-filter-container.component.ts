@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { ArrayFilterMetadata } from '../../models/metadata/array-filter-metadata';
 import { FilterSearchResult } from '../../models/filter-search-results';
+import { ArrayFilterCounters } from '../../models/counters/array-filter-counters';
 
 @Component({
 	selector: 'ansyn-array-filter-container',
@@ -9,6 +10,7 @@ import { FilterSearchResult } from '../../models/filter-search-results';
 })
 export class ArrayFilterContainerComponent implements OnChanges {
 	@Input() metadata: ArrayFilterMetadata;
+	@Input() counters: ArrayFilterCounters;
 	@Input() filtersSearchResult: FilterSearchResult;
 	@Output() onMetadataChange = new EventEmitter<ArrayFilterMetadata>(true);
 	fields = [];

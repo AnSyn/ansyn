@@ -9,7 +9,6 @@ export class ArrayFilterMetadata extends FilterMetadata {
 	fields = new Map<string, boolean>();
 	type: FilterType = FilterType.Array;
 	count = 0;
-	filteredCount = 0;
 
 	updateMetadata(key: string): void {
 		if (this.fields.has(key)) {
@@ -22,14 +21,6 @@ export class ArrayFilterMetadata extends FilterMetadata {
 			this.fields.set(key, false);
 		});
 		this.count++;
-	}
-
-	incrementFilteredCount(value: number): void {
-		this.filteredCount++;
-	}
-
-	resetFilteredCount(): void {
-		this.filteredCount = 0;
 	}
 
 	hasResults(): boolean {

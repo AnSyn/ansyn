@@ -1,5 +1,6 @@
 import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 import { BooleanFilterMetadata } from '../../models/metadata/boolean-filter-metadata';
+import { BooleanFilterCounters } from '../../models/counters/boolean-filter-counters';
 
 export interface IBooleanFilterCustomData {
 	displayTrueName: string;
@@ -13,6 +14,7 @@ export interface IBooleanFilterCustomData {
 })
 export class BooleanFilterContainerComponent {
 	@Input() metadata: BooleanFilterMetadata;
+	@Input() counters: BooleanFilterCounters;
 	@Output() onMetadataChange = new EventEmitter<BooleanFilterMetadata>(true);
 
 	@Input()
@@ -29,8 +31,8 @@ export class BooleanFilterContainerComponent {
 		return countAll < 1;
 	}
 
-	get metadataValues() {
-		return Object.values(this.metadata.properties);
+	get metadataKeys() {
+		return Object.keys(this.metadata.properties);
 	}
 
 	onInputClicked(key: string, value: boolean) {

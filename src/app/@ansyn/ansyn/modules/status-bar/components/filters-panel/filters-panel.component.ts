@@ -2,7 +2,7 @@ import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import {
 	IFiltersState, selectEnableOnlyFavorites,
 	selectFacets,
-	selectFilters,
+	selectFiltersMetadata,
 	selectShowOnlyFavorites
 } from '../../../filters/reducer/filters.reducer';
 import { Store } from '@ngrx/store';
@@ -48,7 +48,7 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	updateFilters$ = this.store.select(selectFilters).pipe(
+	updateFilters$ = this.store.select(selectFiltersMetadata).pipe(
 		filter(filters => filters && filters.size > 0 ),
 		withLatestFrom(this.store.select(selectFacets)),
 		tap(([filters, facets]: [Map<IFilter, FilterMetadata>, ICaseFacetsState]) => {

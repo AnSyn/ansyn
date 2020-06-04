@@ -1,9 +1,9 @@
 import { UpdateFilterAction } from '../../actions/filters.actions';
 import { select, Store } from '@ngrx/store';
 import {
-	Filters,
+	FiltersMetadata, FiltersCounters,
 	IFiltersState,
-	selectFilters,
+	selectFiltersMetadata, selectFiltersCounters,
 	selectFiltersSearchResults,
 	selectIsLoading,
 	selectShowOnlyFavorites
@@ -18,6 +18,7 @@ import { filtersConfig } from '../../services/filters.service';
 import { IFiltersConfig } from '../../models/filters-config';
 import { filter, map, tap } from 'rxjs/operators';
 import { FilterType } from '../../models/filter-type';
+import { FilterCounters } from '../../models/counters/filter-counters.interface';
 
 @Component({
 	selector: 'ansyn-filter-container',
@@ -43,6 +44,7 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	public showOnlyFavorite = false;
 	public isGotSmallListFromProvider = true;
 	public metadataFromState: FilterMetadata;
+	public filterCountersFromState: FilterCounters;
 	subscribers = [];
 	filtersSearchResults = {};
 
@@ -55,10 +57,17 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 		tap((filtersSearchResults) => this.filtersSearchResults = filtersSearchResults)
 	);
 
-	metadataFromState$: Observable<any> = this.store.select(selectFilters).pipe(
-		map((filters: Filters) => filters.get(this.filter)),
+	metadataFromState$: Observable<any> = this.store.select(selectFiltersMetadata).pipe(
+		map((filters: FiltersMetadata) => filters.get(this.filter)),
 		tap((metadata: FilterMetadata) => {
 			this.metadataFromState = metadata;
+		})
+	);
+
+	filterCountersFromState$: Observable<any> = this.store.select(selectFiltersCounters).pipe(
+		map((allCounters: FiltersCounters) => allCounters.get(this.filter)),
+		tap((counters: FilterCounters) => {
+			this.filterCountersFromState = counters;
 		})
 	);
 
@@ -87,6 +96,7 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		this.subscribers.push(
 			this.metadataFromState$.subscribe(),
+			this.filterCountersFromState$.subscribe(),
 			this.isGotSmallListFromProvider$.subscribe(),
 			this.showOnlyFavorites$.subscribe(),
 			this.filterSearchResults$.subscribe()

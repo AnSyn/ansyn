@@ -1,5 +1,5 @@
 import { combineLatest, Observable, of } from 'rxjs';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Inject, Injectable } from '@angular/core';
 import {
@@ -14,14 +14,15 @@ import { BooleanFilterMetadata } from '../../modules/filters/models/metadata/boo
 import {
 	EnableOnlyFavoritesSelectionAction,
 	InitializeFiltersAction,
-	InitializeFiltersSuccessAction, UpdateFilterCounters
+	InitializeFiltersSuccessAction,
+	UpdateFilterCounters
 } from '../../modules/filters/actions/filters.actions';
 import { EnumFilterMetadata } from '../../modules/filters/models/metadata/enum-filter-metadata';
 import { FilterMetadata } from '../../modules/filters/models/metadata/filter-metadata.interface';
 import {
-	filtersToString,
 	FiltersMetadata,
 	filtersStateSelector,
+	filtersToString,
 	IFiltersState,
 	selectFacets,
 	selectFiltersMetadata,
@@ -40,12 +41,15 @@ import {
 	OverlaysActionTypes,
 	SetDropsAction,
 	SetFilteredOverlaysAction,
-	SetOverlaysStatusMessageAction, SetTotalOverlaysAction
+	SetOverlaysStatusMessageAction,
+	SetTotalOverlaysAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	overlaysStatusMessages,
 	selectFilteredOveralys,
+	selectOverlaysAreLoaded,
 	selectOverlaysArray,
+	selectOverlaysContainmentChecked,
 	selectOverlaysMap,
 	selectSpecialObjects
 } from '../../modules/overlays/reducers/overlays.reducer';
@@ -126,13 +130,14 @@ export class FiltersAppEffects {
 		map(() => new InitializeFiltersAction()));
 
 	@Effect()
-	onInitializeFilters$: Observable<InitializeFiltersSuccessAction> = this.actions$.pipe(
-		ofType<InitializeFiltersAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
+	onInitializeFilters$: Observable<InitializeFiltersSuccessAction> = combineLatest(
+		this.store$.select(selectOverlaysAreLoaded), this.store$.select(selectOverlaysContainmentChecked)).pipe(
 		withLatestFrom(this.overlaysArray$, this.facets$),
-		map(([action, overlays, facets]: [Action, IOverlay[], ICaseFacetsState]) => {
+		filter(([[overlaysAreLoaded, overlaysContainmentChecked], overlays, facets]: [[boolean, boolean], IOverlay[], ICaseFacetsState]) => overlaysAreLoaded && overlaysContainmentChecked),
+		map(([[overlaysAreLoaded, overlaysContainmentChecked], overlays, facets]: [[boolean, boolean], IOverlay[], ICaseFacetsState]) => {
 			const filtersMetadata = new Map<IFilter, FilterMetadata>(
 				this.config.filters.map<[IFilter, FilterMetadata]>((filterKey: IFilter) => {
-					const metadata: FilterMetadata = this.resolveMetadata(filterKey.type)
+					const metadata: FilterMetadata = this.resolveMetadata(filterKey.type);
 					const selectedFilter = facets.filters.find(({ fieldName }) => fieldName === filterKey.modelName);
 					metadata.initializeFilter(overlays, filterKey.modelName, selectedFilter, filterKey.visibility);
 					return [filterKey, metadata];

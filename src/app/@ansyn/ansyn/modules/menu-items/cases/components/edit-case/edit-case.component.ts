@@ -94,7 +94,6 @@ export class EditCaseComponent implements OnInit {
 					data: [activeMap]
 				},
 				time: {
-					type: 'absolute',
 					from: new Date(0),
 					to: new Date()
 				},

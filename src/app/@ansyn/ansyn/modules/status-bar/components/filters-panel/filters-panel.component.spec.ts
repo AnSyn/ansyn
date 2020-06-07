@@ -40,7 +40,10 @@ describe('FiltersPanelComponent', () => {
 				{
 					provide: StatusBarConfig,
 					useValue: {
-						filters: ['filter1']
+						filters: {
+							filterNames: ['filter1'],
+							maximumOpen: 1
+						}
 					}
 				},
 				{

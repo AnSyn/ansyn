@@ -4,10 +4,8 @@ import { cloneDeep, mapValues } from 'lodash';
 import { CasesService } from '../cases.service';
 import * as wellknown from 'wellknown';
 import * as rison from 'rison';
-import * as turf from '@turf/turf';
-import { bbox, bboxPolygon, centroid, point } from '@turf/turf';
+import { bbox, bboxPolygon, polygon } from '@turf/turf';
 import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
-import { UUID } from 'angular2-uuid';
 import { getPolygonByPointAndRadius, } from '@ansyn/imagery';
 import {
 	ICase,
@@ -45,85 +43,43 @@ export class QueryParamsHelper {
 		let updatedCaseModel = cloneDeep(caseModel);
 		// needed for ngc
 		updatedCaseModel.selectedContextId = selectedContext.id;
-		['region', 'facets', 'time', 'layoutIndex', 'orientation'].forEach(key => {
+		['region', 'facets', 'time', 'layoutIndex'].forEach(key => {
 			if (selectedContext[key]) {
 				updatedCaseModel.state[key] = selectedContext[key];
 			}
 		});
 
-		if (selectedContext.requirements && Boolean(qParams)) {
-			this.updateCaseViaContextGeometry(updatedCaseModel, selectedContext, qParams);
+		if (Boolean(qParams.geometry)) {
+			this.updateCaseViaContextGeometry(updatedCaseModel, selectedContext, qParams.geometry);
 		}
 
 		return this.casesService.parseCase(updatedCaseModel);
 	}
 
-	updateCaseViaContextGeometry(updatedCaseModel, selectedContext, qParams): void {
+	updateCaseViaContextGeometry(updatedCaseModel, selectedContext, geometry): void {
 		/* reference */
-		selectedContext.requirements.forEach((requireKey: string) => {
-			switch (requireKey) {
-				case 'geopoint': {
-					const { geopoint } = qParams;
-					if (geopoint) {
-						const coordinates = geopoint.split(',').map(Number).reverse(); // todo: check if reverse is needed?
-						const region = turf.geometry('Point', coordinates);
-						updatedCaseModel.state.region = region;
-						// Put the requested position in the case. This is needed in order to set correct map position, when no overlays are found
-						updatedCaseModel.state.maps.data[0].data.position.projectedState = null;
-						updatedCaseModel.state.maps.data[0].data.position.extentPolygon = getPolygonByPointAndRadius(coordinates, 1).geometry;
-					}
-				}
-					break;
-				case 'geometry':
-					const { geometry } = qParams;
-					if (geometry) {
-						const geoJsonGeomtry = <GeoJsonObject>wellknown.parse(geometry);
-
-						switch (geoJsonGeomtry.type) {
-							case 'Point': {
-								const geoPoint: Point = <any>geoJsonGeomtry;
-								updatedCaseModel.state.region = geoPoint;
-								updatedCaseModel.state.contextEntities = [{
-									id: UUID.UUID(),
-									date: qParams.time ? new Date(qParams.time) : new Date(),
-									featureJson: point(geoPoint.coordinates)
-								}];
-								const extentPolygon = getPolygonByPointAndRadius(geoPoint.coordinates, 1).geometry;
-								updatedCaseModel.state.maps.data.forEach(map => {
-									map.data.position.projectedState = null;
-									map.data.position.extentPolygon = extentPolygon;
-								});
-							}
-								break;
-							case 'Polygon': {
-								const region = <Polygon>geoJsonGeomtry;
-								const feature: Feature<any> = turf.polygon(region.coordinates);
-								const centroidOfGeometry = centroid(feature);
-								const extentPolygon = bboxPolygon(bbox(feature)).geometry;
-								const polygonContextEntity = this.generatContextEntity(qParams.time, feature);
-								const centerContextEntity = this.generatContextEntity(qParams.time, centroidOfGeometry);
-								const contextEntities = [polygonContextEntity, centerContextEntity];
-								const maps = {
-									...updatedCaseModel.state.maps,
-									data: updatedCaseModel.state.maps.data.map((map) => ({
-										...map,
-										data: { ...map, position: { projectedState: null, extentPolygon } }
-									}))
-								};
-								updatedCaseModel.state = { ...updatedCaseModel.state, region, maps, contextEntities };
-							}
-						}
-					}
-			}
-		});
-	}
-
-	generatContextEntity(time, featureJson) {
-		return {
-			id: UUID.UUID(),
-			date: time ? new Date(time) : new Date(),
-			featureJson
-		};
+		const geoJsonGeomtry = <GeoJsonObject>wellknown.parse(geometry);
+		if (geoJsonGeomtry.type === 'Point') {
+			const geoPoint: Point = <any>geoJsonGeomtry;
+			updatedCaseModel.state.region = geoPoint;
+			const extentPolygon = getPolygonByPointAndRadius(geoPoint.coordinates, 1).geometry;
+			updatedCaseModel.state.maps.data.forEach(map => {
+				map.data.position.projectedState = null;
+				map.data.position.extentPolygon = extentPolygon;
+			});
+		} else {
+			const region = <Polygon>geoJsonGeomtry;
+			const feature: Feature<any> = polygon(region.coordinates);
+			const extentPolygon = bboxPolygon(bbox(feature)).geometry;
+			const maps = {
+				...updatedCaseModel.state.maps,
+				data: updatedCaseModel.state.maps.data.map((map) => ({
+					...map,
+					data: { ...map, position: { projectedState: null, extentPolygon } }
+				}))
+			};
+			updatedCaseModel.state = { ...updatedCaseModel.state, region, maps };
+		}
 	}
 
 	generateQueryParamsViaCase(sCase: ICase): string {

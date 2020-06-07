@@ -1,12 +1,14 @@
-import { ICoordinatesSystem } from '@ansyn/map-facade';
-
 export interface IShadowMouseConfig {
 	activeByDefault: boolean,
 	forceSendShadowMousePosition: boolean
 }
 
 export interface IToolsConfig {
-	ShadowMouse?: IShadowMouseConfig
+	ShadowMouse?: IShadowMouseConfig,
+	exportMap?: {
+		target: string,
+		excludeClasses: string[]
+	}
 }
 
 export const toolsConfig = 'toolsConfig';

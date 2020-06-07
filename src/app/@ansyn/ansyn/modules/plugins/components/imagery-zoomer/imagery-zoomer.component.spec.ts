@@ -5,6 +5,7 @@ import { of } from 'rxjs';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { TranslateModule } from '@ngx-translate/core';
 import { StoreModule } from '@ngrx/store';
+import { IMapFacadeConfig, mapFacadeConfig } from '@ansyn/map-facade';
 
 describe('ImageryZoomerComponent', () => {
 	let component: ImageryZoomerComponent;
@@ -29,7 +30,8 @@ describe('ImageryZoomerComponent', () => {
 				{
 					provide: ImageryCommunicatorService,
 					useValue: imageryCommunicatorServiceMock
-				}
+				},
+				{ provide: mapFacadeConfig, useValue: <IMapFacadeConfig>{ showOne2One: true } },
 			]
 		})
 			.compileComponents();

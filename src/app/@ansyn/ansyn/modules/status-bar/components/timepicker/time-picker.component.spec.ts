@@ -59,8 +59,7 @@ describe('TimepickerComponent', () => {
 		const endDate = new Date(startDate.getTime() + 60000);
 		const time: ICaseTimeState = {
 			from: startDate,
-			to: endDate,
-			type: 'absolute'
+			to: endDate
 		};
 		component.onTimeRangeChange({value: [startDate, endDate]});
 		tick();

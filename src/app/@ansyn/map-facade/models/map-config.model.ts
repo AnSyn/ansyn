@@ -11,6 +11,7 @@ export interface IMapSearchConfig {
 }
 
 export interface IMapFacadeConfig {
+	showOne2One: boolean;
 	displayDebounceTime: number;
 	overlayCoverage: number;
 	disableBestResolutionContextMenu: boolean;

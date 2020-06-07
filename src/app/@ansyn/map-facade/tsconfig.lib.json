@@ -3,7 +3,7 @@
   "compilerOptions": {
     "paths": {
       "@ansyn/imagery": [
-        "dist/ansyn/imagery"
+        "src/app/@ansyn/imagery-submodules/dist/ansyn/imagery"
       ]
     },
     "outDir": "../../../out-tsc/lib",

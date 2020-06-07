@@ -11,19 +11,18 @@
       "@ansyn/map-facade/*": [
         "dist/ansyn/map-facade/*"
       ],
-      // "@ansyn/imagery": [
-      //   "dist/ansyn/imagery"
-      // ],
-      // // ??
-      // "@ansyn/imagery-ol": [
-      //   "dist/ansyn/ol"
-      // ],
-      // "@ansyn/imagery-cesium": [
-      //   "dist/ansyn/imagery-cesium"
-      // ],
-      // "@ansyn/imagery-video": [
-      //   "dist/ansyn/imagery-video"
-      // ]
+      "@ansyn/imagery": [
+        "src/app/@ansyn/imagery-submodules/dist/ansyn/imagery"
+      ],
+      "@ansyn/imagery-ol": [
+        "src/app/@ansyn/imagery-submodules/dist/ansyn/imagery-ol"
+      ],
+      "@ansyn/imagery-cesium": [
+        "src/app/@ansyn/imagery-submodules/dist/ansyn/imagery-cesium"
+      ],
+      "@ansyn/imagery-video": [
+        "src/app/@ansyn/imagery-submodules/dist/ansyn/imagery-video"
+      ]
     },
     "outDir": "../../../out-tsc/lib",
     "target": "es2015",

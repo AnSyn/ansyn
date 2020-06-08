@@ -39,7 +39,13 @@ import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
 import { UUID } from 'angular2-uuid';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { DataLayersService } from '../../layers-manager/services/data-layers.service';
-import { copyFromContent, SetMapsDataActionStore, SetToastMessageAction, selectActiveMapId } from '@ansyn/map-facade';
+import {
+	copyFromContent,
+	SetMapsDataActionStore,
+	SetToastMessageAction,
+	selectActiveMapId,
+	selectMapsIds
+} from '@ansyn/map-facade';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { IStoredEntity } from '../../../core/services/storage/storage.service';
 import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCrash';
@@ -124,9 +130,9 @@ export class CasesEffects {
 	@Effect()
 	loadDefaultCase$: Observable<SelectDilutedCaseAction | BackToWorldView> = this.actions$.pipe(
 		ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
-		withLatestFrom(this.store.select(selectActiveMapId)),
-		filter(([action, mapId]: [LoadDefaultCaseAction, string]) => !action.payload.context),
-		mergeMap(([action, mapId]: [LoadDefaultCaseAction, string]) => {
+		withLatestFrom(this.store.select(selectMapsIds)),
+		filter(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => !action.payload.context),
+		mergeMap(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => {
 			const defaultCaseQueryParams: ICase = this.casesService.updateCaseViaQueryParmas(action.payload, this.casesService.defaultCase);
 			return [new SelectDilutedCaseAction(defaultCaseQueryParams), new BackToWorldView({ mapId })];
 		}),

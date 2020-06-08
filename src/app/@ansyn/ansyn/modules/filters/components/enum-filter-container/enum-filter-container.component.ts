@@ -26,8 +26,8 @@ export class EnumFilterContainerComponent implements OnChanges {
 	}
 
 	ngOnChanges(changes: SimpleChanges): void {
-		const defined = this.metadata && this.filtersSearchResult;
-		const changed = changes.metadata || changes.filtersSearchResult;
+		const defined = this.metadata && this.filtersSearchResult && this.counters;
+		const changed = changes.metadata || changes.filtersSearchResult || changes.counters;
 		if (defined && changed) {
 			this.fields = Array.from(this.metadata.enumsFields)
 				.map(([key, value]) => ({ key, value, filteredCount: this.counters.enumsFields.get(key)?.filteredCount }))

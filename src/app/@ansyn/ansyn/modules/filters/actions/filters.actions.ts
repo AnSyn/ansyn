@@ -12,7 +12,7 @@ export const FiltersActionTypes = {
 
 	INITIALIZE_SINGLE_FILTER: 'INITIALIZE_SINGLE_FILTER',
 	UPDATE_FILTER_METADATA: 'UPDATE_FILTER_METADATA',
-	UPDATE_FILTER_COUNTERS: 'UPDATE_FILTER_COUNTERS',
+	UPDATE_FILTERS_COUNTERS: 'UPDATE_FILTERS_COUNTERS',
 
 	ENABLE_ONLY_FAVORITES_SELECTION: 'ENABLE_ONLY_FAVORITES_SELECTION',
 	UPDATE_FACETS: 'UPDATE_FACETS',
@@ -41,10 +41,10 @@ export class UpdateFilterAction implements Action {
 	}
 }
 
-export class UpdateFilterCounters implements Action {
-	type = FiltersActionTypes.UPDATE_FILTER_COUNTERS;
+export class UpdateFiltersCounters implements Action {
+	type = FiltersActionTypes.UPDATE_FILTERS_COUNTERS;
 
-	constructor(public payload?: { filter: IFilter, newCounters: FilterCounters }) {
+	constructor(public payload: { filter: IFilter, newCounters: FilterCounters }[]) {
 	}
 }
 
@@ -80,6 +80,6 @@ export class SetFiltersSearchResults implements Action {
 export type FiltersActions = InitializeFiltersAction
 	| InitializeFiltersSuccessAction
 	| UpdateFilterAction
-	| UpdateFilterCounters
+	| UpdateFiltersCounters
 	| EnableOnlyFavoritesSelectionAction
 	| UpdateFacetsAction;

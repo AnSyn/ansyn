@@ -15,7 +15,7 @@ import {
 	EnableOnlyFavoritesSelectionAction,
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
-	UpdateFilterCounters
+	UpdateFiltersCounters
 } from '../../modules/filters/actions/filters.actions';
 import { EnumFilterMetadata } from '../../modules/filters/models/metadata/enum-filter-metadata';
 import { FilterMetadata } from '../../modules/filters/models/metadata/filter-metadata.interface';
@@ -189,9 +189,9 @@ export class FiltersAppEffects {
 		filter(([filteredOverlays, filterState, overlays]: [string[], IFiltersState, Map<string, IOverlay>, IOverlay[], string[], boolean]) => {
 			return overlays.size > 0;
 		}),
-		mergeMap(([filteredOverlays, filterState, overlays, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility]: [string[], IFiltersState, Map<string, IOverlay>, IOverlay[], string[], boolean]) => {
+		map(([filteredOverlays, filterState, overlays, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility]: [string[], IFiltersState, Map<string, IOverlay>, IOverlay[], string[], boolean]) => {
 			const filtersCounters = filterState.filtersCounters;
-			return Array.from(filterState.filtersMetadata).map(([metadataKey, metadata]: [IFilter, FilterMetadata]) => {
+			const filtersChanges = Array.from(filterState.filtersMetadata).map(([metadataKey, metadata]: [IFilter, FilterMetadata]) => {
 				const cloneCounters = cloneDeep(filtersCounters.get(metadataKey));
 
 				cloneCounters.resetFilteredCount();
@@ -202,8 +202,9 @@ export class FiltersAppEffects {
 				if (metadata instanceof EnumFilterMetadata || metadata instanceof BooleanFilterMetadata) {
 					FiltersService.calculatePotentialOverlaysCount(metadataKey, metadata, cloneCounters, overlays, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, filterState);
 				}
-				return new UpdateFilterCounters({ filter: metadataKey, newCounters: cloneCounters });
+				return { filter: metadataKey, newCounters: cloneCounters };
 			});
+			return new UpdateFiltersCounters(filtersChanges);
 		}));
 
 

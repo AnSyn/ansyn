@@ -28,9 +28,9 @@ export function filtersToString(filtersMetadata: FiltersMetadata): string {
 		result += '{"filterData": [' + JSON.stringify(entry[0]) + ',';
 		if (entry[1] instanceof EnumFilterMetadata) {
 			const enumData = <EnumFilterMetadata>entry[1];
-			result += '{"collapse": ' + `"${ enumData.collapse }",`;
-			result += ' "type": ' + `"${ enumData.type }",`;
-			result += ' "visible": ' + `"${ enumData.visible }",`;
+			result += '{"collapse": ' + `"${enumData.collapse}",`;
+			result += ' "type": ' + `"${enumData.type}",`;
+			result += ' "visible": ' + `"${enumData.visible}",`;
 			result += ' "enumsFields": ' + JSON.stringify(Array.from(enumData.enumsFields.entries())) + '}';
 		} else {
 			result += ' ' + JSON.stringify(entry[1]);
@@ -97,10 +97,12 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 			return { ...state, filtersMetadata: clonedFiltersMetadata, facets };
 		}
 
-		case FiltersActionTypes.UPDATE_FILTER_COUNTERS: {
-			const actionPayload: { filter: IFilter, newCounters: FilterCounters } = action.payload;
+		case FiltersActionTypes.UPDATE_FILTERS_COUNTERS: {
+			const changes: { filter: IFilter, newCounters: FilterCounters }[] = action.payload;
 			const clonedCouters = new Map(state.filtersCounters);
-			clonedCouters.set(actionPayload.filter, actionPayload.newCounters);
+			changes.forEach(filterChanges => {
+				clonedCouters.set(filterChanges.filter, filterChanges.newCounters);
+			});
 			return { ...state, filtersCounters: clonedCouters };
 		}
 

@@ -24,6 +24,7 @@ before_script:
   #- apt-get install graphicsmagick # for e2e screenshots
 
 script:
+  - build:submodules:libs
   - npm run lint
   - npm run test:single-run
   - npm run build:libs

@@ -14,6 +14,7 @@
     "build:gulp": "cd build && gulp build",
     "build:prod": "node --max_old_space_size=12288 ./node_modules/@angular/cli/bin/ng build ansyn --prod",
     "build:libs": "bash scripts/build-libs.sh",
+    "build:submodules:libs": "bash scripts/build-submodules-libs.sh",
     "publish:libs": "bash scripts/publish-libs.sh",
     "docker:elastic": "docker run -p 9200:9200 -v  /esdata1:/usr/share/elasticsearch/data -e \"http.host=0.0.0.0\" -e \"transport.host=127.0.0.1\" -e \"http.cors.enabled=true\" -e \"http.cors.allow-origin=/.*/\" -e \"http.cors.allow-credentials=true\" -e \"http.cors.allow-headers=X-Requested-With, Content-Type, Content-Length, Authorization\" docker.elastic.co/elasticsearch/elasticsearch:5.4.3",
     "fix-all": "node scripts/fix-package-json -a",

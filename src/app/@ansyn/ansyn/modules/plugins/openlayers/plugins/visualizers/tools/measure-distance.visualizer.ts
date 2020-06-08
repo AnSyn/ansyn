@@ -9,14 +9,15 @@ import Circle from 'ol/style/Circle';
 import Point from 'ol/geom/Point';
 import MultiPoint from 'ol/geom/MultiPoint';
 import LineString from 'ol/geom/LineString';
-import { FeatureCollection, GeometryObject } from 'geojson';
+import { FeatureCollection, GeometryObject, LineString as GeoJsonLineString } from 'geojson';
 import VectorSource from 'ol/source/Vector';
-import * as Sphere from 'ol/sphere';
+import { getLength } from 'ol/sphere';
 import GeoJSON from 'ol/format/GeoJSON';
-import * as condition from 'ol/events/condition';
+import { pointerMove as pointerMoveCondition, click as clickCondition } from 'ol/events/condition';
 import Select from 'ol/interaction/Select';
 import { UUID } from 'angular2-uuid';
 import {
+	calculateLineDistance,
 	getPointByGeometry,
 	ImageryVisualizer,
 	IVisualizerEntity,
@@ -31,7 +32,7 @@ import { selectActiveMapId } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
 import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
-import { distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, switchMap, tap, take } from 'rxjs/operators';
 import {
 	IMeasureData,
 	selectIsMeasureToolActive,
@@ -39,6 +40,7 @@ import {
 } from '../../../../../menu-items/tools/reducers/tools.reducer';
 import { Inject } from '@angular/core';
 import { AddMeasureAction, RemoveMeasureAction } from '../../../../../menu-items/tools/actions/tools.actions';
+import { geometry } from '@turf/helpers';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -189,7 +191,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	createHoverForDeleteInteraction() {
 		this.removeHoverForDeleteInteraction();
 		const pointerMove = new Select({
-			condition: condition.pointerMove,
+			condition: pointerMoveCondition,
 			style: this.hoverStyle.bind(this),
 			layers: [this.vector],
 			filter: this.filterLineStringFeature.bind(this)
@@ -213,7 +215,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	createClickDeleteInteraction() {
 		this.removeClickDeleteInteraction();
 		const click = new Select({
-			condition: condition.click,
+			condition: clickCondition,
 			style: () => new Style({}),
 			layers: [this.vector],
 			filter: this.filterLineStringFeature.bind(this)
@@ -286,7 +288,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	onDrawEndEvent(data) {
 		data.feature.setId(UUID.UUID());
 		const measures = this.createMeasureLabelsFeatures(data.feature);
-		this.projectionService.projectCollectionAccurately([data.feature, ...measures], this.iMap.mapObject)
+		this.projectionService.projectCollectionAccurately([data.feature, ...measures], this.iMap.mapObject).pipe(take(1))
 			.subscribe((featureCollection: FeatureCollection<GeometryObject>) => {
 				const [featureJson, ...measures] = featureCollection.features;
 				const newEntity: IVisualizerEntity = {
@@ -444,11 +446,9 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		if (length > 2) {
 			geometry.forEachSegment((start, end) => {
 				const lineString = new LineString([start, end]);
-				const centroid = getPointByGeometry(<any>{
-					type: lineString.getType(),
-					coordinates: lineString.getCoordinates()
-				});
-				const segmentLengthText = this.measureApproximateLength(lineString, projection);
+				const geoJsonLinestring = this.geoJsonFormat.writeGeometryObject(lineString);
+				const centroid = getPointByGeometry(geoJsonLinestring);
+				const segmentLengthText = this.measureAccurateLength(geoJsonLinestring);
 				const singlePointLengthTextStyle = this.getSinglePointLengthTextStyle();
 				singlePointLengthTextStyle.setText(segmentLengthText);
 				const labelFeature = new Feature(new Point(<[number, number]>centroid.coordinates));
@@ -461,11 +461,11 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 		if (this.isTotalMeasureActive || length === 2) {
 			// all line string
-			const allLengthText = this.measureApproximateLength(geometry, projection);
+			const line = this.geoJsonFormat.writeGeometryObject(geometry);
+			const allLengthText = this.measureAccurateLength(line);
 			const allLengthTextStyle = this.allLengthTextStyle.clone();
 			allLengthTextStyle.setText(allLengthText);
-			const featureGeoJson = <any>this.geoJsonFormat.writeFeatureObject(feature);
-			const centroid = getPointByGeometry(featureGeoJson.geometry);
+			const centroid = getPointByGeometry(line);
 			const allLinePoint = new Point(<[number, number]>centroid.coordinates);
 			const labelFeature = new Feature(allLinePoint);
 			const featureStyle = new Style({text: allLengthTextStyle});
@@ -481,7 +481,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	createTranslateMeasuresLabelInteraction() {
 		this.removeTranslateMeasuresLabelInteraction();
 		const select = new Select({
-			condition: (event) => event.type === 'pointermove' && !event.dragging,
+			condition: (event) => pointerMoveCondition(event) && !event.dragging,
 			layers: [this.vector],
 			style: (feature) => feature.get('measureStyle'),
 			filter: (feature) => !this.filterLineStringFeature(feature)
@@ -502,7 +502,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	 * @param projection The Projection.
 	 */
 	measureApproximateLength(line, projection): string {
-		const length = Sphere.getLength(line, { projection: projection });
+		const length = getLength(line, { projection: projection });
 		let output;
 		if (length >= 1000) {
 			output = (Math.round(length / 1000 * 100) / 100) +
@@ -514,8 +514,20 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		return output;
 	};
 
+	measureAccurateLength(line: GeoJsonLineString): string {
+		const length = line.coordinates
+			.map( (segment, index, arr) => arr[index + 1] && [geometry('Point', segment), geometry('Point', arr[index + 1])] )
+			.filter(Boolean)
+			.reduce( (length, segment) => {
+				return length + calculateLineDistance(segment[0], segment[1]);
+			}, 0);
+		if (length < 1) {
+			return `${(length * 1000).toFixed(2)}  m`;
+		}
+		return `${length.toFixed(2)}  km`;
+	}
+
 	onDispose(): void {
-		// this.clearLabelInteractions();
 		this.removeTranslateMeasuresLabelInteraction();
 		this.removeInteraction(VisualizerInteractions.drawInteractionHandler);
 		this.removeInteraction(VisualizerInteractions.pointerMove);
@@ -524,7 +536,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	}
 
 	private filterLineStringFeature(feature) {
-		return feature.getGeometry().getType() === 'LineString'
+		return feature.getGeometry().getType() === 'LineString';
 	}
 }
 

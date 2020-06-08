@@ -79,7 +79,6 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 			.map(([providerName, { dataInputFiltersConfig, showOnlyMyChildren }]: [string, IOverlaysSourceProvider]) => {
 					if (showOnlyMyChildren) {
 						return dataInputFiltersConfig.children.map(child => {
-							this.leavesCount++;
 							return this.buildDataFilter(providerName, child);
 						})
 					} else {

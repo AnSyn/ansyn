@@ -86,7 +86,8 @@ export class OverlaysService {
 			timeRange: <any>{
 				start: params.time.from,
 				end: params.time.to
-			}
+			},
+			customSensorToFilter: params.dataInputFilters.customFiltersSensor
 		});
 	}
 

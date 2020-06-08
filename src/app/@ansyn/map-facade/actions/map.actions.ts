@@ -81,9 +81,6 @@ export const MapActionTypes = {
 	SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG: 'SET_WAS_WELCOME_NOTIFICATION_SHOWN_FLAG',
 	SET_TOAST_MESSAGE: 'SET_TOAST_MESSAGE',
 	FOOTER_COLLAPSE: 'FOOTER_COLLAPSE',
-	EXPORT_MAPS_TO_PNG_REQUEST: 'EXPORT_MAPS_TO_PNG_REQUEST',
-	EXPORT_MAPS_TO_PNG_SUCCESS: 'EXPORT_MAPS_TO_PNG_SUCCESS',
-	EXPORT_MAPS_TO_PNG_FAILED: 'EXPORT_MAPS_TO_PNG_FAILED',
 	SET_MINIMALIST_VIEW_MODE: '[Maps] Set Minimalist View Mode',
 	REPLACE_MAP_MAIN_LAYER: '[Maps] replace Main Layer',
 	REPLACE_MAP_MAIN_LAYER_SUCCESS: '[Maps] replace Main Layer success',
@@ -98,13 +95,6 @@ export interface IContextMenuShowPayload {
 
 export type MapActions = any;
 
-export class ExportMapsToPngActionFailed implements Action {
-	readonly type = MapActionTypes.EXPORT_MAPS_TO_PNG_FAILED;
-
-	constructor(error: any) {
-	}
-}
-
 export class SetMinimalistViewModeAction implements Action {
 	type = MapActionTypes.SET_MINIMALIST_VIEW_MODE;
 
@@ -115,20 +105,6 @@ export class SetMinimalistViewModeAction implements Action {
 export class SetMapOrientation implements Action {
 	type = MapActionTypes.SET_MAP_ORIENTATION;
 	constructor(public payload: {orientation: MapOrientation, mapId?: string}) {
-	}
-}
-
-export class ExportMapsToPngRequestedAction implements Action {
-	readonly type = MapActionTypes.EXPORT_MAPS_TO_PNG_REQUEST;
-
-	constructor() {
-	}
-}
-
-export class ExportMapsToPngActionSuccess implements Action {
-	readonly type = MapActionTypes.EXPORT_MAPS_TO_PNG_SUCCESS;
-
-	constructor() {
 	}
 }
 

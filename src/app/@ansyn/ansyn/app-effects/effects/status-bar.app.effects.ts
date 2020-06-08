@@ -20,9 +20,8 @@ import {
 	StatusBarActionsTypes,
 	UpdateGeoFilterStatus
 } from '../../modules/status-bar/actions/status-bar.actions';
-import { selectGeoFilterActive, selectGeoFilterType } from '../../modules/status-bar/reducers/status-bar.reducer';
+import { selectGeoFilterActive } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { CopyCaseLinkAction } from '../../modules/menu-items/cases/actions/cases.actions';
-import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { DisplayOverlayAction, DisplayOverlayFromStoreAction } from '../../modules/overlays/actions/overlays.actions';
 import {
 	selectDropsWithoutSpecialObjects,
@@ -117,7 +116,6 @@ export class StatusBarAppEffects {
 
 	constructor(protected actions$: Actions,
 				protected store: Store<IAppState>,
-				public overlaysService: OverlaysService,
 				protected loggerService: LoggerService) {
 	}
 

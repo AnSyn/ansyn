@@ -98,14 +98,6 @@ export class Pic4cartoSourceProvider extends BaseOverlaySourceProvider {
 		return of(overlay);
 	}
 
-	getStartDateViaLimitFacets(params: { facets; limit; region }): Observable<IStartAndEndDate> {
-		return EMPTY;
-	}
-
-	getStartAndEndDateViaRangeFacets(params: { facets; limitBefore; limitAfter; date; region }): Observable<any> {
-		return EMPTY;
-	}
-
 	getThumbnailName(overlay): string {
 		return overlay.sensorType;
 	}

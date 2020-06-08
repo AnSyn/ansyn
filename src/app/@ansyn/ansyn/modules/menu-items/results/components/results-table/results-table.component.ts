@@ -8,15 +8,16 @@ import {
 	IOverlaysState,
 	MarkUpClass,
 	selectDropMarkup,
-	selectDrops, selectDropsWithoutSpecialObjects, selectPaginatedDrops
+	selectDropsWithoutSpecialObjects
 } from '../../../../overlays/reducers/overlays.reducer';
-import { take, tap, withLatestFrom } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import {
 	DisplayOverlayFromStoreAction,
 	SetMarkUp
 } from '../../../../overlays/actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
+import { TranslateService } from '@ngx-translate/core';
 
 interface ITableHeader {
 	headerName: string;
@@ -24,6 +25,7 @@ interface ITableHeader {
 	isAscending: boolean;
 	sortFn: (a, b) => number;
 }
+
 @Component({
 	selector: 'ansyn-results-table',
 	templateUrl: './results-table.component.html',
@@ -45,7 +47,9 @@ interface ITableHeader {
 export class ResultsTableComponent implements OnInit, OnDestroy {
 	overlays: IOverlayDrop[] = [];
 	selectedOverlayId: string;
-	sortedBy  = 'date';
+	sortedBy = 'date';
+	start = 0;
+	end = 15;
 	overlayCount: number;
 	tableHeaders: ITableHeader[] = [
 		{
@@ -58,13 +62,13 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			headerName: 'Sensor',
 			headerData: 'sensorName',
 			isAscending: true,
-			sortFn: (a: string, b: string) => a.localeCompare(b)
+			sortFn: (a: string, b: string) => this.translateService.instant(a).localeCompare(this.translateService.instant(b))
 		},
 		{
 			headerName: 'Type',
-			headerData: 'type',
+			headerData: 'icon',
 			isAscending: true,
-			sortFn: (a, b) => 0
+			sortFn: (a, b) => a.localeCompare(b)
 		}
 	];
 
@@ -84,23 +88,19 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			select(selectDropsWithoutSpecialObjects),
 			tap((overlays: IOverlayDrop[]) => {
 				this.resetSort();
-				this.paginateOverlays(overlays);
+				this.overlays = overlays;
 				this.overlayCount = overlays.length;
 			})
 		);
 
-	constructor(protected store$: Store<IOverlaysState>) {
+	constructor(protected store$: Store<IOverlaysState>,
+				protected translateService: TranslateService) {
 	}
 
 	ngOnDestroy(): void {
 	}
 
 	ngOnInit(): void {
-	}
-
-	paginateOverlays(overlays: IOverlayDrop[]) {
-		const pagination = 15;
-		this.overlays = overlays.slice(0, pagination);
 	}
 
 	resetSort() {
@@ -110,9 +110,8 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	loadResults() {
-		this.store$.select(selectPaginatedDrops(this.overlays.length)).pipe(
-			take(1),
-			tap((addedOverlays: IOverlayDrop[]) => this.overlays.push(...addedOverlays))).subscribe();
+		const pagination = 15;
+		this.end += pagination;
 	}
 
 	onMouseOver($event, id: string): void {

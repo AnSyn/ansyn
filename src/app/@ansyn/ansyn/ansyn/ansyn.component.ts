@@ -65,9 +65,6 @@ export class AnsynComponent implements OnInit {
 	ngOnInit(): void {
 		if (this.componentMode) {
 			this.store$.dispatch(new LoadDefaultCaseAction());
-			requestAnimationFrame(() => {
-				this.ansynApp.nativeElement.style.position = 'relative';
-			})
 		}
 
 		this.store$.dispatch(new UpdateToolsFlags([{

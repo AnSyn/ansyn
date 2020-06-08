@@ -44,7 +44,6 @@ import {
 	ICaseMapsState,
 	ICaseState,
 	ICaseTimeState,
-	IContextEntity,
 	IOverlaysManualProcessArgs
 } from '../../../modules/menu-items/cases/models/case.model';
 import { IOverlay, IOverlaysHash } from '../../../modules/overlays/models/overlay.model';
@@ -88,7 +87,7 @@ describe('SelectCaseAppEffects', () => {
 			const
 				orientation: CaseOrientation = 'Imagery Perspective',
 				timeFilter: CaseTimeFilter = 'Start - End',
-				time: ICaseTimeState = { type: 'absolute', from: new Date(0), to: new Date(0) },
+				time: ICaseTimeState = { from: new Date(0), to: new Date(0) },
 				region: CaseRegionState = {},
 				dataInputFilters: ICaseDataInputFiltersState = { fullyChecked: true, filters: [] },
 				favoriteOverlays: IOverlay[] = [],
@@ -101,7 +100,6 @@ describe('SelectCaseAppEffects', () => {
 				},
 				overlaysManualProcessArgs: IOverlaysManualProcessArgs = {},
 				facets: ICaseFacetsState = { showOnlyFavorites: true, filters: [] },
-				contextEntities: IContextEntity[] = [{ id: '234', date: new Date(), featureJson: null }],
 				miscOverlays: IOverlaysHash = {},
 				overlaysTranslationData = {},
 				overlaysScannedAreaData = {}
@@ -124,7 +122,6 @@ describe('SelectCaseAppEffects', () => {
 				layers,
 				overlaysManualProcessArgs,
 				facets,
-				contextEntities,
 				miscOverlays,
 				overlaysScannedAreaData
 			};
@@ -141,7 +138,7 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijklmnopqrstx)--', {
+			const expectedResult = cold('--(abcdefghijklmnpqrstx)--', {
 				a: new SetMapsDataActionStore({ mapsList: maps.data }),
 				b: new SetActiveMapId(maps.activeMapId),
 				c: new SetLayoutAction(<any>maps.layout),
@@ -156,7 +153,6 @@ describe('SelectCaseAppEffects', () => {
 				l: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 				m: new UpdateFacetsAction(facets),
 				n: new UpdateSelectedLayersIds([]),
-				o: <any>{ type: '[Context] Set context params', payload: { contextEntities } },
 				p: new SetAutoSave(false),
 				q: new SetRemovedOverlaysIdsAction(removedOverlaysIds),
 				r: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),

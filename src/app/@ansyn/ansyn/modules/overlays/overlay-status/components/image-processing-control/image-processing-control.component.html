@@ -1,7 +1,8 @@
 <div class="image-processing-container">
 	<div class="title-wrapper">
-		<label class="title">{{'Manual Image Enhancement' | translate}}</label>
-		<div class="resetAll" (click)="resetParams()">{{'Reset all' | translate}}</div>
+		<p class="title">{{'Manual Image Enhancement' | translate}}
+			<span class="resetAll" (click)="resetParams()">{{'Reset all' | translate}}</span>
+		</p>
 	</div>
 	<ul class="image-processing-options">
 		<li *ngFor="let param of params">

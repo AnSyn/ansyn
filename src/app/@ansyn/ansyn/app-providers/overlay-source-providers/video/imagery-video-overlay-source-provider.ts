@@ -53,12 +53,4 @@ export class ImageryVideoOverlaySourceProvider extends BaseOverlaySourceProvider
 	getById(id: string, sourceType: string): Observable<IOverlay> {
 		return of(DATA[id]);
 	}
-
-	getStartDateViaLimitFacets(params: { facets; limit; region }): Observable<IStartAndEndDate> {
-		return EMPTY;
-	}
-
-	getStartAndEndDateViaRangeFacets(params: { facets; limitBefore; limitAfter; date; region }): Observable<any> {
-		return EMPTY;
-	}
 }

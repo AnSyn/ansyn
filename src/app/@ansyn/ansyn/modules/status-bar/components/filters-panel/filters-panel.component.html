@@ -1,4 +1,4 @@
-<div class="filter" *ngFor="let filter of filters | slice:0:2">
+<div class="filter" *ngFor="let filter of filters | slice:0:config.maximumOpen">
 	<button ansynComboBoxTrigger
 			[disabled]="onlyFavorite"
 			[attr.tooltip-value]="getFilterTooltip(filter.displayName) | translate"
@@ -22,7 +22,7 @@
 </div>
 
 <div class="filter more-or-favorites">
-	<button ansynComboBoxTrigger *ngIf="filters.length < 3; else moreFiltersBtn"
+	<button ansynComboBoxTrigger *ngIf="filters.length <= config.maximumOpen; else moreFiltersBtn"
 			class="favorites"
 			[withArrow]="false"
 			[disabled]="disableOnlyFavoritesButton && !onlyFavorite"
@@ -55,7 +55,7 @@
 				<span class="title">{{'Favorites' | translate}}</span>
 			</button>
 			<div>
-				<ansyn-filter-container *ngFor="let filter of filters | slice:2"
+				<ansyn-filter-container *ngFor="let filter of filters | slice:config.maximumOpen"
 										[filter]="filter">
 				</ansyn-filter-container>
 			</div>

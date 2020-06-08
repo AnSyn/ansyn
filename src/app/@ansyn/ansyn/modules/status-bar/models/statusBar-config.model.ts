@@ -15,8 +15,13 @@ export interface IToolTipsConfig {
 	quickloop?: string
 }
 
+export interface IFilterStatusBar {
+	filterNames: string[],
+	maximumOpen: number
+
+}
 export interface IStatusBarConfig {
 	toolTips: IToolTipsConfig,
-	filters: string[]
+	filters: IFilterStatusBar
 	locale: string
 }

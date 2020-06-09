@@ -36,7 +36,7 @@ import {
 } from '../actions/overlay-status.actions';
 import {
 	SetActiveOverlaysFootprintModeAction,
-	SetAnnotationMode,
+	SetAnnotationMode, ShowOverlaysFootprintAction,
 } from '../../../menu-items/tools/actions/tools.actions';
 import {
 	ICaseMapState,
@@ -55,6 +55,8 @@ import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from '../config/overlay-status-config';
 import { isEqual } from "lodash";
 import { CasesActionTypes } from '../../../menu-items/cases/actions/cases.actions';
+import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
+import { casesConfig } from '../../../menu-items/cases/services/cases.service';
 
 @Injectable()
 export class OverlayStatusEffects {
@@ -68,12 +70,13 @@ export class OverlayStatusEffects {
 				const mapId = action.payload.mapId;
 				const selectedMap = entities[mapId];
 				const communicator = this.communicatorsService.provide(mapId);
-				const { position } = selectedMap.data;
+				const { position } = this.caseConfig.defaultCase.state.maps.data[0].data;
 				return [action.payload, selectedMap, communicator, position];
 			}),
 			filter(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => Boolean(communicator)),
 			switchMap(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => {
 				const disabledMap = communicator.activeMapName === DisabledOpenLayersMapName || communicator.activeMapName === ImageryVideoMapType;
+				this.store$.dispatch(new ShowOverlaysFootprintAction('None'));
 				this.store$.dispatch(new UpdateMapAction({
 					id: communicator.id,
 					changes: { data: { ...selectedMap.data, overlay: null, isAutoImageProcessingActive: false, imageManualProcessArgs: this.defaultImageManualProcessArgs } }
@@ -223,7 +226,8 @@ export class OverlayStatusEffects {
 	constructor(protected actions$: Actions,
 				protected communicatorsService: ImageryCommunicatorService,
 				protected store$: Store<any>,
-				@Inject(overlayStatusConfig) protected config: IOverlayStatusConfig) {
+				@Inject(overlayStatusConfig) protected config: IOverlayStatusConfig,
+				@Inject(casesConfig) public caseConfig: ICasesConfig) {
 	}
 
 	get params(): Array<IImageProcParam> {

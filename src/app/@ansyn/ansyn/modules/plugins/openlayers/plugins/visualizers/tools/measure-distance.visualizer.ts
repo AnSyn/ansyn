@@ -9,7 +9,7 @@ import Circle from 'ol/style/Circle';
 import Point from 'ol/geom/Point';
 import MultiPoint from 'ol/geom/MultiPoint';
 import LineString from 'ol/geom/LineString';
-import { FeatureCollection, GeometryObject, LineString as GeoJsonLineString } from 'geojson';
+import { FeatureCollection, GeometryObject, LineString as GeoJsonLineString, Point as GeoJsonPoint } from 'geojson';
 import VectorSource from 'ol/source/Vector';
 import { getLength } from 'ol/sphere';
 import GeoJSON from 'ol/format/GeoJSON';
@@ -287,10 +287,10 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 	onDrawEndEvent(data) {
 		data.feature.setId(UUID.UUID());
-		const measures = this.createMeasureLabelsFeatures(data.feature);
-		this.projectionService.projectCollectionAccurately([data.feature, ...measures], this.iMap.mapObject).pipe(take(1))
+		this.projectionService.projectCollectionAccurately([data.feature], this.iMap.mapObject).pipe(take(1))
 			.subscribe((featureCollection: FeatureCollection<GeometryObject>) => {
-				const [featureJson, ...measures] = featureCollection.features;
+				const [featureJson] = featureCollection.features;
+				const measures = this.createMeasureLabelsFeatures(<GeoJsonLineString>featureJson.geometry, <string>featureJson.id);
 				const newEntity: IVisualizerEntity = {
 					id: <string>featureJson.id,
 					featureJson: {
@@ -434,48 +434,38 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		return styles;
 	}
 
-	private createMeasureLabelsFeatures(feature) {
+	private createMeasureLabelsFeatures(linestring: GeoJsonLineString, featureId: string) {
 		// @TODO: try to make this and getMeasureTextStyle one function
 		const features = [];
-		const geometry = <LineString>feature.getGeometry();
-
-		const view = (<any>this.iMap.mapObject).getView();
-		const projection = view.getProjection();
-
-		const length = geometry.getCoordinates().length;
+		const length = linestring.coordinates.length;
 		if (length > 2) {
-			geometry.forEachSegment((start, end) => {
-				const lineString = new LineString([start, end]);
-				const geoJsonLinestring = this.geoJsonFormat.writeGeometryObject(lineString);
-				const centroid = getPointByGeometry(geoJsonLinestring);
-				const segmentLengthText = this.measureAccurateLength(geoJsonLinestring);
-				const singlePointLengthTextStyle = this.getSinglePointLengthTextStyle();
-				singlePointLengthTextStyle.setText(segmentLengthText);
-				const labelFeature = new Feature(new Point(<[number, number]>centroid.coordinates));
-				const featureStyle = new Style({text: singlePointLengthTextStyle});
-				labelFeature.setStyle(featureStyle);
-				labelFeature.set('measureStyle', featureStyle);
-				features.push(labelFeature);
-			})
+			linestring.coordinates.forEach( (point, index, coordinates) => {
+				if (coordinates[index + 1]) {
+					const pointA = this.createGeometryPoint(point);
+					const pointB = this.createGeometryPoint(coordinates[index + 1]);
+					const segment = this.createGeometryLineString(pointA, pointB);
+					const centroid = getPointByGeometry(segment);
+					const segmentLengthText = this.measureAccurateLength(segment);
+					const singlePointLengthTextStyle = this.getSinglePointLengthTextStyle();
+					singlePointLengthTextStyle.setText(segmentLengthText);
+					const labelFeature = this.createLabelFeature(centroid.coordinates, singlePointLengthTextStyle);
+					features.push(labelFeature);
+				}
+			});
 		}
 
 		if (this.isTotalMeasureActive || length === 2) {
 			// all line string
-			const line = this.geoJsonFormat.writeGeometryObject(geometry);
-			const allLengthText = this.measureAccurateLength(line);
+			const allLengthText = this.measureAccurateLength(linestring);
 			const allLengthTextStyle = this.allLengthTextStyle.clone();
 			allLengthTextStyle.setText(allLengthText);
-			const centroid = getPointByGeometry(line);
-			const allLinePoint = new Point(<[number, number]>centroid.coordinates);
-			const labelFeature = new Feature(allLinePoint);
-			const featureStyle = new Style({text: allLengthTextStyle});
-			labelFeature.setStyle(featureStyle);
-			labelFeature.set('measureStyle', featureStyle);
+			const centroid = getPointByGeometry(linestring);
+			const labelFeature = this.createLabelFeature(centroid.coordinates, allLengthTextStyle);
 			features.push(labelFeature);
 		}
 		features.forEach(feature => feature.setId(UUID.UUID()));
-		features.forEach(_feature => _feature.set('feature' , feature.getId()));
-		return features;
+		features.forEach(feature => feature.set('feature' , featureId));
+		return features.map( feature => this.geoJsonFormat.writeFeatureObject(feature));
 	}
 
 	createTranslateMeasuresLabelInteraction() {
@@ -516,7 +506,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 	measureAccurateLength(line: GeoJsonLineString): string {
 		const length = line.coordinates
-			.map( (segment, index, arr) => arr[index + 1] && [geometry('Point', segment), geometry('Point', arr[index + 1])] )
+			.map( (segment, index, arr) => arr[index + 1] && [this.createGeometryPoint(segment), this.createGeometryPoint(arr[index + 1])] )
 			.filter(Boolean)
 			.reduce( (length, segment) => {
 				return length + calculateLineDistance(segment[0], segment[1]);
@@ -537,6 +527,22 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 
 	private filterLineStringFeature(feature) {
 		return feature.getGeometry().getType() === 'LineString';
+	}
+
+	private createGeometryPoint(coordinates: number[]): GeoJsonPoint {
+		return <GeoJsonPoint>geometry('Point', coordinates);
+	}
+
+	private createGeometryLineString(pointA: GeoJsonPoint, pointB: GeoJsonPoint): GeoJsonLineString {
+		return <GeoJsonLineString>geometry('LineString', [pointA, pointB]);
+	}
+
+	private createLabelFeature(coordinates, length) {
+		const labelFeature = new Feature(new Point(<[number, number]>coordinates));
+		const featureStyle = new Style({text: length});
+		labelFeature.setStyle(featureStyle);
+		labelFeature.set('measureStyle', featureStyle);
+		return labelFeature;
 	}
 }
 

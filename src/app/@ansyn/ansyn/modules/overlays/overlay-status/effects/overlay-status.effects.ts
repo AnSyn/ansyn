@@ -70,7 +70,7 @@ export class OverlayStatusEffects {
 				const mapId = action.payload.mapId;
 				const selectedMap = entities[mapId];
 				const communicator = this.communicatorsService.provide(mapId);
-				const { position } = this.caseConfig.defaultCase.state.maps.data[0].data;
+				const position = this.config.defaultPosition;
 				return [action.payload, selectedMap, communicator, position];
 			}),
 			filter(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => Boolean(communicator)),
@@ -226,8 +226,7 @@ export class OverlayStatusEffects {
 	constructor(protected actions$: Actions,
 				protected communicatorsService: ImageryCommunicatorService,
 				protected store$: Store<any>,
-				@Inject(overlayStatusConfig) protected config: IOverlayStatusConfig,
-				@Inject(casesConfig) public caseConfig: ICasesConfig) {
+				@Inject(overlayStatusConfig) protected config: IOverlayStatusConfig) {
 	}
 
 	get params(): Array<IImageProcParam> {

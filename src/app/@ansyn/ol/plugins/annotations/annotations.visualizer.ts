@@ -578,7 +578,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	labelTranslateMode(featureId: any) {
 		let oldFeature = null;
-		let event = null;
+		let event = undefined;
 
 		if (this.labelTranslate) {
 			const { originalFeature } = this.labelTranslate;

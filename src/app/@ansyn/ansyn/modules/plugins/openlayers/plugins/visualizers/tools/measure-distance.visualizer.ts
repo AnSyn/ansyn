@@ -138,20 +138,22 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			if (!measureData.isLayerShowed) {
 				this.iMap.removeLayer(this.vector);
 			} else {
-				this.iMap.addLayer(this.vector);
-				if (isMeasureToolActive && activeMapId && measureData.isToolActive) {
-					this.createDrawInteraction();
-				} else {
-					this.removeDrawInteraction();
+				if (isMeasureToolActive) {
+					this.iMap.addLayer(this.vector);
+					this.checkToolActive(measureData.isToolActive);
+					this.checkRemoveModeActive(measureData.isRemoveMeasureModeActive);
+					if (measureData.forceDisableTranslate) {
+						this.removeTranslateMeasuresLabelInteraction();
+					}
+					else if (measureData.forceDisableTranslate === false) { // don't enter if forceDisableTranslate is undefined
+						this.createTranslateMeasuresLabelInteraction();
+					}
 				}
-				if (isMeasureToolActive && activeMapId && measureData.isRemoveMeasureModeActive) {
-					this.removeTranslateMeasuresLabelInteraction();
-					this.createHoverForDeleteInteraction();
-					this.createClickDeleteInteraction();
-				} else {
+				else {
+					this.removeDrawInteraction();
 					this.removeHoverForDeleteInteraction();
 					this.removeClickDeleteInteraction();
-					this.createTranslateMeasuresLabelInteraction();
+					this.removeTranslateMeasuresLabelInteraction();
 				}
 			}
 		}),
@@ -159,6 +161,28 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 			return this.setEntities(measureData.meausres);
 		}),
 	);
+
+	checkToolActive(isActive: boolean) {
+		if (isActive) {
+			this.createDrawInteraction();
+		}
+		else {
+			this.removeDrawInteraction();
+		}
+	}
+
+	checkRemoveModeActive(isActive: boolean) {
+		if (isActive) {
+			this.createHoverForDeleteInteraction();
+			this.createClickDeleteInteraction();
+			this.removeTranslateMeasuresLabelInteraction();
+		}
+		else {
+			this.removeClickDeleteInteraction();
+			this.removeHoverForDeleteInteraction();
+			this.createTranslateMeasuresLabelInteraction();
+		}
+	}
 
 	setEntities(logicalEntities: IVisualizerEntity[]): Observable<boolean> {
 		const entitiesToRemove = [];
@@ -534,7 +558,7 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	}
 
 	private createGeometryLineString(pointA: GeoJsonPoint, pointB: GeoJsonPoint): GeoJsonLineString {
-		return <GeoJsonLineString>geometry('LineString', [pointA, pointB]);
+		return <GeoJsonLineString>geometry('LineString', [pointA.coordinates, pointB.coordinates]);
 	}
 
 	private createLabelFeature(coordinates, length) {

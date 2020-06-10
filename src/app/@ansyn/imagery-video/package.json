@@ -1,12 +1,12 @@
 {
 	"name": "@ansyn/imagery-video",
-	"version": "2.0.4",
+	"version": "2.1.1",
 	"peerDependencies": {
 		"@angular/core": "^7.2.2",
 		"@angular/common": "^7.2.2",
 		"@angular/platform-browser": "^7.2.2",
-		"@ansyn/imagery": "2.0.4",
-		"@ansyn/map-facade": "2.0.4",
+		"@ansyn/imagery": "2.1.1",
+		"@ansyn/map-facade": "2.1.1",
 		"rxjs": "^6.4.0"
 	},
 	"dependencies": {

@@ -473,6 +473,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						})
 					})
 				);
+				console.log(moreStyles[1]);
 				break;
 		}
 		if (mode === 'Rectangle' || mode === 'Circle') {
@@ -530,7 +531,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		return [
 			new olStyle({
+				placement: 'line',
+				overflow: true,
+				rotateWithView: true,
 				text: new olText({
+					...this.measuresTextStyle,
+					placement: 'point',
 					font: '16px Calibri,sans-serif',
 					fill: new olFill({
 						color: '#fff'

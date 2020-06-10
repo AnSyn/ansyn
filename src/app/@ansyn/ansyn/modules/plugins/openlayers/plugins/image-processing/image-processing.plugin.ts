@@ -55,9 +55,8 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 				return;
 			}
 			// else
-			this.createImageLayer([isAutoImageProcessingActive, imageManualProcessArgs]);
-			const hasRasterLayer = this.getExistingRasterLayer();
-			if (Boolean(hasRasterLayer)) {
+			this.createImageLayer();
+			if (Boolean(this.imageLayer)) {
 				// auto
 				this.setAutoImageProcessing(isAutoImageProcessingActive);
 				// manual
@@ -124,42 +123,27 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		}
 	}
 
-	createImageLayer([isAutoImageProcessingActive, imageManualProcessArgs]: [boolean, ImageManualProcessArgs]) {
-		this.imageLayer = this.getExistingRasterLayer();
+	createImageLayer() {
 		if (this.imageLayer) {
 			return;
 		}
 		const mainLayer = this.getMainLayer();
-		const imageLayer = mainLayer.get(IMAGE_PROCESS_ATTRIBUTE);
-		if (!imageLayer) {
+		this.imageLayer = mainLayer.get(IMAGE_PROCESS_ATTRIBUTE);
+		if (!this.imageLayer) {
 			return;
 		}
 
-		this.communicator.ActiveMap.addLayer(imageLayer);
-		this.imageLayer = imageLayer;
+		this.communicator.ActiveMap.addLayer(this.imageLayer);
 		this.imageLayer.setZIndex(0);
 		this._imageProcessing = new OpenLayersImageProcessing(<any>this.imageLayer.getSource());
 	}
 
 	removeImageLayer(): void {
-		this.imageLayer = this.getExistingRasterLayer();
 		if (this.imageLayer) {
 			this.communicator.ActiveMap.removeLayer(this.imageLayer);
 			this._imageProcessing = new OpenLayersImageProcessing();
 			this.imageLayer = null;
 		}
-	}
-
-	getExistingRasterLayer(): ImageLayer {
-		const layers = this.communicator.ActiveMap.getLayers() as ol_Layer[];
-		const imageLayer = layers.find((layer) => {
-			if (layer.type && layer.type === 'IMAGE') { // for component
-				const source = layer.getSource();
-				return source instanceof ProjectableRaster;
-			}
-			return false;
-		});
-		return imageLayer;
 	}
 
 }

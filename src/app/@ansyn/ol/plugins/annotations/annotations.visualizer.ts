@@ -473,7 +473,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 						})
 					})
 				);
-				console.log(moreStyles[1]);
 				break;
 		}
 		if (mode === 'Rectangle' || mode === 'Circle') {

@@ -16,10 +16,10 @@
       true
     ],
     "import-spacing": true,
-    // "indent": [
-    // 	true,
-    // 	"tabs"
-    // ],
+    "indent": [
+      true,
+      "tabs"
+    ],
     "interface-over-type-literal": true,
     "label-position": true,
     "max-line-length": [

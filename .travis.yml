@@ -26,7 +26,7 @@ before_script:
 script:
   - npm run lint:submodules
   - npm run lint
-  - npm run test:single-run:submodules
+  # - npm run test:single-run:submodules
   - npm run test:single-run
   - npm run build:submodules:libs
   - npm run build:libs

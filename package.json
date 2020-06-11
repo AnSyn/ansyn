@@ -12,7 +12,7 @@
     "build:aot": "ng build --aot true",
     "build:builder": "ng build builder",
     "build:gulp": "cd build && gulp build",
-    "build:prod": "node --max_old_space_size=12288 ./node_modules/@angular/cli/bin/ng build ansyn --prod",
+    "build:prod": "node --max_old_space_size=20000 ./node_modules/@angular/cli/bin/ng build ansyn --prod",
     "build:libs": "bash scripts/build-libs.sh",
     "build:submodules:libs": "bash scripts/build-submodules-libs.sh",
     "publish:libs": "bash scripts/publish-libs.sh",

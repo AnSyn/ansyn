@@ -7,9 +7,9 @@
 		<ansyn-status-bar></ansyn-status-bar>
 	</div>
 
-	<div class="layer" #animatedElementHorizontal [class.hide-status-bar]="(hideStatus$ | async)">
+	<div class="layer" #animatedElementHorizontal>
 
-		<div class="maps-container" #animatedElementVertical>
+		<div class="maps-container" #animatedElementVertical [class.hide-status-bar]="(hideStatus$ | async)">
 			<ansyn-imageries-manager></ansyn-imageries-manager>
 			<ansyn-context-menu *ngIf="renderContextMenu"></ansyn-context-menu>
 		</div>

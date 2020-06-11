@@ -450,7 +450,7 @@
         }
       }
     },
-    "@ansyn/ol": {
+    "@ansyn/imagery-ol": {
       "root": "src/app/@ansyn/imagery-submodules/imagery-ol",
       "sourceRoot": "src/app/@ansyn/imagery-submodules/imagery-ol/src",
       "projectType": "library",

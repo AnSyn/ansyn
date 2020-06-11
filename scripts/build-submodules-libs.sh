@@ -1,8 +1,9 @@
 #!/bin/sh
-cd src/app/\@ansyn/imagery-submodules;
-npm i;
-npm run lint;
-npm run test:single-run;
-npm run build:libs;
-npm run rm:nodemodules;
+
+BUILDS=("imagery" "imagery-ol" "imagery-video" "imagery-cesium")
+len=${#BUILDS[*]}
+for (( i=0; i<len; i++ ))
+do
+    ng build @ansyn/${BUILDS[$i]} || exit 1
+done
 

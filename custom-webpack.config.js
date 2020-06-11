@@ -1,3 +1,5 @@
+/* This file was added in order to overcome a bug with Cesium and webpack- it enables custom webpack config. */
+// TODO - file should be removed in Cesium future versions.
 module.exports = {
 	node: {
 		// Resolve node module use of fs

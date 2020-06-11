@@ -21,7 +21,8 @@
             "tsConfig": "src/tsconfig.app.json",
             "showCircularDependencies": true,
             "polyfills": "src/polyfills.ts",
-            "assets": [{
+            "assets": [
+              {
                 "glob": "**/*",
                 "input": "src/app/@ansyn/ansyn/assets",
                 "output": "/assets"
@@ -47,19 +48,23 @@
           },
           "configurations": {
             "dev": {
-              "budgets": [{
+              "budgets": [
+                {
                 "type": "anyComponentStyle",
                 "maximumWarning": "6kb"
-              }],
+                }
+              ],
               "sourceMap": true,
               "extractCss": true,
               "fileReplacements": []
             },
             "production": {
-              "budgets": [{
+              "budgets": [
+                {
                 "type": "anyComponentStyle",
                 "maximumWarning": "6kb"
-              }],
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": true,
@@ -69,10 +74,12 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": false,
-              "fileReplacements": [{
+              "fileReplacements": [
+                {
                 "replace": "src/configuration/configuration.ts",
                 "with": "src/configuration/configuration.prod.ts"
-              }]
+                }
+              ]
             }
           }
         },
@@ -117,7 +124,8 @@
                 "src/app/@ansyn"
               ]
             },
-            "assets": [{
+            "assets": [
+              {
                 "glob": "**/*",
                 "input": "src/app/@ansyn/ansyn/assets",
                 "output": "/assets"
@@ -190,7 +198,8 @@
                 "src/app/@ansyn"
               ]
             },
-            "assets": [{
+            "assets": [
+              {
                 "glob": "**/*",
                 "input": "src/app/@ansyn/ansyn/assets",
                 "output": "/assets"
@@ -204,20 +213,26 @@
           },
           "configurations": {
             "dev": {
-              "budgets": [{
+              "budgets": [
+                {
                 "type": "anyComponentStyle",
                 "maximumWarning": "6kb"
-              }],
-              "fileReplacements": [{
+                }
+              ],
+              "fileReplacements": [
+                {
                 "replace": "src/configuration/configuration.ts",
                 "with": "src/configuration/configuration.dev.ts"
-              }]
+                }
+              ]
             },
             "production": {
-              "budgets": [{
+              "budgets": [
+                {
                 "type": "anyComponentStyle",
                 "maximumWarning": "6kb"
-              }],
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -227,10 +242,12 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
-              "fileReplacements": [{
+              "fileReplacements": [
+                {
                 "replace": "src/configuration/configuration.ts",
                 "with": "src/configuration/configuration.prod.ts"
-              }]
+                }
+              ]
             }
           }
         },
@@ -265,7 +282,8 @@
             "styles": [
               "src/app/@ansyn/ansyn/assets/styles/styles.css"
             ],
-            "assets": [{
+            "assets": [
+              {
                 "glob": "**/*",
                 "input": "src/app/@ansyn/ansyn/assets",
                 "output": "/assets"
@@ -308,7 +326,8 @@
                 "src/app/@ansyn"
               ]
             },
-            "assets": [{
+            "assets": [
+              {
                 "glob": "**/*",
                 "input": "src/app/@ansyn/ansyn/assets",
                 "output": "/assets"
@@ -324,20 +343,26 @@
           },
           "configurations": {
             "dev": {
-              "budgets": [{
+              "budgets": [
+                {
                 "type": "anyComponentStyle",
                 "maximumWarning": "6kb"
-              }],
-              "fileReplacements": [{
+                }
+              ],
+              "fileReplacements": [
+                {
                 "replace": "src/configuration/configuration.ts",
                 "with": "src/configuration/configuration.dev.ts"
-              }]
+                }
+              ]
             },
             "production": {
-              "budgets": [{
+              "budgets": [
+                {
                 "type": "anyComponentStyle",
                 "maximumWarning": "6kb"
-              }],
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -347,10 +372,12 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
-              "fileReplacements": [{
+              "fileReplacements": [
+                {
                 "replace": "src/configuration/configuration.ts",
                 "with": "src/configuration/configuration.prod.ts"
-              }]
+                }
+              ]
             }
           }
         },
@@ -385,7 +412,8 @@
             "styles": [
               "src/app/@ansyn/ansyn/assets/styles/styles.css"
             ],
-            "assets": [{
+            "assets": [
+              {
                 "glob": "**/*",
                 "input": "src/app/@ansyn/ansyn/assets",
                 "output": "/assets"

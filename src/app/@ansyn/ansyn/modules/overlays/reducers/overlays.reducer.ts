@@ -286,6 +286,9 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 		case OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS:
 			const { mapId, overlay } = action.payload;
 			const mapHistory = state.displayOverlayHistory[mapId] || [];
+			if (mapHistory.slice(-1)[0] === overlay.id) { // Is this overlay already the last item in history?
+				return state;
+			}
 			return {
 				...state,
 				displayOverlayHistory: {

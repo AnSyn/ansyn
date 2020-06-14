@@ -32,8 +32,12 @@ export class TimepickerPresetsComponent implements OnInit, OnDestroy {
 		this.closePresets();
 	}
 
-	presetTitle(preset: number) {
-		return (preset < 365) ? `${preset} days ago` : `${preset / 365} years ago`
+	presetValue(preset: number): number {
+		return (preset < 365) ? preset : preset / 365;
+	}
+
+	presetTitle(preset: number): string {
+		return  (preset < 365) ? 'days ago' : 'years ago';
 	}
 
 	closePresets() {

@@ -1,7 +1,7 @@
 <div class="presets">
 	<div *ngFor="let preset of presets" [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''">
 		<button (click)="setPreset(preset)">
-			{{presetTitle(preset) | translate}}
+			{{presetValue(preset)}} {{presetTitle(preset) | translate}}
 		</button>
 	</div>
 	<button

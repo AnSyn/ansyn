@@ -1,10 +1,10 @@
 {
 	"name": "@ansyn/ol",
-	"version": "2.0.4",
+	"version": "2.1.1",
 	"peerDependencies": {
 		"@angular/core": "~9.1.0",
 		"@angular/common": "~9.1.0",
-		"@ansyn/imagery": "2.0.4",
+		"@ansyn/imagery": "2.1.1",
 		"rxjs": "~6.5.4",
 		"@ngx-translate/core": "^12.1.2"
 	},

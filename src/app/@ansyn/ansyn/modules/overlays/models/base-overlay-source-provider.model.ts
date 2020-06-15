@@ -141,11 +141,7 @@ export abstract class BaseOverlaySourceProvider {
 
 	abstract fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData>;
 
-	abstract getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<IStartAndEndDate>;
-
 	abstract getById(id: string, sourceType: string): Observable<IOverlay>;
-
-	abstract getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any>;
 
 	getByIds(ids: IOverlayByIdMetaData[]): Observable<IOverlay[]> {
 		const requests = ids.map(({ id, sourceType }) => this.getById(id, sourceType));

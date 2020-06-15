@@ -6,10 +6,9 @@ import GeoJSON from 'ol/format/GeoJSON';
 import { Observable } from 'rxjs';
 import { Actions } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
-import { distinctUntilChanged, filter, map, mergeMap, tap } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
-import { selectContextEntities } from '../reducers/context.reducer';
-import { IContextEntity, IOverlay, } from '@ansyn/ansyn';
+import { IOverlay, } from '@ansyn/ansyn';
 import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
 
 @ImageryVisualizer({
@@ -20,12 +19,6 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 	referenceDate: Date;
 	idToCachedCenter: Map<string, olPolygon | olPoint> = new Map<string, olPolygon | olPoint>();
 	geoJsonFormat: GeoJSON;
-
-	@AutoSubscription
-	contextEntites$ = this.store$.select(selectContextEntities).pipe(
-		filter(Boolean),
-		mergeMap(this.setEntities.bind(this))
-	);
 
 	constructor(protected actions$: Actions, protected store$: Store<any>) {
 		super();
@@ -81,8 +74,8 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 		if (!this.referenceDate || !(this.getGeometry(feature) instanceof olPoint)) {
 			return '';
 		}
-		const originalEntity = this.idToEntity.get(feature.getId()).originalEntity;
-		const entityDate = (<IContextEntity>originalEntity).date;
+		const originalEntity: any = this.idToEntity.get(feature.getId()).originalEntity;
+		const entityDate = originalEntity.date;
 		const timeDiff = getTimeDiff(this.referenceDate, entityDate);
 
 		return getTimeDiffFormat(timeDiff);

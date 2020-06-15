@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action, select, Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { forkJoin, from, Observable } from 'rxjs';
-import { catchError,  filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError,  filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
 	CheckTrianglesAction,
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
-	OverlaysActionTypes,
+	OverlaysActionTypes, SetOverlaysContainmentChecked,
 	RequestOverlayByIDFromBackendAction,
 	SetMarkUp,
 	SetOverlaysCriteriaAction,
 	SetOverlaysStatusMessageAction,
-	UpdateOverlay,
+	UpdateOverlays,
 	UpdateOverlaysCountAction
 } from '../actions/overlays.actions';
 import { IOverlay, IOverlaysCriteria, IOverlaysFetchData, RegionContainment } from '../models/overlay.model';
@@ -37,18 +37,18 @@ import { LoggerService } from '../../core/services/logger.service';
 import { AreaToCredentialsService } from '../../core/services/credentials/area-to-credentials.service';
 import { CredentialsService, ICredentialsResponse } from '../../core/services/credentials/credentials.service';
 import { SetDoesUserHaveCredentials } from '@ansyn/menu';
+import { Update } from '@ngrx/entity';
 
 @Injectable()
 export class OverlaysEffects {
 
-	@Effect({ dispatch: false })
+	@Effect()
 	setOverlaysContainedInRegionField$ = this.actions$.pipe(
 		ofType(OverlaysActionTypes.SET_OVERLAYS_CRITERIA, OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
 		withLatestFrom(this.store$.select(selectOverlaysCriteria), this.store$.select(selectOverlaysArray)),
 		filter(([action, criteria, overlays]: [any, IOverlaysCriteria, IOverlay[]]) => Boolean(overlays) && overlays.length > 0),
 		mergeMap(([action, criteria, overlays]: [any, IOverlaysCriteria, IOverlay[]]) => {
-			let actions: Action[];
-			overlays.forEach((overlay: IOverlay) => {
+			const payload: Update<IOverlay>[] = overlays.map((overlay: IOverlay) => {
 				let containedInSearchPolygon;
 				try {
 					if (criteria.region.type === 'Point') {
@@ -68,12 +68,15 @@ export class OverlaysEffects {
 					console.error('failed to calc overlay intersection ratio of ', overlay, ' error ', e);
 					containedInSearchPolygon = RegionContainment.unknown;
 				}
-				actions.push(new UpdateOverlay({
+				return {
 					id: overlay.id,
 					changes: { containedInSearchPolygon }
-				}));
+				};
 			});
-			return actions;
+			return [
+				new UpdateOverlays(payload),
+				new SetOverlaysContainmentChecked()
+			];
 		}),
 		rxPreventCrash()
 	);

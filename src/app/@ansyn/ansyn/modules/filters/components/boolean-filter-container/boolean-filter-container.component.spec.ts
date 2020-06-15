@@ -5,6 +5,7 @@ import { BooleanFilterMetadata } from '../../models/metadata/boolean-filter-meta
 import { FilterCounterComponent } from '../filter-counter/filter-counter.component';
 import { FormsModule } from '@angular/forms';
 import { AnsynCheckboxComponent } from '../../../core/forms/ansyn-checkbox/ansyn-checkbox.component';
+import { BooleanFilterCounters } from '../../models/counters/boolean-filter-counters';
 
 describe('BooleanFilterContainerComponent', () => {
 	let component: BooleanFilterContainerComponent;
@@ -22,6 +23,7 @@ describe('BooleanFilterContainerComponent', () => {
 		fixture = TestBed.createComponent(BooleanFilterContainerComponent);
 		component = fixture.componentInstance;
 		component.metadata = new BooleanFilterMetadata();
+		component.counters = new BooleanFilterCounters();
 		fixture.detectChanges();
 	});
 

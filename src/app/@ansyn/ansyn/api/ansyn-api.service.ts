@@ -409,7 +409,7 @@ export class AnsynApi {
 	private generateFeaturesIds(annotationsLayer): void {
 		/* reference */
 		annotationsLayer.features.forEach((feature) => {
-			feature.properties = { ...feature.properties, id: UUID.UUID() };
+			feature.properties = { ...feature.properties, id: feature.id ? feature.id : UUID.UUID() };
 		});
 
 	}

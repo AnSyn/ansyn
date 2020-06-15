@@ -22,7 +22,7 @@ import { IOverlaysCriteria } from '../../../overlays/models/overlay.model';
 import { mockIndexProviders } from '../../../core/test/mock-providers';
 
 const overlaysCriteria: IOverlaysCriteria = {
-	time: { from: new Date(), to: new Date(), type: 'absolute' },
+	time: { from: new Date(), to: new Date() },
 	region: { type: 'Point', coordinates: [122.00, 44.122] },
 	dataInputFilters: { fullyChecked: true, filters: [] }
 };

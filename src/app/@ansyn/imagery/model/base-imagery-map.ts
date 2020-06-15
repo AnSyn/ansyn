@@ -1,10 +1,9 @@
 import { EventEmitter, ViewContainerRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GeoJsonObject, Point } from 'geojson';
-import { ImageryMapExtent, IImageryMapPosition, IMousePointerMove } from './case-map-position.model';
+import { ImageryMapExtent, IImageryMapPosition, IMousePointerMove, IMouseClick } from './case-map-position.model';
 import { IMapErrorMessage, IMapProgress } from './map-progress.model';
 import { IBaseImageryLayer } from './imagery-layer.model';
-import { EPSG_4326 } from '../utils/geo';
 
 export interface IImageryMapMetaData {
 	deps?: any[];
@@ -33,7 +32,11 @@ export abstract class BaseImageryMap<T = any> {
 
 	public positionChanged: EventEmitter<IImageryMapPosition> = new EventEmitter<IImageryMapPosition>();
 	public mousePointerMoved: EventEmitter<IMousePointerMove> = new EventEmitter<IMousePointerMove>();
+	public mouseSingleClick: EventEmitter<IMouseClick> = new EventEmitter<IMouseClick>();
+	public mouseRightClick: EventEmitter<IMouseClick> = new EventEmitter<IMouseClick>();
+	public mouseDoubleClick: EventEmitter<IMouseClick> = new EventEmitter<IMouseClick>();
 	public moveStart: EventEmitter<IImageryMapPosition> = new EventEmitter<IImageryMapPosition>();
+	public mapLayerChangedEventEmitter: EventEmitter<any> = new EventEmitter<any>();
 
 	public tilesLoadProgressEventEmitter: EventEmitter<IMapProgress> = new EventEmitter<IMapProgress>();
 	public tilesLoadErrorEventEmitter: EventEmitter<IMapErrorMessage> = new EventEmitter<IMapErrorMessage>();
@@ -98,9 +101,7 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract getHtmlContainer(): HTMLElement;
 
-	getProjectionCode(): string {
-		return EPSG_4326;
-	}
+	abstract getProjectionCode(): string;
 
 	fitToExtent(extent: any): Observable<any> {
 		throw new Error('Method not implemented.');

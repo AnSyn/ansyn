@@ -120,6 +120,9 @@ export class ImageryVideoMap extends BaseImageryMap<any> {
 		this.videoComponent = ref.instance;
 		return of(true);
 	}
+	getProjectionCode(): string {
+		throw new Error("Not implemented yet!");
+	}
 
 	private _getCenter(): Point {
 		const line = turf.feature(_get(this.mainLayer, 'data.overlay.footprint'));
@@ -137,5 +140,6 @@ export class ImageryVideoMap extends BaseImageryMap<any> {
 		const extentPolygon: any = turf.bboxPolygon(bbox).geometry;
 		return { extentPolygon };
 	}
+
 
 }

@@ -180,18 +180,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.geoJsonFormat = new OLGeoJSON();
 	}
 
-	findFeatureWithMinimumArea(featuresArray: any[]) {
-		return featuresArray.reduce((prevResult, currFeature) => {
-			const currGeometry = currFeature.getGeometry();
-			const currArea = currGeometry.getArea ? currGeometry.getArea() : 0;
-			if (currArea < prevResult.area) {
-				return { feature: currFeature, area: currArea };
-			} else {
-				return prevResult;
-			}
-		}, { feature: null, area: Infinity }).feature;
-	}
-
 	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
 		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => {
 			const featureJson: Feature<any> = {
@@ -290,14 +278,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.dragBox.on('boxdrag', this.mapBoxdrag);
 		map.addInteraction(this.dragBox);
 	}
-
-	featureAtPixel = (pixel) => {
-		const featuresArray = [];
-		this.iMap.mapObject.forEachFeatureAtPixel(pixel, feature => {
-			featuresArray.push(feature);
-		}, { hitTolerance: 2, layerFilter: (layer) => this.vector === layer });
-		return this.findFeatureWithMinimumArea(featuresArray);
-	};
 
 	onDrawEndEvent({ feature }) {
 		const { mode } = this;
@@ -591,19 +571,23 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		if (!oldFeature || featureId !== oldFeature.getId()) { // start editing
 			this.clearAnnotationEditMode();
-			const originalFeature: olFeature = this.source.getFeatureById(featureId);
+			let originalFeature: olFeature = this.source.getFeatureById(featureId);
 			this.updateFeature(originalFeature.getId(), { labelTranslateOn: true });
-			const labelFeature = this.createLabelFeature(originalFeature);
+			this.addOrUpdateEntities([this.getEntityById(featureId)]).pipe(take(1)).subscribe(() => {
+				originalFeature = this.source.getFeatureById(featureId);
+				const labelFeature = this.createLabelFeature(originalFeature);
 
-			this.addInteraction(VisualizerInteractions.labelTranslateHandler, this.moveLabelInteraction(originalFeature, labelFeature));
-			event = {
-				originalFeature,
-				labelFeature
-			};
-			this.source.addFeature(labelFeature);
+				this.addInteraction(VisualizerInteractions.labelTranslateHandler, this.moveLabelInteraction(originalFeature, labelFeature));
+				event = {
+					originalFeature,
+					labelFeature
+				};
+				this.source.addFeature(labelFeature);
+			})
 		} else {
 			this.updateFeature(featureId, { labelTranslateOn: false });
 			this.source.removeFeature(this.labelTranslate.labelFeature);
+			this.addOrUpdateEntities([this.getEntityById(featureId)]).pipe(take(1)).subscribe();
 		}
 		this.events.onLabelTranslateStart.next(event);
 	}

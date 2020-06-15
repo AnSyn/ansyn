@@ -38,7 +38,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	toggleGroup(groupName: string, newState: boolean) {
 	}
 
-	getLayers(): ol_Layer {
+	getLayers(): ol_Layer[] {
 		return this.mapObject.getLayers().getArray();
 	}
 
@@ -168,6 +168,10 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 
 	getHtmlContainer(): HTMLElement {
 		return <HTMLElement>this.element;
+	}
+
+	getProjectionCode(): string {
+		throw new Error("Not implemented yet!");
 	}
 
 	dispose() {

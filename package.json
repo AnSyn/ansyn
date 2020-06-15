@@ -33,6 +33,7 @@
     "update": "ng update @angular/core @angular/cli"
   },
   "dependencies": {
+    "@angular-builders/custom-webpack": "^9.1.0",
     "@angular/animations": "~9.1.0",
     "@angular/cdk": "^9.2.0",
     "@angular/common": "~9.1.0",
@@ -57,7 +58,7 @@
     "angular2-uuid": "^1.1.1",
     "auth0-js": "^9.7.3",
     "auto-subscriptions": "^2.0.5",
-    "cesium": "^1.66.0",
+    "cesium": "^1.70.1",
     "core-js": "^2.5.4",
     "crypto-js": "3.1.9-1",
     "d3": "^5.9.2",
@@ -81,6 +82,7 @@
     "rison": "^0.1.1",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
+    "webpack-dev-server": "^3.11.0",
     "wellknown": "^0.5.0",
     "zone.js": "~0.10.2"
   },

@@ -1,3 +1,9 @@
+export { IImageProcParam, IImageManualProcessArgs, getDefaultImageProcParams } from './plugins/image-processing/model';
+export { ImageProcessingPlugin } from './plugins/image-processing/image-processing.plugin';
+
+export { GridLinesVisualizer } from './plugins/grid-lines/grid-lines.visualizer';
+
+export { MeasureRulerVisualizer, ILabelHandler } from './plugins/measure-ruler/measure-ruler.visualizer';
 export { IMAGE_PROCESS_ATTRIBUTE } from './mapSourceProviders/open-layers.map-source-provider';
 
 export { OpenLayerESRI_4326SourceProviderSourceType } from './mapSourceProviders/open-layers-ESRI-4326-source-provider';
@@ -33,6 +39,7 @@ export { OpenLayerESRI4326SourceProvider } from './mapSourceProviders/open-layer
 export { OpenLayerOpenAerialSourceProvider } from './mapSourceProviders/open-layers-open-aerial-source-provider';
 export { OpenLayersStaticImageSourceProvider } from './mapSourceProviders/open-layers-static-image-source-provider';
 export { OpenLayerMarcoSourceProvider } from './mapSourceProviders/marco/open-layers-MARCO-source-provider';
+export { OpenLayerGEESourceProvider } from './mapSourceProviders/open-layers-GEE-source-provider';
 
 export {
 	AnnotationInteraction,

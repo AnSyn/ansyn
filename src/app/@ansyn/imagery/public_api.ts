@@ -3,7 +3,7 @@ export { IMapSource } from './model/map-providers-config';
 export { IStroke, IIcon } from './model/visualizers/visualizer-style';
 export { ICanvasExportData } from './model/base-imagery-map';
 export {
-	ImageryMapExtent, ImageryMapExtentPolygon, IImageryMapProjectedState, IImageryMapPosition, IMousePointerMove
+	ImageryMapExtent, ImageryMapExtentPolygon, IImageryMapProjectedState, IImageryMapPosition, IMousePointerMove, IMouseClick
 }from './model/case-map-position.model';
 
 export { MAP_SOURCE_PROVIDERS_CONFIG, IMapSourceProvidersConfig } from './model/base-map-source-provider';
@@ -77,6 +77,6 @@ export { IMAGERY_CONFIG } from './model/configuration.token';
 export { IBaseImageryLayer, ImageryLayerProperties, IMAGERY_MAIN_LAYER_NAME, IMAGERY_BASE_MAP_LAYER } from './model/imagery-layer.model';
 
 export { IMapSettings, IMapSettingsData, IWorldViewMapState } from './model/map-settings';
-export { toDegrees, toRadians, getAngleDegreeBetweenPoints } from './utils/math';
+export { toDegrees, toRadians, getAngleDegreeBetweenPoints, getAngleDegreeBetweenCoordinates } from './utils/math';
 export { ExtentCalculator } from './utils/extent-calculator';
 export { ImageryComponent } from './imagery/imagery.component';

@@ -1,11 +1,11 @@
 <ng-container *ngFor="let featureId of selection">
 	<div class="context-menu-wrapper"
-		 *ngIf="annotations?.idToEntity?.has(featureId)"
+		 *ngIf="getEntitiy(featureId)"
 		 [ngStyle]="calcBoundingRect(featureId)">
 
 		<div class="context-menu" [style.outline-color]="getFeatureProps(featureId)?.style?.initial?.stroke">
 			<ansyn-annotations-context-menu-buttons
-				[annotations]="annotations"
+				[annotations]="getAnnotationVisById(featureId)"
 				[featureId]="featureId"
 				[selectedTab]="selectedTab">
 			</ansyn-annotations-context-menu-buttons>
@@ -13,7 +13,7 @@
 	</div>
 </ng-container>
 <div class="context-menu-wrapper hover"
-	 *ngIf="annotations?.idToEntity?.has(hoverFeatureId)"
+	 *ngIf="getEntitiy(hoverFeatureId)"
 	 [ngStyle]="calcBoundingRect(hoverFeatureId)">
 	<div class="context-menu" [style.outline-color]="getFeatureProps(hoverFeatureId)?.style?.initial?.stroke"></div>
 </div>

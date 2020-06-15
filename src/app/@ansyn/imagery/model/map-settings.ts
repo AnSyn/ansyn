@@ -16,7 +16,7 @@ export interface IMapSettings {
 	id: string;
 	worldView: IWorldViewMapState;
 	data: IMapSettingsData;
-	orientation: MapOrientation;
+	orientation?: MapOrientation;
 	flags: {
 		hideLayers?: boolean;
 	};

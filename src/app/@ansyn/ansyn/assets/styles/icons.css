@@ -110,7 +110,7 @@
 	content: "\e826";
 }
 .icon-drag-annotations:before {
-	content: "\e827";
+	content: "\e827" !important;
 }
 .icon-next:before {
 	content: "\e828";

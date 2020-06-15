@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Observable } from 'rxjs';
+import { Observable, pipe } from 'rxjs';
 import { IOverlayDrop } from '../../../../overlays/models/overlay.model';
 import { select, Store } from '@ngrx/store';
 import {
@@ -10,7 +10,7 @@ import {
 	selectDropMarkup,
 	selectDropsWithoutSpecialObjects
 } from '../../../../overlays/reducers/overlays.reducer';
-import { tap } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import {
 	DisplayOverlayFromStoreAction,
 	SetMarkUp
@@ -46,11 +46,10 @@ interface ITableHeader {
 @AutoSubscriptions()
 export class ResultsTableComponent implements OnInit, OnDestroy {
 	overlays: IOverlayDrop[] = [];
-	selectedOverlayId: string;
 	sortedBy = 'date';
 	start = 0;
 	end = 15;
-	overlayCount: number;
+	pagination = 15;
 	tableHeaders: ITableHeader[] = [
 		{
 			headerName: 'Date & time',
@@ -71,6 +70,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			sortFn: (a, b) => a.localeCompare(b)
 		}
 	];
+	overlayIds: string[];
 
 	@AutoSubscription
 	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, IMarkUpData>> = this.store$
@@ -78,7 +78,8 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			select(selectDropMarkup),
 			tap((value: ExtendMap<MarkUpClass, IMarkUpData>) => {
 				const activeMapData = value.get(MarkUpClass.active);
-				this.selectedOverlayId = activeMapData.overlaysIds[0];
+				const displayedMapData = value.get(MarkUpClass.displayed);
+				this.overlayIds = activeMapData.overlaysIds.concat(displayedMapData.overlaysIds);
 			})
 		);
 
@@ -89,12 +90,33 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			tap((overlays: IOverlayDrop[]) => {
 				this.resetSort();
 				this.overlays = overlays;
-				this.overlayCount = overlays.length;
 			})
 		);
 
+	scrollToRecentOverlay$: Observable<any> = this.dropsMarkUp$
+		.pipe(
+			tap(() => {
+				setTimeout(() => {
+					if (this.overlayIds) {
+						const latestSelectedOverlayId = this.overlayIds[this.overlayIds.length - 1];
+						if (latestSelectedOverlayId) {
+							this.findIndexOfRecentOverlay(latestSelectedOverlayId);
+							this.scroll(latestSelectedOverlayId);
+						}
+					}
+				}, 500);
+			})
+		);
+
+
 	constructor(protected store$: Store<IOverlaysState>,
 				protected translateService: TranslateService) {
+		this.scrollToRecentOverlay$.pipe(take(1)).subscribe();
+	}
+
+	findIndexOfRecentOverlay(latestSelectedOverlay: string) {
+		const recentOverlayIndex = this.overlays.map(overlay => overlay.id).indexOf(latestSelectedOverlay);
+		this.end = recentOverlayIndex > this.pagination ? recentOverlayIndex + this.pagination : this.end;
 	}
 
 	ngOnDestroy(): void {
@@ -109,9 +131,17 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		});
 	}
 
+	scroll(id) {
+		setTimeout(() => {
+			const scrolledId = document.getElementById(id);
+			if (scrolledId) {
+				scrolledId.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			}
+		}, 500)
+	}
+
 	loadResults() {
-		const pagination = 15;
-		this.end += pagination;
+		this.end += this.pagination;
 	}
 
 	onMouseOver($event, id: string): void {
@@ -127,7 +157,6 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	openOverlay(id: string): void {
-		this.selectedOverlayId = id;
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id }));
 	}
 

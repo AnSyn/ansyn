@@ -30,7 +30,7 @@ script:
   - npm run test:single-run
   - npm run build:submodules:libs
   - npm run build:libs
-  - sh -x scripts/build.sh ansyn $TRAVIS_COMMIT $TRAVIS_TAG
+  - travis_wait 20 sh -x scripts/build.sh ansyn $TRAVIS_COMMIT $TRAVIS_TAG
 
 cache:
   directories:

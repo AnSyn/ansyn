@@ -13,7 +13,7 @@
 		"@ansyn/imagery-cesium": "2.0.4",
 		"@ansyn/imagery-video": "2.0.4",
 		"@ansyn/event-drops": "^0.2.8-1.9",
-		"ol": "^6.1.1",
+		"ol": "^6.3.1",
 		"@angular/cdk": "^7.3.0",
 		"@angular/material": "^7.3.0",
 		"@ngx-translate/core": "^11.0.1"

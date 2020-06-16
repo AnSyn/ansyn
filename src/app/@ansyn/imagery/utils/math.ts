@@ -17,5 +17,5 @@ export function getAngleDegreeBetweenPoints(source: Point, destination: Point): 
 }
 
 export function logarithmByBase(base: number, ofNumber: number): number {
-	return base === 0 ? NaN : Math.log(ofNumber) / Math.log(base);
+	return base <= 0 || ofNumber <= 0 ? NaN : Math.log(ofNumber) / Math.log(base);
 }

@@ -15,3 +15,7 @@ export function getAngleDegreeBetweenPoints(source: Point, destination: Point): 
 	const brng = bearing(source, destination);
 	return brng;
 }
+
+export function logarithmByBase(base: number, ofNumber: number): number {
+	return base === 0 ? NaN : Math.log(ofNumber) / Math.log(base);
+}

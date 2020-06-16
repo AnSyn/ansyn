@@ -11,7 +11,7 @@ import {
 	ImageryMapExtent,
 	ImageryMapExtentPolygon,
 	ImageryMapPosition,
-	IMapProgress
+	IMapProgress, logarithmByBase
 } from '@ansyn/imagery';
 import * as turf from '@turf/turf';
 import { feature } from '@turf/turf';
@@ -197,10 +197,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	createView(layer): View {
+		const defaultZoomFactor = 2;
+		const zoomFactor = 1.2; // zoom step for every mouse wheel turn
 		return new View({
 			projection: layer.getSource().getProjection(),
-			maxZoom: 21,
-			minZoom: 1
+			maxZoom: 21 * logarithmByBase(zoomFactor, defaultZoomFactor),
+			minZoom: 1,
+			zoomFactor
 		});
 	}
 

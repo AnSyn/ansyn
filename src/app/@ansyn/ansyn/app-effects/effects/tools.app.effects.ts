@@ -103,15 +103,6 @@ export class ToolsAppEffects {
 	);
 
 	@Effect()
-	backToWorldView$: Observable<DisableImageProcessing> = this.actions$
-		.pipe(
-			ofType(OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW),
-			withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState): CommunicatorEntity => this.imageryCommunicatorService.provide(mapState.activeMapId)),
-			filter(communicator => Boolean(communicator)),
-			map(() => new DisableImageProcessing())
-		);
-
-	@Effect()
 	getActiveCenter$: Observable<SetActiveCenter> = this.actions$.pipe(
 		ofType(ToolsActionsTypes.PULL_ACTIVE_CENTER),
 		withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState): CommunicatorEntity => this.imageryCommunicatorService.provide(mapState.activeMapId)),

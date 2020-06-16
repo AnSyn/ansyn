@@ -62,21 +62,15 @@ export class OverlayStatusEffects {
 	backToWorldView$: Observable<any> = this.actions$
 		.pipe(
 			ofType(OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW),
-			withLatestFrom(this.store$.select(selectMaps)),
-			filter(([action, entities]: [BackToWorldView, Dictionary<IMapSettings>]) => Boolean(entities[action.payload.mapId])),
-			map(([action, entities]: [BackToWorldView, Dictionary<IMapSettings>]) => {
-				const mapId = action.payload.mapId;
-				const selectedMap = entities[mapId];
-				const communicator = this.communicatorsService.provide(mapId);
-				const { position } = selectedMap.data;
-				return [action.payload, selectedMap, communicator, position];
-			}),
-			filter(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => Boolean(communicator)),
-			switchMap(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => {
+			filter( (action: BackToWorldView) => this.communicatorsService.has(action.payload.mapId)),
+			switchMap(({payload}: BackToWorldView) => {
+				const communicator = this.communicatorsService.provide(payload.mapId);
+				const mapData = {...communicator.mapSettings.data};
+				const position = mapData.position;
 				const disabledMap = communicator.activeMapName === DisabledOpenLayersMapName || communicator.activeMapName === ImageryVideoMapType;
 				this.store$.dispatch(new UpdateMapAction({
 					id: communicator.id,
-					changes: { data: { ...selectedMap.data, overlay: null, isAutoImageProcessingActive: false, imageManualProcessArgs: this.defaultImageManualProcessArgs } }
+					changes: { data: { ...mapData, overlay: null, isAutoImageProcessingActive: false, imageManualProcessArgs: this.defaultImageManualProcessArgs } }
 				}));
 
 				return fromPromise<any>(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))

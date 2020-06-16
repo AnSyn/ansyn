@@ -1,9 +1,10 @@
 # Stage 1: Build
-RUN echo "Stage 1: Build"
 FROM node as builder
 
 WORKDIR /ng-app
 COPY . .
+
+RUN echo "Stage 1: Build"
 
 RUN npm set progress=false \
   && npm config set depth 0 \

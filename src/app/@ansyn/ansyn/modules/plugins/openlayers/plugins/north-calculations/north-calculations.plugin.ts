@@ -133,6 +133,9 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		filter((action: BackToWorldSuccess) => action.payload.mapId === this.communicator.id),
 		withLatestFrom(this.store$.select(selectMapOrientation(this.mapId))),
 		tap(([action, orientation]: [BackToWorldView, MapOrientation]) => {
+			if (this.shadowMapObject) {
+				this.shadowMapObject.getLayers().clear();
+			}
 			this.communicator.setVirtualNorth(0);
 			if (orientation === 'Imagery Perspective') {
 				this.communicator.setRotation(0);

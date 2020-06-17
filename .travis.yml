@@ -1,5 +1,8 @@
-os: linux
+#from https://github.com/zcash/zcash/issues/341
+sudo: required
 dist: trusty
+
+os: linux
 addons:
   chrome: stable
 

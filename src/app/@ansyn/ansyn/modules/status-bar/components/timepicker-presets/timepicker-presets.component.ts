@@ -13,16 +13,15 @@ export class TimepickerPresetsComponent implements OnInit, OnDestroy {
 
 	@Output() hideMe = new EventEmitter<boolean>();
 	@Output() openTimePicker = new EventEmitter<boolean>();
-	presetsDays = [7, 30, 60];
-
+	presets = [7, 30, 60, 365, 5 * 365];
 
 	constructor(protected store$: Store<any>) {
 	}
 
-	setPreset(days: number) {
+	setPreset(preset: number) {
 		const currentDate = new Date();
 		let from = new Date();
-		from.setDate(from.getDate() - days);
+		from.setDate(from.getDate() - preset);
 
 		const time: ICaseTimeState = {
 			from,
@@ -31,6 +30,14 @@ export class TimepickerPresetsComponent implements OnInit, OnDestroy {
 
 		this.store$.dispatch(new SetOverlaysCriteriaAction({ time }));
 		this.closePresets();
+	}
+
+	presetValue(preset: number): number {
+		return (preset < 365) ? preset : preset / 365;
+	}
+
+	presetTitle(preset: number): string {
+		return  (preset < 365) ? 'days ago' : 'years ago';
 	}
 
 	closePresets() {

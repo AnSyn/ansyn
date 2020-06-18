@@ -16,7 +16,7 @@ export class GeocoderService {
 		basic: /([0-9]{1,3}[.[0-9]+]?)[, ]([0-9]{1,3}[.[0-9]+]?)( ([0-9]{1,2}))?/,
 		wgs84GeoRegex: /^(?:[\s\t]*)(?:wgs84)?(?:[\s\t]*)(?:geo)?(?:\s*)([\-+]?\d{1,3}(?:\.\d+)?)(?:[\s\t]*)(?:e)?(?:[\s\t]*)[/\s,\\](?:[\s\t]*)([\-+]?\d{1,3}(?:\.\d+)?)(?:[\s\t]*)(?:n)?(?:[\s\t]*)$/i,
 		wgs84UtmRegex: /^(?:[\s\t]*)(?:wgs84)(?:[\s\t]*)(?:utm)(?:\s*)(?:(\d+)\s*[nNsS])?(?:[\s\t]*)([\-+]?\d{2,}\.?\d*)(?:[\s\t]*)(?:e)?(?:[\s\t]*)[/\s,\\](?:[\s\t]*)([\-+]?\d{2,}\.?\d*)(?:[\s\t]*)(?:n)(?:[\s\t]*)$/i,
-		ed50UtmRegex: /^(?:[\s\t]*)(?:ed50)(?:[\s\t]*)(?:utm)?(?:\s*)(?:(\d+)\s*[nNsS])?(?:[\s\t]*)([\-+]?\d{2,})(?:[\s\t]*)(?:e)?(?:[\s\t]*)[/\s,\\](?:[\s\t]*)([\-+]?\d{2,})(?:[\s\t]*)(?:n)?(?:[\s\t]*)?/i,
+		ed50UtmRegex: /^(?:[\s\t]*)(?:ed50)(?:[\s\t]*)(?:utm)?(?:\s*)(?:(\d+)\s*[nNsS])?(?:[\s\t]*)([\-+]?\d{2,})(?:[\s\t]*)(?:e)?(?:[\s\t]*)[/\s,\\](?:[\s\t]*)([\-+]?\d{2,})(?:[\s\t]*)(?:n)?(?:[\s\t]*)$/i,
 		noPrefixUtmRegex: /^(?:[\s\t]*)([\-+]?\d{2,}(?:.\d+)?)(?:[\s\t]*)(?:e)?(?:[\s\t]*)[/\s,\\](?:[\s\t]*)([\-+]?\d{2,}(?:.\d+)?)(?:[\s\t]*)$/i
 	};
 	placeholder = 'Search';
@@ -58,7 +58,7 @@ export class GeocoderService {
 				const convertPoint = this.projectionConverterService.convertByProjectionDatum(
 					coords,
 					{ datum: 'wgs84', projection: 'utm'},
-					{ datum: 'ed50', projection: 'geo'}
+					{ datum: 'wgs84', projection: 'geo'}
 				);
 				return point(convertPoint).geometry;
 			}

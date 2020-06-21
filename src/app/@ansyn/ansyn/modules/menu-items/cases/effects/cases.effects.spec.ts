@@ -178,7 +178,7 @@ describe('CasesEffects', () => {
 			.returnValue('updateCaseViaQueryParmasResult');
 		const queryParmas: Params = { foo: 'bar' };
 		actions = hot('a', { a: new LoadDefaultCaseAction(queryParmas) });
-		const expectedResults = cold('(bc)', { b: new SelectDilutedCaseAction('updateCaseViaQueryParmasResult' as any), c: new BackToWorldView({mapId: 'm'})});
+		const expectedResults = cold('(b)', { b: new SelectDilutedCaseAction('updateCaseViaQueryParmasResult' as any)});
 		expect(casesEffects.loadDefaultCase$).toBeObservable(expectedResults);
 	});
 

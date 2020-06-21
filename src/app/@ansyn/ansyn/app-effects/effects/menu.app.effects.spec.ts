@@ -17,6 +17,7 @@ import { DisplayOverlaySuccessAction, RedrawTimelineAction } from '../../modules
 import { ResetAppAction } from '../../../menu/actions/menu.actions';
 import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
+import { ShowOverlaysFootprintAction } from '../../modules/menu-items/tools/actions/tools.actions';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
@@ -67,12 +68,13 @@ describe('MenuAppEffects', () => {
 		expect(menuAppEffects.onContainerChanged$).toBeObservable(expectedResults);
 	});
 
-	it(`onResetApp$ should call LoadDefaultCaseAction`, () => {
+	fit(`onResetApp$ should call LoadDefaultCaseAction`, () => {
 		actions = hot('--a--', {
 			a: new ResetAppAction()
 		});
-		const expectedResults = cold('--b--', {
-			b: new LoadDefaultCaseAction()
+		const expectedResults = cold('--(bc)--', {
+			b: new LoadDefaultCaseAction(),
+			c: new ShowOverlaysFootprintAction('None')
 		});
 		expect(menuAppEffects.onResetApp$).toBeObservable(expectedResults);
 	});

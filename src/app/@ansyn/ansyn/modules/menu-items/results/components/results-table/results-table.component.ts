@@ -105,6 +105,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 						const latestSelectedOverlayId = this.overlayIds[this.overlayIds.length - 1];
 						if (latestSelectedOverlayId) {
 							const indexOfRecentOverlay = this.findIndexOfRecentOverlay(latestSelectedOverlayId);
+							this.updatePaginationOnScroll(indexOfRecentOverlay);
 							this.scroll(indexOfRecentOverlay);
 						}
 					}
@@ -119,7 +120,6 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 
 	findIndexOfRecentOverlay(latestSelectedOverlay: string): number {
 		const recentOverlayIndex = this.overlays.map(overlay => overlay.id).indexOf(latestSelectedOverlay);
-		this.end = recentOverlayIndex > this.pagination ? recentOverlayIndex + this.pagination : this.end;
 		return recentOverlayIndex;
 	}
 
@@ -129,13 +129,13 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 	}
 
-	resetSort() {
+	resetSort(): void {
 		this.tableHeaders.forEach(tableHeader => {
 			tableHeader.isAscending = true;
 		});
 	}
 
-	scroll(index: number) {
+	scroll(index: number): void {
 		requestAnimationFrame(() => {
 			const heightOfRow = document.getElementsByClassName('results-table-body-row-data')[0].clientHeight;
 			const amountOfRowsDisplayed = this.table.nativeElement.offsetHeight / heightOfRow;
@@ -143,7 +143,11 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		})
 	}
 
-	loadResults() {
+	updatePaginationOnScroll(recentOverlayIndex: number): void {
+		this.end = recentOverlayIndex > this.pagination ? recentOverlayIndex + this.pagination : this.end;
+	}
+
+	loadResults(): void {
 		this.end += this.pagination;
 	}
 

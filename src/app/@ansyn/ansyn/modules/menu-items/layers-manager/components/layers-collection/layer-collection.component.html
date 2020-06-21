@@ -27,6 +27,7 @@
 	</div>
 
 	<ansyn-layer *ngFor="let layer of collection.data; let index = index"
+			     [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''"	
 				 [@layersTrigger]="show"
 				 [layer]="layer"
 				 [showOnly]="collection.data.length < 2">

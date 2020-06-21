@@ -8,6 +8,7 @@ import { FormControl } from '@angular/forms';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectIsMinimalistViewMode } from "../../reducers/map.reducer";
 import { Store } from "@ngrx/store";
+import { SetActiveCenter } from '../../../ansyn/modules/menu-items/tools/actions/tools.actions';
 const DEFAULT_WIDTH = 150;
 @Component({
 	selector: 'ansyn-map-search-box',
@@ -76,6 +77,8 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		if (point) {
 			this._communicator.setCenter(point, true).pipe(take(1)).subscribe();
 		}
+
+		this.store$.dispatch(new SetActiveCenter({coordinates: point.coordinates, mapSearchBoxSearch: true}));
 	}
 
 	ngOnInit(): void {

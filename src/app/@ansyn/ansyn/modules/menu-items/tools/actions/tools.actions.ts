@@ -80,7 +80,7 @@ export class PullActiveCenter implements Action {
 export class SetActiveCenter implements Action {
 	type = ToolsActionsTypes.SET_ACTIVE_CENTER;
 
-	constructor(public payload: number[]) {
+	constructor(public payload: { coordinates: number[], mapSearchBoxSearch?: boolean }) {
 	};
 }
 

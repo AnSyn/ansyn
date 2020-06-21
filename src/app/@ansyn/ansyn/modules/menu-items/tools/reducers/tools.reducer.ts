@@ -44,6 +44,7 @@ export interface IToolsState {
 	annotationProperties: Partial<IVisualizerStyle>;
 	activeAnnotationLayer: string;
 	mapsMeasures: Map<string, IMeasureData>;
+	mapSearchBoxSearch: boolean;
 }
 
 export const toolsInitialState: IToolsState = {
@@ -62,7 +63,8 @@ export const toolsInitialState: IToolsState = {
 		fill: '#ffffff'
 	},
 	activeAnnotationLayer: null,
-	mapsMeasures: new Map<string, IMeasureData>()
+	mapsMeasures: new Map<string, IMeasureData>(),
+	mapSearchBoxSearch: false
 };
 
 export const toolsFeatureKey = 'tools';
@@ -112,7 +114,8 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 		}
 
 		case ToolsActionsTypes.SET_ACTIVE_CENTER:
-			return { ...state, activeCenter: action.payload };
+			console.log('ac', action.payload.mapSearchBoxSearch);
+			return { ...state, activeCenter: action.payload.coordinates, mapSearchBoxSearch: action.payload.mapSearchBoxSearch };
 
 		case ToolsActionsTypes.SET_PIN_LOCATION_MODE:
 			tmpMap = new Map(state.flags);

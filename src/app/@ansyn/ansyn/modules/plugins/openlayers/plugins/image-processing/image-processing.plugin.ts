@@ -4,7 +4,7 @@ import ImageLayer from 'ol/layer/Image';
 import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
-import { IMAGE_PROCESS_ATTRIBUTE, OpenLayersDisabledMap, OpenLayersMap, ProjectableRaster } from '@ansyn/ol';
+import { IMAGE_PROCESS_ATTRIBUTE, OpenLayersDisabledMap, OpenLayersMap, ProjectableRaster } from '@ansyn/imagery-ol';
 import { OpenLayersImageProcessing } from './image-processing';
 import { distinctUntilChanged, filter, map, take, tap } from 'rxjs/operators';
 import { isEqual } from 'lodash';

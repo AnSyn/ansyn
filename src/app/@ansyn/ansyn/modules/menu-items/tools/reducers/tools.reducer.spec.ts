@@ -1,7 +1,7 @@
 import { toolsFlags, toolsInitialState, ToolsReducer } from './tools.reducer';
 import { AnnotationSetProperties, SetAnnotationMode } from '../actions/tools.actions';
 import { cloneDeep } from 'lodash';
-import { AnnotationMode } from '@ansyn/ol';
+import { AnnotationMode } from '@ansyn/imagery-ol';
 import { Action } from '@ngrx/store';
 
 describe('ToolsReducer', () => {

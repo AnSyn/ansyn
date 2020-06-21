@@ -7,7 +7,7 @@ import * as turf from '@turf/turf';
 import { selectDrops } from '../../../../../overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../../../../overlays/services/overlays.service';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
-import { EntitiesVisualizer } from '@ansyn/ol';
+import { EntitiesVisualizer } from '@ansyn/imagery-ol';
 import { OverlayDisplayMode } from '../../../../../menu-items/tools/overlays-display-mode/overlays-display-mode.component';
 import { selectOverlayDisplayModeByMapId } from '@ansyn/map-facade';
 

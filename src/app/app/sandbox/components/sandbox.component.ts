@@ -17,7 +17,7 @@ import {
 	AnnotationsVisualizer,
 	OpenLayerMarcoSourceProviderSourceType,
 	OpenLayersStaticImageSourceProviderSourceType
-} from '@ansyn/ol';
+} from '@ansyn/imagery-ol';
 import * as momentNs from 'moment';
 import { take, tap } from 'rxjs/operators';
 import { ImageryCommunicatorService } from '@ansyn/imagery';

@@ -36,11 +36,6 @@ import {
 
 @Injectable()
 export class CasesAppEffects {
-	get defaultImageManualProcessArgs(): IImageManualProcessArgs {
-		return this.overlayStatusConfig.ImageProcParams.reduce<IImageManualProcessArgs>((initialObject: any, imageProcParam) => {
-			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
-		}, {});
-	}
 
 	@Effect({ dispatch: false })
 	actionsLogger$: Observable<any> = this.actions$.pipe(
@@ -149,6 +144,12 @@ export class CasesAppEffects {
 					);
 			})
 		);
+
+		get defaultImageManualProcessArgs(): IImageManualProcessArgs {
+			return this.overlayStatusConfig.ImageProcParams.reduce<IImageManualProcessArgs>((initialObject: any, imageProcParam) => {
+				return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
+			}, {});
+		}
 
 
 	constructor(protected actions$: Actions,

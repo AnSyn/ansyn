@@ -13,6 +13,11 @@ export class SliderFilterContainerComponent {
 	_metadata: SliderFilterMetadata;
 	realRange: number[];
 
+	@Output() onMetadataChange = new EventEmitter<SliderFilterMetadata>(true);
+	rangeValues: number[];
+
+	@Input() counters: SliderFilterCounters;
+
 	@Input()
 	set metadata(value: SliderFilterMetadata) {
 		this._metadata = value;
@@ -25,11 +30,6 @@ export class SliderFilterContainerComponent {
 	get metadata(): SliderFilterMetadata {
 		return this._metadata;
 	}
-
-	@Input() counters: SliderFilterCounters;
-
-	@Output() onMetadataChange = new EventEmitter<SliderFilterMetadata>(true);
-	rangeValues: number[];
 
 	constructor(protected elem: ElementRef) {
 	}

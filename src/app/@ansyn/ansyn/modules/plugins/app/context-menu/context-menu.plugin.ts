@@ -10,7 +10,7 @@ import { AutoSubscription } from 'auto-subscriptions';
 import { overlaysStateSelector } from '../../../overlays/reducers/overlays.reducer';
 import { DisplayOverlayFromStoreAction } from '../../../overlays/actions/overlays.actions';
 import { IOverlay } from '../../../overlays/models/overlay.model';
-import { OpenLayersMap, OpenlayersMapName, OpenLayersProjectionService } from '@ansyn/ol';
+import { OpenLayersMap, OpenlayersMapName, OpenLayersProjectionService } from '@ansyn/imagery-ol';
 import { CesiumMap, CesiumMapName, CesiumProjectionService } from '@ansyn/imagery-cesium';
 import { Injectable } from '@angular/core';
 

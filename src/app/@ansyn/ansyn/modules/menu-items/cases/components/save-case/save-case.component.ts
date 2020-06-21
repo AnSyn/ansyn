@@ -33,12 +33,12 @@ const animations: any[] = [
 	animations
 })
 export class SaveCaseComponent {
+	caseName: string;
+
 	@HostBinding('@modalContent')
 	get modalContent() {
 		return true;
 	};
-
-	caseName: string;
 
 	constructor(protected store: Store<ICasesState>,
 				protected casesService: CasesService) {

@@ -12,7 +12,7 @@ import {
 import Draw from 'ol/interaction/Draw';
 import { AutoSubscription } from 'auto-subscriptions';
 import { distinctUntilChanged, map, mergeMap, take, tap } from 'rxjs/operators';
-import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
+import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/imagery-ol';
 import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
 import Stroke from 'ol/style/Stroke';
@@ -148,7 +148,7 @@ export class TaskRegionVisualizer extends EntitiesVisualizer {
 	}
 
 	drawRegionOnMap(point: GeometryObject): Observable<boolean> {
-		const coordinates = getPointByGeometry(point).coordinates;
+		const coordinates = getPointByGeometry(point as any).coordinates;
 		const featureJson = getPolygonByPointAndRadius(coordinates, this.regionLengthInMeter / 2000);
 		const id = 'algorithmTaskRegion';
 		const entities = [{ id, featureJson }];

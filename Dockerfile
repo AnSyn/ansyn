@@ -4,12 +4,19 @@ FROM node as builder
 WORKDIR /ng-app
 COPY . .
 
+RUN echo "Stage 1: Build"
+
 RUN npm set progress=false \
   && npm config set depth 0 \
   && npm cache clean --force
 
+RUN echo "RUN npm run install:submodules"
+RUN npm run install:submodules
+
+RUN echo "RUN npm install && npm run build:prod"
 RUN npm install && npm run build:prod
 
+RUN echo "Stage 2: Setup"
 # Stage 2: Setup
 FROM nginx:1.13-alpine
 

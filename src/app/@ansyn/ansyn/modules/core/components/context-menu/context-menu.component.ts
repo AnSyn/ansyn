@@ -43,10 +43,6 @@ export interface IOverlayButton {
 export class ContextMenuComponent implements OnInit {
 	mapState$ = this.store.select(mapStateSelector);
 
-	get filterField() {
-		return this.config.contextMenu.filterField;
-	}
-
 	displayedOverlay$: Observable<IOverlay> = this.mapState$.pipe(
 		map(MapFacadeService.activeMap),
 		filter(Boolean),
@@ -76,38 +72,6 @@ export class ContextMenuComponent implements OnInit {
 	private _filteredOverlays: IOverlay[];
 	private _prevfilteredOverlays = [];
 	private _nextfilteredOverlays = [];
-
-	set filteredOverlays(value) {
-		this._filteredOverlays = value;
-		this.allSensors = this.pluckFilterField(value);
-	}
-
-	set prevfilteredOverlays(value) {
-		this._prevfilteredOverlays = value;
-		this.prevSensors = this.pluckFilterField(value);
-	}
-
-	set nextfilteredOverlays(value) {
-		this._nextfilteredOverlays = value;
-		this.nextSensors = this.pluckFilterField(value);
-	}
-
-	get filteredOverlays() {
-		return this._filteredOverlays;
-	}
-
-	get prevfilteredOverlays() {
-		return this._prevfilteredOverlays;
-	}
-
-	get nextfilteredOverlays() {
-		return this._nextfilteredOverlays;
-	}
-
-	/*
-	Note: 'best' and 'angle' are first in the list, in order that they do not hide the tooltips
-	that stem from 'first' and 'last', which are under them on the screen
-	* */
 
 	overlayButtons: IOverlayButton[] = [
 		{
@@ -142,6 +106,44 @@ export class ContextMenuComponent implements OnInit {
 			action: this.clickPrev.bind(this)
 		}
 	];
+
+
+	set filteredOverlays(value) {
+		this._filteredOverlays = value;
+		this.allSensors = this.pluckFilterField(value);
+	}
+
+	set prevfilteredOverlays(value) {
+		this._prevfilteredOverlays = value;
+		this.prevSensors = this.pluckFilterField(value);
+	}
+
+	set nextfilteredOverlays(value) {
+		this._nextfilteredOverlays = value;
+		this.nextSensors = this.pluckFilterField(value);
+	}
+
+	get filteredOverlays() {
+		return this._filteredOverlays;
+	}
+
+	get prevfilteredOverlays() {
+		return this._prevfilteredOverlays;
+	}
+
+	get nextfilteredOverlays() {
+		return this._nextfilteredOverlays;
+	}
+
+	get filterField() {
+		return this.config.contextMenu.filterField;
+	}
+
+
+	/*
+	Note: 'best' and 'angle' are first in the list, in order that they do not hide the tooltips
+	that stem from 'first' and 'last', which are under them on the screen
+	* */
 
 	@HostBinding('attr.tabindex')
 	get tabindex() {

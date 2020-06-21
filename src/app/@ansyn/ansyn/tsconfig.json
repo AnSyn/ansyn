@@ -3,19 +3,19 @@
   "compilerOptions": {
     "paths": {
       "@ansyn/imagery": [
-        "src/app/@ansyn/imagery/public_api"
+        "src/app/@ansyn/imagery-submodules/imagery/public_api"
       ],
       "@ansyn/map-facade": [
         "src/app/@ansyn/map-facade/public_api"
       ],
-      "@ansyn/ol": [
-        "src/app/@ansyn/ol/public_api"
+      "@ansyn/imagery-ol": [
+        "src/app/@ansyn/imagery-submodules/imagery-ol/public_api"
       ],
       "@ansyn/imagery-cesium": [
-        "src/app/@ansyn/imagery-cesium/public_api"
+        "src/app/@ansyn/imagery-submodules/imagery-cesium/public_api"
       ],
       "@ansyn/imagery-video": [
-        "src/app/@ansyn/imagery-video/public_api"
+        "src/app/@ansyn/imagery-submodules/imagery-video/public_api"
       ],
       "@ansyn/menu": [
         "src/app/@ansyn/menu/public_api"

@@ -109,7 +109,7 @@ describe('CasesService', () => {
 			expect(rison.decode).toHaveBeenCalledWith('facetsValue');
 
 			queryParamsHelper.decodeCaseObjects('time', { from: 'from', to: 'to' });
-			expect(rison.decode).toHaveBeenCalledWith({ from: 'from', to: 'to' });
+			expect(rison.decode).toHaveBeenCalledWith({ from: 'from', to: 'to' } as any);
 
 			queryParamsHelper.decodeCaseObjects('maps', 'mapsValue');
 			expect(rison.decode).toHaveBeenCalledWith('mapsValue');

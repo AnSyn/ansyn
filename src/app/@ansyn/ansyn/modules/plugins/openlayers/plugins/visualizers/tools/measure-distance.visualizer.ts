@@ -31,7 +31,7 @@ import { combineLatest, Observable, Subject } from 'rxjs';
 import { selectActiveMapId } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
-import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
+import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/imagery-ol';
 import { distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 import {
 	selectIsMeasureToolActive,

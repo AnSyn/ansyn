@@ -20,6 +20,7 @@ import { imageryStatusFeatureKey, ImageryStatusReducer, mapFeatureKey, MapReduce
 import { AnsynFormsModule } from '../../../../core/forms/ansyn-forms.module';
 import { MockComponent } from '../../../../core/test/mock-component';
 import { Overlay } from '../../../../overlays/models/overlay.model';
+import { Geometry } from 'geojson';
 
 describe('TasksFormComponent', () => {
 	let component: TasksFormComponent;
@@ -109,7 +110,7 @@ describe('TasksFormComponent', () => {
 					masterOverlay: overlays[0],
 					region: {
 						type: 'Point'
-					}
+					} as Geometry
 				}
 			};
 			store.dispatch(new SetCurrentTask(task));

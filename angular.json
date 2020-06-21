@@ -9,8 +9,11 @@
       "projectType": "application",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
+            "customWebpackConfig": {
+              "path": "./custom-webpack.config.js"
+            },
             "aot": true,
             "outputPath": "dist",
             "index": "src/index.html",
@@ -64,7 +67,7 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
+              "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
               "aot": true,
@@ -81,7 +84,7 @@
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
             "browserTarget": "ansyn:build"
           },
@@ -101,8 +104,11 @@
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular-builders/custom-webpack:karma",
           "options": {
+            "customWebpackConfig": {
+              "path": "./custom-webpack.config.js"
+            },
             "main": "src/test.ts",
             "karmaConfig": "./karma.conf.js",
             "polyfills": "src/polyfills.ts",
@@ -472,86 +478,86 @@
         }
       }
     },
-    "@ansyn/ol": {
-      "root": "src/app/@ansyn/ol",
-      "sourceRoot": "projects/ansyn/ol/src",
+    "@ansyn/imagery-ol": {
+      "root": "src/app/@ansyn/imagery-submodules/imagery-ol",
+      "sourceRoot": "src/app/@ansyn/imagery-submodules/imagery-ol/src",
       "projectType": "library",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "src/app/@ansyn/ol/tsconfig.lib.json",
-            "project": "src/app/@ansyn/ol/ng-package.json"
+            "tsConfig": "src/app/@ansyn/imagery-submodules/imagery-ol/tsconfig.lib.json",
+            "project": "src/app/@ansyn/imagery-submodules/imagery-ol/ng-package.json"
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/ol/ng-package.json"
-            ,              "tsConfig": "src/app/@ansyn/ol/tsconfig.lib.prod.json"
-}
+              "project": "src/app/@ansyn/imagery-submodules/imagery-ol/ng-package.json",
+              "tsConfig": "src/app/@ansyn/imagery-submodules/imagery-ol/tsconfig.lib.prod.json"
+            }
           }
         }
       }
     },
     "@ansyn/imagery-cesium": {
-      "root": "src/app/@ansyn/imagery-cesium",
-      "sourceRoot": "projects/ansyn/imagery-cesium/src",
+      "root": "src/app/@ansyn/imagery-submodules/imagery-cesium",
+      "sourceRoot": "src/app/@ansyn/imagery-submodules/imagery-cesium/src",
       "projectType": "library",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "src/app/@ansyn/imagery-cesium/tsconfig.lib.json",
-            "project": "src/app/@ansyn/imagery-cesium/ng-package.json"
+            "tsConfig": "src/app/@ansyn/imagery-submodules/imagery-cesium/tsconfig.lib.json",
+            "project": "src/app/@ansyn/imagery-submodules/imagery-cesium/ng-package.json"
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/imagery-cesium/ng-package.json"
-            ,              "tsConfig": "src/app/@ansyn/imagery-cesium/tsconfig.lib.prod.json"
-}
+              "project": "src/app/@ansyn/imagery-submodules/imagery-cesium/ng-package.json",
+              "tsConfig": "src/app/@ansyn/imagery-submodules/imagery-cesium/tsconfig.lib.prod.json"
+            }
           }
         }
       }
     },
     "@ansyn/imagery-video": {
-      "root": "src/app/@ansyn/imagery-video",
-      "sourceRoot": "projects/ansyn/imagery-video/src",
+      "root": "src/app/@ansyn/imagery-submodules/imagery-video",
+      "sourceRoot": "src/app/@ansyn/imagery-submodules/imagery-video/src",
       "projectType": "library",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "src/app/@ansyn/imagery-video/tsconfig.lib.json",
-            "project": "src/app/@ansyn/imagery-video/ng-package.json"
+            "tsConfig": "src/app/@ansyn/imagery-submodules/imagery-video/tsconfig.lib.json",
+            "project": "src/app/@ansyn/imagery-submodules/imagery-video/ng-package.json"
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/imagery-video/ng-package.json"
-            ,              "tsConfig": "src/app/@ansyn/imagery-video/tsconfig.lib.prod.json"
-}
+              "project": "src/app/@ansyn/imagery-submodules/imagery-video/ng-package.json",
+              "tsConfig": "src/app/@ansyn/imagery-submodules/imagery-video/tsconfig.lib.prod.json"
+            }
           }
         }
       }
     },
     "@ansyn/imagery": {
-      "root": "src/app/@ansyn/imagery",
-      "sourceRoot": "src/app/@ansyn/imagery",
+      "root": "src/app/@ansyn/imagery-submodules/imagery",
+      "sourceRoot": "src/app/@ansyn/imagery-submodules/imagery/src",
       "projectType": "library",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "src/app/@ansyn/imagery/tsconfig.lib.json",
-            "project": "src/app/@ansyn/imagery/ng-package.json"
+            "tsConfig": "src/app/@ansyn/imagery-submodules/imagery/tsconfig.lib.json",
+            "project": "src/app/@ansyn/imagery-submodules/imagery/ng-package.json"
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/imagery/ng-package.json"
-            ,              "tsConfig": "src/app/@ansyn/imagery/tsconfig.lib.prod.json"
-}
+              "project": "src/app/@ansyn/imagery-submodules/imagery/ng-package.json",
+              "tsConfig": "src/app/@ansyn/imagery-submodules/imagery/tsconfig.lib.prod.json"
+            }
           }
         }
       }

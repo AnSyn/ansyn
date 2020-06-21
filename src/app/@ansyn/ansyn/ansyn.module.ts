@@ -7,7 +7,7 @@ import { DefaultUrlSerializer, RouterModule, UrlSerializer } from '@angular/rout
 import { ImageryModule } from '@ansyn/imagery';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { MenuModule } from '@ansyn/menu';
-import { AnnotationContextMenuComponent } from '@ansyn/ol';
+import { AnnotationContextMenuComponent } from '@ansyn/imagery-ol';
 import { AnsynComponent } from './ansyn/ansyn.component';
 import { ANSYN_ID } from './api/ansyn-id.provider';
 import { AppEffectsModule } from './app-effects/app.effects.module';

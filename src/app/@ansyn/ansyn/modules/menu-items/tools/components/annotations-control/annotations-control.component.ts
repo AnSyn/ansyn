@@ -20,7 +20,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectActiveAnnotationLayer, selectLayers } from '../../../layers-manager/reducers/layers.reducer';
 import { ILayer, LayerType } from '../../../layers-manager/models/layers.model';
 import { SetActiveAnnotationLayer } from '../../../layers-manager/actions/layers.actions';
-import { ANNOTATION_MODE_LIST, AnnotationMode, IStyleWeight } from '@ansyn/ol';
+import { ANNOTATION_MODE_LIST, AnnotationMode, IStyleWeight } from '@ansyn/imagery-ol';
 import { ClickOutsideService } from '../../../../core/click-outside/click-outside.service';
 
 export enum SelectionBoxTypes {
@@ -49,14 +49,6 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 
 	private _expand: boolean;
 	public selectedBox: SelectionBoxTypes;
-
-	get SelectionBoxTypes() {
-		return SelectionBoxTypes;
-	}
-
-	get Boolean() {
-		return Boolean;
-	}
 
 	annotationLayer$ = this.store.pipe(
 		select(selectLayers),
@@ -120,6 +112,14 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 
 	get expand() {
 		return this._expand;
+	}
+
+	get SelectionBoxTypes() {
+		return SelectionBoxTypes;
+	}
+
+	get Boolean() {
+		return Boolean;
 	}
 
 	constructor(

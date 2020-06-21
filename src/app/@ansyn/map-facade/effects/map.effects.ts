@@ -138,12 +138,12 @@ export class MapEffects {
 
 	@Effect()
 	imageryCreated$ = this.communicatorsService
-		.instanceCreated.pipe(map((payload) => new ImageryCreatedAction(payload)));
+		.instanceCreated.pipe(map((payload) => new ImageryCreatedAction(payload as {id: string})));
 
 	@Effect()
 	imageryRemoved$ = this.communicatorsService
 		.instanceRemoved.pipe(
-			map((payload) => new ImageryRemovedAction(payload)));
+			map((payload) => new ImageryRemovedAction(payload as {id: string})));
 
 	@Effect()
 	activeMapEnter$ = this.actions$.pipe(

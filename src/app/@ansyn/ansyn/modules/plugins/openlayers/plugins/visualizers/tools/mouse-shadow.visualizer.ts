@@ -10,7 +10,7 @@ import * as turf from '@turf/turf';
 import { ImageryVisualizer, IVisualizerEntity } from '@ansyn/imagery';
 import { selectToolFlag, toolsFlags } from '../../../../../menu-items/tools/reducers/tools.reducer';
 import { AutoSubscription } from 'auto-subscriptions';
-import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
+import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/imagery-ol';
 import { filter, map, mergeMap, take, tap } from 'rxjs/operators';
 import { Inject } from '@angular/core';
 import { IToolsConfig, toolsConfig } from '../../../../../menu-items/tools/models/tools-config';

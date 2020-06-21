@@ -1,4 +1,4 @@
-import { ProjectableRaster } from '@ansyn/ol';
+import { ProjectableRaster } from '@ansyn/imagery-ol';
 
 // skipOnValue is the value which the image do not require any processing (e.i. the natural/default value)
 export const IMG_PROCESS_ORDER = [

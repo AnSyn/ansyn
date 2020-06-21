@@ -2,7 +2,7 @@ import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { ScannedAreaVisualizer } from './scanned-area.visualizer';
-import { OpenLayersProjectionService } from '@ansyn/ol';
+import { OpenLayersProjectionService } from '@ansyn/imagery-ol';
 
 describe('ScannedAreaVisualizer', () => {
 	let scannedAreaVisualizer: ScannedAreaVisualizer;

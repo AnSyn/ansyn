@@ -9,7 +9,7 @@ import { StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from './reducers/tools.reducer';
 import { MapFacadeModule, ProjectionConverterService } from '@ansyn/map-facade';
 import { IToolsConfig, toolsConfig } from './models/tools-config';
-import { AnnotationsContextMenuModule } from '@ansyn/ol';
+import { AnnotationsContextMenuModule } from '@ansyn/imagery-ol';
 import { MeasureControlComponent } from './components/measure-control/measure-control.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { ExportMapsPopupComponent } from './export-maps-popup/export-maps-popup.component';

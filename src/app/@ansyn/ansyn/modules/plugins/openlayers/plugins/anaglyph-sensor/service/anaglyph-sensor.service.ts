@@ -6,7 +6,7 @@ import {
 	BaseMapSourceProvider, CommunicatorEntity, ImageryCommunicatorService, IMapSettings
 } from '@ansyn/imagery';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { DisabledOpenLayersMapName, OpenlayersMapName, OpenLayersStaticImageSourceProviderSourceType } from '@ansyn/ol';
+import { DisabledOpenLayersMapName, OpenlayersMapName, OpenLayersStaticImageSourceProviderSourceType } from '@ansyn/imagery-ol';
 import { cloneDeep } from 'lodash';
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { CesiumMapName } from '@ansyn/imagery-cesium';

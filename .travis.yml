@@ -1,5 +1,8 @@
-os: linux
+#from https://github.com/zcash/zcash/issues/341
+sudo: required
 dist: trusty
+
+os: linux
 addons:
   chrome: stable
 
@@ -24,8 +27,11 @@ before_script:
   #- apt-get install graphicsmagick # for e2e screenshots
 
 script:
+  - npm run lint:submodules
   - npm run lint
+  # - npm run test:single-run:submodules
   - npm run test:single-run
+  - npm run build:submodules:libs
   - npm run build:libs
   - sh -x scripts/build.sh ansyn $TRAVIS_COMMIT $TRAVIS_TAG
 

@@ -20,6 +20,9 @@ export class OverlaysDisplayModeComponent {
 	public _disabled = false;
 	public _visualizerType: OverlayDisplayMode;
 
+	@Output() modeOnChange = new EventEmitter();
+	@Output() expandChange = new EventEmitter();
+
 	radioIds = {
 		switchNone: UUID.UUID(),
 		switchHeatMap: UUID.UUID(),
@@ -48,8 +51,6 @@ export class OverlaysDisplayModeComponent {
 		return this._visualizerType;
 	}
 
-	@Output() expandChange = new EventEmitter();
-
 	@HostBinding('class.expand') @Input()
 	set expand(value) {
 		this._expand = value;
@@ -69,7 +70,6 @@ export class OverlaysDisplayModeComponent {
 		return this._disabled;
 	}
 
-	@Output() modeOnChange = new EventEmitter();
 
 	@Input()
 	set modeOn(value) {

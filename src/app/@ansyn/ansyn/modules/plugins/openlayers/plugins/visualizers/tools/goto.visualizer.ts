@@ -8,7 +8,7 @@ import { selectActiveMapId } from '@ansyn/map-facade';
 import * as turf from '@turf/turf';
 import { ImageryVisualizer } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
-import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
+import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/imagery-ol';
 import { distinctUntilChanged, map, mergeMap, pluck, take, tap } from 'rxjs/operators';
 import {
 	IToolsState,

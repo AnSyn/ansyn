@@ -32,7 +32,6 @@ import {
 	IOverlayStatusState,
 	overlayStatusStateSelector
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
-import { BackToWorldView } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { casesConfig } from '../../modules/menu-items/cases/services/cases.service';
 import { ICasesConfig } from '../../modules/menu-items/cases/models/cases-config';
 import { fromPromise } from 'rxjs/internal-compatibility';

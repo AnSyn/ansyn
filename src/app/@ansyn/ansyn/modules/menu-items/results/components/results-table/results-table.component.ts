@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Observable, pipe } from 'rxjs';
 import { IOverlayDrop } from '../../../../overlays/models/overlay.model';
@@ -72,6 +72,8 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	];
 	overlayIds: string[];
 
+	@ViewChild('table') table: ElementRef;
+
 	@AutoSubscription
 	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, IMarkUpData>> = this.store$
 		.pipe(
@@ -93,15 +95,17 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			})
 		);
 
+	@AutoSubscription
 	scrollToRecentOverlay$: Observable<any> = this.dropsMarkUp$
 		.pipe(
+			take(1),
 			tap(() => {
 				setTimeout(() => {
 					if (this.overlayIds) {
 						const latestSelectedOverlayId = this.overlayIds[this.overlayIds.length - 1];
 						if (latestSelectedOverlayId) {
-							this.findIndexOfRecentOverlay(latestSelectedOverlayId);
-							this.scroll(latestSelectedOverlayId);
+							const indexOfRecentOverlay = this.findIndexOfRecentOverlay(latestSelectedOverlayId);
+							this.scroll(indexOfRecentOverlay);
 						}
 					}
 				}, 500);
@@ -111,12 +115,12 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 
 	constructor(protected store$: Store<IOverlaysState>,
 				protected translateService: TranslateService) {
-		this.scrollToRecentOverlay$.pipe(take(1)).subscribe();
 	}
 
-	findIndexOfRecentOverlay(latestSelectedOverlay: string) {
+	findIndexOfRecentOverlay(latestSelectedOverlay: string): number {
 		const recentOverlayIndex = this.overlays.map(overlay => overlay.id).indexOf(latestSelectedOverlay);
 		this.end = recentOverlayIndex > this.pagination ? recentOverlayIndex + this.pagination : this.end;
+		return recentOverlayIndex;
 	}
 
 	ngOnDestroy(): void {
@@ -131,13 +135,12 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	scroll(id) {
-		setTimeout(() => {
-			const scrolledId = document.getElementById(id);
-			if (scrolledId) {
-				scrolledId.scrollIntoView({ behavior: 'smooth', block: 'center' });
-			}
-		}, 500)
+	scroll(index: number) {
+		requestAnimationFrame(() => {
+			const heightOfRow = document.getElementsByClassName('results-table-body-row-data')[0].clientHeight;
+			const amountOfRowsDisplayed = 11;
+			this.table.nativeElement.scrollTo(0, (index * heightOfRow) - (amountOfRowsDisplayed / 2) * heightOfRow);
+		})
 	}
 
 	loadResults() {

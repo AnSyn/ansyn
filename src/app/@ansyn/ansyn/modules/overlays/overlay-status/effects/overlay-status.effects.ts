@@ -36,7 +36,7 @@ import {
 } from '../actions/overlay-status.actions';
 import {
 	SetActiveOverlaysFootprintModeAction,
-	SetAnnotationMode, ShowOverlaysFootprintAction,
+	SetAnnotationMode,
 } from '../../../menu-items/tools/actions/tools.actions';
 import {
 	ICaseMapState,
@@ -55,8 +55,6 @@ import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from '../config/overlay-status-config';
 import { isEqual } from "lodash";
 import { CasesActionTypes } from '../../../menu-items/cases/actions/cases.actions';
-import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
-import { casesConfig } from '../../../menu-items/cases/services/cases.service';
 
 @Injectable()
 export class OverlayStatusEffects {

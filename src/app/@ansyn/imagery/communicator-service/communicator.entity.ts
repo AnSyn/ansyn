@@ -153,6 +153,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	loadInitialMapSource(position?: ImageryMapPosition): Promise<IBaseImageryLayer> {
+		console.log('position', position);
 		return new Promise(resolve => {
 			if (!this._activeMap) {
 				resolve();

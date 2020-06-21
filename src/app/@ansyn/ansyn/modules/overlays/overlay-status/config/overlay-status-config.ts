@@ -1,8 +1,5 @@
-import { ImageryMapPosition } from '@ansyn/imagery';
-
 export interface IOverlayStatusConfig {
 	ImageProcParams: Array<IImageProcParam>,
-	defaultPosition: ImageryMapPosition;
 }
 
 export interface IImageProcParam {

@@ -52,6 +52,8 @@ import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCras
 import { toastMessages } from '../../../core/models/toast-messages';
 import { ICase, ICasePreview, IDilutedCaseState } from '../models/case.model';
 import { BackToWorldView } from '../../../overlays/overlay-status/actions/overlay-status.actions';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { fromPromise } from 'rxjs/internal-compatibility';
 
 @Injectable()
 export class CasesEffects {

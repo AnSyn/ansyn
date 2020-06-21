@@ -70,13 +70,12 @@ export class OverlayStatusEffects {
 				const mapId = action.payload.mapId;
 				const selectedMap = entities[mapId];
 				const communicator = this.communicatorsService.provide(mapId);
-				const position = this.config.defaultPosition;
+				const { position } = selectedMap.data;
 				return [action.payload, selectedMap, communicator, position];
 			}),
 			filter(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => Boolean(communicator)),
 			switchMap(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => {
 				const disabledMap = communicator.activeMapName === DisabledOpenLayersMapName || communicator.activeMapName === ImageryVideoMapType;
-				this.store$.dispatch(new ShowOverlaysFootprintAction('None'));
 				this.store$.dispatch(new UpdateMapAction({
 					id: communicator.id,
 					changes: { data: { ...selectedMap.data, overlay: null, isAutoImageProcessingActive: false, imageManualProcessArgs: this.defaultImageManualProcessArgs } }

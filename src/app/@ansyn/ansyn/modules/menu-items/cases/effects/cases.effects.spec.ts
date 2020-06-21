@@ -107,7 +107,7 @@ describe('CasesEffects', () => {
 			[selectLayers, [{ type: LayerType.annotation }]],
 			[casesStateSelector, casesState],
 			[selectActiveMapId, 'mapId'],
-			[selectMapsIds, 'mapIds']
+			[selectMapsIds, 'mapIds[]']
 		]);
 		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
 	}));

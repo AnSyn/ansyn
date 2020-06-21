@@ -1,21 +1,20 @@
 import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { IMapState, mapStateSelector, SetToastMessageAction, UpdateMapAction } from '@ansyn/map-facade';
+import { EMPTY, Observable } from 'rxjs';
+import { IMapState, mapStateSelector, selectMapsIds, SetToastMessageAction, UpdateMapAction } from '@ansyn/map-facade';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpErrorResponse } from '@angular/common/http';
 import { mapValues, uniqBy } from 'lodash';
 import { IAppState } from '../app.effects.module';
-import { catchError, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, share, take, tap, withLatestFrom } from 'rxjs/operators';
 import {
-	CasesActionTypes,
+	CasesActionTypes, LoadDefaultCaseAction,
 	LoadDefaultCaseIfNoActiveCaseAction,
 	SelectCaseAction,
 	SelectDilutedCaseAction
 } from '../../modules/menu-items/cases/actions/cases.actions';
 import { IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
-import { IToolsState, toolsStateSelector } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import {
 	DisplayOverlayAction,
 	DisplayOverlaySuccessAction,
@@ -23,7 +22,7 @@ import {
 } from '../../modules/overlays/actions/overlays.actions';
 import { IOverlayByIdMetaData, OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { LoggerService } from '../../modules/core/services/logger.service';
-import { IDilutedCase, ImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
+import { ICase, IDilutedCase, ImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import {
 	IOverlayStatusConfig,
@@ -33,6 +32,10 @@ import {
 	IOverlayStatusState,
 	overlayStatusStateSelector
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
+import { BackToWorldView } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
+import { casesConfig } from '../../modules/menu-items/cases/services/cases.service';
+import { ICasesConfig } from '../../modules/menu-items/cases/models/cases-config';
+import { fromPromise } from 'rxjs/internal-compatibility';
 
 @Injectable()
 export class CasesAppEffects {
@@ -79,6 +82,8 @@ export class CasesAppEffects {
 			});
 		})
 	);
+
+	onResetApp$
 
 	@Effect()
 	loadCase$: Observable<any> = this.actions$
@@ -127,6 +132,21 @@ export class CasesAppEffects {
 			})
 		);
 
+	@Effect()
+	onLoadDefaultCase$ = this.actions$.pipe(
+		ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
+		withLatestFrom(this.store$.select(selectMapsIds)),
+		filter(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => !action.payload.context && Boolean(mapId)),
+		mergeMap(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => {
+			const position = this.caseConfig.defaultCase.state.maps.data[0].data.position;
+			console.log('position', position);
+			const communicator = this.imageryCommunicatorService.provide(mapId);
+			fromPromise(communicator.loadInitialMapSource(position)).pipe(
+				map(() => EMPTY)
+			);
+			return EMPTY;
+		}));
+
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
@@ -134,6 +154,7 @@ export class CasesAppEffects {
 				@Inject(toolsConfig) protected config: IToolsConfig,
 				@Inject(overlayStatusConfig) protected overlayStatusConfig: IOverlayStatusConfig,
 				protected loggerService: LoggerService,
+				@Inject(casesConfig) public caseConfig: ICasesConfig,
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 }

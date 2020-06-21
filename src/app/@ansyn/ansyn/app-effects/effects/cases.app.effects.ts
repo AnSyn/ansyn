@@ -83,8 +83,6 @@ export class CasesAppEffects {
 		})
 	);
 
-	onResetApp$
-
 	@Effect()
 	loadCase$: Observable<any> = this.actions$
 		.pipe(
@@ -139,7 +137,6 @@ export class CasesAppEffects {
 		filter(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => !action.payload.context && Boolean(mapId)),
 		mergeMap(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => {
 			const position = this.caseConfig.defaultCase.state.maps.data[0].data.position;
-			console.log('position', position);
 			const communicator = this.imageryCommunicatorService.provide(mapId);
 			fromPromise(communicator.loadInitialMapSource(position)).pipe(
 				map(() => EMPTY)

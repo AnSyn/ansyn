@@ -100,16 +100,14 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		.pipe(
 			take(1),
 			tap(() => {
-				setTimeout(() => {
-					if (this.overlayIds) {
-						const latestSelectedOverlayId = this.overlayIds[this.overlayIds.length - 1];
-						if (latestSelectedOverlayId) {
-							const indexOfRecentOverlay = this.findIndexOfRecentOverlay(latestSelectedOverlayId);
-							this.updatePaginationOnScroll(indexOfRecentOverlay);
-							this.scroll(indexOfRecentOverlay);
-						}
+				if (this.overlayIds) {
+					const latestSelectedOverlayId = this.overlayIds[this.overlayIds.length - 1];
+					if (latestSelectedOverlayId) {
+						const indexOfRecentOverlay = this.findIndexOfRecentOverlay(latestSelectedOverlayId);
+						this.updatePaginationOnScroll(indexOfRecentOverlay);
+						this.scroll(indexOfRecentOverlay);
 					}
-				}, 500);
+				}
 			})
 		);
 

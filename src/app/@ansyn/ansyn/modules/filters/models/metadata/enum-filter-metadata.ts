@@ -9,7 +9,6 @@ import { Injectable } from "@angular/core";
 export interface IEnumFiled {
 	key: string;
 	count: number;
-	filteredCount: number;
 	isChecked: boolean;
 	disabled?: boolean;
 }
@@ -33,20 +32,10 @@ export class EnumFilterMetadata extends FilterMetadata {
 
 	accumulateData(value: string): void {
 		if (!this.enumsFields.get(value)) {
-			this.enumsFields.set(value, { count: 1, filteredCount: 0, isChecked: true, key: value });
+			this.enumsFields.set(value, { count: 1, isChecked: true, key: value });
 		} else {
 			this.enumsFields.get(value).count = this.enumsFields.get(value).count + 1;
 		}
-	}
-
-	incrementFilteredCount(value: any): void {
-		this.enumsFields.get(value).filteredCount = this.enumsFields.get(value).filteredCount + 1;
-	}
-
-	resetFilteredCount(): void {
-		this.enumsFields.forEach((val, key) => {
-			val.filteredCount = 0;
-		});
 	}
 
 	hasResults(): boolean {

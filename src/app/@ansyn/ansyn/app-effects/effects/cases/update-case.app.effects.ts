@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Effect } from '@ngrx/effects';
-import { createFeatureSelector, createSelector, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { combineLatest, Observable, pipe } from 'rxjs';
 import { selectActiveMapId, selectLayout, selectMapsList } from '@ansyn/map-facade';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
@@ -20,11 +20,6 @@ import { selectAutoSave, selectSelectedCase } from '../../../modules/menu-items/
 import { selectMiscOverlays, selectOverlaysCriteria } from '../../../modules/overlays/reducers/overlays.reducer';
 import { ICase } from '../../../modules/menu-items/cases/models/case.model';
 
-// @todo refactor
-const contextFeatureSelector = createFeatureSelector('context');
-const selectContextsParams = createSelector(contextFeatureSelector, (context: any) => context && context.params);
-const selectContextEntities = createSelector(selectContextsParams, (params: any) => params && params.contextEntities);
-
 @Injectable()
 export class UpdateCaseAppEffects {
 	isAutoSaveTriggered: boolean;
@@ -43,7 +38,6 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectLayout),
 		this.store$.select(selectOverlaysCriteria),
 		this.store$.select(selectOverlaysManualProcessArgs),
-		this.store$.select(selectContextEntities),
 		this.store$.select(selectMiscOverlays),
 		this.store$.select(selectTranslationData),
 		this.store$.select(selectScannedAreaData)
@@ -68,14 +62,13 @@ export class UpdateCaseAppEffects {
 				layout,
 				{ time, region, dataInputFilters }, /* overlaysCriteria */
 				overlaysManualProcessArgs,
-				contextEntities,
 				miscOverlays,
 				overlaysTranslationData,
 				overlaysScannedAreaData,
 				autoSave
 			] = events;
 
-			const { id, name, lastModified, creationTime, selectedContextId } = selectedCase;
+			const { id, name, lastModified, creationTime } = selectedCase;
 
 			const updatedCase: ICase = {
 				id,
@@ -100,7 +93,6 @@ export class UpdateCaseAppEffects {
 					dataInputFilters,
 					time,
 					facets,
-					contextEntities,
 					miscOverlays,
 					overlaysManualProcessArgs,
 					overlaysTranslationData,

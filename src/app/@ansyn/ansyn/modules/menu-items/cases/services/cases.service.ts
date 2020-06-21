@@ -16,7 +16,6 @@ import {
 	ICasePreview,
 	ICaseState,
 	ICaseTimeState,
-	IContextEntity,
 	IDilutedCaseState
 } from '../models/case.model';
 
@@ -33,7 +32,6 @@ export class CasesService {
 	};
 
 	defaultTime: ICaseTimeState = {
-		type: 'absolute',
 		from: moment().subtract(this.defaultSearchFromDeltaTime.amount, this.defaultSearchFromDeltaTime.unit).toDate(),
 		to: new Date()
 	};
@@ -103,12 +101,7 @@ export class CasesService {
 					...caseValue.state.time,
 					from: new Date(caseValue.state.time.from),
 					to: new Date(caseValue.state.time.to)
-				} : null,
-				contextEntities: caseValue.state.contextEntities && Array.isArray(caseValue.state.contextEntities) ?
-					caseValue.state.contextEntities.map((contextEntity: IContextEntity) => ({
-						...contextEntity,
-						date: new Date(contextEntity.date)
-					})) : null
+				} : null
 			}
 		};
 	}

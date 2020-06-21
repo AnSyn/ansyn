@@ -68,7 +68,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		super();
 	}
 
-	drawChanges([region, regionAsVisualizer, isActive, , isMinimalistViewMode]) {
+	drawChanges([region, regionAsVisualizer, isActive, isMinimalistViewMode]) {
 		if (regionAsVisualizer && !isActive && !isMinimalistViewMode) {
 			return this.drawRegionOnMap(region);
 		}

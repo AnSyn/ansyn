@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { combineLatest, Observable, of, pipe } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
-	ContextMenuTriggerAction,
 	IMapState,
 	IPendingOverlay,
 	LayoutKey,
@@ -34,7 +33,6 @@ import { IAppState } from '../app.effects.module';
 import { IImageryMapPosition } from '@ansyn/imagery';
 import {
 	catchError,
-	distinctUntilChanged,
 	filter,
 	map,
 	mergeMap,
@@ -62,17 +60,17 @@ import {
 	MarkUpClass,
 	selectdisplayOverlayHistory,
 	selectDropMarkup,
-	selectOverlaysMap,
-	selectRegion
+	selectOverlaysMap
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { ExtendMap } from '../../modules/overlays/reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../../modules/overlays/components/overlay-overview/overlay-overview.component.const';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
-import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
+import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { Dictionary } from '@ngrx/entity';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { SetBadgeAction } from '@ansyn/menu';
+import { rxPreventCrash } from '../../modules/core/utils/rxjs/operators/rxPreventCrash';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -192,7 +190,7 @@ export class OverlaysAppEffects {
 				.filter((map) => map.data.overlay && (map.data.overlay.id === payload.id) && (map.id === payload.mapId))
 				.map((map) => {
 					const mapId = map.id;
-					const id = (displayOverlayHistory[mapId] || []).pop();
+					const id = (displayOverlayHistory[mapId] || []).slice(-1)[0]; // get last overlay id from history
 					if (Boolean(id)) {
 						return new DisplayOverlayFromStoreAction({ mapId, id });
 					}
@@ -203,7 +201,8 @@ export class OverlaysAppEffects {
 				new TogglePresetOverlayAction({ value: false, id: payload.id }),
 				...mapActions
 			];
-		})
+		}),
+		rxPreventCrash()
 	);
 
 

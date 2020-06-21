@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action, select, Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import {
@@ -18,8 +18,8 @@ import {
 } from '@ansyn/map-facade';
 import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
-import { differenceWith, isEqual } from 'lodash';
-import { filter, map, mergeMap, pluck, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { differenceWith } from 'lodash';
+import { filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	OverlayStatusActionsTypes,
 	DisableImageProcessing
@@ -45,8 +45,9 @@ import {
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { selectToolFlag, toolsFlags } from '../../modules/menu-items/tools/reducers/tools.reducer';
-import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
+import { CaseGeoFilter } from '../../modules/menu-items/cases/models/case.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
+import { rxPreventCrash } from '../../modules/core/utils/rxjs/operators/rxPreventCrash';
 
 @Injectable()
 export class ToolsAppEffects {
@@ -174,13 +175,13 @@ export class ToolsAppEffects {
 			withLatestFrom(this.store$.select(mapStateSelector)),
 			map(([action, mapState]: [ShowOverlaysFootprintAction, IMapState]) => {
 				const activeMap = MapFacadeService.activeMap(mapState);
-				activeMap.data.overlayDisplayMode = action.payload;
 				return new UpdateMapAction({
 					id: activeMap.id, changes: {
 						data: { ...activeMap.data, overlayDisplayMode: action.payload }
 					}
 				});
-			})
+			}),
+			rxPreventCrash()
 		);
 
 	@Effect()

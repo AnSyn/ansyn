@@ -7,7 +7,6 @@ import { Injectable } from "@angular/core";
 @Injectable()
 export class SliderFilterMetadata extends FilterMetadata {
 	count = 0;
-	filteredCount = 0;
 
 	min: number = Number.MAX_SAFE_INTEGER;
 	max: number = Number.MIN_SAFE_INTEGER;
@@ -39,14 +38,6 @@ export class SliderFilterMetadata extends FilterMetadata {
 
 	hasResults(): boolean {
 		return true;
-	}
-
-	incrementFilteredCount(value: number): void {
-		this.filteredCount++;
-	}
-
-	resetFilteredCount(): void {
-		this.filteredCount = 0;
 	}
 
 	initializeFilter(overlays: IOverlay[], modelName: string, caseFilter: ICaseFilter<ICaseSliderFilterMetadata>, visibility?: boolean): void {

@@ -1,5 +1,6 @@
 import { SliderFilterMetadata } from '../../models/metadata/slider-filter-metadata';
 import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { SliderFilterCounters } from '../../models/counters/slider-filter-counters';
 
 @Component({
 	selector: 'ansyn-slider-filter-container',
@@ -14,6 +15,8 @@ export class SliderFilterContainerComponent {
 
 	@Output() onMetadataChange = new EventEmitter<SliderFilterMetadata>(true);
 	rangeValues: number[];
+
+	@Input() counters: SliderFilterCounters;
 
 	@Input()
 	set metadata(value: SliderFilterMetadata) {

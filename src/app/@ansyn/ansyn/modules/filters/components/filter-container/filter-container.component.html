@@ -30,6 +30,7 @@
 					*ngSwitchCase="'Enum'"
 					[isLongFiltersList]="isLongFiltersList"
 					[metadata]="metadataFromState"
+					[counters]="filterCountersFromState"
 					[filtersSearchResult]="filtersSearchResults[filter.displayName]"
 					(onMetadataChange)="onMetadataChange($event)">
 				</ansyn-enum-filter-container>
@@ -37,12 +38,14 @@
 				<ansyn-slider-filter-container
 					*ngSwitchCase="'Slider'"
 					[metadata]="metadataFromState"
+					[counters]="filterCountersFromState"
 					(onMetadataChange)="onMetadataChange($event)">
 				</ansyn-slider-filter-container>
 
 				<ansyn-boolean-filter-container
 					*ngSwitchCase="'Boolean'"
 					[metadata]="metadataFromState"
+					[counters]="filterCountersFromState"
 					[customData]="filter.customData"
 					(onMetadataChange)="onMetadataChange($event)">
 				</ansyn-boolean-filter-container>
@@ -50,6 +53,7 @@
 				<ansyn-array-filter-container
 					*ngSwitchCase="'Array'"
 					[metadata]="metadataFromState"
+					[counters]="filterCountersFromState"
 					(onMetadataChange)="onMetadataChange($event)"
 					[filtersSearchResult]="filtersSearchResults[filter.displayName]">
 				</ansyn-array-filter-container>

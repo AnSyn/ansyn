@@ -1,23 +1,23 @@
-<ng-container *ngFor="let properties of metadataValues">
-	<div class="enum-fields-enumerator" [hidden]="!properties.count">
+<ng-container *ngFor="let key of metadataKeys">
+	<div class="enum-fields-enumerator" [hidden]="!metadata.properties[key].count">
 		<div class="left-side">
 			<ansyn-checkbox
-				[disabled]="properties.disabled"
-				[ngModel]="properties.value"
-				(ngModelChange)='onInputClicked(properties.name, $event)'>
-				<span class="field-name" [title]="true">{{properties.displayName}}</span>
+				[disabled]="metadata.properties[key].disabled"
+				[ngModel]="metadata.properties[key].value"
+				(ngModelChange)='onInputClicked(metadata.properties[key].name, $event)'>
+				<span class="field-name" [title]="true">{{metadata.properties[key].displayName}}</span>
 			</ansyn-checkbox>
 
 			<span class="only-filter"
-				  (click)="selectOnly(properties.name)"
-				  [hidden]="properties.disabled || false">only</span>
+				  (click)="selectOnly(metadata.properties[key].name)"
+				  [hidden]="metadata.properties[key].disabled || false">only</span>
 
 		</div>
 
 		<ansyn-filter-counter
-			[isChecked]="properties.value"
-			[count]="properties.count"
-			[filteredCount]="properties.filteredCount">
+			[isChecked]="metadata.properties[key].value"
+			[count]="metadata.properties[key].count"
+			[filteredCount]="counters.properties[key].filteredCount">
 		</ansyn-filter-counter>
 
 	</div>

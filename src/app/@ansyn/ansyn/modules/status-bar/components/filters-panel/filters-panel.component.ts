@@ -2,7 +2,7 @@ import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import {
 	IFiltersState, selectEnableOnlyFavorites,
 	selectFacets,
-	selectFilters,
+	selectFiltersMetadata,
 	selectShowOnlyFavorites
 } from '../../../filters/reducer/filters.reducer';
 import { Store } from '@ngrx/store';
@@ -19,7 +19,7 @@ import {
 	ICaseFilter
 } from '../../../menu-items/cases/models/case.model';
 import { StatusBarConfig } from '../../models/statusBar.config';
-import { IStatusBarConfig } from '../../models/statusBar-config.model';
+import { IFilterStatusBar, IStatusBarConfig } from '../../models/statusBar-config.model';
 import { filtersConfig } from '../../../filters/services/filters.service';
 import { IFiltersConfig } from '../../../filters/models/filters-config';
 
@@ -48,7 +48,7 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	updateFilters$ = this.store.select(selectFilters).pipe(
+	updateFilters$ = this.store.select(selectFiltersMetadata).pipe(
 		filter(filters => filters && filters.size > 0 ),
 		withLatestFrom(this.store.select(selectFacets)),
 		tap(([filters, facets]: [Map<IFilter, FilterMetadata>, ICaseFacetsState]) => {
@@ -75,14 +75,17 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 		tap( this.closeAllFilter.bind(this))
 	);
 
+	get config(): IFilterStatusBar {
+		return this.statusBarConfig.filters;
+	}
 	get filters(): IFilter[] {
-		return this.statusBarConfig.filters.map( filterName => this.filtersConfig.filters.find( filter => filterName === filter.modelName));
+		return this.config.filterNames.map( filterName => this.filtersConfig.filters.find( filter => filterName === filter.modelName));
 	}
 	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 				@Inject(filtersConfig) public filtersConfig: IFiltersConfig,
 				public store: Store<IFiltersState>,
 				protected clickOutside: ClickOutsideService) {
-		if (this.filters.length > 2) {
+		if (this.filters.length > this.config.maximumOpen) {
 			this.expand[this.filters[0].modelName] = false;
 			this.expand[this.filters[1].modelName] = false;
 			this.expand[this.MORE_FILTERS] = false;

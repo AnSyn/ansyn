@@ -86,7 +86,7 @@ export {
 export {
 	LoadDefaultCaseAction, SaveCaseAsSuccessAction, SelectDilutedCaseAction
 }from './modules/menu-items/cases/actions/cases.actions';
-export { Filters, IFiltersState } from './modules/filters/reducer/filters.reducer';
+export { FiltersMetadata, IFiltersState } from './modules/filters/reducer/filters.reducer';
 export { IFilter } from './modules/filters/models/IFilter';
 export { ILayer } from './modules/menu-items/layers-manager/models/layers.model';
 export { ShowOverlaysFootprintAction } from './modules/menu-items/tools/actions/tools.actions';
@@ -135,6 +135,7 @@ export {
 export { BooleanFilterMetadata } from './modules/filters/models/metadata/boolean-filter-metadata';
 export { SliderFilterMetadata } from './modules/filters/models/metadata/slider-filter-metadata';
 export { FilterMetadata } from './modules/filters/models/metadata/filter-metadata.interface';
+export { FilterCounters } from './modules/filters/models/counters/filter-counters.interface';
 export { EnumFilterMetadata } from './modules/filters/models/metadata/enum-filter-metadata';
 export { casesConfig, CasesService } from './modules/menu-items/cases/services/cases.service';
 export {
@@ -149,7 +150,7 @@ export { casesStateSelector, selectSelectedCase } from './modules/menu-items/cas
 export {
 	filtersStateSelector,
 	selectFacets,
-	selectFilters,
+	selectFiltersMetadata,
 	selectEnableOnlyFavorites,
 	selectShowOnlyFavorites
 } from './modules/filters/reducer/filters.reducer';
@@ -267,7 +268,6 @@ export { rxPreventCrash } from './modules/core/utils/rxjs/operators/rxPreventCra
 export { IContext } from './modules/core/models/context.model';
 export { mapValuesToArray } from './modules/core/utils/misc';
 export { CoreModule } from './modules/core/core.module';
-export { DisplayedOverlay } from './modules/core/models/context.model';
 export { BaseFetchService } from './modules/core/services/base-fetch-service';
 export { FetchService } from './modules/core/services/fetch.service';
 export { IDeltaTime } from './modules/core/models/time.model';
@@ -294,7 +294,6 @@ export {
 	ICaseDataInputFiltersState,
 	ICaseTimeState
 } from './modules/menu-items/cases/models/case.model';
-export { IContextEntity } from './modules/menu-items/cases/models/case.model';
 export {
 	ICaseBooleanFilterMetadata, ICaseState, IOverlaysManualProcessArgs
 }from './modules/menu-items/cases/models/case.model';

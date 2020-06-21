@@ -14,7 +14,7 @@ import {
 	MapFacadeService,
 	mapStateSelector
 } from '@ansyn/map-facade';
-import { uniq as _uniq } from 'lodash';
+import { uniq as _uniq, cloneDeep } from 'lodash';
 import { Point } from 'geojson';
 import { Actions, ofType } from '@ngrx/effects';
 import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/operators';
@@ -263,7 +263,7 @@ export class ContextMenuComponent implements OnInit {
 
 	clickAngle($event: MouseEvent) {
 		event.stopPropagation();
-		this.store.dispatch(new ContextMenuShowAngleFilter(this.angleFilter));
+		this.store.dispatch(new ContextMenuShowAngleFilter(cloneDeep(this.angleFilter)));
 	}
 
 	displayOverlayEvent(event$: MouseEvent, overlay?) {

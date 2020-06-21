@@ -35,7 +35,6 @@ const CRITERIA: IOverlaysCriteria = {
 		fullyChecked: true
 	},
 	time: {
-		type: 'absolute',
 		from: new Date(2020, 4, 10),
 		to: new Date(2020, 5, 20)
 	},

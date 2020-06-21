@@ -45,7 +45,9 @@ export const OverlaysActionTypes = {
 	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT',
 	SET_MISC_OVERLAYS: 'SET_MISC_OVERLAYS',
 	SET_MISC_OVERLAY: 'SET_MISC_OVERLAY',
-	UPDATE_OVERLAY: 'UPDATE_OVERLAY'
+	UPDATE_OVERLAY: 'UPDATE_OVERLAY',
+	UPDATE_OVERLAYS: 'UPDATE_OVERLAYS',
+	SET_OVERLAYS_CONTAINMENT_CHECKED: 'OVERLAYS_CONTAINMENT_CHECKED'
 };
 
 export class SelectOverlayAction implements Action {
@@ -262,6 +264,20 @@ export class UpdateOverlay implements Action {
 	}
 }
 
+export class UpdateOverlays implements Action {
+	type: string = OverlaysActionTypes.UPDATE_OVERLAYS;
+
+	constructor(public payload: Update<IOverlay>[]) {
+	}
+}
+
+export class SetOverlaysContainmentChecked implements Action {
+	type: string = OverlaysActionTypes.SET_OVERLAYS_CONTAINMENT_CHECKED;
+
+	constructor(public payload: boolean = true) {
+	}
+}
+
 export type OverlaysActions
 	= DisplayOverlayFromStoreAction
 	| DisplayMultipleOverlaysFromStoreAction
@@ -288,3 +304,5 @@ export type OverlaysActions
 	| SetMiscOverlays
 	| SetMiscOverlay
 	| UpdateOverlay
+	| UpdateOverlays
+	| SetOverlaysContainmentChecked

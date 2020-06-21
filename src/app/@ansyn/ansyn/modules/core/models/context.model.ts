@@ -1,11 +1,6 @@
 import { CaseRegionState, ICaseFacetsState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
 import { IEntity } from '../services/storage/storage.service';
 
-export enum DisplayedOverlay {
-	nearest = 'nearest',
-	latest = 'latest',
-}
-
 export interface IContext extends IEntity {
 	id: string;
 	name: string;
@@ -22,6 +17,5 @@ export interface IContext extends IEntity {
 	facets?: ICaseFacetsState;
 	region?: CaseRegionState;
 	requires?: string[]
-	defaultOverlay?: DisplayedOverlay;
 	requirements?: string[];
 }

@@ -1,5 +1,6 @@
 import { EnumFilterMetadata } from '../../models/metadata/enum-filter-metadata';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { EnumFilterCounters } from '../../models/counters/enum-filter-counters';
 
 @Component({
 	selector: 'ansyn-enum-filter-container',
@@ -8,10 +9,11 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 })
 export class EnumFilterContainerComponent implements OnChanges {
 	@Input() metadata: EnumFilterMetadata;
+	@Input() counters: EnumFilterCounters;
 	@Input() isLongFiltersList: boolean;
 	@Output() onMetadataChange = new EventEmitter<EnumFilterMetadata>(true);
 	@Input() filtersSearchResult: any;
-	fields = [];
+	fields: { key: any, value: any, filteredCount: number }[] = [];
 
 	onInputClicked(key: string) {
 		this.metadata.updateMetadata(key);
@@ -24,11 +26,11 @@ export class EnumFilterContainerComponent implements OnChanges {
 	}
 
 	ngOnChanges(changes: SimpleChanges): void {
-		const defined = this.metadata && this.filtersSearchResult;
-		const changed = changes.metadata || changes.filtersSearchResult;
+		const defined = this.metadata && this.filtersSearchResult && this.counters;
+		const changed = changes.metadata || changes.filtersSearchResult || changes.counters;
 		if (defined && changed) {
 			this.fields = Array.from(this.metadata.enumsFields)
-				.map(([key, value]) => ({ key, value }))
+				.map(([key, value]) => ({ key, value, filteredCount: this.counters.enumsFields.get(key)?.filteredCount }))
 				.filter(({ key }) => (
 					this.filtersSearchResult && (this.filtersSearchResult === 'all' || (this.filtersSearchResult || []).includes(key))
 				));

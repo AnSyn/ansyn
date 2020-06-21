@@ -4,7 +4,7 @@ import {
 	OverlayStatusReducer
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { FiltersAppEffects } from './filters.app.effects';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
@@ -27,7 +27,8 @@ import {
 	LoadOverlaysAction,
 	SetDropsAction,
 	SetFilteredOverlaysAction,
-	SetOverlaysStatusMessageAction, SetTotalOverlaysAction
+	SetOverlaysStatusMessageAction,
+	SetTotalOverlaysAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	OverlayReducer,
@@ -38,9 +39,12 @@ import { OverlaysService } from '../../modules/overlays/services/overlays.servic
 import { imageryStatusFeatureKey, ImageryStatusReducer } from '@ansyn/map-facade';
 import { FilterType } from '../../modules/filters/models/filter-type';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
-import { MissingTranslationHandler, TranslateLoader, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { SetHideResultsTableBadgeAction } from '../../../menu/actions/menu.actions';
+import { EnumFilterCounters } from '../../modules/filters/models/counters/enum-filter-counters';
+import { FilterCounters } from '../../modules/filters/models/counters/filter-counters.interface';
+import { SliderFilterCounters } from '../../modules/filters/models/counters/slider-filter-counters';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -51,11 +55,16 @@ describe('Filters app effects', () => {
 	const filterMetadata2: FilterMetadata = new EnumFilterMetadata();
 	const filterMetadata3: FilterMetadata = new SliderFilterMetadata();
 	const filterMetadata4: FilterMetadata = new SliderFilterMetadata();
+	const filterCounters: FilterCounters = new EnumFilterCounters();
+	const filterCounters2: FilterCounters = new EnumFilterCounters();
+	const filterCounters3: FilterCounters = new SliderFilterCounters();
+	const filterCounters4: FilterCounters = new SliderFilterCounters();
 	const filterKey: IFilter = { modelName: 'enumModel1', displayName: 'Enum Model', type: FilterType.Enum };
 	const filterKey2: IFilter = { modelName: 'enumModel2', displayName: 'Enum Model 2', type: FilterType.Enum };
 	const filterKey3: IFilter = { modelName: 'SliderModel', displayName: 'Slider Model', type: FilterType.Slider };
 	const filterKey4: IFilter = { modelName: 'SliderModel2', displayName: 'Slider Model2', type: FilterType.Slider };
-	const filters = new Map([[filterKey, filterMetadata], [filterKey2, filterMetadata2], [filterKey3, filterMetadata3], [filterKey4, filterMetadata4]]);
+	const filtersMetadata = new Map([[filterKey, filterMetadata], [filterKey2, filterMetadata2], [filterKey3, filterMetadata3], [filterKey4, filterMetadata4]]);
+	const filtersCounters = new Map([[filterKey, filterCounters], [filterKey2, filterCounters2], [filterKey3, filterCounters3], [filterKey4, filterCounters4]]);
 
 	const favoriteOver = <IOverlay>{};
 	favoriteOver.id = '2';
@@ -97,7 +106,10 @@ describe('Filters app effects', () => {
 			buildFilteredOverlays: buildFilteredOverlays
 		};
 		spyOn(fakeObj, 'buildFilteredOverlays').and.callFake(() => []);
-		store.dispatch(new InitializeFiltersSuccessAction(new Map()));
+		store.dispatch(new InitializeFiltersSuccessAction({
+			filtersMetadata: new Map(),
+			filtersCounters: new Map()
+		}));
 		const expectedResults = cold('(bcd)', {
 			b: new SetFilteredOverlaysAction([]),
 			c: new SetOverlaysStatusMessageAction(overlaysStatusMessages.noOverLayMatchFilters),
@@ -126,26 +138,22 @@ describe('Filters app effects', () => {
 		(<EnumFilterMetadata>filterMetadata).enumsFields.set('example', {
 			key: 'example',
 			count: 10,
-			filteredCount: 0,
 			isChecked: true
 		}); // (isChecked) => no changes
 		(<EnumFilterMetadata>filterMetadata).enumsFields.set('example2', {
 			key: 'example2',
 			count: 10,
-			filteredCount: 0,
 			isChecked: false
 		}); // (!isChecked) => 1
 
 		(<EnumFilterMetadata>filterMetadata2).enumsFields.set('example', {
 			key: 'example',
 			count: 10,
-			filteredCount: 0,
 			isChecked: true
 		}); // (isChecked) => no changes
 		(<EnumFilterMetadata>filterMetadata2).enumsFields.set('example2', {
 			key: 'example2',
 			count: 10,
-			filteredCount: 0,
 			isChecked: false
 		}); // (!isChecked) => 2
 
@@ -154,7 +162,7 @@ describe('Filters app effects', () => {
 
 		(<SliderFilterMetadata>filterMetadata3).start = -2;
 		(<SliderFilterMetadata>filterMetadata3).end = 1; // (start > -Infinity || end < Infinity ) => 3
-		store.dispatch(new InitializeFiltersSuccessAction(filters));
+		store.dispatch(new InitializeFiltersSuccessAction({ filtersMetadata, filtersCounters }));
 		const expectedResults = cold('b', { b: new SetBadgeAction({ key: 'Filters', badge: '3' }) });
 		expect(filtersAppEffects.updateFiltersBadge$).toBeObservable(expectedResults);
 	});

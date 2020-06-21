@@ -199,18 +199,6 @@ describe('OverlaysAppEffects', () => {
 				{
 					provide: OverlaysService,
 					useValue: {
-						getStartDateViaLimitFasets: () => {
-							return of({
-								'startDate': new Date('2014-06-27T08:43:03.624Z'),
-								'endDate': new Date('2015-06-27T08:43:03.624Z')
-							});
-						},
-						getStartAndEndDateViaRangeFacets: () => {
-							return of({
-								'startDate': new Date('2014-06-27T08:43:03.624Z'),
-								'endDate': new Date('2015-06-27T08:43:03.624Z')
-							});
-						},
 						getTimeStateByOverlay: () => {
 						},
 						getAllOverlays$: of(new Map<string, any>(Object.entries(exampleOverlays))),

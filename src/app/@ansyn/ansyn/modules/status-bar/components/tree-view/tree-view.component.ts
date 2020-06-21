@@ -97,7 +97,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	buildDataFilter(providerName, filter) {
 		this.leavesCount++;
 		return {
-			text: filter.text,
+			text: this.translate.instant(filter.text),
 			value: {
 				...filter.value,
 				providerName

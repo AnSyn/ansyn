@@ -40,11 +40,8 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 
 		case CasesActionTypes.UPDATE_CASE: {
 			const caseToUpdate = { ...action.payload.updatedCase };
-			if(state.selectedCase) {
-				const selectedCase = caseToUpdate.id === state.selectedCase.id ? caseToUpdate : state.selectedCase;
-				return casesAdapter.updateOne({ id: caseToUpdate.id, changes: caseToUpdate }, { ...state, selectedCase });
-			}
-			return state;
+			const selectedCase = state.selectedCase && caseToUpdate.id === state.selectedCase.id ? caseToUpdate : state.selectedCase;
+			return casesAdapter.updateOne({ id: caseToUpdate.id, changes: caseToUpdate }, { ...state, selectedCase });
 		}
 
 		case CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS: {

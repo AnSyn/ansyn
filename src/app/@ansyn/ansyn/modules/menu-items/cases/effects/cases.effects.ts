@@ -130,13 +130,13 @@ export class CasesEffects {
 	);
 
 	@Effect()
-	loadDefaultCase$: Observable<SelectDilutedCaseAction | BackToWorldView> = this.actions$.pipe(
+	loadDefaultCase$: Observable<SelectDilutedCaseAction> = this.actions$.pipe(
 		ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
 		withLatestFrom(this.store.select(selectMapsIds)),
 		filter(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => !action.payload.context),
 		mergeMap(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => {
 			const defaultCaseQueryParams: ICase = this.casesService.updateCaseViaQueryParmas(action.payload, this.casesService.defaultCase);
-			return [new SelectDilutedCaseAction(defaultCaseQueryParams), new BackToWorldView({ mapId })];
+			return [new SelectDilutedCaseAction(defaultCaseQueryParams)];
 		}),
 		share());
 

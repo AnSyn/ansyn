@@ -138,10 +138,7 @@ export class CasesAppEffects {
 		mergeMap(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => {
 			const position = this.caseConfig.defaultCase.state.maps.data[0].data.position;
 			const communicator = this.imageryCommunicatorService.provide(mapId);
-			fromPromise(communicator.loadInitialMapSource(position)).pipe(
-				map(() => EMPTY)
-			);
-			return EMPTY;
+			return fromPromise(communicator.loadInitialMapSource(position));
 		}));
 
 

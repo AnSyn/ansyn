@@ -8,7 +8,7 @@ import { FormControl } from '@angular/forms';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectIsMinimalistViewMode } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
-import { SetActiveCenter, SetMapSearchBox } from '../../../ansyn/modules/menu-items/tools/actions/tools.actions';
+import { SetActiveCenterTriggerAction, SetMapSearchBoxTriggerAction } from '../../actions/map.actions';
 
 const DEFAULT_WIDTH = 150;
 
@@ -70,7 +70,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		this.error = null;
 		this.loading = true;
 		this.autoCompleteWidth = DEFAULT_WIDTH;
-		this.store$.dispatch(new SetMapSearchBox(false));
+		this.store$.dispatch(new SetMapSearchBoxTriggerAction(false));
 	}
 
 	goToLocation(point) {
@@ -79,8 +79,8 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		}
 		if (point) {
 			this._communicator.setCenter(point, true).pipe(take(1)).subscribe();
-			this.store$.dispatch(new SetActiveCenter(point.coordinates));
-			this.store$.dispatch(new SetMapSearchBox(true));
+			this.store$.dispatch(new SetActiveCenterTriggerAction(point.coordinates));
+			this.store$.dispatch(new SetMapSearchBoxTriggerAction(true));
 		}
 	}
 

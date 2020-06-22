@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Observable } from 'rxjs';
+import { Observable, pipe } from 'rxjs';
 import { IOverlayDrop } from '../../../../overlays/models/overlay.model';
 import { select, Store } from '@ngrx/store';
 import {
@@ -10,7 +10,7 @@ import {
 	selectDropMarkup,
 	selectDropsWithoutSpecialObjects
 } from '../../../../overlays/reducers/overlays.reducer';
-import { tap } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import {
 	DisplayOverlayFromStoreAction,
 	SetMarkUp
@@ -46,11 +46,10 @@ interface ITableHeader {
 @AutoSubscriptions()
 export class ResultsTableComponent implements OnInit, OnDestroy {
 	overlays: IOverlayDrop[] = [];
-	selectedOverlayId: string;
 	sortedBy = 'date';
 	start = 0;
 	end = 15;
-	overlayCount: number;
+	pagination = 15;
 	tableHeaders: ITableHeader[] = [
 		{
 			headerName: 'Date & time',
@@ -71,6 +70,9 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			sortFn: (a, b) => a.localeCompare(b)
 		}
 	];
+	overlayIds: string[];
+
+	@ViewChild('table') table: ElementRef;
 
 	@AutoSubscription
 	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, IMarkUpData>> = this.store$
@@ -78,7 +80,8 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			select(selectDropMarkup),
 			tap((value: ExtendMap<MarkUpClass, IMarkUpData>) => {
 				const activeMapData = value.get(MarkUpClass.active);
-				this.selectedOverlayId = activeMapData.overlaysIds[0];
+				const displayedMapData = value.get(MarkUpClass.displayed);
+				this.overlayIds = activeMapData.overlaysIds.concat(displayedMapData.overlaysIds);
 			})
 		);
 
@@ -89,12 +92,33 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			tap((overlays: IOverlayDrop[]) => {
 				this.resetSort();
 				this.overlays = overlays;
-				this.overlayCount = overlays.length;
 			})
 		);
 
+	@AutoSubscription
+	scrollToRecentOverlay$: Observable<any> = this.dropsMarkUp$
+		.pipe(
+			take(1),
+			tap(() => {
+				if (this.overlayIds) {
+					const latestSelectedOverlayId = this.overlayIds[this.overlayIds.length - 1];
+					if (latestSelectedOverlayId) {
+						const indexOfRecentOverlay = this.findIndexOfRecentOverlay(latestSelectedOverlayId);
+						this.updatePaginationOnScroll(indexOfRecentOverlay);
+						this.scroll(indexOfRecentOverlay);
+					}
+				}
+			})
+		);
+
+
 	constructor(protected store$: Store<IOverlaysState>,
 				protected translateService: TranslateService) {
+	}
+
+	findIndexOfRecentOverlay(latestSelectedOverlay: string): number {
+		const recentOverlayIndex = this.overlays.map(overlay => overlay.id).indexOf(latestSelectedOverlay);
+		return recentOverlayIndex;
 	}
 
 	ngOnDestroy(): void {
@@ -103,15 +127,26 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 	}
 
-	resetSort() {
+	resetSort(): void {
 		this.tableHeaders.forEach(tableHeader => {
 			tableHeader.isAscending = true;
 		});
 	}
 
-	loadResults() {
-		const pagination = 15;
-		this.end += pagination;
+	scroll(index: number): void {
+		requestAnimationFrame(() => {
+			const heightOfRow = document.getElementsByClassName('results-table-body-row-data')[0].clientHeight;
+			const amountOfRowsDisplayed = this.table.nativeElement.offsetHeight / heightOfRow;
+			this.table.nativeElement.scrollTo(0, (index * heightOfRow) - (amountOfRowsDisplayed / 2) * heightOfRow);
+		})
+	}
+
+	updatePaginationOnScroll(recentOverlayIndex: number): void {
+		this.end = recentOverlayIndex > this.pagination ? recentOverlayIndex + this.pagination : this.end;
+	}
+
+	loadResults(): void {
+		this.end += this.pagination;
 	}
 
 	onMouseOver($event, id: string): void {
@@ -127,7 +162,6 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	openOverlay(id: string): void {
-		this.selectedOverlayId = id;
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id }));
 	}
 

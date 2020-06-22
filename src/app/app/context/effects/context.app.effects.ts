@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import * as wellknown from 'wellknown';
-import { CasesActionTypes, CasesService, LoadDefaultCaseAction, SelectCaseAction } from '@ansyn/ansyn';
+import {
+	CasesActionTypes,
+	CasesService,
+	ICaseDataInputFiltersState,
+	LoadDefaultCaseAction,
+	SelectCaseAction
+} from '@ansyn/ansyn';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { filter, withLatestFrom, mergeMap } from 'rxjs/operators';
+import { filter, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import { Geometries } from '@turf/turf';
 import { selectActiveMapId, SetToastMessageAction } from '@ansyn/map-facade';
 import { ContextName, RequiredContextParams } from '../models/context.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -34,41 +38,67 @@ export class ContextAppEffects {
 
 	}
 
+	get defaultTime() {
+		const to = new Date();
+		const from = new Date(to);
+		from.setMonth(from.getMonth() - 2);
+		return { from, to };
+	}
 
 	parseContextParams([{ payload }, mapId]: [LoadDefaultCaseAction, string]): any[] {
 		const { context, ...params } = payload;
-		let contextCase;
+		let contextCase = this.casesService.defaultCase;
 		const missingParams = this.isMissingParametersContext(context, params);
-		const actions: unknown[] = [];
+		const actions: unknown[] = [new SelectCaseAction(contextCase)];
 		if (missingParams.length > 0) {
 			const toastText = this.buildErrorToastMessage(context, missingParams);
 			actions.push(new SetToastMessageAction({ toastText }));
 			return actions;
 		}
+		if (!this.isValidGeometry(params.geometry)) {
+			actions.push(new SetToastMessageAction({ toastText: this.translateService.instant(CONTEXT_TOAST.region) }));
+			return actions;
+		}
+		const time = this.defaultTime;
 		switch (context) {
 			case ContextName.AreaAnalysis:
-				const geo: Geometries = <Geometries>wellknown.parse(params.geometry);
-				if (!['Point', 'Polygon'].includes(geo.type)) {
-					actions.push(new SetToastMessageAction({ toastText: this.translateService.instant(CONTEXT_TOAST.region) }));
-					break;
-				}
-				const to = new Date();
-				const from = new Date(to);
-				from.setMonth(from.getMonth() - 2);
-				const _context = {
-					id: context,
-					time: { to, from }
-				};
-				contextCase = this.casesService.updateCaseViaContext(_context, this.casesService.defaultCase, params);
-				break;
+				contextCase = this.casesService.updateCaseViaContext({ time }, this.casesService.defaultCase, params);
+				return [new SelectCaseAction(contextCase)];
+			case ContextName.QuickSearch:
+				this.parseTimeParams(time, params.time);
+				const dataInputFilters = this.parseSensorParams(params.sensors);
+				contextCase = this.casesService.updateCaseViaContext({
+					time,
+					dataInputFilters
+				}, this.casesService.defaultCase, params);
+				return [new SelectCaseAction(contextCase)];
 			default:
 				actions.push(new SetToastMessageAction({
 						toastText: this.buildErrorToastMessage(context)
 					})
 				);
 		}
-		actions.push(new SelectCaseAction(contextCase));
 		return actions;
+	}
+
+	private parseTimeParams(time, contextTime) {
+		const [start, end] = contextTime.split(',');
+		const from = new Date(start);
+		const to = new Date(end);
+		if (from.toJSON()) {
+			time.from = from;
+		}
+		if (to.toJSON()) {
+			time.to = to;
+		}
+	}
+
+	private parseSensorParams(sensors): ICaseDataInputFiltersState {
+		return {
+			filters: [],
+			fullyChecked: true,
+			customFiltersSensor: sensors.split(',')
+		}
 	}
 
 	private buildErrorToastMessage(contextName: string, params?: string[]) {
@@ -83,6 +113,10 @@ export class ContextAppEffects {
 		const passParams = Object.keys(params);
 		const allParams = RequiredContextParams[contextName];
 		return allParams.filter(param => !passParams.includes(param))
+	}
+
+	private isValidGeometry(geometry: string) {
+		return /POLYGON|POINT/.test(geometry)
 	}
 
 }

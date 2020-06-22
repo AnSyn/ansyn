@@ -288,13 +288,17 @@ describe('ToolsAppEffects', () => {
 	it('clearActiveInteractions$ should clear active interactions', () => {
 		actions = hot('--a--', { a: new ClearActiveInteractionsAction() });
 
-		const expectedResult = cold('--(bcde)--', {
+		const expectedResult = cold('--(bcdef)--', {
 			b: new SetAnnotationMode(null),
 			c: new UpdateGeoFilterStatus(),
 			d: new SetPinLocationModeAction(false),
 			e: new UpdateMeasureDataOptionsAction({
 				mapId: 'imagery1',
 				options: { isToolActive: false }
+			}),
+			f: new UpdateMeasureDataOptionsAction({
+				mapId: 'imagery1',
+				options: { forceDisableTranslate: undefined}
 			})
 		});
 
@@ -308,12 +312,16 @@ describe('ToolsAppEffects', () => {
 			})
 		});
 
-		const expectedResult = cold('--(bcd)--', {
+		const expectedResult = cold('--(bcde)--', {
 			b: new UpdateGeoFilterStatus(),
 			c: new SetPinLocationModeAction(false),
 			d: new UpdateMeasureDataOptionsAction({
 				mapId: 'imagery1',
 				options: { isToolActive: false }
+			}),
+			e: new UpdateMeasureDataOptionsAction({
+				mapId: 'imagery1',
+				options: { forceDisableTranslate: undefined}
 			})
 		});
 

@@ -319,21 +319,14 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	}
 
 	resetShadowMapView(projectedState) {
-		const layers = this.shadowMapObject.getLayers();
-		layers.forEach((layer) => {
-			this.shadowMapObject.removeLayer(layer);
-		});
 		const mainLayer = this.iMap.getMainLayer() as ol_Layer;
-		this.shadowMapObjectView = new View({
-			projection: mainLayer.getSource().getProjection()
-		});
-		const clonedLayer = cloneDeep(mainLayer);
-		this.shadowMapObject.addLayer(clonedLayer);
-		this.shadowMapObject.setView(this.shadowMapObjectView);
-
 		const { center, zoom, rotation } = projectedState;
-		this.shadowMapObjectView.setCenter(center);
-		this.shadowMapObjectView.setZoom(zoom);
-		this.shadowMapObjectView.setRotation(rotation);
+		this.shadowMapObjectView = new View({
+			projection: mainLayer.getSource().getProjection(),
+			center,
+			zoom,
+			rotation
+		});
+		this.shadowMapObject.setView(this.shadowMapObjectView);
 	}
 }

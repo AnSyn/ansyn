@@ -46,7 +46,7 @@ import {
 	switchMap,
 	tap,
 	withLatestFrom,
-    take
+	take
 } from 'rxjs/operators';
 import { toastMessages } from '../../modules/core/models/toast-messages';
 import { endTimingLog, startTimingLog } from '../../modules/core/utils/logs/timer-logs';

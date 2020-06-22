@@ -117,7 +117,7 @@ export class ToolsAppEffects {
 		withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState): CommunicatorEntity => this.imageryCommunicatorService.provide(mapState.activeMapId)),
 		filter(communicator => Boolean(communicator)),
 		mergeMap((communicator: CommunicatorEntity) => communicator.getCenter()),
-		map((activeMapCenter: Point) => new SetActiveCenter({ coordinates: activeMapCenter.coordinates })));
+		map((activeMapCenter: Point) => new SetActiveCenter(activeMapCenter.coordinates)));
 
 	@Effect()
 	onGoTo$: Observable<SetActiveCenter> = this.actions$.pipe(
@@ -137,7 +137,7 @@ export class ToolsAppEffects {
 				return { action, communicator };
 			}));
 		}),
-		map(({ action, communicator }) => new SetActiveCenter({ coordinates: action.payload })));
+		map(({ action, communicator }) => new SetActiveCenter(action.payload)));
 
 	@Effect()
 	updatePinLocationState$: Observable<PinLocationModeTriggerAction> = this.actions$.pipe(

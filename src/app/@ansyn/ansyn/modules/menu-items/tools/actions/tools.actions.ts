@@ -18,6 +18,7 @@ export const ToolsActionsTypes = {
 	SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE: type('SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE'),
 	SET_MANUAL_IMAGE_PROCESSING: type('SET_MANUAL_IMAGE_PROCESSING'),
 	MAP_GEO_ENABLED_MODE_CHANGED: type('MAP_GEO_ENABLED_MODE_CHANGED'),
+	SET_MAP_SEARCH_BOX: type('SET_MAP_SEARCH_BOX'),
 	ANNOTATION_SET_PROPERTIES: type('ANNOTATION_SET_PROPERTIES'),
 	SET_SUB_MENU: type('SET_SUB_MENU'),
 	MEASURES: {
@@ -80,7 +81,14 @@ export class PullActiveCenter implements Action {
 export class SetActiveCenter implements Action {
 	type = ToolsActionsTypes.SET_ACTIVE_CENTER;
 
-	constructor(public payload: { coordinates: number[], mapSearchBoxSearch?: boolean }) {
+	constructor(public payload: number[]) {
+	};
+}
+
+export class SetMapSearchBox implements Action {
+	type = ToolsActionsTypes.SET_MAP_SEARCH_BOX;
+
+	constructor(public payload: boolean) {
 	};
 }
 

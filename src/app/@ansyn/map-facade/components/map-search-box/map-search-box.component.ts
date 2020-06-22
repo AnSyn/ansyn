@@ -6,10 +6,12 @@ import { Observable } from 'rxjs';
 import { filter, retryWhen, switchMap, take, tap, delay } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { selectIsMinimalistViewMode } from "../../reducers/map.reducer";
-import { Store } from "@ngrx/store";
-import { SetActiveCenter } from '../../../ansyn/modules/menu-items/tools/actions/tools.actions';
+import { selectIsMinimalistViewMode } from '../../reducers/map.reducer';
+import { Store } from '@ngrx/store';
+import { SetActiveCenter, SetMapSearchBox } from '../../../ansyn/modules/menu-items/tools/actions/tools.actions';
+
 const DEFAULT_WIDTH = 150;
+
 @Component({
 	selector: 'ansyn-map-search-box',
 	templateUrl: './map-search-box.component.html',
@@ -68,6 +70,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		this.error = null;
 		this.loading = true;
 		this.autoCompleteWidth = DEFAULT_WIDTH;
+		this.store$.dispatch(new SetMapSearchBox(false));
 	}
 
 	goToLocation(point) {
@@ -76,9 +79,9 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		}
 		if (point) {
 			this._communicator.setCenter(point, true).pipe(take(1)).subscribe();
+			this.store$.dispatch(new SetActiveCenter(point.coordinates));
+			this.store$.dispatch(new SetMapSearchBox(true));
 		}
-
-		this.store$.dispatch(new SetActiveCenter({coordinates: point.coordinates, mapSearchBoxSearch: true}));
 	}
 
 	ngOnInit(): void {
@@ -92,8 +95,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		let point;
 		if (this.geocoderService.isCoordinates(value)) {
 			point = this.geocoderService.createPoint(value);
-		}
-		else {
+		} else {
 			let index = this.locations.findIndex(loc => loc.name === value);
 			if (index > -1) {
 				point = this.locations[index].point;

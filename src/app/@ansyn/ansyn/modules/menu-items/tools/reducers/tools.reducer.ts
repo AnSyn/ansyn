@@ -114,8 +114,10 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 		}
 
 		case ToolsActionsTypes.SET_ACTIVE_CENTER:
-			console.log('ac', action.payload.mapSearchBoxSearch);
-			return { ...state, activeCenter: action.payload.coordinates, mapSearchBoxSearch: action.payload.mapSearchBoxSearch };
+			return { ...state, activeCenter: action.payload };
+
+		case ToolsActionsTypes.SET_MAP_SEARCH_BOX:
+			return { ...state, mapSearchBoxSearch: action.payload };
 
 		case ToolsActionsTypes.SET_PIN_LOCATION_MODE:
 			tmpMap = new Map(state.flags);

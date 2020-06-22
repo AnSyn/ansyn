@@ -81,7 +81,7 @@ export class GoToVisualizer extends EntitiesVisualizer {
 			.pipe(take(1))
 			.subscribe((point: Point) => {
 				this.store$.dispatch(new SetPinLocationModeAction(false));
-				this.store$.dispatch(new SetActiveCenter({ coordinates: point.coordinates }));
+				this.store$.dispatch(new SetActiveCenter(point.coordinates));
 			});
 	};
 

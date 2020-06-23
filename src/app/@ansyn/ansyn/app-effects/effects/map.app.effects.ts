@@ -22,7 +22,9 @@ import {
 	SetToastMessageAction,
 	SynchronizeMapsAction,
 	ToggleMapLayersAction,
-	UpdateMapAction
+	UpdateMapAction,
+	SetActiveCenterTriggerAction,
+	SetMapSearchBoxTriggerAction
 } from '@ansyn/map-facade';
 import {
 	BaseMapSourceProvider,
@@ -54,7 +56,10 @@ import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model'
 import { MarkUpClass } from '../../modules/overlays/reducers/overlays.reducer';
 import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity/src/models';
-import { SetMapGeoEnabledModeToolsActionStore } from '../../modules/menu-items/tools/actions/tools.actions';
+import {
+	SetActiveCenter,
+	SetMapGeoEnabledModeToolsActionStore, SetMapSearchBox
+} from '../../modules/menu-items/tools/actions/tools.actions';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
@@ -198,6 +203,20 @@ export class MapAppEffects {
 					new SetIsLoadingAcion({ mapId: action.payload.mapId, show: true, text: 'Loading Overlay' })
 				];
 			})
+		);
+
+	@Effect()
+	onSetActiveCenterTrigger$: Observable<any> = this.actions$
+		.pipe(
+			ofType<SetActiveCenterTriggerAction>(MapActionTypes.SET_ACTIVE_CENTER_TRIGGER),
+			map((action: SetActiveCenterTriggerAction) => new SetActiveCenter(action.payload))
+		);
+
+	@Effect()
+	onMapSearchBoxTrigger$: Observable<any> = this.actions$
+		.pipe(
+			ofType<SetMapSearchBoxTriggerAction>(MapActionTypes.MAP_SEARCH_BOX_TRIGGER),
+			map((action: SetMapSearchBoxTriggerAction) => new SetMapSearchBox(action.payload))
 		);
 
 	@Effect({ dispatch: false })

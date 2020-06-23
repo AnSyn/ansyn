@@ -72,7 +72,9 @@ export {
 	ReplaceMainLayer,
 	ReplaceMainLayerSuccess,
 	ReplaceMainLayerFailed,
-	SynchronizeMapsAction
+	SynchronizeMapsAction,
+	SetActiveCenterTriggerAction,
+	SetMapSearchBoxTriggerAction
 } from './actions/map.actions';
 
 export {

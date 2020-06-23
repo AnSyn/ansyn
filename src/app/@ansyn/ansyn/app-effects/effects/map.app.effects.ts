@@ -22,7 +22,9 @@ import {
 	SetToastMessageAction,
 	SynchronizeMapsAction,
 	ToggleMapLayersAction,
-	UpdateMapAction
+	UpdateMapAction,
+	SetActiveCenterTriggerAction,
+	SetMapSearchBoxTriggerAction
 } from '@ansyn/map-facade';
 import {
 	BaseMapSourceProvider,
@@ -54,7 +56,10 @@ import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model'
 import { MarkUpClass } from '../../modules/overlays/reducers/overlays.reducer';
 import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity/src/models';
-import { SetMapGeoEnabledModeToolsActionStore } from '../../modules/menu-items/tools/actions/tools.actions';
+import {
+	SetActiveCenter,
+	SetMapGeoEnabledModeToolsActionStore, SetMapSearchBox
+} from '../../modules/menu-items/tools/actions/tools.actions';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
@@ -200,6 +205,20 @@ export class MapAppEffects {
 			})
 		);
 
+	@Effect()
+	onSetActiveCenterTrigger$: Observable<any> = this.actions$
+		.pipe(
+			ofType<SetActiveCenterTriggerAction>(MapActionTypes.SET_ACTIVE_CENTER_TRIGGER),
+			map((action: SetActiveCenterTriggerAction) => new SetActiveCenter(action.payload))
+		);
+
+	@Effect()
+	onMapSearchBoxTrigger$: Observable<any> = this.actions$
+		.pipe(
+			ofType<SetMapSearchBoxTriggerAction>(MapActionTypes.MAP_SEARCH_BOX_TRIGGER),
+			map((action: SetMapSearchBoxTriggerAction) => new SetMapSearchBox(action.payload))
+		);
+
 	@Effect({ dispatch: false })
 	onDisplayOverlayCheckItsExtent$ = this.actions$.pipe(
 		ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
@@ -208,6 +227,7 @@ export class MapAppEffects {
 				withLatestFrom(this.store$.select(selectMapPositionByMapId(action.payload.mapId)))
 			)
 		),
+		filter(([payload, position]: [any, ImageryMapPosition]) => Boolean(position)),
 		tap( ([payload, position]: [any, ImageryMapPosition]) => {
 			const isNotIntersect = polygonsDontIntersect(position.extentPolygon, payload.overlay.footprint, 0.2);
 			if (isNotIntersect) {
@@ -215,7 +235,7 @@ export class MapAppEffects {
 				comm.ActiveMap.fitToExtent(bboxFromGeoJson(payload.overlay.footprint))
 			}
 		})
-	)
+	);
 
 	@Effect({ dispatch: false })
 	onSynchronizeAppMaps$: Observable<any> = this.actions$.pipe(

@@ -57,7 +57,7 @@
 		</div>
 
 		<div class="show-more-less" *ngIf="!isGotSmallListFromProvider && !showOnlyFavorite && !metadataFromState.collapse">
-			<span (click)="toggleShowMoreLess()">{{!isLongFiltersList ? 'SHOW MORE' : 'SHOW LESS' | translate}}</span>
+			<span (click)="toggleShowMoreLess()">{{(!isLongFiltersList ? 'SHOW MORE' : 'SHOW LESS') | translate}}</span>
 		</div>
 
 	</ng-template>

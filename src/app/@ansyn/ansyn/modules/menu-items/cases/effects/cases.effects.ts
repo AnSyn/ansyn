@@ -130,9 +130,8 @@ export class CasesEffects {
 	@Effect()
 	loadDefaultCase$: Observable<SelectDilutedCaseAction> = this.actions$.pipe(
 		ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
-		withLatestFrom(this.store.select(selectMapsIds)),
-		filter(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => !action.payload.context),
-		mergeMap(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => {
+		filter((action: LoadDefaultCaseAction) => !action.payload.context),
+		mergeMap((action: LoadDefaultCaseAction) => {
 			const defaultCaseQueryParams: ICase = this.casesService.updateCaseViaQueryParmas(action.payload, this.casesService.defaultCase);
 			return [new SelectDilutedCaseAction(defaultCaseQueryParams)];
 		}),

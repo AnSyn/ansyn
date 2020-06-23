@@ -68,7 +68,7 @@ describe('MenuAppEffects', () => {
 		expect(menuAppEffects.onContainerChanged$).toBeObservable(expectedResults);
 	});
 
-	fit(`onResetApp$ should call LoadDefaultCaseAction`, () => {
+	it(`onResetApp$ should call LoadDefaultCaseAction`, () => {
 		actions = hot('--a--', {
 			a: new ResetAppAction()
 		});

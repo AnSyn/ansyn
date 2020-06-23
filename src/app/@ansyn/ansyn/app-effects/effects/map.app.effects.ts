@@ -22,7 +22,9 @@ import {
 	SetToastMessageAction,
 	SynchronizeMapsAction,
 	ToggleMapLayersAction,
-	UpdateMapAction
+	UpdateMapAction,
+	SetActiveCenterTriggerAction,
+	SetMapSearchBoxTriggerAction
 } from '@ansyn/map-facade';
 import {
 	BaseMapSourceProvider,
@@ -82,7 +84,7 @@ import {
 	IOverlayStatusConfig,
 	overlayStatusConfig
 } from '../../modules/overlays/overlay-status/config/overlay-status-config';
-import { SetActiveCenterTriggerAction, SetMapSearchBoxTriggerAction } from '../../../map-facade/actions/map.actions';
+import {  } from '../../../map-facade/actions/map.actions';
 
 @Injectable()
 export class MapAppEffects {

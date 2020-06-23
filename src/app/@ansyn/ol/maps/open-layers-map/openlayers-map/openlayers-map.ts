@@ -198,11 +198,12 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	createView(layer): View {
 		const defaultZoomFactor = 2;
-		const zoomFactor = 1.2; // zoom step for every mouse wheel turn
+		const zoomFactor = 2; // zoom step for every mouse wheel turn
+		const maxZoom = 21 * logarithmByBase(zoomFactor, defaultZoomFactor);
 		return new View({
 			projection: layer.getSource().getProjection(),
-			maxZoom: 21 * logarithmByBase(zoomFactor, defaultZoomFactor),
 			minZoom: 1,
+			maxZoom,
 			zoomFactor
 		});
 	}
@@ -512,13 +513,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	zoomOut(): void {
 		const view = this.mapObject.getView();
 		const current = view.getZoom();
-		view.setZoom(current - 1);
+		view.setZoom(current - 0.5);
 	}
 
 	zoomIn(): void {
 		const view = this.mapObject.getView();
 		const current = view.getZoom();
-		view.setZoom(current + 1);
+		view.setZoom(current + 0.5);
 	}
 
 	flyTo(location: [number, number]) {

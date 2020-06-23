@@ -122,7 +122,7 @@ export class CasesEffects {
 	);
 
 	@Effect()
-	loadDefaultCase$: Observable<SelectDilutedCaseAction | BackToWorldView> = this.actions$.pipe(
+	loadDefaultCase$: Observable<(SelectDilutedCaseAction | BackToWorldView)> = this.actions$.pipe(
 		ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
 		withLatestFrom(this.store.select(selectActiveMapId)),
 		filter(([action, mapId]: [LoadDefaultCaseAction, string]) => !action.payload.context),

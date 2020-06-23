@@ -227,6 +227,7 @@ export class MapAppEffects {
 				withLatestFrom(this.store$.select(selectMapPositionByMapId(action.payload.mapId)))
 			)
 		),
+		filter(([payload, position]: [any, ImageryMapPosition]) => Boolean(position)),
 		tap( ([payload, position]: [any, ImageryMapPosition]) => {
 			const isNotIntersect = polygonsDontIntersect(position.extentPolygon, payload.overlay.footprint, 0.2);
 			if (isNotIntersect) {
@@ -234,7 +235,7 @@ export class MapAppEffects {
 				comm.ActiveMap.fitToExtent(bboxFromGeoJson(payload.overlay.footprint))
 			}
 		})
-	)
+	);
 
 	@Effect({ dispatch: false })
 	onSynchronizeAppMaps$: Observable<any> = this.actions$.pipe(

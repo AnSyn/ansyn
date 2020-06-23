@@ -84,7 +84,6 @@ import {
 	IOverlayStatusConfig,
 	overlayStatusConfig
 } from '../../modules/overlays/overlay-status/config/overlay-status-config';
-import {  } from '../../../map-facade/actions/map.actions';
 
 @Injectable()
 export class MapAppEffects {

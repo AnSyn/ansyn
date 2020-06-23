@@ -36,10 +36,6 @@ describe('MapSearchBoxComponent', () => {
 					}
 				},
 				{
-					provide: TranslateService,
-					useValue: {}
-				},
-				{
 					provide: GeocoderService, useValue: {
 						getLocation$: () => {
 						},

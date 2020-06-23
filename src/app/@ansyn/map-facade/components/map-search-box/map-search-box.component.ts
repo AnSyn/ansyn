@@ -15,6 +15,7 @@ import {
 } from '../../actions/map.actions';
 import { TranslateService } from '@ngx-translate/core';
 
+
 const DEFAULT_WIDTH = 150;
 
 @Component({

@@ -12,6 +12,7 @@ import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/ca
 import { selectDropsWithoutSpecialObjects } from '../../modules/overlays/reducers/overlays.reducer';
 import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
+import { ShowOverlaysFootprintAction } from '../../modules/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class MenuAppEffects {
@@ -50,7 +51,7 @@ export class MenuAppEffects {
 					return EMPTY;
 				}
 
-				return [new LoadDefaultCaseAction()];
+				return [new LoadDefaultCaseAction(), new ShowOverlaysFootprintAction('None')];
 			})
 		);
 

@@ -96,6 +96,7 @@ describe('CasesAppEffects', () => {
 						}
 					}
 				},
+				{ provide: casesConfig, useValue: { schema: null, defaultCase: { id: 'defaultCaseId' } } },
 				{
 					provide: overlayStatusConfig,
 					useValue: {

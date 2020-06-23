@@ -47,7 +47,8 @@ import {
 	startWith,
 	switchMap,
 	tap,
-	withLatestFrom
+	withLatestFrom,
+	take
 } from 'rxjs/operators';
 import { toastMessages } from '../../modules/core/models/toast-messages';
 import { endTimingLog, startTimingLog } from '../../modules/core/utils/logs/timer-logs';
@@ -222,17 +223,22 @@ export class MapAppEffects {
 	@Effect({ dispatch: false })
 	onDisplayOverlayCheckItsExtent$ = this.actions$.pipe(
 		ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
-		mergeMap((action: DisplayOverlaySuccessAction) =>
-			of(action.payload).pipe(
-				withLatestFrom(this.store$.select(selectMapPositionByMapId(action.payload.mapId)))
-			)
+		mergeMap((action: DisplayOverlaySuccessAction) => {
+				const { ActiveMap } = this.imageryCommunicatorService.provide(action.payload.mapId);
+				return ActiveMap.getPosition().pipe(
+					map( position => [action.payload, position])
+				)
+			}
 		),
 		filter(([payload, position]: [any, ImageryMapPosition]) => Boolean(position)),
 		tap( ([payload, position]: [any, ImageryMapPosition]) => {
-			const isNotIntersect = polygonsDontIntersect(position.extentPolygon, payload.overlay.footprint, 0.2);
+			const isNotIntersect = polygonsDontIntersect(position.extentPolygon, payload.overlay.footprint, 0.1);
 			if (isNotIntersect) {
 				const comm = this.imageryCommunicatorService.provide(payload.mapId);
-				comm.ActiveMap.fitToExtent(bboxFromGeoJson(payload.overlay.footprint))
+				comm.ActiveMap.fitToExtent(bboxFromGeoJson(payload.overlay.footprint)).pipe(
+					take(1),
+					tap( () => comm.ActiveMap.zoomIn())
+				)
 			}
 		})
 	);

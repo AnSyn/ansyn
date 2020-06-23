@@ -149,13 +149,13 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	zoomOut(): void {
 		const view = this.mapObject.getView();
 		const current = view.getZoom();
-		view.setZoom(current - 1);
+		view.setZoom(current - 0.5);
 	}
 
 	zoomIn(): void {
 		const view = this.mapObject.getView();
 		const current = view.getZoom();
-		view.setZoom(current + 1);
+		view.setZoom(current + 0.5);
 	}
 
 	getRotation(): number {

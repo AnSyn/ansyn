@@ -471,11 +471,11 @@ export class CesiumMap extends BaseImageryMap<any> {
 	}
 
 	zoomIn(): void {
-		this.mapObject.camera.zoomIn();
+		this.mapObject.camera.zoomIn(this.mapObject.camera.defaultZoomAmount * 0.5);
 	}
 
 	zoomOut(): void {
-		this.mapObject.camera.zoomOut();
+		this.mapObject.camera.zoomOut(this.mapObject.camera.defaultZoomAmount * 0.5);
 	}
 
 	one2one(): void {

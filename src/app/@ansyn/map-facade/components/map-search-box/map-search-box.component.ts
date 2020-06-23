@@ -8,7 +8,12 @@ import { FormControl } from '@angular/forms';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectIsMinimalistViewMode } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
-import { SetActiveCenterTriggerAction, SetMapSearchBoxTriggerAction } from '../../actions/map.actions';
+import {
+	SetActiveCenterTriggerAction,
+	SetMapSearchBoxTriggerAction,
+	SetToastMessageAction
+} from '../../actions/map.actions';
+import { TranslateService } from '@ngx-translate/core';
 
 const DEFAULT_WIDTH = 150;
 
@@ -62,7 +67,8 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 
 	constructor(protected store$: Store<any>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				public geocoderService: GeocoderService) {
+				public geocoderService: GeocoderService,
+				protected translator: TranslateService) {
 	}
 
 	resetSearch() {
@@ -105,6 +111,12 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 				this.control.setValue(bestLocation ? bestLocation.name : value);
 			}
 		}
-		this.goToLocation(point);
+
+		if (point) {
+			this.goToLocation(point);
+		} else {
+			const toastText = this.translator.instant('Invalid location');
+			this.store$.dispatch(new SetToastMessageAction({ toastText }))
+		}
 	}
 }

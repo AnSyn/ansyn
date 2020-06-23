@@ -7,7 +7,8 @@ import {
 	CesiumMap,
 	CesiumOpenAerialSourceProvider,
 	CesiumOsmSourceProvider,
-	CesiumPlanetSourceProvider
+	CesiumPlanetSourceProvider,
+	CesiumSentinelSourceProvider
 } from '@ansyn/imagery-cesium';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { NorthCalculationsPlugin } from './plugins/north-calculations/north-calculations.plugin';
@@ -30,7 +31,8 @@ import { MouseMarkerPlugin } from './plugins/mouse-marker/mouse-marker.plugin';
 				CesiumOsmSourceProvider,
 				CesiumPlanetSourceProvider,
 				CesiumOpenAerialSourceProvider,
-				CesiumGeoServerSourceProvider
+				CesiumGeoServerSourceProvider,
+				CesiumSentinelSourceProvider
 			]
 		}),
 		MapFacadeModule.provide({

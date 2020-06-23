@@ -344,7 +344,7 @@ export class MapAppEffects {
 		const communicator = this.imageryCommunicatorService.provide(mapId);
 		const { sourceType } = overlay;
 		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({
-			sourceType,
+			sourceType: 'CESIUM_SENTINEL',
 			mapType: sourceType.toLowerCase().includes('video') ? ImageryVideoMapType : caseMapState.worldView.mapType
 		});
 

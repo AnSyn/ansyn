@@ -1,4 +1,4 @@
-<div class="edit-layer">
+<div class="edit-layer" [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''">
 	<form #f="ngForm" class="edit-layer-form"
 		  (ngSubmit)="layer ? editLayer(layerName.value) : addLayer(layerName.value)">
 		<ansyn-input

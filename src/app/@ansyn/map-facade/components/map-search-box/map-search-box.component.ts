@@ -6,9 +6,18 @@ import { Observable } from 'rxjs';
 import { filter, retryWhen, switchMap, take, tap, delay } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { selectIsMinimalistViewMode } from "../../reducers/map.reducer";
-import { Store } from "@ngrx/store";
+import { selectIsMinimalistViewMode } from '../../reducers/map.reducer';
+import { Store } from '@ngrx/store';
+import {
+	SetActiveCenterTriggerAction,
+	SetMapSearchBoxTriggerAction,
+	SetToastMessageAction
+} from '../../actions/map.actions';
+import { TranslateService } from '@ngx-translate/core';
+
+
 const DEFAULT_WIDTH = 150;
+
 @Component({
 	selector: 'ansyn-map-search-box',
 	templateUrl: './map-search-box.component.html',
@@ -59,7 +68,8 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 
 	constructor(protected store$: Store<any>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				public geocoderService: GeocoderService) {
+				public geocoderService: GeocoderService,
+				protected translator: TranslateService) {
 	}
 
 	resetSearch() {
@@ -67,6 +77,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		this.error = null;
 		this.loading = true;
 		this.autoCompleteWidth = DEFAULT_WIDTH;
+		this.store$.dispatch(new SetMapSearchBoxTriggerAction(false));
 	}
 
 	goToLocation(point) {
@@ -75,6 +86,8 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		}
 		if (point) {
 			this._communicator.setCenter(point, true).pipe(take(1)).subscribe();
+			this.store$.dispatch(new SetActiveCenterTriggerAction(point.coordinates));
+			this.store$.dispatch(new SetMapSearchBoxTriggerAction(true));
 		}
 	}
 
@@ -89,8 +102,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		let point;
 		if (this.geocoderService.isCoordinates(value)) {
 			point = this.geocoderService.createPoint(value);
-		}
-		else {
+		} else {
 			let index = this.locations.findIndex(loc => loc.name === value);
 			if (index > -1) {
 				point = this.locations[index].point;
@@ -100,6 +112,12 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 				this.control.setValue(bestLocation ? bestLocation.name : value);
 			}
 		}
-		this.goToLocation(point);
+
+		if (point) {
+			this.goToLocation(point);
+		} else {
+			const toastText = this.translator.instant('Invalid location');
+			this.store$.dispatch(new SetToastMessageAction({ toastText }))
+		}
 	}
 }

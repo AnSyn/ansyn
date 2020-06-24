@@ -47,9 +47,13 @@ export class GoToVisualizer extends EntitiesVisualizer {
 		pluck<IToolsState, number[]>('activeCenter'),
 		distinctUntilChanged());
 
+	mapSearchBox$ = this.toolsState$.pipe(
+		pluck<IToolsState, number[]>('mapSearchBoxSearch'),
+		distinctUntilChanged());
+
 	/* events */
 	@AutoSubscription
-	drawPinPoint$ = combineLatest(this.isActiveMap$, this.goToExpand$, this.activeCenter$)
+	drawPinPoint$ = combineLatest(this.isActiveMap$, this.goToExpand$, this.activeCenter$, this.mapSearchBox$)
 		.pipe(mergeMap(this.drawGotoIconOnMap.bind(this)));
 
 	@AutoSubscription
@@ -97,8 +101,8 @@ export class GoToVisualizer extends EntitiesVisualizer {
 		return this.iMap && this.iMap.mapObject.un('singleclick', this.singleClickListener, this);
 	}
 
-	drawGotoIconOnMap([isActiveMap, goToExpand, activeCenter]: [boolean, boolean, number[]]): Observable<boolean> {
-		if (goToExpand && isActiveMap) {
+	drawGotoIconOnMap([isActiveMap, goToExpand, activeCenter, mapSearchBox]: [boolean, boolean, number[], boolean]): Observable<boolean> {
+		if ((goToExpand && isActiveMap) || mapSearchBox) {
 			const featureJson: GeoJSON.Feature<any> = turf.point(activeCenter);
 			return this.setEntities([{ id: 'goto', featureJson }]);
 		}

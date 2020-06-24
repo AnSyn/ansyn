@@ -5,7 +5,7 @@ import {
 	BaseImageryMap,
 	ExtentCalculator,
 	IMAGERY_BASE_MAP_LAYER,
-	IMAGERY_MAIN_LAYER_NAME,
+	IMAGERY_MAIN_LAYER_NAME, IMAGERY_SLOW_ZOOM_FACTOR,
 	ImageryLayerProperties,
 	ImageryMap,
 	ImageryMapExtent,
@@ -509,13 +509,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	zoomOut(): void {
 		const view = this.mapObject.getView();
 		const current = view.getZoom();
-		view.setZoom(current - 0.5);
+		view.setZoom(current - IMAGERY_SLOW_ZOOM_FACTOR);
 	}
 
 	zoomIn(): void {
 		const view = this.mapObject.getView();
 		const current = view.getZoom();
-		view.setZoom(current + 0.5);
+		view.setZoom(current + IMAGERY_SLOW_ZOOM_FACTOR);
 	}
 
 	flyTo(location: [number, number]) {

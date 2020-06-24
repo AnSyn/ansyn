@@ -1,6 +1,6 @@
 import {
 	BaseImageryMap,
-	IMAGERY_MAIN_LAYER_NAME,
+	IMAGERY_MAIN_LAYER_NAME, IMAGERY_SLOW_ZOOM_FACTOR,
 	ImageryLayerProperties,
 	ImageryMap,
 	ImageryMapPosition
@@ -149,13 +149,13 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	zoomOut(): void {
 		const view = this.mapObject.getView();
 		const current = view.getZoom();
-		view.setZoom(current - 1);
+		view.setZoom(current - IMAGERY_SLOW_ZOOM_FACTOR);
 	}
 
 	zoomIn(): void {
 		const view = this.mapObject.getView();
 		const current = view.getZoom();
-		view.setZoom(current + 1);
+		view.setZoom(current + IMAGERY_SLOW_ZOOM_FACTOR);
 	}
 
 	getRotation(): number {

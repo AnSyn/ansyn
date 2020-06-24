@@ -2,7 +2,7 @@ import {
 	BaseImageryMap,
 	ExtentCalculator,
 	IMAGERY_BASE_MAP_LAYER,
-	IMAGERY_MAIN_LAYER_NAME,
+	IMAGERY_MAIN_LAYER_NAME, IMAGERY_SLOW_ZOOM_FACTOR,
 	ImageryLayerProperties,
 	ImageryMap,
 	ImageryMapExtent,
@@ -471,11 +471,11 @@ export class CesiumMap extends BaseImageryMap<any> {
 	}
 
 	zoomIn(): void {
-		this.mapObject.camera.zoomIn();
+		this.mapObject.camera.zoomIn(this.mapObject.camera.defaultZoomAmount * IMAGERY_SLOW_ZOOM_FACTOR);
 	}
 
 	zoomOut(): void {
-		this.mapObject.camera.zoomOut();
+		this.mapObject.camera.zoomOut(this.mapObject.camera.defaultZoomAmount * IMAGERY_SLOW_ZOOM_FACTOR);
 	}
 
 	one2one(): void {

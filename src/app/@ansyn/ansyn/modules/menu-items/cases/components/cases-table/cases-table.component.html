@@ -21,7 +21,9 @@
 		</div>
 	</div>
 
-	<div class="cases-table-body scrolled" (ansynInfiniteScroll)="loadCases()" *ngIf="entities$ | async as entities"
+	<div class="cases-table-body scrolled"
+		 [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''"
+		 (ansynInfiniteScroll)="loadCases()" *ngIf="entities$ | async as entities"
          #tbodyElement>
 
 		<div class="cases-table-body-row"

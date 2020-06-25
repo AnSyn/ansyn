@@ -207,6 +207,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 			if (selection.type === 'Caret' && !/[ \/:]/g.test(selection.baseNode.textContent.charAt(selection.baseOffset - 1))) {
 				return;
 			}
+			this.selectOnlyNumber();
 			selection.deleteFromDocument();
 		}
 		if (isDigitKey(event)) {

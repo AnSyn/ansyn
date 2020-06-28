@@ -10,7 +10,7 @@
 			 class="map-container-wrapper"
              #dragElement
 			 (click)="clickMapContainer(map.id)"
-			 (dblclick)="dbclick()"
+			 (dblclick)="clickMapContainer(map.id)"
 			 [id]="map.id"
 			 draggable="false">
 			<ansyn-imagery-container class="map"

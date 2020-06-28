@@ -105,7 +105,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 				if (activeMapOverlayId) {
 					const indexOfRecentOverlay = this.findIndexBytOverlayId(activeMapOverlayId);
 					this.updatePaginationOnScroll(indexOfRecentOverlay);
-					this.scroll(indexOfRecentOverlay);
+					this.scrollOverlayToCenter(indexOfRecentOverlay);
 				}
 			})
 		);
@@ -132,7 +132,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	scroll(index: number): void {
+	scrollOverlayToCenter(index: number): void {
 		requestAnimationFrame(() => {
 			const heightOfRow = document.getElementsByClassName('results-table-body-row-data')[0].clientHeight;
 			const amountOfRowsDisplayed = this.table.nativeElement.offsetHeight / heightOfRow;

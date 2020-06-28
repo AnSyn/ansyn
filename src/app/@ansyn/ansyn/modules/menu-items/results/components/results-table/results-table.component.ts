@@ -102,11 +102,16 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			select(selectDropMarkup),
 			tap((value: ExtendMap<MarkUpClass, IMarkUpData>) => {
 				const [activeMapOverlayId] = value.get(MarkUpClass.active).overlaysIds;
+				let overlayIdToScroll: string;
 				if (activeMapOverlayId) {
-					const indexOfRecentOverlay = this.findIndexBytOverlayId(activeMapOverlayId);
-					this.updatePaginationOnScroll(indexOfRecentOverlay);
-					this.scrollOverlayToCenter(indexOfRecentOverlay);
+					overlayIdToScroll = activeMapOverlayId;
+				} else if (this.overlayIds) {
+					overlayIdToScroll = this.overlayIds[this.overlayIds.length - 1];
 				}
+
+				const indexOfRecentOverlay = this.findIndexBytOverlayId(overlayIdToScroll);
+				this.updatePaginationOnScroll(indexOfRecentOverlay);
+				this.scrollOverlayToCenter(indexOfRecentOverlay);
 			})
 		);
 

@@ -103,7 +103,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			tap((value: ExtendMap<MarkUpClass, IMarkUpData>) => {
 				const [activeMapOverlayId] = value.get(MarkUpClass.active).overlaysIds;
 				if (activeMapOverlayId) {
-					const indexOfRecentOverlay = this.findIndexBytOverlay(activeMapOverlayId);
+					const indexOfRecentOverlay = this.findIndexBytOverlayId(activeMapOverlayId);
 					this.updatePaginationOnScroll(indexOfRecentOverlay);
 					this.scroll(indexOfRecentOverlay);
 				}
@@ -115,9 +115,9 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 				protected translateService: TranslateService) {
 	}
 
-	findIndexBytOverlay(latestSelectedOverlay: string): number {
-		const recentOverlayIndex = this.overlays.map(overlay => overlay.id).indexOf(latestSelectedOverlay);
-		return recentOverlayIndex;
+	findIndexBytOverlayId(overlayId: string): number {
+		const overlayIndex = this.overlays.map(overlay => overlay.id).indexOf(overlayId);
+		return overlayIndex;
 	}
 
 	ngOnDestroy(): void {

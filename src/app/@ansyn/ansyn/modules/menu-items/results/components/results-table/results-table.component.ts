@@ -96,17 +96,16 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		);
 
 	@AutoSubscription
-	scrollToRecentOverlay$: Observable<any> = this.dropsMarkUp$
+	scrollToActiveMapOverlay$: Observable<any> = this.store$
 		.pipe(
 			take(1),
-			tap(() => {
-				if (this.overlayIds) {
-					const latestSelectedOverlayId = this.overlayIds[this.overlayIds.length - 1];
-					if (latestSelectedOverlayId) {
-						const indexOfRecentOverlay = this.findIndexOfRecentOverlay(latestSelectedOverlayId);
-						this.updatePaginationOnScroll(indexOfRecentOverlay);
-						this.scroll(indexOfRecentOverlay);
-					}
+			select(selectDropMarkup),
+			tap((value: ExtendMap<MarkUpClass, IMarkUpData>) => {
+				const [activeMapOverlayId] = value.get(MarkUpClass.active).overlaysIds;
+				if (activeMapOverlayId) {
+					const indexOfRecentOverlay = this.findIndexBytOverlay(activeMapOverlayId);
+					this.updatePaginationOnScroll(indexOfRecentOverlay);
+					this.scroll(indexOfRecentOverlay);
 				}
 			})
 		);
@@ -116,7 +115,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 				protected translateService: TranslateService) {
 	}
 
-	findIndexOfRecentOverlay(latestSelectedOverlay: string): number {
+	findIndexBytOverlay(latestSelectedOverlay: string): number {
 		const recentOverlayIndex = this.overlays.map(overlay => overlay.id).indexOf(latestSelectedOverlay);
 		return recentOverlayIndex;
 	}

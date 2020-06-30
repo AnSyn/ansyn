@@ -95,7 +95,7 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 
 	@HostListener('window:keypress', ['$event'])
 	onkeypress($event: KeyboardEvent) {
-		if (!this.isElementNotValid($event)) {
+		if (this.isElementNotValid($event)) {
 			return;
 		}
 

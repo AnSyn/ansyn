@@ -1,3 +1,6 @@
+import { Pipe, PipeTransform } from '@angular/core';
+import { DatePipe } from '@angular/common';
+
 export class TimeDiff {
 	isNegative: boolean;
 	seconds: number;
@@ -58,4 +61,13 @@ export function getTimeDiffFormat(timeDiff: TimeDiff): string {
 export function getTimeFormat(dateTime: Date): string {
 	// Remarks: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString
 	return dateTime.toLocaleString('en-GB', { hour12: false });
+}
+
+@Pipe({
+	name: 'ansynDate'
+})
+export class AnsynDatePipe extends DatePipe implements PipeTransform {
+	transform(value: any, args?: any): any {
+		return super.transform(value, 'dd/MM/yyyy HH:mm');
+	}
 }

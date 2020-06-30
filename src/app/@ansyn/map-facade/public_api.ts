@@ -90,7 +90,7 @@ export {
 } from './reducers/imagery-status.reducer'
 
 export { copyFromContent } from './utils/clipboard';
-export { getTimeFormat, getTimeDiff, getTimeDiffFormat } from './utils/time';
+export { getTimeFormat, getTimeDiff, getTimeDiffFormat, AnsynDatePipe } from './utils/time';
 
 export { ProjectionConverterService, ICoordinatesSystem, IUtmZone } from './services/projection-converter.service';
 export { MapFacadeService } from './services/map-facade.service';

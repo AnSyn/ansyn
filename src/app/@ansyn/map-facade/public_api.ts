@@ -1,4 +1,5 @@
 export { GeocoderService } from './services/geocoder.service';
+export { IMapSearchResult } from './models/map-search.model';
 
 export { ImageryZoomerService } from './services/imagery-zoomer.service';
 export { IEd50Notification } from './models/map-config.model';
@@ -94,7 +95,7 @@ export { getTimeFormat, getTimeDiff, getTimeDiffFormat } from './utils/time';
 
 export { ProjectionConverterService, ICoordinatesSystem, IUtmZone } from './services/projection-converter.service';
 export { MapFacadeService } from './services/map-facade.service';
-export { IMapFacadeConfig } from './models/map-config.model';
+export { IMapFacadeConfig, IMapSearchConfig } from './models/map-config.model';
 export { mapFacadeConfig } from './models/map-facade.config';
 export { EntryComponentDirective } from './directives/entry-component.directive';
 export { InfiniteScrollDirective } from './directives/infinite-scroll.directive';

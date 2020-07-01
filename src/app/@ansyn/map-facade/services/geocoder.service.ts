@@ -1,12 +1,13 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, EMPTY } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { IMapFacadeConfig, IMapSearchConfig } from '../models/map-config.model';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { catchError, map } from 'rxjs/operators';
 import { Point } from 'geojson';
 import { ProjectionConverterService } from './projection-converter.service';
 import { point } from '@turf/helpers';
+import { IMapSearchResult } from '../models/map-search.model';
 
 
 @Injectable()
@@ -28,13 +29,13 @@ export class GeocoderService {
 		this.config = this.packageConfig.mapSearch;
 	}
 
-	getLocation$(searchString: string): Observable<{ name: string, point: Point }[]> {
+	getLocation$(searchString: string): Observable<IMapSearchResult[]> {
 		const url = this.config.url.concat(searchString).concat("&format=geojson");
 		if (/\d/.test(searchString.charAt(0))) { // user enter coordinates
 			return of([]);
 		}
 		return this.http.get<any>(url).pipe(
-			map( (locations: any) => locations.features.map( feature => ({ name: feature.properties.display_name, point: feature.geometry }))),
+			map( (result: any): IMapSearchResult[] => result.features.map( feature => ({ name: feature.properties.display_name, point: feature.geometry }))),
 			catchError((error: Response | any) => {
 				console.warn(error);
 				return of([{ name: undefined, point: undefined }]);

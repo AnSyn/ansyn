@@ -181,6 +181,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				);
 			}
 			return of(0);
+			
 		})
 	);
 

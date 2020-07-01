@@ -33,7 +33,7 @@ import { UtmHolderComponent } from './components/imagery-mouse-coordinates/holde
 import { FloatingMenuComponent } from './components/floating-menu/floating-menu.component';
 import { MatAutocompleteModule, MatInputModule } from '@angular/material';
 import { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
-import { AnsynDatePipe } from './utils/time';
+import { AnsynDatePipe } from './pipes/ansyn-date.pipe';
 
 @NgModule({
 	imports: [

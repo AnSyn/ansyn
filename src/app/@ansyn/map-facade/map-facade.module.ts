@@ -84,7 +84,8 @@ import { AnsynDatePipe } from './utils/time';
 		AnsynPopoverComponent,
 		EntryComponentDirective,
 		GeoHolderComponent,
-		UtmHolderComponent
+		UtmHolderComponent,
+		AnsynDatePipe
 	]
 })
 

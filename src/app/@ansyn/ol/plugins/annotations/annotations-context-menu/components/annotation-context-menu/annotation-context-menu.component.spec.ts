@@ -4,6 +4,7 @@ import { EventEmitter } from '@angular/core';
 import { Actions } from '@ngrx/effects';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { MockComponent } from '../../../../../../ansyn/modules/core/test/mock-component';
+import { StoreModule } from '@ngrx/store';
 
 describe('AnnotationContextMenuComponent', () => {
 	let component: AnnotationContextMenuComponent;
@@ -15,6 +16,7 @@ describe('AnnotationContextMenuComponent', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
+			imports: [StoreModule.forRoot({})],
 			providers: [
 				ImageryCommunicatorService,
 				{ provide: Actions, useValue: new EventEmitter() }

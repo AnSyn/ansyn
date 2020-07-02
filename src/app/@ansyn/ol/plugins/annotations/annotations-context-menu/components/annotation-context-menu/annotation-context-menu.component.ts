@@ -2,6 +2,9 @@ import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnI
 import { CommunicatorEntity, ImageryCommunicatorService, IMapInstanceChanged } from '@ansyn/imagery';
 import { filter, take, tap } from 'rxjs/operators';
 import { AnnotationsVisualizer } from '../../../annotations.visualizer';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { selectIsMinimalistViewMode } from '@ansyn/map-facade';
+import { Store } from '@ngrx/store';
 
 export enum AnnotationsContextmenuTabs {
 	Colors,
@@ -14,6 +17,8 @@ export enum AnnotationsContextmenuTabs {
 	templateUrl: './annotation-context-menu.component.html',
 	styleUrls: ['./annotation-context-menu.component.less']
 })
+
+@AutoSubscriptions()
 export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	annotations: AnnotationsVisualizer;
 	communicator: CommunicatorEntity;
@@ -21,9 +26,17 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 
 	selection: string[];
 	hoverFeatureId: string;
+	show: boolean;
 
 	@Input() mapId: string;
 	@HostBinding('attr.tabindex') tabindex = 0;
+
+	@AutoSubscription
+	isMinimalistViewMode$ = this.store$.select(selectIsMinimalistViewMode).pipe(
+		tap(isMinimalistViewMode => {
+			this.show = !isMinimalistViewMode;
+		})
+	);
 
 	subscribers = [];
 	annotationsSubscribers = [];
@@ -32,7 +45,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		$event.preventDefault();
 	}
 
-	constructor(public host: ElementRef, protected communicators: ImageryCommunicatorService) {
+	constructor(public host: ElementRef, protected communicators: ImageryCommunicatorService, protected store$: Store<any>) {
 	}
 
 	calcBoundingRect(id) {

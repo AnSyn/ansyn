@@ -91,6 +91,7 @@ export {
 
 export { copyFromContent } from './utils/clipboard';
 export { getTimeFormat, getTimeDiff, getTimeDiffFormat } from './utils/time';
+export { AnsynDatePipe } from './pipes/ansyn-date.pipe';
 
 export { ProjectionConverterService, ICoordinatesSystem, IUtmZone } from './services/projection-converter.service';
 export { MapFacadeService } from './services/map-facade.service';
@@ -100,6 +101,5 @@ export { EntryComponentDirective } from './directives/entry-component.directive'
 export { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
 export { AnimatedEllipsisComponent } from './components/animated-ellipsis/animated-ellipsis.component';
 export { MapFacadeModule } from './map-facade.module';
-
 
 export { LayoutKey, layoutOptions, IMapsLayout } from './models/maps-layout';

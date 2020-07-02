@@ -1,7 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { DeleteTaskAction, LoadTasksAction, SelectTaskAction, SetTasksPageToShow } from '../../actions/tasks.actions';
-import { getTimeFormat } from '@ansyn/map-facade';
 import { TasksEffects } from '../../effects/tasks.effects';
 import { Observable } from 'rxjs';
 import {
@@ -93,10 +92,6 @@ export class TasksTableComponent implements OnInit, OnDestroy {
 	selectTask(taskId: string): void {
 		this.store$.dispatch(new SelectTaskAction(taskId));
 		this.store$.dispatch(new SetTasksPageToShow(TasksPageToShow.TASK_FORM));
-	}
-
-	formatTime(timeToFormat: Date): string {
-		return getTimeFormat(timeToFormat);
 	}
 
 	showModal(id, name = '??') {

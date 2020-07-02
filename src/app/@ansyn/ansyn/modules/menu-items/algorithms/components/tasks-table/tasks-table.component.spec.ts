@@ -12,10 +12,11 @@ import { TasksRemoteService } from '../../services/tasks-remote.service';
 import { MenuConfig } from '@ansyn/menu';
 import { TranslateModule } from '@ngx-translate/core';
 import { TasksEffects } from '../../effects/tasks.effects';
-import { of } from 'rxjs/index';
+import { of } from 'rxjs';
 import { CoreConfig } from '../../../../core/models/core.config';
 import { LoggerConfig } from '../../../../core/models/logger.config';
 import { MockComponent } from '../../../../core/test/mock-component';
+import { MockPipe } from '../../../../core/test/mock-pipe';
 
 describe('TasksTableComponent', () => {
 	let component: TasksTableComponent;
@@ -25,6 +26,7 @@ describe('TasksTableComponent', () => {
 	const mockLoader = MockComponent({ selector: 'ansyn-loader', inputs: ['show'] });
 	const mockModal = MockComponent({ selector: 'ansyn-modal', inputs: ['show'] });
 	const mockRemove = MockComponent({ selector: 'ansyn-remove-task-modal', inputs: ['message'] });
+	const mockDatePipe = MockPipe('ansynDate');
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -32,7 +34,8 @@ describe('TasksTableComponent', () => {
 				TasksTableComponent,
 				mockLoader,
 				mockModal,
-				mockRemove
+				mockRemove,
+				mockDatePipe
 			],
 			imports: [
 				HttpClientModule,

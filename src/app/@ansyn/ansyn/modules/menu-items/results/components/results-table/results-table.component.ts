@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Observable, pipe } from 'rxjs';
+import { Observable } from 'rxjs';
 import { IOverlayDrop } from '../../../../overlays/models/overlay.model';
 import { select, Store } from '@ngrx/store';
 import {
@@ -163,10 +163,6 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 
 	openOverlay(id: string): void {
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id }));
-	}
-
-	timeFormat(overlayDate: Date): string {
-		return overlayDate.toLocaleString('he-IL', { hour12: false });
 	}
 
 	sortOverlays(header: ITableHeader): void {

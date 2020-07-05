@@ -22,8 +22,13 @@
 		span {
 			margin-left: 5px;
 			line-height: 23px;
-			width: 100%;
+			overflow: hidden;
 			text-overflow: ellipsis;
+
+			&.hide-overflow {
+				width: 100%;
+				overflow: unset;
+			}
 		}
 	}
 

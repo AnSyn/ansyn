@@ -2,7 +2,7 @@
 	<input type="text" [placeholder]="'Search place or coordinates' | translate"
 		   [formControl]="control"
 		   [matAutocomplete]="auto">
-	<mat-autocomplete #auto="matAutocomplete" [panelWidth]="autoCompleteWidth + 'px'">
+	<mat-autocomplete #auto="matAutocomplete" panelWidth="fit">
 		<mat-option *ngIf="loading;" disabled>
 			{{'loading results' | translate}}
 		</mat-option>

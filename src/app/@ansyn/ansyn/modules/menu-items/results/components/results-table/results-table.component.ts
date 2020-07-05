@@ -96,18 +96,22 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		);
 
 	@AutoSubscription
-	scrollToRecentOverlay$: Observable<any> = this.dropsMarkUp$
+	scrollToActiveMapOverlay$: Observable<any> = this.store$
 		.pipe(
 			take(1),
-			tap(() => {
-				if (this.overlayIds) {
-					const latestSelectedOverlayId = this.overlayIds[this.overlayIds.length - 1];
-					if (latestSelectedOverlayId) {
-						const indexOfRecentOverlay = this.findIndexOfRecentOverlay(latestSelectedOverlayId);
-						this.updatePaginationOnScroll(indexOfRecentOverlay);
-						this.scroll(indexOfRecentOverlay);
-					}
+			select(selectDropMarkup),
+			tap((value: ExtendMap<MarkUpClass, IMarkUpData>) => {
+				const [activeMapOverlayId] = value.get(MarkUpClass.active).overlaysIds;
+				let overlayIdToScroll: string;
+				if (activeMapOverlayId) {
+					overlayIdToScroll = activeMapOverlayId;
+				} else if (this.overlayIds) {
+					overlayIdToScroll = this.overlayIds[this.overlayIds.length - 1];
 				}
+
+				const indexOfRecentOverlay = this.findIndexBytOverlayId(overlayIdToScroll);
+				this.updatePaginationOnScroll(indexOfRecentOverlay);
+				this.scrollOverlayToCenter(indexOfRecentOverlay);
 			})
 		);
 
@@ -116,9 +120,9 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 				protected translateService: TranslateService) {
 	}
 
-	findIndexOfRecentOverlay(latestSelectedOverlay: string): number {
-		const recentOverlayIndex = this.overlays.map(overlay => overlay.id).indexOf(latestSelectedOverlay);
-		return recentOverlayIndex;
+	findIndexBytOverlayId(overlayId: string): number {
+		const overlayIndex = this.overlays.map(overlay => overlay.id).indexOf(overlayId);
+		return overlayIndex;
 	}
 
 	ngOnDestroy(): void {
@@ -133,7 +137,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	scroll(index: number): void {
+	scrollOverlayToCenter(index: number): void {
 		requestAnimationFrame(() => {
 			const heightOfRow = document.getElementsByClassName('results-table-body-row-data')[0].clientHeight;
 			const amountOfRowsDisplayed = this.table.nativeElement.offsetHeight / heightOfRow;

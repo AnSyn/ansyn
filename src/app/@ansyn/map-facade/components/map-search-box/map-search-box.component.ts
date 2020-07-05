@@ -1,9 +1,9 @@
-import { Component, Input, OnDestroy, OnInit, HostBinding } from '@angular/core';
+import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import { GeocoderService } from '../../services/geocoder.service';
 import { Point } from 'geojson';
 import { Observable } from 'rxjs';
-import { filter, retryWhen, switchMap, take, tap, delay } from 'rxjs/operators';
+import { filter, retryWhen, switchMap, take, tap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectIsMinimalistViewMode } from '../../reducers/map.reducer';
@@ -14,9 +14,7 @@ import {
 	SetToastMessageAction
 } from '../../actions/map.actions';
 import { TranslateService } from '@ngx-translate/core';
-
-
-const DEFAULT_WIDTH = 150;
+import { IMapSearchResult } from '../../models/map-search.model';
 
 @Component({
 	selector: 'ansyn-map-search-box',
@@ -29,7 +27,6 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 	@HostBinding('class.hide') isMinimalView: boolean;
 	control = new FormControl();
 	_communicator: CommunicatorEntity;
-	autoCompleteWidth = DEFAULT_WIDTH;
 	locations: { name: string, point: Point }[] = [];
 	public error: boolean;
 	loading: boolean;
@@ -46,19 +43,14 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		tap(this.resetSearch.bind(this)),
 		filter((value: string) => value.length >= 2),
 		switchMap((value: string) => this.geocoderService.getLocation$(value)),
-		tap((allLocations: Array<any>) => {
+		tap((allLocations: Array<IMapSearchResult>) => {
 			this.locations = allLocations.slice(0, 10);
-			const newAutoCompleteWidth = this.locations.reduce<number>((acc, next) => {
-				return acc > next.name.length ? acc : next.name.length;
-			}, 0) * 9;
-			this.autoCompleteWidth = this.autoCompleteWidth < newAutoCompleteWidth ? newAutoCompleteWidth : this.autoCompleteWidth;
 			this.loading = false;
 		}),
 		retryWhen((err) => {
 			return err.pipe(
 				tap(error => {
 					this.error = true;
-					this.autoCompleteWidth = DEFAULT_WIDTH;
 					this.locations = [];
 					this.loading = false;
 				})
@@ -76,7 +68,6 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		this.locations = [];
 		this.error = null;
 		this.loading = true;
-		this.autoCompleteWidth = DEFAULT_WIDTH;
 		this.store$.dispatch(new SetMapSearchBoxTriggerAction(false));
 	}
 

@@ -13,7 +13,7 @@
 			<div class="results-table-head-row-data">
 				<div (click)="sortOverlays(header)" *ngFor="let header of tableHeaders" class="results-table-head-col  {{header.headerName}}">
 					{{header.headerName | translate}}
-					<i class="icon icon-arrow" [@isDescending]="!header.isAscending" [class.active]="sortedBy === header.headerData"></i>
+					<i class="icon icon-arrow" [@isDescending]="header.isDescending" [class.active]="sortedBy === header.headerData"></i>
 				</div>
 			</div>
 

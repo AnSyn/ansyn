@@ -7,8 +7,11 @@ import { StatusBarConfig } from '../../../status-bar/models/statusBar.config';
 import { EnableCopyOriginalOverlayDataAction, selectOverlayOfActiveMap } from '@ansyn/map-facade';
 import { ActivateScannedAreaAction } from '../../overlay-status/actions/overlay-status.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { tap } from 'rxjs/operators';
+import { tap, filter } from 'rxjs/operators';
 import { selectPresetOverlays } from '../../overlay-status/reducers/overlay-status.reducer';
+import { selectDropsAscending } from '../../reducers/overlays.reducer';
+import { combineLatest } from 'rxjs';
+import { IOverlay, IOverlayDrop } from '../../models/overlay.model';
 
 @Component({
 	selector: 'ansyn-overlay-navigation-bar',
@@ -23,6 +26,8 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	scanAreaActive = false;
 	hasPresetOverlays: boolean;
 	hasOverlayDisplay: boolean;
+	isFirstOverlay: boolean;
+	isLastOverlay: boolean;
 
 	@AutoSubscription
 	hasOverlayDisplay$ = this.store.select(selectOverlayOfActiveMap).pipe(
@@ -32,6 +37,15 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	hasPresetOverlays$ = this.store.select(selectPresetOverlays).pipe(
 		tap(presetOverlays => this.hasPresetOverlays = presetOverlays.length > 0)
+	);
+
+	@AutoSubscription
+	isLastOrFirstOverlay$ = combineLatest(this.store.select(selectOverlayOfActiveMap), this.store.select(selectDropsAscending)).pipe(
+		filter(([activeMapOverlay, overlays]: [IOverlay, IOverlayDrop[]]) => Boolean(activeMapOverlay) && Boolean(overlays)),
+		tap(([activeMapOverlay, overlays]: [IOverlay, IOverlayDrop[]]) => {
+			this.isFirstOverlay = activeMapOverlay.id === overlays[0].id;
+			this.isLastOverlay = activeMapOverlay.id === overlays[overlays.length - 1].id;
+		})
 	);
 
 	private _nextPresetOverlayKeys = 'qQ/'.split('');

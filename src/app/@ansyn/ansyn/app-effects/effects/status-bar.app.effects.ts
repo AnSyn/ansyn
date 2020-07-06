@@ -24,7 +24,7 @@ import { selectGeoFilterActive } from '../../modules/status-bar/reducers/status-
 import { CopyCaseLinkAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { DisplayOverlayAction, DisplayOverlayFromStoreAction } from '../../modules/overlays/actions/overlays.actions';
 import {
-	selectDropsWithoutSpecialObjects,
+	selectDropsAscending,
 	selectRegion
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { IOverlay, IOverlayDrop } from '../../modules/overlays/models/overlay.model';
@@ -49,7 +49,7 @@ export class StatusBarAppEffects {
 		ofType<GoAdjacentOverlay>(StatusBarActionsTypes.GO_ADJACENT_OVERLAY),
 		withLatestFrom(this.store.select(selectOverlayOfActiveMap)),
 		filter(( [action, overlay] ) => Boolean(overlay)),
-		withLatestFrom(this.store.select(selectDropsWithoutSpecialObjects), ([ action, {id: overlayId} ], drops: IOverlayDrop[]): IOverlayDrop => {
+		withLatestFrom(this.store.select(selectDropsAscending), ([ action, {id: overlayId} ], drops: IOverlayDrop[]): IOverlayDrop => {
 			const index = drops.findIndex(({ id }) => id === overlayId);
 			const isNextOverlay = action.payload.isNext;
 			const adjacent = isNextOverlay ? 1 : -1;

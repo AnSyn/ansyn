@@ -1,6 +1,6 @@
 <div class="block pop-hover">
 	<i *ngIf="icon" [ngClass]="icon"></i>
-	<span [class.show-overflow]=hideOverflow>{{text}}</span>
+	<span [class.show-overflow]=showOverflow>{{text}}</span>
 
 	<div class="pop-content" [ngClass]="popDirection" (click)="$event.stopPropagation()">
 		<ng-content></ng-content>

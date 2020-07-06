@@ -48,8 +48,6 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 
 	public selectedLayout;
 
-	clickTimeout: number;
-
 	@ViewChild('imageriesContainer') imageriesContainer: ElementRef;
 
 	pinLocationMode: boolean;
@@ -108,12 +106,6 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 		this.mapEffects.pinLocationModeTriggerAction$.subscribe((_pinLocationMode: boolean) => {
 			this.pinLocationMode = _pinLocationMode;
 		});
-	}
-
-	clickMapContainer(value) {
-		this.clickTimeout = window.setTimeout(() => {
-			this.changeActiveImagery(value);
-		}, 200);
 	}
 
 	changeActiveImagery(value) {

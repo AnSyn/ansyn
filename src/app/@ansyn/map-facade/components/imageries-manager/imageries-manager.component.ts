@@ -48,10 +48,6 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 
 	public selectedLayout;
 
-	clickTimeout: number;
-	preventDbClick: boolean;
-
-
 	@ViewChild('imageriesContainer') imageriesContainer: ElementRef;
 
 	pinLocationMode: boolean;
@@ -112,25 +108,11 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 		});
 	}
 
-	clickMapContainer(value) {
-		this.clickTimeout = window.setTimeout(() => {
-			if (!this.preventDbClick) {
-				this.changeActiveImagery(value);
-			}
-			this.preventDbClick = false;
-		}, 200);
-	}
-
 	changeActiveImagery(value) {
 		if (this.activeMapId !== value) {
 			this.store.dispatch(new SetActiveMapId(value));
 			this.store.dispatch(new ActiveImageryMouseEnter());
 		}
-	}
-
-	dbclick() {
-		window.clearTimeout(this.clickTimeout);
-		this.preventDbClick = true;
 	}
 
 	trackByFun(index, item) {

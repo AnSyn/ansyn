@@ -41,10 +41,10 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	isLastOrFirstOverlay$ = combineLatest(this.store.select(selectOverlayOfActiveMap), this.store.select(selectDropsAscending)).pipe(
-		filter(([overlay, drops]: [IOverlay, IOverlayDrop[]]) => Boolean(overlay) && Boolean(drops)),
-		tap(([overlay, drops]: [IOverlay, IOverlayDrop[]]) => {
-			this.isFirstOverlay = overlay.id === drops[0].id;
-			this.isLastOverlay = overlay.id === drops[drops.length - 1].id;
+		filter(([activeMapOverlay, overlays]: [IOverlay, IOverlayDrop[]]) => Boolean(activeMapOverlay) && Boolean(overlays)),
+		tap(([activeMapOverlay, overlays]: [IOverlay, IOverlayDrop[]]) => {
+			this.isFirstOverlay = activeMapOverlay.id === overlays[0].id;
+			this.isLastOverlay = activeMapOverlay.id === overlays[overlays.length - 1].id;
 		})
 	);
 

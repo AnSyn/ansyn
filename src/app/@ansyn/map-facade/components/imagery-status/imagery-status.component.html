@@ -54,7 +54,7 @@
 
 <div class="description">
 	<ansyn-popover *ngIf="overlay" [text]="overlayDescription"
-				   [hideOverflow]="isMinimalistViewMode"
+				   [showOverflow]="!isMinimalistViewMode"
 				   [popDirection]="'bottom left'">
 		<button class="share-link" (click)="copyOverlayDescription()">
 			<span>{{overlayDescription | translate}}</span>

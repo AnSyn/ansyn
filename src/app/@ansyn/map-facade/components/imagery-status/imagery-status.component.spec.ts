@@ -49,7 +49,7 @@ describe('ImageryStatusComponent', () => {
 				EntryComponentDirective,
 				MockComponent({
 					selector: 'ansyn-popover',
-					inputs: ['text', 'icon', 'popDirection', 'hideOverflow']
+					inputs: ['text', 'icon', 'popDirection', 'showOverflow']
 				})
 			],
 			providers: [

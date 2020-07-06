@@ -9,7 +9,7 @@ export class AnsynPopoverComponent {
 
 	@Input() readonly icon: string;
 
-	@Input() hideOverflow: boolean;
+	@Input() showOverflow: boolean;
 
 	@Input()
 	readonly text: string;

@@ -64,7 +64,7 @@ export class OverlaysService {
 			overlaysArray.filter(({ id }) => filteredOverlays.includes(id));
 		const allOverlays: IOverlay[] = unionBy(criterialOverlays, favoriteOverlays, ({ id }) => id);
 		const dropsFromOverlays: IOverlayDrop[] = allOverlays.map(({ id, date, sensorName, icon }) => ({ id, date, sensorName, icon }));
-		const allDrops = [...dropsFromOverlays, ...mapValuesToArray(specialObjects)].sort(sortByDate);
+		const allDrops = [...dropsFromOverlays, ...mapValuesToArray(specialObjects)].sort(sortByDateDesc);
 		return allDrops;
 	}
 

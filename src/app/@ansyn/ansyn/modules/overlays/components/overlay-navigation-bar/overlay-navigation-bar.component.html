@@ -1,6 +1,6 @@
 	<button (click)="clickGoAdjacent(false)"
 			[class.active]="goPrevActive"
-			[disabled]="!hasOverlayDisplay"
+			[disabled]="!hasOverlayDisplay || isFirstOverlay"
 			[attr.tooltip-value]="statusBarConfig?.toolTips?.backwards | translate"
 			tooltip-class="top left"
 	>
@@ -18,7 +18,7 @@
 
 	<button (click)="clickGoAdjacent(true)"
 			[class.active]="goNextActive"
-			[disabled]="!hasOverlayDisplay"
+			[disabled]="!hasOverlayDisplay || isLastOverlay"
 			[attr.tooltip-value]="statusBarConfig?.toolTips?.forward | translate"
 			tooltip-class="top left"
 	>

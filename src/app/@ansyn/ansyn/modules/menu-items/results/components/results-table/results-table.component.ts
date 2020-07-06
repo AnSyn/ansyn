@@ -8,7 +8,7 @@ import {
 	IOverlaysState,
 	MarkUpClass,
 	selectDropMarkup,
-	selectDropsWithoutSpecialObjects
+	selectDropsDescending
 } from '../../../../overlays/reducers/overlays.reducer';
 import { take, tap } from 'rxjs/operators';
 import {
@@ -22,7 +22,7 @@ import { TranslateService } from '@ngx-translate/core';
 interface ITableHeader {
 	headerName: string;
 	headerData: string;
-	isAscending: boolean;
+	isDescending: boolean;
 	sortFn: (a, b) => number;
 }
 
@@ -32,10 +32,10 @@ interface ITableHeader {
 	styleUrls: ['./results-table.component.less'],
 	animations: [
 		trigger('isDescending', [
-			state('true', style({
+			state('false', style({
 				transform: 'rotate(180deg)',
 			})),
-			state('false', style({
+			state('true', style({
 				transform: 'rotate(0deg)',
 			})),
 			transition('false <=> true', animate('0.2s'))
@@ -54,19 +54,19 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		{
 			headerName: 'Date & time',
 			headerData: 'date',
-			isAscending: true,
+			isDescending: true,
 			sortFn: (a: number, b: number) => a - b
 		},
 		{
 			headerName: 'Sensor',
 			headerData: 'sensorName',
-			isAscending: true,
+			isDescending: true,
 			sortFn: (a: string, b: string) => this.translateService.instant(a).localeCompare(this.translateService.instant(b))
 		},
 		{
 			headerName: 'Type',
 			headerData: 'icon',
-			isAscending: true,
+			isDescending: true,
 			sortFn: (a, b) => a.localeCompare(b)
 		}
 	];
@@ -88,10 +88,10 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	loadOverlays$: Observable<any> = this.store$
 		.pipe(
-			select(selectDropsWithoutSpecialObjects),
+			select(selectDropsDescending),
 			tap((overlays: IOverlayDrop[]) => {
 				this.resetSort();
-				this.overlays = overlays;
+				this.overlays = overlays.slice();
 			})
 		);
 
@@ -129,7 +129,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 
 	resetSort(): void {
 		this.tableHeaders.forEach(tableHeader => {
-			tableHeader.isAscending = true;
+			tableHeader.isDescending = true;
 		});
 	}
 
@@ -166,15 +166,15 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	sortOverlays(header: ITableHeader): void {
-		let { headerData, isAscending, sortFn } = header;
+		let { headerData, isDescending, sortFn } = header;
 		this.sortedBy = headerData;
 		this.overlays.sort(function (a, b) {
 			const dataA = a[headerData];
 			const dataB = b[headerData];
-			return isAscending ? sortFn(dataB, dataA) : sortFn(dataA, dataB);
+			return isDescending ? sortFn(dataA, dataB) : sortFn(dataB, dataA);
 
 		});
 
-		header.isAscending = !header.isAscending;
+		header.isDescending = !header.isDescending;
 	}
 }

@@ -50,10 +50,12 @@ export class StatusBarAppEffects {
 		withLatestFrom(this.store.select(selectOverlayOfActiveMap)),
 		filter(( [action, overlay] ) => Boolean(overlay)),
 		withLatestFrom(this.store.select(selectDropsAscending), ([ action, {id: overlayId} ], drops: IOverlayDrop[]): IOverlayDrop => {
-			const index = drops.findIndex(({ id }) => id === overlayId);
-			const isNextOverlay = action.payload.isNext;
-			const adjacent = isNextOverlay ? 1 : -1;
-			return drops[index + adjacent];
+			if (Boolean(drops.length)) {
+				const index = drops.findIndex(({ id }) => id === overlayId);
+				const isNextOverlay = action.payload.isNext;
+				const adjacent = isNextOverlay ? 1 : -1;
+				return drops[index + adjacent];
+			}
 		}),
 		filter(Boolean),
 		map(({ id }) => new DisplayOverlayFromStoreAction({ id })));

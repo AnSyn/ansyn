@@ -27,7 +27,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 	@HostBinding('class.hide') isMinimalView: boolean;
 	control = new FormControl();
 	_communicator: CommunicatorEntity;
-	locations: { name: string, point: Point }[] = [];
+	locations: IMapSearchResult[] = [];
 	public error: boolean;
 	loading: boolean;
 

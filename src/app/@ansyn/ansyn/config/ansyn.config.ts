@@ -29,6 +29,8 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			key: 'overlaysOutOfBounds',
 			component: OverlayOutOfBoundsComponent
 		}
+
+		// Commeneted due to show-anaglyph being out of use currently
 		// ,
 		// {
 		// 	key: anaglyphSensorAlertKey,

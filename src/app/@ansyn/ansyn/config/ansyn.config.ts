@@ -28,11 +28,14 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 		{
 			key: 'overlaysOutOfBounds',
 			component: OverlayOutOfBoundsComponent
-		},
-		{
-			key: anaglyphSensorAlertKey,
-			component: AnaglyphSensorAlertComponent
 		}
+
+		// Commented due to anaglyph currently being inactive.
+		// ,
+		// {
+		// 	key: anaglyphSensorAlertKey,
+		// 	component: AnaglyphSensorAlertComponent
+		// }
 	],
 	ansynMenuItems: [
 		{

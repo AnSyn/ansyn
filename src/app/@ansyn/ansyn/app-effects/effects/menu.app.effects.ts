@@ -12,7 +12,7 @@ import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/ca
 import { selectDropsWithoutSpecialObjects } from '../../modules/overlays/reducers/overlays.reducer';
 import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
-import { ShowOverlaysFootprintAction } from '../../modules/menu-items/tools/actions/tools.actions';
+import { ShowOverlaysFootprintAction, StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
 
 @Injectable()
 export class MenuAppEffects {
@@ -50,8 +50,20 @@ export class MenuAppEffects {
 					window.open(this.menuConfig.baseUrl, '_blank');
 					return EMPTY;
 				}
-
-				return [new LoadDefaultCaseAction(), new ShowOverlaysFootprintAction('None')];
+				
+				return [
+					new LoadDefaultCaseAction(),
+					new ShowOverlaysFootprintAction('None'), 
+					new StartMouseShadow({ fromUser: true }),
+					new AnnotationSetProperties({
+						'stroke-opacity': true,
+						'fill-opacity': true,
+						'fill': 'white',
+						'stroke': 'rgb(39, 178, 207)',
+						'stroke-width': 1,
+						'stroke-dasharray': 0
+					})
+				];
 			})
 		);
 

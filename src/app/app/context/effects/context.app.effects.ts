@@ -112,7 +112,7 @@ export class ContextAppEffects {
 	private isMissingParametersContext(contextName: string, params: { [key: string]: unknown }) {
 		const passParams = Object.keys(params);
 		const allParams = RequiredContextParams[contextName];
-		return allParams.filter(param => !passParams.includes(param))
+		return Boolean(allParams) ? allParams.filter(param => !passParams.includes(param)) : [];
 	}
 
 	private isValidGeometry(geometry: string) {

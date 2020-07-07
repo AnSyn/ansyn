@@ -333,10 +333,10 @@ export const selectOverlaysMap: any = createSelector(selectOverlays, (entities: 
 export const selectOverlaysArray = createSelector(overlaysStateSelector, selectAll);
 export const selectFilteredOveralys = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string[] => overlays.filteredOverlays);
 export const selectSpecialObjects = createSelector(overlaysStateSelector, (overlays: IOverlaysState): Map<string, IOverlaySpecialObject> => overlays.specialObjects);
-export const selectDrops = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays.drops);
-export const selectDropsWithoutSpecialObjects = createSelector(selectDrops, (drops: IOverlayDrop[]) => drops.filter(({ shape }) => !shape));
-export const selectDropsDescending = createSelector(selectDrops, (drops: IOverlayDrop[]) => drops.filter(({ shape }) => !shape).reverse());
-export const selectDropsAscending = createSelector(selectDrops, (drops: IOverlayDrop[]) => drops.filter(({ shape }) => !shape));
+export const selectDrops = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays && overlays.drops);
+export const selectDropsWithoutSpecialObjects = createSelector(selectDrops, (drops: IOverlayDrop[]) => drops && drops.filter(({ shape }) => !shape));
+export const selectDropsDescending = createSelector(selectDrops, (drops: IOverlayDrop[]) => drops && drops.filter(({ shape }) => !shape).reverse());
+export const selectDropsAscending = createSelector(selectDrops, (drops: IOverlayDrop[]) => drops && drops.filter(({ shape }) => !shape));
 export const selectLoading = createSelector(overlaysStateSelector, (overlays: IOverlaysState): boolean => overlays.loading);
 export const selectDropMarkup = createSelector(overlaysStateSelector, (overlayState: IOverlaysState): ExtendMap<MarkUpClass, IMarkUpData> => overlayState.dropsMarkUp);
 export const selectHoveredOverlay = createSelector(overlaysStateSelector, (overlays: IOverlaysState): IOverlay => overlays.hoveredOverlay);

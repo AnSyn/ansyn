@@ -41,7 +41,7 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	isLastOrFirstOverlay$ = combineLatest(this.store.select(selectOverlayOfActiveMap), this.store.select(selectDropsAscending)).pipe(
-		filter(([activeMapOverlay, overlays]: [IOverlay, IOverlayDrop[]]) => Boolean(activeMapOverlay) && Boolean(overlays)),
+		filter(([activeMapOverlay, overlays]: [IOverlay, IOverlayDrop[]]) => Boolean(activeMapOverlay) && Boolean(overlays.length)),
 		tap(([activeMapOverlay, overlays]: [IOverlay, IOverlayDrop[]]) => {
 			this.isFirstOverlay = activeMapOverlay.id === overlays[0].id;
 			this.isLastOverlay = activeMapOverlay.id === overlays[overlays.length - 1].id;
@@ -110,11 +110,11 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	@HostListener('window:keypress', ['$event'])
 	onkeypress($event: KeyboardEvent) {
 		if (this.isElementNotValid($event)) {
-			return; 
+			return;
 		}
 
 		if (this.keysWereUsed($event, this._scannedAreaKeys)) {
-			this.clickScannedArea(); 
+			this.clickScannedArea();
 		}
 	}
 

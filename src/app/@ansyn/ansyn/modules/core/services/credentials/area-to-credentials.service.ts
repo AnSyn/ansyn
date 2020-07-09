@@ -28,7 +28,7 @@ export class AreaToCredentialsService{
 	getAreaTriangles(area: GeoJSON): Observable<any> {
 		const url = this.getUrl();
 		const headers = new HttpHeaders({'Content-Type': 'application/json'});
-		const body = `"${wellknown.stringify(area)}"`;
+		const body = `"${wellknown.stringify(area as any)}"`;
 		const options = {headers};
 		return this.createRequest(url, body, options);
 	}

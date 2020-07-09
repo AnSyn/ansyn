@@ -7,11 +7,13 @@ import {
 	CesiumMap,
 	CesiumOpenAerialSourceProvider,
 	CesiumOsmSourceProvider,
-	CesiumPlanetSourceProvider
+	CesiumPlanetSourceProvider,
+	CesiumDrawAnnotationsVisualizer
 } from '@ansyn/imagery-cesium';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { NorthCalculationsPlugin } from './plugins/north-calculations/north-calculations.plugin';
 import { MouseMarkerPlugin } from './plugins/mouse-marker/mouse-marker.plugin';
+import { AnnotationsVisualizer } from './plugins/annotations.visualizer';
 
 @NgModule({
 	declarations: [],
@@ -22,7 +24,9 @@ import { MouseMarkerPlugin } from './plugins/mouse-marker/mouse-marker.plugin';
 		ImageryModule.provide({
 			plugins: [
 				NorthCalculationsPlugin,
-				MouseMarkerPlugin
+				MouseMarkerPlugin,
+				CesiumDrawAnnotationsVisualizer,
+				AnnotationsVisualizer
 			],
 			maps: [CesiumMap],
 			mapSourceProviders: [

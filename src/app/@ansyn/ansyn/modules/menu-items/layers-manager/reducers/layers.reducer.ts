@@ -101,9 +101,9 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 
 export const { selectAll, selectEntities }: EntitySelectors<ILayer, ILayerState> = layersAdapter.getSelectors();
 
-export const layersStateOrInitial: MemoizedSelector<any, any> = createSelector(layersStateSelector, (layersState: ILayerState) => layersState || initialLayersState);
+export const layersStateOrInitial: MemoizedSelector<ILayerState, ILayerState> = createSelector(layersStateSelector, (layersState: ILayerState) => layersState || initialLayersState);
 export const selectLayers: MemoizedSelector<any, any> = createSelector(layersStateOrInitial, selectAll);
-export const selectLayersEntities: MemoizedSelector<any, any> = createSelector(layersStateOrInitial, <(state: any) => Dictionary<any>>selectEntities);
+export const selectLayersEntities: MemoizedSelector<ILayerState, Dictionary<ILayer>> = createSelector(layersStateOrInitial, <(state: ILayerState) => Dictionary<ILayer>>selectEntities);
 export const selectSelectedLayersIds: MemoizedSelector<any, any> = createSelector(layersStateOrInitial, (layersState: ILayerState) => layersState.selectedLayersIds);
-export const selectActiveAnnotationLayer: MemoizedSelector<any, any> = createSelector(layersStateOrInitial, (layersState: ILayerState) => layersState.activeAnnotationLayer);
-export const selectLayersModal: MemoizedSelector<any, any> = createSelector(layersStateOrInitial, (layersState: ILayerState) => layersState.modal);
+export const selectActiveAnnotationLayer: MemoizedSelector<ILayerState, string> = createSelector(layersStateOrInitial, (layersState: ILayerState) => layersState.activeAnnotationLayer);
+export const selectLayersModal: MemoizedSelector<ILayerState, ILayerModal> = createSelector(layersStateOrInitial, (layersState: ILayerState) => layersState.modal);

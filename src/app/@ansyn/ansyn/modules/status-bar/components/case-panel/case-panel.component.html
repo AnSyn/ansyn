@@ -12,7 +12,9 @@
 			<i class="block-icon icon-status-bar-imagery-count"></i>
 			<span>{{(overlaysCount$ | async) || 0}}</span>
 		</div>
-		<div class="share" (click)="copyLink()">
+		<div class="share" (click)="copyLink()"
+			 [attr.tooltip-value]="statusBarConfig?.toolTips?.share | translate"
+			 tooltip-class="bottom">
 			<i class="icon-share"></i>
 			<span>{{'Share' | translate}}</span>
 		</div>

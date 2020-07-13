@@ -6,7 +6,7 @@ import { ImageryPlugin } from '@ansyn/imagery';
 import { CesiumMap, CesiumProjectionService, BaseEntitiesVisualizer, CesiumDrawAnnotationsVisualizer } from '@ansyn/imagery-cesium';
 import { LoggerService } from '../../../core/services/logger.service';
 import { AutoSubscription } from 'auto-subscriptions';
-import { tap, take, filter, map, mergeMap, distinctUntilChanged, switchMap, withLatestFrom } from 'rxjs/operators';
+import { tap, filter, map, mergeMap, distinctUntilChanged, switchMap, withLatestFrom } from 'rxjs/operators';
 import { selectAnnotationMode, selectSubMenu, SubMenuEnum } from '../../../menu-items/tools/reducers/tools.reducer';
 import {
 	selectLayersEntities,
@@ -19,6 +19,7 @@ import { uniq } from 'lodash';
 import { featureCollection } from '@turf/turf';
 import { UpdateLayer } from '../../../menu-items/layers-manager/actions/layers.actions';
 import { FeatureCollection } from 'geojson';
+import { checkEntitiesDiff } from '../../utils/annotations-visualizers';
 
 @ImageryPlugin({
 	supported: [CesiumMap],
@@ -45,11 +46,6 @@ export class AnnotationsVisualizer extends BaseEntitiesVisualizer {
 		distinctUntilChanged()
 	);
 
-	onCesiumDrawerReady$ = of(this.isReady).pipe(
-		mergeMap((isReady) => (isReady ? of(isReady) : this.isReady$.asObservable())),
-		take(1)
-	);
-
 	onAnnotationsChange$ = combineLatest(
 		this.store.pipe(select(selectLayersEntities)),
 		this.isAnnotationSubMenuOpen$,
@@ -59,7 +55,7 @@ export class AnnotationsVisualizer extends BaseEntitiesVisualizer {
 	).pipe(mergeMap((resultArray) => this.renderEntities(...resultArray)));
 
 	@AutoSubscription
-	renderEntities$ = this.onCesiumDrawerReady$.pipe(switchMap(() => this.onAnnotationsChange$));
+	renderEntities$ = this.isReady$.pipe(switchMap(() => this.onAnnotationsChange$));
 
 	activeAnnotationLayer$: Observable<ILayer> = combineLatest(
 		this.store.pipe(select(selectActiveAnnotationLayer)),
@@ -116,16 +112,7 @@ export class AnnotationsVisualizer extends BaseEntitiesVisualizer {
 		const entitiesToAdd = annotationsLayerEntities.filter((entity) => {
 			const oldEntity = this.idToEntity.get(entity.id);
 			if (oldEntity) {
-				const isShowMeasuresDiff = oldEntity.originalEntity.showMeasures !== entity.showMeasures;
-				const isShowAreaDiff = oldEntity.originalEntity.showArea !== entity.showArea;
-				const isLabelDiff = oldEntity.originalEntity.label !== entity.label;
-				const isFillDiff = oldEntity.originalEntity.style.initial.fill !== entity.style.initial.fill;
-				const isStrokeWidthDiff = oldEntity.originalEntity.style.initial['stroke-width'] !== entity.style.initial['stroke-width'];
-				const isStrokeDiff = oldEntity.originalEntity.style.initial['stroke'] !== entity.style.initial['stroke'];
-				const isOpacityDiff = ['fill-opacity', 'stroke-opacity'].filter(
-					(o) => oldEntity.originalEntity.style.initial[o] !== entity.style.initial[o]
-				);
-				return isShowMeasuresDiff || isLabelDiff || isFillDiff || isStrokeWidthDiff || isStrokeDiff || isOpacityDiff || isShowAreaDiff;
+				return checkEntitiesDiff(oldEntity.originalEntity, entity);
 			}
 			return true;
 		});

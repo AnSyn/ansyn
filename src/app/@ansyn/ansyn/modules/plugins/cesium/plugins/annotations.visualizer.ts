@@ -1,24 +1,24 @@
-import { Observable, of, combineLatest } from "rxjs";
-import { Actions, ofType } from "@ngrx/effects";
-import { Store, select } from "@ngrx/store";
-import { ImageryPlugin } from "@ansyn/imagery";
+import { Observable, of, combineLatest } from 'rxjs';
+import { Actions } from '@ngrx/effects';
+import { Store, select } from '@ngrx/store';
+import { ImageryPlugin } from '@ansyn/imagery';
 
-import { CesiumMap, CesiumProjectionService, BaseEntitiesVisualizer, CesiumDrawAnnotationsVisualizer } from "@ansyn/imagery-cesium";
-import { LoggerService } from "../../../core/services/logger.service";
-import { AutoSubscription } from "auto-subscriptions";
-import { tap, take, filter, map, mergeMap, distinctUntilChanged, switchMap, withLatestFrom } from "rxjs/operators";
-import { selectAnnotationMode, selectSubMenu, SubMenuEnum } from "../../../menu-items/tools/reducers/tools.reducer";
+import { CesiumMap, CesiumProjectionService, BaseEntitiesVisualizer, CesiumDrawAnnotationsVisualizer } from '@ansyn/imagery-cesium';
+import { LoggerService } from '../../../core/services/logger.service';
+import { AutoSubscription } from 'auto-subscriptions';
+import { tap, take, filter, map, mergeMap, distinctUntilChanged, switchMap, withLatestFrom } from 'rxjs/operators';
+import { selectAnnotationMode, selectSubMenu, SubMenuEnum } from '../../../menu-items/tools/reducers/tools.reducer';
 import {
 	selectLayersEntities,
 	selectActiveAnnotationLayer,
 	selectSelectedLayersIds,
-} from "../../../menu-items/layers-manager/reducers/layers.reducer";
-import { ILayer, LayerType } from "../../../menu-items/layers-manager/models/layers.model";
-import { selectActiveMapId } from "@ansyn/map-facade";
-import { uniq } from "lodash";
-import { featureCollection } from "@turf/turf";
-import { UpdateLayer } from "../../../menu-items/layers-manager/actions/layers.actions";
-import { FeatureCollection } from "geojson";
+} from '../../../menu-items/layers-manager/reducers/layers.reducer';
+import { ILayer, LayerType, ILayerDictionary } from '../../../menu-items/layers-manager/models/layers.model';
+import { selectActiveMapId } from '@ansyn/map-facade';
+import { uniq } from 'lodash';
+import { featureCollection } from '@turf/turf';
+import { UpdateLayer } from '../../../menu-items/layers-manager/actions/layers.actions';
+import { FeatureCollection } from 'geojson';
 
 @ImageryPlugin({
 	supported: [CesiumMap],
@@ -79,13 +79,6 @@ export class AnnotationsVisualizer extends BaseEntitiesVisualizer {
 					...activeAnnotationLayer.data,
 					features: activeAnnotationLayer.data.features.concat(GeoJSON.features),
 				};
-				// TODO - display overlays with cesium
-				// if (this.overlay) {
-				// 	GeoJSON.features[0].properties = {
-				// 		...GeoJSON.features[0].properties,
-				// 		...this.projectionService.getProjectionProperties(this.communicator, data, feature, this.overlay)
-				// 	};
-				// }
 				this.store.dispatch(
 					new UpdateLayer({
 						id: activeAnnotationLayer.id,
@@ -100,19 +93,17 @@ export class AnnotationsVisualizer extends BaseEntitiesVisualizer {
 	}
 
 	renderEntities(
-		entities: {
-			[key: string]: ILayer;
-		},
+		layers: ILayerDictionary,
 		isAnnotationSubMenuOpen: boolean,
 		selectedLayersIds: string[],
 		isActiveMap: boolean,
-		activeAnnotationLayer: string
+		activeAnnotationLayerId: string
 	): Observable<boolean> {
-		const displayedIds = uniq(
-			isActiveMap && isAnnotationSubMenuOpen ? [...selectedLayersIds, activeAnnotationLayer] : [...selectedLayersIds]
-		).filter((id: string) => entities[id] && entities[id].type === LayerType.annotation);
+		const displayedLayersIds = uniq(
+			isActiveMap && isAnnotationSubMenuOpen ? [...selectedLayersIds, activeAnnotationLayerId] : [...selectedLayersIds]
+		).filter((id: string) => layers[id] && layers[id].type === LayerType.annotation);
 
-		const features = displayedIds.reduce((array, layerId) => [...array, ...entities[layerId].data.features], []);
+		const features = displayedLayersIds.reduce((array, layerId) => [...array, ...layers[layerId].data.features], []);
 		return this.showAnnotation(featureCollection(features) as FeatureCollection);
 	}
 
@@ -129,9 +120,9 @@ export class AnnotationsVisualizer extends BaseEntitiesVisualizer {
 				const isShowAreaDiff = oldEntity.originalEntity.showArea !== entity.showArea;
 				const isLabelDiff = oldEntity.originalEntity.label !== entity.label;
 				const isFillDiff = oldEntity.originalEntity.style.initial.fill !== entity.style.initial.fill;
-				const isStrokeWidthDiff = oldEntity.originalEntity.style.initial["stroke-width"] !== entity.style.initial["stroke-width"];
-				const isStrokeDiff = oldEntity.originalEntity.style.initial["stroke"] !== entity.style.initial["stroke"];
-				const isOpacityDiff = ["fill-opacity", "stroke-opacity"].filter(
+				const isStrokeWidthDiff = oldEntity.originalEntity.style.initial['stroke-width'] !== entity.style.initial['stroke-width'];
+				const isStrokeDiff = oldEntity.originalEntity.style.initial['stroke'] !== entity.style.initial['stroke'];
+				const isOpacityDiff = ['fill-opacity', 'stroke-opacity'].filter(
 					(o) => oldEntity.originalEntity.style.initial[o] !== entity.style.initial[o]
 				);
 				return isShowMeasuresDiff || isLabelDiff || isFillDiff || isStrokeWidthDiff || isStrokeDiff || isOpacityDiff || isShowAreaDiff;

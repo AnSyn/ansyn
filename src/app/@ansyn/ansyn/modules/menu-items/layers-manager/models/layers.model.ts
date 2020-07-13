@@ -26,3 +26,7 @@ export interface ILayer extends IEntity {
 	extent?: [number, number, number, number];
 	isNonEditable?: boolean;
 }
+
+export interface ILayerDictionary {
+	[key: string]: ILayer;
+}

@@ -3,7 +3,7 @@ import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/s
 import { uniq } from 'lodash';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary, EntitySelectors } from '@ngrx/entity/src/models';
-import { ILayer, LayerType } from '../models/layers.model';
+import { ILayer, LayerType, ILayerDictionary } from '../models/layers.model';
 import { ILayerModal, SelectedModalEnum } from './layers-modal';
 
 export const layersAdapter: EntityAdapter<ILayer> = createEntityAdapter<ILayer>();
@@ -103,7 +103,7 @@ export const { selectAll, selectEntities }: EntitySelectors<ILayer, ILayerState>
 
 export const layersStateOrInitial: MemoizedSelector<ILayerState, ILayerState> = createSelector(layersStateSelector, (layersState: ILayerState) => layersState || initialLayersState);
 export const selectLayers: MemoizedSelector<any, any> = createSelector(layersStateOrInitial, selectAll);
-export const selectLayersEntities: MemoizedSelector<ILayerState, Dictionary<ILayer>> = createSelector(layersStateOrInitial, <(state: ILayerState) => Dictionary<ILayer>>selectEntities);
+export const selectLayersEntities: MemoizedSelector<ILayerState, ILayerDictionary> = createSelector(layersStateOrInitial, <(state: ILayerState) => Dictionary<ILayer>>selectEntities);
 export const selectSelectedLayersIds: MemoizedSelector<any, any> = createSelector(layersStateOrInitial, (layersState: ILayerState) => layersState.selectedLayersIds);
 export const selectActiveAnnotationLayer: MemoizedSelector<ILayerState, string> = createSelector(layersStateOrInitial, (layersState: ILayerState) => layersState.activeAnnotationLayer);
 export const selectLayersModal: MemoizedSelector<ILayerState, ILayerModal> = createSelector(layersStateOrInitial, (layersState: ILayerState) => layersState.modal);

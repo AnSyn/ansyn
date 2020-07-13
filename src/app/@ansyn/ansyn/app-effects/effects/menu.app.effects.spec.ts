@@ -17,7 +17,7 @@ import { DisplayOverlaySuccessAction, RedrawTimelineAction } from '../../modules
 import { ResetAppAction } from '../../../menu/actions/menu.actions';
 import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
-import { ShowOverlaysFootprintAction } from '../../modules/menu-items/tools/actions/tools.actions';
+import { ShowOverlaysFootprintAction, StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
@@ -72,9 +72,18 @@ describe('MenuAppEffects', () => {
 		actions = hot('--a--', {
 			a: new ResetAppAction()
 		});
-		const expectedResults = cold('--(bc)--', {
+		const expectedResults = cold('--(bcde)--', {
 			b: new LoadDefaultCaseAction(),
-			c: new ShowOverlaysFootprintAction('None')
+			c: new ShowOverlaysFootprintAction('None'),
+			d: new StartMouseShadow({ fromUser: true }),
+			e: new AnnotationSetProperties({
+				'stroke-width': 1,
+				'fill-opacity': 0.4,
+				'stroke-opacity': 1,
+				'stroke-dasharray': 0,
+				stroke: '#27b2cf',
+				fill: '#ffffff'
+			})
 		});
 		expect(menuAppEffects.onResetApp$).toBeObservable(expectedResults);
 	});

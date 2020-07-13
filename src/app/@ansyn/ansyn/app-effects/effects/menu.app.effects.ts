@@ -56,12 +56,12 @@ export class MenuAppEffects {
 					new ShowOverlaysFootprintAction('None'), 
 					new StartMouseShadow({ fromUser: true }),
 					new AnnotationSetProperties({
-						'stroke-opacity': true,
-						'fill-opacity': true,
-						'fill': 'white',
-						'stroke': 'rgb(39, 178, 207)',
 						'stroke-width': 1,
-						'stroke-dasharray': 0
+						'fill-opacity': 0.4,
+						'stroke-opacity': 1,
+						'stroke-dasharray': 0,
+						stroke: '#27b2cf',
+						fill: '#ffffff'
 					})
 				];
 			})

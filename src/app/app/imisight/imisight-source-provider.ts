@@ -131,7 +131,7 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 
 	protected parseData(imiSightElement: ImiSightElement): IOverlay {
 		const companyId = 1;
-		const gatewayUrl = 'https://gw.sat.imisight.net';
+		const gatewayUrl = 'https://gw.imisight.net';
 		const footprint: any = imiSightElement.geojson;
 		return new Overlay({
 			id: imiSightElement._id,

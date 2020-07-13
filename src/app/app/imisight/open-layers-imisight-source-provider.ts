@@ -22,7 +22,7 @@ import { OpenLayersDisabledMap, OpenLayersMap, OpenLayersMapSourceProvider } fro
 	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvider {
-	gatewayUrl = 'https://gw.sat.imisight.net';
+	gatewayUrl = 'https://gw.imisight.net';
 
 	constructor(protected cacheService: CacheService,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
@@ -34,11 +34,11 @@ export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvide
 	public create(metaData: IMapSettings): any {
 		const url = metaData.data.overlay.imageUrl;
 		const layers = metaData.data.overlay.tag.urls;
-		const projection = EPSG_3857;
+		const projection = metaData.data.overlay.tag.metaData.coordinateReferenceSystem;
 		const token = localStorage.getItem('id_token');
 		const helper = new JwtHelperService();
 		const decodedToken = this.parseTokenObjects(helper.decodeToken(token));
-		const companyId = decodedToken.user_metadata.companyId;
+		const companyId = decodedToken.app_metadata.companyId;
 		const source = new TileWMS({
 			url: `${ this.gatewayUrl }/geo/geoserver/company_${ companyId }/wms`,
 			params: {
@@ -47,6 +47,7 @@ export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvide
 				LAYERS: layers
 				// FORMAT: 'image/gif'
 			},
+			projection: projection,
 			serverType: 'geoserver',
 			tileLoadFunction: (tile, src) => {
 				this.getImageURL(src)

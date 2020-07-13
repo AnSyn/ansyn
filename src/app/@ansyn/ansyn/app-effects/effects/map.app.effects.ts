@@ -14,21 +14,20 @@ import {
 	mapStateSelector,
 	PositionChangedAction,
 	selectActiveMapId,
-	selectMapPositionByMapId,
 	selectMaps,
 	selectOverlayOfActiveMap,
 	selectOverlaysWithMapIds,
+	SetActiveCenterTriggerAction,
 	SetIsLoadingAcion,
+	SetMapSearchBoxTriggerAction,
 	SetToastMessageAction,
 	SynchronizeMapsAction,
 	ToggleMapLayersAction,
-	UpdateMapAction,
-	SetActiveCenterTriggerAction,
-	SetMapSearchBoxTriggerAction
+	UpdateMapAction
 } from '@ansyn/map-facade';
 import {
 	BaseMapSourceProvider,
-	bboxFromGeoJson,
+	bboxFromGeoJson, getPolygonIntersectionRatio,
 	IBaseImageryLayer,
 	ImageryCommunicatorService,
 	ImageryMapPosition,
@@ -47,8 +46,7 @@ import {
 	startWith,
 	switchMap,
 	tap,
-	withLatestFrom,
-	take
+	withLatestFrom
 } from 'rxjs/operators';
 import { toastMessages } from '../../modules/core/models/toast-messages';
 import { endTimingLog, startTimingLog } from '../../modules/core/utils/logs/timer-logs';
@@ -59,7 +57,8 @@ import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity/src/models';
 import {
 	SetActiveCenter,
-	SetMapGeoEnabledModeToolsActionStore, SetMapSearchBox
+	SetMapGeoEnabledModeToolsActionStore,
+	SetMapSearchBox
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import {
 	DisplayOverlayAction,
@@ -85,6 +84,8 @@ import {
 	IOverlayStatusConfig,
 	overlayStatusConfig
 } from '../../modules/overlays/overlay-status/config/overlay-status-config';
+
+const FOOTPRINT_INSIDE_MAP_RATIO = 1;
 
 @Injectable()
 export class MapAppEffects {
@@ -221,29 +222,6 @@ export class MapAppEffects {
 		);
 
 	@Effect({ dispatch: false })
-	onDisplayOverlayCheckItsExtent$ = this.actions$.pipe(
-		ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
-		mergeMap((action: DisplayOverlaySuccessAction) => {
-				const { ActiveMap } = this.imageryCommunicatorService.provide(action.payload.mapId);
-				return ActiveMap.getPosition().pipe(
-					map( position => [action.payload, position])
-				)
-			}
-		),
-		filter(([payload, position]: [any, ImageryMapPosition]) => Boolean(position)),
-		tap( ([payload, position]: [any, ImageryMapPosition]) => {
-			const isNotIntersect = polygonsDontIntersect(position.extentPolygon, payload.overlay.footprint, 0.1);
-			if (isNotIntersect) {
-				const comm = this.imageryCommunicatorService.provide(payload.mapId);
-				comm.ActiveMap.fitToExtent(bboxFromGeoJson(payload.overlay.footprint)).pipe(
-					take(1),
-					tap( () => comm.ActiveMap.zoomIn())
-				)
-			}
-		})
-	);
-
-	@Effect({ dispatch: false })
 	onSynchronizeAppMaps$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.SYNCHRONIZE_MAPS),
 		withLatestFrom(this.store$.select(mapStateSelector)),
@@ -366,7 +344,7 @@ export class MapAppEffects {
 		const caseMapState = mapState.entities[payload.mapId || mapState.activeMapId];
 		const mapData = caseMapState.data;
 		const prevOverlay = mapData.overlay;
-		const isNotIntersect = polygonsDontIntersect(mapData.position.extentPolygon, overlay.footprint, this.config.overlayCoverage);
+		const intersectionRatio = getPolygonIntersectionRatio(this.bboxPolygon(mapData.position.extentPolygon), overlay.footprint);
 		const communicator = this.imageryCommunicatorService.provide(mapId);
 		const { sourceType } = overlay;
 		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({
@@ -409,15 +387,16 @@ export class MapAppEffects {
 		/* -3- */
 		const resetView = pipe(
 			mergeMap((layer: IBaseImageryLayer) => {
-				const extent = payloadExtent || isNotIntersect && bboxFromGeoJson(overlay.footprint);
+				const isFootprintExtentInsideMapExtent = intersectionRatio === FOOTPRINT_INSIDE_MAP_RATIO;
+				const extent = payloadExtent || isFootprintExtentInsideMapExtent && bboxFromGeoJson(overlay.footprint);
 				return communicator.resetView(layer, mapData.position, extent);
 			}),
 			mergeMap(() => {
-				const wasOverlaySetAsExtent = !payloadExtent && isNotIntersect;
+				const wasOverlaySetAsExtent = !payloadExtent && intersectionRatio < this.config.overlayCoverage;
 				const actionsArray: Action[] = [];
 				// in order to set the new map position for unregistered overlays maps
 				if (overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered && wasOverlaySetAsExtent) {
-					const position: ImageryMapPosition = { extentPolygon: polygonFromBBOX(bboxFromGeoJson(overlay.footprint)) };
+					const position: ImageryMapPosition = { extentPolygon: this.bboxPolygon(overlay.footprint) };
 					actionsArray.push(new PositionChangedAction({ id: mapId, position, mapInstance: caseMapState }));
 				}
 				actionsArray.push(new DisplayOverlaySuccessAction(payload));
@@ -482,7 +461,7 @@ export class MapAppEffects {
 		if (mapItem.data.overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered) {
 			return this.cantSyncMessage();
 		}
-		const isNotIntersect = polygonsDontIntersect(position.extentPolygon, mapItem.data.overlay.footprint, this.config.overlayCoverage);
+		const isNotIntersect = polygonsDontIntersect(this.bboxPolygon(position.extentPolygon), mapItem.data.overlay.footprint, this.config.overlayCoverage);
 		if (isNotIntersect) {
 			return this.cantSyncMessage();
 		}
@@ -495,5 +474,9 @@ export class MapAppEffects {
 			showWarningIcon: true
 		}));
 		return EMPTY;
+	}
+
+	private bboxPolygon(polygon) {
+		return polygonFromBBOX(bboxFromGeoJson(polygon));
 	}
 }

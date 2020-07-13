@@ -6,6 +6,6 @@ import { DatePipe } from '@angular/common';
 })
 export class AnsynDatePipe extends DatePipe implements PipeTransform {
 	transform(value: any, args?: any): any {
-		return super.transform(value, 'dd/MM/yyyy HH:mm');
+		return super.transform(value, 'dd/MM/yyyy HH:mm:ss');
 	}
 }

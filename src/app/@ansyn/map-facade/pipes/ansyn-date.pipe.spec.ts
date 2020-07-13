@@ -12,8 +12,8 @@ describe('AnsynDatePipe', () => {
 	});
 
 	it('will return expected value', () => {
-		const inputDate = new Date(98, 2, 12, 3, 13);
-		const outputStr = '12/03/1998 03:13';
+		const inputDate = new Date(98, 2, 12, 3, 13, 0);
+		const outputStr = '12/03/1998 03:13:00';
 		expect(myPipe.transform(inputDate)).toEqual(outputStr);
 	});
 

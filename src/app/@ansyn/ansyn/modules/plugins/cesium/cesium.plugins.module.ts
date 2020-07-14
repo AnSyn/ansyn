@@ -8,8 +8,7 @@ import {
 	CesiumOpenAerialSourceProvider,
 	CesiumOsmSourceProvider,
 	CesiumPlanetSourceProvider,
-	CesiumDrawAnnotationsVisualizer,
-	CesiumSentinelSourceProvider
+	CesiumDrawAnnotationsVisualizer
 } from '@ansyn/imagery-cesium';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { NorthCalculationsPlugin } from './plugins/north-calculations/north-calculations.plugin';
@@ -35,8 +34,7 @@ import { AnnotationsVisualizer } from './plugins/annotations.visualizer';
 				CesiumOsmSourceProvider,
 				CesiumPlanetSourceProvider,
 				CesiumOpenAerialSourceProvider,
-				CesiumGeoServerSourceProvider,
-				CesiumSentinelSourceProvider
+				CesiumGeoServerSourceProvider
 			]
 		}),
 		MapFacadeModule.provide({

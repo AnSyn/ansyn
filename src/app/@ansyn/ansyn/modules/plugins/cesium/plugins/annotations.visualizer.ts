@@ -20,6 +20,7 @@ import { featureCollection } from '@turf/turf';
 import { UpdateLayer } from '../../../menu-items/layers-manager/actions/layers.actions';
 import { FeatureCollection } from 'geojson';
 import { checkEntitiesDiff } from '../../utils/annotations-visualizers';
+import { SetAnnotationMode } from '../../../menu-items/tools/actions/tools.actions';
 
 @ImageryPlugin({
 	supported: [CesiumMap],
@@ -79,6 +80,12 @@ export class AnnotationsVisualizer extends BaseEntitiesVisualizer {
 					new UpdateLayer({
 						id: activeAnnotationLayer.id,
 						data,
+					})
+				);
+
+				this.store.dispatch(
+					new SetAnnotationMode({
+						annotationMode: undefined
 					})
 				);
 			})

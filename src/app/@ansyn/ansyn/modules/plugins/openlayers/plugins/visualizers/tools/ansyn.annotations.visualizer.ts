@@ -274,6 +274,11 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	onInit() {
 		super.onInit();
 		this.annotationsVisualizer = this.communicator.getPlugin(AnnotationsVisualizer);
+		
+		this.store$.select(selectAnnotationMode).pipe(take(1))	
+		.subscribe((annotationMode) => {	
+			this.annotationsVisualizer.setMode(annotationMode, false);	
+		});
 	}
 
 }

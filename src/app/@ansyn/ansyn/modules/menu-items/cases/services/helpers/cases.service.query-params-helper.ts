@@ -94,23 +94,28 @@ export class QueryParamsHelper {
 		return decodeURIComponent(`${ href }${ urlTree.toString() }`);
 	}
 
+	rot13(s) {
+		return (s ? s : this).split('').map(function (_) {
+			if (!_.match(/[A-Za-z]/)) {
+				return _;
+			}
+			const c = Math.floor(_.charCodeAt(0) / 97);
+			const k = (_.toLowerCase().charCodeAt(0) - 83) % 26 || 26;
+			return String.fromCharCode(k + ((c === 0) ? 64 : 96));
+		}).join('');
+	}
+
 	encodeCaseObjects(key, value, caseState?: ICaseState) {
 		switch (key) {
 			case 'facets':
-				return rison.encode(value);
+				const compressedFacets = this.casesService.queryCompressorService.compressFacets(value);
+				return rison.encode(compressedFacets);
 			case 'time':
-				return rison.encode({ ...value, from: value.from.toISOString(), to: value.to.toISOString() });
+				return rison.encode({ ...value, from: value.from.getTime(), to: value.to.getTime() });
 			case 'maps':
-				const clonedvalue: ICaseMapsState = cloneDeep(value);
-				clonedvalue.data.forEach((caseMapState: ICaseMapState) => {
-					if (caseMapState.data.overlay) {
-						caseMapState.data.overlay = <any>{
-							id: caseMapState.data.overlay.id,
-							sourceType: caseMapState.data.overlay.sourceType
-						};
-					}
-				});
-				return rison.encode(clonedvalue);
+				const mapData: ICaseMapsState = cloneDeep(value);
+				const compressedMapData = this.casesService.queryCompressorService.compressMapsData(mapData);
+				return rison.encode(compressedMapData);
 			case 'region':
 				return wellknown.stringify(value);
 			case 'orientation':
@@ -126,10 +131,11 @@ export class QueryParamsHelper {
 							return caseMapState.data.overlay && caseMapState.data.overlay.id === overlayId;
 						});
 						if (loadedOverlay) {
-							activeMapsManualProcessArgs[overlayId] = processArgs;
+							activeMapsManualProcessArgs[overlayId] = this.casesService.queryCompressorService.compressManualImageProcessingData(processArgs);
 						}
 					});
 				}
+
 				return rison.encode(activeMapsManualProcessArgs);
 			case 'layers':
 				return rison.encode(value.activeLayersIds);
@@ -143,10 +149,22 @@ export class QueryParamsHelper {
 		}
 	}
 
+
 	decodeCaseObjects(key, value) {
 		switch (key) {
 			case 'region':
 				return wellknown.parse(value);
+			case 'facets':
+				return this.casesService.queryCompressorService.decompressFacets(rison.decode(value));
+			case 'maps':
+				return this.casesService.queryCompressorService.decompressMapData(rison.decode(value));
+			case 'overlaysManualProcessArgs':
+				const decodedData = rison.decode(value);
+				const keys = Object.keys(decodedData);
+				keys.forEach((overlayId) => {
+					decodedData[overlayId] = this.casesService.queryCompressorService.decompressManualImageProcessingData(decodedData[overlayId]);
+				});
+				return decodedData;
 			case 'layers':
 				const selectedLayersIds = rison.decode(value);
 				return { activeLayersIds: selectedLayersIds };

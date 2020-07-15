@@ -18,6 +18,7 @@ import {
 	ICaseTimeState,
 	IDilutedCaseState
 } from '../models/case.model';
+import { QueryCompressorService } from './helpers/query-compresser-service.service';
 
 const moment = momentNs;
 
@@ -45,6 +46,7 @@ export class CasesService {
 	constructor(protected storageService: StorageService,
 				@Inject(casesConfig) public config: ICasesConfig,
 				public urlSerializer: UrlSerializer,
+				public queryCompressorService: QueryCompressorService,
 				public errorHandlerService: ErrorHandlerService) {
 		this.paginationLimit = this.config.paginationLimit;
 		this.queryParamsKeys = this.config.casesQueryParamsKeys;

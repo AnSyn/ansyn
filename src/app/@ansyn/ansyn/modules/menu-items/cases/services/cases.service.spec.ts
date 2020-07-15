@@ -8,6 +8,7 @@ import { CoreConfig } from '../../../core/models/core.config';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { StorageService } from '../../../core/services/storage/storage.service';
 import { ICase } from '../models/case.model';
+import { QueryCompressorService } from './helpers/query-compresser-service.service';
 
 export const MockCasesConfig = {
 	provide: casesConfig,
@@ -85,6 +86,7 @@ describe('CasesService', () => {
 				CasesService,
 				UrlSerializer,
 				MockCasesConfig,
+				{ provide: QueryCompressorService, useValue: {} },
 				{ provide: ErrorHandlerService, useValue: { httpErrorHandle: () => throwError(null) } },
 				{ provide: CoreConfig, useValue: { storageService: { baseUrl: 'fake-base-url' } } }
 			]

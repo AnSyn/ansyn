@@ -10,7 +10,13 @@ import { throwError } from 'rxjs';
 import { CoreConfig } from '../../../../core/models/core.config';
 import { ErrorHandlerService } from '../../../../core/services/error-handler.service';
 import { StorageService } from '../../../../core/services/storage/storage.service';
-import { ICase } from '../../models/case.model';
+import {
+	ICase,
+	ICaseFacetsState,
+	ICompressedCaseFacetsState,
+	ICompressedCaseMapsState,
+	IDilutedCaseMapsState
+} from '../../models/case.model';
 
 describe('CasesService', () => {
 	let casesService: CasesService;
@@ -88,14 +94,36 @@ describe('CasesService', () => {
 			spyOn(rison, 'encode');
 			spyOn(wellknown, 'stringify');
 
-			queryParamsHelper.encodeCaseObjects('facets', 'facetsValue');
-			expect(rison.encode).toHaveBeenCalledWith('facetsValue');
+			const facetsValue: ICaseFacetsState = {
+				showOnlyFavorites: false,
+				filters: []
+			};
+
+			const compressedFacetsValue: ICompressedCaseFacetsState = {
+				fav: false,
+				f: []
+			};
+
+			queryParamsHelper.encodeCaseObjects('facets', facetsValue);
+			expect(rison.encode).toHaveBeenCalledWith(compressedFacetsValue);
 			const date = new Date();
 			queryParamsHelper.encodeCaseObjects('time', { from: date, to: date });
-			expect(rison.encode).toHaveBeenCalledWith({ from: date.toISOString(), to: date.toISOString() });
+			expect(rison.encode).toHaveBeenCalledWith({ from: date.getTime(), to: date.getTime() });
 
-			queryParamsHelper.encodeCaseObjects('maps', { data: [] });
-			expect(rison.encode).toHaveBeenCalledWith({ data: [] });
+			const mapData: IDilutedCaseMapsState = {
+				activeMapId: '',
+				data: [],
+				layout: 'layout1'
+			};
+
+			const compressedMapData: ICompressedCaseMapsState = {
+				id: '',
+				d: [],
+				l: 'layout1'
+			};
+
+			queryParamsHelper.encodeCaseObjects('maps', mapData);
+			expect(rison.encode).toHaveBeenCalledWith(compressedMapData);
 
 			queryParamsHelper.encodeCaseObjects('region', 'regionValue');
 			expect(wellknown.stringify).toHaveBeenCalledWith('regionValue');
@@ -122,3 +150,4 @@ describe('CasesService', () => {
 
 })
 ;
+

@@ -4,7 +4,7 @@ import { LayoutKey } from '@ansyn/map-facade';
 import { FilterType } from '../../../filters/models/filter-type';
 import { IMapSettings, IMapSettingsData } from '@ansyn/imagery';
 import { OverlayDisplayMode } from '../../tools/overlays-display-mode/overlays-display-mode.component';
-import { ICompressedMapSettings, ICompressedMapSettingsData } from '../../../../../imagery/model/map-settings';
+import { ICompressedMapSettings, ICompressedMapSettingsData } from '@ansyn/imagery';
 
 export interface ICasePreview {
 	creationTime: Date;

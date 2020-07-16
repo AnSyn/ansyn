@@ -129,7 +129,7 @@ describe('CasesService', () => {
 			expect(wellknown.stringify).toHaveBeenCalledWith('regionValue');
 		});
 
-		fit('decodeCaseObjects should switch between keys, "region" should decode by "wellknown" and other keys by "rison"', () => {
+		it('decodeCaseObjects should switch between keys, "region" should decode by "wellknown" and other keys by "rison"', () => {
 			spyOn(rison, 'decode');
 			spyOn(wellknown, 'parse');
 

@@ -119,8 +119,8 @@
     "updateCaseDebounceTime": 700,
     "useHash": true,
     "defaultSearchFromDeltaTime": {
-    	"unit": "days",
-    	"amount": 80
+    	"unit": "years",
+    	"amount": 5 
     }
   },
   "layersManagerConfig": {
@@ -257,7 +257,10 @@
 	},
   	"ESRI_4326": { },
 
-    "CESIUM_GEO_SERVER": { }
+    "CESIUM_GEO_SERVER": { },
+	"IMISIGHT": {
+		"imageUrl": "https://gw.lab01.imisight.net"
+	}
   },
   "filtersConfig": {
   	"shortFilterListLength": 8,
@@ -1089,7 +1092,7 @@
 			}
 		},
 		"PIC4CARTO": {
-			"inActive":false,
+			"inActive":true,
 			"whitelist":[
 				{
 					"name":"Entire Earth",
@@ -1147,7 +1150,7 @@
 			}
 		},
 		"OPEN_AERIAL": {
-			"inActive": {{ getv "/ansyn/overlay/open/aerial/inactive" "false" }},
+			"inActive": {{ getv "/ansyn/overlay/open/aerial/inactive" "true" }},
 			"whitelist": [
 				{
 					"name": "Entire Earth",
@@ -1203,7 +1206,7 @@
 			  }
 		},
 		"IMISIGHT": {
-			"inActive": {{ getv "/ansyn/overlay/imisight/inactive" "true" }},
+			"inActive": {{ getv "/ansyn/overlay/imisight/inactive" "false" }},
 			"whitelist": [
 				{
 					"name": "Entire Earth",
@@ -1258,7 +1261,7 @@
 				  }
 		},
 		"SENTINEL": {
-			"inActive": {{ getv "/ansyn/overlay/sentinel/inactive" "false" }},
+			"inActive": {{ getv "/ansyn/overlay/sentinel/inactive" "true" }},
 			"whitelist": [
 				{
 					"name": "Entire Earth",
@@ -1455,7 +1458,8 @@
   	"baseUrl": "https://api.openaerialmap.org/meta"
   },
   "imisightOverlaysSourceConfig": {
-    "baseUrl": "https://gw.imisight.net/a3/search"
+	"baseUrl": "https://gw.lab01.imisight.net",
+    "searchPath": "/a3/search",
   },
   "planetOverlaysSourceConfig": {
     "baseUrl": "https://api.planet.com/data/v1/quick-search",
@@ -1491,7 +1495,7 @@
       "clientID":"{{ getv "/ansyn/auth0/clientId" "KXLTbs08LtLqrbPwSgn7Ioej0aMB7tf6" }}",
       "domain": "{{ getv "/ansyn/auth0/domain" "imisight.auth0.com" }}",
       "responseType": "{{ getv "/ansyn/auth0/responseType" "token id_token" }}",
-      "audience": "{{ getv "/ansyn/auth0/audience" "https://gw.imisight.net" }}",
+      "audience": "{{ getv "/ansyn/auth0/audience" "https://gw.lab01.imisight.net" }}",
       "callbackURL": "{{ getv "/ansyn/auth0/callbackURL" "http://localhost:4200/#/callback/" }}",
       "scope": "{{ getv "/ansyn/auth0/scope" "openid" }}"
   },

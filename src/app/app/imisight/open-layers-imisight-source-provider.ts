@@ -22,13 +22,15 @@ import { OpenLayersDisabledMap, OpenLayersMap, OpenLayersMapSourceProvider } fro
 	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvider {
-	gatewayUrl = 'https://gw.imisight.net';
 
+	gatewayUrl: string;
 	constructor(protected cacheService: CacheService,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig,
 				protected httpClient: HttpClient) {
 		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
+
+		this.gatewayUrl = this.config.imageUrl;
 	}
 
 	public create(metaData: IMapSettings): any {
@@ -63,7 +65,7 @@ export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvide
 	}
 
 	getImageURL(url: string): Observable<any> {
-		const token = localStorage.getItem('access_token');
+		const token = localStorage.getItem('id_token');
 		const headers = {
 			'Content-Type': 'application/json',
 			'Authorization': 'Bearer ' + token,

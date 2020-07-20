@@ -71,7 +71,9 @@ export class ContextAppEffects {
 					idToken: params.idToken,
 					expiresIn: params.expiresIn
 				});
-				contextCase = this.casesService.updateCaseViaContext({ time }, this.casesService.defaultCase, params);
+
+				// If no time is provided, the time will be taken from the configuration file
+				contextCase = this.casesService.updateCaseViaContext({}, this.casesService.defaultCase, params);
 				return [new SelectCaseAction(contextCase)];
 			case ContextName.QuickSearch:
 				this.parseTimeParams(time, params.time);

@@ -70,7 +70,6 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	importLayer(files: FileList) {
 		this.file = files.item(0);
 		const fileType = this.file.name.slice(this.file.name.lastIndexOf('.') + 1);
-		console.log(fileType);
 		if (fileType.toLocaleLowerCase() === 'shp') {
 			this.reader.readAsArrayBuffer(this.file);
 		} else {

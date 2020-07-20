@@ -27,17 +27,16 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	kmlFormat = new KmlFormat();
 	geoJsonFormat = new GeoJSONFormat();
 	file: File;
+	fileType: string;
 
 	@AutoSubscription
 	onFileLoad$: Observable<any> = fromEvent(this.reader, 'load').pipe(
 		tap(() => {
-			console.log(this.reader.result);
 			const layerName = this.file.name.slice(0, this.file.name.lastIndexOf('.'));
-			const fileType = this.file.name.slice(this.file.name.lastIndexOf('.') + 1);
 			let layerData;
 			try {
 				const readerResult: string = <string>this.reader.result;
-				switch (fileType.toLowerCase()) {
+				switch (this.fileType.toLowerCase()) {
 					case 'kml':
 						const features = this.kmlFormat.readFeatures(readerResult);
 						layerData = JSON.parse(this.geoJsonFormat.writeFeatures(features));
@@ -69,8 +68,8 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 
 	importLayer(files: FileList) {
 		this.file = files.item(0);
-		const fileType = this.file.name.slice(this.file.name.lastIndexOf('.') + 1);
-		if (fileType.toLocaleLowerCase() === 'shp') {
+		this.fileType = this.file.name.slice(this.file.name.lastIndexOf('.') + 1);
+		if (this.fileType.toLocaleLowerCase() === 'shp') {
 			this.reader.readAsArrayBuffer(this.file);
 		} else {
 			this.reader.readAsText(this.file, 'UTF-8');
@@ -81,9 +80,8 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 		let layerData;
 		shapeFile.read(this.reader.result).then(geoJson => {
 			layerData = geoJson;
-			console.log('layerData', layerData);
 			this.generateFeatureCollection(layerData, layerName);
-		}).catch(e => console.log(e));
+		}).catch(e => console.error(e));
 
 	}
 

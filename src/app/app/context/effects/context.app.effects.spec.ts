@@ -1,11 +1,10 @@
 import { inject, TestBed, fakeAsync } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 
-import { CasesService, ICase, LoadDefaultCaseAction, SelectCaseAction, SelectDilutedCaseAction } from '@ansyn/ansyn';
+import { CasesService, ICase, LoadDefaultCaseAction, SelectCaseAction } from '@ansyn/ansyn';
 import { Observable, of } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { ImageryCommunicatorService, } from '@ansyn/imagery';
 import { ContextAppEffects } from './context.app.effects';
 import {
 	contextFeatureKey,
@@ -16,12 +15,14 @@ import { ContextConfig, ContextName } from '../models/context.config';
 import { Point } from '@turf/helpers';
 import { TranslateModule } from '@ngx-translate/core';
 import { mapFeatureKey, MapReducer, selectActiveMapId } from '@ansyn/map-facade';
+import { Auth0Service } from '../../imisight/auth0.service';
 
 describe('ContextAppEffects', () => {
 	let contextAppEffects: ContextAppEffects;
 	let actions: Observable<any>;
 	let store: Store<any>;
 	let casesService: CasesService;
+	let auth0Service: Auth0Service;
 	const caseItem: ICase = {
 		id: '31b33526-6447-495f-8b52-83be3f6b55bd',
 		state: {
@@ -67,6 +68,12 @@ describe('ContextAppEffects', () => {
 					}
 				},
 				{
+					provide: Auth0Service,
+					useValue: {
+						setSession: () => ({})
+					}
+				},
+				{
 					provide: ContextConfig,
 					useValue: {}
 				}
@@ -75,10 +82,11 @@ describe('ContextAppEffects', () => {
 		}).compileComponents();
 	});
 
-	beforeEach(inject([Store, CasesService, ContextAppEffects], (_store, _casesService, _contextAppEffects) => {
+	beforeEach(inject([Store, CasesService, ContextAppEffects, Auth0Service], (_store, _casesService, _contextAppEffects, _auth0Service) => {
 		contextAppEffects = _contextAppEffects;
 		store = _store;
 		casesService = _casesService;
+		auth0Service = _auth0Service;
 		const fakeStore = new Map<any, any>([
 			[selectActiveMapId, 'imagery1'],
 			[contextStateSelector, { params: {} }]

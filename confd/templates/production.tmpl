@@ -120,7 +120,7 @@
     "useHash": true,
     "defaultSearchFromDeltaTime": {
     	"unit": "years",
-    	"amount": 5 
+    	"amount": 5
     }
   },
   "layersManagerConfig": {
@@ -1092,7 +1092,7 @@
 			}
 		},
 		"PIC4CARTO": {
-			"inActive":true,
+			"inActive":false,
 			"whitelist":[
 				{
 					"name":"Entire Earth",
@@ -1150,7 +1150,7 @@
 			}
 		},
 		"OPEN_AERIAL": {
-			"inActive": {{ getv "/ansyn/overlay/open/aerial/inactive" "true" }},
+			"inActive": {{ getv "/ansyn/overlay/open/aerial/inactive" "false" }},
 			"whitelist": [
 				{
 					"name": "Entire Earth",
@@ -1206,7 +1206,7 @@
 			  }
 		},
 		"IMISIGHT": {
-			"inActive": {{ getv "/ansyn/overlay/imisight/inactive" "false" }},
+			"inActive": {{ getv "/ansyn/overlay/imisight/inactive" "true" }},
 			"whitelist": [
 				{
 					"name": "Entire Earth",
@@ -1261,7 +1261,7 @@
 				  }
 		},
 		"SENTINEL": {
-			"inActive": {{ getv "/ansyn/overlay/sentinel/inactive" "true" }},
+			"inActive": {{ getv "/ansyn/overlay/sentinel/inactive" "false" }},
 			"whitelist": [
 				{
 					"name": "Entire Earth",

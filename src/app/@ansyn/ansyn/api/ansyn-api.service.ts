@@ -218,10 +218,6 @@ export class AnsynApi {
 	}
 
 	setAnnotations(featureCollection: FeatureCollection<any>): void {
-		const plugin: AnnotationsVisualizer = this.imageryCommunicatorService.communicatorsAsArray()[0].getPlugin(AnnotationsVisualizer);
-		if (featureCollection.features.length === 0) {
-			this.features.forEach(feature => plugin.setEditAnnotationMode(<string>feature.properties.id, false));
-		}
 		if (!Boolean(featureCollection)) {
 			console.error('can\'t set undefined annotations');
 			return null;
@@ -239,6 +235,8 @@ export class AnsynApi {
 	}
 
 	deleteAllAnnotations(): void {
+		const plugin: AnnotationsVisualizer = this.imageryCommunicatorService.communicatorsAsArray()[0].getPlugin(AnnotationsVisualizer);
+		this.features.forEach(feature => plugin.setEditAnnotationMode(<string>feature.properties.id, false));
 		this.setAnnotations(<FeatureCollection>(featureCollection([])));
 	}
 

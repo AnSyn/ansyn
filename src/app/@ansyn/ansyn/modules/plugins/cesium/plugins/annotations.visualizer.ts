@@ -96,8 +96,6 @@ export class AnnotationsVisualizer extends BaseEntitiesVisualizer {
 				);
 			})
 		);
-	
-
 
 	constructor(protected actions: Actions, public loggerService: LoggerService, public store: Store<any>) {
 		super();

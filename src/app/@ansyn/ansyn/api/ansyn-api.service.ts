@@ -63,6 +63,7 @@ import { ToggleMenuCollapse } from '@ansyn/menu';
 import { UUID } from 'angular2-uuid';
 import { DataLayersService } from '../modules/menu-items/layers-manager/services/data-layers.service';
 import { SetMinimalistViewModeAction } from '@ansyn/map-facade';
+import { AnnotationsVisualizer } from "@ansyn/ol";
 
 @Injectable({
 	providedIn: 'root'
@@ -83,6 +84,7 @@ export class AnsynApi {
 	};
 	/** @deprecated onReady as own events was deprecated use events.onReady instead */
 	onReady = new EventEmitter<boolean>(true);
+	features;
 
 	getMaps$: Observable<IMapSettings[]> = this.store.pipe(
 		select(selectMapsList),
@@ -216,6 +218,10 @@ export class AnsynApi {
 	}
 
 	setAnnotations(featureCollection: FeatureCollection<any>): void {
+		const plugin: AnnotationsVisualizer = this.imageryCommunicatorService.communicatorsAsArray()[0].getPlugin(AnnotationsVisualizer);
+		if (featureCollection.features.length === 0) {
+			this.features.forEach(feature => plugin.setEditAnnotationMode(<string>feature.properties.id, false));
+		}
 		if (!Boolean(featureCollection)) {
 			console.error('can\'t set undefined annotations');
 			return null;
@@ -228,6 +234,8 @@ export class AnsynApi {
 			...this.activeAnnotationLayer,
 			data: cloneDeep(featureCollection)
 		}));
+
+		this.features = featureCollection.features;
 	}
 
 	deleteAllAnnotations(): void {

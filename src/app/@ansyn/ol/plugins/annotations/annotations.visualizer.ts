@@ -632,7 +632,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			}
 
 		} else {
-			centerFeature = this.currentAnnotationEdit.centerFeature;
+			centerFeature = this.currentAnnotationEdit ? this.currentAnnotationEdit.centerFeature : null;
 			this.removeInteraction(VisualizerInteractions.editAnnotationTranslateHandler);
 			this.removeInteraction(VisualizerInteractions.modifyInteractionHandler);
 			if (centerFeature) {

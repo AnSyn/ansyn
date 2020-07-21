@@ -8,6 +8,7 @@ import { CoreConfig } from '../../../core/models/core.config';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { StorageService } from '../../../core/services/storage/storage.service';
 import { ICase } from '../models/case.model';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 export const MockCasesConfig = {
 	provide: casesConfig,
@@ -29,6 +30,7 @@ describe('CasesService', () => {
 	let casesService: CasesService;
 	let http: HttpClient;
 	let storageService: StorageService;
+	let translateService: TranslateService;
 
 	const caseMock: ICase = {
 		id: 'fakeId',
@@ -72,8 +74,12 @@ describe('CasesService', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpClientModule],
+			imports: [HttpClientModule, TranslateModule],
 			providers: [
+				{
+					provide: TranslateService,
+					useValue: {}
+				},
 				{
 					provide: StorageService, useValue: {
 						delete: () => of({}),
@@ -91,11 +97,12 @@ describe('CasesService', () => {
 		});
 	});
 
-	beforeEach(inject([StorageService, CasesService, HttpClient],
-		(_storageService: StorageService, _casesService: CasesService, _http: HttpClient) => {
+	beforeEach(inject([TranslateService, StorageService, CasesService, HttpClient],
+		(_translateService: TranslateService, _storageService: StorageService, _casesService: CasesService, _http: HttpClient) => {
 			storageService = _storageService;
 			casesService = _casesService;
 			http = _http;
+			translateService = _translateService;
 		}));
 
 

@@ -38,6 +38,7 @@ import { casesConfig, CasesService } from '../services/cases.service';
 import { CasesEffects } from './cases.effects';
 import { SetMapsDataActionStore, selectActiveMapId, selectMapsIds } from '@ansyn/map-facade';
 import { BackToWorldView } from '../../../overlays/overlay-status/actions/overlay-status.actions';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
@@ -81,6 +82,7 @@ describe('CasesEffects', () => {
 					[casesFeatureKey]: CasesReducer,
 					[overlayStatusFeatureKey]: OverlayStatusReducer
 				}),
+				TranslateModule,
 				RouterTestingModule
 			],
 			providers: [
@@ -92,6 +94,10 @@ describe('CasesEffects', () => {
 				{
 					provide: ErrorHandlerService,
 					useValue: { httpErrorHandle: () => throwError(null) }
+				},
+				{
+					provide: TranslateService,
+					useValue: {}
 				},
 				provideMockActions(() => actions),
 				{ provide: LoggerService, useValue: {} },

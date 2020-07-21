@@ -13,6 +13,7 @@ import { Store } from '@ngrx/store';
 import { selectActiveMapId, SetToastMessageAction } from '@ansyn/map-facade';
 import { ContextName, RequiredContextParams } from '../models/context.config';
 import { TranslateService } from '@ngx-translate/core';
+import { Auth0Service } from '../../imisight/auth0.service';
 
 const CONTEXT_TOAST = {
 	paramsError: 'params: {0} is require in {1} context',
@@ -34,8 +35,8 @@ export class ContextAppEffects {
 	constructor(protected actions$: Actions,
 				protected store: Store<any>,
 				protected casesService: CasesService,
-				protected translateService: TranslateService) {
-
+				protected translateService: TranslateService,
+				protected auth0Service: Auth0Service) {
 	}
 
 	get defaultTime() {
@@ -63,6 +64,16 @@ export class ContextAppEffects {
 		switch (context) {
 			case ContextName.AreaAnalysis:
 				contextCase = this.casesService.updateCaseViaContext({ time }, this.casesService.defaultCase, params);
+				return [new SelectCaseAction(contextCase)];
+			case ContextName.ImisightMission:
+				this.auth0Service.setSession({
+					accessToken: params.accessToken,
+					idToken: params.idToken,
+					expiresIn: params.expiresIn
+				});
+
+				// If no time is provided, the time will be taken from the configuration file
+				contextCase = this.casesService.updateCaseViaContext({}, this.casesService.defaultCase, params);
 				return [new SelectCaseAction(contextCase)];
 			case ContextName.QuickSearch:
 				this.parseTimeParams(time, params.time);

@@ -317,7 +317,8 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	}
 
 	private validateDate(date) {
-		return moment(date, DATE_FORMAT, true).isValid();
+		const dateFromFormat = moment(date, DATE_FORMAT, true);
+		return dateFromFormat.isValid() && dateFromFormat.toDate().getTime() <= Date.now();
 	}
 
 	private findExtentOffset(content: string, fromLast: boolean) {

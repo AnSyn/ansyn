@@ -3,7 +3,6 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
-	selectAlertMsg,
 	selectPresetOverlays
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../app.effects.module';

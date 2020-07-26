@@ -63,6 +63,8 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 				this.dataInputFiltersItems.push(new TreeviewItem(f));
 			});
 		});
+
+		console.log('dataFilters', this.dataFilters);
 	}
 
 	set selectedFilters(value) {
@@ -77,6 +79,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		const dataInputs = Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
 			.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive)
 			.map(([providerName, { dataInputFiltersConfig, showOnlyMyChildren }]: [string, IOverlaysSourceProvider]) => {
+				console.log(showOnlyMyChildren);
 					if (showOnlyMyChildren) {
 						return dataInputFiltersConfig.children.map(child => {
 							return this.buildDataFilter(providerName, child);
@@ -94,7 +97,9 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	}
 
 	buildDataFilter(providerName, filter) {
+		console.log('filter', filter);
 		this.leavesCount++;
+		console.log('leavesCount', this.leavesCount);
 		return {
 			text: this.translate.instant(filter.text),
 			value: {

@@ -89,6 +89,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	dataInputFilters$ = this.store$.select(selectDataInputFilter).pipe(
 		filter((caseDataInputFiltersState: ICaseDataInputFiltersState) => Boolean(caseDataInputFiltersState) && Boolean(caseDataInputFiltersState.filters)),
 		tap((caseDataInputFiltersState: ICaseDataInputFiltersState) => {
+			console.log('caseDataInputFiltersState', caseDataInputFiltersState);
 			this.dataInputFilters = caseDataInputFiltersState;
 			const selectedFiltersSize = this.dataInputFilters.filters.length;
 			let dataInputsSize = 0;

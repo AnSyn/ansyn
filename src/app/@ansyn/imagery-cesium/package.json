@@ -2,8 +2,8 @@
 	"name": "@ansyn/imagery-cesium",
 	"version": "2.1.2",
 	"peerDependencies": {
-		"@angular/core": "~9.1.0",
-		"@angular/common": "~9.1.0",
+		"@angular/core": "~10.0.5",
+		"@angular/common": "~10.0.5",
 		"@ansyn/imagery": "2.1.2",
 		"rxjs": "~6.5.4",
 		"cesium": "^1.66.0",
@@ -12,6 +12,8 @@
 		"ngx-color-picker": "^9.1.0",
 		"angular2-uuid": "^1.1.1"
 	},
-	"dependencies": {},
+	"dependencies": {
+		"tslib": "^2.0.0"
+	},
 	"license": "MIT"
 }

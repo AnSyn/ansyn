@@ -2,15 +2,16 @@
 	"name": "@ansyn/menu",
 	"version": "2.1.2",
 	"peerDependencies": {
-		"@angular/common": "~9.1.0",
-		"@angular/core": "~9.1.0",
+		"@angular/common": "~10.0.5",
+		"@angular/core": "~10.0.5",
 		"@ngrx/core": "^1.2.0",
 		"@ngrx/store": "^9.0.0",
 		"@ngrx/entity": "^9.0.0",
 		"@ngx-translate/core": "^12.1.2"
 	},
 	"dependencies": {
-		"auto-subscriptions": "^2.0.5"
+		"auto-subscriptions": "^2.0.5",
+		"tslib": "^2.0.0"
 	},
 	"license": "MIT"
 }

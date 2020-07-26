@@ -236,9 +236,9 @@ export type ToolsActions =
 	| GoToAction
 	| ShowOverlaysFootprintAction
 	| SetActiveOverlaysFootprintModeAction
-	| SetMapGeoEnabledModeToolsActionStore
 	| SetAnnotationMode
 	| SetMapGeoEnabledModeToolsActionStore
 	| SetMeasureDistanceToolState
 	| SetSubMenu
-	| ClearActiveInteractionsAction;
+	| ClearActiveInteractionsAction
+	| SetMapSearchBox;

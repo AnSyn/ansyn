@@ -41,6 +41,17 @@
             },
             "scripts": [
               "node_modules/cesium/Build/Cesium/Cesium.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "auto-subscriptions",
+              "pixelworks/lib/index",
+              "rbush",
+              "rxjs/index",
+              "lodash-decorators",
+              "rison",
+              "file-saver",
+              "pbf"
             ]
           },
           "configurations": {

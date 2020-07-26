@@ -3,7 +3,7 @@ import {
 	CreateMeasureDataAction, RemoveMeasureAction, RemoveMeasureDataAction,
 	SetActiveCenter, SetActiveOverlaysFootprintModeAction,
 	SetAnnotationMode,
-	SetMapGeoEnabledModeToolsActionStore,
+	SetMapGeoEnabledModeToolsActionStore, SetMapSearchBox,
 	SetMeasureDistanceToolState,
 	SetPinLocationModeAction, SetSubMenu,
 	StartMouseShadow,
@@ -121,7 +121,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			return { ...state, activeCenter: (<SetActiveCenter>action).payload };
 
 		case ToolsActionsTypes.SET_MAP_SEARCH_BOX:
-			return { ...state, mapSearchBoxSearch: action.payload };
+			return { ...state, mapSearchBoxSearch: (<SetMapSearchBox>action).payload };
 
 		case ToolsActionsTypes.SET_PIN_LOCATION_MODE:
 			tmpMap = new Map(state.flags);

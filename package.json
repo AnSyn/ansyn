@@ -30,7 +30,8 @@
     "test:e2e": "node scripts/generate-config.js && ng e2e ansyn-e2e",
     "test:single-run": "ng test ansyn --watch=false",
     "testCompile": "cd build && gulp testCompile",
-    "update": "ng update @angular/core @angular/cli"
+    "update": "ng update @angular/core @angular/cli",
+    "postinstall": "ngcc"
   },
   "dependencies": {
     "@angular/animations": "~9.1.0",

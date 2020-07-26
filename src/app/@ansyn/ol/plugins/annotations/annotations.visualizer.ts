@@ -533,7 +533,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		return [
 			new olStyle({
+				placement: 'line',
+				overflow: true,
+				rotateWithView: true,
 				text: new olText({
+					...this.measuresTextStyle,
+					placement: 'point',
 					font: '16px Calibri,sans-serif',
 					fill: new olFill({
 						color: '#fff'
@@ -630,7 +635,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			}
 
 		} else {
-			centerFeature = this.currentAnnotationEdit.centerFeature;
+			centerFeature = this.currentAnnotationEdit ? this.currentAnnotationEdit.centerFeature : null;
 			this.removeInteraction(VisualizerInteractions.editAnnotationTranslateHandler);
 			this.removeInteraction(VisualizerInteractions.modifyInteractionHandler);
 			if (centerFeature) {

@@ -26,7 +26,11 @@ describe('ExportMapsPopupComponent', () => {
 				StoreModule.forRoot({ [mapFeatureKey]: MapReducer }),
 				TranslateModule.forRoot()],
 			providers: [ImageryCommunicatorService,
-				{ provide: MatDialogRef, useValue: {} },
+				{
+					provide: MatDialogRef, useValue: {
+						close: () => {}
+					}
+				},
 				{ provide: MatDialog, useValue: {} },
 				{
 					provide: credentialsConfig,
@@ -38,7 +42,7 @@ describe('ExportMapsPopupComponent', () => {
 					provide: toolsConfig,
 					useValue: {
 						exportMap: {
-							target: '',
+							target: 'some-element',
 							excludeClasses: []
 						}
 					}

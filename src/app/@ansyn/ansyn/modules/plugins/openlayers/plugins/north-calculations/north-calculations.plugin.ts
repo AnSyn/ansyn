@@ -181,9 +181,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				);
 			}
 			return of(0);
-		}),
-		tap((virtualNorth: number) => {
-			this.communicator.setVirtualNorth(virtualNorth);
+			
 		})
 	);
 

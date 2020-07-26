@@ -1,14 +1,21 @@
-import { Component, Input, OnDestroy, OnInit, HostBinding } from '@angular/core';
+import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import { GeocoderService } from '../../services/geocoder.service';
 import { Point } from 'geojson';
 import { Observable } from 'rxjs';
-import { filter, retryWhen, switchMap, take, tap, delay } from 'rxjs/operators';
+import { filter, retryWhen, switchMap, take, tap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { selectIsMinimalistViewMode } from "../../reducers/map.reducer";
-import { Store } from "@ngrx/store";
-const DEFAULT_WIDTH = 150;
+import { selectIsMinimalistViewMode } from '../../reducers/map.reducer';
+import { Store } from '@ngrx/store';
+import {
+	SetActiveCenterTriggerAction,
+	SetMapSearchBoxTriggerAction,
+	SetToastMessageAction
+} from '../../actions/map.actions';
+import { TranslateService } from '@ngx-translate/core';
+import { IMapSearchResult } from '../../models/map-search.model';
+
 @Component({
 	selector: 'ansyn-map-search-box',
 	templateUrl: './map-search-box.component.html',
@@ -20,8 +27,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 	@HostBinding('class.hide') isMinimalView: boolean;
 	control = new FormControl();
 	_communicator: CommunicatorEntity;
-	autoCompleteWidth = DEFAULT_WIDTH;
-	locations: { name: string, point: Point }[] = [];
+	locations: IMapSearchResult[] = [];
 	public error: boolean;
 	loading: boolean;
 
@@ -37,19 +43,14 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		tap(this.resetSearch.bind(this)),
 		filter((value: string) => value.length >= 2),
 		switchMap((value: string) => this.geocoderService.getLocation$(value)),
-		tap((allLocations: Array<any>) => {
+		tap((allLocations: Array<IMapSearchResult>) => {
 			this.locations = allLocations.slice(0, 10);
-			const newAutoCompleteWidth = this.locations.reduce<number>((acc, next) => {
-				return acc > next.name.length ? acc : next.name.length;
-			}, 0) * 9;
-			this.autoCompleteWidth = this.autoCompleteWidth < newAutoCompleteWidth ? newAutoCompleteWidth : this.autoCompleteWidth;
 			this.loading = false;
 		}),
 		retryWhen((err) => {
 			return err.pipe(
 				tap(error => {
 					this.error = true;
-					this.autoCompleteWidth = DEFAULT_WIDTH;
 					this.locations = [];
 					this.loading = false;
 				})
@@ -59,14 +60,15 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 
 	constructor(protected store$: Store<any>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				public geocoderService: GeocoderService) {
+				public geocoderService: GeocoderService,
+				protected translator: TranslateService) {
 	}
 
 	resetSearch() {
 		this.locations = [];
 		this.error = null;
 		this.loading = true;
-		this.autoCompleteWidth = DEFAULT_WIDTH;
+		this.store$.dispatch(new SetMapSearchBoxTriggerAction(false));
 	}
 
 	goToLocation(point) {
@@ -75,6 +77,8 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		}
 		if (point) {
 			this._communicator.setCenter(point, true).pipe(take(1)).subscribe();
+			this.store$.dispatch(new SetActiveCenterTriggerAction(point.coordinates));
+			this.store$.dispatch(new SetMapSearchBoxTriggerAction(true));
 		}
 	}
 
@@ -89,8 +93,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		let point;
 		if (this.geocoderService.isCoordinates(value)) {
 			point = this.geocoderService.createPoint(value);
-		}
-		else {
+		} else {
 			let index = this.locations.findIndex(loc => loc.name === value);
 			if (index > -1) {
 				point = this.locations[index].point;
@@ -100,6 +103,12 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 				this.control.setValue(bestLocation ? bestLocation.name : value);
 			}
 		}
-		this.goToLocation(point);
+
+		if (point) {
+			this.goToLocation(point);
+		} else {
+			const toastText = this.translator.instant('Invalid location');
+			this.store$.dispatch(new SetToastMessageAction({ toastText }))
+		}
 	}
 }

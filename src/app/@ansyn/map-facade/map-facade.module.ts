@@ -34,6 +34,7 @@ import { FloatingMenuComponent } from './components/floating-menu/floating-menu.
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
+import { AnsynDatePipe } from './pipes/ansyn-date.pipe';
 
 @NgModule({
 	imports: [
@@ -70,7 +71,8 @@ import { InfiniteScrollDirective } from './directives/infinite-scroll.directive'
 		ImageryMouseCoordinatesComponent,
 		GeoHolderComponent,
 		UtmHolderComponent,
-		FloatingMenuComponent
+		FloatingMenuComponent,
+		AnsynDatePipe
 	],
 	exports: [
 		ImageriesManagerComponent,
@@ -83,7 +85,8 @@ import { InfiniteScrollDirective } from './directives/infinite-scroll.directive'
 		AnsynPopoverComponent,
 		EntryComponentDirective,
 		GeoHolderComponent,
-		UtmHolderComponent
+		UtmHolderComponent,
+		AnsynDatePipe
 	]
 })
 

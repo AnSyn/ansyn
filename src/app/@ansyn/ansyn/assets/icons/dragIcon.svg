@@ -2,8 +2,9 @@
  <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
 
  <g>
-  <title>background</title>
-  <rect fill="none" id="canvas_background" height="27" width="27" y="-1" x="-1"/>
+	 <title>background</title>
+	 <!-- Set very small, but not zero, opacity, so that the rect remains clickable -->
+	 <rect fill="lightgray" fill-opacity="0.01" id="canvas_background" height="27" width="27" y="-1" x="-1"/>
  </g>
  <g>
   <title>Layer 1</title>

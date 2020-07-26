@@ -42,6 +42,7 @@ import { LoggerService } from '../../modules/core/services/logger.service';
 import { ICase } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { overlayStatusConfig } from "../../modules/overlays/overlay-status/config/overlay-status-config";
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -87,15 +88,21 @@ describe('CasesAppEffects', () => {
 					[mapFeatureKey]: MapReducer,
 					[overlayStatusFeatureKey]: OverlayStatusReducer
 				}),
+				TranslateModule,
 				RouterTestingModule
 			],
 			providers: [
+				{
+					provide: TranslateService,
+					useValue: {}
+				},
 				{
 					provide: LoggerService, useValue: {
 						info: () => {
 						}
 					}
 				},
+				{ provide: casesConfig, useValue: { schema: null, defaultCase: { id: 'defaultCaseId' } } },
 				{
 					provide: overlayStatusConfig,
 					useValue: {

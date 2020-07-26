@@ -92,6 +92,7 @@ export interface IDataInputFilterValue {
 export interface ICaseDataInputFiltersState {
 	fullyChecked?: boolean;
 	filters: IDataInputFilterValue[];
+	customFiltersSensor?: string[]; // for context
 }
 
 export interface ICaseTimeState {

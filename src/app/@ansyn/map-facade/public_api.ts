@@ -1,4 +1,5 @@
 export { GeocoderService } from './services/geocoder.service';
+export { IMapSearchResult } from './models/map-search.model';
 
 export { ImageryZoomerService } from './services/imagery-zoomer.service';
 export { IEd50Notification } from './models/map-config.model';
@@ -72,7 +73,9 @@ export {
 	ReplaceMainLayer,
 	ReplaceMainLayerSuccess,
 	ReplaceMainLayerFailed,
-	SynchronizeMapsAction
+	SynchronizeMapsAction,
+	SetActiveCenterTriggerAction,
+	SetMapSearchBoxTriggerAction
 } from './actions/map.actions';
 
 export {
@@ -89,16 +92,16 @@ export {
 
 export { copyFromContent } from './utils/clipboard';
 export { getTimeFormat, getTimeDiff, getTimeDiffFormat } from './utils/time';
+export { AnsynDatePipe } from './pipes/ansyn-date.pipe';
 
 export { ProjectionConverterService, ICoordinatesSystem, IUtmZone } from './services/projection-converter.service';
 export { MapFacadeService } from './services/map-facade.service';
-export { IMapFacadeConfig } from './models/map-config.model';
+export { IMapFacadeConfig, IMapSearchConfig } from './models/map-config.model';
 export { mapFacadeConfig } from './models/map-facade.config';
 export { EntryComponentDirective } from './directives/entry-component.directive';
 export { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
 export { AnimatedEllipsisComponent } from './components/animated-ellipsis/animated-ellipsis.component';
 export { MapFacadeModule } from './map-facade.module';
-
 
 export { LayoutKey, layoutOptions, IMapsLayout } from './models/maps-layout';
 export { UtmHolderComponent } from './components/imagery-mouse-coordinates/holders/utm-holder/utm-holder.component';

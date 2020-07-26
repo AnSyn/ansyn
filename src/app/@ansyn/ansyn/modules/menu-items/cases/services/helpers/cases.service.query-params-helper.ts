@@ -43,7 +43,7 @@ export class QueryParamsHelper {
 		let updatedCaseModel = cloneDeep(caseModel);
 		// needed for ngc
 		updatedCaseModel.selectedContextId = selectedContext.id;
-		['region', 'facets', 'time', 'layoutIndex'].forEach(key => {
+		['dataInputFilters', 'facets', 'time'].forEach(key => {
 			if (selectedContext[key]) {
 				updatedCaseModel.state[key] = selectedContext[key];
 			}

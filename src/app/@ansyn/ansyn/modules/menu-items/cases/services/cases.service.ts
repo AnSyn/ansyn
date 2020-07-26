@@ -18,6 +18,7 @@ import {
 	ICaseTimeState,
 	IDilutedCaseState
 } from '../models/case.model';
+import { TranslateService } from '@ngx-translate/core';
 
 const moment = momentNs;
 
@@ -45,6 +46,7 @@ export class CasesService {
 	constructor(protected storageService: StorageService,
 				@Inject(casesConfig) public config: ICasesConfig,
 				public urlSerializer: UrlSerializer,
+				protected translator: TranslateService,
 				public errorHandlerService: ErrorHandlerService) {
 		this.paginationLimit = this.config.paginationLimit;
 		this.queryParamsKeys = this.config.casesQueryParamsKeys;
@@ -78,7 +80,7 @@ export class CasesService {
 		return this.storageService.getPage<ICasePreview>(this.config.schema, casesOffset, this.paginationLimit)
 			.pipe(
 				map(previews => previews.map(preview => this.parseCasePreview(preview))),
-				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load cases'))
+				catchError(err => this.errorHandlerService.httpErrorHandle(err, this.translator.instant('Failed to load cases')))
 			);
 	}
 

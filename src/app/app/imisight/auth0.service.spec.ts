@@ -21,7 +21,7 @@ describe('Auth0Service', () => {
 						clientID: 'KXLTbs08LtLqrbPwSgn7Ioej0aMB7tf6',
 						domain: 'imisight-sat.auth0.com',
 						responseType: 'token id_token',
-						audience: 'https://gw.sat.imisight.net',
+						audience: 'https://gw.imisight.net',
 						callbackURL: 'http://localhost:4200/#/callback/',
 						scope: 'openid'
 					}

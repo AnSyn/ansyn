@@ -8,7 +8,7 @@ import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs/operators';
 import { selectFavoriteOverlays } from '../overlay-status/reducers/overlay-status.reducer';
-import { sortByDateDesc } from '../../core/utils/sorting';
+import { sortByDateDesc, sortByDate } from '../../core/utils/sorting';
 import { mapValuesToArray } from '../../core/utils/misc';
 import { IOverlay, IOverlayDrop, IOverlaysCriteria, IOverlaysFetchData } from '../models/overlay.model';
 
@@ -86,7 +86,8 @@ export class OverlaysService {
 			timeRange: <any>{
 				start: params.time.from,
 				end: params.time.to
-			}
+			},
+			customSensorToFilter: params.dataInputFilters.customFiltersSensor
 		});
 	}
 

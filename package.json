@@ -1,6 +1,6 @@
 {
   "name": "ansyn-src",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "private": true,
   "license": "MIT",
   "repository": {
@@ -81,6 +81,7 @@
     "rison": "^0.1.1",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
+    "shapefile": "^0.6.6",
     "wellknown": "^0.5.0",
     "zone.js": "~0.10.2"
   },

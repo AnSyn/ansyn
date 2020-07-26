@@ -49,6 +49,8 @@ export interface IImiSightElement {
 })
 export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 
+	private gatewayUrl: string;
+	private searchUrl: string;
 	constructor(
 		public errorHandlerService: ErrorHandlerService,
 		protected loggerService: LoggerService,
@@ -57,6 +59,8 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 		@Inject(ImisightOverlaySourceConfig)
 		protected imisightOverlaysSourceConfig: IImisightOverlaySourceConfig) {
 		super(loggerService);
+		this.searchUrl = this.imisightOverlaysSourceConfig.baseUrl + this.imisightOverlaysSourceConfig.searchPath;
+		this.gatewayUrl = this.imisightOverlaysSourceConfig.baseUrl;
 	}
 
 	fetch(fetchParams: IFetchParams): Observable<any> {
@@ -81,7 +85,6 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 		}
 		// if limit not provided by config - set default value
 		fetchParams.limit = fetchParams.limit ? fetchParams.limit : DEFAULT_OVERLAYS_LIMIT;
-		let baseUrl = this.imisightOverlaysSourceConfig.baseUrl;
 		// let headers = new HttpHeaders( );
 		// add 1 to limit - so we'll know if provider have more then X overlays
 		const params = {
@@ -96,7 +99,7 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 				'Authorization': 'Bearer ' + token
 			}
 		};
-		return this.http.post<any>(baseUrl, params, httpOptions).pipe(
+		return this.http.post<any>(this.searchUrl, params, httpOptions).pipe(
 			map(data => this.extractData(data)),
 			map((overlays: IOverlay[]) => <any>limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
@@ -111,8 +114,7 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	getById(id: string, sourceType: string): Observable<IOverlay> {
-		let baseUrl = this.imisightOverlaysSourceConfig.baseUrl;
-		return this.http.get<any>(baseUrl, { params: { _id: id } }).pipe(
+		return this.http.get<any>(this.searchUrl, { params: { _id: id } }).pipe(
 			map(data => this.extractData(data.results)),
 			map(([overaly]): any => overaly),
 			catchError((error: any) => this.errorHandlerService.httpErrorHandle(error))
@@ -131,7 +133,6 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 
 	protected parseData(imiSightElement: IImiSightElement): IOverlay {
 		const companyId = 1;
-		const gatewayUrl = 'https://gw.sat.imisight.net';
 		const footprint: any = imiSightElement.geojson;
 		return new Overlay({
 			id: imiSightElement._id,
@@ -140,8 +141,8 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 			sensorName: imiSightElement.sensorName,
 			bestResolution: 1,
 			name: imiSightElement.s3Id,
-			imageUrl: `${ gatewayUrl }/geo/geoserver/company_${ companyId }/wms/${ imiSightElement.geoFile }`,
-			thumbnailUrl: `${ gatewayUrl }/geo/geoserver/company_${ companyId }/wms/${ imiSightElement.geoFile }`,
+			imageUrl: `${ this.gatewayUrl }/geo/geoserver/company_${ companyId }/wms/${ imiSightElement.geoFile }`,
+			thumbnailUrl: `${ this.gatewayUrl }/geo/geoserver/company_${ companyId }/wms/${ imiSightElement.geoFile }`,
 			date: new Date(imiSightElement.timestamp),
 			photoTime: imiSightElement.timestamp,
 			azimuth: toRadians(180),

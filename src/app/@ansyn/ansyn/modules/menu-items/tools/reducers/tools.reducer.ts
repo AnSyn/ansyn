@@ -47,6 +47,16 @@ export interface IToolsState {
 	mapSearchBoxSearch: boolean;
 }
 
+export const initialAnnotationProperties = {
+    'stroke-width': 1,
+    'fill-opacity': 0.4,
+    'stroke-opacity': 1,
+    'stroke-dasharray': 0,
+    'marker-color': '#ffffff',
+    stroke: '#27b2cf',
+    fill: '#ffffff'
+}
+
 export const toolsInitialState: IToolsState = {
 	flags: new Map<toolsFlags, boolean>([
 		[toolsFlags.geoRegisteredOptionsEnabled, true]
@@ -54,14 +64,7 @@ export const toolsInitialState: IToolsState = {
 	subMenu: undefined,
 	activeCenter: [0, 0],
 	annotationMode: undefined,
-	annotationProperties: {
-		'stroke-width': 1,
-		'fill-opacity': 0.4,
-		'stroke-opacity': 1,
-		'stroke-dasharray': 0,
-		stroke: '#27b2cf',
-		fill: '#ffffff'
-	},
+	annotationProperties: initialAnnotationProperties,
 	activeAnnotationLayer: null,
 	mapsMeasures: new Map<string, IMeasureData>(),
 	mapSearchBoxSearch: false

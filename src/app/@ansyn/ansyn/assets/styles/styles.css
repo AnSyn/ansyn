@@ -10,6 +10,7 @@
 @import "~cesium/Build/Cesium/Widgets/widgets.css";
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 @import "~@ansyn/ng-pick-datetime/assets/style/picker.min.css";
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
 
 circle.drop.selected {
 	fill: black;
@@ -250,14 +251,15 @@ input[type=number]::-webkit-outer-spin-button {
 	font-family: 'AnSyn';
 	src: url('/assets/fonts/AnSyn/AnSyn.eot?56493936');
 	src: url('/assets/fonts/AnSyn/AnSyn.eot?56493936#iefix') format('embedded-opentype'),
-	url('/assets/fonts/AnSyn/AnSyn.woff?56493936') format('woff'),
-	url('/assets/fonts/AnSyn/AnSyn.ttf?56493936') format('truetype'),
-	url('/assets/fonts/AnSyn/AnSyn.svg?56493936#AnSyn') format('svg');
+		url('/assets/fonts/AnSyn/AnSyn.woff?56493936') format('woff'),
+		url('/assets/fonts/AnSyn/AnSyn.ttf?56493936') format('truetype'),
+		url('/assets/fonts/AnSyn/AnSyn.svg?56493936#AnSyn') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
 
-[class^="icon-"], [class*=" icon-"] {
+[class^="icon-"],
+[class*=" icon-"] {
 	/* use !important to prevent issues with browser extensions that change fonts */
 	font-family: 'AnSyn' !important;
 	speak: none;
@@ -273,7 +275,12 @@ input[type=number]::-webkit-outer-spin-button {
 	-moz-osx-font-smoothing: grayscale;
 }
 
-.icon-screen-1:before, .icon-screen-2:before, .icon-screen-3:before, .icon-screen-4:before, .icon-screen-5:before, .icon-screen-6:before {
+.icon-screen-1:before,
+.icon-screen-2:before,
+.icon-screen-3:before,
+.icon-screen-4:before,
+.icon-screen-5:before,
+.icon-screen-6:before {
 	font-size: 20px;
 	line-height: normal;
 }

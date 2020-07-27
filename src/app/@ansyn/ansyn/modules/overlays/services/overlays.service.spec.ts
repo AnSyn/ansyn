@@ -3,7 +3,7 @@ import { OverlaysConfig, OverlaysService } from './overlays.service';
 import { IOverlayDropSources, OverlayReducer, overlaysFeatureKey } from '../reducers/overlays.reducer';
 import { Response, ResponseOptions, XHRBackend } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
-import { EMPTY, Observable, Observer, of } from 'rxjs';
+import { Observable, Observer, of } from 'rxjs';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
@@ -18,6 +18,11 @@ import {
 	IOverlaysFetchData,
 	IOverlaySpecialObject
 } from '../models/overlay.model';
+import {
+	IMultipleOverlaysSourceConfig,
+	MultipleOverlaysSourceConfig
+} from '../../core/models/multiple-overlays-source-config';
+import { IDataInputFilterValue } from '../../menu-items/cases/models/case.model';
 
 @OverlaySourceProvider({
 	sourceType: 'Mock'
@@ -119,6 +124,17 @@ describe('OverlaysService', () => {
 			filters: []
 		}
 	};
+	const multipleOverlaysSourceConfig: Partial<IMultipleOverlaysSourceConfig> = {
+		indexProviders: {
+			animals: {
+				whitelist: [],
+				blacklist: [],
+				sensorNamesByGroup: {
+					kipod: ["shmulik"]
+				}
+			}
+		}
+	}
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
@@ -127,6 +143,7 @@ describe('OverlaysService', () => {
 				{ provide: LoggerService, useValue: { error: (some) => null } },
 				{ provide: XHRBackend, useClass: MockBackend },
 				{ provide: OverlaysConfig, useValue: {} },
+				{ provide: MultipleOverlaysSourceConfig, useValue: multipleOverlaysSourceConfig },
 				{ provide: MultipleOverlaysSourceProvider, useClass: OverlaySourceProviderMock }
 			],
 			imports: [
@@ -342,4 +359,22 @@ describe('OverlaysService', () => {
 		});
 
 	});
+
+	describe('getSensorGroupAndProviderFromSensorName()', () => {
+		it('will find group and provider for sensor name', () => {
+			const sensorName = 'shmulik';
+			const expected: IDataInputFilterValue = {
+				providerName: 'animals',
+				sensorType: 'kipod',
+				sensorName
+			};
+			const actual = overlaysService.getSensorGroupAndProviderFromSensorName(sensorName);
+			expect(actual).toEqual(expected);
+		});
+
+		it('will return falsy value if group and provider were not found', () => {
+			const actual = overlaysService.getSensorGroupAndProviderFromSensorName('muki');
+			expect(actual).toBeFalsy();
+		})
+	})
 });

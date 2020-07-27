@@ -608,7 +608,7 @@
 		  "blacklist": []
 		},
 		"PLANET": {
-		  "inActive": {{ getv "/ansyn/overlay/planet/inactive" "true" }},
+		  "inActive": {{ getv "/ansyn/overlay/planet/inactive" "false" }},
 		  "whitelist": [
 			  {
 				"name": "Entire Earth",
@@ -1090,6 +1090,9 @@
 				  }
 				}
 			]
+			},
+			"sensorNamesByGroup": {
+				"Landsat8L1G": ["Landsat8"]
 			}
 		},
 		"PIC4CARTO": {

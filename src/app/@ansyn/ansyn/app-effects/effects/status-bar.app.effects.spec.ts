@@ -81,7 +81,10 @@ describe('StatusBarAppEffects', () => {
 			],
 			providers: [
 				{ provide: LoggerService, useValue: { error: (some) => null } },
-				OverlaysService,
+				{
+					provide: OverlaysService,
+					useValue: {}
+				},
 				StatusBarAppEffects,
 				provideMockActions(() => actions),
 				{ provide: CasesService, useValue: { updateCase: () => null, getOverlaysMarkup: () => null } },

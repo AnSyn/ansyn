@@ -122,13 +122,21 @@ describe('TimelineComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			providers: [OverlaysService, OverlaysEffects, Actions, {
-				provide: MultipleOverlaysSourceProvider,
-				useValue: {}
-			}, {
-				provide: OverlaysConfig,
-				useValue: {}
-			},
+			providers: [
+				{
+					provide: OverlaysService,
+					useValue: {}
+				},
+				OverlaysEffects,
+				Actions,
+				{
+					provide: MultipleOverlaysSourceProvider,
+					useValue: {}
+				},
+				{
+					provide: OverlaysConfig,
+					useValue: {}
+				},
 				{
 					provide: LoggerService,
 					useValue: { error: (some) => null }

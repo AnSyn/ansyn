@@ -48,13 +48,13 @@ export interface IToolsState {
 }
 
 export const initialAnnotationProperties = {
-    'stroke-width': 1,
-    'fill-opacity': 0.4,
-    'stroke-opacity': 1,
-    'stroke-dasharray': 0,
-    'marker-color': '#ffffff',
-    stroke: '#27b2cf',
-    fill: '#ffffff'
+	'stroke-width': 1,
+	'fill-opacity': 0.4,
+	'stroke-opacity': 1,
+	'stroke-dasharray': 0,
+	'marker-color': '#ffffff',
+	stroke: '#27b2cf',
+	fill: '#ffffff'
 }
 
 export const toolsInitialState: IToolsState = {

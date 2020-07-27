@@ -74,14 +74,14 @@ describe('MenuAppEffects', () => {
 			a: new ResetAppAction()
 		});
 		const expectedResults = cold('--(bcdefgh)--', {
-            b: new LoadDefaultCaseAction(),
-            c: new ShowOverlaysFootprintAction('None'),
-            d: new StartMouseShadow({fromUser: true}),
-            e: new AnnotationSetProperties(initialAnnotationProperties),
-            f: new ToggleIsPinnedAction(false),
-            g: new UnSelectMenuItemAction(),
-            h: new ToggleFooter(false)
-        });
+			b: new LoadDefaultCaseAction(),
+			c: new ShowOverlaysFootprintAction('None'),
+			d: new StartMouseShadow({fromUser: true}),
+			e: new AnnotationSetProperties(initialAnnotationProperties),
+			f: new ToggleIsPinnedAction(false),
+			g: new UnSelectMenuItemAction(),
+			h: new ToggleFooter(false)
+		});
 		expect(menuAppEffects.onResetApp$).toBeObservable(expectedResults);
 	});
 

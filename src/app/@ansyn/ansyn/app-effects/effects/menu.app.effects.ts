@@ -53,14 +53,14 @@ export class MenuAppEffects {
 				}
 
 				return [
-                    new LoadDefaultCaseAction(),
-                    new ShowOverlaysFootprintAction('None'),
-                    new StartMouseShadow({fromUser: true}),
-                    new AnnotationSetProperties(initialAnnotationProperties),
-                    new ToggleIsPinnedAction(false),
-                    new UnSelectMenuItemAction(),
-                    new ToggleFooter(false)
-                ];
+					new LoadDefaultCaseAction(),
+					new ShowOverlaysFootprintAction('None'),
+					new StartMouseShadow({fromUser: true}),
+					new AnnotationSetProperties(initialAnnotationProperties),
+					new ToggleIsPinnedAction(false),
+					new UnSelectMenuItemAction(),
+					new ToggleFooter(false)
+				];
 			})
 		);
 

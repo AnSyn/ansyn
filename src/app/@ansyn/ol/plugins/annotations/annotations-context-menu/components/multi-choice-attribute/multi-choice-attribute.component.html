@@ -1,0 +1,11 @@
+<mat-chip-list>
+	<mat-chip *ngFor="let option of selectedOptions" [selectable]="isMatChipSelectable" [removable]="isMatChipRemovable" (removed)="removeOption(option)">
+		{{ option.value }}
+		<mat-icon matChipRemove *ngIf="isMatChipRemovable">cancel</mat-icon>
+	</mat-chip>
+	<button mat-button [matMenuTriggerFor]="menu">Add {{ label }}</button>
+</mat-chip-list>
+
+<mat-menu #menu="matMenu">
+	<div mat-menu-item *ngFor="let option of optionsList" (click)="selectOption(option)">{{ option.value }}</div>
+</mat-menu>

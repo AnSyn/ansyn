@@ -13,4 +13,5 @@ export interface IVisualizerEntity {
 	undeletable?: boolean;
 	showArea?: boolean;
 	labelTranslateOn?: boolean;
+	attributes?: { [key: string]: string };
 }

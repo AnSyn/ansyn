@@ -5,6 +5,10 @@ import * as SVG from '../annotation-context-menu/icons-svg';
 import { IStyleWeight } from '../annotations-weight/annotations-weight.component';
 import { IVisualizerEntity, StayInImageryService } from '@ansyn/imagery';
 import { AnnotationMode } from '../../../annotations.model';
+import { AttributeBase } from '../../models/attribute-base';
+import { AttributesService } from '../../services/attributes.service';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 interface IFeatureProperties extends IVisualizerEntity {
 	mode: AnnotationMode
@@ -20,6 +24,10 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 	@Input() annotations: AnnotationsVisualizer;
 	@Input() featureId: string;
 	@Input() selectedTab: { [id: string]: AnnotationsContextmenuTabs } = {};
+
+	attributes$: Observable<AttributeBase<any>[]>;
+	// TODO - get from config
+	isMetadataEnabled = true;
 
 	@HostBinding('style.right.px')
 	get right() {
@@ -39,7 +47,8 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 
 	constructor(
 		protected myElement: ElementRef,
-		protected stayInImageryService: StayInImageryService
+		protected stayInImageryService: StayInImageryService,
+		private attributesService: AttributesService
 	) {
 	}
 
@@ -47,6 +56,14 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 		const feature = this.annotations.getJsonFeatureById(this.featureId);
 		this.isFeatureNonEditable = feature && feature.properties.isNonEditable;
 		this.featureProps = this.getFeatureProps() as IFeatureProperties;
+		this.attributes$ = this.attributesService.getAttributes().pipe(
+			tap((attributes) => {
+				const featureProps = this.getFeatureProps();
+				if (!!featureProps.attributes) {
+					this.updateAttributesValues(featureProps.attributes, attributes);
+				}
+			})
+		);
 	}
 
 	ngAfterViewInit(): void {
@@ -134,6 +151,23 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 
 	removeFeature() {
 		this.annotations.removeFeature(this.featureId);
+	}
+
+	onMetadataFormSubmit(attributes: AttributeBase<any>[]) {
+		const attributesDictionary = {};
+		attributes.forEach((att) => {
+			attributesDictionary[att.key] = att.value;
+		});
+		this.annotations.updateFeature(this.featureId, { attributes: attributesDictionary });
+	}
+	private updateAttributesValues(newValues: { [key: string]: string }, attributes: AttributeBase<any>[]) {
+		attributes.forEach((attribute) => {
+			Object.keys(newValues).forEach((key) => {
+				if (key === attribute.key) {
+					attribute.value = newValues[key];
+				}
+			});
+		});
 	}
 
 }

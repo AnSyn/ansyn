@@ -1,0 +1,18 @@
+<div *ngIf="!!attributesForm" [formGroup]="attributesForm">
+	<label [attr.for]="attribute.key">{{ attribute.label }}</label>
+
+	<div [ngSwitch]="attribute.type">
+		<textarea *ngSwitchCase="controlType.FreeText" [formControlName]="attribute.key" [id]="attribute.key" [value]="attribute.value"></textarea>
+		<select *ngSwitchCase="controlType.SingleChoice" [id]="attribute.key" [formControlName]="attribute.key" [value]="attribute.value">
+			<option *ngFor="let opt of attribute.options">{{ opt.value }}</option>
+		</select>
+
+		<div *ngSwitchCase="controlType.MultipleChoices">
+			<ansyn-multi-choice-attribute [label]="attribute.label" [optionsList]="attribute.options" [selectedOptions]="getSelectedOptions()" (onSelectOption)="selectOption($event)" (onRemoveOption)="removeOption($event)"></ansyn-multi-choice-attribute>
+		</div>
+
+		<input *ngSwitchCase="controlType.Number" [formControlName]="attribute.key" type="number" [id]="attribute.key" [value]="attribute.value" />
+	</div>
+
+	<div class="errorMessage" *ngIf="!isValid">{{ attribute.label }} is required</div>
+</div>

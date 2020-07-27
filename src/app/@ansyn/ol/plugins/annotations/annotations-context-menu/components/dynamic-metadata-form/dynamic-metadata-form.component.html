@@ -1,0 +1,6 @@
+<form [formGroup]="form">
+	<ng-container *ngFor="let attribute of attributes">
+		<ansyn-dynamic-attribute-control [attribute]="attribute" [form]="form"></ansyn-dynamic-attribute-control>
+	</ng-container>
+	<button (click)="submit()">Save</button>
+</form>

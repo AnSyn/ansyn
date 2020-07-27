@@ -6,7 +6,8 @@ import { AnnotationsVisualizer } from '../../../annotations.visualizer';
 export enum AnnotationsContextmenuTabs {
 	Colors,
 	Weight,
-	Label
+	Label,
+	Metadata
 }
 
 @Component({

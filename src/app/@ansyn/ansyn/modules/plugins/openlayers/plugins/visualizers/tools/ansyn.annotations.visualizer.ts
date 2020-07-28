@@ -4,7 +4,7 @@ import { select, Store } from '@ngrx/store';
 import { selectActiveMapId, selectOverlayByMapId } from '@ansyn/map-facade';
 import { combineLatest, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
-import { distinctUntilChanged, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, map, mergeMap, take, tap, withLatestFrom, switchMapTo, skip, filter } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { selectGeoFilterActive } from '../../../../../status-bar/reducers/status-bar.reducer';
 import {
@@ -50,6 +50,10 @@ import { checkEntitiesDiff } from '../../../../utils/annotations-visualizers';
 	deps: [Store, Actions, OpenLayersProjectionService, OL_PLUGINS_CONFIG]
 })
 export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
+	// TODO - rename (?) and bring value from config;
+	private isContinuousDrawingAllowedFromConfig = false;
+	/** Last selected annotation mode which was not null or undefined */
+	private lastAnnotationMode: AnnotationMode;
 	annotationsVisualizer: AnnotationsVisualizer;
 	overlay: IOverlay;
 
@@ -159,7 +163,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	@AutoSubscription
 	onDrawEnd$ = () => this.annotationsVisualizer.events.onDrawEnd.pipe(
 		withLatestFrom(this.activeAnnotationLayer$),
-		tap(([{ GeoJSON, feature }, activeAnnotationLayer]: [IDrawEndEvent, ILayer]) => {
+		map(([{ GeoJSON, feature }, activeAnnotationLayer]: [IDrawEndEvent, ILayer]) => {
 			const data = <FeatureCollection<any>>{
 				...activeAnnotationLayer.data,
 				features: activeAnnotationLayer.data.features.concat(GeoJSON.features)
@@ -171,6 +175,19 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 				};
 			}
 			this.store$.dispatch(new UpdateLayer({ id: activeAnnotationLayer.id, data }));
+			const id = GeoJSON?.features[0]?.id?.toString() ?? null;
+			return id;
+		}),
+		filter(featureId => this.isContinuousDrawingAllowedFromConfig && !!featureId),
+		tap(featureId => {
+			this.annotationsVisualizer.events.onSelect.next([featureId]);
+			this.annotationsVisualizer.continuousDrawingActive = true;			
+		}),
+		switchMapTo(this.communicator.ActiveMap.mouseSingleClick.pipe(skip(1),take(1))),
+		tap(_ => {
+			this.annotationsVisualizer.events.onSelect.next([]);
+			this.annotationsVisualizer.continuousDrawingActive = false;
+			this.annotationsVisualizer.setMode(this.lastAnnotationMode, true);
 		})
 	);
 
@@ -274,11 +291,15 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	onInit() {
 		super.onInit();
 		this.annotationsVisualizer = this.communicator.getPlugin(AnnotationsVisualizer);
-		
-		this.store$.select(selectAnnotationMode).pipe(take(1))	
-		.subscribe((annotationMode) => {	
-			this.annotationsVisualizer.setMode(annotationMode, false);	
-		});
+
+		this.store$.select(selectAnnotationMode).pipe(
+			tap(annotationMode => {
+				this.annotationsVisualizer.setMode(annotationMode, false);
+			}),
+			filter(mode => !!mode),
+			tap(mode => this.lastAnnotationMode = mode)
+		)
+		.subscribe();
 	}
 
 }

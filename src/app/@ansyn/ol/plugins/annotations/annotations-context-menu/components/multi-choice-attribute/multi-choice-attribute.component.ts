@@ -10,9 +10,9 @@ type Option = IKeyValuePair<string>;
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MultiChoiceAttributeComponent {
-	protected isMatChipSelectable = true;
-	protected isMatChipRemovable = true;
-	protected isOpen = false;
+	isMatChipSelectable = true;
+	isMatChipRemovable = true;
+	isOpen = false;
 
 	@Output() onSelectOption = new EventEmitter<Option>();
 	@Output() onRemoveOption = new EventEmitter<Option>();

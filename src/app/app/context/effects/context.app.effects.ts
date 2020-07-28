@@ -4,7 +4,7 @@ import {
 	CasesActionTypes,
 	CasesService,
 	ICaseDataInputFiltersState, IDataInputFilterValue,
-	LoadDefaultCaseAction, OverlaysService,
+	LoadDefaultCaseAction, OverlaysService, rxPreventCrash,
 	SelectCaseAction
 } from '@ansyn/ansyn';
 import { Actions, Effect, ofType } from '@ngrx/effects';
@@ -29,7 +29,8 @@ export class ContextAppEffects {
 		ofType<LoadDefaultCaseAction>(CasesActionTypes.LOAD_DEFAULT_CASE),
 		filter((action: LoadDefaultCaseAction) => action.payload.context),
 		withLatestFrom(this.store.select(selectActiveMapId)),
-		mergeMap(this.parseContextParams.bind(this))
+		mergeMap(this.parseContextParams.bind(this)),
+		rxPreventCrash()
 	);
 
 	constructor(protected actions$: Actions,

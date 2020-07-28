@@ -1,13 +1,13 @@
 import { Observable, of, combineLatest } from 'rxjs';
 import { Actions } from '@ngrx/effects';
 import { Store, select } from '@ngrx/store';
-import { ImageryPlugin } from '@ansyn/imagery';
+import { ImageryPlugin, IVisualizerStyle } from '@ansyn/imagery';
 
 import { CesiumMap, CesiumProjectionService, BaseEntitiesVisualizer, CesiumDrawAnnotationsVisualizer } from '@ansyn/imagery-cesium';
 import { LoggerService } from '../../../core/services/logger.service';
 import { AutoSubscription } from 'auto-subscriptions';
 import { tap, filter, map, mergeMap, distinctUntilChanged, switchMap, withLatestFrom } from 'rxjs/operators';
-import { selectAnnotationMode, selectSubMenu, SubMenuEnum } from '../../../menu-items/tools/reducers/tools.reducer';
+import { selectAnnotationMode, selectSubMenu, SubMenuEnum, selectAnnotationProperties } from '../../../menu-items/tools/reducers/tools.reducer';
 import {
 	selectLayersEntities,
 	selectActiveAnnotationLayer,
@@ -65,6 +65,12 @@ export class AnnotationsVisualizer extends BaseEntitiesVisualizer {
 		map(([activeAnnotationLayerId, entities]) => {
 			return entities[activeAnnotationLayerId];
 		})
+	);
+
+	@AutoSubscription
+	annotationPropertiesChange$: Observable<any> = this.store.pipe(
+		select(selectAnnotationProperties),
+		tap((changes: Partial<IVisualizerStyle>) => this.cesiumDrawer.updateStyle({ initial: { ...changes } }))
 	);
 
 	@AutoSubscription

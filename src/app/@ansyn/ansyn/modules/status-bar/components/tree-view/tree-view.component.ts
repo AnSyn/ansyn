@@ -43,6 +43,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	onDataInputFilterChange$ = this.store.select(selectDataInputFilter).pipe(
+		tap(x => console.log('criteria / dataInputFilter has changed', x)),
 		filter(Boolean),
 		tap((_preFilter: ICaseDataInputFiltersState) => {
 			this._selectedFilters = _preFilter.fullyChecked ? this.selectAll() : _preFilter.filters;

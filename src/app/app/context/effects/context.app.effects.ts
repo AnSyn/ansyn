@@ -114,7 +114,7 @@ export class ContextAppEffects {
 				.filter(Boolean);
 		return {
 			filters,
-			fullyChecked: true,
+			fullyChecked: filters.length === 0,
 			customFiltersSensor: sensorsArray
 		}
 	}

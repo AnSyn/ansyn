@@ -331,7 +331,7 @@ export const { selectEntities, selectAll, selectTotal, selectIds } = overlaysAda
 export const selectOverlays = createSelector(overlaysStateSelector, selectEntities);
 export const selectOverlaysMap: any = createSelector(selectOverlays, (entities: Dictionary<IOverlay>): Map<string, IOverlay> => new Map(Object.entries(entities)));
 export const selectOverlaysArray = createSelector(overlaysStateSelector, selectAll);
-export const selectFilteredOveralys = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string[] => overlays.filteredOverlays);
+export const selectFilteredOveralys = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string[] => overlays && overlays.filteredOverlays);
 export const selectSpecialObjects = createSelector(overlaysStateSelector, (overlays: IOverlaysState): Map<string, IOverlaySpecialObject> => overlays.specialObjects);
 export const selectDrops = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays && overlays.drops);
 export const selectDropsWithoutSpecialObjects = createSelector(selectDrops, (drops: IOverlayDrop[]) => drops && drops.filter(({ shape }) => !shape));

@@ -3,8 +3,8 @@ import { Observable } from 'rxjs';
 import {
 	CasesActionTypes,
 	CasesService,
-	ICaseDataInputFiltersState,
-	LoadDefaultCaseAction,
+	ICaseDataInputFiltersState, IDataInputFilterValue,
+	LoadDefaultCaseAction, OverlaysService,
 	SelectCaseAction
 } from '@ansyn/ansyn';
 import { Actions, Effect, ofType } from '@ngrx/effects';
@@ -36,7 +36,9 @@ export class ContextAppEffects {
 				protected store: Store<any>,
 				protected casesService: CasesService,
 				protected translateService: TranslateService,
-				protected auth0Service: Auth0Service) {
+				protected auth0Service: Auth0Service,
+				protected overlaysService: OverlaysService
+	) {
 	}
 
 	get defaultTime() {
@@ -105,10 +107,14 @@ export class ContextAppEffects {
 	}
 
 	private parseSensorParams(sensors): ICaseDataInputFiltersState {
+		const sensorsArray = sensors.split(',');
+		const filters: IDataInputFilterValue[] = sensorsArray
+				.map(this.overlaysService.getSensorGroupAndProviderFromSensorName)
+				.filter(Boolean);
 		return {
-			filters: [],
+			filters,
 			fullyChecked: true,
-			customFiltersSensor: sensors.split(',')
+			customFiltersSensor: sensorsArray
 		}
 	}
 

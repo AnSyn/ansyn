@@ -1,7 +1,7 @@
 import { inject, TestBed, fakeAsync } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 
-import { CasesService, ICase, LoadDefaultCaseAction, SelectCaseAction } from '@ansyn/ansyn';
+import { CasesService, ICase, LoadDefaultCaseAction, OverlaysService, SelectCaseAction } from '@ansyn/ansyn';
 import { Observable, of } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
@@ -75,6 +75,10 @@ describe('ContextAppEffects', () => {
 				},
 				{
 					provide: ContextConfig,
+					useValue: {}
+				},
+				{
+					provide: OverlaysService,
 					useValue: {}
 				}
 			]

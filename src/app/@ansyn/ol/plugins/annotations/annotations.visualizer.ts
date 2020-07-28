@@ -62,6 +62,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	mapSearchIsActive = false;
 	selected: string[] = [];
 	geoJsonFormat: OLGeoJSON;
+	continuousDrawingActive = false;
 	dragBox = new DragBox({ condition: platformModifierKeyOnly });
 	translationSubscriptions = [];
 	currentAnnotationEdit: IEditAnnotationMode;
@@ -800,7 +801,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	protected mapClick = (event) => {
-		if (this.mapSearchIsActive || this.mode || this.isHidden) {
+		this.events.onClick.next(); // TODO - Can be removed when ansyn.annotations.visualizer onDrawEnd will use communicatorActiveMap.singleMousClick instead of visualizer.event.onClick
+		if (this.mapSearchIsActive || this.mode || this.isHidden || this.continuousDrawingActive) {
 			return;
 		}
 		const { shiftKey: multi } = event.originalEvent;

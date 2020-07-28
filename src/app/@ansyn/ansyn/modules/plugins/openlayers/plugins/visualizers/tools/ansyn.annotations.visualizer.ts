@@ -4,7 +4,7 @@ import { select, Store } from '@ngrx/store';
 import { selectActiveMapId, selectOverlayByMapId } from '@ansyn/map-facade';
 import { combineLatest, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
-import { distinctUntilChanged, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, map, mergeMap, take, tap, withLatestFrom, switchMapTo, skip, filter } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { selectGeoFilterActive } from '../../../../../status-bar/reducers/status-bar.reducer';
 import {
@@ -49,6 +49,10 @@ import { Actions, ofType } from '@ngrx/effects';
 	deps: [Store, Actions, OpenLayersProjectionService, OL_PLUGINS_CONFIG]
 })
 export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
+	// TODO - rename (?) and bring value from config;
+	private isContinuousDrawingAllowedFromConfig = true;
+	/** Last selected annotation mode which was not null or undefined */
+	private lastAnnotationMode: AnnotationMode;
 	annotationsVisualizer: AnnotationsVisualizer;
 	overlay: IOverlay;
 
@@ -158,7 +162,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	@AutoSubscription
 	onDrawEnd$ = () => this.annotationsVisualizer.events.onDrawEnd.pipe(
 		withLatestFrom(this.activeAnnotationLayer$),
-		tap(([{ GeoJSON, feature }, activeAnnotationLayer]: [IDrawEndEvent, ILayer]) => {
+		map(([{ GeoJSON, feature }, activeAnnotationLayer]: [IDrawEndEvent, ILayer]) => {
 			const [geoJsonFeature] = GeoJSON.features;
 			const data = <FeatureCollection<any>>{ ...activeAnnotationLayer.data };
 			data.features.push(geoJsonFeature);
@@ -170,6 +174,21 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			}
 			geoJsonFeature.properties = { ...geoJsonFeature.properties };
 			this.store$.dispatch(new UpdateLayer(<ILayer>{ ...activeAnnotationLayer, data }));
+			// TOTO - refactor to const id = GeoJSON?.features[0]?.id?.toString() ?? null; when typescript version updated (angular9+)
+			const id = GeoJSON.features[0].id ? GeoJSON.features[0].id.toString() : null;
+			return id;
+		}),
+		filter(featureId => this.isContinuousDrawingAllowedFromConfig && !!featureId),
+		tap(featureId => {
+			this.annotationsVisualizer.events.onSelect.next([featureId]);
+			this.annotationsVisualizer.continuousDrawingActive = true;			
+		}),
+		// TODO - switchMapTo(this.communicator.ActiveMap.mouseSingleClick.pipe(skip(1),take(1))) instead of switchMapTo(this.annotationsVisualizer.events.onClick.pipe(skip(1),take(1)))
+		switchMapTo(this.annotationsVisualizer.events.onClick.pipe(skip(1),take(1))),
+		tap(_ => {
+			this.annotationsVisualizer.events.onSelect.next([]);
+			this.annotationsVisualizer.continuousDrawingActive = false;
+			this.annotationsVisualizer.setMode(this.lastAnnotationMode, true);
 		})
 	);
 
@@ -278,11 +297,15 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	onInit() {
 		super.onInit();
 		this.annotationsVisualizer = this.communicator.getPlugin(AnnotationsVisualizer);
-		this.store$.select(selectAnnotationMode)
-			.pipe(take(1))
-			.subscribe((annotationMode) => {
+
+		this.store$.select(selectAnnotationMode).pipe(
+			tap(annotationMode => {
 				this.annotationsVisualizer.setMode(annotationMode, false);
-			});
+			}),
+			filter(mode => !!mode),
+			tap(mode => this.lastAnnotationMode = mode)
+		)
+		.subscribe();
 	}
 
 }

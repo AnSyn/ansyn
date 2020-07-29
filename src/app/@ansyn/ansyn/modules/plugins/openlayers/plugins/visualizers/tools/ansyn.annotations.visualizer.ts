@@ -52,6 +52,8 @@ import { checkEntitiesDiff } from '../../../../utils/annotations-visualizers';
 export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	// TODO - rename (?) and bring value from config;
 	private isContinuousDrawingAllowedFromConfig = false;
+	private openLastDrawnAnnotationContextMenuFromConfig = false;
+
 	/** Last selected annotation mode which was not null or undefined */
 	private lastAnnotationMode: AnnotationMode;
 
@@ -182,9 +184,9 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			const featureId = GeoJSON?.features[0]?.id?.toString() ?? null;
 			return featureId;
 		}),
-		filter(featureId => this.isContinuousDrawingAllowedFromConfig && !!featureId),
-		tap(this.openContextMenuByFeatureId),
-		switchMapTo(this.closeContextMenuesAndKeepDrawing())
+		filter(featureId => this.isContinuousDrawingAllowedFromConfig || (this.openLastDrawnAnnotationContextMenuFromConfig && !!featureId)),
+		tap(this.openLastDrawnAnnotationContextMenuFromConfig ? this.openContextMenuByFeatureId : () => {}),
+		switchMapTo(this.closeContextMenuesAndKeepDrawing$)
 	);
 
 	@AutoSubscription
@@ -297,14 +299,20 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 
 	private openContextMenuByFeatureId = (featureId: string) => this.annotationsVisualizer.events.onSelect.next([featureId]);
 
-	private closeContextMenuesAndKeepDrawing = () => this.communicator.ActiveMap.mouseSingleClick.pipe(
-		skip(1),
-		take(1),
-		tap(_ => {
-			this.annotationsVisualizer.events.onSelect.next([]);
-			this.annotationsVisualizer.setMode(this.lastAnnotationMode, true);
-		})
-	);
+	private get closeContextMenuesAndKeepDrawing$() {
+		return this.communicator.ActiveMap.mouseSingleClick.pipe(
+			skip(this.isContinuousDrawingAllowedFromConfig && !this.openLastDrawnAnnotationContextMenuFromConfig ? 0 : 1),
+			take(1),
+			tap(_ => {
+				if (this.openLastDrawnAnnotationContextMenuFromConfig) {
+					this.annotationsVisualizer.events.onSelect.next([]);				
+				}
+				if (this.isContinuousDrawingAllowedFromConfig) {
+					this.annotationsVisualizer.setMode(this.lastAnnotationMode, true);				
+				}
+			})
+		);
+	}
 
 }
 

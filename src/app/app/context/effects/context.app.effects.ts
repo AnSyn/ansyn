@@ -14,6 +14,7 @@ import { selectActiveMapId, SetToastMessageAction } from '@ansyn/map-facade';
 import { ContextName, RequiredContextParams } from '../models/context.config';
 import { TranslateService } from '@ngx-translate/core';
 import { Auth0Service } from '../../imisight/auth0.service';
+import { uniq } from 'lodash';
 
 const CONTEXT_TOAST = {
 	paramsError: 'params: {0} is require in {1} context',
@@ -109,9 +110,9 @@ export class ContextAppEffects {
 
 	private parseSensorParams(sensors): ICaseDataInputFiltersState {
 		const sensorsArray = sensors.split(',');
-		const filters: IDataInputFilterValue[] = sensorsArray
+		const filters: IDataInputFilterValue[] = uniq(sensorsArray
 				.map(this.overlaysService.getSensorGroupAndProviderFromSensorName.bind(this.overlaysService))
-				.filter(Boolean);
+				.filter(Boolean));
 		return {
 			filters,
 			fullyChecked: filters.length === 0,

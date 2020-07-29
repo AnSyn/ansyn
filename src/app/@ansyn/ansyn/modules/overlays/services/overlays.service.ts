@@ -167,8 +167,7 @@ export class OverlaysService {
 		if (providerName) {
 			const result: IDataInputFilterValue = {
 				providerName,
-				sensorType,
-				sensorName
+				sensorType
 			};
 			return result;
 		}

@@ -54,6 +54,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	private isContinuousDrawingAllowedFromConfig = false;
 	/** Last selected annotation mode which was not null or undefined */
 	private lastAnnotationMode: AnnotationMode;
+
 	annotationsVisualizer: AnnotationsVisualizer;
 	overlay: IOverlay;
 
@@ -99,16 +100,19 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	annoatationModeChange$: any = this.actions$
-		.pipe(
-			ofType(ToolsActionsTypes.STORE.SET_ANNOTATION_MODE),
-			tap((action: SetAnnotationMode) => {
-				const annotationMode = Boolean(action.payload) ? action.payload.annotationMode : null;
-				const useMapId = action.payload && Boolean(action.payload.mapId);
-				if (!useMapId || (useMapId && action.payload.mapId === this.mapId)) {
-					this.annotationsVisualizer.setMode(annotationMode, !useMapId);
-				}
-			}));
+	annoatationModeChange$: any = this.actions$.pipe(
+		ofType(ToolsActionsTypes.STORE.SET_ANNOTATION_MODE),
+		tap((action: SetAnnotationMode) => {
+			const annotationMode = Boolean(action.payload) ? action.payload.annotationMode : null;
+			const useMapId = action.payload && Boolean(action.payload.mapId);
+			if (!useMapId || (useMapId && action.payload.mapId === this.mapId)) {
+				this.annotationsVisualizer.setMode(annotationMode, !useMapId);
+			}
+		}),
+		map(action => action.payload?.annotationMode),
+		filter(annotationMode => !!annotationMode),
+		tap(annotationMode => this.lastAnnotationMode = annotationMode)
+	);
 
 	@AutoSubscription
 	annotationPropertiesChange$: Observable<any> = this.store$.pipe(
@@ -175,20 +179,12 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 				};
 			}
 			this.store$.dispatch(new UpdateLayer({ id: activeAnnotationLayer.id, data }));
-			const id = GeoJSON?.features[0]?.id?.toString() ?? null;
-			return id;
+			const featureId = GeoJSON?.features[0]?.id?.toString() ?? null;
+			return featureId;
 		}),
 		filter(featureId => this.isContinuousDrawingAllowedFromConfig && !!featureId),
-		tap(featureId => {
-			this.annotationsVisualizer.events.onSelect.next([featureId]);
-			this.annotationsVisualizer.continuousDrawingActive = true;			
-		}),
-		switchMapTo(this.communicator.ActiveMap.mouseSingleClick.pipe(skip(1),take(1))),
-		tap(_ => {
-			this.annotationsVisualizer.events.onSelect.next([]);
-			this.annotationsVisualizer.continuousDrawingActive = false;
-			this.annotationsVisualizer.setMode(this.lastAnnotationMode, true);
-		})
+		tap(this.openContextMenuByFeatureId),
+		switchMapTo(this.closeContextMenuesAndKeepDrawing())
 	);
 
 	@AutoSubscription
@@ -293,14 +289,22 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 		this.annotationsVisualizer = this.communicator.getPlugin(AnnotationsVisualizer);
 
 		this.store$.select(selectAnnotationMode).pipe(
-			tap(annotationMode => {
-				this.annotationsVisualizer.setMode(annotationMode, false);
-			}),
-			filter(mode => !!mode),
-			tap(mode => this.lastAnnotationMode = mode)
+			take(1),
+			tap(annotationMode => this.annotationsVisualizer.setMode(annotationMode, false))
 		)
 		.subscribe();
 	}
+
+	private openContextMenuByFeatureId = (featureId: string) => this.annotationsVisualizer.events.onSelect.next([featureId]);
+
+	private closeContextMenuesAndKeepDrawing = () => this.communicator.ActiveMap.mouseSingleClick.pipe(
+		skip(1),
+		take(1),
+		tap(_ => {
+			this.annotationsVisualizer.events.onSelect.next([]);
+			this.annotationsVisualizer.setMode(this.lastAnnotationMode, true);
+		})
+	);
 
 }
 

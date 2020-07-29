@@ -113,8 +113,30 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 				...style.initial,
 			}
 		};
+
+		// RegExp which recognizes strings in format 'rgba(r,g,b,a)' where r,g,b,a are numbers
+		const rgbaMatcher = /^rgba\(\d{1,3},\d{1,3},\d{1,3},\d\.*\d*\)$/;
+
 		$event.forEach((entity) => {
 			updatedStyle.initial[entity.label] = entity.event;
+
+			let opacityProp: string;
+			switch (entity.label) {
+				case 'fill':
+					opacityProp = 'fill-opacity';
+					break;
+				case 'stroke':
+					opacityProp = 'stroke-opacity';
+					break;
+				default:
+					opacityProp = null;
+			}
+
+			if (opacityProp) {
+				const colorIsInRgbaFormat = rgbaMatcher.test(entity.event);
+				const alpha = colorIsInRgbaFormat ? +entity.event.split(',')[3].replace(/[^0-9.]/g, '') : 1;
+				updatedStyle.initial[opacityProp] = alpha;
+			}
 		});
 		this.annotations.updateFeature(this.featureId, { style: updatedStyle });
 	}

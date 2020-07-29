@@ -4,7 +4,7 @@ import { select, Store } from '@ngrx/store';
 import { selectActiveMapId, selectOverlayByMapId } from '@ansyn/map-facade';
 import { combineLatest, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
-import { distinctUntilChanged, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, map, mergeMap, take, tap, withLatestFrom, filter, skip, switchMapTo } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { selectGeoFilterActive } from '../../../../../status-bar/reducers/status-bar.reducer';
 import {
@@ -49,6 +49,13 @@ import { Actions, ofType } from '@ngrx/effects';
 	deps: [Store, Actions, OpenLayersProjectionService, OL_PLUGINS_CONFIG]
 })
 export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
+	// TODO - rename (?) and bring value from config;
+	private isContinuousDrawingAllowedFromConfig = false;
+	private openLastDrawnAnnotationContextMenuFromConfig = false;
+
+	/** Last selected annotation mode which was not null or undefined */
+	private lastAnnotationMode: AnnotationMode;
+
 	annotationsVisualizer: AnnotationsVisualizer;
 	overlay: IOverlay;
 
@@ -103,7 +110,11 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 				if (!useMapId || (useMapId && action.payload.mapId === this.mapId)) {
 					this.annotationsVisualizer.setMode(annotationMode, !useMapId);
 				}
-			}));
+			}),
+			map(action => action.payload? action.payload.annotationMode : null),
+			filter(annotationMode => !!annotationMode),
+			tap(annotationMode => this.lastAnnotationMode = annotationMode)
+		);
 
 	@AutoSubscription
 	annotationPropertiesChange$: Observable<any> = this.store$.pipe(
@@ -158,7 +169,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	@AutoSubscription
 	onDrawEnd$ = () => this.annotationsVisualizer.events.onDrawEnd.pipe(
 		withLatestFrom(this.activeAnnotationLayer$),
-		tap(([{ GeoJSON, feature }, activeAnnotationLayer]: [IDrawEndEvent, ILayer]) => {
+		map(([{ GeoJSON, feature }, activeAnnotationLayer]: [IDrawEndEvent, ILayer]) => {
 			const [geoJsonFeature] = GeoJSON.features;
 			const data = <FeatureCollection<any>>{ ...activeAnnotationLayer.data };
 			data.features.push(geoJsonFeature);
@@ -170,7 +181,14 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			}
 			geoJsonFeature.properties = { ...geoJsonFeature.properties };
 			this.store$.dispatch(new UpdateLayer(<ILayer>{ ...activeAnnotationLayer, data }));
-		})
+			const featureId = (GeoJSON.features && GeoJSON.features[0] && GeoJSON.features[0].id) ?
+				GeoJSON.features[0].id.toString() :
+				null;
+			return featureId;
+		}),
+		filter(featureId => this.isContinuousDrawingAllowedFromConfig || (this.openLastDrawnAnnotationContextMenuFromConfig && !!featureId)),
+		tap(this.openLastDrawnAnnotationContextMenuFromConfig ? this.openContextMenuByFeatureId : () => {}),
+		switchMapTo(this.closeContextMenuesAndKeepDrawing$)
 	);
 
 	@AutoSubscription
@@ -283,6 +301,24 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			.subscribe((annotationMode) => {
 				this.annotationsVisualizer.setMode(annotationMode, false);
 			});
+	}
+
+	private openContextMenuByFeatureId = (featureId: string) => this.annotationsVisualizer.events.onSelect.next([featureId]);
+
+	private get closeContextMenuesAndKeepDrawing$() {
+		// TODO - can be replaced with this.communicator.ActiveMap.mouseSingleClick.pipe(...) when most recent changes merged
+		return this.annotationsVisualizer.events.onClick.pipe(
+			skip(this.isContinuousDrawingAllowedFromConfig && !this.openLastDrawnAnnotationContextMenuFromConfig ? 0 : 1),
+			take(1),
+			tap(_ => {
+				if (this.openLastDrawnAnnotationContextMenuFromConfig) {
+					this.annotationsVisualizer.events.onSelect.next([]);				
+				}
+				if (this.isContinuousDrawingAllowedFromConfig) {
+					this.annotationsVisualizer.setMode(this.lastAnnotationMode, true);				
+				}
+			})
+		);
 	}
 
 }

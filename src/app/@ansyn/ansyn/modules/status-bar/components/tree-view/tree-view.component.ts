@@ -126,12 +126,14 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		}, { noInitialSearch: !isFullCheck && isNoneCheck }));
 	}
 
-	updateItemState(filter, isFullyChecked) {
-		if (this.isChild(filter)) {
-			filter.checked = isFullyChecked || this._selectedFilters.some( _filter => isEqual(_filter, filter.value))
+	updateItemState(treeItem: TreeviewItem, isFullyChecked: boolean) {
+		if (this.isChild(treeItem)) {
+			treeItem.checked = isFullyChecked || this._selectedFilters.some( _filter => isEqual(_filter, treeItem.value))
 		}
 		else {
-			filter.children.forEach( child => this.updateItemState(child, isFullyChecked));
+			treeItem.children.forEach( child => this.updateItemState(child, isFullyChecked));
+			treeItem.checked = treeItem.children.every(c => c.checked) ? true :
+				treeItem.children.every(c => c.checked === false) ? false : undefined;
 		}
 	}
 

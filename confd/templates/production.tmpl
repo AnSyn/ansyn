@@ -608,7 +608,7 @@
 		  "blacklist": []
 		},
 		"PLANET": {
-		  "inActive": {{ getv "/ansyn/overlay/planet/inactive" "false" }},
+		  "inActive": {{ getv "/ansyn/overlay/planet/inactive" "true" }},
 		  "whitelist": [
 			  {
 				"name": "Entire Earth",
@@ -1318,7 +1318,10 @@
 						}
 					  }
 					]
-			  }
+			},
+			"sensorNamesByGroup": {
+				"S2L2A": ["Multi-Spectral Instrument"]
+			}
 		},
 		"AIRBUS": {
 			"inActive": {{ getv "/ansyn/overlay/airbus/inactive" "true" }},

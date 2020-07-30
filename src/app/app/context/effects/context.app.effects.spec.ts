@@ -159,7 +159,7 @@ describe('ContextAppEffects', () => {
 		};
 		const dataInputFilters: ICaseDataInputFiltersState = {
 			filters: [filter],
-			fullyChecked: true,
+			fullyChecked: false,
 			customFiltersSensor: ['Landsat8']
 		}
 		contextCase.state = {

@@ -46,12 +46,10 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	onDataInputFilterChange$ = combineLatest(this.store.select(selectDataInputFilter), this.initDoneAsync).pipe(
-		tap(x => console.log('criteria / dataInputFilter has changed', x)),
 		map(([data, init]) => data),
 		filter(Boolean),
 		tap((_preFilter: ICaseDataInputFiltersState) => {
 			this._selectedFilters = _preFilter.fullyChecked ? this.selectAll() : _preFilter.filters;
-			console.log('_selectedFilters 1', this._selectedFilters);
 			if (Boolean(this._selectedFilters)) {
 				this.dataInputFiltersItems.forEach(root => this.updateItemState(root, _preFilter.fullyChecked));
 			}
@@ -74,7 +72,6 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	set selectedFilters(value) {
 		if (this.initDoneSync && !isEqual(value, this._selectedFilters)) {
 			this._selectedFilters = value;
-			console.log('_selectedFilters 3', this._selectedFilters);
 			this.dataInputFiltersChange();
 		}
 	}
@@ -114,7 +111,6 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	}
 
 	dataInputFiltersChange(): void {
-		console.log('_selectedFilters 2', this._selectedFilters);
 		const isFullCheck = this.leavesCount <= this._selectedFilters.length;
 		const isNoneCheck = this._selectedFilters.length === 0;
 
@@ -153,7 +149,6 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		console.log('ngOnInit');
 		this.initDoneSync = true;
 		this.initDoneAsync.next(true);
 	}

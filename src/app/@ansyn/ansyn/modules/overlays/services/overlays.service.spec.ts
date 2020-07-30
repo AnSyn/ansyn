@@ -365,8 +365,7 @@ describe('OverlaysService', () => {
 			const sensorName = 'shmulik';
 			const expected: IDataInputFilterValue = {
 				providerName: 'animals',
-				sensorType: 'kipod',
-				sensorName
+				sensorType: 'kipod'
 			};
 			const actual = overlaysService.getSensorGroupAndProviderFromSensorName(sensorName);
 			expect(actual).toEqual(expected);

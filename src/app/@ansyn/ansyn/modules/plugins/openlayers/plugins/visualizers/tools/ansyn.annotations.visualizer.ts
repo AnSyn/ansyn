@@ -111,7 +111,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 					this.annotationsVisualizer.setMode(annotationMode, !useMapId);
 				}
 			}),
-			map(action => action.payload? action.payload.annotationMode : null),
+			map(action => action.payload ? action.payload.annotationMode : null),
 			filter(annotationMode => !!annotationMode),
 			tap(annotationMode => this.lastAnnotationMode = annotationMode)
 		);

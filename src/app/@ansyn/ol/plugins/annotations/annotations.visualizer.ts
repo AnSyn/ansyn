@@ -4,7 +4,8 @@ import {
 	IVisualizerEntity,
 	MarkerSize,
 	VisualizerInteractions,
-	VisualizerStates
+	VisualizerStates,
+	ANNOTATIONS_FEATURE_INITIAL_PROPERTIES
 } from '@ansyn/imagery';
 import { UUID } from 'angular2-uuid';
 import { AutoSubscription } from 'auto-subscriptions';
@@ -193,8 +194,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
 		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => {
-			const featureJson = { ...feature };
-			delete featureJson.properties.featureJson;
+			const featureJson = cloneDeep(feature);
+			featureJson.properties.featureJson = undefined;
 			return {
 				featureJson,
 				id: feature.properties.id,

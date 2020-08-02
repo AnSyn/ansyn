@@ -8,7 +8,7 @@ import {
 	getPolygonByPointAndRadius,
 	toRadians,
 } from '@ansyn/imagery';
-import { empty, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { catchError, map, timeout } from 'rxjs/operators';
 
 import proj4 from 'proj4';
@@ -22,7 +22,6 @@ import {
 	IFetchParams,
 	IMultipleOverlaysSourceConfig,
 	IOverlay,
-	IStartAndEndDate,
 	limitArray,
 	LoggerService,
 	MultipleOverlaysSourceConfig,
@@ -136,8 +135,10 @@ export class SentinelSourceProvider extends BaseOverlaySourceProvider {
 		return new Overlay({
 			id: sentinelElement.properties.id,
 			footprint: geometry,
-			sensorType: sentinelElement.properties.producttype,
-			sensorName: sentinelElement.properties.instrumentname,
+			sensorName: sentinelElement.properties.producttype,
+			sensorType: sentinelElement.properties.instrumentname,
+			// sensorType: sentinelElement.properties.producttype,
+			// sensorName: sentinelElement.properties.instrumentname,
 			cloudCoverage: sentinelElement.properties.cloudcoverpercentage / 100,
 			bestResolution: 1,
 			name: sentinelElement.properties.identifier,

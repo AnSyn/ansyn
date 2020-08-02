@@ -27,6 +27,7 @@ const overlaysCriteria: IOverlaysCriteria = {
 	region: { type: 'Point', coordinates: [122.00, 44.122] },
 	dataInputFilters: { fullyChecked: true, filters: [] }
 };
+
 describe('TreeViewComponent', () => {
 	let component: TreeViewComponent;
 	let fixture: ComponentFixture<TreeViewComponent>;
@@ -125,5 +126,28 @@ describe('TreeViewComponent', () => {
 				}
 			}, { noInitialSearch: true }
 		));
-	})
+	});
+
+	describe('updateItemState()', () => {
+		let saveSelectFilters;
+
+		beforeEach(() => {
+			saveSelectFilters = component._selectedFilters;
+		});
+
+		it('should update checkboxes correctly', () => {
+			component._selectedFilters = <any>[{
+				providerName: 'provide2',
+				sensorType: 'sensor2'
+			}];
+			component.updateItemState(component.dataInputFiltersItems[0], false);
+			expect(component.dataInputFiltersItems[0].children[0].checked).toEqual(false);
+			component.updateItemState(component.dataInputFiltersItems[1], false);
+			expect(component.dataInputFiltersItems[1].children[0].checked).toEqual(true);
+		});
+
+		afterEach(() => {
+			component._selectedFilters = saveSelectFilters;
+		});
+	});
 });

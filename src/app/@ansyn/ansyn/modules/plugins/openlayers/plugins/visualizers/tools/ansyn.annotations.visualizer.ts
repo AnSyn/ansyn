@@ -1,4 +1,4 @@
-import { BaseImageryPlugin, ImageryPlugin, IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
+import { BaseImageryPlugin, ImageryPlugin, IVisualizerEntity, IVisualizerStyle, VisualizersConfig, IVisualizersConfig } from '@ansyn/imagery';
 import { uniq } from 'lodash';
 import { select, Store } from '@ngrx/store';
 import { selectActiveMapId, selectOverlayByMapId } from '@ansyn/map-facade';
@@ -42,16 +42,16 @@ import { IOverlay } from '../../../../../overlays/models/overlay.model';
 import { selectTranslationData } from '../../../../../overlays/overlay-status/reducers/overlay-status.reducer';
 import { SetOverlayTranslationDataAction } from '../../../../../overlays/overlay-status/actions/overlay-status.actions';
 import { Actions, ofType } from '@ngrx/effects';
+import { GeometryObject } from 'geojson';
 
 // @dynamic
 @ImageryPlugin({
 	supported: [OpenLayersMap],
-	deps: [Store, Actions, OpenLayersProjectionService, OL_PLUGINS_CONFIG]
+	deps: [Store, Actions, OpenLayersProjectionService, OL_PLUGINS_CONFIG, VisualizersConfig]
 })
 export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
-	// TODO - rename (?) and bring value from config;
-	private isContinuousDrawingAllowedFromConfig = false;
-	private openLastDrawnAnnotationContextMenuFromConfig = false;
+	private isContinuousDrawingEnabled = false;
+	private openLastDrawnAnnotationContextMenuEnabled = false;
 
 	/** Last selected annotation mode which was not null or undefined */
 	private lastAnnotationMode: AnnotationMode;
@@ -136,8 +136,11 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	constructor(public store$: Store<any>,
 				protected actions$: Actions,
 				protected projectionService: OpenLayersProjectionService,
-				@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig) {
+				@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig,
+				@Inject(VisualizersConfig) config: IVisualizersConfig) {
 		super();
+		this.isContinuousDrawingEnabled = config.AnnotationsVisualizer.extra.continuousDrawing;
+		this.openLastDrawnAnnotationContextMenuEnabled = config.AnnotationsVisualizer.extra.openContextMenuOnDrawEnd;
 	}
 
 	get offset() {
@@ -181,13 +184,11 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			}
 			geoJsonFeature.properties = { ...geoJsonFeature.properties };
 			this.store$.dispatch(new UpdateLayer(<ILayer>{ ...activeAnnotationLayer, data }));
-			const featureId = (GeoJSON.features && GeoJSON.features[0] && GeoJSON.features[0].id) ?
-				GeoJSON.features[0].id.toString() :
-				null;
+			const featureId = this.getFeatureIdFromGeoJson(GeoJSON);
 			return featureId;
 		}),
-		filter(featureId => this.isContinuousDrawingAllowedFromConfig || (this.openLastDrawnAnnotationContextMenuFromConfig && !!featureId)),
-		tap(this.openLastDrawnAnnotationContextMenuFromConfig ? this.openContextMenuByFeatureId : () => {}),
+		filter(featureId => this.isContinuousDrawingEnabled || (this.openLastDrawnAnnotationContextMenuEnabled && !!featureId)),
+		tap(this.openLastDrawnAnnotationContextMenuEnabled ? this.openContextMenuByFeatureId : () => {}),
 		switchMapTo(this.closeContextMenuesAndKeepDrawing$)
 	);
 
@@ -308,17 +309,23 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	private get closeContextMenuesAndKeepDrawing$() {
 		// TODO - can be replaced with this.communicator.ActiveMap.mouseSingleClick.pipe(...) when most recent changes merged
 		return this.annotationsVisualizer.events.onClick.pipe(
-			skip(this.isContinuousDrawingAllowedFromConfig && !this.openLastDrawnAnnotationContextMenuFromConfig ? 0 : 1),
+			skip(this.isContinuousDrawingEnabled && !this.openLastDrawnAnnotationContextMenuEnabled ? 0 : 1),
 			take(1),
 			tap(_ => {
-				if (this.openLastDrawnAnnotationContextMenuFromConfig) {
+				if (this.openLastDrawnAnnotationContextMenuEnabled) {
 					this.annotationsVisualizer.events.onSelect.next([]);				
 				}
-				if (this.isContinuousDrawingAllowedFromConfig) {
+				if (this.isContinuousDrawingEnabled) {
 					this.annotationsVisualizer.setMode(this.lastAnnotationMode, true);				
 				}
 			})
 		);
+	}
+
+	private getFeatureIdFromGeoJson(geoJson: FeatureCollection<GeometryObject, {[name: string]: any}>, index = 0): string {
+		return (geoJson.features && geoJson.features[index] && geoJson.features[index].id) ?
+			geoJson.features[index].id.toString() :
+			null;
 	}
 
 }

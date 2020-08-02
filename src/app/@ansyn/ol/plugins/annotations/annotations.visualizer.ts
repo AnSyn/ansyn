@@ -803,6 +803,8 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	protected mapClick = (event) => {
 		this.events.onClick.next(); // TODO - can be removed when ansyn.annotations.visualizer will use communicator instead of this for listening to click events on the map
+		// As the drawend callback is called before the click one, if the annotation's context-menu has been opened on drawend,
+		//  the click event will cause it to be closed so in this case, we use this flag to prevent it.
 		if (this.skipNextMapClickHandler) {
 			this.skipNextMapClickHandler = false;
 			return;

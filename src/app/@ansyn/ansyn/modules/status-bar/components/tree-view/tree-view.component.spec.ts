@@ -1,7 +1,7 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { MissingTranslationHandler, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { cloneDeep } from 'lodash';
 import { TreeviewModule } from 'ngx-treeview';
 import { Observable, of } from 'rxjs';
@@ -20,6 +20,7 @@ import { TreeViewComponent } from './tree-view.component';
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import { IOverlaysCriteria } from '../../../overlays/models/overlay.model';
 import { mockIndexProviders } from '../../../core/test/mock-providers';
+import { MockPipe } from '../../../core/test/mock-pipe';
 
 const overlaysCriteria: IOverlaysCriteria = {
 	time: { from: new Date(), to: new Date() },
@@ -35,27 +36,31 @@ describe('TreeViewComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [TreeViewComponent, SliderCheckboxComponent],
+			declarations: [
+				TreeViewComponent,
+				SliderCheckboxComponent,
+				MockPipe('translate')
+			],
 			imports: [
-				TranslateModule.forRoot(),
 				StoreModule.forRoot({
 					[overlaysFeatureKey]: OverlayReducer
 				}),
 				TreeviewModule.forRoot()],
 			providers: [
-				{ provide: USE_DEFAULT_LANG },
-				{
-					provide: MissingTranslationHandler, useValue: {
-						handle: () => ''
-					}
-				},
 				{
 					provide: MultipleOverlaysSourceConfig,
 					useValue: {
 						indexProviders: mockIndexProviders(['provide1', 'provide2', 'provide3'])
 					}
 				},
-				provideMockActions(() => actions)
+				provideMockActions(() => actions),
+				{
+					provide: TranslateService,
+					useValue: {
+						instant: (x) => x,
+						get: (x) => of(x)
+					}
+				}
 			]
 		})
 			.compileComponents();
@@ -85,14 +90,25 @@ describe('TreeViewComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
+	it('should init treeview items correctly', () => {
+		expect(component.dataInputFiltersItems[0].text).toEqual('provide1');
+		expect(component.dataInputFiltersItems[0].checked).toEqual(true);
+		expect(component.dataInputFiltersItems[0].children[0].text).toEqual('sensor1');
+		expect(component.dataInputFiltersItems[0].children[0].checked).toEqual(true);
+		expect(component.dataInputFiltersItems[0].children[0].value).toEqual({
+			providerName: 'provide1',
+			sensorType: 'sensor1'
+		});
+	});
+
 	it('on check/unCheck should SetOverlaysCriteriaAction', () => {
 		spyOn(store, 'dispatch');
-		component.selectedFilters = [{providerName: 'provide2', sensorType: 'sensor2', sensorName: 'sensor2'}];
+		component.selectedFilters = [{ providerName: 'provide2', sensorType: 'sensor2', sensorName: 'sensor2' }];
 		fixture.detectChanges();
 		expect(store.dispatch).toHaveBeenCalledWith(new SetOverlaysCriteriaAction({
 				dataInputFilters: {
 					fullyChecked: false,
-					filters: [{providerName: 'provide2', sensorType: 'sensor2', sensorName: 'sensor2'}]
+					filters: [{ providerName: 'provide2', sensorType: 'sensor2', sensorName: 'sensor2' }]
 				}
 			}, { noInitialSearch: false }
 		));

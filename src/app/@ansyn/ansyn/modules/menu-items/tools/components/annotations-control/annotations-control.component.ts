@@ -172,8 +172,30 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 
 	colorChange(changesArray: Array<any>) {
 		const style = {};
+
+		// RegExp which recognizes strings in format 'rgba(r,g,b,a)' where r,g,b,a are numbers
+		const rgbaMatcher = /^rgba\(\d{1,3},\d{1,3},\d{1,3},\d\.*\d*\)$/;
+
 		changesArray.forEach((colorData) => {
 			style[colorData.label] = colorData.event;
+
+			let opacityProp: string;
+			switch (colorData.label) {
+				case 'fill':
+					opacityProp = 'fill-opacity';
+					break;
+				case 'stroke':
+					opacityProp = 'stroke-opacity';
+					break;
+				default:
+					opacityProp = null;
+			}
+
+			if (opacityProp) {
+				const colorIsInRgbaFormat = rgbaMatcher.test(colorData.event);
+				const alpha = colorIsInRgbaFormat ? +colorData.event.split(',')[3].replace(/[^0-9.]/g, '') : 1;
+				style[opacityProp] = alpha;
+			}
 		});
 		this.store.dispatch(new AnnotationSetProperties(style));
 	}

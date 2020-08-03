@@ -3,7 +3,7 @@ import { AnnotationsVisualizer } from '../../../annotations.visualizer';
 import { AnnotationsContextmenuTabs } from '../annotation-context-menu/annotation-context-menu.component';
 import * as SVG from '../annotation-context-menu/icons-svg';
 import { IStyleWeight } from '../annotations-weight/annotations-weight.component';
-import { IVisualizerEntity, StayInImageryService } from '@ansyn/imagery';
+import { IVisualizerEntity, StayInImageryService, IVisualizerAttributes } from '@ansyn/imagery';
 import { AnnotationMode } from '../../../annotations.model';
 import { AttributeBase } from '../../models/attribute-base';
 import { AttributesService } from '../../services/attributes.service';
@@ -160,7 +160,7 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 		});
 		this.annotations.updateFeature(this.featureId, { attributes: attributesDictionary });
 	}
-	private updateAttributesValues(newValues: { [key: string]: string }, attributes: AttributeBase<any>[]) {
+	private updateAttributesValues(newValues: IVisualizerAttributes, attributes: AttributeBase<any>[]) {
 		attributes.forEach((attribute) => {
 			Object.keys(newValues).forEach((key) => {
 				if (key === attribute.key) {

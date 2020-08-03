@@ -13,6 +13,7 @@ export { MarkerSize } from './model/visualizers/visualizer-style';
 export { IVisualizerStyle } from './model/visualizers/visualizer-style';
 export { IVisualizerStateStyle } from './model/visualizers/visualizer-state';
 export { VisualizerStates } from './model/visualizers/visualizer-state';
+export { IVisualizerAttributes } from './model/visualizers/visualizer-attributes';
 export { IMapProgress, IMapErrorMessage } from './model/map-progress.model';
 export {
 	IMapProviderConfig,

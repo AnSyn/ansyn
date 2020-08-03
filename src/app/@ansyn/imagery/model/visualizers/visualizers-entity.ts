@@ -1,5 +1,6 @@
 import { IVisualizerStateStyle } from './visualizer-state';
 import { Feature } from 'geojson';
+import { IVisualizerAttributes } from './visualizer-attributes';
 
 export interface IVisualizerEntity {
 	id: string;
@@ -13,5 +14,5 @@ export interface IVisualizerEntity {
 	undeletable?: boolean;
 	showArea?: boolean;
 	labelTranslateOn?: boolean;
-	attributes?: { [key: string]: string };
+	attributes?: IVisualizerAttributes;
 }

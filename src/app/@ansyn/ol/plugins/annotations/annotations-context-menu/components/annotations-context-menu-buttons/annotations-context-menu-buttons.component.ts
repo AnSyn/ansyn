@@ -3,7 +3,7 @@ import { AnnotationsVisualizer } from '../../../annotations.visualizer';
 import { AnnotationsContextmenuTabs } from '../annotation-context-menu/annotation-context-menu.component';
 import * as SVG from '../annotation-context-menu/icons-svg';
 import { IStyleWeight } from '../annotations-weight/annotations-weight.component';
-import { IVisualizerEntity, StayInImageryService } from '@ansyn/imagery';
+import { IVisualizerEntity, StayInImageryService, getOpacityFromColor } from '@ansyn/imagery';
 import { AnnotationMode } from '../../../annotations.model';
 
 interface IFeatureProperties extends IVisualizerEntity {
@@ -114,9 +114,6 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 			}
 		};
 
-		// RegExp which recognizes strings in format 'rgba(r,g,b,a)' where r,g,b,a are numbers
-		const rgbaMatcher = /^rgba\(\d{1,3},\d{1,3},\d{1,3},\d\.*\d*\)$/;
-
 		$event.forEach((entity) => {
 			updatedStyle.initial[entity.label] = entity.event;
 
@@ -133,9 +130,7 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 			}
 
 			if (opacityProp) {
-				const colorIsInRgbaFormat = rgbaMatcher.test(entity.event);
-				const alpha = colorIsInRgbaFormat ? +entity.event.split(',')[3].replace(/[^0-9.]/g, '') : 1;
-				updatedStyle.initial[opacityProp] = alpha;
+				updatedStyle.initial[opacityProp] = getOpacityFromColor(entity.event);
 			}
 		});
 		this.annotations.updateFeature(this.featureId, { style: updatedStyle });

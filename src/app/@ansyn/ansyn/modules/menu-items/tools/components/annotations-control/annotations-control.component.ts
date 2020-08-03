@@ -14,7 +14,7 @@ import { select, Store } from '@ngrx/store';
 import { AnnotationSetProperties, ClearActiveInteractionsAction, SetAnnotationMode } from '../../actions/tools.actions';
 import { DOCUMENT } from '@angular/common';
 import { selectAnnotationMode, selectAnnotationProperties } from '../../reducers/tools.reducer';
-import { IVisualizerStyle } from '@ansyn/imagery';
+import { IVisualizerStyle, getOpacityFromColor } from '@ansyn/imagery';
 import { filter, map, tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectActiveAnnotationLayer, selectLayers } from '../../../layers-manager/reducers/layers.reducer';
@@ -173,9 +173,6 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	colorChange(changesArray: Array<any>) {
 		const style = {};
 
-		// RegExp which recognizes strings in format 'rgba(r,g,b,a)' where r,g,b,a are numbers
-		const rgbaMatcher = /^rgba\(\d{1,3},\d{1,3},\d{1,3},\d\.*\d*\)$/;
-
 		changesArray.forEach((colorData) => {
 			style[colorData.label] = colorData.event;
 
@@ -192,9 +189,7 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 			}
 
 			if (opacityProp) {
-				const colorIsInRgbaFormat = rgbaMatcher.test(colorData.event);
-				const alpha = colorIsInRgbaFormat ? +colorData.event.split(',')[3].replace(/[^0-9.]/g, '') : 1;
-				style[opacityProp] = alpha;
+				style[opacityProp] = getOpacityFromColor(colorData.event);
 			}
 		});
 		this.store.dispatch(new AnnotationSetProperties(style));

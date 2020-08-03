@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { EMPTY, Observable } from 'rxjs';
+import { EMPTY, Observable, of, forkJoin } from 'rxjs';
 import { IMapState, mapStateSelector, selectMapsIds, SetToastMessageAction, UpdateMapAction } from '@ansyn/map-facade';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -35,6 +35,8 @@ import {
 import { casesConfig } from '../../modules/menu-items/cases/services/cases.service';
 import { ICasesConfig } from '../../modules/menu-items/cases/models/cases-config';
 import { fromPromise } from 'rxjs/internal-compatibility';
+
+const IMISIGHT_OVERLAY_SOURCE_TYPE = 'IMISIGHT';
 
 @Injectable()
 export class CasesAppEffects {
@@ -96,36 +98,61 @@ export class CasesAppEffects {
 					, 'id')
 					.map(({ id, sourceType }: IOverlay): IOverlayByIdMetaData => ({ id, sourceType }));
 
-				return this.overlaysService.getOverlaysById(ids)
-					.pipe(
-						map(overlays => new Map(overlays.map((overlay): [string, IOverlay] => [overlay.id, overlay]))),
-						map((mapOverlay: Map<string, IOverlay>) => {
-							caseValue.state.favoriteOverlays = caseValue.state.favoriteOverlays
-								.map((favOverlay: IOverlay) => mapOverlay.get(favOverlay.id));
+				/* At this time, imisight's api doesn't have a "get by id" endpoint, so in order to fetch
+				 * overlays for the selected case, we use the "search" method with the case's params.
+				 * Other overlays (which sourcetypes aren't imisight) are fetched by id.
+				 */
 
-							caseValue.state.presetOverlays = (caseValue.state.presetOverlays || [])
-								.map((preOverlay: IOverlay) => mapOverlay.get(preOverlay.id));
+				const imisightIds: IOverlayByIdMetaData[] = [];
+				const otherIds: IOverlayByIdMetaData[] = [];
 
-							caseValue.state.miscOverlays = mapValues(caseValue.state.miscOverlays || {},
-								(prevOverlay: IOverlay) => {
-									return prevOverlay && mapOverlay.get(prevOverlay.id);
-								});
+				ids.forEach(id => {
+					id.sourceType === IMISIGHT_OVERLAY_SOURCE_TYPE ?
+						imisightIds.push(id) :
+						otherIds.push(id);
+				});
 
-							caseValue.state.maps.data
-								.filter(mapData => Boolean(Boolean(mapData.data.overlay)))
-								.forEach((map) => map.data.overlay = mapOverlay.get(map.data.overlay.id));
+				const imisightOverlay$: Observable<IOverlay[]> = !imisightIds.length ?
+					of([]) : 
+					this.overlaysService.search({
+						dataInputFilters: caseValue.state.dataInputFilters,
+						region: caseValue.state.region,
+						time: {
+							from: caseValue.state.time.from,
+							to: caseValue.state.time.to
+						}
+					}).pipe(map(overlaysFetchedData => overlaysFetchedData.data));
 
-							return new SelectCaseAction(caseValue);
+				return forkJoin(imisightOverlay$, this.overlaysService.getOverlaysById(otherIds)).pipe(
+					map(([imisightOverlays, otherOverlays]) => ([...imisightOverlays, ...otherOverlays])),
+					map(overlays => new Map(overlays.map((overlay): [string, IOverlay] => [overlay.id, overlay]))),
+					map((mapOverlay: Map<string, IOverlay>) => {
+						caseValue.state.favoriteOverlays = caseValue.state.favoriteOverlays
+							.map((favOverlay: IOverlay) => mapOverlay.get(favOverlay.id));
+
+						caseValue.state.presetOverlays = (caseValue.state.presetOverlays || [])
+							.map((preOverlay: IOverlay) => mapOverlay.get(preOverlay.id));
+
+						caseValue.state.miscOverlays = mapValues(caseValue.state.miscOverlays || {},
+							(prevOverlay: IOverlay) => {
+								return prevOverlay && mapOverlay.get(prevOverlay.id);
+							});
+
+						caseValue.state.maps.data
+							.filter(mapData => Boolean(Boolean(mapData.data.overlay)))
+							.forEach((map) => map.data.overlay = mapOverlay.get(map.data.overlay.id));
+
+						return new SelectCaseAction(caseValue);
+					}),
+					catchError<any, any>((result: HttpErrorResponse) => {
+						console.warn(result);
+						return [new SetToastMessageAction({
+							toastText: `Failed to load case ${ result.status ? `(${ result.status })` : '' }`,
+							showWarningIcon: true
 						}),
-						catchError<any, any>((result: HttpErrorResponse) => {
-							console.warn(result);
-							return [new SetToastMessageAction({
-								toastText: `Failed to load case ${ result.status ? `(${ result.status })` : '' }`,
-								showWarningIcon: true
-							}),
-								new LoadDefaultCaseIfNoActiveCaseAction()];
-						})
-					);
+							new LoadDefaultCaseIfNoActiveCaseAction()];
+					})
+				);
 			})
 		);
 

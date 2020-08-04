@@ -149,6 +149,10 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
+		// The two initDone vars were added to prevent a race condition, when the component
+		// should be set according to the state (dataInputFilters) when it inits. There was
+		// a race condition between (a) component init from the config, and (b) component
+		// update from the store (dataInputFilters).
 		this.initDoneSync = true;
 		this.initDoneAsync.next(true);
 	}

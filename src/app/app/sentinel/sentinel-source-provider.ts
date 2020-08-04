@@ -135,10 +135,11 @@ export class SentinelSourceProvider extends BaseOverlaySourceProvider {
 		return new Overlay({
 			id: sentinelElement.properties.id,
 			footprint: geometry,
+			// Sensor name/type switched (08.20) because it seemed to make more sense.
+			// instrumentname is "Multi-Spectral Instrument" for all overlays
+			// producttype seems a more specific name, like: "S2MSI1C", "S2MSI2A"
 			sensorName: sentinelElement.properties.producttype,
 			sensorType: sentinelElement.properties.instrumentname,
-			// sensorType: sentinelElement.properties.producttype,
-			// sensorName: sentinelElement.properties.instrumentname,
 			cloudCoverage: sentinelElement.properties.cloudcoverpercentage / 100,
 			bestResolution: 1,
 			name: sentinelElement.properties.identifier,

@@ -1,9 +1,9 @@
 <mat-chip-list>
 	<mat-chip *ngFor="let option of selectedOptions" [selectable]="isMatChipSelectable" [removable]="isMatChipRemovable" (removed)="removeOption(option)">
 		{{ option.value }}
-		<mat-icon matChipRemove *ngIf="isMatChipRemovable">cancel</mat-icon>
+		<mat-icon matChipRemove *ngIf="isMatChipRemovable">{{'cancel' | translate}}</mat-icon>
 	</mat-chip>
-	<button mat-button [matMenuTriggerFor]="menu">Add {{ label }}</button>
+	<button mat-button [matMenuTriggerFor]="menu"> {{addEntityLabel | translate}}</button>
 </mat-chip-list>
 
 <mat-menu #menu="matMenu">

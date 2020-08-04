@@ -13,13 +13,16 @@ export class MultiChoiceAttributeComponent {
 	isMatChipSelectable = true;
 	isMatChipRemovable = true;
 	isOpen = false;
+	addEntityLabel = 'Add Entity';
 
 	@Output() onSelectOption = new EventEmitter<Option>();
 	@Output() onRemoveOption = new EventEmitter<Option>();
 
 	@Input() optionsList: Option[];
 	@Input() selectedOptions: Option[] = [];
-	@Input() label = 'entity';
+	@Input() set label(label: string) {
+		this.addEntityLabel = 'Add ' + label;
+	};
 	constructor() {}
 
 	selectOption(option: Option) {

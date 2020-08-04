@@ -88,7 +88,7 @@ describe('ContextAppEffects', () => {
 				{
 					provide: OverlaysService,
 					useValue: {
-						getSensorGroupAndProviderFromSensorName: () => {}
+						getSensorTypeAndProviderFromSensorName: () => {}
 					}
 				}
 			]

@@ -83,9 +83,6 @@ import { ResultsModule } from "./modules/menu-items/results/results.module";
 		},
 		{ provide: UrlSerializer, useClass: DefaultUrlSerializer }
 	],
-	entryComponents: [
-		OverlayOutOfBoundsComponent, ImageryZoomerComponent, ImageryDimensionModeComponent
-	],
 	declarations: [
 		AnsynComponent,
 		OverlayOutOfBoundsComponent,

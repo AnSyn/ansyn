@@ -35,7 +35,6 @@ import { TranslateModule } from '@ngx-translate/core';
 	],
 	declarations: [TasksComponent, TasksTableComponent, TasksTablePageComponent, TasksTablePageHeaderComponent,
 		TasksFormPageComponent, TasksFormPageHeaderComponent, TasksFormComponent, RemoveTaskModalComponent],
-	entryComponents: [TasksComponent],
 	exports: [TasksComponent],
 	providers: []
 })

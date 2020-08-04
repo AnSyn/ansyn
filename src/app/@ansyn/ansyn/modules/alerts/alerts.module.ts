@@ -19,7 +19,6 @@ import { TranslateModule } from '@ngx-translate/core';
 		TranslateModule
 	],
 	declarations: [AlertsContainerComponent],
-	entryComponents: [AlertsContainerComponent],
 	exports: [],
 	providers: [AlertsProvider]
 })

@@ -46,7 +46,6 @@ import { OverlayNavigationBarComponent } from './components/overlay-navigation-b
 		OverlaySourceTypeNoticeComponent,
 		OverlayNavigationBarComponent
 	],
-	entryComponents: [OverlaySourceTypeNoticeComponent],
 	exports: [
 		OverlaysContainerComponent,
 		TimelineComponent,

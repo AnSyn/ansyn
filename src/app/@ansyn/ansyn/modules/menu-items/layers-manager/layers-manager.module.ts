@@ -28,7 +28,6 @@ import { CoreModule } from '../../core/core.module';
 		EffectsModule.forFeature([LayersEffects])
 	],
 	declarations: [LayersManagerComponent, LayerCollectionComponent, DownloadLayersComponent, LayerComponent, LayerMenuComponent, DataLayersModalsComponent, EditLayerComponent, DeleteLayerComponent, ImportLayerComponent],
-	entryComponents: [LayersManagerComponent],
 	providers: [DataLayersService]
 })
 

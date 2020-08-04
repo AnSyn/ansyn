@@ -27,7 +27,6 @@ export interface IImageryMetaData {
 		HttpClientModule
 	],
 	declarations: [ImageryComponent, MapComponent],
-	entryComponents: [MapComponent],
 	providers: [
 		ImageryCommunicatorService,
 		CacheService,

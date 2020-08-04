@@ -18,7 +18,6 @@ import { CoreModule } from '../../core/core.module';
 	],
 	providers: [HelpLocalStorageService],
 	declarations: [HelpComponent],
-	entryComponents: [HelpComponent]
 })
 export class HelpModule {
 }

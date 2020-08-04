@@ -41,7 +41,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 	],
 	providers: [ProjectionConverterService, MatDialogModule, { provide: MatDialogRef, useValue: {} }],
 	declarations: [ToolsComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent, MeasureControlComponent, ExportMapsPopupComponent],
-	entryComponents: [ToolsComponent, MeasureControlComponent, ExportMapsPopupComponent],
 	exports: [ToolsComponent, MatDialogModule]
 })
 

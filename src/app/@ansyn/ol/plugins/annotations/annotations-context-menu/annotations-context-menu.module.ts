@@ -21,7 +21,6 @@ import { AnnotationsContextMenuButtonsComponent } from './components/annotations
 		AnnotationLabelComponent,
 		AnnotationsContextMenuButtonsComponent
 	],
-	entryComponents: [AnnotationContextMenuComponent],
 	exports: [
 		AnnotationContextMenuComponent,
 		AnnotationsWeightComponent,

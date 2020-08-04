@@ -29,7 +29,6 @@ import { MapFacadeModule } from '@ansyn/map-facade';
 		EffectsModule.forFeature([CasesEffects])
 	],
 	declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent, CasesAutoSaveComponent],
-	entryComponents: [CasesComponent, EditCaseComponent, SaveCaseComponent, DeleteCaseComponent],
 	providers: [CasesService]
 })
 export class CasesModule {

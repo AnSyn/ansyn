@@ -32,8 +32,7 @@ export enum SelectionBoxTypes {
 @Component({
 	selector: 'ansyn-annotations-control',
 	templateUrl: './annotations-control.component.html',
-	styleUrls: ['./annotations-control.component.less'],
-	providers: [ClickOutsideService]
+	styleUrls: ['./annotations-control.component.less']
 })
 @AutoSubscriptions({
 	init: 'ngOnInit',
@@ -90,7 +89,7 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	public ANNOTATION_MODE_LIST = ANNOTATION_MODE_LIST;
 
 	@AutoSubscription
-	onClickOutside$ = this.clickOutsideService.onClickOutside().pipe(
+	onClickOutside$ = this.clickOutsideService.onClickOutside({monitor: this.element.nativeElement}).pipe(
 		filter((isClickOutside) => isClickOutside && this.expand),
 		tap(() => {
 			this.hideMe.emit();

@@ -11,14 +11,13 @@ import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
 @Component({
 	selector: 'ansyn-credentials',
 	templateUrl: './credentials.component.html',
-	styleUrls: ['./credentials.component.less'],
-	providers: [ClickOutsideService]
+	styleUrls: ['./credentials.component.less']
 })
 @AutoSubscriptions()
 export class CredentialsComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
-	onClickOutside$ = () => this.clickOutsideService.onClickOutside(this.element.nativeElement, this.element.nativeElement.lastChild).pipe(
+	onClickOutside$ = () => this.clickOutsideService.onClickOutside({target: this.element.nativeElement, monitor: this.element.nativeElement.lastChild}).pipe(
 		filter(Boolean),
 		tap(() => {
 				this.closeWindow();

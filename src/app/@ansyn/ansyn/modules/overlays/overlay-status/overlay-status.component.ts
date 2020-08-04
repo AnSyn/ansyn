@@ -37,8 +37,7 @@ import { ClickOutsideService } from '../../core/click-outside/click-outside.serv
 @Component({
 	selector: 'ansyn-overlay-status',
 	templateUrl: './overlay-status.component.html',
-	styleUrls: ['./overlay-status.component.less'],
-	providers: [ClickOutsideService]
+	styleUrls: ['./overlay-status.component.less']
 })
 @AutoSubscriptions({
 	init: 'ngOnInit',
@@ -98,7 +97,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	);
 
 	@AutoSubscription
-	onClickOutSide$ = this.clickOutsideService.onClickOutside().pipe(
+	onClickOutSide$ = this.clickOutsideService.onClickOutside({monitor: this.element.nativeElement}).pipe(
 		filter(Boolean),
 		tap( () => {
 			this.moreButtons = false;

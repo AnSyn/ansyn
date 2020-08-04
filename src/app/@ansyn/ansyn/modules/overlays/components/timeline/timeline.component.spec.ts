@@ -6,7 +6,7 @@ import { IOverlaysState, OverlayReducer, overlaysFeatureKey } from '../../reduce
 import { State, Store, StoreModule } from '@ngrx/store';
 import { OverlaysEffects } from '../../effects/overlays.effects';
 import { Actions } from '@ngrx/effects';
-import { OverlaysConfig, OverlaysService } from '../../services/overlays.service';
+import { OverlaysService } from '../../services/overlays.service';
 import { MultipleOverlaysSourceProvider } from '../../services/multiple-source-provider';
 import { createStore, IStoreFixture } from '../../../core/test/mock-store';
 import { LoggerService } from '../../../core/services/logger.service';
@@ -122,13 +122,17 @@ describe('TimelineComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			providers: [OverlaysService, OverlaysEffects, Actions, {
-				provide: MultipleOverlaysSourceProvider,
-				useValue: {}
-			}, {
-				provide: OverlaysConfig,
-				useValue: {}
-			},
+			providers: [
+				{
+					provide: OverlaysService,
+					useValue: {}
+				},
+				OverlaysEffects,
+				Actions,
+				{
+					provide: MultipleOverlaysSourceProvider,
+					useValue: {}
+				},
 				{
 					provide: LoggerService,
 					useValue: { error: (some) => null }

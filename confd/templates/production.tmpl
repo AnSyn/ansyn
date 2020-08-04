@@ -1091,6 +1091,9 @@
 				  }
 				}
 			]
+			},
+			"sensorNamesByGroup": {
+				"Landsat8L1G": ["Landsat8"]
 			}
 		},
 		"PIC4CARTO": {
@@ -1310,13 +1313,16 @@
 					"collapsed": true,
 					"children": [
 					  {
-						"text": "S2L2A",
+						"text": "Multi-Spectral Instrument",
 						"value": {
-						  "sensorType": "S2L2A"
+						  "sensorType": "Multi-Spectral Instrument"
 						}
 					  }
 					]
-			  }
+			},
+			"sensorNamesByGroup": {
+				"Multi-Spectral Instrument": ["S2MSI1C", "S2MSI2A"]
+			}
 		},
 		"AIRBUS": {
 			"inActive": {{ getv "/ansyn/overlay/airbus/inactive" "true" }},
@@ -1509,13 +1515,13 @@
 		"alg_1" : {
 			"maxOverlays": 20,
 			"timeEstimationPerOverlayInMinutes": 10,
-			"sensorNames": [ "Sentinel-2A", "Sentinel-2B", "Multi-Spectral Instrument" ],
+			"sensorNames": [ "Sentinel-2A", "Sentinel-2B", "S2MSI1C", "S2MSI2A" ],
 			"regionLengthInMeters": 200
 		},
 		"alg_2" : {
 			"maxOverlays": 2,
 			"timeEstimationPerOverlayInMinutes": 20,
-			"sensorNames": [ "Sentinel-2A", "Multi-Spectral Instrument" ],
+			"sensorNames": [ "Sentinel-2A", "S2MSI2A" ],
 			"regionLengthInMeters": 100
 		}
 	}

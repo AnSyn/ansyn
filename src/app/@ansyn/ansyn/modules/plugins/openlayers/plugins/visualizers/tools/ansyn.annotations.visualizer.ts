@@ -50,8 +50,8 @@ import { GeometryObject } from 'geojson';
 	deps: [Store, Actions, OpenLayersProjectionService, OL_PLUGINS_CONFIG, VisualizersConfig]
 })
 export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
-	private isContinuousDrawingEnabled = false;
-	private openLastDrawnAnnotationContextMenuEnabled = false;
+	protected isContinuousDrawingEnabled: boolean;
+	protected openLastDrawnAnnotationContextMenuEnabled: boolean;
 
 	/** Last selected annotation mode which was not null or undefined */
 	private lastAnnotationMode: AnnotationMode;
@@ -139,8 +139,9 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 				@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig,
 				@Inject(VisualizersConfig) config: IVisualizersConfig) {
 		super();
-		this.isContinuousDrawingEnabled = config.AnnotationsVisualizer.extra.continuousDrawing;
-		this.openLastDrawnAnnotationContextMenuEnabled = config.AnnotationsVisualizer.extra.openContextMenuOnDrawEnd;
+		// TODO - refactor with optional chaining when typescript version updated to >= 3.7
+		this.isContinuousDrawingEnabled = (config && config.AnnotationsVisualizer && config.AnnotationsVisualizer.extra && config.AnnotationsVisualizer.extra.continuousDrawing) ? config.AnnotationsVisualizer.extra.continuousDrawing : false;
+		this.openLastDrawnAnnotationContextMenuEnabled = (config && config.AnnotationsVisualizer && config.AnnotationsVisualizer.extra && config.AnnotationsVisualizer.extra.openContextMenuOnDrawEnd) ? config.AnnotationsVisualizer.extra.openContextMenuOnDrawEnd : false;
 	}
 
 	get offset() {

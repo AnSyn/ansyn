@@ -9,7 +9,7 @@ import { ActivateScannedAreaAction } from '../../overlay-status/actions/overlay-
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap, filter } from 'rxjs/operators';
 import { selectPresetOverlays } from '../../overlay-status/reducers/overlay-status.reducer';
-import { selectDropsAscending } from '../../reducers/overlays.reducer';
+import { selectDropsAscending, selectFilteredOveralys } from '../../reducers/overlays.reducer';
 import { combineLatest } from 'rxjs';
 import { IOverlay, IOverlayDrop } from '../../models/overlay.model';
 
@@ -23,11 +23,11 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	goPrevActive = false;
 	goNextActive = false;
 	goNextQuickLoop = false;
-	scanAreaActive = false;
 	hasPresetOverlays: boolean;
 	hasOverlayDisplay: boolean;
 	isFirstOverlay: boolean;
 	isLastOverlay: boolean;
+	overlaysLength: number;
 
 	@AutoSubscription
 	hasOverlayDisplay$ = this.store.select(selectOverlayOfActiveMap).pipe(
@@ -40,9 +40,13 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	isLastOrFirstOverlay$ = combineLatest(this.store.select(selectOverlayOfActiveMap), this.store.select(selectDropsAscending)).pipe(
-		filter(([activeMapOverlay, overlays]: [IOverlay, IOverlayDrop[]]) => Boolean(activeMapOverlay) && Boolean(overlays)),
-		tap(([activeMapOverlay, overlays]: [IOverlay, IOverlayDrop[]]) => {
+	isLastOrFirstOverlay$ = combineLatest(
+		this.store.select(selectOverlayOfActiveMap),
+		this.store.select(selectDropsAscending),
+		this.store.select(selectFilteredOveralys)).pipe(
+		filter(([activeMapOverlay, overlays, filtered]: [IOverlay, IOverlayDrop[], any[]]) => Boolean(activeMapOverlay) && Boolean(overlays.length)),
+		tap(([activeMapOverlay, overlays, filtered]: [IOverlay, IOverlayDrop[],  IOverlay[]]) => {
+			this.overlaysLength = filtered.length;
 			this.isFirstOverlay = activeMapOverlay.id === overlays[0].id;
 			this.isLastOverlay = activeMapOverlay.id === overlays[overlays.length - 1].id;
 		})
@@ -110,11 +114,11 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	@HostListener('window:keypress', ['$event'])
 	onkeypress($event: KeyboardEvent) {
 		if (this.isElementNotValid($event)) {
-			return; 
+			return;
 		}
 
 		if (this.keysWereUsed($event, this._scannedAreaKeys)) {
-			this.clickScannedArea(); 
+			this.clickScannedArea();
 		}
 	}
 

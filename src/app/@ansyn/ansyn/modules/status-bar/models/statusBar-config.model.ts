@@ -12,7 +12,8 @@ export interface IToolTipsConfig {
 	forward?: string,
 	reset?: string,
 	enlarge?: string,
-	quickloop?: string
+	quickloop?: string,
+	share?: string
 }
 
 export interface IFilterStatusBar {

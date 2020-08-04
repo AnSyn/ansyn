@@ -3,7 +3,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { EMPTY, Observable, of, forkJoin } from 'rxjs';
 import { IMapState, mapStateSelector, selectMapsIds, SetToastMessageAction, UpdateMapAction } from '@ansyn/map-facade';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { IBaseImageryLayer, ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpErrorResponse } from '@angular/common/http';
 import { mapValues, uniqBy } from 'lodash';
 import { IAppState } from '../app.effects.module';
@@ -157,7 +157,7 @@ export class CasesAppEffects {
 		);
 
 	@Effect()
-	onLoadDefaultCase$ = this.actions$.pipe(
+	onLoadDefaultCase$: Observable<IBaseImageryLayer> = this.actions$.pipe(
 		ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
 		withLatestFrom(this.store$.select(selectMapsIds)),
 		filter(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => !action.payload.context && Boolean(mapId)),

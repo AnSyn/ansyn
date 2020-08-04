@@ -7,7 +7,6 @@ describe('AttributesService', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({});
-		// service = TestBed.inject(AttributesService);
 	});
 
 	beforeEach(inject(

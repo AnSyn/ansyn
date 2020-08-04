@@ -111,7 +111,7 @@ export class ContextAppEffects {
 	private parseSensorParams(sensors): ICaseDataInputFiltersState {
 		const sensorsArray = sensors.split(',');
 		const filters: IDataInputFilterValue[] = uniq(sensorsArray
-				.map(this.overlaysService.getSensorGroupAndProviderFromSensorName.bind(this.overlaysService))
+				.map(this.overlaysService.getSensorTypeAndProviderFromSensorName.bind(this.overlaysService))
 				.filter(Boolean));
 		return {
 			filters,

@@ -172,7 +172,7 @@ describe('ContextAppEffects', () => {
 				a: new SelectCaseAction(contextCase),
 			}
 		);
-		spyOn(overlaysService, 'getSensorGroupAndProviderFromSensorName')
+		spyOn(overlaysService, 'getSensorTypeAndProviderFromSensorName')
 			.and.returnValue(filter);
 		spyOn(casesService, 'updateCaseViaContext')
 			.and.callFake((ctx, c , p) => {

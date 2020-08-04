@@ -360,19 +360,19 @@ describe('OverlaysService', () => {
 
 	});
 
-	describe('getSensorGroupAndProviderFromSensorName()', () => {
+	describe('getSensorTypeAndProviderFromSensorName()', () => {
 		it('will find group and provider for sensor name', () => {
 			const sensorName = 'shmulik';
 			const expected: IDataInputFilterValue = {
 				providerName: 'animals',
 				sensorType: 'kipod'
 			};
-			const actual = overlaysService.getSensorGroupAndProviderFromSensorName(sensorName);
+			const actual = overlaysService.getSensorTypeAndProviderFromSensorName(sensorName);
 			expect(actual).toEqual(expected);
 		});
 
 		it('will return falsy value if group and provider were not found', () => {
-			const actual = overlaysService.getSensorGroupAndProviderFromSensorName('muki');
+			const actual = overlaysService.getSensorTypeAndProviderFromSensorName('muki');
 			expect(actual).toBeFalsy();
 		})
 	})

@@ -155,7 +155,7 @@ export class OverlaysService {
 		return this._overlaySourceProvider.getThumbnailName(overlay)
 	}
 
-	getSensorGroupAndProviderFromSensorName(sensorName: string): IDataInputFilterValue {
+	getSensorTypeAndProviderFromSensorName(sensorName: string): IDataInputFilterValue {
 		if (!(this.multipleOverlays && this.multipleOverlays.indexProviders instanceof Object)) {
 			return;
 		}

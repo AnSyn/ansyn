@@ -3,7 +3,7 @@ import { AnnotationsVisualizer } from '../../../annotations.visualizer';
 import { AnnotationsContextmenuTabs } from '../annotation-context-menu/annotation-context-menu.component';
 import * as SVG from '../annotation-context-menu/icons-svg';
 import { IStyleWeight } from '../annotations-weight/annotations-weight.component';
-import { IVisualizerEntity, StayInImageryService } from '@ansyn/imagery';
+import { IVisualizerEntity, StayInImageryService, getOpacityFromColor } from '@ansyn/imagery';
 import { AnnotationMode } from '../../../annotations.model';
 
 interface IFeatureProperties extends IVisualizerEntity {
@@ -113,8 +113,25 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 				...style.initial,
 			}
 		};
+
 		$event.forEach((entity) => {
 			updatedStyle.initial[entity.label] = entity.event;
+
+			let opacityProp: string;
+			switch (entity.label) {
+				case 'fill':
+					opacityProp = 'fill-opacity';
+					break;
+				case 'stroke':
+					opacityProp = 'stroke-opacity';
+					break;
+				default:
+					opacityProp = null;
+			}
+
+			if (opacityProp) {
+				updatedStyle.initial[opacityProp] = getOpacityFromColor(entity.event);
+			}
 		});
 		this.annotations.updateFeature(this.featureId, { style: updatedStyle });
 	}

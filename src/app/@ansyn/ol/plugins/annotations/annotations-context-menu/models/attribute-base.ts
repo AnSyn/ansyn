@@ -1,5 +1,6 @@
 import { ControlType } from './control-type.enum';
 import { IKeyValuePair } from './key-value.interface';
+import { IAttributeData } from './attribute-data.interface';
 
 export class AttributeBase<T> {
 	value: T;
@@ -10,19 +11,13 @@ export class AttributeBase<T> {
 	required?: boolean;
 
 	constructor(
-		options: {
-			key?: string;
-			label?: string;
-			type?: ControlType;
-			value?: T;
-			required?: boolean;
-		} = {}
+		{ key, label, type, value, required = false, options }: IAttributeData
 	) {
-		this.value = options.value;
-		this.key = options.key || '';
-		this.label = options.label || '';
-		this.type = options.type;
-
-		this.required = options.required;
+		this.value = value;
+		this.key = key;
+		this.label = label || '';
+		this.type = type;
+		this.required = required;
+		this.options = options || [];
 	}
 }

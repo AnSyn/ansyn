@@ -1,24 +1,23 @@
 import { ControlType } from './control-type.enum';
 import { AttributeBase } from './attribute-base';
 import { IKeyValuePair } from './key-value.interface';
+import { IAttributeData } from './attribute-data.interface';
 
 export class MultiChoiceAttribute extends AttributeBase<IKeyValuePair<string>[]> {
-	type = ControlType.MultipleChoices;
-	options: IKeyValuePair<string>[];
 	private selectedOptions: IKeyValuePair<string>[] = [];
-	value = [];
 
 	constructor(
-		options: {
-			key?: string;
-			label?: string;
-			type?: ControlType;
-			value?: IKeyValuePair<string>[];
-			options?: IKeyValuePair<string>[];
-		} = {}
+		data: IAttributeData
 	) {
-		super(options);
-		this.options = options['options'] || [];
+		super(data);
+		this.type = ControlType.MultipleChoices;
+
+		if (!!data.value && !Array.isArray(data.value)) {
+			throw new Error('Value must be of type IKeyValuePair<string>[]');
+		}
+		if (!data.value) {
+			this.value = [];
+		}
 	}
 
 	addSelectedOption(option: IKeyValuePair<string>) {

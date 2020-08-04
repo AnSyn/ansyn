@@ -1,22 +1,16 @@
 
 import { ControlType } from './control-type.enum';
 import { AttributeBase } from './attribute-base';
-import { IKeyValuePair } from './key-value.interface';
+import { IAttributeData } from './attribute-data.interface';
 
 export class SingleChoiceAttribute extends AttributeBase<string> {
-	type = ControlType.SingleChoice;
-	options?: IKeyValuePair<string>[];
-
 	constructor(
-		options: {
-			key?: string;
-			label?: string;
-			type?: ControlType;
-			value?: string;
-			options?: IKeyValuePair<string>[];
-		} = {}
+		data: IAttributeData
 	) {
-		super(options);
-		this.options = options['options'] || [];
+		super(data);
+		this.type = ControlType.SingleChoice;
+		if (!!data.value && typeof data.value !== 'string') {
+			throw new Error('Value must be of type string');
+		}
 	}
 }

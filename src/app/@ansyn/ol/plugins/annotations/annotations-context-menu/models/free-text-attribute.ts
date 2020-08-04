@@ -1,19 +1,15 @@
 import { ControlType } from './control-type.enum';
 import { AttributeBase } from './attribute-base';
-import { IKeyValuePair } from './key-value.interface';
+import { IAttributeData } from './attribute-data.interface';
 
 export class FreeTextAttribute extends AttributeBase<string> {
-	type = ControlType.FreeText;
-	options?: IKeyValuePair<string>[];
 	constructor(
-		options: {
-			key?: string;
-			label?: string;
-			type?: ControlType;
-			value?: string;
-		} = {}
+		data: IAttributeData
 	) {
-		super(options);
-		this.options = options['options'] || [];
+		super(data);
+		this.type = ControlType.FreeText;
+		if (!!data.value && typeof data.value !== 'string') {
+			throw new Error('Value must be of type string');
+		}
 	}
 }

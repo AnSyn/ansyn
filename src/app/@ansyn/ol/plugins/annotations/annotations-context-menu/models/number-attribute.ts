@@ -1,22 +1,17 @@
 
 import { ControlType } from './control-type.enum';
 import { AttributeBase } from './attribute-base';
-import { IKeyValuePair } from './key-value.interface';
+import { IAttributeData } from './attribute-data.interface';
 
 export class NumberAttribute extends AttributeBase<number> {
-	type = ControlType.Number;
-	options?: IKeyValuePair<string>[];
-
 	constructor(
-		options: {
-			key?: string;
-			label?: string;
-			type?: ControlType;
-			value?: number;
-			options?: IKeyValuePair<string>[];
-		} = {}
+		data: IAttributeData
 	) {
-		super(options);
-		this.options = options['options'] || [];
+		super(data);
+		this.type = ControlType.Number;
+
+		if (!!data.value && typeof data.value !== 'number') {
+			throw new Error('Value must be of type number');
+		}
 	}
 }

@@ -194,16 +194,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
 		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => {
-			const featureJson = cloneDeep(feature);
-			featureJson.properties = {
-				...getInitialAnnotationsFeatureProperties(),
-				...feature.properties,
-				style: {
-					...getInitialAnnotationsFeatureProperties().style,
-					...feature.properties.style
-
-				}
-			}
+			const featureJson = this.validateFeatureProperties(feature);
 			featureJson.properties.featureJson = undefined;
 			return {
 				featureJson,
@@ -218,6 +209,21 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				labelTranslateOn: feature.properties.labelTranslateOn || false
 			};
 		});
+	}
+
+	validateFeatureProperties(feature: Feature<any>): Feature<any> {
+		const featureJson = cloneDeep(feature);
+		featureJson.properties = {
+			...getInitialAnnotationsFeatureProperties(),
+			...featureJson.properties,
+			style: {
+				...getInitialAnnotationsFeatureProperties().style,
+				...featureJson.properties.style
+
+			}
+		}
+
+		return featureJson;
 	}
 
 	setMode(mode, forceBroadcast: boolean) {

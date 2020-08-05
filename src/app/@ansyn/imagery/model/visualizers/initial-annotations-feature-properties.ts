@@ -1,5 +1,5 @@
-import { IVisualizerStyle, MarkerSize } from "./visualizer-style"
-import { cloneDeep } from "lodash";
+import { IVisualizerStyle, MarkerSize } from './visualizer-style';
+import { cloneDeep } from 'lodash';
 
 const ANNOTATIONS_INITIAL_STYLE: IVisualizerStyle = {
 	stroke: '#27b2cfe6',
@@ -37,6 +37,7 @@ const ANNOTATIONS_FEATURE_INITIAL_PROPERTIES = {
 export function getInitialAnnotationsFeatureProperties() {
 	return cloneDeep(ANNOTATIONS_FEATURE_INITIAL_PROPERTIES);
 }
+
 export function getInitialAnnotationsFeatureStyle() {
 	return cloneDeep(ANNOTATIONS_INITIAL_STYLE);
 }

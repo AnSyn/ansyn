@@ -4,6 +4,7 @@ import { MultiChoiceAttributeComponent } from './multi-choice-attribute.componen
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatChipsModule, MatMenuModule, MatFormFieldModule } from '@angular/material';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('MultiChoiceAttributeComponent', () => {
 	let component: MultiChoiceAttributeComponent;
@@ -12,7 +13,7 @@ describe('MultiChoiceAttributeComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ MultiChoiceAttributeComponent ],
-			imports: [ ReactiveFormsModule, MatChipsModule, MatFormFieldModule, MatMenuModule ],
+			imports: [ ReactiveFormsModule, MatChipsModule, MatFormFieldModule, MatMenuModule, TranslateModule.forRoot() ],
 			schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 		}).compileComponents();
 	}));

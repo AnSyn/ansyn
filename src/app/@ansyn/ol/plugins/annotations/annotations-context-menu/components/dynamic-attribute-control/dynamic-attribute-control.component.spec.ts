@@ -2,7 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DynamicAttributeControlComponent } from './dynamic-attribute-control.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('DynamicAttributeControlComponent', () => {
 	let component: DynamicAttributeControlComponent;
@@ -11,7 +12,7 @@ describe('DynamicAttributeControlComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ DynamicAttributeControlComponent ],
-			imports: [ ReactiveFormsModule ],
+			imports: [ ReactiveFormsModule, TranslateModule.forRoot() ],
 			schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 		}).compileComponents();
 	}));

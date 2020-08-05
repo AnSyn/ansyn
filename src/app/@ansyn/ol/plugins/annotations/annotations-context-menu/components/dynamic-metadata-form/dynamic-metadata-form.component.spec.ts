@@ -3,9 +3,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DynamicMetadataFormComponent } from './dynamic-metadata-form.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatChipsModule, MatIconModule, MatMenuModule, MatFormFieldModule } from '@angular/material';
+import { TranslateModule } from '@ngx-translate/core';
 
-describe('MetadataFormComponent', () => {
+
+describe('DynamicMetadataFormComponent', () => {
 	let component: DynamicMetadataFormComponent;
 	let fixture: ComponentFixture<DynamicMetadataFormComponent>;
 
@@ -13,7 +14,8 @@ describe('MetadataFormComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [DynamicMetadataFormComponent],
 			imports: [		
-				ReactiveFormsModule
+				ReactiveFormsModule,
+				TranslateModule.forRoot()
 			],
 			schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 		}).compileComponents();

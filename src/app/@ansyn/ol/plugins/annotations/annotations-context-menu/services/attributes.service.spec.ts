@@ -1,12 +1,20 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { AttributesService } from './attributes.service';
+import { OL_PLUGINS_CONFIG } from '../../../plugins.config';
 
 describe('AttributesService', () => {
 	let service: AttributesService;
 
 	beforeEach(() => {
-		TestBed.configureTestingModule({});
+		TestBed.configureTestingModule({
+			providers: [
+				{
+					provide: OL_PLUGINS_CONFIG,
+					useValue: { Annotations: { displayId: true } }
+				}
+			]
+		});
 	});
 
 	beforeEach(inject(

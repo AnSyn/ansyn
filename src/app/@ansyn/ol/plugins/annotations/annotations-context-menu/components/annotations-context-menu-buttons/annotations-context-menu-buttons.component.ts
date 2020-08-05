@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostBinding, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostBinding, Input, OnInit, Inject } from '@angular/core';
 import { AnnotationsVisualizer } from '../../../annotations.visualizer';
 import { AnnotationsContextmenuTabs } from '../annotation-context-menu/annotation-context-menu.component';
 import * as SVG from '../annotation-context-menu/icons-svg';
@@ -9,6 +9,7 @@ import { AttributeBase } from '../../models/attribute-base';
 import { AttributesService } from '../../services/attributes.service';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { OL_PLUGINS_CONFIG, IOLPluginsConfig } from '../../../../plugins.config';
 
 interface IFeatureProperties extends IVisualizerEntity {
 	mode: AnnotationMode
@@ -26,8 +27,7 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 	@Input() selectedTab: { [id: string]: AnnotationsContextmenuTabs } = {};
 
 	attributes$: Observable<AttributeBase<any>[]>;
-	// TODO - get from config
-	isMetadataEnabled = true;
+	isMetadataEnabled = false;
 
 	@HostBinding('style.right.px')
 	get right() {
@@ -48,7 +48,8 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 	constructor(
 		protected myElement: ElementRef,
 		protected stayInImageryService: StayInImageryService,
-		private attributesService: AttributesService
+		private attributesService: AttributesService,
+		@Inject(OL_PLUGINS_CONFIG) private olPluginsConfig: IOLPluginsConfig
 	) {
 	}
 
@@ -64,6 +65,8 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 				}
 			})
 		);
+
+		this.isMetadataEnabled = this.olPluginsConfig.AnnotationsContextMenu.metadata.active;
 	}
 
 	ngAfterViewInit(): void {

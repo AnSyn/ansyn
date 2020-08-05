@@ -2,7 +2,7 @@ import { IDilutedOverlay, IDilutedOverlaysHash, IOverlay, IOverlaysHash } from '
 import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
 import { LayoutKey } from '@ansyn/map-facade';
 import { FilterType } from '../../../filters/models/filter-type';
-import { IMapSettings, IMapSettingsData, IVisualizerEntity } from '@ansyn/imagery';
+import { IMapSettings, IMapSettingsData } from '@ansyn/imagery';
 import { OverlayDisplayMode } from '../../tools/overlays-display-mode/overlays-display-mode.component';
 
 export interface ICasePreview {
@@ -86,7 +86,7 @@ export type CaseRegionState = any | Feature<Polygon> | Point | Polygon | Positio
 export interface IDataInputFilterValue {
 	providerName: string;
 	sensorType: string;
-	sensorName: string;
+	sensorName?: string;
 }
 
 export interface ICaseDataInputFiltersState {

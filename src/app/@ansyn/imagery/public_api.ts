@@ -80,3 +80,4 @@ export { IMAGERY_SLOW_ZOOM_FACTOR } from './model/imagery-zoom.model';
 export { IMapSettings, IMapSettingsData, IWorldViewMapState } from './model/map-settings';
 export { toDegrees, toRadians, getAngleDegreeBetweenPoints } from './utils/math';
 export { ExtentCalculator } from './utils/extent-calculator';
+export { getOpacityFromColor } from './utils/color-opacity-extractor';

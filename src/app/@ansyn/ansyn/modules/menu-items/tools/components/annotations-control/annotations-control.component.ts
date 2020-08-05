@@ -14,7 +14,7 @@ import { select, Store } from '@ngrx/store';
 import { AnnotationSetProperties, ClearActiveInteractionsAction, SetAnnotationMode } from '../../actions/tools.actions';
 import { DOCUMENT } from '@angular/common';
 import { selectAnnotationMode, selectAnnotationProperties } from '../../reducers/tools.reducer';
-import { IVisualizerStyle } from '@ansyn/imagery';
+import { IVisualizerStyle, getOpacityFromColor } from '@ansyn/imagery';
 import { filter, map, tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectActiveAnnotationLayer, selectLayers } from '../../../layers-manager/reducers/layers.reducer';
@@ -172,8 +172,25 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 
 	colorChange(changesArray: Array<any>) {
 		const style = {};
+
 		changesArray.forEach((colorData) => {
 			style[colorData.label] = colorData.event;
+
+			let opacityProp: string;
+			switch (colorData.label) {
+				case 'fill':
+					opacityProp = 'fill-opacity';
+					break;
+				case 'stroke':
+					opacityProp = 'stroke-opacity';
+					break;
+				default:
+					opacityProp = null;
+			}
+
+			if (opacityProp) {
+				style[opacityProp] = getOpacityFromColor(colorData.event);
+			}
 		});
 		this.store.dispatch(new AnnotationSetProperties(style));
 	}

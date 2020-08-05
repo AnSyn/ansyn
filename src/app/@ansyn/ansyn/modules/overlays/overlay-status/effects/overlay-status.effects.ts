@@ -6,7 +6,8 @@ import {
 	ImageryCommunicatorService,
 	ImageryMapPosition,
 	IMapSettings,
-	unifyPolygons
+	unifyPolygons,
+	geojsonMultiPolygonToFirstPolygon
 } from '@ansyn/imagery';
 import {
 	MapActionTypes,
@@ -50,11 +51,12 @@ import {
 	selectTranslationData
 } from '../reducers/overlay-status.reducer';
 import { IOverlay } from '../../models/overlay.model';
-import { feature } from '@turf/turf';
+import { feature, difference, booleanContains } from '@turf/turf';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from '../config/overlay-status-config';
 import { isEqual } from "lodash";
 import { CasesActionTypes } from '../../../menu-items/cases/actions/cases.actions';
+import { getPolygonIntersectionRatioWithMultiPolygon } from 'src/app/@ansyn/imagery/utils/geo';
 
 @Injectable()
 export class OverlayStatusEffects {
@@ -174,11 +176,22 @@ export class OverlayStatusEffects {
 					const featurePolygons = polygons.map((polygon) => {
 						return feature(polygon);
 					});
-					const combinedResult = unifyPolygons(featurePolygons);
-					if (combinedResult.geometry.type === 'MultiPolygon') {
-						scannedArea = combinedResult.geometry;
-					} else {	// polygon
-						scannedArea = geojsonPolygonToMultiPolygon(combinedResult.geometry);
+					let combinedResult = unifyPolygons(featurePolygons);
+					const scannedAreaToPolygon = geojsonMultiPolygonToFirstPolygon(scannedArea);
+				
+					if (getPolygonIntersectionRatioWithMultiPolygon(position.extentPolygon, scannedArea) || booleanContains(scannedAreaToPolygon, position.extentPolygon)) {
+						combinedResult = difference(combinedResult, position.extentPolygon);
+					}
+					
+					if (combinedResult === null) {
+						scannedArea = undefined;
+					}
+					else {
+						if (combinedResult.geometry.type === 'MultiPolygon') {
+							scannedArea = combinedResult.geometry;
+						} else {	// polygon
+							scannedArea = geojsonPolygonToMultiPolygon(combinedResult.geometry);
+						}
 					}
 				} catch (e) {
 					console.error('failed to save scanned area', e);

@@ -27,7 +27,7 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 	@Input() selectedTab: { [id: string]: AnnotationsContextmenuTabs } = {};
 
 	attributes$: Observable<AttributeBase<any>[]>;
-	isMetadataEnabled = false;
+	isMetadataEnabled: boolean;
 
 	@HostBinding('style.right.px')
 	get right() {
@@ -66,7 +66,8 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 			})
 		);
 
-		this.isMetadataEnabled = this.olPluginsConfig.AnnotationsContextMenu.metadata.active;
+		this.isMetadataEnabled = 
+			(!!this.olPluginsConfig && !!this.olPluginsConfig.AnnotationsContextMenu) ? this.olPluginsConfig.AnnotationsContextMenu.metadataActive : false;
 	}
 
 	ngAfterViewInit(): void {

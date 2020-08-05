@@ -18,7 +18,11 @@ export class AttributesService {
 	) {}
 
 	getAttributes(): Observable<AttributeBase<any>[]> {
-		const configAttributes: IConfigAttribute[] = this.olPluginsConfig.AnnotationsContextMenu.metadata.attributes
+		const configAttributes: IConfigAttribute[] = 
+			!!this.olPluginsConfig && 
+			!!this.olPluginsConfig.AnnotationsContextMenu && 
+			!!this.olPluginsConfig.AnnotationsContextMenu.metadataAttributes ? this.olPluginsConfig.AnnotationsContextMenu.metadataAttributes : [];
+
 		const attributes: AttributeBase<any>[] = [];
 		configAttributes.forEach(({key, label, options, type}) => {
 			switch (type) {

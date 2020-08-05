@@ -4,7 +4,18 @@ import { IKeyValuePair } from './key-value.interface';
 import { IAttributeData } from './attribute-data.interface';
 
 export class MultiChoiceAttribute extends AttributeBase<IKeyValuePair<string>[]> {
-	private selectedOptions: IKeyValuePair<string>[] = [];
+	private selectedOptions: IKeyValuePair<string>[];
+
+	private _value: IKeyValuePair<string>[];
+	set value(value: IKeyValuePair<string>[]) {
+		if (!!value) {
+			this._value = [...value];
+			this.selectedOptions = [...value]
+		}
+	}
+	get value() {
+		return this._value;
+	}
 
 	constructor(
 		data: IAttributeData
@@ -25,7 +36,7 @@ export class MultiChoiceAttribute extends AttributeBase<IKeyValuePair<string>[]>
 			return;
 		}
 		this.selectedOptions.push(option);
-		this.value = this.selectedOptions;
+		this._value = this.selectedOptions;
 	}
 
 	removeSelectedOption(option: IKeyValuePair<string>) {
@@ -34,7 +45,7 @@ export class MultiChoiceAttribute extends AttributeBase<IKeyValuePair<string>[]>
 		if (index >= 0) {
 			this.selectedOptions.splice(index, 1);
 		}
-		this.value = this.selectedOptions;
+		this._value = this.selectedOptions;
 
 	}
 

@@ -1,5 +1,4 @@
 import {
-	ICompressedImageryMapPosition,
 	ICompressedImageryMapProjectedState,
 	ImageryMapPosition
 } from './case-map-position.model';

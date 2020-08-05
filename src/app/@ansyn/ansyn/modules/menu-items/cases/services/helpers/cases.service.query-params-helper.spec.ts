@@ -138,16 +138,16 @@ describe('CasesService', () => {
 			spyOn(rison, 'decode');
 			spyOn(wellknown, 'parse');
 
-			queryParamsHelper.decodeCaseObjects('facets', 'facetsValue');
-			expect(rison.decode).toHaveBeenCalledWith('facetsValue');
+			queryParamsHelper.decodeCaseObjects('facets', queryParamsHelper.rot13(rison.encode('facetsValue')));
+			expect(rison.decode).toHaveBeenCalledWith(rison.encode('facetsValue'));
 
-			queryParamsHelper.decodeCaseObjects('time', { from: 'from', to: 'to' });
-			expect(rison.decode).toHaveBeenCalledWith({ from: 'from', to: 'to' });
+			queryParamsHelper.decodeCaseObjects('time', queryParamsHelper.rot13(rison.encode( { from: 'from', to: 'to' })));
+			expect(rison.decode).toHaveBeenCalledWith(rison.encode( { from: 'from', to: 'to' }));
 
-			queryParamsHelper.decodeCaseObjects('maps', 'mapsValue');
+			queryParamsHelper.decodeCaseObjects('maps',  queryParamsHelper.rot13('mapsValue'));
 			expect(rison.decode).toHaveBeenCalledWith('mapsValue');
 
-			queryParamsHelper.decodeCaseObjects('region', 'regionValue');
+			queryParamsHelper.decodeCaseObjects('region', queryParamsHelper.rot13('regionValue'));
 			expect(wellknown.parse).toHaveBeenCalledWith('regionValue');
 		});
 	});

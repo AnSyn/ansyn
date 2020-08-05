@@ -1,10 +1,17 @@
-export { MapOrientation } from "./model/map-settings";
+export {
+	MapOrientation,
+	ICompressedMapSettings,
+	ICompressedMapSettingsData,
+	IMapSettings,
+	IMapSettingsData,
+	IWorldViewMapState
+} from "./model/map-settings";
 export { IMapSource } from './model/map-providers-config';
 export { IStroke, IIcon } from './model/visualizers/visualizer-style';
 export { ICanvasExportData } from './model/base-imagery-map';
 export {
 	ImageryMapExtent, ImageryMapExtentPolygon, ImageryMapProjectedState, ImageryMapPosition, IMousePointerMove
-}from './model/case-map-position.model';
+} from './model/case-map-position.model';
 
 export { MAP_SOURCE_PROVIDERS_CONFIG, IMapSourceProvidersConfig } from './model/base-map-source-provider';
 export { MarkerSizeDic } from './model/visualizers/visualizer-style';
@@ -74,9 +81,11 @@ export { ProjectionService } from './projection-service/projection.service';
 export { StayInImageryService } from './stay-in-imagery-service/stay-in-imagery.service';
 export { ImageryModule } from './imagery.module';
 export { IMAGERY_CONFIG } from './model/configuration.token';
-export { IBaseImageryLayer, ImageryLayerProperties, IMAGERY_MAIN_LAYER_NAME, IMAGERY_BASE_MAP_LAYER } from './model/imagery-layer.model';
+export {
+	IBaseImageryLayer, ImageryLayerProperties, IMAGERY_MAIN_LAYER_NAME, IMAGERY_BASE_MAP_LAYER
+} from './model/imagery-layer.model';
 export { IMAGERY_SLOW_ZOOM_FACTOR } from './model/imagery-zoom.model';
-export { IMapSettings, IMapSettingsData, IWorldViewMapState } from './model/map-settings';
+export {} from './model/map-settings';
 export { toDegrees, toRadians, getAngleDegreeBetweenPoints } from './utils/math';
 export { ExtentCalculator } from './utils/extent-calculator';
 export { getOpacityFromColor } from './utils/color-opacity-extractor';

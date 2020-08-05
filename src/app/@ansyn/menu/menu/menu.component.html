@@ -14,21 +14,10 @@
 					<i [ngClass]="menuItem.iconClass"></i>
 					<span class="badge"
 						  	[ngClass]="menuItem.dockedToBottom ? 'bottom' : 'count-badge'"
-						   [hidden]="hideBadge(menuItem.badge, menuItem.name)">{{menuItem.badge}}</span>
+						   [hidden]="hideBadge(menuItem.badge)">{{menuItem.badge}}</span>
 					{{menuItem.name | translate}}
 				</div>
 			</div>
-			<!--<div
-				*ngFor="let menuItem of menuItemsArray | menuItemTop:false"
-				class="menu-btn bottom"
-				[class.draw-user-attention]="isUserFirstEntrance || !doesUserHaveCredentials"
-				[class.active]="isActive(menuItem.name)"
-				(click)="toggleItem(menuItem.name, true)">
-
-				<i [ngClass]="menuItem.iconClass"></i>
-				<span class="badge bottom" [hidden]="!isUserFirstEntrance && doesUserHaveCredentials"> </span>
-				{{menuItem.name | translate}}
-			</div>-->
 			<div class="logo">
 
 				<ng-container *ngIf="menuConfig?.forkMe?.active">

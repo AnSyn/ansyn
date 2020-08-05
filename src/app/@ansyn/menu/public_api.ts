@@ -4,11 +4,11 @@ export { IMenuItem } from './models/menu-item.model';
 export { IMenuState } from './reducers/menu.reducer';
 export { MenuConfig } from './models/menuConfig';
 export {
-	MenuActionTypes, SelectMenuItemAction, SetAutoClose, SetBadgeAction, ToggleIsPinnedAction, SetDoesUserHaveCredentials, SetHideResultsTableBadgeAction
+	MenuActionTypes, SelectMenuItemAction, SetAutoClose, SetBadgeAction, ToggleIsPinnedAction
 }from './actions/menu.actions';
 export { getMenuSessionData } from './helpers/menu-session.helper';
 export { selectIsPinned } from './reducers/menu.reducer';
 export { MenuModule } from './menu.module';
 export { menuFeatureKey, MenuReducer, selectMenuCollapse } from './reducers/menu.reducer';
-export { ContainerChangedTriggerAction, ToggleMenuCollapse, UnSelectMenuItemAction, SetUserEnter } from './actions/menu.actions';
+export { ContainerChangedTriggerAction, ToggleMenuCollapse, UnSelectMenuItemAction } from './actions/menu.actions';
 export { MenuComponent } from './menu/menu.component';

@@ -36,7 +36,7 @@ import { getErrorLogFromException } from '../../core/utils/logs/timer-logs';
 import { LoggerService } from '../../core/services/logger.service';
 import { AreaToCredentialsService } from '../../core/services/credentials/area-to-credentials.service';
 import { CredentialsService, ICredentialsResponse } from '../../core/services/credentials/credentials.service';
-import { SetDoesUserHaveCredentials } from '@ansyn/menu';
+import { getMenuSessionData, SetBadgeAction } from '@ansyn/menu';
 import { Update } from '@ngrx/entity';
 
 @Injectable()
@@ -98,20 +98,20 @@ export class OverlaysEffects {
 	checkTrianglesBeforeSearch$ = this.actions$.pipe(
 		ofType<CheckTrianglesAction>(OverlaysActionTypes.CHECK_TRIANGLES),
 		switchMap((action: CheckTrianglesAction) => {
+			const { isUserFirstEntrance } = getMenuSessionData();
 			return forkJoin([this.areaToCredentialsService.getAreaTriangles(action.payload.region), this.userAuthorizedAreas$]).pipe(
 				mergeMap<any, any>(([trianglesOfArea, userAuthorizedAreas]: [any, any]) => {
-
 					if (userAuthorizedAreas.some( area => trianglesOfArea.includes(area))) {
 						return [new LoadOverlaysAction(action.payload),
-							new SetDoesUserHaveCredentials(true)];
+							new SetBadgeAction({key: 'Permissions', badge: undefined})];
 					}
 					return [new LoadOverlaysSuccessAction([]),
 						new SetOverlaysStatusMessageAction(this.translate.instant(overlaysStatusMessages.noPermissionsForArea)),
-						new SetDoesUserHaveCredentials(false)];
+						new SetBadgeAction({key: 'Permissions', badge: isUserFirstEntrance ? '' : undefined})];
 				}),
 				catchError( () => {
 					return [new LoadOverlaysAction(action.payload),
-						new SetDoesUserHaveCredentials(true)];
+						new SetBadgeAction({key: 'Permissions', badge: undefined})];
 				})
 			)
 		})

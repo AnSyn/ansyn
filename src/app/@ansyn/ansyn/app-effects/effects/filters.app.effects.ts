@@ -8,7 +8,7 @@ import {
 	selectRemovedOverlaysVisibility
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../app.effects.module';
-import { SetBadgeAction, SetHideResultsTableBadgeAction } from '@ansyn/menu';
+import { SetBadgeAction } from '@ansyn/menu';
 import { catchError, distinctUntilChanged, filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
 import { BooleanFilterMetadata } from '../../modules/filters/models/metadata/boolean-filter-metadata';
 import {
@@ -104,8 +104,7 @@ export class FiltersAppEffects {
 			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : this.translate.instant(overlaysStatusMessages.noOverLayMatchFilters);
 			return [
 				new SetFilteredOverlaysAction(filteredOverlays),
-				new SetOverlaysStatusMessageAction(message),
-				new SetHideResultsTableBadgeAction(false)
+				new SetOverlaysStatusMessageAction(message)
 			];
 		}));
 
@@ -173,7 +172,7 @@ export class FiltersAppEffects {
 				badge = filterValues.reduce((badgeNum: number, filterMetadata: FilterMetadata) => filterMetadata.isFiltered() ? badgeNum + 1 : badgeNum, 0).toString();
 			}
 
-			return new SetBadgeAction({ key: 'Filters', badge });
+			return new SetBadgeAction({ key: 'Filters', badge: badge === '0' ? undefined : badge });
 		}),
 		share()
 	);

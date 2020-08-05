@@ -6,15 +6,12 @@ export const MenuActionTypes = {
 	UNSELECT_MENU_ITEM: 'UNSELECT_MENU_ITEM',
 	SET_BADGE: 'SET_BADGE',
 	TOGGLE_IS_PINNED: 'TOGGLE_IS_PINNED',
-	SET_HIDE_RESULTS_TABLE_BADGE: 'SET_HIDE_RESULTS_TABLE_BADGE',
 	TRIGGER: {
 		CONTAINER_CHANGED: 'CONTAINER_CHANGED'
 	},
 	SET_AUTO_CLOSE: 'SET_AUTO_CLOSE',
 	MENU_COLLAPSE: 'MENU_COLLAPSE',
-	RESET_APP: 'RESET_APP',
-	SET_USER_ENTER: 'SET_USER_ENTER',
-	SET_DOES_USER_HAVE_CREDENTIALS: 'SET_DOES_USER_HAVE_CREDENTIALS'
+	RESET_APP: 'RESET_APP'
 };
 
 export class ResetAppAction implements Action {
@@ -59,13 +56,6 @@ export class ContainerChangedTriggerAction implements Action {
 	}
 }
 
-export class SetHideResultsTableBadgeAction implements Action {
-	type = MenuActionTypes.SET_HIDE_RESULTS_TABLE_BADGE;
-
-	constructor(public payload?: any) {
-	}
-}
-
 export class SetAutoClose implements Action {
 	type = MenuActionTypes.SET_AUTO_CLOSE;
 
@@ -75,17 +65,6 @@ export class SetAutoClose implements Action {
 
 export class ToggleMenuCollapse implements Action {
 	type = MenuActionTypes.MENU_COLLAPSE;
-
-	constructor(public payload: boolean) {
-	}
-}
-
-export class SetUserEnter implements Action {
-	type = MenuActionTypes.SET_USER_ENTER;
-}
-
-export class SetDoesUserHaveCredentials implements Action {
-	type = MenuActionTypes.SET_DOES_USER_HAVE_CREDENTIALS;
 
 	constructor(public payload: boolean) {
 	}

@@ -1,12 +1,12 @@
 import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { CredentialsService } from '../../services/credentials/credentials.service';
 import { Store } from '@ngrx/store';
-import { getMenuSessionData, UnSelectMenuItemAction } from '@ansyn/menu';
-import { SetUserEnter } from '@ansyn/menu';
+import { getMenuSessionData, SetBadgeAction, UnSelectMenuItemAction } from '@ansyn/menu';
 import { fromEvent, Subscription } from 'rxjs';
 import { tap, filter } from 'rxjs/operators';
 import { ClickOutsideService } from '../../click-outside/click-outside.service';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
+import { setMenuSessionData } from '../../../../../menu/helpers/menu-session.helper';
 
 @Component({
 	selector: 'ansyn-credentials',
@@ -30,7 +30,8 @@ export class CredentialsComponent implements OnInit, OnDestroy {
 				protected clickOutsideService: ClickOutsideService) {
 		const menuSession = getMenuSessionData();
 		if (menuSession.isUserFirstEntrance) {
-			store$.dispatch(new SetUserEnter());
+			setMenuSessionData({ isUserFirstEntrance: false });
+			this.store$.dispatch(new SetBadgeAction({ key: 'Permissions', badge: undefined }));
 		}
 	}
 

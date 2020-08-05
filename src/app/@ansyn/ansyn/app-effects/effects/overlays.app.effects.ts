@@ -40,10 +40,12 @@ import {
 	startWith,
 	switchMap,
 	tap,
-	withLatestFrom
+	withLatestFrom,
+	distinctUntilKeyChanged
 } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import {
+	CheckTrianglesAction,
 	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
@@ -52,12 +54,12 @@ import {
 	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
 	SetHoveredOverlayAction,
-	SetMarkUp,
+	SetMarkUp, SetOverlaysStatusMessageAction,
 	SetTotalOverlaysAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	IMarkUpData,
-	MarkUpClass,
+	MarkUpClass, overlaysStatusMessages,
 	selectdisplayOverlayHistory,
 	selectDropMarkup,
 	selectOverlaysMap
@@ -69,7 +71,7 @@ import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model'
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { Dictionary } from '@ngrx/entity';
 import { LoggerService } from '../../modules/core/services/logger.service';
-import { SetBadgeAction } from '@ansyn/menu';
+import { getMenuSessionData, SetBadgeAction } from '@ansyn/menu';
 import { rxPreventCrash } from '../../modules/core/utils/rxjs/operators/rxPreventCrash';
 
 @Injectable()
@@ -274,6 +276,7 @@ export class OverlaysAppEffects {
 	@Effect()
 	updateResultTableBadge$: Observable<SetBadgeAction> = this.actions$.pipe(
 		ofType<SetTotalOverlaysAction>(OverlaysActionTypes.SET_TOTAL_OVERLAYS),
+		distinctUntilKeyChanged('payload'),
 		map((action) => new SetBadgeAction({ key: 'Results table', badge: `${ action.payload }` })));
 
 	onDropMarkupFilter([prevAction, currentAction]): boolean {

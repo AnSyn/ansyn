@@ -7,7 +7,8 @@ import {
 	ImageryMapPosition,
 	IMapSettings,
 	unifyPolygons,
-	geojsonMultiPolygonToFirstPolygon
+	geojsonMultiPolygonToFirstPolygon,
+	getPolygonIntersectionRatioWithMultiPolygon
 } from '@ansyn/imagery';
 import {
 	MapActionTypes,
@@ -56,7 +57,6 @@ import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from '../config/overlay-status-config';
 import { isEqual } from "lodash";
 import { CasesActionTypes } from '../../../menu-items/cases/actions/cases.actions';
-import { getPolygonIntersectionRatioWithMultiPolygon } from 'src/app/@ansyn/imagery/utils/geo';
 
 @Injectable()
 export class OverlayStatusEffects {

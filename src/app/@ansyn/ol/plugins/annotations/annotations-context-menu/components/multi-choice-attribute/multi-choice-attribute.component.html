@@ -7,5 +7,5 @@
 </mat-chip-list>
 
 <mat-menu #menu="matMenu">
-	<div mat-menu-item *ngFor="let option of optionsList" (click)="selectOption(option)">{{ option.value }}</div>
+	<div mat-menu-item *ngFor="let option of optionsList" (click)="selectOption(option)">{{ option.value | translate }}</div>
 </mat-menu>

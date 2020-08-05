@@ -177,14 +177,24 @@ export class OverlayStatusEffects {
 						return feature(polygon);
 					});
 					let combinedResult = unifyPolygons(featurePolygons);
-					const scannedAreaToPolygon = geojsonMultiPolygonToFirstPolygon(scannedArea);
-				
-					if (getPolygonIntersectionRatioWithMultiPolygon(position.extentPolygon, scannedArea) || booleanContains(scannedAreaToPolygon, position.extentPolygon)) {
+					let scannedAreaContainsExtentPolygon = false;
+					
+					for (let index = 0; index < scannedArea.coordinates.length; index++) {
+						let copyOfScannedArea = JSON.parse(JSON.stringify(scannedArea));
+						copyOfScannedArea.coordinates = [];
+						copyOfScannedArea.coordinates[0] = JSON.parse(JSON.stringify(scannedArea.coordinates[index]));
+
+						if (getPolygonIntersectionRatioWithMultiPolygon(position.extentPolygon, copyOfScannedArea)) {
+							scannedAreaContainsExtentPolygon = true;
+						}
+					}
+
+					if (scannedAreaContainsExtentPolygon) {
 						combinedResult = difference(combinedResult, position.extentPolygon);
 					}
 					
 					if (combinedResult === null) {
-						scannedArea = undefined;
+						scannedArea = null;
 					}
 					else {
 						if (combinedResult.geometry.type === 'MultiPolygon') {

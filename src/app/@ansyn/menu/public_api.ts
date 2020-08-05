@@ -7,8 +7,8 @@ export {
 	MenuActionTypes, SelectMenuItemAction, SetAutoClose, SetBadgeAction, ToggleIsPinnedAction, SetDoesUserHaveCredentials, SetHideResultsTableBadgeAction
 }from './actions/menu.actions';
 export { getMenuSessionData } from './helpers/menu-session.helper';
-export { selectEntitiesMenuItems, selectIsPinned } from './reducers/menu.reducer';
+export { selectIsPinned } from './reducers/menu.reducer';
 export { MenuModule } from './menu.module';
 export { menuFeatureKey, MenuReducer, selectMenuCollapse } from './reducers/menu.reducer';
-export { AddMenuItemAction, ContainerChangedTriggerAction, ToggleMenuCollapse, UnSelectMenuItemAction, SetUserEnter } from './actions/menu.actions';
+export { ContainerChangedTriggerAction, ToggleMenuCollapse, UnSelectMenuItemAction, SetUserEnter } from './actions/menu.actions';
 export { MenuComponent } from './menu/menu.component';

@@ -20,12 +20,11 @@ import {
 	ToggleMenuCollapse,
 	UnSelectMenuItemAction
 } from '../actions/menu.actions';
-import { combineLatest, fromEvent, Observable } from 'rxjs';
+import { fromEvent } from 'rxjs';
 import {
 	IMenuState,
-	selectAllMenuItems,
-	selectAutoClose,
-	selectEntitiesMenuItems, selectHideResultsTableBadge,
+	selectAutoClose, selectBadge,
+	selectHideResultsTableBadge,
 	selectIsPinned,
 	selectMenuCollapse,
 	selectSelectedMenuItem, selectUserFirstEnter, selectUserHaveCredentials
@@ -39,6 +38,7 @@ import { IMenuConfig } from '../models/menu-config.model';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, filter, tap, withLatestFrom, map } from 'rxjs/operators';
+import { MENU_ITEMS } from '../helpers/menu-item-token';
 
 const animations: any[] = [
 	trigger(
@@ -86,27 +86,11 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	@ViewChild('container', {static: true}) container: ElementRef;
 	@Input() version;
 
-	topMenuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(
-		select(selectAllMenuItems),
-		map(menuItems => menuItems.filter((menuItem: IMenuItem) => !menuItem.dockedToBottom))
-	);
-
-	bottomMenuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(
-		select(selectAllMenuItems),
-		map(menuItems => menuItems.filter((menuItem: IMenuItem) => menuItem.dockedToBottom))
-	);
-
 	@AutoSubscription
 	collapse$ = this.store.select(selectMenuCollapse).pipe(
 		tap(this.startToggleMenuCollapse.bind(this))
 	);
 
-	@AutoSubscription
-	getMenuEntities: Observable<any> = this.store.select(selectEntitiesMenuItems)
-		.pipe(
-			filter(Boolean),
-			tap((menuEntities) => this.entities = menuEntities)
-		);
 
 	@AutoSubscription
 	selectIsPinned$ = this.store.select(selectIsPinned).pipe(
@@ -120,6 +104,16 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	@AutoSubscription
 	selectMenuItem$ = this.store.select(selectSelectedMenuItem).pipe(
 		tap(this.setSelectedMenuItem.bind(this))
+	);
+
+	@AutoSubscription
+	selectBadge$ = this.store.select(selectBadge).pipe(
+		tap( (badge) => console.log({badge})),
+		filter(({menuItem, badge}) => Boolean(menuItem)),
+		tap(({menuItem, badge}) => {
+			console.log({menuItem, badge});
+			this.entities[menuItem].badge = badge;
+		})
 	);
 
 	@AutoSubscription
@@ -151,8 +145,27 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 				protected renderer: Renderer2,
 				protected elementRef: ElementRef,
 				@Inject(DOCUMENT) protected document: Document,
+				@Inject(MENU_ITEMS) menuItemsMulti: IMenuItem[][],
 				@Inject(MenuConfig) public menuConfig: IMenuConfig,
 				private cdref: ChangeDetectorRef) {
+		let menuItems = menuItemsMulti.reduce((prev, next) => [...prev, ...next], []);
+
+		const menuItemsObject = menuItems.reduce((menuItems, menuItem: IMenuItem) => {
+			return { ...menuItems, [menuItem.name]: menuItem };
+		}, {});
+
+		// if empty put all
+		if (Array.isArray(menuConfig.menuItems)) {
+			menuItems = menuConfig.menuItems
+				.map((name) => menuItemsObject[name])
+				.filter(Boolean);
+		}
+		this.entities = Object.assign({}, ...menuItems.map( item => ({[item.name]: item})));
+	}
+
+	get menuItemsArray(): IMenuItem[] {
+		return Object.values(this.entities)
+			.sort( (a, b) => b.dockedToBottom ? -1 : 0); // sort all bottom item to last of the list
 	}
 
 	get componentElem() {
@@ -241,6 +254,9 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	}
 
 	hideBadge(badge: string, name?: string): boolean {
+		if (!Boolean(badge)) {
+			return true;
+		}
 		if (this.isMenuItemResultsTable(name)) {
 			return this.hideResultsTableBadge;
 		}

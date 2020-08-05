@@ -1,10 +1,10 @@
 <div *ngIf="!!attributesForm" [formGroup]="attributesForm">
-	<label [attr.for]="attribute.key">{{ attribute.label }}</label>
+	<label [attr.for]="attribute.key">{{ attribute.label | translate }}</label>
 
 	<div [ngSwitch]="attribute.type">
 		<textarea *ngSwitchCase="controlType.FreeText" [formControlName]="attribute.key" [id]="attribute.key" [value]="attribute.value"></textarea>
 		<select *ngSwitchCase="controlType.SingleChoice" [id]="attribute.key" [formControlName]="attribute.key" [value]="attribute.value">
-			<option *ngFor="let opt of attribute.options">{{ opt.value }}</option>
+			<option *ngFor="let opt of attribute.options">{{ opt.value | translate }}</option>
 		</select>
 
 		<div *ngSwitchCase="controlType.MultipleChoices">
@@ -13,6 +13,4 @@
 
 		<input *ngSwitchCase="controlType.Number" [formControlName]="attribute.key" type="number" [id]="attribute.key" [value]="attribute.value" />
 	</div>
-
-	<div class="errorMessage" *ngIf="!isValid">{{ attribute.label }} is required</div>
 </div>

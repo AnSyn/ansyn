@@ -11,7 +11,10 @@ export function MockPipe(name: string): Pipe {
 		name
 	};
 	return Pipe(metadata)(
-		class Name2 {
-		} as any
+		class {
+			transform(value: any) {
+				return value;
+			}
+		}
 	);
 }

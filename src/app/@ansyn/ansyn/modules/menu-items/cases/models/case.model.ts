@@ -95,7 +95,7 @@ export type CaseRegionState = any | Feature<Polygon> | Point | Polygon | Positio
 export interface IDataInputFilterValue {
 	providerName: string;
 	sensorType: string;
-	sensorName: string;
+	sensorName?: string;
 }
 
 export interface ICaseDataInputFiltersState {

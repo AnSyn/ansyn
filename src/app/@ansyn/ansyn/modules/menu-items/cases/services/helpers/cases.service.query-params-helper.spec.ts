@@ -17,13 +17,14 @@ import {
 	ICompressedCaseMapsState,
 	IDilutedCaseMapsState
 } from '../../models/case.model';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 describe('CasesService', () => {
 	let casesService: CasesService;
 	let urlSerializer: UrlSerializer;
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpClientModule],
+			imports: [HttpClientModule, TranslateModule],
 			providers: [
 				{ provide: StorageService, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
@@ -34,6 +35,10 @@ describe('CasesService', () => {
 						parse: () => {
 						}
 					}
+				},
+				{
+					provide: TranslateService,
+					useValue: {}
 				},
 				{
 					provide: ErrorHandlerService,

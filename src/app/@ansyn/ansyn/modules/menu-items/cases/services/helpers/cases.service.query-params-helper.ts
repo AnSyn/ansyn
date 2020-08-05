@@ -108,6 +108,8 @@ export class QueryParamsHelper {
 	encodeCaseObjects(key, value, caseState?: ICaseState) {
 		let encodedValue;
 		switch (key) {
+			case 'dataInputFilters':
+				return rison.encode(value);
 			case 'facets':
 				const compressedFacets = this.casesService.queryCompressorService.compressFacets(value);
 				encodedValue = rison.encode(compressedFacets);

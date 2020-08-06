@@ -226,9 +226,10 @@ export class AnsynApi {
 			console.error('feature collection must have FeatureCollection type');
 			return null;
 		}
-		this.store.dispatch(new UpdateLayer(<ILayer>{
-			...this.activeAnnotationLayer,
-			data: cloneDeep(featureCollection)
+		this.store.dispatch(UpdateLayer({layer: {
+									...this.activeAnnotationLayer,
+									data: cloneDeep(featureCollection)
+								}
 		}));
 
 		this.features = featureCollection.features;
@@ -384,7 +385,7 @@ export class AnsynApi {
 
 		this.generateFeaturesIds(layerData);
 		const layer = this.dataLayersService.generateAnnotationLayer(layerName, layerData, !isEditable);
-		this.store.dispatch(new AddLayer(layer));
+		this.store.dispatch(AddLayer({layer}));
 		return layer.id;
 	}
 
@@ -393,7 +394,7 @@ export class AnsynApi {
 			console.error('failed to remove layer - invalid layerId ', layerId);
 			return;
 		}
-		this.store.dispatch(new RemoveLayer(layerId));
+		this.store.dispatch(RemoveLayer({layerId}));
 	}
 
 	showLayer(layerId: string, show: boolean): void {
@@ -401,7 +402,7 @@ export class AnsynApi {
 			console.error('failed to show layer - invalid layerId ', layerId);
 			return;
 		}
-		this.store.dispatch(new SetLayerSelection({ id: layerId, value: show }));
+		this.store.dispatch(SetLayerSelection({ id: layerId, value: show }));
 	}
 
 	init(): void {

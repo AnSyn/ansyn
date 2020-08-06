@@ -15,6 +15,7 @@ import { ICoreConfig } from './modules/core/models/core.config.model';
 import { IMultipleOverlaysSourceConfig } from './modules/core/models/multiple-overlays-source-config';
 import { IAlgorithmsConfig } from './modules/menu-items/algorithms/models/tasks.model';
 import { IAnaglyphConfig } from './modules/plugins/openlayers/plugins/anaglyph-sensor/models/anaglyph.model';
+import { IOLPluginsConfig } from '@ansyn/ol';
 
 export interface IConfigModel {
 	casesConfig: ICasesConfig;
@@ -39,4 +40,5 @@ export interface IConfigModel {
 	ORIENTATIONS: string[];
 	algorithmsConfig: IAlgorithmsConfig;
 	anaglyphConfig: IAnaglyphConfig;
+	olPluginsConfig: IOLPluginsConfig;
 }

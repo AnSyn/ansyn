@@ -88,9 +88,9 @@ describe('LayersEffects', () => {
 		spyOn(dataLayersService, 'getAllLayersInATree').and.returnValue(of(serverResponse));
 		dataLayersService.getAllLayersInATree({ caseId: 'caseId' });
 
-		actions = hot('--a--', { a: new BeginLayerCollectionLoadAction({ caseId: 'caseId' }) });
+		actions = hot('--a--', { a: BeginLayerCollectionLoadAction({ caseId: 'caseId' }) });
 		const expectedResults = cold('--a--', {
-			a: new LayerCollectionLoadedAction(layers)
+			a: LayerCollectionLoadedAction({layers})
 		});
 		expect(layersEffects.beginLayerTreeLoad$).toBeObservable(expectedResults);
 	});

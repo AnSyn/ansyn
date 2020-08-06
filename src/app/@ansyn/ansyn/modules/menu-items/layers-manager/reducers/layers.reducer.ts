@@ -1,5 +1,4 @@
-import { LayerCollectionLoadedAction, SetLayerSelection, SelectOnlyLayer, UpdateSelectedLayersIds, AddLayer, UpdateLayer, RemoveLayer, SetActiveAnnotationLayer, SetLayersModal, ShowAllLayers, CloseLayersModal } from './../actions/layers.actions';
-import { ILayerState } from './layers.reducer';
+import { LayerCollectionLoadedAction, SetLayerSelection, SelectOnlyLayer, UpdateSelectedLayersIds, AddLayer, UpdateLayer, RemoveLayer, SetActiveAnnotationLayer, SetLayersModal, ShowAllLayers, CloseLayersModal } from '../actions/layers.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector, createReducer, on, Action } from '@ngrx/store';
 import { uniq } from 'lodash';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';

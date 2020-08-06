@@ -34,6 +34,6 @@ describe('LayerComponent', () => {
 		spyOn(store, 'dispatch');
 		component.layer = <any>{ id: 'layerId' };
 		component.selectOnly();
-		expect(store.dispatch).toHaveBeenCalledWith(new SelectOnlyLayer('layerId'));
+		expect(store.dispatch).toHaveBeenCalledWith( SelectOnlyLayer({id: 'layerId'}))
 	});
 });

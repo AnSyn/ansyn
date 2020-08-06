@@ -185,7 +185,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 				};
 			}
 			GeoJSON.features[0].properties = { ...GeoJSON.features[0].properties };
-			this.store$.dispatch(new UpdateLayer({ id: activeAnnotationLayer.id, data }));
+			this.store$.dispatch(UpdateLayer({ layer: {...activeAnnotationLayer, data }}));
 			const featureId = this.getFeatureIdFromGeoJson(GeoJSON);
 			return featureId;
 		}),
@@ -218,7 +218,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 					};
 				}
 				geoJsonFeature.properties = { ...geoJsonFeature.properties, label };
-				this.store$.dispatch(new UpdateLayer({ id: layerToUpdate.id, data }));
+				this.store$.dispatch( UpdateLayer({ layer: {...layerToUpdate, data }}));
 			}
 		})
 	);

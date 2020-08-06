@@ -42,12 +42,10 @@ export const UpdateSelectedLayersIds = createAction(
 										props<{layerIds: string[]}>()
 );
 
-export class ErrorLoadingLayersAction implements Action {
-	type = LayersActionTypes.ERROR_LOADING_LAYERS;
-
-	constructor(public payload: string) {
-	}
-}
+export const ErrorLoadingLayersAction = createAction(
+	LayersActionTypes.ERROR_LOADING_LAYERS,
+	props<{error: string}>()
+);
 
 export const SetLayerSelection = createAction(
 									LayersActionTypes.SET_LAYER_SELECTION,

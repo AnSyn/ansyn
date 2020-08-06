@@ -14,7 +14,7 @@ describe('LayersReducer', () => {
 			layerPluginType: layerPluginTypeEnum.Annotations
 		};
 
-		let action: LayerCollectionLoadedAction = new LayerCollectionLoadedAction([staticLayer]);
+		let action = LayerCollectionLoadedAction({layers: [staticLayer]});
 
 		let result: ILayerState = LayersReducer(initialLayersState, action);
 		expect(result.ids).toEqual(['staticLayerId']);
@@ -45,7 +45,7 @@ describe('LayersReducer', () => {
 			ids: ['annotations', 'annotations1', 'staticLayerId', 'staticLayerId2']
 		};
 
-		let action = new ShowAllLayers(LayerType.annotation);
+		let action = ShowAllLayers({layerType: LayerType.annotation});
 		let result: ILayerState = LayersReducer(layersState, action);
 		['annotations', 'annotations1', 'staticLayerId2'].forEach((id) => {
 			expect(result.selectedLayersIds).toContain(id);

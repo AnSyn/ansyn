@@ -80,3 +80,4 @@ export { IMapSettings, IMapSettingsData, IWorldViewMapState } from './model/map-
 export { toDegrees, toRadians, getAngleDegreeBetweenPoints } from './utils/math';
 export { ExtentCalculator } from './utils/extent-calculator';
 export { ImageryComponent } from './imagery/imagery.component';
+export { getOpacityFromColor } from './utils/color-opacity-extractor';

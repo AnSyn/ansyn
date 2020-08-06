@@ -23,7 +23,7 @@ import {
 	IFetchParams
 } from '../../modules/overlays/models/base-overlay-source-provider.model';
 import { MultipleOverlaysSourceProvider } from '../../modules/overlays/services/multiple-source-provider';
-import { OverlaysConfig, OverlaysService } from '../../modules/overlays/services/overlays.service';
+import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { OverlaySourceProvider } from '../../modules/overlays/models/overlays-source-providers';
 import { DisplayOverlayAction } from '../../modules/overlays/actions/overlays.actions';
 import {
@@ -81,18 +81,15 @@ describe('StatusBarAppEffects', () => {
 			],
 			providers: [
 				{ provide: LoggerService, useValue: { error: (some) => null } },
-				OverlaysService,
+				{
+					provide: OverlaysService,
+					useValue: {}
+				},
 				StatusBarAppEffects,
 				provideMockActions(() => actions),
 				{ provide: CasesService, useValue: { updateCase: () => null, getOverlaysMarkup: () => null } },
 				ImageryCommunicatorService,
 				HttpBackend,
-				{
-					provide: OverlaysConfig,
-					useValue: {
-						'limit': 500
-					}
-				},
 				{ provide: MultipleOverlaysSourceProvider, useClass: OverlaySourceProviderMock },
 				{
 					provide: LoggerService, useValue: {

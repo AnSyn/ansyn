@@ -18,6 +18,11 @@ import {
 	IOverlaysFetchData,
 	IOverlaySpecialObject
 } from '../models/overlay.model';
+import {
+	IMultipleOverlaysSourceConfig,
+	MultipleOverlaysSourceConfig
+} from '../../core/models/multiple-overlays-source-config';
+import { IDataInputFilterValue } from '../../menu-items/cases/models/case.model';
 
 @OverlaySourceProvider({
 	sourceType: 'Mock'
@@ -120,6 +125,17 @@ describe('OverlaysService', () => {
 			filters: []
 		}
 	};
+	const multipleOverlaysSourceConfig: Partial<IMultipleOverlaysSourceConfig> = {
+		indexProviders: {
+			animals: {
+				whitelist: [],
+				blacklist: [],
+				sensorNamesByGroup: {
+					kipod: ["shmulik"]
+				}
+			}
+		}
+	}
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
@@ -128,6 +144,7 @@ describe('OverlaysService', () => {
 				{ provide: LoggerService, useValue: { error: (some) => null } },
 				// { provide: XHRBackend, useClass: MockBackend },
 				{ provide: OverlaysConfig, useValue: {} },
+				{ provide: MultipleOverlaysSourceConfig, useValue: multipleOverlaysSourceConfig },
 				{ provide: MultipleOverlaysSourceProvider, useClass: OverlaySourceProviderMock }
 			],
 			imports: [
@@ -344,4 +361,21 @@ describe('OverlaysService', () => {
 		});
 
 	});
+
+	describe('getSensorTypeAndProviderFromSensorName()', () => {
+		it('will find group and provider for sensor name', () => {
+			const sensorName = 'shmulik';
+			const expected: IDataInputFilterValue = {
+				providerName: 'animals',
+				sensorType: 'kipod'
+			};
+			const actual = overlaysService.getSensorTypeAndProviderFromSensorName(sensorName);
+			expect(actual).toEqual(expected);
+		});
+
+		it('will return falsy value if group and provider were not found', () => {
+			const actual = overlaysService.getSensorTypeAndProviderFromSensorName('muki');
+			expect(actual).toBeFalsy();
+		})
+	})
 });

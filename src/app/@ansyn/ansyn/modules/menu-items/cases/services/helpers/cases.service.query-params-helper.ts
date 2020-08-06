@@ -96,6 +96,8 @@ export class QueryParamsHelper {
 
 	encodeCaseObjects(key, value, caseState?: ICaseState) {
 		switch (key) {
+			case 'dataInputFilters':
+				return rison.encode(value);
 			case 'facets':
 				return rison.encode(value);
 			case 'time':

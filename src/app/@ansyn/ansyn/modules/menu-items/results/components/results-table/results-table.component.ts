@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Observable } from 'rxjs';
+import { Observable, fromEvent } from 'rxjs';
 import { IOverlayDrop } from '../../../../overlays/models/overlay.model';
 import { select, Store } from '@ngrx/store';
 import {
@@ -18,6 +18,7 @@ import {
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
 import { TranslateService } from '@ngx-translate/core';
+import { SetBadgeAction } from '@ansyn/menu';
 
 interface ITableHeader {
 	headerName: string;
@@ -73,6 +74,11 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	overlayIds: string[];
 
 	@ViewChild('table') table: ElementRef;
+
+	@AutoSubscription
+	onClickClearBadge$ = fromEvent(window, 'click').pipe(
+		tap(() => this.store$.dispatch(new SetBadgeAction({key: 'Results table', badge: undefined})))
+	);
 
 	@AutoSubscription
 	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, IMarkUpData>> = this.store$

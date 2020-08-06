@@ -179,10 +179,10 @@ export class OverlayStatusEffects {
 					let scannedAreaContainsExtentPolygon = false;
 					
 					scannedArea.coordinates.forEach(coordinates => {
-						let multyPolygon = JSON.parse(JSON.stringify(scannedArea));
-						multyPolygon.coordinates = [coordinates];
+						let multiPolygon = JSON.parse(JSON.stringify(scannedArea));
+						multiPolygon.coordinates = [coordinates];
 						
-						if (getPolygonIntersectionRatioWithMultiPolygon(position.extentPolygon, multyPolygon)) {
+						if (getPolygonIntersectionRatioWithMultiPolygon(position.extentPolygon, multiPolygon)) {
 							scannedAreaContainsExtentPolygon = true;
 						}
 					});
@@ -194,12 +194,10 @@ export class OverlayStatusEffects {
 					if (combinedResult === null) {
 						scannedArea = null;
 					}
-					else {
-						if (combinedResult.geometry.type === 'MultiPolygon') {
+					else if (combinedResult.geometry.type === 'MultiPolygon') {
 							scannedArea = combinedResult.geometry;
-						} else {	// polygon
-							scannedArea = geojsonPolygonToMultiPolygon(combinedResult.geometry);
-						}
+					} else {
+						scannedArea = geojsonPolygonToMultiPolygon(combinedResult.geometry);
 					}
 				} catch (e) {
 					console.error('failed to save scanned area', e);

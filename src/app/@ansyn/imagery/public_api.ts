@@ -12,6 +12,7 @@ export { IVisualizerEntity } from './model/visualizers/visualizers-entity';
 export { MarkerSize } from './model/visualizers/visualizer-style';
 export { IVisualizerStyle } from './model/visualizers/visualizer-style';
 export { IVisualizerStateStyle, VisualizerStates } from './model/visualizers/visualizer-state';
+export { IVisualizerAttributes } from './model/visualizers/visualizer-attributes';
 export { getInitialAnnotationsFeatureProperties, getInitialAnnotationsFeatureStyle, validateFeatureProperties } from './model/visualizers/initial-annotations-feature-properties';
 export { IMapProgress, IMapErrorMessage } from './model/map-progress.model';
 export {
@@ -79,3 +80,4 @@ export { IMAGERY_SLOW_ZOOM_FACTOR } from './model/imagery-zoom.model';
 export { IMapSettings, IMapSettingsData, IWorldViewMapState } from './model/map-settings';
 export { toDegrees, toRadians, getAngleDegreeBetweenPoints } from './utils/math';
 export { ExtentCalculator } from './utils/extent-calculator';
+export { getOpacityFromColor } from './utils/color-opacity-extractor';

@@ -96,6 +96,23 @@
 	</p>
 </div>
 
+<div *ngIf="isMetadataEnabled">
+	<button [class.active]="selectedTab[featureId] === Tabs.Metadata" (click)="selectTab(Tabs.Metadata)">
+		<i [attr.tooltip-value]="'Metadata' | translate" tooltip-class="bottom">
+			<svg class="metadata-icon" viewBox="0 0 1792 1792" overflow="visible">
+				<path [attr.d]="SVGICON.metadataSvg"></path>
+			</svg>
+		</i>
+	</button>
+
+	<ansyn-dynamic-metadata-form 
+		*ngIf="selectedTab[featureId] === Tabs.Metadata" 
+		class="metadata-form" 
+		[attributes]="attributes$ | async" 
+		(onSubmit)="onMetadataFormSubmit($event)"
+	></ansyn-dynamic-metadata-form>
+</div>
+
 <div *ngIf="!featureProps?.undeletable">
 	<button class='removeFeature' (click)="removeFeature()"
 			[class.disabled]="isFeatureNonEditable"

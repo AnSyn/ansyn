@@ -7,7 +7,6 @@ import {
 	ImageryMapPosition,
 	IMapSettings,
 	unifyPolygons,
-	geojsonMultiPolygonToFirstPolygon,
 	getPolygonIntersectionRatioWithMultiPolygon
 } from '@ansyn/imagery';
 import {
@@ -52,7 +51,7 @@ import {
 	selectTranslationData
 } from '../reducers/overlay-status.reducer';
 import { IOverlay } from '../../models/overlay.model';
-import { feature, difference, booleanContains } from '@turf/turf';
+import { feature, difference } from '@turf/turf';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from '../config/overlay-status-config';
 import { isEqual } from "lodash";
@@ -179,15 +178,14 @@ export class OverlayStatusEffects {
 					let combinedResult = unifyPolygons(featurePolygons);
 					let scannedAreaContainsExtentPolygon = false;
 					
-					for (let index = 0; index < scannedArea.coordinates.length; index++) {
-						let copyOfScannedArea = JSON.parse(JSON.stringify(scannedArea));
-						copyOfScannedArea.coordinates = [];
-						copyOfScannedArea.coordinates[0] = JSON.parse(JSON.stringify(scannedArea.coordinates[index]));
-
-						if (getPolygonIntersectionRatioWithMultiPolygon(position.extentPolygon, copyOfScannedArea)) {
+					scannedArea.coordinates.forEach(coordinates => {
+						let multyPolygon = JSON.parse(JSON.stringify(scannedArea));
+						multyPolygon.coordinates = [coordinates];
+						
+						if (getPolygonIntersectionRatioWithMultiPolygon(position.extentPolygon, multyPolygon)) {
 							scannedAreaContainsExtentPolygon = true;
 						}
-					}
+					});
 
 					if (scannedAreaContainsExtentPolygon) {
 						combinedResult = difference(combinedResult, position.extentPolygon);

@@ -38,6 +38,7 @@ import { IOLPluginsConfig, OL_PLUGINS_CONFIG } from '../plugins.config';
 import { AnnotationMode, IAnnotationBoundingRect, IDrawEndEvent } from './annotations.model';
 import { DragPixelsInteraction } from './dragPixelsInteraction';
 import { TranslateService } from '@ngx-translate/core';
+import { validateFeatureProperties } from './feature-properties-validation';
 
 export interface ILabelTranslateMode {
 	originalFeature: olFeature,
@@ -194,37 +195,16 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
 		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => {
-			const featureJson = this.validateFeatureProperties(feature);
+			const featureJson = validateFeatureProperties(feature);
 			featureJson.properties.featureJson = undefined;
 			return {
-				featureJson,
 				id: feature.properties.id,
-				style: feature.properties.style || this.visualizerStyle,
-				showMeasures: feature.properties.showMeasures || false,
-				showArea: feature.properties.showArea || false,
-				label: feature.properties.label || { text: '', geometry: null },
-				icon: feature.properties.icon || '',
-				undeletable: feature.properties.undeletable || false,
-				labelSize: feature.properties.labelSize || 28,
-				labelTranslateOn: feature.properties.labelTranslateOn || false
+				...featureJson.properties,
+				featureJson
 			};
 		});
 	}
 
-	validateFeatureProperties(feature: Feature<any>): Feature<any> {
-		const featureJson = cloneDeep(feature);
-		featureJson.properties = {
-			...getInitialAnnotationsFeatureProperties(),
-			...featureJson.properties,
-			style: {
-				...getInitialAnnotationsFeatureProperties().style,
-				...featureJson.properties.style
-
-			}
-		}
-
-		return featureJson;
-	}
 
 	setMode(mode, forceBroadcast: boolean) {
 		if (this.mode !== mode) {

@@ -111,7 +111,8 @@ export class QueryParamsHelper {
 		let encodedValue;
 		switch (key) {
 			case 'dataInputFilters':
-				return rison.encode(value);
+				encodedValue = rison.encode(value);
+				break;
 			case 'facets':
 				const compressedFacets = this.casesService.queryCompressorService.compressFacets(value);
 				encodedValue = rison.encode(compressedFacets);
@@ -167,26 +168,26 @@ export class QueryParamsHelper {
 
 
 	decodeCaseObjects(key, value) {
-		const decodedValue = this.rot13(value);
+		const decryptedValue = this.rot13(value);
 		switch (key) {
 			case 'region':
-				return wellknown.parse(decodedValue);
+				return wellknown.parse(decryptedValue);
 			case 'facets':
-				return this.casesService.queryCompressorService.decompressFacets(rison.decode(decodedValue));
+				return this.casesService.queryCompressorService.decompressFacets(rison.decode(decryptedValue));
 			case 'maps':
-				return this.casesService.queryCompressorService.decompressMapData(rison.decode(decodedValue));
+				return this.casesService.queryCompressorService.decompressMapData(rison.decode(decryptedValue));
 			case 'overlaysManualProcessArgs':
-				const decodedData = rison.decode(decodedValue);
+				const decodedData = rison.decode(decryptedValue);
 				const keys = Object.keys(decodedData);
 				keys.forEach((overlayId) => {
 					decodedData[overlayId] = this.casesService.queryCompressorService.decompressManualImageProcessingData(decodedData[overlayId]);
 				});
 				return decodedData;
 			case 'layers':
-				const selectedLayersIds = rison.decode(decodedValue);
+				const selectedLayersIds = rison.decode(decryptedValue);
 				return { activeLayersIds: selectedLayersIds };
 			default:
-				return rison.decode(decodedValue);
+				return rison.decode(decryptedValue);
 		}
 	}
 }

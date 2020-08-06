@@ -21,6 +21,7 @@ export class StayInImageryService implements OnDestroy {
 	}
 
 	ngOnDestroy(): void {
+		console.log('on destroy');
 		if (this.timerId) {
 			window.clearInterval(this.timerId);
 		}

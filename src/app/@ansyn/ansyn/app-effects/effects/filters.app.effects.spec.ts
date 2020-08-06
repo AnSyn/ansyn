@@ -41,7 +41,6 @@ import { FilterType } from '../../modules/filters/models/filter-type';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { TranslateModule } from '@ngx-translate/core';
 import { LoggerService } from '../../modules/core/services/logger.service';
-import { SetHideResultsTableBadgeAction } from '../../../menu/actions/menu.actions';
 import { EnumFilterCounters } from '../../modules/filters/models/counters/enum-filter-counters';
 import { FilterCounters } from '../../modules/filters/models/counters/filter-counters.interface';
 import { SliderFilterCounters } from '../../modules/filters/models/counters/slider-filter-counters';
@@ -110,10 +109,9 @@ describe('Filters app effects', () => {
 			filtersMetadata: new Map(),
 			filtersCounters: new Map()
 		}));
-		const expectedResults = cold('(bcd)', {
+		const expectedResults = cold('(bc)', {
 			b: new SetFilteredOverlaysAction([]),
 			c: new SetOverlaysStatusMessageAction(overlaysStatusMessages.noOverLayMatchFilters),
-			d: new SetHideResultsTableBadgeAction(false)
 		});
 
 		expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);

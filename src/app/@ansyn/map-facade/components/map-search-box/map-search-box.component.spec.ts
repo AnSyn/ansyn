@@ -5,10 +5,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { GeocoderService } from '../../services/geocoder.service';
 import { asyncData } from '../../test/async-observable-helpers';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { MatAutocompleteModule, MatInputModule } from '@angular/material';
+import { TranslateModule } from '@ngx-translate/core';
 import { StoreModule } from "@ngrx/store";
 import { mapFeatureKey, MapReducer } from "../../reducers/map.reducer";
+import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 describe('MapSearchBoxComponent', () => {

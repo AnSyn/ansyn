@@ -1,5 +1,4 @@
 import {
-	AddMenuItemAction,
 	ContainerChangedTriggerAction, MenuConfig,
 	menuFeatureKey,
 	MenuReducer,
@@ -9,11 +8,11 @@ import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/re
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
-import { RemovePendingOverlayAction, UpdateMapSizeAction } from '@ansyn/map-facade';
+import { UpdateMapSizeAction } from '@ansyn/map-facade';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { DisplayOverlaySuccessAction, RedrawTimelineAction } from '../../modules/overlays/actions/overlays.actions';
+import { RedrawTimelineAction } from '../../modules/overlays/actions/overlays.actions';
 import { ResetAppAction } from '../../../menu/actions/menu.actions';
 import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
@@ -46,20 +45,6 @@ describe('MenuAppEffects', () => {
 
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
-		store.dispatch(new AddMenuItemAction({
-			name: 'Cases',
-			component: null,
-			iconClass: null
-
-		}));
-		store.dispatch(new AddMenuItemAction({
-			name: 'Shmases',
-			component: null,
-			iconClass: null
-
-		}));
-		store.dispatch(new SelectMenuItemAction({ menuKey: 'Cases' }));
-
 	}));
 
 	it('onContainerChanged$ effect should dispatch UpdateMapSizeAction and RedrawTimelineAction', () => {

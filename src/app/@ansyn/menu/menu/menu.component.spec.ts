@@ -12,6 +12,7 @@ import {
 import { MenuConfig } from '../models/menuConfig';
 import { IMenuItem } from '../models/menu-item.model';
 import { TranslateModule } from '@ngx-translate/core';
+import { MENU_ITEMS } from '../helpers/menu-item-token';
 
 describe('MenuComponent', () => {
 	let menuComponent: MenuComponent;
@@ -23,7 +24,7 @@ describe('MenuComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [BrowserAnimationsModule, StoreModule.forRoot({ [menuFeatureKey]: MenuReducer }), TranslateModule.forRoot()],
 			declarations: [MenuComponent],
-			providers: [{ provide: MenuConfig, useValue: {} }]
+			providers: [{ provide: MenuConfig, useValue: {}}, {provide: MENU_ITEMS, useValue: [[]]}]
 		}).compileComponents();
 	}));
 
@@ -123,9 +124,10 @@ describe('MenuComponent', () => {
 	});
 
 	it('hideBadge should check if badge need to be hidden', () => {
-		expect(menuComponent.hideBadge('')).toBeTruthy();
-		expect(menuComponent.hideBadge('0')).toBeTruthy();
+		expect(menuComponent.hideBadge(undefined)).toBeTruthy();
 		expect(menuComponent.hideBadge('str')).toBeTruthy();
+		expect(menuComponent.hideBadge('')).toBeFalsy();
+		expect(menuComponent.hideBadge('0')).toBeFalsy();
 		expect(menuComponent.hideBadge('1')).toBeFalsy();
 		expect(menuComponent.hideBadge('★')).toBeFalsy();
 	});

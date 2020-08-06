@@ -181,7 +181,7 @@ export class OverlayStatusEffects {
 					scannedArea.coordinates.forEach(coordinates => {
 						let multiPolygon = JSON.parse(JSON.stringify(scannedArea));
 						multiPolygon.coordinates = [coordinates];
-
+						
 						if (getPolygonIntersectionRatioWithMultiPolygon(position.extentPolygon, multiPolygon)) {
 							scannedAreaContainsExtentPolygon = true;
 						}

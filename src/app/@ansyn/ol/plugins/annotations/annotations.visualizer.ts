@@ -5,7 +5,7 @@ import {
 	MarkerSize,
 	VisualizerInteractions,
 	VisualizerStates,
-	getInitialAnnotationsFeatureProperties
+	validateFeatureProperties
 } from '@ansyn/imagery';
 import { UUID } from 'angular2-uuid';
 import { AutoSubscription } from 'auto-subscriptions';
@@ -38,7 +38,6 @@ import { IOLPluginsConfig, OL_PLUGINS_CONFIG } from '../plugins.config';
 import { AnnotationMode, IAnnotationBoundingRect, IDrawEndEvent } from './annotations.model';
 import { DragPixelsInteraction } from './dragPixelsInteraction';
 import { TranslateService } from '@ngx-translate/core';
-import { validateFeatureProperties } from './feature-properties-validation';
 
 export interface ILabelTranslateMode {
 	originalFeature: olFeature,
@@ -204,7 +203,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			};
 		});
 	}
-
 
 	setMode(mode, forceBroadcast: boolean) {
 		if (this.mode !== mode) {

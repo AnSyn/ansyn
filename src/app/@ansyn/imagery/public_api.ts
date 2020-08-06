@@ -12,7 +12,7 @@ export { IVisualizerEntity } from './model/visualizers/visualizers-entity';
 export { MarkerSize } from './model/visualizers/visualizer-style';
 export { IVisualizerStyle } from './model/visualizers/visualizer-style';
 export { IVisualizerStateStyle, VisualizerStates } from './model/visualizers/visualizer-state';
-export { getInitialAnnotationsFeatureProperties, getInitialAnnotationsFeatureStyle } from './model/visualizers/initial-annotations-feature-properties';
+export { getInitialAnnotationsFeatureProperties, getInitialAnnotationsFeatureStyle, validateFeatureProperties } from './model/visualizers/initial-annotations-feature-properties';
 export { IMapProgress, IMapErrorMessage } from './model/map-progress.model';
 export {
 	IMapProviderConfig,

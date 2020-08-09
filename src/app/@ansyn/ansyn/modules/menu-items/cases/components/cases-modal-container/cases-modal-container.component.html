@@ -1,2 +1,13 @@
-<div *ngIf="show$ | async" class="blackscreen" (click)="close()" [@blackScreen]></div>
-<ng-template #modalContent></ng-template>
+<div *ngIf="modal.show " class="blackscreen" (click)="close()" [@blackScreen]></div>
+<div
+	[ngSwitch]="modal.type">
+	<ansyn-edit-case
+		[caseId]="modal.id"
+		*ngSwitchCase="'edit'"></ansyn-edit-case>
+	<ansyn-delete-case
+		[caseId]="modal.id"
+		*ngSwitchCase="'delete'"></ansyn-delete-case>
+	<ansyn-save-case
+		*ngSwitchCase="'save'"></ansyn-save-case>
+	<ng-template *ngSwitchDefaultCase></ng-template>
+</div>

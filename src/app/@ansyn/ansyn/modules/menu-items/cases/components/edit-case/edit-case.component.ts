@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnInit } from '@angular/core';
+import { Component, HostBinding, OnInit, OnDestroy } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Store } from '@ngrx/store';
 import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
@@ -6,8 +6,9 @@ import { Observable, of } from 'rxjs';
 import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
 import { cloneDeep } from 'lodash';
 import { CasesService } from '../../services/cases.service';
-import { map, take } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
 import { ICase, ICasePreview } from '../../models/case.model';
+import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
 
 const animationsDuring = '0.2s';
 
@@ -30,20 +31,23 @@ const animations: any[] = [
 	styleUrls: ['./edit-case.component.less'],
 	animations
 })
-
-export class EditCaseComponent implements OnInit {
-	@HostBinding('@modalContent')
-	get modalContent() {
-		return true;
-	};
+@AutoSubscriptions()
+export class EditCaseComponent implements OnInit, OnDestroy {
+	@HostBinding('@modalContent') readonly modalContent = true;
 
 	casesState$: Observable<ICasesState> = this.store.select(casesStateSelector);
 
-	activeCase$: Observable<ICase> = this.casesState$
-		.pipe(map(this.getCloneActiveCase.bind(this)));
+	@AutoSubscription
+	activeCase$: Observable<ICase> = this.casesState$.pipe(
+		map(this.getCloneActiveCase.bind(this)),
+		tap( (activeCase: ICase) => this.caseModel = activeCase)
 
+	);
+
+	@AutoSubscription
 	contextsList$: Observable<any[]> = of([]).pipe(
-		map(this.addDefaultContext)
+		map(this.addDefaultContext),
+		tap( (contextList) => this.contextsList = contextList)
 	);
 
 	contextsList: any[];
@@ -104,14 +108,9 @@ export class EditCaseComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+	}
 
-		this.activeCase$.pipe(take(1)).subscribe((activeCase: ICase) => {
-			this.caseModel = activeCase;
-		});
-
-		this.contextsList$.subscribe((_contextsList: any[]) => {
-			this.contextsList = _contextsList;
-		});
+	ngOnDestroy(): void {
 	}
 
 	close(): void {

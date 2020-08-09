@@ -22,7 +22,7 @@ import {
 	UpdateCaseBackendSuccessAction
 } from '../actions/cases.actions';
 import { casesConfig, CasesService } from '../services/cases.service';
-import { casesStateSelector, ICasesState, selectCaseTotal } from '../reducers/cases.reducer';
+import { casesStateSelector, ICasesState, selectCaseTotal, selectSelectedCase } from '../reducers/cases.reducer';
 import { ICasesConfig } from '../models/cases-config';
 import {
 	catchError,
@@ -117,15 +117,6 @@ export class CasesEffects {
 
 			})
 		);
-
-	@Effect({ dispatch: false })
-	openModal$: Observable<any> = this.actions$.pipe(
-		ofType(CasesActionTypes.OPEN_MODAL));
-
-	@Effect({ dispatch: false })
-	closeModal$: Observable<any> = this.actions$.pipe(
-		ofType(CasesActionTypes.CLOSE_MODAL)
-	);
 
 	@Effect()
 	loadDefaultCase$: Observable<SelectDilutedCaseAction> = this.actions$.pipe(

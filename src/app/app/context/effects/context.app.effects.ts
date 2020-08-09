@@ -3,8 +3,8 @@ import { Observable } from 'rxjs';
 import {
 	CasesActionTypes,
 	CasesService,
-	ICaseDataInputFiltersState,
-	LoadDefaultCaseAction,
+	ICaseDataInputFiltersState, IDataInputFilterValue,
+	LoadDefaultCaseAction, OverlaysService, rxPreventCrash,
 	SelectCaseAction
 } from '@ansyn/ansyn';
 import { Actions, Effect, ofType } from '@ngrx/effects';
@@ -14,6 +14,7 @@ import { selectActiveMapId, SetToastMessageAction } from '@ansyn/map-facade';
 import { ContextName, RequiredContextParams } from '../models/context.config';
 import { TranslateService } from '@ngx-translate/core';
 import { Auth0Service } from '../../imisight/auth0.service';
+import { uniq } from 'lodash';
 
 const CONTEXT_TOAST = {
 	paramsError: 'params: {0} is require in {1} context',
@@ -29,14 +30,17 @@ export class ContextAppEffects {
 		ofType<LoadDefaultCaseAction>(CasesActionTypes.LOAD_DEFAULT_CASE),
 		filter((action: LoadDefaultCaseAction) => action.payload.context),
 		withLatestFrom(this.store.select(selectActiveMapId)),
-		mergeMap(this.parseContextParams.bind(this))
+		mergeMap(this.parseContextParams.bind(this)),
+		rxPreventCrash()
 	);
 
 	constructor(protected actions$: Actions,
 				protected store: Store<any>,
 				protected casesService: CasesService,
 				protected translateService: TranslateService,
-				protected auth0Service: Auth0Service) {
+				protected auth0Service: Auth0Service,
+				protected overlaysService: OverlaysService
+	) {
 	}
 
 	get defaultTime() {
@@ -105,10 +109,14 @@ export class ContextAppEffects {
 	}
 
 	private parseSensorParams(sensors): ICaseDataInputFiltersState {
+		const sensorsArray = sensors.split(',');
+		const filters: IDataInputFilterValue[] = uniq(sensorsArray
+				.map(this.overlaysService.getSensorTypeAndProviderFromSensorName.bind(this.overlaysService))
+				.filter(Boolean));
 		return {
-			filters: [],
-			fullyChecked: true,
-			customFiltersSensor: sensors.split(',')
+			filters,
+			fullyChecked: filters.length === 0,
+			customFiltersSensor: sensorsArray
 		}
 	}
 

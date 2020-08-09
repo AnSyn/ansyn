@@ -133,7 +133,10 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 		this.store$.select(selectIsMeasureToolActive),
 		this.onHiddenStateChanged).pipe(
 		distinctUntilChanged(),
-		filter(([activeMapId, measureData, isMeasureToolActive]) => !this.isHidden && Boolean(measureData)),
+		// filter() update - checking isMeasureToolActive: if the measures layer is
+		// hidden, we still want to proceed if the measure tool changed to inactive,
+		// in order to cancel cursor style and interactions.
+		filter(([activeMapId, measureData, isMeasureToolActive]) => (!this.isHidden || !isMeasureToolActive) && Boolean(measureData)),
 		tap(([activeMapId, measureData, isMeasureToolActive]) => {
 			this.measureData = measureData;
 			if (!measureData.isLayerShowed) {

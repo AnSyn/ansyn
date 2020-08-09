@@ -1,4 +1,4 @@
-import { Polygon } from 'geojson';
+import { Polygon, Position } from 'geojson';
 
 export type ImageryMapExtent = [number, number, number, number];
 
@@ -15,6 +15,19 @@ export interface ImageryMapProjectedState {
 	cameraPosition?: any;
 }
 
+export interface ICompressedImageryMapProjectedState {
+	p: {
+		c: any;
+	};
+	c?: any;
+	re?: number;
+	ro?: number;
+	pi?: number;
+	rol?: number;
+	z?: number;
+	ca?: any;
+}
+
 export interface IMousePointerMove {
 	lat: number;
 	long: number;
@@ -23,9 +36,20 @@ export interface IMousePointerMove {
 
 export type ImageryMapExtentPolygon = Polygon;
 
+export interface ICompressedImageryMapExtentPolygon {
+	c?: string;
+	t?: Position[][];
+}
+
 export interface ImageryMapPosition {
 	projectedState?: ImageryMapProjectedState;
 	extentPolygon?: ImageryMapExtentPolygon;
 	customResolution?: number;
+}
+
+export interface ICompressedImageryMapPosition {
+	p?: ICompressedImageryMapProjectedState;
+	e?: ICompressedImageryMapExtentPolygon;
+	c?: number;
 }
 

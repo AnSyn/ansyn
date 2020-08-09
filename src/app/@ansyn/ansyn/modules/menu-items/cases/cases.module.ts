@@ -17,6 +17,7 @@ import { casesFeatureKey, CasesReducer } from './reducers/cases.reducer';
 import { CasesAutoSaveComponent } from './components/cases-auto-save/cases-auto-save.component';
 import { CoreModule } from '../../core/core.module';
 import { MapFacadeModule } from '@ansyn/map-facade';
+import { QueryCompressorService } from './services/helpers/query-compresser-service.service';
 
 // @dynamic
 @NgModule({
@@ -37,6 +38,7 @@ export class CasesModule {
 		return {
 			ngModule: CasesModule,
 			providers: [
+				QueryCompressorService,
 				CasesService,
 				{ provide: casesConfig, useValue: config }
 			]

@@ -36,6 +36,7 @@
 	</button>
 
 	<button class="small-icon-button perspective"
+			[disabled]="noGeoRegistration"
 			(click)="toggleImageryPerspective()"
 			[attr.tooltip-value]="orientation | translate"
 			tooltip-class="bottom right">

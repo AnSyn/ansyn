@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { selectPresetOverlays } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
+import {
+	selectPresetOverlays
+} from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../app.effects.module';
 import { casesStateSelector, ICasesState } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import {
@@ -48,13 +50,17 @@ export class StatusBarAppEffects {
 	onAdjacentOverlay$: Observable<any> = this.actions$.pipe(
 		ofType<GoAdjacentOverlay>(StatusBarActionsTypes.GO_ADJACENT_OVERLAY),
 		withLatestFrom(this.store.select(selectOverlayOfActiveMap)),
-		filter(( [action, overlay] ) => Boolean(overlay)),
-		withLatestFrom(this.store.select(selectDropsAscending), ([ action, {id: overlayId} ], drops: IOverlayDrop[]): IOverlayDrop => {
+		filter(([action, overlay]) => Boolean(overlay)),
+		withLatestFrom(this.store.select(selectDropsAscending), ([action, { id: overlayId }], drops: IOverlayDrop[]): IOverlayDrop => {
 			if (Boolean(drops.length)) {
-				const index = drops.findIndex(({ id }) => id === overlayId);
 				const isNextOverlay = action.payload.isNext;
 				const adjacent = isNextOverlay ? 1 : -1;
-				return drops[index + adjacent];
+				const index = drops.findIndex(({ id }) => id === overlayId);
+				if (index >= 0) {
+					return drops[index + adjacent];
+				}
+
+				return adjacent > 0 ? drops[drops.length - 1] : drops[0];
 			}
 		}),
 		filter(Boolean),
@@ -113,7 +119,7 @@ export class StatusBarAppEffects {
 		ofType<UpdateGeoFilterStatus>(StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS),
 		filter(action => action.payload === undefined),
 		withLatestFrom(this.store.select(selectRegion)),
-		map( ([action , {type}]) => new UpdateGeoFilterStatus({type, active: false}))
+		map(([action, { type }]) => new UpdateGeoFilterStatus({ type, active: false }))
 	);
 
 	constructor(protected actions$: Actions,

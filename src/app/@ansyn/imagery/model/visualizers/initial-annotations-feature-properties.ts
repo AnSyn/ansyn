@@ -57,6 +57,7 @@ export function validateFeatureProperties(feature: Feature<any>): Feature<any> {
 	const { opacity, initial } = !!style ? style :  { opacity: null, initial: null };
 
 	featureJson.properties = {
+		... featureJson.properties,
 		id: (!!id && typeof id === 'string') ? id : defaultProperties.id,
 		labelSize: (!!labelSize && typeof labelSize === 'number') ? labelSize : defaultProperties.labelSize,
 		icon: (!!icon && typeof icon === 'string') ? icon : defaultProperties.icon,

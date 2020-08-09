@@ -1,9 +1,8 @@
-import { IStartAndEndDate } from '../models/base-overlay-source-provider.model';
 import { Inject, Injectable } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
 import { IOverlayDropSources, ITimelineRange, selectOverlaysMap } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
-import { unionBy } from 'lodash';
+import { unionBy, findKey } from 'lodash';
 import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs/operators';
@@ -11,6 +10,11 @@ import { selectFavoriteOverlays } from '../overlay-status/reducers/overlay-statu
 import { sortByDateDesc } from '../../core/utils/sorting';
 import { mapValuesToArray } from '../../core/utils/misc';
 import { IOverlay, IOverlayDrop, IOverlaysCriteria, IOverlaysFetchData } from '../models/overlay.model';
+import {
+	IMultipleOverlaysSourceConfig,
+	MultipleOverlaysSourceConfig
+} from '../../core/models/multiple-overlays-source-config';
+import { IDataInputFilterValue } from '../../menu-items/cases/models/case.model';
 
 export const OverlaysConfig = 'overlaysConfig';
 
@@ -73,6 +77,7 @@ export class OverlaysService {
 	}
 
 	constructor(@Inject(OverlaysConfig) public config: IOverlaysConfig,
+				@Inject(MultipleOverlaysSourceConfig) protected multipleOverlays: IMultipleOverlaysSourceConfig,
 				protected _overlaySourceProvider: MultipleOverlaysSourceProvider,
 				protected store$: Store<any>) {
 	}
@@ -86,7 +91,8 @@ export class OverlaysService {
 			timeRange: <any>{
 				start: params.time.from,
 				end: params.time.to
-			}
+			},
+			customSensorToFilter: params.dataInputFilters.customFiltersSensor
 		});
 	}
 
@@ -147,5 +153,23 @@ export class OverlaysService {
 
 	getThumbnailName(overlay): string {
 		return this._overlaySourceProvider.getThumbnailName(overlay)
+	}
+
+	getSensorTypeAndProviderFromSensorName(sensorName: string): IDataInputFilterValue {
+		if (!(this.multipleOverlays && this.multipleOverlays.indexProviders instanceof Object)) {
+			return;
+		}
+		let sensorType: string;
+		const providerName = findKey(this.multipleOverlays.indexProviders, (provider) => {
+			sensorType = findKey(provider.sensorNamesByGroup, (group) => group.includes(sensorName));
+			return Boolean(sensorType);
+		});
+		if (providerName) {
+			const result: IDataInputFilterValue = {
+				providerName,
+				sensorType
+			};
+			return result;
+		}
 	}
 }

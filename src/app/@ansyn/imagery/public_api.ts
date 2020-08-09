@@ -1,10 +1,17 @@
-export { MapOrientation } from "./model/map-settings";
+export {
+	MapOrientation,
+	ICompressedMapSettings,
+	ICompressedMapSettingsData,
+	IMapSettings,
+	IMapSettingsData,
+	IWorldViewMapState
+} from "./model/map-settings";
 export { IMapSource } from './model/map-providers-config';
 export { IStroke, IIcon } from './model/visualizers/visualizer-style';
 export { ICanvasExportData } from './model/base-imagery-map';
 export {
 	ImageryMapExtent, ImageryMapExtentPolygon, ImageryMapProjectedState, ImageryMapPosition, IMousePointerMove
-}from './model/case-map-position.model';
+} from './model/case-map-position.model';
 
 export { MAP_SOURCE_PROVIDERS_CONFIG, IMapSourceProvidersConfig } from './model/base-map-source-provider';
 export { MarkerSizeDic } from './model/visualizers/visualizer-style';
@@ -13,6 +20,7 @@ export { MarkerSize } from './model/visualizers/visualizer-style';
 export { IVisualizerStyle } from './model/visualizers/visualizer-style';
 export { IVisualizerStateStyle } from './model/visualizers/visualizer-state';
 export { VisualizerStates } from './model/visualizers/visualizer-state';
+export { IVisualizerAttributes } from './model/visualizers/visualizer-attributes';
 export { IMapProgress, IMapErrorMessage } from './model/map-progress.model';
 export {
 	IMapProviderConfig,
@@ -43,6 +51,7 @@ export {
 	getPolygonByPointAndRadius,
 	getPolygonByBufferRadius,
 	getPolygonIntersectionRatio,
+	getPolygonIntersectionRatioWithMultiPolygon,
 	polygonsDontIntersect,
 	isPointContainedInGeometry,
 	unifyPolygons,
@@ -74,8 +83,10 @@ export { ProjectionService } from './projection-service/projection.service';
 export { StayInImageryService } from './stay-in-imagery-service/stay-in-imagery.service';
 export { ImageryModule } from './imagery.module';
 export { IMAGERY_CONFIG } from './model/configuration.token';
-export { IBaseImageryLayer, ImageryLayerProperties, IMAGERY_MAIN_LAYER_NAME, IMAGERY_BASE_MAP_LAYER } from './model/imagery-layer.model';
-
-export { IMapSettings, IMapSettingsData, IWorldViewMapState } from './model/map-settings';
+export {
+	IBaseImageryLayer, ImageryLayerProperties, IMAGERY_MAIN_LAYER_NAME, IMAGERY_BASE_MAP_LAYER
+} from './model/imagery-layer.model';
+export { IMAGERY_SLOW_ZOOM_FACTOR } from './model/imagery-zoom.model';
 export { toDegrees, toRadians, getAngleDegreeBetweenPoints } from './utils/math';
 export { ExtentCalculator } from './utils/extent-calculator';
+export { getOpacityFromColor } from './utils/color-opacity-extractor';

@@ -59,8 +59,10 @@ export const MapActionTypes = {
 		ACTIVE_IMAGERY_MOUSE_LEAVE: 'ACTIVE_IMAGERY_MOUSE_LEAVE',
 		CONTEXT_MENU: 'CONTEXT_MENU',
 		PIN_LOCATION_MODE: 'PIN_LOCATION_MODE',
-		CLICK_OUTSIDE_MAP: 'CLICK_OUTSIDE_MAP'
+		CLICK_OUTSIDE_MAP: 'CLICK_OUTSIDE_MAP',
 	},
+	MAP_SEARCH_BOX_TRIGGER: 'MAP_SEARCH_BOX_TRIGGER',
+	SET_ACTIVE_CENTER_TRIGGER: 'SET_ACTIVE_CENTER_TRIGGER',
 	SET_PENDING_MAPS_COUNT: 'SET_PENDING_MAPS_COUNT',
 	DECREASE_PENDING_MAPS_COUNT: 'DECREASE_PENDING_MAPS_COUNT',
 	SET_PENDING_OVERLAYS: 'SET_PENDING_OVERLAYS',
@@ -178,6 +180,21 @@ export class ContextMenuTriggerAction implements Action {
 	constructor(public payload: Position) {
 	}
 }
+
+export class SetActiveCenterTriggerAction implements Action {
+	type = MapActionTypes.SET_ACTIVE_CENTER_TRIGGER;
+
+	constructor(public payload: number[]) {
+	}
+}
+
+export class SetMapSearchBoxTriggerAction implements Action {
+	type = MapActionTypes.MAP_SEARCH_BOX_TRIGGER;
+
+	constructor(public payload: boolean) {
+	}
+}
+
 
 export class ContextMenuShowAction implements Action {
 	type = MapActionTypes.CONTEXT_MENU.SHOW;

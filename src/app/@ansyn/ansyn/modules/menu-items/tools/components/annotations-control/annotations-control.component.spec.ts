@@ -95,7 +95,17 @@ describe('AnnotationsControlComponent', () => {
 		const strokeColor = 'white';
 		component.colorChange([{ event: strokeColor, label: 'stroke' }]);
 		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties({
-			'stroke': strokeColor
+			'stroke': strokeColor,
+			'stroke-opacity': 1
+		}));
+	});
+
+	it('change stroke color as rgba', () => {
+		const strokeColor = 'rgba(0,0,0,0.8)';
+		component.colorChange([{ event: strokeColor, label: 'stroke' }]);
+		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties({
+			'stroke': strokeColor,
+			'stroke-opacity': 0.8
 		}));
 	});
 
@@ -104,6 +114,17 @@ describe('AnnotationsControlComponent', () => {
 		component.colorChange([{ event: fill, label: 'fill' }, { event: fill, label: 'marker-color' }]);
 		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties({
 			fill,
+			'fill-opacity': 1,
+			'marker-color': fill
+		}));
+	});
+
+	it('change fill color as rgba', () => {
+		const fill = 'rgba(0,0,0,0.8)';
+		component.colorChange([{ event: fill, label: 'fill' }, { event: fill, label: 'marker-color' }]);
+		expect(store.dispatch).toHaveBeenCalledWith(new AnnotationSetProperties({
+			fill,
+			'fill-opacity': 0.8,
 			'marker-color': fill
 		}));
 	});

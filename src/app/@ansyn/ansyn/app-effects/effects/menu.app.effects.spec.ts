@@ -9,14 +9,16 @@ import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/re
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
-import { RemovePendingOverlayAction, UpdateMapSizeAction } from '@ansyn/map-facade';
+import { RemovePendingOverlayAction, UpdateMapSizeAction, ToggleFooter } from '@ansyn/map-facade';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { DisplayOverlaySuccessAction, RedrawTimelineAction } from '../../modules/overlays/actions/overlays.actions';
-import { ResetAppAction } from '../../../menu/actions/menu.actions';
+import { ResetAppAction, ToggleIsPinnedAction, UnSelectMenuItemAction } from '../../../menu/actions/menu.actions';
 import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
+import { ShowOverlaysFootprintAction, StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
+import { initialAnnotationProperties } from '../../modules/menu-items/tools/reducers/tools.reducer';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
@@ -71,8 +73,14 @@ describe('MenuAppEffects', () => {
 		actions = hot('--a--', {
 			a: new ResetAppAction()
 		});
-		const expectedResults = cold('--b--', {
-			b: new LoadDefaultCaseAction()
+		const expectedResults = cold('--(bcdefgh)--', {
+			b: new LoadDefaultCaseAction(),
+			c: new ShowOverlaysFootprintAction('None'),
+			d: new StartMouseShadow({fromUser: true}),
+			e: new AnnotationSetProperties(initialAnnotationProperties),
+			f: new ToggleIsPinnedAction(false),
+			g: new UnSelectMenuItemAction(),
+			h: new ToggleFooter(false)
 		});
 		expect(menuAppEffects.onResetApp$).toBeObservable(expectedResults);
 	});

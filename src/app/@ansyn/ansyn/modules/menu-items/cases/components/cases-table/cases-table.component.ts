@@ -3,7 +3,6 @@ import { DeleteCaseComponent } from '../delete-case/delete-case.component';
 import { EditCaseComponent } from '../edit-case/edit-case.component';
 import { Store } from '@ngrx/store';
 import { CopyCaseLinkAction, LoadCaseAction, LoadCasesAction, OpenModalAction } from '../../actions/cases.actions';
-import { getTimeFormat } from '@ansyn/map-facade';
 import { CasesEffects } from '../../effects/cases.effects';
 import { Observable } from 'rxjs';
 import {
@@ -112,10 +111,6 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 		if (this.selectedCaseId !== caseId) {
 			this.store$.dispatch(new LoadCaseAction(caseId));
 		}
-	}
-
-	formatTime(timeToFormat: Date): string {
-		return getTimeFormat(timeToFormat);
 	}
 
 }

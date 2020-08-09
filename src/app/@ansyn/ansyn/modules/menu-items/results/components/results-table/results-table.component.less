@@ -94,7 +94,7 @@
 			direction: rtl;
 			display: block;
 			overflow-y: auto;
-			max-height: 80vh;
+			height: 80vh;
 
 			div.results-table-body-row-data:hover {
 				background-color: @background-color-7;
@@ -117,7 +117,7 @@
 				margin: 0px 0px 0px 16px;
 				transition: background .3s, color .3s;
 				overflow: hidden;
-				height: 57px;
+				height: 10%;
 				position: relative;
 
 				&.mouse-enter {
@@ -134,13 +134,11 @@
 				}
 
 				&.active {
-					pointer-events:none;
 					background: #9deeff;
 					color: #156879;
 				}
 
 				&.selected {
-					pointer-events:none;
 					color: #156879;
 					background: #EBF8FA;
 				}

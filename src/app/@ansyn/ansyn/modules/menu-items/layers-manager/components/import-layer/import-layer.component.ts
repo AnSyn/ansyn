@@ -10,6 +10,7 @@ import { tap } from 'rxjs/operators';
 import { FeatureCollection } from 'geojson';
 import KmlFormat from 'ol/format/KML';
 import GeoJSONFormat from 'ol/format/GeoJSON';
+import * as shapeFile from 'shapefile';
 import { getErrorMessageFromException } from '../../../../core/utils/logs/timer-logs';
 
 @Component({
@@ -26,16 +27,16 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	kmlFormat = new KmlFormat();
 	geoJsonFormat = new GeoJSONFormat();
 	file: File;
+	fileType: string;
 
 	@AutoSubscription
 	onFileLoad$: Observable<any> = fromEvent(this.reader, 'load').pipe(
 		tap(() => {
 			const layerName = this.file.name.slice(0, this.file.name.lastIndexOf('.'));
-			const fileType = this.file.name.slice(this.file.name.lastIndexOf('.') + 1);
 			let layerData;
 			try {
 				const readerResult: string = <string>this.reader.result;
-				switch (fileType.toLowerCase()) {
+				switch (this.fileType.toLowerCase()) {
 					case 'kml':
 						const features = this.kmlFormat.readFeatures(readerResult);
 						layerData = JSON.parse(this.geoJsonFormat.writeFeatures(features));
@@ -45,19 +46,14 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 					case 'geojson':
 						layerData = JSON.parse(readerResult);
 						break;
-
+					case 'shp':
+						this.addShapeFileLayer(layerName);
+						return;
 					default:
 						throw new Error('Can\'t read file type');
 				}
 
-				if (this.isFeatureCollection(layerData)) {
-					this.generateFeaturesIds(layerData);
-					const isNonEditable = this.isNonEditable(layerData);
-					const layer = this.dataLayersService.generateAnnotationLayer(layerName, layerData, isNonEditable);
-					this.store.dispatch(new AddLayer(layer));
-				} else {
-					throw new Error('Not a feature collection');
-				}
+				this.generateFeatureCollection(layerData, layerName);
 			} catch (error) {
 				this.store.dispatch(new SetToastMessageAction({
 					showWarningIcon: true,
@@ -72,7 +68,32 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 
 	importLayer(files: FileList) {
 		this.file = files.item(0);
-		this.reader.readAsText(this.file, 'UTF-8');
+		this.fileType = this.file.name.slice(this.file.name.lastIndexOf('.') + 1);
+		if (this.fileType.toLocaleLowerCase() === 'shp') {
+			this.reader.readAsArrayBuffer(this.file);
+		} else {
+			this.reader.readAsText(this.file, 'UTF-8');
+		}
+	}
+
+	addShapeFileLayer(layerName) {
+		let layerData;
+		shapeFile.read(this.reader.result).then(geoJson => {
+			layerData = geoJson;
+			this.generateFeatureCollection(layerData, layerName);
+		}).catch(e => console.error(e));
+
+	}
+
+	generateFeatureCollection(layerData, layerName) {
+		if (this.isFeatureCollection(layerData)) {
+			this.generateFeaturesIds(layerData);
+			const isNonEditable = this.isNonEditable(layerData);
+			const layer = this.dataLayersService.generateAnnotationLayer(layerName, layerData, isNonEditable);
+			this.store.dispatch(new AddLayer(layer));
+		} else {
+			throw new Error('Not a feature collection');
+		}
 	}
 
 	ngOnInit(): void {
@@ -117,13 +138,13 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	extractLabel(label: string): {text: string, geometry: any} {
-		let newLabel = {text: '', geometry: null};
+	extractLabel(label: string): { text: string, geometry: any } {
+		let newLabel = { text: '', geometry: null };
 		try {
 			newLabel = JSON.parse(label);
-		}catch (e) {
+		} catch (e) {
 			newLabel.text = label;
-		}finally {
+		} finally {
 			return newLabel;
 		}
 	}

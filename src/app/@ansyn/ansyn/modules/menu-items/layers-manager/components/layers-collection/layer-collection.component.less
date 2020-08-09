@@ -22,6 +22,12 @@ div.container {
 		}
 
 		ansyn-layer {
+			&.rtl {
+				/deep/.ansyn-checkbox-text {
+					direction: rtl;
+				}
+			}
+
 			&:hover {
 				background: rgba(255, 255, 255, 0.4);
 

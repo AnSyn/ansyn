@@ -57,6 +57,7 @@ export interface IEditAnnotationMode {
 })
 export class AnnotationsVisualizer extends EntitiesVisualizer {
 	static fillAlpha = 0.4;
+	private skipNextMapClickHandler = false;
 	disableCache = true;
 	public mode: AnnotationMode;
 	mapSearchIsActive = false;
@@ -299,6 +300,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	onDrawEndEvent({ feature }) {
 		const { mode } = this;
 		this.setMode(undefined, true);
+		this.skipNextMapClickHandler = true;
 		const id = UUID.UUID();
 		const geometry = feature.getGeometry();
 		let cloneGeometry = <any>geometry.clone();
@@ -530,7 +532,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 		return [
 			new olStyle({
+				placement: 'line',
+				overflow: true,
+				rotateWithView: true,
 				text: new olText({
+					...this.measuresTextStyle,
+					placement: 'point',
 					font: '16px Calibri,sans-serif',
 					fill: new olFill({
 						color: '#fff'
@@ -627,7 +634,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			}
 
 		} else {
-			centerFeature = this.currentAnnotationEdit.centerFeature;
+			centerFeature = this.currentAnnotationEdit ? this.currentAnnotationEdit.centerFeature : null;
 			this.removeInteraction(VisualizerInteractions.editAnnotationTranslateHandler);
 			this.removeInteraction(VisualizerInteractions.modifyInteractionHandler);
 			if (centerFeature) {
@@ -795,6 +802,13 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	protected mapClick = (event) => {
+		this.events.onClick.next(); // TODO - can be removed when ansyn.annotations.visualizer will use communicator instead of this for listening to click events on the map
+		// As the drawend callback is called before the click one, if the annotation's context-menu has been opened on drawend,
+		//  the click event will cause it to be closed so in this case, we use this flag to prevent it.
+		if (this.skipNextMapClickHandler) {
+			this.skipNextMapClickHandler = false;
+			return;
+		}
 		if (this.mapSearchIsActive || this.mode || this.isHidden) {
 			return;
 		}

@@ -1,4 +1,4 @@
-<div class="edit-case">
+<div class="edit-case" [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''">
 	<button (click)="close()" class="close" type="button">
 		<span>×</span>
 	</button>

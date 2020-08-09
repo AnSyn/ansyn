@@ -1,11 +1,17 @@
 import { inject, TestBed, fakeAsync } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 
-import { CasesService, ICase, LoadDefaultCaseAction, SelectCaseAction, SelectDilutedCaseAction } from '@ansyn/ansyn';
+import {
+	CasesService,
+	ICase,
+	ICaseDataInputFiltersState,
+	LoadDefaultCaseAction,
+	OverlaysService,
+	SelectCaseAction
+} from '@ansyn/ansyn';
 import { Observable, of } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { ImageryCommunicatorService, } from '@ansyn/imagery';
 import { ContextAppEffects } from './context.app.effects';
 import {
 	contextFeatureKey,
@@ -16,12 +22,15 @@ import { ContextConfig, ContextName } from '../models/context.config';
 import { Point } from '@turf/helpers';
 import { TranslateModule } from '@ngx-translate/core';
 import { mapFeatureKey, MapReducer, selectActiveMapId } from '@ansyn/map-facade';
+import { Auth0Service } from '../../imisight/auth0.service';
 
 describe('ContextAppEffects', () => {
 	let contextAppEffects: ContextAppEffects;
 	let actions: Observable<any>;
 	let store: Store<any>;
 	let casesService: CasesService;
+	let overlaysService: OverlaysService;
+	let auth0Service: Auth0Service;
 	const caseItem: ICase = {
 		id: '31b33526-6447-495f-8b52-83be3f6b55bd',
 		state: {
@@ -67,18 +76,32 @@ describe('ContextAppEffects', () => {
 					}
 				},
 				{
+					provide: Auth0Service,
+					useValue: {
+						setSession: () => ({})
+					}
+				},
+				{
 					provide: ContextConfig,
 					useValue: {}
+				},
+				{
+					provide: OverlaysService,
+					useValue: {
+						getSensorTypeAndProviderFromSensorName: () => {}
+					}
 				}
 			]
 
 		}).compileComponents();
 	});
 
-	beforeEach(inject([Store, CasesService, ContextAppEffects], (_store, _casesService, _contextAppEffects) => {
+	beforeEach(inject([Store, CasesService, ContextAppEffects, Auth0Service, OverlaysService], (_store, _casesService, _contextAppEffects, _auth0Service, _overlaysService) => {
 		contextAppEffects = _contextAppEffects;
 		store = _store;
 		casesService = _casesService;
+		auth0Service = _auth0Service;
+		overlaysService = _overlaysService;
 		const fakeStore = new Map<any, any>([
 			[selectActiveMapId, 'imagery1'],
 			[contextStateSelector, { params: {} }]
@@ -92,7 +115,6 @@ describe('ContextAppEffects', () => {
 	});
 
 	it('on load case with area analysis context fire SelectDilutedCaseAction and update params', fakeAsync(() => {
-
 		actions = hot('-a-', {
 			a: new LoadDefaultCaseAction({
 				context: ContextName.AreaAnalysis,
@@ -114,6 +136,50 @@ describe('ContextAppEffects', () => {
 			}
 		);
 		spyOn(casesService, 'updateCaseViaContext').and.callFake((ctx, c , p) => contextCase);
+		expect(contextAppEffects.loadDefaultCaseContext$).toBeObservable(expectedResult);
+	}));
+
+	it('on load case with quick search context fire SelectDilutedCaseAction and update params', fakeAsync(() => {
+		actions = hot('-a-', {
+			a: new LoadDefaultCaseAction({
+				context: ContextName.QuickSearch,
+				geometry: 'POINT(-117.91897 34.81265)',
+				time: '2020-05-23,2020-06-23',
+				sensors: 'Landsat8'
+			})
+		});
+		const contextCase = {...casesService.defaultCase };
+		const to = new Date('2020-06-23');
+		const from = new Date('2020-05-23');
+		const geo: Point = { type: 'Point', coordinates: [-117.91897, 34.81265] };
+		const filter = {
+			providerName: 'Planet',
+			sensorType: 'Landsat8L1G',
+			sensorName: 'Landsat8'
+		};
+		const dataInputFilters: ICaseDataInputFiltersState = {
+			filters: [filter],
+			fullyChecked: false,
+			customFiltersSensor: ['Landsat8']
+		}
+		contextCase.state = {
+			...contextCase.state,
+			time: { to, from },
+			region: geo,
+			dataInputFilters
+		};
+		const expectedResult = cold('-a-', {
+				a: new SelectCaseAction(contextCase),
+			}
+		);
+		spyOn(overlaysService, 'getSensorTypeAndProviderFromSensorName')
+			.and.returnValue(filter);
+		spyOn(casesService, 'updateCaseViaContext')
+			.and.callFake((ctx, c , p) => {
+				return { ...contextCase,
+					state: { ...contextCase.state,
+						time: ctx.time, dataInputFilters: ctx.dataInputFilters }};
+		});
 		expect(contextAppEffects.loadDefaultCaseContext$).toBeObservable(expectedResult);
 	}))
 })

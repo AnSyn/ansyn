@@ -6,7 +6,8 @@ import {
 	ImageryCommunicatorService,
 	ImageryMapPosition,
 	IMapSettings,
-	unifyPolygons
+	unifyPolygons,
+	getPolygonIntersectionRatioWithMultiPolygon
 } from '@ansyn/imagery';
 import {
 	MapActionTypes,
@@ -50,7 +51,7 @@ import {
 	selectTranslationData
 } from '../reducers/overlay-status.reducer';
 import { IOverlay } from '../../models/overlay.model';
-import { feature } from '@turf/turf';
+import { feature, difference } from '@turf/turf';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from '../config/overlay-status-config';
 import { isEqual } from "lodash";
@@ -168,10 +169,28 @@ export class OverlayStatusEffects {
 					const featurePolygons = polygons.map((polygon) => {
 						return feature(polygon);
 					});
-					const combinedResult = unifyPolygons(featurePolygons);
-					if (combinedResult.geometry.type === 'MultiPolygon') {
-						scannedArea = combinedResult.geometry;
-					} else {	// polygon
+					let combinedResult = unifyPolygons(featurePolygons);
+					let scannedAreaContainsExtentPolygon = false;
+					
+					scannedArea.coordinates.forEach(coordinates => {
+						let multiPolygon = JSON.parse(JSON.stringify(scannedArea));
+						multiPolygon.coordinates = [coordinates];
+						
+						if (getPolygonIntersectionRatioWithMultiPolygon(position.extentPolygon, multiPolygon)) {
+							scannedAreaContainsExtentPolygon = true;
+						}
+					});
+
+					if (scannedAreaContainsExtentPolygon) {
+						combinedResult = difference(combinedResult, position.extentPolygon);
+					}
+					
+					if (combinedResult === null) {
+						scannedArea = null;
+					}
+					else if (combinedResult.geometry.type === 'MultiPolygon') {
+							scannedArea = combinedResult.geometry;
+					} else {
 						scannedArea = geojsonPolygonToMultiPolygon(combinedResult.geometry);
 					}
 				} catch (e) {

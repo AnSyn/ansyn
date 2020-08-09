@@ -2,8 +2,9 @@ import { IDilutedOverlay, IDilutedOverlaysHash, IOverlay, IOverlaysHash } from '
 import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
 import { LayoutKey } from '@ansyn/map-facade';
 import { FilterType } from '../../../filters/models/filter-type';
-import { IMapSettings, IMapSettingsData, IVisualizerEntity } from '@ansyn/imagery';
+import { IMapSettings, IMapSettingsData } from '@ansyn/imagery';
 import { OverlayDisplayMode } from '../../tools/overlays-display-mode/overlays-display-mode.component';
+import { ICompressedMapSettings, ICompressedMapSettingsData } from '@ansyn/imagery';
 
 export interface ICasePreview {
 	creationTime: Date;
@@ -38,6 +39,14 @@ export interface ImageManualProcessArgs {
 	Gamma?: number;
 	Saturation?: number;
 	Sharpness?: number;
+}
+
+export interface ICompressedImageManualProcessArgs {
+	b?: number;
+	c?: number;
+	g?: number;
+	sa?: number;
+	sh?: number;
 }
 
 export interface IOverlaysManualProcessArgs {
@@ -86,12 +95,13 @@ export type CaseRegionState = any | Feature<Polygon> | Point | Polygon | Positio
 export interface IDataInputFilterValue {
 	providerName: string;
 	sensorType: string;
-	sensorName: string;
+	sensorName?: string;
 }
 
 export interface ICaseDataInputFiltersState {
 	fullyChecked?: boolean;
 	filters: IDataInputFilterValue[];
+	customFiltersSensor?: string[]; // for context
 }
 
 export interface ICaseTimeState {
@@ -116,12 +126,18 @@ export interface ICaseEnumFilterMetadata {
 	disabledEnums: string[];
 }
 
+export interface ICompressedCaseEnumFilterMetadata {
+	un: string[];
+	dis: string[];
+}
+
 export type CaseArrayFilterMetadata = [string, boolean][];
 
 export type CaseFilterMetadata =
 	ICaseBooleanFilterMetadata
 	| ICaseEnumFilterMetadata
 	| ICaseSliderFilterMetadata
+	| ICompressedCaseEnumFilterMetadata
 	| CaseArrayFilterMetadata;
 
 export interface ICaseFilter<T = CaseFilterMetadata> {
@@ -131,9 +147,21 @@ export interface ICaseFilter<T = CaseFilterMetadata> {
 	positive?: boolean;
 }
 
+export interface ICompressedCaseFilter<T = CaseFilterMetadata> {
+	t: FilterType;
+	f: string;
+	m: T;
+	p?: boolean;
+}
+
 export interface ICaseFacetsState {
 	filters?: ICaseFilter[];
 	showOnlyFavorites?: boolean;
+}
+
+export interface ICompressedCaseFacetsState {
+	f?: ICompressedCaseFilter[];
+	fav?: boolean;
 }
 
 export interface ICaseLayersState {
@@ -150,13 +178,27 @@ export interface ICaseMapsState extends IDilutedCaseMapsState {
 	data: ICaseMapState[];
 }
 
+export interface ICompressedCaseMapsState {
+	d: ICompressedCaseMapState[];
+	l: LayoutKey;
+	id: string;
+}
 
 export interface IDilutedCaseMapData extends IMapSettingsData {
 	overlay?: IDilutedOverlay;
 	isAutoImageProcessingActive?: boolean;
 	overlayDisplayMode?: OverlayDisplayMode;
 	imageManualProcessArgs?: ImageManualProcessArgs;
-	translationData: ITranslationData;
+	translationData?: ITranslationData;
+}
+
+export interface ICompressedCaseMapData extends IDilutedCaseMapData {
+	o?: any;
+	p?: ICompressedMapSettingsData;
+	auto?: boolean;
+	d?: OverlayDisplayMode;
+	man?: ICompressedImageManualProcessArgs;
+	translationData?: ITranslationData;
 }
 
 export interface ICaseMapData extends IDilutedCaseMapData {
@@ -170,3 +212,15 @@ export interface IDilutedCaseMapState extends IMapSettings {
 export interface ICaseMapState extends IMapSettings {
 	data: ICaseMapData;
 }
+
+export interface ICompressedCaseMapState extends ICompressedMapSettings {
+	d?: any;
+}
+
+const facetsFilterNames: string[] = ['sensorType', 'sensorName', 'sourceType', 'isGeoRegistered', 'containedInSearchPolygon', 'bestResolution', 'cloudCoverage'];
+const compressedFacetsFilterNames: string[] = ['senT', 'senN', 'srcT', 'geo', 'con', 'res', 'cld'];
+
+export const filtersMap = new Map<string, string>(facetsFilterNames.map<any>((facetsFilterName: string, index: number) => {
+	return [facetsFilterName, compressedFacetsFilterNames[index]];
+}));
+

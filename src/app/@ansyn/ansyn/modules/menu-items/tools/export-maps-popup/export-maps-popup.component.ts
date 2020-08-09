@@ -87,7 +87,6 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 	}
 
 	closeModal(): void {
-
 		this.dialogRef.close();
 	}
 

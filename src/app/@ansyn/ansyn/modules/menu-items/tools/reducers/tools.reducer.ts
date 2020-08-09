@@ -45,6 +45,17 @@ export interface IToolsState {
 	annotationProperties: Partial<IVisualizerStyle>;
 	activeAnnotationLayer: string;
 	mapsMeasures: Map<string, IMeasureData>;
+	mapSearchBoxSearch: boolean;
+}
+
+export const initialAnnotationProperties = {
+	'stroke-width': 1,
+	'fill-opacity': 0.4,
+	'stroke-opacity': 1,
+	'stroke-dasharray': 0,
+	'marker-color': '#ffffff',
+	stroke: '#27b2cf',
+	fill: '#ffffff'
 }
 
 export const toolsInitialState: IToolsState = {
@@ -54,16 +65,10 @@ export const toolsInitialState: IToolsState = {
 	subMenu: undefined,
 	activeCenter: [0, 0],
 	annotationMode: undefined,
-	annotationProperties: {
-		'stroke-width': 1,
-		'fill-opacity': 0.4,
-		'stroke-opacity': 1,
-		'stroke-dasharray': 0,
-		stroke: '#27b2cf',
-		fill: '#ffffff'
-	},
+	annotationProperties: initialAnnotationProperties,
 	activeAnnotationLayer: null,
-	mapsMeasures: new Map<string, IMeasureData>()
+	mapsMeasures: new Map<string, IMeasureData>(),
+	mapSearchBoxSearch: false
 };
 
 export const toolsFeatureKey = 'tools';
@@ -114,6 +119,9 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 
 		case ToolsActionsTypes.SET_ACTIVE_CENTER:
 			return { ...state, activeCenter: action.payload };
+
+		case ToolsActionsTypes.SET_MAP_SEARCH_BOX:
+			return { ...state, mapSearchBoxSearch: action.payload };
 
 		case ToolsActionsTypes.SET_PIN_LOCATION_MODE:
 			tmpMap = new Map(state.flags);

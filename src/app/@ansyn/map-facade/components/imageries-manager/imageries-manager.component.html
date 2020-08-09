@@ -9,8 +9,7 @@
 		<div *ngFor="let map of mapsEntities; trackBy: trackByFun "
 			 class="map-container-wrapper"
              #dragElement
-			 (click)="clickMapContainer(map.id)"
-			 (dblclick)="dbclick()"
+			 (click)="changeActiveImagery(map.id)"
 			 [id]="map.id"
 			 draggable="false">
 			<ansyn-imagery-container class="map"

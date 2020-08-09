@@ -36,6 +36,7 @@
 	</button>
 
 	<button class="small-icon-button perspective"
+			[disabled]="noGeoRegistration"
 			(click)="toggleImageryPerspective()"
 			[attr.tooltip-value]="orientation | translate"
 			tooltip-class="bottom right">
@@ -54,6 +55,7 @@
 
 <div class="description">
 	<ansyn-popover *ngIf="overlay" [text]="overlayDescription"
+				   [showOverflow]="isMinimalistViewMode"
 				   [popDirection]="'bottom left'">
 		<button class="share-link" (click)="copyOverlayDescription()">
 			<span>{{overlayDescription | translate}}</span>

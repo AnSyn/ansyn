@@ -15,8 +15,13 @@ export const mergeConfig = (sectionInConfig, mergeChanges) => {
 };
 
 export const fetchConfigProviders = (configPath = 'assets/config/app.config.json', mergeChanges: IConfigModel | any = null) =>
-	fetch(configPath)
-		.then(response => response.json())
+	fetch(configPath, {
+		headers : {
+			'Content-Type': 'application/json',
+			'Accept': 'application/json'
+		}
+	})
+		.then(response => response.json()).catch( (err) => console.log({err}))
 		.then(jsonConfig => mergeWith(jsonConfig, mergeChanges, mergeConfig))
 		.then(getProviders);
 

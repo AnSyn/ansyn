@@ -2,7 +2,6 @@
 @import "ansyn/less/colors";
 
 :host {
-
 	div.back-to-world-view {
 		height: @imagery-status-height;
 		button {
@@ -16,32 +15,6 @@
 
 			i {
 				font-size: @icon-size;
-			}
-		}
-
-		button.menu-pinned {
-			font-size: 0;
-			overflow: hidden;
-			padding: 0;
-
-			&.small-icon-button {
-				margin: 0;
-			}
-		}
-	}
-}
-
-@media screen and (max-width: 1440px) { 
-	:host {
-		div.back-to-world-view {
-			button {
-				font-size: 0;
-				overflow: hidden;
-				padding: 0;
-
-				&.small-icon-button {
-					margin: 0;
-				}
 			}
 		}
 	}
@@ -65,7 +38,7 @@
 	}
 
 	&.layout5 {
-		:nth-child(2), :nth-child(3){
+		:nth-child(2), :nth-child(3) {
 			:host {
 				div.back-to-world-view {
 					button {

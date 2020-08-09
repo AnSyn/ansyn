@@ -10,11 +10,12 @@ import { Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Actions, ofType, createEffect } from '@ngrx/effects';
 import { EMPTY, of } from 'rxjs';
-import { catchError, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap } from 'rxjs/operators';
 import { DataLayersService } from '../services/data-layers.service';
 import { ILayer, LayerType } from '../models/layers.model';
 import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCrash';
 import { selectAutoSave } from '../../cases/reducers/cases.reducer';
+import { flatWithLatestFrom } from '../../../core/utils/rxjs/operators/flatWithLatestFrom';
 
 @Injectable()
 export class LayersEffects {
@@ -38,7 +39,7 @@ export class LayersEffects {
 
 	addLayer$ = createEffect(() => this.actions$.pipe(
 		ofType(AddLayer),
-		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
+		flatWithLatestFrom(this.store$.pipe(select(selectAutoSave))),
 		filter(([, autoSave]) => autoSave),
 		mergeMap(([payload]) => this.dataLayersService.addLayer(payload.layer)),
 		rxPreventCrash()),
@@ -46,7 +47,7 @@ export class LayersEffects {
 
 	updateLayer$ = createEffect(() => this.actions$.pipe(
 		ofType(UpdateLayer),
-		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
+		flatWithLatestFrom(this.store$.pipe(select(selectAutoSave))),
 		filter(([, autoSave]) => autoSave),
 		mergeMap(([payload]) => this.dataLayersService.updateLayer(payload.layer)
 			.pipe(
@@ -58,7 +59,7 @@ export class LayersEffects {
 
 	removeLayer$ = createEffect(() => this.actions$.pipe(
 		ofType(RemoveLayer),
-		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
+		flatWithLatestFrom(this.store$.pipe(select(selectAutoSave))),
 		filter(([, autoSave]) => autoSave),
 		mergeMap(([payload]: [any, boolean]) => this.dataLayersService.removeLayer(payload.payload)
 			.pipe(

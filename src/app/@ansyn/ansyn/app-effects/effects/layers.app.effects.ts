@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
+import { map, mergeMap, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { Feature } from 'geojson';
 import { EMPTY, Observable, of } from 'rxjs';
@@ -19,6 +19,7 @@ import {
 	ToolsActionsTypes
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { LoggerService } from '../../modules/core/services/logger.service';
+import { flatWithLatestFrom } from '../../modules/core/utils/rxjs/operators/flatWithLatestFrom';
 
 
 @Injectable()
@@ -63,7 +64,7 @@ export class LayersAppEffects {
 	@Effect()
 	removeAnnotationFeature$: Observable<any> = this.actions$.pipe(
 		ofType<AnnotationRemoveFeature>(ToolsActionsTypes.ANNOTATION_REMOVE_FEATURE),
-		withLatestFrom(this.store$.select(selectLayers)),
+		flatWithLatestFrom(this.store$.select(selectLayers)),
 		mergeMap(([action, layers]: [AnnotationRemoveFeature, ILayer[]]) => {
 			const layer = layers
 				.filter(({ type }) => type === LayerType.annotation)
@@ -85,7 +86,7 @@ export class LayersAppEffects {
 	@Effect()
 	updateAnnotationFeature$: Observable<any> = this.actions$.pipe(
 		ofType<AnnotationUpdateFeature>(ToolsActionsTypes.ANNOTATION_UPDATE_FEATURE),
-		withLatestFrom(this.store$.select(selectLayers)),
+		flatWithLatestFrom(this.store$.select(selectLayers)),
 		map(([action, layers]: [AnnotationUpdateFeature, ILayer[]]) => {
 			const layer = layers
 				.filter(({ type }) => type === LayerType.annotation)

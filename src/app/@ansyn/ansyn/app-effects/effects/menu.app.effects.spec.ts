@@ -18,7 +18,7 @@ import { ResetAppAction, ToggleIsPinnedAction, UnSelectMenuItemAction } from '..
 import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
 import { ShowOverlaysFootprintAction, StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
-import { getInitialAnnotationsFeatureProperties } from '@ansyn/imagery';
+import { getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
@@ -77,7 +77,7 @@ describe('MenuAppEffects', () => {
 			b: new LoadDefaultCaseAction(),
 			c: new ShowOverlaysFootprintAction('None'),
 			d: new StartMouseShadow({fromUser: true}),
-			e: new AnnotationSetProperties(getInitialAnnotationsFeatureProperties()),
+			e: new AnnotationSetProperties(getInitialAnnotationsFeatureStyle()),
 			f: new ToggleIsPinnedAction(false),
 			g: new UnSelectMenuItemAction(),
 			h: new ToggleFooter(false)

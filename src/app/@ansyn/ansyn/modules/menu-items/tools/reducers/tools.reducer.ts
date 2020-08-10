@@ -1,6 +1,6 @@
 import { StartMouseShadow, StopMouseShadow, ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { IVisualizerEntity, IVisualizerStyle, getInitialAnnotationsFeatureProperties } from '@ansyn/imagery';
+import { IVisualizerEntity, IVisualizerStyle, getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 import { AnnotationMode } from '@ansyn/ol';
 
@@ -55,7 +55,7 @@ export const toolsInitialState: IToolsState = {
 	subMenu: undefined,
 	activeCenter: [0, 0],
 	annotationMode: undefined,
-	annotationProperties: getInitialAnnotationsFeatureProperties(),
+	annotationProperties: getInitialAnnotationsFeatureStyle(),
 	activeAnnotationLayer: null,
 	mapsMeasures: new Map<string, IMeasureData>(),
 	mapSearchBoxSearch: false

@@ -58,7 +58,7 @@ import { CasesActionTypes } from '../../../menu-items/cases/actions/cases.action
 
 @Injectable()
 export class OverlayStatusEffects {
-	@Effect()
+	@Effect({dispatch: false})
 	backToWorldView$: Observable<any> = this.actions$
 		.pipe(
 			ofType(OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW),

@@ -38,12 +38,6 @@ import { fromPromise } from 'rxjs/internal-compatibility';
 
 @Injectable()
 export class CasesAppEffects {
-	get defaultImageManualProcessArgs(): IImageManualProcessArgs {
-		return this.overlayStatusConfig.ImageProcParams.reduce<IImageManualProcessArgs>((initialObject: any, imageProcParam) => {
-			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
-		}, {});
-	}
-
 	@Effect({ dispatch: false })
 	actionsLogger$: Observable<any> = this.actions$.pipe(
 		ofType(CasesActionTypes.ADD_CASE,
@@ -137,16 +131,22 @@ export class CasesAppEffects {
 			})
 		);
 
-	@Effect()
-	onLoadDefaultCase$: Observable<IBaseImageryLayer> = this.actions$.pipe(
+	@Effect({dispatch: false})
+	onLoadDefaultCase$ = this.actions$.pipe(
 		ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
 		withLatestFrom(this.store$.select(selectMapsIds)),
 		filter(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => !action.payload.context && Boolean(mapId)),
-		mergeMap(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => {
+		tap(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => {
 			const position = this.caseConfig.defaultCase.state.maps.data[0].data.position;
 			const communicator = this.imageryCommunicatorService.provide(mapId);
-			return fromPromise(communicator.loadInitialMapSource(position));
+			communicator.loadInitialMapSource(position);
 		}));
+
+	get defaultImageManualProcessArgs(): IImageManualProcessArgs {
+		return this.overlayStatusConfig.ImageProcParams.reduce<IImageManualProcessArgs>((initialObject: any, imageProcParam) => {
+			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
+		}, {});
+	}
 
 
 	constructor(protected actions$: Actions,

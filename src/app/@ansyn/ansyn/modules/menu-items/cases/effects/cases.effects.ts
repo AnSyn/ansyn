@@ -81,8 +81,8 @@ export class CasesEffects {
 	onDeleteCase$: Observable<any> = this.actions$.pipe(
 		ofType<DeleteCaseAction>(CasesActionTypes.DELETE_CASE),
 		mergeMap((action) => this.dataLayersService.removeCaseLayers(action.payload).pipe(map(() => action))),
-		withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState) => [state.modal.id, state.selectedCase.id]),
-		filter(([modalCaseId, selectedCaseId]) => modalCaseId === selectedCaseId),
+		withLatestFrom(this.store.select(selectSelectedCase), ({payload: deletedCaseId}, selectedCase: ICase) => [deletedCaseId, selectedCase.id]),
+		filter(([deletedCaseId, selectedCaseId]) => deletedCaseId === selectedCaseId),
 		map(() => new LoadDefaultCaseAction()),
 		rxPreventCrash()
 	);

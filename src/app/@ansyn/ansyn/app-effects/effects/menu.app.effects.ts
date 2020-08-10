@@ -5,7 +5,7 @@ import { IAppState } from '../app.effects.module';
 import { select, Store } from '@ngrx/store';
 import { UpdateMapSizeAction, ToggleFooter } from '@ansyn/map-facade';
 import { IMenuConfig, MenuActionTypes, MenuConfig, SetAutoClose, ToggleIsPinnedAction, UnSelectMenuItemAction } from '@ansyn/menu';
-import { selectSubMenu, initialAnnotationProperties } from '../../modules/menu-items/tools/reducers/tools.reducer';
+import { selectSubMenu } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import { map, mergeMap } from 'rxjs/operators';
 import { RedrawTimelineAction, SetTotalOverlaysAction } from '../../modules/overlays/actions/overlays.actions';
 import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
@@ -13,6 +13,7 @@ import { selectDropsWithoutSpecialObjects } from '../../modules/overlays/reducer
 import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
 import { ShowOverlaysFootprintAction, StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
+import { getInitialAnnotationsFeatureProperties } from '@ansyn/imagery';
 
 @Injectable()
 export class MenuAppEffects {
@@ -55,7 +56,7 @@ export class MenuAppEffects {
 					new LoadDefaultCaseAction(),
 					new ShowOverlaysFootprintAction('None'),
 					new StartMouseShadow({fromUser: true}),
-					new AnnotationSetProperties(initialAnnotationProperties),
+					new AnnotationSetProperties(getInitialAnnotationsFeatureProperties()),
 					new ToggleIsPinnedAction(false),
 					new UnSelectMenuItemAction(),
 					new ToggleFooter(false)

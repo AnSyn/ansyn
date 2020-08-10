@@ -2,11 +2,12 @@ import { IVisualizerStyle, MarkerSize } from './visualizer-style';
 import { cloneDeep } from 'lodash';
 import { Feature } from 'geojson';
 
+export const ANNOTATIONS_FILL_ALPHA = 0.4;
 const ANNOTATIONS_INITIAL_STYLE: IVisualizerStyle = {
 	stroke: '#27b2cfe6',
 	'stroke-width': 1,
 	fill: `white`,
-	'fill-opacity': 0.4,
+	'fill-opacity': ANNOTATIONS_FILL_ALPHA,
 	'stroke-opacity': 1,
 	'stroke-dasharray': 0,
 	'marker-size': MarkerSize.medium,

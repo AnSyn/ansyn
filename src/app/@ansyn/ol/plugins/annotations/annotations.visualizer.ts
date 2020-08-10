@@ -2,10 +2,11 @@ import { Inject } from '@angular/core';
 import {
 	ImageryVisualizer,
 	IVisualizerEntity,
-	MarkerSize,
 	VisualizerInteractions,
 	VisualizerStates,
-	validateFeatureProperties
+	validateFeatureProperties,
+	getInitialAnnotationsFeatureStyle,
+	ANNOTATIONS_FILL_ALPHA
 } from '@ansyn/imagery';
 import { UUID } from 'angular2-uuid';
 import { AutoSubscription } from 'auto-subscriptions';
@@ -57,7 +58,7 @@ export interface IEditAnnotationMode {
 	isHideable: true
 })
 export class AnnotationsVisualizer extends EntitiesVisualizer {
-	static fillAlpha = 0.4;
+	static fillAlpha = ANNOTATIONS_FILL_ALPHA;
 	private skipNextMapClickHandler = false;
 	disableCache = true;
 	public mode: AnnotationMode;
@@ -133,26 +134,16 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	constructor(protected projectionService: OpenLayersProjectionService,
 				@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig,
 				protected translator: TranslateService) {
-
 		super(null, {
 			initial: {
-				stroke: '#27b2cfe6',
-				'stroke-width': 1,
-				fill: `white`,
-				'fill-opacity': AnnotationsVisualizer.fillAlpha,
-				'stroke-opacity': 1,
-				'marker-size': MarkerSize.medium,
-				'marker-color': `#ffffff`,
+				...getInitialAnnotationsFeatureStyle(),
 				label: {
-					overflow: true,
+					...getInitialAnnotationsFeatureStyle().label,
 					fontSize: (feature) => {
 						const entity = this.idToEntity.get(feature.getId());
 						const labelSize = entity && entity.originalEntity && entity.originalEntity.labelSize;
 						return labelSize || 28;
 					},
-					stroke: '#000',
-					fill: 'white',
-					offsetY: 30,
 					text: (feature: olFeature) => {
 						const entity = this.idToEntity.get(feature.getId());
 						if (entity) {

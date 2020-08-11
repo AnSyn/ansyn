@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, tick, inject } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, inject, fakeAsync } from '@angular/core/testing';
 import { CasesModalContainerComponent } from './cases-modal-container.component';
 import { CasesModule } from '../../cases.module';
 import { CloseModalAction, OpenModalAction } from '../../actions/cases.actions';
@@ -55,17 +55,17 @@ describe('ModalContainerComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('dispatch OpenModal with edit type should open ansyn-edit-case', () => {
+	it('dispatch OpenModal with edit type should open ansyn-edit-case', fakeAsync(() => {
 		store.dispatch(new OpenModalAction({ type: 'edit' }));
 		tick();
 		expect(fixture.nativeElement.querySelector('ansyn-edit-case')).toBeDefined();
-	});
+	}));
 
-	it('dispatch OpenModal with delete type should open ansyn-delete-case', () => {
+	it('dispatch OpenModal with delete type should open ansyn-delete-case', fakeAsync(() => {
 		store.dispatch(new OpenModalAction({ type: 'delete' }));
 		tick();
 		expect(fixture.nativeElement.querySelector('ansyn-delete-case')).toBeDefined();
-	});
+	}));
 
 	it('click outside the modal should dispatch CloseModal', () => {
 		spyOn(store, 'dispatch');

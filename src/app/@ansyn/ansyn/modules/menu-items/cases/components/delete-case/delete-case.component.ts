@@ -35,8 +35,7 @@ export class DeleteCaseComponent implements OnInit, OnDestroy {
 	@HostBinding('@modalContent') readonly modalContent = true;
 
 	@AutoSubscription
-	activeCase$ = this.store.pipe(
-		select(casesStateSelector),
+	activeCase$ = this.store.select(casesStateSelector).pipe(
 		map((cases) => cases.entities[cases.modal.id]),
 	tap( (activeCase) => this.activeCase = activeCase)
 )

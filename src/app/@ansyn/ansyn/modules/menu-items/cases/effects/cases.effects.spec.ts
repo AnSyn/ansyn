@@ -33,7 +33,13 @@ import {
 	UpdateCaseBackendAction
 } from '../actions/cases.actions';
 import { ICase } from '../models/case.model';
-import { casesFeatureKey, CasesReducer, casesStateSelector, initialCasesState } from '../reducers/cases.reducer';
+import {
+	casesFeatureKey,
+	CasesReducer,
+	casesStateSelector,
+	initialCasesState,
+	selectSelectedCase
+} from '../reducers/cases.reducer';
 import { casesConfig, CasesService } from '../services/cases.service';
 import { CasesEffects } from './cases.effects';
 import { SetMapsDataActionStore, selectActiveMapId, selectMapsIds } from '@ansyn/map-facade';
@@ -112,6 +118,7 @@ describe('CasesEffects', () => {
 		const fakeStore = new Map<any, any>([
 			[selectLayers, [{ type: LayerType.annotation }]],
 			[casesStateSelector, casesState],
+			[selectSelectedCase, { id: 'delete-case-id' }],
 			[selectActiveMapId, 'mapId'],
 			[selectMapsIds, 'mapIds[]']
 		]);
@@ -163,9 +170,7 @@ describe('CasesEffects', () => {
 
 	it('onDeleteCase$ should call DeleteCaseBackendAction. when deleted case equal to selected case LoadDefaultCaseAction should have been called too', () => {
 		spyOn(dataLayersService, 'removeCaseLayers').and.callFake(() => of('good'));
-		casesState.modal = { ...casesState.modal, id: 'delete-case-id' };
-		casesState.selectedCase = <any>{ id: 'delete-case-id' };
-		actions = hot('--a--', { a: new DeleteCaseAction('') });
+		actions = hot('--a--', { a: new DeleteCaseAction('delete-case-id') });
 		const expectedResults = cold('--(a)--', { a: new LoadDefaultCaseAction() });
 		expect(casesEffects.onDeleteCase$).toBeObservable(expectedResults);
 	});

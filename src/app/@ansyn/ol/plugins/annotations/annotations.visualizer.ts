@@ -5,8 +5,7 @@ import {
 	VisualizerInteractions,
 	VisualizerStates,
 	validateFeatureProperties,
-	getInitialAnnotationsFeatureStyle,
-	ANNOTATIONS_FILL_ALPHA
+	getInitialAnnotationsFeatureStyle
 } from '@ansyn/imagery';
 import { UUID } from 'angular2-uuid';
 import { AutoSubscription } from 'auto-subscriptions';

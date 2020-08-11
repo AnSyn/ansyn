@@ -58,7 +58,6 @@ export interface IEditAnnotationMode {
 	isHideable: true
 })
 export class AnnotationsVisualizer extends EntitiesVisualizer {
-	static fillAlpha = ANNOTATIONS_FILL_ALPHA;
 	private skipNextMapClickHandler = false;
 	disableCache = true;
 	public mode: AnnotationMode;

@@ -49,7 +49,7 @@ import {
 	withLatestFrom
 } from 'rxjs/operators';
 import { toastMessages } from '../../modules/core/models/toast-messages';
-import { endTimingLog, startTimingLog } from '../../modules/core/utils/logs/timer-logs';
+import { endTimingLog, getLogMessageFromPayload, startTimingLog } from '../../modules/core/utils/logs/timer-logs';
 import { isFullOverlay } from '../../modules/core/utils/overlays';
 import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { MarkUpClass } from '../../modules/overlays/reducers/overlays.reducer';
@@ -109,7 +109,7 @@ export class MapAppEffects {
 			OverlayStatusActionsTypes.BACK_TO_WORLD_FAILED
 		),
 		tap((action) => {
-			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Map', action.type);
+			this.loggerService.info(getLogMessageFromPayload(action), 'Map', action.type);
 		}));
 
 	onDisplayOverlay$: Observable<any> = this.actions$

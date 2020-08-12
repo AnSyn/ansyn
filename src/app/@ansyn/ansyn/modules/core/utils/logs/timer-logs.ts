@@ -23,3 +23,12 @@ export function getErrorLogFromException(error: any, defaultError: string): stri
 	const result = Boolean(error) ? JSON.stringify(error) : defaultError;
 	return result;
 }
+
+export interface IPayloadWithLogMessage {
+	payload: any;
+	logMessage?: Function;
+}
+
+export function getLogMessageFromPayload(action: IPayloadWithLogMessage): string {
+	return action.logMessage ? action.logMessage() : action.payload ? JSON.stringify(action.payload) : '';
+}

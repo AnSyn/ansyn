@@ -137,6 +137,10 @@ export class PositionChangedAction implements Action {
 
 	constructor(public payload: { id: string, position: ImageryMapPosition, mapInstance: IMapSettings }) {
 	}
+
+	logMessage() {
+		return `User changed position in map ${this.payload.id}`;
+	}
 }
 
 export class UpdateMapSizeAction implements Action {

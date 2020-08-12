@@ -9,6 +9,7 @@ import {
 } from '@ansyn/imagery';
 import { LayoutKey } from '../models/maps-layout';
 import { MapOrientation } from "@ansyn/imagery";
+import { ILogMessage } from '../../ansyn/modules/core/utils/logs/timer-logs';
 
 export interface IAngleFilterClick { // @TODO: map-facade should not know IOverlay
 	click: { x: number, y: number };
@@ -132,14 +133,14 @@ export class PointToImageOrientationAction implements Action {
 	}
 }
 
-export class PositionChangedAction implements Action {
+export class PositionChangedAction implements Action, ILogMessage {
 	type = MapActionTypes.POSITION_CHANGED;
 
 	constructor(public payload: { id: string, position: ImageryMapPosition, mapInstance: IMapSettings }) {
 	}
 
 	logMessage() {
-		return `User changed position in map ${this.payload.id}`;
+		return `Position changed on map`;
 	}
 }
 

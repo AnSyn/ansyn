@@ -19,6 +19,7 @@ import {
 	ToolsActionsTypes
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { LoggerService } from '../../modules/core/services/logger.service';
+import { getLogMessageFromAction } from '../../modules/core/utils/logs/timer-logs';
 
 
 @Injectable()
@@ -46,7 +47,7 @@ export class LayersAppEffects {
 			LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_SUCCESS_ACTION
 		),
 		tap((action) => {
-			this.loggerService.info(action.payload, 'Layers', action.type);
+			this.loggerService.info(getLogMessageFromAction(action), 'Layers', action.type);
 		}));
 
 	@Effect()

@@ -24,11 +24,11 @@ export function getErrorLogFromException(error: any, defaultError: string): stri
 	return result;
 }
 
-export interface IPayloadWithLogMessage {
+export interface ILogMessage {
 	payload: any;
 	logMessage?: Function;
 }
 
-export function getLogMessageFromPayload(action: IPayloadWithLogMessage): string {
+export function getLogMessageFromAction(action: ILogMessage): string {
 	return action.logMessage ? action.logMessage() : action.payload ? JSON.stringify(action.payload) : '';
 }

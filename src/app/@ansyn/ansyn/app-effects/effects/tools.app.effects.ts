@@ -47,6 +47,7 @@ import { IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models
 import { selectToolFlag, toolsFlags } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
+import { getLogMessageFromAction } from '../../modules/core/utils/logs/timer-logs';
 
 @Injectable()
 export class ToolsAppEffects {
@@ -70,7 +71,7 @@ export class ToolsAppEffects {
 			ToolsActionsTypes.SET_SUB_MENU
 		),
 		tap((action) => {
-			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Tools', action.type);
+			this.loggerService.info(getLogMessageFromAction(action), 'Tools', action.type);
 		}));
 
 	@Effect()

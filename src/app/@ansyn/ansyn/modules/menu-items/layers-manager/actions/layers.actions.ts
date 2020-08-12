@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 import { ILayer, LayerType } from '../models/layers.model';
 import { ILayerModal, SelectedModalEnum } from '../reducers/layers-modal';
+import { ILogMessage } from '../../../core/utils/logs/timer-logs';
 
 export enum LayersActionTypes {
 	BEGIN_LAYER_COLLECTION_LOAD = '[Layers] Begin layer collection load',
@@ -38,10 +39,14 @@ export type LayersActions =
 	| SetLayersModal
 	| CloseLayersModal;
 
-export class BeginLayerCollectionLoadAction implements Action {
+export class BeginLayerCollectionLoadAction implements Action, ILogMessage {
 	type = LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD;
 
 	constructor(public payload: { caseId: string }) {
+	}
+
+	logMessage() {
+		return `Beginning layer collection load for case`;
 	}
 }
 

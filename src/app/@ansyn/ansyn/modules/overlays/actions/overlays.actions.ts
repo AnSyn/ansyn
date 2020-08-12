@@ -10,6 +10,7 @@ import {
 	IOverlaySpecialObject,
 } from '../models/overlay.model';
 import { IMarkUpData, IOverlayDropMarkUp, ITimelineRange, MarkUpClass } from '../reducers/overlays.reducer';
+import { ILogMessage } from '../../core/utils/logs/timer-logs';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
@@ -224,7 +225,7 @@ export class ChangeOverlayPreviewRotationAction implements Action {
 	}
 }
 
-export class SetOverlaysCriteriaAction implements Action {
+export class SetOverlaysCriteriaAction implements Action, ILogMessage {
 	type = OverlaysActionTypes.SET_OVERLAYS_CRITERIA;
 
 	constructor(public payload: IOverlaysCriteria,
@@ -232,7 +233,7 @@ export class SetOverlaysCriteriaAction implements Action {
 	}
 
 	logMessage() {
-		return `Setting overlays criteria for search:\n${JSON.stringify(this.payload)} ${JSON.stringify(this.options)}`
+		return `Setting overlays criteria for search`
 	}
 }
 

@@ -4,6 +4,7 @@ import { SubMenuEnum, toolsFlags, IMeasureData, IMeasureDataOptions } from '../r
 import { type } from '../../../core/utils/type';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 import { AnnotationMode, IUpdateFeatureEvent } from '@ansyn/ol';
+import { ILogMessage } from '../../../core/utils/logs/timer-logs';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),
@@ -48,11 +49,15 @@ export class StartMouseShadow implements Action {
 	}
 }
 
-export class SetAnnotationMode implements Action {
+export class SetAnnotationMode implements Action, ILogMessage {
 	type = ToolsActionsTypes.STORE.SET_ANNOTATION_MODE;
 
 	constructor(public payload: { annotationMode: AnnotationMode, mapId?: string }) {
 
+	}
+
+	logMessage() {
+		return this.payload ? `Setting annotation mode = ${ this.payload.annotationMode }` : '';
 	}
 }
 
@@ -235,7 +240,6 @@ export type ToolsActions =
 	| GoToAction
 	| ShowOverlaysFootprintAction
 	| SetActiveOverlaysFootprintModeAction
-	| SetMapGeoEnabledModeToolsActionStore
 	| SetAnnotationMode
 	| SetMapGeoEnabledModeToolsActionStore
 	| SetMeasureDistanceToolState

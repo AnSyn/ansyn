@@ -2,6 +2,7 @@ import { Action } from '@ngrx/store';
 import { Params } from '@angular/router';
 import { IStoredEntity } from '../../../core/services/storage/storage.service';
 import { ICase, ICasePreview, IDilutedCase, IDilutedCaseState } from '../models/case.model';
+import { ILogMessage } from '../../../core/utils/logs/timer-logs';
 
 export const CasesActionTypes = {
 	LOAD_CASES: 'LOAD_CASES',
@@ -139,7 +140,7 @@ export class LoadCaseAction implements Action {
 	}
 }
 
-export class LoadDefaultCaseAction implements Action {
+export class LoadDefaultCaseAction implements Action, ILogMessage {
 	type = CasesActionTypes.LOAD_DEFAULT_CASE;
 
 	constructor(public payload: Params = {}) {

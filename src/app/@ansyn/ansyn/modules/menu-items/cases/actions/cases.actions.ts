@@ -144,6 +144,10 @@ export class LoadDefaultCaseAction implements Action {
 
 	constructor(public payload: Params = {}) {
 	}
+
+	logMessage() {
+		return `App will load default case`;
+	}
 }
 
 export class SaveCaseAsAction implements Action {

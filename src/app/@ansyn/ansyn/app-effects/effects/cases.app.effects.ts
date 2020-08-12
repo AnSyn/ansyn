@@ -35,6 +35,7 @@ import {
 import { casesConfig } from '../../modules/menu-items/cases/services/cases.service';
 import { ICasesConfig } from '../../modules/menu-items/cases/models/cases-config';
 import { fromPromise } from 'rxjs/internal-compatibility';
+import { getLogMessageFromPayload } from '../../modules/core/utils/logs/timer-logs';
 
 @Injectable()
 export class CasesAppEffects {
@@ -56,7 +57,7 @@ export class CasesAppEffects {
 			CasesActionTypes.COPY_CASE_LINK
 		),
 		tap((action) => {
-			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Cases', action.type);
+			this.loggerService.info(getLogMessageFromPayload(action), 'Cases', action.type);
 		}));
 
 	@Effect()

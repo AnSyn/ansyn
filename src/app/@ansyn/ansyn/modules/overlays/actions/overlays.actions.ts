@@ -230,6 +230,10 @@ export class SetOverlaysCriteriaAction implements Action {
 	constructor(public payload: IOverlaysCriteria,
 				public options: IOverlaysCriteriaOptions = null) {
 	}
+
+	logMessage() {
+		return `Setting overlays criteria for search:\n${JSON.stringify(this.payload)} ${JSON.stringify(this.options)}`
+	}
 }
 
 export class UpdateOverlaysCountAction {

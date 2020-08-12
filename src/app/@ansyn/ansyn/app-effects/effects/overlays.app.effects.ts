@@ -73,6 +73,7 @@ import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { Dictionary } from '@ngrx/entity';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { SetBadgeAction } from '@ansyn/menu';
+import { getLogMessageFromPayload } from '../../modules/core/utils/logs/timer-logs';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -93,7 +94,7 @@ export class OverlaysAppEffects {
 			OverlayStatusActionsTypes.TOGGLE_OVERLAY_PRESET
 		),
 		tap((action) => {
-			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Overlays', action.type);
+			this.loggerService.info(getLogMessageFromPayload(action), 'Overlays', action.type);
 		}));
 
 	@Effect()

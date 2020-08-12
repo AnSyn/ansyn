@@ -25,8 +25,8 @@ export function getErrorLogFromException(error: any, defaultError: string): stri
 }
 
 export interface ILogMessage {
-	payload: any;
-	logMessage?: Function;
+	payload?: any;
+	logMessage: Function;
 }
 
 export function getLogMessageFromAction(action: ILogMessage): string {

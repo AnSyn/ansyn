@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
-import { SubMenuEnum, toolsFlags, IMeasureData, IMeasureDataOptions } from '../reducers/tools.reducer';
+import { SubMenuEnum, toolsFlags, IMeasureDataOptions } from '../reducers/tools.reducer';
 import { type } from '../../../core/utils/type';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 import { AnnotationMode, IUpdateFeatureEvent } from '@ansyn/ol';
@@ -57,15 +57,19 @@ export class SetAnnotationMode implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return this.payload ? `Setting annotation mode = ${ this.payload.annotationMode }` : '';
+		return `Setting annotation mode = ${ this.payload && this.payload.annotationMode }`;
 	}
 }
 
-export class StopMouseShadow implements Action {
+export class StopMouseShadow implements Action, ILogMessage {
 	type = ToolsActionsTypes.STOP_MOUSE_SHADOW;
 
 	constructor(public payload?: { updateTools?: boolean, fromUser?: boolean }) {
 		// code...
+	}
+
+	logMessage() {
+		return `Disabling shadow mouse`;
 	}
 }
 
@@ -125,11 +129,15 @@ export class ShowOverlaysFootprintAction implements Action {
 	};
 }
 
-export class SetActiveOverlaysFootprintModeAction implements Action {
+export class SetActiveOverlaysFootprintModeAction implements Action, ILogMessage {
 	type = ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE;
 
 	constructor(public payload: OverlayDisplayMode) {
 	};
+
+	logMessage() {
+		return `Setting active overlays footprints mode = ${this.payload}`;
+	}
 }
 
 export class SetMapGeoEnabledModeToolsActionStore implements Action {
@@ -139,10 +147,14 @@ export class SetMapGeoEnabledModeToolsActionStore implements Action {
 	}
 }
 
-export class SetMeasureDistanceToolState implements Action {
+export class SetMeasureDistanceToolState implements Action, ILogMessage {
 	type = ToolsActionsTypes.MEASURES.SET_MEASURE_TOOL_STATE;
 
 	constructor(public payload: boolean) {
+	}
+
+	logMessage() {
+		return `Setting measure distance tool state = ${this.payload}`
 	}
 }
 

@@ -84,17 +84,25 @@ export class UnSelectOverlayAction implements Action {
 	}
 }
 
-export class LoadOverlaysAction implements Action {
+export class LoadOverlaysAction implements Action, ILogMessage {
 	type = OverlaysActionTypes.LOAD_OVERLAYS;
 
 	constructor(public payload: IOverlaysCriteria) {
 	}
+
+	logMessage() {
+		return `Start loading overlays`;
+	}
 }
 
-export class CheckTrianglesAction implements Action {
+export class CheckTrianglesAction implements Action, ILogMessage {
 	type = OverlaysActionTypes.CHECK_TRIANGLES;
 
 	constructor(public payload: IOverlaysCriteria) {
+	}
+
+	logMessage() {
+		return `Checking area against user credentials`
 	}
 }
 

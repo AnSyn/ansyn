@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action, select, Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import {
@@ -18,8 +18,8 @@ import {
 } from '@ansyn/map-facade';
 import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
-import { differenceWith, isEqual } from 'lodash';
-import { filter, map, mergeMap, pluck, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { differenceWith} from 'lodash';
+import { filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	OverlayStatusActionsTypes,
 	DisableImageProcessing
@@ -45,7 +45,7 @@ import {
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { selectToolFlag, toolsFlags } from '../../modules/menu-items/tools/reducers/tools.reducer';
-import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
+import { CaseGeoFilter } from '../../modules/menu-items/cases/models/case.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { getLogMessageFromAction } from '../../modules/core/utils/logs/timer-logs';
 
@@ -65,7 +65,6 @@ export class ToolsAppEffects {
 			ToolsActionsTypes.STOP_MOUSE_SHADOW,
 			ToolsActionsTypes.GO_TO,
 			ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE,
-			ToolsActionsTypes.UPDATE_TOOLS_FLAGS,
 			ToolsActionsTypes.MEASURES.SET_MEASURE_TOOL_STATE,
 			ToolsActionsTypes.STORE.SET_ANNOTATION_MODE,
 			ToolsActionsTypes.SET_SUB_MENU

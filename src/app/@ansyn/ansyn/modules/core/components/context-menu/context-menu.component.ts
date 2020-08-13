@@ -12,7 +12,7 @@ import {
 	MapActionTypes,
 	mapFacadeConfig,
 	MapFacadeService,
-	mapStateSelector,
+	mapStateSelector
 } from '@ansyn/map-facade';
 import { uniq as _uniq } from 'lodash';
 import { Point } from 'geojson';

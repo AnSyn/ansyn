@@ -152,23 +152,39 @@ export class DisplayMultipleOverlaysFromStoreAction implements Action {
 	}
 }
 
-export class DisplayOverlayAction implements Action {
+export function getOverlayTitle(overlay: IOverlay): string {
+	return `${overlay.sensorType} (${overlay.sensorName}) ${overlay.photoTime}`;
+}
+
+export class DisplayOverlayAction implements Action, ILogMessage {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY;
 
 	constructor(public payload: {
 		overlay: IOverlay, mapId: string, extent?: any, forceFirstDisplay?: boolean, force?: boolean, customOriantation?: string
 	}) {
 	}
+
+	logMessage() {
+		return `Start loading overlay ${getOverlayTitle(this.payload.overlay)}`
+	}
 }
 
 export class DisplayOverlaySuccessAction extends DisplayOverlayAction {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS;
+
+	logMessage() {
+		return `Loaded overlay ${getOverlayTitle(this.payload.overlay)}`
+	}
 }
 
-export class DisplayOverlayFailedAction implements Action {
+export class DisplayOverlayFailedAction implements Action, ILogMessage {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY_FAILED;
 
 	constructor(public payload: { id: string, mapId?: string }) {
+	}
+
+	logMessage() {
+		return `Display overlay failed`
 	}
 }
 
@@ -245,7 +261,7 @@ export class SetOverlaysCriteriaAction implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return `Setting overlays criteria for search`
+		return `Setting overlays criteria for search:\n${JSON.stringify(this.payload)} ${JSON.stringify(this.options)}`
 	}
 }
 

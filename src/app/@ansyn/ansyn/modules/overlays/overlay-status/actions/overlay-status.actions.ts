@@ -7,6 +7,7 @@ import {
 	IOverlaysTranslationData,
 } from '../../../menu-items/cases/models/case.model';
 import { IScannedArea } from '../reducers/overlay-status.reducer';
+import { ILogMessage } from '../../../core/utils/logs/timer-logs';
 
 export enum OverlayStatusActionsTypes {
 	SET_MANUAL_IMAGE_PROCESSING = 'SET_MANUAL_IMAGE_PROCESSING',
@@ -113,11 +114,15 @@ export class DisableImageProcessing implements Action {
 	};
 }
 
-export class BackToWorldView implements Action {
+export class BackToWorldView implements Action, ILogMessage {
 	type = OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW;
 
 	constructor(public payload: { mapId: string }) {
 
+	}
+
+	logMessage() {
+		return `Going back to world map`
 	}
 }
 
@@ -130,6 +135,10 @@ export class SetManualImageProcessing implements Action {
 
 export class BackToWorldSuccess extends BackToWorldView {
 	type = OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS;
+
+	logMessage(): string {
+		return `Went back to world map`;
+	}
 }
 
 export class BackToWorldFailed extends BackToWorldView {
@@ -137,6 +146,10 @@ export class BackToWorldFailed extends BackToWorldView {
 
 	constructor(public payload: { mapId: string, error: any }) {
 		super(payload)
+	}
+
+	logMessage(): string {
+		return `Going back to world map failed`;
 	}
 }
 

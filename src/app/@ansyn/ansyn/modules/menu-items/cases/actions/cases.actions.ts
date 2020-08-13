@@ -84,10 +84,14 @@ export class UpdateCaseBackendAction implements Action {
 	}
 }
 
-export class UpdateCaseBackendSuccessAction implements Action {
+export class UpdateCaseBackendSuccessAction implements Action, ILogMessage {
 	type = CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS;
 
 	constructor(public payload: IStoredEntity<ICasePreview, IDilutedCaseState>) {
+	}
+
+	logMessage() {
+		return `Case was saved to storage`
 	}
 }
 

@@ -18,7 +18,7 @@ import {
 } from '@ansyn/map-facade';
 import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
-import { differenceWith} from 'lodash';
+import { differenceWith } from 'lodash';
 import { filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	OverlayStatusActionsTypes,

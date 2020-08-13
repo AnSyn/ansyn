@@ -18,6 +18,7 @@ import {
 	ICaseTimeState,
 	IDilutedCaseState
 } from '../models/case.model';
+import { QueryCompressorService } from './helpers/query-compresser-service.service';
 import { TranslateService } from '@ngx-translate/core';
 
 const moment = momentNs;
@@ -47,6 +48,7 @@ export class CasesService {
 				@Inject(casesConfig) public config: ICasesConfig,
 				public urlSerializer: UrlSerializer,
 				protected translator: TranslateService,
+				public queryCompressorService: QueryCompressorService,
 				public errorHandlerService: ErrorHandlerService) {
 		this.paginationLimit = this.config.paginationLimit;
 		this.queryParamsKeys = this.config.casesQueryParamsKeys;

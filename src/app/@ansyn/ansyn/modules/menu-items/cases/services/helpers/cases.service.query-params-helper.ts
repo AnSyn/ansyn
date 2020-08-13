@@ -94,29 +94,43 @@ export class QueryParamsHelper {
 		return decodeURIComponent(`${ href }${ urlTree.toString() }`);
 	}
 
+	rot13(s) {
+		if (s) {
+			return (s ? s : this).split('').map(function (_) {
+				if (!_.match(/[A-Za-z]/)) {
+					return _;
+				}
+				const c = Math.floor(_.charCodeAt(0) / 97);
+				const k = (_.toLowerCase().charCodeAt(0) - 83) % 26 || 26;
+				return String.fromCharCode(k + ((c === 0) ? 64 : 96));
+			}).join('');
+		}
+	}
+
 	encodeCaseObjects(key, value, caseState?: ICaseState) {
+		let encodedValue;
 		switch (key) {
 			case 'dataInputFilters':
-				return rison.encode(value);
+				encodedValue = rison.encode(value);
+				break;
 			case 'facets':
-				return rison.encode(value);
+				const compressedFacets = this.casesService.queryCompressorService.compressFacets(value);
+				encodedValue = rison.encode(compressedFacets);
+				break;
 			case 'time':
-				return rison.encode({ ...value, from: value.from.toISOString(), to: value.to.toISOString() });
+				encodedValue =  rison.encode({ ...value, from: value.from.getTime(), to: value.to.getTime() });
+				break;
 			case 'maps':
-				const clonedvalue: ICaseMapsState = cloneDeep(value);
-				clonedvalue.data.forEach((caseMapState: ICaseMapState) => {
-					if (caseMapState.data.overlay) {
-						caseMapState.data.overlay = <any>{
-							id: caseMapState.data.overlay.id,
-							sourceType: caseMapState.data.overlay.sourceType
-						};
-					}
-				});
-				return rison.encode(clonedvalue);
+				const mapData: ICaseMapsState = cloneDeep(value);
+				const compressedMapData = this.casesService.queryCompressorService.compressMapsData(mapData);
+				encodedValue =  rison.encode(compressedMapData);
+				break;
 			case 'region':
-				return wellknown.stringify(value);
+				encodedValue =  wellknown.stringify(value);
+				break;
 			case 'orientation':
-				return rison.encode(value);
+				encodedValue = rison.encode(value);
+				break;
 			case 'overlaysManualProcessArgs':
 				// collect process arguments only for overlays currently loaded by map
 				const activeMapsManualProcessArgs = {};
@@ -128,32 +142,52 @@ export class QueryParamsHelper {
 							return caseMapState.data.overlay && caseMapState.data.overlay.id === overlayId;
 						});
 						if (loadedOverlay) {
-							activeMapsManualProcessArgs[overlayId] = processArgs;
+							activeMapsManualProcessArgs[overlayId] = this.casesService.queryCompressorService.compressManualImageProcessingData(processArgs);
 						}
 					});
 				}
-				return rison.encode(activeMapsManualProcessArgs);
+
+				encodedValue =  rison.encode(activeMapsManualProcessArgs);
+				break;
 			case 'layers':
-				return rison.encode(value.activeLayersIds);
+				encodedValue = rison.encode(value.activeLayersIds);
+				break;
 			case 'miscOverlays':
 				const miscOverlays: IOverlaysHash = value || {};
 				const miscOverlaysDiluted: IDilutedOverlaysHash = mapValues(miscOverlays, (overlay: IOverlay) =>
 					overlay ? { id: overlay.id, sourceType: overlay.sourceType } : null);
-				return rison.encode(miscOverlaysDiluted);
+				encodedValue = rison.encode(miscOverlaysDiluted);
+				break;
 			default:
-				return wellknown.stringify(value);
+				encodedValue = wellknown.stringify(value);
 		}
+
+		const encryptedValue = this.rot13(encodedValue);
+		return encryptedValue;
 	}
 
+
 	decodeCaseObjects(key, value) {
+		const decryptedValue = this.rot13(value);
 		switch (key) {
 			case 'region':
-				return wellknown.parse(value);
+				return wellknown.parse(decryptedValue);
+			case 'facets':
+				return this.casesService.queryCompressorService.decompressFacets(rison.decode(decryptedValue));
+			case 'maps':
+				return this.casesService.queryCompressorService.decompressMapData(rison.decode(decryptedValue));
+			case 'overlaysManualProcessArgs':
+				const decodedData = rison.decode(decryptedValue);
+				const keys = Object.keys(decodedData);
+				keys.forEach((overlayId) => {
+					decodedData[overlayId] = this.casesService.queryCompressorService.decompressManualImageProcessingData(decodedData[overlayId]);
+				});
+				return decodedData;
 			case 'layers':
-				const selectedLayersIds = rison.decode(value);
+				const selectedLayersIds = rison.decode(decryptedValue);
 				return { activeLayersIds: selectedLayersIds };
 			default:
-				return rison.decode(value);
+				return rison.decode(decryptedValue);
 		}
 	}
 }

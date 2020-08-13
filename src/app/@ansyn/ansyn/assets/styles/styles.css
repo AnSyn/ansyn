@@ -299,3 +299,16 @@ input[type=number]::-webkit-outer-spin-button {
 	border-radius: 2px;
 	background: white -webkit-gradient(linear, 0 0, 0 100%, color-stop(.5, rgba(255, 255, 255, .2)), color-stop(.5, transparent), to(transparent));
 }
+
+.mat-option.mat-active, .mat-option:hover {
+	background: rgba(0,0,0,.12) !important;
+}
+
+.mat-autocomplete-panel::-webkit-scrollbar, .mat-select-panel::-webkit-scrollbar {
+	width: 7px;
+}
+
+.mat-autocomplete-panel::-webkit-scrollbar-thumb, .mat-select-panel::-webkit-scrollbar-thumb {
+    background: #2c2c2c;
+    border-radius: 2px;
+}

@@ -68,7 +68,9 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		this.locations = [];
 		this.error = null;
 		this.loading = true;
-		this.store$.dispatch(new SetMapSearchBoxTriggerAction(false));
+		if (!this.control.value) {
+			this.store$.dispatch(new SetMapSearchBoxTriggerAction(false));
+		}
 	}
 
 	goToLocation(point) {

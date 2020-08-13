@@ -8,11 +8,11 @@ import {
 	ContextMenuTriggerAction,
 	IAngleFilterClick,
 	IMapFacadeConfig,
-	IMapState,
+	IMapState, IPendingOverlay,
 	MapActionTypes,
 	mapFacadeConfig,
 	MapFacadeService,
-	mapStateSelector
+	mapStateSelector, SetLayoutAction,
 } from '@ansyn/map-facade';
 import { uniq as _uniq } from 'lodash';
 import { Point } from 'geojson';
@@ -21,6 +21,7 @@ import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/ope
 import { selectRegion } from '../../../overlays/reducers/overlays.reducer';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { CaseGeoFilter, ICaseMapState } from '../../../menu-items/cases/models/case.model';
+import { DisplayFourViewAction } from '../../../overlays/actions/overlays.actions';
 
 export interface IContextMenuShowPayload {
 	point: Point;
@@ -111,10 +112,9 @@ export class ContextMenuComponent implements OnInit {
 
 	overlayButtons: IOverlayButton[] = [
 		{
-			name: 'best',
-			subList: 'allSensors',
-			disabledToolTip: this.config.disableBestResolutionContextMenu ? 'down for maintenance' : null,
-			action: this.clickBest.bind(this)
+			name: 'four-view',
+			subList: 'angleFilter',
+			action: this.clickFourView.bind(this)
 		},
 		{
 			name: 'angle',
@@ -239,11 +239,18 @@ export class ContextMenuComponent implements OnInit {
 		this.displayOverlayEvent($event, prevOverlay);
 	}
 
-	clickBest($event: MouseEvent, subFilter?: string) {
-		const bestOverlay = this.filteredOverlays
-			.filter((overlay: IOverlay) => !subFilter || subFilter === overlay[this.filterField])
-			.reduce((minValue, value) => value.bestResolution < minValue.bestResolution ? value : minValue);
-		this.displayOverlayEvent($event, bestOverlay);
+	getViewedOverlays(): IPendingOverlay[] {
+		const angledFilterSize = this.angleFilter.overlays.length;
+		const views = angledFilterSize >= 4 ? 4 : angledFilterSize;
+
+		let overlays: IPendingOverlay[] = [];
+		this.angleFilter.overlays.slice(0, views).forEach(overlay => overlays.push({ overlay }));
+		return overlays;
+	}
+
+	clickFourView($event: MouseEvent, subFilter?: string) {
+		const overlays = this.getViewedOverlays();
+		this.store$.dispatch(new DisplayFourViewAction(overlays));
 	}
 
 	clickFirst($event: MouseEvent, subFilter?: string) {

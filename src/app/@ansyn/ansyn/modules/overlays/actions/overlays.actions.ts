@@ -44,6 +44,7 @@ export const OverlaysActionTypes = {
 	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT',
 	SET_MISC_OVERLAYS: 'SET_MISC_OVERLAYS',
 	SET_MISC_OVERLAY: 'SET_MISC_OVERLAY',
+	DISPLAY_FOUR_VIEW: 'DISPLAY_FOUR_VIEW',
 };
 
 export class SelectOverlayAction implements Action {
@@ -87,6 +88,12 @@ export class LoadOverlaysAction implements Action {
 	type = OverlaysActionTypes.LOAD_OVERLAYS;
 
 	constructor(public payload: IOverlaysCriteria) {
+	}
+}
+export class DisplayFourViewAction implements Action {
+	type = OverlaysActionTypes.DISPLAY_FOUR_VIEW;
+
+	constructor(public payload: IPendingOverlay[]) {
 	}
 }
 

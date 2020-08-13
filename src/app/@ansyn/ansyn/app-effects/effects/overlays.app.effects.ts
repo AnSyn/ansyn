@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { combineLatest, Observable, of, pipe } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
-	ContextMenuTriggerAction,
 	IMapState,
 	IPendingOverlay,
 	LayoutKey,
@@ -34,7 +33,6 @@ import { IAppState } from '../app.effects.module';
 import { ImageryMapPosition } from '@ansyn/imagery';
 import {
 	catchError,
-	distinctUntilChanged,
 	filter,
 	map,
 	mergeMap,
@@ -46,6 +44,7 @@ import {
 } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import {
+	DisplayFourViewAction,
 	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
@@ -62,13 +61,12 @@ import {
 	MarkUpClass,
 	selectdisplayOverlayHistory,
 	selectDropMarkup,
-	selectOverlaysMap,
-	selectRegion
+	selectOverlaysMap
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { ExtendMap } from '../../modules/overlays/reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../../modules/overlays/components/overlay-overview/overlay-overview.component.const';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
-import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
+import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { Dictionary } from '@ngrx/entity';
 import { LoggerService } from '../../modules/core/services/logger.service';
@@ -109,6 +107,16 @@ export class OverlaysAppEffects {
 		ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
 		filter(({ clearExistingOverlays }) => clearExistingOverlays),
 		map(() => new SetPresetOverlaysAction([]))
+	);
+
+	@Effect()
+	onDisplayFourView: Observable<any> = this.actions$.pipe(
+		ofType<DisplayFourViewAction>(OverlaysActionTypes.DISPLAY_FOUR_VIEW),
+		filter(Boolean),
+		map(({ payload }) => {
+			this.store$.dispatch(new SetPendingOverlaysAction(payload));
+			return new SetLayoutAction('layout6');
+		})
 	);
 
 	@Effect()

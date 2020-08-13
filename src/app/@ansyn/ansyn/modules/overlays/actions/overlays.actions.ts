@@ -113,10 +113,14 @@ export class RequestOverlayByIDFromBackendAction implements Action {
 	}
 }
 
-export class LoadOverlaysSuccessAction implements Action {
+export class LoadOverlaysSuccessAction implements Action, ILogMessage {
 	type = OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS;
 
 	constructor(public payload: IOverlay[], public clearExistingOverlays = false) {
+	}
+
+	logMessage() {
+		return `Loaded ${this.payload.length} overlays`;
 	}
 }
 

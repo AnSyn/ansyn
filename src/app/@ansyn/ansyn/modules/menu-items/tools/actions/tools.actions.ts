@@ -210,11 +210,15 @@ export class AnnotationSetProperties implements Action {
 	}
 }
 
-export class SetSubMenu implements Action {
+export class SetSubMenu implements Action, ILogMessage {
 	type = ToolsActionsTypes.SET_SUB_MENU;
 
 	constructor(public payload: SubMenuEnum) {
 
+	}
+
+	logMessage() {
+		return this.payload ? `Opening sub menu = ${this.payload}` : `Closing sub menus`;
 	}
 }
 

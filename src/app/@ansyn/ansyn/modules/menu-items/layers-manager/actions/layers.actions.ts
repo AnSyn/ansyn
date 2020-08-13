@@ -46,14 +46,18 @@ export class BeginLayerCollectionLoadAction implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return `Beginning layer collection load for case`;
+		return `Beginning layer collection load from storage`;
 	}
 }
 
-export class LayerCollectionLoadedAction implements Action {
+export class LayerCollectionLoadedAction implements Action, ILogMessage {
 	type = LayersActionTypes.LAYER_COLLECTION_LOADED;
 
 	constructor(public payload: ILayer[]) {
+	}
+
+	logMessage() {
+		return `${this.payload.length} Layers loaded from storage`;
 	}
 }
 
@@ -85,10 +89,14 @@ export class SelectOnlyLayer implements Action {
 	}
 }
 
-export class AddLayer implements Action {
+export class AddLayer implements Action, ILogMessage {
 	type = LayersActionTypes.ADD_LAYER;
 
 	constructor(public payload: ILayer) {
+	}
+
+	logMessage() {
+		return `Adding an ${this.payload.type} data layer` + (this.payload.data.features ? ` with ${this.payload.data.features.length} features` : ``);
 	}
 }
 

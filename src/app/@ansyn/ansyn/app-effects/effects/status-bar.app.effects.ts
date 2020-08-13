@@ -31,6 +31,7 @@ import {
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { IOverlay, IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
+import { getLogMessageFromAction } from '../../modules/core/utils/logs/timer-logs';
 
 @Injectable()
 export class StatusBarAppEffects {
@@ -43,7 +44,7 @@ export class StatusBarAppEffects {
 			StatusBarActionsTypes.SET_IMAGE_OPENING_ORIENTATION
 		),
 		tap((action) => {
-			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Status_Bar', action.type);
+			this.loggerService.info(getLogMessageFromAction(action), 'Status_Bar', action.type);
 		}));
 
 	@Effect()

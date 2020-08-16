@@ -3,7 +3,12 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { EMPTY, Observable } from 'rxjs';
 import { IMapState, mapStateSelector, selectMapsIds, SetToastMessageAction, UpdateMapAction } from '@ansyn/map-facade';
-import { IBaseImageryLayer, ImageryCommunicatorService } from '@ansyn/imagery';
+import {
+	IBaseImageryLayer,
+	ImageryCommunicatorService,
+	IMapProvidersConfig,
+	MAP_PROVIDERS_CONFIG
+} from '@ansyn/imagery';
 import { HttpErrorResponse } from '@angular/common/http';
 import { mapValues, uniqBy } from 'lodash';
 import { IAppState } from '../app.effects.module';
@@ -129,15 +134,16 @@ export class CasesAppEffects {
 			})
 		);
 
-	@Effect()
-	onLoadDefaultCase$: Observable<IBaseImageryLayer> = this.actions$.pipe(
+	@Effect({dispatch: false})
+	onLoadDefaultCase$ = this.actions$.pipe(
 		ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
 		withLatestFrom(this.store$.select(selectMapsIds)),
 		filter(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => !action.payload.context && Boolean(mapId)),
-		mergeMap(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => {
+		tap(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => {
 			const position = this.caseConfig.defaultCase.state.maps.data[0].data.position;
 			const communicator = this.imageryCommunicatorService.provide(mapId);
-			return fromPromise(communicator.loadInitialMapSource(position));
+			const mapType = communicator.mapSettings.worldView.mapType;
+			fromPromise(communicator.loadInitialMapSource(position, this.mapProvidersConfig[mapType].defaultMapSource));
 		}));
 
 
@@ -148,6 +154,7 @@ export class CasesAppEffects {
 				@Inject(overlayStatusConfig) protected overlayStatusConfig: IOverlayStatusConfig,
 				protected loggerService: LoggerService,
 				@Inject(casesConfig) public caseConfig: ICasesConfig,
+				@Inject(MAP_PROVIDERS_CONFIG) protected mapProvidersConfig: IMapProvidersConfig,
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 }

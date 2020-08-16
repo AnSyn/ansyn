@@ -108,11 +108,15 @@ export class SetPinLocationModeAction implements Action {
 	};
 }
 
-export class GoToAction implements Action {
+export class GoToAction implements Action, ILogMessage {
 	type = ToolsActionsTypes.GO_TO;
 
 	constructor(public payload: number[]) {
 	};
+
+	logMessage() {
+		return `Go to location ${this.payload}`
+	}
 }
 
 export class GoToInputChangeAction implements Action {
@@ -218,7 +222,7 @@ export class SetSubMenu implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return this.payload ? `Opening sub menu = ${this.payload}` : `Closing sub menus`;
+		return this.payload ? `Opening sub menu = ${SubMenuEnum[this.payload]}` : `Closing sub menus`;
 	}
 }
 

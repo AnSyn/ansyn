@@ -57,7 +57,7 @@ export class LayerCollectionLoadedAction implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return `${this.payload.length} Layers loaded from storage`;
+		return `${this.payload.length} data layers loaded from backend`;
 	}
 }
 
@@ -96,7 +96,7 @@ export class AddLayer implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return `Adding an ${this.payload.type} data layer` + (this.payload.data.features ? ` with ${this.payload.data.features.length} features` : ``);
+		return `Adding ${this.payload.type} data layer ${this.payload.name}` + (this.payload.data.features ? ` with ${this.payload.data.features.length} features` : ``);
 	}
 }
 
@@ -106,6 +106,10 @@ export class AddLayerOnBackendFailedAction extends AddLayer {
 	constructor(public payload: ILayer, error: any) {
 		super(payload)
 	}
+
+	logMessage() {
+		return `Failed adding ${this.payload.type} data layer ${this.payload.name} to backend`
+	}
 }
 
 export class AddLayerOnBackendSuccessAction implements Action {
@@ -113,12 +117,20 @@ export class AddLayerOnBackendSuccessAction implements Action {
 
 	constructor(public payload: string) {
 	}
+
+	logMessage() {
+		return `Added data layer to backend`
+	}
 }
 
-export class UpdateLayer implements Action {
+export class UpdateLayer implements Action, ILogMessage {
 	type = LayersActionTypes.UPDATE_LAYER;
 
 	constructor(public payload: ILayer) {
+	}
+
+	logMessage() {
+		return `Updating ${this.payload.type} data layer ${this.payload.name}`
 	}
 }
 
@@ -128,6 +140,10 @@ export class UpdateLayerOnBackendFailedAction extends UpdateLayer {
 	constructor(public payload: ILayer, error: any) {
 		super(payload)
 	}
+
+	logMessage() {
+		return `Failed saving ${this.payload.type} data layer ${this.payload.name} to backend`
+	}
 }
 
 export class UpdateLayerOnBackendSuccessAction implements Action {
@@ -135,13 +151,21 @@ export class UpdateLayerOnBackendSuccessAction implements Action {
 
 	constructor(public payload: string) {
 	}
+
+	logMessage() {
+		return `Saved data layer to backend`
+	}
 }
 
-export class RemoveLayer implements Action {
+export class RemoveLayer implements Action, ILogMessage {
 	type = LayersActionTypes.REMOVE_LAYER;
 
 	constructor(public payload: string) {
 
+	}
+
+	logMessage() {
+		return `Removing data layer`
 	}
 }
 
@@ -151,12 +175,20 @@ export class RemoveLayerOnBackendFailedAction extends RemoveLayer {
 	constructor(public payload: string, error: any) {
 		super(payload);
 	}
+
+	logMessage() {
+		return `Failed removing data layer from backend`
+	}
 }
 
 export class RemoveLayerOnBackendSuccessAction implements Action {
 	readonly type = LayersActionTypes.REMOVE_LAYER_ON_BACKEND_SUCCESS_ACTION;
 
 	constructor(public payload: string) {
+	}
+
+	logMessage() {
+		return `Removed data layer from backend`
 	}
 }
 

@@ -294,7 +294,7 @@ describe('ToolsAppEffects', () => {
 			d: new SetPinLocationModeAction(false),
 			e: new UpdateMeasureDataOptionsAction({
 				mapId: 'imagery1',
-				options: { isToolActive: false }
+				options: { isToolActive: false, isRemoveMeasureModeActive: false }
 			}),
 			f: new UpdateMeasureDataOptionsAction({
 				mapId: 'imagery1',
@@ -317,7 +317,7 @@ describe('ToolsAppEffects', () => {
 			c: new SetPinLocationModeAction(false),
 			d: new UpdateMeasureDataOptionsAction({
 				mapId: 'imagery1',
-				options: { isToolActive: false }
+				options: { isToolActive: false, isRemoveMeasureModeActive: false }
 			}),
 			e: new UpdateMeasureDataOptionsAction({
 				mapId: 'imagery1',

@@ -86,17 +86,25 @@ export class SetOverlaysScannedAreaDataAction implements Action {
 	}
 }
 
-export class SetAutoImageProcessing implements Action {
+export class SetAutoImageProcessing implements Action, ILogMessage {
 	type = OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING;
 
 	constructor(public payload?: any) {
 	}
+
+	logMessage() {
+		return `Trying to toggle auto image processing`
+	}
 }
 
-export class SetAutoImageProcessingSuccess implements Action {
+export class SetAutoImageProcessingSuccess implements Action, ILogMessage {
 	type = OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS;
 
 	constructor(public payload: boolean) {
+	}
+
+	logMessage() {
+		return `Auto image processing was set to ${this.payload}`
 	}
 }
 
@@ -126,11 +134,15 @@ export class BackToWorldView implements Action, ILogMessage {
 	}
 }
 
-export class SetManualImageProcessing implements Action {
+export class SetManualImageProcessing implements Action, ILogMessage {
 	type = OverlayStatusActionsTypes.SET_MANUAL_IMAGE_PROCESSING;
 
 	constructor(public payload: ImageManualProcessArgs) {
 	};
+
+	logMessage() {
+		return `Updating manual image processing params\n${JSON.stringify(this.payload)}`
+	}
 }
 
 export class BackToWorldSuccess extends BackToWorldView {
@@ -216,18 +228,27 @@ export class SetPresetOverlaysAction implements Action {
 	}
 }
 
-export class AddAlertMsg implements Action {
+export class AddAlertMsg implements Action, ILogMessage {
 	type = OverlayStatusActionsTypes.ADD_ALERT_MSG;
 
 	constructor(public payload: { value: string, key: AlertMsgTypes }) {
 	}
+
+	logMessage() {
+		return `Adding overlay alert message ${this.payload.key}`
+	}
 }
 
-export class RemoveAlertMsg implements Action {
+export class RemoveAlertMsg implements Action, ILogMessage {
 	type = OverlayStatusActionsTypes.REMOVE_ALERT_MSG;
 
 	constructor(public payload: { value: string, key: AlertMsgTypes }) {
 	}
+
+	logMessage() {
+		return `Removing overlay alert message ${this.payload.key}`
+	}
+
 }
 
 export class ToggleDraggedModeAction implements Action {

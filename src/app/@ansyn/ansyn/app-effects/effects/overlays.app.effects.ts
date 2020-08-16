@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { combineLatest, Observable, of, pipe } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
-	ContextMenuTriggerAction,
 	IMapState,
 	IPendingOverlay,
 	LayoutKey,
@@ -34,7 +33,6 @@ import { IAppState } from '../app.effects.module';
 import { ImageryMapPosition } from '@ansyn/imagery';
 import {
 	catchError,
-	distinctUntilChanged,
 	filter,
 	map,
 	mergeMap,
@@ -62,13 +60,12 @@ import {
 	MarkUpClass,
 	selectdisplayOverlayHistory,
 	selectDropMarkup,
-	selectOverlaysMap,
-	selectRegion
+	selectOverlaysMap
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { ExtendMap } from '../../modules/overlays/reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../../modules/overlays/components/overlay-overview/overlay-overview.component.const';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
-import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
+import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { Dictionary } from '@ngrx/entity';
 import { LoggerService } from '../../modules/core/services/logger.service';
@@ -91,7 +88,10 @@ export class OverlaysAppEffects {
 			OverlayStatusActionsTypes.ADD_ALERT_MSG,
 			OverlayStatusActionsTypes.REMOVE_ALERT_MSG,
 			OverlayStatusActionsTypes.TOGGLE_DRAGGED_MODE,
-			OverlayStatusActionsTypes.TOGGLE_OVERLAY_PRESET
+			OverlayStatusActionsTypes.TOGGLE_OVERLAY_PRESET,
+			OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING,
+			OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS,
+			OverlayStatusActionsTypes.SET_MANUAL_IMAGE_PROCESSING
 		),
 		tap((action) => {
 			this.loggerService.info(getLogMessageFromAction(action), 'Overlays', action.type);

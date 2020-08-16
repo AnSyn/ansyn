@@ -5,7 +5,7 @@
 
 :host {
 	position: absolute;
-	min-width: 170px;
+	min-width: 250px;
 	top: @search-panel-popup-top;
 
 
@@ -17,27 +17,34 @@
 	/deep/ .treeview-container .row-item, /deep/ div.form-check-inline {
 		display: flex;
 		color: ghostwhite;
-		padding: 5px 20px;
+		padding: 5px 15px;
 		margin-bottom: .3rem;
 
 		.form-check-label {
 			cursor: pointer !important;
-		}
-
-		&:hover {
-			background-color: @background-color-4;
 		}
 	}
 
 	.data-input-filter {
 		background: @background-color-0;
 		background-clip: padding-box;
+		padding-bottom: 10px;
 	}
 
 	.data-input-header {
 		font-weight: bold;
 		font-size: 1em;
-		padding: 10px 25px;
+		padding: 15px 15px 10px;
+		display: flex;
+
+		div.show-all {
+			margin-left: auto;
+			font-size: 10px;
+			font-style: normal;
+			color: rgba(255, 255, 255, 0.75);
+			margin-top: 3px;
+			cursor: pointer;
+		}	
 	}
 
 	.tree-view-main {
@@ -50,5 +57,28 @@
 	.tree-view-container {
 		max-height: 300px;
 		overflow-y: auto;
+	}
+
+	.form-check {
+		margin-right: auto;
+
+		&:hover {
+			span.only-filter {
+				visibility: visible;
+			}
+		}
+
+		span.only-filter {
+			visibility: hidden;
+			font-size: 10px;
+			font-weight: bold;
+			color: rgba(255, 255, 255, 0.75);
+			cursor: pointer;
+			margin: 0 2px;
+	
+			&:hover {
+				text-decoration: underline;
+			}
+		}
 	}
 }

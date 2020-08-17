@@ -134,7 +134,7 @@ export class UpdateLayer implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return `Updating ${this.payload.type} data layer ${this.payload.name}`
+		return `Updating ${this.payload.type} layer ${this.payload.name}`
 	}
 }
 

@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { ILayerState } from '../../../reducers/layers.reducer';
 import { AddLayer, CloseLayersModal, UpdateLayer } from '../../../actions/layers.actions';
 import { DataLayersService } from '../../../services/data-layers.service';
+import { LoggerService } from '../../../../../core/services/logger.service';
 
 @Component({
 	selector: 'ansyn-edit-layer',
@@ -13,7 +14,11 @@ import { DataLayersService } from '../../../services/data-layers.service';
 export class EditLayerComponent {
 	@Input() layer: ILayer;
 
-	constructor(protected store: Store<ILayerState>, protected dataLayersService: DataLayersService) {
+	constructor(
+		protected store: Store<ILayerState>,
+		protected dataLayersService: DataLayersService,
+		protected loggerService: LoggerService
+		) {
 	}
 
 	addLayer(name) {
@@ -27,6 +32,8 @@ export class EditLayerComponent {
 	}
 
 	editLayer(name) {
+		this.loggerService.info(`Renaming ${this.layer.type} layer ${this.layer.name} to ${name}`, 'Layers', 'RENAME_LAYER');
+		// Todo: by action + effect
 		this.store.dispatch(new UpdateLayer({ ...this.layer, name }));
 		this.closeModal();
 	}

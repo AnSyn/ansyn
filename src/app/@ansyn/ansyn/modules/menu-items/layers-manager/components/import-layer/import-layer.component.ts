@@ -12,6 +12,7 @@ import KmlFormat from 'ol/format/KML';
 import GeoJSONFormat from 'ol/format/GeoJSON';
 import * as shapeFile from 'shapefile';
 import { getErrorMessageFromException } from '../../../../core/utils/logs/timer-logs';
+import { LoggerService } from '../../../../core/services/logger.service';
 
 @Component({
 	selector: 'ansyn-import-layer',
@@ -63,11 +64,17 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 		})
 	);
 
-	constructor(private store: Store<any>, private dataLayersService: DataLayersService) {
+	constructor(
+		private store: Store<any>,
+		private dataLayersService: DataLayersService,
+		protected loggerService: LoggerService
+		) {
 	}
 
 	importLayer(files: FileList) {
 		this.file = files.item(0);
+		this.loggerService.info(`Trying to import data layer from file ${this.file.name}`, 'Layers', 'IMPORT_LAYER');
+		// Todo: by action + effect + service, instead of in component
 		this.fileType = this.file.name.slice(this.file.name.lastIndexOf('.') + 1);
 		if (this.fileType.toLocaleLowerCase() === 'shp') {
 			this.reader.readAsArrayBuffer(this.file);

@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ImportLayerComponent } from './import-layer.component';
 import { StoreModule } from '@ngrx/store';
 import { DataLayersService } from '../../services/data-layers.service';
+import { LoggerService } from '../../../../core/services/logger.service';
 
 describe('ImportLayerComponent', () => {
 	let component: ImportLayerComponent;
@@ -11,7 +12,10 @@ describe('ImportLayerComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ImportLayerComponent],
-			providers: [{ provide: DataLayersService, useValue: {} }],
+			providers: [
+				{ provide: DataLayersService, useValue: {} },
+				{ provide: LoggerService, useValue: {} }
+				],
 			imports: [StoreModule.forRoot({})]
 		})
 			.compileComponents();

@@ -389,10 +389,14 @@ export class SetLayoutSuccessAction implements Action {
 	}
 }
 
-export class ToggleMapLayersAction implements Action {
+export class ToggleMapLayersAction implements Action, ILogMessage {
 	type = MapActionTypes.TOGGLE_MAP_LAYERS;
 
 	constructor(public payload: { mapId: string, isVisible: boolean }) {
+	}
+
+	logMessage() {
+		return `Toggling data layers, visible = ${this.payload.isVisible}`
 	}
 }
 

@@ -103,6 +103,7 @@ export class MapAppEffects {
 			MapActionTypes.CONTEXT_MENU.ANGLE_FILTER_SHOW,
 			MapActionTypes.SET_LAYOUT_SUCCESS,
 			MapActionTypes.SYNCHRONIZE_MAPS,
+			MapActionTypes.TOGGLE_MAP_LAYERS,
 			OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW,
 			OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS,
 			OverlayStatusActionsTypes.BACK_TO_WORLD_FAILED

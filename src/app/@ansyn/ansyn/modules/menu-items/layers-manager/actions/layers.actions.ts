@@ -75,10 +75,14 @@ export class ErrorLoadingLayersAction implements Action {
 	}
 }
 
-export class SetLayerSelection implements Action {
+export class SetLayerSelection implements Action, ILogMessage {
 	readonly type = LayersActionTypes.SET_LAYER_SELECTION;
 
 	constructor(public payload: { id: string, value: boolean }) {
+	}
+
+	logMessage() {
+		return `Toggling one data layer, visible = ${this.payload.value}`
 	}
 }
 

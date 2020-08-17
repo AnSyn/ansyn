@@ -196,10 +196,8 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	// Time Picker functions
 	// TODO: refactor eject timepicker logic outside search panel
 	checkForTimeContentOk(event: any) {
+		this.selectOnlyNumber();
 		if (isArrowRightKey(event) || isArrowLeftKey(event)) {
-			if (event.shiftKey) {
-				this.selectOnlyNumber();
-			}
 			return;
 		}
 		if (isBackspaceKey(event)) {
@@ -207,7 +205,6 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 			if (selection.type === 'Caret' && !/[ \/:]/g.test(selection.baseNode.textContent.charAt(selection.baseOffset - 1))) {
 				return;
 			}
-			this.selectOnlyNumber();
 			selection.deleteFromDocument();
 		}
 		if (isDigitKey(event)) {

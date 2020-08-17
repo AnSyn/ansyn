@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
 import { IMenuItem } from '../models/menu-item.model';
+import { ILogMessage } from '../../ansyn/modules/core/utils/logs/timer-logs';
 
 export const MenuActionTypes = {
 	INITIALIZE_MENU_ITEMS: 'INITIALIZE_MENU_ITEMS',
@@ -40,17 +41,25 @@ export class AddMenuItemAction implements Action {
 	}
 }
 
-export class SelectMenuItemAction implements Action {
+export class SelectMenuItemAction implements Action, ILogMessage {
 	type = MenuActionTypes.SELECT_MENU_ITEM;
 
 	constructor(public payload: { menuKey: string, skipSession?: boolean }) {
 	}
+
+	logMessage() {
+		return `Opening menu item: ${this.payload.menuKey}`
+	}
 }
 
-export class UnSelectMenuItemAction implements Action {
+export class UnSelectMenuItemAction implements Action, ILogMessage {
 	type = MenuActionTypes.UNSELECT_MENU_ITEM;
 
 	constructor(public payload?: any) {
+	}
+
+	logMessage() {
+		return `Closing current menu item`
 	}
 }
 
@@ -61,10 +70,14 @@ export class SetBadgeAction implements Action {
 	}
 }
 
-export class ToggleIsPinnedAction implements Action {
+export class ToggleIsPinnedAction implements Action, ILogMessage {
 	type = MenuActionTypes.TOGGLE_IS_PINNED;
 
 	constructor(public payload: boolean) {
+	}
+
+	logMessage() {
+		return `${this.payload ? 'Pinning' : 'Unpinning'} current menu item`
 	}
 }
 

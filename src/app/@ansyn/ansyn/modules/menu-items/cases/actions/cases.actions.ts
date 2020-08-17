@@ -49,10 +49,14 @@ export class LoadDefaultCaseIfNoActiveCaseAction implements Action {
 	type = CasesActionTypes.LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE;
 }
 
-export class LoadCasesAction implements Action {
+export class LoadCasesAction implements Action, ILogMessage {
 	type = CasesActionTypes.LOAD_CASES;
 
 	constructor(public payload?: ICase[]) {
+	}
+
+	logMessage() {
+		return `Loading cases from backend`
 	}
 }
 

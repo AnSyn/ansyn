@@ -1,4 +1,3 @@
-import { BackToWorldView } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { ToolsAppEffects } from './tools.app.effects';
 import { Observable, of } from 'rxjs';
 import { cloneDeep } from 'lodash';
@@ -36,7 +35,6 @@ import {
 	SetSubMenu,
 	ShowOverlaysFootprintAction, UpdateMeasureDataOptionsAction
 } from '../../modules/menu-items/tools/actions/tools.actions';
-import { SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import { ICase, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
@@ -170,7 +168,7 @@ describe('ToolsAppEffects', () => {
 				},
 				{
 					provide: LoggerService, useValue: {
-						error: (some) => null, info: () => {
+						error: () => null, info: () => {
 						}
 					}
 				}
@@ -254,15 +252,7 @@ describe('ToolsAppEffects', () => {
 		expect(toolsAppEffects).toBeTruthy();
 	});
 
-
 	describe('onDisplayOverlaySuccess', () => {
-		const manualProcessArgs = {
-			Sharpness: 0,
-			Contrast: 0,
-			Brightness: 100,
-			Gamma: 100,
-			Saturation: 0
-		};
 	});
 
 	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Heatmap"', () => {
@@ -322,7 +312,7 @@ describe('ToolsAppEffects', () => {
 
 	it('setSubMenu to null should call setPinLocationMode with false', () => {
 		actions = hot('--a--', {
-			a: new SetSubMenu(null)
+			a: new SetSubMenu({ which: null })
 		});
 		const expectdResult = cold('--b--', {
 			b: new SetPinLocationModeAction(false)

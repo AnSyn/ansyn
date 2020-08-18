@@ -75,7 +75,7 @@ export class LoggerService implements ErrorHandler {
 	}
 
 	protected log(severity: Severity, actionType: string, subType: string, msg: string, includeBrowserData?: boolean) {
-		if (!this.loggerConfig.active) {
+		if (!this.loggerConfig.active || !msg) {
 			return;
 		}
 		this.updateLogTimeForDisconnect();

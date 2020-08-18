@@ -1,4 +1,10 @@
-import { StartMouseShadow, StopMouseShadow, ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
+import {
+	SetSubMenu,
+	StartMouseShadow,
+	StopMouseShadow,
+	ToolsActions,
+	ToolsActionsTypes
+} from '../actions/tools.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { IVisualizerStyle } from '@ansyn/imagery';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
@@ -169,7 +175,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			return { ...state, annotationProperties: { ...state.annotationProperties, ...action.payload } };
 
 		case ToolsActionsTypes.SET_SUB_MENU:
-			return { ...state, subMenu: action.payload };
+			return { ...state, subMenu: (action as SetSubMenu).payload.which };
 
 		default:
 			return state;

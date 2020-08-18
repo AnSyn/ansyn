@@ -214,11 +214,15 @@ export class RemoveCaseLayersFromBackendFailedAction extends RemoveCaseLayersFro
 	}
 }
 
-export class SetActiveAnnotationLayer implements Action {
+export class SetActiveAnnotationLayer implements Action, ILogMessage {
 	type = LayersActionTypes.SET_ACTIVE_ANNOTATION_LAYER;
 
 	constructor(public payload: string) {
 
+	}
+
+	logMessage() {
+		return `Changed active annotation layer`
 	}
 }
 

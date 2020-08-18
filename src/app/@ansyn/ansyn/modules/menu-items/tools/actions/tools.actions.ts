@@ -229,12 +229,14 @@ export class AnnotationSetProperties implements Action {
 export class SetSubMenu implements Action, ILogMessage {
 	type = ToolsActionsTypes.SET_SUB_MENU;
 
-	constructor(public payload: SubMenuEnum) {
+	constructor(public payload: { which: SubMenuEnum, fromUI?: boolean }) {
 
 	}
 
 	logMessage() {
-		return this.payload ? `Opening sub menu = ${SubMenuEnum[this.payload]}` : `Closing sub menus`;
+		return this.payload.fromUI ?
+			this.payload.which ? `Opening sub menu = ${SubMenuEnum[this.payload.which]}` : `Closing current sub menu`
+			: null;
 	}
 }
 

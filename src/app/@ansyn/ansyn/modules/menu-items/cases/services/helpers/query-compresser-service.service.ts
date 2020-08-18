@@ -7,7 +7,7 @@ import {
 	ICompressedCaseFilter,
 	ICompressedCaseMapsState,
 	ICompressedCaseMapState, ICompressedImageManualProcessArgs,
-	IDilutedCaseMapsState, ImageManualProcessArgs,
+	IDilutedCaseMapsState, IImageManualProcessArgs,
 } from '../../models/case.model';
 import { FilterType } from '../../../../filters/models/filter-type';
 
@@ -19,7 +19,7 @@ export class QueryCompressorService {
 	constructor() {
 	}
 
-	compressManualImageProcessingData(imageManualProcessArgs: ImageManualProcessArgs): ICompressedImageManualProcessArgs {
+	compressManualImageProcessingData(imageManualProcessArgs: IImageManualProcessArgs): ICompressedImageManualProcessArgs {
 		return {
 			b: imageManualProcessArgs.Brightness,
 			c: imageManualProcessArgs.Contrast,
@@ -29,7 +29,7 @@ export class QueryCompressorService {
 		}
 	}
 
-	decompressManualImageProcessingData(compressedImageManualProcessArgs: ICompressedImageManualProcessArgs): ImageManualProcessArgs {
+	decompressManualImageProcessingData(compressedImageManualProcessArgs: ICompressedImageManualProcessArgs): IImageManualProcessArgs {
 		return {
 			Brightness: compressedImageManualProcessArgs.b,
 			Contrast: compressedImageManualProcessArgs.c,

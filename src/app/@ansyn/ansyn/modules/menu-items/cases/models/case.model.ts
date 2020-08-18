@@ -189,7 +189,7 @@ export interface IDilutedCaseMapData extends IMapSettingsData {
 	isAutoImageProcessingActive?: boolean;
 	overlayDisplayMode?: OverlayDisplayMode;
 	imageManualProcessArgs?: IImageManualProcessArgs;
-	translationData: ITranslationData;
+	translationData?: ITranslationData;
 }
 
 export interface ICompressedCaseMapData extends IDilutedCaseMapData {

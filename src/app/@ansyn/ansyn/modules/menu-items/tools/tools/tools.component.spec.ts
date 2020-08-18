@@ -5,10 +5,11 @@ import { layersFeatureKey, LayersReducer } from '../../layers-manager/reducers/l
 import { StartMouseShadow, StopMouseShadow } from '../actions/tools.actions';
 import { Store, StoreModule } from '@ngrx/store';
 import { ToolsComponent } from './tools.component';
-import { SubMenuEnum, toolsFeatureKey, toolsFlags, ToolsReducer } from '../reducers/tools.reducer';
+import { toolsFeatureKey, ToolsReducer } from '../reducers/tools.reducer';
 import { MockComponent } from '../../../core/test/mock-component';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatDialogRef, MatDialog } from '@angular/material';
+import { SubMenuEnum, toolsFlags } from '../models/tools.model';
 
 
 describe('ToolsComponent', () => {

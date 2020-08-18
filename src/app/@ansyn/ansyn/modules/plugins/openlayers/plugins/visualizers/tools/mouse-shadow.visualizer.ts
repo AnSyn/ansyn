@@ -3,17 +3,18 @@ import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { FeatureCollection, Point as GeoPoint } from 'geojson';
-import { MapActionTypes, selectActiveMapId, selectMapsTotal, ShadowMouseProducer } from '@ansyn/map-facade';
+import { MapActionTypes, selectActiveMapId, ShadowMouseProducer } from '@ansyn/map-facade';
 import { Actions, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import * as turf from '@turf/turf';
 import { ImageryVisualizer, IVisualizerEntity } from '@ansyn/imagery';
-import { selectToolFlag, toolsFlags } from '../../../../../menu-items/tools/reducers/tools.reducer';
+import { selectToolFlag } from '../../../../../menu-items/tools/reducers/tools.reducer';
 import { AutoSubscription } from 'auto-subscriptions';
 import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
 import { filter, map, mergeMap, take, tap } from 'rxjs/operators';
 import { Inject } from '@angular/core';
 import { IToolsConfig, toolsConfig } from '../../../../../menu-items/tools/models/tools-config';
+import { toolsFlags } from '../../../../../menu-items/tools/models/tools.model';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

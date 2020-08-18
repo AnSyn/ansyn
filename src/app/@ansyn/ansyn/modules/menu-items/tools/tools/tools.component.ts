@@ -11,10 +11,7 @@ import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import {
 	IToolsState,
-	selectSubMenu, selectToolFlag,
-	selectToolFlags,
-	SubMenuEnum,
-	toolsFlags,
+	selectSubMenu, selectToolFlags,
 	toolsStateSelector
 } from '../reducers/tools.reducer';
 import { map, tap, take } from 'rxjs/operators';
@@ -22,6 +19,7 @@ import { selectActiveAnnotationLayer } from '../../layers-manager/reducers/layer
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { MatDialog } from '@angular/material/dialog';
 import { ExportMapsPopupComponent } from '../export-maps-popup/export-maps-popup.component';
+import { SubMenuEnum, toolsFlags } from '../models/tools.model';
 
 @Component({
 	selector: 'ansyn-tools',

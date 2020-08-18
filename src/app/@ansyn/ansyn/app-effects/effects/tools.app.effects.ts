@@ -44,10 +44,11 @@ import {
 	UpdateToolsFlags
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
-import { selectToolFlag, toolsFlags } from '../../modules/menu-items/tools/reducers/tools.reducer';
+import { selectToolFlag } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import { CaseGeoFilter } from '../../modules/menu-items/cases/models/case.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { getLogMessageFromAction } from '../../modules/core/utils/logs/timer-logs';
+import { toolsFlags } from '../../modules/menu-items/tools/models/tools.model';
 
 @Injectable()
 export class ToolsAppEffects {
@@ -66,6 +67,9 @@ export class ToolsAppEffects {
 			ToolsActionsTypes.GO_TO,
 			ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE,
 			ToolsActionsTypes.MEASURES.SET_MEASURE_TOOL_STATE,
+			ToolsActionsTypes.MEASURES.REMOVE_MEASURE,
+			ToolsActionsTypes.MEASURES.ADD_MEASURE,
+			ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS,
 			ToolsActionsTypes.STORE.SET_ANNOTATION_MODE,
 			ToolsActionsTypes.SET_SUB_MENU
 		),

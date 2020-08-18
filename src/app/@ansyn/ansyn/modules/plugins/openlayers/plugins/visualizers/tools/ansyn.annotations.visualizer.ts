@@ -11,7 +11,6 @@ import {
 	selectAnnotationMode,
 	selectAnnotationProperties,
 	selectSubMenu,
-	SubMenuEnum
 } from '../../../../../menu-items/tools/reducers/tools.reducer';
 import { featureCollection, FeatureCollection } from '@turf/turf';
 import {
@@ -43,6 +42,7 @@ import { selectTranslationData } from '../../../../../overlays/overlay-status/re
 import { SetOverlayTranslationDataAction } from '../../../../../overlays/overlay-status/actions/overlay-status.actions';
 import { Actions, ofType } from '@ngrx/effects';
 import { GeometryObject } from 'geojson';
+import { SubMenuEnum } from '../../../../../menu-items/tools/models/tools.model';
 
 // @dynamic
 @ImageryPlugin({
@@ -314,10 +314,10 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			take(1),
 			tap(_ => {
 				if (this.openLastDrawnAnnotationContextMenuEnabled) {
-					this.annotationsVisualizer.events.onSelect.next([]);				
+					this.annotationsVisualizer.events.onSelect.next([]);
 				}
 				if (this.isContinuousDrawingEnabled) {
-					this.annotationsVisualizer.setMode(this.lastAnnotationMode, true);				
+					this.annotationsVisualizer.setMode(this.lastAnnotationMode, true);
 				}
 			})
 		);

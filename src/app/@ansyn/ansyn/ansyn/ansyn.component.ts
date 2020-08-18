@@ -1,24 +1,23 @@
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Component, HostBinding, HostListener, Inject, Input, OnInit, ElementRef } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
 import {
 	MapFacadeService,
-	mapStateSelector,
 	selectActiveMapId,
 	selectMapsList,
 	selectOverlayOfActiveMap,
 	selectIsMinimalistViewMode
 } from '@ansyn/map-facade';
 import { selectIsPinned, selectMenuCollapse } from '@ansyn/menu';
-import { filter, map, withLatestFrom, tap } from 'rxjs/operators';
+import { filter, map, withLatestFrom } from 'rxjs/operators';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
 import { LoadDefaultCaseAction } from '../modules/menu-items/cases/actions/cases.actions';
-import { ICase, ICaseMapState } from '../modules/menu-items/cases/models/case.model';
+import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
 import { IToolsConfig, toolsConfig } from '../modules/menu-items/tools/models/tools-config';
 import { UpdateToolsFlags } from '../modules/menu-items/tools/actions/tools.actions';
-import { toolsFlags } from '../modules/menu-items/tools/reducers/tools.reducer';
 import { LoggerService } from '../modules/core/services/logger.service';
 import { IOverlay } from '../modules/overlays/models/overlay.model';
+import { toolsFlags } from '../modules/menu-items/tools/models/tools.model';
 
 @Component({
 	selector: 'ansyn-app',

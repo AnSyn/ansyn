@@ -1,10 +1,10 @@
 import { Action } from '@ngrx/store';
 import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
-import { SubMenuEnum, toolsFlags, IMeasureDataOptions } from '../reducers/tools.reducer';
 import { type } from '../../../core/utils/type';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 import { AnnotationMode, IUpdateFeatureEvent } from '@ansyn/ol';
 import { ILogMessage } from '../../../core/utils/logs/timer-logs';
+import { IMeasureDataOptions, SubMenuEnum, toolsFlags } from '../models/tools.model';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),
@@ -176,7 +176,7 @@ export class RemoveMeasureDataAction implements Action {
 	}
 }
 
-export class UpdateMeasureDataOptionsAction implements Action {
+export class UpdateMeasureDataOptionsAction implements Action, ILogMessage {
 	type = ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS;
 
 	constructor(public payload: {
@@ -184,9 +184,13 @@ export class UpdateMeasureDataOptionsAction implements Action {
 		options: Partial<IMeasureDataOptions>
 	}) {
 	}
+
+	logMessage() {
+		return `Updating measure tool options: ${JSON.stringify(this.payload.options)}`
+	}
 }
 
-export class AddMeasureAction implements Action {
+export class AddMeasureAction implements Action, ILogMessage {
 	type = ToolsActionsTypes.MEASURES.ADD_MEASURE;
 
 	constructor(public payload: {
@@ -194,15 +198,23 @@ export class AddMeasureAction implements Action {
 		measure: IVisualizerEntity
 	}) {
 	}
+
+	logMessage() {
+		return `Adding one measure to map`
+	}
 }
 
-export class RemoveMeasureAction implements Action {
+export class RemoveMeasureAction implements Action, ILogMessage {
 	type = ToolsActionsTypes.MEASURES.REMOVE_MEASURE;
 
 	constructor(public payload: {
 		mapId: string;
 		measureId?: string;
 	}) {
+	}
+
+	logMessage() {
+		return `Removing ${this.payload.measureId ? 'one measure' : 'all measures'} from map`
 	}
 }
 

@@ -34,12 +34,12 @@ import { AutoSubscription } from 'auto-subscriptions';
 import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
 import { distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 import {
-	IMeasureData,
 	selectIsMeasureToolActive,
 	selectMeasureDataByMapId
 } from '../../../../../menu-items/tools/reducers/tools.reducer';
 import { Inject } from '@angular/core';
 import { AddMeasureAction, RemoveMeasureAction } from '../../../../../menu-items/tools/actions/tools.actions';
+import { IMeasureData } from '../../../../../menu-items/tools/models/tools.model';
 
 interface ILabelHandler {
 	select: Select;

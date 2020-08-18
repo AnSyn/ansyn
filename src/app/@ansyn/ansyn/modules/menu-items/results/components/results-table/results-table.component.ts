@@ -18,6 +18,7 @@ import {
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
 import { TranslateService } from '@ngx-translate/core';
+import { LoggerService } from '../../../../core/services/logger.service';
 
 interface ITableHeader {
 	headerName: string;
@@ -116,8 +117,11 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		);
 
 
-	constructor(protected store$: Store<IOverlaysState>,
-				protected translateService: TranslateService) {
+	constructor(
+		protected store$: Store<IOverlaysState>,
+		protected translateService: TranslateService,
+		protected loggerService: LoggerService
+	) {
 	}
 
 	findIndexBytOverlayId(overlayId: string): number {
@@ -173,6 +177,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	sortOverlays(header: ITableHeader): void {
+		this.loggerService.info(`Sorting results table by ${header.headerName} ${header.isDescending ? 'ascending' : 'descending'}`, 'Results Table', 'SORT_RESULTS_TABLE');
 		let { headerData, isDescending, sortFn } = header;
 		this.sortedBy = headerData;
 		this.overlays.sort(function (a, b) {

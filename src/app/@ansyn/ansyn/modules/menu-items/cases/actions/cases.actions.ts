@@ -141,10 +141,14 @@ export class SelectDilutedCaseAction implements Action {
 	}
 }
 
-export class LoadCaseAction implements Action {
+export class LoadCaseAction implements Action, ILogMessage {
 	type = CasesActionTypes.LOAD_CASE;
 
 	constructor(public payload: string) {
+	}
+
+	logMessage() {
+		return `Loading case from backend`
 	}
 }
 

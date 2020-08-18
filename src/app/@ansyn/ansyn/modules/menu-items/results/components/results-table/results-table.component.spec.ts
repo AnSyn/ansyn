@@ -16,6 +16,7 @@ import {
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { mapFacadeConfig, MapFacadeModule } from '@ansyn/map-facade';
 import { EffectsModule } from '@ngrx/effects';
+import { LoggerService } from '../../../../core/services/logger.service';
 
 describe('ResultsTableComponent', () => {
 	let component: ResultsTableComponent;
@@ -30,7 +31,10 @@ describe('ResultsTableComponent', () => {
 				EffectsModule.forRoot([]),
 				BrowserAnimationsModule],
 			declarations: [ResultsTableComponent],
-			providers: [{ provide: mapFacadeConfig, useValue: {} }]
+			providers: [
+				{ provide: mapFacadeConfig, useValue: {} },
+				{ provide: LoggerService, useValue: {} }
+			]
 		})
 			.compileComponents();
 	}));

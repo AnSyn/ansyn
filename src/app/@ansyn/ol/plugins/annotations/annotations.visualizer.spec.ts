@@ -3,7 +3,8 @@ import { of } from 'rxjs';
 import { AnnotationsVisualizer } from './annotations.visualizer';
 import { OL_PLUGINS_CONFIG } from '../plugins.config';
 import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
+import { LoggerService } from '../../../ansyn/modules/core/services/logger.service';
 
 describe('AnnotationsVisualizer', () => {
 	let annotationsVisualizer: AnnotationsVisualizer;
@@ -13,6 +14,10 @@ describe('AnnotationsVisualizer', () => {
 			providers: [
 				{
 					provide: TranslateService,
+					useValue: {}
+				},
+				{
+					provide: LoggerService,
 					useValue: {}
 				},
 				AnnotationsVisualizer,
@@ -25,7 +30,6 @@ describe('AnnotationsVisualizer', () => {
 					useValue: { Annotations: { displayId: true } }
 				},
 			],
-			imports: [TranslateModule]
 		});
 	});
 

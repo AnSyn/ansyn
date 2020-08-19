@@ -12,7 +12,6 @@ import { fromPromise } from 'rxjs/internal-compatibility';
 
 @Injectable()
 export class FiltersEffects {
-;
 
 	@Effect()
 	onFilterSearch$ = combineLatest([this.store$.pipe(select(selectFiltersSearch)), this.store$.pipe(select(selectFiltersMetadata))]).pipe(

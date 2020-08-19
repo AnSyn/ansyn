@@ -1,9 +1,11 @@
 import { UpdateFilterAction } from '../../actions/filters.actions';
 import { select, Store } from '@ngrx/store';
 import {
-	FiltersMetadata, FiltersCounters,
+	FiltersCounters,
+	FiltersMetadata,
 	IFiltersState,
-	selectFiltersMetadata, selectFiltersCounters,
+	selectFiltersCounters,
+	selectFiltersMetadata,
 	selectFiltersSearchResults,
 	selectIsLoading,
 	selectShowOnlyFavorites
@@ -89,10 +91,6 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	constructor(protected store: Store<IFiltersState>, @Inject(filtersConfig) protected config: IFiltersConfig) {
 	}
 
-	get disabledShowAll() {
-		return !this.metadataFromState || this.showOnlyFavorite;
-	}
-
 	ngOnInit() {
 		this.subscribers.push(
 			this.metadataFromState$.subscribe(),
@@ -125,6 +123,6 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 	toggleVisible(): void {
 		const newMetadata = clone(this.metadataFromState);
 		newMetadata.collapse = !newMetadata.collapse;
-		this.store.dispatch(new UpdateFilterAction({filter: this.filter, newMetadata}));
+		this.store.dispatch(new UpdateFilterAction({ filter: this.filter, newMetadata }));
 	}
 }

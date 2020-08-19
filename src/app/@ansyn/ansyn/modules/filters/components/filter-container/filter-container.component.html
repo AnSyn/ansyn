@@ -23,8 +23,8 @@
 	</div>
 
 	<ng-template #filterBody>
-		<div class="fields scrolled " *ngIf="!showOnlyFavorite" [@fieldsTrigger]="!metadataFromState.collapse">
-			<div *ngIf="metadataFromState" [ngSwitch]="metadataFromState?.type">
+		<div class="fields scrolled " *ngIf="!showOnlyFavorite" [@fieldsTrigger]="!metadataFromState?.collapse">
+			<div *ngIf="metadataFromState; else noResult" [ngSwitch]="metadataFromState?.type">
 
 				<ansyn-enum-filter-container
 					*ngSwitchCase="'Enum'"
@@ -58,6 +58,9 @@
 					[filtersSearchResult]="filtersSearchResults[filter.displayName]">
 				</ansyn-array-filter-container>
 			</div>
+			<ng-template #noResult>
+				<span class="field-name">{{'No Results' | translate }}</span>
+			</ng-template>
 		</div>
 
 		<div class="show-more-less" *ngIf="!isGotSmallListFromProvider && !showOnlyFavorite && !metadataFromState.collapse">

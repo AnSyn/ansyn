@@ -56,7 +56,7 @@ export interface IFiltersState {
 export const initialFiltersState: IFiltersState = {
 	filtersMetadata: new Map<IFilter, FilterMetadata>(),
 	filtersCounters: new Map<IFilter, FilterCounters>(),
-	isLoading: true,
+	isLoading: false,
 	facets: {
 		showOnlyFavorites: false,
 		filters: []

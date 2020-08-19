@@ -97,7 +97,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 	algorithmConfig$: Observable<IAlgorithmConfig> = this.currentTaskAlgorithmName$.pipe(
 		map((name: string) => this.algorithms[name])
 	);
-	timeEstimation$: Observable<number> = combineLatest(this.currentTaskOverlays$, this.algorithmConfig$).pipe(
+	timeEstimation$: Observable<number> = combineLatest([this.currentTaskOverlays$, this.algorithmConfig$]).pipe(
 		map(([overlays, config]: [IOverlay[], IAlgorithmConfig]) => {
 			if (!Boolean(config)) {
 				return 0;
@@ -134,11 +134,11 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		map((status: AlgorithmTaskStatus) => status === 'New')
 	);
 	@AutoSubscription
-	getOverlaysForNewTask$: Observable<IOverlay[]> = combineLatest(
+	getOverlaysForNewTask$: Observable<IOverlay[]> = combineLatest([
 		this.isNewTask$,
 		this.currentTaskAlgorithmName$,
 		this.store$.select(selectFavoriteOverlays)
-	).pipe(
+	]).pipe(
 		filter(([isNew, algName, overlays]: [boolean, string, IOverlay[]]) => isNew && Boolean(algName)),
 		map((([isNew, algName, overlays]: [boolean, string, IOverlay[]]) => {
 			const result = overlays.filter((overlay: IOverlay) => {
@@ -151,12 +151,12 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		})
 	);
 	@AutoSubscription
-	getMasterOverlayForNewTask$: Observable<any> = combineLatest(
+	getMasterOverlayForNewTask$: Observable<any> = combineLatest([
 		this.isNewTask$,
 		this.store$.select(selectActiveMapId),
 		this.store$.select(selectMaps),
 		this.store$.select(selectCurrentAlgorithmTaskOverlays)
-	).pipe(
+	]).pipe(
 		filter(([isNew, activeMapId, mapEntities]: [boolean, string, Dictionary<ICaseMapState>, IOverlay[]]) => Boolean(isNew && mapEntities[activeMapId])),
 		map(([isNew, activeMapId, mapEntities, overlays]: [boolean, string, Dictionary<ICaseMapState>, IOverlay[]]) => {
 			const activeMap = mapEntities[activeMapId];
@@ -173,7 +173,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		})
 	);
 	@AutoSubscription
-	checkForErrors$: Observable<any> = combineLatest(
+	checkForErrors$: Observable<any> = combineLatest([
 		this.isNewTask$,
 		this.currentTaskAlgorithmName$,
 		this.currentTaskMasterOverlay$,
@@ -181,7 +181,7 @@ export class TasksFormComponent implements OnInit, OnDestroy {
 		this.translate.get('The number of selected overlays _X_ should be at least _Y_'),
 		this.translate.get('The number of selected overlays _X_ should be at most _Y_'),
 		this.translate.get('No master overlay selected')
-	).pipe(
+	]).pipe(
 		filter(([isNew, algName, masterOverlay, overlays, atLeastMsg, atMosteMsg, masterMsg]: [boolean, string, IOverlay, IOverlay[], string, string, string]) => isNew && Boolean(algName)),
 		tap(([isNew, algName, masterOverlay, overlays, atLeastMsg, atMostMsg, masterMsg]: [boolean, string, IOverlay, IOverlay[], string, string, string]) => {
 			let message = '';

@@ -95,8 +95,8 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		drop: {
 			onMouseOver: this.onMouseOver.bind(this),
 			onMouseOut: this.onMouseOut.bind(this),
-			onClick: this.clickEvent(),
-			onDblClick: () => event.stopPropagation(),
+			// onClick: this.clickEvent(),
+			onDblClick: this.onDblClick.bind(this),
 			dropId: d => 'dropId-' + d.id,
 			color: BASE_DROP_COLOR,
 			date: d => new Date(d.date),

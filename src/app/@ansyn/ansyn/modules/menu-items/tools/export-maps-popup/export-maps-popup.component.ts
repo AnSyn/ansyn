@@ -33,7 +33,7 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 	isDownloadAvailable = false;
 
 	@AutoSubscription
-	onMapReadyToExport$ = combineLatest(this.mapBlob, this.onClick).pipe(
+	onMapReadyToExport$ = combineLatest([this.mapBlob, this.onClick]).pipe(
 		tap(([blob, isExport]: [Blob, boolean]) => {
 			if (isExport) {
 				saveAs(blob, 'map.jpg');

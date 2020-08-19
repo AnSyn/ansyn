@@ -6,7 +6,7 @@ describe('QueryCompresserService', () => {
 	beforeEach(() => TestBed.configureTestingModule({}));
 
 	it('should be created', () => {
-		const service: QueryCompressorService = TestBed.get(QueryCompressorService);
+		const service: QueryCompressorService = TestBed.inject(QueryCompressorService);
 		expect(service).toBeTruthy();
 	});
 });

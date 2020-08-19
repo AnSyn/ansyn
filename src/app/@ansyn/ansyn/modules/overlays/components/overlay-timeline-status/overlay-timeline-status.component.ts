@@ -42,7 +42,7 @@ export class OverlayTimelineStatusComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	showStatus$: Observable<any> = combineLatest(this.overlaysStatusMessage$, this.overlaysLoader$).pipe(
+	showStatus$: Observable<any> = combineLatest([this.overlaysStatusMessage$, this.overlaysLoader$]).pipe(
 		map(([statusMessage, loading]) => Boolean(statusMessage && !loading)),
 		distinctUntilChanged(),
 		tap((showStatus: boolean) => {

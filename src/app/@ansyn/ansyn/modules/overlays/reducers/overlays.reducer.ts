@@ -151,7 +151,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			}
 
 		case OverlaysActionTypes.LOAD_OVERLAYS: {
-			return overlaysAdapter.addAll([], {
+			return overlaysAdapter.setAll([], {
 				...state,
 				loading: true,
 				loaded: false,
@@ -165,7 +165,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 		}
 
 		case OverlaysActionTypes.CHECK_TRIANGLES: {
-			return overlaysAdapter.addAll([], {
+			return overlaysAdapter.setAll([], {
 				...state,
 				loading: true,
 				loaded: false
@@ -183,7 +183,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			if (!(<any>action).clearExistingOverlays) {
 				return overlaysAdapter.addMany(action.payload, newState);
 			}
-			return overlaysAdapter.addAll(action.payload, newState);
+			return overlaysAdapter.setAll(action.payload, newState);
 		}
 
 		case OverlaysActionTypes.LOAD_OVERLAYS_FAIL:

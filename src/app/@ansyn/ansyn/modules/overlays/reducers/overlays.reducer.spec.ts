@@ -108,7 +108,7 @@ describe('Overlay Reducer', () => {
 		/*  -> '5' and '6' does not exist on "overlays" */
 		const setFilteredOverlaysAction = new SetFilteredOverlaysAction(filteredOverlays);
 		const overlays: any = [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }];
-		const state = OverlayReducer(overlaysAdapter.addAll(overlays, mockOverlayInitialState), setFilteredOverlaysAction);
+		const state = OverlayReducer(overlaysAdapter.setAll(overlays, mockOverlayInitialState), setFilteredOverlaysAction);
 		expect(state.filteredOverlays).toEqual(['1', '2', '3', '4']);
 	});
 

@@ -34,11 +34,12 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 	}
 
 	@AutoSubscription
-	show$ = () => combineLatest(
+	show$ = () => combineLatest([
 		this.store$.select(selectIsMeasureToolActive),
 		this.store$.select(selectActiveMapId),
 		this.store$.select(selectIsMinimalistViewMode),
-		this.store$.select(selectOverlayByMapId(this.mapId))).pipe(
+		this.store$.select(selectOverlayByMapId(this.mapId))
+		]).pipe(
 		tap(([isActive, activeMapId, isHidden, overlay]) => {
 			const differentOverlay = this.isDifferentOverlay(this.currentOverlay, overlay);
 			this.currentOverlay = overlay;

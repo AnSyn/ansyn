@@ -102,10 +102,10 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	geoFilter$ = combineLatest(
+	geoFilter$ = combineLatest([
 		this.store$.select(selectGeoFilterType),
 		this.store$.select(selectGeoFilterActive)
-	).pipe(
+	]).pipe(
 		tap(([geoFilterType, active]) => {
 			this.geoFilterTitle = `${ geoFilterType }`;
 			this.popupExpanded.set('LocationPicker', active);

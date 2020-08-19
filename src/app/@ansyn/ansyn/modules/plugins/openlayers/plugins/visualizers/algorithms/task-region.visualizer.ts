@@ -17,6 +17,7 @@ import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
 import Stroke from 'ol/style/Stroke';
 import Feature from 'ol/Feature';
+import { click as mouseClickCondition } from 'ol/events/condition'
 import {
 	selectAlgorithmTaskDrawIndicator,
 	selectCurrentAlgorithmTaskAlgorithmName,
@@ -72,12 +73,12 @@ export class TaskRegionVisualizer extends EntitiesVisualizer {
 	);
 
 	@AutoSubscription
-	interactionChanges$: Observable<any> = combineLatest(this.isActiveMap$, this.drawIndicator$).pipe(
+	interactionChanges$: Observable<any> = combineLatest([this.isActiveMap$, this.drawIndicator$]).pipe(
 		tap(this.interactionChanges.bind(this))
 	);
 
 	@AutoSubscription
-	drawChanges$ = combineLatest(this.region$, this.drawIndicator$, this.regionLengthInMeter$).pipe(
+	drawChanges$ = combineLatest([this.region$, this.drawIndicator$, this.regionLengthInMeter$]).pipe(
 		mergeMap(this.drawChanges.bind(this)));
 
 	constructor(
@@ -114,7 +115,7 @@ export class TaskRegionVisualizer extends EntitiesVisualizer {
 	createDrawInteraction() {
 		const drawInteractionHandler = new Draw({
 			type: 'Point',
-			condition: (event: any) => (<MouseEvent>event.originalEvent).which === 1,
+			condition: mouseClickCondition,
 			style: this.iconStyle
 		});
 

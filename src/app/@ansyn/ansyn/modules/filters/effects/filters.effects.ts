@@ -15,7 +15,7 @@ export class FiltersEffects {
 ;
 
 	@Effect()
-	onFilterSearch$ = combineLatest(this.store$.pipe(select(selectFiltersSearch)), this.store$.pipe(select(selectFiltersMetadata))).pipe(
+	onFilterSearch$ = combineLatest([this.store$.pipe(select(selectFiltersSearch)), this.store$.pipe(select(selectFiltersMetadata))]).pipe(
 		mergeMap(([filtersSearch, filters]) => fromPromise(this.getFiltersSearchResults([filtersSearch, filters]))),
 		map((filtersSearchResults) => new SetFiltersSearchResults(filtersSearchResults))
 	);

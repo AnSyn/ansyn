@@ -33,7 +33,7 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	};
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
-		return Observable.create((observer: Observer<IOverlaysFetchData>) => {
+		return new Observable((observer: Observer<IOverlaysFetchData>) => {
 			const overlays: IOverlay[] = [
 				{
 					id: 'abc',
@@ -60,7 +60,7 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	}
 
 	getOverlayById(id: string): Observable<IOverlay> {
-		return Observable.create((observer: Observer<IOverlay>) => {
+		return new Observable((observer: Observer<IOverlay>) => {
 			const overlay: any = {
 				id: 'abc',
 				sourceType: 'mock1',
@@ -260,7 +260,7 @@ describe('OverlaysService', () => {
 		let response = { key: 'value' };
 
 		spyOn(multipleOverlaysSourceProvider, 'fetch').and.callFake(() => {
-			return Observable.create((observer: Observer<any>) => observer.next(response));
+			return new Observable((observer: Observer<any>) => observer.next(response));
 		});
 
 		overlaysService.search(searchParams).subscribe((result: any) => {
@@ -278,7 +278,7 @@ describe('OverlaysService', () => {
 		let response = { key: 'value' };
 
 		let calls = spyOn(multipleOverlaysSourceProvider, 'fetch').and.callFake(function () {
-			return Observable.create((observer: Observer<any>) => observer.next(response));
+			return new Observable((observer: Observer<any>) => observer.next(response));
 		}).calls;
 
 

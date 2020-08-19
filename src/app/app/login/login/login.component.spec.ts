@@ -59,7 +59,7 @@ describe('LoginComponent', () => {
 		spyOn(fakeLogin$, 'subscribe');
 		spyOn(component, 'loginRequest').and.callFake(() => fakeLogin$);
 		component.login();
-		expect(fakeLogin$.subscribe).toHaveBeenCalled();
+		expect(fakeLogin$.subscribe).toHaveBeenCalled(); // tslint:disable-line
 	});
 
 

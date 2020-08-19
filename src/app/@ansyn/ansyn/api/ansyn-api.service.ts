@@ -82,7 +82,7 @@ export class AnsynApi {
 		overlaysLoadedSuccess: new EventEmitter<IOverlay[] | false>(),
 		displayOverlaySuccess: new EventEmitter<{ overlay: IOverlay | false, mapId: string }>()
 	};
-	/** @deprecated onReady as own events was deprecated use events.onReady instead */
+	/** @deprecated onReady as own event was deprecated use events.onReady instead */
 	onReady = new EventEmitter<boolean>(true);
 	features;
 
@@ -120,7 +120,7 @@ export class AnsynApi {
 	ready$ = this.imageryCommunicatorService.instanceCreated.pipe(
 		take(1),
 		tap((map) => {
-			this.onReady.emit(true);
+			this.onReady.emit(true); // tslint:disable-line
 			this.events.onReady.emit(true);
 		})
 	);
@@ -285,7 +285,7 @@ export class AnsynApi {
 	}
 
 	getOverlays(): Observable<IOverlay[]> {
-		return combineLatest(this.store.select(selectOverlaysArray), this.store.select(selectFilteredOveralys)).pipe(
+		return combineLatest([this.store.select(selectOverlaysArray), this.store.select(selectFilteredOveralys)]).pipe(
 			take(1),
 			map(([overlays, filteredOverlays]: [IOverlay[], string[]]) => {
 				return overlays.filter((overlay) => {

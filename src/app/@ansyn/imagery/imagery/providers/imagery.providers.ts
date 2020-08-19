@@ -20,7 +20,7 @@ export function BaseImageryPluginProviderFactory(pluginsCollections: Array<Image
 		return [];
 	}
 
-	const childInjector = Injector.create(providers, parent);
+	const childInjector = Injector.create({providers, parent});
 	return childInjector.get(BaseImageryPlugin);
 }
 

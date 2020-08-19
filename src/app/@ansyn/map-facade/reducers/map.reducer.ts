@@ -147,7 +147,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		}
 
 		case MapActionTypes.SET_MAPS_DATA:
-			return mapsAdapter.addAll(action.payload.mapsList, state);
+			return mapsAdapter.setAll(action.payload.mapsList, state);
 
 		case MapActionTypes.DECREASE_PENDING_MAPS_COUNT:
 			const currentCount = state.pendingMapsCount;
@@ -174,7 +174,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			if (layout.mapsCount !== Object.values(state.entities).length && Object.values(state.entities).length) {
 				const pendingMapsCount = Math.abs(layout.mapsCount - Object.values(state.entities).length);
 				const mapsList = setMapsDataChanges(state.entities, state.activeMapId, layout);
-				return mapsAdapter.addAll(mapsList, { ...state, pendingMapsCount, layout: action.payload });
+				return mapsAdapter.setAll(mapsList, { ...state, pendingMapsCount, layout: action.payload });
 			}
 			return { ...state, layout: action.payload };
 

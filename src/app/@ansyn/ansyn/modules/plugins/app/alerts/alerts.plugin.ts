@@ -46,16 +46,16 @@ export class AlertsPlugin extends BaseImageryPlugin {
 	overlayByMap$ = (mapId) => this.store$.select(selectOverlayByMapId(mapId));
 
 	@AutoSubscription
-	setOverlaysNotInCase$ = () => combineLatest(
-		this.overlayByMap$(this.mapId).pipe(startWith(null)),
-		this.filteredOverlay$.pipe(startWith([]))).pipe(
+	setOverlaysNotInCase$ = () => combineLatest([
+		this.overlayByMap$(this.mapId).pipe(startWith<any, null>(null)),
+		this.filteredOverlay$.pipe(startWith([]))]).pipe(
 		map(this.setOverlaysNotInCase.bind(this)),
 		filter(Boolean),
 		tap((action: RemoveAlertMsg | AddAlertMsg) => this.store$.dispatch(action))
 	);
 
 	@AutoSubscription
-	positionChange$ = () => combineLatest(this.store$.select(selectMapPositionByMapId(this.mapId)), this.store$.select(selectOverlayByMapId(this.mapId)))
+	positionChange$ = () => combineLatest([this.store$.select(selectMapPositionByMapId(this.mapId)), this.store$.select(selectOverlayByMapId(this.mapId))])
 		.pipe(
 			filter(([position, overlay]) => Boolean(position) && Boolean(overlay)),
 			switchMap(this.positionChanged.bind(this)),

@@ -10,7 +10,7 @@ import { UUID } from 'angular2-uuid';
 import { AutoSubscription } from 'auto-subscriptions';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { cloneDeep, merge } from 'lodash';
-import { platformModifierKeyOnly } from 'ol/events/condition';
+import { click as mouseClickCondition, platformModifierKeyOnly } from 'ol/events/condition';
 import olFeature from 'ol/Feature';
 import olCollection from 'ol/Collection';
 import OLGeoJSON from 'ol/format/GeoJSON';
@@ -58,7 +58,6 @@ export interface IEditAnnotationMode {
 @Injectable()
 export class AnnotationsVisualizer extends EntitiesVisualizer {
 	static fillAlpha = 0.4;
-	private skipNextMapClickHandler = false;
 	disableCache = true;
 	public mode: AnnotationMode;
 	mapSearchIsActive = false;
@@ -90,19 +89,15 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	clearAnnotationEditMode$ = tap(() => {
 		this.clearAnnotationEditMode();
 	});
-
 	@AutoSubscription
 	selected$ = this.events.onSelect.pipe(
 		this.clearAnnotationEditMode$,
 		this.clearLabelTranslate$,
 		tap((selected: any) => this.selected = selected));
-
 	@AutoSubscription
 	labelTranslate$ = this.events.onLabelTranslateStart.pipe(tap((labelTranslate) => this.labelTranslate = labelTranslate));
-
 	@AutoSubscription
 	editAnnotation$ = this.events.onAnnotationEditStart.pipe(tap(annotationEdit => this.currentAnnotationEdit = annotationEdit));
-
 	modeDictionary = {
 		Arrow: {
 			type: 'LineString',
@@ -113,7 +108,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			geometryFunction: this.rectangleGeometryFunction.bind(this)
 		}
 	};
-
 	protected measuresTextStyle = {
 		font: '16px Calibri,sans-serif',
 		fill: new olFill({
@@ -127,7 +121,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		overflow: true,
 		rotateWithView: true
 	};
-
+	private skipNextMapClickHandler = false;
 	private iconSrc = '';
 
 	constructor(protected projectionService: OpenLayersProjectionService,
@@ -242,7 +236,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				const drawInteractionHandler = new Draw({
 					type: this.modeDictionary[mode] ? this.modeDictionary[mode].type : mode,
 					geometryFunction: this.modeDictionary[mode] ? this.modeDictionary[mode].geometryFunction : undefined,
-					condition: (event: any) => (<MouseEvent>event.originalEvent).which === 1,
+					condition: mouseClickCondition,
 					style: this.featureStyle.bind(this)
 				});
 
@@ -551,7 +545,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					}),
 					text: `${ calcArea } :${ areaText }`,
 					offsetY: height / 2,
-					offsetX: - (width / 2)
+					offsetX: -(width / 2)
 				})
 			})
 		];
@@ -647,6 +641,70 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.events.onAnnotationEditStart.next(event);
 	}
 
+	onResetView(): Observable<boolean> {
+		this.clearLabelTranslateMode();
+		this.clearAnnotationEditMode();
+		return super.onResetView();
+	}
+
+	dispose() {
+		this.clearLabelTranslateMode();
+		this.clearAnnotationEditMode();
+		super.dispose();
+	}
+
+	clearAnnotationEditMode() {
+		if (this.currentAnnotationEdit) {
+			this.setEditAnnotationMode(this.currentAnnotationEdit.originalFeature.getId(), false)
+		}
+	}
+
+	protected mapClick = (event) => {
+		this.events.onClick.next(); // TODO - can be removed when ansyn.annotations.visualizer will use communicator instead of this for listening to click events on the map
+		// As the drawend callback is called before the click one, if the annotation's context-menu has been opened on drawend,
+		//  the click event will cause it to be closed so in this case, we use this flag to prevent it.
+		if (this.skipNextMapClickHandler) {
+			this.skipNextMapClickHandler = false;
+			return;
+		}
+		if (this.mapSearchIsActive || this.mode || this.isHidden) {
+			return;
+		}
+		const { shiftKey: multi } = event.originalEvent;
+		const selectedFeature = this.featureAtPixel(event.pixel);
+		let ids = [];
+		if (selectedFeature) {
+			const featureId = selectedFeature.getId();
+			ids = multi ? this.selected.includes(featureId) ? this.selected.filter(id => id !== featureId) : [...this.selected, featureId] : [featureId];
+		} else {
+			ids = multi ? this.selected : [];
+		}
+		this.events.onSelect.next(ids);
+	};
+
+	protected mapPointermove = (event) => {
+		if (this.mapSearchIsActive || this.mode) {
+			return;
+		}
+		const selectedFeature = this.featureAtPixel(event.pixel);
+		this.events.onHover.next(selectedFeature ? selectedFeature.getId() : null);
+	};
+
+	protected mapBoxstart = () => {
+		this.events.onSelect.next([]);
+	};
+
+	protected mapBoxdrag = ({ target }) => {
+		if (this.isHidden) {
+			return;
+		}
+		const extent = target.getGeometry().getExtent();
+		const selected = [];
+		this.vector.getSource().forEachFeatureIntersectingExtent(extent, (feature) => {
+			selected.push(feature.getId());
+		});
+		this.events.onSelect.next(selected);
+	};
 
 	private createCenterFeatureToDrag(feature: olFeature) {
 		const center = this.getCenterOfFeature(feature);
@@ -792,65 +850,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 	}
 
-	onResetView(): Observable<boolean> {
-		this.clearLabelTranslateMode();
-		this.clearAnnotationEditMode();
-		return super.onResetView();
-	}
-
-	dispose() {
-		this.clearLabelTranslateMode();
-		this.clearAnnotationEditMode();
-		super.dispose();
-	}
-
-	protected mapClick = (event) => {
-		this.events.onClick.next(); // TODO - can be removed when ansyn.annotations.visualizer will use communicator instead of this for listening to click events on the map
-		// As the drawend callback is called before the click one, if the annotation's context-menu has been opened on drawend,
-		//  the click event will cause it to be closed so in this case, we use this flag to prevent it.
-		if (this.skipNextMapClickHandler) {
-			this.skipNextMapClickHandler = false;
-			return;
-		}
-		if (this.mapSearchIsActive || this.mode || this.isHidden) {
-			return;
-		}
-		const { shiftKey: multi } = event.originalEvent;
-		const selectedFeature = this.featureAtPixel(event.pixel);
-		let ids = [];
-		if (selectedFeature) {
-			const featureId = selectedFeature.getId();
-			ids = multi ? this.selected.includes(featureId) ? this.selected.filter(id => id !== featureId) : [...this.selected, featureId] : [featureId];
-		} else {
-			ids = multi ? this.selected : [];
-		}
-		this.events.onSelect.next(ids);
-	};
-
-	protected mapPointermove = (event) => {
-		if (this.mapSearchIsActive || this.mode) {
-			return;
-		}
-		const selectedFeature = this.featureAtPixel(event.pixel);
-		this.events.onHover.next(selectedFeature ? selectedFeature.getId() : null);
-	};
-
-	protected mapBoxstart = () => {
-		this.events.onSelect.next([]);
-	};
-
-	protected mapBoxdrag = ({ target }) => {
-		if (this.isHidden) {
-			return;
-		}
-		const extent = target.getGeometry().getExtent();
-		const selected = [];
-		this.vector.getSource().forEachFeatureIntersectingExtent(extent, (feature) => {
-			selected.push(feature.getId());
-		});
-		this.events.onSelect.next(selected);
-	};
-
 	private isNumArray([first, second]) {
 		return typeof first === 'number' && typeof second === 'number';
 	}
@@ -863,11 +862,5 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			minX: Math.min(x, prev.minX),
 			minY: Math.min(y, prev.minY)
 		};
-	}
-
-	clearAnnotationEditMode() {
-		if (this.currentAnnotationEdit) {
-			this.setEditAnnotationMode(this.currentAnnotationEdit.originalFeature.getId(), false)
-		}
 	}
 }

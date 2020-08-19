@@ -74,12 +74,13 @@ export class FiltersAppEffects {
 	specialObjects$: Observable<Map<string, IOverlaySpecialObject>> = this.store$.select(selectSpecialObjects);
 	removedOverlays$: Observable<any> = this.store$.select(selectRemovedOverlays);
 	removedOverlaysVisibility$: Observable<any> = this.store$.select(selectRemovedOverlaysVisibility);
-	onFiltersChanges$: Observable<[FiltersMetadata, boolean, IOverlay[], string[], boolean]> = combineLatest(this.filtersMetadata$, this.showOnlyFavorite$, this.favoriteOverlays$, this.removedOverlays$, this.removedOverlaysVisibility$);
-	onCriterialFiltersChanges$: Observable<[FiltersMetadata, string[], boolean]> = combineLatest(this.filtersMetadata$, this.removedOverlays$, this.removedOverlaysVisibility$);
-	forOverlayDrops$: Observable<[Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean]> = combineLatest(
-		this.overlaysMap$, this.filteredOverlays$, this.specialObjects$, this.favoriteOverlays$, this.showOnlyFavorite$);
+	onFiltersChanges$: Observable<[FiltersMetadata, boolean, IOverlay[], string[], boolean]> = combineLatest([this.filtersMetadata$, this.showOnlyFavorite$, this.favoriteOverlays$, this.removedOverlays$, this.removedOverlaysVisibility$]);
+	onCriterialFiltersChanges$: Observable<[FiltersMetadata, string[], boolean]> = combineLatest([this.filtersMetadata$, this.removedOverlays$, this.removedOverlaysVisibility$]);
+	forOverlayDrops$: Observable<[Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean]> = combineLatest([
+		this.overlaysMap$, this.filteredOverlays$, this.specialObjects$, this.favoriteOverlays$, this.showOnlyFavorite$]);
+
 	facets$: Observable<ICaseFacetsState> = this.store$.select(selectFacets);
-	onFiltersChangesForLog$: Observable<[FiltersMetadata, boolean, string[], boolean]> = combineLatest(this.filtersMetadata$, this.showOnlyFavorite$, this.removedOverlays$, this.removedOverlaysVisibility$);
+	onFiltersChangesForLog$: Observable<[FiltersMetadata, boolean, string[], boolean]> = combineLatest([this.filtersMetadata$, this.showOnlyFavorite$, this.removedOverlays$, this.removedOverlaysVisibility$]);
 
 	@Effect({ dispatch: false })
 	filtersLogger$: Observable<any> = this.onFiltersChangesForLog$.pipe(
@@ -130,7 +131,7 @@ export class FiltersAppEffects {
 
 	@Effect()
 	onInitializeFilters$: Observable<InitializeFiltersSuccessAction> = combineLatest(
-		this.store$.select(selectOverlaysAreLoaded), this.store$.select(selectOverlaysContainmentChecked)).pipe(
+		[this.store$.select(selectOverlaysAreLoaded), this.store$.select(selectOverlaysContainmentChecked)]).pipe(
 		withLatestFrom(this.overlaysArray$, this.facets$),
 		filter(([[overlaysAreLoaded, overlaysContainmentChecked], overlays, facets]: [[boolean, boolean], IOverlay[], ICaseFacetsState]) => overlaysAreLoaded && overlaysContainmentChecked),
 		map(([[overlaysAreLoaded, overlaysContainmentChecked], overlays, facets]: [[boolean, boolean], IOverlay[], ICaseFacetsState]) => {

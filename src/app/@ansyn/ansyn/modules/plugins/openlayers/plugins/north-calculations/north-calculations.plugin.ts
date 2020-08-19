@@ -190,7 +190,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				);
 			}
 			return of(0);
-			
+
 		})
 	);
 
@@ -267,7 +267,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	}
 
 	getProjectedCenters(mapObject: OLMap, sourceProjection?: string, destProjection?: string): Observable<Point[]> {
-		return Observable.create((observer: Observer<any>) => {
+		return new Observable((observer: Observer<any>) => {
 			const size = mapObject.getSize();
 			const olCenterView = mapObject.getCoordinateFromPixel([size[0] / 2, size[1] / 2]);
 			if (!areCoordinatesNumeric(olCenterView)) {

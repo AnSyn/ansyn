@@ -53,11 +53,11 @@ export class GoToVisualizer extends EntitiesVisualizer {
 
 	/* events */
 	@AutoSubscription
-	drawPinPoint$ = combineLatest(this.isActiveMap$, this.goToExpand$, this.activeCenter$, this.mapSearchBox$)
+	drawPinPoint$ = combineLatest([this.isActiveMap$, this.goToExpand$, this.activeCenter$, this.mapSearchBox$])
 		.pipe(mergeMap(this.drawGotoIconOnMap.bind(this)));
 
 	@AutoSubscription
-	goToPinAvailable$ = combineLatest(this.pinLocation$, this.isActiveMap$).pipe(
+	goToPinAvailable$ = combineLatest([this.pinLocation$, this.isActiveMap$]).pipe(
 		tap(([pinLocation, isActiveMap]: [boolean, boolean]) => {
 			if (isActiveMap && pinLocation) {
 				this.createSingleClickEvent();

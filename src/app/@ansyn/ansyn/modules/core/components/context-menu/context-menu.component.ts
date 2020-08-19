@@ -224,7 +224,8 @@ export class ContextMenuComponent implements OnInit {
 	}
 
 	isClick($event: MouseEvent): boolean {
-		return $event.which === 1;
+		console.log({$event});
+		return $event.buttons === 1;
 	}
 
 	clickNext($event: MouseEvent, subFilter?: string) {
@@ -260,7 +261,7 @@ export class ContextMenuComponent implements OnInit {
 	}
 
 	clickAngle($event: MouseEvent) {
-		event.stopPropagation();
+		$event.stopPropagation();
 		this.store.dispatch(new ContextMenuShowAngleFilter(cloneDeep(this.angleFilter)));
 	}
 

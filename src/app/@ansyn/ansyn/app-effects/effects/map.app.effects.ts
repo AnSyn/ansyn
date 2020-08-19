@@ -115,7 +115,7 @@ export class MapAppEffects {
 	onDisplayOverlay$: Observable<any> = this.actions$
 		.pipe(
 			ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY),
-			startWith(null),
+			startWith<any, null>(null),
 			pairwise(),
 			withLatestFrom(this.store$.select(mapStateSelector)),
 			filter(this.onDisplayOverlayFilter.bind(this))
@@ -303,7 +303,7 @@ export class MapAppEffects {
 		);
 
 	@Effect()
-	activeMapGeoRegistrationChanged$: Observable<any> = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectOverlayOfActiveMap))
+	activeMapGeoRegistrationChanged$: Observable<any> = combineLatest([this.store$.select(selectActiveMapId), this.store$.select(selectOverlayOfActiveMap)])
 		.pipe(
 			withLatestFrom(this.store$.select(selectGeoRegisteredOptionsEnabled)),
 			filter(([[activeMapId, overlay], isGeoRegisteredOptionsEnabled]: [[string, IOverlay], boolean]) => Boolean(activeMapId)),

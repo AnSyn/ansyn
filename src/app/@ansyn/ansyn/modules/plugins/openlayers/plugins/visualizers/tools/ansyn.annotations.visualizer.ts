@@ -59,10 +59,10 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	annotationsVisualizer: AnnotationsVisualizer;
 	overlay: IOverlay;
 
-	activeAnnotationLayer$: Observable<ILayer> = combineLatest(
+	activeAnnotationLayer$: Observable<ILayer> = combineLatest([
 		this.store$.pipe(select(selectActiveAnnotationLayer)),
 		this.store$.pipe(select(selectLayersEntities))
-	).pipe(
+	]).pipe(
 		map(([activeAnnotationLayerId, entities]) => {
 			return entities[activeAnnotationLayerId];
 		})
@@ -123,13 +123,13 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	onAnnotationsChange$ = combineLatest(
+	onAnnotationsChange$ = combineLatest([
 		this.store$.pipe(select(selectLayersEntities)),
 		this.annotationFlag$,
 		this.store$.select(selectSelectedLayersIds),
 		this.isActiveMap$,
 		this.store$.select(selectActiveAnnotationLayer)
-	).pipe(
+	]).pipe(
 		mergeMap(this.onAnnotationsChange.bind(this))
 	);
 
@@ -224,7 +224,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	getOffsetFromCase$ = () => combineLatest(this.store$.select(selectTranslationData), this.store$.select(selectOverlayByMapId(this.mapId))).pipe(
+	getOffsetFromCase$ = () => combineLatest([this.store$.select(selectTranslationData), this.store$.select(selectOverlayByMapId(this.mapId))]).pipe(
 		tap(([translationData, overlay]: [IOverlaysTranslationData, IOverlay]) => {
 			if (overlay && translationData[overlay.id] && translationData[overlay.id].offset) {
 				this.offset = [...translationData[overlay.id].offset] as [number, number];

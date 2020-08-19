@@ -3,6 +3,7 @@ import { combineLatest, EMPTY, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject, Position } from 'geojson';
+import { click as mouseClickCondition } from 'ol/events/condition'
 import {
 	ContextMenuTriggerAction,
 	MapActionTypes,
@@ -15,10 +16,7 @@ import Draw from 'ol/interaction/Draw';
 import { AutoSubscription } from 'auto-subscriptions';
 import { distinctUntilChanged, filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { EntitiesVisualizer, OpenLayersProjectionService } from '@ansyn/ol';
-import {
-	selectGeoFilterActive,
-	selectGeoFilterType
-} from '../../../../../status-bar/reducers/status-bar.reducer';
+import { selectGeoFilterActive, selectGeoFilterType } from '../../../../../status-bar/reducers/status-bar.reducer';
 import { UpdateGeoFilterStatus } from '../../../../../status-bar/actions/status-bar.actions';
 import { SetOverlaysCriteriaAction } from '../../../../../overlays/actions/overlays.actions';
 import { selectRegion } from '../../../../../overlays/reducers/overlays.reducer';
@@ -29,7 +27,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	newRegionSelect$ = this.store$.select(selectRegion);
 
 	regionSameAsVisualizer$ = this.newRegionSelect$.pipe(
-		map( region => region.type === this.geoFilter)
+		map(region => region.type === this.geoFilter)
 	);
 
 	isActiveMap$ = this.store$.select(selectActiveMapId).pipe(
@@ -42,7 +40,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	geoFilterActive$ = this.store$.select(selectGeoFilterActive);
 
 	isTheRightVisualizer$ = this.geoFilterType$.pipe(
-		map( geoFilter => geoFilter === this.geoFilter)
+		map(geoFilter => geoFilter === this.geoFilter)
 	);
 
 	@AutoSubscription
@@ -55,12 +53,12 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	);
 
 	@AutoSubscription
-	interactionChanges$: Observable<any> = combineLatest(this.geoFilterType$, this.geoFilterActive$, this.isActiveMap$).pipe(
+	interactionChanges$: Observable<any> = combineLatest([this.geoFilterType$, this.geoFilterActive$, this.isActiveMap$]).pipe(
 		tap(this.interactionChanges.bind(this))
 	);
 
 	@AutoSubscription
-	drawChanges$ = combineLatest(this.newRegionSelect$, this.regionSameAsVisualizer$, this.geoFilterActive$, this.store$.select(selectIsMinimalistViewMode)).pipe(
+	drawChanges$ = combineLatest([this.newRegionSelect$, this.regionSameAsVisualizer$, this.geoFilterActive$, this.store$.select(selectIsMinimalistViewMode)]).pipe(
 		mergeMap(this.drawChanges.bind(this))
 	);
 
@@ -85,7 +83,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 				const region = this.createRegion(geoJsonFeature);
 				if (region.type === 'Point' || turf.kinks(region).features.length === 0) {  // turf way to check if there are any self-intersections
 					this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
-					this.store$.dispatch(new UpdateGeoFilterStatus({active: false}));
+					this.store$.dispatch(new UpdateGeoFilterStatus({ active: false }));
 				} else {
 					this.store$.dispatch(new SetToastMessageAction({
 						toastText: this.selfIntersectMessage
@@ -98,7 +96,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	createDrawInteraction() {
 		const drawInteractionHandler = new Draw(<any>{
 			type: this.geoFilter,
-			condition: (event: any) => (<MouseEvent>event.originalEvent).which === 1,
+			condition: mouseClickCondition,
 			style: this.featureStyle.bind(this)
 		});
 
@@ -112,7 +110,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	resetInteractions() {
 		super.resetInteractions();
-		this.store$.dispatch(new UpdateGeoFilterStatus({active: false}));
+		this.store$.dispatch(new UpdateGeoFilterStatus({ active: false }));
 	}
 
 	interactionChanges([geoFilterSearch, isGeoActive, isActiveMap]: [CaseGeoFilter, boolean, boolean]): void {

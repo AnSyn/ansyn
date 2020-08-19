@@ -45,7 +45,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	});
 
 	@AutoSubscription
-	onDataInputFilterChange$ = combineLatest(this.store.select(selectDataInputFilter), this.initDoneAsync).pipe(
+	onDataInputFilterChange$ = combineLatest([this.store.select(selectDataInputFilter), this.initDoneAsync]).pipe(
 		map(([data, init]) => data),
 		filter(Boolean),
 		tap((_preFilter: ICaseDataInputFiltersState) => {

@@ -3,7 +3,7 @@
  * compatibility with chrome 44.
  * @param event keyboard event
  */
-
+/* tslint:disable */
 export function isArrowRightKey(event: KeyboardEvent) {
 	return event.key === 'ArrowRight' || event.which === 39;
 }
@@ -26,4 +26,8 @@ export function isDigitKey(event: KeyboardEvent) {
 
 export function isEscapeKey(event: KeyboardEvent) {
 	return event.key === 'Escape' || event.which === 27;
+}
+
+export function isDeleteKey(event: KeyboardEvent) {
+	return event.key === 'Delete' || event.which === 46
 }

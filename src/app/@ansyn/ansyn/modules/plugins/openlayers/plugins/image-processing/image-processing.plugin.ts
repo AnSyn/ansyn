@@ -47,7 +47,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	onAutoImageProcessingAndManualImageProcessActive$ = combineLatest(this.isAutoImageProcessingActive$, this.imageManualProcessArgs$).pipe(
+	onAutoImageProcessingAndManualImageProcessActive$ = combineLatest([this.isAutoImageProcessingActive$, this.imageManualProcessArgs$]).pipe(
 		tap(([isAutoImageProcessingActive, imageManualProcessArgs]: [boolean, IImageManualProcessArgs]) => {
 			const isImageProcessActive = this.isImageProcessActive(isAutoImageProcessingActive, imageManualProcessArgs);
 			if (!isImageProcessActive) {

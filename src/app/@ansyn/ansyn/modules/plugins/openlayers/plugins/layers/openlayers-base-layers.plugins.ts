@@ -14,7 +14,7 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 	protected subscriptions: Subscription[] = [];
 
 	// todo: return auto-subscription when the bug is fixed
-	osmLayersChanges$: Observable<any[]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
+	osmLayersChanges$: Observable<any[]> = combineLatest([this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds)])
 		.pipe(
 			tap(([result, selectedLayerId]: [ILayer[], string[]]) => {
 				result.filter(this.checkLayer)

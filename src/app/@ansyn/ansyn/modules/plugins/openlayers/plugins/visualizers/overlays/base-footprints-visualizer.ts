@@ -23,7 +23,7 @@ export class BaseFootprintsVisualizer extends EntitiesVisualizer {
 	}
 
 	@AutoSubscription
-	drawOverlaysOnMap$: () => Observable<any> = () => combineLatest(this.store.select(selectOverlayDisplayModeByMapId(this.mapId)), this.store.select(selectDrops))
+	drawOverlaysOnMap$: () => Observable<any> = () => combineLatest([this.store.select(selectOverlayDisplayModeByMapId(this.mapId)), this.store.select(selectDrops)])
 		.pipe(
 			filter(([overlayDisplayMode, drops]: [OverlayDisplayMode, IOverlay[]]) => Boolean(overlayDisplayMode)),
 			withLatestFrom(this.overlaysService.getAllOverlays$),

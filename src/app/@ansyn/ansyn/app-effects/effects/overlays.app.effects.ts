@@ -41,7 +41,8 @@ import {
 	switchMap,
 	tap,
 	withLatestFrom,
-	distinctUntilKeyChanged
+	distinctUntilKeyChanged,
+	distinctUntilChanged
 } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import {
@@ -97,7 +98,7 @@ export class OverlaysAppEffects {
 		}));
 
 	@Effect()
-	removedOverlaysCount$ = combineLatest(this.store$.select(selectRemovedOverlays), this.store$.select(selectOverlaysMap)).pipe(
+	removedOverlaysCount$ = combineLatest([this.store$.select(selectRemovedOverlays), this.store$.select(selectOverlaysMap)]).pipe(
 		map(([removedOverlaysIds, overlays]: [string[], Map<string, IOverlay>]) => {
 			const removedOverlaysCount = removedOverlaysIds.filter((removedId) => overlays.has(removedId)).length;
 			return new SetRemovedOverlayIdsCount(removedOverlaysCount);
@@ -247,13 +248,10 @@ export class OverlaysAppEffects {
 	});
 
 	@Effect()
-	setHoveredOverlay$: Observable<any> = combineLatest(this.store$.select(selectDropMarkup), this.store$.select(selectFooterCollapse))
+	setHoveredOverlay$: Observable<any> = combineLatest([this.store$.select(selectDropMarkup), this.store$.select(selectFooterCollapse)])
 		.pipe(
 			filter(([drop, footerCollapse]) => Boolean(!footerCollapse)),
-			startWith(null),
-			pairwise(),
-			filter(this.onDropMarkupFilter.bind(this)),
-			map(([prevAction, currentAction]) => currentAction),
+			distinctUntilChanged( isEqual),
 			withLatestFrom<any, any>(this.overlaysService.getAllOverlays$, ([drop, footer], overlays) => [drop, overlays]),
 			this.getOverlayFromDropMarkup,
 			this.getPositionForActiveMap,
@@ -283,11 +281,6 @@ export class OverlaysAppEffects {
 				public store$: Store<IAppState>,
 				public overlaysService: OverlaysService,
 				protected loggerService: LoggerService) {
-	}
-
-	onDropMarkupFilter([prevAction, currentAction]): boolean {
-		const isEquel = !isEqual(prevAction, currentAction);
-		return isEquel;
 	}
 
 }

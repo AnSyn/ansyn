@@ -33,6 +33,7 @@ import {
 } from '../../menu-items/tools/actions/tools.actions';
 import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-manager/reducers/layers.reducer';
 import { ClickOutsideService } from '../../core/click-outside/click-outside.service';
+import { isDeleteKey } from '../../core/utils/keyboardKey';
 
 @Component({
 	selector: 'ansyn-overlay-status',
@@ -88,7 +89,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	);
 
 	@AutoSubscription
-	active$ = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectTranslationData)).pipe(
+	active$ = combineLatest([this.store$.select(selectActiveMapId), this.store$.select(selectTranslationData)]).pipe(
 		tap(([activeMapId, overlaysTranslationData]: [string, { [key: string]: ITranslationData }]) => {
 			this.isActiveMap = activeMapId === this.mapId;
 			this.overlaysTranslationData = overlaysTranslationData;
@@ -126,10 +127,10 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	@AutoSubscription
-	layersVisibility$ = () => combineLatest(
+	layersVisibility$ = () => combineLatest([
 		this.store$.select(selectSelectedLayersIds),
 		this.store$.select(selectHideLayersOnMap(this.mapId)),
-		this.store$.select(selectLayers))
+		this.store$.select(selectLayers)])
 		.pipe(
 			map(([selectedLayerIds, areLayersHidden, layers]) => {
 				layers = layers.filter((currentLayer) =>
@@ -161,7 +162,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 
 	@HostListener('window:keydown', ['$event'])
 	deleteKeyPressed($event: KeyboardEvent) {
-		if (this.isActiveMap && this.overlay && $event.which === 46 && !this.isRemoved) {
+		if (this.isActiveMap && this.overlay && isDeleteKey($event) && !this.isRemoved) {
 			this.removeOverlay();
 		}
 	}

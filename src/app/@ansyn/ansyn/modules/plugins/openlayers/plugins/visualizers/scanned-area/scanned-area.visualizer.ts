@@ -39,7 +39,7 @@ export class ScannedAreaVisualizer extends EntitiesVisualizer {
 	}
 
 	@AutoSubscription
-	scannedArea$ = () => combineLatest(this.store$.select(selectScannedAreaData), this.store$.select(selectOverlayByMapId(this.mapId))).pipe(
+	scannedArea$ = () => combineLatest([this.store$.select(selectScannedAreaData), this.store$.select(selectOverlayByMapId(this.mapId))]).pipe(
 		filter(([scannedAreaData, overlay]: [IOverlaysScannedAreaData, IOverlay]) => Boolean(scannedAreaData)),
 		mergeMap(([scannedAreaData, overlay]: [IOverlaysScannedAreaData, IOverlay]) => {
 			const entities: IVisualizerEntity[] = [];

@@ -41,11 +41,48 @@ export interface IOverlayButton {
 	styleUrls: ['./context-menu.component.less']
 })
 export class ContextMenuComponent implements OnInit {
-	mapState$ = this.store.select(mapStateSelector);
 
 	get filterField() {
 		return this.config.contextMenu.filterField;
 	}
+
+	set filteredOverlays(value) {
+		this._filteredOverlays = value;
+		this.allSensors = this.pluckFilterField(value);
+	}
+
+	set prevfilteredOverlays(value) {
+		this._prevfilteredOverlays = value;
+		this.prevSensors = this.pluckFilterField(value);
+	}
+
+	set nextfilteredOverlays(value) {
+		this._nextfilteredOverlays = value;
+		this.nextSensors = this.pluckFilterField(value);
+	}
+
+	get filteredOverlays() {
+		return this._filteredOverlays;
+	}
+
+	get prevfilteredOverlays() {
+		return this._prevfilteredOverlays;
+	}
+
+	get nextfilteredOverlays() {
+		return this._nextfilteredOverlays;
+	}
+
+	@HostBinding('attr.tabindex')
+	get tabindex() {
+		return 0;
+	}
+
+	@HostListener('window:mousewheel')
+	get onMousewheel() {
+		return this.hide;
+	}
+	mapState$ = this.store.select(mapStateSelector);
 
 	displayedOverlay$: Observable<IOverlay> = this.mapState$.pipe(
 		map(MapFacadeService.activeMap),
@@ -76,33 +113,6 @@ export class ContextMenuComponent implements OnInit {
 	private _filteredOverlays: IOverlay[];
 	private _prevfilteredOverlays = [];
 	private _nextfilteredOverlays = [];
-
-	set filteredOverlays(value) {
-		this._filteredOverlays = value;
-		this.allSensors = this.pluckFilterField(value);
-	}
-
-	set prevfilteredOverlays(value) {
-		this._prevfilteredOverlays = value;
-		this.prevSensors = this.pluckFilterField(value);
-	}
-
-	set nextfilteredOverlays(value) {
-		this._nextfilteredOverlays = value;
-		this.nextSensors = this.pluckFilterField(value);
-	}
-
-	get filteredOverlays() {
-		return this._filteredOverlays;
-	}
-
-	get prevfilteredOverlays() {
-		return this._prevfilteredOverlays;
-	}
-
-	get nextfilteredOverlays() {
-		return this._nextfilteredOverlays;
-	}
 
 	/*
 	Note: 'best' and 'angle' are first in the list, in order that they do not hide the tooltips
@@ -143,27 +153,17 @@ export class ContextMenuComponent implements OnInit {
 		}
 	];
 
-	@HostBinding('attr.tabindex')
-	get tabindex() {
-		return 0;
-	}
-
-	@HostListener('window:mousewheel')
-	get onMousewheel() {
-		return this.hide;
-	}
-
-	@HostListener('contextmenu', ['$event'])
-	onContextMenu($event) {
-		$event.preventDefault();
-	}
-
 	constructor(protected store: Store<IMapState>,
 				protected actions$: Actions,
 				protected elem: ElementRef,
 				protected renderer: Renderer2,
 				public store$: Store<any>,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
+	}
+
+	@HostListener('contextmenu', ['$event'])
+	onContextMenu($event) {
+		$event.preventDefault();
 	}
 
 	pluckFilterField(overlays: IOverlay[]) {

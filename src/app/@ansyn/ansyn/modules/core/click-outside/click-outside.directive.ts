@@ -8,15 +8,18 @@ import { tap } from 'rxjs/operators';
 })
 @AutoSubscriptions()
 export class ClickOutsideDirective implements OnInit, OnDestroy {
-	@Output() ansynClickOutside = new EventEmitter();
-	@Input() trigger: any;
 	@Input()
 	set extraClass(val: string) {
 		this._extraClass = val ? val.split(" ") : [];
 	}
+	@Output() ansynClickOutside = new EventEmitter();
+	@Input() trigger: any;
 	@Input() clickEventType: string | string[] = 'click';
 
 	_extraClass: string[];
+
+	constructor(public elementRef: ElementRef) {
+	}
 	@AutoSubscription
 	$event: () => any = () => {
 		let eventSource$: Observable<any> = this.clickEventType instanceof Array ?
@@ -42,9 +45,6 @@ export class ClickOutsideDirective implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-	}
-
-	constructor(public elementRef: ElementRef) {
 	}
 
 }

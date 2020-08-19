@@ -92,6 +92,9 @@ import { AnsynDatePipe } from './pipes/ansyn-date.pipe';
 
 export class MapFacadeModule {
 
+	constructor() {
+	}
+
 	static provide(metadata: { entryComponents: IEntryComponentsEntities }): ModuleWithProviders<MapFacadeModule> {
 		return {
 			ngModule: MapFacadeModule,
@@ -99,8 +102,5 @@ export class MapFacadeModule {
 				provideEntryComponentsEntities(metadata.entryComponents)
 			]
 		};
-	}
-
-	constructor() {
 	}
 }

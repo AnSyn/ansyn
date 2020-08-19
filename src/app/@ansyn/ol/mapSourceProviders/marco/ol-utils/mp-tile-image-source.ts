@@ -16,6 +16,41 @@ export class MpTileImageSource extends ProjectableRaster {
 	public _meta: any;
 	public _projection: any;
 
+	constructor(meta, url, transform, csmKey) {
+		const projection = <Projection>new MpImageProjection(meta, transform, csmKey);
+		proj.addProjection(projection);
+
+		const tileGrid = MpTileImageSource.createForExtent(projection.getExtent(), meta.LevelsCount - 1);
+
+		const innerTileImageSource: TileImage = new TileImage({
+			tileUrlFunction: function (tileCoord, pixelRatio, proj) {
+				const z = tileCoord[0];
+				const x = tileCoord[1];
+				const y = -tileCoord[2] - 1;
+				return url + urlTemplate.replace('{z}', z.toString())
+					.replace('{y}', y.toString())
+					.replace('{x}', x.toString());
+
+			},
+			tileGrid: tileGrid,
+			url: url,
+			crossOrigin: 'Anonymous',
+			projection: projection
+		});
+		super({
+			sources: [innerTileImageSource],
+			operation: function (pixels, data) {
+				return pixels[0];
+			},
+			operationType: 'image'
+		});
+
+		this._url = url;
+		this.crossOrigin = 'Anonymous';
+		this._meta = meta;
+		this._projection = projection;
+	}
+
 	static createForExtent(extent, opt_maxZoom) {
 		const tileSize = 512;
 
@@ -58,40 +93,5 @@ export class MpTileImageSource extends ProjectableRaster {
 
 	static create(data, url, transform, csmKey) {
 		return new MpTileImageSource(data, url, transform, csmKey);
-	}
-
-	constructor(meta, url, transform, csmKey) {
-		const projection = <Projection>new MpImageProjection(meta, transform, csmKey);
-		proj.addProjection(projection);
-
-		const tileGrid = MpTileImageSource.createForExtent(projection.getExtent(), meta.LevelsCount - 1);
-
-		const innerTileImageSource: TileImage = new TileImage({
-			tileUrlFunction: function (tileCoord, pixelRatio, proj) {
-				const z = tileCoord[0];
-				const x = tileCoord[1];
-				const y = -tileCoord[2] - 1;
-				return url + urlTemplate.replace('{z}', z.toString())
-					.replace('{y}', y.toString())
-					.replace('{x}', x.toString());
-
-			},
-			tileGrid: tileGrid,
-			url: url,
-			crossOrigin: 'Anonymous',
-			projection: projection
-		});
-		super({
-			sources: [innerTileImageSource],
-			operation: function (pixels, data) {
-				return pixels[0];
-			},
-			operationType: 'image'
-		});
-
-		this._url = url;
-		this.crossOrigin = 'Anonymous';
-		this._meta = meta;
-		this._projection = projection;
 	}
 }

@@ -62,6 +62,7 @@ import { selectMapOrientation } from '@ansyn/map-facade';
 	deps: [Actions, LoggerService, Store, CoreConfig, OpenLayersProjectionService]
 })
 export class NorthCalculationsPlugin extends BaseImageryPlugin {
+;
 	communicator: CommunicatorEntity;
 	isEnabled = true;
 
@@ -104,6 +105,14 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			this.setImageryOrientation(action.payload.overlay);
 		})
 	);
+
+	constructor(protected actions$: Actions,
+				public loggerService: LoggerService,
+				public store$: Store<any>,
+				@Inject(CoreConfig) public config: ICoreConfig,
+				protected projectionService: OpenLayersProjectionService) {
+		super();
+	}
 
 	@AutoSubscription
 	calcNorthAfterDisplayOverlaySuccess$ = () => this.actions$.pipe(
@@ -184,14 +193,6 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			
 		})
 	);
-
-	constructor(protected actions$: Actions,
-				public loggerService: LoggerService,
-				public store$: Store<any>,
-				@Inject(CoreConfig) public config: ICoreConfig,
-				protected projectionService: OpenLayersProjectionService) {
-		super();
-	}
 
 	setActualNorth(): Observable<any> {
 		return this.pointNorth(this.shadowMapObject).pipe(take(1)).pipe(
@@ -301,8 +302,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	onResetView(): Observable<boolean> {
 		this.createShadowMap();
 		return of(true);
-	};
-
+	}
 	createShadowMapObject() {
 		const renderer = 'canvas';
 		this.shadowMapObject = new OLMap({

@@ -29,6 +29,10 @@ export interface IOverlayByIdMetaData {
 })
 export class OverlaysService {
 
+	get fetchLimit() {
+		return (this.config) ? this.config.limit : null;
+	}
+
 	/**
 	 * @description Observable: get a map with both query overlays and favorite overlays
 	 */
@@ -41,6 +45,12 @@ export class OverlaysService {
 			return result;
 		})
 	);
+
+	constructor(@Inject(OverlaysConfig) public config: IOverlaysConfig,
+				@Inject(MultipleOverlaysSourceConfig) protected multipleOverlays: IMultipleOverlaysSourceConfig,
+				protected _overlaySourceProvider: MultipleOverlaysSourceProvider,
+				protected store$: Store<any>) {
+	}
 
 	/**
 	 * function to return specific fields from overlay given ids object if properties is empty it returns all of the object;
@@ -70,16 +80,6 @@ export class OverlaysService {
 		const dropsFromOverlays: IOverlayDrop[] = allOverlays.map(({ id, date, sensorName, icon }) => ({ id, date, sensorName, icon }));
 		const allDrops = [...dropsFromOverlays, ...mapValuesToArray(specialObjects)].sort(sortByDateDesc);
 		return allDrops;
-	}
-
-	get fetchLimit() {
-		return (this.config) ? this.config.limit : null;
-	}
-
-	constructor(@Inject(OverlaysConfig) public config: IOverlaysConfig,
-				@Inject(MultipleOverlaysSourceConfig) protected multipleOverlays: IMultipleOverlaysSourceConfig,
-				protected _overlaySourceProvider: MultipleOverlaysSourceProvider,
-				protected store$: Store<any>) {
 	}
 
 	search(params: IOverlaysCriteria): Observable<IOverlaysFetchData> {

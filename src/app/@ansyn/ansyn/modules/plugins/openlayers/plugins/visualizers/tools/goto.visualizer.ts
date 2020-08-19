@@ -75,6 +75,10 @@ export class GoToVisualizer extends EntitiesVisualizer {
 		zIndex: 100
 	});
 
+	constructor(public store$: Store<any>, protected projectionService: OpenLayersProjectionService) {
+		super();
+	}
+
 	public singleClickListener = (e) => {
 		this.projectionService
 			.projectAccurately({ type: 'Point', coordinates: e.coordinate }, this.iMap.mapObject)
@@ -84,10 +88,6 @@ export class GoToVisualizer extends EntitiesVisualizer {
 				this.store$.dispatch(new SetActiveCenter(point.coordinates));
 			});
 	};
-
-	constructor(public store$: Store<any>, protected projectionService: OpenLayersProjectionService) {
-		super();
-	}
 
 	featureStyle(feature: Feature, resolution) {
 		return this._iconSrc;

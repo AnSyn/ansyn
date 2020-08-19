@@ -21,6 +21,18 @@ export class AlertsContainerComponent implements OnInit, OnDestroy {
 	overlay: IOverlay;
 	@Input() mapId: string;
 
+	get noGeoRegistration() {
+		if (!this.overlay) {
+			return false;
+		}
+
+		return this.overlay.isGeoRegistered === 'notGeoRegistered';
+	}
+
+	constructor(protected store$: Store<any>,
+				@Inject(ALERTS) public alerts: IAlert[]) {
+	}
+
 	@AutoSubscription
 	alertMsg$: () => Observable<any> = () => combineLatest(this.store$.select(selectAlertMsg), this.store$.select(selectOverlayByMapId(this.mapId))).pipe(
 		distinctUntilChanged(),
@@ -29,10 +41,6 @@ export class AlertsContainerComponent implements OnInit, OnDestroy {
 			this.overlay = overlay;
 		})
 	);
-
-	constructor(protected store$: Store<any>,
-				@Inject(ALERTS) public alerts: IAlert[]) {
-	}
 
 	showAlert(alertKey) {
 		if (this.overlay) {
@@ -43,14 +51,6 @@ export class AlertsContainerComponent implements OnInit, OnDestroy {
 				return this[alertKey];
 			}
 		}
-	}
-
-	get noGeoRegistration() {
-		if (!this.overlay) {
-			return false;
-		}
-
-		return this.overlay.isGeoRegistered === 'notGeoRegistered';
 	}
 
 	ngOnInit() {

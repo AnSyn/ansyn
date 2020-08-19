@@ -27,53 +27,6 @@ import { TranslateService } from '@ngx-translate/core';
 	destroy: 'ngOnDestroy'
 })
 export class ImageryStatusComponent implements OnInit, OnDestroy {
-	isMapLayersVisible = true;
-	mapsAmount = 1;
-	_map: IMapSettings;
-	perspective: boolean;
-	orientation: MapOrientation;
-	baseMapDescription = 'Base Map';
-	formattedOverlayTime: string = null;
-	@HostBinding('class.active') isActiveMap: boolean;
-	@Input() isMinimalistViewMode: boolean;
-	hideLayers: boolean;
-
-	@AutoSubscription
-	active$ = this.store$.pipe(
-		select(selectActiveMapId),
-		map((activeMapId) => activeMapId === this.mapId),
-		tap((isActiveMap) => this.isActiveMap = isActiveMap)
-	);
-	@AutoSubscription
-	mapsAmount$ = this.store$.pipe(
-		select(selectMapsTotal),
-		tap((mapsAmount) => this.mapsAmount = mapsAmount)
-	);
-	translatedOverlaySensorName = '';
-	@Output() toggleMapSynchronization = new EventEmitter<void>();
-	@Output() onMove = new EventEmitter<MouseEvent>();
-	enableCopyOriginalOverlayData: boolean;
-	@AutoSubscription
-	copyOriginalOverlayDataFlag$ = this.store$.select(selectEnableCopyOriginalOverlayDataFlag).pipe(
-		tap((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
-	);
-
-	@AutoSubscription
-	getMapOrientation$ = () => this.store$.select(selectMapOrientation(this.mapId)).pipe(
-		filter(Boolean),
-		tap( (orientation: MapOrientation) => {
-			this.orientation = orientation;
-			this.perspective = this.orientation === 'User Perspective';
-		})
-	);
-
-
-
-	constructor(protected store$: Store<any>,
-				protected communicators: ImageryCommunicatorService,
-				protected translate: TranslateService,
-				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities) {
-	}
 
 	get map() {
 		return this._map;
@@ -123,6 +76,53 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		}
 		return this.overlay.isGeoRegistered === 'notGeoRegistered';
 	}
+	isMapLayersVisible = true;
+	mapsAmount = 1;
+	_map: IMapSettings;
+	perspective: boolean;
+	orientation: MapOrientation;
+	baseMapDescription = 'Base Map';
+	formattedOverlayTime: string = null;
+	@HostBinding('class.active') isActiveMap: boolean;
+	@Input() isMinimalistViewMode: boolean;
+	hideLayers: boolean;
+
+	@AutoSubscription
+	active$ = this.store$.pipe(
+		select(selectActiveMapId),
+		map((activeMapId) => activeMapId === this.mapId),
+		tap((isActiveMap) => this.isActiveMap = isActiveMap)
+	);
+	@AutoSubscription
+	mapsAmount$ = this.store$.pipe(
+		select(selectMapsTotal),
+		tap((mapsAmount) => this.mapsAmount = mapsAmount)
+	);
+	translatedOverlaySensorName = '';
+	@Output() toggleMapSynchronization = new EventEmitter<void>();
+	@Output() onMove = new EventEmitter<MouseEvent>();
+	enableCopyOriginalOverlayData: boolean;
+	@AutoSubscription
+	copyOriginalOverlayDataFlag$ = this.store$.select(selectEnableCopyOriginalOverlayDataFlag).pipe(
+		tap((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
+	);
+
+
+
+	constructor(protected store$: Store<any>,
+				protected communicators: ImageryCommunicatorService,
+				protected translate: TranslateService,
+				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities) {
+	}
+
+	@AutoSubscription
+	getMapOrientation$ = () => this.store$.select(selectMapOrientation(this.mapId)).pipe(
+		filter(Boolean),
+		tap( (orientation: MapOrientation) => {
+			this.orientation = orientation;
+			this.perspective = this.orientation === 'User Perspective';
+		})
+	);
 
 	@AutoSubscription
 	hideLayers$ = () => this.store$.pipe(

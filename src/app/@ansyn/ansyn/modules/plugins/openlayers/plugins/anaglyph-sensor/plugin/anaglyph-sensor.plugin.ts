@@ -30,6 +30,11 @@ export class AnaglyphSensorPlugin extends BaseImageryPlugin {
 		})
 	);
 
+	constructor(public store$: Store<any>,
+				protected anaglyphSensorService: AnaglyphSensorService) {
+		super();
+	}
+
 	@AutoSubscription
 	overlay$ = () => this.store$.pipe(
 		select(selectOverlayByMapId(this.mapId)),
@@ -57,9 +62,4 @@ export class AnaglyphSensorPlugin extends BaseImageryPlugin {
 
 		})
 	);
-
-	constructor(public store$: Store<any>,
-				protected anaglyphSensorService: AnaglyphSensorService) {
-		super();
-	}
 }

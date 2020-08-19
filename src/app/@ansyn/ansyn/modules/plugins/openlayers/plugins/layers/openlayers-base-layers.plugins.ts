@@ -28,6 +28,10 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 			})
 		);
 
+	protected constructor(protected store$: Store<any>) {
+		super();
+	}
+
 	// todo: return auto-subscription when the bug is fixed
 	toggleGroup$ = () => this.store$.select(selectHideLayersOnMap(this.mapId)).pipe(
 		tap((newState: boolean) => this.iMap.toggleGroup('layers', !newState))
@@ -47,10 +51,6 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 		this.subscriptions.forEach((sub) => sub.unsubscribe());
 		this.subscriptions = [];
 		super.onDispose();
-	}
-
-	protected constructor(protected store$: Store<any>) {
-		super();
 	}
 
 	abstract checkLayer(layer: ILayer);

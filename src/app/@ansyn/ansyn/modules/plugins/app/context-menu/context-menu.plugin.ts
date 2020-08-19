@@ -20,6 +20,10 @@ import { Injectable } from '@angular/core';
 })
 @Injectable()
 export class ContextMenuPlugin extends BaseImageryPlugin {
+
+	get containerElem(): HTMLElement {
+		return this.iMap.getHtmlContainer();
+	}
 	isActiveOperators: UnaryFunction<any, any> = pipe(
 		withLatestFrom(this.store$.select(selectActiveMapId).pipe(map((activeMapId: string) => activeMapId === this.mapId))),
 		filter(([prevData, isActive]: [any, boolean]) => isActive),
@@ -36,19 +40,15 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 			tap((action) => this.store$.dispatch(action))
 		);
 
+	constructor(protected store$: Store<any>, protected actions$: Actions, protected olProjectionService: OpenLayersProjectionService, protected cesiumProjectionService: CesiumProjectionService) {
+		super();
+	}
+
 	@AutoSubscription
 	contextMenuTrigger$ = () => fromEvent(this.containerElem, 'contextmenu')
 		.pipe(
 			tap(this.contextMenuEventListener.bind(this))
 		);
-
-	get containerElem(): HTMLElement {
-		return this.iMap.getHtmlContainer();
-	}
-
-	constructor(protected store$: Store<any>, protected actions$: Actions, protected olProjectionService: OpenLayersProjectionService, protected cesiumProjectionService: CesiumProjectionService) {
-		super();
-	}
 
 	contextMenuEventListener(event: MouseEvent) {
 		event.preventDefault();

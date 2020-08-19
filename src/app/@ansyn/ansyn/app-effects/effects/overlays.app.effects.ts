@@ -279,15 +279,15 @@ export class OverlaysAppEffects {
 		distinctUntilKeyChanged('payload'),
 		map((action) => new SetBadgeAction({ key: 'Results table', badge: `${ action.payload }` })));
 
-	onDropMarkupFilter([prevAction, currentAction]): boolean {
-		const isEquel = !isEqual(prevAction, currentAction);
-		return isEquel;
-	}
-
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,
 				public overlaysService: OverlaysService,
 				protected loggerService: LoggerService) {
+	}
+
+	onDropMarkupFilter([prevAction, currentAction]): boolean {
+		const isEquel = !isEqual(prevAction, currentAction);
+		return isEquel;
 	}
 
 }

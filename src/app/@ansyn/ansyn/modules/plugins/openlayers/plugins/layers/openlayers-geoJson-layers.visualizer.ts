@@ -27,6 +27,18 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	showedLayersDictionary: string[];
 	currentExtent: Polygon;
 	protected subscriptions: Subscription[] = [];
+
+	constructor(protected store$: Store<any>,
+				protected http: HttpClient,
+				protected loggerService: LoggerService) {
+		super({
+			initial: {
+				'fill-opacity': 0
+			}
+		});
+		this.layersDictionary = {};
+		this.showedLayersDictionary = [];
+	}
 	// todo: return auto-subscription when the bug is fixed
 	updateLayersOnMap$ = () => combineLatest(this.store$.select(selectHideLayersOnMap(this.mapId)), this.store$.select(selectSelectedLayersIds))
 		.pipe(
@@ -55,18 +67,6 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 			return this.setEntities(entities);
 		})
 	);
-
-	constructor(protected store$: Store<any>,
-				protected http: HttpClient,
-				protected loggerService: LoggerService) {
-		super({
-			initial: {
-				'fill-opacity': 0
-			}
-		});
-		this.layersDictionary = {};
-		this.showedLayersDictionary = [];
-	}
 
 	onInitSubscriptions(): void {
 		super.onInitSubscriptions();

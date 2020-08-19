@@ -30,6 +30,7 @@ import { selectMapOrientation } from '@ansyn/map-facade';
 	deps: [Actions, LoggerService, Store, CesiumProjectionService]
 })
 export class NorthCalculationsPlugin extends BaseImageryPlugin {
+;
 	communicator: CommunicatorEntity;
 	isEnabled = true;
 
@@ -53,6 +54,13 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			return this.communicator.ActiveMap.setRotation(0);
 		})
 	);
+
+	constructor(protected actions$: Actions,
+				public loggerService: LoggerService,
+				public store$: Store<any>,
+				protected projectionService: CesiumProjectionService) {
+		super();
+	}
 
 	@AutoSubscription
 	calcNorthAfterDisplayOverlaySuccess$ = () => this.actions$.pipe(
@@ -81,14 +89,6 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		})
 	);
 
-	constructor(protected actions$: Actions,
-				public loggerService: LoggerService,
-				public store$: Store<any>,
-				protected projectionService: CesiumProjectionService) {
-		super();
-	}
-
 	onResetView(): Observable<boolean> {
 		return of(true);
-	};
-}
+	}}

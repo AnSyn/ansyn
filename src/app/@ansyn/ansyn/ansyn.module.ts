@@ -95,6 +95,10 @@ import { ResultsModule } from "./modules/menu-items/results/results.module";
 })
 
 export class AnsynModule {
+
+	constructor(public translate: TranslateService) {
+		translate.setDefaultLang('default');
+	}
 	static component(id?: string): ModuleWithProviders<AnsynModule> {
 		return {
 			ngModule: AnsynModule,
@@ -109,9 +113,5 @@ export class AnsynModule {
 				}
 			]
 		};
-	}
-
-	constructor(public translate: TranslateService) {
-		translate.setDefaultLang('default');
 	}
 }

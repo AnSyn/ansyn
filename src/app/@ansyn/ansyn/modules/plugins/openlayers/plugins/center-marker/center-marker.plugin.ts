@@ -14,10 +14,6 @@ import { OpenLayersMap } from '@ansyn/ol';
 	deps: []
 })
 export class CenterMarkerPlugin extends BaseImageryPlugin {
-	private _iconStyle: Style;
-	private _existingLayer;
-
-	private _isEnabled: boolean;
 
 	public set isEnabled(value: boolean) {
 		if (this._isEnabled !== value) {
@@ -34,15 +30,10 @@ export class CenterMarkerPlugin extends BaseImageryPlugin {
 	public get isEnabled(): boolean {
 		return this._isEnabled;
 	}
+	private _iconStyle: Style;
+	private _existingLayer;
 
-	@AutoSubscription
-	positionChanged$ = () => this.communicator.positionChanged.subscribe((position: IImageryMapPosition) => {
-		if (this.isEnabled) {
-			this.tryDrawCenter();
-		} else {
-			this.tryDeleteCenter();
-		}
-	});
+	private _isEnabled: boolean;
 
 	constructor() {
 		super();
@@ -58,6 +49,15 @@ export class CenterMarkerPlugin extends BaseImageryPlugin {
 		});
 
 	}
+
+	@AutoSubscription
+	positionChanged$ = () => this.communicator.positionChanged.subscribe((position: IImageryMapPosition) => {
+		if (this.isEnabled) {
+			this.tryDrawCenter();
+		} else {
+			this.tryDeleteCenter();
+		}
+	});
 
 	onResetView(): Observable<boolean> {
 		return of(true);

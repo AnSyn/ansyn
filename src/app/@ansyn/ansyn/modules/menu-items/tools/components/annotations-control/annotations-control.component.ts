@@ -39,6 +39,27 @@ export enum SelectionBoxTypes {
 	destroy: 'ngOnDestroy'
 })
 export class AnnotationsControlComponent implements OnInit, OnDestroy {
+
+	get SelectionBoxTypes() {
+		return SelectionBoxTypes;
+	}
+
+	get Boolean() {
+		return Boolean;
+	}
+
+	@HostBinding('class.expand')
+	@Input()
+	set expand(value) {
+		if (!value) {
+			this.selectedBox = SelectionBoxTypes.None;
+		}
+		this._expand = value;
+	}
+
+	get expand() {
+		return this._expand;
+	}
 	@Input() isGeoOptionsDisabled: boolean;
 	@Output() hideMe = new EventEmitter<boolean>();
 
@@ -48,14 +69,6 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 
 	private _expand: boolean;
 	public selectedBox: SelectionBoxTypes;
-
-	get SelectionBoxTypes() {
-		return SelectionBoxTypes;
-	}
-
-	get Boolean() {
-		return Boolean;
-	}
 
 	annotationLayer$ = this.store.pipe(
 		select(selectLayers),
@@ -96,6 +109,13 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		})
 	);
 
+	constructor(
+		protected element: ElementRef,
+		public store: Store<any>,
+		protected clickOutsideService: ClickOutsideService,
+		@Inject(DOCUMENT) public document: any) {
+	}
+
 	@AutoSubscription
 	clickOutsideColorOrWeight = () => fromEvent(this.document, 'click')
 		.pipe(
@@ -107,26 +127,6 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 			),
 			tap(_ => this.toggleSelection())
 		);
-
-	@HostBinding('class.expand')
-	@Input()
-	set expand(value) {
-		if (!value) {
-			this.selectedBox = SelectionBoxTypes.None;
-		}
-		this._expand = value;
-	}
-
-	get expand() {
-		return this._expand;
-	}
-
-	constructor(
-		protected element: ElementRef,
-		public store: Store<any>,
-		protected clickOutsideService: ClickOutsideService,
-		@Inject(DOCUMENT) public document: any) {
-	}
 
 	ngOnInit() {
 	}

@@ -56,6 +56,10 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	private _scannedAreaKeys = '`~;'.split('');
 	private _overlayHackKeys = 'Eeק'.split('');
 
+	constructor(protected store: Store<IStatusBarState>,
+				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
+	}
+
 	isElementNotValid($event: KeyboardEvent) {
 		const { activeElement } = (<Window>$event.currentTarget).document;
 		return this.isElementInput(activeElement) || this.isTimePicker(activeElement);
@@ -120,10 +124,6 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 		if (this.keysWereUsed($event, this._scannedAreaKeys)) {
 			this.clickScannedArea();
 		}
-	}
-
-	constructor(protected store: Store<IStatusBarState>,
-				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
 	}
 
 	private keyWasUsed(event: KeyboardEvent, key: string, keycode: number = key.charCodeAt(0)): boolean {

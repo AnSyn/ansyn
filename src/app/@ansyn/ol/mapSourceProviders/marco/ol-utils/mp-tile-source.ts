@@ -15,6 +15,33 @@ export class MpTileSource extends XYZ {
 	public _meta: any;
 	public _projection: any;
 
+	constructor(meta, url, transform, projectionKey) {
+		const projection = <Projection>new MpImageProjection(meta, transform, projectionKey);
+		proj.addProjection(projection);
+
+		const tileGrid = MpTileSource.createForExtent(projection.getExtent(), meta.LevelsCount - 1);
+
+		super({
+			tileUrlFunction: function (tileCoord, pixelRatio, proj) {
+				const z = tileCoord[0];
+				const x = tileCoord[1];
+				const y = -tileCoord[2] - 1;
+				return url + urlTemplate.replace('{z}', z.toString())
+					.replace('{y}', y.toString())
+					.replace('{x}', x.toString());
+			},
+			tileGrid: tileGrid,
+			url: url,
+			crossOrigin: 'Anonymous',
+			projection: projection
+		});
+
+		this._url = url;
+		this.crossOrigin = 'Anonymous';
+		this._meta = meta;
+		this._projection = projection;
+	}
+
 	static createForExtent(extent, opt_maxZoom) {
 		const tileSize = 512;
 
@@ -57,32 +84,5 @@ export class MpTileSource extends XYZ {
 
 	static create(data, url, transform, projectionKey) {
 		return new MpTileSource(data, url, transform, projectionKey);
-	}
-
-	constructor(meta, url, transform, projectionKey) {
-		const projection = <Projection>new MpImageProjection(meta, transform, projectionKey);
-		proj.addProjection(projection);
-
-		const tileGrid = MpTileSource.createForExtent(projection.getExtent(), meta.LevelsCount - 1);
-
-		super({
-			tileUrlFunction: function (tileCoord, pixelRatio, proj) {
-				const z = tileCoord[0];
-				const x = tileCoord[1];
-				const y = -tileCoord[2] - 1;
-				return url + urlTemplate.replace('{z}', z.toString())
-					.replace('{y}', y.toString())
-					.replace('{x}', x.toString());
-			},
-			tileGrid: tileGrid,
-			url: url,
-			crossOrigin: 'Anonymous',
-			projection: projection
-		});
-
-		this._url = url;
-		this.crossOrigin = 'Anonymous';
-		this._meta = meta;
-		this._projection = projection;
 	}
 }

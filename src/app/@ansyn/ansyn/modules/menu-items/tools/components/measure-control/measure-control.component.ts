@@ -30,6 +30,9 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 	currentOverlay: IOverlay = undefined;
 	measureData: IMeasureData;
 
+	constructor(protected store$: Store<any>) {
+	}
+
 	@AutoSubscription
 	show$ = () => combineLatest(
 		this.store$.select(selectIsMeasureToolActive),
@@ -66,9 +69,6 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 			return false;
 		}
 		return true;
-	}
-
-	constructor(protected store$: Store<any>) {
 	}
 
 	ngOnInit() {

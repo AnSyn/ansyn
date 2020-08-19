@@ -16,14 +16,6 @@ import { setMenuSessionData } from '../../../../../menu/helpers/menu-session.hel
 @AutoSubscriptions()
 export class CredentialsComponent implements OnInit, OnDestroy {
 
-	@AutoSubscription
-	onClickOutside$ = () => this.clickOutsideService.onClickOutside({target: this.element.nativeElement, monitor: this.element.nativeElement.lastChild}).pipe(
-		filter(Boolean),
-		tap(() => {
-				this.closeWindow();
-		})
-	);
-
 	constructor(public credentialsService: CredentialsService,
 				protected store$: Store<any>,
 				protected element: ElementRef,
@@ -34,6 +26,14 @@ export class CredentialsComponent implements OnInit, OnDestroy {
 			this.store$.dispatch(new SetBadgeAction({ key: 'Permissions', badge: undefined }));
 		}
 	}
+
+	@AutoSubscription
+	onClickOutside$ = () => this.clickOutsideService.onClickOutside({target: this.element.nativeElement, monitor: this.element.nativeElement.lastChild}).pipe(
+		filter(Boolean),
+		tap(() => {
+				this.closeWindow();
+		})
+	);
 
 	hasAuthorized() {
 		return this.credentialsService.authorizedAreas.length > 0;

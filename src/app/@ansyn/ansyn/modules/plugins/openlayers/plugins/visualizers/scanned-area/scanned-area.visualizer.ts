@@ -20,23 +20,6 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class ScannedAreaVisualizer extends EntitiesVisualizer {
 
-	@AutoSubscription
-	scannedArea$ = () => combineLatest(this.store$.select(selectScannedAreaData), this.store$.select(selectOverlayByMapId(this.mapId))).pipe(
-		filter(([scannedAreaData, overlay]: [IOverlaysScannedAreaData, IOverlay]) => Boolean(scannedAreaData)),
-		mergeMap(([scannedAreaData, overlay]: [IOverlaysScannedAreaData, IOverlay]) => {
-			const entities: IVisualizerEntity[] = [];
-			if (!Boolean(overlay) || !Boolean(scannedAreaData[overlay.id])) {
-				this.clearEntities();
-			} else {
-				entities.push({
-					id: 'scannedArea',
-					featureJson: feature(scannedAreaData[overlay.id])
-				});
-			}
-			return this.setEntities(entities);
-		})
-	);
-
 	constructor(
 		public store$: Store<any>,
 		public actions$: Actions,
@@ -54,4 +37,21 @@ export class ScannedAreaVisualizer extends EntitiesVisualizer {
 			}
 		});
 	}
+
+	@AutoSubscription
+	scannedArea$ = () => combineLatest(this.store$.select(selectScannedAreaData), this.store$.select(selectOverlayByMapId(this.mapId))).pipe(
+		filter(([scannedAreaData, overlay]: [IOverlaysScannedAreaData, IOverlay]) => Boolean(scannedAreaData)),
+		mergeMap(([scannedAreaData, overlay]: [IOverlaysScannedAreaData, IOverlay]) => {
+			const entities: IVisualizerEntity[] = [];
+			if (!Boolean(overlay) || !Boolean(scannedAreaData[overlay.id])) {
+				this.clearEntities();
+			} else {
+				entities.push({
+					id: 'scannedArea',
+					featureJson: feature(scannedAreaData[overlay.id])
+				});
+			}
+			return this.setEntities(entities);
+		})
+	);
 }

@@ -39,6 +39,10 @@ export class AlertsPlugin extends BaseImageryPlugin {
 		})
 	);
 
+	constructor(protected store$: Store<any>) {
+		super();
+	}
+
 	overlayByMap$ = (mapId) => this.store$.select(selectOverlayByMapId(mapId));
 
 	@AutoSubscription
@@ -49,10 +53,6 @@ export class AlertsPlugin extends BaseImageryPlugin {
 		filter(Boolean),
 		tap((action: RemoveAlertMsg | AddAlertMsg) => this.store$.dispatch(action))
 	);
-
-	constructor(protected store$: Store<any>) {
-		super();
-	}
 
 	@AutoSubscription
 	positionChange$ = () => combineLatest(this.store$.select(selectMapPositionByMapId(this.mapId)), this.store$.select(selectOverlayByMapId(this.mapId)))

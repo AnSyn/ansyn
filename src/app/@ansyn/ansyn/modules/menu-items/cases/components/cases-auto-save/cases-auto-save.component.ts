@@ -29,6 +29,9 @@ export class CasesAutoSaveComponent implements OnInit, OnDestroy {
 			tap((currentCase) => this.currentCase = currentCase)
 		);
 
+	constructor(protected store$: Store<any>) {
+	}
+
 	@HostListener('click', ['$event']) onClick($event) {
 		$event.stopPropagation();
 	}
@@ -41,9 +44,6 @@ export class CasesAutoSaveComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-	}
-
-	constructor(protected store$: Store<any>) {
 	}
 
 }

@@ -12,12 +12,16 @@ import { fromPromise } from 'rxjs/internal-compatibility';
 
 @Injectable()
 export class FiltersEffects {
+;
 
 	@Effect()
 	onFilterSearch$ = combineLatest(this.store$.pipe(select(selectFiltersSearch)), this.store$.pipe(select(selectFiltersMetadata))).pipe(
 		mergeMap(([filtersSearch, filters]) => fromPromise(this.getFiltersSearchResults([filtersSearch, filters]))),
 		map((filtersSearchResults) => new SetFiltersSearchResults(filtersSearchResults))
 	);
+
+	constructor(protected store$: Store<IFiltersState>, protected translate: TranslateService) {
+	}
 
 	private async getIncludedKeys([filtersSearch, filterKey, filterVal]) {
 		if (filterKey.displayName.toLowerCase().includes(filtersSearch)) {
@@ -34,8 +38,7 @@ export class FiltersEffects {
 			}
 			return includedKeys;
 		}
-	};
-
+	}
 	private async getFiltersSearchResults([filtersSearch, filters]): Promise<IFilterSearchResults> {
 		const filtersSearchResults: IFilterSearchResults = {};
 		const lowerFiltersSearch = filtersSearch.toLowerCase();
@@ -44,9 +47,6 @@ export class FiltersEffects {
 			filtersSearchResults[filterKey.displayName] = includedKeys;
 		}
 		return filtersSearchResults;
-	}
-
-	constructor(protected store$: Store<IFiltersState>, protected translate: TranslateService) {
 	}
 
 

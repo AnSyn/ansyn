@@ -218,11 +218,15 @@ export class RemoveMeasureAction implements Action, ILogMessage {
 	}
 }
 
-export class AnnotationSetProperties implements Action {
+export class AnnotationSetProperties implements Action, ILogMessage {
 	type = ToolsActionsTypes.ANNOTATION_SET_PROPERTIES;
 
 	constructor(public payload: Partial<IVisualizerStyle>) {
 
+	}
+
+	logMessage() {
+		return `Setting annotation properties: ${JSON.stringify(this.payload)}`
 	}
 }
 
@@ -235,7 +239,7 @@ export class SetSubMenu implements Action, ILogMessage {
 
 	logMessage() {
 		return this.payload.fromUI ?
-			this.payload.which ? `Opening sub menu = ${SubMenuEnum[this.payload.which]}` : `Closing current sub menu`
+			this.payload.which ? `Opening sub menu: ${SubMenuEnum[this.payload.which]}` : `Closing current sub menu`
 			: null;
 	}
 }

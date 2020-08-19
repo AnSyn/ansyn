@@ -71,7 +71,8 @@ export class ToolsAppEffects {
 			ToolsActionsTypes.MEASURES.ADD_MEASURE,
 			ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS,
 			ToolsActionsTypes.STORE.SET_ANNOTATION_MODE,
-			ToolsActionsTypes.SET_SUB_MENU
+			ToolsActionsTypes.SET_SUB_MENU,
+			ToolsActionsTypes.ANNOTATION_SET_PROPERTIES
 		),
 		tap((action) => {
 			this.loggerService.info(getLogMessageFromAction(action), 'Tools', action.type);

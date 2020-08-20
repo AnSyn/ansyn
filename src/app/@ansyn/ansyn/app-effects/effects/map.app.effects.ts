@@ -95,6 +95,7 @@ export class MapAppEffects {
 		ofType(
 			OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
 			OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
+			OverlaysActionTypes.SET_OVERLAYS_STATUS_MESSAGE,
 			MapActionTypes.MAP_INSTANCE_CHANGED_ACTION,
 			MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS,
 			MapActionTypes.CHANGE_IMAGERY_MAP_FAILED,

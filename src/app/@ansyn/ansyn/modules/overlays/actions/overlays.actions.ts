@@ -223,10 +223,14 @@ export class SetDropsAction implements Action {
 	};
 }
 
-export class SetOverlaysStatusMessageAction implements Action {
+export class SetOverlaysStatusMessageAction implements Action, ILogMessage {
 	type = OverlaysActionTypes.SET_OVERLAYS_STATUS_MESSAGE;
 
 	constructor(public payload: string) {
+	}
+
+	logMessage() {
+		return this.payload && `Showing overlays status message: ${this.payload}`
 	}
 }
 

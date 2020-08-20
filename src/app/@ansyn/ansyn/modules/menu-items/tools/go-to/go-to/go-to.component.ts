@@ -129,8 +129,8 @@ export class GoToComponent implements OnInit {
 		}
 	}
 
-	copyToClipBoard(value: string) {
-		copyFromContent(value);
+	copyToClipBoard(value: string, projection: string = '', datum: string = '') {
+		copyFromContent(`${datum}${projection} ${value}`);
 		this.store$.dispatch(new SetToastMessageAction({ toastText: 'Copy to clipboard' }));
 	}
 

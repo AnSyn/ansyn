@@ -3,10 +3,10 @@ import { CredentialsService } from '../../services/credentials/credentials.servi
 import { Store } from '@ngrx/store';
 import { getMenuSessionData, UnSelectMenuItemAction } from '@ansyn/menu';
 import { SetUserEnter } from '@ansyn/menu';
-import { fromEvent, Subscription } from 'rxjs';
 import { tap, filter } from 'rxjs/operators';
 import { ClickOutsideService } from '../../click-outside/click-outside.service';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
+import { LoggerService } from '../../services/logger.service';
 
 @Component({
 	selector: 'ansyn-credentials',
@@ -25,10 +25,13 @@ export class CredentialsComponent implements OnInit, OnDestroy {
 		})
 	);
 
-	constructor(public credentialsService: CredentialsService,
-				protected store$: Store<any>,
-				protected element: ElementRef,
-				protected clickOutsideService: ClickOutsideService) {
+	constructor(
+		public credentialsService: CredentialsService,
+		protected store$: Store<any>,
+		protected element: ElementRef,
+		protected clickOutsideService: ClickOutsideService,
+		protected loggerService: LoggerService
+	) {
 		const menuSession = getMenuSessionData();
 		if (menuSession.isUserFirstEntrance) {
 			store$.dispatch(new SetUserEnter());
@@ -47,6 +50,16 @@ export class CredentialsComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
+	}
+
+	openPermissionSite() {
+		this.loggerService.info(`Opening permissions site`, 'Permissions', 'OPEN_PERMISSIONS_SITE');
+		this.credentialsService.openPermissionSite();
+	}
+
+	downloadGuide() {
+		this.loggerService.info(`Downloading permissions guide`, 'Permissions', 'DOWNLOAD_PERMISSIONS_GUIDE');
+		this.credentialsService.downloadGuide();
 	}
 
 	closeWindow() {

@@ -126,7 +126,7 @@ export class OverlayStatusEffects {
 					id: activeMap.id,
 					changes: { data: { ...activeMap.data, isAutoImageProcessingActive } }
 				}),
-				new SetAutoImageProcessingSuccess(isAutoImageProcessingActive)
+				new SetAutoImageProcessingSuccess({ value: isAutoImageProcessingActive, fromUI: true })
 			];
 		})
 	);
@@ -177,11 +177,11 @@ export class OverlayStatusEffects {
 					});
 					let combinedResult = unifyPolygons(featurePolygons);
 					let scannedAreaContainsExtentPolygon = false;
-					
+
 					scannedArea.coordinates.forEach(coordinates => {
 						let multiPolygon = JSON.parse(JSON.stringify(scannedArea));
 						multiPolygon.coordinates = [coordinates];
-						
+
 						if (getPolygonIntersectionRatioWithMultiPolygon(position.extentPolygon, multiPolygon)) {
 							scannedAreaContainsExtentPolygon = true;
 						}
@@ -190,7 +190,7 @@ export class OverlayStatusEffects {
 					if (scannedAreaContainsExtentPolygon) {
 						combinedResult = difference(combinedResult, position.extentPolygon);
 					}
-					
+
 					if (combinedResult === null) {
 						scannedArea = null;
 					}
@@ -231,7 +231,7 @@ export class OverlayStatusEffects {
 		withLatestFrom(this.store$.select(overlayStatusStateSelector).pipe(pluck<IOverlayStatusState, ImageManualProcessArgs>('manualImageProcessingParams'))),
 		mergeMap<any, any>(([map, manualImageProcessingParams]: [ICaseMapState, ImageManualProcessArgs]) => {
 			const { overlay, isAutoImageProcessingActive, imageManualProcessArgs } = map.data;
-			const actions = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess(overlay ? isAutoImageProcessingActive : false)];
+			const actions = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess({ value: overlay ? isAutoImageProcessingActive : false })];
 			if (!isEqual(imageManualProcessArgs, manualImageProcessingParams)) {
 				actions.push(new SetManualImageProcessing(map.data && imageManualProcessArgs || this.defaultImageManualProcessArgs));
 			}

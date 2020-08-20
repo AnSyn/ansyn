@@ -100,11 +100,11 @@ export class SetAutoImageProcessing implements Action, ILogMessage {
 export class SetAutoImageProcessingSuccess implements Action, ILogMessage {
 	type = OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS;
 
-	constructor(public payload: boolean) {
+	constructor(public payload: { value: boolean, fromUI?: boolean }) {
 	}
 
 	logMessage() {
-		return `Auto image processing was set to ${this.payload}`
+		return this.payload.fromUI ? `Auto image processing was set to ${this.payload.value}` : null;
 	}
 }
 

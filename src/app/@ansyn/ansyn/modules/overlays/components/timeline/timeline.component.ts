@@ -30,10 +30,10 @@ import {
 	OverlaysActionTypes,
 	RedrawTimelineAction,
 	SetMarkUp, SetOverlaysStatusMessageAction,
-	SetTimelineStateAction, UpdateOverlaysCountAction
+	SetTimelineStateAction
 } from '../../actions/overlays.actions';
 import { schemeCategory10 } from 'd3-scale-chromatic';
-import { distinctUntilChanged, map, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, tap, withLatestFrom } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import { ExtendMap } from '../../reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../overlay-overview/overlay-overview.component.const';
@@ -246,7 +246,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	onZoomEnd() {
 		const errorMessage = this.isNoOverlaysLeft() ? this.translator.instant('No overlays left there') : null;
-		this.store$.dispatch(new SetOverlaysStatusMessageAction(errorMessage));
+		this.store$.dispatch(new SetOverlaysStatusMessageAction({ message: errorMessage }));
 
 		this.store$.dispatch(new SetTimelineStateAction({
 			timeLineRange: {

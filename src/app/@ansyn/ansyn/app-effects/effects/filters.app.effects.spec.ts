@@ -4,7 +4,7 @@ import {
 	OverlayStatusReducer
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { FiltersAppEffects } from './filters.app.effects';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
@@ -38,7 +38,7 @@ import { OverlaysService } from '../../modules/overlays/services/overlays.servic
 import { imageryStatusFeatureKey, ImageryStatusReducer } from '@ansyn/map-facade';
 import { FilterType } from '../../modules/filters/models/filter-type';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
-import { MissingTranslationHandler, TranslateLoader, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { SetHideResultsTableBadgeAction } from '../../../menu/actions/menu.actions';
 
@@ -100,7 +100,7 @@ describe('Filters app effects', () => {
 		store.dispatch(new InitializeFiltersSuccessAction(new Map()));
 		const expectedResults = cold('(bcd)', {
 			b: new SetFilteredOverlaysAction([]),
-			c: new SetOverlaysStatusMessageAction(overlaysStatusMessages.noOverLayMatchFilters),
+			c: new SetOverlaysStatusMessageAction({ message: overlaysStatusMessages.noOverLayMatchFilters }),
 			d: new SetHideResultsTableBadgeAction(false)
 		});
 

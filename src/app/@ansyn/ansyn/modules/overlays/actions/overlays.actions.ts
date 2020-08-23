@@ -3,7 +3,7 @@ import { Action } from '@ngrx/store';
 import { type } from '../../core/utils/type';
 import {
 	IOverlay,
-	IOverlayDrop,
+	IOverlayDrop, IOverlayError,
 	IOverlaysCriteria,
 	IOverlaysCriteriaOptions,
 	IOverlaysHash,
@@ -226,11 +226,15 @@ export class SetDropsAction implements Action {
 export class SetOverlaysStatusMessageAction implements Action, ILogMessage {
 	type = OverlaysActionTypes.SET_OVERLAYS_STATUS_MESSAGE;
 
-	constructor(public payload: string) {
+	constructor(public payload: { message: string, originalMessages?: IOverlayError[] }) {
 	}
 
 	logMessage() {
-		return this.payload && `Showing overlays status message: ${this.payload}`
+		const originalMessages = this.payload && this.payload.originalMessages &&
+			this.payload.originalMessages.reduce((prevSum, currVal) => {
+				return `${prevSum}\n${currVal.sourceType ? '(' + currVal.sourceType + ') ' : ''}${currVal.message}`
+			}, '');
+		return this.payload && `Showing overlays status message: ${this.payload.message}${this.payload.originalMessages ? originalMessages : ''}`
 	}
 }
 

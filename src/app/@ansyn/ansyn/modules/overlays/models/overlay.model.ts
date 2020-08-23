@@ -2,11 +2,16 @@ import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../
 import { LineString, MultiPolygon, Point } from 'geojson';
 import { EPSG_3857 } from '@ansyn/imagery';
 
+export interface IOverlayError {
+	message: string,
+	sourceType?: string
+}
+
 export interface IOverlaysFetchData {
 	data: IOverlay[],
 	// number of overlays removed from total overlays (according to config)
 	limited: number,
-	errors?: Error[]
+	errors?: IOverlayError[]
 }
 
 export interface IDilutedOverlay {

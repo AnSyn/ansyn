@@ -275,7 +275,7 @@ export { IDeltaTime } from './modules/core/models/time.model';
 export { PhotoAngle, RegionContainment } from './modules/overlays/models/overlay.model';
 export { IOverlaysCriteriaOptions } from './modules/overlays/models/overlay.model';
 export { GeoRegisteration } from './modules/overlays/models/overlay.model';
-export { IOverlaysFetchData, IOverlayDrop, IOverlaySpecialObject } from './modules/overlays/models/overlay.model';
+export { IOverlayError, IOverlaysFetchData, IOverlayDrop, IOverlaySpecialObject } from './modules/overlays/models/overlay.model';
 export {
 	IOverlay, IDilutedOverlay, Overlay, IOverlaysCriteria, IDilutedOverlaysHash, IOverlaysHash
 }from './modules/overlays/models/overlay.model';

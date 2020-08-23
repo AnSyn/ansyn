@@ -100,7 +100,7 @@ export class FiltersAppEffects {
 			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : this.translate.instant(overlaysStatusMessages.noOverLayMatchFilters);
 			return [
 				new SetFilteredOverlaysAction(filteredOverlays),
-				new SetOverlaysStatusMessageAction(message),
+				new SetOverlaysStatusMessageAction({ message }),
 				new SetHideResultsTableBadgeAction(false)
 			];
 		}));

@@ -234,7 +234,7 @@ export class SetOverlaysStatusMessageAction implements Action, ILogMessage {
 			this.payload.originalMessages.reduce((prevSum, currVal) => {
 				return `${prevSum}\n${currVal.sourceType ? '(' + currVal.sourceType + ') ' : ''}${currVal.message}`
 			}, '');
-		return this.payload && `Showing overlays status message: ${this.payload.message}${this.payload.originalMessages ? originalMessages : ''}`
+		return this.payload && this.payload.message && `Showing overlays status message: ${this.payload.message}${this.payload.originalMessages ? originalMessages : ''}`
 	}
 }
 

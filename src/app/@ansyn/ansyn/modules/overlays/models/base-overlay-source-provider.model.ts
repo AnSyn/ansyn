@@ -108,14 +108,14 @@ export abstract class BaseOverlaySourceProvider {
 					newFetchParams.sensors = [f.sensor];
 				}
 
-				return this.fetch(newFetchParams).pipe(catchError((err: Error) => {
+				return this.fetch(newFetchParams).pipe(catchError((err: Error | string) => {
 					const errMsg = getErrorLogFromException(err, `Failed to fetch overlay's newFetchParams=${JSON.stringify(newFetchParams)}`);
 					this.loggerService.error(errMsg, 'overlays');
 					return of({
 						data: null,
 						limited: -1,
 						errors: [{
-							message: err.message,
+							message: err.toString(),
 							sourceType: this.sourceType
 						}]
 					});

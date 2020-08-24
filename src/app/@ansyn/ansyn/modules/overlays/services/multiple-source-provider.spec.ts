@@ -63,7 +63,7 @@ class FaultyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
 }
 
 const faultyError: IOverlayError = {
-	message: 'Failed to fetch overlays',
+	message: 'Error: Failed to fetch overlays',
 	sourceType: 'Faulty'
 };
 

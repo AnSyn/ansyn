@@ -17,7 +17,7 @@ import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
 import Stroke from 'ol/style/Stroke';
 import Feature from 'ol/Feature';
-import { click as mouseClickCondition } from 'ol/events/condition'
+import { primaryAction as mouseClickCondition } from 'ol/events/condition'
 import {
 	selectAlgorithmTaskDrawIndicator,
 	selectCurrentAlgorithmTaskAlgorithmName,

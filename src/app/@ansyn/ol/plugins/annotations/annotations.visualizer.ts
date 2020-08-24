@@ -10,7 +10,7 @@ import { UUID } from 'angular2-uuid';
 import { AutoSubscription } from 'auto-subscriptions';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { cloneDeep, merge } from 'lodash';
-import { click as mouseClickCondition, platformModifierKeyOnly } from 'ol/events/condition';
+import { primaryAction as mouseClickCondition, platformModifierKeyOnly } from 'ol/events/condition';
 import olFeature from 'ol/Feature';
 import olCollection from 'ol/Collection';
 import OLGeoJSON from 'ol/format/GeoJSON';

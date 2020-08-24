@@ -3,7 +3,7 @@ import { combineLatest, EMPTY, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject, Position } from 'geojson';
-import { click as mouseClickCondition } from 'ol/events/condition'
+import { primaryAction as mouseClickCondition } from 'ol/events/condition'
 import {
 	ContextMenuTriggerAction,
 	MapActionTypes,

@@ -7,7 +7,7 @@ import {
 	IMapSettings,
 	IWorldViewMapState
 } from '@ansyn/imagery';
-import { LayoutKey } from '../models/maps-layout';
+import { LayoutKey, layoutOptions } from '../models/maps-layout';
 import { MapOrientation } from "@ansyn/imagery";
 import { ILogMessage } from '../../ansyn/modules/core/utils/logs/timer-logs';
 
@@ -375,10 +375,14 @@ export class SetMapPositionByRadiusAction implements Action {
 	}
 }
 
-export class SetLayoutAction implements Action {
+export class SetLayoutAction implements Action, ILogMessage {
 	type = MapActionTypes.SET_LAYOUT;
 
 	constructor(public payload: LayoutKey) {
+	}
+
+	logMessage() {
+		return `Changing maps layout, no. of maps = ${layoutOptions.get(this.payload).mapsCount}`
 	}
 }
 

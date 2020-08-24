@@ -47,7 +47,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 	needToShowLayer = true;
 
 	@AutoSubscription
-	currentOverlays$ = this.store$.select(selectOverlaysArray).pipe(
+	currentOverlays$ = this.ansynApi.events.overlaysLoadedSuccess.pipe(
 		tap(x => console.log('sandbox', 'overlays array', x)),
 		tap((x: IOverlay[]) => this.currentOverlays = x)
 	);
@@ -157,7 +157,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 			type: 'Point',
 			coordinates: [-117.914, 33.811]
 		};
-		this.ansynApi.setMapPositionByRadius(center, 100, true);
+		this.ansynApi.setMapPositionByRadius(center, 100, undefined, true);
 	}
 
 	setPositionByRect() {
@@ -181,7 +181,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 			type: 'Point',
 			coordinates: [-118.02, 33.69]
 		};
-		this.ansynApi.setMapPositionByRadius(point, 2000, false);
+		this.ansynApi.setMapPositionByRadius(point, 2000, undefined, false);
 		let criteria: IOverlaysCriteria = {
 			region: point
 		};
@@ -193,7 +193,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 			type: 'Point',
 			coordinates: [-118.02, 33.69]
 		};
-		this.ansynApi.setMapPositionByRadius(point, 2000, false);
+		this.ansynApi.setMapPositionByRadius(point, 2000, undefined, false);
 		const rectangle: Polygon = {
 			'type': 'Polygon',
 			'coordinates': [
@@ -290,7 +290,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 			type: 'Point',
 			coordinates: [-117.9402, 33.8181]
 		};
-		this.ansynApi.setMapPositionByRadius(center, 5000, true);
+		this.ansynApi.setMapPositionByRadius(center, 5000, undefined, true);
 		this.ansynApi.setAnnotations({
 			'type': 'FeatureCollection',
 			'features': [

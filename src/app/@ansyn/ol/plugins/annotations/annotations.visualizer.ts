@@ -2,9 +2,10 @@ import { Inject, Injectable } from '@angular/core';
 import {
 	ImageryVisualizer,
 	IVisualizerEntity,
-	MarkerSize,
 	VisualizerInteractions,
-	VisualizerStates
+	VisualizerStates,
+	validateFeatureProperties,
+	getInitialAnnotationsFeatureStyle
 } from '@ansyn/imagery';
 import { UUID } from 'angular2-uuid';
 import { AutoSubscription } from 'auto-subscriptions';
@@ -57,7 +58,7 @@ export interface IEditAnnotationMode {
 })
 @Injectable()
 export class AnnotationsVisualizer extends EntitiesVisualizer {
-	static fillAlpha = 0.4;
+	private skipNextMapClickHandler = false;
 	disableCache = true;
 	public mode: AnnotationMode;
 	mapSearchIsActive = false;
@@ -89,15 +90,19 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	clearAnnotationEditMode$ = tap(() => {
 		this.clearAnnotationEditMode();
 	});
+
 	@AutoSubscription
 	selected$ = this.events.onSelect.pipe(
 		this.clearAnnotationEditMode$,
 		this.clearLabelTranslate$,
 		tap((selected: any) => this.selected = selected));
+
 	@AutoSubscription
 	labelTranslate$ = this.events.onLabelTranslateStart.pipe(tap((labelTranslate) => this.labelTranslate = labelTranslate));
+
 	@AutoSubscription
 	editAnnotation$ = this.events.onAnnotationEditStart.pipe(tap(annotationEdit => this.currentAnnotationEdit = annotationEdit));
+
 	modeDictionary = {
 		Arrow: {
 			type: 'LineString',
@@ -108,6 +113,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			geometryFunction: this.rectangleGeometryFunction.bind(this)
 		}
 	};
+
 	protected measuresTextStyle = {
 		font: '16px Calibri,sans-serif',
 		fill: new olFill({
@@ -121,32 +127,21 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		overflow: true,
 		rotateWithView: true
 	};
-	private skipNextMapClickHandler = false;
 	private iconSrc = '';
 
 	constructor(protected projectionService: OpenLayersProjectionService,
 				@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig,
 				protected translator: TranslateService) {
-
 		super(null, {
 			initial: {
-				stroke: '#27b2cfe6',
-				'stroke-width': 1,
-				fill: `white`,
-				'fill-opacity': AnnotationsVisualizer.fillAlpha,
-				'stroke-opacity': 1,
-				'marker-size': MarkerSize.medium,
-				'marker-color': `#ffffff`,
+				...getInitialAnnotationsFeatureStyle(),
 				label: {
-					overflow: true,
+					...getInitialAnnotationsFeatureStyle().label,
 					fontSize: (feature) => {
 						const entity = this.idToEntity.get(feature.getId());
 						const labelSize = entity && entity.originalEntity && entity.originalEntity.labelSize;
 						return labelSize || 28;
 					},
-					stroke: '#000',
-					fill: 'white',
-					offsetY: 30,
 					text: (feature: olFeature) => {
 						const entity = this.idToEntity.get(feature.getId());
 						if (entity) {
@@ -189,21 +184,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
 		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => {
-			const featureJson: Feature<any> = {
-				...feature,
-				properties: { ...feature.properties, featureJson: undefined }
-			};
+			const featureJson = validateFeatureProperties(feature);
+			featureJson.properties.featureJson = undefined;
 			return {
-				featureJson,
 				id: feature.properties.id,
-				style: feature.properties.style || this.visualizerStyle,
-				showMeasures: feature.properties.showMeasures || false,
-				showArea: feature.properties.showArea || false,
-				label: feature.properties.label || { text: '', geometry: null },
-				icon: feature.properties.icon || '',
-				undeletable: feature.properties.undeletable || false,
-				labelSize: feature.properties.labelSize || 28,
-				labelTranslateOn: feature.properties.labelTranslateOn || false
+				...featureJson.properties,
+				featureJson
 			};
 		});
 	}
@@ -560,6 +546,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	updateFeature(featureId, props: Partial<IVisualizerEntity>) {
+		const editMode = this.currentAnnotationEdit;
+		if (editMode) {
+			this.setEditAnnotationMode(featureId, false);
+		}
+
 		const entity = this.idToEntity.get(featureId);
 		if (entity) {
 			entity.originalEntity = merge({}, entity.originalEntity, props);
@@ -568,6 +559,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			}
 			this.events.updateEntity.next(entity.originalEntity);
 			this.source.refresh();
+		}
+
+		if (editMode) {
+			this.setEditAnnotationMode(featureId, true);
 		}
 	}
 
@@ -641,70 +636,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		this.events.onAnnotationEditStart.next(event);
 	}
 
-	onResetView(): Observable<boolean> {
-		this.clearLabelTranslateMode();
-		this.clearAnnotationEditMode();
-		return super.onResetView();
-	}
-
-	dispose() {
-		this.clearLabelTranslateMode();
-		this.clearAnnotationEditMode();
-		super.dispose();
-	}
-
-	clearAnnotationEditMode() {
-		if (this.currentAnnotationEdit) {
-			this.setEditAnnotationMode(this.currentAnnotationEdit.originalFeature.getId(), false)
-		}
-	}
-
-	protected mapClick = (event) => {
-		this.events.onClick.next(); // TODO - can be removed when ansyn.annotations.visualizer will use communicator instead of this for listening to click events on the map
-		// As the drawend callback is called before the click one, if the annotation's context-menu has been opened on drawend,
-		//  the click event will cause it to be closed so in this case, we use this flag to prevent it.
-		if (this.skipNextMapClickHandler) {
-			this.skipNextMapClickHandler = false;
-			return;
-		}
-		if (this.mapSearchIsActive || this.mode || this.isHidden) {
-			return;
-		}
-		const { shiftKey: multi } = event.originalEvent;
-		const selectedFeature = this.featureAtPixel(event.pixel);
-		let ids = [];
-		if (selectedFeature) {
-			const featureId = selectedFeature.getId();
-			ids = multi ? this.selected.includes(featureId) ? this.selected.filter(id => id !== featureId) : [...this.selected, featureId] : [featureId];
-		} else {
-			ids = multi ? this.selected : [];
-		}
-		this.events.onSelect.next(ids);
-	};
-
-	protected mapPointermove = (event) => {
-		if (this.mapSearchIsActive || this.mode) {
-			return;
-		}
-		const selectedFeature = this.featureAtPixel(event.pixel);
-		this.events.onHover.next(selectedFeature ? selectedFeature.getId() : null);
-	};
-
-	protected mapBoxstart = () => {
-		this.events.onSelect.next([]);
-	};
-
-	protected mapBoxdrag = ({ target }) => {
-		if (this.isHidden) {
-			return;
-		}
-		const extent = target.getGeometry().getExtent();
-		const selected = [];
-		this.vector.getSource().forEachFeatureIntersectingExtent(extent, (feature) => {
-			selected.push(feature.getId());
-		});
-		this.events.onSelect.next(selected);
-	};
 
 	private createCenterFeatureToDrag(feature: olFeature) {
 		const center = this.getCenterOfFeature(feature);
@@ -850,6 +781,65 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 	}
 
+	onResetView(): Observable<boolean> {
+		this.clearLabelTranslateMode();
+		this.clearAnnotationEditMode();
+		return super.onResetView();
+	}
+
+	dispose() {
+		this.clearLabelTranslateMode();
+		this.clearAnnotationEditMode();
+		super.dispose();
+	}
+
+	protected mapClick = (event) => {
+		this.events.onClick.next(); // TODO - can be removed when ansyn.annotations.visualizer will use communicator instead of this for listening to click events on the map
+		// As the drawend callback is called before the click one, if the annotation's context-menu has been opened on drawend,
+		//  the click event will cause it to be closed so in this case, we use this flag to prevent it.
+		if (this.skipNextMapClickHandler) {
+			this.skipNextMapClickHandler = false;
+			return;
+		}
+		if (this.mapSearchIsActive || this.mode || this.isHidden) {
+			return;
+		}
+		const { shiftKey: multi } = event.originalEvent;
+		const selectedFeature = this.featureAtPixel(event.pixel);
+		let ids = [];
+		if (selectedFeature) {
+			const featureId = selectedFeature.getId();
+			ids = multi ? this.selected.includes(featureId) ? this.selected.filter(id => id !== featureId) : [...this.selected, featureId] : [featureId];
+		} else {
+			ids = multi ? this.selected : [];
+		}
+		this.events.onSelect.next(ids);
+	};
+
+	protected mapPointermove = (event) => {
+		if (this.mapSearchIsActive || this.mode) {
+			return;
+		}
+		const selectedFeature = this.featureAtPixel(event.pixel);
+		this.events.onHover.next(selectedFeature ? selectedFeature.getId() : null);
+	};
+
+	protected mapBoxstart = () => {
+		this.events.onSelect.next([]);
+	};
+
+	protected mapBoxdrag = ({ target }) => {
+		if (this.isHidden) {
+			return;
+		}
+		const extent = target.getGeometry().getExtent();
+		const selected = [];
+		this.vector.getSource().forEachFeatureIntersectingExtent(extent, (feature) => {
+			selected.push(feature.getId());
+		});
+		this.events.onSelect.next(selected);
+	};
+
 	private isNumArray([first, second]) {
 		return typeof first === 'number' && typeof second === 'number';
 	}
@@ -862,5 +852,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			minX: Math.min(x, prev.minX),
 			minY: Math.min(y, prev.minY)
 		};
+	}
+
+	clearAnnotationEditMode() {
+		if (this.currentAnnotationEdit) {
+			this.setEditAnnotationMode(this.currentAnnotationEdit.originalFeature.getId(), false)
+		}
 	}
 }

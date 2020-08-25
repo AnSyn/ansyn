@@ -37,7 +37,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	initDoneSync = false;
 	initDoneAsync: Subject<any> = new Subject();
 	dataInputFiltersConfig = TreeviewConfig.create({
-		hasAllCheckBox: true,
+		hasAllCheckBox: false,
 		hasFilter: false,
 		hasCollapseExpand: false, // Collapse (show all filters).
 		decoupleChildFromParent: false,
@@ -137,11 +137,26 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 		return flattenDeep(this.dataFilters.map(filter => this.selectAllChildren(filter)));
 	}
 
+	selectOnly(item) {
+		const filters = [item];
+		return flattenDeep(filters.map(filter => this.selectAllChildren(filter)));
+	}
+
 	selectAllChildren(parent) {
 		if (this.isChild(parent)) {
 			return parent.value;
 		}
 		return parent.children.map( child => this.selectAllChildren(child));
+	}
+
+	showAll() {
+		this._selectedFilters = this.selectAll();
+		this.dataInputFiltersChange();
+	}
+
+	showOnly(item) {
+		this._selectedFilters = this.selectOnly(item);
+		this.dataInputFiltersChange();
 	}
 
 	private isChild(filter) {

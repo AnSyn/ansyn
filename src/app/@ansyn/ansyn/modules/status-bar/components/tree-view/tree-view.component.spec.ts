@@ -21,6 +21,7 @@ import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.ac
 import { IOverlaysCriteria } from '../../../overlays/models/overlay.model';
 import { mockIndexProviders } from '../../../core/test/mock-providers';
 import { MockPipe } from '../../../core/test/mock-pipe';
+import { FormsModule } from '@angular/forms';
 
 const overlaysCriteria: IOverlaysCriteria = {
 	time: { from: new Date(), to: new Date() },
@@ -43,6 +44,7 @@ describe('TreeViewComponent', () => {
 				MockPipe('translate')
 			],
 			imports: [
+				FormsModule,
 				StoreModule.forRoot({
 					[overlaysFeatureKey]: OverlayReducer
 				}),

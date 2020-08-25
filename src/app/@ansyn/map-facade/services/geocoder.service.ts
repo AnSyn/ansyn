@@ -30,7 +30,7 @@ export class GeocoderService {
 
 	getLocation$(searchString: string): Observable<IMapSearchResult[]> {
 		const url = this.config.url.concat(searchString).concat("&format=geojson");
-		if (/(wgs84)?(ed50)?\d*/.test(searchString.charAt(0))) { // user enter coordinates
+		if (/\d+\./.test(searchString)) { // user enter coordinates
 			return of([]);
 		}
 		return this.http.get<any>(url).pipe(

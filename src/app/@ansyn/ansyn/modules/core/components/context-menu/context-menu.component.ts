@@ -224,7 +224,6 @@ export class ContextMenuComponent implements OnInit {
 	}
 
 	isClick($event: MouseEvent): boolean {
-		console.log({$event});
 		return $event.buttons === 1;
 	}
 

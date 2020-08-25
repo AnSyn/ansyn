@@ -138,7 +138,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	escpapeDrawing$ = this.escapeKeyup$.pipe(
+	escapeDrawing$ = this.escapeKeyup$.pipe(
 		tap(() => {
 			if (this.isContinuousDrawingEnabled) {
 				this.lastAnnotationMode = undefined;

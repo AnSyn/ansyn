@@ -2,10 +2,8 @@
 <div
 	[ngSwitch]="modal.type">
 	<ansyn-edit-case
-		[caseId]="modal.id"
 		*ngSwitchCase="'edit'"></ansyn-edit-case>
 	<ansyn-delete-case
-		[caseId]="modal.id"
 		*ngSwitchCase="'delete'"></ansyn-delete-case>
 	<ansyn-save-case
 		*ngSwitchCase="'save'"></ansyn-save-case>

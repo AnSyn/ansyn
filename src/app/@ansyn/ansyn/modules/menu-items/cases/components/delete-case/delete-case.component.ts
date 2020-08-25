@@ -38,7 +38,7 @@ export class DeleteCaseComponent implements OnInit, OnDestroy {
 	activeCase$ = this.store.select(casesStateSelector).pipe(
 		map((cases) => cases.entities[cases.modal.id]),
 	tap( (activeCase) => this.activeCase = activeCase)
-)
+);
 
 	activeCase: ICasePreview;
 

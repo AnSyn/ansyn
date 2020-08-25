@@ -6,7 +6,7 @@ import { fromEvent, Subscription } from 'rxjs';
 import { tap, filter } from 'rxjs/operators';
 import { ClickOutsideService } from '../../click-outside/click-outside.service';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
-import { setMenuSessionData } from '../../../../../menu/helpers/menu-session.helper';
+import { setMenuSessionData } from '@ansyn/menu';
 
 @Component({
 	selector: 'ansyn-credentials',

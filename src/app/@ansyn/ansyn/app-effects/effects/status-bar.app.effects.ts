@@ -41,7 +41,8 @@ export class StatusBarAppEffects {
 		ofType(
 			StatusBarActionsTypes.COPY_SNAPSHOT_SHARE_LINK,
 			StatusBarActionsTypes.GO_ADJACENT_OVERLAY,
-			StatusBarActionsTypes.SET_IMAGE_OPENING_ORIENTATION
+			StatusBarActionsTypes.SET_IMAGE_OPENING_ORIENTATION,
+			StatusBarActionsTypes.COPY_SNAPSHOT_SHARE_LINK
 		),
 		tap((action) => {
 			this.loggerService.info(getLogMessageFromAction(action), 'Status_Bar', action.type);

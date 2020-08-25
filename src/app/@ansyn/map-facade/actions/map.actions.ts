@@ -412,10 +412,14 @@ export class SetWasWelcomeNotificationShownFlagAction implements Action {
 	}
 }
 
-export class SetToastMessageAction implements Action {
+export class SetToastMessageAction implements Action, ILogMessage {
 	type = MapActionTypes.SET_TOAST_MESSAGE;
 
 	constructor(public payload?: IToastMessage) {
+	}
+
+	logMessage() {
+		return this.payload && `Showing toast message: ${this.payload.toastText}`;
 	}
 }
 

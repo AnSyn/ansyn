@@ -72,7 +72,7 @@
 								tooltip-class="bottom">
 							<i class="icon-delete"></i>
 						</button>
-						<button (click)="shareCase(id)"
+						<button (click)="shareCase(id, entities[id].name)"
 								[attr.tooltip-value]="'Share' | translate"
 								tooltip-class="bottom">
 							<i class="icon-share"></i>

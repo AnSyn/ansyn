@@ -106,6 +106,7 @@ export class MapAppEffects {
 			MapActionTypes.SYNCHRONIZE_MAPS,
 			MapActionTypes.TOGGLE_MAP_LAYERS,
 			MapActionTypes.SET_LAYOUT,
+			MapActionTypes.SET_TOAST_MESSAGE,
 			OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW,
 			OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS,
 			OverlayStatusActionsTypes.BACK_TO_WORLD_FAILED

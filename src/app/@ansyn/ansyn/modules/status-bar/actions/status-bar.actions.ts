@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
 import { IGeoFilterStatus } from '../reducers/status-bar.reducer';
+import { ILogMessage } from '../../core/utils/logs/timer-logs';
 
 export const StatusBarActionsTypes = {
 	SHOW_LINK_COPY_TOAST: 'SHOW_LINK_COPY_TOAST',
@@ -11,10 +12,14 @@ export const StatusBarActionsTypes = {
 	GO_NEXT_PRESET_OVERLAY: 'GO_NEXT_PRESET_OVERLAY'
 };
 
-export class CopySnapshotShareLinkAction implements Action {
+export class CopySnapshotShareLinkAction implements Action, ILogMessage {
 	type: string = StatusBarActionsTypes.COPY_SNAPSHOT_SHARE_LINK;
 
 	constructor() {
+	}
+
+	logMessage() {
+		return `User selected share link option`
 	}
 }
 

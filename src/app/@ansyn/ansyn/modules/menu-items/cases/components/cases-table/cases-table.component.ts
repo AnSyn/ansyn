@@ -17,6 +17,7 @@ import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, map, pluck, tap } from 'rxjs/operators';
 import { ICasePreview } from '../../models/case.model';
+import { LoggerService } from '../../../../core/services/logger.service';
 
 const animations: any[] = [
 	trigger('leaveAnim', [
@@ -58,7 +59,11 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 
 	selectedCaseId: string;
 
-	constructor(protected store$: Store<ICasesState>, protected casesEffects: CasesEffects) {
+	constructor(
+		protected store$: Store<ICasesState>,
+		protected casesEffects: CasesEffects,
+		protected loggerService: LoggerService
+	) {
 		this.casesEffects.onAddCase$.subscribe(this.onCasesAdded.bind(this));
 	}
 
@@ -103,8 +108,9 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 		this.store$.dispatch(new OpenModalAction({ component: EditCaseComponent, caseId }));
 	}
 
-	shareCase(caseId: string) {
-		this.store$.dispatch(new CopyCaseLinkAction({ caseId: caseId }));
+	shareCase(caseId: string, caseName: string) {
+		this.loggerService.info(`User selected share case ${caseName} link option`, 'Cases', 'SHARE_CASE_LINK')
+		this.store$.dispatch(new CopyCaseLinkAction({ caseId, caseName }));
 	}
 
 	selectCase(caseId: string): void {

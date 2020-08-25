@@ -177,10 +177,14 @@ export class SaveCaseAsSuccessAction implements Action {
 	}
 }
 
-export class CopyCaseLinkAction implements Action {
+export class CopyCaseLinkAction implements Action, ILogMessage {
 	type = CasesActionTypes.COPY_CASE_LINK;
 
-	constructor(public payload: { caseId: string, shareCaseAsQueryParams?: boolean }) {
+	constructor(public payload: { caseId: string, shareCaseAsQueryParams?: boolean, caseName?: string }) {
+	}
+
+	logMessage() {
+		return `Copying case${this.payload.caseName ? ' ' + this.payload.caseName : ''} link to clipboard`;
 	}
 }
 

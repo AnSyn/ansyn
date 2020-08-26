@@ -8,6 +8,7 @@ import { ClickOutsideService } from '../../../core/click-outside/click-outside.s
 import { TranslateModule } from '@ngx-translate/core';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { filtersConfig } from '../../../filters/services/filters.service';
+import { LoggerService } from '../../../core/services/logger.service';
 
 const FILTERS = [
 	{
@@ -51,6 +52,10 @@ describe('FiltersPanelComponent', () => {
 					useValue: {
 						filters: FILTERS
 					}
+				},
+				{
+					provide: LoggerService,
+					useValue: {}
 				}
 			]
 		})

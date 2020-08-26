@@ -22,6 +22,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 import { IFilterStatusBar, IStatusBarConfig } from '../../models/statusBar-config.model';
 import { filtersConfig } from '../../../filters/services/filters.service';
 import { IFiltersConfig } from '../../../filters/models/filters-config';
+import { LoggerService } from '../../../core/services/logger.service';
 
 @Component({
 	selector: 'ansyn-filters-panel',
@@ -81,10 +82,13 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 	get filters(): IFilter[] {
 		return this.config.filterNames.map( filterName => this.filtersConfig.filters.find( filter => filterName === filter.modelName));
 	}
-	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
-				@Inject(filtersConfig) public filtersConfig: IFiltersConfig,
-				public store: Store<IFiltersState>,
-				protected clickOutside: ClickOutsideService) {
+	constructor(
+		@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
+		@Inject(filtersConfig) public filtersConfig: IFiltersConfig,
+		public store: Store<IFiltersState>,
+		protected clickOutside: ClickOutsideService,
+		protected loggerService: LoggerService
+	) {
 		if (this.filters.length > this.config.maximumOpen) {
 			this.expand[this.filters[0].modelName] = false;
 			this.expand[this.filters[1].modelName] = false;
@@ -114,6 +118,7 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 
 	expandFilter(filter?) {
 		const newState = !this.expand[filter];
+		this.loggerService.info(`Filters panel: ${newState ? 'opening' : 'closing'} ${filter} popup`, 'Search panel', 'SEARCH_PANEL_TOGGLE_POPUP');
 		this.filters.forEach( filter => this.expand[filter.modelName] = false);
 		this.expand[this.MORE_FILTERS] = false;
 		if (filter) {

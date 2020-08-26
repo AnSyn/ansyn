@@ -20,10 +20,14 @@ export const MenuActionTypes = {
 	SET_DOES_USER_HAVE_CREDENTIALS: 'SET_DOES_USER_HAVE_CREDENTIALS'
 };
 
-export class ResetAppAction implements Action {
+export class ResetAppAction implements Action, ILogMessage {
 	type = MenuActionTypes.RESET_APP;
 
 	constructor() {
+	}
+
+	logMessage() {
+		return `*Resetting application* according to user request`
 	}
 }
 

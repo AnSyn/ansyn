@@ -24,7 +24,8 @@ export class MenuAppEffects {
 		ofType(
 			MenuActionTypes.SELECT_MENU_ITEM,
 			MenuActionTypes.UNSELECT_MENU_ITEM,
-			MenuActionTypes.TOGGLE_IS_PINNED
+			MenuActionTypes.TOGGLE_IS_PINNED,
+			MenuActionTypes.RESET_APP
 		),
 		tap((action) => {
 			this.loggerService.info(getLogMessageFromAction(action), 'Menu', action.type);

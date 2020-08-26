@@ -41,11 +41,15 @@ export const ToolsActionsTypes = {
 	ANNOTATION_UPDATE_FEATURE: 'ANNOTATION_UPDATE_FEATURE'
 };
 
-export class StartMouseShadow implements Action {
+export class StartMouseShadow implements Action, ILogMessage {
 	type = ToolsActionsTypes.START_MOUSE_SHADOW;
 
 	constructor(public payload?: { updateTools?: boolean, fromUser?: boolean }) {
 		// code...
+	}
+
+	logMessage() {
+		return `Enabling shadow mouse`;
 	}
 }
 

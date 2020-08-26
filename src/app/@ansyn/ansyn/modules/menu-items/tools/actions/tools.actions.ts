@@ -61,7 +61,7 @@ export class SetAnnotationMode implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return `Setting annotation mode = ${ this.payload && this.payload.annotationMode }`;
+		return this.payload && `Setting annotation mode = ${ this.payload.annotationMode }`;
 	}
 }
 
@@ -185,12 +185,13 @@ export class UpdateMeasureDataOptionsAction implements Action, ILogMessage {
 
 	constructor(public payload: {
 		mapId: string,
-		options: Partial<IMeasureDataOptions>
+		options: Partial<IMeasureDataOptions>,
+		fromUI?: boolean
 	}) {
 	}
 
 	logMessage() {
-		return `Updating measure tool options: ${JSON.stringify(this.payload.options)}`
+		return this.payload.fromUI && `Updating measure tool options: ${JSON.stringify(this.payload.options)}`
 	}
 }
 

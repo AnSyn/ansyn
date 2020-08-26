@@ -84,7 +84,8 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 	toggleShowLayer() {
 		this.store$.dispatch(new UpdateMeasureDataOptionsAction({
 			mapId: this.mapId,
-			options: { isLayerShowed: !this.measureData.isLayerShowed }
+			options: { isLayerShowed: !this.measureData.isLayerShowed },
+			fromUI: true
 		}));
 	}
 
@@ -95,7 +96,8 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 			options: {
 				isToolActive: !this.measureData.isToolActive,
 				isRemoveMeasureModeActive: false,
-			}
+			},
+			fromUI: true
 		}));
 	}
 
@@ -105,7 +107,8 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 			options: {
 				isRemoveMeasureModeActive: !this.measureData.isRemoveMeasureModeActive,
 				isToolActive: false
-			}
+			},
+			fromUI: true
 		}));
 	}
 

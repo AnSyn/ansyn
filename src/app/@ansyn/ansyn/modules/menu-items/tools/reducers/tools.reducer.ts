@@ -45,6 +45,8 @@ export interface IToolsState {
 	activeAnnotationLayer: string;
 	mapsMeasures: Map<string, IMeasureData>;
 	mapSearchBoxSearch: boolean;
+	lastAnnotationMode: AnnotationMode;
+	isContinuousDrawingEnabled: boolean;
 }
 
 
@@ -58,7 +60,9 @@ export const toolsInitialState: IToolsState = {
 	annotationProperties: getInitialAnnotationsFeatureStyle(),
 	activeAnnotationLayer: null,
 	mapsMeasures: new Map<string, IMeasureData>(),
-	mapSearchBoxSearch: false
+	mapSearchBoxSearch: false,
+	lastAnnotationMode: undefined,
+	isContinuousDrawingEnabled: false
 };
 
 export const toolsFeatureKey = 'tools';
@@ -186,6 +190,12 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 		case ToolsActionsTypes.SET_SUB_MENU:
 			return { ...state, subMenu: action.payload };
 
+		case ToolsActionsTypes.STORE.SET_LAST_ANNOTATION_MODE:
+			return { ...state, lastAnnotationMode: action.payload.lastAnnotationMode };
+
+		case ToolsActionsTypes.STORE.SET_CONTINUOUS_DRAWING_ENABLED:
+			return { ...state, isContinuousDrawingEnabled: action.payload.isContinuousDrawingEnabled }
+
 		default:
 			return state;
 
@@ -203,3 +213,5 @@ export const selectOverlayFootprintMode = createSelector(toolsStateSelector, (to
 export const selectMeasureDataByMapId = (mapId: string) => createSelector(toolsStateSelector, (tools: IToolsState) => {
 	return tools && tools.mapsMeasures && tools.mapsMeasures.get(mapId);
 });
+export const selectLastAnnotationMode = createSelector(toolsStateSelector, ((tools: IToolsState) => tools.lastAnnotationMode));
+export const selectIsContinuousDrawingEnabled = createSelector(toolsStateSelector, ((tools: IToolsState) => tools.isContinuousDrawingEnabled));

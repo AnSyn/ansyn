@@ -30,7 +30,9 @@ export const ToolsActionsTypes = {
 		UPDATE_MEASURE_DATE_OPTIONS: type('[tools] UPDATE_MEASURE_DATA_OPTIONS')
 	},
 	STORE: {
-		SET_ANNOTATION_MODE: type('SET_ANNOTATION_MODE')
+		SET_ANNOTATION_MODE: type('SET_ANNOTATION_MODE'),
+		SET_LAST_ANNOTATION_MODE: type('SET_LAST_ANNOTATION_MODE'),
+		SET_CONTINUOUS_DRAWING_ENABLED: type('SET_CONTINUOUS_DRAWING_ENABLED')
 	},
 	SET_ACTIVE_ANNOTATION_LAYER: 'SET_ACTIVE_ANNOTATION_LAYER',
 	CLEAR_ACTIVE_TOOLS: 'CLEAR_ACTIVE_TOOLS',
@@ -225,6 +227,18 @@ export class AnnotationUpdateFeature implements Action {
 	};
 }
 
+export class SetLastAnnotationMode implements Action {
+	type = ToolsActionsTypes.STORE.SET_LAST_ANNOTATION_MODE;
+
+	constructor(public payload: { lastAnnotationMode: AnnotationMode }) {}
+}
+
+export class SetIsContinuousDrawingEnabled implements Action {
+	type = ToolsActionsTypes.STORE.SET_CONTINUOUS_DRAWING_ENABLED;
+
+	constructor(public payload: { isContinuousDrawingEnabled: boolean }) {}
+}
+
 export type ToolsActions =
 	StartMouseShadow
 	| StopMouseShadow
@@ -240,4 +254,6 @@ export type ToolsActions =
 	| SetMapGeoEnabledModeToolsActionStore
 	| SetMeasureDistanceToolState
 	| SetSubMenu
-	| ClearActiveInteractionsAction;
+	| ClearActiveInteractionsAction
+	| SetLastAnnotationMode
+	| SetIsContinuousDrawingEnabled;

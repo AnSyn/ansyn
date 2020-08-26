@@ -34,7 +34,9 @@ import {
 	AnnotationRemoveFeature,
 	AnnotationUpdateFeature,
 	SetAnnotationMode,
-	ToolsActionsTypes
+	ToolsActionsTypes,
+	SetLastAnnotationMode,
+	SetIsContinuousDrawingEnabled
 } from '../../../../../menu-items/tools/actions/tools.actions';
 import { UpdateLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
 import { IOverlaysTranslationData } from '../../../../../menu-items/cases/models/case.model';
@@ -113,8 +115,17 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			}),
 			map(action => action.payload ? action.payload.annotationMode : null),
 			filter(annotationMode => !!annotationMode),
-			tap(annotationMode => this.lastAnnotationMode = annotationMode)
+			tap(annotationMode => {
+				this.store$.dispatch(new SetLastAnnotationMode({lastAnnotationMode: annotationMode}));
+			})
 		);
+
+	@AutoSubscription
+	lastAnnotationModeChange$ = this.actions$.pipe(
+		ofType(ToolsActionsTypes.STORE.SET_LAST_ANNOTATION_MODE),
+		map((action: SetLastAnnotationMode) => action.payload.lastAnnotationMode),
+		tap(mode => this.lastAnnotationMode = mode)
+	);
 
 	@AutoSubscription
 	annotationPropertiesChange$: Observable<any> = this.store$.pipe(
@@ -141,7 +152,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	escapeDrawing$ = this.escapeKeyup$.pipe(
 		tap(() => {
 			if (this.isContinuousDrawingEnabled) {
-				this.lastAnnotationMode = undefined;
+				this.store$.dispatch(new SetLastAnnotationMode({lastAnnotationMode: undefined}));
 				this.annotationsVisualizer.setMode(undefined, true);
 			}
 		})
@@ -155,6 +166,8 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 		super();
 		// TODO - refactor with optional chaining when typescript version updated to >= 3.7
 		this.isContinuousDrawingEnabled = (config && config.AnnotationsVisualizer && config.AnnotationsVisualizer.extra && config.AnnotationsVisualizer.extra.continuousDrawing) ? config.AnnotationsVisualizer.extra.continuousDrawing : false;
+		store$.dispatch(new SetIsContinuousDrawingEnabled({isContinuousDrawingEnabled: this.isContinuousDrawingEnabled}));
+
 		this.openLastDrawnAnnotationContextMenuEnabled = (config && config.AnnotationsVisualizer && config.AnnotationsVisualizer.extra && config.AnnotationsVisualizer.extra.openContextMenuOnDrawEnd) ? config.AnnotationsVisualizer.extra.openContextMenuOnDrawEnd : false;
 	}
 

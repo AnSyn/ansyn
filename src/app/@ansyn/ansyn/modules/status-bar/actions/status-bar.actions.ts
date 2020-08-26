@@ -30,10 +30,14 @@ export class ExpandAction implements Action {
 	}
 }
 
-export class UpdateGeoFilterStatus implements Action {
+export class UpdateGeoFilterStatus implements Action, ILogMessage {
 	readonly type = StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS;
 
 	constructor(public payload?: Partial<IGeoFilterStatus>) {
+	}
+
+	logMessage() {
+		return this.payload && this.payload.type && `Setting geo filter type to ${this.payload.type}`
 	}
 }
 

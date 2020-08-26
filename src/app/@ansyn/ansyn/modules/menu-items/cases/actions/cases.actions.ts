@@ -99,10 +99,14 @@ export class UpdateCaseBackendSuccessAction implements Action, ILogMessage {
 	}
 }
 
-export class DeleteCaseAction implements Action {
+export class DeleteCaseAction implements Action, ILogMessage {
 	type = CasesActionTypes.DELETE_CASE;
 
 	constructor(public payload: string) {
+	}
+
+	logMessage() {
+		return `Deleting case, according to user request`
 	}
 }
 

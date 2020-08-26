@@ -546,6 +546,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	updateFeature(featureId, props: Partial<IVisualizerEntity>) {
+		const editMode = this.currentAnnotationEdit;
+		if (editMode) {
+			this.setEditAnnotationMode(featureId, false);
+		}
+
 		const entity = this.idToEntity.get(featureId);
 		if (entity) {
 			entity.originalEntity = merge({}, entity.originalEntity, props);
@@ -554,6 +559,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			}
 			this.events.updateEntity.next(entity.originalEntity);
 			this.source.refresh();
+		}
+
+		if (editMode) {
+			this.setEditAnnotationMode(featureId, true);
 		}
 	}
 

@@ -91,5 +91,9 @@ export function validateFeatureProperties(feature: Feature<any>): Feature<any> {
 		labelTranslateOn: typeof labelTranslateOn === 'boolean' ? labelTranslateOn : defaultProperties.labelTranslateOn
 	}
 
+	if (!!label && typeof label === 'string') {
+		featureJson.properties.label.text = label;
+	}
+
 	return featureJson;
 }

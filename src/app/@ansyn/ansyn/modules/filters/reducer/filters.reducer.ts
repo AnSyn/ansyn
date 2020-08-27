@@ -11,33 +11,30 @@ import {
 	ICaseSliderFilterMetadata
 } from '../../menu-items/cases/models/case.model';
 import { IFilterSearchResults } from '../models/filter-search-results';
-import { EnumFilterMetadata } from '../models/metadata/enum-filter-metadata';
+import { EnumFilterMetadata, IEnumFiled } from '../models/metadata/enum-filter-metadata';
 
 export type Filters = Map<IFilter, FilterMetadata>;
 
 export function filtersToString(filters: Filters): string {
-	let result = (Boolean(filters) ? '' : '"null"');
 	if (!Boolean(filters)) {
-		return result;
+		return '\nNo filters found';
 	}
-	const entriesArray = Array.from(filters.entries());
-	result += '[';
-	entriesArray.forEach((entry) => {
-		result += '{"filterData": [' + JSON.stringify(entry[0]) + ',';
-		if (entry[1] instanceof EnumFilterMetadata) {
-			const enumData = <EnumFilterMetadata>entry[1];
-			result += '{"collapse": ' + `"${ enumData.collapse }",`;
-			result += ' "type": ' + `"${ enumData.type }",`;
-			result += ' "visible": ' + `"${ enumData.visible }",`;
-			result += ' "enumsFields": ' + JSON.stringify(Array.from(enumData.enumsFields.entries())) + '}';
+	let result = '';
+	filters.forEach((metadata, key) => {
+		if (metadata instanceof EnumFilterMetadata) {
+			const enumFieldsArray: IEnumFiled[] = Array.from(metadata.enumsFields.values());
+			const unchecked = enumFieldsArray.filter(({ isChecked }) => !isChecked);
+			if (unchecked.length === 0) {
+				return;
+			}
+			const checked = enumFieldsArray.filter(({ isChecked }) => isChecked);
+			const keyList = (arr: IEnumFiled[]) => arr.map(({ key }) => key).join();
+			result += `\nfilter: ${key.displayName}`;
+			result += checked.length > 0 ? ` Checked: ${keyList(checked)} Unchecked: ${keyList(unchecked)}` : ` Unchecked: All`;
 		} else {
-			result += ' ' + JSON.stringify(entry[1]);
+			// Todo: non-enum filters
 		}
-		result += ']},';
 	});
-	result = result.substring(0, result.length - 1);
-	result += '';
-	result += ']';
 	return result;
 }
 

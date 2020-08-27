@@ -82,7 +82,7 @@ export class FiltersAppEffects {
 		filter(([filters, showOnlyFavorites, removedOverlays, removedOverlaysVisibality]: [Filters, boolean, string[], boolean]) => Boolean(filters) && filters.size !== 0),
 		map(([filters, showOnlyFavorites, removedOverlays, removedOverlaysVisibality]: [Filters, boolean, string[], boolean]) => {
 			const filtersData = filtersToString(filters);
-			const filtersState = `Post-search filters state:\n{"showOnlyFavorites": "${ showOnlyFavorites }", "removedOverlays": "${ JSON.stringify(removedOverlays) }", "removedOverlaysVisibality": "${ removedOverlaysVisibality }", "filters": ${ Boolean(filters) ? filtersData : filters }}`;
+			const filtersState = `Filters changed:\nshowOnlyFavorites: ${ showOnlyFavorites }, removedOverlays: ${ JSON.stringify(removedOverlays) }, removedOverlaysVisibility: ${ removedOverlaysVisibality } ${ Boolean(filters) ? filtersData : '' }`;
 			return filtersState;
 		}),
 		distinctUntilChanged(isEqual),

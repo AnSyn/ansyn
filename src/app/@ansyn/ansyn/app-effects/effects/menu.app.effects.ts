@@ -44,8 +44,7 @@ export class MenuAppEffects {
 	loadOverlays$: Observable<any> = this.store$
 		.pipe(
 			select(selectDropsWithoutSpecialObjects),
-			map((overlays: IOverlayDrop[]) => new SetTotalOverlaysAction(overlays.length)));
-
+			map((overlays: IOverlayDrop[]) => new SetTotalOverlaysAction({ number: overlays.length, showLog: true })));
 
 	@Effect()
 	autoCloseMenu$: Observable<SetAutoClose> = this.store$

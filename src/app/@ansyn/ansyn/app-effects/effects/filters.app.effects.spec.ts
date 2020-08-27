@@ -111,7 +111,7 @@ describe('Filters app effects', () => {
 		spyOn(OverlaysService, 'parseOverlayDataForDisplay').and.callFake(() => []);
 		const expectedResults = cold('(bc)', {
 			b: new SetDropsAction([]),
-			c: new SetTotalOverlaysAction(0)
+			c: new SetTotalOverlaysAction({ number: 0 })
 		});
 		expect(filtersAppEffects.updateOverlayDrops$).toBeObservable(expectedResults);
 	});

@@ -118,7 +118,9 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 
 	expandFilter(filter?) {
 		const newState = !this.expand[filter];
-		this.loggerService.info(`Filters panel: ${newState ? 'opening' : 'closing'} ${filter} popup`, 'Search panel', 'SEARCH_PANEL_TOGGLE_POPUP');
+		if (newState) {
+			this.loggerService.info(`Filters panel: opening ${filter} popup`, 'Search panel', 'SEARCH_PANEL_TOGGLE_POPUP');
+		}
 		this.filters.forEach( filter => this.expand[filter.modelName] = false);
 		this.expand[this.MORE_FILTERS] = false;
 		if (filter) {

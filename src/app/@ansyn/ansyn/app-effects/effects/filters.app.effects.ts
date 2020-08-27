@@ -116,7 +116,7 @@ export class FiltersAppEffects {
 				showOnlyFavorites
 			});
 
-			return [new SetDropsAction(drops), new SetTotalOverlaysAction(drops.length)];
+			return [new SetDropsAction(drops), new SetTotalOverlaysAction({ number: drops.length })];
 		})
 	);
 

@@ -188,10 +188,14 @@ export class DisplayOverlayFailedAction implements Action, ILogMessage {
 	}
 }
 
-export class SetTotalOverlaysAction implements Action {
+export class SetTotalOverlaysAction implements Action, ILogMessage {
 	type = OverlaysActionTypes.SET_TOTAL_OVERLAYS;
 
-	constructor(public payload: number) {
+	constructor(public payload: { number: number, showLog?: boolean }) {
+	}
+
+	logMessage() {
+		return this.payload.showLog && this.payload.number > 0 && `Showing ${this.payload.number} overlays after filtering`
 	}
 }
 

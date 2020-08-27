@@ -164,7 +164,9 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	toggleExpander(popup: SearchPanelTitle, forceState?: boolean) {
 		if (this.isDataInputsOk()) {
 			const newState = forceState || !this.popupExpanded.get(popup);
-			this.loggerService.info(`Search panel: ${newState ? 'opening' : 'closing'} ${popup} popup`, 'Search panel', 'SEARCH_PANEL_TOGGLE_POPUP');
+			if (newState) {
+				this.loggerService.info(`Search panel: opening ${popup} popup`, 'Search panel', 'SEARCH_PANEL_TOGGLE_POPUP');
+			}
 			this.popupExpanded.forEach((_, key, map) => {
 				map.set(key, key === popup ? newState : false)
 			});

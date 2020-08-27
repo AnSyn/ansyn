@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
 import { AttributeBase } from '../../models/attribute-base';
 import { FormGroup } from '@angular/forms';
 import { ControlType } from '../../models/control-type.enum';
@@ -10,6 +10,7 @@ import { MultiChoiceAttribute } from '../../models/multi-choice-attribute';
 	templateUrl: './dynamic-attribute-control.component.html',
 	styleUrls: ['./dynamic-attribute-control.component.less'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	encapsulation: ViewEncapsulation.None
 })
 export class DynamicAttributeControlComponent {
 	controlType = ControlType;

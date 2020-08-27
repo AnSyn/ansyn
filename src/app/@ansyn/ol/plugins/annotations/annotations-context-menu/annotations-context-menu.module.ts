@@ -18,6 +18,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
 import { MultiChoiceAttributeComponent } from './components/multi-choice-attribute/multi-choice-attribute.component';
 
 @NgModule({
@@ -50,7 +52,9 @@ import { MultiChoiceAttributeComponent } from './components/multi-choice-attribu
 		MatChipsModule,
 		MatIconModule,
 		MatFormFieldModule,
-		MatMenuModule
+		MatMenuModule,
+		MatAutocompleteModule,
+		MatButtonModule
 	]
 })
 export class AnnotationsContextMenuModule {

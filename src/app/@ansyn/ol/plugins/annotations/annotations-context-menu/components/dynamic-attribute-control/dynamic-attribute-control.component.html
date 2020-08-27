@@ -1,16 +1,42 @@
-<div *ngIf="!!attributesForm" [formGroup]="attributesForm">
-	<label [attr.for]="attribute.key">{{ attribute.label | translate }}</label>
-
-	<div [ngSwitch]="attribute.type">
-		<textarea *ngSwitchCase="controlType.FreeText" [formControlName]="attribute.key" [id]="attribute.key" [value]="attribute.value"></textarea>
-		<select *ngSwitchCase="controlType.SingleChoice" [id]="attribute.key" [formControlName]="attribute.key" [value]="attribute.value">
-			<option *ngFor="let opt of attribute.options">{{ opt.value | translate }}</option>
-		</select>
-
-		<div *ngSwitchCase="controlType.MultipleChoices">
-			<ansyn-multi-choice-attribute [label]="attribute.label" [optionsList]="attribute.options" [selectedOptions]="getSelectedOptions()" (onSelectOption)="selectOption($event)" (onRemoveOption)="removeOption($event)"></ansyn-multi-choice-attribute>
-		</div>
-
-		<input *ngSwitchCase="controlType.Number" [formControlName]="attribute.key" type="number" [id]="attribute.key" [value]="attribute.value" />
-	</div>
+<div class="dynamic-attribute-control-component"
+	*ngIf="!!attributesForm"
+	[formGroup]="attributesForm">
+	<ng-container *ngIf="attribute.type === controlType.MultipleChoices; else attributeTypeTemplate">
+		<ansyn-multi-choice-attribute
+			[label]="attribute.label"
+			[optionsList]="attribute.options"
+			[selectedOptions]="getSelectedOptions()"
+			(onSelectOption)="selectOption($event)"
+			(onRemoveOption)="removeOption($event)">
+		</ansyn-multi-choice-attribute>
+	</ng-container>
+	<ng-template #attributeTypeTemplate>
+		<mat-form-field>
+			<mat-label>{{ attribute.label | translate }}</mat-label>
+			<ng-container [ngSwitch]="attribute.type">
+				<textarea *ngSwitchCase="controlType.FreeText"
+					matInput
+					[formControlName]="attribute.key"
+					[id]="attribute.key">
+				</textarea>
+				<mat-select *ngSwitchCase="controlType.SingleChoice"
+					[id]="attribute.key"
+					[formControlName]="attribute.key"
+					[value]="attribute.value"
+					panelClass="dark-panel">
+					<mat-option *ngFor="let opt of attribute.options" [value]="opt.value">{{ opt.value | translate }}</mat-option>
+				</mat-select>
+				<input *ngSwitchCase="controlType.Number"
+					matInput
+					[formControlName]="attribute.key"
+					type="number"
+					[id]="attribute.key">
+				<input *ngSwitchDefault
+					matInput
+					[formControlName]="attribute.key"
+					type="text"
+					[id]="attribute.key">
+			</ng-container>
+		</mat-form-field>
+	</ng-template>
 </div>

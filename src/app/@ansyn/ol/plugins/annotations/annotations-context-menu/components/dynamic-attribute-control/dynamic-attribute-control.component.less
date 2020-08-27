@@ -1,0 +1,23 @@
+@import "ansyn/less/colors";
+
+mat-form-field {
+    width: 100%;
+    mat-label {
+        color: rgba(255, 255, 255, 0.8);
+    }
+    .mat-form-field-flex {
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+}
+
+.dark-panel {
+    &.mat-select-panel {
+        background: @background-color-3;
+        .mat-option {
+            color: #fff;
+            &:hover {
+                background: @status-bar-delimiter !important;
+            }
+        }
+    }
+}

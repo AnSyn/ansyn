@@ -123,11 +123,11 @@ export class ToolsComponent implements OnInit, OnDestroy {
 			event.stopPropagation();
 		}
 		const value = (subMenu !== this.subMenu) ? subMenu : null;
-		this.store$.dispatch(new SetSubMenu({ which: value, fromUI: true }));
+		this.store$.dispatch(new SetSubMenu(value));
 	}
 
 	onAnimation() {
-		this.store$.dispatch(new SetSubMenu({ which: null }));
+		this.store$.dispatch(new SetSubMenu(null));
 	}
 
 	isExpand(subMenu: SubMenuEnum): boolean {

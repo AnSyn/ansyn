@@ -163,7 +163,7 @@ export class GoToComponent implements OnInit {
 	}
 
 	close() {
-		this.store$.dispatch(new SetSubMenu({ which: null }));
+		this.store$.dispatch(new SetSubMenu(null));
 	}
 
 	private dispatchInputUpdated(coords: number[], convertFrom: ICoordinatesSystem) {

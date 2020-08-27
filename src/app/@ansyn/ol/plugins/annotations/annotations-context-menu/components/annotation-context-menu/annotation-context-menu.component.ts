@@ -87,8 +87,10 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 				this.hoverFeatureId = hoverFeatureId;
 			}),
 			this.annotations.events.onSelect.subscribe((selected: string[]) => {
-				this.loggerService.info(`${selected.length > 0 ? 'Opening' : 'Closing'} annotations context menu`,
-					'Annotations', 'TOGGLE_ANNOTATIONS_CONTEXT_MENU');
+				if (selected.length > 0) {
+					this.loggerService.info(`Opening annotations context menu`,
+						'Annotations', 'TOGGLE_ANNOTATIONS_CONTEXT_MENU');
+				}
 				this.selection = selected;
 				this.selectedTab = this.selection.reduce((prev, id) => ({
 					...prev,

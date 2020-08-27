@@ -218,7 +218,7 @@ export class ToolsAppEffects {
 	@Effect()
 	onCloseGoTo$ = this.actions$.pipe(
 		ofType<SetSubMenu>(ToolsActionsTypes.SET_SUB_MENU),
-		filter(action => Boolean(!action.payload.which)),
+		filter(action => Boolean(!action.payload)),
 		map(() => new SetPinLocationModeAction(false))
 	);
 

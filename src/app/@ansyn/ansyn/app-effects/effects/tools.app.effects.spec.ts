@@ -312,7 +312,7 @@ describe('ToolsAppEffects', () => {
 
 	it('setSubMenu to null should call setPinLocationMode with false', () => {
 		actions = hot('--a--', {
-			a: new SetSubMenu({ which: null })
+			a: new SetSubMenu(null)
 		});
 		const expectdResult = cold('--b--', {
 			b: new SetPinLocationModeAction(false)

@@ -175,7 +175,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			return { ...state, annotationProperties: { ...state.annotationProperties, ...action.payload } };
 
 		case ToolsActionsTypes.SET_SUB_MENU:
-			return { ...state, subMenu: (action as SetSubMenu).payload.which };
+			return { ...state, subMenu: (action as SetSubMenu).payload };
 
 		default:
 			return state;

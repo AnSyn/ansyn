@@ -23,7 +23,6 @@ export class MenuAppEffects {
 	actionsLogger$: Observable<any> = this.actions$.pipe(
 		ofType(
 			MenuActionTypes.SELECT_MENU_ITEM,
-			MenuActionTypes.UNSELECT_MENU_ITEM,
 			MenuActionTypes.TOGGLE_IS_PINNED,
 			MenuActionTypes.RESET_APP
 		),

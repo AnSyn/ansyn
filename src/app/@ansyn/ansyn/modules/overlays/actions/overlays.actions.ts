@@ -269,7 +269,7 @@ export class SetOverlaysCriteriaAction implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return `Setting overlays criteria for search:\n${JSON.stringify(this.payload)} ${JSON.stringify(this.options)}`
+		return `Setting overlays criteria for search:\n${JSON.stringify(this.payload)} ${this.options ? JSON.stringify(this.options) : ''}`
 	}
 }
 

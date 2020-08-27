@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, ViewChild, ElementRef, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent, MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material';
 
 import { Observable } from 'rxjs';
@@ -59,12 +59,12 @@ export class MultiChoiceAttributeComponent {
 			const { input, value } = event;
 
 			if ((value || '').trim()) {
-			  const option = this.optionsList.find(option => option.value === value.trim());
-			  this.onSelectOption.emit(option);
+				const option = this.optionsList.find(option => option.value === value.trim());
+				this.onSelectOption.emit(option);
 			}
 
 			if (input) {
-			  input.value = '';
+				input.value = '';
 			}
 
 			this.addTagCtrl.setValue(null);

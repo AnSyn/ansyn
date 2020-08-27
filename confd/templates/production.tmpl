@@ -120,8 +120,8 @@
     "updateCaseDebounceTime": 700,
     "useHash": true,
     "defaultSearchFromDeltaTime": {
-    	"unit": "days",
-    	"amount": 80
+    	"unit": "years",
+    	"amount": 5
     }
   },
   "layersManagerConfig": {
@@ -379,7 +379,7 @@
   },
   "coreConfig": {
     "storageService": {
-      "baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://platform.ansyn.io:8888/api/store" }}"
+      "baseUrl": "{{ getv "/ansyn/storage/baseurl" "http://platform.ansyn.io:8080/api/store" }}"
     },
     "translation": {
     	"default": {
@@ -411,7 +411,7 @@
   		"displayId":  "{{ getv "/ansyn/tools/displayid" "0" }}"
   	},
 	"AnnotationsContextMenu": {
-		"metadataActive": false,
+		"metadataActive": true,
 		"metadataAttributes": [
 			{
 				"key": "key1",
@@ -507,8 +507,8 @@
   "visualizersConfig": {
 	"AnnotationsVisualizer": {
 		"extra": {
-			"continuousDrawing": false,
-			"openContextMenuOnDrawEnd": false
+			"continuousDrawing": true,
+			"openContextMenuOnDrawEnd": true
 		}
 	},
   	"MeasureDistanceVisualizer": {
@@ -1214,7 +1214,7 @@
 			}
 		},
 		"OPEN_AERIAL": {
-			"inActive": {{ getv "/ansyn/overlay/open/aerial/inactive" "false" }},
+			"inActive": {{ getv "/ansyn/overlay/open/aerial/inactive" "true" }},
 			"whitelist": [
 				{
 					"name": "Entire Earth",
@@ -1270,7 +1270,7 @@
 			  }
 		},
 		"IMISIGHT": {
-			"inActive": {{ getv "/ansyn/overlay/imisight/inactive" "true" }},
+			"inActive": {{ getv "/ansyn/overlay/imisight/inactive" "false" }},
 			"whitelist": [
 				{
 					"name": "Entire Earth",
@@ -1325,7 +1325,7 @@
 				  }
 		},
 		"SENTINEL": {
-			"inActive": {{ getv "/ansyn/overlay/sentinel/inactive" "false" }},
+			"inActive": {{ getv "/ansyn/overlay/sentinel/inactive" "true" }},
 			"whitelist": [
 				{
 					"name": "Entire Earth",

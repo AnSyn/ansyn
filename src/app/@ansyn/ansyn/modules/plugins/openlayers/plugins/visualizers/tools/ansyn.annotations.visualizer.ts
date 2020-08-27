@@ -2,7 +2,7 @@ import { BaseImageryPlugin, ImageryPlugin, IVisualizerEntity, IVisualizerStyle, 
 import { uniq } from 'lodash';
 import { select, Store } from '@ngrx/store';
 import { selectActiveMapId, selectOverlayByMapId } from '@ansyn/map-facade';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, fromEvent } from 'rxjs';
 import { Inject } from '@angular/core';
 import { distinctUntilChanged, map, mergeMap, take, tap, withLatestFrom, filter, skip, switchMapTo } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
@@ -131,6 +131,20 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 		this.store$.select(selectActiveAnnotationLayer)
 	).pipe(
 		mergeMap(this.onAnnotationsChange.bind(this))
+	);
+
+	private escapeKeyup$: Observable<KeyboardEvent> = fromEvent(document, 'keyup').pipe(
+		filter((e: KeyboardEvent) => e.key === 'Escape')
+	);
+
+	@AutoSubscription
+	escapeDrawing$ = this.escapeKeyup$.pipe(
+		tap(() => {
+			if (this.isContinuousDrawingEnabled) {
+				this.lastAnnotationMode = undefined;
+				this.annotationsVisualizer.setMode(undefined, true);
+			}
+		})
 	);
 
 	constructor(public store$: Store<any>,

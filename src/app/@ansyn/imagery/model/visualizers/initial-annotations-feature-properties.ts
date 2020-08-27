@@ -53,9 +53,17 @@ export function validateFeatureProperties(feature: Feature<any>): Feature<any> {
 		featureJson.properties = {};
 	}
 
-	const { id, style, label, labelSize, icon, showMeasures, showArea, undeletable, mode, labelTranslateOn } = featureJson.properties;
+	const { id, style, label = {}, labelSize, icon, showMeasures, showArea, undeletable, mode, labelTranslateOn } = featureJson.properties;
 	const { opacity, initial } = !!style ? style :  { opacity: null, initial: null };
 
+	let labelText = defaultProperties.label.text;
+	if (!!label.text && typeof label.text === 'string') {
+		labelText = label.text;
+	}
+	if (typeof label === 'string') {
+		labelText = label;
+	}
+	
 	featureJson.properties = {
 		... featureJson.properties,
 		id: (!!id && typeof id === 'string') ? id : defaultProperties.id,
@@ -66,7 +74,7 @@ export function validateFeatureProperties(feature: Feature<any>): Feature<any> {
 		undeletable: typeof undeletable === 'boolean' ? undeletable : defaultProperties.undeletable,
 		mode: (!!mode && typeof mode === 'string') ? mode : defaultProperties.mode,
 		label: {
-			text: (!!label && !!label.text && typeof label.text === 'string') ? label.text : defaultProperties.label.text,
+			text: labelText,
 			geometry: (!!label && !!label.geometry) ? label.geometry : defaultProperties.label.geometry
 		},
 		style: {

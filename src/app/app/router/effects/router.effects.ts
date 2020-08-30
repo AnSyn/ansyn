@@ -21,7 +21,6 @@ import {
 import { IRouterState, routerStateSelector } from '../reducers/router.reducer';
 import { Store } from '@ngrx/store';
 import { catchError, filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
-import { AddCasesAction } from '../../../@ansyn/ansyn/modules/menu-items/cases/actions/cases.actions';
 import { cloneDeep } from 'lodash';
 
 @Injectable()

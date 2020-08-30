@@ -61,10 +61,6 @@ export class CasesService {
 		return this.queryParamsHelper.generateQueryParamsViaCase.bind(this.queryParamsHelper);
 	}
 
-	get updateCaseViaQueryParmas() {
-		return this.queryParamsHelper.updateCaseViaQueryParmas.bind(this.queryParamsHelper);
-	}
-
 	get updateCaseViaContext() {
 		return this.queryParamsHelper.updateCaseViaContext.bind(this.queryParamsHelper);
 	}

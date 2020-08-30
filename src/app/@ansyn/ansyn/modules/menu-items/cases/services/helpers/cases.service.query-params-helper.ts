@@ -7,7 +7,6 @@ import { bbox, bboxPolygon, polygon } from '@turf/turf';
 import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
 import { getPolygonByPointAndRadius, } from '@ansyn/imagery';
 import { ICase } from '../../models/case.model';
-import { take } from 'rxjs/operators';
 
 export const linksConfig = 'linksConfig';
 
@@ -22,19 +21,6 @@ export class QueryParamsHelper {
 
 	get defaultCase() {
 		return this.casesService.config.defaultCase;
-	}
-
-	updateCaseViaQueryParmas(id: string, defaultCase: ICase = this.defaultCase) {
-		if (id) {
-			this.casesService.storageService.get(this.casesService.linksConfig.schema, id).subscribe(state => {
-				console.log('state', state.data);
-				const caseData = cloneDeep(defaultCase);
-				caseData.state = <any>state.data;
-				return this.casesService.parseCase(caseData)
-			});
-		}
-
-		return this.casesService.parseCase(cloneDeep(defaultCase));
 	}
 
 	updateCaseViaContext(selectedContext: IContext, caseModel: ICase, qParams: Params = {}) {

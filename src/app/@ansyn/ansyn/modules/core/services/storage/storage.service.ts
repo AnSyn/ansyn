@@ -11,7 +11,7 @@ export interface IEntity {
 }
 
 export interface IStoredEntity<P extends IEntity, D> {
-	preview?: P;
+	preview: P;
 	data?: D;
 }
 

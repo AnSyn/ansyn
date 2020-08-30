@@ -42,9 +42,7 @@ import { DataLayersService } from '../../layers-manager/services/data-layers.ser
 import {
 	copyFromContent,
 	SetMapsDataActionStore,
-	SetToastMessageAction,
-	selectActiveMapId,
-	selectMapsIds
+	SetToastMessageAction
 } from '@ansyn/map-facade';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { IStoredEntity } from '../../../core/services/storage/storage.service';

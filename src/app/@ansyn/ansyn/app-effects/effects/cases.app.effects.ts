@@ -88,6 +88,7 @@ export class CasesAppEffects {
 			ofType<SelectDilutedCaseAction>(CasesActionTypes.SELECT_DILUTED_CASE),
 			map(({ payload }: SelectDilutedCaseAction) => payload),
 			mergeMap((caseValue: IDilutedCase) => {
+				console.log('caseValue', caseValue);
 				const ids: IOverlayByIdMetaData[] = uniqBy(caseValue.state.maps.data.filter(mapData => Boolean(mapData.data.overlay))
 						.map((mapData) => mapData.data.overlay)
 						.concat(caseValue.state.favoriteOverlays,

@@ -1,11 +1,11 @@
 import { ICasesConfig } from '../models/cases-config';
 import { Inject, Injectable } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
-import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
+import { ILinksConfig, QueryParamsHelper, linksConfig } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
 import { UUID } from 'angular2-uuid';
 import { cloneDeep, cloneDeep as _cloneDeep, isEqual as _isEqual, mapValues } from 'lodash';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map, take, tap } from 'rxjs/operators';
 /* Do not change this ( rollup issue ) */
 import * as momentNs from 'moment';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
@@ -18,7 +18,6 @@ import {
 	ICaseTimeState,
 	IDilutedCaseState
 } from '../models/case.model';
-import { QueryCompressorService } from './helpers/query-compresser-service.service';
 import { TranslateService } from '@ngx-translate/core';
 
 const moment = momentNs;
@@ -44,11 +43,11 @@ export class CasesService {
 	queryParamsKeys;
 	latestStoredEntity: any;
 
-	constructor(protected storageService: StorageService,
+	constructor(public storageService: StorageService,
 				@Inject(casesConfig) public config: ICasesConfig,
+				@Inject(linksConfig) public linksConfig: ILinksConfig,
 				public urlSerializer: UrlSerializer,
 				protected translator: TranslateService,
-				public queryCompressorService: QueryCompressorService,
 				public errorHandlerService: ErrorHandlerService) {
 		this.paginationLimit = this.config.paginationLimit;
 		this.queryParamsKeys = this.config.casesQueryParamsKeys;
@@ -56,14 +55,6 @@ export class CasesService {
 
 	get defaultCase() {
 		return this.config.defaultCase;
-	}
-
-	get decodeCaseObjects() {
-		return this.queryParamsHelper.decodeCaseObjects.bind(this.queryParamsHelper);
-	}
-
-	get encodeCaseObjects() {
-		return this.queryParamsHelper.encodeCaseObjects.bind(this.queryParamsHelper);
 	}
 
 	get generateQueryParamsViaCase() {
@@ -181,6 +172,17 @@ export class CasesService {
 			.pipe(
 				map(_ => selectedCase),
 				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to create case'))
+			);
+	}
+
+	createLink(link): Observable<any> {
+		return this.storageService.create(this.linksConfig.schema, link)
+			.pipe(
+				take(1),
+				catchError(err => {
+					console.log('err', err);
+					return this.errorHandlerService.httpErrorHandle(err, 'Failed to create case');
+				})
 			);
 	}
 

@@ -1,21 +1,20 @@
 import { IContext } from '../../../../core/models/context.model';
 import { Params } from '@angular/router';
-import { cloneDeep, mapValues } from 'lodash';
+import { cloneDeep } from 'lodash';
 import { CasesService } from '../cases.service';
 import * as wellknown from 'wellknown';
-import * as rison from 'rison';
 import { bbox, bboxPolygon, polygon } from '@turf/turf';
 import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
 import { getPolygonByPointAndRadius, } from '@ansyn/imagery';
-import {
-	ICase,
-	ICaseMapsState,
-	ICaseMapState,
-	ICaseState,
-	ImageManualProcessArgs,
-	IOverlaysManualProcessArgs
-} from '../../models/case.model';
-import { IDilutedOverlaysHash, IOverlay, IOverlaysHash } from '../../../../overlays/models/overlay.model';
+import { ICase } from '../../models/case.model';
+import { take } from 'rxjs/operators';
+
+export const linksConfig = 'linksConfig';
+
+export interface ILinksConfig {
+	schema: string;
+	idLength: number;
+}
 
 export class QueryParamsHelper {
 	constructor(protected casesService: CasesService) {
@@ -25,15 +24,17 @@ export class QueryParamsHelper {
 		return this.casesService.config.defaultCase;
 	}
 
-	updateCaseViaQueryParmas(qParams: Params = {}, defaultCase: ICase = this.defaultCase) {
-		const sCase = cloneDeep(defaultCase);
-		sCase.state.overlaysManualProcessArgs = <IOverlaysManualProcessArgs>sCase.state.overlaysManualProcessArgs;
-		// needed for ngc
-		const qParamsKeys = Object.keys(qParams);
-		qParamsKeys.forEach((key) => {
-			sCase.state[key] = this.decodeCaseObjects(key, qParams[key]);
-		});
-		return this.casesService.parseCase(sCase);
+	updateCaseViaQueryParmas(id: string, defaultCase: ICase = this.defaultCase) {
+		if (id) {
+			this.casesService.storageService.get(this.casesService.linksConfig.schema, id).subscribe(state => {
+				console.log('state', state.data);
+				const caseData = cloneDeep(defaultCase);
+				caseData.state = <any>state.data;
+				return this.casesService.parseCase(caseData)
+			});
+		}
+
+		return this.casesService.parseCase(cloneDeep(defaultCase));
 	}
 
 	updateCaseViaContext(selectedContext: IContext, caseModel: ICase, qParams: Params = {}) {
@@ -82,112 +83,27 @@ export class QueryParamsHelper {
 		}
 	}
 
+	generateLinkId() {
+		let result = '';
+		const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+		const { idLength } = this.casesService.linksConfig;
+		for (let i = 0; i < idLength; i++) {
+			result += characters.charAt(Math.floor(Math.random() * characters.length));
+		}
+		return result;
+	}
+
 	generateQueryParamsViaCase(sCase: ICase): string {
-		const url = `/`;
-		const urlTree = this.casesService.urlSerializer.parse(url);
-		const keys = this.casesService.queryParamsKeys.filter(key => sCase.state[key]);
-		keys.forEach(key => {
-			urlTree.queryParams[key] = this.encodeCaseObjects(key, sCase.state[key], sCase.state);
-		});
+		const id = this.generateLinkId();
+		const link = {
+			preview: { id, creationTime: new Date() },
+			data: sCase.state
+		};
+
+		this.casesService.createLink(link).subscribe();
+
 		const baseLocation = location.href.split('#')[0];
-		const href = this.casesService.config.useHash ? `${ baseLocation }/#` : baseLocation;
-		return decodeURIComponent(`${ href }${ urlTree.toString() }`);
-	}
-
-	rot13(s) {
-		if (s) {
-			return (s ? s : this).split('').map(function (_) {
-				if (!_.match(/[A-Za-z]/)) {
-					return _;
-				}
-				const c = Math.floor(_.charCodeAt(0) / 97);
-				const k = (_.toLowerCase().charCodeAt(0) - 83) % 26 || 26;
-				return String.fromCharCode(k + ((c === 0) ? 64 : 96));
-			}).join('');
-		}
-	}
-
-	encodeCaseObjects(key, value, caseState?: ICaseState) {
-		let encodedValue;
-		switch (key) {
-			case 'dataInputFilters':
-				encodedValue = rison.encode(value);
-				break;
-			case 'facets':
-				const compressedFacets = this.casesService.queryCompressorService.compressFacets(value);
-				encodedValue = rison.encode(compressedFacets);
-				break;
-			case 'time':
-				encodedValue =  rison.encode({ ...value, from: value.from.getTime(), to: value.to.getTime() });
-				break;
-			case 'maps':
-				const mapData: ICaseMapsState = cloneDeep(value);
-				const compressedMapData = this.casesService.queryCompressorService.compressMapsData(mapData);
-				encodedValue =  rison.encode(compressedMapData);
-				break;
-			case 'region':
-				encodedValue =  wellknown.stringify(value);
-				break;
-			case 'orientation':
-				encodedValue = rison.encode(value);
-				break;
-			case 'overlaysManualProcessArgs':
-				// collect process arguments only for overlays currently loaded by map
-				const activeMapsManualProcessArgs = {};
-				if (caseState) {
-					const keys = Object.keys(caseState.overlaysManualProcessArgs);
-					keys.forEach((overlayId) => {
-						const processArgs: ImageManualProcessArgs = caseState.overlaysManualProcessArgs[overlayId];
-						const loadedOverlay = caseState.maps.data.find((caseMapState: ICaseMapState) => {
-							return caseMapState.data.overlay && caseMapState.data.overlay.id === overlayId;
-						});
-						if (loadedOverlay) {
-							activeMapsManualProcessArgs[overlayId] = this.casesService.queryCompressorService.compressManualImageProcessingData(processArgs);
-						}
-					});
-				}
-
-				encodedValue =  rison.encode(activeMapsManualProcessArgs);
-				break;
-			case 'layers':
-				encodedValue = rison.encode(value.activeLayersIds);
-				break;
-			case 'miscOverlays':
-				const miscOverlays: IOverlaysHash = value || {};
-				const miscOverlaysDiluted: IDilutedOverlaysHash = mapValues(miscOverlays, (overlay: IOverlay) =>
-					overlay ? { id: overlay.id, sourceType: overlay.sourceType } : null);
-				encodedValue = rison.encode(miscOverlaysDiluted);
-				break;
-			default:
-				encodedValue = wellknown.stringify(value);
-		}
-
-		const encryptedValue = this.rot13(encodedValue);
-		return encryptedValue;
-	}
-
-
-	decodeCaseObjects(key, value) {
-		const decryptedValue = this.rot13(value);
-		switch (key) {
-			case 'region':
-				return wellknown.parse(decryptedValue);
-			case 'facets':
-				return this.casesService.queryCompressorService.decompressFacets(rison.decode(decryptedValue));
-			case 'maps':
-				return this.casesService.queryCompressorService.decompressMapData(rison.decode(decryptedValue));
-			case 'overlaysManualProcessArgs':
-				const decodedData = rison.decode(decryptedValue);
-				const keys = Object.keys(decodedData);
-				keys.forEach((overlayId) => {
-					decodedData[overlayId] = this.casesService.queryCompressorService.decompressManualImageProcessingData(decodedData[overlayId]);
-				});
-				return decodedData;
-			case 'layers':
-				const selectedLayersIds = rison.decode(decryptedValue);
-				return { activeLayersIds: selectedLayersIds };
-			default:
-				return rison.decode(decryptedValue);
-		}
+		const href = this.casesService.config.useHash ? `${ baseLocation }#/link/` : baseLocation;
+		return decodeURIComponent(`${ href }${ link.preview.id }`);
 	}
 }

@@ -14,7 +14,7 @@ describe('MultiChoiceAttributeComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ MultiChoiceAttributeComponent ],
-			imports: [ NoopAnimationsModule, ReactiveFormsModule, MatChipsModule, MatFormFieldModule, MatMenuModule,MatAutocompleteModule, MatButtonModule, TranslateModule.forRoot() ],
+			imports: [ NoopAnimationsModule, ReactiveFormsModule, MatChipsModule, MatFormFieldModule, MatMenuModule, MatAutocompleteModule, MatButtonModule, TranslateModule.forRoot() ],
 			schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 		}).compileComponents();
 	}));

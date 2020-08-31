@@ -227,14 +227,14 @@ export class CasesEffects {
 		}),
 		switchMap((sCase: ICase) => {
 			return this.casesService.generateQueryParamsViaCase(sCase).pipe(
-				map((link: any) => {
+				map((linkId: any) => {
 					const baseLocation = location.href.split('#')[0];
 					const href = this.casesService.config.useHash ? `${ baseLocation }#/link/` : baseLocation;
-					const decodedUri = decodeURIComponent(`${ href }${ link.preview.id }`);
+					const decodedUri = decodeURIComponent(`${ href }${ linkId }`);
 					copyFromContent(decodedUri);
 					return new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast });
 				}),
-				catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Failed to create link')),
+				catchError((err) => this.errorHandlerService.httpErrorHandle(err, toastMessages.failedToCreateLink)),
 				catchError(() => EMPTY)
 			);
 		})

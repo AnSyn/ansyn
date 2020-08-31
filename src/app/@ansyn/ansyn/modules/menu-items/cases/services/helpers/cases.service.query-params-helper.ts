@@ -7,6 +7,8 @@ import { bbox, bboxPolygon, polygon } from '@turf/turf';
 import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
 import { getPolygonByPointAndRadius, } from '@ansyn/imagery';
 import { ICase } from '../../models/case.model';
+import { catchError, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 export const linksConfig = 'linksConfig';
 
@@ -69,17 +71,13 @@ export class QueryParamsHelper {
 		}
 	}
 
-	generateQueryParamsViaCase(sCase: ICase): string {
+	generateQueryParamsViaCase(sCase: ICase): Observable<any> {
 		const id: string = this.casesService.generateUUID();
 		const link = {
 			preview: { id, creationTime: new Date() },
 			data: sCase.state
 		};
 
-		this.casesService.createLink(link).subscribe(link => link);
-
-		const baseLocation = location.href.split('#')[0];
-		const href = this.casesService.config.useHash ? `${ baseLocation }#/link/` : baseLocation;
-		return decodeURIComponent(`${ href }${ link.preview.id }`);
+		return this.casesService.createLink(link);
 	}
 }

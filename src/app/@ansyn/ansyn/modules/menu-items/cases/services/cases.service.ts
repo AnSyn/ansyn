@@ -61,7 +61,11 @@ export class CasesService {
 	getLink(linkId: string) {
 		return this.storageService.get(this.linksConfig.schema, linkId).pipe(
 			map(caseData => {
-				const dilutedCase: IDilutedCase = { state: <ICaseState>caseData.data, creationTime: new Date(), id: linkId };
+				const dilutedCase: IDilutedCase = {
+					state: <ICaseState>caseData.data,
+					creationTime: new Date(),
+					id: linkId
+				};
 				return new SelectDilutedCaseAction(dilutedCase);
 			}),
 			catchError(() => EMPTY)
@@ -187,10 +191,9 @@ export class CasesService {
 	}
 
 	createLink(link): Observable<any> {
-		return this.storageService.create(this.linksConfig.schema, link)
-			.pipe(
-				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to create case'))
-			);
+		return this.storageService.create(this.linksConfig.schema, link).pipe(
+			map(_ => link)
+		);
 	}
 
 	updateCase(selectedCase: ICase): Observable<IStoredEntity<ICasePreview, IDilutedCaseState>> {

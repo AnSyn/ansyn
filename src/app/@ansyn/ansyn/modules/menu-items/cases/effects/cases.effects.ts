@@ -32,7 +32,7 @@ import {
 	map,
 	mergeMap,
 	share,
-	switchMap,
+	switchMap, tap,
 	withLatestFrom
 } from 'rxjs/operators';
 import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
@@ -225,10 +225,18 @@ export class CasesEffects {
 			}
 			return sCase;
 		}),
-		map((sCase: ICase) => {
-			const shareLink = this.casesService.generateQueryParamsViaCase(sCase);
-			copyFromContent(shareLink);
-			return new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast });
+		switchMap((sCase: ICase) => {
+			return this.casesService.generateQueryParamsViaCase(sCase).pipe(
+				map((link: any) => {
+					const baseLocation = location.href.split('#')[0];
+					const href = this.casesService.config.useHash ? `${ baseLocation }#/link/` : baseLocation;
+					const decodedUri = decodeURIComponent(`${ href }${ link.preview.id }`);
+					copyFromContent(decodedUri);
+					return new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast });
+				}),
+				catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Failed to create link')),
+				catchError(() => EMPTY)
+			);
 		})
 	);
 

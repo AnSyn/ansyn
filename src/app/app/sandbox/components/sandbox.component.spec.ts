@@ -12,6 +12,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { StoreModule } from '@ngrx/store';
 import { HttpClientModule } from "@angular/common/http";
 import { TranslateModule } from "@ngx-translate/core";
+import { of } from 'rxjs';
 
 describe('SandboxComponent', () => {
 	let component: SandboxComponent;
@@ -30,7 +31,11 @@ describe('SandboxComponent', () => {
 				},
 				{
 					provide: AnsynApi,
-					useValue: {}
+					useValue: {
+						events: {
+							overlaysLoadedSuccess: of([])
+						}
+					}
 				},
 				{
 					provide: credentialsConfig,

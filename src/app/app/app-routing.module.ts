@@ -33,6 +33,24 @@ export const routes: Routes = [
 	{
 		path: 'access_token',
 		component: CallbackComponent
+	},
+	{
+		path: '',
+		component: AnsynHostComponent,
+		data: {
+			name: 'link'
+		},
+		canActivate: [AuthGuard],
+		canDeactivate: [UnAuthGuard],
+		children: [
+			{
+				path: 'link/:linkId',
+				component: PlaceholderComponent,
+				data: {
+					name: 'linkChild'
+				}
+			}
+		]
 	}
 ];
 

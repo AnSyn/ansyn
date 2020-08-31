@@ -26,15 +26,22 @@ export class AnsynRouterService {
 				}
 				return activated;
 			}),
-			filter(activated => activated.snapshot.data.name === 'case' || activated.snapshot.data.name === 'caseChild'),
+			filter(activated => activated.snapshot.data.name === 'case' ||
+				activated.snapshot.data.name === 'caseChild' ||
+				activated.snapshot.data.name === 'link' ||
+				activated.snapshot.data.name === 'linkChild'
+			),
 			map(activated => {
-				const queryParamMap = activated.snapshot.queryParamMap;
+				const { queryParamMap } = activated.snapshot;
 				const queryParams = {};
+				const linkId = activated.snapshot.params.linkId;
+
 				queryParamMap.keys.forEach(key => {
 					queryParams[key] = queryParamMap.get(key);
 				});
+
 				const caseId = activated.snapshot.paramMap.get('caseId');
-				return { caseId, queryParams };
+				return { caseId, queryParams, linkId };
 			}),
 			tap(state => this.store.dispatch(new SetStateAction(state)))
 		)

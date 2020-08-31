@@ -9,11 +9,11 @@ import { ICompressedMapSettings, ICompressedMapSettingsData } from '@ansyn/image
 export interface ICasePreview {
 	creationTime: Date;
 	id: string;
-	name: string;
+	name?: string;
 	owner?: string;
-	lastModified: Date;
+	lastModified?: Date;
 	selectedContextId?: string;
-	autoSave: boolean;
+	autoSave?: boolean;
 }
 
 export interface ICase extends ICasePreview {

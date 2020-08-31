@@ -175,11 +175,7 @@ export class CasesService {
 		return this.storageService.create(this.linksConfig.schema, link)
 			.pipe(
 				take(1),
-				catchError(err => {
-					console.log('err', err);
-					return this.errorHandlerService.httpErrorHandle(err, 'Failed to create case');
-				})
-			);
+				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to create case')));
 	}
 
 	updateCase(selectedCase: ICase): Observable<IStoredEntity<ICasePreview, IDilutedCaseState>> {

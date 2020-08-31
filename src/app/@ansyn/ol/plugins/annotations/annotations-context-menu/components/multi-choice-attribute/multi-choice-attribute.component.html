@@ -1,11 +1,29 @@
-<mat-chip-list>
-	<mat-chip *ngFor="let option of selectedOptions" [selectable]="isMatChipSelectable" [removable]="isMatChipRemovable" (removed)="removeOption(option)">
-		{{ option.value }}
-		<mat-icon matChipRemove *ngIf="isMatChipRemovable">{{'cancel' | translate}}</mat-icon>
-	</mat-chip>
-	<button mat-button [matMenuTriggerFor]="menu"> {{addEntityLabel | translate}}</button>
-</mat-chip-list>
-
-<mat-menu #menu="matMenu">
-	<div mat-menu-item *ngFor="let option of optionsList" (click)="selectOption(option)">{{ option.value | translate }}</div>
-</mat-menu>
+<div class="multi-choice-attribute-component">
+	<mat-form-field>
+		<mat-label>{{addEntityLabel | translate}}</mat-label>
+		<mat-chip-list #chipList aria-orientation="horizontal">
+			<mat-chip *ngFor="let option of selectedOptions"			
+				[selectable]="isMatChipSelectable"
+				[removable]="isMatChipRemovable"
+				(removed)="removeOption(option)">
+				{{option.value}}
+				<i class="icon-close" matChipRemove *ngIf="isMatChipRemovable"></i>
+			</mat-chip>
+			<input
+				#addTagInput
+				[formControl]="addTagCtrl"
+				[matAutocomplete]="auto"
+				[matChipInputFor]="chipList"
+				[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+				[matChipInputAddOnBlur]="addOnBlur"
+				(matChipInputTokenEnd)="addOption($event)">
+		</mat-chip-list>
+		<mat-autocomplete #auto="matAutocomplete"
+			class="multi-choice-attribute-component-autocomplete-dark-panel"
+			(optionSelected)="onSelected($event)">
+			<mat-option *ngFor="let option of filteredOptions$ | async" [value]="option.value">
+				{{option.value}}
+			</mat-option>
+		</mat-autocomplete>
+	</mat-form-field>
+</div>

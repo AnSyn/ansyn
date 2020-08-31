@@ -1,0 +1,55 @@
+// NOTE: Component's encapsulation is ViewEncapsulation.None
+// if you need to change its styles, be carefull to have selectors specific enough
+// so other components styles won't be affected
+
+@import "ansyn/less/colors";
+
+.dynamic-attribute-control-component {
+    mat-form-field {
+        width: 100%;
+        mat-label {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .mat-form-field-flex {
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 8px;
+        }
+        &.mat-focused {
+            mat-label {
+                color: @application-primary-color;
+            }
+            .mat-form-field-ripple {
+                background-color: @application-primary-color;
+            }
+            .mat-select-arrow {
+                color: @application-primary-color !important;
+            }
+        }
+        input, textarea {
+            caret-color: @application-primary-color;
+        }
+    }
+
+    .mat-select-value,.mat-select-arrow {
+        color: #fff;
+    }
+
+    .mat-form-field-underline {
+        background-color: #fff;
+    }
+}
+
+.dynamic-attribute-control-component-dark-panel {
+    &.mat-select-panel {
+        background: @background-color-3;
+        .mat-option {
+            color: #fff;
+            &:hover {
+                background: @status-bar-delimiter !important;
+            }
+            &.mat-selected {
+                color: @application-primary-color;
+            }
+        }
+    }
+}

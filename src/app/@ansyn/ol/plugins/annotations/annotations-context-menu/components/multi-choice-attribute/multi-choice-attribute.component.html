@@ -18,7 +18,9 @@
 				  [matChipInputAddOnBlur]="addOnBlur"
 				  (matChipInputTokenEnd)="add($event)">
 		</mat-chip-list>
-		<mat-autocomplete #auto="matAutocomplete" class="autocomplete-dark-panel" (optionSelected)="selected($event)">
+		<mat-autocomplete #auto="matAutocomplete"
+			class="multi-choice-attribute-component-autocomplete-dark-panel"
+			(optionSelected)="selected($event)">
 			<mat-option *ngFor="let option of filteredOptions$ | async" [value]="option.value">
 				{{option.value}}
 			</mat-option>

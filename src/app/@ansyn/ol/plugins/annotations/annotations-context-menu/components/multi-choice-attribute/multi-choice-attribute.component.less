@@ -1,3 +1,7 @@
+// NOTE: Component's encapsulation is ViewEncapsulation.None
+// if you need to change its styles, be carefull to have selectors specific enough
+// so other components styles won't be affected
+
 @import "ansyn/less/colors";
 
 .multi-choice-attribute-component {
@@ -22,7 +26,7 @@
     }
 }
 
-.autocomplete-dark-panel {
+.multi-choice-attribute-component-autocomplete-dark-panel {
     background: @background-color-3;
     .mat-option, .mat-option.mat-selected:not(.mat-active):not(:hover):not(.mat-option-disabled) {
         background: @background-color-3;

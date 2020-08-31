@@ -25,7 +25,7 @@
 					[id]="attribute.key"
 					[formControlName]="attribute.key"
 					[value]="attribute.value"
-					panelClass="dark-panel">
+					panelClass="dynamic-attribute-control-component-dark-panel">
 					<mat-option *ngFor="let opt of attribute.options" [value]="opt.value">{{ opt.value | translate }}</mat-option>
 				</mat-select>
 				<input *ngSwitchCase="controlType.Number"

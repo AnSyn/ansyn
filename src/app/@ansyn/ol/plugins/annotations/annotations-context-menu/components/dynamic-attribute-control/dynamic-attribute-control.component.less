@@ -1,3 +1,7 @@
+// NOTE: Component's encapsulation is ViewEncapsulation.None
+// if you need to change its styles, be carefull to have selectors specific enough
+// so other components styles won't be affected
+
 @import "ansyn/less/colors";
 
 .dynamic-attribute-control-component {
@@ -29,7 +33,7 @@
     }
 }
 
-.dark-panel {
+.dynamic-attribute-control-component-dark-panel {
     &.mat-select-panel {
         background: @background-color-3;
         .mat-option {

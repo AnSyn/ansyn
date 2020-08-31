@@ -104,6 +104,16 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 
 		case FiltersActionTypes.SET_FILTERS_SEARCH_RESULTS:
 			return { ...state, filtersSearchResults: action.payload };
+
+		case FiltersActionTypes.SELECT_ONLY_GEO_REGISTERED:
+			const newFilters = new Map(state.filters);
+			newFilters.forEach( (value, key) => {
+				if (key.modelName === 'isGeoRegistered') {
+					(value as EnumFilterMetadata).selectOnly('geoRegistered');
+				}
+			});
+			return {...state};
+
 		default:
 			return state;
 	}

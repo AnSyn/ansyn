@@ -60,8 +60,9 @@ import { ToggleMenuCollapse } from '@ansyn/menu';
 import { UUID } from 'angular2-uuid';
 import { DataLayersService } from '../modules/menu-items/layers-manager/services/data-layers.service';
 import { AnnotationsVisualizer } from '@ansyn/ol';
+import NoSuchMapError from './NoSuchMapError';
 
-type mapIdOrNumber = string | number | undefined;
+export type mapIdOrNumber = string | number | undefined;
 
 @Injectable({
 	providedIn: 'root'
@@ -549,10 +550,13 @@ export class AnsynApi {
 		if (!Boolean(mapId)) {
 			return this.activeMapId;
 		}
-		if (typeof mapId === 'string') {
-			return mapId;
+		if ((typeof mapId === 'string' && Boolean(this.mapsEntities[mapId])) ||
+			(typeof mapId === 'number' && mapId > 0  && mapId < 4 && Boolean(this.mapList[mapId - 1]))) {
+			return typeof mapId === 'string' ? mapId : this.mapList[mapId - 1].id;
 		}
-		return (mapId < 0 || mapId >= 4) && this.mapList[mapId - 1] ? this.mapList[mapId - 1].id : this.activeMapId;
+		else {
+			throw new NoSuchMapError(mapId);
+		}
 	}
 
 	private removeElement(id): void {

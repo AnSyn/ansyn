@@ -609,4 +609,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		plugin.setMode(null, false);
 	}
 
+	errorMap() {
+		this.ansynApi.setRotation(Math.PI, 'no-such-map-id');
+	}
 }

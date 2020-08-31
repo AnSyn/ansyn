@@ -46,10 +46,6 @@ export class MultiChoiceAttributeComponent {
 		);
 	}
 
-	selectOption(option: Option) {
-		this.onSelectOption.emit(option);
-	}
-
 	removeOption(option: Option) {
 		this.onRemoveOption.emit(option);
 	}

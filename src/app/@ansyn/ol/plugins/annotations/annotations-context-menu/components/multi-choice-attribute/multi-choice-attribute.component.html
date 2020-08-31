@@ -1,6 +1,6 @@
 <div class="multi-choice-attribute-component">
 	<mat-form-field>
-		<mat-label>{{addEntityLabel}}</mat-label>
+		<mat-label>{{addEntityLabel | translate}}</mat-label>
 		<mat-chip-list #chipList aria-orientation="horizontal">
 			<mat-chip *ngFor="let option of selectedOptions"			
 				[selectable]="isMatChipSelectable"
@@ -15,12 +15,12 @@
 				[matAutocomplete]="auto"
 				[matChipInputFor]="chipList"
 				[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-				  [matChipInputAddOnBlur]="addOnBlur"
-				  (matChipInputTokenEnd)="add($event)">
+				[matChipInputAddOnBlur]="addOnBlur"
+				(matChipInputTokenEnd)="addOption($event)">
 		</mat-chip-list>
 		<mat-autocomplete #auto="matAutocomplete"
 			class="multi-choice-attribute-component-autocomplete-dark-panel"
-			(optionSelected)="selected($event)">
+			(optionSelected)="onSelected($event)">
 			<mat-option *ngFor="let option of filteredOptions$ | async" [value]="option.value">
 				{{option.value}}
 			</mat-option>

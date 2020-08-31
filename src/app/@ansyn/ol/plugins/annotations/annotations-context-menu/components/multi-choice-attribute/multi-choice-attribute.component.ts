@@ -54,13 +54,15 @@ export class MultiChoiceAttributeComponent {
 		this.onRemoveOption.emit(option);
 	}
 
-	add(event: MatChipInputEvent): void {
+	addOption(event: MatChipInputEvent): void {
 		if (!this.matAutocomplete.isOpen) {
 			const { input, value } = event;
 
 			if ((value || '').trim()) {
 				const option = this.optionsList.find(option => option.value === value.trim());
-				this.onSelectOption.emit(option);
+				if (!!option) {
+					this.onSelectOption.emit(option);
+				}
 			}
 
 			if (input) {
@@ -71,7 +73,7 @@ export class MultiChoiceAttributeComponent {
 		}
 	}
 
-	selected(event: MatAutocompleteSelectedEvent): void {
+	onSelected(event: MatAutocompleteSelectedEvent): void {
 		const option = this.optionsList.find(option => option.value === event.option.viewValue);
 		this.onSelectOption.emit(option);
 		this.addTagInput.nativeElement.value = '';
@@ -81,6 +83,9 @@ export class MultiChoiceAttributeComponent {
 	private filter(value: string): Option[] {
 		const filterValue = value.toLowerCase();
 
-		return this.optionsList.filter(option => option.value.toLowerCase().indexOf(filterValue) === 0);
+		return this.optionsList.filter(option => {
+			const optionIndex = option.value.toLowerCase().indexOf(filterValue);
+			return optionIndex === 0;
+		});
 	}
 }

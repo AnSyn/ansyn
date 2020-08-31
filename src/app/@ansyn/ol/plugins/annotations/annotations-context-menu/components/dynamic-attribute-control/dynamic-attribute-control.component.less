@@ -19,8 +19,14 @@
                 color: @application-primary-color;
             }
             .mat-form-field-ripple {
-                background-color: @application-primary-color;;
+                background-color: @application-primary-color;
             }
+            .mat-select-arrow {
+                color: @application-primary-color !important;
+            }
+        }
+        input, textarea {
+            caret-color: @application-primary-color;
         }
     }
 
@@ -40,6 +46,9 @@
             color: #fff;
             &:hover {
                 background: @status-bar-delimiter !important;
+            }
+            &.mat-selected {
+                color: @application-primary-color;
             }
         }
     }

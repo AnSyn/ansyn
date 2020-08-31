@@ -11,9 +11,9 @@ import {
 } from '@angular/core';
 import { fromEvent, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
-import { AnnotationSetProperties, ClearActiveInteractionsAction, SetAnnotationMode } from '../../actions/tools.actions';
+import { AnnotationSetProperties, ClearActiveInteractionsAction, SetAnnotationMode, SetLastAnnotationMode } from '../../actions/tools.actions';
 import { DOCUMENT } from '@angular/common';
-import { selectAnnotationMode, selectAnnotationProperties } from '../../reducers/tools.reducer';
+import { selectAnnotationMode, selectAnnotationProperties, selectLastAnnotationMode, selectIsContinuousDrawingEnabled } from '../../reducers/tools.reducer';
 import { IVisualizerStyle, getOpacityFromColor } from '@ansyn/imagery';
 import { filter, map, tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -79,6 +79,18 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
+	lastMode$: Observable<AnnotationMode> = this.store.pipe(
+		select(selectLastAnnotationMode),
+		tap(mode => this.lastAnnotationMode = mode)
+	);
+
+	@AutoSubscription
+	isContinuousDrawingEnabled$: Observable<boolean> = this.store.pipe(
+		select(selectIsContinuousDrawingEnabled),
+		tap(val => this.isContinuousDrawingEnabled = val)
+	);
+
+	@AutoSubscription
 	annotationProperties$: Observable<Partial<IVisualizerStyle>> = this.store.pipe(
 		select(selectAnnotationProperties),
 		tap(annotationProperties => this.annotationProperties = annotationProperties)
@@ -88,6 +100,9 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	public annotationProperties: Partial<IVisualizerStyle>;
 
 	public ANNOTATION_MODE_LIST = ANNOTATION_MODE_LIST;
+
+	private lastAnnotationMode: AnnotationMode;
+	private isContinuousDrawingEnabled: boolean;
 
 	@AutoSubscription
 	onClickOutside$ = this.clickOutsideService.onClickOutside().pipe(
@@ -144,13 +159,14 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	}
 
 	setAnnotationMode(mode?: AnnotationMode) {
-		const dispatchValue = this.mode === mode ? undefined : mode;
+		const dispatchValue = this.mode === mode || (this.isContinuousDrawingEnabled && this.lastAnnotationMode === mode) ? undefined : mode;
 		if (dispatchValue) {
 			this.store.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetAnnotationMode] }));
 			this.store.dispatch(new SetAnnotationMode({ annotationMode: dispatchValue }));
 			this.hideMe.emit();
 		} else {
 			this.store.dispatch(new SetAnnotationMode(null));
+			this.store.dispatch(new SetLastAnnotationMode({ lastAnnotationMode: undefined }));
 		}
 	}
 
@@ -201,6 +217,6 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	}
 
 	isActive(annotationMode) {
-		return annotationMode !== AnnotationMode.Translate && this.mode === annotationMode;
+		return (annotationMode !== AnnotationMode.Translate && this.mode === annotationMode) || (this.isContinuousDrawingEnabled && this.lastAnnotationMode === annotationMode);
 	}
 }

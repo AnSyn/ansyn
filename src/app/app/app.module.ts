@@ -16,6 +16,7 @@ import { ContextModule } from './context/context.module';
 import { DeviceDetectorModule } from 'ngx-device-detector';
 import { SentinelModule } from './sentinel/sentinel.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { linksConfig } from '../@ansyn/ansyn/modules/menu-items/cases/services/helpers/cases.service.query-params-helper';
 
 @NgModule({
 	imports: [
@@ -37,6 +38,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 		{
 			provide: ErrorHandler,
 			useClass: LoggerService
+		},
+		{
+			provide: linksConfig,
+			useValue: {}
 		}
 	],
 	declarations: [AppAnsynComponent, AnsynHostComponent, PlaceholderComponent],

@@ -170,7 +170,7 @@ export class CasesService {
 
 	createCase(selectedCase: ICase): Observable<ICase> {
 		const currentTime = new Date();
-		const uuid = UUID.UUID();
+		const uuid = this.generateUUID();
 		selectedCase.id = uuid;
 		selectedCase.creationTime = currentTime;
 		selectedCase.lastModified = currentTime;
@@ -182,10 +182,13 @@ export class CasesService {
 			);
 	}
 
+	generateUUID(): string {
+		return UUID.UUID();
+	}
+
 	createLink(link): Observable<any> {
 		return this.storageService.create(this.linksConfig.schema, link)
 			.pipe(
-				take(1),
 				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to create case'))
 			);
 	}

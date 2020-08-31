@@ -69,18 +69,8 @@ export class QueryParamsHelper {
 		}
 	}
 
-	generateLinkId() {
-		let result = '';
-		const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-		const { idLength } = this.casesService.linksConfig;
-		for (let i = 0; i < idLength; i++) {
-			result += characters.charAt(Math.floor(Math.random() * characters.length));
-		}
-		return result;
-	}
-
 	generateQueryParamsViaCase(sCase: ICase): string {
-		const id = this.generateLinkId();
+		const id: string = this.casesService.generateUUID();
 		const link = {
 			preview: { id, creationTime: new Date() },
 			data: sCase.state

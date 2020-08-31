@@ -86,7 +86,7 @@ export class QueryParamsHelper {
 			data: sCase.state
 		};
 
-		this.casesService.createLink(link).subscribe();
+		this.casesService.createLink(link).subscribe(link => link);
 
 		const baseLocation = location.href.split('#')[0];
 		const href = this.casesService.config.useHash ? `${ baseLocation }#/link/` : baseLocation;

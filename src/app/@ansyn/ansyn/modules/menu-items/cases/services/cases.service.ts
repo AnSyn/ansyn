@@ -15,10 +15,11 @@ import {
 	ICase,
 	ICasePreview,
 	ICaseState,
-	ICaseTimeState,
+	ICaseTimeState, IDilutedCase,
 	IDilutedCaseState
 } from '../models/case.model';
 import { TranslateService } from '@ngx-translate/core';
+import { SelectDilutedCaseAction } from '../actions/cases.actions';
 
 const moment = momentNs;
 
@@ -43,7 +44,7 @@ export class CasesService {
 	queryParamsKeys;
 	latestStoredEntity: any;
 
-	constructor(public storageService: StorageService,
+	constructor(protected storageService: StorageService,
 				@Inject(casesConfig) public config: ICasesConfig,
 				@Inject(linksConfig) public linksConfig: ILinksConfig,
 				public urlSerializer: UrlSerializer,
@@ -55,6 +56,16 @@ export class CasesService {
 
 	get defaultCase() {
 		return this.config.defaultCase;
+	}
+
+	getLink(linkId: string) {
+		return this.storageService.get(this.linksConfig.schema, linkId).pipe(
+			map(caseData => {
+				const dilutedCase: IDilutedCase = { state: <ICaseState>caseData.data, creationTime: new Date(), id: linkId };
+				return new SelectDilutedCaseAction(dilutedCase);
+			}),
+			catchError(() => EMPTY)
+		);
 	}
 
 	get generateQueryParamsViaCase() {

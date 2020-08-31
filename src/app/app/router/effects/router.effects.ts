@@ -72,19 +72,12 @@ export class RouterEffects {
 		withLatestFrom(this.store$.select(routerStateSelector)),
 		mergeMap(([action, router]: [(SelectDilutedCaseAction), IRouterState]) => {
 			if (router.linkId) {
-				return this.casesService.storageService.get(this.casesService.linksConfig.schema, router.linkId).pipe(
-					map(caseData => {
-						const dilutedCase: IDilutedCase = { state: <ICaseState>caseData.data, creationTime: new Date(), id: router.linkId };
-						return new SelectDilutedCaseAction(dilutedCase);
-					}),
-					catchError(() => EMPTY)
-				);
+				return this.casesService.getLink(router.linkId);
 			}
 
 			const defaultCaseQueryParams: ICase = this.casesService.parseCase(cloneDeep(this.casesService.defaultCase));
 			return [new SelectDilutedCaseAction(defaultCaseQueryParams)];
-		}),
-		share());
+		}));
 
 	@Effect()
 	selectDefaultCaseUpdateRouter$: Observable<NavigateCaseTriggerAction> = this.actions$.pipe(

@@ -148,8 +148,8 @@ export class SetManualImageProcessing implements Action, ILogMessage {
 export class BackToWorldSuccess extends BackToWorldView {
 	type = OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS;
 
-	logMessage(): string {
-		return `Went back to world map`;
+	logMessage() {
+		return null
 	}
 }
 
@@ -161,7 +161,7 @@ export class BackToWorldFailed extends BackToWorldView {
 	}
 
 	logMessage(): string {
-		return `Going back to world map failed`;
+		return `Going back to world map failed${this.payload.error ? '\n' + this.payload.error.toString() : ''}`;
 	}
 }
 

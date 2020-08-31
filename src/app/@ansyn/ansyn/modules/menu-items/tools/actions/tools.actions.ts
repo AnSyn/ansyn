@@ -162,7 +162,7 @@ export class SetMeasureDistanceToolState implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return `${this.payload ? 'Opening' : 'Closing'} measure distance tool`
+		return this.payload && `Opening measure distance tool`
 	}
 }
 

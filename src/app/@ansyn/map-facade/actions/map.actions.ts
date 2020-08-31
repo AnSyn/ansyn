@@ -118,10 +118,14 @@ export class SetProgressBarAction implements Action {
 	}
 }
 
-export class PointToRealNorthAction implements Action {
+export class PointToRealNorthAction implements Action, ILogMessage {
 	type = MapActionTypes.POINT_TO_REAL_NORTH;
 
 	constructor(public payload: string) {
+	}
+
+	logMessage() {
+		return `Rotating map to real north`
 	}
 }
 
@@ -172,10 +176,14 @@ export class MapInstanceChangedAction implements Action {
 	}
 }
 
-export class SynchronizeMapsAction implements Action {
+export class SynchronizeMapsAction implements Action, ILogMessage {
 	type = MapActionTypes.SYNCHRONIZE_MAPS;
 
 	constructor(public payload: { mapId: string }) {
+	}
+
+	logMessage() {
+		return `Synchronizing maps`
 	}
 }
 
@@ -201,24 +209,36 @@ export class SetMapSearchBoxTriggerAction implements Action {
 }
 
 
-export class ContextMenuShowAction implements Action {
+export class ContextMenuShowAction implements Action, ILogMessage {
 	type = MapActionTypes.CONTEXT_MENU.SHOW;
 
 	constructor(public payload: IContextMenuShowPayload) {
 	}
+
+	logMessage() {
+		return `Showing map context menu`
+	}
 }
 
-export class ContextMenuDisplayAction implements Action {
+export class ContextMenuDisplayAction implements Action, ILogMessage {
 	type = MapActionTypes.CONTEXT_MENU.DISPLAY;
 
 	constructor(public payload: string) {
 	}
+
+	logMessage() {
+		return `Displaying overlay from context menu`
+	}
 }
 
-export class ContextMenuShowAngleFilter implements Action {
+export class ContextMenuShowAngleFilter implements Action, ILogMessage {
 	type = MapActionTypes.CONTEXT_MENU.ANGLE_FILTER_SHOW;
 
 	constructor(public payload: IAngleFilterClick) {
+	}
+
+	logMessage() {
+		return `Showing angle filter on map`
 	}
 }
 

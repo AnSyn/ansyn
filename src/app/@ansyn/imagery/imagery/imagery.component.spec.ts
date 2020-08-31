@@ -8,6 +8,7 @@ import { IMAGERY_MAPS } from '../providers/imagery-map-collection';
 import { ImageryMapSource } from '../decorators/map-source-provider';
 import { MAP_PROVIDERS_CONFIG } from '../model/map-providers-config';
 import { IMapSettings } from '../model/map-settings';
+import { LoggerService } from '../../ansyn/modules/core/services/logger.service';
 
 @ImageryMapSource({
 	sourceType: 'sourceType1',
@@ -52,7 +53,8 @@ describe('ImageryComponent', () => {
 					useValue: {}
 				},
 				{ provide: IMAGERY_MAPS, useValue: {} },
-				ImageryCommunicatorService
+				ImageryCommunicatorService,
+				{ provide: LoggerService, useValue: {} }
 			]
 		}).compileComponents();
 	}));

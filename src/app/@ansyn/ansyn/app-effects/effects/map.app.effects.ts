@@ -102,14 +102,15 @@ export class MapAppEffects {
 			MapActionTypes.CHANGE_IMAGERY_MAP_FAILED,
 			MapActionTypes.CHANGE_IMAGERY_MAP,
 			MapActionTypes.CONTEXT_MENU.SHOW,
+			MapActionTypes.CONTEXT_MENU.DISPLAY,
 			MapActionTypes.CONTEXT_MENU.ANGLE_FILTER_SHOW,
 			MapActionTypes.SET_LAYOUT_SUCCESS,
 			MapActionTypes.SYNCHRONIZE_MAPS,
 			MapActionTypes.TOGGLE_MAP_LAYERS,
 			MapActionTypes.SET_LAYOUT,
 			MapActionTypes.SET_TOAST_MESSAGE,
+			MapActionTypes.POINT_TO_REAL_NORTH,
 			OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW,
-			OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS,
 			OverlayStatusActionsTypes.BACK_TO_WORLD_FAILED
 		),
 		tap((action) => {

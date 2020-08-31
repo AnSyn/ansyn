@@ -2,9 +2,10 @@ import { Inject } from '@angular/core';
 import {
 	ImageryVisualizer,
 	IVisualizerEntity,
-	MarkerSize,
 	VisualizerInteractions,
-	VisualizerStates
+	VisualizerStates,
+	validateFeatureProperties,
+	getInitialAnnotationsFeatureStyle
 } from '@ansyn/imagery';
 import { UUID } from 'angular2-uuid';
 import { AutoSubscription } from 'auto-subscriptions';
@@ -56,7 +57,6 @@ export interface IEditAnnotationMode {
 	isHideable: true
 })
 export class AnnotationsVisualizer extends EntitiesVisualizer {
-	static fillAlpha = 0.4;
 	private skipNextMapClickHandler = false;
 	disableCache = true;
 	public mode: AnnotationMode;
@@ -132,26 +132,16 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	constructor(protected projectionService: OpenLayersProjectionService,
 				@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig,
 				protected translator: TranslateService) {
-
 		super(null, {
 			initial: {
-				stroke: '#27b2cfe6',
-				'stroke-width': 1,
-				fill: `white`,
-				'fill-opacity': AnnotationsVisualizer.fillAlpha,
-				'stroke-opacity': 1,
-				'marker-size': MarkerSize.medium,
-				'marker-color': `#ffffff`,
+				...getInitialAnnotationsFeatureStyle(),
 				label: {
-					overflow: true,
+					...getInitialAnnotationsFeatureStyle().label,
 					fontSize: (feature) => {
 						const entity = this.idToEntity.get(feature.getId());
 						const labelSize = entity && entity.originalEntity && entity.originalEntity.labelSize;
 						return labelSize || 28;
 					},
-					stroke: '#000',
-					fill: 'white',
-					offsetY: 30,
 					text: (feature: olFeature) => {
 						const entity = this.idToEntity.get(feature.getId());
 						if (entity) {
@@ -194,19 +184,12 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	annotationsLayerToEntities(annotationsLayer: FeatureCollection<any>): IVisualizerEntity[] {
 		return annotationsLayer.features.map((feature: Feature<any>): IVisualizerEntity => {
-			const featureJson = { ...feature };
-			delete featureJson.properties.featureJson;
+			const featureJson = validateFeatureProperties(feature);
+			featureJson.properties.featureJson = undefined;
 			return {
-				featureJson,
 				id: feature.properties.id,
-				style: feature.properties.style || this.visualizerStyle,
-				showMeasures: feature.properties.showMeasures || false,
-				showArea: feature.properties.showArea || false,
-				label: feature.properties.label || { text: '', geometry: null },
-				icon: feature.properties.icon || '',
-				undeletable: feature.properties.undeletable || false,
-				labelSize: feature.properties.labelSize || 28,
-				labelTranslateOn: feature.properties.labelTranslateOn || false
+				...featureJson.properties,
+				featureJson
 			};
 		});
 	}
@@ -563,6 +546,11 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	}
 
 	updateFeature(featureId, props: Partial<IVisualizerEntity>) {
+		const editMode = this.currentAnnotationEdit;
+		if (editMode) {
+			this.setEditAnnotationMode(featureId, false);
+		}
+
 		const entity = this.idToEntity.get(featureId);
 		if (entity) {
 			entity.originalEntity = merge({}, entity.originalEntity, props);
@@ -571,6 +559,10 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			}
 			this.events.updateEntity.next(entity.originalEntity);
 			this.source.refresh();
+		}
+
+		if (editMode) {
+			this.setEditAnnotationMode(featureId, true);
 		}
 	}
 

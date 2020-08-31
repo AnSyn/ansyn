@@ -5,7 +5,7 @@ import {
 	CasesService,
 	ICase,
 	ICaseDataInputFiltersState,
-	LoadDefaultCaseAction,
+	LoadDefaultCaseAction, LoggerService,
 	OverlaysService,
 	SelectCaseAction
 } from '@ansyn/ansyn';
@@ -89,6 +89,12 @@ describe('ContextAppEffects', () => {
 					provide: OverlaysService,
 					useValue: {
 						getSensorTypeAndProviderFromSensorName: () => {}
+					}
+				},
+				{
+					provide: LoggerService,
+					useValue: {
+						info: () => {}
 					}
 				}
 			]

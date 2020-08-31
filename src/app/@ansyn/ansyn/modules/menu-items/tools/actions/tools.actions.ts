@@ -104,7 +104,7 @@ export class SetPinLocationModeAction implements Action {
 export class GoToAction implements Action {
 	type = ToolsActionsTypes.GO_TO;
 
-	constructor(public payload: number[]) {
+	constructor(public payload: number[], public mapId?: string) {
 	};
 }
 

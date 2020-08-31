@@ -4,7 +4,7 @@ import {
 	CasesActionTypes,
 	CasesService,
 	ICaseDataInputFiltersState, IDataInputFilterValue,
-	LoadDefaultCaseAction, OverlaysService, rxPreventCrash,
+	LoadDefaultCaseAction, LoggerService, OverlaysService, rxPreventCrash,
 	SelectCaseAction
 } from '@ansyn/ansyn';
 import { Actions, Effect, ofType } from '@ngrx/effects';
@@ -38,6 +38,7 @@ export class ContextAppEffects {
 				protected store: Store<any>,
 				protected casesService: CasesService,
 				protected translateService: TranslateService,
+				protected loggerService: LoggerService,
 				protected auth0Service: Auth0Service,
 				protected overlaysService: OverlaysService
 	) {
@@ -63,6 +64,9 @@ export class ContextAppEffects {
 		if (!this.isValidGeometry(params.geometry)) {
 			actions.push(new SetToastMessageAction({ toastText: this.translateService.instant(CONTEXT_TOAST.region) }));
 			return actions;
+		}
+		if (params.from) {
+			this.loggerService.info(`open context from ${params.from}`);
 		}
 		const time = this.defaultTime;
 		switch (context) {

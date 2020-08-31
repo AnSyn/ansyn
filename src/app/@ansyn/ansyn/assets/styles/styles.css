@@ -313,15 +313,3 @@ input[type=number]::-webkit-outer-spin-button {
     background: #2c2c2c;
     border-radius: 2px;
 }
-
-.dynamic-attribute-control-component .mat-select-value {	
-	color: #fff;
-}
-
-.dynamic-attribute-control-component .mat-select-arrow {
-	color: #fff;
-}
-
-.dynamic-attribute-control-component .mat-form-field-underline {
-	background-color: #fff;
-}

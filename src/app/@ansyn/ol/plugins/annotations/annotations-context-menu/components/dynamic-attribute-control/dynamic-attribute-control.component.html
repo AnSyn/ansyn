@@ -16,6 +16,8 @@
 			<ng-container [ngSwitch]="attribute.type">
 				<textarea *ngSwitchCase="controlType.FreeText"
 					matInput
+					matTextareaAutosize
+					matAutosizeMinRows="2"
 					[formControlName]="attribute.key"
 					[id]="attribute.key">
 				</textarea>

@@ -1,14 +1,28 @@
 @import "ansyn/less/colors";
 
-mat-form-field {
-    width: 100%;
+.multi-choice-attribute-component {
+    mat-form-field {
+        width: 100%;
+    }
+    
+    mat-label {
+        color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .mat-chip {
+        background: @status-bar-delimiter !important;
+        color: #fff !important;
+    }
+    
+    .icon-close {
+        opacity: 1 !important;
+        background-color: rgba(255, 255, 255, 0.54);
+        border-radius: 50%;
+        font-size: 20px;
+    }
 }
 
-mat-label {
-    color: rgba(255, 255, 255, 0.8);
-}
-
-.mat-autocomplete-panel {
+.autocomplete-dark-panel {
     background: @background-color-3;
     .mat-option, .mat-option.mat-selected:not(.mat-active):not(:hover):not(.mat-option-disabled) {
         background: @background-color-3;
@@ -17,16 +31,4 @@ mat-label {
             background: @status-bar-delimiter !important;
         }
     }
-}
-
-.mat-chip {
-    background: @status-bar-delimiter !important;
-    color: #fff !important;
-}
-
-.icon-close {
-    opacity: 1 !important;
-    background-color: rgba(255, 255, 255, 0.54);
-    border-radius: 50%;
-    font-size: 20px;
 }

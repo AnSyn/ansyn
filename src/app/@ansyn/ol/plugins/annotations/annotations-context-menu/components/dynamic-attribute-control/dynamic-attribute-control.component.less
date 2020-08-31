@@ -1,12 +1,31 @@
 @import "ansyn/less/colors";
 
-mat-form-field {
-    width: 100%;
-    mat-label {
-        color: rgba(255, 255, 255, 0.8);
+.dynamic-attribute-control-component {
+    mat-form-field {
+        width: 100%;
+        mat-label {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .mat-form-field-flex {
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 8px;
+        }
+        &.mat-focused {
+            mat-label {
+                color: @application-primary-color;
+            }
+            .mat-form-field-ripple {
+                background-color: @application-primary-color;;
+            }
+        }
     }
-    .mat-form-field-flex {
-        background-color: rgba(0, 0, 0, 0.4);
+
+    .mat-select-value,.mat-select-arrow {
+        color: #fff;
+    }
+
+    .mat-form-field-underline {
+        background-color: #fff;
     }
 }
 

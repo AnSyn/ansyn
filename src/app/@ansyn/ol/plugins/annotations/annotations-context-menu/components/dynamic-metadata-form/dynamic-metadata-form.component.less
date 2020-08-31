@@ -1,24 +1,26 @@
 @import "ansyn/less/colors";
 
 :host {
-	left: 0px;
+	left: -1px;
 	width: 100%;
 	background-color: @background-color-3;
 	color: white;
+	border: 1px solid #fff;
 }
 
 .inputs-container {
 	padding: 12px;
 }
 
-button {
-	background-color: @application-primary-color;
-	color: #fff;
-	width: 90px;
-	height: 36px;
-}
 
 .save-btn-container {
 	border-top: 1px solid #fff;
 	padding: 12px;
+	button {
+		background-color: @application-primary-color;
+		color: #fff;
+		width: 90px;
+		height: 36px;
+		border-radius: 1px;
+	}
 }

@@ -1,25 +1,27 @@
-<mat-form-field>
-	<mat-label>{{addEntityLabel}}</mat-label>
-	<mat-chip-list #chipList aria-orientation="horizontal">
-		<mat-chip *ngFor="let option of selectedOptions"			
-			[selectable]="isMatChipSelectable"
-			[removable]="isMatChipRemovable"
-			(removed)="removeOption(option)">
-			{{option.value}}
-			<i class="icon-close" matChipRemove *ngIf="isMatChipRemovable"></i>
-		</mat-chip>
-		<input
-			#addTagInput
-			[formControl]="addTagCtrl"
-			[matAutocomplete]="auto"
-			[matChipInputFor]="chipList"
-			[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-      		[matChipInputAddOnBlur]="addOnBlur"
-      		(matChipInputTokenEnd)="add($event)">
-	</mat-chip-list>
-	<mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-		<mat-option *ngFor="let option of filteredOptions$ | async" [value]="option.value">
-			{{option.value}}
-		</mat-option>
-	</mat-autocomplete>
-</mat-form-field>
+<div class="multi-choice-attribute-component">
+	<mat-form-field>
+		<mat-label>{{addEntityLabel}}</mat-label>
+		<mat-chip-list #chipList aria-orientation="horizontal">
+			<mat-chip *ngFor="let option of selectedOptions"			
+				[selectable]="isMatChipSelectable"
+				[removable]="isMatChipRemovable"
+				(removed)="removeOption(option)">
+				{{option.value}}
+				<i class="icon-close" matChipRemove *ngIf="isMatChipRemovable"></i>
+			</mat-chip>
+			<input
+				#addTagInput
+				[formControl]="addTagCtrl"
+				[matAutocomplete]="auto"
+				[matChipInputFor]="chipList"
+				[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+				  [matChipInputAddOnBlur]="addOnBlur"
+				  (matChipInputTokenEnd)="add($event)">
+		</mat-chip-list>
+		<mat-autocomplete #auto="matAutocomplete" class="autocomplete-dark-panel" (optionSelected)="selected($event)">
+			<mat-option *ngFor="let option of filteredOptions$ | async" [value]="option.value">
+				{{option.value}}
+			</mat-option>
+		</mat-autocomplete>
+	</mat-form-field>
+</div>

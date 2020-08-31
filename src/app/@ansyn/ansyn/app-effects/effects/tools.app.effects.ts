@@ -122,9 +122,9 @@ export class ToolsAppEffects {
 	@Effect()
 	onGoTo$: Observable<SetActiveCenter> = this.actions$.pipe(
 		ofType<GoToAction>(ToolsActionsTypes.GO_TO),
-		withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState): any => ({
+		withLatestFrom(this.store$.select(mapStateSelector), (action: GoToAction, mapState: IMapState): any => ({
 			action,
-			communicator: this.imageryCommunicatorService.provide(mapState.activeMapId)
+			communicator: this.imageryCommunicatorService.provide(action.mapId ? action.mapId : mapState.activeMapId)
 		})),
 		filter(({ action, communicator }) => Boolean(communicator)),
 		switchMap(({ action, communicator }) => {

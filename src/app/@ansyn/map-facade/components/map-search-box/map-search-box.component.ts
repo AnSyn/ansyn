@@ -1,7 +1,6 @@
 import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import { GeocoderService } from '../../services/geocoder.service';
-import { Point } from 'geojson';
 import { Observable } from 'rxjs';
 import { filter, retryWhen, switchMap, take, tap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
@@ -15,6 +14,7 @@ import {
 } from '../../actions/map.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { IMapSearchResult } from '../../models/map-search.model';
+import { LoggerService } from '../../../ansyn/modules/core/services/logger.service';
 
 @Component({
 	selector: 'ansyn-map-search-box',
@@ -49,7 +49,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		}),
 		retryWhen((err) => {
 			return err.pipe(
-				tap(error => {
+				tap(() => {
 					this.error = true;
 					this.locations = [];
 					this.loading = false;
@@ -58,10 +58,13 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		})
 	);
 
-	constructor(protected store$: Store<any>,
-				protected imageryCommunicatorService: ImageryCommunicatorService,
-				public geocoderService: GeocoderService,
-				protected translator: TranslateService) {
+	constructor(
+		protected store$: Store<any>,
+		protected imageryCommunicatorService: ImageryCommunicatorService,
+		public geocoderService: GeocoderService,
+		protected translator: TranslateService,
+		protected loggerService: LoggerService
+	) {
 	}
 
 	resetSearch() {
@@ -92,6 +95,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 
 	onSubmit() {
 		const value: string = this.control.value;
+		this.loggerService.info(`Using map search box. Search string = ${value}`);
 		let point;
 		if (this.geocoderService.isCoordinates(value)) {
 			point = this.geocoderService.createPoint(value);

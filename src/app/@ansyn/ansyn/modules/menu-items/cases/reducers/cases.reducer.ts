@@ -1,4 +1,4 @@
-import { CasesActions, CasesActionTypes } from '../actions/cases.actions';
+import { CasesActions, CasesActionTypes, DeleteCaseAction } from '../actions/cases.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary } from '@ngrx/entity/src/models';
@@ -54,7 +54,7 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 		}
 
 		case CasesActionTypes.DELETE_CASE:
-			return casesAdapter.removeOne(action.payload, state);
+			return casesAdapter.removeOne((action as DeleteCaseAction).payload.id, state);
 
 		case CasesActionTypes.ADD_CASES:
 			return casesAdapter.addMany(action.payload, state);

@@ -67,10 +67,14 @@ export class AddCasesAction implements Action {
 	}
 }
 
-export class AddCaseAction implements Action {
+export class AddCaseAction implements Action, ILogMessage {
 	type = CasesActionTypes.ADD_CASE;
 
 	constructor(public payload: ICase) {
+	}
+
+	logMessage() {
+		return `Adding case ${this.payload.name}`
 	}
 }
 
@@ -102,11 +106,11 @@ export class UpdateCaseBackendSuccessAction implements Action, ILogMessage {
 export class DeleteCaseAction implements Action, ILogMessage {
 	type = CasesActionTypes.DELETE_CASE;
 
-	constructor(public payload: string) {
+	constructor(public payload: { id: string, name: string }) {
 	}
 
 	logMessage() {
-		return `Deleting case, according to user request`
+		return `Deleting case ${this.payload.name}`
 	}
 }
 
@@ -174,10 +178,14 @@ export class SaveCaseAsAction implements Action {
 	}
 }
 
-export class SaveCaseAsSuccessAction implements Action {
+export class SaveCaseAsSuccessAction implements Action, ILogMessage {
 	type = CasesActionTypes.SAVE_CASE_AS_SUCCESS;
 
 	constructor(public payload: ICase) {
+	}
+
+	logMessage() {
+		return `Saving case as ${this.payload.name}`
 	}
 }
 

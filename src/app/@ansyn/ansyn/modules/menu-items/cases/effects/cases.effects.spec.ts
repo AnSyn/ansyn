@@ -165,7 +165,7 @@ describe('CasesEffects', () => {
 		spyOn(dataLayersService, 'removeCaseLayers').and.callFake(() => of('good'));
 		casesState.modal.id = 'delete-case-id';
 		casesState.selectedCase = <any>{ id: 'delete-case-id' };
-		actions = hot('--a--', { a: new DeleteCaseAction('') });
+		actions = hot('--a--', { a: new DeleteCaseAction({ id: '', name: '' }) });
 		const expectedResults = cold('--(a)--', { a: new LoadDefaultCaseAction() });
 		expect(casesEffects.onDeleteCase$).toBeObservable(expectedResults);
 	});

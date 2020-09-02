@@ -42,9 +42,7 @@ import { DataLayersService } from '../../layers-manager/services/data-layers.ser
 import {
 	copyFromContent,
 	SetMapsDataActionStore,
-	SetToastMessageAction,
-	selectActiveMapId,
-	selectMapsIds
+	SetToastMessageAction
 } from '@ansyn/map-facade';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { IStoredEntity } from '../../../core/services/storage/storage.service';
@@ -80,7 +78,7 @@ export class CasesEffects {
 	@Effect()
 	onDeleteCase$: Observable<any> = this.actions$.pipe(
 		ofType<DeleteCaseAction>(CasesActionTypes.DELETE_CASE),
-		mergeMap((action) => this.dataLayersService.removeCaseLayers(action.payload).pipe(map(() => action))),
+		mergeMap((action) => this.dataLayersService.removeCaseLayers(action.payload.id).pipe(map(() => action))),
 		withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState) => [state.modal.id, state.selectedCase.id]),
 		filter(([modalCaseId, selectedCaseId]) => modalCaseId === selectedCaseId),
 		map(() => new LoadDefaultCaseAction()),

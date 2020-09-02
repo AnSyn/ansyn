@@ -55,7 +55,10 @@ export class DeleteCaseComponent implements OnInit {
 	onSubmitRemove() {
 		(<Observable<any>>this.casesService.removeCase(this.activeCase.id))
 			.pipe(
-				tap(() => this.store.dispatch(new DeleteCaseAction(this.activeCase.id))),
+				tap(() => {
+					const { id, name } = this.activeCase;
+					this.store.dispatch(new DeleteCaseAction({ id, name }))
+				}),
 				catchError(() => of(false)),
 				tap(() => this.close())
 			)

@@ -77,8 +77,8 @@ describe('Filters app effects', () => {
 				GenericTypeResolverService,
 				{
 					provide: LoggerService, useValue: {
-						error: (some) => null, info: () => {
-						}
+						error: (s) => s,
+						info: (s) => s
 					}
 				},
 				{ provide: filtersConfig, useValue: {} },

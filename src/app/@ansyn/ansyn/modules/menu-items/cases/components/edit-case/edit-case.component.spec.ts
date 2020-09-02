@@ -15,6 +15,7 @@ import { LoggerConfig } from '../../../../core/models/logger.config';
 import { TranslateModule } from '@ngx-translate/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { mapFacadeConfig } from '@ansyn/map-facade';
+import { LoggerService } from '../../../../core/services/logger.service';
 
 describe('EditCaseComponent', () => {
 	let component: EditCaseComponent;
@@ -52,7 +53,8 @@ describe('EditCaseComponent', () => {
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
 				{ provide: layersConfig, useValue: {} },
-				{ provide: mapFacadeConfig, useValue: {} }
+				{ provide: mapFacadeConfig, useValue: {} },
+				{ provide: LoggerService, useValue: { info: (s) => s } }
 			]
 		}).compileComponents();
 	}));

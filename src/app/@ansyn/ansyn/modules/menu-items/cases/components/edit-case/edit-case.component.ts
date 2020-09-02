@@ -8,6 +8,7 @@ import { cloneDeep } from 'lodash';
 import { CasesService } from '../../services/cases.service';
 import { map, take } from 'rxjs/operators';
 import { ICase, ICasePreview } from '../../models/case.model';
+import { LoggerService } from '../../../../core/services/logger.service';
 
 const animationsDuring = '0.2s';
 
@@ -49,8 +50,13 @@ export class EditCaseComponent implements OnInit {
 	contextsList: any[];
 	caseModel: ICase;
 	editMode = false;
+	activeCaseName: string;
 
-	constructor(protected store: Store<ICasesState>, protected casesService: CasesService) {
+	constructor(
+		protected store: Store<ICasesState>,
+		protected casesService: CasesService,
+		protected loggerService: LoggerService
+	) {
 	}
 
 	addDefaultContext(context: any[]): any[] {
@@ -107,6 +113,7 @@ export class EditCaseComponent implements OnInit {
 
 		this.activeCase$.pipe(take(1)).subscribe((activeCase: ICase) => {
 			this.caseModel = activeCase;
+			this.activeCaseName = activeCase && activeCase.name;
 		});
 
 		this.contextsList$.subscribe((_contextsList: any[]) => {
@@ -120,6 +127,7 @@ export class EditCaseComponent implements OnInit {
 
 	onSubmitCase(contextIndex: number) {
 		if (this.editMode) {
+			this.loggerService.info(`Renaming case ${this.activeCaseName} to ${this.caseModel.name}`, 'Cases', 'RENAME_CASE');
 			this.store.dispatch(new UpdateCaseAction({ updatedCase: this.caseModel, forceUpdate: true }));
 		} else {
 			const selectContext = this.contextsList[contextIndex];

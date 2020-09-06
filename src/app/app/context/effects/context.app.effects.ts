@@ -190,7 +190,7 @@ export class ContextAppEffects {
 	}
 
 	private findGeoOverlays(overlays: IOverlay[], numOfOverlays: number = 1): IOverlay[] {
-		const onlyGeoRegisteredOverlay = overlays.filter( overlay => overlay.isGeoRegistered === GeoRegisteration.geoRegistered)
+		const onlyGeoRegisteredOverlay = overlays.filter( overlay => overlay.isGeoRegistered !== GeoRegisteration.notGeoRegistered)
 			// make sure the array in ascending order by date
 			.sort( (a, b) => a.date.getTime() - b.date.getTime());
 		return onlyGeoRegisteredOverlay.slice( onlyGeoRegisteredOverlay.length - numOfOverlays);

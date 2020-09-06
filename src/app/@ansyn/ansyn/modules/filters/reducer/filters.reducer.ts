@@ -12,6 +12,7 @@ import {
 } from '../../menu-items/cases/models/case.model';
 import { IFilterSearchResults } from '../models/filter-search-results';
 import { EnumFilterMetadata } from '../models/metadata/enum-filter-metadata';
+import { GeoRegisteration } from '../../overlays/models/overlay.model';
 
 export type Filters = Map<IFilter, FilterMetadata>;
 
@@ -109,7 +110,7 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 			const newFilters = new Map(state.filters);
 			newFilters.forEach( (value, key) => {
 				if (key.modelName === 'isGeoRegistered') {
-					(value as EnumFilterMetadata).selectOnly('geoRegistered');
+					(value as EnumFilterMetadata).selectOnly(GeoRegisteration.geoRegistered);
 				}
 			});
 			return {...state};

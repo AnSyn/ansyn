@@ -5,7 +5,7 @@ import {
 	VisualizerInteractions,
 	VisualizerStates,
 	validateFeatureProperties,
-	getInitialAnnotationsFeatureStyle, MarkerSize
+	getInitialAnnotationsFeatureStyle
 } from '@ansyn/imagery';
 import { UUID } from 'angular2-uuid';
 import { AutoSubscription } from 'auto-subscriptions';
@@ -126,38 +126,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		overflow: true,
 		rotateWithView: true
 	};
-
-	static initialProperties = {
-		labelSize: 28,
-		mode: 'Polygon',
-		label: {
-			text: '',
-			geometry: null,
-		},
-		icon: '',
-		style: {
-			inital: {
-				stroke: '#27b2cfe6',
-				'stroke-width': 1,
-				fill: 'red',
-				'fill-opacity': 0.4,
-				'stroke-opacity': 1,
-				'marker-size': MarkerSize.medium,
-				'marker-color': '#ffffff',
-				label: {
-					overflow: true,
-					fontSize: 28,
-					stroke: '#000',
-					fill: 'white',
-					offsetY: 30
-				}
-			},
-			opacity: 1
-		},
-		showMeasures: false,
-		showArea: false,
-		undeletable: false
-	}
 
 	private iconSrc = '';
 

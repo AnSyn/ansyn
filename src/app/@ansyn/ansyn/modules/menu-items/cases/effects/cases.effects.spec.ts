@@ -39,6 +39,7 @@ import { CasesEffects } from './cases.effects';
 import { SetMapsDataActionStore, selectActiveMapId, selectMapsIds } from '@ansyn/map-facade';
 import { BackToWorldView } from '../../../overlays/overlay-status/actions/overlay-status.actions';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { linksConfig } from '../services/helpers/cases.service.query-params-helper';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
@@ -101,6 +102,7 @@ describe('CasesEffects', () => {
 				},
 				provideMockActions(() => actions),
 				{ provide: LoggerService, useValue: {} },
+				{ provide: linksConfig, useValue: {} },
 				{ provide: casesConfig, useValue: { schema: null, defaultCase: { id: 'defaultCaseId' } } },
 				{ provide: CoreConfig, useValue: { storageService: { baseUrl: 'fake-base-url' } } }
 			]
@@ -175,17 +177,6 @@ describe('CasesEffects', () => {
 		actions = hot('--a--', { a: new UpdateCaseAction({ updatedCase: updatedCase, forceUpdate: true }) });
 		const expectedResults = cold('--b--', { b: new UpdateCaseBackendAction(updatedCase) });
 		expect(casesEffects.onUpdateCase$).toBeObservable(expectedResults);
-	});
-
-	it('loadDefaultCase$ should call updateCaseViaQueryParmas and dispatch SelectDilutedCaseAction ', () => {
-		spyOnProperty(casesService, 'defaultCase', 'get').and.returnValue({ id: '31b33526-6447-495f-8b52-83be3f6b55bd' } as any);
-		spyOn(casesService.queryParamsHelper, 'updateCaseViaQueryParmas')
-			.and
-			.returnValue('updateCaseViaQueryParmasResult');
-		const queryParmas: Params = { foo: 'bar' };
-		actions = hot('a', { a: new LoadDefaultCaseAction(queryParmas) });
-		const expectedResults = cold('(b)', { b: new SelectDilutedCaseAction('updateCaseViaQueryParmasResult' as any)});
-		expect(casesEffects.loadDefaultCase$).toBeObservable(expectedResults);
 	});
 
 	it('onSaveCaseAs$ should add a default case', () => {

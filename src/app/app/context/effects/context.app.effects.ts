@@ -11,6 +11,7 @@ import {
 	LoadDefaultCaseAction,
 	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
+	LoggerService,
 	OverlaysService,
 	rxPreventCrash,
 	SelectCaseAction,
@@ -61,6 +62,7 @@ export class ContextAppEffects {
 				protected store: Store<any>,
 				protected casesService: CasesService,
 				protected translateService: TranslateService,
+				protected loggerService: LoggerService,
 				protected auth0Service: Auth0Service,
 				protected overlaysService: OverlaysService,
 				@Inject(ContextConfig) protected config: IContextConfig
@@ -83,7 +85,10 @@ export class ContextAppEffects {
 			return actions;
 		}
 
-		switch (selectedContext.id) {
+		if (params.sendingSystem) {
+			this.loggerService.info(`open context from ${params.sendingSystem}`);
+		}
+		switch (context) {
 			case ContextName.AreaAnalysis:
 				contextCase = this.casesService.updateCaseViaContext({
 					...selectedContext,

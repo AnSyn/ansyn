@@ -68,7 +68,7 @@ export interface IOverlaysState extends EntityState<IOverlay> {
 	dropsMarkUp: ExtendMap<MarkUpClass, IMarkUpData>;
 	hoveredOverlay: IOverlay;
 	overlaysCriteria: IOverlaysCriteria;
-	miscOverlays: IOverlaysHash;
+	miscOverlays: IOverlaysHash; // use to save overlay that not part of the current criteria
 	customOverviewElement: any;
 	totalOverlaysLength: number;
 }

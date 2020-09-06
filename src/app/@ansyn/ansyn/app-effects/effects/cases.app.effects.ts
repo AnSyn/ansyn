@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { EMPTY, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { IMapState, mapStateSelector, selectMapsIds, SetToastMessageAction, UpdateMapAction } from '@ansyn/map-facade';
 import { IBaseImageryLayer, ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpErrorResponse } from '@angular/common/http';
 import { mapValues, uniqBy } from 'lodash';
 import { IAppState } from '../app.effects.module';
-import { catchError, filter, map, mergeMap, share, take, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	CasesActionTypes, LoadDefaultCaseAction,
 	LoadDefaultCaseIfNoActiveCaseAction,
@@ -22,7 +22,7 @@ import {
 } from '../../modules/overlays/actions/overlays.actions';
 import { IOverlayByIdMetaData, OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { LoggerService } from '../../modules/core/services/logger.service';
-import { ICase, IDilutedCase, ImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
+import { IDilutedCase, ImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import {
 	IOverlayStatusConfig,

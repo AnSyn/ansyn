@@ -50,6 +50,7 @@ import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCras
 import { toastMessages } from '../../../core/models/toast-messages';
 import { ICase, ICasePreview, IDilutedCaseState } from '../models/case.model';
 import { BackToWorldView } from '../../../overlays/overlay-status/actions/overlay-status.actions';
+import { fromPromise } from 'rxjs/internal-compatibility';
 
 @Injectable()
 export class CasesEffects {
@@ -165,7 +166,7 @@ export class CasesEffects {
 		ofType<CopyCaseLinkAction>(CasesActionTypes.COPY_CASE_LINK),
 		filter(action => !Boolean(action.payload.shareCaseAsQueryParams)),
 		map((action) => {
-			const shareLink = this.casesService.generateLinkWithCaseId(action.payload.caseId);
+			const shareLink = this.casesService.generateLinkById(action.payload.caseId, 'case');
 			copyFromContent(shareLink);
 			return new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast });
 		})
@@ -225,20 +226,14 @@ export class CasesEffects {
 			}
 			return sCase;
 		}),
-		switchMap((sCase: ICase) => {
-			return this.casesService.generateQueryParamsViaCase(sCase).pipe(
-				map((linkId: any) => {
-					const baseLocation = location.href.split('#')[0];
-					const href = this.casesService.config.useHash ? `${ baseLocation }#/link/` : baseLocation;
-					const decodedUri = decodeURIComponent(`${ href }${ linkId }`);
-					copyFromContent(decodedUri);
-					return new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast });
-				}),
-				catchError((err) => this.errorHandlerService.httpErrorHandle(err, toastMessages.failedToCreateLink)),
-				catchError(() => EMPTY)
-			);
-		})
-	);
+		mergeMap(sCase => this.casesService.generateQueryParamsViaCase(sCase)),
+		map((linkId: string) => {
+			const url = this.casesService.generateLinkById(linkId, 'link');
+			return fromPromise(copyFromContent(url));
+		}),
+		map(() => new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast })),
+		catchError((err) => this.errorHandlerService.httpErrorHandle(err, toastMessages.failedToCreateLink)),
+		catchError(() => EMPTY));
 
 	constructor(protected actions$: Actions,
 				protected casesService: CasesService,

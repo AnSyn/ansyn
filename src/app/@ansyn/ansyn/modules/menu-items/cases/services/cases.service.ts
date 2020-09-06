@@ -222,10 +222,10 @@ export class CasesService {
 				catchError(err => this.errorHandlerService.httpErrorHandle(err)));
 	}
 
-	generateLinkWithCaseId(caseId: string) {
+	generateLinkById(id: string, schema: string = 'case' || 'link') {
 		const baseLocation = location.href.split('#')[0];
 		const href = this.config.useHash ? `${ baseLocation }/#` : baseLocation;
-		return `${ href }/case/${ caseId }`;
+		return `${ href }/${schema}/${ id }`;
 	}
 
 	isStoreEntitiesEqual(caseA, caseB) {

@@ -320,7 +320,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		const sources: IMapSource[] = this.mapProvidersConfig[mapType].sources;
 		let mapSource: IMapSource = null;
 		if (Boolean(sources)) {
-			sources.find(source => source.key === sourceType);
+			mapSource = sources.find(source => source.key === sourceType);
 		}
 		const sourceProvider = this.getMapSourceProvider({
 			mapType, sourceType: mapSource && mapSource.sourceType || ''

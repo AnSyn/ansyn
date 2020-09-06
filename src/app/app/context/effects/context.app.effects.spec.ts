@@ -72,6 +72,7 @@ describe('ContextAppEffects', () => {
 					provide: CasesService,
 					useValue: {
 						defaultCase: caseItem,
+						defaultTime: {to: new Date(), from: new Date()},
 						updateCaseViaContext: () => ({})
 					}
 				},

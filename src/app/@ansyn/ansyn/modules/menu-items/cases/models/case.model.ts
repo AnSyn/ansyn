@@ -217,10 +217,4 @@ export interface ICompressedCaseMapState extends ICompressedMapSettings {
 	d?: any;
 }
 
-const facetsFilterNames: string[] = ['sensorType', 'sensorName', 'sourceType', 'isGeoRegistered', 'containedInSearchPolygon', 'bestResolution', 'cloudCoverage'];
-const compressedFacetsFilterNames: string[] = ['senT', 'senN', 'srcT', 'geo', 'con', 'res', 'cld'];
-
-export const filtersMap = new Map<string, string>(facetsFilterNames.map<any>((facetsFilterName: string, index: number) => {
-	return [facetsFilterName, compressedFacetsFilterNames[index]];
-}));
 

@@ -531,7 +531,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 					}),
 					text: `${ calcArea } :${ areaText }`,
 					offsetY: height / 2,
-					offsetX: - (width / 2)
+					offsetX: -(width / 2)
 				})
 			})
 		];

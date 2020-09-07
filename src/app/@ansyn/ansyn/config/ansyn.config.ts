@@ -70,10 +70,6 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			iconClass: 'icon-main-settings'
 		},
 		{
-			name: 'Help',
-			iconClass: 'icon-main-help'
-		},
-		{
 			name: 'Permissions',
 			component: CredentialsComponent,
 			iconClass: 'icon-credentials',

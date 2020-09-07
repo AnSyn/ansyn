@@ -222,7 +222,7 @@ export class CasesService {
 				catchError(err => this.errorHandlerService.httpErrorHandle(err)));
 	}
 
-	generateLinkById(id: string, schema: string = 'case' || 'link') {
+	generateLinkById(id: string, schema: 'case' | 'link' = 'case') {
 		const baseLocation = location.href.split('#')[0];
 		const href = this.config.useHash ? `${ baseLocation }/#` : baseLocation;
 		return `${ href }/${schema}/${ id }`;

@@ -9,7 +9,7 @@
             "type": "chrome",
             "request": "launch",
             "url": "http://localhost:4200/",
-            "sourceMaps": true,
+            "sourceMaps": false,
             "webRoot": "${workspaceRoot}",
             "userDataDir": "${workspaceRoot}/out/chrome"
         },

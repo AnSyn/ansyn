@@ -264,7 +264,6 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	toggleItem(key: string, skipSession: boolean = false): void {
 		this.hideTableBadge(key);
 
-		console.log('key', key);
 		if (key === 'Help') {
 			window.open(this.helpConfig.landingPageUrl);
 			return;

@@ -224,7 +224,7 @@ export class CasesService {
 
 	generateLinkById(id: string, schema: 'case' | 'link' = 'case') {
 		const baseLocation = location.href.split('#')[0];
-		const href = this.config.useHash ? `${ baseLocation }/#` : baseLocation;
+		const href = this.config.useHash ? `${ baseLocation }#` : baseLocation;
 		return `${ href }/${schema}/${ id }`;
 	}
 

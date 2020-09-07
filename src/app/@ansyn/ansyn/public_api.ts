@@ -122,7 +122,8 @@ export {
 	EnableOnlyFavoritesSelectionAction,
 	FiltersActionTypes, InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
-	UpdateFacetsAction
+	UpdateFacetsAction,
+	SelectOnlyGeoRegistered
 } from './modules/filters/actions/filters.actions';
 export {
 	BeginLayerCollectionLoadAction,
@@ -345,7 +346,7 @@ export {
 	MarkUpClass,
 	overlaysStateSelector,
 	overlaysStatusMessages, selectdisplayOverlayHistory, selectDropMarkup,
-	selectFilteredOveralys, selectOverlaysArray,
+	selectFilteredOveralys, selectOverlaysArray, selectOverlaysIds,
 	selectOverlaysMap, selectOverlays, selectSpecialObjects, selectDrops, selectDropsWithoutSpecialObjects
 } from './modules/overlays/reducers/overlays.reducer';
 export { OverlaysConfig, OverlaysService } from './modules/overlays/services/overlays.service';

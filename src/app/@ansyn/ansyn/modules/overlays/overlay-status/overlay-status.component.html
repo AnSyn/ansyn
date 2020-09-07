@@ -24,8 +24,7 @@
 			[attr.tooltip-value]="'Manual Image Enhancement' | translate"
 			tooltip-class="bottom"
 			(click)="toggleManualImageProcessing()"
-			[class.mode-on]="isImageControlActive && !onAutoImageProcessing"
-			[disabled]="onAutoImageProcessing">
+			[class.mode-on]="isImageControlActive && !onAutoImageProcessing">
 		<i class="icon-tools-image-processing" [class.active]="isManualProcessing"></i>
 	</button>
 	<ansyn-image-processing-control

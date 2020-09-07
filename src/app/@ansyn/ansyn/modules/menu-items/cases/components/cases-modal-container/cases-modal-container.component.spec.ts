@@ -13,6 +13,7 @@ import { CoreConfig } from '../../../../core/models/core.config';
 import { LoggerConfig } from '../../../../core/models/logger.config';
 import { TranslateModule } from '@ngx-translate/core';
 import { mapFacadeConfig } from '@ansyn/map-facade';
+import { linksConfig } from '../../services/helpers/cases.service.query-params-helper';
 
 describe('ModalContainerComponent', () => {
 	let component: CasesModalContainerComponent;
@@ -31,6 +32,7 @@ describe('ModalContainerComponent', () => {
 			],
 			providers: [
 				DataLayersService,
+				{ provide: linksConfig, useValue: {} },
 				{ provide: casesConfig, useValue: { schema: null } },
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },

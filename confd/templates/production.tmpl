@@ -120,10 +120,16 @@
     "updateCaseDebounceTime": 700,
     "useHash": true,
     "defaultSearchFromDeltaTime": {
-    	"unit": "days",
-    	"amount": 80
+    	"unit": "months",
+    	"amount": 2
     }
   },
+  "contextConfig": {
+      "TwoMaps": {
+        "layout": "layout2",
+        "sensors": "S2MSI2A"
+      }
+    },
   "layersManagerConfig": {
     "schema": "layers"
   },
@@ -1591,5 +1597,8 @@
   },
   "addressService": {
       "url": "assets/config/addresses.json"
-    }
+    },
+    "linksConfig": {
+        "schema": "links"
+      }
 }

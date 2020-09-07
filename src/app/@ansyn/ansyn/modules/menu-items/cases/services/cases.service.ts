@@ -1,11 +1,11 @@
 import { ICasesConfig } from '../models/cases-config';
 import { Inject, Injectable } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
-import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
+import { ILinksConfig, QueryParamsHelper, linksConfig } from './helpers/cases.service.query-params-helper';
 import { UrlSerializer } from '@angular/router';
 import { UUID } from 'angular2-uuid';
 import { cloneDeep, cloneDeep as _cloneDeep, isEqual as _isEqual, mapValues } from 'lodash';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map, take, tap } from 'rxjs/operators';
 /* Do not change this ( rollup issue ) */
 import * as momentNs from 'moment';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
@@ -15,11 +15,11 @@ import {
 	ICase,
 	ICasePreview,
 	ICaseState,
-	ICaseTimeState,
+	ICaseTimeState, IDilutedCase,
 	IDilutedCaseState
 } from '../models/case.model';
-import { QueryCompressorService } from './helpers/query-compresser-service.service';
 import { TranslateService } from '@ngx-translate/core';
+import { SelectDilutedCaseAction } from '../actions/cases.actions';
 
 const moment = momentNs;
 
@@ -46,9 +46,9 @@ export class CasesService {
 
 	constructor(protected storageService: StorageService,
 				@Inject(casesConfig) public config: ICasesConfig,
+				@Inject(linksConfig) public linksConfig: ILinksConfig,
 				public urlSerializer: UrlSerializer,
 				protected translator: TranslateService,
-				public queryCompressorService: QueryCompressorService,
 				public errorHandlerService: ErrorHandlerService) {
 		this.paginationLimit = this.config.paginationLimit;
 		this.queryParamsKeys = this.config.casesQueryParamsKeys;
@@ -58,20 +58,22 @@ export class CasesService {
 		return this.config.defaultCase;
 	}
 
-	get decodeCaseObjects() {
-		return this.queryParamsHelper.decodeCaseObjects.bind(this.queryParamsHelper);
-	}
-
-	get encodeCaseObjects() {
-		return this.queryParamsHelper.encodeCaseObjects.bind(this.queryParamsHelper);
+	getLink(linkId: string) {
+		return this.storageService.get(this.linksConfig.schema, linkId).pipe(
+			map(caseData => {
+				const dilutedCase: IDilutedCase = {
+					state: <ICaseState>caseData.data,
+					creationTime: new Date(),
+					id: linkId
+				};
+				return new SelectDilutedCaseAction(dilutedCase);
+			}),
+			catchError(() => EMPTY)
+		);
 	}
 
 	get generateQueryParamsViaCase() {
 		return this.queryParamsHelper.generateQueryParamsViaCase.bind(this.queryParamsHelper);
-	}
-
-	get updateCaseViaQueryParmas() {
-		return this.queryParamsHelper.updateCaseViaQueryParmas.bind(this.queryParamsHelper);
 	}
 
 	get updateCaseViaContext() {
@@ -171,7 +173,7 @@ export class CasesService {
 	}
 
 	createCase(selectedCase: ICase, currentTime = new Date()): Observable<ICase> {
-		const uuid = UUID.UUID();
+		const uuid = this.generateUUID();
 		const newCase: ICase = {
 			...selectedCase,
 			id: uuid,
@@ -179,15 +181,21 @@ export class CasesService {
 			lastModified: currentTime,
 			autoSave: true
 		};
-		// selectedCase.id = uuid;
-		// selectedCase.creationTime = currentTime;
-		// selectedCase.lastModified = currentTime;
-		// selectedCase.autoSave = true;
 		return this.storageService.create(this.config.schema, this.convertToStoredEntity(newCase))
 			.pipe(
 				map(_ => newCase),
 				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to create case'))
 			);
+	}
+
+	generateUUID(): string {
+		return UUID.UUID();
+	}
+
+	createLink(link): Observable<any> {
+		return this.storageService.create(this.linksConfig.schema, link).pipe(
+			map((_: any) => _._id)
+		);
 	}
 
 	updateCase(selectedCase: ICase): Observable<IStoredEntity<ICasePreview, IDilutedCaseState>> {

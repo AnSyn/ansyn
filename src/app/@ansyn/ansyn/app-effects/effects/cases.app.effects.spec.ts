@@ -43,6 +43,7 @@ import { ICase } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { overlayStatusConfig } from "../../modules/overlays/overlay-status/config/overlay-status-config";
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { linksConfig } from '../../modules/menu-items/cases/services/helpers/cases.service.query-params-helper';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -103,6 +104,7 @@ describe('CasesAppEffects', () => {
 					}
 				},
 				{ provide: casesConfig, useValue: { schema: null, defaultCase: { id: 'defaultCaseId' } } },
+				{ provide: linksConfig, useValue: {} },
 				{
 					provide: overlayStatusConfig,
 					useValue: {

@@ -1,6 +1,6 @@
 import { Inject } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import {
@@ -114,9 +114,13 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	getById(id: string, sourceType: string): Observable<IOverlay> {
-		return this.http.get<any>(this.searchUrl, { params: { _id: id } }).pipe(
-			map(data => this.extractData(data.results)),
-			map(([overaly]): any => overaly),
+		const token = localStorage.getItem('id_token');
+		const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+		const params = new HttpParams().set('id', id);
+		
+		return this.http.get<any>(this.searchUrl, { headers, params }).pipe(
+			map(data => this.extractData(data)),
+			map(([overlay]): any => overlay),
 			catchError((error: any) => this.errorHandlerService.httpErrorHandle(error))
 		);
 	}

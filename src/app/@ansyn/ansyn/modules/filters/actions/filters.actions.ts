@@ -17,7 +17,8 @@ export const FiltersActionTypes = {
 	ENABLE_ONLY_FAVORITES_SELECTION: 'ENABLE_ONLY_FAVORITES_SELECTION',
 	UPDATE_FACETS: 'UPDATE_FACETS',
 	SET_FILTER_SEARCH: 'SET_FILTER_SEARCH',
-	SET_FILTERS_SEARCH_RESULTS: 'SET_FILTERS_SEARCH_RESULTS'
+	SET_FILTERS_SEARCH_RESULTS: 'SET_FILTERS_SEARCH_RESULTS',
+	SELECT_ONLY_GEO_REGISTERED: 'SELECT_ONLY_GEO_REGISTERED'
 };
 
 export class InitializeFiltersAction implements Action {
@@ -75,6 +76,11 @@ export class SetFiltersSearchResults implements Action {
 
 	constructor(public payload: IFilterSearchResults) {
 	}
+}
+
+export class SelectOnlyGeoRegistered implements Action {
+	readonly type = FiltersActionTypes.SELECT_ONLY_GEO_REGISTERED;
+
 }
 
 export type FiltersActions = InitializeFiltersAction

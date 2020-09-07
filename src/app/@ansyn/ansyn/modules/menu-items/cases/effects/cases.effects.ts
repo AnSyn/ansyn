@@ -32,7 +32,7 @@ import {
 	map,
 	mergeMap,
 	share,
-	switchMap,
+	switchMap, tap,
 	withLatestFrom
 } from 'rxjs/operators';
 import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
@@ -42,9 +42,7 @@ import { DataLayersService } from '../../layers-manager/services/data-layers.ser
 import {
 	copyFromContent,
 	SetMapsDataActionStore,
-	SetToastMessageAction,
-	selectActiveMapId,
-	selectMapsIds
+	SetToastMessageAction
 } from '@ansyn/map-facade';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { IStoredEntity } from '../../../core/services/storage/storage.service';
@@ -117,16 +115,6 @@ export class CasesEffects {
 
 			})
 		);
-
-	@Effect()
-	loadDefaultCase$: Observable<SelectDilutedCaseAction> = this.actions$.pipe(
-		ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
-		filter((action: LoadDefaultCaseAction) => !action.payload.context),
-		mergeMap((action: LoadDefaultCaseAction) => {
-			const defaultCaseQueryParams: ICase = this.casesService.updateCaseViaQueryParmas(action.payload, this.casesService.defaultCase);
-			return [new SelectDilutedCaseAction(defaultCaseQueryParams)];
-		}),
-		share());
 
 	@Effect()
 	onSaveCaseAs$: Observable<SaveCaseAsSuccessAction> = this.actions$.pipe(
@@ -248,10 +236,18 @@ export class CasesEffects {
 			}
 			return sCase;
 		}),
-		map((sCase: ICase) => {
-			const shareLink = this.casesService.generateQueryParamsViaCase(sCase);
-			copyFromContent(shareLink);
-			return new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast });
+		switchMap((sCase: ICase) => {
+			return this.casesService.generateQueryParamsViaCase(sCase).pipe(
+				map((linkId: any) => {
+					const baseLocation = location.href.split('#')[0];
+					const href = this.casesService.config.useHash ? `${ baseLocation }#/link/` : baseLocation;
+					const decodedUri = decodeURIComponent(`${ href }${ linkId }`);
+					copyFromContent(decodedUri);
+					return new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast });
+				}),
+				catchError((err) => this.errorHandlerService.httpErrorHandle(err, toastMessages.failedToCreateLink)),
+				catchError(() => EMPTY)
+			);
 		})
 	);
 

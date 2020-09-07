@@ -9,11 +9,11 @@ import { ICompressedMapSettings, ICompressedMapSettingsData } from '@ansyn/image
 export interface ICasePreview {
 	creationTime: Date;
 	id: string;
-	name: string;
+	name?: string;
 	owner?: string;
-	lastModified: Date;
+	lastModified?: Date;
 	selectedContextId?: string;
-	autoSave: boolean;
+	autoSave?: boolean;
 }
 
 export interface ICase extends ICasePreview {
@@ -217,10 +217,4 @@ export interface ICompressedCaseMapState extends ICompressedMapSettings {
 	d?: any;
 }
 
-const facetsFilterNames: string[] = ['sensorType', 'sensorName', 'sourceType', 'isGeoRegistered', 'containedInSearchPolygon', 'bestResolution', 'cloudCoverage'];
-const compressedFacetsFilterNames: string[] = ['senT', 'senN', 'srcT', 'geo', 'con', 'res', 'cld'];
-
-export const filtersMap = new Map<string, string>(facetsFilterNames.map<any>((facetsFilterName: string, index: number) => {
-	return [facetsFilterName, compressedFacetsFilterNames[index]];
-}));
 

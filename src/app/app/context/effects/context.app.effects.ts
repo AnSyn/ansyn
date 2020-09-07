@@ -1,25 +1,42 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Inject, Injectable } from '@angular/core';
+import { EMPTY, Observable } from 'rxjs';
 import {
 	CasesActionTypes,
 	CasesService,
-	ICaseDataInputFiltersState, IDataInputFilterValue,
-	LoadDefaultCaseAction, OverlaysService, rxPreventCrash,
-	SelectCaseAction
+	DisplayMultipleOverlaysFromStoreAction,
+	GeoRegisteration,
+	ICaseDataInputFiltersState,
+	IDataInputFilterValue,
+	IOverlay,
+	LoadDefaultCaseAction,
+	LoadOverlaysSuccessAction,
+	OverlaysActionTypes,
+	LoggerService,
+	OverlaysService,
+	rxPreventCrash,
+	SelectCaseAction,
 } from '@ansyn/ansyn';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { filter, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import { selectActiveMapId, SetToastMessageAction } from '@ansyn/map-facade';
-import { ContextName, RequiredContextParams } from '../models/context.config';
+import { selectActiveMapId, SetLayoutAction, SetToastMessageAction } from '@ansyn/map-facade';
+import {
+	ContextConfig,
+	ContextName,
+	IContextConfig,
+	RequiredContextParams
+} from '../models/context.config';
 import { TranslateService } from '@ngx-translate/core';
 import { Auth0Service } from '../../imisight/auth0.service';
 import { uniq } from 'lodash';
+import { SelectOnlyGeoRegistered } from '@ansyn/ansyn';
+import * as moment from 'moment';
 
 const CONTEXT_TOAST = {
 	paramsError: 'params: {0} is require in {1} context',
 	contextError: 'Unknown context {0}',
-	region: 'Unknown geometry'
+	region: 'Unknown geometry',
+	geoOverlayNotExist: 'There is no Geo registration overlay'
 };
 
 @Injectable()
@@ -34,24 +51,27 @@ export class ContextAppEffects {
 		rxPreventCrash()
 	);
 
+	@Effect()
+	PostContextOpen$: Observable<any> = this.actions$.pipe(
+		ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE_SUCCESS),
+		filter(({ payload }) => Boolean(payload.selectedContextId)),
+		mergeMap(this.postContextAction.bind(this))
+	);
+
 	constructor(protected actions$: Actions,
 				protected store: Store<any>,
 				protected casesService: CasesService,
 				protected translateService: TranslateService,
+				protected loggerService: LoggerService,
 				protected auth0Service: Auth0Service,
-				protected overlaysService: OverlaysService
+				protected overlaysService: OverlaysService,
+				@Inject(ContextConfig) protected config: IContextConfig
 	) {
-	}
-
-	get defaultTime() {
-		const to = new Date();
-		const from = new Date(to);
-		from.setMonth(from.getMonth() - 2);
-		return { from, to };
 	}
 
 	parseContextParams([{ payload }, mapId]: [LoadDefaultCaseAction, string]): any[] {
 		const { context, ...params } = payload;
+		const selectedContext = { id: context };
 		let contextCase = this.casesService.defaultCase;
 		const missingParams = this.isMissingParametersContext(context, params);
 		const actions: unknown[] = [new SelectCaseAction(contextCase)];
@@ -64,10 +84,15 @@ export class ContextAppEffects {
 			actions.push(new SetToastMessageAction({ toastText: this.translateService.instant(CONTEXT_TOAST.region) }));
 			return actions;
 		}
-		const time = this.defaultTime;
+
+		if (params.sendingSystem) {
+			this.loggerService.info(`open context from ${params.sendingSystem}`);
+		}
 		switch (context) {
 			case ContextName.AreaAnalysis:
-				contextCase = this.casesService.updateCaseViaContext({ time }, this.casesService.defaultCase, params);
+				contextCase = this.casesService.updateCaseViaContext({
+					...selectedContext,
+				}, this.casesService.defaultCase, params);
 				return [new SelectCaseAction(contextCase)];
 			case ContextName.ImisightMission:
 				this.auth0Service.setSession({
@@ -77,12 +102,14 @@ export class ContextAppEffects {
 				});
 
 				// If no time is provided, the time will be taken from the configuration file
-				contextCase = this.casesService.updateCaseViaContext({}, this.casesService.defaultCase, params);
+				contextCase = this.casesService.updateCaseViaContext(selectedContext, this.casesService.defaultCase, params);
 				return [new SelectCaseAction(contextCase)];
 			case ContextName.QuickSearch:
-				this.parseTimeParams(time, params.time);
-				const dataInputFilters = this.parseSensorParams(params.sensors);
+			case ContextName.TwoMaps:
+				const time = this.parseTimeParams(params.time);
+				const dataInputFilters = this.parseSensorParams(context === ContextName.TwoMaps ? this.config.TwoMaps.sensors : params.sensors);
 				contextCase = this.casesService.updateCaseViaContext({
+					...selectedContext,
 					time,
 					dataInputFilters
 				}, this.casesService.defaultCase, params);
@@ -96,16 +123,45 @@ export class ContextAppEffects {
 		return actions;
 	}
 
-	private parseTimeParams(time, contextTime) {
+	postContextAction(action: SelectCaseAction) {
+		switch (action.payload.selectedContextId) {
+			case ContextName.TwoMaps:
+				return this.actions$.pipe(
+					ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
+					filter( ({payload}: {payload: IOverlay[]}) => Boolean(payload.length)),
+					mergeMap(({payload}: {payload: IOverlay[]}) => {
+						const geoOverlays = this.findGeoOverlays(payload);
+						if (Boolean(geoOverlays.length)) {
+							return [
+								new SetLayoutAction(this.config.TwoMaps.layout),
+								new DisplayMultipleOverlaysFromStoreAction(geoOverlays.map( overlay => ({overlay}))),
+								new SelectOnlyGeoRegistered()
+							]
+						}
+						else {
+							return [new SetToastMessageAction({toastText: CONTEXT_TOAST.geoOverlayNotExist})]
+						}
+
+						}
+					)
+				);
+			default:
+				return [EMPTY];
+		}
+	}
+
+	private parseTimeParams(contextTime: string = '') {
+		const time = this.casesService.defaultTime;
 		const [start, end] = contextTime.split(',');
 		const from = new Date(start);
 		const to = new Date(end);
-		if (from.toJSON()) {
+		if (moment(from).isValid()) {
 			time.from = from;
 		}
-		if (to.toJSON()) {
+		if (moment(to).isValid()) {
 			time.to = to;
 		}
+		return time;
 	}
 
 	private parseSensorParams(sensors): ICaseDataInputFiltersState {
@@ -135,7 +191,14 @@ export class ContextAppEffects {
 	}
 
 	private isValidGeometry(geometry: string) {
-		return /POLYGON|POINT/.test(geometry)
+		return /POLYGON|POINT/i.test(geometry)
+	}
+
+	private findGeoOverlays(overlays: IOverlay[], numOfOverlays: number = 1): IOverlay[] {
+		const onlyGeoRegisteredOverlay = overlays.filter( overlay => overlay.isGeoRegistered !== GeoRegisteration.notGeoRegistered)
+			// make sure the array in ascending order by date
+			.sort( (a, b) => a.date.getTime() - b.date.getTime());
+		return onlyGeoRegisteredOverlay.slice( onlyGeoRegisteredOverlay.length - numOfOverlays);
 	}
 
 }

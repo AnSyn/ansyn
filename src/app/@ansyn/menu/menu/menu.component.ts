@@ -39,6 +39,7 @@ import { IMenuConfig } from '../models/menu-config.model';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, filter, tap, withLatestFrom, map } from 'rxjs/operators';
+import { IHelpConfig, helpConfig } from '../../ansyn/modules/menu-items/help/components/help.component';
 
 const animations: any[] = [
 	trigger(
@@ -150,6 +151,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 				protected store: Store<IMenuState>,
 				protected renderer: Renderer2,
 				protected elementRef: ElementRef,
+				@Inject(helpConfig) private helpConfig: IHelpConfig,
 				@Inject(DOCUMENT) protected document: Document,
 				@Inject(MenuConfig) public menuConfig: IMenuConfig,
 				private cdref: ChangeDetectorRef) {
@@ -262,9 +264,16 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	toggleItem(key: string, skipSession: boolean = false): void {
 		this.hideTableBadge(key);
 
+		console.log('key', key);
+		if (key === 'Help') {
+			window.open(this.helpConfig.landingPageUrl);
+			return;
+		}
+
 		if (this.onAnimation) {
 			return;
 		}
+
 		if (this.selectedMenuItemName === key) {
 			this.closeMenu();
 		} else {

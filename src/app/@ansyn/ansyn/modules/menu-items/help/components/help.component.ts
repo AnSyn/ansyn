@@ -1,6 +1,11 @@
-import { Component } from '@angular/core';
-import { helpComponentConstants } from '../components/help.component.const';
+import { Component, Inject } from '@angular/core';
 import { HelpLocalStorageService } from '../services/help.local-storage.service';
+
+export const helpConfig = 'helpConfig';
+
+export interface IHelpConfig {
+	landingPageUrl: string;
+}
 
 @Component({
 	selector: 'ansyn-help',
@@ -9,14 +14,7 @@ import { HelpLocalStorageService } from '../services/help.local-storage.service'
 })
 export class HelpComponent {
 
-	get const() {
-		return helpComponentConstants;
-	}
-
-	constructor(public helpLocalStorageService: HelpLocalStorageService) {
-	}
-
-	img(imgName) {
-		return this.const.IMG_PATH + imgName;
+	constructor(public helpLocalStorageService: HelpLocalStorageService, @Inject(helpConfig) private helpConfig: IHelpConfig ) {
+		window.open(helpConfig.landingPageUrl);
 	}
 }

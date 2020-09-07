@@ -35,7 +35,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { DOCUMENT } from '@angular/common';
 import { IMenuItem } from '../models/menu-item.model';
 import { MenuConfig } from '../models/menuConfig';
-import { IMenuConfig, IHelpConfig, helpConfig } from '../models/menu-config.model';
+import { IMenuConfig } from '../models/menu-config.model';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, filter, tap, withLatestFrom, map } from 'rxjs/operators';
@@ -150,7 +150,6 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 				protected store: Store<IMenuState>,
 				protected renderer: Renderer2,
 				protected elementRef: ElementRef,
-				@Inject(helpConfig) private helpConfig: IHelpConfig,
 				@Inject(DOCUMENT) protected document: Document,
 				@Inject(MenuConfig) public menuConfig: IMenuConfig,
 				private cdref: ChangeDetectorRef) {
@@ -279,7 +278,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	}
 
 	goToLandingPage() {
-		window.open(this.helpConfig.landingPageUrl);
+		window.open(this.menuConfig.landingPageUrl);
 	}
 
 	anyMenuItemSelected(): boolean {

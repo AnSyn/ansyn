@@ -12,6 +12,7 @@ import KmlFormat from 'ol/format/KML';
 import GeoJSONFormat from 'ol/format/GeoJSON';
 import * as shapeFile from 'shapefile';
 import { getErrorMessageFromException } from '../../../../core/utils/logs/timer-logs';
+import { getInitialAnnotationsFeatureProperties } from '@ansyn/imagery';
 
 @Component({
 	selector: 'ansyn-import-layer',
@@ -80,6 +81,10 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 		let layerData;
 		shapeFile.read(this.reader.result).then(geoJson => {
 			layerData = geoJson;
+			layerData.features.forEach( feature => {
+				feature.properties = getInitialAnnotationsFeatureProperties();
+				feature.properties.id = feature.id;
+			});
 			this.generateFeatureCollection(layerData, layerName);
 		}).catch(e => console.error(e));
 

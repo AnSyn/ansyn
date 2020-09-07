@@ -262,10 +262,6 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	toggleItem(key: string, skipSession: boolean = false): void {
 		this.hideTableBadge(key);
 
-		if (key === 'Help') {
-			return this.goToLandingPage();
-		}
-
 		if (this.onAnimation) {
 			return;
 		}

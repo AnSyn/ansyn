@@ -121,7 +121,9 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 		}),
 		tap((badgeMap) => {
 			badgeMap.forEach( (value, key) => {
-				this.entities[key].badge = value;
+				if (this.entities[key]) { // for component in case our customer dont want Result Table menu item.
+					this.entities[key].badge = value;
+				}
 			});
 		})
 	);

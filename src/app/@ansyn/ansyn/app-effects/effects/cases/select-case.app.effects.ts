@@ -66,12 +66,10 @@ export class SelectCaseAppEffects {
 		const { data } = state.maps;
 		// context
 		const { favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, presetOverlays, region, dataInputFilters, miscOverlays } = state;
-		let { time } = state;
+
 		const { layout } = state.maps;
 
-		if (!time) {
-			time = this.casesService.defaultTime;
-		}
+		let  time = state.time ? {...state.time} : this.casesService.defaultTime;
 
 		if (typeof time.from === 'string') {
 			time.from = new Date(time.from);

@@ -15,3 +15,9 @@ export interface IMenuConfig {
 	menuItems?: string[];
 	isCollapsible?: boolean;
 }
+
+export const helpConfig = 'helpConfig';
+
+export interface IHelpConfig {
+	landingPageUrl: string;
+}

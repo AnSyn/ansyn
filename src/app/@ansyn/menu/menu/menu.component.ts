@@ -20,7 +20,7 @@ import {
 	ToggleMenuCollapse,
 	UnSelectMenuItemAction
 } from '../actions/menu.actions';
-import { combineLatest, fromEvent, Observable } from 'rxjs';
+import { fromEvent, Observable } from 'rxjs';
 import {
 	IMenuState,
 	selectAllMenuItems,
@@ -35,11 +35,10 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { DOCUMENT } from '@angular/common';
 import { IMenuItem } from '../models/menu-item.model';
 import { MenuConfig } from '../models/menuConfig';
-import { IMenuConfig } from '../models/menu-config.model';
+import { IMenuConfig, IHelpConfig, helpConfig } from '../models/menu-config.model';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, filter, tap, withLatestFrom, map } from 'rxjs/operators';
-import { IHelpConfig, helpConfig } from '../../ansyn/modules/menu-items/help/components/help.component';
 
 const animations: any[] = [
 	trigger(
@@ -265,8 +264,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 		this.hideTableBadge(key);
 
 		if (key === 'Help') {
-			window.open(this.helpConfig.landingPageUrl);
-			return;
+			return this.goToLandingPage();
 		}
 
 		if (this.onAnimation) {
@@ -278,6 +276,10 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 		} else {
 			this.openMenu(key, skipSession);
 		}
+	}
+
+	goToLandingPage() {
+		window.open(this.helpConfig.landingPageUrl);
 	}
 
 	anyMenuItemSelected(): boolean {

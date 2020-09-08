@@ -40,7 +40,6 @@ import { UUID } from 'angular2-uuid';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { DataLayersService } from '../../layers-manager/services/data-layers.service';
 import {
-	copyFromContent,
 	SetMapsDataActionStore,
 	SetToastMessageAction
 } from '@ansyn/map-facade';
@@ -167,7 +166,7 @@ export class CasesEffects {
 		filter(action => !Boolean(action.payload.shareCaseAsQueryParams)),
 		map((action) => {
 			const shareLink = this.casesService.generateLinkById(action.payload.caseId, 'case');
-			copyFromContent(shareLink);
+			this.clipboardService.copyFromContent(shareLink);
 			return new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast });
 		})
 	);

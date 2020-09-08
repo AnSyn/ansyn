@@ -13,7 +13,6 @@ import {
 	selectMapOrientation,
 	selectMapsTotal
 } from '../../reducers/map.reducer';
-import { copyFromContent } from '../../utils/clipboard';
 import { getTimeFormat } from '../../utils/time';
 import { TranslateService } from '@ngx-translate/core';
 

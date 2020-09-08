@@ -27,7 +27,7 @@ export class CasePanelComponent implements OnInit {
 	selectedCaseName$: Observable<string> = this.store$
 		.pipe(
 			select(selectSelectedCase),
-			map((selectSelected: ICase) => selectSelected ? selectSelected.name : 'Default Case')
+			map((selectSelected: ICase) => selectSelected && selectSelected.name ? selectSelected.name : 'Default Case')
 		);
 	constructor(protected actions$: Actions,
 				protected store$: Store<IStatusBarState>,

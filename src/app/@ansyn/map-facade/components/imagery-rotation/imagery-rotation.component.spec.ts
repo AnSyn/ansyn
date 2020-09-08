@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
 import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { PointToImageOrientationAction, PointToRealNorthAction } from '../../actions/map.actions';
+import { LoggerService } from '../../../ansyn/modules/core/services/logger.service';
 
 describe('ImageryRotationComponent', () => {
 	let component: ImageryRotationComponent;
@@ -23,7 +24,10 @@ describe('ImageryRotationComponent', () => {
 				EffectsModule.forRoot([]),
 				TranslateModule.forRoot()
 			],
-			providers: [ImageryCommunicatorService],
+			providers: [
+				ImageryCommunicatorService,
+				{ provide: LoggerService, useValue: {} }
+			],
 			declarations: [
 				ImageryRotationComponent
 			]

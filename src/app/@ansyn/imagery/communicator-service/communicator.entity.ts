@@ -33,7 +33,6 @@ import {
 } from '../model/map-providers-config';
 import { IMapSettings } from '../model/map-settings';
 import { IBaseImageryLayer, IMAGERY_BASE_MAP_LAYER, ImageryLayerProperties } from '../model/imagery-layer.model';
-import { LoggerService } from '../../ansyn/modules/core/services/logger.service';
 
 export interface IMapInstanceChanged {
 	id: string;
@@ -59,8 +58,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 				protected componentFactoryResolver: ComponentFactoryResolver,
 				public imageryCommunicatorService: ImageryCommunicatorService,
 				@Inject(BaseMapSourceProvider) public imageryMapSources: ImageryMapSources,
-				@Inject(MAP_PROVIDERS_CONFIG) protected mapProvidersConfig: IMapProvidersConfig,
-				protected loggerService: LoggerService
+				@Inject(MAP_PROVIDERS_CONFIG) protected mapProvidersConfig: IMapProvidersConfig
 	) {
 	}
 
@@ -235,7 +233,6 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	public setRotation(rotation: number) {
-		this.loggerService.info(`Rotating active map`, 'maps', 'ROTATE_ACTIVE_MAP');
 		if (!this.ActiveMap) {
 			throw new Error('missing active map');
 		}

@@ -4,6 +4,7 @@ import {
 	selectActiveMapId,
 	selectHideLayersOnMap,
 	selectOverlayByMapId,
+	SetActiveMapId,
 } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -269,22 +270,18 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	toggleManualImageProcessing() {
-		if (this.isActiveMap) {
-			if (this.isAutoProcessing) {
-				this.store$.dispatch(new SetAutoImageProcessing());
-			}
-			this.isAutoProcessing = false;
-			this.moreButtons = false;
-			this.isManualProcessing = !this.isManualProcessing;
+		if (this.isAutoProcessing) {
+			this.store$.dispatch(new SetAutoImageProcessing({mapId: this.mapId}));
 		}
+		this.isAutoProcessing = false;
+		this.moreButtons = false;
+		this.isManualProcessing = !this.isManualProcessing;
 	}
 
 	toggleAutoImageProcessing() {
-		if (this.isActiveMap) {
-			this.isAutoProcessing = !this.isAutoProcessing;
-			this.isManualProcessing = false;
-			this.store$.dispatch(new SetAutoImageProcessing());
-		}
+		this.isAutoProcessing = !this.isAutoProcessing;
+		this.isManualProcessing = false;
+		this.store$.dispatch(new SetAutoImageProcessing({mapId: this.mapId}));
 	}
 
 	toggleMoreButtons() {

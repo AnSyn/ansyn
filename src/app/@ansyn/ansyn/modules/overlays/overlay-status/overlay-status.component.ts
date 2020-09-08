@@ -270,11 +270,8 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	toggleManualImageProcessing() {
-		if (!this.isActiveMap) {
-			this.store$.dispatch(new SetActiveMapId(this.mapId));
-		}
 		if (this.isAutoProcessing) {
-			this.store$.dispatch(new SetAutoImageProcessing());
+			this.store$.dispatch(new SetAutoImageProcessing({mapId: this.mapId}));
 		}
 		this.isAutoProcessing = false;
 		this.moreButtons = false;
@@ -282,12 +279,9 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	toggleAutoImageProcessing() {
-		if (!this.isActiveMap) {
-			this.store$.dispatch(new SetActiveMapId(this.mapId));
-		}
 		this.isAutoProcessing = !this.isAutoProcessing;
 		this.isManualProcessing = false;
-		this.store$.dispatch(new SetAutoImageProcessing());
+		this.store$.dispatch(new SetAutoImageProcessing({mapId: this.mapId}));
 	}
 
 	toggleMoreButtons() {

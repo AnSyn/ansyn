@@ -12,7 +12,6 @@ import {
 import { Observable } from 'rxjs';
 import { IToolsConfig, toolsConfig } from '../../models/tools-config';
 import {
-	copyFromContent,
 	ICoordinatesSystem,
 	IEd50Notification,
 	IMapFacadeConfig,
@@ -21,6 +20,7 @@ import {
 	SetToastMessageAction
 } from '@ansyn/map-facade';
 import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
+import { ClipboardService } from 'ngx-clipboard';
 
 @Component({
 	selector: 'ansyn-go-to',
@@ -117,6 +117,7 @@ export class GoToComponent implements OnInit {
 
 	constructor(protected store$: Store<IToolsState>,
 				@Inject(toolsConfig) protected config: IToolsConfig,
+				private clipboardService: ClipboardService,
 				@Inject(mapFacadeConfig) protected mapfacadeConfig: IMapFacadeConfig,
 				protected projectionConverterService: ProjectionConverterService) {
 	}
@@ -130,7 +131,7 @@ export class GoToComponent implements OnInit {
 	}
 
 	copyToClipBoard(value: string) {
-		copyFromContent(value);
+		this.clipboardService.copyFromContent(value);
 		this.store$.dispatch(new SetToastMessageAction({ toastText: 'Copy to clipboard' }));
 	}
 

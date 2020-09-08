@@ -1,22 +1,18 @@
-import { Component, OnDestroy, OnInit, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { Store, select } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { DataLayersService } from '../../services/data-layers.service';
 import { AddLayer } from '../../actions/layers.actions';
-import { fromEvent, Observable, EMPTY } from 'rxjs';
+import { fromEvent, Observable } from 'rxjs';
 import { UUID } from 'angular2-uuid';
 import { selectActiveMapId, SetMapPositionByRectAction, SetToastMessageAction } from '@ansyn/map-facade';
-import { tap, map, withLatestFrom, catchError } from 'rxjs/operators';
+import { delay, filter, map, retryWhen, tap, withLatestFrom } from 'rxjs/operators';
 import { FeatureCollection } from 'geojson';
 import KmlFormat from 'ol/format/KML';
 import GeoJSONFormat from 'ol/format/GeoJSON';
 import * as shapeFile from 'shapefile';
 import { getErrorMessageFromException } from '../../../../core/utils/logs/timer-logs';
-import {
-	bboxFromGeoJson,
-	polygonFromBBOX,
-	validateFeatureProperties
-} from '@ansyn/imagery';
+import { bboxFromGeoJson, polygonFromBBOX, validateFeatureProperties } from '@ansyn/imagery';
 
 @Component({
 	selector: 'ansyn-import-layer',
@@ -33,52 +29,58 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	geoJsonFormat = new GeoJSONFormat();
 	file: File;
 	fileType: string;
-	onReadLayer$ = new EventEmitter<{data: any, name: string}>();
+	onReadLayer$ = new EventEmitter<{ data: any, name: string }>();
 
 	@AutoSubscription
 	onFileLoad$: Observable<any> = fromEvent(this.reader, 'load').pipe(
 		tap(() => {
 			const layerName = this.file.name.slice(0, this.file.name.lastIndexOf('.'));
-			let layerData = {name: layerName, data: null};
-			try {
-				const readerResult: string = <string>this.reader.result;
-				switch (this.fileType.toLowerCase()) {
-					case 'kml':
-						const features = this.kmlFormat.readFeatures(readerResult);
-						layerData.data = this.geoJsonFormat.writeFeaturesObject(features);
-						this.onReadLayer$.emit(layerData);
-						break;
-					case 'json':
-					case 'geojson':
-						layerData.data = JSON.parse(readerResult);
-						this.onReadLayer$.emit(layerData);
-						break;
-					case 'shp':
-						this.addShapeFileLayer(readerResult).then( (data) => {
-							this.onReadLayer$.emit({...layerData. data});
-						});
-						break;
-					default:
-						throw new Error('Can\'t read file type');
-				}
-			} catch (error) {
-				this.importError(error);
+			let layerData = { name: layerName, data: null };
+			const readerResult: string = <string>this.reader.result;
+			switch (this.fileType.toLowerCase()) {
+				case 'kml':
+					const features = this.kmlFormat.readFeatures(readerResult);
+					this.prepareKMLFeature(features);
+					layerData.data = this.geoJsonFormat.writeFeaturesObject(features);
+					this.onReadLayer$.emit(layerData);
+					break;
+				case 'json':
+				case 'geojson':
+					layerData.data = JSON.parse(readerResult);
+					this.onReadLayer$.emit(layerData);
+					break;
+				case 'shp':
+					this.addShapeFileLayer(readerResult).then((data) => {
+						this.onReadLayer$.emit({ ...layerData, data });
+					});
+					break;
+				default:
+					throw new Error('Can\'t read file type');
 			}
-		})
+		}),
+		retryWhen((error) => error.pipe(
+			tap((err) => this.importError(err)),
+			delay(100)
+		))
 	);
 
 	@AutoSubscription
 	onReadLayerSuccess$ = this.onReadLayer$.pipe(
-		map( (layer) => {
+		map((layer) => {
 			this.generateFeatureCollection(layer.data, layer.name);
 			return this.calculateLayerBbox(layer.data);
 		}),
+		filter(Boolean),
 		withLatestFrom(this.store.pipe(select(selectActiveMapId))),
-		tap( ([layerBbox, activeMapId]) => this.store.dispatch(new SetMapPositionByRectAction({id: activeMapId, rect: layerBbox}))),
-		catchError((error) => {
-			this.importError(error);
-			return EMPTY;
-		})
+		tap(([layerBbox, activeMapId]) => this.store.dispatch(new SetMapPositionByRectAction({
+			id: activeMapId,
+			rect: layerBbox
+		}))),
+		retryWhen((error) =>
+			error.pipe(
+				tap((err) => this.importError(err)),
+				delay(100)
+			))
 	);
 
 	constructor(private store: Store<any>, private dataLayersService: DataLayersService) {
@@ -95,7 +97,9 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	}
 
 	addShapeFileLayer(data) {
-		return shapeFile.read(data).catch(e => {throw new Error(e)});
+		return shapeFile.read(data).catch(e => {
+			throw new Error(e)
+		});
 
 	}
 
@@ -126,11 +130,29 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 
 	ValidateFeatures(annotationsLayer): void {
 		/* reference */
-		annotationsLayer.features.forEach( (feature, index, features) => {
+		annotationsLayer.features.forEach((feature, index, features) => {
 			features[index] = validateFeatureProperties(feature);
 			features[index].id = UUID.UUID();
 			features[index].properties.id = features[index].id;
 		});
+	}
+
+	private prepareKMLFeature(features) {
+		// on kml label and style return as a string
+		const fixProperties = (feature, tag) => {
+			const oldProp = feature.get(tag);
+			let parsedProp;
+			try {
+				parsedProp = JSON.parse(oldProp);
+			} catch {
+				parsedProp = oldProp;
+			} finally {
+				feature.set(tag, parsedProp);
+			}
+		};
+		features.forEach((feature) => {
+			['style', 'label'].forEach((tag) => fixProperties(feature, tag));
+		})
 	}
 
 	private importError(error) {
@@ -141,13 +163,15 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	}
 
 	private calculateLayerBbox(layer) {
-		let layerBbox;
-		if (layer.bbox) {
-			layerBbox = layer.bbox;
-		}else {
-			layerBbox = bboxFromGeoJson(layer);
+		if (layer.features.length > 0) {
+			let layerBbox;
+			if (layer.bbox) {
+				layerBbox = layer.bbox;
+			} else {
+				layerBbox = bboxFromGeoJson(layer);
+			}
+			return polygonFromBBOX(layerBbox);
 		}
-		return polygonFromBBOX(layerBbox);
 	}
 
 }

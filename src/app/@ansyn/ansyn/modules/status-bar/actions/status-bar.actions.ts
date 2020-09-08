@@ -37,7 +37,8 @@ export class UpdateGeoFilterStatus implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return this.payload && this.payload.type && `Setting geo filter type to ${this.payload.type}`
+		// if payload.active is undefined, rather than false, the geotype is not deactivated
+		return this.payload && this.payload.type && ( this.payload.active !== false ) && `Setting geo filter type to ${this.payload.type}`
 	}
 }
 

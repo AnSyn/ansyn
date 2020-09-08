@@ -61,7 +61,7 @@ export class SetAnnotationMode implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return this.payload && `Setting annotation mode = ${ this.payload.annotationMode }`;
+		return this.payload && this.payload.annotationMode && `Setting annotation mode = ${ this.payload.annotationMode }`;
 	}
 }
 

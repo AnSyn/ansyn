@@ -40,6 +40,7 @@ import { SetMapsDataActionStore, selectActiveMapId, selectMapsIds } from '@ansyn
 import { BackToWorldView } from '../../../overlays/overlay-status/actions/overlay-status.actions';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { linksConfig } from '../services/helpers/cases.service.query-params-helper';
+import { ClipboardModule, ClipboardService } from 'ngx-clipboard';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
@@ -78,6 +79,7 @@ describe('CasesEffects', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
+				ClipboardModule,
 				HttpClientModule,
 				StoreModule.forRoot({
 					[casesFeatureKey]: CasesReducer,
@@ -87,6 +89,7 @@ describe('CasesEffects', () => {
 				RouterTestingModule
 			],
 			providers: [
+				ClipboardService,
 				CasesEffects,
 				{ provide: StorageService, useValue: {} },
 				CasesService,

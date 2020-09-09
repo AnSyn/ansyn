@@ -69,6 +69,7 @@ export class RouterEffects {
 	@Effect()
 	loadDefaultCase$: Observable<any> = this.actions$.pipe(
 		ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
+		filter( (action) => !(action as LoadDefaultCaseAction).payload.context),
 		withLatestFrom(this.store$.select(routerStateSelector)),
 		mergeMap(([action, router]: [(SelectDilutedCaseAction), IRouterState]) => {
 			if (router.linkId) {

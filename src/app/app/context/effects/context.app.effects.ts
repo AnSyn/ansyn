@@ -28,7 +28,7 @@ import {
 } from '../models/context.config';
 import { TranslateService } from '@ngx-translate/core';
 import { Auth0Service } from '../../imisight/auth0.service';
-import { uniq } from 'lodash';
+import { isEqual, uniqWith } from 'lodash';
 import { SelectOnlyGeoRegistered } from '@ansyn/ansyn';
 import * as moment from 'moment';
 
@@ -165,10 +165,10 @@ export class ContextAppEffects {
 	}
 
 	private parseSensorParams(sensors): ICaseDataInputFiltersState {
-		const sensorsArray = sensors.split(',');
-		const filters: IDataInputFilterValue[] = uniq(sensorsArray
+		const sensorsArray = sensors.split(',').map( sensor => sensor.trim());
+		const filters: IDataInputFilterValue[] = uniqWith(sensorsArray
 				.map(this.overlaysService.getSensorTypeAndProviderFromSensorName.bind(this.overlaysService))
-				.filter(Boolean));
+				.filter(Boolean) , isEqual);
 		return {
 			filters,
 			fullyChecked: filters.length === 0,

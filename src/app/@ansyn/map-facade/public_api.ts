@@ -90,7 +90,6 @@ export {
 	imageryStatusInitialState
 } from './reducers/imagery-status.reducer'
 
-export { copyFromContent } from './utils/clipboard';
 export { getTimeFormat, getTimeDiff, getTimeDiffFormat } from './utils/time';
 export { AnsynDatePipe } from './pipes/ansyn-date.pipe';
 

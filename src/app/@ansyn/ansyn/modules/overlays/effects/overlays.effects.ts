@@ -205,7 +205,7 @@ export class OverlaysEffects {
 
 				// if data.length != fetchLimit that means only duplicate overlays removed
 				if (!overlays.data || overlays.data.length === 0) {
-					actions.push(new SetOverlaysStatusMessageAction({ message: noOverlayMatchQuery }));
+					actions.push(new SetOverlaysStatusMessageAction({ message: noOverlayMatchQuery, originalMessages: overlays.errors }));
 				} else if (overlays.limited > 0 && overlays.data.length === this.overlaysService.fetchLimit) {
 					// TODO: replace when design is available
 					actions.push(new SetOverlaysStatusMessageAction({ message: overLoad.replace('$overLoad', overlays.data.length.toString()) }));

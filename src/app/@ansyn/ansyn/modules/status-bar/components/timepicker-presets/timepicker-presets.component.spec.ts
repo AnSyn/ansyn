@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TimepickerPresetsComponent } from './timepicker-presets.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { StoreModule } from '@ngrx/store';
+import { LoggerService } from '../../../core/services/logger.service';
 
 describe('TimepickerPresetsComponent', () => {
 	let component: TimepickerPresetsComponent;
@@ -13,7 +14,10 @@ describe('TimepickerPresetsComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [TimepickerPresetsComponent],
-			imports: [TranslateModule.forRoot(), StoreModule.forRoot({})]
+			imports: [TranslateModule.forRoot(), StoreModule.forRoot({})],
+			providers: [
+				{ provide: LoggerService, useValue: {} }
+			]
 		})
 			.compileComponents();
 	}));

@@ -144,7 +144,7 @@ export class SetActiveOverlaysFootprintModeAction implements Action, ILogMessage
 	};
 
 	logMessage() {
-		return `Overlays footprints mode = ${this.payload}`;
+		return this.payload && this.payload !== 'None' && `Showing overlays footprints (${this.payload} mode)`;
 	}
 }
 

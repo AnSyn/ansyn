@@ -54,7 +54,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 				this.removeImageLayer();
 				return;
 			}
-			// else
+
 			this.createImageLayer();
 			if (Boolean(this.imageLayer)) {
 				// auto

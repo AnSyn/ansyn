@@ -50,8 +50,6 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 			source,
 			extent
 		});
-		const imageLayer = this.getImageLayer(source, extent);
-		this.removeExtraData(imageLayer);
 		return tileLayer;
 	}
 

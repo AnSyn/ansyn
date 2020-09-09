@@ -1,5 +1,4 @@
 import { EMPTY, forkJoin, Observable, Observer, of, throwError } from 'rxjs';
-import { cloneDeep } from 'lodash';
 import * as turf from '@turf/turf';
 import * as GeoJSON from 'geojson';
 import { Point } from 'geojson';
@@ -185,7 +184,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 				);
 			}
 			return of(0);
-			
+
 		})
 	);
 

@@ -28,7 +28,7 @@ import {
 } from '../models/context.config';
 import { TranslateService } from '@ngx-translate/core';
 import { Auth0Service } from '../../imisight/auth0.service';
-import { uniq, isEqual, uniqWith } from 'lodash';
+import { isEqual, uniqWith } from 'lodash';
 import { SelectOnlyGeoRegistered } from '@ansyn/ansyn';
 import * as moment from 'moment';
 

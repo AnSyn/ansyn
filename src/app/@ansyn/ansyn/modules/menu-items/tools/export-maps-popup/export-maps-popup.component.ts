@@ -1,16 +1,6 @@
-import { Component, EventEmitter, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
-import { CredentialsService } from '../../../core/services/credentials/credentials.service';
-import { DOCUMENT } from '@angular/common';
-import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { tap, filter, timeout } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
-import { saveAs } from 'file-saver';
-import { IToolsConfig, toolsConfig } from '../models/tools-config';
-import { Store } from '@ngrx/store';
-import { selectIsMinimalistViewMode, SetMinimalistViewModeAction } from '@ansyn/map-facade';
-import { LoggerService } from '../../../core/services/logger.service';
-import { toBlob } from 'dom-to-image';
+import { Component, HostBinding, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { AutoSubscriptions } from 'auto-subscriptions';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
 
 const LOGS = {
 	request: 'Request to export maps',
@@ -19,81 +9,65 @@ const LOGS = {
 	canceled: 'Export maps was canceled'
 };
 
+const DEFAULT_QUALITY = 'normal';
+const DEFAULT_PAGE_SIZE = 'a4';
+
 @Component({
 	selector: 'ansyn-export-maps-popup',
 	templateUrl: './export-maps-popup.component.html',
 	styleUrls: ['./export-maps-popup.component.less']
 })
-@AutoSubscriptions()
-export class ExportMapsPopupComponent implements OnInit, OnDestroy {
-	animationFrame;
-	title = 'Notice';
-	description = 'Your image is in process, keep in mind that the image may be protected.';
-	mapBlob = new EventEmitter<Blob>();
-	onClick = new EventEmitter<boolean>();
-	isDownloadAvailable = false;
+export class ExportMapsPopupComponent {
+	@HostBinding('style.direction') direction: 'rtl' | 'ltr';
+	title = 'Export';
+	description = 'keep in mind that the image may be protected';
+	exportMethod: 'basic' | 'advanced' = 'basic';
+	graphicExport = ['all', 'draws and annotations', 'north point', 'description'];
+	graphicexportMap = new Map(this.graphicExport.reduce( (entries: Array<[string, boolean]>, e) => {
+			entries.push([e, true]);
+			return entries;
+	}, []));
+	formats = ['JPG (Screenshot)', 'PDF'];
+	format = this.formats[0];
+	pageSize = DEFAULT_PAGE_SIZE;
+	pageSizes = ['a0', 'a1', 'a2', 'a3', 'a4', 'a5'];
+	quality = DEFAULT_QUALITY;
+	_qualities = { low: 72, normal: 150, high: 300 };
 
-	@AutoSubscription
-	onMapReadyToExport$ = combineLatest(this.mapBlob, this.onClick).pipe(
-		tap(([blob, isExport]: [Blob, boolean]) => {
-			if (isExport) {
-				saveAs(blob, 'map.jpg');
-				this.logger.info(LOGS.success);
-			}
-			else {
-				this.logger.info(LOGS.canceled);
-			}
-			this.closeModal()
-		})
-	);
-
-	@AutoSubscription
-	isMinimalView$ = this.store$.select(selectIsMinimalistViewMode).pipe(
-		filter(Boolean),
-		tap( this.exportMapsToPng.bind(this))
-	);
-
-	get config() {
-		return this.toolsConfigData.exportMap;
+	get qualities() {
+		return Object.keys(this._qualities);
 	}
 
-	constructor(
-		public store$: Store<any>,
-		public credentialsService: CredentialsService,
-		public dialogRef: MatDialogRef<ExportMapsPopupComponent>,
-		protected logger: LoggerService,
-		@Inject(DOCUMENT) protected document: any,
-		@Inject(toolsConfig) public toolsConfigData: IToolsConfig) {
-		this.logger.info(LOGS.request);
-		this.store$.dispatch(new SetMinimalistViewModeAction(true));
+	constructor(protected communicatorService: ImageryCommunicatorService) {
+
 	}
 
-	exportMapsToPng() {
-			toBlob(document.querySelector(this.config.target), {
-				filter: (element) => {
-					if (element.tagName === 'CANVAS') {
-						return element.width > 0;
-					}
-					return !(element.classList && this.config.excludeClasses.some( excludeClass => element.classList.contains(excludeClass)));
-				}
-			}).then(blob => {
-				this.store$.dispatch(new SetMinimalistViewModeAction(false));
-				this.isDownloadAvailable = true;
-				this.mapBlob.emit(blob)
-			}).catch( err => {
-				this.logger.error(LOGS.failed);
-				this.closeModal();
+	graphicExportChange(ge: string, forceState = false) {
+		const newState = forceState || !this.graphicexportMap.get(ge);
+		if (ge !== 'all') {
+			this.graphicexportMap.set(ge, newState);
+			let notAllCheck = !newState;
+			this.graphicexportMap.forEach( (g, key) => {
+				notAllCheck = notAllCheck || (key !== 'all' && !g)
 			});
+			this.graphicexportMap.set('all', !notAllCheck);
+
+		}
+		else {
+			this.graphicexportMap.forEach( (_, key, map) => map.set(key, newState))
+		}
 	}
 
-	closeModal(): void {
-		this.dialogRef.close();
+	reset() {
+		this.graphicExportChange('all', true);
+		this.format = this.formats[0];
+		this.quality = DEFAULT_QUALITY;
+		this.pageSize = DEFAULT_PAGE_SIZE;
 	}
 
-	ngOnDestroy(): void {
-	}
+	export() {
+		if (this.exportMethod === 'basic') {
 
-	ngOnInit(): void {
+		}
 	}
-
 }

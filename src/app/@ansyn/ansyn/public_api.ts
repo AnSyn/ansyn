@@ -254,7 +254,7 @@ export {
 
 export { ICoreConfig } from './modules/core/models/core.config.model';
 export { CoreConfig } from './modules/core/models/core.config';
-export { endTimingLog, startTimingLog, getLogMessageFromAction } from './modules/core/utils/logs/timer-logs';
+export { endTimingLog, startTimingLog, getLogMessageFromAction, actionHasLogMessage } from './modules/core/utils/logs/timer-logs';
 export { buildFilteredOverlays } from './modules/core/utils/overlays';
 export { isFullOverlay } from './modules/core/utils/overlays';
 export { IFilterModel } from './modules/core/models/IFilterModel';

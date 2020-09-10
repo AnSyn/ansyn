@@ -19,7 +19,7 @@ import {
 import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
 import { differenceWith } from 'lodash';
-import { filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
 	OverlayStatusActionsTypes,
 	DisableImageProcessing
@@ -47,7 +47,6 @@ import { IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models
 import { selectToolFlag } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import { CaseGeoFilter } from '../../modules/menu-items/cases/models/case.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
-import { getLogMessageFromAction } from '../../modules/core/utils/logs/timer-logs';
 import { toolsFlags } from '../../modules/menu-items/tools/models/tools.model';
 
 @Injectable()
@@ -59,24 +58,24 @@ export class ToolsAppEffects {
 
 	isShadowMouseActiveByDefault = this.config.ShadowMouse && this.config.ShadowMouse.activeByDefault;
 
-	@Effect({ dispatch: false })
-	actionsLogger$: Observable<any> = this.actions$.pipe(
-		ofType(
-			ToolsActionsTypes.START_MOUSE_SHADOW,
-			ToolsActionsTypes.STOP_MOUSE_SHADOW,
-			ToolsActionsTypes.GO_TO,
-			ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE,
-			ToolsActionsTypes.MEASURES.SET_MEASURE_TOOL_STATE,
-			ToolsActionsTypes.MEASURES.REMOVE_MEASURE,
-			ToolsActionsTypes.MEASURES.ADD_MEASURE,
-			ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS,
-			ToolsActionsTypes.STORE.SET_ANNOTATION_MODE,
-			ToolsActionsTypes.SET_SUB_MENU,
-			ToolsActionsTypes.ANNOTATION_SET_PROPERTIES
-		),
-		tap((action) => {
-			this.loggerService.info(getLogMessageFromAction(action), 'Tools', action.type);
-		}));
+	// @Effect({ dispatch: false })
+	// actionsLogger$: Observable<any> = this.actions$.pipe(
+	// 	ofType(
+	// 		ToolsActionsTypes.START_MOUSE_SHADOW,
+	// 		ToolsActionsTypes.STOP_MOUSE_SHADOW,
+	// 		ToolsActionsTypes.GO_TO,
+	// 		ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE,
+	// 		ToolsActionsTypes.MEASURES.SET_MEASURE_TOOL_STATE,
+	// 		ToolsActionsTypes.MEASURES.REMOVE_MEASURE,
+	// 		ToolsActionsTypes.MEASURES.ADD_MEASURE,
+	// 		ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS,
+	// 		ToolsActionsTypes.STORE.SET_ANNOTATION_MODE,
+	// 		ToolsActionsTypes.SET_SUB_MENU,
+	// 		ToolsActionsTypes.ANNOTATION_SET_PROPERTIES
+	// 	),
+	// 	tap((action) => {
+	// 		this.loggerService.info(getLogMessageFromAction(action), 'Tools', action.type);
+	// 	}));
 
 	@Effect()
 	onImageriesChanged: Observable<any> = this.actions$.pipe(

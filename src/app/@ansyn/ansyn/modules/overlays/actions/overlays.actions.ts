@@ -95,14 +95,10 @@ export class LoadOverlaysAction implements Action, ILogMessage {
 	}
 }
 
-export class CheckTrianglesAction implements Action, ILogMessage {
+export class CheckTrianglesAction implements Action {
 	type = OverlaysActionTypes.CHECK_TRIANGLES;
 
 	constructor(public payload: IOverlaysCriteria) {
-	}
-
-	logMessage() {
-		return `Checking area against user credentials`
 	}
 }
 

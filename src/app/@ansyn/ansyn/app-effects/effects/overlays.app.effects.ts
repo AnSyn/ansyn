@@ -39,7 +39,6 @@ import {
 	pairwise,
 	startWith,
 	switchMap,
-	tap,
 	withLatestFrom
 } from 'rxjs/operators';
 import { isEqual } from 'lodash';
@@ -70,31 +69,30 @@ import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { Dictionary } from '@ngrx/entity';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { SetBadgeAction } from '@ansyn/menu';
-import { getLogMessageFromAction } from '../../modules/core/utils/logs/timer-logs';
 
 @Injectable()
 export class OverlaysAppEffects {
 
-	@Effect({ dispatch: false })
-	actionsLogger$: Observable<any> = this.actions$.pipe(
-		ofType(
-			OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS,
-			OverlaysActionTypes.LOAD_OVERLAYS,
-			OverlaysActionTypes.LOAD_OVERLAYS_FAIL,
-			OverlaysActionTypes.SET_OVERLAYS_CRITERIA,
-			OverlayStatusActionsTypes.ACTIVATE_SCANNED_AREA,
-			OverlayStatusActionsTypes.TOGGLE_OVERLAY_FAVORITE,
-			OverlayStatusActionsTypes.ADD_ALERT_MSG,
-			OverlayStatusActionsTypes.REMOVE_ALERT_MSG,
-			OverlayStatusActionsTypes.TOGGLE_DRAGGED_MODE,
-			OverlayStatusActionsTypes.TOGGLE_OVERLAY_PRESET,
-			OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING,
-			OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS,
-			OverlayStatusActionsTypes.SET_MANUAL_IMAGE_PROCESSING
-		),
-		tap((action) => {
-			this.loggerService.info(getLogMessageFromAction(action), 'Overlays', action.type);
-		}));
+	// @Effect({ dispatch: false })
+	// actionsLogger$: Observable<any> = this.actions$.pipe(
+	// 	ofType(
+	// 		OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS,
+	// 		OverlaysActionTypes.LOAD_OVERLAYS,
+	// 		OverlaysActionTypes.LOAD_OVERLAYS_FAIL,
+	// 		OverlaysActionTypes.SET_OVERLAYS_CRITERIA,
+	// 		OverlayStatusActionsTypes.ACTIVATE_SCANNED_AREA,
+	// 		OverlayStatusActionsTypes.TOGGLE_OVERLAY_FAVORITE,
+	// 		OverlayStatusActionsTypes.ADD_ALERT_MSG,
+	// 		OverlayStatusActionsTypes.REMOVE_ALERT_MSG,
+	// 		OverlayStatusActionsTypes.TOGGLE_DRAGGED_MODE,
+	// 		OverlayStatusActionsTypes.TOGGLE_OVERLAY_PRESET,
+	// 		OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING,
+	// 		OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS,
+	// 		OverlayStatusActionsTypes.SET_MANUAL_IMAGE_PROCESSING
+	// 	),
+	// 	tap((action) => {
+	// 		this.loggerService.info(getLogMessageFromAction(action), 'Overlays', action.type);
+	// 	}));
 
 	@Effect()
 	removedOverlaysCount$ = combineLatest(this.store$.select(selectRemovedOverlays), this.store$.select(selectOverlaysMap)).pipe(

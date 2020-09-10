@@ -29,6 +29,10 @@ export interface ILogMessage {
 	logMessage: Function;
 }
 
+export function actionHasLogMessage(action: ILogMessage): boolean {
+	return Boolean(action.logMessage);
+}
+
 export function getLogMessageFromAction(action: ILogMessage): string {
 	return action.logMessage ? action.logMessage() : action.payload ? JSON.stringify(action.payload) : '';
 }

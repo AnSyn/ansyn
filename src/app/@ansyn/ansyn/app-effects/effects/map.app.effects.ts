@@ -49,7 +49,7 @@ import {
 	withLatestFrom
 } from 'rxjs/operators';
 import { toastMessages } from '../../modules/core/models/toast-messages';
-import { endTimingLog, getLogMessageFromAction, startTimingLog } from '../../modules/core/utils/logs/timer-logs';
+import { endTimingLog, startTimingLog } from '../../modules/core/utils/logs/timer-logs';
 import { isFullOverlay } from '../../modules/core/utils/overlays';
 import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { MarkUpClass } from '../../modules/overlays/reducers/overlays.reducer';
@@ -90,32 +90,32 @@ const FOOTPRINT_INSIDE_MAP_RATIO = 1;
 @Injectable()
 export class MapAppEffects {
 
-	@Effect({ dispatch: false })
-	actionsLogger$: Observable<any> = this.actions$.pipe(
-		ofType(
-			OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
-			OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
-			OverlaysActionTypes.SET_OVERLAYS_STATUS_MESSAGE,
-			OverlaysActionTypes.SET_TOTAL_OVERLAYS,
-			MapActionTypes.MAP_INSTANCE_CHANGED_ACTION,
-			MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS,
-			MapActionTypes.CHANGE_IMAGERY_MAP_FAILED,
-			MapActionTypes.CHANGE_IMAGERY_MAP,
-			MapActionTypes.CONTEXT_MENU.SHOW,
-			MapActionTypes.CONTEXT_MENU.DISPLAY,
-			MapActionTypes.CONTEXT_MENU.ANGLE_FILTER_SHOW,
-			MapActionTypes.SET_LAYOUT_SUCCESS,
-			MapActionTypes.SYNCHRONIZE_MAPS,
-			MapActionTypes.TOGGLE_MAP_LAYERS,
-			MapActionTypes.SET_LAYOUT,
-			MapActionTypes.SET_TOAST_MESSAGE,
-			MapActionTypes.POINT_TO_REAL_NORTH,
-			OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW,
-			OverlayStatusActionsTypes.BACK_TO_WORLD_FAILED
-		),
-		tap((action) => {
-			this.loggerService.info(getLogMessageFromAction(action), 'Map', action.type);
-		}));
+	// @Effect({ dispatch: false })
+	// actionsLogger$: Observable<any> = this.actions$.pipe(
+	// 	ofType(
+	// 		OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
+	// 		OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
+	// 		OverlaysActionTypes.SET_OVERLAYS_STATUS_MESSAGE,
+	// 		OverlaysActionTypes.SET_TOTAL_OVERLAYS,
+	// 		MapActionTypes.MAP_INSTANCE_CHANGED_ACTION,
+	// 		MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS,
+	// 		MapActionTypes.CHANGE_IMAGERY_MAP_FAILED,
+	// 		MapActionTypes.CHANGE_IMAGERY_MAP,
+	// 		MapActionTypes.CONTEXT_MENU.SHOW,
+	// 		MapActionTypes.CONTEXT_MENU.DISPLAY,
+	// 		MapActionTypes.CONTEXT_MENU.ANGLE_FILTER_SHOW,
+	// 		MapActionTypes.SET_LAYOUT_SUCCESS,
+	// 		MapActionTypes.SYNCHRONIZE_MAPS,
+	// 		MapActionTypes.TOGGLE_MAP_LAYERS,
+	// 		MapActionTypes.SET_LAYOUT,
+	// 		MapActionTypes.SET_TOAST_MESSAGE,
+	// 		MapActionTypes.POINT_TO_REAL_NORTH,
+	// 		OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW,
+	// 		OverlayStatusActionsTypes.BACK_TO_WORLD_FAILED
+	// 	),
+	// 	tap((action) => {
+	// 		this.loggerService.info(getLogMessageFromAction(action), 'Map', action.type);
+	// 	}));
 
 	onDisplayOverlay$: Observable<any> = this.actions$
 		.pipe(

@@ -19,6 +19,7 @@ import { ILayerState } from '../modules/menu-items/layers-manager/reducers/layer
 import { IToolsState } from '../modules/menu-items/tools/reducers/tools.reducer';
 import { IOverlaysState } from '../modules/overlays/reducers/overlays.reducer';
 import { TranslateModule } from '@ngx-translate/core';
+import { LoggerAppEffects } from './effects/logger.app.effects';
 
 export interface IAppState {
 	overlays: IOverlaysState;
@@ -45,7 +46,8 @@ export interface IAppState {
 			FiltersAppEffects,
 			ToolsAppEffects,
 			UpdateCaseAppEffects,
-			SelectCaseAppEffects
+			SelectCaseAppEffects,
+			LoggerAppEffects
 		])
 	]
 })

@@ -14,7 +14,7 @@ import {
 	selectActiveMapId,
 	selectOverlayOfActiveMap
 } from '@ansyn/map-facade';
-import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, map, withLatestFrom } from 'rxjs/operators';
 import {
 	CopySnapshotShareLinkAction,
 	GoAdjacentOverlay,
@@ -31,23 +31,22 @@ import {
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { IOverlay, IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
-import { getLogMessageFromAction } from '../../modules/core/utils/logs/timer-logs';
 
 @Injectable()
 export class StatusBarAppEffects {
 
-	@Effect({ dispatch: false })
-	actionsLogger$: Observable<any> = this.actions$.pipe(
-		ofType(
-			StatusBarActionsTypes.COPY_SNAPSHOT_SHARE_LINK,
-			StatusBarActionsTypes.GO_ADJACENT_OVERLAY,
-			StatusBarActionsTypes.SET_IMAGE_OPENING_ORIENTATION,
-			StatusBarActionsTypes.COPY_SNAPSHOT_SHARE_LINK,
-			StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS
-		),
-		tap((action) => {
-			this.loggerService.info(getLogMessageFromAction(action), 'Status_Bar', action.type);
-		}));
+	// @Effect({ dispatch: false })
+	// actionsLogger$: Observable<any> = this.actions$.pipe(
+	// 	ofType(
+	// 		StatusBarActionsTypes.COPY_SNAPSHOT_SHARE_LINK,
+	// 		StatusBarActionsTypes.GO_ADJACENT_OVERLAY,
+	// 		StatusBarActionsTypes.SET_IMAGE_OPENING_ORIENTATION,
+	// 		StatusBarActionsTypes.COPY_SNAPSHOT_SHARE_LINK,
+	// 		StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS
+	// 	),
+	// 	tap((action) => {
+	// 		this.loggerService.info(getLogMessageFromAction(action), 'Status_Bar', action.type);
+	// 	}));
 
 	@Effect()
 	onAdjacentOverlay$: Observable<any> = this.actions$.pipe(

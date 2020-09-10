@@ -7,7 +7,7 @@ import { IBaseImageryLayer, ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpErrorResponse } from '@angular/common/http';
 import { mapValues, uniqBy } from 'lodash';
 import { IAppState } from '../app.effects.module';
-import { catchError, filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import {
 	CasesActionTypes, LoadDefaultCaseAction,
 	LoadDefaultCaseIfNoActiveCaseAction,
@@ -35,7 +35,6 @@ import {
 import { casesConfig } from '../../modules/menu-items/cases/services/cases.service';
 import { ICasesConfig } from '../../modules/menu-items/cases/models/cases-config';
 import { fromPromise } from 'rxjs/internal-compatibility';
-import { getLogMessageFromAction } from '../../modules/core/utils/logs/timer-logs';
 
 @Injectable()
 export class CasesAppEffects {
@@ -45,19 +44,19 @@ export class CasesAppEffects {
 		}, {});
 	}
 
-	@Effect({ dispatch: false })
-	actionsLogger$: Observable<any> = this.actions$.pipe(
-		ofType(CasesActionTypes.ADD_CASE,
-			CasesActionTypes.DELETE_CASE,
-			CasesActionTypes.LOAD_CASES,
-			CasesActionTypes.LOAD_DEFAULT_CASE,
-			CasesActionTypes.SAVE_CASE_AS_SUCCESS,
-			CasesActionTypes.COPY_CASE_LINK,
-			CasesActionTypes.SELECT_DILUTED_CASE
-		),
-		tap((action) => {
-			this.loggerService.info(getLogMessageFromAction(action), 'Cases', action.type);
-		}));
+	// @Effect({ dispatch: false })
+	// actionsLogger$: Observable<any> = this.actions$.pipe(
+	// 	ofType(CasesActionTypes.ADD_CASE,
+	// 		CasesActionTypes.DELETE_CASE,
+	// 		CasesActionTypes.LOAD_CASES,
+	// 		CasesActionTypes.LOAD_DEFAULT_CASE,
+	// 		CasesActionTypes.SAVE_CASE_AS_SUCCESS,
+	// 		CasesActionTypes.COPY_CASE_LINK,
+	// 		CasesActionTypes.SELECT_DILUTED_CASE
+	// 	),
+	// 	tap((action) => {
+	// 		this.loggerService.info(getLogMessageFromAction(action), 'Cases', action.type);
+	// 	}));
 
 	@Effect()
 	onDisplayOverlay$: Observable<any> = this.actions$.pipe(

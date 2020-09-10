@@ -57,7 +57,7 @@ export class ContextEntityVisualizer extends EntitiesVisualizer {
 			tap((referenceDate) => {
 				this.referenceDate = referenceDate;
 				this.purgeCache();
-				this.source.refresh();
+				this.source.changed();
 			})
 		);
 

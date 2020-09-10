@@ -6,7 +6,8 @@
     "@turf/turf",
     "ol",
     "ngx-color-picker",
-    "angular2-uuid"
+    "angular2-uuid",
+    "@ngx-translate/core"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

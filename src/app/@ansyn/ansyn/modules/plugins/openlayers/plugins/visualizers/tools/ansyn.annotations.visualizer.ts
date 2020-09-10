@@ -2,7 +2,7 @@ import { BaseImageryPlugin, ImageryPlugin, IVisualizerEntity, IVisualizerStyle, 
 import { uniq } from 'lodash';
 import { select, Store } from '@ngrx/store';
 import { selectActiveMapId, selectOverlayByMapId } from '@ansyn/map-facade';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, merge, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
 import { distinctUntilChanged, map, mergeMap, take, tap, withLatestFrom, filter, skip, switchMapTo } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
@@ -34,7 +34,8 @@ import {
 	AnnotationRemoveFeature,
 	AnnotationUpdateFeature,
 	SetAnnotationMode,
-	ToolsActionsTypes
+	ToolsActionsTypes,
+	UpdateMeasureDataOptionsAction
 } from '../../../../../menu-items/tools/actions/tools.actions';
 import { UpdateLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
 import { IOverlaysTranslationData } from '../../../../../menu-items/cases/models/case.model';
@@ -261,6 +262,20 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 		})
 	);
 
+	@AutoSubscription
+	onStartLabelOrAnnotationEditDisableMeasureTranslate$ = () => merge(
+		this.annotationsVisualizer.events.onAnnotationEditStart,
+		this.annotationsVisualizer.events.onLabelTranslateStart).pipe(
+		tap((event) => {
+			this.store$.dispatch(new UpdateMeasureDataOptionsAction({
+				mapId: this.mapId,
+				options: {
+					forceDisableTranslate: event !== undefined
+				}
+			}))
+		})
+	);
+
 	onAnnotationsChange([entities, annotationFlag, selectedLayersIds, isActiveMap, activeAnnotationLayer]: [{ [key: string]: ILayer }, boolean, string[], boolean, string]): Observable<any> {
 		const displayedIds = uniq(
 			isActiveMap && annotationFlag ? [...selectedLayersIds, activeAnnotationLayer] : [...selectedLayersIds]
@@ -314,10 +329,10 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			take(1),
 			tap(_ => {
 				if (this.openLastDrawnAnnotationContextMenuEnabled) {
-					this.annotationsVisualizer.events.onSelect.next([]);				
+					this.annotationsVisualizer.events.onSelect.next([]);
 				}
 				if (this.isContinuousDrawingEnabled) {
-					this.annotationsVisualizer.setMode(this.lastAnnotationMode, true);				
+					this.annotationsVisualizer.setMode(this.lastAnnotationMode, true);
 				}
 			})
 		);

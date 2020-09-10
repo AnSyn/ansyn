@@ -20,7 +20,9 @@
     "lodash-decorators",
     "ngx-bootstrap",
     "proj4",
-    "rison"
+    "rison",
+    "@ngx-translate/core"
+
   ],
   "lib": {
     "entryFile": "./public_api.ts",

@@ -1,9 +1,8 @@
-import { select, Store } from '@ngrx/store';
-import { Component, HostBinding, HostListener, Inject, Input, OnInit, ElementRef } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Component, HostBinding, HostListener, Inject, Input, OnInit, ElementRef, OnDestroy } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
 import {
 	MapFacadeService,
-	mapStateSelector,
 	selectActiveMapId,
 	selectMapsList,
 	selectOverlayOfActiveMap,
@@ -13,7 +12,7 @@ import { selectIsPinned, selectMenuCollapse } from '@ansyn/menu';
 import { filter, map, withLatestFrom, tap } from 'rxjs/operators';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
 import { LoadDefaultCaseAction } from '../modules/menu-items/cases/actions/cases.actions';
-import { ICase, ICaseMapState } from '../modules/menu-items/cases/models/case.model';
+import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
 import { IToolsConfig, toolsConfig } from '../modules/menu-items/tools/models/tools-config';
 import { UpdateToolsFlags } from '../modules/menu-items/tools/actions/tools.actions';
 import { toolsFlags } from '../modules/menu-items/tools/reducers/tools.reducer';
@@ -58,7 +57,6 @@ export class AnsynComponent implements OnInit {
 	constructor(protected store$: Store<any>,
 				@Inject(COMPONENT_MODE) public componentMode: boolean,
 				@Inject(toolsConfig) public toolsConfigData: IToolsConfig,
-				protected ansynApp: ElementRef,
 				public loggerService: LoggerService) {
 	}
 

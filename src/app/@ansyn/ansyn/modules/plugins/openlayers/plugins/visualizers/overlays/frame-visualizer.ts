@@ -49,7 +49,7 @@ export class FrameVisualizer extends EntitiesVisualizer {
 			const features = this.source.getFeatures();
 			if (features && features[0]) {
 				delete (<any>features[0]).styleCache;
-				this.source.refresh();
+				this.source.changed();
 			}
 		}
 		return;

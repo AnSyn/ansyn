@@ -152,13 +152,13 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		});
 	}
 
-	loadInitialMapSource(position?: ImageryMapPosition): Promise<IBaseImageryLayer> {
+	loadInitialMapSource(position?: ImageryMapPosition, sourceType: string = this.mapSettings.worldView.sourceType): Promise<IBaseImageryLayer> {
 		return new Promise(resolve => {
 			if (!this._activeMap) {
 				resolve();
 			}
 
-			this.createMapSourceForMapType(this.mapSettings.worldView.mapType, this.mapSettings.worldView.sourceType)
+			this.createMapSourceForMapType(this.mapSettings.worldView.mapType, sourceType)
 				.then((layer) => {
 					this.resetView(layer, position).subscribe(() => {
 						resolve(layer);

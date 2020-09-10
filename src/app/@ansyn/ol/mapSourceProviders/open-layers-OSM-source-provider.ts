@@ -1,5 +1,4 @@
 import OSM from 'ol/source/OSM';
-import TileLayer from 'ol/layer/Tile';
 import { ImageryMapSource, IMapSettings } from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';

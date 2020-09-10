@@ -12,6 +12,10 @@ export class ImageryCommunicatorService {
 	public instanceCreated = new EventEmitter<{ id: string }>();
 	public instanceRemoved = new EventEmitter<{ id: string }>();
 
+	public has(id: string): boolean {
+		return Object.keys(this.communicators).includes(id);
+	}
+
 	public provide(id: string): CommunicatorEntity {
 
 		if (!this.communicators[id]) {

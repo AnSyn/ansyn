@@ -558,7 +558,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				entity.originalEntity.featureJson.properties = merge({}, entity.originalEntity.featureJson.properties, props);
 			}
 			this.events.updateEntity.next(entity.originalEntity);
-			this.source.refresh();
+			this.source.changed();
 		}
 
 		if (editMode) {
@@ -577,7 +577,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	labelTranslateMode(featureId: any) {
 		let oldFeature = null;
-		let event = null;
+		let event = undefined;
 
 		if (this.labelTranslate) {
 			const { originalFeature } = this.labelTranslate;

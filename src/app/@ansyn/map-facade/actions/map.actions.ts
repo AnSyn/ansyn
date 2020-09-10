@@ -27,6 +27,7 @@ export interface IPendingOverlay { // @TODO: map-facade should not know IOverlay
 export interface IToastMessage {
 	toastText: string;
 	showWarningIcon?: boolean;
+	originalMessage?: string;
 }
 
 export const MapActionTypes = {
@@ -439,7 +440,10 @@ export class SetToastMessageAction implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return this.payload && `Showing toast message: ${this.payload.toastText}`;
+		if (this.payload) {
+			const originalMessage = this.payload.originalMessage ? `\n${this.payload.originalMessage}` : '';
+			return `Showing toast message: ${this.payload.toastText}${originalMessage}`;
+		}
 	}
 }
 

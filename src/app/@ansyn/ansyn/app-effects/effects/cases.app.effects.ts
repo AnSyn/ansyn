@@ -49,11 +49,11 @@ export class CasesAppEffects {
 	actionsLogger$: Observable<any> = this.actions$.pipe(
 		ofType(CasesActionTypes.ADD_CASE,
 			CasesActionTypes.DELETE_CASE,
-			CasesActionTypes.LOAD_CASE,
 			CasesActionTypes.LOAD_CASES,
 			CasesActionTypes.LOAD_DEFAULT_CASE,
 			CasesActionTypes.SAVE_CASE_AS_SUCCESS,
-			CasesActionTypes.COPY_CASE_LINK
+			CasesActionTypes.COPY_CASE_LINK,
+			CasesActionTypes.SELECT_DILUTED_CASE
 		),
 		tap((action) => {
 			this.loggerService.info(getLogMessageFromAction(action), 'Cases', action.type);
@@ -117,11 +117,13 @@ export class CasesAppEffects {
 
 							return new SelectCaseAction(caseValue);
 						}),
-						catchError<any, any>((result: HttpErrorResponse) => {
-							console.warn(result);
+						catchError<any, any>((error: HttpErrorResponse) => {
+							const errMsg = error.message ? error.message : error.toString();
+							console.warn(errMsg);
 							return [new SetToastMessageAction({
-								toastText: `Failed to load case ${ result.status ? `(${ result.status })` : '' }`,
-								showWarningIcon: true
+								toastText: `Failed to load case ${ error.status ? `(${ error.status })` : '' }`,
+								showWarningIcon: true,
+								originalMessage: errMsg
 							}),
 								new LoadDefaultCaseIfNoActiveCaseAction()];
 						})

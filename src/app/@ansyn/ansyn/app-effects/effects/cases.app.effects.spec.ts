@@ -280,7 +280,11 @@ describe('CasesAppEffects', () => {
 			spyOn(casesService, 'loadCase').and.callFake(() => of(caseItem));
 			actions = hot('--a--', { a: new SelectDilutedCaseAction(<any>caseItem) });
 			const expectedResults = cold('--(bc)--', {
-				b: new SetToastMessageAction({ toastText: 'Failed to load case (404)', showWarningIcon: true }),
+				b: new SetToastMessageAction({
+					toastText: 'Failed to load case (404)',
+					showWarningIcon: true,
+					originalMessage: 'Http failure response for (unknown url): 404 undefined'
+				}),
 				c: new LoadDefaultCaseIfNoActiveCaseAction()
 			});
 			expect(casesAppEffects.loadCase$).toBeObservable(expectedResults);

@@ -142,21 +142,21 @@ export class SelectCaseSuccessAction implements Action {
 	}
 }
 
-export class SelectDilutedCaseAction implements Action {
+export class SelectDilutedCaseAction implements Action, ILogMessage {
 	type = CasesActionTypes.SELECT_DILUTED_CASE;
 
 	constructor(public payload: IDilutedCase) {
 	}
+
+	logMessage() {
+		return `Selecting case ${this.payload.name}`
+	}
 }
 
-export class LoadCaseAction implements Action, ILogMessage {
+export class LoadCaseAction implements Action {
 	type = CasesActionTypes.LOAD_CASE;
 
 	constructor(public payload: string) {
-	}
-
-	logMessage() {
-		return `Loading case from backend`
 	}
 }
 

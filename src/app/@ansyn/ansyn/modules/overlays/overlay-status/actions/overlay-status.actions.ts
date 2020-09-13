@@ -173,10 +173,14 @@ export class BackToWorldFailed extends BackToWorldView {
 	}
 }
 
-export class ToggleFavoriteAction implements Action {
+export class ToggleFavoriteAction implements Action, ILogMessage {
 	type: string = OverlayStatusActionsTypes.TOGGLE_OVERLAY_FAVORITE;
 
 	constructor(public payload: { id: string, value: boolean, overlay?: IOverlay }) {
+	}
+
+	logMessage() {
+		return `${this.payload.value ? 'Adding' : 'Removing'} overlay ${this.payload.value ? 'to' : 'from'} favorites`
 	}
 }
 
@@ -222,10 +226,14 @@ export class SetRemovedOverlayIdsCount implements Action {
 	}
 }
 
-export class TogglePresetOverlayAction implements Action {
+export class TogglePresetOverlayAction implements Action, ILogMessage {
 	type: string = OverlayStatusActionsTypes.TOGGLE_OVERLAY_PRESET;
 
 	constructor(public payload: { id: string, value: boolean, overlay?: any }) {
+	}
+
+	logMessage() {
+		return `${this.payload.value ? 'Adding' : 'Removing'} overlay ${this.payload.value ? 'to' : 'from'} presets (quick loop)`
 	}
 }
 

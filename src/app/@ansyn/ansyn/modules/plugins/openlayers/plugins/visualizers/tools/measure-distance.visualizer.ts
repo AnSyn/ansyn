@@ -42,10 +42,12 @@ import { Inject } from '@angular/core';
 import { AddMeasureAction, RemoveMeasureAction } from '../../../../../menu-items/tools/actions/tools.actions';
 import { geometry } from '@turf/helpers';
 
+export const measuresExcludeClassNameForExport = 'measures-layer';
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store, OpenLayersProjectionService, VisualizersConfig],
-	isHideable: true
+	isHideable: true,
+	layerClassName: measuresExcludeClassNameForExport
 })
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	isTotalMeasureActive: boolean;

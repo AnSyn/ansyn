@@ -1,3 +1,5 @@
+export { measuresExcludeClassNameForExport } from './modules/plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
+
 export { selectOverlaysManualProcessArgs } from './modules/overlays/overlay-status/reducers/overlay-status.reducer';
 
 export { isArrowRightKey, isArrowLeftKey, isBackspaceKey, isDigitKey, isEnterKey, isEscapeKey } from "./modules/core/utils/keyboardKey";

@@ -33,14 +33,16 @@
 		<div class="option">
 			<p>{{'Format' | translate}}</p>
 			<mat-select [(value)]="format">
-				<mat-option *ngFor="let fmt of formats" [value]="fmt">{{fmt}}</mat-option>
+				<mat-option *ngFor="let fmt of formats" [value]="fmt">
+					{{fmt | translate}}
+				</mat-option>
 			</mat-select>
 		</div>
 		<div class="option">
 			<p>{{'Page size' | translate}}</p>
 			<mat-select [(value)]="pageSize" [disabled]="format !== 'PDF'">
 				<mat-option *ngFor="let size of pageSizes" [value]="size">
-					{{ size }}
+					{{ size | translate}}
 				</mat-option>
 			</mat-select>
 		</div>
@@ -48,7 +50,7 @@
 			<p>{{'Quality' | translate}}</p>
 			<mat-select [(value)]="quality" [disabled]="format !== 'PDF'">
 				<mat-option *ngFor="let q of qualities" [value]="q">
-					{{ q }}
+					{{ q | translate}}
 				</mat-option>
 			</mat-select>
 		</div>

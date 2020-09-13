@@ -11,6 +11,7 @@ import { ILogMessage } from '../../../core/utils/logs/timer-logs';
 
 export enum OverlayStatusActionsTypes {
 	SET_MANUAL_IMAGE_PROCESSING = 'SET_MANUAL_IMAGE_PROCESSING',
+	LOG_MANUAL_IMAGE_PROCESSING = 'LOG_MANUAL_IMAGE_PROCESSING',
 	BACK_TO_WORLD_VIEW = 'BACK_TO_WORLD_VIEW',
 	BACK_TO_WORLD_SUCCESS = 'BACK_TO_WORLD_SUCCESS',
 	BACK_TO_WORLD_FAILED = 'BACK_TO_WORLD_FAILED',
@@ -134,14 +135,21 @@ export class BackToWorldView implements Action, ILogMessage {
 	}
 }
 
-export class SetManualImageProcessing implements Action, ILogMessage {
+export class SetManualImageProcessing implements Action {
 	type = OverlayStatusActionsTypes.SET_MANUAL_IMAGE_PROCESSING;
 
 	constructor(public payload: ImageManualProcessArgs) {
 	};
+}
+
+export class LogManualImageProcessing implements Action, ILogMessage {
+	type = OverlayStatusActionsTypes.LOG_MANUAL_IMAGE_PROCESSING;
+
+	constructor(public payload: { changedArg: string, allArgs: ImageManualProcessArgs }) {
+	};
 
 	logMessage() {
-		return `Updating manual image processing params\n${JSON.stringify(this.payload)}`
+		return `Updating manual image processing param: ${this.payload.changedArg}\n${JSON.stringify(this.payload.allArgs)}`
 	}
 }
 

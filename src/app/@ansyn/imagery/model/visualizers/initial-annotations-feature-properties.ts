@@ -48,11 +48,13 @@ export function validateFeatureProperties(feature: Feature<any>): Feature<any> {
 	const featureJson = cloneDeep(feature);
 	const defaultProperties = getInitialAnnotationsFeatureProperties();
 	const defaultStyle = defaultProperties.style;
+	const defaultType = 'Polygon';
 
 	if (!featureJson.properties) {
 		featureJson.properties = {};
 	}
 
+	const { type } = featureJson.geometry.type;
 	const { id, style, label = {}, labelSize, icon, showMeasures, showArea, undeletable, mode, labelTranslateOn } = featureJson.properties;
 	const { opacity, initial } = !!style ? style :  { opacity: null, initial: null };
 
@@ -63,7 +65,10 @@ export function validateFeatureProperties(feature: Feature<any>): Feature<any> {
 	if (typeof label === 'string') {
 		labelText = label;
 	}
-
+	featureJson.geometry = {
+		...featureJson.geometry,
+		type: (!!type && typeof type === 'string') ? type : defaultType
+	}
 	featureJson.properties = {
 		... featureJson.properties,
 		id: (!!id && typeof id === 'string') ? id : defaultProperties.id,
@@ -72,7 +77,7 @@ export function validateFeatureProperties(feature: Feature<any>): Feature<any> {
 		showMeasures: typeof showMeasures === 'boolean' ? showMeasures : defaultProperties.showMeasures,
 		showArea: typeof showArea === 'boolean' ? showArea : defaultProperties.showArea,
 		undeletable: typeof undeletable === 'boolean' ? undeletable : defaultProperties.undeletable,
-		mode: (!!mode && typeof mode === 'string') ? mode : defaultProperties.mode,
+		mode: (!!mode && typeof mode === 'string') ? mode : featureJson.geometry.type,
 		label: {
 			text: labelText,
 			geometry: (!!label && !!label.geometry) ? label.geometry : defaultProperties.label.geometry

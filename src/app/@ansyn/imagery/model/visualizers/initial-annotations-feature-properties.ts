@@ -50,6 +50,7 @@ export function validateFeatureProperties(feature: Feature<any>): Feature<any> {
 	const defaultStyle = defaultProperties.style;
 	const defaultType = 'Polygon';
 
+
 	if (!featureJson.properties) {
 		featureJson.properties = {};
 	}

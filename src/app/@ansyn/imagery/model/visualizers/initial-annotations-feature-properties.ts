@@ -55,7 +55,7 @@ export function validateFeatureProperties(feature: Feature<any>): Feature<any> {
 		featureJson.properties = {};
 	}
 
-	const { type } = featureJson.geometry.type;
+	const { type } = featureJson.geometry;
 	const { id, style, label = {}, labelSize, icon, showMeasures, showArea, undeletable, mode, labelTranslateOn } = featureJson.properties;
 	const { opacity, initial } = !!style ? style :  { opacity: null, initial: null };
 

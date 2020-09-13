@@ -65,6 +65,7 @@ export function validateFeatureProperties(feature: Feature<any>): Feature<any> {
 	if (typeof label === 'string') {
 		labelText = label;
 	}
+
 	featureJson.geometry = {
 		...featureJson.geometry,
 		type: (!!type && typeof type === 'string') ? type : defaultType

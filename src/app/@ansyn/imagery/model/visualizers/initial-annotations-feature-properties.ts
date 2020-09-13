@@ -79,7 +79,7 @@ export function validateFeatureProperties(feature: Feature<any>): Feature<any> {
 		showMeasures: typeof showMeasures === 'boolean' ? showMeasures : defaultProperties.showMeasures,
 		showArea: typeof showArea === 'boolean' ? showArea : defaultProperties.showArea,
 		undeletable: typeof undeletable === 'boolean' ? undeletable : defaultProperties.undeletable,
-		mode: (!!mode && typeof mode === 'string') ? mode : featureJson.geometry.type,
+		mode: (!!mode && typeof mode === 'string') ? mode : type,
 		label: {
 			text: labelText,
 			geometry: (!!label && !!label.geometry) ? label.geometry : defaultProperties.label.geometry

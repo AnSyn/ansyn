@@ -1,6 +1,6 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
-import { combineLatest, Observable, of, pipe } from 'rxjs';
+import { combineLatest, forkJoin, Observable, of, pipe } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
 	IMapState,
@@ -60,17 +60,19 @@ import {
 	IMarkUpData,
 	MarkUpClass,
 	selectdisplayOverlayHistory,
-	selectDropMarkup,
+	selectDropMarkup, selectOverlaysCriteria,
 	selectOverlaysMap
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { ExtendMap } from '../../modules/overlays/reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../../modules/overlays/components/overlay-overview/overlay-overview.component.const';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
-import { IOverlay } from '../../modules/overlays/models/overlay.model';
+import { IOverlay, IOverlaysCriteria, IOverlaysFetchData } from '../../modules/overlays/models/overlay.model';
 import { Dictionary } from '@ngrx/entity';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { SetBadgeAction } from '@ansyn/menu';
+import { MultipleOverlaysSourceProvider } from "../../modules/overlays/services/multiple-source-provider";
+import { IFetchParams } from "../../modules/overlays/models/base-overlay-source-provider.model";
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -113,9 +115,38 @@ export class OverlaysAppEffects {
 	onDisplayFourView: Observable<any> = this.actions$.pipe(
 		ofType<DisplayFourViewAction>(OverlaysActionTypes.DISPLAY_FOUR_VIEW),
 		filter(Boolean),
-		map(({ payload }) => {
-			this.store$.dispatch(new SetPendingOverlaysAction(payload));
-			return new SetLayoutAction('layout6');
+		withLatestFrom(this.store$.select(selectOverlaysCriteria)),
+		map(([action, criteria]: [DisplayFourViewAction, IOverlaysCriteria]) => {
+			const overlayObservables: Observable<IOverlaysFetchData>[] = [];
+			const params: IFetchParams = {
+				limit: this.overlaysService.config.limit,
+				dataInputFilters: [],
+				timeRange: {
+					start: criteria.time.from,
+					end: criteria.time.to
+				},
+				region: criteria.region,
+				angleParams: {
+					firstAngle: 0,
+					secondAngle: 90
+				}
+			};
+
+			for (let i = 0; i < 4; i++) {
+				overlayObservables.push(this.sourceProvider.fetch(params));
+				params.angleParams.firstAngle += 90;
+				params.angleParams.secondAngle += 90;
+			}
+
+			return forkJoin(overlayObservables).pipe(
+				map((overlaysData: any[]) => {
+					const pendingOverlays: IPendingOverlay[] = [];
+					overlaysData.forEach(overlayData => pendingOverlays.push({overlay: overlayData.data}));
+					
+					this.store$.dispatch(new SetPendingOverlaysAction(pendingOverlays));
+					return new SetLayoutAction('layout6');
+				})
+			);
 		})
 	);
 
@@ -291,6 +322,7 @@ export class OverlaysAppEffects {
 	}
 
 	constructor(public actions$: Actions,
+				private sourceProvider: MultipleOverlaysSourceProvider,
 				public store$: Store<IAppState>,
 				public overlaysService: OverlaysService,
 				protected loggerService: LoggerService) {

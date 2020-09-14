@@ -19,7 +19,13 @@ export interface IFetchParams {
 	sensors?: string[];
 	dataInputFilters: IDataInputFilterValue[];
 	timeRange: IDateRange;
-	customSensorToFilter: string[]; // for context
+	customSensorToFilter?: string[]; // for context
+	angleParams?: IAngleParams
+}
+
+export interface IAngleParams {
+	firstAngle: number;
+	secondAngle: number;
 }
 
 export interface IOverlayFilter {

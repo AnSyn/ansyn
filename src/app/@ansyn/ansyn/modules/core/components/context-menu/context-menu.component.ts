@@ -249,8 +249,7 @@ export class ContextMenuComponent implements OnInit {
 	}
 
 	clickFourView($event: MouseEvent, subFilter?: string) {
-		const overlays = this.getViewedOverlays();
-		this.store$.dispatch(new DisplayFourViewAction(overlays));
+		this.store$.dispatch(new DisplayFourViewAction());
 	}
 
 	clickFirst($event: MouseEvent, subFilter?: string) {

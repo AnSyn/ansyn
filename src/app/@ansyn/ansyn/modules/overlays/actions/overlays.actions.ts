@@ -93,7 +93,7 @@ export class LoadOverlaysAction implements Action {
 export class DisplayFourViewAction implements Action {
 	type = OverlaysActionTypes.DISPLAY_FOUR_VIEW;
 
-	constructor(public payload: IPendingOverlay[]) {
+	constructor(public payload?: any) {
 	}
 }
 

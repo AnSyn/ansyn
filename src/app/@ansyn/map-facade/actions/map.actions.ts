@@ -138,14 +138,10 @@ export class PointToImageOrientationAction implements Action {
 	}
 }
 
-export class PositionChangedAction implements Action, ILogMessage {
+export class PositionChangedAction implements Action {
 	type = MapActionTypes.POSITION_CHANGED;
 
 	constructor(public payload: { id: string, position: ImageryMapPosition, mapInstance: IMapSettings }) {
-	}
-
-	logMessage() {
-		return `Position changed on map`;
 	}
 }
 
@@ -447,9 +443,13 @@ export class SetToastMessageAction implements Action, ILogMessage {
 	}
 }
 
-export class ToggleFooter implements Action {
+export class ToggleFooter implements Action, ILogMessage {
 	type = MapActionTypes.FOOTER_COLLAPSE;
 
 	constructor(public payload: boolean) {
+	}
+
+	logMessage() {
+		return `${this.payload ? '' : 'Un-'}Hiding timeline`
 	}
 }

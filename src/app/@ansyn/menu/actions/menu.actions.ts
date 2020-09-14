@@ -106,10 +106,14 @@ export class SetAutoClose implements Action {
 	}
 }
 
-export class ToggleMenuCollapse implements Action {
+export class ToggleMenuCollapse implements Action, ILogMessage {
 	type = MenuActionTypes.MENU_COLLAPSE;
 
 	constructor(public payload: boolean) {
+	}
+
+	logMessage() {
+		return `${this.payload ? '' : 'Un-'}Hiding menu`
 	}
 }
 

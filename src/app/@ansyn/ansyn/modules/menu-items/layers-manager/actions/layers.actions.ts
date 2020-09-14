@@ -39,14 +39,10 @@ export type LayersActions =
 	| SetLayersModal
 	| CloseLayersModal;
 
-export class BeginLayerCollectionLoadAction implements Action, ILogMessage {
+export class BeginLayerCollectionLoadAction implements Action {
 	type = LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD;
 
 	constructor(public payload: { caseId: string }) {
-	}
-
-	logMessage() {
-		return `Beginning layer collection load from storage`;
 	}
 }
 
@@ -121,10 +117,6 @@ export class AddLayerOnBackendSuccessAction implements Action {
 
 	constructor(public payload: string) {
 	}
-
-	logMessage() {
-		return `Added data layer to backend`
-	}
 }
 
 export class UpdateLayer implements Action, ILogMessage {
@@ -154,10 +146,6 @@ export class UpdateLayerOnBackendSuccessAction implements Action {
 	readonly type = LayersActionTypes.UPDATE_LAYER_ON_BACKEND_SUCCESS_ACTION;
 
 	constructor(public payload: string) {
-	}
-
-	logMessage() {
-		return `Saved data layer to backend`
 	}
 }
 

@@ -392,7 +392,7 @@ export class MapAppEffects {
 		/* -3- */
 		const resetView = pipe(
 			mergeMap((layer: IBaseImageryLayer) => {
-				const isFootprintExtentInsideMapExtent = intersectionRatio !== FOOTPRINT_INSIDE_MAP_RATIO;
+				const isFootprintExtentInsideMapExtent = intersectionRatio === FOOTPRINT_INSIDE_MAP_RATIO;
 				const extent = payloadExtent || isFootprintExtentInsideMapExtent && bboxFromGeoJson(overlay.footprint);
 				return communicator.resetView(layer, mapData.position, extent);
 			}),

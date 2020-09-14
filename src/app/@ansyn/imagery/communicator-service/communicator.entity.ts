@@ -33,6 +33,7 @@ import {
 } from '../model/map-providers-config';
 import { IMapSettings } from '../model/map-settings';
 import { IBaseImageryLayer, IMAGERY_BASE_MAP_LAYER, ImageryLayerProperties } from '../model/imagery-layer.model';
+import { IExportMapData, IExportMapMetadata } from '../model/export-map.model';
 
 export interface IMapInstanceChanged {
 	id: string;
@@ -246,6 +247,15 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return this.ActiveMap.getRotation();
 	}
 
+	exportMap(exportMetadata: IExportMapMetadata): Observable<IExportMapData> {
+		if (!this.ActiveMap) {
+			throw new Error('missing active map');
+		}
+		return this.ActiveMap.exportMap(exportMetadata).pipe(
+			map( (canvas) => ({canvas}))
+		);
+	}
+
 	public getPlugin<T extends BaseImageryPlugin>(plugin: { new(...args): T }): T {
 		return <any>this.plugins.find((_plugin) => _plugin instanceof plugin);
 	}
@@ -345,6 +355,18 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 			this._mapComponentRef.destroy();
 			this._mapComponentRef = undefined;
 		}
+	}
+
+	private calcBoundingRect() {
+		const boundingRect = this.ActiveMap.getHtmlContainer().getBoundingClientRect();
+		// cut the status bar and the menu
+		return {
+			x: Math.round(boundingRect.left - 90),
+			y: Math.round(boundingRect.top - 55),
+			width: Math.round(boundingRect.width),
+			height: Math.round(boundingRect.height)
+
+		};
 	}
 
 }

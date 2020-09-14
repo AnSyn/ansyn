@@ -5,6 +5,7 @@ import { ImageryMapExtent, ImageryMapPosition, IMousePointerMove } from './case-
 import { IMapErrorMessage, IMapProgress } from './map-progress.model';
 import { IBaseImageryLayer } from './imagery-layer.model';
 import { EPSG_4326 } from '../utils/geo';
+import { IExportMapMetadata } from './export-map.model';
 
 export interface IImageryMapMetaData {
 	deps?: any[];
@@ -89,6 +90,8 @@ export abstract class BaseImageryMap<T = any> {
 	abstract updateSize(): void;
 
 	abstract addGeojsonLayer(data: GeoJsonObject);
+
+	abstract exportMap(exportMetadata: IExportMapMetadata): Observable<HTMLCanvasElement>
 
 	abstract dispose(): void;
 

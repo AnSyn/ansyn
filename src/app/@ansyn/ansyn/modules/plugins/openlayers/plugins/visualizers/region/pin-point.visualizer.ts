@@ -15,7 +15,8 @@ import { SetOverlaysCriteriaAction } from '../../../../../overlays/actions/overl
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store, Actions, OpenLayersProjectionService],
-	dontRestrictToExtent: true
+	dontRestrictToExtent: true,
+	layerClassName: 'pin-point-layer'
 })
 export class PinPointVisualizer extends RegionVisualizer {
 	_iconSrc: Style = new Style({

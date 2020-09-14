@@ -33,7 +33,8 @@ import { getIconSvg } from './arrow-svg';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, VisualizersConfig, OverlaysService]
+	deps: [Store, VisualizersConfig, OverlaysService],
+	layerClassName: 'footprint-layer'
 })
 export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 	markups: ExtendMap<MarkUpClass, IMarkUpData>;

@@ -7,18 +7,18 @@
 	<div class="method-chose">
 		<ansyn-radio
 			[(ngModel)]="exportMethod"
-			value="basic"
-			name="exportBasic">
-			{{'basic' | translate}}
+			[value]="basicExport"
+			name="basicExport">
+			{{basicExport | translate}}
 		</ansyn-radio>
 		<ansyn-radio
 			[(ngModel)]="exportMethod"
-			value="advanced"
-			name="exportAdvanced">
-			{{'advanced' | translate}}
+			[value]="advancedExport"
+			name="advancedExport">
+			{{advancedExport | translate}}
 		</ansyn-radio>
 	</div>
-	<ng-container *ngIf="exportMethod === 'advanced'">
+	<ng-container *ngIf="exportMethod === advancedExport">
 		<div class="option">
 			<p>{{'Graphic to be export' | translate}}</p>
 			<div>
@@ -38,9 +38,10 @@
 				</mat-option>
 			</mat-select>
 		</div>
+		<h3 class="note" *ngIf="format === pdfFormat">export pdf work only on the selected map</h3>
 		<div class="option">
 			<p>{{'Page size' | translate}}</p>
-			<mat-select [(value)]="pageSize" [disabled]="format !== 'PDF'">
+			<mat-select [(value)]="pageSize" [disabled]="format !== pdfFormat">
 				<mat-option *ngFor="let size of pageSizes" [value]="size">
 					{{ size | translate}}
 				</mat-option>
@@ -48,7 +49,7 @@
 		</div>
 		<div class="option">
 			<p>{{'Quality' | translate}}</p>
-			<mat-select [(value)]="quality" [disabled]="format !== 'PDF'">
+			<mat-select [(value)]="quality" [disabled]="format !== pdfFormat">
 				<mat-option *ngFor="let q of qualities" [value]="q">
 					{{ q | translate}}
 				</mat-option>
@@ -58,7 +59,7 @@
 </mat-dialog-content>
 <mat-dialog-actions>
 	<button (click)="export()">{{'Export' | translate}}</button>
-	<button class='reset-btn' *ngIf="exportMethod === 'advanced'"
+	<button class='reset-btn' *ngIf="exportMethod === advancedExport"
 	(click)="reset()">
 		{{'Reset' | translate}}
 	</button>

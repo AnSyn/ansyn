@@ -88,7 +88,8 @@ export const MapActionTypes = {
 	SET_MINIMALIST_VIEW_MODE: '[Maps] Set Minimalist View Mode',
 	REPLACE_MAP_MAIN_LAYER: '[Maps] replace Main Layer',
 	REPLACE_MAP_MAIN_LAYER_SUCCESS: '[Maps] replace Main Layer success',
-	REPLACE_MAP_MAIN_LAYER_FAILED: '[Maps] replace Main Layer failed'
+	REPLACE_MAP_MAIN_LAYER_FAILED: '[Maps] replace Main Layer failed',
+	START_DRAGGING_MAP_BETWEEN_SCREEN_AREAS: '[Maps] START_DRAGGING_MAP_BETWEEN_SCREEN_AREAS'
 };
 
 export interface IContextMenuShowPayload {
@@ -417,7 +418,7 @@ export class ToggleMapLayersAction implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return `Toggling data layers, visible = ${this.payload.isVisible}`
+		return `${this.payload.isVisible ? 'Un-' : ''}Hiding data layers for map`
 	}
 }
 
@@ -451,5 +452,16 @@ export class ToggleFooter implements Action, ILogMessage {
 
 	logMessage() {
 		return `${this.payload ? '' : 'Un-'}Hiding timeline`
+	}
+}
+
+export class StartDraggingMapBetweenScreenAreas implements Action, ILogMessage {
+	type = MapActionTypes.START_DRAGGING_MAP_BETWEEN_SCREEN_AREAS;
+
+	constructor(public payload?: any) {
+	}
+
+	logMessage() {
+		return `Dragging map between screen areas`
 	}
 }

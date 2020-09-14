@@ -267,10 +267,14 @@ export class RemoveAlertMsg implements Action, ILogMessage {
 
 }
 
-export class ToggleDraggedModeAction implements Action {
+export class ToggleDraggedModeAction implements Action, ILogMessage {
 	type = OverlayStatusActionsTypes.TOGGLE_DRAGGED_MODE;
 
 	constructor(public payload: { mapId: string, overlayId: string, dragged: boolean }) {
+	}
+
+	logMessage() {
+		return `${this.payload.dragged ? 'Start' : 'End'} annotations drag mode`
 	}
 }
 

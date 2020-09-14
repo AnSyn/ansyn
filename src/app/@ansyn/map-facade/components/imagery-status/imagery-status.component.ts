@@ -4,7 +4,12 @@ import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { get as _get } from 'lodash'
 import { map, tap, filter } from 'rxjs/operators';
-import { SetMapOrientation, SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
+import {
+	SetMapOrientation,
+	SetToastMessageAction,
+	StartDraggingMapBetweenScreenAreas,
+	ToggleMapLayersAction
+} from '../../actions/map.actions';
 import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../models/entry-components-provider';
 import { selectEnableCopyOriginalOverlayDataFlag } from '../../reducers/imagery-status.reducer';
 import {
@@ -160,5 +165,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	toggleImageryPerspective() {
 		const newMapOrientation = this.orientation === 'Imagery Perspective' ? 'User Perspective' : 'Imagery Perspective';
 		this.store$.dispatch(new SetMapOrientation({orientation: newMapOrientation, mapId: this.mapId}));
+	}
+
+	onStartDraggingMap(event) {
+		this.store$.dispatch(new StartDraggingMapBetweenScreenAreas());
+		this.onMove.emit(event);
 	}
 }

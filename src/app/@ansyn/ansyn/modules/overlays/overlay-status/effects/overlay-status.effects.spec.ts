@@ -106,7 +106,7 @@ describe('OverlayStatusEffects', () => {
 	});
 
 	it('toggleAutoImageProcessing$ should raise SetAutoImageProcessingSuccess', () => {
-		actions = hot('--a--', { a: new SetAutoImageProcessing() });
+		actions = hot('--a--', { a: new SetAutoImageProcessing({ mapId: 'mapId' }) });
 		const expectedResults = cold('--(bc)--', {
 			b: new UpdateMapAction({
 				id: 'mapId',

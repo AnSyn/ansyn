@@ -20,10 +20,6 @@ import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
 import { differenceWith } from 'lodash';
 import { filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
-import {
-	OverlayStatusActionsTypes,
-	DisableImageProcessing
-} from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { IAppState } from '../app.effects.module';
 import { selectGeoFilterType } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';

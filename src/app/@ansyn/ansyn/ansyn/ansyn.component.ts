@@ -1,5 +1,5 @@
 import { Store } from '@ngrx/store';
-import { Component, HostBinding, HostListener, Inject, Input, OnInit, ElementRef, OnDestroy } from '@angular/core';
+import { Component, HostBinding, HostListener, Inject, Input, OnInit } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
 import {
 	MapFacadeService,

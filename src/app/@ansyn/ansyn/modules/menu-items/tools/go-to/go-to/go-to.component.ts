@@ -21,6 +21,7 @@ import {
 } from '@ansyn/map-facade';
 import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
 import { ClipboardService } from 'ngx-clipboard';
+import { SubMenuEnum, toolsFlags } from '../../models/tools.model';
 
 @Component({
 	selector: 'ansyn-go-to',

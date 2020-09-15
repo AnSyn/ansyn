@@ -110,14 +110,14 @@ export {
 	UpdateCaseAction
 } from './modules/menu-items/cases/actions/cases.actions';
 export {
-	SubMenuEnum,
-	toolsFlags,
-} from './modules/menu-items/tools/models/tools.model'
-export {
 	selectAnnotationMode, selectAnnotationProperties,
 	selectSubMenu,
 	toolsStateSelector
 } from './modules/menu-items/tools/reducers/tools.reducer';
+export {
+	SubMenuEnum,
+	toolsFlags
+} from './modules/menu-items/tools/models/tools.model';
 export {
 	EnableOnlyFavoritesSelectionAction,
 	FiltersActionTypes, InitializeFiltersAction,

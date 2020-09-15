@@ -3,7 +3,7 @@ import { cloneDeep } from 'lodash';
 import { Feature } from 'geojson';
 
 const ANNOTATIONS_INITIAL_STYLE: IVisualizerStyle = {
-	stroke: '#27b2cfe6',
+	stroke: `rgba(39,179,207,0.9)`,
 	'stroke-width': 1,
 	fill: `rgba(255, 255, 255, 0.4)`,
 	'fill-opacity': 0.4,

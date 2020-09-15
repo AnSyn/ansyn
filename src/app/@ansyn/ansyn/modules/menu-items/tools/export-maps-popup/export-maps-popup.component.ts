@@ -194,9 +194,11 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 				}
 
 				doc.save('map.pdf');
+				this.logger.info(LOGS.success);
 			}),
 			catchError( (err) => {
 				console.error(err);
+				this.logger.error(LOGS.failed);
 				this.store$.dispatch(new SetToastMessageAction({toastText: `can't export map,use basic export instead`}));
 				return EMPTY;
 			}),
@@ -208,6 +210,7 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 		toBlob(document.querySelector(this.config.target), {
 			filter: this.filterExcludeClass(),
 		}).then(blob => {
+			this.logger.info(LOGS.success);
 			this.store$.dispatch(new SetMinimalistViewModeAction(false));
 			saveAs(blob, 'map.jpg');
 		}).catch(err => {
@@ -242,7 +245,7 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 	export() {
 		this.exporting = true;
 		const exportMetadata: IExportMapMetadata = this.getExportMetadata();
-		if (this.exportMethod === ExportMethodEnum.BASIC || this.format === this.formats[0]) {
+		if (this.exportMethod === ExportMethodEnum.BASIC || !this.isPDF()) {
 			this.store$.dispatch(new SetMinimalistViewModeAction(true));
 		} else {
 			this.advancedExportMaps(exportMetadata);
@@ -270,7 +273,7 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 
 	private filterExcludeClass() {
 		const excludeClasses = [...this.config.excludeClasses];
-		if (this.exportMethod === ExportMethodEnum.ADVANCED && this.format === this.formats[0]) {
+		if (this.exportMethod === ExportMethodEnum.ADVANCED && !this.isPDF()) {
 			this.graphicexportMap.forEach((show, key) => {
 				if (!show && item2class[key]) {
 					let excludeClass = item2class[key];
@@ -293,5 +296,9 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 		const time = overlay.date;
 		const sensorName = overlay.sensorName;
 		return `${sensorName} ${time.toLocaleString()}`;
+	}
+
+	close() {
+		this.logger.info(LOGS.canceled);
 	}
 }

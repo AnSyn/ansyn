@@ -13,9 +13,8 @@ import { AnnotationsContextMenuModule } from '@ansyn/ol';
 import { MeasureControlComponent } from './components/measure-control/measure-control.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { ExportMapsPopupComponent } from './export-maps-popup/export-maps-popup.component';
-import { MatDialogModule, MatDialogRef, MatSelectModule } from '@angular/material';
+import { MatDialogModule, MatSelectModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 
@@ -36,7 +35,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 		TranslateModule,
 		CoreModule,
 		MatDialogModule,
-		MatProgressBarModule,
 		MatButtonModule,
 		MatFormFieldModule,
 		MatSelectModule

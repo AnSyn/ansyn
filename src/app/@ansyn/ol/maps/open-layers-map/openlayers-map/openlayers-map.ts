@@ -36,6 +36,7 @@ import { OpenLayersProjectionService } from '../../../projection/open-layers-pro
 import { OpenLayersMonitor } from '../helpers/openlayers-monitor';
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
+import { exportMapHelper } from '../../helpers/helpers';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -503,45 +504,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	exportMap(exportMetadata: IExportMapMetadata): Observable<HTMLCanvasElement> {
 		const {size, resolution, extra: {annotations}} = exportMetadata;
 		const classToInclude = '.ol-layer canvas' + (annotations ? `,${annotations}` : '');
-		const width = Math.round( (size[0] * resolution) / 25.4);
-		const height = Math.round( (size[1] * resolution) / 25.4);
-		const mapSize = this.mapObject.getSize();
-		const viewResolution = this.mapObject.getView().getResolution();
-		return new Observable<HTMLCanvasElement>((observer) => {
-			this.mapObject.once('rendercomplete', () => {
-				const mapCanvas = document.createElement('canvas');
-				mapCanvas.width = width;
-				mapCanvas.height = height;
-				const mapContext = mapCanvas.getContext('2d');
-				this.mapObject.getViewport().querySelectorAll(classToInclude).forEach(
-					function (canvas: HTMLCanvasElement) {
-					if (canvas.width > 0) {
-						const opacity = (canvas.parentNode as any).style.opacity;
-						mapContext.globalAlpha = opacity === '' ? 1 : Number(opacity);
-						const transform = canvas.style.transform;
-						// Get the transform parameters from the style's transform matrix
-						const matrix = transform
-							.match(/^matrix\(([^\(]*)\)$/)[1]
-							.split(',')
-							.map(Number);
-						// Apply the transform to the export map context
-						CanvasRenderingContext2D.prototype.setTransform.apply(
-							mapContext,
-							matrix
-						);
-						mapContext.drawImage(canvas, 0, 0);
-					}
-				});
-				observer.next(mapCanvas);
-				this.mapObject.setSize(mapSize);
-				this.mapObject.getView().setResolution(viewResolution);
-				observer.complete();
-			});
-			const printSize = [width, height];
-			this.mapObject.setSize(printSize);
-			const scaling = Math.min( width / mapSize[0], height / size[1]);
-			this.mapObject.getView().setResolution(viewResolution / scaling);
-		});
+		return exportMapHelper(this.mapObject, size, resolution, classToInclude);
 	}
 
 	one2one(): void {

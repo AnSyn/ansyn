@@ -21,7 +21,7 @@
 	<ng-container *ngIf="exportMethod === advancedExport">
 		<div class="option">
 			<p>{{'Graphic to be export' | translate}}</p>
-			<div>
+			<div class="graphics">
 				<ansyn-checkbox
 					*ngFor="let ge of graphicExport"
 					[ngModel]="graphicexportMap.get(ge)"
@@ -63,4 +63,8 @@
 	(click)="reset()">
 		{{'Reset' | translate}}
 	</button>
+	<ansyn-animated-ellipsis
+		[text]="exporting && ('Exporting' | translate)"
+		[rtl]="'rtl' === ('direction' | translate)"
+	></ansyn-animated-ellipsis>
 </mat-dialog-actions>

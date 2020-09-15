@@ -1,5 +1,5 @@
 import { EventEmitter, ViewContainerRef } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { GeoJsonObject, Point } from 'geojson';
 import { ImageryMapExtent, ImageryMapPosition, IMousePointerMove } from './case-map-position.model';
 import { IMapErrorMessage, IMapProgress } from './map-progress.model';
@@ -91,8 +91,6 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract addGeojsonLayer(data: GeoJsonObject);
 
-	abstract exportMap(exportMetadata: IExportMapMetadata): Observable<HTMLCanvasElement>
-
 	abstract dispose(): void;
 
 	abstract addLayerIfNotExist(layer: IBaseImageryLayer);
@@ -111,5 +109,9 @@ export abstract class BaseImageryMap<T = any> {
 
 	getExtraData(): { [key: string]: any } {
 		return {}
+	}
+
+	exportMap(exportMetadata: IExportMapMetadata): Observable<HTMLCanvasElement> {
+		return throwError(`Method not implement on ${this.mapType}`);
 	}
 }

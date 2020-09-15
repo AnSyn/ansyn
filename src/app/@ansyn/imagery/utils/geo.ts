@@ -150,9 +150,6 @@ export function getPolygonIntersectionRatioWithMultiPolygon(extent: Polygon, foo
 		console.warn('getPolygonIntersectionRatioWithMultiPolygon: turf exception', e);
 	}
 
-	console.log('intersectionRatio', intersectionArea / extentArea);
-	const ratio = intersectionArea / extentArea;
-
 	return intersectionArea / extentArea;
 }
 

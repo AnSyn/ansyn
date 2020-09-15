@@ -161,7 +161,7 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 	activeChange($event: { label: 'stroke' | 'fill', event: string }) {
 		const { style } = this.getFeatureProps();
 		const opacity =  {
-			stroke: color(style.initial.fill).opacity,
+			stroke: color(style.initial.stroke).opacity,
 			fill: color(style.initial.fill).opacity
 		};
 

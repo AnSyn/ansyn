@@ -23,6 +23,13 @@ export const routes: Routes = [
 				data: {
 					name: 'caseChild'
 				}
+			},
+			{
+				path: 'link/:linkId',
+				component: PlaceholderComponent,
+				data: {
+					name: 'linkChild'
+				}
 			}
 		]
 	},
@@ -33,29 +40,11 @@ export const routes: Routes = [
 	{
 		path: 'access_token',
 		component: CallbackComponent
-	},
-	{
-		path: '',
-		component: AnsynHostComponent,
-		data: {
-			name: 'link'
-		},
-		canActivate: [AuthGuard],
-		canDeactivate: [UnAuthGuard],
-		children: [
-			{
-				path: 'link/:linkId',
-				component: PlaceholderComponent,
-				data: {
-					name: 'linkChild'
-				}
-			}
-		]
 	}
 ];
 
 @NgModule({
-	imports: [RouterModule.forRoot(routes)],
+	imports: [RouterModule.forRoot(routes, { useHash: true })],
 	exports: [RouterModule]
 })
 export class AppRoutingModule {

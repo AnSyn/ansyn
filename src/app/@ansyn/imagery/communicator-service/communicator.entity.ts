@@ -357,16 +357,4 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		}
 	}
 
-	private calcBoundingRect() {
-		const boundingRect = this.ActiveMap.getHtmlContainer().getBoundingClientRect();
-		// cut the status bar and the menu
-		return {
-			x: Math.round(boundingRect.left - 90),
-			y: Math.round(boundingRect.top - 55),
-			width: Math.round(boundingRect.width),
-			height: Math.round(boundingRect.height)
-
-		};
-	}
-
 }

@@ -8,7 +8,7 @@ import {
 	SetMinimalistViewModeAction, SetToastMessageAction
 } from '@ansyn/map-facade';
 import { LoggerService } from '../../../core/services/logger.service';
-import { debounceTime, filter, tap, map, mergeMap, catchError, finalize } from 'rxjs/operators';
+import { debounceTime, filter, tap, mergeMap, catchError, finalize } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import { toBlob } from 'dom-to-image';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -35,14 +35,15 @@ enum ExportMethodEnum {
 }
 
 enum FormatEnum {
-	JPG = 'JPG (Screenshot)',
+	JPG = 'JPG',
 	PDF = 'PDF'
 }
 const LOGS = {
 	request: 'Request to export maps',
 	failed: 'Export maps failed',
 	success: 'Export maps success',
-	canceled: 'Export maps was canceled'
+	canceled: 'Export maps was canceled',
+	unsupported: `can't export map,use basic export instead`
 };
 
 const DEFAULT_QUALITY = 'normal';
@@ -62,13 +63,12 @@ const item2class = {
 @AutoSubscriptions()
 export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 	@HostBinding('class.rtl') isRtl: boolean;
-	readonly basicExport = ExportMethodEnum.BASIC;
 	readonly advancedExport = ExportMethodEnum.ADVANCED;
 	readonly pdfFormat = FormatEnum.PDF;
-
+	readonly exportMethods = [ExportMethodEnum.BASIC, ExportMethodEnum.ADVANCED];
 	title = 'Export';
 	description = 'keep in mind that the image may be protected';
-	exportMethod: ExportMethodEnum = ExportMethodEnum.BASIC;
+	selectedExportMethod: ExportMethodEnum = ExportMethodEnum.BASIC;
 	pdfExportMapId: string;
 	exporting: boolean;
 	graphicExport = [GraphicExportEnum.All, GraphicExportEnum.DrawsAndMeasures, GraphicExportEnum.North, GraphicExportEnum.Description];
@@ -199,7 +199,7 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 			catchError( (err) => {
 				console.error(err);
 				this.logger.error(LOGS.failed);
-				this.store$.dispatch(new SetToastMessageAction({toastText: `can't export map,use basic export instead`}));
+				this.store$.dispatch(new SetToastMessageAction({toastText: LOGS.unsupported}));
 				return EMPTY;
 			}),
 			finalize( () => this.dialogRef.close())
@@ -245,7 +245,7 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 	export() {
 		this.exporting = true;
 		const exportMetadata: IExportMapMetadata = this.getExportMetadata();
-		if (this.exportMethod === ExportMethodEnum.BASIC || !this.isPDF()) {
+		if (this.selectedExportMethod === ExportMethodEnum.BASIC || !this.isPDF()) {
 			this.store$.dispatch(new SetMinimalistViewModeAction(true));
 		} else {
 			this.advancedExportMaps(exportMetadata);
@@ -273,7 +273,7 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 
 	private filterExcludeClass() {
 		const excludeClasses = [...this.config.excludeClasses];
-		if (this.exportMethod === ExportMethodEnum.ADVANCED && !this.isPDF()) {
+		if (this.selectedExportMethod === ExportMethodEnum.ADVANCED && !this.isPDF()) {
 			this.graphicexportMap.forEach((show, key) => {
 				if (!show && item2class[key]) {
 					let excludeClass = item2class[key];

@@ -27,7 +27,7 @@ describe('ExportMapsPopupComponent', () => {
 				selector: 'ansyn-animated-ellipsis',
 				inputs: ['text', 'rtl'],
 				outputs: []
-			}),],
+			})],
 			imports: [
 				CoreModule,
 				FormsModule,
@@ -73,7 +73,7 @@ describe('ExportMapsPopupComponent', () => {
 
 	it('when pdf selected export should call advancedExportMaps', fakeAsync(() => {
 		spyOn(component, 'advancedExportMaps');
-		component.exportMethod = component.advancedExport;
+		component.selectedExportMethod = component.advancedExport;
 		component.format = component.pdfFormat;
 		tick();
 		component.export();

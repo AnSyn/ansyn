@@ -5,20 +5,13 @@
 <mat-dialog-content>
 	<h5 mat-dialog-title>{{description | translate}}</h5>
 	<div class="method-chose">
-		<ansyn-radio
-			[(ngModel)]="exportMethod"
-			[value]="basicExport"
-			name="basicExport">
-			{{basicExport | translate}}
-		</ansyn-radio>
-		<ansyn-radio
-			[(ngModel)]="exportMethod"
-			[value]="advancedExport"
-			name="advancedExport">
-			{{advancedExport | translate}}
+		<ansyn-radio *ngFor="let exportMethod of exportMethods"
+					 [(ngModel)]="selectedExportMethod"
+					 [value]="exportMethod"
+					 [name]="exportMethod">{{exportMethod | translate}}
 		</ansyn-radio>
 	</div>
-	<ng-container *ngIf="exportMethod === advancedExport">
+	<ng-container *ngIf="selectedExportMethod === advancedExport">
 		<div class="option">
 			<p>{{'Graphic to be export' | translate}}</p>
 			<div class="graphics">
@@ -59,7 +52,7 @@
 </mat-dialog-content>
 <mat-dialog-actions>
 	<button (click)="export()">{{'Export' | translate}}</button>
-	<button class='reset-btn' *ngIf="exportMethod === advancedExport"
+	<button class='reset-btn' *ngIf="selectedExportMethod === advancedExport"
 	(click)="reset()">
 		{{'Reset' | translate}}
 	</button>

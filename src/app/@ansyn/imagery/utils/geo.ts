@@ -150,7 +150,10 @@ export function getPolygonIntersectionRatioWithMultiPolygon(extent: Polygon, foo
 		console.warn('getPolygonIntersectionRatioWithMultiPolygon: turf exception', e);
 	}
 
-	return intersectionArea / extentArea > 0.99999999999999 ? 1 : intersectionArea / extentArea;
+	console.log('intersectionRatio', intersectionArea / extentArea);
+	const ratio = intersectionArea / extentArea;
+
+	return intersectionArea / extentArea;
 }
 
 export function isPointContainedInGeometry(point: Point, footprint: MultiPolygon | Point | LineString): boolean {

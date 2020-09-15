@@ -9,4 +9,5 @@ export interface IExportMapMetadata {
 
 export interface IExportMapData {
 	canvas: HTMLCanvasElement
+	compass?: HTMLCanvasElement
 }

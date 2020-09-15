@@ -8,7 +8,7 @@ import {
 	SetMinimalistViewModeAction
 } from '@ansyn/map-facade';
 import { LoggerService } from '../../../core/services/logger.service';
-import { debounceTime, filter, tap, map } from 'rxjs/operators';
+import { debounceTime, filter, tap, map, mergeMap } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import { toBlob } from 'dom-to-image';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -16,11 +16,11 @@ import { DOCUMENT } from '@angular/common';
 import { IToolsConfig, toolsConfig } from '../models/tools-config';
 import { annotationsExcludeClassNameForExport } from '@ansyn/ol';
 import { measuresExcludeClassNameForExport } from '../../../plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
-import { IExportMapMetadata, ImageryCommunicatorService, toDegrees } from '@ansyn/imagery';
+import { IExportMapData, IExportMapMetadata, ImageryCommunicatorService, toDegrees } from '@ansyn/imagery';
 import { jsPDF } from "jspdf";
 import { TranslateService } from '@ngx-translate/core';
 import { IOverlay } from '../../../overlays/models/overlay.model';
-import { bindCallback, Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 enum GraphicExportEnum {
 	All = 'All',
@@ -151,50 +151,52 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 
 
 		mapToBeExport.exportMap(exportMetadata).pipe(
-			map( (mapData) => {
+			mergeMap( (exportMapData) => {
 				if (exportMetadata.extra.north) {
 					return new Observable( obs => {
-						const rotation = mapToBeExport.mapSettings.data.position.projectedState.rotation;
-						const rotationInDeg = toDegrees(rotation);
-						const northImage = new Image(90, 90);
+						const rotation = mapToBeExport.getRotation();
+						const northImage = new Image();
 						northImage.onload = function() {
-							const context = mapData.canvas.getContext('2d');
-							context.drawImage(northImage, 10, 20);
-						}
+							const { width, height } = northImage;
+							northImage.style.transform = `rotate(${rotation}rad)`;
+							const canvas = document.createElement('canvas');
+							canvas.width = width;
+							canvas.height = height;
+							const x = canvas.width / 2, y = canvas.height / 2;
+							const ctx = canvas.getContext('2d');
+							ctx.translate(x, y);
+							ctx.rotate(rotation);
+							ctx.drawImage(northImage, -width / 2, -height / 2, width, height);
+							ctx.rotate(-rotation);
+							ctx.translate(-x, -y);
+							obs.next({...exportMapData, compass: canvas});
+							obs.complete();
+						};
 						northImage.src = 'assets/icons/full-north.svg';
 					})
 				}
-				return mapData;
-			})
-		)
-		mapToBeExport.exportMap(exportMetadata).subscribe( (exportMap) => {
-			const {size, extra} = exportMetadata;
-			const doc = new jsPDF('landscape', undefined, this.pageSize);
-			doc.addImage(exportMap.canvas.toDataURL('image/jpeg'), 'JPEG', 0, 0, exportMetadata.size[0], exportMetadata.size[1]);
-			if (extra.descriptions) {
-				doc.rect(0, 0, size[0], 5, 'F');
-				doc.setTextColor(255, 255, 255);
-				doc.setFontSize(11);
-				const loadOverlay = mapToBeExport.mapSettings.data.overlay;
-				const desc = Boolean(loadOverlay) ? this.getDescriptionFromOverlay(loadOverlay) : 'Base Map';
-				doc.text(desc, size[0] / 2, 5, {align: 'center', baseline: 'bottom'});
-			}
-			if ( extra.north) {
-				const rotation = mapToBeExport.mapSettings.data.position.projectedState.rotation;
-				console.log({rotation});
-				const rotationInDeg = toDegrees(rotation);
-				const northImage = new Image(90, 90);
-				northImage.onload = function () {
-					doc.addImage(northImage, 'JPEG', size[0] / 2, size[1] / 2, 26, 26, 'compass', 0, rotationInDeg);
-					doc.save('map.pdf');
+				return of(exportMapData);
+			}),
+			tap( (exportMapData: IExportMapData) => {
+				const {size, extra} = exportMetadata;
+				const doc = new jsPDF('landscape', undefined, this.pageSize);
+				doc.addImage(exportMapData.canvas.toDataURL('image/jpeg'), 'JPEG', 0, 0, exportMetadata.size[0], exportMetadata.size[1]);
+				if (extra.descriptions) {
+					doc.rect(0, 0, size[0], 5, 'F');
+					doc.setTextColor(255, 255, 255);
+					doc.setFontSize(11);
+					const loadOverlay = mapToBeExport.mapSettings.data.overlay;
+					const desc = Boolean(loadOverlay) ? this.getDescriptionFromOverlay(loadOverlay) : 'Base Map';
+					doc.text(desc, size[0] / 2, 5, {align: 'center', baseline: 'bottom'});
 				}
-				northImage.src = 'assets/icons/full-north.svg';
-			}else {
+				if (exportMapData.compass) {
+					doc.addImage(exportMapData.compass.toDataURL('image/png'), 'PNG', 0, 0, 25, 25); // we use png for transparent compass
+				}
+
 				doc.save('map.pdf');
-			}
-			this.dialogRef.close();
-			}
-		);
+			}),
+			tap( () => this.dialogRef.close())
+		).subscribe();
 	}
 
 	basicExportMap() {
@@ -244,9 +246,10 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 	private getExportMetadata(): IExportMapMetadata {
 		const annotations = this.graphicexportMap.get(GraphicExportEnum.DrawsAndMeasures) ?
 			item2class[GraphicExportEnum.DrawsAndMeasures].map( (layerName) => `.${layerName} canvas`).join(',') : false;
+		const resolution = this._qualities[this.quality];
 		return {
 			size: this._pageSizes[this._pageSize],
-			resolution: this._qualities[this.quality],
+			resolution: this._pageSize === 'a0' ? Math.min(250, resolution) : resolution, // export a0 with 300 dpi cause some problem.
 			extra: {
 				north: this.graphicexportMap.get(GraphicExportEnum.North),
 				annotations,

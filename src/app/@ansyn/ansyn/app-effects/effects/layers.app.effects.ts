@@ -92,7 +92,7 @@ export class LayersAppEffects {
 				data: {
 					...layer.data,
 					features: layer.data.features.map((feature) => feature.properties.id === action.payload.featureId ?
-						{ ...feature, properties: { ...feature.properties, ...action.payload.properties } } :
+						{ ...feature, properties: { ...feature.properties, ...action.payload.properties, featureJson: undefined } } :
 						feature)
 				}
 			});

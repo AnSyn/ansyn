@@ -5,7 +5,6 @@ import { CasesComponent } from '../modules/menu-items/cases/components/cases/cas
 import { LayersManagerComponent } from '../modules/menu-items/layers-manager/components/layers-manager/layers-manager.component';
 import { ToolsComponent } from '../modules/menu-items/tools/tools/tools.component';
 import { SettingsComponent } from '../modules/menu-items/settings/settings/settings.component';
-import { HelpComponent } from '../modules/menu-items/help/components/help.component';
 import { TasksComponent } from '../modules/menu-items/algorithms/components/tasks/tasks.component';
 import { anaglyphSensorAlertKey } from '../modules/plugins/openlayers/plugins/anaglyph-sensor/plugin/anaglyph-sensor.plugin';
 import { AnaglyphSensorAlertComponent } from '../modules/plugins/openlayers/plugins/anaglyph-sensor/alert-component/anaglyph-sensor-alert.component';
@@ -69,11 +68,6 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			name: 'Settings',
 			component: SettingsComponent,
 			iconClass: 'icon-main-settings'
-		},
-		{
-			name: 'Help',
-			component: HelpComponent,
-			iconClass: 'icon-main-help'
 		},
 		{
 			name: 'Permissions',

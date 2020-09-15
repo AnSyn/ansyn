@@ -152,13 +152,13 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		});
 	}
 
-	loadInitialMapSource(position?: ImageryMapPosition): Promise<IBaseImageryLayer> {
+	loadInitialMapSource(position?: ImageryMapPosition, sourceType: string = this.mapSettings.worldView.sourceType): Promise<IBaseImageryLayer> {
 		return new Promise(resolve => {
 			if (!this._activeMap) {
 				resolve();
 			}
 
-			this.createMapSourceForMapType(this.mapSettings.worldView.mapType, this.mapSettings.worldView.sourceType)
+			this.createMapSourceForMapType(this.mapSettings.worldView.mapType, sourceType)
 				.then((layer) => {
 					this.resetView(layer, position).subscribe(() => {
 						resolve(layer);
@@ -318,7 +318,10 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 
 	private createMapSourceForMapType(mapType: string, sourceType: string): Promise<IBaseImageryLayer> {
 		const sources: IMapSource[] = this.mapProvidersConfig[mapType].sources;
-		const mapSource: IMapSource = sources.find(source => source.key === sourceType);
+		let mapSource: IMapSource = null;
+		if (Boolean(sources)) {
+			mapSource = sources.find(source => source.key === sourceType);
+		}
 		const sourceProvider = this.getMapSourceProvider({
 			mapType, sourceType: mapSource && mapSource.sourceType || ''
 		});

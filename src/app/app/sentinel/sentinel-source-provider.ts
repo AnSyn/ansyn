@@ -74,11 +74,13 @@ export class SentinelSourceProvider extends BaseOverlaySourceProvider {
 		}
 		// bbox = proj.transform(bbox, EPSG_4326, EPSG_3857);
 		const { start, end } = fetchParams.timeRange;
+		const { customSensorToFilter } = fetchParams;
 		const params = {
 			region: fetchParams.region,
 			start,
 			end,
 			limit: 250,
+			producttype: customSensorToFilter && customSensorToFilter.length ? customSensorToFilter.join(',') : undefined,
 			plate: 'Sentinel-2'
 		};
 		return this.http.post<any>(search, params, { responseType: 'json' }).pipe(

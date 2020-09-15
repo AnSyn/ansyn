@@ -120,10 +120,16 @@
     "updateCaseDebounceTime": 700,
     "useHash": true,
     "defaultSearchFromDeltaTime": {
-    	"unit": "days",
-    	"amount": 80
+    	"unit": "months",
+    	"amount": 2
     }
   },
+  "contextConfig": {
+      "TwoMaps": {
+        "layout": "layout2",
+        "sensors": "S2MSI2A"
+      }
+    },
   "layersManagerConfig": {
     "schema": "layers"
   },
@@ -478,7 +484,8 @@
     	"title": "Fork me on github",
 		"href": "{{ getv "/ansyn/menu/forkme/url" "https://github.com/ansyn/ansyn" }}"
     },
-    "isCollapsible": {{ getv "/ansyn/iscollapsible" "false" }}
+    "isCollapsible": {{ getv "/ansyn/iscollapsible" "false" }},
+    "landingPageUrl": "http://platform.ansyn.io:81/#/"
   },
   "loginConfig": {
   	"baseUrl": "{{ getv "/ansyn/login/baseurl" "http://platform.ansyn.io:9001/api/v1/login" }}",
@@ -1592,5 +1599,8 @@
   },
   "addressService": {
       "url": "assets/config/addresses.json"
-    }
+    },
+    "linksConfig": {
+        "schema": "link"
+      }
 }

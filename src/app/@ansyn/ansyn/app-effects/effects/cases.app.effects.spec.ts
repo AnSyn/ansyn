@@ -19,7 +19,7 @@ import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable, of, throwError } from 'rxjs';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ImageryCommunicatorService, MAP_PROVIDERS_CONFIG } from '@ansyn/imagery';
 import { CoreConfig } from '../../modules/core/models/core.config';
 import { ErrorHandlerService } from '../../modules/core/services/error-handler.service';
 import { StorageService } from '../../modules/core/services/storage/storage.service';
@@ -43,6 +43,7 @@ import { ICase } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { overlayStatusConfig } from "../../modules/overlays/overlay-status/config/overlay-status-config";
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { linksConfig } from '../../modules/menu-items/cases/services/helpers/cases.service.query-params-helper';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -103,6 +104,7 @@ describe('CasesAppEffects', () => {
 					}
 				},
 				{ provide: casesConfig, useValue: { schema: null, defaultCase: { id: 'defaultCaseId' } } },
+				{ provide: linksConfig, useValue: {} },
 				{
 					provide: overlayStatusConfig,
 					useValue: {
@@ -179,6 +181,12 @@ describe('CasesAppEffects', () => {
 				{ provide: casesConfig, useValue: { schema: null } },
 				{
 					provide: toolsConfig, useValue: {}
+				},
+				{
+					provide: MAP_PROVIDERS_CONFIG,
+					useValue: {
+
+					}
 				}
 			]
 		}).compileComponents();

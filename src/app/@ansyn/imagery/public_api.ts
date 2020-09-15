@@ -18,9 +18,9 @@ export { MarkerSizeDic } from './model/visualizers/visualizer-style';
 export { IVisualizerEntity } from './model/visualizers/visualizers-entity';
 export { MarkerSize } from './model/visualizers/visualizer-style';
 export { IVisualizerStyle } from './model/visualizers/visualizer-style';
-export { IVisualizerStateStyle } from './model/visualizers/visualizer-state';
-export { VisualizerStates } from './model/visualizers/visualizer-state';
+export { IVisualizerStateStyle, VisualizerStates } from './model/visualizers/visualizer-state';
 export { IVisualizerAttributes } from './model/visualizers/visualizer-attributes';
+export { getInitialAnnotationsFeatureProperties, getInitialAnnotationsFeatureStyle, validateFeatureProperties } from './model/visualizers/initial-annotations-feature-properties';
 export { IMapProgress, IMapErrorMessage } from './model/map-progress.model';
 export {
 	IMapProviderConfig,

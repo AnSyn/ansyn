@@ -90,7 +90,7 @@ export class SetOverlaysScannedAreaDataAction implements Action {
 export class SetAutoImageProcessing implements Action, ILogMessage {
 	type = OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING;
 
-	constructor(public payload?: any) {
+	constructor(public payload?: { mapId: string }) {
 	}
 
 	logMessage() {

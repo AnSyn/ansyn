@@ -18,9 +18,9 @@ import {
 	selectMapOrientation,
 	selectMapsTotal
 } from '../../reducers/map.reducer';
-import { copyFromContent } from '../../utils/clipboard';
 import { getTimeFormat } from '../../utils/time';
 import { TranslateService } from '@ngx-translate/core';
+import { ClipboardService } from 'ngx-clipboard';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -77,6 +77,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	constructor(protected store$: Store<any>,
 				protected communicators: ImageryCommunicatorService,
 				protected translate: TranslateService,
+				private clipboardService: ClipboardService,
 				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities) {
 	}
 
@@ -143,10 +144,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	copyOverlayDescription() {
 		if (this.enableCopyOriginalOverlayData && this.overlay.tag) {
 			const tagJson = JSON.stringify(this.overlay.tag);
-			copyFromContent(tagJson);
+			this.clipboardService.copyFromContent(tagJson);
 			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay original data copied to clipboard' }));
 		} else {
-			copyFromContent(this.overlayDescription);
+			this.clipboardService.copyFromContent(this.overlayDescription);
 			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay description copied to clipboard' }));
 		}
 	}

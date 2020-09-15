@@ -1,5 +1,5 @@
 import { Store } from '@ngrx/store';
-import { Component, HostBinding, HostListener, Inject, Input, OnInit, ElementRef } from '@angular/core';
+import { Component, HostBinding, HostListener, Inject, Input, OnInit, ElementRef, OnDestroy } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
 import {
 	MapFacadeService,
@@ -57,7 +57,6 @@ export class AnsynComponent implements OnInit {
 	constructor(protected store$: Store<any>,
 				@Inject(COMPONENT_MODE) public componentMode: boolean,
 				@Inject(toolsConfig) public toolsConfigData: IToolsConfig,
-				protected ansynApp: ElementRef,
 				public loggerService: LoggerService) {
 	}
 

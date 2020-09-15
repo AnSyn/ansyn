@@ -6,16 +6,41 @@ import {
 	ToolsActionsTypes
 } from '../actions/tools.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { IVisualizerStyle } from '@ansyn/imagery';
+import { IVisualizerStyle, getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
 import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 import { AnnotationMode } from '@ansyn/ol';
-import {
-	createNewMeasureData,
-	IMeasureData,
-	IMeasureDataOptions,
-	SubMenuEnum,
-	toolsFlags
-} from '../models/tools.model';
+
+export enum toolsFlags {
+	geoRegisteredOptionsEnabled = 'geoRegisteredOptionsEnabled',
+	shadowMouse = 'shadowMouse',
+	shadowMouseDisabled = 'shadowMouseDisabled',
+	shadowMouseActiveForManyScreens = 'shadowMouseActiveForManyScreens',
+	forceShadowMouse = 'forceShadowMouse',
+	pinLocation = 'pinLocation',
+	isMeasureToolActive = 'isMeasureToolActive'
+}
+
+export enum SubMenuEnum { goTo, overlays, annotations }
+
+export interface IMeasureDataOptions {
+	isLayerShowed: boolean;
+	isToolActive: boolean;
+	isRemoveMeasureModeActive: boolean;
+	forceDisableTranslate?: boolean;
+}
+
+export interface IMeasureData extends IMeasureDataOptions{
+	meausres: IVisualizerEntity[];
+}
+
+export function createNewMeasureData(): IMeasureData {
+	return {
+		isLayerShowed: true,
+		isToolActive: true,
+		isRemoveMeasureModeActive: false,
+		meausres: []
+	}
+}
 
 export interface IToolsState {
 	flags: Map<toolsFlags, boolean>;
@@ -29,15 +54,6 @@ export interface IToolsState {
 	mapSearchBoxSearch: boolean;
 }
 
-export const initialAnnotationProperties = {
-	'stroke-width': 1,
-	'fill-opacity': 0.4,
-	'stroke-opacity': 1,
-	'stroke-dasharray': 0,
-	'marker-color': '#ffffff',
-	stroke: '#27b2cf',
-	fill: '#ffffff'
-}
 
 export const toolsInitialState: IToolsState = {
 	flags: new Map<toolsFlags, boolean>([
@@ -46,7 +62,7 @@ export const toolsInitialState: IToolsState = {
 	subMenu: undefined,
 	activeCenter: [0, 0],
 	annotationMode: undefined,
-	annotationProperties: initialAnnotationProperties,
+	annotationProperties: getInitialAnnotationsFeatureStyle(),
 	activeAnnotationLayer: null,
 	mapsMeasures: new Map<string, IMeasureData>(),
 	mapSearchBoxSearch: false

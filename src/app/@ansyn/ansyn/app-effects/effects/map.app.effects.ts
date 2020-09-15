@@ -84,6 +84,7 @@ import {
 	IOverlayStatusConfig,
 	overlayStatusConfig
 } from '../../modules/overlays/overlay-status/config/overlay-status-config';
+import { MeasureDistanceVisualizer } from '../../modules/plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
 
 const FOOTPRINT_INSIDE_MAP_RATIO = 1;
 
@@ -303,7 +304,11 @@ export class MapAppEffects {
 			ofType<ToggleMapLayersAction>(MapActionTypes.TOGGLE_MAP_LAYERS),
 			tap(({ payload }) => {
 				const communicator = this.imageryCommunicatorService.provide(payload.mapId);
-				communicator.visualizers.forEach(v => v.setVisibility(payload.isVisible));
+				communicator.visualizers.forEach(v => {
+					if (!(v instanceof MeasureDistanceVisualizer)) {
+						v.setVisibility(payload.isVisible);
+					}
+				})
 			})
 		);
 

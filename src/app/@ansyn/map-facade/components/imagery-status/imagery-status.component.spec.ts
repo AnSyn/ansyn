@@ -11,6 +11,7 @@ import { imageryStatusFeatureKey, ImageryStatusReducer } from '../../reducers/im
 import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { MockComponent } from '../../test/mock-component';
 import { ImageryStatusComponent } from './imagery-status.component';
+import { ClipboardModule, ClipboardService } from 'ngx-clipboard';
 
 const MAP: IMapSettings = {
 	id: 'test',
@@ -35,6 +36,7 @@ describe('ImageryStatusComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
+				ClipboardModule,
 				HttpClientModule,
 				FormsModule,
 				EffectsModule.forRoot([]),
@@ -53,6 +55,7 @@ describe('ImageryStatusComponent', () => {
 				})
 			],
 			providers: [
+				ClipboardService,
 				ImageryCommunicatorService,
 				{ provide: ENTRY_COMPONENTS_PROVIDER, useValue: {status: [], container: [], floating_menu: []} }
 			]

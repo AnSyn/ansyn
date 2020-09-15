@@ -153,9 +153,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			target,
 			renderer,
 			controls,
-			interaction: olInteraction.defaults({ doubleClickZoom: false }),
-			loadTilesWhileInteracting: true,
-			loadTilesWhileAnimating: true
+			interactions: olInteraction.defaults({ doubleClickZoom: false }),
+			preload: Infinity
 		});
 		this.initListeners();
 		this._backgroundMapParams = {
@@ -528,6 +527,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	public addGeojsonLayer(data: GeoJsonObject): void {
 		let layer: VectorLayer = new VectorLayer({
+			updateWhileAnimating: true,
+			updateWhileInteracting: true,
 			source: new Vector({
 				features: new olGeoJSON().readFeatures(data)
 			})

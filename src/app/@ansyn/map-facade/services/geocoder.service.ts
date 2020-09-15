@@ -35,7 +35,8 @@ export class GeocoderService {
 			return of([]);
 		}
 		return this.http.get<any>(url).pipe(
-			map( (result: any): IMapSearchResult[] => result.features.map( feature => ({ name: feature.properties.display_name, point: feature.geometry }))),
+			map( (result: any): IMapSearchResult[] =>
+				result.features.map( feature => ({ name: feature.properties.display_name, point: feature.geometry }))),
 			catchError((error: Response | any) => {
 				console.warn(error);
 				return of([{ name: undefined, point: undefined }]);

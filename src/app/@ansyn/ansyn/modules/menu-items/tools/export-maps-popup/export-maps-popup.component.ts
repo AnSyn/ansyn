@@ -3,7 +3,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { CredentialsService } from '../../../core/services/credentials/credentials.service';
 import { DOCUMENT } from '@angular/common';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { tap, filter } from 'rxjs/operators';
+import { tap, filter, timeout } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { saveAs } from 'file-saver';
 import { IToolsConfig, toolsConfig } from '../models/tools-config';
@@ -26,6 +26,7 @@ const LOGS = {
 })
 @AutoSubscriptions()
 export class ExportMapsPopupComponent implements OnInit, OnDestroy {
+	animationFrame;
 	title = 'Notice';
 	description = 'Your image is in process, keep in mind that the image may be protected.';
 	mapBlob = new EventEmitter<Blob>();
@@ -68,16 +69,21 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 	}
 
 	exportMapsToPng() {
-		toBlob(document.querySelector(this.config.target), {
-			filter: (element) => !(element.classList && this.config.excludeClasses.some( excludeClass => element.classList.contains(excludeClass)))
-		}).then(blob => {
-			this.store$.dispatch(new SetMinimalistViewModeAction(false));
-			this.isDownloadAvailable = true;
-			this.mapBlob.emit(blob)
-		}).catch( err => {
-			this.logger.error(LOGS.failed);
-			this.closeModal();
-		});
+			toBlob(document.querySelector(this.config.target), {
+				filter: (element) => {
+					if (element.tagName === 'CANVAS') {
+						return element.width > 0;
+					}
+					return !(element.classList && this.config.excludeClasses.some( excludeClass => element.classList.contains(excludeClass)));
+				}
+			}).then(blob => {
+				this.store$.dispatch(new SetMinimalistViewModeAction(false));
+				this.isDownloadAvailable = true;
+				this.mapBlob.emit(blob)
+			}).catch( err => {
+				this.logger.error(LOGS.failed);
+				this.closeModal();
+			});
 	}
 
 	closeModal(): void {

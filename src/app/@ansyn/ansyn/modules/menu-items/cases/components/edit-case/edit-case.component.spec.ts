@@ -16,6 +16,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { mapFacadeConfig } from '@ansyn/map-facade';
 import { LoggerService } from '../../../../core/services/logger.service';
+import { linksConfig } from '../../services/helpers/cases.service.query-params-helper';
 
 describe('EditCaseComponent', () => {
 	let component: EditCaseComponent;
@@ -49,6 +50,7 @@ describe('EditCaseComponent', () => {
 			],
 			providers: [
 				DataLayersService,
+				{ provide: linksConfig, useValue: {} },
 				{ provide: casesConfig, useValue: { schema: null, defaultCase: { id: 'defaultCaseId' } } },
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },

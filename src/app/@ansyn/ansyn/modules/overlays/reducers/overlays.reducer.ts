@@ -74,7 +74,7 @@ export interface IOverlaysState extends EntityState<IOverlay> {
 	dropsMarkUp: ExtendMap<MarkUpClass, IMarkUpData>;
 	hoveredOverlay: IOverlay;
 	overlaysCriteria: IOverlaysCriteria;
-	miscOverlays: IOverlaysHash;
+	miscOverlays: IOverlaysHash; // use to save overlay that not part of the current criteria
 	customOverviewElement: any;
 	totalOverlaysLength: number;
 }
@@ -337,6 +337,7 @@ export const { selectEntities, selectAll, selectTotal, selectIds } = overlaysAda
 export const selectOverlays = createSelector(overlaysStateSelector, selectEntities);
 export const selectOverlaysMap: any = createSelector(selectOverlays, (entities: Dictionary<IOverlay>): Map<string, IOverlay> => new Map(Object.entries(entities)));
 export const selectOverlaysArray = createSelector(overlaysStateSelector, selectAll);
+export const selectOverlaysIds = createSelector(overlaysStateSelector, selectIds);
 export const selectFilteredOveralys = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string[] => overlays && overlays.filteredOverlays);
 export const selectSpecialObjects = createSelector(overlaysStateSelector, (overlays: IOverlaysState): Map<string, IOverlaySpecialObject> => overlays.specialObjects);
 export const selectDrops = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays && overlays.drops);

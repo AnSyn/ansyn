@@ -18,7 +18,7 @@ import { ResetAppAction, ToggleIsPinnedAction, UnSelectMenuItemAction } from '..
 import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
 import { ShowOverlaysFootprintAction, StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
-import { initialAnnotationProperties } from '../../modules/menu-items/tools/reducers/tools.reducer';
+import { getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
 import { LoggerService } from '../../modules/core/services/logger.service';
 
 describe('MenuAppEffects', () => {
@@ -79,7 +79,7 @@ describe('MenuAppEffects', () => {
 			b: new LoadDefaultCaseAction(),
 			c: new ShowOverlaysFootprintAction('None'),
 			d: new StartMouseShadow({fromUser: true}),
-			e: new AnnotationSetProperties(initialAnnotationProperties),
+			e: new AnnotationSetProperties(getInitialAnnotationsFeatureStyle()),
 			f: new ToggleIsPinnedAction(false),
 			g: new UnSelectMenuItemAction(),
 			h: new ToggleFooter(false)

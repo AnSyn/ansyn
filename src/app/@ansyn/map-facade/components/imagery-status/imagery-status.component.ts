@@ -27,7 +27,7 @@ export const imageryStatusClassNameForExport = 'imagery-status';
 	destroy: 'ngOnDestroy'
 })
 export class ImageryStatusComponent implements OnInit, OnDestroy {
-	@HostBinding(`class.${imageryStatusClassNameForExport}`) private _ = true;
+	@HostBinding(`class.${imageryStatusClassNameForExport}`) readonly _ = true;
 	isMapLayersVisible = true;
 	mapsAmount = 1;
 	_map: IMapSettings;

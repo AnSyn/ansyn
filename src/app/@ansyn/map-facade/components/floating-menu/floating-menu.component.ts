@@ -9,7 +9,7 @@ export const floationMenuClassNameForExport = 'floating-menu';
 	styleUrls: ['./floating-menu.component.less']
 })
 export class FloatingMenuComponent implements OnInit {
-	@HostBinding(`class.${floationMenuClassNameForExport}`) private _ = true;
+	@HostBinding(`class.${floationMenuClassNameForExport}`) readonly _ = true;
 	@Input() isMinimalistViewMode: boolean;
 	@Input() mapState: IMapSettings;
 

@@ -5,7 +5,7 @@ import { Feature } from 'geojson';
 const ANNOTATIONS_INITIAL_STYLE: IVisualizerStyle = {
 	stroke: '#27b2cfe6',
 	'stroke-width': 1,
-	fill: `white`,
+	fill: `rgba(255, 255, 255, 0.4)`,
 	'fill-opacity': 0.4,
 	'stroke-opacity': 1,
 	'stroke-dasharray': 0,

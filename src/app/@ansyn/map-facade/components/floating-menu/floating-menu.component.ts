@@ -1,7 +1,7 @@
 import { Component, HostBinding, Inject, Input, OnInit } from '@angular/core';
 import { IMapSettings } from '@ansyn/imagery';
 import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../models/entry-components-provider';
-export const floationMenuExcludeClassNameForExport = 'floating-menu';
+export const floationMenuClassNameForExport = 'floating-menu';
 
 @Component({
 	selector: 'ansyn-floating-menu',
@@ -9,7 +9,7 @@ export const floationMenuExcludeClassNameForExport = 'floating-menu';
 	styleUrls: ['./floating-menu.component.less']
 })
 export class FloatingMenuComponent implements OnInit {
-	@HostBinding(`class.${floationMenuExcludeClassNameForExport}`) private _ = true;
+	@HostBinding(`class.${floationMenuClassNameForExport}`) private _ = true;
 	@Input() isMinimalistViewMode: boolean;
 	@Input() mapState: IMapSettings;
 

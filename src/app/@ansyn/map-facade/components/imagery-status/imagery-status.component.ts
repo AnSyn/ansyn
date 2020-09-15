@@ -16,7 +16,7 @@ import {
 import { getTimeFormat } from '../../utils/time';
 import { TranslateService } from '@ngx-translate/core';
 import { ClipboardService } from 'ngx-clipboard';
-export const imageryStatusExcludeClassNameForExport = 'imagery-status';
+export const imageryStatusClassNameForExport = 'imagery-status';
 @Component({
 	selector: 'ansyn-imagery-status',
 	templateUrl: './imagery-status.component.html',
@@ -27,7 +27,7 @@ export const imageryStatusExcludeClassNameForExport = 'imagery-status';
 	destroy: 'ngOnDestroy'
 })
 export class ImageryStatusComponent implements OnInit, OnDestroy {
-	@HostBinding(`class.${imageryStatusExcludeClassNameForExport}`) private _ = true;
+	@HostBinding(`class.${imageryStatusClassNameForExport}`) private _ = true;
 	isMapLayersVisible = true;
 	mapsAmount = 1;
 	_map: IMapSettings;

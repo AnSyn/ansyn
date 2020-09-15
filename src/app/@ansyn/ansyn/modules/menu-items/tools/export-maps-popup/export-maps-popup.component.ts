@@ -2,8 +2,8 @@ import { Component, HostBinding, Inject, OnDestroy, OnInit } from '@angular/core
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { select, Store } from '@ngrx/store';
 import {
-	floationMenuExcludeClassNameForExport,
-	imageryStatusExcludeClassNameForExport, selectActiveMapId,
+	floationMenuClassNameForExport,
+	imageryStatusClassNameForExport, selectActiveMapId,
 	selectIsMinimalistViewMode,
 	SetMinimalistViewModeAction, SetToastMessageAction
 } from '@ansyn/map-facade';
@@ -14,8 +14,8 @@ import { toBlob } from 'dom-to-image';
 import { MatDialogRef } from '@angular/material/dialog';
 import { DOCUMENT } from '@angular/common';
 import { IToolsConfig, toolsConfig } from '../models/tools-config';
-import { annotationsExcludeClassNameForExport } from '@ansyn/ol';
-import { measuresExcludeClassNameForExport } from '../../../plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
+import { annotationsClassNameForExport } from '@ansyn/ol';
+import { measuresClassNameForExport } from '../../../plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
 import { IExportMapData, IExportMapMetadata, ImageryCommunicatorService, toDegrees } from '@ansyn/imagery';
 import { jsPDF } from "jspdf";
 import { TranslateService } from '@ngx-translate/core';
@@ -49,9 +49,9 @@ const DEFAULT_QUALITY = 'normal';
 const DEFAULT_PAGE_SIZE = 'a4';
 
 const item2class = {
-	[GraphicExportEnum.DrawsAndMeasures]: [annotationsExcludeClassNameForExport, measuresExcludeClassNameForExport],
-	[GraphicExportEnum.North]: floationMenuExcludeClassNameForExport,
-	[GraphicExportEnum.Description]: imageryStatusExcludeClassNameForExport
+	[GraphicExportEnum.DrawsAndMeasures]: [annotationsClassNameForExport, measuresClassNameForExport],
+	[GraphicExportEnum.North]: floationMenuClassNameForExport,
+	[GraphicExportEnum.Description]: imageryStatusClassNameForExport
 };
 
 @Component({

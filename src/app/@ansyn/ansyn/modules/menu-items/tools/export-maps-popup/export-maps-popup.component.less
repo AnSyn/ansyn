@@ -4,6 +4,10 @@
 :host {
 	&.rtl {
 		direction: rtl;
+
+		.mat-dialog-actions {
+			flex-direction: row-reverse;
+		}
 	}
 	background-color: @background-color-2;
 	display: flex;
@@ -80,11 +84,6 @@
 			color: red;
 			font-weight: bold;
 			text-align: center;
-
-			&:before {
-				content: '⚠ Note: ';
-
-			}
 		}
 	}
 

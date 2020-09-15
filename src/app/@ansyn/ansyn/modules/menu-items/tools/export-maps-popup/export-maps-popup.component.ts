@@ -61,7 +61,7 @@ const item2class = {
 })
 @AutoSubscriptions()
 export class ExportMapsPopupComponent implements OnInit, OnDestroy {
-	@HostBinding('style.direction') direction: 'rtl' | 'ltr';
+	@HostBinding('class.rtl') isRtl: boolean;
 	readonly basicExport = ExportMethodEnum.BASIC;
 	readonly advancedExport = ExportMethodEnum.ADVANCED;
 	readonly pdfFormat = FormatEnum.PDF;
@@ -133,7 +133,7 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 				@Inject(DOCUMENT) protected document: any,
 				@Inject(toolsConfig) public toolsConfigData: IToolsConfig) {
 		this.logger.info(LOGS.request);
-		this.translateService.get('direction', '').subscribe( (direction) => this.direction = direction === 'rtl' ? 'rtl' : 'ltr')
+		this.translateService.get('direction', '').subscribe( (direction) => this.isRtl = direction === 'rtl')
 	}
 
 	ngOnInit(): void {

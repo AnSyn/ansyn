@@ -9,10 +9,6 @@ import {
 	SetFavoriteOverlaysAction,
 	SetOverlaysScannedAreaDataAction,
 	SetOverlaysTranslationDataAction,
-	SetPresetOverlaysAction,
-	SetRemovedOverlaysIdsAction,
-	SetRemovedOverlaysVisibilityAction,
-	UpdateOverlaysManualProcessArgs
 } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { SelectCaseAppEffects } from './select-case.app.effects';
 import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '@ansyn/map-facade';
@@ -138,27 +134,23 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijklmnpqrstx)--', {
+			const expectedResult = cold('--(abcdefghijklmnpq)--', {
 				a: new SetMapsDataActionStore({ mapsList: maps.data }),
 				b: new SetActiveMapId(maps.activeMapId),
 				c: new SetLayoutAction(<any>maps.layout),
 				d: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
 				e: new UpdateGeoFilterStatus({active: false, type: region.type}),
 				f: new SetFavoriteOverlaysAction(favoriteOverlays),
-				g: new SetPresetOverlaysAction(presetOverlays),
-				h: new SetMiscOverlays({ miscOverlays }),
-				i: new SetOverlaysTranslationDataAction(overlaysTranslationData),
-				j: new SetOverlaysScannedAreaDataAction(overlaysScannedAreaData),
-				k: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
-				l: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
-				m: new UpdateFacetsAction(facets),
-				n: new UpdateSelectedLayersIds([]),
-				p: new SetAutoSave(false),
-				q: new SetRemovedOverlaysIdsAction(removedOverlaysIds),
-				r: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
-				s: new SetAnnotationMode(null),
-				t: new SetMeasureDistanceToolState(false),
-				x: new SelectCaseSuccessAction(payload)
+				g: new SetMiscOverlays({ miscOverlays }),
+				h: new SetOverlaysTranslationDataAction(overlaysTranslationData),
+				i: new SetOverlaysScannedAreaDataAction(overlaysScannedAreaData),
+				j: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
+				k: new UpdateFacetsAction(facets),
+				l: new UpdateSelectedLayersIds([]),
+				m: new SetAutoSave(false),
+				n: new SetAnnotationMode(null),
+				p: new SetMeasureDistanceToolState(false),
+				q: new SelectCaseSuccessAction(payload)
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

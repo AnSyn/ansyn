@@ -11,7 +11,6 @@ import {
 	IOverlaysHash,
 	IOverlaySpecialObject
 } from '../models/overlay.model';
-import { OverlayStatusActionsTypes } from '../overlay-status/actions/overlay-status.actions';
 import { ExtendMap } from './extendedMap.class';
 
 export interface ITimelineRange {
@@ -282,16 +281,6 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 					[mapId]: [...mapHistory, overlay.id]
 				}
 			};
-
-		case OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_ID:
-			if (action.payload.value) {
-				const displayOverlayHistory = { ...state.displayOverlayHistory };
-				Object.entries(displayOverlayHistory).forEach(([key, value]) => {
-					displayOverlayHistory[key] = value.filter((id) => id !== action.payload.id);
-				});
-				return { ...state, displayOverlayHistory };
-			}
-			return state;
 
 		case MapActionTypes.SET_MAPS_DATA:
 			const { mapsList } = action.payload;

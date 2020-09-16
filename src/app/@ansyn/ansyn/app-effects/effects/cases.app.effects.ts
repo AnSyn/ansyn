@@ -96,7 +96,6 @@ export class CasesAppEffects {
 				const ids: IOverlayByIdMetaData[] = uniqBy(caseValue.state.maps.data.filter(mapData => Boolean(mapData.data.overlay))
 						.map((mapData) => mapData.data.overlay)
 						.concat(caseValue.state.favoriteOverlays,
-							caseValue.state.presetOverlays || [],
 							Object.values(caseValue.state.miscOverlays || {}).filter(Boolean))
 					, 'id')
 					.map(({ id, sourceType }: IOverlay): IOverlayByIdMetaData => ({ id, sourceType }));
@@ -107,9 +106,6 @@ export class CasesAppEffects {
 						map((mapOverlay: Map<string, IOverlay>) => {
 							caseValue.state.favoriteOverlays = caseValue.state.favoriteOverlays
 								.map((favOverlay: IOverlay) => mapOverlay.get(favOverlay.id));
-
-							caseValue.state.presetOverlays = (caseValue.state.presetOverlays || [])
-								.map((preOverlay: IOverlay) => mapOverlay.get(preOverlay.id));
 
 							caseValue.state.miscOverlays = mapValues(caseValue.state.miscOverlays || {},
 								(prevOverlay: IOverlay) => {

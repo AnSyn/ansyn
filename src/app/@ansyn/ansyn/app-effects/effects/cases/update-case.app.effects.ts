@@ -6,9 +6,6 @@ import { selectActiveMapId, selectLayout, selectMapsList } from '@ansyn/map-faca
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	selectFavoriteOverlays, selectOverlaysManualProcessArgs,
-	selectPresetOverlays,
-	selectRemovedOverlays,
-	selectRemovedOverlaysVisibility,
 	selectScannedAreaData,
 	selectTranslationData
 } from '../../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
@@ -30,12 +27,9 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectSelectedLayersIds),
 		this.store$.select(selectFacets),
 		this.store$.select(selectFavoriteOverlays),
-		this.store$.select(selectRemovedOverlays),
-		this.store$.select(selectRemovedOverlaysVisibility),
-		this.store$.select(selectPresetOverlays),
 		this.store$.select(selectActiveMapId),
 		this.store$.select(selectMapsList),
-		this.store$.select(selectLayout),
+	this.store$.select(selectLayout),
 		this.store$.select(selectOverlaysCriteria),
 		this.store$.select(selectOverlaysManualProcessArgs),
 		this.store$.select(selectMiscOverlays),
@@ -54,9 +48,6 @@ export class UpdateCaseAppEffects {
 				activeLayersIds,
 				facets,
 				favoriteOverlays,
-				removedOverlaysIds,
-				removedOverlaysVisibility,
-				presetOverlays,
 				activeMapId,
 				mapsList,
 				layout,
@@ -86,9 +77,6 @@ export class UpdateCaseAppEffects {
 						activeLayersIds
 					},
 					favoriteOverlays,
-					removedOverlaysIds,
-					removedOverlaysVisibility,
-					presetOverlays,
 					region,
 					dataInputFilters,
 					time,

@@ -1,5 +1,4 @@
 import { Store, StoreModule } from '@ngrx/store';
-import { SetPresetOverlaysAction } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import {
 	overlayStatusFeatureKey,
 	OverlayStatusReducer
@@ -12,7 +11,7 @@ import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpBackend, HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { ExpandAction, GoNextPresetOverlay } from '../../modules/status-bar/actions/status-bar.actions';
+import { ExpandAction } from '../../modules/status-bar/actions/status-bar.actions';
 import { statusBarFeatureKey, StatusBarReducer } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { CasesService } from '../../modules/menu-items/cases/services/cases.service';
 import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/reducers/cases.reducer';
@@ -162,7 +161,6 @@ describe('StatusBarAppEffects', () => {
 
 			store.dispatch(new SetActiveMapId('map_1'));
 			store.dispatch(new SetMapsDataActionStore({ mapsList }));
-			store.dispatch(new SetPresetOverlaysAction(presetOverlays))
 		});
 		it('if no preset overlay currently displays, should display presetOverlays[0]', () => {
 			actions = hot('--a--', { a: new GoNextPresetOverlay() });

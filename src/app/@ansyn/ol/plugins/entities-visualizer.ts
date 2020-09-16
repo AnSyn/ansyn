@@ -89,6 +89,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 		let extent = !this.dontRestrictToExtent ? (this.iMap.getMainLayer() as ol_Layer).getExtent() : undefined;
 		this.vector = new VectorLayer(<any>{
+			className: this.layerClassName ? this.layerClassName : undefined,
 			source: this.source,
 			style: this.featureStyle.bind(this),
 			opacity: this.visualizerStyle.opacity,

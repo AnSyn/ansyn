@@ -73,9 +73,6 @@ export interface IDilutedCaseState {
 	dataInputFilters: ICaseDataInputFiltersState;
 	favoriteOverlays?: IDilutedOverlay[];
 	miscOverlays?: IDilutedOverlaysHash;
-	removedOverlaysIds?: string[];
-	removedOverlaysVisibility: boolean;
-	presetOverlays?: IDilutedOverlay[];
 	overlaysManualProcessArgs: IOverlaysManualProcessArgs;
 	overlaysTranslationData: IOverlaysTranslationData;
 	overlaysScannedAreaData?: IOverlaysScannedAreaData;
@@ -84,7 +81,6 @@ export interface IDilutedCaseState {
 
 export interface ICaseState extends IDilutedCaseState {
 	favoriteOverlays?: IOverlay[];
-	presetOverlays?: IOverlay[];
 	miscOverlays?: IOverlaysHash;
 	maps?: ICaseMapsState;
 }

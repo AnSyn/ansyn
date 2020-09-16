@@ -6,9 +6,6 @@ import {
 	SetFavoriteOverlaysAction,
 	SetOverlaysScannedAreaDataAction,
 	SetOverlaysTranslationDataAction,
-	SetPresetOverlaysAction,
-	SetRemovedOverlaysIdsAction,
-	SetRemovedOverlaysVisibilityAction,
 	UpdateOverlaysManualProcessArgs
 } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { IAppState } from '../../app.effects.module';
@@ -37,7 +34,6 @@ import { SetMiscOverlays, SetOverlaysCriteriaAction } from '../../../modules/ove
 import { ICase, ICaseMapState } from '../../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../../modules/overlays/models/overlay.model';
 import { mapValues } from 'lodash';
-import { UUID } from 'angular2-uuid';
 import { ICasesConfig } from '../../../modules/menu-items/cases/models/cases-config';
 import { UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/status-bar.actions';
 
@@ -65,7 +61,7 @@ export class SelectCaseAppEffects {
 		// map
 		const { data } = state.maps;
 		// context
-		const { favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, presetOverlays, region, dataInputFilters, miscOverlays } = state;
+		const { favoriteOverlays, region, dataInputFilters, miscOverlays } = state;
 		let { time } = state;
 		const { layout } = state.maps;
 
@@ -91,7 +87,6 @@ export class SelectCaseAppEffects {
 			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
 			new UpdateGeoFilterStatus({active: false, type: region.type}),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
-			new SetPresetOverlaysAction((presetOverlays || []).map(this.parseOverlay.bind(this))),
 			new SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this)) }),
 			new SetOverlaysTranslationDataAction(overlaysTranslationData),
 			new SetOverlaysScannedAreaDataAction(overlaysScannedAreaData),
@@ -100,8 +95,6 @@ export class SelectCaseAppEffects {
 			new UpdateFacetsAction(facets),
 			new UpdateSelectedLayersIds(activeLayersIds),
 			new SetAutoSave(autoSave),
-			new SetRemovedOverlaysIdsAction(removedOverlaysIds),
-			new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
 			new SetAnnotationMode(null),
 			new SetMeasureDistanceToolState(false),
 			new SelectCaseSuccessAction(payload)

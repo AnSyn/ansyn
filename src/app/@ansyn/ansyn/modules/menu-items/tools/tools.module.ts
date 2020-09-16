@@ -12,9 +12,8 @@ import { AnnotationsContextMenuModule } from '@ansyn/ol';
 import { MeasureControlComponent } from './components/measure-control/measure-control.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { ExportMapsPopupComponent } from './export-maps-popup/export-maps-popup.component';
-import { MatDialogModule, MatDialogRef } from '@angular/material';
+import { MatDialogModule, MatSelectModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 // @dynamic
@@ -34,9 +33,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 		TranslateModule,
 		CoreModule,
 		MatDialogModule,
-		MatProgressBarModule,
 		MatButtonModule,
-		MatFormFieldModule
+		MatFormFieldModule,
+		MatSelectModule
 	],
 	providers: [ProjectionConverterService, MatDialogModule, { provide: MatDialogRef, useValue: {} }],
 	declarations: [ToolsComponent, AnnotationsControlComponent, MeasureControlComponent, ExportMapsPopupComponent],

@@ -33,6 +33,7 @@ import {
 } from '../model/map-providers-config';
 import { IMapSettings } from '../model/map-settings';
 import { IBaseImageryLayer, IMAGERY_BASE_MAP_LAYER, ImageryLayerProperties } from '../model/imagery-layer.model';
+import { IExportMapData, IExportMapMetadata } from '../model/export-map.model';
 
 export interface IMapInstanceChanged {
 	id: string;
@@ -244,6 +245,15 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 			throw new Error('missing active map');
 		}
 		return this.ActiveMap.getRotation();
+	}
+
+	exportMap(exportMetadata: IExportMapMetadata): Observable<IExportMapData> {
+		if (!this.ActiveMap) {
+			throw new Error('missing active map');
+		}
+		return this.ActiveMap.exportMap(exportMetadata).pipe(
+			map( (canvas) => ({canvas}))
+		);
 	}
 
 	public getPlugin<T extends BaseImageryPlugin>(plugin: { new(...args): T }): T {

@@ -1,3 +1,5 @@
+export { measuresClassNameForExport } from './modules/plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
+
 export { selectOverlaysManualProcessArgs } from './modules/overlays/overlay-status/reducers/overlay-status.reducer';
 
 export { isArrowRightKey, isArrowLeftKey, isBackspaceKey, isDigitKey, isEnterKey, isEscapeKey } from "./modules/core/utils/keyboardKey";
@@ -56,7 +58,6 @@ export {
 	StatusBarActions,
 	GoAdjacentOverlay,
 	ExpandAction,
-	GoNextPresetOverlay
 } from './modules/status-bar/actions/status-bar.actions';
 export { StatusBarConfig } from './modules/status-bar/models/statusBar.config';
 export { StatusBarModule } from './modules/status-bar/status-bar.module';
@@ -369,7 +370,6 @@ export {
 	SetOverlayTranslationDataAction,
 	ToggleDraggedModeAction,
 	UpdateOverlaysManualProcessArgs,
-	TogglePresetOverlayAction,
 	SetAutoImageProcessing,
 	SetAutoImageProcessingSuccess,
 	DisableImageProcessing,

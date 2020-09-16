@@ -29,7 +29,7 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectFavoriteOverlays),
 		this.store$.select(selectActiveMapId),
 		this.store$.select(selectMapsList),
-	this.store$.select(selectLayout),
+		this.store$.select(selectLayout),
 		this.store$.select(selectOverlaysCriteria),
 		this.store$.select(selectOverlaysManualProcessArgs),
 		this.store$.select(selectMiscOverlays),

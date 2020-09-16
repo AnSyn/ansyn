@@ -67,7 +67,6 @@ export class FiltersAppEffects {
 	filteredOverlays$: Observable<string[]> = this.store$.select(selectFilteredOveralys);
 	specialObjects$: Observable<Map<string, IOverlaySpecialObject>> = this.store$.select(selectSpecialObjects);
 	onFiltersChanges$: Observable<[Filters, boolean, IOverlay[]]> = combineLatest(this.filters$, this.showOnlyFavorite$, this.favoriteOverlays$);
-	onCriterialFiltersChanges$: Observable<[Filters]> = combineLatest(this.filters$);
 	forOverlayDrops$: Observable<[Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean]> = combineLatest(
 		this.overlaysMap$, this.filteredOverlays$, this.specialObjects$, this.favoriteOverlays$, this.showOnlyFavorite$);
 	facets$: Observable<ICaseFacetsState> = this.store$.select(selectFacets);
@@ -88,9 +87,9 @@ export class FiltersAppEffects {
 	);
 
 	@Effect()
-	updateOverlayFilters$ = this.onCriterialFiltersChanges$.pipe(
+	updateOverlayFilters$ = this.filters$.pipe(
 		withLatestFrom(this.overlaysArray$),
-		mergeMap(([[filters], overlaysArray]: [[Filters], IOverlay[]]) => {
+		mergeMap(([filters, overlaysArray]: [Filters, IOverlay[]]) => {
 			const filterModels: IFilterModel[] = FiltersService.pluckFilterModels(filters);
 			const filteredOverlays: string[] = buildFilteredOverlays(overlaysArray, filterModels);
 			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : this.translate.instant(overlaysStatusMessages.noOverLayMatchFilters);

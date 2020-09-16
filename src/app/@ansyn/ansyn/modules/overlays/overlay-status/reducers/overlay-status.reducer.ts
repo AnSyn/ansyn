@@ -28,10 +28,6 @@ export interface IScannedArea {
 
 export interface IOverlayStatusState {
 	favoriteOverlays: IOverlay[];
-	removedOverlaysIds: string[];
-	removedOverlaysVisibility: boolean;
-	removedOverlaysIdsCount: number;
-	presetOverlays: IOverlay[];
 	flags: Map<overlayStatusFlags, boolean>;
 	alertMsg: AlertMsg;
 	manualImageProcessingParams: ImageManualProcessArgs;
@@ -50,10 +46,6 @@ export interface IImageProcessState {
 export const overlayStatusInitialState: IOverlayStatusState = {
 	flags: new Map<overlayStatusFlags, boolean>(),
 	favoriteOverlays: [],
-	presetOverlays: [],
-	removedOverlaysIds: [],
-	removedOverlaysVisibility: true,
-	removedOverlaysIdsCount: 0,
 	alertMsg: new Map([]),
 	overlaysTranslationData: {},
 	overlaysScannedAreaData: {},
@@ -73,23 +65,6 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 			const fo = [...state.favoriteOverlays];
 			return { ...state, favoriteOverlays: value ? uniq([...fo, overlay]) : fo.filter((o) => o.id !== id) };
 		}
-
-		case OverlayStatusActionsTypes.TOGGLE_OVERLAY_PRESET: {
-			const { overlay, id, value } = action.payload;
-			const po = [...state.presetOverlays];
-			return { ...state, presetOverlays: value ? uniq([...po, overlay]) : po.filter((o) => o.id !== id) };
-		}
-
-		case OverlayStatusActionsTypes.SET_PRESET_OVERLAYS:
-			return { ...state, presetOverlays: action.payload };
-
-		case OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_IDS:
-			return { ...state, removedOverlaysIds: action.payload };
-
-		case OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_ID:
-			const { id, value } = action.payload;
-			const removedOverlaysIds = value ? uniq([...state.removedOverlaysIds, id]) : state.removedOverlaysIds.filter(_id => id !== _id);
-			return { ...state, removedOverlaysIds };
 
 		case OverlayStatusActionsTypes.ENABLE_IMAGE_PROCESSING:
 			tmpMap = new Map(state.flags);
@@ -112,17 +87,8 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 				overlaysManualProcessArgs: { ...state.overlaysManualProcessArgs, ...action.payload.data }
 			};
 
-		case OverlayStatusActionsTypes.RESET_REMOVED_OVERLAY_IDS:
-			return { ...state, removedOverlaysIds: [] };
-
 		case OverlayStatusActionsTypes.SET_MANUAL_IMAGE_PROCESSING:
 			return { ...state, manualImageProcessingParams: action.payload };
-
-		case OverlayStatusActionsTypes.SET_REMOVED_OVERLAYS_VISIBILITY:
-			return { ...state, removedOverlaysVisibility: action.payload };
-
-		case OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_IDS_COUNT:
-			return { ...state, removedOverlaysIdsCount: action.payload };
 
 		case OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS:
 			tmpMap = new Map(state.flags);
@@ -197,10 +163,6 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 }
 
 export const selectFavoriteOverlays: MemoizedSelector<any, IOverlay[]> = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus ? overlayStatus.favoriteOverlays : []);
-export const selectRemovedOverlaysVisibility: MemoizedSelector<any, boolean> = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.removedOverlaysVisibility);
-export const selectRemovedOverlaysIdsCount: MemoizedSelector<any, number> = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.removedOverlaysIdsCount);
-export const selectRemovedOverlays: MemoizedSelector<any, string[]> = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.removedOverlaysIds);
-export const selectPresetOverlays: MemoizedSelector<any, IOverlay[]> = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.presetOverlays);
 export const selectAlertMsg = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.alertMsg);
 export const selectOverlaysManualProcessArgs = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.overlaysManualProcessArgs);
 export const selectTranslationData = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus && overlayStatus.overlaysTranslationData);

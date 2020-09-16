@@ -7,15 +7,6 @@
 		<i class="icon-prev"></i>
 	</button>
 
-	<button (click)="clickGoNextPresetOverlay()"
-			[class.active]="goNextQuickLoop"
-			[disabled]="!hasPresetOverlays"
-			[attr.tooltip-value]="statusBarConfig?.toolTips?.quickloop | translate"
-			tooltip-class="top left"
-	>
-		<i class="icon-quick-loop"></i>
-	</button>
-
 	<button (click)="clickGoAdjacent(true)"
 			[class.active]="goNextActive"
 			[disabled]="!hasOverlayDisplay || isLastOverlay || !overlaysLength"

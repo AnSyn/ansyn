@@ -19,7 +19,7 @@ import {
 } from '../actions/overlays.actions';
 import { IOverlay, IOverlaysCriteria, IOverlaysFetchData, RegionContainment } from '../models/overlay.model';
 import { BackToWorldView } from '../overlay-status/actions/overlay-status.actions';
-import { selectFavoriteOverlays, selectPresetOverlays } from '../overlay-status/reducers/overlay-status.reducer';
+import { selectFavoriteOverlays } from '../overlay-status/reducers/overlay-status.reducer';
 import {
 	MarkUpClass,
 	overlaysStateSelector,
@@ -149,19 +149,6 @@ export class OverlaysEffects {
 		map((favoriteOverlays: IOverlay[]) => favoriteOverlays.map(overlay => overlay.id)),
 		map((overlayIds) => new SetMarkUp({
 				classToSet: MarkUpClass.favorites,
-				dataToSet: {
-					overlaysIds: overlayIds
-				}
-			}
-		))
-	);
-
-	@Effect()
-	setPresetOverlaysUpdateCase$: Observable<any> = this.store$.pipe(
-		select(selectPresetOverlays),
-		map((presetOverlays: IOverlay[]) => presetOverlays.map(overlay => overlay.id)),
-		map((overlayIds) => new SetMarkUp({
-				classToSet: MarkUpClass.presets,
 				dataToSet: {
 					overlaysIds: overlayIds
 				}

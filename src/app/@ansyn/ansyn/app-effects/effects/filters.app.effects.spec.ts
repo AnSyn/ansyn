@@ -39,7 +39,6 @@ import { imageryStatusFeatureKey, ImageryStatusReducer } from '@ansyn/map-facade
 import { FilterType } from '../../modules/filters/models/filter-type';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { TranslateModule } from '@ngx-translate/core';
-import { LoggerService } from '../../modules/core/services/logger.service';
 import { SetHideResultsTableBadgeAction } from '../../../menu/actions/menu.actions';
 
 describe('Filters app effects', () => {
@@ -75,12 +74,6 @@ describe('Filters app effects', () => {
 			providers: [
 				FiltersAppEffects,
 				GenericTypeResolverService,
-				{
-					provide: LoggerService, useValue: {
-						error: (s) => s,
-						info: (s) => s
-					}
-				},
 				{ provide: filtersConfig, useValue: {} },
 				provideMockActions(() => actions)
 			]

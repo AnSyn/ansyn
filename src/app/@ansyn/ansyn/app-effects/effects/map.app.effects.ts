@@ -79,7 +79,6 @@ import { fromPromise } from 'rxjs/internal-compatibility';
 import { isEqual } from 'lodash';
 import { selectGeoRegisteredOptionsEnabled } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
-import { LoggerService } from '../../modules/core/services/logger.service';
 import {
 	IOverlayStatusConfig,
 	overlayStatusConfig
@@ -329,7 +328,6 @@ export class MapAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				protected loggerService: LoggerService,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig
 	) {

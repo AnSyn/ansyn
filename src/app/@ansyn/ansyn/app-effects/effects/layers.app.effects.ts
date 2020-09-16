@@ -17,7 +17,6 @@ import {
 	AnnotationUpdateFeature,
 	ToolsActionsTypes
 } from '../../modules/menu-items/tools/actions/tools.actions';
-import { LoggerService } from '../../modules/core/services/logger.service';
 
 @Injectable()
 export class LayersAppEffects {
@@ -99,9 +98,9 @@ export class LayersAppEffects {
 		})
 	);
 
-	constructor(protected actions$: Actions,
-				protected store$: Store<any>,
-				protected loggerService: LoggerService) {
-
+	constructor(
+		protected actions$: Actions,
+		protected store$: Store<any>
+	) {
 	}
 }

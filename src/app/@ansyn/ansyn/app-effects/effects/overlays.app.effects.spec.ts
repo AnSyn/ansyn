@@ -63,7 +63,6 @@ import {
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { ICase } from '../../modules/menu-items/cases/models/case.model';
 import { cloneDeep } from 'lodash';
-import { LoggerService } from '../../modules/core/services/logger.service';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -217,12 +216,6 @@ describe('OverlaysAppEffects', () => {
 				{
 					provide: CacheService,
 					useClass: () => {
-					}
-				},
-				{
-					provide: LoggerService, useValue: {
-						error: (some) => null, info: () => {
-						}
 					}
 				}
 			]

@@ -55,7 +55,6 @@ import {
 	StatusBarReducer,
 	statusBarStateSelector
 } from '../../modules/status-bar/reducers/status-bar.reducer';
-import { LoggerService } from '../../modules/core/services/logger.service';
 import {
 	IOverlaysState,
 	OverlayReducer,
@@ -188,12 +187,6 @@ describe('MapAppEffects', () => {
 				})
 			],
 			providers: [
-				{
-					provide: LoggerService, useValue: {
-						error: (some) => null, info: () => {
-						}
-					}
-				},
 				{
 					provide: CacheService,
 					useClass: CacheService,

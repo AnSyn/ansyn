@@ -4,6 +4,7 @@ import { Action } from '@ngrx/store';
 import { Filters } from '../reducer/filters.reducer';
 import { ICaseFacetsState } from '../../menu-items/cases/models/case.model';
 import { IFilterSearchResults } from '../models/filter-search-results';
+import { ILogMessage } from '../../core/utils/logs/timer-logs';
 
 export const FiltersActionTypes = {
 	INITIALIZE_FILTERS: 'INITIALIZE_FILTERS',
@@ -16,7 +17,8 @@ export const FiltersActionTypes = {
 	UPDATE_FACETS: 'UPDATE_FACETS',
 	SET_FILTER_SEARCH: 'SET_FILTER_SEARCH',
 	SET_FILTERS_SEARCH_RESULTS: 'SET_FILTERS_SEARCH_RESULTS',
-	SELECT_ONLY_GEO_REGISTERED: 'SELECT_ONLY_GEO_REGISTERED'
+	SELECT_ONLY_GEO_REGISTERED: 'SELECT_ONLY_GEO_REGISTERED',
+	LOG_FILTERS: 'LOG_FILTERS'
 };
 
 export class InitializeFiltersAction implements Action {
@@ -72,6 +74,17 @@ export class SetFiltersSearchResults implements Action {
 export class SelectOnlyGeoRegistered implements Action {
 	readonly type = FiltersActionTypes.SELECT_ONLY_GEO_REGISTERED;
 
+}
+
+export class LogFilters implements Action, ILogMessage {
+	readonly type = FiltersActionTypes.LOG_FILTERS;
+
+	constructor(public payload: string) {
+	}
+
+	logMessage() {
+		return this.payload
+	}
 }
 
 export type FiltersActions = InitializeFiltersAction

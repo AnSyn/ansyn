@@ -19,7 +19,6 @@ import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/ca
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
 import { ShowOverlaysFootprintAction, StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
 import { getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
-import { LoggerService } from '../../modules/core/services/logger.service';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
@@ -35,8 +34,7 @@ describe('MenuAppEffects', () => {
 				{ provide: MenuConfig, useValue: {} }, {
 					provide: COMPONENT_MODE,
 					useValue: false
-				},
-				{ provide: LoggerService, useValue: {} }
+				}
 			]
 
 		}).compileComponents();

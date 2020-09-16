@@ -16,7 +16,6 @@ import { ExpandAction, GoNextPresetOverlay } from '../../modules/status-bar/acti
 import { statusBarFeatureKey, StatusBarReducer } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { CasesService } from '../../modules/menu-items/cases/services/cases.service';
 import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/reducers/cases.reducer';
-import { LoggerService } from '../../modules/core/services/logger.service';
 import { OverlayReducer, overlaysFeatureKey } from '../../modules/overlays/reducers/overlays.reducer';
 import {
 	BaseOverlaySourceProvider,
@@ -80,7 +79,6 @@ describe('StatusBarAppEffects', () => {
 				})
 			],
 			providers: [
-				{ provide: LoggerService, useValue: { error: (some) => null } },
 				{
 					provide: OverlaysService,
 					useValue: {}
@@ -90,13 +88,7 @@ describe('StatusBarAppEffects', () => {
 				{ provide: CasesService, useValue: { updateCase: () => null, getOverlaysMarkup: () => null } },
 				ImageryCommunicatorService,
 				HttpBackend,
-				{ provide: MultipleOverlaysSourceProvider, useClass: OverlaySourceProviderMock },
-				{
-					provide: LoggerService, useValue: {
-						error: (some) => null, info: () => {
-						}
-					}
-				}
+				{ provide: MultipleOverlaysSourceProvider, useClass: OverlaySourceProviderMock }
 			]
 		}).compileComponents();
 	}));

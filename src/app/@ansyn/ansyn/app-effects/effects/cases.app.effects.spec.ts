@@ -38,7 +38,6 @@ import {
 	LoadOverlaysSuccessAction
 } from '../../modules/overlays/actions/overlays.actions';
 import { IOverlayByIdMetaData, OverlaysService } from '../../modules/overlays/services/overlays.service';
-import { LoggerService } from '../../modules/core/services/logger.service';
 import { ICase } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { overlayStatusConfig } from "../../modules/overlays/overlay-status/config/overlay-status-config";
@@ -96,12 +95,6 @@ describe('CasesAppEffects', () => {
 				{
 					provide: TranslateService,
 					useValue: {}
-				},
-				{
-					provide: LoggerService, useValue: {
-						info: () => {
-						}
-					}
 				},
 				{ provide: casesConfig, useValue: { schema: null, defaultCase: { id: 'defaultCaseId' } } },
 				{ provide: linksConfig, useValue: {} },

@@ -14,7 +14,7 @@ import { BooleanFilterMetadata } from '../../modules/filters/models/metadata/boo
 import {
 	EnableOnlyFavoritesSelectionAction,
 	InitializeFiltersAction,
-	InitializeFiltersSuccessAction
+	InitializeFiltersSuccessAction, LogFilters
 } from '../../modules/filters/actions/filters.actions';
 import { EnumFilterMetadata } from '../../modules/filters/models/metadata/enum-filter-metadata';
 import { FilterMetadata } from '../../modules/filters/models/metadata/filter-metadata.interface';
@@ -55,7 +55,6 @@ import { ICaseFacetsState } from '../../modules/menu-items/cases/models/case.mod
 import { IOverlay, IOverlaySpecialObject } from '../../modules/overlays/models/overlay.model';
 import { get as _get } from 'lodash';
 import { TranslateService } from '@ngx-translate/core';
-import { LoggerService } from '../../modules/core/services/logger.service';
 import { isEqual } from 'lodash';
 
 @Injectable()
@@ -77,7 +76,7 @@ export class FiltersAppEffects {
 	facets$: Observable<ICaseFacetsState> = this.store$.select(selectFacets);
 	onFiltersChangesForLog$: Observable<[Filters, boolean, string[], boolean]> = combineLatest(this.filters$, this.showOnlyFavorite$, this.removedOverlays$, this.removedOverlaysVisibility$);
 
-	@Effect({ dispatch: false })
+	@Effect()
 	filtersLogger$: Observable<any> = this.onFiltersChangesForLog$.pipe(
 		filter(([filters, showOnlyFavorites, removedOverlays, removedOverlaysVisibality]: [Filters, boolean, string[], boolean]) => Boolean(filters) && filters.size !== 0),
 		map(([filters, showOnlyFavorites, removedOverlays, removedOverlaysVisibality]: [Filters, boolean, string[], boolean]) => {
@@ -86,9 +85,7 @@ export class FiltersAppEffects {
 			return filtersState;
 		}),
 		distinctUntilChanged(isEqual),
-		tap((message: string) => {
-			this.loggerService.info(message, 'Filters', 'Filtered Data Changed');
-		})
+		map((message: string) => new LogFilters(message))
 	);
 
 	@Effect()
@@ -188,7 +185,6 @@ export class FiltersAppEffects {
 				protected store$: Store<IAppState>,
 				protected genericTypeResolverService: GenericTypeResolverService,
 				public translate: TranslateService,
-				protected loggerService: LoggerService,
 				@Inject(filtersConfig) protected config: IFiltersConfig) {
 	}
 

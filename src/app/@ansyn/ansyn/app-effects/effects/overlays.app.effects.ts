@@ -67,7 +67,6 @@ import { OverlaysService } from '../../modules/overlays/services/overlays.servic
 import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { Dictionary } from '@ngrx/entity';
-import { LoggerService } from '../../modules/core/services/logger.service';
 import { SetBadgeAction } from '@ansyn/menu';
 
 @Injectable()
@@ -282,8 +281,7 @@ export class OverlaysAppEffects {
 
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,
-				public overlaysService: OverlaysService,
-				protected loggerService: LoggerService) {
+				public overlaysService: OverlaysService) {
 	}
 
 }

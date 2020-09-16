@@ -42,7 +42,6 @@ import {
 import { IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { selectToolFlag } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import { CaseGeoFilter } from '../../modules/menu-items/cases/models/case.model';
-import { LoggerService } from '../../modules/core/services/logger.service';
 import { toolsFlags } from '../../modules/menu-items/tools/models/tools.model';
 
 @Injectable()
@@ -218,7 +217,6 @@ export class ToolsAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				@Inject(toolsConfig) protected config: IToolsConfig,
-				protected loggerService: LoggerService) {
+				@Inject(toolsConfig) protected config: IToolsConfig) {
 	}
 }

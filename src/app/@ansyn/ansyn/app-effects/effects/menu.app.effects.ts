@@ -14,7 +14,6 @@ import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
 import { ShowOverlaysFootprintAction, StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
 import { getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
-import { LoggerService } from '../../modules/core/services/logger.service';
 
 @Injectable()
 export class MenuAppEffects {
@@ -87,7 +86,6 @@ export class MenuAppEffects {
 	constructor(
 		protected actions$: Actions,
 		protected store$: Store<IAppState>,
-		protected loggerService: LoggerService,
 		@Inject(COMPONENT_MODE) public componentMode: boolean,
 		@Inject(MenuConfig) public menuConfig: IMenuConfig
 	) {

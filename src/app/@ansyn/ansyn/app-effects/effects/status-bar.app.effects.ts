@@ -30,7 +30,6 @@ import {
 	selectRegion
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { IOverlay, IOverlayDrop } from '../../modules/overlays/models/overlay.model';
-import { LoggerService } from '../../modules/core/services/logger.service';
 
 @Injectable()
 export class StatusBarAppEffects {
@@ -125,8 +124,7 @@ export class StatusBarAppEffects {
 	);
 
 	constructor(protected actions$: Actions,
-				protected store: Store<IAppState>,
-				protected loggerService: LoggerService) {
+				protected store: Store<IAppState>) {
 	}
 
 }

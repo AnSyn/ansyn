@@ -4,7 +4,6 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { IMapState, mapStateSelector, selectMapsIds, SetToastMessageAction, UpdateMapAction } from '@ansyn/map-facade';
 import {
-	IBaseImageryLayer,
 	ImageryCommunicatorService,
 	IMapProvidersConfig,
 	MAP_PROVIDERS_CONFIG
@@ -26,7 +25,6 @@ import {
 	OverlaysActionTypes
 } from '../../modules/overlays/actions/overlays.actions';
 import { IOverlayByIdMetaData, OverlaysService } from '../../modules/overlays/services/overlays.service';
-import { LoggerService } from '../../modules/core/services/logger.service';
 import { IDilutedCase, ImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import {
@@ -153,7 +151,6 @@ export class CasesAppEffects {
 				protected overlaysService: OverlaysService,
 				@Inject(toolsConfig) protected config: IToolsConfig,
 				@Inject(overlayStatusConfig) protected overlayStatusConfig: IOverlayStatusConfig,
-				protected loggerService: LoggerService,
 				@Inject(casesConfig) public caseConfig: ICasesConfig,
 				@Inject(MAP_PROVIDERS_CONFIG) protected mapProvidersConfig: IMapProvidersConfig,
 				protected imageryCommunicatorService: ImageryCommunicatorService) {

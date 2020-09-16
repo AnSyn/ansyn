@@ -12,7 +12,8 @@ import { feature } from '@turf/turf';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, Actions, VisualizersConfig]
+	deps: [Store, Actions, VisualizersConfig],
+	layerClassName: 'frame-layer'
 })
 export class FrameVisualizer extends EntitiesVisualizer {
 	public isActive = false;

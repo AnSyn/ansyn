@@ -36,7 +36,6 @@ import {
 	DisableImageProcessing
 } from '../actions/overlay-status.actions';
 import {
-	SetActiveOverlaysFootprintModeAction,
 	SetAnnotationMode,
 } from '../../../menu-items/tools/actions/tools.actions';
 import {
@@ -93,14 +92,8 @@ export class OverlayStatusEffects {
 	onActiveMapChangesSetOverlaysFootprintMode$: Observable<any> = this.store$.select(selectActiveMapId).pipe(
 		filter(Boolean),
 		withLatestFrom(this.store$.select(mapStateSelector), (activeMapId, mapState: IMapState) => MapFacadeService.activeMap(mapState)),
-		filter((activeMap: ICaseMapState) => Boolean(activeMap)),
-		mergeMap<any, any>((activeMap: ICaseMapState) => {
-			const actions: Action[] = [new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode)];
-			if (!Boolean(activeMap.data.overlay)) {
-				actions.push(new DisableImageProcessing());
-			}
-			return actions;
-		})
+		filter((activeMap: ICaseMapState) => activeMap && activeMap.data && !activeMap.data.overlay),
+		map((activeMap: ICaseMapState) => new DisableImageProcessing())
 	);
 
 	@Effect()
@@ -172,11 +165,11 @@ export class OverlayStatusEffects {
 					});
 					let combinedResult = unifyPolygons(featurePolygons);
 					let scannedAreaContainsExtentPolygon = false;
-					
+
 					scannedArea.coordinates.forEach(coordinates => {
 						let multiPolygon = JSON.parse(JSON.stringify(scannedArea));
 						multiPolygon.coordinates = [coordinates];
-						
+
 						if (getPolygonIntersectionRatioWithMultiPolygon(position.extentPolygon, multiPolygon)) {
 							scannedAreaContainsExtentPolygon = true;
 						}
@@ -185,7 +178,7 @@ export class OverlayStatusEffects {
 					if (scannedAreaContainsExtentPolygon) {
 						combinedResult = difference(combinedResult, position.extentPolygon);
 					}
-					
+
 					if (combinedResult === null) {
 						scannedArea = null;
 					}

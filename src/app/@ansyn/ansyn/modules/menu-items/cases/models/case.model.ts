@@ -3,7 +3,6 @@ import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
 import { LayoutKey } from '@ansyn/map-facade';
 import { FilterType } from '../../../filters/models/filter-type';
 import { IMapSettings, IMapSettingsData } from '@ansyn/imagery';
-import { OverlayDisplayMode } from '../../tools/overlays-display-mode/overlays-display-mode.component';
 import { ICompressedMapSettings, ICompressedMapSettingsData } from '@ansyn/imagery';
 
 export interface ICasePreview {
@@ -183,7 +182,6 @@ export interface ICompressedCaseMapsState {
 export interface IDilutedCaseMapData extends IMapSettingsData {
 	overlay?: IDilutedOverlay;
 	isAutoImageProcessingActive?: boolean;
-	overlayDisplayMode?: OverlayDisplayMode;
 	imageManualProcessArgs?: ImageManualProcessArgs;
 	translationData?: ITranslationData;
 }
@@ -192,7 +190,6 @@ export interface ICompressedCaseMapData extends IDilutedCaseMapData {
 	o?: any;
 	p?: ICompressedMapSettingsData;
 	auto?: boolean;
-	d?: OverlayDisplayMode;
 	man?: ICompressedImageManualProcessArgs;
 	translationData?: ITranslationData;
 }

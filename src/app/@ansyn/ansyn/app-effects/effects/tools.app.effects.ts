@@ -13,8 +13,7 @@ import {
 	PinLocationModeTriggerAction,
 	selectActiveMapId,
 	selectMapsIds,
-	selectMapsList,
-	UpdateMapAction
+	selectMapsList
 } from '@ansyn/map-facade';
 import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
@@ -33,11 +32,9 @@ import {
 	GoToAction,
 	RemoveMeasureDataAction,
 	SetActiveCenter,
-	SetActiveOverlaysFootprintModeAction,
 	SetAnnotationMode,
 	SetPinLocationModeAction,
 	SetSubMenu,
-	ShowOverlaysFootprintAction,
 	StartMouseShadow,
 	StopMouseShadow,
 	ToolsActionsTypes, UpdateMeasureDataOptionsAction,
@@ -63,7 +60,6 @@ export class ToolsAppEffects {
 			ToolsActionsTypes.START_MOUSE_SHADOW,
 			ToolsActionsTypes.STOP_MOUSE_SHADOW,
 			ToolsActionsTypes.GO_TO,
-			ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE,
 			ToolsActionsTypes.UPDATE_TOOLS_FLAGS,
 			ToolsActionsTypes.MEASURES.SET_MEASURE_TOOL_STATE,
 			ToolsActionsTypes.STORE.SET_ANNOTATION_MODE,
@@ -94,12 +90,6 @@ export class ToolsAppEffects {
 		withLatestFrom(this.isPolygonSearch$),
 		filter(([action, isPolygonSearch]: [SelectMenuItemAction, boolean]) => isPolygonSearch),
 		map(() => new UpdateGeoFilterStatus())
-	);
-
-	@Effect()
-	onShowOverlayFootprint$: Observable<any> = this.actions$.pipe(
-		ofType<ShowOverlaysFootprintAction>(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT),
-		map((action) => new SetActiveOverlaysFootprintModeAction(action.payload))
 	);
 
 	@Effect()
@@ -157,22 +147,6 @@ export class ToolsAppEffects {
 				shadowMouseActiveForManyScreens || forceShadowMouse ? new StartMouseShadow() : undefined
 			].filter(Boolean);
 		}));
-
-	@Effect()
-	updateCaseFromTools$: Observable<any> = this.actions$
-		.pipe(
-			ofType<ShowOverlaysFootprintAction>(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT),
-			withLatestFrom(this.store$.select(mapStateSelector)),
-			map(([action, mapState]: [ShowOverlaysFootprintAction, IMapState]) => {
-				const activeMap = MapFacadeService.activeMap(mapState);
-				activeMap.data.overlayDisplayMode = action.payload;
-				return new UpdateMapAction({
-					id: activeMap.id, changes: {
-						data: { ...activeMap.data, overlayDisplayMode: action.payload }
-					}
-				});
-			})
-		);
 
 	@Effect()
 	clearActiveInteractions$ = this.actions$.pipe(

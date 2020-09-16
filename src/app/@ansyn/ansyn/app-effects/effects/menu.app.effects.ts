@@ -12,7 +12,7 @@ import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/ca
 import { selectDropsWithoutSpecialObjects } from '../../modules/overlays/reducers/overlays.reducer';
 import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
-import { ShowOverlaysFootprintAction, StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
+import { StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
 import { getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
 
 @Injectable()
@@ -54,7 +54,6 @@ export class MenuAppEffects {
 
 				return [
 					new LoadDefaultCaseAction(),
-					new ShowOverlaysFootprintAction('None'),
 					new StartMouseShadow({fromUser: true}),
 					new AnnotationSetProperties(getInitialAnnotationsFeatureStyle()),
 					new ToggleIsPinnedAction(false),

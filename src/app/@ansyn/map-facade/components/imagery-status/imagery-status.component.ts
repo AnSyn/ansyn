@@ -4,14 +4,19 @@ import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { get as _get } from 'lodash'
 import { map, tap, filter } from 'rxjs/operators';
-import { SetMapOrientation, SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
+import {
+	SetMapOrientation,
+	SetOverlaysFootprintActive,
+	SetToastMessageAction,
+	ToggleMapLayersAction
+} from '../../actions/map.actions';
 import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../models/entry-components-provider';
 import { selectEnableCopyOriginalOverlayDataFlag } from '../../reducers/imagery-status.reducer';
 import {
 	selectActiveMapId,
 	selectHideLayersOnMap,
 	selectMapOrientation,
-	selectMapsTotal
+	selectMapsTotal, selectOverlaysFootprintActiveByMapId
 } from '../../reducers/map.reducer';
 import { getTimeFormat } from '../../utils/time';
 import { TranslateService } from '@ngx-translate/core';
@@ -33,6 +38,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	_map: IMapSettings;
 	perspective: boolean;
 	orientation: MapOrientation;
+	overlaysFootprintActive: boolean;
 	baseMapDescription = 'Base Map';
 	formattedOverlayTime: string = null;
 	@HostBinding('class.active') isActiveMap: boolean;
@@ -66,6 +72,11 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 			this.orientation = orientation;
 			this.perspective = this.orientation === 'User Perspective';
 		})
+	);
+
+	@AutoSubscription
+	getOverlaysFootprint = () => this.store$.select(selectOverlaysFootprintActiveByMapId(this.mapId)).pipe(
+		tap( isActive => this.overlaysFootprintActive = isActive)
 	);
 
 
@@ -162,5 +173,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	toggleImageryPerspective() {
 		const newMapOrientation = this.orientation === 'Imagery Perspective' ? 'User Perspective' : 'Imagery Perspective';
 		this.store$.dispatch(new SetMapOrientation({orientation: newMapOrientation, mapId: this.mapId}));
+	}
+
+	toggleOverlaysFootprint() {
+		const isDisplay = !this.overlaysFootprintActive;
+		this.store$.dispatch(new SetOverlaysFootprintActive({mapId: this.mapId, show: isDisplay}));
 	}
 }

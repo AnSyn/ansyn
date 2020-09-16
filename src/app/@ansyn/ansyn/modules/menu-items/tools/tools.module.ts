@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { CoreModule } from '../../core/core.module';
 import { ToolsComponent } from './tools/tools.component';
 import { GoToModule } from './go-to/go-to.module';
-import { OverlaysDisplayModeComponent } from './overlays-display-mode/overlays-display-mode.component';
 import { AnnotationsControlComponent } from './components/annotations-control/annotations-control.component';
 import { StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from './reducers/tools.reducer';
@@ -16,7 +15,6 @@ import { ExportMapsPopupComponent } from './export-maps-popup/export-maps-popup.
 import { MatDialogModule, MatSelectModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
-
 
 // @dynamic
 @NgModule({
@@ -40,7 +38,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 		MatSelectModule
 	],
 	providers: [ProjectionConverterService],
-	declarations: [ToolsComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent, MeasureControlComponent, ExportMapsPopupComponent],
+	declarations: [ToolsComponent, AnnotationsControlComponent, MeasureControlComponent, ExportMapsPopupComponent],
 	entryComponents: [ToolsComponent, MeasureControlComponent, ExportMapsPopupComponent],
 	exports: [ToolsComponent, MatDialogModule]
 })

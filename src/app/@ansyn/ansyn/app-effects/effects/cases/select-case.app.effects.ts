@@ -104,10 +104,16 @@ export class SelectCaseAppEffects {
 	}
 
 	parseMapData(map: ICaseMapState): ICaseMapState {
-		if (map.data.overlay) {
-			return { ...map, data: { ...map.data, overlay: this.parseOverlay(map.data.overlay) } };
+		const newMap = {...map};
+		// check overlayDisplayMode for old case
+		if ((newMap.data as any).overlayDisplayMode !== undefined) {
+			newMap.data.overlaysFootprintActive = (newMap.data as any).overlayDisplayMode === 'Polygon';
+			delete (newMap.data as any).overlayDisplayMode;
 		}
-		return map;
+		if (newMap.data.overlay) {
+			newMap.data.overlay = this.parseOverlay(newMap.data.overlay);
+		}
+		return newMap;
 	}
 
 	parseOverlay(overlay: IOverlay): IOverlay {

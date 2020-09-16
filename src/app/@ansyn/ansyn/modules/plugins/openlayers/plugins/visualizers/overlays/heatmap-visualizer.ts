@@ -17,7 +17,7 @@ export class FootprintHeatmapVisualizer extends BaseFootprintsVisualizer {
 				public actions$: Actions,
 				public overlaysService: OverlaysService
 	) {
-		super(store, overlaysService, 'Heatmap', config.FootprintHeatmapVisualizer, {
+		super(store, overlaysService, config.FootprintHeatmapVisualizer, {
 			opacity: 0.5,
 			initial: {
 				fill: 'rgb(255, 0, 0)',

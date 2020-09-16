@@ -23,7 +23,8 @@ export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId,
 					position: {
 						extentPolygon: activeMap.data.position.extentPolygon,
 						projectedState: activeMap.data.position.projectedState
-					}
+					},
+					overlaysFootprintActive: false
 				},
 				worldView: { ...activeMap.worldView },
 				orientation: activeMap.orientation,
@@ -204,6 +205,10 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		case MapActionTypes.SET_MINIMALIST_VIEW_MODE:
 			return { ...state, minimalistViewMode: action.payload };
 
+		case MapActionTypes.VISUALIZERS.OVERLAYS_FOOTPRINT:
+			const {mapId, show} = action.payload;
+			const oldData = state.entities[mapId].data;
+			return mapsAdapter.updateOne({id: mapId, changes: {data: {...oldData, overlaysFootprintActive: show}}}, state);
 		default:
 			return state;
 	}
@@ -240,5 +245,5 @@ export const selectMapPositionByMapId: (mapId: string) => MemoizedSelector<any, 
 export const selectMapTypeById: (mapId: string) => MemoizedSelector<any, string> = (mapId => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.worldView.mapType));
 export const selectSourceTypeById: (mapId: string) => MemoizedSelector<any, string> = (mapId => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.worldView.sourceType));
 
-export const selectOverlayDisplayModeByMapId: (mapId: string) => MemoizedSelector<any, any> = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data && mapState.data.overlayDisplayMode);
+export const selectOverlaysFootprintActiveByMapId: (mapId: string) => MemoizedSelector<any, any> = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data && mapState.data.overlaysFootprintActive);
 export const selectMapOrientation = (mapId: string) => createSelector(selectMapStateById(mapId) , (mapState) => mapState && mapState.orientation);

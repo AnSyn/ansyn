@@ -8,7 +8,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { UnSelectMenuItemAction } from '@ansyn/menu';
 import { EMPTY } from 'rxjs';
-import { LoggerService } from '../../services/logger.service';
 
 describe('CredentialsComponent', () => {
 	let component: CredentialsComponent;
@@ -40,10 +39,6 @@ describe('CredentialsComponent', () => {
 						useValue: {
 							noCredentialsMessage: 'TEST'
 						}
-					},
-					{
-						provide: LoggerService,
-						useValue: {}
 					}
 				]
 		}).compileComponents();

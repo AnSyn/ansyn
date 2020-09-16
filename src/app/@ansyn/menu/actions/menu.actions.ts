@@ -17,7 +17,9 @@ export const MenuActionTypes = {
 	MENU_COLLAPSE: 'MENU_COLLAPSE',
 	RESET_APP: 'RESET_APP',
 	SET_USER_ENTER: 'SET_USER_ENTER',
-	SET_DOES_USER_HAVE_CREDENTIALS: 'SET_DOES_USER_HAVE_CREDENTIALS'
+	SET_DOES_USER_HAVE_CREDENTIALS: 'SET_DOES_USER_HAVE_CREDENTIALS',
+	LOG_OPEN_PERMISSIONS_SITE: 'LOG_OPEN_PERMISSIONS_SITE',
+	LOG_DOWNLOAD_PERMISSIONS_GUIDE: 'LOG_DOWNLOAD_PERMISSIONS_GUIDE'
 };
 
 export class ResetAppAction implements Action, ILogMessage {
@@ -125,5 +127,27 @@ export class SetDoesUserHaveCredentials implements Action {
 	type = MenuActionTypes.SET_DOES_USER_HAVE_CREDENTIALS;
 
 	constructor(public payload: boolean) {
+	}
+}
+
+export class LogOpenPermissionsSite implements Action, ILogMessage {
+	type = MenuActionTypes.LOG_OPEN_PERMISSIONS_SITE;
+
+	constructor(public payload?: any) {
+	}
+
+	logMessage() {
+		return `Opening permissions site`
+	}
+}
+
+export class LogDownloadPermissionsGuide implements Action, ILogMessage {
+	type = MenuActionTypes.LOG_DOWNLOAD_PERMISSIONS_GUIDE;
+
+	constructor(public payload?: any) {
+	}
+
+	logMessage() {
+		return `Downloading permissions guide`
 	}
 }

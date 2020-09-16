@@ -6,7 +6,7 @@ import { SetUserEnter } from '@ansyn/menu';
 import { tap, filter } from 'rxjs/operators';
 import { ClickOutsideService } from '../../click-outside/click-outside.service';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
-import { LoggerService } from '../../services/logger.service';
+import { LogDownloadPermissionsGuide, LogOpenPermissionsSite } from '../../../../../menu/actions/menu.actions';
 
 @Component({
 	selector: 'ansyn-credentials',
@@ -30,7 +30,6 @@ export class CredentialsComponent implements OnInit, OnDestroy {
 		protected store$: Store<any>,
 		protected element: ElementRef,
 		protected clickOutsideService: ClickOutsideService,
-		protected loggerService: LoggerService
 	) {
 		const menuSession = getMenuSessionData();
 		if (menuSession.isUserFirstEntrance) {
@@ -53,12 +52,12 @@ export class CredentialsComponent implements OnInit, OnDestroy {
 	}
 
 	openPermissionSite() {
-		this.loggerService.info(`Opening permissions site`, 'Permissions', 'OPEN_PERMISSIONS_SITE');
+		this.store$.dispatch(new LogOpenPermissionsSite());
 		this.credentialsService.openPermissionSite();
 	}
 
 	downloadGuide() {
-		this.loggerService.info(`Downloading permissions guide`, 'Permissions', 'DOWNLOAD_PERMISSIONS_GUIDE');
+		this.store$.dispatch(new LogDownloadPermissionsGuide());
 		this.credentialsService.downloadGuide();
 	}
 

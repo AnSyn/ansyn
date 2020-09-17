@@ -41,6 +41,8 @@ export const CasesActionTypes = {
 	MANUAL_SAVE: 'MANUAL_SAVE',
 
 	SET_AUTO_SAVE: 'SET_AUTO_SAVE',
+
+	LOG_RENAME_CASE: 'LOG_RENAME_CASE'
 };
 
 export type CasesActions = any;
@@ -207,5 +209,16 @@ export class SetAutoSave implements Action {
 	readonly type = CasesActionTypes.SET_AUTO_SAVE;
 
 	constructor(public payload: boolean) {
+	}
+}
+
+export class LogRenameCase implements Action, ILogMessage {
+	readonly type = CasesActionTypes.LOG_RENAME_CASE;
+
+	constructor(public payload: { oldName: string, newName: string }) {
+	}
+
+	logMessage() {
+		return `Renaming case ${this.payload.oldName} to ${this.payload.newName}`
 	}
 }

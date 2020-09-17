@@ -3,12 +3,11 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { Store } from '@ngrx/store';
 import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { Observable, of } from 'rxjs';
-import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
+import { AddCaseAction, CloseModalAction, LogRenameCase, UpdateCaseAction } from '../../actions/cases.actions';
 import { cloneDeep } from 'lodash';
 import { CasesService } from '../../services/cases.service';
 import { map, take } from 'rxjs/operators';
 import { ICase, ICasePreview } from '../../models/case.model';
-import { LoggerService } from '../../../../core/services/logger.service';
 
 const animationsDuring = '0.2s';
 
@@ -54,8 +53,7 @@ export class EditCaseComponent implements OnInit {
 
 	constructor(
 		protected store: Store<ICasesState>,
-		protected casesService: CasesService,
-		protected loggerService: LoggerService
+		protected casesService: CasesService
 	) {
 	}
 
@@ -127,7 +125,7 @@ export class EditCaseComponent implements OnInit {
 
 	onSubmitCase(contextIndex: number) {
 		if (this.editMode) {
-			this.loggerService.info(`Renaming case ${this.activeCaseName} to ${this.caseModel.name}`, 'Cases', 'RENAME_CASE');
+			this.store.dispatch(new LogRenameCase({ oldName: this.activeCaseName, newName: this.caseModel.name }));
 			this.store.dispatch(new UpdateCaseAction({ updatedCase: this.caseModel, forceUpdate: true }));
 		} else {
 			const selectContext = this.contextsList[contextIndex];

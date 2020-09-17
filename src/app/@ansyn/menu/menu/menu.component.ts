@@ -13,7 +13,7 @@ import {
 	ViewContainerRef
 } from '@angular/core';
 import {
-	ContainerChangedTriggerAction,
+	ContainerChangedTriggerAction, LogHelp,
 	ResetAppAction,
 	SelectMenuItemAction, SetHideResultsTableBadgeAction,
 	ToggleIsPinnedAction,
@@ -271,6 +271,11 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 		} else {
 			this.openMenu(key, skipSession);
 		}
+	}
+
+	onHelp() {
+		this.store.dispatch(new LogHelp());
+		this.goToLandingPage();
 	}
 
 	goToLandingPage() {

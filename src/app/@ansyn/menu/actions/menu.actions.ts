@@ -19,7 +19,8 @@ export const MenuActionTypes = {
 	SET_USER_ENTER: 'SET_USER_ENTER',
 	SET_DOES_USER_HAVE_CREDENTIALS: 'SET_DOES_USER_HAVE_CREDENTIALS',
 	LOG_OPEN_PERMISSIONS_SITE: 'LOG_OPEN_PERMISSIONS_SITE',
-	LOG_DOWNLOAD_PERMISSIONS_GUIDE: 'LOG_DOWNLOAD_PERMISSIONS_GUIDE'
+	LOG_DOWNLOAD_PERMISSIONS_GUIDE: 'LOG_DOWNLOAD_PERMISSIONS_GUIDE',
+	LOG_HELP: 'LOG_HELP'
 };
 
 export class ResetAppAction implements Action, ILogMessage {
@@ -149,5 +150,16 @@ export class LogDownloadPermissionsGuide implements Action, ILogMessage {
 
 	logMessage() {
 		return `Downloading permissions guide`
+	}
+}
+
+export class LogHelp implements Action, ILogMessage {
+	type = MenuActionTypes.LOG_HELP;
+
+	constructor(public payload?: any) {
+	}
+
+	logMessage() {
+		return `User clicked on Help button`
 	}
 }

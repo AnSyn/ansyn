@@ -2,7 +2,6 @@ import { Action } from '@ngrx/store';
 import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { SubMenuEnum, toolsFlags, IMeasureData, IMeasureDataOptions } from '../reducers/tools.reducer';
 import { type } from '../../../core/utils/type';
-import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
 import { AnnotationMode, IUpdateFeatureEvent } from '@ansyn/ol';
 
 export const ToolsActionsTypes = {
@@ -14,8 +13,6 @@ export const ToolsActionsTypes = {
 	SET_PIN_LOCATION_MODE: type('SET_PIN_LOCATION_MODE'),
 	GO_TO: type('GO_TO'), // Give better name
 	GO_TO_INPUT_CHANGED: type('GO_TO_INPUT_CHANGED'),
-	SHOW_OVERLAYS_FOOTPRINT: type('SHOW_OVERLAYS_FOOTPRINT'),
-	SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE: type('SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE'),
 	SET_MANUAL_IMAGE_PROCESSING: type('SET_MANUAL_IMAGE_PROCESSING'),
 	MAP_GEO_ENABLED_MODE_CHANGED: type('MAP_GEO_ENABLED_MODE_CHANGED'),
 	SET_MAP_SEARCH_BOX: type('SET_MAP_SEARCH_BOX'),
@@ -113,19 +110,8 @@ export class GoToInputChangeAction implements Action {
 	}
 }
 
-export class ShowOverlaysFootprintAction implements Action {
-	type = ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT;
 
-	constructor(public payload: OverlayDisplayMode) {
-	};
-}
 
-export class SetActiveOverlaysFootprintModeAction implements Action {
-	type = ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE;
-
-	constructor(public payload: OverlayDisplayMode) {
-	};
-}
 
 export class SetMapGeoEnabledModeToolsActionStore implements Action {
 	type = ToolsActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED;
@@ -233,8 +219,6 @@ export type ToolsActions =
 	| SetActiveCenter
 	| SetPinLocationModeAction
 	| GoToAction
-	| ShowOverlaysFootprintAction
-	| SetActiveOverlaysFootprintModeAction
 	| SetMapGeoEnabledModeToolsActionStore
 	| SetAnnotationMode
 	| SetMapGeoEnabledModeToolsActionStore

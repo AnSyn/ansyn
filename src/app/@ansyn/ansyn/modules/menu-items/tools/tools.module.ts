@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { CoreModule } from '../../core/core.module';
 import { ToolsComponent } from './tools/tools.component';
 import { GoToModule } from './go-to/go-to.module';
-import { OverlaysDisplayModeComponent } from './overlays-display-mode/overlays-display-mode.component';
 import { AnnotationsControlComponent } from './components/annotations-control/annotations-control.component';
 import { StoreModule } from '@ngrx/store';
 import { toolsFeatureKey, ToolsReducer } from './reducers/tools.reducer';
@@ -13,9 +12,8 @@ import { AnnotationsContextMenuModule } from '@ansyn/ol';
 import { MeasureControlComponent } from './components/measure-control/measure-control.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { ExportMapsPopupComponent } from './export-maps-popup/export-maps-popup.component';
-import { MatDialogModule, MatDialogRef } from '@angular/material';
+import { MatDialogModule, MatSelectModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 // @dynamic
@@ -35,12 +33,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 		TranslateModule,
 		CoreModule,
 		MatDialogModule,
-		MatProgressBarModule,
 		MatButtonModule,
-		MatFormFieldModule
+		MatFormFieldModule,
+		MatSelectModule
 	],
-	providers: [ProjectionConverterService, MatDialogModule, { provide: MatDialogRef, useValue: {} }],
-	declarations: [ToolsComponent, OverlaysDisplayModeComponent, AnnotationsControlComponent, MeasureControlComponent, ExportMapsPopupComponent],
+	providers: [ProjectionConverterService],
+	declarations: [ToolsComponent, AnnotationsControlComponent, MeasureControlComponent, ExportMapsPopupComponent],
 	entryComponents: [ToolsComponent, MeasureControlComponent, ExportMapsPopupComponent],
 	exports: [ToolsComponent, MatDialogModule]
 })

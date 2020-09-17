@@ -43,6 +43,14 @@
 		<i class="icon-status-bar-orientation" [class.active]="perspective"></i>
 	</button>
 
+	<button class="small-icon-button"
+		[disabled]="noGeoRegistration"
+			(click)="toggleOverlaysFootprint()"
+			[attr.tooltip-value]="'Overlays Footprint' | translate"
+			tooltip-class="bottom right">
+		<i class="icon-frame-mode" [class.active]="overlaysFootprintActive && !noGeoRegistration"></i>
+	</button>
+
 	<ng-container
 		*ngFor="let component of entryComponents.status">
 		<ng-container

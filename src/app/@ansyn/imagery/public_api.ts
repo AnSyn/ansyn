@@ -1,3 +1,5 @@
+export { IExportMapMetadata, IExportMapData } from './model/export-map.model';
+
 export {
 	MapOrientation,
 	ICompressedMapSettings,

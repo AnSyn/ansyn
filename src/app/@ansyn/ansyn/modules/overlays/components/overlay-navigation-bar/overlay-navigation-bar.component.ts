@@ -1,14 +1,13 @@
 import { Component, HostListener, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState } from '../../../status-bar/reducers/status-bar.reducer';
-import { ExpandAction, GoAdjacentOverlay, GoNextPresetOverlay } from '../../../status-bar/actions/status-bar.actions';
+import { ExpandAction, GoAdjacentOverlay } from '../../../status-bar/actions/status-bar.actions';
 import { IStatusBarConfig } from '../../../status-bar/models/statusBar-config.model';
 import { StatusBarConfig } from '../../../status-bar/models/statusBar.config';
 import { EnableCopyOriginalOverlayDataAction, selectOverlayOfActiveMap } from '@ansyn/map-facade';
 import { ActivateScannedAreaAction } from '../../overlay-status/actions/overlay-status.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap, filter } from 'rxjs/operators';
-import { selectPresetOverlays } from '../../overlay-status/reducers/overlay-status.reducer';
 import { selectDropsAscending, selectFilteredOveralys } from '../../reducers/overlays.reducer';
 import { combineLatest } from 'rxjs';
 import { IOverlay, IOverlayDrop } from '../../models/overlay.model';
@@ -23,7 +22,6 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	goPrevActive = false;
 	goNextActive = false;
 	goNextQuickLoop = false;
-	hasPresetOverlays: boolean;
 	hasOverlayDisplay: boolean;
 	isFirstOverlay: boolean;
 	isLastOverlay: boolean;
@@ -32,11 +30,6 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	hasOverlayDisplay$ = this.store.select(selectOverlayOfActiveMap).pipe(
 		tap(overlay => this.hasOverlayDisplay = Boolean(overlay))
-	);
-
-	@AutoSubscription
-	hasPresetOverlays$ = this.store.select(selectPresetOverlays).pipe(
-		tap(presetOverlays => this.hasPresetOverlays = presetOverlays.length > 0)
 	);
 
 	@AutoSubscription
@@ -52,7 +45,6 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 		})
 	);
 
-	private _nextPresetOverlayKeys = 'qQ/'.split('');
 	private _scannedAreaKeys = '`~;'.split('');
 	private _overlayHackKeys = 'Eeק'.split('');
 
@@ -82,9 +74,6 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 		} else if (this.keyWasUsed($event, 'ArrowLeft', 37)) {
 			this.clickGoAdjacent(false);
 			this.goPrevActive = false;
-		} else if (this.keysWereUsed($event, this._nextPresetOverlayKeys)) {
-			this.clickGoNextPresetOverlay();
-			this.goNextQuickLoop = false;
 		}
 
 		if (this.keysWereUsed($event, this._overlayHackKeys)) {
@@ -102,9 +91,7 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 			this.goNextActive = true;
 		} else if (this.keyWasUsed($event, 'ArrowLeft', 37)) {
 			this.goPrevActive = true;
-		} else if (this.keysWereUsed($event, this._nextPresetOverlayKeys)) {
-			this.goNextQuickLoop = true;
-		}
+		} 
 
 		if (this.keysWereUsed($event, this._overlayHackKeys)) {
 			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(true));
@@ -141,10 +128,6 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 
 	clickScannedArea(): void {
 		this.store.dispatch(new ActivateScannedAreaAction());
-	}
-
-	clickGoNextPresetOverlay(): void {
-		this.store.dispatch(new GoNextPresetOverlay());
 	}
 
 	clickTime(): void {

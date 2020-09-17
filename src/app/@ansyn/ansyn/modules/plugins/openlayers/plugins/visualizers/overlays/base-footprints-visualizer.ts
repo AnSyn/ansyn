@@ -1,21 +1,22 @@
-import { combineLatest, EMPTY, Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { filter, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { combineLatest, Observable, of, EMPTY } from 'rxjs';
+import { Store, select } from '@ngrx/store';
+import { withLatestFrom, mergeMap, filter } from 'rxjs/operators';
 import { IVisualizerEntity, IVisualizerStateStyle } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
-import * as turf from '@turf/turf';
+import simplify from '@turf/simplify'
+import { multiPolygon } from '@turf/helpers';
 import { selectDrops } from '../../../../../overlays/reducers/overlays.reducer';
 import { OverlaysService } from '../../../../../overlays/services/overlays.service';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
 import { EntitiesVisualizer } from '@ansyn/ol';
-import { OverlayDisplayMode } from '../../../../../menu-items/tools/overlays-display-mode/overlays-display-mode.component';
-import { selectOverlayDisplayModeByMapId } from '@ansyn/map-facade';
 
 export class BaseFootprintsVisualizer extends EntitiesVisualizer {
-
+	readonly selectDrop = this.store.pipe(
+		select(selectDrops)
+	);
+	selectVisualizerActive = () => of(false);
 	constructor(public store: Store<any>,
 				public overlaysService: OverlaysService,
-				public overlayDisplayMode: string,
 				public fpConfig: Partial<IVisualizerStateStyle>,
 				...superArgs
 	) {
@@ -23,12 +24,12 @@ export class BaseFootprintsVisualizer extends EntitiesVisualizer {
 	}
 
 	@AutoSubscription
-	drawOverlaysOnMap$: () => Observable<any> = () => combineLatest(this.store.select(selectOverlayDisplayModeByMapId(this.mapId)), this.store.select(selectDrops))
+	drawOverlaysOnMap$: () => Observable<any> = () => combineLatest(this.selectVisualizerActive(), this.selectDrop)
 		.pipe(
-			filter(([overlayDisplayMode, drops]: [OverlayDisplayMode, IOverlay[]]) => Boolean(overlayDisplayMode)),
+			filter( ([isActive]) => isActive !== undefined),
 			withLatestFrom(this.overlaysService.getAllOverlays$),
-			mergeMap(([[overlayDisplayMode, drops], overlays]: [[OverlayDisplayMode, IOverlay[]], Map<string, IOverlay>]) => {
-				if (overlayDisplayMode === this.overlayDisplayMode) {
+			mergeMap(([[isActive, drops], overlays]: [[boolean, IOverlay[]], Map<string, IOverlay>]) => {
+				if (isActive) {
 					const pluckOverlays = <any[]>OverlaysService.pluck(overlays, drops.map(({ id }) => id), ['id', 'footprint']);
 					const entitiesToDraw = pluckOverlays
 						.map(({ id, footprint }) => this.geometryToEntity(id, footprint));
@@ -45,7 +46,7 @@ export class BaseFootprintsVisualizer extends EntitiesVisualizer {
 			const numOfPoints = geometry.coordinates[0][0].length;
 
 			if (this.fpConfig.minSimplifyVertexCountLimit < numOfPoints) {
-				geometry = turf.simplify(turf.multiPolygon(geometry.coordinates), {
+				geometry = simplify(multiPolygon(geometry.coordinates), {
 					tolerance: 0.01,
 					highQuality: true
 				}).geometry;

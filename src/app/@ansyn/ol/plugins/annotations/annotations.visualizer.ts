@@ -39,6 +39,7 @@ import { AnnotationMode, IAnnotationBoundingRect, IDrawEndEvent } from './annota
 import { DragPixelsInteraction } from './dragPixelsInteraction';
 import { TranslateService } from '@ngx-translate/core';
 
+export const annotationsClassNameForExport = 'annotations-layer';
 export interface ILabelTranslateMode {
 	originalFeature: olFeature,
 	labelFeature: olFeature
@@ -54,7 +55,8 @@ export interface IEditAnnotationMode {
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [OpenLayersProjectionService, OL_PLUGINS_CONFIG, TranslateService],
-	isHideable: true
+	isHideable: true,
+	layerClassName: annotationsClassNameForExport
 })
 export class AnnotationsVisualizer extends EntitiesVisualizer {
 	private skipNextMapClickHandler = false;

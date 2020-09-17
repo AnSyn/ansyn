@@ -1,10 +1,9 @@
-import { Component, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import {
 	IEntryComponent,
 	selectActiveMapId,
 	selectHideLayersOnMap,
 	selectOverlayByMapId,
-	SetActiveMapId,
 } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -12,16 +11,12 @@ import { combineLatest, fromEvent, Observable } from 'rxjs';
 import { tap, map, filter } from 'rxjs/operators';
 import { GeoRegisteration, IOverlay } from '../models/overlay.model';
 import {
-	SetRemovedOverlaysIdAction,
 	ToggleDraggedModeAction,
 	ToggleFavoriteAction,
-	TogglePresetOverlayAction,
 	SetAutoImageProcessing
 } from './actions/overlay-status.actions';
 import {
 	selectFavoriteOverlays,
-	selectPresetOverlays,
-	selectRemovedOverlays,
 	selectTranslationData
 } from './reducers/overlay-status.reducer';
 import { AnnotationMode } from '@ansyn/ol';
@@ -53,14 +48,12 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	overlay: IOverlay;
 	isActiveMap: boolean;
 	favoriteOverlays: IOverlay[];
-	removedOverlaysIds: string[] = [];
 	presetOverlays: IOverlay[];
 	overlaysTranslationData: any;
 	isFavorite: boolean;
 	favoritesButtonText: string;
 	isPreset: boolean;
 	presetsButtonText: string;
-	isRemoved: boolean;
 	isDragged: boolean;
 	isImageControlActive = false;
 	draggedButtonText: string;
@@ -71,21 +64,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		tap((favoriteOverlays) => {
 			this.favoriteOverlays = favoriteOverlays;
 			this.updateFavoriteStatus();
-		})
-	);
-	@AutoSubscription
-	presetOverlays$: Observable<any[]> = this.store$.select(selectPresetOverlays).pipe(
-		tap((presetOverlays) => {
-			this.presetOverlays = presetOverlays;
-			this.updatePresetStatus();
-		})
-	);
-
-	@AutoSubscription
-	removedOverlays$: Observable<string[]> = this.store$.select(selectRemovedOverlays).pipe(
-		tap((removedOverlaysIds) => {
-			this.removedOverlaysIds = removedOverlaysIds;
-			this.updateRemovedStatus();
 		})
 	);
 
@@ -161,13 +139,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		})
 	);
 
-	@HostListener('window:keydown', ['$event'])
-	deleteKeyPressed($event: KeyboardEvent) {
-		if (this.isActiveMap && this.overlay && $event.which === 46 && !this.isRemoved) {
-			this.removeOverlay();
-		}
-	}
-
 	ngOnInit() {
 	}
 
@@ -178,8 +149,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	onChangeOverlay() {
-		this.updateRemovedStatus();
-		this.updatePresetStatus();
 		this.updateFavoriteStatus();
 		this.updateDraggedStatus();
 		this.resetButtons();
@@ -199,31 +168,11 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		this.favoritesButtonText = this.isFavorite ? 'Remove from favorites' : 'Add to favorites';
 	}
 
-	updatePresetStatus() {
-		this.isPreset = false;
-		if (this.overlay && this.presetOverlays && this.presetOverlays.length > 0) {
-			this.isPreset = this.presetOverlays.some(o => o.id === this.overlay.id);
-		}
-		this.presetsButtonText = this.isPreset ? 'Remove from overlays quick loop' : 'Add to overlays quick loop';
-	}
-
-	updateRemovedStatus() {
-		this.isRemoved = this.removedOverlaysIds.includes(this.overlay && this.overlay.id);
-	}
-
 	toggleFavorite() {
 		const overlay = this.overlay;
 		const { id } = overlay;
 		const value = !this.isFavorite;
 		this.store$.dispatch(new ToggleFavoriteAction({ value, id, overlay }));
-	}
-
-	togglePreset() {
-		const overlay = this.overlay;
-		const { id } = overlay;
-		const value = !this.isPreset;
-		this.store$.dispatch(new TogglePresetOverlayAction({ value, id, overlay }));
-
 	}
 
 	toggleDragged() {
@@ -235,15 +184,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		if (this.isDragged) {
 			this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetAnnotationMode] }));
 		}
-	}
-
-	removeOverlay() {
-		this.store$.dispatch(new SetRemovedOverlaysIdAction({
-			mapId: this.mapId,
-			id: this.overlay.id,
-			value: !this.isRemoved
-
-		}))
 	}
 
 	getType(): string {
@@ -282,10 +222,5 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		this.isAutoProcessing = !this.isAutoProcessing;
 		this.isManualProcessing = false;
 		this.store$.dispatch(new SetAutoImageProcessing({mapId: this.mapId}));
-	}
-
-	toggleMoreButtons() {
-		this.isManualProcessing = false;
-		this.moreButtons = !this.moreButtons;
 	}
 }

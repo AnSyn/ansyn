@@ -3,7 +3,7 @@ import { Inject } from '@angular/core';
 import {
 	areCoordinatesNumeric,
 	BaseImageryMap,
-	ExtentCalculator,
+	ExtentCalculator, IExportMapMetadata,
 	IMAGERY_BASE_MAP_LAYER,
 	IMAGERY_MAIN_LAYER_NAME, IMAGERY_SLOW_ZOOM_FACTOR,
 	ImageryLayerProperties,
@@ -36,6 +36,7 @@ import { OpenLayersProjectionService } from '../../../projection/open-layers-pro
 import { OpenLayersMonitor } from '../helpers/openlayers-monitor';
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
+import { exportMapHelper } from '../../helpers/helpers';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -498,6 +499,12 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	public getRotation(view: View = this.mapObject.getView()): number {
 		return view.getRotation();
+	}
+
+	exportMap(exportMetadata: IExportMapMetadata): Observable<HTMLCanvasElement> {
+		const {size, resolution, extra: {annotations}} = exportMetadata;
+		const classToInclude = '.ol-layer canvas' + (annotations ? `,${annotations}` : '');
+		return exportMapHelper(this.mapObject, size, resolution, classToInclude);
 	}
 
 	one2one(): void {

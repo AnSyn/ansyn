@@ -3,7 +3,8 @@ import {
 	IMAGERY_MAIN_LAYER_NAME, IMAGERY_SLOW_ZOOM_FACTOR,
 	ImageryLayerProperties,
 	ImageryMap,
-	ImageryMapPosition
+	ImageryMapPosition,
+	IExportMapMetadata
 } from '@ansyn/imagery';
 import { GeoJsonObject, Point } from 'geojson';
 import ol_Layer from 'ol/layer/Layer';
@@ -11,6 +12,7 @@ import Map from 'ol/Map';
 import View from 'ol/View';
 import { Observable, of } from 'rxjs';
 import * as olShared from '../open-layers-map/shared/openlayers-shared';
+import { exportMapHelper } from '../helpers/helpers';
 
 export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
 
@@ -168,6 +170,13 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 
 	getHtmlContainer(): HTMLElement {
 		return <HTMLElement>this.element;
+	}
+
+	exportMap(exportMetadata: IExportMapMetadata): Observable<HTMLCanvasElement> {
+		const { size, resolution } = exportMetadata;
+		exportMetadata.extra.north = false;
+		const classToInclude = '.ol-layer canvas';
+		return exportMapHelper(this.mapObject, size, resolution, classToInclude);
 	}
 
 	dispose() {

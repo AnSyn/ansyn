@@ -40,6 +40,7 @@ import {
 import { casesConfig } from '../../modules/menu-items/cases/services/cases.service';
 import { ICasesConfig } from '../../modules/menu-items/cases/models/cases-config';
 import { fromPromise } from 'rxjs/internal-compatibility';
+import { Action } from 'rxjs/internal/scheduler/Action';
 
 @Injectable()
 export class CasesAppEffects {
@@ -88,6 +89,25 @@ export class CasesAppEffects {
 	);
 
 	@Effect()
+	loadCaseDisplayOverlays$: Observable<any> = this.actions$
+	.pipe(
+		ofType<SelectDilutedCaseAction>(CasesActionTypes.SELECT_DILUTED_CASE),
+		map(({ payload }: SelectDilutedCaseAction) => payload),
+		mergeMap((caseValue: IDilutedCase) => {
+			const maps = caseValue.state.maps.data.filter(mapData => Boolean(Boolean(mapData.data.overlay)));
+
+			const displayOverlayActions = [];
+			maps.forEach(map => { 
+				const overlay = map.data.overlay;
+				const mapId = map.id;
+				displayOverlayActions.push(new DisplayOverlayAction({ overlay, mapId }));
+			});
+
+			return displayOverlayActions;
+		})
+	);
+
+	@Effect()
 	loadCase$: Observable<any> = this.actions$
 		.pipe(
 			ofType<SelectDilutedCaseAction>(CasesActionTypes.SELECT_DILUTED_CASE),
@@ -114,8 +134,8 @@ export class CasesAppEffects {
 
 							caseValue.state.maps.data
 								.filter(mapData => Boolean(Boolean(mapData.data.overlay)))
-								.forEach((map) => map.data.overlay = mapOverlay.get(map.data.overlay.id));
-
+								.forEach((map, index) => map.data.overlay = mapOverlay.get(map.data.overlay.id));
+								
 							return new SelectCaseAction(caseValue);
 						}),
 						catchError<any, any>((result: HttpErrorResponse) => {

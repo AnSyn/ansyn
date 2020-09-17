@@ -518,7 +518,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			new olStyle({
 				placement: 'line',
 				overflow: true,
-				// rotateWithView: true,
+				rotateWithView: true,
 				text: new olText({
 					...this.measuresTextStyle,
 					placement: 'point',

@@ -6,10 +6,7 @@ import { of, Observable } from 'rxjs';
 	providedIn: 'root'
 })
 export class GetProvidersMapsService {
-	constructor(@Inject(MAP_PROVIDERS_CONFIG) protected mapProvidersConfig: IMapProvidersConfig) {
-		mapProvidersConfig.someOtherProvider = {defaultMapSource: 'sdsd', sources: []};
-		console.log('init service')
-	}
+	constructor(@Inject(MAP_PROVIDERS_CONFIG) protected mapProvidersConfig: IMapProvidersConfig) {}
 
 	getAllSourceForType(type): Observable<any> {
 		return of(this.mapProvidersConfig[type].sources);
@@ -20,7 +17,7 @@ export class GetProvidersMapsService {
 	}
 
 
-	getMapProviderByTypeAndSource(type, source): Observable<any> {
-		return of(this.mapProvidersConfig[type][source])
+	getMapProviderByTypeAndSource(type, sourceType): Observable<any> {
+		return of(this.mapProvidersConfig[type].sources.find(source => source.key === sourceType))
 	}
 }

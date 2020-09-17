@@ -183,7 +183,7 @@ describe('CasesAppEffects', () => {
 					provide: toolsConfig, useValue: {}
 				},
 				{
-					provider: GetProvidersMapsService,
+					provide: GetProvidersMapsService,
 					useValue: {
 						getDefaultProviderByType: () => of()
 					}

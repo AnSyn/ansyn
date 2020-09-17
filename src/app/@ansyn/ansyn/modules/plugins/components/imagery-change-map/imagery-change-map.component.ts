@@ -27,9 +27,18 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	mapId: string;
 	overlayDisplay: boolean;
 	showPopup: boolean;
+	show: boolean;
 	currentSourceType: string;
 	mapSources: IMapSource[];
 	communicator: CommunicatorEntity;
+
+
+	@AutoSubscription
+	isMinimalistViewMode$ = this.store$.select(selectIsMinimalistViewMode).pipe(
+		tap(isMinimalistViewMode => {
+			this.show = !isMinimalistViewMode;
+		})
+	);
 
 	constructor(protected store$: Store<any>,
 				protected logger: LoggerService,

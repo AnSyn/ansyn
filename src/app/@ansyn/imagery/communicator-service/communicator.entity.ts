@@ -322,11 +322,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	private async createMapSourceForMapType(mapType: string, sourceType: string): Promise<IBaseImageryLayer> {
-		const sources: IMapSource[] = await this.getProvidersMapsService.getAllSourceForType(mapType).toPromise();
-		let mapSource: IMapSource = null;
-		if (Boolean(sources)) {
-			mapSource = sources.find(source => source.key === sourceType);
-		}
+		const mapSource: IMapSource = await this.getProvidersMapsService.getMapProviderByTypeAndSource(mapType, sourceType).toPromise();
 		const sourceProvider = this.getMapSourceProvider({
 			mapType, sourceType: mapSource && mapSource.sourceType || ''
 		});

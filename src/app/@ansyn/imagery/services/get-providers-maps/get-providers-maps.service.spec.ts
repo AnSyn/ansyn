@@ -20,7 +20,7 @@ describe('GetProvidersMapsService', () => {
 	let service: GetProvidersMapsService;
 	beforeEach(() => TestBed.configureTestingModule({
 		providers: [{
-			provider: MAP_PROVIDERS_CONFIG,
+			provide: MAP_PROVIDERS_CONFIG,
 			useValue: MAP_PROVIDERS
 		}]
 	}));

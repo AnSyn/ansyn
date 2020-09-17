@@ -24,7 +24,6 @@ export class AnsynRouterService {
 				while (activated.firstChild) {
 					activated = activated.firstChild;
 				}
-
 				return activated;
 			}),
 			filter(activated => activated.snapshot.data.name === 'case' ||

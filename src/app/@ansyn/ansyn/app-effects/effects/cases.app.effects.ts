@@ -4,7 +4,6 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { IMapState, mapStateSelector, selectMapsIds, SetToastMessageAction, UpdateMapAction } from '@ansyn/map-facade';
 import {
-	IBaseImageryLayer,
 	ImageryCommunicatorService,
 	IMapProvidersConfig,
 	MAP_PROVIDERS_CONFIG
@@ -40,7 +39,6 @@ import {
 import { casesConfig } from '../../modules/menu-items/cases/services/cases.service';
 import { ICasesConfig } from '../../modules/menu-items/cases/models/cases-config';
 import { fromPromise } from 'rxjs/internal-compatibility';
-import { Action } from 'rxjs/internal/scheduler/Action';
 
 @Injectable()
 export class CasesAppEffects {
@@ -134,7 +132,7 @@ export class CasesAppEffects {
 
 							caseValue.state.maps.data
 								.filter(mapData => Boolean(Boolean(mapData.data.overlay)))
-								.forEach((map, index) => map.data.overlay = mapOverlay.get(map.data.overlay.id));
+								.forEach(map => map.data.overlay = mapOverlay.get(map.data.overlay.id));
 								
 							return new SelectCaseAction(caseValue);
 						}),

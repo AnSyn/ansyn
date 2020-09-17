@@ -107,9 +107,14 @@ export class SetMinimalistViewModeAction implements Action {
 	}
 }
 
-export class SetMapOrientation implements Action {
+export class SetMapOrientation implements Action, ILogMessage {
 	type = MapActionTypes.SET_MAP_ORIENTATION;
+
 	constructor(public payload: {orientation: MapOrientation, mapId?: string}) {
+	}
+
+	logMessage() {
+		return `Setting map image orientation to ${this.payload.orientation}`
 	}
 }
 

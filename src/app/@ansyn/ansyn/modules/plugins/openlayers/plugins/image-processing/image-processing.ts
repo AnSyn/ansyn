@@ -50,8 +50,9 @@ export class OpenLayersImageProcessing {
 		this._libs = {
 			getFunctionByArgument: this.getFunctionByArgument
 		};
-
-		const functionNames = Object.keys(Object.getPrototypeOf(this)).filter(name => !name.includes("init") && !name.includes("process") && !name.includes("cascade") && !name.includes("get"));
+		
+		// Getting every function that libs requiers for image processing. those are the functions that do not include 'init', 'process', 'cascade' or in their names.
+		const functionNames = Object.keys(Object.getPrototypeOf(this)).filter(name => !name.includes("init") && !name.includes("process") && !name.includes("cascade"));
 		functionNames.forEach(name => {this._libs[name] = this[name]});
 	}
 
@@ -91,7 +92,6 @@ export class OpenLayersImageProcessing {
 		this._raster.set('imageOperations', imageOperations);
 		this._raster.changed();
 	}
-
 	
 	// ------ General Operation Start ------ //
 	cascadeOperations(pixels, data) {
@@ -131,13 +131,13 @@ export class OpenLayersImageProcessing {
 		return outputImageData;
 	}
 
+	fillArray(size, item) {
+		return new Array(size).fill(item);
+	}
+
 	getFunctionByArgument(arg) {
 		return arg ? this[`perform${arg}`] : null;
 
-	}
-
-	fillArray(size, item) {
-		return new Array(size).fill(item);
 	}
 
 	// ------ General Operation End ------ //

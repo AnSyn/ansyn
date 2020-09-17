@@ -3,12 +3,11 @@ import { saveAs } from 'file-saver';
 import { cloneDeep } from 'lodash';
 import { Store } from '@ngrx/store';
 import { ILayerState } from '../../../reducers/layers.reducer';
-import { CloseLayersModal } from '../../../actions/layers.actions';
+import { CloseLayersModal, LogExportLayer } from '../../../actions/layers.actions';
 import { UUID } from 'angular2-uuid';
 import { ILayer } from '../../../models/layers.model';
 import GeoJsonFormat from 'ol/format/GeoJSON';
 import KMLFormat from 'ol/format/KML';
-import { LoggerService } from '../../../../../core/services/logger.service';
 
 @Component({
 	selector: 'ansyn-download-layers',
@@ -21,16 +20,14 @@ export class DownloadLayersComponent {
 	kmlFormat: KMLFormat;
 
 	constructor(
-		protected store: Store<ILayerState>,
-		protected loggerService: LoggerService
+		protected store: Store<ILayerState>
 	) {
 		this.geoJsonFormat = new GeoJsonFormat();
 		this.kmlFormat = new KMLFormat();
 	}
 
 	downloadGeojson() {
-		this.loggerService.info(`Opening popup to save ${this.layer.type} layer ${this.layer.name} as Geojson file`, 'Layers', 'EXPORT_LAYER');
-		// Todo: by action + effect + service, instead of in component
+		this.store.dispatch(new LogExportLayer({ layer: this.layer, format: 'GeoJSON' }));
 		const annotationsLayer = cloneDeep(this.layer.data);
 		this.generateFeaturesIds(annotationsLayer);
 		const blob = new Blob([JSON.stringify(annotationsLayer)], { type: 'application/geo+json' });
@@ -39,8 +36,7 @@ export class DownloadLayersComponent {
 	}
 
 	downloadKml() {
-		this.loggerService.info(`Opening popup to save ${this.layer.type} layer ${this.layer.name} as KML file`, 'Layers', 'EXPORT_LAYER');
-		// Todo: by action + effect + service, instead of in component
+		this.store.dispatch(new LogExportLayer({ layer: this.layer, format: 'KML' }));
 		const annotationsLayer = cloneDeep(this.layer.data);
 		this.generateFeaturesIds(annotationsLayer);
 		this.visualizerToSimpleStyle(annotationsLayer);

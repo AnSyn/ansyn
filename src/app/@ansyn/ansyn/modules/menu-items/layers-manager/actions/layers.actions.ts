@@ -24,7 +24,8 @@ export enum LayersActionTypes {
 	REMOVE_CASE_LAYERS_FROM_BACKEND_FAILED_ACTION = '[Layers] Remove case layers from backend failed',
 	SET_ACTIVE_ANNOTATION_LAYER = '[Layers] Set active annotation layer',
 	SET_MODAL = '[Layers] Set modal value',
-	SHOW_ALL_LAYERS = '[Layers] Show all layers'
+	SHOW_ALL_LAYERS = '[Layers] Show all layers',
+	LOG_EXPORT_LAYER = 'LOG_EXPORT_LAYER'
 }
 
 export type LayersActions =
@@ -233,5 +234,17 @@ export class ShowAllLayers implements Action {
 
 	constructor(public payload: LayerType) {
 
+	}
+}
+
+export class LogExportLayer implements Action, ILogMessage {
+	type = LayersActionTypes.LOG_EXPORT_LAYER;
+
+	constructor(public payload: { layer: ILayer, format: string }) {
+
+	}
+
+	logMessage() {
+		return `Opening popup to save ${this.payload.layer.type} layer ${this.payload.layer.name} as ${this.payload.format} file`
 	}
 }

@@ -3,7 +3,6 @@ import {
 	ClearActiveInteractionsAction,
 	SetMeasureDistanceToolState,
 	SetSubMenu,
-	ShowOverlaysFootprintAction,
 	StartMouseShadow,
 	StopMouseShadow
 } from '../actions/tools.actions';
@@ -38,14 +37,6 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	public flags$: Observable<Map<toolsFlags, boolean>> = this.store$.select(selectToolFlags).pipe(
 		tap((flags: Map<toolsFlags, boolean>) => this.flags = flags)
-	);
-
-	@AutoSubscription
-	public selectedMapOverlaysMode$: Observable<IToolsState> = this.store$.pipe(
-		select(toolsStateSelector),
-		tap((state: IToolsState) => {
-			this.displayModeOn = state.activeOverlaysFootprintMode === 'Polygon';
-		})
 	);
 
 	isActiveAnnotationLayer$ = this.store$.select(selectActiveAnnotationLayer).pipe(
@@ -106,14 +97,6 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		const value = this.onMeasureTool;
 		this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [] }));
 		this.store$.dispatch(new SetMeasureDistanceToolState(!value));
-	}
-
-	toggleDisplayFootprints() {
-		if (this.displayModeOn) {
-			this.store$.dispatch(new ShowOverlaysFootprintAction('None'));
-		} else {
-			this.store$.dispatch(new ShowOverlaysFootprintAction('Polygon'));
-		}
 	}
 
 	toggleSubMenu(subMenu: SubMenuEnum, event: MouseEvent = null) {

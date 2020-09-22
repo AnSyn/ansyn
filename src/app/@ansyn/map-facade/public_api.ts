@@ -1,3 +1,7 @@
+export { imageryStatusClassNameForExport } from './components/imagery-status/imagery-status.component';
+
+export { floationMenuClassNameForExport } from './components/floating-menu/floating-menu.component';
+
 export { GeocoderService } from './services/geocoder.service';
 export { IMapSearchResult } from './models/map-search.model';
 
@@ -27,7 +31,7 @@ export {
 	selectOverlaysWithMapIds,
 	selectMapPositionByMapId,
 	selectMapsStateByIds,
-	selectOverlayDisplayModeByMapId,
+	selectOverlaysFootprintActiveByMapId,
 	selectOverlayOfActiveMap,
 	selectIsMinimalistViewMode,
 	selectMapTypeById,
@@ -75,7 +79,8 @@ export {
 	ReplaceMainLayerFailed,
 	SynchronizeMapsAction,
 	SetActiveCenterTriggerAction,
-	SetMapSearchBoxTriggerAction
+	SetMapSearchBoxTriggerAction,
+	SetOverlaysFootprintActive
 } from './actions/map.actions';
 
 export {

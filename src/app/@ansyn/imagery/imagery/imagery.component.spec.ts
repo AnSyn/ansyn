@@ -6,8 +6,9 @@ import { CacheService } from '../cache-service/cache.service';
 import { PLUGINS_COLLECTIONS } from '../providers/plugins-collection';
 import { IMAGERY_MAPS } from '../providers/imagery-map-collection';
 import { ImageryMapSource } from '../decorators/map-source-provider';
-import { MAP_PROVIDERS_CONFIG } from '../model/map-providers-config';
 import { IMapSettings } from '../model/map-settings';
+import { GetProvidersMapsService } from '../services/get-providers-maps/get-providers-maps.service';
+import { of } from 'rxjs';
 import { LoggerService } from '../../ansyn/modules/core/services/logger.service';
 
 @ImageryMapSource({
@@ -49,8 +50,12 @@ describe('ImageryComponent', () => {
 					useValue: {}
 				},
 				{
-					provide: MAP_PROVIDERS_CONFIG,
-					useValue: {}
+					provide: GetProvidersMapsService,
+					useValue: {
+						getAllSourceForType: () => of(),
+						getDefaultProviderByType: () => of(),
+						getMapProviderByTypeAndSource: () => of()
+					}
 				},
 				{ provide: IMAGERY_MAPS, useValue: {} },
 				ImageryCommunicatorService,

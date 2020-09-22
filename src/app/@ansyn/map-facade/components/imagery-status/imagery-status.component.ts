@@ -6,7 +6,7 @@ import { get as _get } from 'lodash'
 import { map, tap, filter } from 'rxjs/operators';
 import {
 	SetMapOrientation,
-	SetToastMessageAction,
+	SetOverlaysFootprintActive,SetToastMessageAction,
 	StartDraggingMapBetweenScreenAreas,
 	ToggleMapLayersAction
 } from '../../actions/map.actions';
@@ -16,12 +16,12 @@ import {
 	selectActiveMapId,
 	selectHideLayersOnMap,
 	selectMapOrientation,
-	selectMapsTotal
+	selectMapsTotal, selectOverlaysFootprintActiveByMapId
 } from '../../reducers/map.reducer';
 import { getTimeFormat } from '../../utils/time';
 import { TranslateService } from '@ngx-translate/core';
 import { ClipboardService } from 'ngx-clipboard';
-
+export const imageryStatusClassNameForExport = 'imagery-status';
 @Component({
 	selector: 'ansyn-imagery-status',
 	templateUrl: './imagery-status.component.html',
@@ -32,11 +32,13 @@ import { ClipboardService } from 'ngx-clipboard';
 	destroy: 'ngOnDestroy'
 })
 export class ImageryStatusComponent implements OnInit, OnDestroy {
+	@HostBinding(`class.${imageryStatusClassNameForExport}`) readonly _ = true;
 	isMapLayersVisible = true;
 	mapsAmount = 1;
 	_map: IMapSettings;
 	perspective: boolean;
 	orientation: MapOrientation;
+	overlaysFootprintActive: boolean;
 	baseMapDescription = 'Base Map';
 	formattedOverlayTime: string = null;
 	@HostBinding('class.active') isActiveMap: boolean;
@@ -70,6 +72,11 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 			this.orientation = orientation;
 			this.perspective = this.orientation === 'User Perspective';
 		})
+	);
+
+	@AutoSubscription
+	getOverlaysFootprint = () => this.store$.select(selectOverlaysFootprintActiveByMapId(this.mapId)).pipe(
+		tap( isActive => this.overlaysFootprintActive = isActive)
 	);
 
 
@@ -166,6 +173,11 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	toggleImageryPerspective() {
 		const newMapOrientation = this.orientation === 'Imagery Perspective' ? 'User Perspective' : 'Imagery Perspective';
 		this.store$.dispatch(new SetMapOrientation({orientation: newMapOrientation, mapId: this.mapId}));
+	}
+
+	toggleOverlaysFootprint() {
+		const isDisplay = !this.overlaysFootprintActive;
+		this.store$.dispatch(new SetOverlaysFootprintActive({mapId: this.mapId, show: isDisplay}));
 	}
 
 	onStartDraggingMap(event) {

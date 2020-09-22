@@ -1,10 +1,11 @@
 import { EventEmitter, ViewContainerRef } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { GeoJsonObject, Point } from 'geojson';
 import { ImageryMapExtent, ImageryMapPosition, IMousePointerMove } from './case-map-position.model';
 import { IMapErrorMessage, IMapProgress } from './map-progress.model';
 import { IBaseImageryLayer } from './imagery-layer.model';
 import { EPSG_4326 } from '../utils/geo';
+import { IExportMapMetadata } from './export-map.model';
 
 export interface IImageryMapMetaData {
 	deps?: any[];
@@ -108,5 +109,9 @@ export abstract class BaseImageryMap<T = any> {
 
 	getExtraData(): { [key: string]: any } {
 		return {}
+	}
+
+	exportMap(exportMetadata: IExportMapMetadata): Observable<HTMLCanvasElement> {
+		return throwError(`Method not implement on ${this.mapType}`);
 	}
 }

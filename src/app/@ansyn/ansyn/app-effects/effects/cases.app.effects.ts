@@ -4,9 +4,8 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { IMapState, mapStateSelector, selectMapsIds, SetToastMessageAction, UpdateMapAction } from '@ansyn/map-facade';
 import {
-	ImageryCommunicatorService,
-	IMapProvidersConfig,
-	MAP_PROVIDERS_CONFIG
+	GetProvidersMapsService,
+	ImageryCommunicatorService
 } from '@ansyn/imagery';
 import { HttpErrorResponse } from '@angular/common/http';
 import { mapValues, uniqBy } from 'lodash';
@@ -93,7 +92,6 @@ export class CasesAppEffects {
 				const ids: IOverlayByIdMetaData[] = uniqBy(caseValue.state.maps.data.filter(mapData => Boolean(mapData.data.overlay))
 						.map((mapData) => mapData.data.overlay)
 						.concat(caseValue.state.favoriteOverlays,
-							caseValue.state.presetOverlays || [],
 							Object.values(caseValue.state.miscOverlays || {}).filter(Boolean))
 					, 'id')
 					.map(({ id, sourceType }: IOverlay): IOverlayByIdMetaData => ({ id, sourceType }));
@@ -104,9 +102,6 @@ export class CasesAppEffects {
 						map((mapOverlay: Map<string, IOverlay>) => {
 							caseValue.state.favoriteOverlays = caseValue.state.favoriteOverlays
 								.map((favOverlay: IOverlay) => mapOverlay.get(favOverlay.id));
-
-							caseValue.state.presetOverlays = (caseValue.state.presetOverlays || [])
-								.map((preOverlay: IOverlay) => mapOverlay.get(preOverlay.id));
 
 							caseValue.state.miscOverlays = mapValues(caseValue.state.miscOverlays || {},
 								(prevOverlay: IOverlay) => {
@@ -138,12 +133,15 @@ export class CasesAppEffects {
 		ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
 		withLatestFrom(this.store$.select(selectMapsIds)),
 		filter(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => !action.payload.context && Boolean(mapId)),
-		tap(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => {
+		mergeMap(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => {
 			const position = this.caseConfig.defaultCase.state.maps.data[0].data.position;
 			const communicator = this.imageryCommunicatorService.provide(mapId);
 			const mapType = communicator.mapSettings.worldView.mapType;
-			fromPromise(communicator.loadInitialMapSource(position, this.mapProvidersConfig[mapType].defaultMapSource));
-		}));
+			return this.getProvidersMapsService.getDefaultProviderByType(mapType).pipe(
+				tap( (source) =>	communicator.loadInitialMapSource(position, source))
+			)
+		})
+	);
 
 
 	constructor(protected actions$: Actions,
@@ -152,7 +150,7 @@ export class CasesAppEffects {
 				@Inject(toolsConfig) protected config: IToolsConfig,
 				@Inject(overlayStatusConfig) protected overlayStatusConfig: IOverlayStatusConfig,
 				@Inject(casesConfig) public caseConfig: ICasesConfig,
-				@Inject(MAP_PROVIDERS_CONFIG) protected mapProvidersConfig: IMapProvidersConfig,
+				protected getProvidersMapsService: GetProvidersMapsService,
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 }

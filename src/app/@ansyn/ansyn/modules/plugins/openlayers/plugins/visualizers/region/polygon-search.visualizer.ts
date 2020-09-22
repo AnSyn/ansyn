@@ -13,7 +13,8 @@ import { CaseGeoFilter, CaseRegionState } from '../../../../../menu-items/cases/
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store, Actions, OpenLayersProjectionService],
-	dontRestrictToExtent: true
+	dontRestrictToExtent: true,
+	layerClassName: 'polygon-layer'
 })
 export class PolygonSearchVisualizer extends RegionVisualizer {
 	constructor(public store$: Store<any>,

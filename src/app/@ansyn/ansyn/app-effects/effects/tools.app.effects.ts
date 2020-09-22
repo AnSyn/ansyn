@@ -13,8 +13,7 @@ import {
 	PinLocationModeTriggerAction,
 	selectActiveMapId,
 	selectMapsIds,
-	selectMapsList,
-	UpdateMapAction
+	selectMapsList
 } from '@ansyn/map-facade';
 import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
@@ -29,11 +28,9 @@ import {
 	GoToAction,
 	RemoveMeasureDataAction,
 	SetActiveCenter,
-	SetActiveOverlaysFootprintModeAction,
 	SetAnnotationMode,
 	SetPinLocationModeAction,
 	SetSubMenu,
-	ShowOverlaysFootprintAction,
 	StartMouseShadow,
 	StopMouseShadow,
 	ToolsActionsTypes, UpdateMeasureDataOptionsAction,
@@ -52,25 +49,6 @@ export class ToolsAppEffects {
 	);
 
 	isShadowMouseActiveByDefault = this.config.ShadowMouse && this.config.ShadowMouse.activeByDefault;
-
-	// @Effect({ dispatch: false })
-	// actionsLogger$: Observable<any> = this.actions$.pipe(
-	// 	ofType(
-	// 		ToolsActionsTypes.START_MOUSE_SHADOW,
-	// 		ToolsActionsTypes.STOP_MOUSE_SHADOW,
-	// 		ToolsActionsTypes.GO_TO,
-	// 		ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE,
-	// 		ToolsActionsTypes.MEASURES.SET_MEASURE_TOOL_STATE,
-	// 		ToolsActionsTypes.MEASURES.REMOVE_MEASURE,
-	// 		ToolsActionsTypes.MEASURES.ADD_MEASURE,
-	// 		ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS,
-	// 		ToolsActionsTypes.STORE.SET_ANNOTATION_MODE,
-	// 		ToolsActionsTypes.SET_SUB_MENU,
-	// 		ToolsActionsTypes.ANNOTATION_SET_PROPERTIES
-	// 	),
-	// 	tap((action) => {
-	// 		this.loggerService.info(getLogMessageFromAction(action), 'Tools', action.type);
-	// 	}));
 
 	@Effect()
 	onImageriesChanged: Observable<any> = this.actions$.pipe(
@@ -93,12 +71,6 @@ export class ToolsAppEffects {
 		withLatestFrom(this.isPolygonSearch$),
 		filter(([action, isPolygonSearch]: [SelectMenuItemAction, boolean]) => isPolygonSearch),
 		map(() => new UpdateGeoFilterStatus())
-	);
-
-	@Effect()
-	onShowOverlayFootprint$: Observable<any> = this.actions$.pipe(
-		ofType<ShowOverlaysFootprintAction>(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT),
-		map((action) => new SetActiveOverlaysFootprintModeAction(action.payload))
 	);
 
 	@Effect()
@@ -156,22 +128,6 @@ export class ToolsAppEffects {
 				shadowMouseActiveForManyScreens || forceShadowMouse ? new StartMouseShadow() : undefined
 			].filter(Boolean);
 		}));
-
-	@Effect()
-	updateCaseFromTools$: Observable<any> = this.actions$
-		.pipe(
-			ofType<ShowOverlaysFootprintAction>(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT),
-			withLatestFrom(this.store$.select(mapStateSelector)),
-			map(([action, mapState]: [ShowOverlaysFootprintAction, IMapState]) => {
-				const activeMap = MapFacadeService.activeMap(mapState);
-				activeMap.data.overlayDisplayMode = action.payload;
-				return new UpdateMapAction({
-					id: activeMap.id, changes: {
-						data: { ...activeMap.data, overlayDisplayMode: action.payload }
-					}
-				});
-			})
-		);
 
 	@Effect()
 	clearActiveInteractions$ = this.actions$.pipe(

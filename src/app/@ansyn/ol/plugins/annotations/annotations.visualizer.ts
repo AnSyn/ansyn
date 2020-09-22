@@ -40,6 +40,7 @@ import { DragPixelsInteraction } from './dragPixelsInteraction';
 import { TranslateService } from '@ngx-translate/core';
 import { LoggerService } from '../../../ansyn/modules/core/services/logger.service';
 
+export const annotationsClassNameForExport = 'annotations-layer';
 export interface ILabelTranslateMode {
 	originalFeature: olFeature,
 	labelFeature: olFeature
@@ -55,7 +56,8 @@ export interface IEditAnnotationMode {
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [OpenLayersProjectionService, OL_PLUGINS_CONFIG, TranslateService, LoggerService],
-	isHideable: true
+	isHideable: true,
+	layerClassName: annotationsClassNameForExport
 })
 export class AnnotationsVisualizer extends EntitiesVisualizer {
 	private skipNextMapClickHandler = false;
@@ -124,8 +126,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			width: 3
 		}),
 		placement: 'line',
-		overflow: true,
-		rotateWithView: true
+		overflow: true
 	};
 
 	private iconSrc = '';
@@ -458,7 +459,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 							...this.measuresTextStyle,
 							text: this.formatLength([originalLeftRight.left, originalLeftRight.right]),
 							placement: 'point',
-							offsetX: 20
+							offsetX: 20,
 						})
 					})
 				);

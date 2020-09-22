@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	ReplaceMainLayer,
 	IEntryComponent,
@@ -6,14 +6,12 @@ import {
 	selectOverlayByMapId,
 	selectSourceTypeById, selectIsMinimalistViewMode
 } from '@ansyn/map-facade';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import {
-	CommunicatorEntity,
-	IMapProviderConfig,
-	IMapSource,
-	MAP_PROVIDERS_CONFIG
+	CommunicatorEntity, GetProvidersMapsService,
+	IMapSource
 } from '@ansyn/imagery';
-import { filter, tap } from 'rxjs/operators';
+import { filter, tap, mergeMap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { LoggerService } from '../../../core/services/logger.service';
 import { ClickOutsideService } from '../../../core/click-outside/click-outside.service';
@@ -34,6 +32,7 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	mapSources: IMapSource[];
 	communicator: CommunicatorEntity;
 
+
 	@AutoSubscription
 	isMinimalistViewMode$ = this.store$.select(selectIsMinimalistViewMode).pipe(
 		tap(isMinimalistViewMode => {
@@ -44,8 +43,14 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	constructor(protected store$: Store<any>,
 				protected logger: LoggerService,
 				protected clickOutsideService: ClickOutsideService,
-				@Inject(MAP_PROVIDERS_CONFIG) protected mapProvidersConfig: IMapProviderConfig) {
+				protected getProvidersMapsService: GetProvidersMapsService) {
 	}
+
+
+	getMapType$ = () => this.store$.pipe(
+		select(selectMapTypeById(this.mapId)),
+		filter((mapType: string) => Boolean(mapType))
+	);
 
 	@AutoSubscription
 	onClickOutside$ = () => this.clickOutsideService.onClickOutside().pipe(
@@ -63,12 +68,15 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	);
 
 	@AutoSubscription
-	mapTypeChange$ = () => this.store$.select(selectMapTypeById(this.mapId)).pipe(
-		filter((mapType: string) => Boolean(mapType)),
-		tap((mapType: string) => {
-			this.currentSourceType = this.mapProvidersConfig[mapType].defaultMapSource;
-			this.mapSources = this.mapProvidersConfig[mapType].sources;
-		})
+	getDefaultSource$ = () => this.getMapType$().pipe(
+		mergeMap( (mapType) => this.getProvidersMapsService.getDefaultProviderByType(mapType)),
+		tap( (defaultSource) => this.currentSourceType = defaultSource)
+	);
+
+	@AutoSubscription
+	getAllSources$ = () => this.getMapType$().pipe(
+		mergeMap( (mapType) => this.getProvidersMapsService.getAllSourceForType(mapType)),
+		tap( (sources) => this.mapSources = sources)
 	);
 
 	@AutoSubscription

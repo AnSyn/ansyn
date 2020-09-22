@@ -17,7 +17,7 @@ import { RedrawTimelineAction } from '../../modules/overlays/actions/overlays.ac
 import { ResetAppAction, ToggleIsPinnedAction, UnSelectMenuItemAction } from '../../../menu/actions/menu.actions';
 import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
-import { ShowOverlaysFootprintAction, StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
+import { StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
 import { getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
 
 describe('MenuAppEffects', () => {
@@ -73,9 +73,8 @@ describe('MenuAppEffects', () => {
 		actions = hot('--a--', {
 			a: new ResetAppAction()
 		});
-		const expectedResults = cold('--(bcdefgh)--', {
+		const expectedResults = cold('--(bdefgh)--', {
 			b: new LoadDefaultCaseAction(),
-			c: new ShowOverlaysFootprintAction('None'),
 			d: new StartMouseShadow({fromUser: true}),
 			e: new AnnotationSetProperties(getInitialAnnotationsFeatureStyle()),
 			f: new ToggleIsPinnedAction(false),

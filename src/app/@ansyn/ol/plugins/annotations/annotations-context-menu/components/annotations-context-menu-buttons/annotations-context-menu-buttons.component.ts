@@ -10,6 +10,7 @@ import { AttributesService } from '../../services/attributes.service';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { OL_PLUGINS_CONFIG, IOLPluginsConfig } from '../../../../plugins.config';
+import { color } from 'd3';
 import { LoggerService } from '../../../../../../ansyn/modules/core/services/logger.service';
 
 interface IFeatureProperties extends IVisualizerEntity {
@@ -168,8 +169,12 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 
 	activeChange($event: { label: 'stroke' | 'fill', event: string }) {
 		this.loggerService.info(`Changing annotation active colors`, 'Annotations', 'SET_ANNOTATION_ACTIVE_COLORS');
-		let opacity = { stroke: 1, fill: 0.4 };
 		const { style } = this.getFeatureProps();
+		const opacity =  {
+			stroke: color(style.initial.stroke).opacity,
+			fill: color(style.initial.fill).opacity
+		};
+
 		const updatedStyle = {
 			...style,
 			initial: {

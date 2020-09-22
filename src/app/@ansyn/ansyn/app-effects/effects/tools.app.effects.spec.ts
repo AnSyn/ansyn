@@ -4,7 +4,7 @@ import { cloneDeep } from 'lodash';
 import { Store, StoreModule } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { MapFacadeService, mapStateSelector, UpdateMapAction } from '@ansyn/map-facade';
+import { mapStateSelector } from '@ansyn/map-facade';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import {
@@ -33,7 +33,7 @@ import {
 	SetAnnotationMode,
 	SetPinLocationModeAction,
 	SetSubMenu,
-	ShowOverlaysFootprintAction, UpdateMeasureDataOptionsAction
+	UpdateMeasureDataOptionsAction
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';

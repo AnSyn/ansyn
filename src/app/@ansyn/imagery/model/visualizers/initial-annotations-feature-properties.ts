@@ -3,9 +3,9 @@ import { cloneDeep } from 'lodash';
 import { Feature } from 'geojson';
 
 const ANNOTATIONS_INITIAL_STYLE: IVisualizerStyle = {
-	stroke: '#27b2cfe6',
+	stroke: `rgba(39,179,207,0.9)`,
 	'stroke-width': 1,
-	fill: `white`,
+	fill: `rgba(255, 255, 255, 0.4)`,
 	'fill-opacity': 0.4,
 	'stroke-opacity': 1,
 	'stroke-dasharray': 0,
@@ -56,7 +56,21 @@ export function validateFeatureProperties(feature: Feature<any>): Feature<any> {
 	}
 
 	const { type } = featureJson.geometry;
-	const { id, style, label = {}, labelSize, icon, showMeasures, showArea, undeletable, mode, labelTranslateOn } = featureJson.properties;
+	const { id, label = {}, labelSize, icon, showMeasures, showArea, undeletable, mode, labelTranslateOn } = featureJson.properties;
+	let { style } = featureJson.properties;
+
+	if(!style){
+		style = {
+			initial:{
+				'fill':featureJson.properties.fill,
+				'fill-opacity':featureJson.properties['fill-opacity'],
+				'stroke':featureJson.properties.stroke,
+				'stroke-opacity':featureJson.properties['stroke-opacity'],
+				'stroke-width':featureJson.properties['stroke-width']
+			}
+		}
+	}
+
 	const { opacity, initial } = !!style ? style :  { opacity: null, initial: null };
 
 	let labelText = defaultProperties.label.text;

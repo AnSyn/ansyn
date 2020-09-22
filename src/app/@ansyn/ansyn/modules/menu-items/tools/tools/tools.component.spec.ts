@@ -77,16 +77,6 @@ describe('ToolsComponent', () => {
 		expect(store.dispatch).toHaveBeenCalledWith(new StopMouseShadow({ fromUser: true }));
 	});
 
-	it('toggleExpandVisualizers should get classes via displayModeOn / expandOverlaysDisplayMode values', () => {
-		const displayOverlayButton: HTMLButtonElement = fixture.nativeElement.querySelector('.display-overlay-visualizer button');
-		component.displayModeOn = true;
-		fixture.detectChanges();
-		expect(displayOverlayButton.classList.contains('mode-on')).toBeTruthy();
-		component.displayModeOn = false;
-		fixture.detectChanges();
-		expect(displayOverlayButton.classList.contains('mode-on')).toBeFalsy();
-	});
-
 	it('isExpand should compare between expandedSubMenu to input', () => {
 		component.subMenu = SubMenuEnum.annotations;
 		expect(component.isExpand(SubMenuEnum.annotations)).toBeTruthy();

@@ -7,8 +7,7 @@ export const StatusBarActionsTypes = {
 	COPY_SNAPSHOT_SHARE_LINK: 'COPY_SNAPSHOT_SHARE_LINK',
 	EXPAND: 'EXPAND',
 	UPDATE_GEO_FILTER_STATUS: 'UPDATE_GEO_FILTER_STATUS',
-	GO_ADJACENT_OVERLAY: 'GO_ADJACENT_OVERLAY',
-	GO_NEXT_PRESET_OVERLAY: 'GO_NEXT_PRESET_OVERLAY'
+	GO_ADJACENT_OVERLAY: 'GO_ADJACENT_OVERLAY'
 };
 
 export class CopySnapshotShareLinkAction implements Action, ILogMessage {
@@ -48,12 +47,6 @@ export class GoAdjacentOverlay implements Action {
 	}
 }
 
-export class GoNextPresetOverlay implements Action {
-	type: string = StatusBarActionsTypes.GO_NEXT_PRESET_OVERLAY;
-
-	constructor() {
-	}
-}
 
 export type StatusBarActions =
 	CopySnapshotShareLinkAction

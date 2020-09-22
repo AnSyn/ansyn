@@ -123,16 +123,13 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	private chart: any;
 	private element: any;
 	private oldActiveId: string;
-	drops: IOverlayDrop[] = [];
 
 	@AutoSubscription
 	redraw$: Observable<any> = this.actions$
 		.pipe(
 			ofType<RedrawTimelineAction>(OverlaysActionTypes.REDRAW_TIMELINE),
 			withLatestFrom(this.store$.select(selectDrops)),
-			tap(([action, drops]: [RedrawTimelineAction, IOverlayDrop[]]) => { 
-				this.initEventDropsSequence(drops) 
-			})
+			tap(([action, drops]: [RedrawTimelineAction, IOverlayDrop[]]) => this.initEventDropsSequence(drops))
 		);
 
 	@AutoSubscription
@@ -292,7 +289,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 			const timeLineRange = this.overlaysService.getTimeStateByOverlay(this.dropsIdMap.get(newActiveId), this.configuration.range);
 			if (this.isTimeChanged(timeLineRange)) {
 				this.configuration.range = timeLineRange;
-				this.initEventDropsSequence(this.drops);
+				this.initEventDropsSequence(drops);
 			}
 		}
 		this.oldActiveId = newActiveId;

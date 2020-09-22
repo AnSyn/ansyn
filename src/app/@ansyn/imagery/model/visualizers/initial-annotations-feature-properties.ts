@@ -59,14 +59,14 @@ export function validateFeatureProperties(feature: Feature<any>): Feature<any> {
 	const { id, label = {}, labelSize, icon, showMeasures, showArea, undeletable, mode, labelTranslateOn } = featureJson.properties;
 	let { style } = featureJson.properties;
 
-	if(!style){
+	if (!style) {
 		style = {
-			initial:{
-				'fill':featureJson.properties.fill,
-				'fill-opacity':featureJson.properties['fill-opacity'],
-				'stroke':featureJson.properties.stroke,
-				'stroke-opacity':featureJson.properties['stroke-opacity'],
-				'stroke-width':featureJson.properties['stroke-width']
+			initial: {
+				'fill': featureJson.properties.fill,
+				'fill-opacity': featureJson.properties['fill-opacity'],
+				'stroke': featureJson.properties.stroke,
+				'stroke-opacity': featureJson.properties['stroke-opacity'],
+				'stroke-width': featureJson.properties['stroke-width']
 			}
 		}
 	}

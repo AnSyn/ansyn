@@ -56,8 +56,23 @@ export function validateFeatureProperties(feature: Feature<any>): Feature<any> {
 	}
 
 	const { type } = featureJson.geometry;
-	const { id, style, label = {}, labelSize, icon, showMeasures, showArea, undeletable, mode, labelTranslateOn } = featureJson.properties;
+	const { id, label = {}, labelSize, icon, showMeasures, showArea, undeletable, mode, labelTranslateOn } = featureJson.properties;
+	let { style } = featureJson.properties;
+
+	if(!style){
+		style = {
+			initial:{
+				'fill':featureJson.properties.fill,
+				'fill-opacity':featureJson.properties['fill-opacity'],
+				'stroke':featureJson.properties.stroke,
+				'stroke-opacity':featureJson.properties['stroke-opacity'],
+				'stroke-width':featureJson.properties['stroke-width']
+			}
+		}
+	}
+
 	const { opacity, initial } = !!style ? style :  { opacity: null, initial: null };
+
 
 	let labelText = defaultProperties.label.text;
 	if (!!label.text && typeof label.text === 'string') {

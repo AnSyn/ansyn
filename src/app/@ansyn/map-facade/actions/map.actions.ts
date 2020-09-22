@@ -9,7 +9,7 @@ import {
 } from '@ansyn/imagery';
 import { LayoutKey, layoutOptions } from '../models/maps-layout';
 import { MapOrientation } from "@ansyn/imagery";
-import { ILogMessage } from '../../ansyn/modules/core/utils/logs/timer-logs';
+import { ILogMessage } from '../../ansyn/modules/core/models/logger.model';
 
 export interface IAngleFilterClick { // @TODO: map-facade should not know IOverlay
 	click: { x: number, y: number };

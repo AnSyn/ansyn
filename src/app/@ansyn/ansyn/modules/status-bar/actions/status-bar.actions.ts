@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { IGeoFilterStatus } from '../reducers/status-bar.reducer';
-import { ILogMessage } from '../../core/utils/logs/timer-logs';
+import { ILogMessage } from '../../core/models/logger.model';
 
 export const StatusBarActionsTypes = {
 	SHOW_LINK_COPY_TOAST: 'SHOW_LINK_COPY_TOAST',

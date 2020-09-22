@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { IMenuItem } from '../models/menu-item.model';
-import { ILogMessage } from '../../ansyn/modules/core/utils/logs/timer-logs';
+import { ILogMessage } from '../../ansyn/modules/core/models/logger.model';
 
 export const MenuActionTypes = {
 	INITIALIZE_MENU_ITEMS: 'INITIALIZE_MENU_ITEMS',

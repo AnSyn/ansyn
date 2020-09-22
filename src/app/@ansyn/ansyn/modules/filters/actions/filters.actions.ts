@@ -4,7 +4,7 @@ import { Action } from '@ngrx/store';
 import { Filters } from '../reducer/filters.reducer';
 import { ICaseFacetsState } from '../../menu-items/cases/models/case.model';
 import { IFilterSearchResults } from '../models/filter-search-results';
-import { ILogMessage } from '../../core/utils/logs/timer-logs';
+import { ILogMessage } from '../../core/models/logger.model';
 
 export const FiltersActionTypes = {
 	INITIALIZE_FILTERS: 'INITIALIZE_FILTERS',

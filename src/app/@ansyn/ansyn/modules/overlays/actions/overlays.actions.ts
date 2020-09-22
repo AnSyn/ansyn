@@ -10,7 +10,7 @@ import {
 	IOverlaySpecialObject,
 } from '../models/overlay.model';
 import { IMarkUpData, IOverlayDropMarkUp, ITimelineRange, MarkUpClass } from '../reducers/overlays.reducer';
-import { ILogMessage } from '../../core/utils/logs/timer-logs';
+import { ILogMessage } from '../../core/models/logger.model';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),

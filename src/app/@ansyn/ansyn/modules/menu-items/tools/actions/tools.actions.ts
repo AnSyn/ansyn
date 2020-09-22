@@ -2,8 +2,8 @@ import { Action } from '@ngrx/store';
 import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { type } from '../../../core/utils/type';
 import { AnnotationMode, IUpdateFeatureEvent } from '@ansyn/ol';
-import { ILogMessage } from '../../../core/utils/logs/timer-logs';
 import { IMeasureDataOptions, SubMenuEnum, toolsFlags } from '../models/tools.model';
+import { ILogMessage } from '../../../core/models/logger.model';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),
@@ -263,7 +263,6 @@ export type ToolsActions =
 	| GoToAction
 	| SetMapGeoEnabledModeToolsActionStore
 	| SetAnnotationMode
-	| SetMapGeoEnabledModeToolsActionStore
 	| SetMeasureDistanceToolState
 	| SetSubMenu
 	| ClearActiveInteractionsAction;

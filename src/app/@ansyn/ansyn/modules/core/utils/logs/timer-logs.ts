@@ -1,3 +1,5 @@
+import { ILogMessage } from '../../models/logger.model';
+
 export function startTimingLog(key) {
 	if (window && window.localStorage) {
 		if (localStorage.getItem('ansyn-logTimerOn')) {
@@ -22,11 +24,6 @@ export function getErrorMessageFromException(error: any, defaultError: string): 
 export function getErrorLogFromException(error: any, defaultError: string): string {
 	const result = Boolean(error) ? JSON.stringify(error) : defaultError;
 	return result;
-}
-
-export interface ILogMessage {
-	payload?: any;
-	logMessage: Function;
 }
 
 export function actionHasLogMessage(action: ILogMessage): boolean {

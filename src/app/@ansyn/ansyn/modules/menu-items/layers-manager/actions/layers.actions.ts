@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { ILayer, LayerType } from '../models/layers.model';
 import { ILayerModal, SelectedModalEnum } from '../reducers/layers-modal';
-import { ILogMessage } from '../../../core/utils/logs/timer-logs';
+import { ILogMessage } from '../../../core/models/logger.model';
 
 export enum LayersActionTypes {
 	BEGIN_LAYER_COLLECTION_LOAD = '[Layers] Begin layer collection load',

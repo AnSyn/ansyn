@@ -35,7 +35,7 @@ import {
 } from '../../actions/overlays.actions';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { distinctUntilChanged, filter, tap, withLatestFrom } from 'rxjs/operators';
-import { drop, isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 import { ExtendMap } from '../../reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../overlay-overview/overlay-overview.component.const';
 import { DOCUMENT } from '@angular/common';

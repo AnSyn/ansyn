@@ -73,7 +73,6 @@ export function validateFeatureProperties(feature: Feature<any>): Feature<any> {
 
 	const { opacity, initial } = !!style ? style :  { opacity: null, initial: null };
 
-
 	let labelText = defaultProperties.label.text;
 	if (!!label.text && typeof label.text === 'string') {
 		labelText = label.text;

@@ -248,26 +248,6 @@ describe('ToolsAppEffects', () => {
 	describe('onDisplayOverlaySuccess', () => {
 	});
 
-	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Heatmap"', () => {
-		const activeMap = MapFacadeService.activeMap(imapState);
-		const overlayDisplayMode = 'Heatmap';
-
-		actions = hot('--a--', { a: new ShowOverlaysFootprintAction(overlayDisplayMode) });
-
-		const expectedResults = cold('--a--', {
-			a: new UpdateMapAction({
-				id: activeMap.id, changes: {
-					data: {
-						...activeMap.data,
-						overlayDisplayMode: overlayDisplayMode
-					}
-				}
-			})
-		});
-
-		expect(toolsAppEffects.updateCaseFromTools$).toBeObservable(expectedResults);
-	});
-
 	it('clearActiveInteractions$ should clear active interactions', () => {
 		actions = hot('--a--', { a: new ClearActiveInteractionsAction() });
 

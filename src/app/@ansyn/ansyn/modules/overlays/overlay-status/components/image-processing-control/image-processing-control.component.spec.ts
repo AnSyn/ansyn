@@ -5,6 +5,7 @@ import { MockPipe } from '../../../../core/test/mock-pipe';
 import { MockComponent } from '../../../../core/test/mock-component';
 import { StoreModule } from '@ngrx/store';
 import { overlayStatusConfig } from '../../config/overlay-status-config';
+import { overlayStatusFeatureKey, OverlayStatusReducer } from '../../reducers/overlay-status.reducer';
 
 const mockInputRange = MockComponent({
 	selector: 'input[input_range]',
@@ -19,7 +20,7 @@ describe('ImageProcessingControlComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				StoreModule.forRoot({})
+				StoreModule.forRoot({[overlayStatusFeatureKey]: OverlayStatusReducer})
 			],
 			declarations: [
 				ImageProcessingControlComponent,

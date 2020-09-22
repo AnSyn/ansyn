@@ -94,12 +94,16 @@ export class FiltersAppEffects {
 		mergeMap(([[filters, removedOverlaysIds, removedOverlaysVisibility], overlaysArray]: [[Filters, string[], boolean], IOverlay[]]) => {
 			const filterModels: IFilterModel[] = FiltersService.pluckFilterModels(filters);
 			const filteredOverlays: string[] = buildFilteredOverlays(overlaysArray, filterModels, removedOverlaysIds, removedOverlaysVisibility);
-			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : this.translate.instant(overlaysStatusMessages.noOverLayMatchFilters);
-			return [
+			const actions = [
 				new SetFilteredOverlaysAction(filteredOverlays),
-				new SetOverlaysStatusMessageAction({ message }),
 				new SetHideResultsTableBadgeAction(false)
 			];
+			// If there are overlays, before applying the filters, set the status message according to the filters
+			if (overlaysArray && overlaysArray.length) {
+				const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : this.translate.instant(overlaysStatusMessages.noOverLayMatchFilters);
+				actions.push(new SetOverlaysStatusMessageAction({ message }));
+			}
+			return actions;
 		}));
 
 	@Effect()

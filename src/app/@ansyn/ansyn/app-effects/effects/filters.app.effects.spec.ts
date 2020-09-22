@@ -17,14 +17,13 @@ import {
 } from '../../modules/filters/actions/filters.actions';
 import { EnumFilterMetadata } from '../../modules/filters/models/metadata/enum-filter-metadata';
 import { FilterMetadata } from '../../modules/filters/models/metadata/filter-metadata.interface';
-import { filtersConfig } from '../../modules/filters/services/filters.service';
+import { filtersConfig, FiltersService } from '../../modules/filters/services/filters.service';
 import { filtersFeatureKey, FiltersReducer } from '../../modules/filters/reducer/filters.reducer';
 import { IFilter } from '../../modules/filters/models/IFilter';
 import { SliderFilterMetadata } from '../../modules/filters/models/metadata/slider-filter-metadata';
-import { buildFilteredOverlays } from '../../modules/core/utils/overlays';
 import { GenericTypeResolverService } from '../../modules/core/services/generic-type-resolver.service';
 import {
-	LoadOverlaysAction,
+	LoadOverlaysAction, LoadOverlaysSuccessAction,
 	SetDropsAction,
 	SetFilteredOverlaysAction,
 	SetOverlaysStatusMessageAction, SetTotalOverlaysAction
@@ -85,21 +84,6 @@ describe('Filters app effects', () => {
 		store = _store;
 	}));
 
-	it('updateOverlayFilters$ effect', () => {
-		const fakeObj = {
-			buildFilteredOverlays: buildFilteredOverlays
-		};
-		spyOn(fakeObj, 'buildFilteredOverlays').and.callFake(() => []);
-		store.dispatch(new InitializeFiltersSuccessAction(new Map()));
-		const expectedResults = cold('(bcd)', {
-			b: new SetFilteredOverlaysAction([]),
-			c: new SetOverlaysStatusMessageAction({ message: overlaysStatusMessages.noOverLayMatchFilters }),
-			d: new SetHideResultsTableBadgeAction(false)
-		});
-
-		expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
-	});
-
 	it('updateOverlayDrops$ effect', () => {
 		spyOn(OverlaysService, 'parseOverlayDataForDisplay').and.callFake(() => []);
 		const expectedResults = cold('(bc)', {
@@ -157,5 +141,38 @@ describe('Filters app effects', () => {
 		store.dispatch(new SetFavoriteOverlaysAction(overlays));
 		const expectedResults = cold('b', { b: new EnableOnlyFavoritesSelectionAction(true) });
 		expect(filtersAppEffects.setShowFavoritesFlagOnFilters$).toBeObservable(expectedResults);
+	});
+
+	describe('updateOverlayFilters$ effect', () => {
+
+		beforeEach(() => {
+			store.dispatch(new InitializeFiltersAction(new Map()));
+			store.dispatch(new LoadOverlaysSuccessAction([{ id: '1' }] as any));
+		});
+
+		it('should send null message if there are filtered overlays', () => {
+			const expectedResults = cold('(bcd)', {
+				b: new SetFilteredOverlaysAction(['1']),
+				c: new SetHideResultsTableBadgeAction(false),
+				d: new SetOverlaysStatusMessageAction({ message: null }),
+			});
+
+			expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
+		});
+
+		it('should send no overlays message if there aren\'t filtered overlays', () => {
+			spyOn(FiltersService, 'pluckFilterModels').and.returnValue([{
+				key: 'myFilter',
+				filterFunc: () => false
+			}]);
+
+			const expectedResults = cold('(bcd)', {
+				b: new SetFilteredOverlaysAction([]),
+				c: new SetHideResultsTableBadgeAction(false),
+				d: new SetOverlaysStatusMessageAction({ message: overlaysStatusMessages.noOverLayMatchFilters }),
+			});
+
+			expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
+		});
 	});
 });

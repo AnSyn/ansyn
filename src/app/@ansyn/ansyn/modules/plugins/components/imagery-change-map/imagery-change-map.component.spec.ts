@@ -12,7 +12,7 @@ import {
 	selectMapStateById,
 	selectMapTypeById
 } from '@ansyn/map-facade';
-import { ImageryCommunicatorService, MAP_PROVIDERS_CONFIG } from '@ansyn/imagery';
+import { GetProvidersMapsService, ImageryCommunicatorService } from '@ansyn/imagery';
 import { LoggerService } from '../../../core/services/logger.service';
 import { LoggerConfig } from '../../../core/models/logger.config';
 
@@ -33,8 +33,11 @@ describe('ImageryChangeMapComponent', () => {
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: LoggerService, useValue: { info: (some) => null } },
 				{
-					provide: MAP_PROVIDERS_CONFIG,
-					useValue: {}
+					provide: GetProvidersMapsService,
+					useValue: {
+						getDefaultProviderByType: () => of(''),
+						getAllSourceForType: () => of([])
+					}
 				}
 			]
 		})

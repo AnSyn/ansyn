@@ -113,7 +113,7 @@ export class FiltersAppEffects {
 				favoriteOverlays,
 				showOnlyFavorites
 			}).concat(oldDrops);
-			
+
 			drops = this.removeDuplicateDrops(drops);
 			return [new SetDropsAction(drops), new SetTotalOverlaysAction(drops.length)];
 		})

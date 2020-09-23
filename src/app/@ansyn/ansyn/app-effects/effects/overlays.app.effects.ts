@@ -22,17 +22,7 @@ import { OverlayStatusActionsTypes } from '../../modules/overlays/overlay-status
 import { IAppState } from '../app.effects.module';
 
 import { ImageryMapPosition } from '@ansyn/imagery';
-import {
-	catchError,
-	filter,
-	map,
-	mergeMap,
-	pairwise,
-	startWith,
-	switchMap,
-	tap,
-	withLatestFrom
-} from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, pairwise, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import {
 	DisplayFourViewAction,
@@ -49,14 +39,18 @@ import {
 	IMarkUpData,
 	MarkUpClass,
 	selectDropMarkup,
-	selectOverlaysCriteria,
-	selectOverlaysMap
+	selectOverlaysCriteria
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { ExtendMap } from '../../modules/overlays/reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../../modules/overlays/components/overlay-overview/overlay-overview.component.const';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
-import { IOverlay, IOverlaysCriteria, IOverlaysFetchData } from '../../modules/overlays/models/overlay.model';
+import {
+	GeoRegisteration,
+	IOverlay,
+	IOverlaysCriteria,
+	IOverlaysFetchData
+} from '../../modules/overlays/models/overlay.model';
 import { Dictionary } from '@ngrx/entity';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { SetBadgeAction } from '@ansyn/menu';
@@ -95,8 +89,11 @@ export class OverlaysAppEffects {
 
 			return forkJoin(overlayObservables).pipe(
 				map((overlaysData: IOverlaysFetchData[]) => {
-					const overlays: IPendingOverlay[] = overlaysData.map(({data}) => {
-						return {overlay: data[0]};
+					const overlays: IPendingOverlay[] = [];
+
+					overlaysData.forEach(({ data }) => {
+						data.filter(({ isGeoRegistered }) => isGeoRegistered !== GeoRegisteration.notGeoRegistered);
+						return { overlay: data[0] };
 					});
 					this.store$.dispatch(new SetPendingOverlaysAction(overlays));
 
@@ -107,47 +104,6 @@ export class OverlaysAppEffects {
 		})
 	);
 
-	getFourViewOverlays(criteria: IOverlaysCriteria): Observable<IOverlaysFetchData>[] {
-		const params: IFetchParams = {
-			timeRange: {
-				start: criteria.time.from,
-				end: criteria.time.to
-			},
-			region: criteria.region,
-			limit: this.overlaysService.config.limit,
-			dataInputFilters: []
-		};
-
-		const angleParams: IAngleParams[] = [
-			{
-				firstAngle: 0,
-				secondAngle: 90
-			},
-			{
-				firstAngle: 90,
-				secondAngle: 180
-			},
-			{
-				firstAngle: 180,
-				secondAngle: 270
-			},
-			{
-				firstAngle: 270,
-				secondAngle: 360
-			}
-		];
-
-		const overlayObservables: Observable<IOverlaysFetchData>[] = [];
-
-
-		for (let i = 0; i < 4; i++) {
-			params.angleParams = angleParams[i];
-			overlayObservables.push(this.sourceProvider.fetch(params));
-		}
-
-
-		return overlayObservables;
-	}
 
 	@Effect()
 	displayMultipleOverlays$: Observable<any> = this.actions$.pipe(
@@ -192,7 +148,7 @@ export class OverlaysAppEffects {
 	removePendingOverlayOnDisplay$: Observable<any> = this.actions$.pipe(
 		ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
 		withLatestFrom(this.store$.select(mapStateSelector)),
-		filter(([action, mapState]: [DisplayOverlaySuccessAction, IMapState]) => mapState.pendingOverlays.some((pending) => pending.overlay.id === action.payload.overlay.id)),
+		filter(([action, mapState]: [DisplayOverlaySuccessAction, IMapState]) => mapState.pendingOverlays.some((pending: any) => pending.id === action.payload.overlay.id)),
 		map(([action, mapState]: [DisplayOverlaySuccessAction, IMapState]) => {
 			return new RemovePendingOverlayAction(action.payload.overlay.id);
 		})
@@ -214,6 +170,48 @@ export class OverlaysAppEffects {
 			});
 		})
 	);
+
+	private getFourViewOverlays(criteria: IOverlaysCriteria): Observable<IOverlaysFetchData>[] {
+		const params: IFetchParams = {
+			timeRange: {
+				start: criteria.time.from,
+				end: criteria.time.to
+			},
+			region: criteria.region,
+			limit: this.overlaysService.config.limit,
+			dataInputFilters: []
+		};
+
+		const angleParams: IAngleParams[] = [
+			{
+				firstAngle: 0,
+				secondAngle: 90
+			},
+			{
+				firstAngle: 90,
+				secondAngle: 180
+			},
+			{
+				firstAngle: 180,
+				secondAngle: 270
+			},
+			{
+				firstAngle: 270,
+				secondAngle: 360
+			}
+		];
+
+		const overlayObservables: Observable<IOverlaysFetchData>[] = [];
+
+
+		for (let i = 0; i < 4; i++) {
+			params.angleParams = angleParams[i];
+			overlayObservables.push(this.sourceProvider.fetch(params));
+		}
+
+		return overlayObservables;
+	}
+
 
 	private getOverlayFromDropMarkup = map(([markupMap, overlays]: [ExtendMap<MarkUpClass, IMarkUpData>, Map<any, any>]) =>
 		overlays.get(markupMap && markupMap.get(MarkUpClass.hover) && markupMap.get(MarkUpClass.hover).overlaysIds[0])

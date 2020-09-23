@@ -20,7 +20,6 @@ import {
 	mapFeatureKey,
 	MapReducer,
 	mapStateSelector,
-	RemovePendingOverlayAction,
 	selectActiveMapId,
 	selectMaps,
 	selectMapsList,
@@ -48,7 +47,6 @@ import {
 	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
-	DisplayOverlaySuccessAction,
 	SetHoveredOverlayAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
@@ -64,6 +62,7 @@ import { OverlaysService } from '../../modules/overlays/services/overlays.servic
 import { ICase } from '../../modules/menu-items/cases/models/case.model';
 import { cloneDeep } from 'lodash';
 import { LoggerService } from '../../modules/core/services/logger.service';
+import { MultipleOverlaysSourceProvider } from '../../modules/overlays/services/multiple-source-provider';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -215,6 +214,10 @@ describe('OverlaysAppEffects', () => {
 					multi: true
 				},
 				{
+					provide: MultipleOverlaysSourceProvider,
+					useValue: {}
+				},
+				{
 					provide: CacheService,
 					useClass: () => {
 					}
@@ -297,23 +300,6 @@ describe('OverlaysAppEffects', () => {
 		});
 		expect(overlaysAppEffects.displayPendingOverlaysOnChangeLayoutSuccess$).toBeObservable(expectedResults);
 	});
-
-	it(`removePendingOverlayOnDisplay$ effect with overlay
-	should call RemovePendingOverlayAction with that overlay`, () => {
-		const ov1 = <any>{ id: 'first' }, ov2 = <any>{ id: 'first' };
-		mapState['pendingOverlays'] = [{ overlay: ov1 }, { overlay: ov2 }];
-		actions = hot('--a--', {
-			a: new DisplayOverlaySuccessAction({
-				overlay: <any>ov1,
-				mapId: mapState.activeMapId
-			})
-		});
-		const expectedResults = cold('--b--', {
-			b: new RemovePendingOverlayAction('first')
-		});
-		expect(overlaysAppEffects.removePendingOverlayOnDisplay$).toBeObservable(expectedResults);
-	});
-
 
 	describe('onDisplayOverlayFromStore$ should get id and call DisplayOverlayAction with overlay from store', () => {
 		it('MapId on payload', () => {

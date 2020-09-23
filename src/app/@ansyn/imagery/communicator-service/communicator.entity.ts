@@ -25,14 +25,11 @@ import { ImageryMapSources } from '../providers/map-source-providers';
 import { get as _get } from 'lodash';
 import { ImageryMapExtent, ImageryMapPosition } from '../model/case-map-position.model';
 import { getPolygonByPointAndRadius } from '../utils/geo';
-import {
-	IMapProviderConfig,
-	IMapProvidersConfig,
-	IMapSource,
-	MAP_PROVIDERS_CONFIG
-} from '../model/map-providers-config';
+import { IMapSource } from '../model/map-providers-config';
 import { IMapSettings } from '../model/map-settings';
 import { IBaseImageryLayer, IMAGERY_BASE_MAP_LAYER, ImageryLayerProperties } from '../model/imagery-layer.model';
+import { IExportMapData, IExportMapMetadata } from '../model/export-map.model';
+import { GetProvidersMapsService } from '../services/get-providers-maps/get-providers-maps.service';
 
 export interface IMapInstanceChanged {
 	id: string;
@@ -58,7 +55,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 				protected componentFactoryResolver: ComponentFactoryResolver,
 				public imageryCommunicatorService: ImageryCommunicatorService,
 				@Inject(BaseMapSourceProvider) public imageryMapSources: ImageryMapSources,
-				@Inject(MAP_PROVIDERS_CONFIG) protected mapProvidersConfig: IMapProvidersConfig
+				protected getProvidersMapsService: GetProvidersMapsService
 	) {
 	}
 
@@ -111,7 +108,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return false;
 	}
 
-	public setActiveMap(mapType: string, position: ImageryMapPosition, sourceType?, layer?: IBaseImageryLayer): Promise<BaseImageryMap> {
+	public async setActiveMap(mapType: string, position: ImageryMapPosition, sourceType?, layer?: IBaseImageryLayer): Promise<BaseImageryMap> {
 		if (this._mapComponentRef) {
 			this.destroyCurrentComponent();
 		}
@@ -131,8 +128,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		const mapComponent = this._mapComponentRef.instance;
 
 		if (!layer && !sourceType) {
-			const mapProviderConfig: IMapProviderConfig = this.mapProvidersConfig[imageryMap.prototype.mapType];
-			sourceType = mapProviderConfig && mapProviderConfig.defaultMapSource;
+			sourceType = await this.getProvidersMapsService.getDefaultProviderByType(imageryMap.prototype.mapType).toPromise();
 			if (!sourceType) {
 				console.warn(`Couldn't find defaultMapSource setting in config, for map type ${ imageryMap.prototype.mapType }`);
 			}
@@ -152,13 +148,13 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		});
 	}
 
-	loadInitialMapSource(position?: ImageryMapPosition): Promise<IBaseImageryLayer> {
+	loadInitialMapSource(position?: ImageryMapPosition, sourceType: string = this.mapSettings.worldView.sourceType): Promise<IBaseImageryLayer> {
 		return new Promise(resolve => {
 			if (!this._activeMap) {
 				resolve();
 			}
 
-			this.createMapSourceForMapType(this.mapSettings.worldView.mapType, this.mapSettings.worldView.sourceType)
+			this.createMapSourceForMapType(this.mapSettings.worldView.mapType, sourceType)
 				.then((layer) => {
 					this.resetView(layer, position).subscribe(() => {
 						resolve(layer);
@@ -246,6 +242,15 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return this.ActiveMap.getRotation();
 	}
 
+	exportMap(exportMetadata: IExportMapMetadata): Observable<IExportMapData> {
+		if (!this.ActiveMap) {
+			throw new Error('missing active map');
+		}
+		return this.ActiveMap.exportMap(exportMetadata).pipe(
+			map( (canvas) => ({canvas}))
+		);
+	}
+
 	public getPlugin<T extends BaseImageryPlugin>(plugin: { new(...args): T }): T {
 		return <any>this.plugins.find((_plugin) => _plugin instanceof plugin);
 	}
@@ -316,9 +321,8 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return forkJoin(resetObservables).pipe(map(results => results.every(b => b === true)));
 	}
 
-	private createMapSourceForMapType(mapType: string, sourceType: string): Promise<IBaseImageryLayer> {
-		const sources: IMapSource[] = this.mapProvidersConfig[mapType].sources;
-		const mapSource: IMapSource = sources.find(source => source.key === sourceType);
+	private async createMapSourceForMapType(mapType: string, sourceType: string): Promise<IBaseImageryLayer> {
+		const mapSource: IMapSource = await this.getProvidersMapsService.getMapProviderByTypeAndSource(mapType, sourceType).toPromise();
 		const sourceProvider = this.getMapSourceProvider({
 			mapType, sourceType: mapSource && mapSource.sourceType || ''
 		});

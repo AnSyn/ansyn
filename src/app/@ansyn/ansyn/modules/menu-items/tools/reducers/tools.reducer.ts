@@ -1,7 +1,6 @@
 import { StartMouseShadow, StopMouseShadow, ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
-import { OverlayDisplayMode } from '../overlays-display-mode/overlays-display-mode.component';
+import { IVisualizerEntity, IVisualizerStyle, getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
 import { AnnotationMode } from '@ansyn/ol';
 
 export enum toolsFlags {
@@ -20,6 +19,7 @@ export interface IMeasureDataOptions {
 	isLayerShowed: boolean;
 	isToolActive: boolean;
 	isRemoveMeasureModeActive: boolean;
+	forceDisableTranslate?: boolean;
 }
 
 export interface IMeasureData extends IMeasureDataOptions{
@@ -39,7 +39,6 @@ export interface IToolsState {
 	flags: Map<toolsFlags, boolean>;
 	subMenu: SubMenuEnum;
 	activeCenter: number[];
-	activeOverlaysFootprintMode?: OverlayDisplayMode;
 	annotationMode: AnnotationMode;
 	annotationProperties: Partial<IVisualizerStyle>;
 	activeAnnotationLayer: string;
@@ -47,15 +46,6 @@ export interface IToolsState {
 	mapSearchBoxSearch: boolean;
 }
 
-export const initialAnnotationProperties = {
-	'stroke-width': 1,
-	'fill-opacity': 0.4,
-	'stroke-opacity': 1,
-	'stroke-dasharray': 0,
-	'marker-color': '#ffffff',
-	stroke: '#27b2cf',
-	fill: '#ffffff'
-}
 
 export const toolsInitialState: IToolsState = {
 	flags: new Map<toolsFlags, boolean>([
@@ -64,7 +54,7 @@ export const toolsInitialState: IToolsState = {
 	subMenu: undefined,
 	activeCenter: [0, 0],
 	annotationMode: undefined,
-	annotationProperties: initialAnnotationProperties,
+	annotationProperties: getInitialAnnotationsFeatureStyle(),
 	activeAnnotationLayer: null,
 	mapsMeasures: new Map<string, IMeasureData>(),
 	mapSearchBoxSearch: false
@@ -186,9 +176,6 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			return { ...state, mapsMeasures };
 		}
 
-		case ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE:
-			return { ...state, activeOverlaysFootprintMode: action.payload };
-
 		case ToolsActionsTypes.ANNOTATION_SET_PROPERTIES:
 			return { ...state, annotationProperties: { ...state.annotationProperties, ...action.payload } };
 
@@ -208,7 +195,6 @@ export const selectToolFlags = createSelector(toolsStateSelector, (tools: ITools
 export const selectToolFlag = (flag: toolsFlags) => createSelector(selectToolFlags, (flags: Map<toolsFlags, boolean>) => flags.get(flag));
 export const selectIsMeasureToolActive = createSelector(selectToolFlags, (_toolsFlags) => _toolsFlags.get(toolsFlags.isMeasureToolActive));
 export const selectGeoRegisteredOptionsEnabled = createSelector(selectToolFlags, (_toolsFlags) => _toolsFlags.get(toolsFlags.geoRegisteredOptionsEnabled));
-export const selectOverlayFootprintMode = createSelector(toolsStateSelector, (tools: IToolsState) => tools.activeOverlaysFootprintMode);
 export const selectMeasureDataByMapId = (mapId: string) => createSelector(toolsStateSelector, (tools: IToolsState) => {
 	return tools && tools.mapsMeasures && tools.mapsMeasures.get(mapId);
 });

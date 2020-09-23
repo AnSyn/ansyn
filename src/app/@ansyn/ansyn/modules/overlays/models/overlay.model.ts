@@ -25,6 +25,7 @@ export interface IDilutedOverlaysHash {
 export enum GeoRegisteration {
 	geoRegistered = 'geoRegistered',
 	notGeoRegistered = 'notGeoRegistered',
+	originRegistration = 'originRegistration'
 }
 
 export enum PhotoAngle {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 import {
 	ISetStatePayload,
 	NavigateCaseTriggerAction,
@@ -11,16 +11,17 @@ import { Router } from '@angular/router';
 import {
 	CasesActionTypes,
 	CasesService,
-	casesStateSelector,
-	ICasesState,
+	casesStateSelector, ICase,
+	ICasesState, ICaseState, IDilutedCase,
 	LoadCaseAction,
 	LoadDefaultCaseAction,
 	SaveCaseAsSuccessAction,
-	SelectCaseAction
+	SelectCaseAction, SelectDilutedCaseAction
 } from '@ansyn/ansyn';
 import { IRouterState, routerStateSelector } from '../reducers/router.reducer';
 import { Store } from '@ngrx/store';
-import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
+import { cloneDeep } from 'lodash';
 
 @Injectable()
 export class RouterEffects {
@@ -29,8 +30,13 @@ export class RouterEffects {
 	onNavigateCase$: Observable<any> = this.actions$.pipe(
 		ofType<NavigateCaseTriggerAction>(RouterActionTypes.NAVIGATE_CASE),
 		tap(({ payload }) => {
+
 			if (payload) {
-				this.router.navigate(['case', payload]);
+				if (this.router.url.includes('case')) {
+					this.router.navigate(['case', payload]);
+				} else {
+					this.router.navigate(['link', payload]);
+				}
 			} else {
 				this.router.navigate(['']);
 			}
@@ -64,6 +70,20 @@ export class RouterEffects {
 		filter(([action, router]: [(SelectCaseAction | SaveCaseAsSuccessAction), IRouterState]) => action.payload.id !== this.casesService.defaultCase.id && action.payload.id !== router.caseId),
 		map(([action, router]: [SelectCaseAction | SaveCaseAsSuccessAction, IRouterState]) => new NavigateCaseTriggerAction(action.payload.id))
 	);
+
+	@Effect()
+	loadDefaultCase$: Observable<any> = this.actions$.pipe(
+		ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
+		filter( (action) => !(action as LoadDefaultCaseAction).payload.context),
+		withLatestFrom(this.store$.select(routerStateSelector)),
+		mergeMap(([action, router]: [(SelectDilutedCaseAction), IRouterState]) => {
+			if (router.linkId) {
+				return this.casesService.getLink(router.linkId);
+			}
+
+			const defaultCaseQueryParams: ICase = this.casesService.parseCase(cloneDeep(this.casesService.defaultCase));
+			return [new SelectDilutedCaseAction(defaultCaseQueryParams)];
+		}));
 
 	@Effect()
 	selectDefaultCaseUpdateRouter$: Observable<NavigateCaseTriggerAction> = this.actions$.pipe(

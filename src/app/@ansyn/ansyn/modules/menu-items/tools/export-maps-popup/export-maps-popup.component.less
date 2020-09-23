@@ -2,36 +2,120 @@
 @import 'ansyn/less/common';
 
 :host {
-	.mat-dialog-content {
-		background-color: @background-color-2;
-		color: white;
+	&.rtl {
+		direction: rtl;
+
+		.mat-dialog-actions {
+			flex-direction: row-reverse;
+		}
+	}
+	background-color: @background-color-2;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	color: white;
+	overflow: hidden;
+	.header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		background-color: @background-color-4;
+		padding: 5px 10px;
 
 		.mat-dialog-title {
-			background-color: @background-color-4;
-			color: white;
-
-			.title-message {
-				margin-left: 10px;
-			}
-
-			.close ::ng-deep .mat-button-focus-overlay {
-				display: none;
-			}
+			margin: 0;
 		}
-
-		.info {
-			background-color: @background-color-2;
+		button {
+			width: 20px;
+			height: 20px;
+			padding: 1px 0;
+			font-size: 10px;
+			border-radius: 50%;
 		}
 	}
 
-	.btn-area {
-		display: table;
-		margin: 0 auto;
-
-		.download-btn {
-			background-color: white;
-			color: @background-color-2;
-			border-radius: 5px;
+	.mat-dialog-content {
+		.mat-dialog-title {
+			text-align: center;
+			margin: 20px 0;
 		}
+
+		.method-chose {
+			display: flex;
+			justify-content: space-evenly;
+			margin-bottom: 10px;
+		}
+
+		.option {
+			display: flex;
+			align-items: flex-start;
+			padding: 5px 15px;
+			margin: 10px 0;
+
+			p {
+				min-width: 100px;
+				margin: 0 10px;
+			}
+
+			.mat-select {
+				background-color: @background-color-4;
+				width: 60%;
+				max-width: 300px;
+
+				/deep/ .mat-select-value {
+					color: white;
+					text-align: center;
+				}
+
+				&.mat-select-disabled {
+					opacity: 0.5;
+				}
+			}
+
+			.graphics {
+				ansyn-checkbox:not(:first-child) {
+					margin: 0 15px;
+				}
+			}
+		}
+
+		.note {
+			margin: 1px;
+			color: red;
+			font-weight: bold;
+			text-align: center;
+		}
+	}
+
+	.mat-dialog-actions {
+		padding: 20px;
+		button {
+			background-color: @application-primary-color;
+			color: white;
+			margin: 0 10px;
+			padding: 5px;
+			border-radius: 10px;
+
+
+			&.reset-btn {
+				background-color: @background-color-2;
+				color: @application-primary-color;
+				border: 1px solid @application-primary-color;
+			}
+		}
+
+	}
+}
+
+
+/deep/ mat-option {
+	background-color: @background-color-4 !important;
+
+	.mat-option-text {
+		color: white;
+	}
+
+	&.mat-active, &.mat-selected, &:hover  {
+		background-color: @background-color-6 !important;
 	}
 }

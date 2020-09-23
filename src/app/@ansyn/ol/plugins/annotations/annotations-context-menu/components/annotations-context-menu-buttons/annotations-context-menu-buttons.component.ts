@@ -10,6 +10,7 @@ import { AttributesService } from '../../services/attributes.service';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { OL_PLUGINS_CONFIG, IOLPluginsConfig } from '../../../../plugins.config';
+import { color } from 'd3';
 
 interface IFeatureProperties extends IVisualizerEntity {
 	mode: AnnotationMode
@@ -66,7 +67,7 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 			})
 		);
 
-		this.isMetadataEnabled = 
+		this.isMetadataEnabled =
 			(!!this.olPluginsConfig && !!this.olPluginsConfig.AnnotationsContextMenu) ? this.olPluginsConfig.AnnotationsContextMenu.metadataActive : false;
 	}
 
@@ -158,8 +159,12 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 	}
 
 	activeChange($event: { label: 'stroke' | 'fill', event: string }) {
-		let opacity = { stroke: 1, fill: 0.4 };
 		const { style } = this.getFeatureProps();
+		const opacity =  {
+			stroke: color(style.initial.stroke).opacity,
+			fill: color(style.initial.fill).opacity
+		};
+
 		const updatedStyle = {
 			...style,
 			initial: {

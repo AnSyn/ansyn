@@ -2,7 +2,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { StatusBarComponent } from './status-bar.component';
 import { MockComponent } from '../../../core/test/mock-component';
 import { TranslateModule } from '@ngx-translate/core';
-import { FiltersModule } from '../../../filters/filters.module';
 
 describe('StatusBarComponent', () => {
 	let component: StatusBarComponent;

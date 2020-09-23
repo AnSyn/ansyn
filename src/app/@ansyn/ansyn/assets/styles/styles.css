@@ -20,18 +20,6 @@ circle.drop.selected {
 	padding: 0;
 	width: 600px;
 	overflow: hidden;
-	text-align: center;
-}
-
-.close.mat-button {
-	cursor: pointer;
-	float: right;
-	padding: 0;
-	min-width: 25px;
-}
-
-.main-progress .mat-progress-bar-fill::after {
-	background-color: #0091ff !important;
 }
 
 .main-timeline {
@@ -299,10 +287,6 @@ input[type=number]::-webkit-outer-spin-button {
 	background-clip: padding-box;
 	border-radius: 2px;
 	background: white -webkit-gradient(linear, 0 0, 0 100%, color-stop(.5, rgba(255, 255, 255, .2)), color-stop(.5, transparent), to(transparent));
-}
-
-.mat-option.mat-active, .mat-option:hover {
-	background: rgba(0,0,0,.12) !important;
 }
 
 .mat-autocomplete-panel::-webkit-scrollbar, .mat-select-panel::-webkit-scrollbar {

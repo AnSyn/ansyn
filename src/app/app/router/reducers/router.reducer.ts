@@ -5,6 +5,7 @@ import { createFeatureSelector, MemoizedSelector } from '@ngrx/store';
 export interface IRouterState {
 	caseId: string;
 	queryParams: Params;
+	linkId?: string;
 }
 
 

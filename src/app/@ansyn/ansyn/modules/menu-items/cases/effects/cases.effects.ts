@@ -32,7 +32,7 @@ import {
 	map,
 	mergeMap,
 	share,
-	switchMap,
+	switchMap, tap,
 	withLatestFrom
 } from 'rxjs/operators';
 import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
@@ -40,11 +40,8 @@ import { UUID } from 'angular2-uuid';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { DataLayersService } from '../../layers-manager/services/data-layers.service';
 import {
-	copyFromContent,
 	SetMapsDataActionStore,
-	SetToastMessageAction,
-	selectActiveMapId,
-	selectMapsIds
+	SetToastMessageAction
 } from '@ansyn/map-facade';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { IStoredEntity } from '../../../core/services/storage/storage.service';
@@ -52,6 +49,7 @@ import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCras
 import { toastMessages } from '../../../core/models/toast-messages';
 import { ICase, ICasePreview, IDilutedCaseState } from '../models/case.model';
 import { BackToWorldView } from '../../../overlays/overlay-status/actions/overlay-status.actions';
+import { ClipboardService } from 'ngx-clipboard';
 
 @Injectable()
 export class CasesEffects {
@@ -128,16 +126,6 @@ export class CasesEffects {
 	);
 
 	@Effect()
-	loadDefaultCase$: Observable<SelectDilutedCaseAction> = this.actions$.pipe(
-		ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
-		filter((action: LoadDefaultCaseAction) => !action.payload.context),
-		mergeMap((action: LoadDefaultCaseAction) => {
-			const defaultCaseQueryParams: ICase = this.casesService.updateCaseViaQueryParmas(action.payload, this.casesService.defaultCase);
-			return [new SelectDilutedCaseAction(defaultCaseQueryParams)];
-		}),
-		share());
-
-	@Effect()
 	onSaveCaseAs$: Observable<SaveCaseAsSuccessAction> = this.actions$.pipe(
 		ofType<SaveCaseAsAction>(CasesActionTypes.SAVE_CASE_AS),
 		withLatestFrom(this.store.select(selectLayers)),
@@ -177,8 +165,8 @@ export class CasesEffects {
 		ofType<CopyCaseLinkAction>(CasesActionTypes.COPY_CASE_LINK),
 		filter(action => !Boolean(action.payload.shareCaseAsQueryParams)),
 		map((action) => {
-			const shareLink = this.casesService.generateLinkWithCaseId(action.payload.caseId);
-			copyFromContent(shareLink);
+			const shareLink = this.casesService.generateLinkById(action.payload.caseId, 'case');
+			this.clipboardService.copyFromContent(shareLink);
 			return new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast });
 		})
 	);
@@ -237,15 +225,18 @@ export class CasesEffects {
 			}
 			return sCase;
 		}),
-		map((sCase: ICase) => {
-			const shareLink = this.casesService.generateQueryParamsViaCase(sCase);
-			copyFromContent(shareLink);
+		mergeMap(sCase => this.casesService.generateQueryParamsViaCase(sCase)),
+		map((linkId: string) => {
+			const url = this.casesService.generateLinkById(linkId, 'link');
+			this.clipboardService.copyFromContent(url);
 			return new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast });
-		})
-	);
+		}),
+		catchError((err) => this.errorHandlerService.httpErrorHandle(err, toastMessages.failedToCreateLink)),
+		catchError(() => EMPTY));
 
 	constructor(protected actions$: Actions,
 				protected casesService: CasesService,
+				private clipboardService: ClipboardService,
 				protected store: Store<ICasesState>,
 				protected dataLayersService: DataLayersService,
 				protected errorHandlerService: ErrorHandlerService,

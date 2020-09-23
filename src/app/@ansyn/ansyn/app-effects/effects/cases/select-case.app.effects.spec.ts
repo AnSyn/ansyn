@@ -9,10 +9,7 @@ import {
 	SetFavoriteOverlaysAction,
 	SetOverlaysScannedAreaDataAction,
 	SetOverlaysTranslationDataAction,
-	SetPresetOverlaysAction,
-	SetRemovedOverlaysIdsAction,
-	SetRemovedOverlaysVisibilityAction,
-	UpdateOverlaysManualProcessArgs
+	UpdateOverlaysManualProcessArgs,
 } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { SelectCaseAppEffects } from './select-case.app.effects';
 import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '@ansyn/map-facade';
@@ -91,9 +88,6 @@ describe('SelectCaseAppEffects', () => {
 				region: CaseRegionState = {},
 				dataInputFilters: ICaseDataInputFiltersState = { fullyChecked: true, filters: [] },
 				favoriteOverlays: IOverlay[] = [],
-				removedOverlaysIds: string[] = [],
-				removedOverlaysVisibility = true,
-				presetOverlays: IOverlay[] = [],
 				maps: ICaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
 				layers: ICaseLayersState = {
 					activeLayersIds: []
@@ -114,9 +108,6 @@ describe('SelectCaseAppEffects', () => {
 				region,
 				dataInputFilters,
 				favoriteOverlays,
-				removedOverlaysVisibility,
-				removedOverlaysIds,
-				presetOverlays,
 				overlaysTranslationData,
 				maps,
 				layers,
@@ -138,27 +129,25 @@ describe('SelectCaseAppEffects', () => {
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
-			const expectedResult = cold('--(abcdefghijklmnpqrstx)--', {
-				a: new SetMapsDataActionStore({ mapsList: maps.data }),
-				b: new SetActiveMapId(maps.activeMapId),
-				c: new SetLayoutAction(<any>maps.layout),
-				d: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
-				e: new UpdateGeoFilterStatus({active: false, type: region.type}),
-				f: new SetFavoriteOverlaysAction(favoriteOverlays),
-				g: new SetPresetOverlaysAction(presetOverlays),
-				h: new SetMiscOverlays({ miscOverlays }),
-				i: new SetOverlaysTranslationDataAction(overlaysTranslationData),
-				j: new SetOverlaysScannedAreaDataAction(overlaysScannedAreaData),
-				k: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
-				l: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
-				m: new UpdateFacetsAction(facets),
-				n: new UpdateSelectedLayersIds([]),
-				p: new SetAutoSave(false),
-				q: new SetRemovedOverlaysIdsAction(removedOverlaysIds),
-				r: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
-				s: new SetAnnotationMode(null),
-				t: new SetMeasureDistanceToolState(false),
-				x: new SelectCaseSuccessAction(payload)
+			const expectedResult = cold('--(abcdefghijklmnpqr)--', {
+				
+			a: new SetMapsDataActionStore({ mapsList: maps.data }),
+			b: new SetActiveMapId(state.maps.activeMapId),
+			c: new SetLayoutAction(<any>maps.layout),
+			d: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
+			e: new UpdateGeoFilterStatus({active: false, type: region.type}),
+			f: new SetFavoriteOverlaysAction(favoriteOverlays),
+			g: new SetMiscOverlays({ miscOverlays }),
+			h: new SetOverlaysTranslationDataAction(overlaysTranslationData),
+			i: new SetOverlaysScannedAreaDataAction(overlaysScannedAreaData),
+			j: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
+			k: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
+			l: new UpdateFacetsAction(facets),
+			m: new UpdateSelectedLayersIds([]),
+			n: new SetAutoSave(false),
+			p: new SetAnnotationMode(null),
+			q: new SetMeasureDistanceToolState(false),
+			r: new SelectCaseSuccessAction(payload)
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

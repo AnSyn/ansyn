@@ -18,16 +18,7 @@ import {
 	SetLayoutSuccessAction,
 	SetPendingOverlaysAction
 } from '@ansyn/map-facade';
-import {
-	BackToWorldView,
-	OverlayStatusActionsTypes,
-	SetPresetOverlaysAction,
-	SetRemovedOverlayIdsCount,
-	SetRemovedOverlaysIdAction,
-	ToggleFavoriteAction,
-	TogglePresetOverlayAction
-} from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
-import { selectRemovedOverlays } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
+import { OverlayStatusActionsTypes } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { IAppState } from '../app.effects.module';
 
 import { ImageryMapPosition } from '@ansyn/imagery';
@@ -49,8 +40,6 @@ import {
 	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
 	DisplayOverlaySuccessAction,
-	LoadOverlaysAction,
-	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
 	SetHoveredOverlayAction,
 	SetMarkUp,
@@ -59,7 +48,6 @@ import {
 import {
 	IMarkUpData,
 	MarkUpClass,
-	selectdisplayOverlayHistory,
 	selectDropMarkup,
 	selectOverlaysCriteria,
 	selectOverlaysMap
@@ -90,27 +78,11 @@ export class OverlaysAppEffects {
 			OverlayStatusActionsTypes.TOGGLE_OVERLAY_FAVORITE,
 			OverlayStatusActionsTypes.ADD_ALERT_MSG,
 			OverlayStatusActionsTypes.REMOVE_ALERT_MSG,
-			OverlayStatusActionsTypes.TOGGLE_DRAGGED_MODE,
-			OverlayStatusActionsTypes.TOGGLE_OVERLAY_PRESET
+			OverlayStatusActionsTypes.TOGGLE_DRAGGED_MODE
 		),
 		tap((action) => {
 			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Overlays', action.type);
 		}));
-
-	@Effect()
-	removedOverlaysCount$ = combineLatest(this.store$.select(selectRemovedOverlays), this.store$.select(selectOverlaysMap)).pipe(
-		map(([removedOverlaysIds, overlays]: [string[], Map<string, IOverlay>]) => {
-			const removedOverlaysCount = removedOverlaysIds.filter((removedId) => overlays.has(removedId)).length;
-			return new SetRemovedOverlayIdsCount(removedOverlaysCount);
-		})
-	);
-
-	@Effect()
-	clearPresetsOnClearOverlays$: Observable<any> = this.actions$.pipe(
-		ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
-		filter(({ clearExistingOverlays }) => clearExistingOverlays),
-		map(() => new SetPresetOverlaysAction([]))
-	);
 
 	@Effect()
 	onDisplayFourView: Observable<any> = this.actions$.pipe(
@@ -178,12 +150,6 @@ export class OverlaysAppEffects {
 	}
 
 	@Effect()
-	clearPresets$: Observable<any> = this.actions$.pipe(
-		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
-		map(() => new SetPresetOverlaysAction([]))
-	);
-
-	@Effect()
 	displayMultipleOverlays$: Observable<any> = this.actions$.pipe(
 		ofType(OverlaysActionTypes.DISPLAY_MULTIPLE_OVERLAYS_FROM_STORE),
 		filter((action: DisplayMultipleOverlaysFromStoreAction) => action.payload.length > 0),
@@ -248,31 +214,6 @@ export class OverlaysAppEffects {
 			});
 		})
 	);
-
-	@Effect()
-	onSetRemovedOverlaysIdAction$: Observable<any> = this.actions$.pipe(
-		ofType<SetRemovedOverlaysIdAction>(OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_ID),
-		filter(({ payload }) => payload.value),
-		withLatestFrom(this.store$.select(selectdisplayOverlayHistory), this.store$.select(selectMapsList)),
-		mergeMap(([{ payload }, displayOverlayHistory, mapsList]) => {
-			const mapActions = mapsList
-				.filter((map) => map.data.overlay && (map.data.overlay.id === payload.id) && (map.id === payload.mapId))
-				.map((map) => {
-					const mapId = map.id;
-					const id = (displayOverlayHistory[mapId] || []).pop();
-					if (Boolean(id)) {
-						return new DisplayOverlayFromStoreAction({ mapId, id });
-					}
-					return new BackToWorldView({ mapId });
-				});
-			return [
-				new ToggleFavoriteAction({ value: false, id: payload.id }),
-				new TogglePresetOverlayAction({ value: false, id: payload.id }),
-				...mapActions
-			];
-		})
-	);
-
 
 	private getOverlayFromDropMarkup = map(([markupMap, overlays]: [ExtendMap<MarkUpClass, IMarkUpData>, Map<any, any>]) =>
 		overlays.get(markupMap && markupMap.get(MarkUpClass.hover) && markupMap.get(MarkUpClass.hover).overlaysIds[0])

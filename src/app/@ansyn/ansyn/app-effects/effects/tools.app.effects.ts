@@ -13,8 +13,7 @@ import {
 	PinLocationModeTriggerAction,
 	selectActiveMapId,
 	selectMapsIds,
-	selectMapsList,
-	UpdateMapAction
+	selectMapsList
 } from '@ansyn/map-facade';
 import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
@@ -33,11 +32,9 @@ import {
 	GoToAction,
 	RemoveMeasureDataAction,
 	SetActiveCenter,
-	SetActiveOverlaysFootprintModeAction,
 	SetAnnotationMode,
 	SetPinLocationModeAction,
 	SetSubMenu,
-	ShowOverlaysFootprintAction,
 	StartMouseShadow,
 	StopMouseShadow,
 	ToolsActionsTypes, UpdateMeasureDataOptionsAction,
@@ -63,7 +60,6 @@ export class ToolsAppEffects {
 			ToolsActionsTypes.START_MOUSE_SHADOW,
 			ToolsActionsTypes.STOP_MOUSE_SHADOW,
 			ToolsActionsTypes.GO_TO,
-			ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE,
 			ToolsActionsTypes.UPDATE_TOOLS_FLAGS,
 			ToolsActionsTypes.MEASURES.SET_MEASURE_TOOL_STATE,
 			ToolsActionsTypes.STORE.SET_ANNOTATION_MODE,
@@ -97,21 +93,6 @@ export class ToolsAppEffects {
 	);
 
 	@Effect()
-	onShowOverlayFootprint$: Observable<any> = this.actions$.pipe(
-		ofType<ShowOverlaysFootprintAction>(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT),
-		map((action) => new SetActiveOverlaysFootprintModeAction(action.payload))
-	);
-
-	@Effect()
-	backToWorldView$: Observable<DisableImageProcessing> = this.actions$
-		.pipe(
-			ofType(OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW),
-			withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState): CommunicatorEntity => this.imageryCommunicatorService.provide(mapState.activeMapId)),
-			filter(communicator => Boolean(communicator)),
-			map(() => new DisableImageProcessing())
-		);
-
-	@Effect()
 	getActiveCenter$: Observable<SetActiveCenter> = this.actions$.pipe(
 		ofType(ToolsActionsTypes.PULL_ACTIVE_CENTER),
 		withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState): CommunicatorEntity => this.imageryCommunicatorService.provide(mapState.activeMapId)),
@@ -122,9 +103,9 @@ export class ToolsAppEffects {
 	@Effect()
 	onGoTo$: Observable<SetActiveCenter> = this.actions$.pipe(
 		ofType<GoToAction>(ToolsActionsTypes.GO_TO),
-		withLatestFrom(this.store$.select(mapStateSelector), (action, mapState: IMapState): any => ({
+		withLatestFrom(this.store$.select(mapStateSelector), (action: GoToAction, mapState: IMapState): any => ({
 			action,
-			communicator: this.imageryCommunicatorService.provide(mapState.activeMapId)
+			communicator: this.imageryCommunicatorService.provide(action.mapId ? action.mapId : mapState.activeMapId)
 		})),
 		filter(({ action, communicator }) => Boolean(communicator)),
 		switchMap(({ action, communicator }) => {
@@ -168,22 +149,6 @@ export class ToolsAppEffects {
 		}));
 
 	@Effect()
-	updateCaseFromTools$: Observable<any> = this.actions$
-		.pipe(
-			ofType<ShowOverlaysFootprintAction>(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT),
-			withLatestFrom(this.store$.select(mapStateSelector)),
-			map(([action, mapState]: [ShowOverlaysFootprintAction, IMapState]) => {
-				const activeMap = MapFacadeService.activeMap(mapState);
-				activeMap.data.overlayDisplayMode = action.payload;
-				return new UpdateMapAction({
-					id: activeMap.id, changes: {
-						data: { ...activeMap.data, overlayDisplayMode: action.payload }
-					}
-				});
-			})
-		);
-
-	@Effect()
 	clearActiveInteractions$ = this.actions$.pipe(
 		ofType<ClearActiveInteractionsAction>(ToolsActionsTypes.CLEAR_ACTIVE_TOOLS),
 		withLatestFrom(this.store$.select(selectMapsIds)),
@@ -198,7 +163,7 @@ export class ToolsAppEffects {
 			mapIds.forEach((mapId) => {
 				const updateMeasureAction = new UpdateMeasureDataOptionsAction({
 					mapId: mapId,
-					options: { isToolActive: false }
+					options: { isToolActive: false, isRemoveMeasureModeActive: false}
 				});
 				clearActions.push(updateMeasureAction);
 			});
@@ -207,6 +172,13 @@ export class ToolsAppEffects {
 				clearActions = differenceWith(clearActions, action.payload.skipClearFor,
 					(act, actType) => act instanceof actType);
 			}
+			mapIds.forEach((mapId) => {
+				const updateMeasureAction = new UpdateMeasureDataOptionsAction({
+					mapId: mapId,
+					options: { forceDisableTranslate: undefined }
+				});
+				clearActions.push(updateMeasureAction);
+			});
 			return clearActions;
 		}));
 

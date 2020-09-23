@@ -36,7 +36,6 @@ import {
 	DisableImageProcessing
 } from '../actions/overlay-status.actions';
 import {
-	SetActiveOverlaysFootprintModeAction,
 	SetAnnotationMode,
 } from '../../../menu-items/tools/actions/tools.actions';
 import {
@@ -63,21 +62,15 @@ export class OverlayStatusEffects {
 	backToWorldView$: Observable<any> = this.actions$
 		.pipe(
 			ofType(OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW),
-			withLatestFrom(this.store$.select(selectMaps)),
-			filter(([action, entities]: [BackToWorldView, Dictionary<IMapSettings>]) => Boolean(entities[action.payload.mapId])),
-			map(([action, entities]: [BackToWorldView, Dictionary<IMapSettings>]) => {
-				const mapId = action.payload.mapId;
-				const selectedMap = entities[mapId];
-				const communicator = this.communicatorsService.provide(mapId);
-				const { position } = selectedMap.data;
-				return [action.payload, selectedMap, communicator, position];
-			}),
-			filter(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => Boolean(communicator)),
-			switchMap(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => {
+			filter( (action: BackToWorldView) => this.communicatorsService.has(action.payload.mapId)),
+			switchMap(({payload}: BackToWorldView) => {
+				const communicator = this.communicatorsService.provide(payload.mapId);
+				const mapData = {...communicator.mapSettings.data};
+				const position = mapData.position;
 				const disabledMap = communicator.activeMapName === DisabledOpenLayersMapName || communicator.activeMapName === ImageryVideoMapType;
 				this.store$.dispatch(new UpdateMapAction({
 					id: communicator.id,
-					changes: { data: { ...selectedMap.data, overlay: null, isAutoImageProcessingActive: false, imageManualProcessArgs: this.defaultImageManualProcessArgs } }
+					changes: { data: { ...mapData, overlay: null, isAutoImageProcessingActive: false, imageManualProcessArgs: this.defaultImageManualProcessArgs } }
 				}));
 
 				return fromPromise<any>(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
@@ -99,14 +92,8 @@ export class OverlayStatusEffects {
 	onActiveMapChangesSetOverlaysFootprintMode$: Observable<any> = this.store$.select(selectActiveMapId).pipe(
 		filter(Boolean),
 		withLatestFrom(this.store$.select(mapStateSelector), (activeMapId, mapState: IMapState) => MapFacadeService.activeMap(mapState)),
-		filter((activeMap: ICaseMapState) => Boolean(activeMap)),
-		mergeMap<any, any>((activeMap: ICaseMapState) => {
-			const actions: Action[] = [new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode)];
-			if (!Boolean(activeMap.data.overlay)) {
-				actions.push(new DisableImageProcessing());
-			}
-			return actions;
-		})
+		filter((activeMap: ICaseMapState) => activeMap && activeMap.data && !activeMap.data.overlay),
+		map((activeMap: ICaseMapState) => new DisableImageProcessing())
 	);
 
 	@Effect()
@@ -119,6 +106,7 @@ export class OverlayStatusEffects {
 		ofType(OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING),
 		withLatestFrom(this.store$.select(mapStateSelector)),
 		mergeMap<any, any>(([action, mapsState]: [SetAutoImageProcessing, IMapState]) => {
+			mapsState.activeMapId = action.payload.mapId;
 			const activeMap: IMapSettings = MapFacadeService.activeMap(mapsState);
 			const isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
 			return [
@@ -177,11 +165,11 @@ export class OverlayStatusEffects {
 					});
 					let combinedResult = unifyPolygons(featurePolygons);
 					let scannedAreaContainsExtentPolygon = false;
-					
+
 					scannedArea.coordinates.forEach(coordinates => {
 						let multiPolygon = JSON.parse(JSON.stringify(scannedArea));
 						multiPolygon.coordinates = [coordinates];
-						
+
 						if (getPolygonIntersectionRatioWithMultiPolygon(position.extentPolygon, multiPolygon)) {
 							scannedAreaContainsExtentPolygon = true;
 						}
@@ -190,7 +178,7 @@ export class OverlayStatusEffects {
 					if (scannedAreaContainsExtentPolygon) {
 						combinedResult = difference(combinedResult, position.extentPolygon);
 					}
-					
+
 					if (combinedResult === null) {
 						scannedArea = null;
 					}

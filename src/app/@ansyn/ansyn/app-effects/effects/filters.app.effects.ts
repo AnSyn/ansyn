@@ -4,8 +4,6 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Inject, Injectable } from '@angular/core';
 import {
 	selectFavoriteOverlays,
-	selectRemovedOverlays,
-	selectRemovedOverlaysVisibility
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../app.effects.module';
 import { SetBadgeAction, SetHideResultsTableBadgeAction } from '@ansyn/menu';
@@ -68,21 +66,18 @@ export class FiltersAppEffects {
 	overlaysArray$: Observable<IOverlay[]> = this.store$.select(selectOverlaysArray);
 	filteredOverlays$: Observable<string[]> = this.store$.select(selectFilteredOveralys);
 	specialObjects$: Observable<Map<string, IOverlaySpecialObject>> = this.store$.select(selectSpecialObjects);
-	removedOverlays$: Observable<any> = this.store$.select(selectRemovedOverlays);
-	removedOverlaysVisibility$: Observable<any> = this.store$.select(selectRemovedOverlaysVisibility);
-	onFiltersChanges$: Observable<[Filters, boolean, IOverlay[], string[], boolean]> = combineLatest(this.filters$, this.showOnlyFavorite$, this.favoriteOverlays$, this.removedOverlays$, this.removedOverlaysVisibility$);
-	onCriterialFiltersChanges$: Observable<[Filters, string[], boolean]> = combineLatest(this.filters$, this.removedOverlays$, this.removedOverlaysVisibility$);
+	onFiltersChanges$: Observable<[Filters, boolean, IOverlay[]]> = combineLatest(this.filters$, this.showOnlyFavorite$, this.favoriteOverlays$);
 	forOverlayDrops$: Observable<[Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean]> = combineLatest(
 		this.overlaysMap$, this.filteredOverlays$, this.specialObjects$, this.favoriteOverlays$, this.showOnlyFavorite$);
 	facets$: Observable<ICaseFacetsState> = this.store$.select(selectFacets);
-	onFiltersChangesForLog$: Observable<[Filters, boolean, string[], boolean]> = combineLatest(this.filters$, this.showOnlyFavorite$, this.removedOverlays$, this.removedOverlaysVisibility$);
+	onFiltersChangesForLog$: Observable<[Filters, boolean]> = combineLatest(this.filters$, this.showOnlyFavorite$);
 
 	@Effect({ dispatch: false })
 	filtersLogger$: Observable<any> = this.onFiltersChangesForLog$.pipe(
-		filter(([filters, showOnlyFavorites, removedOverlays, removedOverlaysVisibality]: [Filters, boolean, string[], boolean]) => Boolean(filters) && filters.size !== 0),
-		map(([filters, showOnlyFavorites, removedOverlays, removedOverlaysVisibality]: [Filters, boolean, string[], boolean]) => {
+		filter(([filters, showOnlyFavorites]: [Filters, boolean]) => Boolean(filters) && filters.size !== 0),
+		map(([filters, showOnlyFavorites]: [Filters, boolean]) => {
 			const filtersData = filtersToString(filters);
-			const filtersState = `{"showOnlyFavorites": "${ showOnlyFavorites }", "removedOverlays": "${ JSON.stringify(removedOverlays) }", "removedOverlaysVisibality": "${ removedOverlaysVisibality }", "filters": ${ Boolean(filters) ? filtersData : filters }}`;
+			const filtersState = `{"showOnlyFavorites": "${ showOnlyFavorites }", "filters": ${ Boolean(filters) ? filtersData : filters }}`;
 			return filtersState;
 		}),
 		distinctUntilChanged(isEqual),
@@ -92,11 +87,11 @@ export class FiltersAppEffects {
 	);
 
 	@Effect()
-	updateOverlayFilters$ = this.onCriterialFiltersChanges$.pipe(
+	updateOverlayFilters$ = this.filters$.pipe(
 		withLatestFrom(this.overlaysArray$),
-		mergeMap(([[filters, removedOverlaysIds, removedOverlaysVisibility], overlaysArray]: [[Filters, string[], boolean], IOverlay[]]) => {
+		mergeMap(([filters, overlaysArray]: [Filters, IOverlay[]]) => {
 			const filterModels: IFilterModel[] = FiltersService.pluckFilterModels(filters);
-			const filteredOverlays: string[] = buildFilteredOverlays(overlaysArray, filterModels, removedOverlaysIds, removedOverlaysVisibility);
+			const filteredOverlays: string[] = buildFilteredOverlays(overlaysArray, filterModels);
 			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : this.translate.instant(overlaysStatusMessages.noOverLayMatchFilters);
 			return [
 				new SetFilteredOverlaysAction(filteredOverlays),
@@ -143,7 +138,7 @@ export class FiltersAppEffects {
 
 	@Effect()
 	updateFiltersBadge$: Observable<any> = this.onFiltersChanges$.pipe(
-		map(([filters, showOnlyFavorites]: [Filters, boolean, IOverlay[], string[], boolean]) => {
+		map(([filters, showOnlyFavorites]: [Filters, boolean, IOverlay[]]) => {
 			let badge = '0';
 
 			if (showOnlyFavorites) {
@@ -165,11 +160,11 @@ export class FiltersAppEffects {
 
 	@Effect({ dispatch: false })
 	filteredOverlaysChanged$: Observable<any> = this.store$.select(selectFilteredOveralys).pipe(
-		withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(selectOverlaysMap), this.store$.select(selectFavoriteOverlays), this.store$.select(selectRemovedOverlays), this.store$.select(selectRemovedOverlaysVisibility)),
-		filter(([filteredOverlays, filterState, overlays]: [string[], IFiltersState, Map<string, IOverlay>, IOverlay[], string[], boolean]) => {
+		withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(selectOverlaysMap), this.store$.select(selectFavoriteOverlays)),
+		filter(([filteredOverlays, filterState, overlays]: [string[], IFiltersState, Map<string, IOverlay>, IOverlay[]]) => {
 			return overlays.size > 0;
 		}),
-		tap(([filteredOverlays, filterState, overlays, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility]: [string[], IFiltersState, Map<string, IOverlay>, IOverlay[], string[], boolean]) => {
+		tap(([filteredOverlays, filterState, overlays, favoriteOverlays]: [string[], IFiltersState, Map<string, IOverlay>, IOverlay[]]) => {
 
 			Array.from(filterState.filters).forEach(([metadataKey, metadata]: [IFilter, FilterMetadata]) => {
 				metadata.resetFilteredCount();
@@ -178,7 +173,7 @@ export class FiltersAppEffects {
 					metadata.incrementFilteredCount(_get(overlay, metadataKey.modelName));
 				});
 				if (metadata instanceof EnumFilterMetadata || metadata instanceof BooleanFilterMetadata) {
-					FiltersService.calculatePotentialOverlaysCount(metadataKey, metadata, overlays, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, filterState);
+					FiltersService.calculatePotentialOverlaysCount(metadataKey, metadata, overlays, favoriteOverlays, filterState);
 				}
 			});
 		}));

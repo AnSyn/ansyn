@@ -61,7 +61,7 @@ describe('apiService', () => {
 	it('should go to location', () => {
 		const position = <Point>{type: 'Point', coordinates: [-117, 33]};
 		ansynApi.goToPosition(position);
-		expect(store.dispatch).toHaveBeenCalledWith(new GoToAction(position.coordinates));
+		expect(store.dispatch).toHaveBeenCalledWith(new GoToAction(position.coordinates, null));
 	});
 
 

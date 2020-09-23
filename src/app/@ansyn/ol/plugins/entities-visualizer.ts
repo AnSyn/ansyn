@@ -89,6 +89,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 		let extent = !this.dontRestrictToExtent ? (this.iMap.getMainLayer() as ol_Layer).getExtent() : undefined;
 		this.vector = new VectorLayer(<any>{
+			className: this.layerClassName ? this.layerClassName : undefined,
 			source: this.source,
 			style: this.featureStyle.bind(this),
 			opacity: this.visualizerStyle.opacity,
@@ -298,7 +299,9 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 						originalEntity: filteredLogicalEntities.find(({ id }) => id === _id),
 						feature: feature
 					};
-					entity.feature.set('label', { ...feature.get('label'), geometry: label && label.getGeometry() });
+					if (label) {
+						entity.feature.set('label', { ...feature.get('label'), geometry: label && label.getGeometry() });
+					}
 					this.idToEntity.set(_id, entity);
 					const featureWithTheSameId = this.source.getFeatureById(_id);
 					if (featureWithTheSameId) {

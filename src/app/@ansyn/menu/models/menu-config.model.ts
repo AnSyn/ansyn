@@ -12,6 +12,7 @@ export interface IMenuConfig {
 	background: string;
 	forkMe: IForkMe;
 	baseUrl: string;
+	landingPageUrl: string;
 	menuItems?: string[];
 	isCollapsible?: boolean;
 }

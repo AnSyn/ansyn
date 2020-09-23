@@ -120,11 +120,12 @@ export class OverlaysAppEffects {
 		mergeMap(([action, criteria]: [DisplayFourViewAction, IOverlaysCriteria]): any => {
 			this.store$.dispatch(new SetPendingOverlaysAction(action.payload));
 			const overlayObservables: Observable<IOverlaysFetchData>[] = this.getFourViewOverlays(criteria);
-			
+
 			return forkJoin(overlayObservables).pipe(
 				map((overlaysData: IOverlaysFetchData[]) => {
-					const overlays: IPendingOverlay[] = [];
-					overlaysData.forEach(overlayData => overlays.push({overlay: overlayData.data[0]}));
+					const overlays: IPendingOverlay[] = overlaysData.map(({data}) => {
+						return {overlay: data[0]};
+					});
 					this.store$.dispatch(new SetPendingOverlaysAction(overlays));
 
 					const fourMapsLayout = 'layout6';

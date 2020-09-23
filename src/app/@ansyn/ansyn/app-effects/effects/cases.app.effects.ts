@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { IMapState, mapStateSelector, selectMapsIds, SetToastMessageAction, UpdateMapAction } from '@ansyn/map-facade';
 import {
 	IMapProvidersConfig,
-	MAP_PROVIDERS_CONFIG
+	MAP_PROVIDERS_CONFIG,
 	GetProvidersMapsService,
 	ImageryCommunicatorService
 } from '@ansyn/imagery';

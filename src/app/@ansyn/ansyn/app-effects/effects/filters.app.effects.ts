@@ -192,7 +192,7 @@ export class FiltersAppEffects {
 	}
 
 	removeDuplicateDrops(drops: IOverlayDrop[]): IOverlayDrop[] {
-		return drops.filter((v,i,a) => a.findIndex(t=> (t.id === v.id)) === i);
+		return drops.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
 	}
 
 	resolveMetadata(filterType: FilterType): FilterMetadata {

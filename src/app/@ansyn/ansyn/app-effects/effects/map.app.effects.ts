@@ -194,7 +194,7 @@ export class MapAppEffects {
 	onOverlayFromURL$: Observable<any> = this.actions$
 		.pipe(
 			ofType<DisplayOverlayAction>(OverlaysActionTypes.DISPLAY_OVERLAY),
-			filter((action: DisplayOverlayAction) => !isFullOverlay(action.payload.overlay)),
+			filter((action: DisplayOverlayAction) => action.payload.overlay && !isFullOverlay(action.payload.overlay)),
 			mergeMap((action: DisplayOverlayAction) => {
 				return [
 					new RequestOverlayByIDFromBackendAction({

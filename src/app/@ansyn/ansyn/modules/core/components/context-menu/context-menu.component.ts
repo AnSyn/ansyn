@@ -239,18 +239,8 @@ export class ContextMenuComponent implements OnInit {
 		this.displayOverlayEvent($event, prevOverlay);
 	}
 
-	getViewedOverlays(): IPendingOverlay[] {
-		const angledFilterSize = this.angleFilter.overlays.length;
-		const views = angledFilterSize >= 4 ? 4 : angledFilterSize;
-
-		let overlays: IPendingOverlay[] = [];
-		this.angleFilter.overlays.slice(0, views).forEach(overlay => overlays.push({ overlay }));
-		return overlays;
-	}
-
 	clickFourView($event: MouseEvent, subFilter?: string) {
-		const overlays = this.getViewedOverlays();
-		this.store$.dispatch(new DisplayFourViewAction(overlays));
+		this.store$.dispatch(new DisplayFourViewAction());
 	}
 
 	clickFirst($event: MouseEvent, subFilter?: string) {

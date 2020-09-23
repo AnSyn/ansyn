@@ -60,6 +60,44 @@ import { MultipleOverlaysSourceProvider } from '../../modules/overlays/services/
 @Injectable()
 export class OverlaysAppEffects {
 
+	private getOverlayFromDropMarkup = map(([markupMap, overlays]: [ExtendMap<MarkUpClass, IMarkUpData>, Map<any, any>]) =>
+		overlays.get(markupMap && markupMap.get(MarkUpClass.hover) && markupMap.get(MarkUpClass.hover).overlaysIds[0])
+	);
+
+	private getPositionForActiveMap = pipe(
+		withLatestFrom(this.store$.select(selectActiveMapId)),
+		withLatestFrom(this.store$.select(selectMaps)),
+		filter(([[overlay, activeMapId], mapsList]: [[IOverlay, string], Dictionary<ICaseMapState>]) => Boolean(mapsList) && Boolean(mapsList[activeMapId])),
+		map(([[overlay, activeMapId], mapsList]: [[IOverlay, string], Dictionary<ICaseMapState>]) => {
+			const result = [overlay, mapsList[activeMapId].data.position];
+			return result;
+		})
+	);
+
+	private getOverlayWithNewThumbnail: any = switchMap(([overlay, position]: [IOverlay, ImageryMapPosition]) => {
+		if (!overlay) {
+			return [overlay];
+		}
+		this.store$.dispatch(new SetHoveredOverlayAction(<IOverlay>{
+			...overlay,
+			thumbnailUrl: overlayOverviewComponentConstants.FETCHING_OVERLAY_DATA
+		}));
+		return this.overlaysService.getThumbnailUrl(overlay, position).pipe(
+			map(thumbnailUrl => ({
+				...overlay,
+				thumbnailUrl,
+				thumbnailName: this.overlaysService.getThumbnailName(overlay)
+			})),
+			catchError(() => {
+				return of(overlay);
+			})
+		);
+	});
+
+	private getHoveredOverlayAction = map((overlay: IOverlay) => {
+		return new SetHoveredOverlayAction(overlay);
+	});
+
 	@Effect({ dispatch: false })
 	actionsLogger$: Observable<any> = this.actions$.pipe(
 		ofType(
@@ -171,85 +209,6 @@ export class OverlaysAppEffects {
 		})
 	);
 
-	private getFourViewOverlays(criteria: IOverlaysCriteria): Observable<IOverlaysFetchData>[] {
-		const params: IFetchParams = {
-			timeRange: {
-				start: criteria.time.from,
-				end: criteria.time.to
-			},
-			region: criteria.region,
-			limit: this.overlaysService.config.limit,
-			dataInputFilters: []
-		};
-
-		const angleParams: IAngleParams[] = [
-			{
-				firstAngle: 0,
-				secondAngle: 90
-			},
-			{
-				firstAngle: 90,
-				secondAngle: 180
-			},
-			{
-				firstAngle: 180,
-				secondAngle: 270
-			},
-			{
-				firstAngle: 270,
-				secondAngle: 360
-			}
-		];
-
-		const overlayObservables: Observable<IOverlaysFetchData>[] = [];
-
-
-		for (let i = 0; i < 4; i++) {
-			params.angleParams = angleParams[i];
-			overlayObservables.push(this.sourceProvider.fetch(params));
-		}
-
-		return overlayObservables;
-	}
-
-
-	private getOverlayFromDropMarkup = map(([markupMap, overlays]: [ExtendMap<MarkUpClass, IMarkUpData>, Map<any, any>]) =>
-		overlays.get(markupMap && markupMap.get(MarkUpClass.hover) && markupMap.get(MarkUpClass.hover).overlaysIds[0])
-	);
-
-	private getPositionForActiveMap = pipe(
-		withLatestFrom(this.store$.select(selectActiveMapId)),
-		withLatestFrom(this.store$.select(selectMaps)),
-		filter(([[overlay, activeMapId], mapsList]: [[IOverlay, string], Dictionary<ICaseMapState>]) => Boolean(mapsList) && Boolean(mapsList[activeMapId])),
-		map(([[overlay, activeMapId], mapsList]: [[IOverlay, string], Dictionary<ICaseMapState>]) => {
-			const result = [overlay, mapsList[activeMapId].data.position];
-			return result;
-		})
-	);
-
-	private getOverlayWithNewThumbnail: any = switchMap(([overlay, position]: [IOverlay, ImageryMapPosition]) => {
-		if (!overlay) {
-			return [overlay];
-		}
-		this.store$.dispatch(new SetHoveredOverlayAction(<IOverlay>{
-			...overlay,
-			thumbnailUrl: overlayOverviewComponentConstants.FETCHING_OVERLAY_DATA
-		}));
-		return this.overlaysService.getThumbnailUrl(overlay, position).pipe(
-			map(thumbnailUrl => ({
-				...overlay,
-				thumbnailUrl,
-				thumbnailName: this.overlaysService.getThumbnailName(overlay)
-			})),
-			catchError(() => {
-				return of(overlay);
-			})
-		);
-	});
-
-	private getHoveredOverlayAction = map((overlay: IOverlay) => {
-		return new SetHoveredOverlayAction(overlay);
-	});
 
 	@Effect()
 	setHoveredOverlay$: Observable<any> = combineLatest(this.store$.select(selectDropMarkup), this.store$.select(selectFooterCollapse))
@@ -283,11 +242,6 @@ export class OverlaysAppEffects {
 		ofType<SetTotalOverlaysAction>(OverlaysActionTypes.SET_TOTAL_OVERLAYS),
 		map((action) => new SetBadgeAction({ key: 'Results table', badge: `${ action.payload }` })));
 
-	onDropMarkupFilter([prevAction, currentAction]): boolean {
-		const isEquel = !isEqual(prevAction, currentAction);
-		return isEquel;
-	}
-
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,
 				private sourceProvider: MultipleOverlaysSourceProvider,
@@ -295,4 +249,48 @@ export class OverlaysAppEffects {
 				protected loggerService: LoggerService) {
 	}
 
+	getFourViewOverlays(criteria: IOverlaysCriteria): Observable<IOverlaysFetchData>[] {
+		const params: IFetchParams = {
+			timeRange: {
+				start: criteria.time.from,
+				end: criteria.time.to
+			},
+			region: criteria.region,
+			limit: this.overlaysService.config.limit,
+			dataInputFilters: []
+		};
+
+		const angleParams: IAngleParams[] = [
+			{
+				firstAngle: 0,
+				secondAngle: 90
+			},
+			{
+				firstAngle: 90,
+				secondAngle: 180
+			},
+			{
+				firstAngle: 180,
+				secondAngle: 270
+			},
+			{
+				firstAngle: 270,
+				secondAngle: 360
+			}
+		];
+
+		const overlayObservables: Observable<IOverlaysFetchData>[] = [];
+
+		for (let i = 0; i < 4; i++) {
+			params.angleParams = angleParams[i];
+			overlayObservables.push(this.sourceProvider.fetch(params));
+		}
+
+		return overlayObservables;
+	}
+
+	onDropMarkupFilter([prevAction, currentAction]): boolean {
+		const isEquel = !isEqual(prevAction, currentAction);
+		return isEquel;
+	}
 }

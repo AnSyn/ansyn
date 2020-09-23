@@ -159,7 +159,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return { ...state, pendingOverlays: action.payload };
 
 		case MapActionTypes.REMOVE_PENDING_OVERLAY:
-			const pendingOverlays = state.pendingOverlays.filter((pending) => pending.overlay.id !== action.payload);
+			const pendingOverlays = state.pendingOverlays.filter((pending: any) => pending.id !== action.payload);
 			return { ...state, pendingOverlays };
 
 		case MapActionTypes.TOGGLE_MAP_LAYERS: {

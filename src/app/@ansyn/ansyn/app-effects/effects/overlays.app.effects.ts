@@ -72,7 +72,7 @@ import { IOverlay, IOverlaysCriteria, IOverlaysFetchData } from '../../modules/o
 import { Dictionary } from '@ngrx/entity';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { SetBadgeAction } from '@ansyn/menu';
-import { IFetchParams } from '../../modules/overlays/models/base-overlay-source-provider.model';
+import { IAngleParams, IFetchParams } from '../../modules/overlays/models/base-overlay-source-provider.model';
 import { MultipleOverlaysSourceProvider } from '../../modules/overlays/services/multiple-source-provider';
 
 @Injectable()
@@ -119,28 +119,8 @@ export class OverlaysAppEffects {
 		withLatestFrom(this.store$.select(selectOverlaysCriteria)),
 		mergeMap(([action, criteria]: [DisplayFourViewAction, IOverlaysCriteria]): any => {
 			this.store$.dispatch(new SetPendingOverlaysAction(action.payload));
-			const params: IFetchParams = {
-				timeRange: {
-					start: criteria.time.from,
-					end: criteria.time.to
-				},
-				region: criteria.region,
-				limit: this.overlaysService.config.limit,
-				dataInputFilters: [],
-				angleParams: {
-					firstAngle: 0,
-					secondAngle: 90
-				}
-			};
-
-			const overlayObservables: Observable<IOverlaysFetchData>[] = [];
-
-			for (let i = 0; i < 4; i++) {
-				overlayObservables.push(this.sourceProvider.fetch(params));
-				params.angleParams.firstAngle += 90;
-				params.angleParams.secondAngle += 90;
-			}
-
+			const overlayObservables: Observable<IOverlaysFetchData>[] = this.getFourViewOverlays(criteria);
+			
 			return forkJoin(overlayObservables).pipe(
 				map((overlaysData: IOverlaysFetchData[]) => {
 					const overlays: IPendingOverlay[] = [];
@@ -153,6 +133,48 @@ export class OverlaysAppEffects {
 			)
 		})
 	);
+
+	getFourViewOverlays(criteria: IOverlaysCriteria): Observable<IOverlaysFetchData>[] {
+		const params: IFetchParams = {
+			timeRange: {
+				start: criteria.time.from,
+				end: criteria.time.to
+			},
+			region: criteria.region,
+			limit: this.overlaysService.config.limit,
+			dataInputFilters: []
+		};
+
+		const angleParams: IAngleParams[] = [
+			{
+				firstAngle: 0,
+				secondAngle: 90
+			},
+			{
+				firstAngle: 90,
+				secondAngle: 180
+			},
+			{
+				firstAngle: 180,
+				secondAngle: 270
+			},
+			{
+				firstAngle: 270,
+				secondAngle: 360
+			}
+		];
+
+		const overlayObservables: Observable<IOverlaysFetchData>[] = [];
+
+
+		for (let i = 0; i < 4; i++) {
+			params.angleParams = angleParams[i];
+			overlayObservables.push(this.sourceProvider.fetch(params));
+		}
+
+
+		return overlayObservables;
+	}
 
 	@Effect()
 	clearPresets$: Observable<any> = this.actions$.pipe(

@@ -125,8 +125,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			width: 3
 		}),
 		placement: 'line',
-		overflow: true,
-		rotateWithView: true
+		overflow: true
 	};
 
 	private iconSrc = '';
@@ -456,7 +455,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 							...this.measuresTextStyle,
 							text: this.formatLength([originalLeftRight.left, originalLeftRight.right]),
 							placement: 'point',
-							offsetX: 20
+							offsetX: 20,
 						})
 					})
 				);

@@ -4,9 +4,10 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { IMapState, mapStateSelector, selectMapsIds, SetToastMessageAction, UpdateMapAction } from '@ansyn/map-facade';
 import {
-	ImageryCommunicatorService,
 	IMapProvidersConfig,
 	MAP_PROVIDERS_CONFIG
+	GetProvidersMapsService,
+	ImageryCommunicatorService
 } from '@ansyn/imagery';
 import { HttpErrorResponse } from '@angular/common/http';
 import { mapValues, uniqBy } from 'lodash';
@@ -95,11 +96,7 @@ export class CasesAppEffects {
 			const maps = caseValue.state.maps.data.filter(mapData => Boolean(Boolean(mapData.data.overlay)));
 
 			const displayOverlayActions = [];
-			maps.forEach(map => { 
-				const overlay = map.data.overlay;
-				const mapId = map.id;
-				displayOverlayActions.push(new DisplayOverlayAction({ overlay, mapId }));
-			});
+			maps.forEach(map => displayOverlayActions.push(new DisplayOverlayAction({ overlay: map.data.overlay, mapId: map.id })));
 
 			return displayOverlayActions;
 		})
@@ -133,7 +130,7 @@ export class CasesAppEffects {
 							caseValue.state.maps.data
 								.filter(mapData => Boolean(Boolean(mapData.data.overlay)))
 								.forEach(map => map.data.overlay = mapOverlay.get(map.data.overlay.id));
-								
+
 							return new SelectCaseAction(caseValue);
 						}),
 						catchError<any, any>((result: HttpErrorResponse) => {
@@ -153,12 +150,15 @@ export class CasesAppEffects {
 		ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
 		withLatestFrom(this.store$.select(selectMapsIds)),
 		filter(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => !action.payload.context && Boolean(mapId)),
-		tap(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => {
+		mergeMap(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => {
 			const position = this.caseConfig.defaultCase.state.maps.data[0].data.position;
 			const communicator = this.imageryCommunicatorService.provide(mapId);
 			const mapType = communicator.mapSettings.worldView.mapType;
-			fromPromise(communicator.loadInitialMapSource(position, this.mapProvidersConfig[mapType].defaultMapSource));
-		}));
+			return this.getProvidersMapsService.getDefaultProviderByType(mapType).pipe(
+				tap( (source) =>	communicator.loadInitialMapSource(position, source))
+			)
+		})
+	);
 
 
 	constructor(protected actions$: Actions,
@@ -168,7 +168,7 @@ export class CasesAppEffects {
 				@Inject(overlayStatusConfig) protected overlayStatusConfig: IOverlayStatusConfig,
 				protected loggerService: LoggerService,
 				@Inject(casesConfig) public caseConfig: ICasesConfig,
-				@Inject(MAP_PROVIDERS_CONFIG) protected mapProvidersConfig: IMapProvidersConfig,
+				protected getProvidersMapsService: GetProvidersMapsService,
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 }

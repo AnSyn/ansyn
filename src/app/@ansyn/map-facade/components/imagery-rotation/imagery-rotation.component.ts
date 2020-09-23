@@ -6,8 +6,7 @@ import {
 	IMapSettings,
 	toDegrees
 } from '@ansyn/imagery';
-import { PointToImageOrientationAction, PointToRealNorthAction } from '../../actions/map.actions';
-import { LoggerService } from '../../../ansyn/modules/core/services/logger.service';
+import { LogRotateMapAction, PointToImageOrientationAction, PointToRealNorthAction } from '../../actions/map.actions';
 
 export interface IsGeoRegisteredProperties {
 	letter: 'N' | '?';
@@ -73,7 +72,6 @@ export class ImageryRotationComponent {
 		protected elementRef: ElementRef,
 		protected imageryCommunicatorService: ImageryCommunicatorService,
 		protected store: Store<any>,
-		protected loggerService: LoggerService
 	) {
 	}
 
@@ -137,7 +135,7 @@ export class ImageryRotationComponent {
 		document.addEventListener<'mousemove'>('mousemove', mouseMoveListener);
 
 		const mouseUpListener = () => {
-			this.loggerService.info(`The user rotated map`, 'maps', 'ROTATED_MAP');
+			this.store.dispatch(new LogRotateMapAction());
 			document.removeEventListener('mousemove', mouseMoveListener);
 			document.removeEventListener('mouseup', mouseUpListener);
 			this.isRotating = false;

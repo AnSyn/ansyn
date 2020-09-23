@@ -9,7 +9,7 @@ import {
 } from '@ansyn/imagery';
 import { LayoutKey, layoutOptions } from '../models/maps-layout';
 import { MapOrientation } from "@ansyn/imagery";
-import { ILogMessage } from '../../ansyn/modules/core/models/logger.model';
+import { ILogMessage } from '../models/logger.model';
 
 export interface IAngleFilterClick { // @TODO: map-facade should not know IOverlay
 	click: { x: number, y: number };
@@ -33,6 +33,7 @@ export interface IToastMessage {
 export const MapActionTypes = {
 	POINT_TO_IMAGE_ORIENTATION: 'POINT_TO_IMAGE_ORIENTATION',
 	POINT_TO_REAL_NORTH: 'POINT_TO_REAL_NORTH',
+	LOG_ROTATE_MAP: 'LOG_ROTATE_MAP',
 	POSITION_CHANGED: 'POSITION_CHANGED',
 	UPDATE_MAP_SIZE: 'UPDATE_MAP_SIZE',
 	IMAGERY_CREATED: 'IMAGERY_CREATED',
@@ -65,6 +66,7 @@ export const MapActionTypes = {
 		CLICK_OUTSIDE_MAP: 'CLICK_OUTSIDE_MAP',
 	},
 	MAP_SEARCH_BOX_TRIGGER: 'MAP_SEARCH_BOX_TRIGGER',
+	LOG_MAP_SEARCH_BOX: 'LOG_MAP_SEARCH_BOX',
 	SET_ACTIVE_CENTER_TRIGGER: 'SET_ACTIVE_CENTER_TRIGGER',
 	SET_PENDING_MAPS_COUNT: 'SET_PENDING_MAPS_COUNT',
 	DECREASE_PENDING_MAPS_COUNT: 'DECREASE_PENDING_MAPS_COUNT',
@@ -134,6 +136,17 @@ export class PointToRealNorthAction implements Action, ILogMessage {
 
 	logMessage() {
 		return `Rotating map to real north`
+	}
+}
+
+export class LogRotateMapAction implements Action, ILogMessage {
+	type = MapActionTypes.LOG_ROTATE_MAP;
+
+	constructor(public payload?: any) {
+	}
+
+	logMessage() {
+		return `The user rotated map`
 	}
 }
 
@@ -209,6 +222,17 @@ export class SetMapSearchBoxTriggerAction implements Action {
 	type = MapActionTypes.MAP_SEARCH_BOX_TRIGGER;
 
 	constructor(public payload: boolean) {
+	}
+}
+
+export class LogMapSearchBoxAction implements Action, ILogMessage {
+	type = MapActionTypes.LOG_MAP_SEARCH_BOX;
+
+	constructor(public payload: string) {
+	}
+
+	logMessage() {
+		return `Using map search box. Search string = ${this.payload}`
 	}
 }
 

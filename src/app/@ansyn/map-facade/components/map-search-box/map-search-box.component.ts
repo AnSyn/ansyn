@@ -8,13 +8,13 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectIsMinimalistViewMode } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
 import {
+	LogMapSearchBoxAction,
 	SetActiveCenterTriggerAction,
 	SetMapSearchBoxTriggerAction,
 	SetToastMessageAction
 } from '../../actions/map.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { IMapSearchResult } from '../../models/map-search.model';
-import { LoggerService } from '../../../ansyn/modules/core/services/logger.service';
 
 @Component({
 	selector: 'ansyn-map-search-box',
@@ -63,7 +63,6 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		protected imageryCommunicatorService: ImageryCommunicatorService,
 		public geocoderService: GeocoderService,
 		protected translator: TranslateService,
-		protected loggerService: LoggerService
 	) {
 	}
 
@@ -95,7 +94,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 
 	onSubmit() {
 		const value: string = this.control.value;
-		this.loggerService.info(`Using map search box. Search string = ${value}`);
+		this.store$.dispatch(new LogMapSearchBoxAction(value));
 		let point;
 		if (this.geocoderService.isCoordinates(value)) {
 			point = this.geocoderService.createPoint(value);

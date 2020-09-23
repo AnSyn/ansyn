@@ -130,8 +130,9 @@ export class OverlaysAppEffects {
 					const overlays: IPendingOverlay[] = [];
 
 					overlaysData.forEach(({ data }) => {
-						data.filter(({ isGeoRegistered }) => isGeoRegistered !== GeoRegisteration.notGeoRegistered);
-						return { overlay: data[0] };
+						const geoRegisteredOverlays = data.filter(({ isGeoRegistered }) => isGeoRegistered !== GeoRegisteration.notGeoRegistered);
+						const [overlay] = geoRegisteredOverlays.length ? geoRegisteredOverlays : data;
+						overlays.push({ overlay});
 					});
 					this.store$.dispatch(new SetPendingOverlaysAction(overlays));
 

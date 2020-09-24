@@ -178,10 +178,9 @@ export class CasesEffects {
 		filter(action => !Boolean(action.payload.shareCaseAsQueryParams)),
 		map((action) => {
 			const shareLink = this.casesService.generateLinkById(action.payload.caseId, 'case');
-			return fromPromise(copyFromContent(shareLink)).pipe(
-				map(() => new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast }))
-			);
-		})
+			return fromPromise(copyFromContent(shareLink));
+		}),
+		map(() => new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast }))
 	);
 
 	@Effect()
@@ -241,10 +240,9 @@ export class CasesEffects {
 		mergeMap(sCase => this.casesService.generateQueryParamsViaCase(sCase)),
 		map((linkId: string) => {
 			const url = this.casesService.generateLinkById(linkId, 'link');
-			return fromPromise(copyFromContent(url)).pipe(
-				map(() => new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast }))
-			);
+			return fromPromise(copyFromContent(url));
 		}),
+		map(() => new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast })),
 		catchError((err) => this.errorHandlerService.httpErrorHandle(err, toastMessages.failedToCreateLink)),
 		catchError(() => EMPTY));
 

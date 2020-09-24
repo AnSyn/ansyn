@@ -1,3 +1,5 @@
+export { copyFromContent } from './utils/clipboard';
+
 export { imageryStatusClassNameForExport } from './components/imagery-status/imagery-status.component';
 
 export { floationMenuClassNameForExport } from './components/floating-menu/floating-menu.component';

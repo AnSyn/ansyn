@@ -20,7 +20,7 @@ import {
 	SetToastMessageAction
 } from '@ansyn/map-facade';
 import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
-import { copyFromContent } from '../../../../../../map-facade/utils/clipboard';
+import { copyFromContent } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-go-to',

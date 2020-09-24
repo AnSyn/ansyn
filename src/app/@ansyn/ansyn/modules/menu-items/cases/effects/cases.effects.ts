@@ -50,7 +50,7 @@ import { toastMessages } from '../../../core/models/toast-messages';
 import { ICase, ICasePreview, IDilutedCaseState } from '../models/case.model';
 import { BackToWorldView } from '../../../overlays/overlay-status/actions/overlay-status.actions';
 import { fromPromise } from 'rxjs/internal-compatibility';
-import { copyFromContent } from '../../../../../map-facade/utils/clipboard';
+import { copyFromContent } from '@ansyn/map-facade';
 
 @Injectable()
 export class CasesEffects {

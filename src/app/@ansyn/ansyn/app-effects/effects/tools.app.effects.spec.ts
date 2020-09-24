@@ -245,9 +245,6 @@ describe('ToolsAppEffects', () => {
 		expect(toolsAppEffects).toBeTruthy();
 	});
 
-	describe('onDisplayOverlaySuccess', () => {
-	});
-
 	it('clearActiveInteractions$ should clear active interactions', () => {
 		actions = hot('--a--', { a: new ClearActiveInteractionsAction() });
 

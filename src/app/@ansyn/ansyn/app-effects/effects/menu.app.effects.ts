@@ -18,17 +18,6 @@ import { getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
 @Injectable()
 export class MenuAppEffects {
 
-	// @Effect({ dispatch: false })
-	// actionsLogger$: Observable<any> = this.actions$.pipe(
-	// 	ofType(
-	// 		MenuActionTypes.SELECT_MENU_ITEM,
-	// 		MenuActionTypes.TOGGLE_IS_PINNED,
-	// 		MenuActionTypes.RESET_APP
-	// 	),
-	// 	tap((action) => {
-	// 		this.loggerService.info(getLogMessageFromAction(action), 'Menu', action.type);
-	// 	}));
-
 	@Effect()
 	onContainerChanged$: Observable<UpdateMapSizeAction> = this.actions$
 		.pipe(

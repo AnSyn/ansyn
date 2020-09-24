@@ -21,31 +21,6 @@ import {
 @Injectable()
 export class LayersAppEffects {
 
-	// @Effect({ dispatch: false })
-	// actionsLogger$: Observable<any> = this.actions$.pipe(
-	// 	ofType(
-	// 		LayersActionTypes.ADD_LAYER,
-	// 		LayersActionTypes.ADD_LAYER_ON_BACKEND_FAILED_ACTION,
-	// 		LayersActionTypes.ADD_LAYER_ON_BACKEND_SUCCESS_ACTION,
-	// 		LayersActionTypes.REMOVE_LAYER,
-	// 		LayersActionTypes.REMOVE_LAYER_ON_BACKEND_FAILED_ACTION,
-	// 		LayersActionTypes.REMOVE_LAYER_ON_BACKEND_SUCCESS_ACTION,
-	// 		LayersActionTypes.UPDATE_LAYER,
-	// 		LayersActionTypes.UPDATE_LAYER_ON_BACKEND_FAILED_ACTION,
-	// 		LayersActionTypes.UPDATE_LAYER_ON_BACKEND_SUCCESS_ACTION,
-	// 		LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD,
-	// 		LayersActionTypes.LAYER_COLLECTION_LOADED,
-	// 		LayersActionTypes.ERROR_LOADING_LAYERS,
-	// 		LayersActionTypes.SET_ACTIVE_ANNOTATION_LAYER,
-	// 		LayersActionTypes.SET_LAYER_SELECTION,
-	// 		LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_ACTION,
-	// 		LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_FAILED_ACTION,
-	// 		LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_SUCCESS_ACTION
-	// 	),
-	// 	tap((action) => {
-	// 		this.loggerService.info(getLogMessageFromAction(action), 'Layers', action.type);
-	// 	}));
-
 	@Effect()
 	onSaveCaseAs$ = this.actions$
 		.pipe(

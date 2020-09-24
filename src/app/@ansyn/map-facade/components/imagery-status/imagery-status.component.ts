@@ -6,7 +6,7 @@ import { get as _get } from 'lodash'
 import { map, tap, filter } from 'rxjs/operators';
 import {
 	SetMapOrientation,
-	SetOverlaysFootprintActive,SetToastMessageAction,
+	SetOverlaysFootprintActive, SetToastMessageAction,
 	StartDraggingMapBetweenScreenAreas,
 	ToggleMapLayersAction
 } from '../../actions/map.actions';

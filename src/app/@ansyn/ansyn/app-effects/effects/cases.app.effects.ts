@@ -4,8 +4,6 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { IMapState, mapStateSelector, selectMapsIds, SetToastMessageAction, UpdateMapAction } from '@ansyn/map-facade';
 import {
-	IMapProvidersConfig,
-	MAP_PROVIDERS_CONFIG,
 	GetProvidersMapsService,
 	ImageryCommunicatorService
 } from '@ansyn/imagery';
@@ -38,7 +36,6 @@ import {
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { casesConfig } from '../../modules/menu-items/cases/services/cases.service';
 import { ICasesConfig } from '../../modules/menu-items/cases/models/cases-config';
-import { fromPromise } from 'rxjs/internal-compatibility';
 
 @Injectable()
 export class CasesAppEffects {
@@ -47,20 +44,6 @@ export class CasesAppEffects {
 			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
 		}, {});
 	}
-
-	// @Effect({ dispatch: false })
-	// actionsLogger$: Observable<any> = this.actions$.pipe(
-	// 	ofType(CasesActionTypes.ADD_CASE,
-	// 		CasesActionTypes.DELETE_CASE,
-	// 		CasesActionTypes.LOAD_CASES,
-	// 		CasesActionTypes.LOAD_DEFAULT_CASE,
-	// 		CasesActionTypes.SAVE_CASE_AS_SUCCESS,
-	// 		CasesActionTypes.COPY_CASE_LINK,
-	// 		CasesActionTypes.SELECT_DILUTED_CASE
-	// 	),
-	// 	tap((action) => {
-	// 		this.loggerService.info(getLogMessageFromAction(action), 'Cases', action.type);
-	// 	}));
 
 	@Effect()
 	onDisplayOverlay$: Observable<any> = this.actions$.pipe(

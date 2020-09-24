@@ -11,7 +11,8 @@ export type VisualizerInteractionTypes =
 	| 'translateInteractionHandler'
 	| 'labelTranslateHandler'
 	| 'editAnnotationTranslateHandler'
-	| 'modifyInteractionHandler';
+	| 'modifyInteractionHandler'
+	| 'selectMeasureLabelHandler';
 
 export const VisualizerInteractions: { [key: string]: VisualizerInteractionTypes } = {
 	click: 'click',
@@ -19,7 +20,8 @@ export const VisualizerInteractions: { [key: string]: VisualizerInteractionTypes
 	doubleClick: 'doubleClick',
 	contextMenu: 'contextMenu',
 	drawInteractionHandler: 'drawInteractionHandler',
-	translateInteractionHandler: 'translateInteractionHandler', // for pixel offset translate
+	selectMeasureLabelHandler: 'selectMeasureLabelHandler',
+	translateInteractionHandler: 'translateInteractionHandler', // for pixel offset translate and measure label translate
 	labelTranslateHandler: 'labelTranslateHandler',
 	editAnnotationTranslateHandler: 'editAnnotationTranslateHandler', // for actual geometry change
 	modifyInteractionHandler: 'modifyInteractionHandler'
@@ -28,11 +30,13 @@ export const VisualizerInteractions: { [key: string]: VisualizerInteractionTypes
 export interface IImageryVisualizerMetaData extends IImageryPluginMetaData {
 	readonly isHideable?: boolean;
 	readonly dontRestrictToExtent?: boolean;
+	readonly layerClassName?: string;
 }
 
 export abstract class BaseImageryVisualizer extends BaseImageryPlugin implements IImageryVisualizerMetaData {
 	readonly isHideable?: boolean;
 	readonly dontRestrictToExtent?: boolean;
+	readonly layerClassName?: string;
 	type: string;
 	source: any;
 	vector: any;

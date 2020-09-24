@@ -74,6 +74,9 @@ export class OpenLayersSentinelSourceProvider extends OpenLayersMapSourceProvide
 	}
 
 	createDateString(date: Date): string {
+		if (typeof date === 'string') {
+			date = new Date(date);
+		}
 		const Y = date.getFullYear();
 		const m = date.getMonth() + 1;
 		const d = date.getDate();

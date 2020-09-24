@@ -6,7 +6,6 @@ import { ErrorHandlerService } from './services/error-handler.service';
 import { StorageService } from './services/storage/storage.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { AnsynModalComponent } from './components/ansyn-modal/ansyn-modal.component';
-import { ManualRemovedOverlaysComponent } from './components/manual-removed-overlays/manual-removed-overlays.component';
 import { AnsynTranslationModule } from './translation/ansyn-translation.module';
 import { AnsynFormsModule } from './forms/ansyn-forms.module';
 import { FormsModule } from '@angular/forms';
@@ -33,13 +32,11 @@ import { AreaToCredentialsService } from './services/credentials/area-to-credent
 		AnsynTranslationModule,
 		AnsynFormsModule,
 		AnsynModalComponent,
-		ManualRemovedOverlaysComponent,
 		ContextMenuComponent,
 		CredentialsComponent
 	],
 	declarations: [
 		AnsynModalComponent,
-		ManualRemovedOverlaysComponent,
 		ContextMenuComponent,
 		AngleFilterComponent,
 		CredentialsComponent

@@ -243,11 +243,16 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 		if (this.onAnimation) {
 			return;
 		}
+
 		if (this.selectedMenuItemName === key) {
 			this.closeMenu();
 		} else {
 			this.openMenu(key, skipSession);
 		}
+	}
+
+	goToLandingPage() {
+		window.open(this.menuConfig.landingPageUrl);
 	}
 
 	anyMenuItemSelected(): boolean {

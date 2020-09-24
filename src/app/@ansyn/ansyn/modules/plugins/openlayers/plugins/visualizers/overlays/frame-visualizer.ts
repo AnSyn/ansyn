@@ -12,7 +12,8 @@ import { feature } from '@turf/turf';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, Actions, VisualizersConfig]
+	deps: [Store, Actions, VisualizersConfig],
+	layerClassName: 'frame-layer'
 })
 export class FrameVisualizer extends EntitiesVisualizer {
 	public isActive = false;
@@ -49,7 +50,7 @@ export class FrameVisualizer extends EntitiesVisualizer {
 			const features = this.source.getFeatures();
 			if (features && features[0]) {
 				delete (<any>features[0]).styleCache;
-				this.source.refresh();
+				this.source.changed();
 			}
 		}
 		return;

@@ -21,8 +21,6 @@ describe('CasesReducer', () => {
 				from: new Date(),
 				to: new Date()
 			},
-			removedOverlaysVisibility: true,
-			removedOverlaysIds: [],
 			dataInputFilters: { fullyChecked: true, filters: [] },
 			region: {},
 			overlaysManualProcessArgs: {},

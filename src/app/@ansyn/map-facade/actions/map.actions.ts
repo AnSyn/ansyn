@@ -44,7 +44,8 @@ export const MapActionTypes = {
 		ANGLE_FILTER_SHOW: 'ANGLE_FILTER_SHOW'
 	},
 	VISUALIZERS: {
-		HOVER_FEATURE: 'HOVER_FEATURE'
+		HOVER_FEATURE: 'HOVER_FEATURE',
+		OVERLAYS_FOOTPRINT: 'OVERLAYS_FOOTPRINT'
 	},
 	MAP_INSTANCE_CHANGED_ACTION: 'MAP_INSTANCE_CHANGED_ACTION',
 	VIEW: {
@@ -411,4 +412,11 @@ export class ToggleFooter implements Action {
 
 	constructor(public payload: boolean) {
 	}
+}
+
+export class SetOverlaysFootprintActive implements Action {
+	readonly type = MapActionTypes.VISUALIZERS.OVERLAYS_FOOTPRINT;
+
+	constructor(public payload: {mapId: string, show: boolean}) {}
+
 }

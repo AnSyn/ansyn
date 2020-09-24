@@ -17,9 +17,12 @@
 						   [hidden]="hideBadge(menuItem.badge)">{{menuItem.badge}}</span>
 					{{menuItem.name | translate}}
 				</div>
+				<div class="menu-btn" (click)="goToLandingPage()">
+					<i [style]="" [ngClass]="'icon-main-help'"></i>
+					{{'Help' | translate}}
+				</div>
 			</div>
 			<div class="logo">
-
 				<ng-container *ngIf="menuConfig?.forkMe?.active">
 					<a class="forkMe" [href]="menuConfig.forkMe?.href" target="_blank">
 						<img [src]="menuConfig.forkMe?.image" [alt]="menuConfig.forkMe?.title"

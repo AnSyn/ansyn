@@ -40,7 +40,6 @@ import { UUID } from 'angular2-uuid';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { DataLayersService } from '../../layers-manager/services/data-layers.service';
 import {
-	copyFromContent,
 	SetMapsDataActionStore,
 	SetToastMessageAction
 } from '@ansyn/map-facade';
@@ -51,6 +50,7 @@ import { toastMessages } from '../../../core/models/toast-messages';
 import { ICase, ICasePreview, IDilutedCaseState } from '../models/case.model';
 import { BackToWorldView } from '../../../overlays/overlay-status/actions/overlay-status.actions';
 import { fromPromise } from 'rxjs/internal-compatibility';
+import { copyFromContent } from '../../../../../map-facade/utils/clipboard';
 
 @Injectable()
 export class CasesEffects {
@@ -178,8 +178,9 @@ export class CasesEffects {
 		filter(action => !Boolean(action.payload.shareCaseAsQueryParams)),
 		map((action) => {
 			const shareLink = this.casesService.generateLinkById(action.payload.caseId, 'case');
-			copyFromContent(shareLink);
-			return new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast });
+			return fromPromise(copyFromContent(shareLink)).pipe(
+				map(() => new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast }))
+			);
 		})
 	);
 
@@ -240,9 +241,10 @@ export class CasesEffects {
 		mergeMap(sCase => this.casesService.generateQueryParamsViaCase(sCase)),
 		map((linkId: string) => {
 			const url = this.casesService.generateLinkById(linkId, 'link');
-			return fromPromise(copyFromContent(url));
+			return fromPromise(copyFromContent(url)).pipe(
+				map(() => new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast }))
+			);
 		}),
-		map(() => new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast })),
 		catchError((err) => this.errorHandlerService.httpErrorHandle(err, toastMessages.failedToCreateLink)),
 		catchError(() => EMPTY));
 

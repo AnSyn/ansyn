@@ -19,7 +19,7 @@ import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable, of, throwError } from 'rxjs';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { GetProvidersMapsService, ImageryCommunicatorService } from '@ansyn/imagery';
 import { CoreConfig } from '../../modules/core/models/core.config';
 import { ErrorHandlerService } from '../../modules/core/services/error-handler.service';
 import { StorageService } from '../../modules/core/services/storage/storage.service';
@@ -180,6 +180,12 @@ describe('CasesAppEffects', () => {
 				{ provide: casesConfig, useValue: { schema: null } },
 				{
 					provide: toolsConfig, useValue: {}
+				},
+				{
+					provide: GetProvidersMapsService,
+					useValue: {
+						getDefaultProviderByType: () => of()
+					}
 				}
 			]
 		}).compileComponents();

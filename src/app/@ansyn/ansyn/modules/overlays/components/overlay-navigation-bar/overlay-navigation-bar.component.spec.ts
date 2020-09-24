@@ -19,7 +19,6 @@ import {
 import {
 	overlayStatusFeatureKey,
 	OverlayStatusReducer,
-	selectPresetOverlays
 } from '../../overlay-status/reducers/overlay-status.reducer';
 import { of } from 'rxjs';
 
@@ -57,8 +56,7 @@ describe('OverlyaNavigationBarComponent', () => {
 		const mockStore = new Map<any, any>([
 			[selectMapsList, [{ id: 'activeMap' }]],
 			[selectActiveMapId, 'activeMap'],
-			[selectOverlayOfActiveMap, undefined],
-			[selectPresetOverlays, []]
+			[selectOverlayOfActiveMap, undefined]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => of(mockStore.get(type)));

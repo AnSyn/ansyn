@@ -14,7 +14,8 @@ import { Injectable } from '@angular/core';
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store, Actions, OpenLayersProjectionService],
-	dontRestrictToExtent: true
+	dontRestrictToExtent: true,
+	layerClassName: 'polygon-layer'
 })
 @Injectable()
 export class PolygonSearchVisualizer extends RegionVisualizer {

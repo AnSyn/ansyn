@@ -24,7 +24,9 @@ import { Cartesian2, Cartesian3, ImageryLayer, Viewer } from 'cesium';
 declare const Cesium: any;
 
 Cesium.buildModuleUrl.setBaseUrl('assets/Cesium/');
-Cesium.BingMapsApi.defaultKey = 'AnjT_wAj_juA_MsD8NhcEAVSjCYpV-e50lUypkWm1JPxVu0XyVqabsvD3r2DQpX-';
+if (Cesium.BingMapsApi) {
+	Cesium.BingMapsApi.defaultKey = 'AnjT_wAj_juA_MsD8NhcEAVSjCYpV-e50lUypkWm1JPxVu0XyVqabsvD3r2DQpX-';
+}
 
 export const CesiumMapName = 'CesiumMap';
 

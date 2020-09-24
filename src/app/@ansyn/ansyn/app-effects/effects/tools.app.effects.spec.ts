@@ -1,11 +1,10 @@
-import { BackToWorldView } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { ToolsAppEffects } from './tools.app.effects';
 import { Observable, of } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { Store, StoreModule } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { MapFacadeService, mapStateSelector, UpdateMapAction } from '@ansyn/map-facade';
+import { mapStateSelector } from '@ansyn/map-facade';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import {
@@ -34,9 +33,8 @@ import {
 	SetAnnotationMode,
 	SetPinLocationModeAction,
 	SetSubMenu,
-	ShowOverlaysFootprintAction, UpdateMeasureDataOptionsAction
+	UpdateMeasureDataOptionsAction
 } from '../../modules/menu-items/tools/actions/tools.actions';
-import { SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import { ICase, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
@@ -254,47 +252,20 @@ describe('ToolsAppEffects', () => {
 		expect(toolsAppEffects).toBeTruthy();
 	});
 
-
-	describe('onDisplayOverlaySuccess', () => {
-		const manualProcessArgs = {
-			Sharpness: 0,
-			Contrast: 0,
-			Brightness: 100,
-			Gamma: 100,
-			Saturation: 0
-		};
-	});
-
-	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Heatmap"', () => {
-		const activeMap = MapFacadeService.activeMap(imapState);
-		const overlayDisplayMode = 'Heatmap';
-
-		actions = hot('--a--', { a: new ShowOverlaysFootprintAction(overlayDisplayMode) });
-
-		const expectedResults = cold('--a--', {
-			a: new UpdateMapAction({
-				id: activeMap.id, changes: {
-					data: {
-						...activeMap.data,
-						overlayDisplayMode: overlayDisplayMode
-					}
-				}
-			})
-		});
-
-		expect(toolsAppEffects.updateCaseFromTools$).toBeObservable(expectedResults);
-	});
-
 	it('clearActiveInteractions$ should clear active interactions', () => {
 		actions = hot('--a--', { a: new ClearActiveInteractionsAction() });
 
-		const expectedResult = cold('--(bcde)--', {
+		const expectedResult = cold('--(bcdef)--', {
 			b: new SetAnnotationMode(null),
 			c: new UpdateGeoFilterStatus(),
 			d: new SetPinLocationModeAction(false),
 			e: new UpdateMeasureDataOptionsAction({
 				mapId: 'imagery1',
-				options: { isToolActive: false }
+				options: { isToolActive: false, isRemoveMeasureModeActive: false }
+			}),
+			f: new UpdateMeasureDataOptionsAction({
+				mapId: 'imagery1',
+				options: { forceDisableTranslate: undefined}
 			})
 		});
 
@@ -308,12 +279,16 @@ describe('ToolsAppEffects', () => {
 			})
 		});
 
-		const expectedResult = cold('--(bcd)--', {
+		const expectedResult = cold('--(bcde)--', {
 			b: new UpdateGeoFilterStatus(),
 			c: new SetPinLocationModeAction(false),
 			d: new UpdateMeasureDataOptionsAction({
 				mapId: 'imagery1',
-				options: { isToolActive: false }
+				options: { isToolActive: false, isRemoveMeasureModeActive: false }
+			}),
+			e: new UpdateMeasureDataOptionsAction({
+				mapId: 'imagery1',
+				options: { forceDisableTranslate: undefined}
 			})
 		});
 

@@ -39,6 +39,7 @@ import { AnnotationMode, IAnnotationBoundingRect, IDrawEndEvent } from './annota
 import { DragPixelsInteraction } from './dragPixelsInteraction';
 import { TranslateService } from '@ngx-translate/core';
 
+export const annotationsClassNameForExport = 'annotations-layer';
 export interface ILabelTranslateMode {
 	originalFeature: olFeature,
 	labelFeature: olFeature
@@ -54,7 +55,8 @@ export interface IEditAnnotationMode {
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [OpenLayersProjectionService, OL_PLUGINS_CONFIG, TranslateService],
-	isHideable: true
+	isHideable: true,
+	layerClassName: annotationsClassNameForExport
 })
 @Injectable()
 export class AnnotationsVisualizer extends EntitiesVisualizer {
@@ -124,8 +126,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			width: 3
 		}),
 		placement: 'line',
-		overflow: true,
-		rotateWithView: true
+		overflow: true
 	};
 	private iconSrc = '';
 
@@ -454,7 +455,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 							...this.measuresTextStyle,
 							text: this.formatLength([originalLeftRight.left, originalLeftRight.right]),
 							placement: 'point',
-							offsetX: 20
+							offsetX: 20,
 						})
 					})
 				);
@@ -558,7 +559,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				entity.originalEntity.featureJson.properties = merge({}, entity.originalEntity.featureJson.properties, props);
 			}
 			this.events.updateEntity.next(entity.originalEntity);
-			this.source.refresh();
+			this.source.changed();
 		}
 
 		if (editMode) {
@@ -577,7 +578,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 
 	labelTranslateMode(featureId: any) {
 		let oldFeature = null;
-		let event = null;
+		let event = undefined;
 
 		if (this.labelTranslate) {
 			const { originalFeature } = this.labelTranslate;

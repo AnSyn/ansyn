@@ -17,7 +17,7 @@ export interface ICompressedWorldViewMapState {
 
 export interface IMapSettingsData {
 	position: IImageryMapPosition;
-
+	overlaysFootprintActive?: boolean;
 	[key: string]: any;
 }
 

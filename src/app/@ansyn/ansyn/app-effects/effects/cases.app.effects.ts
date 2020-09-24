@@ -3,8 +3,8 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { IMapState, mapStateSelector, selectMapsIds, SetToastMessageAction, UpdateMapAction } from '@ansyn/map-facade';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { HttpErrorResponse } from '@angular/common/http';
+import { GetProvidersMapsService, ImageryCommunicatorService } from '@ansyn/imagery';
 import { mapValues, uniqBy } from 'lodash';
 import { IAppState } from '../app.effects.module';
 import { catchError, filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
@@ -37,6 +37,12 @@ import { ICasesConfig } from '../../modules/menu-items/cases/models/cases-config
 
 @Injectable()
 export class CasesAppEffects {
+	get defaultImageManualProcessArgs(): IImageManualProcessArgs {
+		return this.overlayStatusConfig.ImageProcParams.reduce<IImageManualProcessArgs>((initialObject: any, imageProcParam) => {
+			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
+		}, {});
+	}
+
 	@Effect({ dispatch: false })
 	actionsLogger$: Observable<any> = this.actions$.pipe(
 		ofType(CasesActionTypes.ADD_CASE,
@@ -76,6 +82,21 @@ export class CasesAppEffects {
 	);
 
 	@Effect()
+	loadCaseDisplayOverlays$: Observable<any> = this.actions$
+	.pipe(
+		ofType<SelectDilutedCaseAction>(CasesActionTypes.SELECT_DILUTED_CASE),
+		map(({ payload }: SelectDilutedCaseAction) => payload),
+		mergeMap((caseValue: IDilutedCase) => {
+			const maps = caseValue.state.maps.data.filter(mapData => Boolean(Boolean(mapData.data.overlay)));
+
+			const displayOverlayActions = [];
+			maps.forEach(map => displayOverlayActions.push(new DisplayOverlayAction({ overlay: map.data.overlay, mapId: map.id })));
+
+			return displayOverlayActions;
+		})
+	);
+
+	@Effect()
 	loadCase$: Observable<any> = this.actions$
 		.pipe(
 			ofType<SelectDilutedCaseAction>(CasesActionTypes.SELECT_DILUTED_CASE),
@@ -84,7 +105,6 @@ export class CasesAppEffects {
 				const ids: IOverlayByIdMetaData[] = uniqBy(caseValue.state.maps.data.filter(mapData => Boolean(mapData.data.overlay))
 						.map((mapData) => mapData.data.overlay)
 						.concat(caseValue.state.favoriteOverlays,
-							caseValue.state.presetOverlays || [],
 							Object.values(caseValue.state.miscOverlays || {}).filter(Boolean))
 					, 'id')
 					.map(({ id, sourceType }: IOverlay): IOverlayByIdMetaData => ({ id, sourceType }));
@@ -94,17 +114,15 @@ export class CasesAppEffects {
 						map(overlays => new Map(overlays.map((overlay): [string, IOverlay] => [overlay.id, overlay]))),
 						map((mapOverlay: Map<string, IOverlay>) => {
 							let newCaseValue: IDilutedCase = { ...caseValue, state: {
-								...caseValue.state,
+									...caseValue.state,
 									favoriteOverlays: caseValue.state.favoriteOverlays
 										.map((favOverlay: IOverlay) => mapOverlay.get(favOverlay.id)),
-									presetOverlays: (caseValue.state.presetOverlays || [])
-										.map((preOverlay: IOverlay) => mapOverlay.get(preOverlay.id)),
 									miscOverlays: mapValues(caseValue.state.miscOverlays || {},
 										(prevOverlay: IOverlay) => {
 											return prevOverlay && mapOverlay.get(prevOverlay.id);
 										}),
 									maps: {
-									...caseValue.state.maps,
+										...caseValue.state.maps,
 										data: caseValue.state.maps.data
 											.map(mapData => ({
 												...mapData,
@@ -135,17 +153,15 @@ export class CasesAppEffects {
 		ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
 		withLatestFrom(this.store$.select(selectMapsIds)),
 		filter(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => !action.payload.context && Boolean(mapId)),
-		tap(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => {
+		mergeMap(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => {
 			const position = this.caseConfig.defaultCase.state.maps.data[0].data.position;
 			const communicator = this.imageryCommunicatorService.provide(mapId);
-			communicator.loadInitialMapSource(position);
-		}));
-
-	get defaultImageManualProcessArgs(): IImageManualProcessArgs {
-		return this.overlayStatusConfig.ImageProcParams.reduce<IImageManualProcessArgs>((initialObject: any, imageProcParam) => {
-			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
-		}, {});
-	}
+			const mapType = communicator.mapSettings.worldView.mapType;
+			return this.getProvidersMapsService.getDefaultProviderByType(mapType).pipe(
+				tap( (source) =>	communicator.loadInitialMapSource(position, source))
+			)
+		})
+	);
 
 
 	constructor(protected actions$: Actions,
@@ -155,6 +171,7 @@ export class CasesAppEffects {
 				@Inject(overlayStatusConfig) protected overlayStatusConfig: IOverlayStatusConfig,
 				protected loggerService: LoggerService,
 				@Inject(casesConfig) public caseConfig: ICasesConfig,
+				protected getProvidersMapsService: GetProvidersMapsService,
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 }

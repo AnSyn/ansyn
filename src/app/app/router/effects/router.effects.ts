@@ -30,8 +30,13 @@ export class RouterEffects {
 	onNavigateCase$: Observable<any> = this.actions$.pipe(
 		ofType<NavigateCaseTriggerAction>(RouterActionTypes.NAVIGATE_CASE),
 		tap(({ payload }) => {
+
 			if (payload) {
-				this.router.navigate(['case', payload]);
+				if (this.router.url.includes('case')) {
+					this.router.navigate(['case', payload]);
+				} else {
+					this.router.navigate(['link', payload]);
+				}
 			} else {
 				this.router.navigate(['']);
 			}
@@ -69,6 +74,7 @@ export class RouterEffects {
 	@Effect()
 	loadDefaultCase$: Observable<any> = this.actions$.pipe(
 		ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
+		filter( (action) => !(action as LoadDefaultCaseAction).payload.context),
 		withLatestFrom(this.store$.select(routerStateSelector)),
 		mergeMap(([action, router]: [(SelectDilutedCaseAction), IRouterState]) => {
 			if (router.linkId) {

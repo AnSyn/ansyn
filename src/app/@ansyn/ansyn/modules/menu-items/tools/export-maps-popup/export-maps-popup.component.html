@@ -1,24 +1,63 @@
-<div class="dialog-area">
-	<div mat-dialog-content>
-		<div mat-dialog-title>
-			<button class="close" mat-button (click)="closeModal()">X</button>
-			<h1 mat-dialog-title class="title-message">{{title | translate}} {{credentialsService?.user}}</h1>
-		</div>
-		<mat-progress-bar *ngIf="!isDownloadAvailable" class="main-progress" color="primary" mode="indeterminate"></mat-progress-bar>
-		<br>
-		<p mat-dialog-title class="info">
-			{{description | translate}}
-		</p>
-		<div class="btn-area">
-			<div class="download-btn">
-				<button mat-button (click)="onClick.emit(true)" [disabled]="!isDownloadAvailable">
-					<i class="fa fa-cloud-download" aria-hidden="true"></i>
-					{{'Download' | translate}}</button>
-			</div>
-			<div class="cancel-btn">
-				<button mat-button (click)="onClick.emit(false)">{{'Cancel' | translate}}</button>
-			</div>
-		</div>
-	</div>
+<div class="header">
+	<h1 mat-dialog-title>{{title | translate}}</h1>
+	<button mat-dialog-close tabindex="-1" (click)="close()">X</button>
 </div>
-
+<mat-dialog-content>
+	<h5 mat-dialog-title>{{description | translate}}</h5>
+	<div class="method-chose">
+		<ansyn-radio *ngFor="let exportMethod of exportMethods"
+					 [(ngModel)]="selectedExportMethod"
+					 [value]="exportMethod"
+					 [name]="exportMethod">{{exportMethod | translate}}
+		</ansyn-radio>
+	</div>
+	<ng-container *ngIf="selectedExportMethod === advancedExport">
+		<div class="option">
+			<p>{{'Graphic to be export' | translate}}</p>
+			<div class="graphics">
+				<ansyn-checkbox
+					*ngFor="let ge of graphicExport"
+					[ngModel]="graphicexportMap.get(ge)"
+					(ngModelChange)="graphicExportChange(ge)">
+					<span>{{ge | translate}}</span>
+				</ansyn-checkbox>
+			</div>
+		</div>
+		<div class="option">
+			<p>{{'Format' | translate}}</p>
+			<mat-select [(value)]="format">
+				<mat-option *ngFor="let fmt of formats" [value]="fmt">
+					{{fmt | translate}}
+				</mat-option>
+			</mat-select>
+		</div>
+		<h3 class="note" *ngIf="format === pdfFormat">{{'export pdf work only on the selected map' | translate}}</h3>
+		<div class="option">
+			<p>{{'Page size' | translate}}</p>
+			<mat-select [(value)]="pageSize" [disabled]="format !== pdfFormat">
+				<mat-option *ngFor="let size of pageSizes" [value]="size">
+					{{ size | translate}}
+				</mat-option>
+			</mat-select>
+		</div>
+		<div class="option">
+			<p>{{'Quality' | translate}}</p>
+			<mat-select [(value)]="quality" [disabled]="format !== pdfFormat">
+				<mat-option *ngFor="let q of qualities" [value]="q">
+					{{ q | translate}}
+				</mat-option>
+			</mat-select>
+		</div>
+	</ng-container>
+</mat-dialog-content>
+<mat-dialog-actions>
+	<button (click)="export()">{{'Export' | translate}}</button>
+	<button class='reset-btn' *ngIf="selectedExportMethod === advancedExport"
+	(click)="reset()">
+		{{'Reset' | translate}}
+	</button>
+	<ansyn-animated-ellipsis
+		[text]="exporting && ('Exporting' | translate)"
+		[rtl]="'rtl' === ('direction' | translate)"
+	></ansyn-animated-ellipsis>
+</mat-dialog-actions>

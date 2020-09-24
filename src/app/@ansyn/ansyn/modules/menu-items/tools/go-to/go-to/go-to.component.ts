@@ -12,7 +12,6 @@ import {
 import { Observable } from 'rxjs';
 import { IToolsConfig, toolsConfig } from '../../models/tools-config';
 import {
-	copyFromContent,
 	ICoordinatesSystem,
 	IEd50Notification,
 	IMapFacadeConfig,
@@ -21,6 +20,7 @@ import {
 	SetToastMessageAction
 } from '@ansyn/map-facade';
 import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
+import { copyFromContent } from '../../../../../../map-facade/utils/clipboard';
 
 @Component({
 	selector: 'ansyn-go-to',
@@ -130,8 +130,7 @@ export class GoToComponent implements OnInit {
 	}
 
 	copyToClipBoard(value: string, projection: string = '', datum: string = '') {
-		copyFromContent(`${datum}${projection} ${value}`);
-		this.store$.dispatch(new SetToastMessageAction({ toastText: 'Copy to clipboard' }));
+		copyFromContent(`${datum}${projection} ${value}`).then(() => this.store$.dispatch(new SetToastMessageAction({ toastText: 'Copy to clipboard' })));
 	}
 
 	convert(coords, convertFrom: any) {

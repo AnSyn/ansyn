@@ -31,14 +31,12 @@
     <div class="form-check">
       <input type="checkbox" class="form-check-input" [(ngModel)]="item.checked" (ngModelChange)="onCheckedChange()"
         [disabled]="item.disabled" [indeterminate]="item.indeterminate"/>
-      <label class="form-check-label ml-2">
-        <span aria-hidden="true" class="only-filter" [hidden]="item.disabled || false" (click)="showOnly(item)">
-			    {{'only' | translate}}
-		    </span>
-	    </label>
-		<label class="form-check-label" (click)="item.checked = !item.checked; onCheckedChange()">
-			{{item.text}}
-		</label>
+      <label class="form-check-label text" (click)="item.checked = !item.checked; onCheckedChange()">
+        {{item.text}}
+      </label>
+      <span aria-hidden="true" class="only-filter" [hidden]="item.disabled || false" (click)="showOnly(item)">
+        {{'only' | translate}}
+      </span>
 	  </div>
   </div>
 </ng-template>

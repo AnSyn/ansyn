@@ -1,3 +1,7 @@
+export { GetProvidersMapsService } from './services/get-providers-maps/get-providers-maps.service';
+
+export { IExportMapMetadata, IExportMapData } from './model/export-map.model';
+
 export {
 	MapOrientation,
 	ICompressedMapSettings,

@@ -53,7 +53,7 @@ export class FiltersService {
 		}));
 	}
 
-	static calculatePotentialOverlaysCount(metadataKey: IFilter, metadata: FilterMetadata, counters: FilterCounters, overlays: Map<string, IOverlay>, favoriteOverlays: IOverlay[], removedOverlaysIds: string[], removedOverlaysVisibility: boolean, filterState: IFiltersState): void {
+	static calculatePotentialOverlaysCount(metadataKey: IFilter, metadata: FilterMetadata, counters: FilterCounters, overlays: Map<string, IOverlay>, favoriteOverlays: IOverlay[], filterState: IFiltersState): void {
 		const cloneMetadata = cloneDeep(metadata);
 
 		if (metadata instanceof EnumFilterMetadata) {
@@ -61,22 +61,22 @@ export class FiltersService {
 				.filter(([enumFiledKey, { isChecked }]: [any, IEnumFiled]) => !isChecked)
 				.forEach(([enumFiledKey, value]: [any, IEnumFiled]) => {
 					(<EnumFilterMetadata>cloneMetadata).enumsFields.set(enumFiledKey, { ...value, isChecked: true });
-					this.calculateOverlaysCount(metadataKey, metadata, counters, overlays, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, filterState, (<EnumFilterMetadata>cloneMetadata));
+					this.calculateOverlaysCount(metadataKey, metadata, counters, overlays, favoriteOverlays, filterState, (<EnumFilterMetadata>cloneMetadata));
 				});
 		} else {
 			if ((<BooleanFilterMetadata>metadata).properties.true.value === false || (<BooleanFilterMetadata>metadata).properties.false.value === false) {
 				(<BooleanFilterMetadata>cloneMetadata).properties.true.value = true;
 				(<BooleanFilterMetadata>cloneMetadata).properties.false.value = true;
-				this.calculateOverlaysCount(metadataKey, metadata, counters, overlays, favoriteOverlays, removedOverlaysIds, removedOverlaysVisibility, filterState, cloneMetadata);
+				this.calculateOverlaysCount(metadataKey, metadata, counters, overlays, favoriteOverlays, filterState, cloneMetadata);
 			}
 		}
 	}
 
-	static calculateOverlaysCount(metadataKey: IFilter, metadata: FilterMetadata, counters: FilterCounters, overlays: Map<string, IOverlay>, favoriteOverlays: IOverlay[], removedOverlaysIds: string[], removedOverlaysVisibility: boolean, filterState: IFiltersState, cloneMetadata: FilterMetadata): void {
+	static calculateOverlaysCount(metadataKey: IFilter, metadata: FilterMetadata, counters: FilterCounters, overlays: Map<string, IOverlay>, favoriteOverlays: IOverlay[], filterState: IFiltersState, cloneMetadata: FilterMetadata): void {
 		const cloneFilters = new Map(filterState.filtersMetadata);
 		cloneFilters.set(metadataKey, cloneMetadata);
 		const filterModels: IFilterModel[] = this.pluckFilterModels(cloneFilters);
-		const filteredOverlays: string[] = buildFilteredOverlays(mapValuesToArray(overlays), filterModels, removedOverlaysIds, removedOverlaysVisibility);
+		const filteredOverlays: string[] = buildFilteredOverlays(mapValuesToArray(overlays), filterModels);
 		counters.resetFilteredCount();
 		filteredOverlays
 			.map((id) => overlays.get(id))
@@ -98,7 +98,7 @@ export class FiltersService {
 			return null;
 		}
 		const metadata: FilterMetadata = filters.get(filter);
-		const filterMetadata = clone(metadata)
+		const filterMetadata = clone(metadata);
 		const selectedFilter: ICaseFilter = facets.filters.find(({ fieldName }) => fieldName === filter.modelName);
 		filterMetadata.initializeFilter(overlays, filter.modelName, selectedFilter, filter.visibility);
 		return { filter, filterMetadata };

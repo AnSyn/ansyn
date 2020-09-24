@@ -1,3 +1,5 @@
+export { measuresClassNameForExport } from './modules/plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
+
 export { selectOverlaysManualProcessArgs } from './modules/overlays/overlay-status/reducers/overlay-status.reducer';
 
 export { isArrowRightKey, isArrowLeftKey, isBackspaceKey, isDigitKey, isEnterKey, isEscapeKey } from "./modules/core/utils/keyboardKey";
@@ -15,9 +17,7 @@ export { AreaToCredentialsService } from './modules/core/services/credentials/ar
 export { CredentialsService } from './modules/core/services/credentials/credentials.service';
 export { credentialsConfig, ICredentialsConfig } from './modules/core/services/credentials/config';
 
-export {
-	OpenlayersBaseLayersPlugins
-}from './modules/plugins/openlayers/plugins/layers/openlayers-base-layers.plugins';
+export { OpenlayersBaseLayersPlugins }from './modules/plugins/openlayers/plugins/layers/openlayers-base-layers.plugins';
 
 export { AddAlertMsg, RemoveAlertMsg } from './modules/overlays/overlay-status/actions/overlay-status.actions';
 export { IAlert } from './modules/alerts/alerts.model';
@@ -58,7 +58,6 @@ export {
 	StatusBarActions,
 	GoAdjacentOverlay,
 	ExpandAction,
-	GoNextPresetOverlay
 } from './modules/status-bar/actions/status-bar.actions';
 export { StatusBarConfig } from './modules/status-bar/models/statusBar.config';
 export { StatusBarModule } from './modules/status-bar/status-bar.module';
@@ -67,7 +66,6 @@ export { StatusBarModule } from './modules/status-bar/status-bar.module';
 export { ClearActiveInteractionsAction } from './modules/menu-items/tools/actions/tools.actions';
 export { selectAutoSave } from './modules/menu-items/cases/reducers/cases.reducer';
 export { FilterType } from './modules/filters/models/filter-type';
-export { OverlayDisplayMode } from './modules/menu-items/tools/overlays-display-mode/overlays-display-mode.component';
 
 export { SelectCaseSuccessAction } from './modules/menu-items/cases/actions/cases.actions';
 export { ILayersManagerConfig } from './modules/menu-items/layers-manager/models/layers-manager-config';
@@ -89,11 +87,9 @@ export {
 export { FiltersMetadata, IFiltersState } from './modules/filters/reducer/filters.reducer';
 export { IFilter } from './modules/filters/models/IFilter';
 export { ILayer } from './modules/menu-items/layers-manager/models/layers.model';
-export { ShowOverlaysFootprintAction } from './modules/menu-items/tools/actions/tools.actions';
 export { TasksComponent } from './modules/menu-items/algorithms/components/tasks/tasks.component';
 export {
 	SetActiveCenter,
-	SetActiveOverlaysFootprintModeAction,
 	SetAnnotationMode,
 	SetMapGeoEnabledModeToolsActionStore,
 	SetMeasureDistanceToolState,
@@ -136,7 +132,6 @@ export {
 export { BooleanFilterMetadata } from './modules/filters/models/metadata/boolean-filter-metadata';
 export { SliderFilterMetadata } from './modules/filters/models/metadata/slider-filter-metadata';
 export { FilterMetadata } from './modules/filters/models/metadata/filter-metadata.interface';
-export { FilterCounters } from './modules/filters/models/counters/filter-counters.interface';
 export { EnumFilterMetadata } from './modules/filters/models/metadata/enum-filter-metadata';
 export { casesConfig, CasesService } from './modules/menu-items/cases/services/cases.service';
 export {
@@ -145,7 +140,6 @@ export {
 	selectLayersEntities,
 	selectSelectedLayersIds
 } from './modules/menu-items/layers-manager/reducers/layers.reducer';
-export { HelpComponent } from './modules/menu-items/help/components/help.component';
 export { filtersConfig, FiltersService } from './modules/filters/services/filters.service';
 export { casesStateSelector, selectSelectedCase } from './modules/menu-items/cases/reducers/cases.reducer';
 export {
@@ -171,7 +165,6 @@ export { IToolsConfig, toolsConfig } from './modules/menu-items/tools/models/too
 export { CasesModule } from './modules/menu-items/cases/cases.module';
 export { TasksModule } from './modules/menu-items/algorithms/tasks.module';
 export { FiltersModule } from './modules/filters/filters.module';
-export { HelpModule } from './modules/menu-items/help/help.module';
 export { LayersManagerModule } from './modules/menu-items/layers-manager/layers-manager.module';
 export { SettingsModule } from './modules/menu-items/settings/settings.module';
 export { ToolsModule } from './modules/menu-items/tools/tools.module';
@@ -380,7 +373,6 @@ export {
 	SetOverlayTranslationDataAction,
 	ToggleDraggedModeAction,
 	UpdateOverlaysManualProcessArgs,
-	TogglePresetOverlayAction,
 	SetAutoImageProcessing,
 	SetAutoImageProcessingSuccess,
 	DisableImageProcessing,
@@ -396,7 +388,6 @@ export { AnsynRadioComponent } from './modules/core/forms/ansyn-radio/ansyn-radi
 export { ComboBoxComponent } from './modules/core/forms/combo-box/combo-box.component';
 export { ComboBoxTriggerComponent } from './modules/core/forms/combo-box-trigger/combo-box-trigger.component';
 export { ComboBoxOptionComponent } from './modules/core/forms/combo-box-option/combo-box-option.component';
-export { ManualRemovedOverlaysComponent } from './modules/core/components/manual-removed-overlays/manual-removed-overlays.component';
 export { ContextMenuComponent } from './modules/core/components/context-menu/context-menu.component';
 export { CredentialsComponent } from './modules/core/components/credentials/credentials.component';
 export { OverlaysContainerComponent } from './modules/overlays/components/container/overlays-container.component';

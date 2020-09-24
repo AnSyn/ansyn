@@ -1,7 +1,5 @@
 import XYZ from 'ol/source/XYZ';
-import TileLayer from 'ol/layer/Tile';
-import { EPSG_4326, ImageryMapSource, IMapSettings } from '@ansyn/imagery';
-import * as proj from 'ol/proj';
+import { ImageryMapSource, IMapSettings } from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../maps/openlayers-disabled-map/openlayers-disabled-map';
@@ -33,9 +31,9 @@ export class OpenLayerESRI4326SourceProvider extends OpenLayersMapSourceProvider
 				return config.baseUrl
 					.replace('{z}', (tileCoord[0] - 1).toString())
 					.replace('{x}', tileCoord[1].toString())
-					.replace('{y}', (-tileCoord[2] - 1).toString());
+					.replace('{y}', (tileCoord[2]).toString());
 			},
-			wrapX: true
+			wrapX: false
 		});
 		return source;
 	}

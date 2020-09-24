@@ -13,6 +13,7 @@ import { createPluginsCollection } from './providers/plugins-collection';
 import { IBaseImageryPluginConstructor } from './model/base-imagery-plugin';
 import { IBaseMapSourceProviderConstructor } from './model/base-map-source-provider';
 import { HttpClientModule } from '@angular/common/http';
+import { GetProvidersMapsService } from './services/get-providers-maps/get-providers-maps.service';
 
 export interface IImageryMetaData {
 	maps: IBaseImageryMapConstructor[],
@@ -35,7 +36,8 @@ export interface IImageryMetaData {
 		createImageryMapsCollection([]),
 		createMapSourceProviders([]),
 		BaseMapSourceProviderProvider,
-		ImageryMapsProvider
+		ImageryMapsProvider,
+		GetProvidersMapsService
 	],
 	exports: [ImageryComponent]
 })

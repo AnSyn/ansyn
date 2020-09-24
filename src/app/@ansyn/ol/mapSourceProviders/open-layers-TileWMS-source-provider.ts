@@ -1,4 +1,3 @@
-import TileLayer from 'ol/layer/Tile';
 import TileWMS from 'ol/source/TileWMS';
 import { ImageryMapSource, IMapSettings } from '@ansyn/imagery';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
@@ -25,7 +24,7 @@ export class OpenLayerTileWMSSourceProvider extends OpenLayersMapSourceProvider 
 			},
 			projection: config.projection
 		});
-		
+
 		return source;
 	}
 }

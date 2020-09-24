@@ -14,7 +14,7 @@ import * as condition from 'ol/events/condition';
 import Select from 'ol/interaction/Select';
 import { Inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { MultiLineString } from 'geojson';
 import { distinctUntilChanged, pluck, tap } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
@@ -30,14 +30,17 @@ import {
 import { ExtendMap } from '../../../../../overlays/reducers/extendedMap.class';
 import { OverlaysService } from '../../../../../overlays/services/overlays.service';
 import { getIconSvg } from './arrow-svg';
+import { selectOverlaysFootprintActiveByMapId } from '@ansyn/map-facade';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, VisualizersConfig, OverlaysService]
+	deps: [Store, VisualizersConfig, OverlaysService],
+	layerClassName: 'footprint-layer'
 })
 export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 	markups: ExtendMap<MarkUpClass, IMarkUpData>;
 	overlaysState$: Observable<IOverlaysState> = this.store.select(overlaysStateSelector);
+
 	@AutoSubscription
 	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, IMarkUpData>> = this.overlaysState$.pipe(
 		pluck<IOverlaysState, ExtendMap<MarkUpClass, IMarkUpData>>('dropsMarkUp'),
@@ -52,7 +55,7 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 				public overlaysService: OverlaysService
 	) {
 
-		super(store, overlaysService, 'Polygon', config.FootprintPolylineVisualizer);
+		super(store, overlaysService, config.FootprintPolylineVisualizer);
 
 		this.updateStyle({
 			opacity: 0.5,
@@ -69,6 +72,9 @@ export class FootprintPolylineVisualizer extends BaseFootprintsVisualizer {
 			}
 		});
 	}
+	selectVisualizerActive =  () => this.store.pipe(
+		select(selectOverlaysFootprintActiveByMapId(this.mapId)),
+	);
 
 	addOrUpdateEntities(logicalEntities: IVisualizerEntity[]): Observable<boolean> {
 		const conversion = this.convertPolygonToPolyline(logicalEntities);

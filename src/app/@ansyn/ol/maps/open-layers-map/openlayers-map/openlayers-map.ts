@@ -3,7 +3,7 @@ import { Inject } from '@angular/core';
 import {
 	areCoordinatesNumeric,
 	BaseImageryMap,
-	ExtentCalculator,
+	ExtentCalculator, IExportMapMetadata,
 	IMAGERY_BASE_MAP_LAYER,
 	IMAGERY_MAIN_LAYER_NAME, IMAGERY_SLOW_ZOOM_FACTOR,
 	ImageryLayerProperties,
@@ -36,6 +36,7 @@ import { OpenLayersProjectionService } from '../../../projection/open-layers-pro
 import { OpenLayersMonitor } from '../helpers/openlayers-monitor';
 import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
+import { exportMapHelper } from '../../helpers/helpers';
 
 export const OpenlayersMapName = 'openLayersMap';
 
@@ -153,9 +154,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			target,
 			renderer,
 			controls,
-			interaction: olInteraction.defaults({ doubleClickZoom: false }),
-			loadTilesWhileInteracting: true,
-			loadTilesWhileAnimating: true
+			interactions: olInteraction.defaults({ doubleClickZoom: false }),
+			preload: Infinity
 		});
 		this.initListeners();
 		this._backgroundMapParams = {
@@ -501,6 +501,12 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return view.getRotation();
 	}
 
+	exportMap(exportMetadata: IExportMapMetadata): Observable<HTMLCanvasElement> {
+		const {size, resolution, extra: {annotations}} = exportMetadata;
+		const classToInclude = '.ol-layer canvas' + (annotations ? `,${annotations}` : '');
+		return exportMapHelper(this.mapObject, size, resolution, classToInclude);
+	}
+
 	one2one(): void {
 		const view = this.mapObject.getView();
 		view.setResolution(1)
@@ -528,6 +534,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	public addGeojsonLayer(data: GeoJsonObject): void {
 		let layer: VectorLayer = new VectorLayer({
+			updateWhileAnimating: true,
+			updateWhileInteracting: true,
 			source: new Vector({
 				features: new olGeoJSON().readFeatures(data)
 			})

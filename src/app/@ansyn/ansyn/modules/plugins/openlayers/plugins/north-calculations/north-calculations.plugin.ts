@@ -141,6 +141,9 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 		filter((action: BackToWorldSuccess) => action.payload.mapId === this.communicator.id),
 		withLatestFrom(this.store$.select(selectMapOrientation(this.mapId))),
 		tap(([action, orientation]: [BackToWorldView, MapOrientation]) => {
+			if (this.shadowMapObject) {
+				this.shadowMapObject.getLayers().clear();
+			}
 			this.communicator.setVirtualNorth(0);
 			if (orientation === 'Imagery Perspective') {
 				this.communicator.setRotation(0);
@@ -313,20 +316,14 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	}
 
 	resetShadowMapView(projectedState) {
-		const layers = this.shadowMapObject.getLayers();
-		layers.forEach((layer) => {
-			this.shadowMapObject.removeLayer(layer);
-		});
 		const mainLayer = this.iMap.getMainLayer() as ol_Layer;
-		this.shadowMapObjectView = new View({
-			projection: mainLayer.getSource().getProjection()
-		});
-		this.shadowMapObject.addLayer(mainLayer);
-		this.shadowMapObject.setView(this.shadowMapObjectView);
-
 		const { center, zoom, rotation } = projectedState;
-		this.shadowMapObjectView.setCenter(center);
-		this.shadowMapObjectView.setZoom(zoom);
-		this.shadowMapObjectView.setRotation(rotation);
+		this.shadowMapObjectView = new View({
+			projection: mainLayer.getSource().getProjection(),
+			center,
+			zoom,
+			rotation
+		});
+		this.shadowMapObject.setView(this.shadowMapObjectView);
 	}
 }

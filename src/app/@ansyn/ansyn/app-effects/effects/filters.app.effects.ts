@@ -42,6 +42,7 @@ import {
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	overlaysStatusMessages,
+	selectDrops,
 	selectFilteredOveralys,
 	selectOverlaysArray,
 	selectOverlaysMap,
@@ -50,7 +51,7 @@ import {
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { FilterType } from '../../modules/filters/models/filter-type';
 import { ICaseFacetsState } from '../../modules/menu-items/cases/models/case.model';
-import { IOverlay, IOverlaySpecialObject } from '../../modules/overlays/models/overlay.model';
+import { IOverlay, IOverlayDrop, IOverlaySpecialObject } from '../../modules/overlays/models/overlay.model';
 import { get as _get } from 'lodash';
 import { TranslateService } from '@ngx-translate/core';
 import { LoggerService } from '../../modules/core/services/logger.service';
@@ -102,15 +103,18 @@ export class FiltersAppEffects {
 
 	@Effect()
 	updateOverlayDrops$ = this.forOverlayDrops$.pipe(
-		mergeMap(([overlaysMap, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites]: [Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean]) => {
-			const drops = OverlaysService.parseOverlayDataForDisplay({
+		withLatestFrom(this.store$.select(selectDrops)),
+		filter(([[overlaysMap, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites], oldDrops]: [[Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean], IOverlayDrop[]]) => Boolean(overlaysMap.size)),
+		mergeMap(([[overlaysMap, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites], oldDrops]: [[Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean], IOverlayDrop[]]) => {
+			let drops = OverlaysService.parseOverlayDataForDisplay({
 				overlaysArray: mapValuesToArray(overlaysMap),
 				filteredOverlays,
 				specialObjects,
 				favoriteOverlays,
 				showOnlyFavorites
-			});
+			}).concat(oldDrops);
 
+			drops = this.removeDuplicateDrops(drops);
 			return [new SetDropsAction(drops), new SetTotalOverlaysAction(drops.length)];
 		})
 	);
@@ -185,6 +189,10 @@ export class FiltersAppEffects {
 				public translate: TranslateService,
 				protected loggerService: LoggerService,
 				@Inject(filtersConfig) protected config: IFiltersConfig) {
+	}
+
+	removeDuplicateDrops(drops: IOverlayDrop[]): IOverlayDrop[] {
+		return drops.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
 	}
 
 	resolveMetadata(filterType: FilterType): FilterMetadata {

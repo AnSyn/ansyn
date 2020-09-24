@@ -1,12 +1,16 @@
 import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { CredentialsService } from '../../services/credentials/credentials.service';
 import { Store } from '@ngrx/store';
-import { getMenuSessionData, UnSelectMenuItemAction } from '@ansyn/menu';
+import {
+	getMenuSessionData,
+	LogDownloadPermissionsGuide,
+	LogOpenPermissionsSite,
+	UnSelectMenuItemAction
+} from '@ansyn/menu';
 import { SetUserEnter } from '@ansyn/menu';
 import { tap, filter } from 'rxjs/operators';
 import { ClickOutsideService } from '../../click-outside/click-outside.service';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
-import { LogDownloadPermissionsGuide, LogOpenPermissionsSite } from '../../../../../menu/actions/menu.actions';
 
 @Component({
 	selector: 'ansyn-credentials',

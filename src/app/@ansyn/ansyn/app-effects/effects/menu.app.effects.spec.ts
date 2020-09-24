@@ -2,8 +2,8 @@ import {
 	AddMenuItemAction,
 	ContainerChangedTriggerAction, MenuConfig,
 	menuFeatureKey,
-	MenuReducer,
-	SelectMenuItemAction
+	MenuReducer, ResetAppAction,
+	SelectMenuItemAction, ToggleIsPinnedAction, UnSelectMenuItemAction
 } from '@ansyn/menu';
 import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import { async, inject, TestBed } from '@angular/core/testing';
@@ -14,7 +14,6 @@ import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { RedrawTimelineAction } from '../../modules/overlays/actions/overlays.actions';
-import { ResetAppAction, ToggleIsPinnedAction, UnSelectMenuItemAction } from '../../../menu/actions/menu.actions';
 import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
 import { StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';

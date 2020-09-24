@@ -10,4 +10,6 @@ export { getMenuSessionData } from './helpers/menu-session.helper';
 export { selectEntitiesMenuItems, selectIsPinned } from './reducers/menu.reducer';
 export { MenuModule, MENU_ITEMS } from './menu.module';
 export { menuFeatureKey, MenuReducer, selectMenuCollapse } from './reducers/menu.reducer';
-export { InitializeMenuItemsAction, AddMenuItemAction, ContainerChangedTriggerAction, ToggleMenuCollapse, UnSelectMenuItemAction, SetUserEnter } from './actions/menu.actions';
+export { InitializeMenuItemsAction, AddMenuItemAction, ContainerChangedTriggerAction,
+	ToggleMenuCollapse, UnSelectMenuItemAction, SetUserEnter,
+	LogDownloadPermissionsGuide, LogOpenPermissionsSite, ResetAppAction } from './actions/menu.actions';

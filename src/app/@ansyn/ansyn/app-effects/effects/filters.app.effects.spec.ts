@@ -9,7 +9,7 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { menuFeatureKey, MenuReducer, SetBadgeAction } from '@ansyn/menu';
+import { menuFeatureKey, MenuReducer, SetBadgeAction, SetHideResultsTableBadgeAction } from '@ansyn/menu';
 import {
 	EnableOnlyFavoritesSelectionAction,
 	InitializeFiltersAction,
@@ -36,7 +36,6 @@ import { imageryStatusFeatureKey, ImageryStatusReducer } from '@ansyn/map-facade
 import { FilterType } from '../../modules/filters/models/filter-type';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { TranslateModule } from '@ngx-translate/core';
-import { SetHideResultsTableBadgeAction } from '../../../menu/actions/menu.actions';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;

@@ -4,6 +4,8 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { IMapState, mapStateSelector, selectMapsIds, SetToastMessageAction, UpdateMapAction } from '@ansyn/map-facade';
 import {
+	IMapProvidersConfig,
+	MAP_PROVIDERS_CONFIG,
 	GetProvidersMapsService,
 	ImageryCommunicatorService
 } from '@ansyn/imagery';
@@ -84,6 +86,21 @@ export class CasesAppEffects {
 	);
 
 	@Effect()
+	loadCaseDisplayOverlays$: Observable<any> = this.actions$
+	.pipe(
+		ofType<SelectDilutedCaseAction>(CasesActionTypes.SELECT_DILUTED_CASE),
+		map(({ payload }: SelectDilutedCaseAction) => payload),
+		mergeMap((caseValue: IDilutedCase) => {
+			const maps = caseValue.state.maps.data.filter(mapData => Boolean(Boolean(mapData.data.overlay)));
+
+			const displayOverlayActions = [];
+			maps.forEach(map => displayOverlayActions.push(new DisplayOverlayAction({ overlay: map.data.overlay, mapId: map.id })));
+
+			return displayOverlayActions;
+		})
+	);
+
+	@Effect()
 	loadCase$: Observable<any> = this.actions$
 		.pipe(
 			ofType<SelectDilutedCaseAction>(CasesActionTypes.SELECT_DILUTED_CASE),
@@ -110,7 +127,7 @@ export class CasesAppEffects {
 
 							caseValue.state.maps.data
 								.filter(mapData => Boolean(Boolean(mapData.data.overlay)))
-								.forEach((map) => map.data.overlay = mapOverlay.get(map.data.overlay.id));
+								.forEach(map => map.data.overlay = mapOverlay.get(map.data.overlay.id));
 
 							return new SelectCaseAction(caseValue);
 						}),

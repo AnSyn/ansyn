@@ -174,6 +174,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				loaded: true,
 				filteredOverlays: []
 			};
+
 			if (!(<any>action).clearExistingOverlays) {
 				return overlaysAdapter.addMany(action.payload, newState);
 			}

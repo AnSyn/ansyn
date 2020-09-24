@@ -22,24 +22,26 @@ import {
 	selectDrops,
 	selectTimelineRange
 } from '../../reducers/overlays.reducer';
-import { fromEvent, Observable, Subscription } from 'rxjs';
+import { fromEvent, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import {
 	DisplayOverlayFromStoreAction,
 	OverlaysActionTypes,
 	RedrawTimelineAction,
-	SetMarkUp, SetOverlaysStatusMessageAction,
+	SetMarkUp,
+	SetOverlaysCriteriaAction,
 	SetTimelineStateAction
 } from '../../actions/overlays.actions';
 import { schemeCategory10 } from 'd3-scale-chromatic';
-import { distinctUntilChanged, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, filter, tap, withLatestFrom } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import { ExtendMap } from '../../reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../overlay-overview/overlay-overview.component.const';
 import { DOCUMENT } from '@angular/common';
 import { IOverlayDrop } from '../../models/overlay.model';
 import { TranslateService } from "@ngx-translate/core";
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 
 export const BASE_DROP_COLOR = '#8cceff';
 selection.prototype.moveToFront = function () {
@@ -61,9 +63,12 @@ export interface IEventDropsEvent {
 	encapsulation: ViewEncapsulation.None
 })
 
+@AutoSubscriptions()
 export class TimelineComponent implements OnInit, OnDestroy {
 
 	@ViewChild('context') context: ElementRef;
+	isZooming: boolean;
+	dispachedSearch: boolean;
 
 	configuration = {
 		range: {
@@ -103,29 +108,31 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		},
 		zoom: {
 			onZoom: this.drawMarkup.bind(this),
-			onZoomStart: null,
-			onZoomEnd: this.onZoomEnd.bind(this),
-			minimumScale: 1
+			onZoomStart: this.onZoomStart.bind(this),
+			onZoomEnd: this.onZoomEnd.bind(this)
 		},
 		label: {
 			width: 0,
 			padding: 0,
 			text: ''
 		},
-		d3: d3
+		d3: d3,
+		searchDebounceTime: 1200
 	};
 
 	private chart: any;
 	private element: any;
 	private oldActiveId: string;
 
+	@AutoSubscription
 	redraw$: Observable<any> = this.actions$
 		.pipe(
 			ofType<RedrawTimelineAction>(OverlaysActionTypes.REDRAW_TIMELINE),
 			withLatestFrom(this.store$.select(selectDrops)),
-			tap(([action, drops]) => this.initEventDropsSequence(drops))
+			tap(([action, drops]: [RedrawTimelineAction, IOverlayDrop[]]) => this.initEventDropsSequence(drops))
 		);
 
+	@AutoSubscription
 	timeLineRange$: Observable<ITimelineRange> = this.store$
 		.pipe(
 			select(selectTimelineRange),
@@ -133,6 +140,8 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		);
 
 	private markup: ExtendMap<MarkUpClass, IMarkUpData>;
+
+	@AutoSubscription
 	dropsMarkUp$: Observable<[ExtendMap<MarkUpClass, IMarkUpData>, any]> = this.store$
 		.pipe(
 			select(selectDropMarkup),
@@ -145,25 +154,28 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		);
 
 	dropsIdMap: Map<string, IOverlayDrop> = new Map();
+
+	@AutoSubscription
 	dropsChange$: Observable<IOverlayDrop[]> = this.store$
 		.pipe(
 			select(selectDrops),
 			distinctUntilChanged(isEqual),
-			tap((drops: any) => this.dropsIdMap = new Map(drops.map((drop) => [drop.id, drop]))),
+			tap(drops => this.dropsIdMap = new Map(drops.map(drop => [drop.id, drop]))),
+			filter(drops => Boolean(drops.length)),
 			tap(drops => {
-				if (drops.length >= 1) {
-					this.configuration.range = this.overlaysService.getTimeRangeFromDrops(drops);
-				}
+				this.configuration.range = this.overlaysService.getTimeRangeFromDrops(drops);
+				this.removeOldEventDrops();
 				this.initEventDropsSequence(drops);
 			})
 		);
 
-	private subscribers: Subscription[];
-
+	@AutoSubscription
 	onResize$: Observable<any> = fromEvent(window, 'resize')
 		.pipe(
 			withLatestFrom(this.store$.select(selectDrops)),
-			tap(([event, drops]) => this.initEventDropsSequence(drops))
+			tap(([event, drops]: [any, IOverlayDrop[]]) => {
+				this.initEventDropsSequence(drops)
+			})
 		);
 
 	constructor(@Inject(OverlaysService) protected overlaysService: OverlaysService,
@@ -174,7 +186,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 				protected translator: TranslateService) {
 	}
 
-	addRStyle() {
+	addRStyle(): void {
 		const circlesR: HTMLStyleElement = this.document.createElement('style');
 		circlesR.innerText = ` circle.displayed, circle.active { r: 8; } `;
 		this.elementRef.nativeElement.appendChild(circlesR);
@@ -182,85 +194,96 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.addRStyle();
-		this.subscribers = [this.dropsChange$.subscribe(),
-			this.dropsMarkUp$.subscribe(),
-			this.timeLineRange$.subscribe(),
-			this.redraw$.subscribe(),
-			this.onResize$.subscribe()
-		];
 	}
 
 	ngOnDestroy() {
-		this.subscribers.forEach(subscriber => subscriber.unsubscribe());
 	}
 
-	onMouseOver({ id }: IEventDropsEvent) {
+	onMouseOver({ id }: IEventDropsEvent): void {
 		this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [id] } }));
 	}
 
-	onMouseOut({ id }: IEventDropsEvent) {
+	onMouseOut({ id }: IEventDropsEvent): void {
 		if (!d3.event.toElement || (d3.event.toElement && d3.event.toElement.id !== overlayOverviewComponentConstants.TRANSPARENT_DIV_ID)) {
 			this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
 		}
 	}
 
-	onClick(data: IEventDropsEvent) {
+	onClick(data: IEventDropsEvent): void {
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id: data.id }));
 	}
 
-	isNoOverlaysLeft() {
-		const datesArray = this.chart.filteredData()[0].fullData;
-		const currentMinimumDate = this.chart.scale().domain()[0];
-		const currentMaximumDate = this.chart.scale().domain()[1];
-		const minimumDate = datesArray[0].date;
-		const maximumDate = datesArray[datesArray.length - 1].date;
-
-		return ((currentMaximumDate < minimumDate) || (currentMinimumDate > maximumDate));
+	onZoomStart(): void {
+		this.dispachedSearch = false;
+		this.isZooming = true;
 	}
 
-	onZoomEnd() {
-		const errorMessage = this.isNoOverlaysLeft() ? this.translator.instant('No overlays left there') : null;
-		this.store$.dispatch(new SetOverlaysStatusMessageAction({ message: errorMessage }));
-
-		this.store$.dispatch(new SetTimelineStateAction({
-			timeLineRange: {
-				start: this.chart.scale().domain()[0],
-				end: this.chart.scale().domain()[1]
-			}
-		}));
-
+	onZoomEnd(): void {
+		const [ start, end ] = this.chart.scale().domain();
+		this.store$.dispatch(new SetTimelineStateAction({ timeLineRange: { start, end } }));
+		setTimeout(() => this.isZooming = false, this.configuration.searchDebounceTime);
 	}
 
-	initEventDropsSequence(drops) {
-		this.removeOldEventDrops();
+	drawMarkup(): void {
+		if (this.markup && this.element) {
+			const dropsElements = this.element.selectAll('.drop');
+			const textContainer = this.element.select('.textContainer');
+			this.clearMarkUp(dropsElements);
+			this.markup.keys.forEach(className => {
+				const markUpData = this.markup.get(className);
+				markUpData.overlaysIds.forEach(overlayId => {
+					const dropElement = dropsElements.filter(d => d.id === overlayId);
+					if (!dropElement.empty()) {
+						if (markUpData.type === MarkUpTypes.symbole) {
+							this.appendLetters(textContainer, dropElement, markUpData.data);
+						} else {
+							const currentClassList = dropElement.attr('class');
+							dropElement.attr('class', currentClassList.concat(' changedDrops ' + className));
+						}
+					}
+				});
+			});
+			this.arrangeDrops(dropsElements, textContainer);
+
+			setTimeout(() => {
+				if (this.isZooming === false && !this.dispachedSearch) {
+					const [ start, end ] = this.chart.scale().domain();
+					this.store$.dispatch(new SetOverlaysCriteriaAction({ time: { from: start, to: end } }));
+					this.dispachedSearch = true;
+				}
+			}, this.configuration.searchDebounceTime)
+		}
+	}
+
+	initEventDropsSequence(drops: IOverlayDrop[]): void {
 		this.initEventDrop(drops);
 		this.drawMarkup();
 	}
 
-	removeOldEventDrops() {
+	removeOldEventDrops(): void {
 		if (this.element) {
-			const exsitEventDrops = this.element.select('.event-drop-chart');
-			if (exsitEventDrops) {
-				exsitEventDrops.remove();
+			const existEventDrops = this.element.select('.event-drop-chart');
+			if (existEventDrops) {
+				existEventDrops.remove();
 			}
 		}
 	}
 
-	isTimeChanged(timeRange) {
+	isTimeChanged(timeRange): Boolean {
 		const currentStartDate = this.configuration.range.start;
 		const currentEndDate = this.configuration.range.end;
 		const newStartDate = timeRange.start;
-		const newSendDate = timeRange.end;
+		const newEndDate = timeRange.end;
 
-		return (newStartDate.getTime() !== currentStartDate.getTime()) || (newSendDate.getTime() !== currentEndDate.getTime());
+		return (newStartDate.getTime() !== currentStartDate.getTime()) || (newEndDate.getTime() !== currentEndDate.getTime());
 	}
 
-	checkDifferenceInTimeRange([newMarkUp, drops]: [ExtendMap<MarkUpClass, IMarkUpData>, any]) {
+	checkDifferenceInTimeRange([newMarkUp, drops]: [ExtendMap<MarkUpClass, IMarkUpData>, IOverlayDrop[]]): void {
 		const newActive = newMarkUp.get(MarkUpClass.active).overlaysIds;
 		if (!newActive || !newActive.length) {
 			return;
 		}
-		const newActiveId = newActive[0];
+		const [ newActiveId ] = newActive;
 		const isExist = Boolean(this.dropsIdMap.get(newActiveId));
 		if (isExist && (!this.oldActiveId || this.oldActiveId !== newActiveId)) {
 			const timeLineRange = this.overlaysService.getTimeStateByOverlay(this.dropsIdMap.get(newActiveId), this.configuration.range);
@@ -272,41 +295,17 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		this.oldActiveId = newActiveId;
 	}
 
-	initEventDrop(drops): void {
+	initEventDrop(drops: IOverlayDrop[]): void {
 		this.chart = eventDrops(this.configuration);
 		this.element = d3.select(this.context.nativeElement);
 		this.element
 			.data([[{ data: drops }]])
 			.call(this.chart);
 
-		this.element.clone().select('.drops').append('g').classed('textContainer', true);
+		this.element.clone().select('.drops').append('g').classed('textContainer', false);
 	}
 
-	drawMarkup() {
-		if (this.markup && this.element) {
-			const dropsElements = this.element.selectAll('.drop');
-			const textContainer = this.element.select('.textContainer');
-			this.clearMarkUp(dropsElements);
-			this.markup.keys.forEach(className => {
-				const markUpData = this.markup.get(className);
-				markUpData.overlaysIds.forEach(overlayId => {
-					const dropElement = dropsElements.filter( (d) => d.id === overlayId);
-					if (!dropElement.empty()) {
-						if (markUpData.type === MarkUpTypes.symbole) {
-							this.appendLetters(textContainer, dropElement, markUpData.data);
-						} else {
-							const currentClassList = dropElement.attr('class');
-							dropElement.attr('class', currentClassList.concat(' changedDrops ' + className));
-						}
-					}
-
-				});
-			});
-			this.arrangeDrops(dropsElements, textContainer);
-		}
-	}
-
-	appendLetters(textContainer, dropElement, symbol) {
+	appendLetters(textContainer, dropElement, symbol): void {
 		textContainer.append('text')
 			.classed('letters', true)
 			.attr('x', dropElement.attr('cx'))
@@ -318,35 +317,38 @@ export class TimelineComponent implements OnInit, OnDestroy {
 			.text(symbol);
 	}
 
-	clearMarkUp(dropsElements) {
+	clearMarkUp(dropsElements): void {
 		dropsElements.filter('.changedDrops').attr('class', 'drop').style('filter', null);
 		this.element.selectAll('.letters').remove();
 	}
 
-	arrangeDrops(drops, textContainer) {
-		const changeDrops = drops.filter('.changedDrops');
-		if (!changeDrops.empty()) {
-			this.moveToFront(changeDrops);
-			const activeDrops = changeDrops.filter('.' + MarkUpClass.active);
-			if (!activeDrops.empty()) {
-				this.moveToFront(activeDrops);
-			}
-			const favoriteDrops = changeDrops.filter('.' + MarkUpClass.favorites);
-			if (!favoriteDrops.empty()) {
-				this.moveToFront(favoriteDrops);
-				favoriteDrops.style('filter', 'url(#highlight)');
-			}
+	arrangeDrops(drops, textContainer): void {
+		const changedDrops = drops.filter('.changedDrops');
+		if (!changedDrops.empty()) {
+			this.moveToFront(changedDrops);
+
+			this.markUpDrops(changedDrops, MarkUpClass.active);
+			this.markUpDrops(changedDrops, MarkUpClass.favorites);
 		}
 		this.moveToFront(textContainer);
 	}
 
-	moveToFront(element) {
+	markUpDrops(changedDrops, markUpClass: MarkUpClass): void {
+		const drops = changedDrops.filter('.' + markUpClass);
+
+		if (!drops.empty()) {
+			this.moveToFront(drops);
+
+			if (markUpClass === MarkUpClass.favorites) {
+				drops.style('filter', 'url(#highlight)');
+			}
+		}
+	}
+
+	moveToFront(element): void {
 		element.each(function () {
 			this.parentNode.appendChild(this);
 		});
 	}
 
 }
-
-
-

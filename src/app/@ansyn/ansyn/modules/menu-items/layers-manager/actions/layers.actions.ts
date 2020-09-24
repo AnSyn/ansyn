@@ -120,14 +120,10 @@ export class AddLayerOnBackendSuccessAction implements Action {
 	}
 }
 
-export class UpdateLayer implements Action, ILogMessage {
+export class UpdateLayer implements Action {
 	type = LayersActionTypes.UPDATE_LAYER;
 
 	constructor(public payload: ILayer) {
-	}
-
-	logMessage() {
-		return `Updating ${this.payload.type} layer ${this.payload.name}`
 	}
 }
 

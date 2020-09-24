@@ -10,7 +10,6 @@ import { mockAnnotationsColorComponent } from '../annotations-color/annotations-
 import { AttributesService } from '../../services/attributes.service';
 import { of } from 'rxjs';
 import { OL_PLUGINS_CONFIG } from '../../../../plugins.config';
-import { LoggerService } from '../../../../../../ansyn/modules/core/services/logger.service';
 import { MockPipe } from '../../../../../../ansyn/modules/core/test/mock-pipe';
 
 describe('AnnotationsContextMenuButtonsComponent', () => {
@@ -64,10 +63,6 @@ describe('AnnotationsContextMenuButtonsComponent', () => {
 						},
 						{
 							provide: TranslateService,
-							useValue: {}
-						},
-						{
-							provide: LoggerService,
 							useValue: {}
 						}
 					],

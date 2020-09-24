@@ -38,7 +38,6 @@ import { IOLPluginsConfig, OL_PLUGINS_CONFIG } from '../plugins.config';
 import { AnnotationMode, IAnnotationBoundingRect, IDrawEndEvent } from './annotations.model';
 import { DragPixelsInteraction } from './dragPixelsInteraction';
 import { TranslateService } from '@ngx-translate/core';
-import { LoggerService } from '../../../ansyn/modules/core/services/logger.service';
 
 export const annotationsClassNameForExport = 'annotations-layer';
 export interface ILabelTranslateMode {
@@ -55,7 +54,7 @@ export interface IEditAnnotationMode {
 // @dynamic
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [OpenLayersProjectionService, OL_PLUGINS_CONFIG, TranslateService, LoggerService],
+	deps: [OpenLayersProjectionService, OL_PLUGINS_CONFIG, TranslateService],
 	isHideable: true,
 	layerClassName: annotationsClassNameForExport
 })
@@ -134,8 +133,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 	constructor(
 		protected projectionService: OpenLayersProjectionService,
 		@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig,
-		protected translator: TranslateService,
-		protected loggerService: LoggerService
+		protected translator: TranslateService
 	) {
 		super(null, {
 			initial: {
@@ -591,7 +589,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 
 		if (!oldFeature || featureId !== oldFeature.getId()) { // start editing
-			this.loggerService.info(`Enter annotation move label mode`, 'Annotations', 'START_ANNOTATION_MOVE_LABEL');
+			this.communicator.logMessages.emit(`Enter annotation move label mode`);
 			this.clearAnnotationEditMode();
 			const originalFeature: olFeature = this.source.getFeatureById(featureId);
 			this.updateFeature(originalFeature.getId(), { labelTranslateOn: true });
@@ -604,7 +602,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			};
 			this.source.addFeature(labelFeature);
 		} else {
-			this.loggerService.info(`Exit annotation move label mode`, 'Annotations', 'STOP_ANNOTATION_MOVE_LABEL');
+			this.communicator.logMessages.emit(`Exit annotation move label mode`);
 			this.updateFeature(featureId, { labelTranslateOn: false });
 			this.source.removeFeature(this.labelTranslate.labelFeature);
 		}

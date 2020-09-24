@@ -92,7 +92,8 @@ export const MapActionTypes = {
 	REPLACE_MAP_MAIN_LAYER: '[Maps] replace Main Layer',
 	REPLACE_MAP_MAIN_LAYER_SUCCESS: '[Maps] replace Main Layer success',
 	REPLACE_MAP_MAIN_LAYER_FAILED: '[Maps] replace Main Layer failed',
-	START_DRAGGING_MAP_BETWEEN_SCREEN_AREAS: '[Maps] START_DRAGGING_MAP_BETWEEN_SCREEN_AREAS'
+	START_DRAGGING_MAP_BETWEEN_SCREEN_AREAS: '[Maps] START_DRAGGING_MAP_BETWEEN_SCREEN_AREAS',
+	LOG_MESSAGE_FROM_IMAGERY: 'LOG_MESSAGE_FROM_IMAGERY'
 };
 
 export interface IContextMenuShowPayload {
@@ -501,4 +502,14 @@ export class SetOverlaysFootprintActive implements Action {
 
 	constructor(public payload: {mapId: string, show: boolean}) {}
 
+}
+
+export class LogMessageFromImagery implements Action, ILogMessage {
+	readonly type = MapActionTypes.LOG_MESSAGE_FROM_IMAGERY;
+
+	constructor(public payload: string) {}
+
+	logMessage() {
+		return this.payload;
+	}
 }

@@ -49,6 +49,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	private _activeMap: BaseImageryMap;
 	private _virtualNorth = 0;
 	public mapInstanceChanged: EventEmitter<IMapInstanceChanged> = new EventEmitter<IMapInstanceChanged>();
+	public logMessages: EventEmitter<string> = new EventEmitter<string>();
 
 	constructor(protected injector: Injector,
 				@Inject(IMAGERY_MAPS) protected imageryMaps: ImageryMaps,

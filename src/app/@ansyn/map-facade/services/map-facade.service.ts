@@ -8,6 +8,7 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import {
+	LogMessageFromImagery,
 	MapInstanceChangedAction,
 	PositionChangedAction,
 } from '../actions/map.actions';
@@ -65,7 +66,10 @@ export class MapFacadeService {
 				id: communicator.id,
 				position
 			})),
-			communicator.mapInstanceChanged.subscribe(this.mapInstanceChanged.bind(this))
+			communicator.mapInstanceChanged.subscribe(this.mapInstanceChanged.bind(this)),
+			communicator.logMessages.subscribe((message) => {
+				this.store.dispatch(new LogMessageFromImagery(message))
+			})
 		);
 		this.subscribers[id] = communicatorSubscribers;
 	}

@@ -4,14 +4,13 @@ import { EventEmitter } from '@angular/core';
 import { Actions } from '@ngrx/effects';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { MockComponent } from '../../../../../../ansyn/modules/core/test/mock-component';
-import { LoggerService } from '../../../../../../ansyn/modules/core/services/logger.service';
 
 describe('AnnotationContextMenuComponent', () => {
 	let component: AnnotationContextMenuComponent;
 	let fixture: ComponentFixture<AnnotationContextMenuComponent>;
 	const mockAnnotationsContextMenuButtonsComponent = MockComponent({
 		selector: 'ansyn-annotations-context-menu-buttons',
-		inputs: ['annotations', 'featureId', 'selectedTab']
+		inputs: ['annotations', 'featureId', 'selectedTab', 'communicator']
 	});
 
 	beforeEach(() => {
@@ -19,7 +18,6 @@ describe('AnnotationContextMenuComponent', () => {
 			providers: [
 				ImageryCommunicatorService,
 				{ provide: Actions, useValue: new EventEmitter() },
-				{ provide: LoggerService, useValue: {} }
 			],
 			declarations: [
 				AnnotationContextMenuComponent,

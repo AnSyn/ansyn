@@ -2,7 +2,6 @@ import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnI
 import { CommunicatorEntity, ImageryCommunicatorService, IMapInstanceChanged } from '@ansyn/imagery';
 import { filter, take, tap } from 'rxjs/operators';
 import { AnnotationsVisualizer } from '../../../annotations.visualizer';
-import { LoggerService } from '../../../../../../ansyn/modules/core/services/logger.service';
 
 export enum AnnotationsContextmenuTabs {
 	Colors,
@@ -36,8 +35,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 
 	constructor(
 		public host: ElementRef,
-		protected communicators: ImageryCommunicatorService,
-		protected loggerService: LoggerService
+		protected communicators: ImageryCommunicatorService
 	) {
 	}
 
@@ -88,8 +86,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 			}),
 			this.annotations.events.onSelect.subscribe((selected: string[]) => {
 				if (selected.length > 0) {
-					this.loggerService.info(`Opening annotations context menu`,
-						'Annotations', 'TOGGLE_ANNOTATIONS_CONTEXT_MENU');
+					this.communicator.logMessages.emit(`Opening annotations context menu`);
 				}
 				this.selection = selected;
 				this.selectedTab = this.selection.reduce((prev, id) => ({

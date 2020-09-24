@@ -24,16 +24,14 @@ import { SliderFilterMetadata } from '../../modules/filters/models/metadata/slid
 import { GenericTypeResolverService } from '../../modules/core/services/generic-type-resolver.service';
 import {
 	LoadOverlaysAction, LoadOverlaysSuccessAction,
-	SetDropsAction,
 	SetFilteredOverlaysAction,
-	SetOverlaysStatusMessageAction, SetTotalOverlaysAction
+	SetOverlaysStatusMessageAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	OverlayReducer,
 	overlaysFeatureKey,
 	overlaysStatusMessages
 } from '../../modules/overlays/reducers/overlays.reducer';
-import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { imageryStatusFeatureKey, ImageryStatusReducer } from '@ansyn/map-facade';
 import { FilterType } from '../../modules/filters/models/filter-type';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
@@ -83,15 +81,6 @@ describe('Filters app effects', () => {
 		filtersAppEffects = _filtersAppEffects;
 		store = _store;
 	}));
-
-	it('updateOverlayDrops$ effect', () => {
-		spyOn(OverlaysService, 'parseOverlayDataForDisplay').and.callFake(() => []);
-		const expectedResults = cold('(bc)', {
-			b: new SetDropsAction([]),
-			c: new SetTotalOverlaysAction({ number: 0 })
-		});
-		expect(filtersAppEffects.updateOverlayDrops$).toBeObservable(expectedResults);
-	});
 
 	it('initializeFilters$ effect', () => {
 		actions = hot('--a--', { a: new LoadOverlaysAction(<any>{}) });

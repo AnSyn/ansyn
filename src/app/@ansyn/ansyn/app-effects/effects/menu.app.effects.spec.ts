@@ -19,6 +19,7 @@ import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/ca
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
 import { StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
 import { getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
+import { SetStateAction } from '../../../../app/router/actions/router.actions';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
@@ -73,13 +74,14 @@ describe('MenuAppEffects', () => {
 		actions = hot('--a--', {
 			a: new ResetAppAction()
 		});
-		const expectedResults = cold('--(bdefgh)--', {
-			b: new LoadDefaultCaseAction(),
-			d: new StartMouseShadow({fromUser: true}),
-			e: new AnnotationSetProperties(getInitialAnnotationsFeatureStyle()),
-			f: new ToggleIsPinnedAction(false),
-			g: new UnSelectMenuItemAction(),
-			h: new ToggleFooter(false)
+		const expectedResults = cold('--(bdefghi)--', {
+			b: new SetStateAction({linkId: undefined}),
+			d: new LoadDefaultCaseAction(),
+			e: new StartMouseShadow({fromUser: true}),
+			f: new AnnotationSetProperties(getInitialAnnotationsFeatureStyle()),
+			g: new ToggleIsPinnedAction(false),
+			h: new UnSelectMenuItemAction(),
+			i: new ToggleFooter(false)
 		});
 		expect(menuAppEffects.onResetApp$).toBeObservable(expectedResults);
 	});

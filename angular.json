@@ -47,10 +47,15 @@
               "auto-subscriptions",
               "pixelworks/lib/index",
               "rbush",
+              "core-js",
+              "@babel/runtime",
+              "raf",
               "rxjs/index",
               "lodash-decorators",
               "rison",
               "file-saver",
+              "jspdf",
+              "canvg",
               "pbf"
             ]
           },

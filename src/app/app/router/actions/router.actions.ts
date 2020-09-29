@@ -17,7 +17,7 @@ export interface ISetStatePayload {
 export class SetStateAction implements Action {
 	type = RouterActionTypes.SET_STATE;
 
-	constructor(public payload: ISetStatePayload) {
+	constructor(public payload: Partial<ISetStatePayload>) {
 	}
 }
 

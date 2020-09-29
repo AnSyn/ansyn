@@ -134,7 +134,7 @@ describe('Filters app effects', () => {
 	describe('updateOverlayFilters$ effect', () => {
 
 		beforeEach(() => {
-			store.dispatch(new InitializeFiltersAction(new Map()));
+			store.dispatch(new InitializeFiltersSuccessAction(new Map()));
 			store.dispatch(new LoadOverlaysSuccessAction([{ id: '1' }] as any));
 		});
 

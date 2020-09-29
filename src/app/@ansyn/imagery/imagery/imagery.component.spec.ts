@@ -57,7 +57,7 @@ describe('ImageryComponent', () => {
 					}
 				},
 				{ provide: IMAGERY_MAPS, useValue: {} },
-				ImageryCommunicatorService,
+				ImageryCommunicatorService
 			]
 		}).compileComponents();
 	}));

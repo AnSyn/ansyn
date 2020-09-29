@@ -17,7 +17,7 @@ describe('AnnotationContextMenuComponent', () => {
 		TestBed.configureTestingModule({
 			providers: [
 				ImageryCommunicatorService,
-				{ provide: Actions, useValue: new EventEmitter() },
+				{ provide: Actions, useValue: new EventEmitter() }
 			],
 			declarations: [
 				AnnotationContextMenuComponent,

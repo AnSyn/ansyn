@@ -7,7 +7,7 @@ import { map, tap, filter } from 'rxjs/operators';
 import {
 	SetMapOrientation,
 	SetOverlaysFootprintActive, SetToastMessageAction,
-	StartDraggingMapBetweenScreenAreas,
+	LogDraggingMapBetweenScreenAreas,
 	ToggleMapLayersAction
 } from '../../actions/map.actions';
 import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../models/entry-components-provider';
@@ -181,7 +181,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	onStartDraggingMap(event) {
-		this.store$.dispatch(new StartDraggingMapBetweenScreenAreas());
+		this.store$.dispatch(new LogDraggingMapBetweenScreenAreas());
 		this.onMove.emit(event);
 	}
 }

@@ -92,8 +92,8 @@ export const MapActionTypes = {
 	REPLACE_MAP_MAIN_LAYER: '[Maps] replace Main Layer',
 	REPLACE_MAP_MAIN_LAYER_SUCCESS: '[Maps] replace Main Layer success',
 	REPLACE_MAP_MAIN_LAYER_FAILED: '[Maps] replace Main Layer failed',
-	START_DRAGGING_MAP_BETWEEN_SCREEN_AREAS: '[Maps] START_DRAGGING_MAP_BETWEEN_SCREEN_AREAS',
-	LOG_MESSAGE_FROM_IMAGERY: 'LOG_MESSAGE_FROM_IMAGERY'
+	LOG_DRAGGING_MAP_BETWEEN_SCREEN_AREAS: '[Maps] LOG_DRAGGING_MAP_BETWEEN_SCREEN_AREAS',
+	LOG_MESSAGE_FROM_IMAGERY: '[Maps] LOG_MESSAGE_FROM_IMAGERY'
 };
 
 export interface IContextMenuShowPayload {
@@ -486,8 +486,8 @@ export class ToggleFooter implements Action, ILogMessage {
 	}
 }
 
-export class StartDraggingMapBetweenScreenAreas implements Action, ILogMessage {
-	type = MapActionTypes.START_DRAGGING_MAP_BETWEEN_SCREEN_AREAS;
+export class LogDraggingMapBetweenScreenAreas implements Action, ILogMessage {
+	type = MapActionTypes.LOG_DRAGGING_MAP_BETWEEN_SCREEN_AREAS;
 
 	constructor(public payload?: any) {
 	}

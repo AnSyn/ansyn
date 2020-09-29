@@ -62,7 +62,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		protected store$: Store<any>,
 		protected imageryCommunicatorService: ImageryCommunicatorService,
 		public geocoderService: GeocoderService,
-		protected translator: TranslateService,
+		protected translator: TranslateService
 	) {
 	}
 

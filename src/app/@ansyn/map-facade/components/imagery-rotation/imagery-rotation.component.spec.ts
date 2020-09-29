@@ -23,9 +23,7 @@ describe('ImageryRotationComponent', () => {
 				EffectsModule.forRoot([]),
 				TranslateModule.forRoot()
 			],
-			providers: [
-				ImageryCommunicatorService,
-			],
+			providers: [ImageryCommunicatorService],
 			declarations: [
 				ImageryRotationComponent
 			]

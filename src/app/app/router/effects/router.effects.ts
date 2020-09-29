@@ -92,7 +92,8 @@ export class RouterEffects {
 		map(() => new NavigateCaseTriggerAction())
 	);
 
-	constructor(protected actions$: Actions, protected store$: Store<any>, protected router: Router, protected casesService: CasesService) {
+	constructor(protected actions$: Actions, protected store$: Store<any>,
+				protected router: Router, protected casesService: CasesService) {
 	}
 
 }

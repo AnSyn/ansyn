@@ -54,7 +54,7 @@ describe('EditCaseComponent', () => {
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
 				{ provide: layersConfig, useValue: {} },
-				{ provide: mapFacadeConfig, useValue: {} },
+				{ provide: mapFacadeConfig, useValue: {} }
 			]
 		}).compileComponents();
 	}));

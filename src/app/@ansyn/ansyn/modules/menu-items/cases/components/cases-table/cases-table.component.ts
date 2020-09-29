@@ -60,7 +60,7 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 	selectedCaseId: string;
 
 	constructor(protected store$: Store<ICasesState>, protected casesEffects: CasesEffects,
-				private router:Router) {
+				private router: Router) {
 		this.casesEffects.onAddCase$.subscribe(this.onCasesAdded.bind(this));
 	}
 
@@ -111,7 +111,7 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 
 	selectCase(caseId: string): void {
 		if (this.router.url.includes('link')) {
-			this.router.navigate([this.router.url.replace('link','case')]);
+			this.router.navigate([this.router.url.replace('link' , 'case')]);
 		}
 		if (this.selectedCaseId !== caseId) {
 			this.store$.dispatch(new LoadCaseAction(caseId));

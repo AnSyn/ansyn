@@ -25,7 +25,10 @@ export enum LayersActionTypes {
 	SET_ACTIVE_ANNOTATION_LAYER = '[Layers] Set active annotation layer',
 	SET_MODAL = '[Layers] Set modal value',
 	SHOW_ALL_LAYERS = '[Layers] Show all layers',
-	LOG_EXPORT_LAYER = 'LOG_EXPORT_LAYER'
+	LOG_EXPORT_LAYER = 'LOG_EXPORT_LAYER',
+	LOG_IMPORT_LAYER = 'LOG_IMPORT_LAYER',
+	LOG_RENAME_LAYER = 'LOG_RENAME_LAYER',
+	LOG_ADD_FEATURE_TO_LAYER = 'LOG_ADD_FEATURE_TO_LAYER'
 }
 
 export type LayersActions =
@@ -242,5 +245,41 @@ export class LogExportLayer implements Action, ILogMessage {
 
 	logMessage() {
 		return `Opening popup to save ${this.payload.layer.type} layer ${this.payload.layer.name} as ${this.payload.format} file`
+	}
+}
+
+export class LogImportLayer implements Action, ILogMessage {
+	type = LayersActionTypes.LOG_IMPORT_LAYER;
+
+	constructor(public payload: { fileName: string }) {
+
+	}
+
+	logMessage() {
+		return `Importing data layer from file ${this.payload.fileName}`
+	}
+}
+
+export class LogRenameLayer implements Action, ILogMessage {
+	type = LayersActionTypes.LOG_RENAME_LAYER;
+
+	constructor(public payload: { layer: ILayer, name: string }) {
+
+	}
+
+	logMessage() {
+		return `Renaming ${this.payload.layer.type} layer ${this.payload.layer.name} to ${this.payload.name}`
+	}
+}
+
+export class LogAddFeatureToLayer implements Action, ILogMessage {
+	type = LayersActionTypes.LOG_ADD_FEATURE_TO_LAYER;
+
+	constructor(public payload: { layerName: string }) {
+
+	}
+
+	logMessage() {
+		return `Adding feature to annotation layer ${this.payload.layerName}`
 	}
 }

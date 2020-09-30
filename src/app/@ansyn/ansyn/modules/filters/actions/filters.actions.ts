@@ -18,7 +18,8 @@ export const FiltersActionTypes = {
 	SET_FILTER_SEARCH: 'SET_FILTER_SEARCH',
 	SET_FILTERS_SEARCH_RESULTS: 'SET_FILTERS_SEARCH_RESULTS',
 	SELECT_ONLY_GEO_REGISTERED: 'SELECT_ONLY_GEO_REGISTERED',
-	LOG_FILTERS: 'LOG_FILTERS'
+	LOG_FILTERS: 'LOG_FILTERS',
+	LOG_OPEN_FILTER_POPUP: 'LOG_OPEN_FILTER_POPUP'
 };
 
 export class InitializeFiltersAction implements Action {
@@ -84,6 +85,17 @@ export class LogFilters implements Action, ILogMessage {
 
 	logMessage() {
 		return this.payload
+	}
+}
+
+export class LogOpenFilterPopup implements Action, ILogMessage {
+	readonly type = FiltersActionTypes.LOG_OPEN_FILTER_POPUP;
+
+	constructor(public payload: { filterName: string }) {
+	}
+
+	logMessage() {
+		return `Filters panel: opening ${this.payload.filterName} popup`
 	}
 }
 

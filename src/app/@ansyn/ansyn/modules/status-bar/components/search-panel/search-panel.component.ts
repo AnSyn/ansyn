@@ -26,8 +26,11 @@ import {
 	isEnterKey,
 	isEscapeKey
 } from '../../../core/utils/keyboardKey';
-import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
-import { LoggerService } from '../../../core/services/logger.service';
+import {
+	LogManualSearchTime,
+	LogSearchPanelPopup,
+	SetOverlaysCriteriaAction
+} from '../../../overlays/actions/overlays.actions';
 import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
 
 const moment = momentNs;
@@ -122,7 +125,6 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	constructor(protected store$: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 				@Inject(MultipleOverlaysSourceConfig) private multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
-				protected loggerService: LoggerService,
 				@Inject(COMPONENT_MODE) public componentMode: boolean,
 				dateTimeAdapter: DateTimeAdapter<any>
 	) {
@@ -161,14 +163,14 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 	}
 
-	toggleExpander(popup: SearchPanelTitle, forceState?: boolean) {
+	toggleExpander(popupName: SearchPanelTitle, forceState?: boolean) {
 		if (this.isDataInputsOk()) {
-			const newState = forceState || !this.popupExpanded.get(popup);
+			const newState = forceState || !this.popupExpanded.get(popupName);
 			if (newState) {
-				this.loggerService.info(`Search panel: opening ${popup} popup`, 'Search panel', 'SEARCH_PANEL_TOGGLE_POPUP');
+				this.store$.dispatch(new LogSearchPanelPopup({ popupName }));
 			}
 			this.popupExpanded.forEach((_, key, map) => {
-				map.set(key, key === popup ? newState : false)
+				map.set(key, key === popupName ? newState : false)
 			});
 		} else {
 			this.store$.dispatch(new SetToastMessageAction({
@@ -218,10 +220,10 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 			}
 		}
 		if (isEnterKey(event)) {
+			this.store$.dispatch(new LogManualSearchTime({ from: this.timePickerInputFrom.nativeElement.textContent, to: this.timePickerInputTo.nativeElement.textContent }));
 			if (!this.setTimeCriteria()) {
 				this.store$.dispatch(new SetToastMessageAction({ toastText: 'Invalid date' }));
 			}
-			this.loggerService.info(`press enter on time picker ${ this.timePickerInputFrom.nativeElement.textContent } - ${ this.timePickerInputTo.nativeElement.textContent }`);
 		}
 		if (isEscapeKey(event)) {
 			this.revertTime();
@@ -305,12 +307,6 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		const { from: oldFrom, to: oldTo } = this.timeSelectionOldTitle;
 		const from = this.timePickerInputFrom.nativeElement.textContent;
 		const to = this.timePickerInputTo.nativeElement.textContent;
-		if (from !== oldFrom) {
-			this.loggerService.info(`change from time: ${ oldFrom } -> ${ from }`);
-		}
-		if (to !== oldTo) {
-			this.loggerService.info(`change to time: ${ oldTo } -> ${ to }`);
-		}
 
 		this.timeSelectionOldTitle.from = from;
 		this.timeSelectionOldTitle.to = to;

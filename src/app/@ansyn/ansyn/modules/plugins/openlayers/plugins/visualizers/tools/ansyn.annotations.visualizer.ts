@@ -35,7 +35,7 @@ import {
 	SetAnnotationMode,
 	ToolsActionsTypes
 } from '../../../../../menu-items/tools/actions/tools.actions';
-import { UpdateLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
+import { LogAddFeatureToLayer, UpdateLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
 import { IOverlaysTranslationData } from '../../../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
 import { selectTranslationData } from '../../../../../overlays/overlay-status/reducers/overlay-status.reducer';
@@ -43,12 +43,11 @@ import { SetOverlayTranslationDataAction } from '../../../../../overlays/overlay
 import { Actions, ofType } from '@ngrx/effects';
 import { GeometryObject } from 'geojson';
 import { SubMenuEnum } from '../../../../../menu-items/tools/models/tools.model';
-import { LoggerService } from '../../../../../core/services/logger.service';
 
 // @dynamic
 @ImageryPlugin({
 	supported: [OpenLayersMap],
-	deps: [Store, Actions, OpenLayersProjectionService, LoggerService, OL_PLUGINS_CONFIG, VisualizersConfig]
+	deps: [Store, Actions, OpenLayersProjectionService, OL_PLUGINS_CONFIG, VisualizersConfig]
 })
 export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	protected isContinuousDrawingEnabled: boolean;
@@ -137,7 +136,6 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	constructor(public store$: Store<any>,
 				protected actions$: Actions,
 				protected projectionService: OpenLayersProjectionService,
-				protected loggerService: LoggerService,
 				@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig,
 				@Inject(VisualizersConfig) config: IVisualizersConfig) {
 		super();
@@ -176,7 +174,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	onDrawEnd$ = () => this.annotationsVisualizer.events.onDrawEnd.pipe(
 		withLatestFrom(this.activeAnnotationLayer$),
 		map(([{ GeoJSON, feature }, activeAnnotationLayer]: [IDrawEndEvent, ILayer]) => {
-			this.loggerService.info(`Adding feature to annotation layer ${activeAnnotationLayer.name}`, 'Annotations', 'ADD_ANNOTATION')
+			this.store$.dispatch(new LogAddFeatureToLayer({ layerName: activeAnnotationLayer.name }));
 			const [geoJsonFeature] = GeoJSON.features;
 			const data = <FeatureCollection<any>>{ ...activeAnnotationLayer.data };
 			data.features.push(geoJsonFeature);

@@ -6,7 +6,7 @@ import {
 	selectShowOnlyFavorites
 } from '../../../filters/reducer/filters.reducer';
 import { Store } from '@ngrx/store';
-import { UpdateFacetsAction } from '../../../filters/actions/filters.actions';
+import { LogOpenFilterPopup, UpdateFacetsAction } from '../../../filters/actions/filters.actions';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
 import { tap, filter, withLatestFrom } from 'rxjs/operators';
 import { ClickOutsideService } from '../../../core/click-outside/click-outside.service';
@@ -22,7 +22,6 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 import { IFilterStatusBar, IStatusBarConfig } from '../../models/statusBar-config.model';
 import { filtersConfig } from '../../../filters/services/filters.service';
 import { IFiltersConfig } from '../../../filters/models/filters-config';
-import { LoggerService } from '../../../core/services/logger.service';
 
 @Component({
 	selector: 'ansyn-filters-panel',
@@ -33,8 +32,8 @@ import { LoggerService } from '../../../core/services/logger.service';
 @AutoSubscriptions()
 export class FiltersPanelComponent implements OnInit, OnDestroy {
 	MORE_FILTERS = 'MORE_FILTERS';
-	expand: {[filter: string]: boolean} = {};
-	filtersMap: {[filter: string]: {active: boolean, title: string}} = {};
+	expand: {[filterName: string]: boolean} = {};
+	filtersMap: {[filterName: string]: {active: boolean, title: string}} = {};
 	onlyFavorite: boolean;
 	disableOnlyFavoritesButton: boolean;
 
@@ -86,8 +85,7 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 		@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 		@Inject(filtersConfig) public filtersConfig: IFiltersConfig,
 		public store: Store<IFiltersState>,
-		protected clickOutside: ClickOutsideService,
-		protected loggerService: LoggerService
+		protected clickOutside: ClickOutsideService
 	) {
 		if (this.filters.length > this.config.maximumOpen) {
 			this.expand[this.filters[0].modelName] = false;
@@ -116,15 +114,15 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 		return this.filtersMap[filter] && this.filtersMap[filter].active || false;
 	}
 
-	expandFilter(filter?) {
-		const newState = !this.expand[filter];
-		if (filter && newState) {
-			this.loggerService.info(`Filters panel: opening ${filter} popup`, 'Search panel', 'SEARCH_PANEL_TOGGLE_POPUP');
+	expandFilter(filterName?) {
+		const newState = !this.expand[filterName];
+		if (filterName && newState) {
+			this.store.dispatch(new LogOpenFilterPopup({ filterName }));
 		}
 		this.filters.forEach( filter => this.expand[filter.modelName] = false);
 		this.expand[this.MORE_FILTERS] = false;
-		if (filter) {
-			this.expand[filter] = newState;
+		if (filterName) {
+			this.expand[filterName] = newState;
 		}
 	}
 

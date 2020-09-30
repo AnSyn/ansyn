@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { select, Store } from '@ngrx/store';
 import { DataLayersService } from '../../services/data-layers.service';
-import { AddLayer } from '../../actions/layers.actions';
+import { AddLayer, LogImportLayer } from '../../actions/layers.actions';
 import { fromEvent, Observable } from 'rxjs';
 import { UUID } from 'angular2-uuid';
 import { selectActiveMapId, SetMapPositionByRectAction, SetToastMessageAction } from '@ansyn/map-facade';
@@ -13,7 +13,6 @@ import GeoJSONFormat from 'ol/format/GeoJSON';
 import * as shapeFile from 'shapefile';
 import { getErrorMessageFromException } from '../../../../core/utils/logs/timer-logs';
 import { bboxFromGeoJson, polygonFromBBOX, validateFeatureProperties } from '@ansyn/imagery';
-import { LoggerService } from '../../../../core/services/logger.service';
 
 @Component({
 	selector: 'ansyn-import-layer',
@@ -86,15 +85,13 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private store: Store<any>,
-		private dataLayersService: DataLayersService,
-		protected loggerService: LoggerService
+		private dataLayersService: DataLayersService
 		) {
 	}
 
 	importLayer(files: FileList) {
 		this.file = files.item(0);
-		this.loggerService.info(`Trying to import data layer from file ${this.file.name}`, 'Layers', 'IMPORT_LAYER');
-		// Todo: by action + effect + service, instead of in component
+		this.store.dispatch(new LogImportLayer({ fileName: this.file.name }));
 		this.fileType = this.file.name.slice(this.file.name.lastIndexOf('.') + 1);
 		if (this.fileType.toLocaleLowerCase() === 'shp') {
 			this.reader.readAsArrayBuffer(this.file);

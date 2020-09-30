@@ -12,13 +12,12 @@ import {
 } from '../../../../overlays/reducers/overlays.reducer';
 import { take, tap } from 'rxjs/operators';
 import {
-	DisplayOverlayFromStoreAction,
+	DisplayOverlayFromStoreAction, LogSortResultsTable,
 	SetMarkUp
 } from '../../../../overlays/actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
 import { TranslateService } from '@ngx-translate/core';
-import { LoggerService } from '../../../../core/services/logger.service';
 
 interface ITableHeader {
 	headerName: string;
@@ -119,8 +118,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 
 	constructor(
 		protected store$: Store<IOverlaysState>,
-		protected translateService: TranslateService,
-		protected loggerService: LoggerService
+		protected translateService: TranslateService
 	) {
 	}
 
@@ -177,8 +175,9 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	sortOverlays(header: ITableHeader): void {
-		this.loggerService.info(`Sorting results table by ${header.headerName} ${header.isDescending ? 'ascending' : 'descending'}`, 'Results Table', 'SORT_RESULTS_TABLE');
-		let { headerData, isDescending, sortFn } = header;
+		// this.loggerService.info(`Sorting results table by ${header.headerName} ${header.isDescending ? 'ascending' : 'descending'}`, 'Results Table', 'SORT_RESULTS_TABLE');
+		const { headerData, isDescending, sortFn, headerName } = header;
+		this.store$.dispatch(new LogSortResultsTable({ byHeader: headerName, isDescending }));
 		this.sortedBy = headerData;
 		this.overlays.sort(function (a, b) {
 			const dataA = a[headerData];

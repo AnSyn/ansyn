@@ -45,6 +45,10 @@ export const OverlaysActionTypes = {
 	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT',
 	SET_MISC_OVERLAYS: 'SET_MISC_OVERLAYS',
 	SET_MISC_OVERLAY: 'SET_MISC_OVERLAY',
+	LOG_SORT_RESULTS_TABLE: 'LOG_SORT_RESULTS_TABLE',
+	LOG_SEARCH_PANEL_POPUP: 'LOG_SEARCH_PANEL_POPUP',
+	LOG_MANUAL_SEARCH_TIME: 'LOG_MANUAL_SEARCH_TIME',
+	LOG_SELECT_SEARCH_TIME_PRESET: 'LOG_SELECT_SEARCH_TIME_PRESET'
 };
 
 export class SelectOverlayAction implements Action {
@@ -291,6 +295,50 @@ export class SetMiscOverlay implements Action {
 	type: string = OverlaysActionTypes.SET_MISC_OVERLAY;
 
 	constructor(public payload: { key: string, overlay: IOverlay }) {
+	}
+}
+
+export class LogSortResultsTable implements Action, ILogMessage {
+	type: string = OverlaysActionTypes.LOG_SORT_RESULTS_TABLE;
+
+	constructor(public payload: { byHeader: string, isDescending: boolean }) {
+	}
+
+	logMessage() {
+		return `Sorting results table by ${this.payload.byHeader} ${this.payload.isDescending ? 'ascending' : 'descending'}`
+	}
+}
+
+export class LogSearchPanelPopup implements Action, ILogMessage {
+	type: string = OverlaysActionTypes.LOG_SEARCH_PANEL_POPUP;
+
+	constructor(public payload: { popupName: string }) {
+	}
+
+	logMessage() {
+		return `Search panel: opening ${this.payload.popupName} popup`
+	}
+}
+
+export class LogManualSearchTime implements Action, ILogMessage {
+	type: string = OverlaysActionTypes.LOG_MANUAL_SEARCH_TIME;
+
+	constructor(public payload: { from: string, to: string }) {
+	}
+
+	logMessage() {
+		return `User confirmed manual time range: ${ this.payload.from } - ${ this.payload.to }`
+	}
+}
+
+export class LogSelectSearchTimePreset implements Action, ILogMessage {
+	type: string = OverlaysActionTypes.LOG_SELECT_SEARCH_TIME_PRESET;
+
+	constructor(public payload: { presetTitle: string }) {
+	}
+
+	logMessage() {
+		return `User selected search time preset: ${this.payload.presetTitle}`
 	}
 }
 

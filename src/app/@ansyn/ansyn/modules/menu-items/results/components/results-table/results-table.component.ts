@@ -175,7 +175,6 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	sortOverlays(header: ITableHeader): void {
-		// this.loggerService.info(`Sorting results table by ${header.headerName} ${header.isDescending ? 'ascending' : 'descending'}`, 'Results Table', 'SORT_RESULTS_TABLE');
 		const { headerData, isDescending, sortFn, headerName } = header;
 		this.store$.dispatch(new LogSortResultsTable({ byHeader: headerName, isDescending }));
 		this.sortedBy = headerData;

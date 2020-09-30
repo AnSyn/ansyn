@@ -2,7 +2,7 @@ import { BaseImageryPlugin, ImageryPlugin, IVisualizerEntity, IVisualizerStyle, 
 import { uniq } from 'lodash';
 import { select, Store } from '@ngrx/store';
 import { selectActiveMapId, selectOverlayByMapId } from '@ansyn/map-facade';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, merge, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
 import { distinctUntilChanged, map, mergeMap, take, tap, withLatestFrom, filter, skip, switchMapTo } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
@@ -33,7 +33,7 @@ import {
 	AnnotationRemoveFeature,
 	AnnotationUpdateFeature,
 	SetAnnotationMode,
-	ToolsActionsTypes
+	ToolsActionsTypes, UpdateMeasureDataOptionsAction
 } from '../../../../../menu-items/tools/actions/tools.actions';
 import { LogAddFeatureToLayer, UpdateLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
 import { IOverlaysTranslationData } from '../../../../../menu-items/cases/models/case.model';
@@ -259,6 +259,20 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 					overlayId: this.overlay.id, offset
 				}));
 			}
+		})
+	);
+
+	@AutoSubscription
+	onStartLabelOrAnnotationEditDisableMeasureTranslate$ = () => merge(
+		this.annotationsVisualizer.events.onAnnotationEditStart,
+		this.annotationsVisualizer.events.onLabelTranslateStart).pipe(
+		tap((event) => {
+			this.store$.dispatch(new UpdateMeasureDataOptionsAction({
+				mapId: this.mapId,
+				options: {
+					forceDisableTranslate: event !== undefined
+				}
+			}))
 		})
 	);
 

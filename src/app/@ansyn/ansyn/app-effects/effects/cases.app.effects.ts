@@ -87,11 +87,9 @@ export class CasesAppEffects {
 		ofType<SelectDilutedCaseAction>(CasesActionTypes.SELECT_DILUTED_CASE),
 		map(({ payload }: SelectDilutedCaseAction) => payload),
 		mergeMap((caseValue: IDilutedCase) => {
-			const maps = caseValue.state.maps.data.filter(mapData => Boolean(Boolean(mapData.data.overlay)));
+			const maps = caseValue.state.maps.data.filter(mapData => Boolean(mapData.data.overlay));
 
-			const displayOverlayActions = [];
-			maps.forEach(map => displayOverlayActions.push(new DisplayOverlayAction({ overlay: map.data.overlay, mapId: map.id })));
-
+			const displayOverlayActions = maps.map(map => new DisplayOverlayAction({ overlay: map.data.overlay, mapId: map.id }));
 			return displayOverlayActions;
 		})
 	);
@@ -148,20 +146,20 @@ export class CasesAppEffects {
 			})
 		);
 
-	@Effect({dispatch: false})
-	onLoadDefaultCase$ = this.actions$.pipe(
-		ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
-		withLatestFrom(this.store$.select(selectMapsIds)),
-		filter(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => !action.payload.context && Boolean(mapId)),
-		mergeMap(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => {
-			const position = this.caseConfig.defaultCase.state.maps.data[0].data.position;
-			const communicator = this.imageryCommunicatorService.provide(mapId);
-			const mapType = communicator.mapSettings.worldView.mapType;
-			return this.getProvidersMapsService.getDefaultProviderByType(mapType).pipe(
-				tap( (source) =>	communicator.loadInitialMapSource(position, source))
-			)
-		})
-	);
+		@Effect({dispatch: false})
+		onLoadDefaultCase$ = this.actions$.pipe(
+			ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
+			withLatestFrom(this.store$.select(selectMapsIds)),
+			filter(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => !action.payload.context && Boolean(mapId)),
+			mergeMap(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => {
+				const position = this.caseConfig.defaultCase.state.maps.data[0].data.position;
+				const communicator = this.imageryCommunicatorService.provide(mapId);
+				const mapType = communicator.mapSettings.worldView.mapType;
+				return this.getProvidersMapsService.getDefaultProviderByType(mapType).pipe(
+					tap( (source) =>	communicator.loadInitialMapSource(position, source))
+				)
+			})
+		);
 
 
 	constructor(protected actions$: Actions,

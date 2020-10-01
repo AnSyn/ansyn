@@ -108,13 +108,10 @@ export class SelectCaseAppEffects {
 			newMap.data.overlaysFootprintActive = (newMap.data as any).overlayDisplayMode === 'Polygon';
 			delete (newMap.data as any).overlayDisplayMode;
 		}
-		if (newMap.data.overlay) {
-			newMap.data.overlay = this.parseOverlay(newMap.data.overlay);
-		}
 		return newMap;
 	}
 
 	parseOverlay(overlay: IOverlay): IOverlay {
-		return isFullOverlay(overlay) ? { ...overlay, date: new Date(overlay.date) } : overlay;
+		return isFullOverlay(overlay)? overlay : { ...overlay, date: new Date(overlay.date) };
 	}
 }

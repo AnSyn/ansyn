@@ -1,8 +1,6 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { OverlaysConfig, OverlaysService } from './overlays.service';
 import { IOverlayDropSources, OverlayReducer, overlaysFeatureKey } from '../reducers/overlays.reducer';
-// import { Response, ResponseOptions, XHRBackend } from '@angular/http';
-// import { MockBackend } from '@angular/http/testing';
 import { EMPTY, Observable, Observer, of } from 'rxjs';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';

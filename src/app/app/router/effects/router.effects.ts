@@ -64,11 +64,11 @@ export class RouterEffects {
 		withLatestFrom(this.store$.select(routerStateSelector)),
 		filter(([action, router]: [(SelectCaseAction | SaveCaseAsSuccessAction), IRouterState]) => Boolean(router)),
 		filter(([action, router]: [(SelectCaseAction | SaveCaseAsSuccessAction), IRouterState]) => action.payload.id !== this.casesService.defaultCase.id && action.payload.id !== router.caseId),
-		map(([action, router]: [SelectCaseAction | SaveCaseAsSuccessAction, IRouterState]) =>{
-			let url: string;
-			if(action.payload.schema)
-				return new NavigateCaseTriggerAction(this.casesService.generateLinkById(action.payload.id,'link'))
-			return new NavigateCaseTriggerAction(this.casesService.generateLinkById(action.payload.id,'case'));
+		map(([action, router]: [SelectCaseAction | SaveCaseAsSuccessAction, IRouterState]) => {
+			if (action.payload.schema) {
+				return new NavigateCaseTriggerAction(this.casesService.generateLinkById(action.payload.id, 'link'));
+			}
+			return new NavigateCaseTriggerAction(this.casesService.generateLinkById(action.payload.id, 'case'));
 		}
 	));
 

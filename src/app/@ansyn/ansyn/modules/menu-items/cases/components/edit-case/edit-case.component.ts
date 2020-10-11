@@ -100,7 +100,7 @@ export class EditCaseComponent implements OnInit {
 				favoriteOverlays: [],
 				overlaysManualProcessArgs: {}
 			},
-			schema:'case'
+			schema: 'case'
 		};
 	}
 

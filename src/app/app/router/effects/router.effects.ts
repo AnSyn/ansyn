@@ -66,9 +66,9 @@ export class RouterEffects {
 		filter(([action, router]: [(SelectCaseAction | SaveCaseAsSuccessAction), IRouterState]) => action.payload.id !== this.casesService.defaultCase.id && action.payload.id !== router.caseId),
 		map(([action, router]: [SelectCaseAction | SaveCaseAsSuccessAction, IRouterState]) => {
 			if (action.payload.schema === 'link') {
-				return new NavigateCaseTriggerAction('/link/' + action.payload.id);
+				return new NavigateCaseTriggerAction(this.casesService.generatePartialLinkById(action.payload.id,'link'));
 			}
-			return new NavigateCaseTriggerAction('/case/' + action.payload.id);
+			return new NavigateCaseTriggerAction(this.casesService.generatePartialLinkById(action.payload.id,'case'));
 		}
 	));
 

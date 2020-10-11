@@ -124,13 +124,14 @@ describe('SelectCaseAppEffects', () => {
 				lastModified: new Date(),
 				creationTime: new Date(),
 				autoSave: false,
-				state
+				state,
+				schema: 'case'
 			};
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
 
 			const expectedResult = cold('--(abcdefghijklmnpqr)--', {
-				
+
 			a: new SetMapsDataActionStore({ mapsList: maps.data }),
 			b: new SetActiveMapId(state.maps.activeMapId),
 			c: new SetLayoutAction(<any>maps.layout),

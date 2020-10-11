@@ -67,10 +67,8 @@ export class RouterEffects {
 		map(([action, router]: [SelectCaseAction | SaveCaseAsSuccessAction, IRouterState]) =>{
 			let url: string;
 			if(action.payload.schema)
-				url = this.casesService.generateLinkById(action.payload.id,'link')
-			else
-				url =  this.casesService.generateLinkById(action.payload.id,'case')
-			return new NavigateCaseTriggerAction(url);
+				return new NavigateCaseTriggerAction(this.casesService.generateLinkById(action.payload.id,'link'))
+			return new NavigateCaseTriggerAction(this.casesService.generateLinkById(action.payload.id,'case'));
 		}
 	));
 

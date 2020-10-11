@@ -276,7 +276,8 @@ describe('CasesAppEffects', () => {
 					]
 				},
 				overlaysManualProcessArgs: {}
-			} as any
+			}as any,
+			schema: 'case'
 		};
 
 		it('loadCase$ should dispatch LoadDefaultCaseIfNoActiveCaseAction and SetToastMessageAction when there is a loading error', () => {

@@ -172,7 +172,8 @@ describe('MapAppEffects', () => {
 				],
 				activeMapId: 'imagery1'
 			}
-		} as any
+		} as any,
+		schema: 'case'
 	}
 	];
 

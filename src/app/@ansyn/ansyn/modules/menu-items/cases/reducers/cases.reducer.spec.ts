@@ -26,7 +26,8 @@ describe('CasesReducer', () => {
 			region: {},
 			overlaysManualProcessArgs: {},
 			overlaysTranslationData: {}
-		}
+		},
+		schema: 'case'
 	};
 
 	it('ADD_CASE action should add new case to state', () => {

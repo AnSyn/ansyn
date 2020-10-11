@@ -12,6 +12,9 @@ import { ILayerState } from '../../../reducers/layers.reducer';
 export class DeleteLayerComponent {
 	@Input() layer: ILayer;
 
+	constructor(protected store: Store<ILayerState>) {
+	}
+
 	removeLayer() {
 		this.store.dispatch(new RemoveLayer(this.layer.id));
 		this.closeModal();
@@ -19,9 +22,6 @@ export class DeleteLayerComponent {
 
 	closeModal() {
 		this.store.dispatch(new CloseLayersModal());
-	}
-
-	constructor(protected store: Store<ILayerState>) {
 	}
 
 }

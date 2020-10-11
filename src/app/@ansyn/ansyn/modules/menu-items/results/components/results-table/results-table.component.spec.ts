@@ -54,13 +54,13 @@ describe('ResultsTableComponent', () => {
 	});
 
 	it('onMouseOver should dispatch SetMarkUp', () => {
-		const $event = jasmine.createSpyObj({ stopPropagation: () => null });
+		const $event = { currentTarget: { id: '234' } };
 		const id = '1';
 		component.onMouseOver($event, id);
 		expect(store.dispatch).toHaveBeenCalledWith(new SetMarkUp({
 			classToSet: MarkUpClass.hover,
 			dataToSet: { overlaysIds: [id] },
-			customOverviewElement: $event.currentTarget
+			customOverviewElementId: $event.currentTarget.id
 		}));
 	});
 

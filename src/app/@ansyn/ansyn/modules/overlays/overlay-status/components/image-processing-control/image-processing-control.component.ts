@@ -2,7 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
-import { ImageManualProcessArgs } from "../../../../menu-items/cases/models/case.model";
+import { IImageManualProcessArgs } from "../../../../menu-items/cases/models/case.model";
 import {
 	IImageProcessState,
 	IOverlayStatusState,
@@ -31,13 +31,13 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 		return this.config.ImageProcParams;
 	}
 
-	get defaultImageManualProcessArgs(): ImageManualProcessArgs {
-		return this.params.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam) => {
+	get defaultImageManualProcessArgs(): IImageManualProcessArgs {
+		return this.params.reduce<IImageManualProcessArgs>((initialObject: any, imageProcParam) => {
 			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
 		}, {});
 	}
 
-	imageManualProcessArgs: ImageManualProcessArgs = this.defaultImageManualProcessArgs;
+	imageManualProcessArgs: IImageManualProcessArgs = this.defaultImageManualProcessArgs;
 
 
 	constructor(public store$: Store<IImageProcessState>, @Inject(overlayStatusConfig) protected config: IOverlayStatusConfig) {

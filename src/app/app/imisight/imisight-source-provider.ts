@@ -30,7 +30,7 @@ export const ImisightOverlaySourceType = 'IMISIGHT';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
 
-export interface ImiSightElement {
+export interface IImiSightElement {
 	s3Id: string;
 	geojson: object;
 	timestamp: string;
@@ -125,7 +125,7 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 		);
 	}
 
-	private extractData(overlays: Array<ImiSightElement>): IOverlay[] {
+	private extractData(overlays: Array<IImiSightElement>): IOverlay[] {
 		if (!overlays) {
 			return [];
 		}
@@ -135,7 +135,7 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 		return overlays.map((element) => this.parseData(element));
 	}
 
-	protected parseData(imiSightElement: ImiSightElement): IOverlay {
+	protected parseData(imiSightElement: IImiSightElement): IOverlay {
 		const companyId = 1;
 		const footprint: any = imiSightElement.geojson;
 		return new Overlay({

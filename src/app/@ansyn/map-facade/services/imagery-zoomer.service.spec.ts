@@ -9,7 +9,7 @@ describe('ImageryZoomerService', () => {
 	}));
 
 	it('should be created', () => {
-		const service: ImageryZoomerService = TestBed.get(ImageryZoomerService);
+		const service: ImageryZoomerService = TestBed.inject(ImageryZoomerService);
 		expect(service).toBeTruthy();
 	});
 });

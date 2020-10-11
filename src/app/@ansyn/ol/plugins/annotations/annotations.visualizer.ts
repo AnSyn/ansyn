@@ -1,4 +1,4 @@
-import { Inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
 	ImageryVisualizer,
 	IVisualizerEntity,
@@ -11,7 +11,7 @@ import { UUID } from 'angular2-uuid';
 import { AutoSubscription } from 'auto-subscriptions';
 import { Feature, FeatureCollection, GeometryObject } from 'geojson';
 import { cloneDeep, merge } from 'lodash';
-import { platformModifierKeyOnly } from 'ol/events/condition';
+import { primaryAction as mouseClickCondition, platformModifierKeyOnly } from 'ol/events/condition';
 import olFeature from 'ol/Feature';
 import olCollection from 'ol/Collection';
 import OLGeoJSON from 'ol/format/GeoJSON';
@@ -58,6 +58,7 @@ export interface IEditAnnotationMode {
 	isHideable: true,
 	layerClassName: annotationsClassNameForExport
 })
+@Injectable()
 export class AnnotationsVisualizer extends EntitiesVisualizer {
 	private skipNextMapClickHandler = false;
 	disableCache = true;
@@ -127,7 +128,6 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		placement: 'line',
 		overflow: true
 	};
-
 	private iconSrc = '';
 
 	constructor(protected projectionService: OpenLayersProjectionService,
@@ -223,7 +223,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 				const drawInteractionHandler = new Draw({
 					type: this.modeDictionary[mode] ? this.modeDictionary[mode].type : mode,
 					geometryFunction: this.modeDictionary[mode] ? this.modeDictionary[mode].geometryFunction : undefined,
-					condition: (event: any) => (<MouseEvent>event.originalEvent).which === 1,
+					condition: mouseClickCondition,
 					style: this.featureStyle.bind(this)
 				});
 

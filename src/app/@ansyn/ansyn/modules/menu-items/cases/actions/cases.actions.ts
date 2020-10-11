@@ -3,6 +3,8 @@ import { Params } from '@angular/router';
 import { IStoredEntity } from '../../../core/services/storage/storage.service';
 import { ICase, ICasePreview, IDilutedCase, IDilutedCaseState } from '../models/case.model';
 
+export type caseModalType = 'save' | 'edit' | 'delete';
+
 export const CasesActionTypes = {
 	LOAD_CASES: 'LOAD_CASES',
 	LOAD_CASE: 'LOAD_CASE',
@@ -100,7 +102,7 @@ export class DeleteCaseAction implements Action {
 export class OpenModalAction implements Action {
 	type = CasesActionTypes.OPEN_MODAL;
 
-	constructor(public payload: { component: any, caseId?: string }) {
+	constructor(public payload: { type: caseModalType, caseId?: string }) {
 	}
 }
 

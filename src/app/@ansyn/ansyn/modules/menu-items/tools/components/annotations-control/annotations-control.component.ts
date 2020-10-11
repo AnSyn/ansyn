@@ -32,14 +32,34 @@ export enum SelectionBoxTypes {
 @Component({
 	selector: 'ansyn-annotations-control',
 	templateUrl: './annotations-control.component.html',
-	styleUrls: ['./annotations-control.component.less'],
-	providers: [ClickOutsideService]
+	styleUrls: ['./annotations-control.component.less']
 })
 @AutoSubscriptions({
 	init: 'ngOnInit',
 	destroy: 'ngOnDestroy'
 })
 export class AnnotationsControlComponent implements OnInit, OnDestroy {
+
+	get SelectionBoxTypes() {
+		return SelectionBoxTypes;
+	}
+
+	get Boolean() {
+		return Boolean;
+	}
+
+	@HostBinding('class.expand')
+	@Input()
+	set expand(value) {
+		if (!value) {
+			this.selectedBox = SelectionBoxTypes.None;
+		}
+		this._expand = value;
+	}
+
+	get expand() {
+		return this._expand;
+	}
 	@Input() isGeoOptionsDisabled: boolean;
 	@Output() hideMe = new EventEmitter<boolean>();
 
@@ -49,14 +69,6 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 
 	private _expand: boolean;
 	public selectedBox: SelectionBoxTypes;
-
-	get SelectionBoxTypes() {
-		return SelectionBoxTypes;
-	}
-
-	get Boolean() {
-		return Boolean;
-	}
 
 	annotationLayer$ = this.store.pipe(
 		select(selectLayers),
@@ -90,12 +102,19 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	public ANNOTATION_MODE_LIST = ANNOTATION_MODE_LIST;
 
 	@AutoSubscription
-	onClickOutside$ = this.clickOutsideService.onClickOutside().pipe(
+	onClickOutside$ = this.clickOutsideService.onClickOutside({monitor: this.element.nativeElement}).pipe(
 		filter((isClickOutside) => isClickOutside && this.expand),
 		tap(() => {
 			this.hideMe.emit();
 		})
 	);
+
+	constructor(
+		protected element: ElementRef,
+		public store: Store<any>,
+		protected clickOutsideService: ClickOutsideService,
+		@Inject(DOCUMENT) public document: any) {
+	}
 
 	@AutoSubscription
 	clickOutsideColorOrWeight = () => fromEvent(this.document, 'click')
@@ -108,26 +127,6 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 			),
 			tap(_ => this.toggleSelection())
 		);
-
-	@HostBinding('class.expand')
-	@Input()
-	set expand(value) {
-		if (!value) {
-			this.selectedBox = SelectionBoxTypes.None;
-		}
-		this._expand = value;
-	}
-
-	get expand() {
-		return this._expand;
-	}
-
-	constructor(
-		protected element: ElementRef,
-		public store: Store<any>,
-		protected clickOutsideService: ClickOutsideService,
-		@Inject(DOCUMENT) public document: any) {
-	}
 
 	ngOnInit() {
 	}

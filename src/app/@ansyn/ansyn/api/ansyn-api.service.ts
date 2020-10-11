@@ -1,9 +1,9 @@
 import { EventEmitter, Inject, Injectable, NgModuleRef } from '@angular/core';
 import {
-	getPolygonByBufferRadius,
 	getPolygonByPointAndRadius,
+	getPolygonByBufferRadius,
 	ImageryCommunicatorService,
-	ImageryMapPosition,
+	IImageryMapPosition,
 	IMapSettings
 } from '@ansyn/imagery';
 import {
@@ -112,7 +112,7 @@ export class AnsynApi {
 		 */
 		displayOverlaySuccess: new EventEmitter<{ overlay: IOverlay | false, mapId: string }>()
 	};
-	/** @deprecated onReady as own events was deprecated use events.onReady instead */
+	/** @deprecated onReady as own event was deprecated use events.onReady instead */
 	onReady = new EventEmitter<boolean>(true);
 	/**
 	 * @return An observable that emits the maps in array.
@@ -152,6 +152,7 @@ export class AnsynApi {
 	private activateMap$: Observable<string> = this.store.select(selectActiveMapId).pipe(
 		tap((activeMapId) => this.activeMapId = activeMapId)
 	);
+
 	@AutoSubscription
 	private mapsEntities$: Observable<Dictionary<IMapSettings>> = this.store.pipe(
 		select(selectMaps),
@@ -173,17 +174,18 @@ export class AnsynApi {
 				this.defaultLayerId = this.activeAnnotationLayer ? this.activeAnnotationLayer.id : undefined;
 			})
 		);
+
 	/** Events **/
 	@AutoSubscription
 	private ready$ = this.imageryCommunicatorService.instanceCreated.pipe(
 		take(1),
 		tap((map) => {
-			this.onReady.emit(true);
+			this.onReady.emit(true); // tslint:disable-line
 			this.events.onReady.emit(true);
 		})
 	);
-
 	/** Events end **/
+
 	@AutoSubscription
 	private overlaysSearchEnd$ = this.actions$.pipe(
 		ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
@@ -191,6 +193,7 @@ export class AnsynApi {
 			this.events.overlaysLoadedSuccess.emit(payload.length > 0 ? payload : false);
 		})
 	);
+
 	@AutoSubscription
 	private displayOverlaySuccess$ = this.actions$.pipe(
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
@@ -199,6 +202,7 @@ export class AnsynApi {
 			mapId: payload.mapId
 		}))
 	);
+
 	@AutoSubscription
 	private displayOverlayFailed$ = this.actions$.pipe(
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_FAILED),
@@ -324,7 +328,7 @@ export class AnsynApi {
 	 * @param mapId the map id or number, default the active map id.
 	 * @return the position of the map.
 	 */
-	getMapPosition(mapId: mapIdOrNumber): ImageryMapPosition {
+	getMapPosition(mapId: mapIdOrNumber): IImageryMapPosition {
 		return this.mapsEntities[this.getMapIdFromMapNumber(mapId)].data.position;
 	}
 
@@ -358,7 +362,7 @@ export class AnsynApi {
 	 * @return all the overlays in the timeline.
 	 */
 	getOverlays(): Observable<IOverlay[]> {
-		return combineLatest(this.store.select(selectOverlaysArray), this.store.select(selectFilteredOveralys)).pipe(
+		return combineLatest([this.store.select(selectOverlaysArray), this.store.select(selectFilteredOveralys)]).pipe(
 			take(1),
 			map(([overlays, filteredOverlays]: [IOverlay[], string[]]) => {
 				return overlays.filter((overlay) => {

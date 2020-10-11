@@ -2,12 +2,13 @@ import { FilterMetadata } from './filter-metadata.interface';
 import { FilterType } from '../filter-type';
 import { ICaseFilter } from '../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../overlays/models/overlay.model';
+import { Injectable } from "@angular/core";
 
+@Injectable()
 export class ArrayFilterMetadata extends FilterMetadata {
 	fields = new Map<string, boolean>();
 	type: FilterType = FilterType.Array;
 	count = 0;
-	filteredCount = 0;
 
 	updateMetadata(key: string): void {
 		if (this.fields.has(key)) {
@@ -20,14 +21,6 @@ export class ArrayFilterMetadata extends FilterMetadata {
 			this.fields.set(key, false);
 		});
 		this.count++;
-	}
-
-	incrementFilteredCount(value: number): void {
-		this.filteredCount++;
-	}
-
-	resetFilteredCount(): void {
-		this.filteredCount = 0;
 	}
 
 	hasResults(): boolean {

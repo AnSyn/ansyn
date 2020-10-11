@@ -57,19 +57,19 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	}
 
 	get isGeoOptionsDisabled() {
-		return !this.flags.get(toolsFlags.geoRegisteredOptionsEnabled);
+		return !this.flags?.get(toolsFlags.geoRegisteredOptionsEnabled);
 	}
 
 	get shadowMouseDisabled() {
-		return this.flags.get(toolsFlags.shadowMouseDisabled);
+		return this.flags?.get(toolsFlags.shadowMouseDisabled);
 	}
 
 	get onShadowMouse() {
-		return this.flags.get(toolsFlags.shadowMouse);
+		return this.flags?.get(toolsFlags.shadowMouse);
 	}
 
 	get onMeasureTool() {
-		return this.flags.get(toolsFlags.isMeasureToolActive);
+		return this.flags?.get(toolsFlags.isMeasureToolActive);
 	}
 
 	// @TODO display the shadow mouse only if there more then one map .

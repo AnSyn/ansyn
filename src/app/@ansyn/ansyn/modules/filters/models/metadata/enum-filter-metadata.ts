@@ -4,15 +4,16 @@ import { ICaseEnumFilterMetadata, ICaseFilter } from '../../../menu-items/cases/
 import { FilterType } from '../filter-type';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { get as _get } from 'lodash';
+import { Injectable } from "@angular/core";
 
 export interface IEnumFiled {
 	key: string;
 	count: number;
-	filteredCount: number;
 	isChecked: boolean;
 	disabled?: boolean;
 }
 
+@Injectable()
 export class EnumFilterMetadata extends FilterMetadata {
 	enumsFields: Map<string, IEnumFiled> = new Map<string, IEnumFiled>();
 	type: FilterType = FilterType.Enum;
@@ -31,20 +32,10 @@ export class EnumFilterMetadata extends FilterMetadata {
 
 	accumulateData(value: string): void {
 		if (!this.enumsFields.get(value)) {
-			this.enumsFields.set(value, { count: 1, filteredCount: 0, isChecked: true, key: value });
+			this.enumsFields.set(value, { count: 1, isChecked: true, key: value });
 		} else {
 			this.enumsFields.get(value).count = this.enumsFields.get(value).count + 1;
 		}
-	}
-
-	incrementFilteredCount(value: any): void {
-		this.enumsFields.get(value).filteredCount = this.enumsFields.get(value).filteredCount + 1;
-	}
-
-	resetFilteredCount(): void {
-		this.enumsFields.forEach((val, key) => {
-			val.filteredCount = 0;
-		});
 	}
 
 	hasResults(): boolean {
@@ -60,10 +51,12 @@ export class EnumFilterMetadata extends FilterMetadata {
 		});
 
 		if (caseFilter) {
-			caseFilter.metadata = Array.isArray(caseFilter.metadata) ? {
-				unCheckedEnums: caseFilter.metadata,
-				disabledEnums: []
-			} : caseFilter.metadata; // hack for old contexts:
+			if (Array.isArray(caseFilter.metadata)) { // hack for old contexts
+				caseFilter.metadata = {
+					unCheckedEnums: caseFilter.metadata,
+					disabledEnums: []
+				}
+			}
 			if (caseFilter.positive) {
 				this.enumsFields.forEach((enumsField: IEnumFiled) => {
 					enumsField.isChecked = caseFilter.metadata.unCheckedEnums.includes(enumsField.key);

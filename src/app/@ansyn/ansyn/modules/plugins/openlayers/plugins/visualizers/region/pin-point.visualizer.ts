@@ -11,6 +11,7 @@ import { OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
 import { RegionVisualizer } from './region.visualizer';
 import { CaseGeoFilter, CaseRegionState } from '../../../../../menu-items/cases/models/case.model';
 import { SetOverlaysCriteriaAction } from '../../../../../overlays/actions/overlays.actions';
+import { Injectable } from '@angular/core';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -18,6 +19,7 @@ import { SetOverlaysCriteriaAction } from '../../../../../overlays/actions/overl
 	dontRestrictToExtent: true,
 	layerClassName: 'pin-point-layer'
 })
+@Injectable()
 export class PinPointVisualizer extends RegionVisualizer {
 	_iconSrc: Style = new Style({
 		image: new Icon({

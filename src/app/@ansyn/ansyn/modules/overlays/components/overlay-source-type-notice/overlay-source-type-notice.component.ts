@@ -16,21 +16,6 @@ import { OverlaysConfig } from '../../services/overlays.service';
 })
 @AutoSubscriptions()
 export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
-	@Input() mapId: string;
-	footerCollapse: boolean;
-	private _title: string = null;
-	@AutoSubscription
-	footerCollapse$ = this.store$.select(selectFooterCollapse).pipe(
-		tap((collapse) => this.footerCollapse = collapse)
-	);
-
-	@AutoSubscription
-	overlay$ = () => this.store$.pipe(
-		select(selectOverlayByMapId(this.mapId)),
-		tap((overlay) => {
-			this.overlay = overlay;
-		})
-	);
 
 	set overlay(overlay: IOverlay) {
 		let sourceTypeConfig;
@@ -48,11 +33,26 @@ export class OverlaySourceTypeNoticeComponent implements OnInit, OnDestroy {
 	get title() {
 		return this._title;
 	}
+	@Input() mapId: string;
+	footerCollapse: boolean;
+	private _title: string = null;
+	@AutoSubscription
+	footerCollapse$ = this.store$.select(selectFooterCollapse).pipe(
+		tap((collapse) => this.footerCollapse = collapse)
+	);
 
 	constructor(protected store$: Store<any>,
 				@Inject(OverlaysConfig) public _config: IOverlaysConfig,
 				@Inject(CoreConfig) public coreConfig: ICoreConfig) {
 	}
+
+	@AutoSubscription
+	overlay$ = () => this.store$.pipe(
+		select(selectOverlayByMapId(this.mapId)),
+		tap((overlay) => {
+			this.overlay = overlay;
+		})
+	);
 
 	ngOnDestroy(): void {
 	}

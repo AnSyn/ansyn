@@ -26,7 +26,7 @@ describe('GetProvidersMapsService', () => {
 	}));
 
 	beforeEach( () => {
-		service = TestBed.get(GetProvidersMapsService);
+		service = TestBed.inject(GetProvidersMapsService);
 	});
 
 	it('should be created', () => {

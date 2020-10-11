@@ -1,6 +1,6 @@
+import { filter, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { combineLatest, Observable, of, EMPTY } from 'rxjs';
 import { Store, select } from '@ngrx/store';
-import { withLatestFrom, mergeMap, filter } from 'rxjs/operators';
 import { IVisualizerEntity, IVisualizerStateStyle } from '@ansyn/imagery';
 import { AutoSubscription } from 'auto-subscriptions';
 import simplify from '@turf/simplify'
@@ -11,10 +11,11 @@ import { IOverlay } from '../../../../../overlays/models/overlay.model';
 import { EntitiesVisualizer } from '@ansyn/ol';
 
 export class BaseFootprintsVisualizer extends EntitiesVisualizer {
+
 	readonly selectDrop = this.store.pipe(
 		select(selectDrops)
 	);
-	selectVisualizerActive = () => of(false);
+
 	constructor(public store: Store<any>,
 				public overlaysService: OverlaysService,
 				public fpConfig: Partial<IVisualizerStateStyle>,
@@ -23,8 +24,10 @@ export class BaseFootprintsVisualizer extends EntitiesVisualizer {
 		super(fpConfig, ...superArgs);
 	}
 
+	selectVisualizerActive = () => of(false);
+
 	@AutoSubscription
-	drawOverlaysOnMap$: () => Observable<any> = () => combineLatest(this.selectVisualizerActive(), this.selectDrop)
+	drawOverlaysOnMap$: () => Observable<any> = () => combineLatest([this.selectVisualizerActive(), this.selectDrop])
 		.pipe(
 			filter( ([isActive]) => isActive !== undefined),
 			withLatestFrom(this.overlaysService.getAllOverlays$),
@@ -42,7 +45,7 @@ export class BaseFootprintsVisualizer extends EntitiesVisualizer {
 		);
 
 	geometryToEntity(id, geometry): IVisualizerEntity {
-		if ( geometry.type === 'MultiPolygon') {
+		if (geometry.type === 'MultiPolygon') {
 			const numOfPoints = geometry.coordinates[0][0].length;
 
 			if (this.fpConfig.minSimplifyVertexCountLimit < numOfPoints) {
@@ -54,5 +57,4 @@ export class BaseFootprintsVisualizer extends EntitiesVisualizer {
 		}
 		return super.geometryToEntity(id, geometry);
 	}
-
 }

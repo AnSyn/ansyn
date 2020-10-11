@@ -31,7 +31,8 @@ import { ImageryMouseCoordinatesComponent } from './components/imagery-mouse-coo
 import { GeoHolderComponent } from './components/imagery-mouse-coordinates/holders/geo-holder/geo-holder.component';
 import { UtmHolderComponent } from './components/imagery-mouse-coordinates/holders/utm-holder/utm-holder.component';
 import { FloatingMenuComponent } from './components/floating-menu/floating-menu.component';
-import { MatAutocompleteModule, MatInputModule } from '@angular/material';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
 import { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
 import { AnsynDatePipe } from './pipes/ansyn-date.pipe';
 
@@ -91,15 +92,15 @@ import { AnsynDatePipe } from './pipes/ansyn-date.pipe';
 
 export class MapFacadeModule {
 
-	static provide(metadata: { entryComponents: IEntryComponentsEntities }): ModuleWithProviders {
+	constructor() {
+	}
+
+	static provide(metadata: { entryComponents: IEntryComponentsEntities }): ModuleWithProviders<MapFacadeModule> {
 		return {
 			ngModule: MapFacadeModule,
 			providers: [
 				provideEntryComponentsEntities(metadata.entryComponents)
 			]
 		};
-	}
-
-	constructor() {
 	}
 }

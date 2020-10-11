@@ -14,7 +14,7 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 	protected subscriptions: Subscription[] = [];
 
 	// todo: return auto-subscription when the bug is fixed
-	osmLayersChanges$: Observable<any[]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
+	osmLayersChanges$: Observable<any[]> = combineLatest([this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds)])
 		.pipe(
 			tap(([result, selectedLayerId]: [ILayer[], string[]]) => {
 				result.filter(this.checkLayer)
@@ -27,6 +27,10 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 					});
 			})
 		);
+
+	protected constructor(protected store$: Store<any>) {
+		super();
+	}
 
 	// todo: return auto-subscription when the bug is fixed
 	toggleGroup$ = () => this.store$.select(selectHideLayersOnMap(this.mapId)).pipe(
@@ -47,10 +51,6 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 		this.subscriptions.forEach((sub) => sub.unsubscribe());
 		this.subscriptions = [];
 		super.onDispose();
-	}
-
-	protected constructor(protected store$: Store<any>) {
-		super();
 	}
 
 	abstract checkLayer(layer: ILayer);

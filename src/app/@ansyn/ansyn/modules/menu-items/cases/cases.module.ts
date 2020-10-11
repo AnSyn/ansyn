@@ -17,7 +17,6 @@ import { casesFeatureKey, CasesReducer } from './reducers/cases.reducer';
 import { CasesAutoSaveComponent } from './components/cases-auto-save/cases-auto-save.component';
 import { CoreModule } from '../../core/core.module';
 import { MapFacadeModule } from '@ansyn/map-facade';
-import { ClipboardModule, ClipboardService } from 'ngx-clipboard';
 
 // @dynamic
 @NgModule({
@@ -26,16 +25,15 @@ import { ClipboardModule, ClipboardService } from 'ngx-clipboard';
 		CommonModule,
 		CoreModule,
 		MapFacadeModule,
-		ClipboardModule,
 		FormsModule,
 		EffectsModule.forFeature([CasesEffects])
 	],
 	declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent, CasesAutoSaveComponent],
 	entryComponents: [CasesComponent, EditCaseComponent, SaveCaseComponent, DeleteCaseComponent],
-	providers: [CasesService, ClipboardService]
+	providers: [CasesService]
 })
 export class CasesModule {
-	static forRoot(config: ICasesConfig): ModuleWithProviders {
+	static forRoot(config: ICasesConfig): ModuleWithProviders<CasesModule> {
 		return {
 			ngModule: CasesModule,
 			providers: [

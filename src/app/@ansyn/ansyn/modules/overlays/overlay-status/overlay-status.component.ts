@@ -7,7 +7,7 @@ import {
 } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { combineLatest, fromEvent, Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { tap, map, filter } from 'rxjs/operators';
 import { GeoRegisteration, IOverlay } from '../models/overlay.model';
 import {
@@ -29,12 +29,12 @@ import {
 } from '../../menu-items/tools/actions/tools.actions';
 import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-manager/reducers/layers.reducer';
 import { ClickOutsideService } from '../../core/click-outside/click-outside.service';
+import { isDeleteKey } from '../../core/utils/keyboardKey';
 
 @Component({
 	selector: 'ansyn-overlay-status',
 	templateUrl: './overlay-status.component.html',
-	styleUrls: ['./overlay-status.component.less'],
-	providers: [ClickOutsideService]
+	styleUrls: ['./overlay-status.component.less']
 })
 @AutoSubscriptions({
 	init: 'ngOnInit',
@@ -68,7 +68,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	);
 
 	@AutoSubscription
-	active$ = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectTranslationData)).pipe(
+	active$ = combineLatest([this.store$.select(selectActiveMapId), this.store$.select(selectTranslationData)]).pipe(
 		tap(([activeMapId, overlaysTranslationData]: [string, { [key: string]: ITranslationData }]) => {
 			this.isActiveMap = activeMapId === this.mapId;
 			this.overlaysTranslationData = overlaysTranslationData;
@@ -77,7 +77,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	);
 
 	@AutoSubscription
-	onClickOutSide$ = this.clickOutsideService.onClickOutside().pipe(
+	onClickOutSide$ = this.clickOutsideService.onClickOutside({monitor: this.element.nativeElement}).pipe(
 		filter(Boolean),
 		tap( () => {
 			this.moreButtons = false;
@@ -106,10 +106,10 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	@AutoSubscription
-	layersVisibility$ = () => combineLatest(
+	layersVisibility$ = () => combineLatest([
 		this.store$.select(selectSelectedLayersIds),
 		this.store$.select(selectHideLayersOnMap(this.mapId)),
-		this.store$.select(selectLayers))
+		this.store$.select(selectLayers)])
 		.pipe(
 			map(([selectedLayerIds, areLayersHidden, layers]) => {
 				layers = layers.filter((currentLayer) =>

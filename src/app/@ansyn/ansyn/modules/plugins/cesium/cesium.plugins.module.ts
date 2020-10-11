@@ -15,7 +15,6 @@ import { MouseMarkerPlugin } from './plugins/mouse-marker/mouse-marker.plugin';
 
 @NgModule({
 	declarations: [],
-	entryComponents: [],
 	exports: [],
 	imports: [
 		CommonModule,

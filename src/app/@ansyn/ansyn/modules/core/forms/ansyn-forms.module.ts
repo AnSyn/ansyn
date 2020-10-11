@@ -10,7 +10,7 @@ import { ComboBoxOptionComponent } from './combo-box-option/combo-box-option.com
 import { ComboBoxComponent } from './combo-box/combo-box.component';
 import { ComboBoxTriggerComponent } from './combo-box-trigger/combo-box-trigger.component';
 import { FileInputComponent } from './file-input/file-input.component';
-import { MatInputModule } from '@angular/material';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
 	imports: [

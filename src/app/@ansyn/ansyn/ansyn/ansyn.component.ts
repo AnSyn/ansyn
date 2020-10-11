@@ -1,5 +1,5 @@
+import { Component, HostBinding, HostListener, Inject, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Component, HostBinding, HostListener, Inject, Input, OnInit, ElementRef, OnDestroy } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
 import {
 	MapFacadeService,
@@ -9,7 +9,7 @@ import {
 	selectIsMinimalistViewMode
 } from '@ansyn/map-facade';
 import { selectIsPinned, selectMenuCollapse } from '@ansyn/menu';
-import { filter, map, withLatestFrom, tap } from 'rxjs/operators';
+import { filter, map, withLatestFrom } from 'rxjs/operators';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
 import { LoadDefaultCaseAction } from '../modules/menu-items/cases/actions/cases.actions';
 import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
@@ -36,8 +36,10 @@ export class AnsynComponent implements OnInit {
 
 	hideStatus$: Observable<boolean> = this.store$.select(selectIsMinimalistViewMode);
 
-	activeMap$: Observable<any> = combineLatest(
-		this.store$.select(selectActiveMapId), this.store$.select(selectOverlayOfActiveMap))
+	activeMap$: Observable<any> = combineLatest([
+		this.store$.select(selectActiveMapId),
+		this.store$.select(selectOverlayOfActiveMap)
+	])
 		.pipe(
 			withLatestFrom(this.store$.select(selectMapsList)),
 			filter(([[activeMapId, overlay], mapList]: [[string, IOverlay], ICaseMapState[]]) => Boolean(mapList)),
@@ -48,16 +50,16 @@ export class AnsynComponent implements OnInit {
 	@HostBinding('class.component') component = this.componentMode;
 	@Input() version;
 
-	@HostListener('window:beforeunload', ['$event'])
-	public onWindowClose($event) {
-		this.loggerService.beforeAppClose();
-		return true;
-	}
-
 	constructor(protected store$: Store<any>,
 				@Inject(COMPONENT_MODE) public componentMode: boolean,
 				@Inject(toolsConfig) public toolsConfigData: IToolsConfig,
 				public loggerService: LoggerService) {
+	}
+
+	@HostListener('window:beforeunload', ['$event'])
+	public onWindowClose($event) {
+		this.loggerService.beforeAppClose();
+		return true;
 	}
 
 	ngOnInit(): void {

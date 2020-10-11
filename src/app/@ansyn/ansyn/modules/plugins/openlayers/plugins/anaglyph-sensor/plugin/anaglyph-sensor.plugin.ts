@@ -8,6 +8,7 @@ import { IOverlay } from '../../../../../overlays/models/overlay.model';
 import { AnaglyphSensorService } from '../service/anaglyph-sensor.service';
 import { AddAlertMsg, RemoveAlertMsg } from '../../../../../overlays/overlay-status/actions/overlay-status.actions';
 import { selectAlertMsg } from '../../../../../overlays/overlay-status/reducers/overlay-status.reducer';
+import { Injectable } from '@angular/core';
 
 export const anaglyphSensorAlertKey = 'anaglyphSensor';
 
@@ -15,6 +16,7 @@ export const anaglyphSensorAlertKey = 'anaglyphSensor';
 	supported: [OpenLayersMap, OpenLayersDisabledMap],
 	deps: [Store, AnaglyphSensorService]
 })
+@Injectable()
 export class AnaglyphSensorPlugin extends BaseImageryPlugin {
 	anglyphMsg: boolean;
 	overlay: IOverlay = null;
@@ -27,6 +29,11 @@ export class AnaglyphSensorPlugin extends BaseImageryPlugin {
 			this.anglyphMsg = anglyphMsgs && anglyphMsgs.has(this.mapId);
 		})
 	);
+
+	constructor(public store$: Store<any>,
+				protected anaglyphSensorService: AnaglyphSensorService) {
+		super();
+	}
 
 	@AutoSubscription
 	overlay$ = () => this.store$.pipe(
@@ -55,9 +62,4 @@ export class AnaglyphSensorPlugin extends BaseImageryPlugin {
 
 		})
 	);
-
-	constructor(public store$: Store<any>,
-				protected anaglyphSensorService: AnaglyphSensorService) {
-		super();
-	}
 }

@@ -33,10 +33,11 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	isLastOrFirstOverlay$ = combineLatest(
+	isLastOrFirstOverlay$ = combineLatest([
 		this.store.select(selectOverlayOfActiveMap),
 		this.store.select(selectDropsAscending),
-		this.store.select(selectFilteredOveralys)).pipe(
+		this.store.select(selectFilteredOveralys)
+	]).pipe(
 		filter(([activeMapOverlay, overlays, filtered]: [IOverlay, IOverlayDrop[], any[]]) => Boolean(activeMapOverlay) && Boolean(overlays.length)),
 		tap(([activeMapOverlay, overlays, filtered]: [IOverlay, IOverlayDrop[],  IOverlay[]]) => {
 			this.overlaysLength = filtered.length;
@@ -47,6 +48,10 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 
 	private _scannedAreaKeys = '`~;'.split('');
 	private _overlayHackKeys = 'Eeק'.split('');
+
+	constructor(protected store: Store<IStatusBarState>,
+				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
+	}
 
 	isElementNotValid($event: KeyboardEvent) {
 		const { activeElement } = (<Window>$event.currentTarget).document;
@@ -91,7 +96,7 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 			this.goNextActive = true;
 		} else if (this.keyWasUsed($event, 'ArrowLeft', 37)) {
 			this.goPrevActive = true;
-		} 
+		}
 
 		if (this.keysWereUsed($event, this._overlayHackKeys)) {
 			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(true));
@@ -109,12 +114,8 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	constructor(protected store: Store<IStatusBarState>,
-				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
-	}
-
 	private keyWasUsed(event: KeyboardEvent, key: string, keycode: number = key.charCodeAt(0)): boolean {
-		return event.key === key || event.which === keycode;
+		return event.key === key || event.which === keycode; // tslint:disable-line
 		// We need to check also on the old field event.which, for Chrome 44
 	}
 

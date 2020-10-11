@@ -8,7 +8,6 @@ import { ImageryVideoProvider } from './providers/imagery-video-provider';
 
 @NgModule({
 	declarations: [ImageryVideoComponent],
-	entryComponents: [ImageryVideoComponent],
 	imports: [
 		CommonModule,
 		MapFacadeModule,

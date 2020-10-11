@@ -10,8 +10,6 @@ import { point } from '@turf/turf';
 })
 export class MouseMarkerPlugin extends BaseEntitiesVisualizer {
 
-	private _isEnabled: boolean;
-
 	public set isEnabled(value: boolean) {
 		if (this._isEnabled !== value) {
 			this._isEnabled = value;
@@ -26,17 +24,19 @@ export class MouseMarkerPlugin extends BaseEntitiesVisualizer {
 		return this._isEnabled;
 	}
 
+	private _isEnabled: boolean;
+
+	constructor() {
+		super();
+		this._isEnabled = false;
+	}
+
 	@AutoSubscription
 	mousePositionChanged$ = () => this.communicator.ActiveMap.mousePointerMoved.subscribe((position: IMousePointerMove) => {
 		if (this.isEnabled) {
 			this.tryDraw(position);
 		}
 	});
-
-	constructor() {
-		super();
-		this._isEnabled = false;
-	}
 
 	onResetView(): Observable<boolean> {
 		return of(true);

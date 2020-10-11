@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 import { filter, map, take, tap } from 'rxjs/operators';
 import { BaseImageryMap } from '../model/base-imagery-map';
-import { ImageryMapPosition } from '../model/case-map-position.model';
+import { IImageryMapPosition } from '../model/case-map-position.model';
 
 @Component({
 	selector: 'ansyn-map',
@@ -11,15 +11,15 @@ import { ImageryMapPosition } from '../model/case-map-position.model';
 	styleUrls: ['./map.component.less']
 })
 export class MapComponent implements OnInit, OnDestroy {
-	@ViewChild('mapElement') protected mapElement: ElementRef;
-	@ViewChild('mapElementShadowNorth') protected mapElementShadowNorth: ElementRef;
-	@ViewChild('mapElementShadowDoubleBuffer') protected mapElementShadowDoubleBuffer: ElementRef;
-	@ViewChild('mapViewContainerRef', { read: ViewContainerRef }) mapViewContainerRef: ViewContainerRef;
+	@ViewChild('mapElement', {static: true}) protected mapElement: ElementRef;
+	@ViewChild('mapElementShadowNorth', {static: true}) protected mapElementShadowNorth: ElementRef;
+	@ViewChild('mapElementShadowDoubleBuffer', {static: true}) protected mapElementShadowDoubleBuffer: ElementRef;
+	@ViewChild('mapViewContainerRef', { read: ViewContainerRef, static: true }) mapViewContainerRef: ViewContainerRef;
 
 	constructor(public map: BaseImageryMap, @Inject(BaseImageryPlugin) public plugins: BaseImageryPlugin[]) {
 	}
 
-	createMap(layer: any, position?: ImageryMapPosition): Observable<BaseImageryMap> {
+	createMap(layer: any, position?: IImageryMapPosition): Observable<BaseImageryMap> {
 		return this.map
 			.initMap(this.mapElement.nativeElement, this.mapElementShadowNorth.nativeElement, this.mapElementShadowDoubleBuffer.nativeElement, layer, position, this.mapViewContainerRef)
 			.pipe(

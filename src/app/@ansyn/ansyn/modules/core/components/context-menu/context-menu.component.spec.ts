@@ -186,8 +186,8 @@ describe('ContextMenuComponent', () => {
 
 		it('action (setPinPoint) should have been call', () => {
 			spyOn(component, 'setPinPoint');
-			// button 0 = witch 1.
-			const mouseDown = new MouseEvent('mousedown', { button: 0 });
+			// button 0 = witch 1 = buttons  1.
+			const mouseDown = new MouseEvent('mousedown', { button: 0, buttons: 1 });
 			menuOpenButton.dispatchEvent(mouseDown);
 			expect(component.setPinPoint).toHaveBeenCalled();
 		});

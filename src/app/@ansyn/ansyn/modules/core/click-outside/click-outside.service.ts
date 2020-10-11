@@ -2,11 +2,9 @@ import { ElementRef, Injectable } from '@angular/core';
 import { fromEvent, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable({providedIn: 'any'})
 export class ClickOutsideService {
-	constructor(protected element: ElementRef) {
+	constructor() {
 	}
 
 	/**
@@ -14,11 +12,12 @@ export class ClickOutsideService {
 	 * @param targetElement - the element to attach the click event handler to default window.
 	 * @param elementToMonitor - the element we want monitor that the click was outside it default element.nativeElement.
 	 */
-	onClickOutside(targetElement: any = window, elementToMonitor = this.element.nativeElement): Observable<boolean> {
-		return fromEvent(targetElement, 'click').pipe(
+	onClickOutside(elements: {target?: any, monitor: any}): Observable<boolean> {
+		const { target, monitor } = elements;
+		return fromEvent(target || window, 'click').pipe(
 			map((event: MouseEvent) => {
 				const path = event.composedPath ? event.composedPath() : this.getPath(event);
-				let clickOutsideMonitor = !(path && path.includes(elementToMonitor));
+				let clickOutsideMonitor = !(path && path.includes(monitor));
 				return clickOutsideMonitor;
 			})
 		)

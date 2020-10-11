@@ -13,7 +13,6 @@ import { TranslateModule } from '@ngx-translate/core';
 		CesiumPluginsModule
 	],
 	declarations: [ImageryChangeMapComponent],
-	entryComponents: [ImageryChangeMapComponent]
 })
 export class AnsynPluginsModule {
 

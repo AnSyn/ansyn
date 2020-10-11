@@ -70,8 +70,7 @@ describe('CasesService', () => {
 				]
 			},
 			overlaysManualProcessArgs: {}
-		} as any,
-		schema: 'schema'
+		} as any
 	};
 
 	beforeEach(() => {

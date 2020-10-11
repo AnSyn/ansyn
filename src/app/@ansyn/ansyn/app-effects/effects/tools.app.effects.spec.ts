@@ -86,8 +86,7 @@ describe('ToolsAppEffects', () => {
 			overlaysManualProcessArgs: {
 				'overlay_123': { Contrast: 50, Brightness: 20 }
 			}
-		} as any,
-		schema: 'case'
+		} as any
 	}];
 
 	const imapState: any = {

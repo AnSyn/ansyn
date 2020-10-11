@@ -13,16 +13,15 @@ export interface ICasePreview {
 	lastModified?: Date;
 	selectedContextId?: string;
 	autoSave?: boolean;
+	schema?: 'case' | 'link';
 }
 
 export interface ICase extends ICasePreview {
 	state: ICaseState;
-	schema: string;
 }
 
 export interface IDilutedCase extends ICasePreview {
 	state: ICaseState;
-	schema: string
 }
 
 export type CaseOrientation = 'Align North' | 'User Perspective' | 'Imagery Perspective';

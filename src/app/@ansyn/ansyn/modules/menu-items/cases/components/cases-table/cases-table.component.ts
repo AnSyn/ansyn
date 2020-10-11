@@ -17,7 +17,6 @@ import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, map, pluck, tap } from 'rxjs/operators';
 import { ICasePreview } from '../../models/case.model';
-import { Router } from '@angular/router';
 
 const animations: any[] = [
 	trigger('leaveAnim', [
@@ -59,8 +58,7 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 
 	selectedCaseId: string;
 
-	constructor(protected store$: Store<ICasesState>, protected casesEffects: CasesEffects,
-				private router: Router) {
+	constructor(protected store$: Store<ICasesState>, protected casesEffects: CasesEffects) {
 		this.casesEffects.onAddCase$.subscribe(this.onCasesAdded.bind(this));
 	}
 

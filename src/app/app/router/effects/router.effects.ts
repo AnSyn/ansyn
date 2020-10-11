@@ -31,7 +31,8 @@ export class RouterEffects {
 		ofType<NavigateCaseTriggerAction>(RouterActionTypes.NAVIGATE_CASE),
 		tap(({ payload }) => {
 			if (payload) {
-				window.location.href = payload;
+				console.log(payload)
+				this.router.navigate([payload]);
 			}
 			else {
 				this.router.navigate(['']);
@@ -66,9 +67,9 @@ export class RouterEffects {
 		filter(([action, router]: [(SelectCaseAction | SaveCaseAsSuccessAction), IRouterState]) => action.payload.id !== this.casesService.defaultCase.id && action.payload.id !== router.caseId),
 		map(([action, router]: [SelectCaseAction | SaveCaseAsSuccessAction, IRouterState]) => {
 			if (action.payload.schema) {
-				return new NavigateCaseTriggerAction(this.casesService.generateLinkById(action.payload.id, 'link'));
+				return new NavigateCaseTriggerAction(this.casesService.generatePartialLinkId(action.payload.id, 'link'));
 			}
-			return new NavigateCaseTriggerAction(this.casesService.generateLinkById(action.payload.id, 'case'));
+			return new NavigateCaseTriggerAction(this.casesService.generatePartialLinkId(action.payload.id, 'case'));
 		}
 	));
 

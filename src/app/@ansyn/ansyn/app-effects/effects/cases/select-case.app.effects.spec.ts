@@ -124,8 +124,7 @@ describe('SelectCaseAppEffects', () => {
 				lastModified: new Date(),
 				creationTime: new Date(),
 				autoSave: false,
-				state,
-				schema: 'case'
+				state
 			};
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });

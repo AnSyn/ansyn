@@ -110,9 +110,6 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 	}
 
 	selectCase(caseId: string): void {
-		if (this.router.url.includes('link')) {
-			this.router.navigate([this.router.url.replace('link' , 'case')]);
-		}
 		if (this.selectedCaseId !== caseId) {
 			this.store$.dispatch(new LoadCaseAction(caseId));
 		}

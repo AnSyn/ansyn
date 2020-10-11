@@ -30,14 +30,10 @@ export class RouterEffects {
 	onNavigateCase$: Observable<any> = this.actions$.pipe(
 		ofType<NavigateCaseTriggerAction>(RouterActionTypes.NAVIGATE_CASE),
 		tap(({ payload }) => {
-
 			if (payload) {
-				if (this.router.url.includes('link')) {
-					this.router.navigate(['link', payload]);
-				} else {
-					this.router.navigate(['case', payload]);
-				}
-			} else {
+				window.location.href = payload;
+			}
+			else {
 				this.router.navigate(['']);
 			}
 		})
@@ -68,8 +64,15 @@ export class RouterEffects {
 		withLatestFrom(this.store$.select(routerStateSelector)),
 		filter(([action, router]: [(SelectCaseAction | SaveCaseAsSuccessAction), IRouterState]) => Boolean(router)),
 		filter(([action, router]: [(SelectCaseAction | SaveCaseAsSuccessAction), IRouterState]) => action.payload.id !== this.casesService.defaultCase.id && action.payload.id !== router.caseId),
-		map(([action, router]: [SelectCaseAction | SaveCaseAsSuccessAction, IRouterState]) => new NavigateCaseTriggerAction(action.payload.id))
-	);
+		map(([action, router]: [SelectCaseAction | SaveCaseAsSuccessAction, IRouterState]) =>{
+			let url: string;
+			if(action.payload.schema)
+				url = this.casesService.generateLinkById(action.payload.id,'link')
+			else
+				url =  this.casesService.generateLinkById(action.payload.id,'case')
+			return new NavigateCaseTriggerAction(url);
+		}
+	));
 
 	@Effect()
 	loadDefaultCase$: Observable<any> = this.actions$.pipe(

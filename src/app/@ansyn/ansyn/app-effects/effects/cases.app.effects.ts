@@ -39,7 +39,7 @@ import {
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { casesConfig } from '../../modules/menu-items/cases/services/cases.service';
 import { ICasesConfig } from '../../modules/menu-items/cases/models/cases-config';
-import { fromPromise } from 'rxjs/internal-compatibility';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class CasesAppEffects {
@@ -169,6 +169,7 @@ export class CasesAppEffects {
 				protected loggerService: LoggerService,
 				@Inject(casesConfig) public caseConfig: ICasesConfig,
 				protected getProvidersMapsService: GetProvidersMapsService,
-				protected imageryCommunicatorService: ImageryCommunicatorService) {
+				protected imageryCommunicatorService: ImageryCommunicatorService,
+				private router: Router) {
 	}
 }

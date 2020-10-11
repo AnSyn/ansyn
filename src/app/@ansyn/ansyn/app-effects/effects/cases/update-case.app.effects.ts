@@ -56,7 +56,8 @@ export class UpdateCaseAppEffects {
 				miscOverlays,
 				overlaysTranslationData,
 				overlaysScannedAreaData,
-				autoSave
+				autoSave,
+				schema
 			] = events;
 
 			const { id, name, lastModified, creationTime } = selectedCase;
@@ -85,7 +86,8 @@ export class UpdateCaseAppEffects {
 					overlaysManualProcessArgs,
 					overlaysTranslationData,
 					overlaysScannedAreaData
-				}
+				},
+				schema
 			};
 
 			return new UpdateCaseAction({ updatedCase, forceUpdate: this.isAutoSaveTriggered });

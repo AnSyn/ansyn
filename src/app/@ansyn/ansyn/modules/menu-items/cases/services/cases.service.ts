@@ -229,10 +229,6 @@ export class CasesService {
 		return `${ href }/${schema}/${ id }`;
 	}
 
-	generatePartialLinkId(id: string, schema: 'case' | 'link' = 'case') {
-		return `${ schema }/${ id }`
-	}
-
 	isStoreEntitiesEqual(caseA, caseB) {
 		// caseA.data == undefined, can happen if you update only the preview data (of other case such as "name" -> updates the preview only)
 		if (!caseA || !caseB || !caseA.data || !caseB.data) {

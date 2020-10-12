@@ -23,7 +23,7 @@ import { Store } from '@ngrx/store';
 import { filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import { cloneDeep } from 'lodash';
 import { MenuActionTypes } from '@ansyn/menu';
-import { setStateActionFinished } from 'src/app/@ansyn/menu/actions/menu.actions';
+import { SetStateActionFinished } from 'src/app/@ansyn/menu/actions/menu.actions';
 
 @Injectable()
 export class RouterEffects {
@@ -99,7 +99,7 @@ export class RouterEffects {
 	setStateActionFromOtherLibs$: Observable<any> = this.actions$.pipe(
 		ofType<SetStateAction>(MenuActionTypes.RESET_APP),
 		map(() => new SetStateAction({linkId: undefined, caseId: undefined})),
-		tap(() => new setStateActionFinished())
+		tap(() => new SetStateActionFinished())
 	);
 
 	constructor(protected actions$: Actions, protected store$: Store<any>, protected router: Router,

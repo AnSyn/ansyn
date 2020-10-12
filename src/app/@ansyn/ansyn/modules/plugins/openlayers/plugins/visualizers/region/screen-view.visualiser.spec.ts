@@ -24,6 +24,12 @@ describe('screenViewSearchVisualizer', () => {
 		screenViewSearchVisualizer = _screenViewSearchVisualizer;
 	}));
 
+	it('createRegion should return "geometry"', () => {
+		const fakeGeojson = <any>{ geometry: 'geometry' };
+		const expectedResult = screenViewSearchVisualizer.createRegion(fakeGeojson);
+		expect(expectedResult).toEqual('geometry');
+	});
+
 	it('onContextMenu should dispatch action UpdateStatusFlagsAction', () => {
 		const fakePoint = [0, 0];
 		spyOn(store, 'dispatch');

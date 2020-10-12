@@ -7,6 +7,7 @@ import { UpdateGeoFilterStatus } from '../../../../../status-bar/actions/status-
 import { RegionVisualizer } from './region.visualizer';
 import { OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
 import { CaseGeoFilter } from '../../../../../menu-items/cases/models/case.model';
+import { Injectable } from '@angular/core';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -14,6 +15,7 @@ import { CaseGeoFilter } from '../../../../../menu-items/cases/models/case.model
 	dontRestrictToExtent: true,
 	layerClassName: 'screen-view-layer'
 })
+@Injectable({providedIn: 'root'})
 export class ScreenViewSearchVisualizer extends RegionVisualizer {
 	constructor(public store$: Store<any>,
 				public actions$: Actions,
@@ -26,8 +28,8 @@ export class ScreenViewSearchVisualizer extends RegionVisualizer {
 		return EMPTY;
 	}
 
-	createRegion() {
-		return EMPTY;
+	createRegion({ geometry }: any) {
+		return geometry;
 	}
 
 	onContextMenu(point: Position): void {

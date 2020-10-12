@@ -91,9 +91,11 @@ import { MeasureDistanceVisualizer } from '../../modules/plugins/openlayers/plug
 import { IGeoFilterStatus, selectGeoFilterStatus } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { Polygon } from '@turf/turf';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
+import { ScreenViewSearchVisualizer } from '../../modules/plugins/openlayers/plugins/visualizers/region/screen-view.visualiser';
 
 const FOOTPRINT_INSIDE_MAP_RATIO = 1;
-const ZOOM_LIMIT = 14;
+const VIEW_SEARCH_ZOOM_LIMIT = 14;
+const VIEW_SEARCH_DEBOUNCE_TIME = 1000;
 let extentPolygon: Polygon = {
 	coordinates: [],
 	type: 'Polygon'
@@ -335,24 +337,24 @@ export class MapAppEffects {
 	@Effect({ dispatch: false })
 	searchByExtentPolygon$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.POSITION_CHANGED, MapActionTypes.SET_ACTIVE_MAP_ID),
-		withLatestFrom(this.store$.select(mapStateSelector), this.store$.select(selectGeoFilterStatus)),
-		map(([action, mapState, geoFilterStatus]) => {
-			const mapSettings: IMapSettings = MapFacadeService.activeMap(mapState);
-			return [mapSettings.data.position, geoFilterStatus];
+		withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus)),
+		map(([action, mapList, activeMapId, geoFilterStatus]) => {
+			const activeMap: IMapSettings = mapList[activeMapId];
+			return [activeMap.data.position, geoFilterStatus];
 		}),
-		filter(([position, geoFilterStatus]: [ImageryMapPosition, IGeoFilterStatus]) => Boolean(position) && geoFilterStatus.type === 'ScreenView'),
-		debounceTime(1000),
-		tap(([position, geoFilterStatus]: [ImageryMapPosition, IGeoFilterStatus]) => {
+		filter(([position, geoFilterStatus]: [IImageryMapPosition, IGeoFilterStatus]) => Boolean(position) && geoFilterStatus.type === 'ScreenView'),
+		debounceTime(VIEW_SEARCH_DEBOUNCE_TIME),
+		tap(([position, geoFilterStatus]: [IImageryMapPosition, IGeoFilterStatus]) => {
 			let zoom = position.projectedState.zoom;
 
 			if (!equalPolygons(position.extentPolygon, extentPolygon)) {
-				if (zoom < ZOOM_LIMIT) {
+				if (zoom < VIEW_SEARCH_ZOOM_LIMIT) {
 					this.store$.dispatch(new SetOverlaysStatusMessageAction('Zoom into 500m to get new overlays'));
 					return;
 				}
 
 				extentPolygon = position.extentPolygon;
-				this.store$.dispatch(new SetOverlaysCriteriaAction(this.createRegion(extentPolygon)));
+				this.store$.dispatch(new SetOverlaysCriteriaAction(this.screenViewSearchVisualizer.createRegion(extentPolygon)));
 
 				if (geoFilterStatus.active) {
 					this.store$.dispatch(new UpdateGeoFilterStatus({active: false}));
@@ -365,6 +367,7 @@ export class MapAppEffects {
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected loggerService: LoggerService,
+				private screenViewSearchVisualizer: ScreenViewSearchVisualizer,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig
 	) {
@@ -519,10 +522,6 @@ export class MapAppEffects {
 			showWarningIcon: true
 		}));
 		return EMPTY;
-	}
-
-	createRegion({ geometry }: any) {
-		return geometry;
 	}
 
 	private bboxPolygon(polygon) {

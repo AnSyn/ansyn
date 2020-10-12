@@ -14,7 +14,6 @@ import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
 import { StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
 import { getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
-import { SetStateAction } from '../../../../app/router/actions/router.actions';
 
 @Injectable()
 export class MenuAppEffects {

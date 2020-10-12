@@ -19,7 +19,6 @@ import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/ca
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
 import { StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
 import { getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
-import { SetStateAction } from '../../../../app/router/actions/router.actions';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;

@@ -74,14 +74,13 @@ describe('MenuAppEffects', () => {
 		actions = hot('--a--', {
 			a: new ResetAppAction()
 		});
-		const expectedResults = cold('--(bdefghi)--', {
-			b: new SetStateAction({linkId: undefined}),
-			d: new LoadDefaultCaseAction(),
-			e: new StartMouseShadow({fromUser: true}),
-			f: new AnnotationSetProperties(getInitialAnnotationsFeatureStyle()),
-			g: new ToggleIsPinnedAction(false),
-			h: new UnSelectMenuItemAction(),
-			i: new ToggleFooter(false)
+		const expectedResults = cold('--(bdefgh)--', {
+			b: new LoadDefaultCaseAction(),
+			d: new StartMouseShadow({fromUser: true}),
+			e: new AnnotationSetProperties(getInitialAnnotationsFeatureStyle()),
+			f: new ToggleIsPinnedAction(false),
+			g: new UnSelectMenuItemAction(),
+			h: new ToggleFooter(false)
 		});
 		expect(menuAppEffects.onResetApp$).toBeObservable(expectedResults);
 	});

@@ -67,7 +67,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	}
 
 	drawChanges([geoFilterType, region, regionAsVisualizer, isActive, isMinimalistViewMode]) {
-		if (regionAsVisualizer && !isActive && !isMinimalistViewMode && geoFilterType !== 'ScreenView') {
+		if (regionAsVisualizer && !isActive && !isMinimalistViewMode && geoFilterType !== CaseGeoFilter.ScreenView) {
 			return this.drawRegionOnMap(region);
 		}
 		this.clearEntities();
@@ -115,7 +115,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	interactionChanges([geoFilterSearch, isGeoActive, isActiveMap]: [CaseGeoFilter, boolean, boolean]): void {
 		this.removeDrawInteraction();
-		if (geoFilterSearch === this.geoFilter && isGeoActive && isActiveMap && this.geoFilter !== 'ScreenView') {
+		if (geoFilterSearch === this.geoFilter && isGeoActive && isActiveMap && this.geoFilter !== CaseGeoFilter.ScreenView) {
 			this.createDrawInteraction();
 		}
 	}

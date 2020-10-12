@@ -52,7 +52,7 @@ import {
 import { toastMessages } from '../../modules/core/models/toast-messages';
 import { endTimingLog, startTimingLog } from '../../modules/core/utils/logs/timer-logs';
 import { isFullOverlay } from '../../modules/core/utils/overlays';
-import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
+import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { MarkUpClass } from '../../modules/overlays/reducers/overlays.reducer';
 import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity/src/models';
@@ -342,7 +342,7 @@ export class MapAppEffects {
 			const activeMap: IMapSettings = mapList[activeMapId];
 			return [activeMap.data.position, geoFilterStatus];
 		}),
-		filter(([position, geoFilterStatus]: [IImageryMapPosition, IGeoFilterStatus]) => Boolean(position) && geoFilterStatus.type === 'ScreenView'),
+		filter(([position, geoFilterStatus]: [IImageryMapPosition, IGeoFilterStatus]) => Boolean(position) && geoFilterStatus.type === CaseGeoFilter.ScreenView),
 		debounceTime(VIEW_SEARCH_DEBOUNCE_TIME),
 		tap(([position, geoFilterStatus]: [IImageryMapPosition, IGeoFilterStatus]) => {
 			let zoom = position.projectedState.zoom;

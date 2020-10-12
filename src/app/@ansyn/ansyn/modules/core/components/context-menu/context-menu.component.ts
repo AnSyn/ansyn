@@ -98,7 +98,7 @@ export class ContextMenuComponent implements OnInit {
 	);
 
 	screenViewMode$ = this.store.select(selectGeoFilterStatus).pipe(
-		map((geoFilter: IGeoFilterStatus) => geoFilter.type === 'ScreenView')
+		map((geoFilter: IGeoFilterStatus) => geoFilter.type === CaseGeoFilter.ScreenView)
 	);
 
 	geoFilter;

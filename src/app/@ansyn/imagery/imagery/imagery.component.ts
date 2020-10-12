@@ -10,7 +10,7 @@ import { IMapSettings } from '../model/map-settings';
 })
 
 export class ImageryComponent implements OnInit {
-	@ViewChild('mapComponentElem', { read: ViewContainerRef })
+	@ViewChild('mapComponentElem', { read: ViewContainerRef, static: true })
 	set mapComponentElem(value: ViewContainerRef) {
 		this.communicator.mapComponentElem = value
 	}

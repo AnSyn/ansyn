@@ -11,8 +11,7 @@ import { CoreModule } from '../../core/core.module';
 		CoreModule,
 		StoreModule.forFeature(settingsFeatureKey, SettingsReducer)
 	],
-	declarations: [SettingsComponent],
-	entryComponents: [SettingsComponent]
+	declarations: [SettingsComponent]
 })
 export class SettingsModule {
 

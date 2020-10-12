@@ -28,13 +28,13 @@ export class LayerComponent implements OnInit, OnDestroy {
 			tap(selectedLayersIds => this.isChecked = selectedLayersIds.includes(this.layer && this.layer.id))
 		);
 
+	constructor(protected store$: Store<any>) {
+	}
+
 	ngOnInit() {
 	}
 
 	ngOnDestroy() {
-	}
-
-	constructor(protected store$: Store<any>) {
 	}
 
 	public onCheckboxClicked(checked: boolean): void {

@@ -18,9 +18,7 @@ export interface IImageryMapSourceMetaData {
 	readonly supported?: IBaseImageryMapConstructor[];
 }
 
-export interface IBaseMapSourceProviderConstructor {
-	new(...args): BaseMapSourceProvider
-}
+export type IBaseMapSourceProviderConstructor = new(...args) => BaseMapSourceProvider;
 
 @Injectable()
 export abstract class BaseMapSourceProvider<CONF = any> implements IImageryMapSourceMetaData {

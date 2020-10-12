@@ -13,6 +13,11 @@ import { AirbusSourceProvider } from './overlay-source-providers/airbus/airbus-s
 import { ImageryVideoOverlaySourceProvider } from './overlay-source-providers/video/imagery-video-overlay-source-provider';
 import { ImageryVideoModule } from '@ansyn/imagery-video';
 import { Pic4cartoSourceProvider } from './overlay-source-providers/pic4carto/pic4carto-source-provider';
+import { FilterCounters } from '../modules/filters/models/counters/filter-counters.interface';
+import { EnumFilterCounters } from '../modules/filters/models/counters/enum-filter-counters';
+import { SliderFilterCounters } from '../modules/filters/models/counters/slider-filter-counters';
+import { BooleanFilterCounters } from '../modules/filters/models/counters/boolean-filter-counters';
+import { ArrayFilterCounters } from '../modules/filters/models/counters/array-filter-counters';
 
 @NgModule({
 	providers: [
@@ -20,7 +25,11 @@ import { Pic4cartoSourceProvider } from './overlay-source-providers/pic4carto/pi
 		{ provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true },
 		{ provide: FilterMetadata, useClass: SliderFilterMetadata, multi: true },
 		{ provide: FilterMetadata, useClass: BooleanFilterMetadata, multi: true },
-		{ provide: FilterMetadata, useClass: ArrayFilterMetadata, multi: true }
+		{ provide: FilterMetadata, useClass: ArrayFilterMetadata, multi: true },
+		{ provide: FilterCounters, useClass: EnumFilterCounters, multi: true },
+		{ provide: FilterCounters, useClass: SliderFilterCounters, multi: true },
+		{ provide: FilterCounters, useClass: BooleanFilterCounters, multi: true },
+		{ provide: FilterCounters, useClass: ArrayFilterCounters, multi: true }
 	],
 	imports: [
 		HttpClientModule,

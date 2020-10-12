@@ -11,7 +11,6 @@ import { imageryStatusFeatureKey, ImageryStatusReducer } from '../../reducers/im
 import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { MockComponent } from '../../test/mock-component';
 import { ImageryStatusComponent } from './imagery-status.component';
-import { ClipboardModule, ClipboardService } from 'ngx-clipboard';
 import { SetOverlaysFootprintActive } from '../../actions/map.actions';
 
 const MAP: IMapSettings = {
@@ -38,7 +37,6 @@ describe('ImageryStatusComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				ClipboardModule,
 				HttpClientModule,
 				FormsModule,
 				EffectsModule.forRoot([]),
@@ -57,7 +55,6 @@ describe('ImageryStatusComponent', () => {
 				})
 			],
 			providers: [
-				ClipboardService,
 				ImageryCommunicatorService,
 				{ provide: ENTRY_COMPONENTS_PROVIDER, useValue: {status: [], container: [], floating_menu: []} }
 			]
@@ -97,7 +94,7 @@ describe('ImageryStatusComponent', () => {
 
 	it('should return map extra description, if exists', () => {
 		const myDescription = 'hehe';
-		spyOn(communicatorService, 'provide').and.returnValue({
+		spyOn(communicatorService, 'provide').and.returnValue(<any>{
 			ActiveMap: {
 				getExtraData: () => ({
 					description: myDescription

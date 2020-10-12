@@ -84,7 +84,7 @@ export {
 export {
 	LoadDefaultCaseAction, SaveCaseAsSuccessAction, SelectDilutedCaseAction
 }from './modules/menu-items/cases/actions/cases.actions';
-export { Filters, IFiltersState } from './modules/filters/reducer/filters.reducer';
+export { FiltersMetadata, IFiltersState } from './modules/filters/reducer/filters.reducer';
 export { IFilter } from './modules/filters/models/IFilter';
 export { ILayer } from './modules/menu-items/layers-manager/models/layers.model';
 export { TasksComponent } from './modules/menu-items/algorithms/components/tasks/tasks.component';
@@ -145,7 +145,7 @@ export { casesStateSelector, selectSelectedCase } from './modules/menu-items/cas
 export {
 	filtersStateSelector,
 	selectFacets,
-	selectFilters,
+	selectFiltersMetadata,
 	selectEnableOnlyFavorites,
 	selectShowOnlyFavorites
 } from './modules/filters/reducer/filters.reducer';
@@ -153,10 +153,13 @@ export { ToolsComponent } from './modules/menu-items/tools/tools/tools.component
 export { layersConfig } from './modules/menu-items/layers-manager/services/data-layers.service';
 export {
 	LayersManagerComponent
-}from './modules/menu-items/layers-manager/components/layers-manager/layers-manager.component';
+} from './modules/menu-items/layers-manager/components/layers-manager/layers-manager.component';
 export {
 	FiltersCollectionComponent
-}from './modules/filters/components/filters-collection/filters-collection.component';
+} from './modules/filters/components/filters-collection/filters-collection.component';
+export {
+	FilterContainerComponent
+} from './modules/filters/components/filter-container/filter-container.component';
 export { CasesComponent } from './modules/menu-items/cases/components/cases/cases.component';
 export { IToolsConfig, toolsConfig } from './modules/menu-items/tools/models/tools-config';
 export { CasesModule } from './modules/menu-items/cases/cases.module';
@@ -289,7 +292,7 @@ export {
 	ICaseBooleanFilterMetadata, ICaseState, IOverlaysManualProcessArgs
 }from './modules/menu-items/cases/models/case.model';
 export {
-	ICaseMapsState, IDilutedCaseState, ImageManualProcessArgs
+	ICaseMapsState, IDilutedCaseState, IImageManualProcessArgs
 }from './modules/menu-items/cases/models/case.model';
 export { ICaseEnumFilterMetadata } from './modules/menu-items/cases/models/case.model';
 export { ICaseMapState } from './modules/menu-items/cases/models/case.model';
@@ -377,3 +380,17 @@ export {
 	SetManualImageProcessing
 } from './modules/overlays/overlay-status/actions/overlay-status.actions';
 
+// ng9 upgrade - missing exports
+export { UnsupportedDevicesComponent } from './components/unsupported-devices/unsupported-devices.component';
+export { StatusBarComponent } from './modules/status-bar/components/status-bar/status-bar.component';
+export { AnsynButtonComponent } from './modules/core/forms/ansyn-button/ansyn-button.component';
+export { AnsynRadioComponent } from './modules/core/forms/ansyn-radio/ansyn-radio.component';
+export { ComboBoxComponent } from './modules/core/forms/combo-box/combo-box.component';
+export { ComboBoxTriggerComponent } from './modules/core/forms/combo-box-trigger/combo-box-trigger.component';
+export { ComboBoxOptionComponent } from './modules/core/forms/combo-box-option/combo-box-option.component';
+export { ContextMenuComponent } from './modules/core/components/context-menu/context-menu.component';
+export { CredentialsComponent } from './modules/core/components/credentials/credentials.component';
+export { OverlaysContainerComponent } from './modules/overlays/components/container/overlays-container.component';
+export { TimelineComponent } from './modules/overlays/components/timeline/timeline.component';
+export { OverlayOverviewComponent } from './modules/overlays/components/overlay-overview/overlay-overview.component';
+export { OverlayNavigationBarComponent } from './modules/overlays/components/overlay-navigation-bar/overlay-navigation-bar.component';

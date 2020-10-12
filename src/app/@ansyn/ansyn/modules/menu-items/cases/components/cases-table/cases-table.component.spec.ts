@@ -109,7 +109,7 @@ describe('CasesTableComponent', () => {
 		let selectedCaseId = 'fakeSelectedCaseId';
 		component.removeCase(selectedCaseId);
 		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({
-			component: DeleteCaseComponent,
+			type: 'delete',
 			caseId: selectedCaseId
 		}));
 	});
@@ -118,7 +118,7 @@ describe('CasesTableComponent', () => {
 		let selectedCaseId = 'fakeSelectedCaseId';
 		component.editCase(selectedCaseId);
 		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({
-			component: EditCaseComponent,
+			type: 'edit',
 			caseId: selectedCaseId
 		}));
 	});

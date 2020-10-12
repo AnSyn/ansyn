@@ -39,11 +39,11 @@ export class CasesToolsComponent implements OnInit, OnDestroy {
 	}
 
 	showEditCaseModal(): void {
-		this.store.dispatch(new OpenModalAction({ component: EditCaseComponent }));
+		this.store.dispatch(new OpenModalAction({ type: 'edit' }));
 	}
 
 	showSaveCaseModal(): void {
-		this.store.dispatch(new OpenModalAction({ component: SaveCaseComponent }));
+		this.store.dispatch(new OpenModalAction({ type: 'save' }));
 	}
 
 	manualSave(): void {

@@ -11,7 +11,7 @@ import { selectLayers, selectSelectedLayersIds } from '../../../../menu-items/la
 import { booleanContains, intersect } from '@turf/turf';
 import {
 	getPolygonIntersectionRatio,
-	ImageryMapPosition,
+	IImageryMapPosition,
 	ImageryPlugin,
 	IVisualizerEntity
 } from '@ansyn/imagery';
@@ -27,8 +27,20 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	showedLayersDictionary: string[];
 	currentExtent: Polygon;
 	protected subscriptions: Subscription[] = [];
+
+	constructor(protected store$: Store<any>,
+				protected http: HttpClient,
+				protected loggerService: LoggerService) {
+		super({
+			initial: {
+				'fill-opacity': 0
+			}
+		});
+		this.layersDictionary = {};
+		this.showedLayersDictionary = [];
+	}
 	// todo: return auto-subscription when the bug is fixed
-	updateLayersOnMap$ = () => combineLatest(this.store$.select(selectHideLayersOnMap(this.mapId)), this.store$.select(selectSelectedLayersIds))
+	updateLayersOnMap$ = () => combineLatest([this.store$.select(selectHideLayersOnMap(this.mapId)), this.store$.select(selectSelectedLayersIds)])
 		.pipe(
 			withLatestFrom(this.store$.select(selectLayers)),
 			filter(([[isHidden, layersId], layers]: [[boolean, string[]], ILayer[]]) => Boolean(layers)),
@@ -44,7 +56,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	updateLayerScale$ = () => this.store$.select(selectMapPositionByMapId(this.mapId)).pipe(
 		debounceTime(500),
 		filter(Boolean),
-		mergeMap((position: ImageryMapPosition) => {
+		mergeMap((position: IImageryMapPosition) => {
 			// used squareGrid to get the extent grid
 			this.currentExtent = position.extentPolygon;
 			const entities = [];
@@ -55,18 +67,6 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 			return this.setEntities(entities);
 		})
 	);
-
-	constructor(protected store$: Store<any>,
-				protected http: HttpClient,
-				protected loggerService: LoggerService) {
-		super({
-			initial: {
-				'fill-opacity': 0
-			}
-		});
-		this.layersDictionary = {};
-		this.showedLayersDictionary = [];
-	}
 
 	onInitSubscriptions(): void {
 		super.onInitSubscriptions();

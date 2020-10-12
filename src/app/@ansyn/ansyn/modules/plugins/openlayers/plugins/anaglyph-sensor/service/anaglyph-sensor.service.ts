@@ -15,6 +15,11 @@ import { AnaglyphConfig, IAnaglyphConfig } from '../models/anaglyph.model';
 @Injectable()
 export class AnaglyphSensorService {
 
+	constructor(protected communicatorService: ImageryCommunicatorService,
+				@Inject(AnaglyphConfig) public config: IAnaglyphConfig) {
+
+	}
+
 	isSupprotedOverlay(overlay: IOverlay): Observable<boolean> {
 		const result = Array.isArray(this.config.sensorNames) && this.config.sensorNames.includes(overlay.sensorName);
 		return of(result);
@@ -74,10 +79,5 @@ export class AnaglyphSensorService {
 			catchError((error) => {
 				return of(false);
 			}));
-	}
-
-	constructor(protected communicatorService: ImageryCommunicatorService,
-				@Inject(AnaglyphConfig) public config: IAnaglyphConfig) {
-
 	}
 }

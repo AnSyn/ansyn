@@ -17,7 +17,7 @@ import { IToolsConfig, toolsConfig } from '../models/tools-config';
 import { annotationsClassNameForExport } from '@ansyn/ol';
 import { measuresClassNameForExport } from '../../../plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
 import { IExportMapData, IExportMapMetadata, ImageryCommunicatorService, toDegrees } from '@ansyn/imagery';
-import { jsPDF } from "jspdf";
+import { jsPDF } from 'jspdf';
 import { TranslateService } from '@ngx-translate/core';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { Observable, of, EMPTY } from 'rxjs';
@@ -83,8 +83,9 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	onActiveMapChange$ = this.store$.pipe(
 		select(selectActiveMapId),
-		tap( (activeMapId) => this.pdfExportMapId = activeMapId)
+		tap( (activeMapId: string) => this.pdfExportMapId = activeMapId)
 	);
+
 	@AutoSubscription
 	basicExport$ = this.store$.pipe(
 		select(selectIsMinimalistViewMode),

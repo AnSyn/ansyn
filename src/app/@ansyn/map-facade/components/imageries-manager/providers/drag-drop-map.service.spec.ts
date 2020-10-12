@@ -17,7 +17,7 @@ describe('DragDropMapService', () => {
 	}));
 
 	it('should be created', () => {
-		const service: DragDropMapService = TestBed.get(DragDropMapService);
+		const service: DragDropMapService = TestBed.inject(DragDropMapService);
 		expect(service).toBeTruthy();
 	});
 });

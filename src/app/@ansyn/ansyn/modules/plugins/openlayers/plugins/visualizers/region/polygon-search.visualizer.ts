@@ -9,6 +9,7 @@ import { UpdateGeoFilterStatus } from '../../../../../status-bar/actions/status-
 import { RegionVisualizer } from './region.visualizer';
 import { OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
 import { CaseGeoFilter, CaseRegionState } from '../../../../../menu-items/cases/models/case.model';
+import { Injectable } from '@angular/core';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -16,6 +17,7 @@ import { CaseGeoFilter, CaseRegionState } from '../../../../../menu-items/cases/
 	dontRestrictToExtent: true,
 	layerClassName: 'polygon-layer'
 })
+@Injectable()
 export class PolygonSearchVisualizer extends RegionVisualizer {
 	constructor(public store$: Store<any>,
 				public actions$: Actions,

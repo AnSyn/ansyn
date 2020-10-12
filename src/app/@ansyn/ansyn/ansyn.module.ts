@@ -81,9 +81,6 @@ import { ResultsModule } from "./modules/menu-items/results/results.module";
 		},
 		{ provide: UrlSerializer, useClass: DefaultUrlSerializer }
 	],
-	entryComponents: [
-		OverlayOutOfBoundsComponent, ImageryZoomerComponent, ImageryDimensionModeComponent
-	],
 	declarations: [
 		AnsynComponent,
 		OverlayOutOfBoundsComponent,
@@ -96,7 +93,11 @@ import { ResultsModule } from "./modules/menu-items/results/results.module";
 })
 
 export class AnsynModule {
-	static component(id?: string): ModuleWithProviders {
+
+	constructor(public translate: TranslateService) {
+		translate.setDefaultLang('default');
+	}
+	static component(id?: string): ModuleWithProviders<AnsynModule> {
 		return {
 			ngModule: AnsynModule,
 			providers: [
@@ -110,9 +111,5 @@ export class AnsynModule {
 				}
 			]
 		};
-	}
-
-	constructor(public translate: TranslateService) {
-		translate.setDefaultLang('default');
 	}
 }

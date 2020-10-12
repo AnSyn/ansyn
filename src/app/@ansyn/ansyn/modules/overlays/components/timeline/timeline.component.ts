@@ -66,7 +66,7 @@ export interface IEventDropsEvent {
 @AutoSubscriptions()
 export class TimelineComponent implements OnInit, OnDestroy {
 
-	@ViewChild('context') context: ElementRef;
+	@ViewChild('context', { static: true }) context: ElementRef;
 	isZooming: boolean;
 	dispachedSearch: boolean;
 
@@ -223,7 +223,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		this.store$.dispatch(new SetTimelineStateAction({ timeLineRange: { start, end } }));
 		setTimeout(() => this.isZooming = false, this.configuration.searchDebounceTime);
 	}
-	
+
 	drawMarkup(): void {
 		if (this.markup && this.element) {
 			const dropsElements = this.element.selectAll('.drop');
@@ -257,7 +257,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	initEventDropsSequence(drops: IOverlayDrop[]): void {
 		this.initEventDrop(drops);
-		this.drawMarkup(); 
+		this.drawMarkup();
 	}
 
 	removeOldEventDrops(): void {
@@ -335,7 +335,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	markUpDrops(changedDrops, markUpClass: MarkUpClass): void {
 		const drops = changedDrops.filter('.' + markUpClass);
-		
+
 		if (!drops.empty()) {
 			this.moveToFront(drops);
 

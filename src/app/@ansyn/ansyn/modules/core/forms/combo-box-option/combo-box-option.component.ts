@@ -14,10 +14,14 @@ import { NgControl } from '@angular/forms';
 	destroy: 'ngOnDestroy'
 })
 export class ComboBoxOptionComponent implements OnInit, OnDestroy {
+
+	get selected() {
+		return this._parent.selected;
+	}
 	@Input() value;
 
 	@HostBinding('class.disabled')
-	@Input('disabled') disabled = false;
+	@Input() disabled = false;
 
 
 	@AutoSubscription
@@ -33,18 +37,14 @@ export class ComboBoxOptionComponent implements OnInit, OnDestroy {
 			}
 		}));
 
+	constructor(protected _parent: ComboBoxComponent, protected el: ElementRef) {
+	}
+
 	@HostListener('click') onClick() {
 		if (this.value) {
 			this._parent.selectOption(this.value);
 		}
 		this._parent.close();
-	}
-
-	get selected() {
-		return this._parent.selected;
-	}
-
-	constructor(protected _parent: ComboBoxComponent, protected el: ElementRef) {
 	}
 
 	ngOnInit() {

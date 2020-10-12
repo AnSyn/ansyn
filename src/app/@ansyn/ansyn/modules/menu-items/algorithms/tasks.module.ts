@@ -35,12 +35,11 @@ import { TranslateModule } from '@ngx-translate/core';
 	],
 	declarations: [TasksComponent, TasksTableComponent, TasksTablePageComponent, TasksTablePageHeaderComponent,
 		TasksFormPageComponent, TasksFormPageHeaderComponent, TasksFormComponent, RemoveTaskModalComponent],
-	entryComponents: [TasksComponent],
 	exports: [TasksComponent],
 	providers: []
 })
 export class TasksModule {
-	static provideRemote(tasksRemoteServiceValue: { new(...args): TasksRemoteService }, tasksServiceValue: { new(...args): TasksService }): ModuleWithProviders {
+	static provideRemote(tasksRemoteServiceValue: new(...args) => TasksRemoteService, tasksServiceValue: new(...args) => TasksService): ModuleWithProviders<TasksModule> {
 		return {
 			ngModule: TasksModule,
 			providers: [

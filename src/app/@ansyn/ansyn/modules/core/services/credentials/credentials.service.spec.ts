@@ -20,7 +20,7 @@ describe('CredentialsService', () => {
 	});
 
 	it('should be created', () => {
-		const service: CredentialsService = TestBed.get(CredentialsService);
+		const service: CredentialsService = TestBed.inject(CredentialsService);
 		expect(service).toBeTruthy();
 	});
 });

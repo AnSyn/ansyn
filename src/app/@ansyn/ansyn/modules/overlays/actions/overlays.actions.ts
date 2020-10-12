@@ -10,6 +10,7 @@ import {
 	IOverlaySpecialObject,
 } from '../models/overlay.model';
 import { IMarkUpData, IOverlayDropMarkUp, ITimelineRange, MarkUpClass } from '../reducers/overlays.reducer';
+import { Update } from '@ngrx/entity';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
@@ -44,6 +45,9 @@ export const OverlaysActionTypes = {
 	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT',
 	SET_MISC_OVERLAYS: 'SET_MISC_OVERLAYS',
 	SET_MISC_OVERLAY: 'SET_MISC_OVERLAY',
+	UPDATE_OVERLAY: 'UPDATE_OVERLAY',
+	UPDATE_OVERLAYS: 'UPDATE_OVERLAYS',
+	SET_OVERLAYS_CONTAINMENT_CHECKED: 'OVERLAYS_CONTAINMENT_CHECKED'
 };
 
 export class SelectOverlayAction implements Action {
@@ -56,7 +60,7 @@ export class SelectOverlayAction implements Action {
 export class SetMarkUp implements Action {
 	type = OverlaysActionTypes.SET_OVERLAYS_MARKUPS;
 
-	constructor(public payload: { classToSet: MarkUpClass, dataToSet: IMarkUpData, customOverviewElement?: any }) {
+	constructor(public payload: { classToSet: MarkUpClass, dataToSet: IMarkUpData, customOverviewElementId?: string }) {
 	};
 }
 
@@ -149,7 +153,7 @@ export class DisplayOverlayAction implements Action {
 }
 
 export class DisplayOverlaySuccessAction extends DisplayOverlayAction {
-	type = OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS;
+	type = <any>OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS;
 }
 
 export class DisplayOverlayFailedAction implements Action {
@@ -253,6 +257,27 @@ export class SetMiscOverlay implements Action {
 	}
 }
 
+export class UpdateOverlay implements Action {
+	type: string = OverlaysActionTypes.UPDATE_OVERLAY;
+
+	constructor(public payload: Update<IOverlay>) {
+	}
+}
+
+export class UpdateOverlays implements Action {
+	type: string = OverlaysActionTypes.UPDATE_OVERLAYS;
+
+	constructor(public payload: Update<IOverlay>[]) {
+	}
+}
+
+export class SetOverlaysContainmentChecked implements Action {
+	type: string = OverlaysActionTypes.SET_OVERLAYS_CONTAINMENT_CHECKED;
+
+	constructor(public payload: boolean = true) {
+	}
+}
+
 export type OverlaysActions
 	= DisplayOverlayFromStoreAction
 	| DisplayMultipleOverlaysFromStoreAction
@@ -278,3 +303,6 @@ export type OverlaysActions
 	| SetOverlaysCriteriaAction
 	| SetMiscOverlays
 	| SetMiscOverlay
+	| UpdateOverlay
+	| UpdateOverlays
+	| SetOverlaysContainmentChecked

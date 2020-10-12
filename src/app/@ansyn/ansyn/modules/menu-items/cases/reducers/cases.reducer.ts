@@ -1,4 +1,4 @@
-import { CasesActions, CasesActionTypes } from '../actions/cases.actions';
+import { caseModalType, CasesActions, CasesActionTypes } from '../actions/cases.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary } from '@ngrx/entity/src/models';
@@ -6,7 +6,8 @@ import { ICase, ICasePreview } from '../models/case.model';
 
 export interface ICaseModal {
 	show: boolean,
-	id?: string,
+	type?: caseModalType,
+	id?: string
 }
 
 export interface ICasesState extends EntityState<ICasePreview> {
@@ -60,10 +61,10 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 			return casesAdapter.addMany(action.payload, state);
 
 		case CasesActionTypes.OPEN_MODAL:
-			return { ...state, modal: { id: action.payload.caseId, show: true } };
+			return { ...state, modal: { type: action.payload.type, id: action.payload.caseId, show: true } };
 
 		case CasesActionTypes.CLOSE_MODAL:
-			return { ...state, modal: { id: null, show: false } };
+			return { ...state, modal: { type: null, id: null, show: false } };
 
 		case CasesActionTypes.SELECT_CASE:
 			return { ...state, selectedCase: null };
@@ -87,3 +88,4 @@ export const selectSelectedCase = createSelector(casesStateSelector, (cases) => 
 export const selectAutoSave: MemoizedSelector<any, boolean> = createSelector(casesStateSelector, (cases) => {
 	return cases.autoSave
 });
+export const selectModalState = createSelector(casesStateSelector, (cases) => cases?.modal);

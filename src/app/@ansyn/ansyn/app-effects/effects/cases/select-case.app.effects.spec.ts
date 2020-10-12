@@ -128,7 +128,6 @@ describe('SelectCaseAppEffects', () => {
 			};
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
-
 			const expectedResult = cold('--(abcdefghijklmnpqr)--', {
 			a: new SetMapsDataActionStore({ mapsList: maps.data }),
 			b: new SetActiveMapId(state.maps.activeMapId),

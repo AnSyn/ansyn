@@ -7,7 +7,7 @@ import { fromEvent, Observable } from 'rxjs';
 import { UUID } from 'angular2-uuid';
 import { selectActiveMapId, SetMapPositionByRectAction, SetToastMessageAction } from '@ansyn/map-facade';
 import { delay, filter, map, retryWhen, tap, withLatestFrom } from 'rxjs/operators';
-import { FeatureCollection } from 'geojson';
+import { FeatureCollection, Polygon } from 'geojson';
 import KmlFormat from 'ol/format/KML';
 import GeoJSONFormat from 'ol/format/GeoJSON';
 import * as shapeFile from 'shapefile';
@@ -72,7 +72,7 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 		}),
 		filter(Boolean),
 		withLatestFrom(this.store.pipe(select(selectActiveMapId))),
-		tap(([layerBbox, activeMapId]) => this.store.dispatch(new SetMapPositionByRectAction({
+		tap(([layerBbox, activeMapId]: [Polygon, string]) => this.store.dispatch(new SetMapPositionByRectAction({
 			id: activeMapId,
 			rect: layerBbox
 		}))),

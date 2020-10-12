@@ -105,7 +105,7 @@ export class AddLayerOnBackendSuccessAction implements Action {
 export class UpdateLayer implements Action {
 	type = LayersActionTypes.UPDATE_LAYER;
 
-	constructor(public payload: ILayer) {
+	constructor(public payload: Partial<ILayer>) {
 	}
 }
 

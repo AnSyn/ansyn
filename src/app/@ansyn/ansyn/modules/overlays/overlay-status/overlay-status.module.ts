@@ -13,7 +13,6 @@ import { FormsModule } from "@angular/forms";
 
 @NgModule({
 	declarations: [OverlayStatusComponent, BackToBaseMapComponent, ImageProcessingControlComponent],
-	entryComponents: [OverlayStatusComponent, BackToBaseMapComponent, ImageProcessingControlComponent],
 	imports: [
 		CommonModule,
 		StoreModule.forFeature(overlayStatusFeatureKey, OverlayStatusReducer),

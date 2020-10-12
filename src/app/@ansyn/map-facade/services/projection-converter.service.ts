@@ -20,6 +20,9 @@ export interface ICoordinatesSystem {
 @Injectable()
 export class ProjectionConverterService {
 
+	constructor(@Inject(mapFacadeConfig) protected mapfacadeConfigProj: IMapFacadeConfig) {
+	}
+
 	static isValidCoordinates(coords: number[], minLength: number) {
 		return coords.length >= minLength && coords.every(c => typeof c === 'number');
 	}
@@ -47,9 +50,6 @@ export class ProjectionConverterService {
 		}
 
 		return false;
-	}
-
-	constructor(@Inject(mapFacadeConfig) protected mapfacadeConfigProj: IMapFacadeConfig) {
 	}
 
 	isValidConversion(coords: number[], from: ICoordinatesSystem): boolean {

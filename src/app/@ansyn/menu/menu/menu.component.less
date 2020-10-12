@@ -62,10 +62,16 @@ div.menu-wrapper {
 			justify-content: space-between;
 
 			div.menu-items {
+				display: flex;
 				flex: 1;
 				flex-direction: column;
-				align-items: center;
-				justify-content: center;
+
+				.bottom {
+					margin-top: auto;
+				}
+				.bottom ~ .bottom {
+					margin-top: unset;
+				}
 			}
 
 			div.menu-btn {
@@ -98,6 +104,11 @@ div.menu-wrapper {
 						padding-right: 2px;
 						padding-left: 2px;
 					}
+
+					&.bottom {
+						width: 10px;
+						height: 10px;
+					}
 				}
 
 				img {
@@ -115,13 +126,6 @@ div.menu-wrapper {
 
 				&.draw-user-attention {
 					background-color: #3d1a1a;
-				}
-
-				&.bottom {
-					span.badge {
-						width: 10px;
-						height: 10px;
-					}
 				}
 
 				@media screen and (max-height: 700px) {

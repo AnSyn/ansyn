@@ -1,20 +1,18 @@
 import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
-
 import { ExportMapsPopupComponent } from './export-maps-popup.component';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { MatDialogRef, MatSelectModule, MatDialogModule } from '@angular/material';
+import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { StoreModule } from '@ngrx/store';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { TranslateModule } from '@ngx-translate/core';
-import { HttpClientModule } from '@angular/common/http';
 import { LoggerService } from '../../../core/services/logger.service';
 import { LoggerConfig } from '../../../core/models/logger.config';
 import { toolsConfig } from '../models/tools-config';
 import { AnsynFormsModule } from '../../../core/forms/ansyn-forms.module';
 import { FormsModule } from '@angular/forms';
-import { ToolsModule } from '../tools.module';
 import { CoreModule } from '../../../core/core.module';
 import { MockComponent } from '../../../../../map-facade/test/mock-component';
+import { MatSelectModule } from '@angular/material/select';
 
 
 describe('ExportMapsPopupComponent', () => {

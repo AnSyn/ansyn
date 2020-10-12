@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { EMPTY, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
 	ISetStatePayload,
 	NavigateCaseTriggerAction,
@@ -12,7 +12,7 @@ import {
 	CasesActionTypes,
 	CasesService,
 	casesStateSelector, ICase,
-	ICasesState, ICaseState, IDilutedCase,
+	ICasesState,
 	LoadCaseAction,
 	LoadDefaultCaseAction,
 	SaveCaseAsSuccessAction,
@@ -20,7 +20,7 @@ import {
 } from '@ansyn/ansyn';
 import { IRouterState, routerStateSelector } from '../reducers/router.reducer';
 import { Store } from '@ngrx/store';
-import { catchError, filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import { cloneDeep } from 'lodash';
 
 @Injectable()

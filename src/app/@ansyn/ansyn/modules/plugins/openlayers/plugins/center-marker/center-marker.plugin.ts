@@ -4,7 +4,7 @@ import Point from 'ol/geom/Point';
 import Style from 'ol/style/Style';
 import Icon from 'ol/style/Icon';
 import VectorLayer from 'ol/layer/Vector';
-import { BaseImageryMap, BaseImageryPlugin, ImageryMapPosition, ImageryPlugin } from '@ansyn/imagery';
+import { BaseImageryMap, BaseImageryPlugin, IImageryMapPosition, ImageryPlugin } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
 import { AutoSubscription } from 'auto-subscriptions';
 import { OpenLayersMap } from '@ansyn/ol';
@@ -14,10 +14,6 @@ import { OpenLayersMap } from '@ansyn/ol';
 	deps: []
 })
 export class CenterMarkerPlugin extends BaseImageryPlugin {
-	private _iconStyle: Style;
-	private _existingLayer;
-
-	private _isEnabled: boolean;
 
 	public set isEnabled(value: boolean) {
 		if (this._isEnabled !== value) {
@@ -34,15 +30,10 @@ export class CenterMarkerPlugin extends BaseImageryPlugin {
 	public get isEnabled(): boolean {
 		return this._isEnabled;
 	}
+	private _iconStyle: Style;
+	private _existingLayer;
 
-	@AutoSubscription
-	positionChanged$ = () => this.communicator.positionChanged.subscribe((position: ImageryMapPosition) => {
-		if (this.isEnabled) {
-			this.tryDrawCenter();
-		} else {
-			this.tryDeleteCenter();
-		}
-	});
+	private _isEnabled: boolean;
 
 	constructor() {
 		super();
@@ -58,6 +49,15 @@ export class CenterMarkerPlugin extends BaseImageryPlugin {
 		});
 
 	}
+
+	@AutoSubscription
+	positionChanged$ = () => this.communicator.positionChanged.subscribe((position: IImageryMapPosition) => {
+		if (this.isEnabled) {
+			this.tryDrawCenter();
+		} else {
+			this.tryDeleteCenter();
+		}
+	});
 
 	onResetView(): Observable<boolean> {
 		return of(true);

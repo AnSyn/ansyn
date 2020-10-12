@@ -103,7 +103,7 @@ describe('OverlayOverviewComponent', () => {
 		spyOn(component.mouseLeave$, 'subscribe');
 		component.showOverview();
 		expect(component.isHoveringOverDrop).toBeTruthy();
-		expect(component.mouseLeave$.subscribe).toHaveBeenCalled();
+		expect(component.mouseLeave$.subscribe).toHaveBeenCalled(); // tslint:disable-line
 	});
 
 	it('hidePreview should change value of isHoveringOverDrop to false', () => {

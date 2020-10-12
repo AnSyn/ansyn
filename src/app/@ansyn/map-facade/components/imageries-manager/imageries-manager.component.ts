@@ -48,7 +48,7 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 
 	public selectedLayout;
 
-	@ViewChild('imageriesContainer') imageriesContainer: ElementRef;
+	@ViewChild('imageriesContainer', { static: true }) imageriesContainer: ElementRef;
 
 	pinLocationMode: boolean;
 	ids: string[] = [];

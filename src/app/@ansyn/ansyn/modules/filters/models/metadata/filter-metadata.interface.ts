@@ -14,8 +14,6 @@ export abstract class FilterMetadata {
 
 	abstract accumulateData(value: any): void;
 
-	abstract incrementFilteredCount(value: any): void;
-
 	abstract updateMetadata(value: any): void;
 
 	abstract filterFunc(ovrelay: any, filteringParams: any): boolean;
@@ -23,8 +21,6 @@ export abstract class FilterMetadata {
 	abstract getMetadataForOuterState(): any;
 
 	abstract isFiltered(): boolean;
-
-	abstract resetFilteredCount(): void;
 
 	abstract showAll(): void;
 

@@ -116,17 +116,18 @@ describe('CasesService', () => {
 		let fakeId = 'fakerId';
 		let selectedCase: ICase = { ...caseMock, name: 'fakerName' };
 		let fakeResponse = { selectedCase };
-		spyOn(storageService, 'create').and.callFake(() => of(fakeResponse));
+		let newDate = new Date();
+		spyOn(storageService, 'create').and.callFake(() => <any>of(fakeResponse));
 		spyOn(UUID, 'UUID').and.callFake(() => fakeId);
-		casesService.createCase(selectedCase);
+		casesService.createCase(selectedCase, newDate);
 		expect(storageService.create).toHaveBeenCalledWith(casesService.config.schema,
 			{
 				preview: {
 					id: fakeId,
 					name: selectedCase.name,
 					owner: selectedCase.owner,
-					creationTime: selectedCase.creationTime,
-					lastModified: selectedCase.lastModified,
+					creationTime: newDate,
+					lastModified: newDate,
 					autoSave: true
 				},
 				data: casesService.pluckIdSourceType(selectedCase.state)
@@ -137,7 +138,7 @@ describe('CasesService', () => {
 		spyOn(casesService, 'isStoreEntitiesEqual').and.callFake(() => false);
 		let selectedCase: ICase = { ...caseMock, id: 'fakerId', name: 'fakerOtherName' };
 		let fakeResponse = { selectedCase };
-		spyOn(storageService, 'update').and.callFake(() => of(fakeResponse));
+		spyOn(storageService, 'update').and.callFake(() => <any>of(fakeResponse));
 		casesService.updateCase(selectedCase);
 		expect(storageService.update).toHaveBeenCalledWith(casesService.config.schema,
 			{
@@ -164,7 +165,7 @@ describe('CasesService', () => {
 
 	it('loadCase should get single case from ajax("get")', () => {
 		const caseId = '12345';
-		spyOn(storageService, 'get').and.returnValue(of([]));
+		spyOn(storageService, 'get').and.returnValue(<any>of([]));
 		casesService.loadCase(caseId);
 		expect(storageService.get).toHaveBeenCalledWith(casesService.config.schema, caseId);
 	});

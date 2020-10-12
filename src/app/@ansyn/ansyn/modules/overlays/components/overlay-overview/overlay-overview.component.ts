@@ -2,7 +2,7 @@ import { Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild } from
 import { select, Store } from '@ngrx/store';
 import { fromEvent, Observable } from 'rxjs';
 import { getTimeFormat } from '@ansyn/map-facade';
-import { IOverlaysState, MarkUpClass, selectCustomOverviewElement, selectHoveredOverlay } from '../../reducers/overlays.reducer';
+import { IOverlaysState, MarkUpClass, selectCustomOverviewElementId, selectHoveredOverlay } from '../../reducers/overlays.reducer';
 import { overlayOverviewComponentConstants } from './overlay-overview.component.const';
 import {
 	ChangeOverlayPreviewRotationAction,
@@ -75,7 +75,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	hoveredOverlay$: Observable<any> = this.store$.pipe(
 		select(selectHoveredOverlay),
-		withLatestFrom(this.store$.select(selectCustomOverviewElement)),
+		withLatestFrom(this.store$.select(selectCustomOverviewElementId)),
 		tap(this.onHoveredOverlay.bind(this))
 	);
 
@@ -91,10 +91,11 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 	}
 
-	onHoveredOverlay([overlay, customElement]: [IOverviewOverlay, any]) {
+	onHoveredOverlay([overlay, customElementId]: [IOverviewOverlay, string]) {
 		if (overlay) {
 			const fetching = overlay.thumbnailUrl === this.const.FETCHING_OVERLAY_DATA;
 			this.overlayId = overlay.id;
+			const customElement = customElementId && this.el.nativeElement.ownerDocument.getElementById(customElementId);
 			const hoveredElement: Element = customElement || this.dropElement;
 			if (!hoveredElement) {
 				return;

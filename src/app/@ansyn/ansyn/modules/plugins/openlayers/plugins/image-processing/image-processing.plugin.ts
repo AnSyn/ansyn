@@ -1,16 +1,15 @@
 import { combineLatest, Observable, of } from 'rxjs';
-import ol_Layer from 'ol/layer/Layer';
 import ImageLayer from 'ol/layer/Image';
 import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
-import { IMAGE_PROCESS_ATTRIBUTE, OpenLayersDisabledMap, OpenLayersMap, ProjectableRaster } from '@ansyn/ol';
+import { IMAGE_PROCESS_ATTRIBUTE, OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ol';
 import { OpenLayersImageProcessing } from './image-processing';
 import { distinctUntilChanged, filter, map, take, tap } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import { Inject } from '@angular/core';
 import { selectMaps } from '@ansyn/map-facade';
-import { ICaseMapState, ImageManualProcessArgs } from '../../../../menu-items/cases/models/case.model';
+import { ICaseMapState, IImageManualProcessArgs } from '../../../../menu-items/cases/models/case.model';
 import {
 	IImageProcParam,
 	IOverlayStatusConfig,
@@ -47,8 +46,8 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	onAutoImageProcessingAndManualImageProcessActive$ = combineLatest(this.isAutoImageProcessingActive$, this.imageManualProcessArgs$).pipe(
-		tap(([isAutoImageProcessingActive, imageManualProcessArgs]: [boolean, ImageManualProcessArgs]) => {
+	onAutoImageProcessingAndManualImageProcessActive$ = combineLatest([this.isAutoImageProcessingActive$, this.imageManualProcessArgs$]).pipe(
+		tap(([isAutoImageProcessingActive, imageManualProcessArgs]: [boolean, IImageManualProcessArgs]) => {
 			const isImageProcessActive = this.isImageProcessActive(isAutoImageProcessingActive, imageManualProcessArgs);
 			if (!isImageProcessActive) {
 				this.removeImageLayer();
@@ -75,13 +74,13 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		super();
 	}
 
-	defaultImageManualProcessArgs(): ImageManualProcessArgs {
-		return this.params.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam: IImageProcParam) => {
+	defaultImageManualProcessArgs(): IImageManualProcessArgs {
+		return this.params.reduce<IImageManualProcessArgs>((initialObject: any, imageProcParam: IImageProcParam) => {
 			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
 		}, {});
 	}
 
-	isImageProcessActive(isAutoImageProcessingActive: boolean, imageManualProcessArgs: ImageManualProcessArgs) {
+	isImageProcessActive(isAutoImageProcessingActive: boolean, imageManualProcessArgs: IImageManualProcessArgs) {
 		const defaultManualParams = this.defaultImageManualProcessArgs();
 		const result = isAutoImageProcessingActive || (Boolean(imageManualProcessArgs) && !isEqual(defaultManualParams, imageManualProcessArgs));
 		return result;

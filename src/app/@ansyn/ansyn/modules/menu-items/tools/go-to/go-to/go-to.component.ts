@@ -20,7 +20,7 @@ import {
 	SetToastMessageAction
 } from '@ansyn/map-facade';
 import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
-import { ClipboardService } from 'ngx-clipboard';
+import { copyFromContent } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-go-to',
@@ -28,32 +28,6 @@ import { ClipboardService } from 'ngx-clipboard';
 	styleUrls: ['./go-to.component.less']
 })
 export class GoToComponent implements OnInit {
-	@Input() disabled: boolean;
-	private _expand: boolean;
-	public activeCenter: number[];
-	public gotoExpand$: Observable<boolean> = this.store$.select(selectSubMenu).pipe(
-		map((subMenu) => subMenu === SubMenuEnum.goTo),
-		distinctUntilChanged()
-	);
-	activeCenter$: Observable<number[]> = this.store$.select(toolsStateSelector).pipe(
-		pluck<any, any>('activeCenter'),
-		distinctUntilChanged()
-	);
-
-	activeCenterProjDatum: ICoordinatesSystem = { datum: 'wgs84', projection: 'geo' };
-
-	inputs = {
-		geoWgs84: [0, 0],
-		utmEd50: [],
-		utmWgs84: []
-	};
-
-	pinLocationMode$: Observable<boolean> = this.store$.select(toolsStateSelector).pipe(
-		map((state: IToolsState) => state.flags.get(toolsFlags.pinLocation)),
-		distinctUntilChanged()
-	);
-
-	pinLocationMode: boolean;
 
 	@HostBinding('class.expand')
 	set expand(value) {
@@ -82,6 +56,38 @@ export class GoToComponent implements OnInit {
 
 	get notification(): IEd50Notification {
 		return this.mapfacadeConfig.Proj4.ed50Notification;
+	}
+	@Input() disabled: boolean;
+	private _expand: boolean;
+	public activeCenter: number[];
+	public gotoExpand$: Observable<boolean> = this.store$.select(selectSubMenu).pipe(
+		map((subMenu) => subMenu === SubMenuEnum.goTo),
+		distinctUntilChanged()
+	);
+	activeCenter$: Observable<number[]> = this.store$.select(toolsStateSelector).pipe(
+		pluck<any, any>('activeCenter'),
+		distinctUntilChanged()
+	);
+
+	activeCenterProjDatum: ICoordinatesSystem = { datum: 'wgs84', projection: 'geo' };
+
+	inputs = {
+		geoWgs84: [0, 0],
+		utmEd50: [],
+		utmWgs84: []
+	};
+
+	pinLocationMode$: Observable<boolean> = this.store$.select(toolsStateSelector).pipe(
+		map((state: IToolsState) => state.flags.get(toolsFlags.pinLocation)),
+		distinctUntilChanged()
+	);
+
+	pinLocationMode: boolean;
+
+	constructor(protected store$: Store<IToolsState>,
+				@Inject(toolsConfig) protected config: IToolsConfig,
+				@Inject(mapFacadeConfig) protected mapfacadeConfig: IMapFacadeConfig,
+				protected projectionConverterService: ProjectionConverterService) {
 	}
 
 	initInputs() {
@@ -115,13 +121,6 @@ export class GoToComponent implements OnInit {
 		});
 	}
 
-	constructor(protected store$: Store<IToolsState>,
-				@Inject(toolsConfig) protected config: IToolsConfig,
-				private clipboardService: ClipboardService,
-				@Inject(mapFacadeConfig) protected mapfacadeConfig: IMapFacadeConfig,
-				protected projectionConverterService: ProjectionConverterService) {
-	}
-
 	submitGoTo(): void {
 		const conversionValid = this.projectionConverterService.isValidConversion(this.inputs.geoWgs84, this.geoWgs84);
 		if (conversionValid) {
@@ -130,9 +129,8 @@ export class GoToComponent implements OnInit {
 		}
 	}
 
-	copyToClipBoard(value: string) {
-		this.clipboardService.copyFromContent(value);
-		this.store$.dispatch(new SetToastMessageAction({ toastText: 'Copy to clipboard' }));
+	copyToClipBoard(value: string, projection: string = '', datum: string = '') {
+		copyFromContent(`${datum}${projection} ${value}`).then(() => this.store$.dispatch(new SetToastMessageAction({ toastText: 'Copy to clipboard' })));
 	}
 
 	convert(coords, convertFrom: any) {

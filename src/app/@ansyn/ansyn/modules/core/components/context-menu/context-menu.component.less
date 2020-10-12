@@ -48,7 +48,7 @@
 				align-items: center;
 				justify-content: center;
 
-				&:hover {
+				&:hover:not(:disabled) {
 					background-color: @context-menu-color;
 					transform: scale(0.6715);
 
@@ -60,6 +60,17 @@
 				.pointer {
 					font-size: 40px;
 					font-weight: bold;
+				}
+
+				&:disabled {
+					&:hover {
+						background-color: rgb(163, 163, 163);
+						transform: scale(0.6715);
+
+						.pointer {
+							color: @context-menu-contrast;
+						}
+					}
 				}
 			}
 

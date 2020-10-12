@@ -15,6 +15,7 @@ import { GoToVisualizer } from './plugins/visualizers/tools/goto.visualizer';
 import { PinPointVisualizer } from './plugins/visualizers/region/pin-point.visualizer';
 import { MouseShadowVisualizer } from './plugins/visualizers/tools/mouse-shadow.visualizer';
 import { PolygonSearchVisualizer } from './plugins/visualizers/region/polygon-search.visualizer';
+import { ScreenViewSearchVisualizer } from './plugins/visualizers/region/screen-view.visualiser';
 import { OpenlayersGeoJsonLayersVisualizer } from './plugins/layers/openlayers-geoJson-layers.visualizer';
 import { TaskRegionVisualizer } from './plugins/visualizers/algorithms/task-region.visualizer';
 import { OpenlayersArcgisLayersPulgin } from './plugins/layers/openlayers-arcgis-layers.pulgin';
@@ -65,6 +66,7 @@ import { OpenLayerPic4CartoSourceProvider } from '@ansyn/ol';
 				PinPointVisualizer,
 				MouseShadowVisualizer,
 				PolygonSearchVisualizer,
+				ScreenViewSearchVisualizer,
 				OpenlayersGeoJsonLayersVisualizer,
 				TaskRegionVisualizer,
 				ScannedAreaVisualizer

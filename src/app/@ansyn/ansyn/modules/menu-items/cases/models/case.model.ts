@@ -29,7 +29,8 @@ export type CaseTimeFilter = 'Start - End';
 
 export enum CaseGeoFilter {
 	PinPoint = 'Point',
-	Polygon = 'Polygon'
+	Polygon = 'Polygon',
+	ScreenView = 'ScreenView'
 }
 
 export interface ImageManualProcessArgs {

@@ -29,7 +29,7 @@ import {
 	unkinkPolygon,
 	featureCollection,
 	envelope,
-	distance
+	distance, difference
 } from '@turf/turf';
 
 export type BBOX = [number, number, number, number] | [number, number, number, number, number, number];
@@ -126,6 +126,11 @@ export function getPolygonIntersectionRatio(extent: Polygon, footprint: MultiPol
 export function polygonsDontIntersect(extentPolygon, footprint, overlayCoverage): boolean {
 	const intersection = getPolygonIntersectionRatio(extentPolygon, footprint);
 	return intersection < overlayCoverage;
+}
+
+export function equalPolygons(firstPolygon: Polygon, secondPolygon: Polygon): boolean {
+	const equal = difference(firstPolygon, secondPolygon) === null && difference(secondPolygon, firstPolygon) === null;
+	return equal;
 }
 
 export function getPolygonIntersectionRatioWithMultiPolygon(extent: Polygon, footprint: MultiPolygon): number {

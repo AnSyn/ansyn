@@ -5,7 +5,8 @@ export type RouterActions = any;
 
 export const RouterActionTypes = {
 	SET_STATE: 'SET_STATE',
-	NAVIGATE_CASE: 'NAVIGATE_CASE'
+	NAVIGATE_CASE: 'NAVIGATE_CASE',
+	MENU_APP_EFFECT: 'MENU_APP_EFFECT'
 };
 
 export interface ISetStatePayload {
@@ -27,3 +28,4 @@ export class NavigateCaseTriggerAction implements Action {
 	constructor(public payload?: string) {
 	}
 }
+

@@ -22,6 +22,8 @@ import { IRouterState, routerStateSelector } from '../reducers/router.reducer';
 import { Store } from '@ngrx/store';
 import { filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import { cloneDeep } from 'lodash';
+import { MenuActionTypes } from '@ansyn/menu';
+import { setStateActionFinished } from 'src/app/@ansyn/menu/actions/menu.actions';
 
 @Injectable()
 export class RouterEffects {
@@ -66,9 +68,9 @@ export class RouterEffects {
 		filter(([action, router]: [(SelectCaseAction | SaveCaseAsSuccessAction), IRouterState]) => action.payload.id !== this.casesService.defaultCase.id && action.payload.id !== router.caseId),
 		map(([action, router]: [SelectCaseAction | SaveCaseAsSuccessAction, IRouterState]) => {
 			if (action.payload.schema === 'link') {
-				return new NavigateCaseTriggerAction(this.casesService.generatePartialLinkById(action.payload.id,'link'));
+				return new NavigateCaseTriggerAction(this.casesService.generatePartialLinkById(action.payload.id, 'link'));
 			}
-			return new NavigateCaseTriggerAction(this.casesService.generatePartialLinkById(action.payload.id,'case'));
+			return new NavigateCaseTriggerAction(this.casesService.generatePartialLinkById(action.payload.id, 'case'));
 		}
 	));
 
@@ -91,6 +93,13 @@ export class RouterEffects {
 		ofType(CasesActionTypes.SELECT_CASE),
 		filter((action: SelectCaseAction) => action.payload.id === this.casesService.defaultCase.id),
 		map(() => new NavigateCaseTriggerAction())
+	);
+
+	@Effect()
+	setStateActionFromOtherLibs$: Observable<any> = this.actions$.pipe(
+		ofType<SetStateAction>(MenuActionTypes.RESET_APP),
+		map(() => new SetStateAction({linkId: undefined, caseId: undefined})),
+		tap(() => new setStateActionFinished())
 	);
 
 	constructor(protected actions$: Actions, protected store$: Store<any>,

@@ -46,7 +46,7 @@ export class MenuAppEffects {
 	@Effect()
 	onResetApp$ = this.actions$
 		.pipe(
-			ofType(MenuActionTypes.RESET_APP),
+			ofType(MenuActionTypes.SET_STATE_ACTION_FINISHED),
 			mergeMap(() => {
 				if (this.componentMode) {
 					window.open(this.menuConfig.baseUrl, '_blank');
@@ -54,7 +54,6 @@ export class MenuAppEffects {
 				}
 
 				return [
-					new SetStateAction({linkId: undefined}),
 					new LoadDefaultCaseAction(),
 					new StartMouseShadow({fromUser: true}),
 					new AnnotationSetProperties(getInitialAnnotationsFeatureStyle()),

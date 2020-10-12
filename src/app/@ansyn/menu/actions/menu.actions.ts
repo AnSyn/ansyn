@@ -16,11 +16,19 @@ export const MenuActionTypes = {
 	MENU_COLLAPSE: 'MENU_COLLAPSE',
 	RESET_APP: 'RESET_APP',
 	SET_USER_ENTER: 'SET_USER_ENTER',
-	SET_DOES_USER_HAVE_CREDENTIALS: 'SET_DOES_USER_HAVE_CREDENTIALS'
+	SET_DOES_USER_HAVE_CREDENTIALS: 'SET_DOES_USER_HAVE_CREDENTIALS',
+	SET_STATE_ACTION_FINISHED: 'SET_STATE_ACTION_FINISHED'
 };
 
 export class ResetAppAction implements Action {
 	type = MenuActionTypes.RESET_APP;
+
+	constructor() {
+	}
+}
+
+export class SetStateActionFinished implements Action {
+	type = MenuActionTypes.SET_STATE_ACTION_FINISHED;
 
 	constructor() {
 	}

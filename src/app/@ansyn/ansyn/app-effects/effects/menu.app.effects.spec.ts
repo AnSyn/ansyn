@@ -14,7 +14,7 @@ import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { RedrawTimelineAction } from '../../modules/overlays/actions/overlays.actions';
-import { ResetAppAction, ToggleIsPinnedAction, UnSelectMenuItemAction } from '../../../menu/actions/menu.actions';
+import { SetStateActionFinished, ToggleIsPinnedAction, UnSelectMenuItemAction } from '../../../menu/actions/menu.actions';
 import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
 import { StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
@@ -71,7 +71,7 @@ describe('MenuAppEffects', () => {
 
 	it(`onResetApp$ should call LoadDefaultCaseAction`, () => {
 		actions = hot('--a--', {
-			a: new ResetAppAction()
+			a: new SetStateActionFinished()
 		});
 		const expectedResults = cold('--(bdefgh)--', {
 			b: new LoadDefaultCaseAction(),

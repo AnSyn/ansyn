@@ -77,7 +77,7 @@ describe('Overlays Effects ', () => {
 		],
 		providers: [
 			AreaToCredentialsService,
-			{ provide: USE_DEFAULT_LANG },
+			{ provide: USE_DEFAULT_LANG, useValue: undefined },
 			{
 				provide: MissingTranslationHandler, useValue: {
 					handle: () => ''
@@ -115,7 +115,7 @@ describe('Overlays Effects ', () => {
 		areaToCredentialsService = _areaToCredentialsService;
 		const imageryStatusState = { ...imageryStatusInitialState };
 		let overlayState = cloneDeep(overlaysInitialState);
-		overlayState = overlaysAdapter.addAll(overlays, overlayState);
+		overlayState = overlaysAdapter.setAll(overlays, overlayState);
 
 		const fakeStore = new Map<any, any>([
 			[imageryStatusFeatureKey, imageryStatusState],

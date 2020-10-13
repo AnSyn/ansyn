@@ -92,10 +92,10 @@ export class TasksService {
 	loadTask(selectedTaskId: string): Observable<AlgorithmTask> {
 		return this.storageService.get<AlgorithmTaskPreview, AlgorithmsTaskState>(this.config.schema, selectedTaskId)
 			.pipe(
-				switchMap((storedEntity: IStoredEntity<AlgorithmTaskPreview, DilutedAlgorithmsTaskState>) => combineLatest(
+				switchMap((storedEntity: IStoredEntity<AlgorithmTaskPreview, DilutedAlgorithmsTaskState>) => combineLatest([
 					of(storedEntity),
 					this.overlaysService.getOverlaysById(<IOverlayByIdMetaData[]>storedEntity.data.overlays)
-				)),
+				])),
 				map(([storedEntity, overlays]: [IStoredEntity<AlgorithmTaskPreview, DilutedAlgorithmsTaskState>, IOverlay[]]) => {
 					const taskState: AlgorithmsTaskState = {
 						region: storedEntity.data.region,

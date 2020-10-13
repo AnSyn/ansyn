@@ -1,10 +1,4 @@
-import {
-	AddMenuItemAction,
-	ContainerChangedTriggerAction, MenuConfig,
-	menuFeatureKey,
-	MenuReducer,
-	SelectMenuItemAction
-} from '@ansyn/menu';
+import { ContainerChangedTriggerAction, MenuConfig, menuFeatureKey, MenuReducer } from '@ansyn/menu';
 import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
@@ -49,20 +43,6 @@ describe('MenuAppEffects', () => {
 
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
-		store.dispatch(new AddMenuItemAction({
-			name: 'Cases',
-			component: null,
-			iconClass: null
-
-		}));
-		store.dispatch(new AddMenuItemAction({
-			name: 'Shmases',
-			component: null,
-			iconClass: null
-
-		}));
-		store.dispatch(new SelectMenuItemAction({ menuKey: 'Cases' }));
-
 	}));
 
 	it('onContainerChanged$ effect should dispatch UpdateMapSizeAction and RedrawTimelineAction', () => {

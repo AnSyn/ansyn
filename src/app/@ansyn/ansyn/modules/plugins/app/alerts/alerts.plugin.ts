@@ -1,7 +1,7 @@
 import {
 	BaseImageryPlugin,
 	getPolygonIntersectionRatio,
-	ImageryMapPosition,
+	IImageryMapPosition,
 	ImageryPlugin
 } from '@ansyn/imagery';
 import { OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ol';
@@ -17,11 +17,13 @@ import { isFullOverlay } from '../../../core/utils/overlays';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { CesiumMap } from '@ansyn/imagery-cesium';
 import { selectAlertMsg } from '../../../overlays/overlay-status/reducers/overlay-status.reducer';
+import { Injectable } from '@angular/core';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap, CesiumMap],
 	deps: [Store]
 })
+@Injectable()
 export class AlertsPlugin extends BaseImageryPlugin {
 	notInQueryMsg: boolean;
 	outOfBound: boolean;
@@ -37,23 +39,23 @@ export class AlertsPlugin extends BaseImageryPlugin {
 		})
 	);
 
+	constructor(protected store$: Store<any>) {
+		super();
+	}
+
 	overlayByMap$ = (mapId) => this.store$.select(selectOverlayByMapId(mapId));
 
 	@AutoSubscription
-	setOverlaysNotInCase$ = () => combineLatest(
-		this.overlayByMap$(this.mapId).pipe(startWith(null)),
-		this.filteredOverlay$.pipe(startWith([]))).pipe(
+	setOverlaysNotInCase$ = () => combineLatest([
+		this.overlayByMap$(this.mapId).pipe(startWith<any, null>(null)),
+		this.filteredOverlay$.pipe(startWith([]))]).pipe(
 		map(this.setOverlaysNotInCase.bind(this)),
 		filter(Boolean),
 		tap((action: RemoveAlertMsg | AddAlertMsg) => this.store$.dispatch(action))
 	);
 
-	constructor(protected store$: Store<any>) {
-		super();
-	}
-
 	@AutoSubscription
-	positionChange$ = () => combineLatest(this.store$.select(selectMapPositionByMapId(this.mapId)), this.store$.select(selectOverlayByMapId(this.mapId)))
+	positionChange$ = () => combineLatest([this.store$.select(selectMapPositionByMapId(this.mapId)), this.store$.select(selectOverlayByMapId(this.mapId))])
 		.pipe(
 			filter(([position, overlay]) => Boolean(position) && Boolean(overlay)),
 			switchMap(this.positionChanged.bind(this)),
@@ -69,7 +71,7 @@ export class AlertsPlugin extends BaseImageryPlugin {
 				new RemoveAlertMsg(payload) : null) : new AddAlertMsg(payload);
 	}
 
-	positionChanged([position, overlay]: [ImageryMapPosition, IOverlay]): Observable<RemoveAlertMsg | AddAlertMsg | null> {
+	positionChanged([position, overlay]: [IImageryMapPosition, IOverlay]): Observable<RemoveAlertMsg | AddAlertMsg | null> {
 		let action;
 		const payload = { key: AlertMsgTypesEnum.OverlaysOutOfBounds, value: this.mapId };
 		const isWorldView = !isFullOverlay(overlay);

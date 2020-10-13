@@ -16,7 +16,7 @@
 		[notification]="notification"
 		[(ngModel)]="inputs.utmEd50"
 		(ngModelChange)="convert($event, utmEd50)"
-		(copyToClipBoardHandler)="copyToClipBoard($event)"
+		(copyToClipBoardHandler)="copyToClipBoard($event, 'utm', 'ed50')"
 		required>
 	</ansyn-utm>
 
@@ -25,7 +25,7 @@
 		name="utmWgs84"
 		[(ngModel)]="inputs.utmWgs84"
 		(ngModelChange)="convert($event, utmWgs84)"
-		(copyToClipBoardHandler)="copyToClipBoard($event)"
+		(copyToClipBoardHandler)="copyToClipBoard($event, 'utm', 'wgs84')"
 		required>
 	</ansyn-utm>
 

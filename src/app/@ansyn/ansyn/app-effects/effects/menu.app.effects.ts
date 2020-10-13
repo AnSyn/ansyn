@@ -65,6 +65,13 @@ export class MenuAppEffects {
 			})
 		);
 
+
+	constructor(protected actions$: Actions, protected store$: Store<IAppState>,
+		@Inject(COMPONENT_MODE) public componentMode: boolean,
+		@Inject(MenuConfig) public menuConfig: IMenuConfig,
+		@Inject(casesConfig) public caseConfig: ICasesConfig) {
+	}
+
 	resetApp() {
 		if (!this.componentMode) {
 			window.open(this.menuConfig.baseUrl, '_blank');
@@ -74,9 +81,4 @@ export class MenuAppEffects {
 		return EMPTY;
 	}
 
-	constructor(protected actions$: Actions, protected store$: Store<IAppState>,
-				@Inject(COMPONENT_MODE) public componentMode: boolean,
-				@Inject(MenuConfig) public menuConfig: IMenuConfig,
-				@Inject(casesConfig) public caseConfig: ICasesConfig) {
-	}
 }

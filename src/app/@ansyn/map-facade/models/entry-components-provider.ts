@@ -3,9 +3,9 @@ import { IEntryComponent } from '../directives/entry-component.directive';
 
 
 export interface IEntryComponentsEntities {
-	status: { new(...args): IEntryComponent }[];
-	container: { new(...args): IEntryComponent }[];
-	floating_menu: { new(...args): IEntryComponent }[];
+	status: (new(...args) => IEntryComponent)[];
+	container: (new(...args) => IEntryComponent)[];
+	floating_menu: (new(...args) => IEntryComponent)[];
 }
 
 export const ENTRY_COMPONENTS_ENTITIES = new InjectionToken('ENTRY_COMPONENTS_ENTITIES');

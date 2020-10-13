@@ -14,6 +14,12 @@ import { mapFacadeConfig } from '../../models/map-facade.config';
 })
 export class WelcomeNotificationComponent implements AfterViewInit, OnDestroy {
 
+	// Make the DOM element focusable
+	@HostBinding('attr.tabindex')
+	get tabindex() {
+		return 0;
+	}
+
 	private _subscriptions: Subscription[] = [];
 
 	public config: any = {};
@@ -23,10 +29,10 @@ export class WelcomeNotificationComponent implements AfterViewInit, OnDestroy {
 			take(1),
 		);
 
-	// Make the DOM element focusable
-	@HostBinding('attr.tabindex')
-	get tabindex() {
-		return 0;
+	constructor(public store$: Store<any>,
+				public elem: ElementRef,
+				@Inject(mapFacadeConfig) public packageConfig: IMapFacadeConfig) {
+		this.config = this.packageConfig.welcomeNotification;
 	}
 
 	// Mark as done, in the store, when losing focus (after a delay, to display a fading animation, before this element is destroyed)
@@ -35,12 +41,6 @@ export class WelcomeNotificationComponent implements AfterViewInit, OnDestroy {
 		setTimeout(() => {
 			this.store$.dispatch(new SetWasWelcomeNotificationShownFlagAction(true));
 		}, 1000);
-	}
-
-	constructor(public store$: Store<any>,
-				public elem: ElementRef,
-				@Inject(mapFacadeConfig) public packageConfig: IMapFacadeConfig) {
-		this.config = this.packageConfig.welcomeNotification;
 	}
 
 	ngAfterViewInit() {

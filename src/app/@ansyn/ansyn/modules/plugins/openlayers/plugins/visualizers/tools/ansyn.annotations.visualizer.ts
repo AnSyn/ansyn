@@ -60,10 +60,10 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	annotationsVisualizer: AnnotationsVisualizer;
 	overlay: IOverlay;
 
-	activeAnnotationLayer$: Observable<ILayer> = combineLatest(
+	activeAnnotationLayer$: Observable<ILayer> = combineLatest([
 		this.store$.pipe(select(selectActiveAnnotationLayer)),
 		this.store$.pipe(select(selectLayersEntities))
-	).pipe(
+	]).pipe(
 		map(([activeAnnotationLayerId, entities]) => {
 			return entities[activeAnnotationLayerId];
 		})
@@ -124,13 +124,13 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	onAnnotationsChange$ = combineLatest(
+	onAnnotationsChange$ = combineLatest([
 		this.store$.pipe(select(selectLayersEntities)),
 		this.annotationFlag$,
 		this.store$.select(selectSelectedLayersIds),
 		this.isActiveMap$,
 		this.store$.select(selectActiveAnnotationLayer)
-	).pipe(
+	]).pipe(
 		mergeMap(this.onAnnotationsChange.bind(this))
 	);
 
@@ -175,17 +175,18 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	onDrawEnd$ = () => this.annotationsVisualizer.events.onDrawEnd.pipe(
 		withLatestFrom(this.activeAnnotationLayer$),
 		map(([{ GeoJSON, feature }, activeAnnotationLayer]: [IDrawEndEvent, ILayer]) => {
-			const [geoJsonFeature] = GeoJSON.features;
-			const data = <FeatureCollection<any>>{ ...activeAnnotationLayer.data };
-			data.features.push(geoJsonFeature);
+			const data = <FeatureCollection<any>>{
+				...activeAnnotationLayer.data,
+				features: activeAnnotationLayer.data.features.concat(GeoJSON.features)
+			};
 			if (this.overlay) {
-				geoJsonFeature.properties = {
-					...geoJsonFeature.properties,
+				GeoJSON.features[0].properties = {
+					...GeoJSON.features[0].properties,
 					...this.projectionService.getProjectionProperties(this.communicator, data, feature, this.overlay)
 				};
 			}
-			geoJsonFeature.properties = { ...geoJsonFeature.properties };
-			this.store$.dispatch(new UpdateLayer(<ILayer>{ ...activeAnnotationLayer, data }));
+			GeoJSON.features[0].properties = { ...GeoJSON.features[0].properties };
+			this.store$.dispatch(new UpdateLayer({ id: activeAnnotationLayer.id, data }));
 			const featureId = this.getFeatureIdFromGeoJson(GeoJSON);
 			return featureId;
 		}),
@@ -201,12 +202,14 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			const [geoJsonFeature] = GeoJSON.features;
 			const layerToUpdate = AnnotationLayers.find((layer: ILayer) => layer.data.features.some(({ id }) => id === geoJsonFeature.id));
 			if (layerToUpdate) {
-				const data = <FeatureCollection<any>>{ ...layerToUpdate.data };
-				const annotationToChangeIndex = data.features.findIndex((feature) => feature.id === geoJsonFeature.id);
-				data.features[annotationToChangeIndex] = geoJsonFeature;
+				const annotationToChangeIndex = layerToUpdate.data.features.findIndex((feature) => feature.id === geoJsonFeature.id);
+				const data = <FeatureCollection<any>>{ ...layerToUpdate.data,
+					features: layerToUpdate.data.features.map((existingFeature, index) =>
+					index === annotationToChangeIndex ? geoJsonFeature : existingFeature)
+				};
 				let label = geoJsonFeature.properties.label;
 				if (geoJsonFeature.properties.label.geometry) {
-					label = { ...geoJsonFeature.properties.label, geometry: GeoJSON.features[1].geometry }
+					label = { ...geoJsonFeature.properties.label, geometry: GeoJSON.features[1].geometry };
 				}
 				feature.set('label', label);
 				if (this.overlay) {
@@ -216,16 +219,16 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 					};
 				}
 				geoJsonFeature.properties = { ...geoJsonFeature.properties, label };
-				this.store$.dispatch(new UpdateLayer(<ILayer>{ ...layerToUpdate, data }));
+				this.store$.dispatch(new UpdateLayer({ id: layerToUpdate.id, data }));
 			}
 		})
 	);
 
 	@AutoSubscription
-	getOffsetFromCase$ = () => combineLatest(this.store$.select(selectTranslationData), this.store$.select(selectOverlayByMapId(this.mapId))).pipe(
+	getOffsetFromCase$ = () => combineLatest([this.store$.select(selectTranslationData), this.store$.select(selectOverlayByMapId(this.mapId))]).pipe(
 		tap(([translationData, overlay]: [IOverlaysTranslationData, IOverlay]) => {
 			if (overlay && translationData[overlay.id] && translationData[overlay.id].offset) {
-				this.offset = translationData[overlay.id].offset;
+				this.offset = [...translationData[overlay.id].offset] as [number, number];
 			} else {
 				this.offset = [0, 0];
 			}

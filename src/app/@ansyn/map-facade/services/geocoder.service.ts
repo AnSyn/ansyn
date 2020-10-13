@@ -14,7 +14,6 @@ import { IMapSearchResult } from '../models/map-search.model';
 export class GeocoderService {
 
 	coordinateRegex = {
-		basic: /([0-9]{1,3}[.[0-9]+]?)[, ]([0-9]{1,3}[.[0-9]+]?)( ([0-9]{1,2}))?/,
 		wgs84GeoRegex: /^(?:[\s\t]*)(?:wgs84)?(?:[\s\t]*)(?:geo)?(?:\s*)([\-+]?\d{1,3}(?:\.\d+)?)(?:[\s\t]*)(?:e)?(?:[\s\t]*)[/\s,\\](?:[\s\t]*)([\-+]?\d{1,3}(?:\.\d+)?)(?:[\s\t]*)(?:n)?(?:[\s\t]*)$/i,
 		wgs84UtmRegex: /^(?:[\s\t]*)(?:wgs84)(?:[\s\t]*)(?:utm)(?:\s*)(?:(\d+)\s*[nNsS])?(?:[\s\t]*)([\-+]?\d{2,}\.?\d*)(?:[\s\t]*)(?:e)?(?:[\s\t]*)[/\s,\\](?:[\s\t]*)([\-+]?\d{2,}\.?\d*)(?:[\s\t]*)(?:n)?(?:[\s\t]*)$/i,
 		ed50UtmRegex: /^(?:[\s\t]*)(?:ed50)(?:[\s\t]*)(?:utm)?(?:\s*)(?:(\d+)\s*[nNsS])?(?:[\s\t]*)([\-+]?\d{2,})(?:[\s\t]*)(?:e)?(?:[\s\t]*)[/\s,\\](?:[\s\t]*)([\-+]?\d{2,})(?:[\s\t]*)(?:n)?(?:[\s\t]*)$/i,
@@ -31,7 +30,7 @@ export class GeocoderService {
 
 	getLocation$(searchString: string): Observable<IMapSearchResult[]> {
 		const url = this.config.url.concat(searchString).concat("&format=geojson");
-		if (/\d/.test(searchString.charAt(0))) { // user enter coordinates
+		if (/\d+\./.test(searchString)) { // user enter coordinates
 			return of([]);
 		}
 		return this.http.get<any>(url).pipe(
@@ -50,21 +49,6 @@ export class GeocoderService {
 
 	createPoint(value: string): Point {
 		let searchResult: any;
-
-		// BASIC (UTM)
-		searchResult = this.coordinateRegex.basic.exec(value);
-		if (searchResult && searchResult.length) {
-			const [matchedString, x, y, zone] = searchResult;
-			const coords = [+x, +y, +zone];
-			if (ProjectionConverterService.isValidUTM(coords)) {
-				const convertPoint = this.projectionConverterService.convertByProjectionDatum(
-					coords,
-					{ datum: 'wgs84', projection: 'utm' },
-					{ datum: 'wgs84', projection: 'geo' }
-				);
-				return point(convertPoint).geometry;
-			}
-		}
 
 		// WGS84 GEO
 		searchResult = this.coordinateRegex.wgs84GeoRegex.exec(value);
@@ -85,6 +69,21 @@ export class GeocoderService {
 				const convertPoint = this.projectionConverterService.convertByProjectionDatum(
 					coords,
 					{ datum: 'wgs84', projection: 'utm' },
+					{ datum: 'wgs84', projection: 'geo' }
+				);
+				return point(convertPoint).geometry;
+			}
+		}
+
+		// ED50 UTM
+		searchResult = this.coordinateRegex.ed50UtmRegex.exec(value);
+		if (searchResult && searchResult.length) {
+			const [matchedString, zone, x, y] = searchResult;
+			const coords = [+x, +y, +zone];
+			if (ProjectionConverterService.isValidUTM(coords)) {
+				const convertPoint = this.projectionConverterService.convertByProjectionDatum(
+					coords,
+					{ datum: 'ed50', projection: 'utm' },
 					{ datum: 'wgs84', projection: 'geo' }
 				);
 				return point(convertPoint).geometry;

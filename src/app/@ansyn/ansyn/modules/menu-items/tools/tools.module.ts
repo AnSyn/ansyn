@@ -12,9 +12,10 @@ import { AnnotationsContextMenuModule } from '@ansyn/ol';
 import { MeasureControlComponent } from './components/measure-control/measure-control.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { ExportMapsPopupComponent } from './export-maps-popup/export-maps-popup.component';
-import { MatDialogModule, MatSelectModule } from '@angular/material';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
 // @dynamic
 @NgModule({
@@ -23,7 +24,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 		MapFacadeModule.provide({
 			entryComponents: {
 				container: [MeasureControlComponent],
-				status: [],
+			status: [],
 				floating_menu: []
 			}
 		}),
@@ -46,7 +47,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 export class ToolsModule {
 
 
-	static forRoot(config: IToolsConfig): ModuleWithProviders {
+	static forRoot(config: IToolsConfig): ModuleWithProviders<ToolsModule> {
 		return {
 			ngModule: ToolsModule,
 			providers: [

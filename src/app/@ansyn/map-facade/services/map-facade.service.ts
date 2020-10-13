@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
 	ImageryCommunicatorService,
-	ImageryMapPosition,
+	IImageryMapPosition,
 	IMapInstanceChanged,
 	IMapSettings
 } from '@ansyn/imagery';
@@ -27,6 +27,12 @@ export class MapFacadeService {
 	layout: LayoutKey;
 	layout$ = this.store.select(selectLayout);
 
+	constructor(protected store: Store<IMapState>,
+				protected imageryCommunicatorService: ImageryCommunicatorService) {
+		(<Observable<any>>this.mapsList$).subscribe((mapsList) => this.mapsList = mapsList);
+		(<Observable<any>>this.layout$).subscribe((layout) => this.layout = layout);
+	}
+
 	// @todo IOveraly
 	static isOverlayGeoRegistered(overlay: any): boolean {
 		if (!overlay) {
@@ -47,12 +53,6 @@ export class MapFacadeService {
 		return mapsList.find(({ id }: IMapSettings) => {
 			return id === mapId;
 		});
-	}
-
-	constructor(protected store: Store<IMapState>,
-				protected imageryCommunicatorService: ImageryCommunicatorService) {
-		(<Observable<any>>this.mapsList$).subscribe((mapsList) => this.mapsList = mapsList);
-		(<Observable<any>>this.layout$).subscribe((layout) => this.layout = layout);
 	}
 
 	initEmitters(id: string) {
@@ -81,7 +81,7 @@ export class MapFacadeService {
 		this.store.dispatch(new MapInstanceChangedAction($event));
 	}
 
-	positionChanged($event: { id: string, position: ImageryMapPosition }) {
+	positionChanged($event: { id: string, position: IImageryMapPosition }) {
 		if (Boolean(this.mapsList)) {
 			const mapInstance = <IMapSettings>MapFacadeService.mapById(this.mapsList, $event.id);
 			this.store.dispatch(new PositionChangedAction({ ...$event, mapInstance }));

@@ -59,14 +59,14 @@ describe('LoginComponent', () => {
 		spyOn(fakeLogin$, 'subscribe');
 		spyOn(component, 'loginRequest').and.callFake(() => fakeLogin$);
 		component.login();
-		expect(fakeLogin$.subscribe).toHaveBeenCalled();
+		expect(fakeLogin$.subscribe).toHaveBeenCalled(); // tslint:disable-line
 	});
 
 
 	describe('loginRequest should be an Observable with catch or mergeMap results', () => {
 		it('on mergeMap', async(async () => {
 			spyOn(authService, 'login').and.callFake(() => of('ok'));
-			spyOn(router, 'navigateByUrl').and.callFake(() => Promise.resolve('navigation'));
+			spyOn(router, 'navigateByUrl').and.callFake(() => Promise.resolve(true));
 			component.username = 'username';
 			component.password = 'password';
 			component.rememberMe = false;

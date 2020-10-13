@@ -11,6 +11,14 @@ export class DragPixelsInteraction extends PointerInteraction {
 	onDrag: EventEmitter<[number, number]>;
 	onStopDrag: EventEmitter<any>;
 
+	constructor() {
+		super();
+		this.startPixel = [0, 0];
+		this.currentPixel = [0, 0];
+		this.onDrag = new EventEmitter<[number, number]>();
+		this.onStopDrag = new EventEmitter<any>();
+	}
+
 	handleDownEvent(args) {
 		this.currentPixel[0] = args.coordinate[0];
 		this.currentPixel[1] = args.coordinate[1];
@@ -46,13 +54,5 @@ export class DragPixelsInteraction extends PointerInteraction {
 
 	handleMoveEvent(args) {
 		return super.handleMoveEvent(args);
-	}
-
-	constructor() {
-		super();
-		this.startPixel = [0, 0];
-		this.currentPixel = [0, 0];
-		this.onDrag = new EventEmitter<[number, number]>();
-		this.onStopDrag = new EventEmitter<any>();
 	}
 }

@@ -9,7 +9,7 @@ import {
 	BaseImageryPlugin,
 	CommunicatorEntity,
 	getAngleDegreeBetweenPoints,
-	ImageryMapPosition,
+	IImageryMapPosition,
 	ImageryPlugin, MapOrientation,
 	toDegrees,
 	toRadians
@@ -62,6 +62,7 @@ import { selectMapOrientation } from '@ansyn/map-facade';
 	deps: [Actions, LoggerService, Store, CoreConfig, OpenLayersProjectionService]
 })
 export class NorthCalculationsPlugin extends BaseImageryPlugin {
+;
 	communicator: CommunicatorEntity;
 	isEnabled = true;
 
@@ -104,6 +105,14 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 			this.setImageryOrientation(action.payload.overlay);
 		})
 	);
+
+	constructor(protected actions$: Actions,
+				public loggerService: LoggerService,
+				public store$: Store<any>,
+				@Inject(CoreConfig) public config: ICoreConfig,
+				protected projectionService: OpenLayersProjectionService) {
+		super();
+	}
 
 	@AutoSubscription
 	calcNorthAfterDisplayOverlaySuccess$ = () => this.actions$.pipe(
@@ -162,7 +171,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	positionChangedCalcNorthAccurately$ = () => this.store$.select(selectMapPositionByMapId(this.mapId)).pipe(
 		debounceTime(50),
 		filter(Boolean),
-		switchMap((position: ImageryMapPosition) => {
+		switchMap((position: IImageryMapPosition) => {
 			const view = this.iMap.mapObject.getView();
 			const projection = view.getProjection();
 			if (projection.getUnits() === 'pixels' && position) {
@@ -187,14 +196,6 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 
 		})
 	);
-
-	constructor(protected actions$: Actions,
-				public loggerService: LoggerService,
-				public store$: Store<any>,
-				@Inject(CoreConfig) public config: ICoreConfig,
-				protected projectionService: OpenLayersProjectionService) {
-		super();
-	}
 
 	setActualNorth(): Observable<any> {
 		return this.pointNorth(this.shadowMapObject).pipe(take(1)).pipe(
@@ -269,7 +270,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	}
 
 	getProjectedCenters(mapObject: OLMap, sourceProjection?: string, destProjection?: string): Observable<Point[]> {
-		return Observable.create((observer: Observer<any>) => {
+		return new Observable((observer: Observer<any>) => {
 			const size = mapObject.getSize();
 			const olCenterView = mapObject.getCoordinateFromPixel([size[0] / 2, size[1] / 2]);
 			if (!areCoordinatesNumeric(olCenterView)) {
@@ -304,8 +305,7 @@ export class NorthCalculationsPlugin extends BaseImageryPlugin {
 	onResetView(): Observable<boolean> {
 		this.createShadowMap();
 		return of(true);
-	};
-
+	}
 	createShadowMapObject() {
 		const renderer = 'canvas';
 		this.shadowMapObject = new OLMap({

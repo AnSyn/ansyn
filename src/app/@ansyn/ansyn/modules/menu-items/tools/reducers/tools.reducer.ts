@@ -1,7 +1,21 @@
-import { StartMouseShadow, StopMouseShadow, ToolsActions, ToolsActionsTypes } from '../actions/tools.actions';
+import {
+	AddMeasureAction,
+	CreateMeasureDataAction, RemoveMeasureAction, RemoveMeasureDataAction,
+	SetActiveCenter,
+	SetAnnotationMode,
+	SetMapGeoEnabledModeToolsActionStore, SetMapSearchBox,
+	SetMeasureDistanceToolState,
+	SetPinLocationModeAction, SetSubMenu,
+	StartMouseShadow,
+	StopMouseShadow,
+	ToolsActions,
+	ToolsActionsTypes, UpdateMeasureDataOptionsAction,
+	UpdateToolsFlags
+} from '../actions/tools.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { IVisualizerEntity, IVisualizerStyle, getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
 import { AnnotationMode } from '@ansyn/ol';
+import { IMeasureData, IMeasureDataOptions } from '../models/measure-data';
 
 export enum toolsFlags {
 	geoRegisteredOptionsEnabled = 'geoRegisteredOptionsEnabled',
@@ -13,18 +27,7 @@ export enum toolsFlags {
 	isMeasureToolActive = 'isMeasureToolActive'
 }
 
-export enum SubMenuEnum { goTo, overlays, annotations }
-
-export interface IMeasureDataOptions {
-	isLayerShowed: boolean;
-	isToolActive: boolean;
-	isRemoveMeasureModeActive: boolean;
-	forceDisableTranslate?: boolean;
-}
-
-export interface IMeasureData extends IMeasureDataOptions{
-	meausres: IVisualizerEntity[];
-}
+export enum SubMenuEnum { goTo, overlays, annotations };
 
 export function createNewMeasureData(): IMeasureData {
 	return {
@@ -67,12 +70,12 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 	let tmpMap: Map<toolsFlags, boolean>;
 	switch (action.type) {
 		case ToolsActionsTypes.STORE.SET_ANNOTATION_MODE:
-			const annotationMode = action.payload ? action.payload.annotationMode : null;
+			const annotationMode = action.payload ? (<SetAnnotationMode>action).payload.annotationMode : null;
 			return { ...state, annotationMode: annotationMode };
 
 		case ToolsActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED:
 			tmpMap = new Map(state.flags);
-			tmpMap.set(toolsFlags.geoRegisteredOptionsEnabled, action.payload);
+			tmpMap.set(toolsFlags.geoRegisteredOptionsEnabled, (<SetMapGeoEnabledModeToolsActionStore>action).payload);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.START_MOUSE_SHADOW:
@@ -100,27 +103,27 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 
 		case ToolsActionsTypes.UPDATE_TOOLS_FLAGS: {
 			const flags = new Map(state.flags);
-			action.payload.forEach(({ key, value }) => {
+			(<UpdateToolsFlags>action).payload.forEach(({ key, value }) => {
 				flags.set(key, value);
 			});
 			return { ...state, flags };
 		}
 
 		case ToolsActionsTypes.SET_ACTIVE_CENTER:
-			return { ...state, activeCenter: action.payload };
+			return { ...state, activeCenter: (<SetActiveCenter>action).payload };
 
 		case ToolsActionsTypes.SET_MAP_SEARCH_BOX:
-			return { ...state, mapSearchBoxSearch: action.payload };
+			return { ...state, mapSearchBoxSearch: (<SetMapSearchBox>action).payload };
 
 		case ToolsActionsTypes.SET_PIN_LOCATION_MODE:
 			tmpMap = new Map(state.flags);
-			tmpMap.set(toolsFlags.pinLocation, action.payload);
+			tmpMap.set(toolsFlags.pinLocation, (<SetPinLocationModeAction>action).payload);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.MEASURES.SET_MEASURE_TOOL_STATE:
 
 			tmpMap = new Map(state.flags);
-			tmpMap.set(toolsFlags.isMeasureToolActive, action.payload);
+			tmpMap.set(toolsFlags.isMeasureToolActive, (<SetMeasureDistanceToolState>action).payload);
 			const mapsMeasures = new Map(state.mapsMeasures);
 			Array.from(mapsMeasures.keys()).forEach((key: string) => {
 				mapsMeasures.set(key, createNewMeasureData());
@@ -130,8 +133,8 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 		case ToolsActionsTypes.MEASURES.CREATE_MEASURE_DATA: {
 
 			const mapsMeasures = new Map(state.mapsMeasures);
-			if (!mapsMeasures.has(action.payload.mapId)) {
-				mapsMeasures.set(action.payload.mapId, createNewMeasureData());
+			if (!mapsMeasures.has((<CreateMeasureDataAction><unknown>action).payload.mapId)) {
+				mapsMeasures.set((<CreateMeasureDataAction><unknown>action).payload.mapId, createNewMeasureData());
 			}
 			return { ...state, mapsMeasures };
 		}
@@ -139,24 +142,24 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 		case ToolsActionsTypes.MEASURES.REMOVE_MEASURE_DATA: {
 
 			const mapsMeasures = new Map(state.mapsMeasures);
-			if (mapsMeasures.has(action.payload.mapId)) {
-				mapsMeasures.delete(action.payload.mapId);
+			if (mapsMeasures.has((<RemoveMeasureDataAction><unknown>action).payload.mapId)) {
+				mapsMeasures.delete((<RemoveMeasureDataAction><unknown>action).payload.mapId);
 			}
 			return { ...state, mapsMeasures };
 		}
 
 		case ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS: {
-			const newOptions: IMeasureDataOptions = action.payload.options;
+			const newOptions: Partial<IMeasureDataOptions> = (action as unknown as UpdateMeasureDataOptionsAction).payload.options;
 			const mapsMeasures = new Map(state.mapsMeasures);
-			const mapMeasure = mapsMeasures.get(action.payload.mapId);
+			const mapMeasure = mapsMeasures.get((action as unknown as UpdateMeasureDataOptionsAction).payload.mapId);
 			if (mapMeasure) {
-				mapsMeasures.set(action.payload.mapId, {...mapMeasure, ...newOptions});
+				mapsMeasures.set((action as unknown as UpdateMeasureDataOptionsAction).payload.mapId, {...mapMeasure, ...newOptions});
 			}
 			return { ...state, mapsMeasures };
 		}
 
 		case ToolsActionsTypes.MEASURES.ADD_MEASURE: {
-			const { mapId, measure } = action.payload;
+			const { mapId, measure } = (action as unknown as AddMeasureAction).payload;
 			const mapsMeasures = new Map(state.mapsMeasures);
 			const mapMeasure = mapsMeasures.get(mapId);
 			if (mapMeasure) {
@@ -166,7 +169,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 		}
 
 		case ToolsActionsTypes.MEASURES.REMOVE_MEASURE: {
-			const { mapId, measureId } = action.payload;
+			const { mapId, measureId } = (action as unknown as RemoveMeasureAction).payload;
 			const mapsMeasures = new Map(state.mapsMeasures);
 			if (mapsMeasures.has(mapId)) {
 				const mapMeasure = mapsMeasures.get(mapId);
@@ -180,7 +183,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			return { ...state, annotationProperties: { ...state.annotationProperties, ...action.payload } };
 
 		case ToolsActionsTypes.SET_SUB_MENU:
-			return { ...state, subMenu: action.payload };
+			return { ...state, subMenu: (<SetSubMenu>action).payload };
 
 		default:
 			return state;

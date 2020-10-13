@@ -3,7 +3,7 @@ import { LayoutKey } from '@ansyn/map-facade';
 export const ContextConfig = 'contextConfig';
 
 export interface IContextConfig {
-	TwoMaps: I2MapsContext
+	TwoMaps: II2MapsContext
 }
 
 export enum ContextName {
@@ -20,7 +20,7 @@ export const RequiredContextParams = {
 	[ContextName.ImisightMission]: ['geometry', 'accessToken', 'idToken', 'expiresIn']
 };
 
-export interface I2MapsContext {
+export interface II2MapsContext {
 	layout: LayoutKey,
 	sensors: string[]
 }

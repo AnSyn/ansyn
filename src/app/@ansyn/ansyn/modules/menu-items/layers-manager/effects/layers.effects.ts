@@ -1,4 +1,4 @@
-import { ILayerState } from '../reducers/layers.reducer';
+import { ILayerState, selectLayersEntities } from '../reducers/layers.reducer';
 import {
 	AddLayer,
 	BeginLayerCollectionLoadAction,
@@ -51,12 +51,15 @@ export class LayersEffects {
 	@Effect({ dispatch: false })
 	updateLayer$: Observable<any> = this.actions$.pipe(
 		ofType<UpdateLayer>(LayersActionTypes.UPDATE_LAYER),
-		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
-		filter(([action, autoSave]) => autoSave),
-		mergeMap(([action]) => this.dataLayersService.updateLayer(action.payload)
-			.pipe(
-				catchError(() => of(true))
-			)
+		withLatestFrom(this.store$.pipe(select(selectAutoSave)), this.store$.pipe(select(selectLayersEntities))),
+		filter(([action, autoSave, layerDictionary]) => autoSave),
+		mergeMap(([action, autoSave, layerDictionary]) => {
+			const layer = layerDictionary[action.payload.id];
+			return this.dataLayersService.updateLayer(layer)
+					.pipe(
+						catchError(() => of(true))
+					)
+			}
 		)
 	);
 

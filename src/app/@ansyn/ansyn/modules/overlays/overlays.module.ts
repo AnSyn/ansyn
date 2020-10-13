@@ -46,7 +46,6 @@ import { OverlayNavigationBarComponent } from './components/overlay-navigation-b
 		OverlaySourceTypeNoticeComponent,
 		OverlayNavigationBarComponent
 	],
-	entryComponents: [OverlaySourceTypeNoticeComponent],
 	exports: [
 		OverlaysContainerComponent,
 		TimelineComponent,
@@ -60,7 +59,7 @@ import { OverlayNavigationBarComponent } from './components/overlay-navigation-b
 
 })
 export class OverlaysModule {
-	static provide(metadata: IOverlaysMetadata): ModuleWithProviders {
+	static provide(metadata: IOverlaysMetadata): ModuleWithProviders<OverlaysModule> {
 		return {
 			ngModule: OverlaysModule,
 			providers: [

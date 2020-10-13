@@ -47,7 +47,7 @@ export class MenuAppEffects {
 	@Effect()
 	onResetApp$ = this.actions$
 		.pipe(
-			ofType(MenuActionTypes.SET_STATE_ACTION_SUCCESS),
+			ofType(MenuActionTypes.RESET_APP_ACTION_SUCCESS),
 			mergeMap(() => {
 				if (this.componentMode) {
 					window.open(this.menuConfig.baseUrl, '_blank');

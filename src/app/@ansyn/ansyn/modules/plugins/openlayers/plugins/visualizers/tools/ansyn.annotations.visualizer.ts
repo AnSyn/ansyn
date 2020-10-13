@@ -243,7 +243,6 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 		})
 	);
 
-
 	@AutoSubscription
 	updateEntity$ = (): Observable<IVisualizerEntity> => this.annotationsVisualizer.events.updateEntity.pipe(
 		tap((feature) => {
@@ -346,7 +345,4 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			geoJson.features[index].id.toString() :
 			null;
 	}
-
 }
-
-

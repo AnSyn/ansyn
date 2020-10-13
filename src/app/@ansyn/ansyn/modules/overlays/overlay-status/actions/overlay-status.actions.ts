@@ -138,7 +138,7 @@ export class SetManualImageProcessing implements Action {
 export class LogManualImageProcessing implements Action, ILogMessage {
 	type = OverlayStatusActionsTypes.LOG_MANUAL_IMAGE_PROCESSING;
 
-	constructor(public payload: { changedArg: string, allArgs: ImageManualProcessArgs }) {
+	constructor(public payload: { changedArg: string, allArgs: IImageManualProcessArgs }) {
 	};
 
 	logMessage() {

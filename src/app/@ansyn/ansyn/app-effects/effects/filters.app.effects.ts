@@ -7,7 +7,7 @@ import {
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../app.effects.module';
 import { SetBadgeAction } from '@ansyn/menu';
-import { catchError, distinctUntilChanged, filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
 import { BooleanFilterMetadata } from '../../modules/filters/models/metadata/boolean-filter-metadata';
 import {
 	EnableOnlyFavoritesSelectionAction,
@@ -95,6 +95,7 @@ export class FiltersAppEffects {
 		mergeMap(([filtersMetadata, overlaysArray]: [FiltersMetadata, IOverlay[]]) => {
 			const filterModels: IFilterModel[] = FiltersService.pluckFilterModels(filtersMetadata);
 			const filteredOverlays: string[] = buildFilteredOverlays(overlaysArray, filterModels);
+			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : this.translate.instant(overlaysStatusMessages.noOverLayMatchFilters);
 			const actions = [
 				new SetFilteredOverlaysAction(filteredOverlays),
 				new SetOverlaysStatusMessageAction(message)

@@ -1,5 +1,4 @@
 import {
-	AddMenuItemAction,
 	ContainerChangedTriggerAction, MenuConfig,
 	menuFeatureKey,
 	MenuReducer, ResetAppAction,

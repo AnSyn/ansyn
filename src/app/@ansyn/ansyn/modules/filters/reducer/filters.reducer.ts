@@ -18,7 +18,7 @@ import { GeoRegisteration } from '../../overlays/models/overlay.model';
 export type FiltersMetadata = Map<IFilter, FilterMetadata>;
 export type FiltersCounters = Map<IFilter, FilterCounters>;
 
-export function filtersToString(filters: Filters): string {
+export function filtersToString(filters: FiltersMetadata): string {
 	if (!Boolean(filters)) {
 		return '\nNo filters found';
 	}

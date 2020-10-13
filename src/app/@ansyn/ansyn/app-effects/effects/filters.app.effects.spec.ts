@@ -9,7 +9,7 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { menuFeatureKey, MenuReducer, SetBadgeAction, SetHideResultsTableBadgeAction } from '@ansyn/menu';
+import { menuFeatureKey, MenuReducer, SetBadgeAction } from '@ansyn/menu';
 import {
 	EnableOnlyFavoritesSelectionAction,
 	InitializeFiltersAction,
@@ -39,6 +39,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { EnumFilterCounters } from '../../modules/filters/models/counters/enum-filter-counters';
 import { FilterCounters } from '../../modules/filters/models/counters/filter-counters.interface';
 import { SliderFilterCounters } from '../../modules/filters/models/counters/slider-filter-counters';
+import { SetHideResultsTableBadgeAction } from '../../../../../../dist/ansyn/menu';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -138,7 +139,10 @@ describe('Filters app effects', () => {
 	describe('updateOverlayFilters$ effect', () => {
 
 		beforeEach(() => {
-			store.dispatch(new InitializeFiltersSuccessAction(new Map()));
+			store.dispatch(new InitializeFiltersSuccessAction({
+				filtersMetadata: new Map(),
+				filtersCounters: new Map()
+			}));
 			store.dispatch(new LoadOverlaysSuccessAction([{ id: '1' }] as any));
 		});
 

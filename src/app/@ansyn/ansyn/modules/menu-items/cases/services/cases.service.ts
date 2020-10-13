@@ -226,12 +226,9 @@ export class CasesService {
 	generateLinkById(id: string, schema: 'case' | 'link' = 'case') {
 		const baseLocation = location.href.split('#')[0];
 		const href = this.config.useHash ? `${ baseLocation }#` : baseLocation;
-		return `${ href }/${schema}/${ id }`;
+			return `${ href }/${schema}/${ id }`;
 	}
 
-	generatePartialLinkById(id: string, schema: 'case' | 'link' = 'case') {
-		return `/${schema}/${ id }`;
-	}
 	isStoreEntitiesEqual(caseA, caseB) {
 		// caseA.data == undefined, can happen if you update only the preview data (of other case such as "name" -> updates the preview only)
 		if (!caseA || !caseB || !caseA.data || !caseB.data) {

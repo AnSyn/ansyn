@@ -17,7 +17,7 @@ export const MenuActionTypes = {
 	RESET_APP: 'RESET_APP',
 	SET_USER_ENTER: 'SET_USER_ENTER',
 	SET_DOES_USER_HAVE_CREDENTIALS: 'SET_DOES_USER_HAVE_CREDENTIALS',
-	SET_STATE_ACTION_FINISHED: 'SET_STATE_ACTION_FINISHED'
+	SET_STATE_ACTION_SUCCESS: 'SET_STATE_ACTION_SUCCESS'
 };
 
 export class ResetAppAction implements Action {
@@ -27,8 +27,8 @@ export class ResetAppAction implements Action {
 	}
 }
 
-export class SetStateActionFinished implements Action {
-	type = MenuActionTypes.SET_STATE_ACTION_FINISHED;
+export class SetStateActionSuccess implements Action {
+	type = MenuActionTypes.SET_STATE_ACTION_SUCCESS;
 
 	constructor() {
 	}

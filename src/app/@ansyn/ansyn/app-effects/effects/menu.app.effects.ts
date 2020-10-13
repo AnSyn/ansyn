@@ -14,6 +14,8 @@ import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
 import { StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
 import { getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
+import { casesConfig } from '../../modules/menu-items/cases/services/cases.service';
+import { ICasesConfig } from '../../modules/menu-items/cases/models/cases-config';
 
 @Injectable()
 export class MenuAppEffects {
@@ -45,7 +47,7 @@ export class MenuAppEffects {
 	@Effect()
 	onResetApp$ = this.actions$
 		.pipe(
-			ofType(MenuActionTypes.SET_STATE_ACTION_FINISHED),
+			ofType(MenuActionTypes.SET_STATE_ACTION_SUCCESS),
 			mergeMap(() => {
 				if (this.componentMode) {
 					window.open(this.menuConfig.baseUrl, '_blank');
@@ -53,7 +55,7 @@ export class MenuAppEffects {
 				}
 
 				return [
-					new LoadDefaultCaseAction(),
+					new LoadDefaultCaseAction(this.caseConfig.defaultCase),
 					new StartMouseShadow({fromUser: true}),
 					new AnnotationSetProperties(getInitialAnnotationsFeatureStyle()),
 					new ToggleIsPinnedAction(false),
@@ -74,6 +76,7 @@ export class MenuAppEffects {
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>,
 				@Inject(COMPONENT_MODE) public componentMode: boolean,
-				@Inject(MenuConfig) public menuConfig: IMenuConfig) {
+				@Inject(MenuConfig) public menuConfig: IMenuConfig,
+				@Inject(casesConfig) public caseConfig: ICasesConfig) {
 	}
 }

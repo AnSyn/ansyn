@@ -42,6 +42,13 @@ export class DataLayersService implements OnInit, OnDestroy {
 			tap(({ id }: ICase) => this.caseId = id)
 		);
 
+	constructor(@Inject(ErrorHandlerService) public errorHandlerService: ErrorHandlerService,
+				protected storageService: StorageService,
+				protected store: Store<any>,
+				@Inject(layersConfig) public config: ILayersManagerConfig) {
+		this.ngOnInit();
+	}
+
 
 	generateAnnotationLayer(name = 'Default', data: any = featureCollection([]), isNonEditable: boolean = false): ILayer {
 		return {
@@ -54,13 +61,6 @@ export class DataLayersService implements OnInit, OnDestroy {
 			data,
 			isNonEditable
 		};
-	}
-
-	constructor(@Inject(ErrorHandlerService) public errorHandlerService: ErrorHandlerService,
-				protected storageService: StorageService,
-				protected store: Store<any>,
-				@Inject(layersConfig) public config: ILayersManagerConfig) {
-		this.ngOnInit();
 	}
 
 	ngOnInit(): void {

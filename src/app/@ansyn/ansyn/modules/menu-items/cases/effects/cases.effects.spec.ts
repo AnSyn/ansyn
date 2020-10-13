@@ -33,14 +33,19 @@ import {
 	UpdateCaseBackendAction
 } from '../actions/cases.actions';
 import { ICase } from '../models/case.model';
-import { casesFeatureKey, CasesReducer, casesStateSelector, initialCasesState } from '../reducers/cases.reducer';
+import {
+	casesFeatureKey,
+	CasesReducer,
+	casesStateSelector,
+	initialCasesState,
+	selectSelectedCase
+} from '../reducers/cases.reducer';
 import { casesConfig, CasesService } from '../services/cases.service';
 import { CasesEffects } from './cases.effects';
 import { SetMapsDataActionStore, selectActiveMapId, selectMapsIds } from '@ansyn/map-facade';
 import { BackToWorldView } from '../../../overlays/overlay-status/actions/overlay-status.actions';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { linksConfig } from '../services/helpers/cases.service.query-params-helper';
-import { ClipboardModule, ClipboardService } from 'ngx-clipboard';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
@@ -79,7 +84,6 @@ describe('CasesEffects', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				ClipboardModule,
 				HttpClientModule,
 				StoreModule.forRoot({
 					[casesFeatureKey]: CasesReducer,
@@ -89,7 +93,6 @@ describe('CasesEffects', () => {
 				RouterTestingModule
 			],
 			providers: [
-				ClipboardService,
 				CasesEffects,
 				{ provide: StorageService, useValue: {} },
 				CasesService,
@@ -117,6 +120,7 @@ describe('CasesEffects', () => {
 		const fakeStore = new Map<any, any>([
 			[selectLayers, [{ type: LayerType.annotation }]],
 			[casesStateSelector, casesState],
+			[selectSelectedCase, { id: 'delete-case-id' }],
 			[selectActiveMapId, 'mapId'],
 			[selectMapsIds, 'mapIds[]']
 		]);
@@ -168,9 +172,7 @@ describe('CasesEffects', () => {
 
 	it('onDeleteCase$ should call DeleteCaseBackendAction. when deleted case equal to selected case LoadDefaultCaseAction should have been called too', () => {
 		spyOn(dataLayersService, 'removeCaseLayers').and.callFake(() => of('good'));
-		casesState.modal.id = 'delete-case-id';
-		casesState.selectedCase = <any>{ id: 'delete-case-id' };
-		actions = hot('--a--', { a: new DeleteCaseAction({ id: '', name: '' }) });
+		actions = hot('--a--', { a: new DeleteCaseAction({ id: '', name: 'delete-case-id' }) });
 		const expectedResults = cold('--(a)--', { a: new LoadDefaultCaseAction() });
 		expect(casesEffects.onDeleteCase$).toBeObservable(expectedResults);
 	});

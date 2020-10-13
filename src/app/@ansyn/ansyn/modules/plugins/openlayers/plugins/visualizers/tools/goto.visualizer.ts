@@ -52,11 +52,11 @@ export class GoToVisualizer extends EntitiesVisualizer {
 
 	/* events */
 	@AutoSubscription
-	drawPinPoint$ = combineLatest(this.isActiveMap$, this.goToExpand$, this.activeCenter$, this.mapSearchBox$)
+	drawPinPoint$ = combineLatest([this.isActiveMap$, this.goToExpand$, this.activeCenter$, this.mapSearchBox$])
 		.pipe(mergeMap(this.drawGotoIconOnMap.bind(this)));
 
 	@AutoSubscription
-	goToPinAvailable$ = combineLatest(this.pinLocation$, this.isActiveMap$).pipe(
+	goToPinAvailable$ = combineLatest([this.pinLocation$, this.isActiveMap$]).pipe(
 		tap(([pinLocation, isActiveMap]: [boolean, boolean]) => {
 			if (isActiveMap && pinLocation) {
 				this.createSingleClickEvent();
@@ -74,6 +74,10 @@ export class GoToVisualizer extends EntitiesVisualizer {
 		zIndex: 100
 	});
 
+	constructor(public store$: Store<any>, protected projectionService: OpenLayersProjectionService) {
+		super();
+	}
+
 	public singleClickListener = (e) => {
 		this.projectionService
 			.projectAccurately({ type: 'Point', coordinates: e.coordinate }, this.iMap.mapObject)
@@ -83,10 +87,6 @@ export class GoToVisualizer extends EntitiesVisualizer {
 				this.store$.dispatch(new SetActiveCenter(point.coordinates));
 			});
 	};
-
-	constructor(public store$: Store<any>, protected projectionService: OpenLayersProjectionService) {
-		super();
-	}
 
 	featureStyle(feature: Feature, resolution) {
 		return this._iconSrc;

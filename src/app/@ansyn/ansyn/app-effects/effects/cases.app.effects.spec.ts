@@ -152,8 +152,7 @@ describe('CasesAppEffects', () => {
 
 						getOverlaysById: (ids: IOverlayByIdMetaData[]) => {
 							if (ids.every(({ id }) => ['uuu', 'eee'].includes(id))) {
-								const overlay = <IOverlay>{};
-								return of([overlay]);
+								return of(ids);
 							}
 
 							return throwError(new HttpErrorResponse({ status: 404 }));
@@ -244,6 +243,8 @@ describe('CasesAppEffects', () => {
 						sourceType: 'PLANET'
 					}
 				],
+				presetOverlays: [],
+				miscOverlays: {},
 				time: {
 					type: 'absolute',
 					from: new Date(),

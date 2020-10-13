@@ -201,7 +201,7 @@ describe('ToolsAppEffects', () => {
 				return of({ coordinates: [0, 0] });
 			}
 		};
-		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => activeCommunicator);
+		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => <any>activeCommunicator);
 		actions = hot('--a--', { a: new PullActiveCenter() });
 		const expectedResults = cold('--b--', { b: new SetActiveCenter([0, 0]) });
 		expect(toolsAppEffects.getActiveCenter$).toBeObservable(expectedResults);
@@ -216,7 +216,7 @@ describe('ToolsAppEffects', () => {
 		};
 
 		beforeEach(() => {
-			spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [activeCommunicator, activeCommunicator]);
+			spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [<any>activeCommunicator, <any>activeCommunicator]);
 		});
 	});
 

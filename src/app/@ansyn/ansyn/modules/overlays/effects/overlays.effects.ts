@@ -3,18 +3,19 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { forkJoin, from, Observable } from 'rxjs';
-import { catchError,  filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError,  filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
 	CheckTrianglesAction,
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
-	OverlaysActionTypes,
+	OverlaysActionTypes, SetOverlaysContainmentChecked,
 	RequestOverlayByIDFromBackendAction,
 	SetMarkUp,
 	SetOverlaysCriteriaAction,
 	SetOverlaysStatusMessageAction,
+	UpdateOverlays,
 	UpdateOverlaysCountAction
 } from '../actions/overlays.actions';
 import { IOverlay, IOverlaysCriteria, IOverlaysFetchData, RegionContainment } from '../models/overlay.model';
@@ -33,39 +34,49 @@ import { rxPreventCrash } from '../../core/utils/rxjs/operators/rxPreventCrash';
 import { getPolygonIntersectionRatio, isPointContainedInGeometry } from '@ansyn/imagery';
 import { getErrorLogFromException } from '../../core/utils/logs/timer-logs';
 import { LoggerService } from '../../core/services/logger.service';
-import { AreaToCredentialsService } from "../../core/services/credentials/area-to-credentials.service";
-import { CredentialsService, ICredentialsResponse } from "../../core/services/credentials/credentials.service";
-import { SetDoesUserHaveCredentials } from "@ansyn/menu";
+import { AreaToCredentialsService } from '../../core/services/credentials/area-to-credentials.service';
+import { CredentialsService, ICredentialsResponse } from '../../core/services/credentials/credentials.service';
+import { getMenuSessionData, SetBadgeAction } from '@ansyn/menu';
+import { Update } from '@ngrx/entity';
 
 @Injectable()
 export class OverlaysEffects {
 
-	@Effect({ dispatch: false })
+	@Effect()
 	setOverlaysContainedInRegionField$ = this.actions$.pipe(
 		ofType(OverlaysActionTypes.SET_OVERLAYS_CRITERIA, OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
 		withLatestFrom(this.store$.select(selectOverlaysCriteria), this.store$.select(selectOverlaysArray)),
 		filter(([action, criteria, overlays]: [any, IOverlaysCriteria, IOverlay[]]) => Boolean(overlays) && overlays.length > 0),
-		tap(([action, criteria, overlays]: [any, IOverlaysCriteria, IOverlay[]]) => {
-			overlays.forEach((overlay: IOverlay) => {
+		mergeMap(([action, criteria, overlays]: [any, IOverlaysCriteria, IOverlay[]]) => {
+			const payload: Update<IOverlay>[] = overlays.map((overlay: IOverlay) => {
+				let containedInSearchPolygon;
 				try {
 					if (criteria.region.type === 'Point') {
 						const isContained = isPointContainedInGeometry(criteria.region, overlay.footprint);
-						overlay.containedInSearchPolygon = isContained ? RegionContainment.contained : RegionContainment.notContained;
+						containedInSearchPolygon = isContained ? RegionContainment.contained : RegionContainment.notContained;
 					} else {
 						const ratio = getPolygonIntersectionRatio(criteria.region, overlay.footprint);
 						if (!Boolean(ratio)) {
-							overlay.containedInSearchPolygon = RegionContainment.notContained;
+							containedInSearchPolygon = RegionContainment.notContained;
 						} else if (ratio === 1) {
-							overlay.containedInSearchPolygon = RegionContainment.contained;
+							containedInSearchPolygon = RegionContainment.contained;
 						} else {
-							overlay.containedInSearchPolygon = RegionContainment.intersect;
+							containedInSearchPolygon = RegionContainment.intersect;
 						}
 					}
 				} catch (e) {
 					console.error('failed to calc overlay intersection ratio of ', overlay, ' error ', e);
-					overlay.containedInSearchPolygon = RegionContainment.unknown;
+					containedInSearchPolygon = RegionContainment.unknown;
 				}
+				return {
+					id: overlay.id,
+					changes: { containedInSearchPolygon }
+				};
 			});
+			return [
+				new UpdateOverlays(payload),
+				new SetOverlaysContainmentChecked()
+			];
 		}),
 		rxPreventCrash()
 	);
@@ -87,20 +98,20 @@ export class OverlaysEffects {
 	checkTrianglesBeforeSearch$ = this.actions$.pipe(
 		ofType<CheckTrianglesAction>(OverlaysActionTypes.CHECK_TRIANGLES),
 		switchMap((action: CheckTrianglesAction) => {
+			const { isUserFirstEntrance } = getMenuSessionData();
 			return forkJoin([this.areaToCredentialsService.getAreaTriangles(action.payload.region), this.userAuthorizedAreas$]).pipe(
 				mergeMap<any, any>(([trianglesOfArea, userAuthorizedAreas]: [any, any]) => {
-
 					if (userAuthorizedAreas.some( area => trianglesOfArea.includes(area))) {
 						return [new LoadOverlaysAction(action.payload),
-							new SetDoesUserHaveCredentials(true)];
+							new SetBadgeAction({key: 'Permissions', badge: undefined})];
 					}
 					return [new LoadOverlaysSuccessAction([]),
 						new SetOverlaysStatusMessageAction({ message: this.translate.instant(overlaysStatusMessages.noPermissionsForArea) }),
-						new SetDoesUserHaveCredentials(false)];
+						new SetBadgeAction({key: 'Permissions', badge: isUserFirstEntrance ? '' : undefined})];
 				}),
 				catchError( () => {
 					return [new LoadOverlaysAction(action.payload),
-						new SetDoesUserHaveCredentials(true)];
+						new SetBadgeAction({key: 'Permissions', badge: undefined})];
 				})
 			)
 		})
@@ -159,7 +170,7 @@ export class OverlaysEffects {
 	@Effect()
 	dropsCount$ = this.store$.select(selectDrops).pipe(
 		filter(Boolean),
-		map(drops => new UpdateOverlaysCountAction(drops.length)));
+		map<any, UpdateOverlaysCountAction>(drops => new UpdateOverlaysCountAction(drops.length)));
 
 
 	constructor(protected actions$: Actions,

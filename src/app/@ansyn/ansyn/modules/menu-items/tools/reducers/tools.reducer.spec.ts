@@ -2,6 +2,7 @@ import { toolsInitialState, ToolsReducer } from './tools.reducer';
 import { AnnotationSetProperties, SetAnnotationMode } from '../actions/tools.actions';
 import { cloneDeep } from 'lodash';
 import { AnnotationMode } from '@ansyn/ol';
+import { Action } from '@ngrx/store';
 import { toolsFlags } from '../models/tools.model';
 
 describe('ToolsReducer', () => {
@@ -22,7 +23,7 @@ describe('ToolsReducer', () => {
 			stroke: 'blue',
 			'stroke-width': 4
 		};
-		const action = new AnnotationSetProperties(payload);
+		const action: Action = new AnnotationSetProperties(payload);
 		const result = ToolsReducer(cloneDeep(toolsInitialState), action);
 		expect(result.annotationProperties).toEqual({ ...toolsInitialState.annotationProperties, ...payload });
 
@@ -31,7 +32,7 @@ describe('ToolsReducer', () => {
 			fill: 'green'
 		};
 
-		const secAction = new AnnotationSetProperties(secPayload);
+		const secAction: Action = new AnnotationSetProperties(secPayload);
 		const secResult = ToolsReducer(cloneDeep(result), secAction);
 
 		expect(secResult.annotationProperties).toEqual({

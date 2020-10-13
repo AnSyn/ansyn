@@ -23,16 +23,16 @@ import {
 } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { IAppState } from '../app.effects.module';
 
-import { ImageryMapPosition } from '@ansyn/imagery';
+import { IImageryMapPosition } from '@ansyn/imagery';
 import {
 	catchError,
 	filter,
 	map,
 	mergeMap,
-	pairwise,
-	startWith,
 	switchMap,
-	withLatestFrom
+	withLatestFrom,
+	distinctUntilKeyChanged,
+	distinctUntilChanged
 } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import {
@@ -40,8 +40,6 @@ import {
 	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
 	DisplayOverlaySuccessAction,
-	LoadOverlaysAction,
-	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
 	SetHoveredOverlayAction,
 	SetMarkUp,
@@ -142,7 +140,7 @@ export class OverlaysAppEffects {
 		})
 	);
 
-	private getOverlayWithNewThumbnail: any = switchMap(([overlay, position]: [IOverlay, ImageryMapPosition]) => {
+	private getOverlayWithNewThumbnail: any = switchMap(([overlay, position]: [IOverlay, IImageryMapPosition]) => {
 		if (!overlay) {
 			return [overlay];
 		}
@@ -167,14 +165,11 @@ export class OverlaysAppEffects {
 	});
 
 	@Effect()
-	setHoveredOverlay$: Observable<any> = combineLatest(this.store$.select(selectDropMarkup), this.store$.select(selectFooterCollapse))
+	setHoveredOverlay$: Observable<any> = combineLatest([this.store$.select(selectDropMarkup), this.store$.select(selectFooterCollapse)])
 		.pipe(
 			filter(([drop, footerCollapse]) => Boolean(!footerCollapse)),
-			startWith(null),
-			pairwise(),
-			filter(this.onDropMarkupFilter.bind(this)),
-			map(([prevAction, currentAction]) => currentAction),
-			withLatestFrom(this.overlaysService.getAllOverlays$, ([drop, footer], overlays) => [drop, overlays]),
+			distinctUntilChanged( isEqual),
+			withLatestFrom<any, any>(this.overlaysService.getAllOverlays$, ([drop, footer], overlays) => [drop, overlays]),
 			this.getOverlayFromDropMarkup,
 			this.getPositionForActiveMap,
 			this.getOverlayWithNewThumbnail,
@@ -196,12 +191,8 @@ export class OverlaysAppEffects {
 	@Effect()
 	updateResultTableBadge$: Observable<SetBadgeAction> = this.actions$.pipe(
 		ofType<SetTotalOverlaysAction>(OverlaysActionTypes.SET_TOTAL_OVERLAYS),
+		distinctUntilKeyChanged('payload'),
 		map((action) => new SetBadgeAction({ key: 'Results table', badge: `${ action.payload.number }` })));
-
-	onDropMarkupFilter([prevAction, currentAction]): boolean {
-		const isEquel = !isEqual(prevAction, currentAction);
-		return isEquel;
-	}
 
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,

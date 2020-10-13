@@ -99,11 +99,11 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 	}
 
 	removeCase(caseId: string): void {
-		this.store$.dispatch(new OpenModalAction({ component: DeleteCaseComponent, caseId }));
+		this.store$.dispatch(new OpenModalAction({ type: 'delete', caseId }));
 	}
 
 	editCase(caseId: string) {
-		this.store$.dispatch(new OpenModalAction({ component: EditCaseComponent, caseId }));
+		this.store$.dispatch(new OpenModalAction({ type: 'edit', caseId }));
 	}
 
 	shareCase(caseId: string, caseName: string) {

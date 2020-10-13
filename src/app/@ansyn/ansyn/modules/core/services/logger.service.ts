@@ -18,12 +18,26 @@ const defaultSubType = '';
 
 @Injectable()
 export class LoggerService implements ErrorHandler {
+
+	get standardPrefix() {
+		return `Ansyn[${ this.env }, ${ this.component }]`;
+	}
 	env = 'ENV'; // default (unknown environment)
 	component = 'app';
 	stack: ILogObject[] = [];
 	disconnectionInMilliseconds: number;
 	timeoutCookie;
 	isConnected: boolean;
+
+	constructor(@Inject(LoggerConfig) public loggerConfig: ILoggerConfig) {
+		this.env = loggerConfig.env;
+		this.component = loggerConfig.component;
+		this.disconnectionInMilliseconds = new Date().getTime() - moment().subtract(this.loggerConfig.disconnectionTimeoutInMinutes, 'minutes').toDate().getTime();
+		this.isConnected = false;
+		window.onerror = (e) => {
+			this.error(e.toString());
+		};
+	}
 
 	beforeAppClose() {
 		this.info('app closed');
@@ -38,20 +52,6 @@ export class LoggerService implements ErrorHandler {
 		}
 		// IMPORTANT: Rethrow the error otherwise it gets swallowed
 		throw error;
-	}
-
-	constructor(@Inject(LoggerConfig) public loggerConfig: ILoggerConfig) {
-		this.env = loggerConfig.env;
-		this.component = loggerConfig.component;
-		this.disconnectionInMilliseconds = new Date().getTime() - moment().subtract(this.loggerConfig.disconnectionTimeoutInMinutes, 'minutes').toDate().getTime();
-		this.isConnected = false;
-		window.onerror = (e) => {
-			this.error(e.toString());
-		};
-	}
-
-	get standardPrefix() {
-		return `Ansyn[${ this.env }, ${ this.component }]`;
 	}
 
 	critical(msg: string, actionType = defaultActionType, subType = defaultSubType) {

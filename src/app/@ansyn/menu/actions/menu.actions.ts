@@ -3,21 +3,16 @@ import { IMenuItem } from '../models/menu-item.model';
 import { ILogMessage } from '../models/logger.model';
 
 export const MenuActionTypes = {
-	INITIALIZE_MENU_ITEMS: 'INITIALIZE_MENU_ITEMS',
-	ADD_MENU_ITEM: 'ADD_MENU_ITEM',
 	SELECT_MENU_ITEM: 'SELECT_MENU_ITEM',
 	UNSELECT_MENU_ITEM: 'UNSELECT_MENU_ITEM',
 	SET_BADGE: 'SET_BADGE',
 	TOGGLE_IS_PINNED: 'TOGGLE_IS_PINNED',
-	SET_HIDE_RESULTS_TABLE_BADGE: 'SET_HIDE_RESULTS_TABLE_BADGE',
 	TRIGGER: {
 		CONTAINER_CHANGED: 'CONTAINER_CHANGED'
 	},
 	SET_AUTO_CLOSE: 'SET_AUTO_CLOSE',
 	MENU_COLLAPSE: 'MENU_COLLAPSE',
 	RESET_APP: 'RESET_APP',
-	SET_USER_ENTER: 'SET_USER_ENTER',
-	SET_DOES_USER_HAVE_CREDENTIALS: 'SET_DOES_USER_HAVE_CREDENTIALS',
 	LOG_OPEN_PERMISSIONS_SITE: 'LOG_OPEN_PERMISSIONS_SITE',
 	LOG_DOWNLOAD_PERMISSIONS_GUIDE: 'LOG_DOWNLOAD_PERMISSIONS_GUIDE',
 	LOG_HELP: 'LOG_HELP'
@@ -31,20 +26,6 @@ export class ResetAppAction implements Action, ILogMessage {
 
 	logMessage() {
 		return `*Resetting application* according to user request`
-	}
-}
-
-export class InitializeMenuItemsAction implements Action {
-	type = MenuActionTypes.INITIALIZE_MENU_ITEMS;
-
-	constructor(public payload: IMenuItem[]) {
-	}
-}
-
-export class AddMenuItemAction implements Action {
-	type = MenuActionTypes.ADD_MENU_ITEM;
-
-	constructor(public payload: IMenuItem) {
 	}
 }
 
@@ -95,13 +76,6 @@ export class ContainerChangedTriggerAction implements Action {
 	}
 }
 
-export class SetHideResultsTableBadgeAction implements Action {
-	type = MenuActionTypes.SET_HIDE_RESULTS_TABLE_BADGE;
-
-	constructor(public payload?: any) {
-	}
-}
-
 export class SetAutoClose implements Action {
 	type = MenuActionTypes.SET_AUTO_CLOSE;
 
@@ -117,17 +91,6 @@ export class ToggleMenuCollapse implements Action, ILogMessage {
 
 	logMessage() {
 		return `${this.payload ? '' : 'Un-'}Hiding menu`
-	}
-}
-
-export class SetUserEnter implements Action {
-	type = MenuActionTypes.SET_USER_ENTER;
-}
-
-export class SetDoesUserHaveCredentials implements Action {
-	type = MenuActionTypes.SET_DOES_USER_HAVE_CREDENTIALS;
-
-	constructor(public payload: boolean) {
 	}
 }
 

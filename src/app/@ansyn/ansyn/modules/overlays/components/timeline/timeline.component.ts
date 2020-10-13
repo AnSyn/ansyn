@@ -66,7 +66,7 @@ export interface IEventDropsEvent {
 @AutoSubscriptions()
 export class TimelineComponent implements OnInit, OnDestroy {
 
-	@ViewChild('context') context: ElementRef;
+	@ViewChild('context', { static: true }) context: ElementRef;
 	isZooming: boolean;
 	dispachedSearch: boolean;
 

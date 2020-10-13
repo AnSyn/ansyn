@@ -12,12 +12,18 @@ import { DisplayOverlayFromStoreAction } from '../../../overlays/actions/overlay
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { OpenLayersMap, OpenlayersMapName, OpenLayersProjectionService } from '@ansyn/ol';
 import { CesiumMap, CesiumMapName, CesiumProjectionService } from '@ansyn/imagery-cesium';
+import { Injectable } from '@angular/core';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, CesiumMap],
 	deps: [Store, Actions, OpenLayersProjectionService, CesiumProjectionService]
 })
+@Injectable()
 export class ContextMenuPlugin extends BaseImageryPlugin {
+
+	get containerElem(): HTMLElement {
+		return this.iMap.getHtmlContainer();
+	}
 	isActiveOperators: UnaryFunction<any, any> = pipe(
 		withLatestFrom(this.store$.select(selectActiveMapId).pipe(map((activeMapId: string) => activeMapId === this.mapId))),
 		filter(([prevData, isActive]: [any, boolean]) => isActive),
@@ -34,19 +40,15 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 			tap((action) => this.store$.dispatch(action))
 		);
 
+	constructor(protected store$: Store<any>, protected actions$: Actions, protected olProjectionService: OpenLayersProjectionService, protected cesiumProjectionService: CesiumProjectionService) {
+		super();
+	}
+
 	@AutoSubscription
 	contextMenuTrigger$ = () => fromEvent(this.containerElem, 'contextmenu')
 		.pipe(
 			tap(this.contextMenuEventListener.bind(this))
 		);
-
-	get containerElem(): HTMLElement {
-		return this.iMap.getHtmlContainer();
-	}
-
-	constructor(protected store$: Store<any>, protected actions$: Actions, protected olProjectionService: OpenLayersProjectionService, protected cesiumProjectionService: CesiumProjectionService) {
-		super();
-	}
 
 	contextMenuEventListener(event: MouseEvent) {
 		event.preventDefault();

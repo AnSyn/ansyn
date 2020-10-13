@@ -1,11 +1,9 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, inject, fakeAsync } from '@angular/core/testing';
 import { CasesModalContainerComponent } from './cases-modal-container.component';
-import { EditCaseComponent } from '../edit-case/edit-case.component';
-import { DeleteCaseComponent } from '../delete-case/delete-case.component';
 import { CasesModule } from '../../cases.module';
-import { OpenModalAction } from '../../actions/cases.actions';
-import { StoreModule } from '@ngrx/store';
-import { casesFeatureKey, CasesReducer } from '../../reducers/cases.reducer';
+import { CloseModalAction, OpenModalAction } from '../../actions/cases.actions';
+import { StoreModule, Store } from '@ngrx/store';
+import { casesFeatureKey, CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
@@ -20,6 +18,7 @@ import { linksConfig } from '../../services/helpers/cases.service.query-params-h
 describe('ModalContainerComponent', () => {
 	let component: CasesModalContainerComponent;
 	let fixture: ComponentFixture<CasesModalContainerComponent>;
+	let store: Store<ICasesState>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -50,28 +49,29 @@ describe('ModalContainerComponent', () => {
 		fixture.detectChanges();
 	});
 
+	beforeEach( (inject([Store], (_store: Store<ICasesState>) => {
+			store = _store;
+	})));
+
 	it('should create', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('buildTemplate should get OpenModalAction and create modal component ', () => {
-		let action: OpenModalAction = new OpenModalAction({ component: EditCaseComponent });
-		component.buildTemplate(action);
+	it('dispatch OpenModal with edit type should open ansyn-edit-case', fakeAsync(() => {
+		store.dispatch(new OpenModalAction({ type: 'edit' }));
+		tick();
 		expect(fixture.nativeElement.querySelector('ansyn-edit-case')).toBeDefined();
-		expect(component.selectedComponentRef.instance instanceof EditCaseComponent).toBeTruthy();
+	}));
 
-		action = new OpenModalAction({ component: DeleteCaseComponent });
-		component.buildTemplate(action);
+	it('dispatch OpenModal with delete type should open ansyn-delete-case', fakeAsync(() => {
+		store.dispatch(new OpenModalAction({ type: 'delete' }));
+		tick();
 		expect(fixture.nativeElement.querySelector('ansyn-delete-case')).toBeDefined();
-		expect(component.selectedComponentRef.instance instanceof DeleteCaseComponent).toBeTruthy();
+	}));
+
+	it('click outside the modal should dispatch CloseModal', () => {
+		spyOn(store, 'dispatch');
+		component.close();
+		expect(store.dispatch).toHaveBeenCalledWith(new CloseModalAction());
 	});
-
-	it('destroyTemplate should destory modal component', () => {
-		component.selectedComponentRef = { destroy: () => null };
-		spyOn(component.selectedComponentRef, 'destroy');
-		component.destroyTemplate();
-		expect(component.selectedComponentRef.destroy).toHaveBeenCalled();
-	});
-
-
 });

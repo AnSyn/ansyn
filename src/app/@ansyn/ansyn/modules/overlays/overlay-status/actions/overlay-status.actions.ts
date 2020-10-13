@@ -2,7 +2,7 @@ import { Action } from '@ngrx/store';
 import { AlertMsgTypes } from '../../../alerts/model';
 import { IOverlay } from '../../models/overlay.model';
 import {
-	ImageManualProcessArgs, IOverlaysManualProcessArgs,
+	IImageManualProcessArgs, IOverlaysManualProcessArgs,
 	IOverlaysScannedAreaData,
 	IOverlaysTranslationData,
 } from '../../../menu-items/cases/models/case.model';
@@ -131,7 +131,7 @@ export class BackToWorldView implements Action, ILogMessage {
 export class SetManualImageProcessing implements Action {
 	type = OverlayStatusActionsTypes.SET_MANUAL_IMAGE_PROCESSING;
 
-	constructor(public payload: ImageManualProcessArgs) {
+	constructor(public payload: IImageManualProcessArgs) {
 	};
 }
 

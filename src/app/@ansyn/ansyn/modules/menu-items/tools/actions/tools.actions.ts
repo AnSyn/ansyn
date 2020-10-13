@@ -265,4 +265,5 @@ export type ToolsActions =
 	| SetAnnotationMode
 	| SetMeasureDistanceToolState
 	| SetSubMenu
-	| ClearActiveInteractionsAction;
+	| ClearActiveInteractionsAction
+	| SetMapSearchBox;

@@ -7,7 +7,7 @@ import { StatusBarAppEffects } from './status-bar.app.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { AddCaseAction, SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { EMPTY, Observable } from 'rxjs';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import { HttpBackend, HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
@@ -30,7 +30,7 @@ import {
 	mapFeatureKey,
 	MapReducer,
 	SetActiveMapId,
-	SetMapsDataActionStore,
+	SetMapsDataActionStore
 } from '@ansyn/map-facade';
 import { ICase } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay, IOverlaysFetchData } from '../../modules/overlays/models/overlay.model';

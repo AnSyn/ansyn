@@ -1,8 +1,8 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, ElementRef } from '@angular/core';
 import {
 	IFiltersState, selectEnableOnlyFavorites,
 	selectFacets,
-	selectFilters,
+	selectFiltersMetadata,
 	selectShowOnlyFavorites
 } from '../../../filters/reducer/filters.reducer';
 import { Store } from '@ngrx/store';
@@ -26,8 +26,7 @@ import { IFiltersConfig } from '../../../filters/models/filters-config';
 @Component({
 	selector: 'ansyn-filters-panel',
 	templateUrl: './filters-panel.component.html',
-	styleUrls: ['./filters-panel.component.less'],
-	providers: [ClickOutsideService]
+	styleUrls: ['./filters-panel.component.less']
 })
 @AutoSubscriptions()
 export class FiltersPanelComponent implements OnInit, OnDestroy {
@@ -48,7 +47,7 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	updateFilters$ = this.store.select(selectFilters).pipe(
+	updateFilters$ = this.store.select(selectFiltersMetadata).pipe(
 		filter(filters => filters && filters.size > 0 ),
 		withLatestFrom(this.store.select(selectFacets)),
 		tap(([filters, facets]: [Map<IFilter, FilterMetadata>, ICaseFacetsState]) => {
@@ -70,7 +69,7 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	isClickOutside$ = this.clickOutside.onClickOutside().pipe(
+	isClickOutside$ = this.clickOutside.onClickOutside({monitor: this.element.nativeElement}).pipe(
 		filter(clickOutside => clickOutside && this.isSomeFilterExpand()),
 		tap( this.closeAllFilter.bind(this))
 	);
@@ -85,7 +84,8 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 		@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 		@Inject(filtersConfig) public filtersConfig: IFiltersConfig,
 		public store: Store<IFiltersState>,
-		protected clickOutside: ClickOutsideService
+		protected element: ElementRef,
+				protected clickOutside: ClickOutsideService
 	) {
 		if (this.filters.length > this.config.maximumOpen) {
 			this.expand[this.filters[0].modelName] = false;

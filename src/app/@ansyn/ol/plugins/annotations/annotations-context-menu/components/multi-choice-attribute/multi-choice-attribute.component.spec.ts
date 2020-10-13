@@ -3,8 +3,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MultiChoiceAttributeComponent } from './multi-choice-attribute.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatChipsModule, MatMenuModule, MatFormFieldModule } from '@angular/material';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatMenuModule } from '@angular/material/menu';
 
 describe('MultiChoiceAttributeComponent', () => {
 	let component: MultiChoiceAttributeComponent;

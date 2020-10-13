@@ -5,8 +5,7 @@ import { IStatusBarState, selectGeoFilterActive, selectGeoFilterType } from '../
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store } from '@ngrx/store';
 import { combineLatest, fromEvent, merge, Observable } from 'rxjs';
-import { animate, style, transition, trigger } from '@angular/animations';
-import { AnimationTriggerMetadata } from '@angular/animations/src/animation_metadata';
+import { animate, style, transition, trigger, AnimationTriggerMetadata } from '@angular/animations';
 import { filter, tap } from 'rxjs/operators';
 import { selectDataInputFilter, selectRegion, selectTime } from '../../../overlays/reducers/overlays.reducer';
 import { ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
@@ -66,8 +65,8 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	geoFilterTitle: string;
 	geoFilterCoordinates: string;
 	dataInputFilters: ICaseDataInputFiltersState;
-	@ViewChild('timePickerTitleFrom') timePickerInputFrom: ElementRef;
-	@ViewChild('timePickerTitleTo') timePickerInputTo: ElementRef;
+	@ViewChild('timePickerTitleFrom', { static: true }) timePickerInputFrom: ElementRef;
+	@ViewChild('timePickerTitleTo', { static: true }) timePickerInputTo: ElementRef;
 
 	@AutoSubscription
 	time$: Observable<ICaseTimeState> = this.store$.select(selectTime).pipe(
@@ -106,10 +105,10 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	geoFilter$ = combineLatest(
+	geoFilter$ = combineLatest([
 		this.store$.select(selectGeoFilterType),
 		this.store$.select(selectGeoFilterActive)
-	).pipe(
+	]).pipe(
 		tap(([geoFilterType, active]) => {
 			this.geoFilterTitle = `${ geoFilterType }`;
 			this.popupExpanded.set('LocationPicker', active);
@@ -207,7 +206,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		}
 		if (isBackspaceKey(event)) {
 			const selection = window.getSelection();
-			if (selection.type === 'Caret' && !/[ \/:]/g.test(selection.baseNode.textContent.charAt(selection.baseOffset - 1))) {
+			if (selection.type === 'Caret' && !/[ \/:]/g.test(selection.anchorNode.textContent.charAt(selection.anchorOffset - 1))) {
 				return;
 			}
 			selection.deleteFromDocument();
@@ -272,16 +271,16 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	selectOnlyNumber() {
 		const selection = window.getSelection();
 		if (selection.type === 'Range') {
-			const { baseOffset, extentOffset, baseNode, extentNode } = selection;
-			const ltr = baseOffset < extentOffset;
-			const minIndex = Math.min(baseOffset, extentOffset);
-			const maxIndex = Math.max(baseOffset, extentOffset);
-			const textContent = baseNode.textContent;
+			const { anchorOffset, focusOffset, anchorNode, focusNode } = selection;
+			const ltr = anchorOffset < focusOffset;
+			const minIndex = Math.min(anchorOffset, focusOffset);
+			const maxIndex = Math.max(anchorOffset, focusOffset);
+			const textContent = anchorNode.textContent;
 			const contentToRemove = textContent.substring(minIndex, maxIndex);
 			if (contentToRemove.split('').some(letterToRemove => ['/', ':', ' '].includes(letterToRemove))) {
 				const offset = this.findExtentOffset(contentToRemove, !ltr);
 
-				selection.setBaseAndExtent(baseNode, baseOffset, extentNode, ltr ? baseOffset + offset : baseOffset - offset);
+				selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, ltr ? anchorOffset + offset : anchorOffset - offset);
 			}
 		}
 	}

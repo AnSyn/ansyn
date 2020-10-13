@@ -40,8 +40,7 @@ import { SentinelComboBoxComponent } from './sentinel-combo-box/sentinel-combo-b
 			]
 		})
 	],
-	exports: [SentinelComboBoxComponent],
-	entryComponents: [SentinelComboBoxComponent]
+	exports: [SentinelComboBoxComponent]
 })
 export class SentinelModule {
 }

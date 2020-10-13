@@ -40,8 +40,7 @@ import { AreaToCredentialsService } from './services/credentials/area-to-credent
 		ContextMenuComponent,
 		AngleFilterComponent,
 		CredentialsComponent
-	],
-	entryComponents: [AngleFilterComponent]
+	]
 })
 
 export class CoreModule {

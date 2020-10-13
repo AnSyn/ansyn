@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import {
 	ReplaceMainLayer,
 	IEntryComponent,
@@ -19,8 +19,7 @@ import { ClickOutsideService } from '../../../core/click-outside/click-outside.s
 @Component({
 	selector: 'ansyn-imagery-change-map',
 	templateUrl: './imagery-change-map.component.html',
-	styleUrls: ['./imagery-change-map.component.less'],
-	providers: [ClickOutsideService]
+	styleUrls: ['./imagery-change-map.component.less']
 })
 @AutoSubscriptions()
 export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryComponent {
@@ -42,6 +41,7 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 
 	constructor(protected store$: Store<any>,
 				protected logger: LoggerService,
+				protected element: ElementRef,
 				protected clickOutsideService: ClickOutsideService,
 				protected getProvidersMapsService: GetProvidersMapsService) {
 	}
@@ -53,7 +53,7 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	);
 
 	@AutoSubscription
-	onClickOutside$ = () => this.clickOutsideService.onClickOutside().pipe(
+	onClickOutside$ = () => this.clickOutsideService.onClickOutside({monitor: this.element.nativeElement}).pipe(
 		filter((shouldCallback) => {
 			return shouldCallback && this.showPopup;
 		}),

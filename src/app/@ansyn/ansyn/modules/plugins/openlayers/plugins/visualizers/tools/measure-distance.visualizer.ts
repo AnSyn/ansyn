@@ -128,11 +128,11 @@ export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	}
 
 	@AutoSubscription
-	show$ = () => combineLatest(
+	show$ = () => combineLatest([
 		this.store$.select(selectActiveMapId),
 		this.store$.select(selectMeasureDataByMapId(this.mapId)),
 		this.store$.select(selectIsMeasureToolActive),
-		this.onHiddenStateChanged).pipe(
+		this.onHiddenStateChanged]).pipe(
 		distinctUntilChanged(),
 		// filter() update - checking isMeasureToolActive: if the measures layer is
 		// hidden, we still want to proceed if the measure tool changed to inactive,

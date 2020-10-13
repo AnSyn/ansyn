@@ -8,7 +8,7 @@ import { ToolsComponent } from './tools.component';
 import { toolsFeatureKey, ToolsReducer } from '../reducers/tools.reducer';
 import { MockComponent } from '../../../core/test/mock-component';
 import { TranslateModule } from '@ngx-translate/core';
-import { MatDialogRef, MatDialog } from '@angular/material';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { SubMenuEnum, toolsFlags } from '../models/tools.model';
 
 

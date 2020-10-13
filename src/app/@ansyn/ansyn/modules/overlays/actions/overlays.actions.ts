@@ -10,6 +10,7 @@ import {
 	IOverlaySpecialObject,
 } from '../models/overlay.model';
 import { IMarkUpData, IOverlayDropMarkUp, ITimelineRange, MarkUpClass } from '../reducers/overlays.reducer';
+import { Update } from '@ngrx/entity';
 import { ILogMessage } from '../../core/models/logger.model';
 
 export const OverlaysActionTypes = {
@@ -45,6 +46,9 @@ export const OverlaysActionTypes = {
 	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT',
 	SET_MISC_OVERLAYS: 'SET_MISC_OVERLAYS',
 	SET_MISC_OVERLAY: 'SET_MISC_OVERLAY',
+	UPDATE_OVERLAY: 'UPDATE_OVERLAY',
+	UPDATE_OVERLAYS: 'UPDATE_OVERLAYS',
+	SET_OVERLAYS_CONTAINMENT_CHECKED: 'OVERLAYS_CONTAINMENT_CHECKED',
 	LOG_SORT_RESULTS_TABLE: 'LOG_SORT_RESULTS_TABLE',
 	LOG_SEARCH_PANEL_POPUP: 'LOG_SEARCH_PANEL_POPUP',
 	LOG_MANUAL_SEARCH_TIME: 'LOG_MANUAL_SEARCH_TIME',
@@ -61,7 +65,7 @@ export class SelectOverlayAction implements Action {
 export class SetMarkUp implements Action {
 	type = OverlaysActionTypes.SET_OVERLAYS_MARKUPS;
 
-	constructor(public payload: { classToSet: MarkUpClass, dataToSet: IMarkUpData, customOverviewElement?: any }) {
+	constructor(public payload: { classToSet: MarkUpClass, dataToSet: IMarkUpData, customOverviewElementId?: string }) {
 	};
 }
 
@@ -170,7 +174,7 @@ export class DisplayOverlayAction implements Action, ILogMessage {
 }
 
 export class DisplayOverlaySuccessAction extends DisplayOverlayAction {
-	type = OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS;
+	type = <any>OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS;
 
 	logMessage() {
 		return `Loaded overlay ${getOverlayTitle(this.payload.overlay)}`
@@ -298,6 +302,27 @@ export class SetMiscOverlay implements Action {
 	}
 }
 
+export class UpdateOverlay implements Action {
+	type: string = OverlaysActionTypes.UPDATE_OVERLAY;
+
+	constructor(public payload: Update<IOverlay>) {
+	}
+}
+
+export class UpdateOverlays implements Action {
+	type: string = OverlaysActionTypes.UPDATE_OVERLAYS;
+
+	constructor(public payload: Update<IOverlay>[]) {
+	}
+}
+
+export class SetOverlaysContainmentChecked implements Action {
+	type: string = OverlaysActionTypes.SET_OVERLAYS_CONTAINMENT_CHECKED;
+
+	constructor(public payload: boolean = true) {
+	}
+}
+
 export class LogSortResultsTable implements Action, ILogMessage {
 	type: string = OverlaysActionTypes.LOG_SORT_RESULTS_TABLE;
 
@@ -367,3 +392,6 @@ export type OverlaysActions
 	| SetOverlaysCriteriaAction
 	| SetMiscOverlays
 	| SetMiscOverlay
+	| UpdateOverlay
+	| UpdateOverlays
+	| SetOverlaysContainmentChecked

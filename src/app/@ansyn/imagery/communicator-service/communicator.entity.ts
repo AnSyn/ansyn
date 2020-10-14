@@ -349,4 +349,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		}
 	}
 
+	log(message: string) {
+		this.logMessages.emit(message);
+	}
 }

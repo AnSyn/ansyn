@@ -4,7 +4,7 @@
 		class="icon-layer-export"></i>&nbsp;{{'Export' | translate}}&nbsp;"<span>{{ layer?.name }}</span>"</h4>
 
 	<div class="export-buttons">
-		<button class="format" (click)="downloadGeojson()">GeoJSON</button>
-		<button class="format" (click)="downloadKml()">KML</button>
+		<button class="format" (click)="downloadLayerAs(LayerFileTypes.GEOJSON)">{{LayerFileTypes.GEOJSON}}</button>
+		<button class="format" (click)="downloadLayerAs(LayerFileTypes.KML)">{{LayerFileTypes.KML}}</button>
 	</div>
 </div>

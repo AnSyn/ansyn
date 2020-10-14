@@ -17,6 +17,13 @@ export const MenuActionTypes = {
 	RESET_APP_ACTION_SUCCESS: 'RESET_APP_ACTION_SUCCESS'
 };
 
+export class ResetAppActionSuccess implements Action {
+	type = MenuActionTypes.RESET_APP_ACTION_SUCCESS;
+
+	constructor() {
+	}
+}
+
 export class ResetAppAction implements Action {
 	type = MenuActionTypes.RESET_APP;
 

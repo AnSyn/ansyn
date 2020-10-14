@@ -23,7 +23,7 @@ import { Store } from '@ngrx/store';
 import { filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import { cloneDeep } from 'lodash';
 import { MenuActionTypes } from '@ansyn/menu';
-import { SetStateActionSuccess } from 'src/app/@ansyn/menu/actions/menu.actions';
+import { ResetAppActionSuccess } from '../../../@ansyn/menu/actions/menu.actions';
 
 @Injectable()
 export class RouterEffects {
@@ -42,13 +42,18 @@ export class RouterEffects {
 	);
 
 	@Effect()
-	onUpdateLocationDefaultCase$: Observable<SetStateActionSuccess> = this.actions$.pipe(
+	onUpdateLocationDefaultCase$: Observable<ResetAppActionSuccess | Observable<SelectDilutedCaseAction>> = this.actions$.pipe(
 		ofType<SetStateAction>(RouterActionTypes.SET_STATE),
 		filter((action) => !(action.payload.caseId)),
 		withLatestFrom(this.store$.select(casesStateSelector)),
 		filter(([action, cases]: [SetStateAction, ICasesState]) => (!cases.selectedCase || cases.selectedCase.id !== this.casesService.defaultCase.id)),
-		map(([action, cases]) => new SetStateActionSuccess())
-	);
+		map(([action, cases]) => {
+			if (!action.payload.caseId && !action.payload.linkId) {
+				return new ResetAppActionSuccess();
+			}
+			return new LoadDefaultCaseAction()
+		} 
+	));
 
 	@Effect()
 	onUpdateLocationCase$: Observable<LoadCaseAction> = this.actions$.pipe(

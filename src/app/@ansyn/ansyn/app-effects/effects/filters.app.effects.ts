@@ -1,5 +1,5 @@
 import { combineLatest, Observable, of } from 'rxjs';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Inject, Injectable } from '@angular/core';
 import {
@@ -95,10 +95,8 @@ export class FiltersAppEffects {
 		mergeMap(([filtersMetadata, overlaysArray]: [FiltersMetadata, IOverlay[]]) => {
 			const filterModels: IFilterModel[] = FiltersService.pluckFilterModels(filtersMetadata);
 			const filteredOverlays: string[] = buildFilteredOverlays(overlaysArray, filterModels);
-			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : this.translate.instant(overlaysStatusMessages.noOverLayMatchFilters);
-			const actions = [
-				new SetFilteredOverlaysAction(filteredOverlays),
-				new SetOverlaysStatusMessageAction(message)
+			const actions: Action[] = [
+				new SetFilteredOverlaysAction(filteredOverlays)
 			];
 			// If there are overlays, before applying the filters, set the status message according to the filters
 			if (overlaysArray && overlaysArray.length) {

@@ -39,7 +39,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { EnumFilterCounters } from '../../modules/filters/models/counters/enum-filter-counters';
 import { FilterCounters } from '../../modules/filters/models/counters/filter-counters.interface';
 import { SliderFilterCounters } from '../../modules/filters/models/counters/slider-filter-counters';
-import { SetHideResultsTableBadgeAction } from '../../../../../../dist/ansyn/menu';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -147,10 +146,9 @@ describe('Filters app effects', () => {
 		});
 
 		it('should send null message if there are filtered overlays', () => {
-			const expectedResults = cold('(bcd)', {
+			const expectedResults = cold('(bc)', {
 				b: new SetFilteredOverlaysAction(['1']),
-				c: new SetHideResultsTableBadgeAction(false),
-				d: new SetOverlaysStatusMessageAction({ message: null }),
+				c: new SetOverlaysStatusMessageAction({ message: null }),
 			});
 
 			expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
@@ -162,10 +160,9 @@ describe('Filters app effects', () => {
 				filterFunc: () => false
 			}]);
 
-			const expectedResults = cold('(bcd)', {
+			const expectedResults = cold('(bc)', {
 				b: new SetFilteredOverlaysAction([]),
-				c: new SetHideResultsTableBadgeAction(false),
-				d: new SetOverlaysStatusMessageAction({ message: overlaysStatusMessages.noOverLayMatchFilters }),
+				c: new SetOverlaysStatusMessageAction({ message: overlaysStatusMessages.noOverLayMatchFilters }),
 			});
 
 			expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);

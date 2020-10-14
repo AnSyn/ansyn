@@ -13,9 +13,8 @@ import { selectDropsWithoutSpecialObjects } from '../../modules/overlays/reducer
 import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
 import { StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
-import { getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
+import { getInitialAnnotationsFeatureStyle, IMapSettings } from '@ansyn/imagery';
 import { ResetAppActionSuccess } from '@ansyn/menu';
-import { IMapSettings } from '@ansyn/imagery'
 
 @Injectable()
 export class MenuAppEffects {

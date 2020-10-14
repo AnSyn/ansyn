@@ -15,7 +15,6 @@ import { COMPONENT_MODE } from '../../app-providers/component-mode';
 import { StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
 import { getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
 import { ResetAppActionSuccess } from '@ansyn/menu';
-import { Action } from '@ngrx/store';
 import { IMapSettings } from '@ansyn/imagery'
 
 @Injectable()

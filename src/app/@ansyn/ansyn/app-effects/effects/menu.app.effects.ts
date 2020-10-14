@@ -14,8 +14,6 @@ import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
 import { StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
 import { getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
-import { casesConfig } from '../../modules/menu-items/cases/services/cases.service';
-import { ICasesConfig } from '../../modules/menu-items/cases/models/cases-config';
 
 @Injectable()
 export class MenuAppEffects {
@@ -68,8 +66,7 @@ export class MenuAppEffects {
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>,
 		@Inject(COMPONENT_MODE) public componentMode: boolean,
-		@Inject(MenuConfig) public menuConfig: IMenuConfig,
-		@Inject(casesConfig) public caseConfig: ICasesConfig) {
+		@Inject(MenuConfig) public menuConfig: IMenuConfig) {
 	}
 
 	resetApp() {

@@ -13,7 +13,6 @@ import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/ca
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
 import { StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
 import { getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
-import { MockCasesConfig } from '../../modules/menu-items/cases/services/cases.service.spec';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
@@ -29,8 +28,7 @@ describe('MenuAppEffects', () => {
 				{ provide: MenuConfig, useValue: {} }, {
 					provide: COMPONENT_MODE,
 					useValue: false
-				},
-				MockCasesConfig
+				}
 			]
 
 		}).compileComponents();
@@ -56,7 +54,7 @@ describe('MenuAppEffects', () => {
 			a: new ResetAppActionSuccess()
 		});
 		const expectedResults = cold('--(bdefgh)--', {
-			b: new LoadDefaultCaseAction({name: 'default name', id: 'default id', state: {time: {}}}),
+			b: new LoadDefaultCaseAction(),
 			d: new StartMouseShadow({fromUser: true}),
 			e: new AnnotationSetProperties(getInitialAnnotationsFeatureStyle()),
 			f: new ToggleIsPinnedAction(false),

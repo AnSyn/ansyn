@@ -55,7 +55,7 @@ export class MenuAppEffects {
 				}
 
 				return [
-					new LoadDefaultCaseAction(this.caseConfig.defaultCase),
+					new LoadDefaultCaseAction(),
 					new StartMouseShadow({fromUser: true}),
 					new AnnotationSetProperties(getInitialAnnotationsFeatureStyle()),
 					new ToggleIsPinnedAction(false),

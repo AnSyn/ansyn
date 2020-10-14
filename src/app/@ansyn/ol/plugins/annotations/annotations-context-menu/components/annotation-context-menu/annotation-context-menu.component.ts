@@ -29,14 +29,14 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	subscribers = [];
 	annotationsSubscribers = [];
 
-	@HostListener('contextmenu', ['$event']) contextmenu($event: MouseEvent) {
-		$event.preventDefault();
-	}
-
 	constructor(
 		public host: ElementRef,
 		protected communicators: ImageryCommunicatorService
 	) {
+	}
+
+	@HostListener('contextmenu', ['$event']) contextmenu($event: MouseEvent) {
+		$event.preventDefault();
 	}
 
 	calcBoundingRect(id) {

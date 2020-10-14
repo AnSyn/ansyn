@@ -6,7 +6,8 @@ import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../
 import {
 	OverlaysActions,
 	OverlaysActionTypes,
-	SetMarkUp,SetMiscOverlay,
+	SetMarkUp,
+	SetMiscOverlay,
 	SetMiscOverlays,
 	SetOverlaysStatusMessageAction
 } from '../actions/overlays.actions';

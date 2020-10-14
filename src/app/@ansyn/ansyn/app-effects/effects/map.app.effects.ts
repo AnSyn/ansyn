@@ -96,7 +96,7 @@ import { ScreenViewSearchVisualizer } from '../../modules/plugins/openlayers/plu
 const FOOTPRINT_INSIDE_MAP_RATIO = 1;
 const VIEW_SEARCH_ZOOM_LIMIT = 14;
 const VIEW_SEARCH_DEBOUNCE_TIME = 1000;
-let extentPolygon: Polygon = {
+let region: Polygon = {
 	coordinates: [],
 	type: 'Polygon'
 };
@@ -347,14 +347,14 @@ export class MapAppEffects {
 		tap(([position, geoFilterStatus]: [IImageryMapPosition, IGeoFilterStatus]) => {
 			let zoom = position.projectedState.zoom;
 
-			if (!equalPolygons(position.extentPolygon, extentPolygon)) {
+			if (!equalPolygons(position.extentPolygon, region)) {
 				if (zoom < VIEW_SEARCH_ZOOM_LIMIT) {
 					this.store$.dispatch(new SetOverlaysStatusMessageAction('Zoom into 500m to get new overlays'));
 					return;
 				}
 
-				extentPolygon = position.extentPolygon;
-				this.store$.dispatch(new SetOverlaysCriteriaAction(this.screenViewSearchVisualizer.createRegion(extentPolygon)));
+				region = position.extentPolygon;
+				this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
 
 				if (geoFilterStatus.active) {
 					this.store$.dispatch(new UpdateGeoFilterStatus({active: false}));
@@ -367,7 +367,6 @@ export class MapAppEffects {
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected loggerService: LoggerService,
-				private screenViewSearchVisualizer: ScreenViewSearchVisualizer,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig
 	) {

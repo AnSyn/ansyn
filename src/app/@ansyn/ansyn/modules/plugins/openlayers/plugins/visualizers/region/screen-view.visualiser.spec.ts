@@ -1,7 +1,6 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { UpdateGeoFilterStatus } from '../../../../../status-bar/actions/status-bar.actions';
 import { PolygonSearchVisualizer as ScreenViewSearchVisualizer } from './polygon-search.visualizer';
 import { OpenLayersProjectionService } from '@ansyn/ol';
 
@@ -23,20 +22,4 @@ describe('screenViewSearchVisualizer', () => {
 	beforeEach(inject([ScreenViewSearchVisualizer], (_screenViewSearchVisualizer: ScreenViewSearchVisualizer) => {
 		screenViewSearchVisualizer = _screenViewSearchVisualizer;
 	}));
-
-	it('createRegion should return "geometry"', () => {
-		const fakeGeojson = <any>{ geometry: 'geometry' };
-		const expectedResult = screenViewSearchVisualizer.createRegion(fakeGeojson);
-		expect(expectedResult).toEqual('geometry');
-	});
-
-	it('onContextMenu should dispatch action UpdateStatusFlagsAction', () => {
-		const fakePoint = [0, 0];
-		spyOn(store, 'dispatch');
-		screenViewSearchVisualizer.onContextMenu(fakePoint);
-		expect(store.dispatch).toHaveBeenCalledWith(new UpdateGeoFilterStatus({
-			type: screenViewSearchVisualizer.geoFilter,
-			active: true
-		}));
-	});
 });

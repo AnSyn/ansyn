@@ -12,7 +12,7 @@ import {
 } from '../../../../overlays/reducers/overlays.reducer';
 import { take, tap } from 'rxjs/operators';
 import {
-	DisplayOverlayFromStoreAction, LogSortResultsTable,
+	DisplayOverlayFromStoreAction,
 	SetMarkUp
 } from '../../../../overlays/actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -185,7 +185,6 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 
 	sortOverlays(header: ITableHeader): void {
 		const { headerData, isDescending, sortFn, headerName } = header;
-		this.store$.dispatch(new LogSortResultsTable({ byHeader: headerName, isDescending }));
 		this.sortedBy = headerData;
 		this.overlays.sort(function (a, b) {
 			const dataA = a[headerData];

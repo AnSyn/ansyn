@@ -49,7 +49,6 @@ export const OverlaysActionTypes = {
 	UPDATE_OVERLAY: 'UPDATE_OVERLAY',
 	UPDATE_OVERLAYS: 'UPDATE_OVERLAYS',
 	SET_OVERLAYS_CONTAINMENT_CHECKED: 'OVERLAYS_CONTAINMENT_CHECKED',
-	LOG_SORT_RESULTS_TABLE: 'LOG_SORT_RESULTS_TABLE',
 	LOG_SEARCH_PANEL_POPUP: 'LOG_SEARCH_PANEL_POPUP',
 	LOG_MANUAL_SEARCH_TIME: 'LOG_MANUAL_SEARCH_TIME',
 	LOG_SELECT_SEARCH_TIME_PRESET: 'LOG_SELECT_SEARCH_TIME_PRESET'
@@ -320,17 +319,6 @@ export class SetOverlaysContainmentChecked implements Action {
 	type: string = OverlaysActionTypes.SET_OVERLAYS_CONTAINMENT_CHECKED;
 
 	constructor(public payload: boolean = true) {
-	}
-}
-
-export class LogSortResultsTable implements Action, ILogMessage {
-	type: string = OverlaysActionTypes.LOG_SORT_RESULTS_TABLE;
-
-	constructor(public payload: { byHeader: string, isDescending: boolean }) {
-	}
-
-	logMessage() {
-		return `Sorting results table by ${this.payload.byHeader} ${this.payload.isDescending ? 'ascending' : 'descending'}`
 	}
 }
 

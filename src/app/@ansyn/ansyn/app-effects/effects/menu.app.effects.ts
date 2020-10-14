@@ -3,10 +3,10 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { EMPTY, Observable } from 'rxjs';
 import { IAppState } from '../app.effects.module';
 import { select, Store } from '@ngrx/store';
-import { UpdateMapSizeAction, ToggleFooter } from '@ansyn/map-facade';
+import { UpdateMapSizeAction, ToggleFooter, selectMapsList, SetOverlaysFootprintActive } from '@ansyn/map-facade';
 import { IMenuConfig, MenuActionTypes, MenuConfig, SetAutoClose, ToggleIsPinnedAction, UnSelectMenuItemAction } from '@ansyn/menu';
 import { selectSubMenu } from '../../modules/menu-items/tools/reducers/tools.reducer';
-import { map, mergeMap } from 'rxjs/operators';
+import { map, mergeMap, withLatestFrom, filter } from 'rxjs/operators';
 import { RedrawTimelineAction, SetTotalOverlaysAction } from '../../modules/overlays/actions/overlays.actions';
 import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { selectDropsWithoutSpecialObjects } from '../../modules/overlays/reducers/overlays.reducer';
@@ -14,6 +14,9 @@ import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
 import { StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
 import { getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
+import { ResetAppActionSuccess } from '@ansyn/menu';
+import { Action } from '@ngrx/store';
+import { IMapSettings } from '@ansyn/imagery'
 
 @Injectable()
 export class MenuAppEffects {
@@ -43,14 +46,14 @@ export class MenuAppEffects {
 		);
 
 	@Effect()
-	onResetApp$ = this.actions$
+	onResetAppSuccess$ = this.actions$
 		.pipe(
-			ofType(MenuActionTypes.RESET_APP_ACTION_SUCCESS),
+			ofType(MenuActionTypes.RESET_APP_SUCCESS),
 			mergeMap(() => {
 				if (this.componentMode) {
 					window.open(this.menuConfig.baseUrl, '_blank');
 					return EMPTY;
-				}
+			}
 
 				return [
 					new LoadDefaultCaseAction(),
@@ -63,6 +66,14 @@ export class MenuAppEffects {
 			})
 		);
 
+		@Effect()
+		onResetAppSuccessDisableFootprint$ = this.actions$
+			.pipe(
+				ofType(MenuActionTypes.RESET_APP_SUCCESS),
+				withLatestFrom(this.store$.select(selectMapsList)),
+				filter(([action, mapsList]: [ResetAppActionSuccess, IMapSettings[]]) => Boolean(mapsList.length)),
+				map(([action, mapsList]: [ResetAppActionSuccess, IMapSettings[]]) => new SetOverlaysFootprintActive({mapId: mapsList[0].id, show: false}))
+			);
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>,
 		@Inject(COMPONENT_MODE) public componentMode: boolean,

@@ -62,7 +62,7 @@ describe('MenuAppEffects', () => {
 			h: new ToggleFooter(false),
 			j: new SetOverlaysFootprintActive({mapId: '', show: false})
 		});
-		expect(menuAppEffects.onResetApp$).toBeObservable(expectedResults);
+		expect(menuAppEffects.onResetAppSuccess$).toBeObservable(expectedResults);
 	});
 
 });

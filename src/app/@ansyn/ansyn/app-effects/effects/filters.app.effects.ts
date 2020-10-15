@@ -39,12 +39,10 @@ import {
 	OverlaysActionTypes,
 	SetDropsAction,
 	SetFilteredOverlaysAction,
-	SetOverlaysStatusMessageAction,
-	SetTotalOverlaysAction
+	SetOverlaysStatusMessageAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	overlaysStatusMessages,
-	selectDrops,
 	selectFilteredOveralys,
 	selectOverlaysAreLoaded,
 	selectOverlaysArray,
@@ -106,19 +104,15 @@ export class FiltersAppEffects {
 
 	@Effect()
 	updateOverlayDrops$ = this.forOverlayDrops$.pipe(
-		withLatestFrom(this.store$.select(selectDrops)),
-		filter(([[overlaysMap, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites], oldDrops]: [[Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean], IOverlayDrop[]]) => Boolean(overlaysMap.size)),
-		mergeMap(([[overlaysMap, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites], oldDrops]: [[Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean], IOverlayDrop[]]) => {
-			let drops = OverlaysService.parseOverlayDataForDisplay({
+		map(([overlaysMap, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites]: [Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean]) => {
+			const drops = OverlaysService.parseOverlayDataForDisplay({
 				overlaysArray: mapValuesToArray(overlaysMap),
 				filteredOverlays,
 				specialObjects,
 				favoriteOverlays,
 				showOnlyFavorites
-			}).concat(oldDrops);
-
-			drops = this.removeDuplicateDrops(drops);
-			return [new SetDropsAction(drops), new SetTotalOverlaysAction(drops.length)];
+			});
+			return new SetDropsAction(drops);
 		})
 	);
 
@@ -210,10 +204,6 @@ export class FiltersAppEffects {
 				public translate: TranslateService,
 				protected loggerService: LoggerService,
 				@Inject(filtersConfig) protected config: IFiltersConfig) {
-	}
-
-	removeDuplicateDrops(drops: IOverlayDrop[]): IOverlayDrop[] {
-		return drops.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
 	}
 
 	resolveMetadata(filterType: FilterType): FilterMetadata {

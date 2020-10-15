@@ -30,6 +30,7 @@ import { IMapSettings } from '../model/map-settings';
 import { IBaseImageryLayer, IMAGERY_BASE_MAP_LAYER, ImageryLayerProperties } from '../model/imagery-layer.model';
 import { IExportMapData, IExportMapMetadata } from '../model/export-map.model';
 import { GetProvidersMapsService } from '../services/get-providers-maps/get-providers-maps.service';
+import { COMMUNICATOR_LOG_MESSAGES } from './communicator-log-messages';
 
 export interface IMapInstanceChanged {
 	id: string;
@@ -49,14 +50,15 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	private _activeMap: BaseImageryMap;
 	private _virtualNorth = 0;
 	public mapInstanceChanged: EventEmitter<IMapInstanceChanged> = new EventEmitter<IMapInstanceChanged>();
-	public logMessages: EventEmitter<string> = new EventEmitter<string>();
+	public logMessagesEmitter: EventEmitter<string> = new EventEmitter<string>();
 
 	constructor(protected injector: Injector,
 				@Inject(IMAGERY_MAPS) protected imageryMaps: IImageryMaps,
 				protected componentFactoryResolver: ComponentFactoryResolver,
 				public imageryCommunicatorService: ImageryCommunicatorService,
 				@Inject(BaseMapSourceProvider) public imageryMapSources: IImageryMapSources,
-				protected getProvidersMapsService: GetProvidersMapsService
+				protected getProvidersMapsService: GetProvidersMapsService,
+				@Inject(COMMUNICATOR_LOG_MESSAGES) public logMessages
 	) {
 	}
 
@@ -350,6 +352,6 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	log(message: string) {
-		this.logMessages.emit(message);
+		this.logMessagesEmitter.emit(message);
 	}
 }

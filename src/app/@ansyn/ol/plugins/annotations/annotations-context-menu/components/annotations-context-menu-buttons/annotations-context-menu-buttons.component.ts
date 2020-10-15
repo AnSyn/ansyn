@@ -86,7 +86,7 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 		this.selectedTab = { ...this.selectedTab, [this.featureId]: null };
 		const currentFeatureId = this.annotations.currentAnnotationEdit && this.annotations.currentAnnotationEdit.originalFeature;
 		const enable = !(currentFeatureId && currentFeatureId.getId() === this.featureId);
-		this.communicator.logMessages.emit(`${enable ? 'Enter' : 'Exit'} annotation edit mode`);
+		this.communicator.log(this.communicator.logMessages.annotationEditMode(enable));
 		this.annotations.setEditAnnotationMode(this.featureId, enable);
 	}
 
@@ -97,13 +97,13 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 
 	toggleMeasures() {
 		const { showMeasures } = this.getFeatureProps();
-		this.communicator.logMessages.emit(`${showMeasures ? 'Hiding' : 'Showing'} annotation measures`);
+		this.communicator.log(this.communicator.logMessages.annotationMeasures(showMeasures));
 		this.annotations.updateFeature(this.featureId, { showMeasures: !showMeasures });
 	}
 
 	toggleArea() {
 		const { showArea } = this.getFeatureProps();
-		this.communicator.logMessages.emit(`${showArea ? 'Hiding' : 'Showing'} annotation area`);
+		this.communicator.log(this.communicator.logMessages.annotationArea(showArea));
 		this.annotations.updateFeature(this.featureId, { showArea: !showArea });
 	}
 
@@ -116,17 +116,17 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 	}
 
 	updateLabel(text) {
-		this.communicator.logMessages.emit(`Changing annotation label to ${text}`);
+		this.communicator.log(this.communicator.logMessages.annotationLabel(text));
 		this.annotations.updateFeature(this.featureId, { label: { text } });
 	}
 
 	updateLabelSize(labelSize) {
-		this.communicator.logMessages.emit(`Changing annotation label size to ${labelSize}`);
+		this.communicator.log(this.communicator.logMessages.annotationLabelSize(labelSize));
 		this.annotations.updateFeature(this.featureId, { labelSize });
 	}
 
 	selectLineWidth(s: IStyleWeight, featureId: string) {
-		this.communicator.logMessages.emit(`Changing annotation line style: width=${s.width} dash=${s.dash === 0 ? 'no' : 'yes'}`);
+		this.communicator.log(this.communicator.logMessages.annotationLineStyle(s.width, s.dash));
 		const { style } = this.getFeatureProps();
 		const updateStyle = {
 			...style,
@@ -142,7 +142,7 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 
 	colorChange($event: [{ label: 'stroke' | 'fill' | 'marker-color', event: string }]) {
 		const asString = $event.map((style) => `${style.label}: ${style.event}`).join(', ');
-		this.communicator.logMessages.emit(`Changing annotation colors: ${asString}`);
+		this.communicator.log(this.communicator.logMessages.annotationColors(asString));
 		const { style } = this.getFeatureProps();
 		const updatedStyle = {
 			...style,
@@ -175,7 +175,7 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 
 	activeChange($event: { label: 'stroke' | 'fill', event: string }) {
 		const asString = `${$event.label}: ${$event.event ? 'yes' : 'no'}`;
-		this.communicator.logMessages.emit(`Changing annotation active colors: ${asString}`);
+		this.communicator.log(this.communicator.logMessages.annotationActiveColors(asString));
 		const { style } = this.getFeatureProps();
 		const opacity =  {
 			stroke: color(style.initial.stroke).opacity,
@@ -193,7 +193,7 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 	}
 
 	removeFeature() {
-		this.communicator.logMessages.emit(`Deleting annotation`);
+		this.communicator.log(this.communicator.logMessages.deletingAnnotation);
 		this.annotations.removeFeature(this.featureId);
 	}
 

@@ -33,7 +33,6 @@ export {
 } from './model/map-providers-config';
 export { IImageryMapSources } from './providers/map-source-providers';
 export { IMapInstanceChanged } from './communicator-service/communicator.entity';
-export { CommunicatorLogMessages } from './communicator-service/communicator-log-messages';
 export { IBaseMapSourceProviderConstructor } from './model/base-map-source-provider';
 export { VisualizerInteractions } from './model/base-imagery-visualizer';
 export { IBaseImageryMapConstructor } from './model/base-imagery-map';

@@ -589,7 +589,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 		}
 
 		if (!oldFeature || featureId !== oldFeature.getId()) { // start editing
-			this.communicator.logMessages.emit(`Enter annotation move label mode`);
+			this.communicator.log(this.communicator.logMessages.startAnnotationMoveLabel);
 			this.clearAnnotationEditMode();
 			const originalFeature: olFeature = this.source.getFeatureById(featureId);
 			this.updateFeature(originalFeature.getId(), { labelTranslateOn: true });
@@ -602,7 +602,7 @@ export class AnnotationsVisualizer extends EntitiesVisualizer {
 			};
 			this.source.addFeature(labelFeature);
 		} else {
-			this.communicator.logMessages.emit(`Exit annotation move label mode`);
+			this.communicator.log(this.communicator.logMessages.endAnnotationMoveLabel);
 			this.updateFeature(featureId, { labelTranslateOn: false });
 			this.source.removeFeature(this.labelTranslate.labelFeature);
 		}

@@ -1,7 +1,6 @@
 import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import {
 	CommunicatorEntity,
-	CommunicatorLogMessages,
 	ImageryCommunicatorService,
 	IMapInstanceChanged
 } from '@ansyn/imagery';
@@ -91,7 +90,7 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 			}),
 			this.annotations.events.onSelect.subscribe((selected: string[]) => {
 				if (selected.length > 0) {
-					this.communicator.log(CommunicatorLogMessages.openingAnnotationsContextMenu);
+					this.communicator.log(this.communicator.logMessages.openingAnnotationsContextMenu);
 				}
 				this.selection = selected;
 				this.selectedTab = this.selection.reduce((prev, id) => ({

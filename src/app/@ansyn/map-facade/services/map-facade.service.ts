@@ -67,7 +67,7 @@ export class MapFacadeService {
 				position
 			})),
 			communicator.mapInstanceChanged.subscribe(this.mapInstanceChanged.bind(this)),
-			communicator.logMessages.subscribe((message) => {
+			communicator.logMessagesEmitter.subscribe((message) => {
 				this.store.dispatch(new LogMessageFromImagery(message))
 			})
 		);

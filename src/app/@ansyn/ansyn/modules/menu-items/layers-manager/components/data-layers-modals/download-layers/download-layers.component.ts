@@ -26,8 +26,8 @@ export class DownloadLayersComponent {
 		this.kmlFormat = new KMLFormat();
 	}
 
-	get LayerFileTypes() {
-		return LayerFileTypes
+	get LayerFileTypesArray(): LayerFileTypes[] {
+		return Object.values(LayerFileTypes)
 	}
 
 	downloadLayerAs(fileType: LayerFileTypes) {

@@ -264,9 +264,9 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	removeOldEventDrops(): void {
 		if (this.element) {
-			const exsitEventDrops = this.element.select('.event-drop-chart');
-			if (exsitEventDrops) {
-				exsitEventDrops.remove();
+			const existEventDrops = this.element.select('.event-drop-chart');
+			if (existEventDrops) {
+				existEventDrops.remove();
 			}
 		}
 	}

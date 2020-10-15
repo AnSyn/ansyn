@@ -89,13 +89,11 @@ import {
 } from '../../modules/overlays/overlay-status/config/overlay-status-config';
 import { MeasureDistanceVisualizer } from '../../modules/plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
 import { IGeoFilterStatus, selectGeoFilterStatus } from '../../modules/status-bar/reducers/status-bar.reducer';
-import { Polygon } from '@turf/turf';
+import { distance, Polygon } from '@turf/turf';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
-import { ScreenViewSearchVisualizer } from '../../modules/plugins/openlayers/plugins/visualizers/region/screen-view.visualiser';
+import { IScreenViewConfig, ScreenViewConfig } from '../../modules/plugins/openlayers/plugins/visualizers/models/screenView.model';
 
 const FOOTPRINT_INSIDE_MAP_RATIO = 1;
-const VIEW_SEARCH_ZOOM_LIMIT = 14;
-const VIEW_SEARCH_DEBOUNCE_TIME = 1000;
 let region: Polygon = {
 	coordinates: [],
 	type: 'Polygon'
@@ -343,21 +341,19 @@ export class MapAppEffects {
 			return [activeMap.data.position, geoFilterStatus];
 		}),
 		filter(([position, geoFilterStatus]: [IImageryMapPosition, IGeoFilterStatus]) => Boolean(position) && geoFilterStatus.type === CaseGeoFilter.ScreenView),
-		debounceTime(VIEW_SEARCH_DEBOUNCE_TIME),
+		debounceTime(this.screenViewConfig.debounceTime),
 		tap(([position, geoFilterStatus]: [IImageryMapPosition, IGeoFilterStatus]) => {
-			let zoom = position.projectedState.zoom;
-
 			if (!equalPolygons(position.extentPolygon, region)) {
-				if (zoom < VIEW_SEARCH_ZOOM_LIMIT) {
-					this.store$.dispatch(new SetOverlaysStatusMessageAction('Zoom into 500m to get new overlays'));
-					return;
-				}
-
 				region = position.extentPolygon;
-				this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
+				const extentWidth = Math.round(distance(region.coordinates[0][0], region.coordinates[0][1], {units: 'metres'}));
 
-				if (geoFilterStatus.active) {
-					this.store$.dispatch(new UpdateGeoFilterStatus({active: false}));
+				if (extentWidth > this.screenViewConfig.extentWidthSearchLimit) {
+					this.store$.dispatch(new SetOverlaysStatusMessageAction('Zoom in to get new overlays'));
+				} else {
+					this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
+					if (geoFilterStatus.active) {
+						this.store$.dispatch(new UpdateGeoFilterStatus({active: false}));
+					}
 				}
 			}
 		})
@@ -368,7 +364,8 @@ export class MapAppEffects {
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected loggerService: LoggerService,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
-				@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig
+				@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig,
+				@Inject(ScreenViewConfig) public screenViewConfig: IScreenViewConfig
 	) {
 	}
 

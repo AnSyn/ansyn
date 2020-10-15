@@ -64,7 +64,8 @@ export class CasesService {
 				const dilutedCase: IDilutedCase = {
 					state: <ICaseState>caseData.data,
 					creationTime: new Date(),
-					id: linkId
+					id: linkId,
+					schema: 'link'
 				};
 				return new SelectDilutedCaseAction(dilutedCase);
 			}),

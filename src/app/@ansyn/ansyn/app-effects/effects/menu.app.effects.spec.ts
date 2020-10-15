@@ -53,14 +53,13 @@ describe('MenuAppEffects', () => {
 		actions = hot('--a--', {
 			a: new ResetAppActionSuccess()
 		});
-		const expectedResults = cold('--(bdefghj)--', {
+		const expectedResults = cold('--(bdefgh)--', {
 			b: new LoadDefaultCaseAction(),
 			d: new StartMouseShadow({fromUser: true}),
 			e: new AnnotationSetProperties(getInitialAnnotationsFeatureStyle()),
 			f: new ToggleIsPinnedAction(false),
 			g: new UnSelectMenuItemAction(),
-			h: new ToggleFooter(false),
-			j: new SetOverlaysFootprintActive({mapId: '', show: false})
+			h: new ToggleFooter(false)
 		});
 		expect(menuAppEffects.onResetAppSuccess$).toBeObservable(expectedResults);
 	});

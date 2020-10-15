@@ -1,8 +1,7 @@
 import {
 	ContainerChangedTriggerAction, MenuConfig,
 	menuFeatureKey,
-	MenuReducer, ResetAppAction,
-	ToggleIsPinnedAction, UnSelectMenuItemAction
+	MenuReducer
 } from '@ansyn/menu';
 import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import { async, inject, TestBed } from '@angular/core/testing';

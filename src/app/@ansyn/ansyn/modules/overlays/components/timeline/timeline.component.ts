@@ -39,7 +39,7 @@ import { ExtendMap } from '../../reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../overlay-overview/overlay-overview.component.const';
 import { DOCUMENT } from '@angular/common';
 import { IOverlayDrop } from '../../models/overlay.model';
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService } from '@ngx-translate/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 
 export const BASE_DROP_COLOR = '#8cceff';
@@ -234,9 +234,9 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	onClick(): void {
 	}
 
-	isNoOverlaysLeft(): boolean{
+	isNoOverlaysLeft(): boolean {
 		const datesArray = this.chart.filteredData()[0].fullData;
-		const [ currentMinimumDate, currentMaximumDate ] = this.getCurrentTimeLineRange();
+		const [currentMinimumDate, currentMaximumDate] = this.getCurrentTimeLineRange();
 		const minimumDate = datesArray[0].date;
 		const maximumDate = datesArray[datesArray.length - 1].date;
 
@@ -250,7 +250,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	onZoomEnd(): void {
 		const errorMessage = this.isNoOverlaysLeft() ? this.translator.instant('No overlays left there') : null;
 		this.store$.dispatch(new SetOverlaysStatusMessageAction(errorMessage));
-		const [ start, end ] = this.getCurrentTimeLineRange();
+		const [start, end] = this.getCurrentTimeLineRange();
 
 		this.store$.dispatch(new SetTimelineStateAction({ timeLineRange: { start, end } }));
 
@@ -315,7 +315,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 			this.markup.keys.forEach(className => {
 				const markUpData = this.markup.get(className);
 				markUpData.overlaysIds.forEach(overlayId => {
-					const dropElement = dropsElements.filter( (d) => d.id === overlayId);
+					const dropElement = dropsElements.filter((d) => d.id === overlayId);
 					if (!dropElement.empty()) {
 						if (markUpData.type === MarkUpTypes.symbole) {
 							this.appendLetters(textContainer, dropElement, markUpData.data);

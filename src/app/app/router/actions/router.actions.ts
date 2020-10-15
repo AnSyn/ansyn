@@ -17,13 +17,14 @@ export interface ISetStatePayload {
 export class SetStateAction implements Action {
 	type = RouterActionTypes.SET_STATE;
 
-	constructor(public payload: ISetStatePayload) {
+	constructor(public payload: Partial<ISetStatePayload>) {
 	}
 }
 
 export class NavigateCaseTriggerAction implements Action {
 	type = RouterActionTypes.NAVIGATE_CASE;
 
-	constructor(public payload?: string) {
+	constructor(public payload?: {schema: string, id: string}) {
 	}
 }
+

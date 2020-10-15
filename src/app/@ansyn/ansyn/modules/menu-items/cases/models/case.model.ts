@@ -13,6 +13,7 @@ export interface ICasePreview {
 	lastModified?: Date;
 	selectedContextId?: string;
 	autoSave?: boolean;
+	schema?: 'case' | 'link';
 }
 
 export interface ICase extends ICasePreview {

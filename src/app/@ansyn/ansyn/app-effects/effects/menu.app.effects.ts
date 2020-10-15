@@ -45,7 +45,7 @@ export class MenuAppEffects {
 	@Effect()
 	onResetApp$ = this.actions$
 		.pipe(
-			ofType(MenuActionTypes.RESET_APP),
+			ofType(MenuActionTypes.RESET_APP_ACTION_SUCCESS),
 			mergeMap(() => {
 				if (this.componentMode) {
 					window.open(this.menuConfig.baseUrl, '_blank');
@@ -63,9 +63,10 @@ export class MenuAppEffects {
 			})
 		);
 
+
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>,
-				@Inject(COMPONENT_MODE) public componentMode: boolean,
-				@Inject(MenuConfig) public menuConfig: IMenuConfig) {
+		@Inject(COMPONENT_MODE) public componentMode: boolean,
+		@Inject(MenuConfig) public menuConfig: IMenuConfig) {
 	}
 
 	resetApp() {
@@ -76,4 +77,5 @@ export class MenuAppEffects {
 
 		return EMPTY;
 	}
+
 }

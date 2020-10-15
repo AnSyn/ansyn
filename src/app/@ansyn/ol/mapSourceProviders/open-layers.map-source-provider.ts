@@ -1,10 +1,10 @@
 import {
 	BaseMapSourceProvider,
-	bboxFromGeoJson,
+	bboxFromGeoJson, CacheService,
 	EPSG_3857,
-	EPSG_4326,
+	EPSG_4326, ImageryCommunicatorService,
 	ImageryLayerProperties,
-	IMapSettings
+	IMapSettings, IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG
 } from '@ansyn/imagery';
 import ol_Layer from 'ol/layer/Layer';
 import ImageLayer from 'ol/layer/Image';
@@ -12,8 +12,15 @@ import TileLayer from 'ol/layer/Tile';
 import * as proj from 'ol/proj';
 import XYZ from 'ol/source/XYZ';
 import { ProjectableRaster } from '../maps/open-layers-map/models/projectable-raster';
+import { Inject } from '@angular/core';
 export const IMAGE_PROCESS_ATTRIBUTE = 'imageLayer';
 export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSourceProvider<CONF> {
+	constructor(protected cacheService: CacheService,
+				protected imageryCommunicatorService: ImageryCommunicatorService,
+				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig<CONF>) {
+		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
+	}
+
 	create(metaData: IMapSettings): Promise<ol_Layer> {
 		const extent = this.createExtent(metaData);
 		const source = this.createSource(metaData);

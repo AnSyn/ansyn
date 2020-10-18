@@ -336,11 +336,11 @@ export class MapAppEffects {
 	searchByExtentPolygon$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.POSITION_CHANGED, MapActionTypes.SET_ACTIVE_MAP_ID),
 		withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus)),
+		filter(([action, mapList, activeMapId, geoFilterStatus]) => Boolean(mapList[activeMapId]) && geoFilterStatus.type === CaseGeoFilter.ScreenView),
 		map(([action, mapList, activeMapId, geoFilterStatus]) => {
 			const activeMap: IMapSettings = mapList[activeMapId];
 			return [activeMap.data.position, geoFilterStatus];
 		}),
-		filter(([position, geoFilterStatus]: [IImageryMapPosition, IGeoFilterStatus]) => Boolean(position) && geoFilterStatus.type === CaseGeoFilter.ScreenView),
 		debounceTime(this.screenViewConfig.debounceTime),
 		tap(([position, geoFilterStatus]: [IImageryMapPosition, IGeoFilterStatus]) => {
 			if (!equalPolygons(position.extentPolygon, region)) {

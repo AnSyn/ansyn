@@ -257,8 +257,8 @@ describe('ToolsAppEffects', () => {
 
 		const expectedResult = cold('--(bcdef)--', {
 			b: new SetAnnotationMode(null),
-			c: new SetPinLocationModeAction(false),
-			d: new UpdateGeoFilterStatus(),
+			c: new UpdateGeoFilterStatus(),
+			d: new SetPinLocationModeAction(false),
 			e: new UpdateMeasureDataOptionsAction({
 				mapId: 'imagery1',
 				options: { isToolActive: false, isRemoveMeasureModeActive: false }
@@ -280,8 +280,8 @@ describe('ToolsAppEffects', () => {
 		});
 
 		const expectedResult = cold('--(bcde)--', {
-			b: new SetPinLocationModeAction(false),
-			c: new UpdateGeoFilterStatus(),
+			b: new UpdateGeoFilterStatus(),
+			c: new SetPinLocationModeAction(false),
 			d: new UpdateMeasureDataOptionsAction({
 				mapId: 'imagery1',
 				options: { isToolActive: false, isRemoveMeasureModeActive: false }

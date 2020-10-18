@@ -147,17 +147,15 @@ export class ToolsAppEffects {
 	@Effect()
 	clearActiveInteractions$ = this.actions$.pipe(
 		ofType<ClearActiveInteractionsAction>(ToolsActionsTypes.CLEAR_ACTIVE_TOOLS),
-		withLatestFrom(this.store$.select(selectMapsIds), this.store$.select(selectGeoFilterType)),
-		mergeMap(([action, mapIds, geoFilterType]: [ClearActiveInteractionsAction, string[], CaseGeoFilter]) => {
+		withLatestFrom(this.store$.select(selectMapsIds)),
+		mergeMap(([action, mapIds]: [ClearActiveInteractionsAction, string[]]) => {
 			// reset the following interactions: Annotation, Pinpoint search, Pin location
 			let clearActions: Action[] = [
 				new SetAnnotationMode(null),
+				new UpdateGeoFilterStatus(),
 				new SetPinLocationModeAction(false)
 			];
 
-			if (geoFilterType !== CaseGeoFilter.ScreenView) {
-				clearActions.push(new UpdateGeoFilterStatus());
-			}
 			// set measure tool as inactive
 			mapIds.forEach((mapId) => {
 				const updateMeasureAction = new UpdateMeasureDataOptionsAction({

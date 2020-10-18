@@ -39,16 +39,6 @@ export class LayersEffects {
 		})
 	);
 
-	@Effect()
-	onLayerCollectionLoadedDefault$ = this.actions$.pipe(
-		ofType<LayerCollectionLoadedAction>(LayersActionTypes.LAYER_COLLECTION_LOADED),
-		filter((action) => !action.payload.some(({ type }) => type !== LayerType.annotation)),
-		map((action) => {
-			const defaultLayer: ILayer = action.payload.find(layer => layer.name === 'Default')
-			return new AddLayer(defaultLayer);
-		})
-	);
-
 	@Effect({ dispatch: false })
 	addLayer$: Observable<any> = this.actions$.pipe(
 		ofType<AddLayer>(LayersActionTypes.ADD_LAYER),

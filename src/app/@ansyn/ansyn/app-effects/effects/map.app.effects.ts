@@ -32,12 +32,12 @@ import {
 	ImageryCommunicatorService,
 	IImageryMapPosition,
 	IMapSettings,
-	equalPolygons,
 	polygonFromBBOX,
 	polygonsDontIntersect
 } from '@ansyn/imagery';
 import {
 	catchError,
+	concatMap,
 	debounceTime,
 	distinctUntilChanged,
 	filter,
@@ -53,7 +53,7 @@ import { toastMessages } from '../../modules/core/models/toast-messages';
 import { endTimingLog, startTimingLog } from '../../modules/core/utils/logs/timer-logs';
 import { isFullOverlay } from '../../modules/core/utils/overlays';
 import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
-import { MarkUpClass } from '../../modules/overlays/reducers/overlays.reducer';
+import { MarkUpClass, selectRegion } from '../../modules/overlays/reducers/overlays.reducer';
 import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity/src/models';
 import {
@@ -89,15 +89,11 @@ import {
 } from '../../modules/overlays/overlay-status/config/overlay-status-config';
 import { MeasureDistanceVisualizer } from '../../modules/plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
 import { IGeoFilterStatus, selectGeoFilterStatus } from '../../modules/status-bar/reducers/status-bar.reducer';
-import { distance, Polygon } from '@turf/turf';
+import { booleanEqual, distance } from '@turf/turf';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import { IScreenViewConfig, ScreenViewConfig } from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
 
 const FOOTPRINT_INSIDE_MAP_RATIO = 1;
-let region: Polygon = {
-	coordinates: [],
-	type: 'Polygon'
-};
 
 @Injectable()
 export class MapAppEffects {
@@ -332,30 +328,31 @@ export class MapAppEffects {
 			})
 		);
 
-	@Effect({ dispatch: false })
+	@Effect()
 	searchByExtentPolygon$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.POSITION_CHANGED, MapActionTypes.SET_ACTIVE_MAP_ID),
-		withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus)),
-		filter(([action, mapList, activeMapId, geoFilterStatus]) => Boolean(mapList[activeMapId]) && geoFilterStatus.type === CaseGeoFilter.ScreenView),
-		map(([action, mapList, activeMapId, geoFilterStatus]) => {
+		withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus), this.store$.select(selectRegion)),
+		filter(([action, mapList, activeMapId, geoFilterStatus, region]) => Boolean(mapList[activeMapId]) && geoFilterStatus.type === CaseGeoFilter.ScreenView),
+		map(([action, mapList, activeMapId, geoFilterStatus, region]) => {
 			const activeMap: IMapSettings = mapList[activeMapId];
-			return [activeMap.data.position, geoFilterStatus];
+			return [activeMap.data.position, geoFilterStatus, region];
 		}),
 		debounceTime(this.screenViewConfig.debounceTime),
-		tap(([position, geoFilterStatus]: [IImageryMapPosition, IGeoFilterStatus]) => {
-			if (!equalPolygons(position.extentPolygon, region)) {
-				region = position.extentPolygon;
-				const extentWidth = Math.round(distance(region.coordinates[0][0], region.coordinates[0][1], {units: 'metres'}));
+		filter(([position, geoFilterStatus, region]: [IImageryMapPosition, IGeoFilterStatus, any]) => !booleanEqual(position.extentPolygon, region)),
+		concatMap(([position, geoFilterStatus, region]: [IImageryMapPosition, IGeoFilterStatus, any]) => {
+			let actions = [];
+			region = position.extentPolygon;
+			const extentWidth = Math.round(distance(region.coordinates[0][0], region.coordinates[0][1], {units: 'metres'}));
 
-				if (extentWidth > this.screenViewConfig.extentWidthSearchLimit) {
-					this.store$.dispatch(new SetOverlaysStatusMessageAction('Zoom in to get new overlays'));
-				} else {
-					this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
-					if (geoFilterStatus.active) {
-						this.store$.dispatch(new UpdateGeoFilterStatus({ active: false }));
-					}
+			if (extentWidth > this.screenViewConfig.extentWidthSearchLimit) {
+				actions.push(new SetOverlaysStatusMessageAction('Zoom in to get new overlays'));
+			} else {
+				actions.push(new SetOverlaysCriteriaAction({ region }));
+				if (geoFilterStatus.active) {
+					actions.push(new UpdateGeoFilterStatus({ active: false }));
 				}
 			}
+			return actions;
 		})
 	);
 

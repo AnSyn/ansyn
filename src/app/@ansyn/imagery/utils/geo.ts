@@ -128,11 +128,6 @@ export function polygonsDontIntersect(extentPolygon, footprint, overlayCoverage)
 	return intersection < overlayCoverage;
 }
 
-export function equalPolygons(firstPolygon: Polygon, secondPolygon: Polygon): boolean {
-	const equal = difference(firstPolygon, secondPolygon) === null && difference(secondPolygon, firstPolygon) === null;
-	return equal;
-}
-
 export function getPolygonIntersectionRatioWithMultiPolygon(extent: Polygon, footprint: MultiPolygon): number {
 	let intersectionArea = 0;
 	let extentArea = 1;

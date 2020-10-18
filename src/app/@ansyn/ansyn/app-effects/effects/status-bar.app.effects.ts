@@ -17,12 +17,13 @@ import {
 	StatusBarActionsTypes,
 	UpdateGeoFilterStatus
 } from '../../modules/status-bar/actions/status-bar.actions';
-import { selectGeoFilterActive, selectGeoFilterStatus } from '../../modules/status-bar/reducers/status-bar.reducer';
+import { selectGeoFilterActive, selectGeoFilterType } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { CopyCaseLinkAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { DisplayOverlayFromStoreAction } from '../../modules/overlays/actions/overlays.actions';
-import { selectDropsAscending } from '../../modules/overlays/reducers/overlays.reducer';
+import { selectDropsAscending, selectRegion } from '../../modules/overlays/reducers/overlays.reducer';
 import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
+import { CaseGeoFilter } from '../../modules/menu-items/cases/models/case.model';
 
 @Injectable()
 export class StatusBarAppEffects {
@@ -90,8 +91,11 @@ export class StatusBarAppEffects {
 	onCancelGeoFilter$ = this.actions$.pipe(
 		ofType<UpdateGeoFilterStatus>(StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS),
 		filter(action => action.payload === undefined),
-		withLatestFrom(this.store.select(selectGeoFilterStatus)),
-		map(([action, { type }]) => new UpdateGeoFilterStatus({ type, active: false }))
+		withLatestFrom(this.store.select(selectRegion), this.store.select(selectGeoFilterType)),
+		map(([action, region, geoFilterType]) => {
+			const type = geoFilterType === CaseGeoFilter.ScreenView ? geoFilterType : region.type;
+			return new UpdateGeoFilterStatus({ type, active: false })
+		})
 	);
 
 	constructor(protected actions$: Actions,

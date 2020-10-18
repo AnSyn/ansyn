@@ -65,6 +65,8 @@ export class SelectCaseAppEffects {
 
 		const { layout } = state.maps;
 
+		const geoFilterType = state.geoFilterType ? state.geoFilterType : region.type;
+
 		let time = state.time ? { ...state.time } : this.casesService.defaultTime;
 
 		if (typeof time.from === 'string') {
@@ -83,7 +85,7 @@ export class SelectCaseAppEffects {
 			new SetActiveMapId(state.maps.activeMapId),
 			new SetLayoutAction(<any>layout),
 			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
-			new UpdateGeoFilterStatus({ active: false, type: region.type }),
+			new UpdateGeoFilterStatus({ active: false, type: geoFilterType }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this)) }),
 			new SetOverlaysTranslationDataAction(overlaysTranslationData),

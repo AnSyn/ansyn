@@ -56,7 +56,6 @@ export {
 	getPolygonByBufferRadius,
 	getPolygonIntersectionRatio,
 	getPolygonIntersectionRatioWithMultiPolygon,
-	equalPolygons,
 	polygonsDontIntersect,
 	isPointContainedInGeometry,
 	unifyPolygons,

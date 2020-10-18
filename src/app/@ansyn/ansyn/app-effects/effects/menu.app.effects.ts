@@ -70,6 +70,7 @@ export class MenuAppEffects {
 				ofType(MenuActionTypes.RESET_APP_SUCCESS),
 				withLatestFrom(this.store$.select(selectMapsList)),
 				filter(([action, mapsList]: [ResetAppActionSuccess, IMapSettings[]]) => Boolean(mapsList.length)),
+				// the id of the map after the reset is complete
 				map(([action, [{id}]]: [ResetAppActionSuccess, IMapSettings[]]) => new SetOverlaysFootprintActive({mapId: id, show: false}))
 			);
 

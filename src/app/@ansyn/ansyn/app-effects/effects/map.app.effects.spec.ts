@@ -81,6 +81,7 @@ import {
 } from '../../modules/overlays/models/overlay.model';
 import { ICase } from '../../modules/menu-items/cases/models/case.model';
 import { overlayStatusConfig } from "../../modules/overlays/overlay-status/config/overlay-status-config";
+import { ScreenViewConfig } from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
 
 @ImageryMapSource({
 	sourceType: 'sourceType1',
@@ -209,6 +210,9 @@ describe('MapAppEffects', () => {
 					useValue: {}
 				},	{
 					provide: mapFacadeConfig,
+					useValue: {}
+				},  {
+					provide: ScreenViewConfig,
 					useValue: {}
 				},
 				{ provide: IMAGERY_MAPS, useValue: {} },

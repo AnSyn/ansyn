@@ -91,7 +91,7 @@ import { MeasureDistanceVisualizer } from '../../modules/plugins/openlayers/plug
 import { IGeoFilterStatus, selectGeoFilterStatus } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { distance, Polygon } from '@turf/turf';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
-import { IScreenViewConfig, ScreenViewConfig } from '../../modules/plugins/openlayers/plugins/visualizers/models/screenView.model';
+import { IScreenViewConfig, ScreenViewConfig } from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
 
 const FOOTPRINT_INSIDE_MAP_RATIO = 1;
 let region: Polygon = {
@@ -352,7 +352,7 @@ export class MapAppEffects {
 				} else {
 					this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
 					if (geoFilterStatus.active) {
-						this.store$.dispatch(new UpdateGeoFilterStatus({active: false}));
+						this.store$.dispatch(new UpdateGeoFilterStatus({ active: false }));
 					}
 				}
 			}

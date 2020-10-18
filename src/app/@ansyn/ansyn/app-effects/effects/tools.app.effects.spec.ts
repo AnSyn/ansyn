@@ -1,11 +1,10 @@
-import { BackToWorldView } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { ToolsAppEffects } from './tools.app.effects';
 import { Observable, of } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { Store, StoreModule } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { MapFacadeService, mapStateSelector, UpdateMapAction } from '@ansyn/map-facade';
+import { mapStateSelector } from '@ansyn/map-facade';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import {
@@ -34,9 +33,8 @@ import {
 	SetAnnotationMode,
 	SetPinLocationModeAction,
 	SetSubMenu,
-	ShowOverlaysFootprintAction, UpdateMeasureDataOptionsAction
+	UpdateMeasureDataOptionsAction
 } from '../../modules/menu-items/tools/actions/tools.actions';
-import { SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import { ICase, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
@@ -210,7 +208,7 @@ describe('ToolsAppEffects', () => {
 				return of({ coordinates: [0, 0] });
 			}
 		};
-		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => activeCommunicator);
+		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => <any>activeCommunicator);
 		actions = hot('--a--', { a: new PullActiveCenter() });
 		const expectedResults = cold('--b--', { b: new SetActiveCenter([0, 0]) });
 		expect(toolsAppEffects.getActiveCenter$).toBeObservable(expectedResults);
@@ -225,7 +223,7 @@ describe('ToolsAppEffects', () => {
 		};
 
 		beforeEach(() => {
-			spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [activeCommunicator, activeCommunicator]);
+			spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [<any>activeCommunicator, <any>activeCommunicator]);
 		});
 	});
 
@@ -252,37 +250,6 @@ describe('ToolsAppEffects', () => {
 
 	it('should be defined', () => {
 		expect(toolsAppEffects).toBeTruthy();
-	});
-
-
-	describe('onDisplayOverlaySuccess', () => {
-		const manualProcessArgs = {
-			Sharpness: 0,
-			Contrast: 0,
-			Brightness: 100,
-			Gamma: 100,
-			Saturation: 0
-		};
-	});
-
-	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Heatmap"', () => {
-		const activeMap = MapFacadeService.activeMap(imapState);
-		const overlayDisplayMode = 'Heatmap';
-
-		actions = hot('--a--', { a: new ShowOverlaysFootprintAction(overlayDisplayMode) });
-
-		const expectedResults = cold('--a--', {
-			a: new UpdateMapAction({
-				id: activeMap.id, changes: {
-					data: {
-						...activeMap.data,
-						overlayDisplayMode: overlayDisplayMode
-					}
-				}
-			})
-		});
-
-		expect(toolsAppEffects.updateCaseFromTools$).toBeObservable(expectedResults);
 	});
 
 	it('clearActiveInteractions$ should clear active interactions', () => {

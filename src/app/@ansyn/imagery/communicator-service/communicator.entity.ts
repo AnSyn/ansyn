@@ -16,24 +16,20 @@ import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
 import { ImageryCommunicatorService } from './communicator.service';
 import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';
 import { filter, map, mergeMap, tap } from 'rxjs/operators';
-import { IMAGERY_MAPS, ImageryMaps } from '../providers/imagery-map-collection';
+import { IMAGERY_MAPS, IImageryMaps } from '../providers/imagery-map-collection';
 import { BaseMapSourceProvider } from '../model/base-map-source-provider';
 import { MapComponent } from '../map/map.component';
 import { BaseImageryPluginProvider } from '../imagery/providers/imagery.providers';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { ImageryMapSources } from '../providers/map-source-providers';
+import { IImageryMapSources } from '../providers/map-source-providers';
 import { get as _get } from 'lodash';
-import { ImageryMapExtent, ImageryMapPosition } from '../model/case-map-position.model';
+import { ImageryMapExtent, IImageryMapPosition } from '../model/case-map-position.model';
 import { getPolygonByPointAndRadius } from '../utils/geo';
-import {
-	IMapProviderConfig,
-	IMapProvidersConfig,
-	IMapSource,
-	MAP_PROVIDERS_CONFIG
-} from '../model/map-providers-config';
+import { IMapSource } from '../model/map-providers-config';
 import { IMapSettings } from '../model/map-settings';
 import { IBaseImageryLayer, IMAGERY_BASE_MAP_LAYER, ImageryLayerProperties } from '../model/imagery-layer.model';
 import { IExportMapData, IExportMapMetadata } from '../model/export-map.model';
+import { GetProvidersMapsService } from '../services/get-providers-maps/get-providers-maps.service';
 
 export interface IMapInstanceChanged {
 	id: string;
@@ -55,11 +51,11 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	public mapInstanceChanged: EventEmitter<IMapInstanceChanged> = new EventEmitter<IMapInstanceChanged>();
 
 	constructor(protected injector: Injector,
-				@Inject(IMAGERY_MAPS) protected imageryMaps: ImageryMaps,
+				@Inject(IMAGERY_MAPS) protected imageryMaps: IImageryMaps,
 				protected componentFactoryResolver: ComponentFactoryResolver,
 				public imageryCommunicatorService: ImageryCommunicatorService,
-				@Inject(BaseMapSourceProvider) public imageryMapSources: ImageryMapSources,
-				@Inject(MAP_PROVIDERS_CONFIG) protected mapProvidersConfig: IMapProvidersConfig
+				@Inject(BaseMapSourceProvider) public imageryMapSources: IImageryMapSources,
+				protected getProvidersMapsService: GetProvidersMapsService
 	) {
 	}
 
@@ -112,7 +108,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return false;
 	}
 
-	public setActiveMap(mapType: string, position: ImageryMapPosition, sourceType?, layer?: IBaseImageryLayer): Promise<BaseImageryMap> {
+	public async setActiveMap(mapType: string, position: IImageryMapPosition, sourceType?, layer?: IBaseImageryLayer): Promise<BaseImageryMap> {
 		if (this._mapComponentRef) {
 			this.destroyCurrentComponent();
 		}
@@ -132,8 +128,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		const mapComponent = this._mapComponentRef.instance;
 
 		if (!layer && !sourceType) {
-			const mapProviderConfig: IMapProviderConfig = this.mapProvidersConfig[imageryMap.prototype.mapType];
-			sourceType = mapProviderConfig && mapProviderConfig.defaultMapSource;
+			sourceType = await this.getProvidersMapsService.getDefaultProviderByType(imageryMap.prototype.mapType).toPromise();
 			if (!sourceType) {
 				console.warn(`Couldn't find defaultMapSource setting in config, for map type ${ imageryMap.prototype.mapType }`);
 			}
@@ -153,7 +148,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		});
 	}
 
-	loadInitialMapSource(position?: ImageryMapPosition, sourceType: string = this.mapSettings.worldView.sourceType): Promise<IBaseImageryLayer> {
+	loadInitialMapSource(position?: IImageryMapPosition, sourceType: string = this.mapSettings.worldView.sourceType): Promise<IBaseImageryLayer> {
 		return new Promise(resolve => {
 			if (!this._activeMap) {
 				resolve();
@@ -203,7 +198,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return of(true);
 	}
 
-	public setPosition(position: ImageryMapPosition): Observable<boolean> {
+	public setPosition(position: IImageryMapPosition): Observable<boolean> {
 		if (!this.ActiveMap) {
 			return throwError(new Error('missing active map'));
 		}
@@ -211,7 +206,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return this.ActiveMap.setPosition(position);
 	}
 
-	public getPosition(): Observable<ImageryMapPosition> {
+	public getPosition(): Observable<IImageryMapPosition> {
 		if (!this.ActiveMap) {
 			return throwError(new Error('missing active map'));
 		}
@@ -219,7 +214,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	setPositionByRect(rect: Polygon): Observable<boolean> {
-		const position: ImageryMapPosition = {
+		const position: IImageryMapPosition = {
 			extentPolygon: rect
 		};
 		return this.setPosition(position);
@@ -227,7 +222,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 
 	setPositionByRadius(center: Point, radiusInMeters: number): Observable<boolean> {
 		const polygon: Feature<Polygon> = getPolygonByPointAndRadius(center.coordinates, radiusInMeters / 1000);
-		const position: ImageryMapPosition = {
+		const position: IImageryMapPosition = {
 			extentPolygon: polygon.geometry
 		};
 		return this.setPosition(position);
@@ -256,11 +251,11 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		);
 	}
 
-	public getPlugin<T extends BaseImageryPlugin>(plugin: { new(...args): T }): T {
+	public getPlugin<T extends BaseImageryPlugin>(plugin: new(...args) => T): T {
 		return <any>this.plugins.find((_plugin) => _plugin instanceof plugin);
 	}
 
-	public resetView(layer: IBaseImageryLayer, position: ImageryMapPosition, extent?: ImageryMapExtent, useDoubleBuffer: boolean = false): Observable<boolean> {
+	public resetView(layer: IBaseImageryLayer, position: IImageryMapPosition, extent?: ImageryMapExtent, useDoubleBuffer: boolean = false): Observable<boolean> {
 		this.setVirtualNorth(0);
 		if (this.ActiveMap) {
 			return this.ActiveMap.resetView(layer, position, extent, useDoubleBuffer).pipe(
@@ -326,12 +321,8 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		return forkJoin(resetObservables).pipe(map(results => results.every(b => b === true)));
 	}
 
-	private createMapSourceForMapType(mapType: string, sourceType: string): Promise<IBaseImageryLayer> {
-		const sources: IMapSource[] = this.mapProvidersConfig[mapType].sources;
-		let mapSource: IMapSource = null;
-		if (Boolean(sources)) {
-			mapSource = sources.find(source => source.key === sourceType);
-		}
+	private async createMapSourceForMapType(mapType: string, sourceType: string): Promise<IBaseImageryLayer> {
+		const mapSource: IMapSource = await this.getProvidersMapsService.getMapProviderByTypeAndSource(mapType, sourceType).toPromise();
 		const sourceProvider = this.getMapSourceProvider({
 			mapType, sourceType: mapSource && mapSource.sourceType || ''
 		});

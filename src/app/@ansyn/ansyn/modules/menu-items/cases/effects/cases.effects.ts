@@ -22,7 +22,7 @@ import {
 	UpdateCaseBackendSuccessAction
 } from '../actions/cases.actions';
 import { casesConfig, CasesService } from '../services/cases.service';
-import { casesStateSelector, ICasesState, selectCaseTotal } from '../reducers/cases.reducer';
+import { casesStateSelector, ICasesState, selectCaseTotal, selectSelectedCase } from '../reducers/cases.reducer';
 import { ICasesConfig } from '../models/cases-config';
 import {
 	catchError,
@@ -49,7 +49,8 @@ import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCras
 import { toastMessages } from '../../../core/models/toast-messages';
 import { ICase, ICasePreview, IDilutedCaseState } from '../models/case.model';
 import { BackToWorldView } from '../../../overlays/overlay-status/actions/overlay-status.actions';
-import { ClipboardService } from 'ngx-clipboard';
+import { fromPromise } from 'rxjs/internal-compatibility';
+import { copyFromContent } from '@ansyn/map-facade';
 
 @Injectable()
 export class CasesEffects {
@@ -79,8 +80,8 @@ export class CasesEffects {
 	onDeleteCase$: Observable<any> = this.actions$.pipe(
 		ofType<DeleteCaseAction>(CasesActionTypes.DELETE_CASE),
 		mergeMap((action) => this.dataLayersService.removeCaseLayers(action.payload).pipe(map(() => action))),
-		withLatestFrom(this.store.select(casesStateSelector), (action, state: ICasesState) => [state.modal.id, state.selectedCase.id]),
-		filter(([modalCaseId, selectedCaseId]) => modalCaseId === selectedCaseId),
+		withLatestFrom(this.store.select(selectSelectedCase), ({ payload: deletedCaseId }, selectedCase: ICase) => [deletedCaseId, selectedCase.id]),
+		filter(([deletedCaseId, selectedCaseId]) => deletedCaseId === selectedCaseId),
 		map(() => new LoadDefaultCaseAction()),
 		rxPreventCrash()
 	);
@@ -116,15 +117,6 @@ export class CasesEffects {
 			})
 		);
 
-	@Effect({ dispatch: false })
-	openModal$: Observable<any> = this.actions$.pipe(
-		ofType(CasesActionTypes.OPEN_MODAL));
-
-	@Effect({ dispatch: false })
-	closeModal$: Observable<any> = this.actions$.pipe(
-		ofType(CasesActionTypes.CLOSE_MODAL)
-	);
-
 	@Effect()
 	onSaveCaseAs$: Observable<SaveCaseAsSuccessAction> = this.actions$.pipe(
 		ofType<SaveCaseAsAction>(CasesActionTypes.SAVE_CASE_AS),
@@ -137,9 +129,27 @@ export class CasesEffects {
 							const newId = UUID.UUID();
 							const oldId = layer.id;
 
-							addedCase.state.layers.activeLayersIds = addedCase.state.layers.activeLayersIds.map((id) => {
-								return id === oldId ? newId : id;
-							});
+							addedCase =
+								{
+									...addedCase, state:
+										{
+											...addedCase.state, layers:
+												{
+													...addedCase.state.layers,
+													activeLayersIds: addedCase.state.layers.activeLayersIds.map((id) => {
+														return id === oldId ? newId : id;
+													})
+												}
+										}
+								};
+							// addedCase.state.layers.activeLayersIds = addedCase.state.layers.activeLayersIds.map((id) => {
+							// 	return id === oldId ? newId : id;
+							// });
+							// Todo: the new case was created by shallow cloning an existing case.
+							//  The existing case is in the store, so this caused problems, and I
+							//  had to do special cloning, as above. Perhaps it will be better to:
+							//  (1) Do deep clone, rather than shallow clone, in the service, or
+							//  (2) Do clonings only in the store/reducer, and not in service/effect
 
 							return { ...layer, id: newId, caseId: addedCase.id };
 						}).map((layer) => this.dataLayersService.addLayer(layer))
@@ -147,9 +157,17 @@ export class CasesEffects {
 						.pipe(map((_) => addedCase))
 				),
 				map((addedCase: ICase) => new SaveCaseAsSuccessAction(addedCase)),
-				catchError(() => EMPTY)
+				catchError((err) => {
+					console.warn(err);
+					return EMPTY;
+				})
 			)
-		));
+		),
+		catchError((err) => {
+			console.warn(err);
+			return EMPTY;
+		})
+	);
 
 	@Effect()
 	onSaveCaseAsSuccess$ = this.actions$.pipe(
@@ -166,9 +184,9 @@ export class CasesEffects {
 		filter(action => !Boolean(action.payload.shareCaseAsQueryParams)),
 		map((action) => {
 			const shareLink = this.casesService.generateLinkById(action.payload.caseId, 'case');
-			this.clipboardService.copyFromContent(shareLink);
-			return new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast });
-		})
+			return fromPromise(copyFromContent(shareLink));
+		}),
+		map(() => new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast }))
 	);
 
 	@Effect()
@@ -228,15 +246,14 @@ export class CasesEffects {
 		mergeMap(sCase => this.casesService.generateQueryParamsViaCase(sCase)),
 		map((linkId: string) => {
 			const url = this.casesService.generateLinkById(linkId, 'link');
-			this.clipboardService.copyFromContent(url);
-			return new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast });
+			return fromPromise(copyFromContent(url));
 		}),
+		map(() => new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast })),
 		catchError((err) => this.errorHandlerService.httpErrorHandle(err, toastMessages.failedToCreateLink)),
 		catchError(() => EMPTY));
 
 	constructor(protected actions$: Actions,
 				protected casesService: CasesService,
-				private clipboardService: ClipboardService,
 				protected store: Store<ICasesState>,
 				protected dataLayersService: DataLayersService,
 				protected errorHandlerService: ErrorHandlerService,

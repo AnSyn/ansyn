@@ -1,3 +1,5 @@
+export { copyFromContent } from './utils/clipboard';
+
 export { imageryStatusClassNameForExport } from './components/imagery-status/imagery-status.component';
 
 export { floationMenuClassNameForExport } from './components/floating-menu/floating-menu.component';
@@ -31,7 +33,7 @@ export {
 	selectOverlaysWithMapIds,
 	selectMapPositionByMapId,
 	selectMapsStateByIds,
-	selectOverlayDisplayModeByMapId,
+	selectOverlaysFootprintActiveByMapId,
 	selectOverlayOfActiveMap,
 	selectIsMinimalistViewMode,
 	selectMapTypeById,
@@ -79,7 +81,8 @@ export {
 	ReplaceMainLayerFailed,
 	SynchronizeMapsAction,
 	SetActiveCenterTriggerAction,
-	SetMapSearchBoxTriggerAction
+	SetMapSearchBoxTriggerAction,
+	SetOverlaysFootprintActive
 } from './actions/map.actions';
 
 export {
@@ -107,3 +110,11 @@ export { AnimatedEllipsisComponent } from './components/animated-ellipsis/animat
 export { MapFacadeModule } from './map-facade.module';
 
 export { LayoutKey, layoutOptions, IMapsLayout } from './models/maps-layout';
+export { UtmHolderComponent } from './components/imagery-mouse-coordinates/holders/utm-holder/utm-holder.component';
+export { GeoHolderComponent } from './components/imagery-mouse-coordinates/holders/geo-holder/geo-holder.component';
+export { ImageriesManagerComponent } from './components/imageries-manager/imageries-manager.component';
+export { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
+export { WelcomeNotificationComponent } from './components/welcome-notification/welcome-notification.component';
+export { ToastComponent } from './components/toast/toast.component';
+export { AnsynLoaderComponent } from './components/ansyn-loader/ansyn-loader.component';
+export { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.component';

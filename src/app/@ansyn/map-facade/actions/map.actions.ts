@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { Point, Polygon, Position } from 'geojson';
 import {
-	ImageryMapPosition,
+	IImageryMapPosition,
 	IMapInstanceChanged,
 	IMapProgress,
 	IMapSettings,
@@ -44,7 +44,8 @@ export const MapActionTypes = {
 		ANGLE_FILTER_SHOW: 'ANGLE_FILTER_SHOW'
 	},
 	VISUALIZERS: {
-		HOVER_FEATURE: 'HOVER_FEATURE'
+		HOVER_FEATURE: 'HOVER_FEATURE',
+		OVERLAYS_FOOTPRINT: 'OVERLAYS_FOOTPRINT'
 	},
 	MAP_INSTANCE_CHANGED_ACTION: 'MAP_INSTANCE_CHANGED_ACTION',
 	VIEW: {
@@ -135,7 +136,7 @@ export class PointToImageOrientationAction implements Action {
 export class PositionChangedAction implements Action {
 	type = MapActionTypes.POSITION_CHANGED;
 
-	constructor(public payload: { id: string, position: ImageryMapPosition, mapInstance: IMapSettings }) {
+	constructor(public payload: { id: string, position: IImageryMapPosition, mapInstance: IMapSettings }) {
 	}
 }
 
@@ -411,4 +412,11 @@ export class ToggleFooter implements Action {
 
 	constructor(public payload: boolean) {
 	}
+}
+
+export class SetOverlaysFootprintActive implements Action {
+	readonly type = MapActionTypes.VISUALIZERS.OVERLAYS_FOOTPRINT;
+
+	constructor(public payload: {mapId: string, show: boolean}) {}
+
 }

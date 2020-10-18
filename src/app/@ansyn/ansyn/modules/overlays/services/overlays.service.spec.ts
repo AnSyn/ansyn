@@ -1,9 +1,7 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { OverlaysConfig, OverlaysService } from './overlays.service';
 import { IOverlayDropSources, OverlayReducer, overlaysFeatureKey } from '../reducers/overlays.reducer';
-import { Response, ResponseOptions, XHRBackend } from '@angular/http';
-import { MockBackend } from '@angular/http/testing';
-import { Observable, Observer, of } from 'rxjs';
+import { EMPTY, Observable, Observer, of } from 'rxjs';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
@@ -33,7 +31,7 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	};
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
-		return Observable.create((observer: Observer<IOverlaysFetchData>) => {
+		return new Observable((observer: Observer<IOverlaysFetchData>) => {
 			const overlays: IOverlay[] = [
 				{
 					id: 'abc',
@@ -60,7 +58,7 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	}
 
 	getOverlayById(id: string): Observable<IOverlay> {
-		return Observable.create((observer: Observer<IOverlay>) => {
+		return new Observable((observer: Observer<IOverlay>) => {
 			const overlay: any = {
 				id: 'abc',
 				sourceType: 'mock1',
@@ -77,7 +75,8 @@ export class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 }
 
 describe('OverlaysService', () => {
-	let overlaysService: OverlaysService, mockBackend, lastConnection, http;
+	let overlaysService: OverlaysService, http;
+	// let mockBackend;
 	let multipleOverlaysSourceProvider: MultipleOverlaysSourceProvider;
 	let overlaysTmpData: IOverlay[];
 	let favoriteOverlays: IOverlay[];
@@ -141,7 +140,7 @@ describe('OverlaysService', () => {
 			providers: [
 				OverlaysService,
 				{ provide: LoggerService, useValue: { error: (some) => null } },
-				{ provide: XHRBackend, useClass: MockBackend },
+				// { provide: XHRBackend, useClass: MockBackend },
 				{ provide: OverlaysConfig, useValue: {} },
 				{ provide: MultipleOverlaysSourceConfig, useValue: multipleOverlaysSourceConfig },
 				{ provide: MultipleOverlaysSourceProvider, useClass: OverlaySourceProviderMock }
@@ -155,23 +154,24 @@ describe('OverlaysService', () => {
 		});
 	});
 
-	beforeEach(inject([OverlaysService, XHRBackend, HttpClient, MultipleOverlaysSourceProvider], (_overlaysService: OverlaysService, _mockBackend, _http, _multipleOverlaysSourceProvider: MultipleOverlaysSourceProvider) => {
+	// beforeEach(inject([OverlaysService, XHRBackend, HttpClient, MultipleOverlaysSourceProvider], (_overlaysService: OverlaysService, _mockBackend, _http, _multipleOverlaysSourceProvider: MultipleOverlaysSourceProvider) => {
+	beforeEach(inject([OverlaysService, HttpClient, MultipleOverlaysSourceProvider], (_overlaysService: OverlaysService, _http, _multipleOverlaysSourceProvider: MultipleOverlaysSourceProvider) => {
 		overlaysService = _overlaysService;
-		mockBackend = _mockBackend;
+		// mockBackend = _mockBackend;
 		http = _http;
 		multipleOverlaysSourceProvider = _multipleOverlaysSourceProvider;
 
-		mockBackend.connections.subscribe((connection: any) => {
-			if (connection.request.url === '//localhost:8037/api/mock/eventDrops/data') {
-				connection.mockRespond(new Response(new ResponseOptions({
-					body: JSON.stringify(response)
-				})));
-			}
-
-			if (connection.request.url === 'error') {
-				connection.mockError(new Error('Username or password is incorrect'));
-			}
-		});
+		// mockBackend.connections.subscribe((connection: any) => {
+		// 	if (connection.request.url === '//localhost:8037/api/mock/eventDrops/data') {
+		// 		connection.mockRespond(new Response(new ResponseOptions({
+		// 			body: JSON.stringify(response)
+		// 		})));
+		// 	}
+		//
+		// 	if (connection.request.url === 'error') {
+		// 		connection.mockError(new Error('Username or password is incorrect'));
+		// 	}
+		// });
 
 		const overlayDefaultValues = () => ({
 			photoTime: new Date().toISOString(),
@@ -258,7 +258,7 @@ describe('OverlaysService', () => {
 		let response = { key: 'value' };
 
 		spyOn(multipleOverlaysSourceProvider, 'fetch').and.callFake(() => {
-			return Observable.create((observer: Observer<any>) => observer.next(response));
+			return new Observable((observer: Observer<any>) => observer.next(response));
 		});
 
 		overlaysService.search(searchParams).subscribe((result: any) => {
@@ -276,7 +276,7 @@ describe('OverlaysService', () => {
 		let response = { key: 'value' };
 
 		let calls = spyOn(multipleOverlaysSourceProvider, 'fetch').and.callFake(function () {
-			return Observable.create((observer: Observer<any>) => observer.next(response));
+			return new Observable((observer: Observer<any>) => observer.next(response));
 		}).calls;
 
 

@@ -47,10 +47,10 @@ export class SelectCaseAppEffects {
 	);
 
 	constructor(protected actions$: Actions,
-				protected store$: Store<IAppState>,
-				@Inject(CoreConfig) protected coreConfig: ICoreConfig,
-				@Inject(casesConfig) public caseConfig: ICasesConfig,
-				protected casesService: CasesService
+		protected store$: Store<IAppState>,
+		@Inject(CoreConfig) protected coreConfig: ICoreConfig,
+		@Inject(casesConfig) public caseConfig: ICasesConfig,
+		protected casesService: CasesService
 	) {
 	}
 
@@ -62,12 +62,10 @@ export class SelectCaseAppEffects {
 		const { data } = state.maps;
 		// context
 		const { favoriteOverlays, region, dataInputFilters, miscOverlays } = state;
-		let { time } = state;
+
 		const { layout } = state.maps;
 
-		if (!time) {
-			time = this.casesService.defaultTime;
-		}
+		let time = state.time ? { ...state.time } : this.casesService.defaultTime;
 
 		if (typeof time.from === 'string') {
 			time.from = new Date(time.from);
@@ -85,7 +83,7 @@ export class SelectCaseAppEffects {
 			new SetActiveMapId(state.maps.activeMapId),
 			new SetLayoutAction(<any>layout),
 			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
-			new UpdateGeoFilterStatus({active: false, type: region.type}),
+			new UpdateGeoFilterStatus({ active: false, type: region.type }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this)) }),
 			new SetOverlaysTranslationDataAction(overlaysTranslationData),
@@ -104,13 +102,16 @@ export class SelectCaseAppEffects {
 	}
 
 	parseMapData(map: ICaseMapState): ICaseMapState {
-		if (map.data.overlay) {
-			return { ...map, data: { ...map.data, overlay: this.parseOverlay(map.data.overlay) } };
+		const newMap = { ...map };
+		// check overlayDisplayMode for old case
+		if ((newMap.data as any).overlayDisplayMode !== undefined) {
+			newMap.data.overlaysFootprintActive = (newMap.data as any).overlayDisplayMode === 'Polygon';
+			delete (newMap.data as any).overlayDisplayMode;
 		}
-		return map;
+		return newMap;
 	}
 
 	parseOverlay(overlay: IOverlay): IOverlay {
-		return isFullOverlay(overlay) ? { ...overlay, date: new Date(overlay.date) } : overlay;
+		return isFullOverlay(overlay) ? overlay : { ...overlay, date: new Date(overlay.date) };
 	}
 }

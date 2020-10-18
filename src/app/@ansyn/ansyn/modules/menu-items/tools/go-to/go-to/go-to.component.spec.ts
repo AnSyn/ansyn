@@ -12,7 +12,6 @@ import { CoreConfig } from '../../../../core/models/core.config';
 import { CoreModule } from '../../../../core/core.module';
 import { LoggerConfig } from '../../../../core/models/logger.config';
 import { TranslateModule } from '@ngx-translate/core';
-import { ClipboardModule, ClipboardService } from 'ngx-clipboard';
 
 describe('GoToComponent', () => {
 	let component: GoToComponent;
@@ -23,7 +22,6 @@ describe('GoToComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [GoToModule,
-				ClipboardModule,
 				HttpClientModule,
 				StoreModule.forRoot({ [toolsFeatureKey]: ToolsReducer }),
 				CoreModule,
@@ -31,7 +29,6 @@ describe('GoToComponent', () => {
 				TranslateModule.forRoot()
 			],
 			providers: [
-				ClipboardService,
 				ProjectionConverterService,
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },

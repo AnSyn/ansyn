@@ -6,13 +6,17 @@
 	display: flex;
 	align-items: center;
 	width: 100px;
-	padding: 0 10px;
+	padding: 0px;
 	box-sizing: border-box;
 	z-index: @z-index-status-bar-navigation-area;
 
 	i {
 		font-size: 25px;
 		color: white;
+	}
+
+	.prev-btn{
+		margin-left: 0vw;
 	}
 
 	button {
@@ -24,6 +28,7 @@
 		margin: 2px;
 		border-radius: 5px;
 		background: #494949;
+		margin-left: 0.5vw;
 
 		&:disabled {
 			opacity: 0.3;

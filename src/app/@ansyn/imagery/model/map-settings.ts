@@ -1,6 +1,6 @@
 import {
 	ICompressedImageryMapProjectedState,
-	ImageryMapPosition
+	IImageryMapPosition
 } from './case-map-position.model';
 export type MapOrientation = 'User Perspective' | 'Imagery Perspective';
 
@@ -16,8 +16,8 @@ export interface ICompressedWorldViewMapState {
 
 
 export interface IMapSettingsData {
-	position: ImageryMapPosition;
-
+	position: IImageryMapPosition;
+	overlaysFootprintActive?: boolean;
 	[key: string]: any;
 }
 

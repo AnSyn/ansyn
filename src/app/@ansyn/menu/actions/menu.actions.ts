@@ -2,13 +2,10 @@ import { Action } from '@ngrx/store';
 import { IMenuItem } from '../models/menu-item.model';
 
 export const MenuActionTypes = {
-	INITIALIZE_MENU_ITEMS: 'INITIALIZE_MENU_ITEMS',
-	ADD_MENU_ITEM: 'ADD_MENU_ITEM',
 	SELECT_MENU_ITEM: 'SELECT_MENU_ITEM',
 	UNSELECT_MENU_ITEM: 'UNSELECT_MENU_ITEM',
 	SET_BADGE: 'SET_BADGE',
 	TOGGLE_IS_PINNED: 'TOGGLE_IS_PINNED',
-	SET_HIDE_RESULTS_TABLE_BADGE: 'SET_HIDE_RESULTS_TABLE_BADGE',
 	TRIGGER: {
 		CONTAINER_CHANGED: 'CONTAINER_CHANGED'
 	},
@@ -16,27 +13,21 @@ export const MenuActionTypes = {
 	MENU_COLLAPSE: 'MENU_COLLAPSE',
 	RESET_APP: 'RESET_APP',
 	SET_USER_ENTER: 'SET_USER_ENTER',
-	SET_DOES_USER_HAVE_CREDENTIALS: 'SET_DOES_USER_HAVE_CREDENTIALS'
+	SET_DOES_USER_HAVE_CREDENTIALS: 'SET_DOES_USER_HAVE_CREDENTIALS',
+	RESET_APP_ACTION_SUCCESS: 'RESET_APP_ACTION_SUCCESS'
 };
 
-export class ResetAppAction implements Action {
-	type = MenuActionTypes.RESET_APP;
+export class ResetAppActionSuccess implements Action {
+	type = MenuActionTypes.RESET_APP_ACTION_SUCCESS;
 
 	constructor() {
 	}
 }
 
-export class InitializeMenuItemsAction implements Action {
-	type = MenuActionTypes.INITIALIZE_MENU_ITEMS;
+export class ResetAppAction implements Action {
+	type = MenuActionTypes.RESET_APP;
 
-	constructor(public payload: IMenuItem[]) {
-	}
-}
-
-export class AddMenuItemAction implements Action {
-	type = MenuActionTypes.ADD_MENU_ITEM;
-
-	constructor(public payload: IMenuItem) {
+	constructor() {
 	}
 }
 
@@ -75,13 +66,6 @@ export class ContainerChangedTriggerAction implements Action {
 	}
 }
 
-export class SetHideResultsTableBadgeAction implements Action {
-	type = MenuActionTypes.SET_HIDE_RESULTS_TABLE_BADGE;
-
-	constructor(public payload?: any) {
-	}
-}
-
 export class SetAutoClose implements Action {
 	type = MenuActionTypes.SET_AUTO_CLOSE;
 
@@ -91,17 +75,6 @@ export class SetAutoClose implements Action {
 
 export class ToggleMenuCollapse implements Action {
 	type = MenuActionTypes.MENU_COLLAPSE;
-
-	constructor(public payload: boolean) {
-	}
-}
-
-export class SetUserEnter implements Action {
-	type = MenuActionTypes.SET_USER_ENTER;
-}
-
-export class SetDoesUserHaveCredentials implements Action {
-	type = MenuActionTypes.SET_DOES_USER_HAVE_CREDENTIALS;
 
 	constructor(public payload: boolean) {
 	}

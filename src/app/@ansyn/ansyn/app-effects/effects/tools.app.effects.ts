@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action, select, Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import {
@@ -13,17 +13,12 @@ import {
 	PinLocationModeTriggerAction,
 	selectActiveMapId,
 	selectMapsIds,
-	selectMapsList,
-	UpdateMapAction
+	selectMapsList
 } from '@ansyn/map-facade';
 import { Point } from 'geojson';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
-import { differenceWith, isEqual } from 'lodash';
-import { filter, map, mergeMap, pluck, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import {
-	OverlayStatusActionsTypes,
-	DisableImageProcessing
-} from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
+import { differenceWith } from 'lodash';
+import { filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { IAppState } from '../app.effects.module';
 import { selectGeoFilterType } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
@@ -33,23 +28,23 @@ import {
 	GoToAction,
 	RemoveMeasureDataAction,
 	SetActiveCenter,
-	SetActiveOverlaysFootprintModeAction,
 	SetAnnotationMode,
 	SetPinLocationModeAction,
 	SetSubMenu,
-	ShowOverlaysFootprintAction,
 	StartMouseShadow,
 	StopMouseShadow,
 	ToolsActionsTypes, UpdateMeasureDataOptionsAction,
 	UpdateToolsFlags
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
-import { selectToolFlag, toolsFlags, selectAnnotationMode } from '../../modules/menu-items/tools/reducers/tools.reducer';
-import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
+import { selectToolFlag, toolsFlags } from '../../modules/menu-items/tools/reducers/tools.reducer';
+import { CaseGeoFilter } from '../../modules/menu-items/cases/models/case.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
+import { OverlayStatusActionsTypes } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 
 @Injectable()
 export class ToolsAppEffects {
+
 
 	isShadowMouseActiveByDefault = this.config.ShadowMouse && this.config.ShadowMouse.activeByDefault;
 
@@ -59,7 +54,6 @@ export class ToolsAppEffects {
 			ToolsActionsTypes.START_MOUSE_SHADOW,
 			ToolsActionsTypes.STOP_MOUSE_SHADOW,
 			ToolsActionsTypes.GO_TO,
-			ToolsActionsTypes.SET_ACTIVE_OVERLAYS_FOOTPRINT_MODE,
 			ToolsActionsTypes.UPDATE_TOOLS_FLAGS,
 			ToolsActionsTypes.MEASURES.SET_MEASURE_TOOL_STATE,
 			ToolsActionsTypes.STORE.SET_ANNOTATION_MODE,
@@ -142,22 +136,6 @@ export class ToolsAppEffects {
 				shadowMouseActiveForManyScreens || forceShadowMouse ? new StartMouseShadow() : undefined
 			].filter(Boolean);
 		}));
-
-	@Effect()
-	updateCaseFromTools$: Observable<any> = this.actions$
-		.pipe(
-			ofType<ShowOverlaysFootprintAction>(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT),
-			withLatestFrom(this.store$.select(mapStateSelector)),
-			map(([action, mapState]: [ShowOverlaysFootprintAction, IMapState]) => {
-				const activeMap = MapFacadeService.activeMap(mapState);
-				activeMap.data.overlayDisplayMode = action.payload;
-				return new UpdateMapAction({
-					id: activeMap.id, changes: {
-						data: { ...activeMap.data, overlayDisplayMode: action.payload }
-					}
-				});
-			})
-		);
 
 	@Effect()
 	clearActiveInteractions$ = this.actions$.pipe(

@@ -8,7 +8,7 @@ import { ToolsComponent } from './tools.component';
 import { SubMenuEnum, toolsFeatureKey, toolsFlags, ToolsReducer } from '../reducers/tools.reducer';
 import { MockComponent } from '../../../core/test/mock-component';
 import { TranslateModule } from '@ngx-translate/core';
-import { MatDialogRef, MatDialog } from '@angular/material';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 
 
 describe('ToolsComponent', () => {
@@ -74,16 +74,6 @@ describe('ToolsComponent', () => {
 		component.flags.set(toolsFlags.shadowMouse, true);
 		button.click();
 		expect(store.dispatch).toHaveBeenCalledWith(new StopMouseShadow({ fromUser: true }));
-	});
-
-	it('toggleExpandVisualizers should get classes via displayModeOn / expandOverlaysDisplayMode values', () => {
-		const displayOverlayButton: HTMLButtonElement = fixture.nativeElement.querySelector('.display-overlay-visualizer button');
-		component.displayModeOn = true;
-		fixture.detectChanges();
-		expect(displayOverlayButton.classList.contains('mode-on')).toBeTruthy();
-		component.displayModeOn = false;
-		fixture.detectChanges();
-		expect(displayOverlayButton.classList.contains('mode-on')).toBeFalsy();
 	});
 
 	it('isExpand should compare between expandedSubMenu to input', () => {

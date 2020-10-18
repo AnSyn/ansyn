@@ -2,12 +2,12 @@ import { FilterMetadata } from './filter-metadata.interface';
 import { FilterType } from '../filter-type';
 import { ICaseBooleanFilterMetadata, ICaseFilter } from '../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../overlays/models/overlay.model';
+import { Injectable } from "@angular/core";
 
 export interface IBooleanProperty {
 	name: 'true' | 'false';
 	displayName: string;
 	value: boolean;
-	filteredCount: number;
 	count: number;
 	disabled?: boolean;
 }
@@ -17,6 +17,7 @@ export interface IBooleanProperties {
 	false: IBooleanProperty;
 }
 
+@Injectable()
 export class BooleanFilterMetadata extends FilterMetadata {
 	type: FilterType = FilterType.Boolean;
 	properties: IBooleanProperties = {
@@ -24,7 +25,6 @@ export class BooleanFilterMetadata extends FilterMetadata {
 			name: 'true',
 			displayName: 'true',
 			value: true,
-			filteredCount: 0,
 			count: 0,
 			disabled: false
 		},
@@ -32,7 +32,6 @@ export class BooleanFilterMetadata extends FilterMetadata {
 			name: 'false',
 			displayName: 'false',
 			value: true,
-			filteredCount: 0,
 			count: 0,
 			disabled: false
 		}
@@ -40,11 +39,6 @@ export class BooleanFilterMetadata extends FilterMetadata {
 
 	updateMetadata({ key, value }): void {
 		this.properties[key].value = value;
-	}
-
-	resetFilteredCount(): void {
-		this.properties.true.filteredCount = 0;
-		this.properties.false.filteredCount = 0;
 	}
 
 	hasResults(): boolean {
@@ -62,14 +56,6 @@ export class BooleanFilterMetadata extends FilterMetadata {
 			this.properties.true.count += 1;
 		} else {
 			this.properties.false.count += 1;
-		}
-	}
-
-	incrementFilteredCount(value: boolean): void {
-		if (value) {
-			this.properties.true.filteredCount += 1;
-		} else {
-			this.properties.false.filteredCount += 1;
 		}
 	}
 

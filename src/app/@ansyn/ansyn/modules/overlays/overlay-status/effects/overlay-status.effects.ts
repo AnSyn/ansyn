@@ -1,10 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
 import {
-	CommunicatorEntity,
 	geojsonMultiPolygonToPolygons,
 	geojsonPolygonToMultiPolygon,
 	ImageryCommunicatorService,
-	ImageryMapPosition,
+	IImageryMapPosition,
 	IMapSettings,
 	unifyPolygons,
 	getPolygonIntersectionRatioWithMultiPolygon
@@ -13,14 +12,13 @@ import {
 	MapActionTypes,
 	MapFacadeService,
 	mapStateSelector,
-	selectMaps, selectMapsList,
+	selectMapsList,
 	SetToastMessageAction,
 	UpdateMapAction,
 	SetLayoutSuccessAction, selectActiveMapId, IMapState
 } from '@ansyn/map-facade';
 import { AnnotationMode, DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Dictionary } from '@ngrx/entity';
 import { Action, select, Store } from '@ngrx/store';
 import { EMPTY, Observable } from 'rxjs';
 import { fromPromise } from 'rxjs/internal-compatibility';
@@ -36,12 +34,11 @@ import {
 	DisableImageProcessing
 } from '../actions/overlay-status.actions';
 import {
-	SetActiveOverlaysFootprintModeAction,
 	SetAnnotationMode,
 } from '../../../menu-items/tools/actions/tools.actions';
 import {
 	ICaseMapState,
-	ImageManualProcessArgs,
+	IImageManualProcessArgs,
 	IOverlaysScannedAreaData
 } from '../../../menu-items/cases/models/case.model';
 import {
@@ -93,14 +90,8 @@ export class OverlayStatusEffects {
 	onActiveMapChangesSetOverlaysFootprintMode$: Observable<any> = this.store$.select(selectActiveMapId).pipe(
 		filter(Boolean),
 		withLatestFrom(this.store$.select(mapStateSelector), (activeMapId, mapState: IMapState) => MapFacadeService.activeMap(mapState)),
-		filter((activeMap: ICaseMapState) => Boolean(activeMap)),
-		mergeMap<any, any>((activeMap: ICaseMapState) => {
-			const actions: Action[] = [new SetActiveOverlaysFootprintModeAction(activeMap.data.overlayDisplayMode)];
-			if (!Boolean(activeMap.data.overlay)) {
-				actions.push(new DisableImageProcessing());
-			}
-			return actions;
-		})
+		filter((activeMap: ICaseMapState) => activeMap && activeMap.data && !activeMap.data.overlay),
+		map((activeMap: ICaseMapState) => new DisableImageProcessing())
 	);
 
 	@Effect()
@@ -158,8 +149,8 @@ export class OverlayStatusEffects {
 			const mapSettings: IMapSettings = MapFacadeService.activeMap(mapState);
 			return [mapSettings.data.position, mapSettings.data.overlay, overlaysScannedAreaData];
 		}),
-		filter(([position, overlay, overlaysScannedAreaData]: [ImageryMapPosition, IOverlay, IOverlaysScannedAreaData]) => Boolean(position) && Boolean(overlay)),
-		map(([position, overlay, overlaysScannedAreaData]: [ImageryMapPosition, IOverlay, IOverlaysScannedAreaData]) => {
+		filter(([position, overlay, overlaysScannedAreaData]: [IImageryMapPosition, IOverlay, IOverlaysScannedAreaData]) => Boolean(position) && Boolean(overlay)),
+		map(([position, overlay, overlaysScannedAreaData]: [IImageryMapPosition, IOverlay, IOverlaysScannedAreaData]) => {
 			let scannedArea = overlaysScannedAreaData && overlaysScannedAreaData[overlay.id];
 			if (!scannedArea) {
 				scannedArea = geojsonPolygonToMultiPolygon(position.extentPolygon);
@@ -172,11 +163,11 @@ export class OverlayStatusEffects {
 					});
 					let combinedResult = unifyPolygons(featurePolygons);
 					let scannedAreaContainsExtentPolygon = false;
-					
+
 					scannedArea.coordinates.forEach(coordinates => {
 						let multiPolygon = JSON.parse(JSON.stringify(scannedArea));
 						multiPolygon.coordinates = [coordinates];
-						
+
 						if (getPolygonIntersectionRatioWithMultiPolygon(position.extentPolygon, multiPolygon)) {
 							scannedAreaContainsExtentPolygon = true;
 						}
@@ -185,7 +176,7 @@ export class OverlayStatusEffects {
 					if (scannedAreaContainsExtentPolygon) {
 						combinedResult = difference(combinedResult, position.extentPolygon);
 					}
-					
+
 					if (combinedResult === null) {
 						scannedArea = null;
 					}
@@ -223,10 +214,10 @@ export class OverlayStatusEffects {
 
 	@Effect()
 	updateImageProcessing$: Observable<any> = this.activeMap$.pipe(
-		withLatestFrom(this.store$.select(overlayStatusStateSelector).pipe(pluck<IOverlayStatusState, ImageManualProcessArgs>('manualImageProcessingParams'))),
-		mergeMap<any, any>(([map, manualImageProcessingParams]: [ICaseMapState, ImageManualProcessArgs]) => {
+		withLatestFrom(this.store$.select(overlayStatusStateSelector).pipe(pluck<IOverlayStatusState, IImageManualProcessArgs>('manualImageProcessingParams'))),
+		mergeMap<any, any>(([map, manualImageProcessingParams]: [ICaseMapState, IImageManualProcessArgs]) => {
 			const { overlay, isAutoImageProcessingActive, imageManualProcessArgs } = map.data;
-			const actions = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess(overlay ? isAutoImageProcessingActive : false)];
+			const actions: Action[] = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess(overlay ? isAutoImageProcessingActive : false)];
 			if (!isEqual(imageManualProcessArgs, manualImageProcessingParams)) {
 				actions.push(new SetManualImageProcessing(map.data && imageManualProcessArgs || this.defaultImageManualProcessArgs));
 			}
@@ -244,8 +235,8 @@ export class OverlayStatusEffects {
 		return this.config.ImageProcParams;
 	}
 
-	get defaultImageManualProcessArgs(): ImageManualProcessArgs {
-		return this.params.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam) => {
+	get defaultImageManualProcessArgs(): IImageManualProcessArgs {
+		return this.params.reduce<IImageManualProcessArgs>((initialObject: any, imageProcParam) => {
 			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
 		}, {});
 	}

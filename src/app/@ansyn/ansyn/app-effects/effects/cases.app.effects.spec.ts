@@ -19,7 +19,7 @@ import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { Observable, of, throwError } from 'rxjs';
-import { ImageryCommunicatorService, MAP_PROVIDERS_CONFIG } from '@ansyn/imagery';
+import { GetProvidersMapsService, ImageryCommunicatorService } from '@ansyn/imagery';
 import { CoreConfig } from '../../modules/core/models/core.config';
 import { ErrorHandlerService } from '../../modules/core/services/error-handler.service';
 import { StorageService } from '../../modules/core/services/storage/storage.service';
@@ -159,8 +159,7 @@ describe('CasesAppEffects', () => {
 
 						getOverlaysById: (ids: IOverlayByIdMetaData[]) => {
 							if (ids.every(({ id }) => ['uuu', 'eee'].includes(id))) {
-								const overlay = <IOverlay>{};
-								return of([overlay]);
+								return of(ids);
 							}
 
 							return throwError(new HttpErrorResponse({ status: 404 }));
@@ -183,9 +182,9 @@ describe('CasesAppEffects', () => {
 					provide: toolsConfig, useValue: {}
 				},
 				{
-					provide: MAP_PROVIDERS_CONFIG,
+					provide: GetProvidersMapsService,
 					useValue: {
-
+						getDefaultProviderByType: () => of()
 					}
 				}
 			]
@@ -251,6 +250,8 @@ describe('CasesAppEffects', () => {
 						sourceType: 'PLANET'
 					}
 				],
+				presetOverlays: [],
+				miscOverlays: {},
 				time: {
 					type: 'absolute',
 					from: new Date(),

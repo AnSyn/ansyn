@@ -44,7 +44,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 			}));
 
 	@AutoSubscription
-	createShadowMouseProducer$ = combineLatest(this.isActive$, this.shadowMouseFlag$, this.onEnterMap$)
+	createShadowMouseProducer$ = combineLatest([this.isActive$, this.shadowMouseFlag$, this.onEnterMap$])
 		.pipe(tap(([isActive, shadowMouseFlag]) => {
 			this.clearEntities();
 			if ((isActive && shadowMouseFlag)) {
@@ -55,7 +55,7 @@ export class MouseShadowVisualizer extends EntitiesVisualizer {
 		}));
 
 	@AutoSubscription
-	drawPoint$ = combineLatest(this.mouseShadowProducer$, this.isActive$).pipe(
+	drawPoint$ = combineLatest([this.mouseShadowProducer$, this.isActive$]).pipe(
 		filter(([{ payload }, isActive]: [ShadowMouseProducer, boolean]) => payload.outsideSource || !isActive),
 		mergeMap(([{ payload }, isActive]: [ShadowMouseProducer, boolean]) => this.setEntities([{
 			id: 'shadowMouse',

@@ -12,7 +12,7 @@ import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/ca
 import { selectDropsWithoutSpecialObjects } from '../../modules/overlays/reducers/overlays.reducer';
 import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
-import { ShowOverlaysFootprintAction, StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
+import { StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
 import { getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
 
 @Injectable()
@@ -45,7 +45,7 @@ export class MenuAppEffects {
 	@Effect()
 	onResetApp$ = this.actions$
 		.pipe(
-			ofType(MenuActionTypes.RESET_APP),
+			ofType(MenuActionTypes.RESET_APP_ACTION_SUCCESS),
 			mergeMap(() => {
 				if (this.componentMode) {
 					window.open(this.menuConfig.baseUrl, '_blank');
@@ -54,7 +54,6 @@ export class MenuAppEffects {
 
 				return [
 					new LoadDefaultCaseAction(),
-					new ShowOverlaysFootprintAction('None'),
 					new StartMouseShadow({fromUser: true}),
 					new AnnotationSetProperties(getInitialAnnotationsFeatureStyle()),
 					new ToggleIsPinnedAction(false),
@@ -63,6 +62,12 @@ export class MenuAppEffects {
 				];
 			})
 		);
+
+
+	constructor(protected actions$: Actions, protected store$: Store<IAppState>,
+		@Inject(COMPONENT_MODE) public componentMode: boolean,
+		@Inject(MenuConfig) public menuConfig: IMenuConfig) {
+	}
 
 	resetApp() {
 		if (!this.componentMode) {
@@ -73,8 +78,4 @@ export class MenuAppEffects {
 		return EMPTY;
 	}
 
-	constructor(protected actions$: Actions, protected store$: Store<IAppState>,
-				@Inject(COMPONENT_MODE) public componentMode: boolean,
-				@Inject(MenuConfig) public menuConfig: IMenuConfig) {
-	}
 }

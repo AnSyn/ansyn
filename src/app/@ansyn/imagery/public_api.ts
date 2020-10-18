@@ -1,3 +1,5 @@
+export { GetProvidersMapsService } from './services/get-providers-maps/get-providers-maps.service';
+
 export { IExportMapMetadata, IExportMapData } from './model/export-map.model';
 
 export {
@@ -12,8 +14,8 @@ export { IMapSource } from './model/map-providers-config';
 export { IStroke, IIcon } from './model/visualizers/visualizer-style';
 export { ICanvasExportData } from './model/base-imagery-map';
 export {
-	ImageryMapExtent, ImageryMapExtentPolygon, ImageryMapProjectedState, ImageryMapPosition, IMousePointerMove
-} from './model/case-map-position.model';
+	ImageryMapExtent, ImageryMapExtentPolygon, IImageryMapProjectedState, IImageryMapPosition, IMousePointerMove
+}from './model/case-map-position.model';
 
 export { MAP_SOURCE_PROVIDERS_CONFIG, IMapSourceProvidersConfig } from './model/base-map-source-provider';
 export { MarkerSizeDic } from './model/visualizers/visualizer-style';
@@ -29,7 +31,7 @@ export {
 	IMapProvidersConfig,
 	MAP_PROVIDERS_CONFIG
 } from './model/map-providers-config';
-export { ImageryMapSources } from './providers/map-source-providers';
+export { IImageryMapSources } from './providers/map-source-providers';
 export { IMapInstanceChanged } from './communicator-service/communicator.entity';
 export { IBaseMapSourceProviderConstructor } from './model/base-map-source-provider';
 export { VisualizerInteractions } from './model/base-imagery-visualizer';
@@ -91,4 +93,5 @@ export {
 export { IMAGERY_SLOW_ZOOM_FACTOR } from './model/imagery-zoom.model';
 export { toDegrees, toRadians, getAngleDegreeBetweenPoints } from './utils/math';
 export { ExtentCalculator } from './utils/extent-calculator';
+export { ImageryComponent } from './imagery/imagery.component';
 export { getOpacityFromColor } from './utils/color-opacity-extractor';

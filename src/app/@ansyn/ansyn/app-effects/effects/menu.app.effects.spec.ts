@@ -1,10 +1,4 @@
-import {
-	AddMenuItemAction,
-	ContainerChangedTriggerAction, MenuConfig,
-	menuFeatureKey,
-	MenuReducer,
-	SelectMenuItemAction
-} from '@ansyn/menu';
+import { ContainerChangedTriggerAction, MenuConfig, menuFeatureKey, MenuReducer } from '@ansyn/menu';
 import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
@@ -14,10 +8,10 @@ import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { RedrawTimelineAction } from '../../modules/overlays/actions/overlays.actions';
-import { ResetAppAction, ToggleIsPinnedAction, UnSelectMenuItemAction } from '../../../menu/actions/menu.actions';
+import { ResetAppActionSuccess, ToggleIsPinnedAction, UnSelectMenuItemAction } from '../../../menu/actions/menu.actions';
 import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
-import { ShowOverlaysFootprintAction, StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
+import { StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
 import { getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
 
 describe('MenuAppEffects', () => {
@@ -47,20 +41,6 @@ describe('MenuAppEffects', () => {
 
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
-		store.dispatch(new AddMenuItemAction({
-			name: 'Cases',
-			component: null,
-			iconClass: null
-
-		}));
-		store.dispatch(new AddMenuItemAction({
-			name: 'Shmases',
-			component: null,
-			iconClass: null
-
-		}));
-		store.dispatch(new SelectMenuItemAction({ menuKey: 'Cases' }));
-
 	}));
 
 	it('onContainerChanged$ effect should dispatch UpdateMapSizeAction and RedrawTimelineAction', () => {
@@ -71,11 +51,10 @@ describe('MenuAppEffects', () => {
 
 	it(`onResetApp$ should call LoadDefaultCaseAction`, () => {
 		actions = hot('--a--', {
-			a: new ResetAppAction()
+			a: new ResetAppActionSuccess()
 		});
-		const expectedResults = cold('--(bcdefgh)--', {
+		const expectedResults = cold('--(bdefgh)--', {
 			b: new LoadDefaultCaseAction(),
-			c: new ShowOverlaysFootprintAction('None'),
 			d: new StartMouseShadow({fromUser: true}),
 			e: new AnnotationSetProperties(getInitialAnnotationsFeatureStyle()),
 			f: new ToggleIsPinnedAction(false),

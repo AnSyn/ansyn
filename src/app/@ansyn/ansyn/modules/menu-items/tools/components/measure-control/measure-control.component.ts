@@ -14,8 +14,9 @@ import {
 	SetMeasureDistanceToolState,
 	UpdateMeasureDataOptionsAction
 } from '../../actions/tools.actions';
-import { IMeasureData, selectIsMeasureToolActive, selectMeasureDataByMapId } from '../../reducers/tools.reducer';
+import { selectIsMeasureToolActive, selectMeasureDataByMapId } from '../../reducers/tools.reducer';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
+import { IMeasureData } from '../../models/measure-data';
 
 @Component({
 	selector: 'ansyn-measure-control',
@@ -29,12 +30,16 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 	currentOverlay: IOverlay = undefined;
 	measureData: IMeasureData;
 
+	constructor(protected store$: Store<any>) {
+	}
+
 	@AutoSubscription
-	show$ = () => combineLatest(
+	show$ = () => combineLatest([
 		this.store$.select(selectIsMeasureToolActive),
 		this.store$.select(selectActiveMapId),
 		this.store$.select(selectIsMinimalistViewMode),
-		this.store$.select(selectOverlayByMapId(this.mapId))).pipe(
+		this.store$.select(selectOverlayByMapId(this.mapId))
+		]).pipe(
 		tap(([isActive, activeMapId, isHidden, overlay]) => {
 			const differentOverlay = this.isDifferentOverlay(this.currentOverlay, overlay);
 			this.currentOverlay = overlay;
@@ -65,9 +70,6 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 			return false;
 		}
 		return true;
-	}
-
-	constructor(protected store$: Store<any>) {
 	}
 
 	ngOnInit() {

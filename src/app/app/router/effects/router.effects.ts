@@ -16,14 +16,14 @@ import {
 	LoadCaseAction,
 	LoadDefaultCaseAction,
 	SaveCaseAsSuccessAction,
-	SelectCaseAction, SelectDilutedCaseAction
+	SelectCaseAction, 
+	SelectDilutedCaseAction
 } from '@ansyn/ansyn';
 import { IRouterState, routerStateSelector } from '../reducers/router.reducer';
 import { Store } from '@ngrx/store';
 import { filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import { cloneDeep } from 'lodash';
-import { MenuActionTypes } from '@ansyn/menu';
-import { ResetAppActionSuccess } from '../../../@ansyn/menu/actions/menu.actions';
+import { MenuActionTypes, ResetAppAction, ResetAppActionSuccess } from '@ansyn/menu';
 
 @Injectable()
 export class RouterEffects {
@@ -33,7 +33,7 @@ export class RouterEffects {
 		ofType<NavigateCaseTriggerAction>(RouterActionTypes.NAVIGATE_CASE),
 		tap(({ payload }) => {
 			if (payload) {
-				this.router.navigate([payload.schema , payload.id]);
+				this.router.navigate([payload.schema, payload.id]);
 			}
 			else {
 				this.router.navigate(['']);
@@ -47,22 +47,16 @@ export class RouterEffects {
 		filter((action) => !(action.payload.caseId)),
 		withLatestFrom(this.store$.select(casesStateSelector)),
 		filter(([action, cases]: [SetStateAction, ICasesState]) => (!cases.selectedCase || cases.selectedCase.id !== this.casesService.defaultCase.id)),
-		map(([action, cases]) => {
-			if (!action.payload.caseId && !action.payload.linkId) {
-				return new ResetAppActionSuccess();
-			}
-			return new LoadDefaultCaseAction()
-		} 
+		map(([action, cases]) => new LoadDefaultCaseAction()
 	));
 
 	@Effect()
-	onUpdateLocationCase$: Observable<LoadCaseAction> = this.actions$.pipe(
+	onUpdateLocationResetApp$: Observable<ResetAppActionSuccess | Observable<SelectDilutedCaseAction>> = this.actions$.pipe(
 		ofType<SetStateAction>(RouterActionTypes.SET_STATE),
-		map(({ payload }): Partial<ISetStatePayload> => payload),
-		filter(({ caseId }) => Boolean(caseId)),
+		filter((action) => !(action.payload.caseId)),
 		withLatestFrom(this.store$.select(casesStateSelector)),
-		filter(([{ caseId }, cases]) => !cases.selectedCase || caseId !== cases.selectedCase.id),
-		map(([{ caseId }]) => new LoadCaseAction(caseId))
+		filter(([{payload}, cases]: [SetStateAction, ICasesState]) => !payload.caseId && !payload.linkId),
+		map(([action, cases]) => new ResetAppActionSuccess())
 	);
 
 	@Effect()
@@ -71,13 +65,13 @@ export class RouterEffects {
 		withLatestFrom(this.store$.select(routerStateSelector)),
 		filter(([action, router]: [(SelectCaseAction | SaveCaseAsSuccessAction), IRouterState]) => Boolean(router)),
 		filter(([action, router]: [(SelectCaseAction | SaveCaseAsSuccessAction), IRouterState]) => action.payload.id !== this.casesService.defaultCase.id && action.payload.id !== router.caseId),
-		map(([action, router]: [SelectCaseAction | SaveCaseAsSuccessAction, IRouterState]) => new NavigateCaseTriggerAction({schema: (action.payload.schema) ? action.payload.schema : 'case', id: action.payload.id})
+		map(([action, router]: [SelectCaseAction | SaveCaseAsSuccessAction, IRouterState]) => new NavigateCaseTriggerAction({ schema: (action.payload.schema) ? action.payload.schema : 'case', id: action.payload.id })
 		));
 
 	@Effect()
 	loadDefaultCase$: Observable<any> = this.actions$.pipe(
 		ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
-		filter( (action) => !(action as LoadDefaultCaseAction).payload.context),
+		filter((action) => !(action as LoadDefaultCaseAction).payload.context),
 		withLatestFrom(this.store$.select(routerStateSelector)),
 		mergeMap(([action, router]: [(SelectDilutedCaseAction), IRouterState]) => {
 			if (router.linkId) {
@@ -96,9 +90,9 @@ export class RouterEffects {
 	);
 
 	@Effect()
-	setStateActionFromOtherLibs$: Observable<SetStateAction> = this.actions$.pipe(
-		ofType<SetStateAction>(MenuActionTypes.RESET_APP),
-		map(() => new SetStateAction({linkId: undefined, caseId: undefined})),
+	onResetApp$: Observable<SetStateAction> = this.actions$.pipe(
+		ofType<ResetAppAction>(MenuActionTypes.RESET_APP),
+		map(() => new SetStateAction({ linkId: undefined, caseId: undefined }))
 	);
 
 	constructor(protected actions$: Actions, protected store$: Store<any>, protected router: Router,

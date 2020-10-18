@@ -130,7 +130,7 @@ export class GoToComponent implements OnInit {
 	}
 
 	copyToClipBoard(value: string, projection: string = '', datum: string = '') {
-		copyFromContent(`${datum}${projection} ${value}`).then(() => this.store$.dispatch(new SetToastMessageAction({ toastText: 'Copy to clipboard' })));
+		copyFromContent(`${value}`).then(() => this.store$.dispatch(new SetToastMessageAction({ toastText: 'Copy to clipboard' })));
 	}
 
 	convert(coords, convertFrom: any) {

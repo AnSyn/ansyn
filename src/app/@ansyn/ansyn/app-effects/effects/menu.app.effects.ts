@@ -69,9 +69,8 @@ export class MenuAppEffects {
 			.pipe(
 				ofType(MenuActionTypes.RESET_APP_SUCCESS),
 				withLatestFrom(this.store$.select(selectMapsList)),
-				filter(([action, mapsList]: [ResetAppActionSuccess, IMapSettings[]]) => Boolean(mapsList.length)),
-				// mapsList[0].id gives the id of the map after the reset is done.
-				map(([action, mapsList]: [ResetAppActionSuccess, IMapSettings[]]) => new SetOverlaysFootprintActive({mapId: mapsList[0].id, show: false}))
+				filter(([action, [{id}]]: [ResetAppActionSuccess, IMapSettings[]]) => Boolean(id)),
+				map(([action, [{id}]]: [ResetAppActionSuccess, IMapSettings[]]) => new SetOverlaysFootprintActive({mapId: id, show: false}))
 			);
 
 	constructor(protected actions$: Actions, protected store$: Store<IAppState>,

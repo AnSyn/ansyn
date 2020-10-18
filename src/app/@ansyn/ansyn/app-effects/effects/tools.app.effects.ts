@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
+import { Action, Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import {
@@ -37,7 +37,11 @@ import {
 	UpdateToolsFlags
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
-import { selectToolFlag, toolsFlags } from '../../modules/menu-items/tools/reducers/tools.reducer';
+import {
+	selectAnnotationMode,
+	selectToolFlag,
+	toolsFlags
+} from '../../modules/menu-items/tools/reducers/tools.reducer';
 import { CaseGeoFilter } from '../../modules/menu-items/cases/models/case.model';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { OverlayStatusActionsTypes } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
@@ -73,12 +77,6 @@ export class ToolsAppEffects {
 				return new RemoveMeasureDataAction({ mapId: action.payload.id });
 			}
 		})
-	);
-
-	@Effect()
-	onShowOverlayFootprint$: Observable<any> = this.actions$.pipe(
-		ofType<ShowOverlaysFootprintAction>(ToolsActionsTypes.SHOW_OVERLAYS_FOOTPRINT),
-		map((action) => new SetActiveOverlaysFootprintModeAction(action.payload))
 	);
 
 	@Effect()

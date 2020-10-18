@@ -69,7 +69,7 @@ export class MenuAppEffects {
 			.pipe(
 				ofType(MenuActionTypes.RESET_APP_SUCCESS),
 				withLatestFrom(this.store$.select(selectMapsList)),
-				filter(([action, [{id}]]: [ResetAppActionSuccess, IMapSettings[]]) => Boolean(id)),
+				filter(([action, mapsList]: [ResetAppActionSuccess, IMapSettings[]]) => Boolean(mapsList.length)),
 				map(([action, [{id}]]: [ResetAppActionSuccess, IMapSettings[]]) => new SetOverlaysFootprintActive({mapId: id, show: false}))
 			);
 

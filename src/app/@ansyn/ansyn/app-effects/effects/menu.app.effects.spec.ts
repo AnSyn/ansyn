@@ -3,7 +3,7 @@ import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/re
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
-import { UpdateMapSizeAction, ToggleFooter } from '@ansyn/map-facade';
+import { UpdateMapSizeAction, ToggleFooter, SetOverlaysFootprintActive } from '@ansyn/map-facade';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
@@ -61,7 +61,7 @@ describe('MenuAppEffects', () => {
 			g: new UnSelectMenuItemAction(),
 			h: new ToggleFooter(false)
 		});
-		expect(menuAppEffects.onResetApp$).toBeObservable(expectedResults);
+		expect(menuAppEffects.onResetAppSuccess$).toBeObservable(expectedResults);
 	});
 
 });

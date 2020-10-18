@@ -1,5 +1,4 @@
 import { Action } from '@ngrx/store';
-import { IMenuItem } from '../models/menu-item.model';
 
 export const MenuActionTypes = {
 	SELECT_MENU_ITEM: 'SELECT_MENU_ITEM',
@@ -14,11 +13,11 @@ export const MenuActionTypes = {
 	RESET_APP: 'RESET_APP',
 	SET_USER_ENTER: 'SET_USER_ENTER',
 	SET_DOES_USER_HAVE_CREDENTIALS: 'SET_DOES_USER_HAVE_CREDENTIALS',
-	RESET_APP_ACTION_SUCCESS: 'RESET_APP_ACTION_SUCCESS'
+	RESET_APP_SUCCESS: 'RESET_APP_SUCCESS'
 };
 
 export class ResetAppActionSuccess implements Action {
-	type = MenuActionTypes.RESET_APP_ACTION_SUCCESS;
+	type = MenuActionTypes.RESET_APP_SUCCESS;
 
 	constructor() {
 	}

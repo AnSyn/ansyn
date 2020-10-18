@@ -80,7 +80,7 @@ export class CasesEffects {
 	onDeleteCase$: Observable<any> = this.actions$.pipe(
 		ofType<DeleteCaseAction>(CasesActionTypes.DELETE_CASE),
 		mergeMap((action) => this.dataLayersService.removeCaseLayers(action.payload).pipe(map(() => action))),
-		withLatestFrom(this.store.select(selectSelectedCase), ({payload: deletedCaseId}, selectedCase: ICase) => [deletedCaseId, selectedCase.id]),
+		withLatestFrom(this.store.select(selectSelectedCase), ({ payload: deletedCaseId }, selectedCase: ICase) => [deletedCaseId, selectedCase.id]),
 		filter(([deletedCaseId, selectedCaseId]) => deletedCaseId === selectedCaseId),
 		map(() => new LoadDefaultCaseAction()),
 		rxPreventCrash()
@@ -130,12 +130,18 @@ export class CasesEffects {
 							const oldId = layer.id;
 
 							addedCase =
-								{ ...addedCase, state:
-										{ ...addedCase.state, layers:
-												{ ...addedCase.state.layers,
+								{
+									...addedCase, state:
+										{
+											...addedCase.state, layers:
+												{
+													...addedCase.state.layers,
 													activeLayersIds: addedCase.state.layers.activeLayersIds.map((id) => {
-								return id === oldId ? newId : id;
-							})}}};
+														return id === oldId ? newId : id;
+													})
+												}
+										}
+								};
 							// addedCase.state.layers.activeLayersIds = addedCase.state.layers.activeLayersIds.map((id) => {
 							// 	return id === oldId ? newId : id;
 							// });

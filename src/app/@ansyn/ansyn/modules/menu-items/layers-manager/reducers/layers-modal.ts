@@ -13,5 +13,5 @@ export interface ILayerModal {
 }
 
 export function getDefaultLayerIdFromLayerArray (layers: ILayer[]) {
-	return Boolean(layers.length)? layers.find(layer => layer.name === 'Default').id : undefined;
+	return Boolean(layers.length)? [layers.find(layer => layer.name === 'Default').id] : [];
 }

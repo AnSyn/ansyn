@@ -12,6 +12,7 @@ export interface ILayerModal {
 	type: SelectedModalEnum;
 }
 
+
 export function getDefaultLayerIdFromLayerArray (layers: ILayer[]) {
-	return layers.find(layer => layer.name === 'Default').id;
+	return Boolean(layers.length)? layers.find(layer => layer.name === 'Default').id : undefined;
 }

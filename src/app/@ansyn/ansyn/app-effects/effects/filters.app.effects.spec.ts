@@ -89,6 +89,14 @@ describe('Filters app effects', () => {
 		store = _store;
 	}));
 
+	it('updateOverlayDrops$ effect', () => {
+		spyOn(OverlaysService, 'parseOverlayDataForDisplay').and.callFake(() => []);
+		const expectedResults = cold('(b)', {
+			b: new SetDropsAction([])
+		});
+		expect(filtersAppEffects.updateOverlayDrops$).toBeObservable(expectedResults);
+	});
+
 	it('initializeFilters$ effect', () => {
 		actions = hot('--a--', { a: new LoadOverlaysAction(<any>{}) });
 		const expectedResults = cold('--b--', { b: new InitializeFiltersAction() });

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
+import { Action, Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import {
@@ -37,16 +37,15 @@ import {
 	UpdateToolsFlags
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
-import { selectToolFlag } from '../../modules/menu-items/tools/reducers/tools.reducer';
+import {
+	selectAnnotationMode,selectToolFlag } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import { CaseGeoFilter } from '../../modules/menu-items/cases/models/case.model';
 import { toolsFlags } from '../../modules/menu-items/tools/models/tools.model';
+import { OverlayStatusActionsTypes } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 
 @Injectable()
 export class ToolsAppEffects {
 
-	isPolygonSearch$ = this.store$.select(selectGeoFilterType).pipe(
-		map((geoFilterSearchMode: CaseGeoFilter) => geoFilterSearchMode === CaseGeoFilter.Polygon)
-	);
 
 	isShadowMouseActiveByDefault = this.config.ShadowMouse && this.config.ShadowMouse.activeByDefault;
 
@@ -60,17 +59,6 @@ export class ToolsAppEffects {
 				return new RemoveMeasureDataAction({ mapId: action.payload.id });
 			}
 		})
-	);
-
-	@Effect()
-	drawInterrupted$: Observable<any> = this.actions$.pipe(
-		ofType<Action>(
-			MenuActionTypes.SELECT_MENU_ITEM,
-			MapActionTypes.SET_LAYOUT,
-			ToolsActionsTypes.SET_SUB_MENU),
-		withLatestFrom(this.isPolygonSearch$),
-		filter(([action, isPolygonSearch]: [SelectMenuItemAction, boolean]) => isPolygonSearch),
-		map(() => new UpdateGeoFilterStatus())
 	);
 
 	@Effect()
@@ -170,9 +158,30 @@ export class ToolsAppEffects {
 		map(() => new SetPinLocationModeAction(false))
 	);
 
+	@Effect()
+	drawInterrupted$ = this.actions$.pipe(
+		ofType(MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP,
+			OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW,
+			),
+		filter((this.isNotFromAnnotationControl.bind(this))),
+		withLatestFrom(this.store$.pipe(select(selectAnnotationMode))),
+		filter(([action, mode]) => Boolean(mode)),
+		map( () => new SetAnnotationMode(null))
+	);
+
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				@Inject(toolsConfig) protected config: IToolsConfig) {
+	}
+
+
+	private isNotFromAnnotationControl(action) {
+		if (action.type === MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP) {
+			// prevent disable from first click
+			const event: MouseEvent = action.payload;
+			return !event.composedPath().some( (target: any) => target.localName === 'ansyn-annotations-control');
+		}
+		return true;
 	}
 }

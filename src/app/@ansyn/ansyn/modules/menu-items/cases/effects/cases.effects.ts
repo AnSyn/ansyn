@@ -130,12 +130,18 @@ export class CasesEffects {
 							const oldId = layer.id;
 
 							addedCase =
-								{ ...addedCase, state:
-										{ ...addedCase.state, layers:
-												{ ...addedCase.state.layers,
+								{
+									...addedCase, state:
+										{
+											...addedCase.state, layers:
+												{
+													...addedCase.state.layers,
 													activeLayersIds: addedCase.state.layers.activeLayersIds.map((id) => {
-								return id === oldId ? newId : id;
-							})}}};
+														return id === oldId ? newId : id;
+													})
+												}
+										}
+								};
 							// addedCase.state.layers.activeLayersIds = addedCase.state.layers.activeLayersIds.map((id) => {
 							// 	return id === oldId ? newId : id;
 							// });

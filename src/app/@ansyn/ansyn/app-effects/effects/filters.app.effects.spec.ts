@@ -23,7 +23,7 @@ import { IFilter } from '../../modules/filters/models/IFilter';
 import { SliderFilterMetadata } from '../../modules/filters/models/metadata/slider-filter-metadata';
 import { GenericTypeResolverService } from '../../modules/core/services/generic-type-resolver.service';
 import {
-	LoadOverlaysAction, LoadOverlaysSuccessAction,
+	LoadOverlaysAction, LoadOverlaysSuccessAction, SetDropsAction,
 	SetFilteredOverlaysAction,
 	SetOverlaysStatusMessageAction
 } from '../../modules/overlays/actions/overlays.actions';
@@ -39,6 +39,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { EnumFilterCounters } from '../../modules/filters/models/counters/enum-filter-counters';
 import { FilterCounters } from '../../modules/filters/models/counters/filter-counters.interface';
 import { SliderFilterCounters } from '../../modules/filters/models/counters/slider-filter-counters';
+import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;

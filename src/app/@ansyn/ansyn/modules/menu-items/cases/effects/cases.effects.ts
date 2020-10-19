@@ -246,6 +246,7 @@ export class CasesEffects {
 		mergeMap(sCase => this.casesService.generateQueryParamsViaCase(sCase)),
 		map((linkId: string) => {
 			const url = this.casesService.generateLinkById(linkId, 'link');
+			console.log(fromPromise(copyFromContent(url)));
 			return fromPromise(copyFromContent(url));
 		}),
 		map(() => new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast })),

@@ -9,8 +9,7 @@ export function copyFromContent(content: string): Promise<any> {
 			textArea.select();
 			const copyResult: boolean = document.execCommand('copy');
 			document.body.removeChild(textArea);
-			resolve();
-			return copyResult;
+			resolve(copyResult);
 		});
 	}
 

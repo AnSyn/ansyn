@@ -6,7 +6,7 @@ import { Observable, of } from 'rxjs';
 import { AddCaseAction, CloseModalAction, LogRenameCase, UpdateCaseAction } from '../../actions/cases.actions';
 import { cloneDeep } from 'lodash';
 import { CasesService } from '../../services/cases.service';
-import { map, take, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { ICase, ICasePreview } from '../../models/case.model';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
 
@@ -40,8 +40,10 @@ export class EditCaseComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	activeCase$: Observable<ICase> = this.casesState$.pipe(
 		map(this.getCloneActiveCase.bind(this)),
-		tap( (activeCase: ICase) => this.caseModel = activeCase)
-
+		tap( (activeCase: ICase) => {
+			this.caseModel = activeCase;
+			this.activeCaseName = activeCase && activeCase.name;
+		})
 	);
 
 	@AutoSubscription
@@ -112,15 +114,6 @@ export class EditCaseComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-
-		this.activeCase$.pipe(take(1)).subscribe((activeCase: ICase) => {
-			this.caseModel = activeCase;
-			this.activeCaseName = activeCase && activeCase.name;
-		});
-
-		this.contextsList$.subscribe((_contextsList: any[]) => {
-			this.contextsList = _contextsList;
-		});
 	}
 
 	ngOnDestroy(): void {

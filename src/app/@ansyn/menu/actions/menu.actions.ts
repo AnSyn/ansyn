@@ -1,5 +1,4 @@
 import { Action } from '@ngrx/store';
-import { IMenuItem } from '../models/menu-item.model';
 import { ILogMessage } from '../models/logger.model';
 
 export const MenuActionTypes = {
@@ -101,28 +100,6 @@ export class ToggleMenuCollapse implements Action, ILogMessage {
 
 	logMessage() {
 		return `${this.payload ? '' : 'Un-'}Hiding menu`
-	}
-}
-
-export class LogOpenPermissionsSite implements Action, ILogMessage {
-	type = MenuActionTypes.LOG_OPEN_PERMISSIONS_SITE;
-
-	constructor(public payload?: any) {
-	}
-
-	logMessage() {
-		return `Opening permissions site`
-	}
-}
-
-export class LogDownloadPermissionsGuide implements Action, ILogMessage {
-	type = MenuActionTypes.LOG_DOWNLOAD_PERMISSIONS_GUIDE;
-
-	constructor(public payload?: any) {
-	}
-
-	logMessage() {
-		return `Downloading permissions guide`
 	}
 }
 

@@ -18,8 +18,6 @@ export {
 	SetBadgeAction,
 	ToggleIsPinnedAction,
 	ResetAppActionSuccess,
-	ResetAppAction,
-	LogDownloadPermissionsGuide,
-	LogOpenPermissionsSite
+	ResetAppAction
 } from './actions/menu.actions';
 export { MenuComponent } from './menu/menu.component';

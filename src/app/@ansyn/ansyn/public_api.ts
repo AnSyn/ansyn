@@ -391,7 +391,7 @@ export { ComboBoxComponent } from './modules/core/forms/combo-box/combo-box.comp
 export { ComboBoxTriggerComponent } from './modules/core/forms/combo-box-trigger/combo-box-trigger.component';
 export { ComboBoxOptionComponent } from './modules/core/forms/combo-box-option/combo-box-option.component';
 export { ContextMenuComponent } from './modules/core/components/context-menu/context-menu.component';
-export { CredentialsComponent } from './modules/core/components/credentials/credentials.component';
+export { CredentialsComponent } from './modules/menu-items/credentials/components/credentials/credentials.component';
 export { OverlaysContainerComponent } from './modules/overlays/components/container/overlays-container.component';
 export { TimelineComponent } from './modules/overlays/components/timeline/timeline.component';
 export { OverlayOverviewComponent } from './modules/overlays/components/overlay-overview/overlay-overview.component';

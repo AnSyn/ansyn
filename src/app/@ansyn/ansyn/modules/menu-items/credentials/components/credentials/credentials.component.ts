@@ -1,13 +1,12 @@
 import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
-import { CredentialsService } from '../../services/credentials/credentials.service';
+import { CredentialsService } from '../../../../core/services/credentials/credentials.service';
 import { Store } from '@ngrx/store';
-import { getMenuSessionData, SetBadgeAction, UnSelectMenuItemAction,
-	LogDownloadPermissionsGuide, LogOpenPermissionsSite } from '@ansyn/menu';
-import { fromEvent, Subscription } from 'rxjs';
+import { getMenuSessionData, SetBadgeAction, UnSelectMenuItemAction } from '@ansyn/menu';
 import { tap, filter } from 'rxjs/operators';
-import { ClickOutsideService } from '../../click-outside/click-outside.service';
+import { ClickOutsideService } from '../../../../core/click-outside/click-outside.service';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
 import { setMenuSessionData } from '@ansyn/menu';
+import { LogDownloadPermissionsGuide, LogOpenPermissionsSite } from '../../actions/credentials.actions';
 
 @Component({
 	selector: 'ansyn-credentials',

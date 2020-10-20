@@ -321,7 +321,7 @@ export class MapAppEffects {
 			let actions = [];
 
 			if (extentWidth > this.screenViewConfig.extentWidthSearchLimit) {
-				actions.push(new SetOverlaysStatusMessageAction('Zoom in to get new overlays'));
+				actions.push(new SetOverlaysStatusMessageAction({message: 'Zoom in to get new overlays'}));
 			} else {
 				actions.push(new SetOverlaysCriteriaAction({ searchMode: CaseGeoFilter.ScreenView, region: extentPolygon }));
 				if (geoFilterStatus.active) {

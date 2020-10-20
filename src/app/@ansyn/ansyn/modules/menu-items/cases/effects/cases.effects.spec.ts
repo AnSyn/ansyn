@@ -1,6 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { Params } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Store, StoreModule } from '@ngrx/store';
@@ -172,7 +171,7 @@ describe('CasesEffects', () => {
 
 	it('onDeleteCase$ should call DeleteCaseBackendAction. when deleted case equal to selected case LoadDefaultCaseAction should have been called too', () => {
 		spyOn(dataLayersService, 'removeCaseLayers').and.callFake(() => of('good'));
-		actions = hot('--a--', { a: new DeleteCaseAction('delete-case-id') });
+		actions = hot('--a--', { a: new DeleteCaseAction({ id: 'delete-case-id', name: 'case to delete' }) });
 		const expectedResults = cold('--(a)--', { a: new LoadDefaultCaseAction() });
 		expect(casesEffects.onDeleteCase$).toBeObservable(expectedResults);
 	});

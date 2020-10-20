@@ -3,4 +3,5 @@ export interface ILoggerConfig {
 	active: boolean;
 	component: string;
 	disconnectionTimeoutInMinutes: number;
+	showTranslationWarnings: boolean;
 }

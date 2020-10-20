@@ -10,7 +10,7 @@ import {
 	MapActionTypes,
 	selectOverlayOfActiveMap
 } from '@ansyn/map-facade';
-import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, map, withLatestFrom } from 'rxjs/operators';
 import {
 	CopySnapshotShareLinkAction,
 	GoAdjacentOverlay,
@@ -25,7 +25,6 @@ import {
 	selectRegion
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
-import { LoggerService } from '../../modules/core/services/logger.service';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
 import { ToolsActionsTypes } from '../../modules/menu-items/tools/actions/tools.actions';
 import { CaseGeoFilter } from '../../modules/menu-items/cases/models/case.model';
@@ -37,17 +36,6 @@ export class StatusBarAppEffects {
 		select(selectGeoFilterType),
 		map((geoFilterSearchMode: CaseGeoFilter) => geoFilterSearchMode === CaseGeoFilter.Polygon)
 	);
-
-	@Effect({ dispatch: false })
-	actionsLogger$: Observable<any> = this.actions$.pipe(
-		ofType(
-			StatusBarActionsTypes.COPY_SNAPSHOT_SHARE_LINK,
-			StatusBarActionsTypes.GO_ADJACENT_OVERLAY,
-			StatusBarActionsTypes.SET_IMAGE_OPENING_ORIENTATION
-		),
-		tap((action) => {
-			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Status_Bar', action.type);
-		}));
 
 	@Effect()
 	onAdjacentOverlay$: Observable<any> = this.actions$.pipe(
@@ -111,8 +99,7 @@ export class StatusBarAppEffects {
 	);
 
 	constructor(protected actions$: Actions,
-				protected store: Store<IAppState>,
-				protected loggerService: LoggerService) {
+				protected store: Store<IAppState>) {
 	}
 
 }

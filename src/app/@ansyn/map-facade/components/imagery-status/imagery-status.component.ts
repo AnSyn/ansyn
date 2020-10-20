@@ -6,8 +6,8 @@ import { get as _get } from 'lodash'
 import { map, tap, filter } from 'rxjs/operators';
 import {
 	SetMapOrientation,
-	SetOverlaysFootprintActive,
-	SetToastMessageAction,
+	SetOverlaysFootprintActive, SetToastMessageAction,
+	LogDraggingMapBetweenScreenAreas,
 	ToggleMapLayersAction
 } from '../../actions/map.actions';
 import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../models/entry-components-provider';
@@ -175,5 +175,10 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	toggleOverlaysFootprint() {
 		const isDisplay = !this.overlaysFootprintActive;
 		this.store$.dispatch(new SetOverlaysFootprintActive({mapId: this.mapId, show: isDisplay}));
+	}
+
+	onStartDraggingMap(event) {
+		this.store$.dispatch(new LogDraggingMapBetweenScreenAreas());
+		this.onMove.emit(event);
 	}
 }

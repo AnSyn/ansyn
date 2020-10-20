@@ -11,7 +11,6 @@ import {
 	selectAnnotationMode,
 	selectAnnotationProperties,
 	selectSubMenu,
-	SubMenuEnum
 } from '../../../../../menu-items/tools/reducers/tools.reducer';
 import { featureCollection, FeatureCollection } from '@turf/turf';
 import {
@@ -34,16 +33,16 @@ import {
 	AnnotationRemoveFeature,
 	AnnotationUpdateFeature,
 	SetAnnotationMode,
-	ToolsActionsTypes,
-	UpdateMeasureDataOptionsAction
+	ToolsActionsTypes, UpdateMeasureDataOptionsAction
 } from '../../../../../menu-items/tools/actions/tools.actions';
-import { UpdateLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
+import { LogAddFeatureToLayer, UpdateLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
 import { IOverlaysTranslationData } from '../../../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
 import { selectTranslationData } from '../../../../../overlays/overlay-status/reducers/overlay-status.reducer';
 import { SetOverlayTranslationDataAction } from '../../../../../overlays/overlay-status/actions/overlay-status.actions';
 import { Actions, ofType } from '@ngrx/effects';
 import { GeometryObject } from 'geojson';
+import { SubMenuEnum } from '../../../../../menu-items/tools/models/tools.model';
 
 // @dynamic
 @ImageryPlugin({
@@ -175,6 +174,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	onDrawEnd$ = () => this.annotationsVisualizer.events.onDrawEnd.pipe(
 		withLatestFrom(this.activeAnnotationLayer$),
 		map(([{ GeoJSON, feature }, activeAnnotationLayer]: [IDrawEndEvent, ILayer]) => {
+			this.store$.dispatch(new LogAddFeatureToLayer({ layerName: activeAnnotationLayer.name }));
 			const data = <FeatureCollection<any>>{
 				...activeAnnotationLayer.data,
 				features: activeAnnotationLayer.data.features.concat(GeoJSON.features)
@@ -242,7 +242,6 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			this.store$.dispatch(new AnnotationRemoveFeature(featureId));
 		})
 	);
-
 
 	@AutoSubscription
 	updateEntity$ = (): Observable<IVisualizerEntity> => this.annotationsVisualizer.events.updateEntity.pipe(
@@ -346,7 +345,4 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			geoJson.features[index].id.toString() :
 			null;
 	}
-
 }
-
-

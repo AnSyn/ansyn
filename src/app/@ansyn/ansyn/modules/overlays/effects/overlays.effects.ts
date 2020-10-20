@@ -106,7 +106,7 @@ export class OverlaysEffects {
 							new SetBadgeAction({key: 'Permissions', badge: undefined})];
 					}
 					return [new LoadOverlaysSuccessAction([]),
-						new SetOverlaysStatusMessageAction(this.translate.instant(overlaysStatusMessages.noPermissionsForArea)),
+						new SetOverlaysStatusMessageAction({ message: this.translate.instant(overlaysStatusMessages.noPermissionsForArea) }),
 						new SetBadgeAction({key: 'Permissions', badge: isUserFirstEntrance ? '' : undefined})];
 				}),
 				catchError( () => {
@@ -196,21 +196,26 @@ export class OverlaysEffects {
 
 				if (!Array.isArray(overlays.data) && Array.isArray(overlays.errors) && overlays.errors.length >= 0) {
 					return [new LoadOverlaysSuccessAction(overlaysResult),
-						new SetOverlaysStatusMessageAction(error)];
+						new SetOverlaysStatusMessageAction({ message: error, originalMessages: overlays.errors })];
 				}
 
 				const actions: Array<any> = [new LoadOverlaysSuccessAction(overlaysResult)];
 
 				// if data.length != fetchLimit that means only duplicate overlays removed
 				if (!overlays.data || overlays.data.length === 0) {
-					actions.push(new SetOverlaysStatusMessageAction(noOverlayMatchQuery));
+					actions.push(new SetOverlaysStatusMessageAction({ message: noOverlayMatchQuery, originalMessages: overlays.errors }));
 				} else if (overlays.limited > 0 && overlays.data.length === this.overlaysService.fetchLimit) {
 					// TODO: replace when design is available
-					actions.push(new SetOverlaysStatusMessageAction(overLoad.replace('$overLoad', overlays.data.length.toString())));
+					actions.push(new SetOverlaysStatusMessageAction({ message: overLoad.replace('$overLoad', overlays.data.length.toString()) }));
 				}
 				return actions;
 			}),
-			catchError(() => from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessageAction('Error on overlays request')]))
+			catchError((err) => from([
+				new LoadOverlaysSuccessAction([]),
+				new SetOverlaysStatusMessageAction({
+					message: 'Error on overlays request', originalMessages: [{ message: err }]
+				})
+			]))
 		);
 	}
 

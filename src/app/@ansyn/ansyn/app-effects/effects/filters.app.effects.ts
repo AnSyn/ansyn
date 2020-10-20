@@ -1,5 +1,5 @@
 import { combineLatest, Observable, of } from 'rxjs';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Inject, Injectable } from '@angular/core';
 import {
@@ -7,13 +7,14 @@ import {
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../app.effects.module';
 import { SetBadgeAction } from '@ansyn/menu';
-import { catchError, distinctUntilChanged, filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
 import { BooleanFilterMetadata } from '../../modules/filters/models/metadata/boolean-filter-metadata';
 import {
 	EnableOnlyFavoritesSelectionAction,
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
-	UpdateFiltersCounters
+	UpdateFiltersCounters,
+	LogFilters
 } from '../../modules/filters/actions/filters.actions';
 import { EnumFilterMetadata } from '../../modules/filters/models/metadata/enum-filter-metadata';
 import { FilterMetadata } from '../../modules/filters/models/metadata/filter-metadata.interface';
@@ -56,7 +57,6 @@ import { ICaseFacetsState } from '../../modules/menu-items/cases/models/case.mod
 import { IOverlay, IOverlayDrop, IOverlaySpecialObject } from '../../modules/overlays/models/overlay.model';
 import { cloneDeep, get as _get, isEqual } from 'lodash';
 import { TranslateService } from '@ngx-translate/core';
-import { LoggerService } from '../../modules/core/services/logger.service';
 import { FilterCounters } from '../../modules/filters/models/counters/filter-counters.interface';
 
 @Injectable()
@@ -75,18 +75,16 @@ export class FiltersAppEffects {
 	facets$: Observable<ICaseFacetsState> = this.store$.select(selectFacets);
 	onFiltersChangesForLog$: Observable<[FiltersMetadata, boolean]> = combineLatest([this.filtersMetadata$, this.showOnlyFavorite$]);
 
-	@Effect({ dispatch: false })
+	@Effect()
 	filtersLogger$: Observable<any> = this.onFiltersChangesForLog$.pipe(
 		filter(([filters, showOnlyFavorites ]: [FiltersMetadata, boolean]) => Boolean(filters) && filters.size !== 0),
 		map(([filters, showOnlyFavorites]: [FiltersMetadata, boolean]) => {
 			const filtersData = filtersToString(filters);
-			const filtersState = `{"showOnlyFavorites": "${ showOnlyFavorites }", "filters": ${ Boolean(filters) ? filtersData : filters }}`;
+			const filtersState = `Filters changed:\nshowOnlyFavorites: ${ showOnlyFavorites } ${ Boolean(filters) ? filtersData : '' }`;
 			return filtersState;
 		}),
 		distinctUntilChanged(isEqual),
-		tap((message: string) => {
-			this.loggerService.info(message, 'Filters', 'Filtered Data Changed');
-		})
+		map((message: string) => new LogFilters(message))
 	);
 
 	@Effect()
@@ -95,11 +93,15 @@ export class FiltersAppEffects {
 		mergeMap(([filtersMetadata, overlaysArray]: [FiltersMetadata, IOverlay[]]) => {
 			const filterModels: IFilterModel[] = FiltersService.pluckFilterModels(filtersMetadata);
 			const filteredOverlays: string[] = buildFilteredOverlays(overlaysArray, filterModels);
-			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : this.translate.instant(overlaysStatusMessages.noOverLayMatchFilters);
-			return [
-				new SetFilteredOverlaysAction(filteredOverlays),
-				new SetOverlaysStatusMessageAction(message)
+			const actions: Action[] = [
+				new SetFilteredOverlaysAction(filteredOverlays)
 			];
+			// If there are overlays, before applying the filters, set the status message according to the filters
+			if (overlaysArray && overlaysArray.length) {
+				const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : this.translate.instant(overlaysStatusMessages.noOverLayMatchFilters);
+				actions.push(new SetOverlaysStatusMessageAction({ message }));
+			}
+			return actions;
 		}));
 
 	@Effect()
@@ -202,7 +204,6 @@ export class FiltersAppEffects {
 				protected store$: Store<IAppState>,
 				protected genericTypeResolverService: GenericTypeResolverService,
 				public translate: TranslateService,
-				protected loggerService: LoggerService,
 				@Inject(filtersConfig) protected config: IFiltersConfig) {
 	}
 

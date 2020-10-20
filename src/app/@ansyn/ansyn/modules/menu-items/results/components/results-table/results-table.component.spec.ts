@@ -30,7 +30,9 @@ describe('ResultsTableComponent', () => {
 				EffectsModule.forRoot([]),
 				BrowserAnimationsModule],
 			declarations: [ResultsTableComponent],
-			providers: [{ provide: mapFacadeConfig, useValue: {} }]
+			providers: [
+				{ provide: mapFacadeConfig, useValue: {} }
+			]
 		})
 			.compileComponents();
 	}));

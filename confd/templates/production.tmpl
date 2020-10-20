@@ -345,7 +345,8 @@
     "env": "PROD",
     "active": {{ getv "/ansyn/logger/active" "false"}},
     "component": "{{ getv "/ansyn/logger/component/name" "app_client" }}",
-    "disconnectionTimeoutInMinutes": {{ getv "/ansyn/logger/disconnection/minutes" "15"}}
+    "disconnectionTimeoutInMinutes": {{ getv "/ansyn/logger/disconnection/minutes" "15"}},
+    "showTranslationWarnings": false
   },
   "statusBarConfig": {
     "toolTips": {

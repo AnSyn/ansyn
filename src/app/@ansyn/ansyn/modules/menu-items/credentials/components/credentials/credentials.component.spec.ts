@@ -1,9 +1,9 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 
 import { CredentialsComponent } from './credentials.component';
-import { CredentialsService } from '../../services/credentials/credentials.service';
+import { CredentialsService } from '../../../../core/services/credentials/credentials.service';
 import { HttpClientModule } from '@angular/common/http';
-import { credentialsConfig } from '../../services/credentials/config';
+import { credentialsConfig } from '../../../../core/services/credentials/config';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import { UnSelectMenuItemAction } from '@ansyn/menu';

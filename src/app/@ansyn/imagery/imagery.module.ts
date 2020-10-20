@@ -14,6 +14,7 @@ import { IBaseImageryPluginConstructor } from './model/base-imagery-plugin';
 import { IBaseMapSourceProviderConstructor } from './model/base-map-source-provider';
 import { HttpClientModule } from '@angular/common/http';
 import { GetProvidersMapsService } from './services/get-providers-maps/get-providers-maps.service';
+import { COMMUNICATOR_LOG_MESSAGES, communicatorLogMessages } from './communicator-service/communicator-log-messages';
 
 export interface IImageryMetaData {
 	maps: IBaseImageryMapConstructor[],
@@ -37,7 +38,11 @@ export interface IImageryMetaData {
 		createMapSourceProviders([]),
 		BaseMapSourceProviderProvider,
 		ImageryMapsProvider,
-		GetProvidersMapsService
+		GetProvidersMapsService,
+		{
+			provide: COMMUNICATOR_LOG_MESSAGES,
+			useValue: communicatorLogMessages
+		}
 	],
 	exports: [ImageryComponent]
 })

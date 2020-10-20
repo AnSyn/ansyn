@@ -8,7 +8,7 @@ import {
 	IOverlayStatusState,
 	overlayStatusStateSelector
 } from "../../reducers/overlay-status.reducer";
-import { SetManualImageProcessing } from "../../actions/overlay-status.actions";
+import { LogManualImageProcessing, SetManualImageProcessing } from '../../actions/overlay-status.actions';
 import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from "../../config/overlay-status-config";
 
 @Component({
@@ -51,6 +51,10 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 		const imageManualProcessArgs = { ...this.imageManualProcessArgs };
 		imageManualProcessArgs[key] = value;
 		this.store$.dispatch(new SetManualImageProcessing(imageManualProcessArgs));
+	}
+
+	log(changedArg: string) {
+		this.store$.dispatch(new LogManualImageProcessing({ changedArg, allArgs: this.imageManualProcessArgs }));
 	}
 
 	resetParams() {

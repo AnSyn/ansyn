@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
+import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { Feature } from 'geojson';
 import { EMPTY, Observable, of } from 'rxjs';
 import {
 	BeginLayerCollectionLoadAction,
-	LayersActionTypes,
 	UpdateLayer,
 	UpdateSelectedLayersIds
 } from '../../modules/menu-items/layers-manager/actions/layers.actions';
@@ -18,36 +17,9 @@ import {
 	AnnotationUpdateFeature,
 	ToolsActionsTypes
 } from '../../modules/menu-items/tools/actions/tools.actions';
-import { LoggerService } from '../../modules/core/services/logger.service';
-
 
 @Injectable()
 export class LayersAppEffects {
-
-	@Effect({ dispatch: false })
-	actionsLogger$: Observable<any> = this.actions$.pipe(
-		ofType(
-			LayersActionTypes.ADD_LAYER,
-			LayersActionTypes.ADD_LAYER_ON_BACKEND_FAILED_ACTION,
-			LayersActionTypes.ADD_LAYER_ON_BACKEND_SUCCESS_ACTION,
-			LayersActionTypes.REMOVE_LAYER,
-			LayersActionTypes.REMOVE_LAYER_ON_BACKEND_FAILED_ACTION,
-			LayersActionTypes.REMOVE_LAYER_ON_BACKEND_SUCCESS_ACTION,
-			LayersActionTypes.UPDATE_LAYER,
-			LayersActionTypes.UPDATE_LAYER_ON_BACKEND_FAILED_ACTION,
-			LayersActionTypes.UPDATE_LAYER_ON_BACKEND_SUCCESS_ACTION,
-			LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD,
-			LayersActionTypes.LAYER_COLLECTION_LOADED,
-			LayersActionTypes.ERROR_LOADING_LAYERS,
-			LayersActionTypes.SET_ACTIVE_ANNOTATION_LAYER,
-			LayersActionTypes.SET_LAYER_SELECTION,
-			LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_ACTION,
-			LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_FAILED_ACTION,
-			LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_SUCCESS_ACTION
-		),
-		tap((action) => {
-			this.loggerService.info(action.payload, 'Layers', action.type);
-		}));
 
 	@Effect()
 	onSaveCaseAs$ = this.actions$
@@ -101,9 +73,9 @@ export class LayersAppEffects {
 		})
 	);
 
-	constructor(protected actions$: Actions,
-				protected store$: Store<any>,
-				protected loggerService: LoggerService) {
-
+	constructor(
+		protected actions$: Actions,
+		protected store$: Store<any>
+	) {
 	}
 }

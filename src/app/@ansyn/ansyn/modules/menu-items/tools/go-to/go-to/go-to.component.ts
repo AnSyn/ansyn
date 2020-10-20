@@ -1,5 +1,5 @@
 import { Component, HostBinding, Inject, Input, OnInit } from '@angular/core';
-import { IToolsState, selectSubMenu, SubMenuEnum, toolsFlags, toolsStateSelector } from '../../reducers/tools.reducer';
+import { IToolsState, selectSubMenu, toolsStateSelector } from '../../reducers/tools.reducer';
 import { Store } from '@ngrx/store';
 import {
 	ClearActiveInteractionsAction,
@@ -21,6 +21,7 @@ import {
 } from '@ansyn/map-facade';
 import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
 import { copyFromContent } from '@ansyn/map-facade';
+import { SubMenuEnum, toolsFlags } from '../../models/tools.model';
 
 @Component({
 	selector: 'ansyn-go-to',

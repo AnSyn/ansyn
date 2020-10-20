@@ -75,7 +75,7 @@ export class LoggerService implements ErrorHandler {
 	}
 
 	protected log(severity: Severity, actionType: string, subType: string, msg: string, includeBrowserData?: boolean) {
-		if (!this.loggerConfig.active) {
+		if (!this.loggerConfig.active || !msg) {
 			return;
 		}
 		this.updateLogTimeForDisconnect();
@@ -83,7 +83,7 @@ export class LoggerService implements ErrorHandler {
 		if (includeBrowserData) {
 			prefix += this.getBrowserData();
 		}
-		const str = `${ prefix }[${ severity }] [${ actionType.toUpperCase() }] ${ subType !== '' ? '[' + subType.toUpperCase() + ']' : '' } ${ msg }`;
+		const str = `${ prefix }[${ severity }] [${ actionType.toUpperCase() }] ${ subType !== '' ? '[' + subType.toUpperCase() + ']' : '' }\n${ msg }`;
 		this.stack.push({ severity, msg: str });
 		this.output();
 	}

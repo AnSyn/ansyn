@@ -22,7 +22,6 @@ import {
 	OverlaysActionTypes
 } from '../../modules/overlays/actions/overlays.actions';
 import { IOverlayByIdMetaData, OverlaysService } from '../../modules/overlays/services/overlays.service';
-import { LoggerService } from '../../modules/core/services/logger.service';
 import { ICase, IDilutedCase, IImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import {
@@ -38,20 +37,7 @@ import { ICasesConfig } from '../../modules/menu-items/cases/models/cases-config
 
 @Injectable()
 export class CasesAppEffects {
-	@Effect({ dispatch: false })
-	actionsLogger$: Observable<any> = this.actions$.pipe(
-		ofType(CasesActionTypes.ADD_CASE,
-			CasesActionTypes.DELETE_CASE,
-			CasesActionTypes.LOAD_CASE,
-			CasesActionTypes.LOAD_CASES,
-			CasesActionTypes.LOAD_DEFAULT_CASE,
-			CasesActionTypes.SAVE_CASE_AS_SUCCESS,
-			CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS,
-			CasesActionTypes.COPY_CASE_LINK
-		),
-		tap((action) => {
-			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Cases', action.type);
-		}));
+
 	@Effect()
 	onDisplayOverlay$: Observable<any> = this.actions$.pipe(
 		ofType<DisplayOverlaySuccessAction>(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
@@ -110,11 +96,13 @@ export class CasesAppEffects {
 								.map(map => new DisplayOverlayAction({ overlay: map.data.overlay, mapId: map.id }));
 							return [new SelectCaseAction(newCaseValue), ...overlayToDisplay];
 						}),
-						catchError<any, any>((result: HttpErrorResponse) => {
-							console.warn(result);
+						catchError<any, any>((error: HttpErrorResponse) => {
+							const errMsg = error.message ? error.message : error.toString();
+							console.warn(errMsg);
 							return [new SetToastMessageAction({
-								toastText: `Failed to load case ${ result.status ? `(${ result.status })` : '' }`,
-								showWarningIcon: true
+								toastText: `Failed to load case ${ error.status ? `(${ error.status })` : '' }`,
+								showWarningIcon: true,
+								originalMessage: errMsg
 							}),
 								new LoadDefaultCaseIfNoActiveCaseAction()];
 						})
@@ -134,7 +122,6 @@ export class CasesAppEffects {
 				protected overlaysService: OverlaysService,
 				@Inject(toolsConfig) protected config: IToolsConfig,
 				@Inject(overlayStatusConfig) protected overlayStatusConfig: IOverlayStatusConfig,
-				protected loggerService: LoggerService,
 				@Inject(casesConfig) public caseConfig: ICasesConfig,
 				protected getProvidersMapsService: GetProvidersMapsService,
 				protected imageryCommunicatorService: ImageryCommunicatorService) {

@@ -3,10 +3,10 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { Store } from '@ngrx/store';
 import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { Observable, of } from 'rxjs';
-import { AddCaseAction, CloseModalAction, UpdateCaseAction } from '../../actions/cases.actions';
+import { AddCaseAction, CloseModalAction, LogRenameCase, UpdateCaseAction } from '../../actions/cases.actions';
 import { cloneDeep } from 'lodash';
 import { CasesService } from '../../services/cases.service';
-import { map, take, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { ICase, ICasePreview } from '../../models/case.model';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
 
@@ -40,8 +40,10 @@ export class EditCaseComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	activeCase$: Observable<ICase> = this.casesState$.pipe(
 		map(this.getCloneActiveCase.bind(this)),
-		tap( (activeCase: ICase) => this.caseModel = activeCase)
-
+		tap( (activeCase: ICase) => {
+			this.caseModel = activeCase;
+			this.activeCaseName = activeCase && activeCase.name;
+		})
 	);
 
 	@AutoSubscription
@@ -53,8 +55,12 @@ export class EditCaseComponent implements OnInit, OnDestroy {
 	contextsList: any[];
 	caseModel: ICase;
 	editMode = false;
+	activeCaseName: string;
 
-	constructor(protected store: Store<ICasesState>, protected casesService: CasesService) {
+	constructor(
+		protected store: Store<ICasesState>,
+		protected casesService: CasesService
+	) {
 	}
 
 	addDefaultContext(context: any[]): any[] {
@@ -119,6 +125,7 @@ export class EditCaseComponent implements OnInit, OnDestroy {
 
 	onSubmitCase(contextIndex: number) {
 		if (this.editMode) {
+			this.store.dispatch(new LogRenameCase({ oldName: this.activeCaseName, newName: this.caseModel.name }));
 			this.store.dispatch(new UpdateCaseAction({ updatedCase: this.caseModel, forceUpdate: true }));
 		} else {
 			const selectContext = this.contextsList[contextIndex];

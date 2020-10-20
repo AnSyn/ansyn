@@ -7,8 +7,9 @@ import {
 	IMapSettings,
 	IWorldViewMapState
 } from '@ansyn/imagery';
-import { LayoutKey } from '../models/maps-layout';
+import { LayoutKey, layoutOptions } from '../models/maps-layout';
 import { MapOrientation } from "@ansyn/imagery";
+import { ILogMessage } from '../models/logger.model';
 
 export interface IAngleFilterClick { // @TODO: map-facade should not know IOverlay
 	click: { x: number, y: number };
@@ -26,11 +27,13 @@ export interface IPendingOverlay { // @TODO: map-facade should not know IOverlay
 export interface IToastMessage {
 	toastText: string;
 	showWarningIcon?: boolean;
+	originalMessage?: string;
 }
 
 export const MapActionTypes = {
 	POINT_TO_IMAGE_ORIENTATION: 'POINT_TO_IMAGE_ORIENTATION',
 	POINT_TO_REAL_NORTH: 'POINT_TO_REAL_NORTH',
+	LOG_ROTATE_MAP: 'LOG_ROTATE_MAP',
 	POSITION_CHANGED: 'POSITION_CHANGED',
 	UPDATE_MAP_SIZE: 'UPDATE_MAP_SIZE',
 	IMAGERY_CREATED: 'IMAGERY_CREATED',
@@ -63,6 +66,7 @@ export const MapActionTypes = {
 		CLICK_OUTSIDE_MAP: 'CLICK_OUTSIDE_MAP',
 	},
 	MAP_SEARCH_BOX_TRIGGER: 'MAP_SEARCH_BOX_TRIGGER',
+	LOG_MAP_SEARCH_BOX: 'LOG_MAP_SEARCH_BOX',
 	SET_ACTIVE_CENTER_TRIGGER: 'SET_ACTIVE_CENTER_TRIGGER',
 	SET_PENDING_MAPS_COUNT: 'SET_PENDING_MAPS_COUNT',
 	DECREASE_PENDING_MAPS_COUNT: 'DECREASE_PENDING_MAPS_COUNT',
@@ -87,7 +91,9 @@ export const MapActionTypes = {
 	SET_MINIMALIST_VIEW_MODE: '[Maps] Set Minimalist View Mode',
 	REPLACE_MAP_MAIN_LAYER: '[Maps] replace Main Layer',
 	REPLACE_MAP_MAIN_LAYER_SUCCESS: '[Maps] replace Main Layer success',
-	REPLACE_MAP_MAIN_LAYER_FAILED: '[Maps] replace Main Layer failed'
+	REPLACE_MAP_MAIN_LAYER_FAILED: '[Maps] replace Main Layer failed',
+	LOG_DRAGGING_MAP_BETWEEN_SCREEN_AREAS: '[Maps] LOG_DRAGGING_MAP_BETWEEN_SCREEN_AREAS',
+	LOG_MESSAGE_FROM_IMAGERY: '[Maps] LOG_MESSAGE_FROM_IMAGERY'
 };
 
 export interface IContextMenuShowPayload {
@@ -105,9 +111,14 @@ export class SetMinimalistViewModeAction implements Action {
 	}
 }
 
-export class SetMapOrientation implements Action {
+export class SetMapOrientation implements Action, ILogMessage {
 	type = MapActionTypes.SET_MAP_ORIENTATION;
+
 	constructor(public payload: {orientation: MapOrientation, mapId?: string}) {
+	}
+
+	logMessage() {
+		return `Setting map image orientation to ${this.payload.orientation}`
 	}
 }
 
@@ -118,10 +129,25 @@ export class SetProgressBarAction implements Action {
 	}
 }
 
-export class PointToRealNorthAction implements Action {
+export class PointToRealNorthAction implements Action, ILogMessage {
 	type = MapActionTypes.POINT_TO_REAL_NORTH;
 
 	constructor(public payload: string) {
+	}
+
+	logMessage() {
+		return `Rotating map to real north`
+	}
+}
+
+export class LogRotateMapAction implements Action, ILogMessage {
+	type = MapActionTypes.LOG_ROTATE_MAP;
+
+	constructor(public payload?: any) {
+	}
+
+	logMessage() {
+		return `The user rotated map`
 	}
 }
 
@@ -168,10 +194,14 @@ export class MapInstanceChangedAction implements Action {
 	}
 }
 
-export class SynchronizeMapsAction implements Action {
+export class SynchronizeMapsAction implements Action, ILogMessage {
 	type = MapActionTypes.SYNCHRONIZE_MAPS;
 
 	constructor(public payload: { mapId: string }) {
+	}
+
+	logMessage() {
+		return `Synchronizing maps`
 	}
 }
 
@@ -196,25 +226,48 @@ export class SetMapSearchBoxTriggerAction implements Action {
 	}
 }
 
+export class LogMapSearchBoxAction implements Action, ILogMessage {
+	type = MapActionTypes.LOG_MAP_SEARCH_BOX;
 
-export class ContextMenuShowAction implements Action {
+	constructor(public payload: string) {
+	}
+
+	logMessage() {
+		return `Using map search box. Search string = ${this.payload}`
+	}
+}
+
+
+export class ContextMenuShowAction implements Action, ILogMessage {
 	type = MapActionTypes.CONTEXT_MENU.SHOW;
 
 	constructor(public payload: IContextMenuShowPayload) {
 	}
+
+	logMessage() {
+		return `Showing map context menu`
+	}
 }
 
-export class ContextMenuDisplayAction implements Action {
+export class ContextMenuDisplayAction implements Action, ILogMessage {
 	type = MapActionTypes.CONTEXT_MENU.DISPLAY;
 
 	constructor(public payload: string) {
 	}
+
+	logMessage() {
+		return `Displaying overlay from context menu`
+	}
 }
 
-export class ContextMenuShowAngleFilter implements Action {
+export class ContextMenuShowAngleFilter implements Action, ILogMessage {
 	type = MapActionTypes.CONTEXT_MENU.ANGLE_FILTER_SHOW;
 
 	constructor(public payload: IAngleFilterClick) {
+	}
+
+	logMessage() {
+		return `Showing angle filter on map`
 	}
 }
 
@@ -371,10 +424,14 @@ export class SetMapPositionByRadiusAction implements Action {
 	}
 }
 
-export class SetLayoutAction implements Action {
+export class SetLayoutAction implements Action, ILogMessage {
 	type = MapActionTypes.SET_LAYOUT;
 
 	constructor(public payload: LayoutKey) {
+	}
+
+	logMessage() {
+		return `Changing maps layout, no. of maps = ${layoutOptions.get(this.payload).mapsCount}`
 	}
 }
 
@@ -385,10 +442,14 @@ export class SetLayoutSuccessAction implements Action {
 	}
 }
 
-export class ToggleMapLayersAction implements Action {
+export class ToggleMapLayersAction implements Action, ILogMessage {
 	type = MapActionTypes.TOGGLE_MAP_LAYERS;
 
 	constructor(public payload: { mapId: string, isVisible: boolean }) {
+	}
+
+	logMessage() {
+		return `${this.payload.isVisible ? 'Un-' : ''}Hiding data layers for map`
 	}
 }
 
@@ -400,17 +461,39 @@ export class SetWasWelcomeNotificationShownFlagAction implements Action {
 	}
 }
 
-export class SetToastMessageAction implements Action {
+export class SetToastMessageAction implements Action, ILogMessage {
 	type = MapActionTypes.SET_TOAST_MESSAGE;
 
 	constructor(public payload?: IToastMessage) {
 	}
+
+	logMessage() {
+		if (this.payload) {
+			const originalMessage = this.payload.originalMessage ? `\n${this.payload.originalMessage}` : '';
+			return `Showing toast message: ${this.payload.toastText}${originalMessage}`;
+		}
+	}
 }
 
-export class ToggleFooter implements Action {
+export class ToggleFooter implements Action, ILogMessage {
 	type = MapActionTypes.FOOTER_COLLAPSE;
 
 	constructor(public payload: boolean) {
+	}
+
+	logMessage() {
+		return `${this.payload ? '' : 'Un-'}Hiding timeline`
+	}
+}
+
+export class LogDraggingMapBetweenScreenAreas implements Action, ILogMessage {
+	type = MapActionTypes.LOG_DRAGGING_MAP_BETWEEN_SCREEN_AREAS;
+
+	constructor(public payload?: any) {
+	}
+
+	logMessage() {
+		return `Dragging map between screen areas`
 	}
 }
 
@@ -419,4 +502,14 @@ export class SetOverlaysFootprintActive implements Action {
 
 	constructor(public payload: {mapId: string, show: boolean}) {}
 
+}
+
+export class LogMessageFromImagery implements Action, ILogMessage {
+	readonly type = MapActionTypes.LOG_MESSAGE_FROM_IMAGERY;
+
+	constructor(public payload: string) {}
+
+	logMessage() {
+		return this.payload;
+	}
 }

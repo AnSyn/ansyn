@@ -8,7 +8,7 @@ import { MultipleOverlaysSource, OverlaySourceProvider } from '../models/overlay
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 import { MultipleOverlaysSourceConfig } from '../../core/models/multiple-overlays-source-config';
 import { LoggerService } from '../../core/services/logger.service';
-import { GeoRegisteration, IOverlay, IOverlaysFetchData } from '../models/overlay.model';
+import { GeoRegisteration, IOverlay, IOverlayError, IOverlaysFetchData } from '../models/overlay.model';
 
 const overlays: IOverlaysFetchData = {
 	data: [
@@ -62,7 +62,11 @@ class FaultyOverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	}
 }
 
-const faultyError = new Error(`Failed to fetch overlays from ${ faultySourceType }`);
+const faultyError: IOverlayError = {
+	message: 'Error: Failed to fetch overlays',
+	sourceType: 'Faulty'
+};
+
 const regionCoordinates = [
 	[
 		[

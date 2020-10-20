@@ -36,8 +36,7 @@ export class MenuAppEffects {
 	loadOverlays$: Observable<any> = this.store$
 		.pipe(
 			select(selectDropsWithoutSpecialObjects),
-			map((overlays: IOverlayDrop[]) => new SetTotalOverlaysAction(overlays.length)));
-
+			map((overlays: IOverlayDrop[]) => new SetTotalOverlaysAction({ number: overlays.length, showLog: true })));
 
 	@Effect()
 	autoCloseMenu$: Observable<SetAutoClose> = this.store$
@@ -52,9 +51,12 @@ export class MenuAppEffects {
 		map(() => new LoadDefaultCaseAction())
 	);
 
-	constructor(protected actions$: Actions, protected store$: Store<IAppState>,
+	constructor(
+		protected actions$: Actions,
+		protected store$: Store<IAppState>,
 		@Inject(COMPONENT_MODE) public componentMode: boolean,
-		@Inject(MenuConfig) public menuConfig: IMenuConfig) {
+		@Inject(MenuConfig) public menuConfig: IMenuConfig
+	) {
 	}
 
 }

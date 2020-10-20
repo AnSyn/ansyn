@@ -10,7 +10,7 @@ describe('AnnotationContextMenuComponent', () => {
 	let fixture: ComponentFixture<AnnotationContextMenuComponent>;
 	const mockAnnotationsContextMenuButtonsComponent = MockComponent({
 		selector: 'ansyn-annotations-context-menu-buttons',
-		inputs: ['annotations', 'featureId', 'selectedTab']
+		inputs: ['annotations', 'featureId', 'selectedTab', 'communicator']
 	});
 
 	beforeEach(() => {

@@ -5,10 +5,12 @@ import { selectIsMeasureToolActive, toolsFeatureKey, ToolsReducer } from '../../
 import { MeasureControlComponent } from './measure-control.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
+import { UpdateMeasureDataOptionsAction } from '../../actions/tools.actions';
 
 const mockStore = new Map<any, any>([
 	[selectActiveMapId, 'mapId']
 ]);
+
 describe('MeasureControlComponent', () => {
 	let component: MeasureControlComponent;
 	let fixture: ComponentFixture<MeasureControlComponent>;
@@ -48,4 +50,19 @@ describe('MeasureControlComponent', () => {
 		fixture.detectChanges();
 		expect(component.show).toBeFalsy();
 	})
+
+	describe('toggleShowLayer()', () => {
+		it('should dispatch UpdateMeasureDataOptionsAction', () => {
+			spyOn(store, 'dispatch');
+			component.measureData = <any>{
+				isLayerShowed: true
+			};
+			component.toggleShowLayer();
+			expect(store.dispatch).toHaveBeenCalledWith(new UpdateMeasureDataOptionsAction({
+				mapId: 'mapId',
+				options: { isLayerShowed: false },
+				fromUI: true
+			}));
+		});
+	});
 });

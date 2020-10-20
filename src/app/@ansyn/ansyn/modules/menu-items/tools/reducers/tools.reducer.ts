@@ -1,42 +1,31 @@
 import {
 	AddMeasureAction,
-	CreateMeasureDataAction, RemoveMeasureAction, RemoveMeasureDataAction,
+	CreateMeasureDataAction,
+	RemoveMeasureAction, RemoveMeasureDataAction,
 	SetActiveCenter,
 	SetAnnotationMode,
-	SetMapGeoEnabledModeToolsActionStore, SetMapSearchBox,
+	SetMapGeoEnabledModeToolsActionStore,
+	SetMapSearchBox,
 	SetMeasureDistanceToolState,
-	SetPinLocationModeAction, SetSubMenu,
+	SetPinLocationModeAction,
+	SetSubMenu,
 	StartMouseShadow,
 	StopMouseShadow,
 	ToolsActions,
-	ToolsActionsTypes, UpdateMeasureDataOptionsAction,
+	ToolsActionsTypes,
+	UpdateMeasureDataOptionsAction,
 	UpdateToolsFlags
 } from '../actions/tools.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { IVisualizerEntity, IVisualizerStyle, getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
+import { IVisualizerStyle, getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
 import { AnnotationMode } from '@ansyn/ol';
-import { IMeasureData, IMeasureDataOptions } from '../models/measure-data';
-
-export enum toolsFlags {
-	geoRegisteredOptionsEnabled = 'geoRegisteredOptionsEnabled',
-	shadowMouse = 'shadowMouse',
-	shadowMouseDisabled = 'shadowMouseDisabled',
-	shadowMouseActiveForManyScreens = 'shadowMouseActiveForManyScreens',
-	forceShadowMouse = 'forceShadowMouse',
-	pinLocation = 'pinLocation',
-	isMeasureToolActive = 'isMeasureToolActive'
-}
-
-export enum SubMenuEnum { goTo, overlays, annotations };
-
-export function createNewMeasureData(): IMeasureData {
-	return {
-		isLayerShowed: true,
-		isToolActive: true,
-		isRemoveMeasureModeActive: false,
-		meausres: []
-	}
-}
+import {
+	createNewMeasureData,
+	IMeasureData,
+	IMeasureDataOptions,
+	SubMenuEnum,
+	toolsFlags
+} from '../models/tools.model';
 
 export interface IToolsState {
 	flags: Map<toolsFlags, boolean>;
@@ -183,7 +172,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			return { ...state, annotationProperties: { ...state.annotationProperties, ...action.payload } };
 
 		case ToolsActionsTypes.SET_SUB_MENU:
-			return { ...state, subMenu: (<SetSubMenu>action).payload };
+			return { ...state, subMenu: (action as SetSubMenu).payload };
 
 		default:
 			return state;

@@ -16,6 +16,11 @@ export enum layerPluginTypeEnum {
 	Annotations = 'Annotations'
 }
 
+export enum LayerFileTypes {
+	KML = 'KML',
+	GEOJSON = 'GeoJSON'
+}
+
 export interface ILayer extends IEntity {
 	url?: string;
 	name: string;

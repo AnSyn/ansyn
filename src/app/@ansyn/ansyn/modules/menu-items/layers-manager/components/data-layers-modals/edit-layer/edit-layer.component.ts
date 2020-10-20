@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { ILayer } from '../../../models/layers.model';
 import { Store } from '@ngrx/store';
 import { ILayerState } from '../../../reducers/layers.reducer';
-import { AddLayer, CloseLayersModal, UpdateLayer } from '../../../actions/layers.actions';
+import { AddLayer, CloseLayersModal, LogRenameLayer, UpdateLayer } from '../../../actions/layers.actions';
 import { DataLayersService } from '../../../services/data-layers.service';
 
 @Component({
@@ -13,7 +13,10 @@ import { DataLayersService } from '../../../services/data-layers.service';
 export class EditLayerComponent {
 	@Input() layer: ILayer;
 
-	constructor(protected store: Store<ILayerState>, protected dataLayersService: DataLayersService) {
+	constructor(
+		protected store: Store<ILayerState>,
+		protected dataLayersService: DataLayersService
+		) {
 	}
 
 	addLayer(name) {
@@ -27,6 +30,7 @@ export class EditLayerComponent {
 	}
 
 	editLayer(name) {
+		this.store.dispatch(new LogRenameLayer({ layer: this.layer, name }))
 		this.store.dispatch(new UpdateLayer({ ...this.layer, name }));
 		this.closeModal();
 	}

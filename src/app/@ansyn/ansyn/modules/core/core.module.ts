@@ -11,7 +11,7 @@ import { AnsynFormsModule } from './forms/ansyn-forms.module';
 import { FormsModule } from '@angular/forms';
 import { ContextMenuComponent } from './components/context-menu/context-menu.component';
 import { AngleFilterComponent } from './components/angle-filter/angle-filter.component';
-import { CredentialsComponent } from './components/credentials/credentials.component';
+import { CredentialsComponent } from '../menu-items/credentials/components/credentials/credentials.component';
 import { AreaToCredentialsService } from './services/credentials/area-to-credentials.service';
 
 @NgModule({

@@ -1,4 +1,5 @@
 import { Action } from '@ngrx/store';
+import { ILogMessage } from '../models/logger.model';
 
 export const MenuActionTypes = {
 	SELECT_MENU_ITEM: 'SELECT_MENU_ITEM',
@@ -12,26 +13,39 @@ export const MenuActionTypes = {
 	MENU_COLLAPSE: 'MENU_COLLAPSE',
 	RESET_APP: 'RESET_APP',
 	SET_USER_ENTER: 'SET_USER_ENTER',
+	LOG_HELP: 'LOG_HELP'
 };
 
-export class ResetAppAction implements Action {
+export class ResetAppAction implements Action, ILogMessage {
 	type = MenuActionTypes.RESET_APP;
 
 	constructor() {
 	}
+
+	logMessage() {
+		return `*Resetting application* according to user request`
+	}
 }
 
-export class SelectMenuItemAction implements Action {
+export class SelectMenuItemAction implements Action, ILogMessage {
 	type = MenuActionTypes.SELECT_MENU_ITEM;
 
 	constructor(public payload: { menuKey: string, skipSession?: boolean }) {
 	}
+
+	logMessage() {
+		return `Opening menu item: ${this.payload.menuKey}`
+	}
 }
 
-export class UnSelectMenuItemAction implements Action {
+export class UnSelectMenuItemAction implements Action, ILogMessage {
 	type = MenuActionTypes.UNSELECT_MENU_ITEM;
 
 	constructor(public payload?: any) {
+	}
+
+	logMessage() {
+		return `Closing current menu item`
 	}
 }
 
@@ -42,10 +56,14 @@ export class SetBadgeAction implements Action {
 	}
 }
 
-export class ToggleIsPinnedAction implements Action {
+export class ToggleIsPinnedAction implements Action, ILogMessage {
 	type = MenuActionTypes.TOGGLE_IS_PINNED;
 
 	constructor(public payload: boolean) {
+	}
+
+	logMessage() {
+		return `${this.payload ? 'Pinning' : 'Unpinning'} current menu item`
 	}
 }
 
@@ -63,9 +81,24 @@ export class SetAutoClose implements Action {
 	}
 }
 
-export class ToggleMenuCollapse implements Action {
+export class ToggleMenuCollapse implements Action, ILogMessage {
 	type = MenuActionTypes.MENU_COLLAPSE;
 
 	constructor(public payload: boolean) {
+	}
+
+	logMessage() {
+		return `${this.payload ? '' : 'Un-'}Hiding menu`
+	}
+}
+
+export class LogHelp implements Action, ILogMessage {
+	type = MenuActionTypes.LOG_HELP;
+
+	constructor(public payload?: any) {
+	}
+
+	logMessage() {
+		return `User clicked on Help button`
 	}
 }

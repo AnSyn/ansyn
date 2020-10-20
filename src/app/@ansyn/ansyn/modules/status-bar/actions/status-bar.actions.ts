@@ -1,19 +1,23 @@
 import { Action } from '@ngrx/store';
 import { IGeoFilterStatus } from '../reducers/status-bar.reducer';
+import { ILogMessage } from '../../core/models/logger.model';
 
 export const StatusBarActionsTypes = {
 	SHOW_LINK_COPY_TOAST: 'SHOW_LINK_COPY_TOAST',
 	COPY_SNAPSHOT_SHARE_LINK: 'COPY_SNAPSHOT_SHARE_LINK',
 	EXPAND: 'EXPAND',
-	SET_IMAGE_OPENING_ORIENTATION: 'SET_IMAGE_OPENING_ORIENTATION',
 	UPDATE_GEO_FILTER_STATUS: 'UPDATE_GEO_FILTER_STATUS',
 	GO_ADJACENT_OVERLAY: 'GO_ADJACENT_OVERLAY'
 };
 
-export class CopySnapshotShareLinkAction implements Action {
+export class CopySnapshotShareLinkAction implements Action, ILogMessage {
 	type: string = StatusBarActionsTypes.COPY_SNAPSHOT_SHARE_LINK;
 
 	constructor() {
+	}
+
+	logMessage() {
+		return `User selected share link option`
 	}
 }
 
@@ -24,10 +28,15 @@ export class ExpandAction implements Action {
 	}
 }
 
-export class UpdateGeoFilterStatus implements Action {
+export class UpdateGeoFilterStatus implements Action, ILogMessage {
 	readonly type = StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS;
 
 	constructor(public payload?: Partial<IGeoFilterStatus>) {
+	}
+
+	logMessage() {
+		// if payload.active is undefined, rather than false, the geotype is not deactivated
+		return this.payload && this.payload.type && ( this.payload.active !== false ) && `Setting geo filter type to ${this.payload.type}`
 	}
 }
 

@@ -39,7 +39,6 @@ import {
 	LoadOverlaysSuccessAction
 } from '../../modules/overlays/actions/overlays.actions';
 import { IOverlayByIdMetaData, OverlaysService } from '../../modules/overlays/services/overlays.service';
-import { LoggerService } from '../../modules/core/services/logger.service';
 import { ICase } from '../../modules/menu-items/cases/models/case.model';
 import { GeoRegisteration, IOverlay } from '../../modules/overlays/models/overlay.model';
 import { overlayStatusConfig } from "../../modules/overlays/overlay-status/config/overlay-status-config";
@@ -97,12 +96,6 @@ describe('CasesAppEffects', () => {
 				{
 					provide: TranslateService,
 					useValue: {}
-				},
-				{
-					provide: LoggerService, useValue: {
-						info: () => {
-						}
-					}
 				},
 				{ provide: casesConfig, useValue: { schema: null, defaultCase: { id: 'defaultCaseId' } } },
 				{ provide: linksConfig, useValue: {} },
@@ -290,7 +283,11 @@ describe('CasesAppEffects', () => {
 			spyOn(casesService, 'loadCase').and.callFake(() => of(caseItem));
 			actions = hot('--a--', { a: new SelectDilutedCaseAction(<any>caseItem) });
 			const expectedResults = cold('--(bc)--', {
-				b: new SetToastMessageAction({ toastText: 'Failed to load case (404)', showWarningIcon: true }),
+				b: new SetToastMessageAction({
+					toastText: 'Failed to load case (404)',
+					showWarningIcon: true,
+					originalMessage: 'Http failure response for (unknown url): 404 undefined'
+				}),
 				c: new LoadDefaultCaseIfNoActiveCaseAction()
 			});
 			expect(casesAppEffects.loadCase$).toBeObservable(expectedResults);

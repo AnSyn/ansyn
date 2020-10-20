@@ -8,7 +8,7 @@ describe('LayersReducer', () => {
 		let staticLayer: ILayer = {
 			url: 'fakeStaticUrl',
 			id: 'staticLayerId',
-			name: 'staticLayer',
+			name: 'Default',
 			type: LayerType.annotation,
 			creationTime: new Date(),
 			layerPluginType: layerPluginTypeEnum.Annotations

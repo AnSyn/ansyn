@@ -35,7 +35,6 @@ import {
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { casesConfig, CasesService } from '../../modules/menu-items/cases/services/cases.service';
 import { ICasesConfig } from '../../modules/menu-items/cases/models/cases-config';
-import { IRouterState, routerStateSelector } from '../../../../app/router/reducers/router.reducer';
 
 @Injectable()
 export class CasesAppEffects {
@@ -79,8 +78,7 @@ export class CasesAppEffects {
 	loadDefaultCase$: Observable<any> = this.actions$.pipe(
 		ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
 		filter((action: LoadDefaultCaseAction) => !action.payload.context),
-		withLatestFrom(this.store$.select(routerStateSelector)),
-		mergeMap(([action, router]: [(SelectDilutedCaseAction), IRouterState]) => {
+		mergeMap(() => {
 			const defaultCase = cloneDeep(this.casesService.defaultCase);
 			// the default map id is null, so we generate a new id
 			// for the initial map

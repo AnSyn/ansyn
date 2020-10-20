@@ -75,7 +75,7 @@ export class QueryParamsHelper {
 		const id: string = this.casesService.generateUUID();
 		const link = {
 			preview: { id, creationTime: new Date() },
-			data: sCase.state
+			data: {...sCase.state, maps: this.casesService.generateMapId(sCase.state.maps)}
 		};
 
 		return this.casesService.createLink(link);

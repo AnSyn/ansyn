@@ -12,7 +12,7 @@ import { ErrorHandlerService } from '../../../core/services/error-handler.servic
 import { IDeltaTime } from '../../../core/models/time.model';
 import { IStoredEntity, StorageService } from '../../../core/services/storage/storage.service';
 import {
-	ICase,
+	ICase, ICaseMapsState,
 	ICasePreview,
 	ICaseState,
 	ICaseTimeState, IDilutedCase,
@@ -67,7 +67,7 @@ export class CasesService {
 					id: linkId,
 					schema: 'link'
 				};
-				return new SelectDilutedCaseAction(dilutedCase);
+				return this.parseCase(dilutedCase);
 			}),
 			catchError(() => EMPTY)
 		);
@@ -177,6 +177,10 @@ export class CasesService {
 		const uuid = this.generateUUID();
 		const newCase: ICase = {
 			...selectedCase,
+			state: {
+				...selectedCase.state,
+				maps: this.generateMapId(selectedCase.state.maps),
+			},
 			id: uuid,
 			creationTime: currentTime,
 			lastModified: currentTime,
@@ -194,6 +198,9 @@ export class CasesService {
 	}
 
 	createLink(link): Observable<any> {
+		const newLink = {
+
+		}
 		return this.storageService.create(this.linksConfig.schema, link).pipe(
 			map((_: any) => _._id)
 		);
@@ -252,5 +259,18 @@ export class CasesService {
 		});
 
 		return _isEqual(cloneA, cloneB);
+	}
+
+	generateMapId(maps: ICaseMapsState) {
+		let activeMapId = maps.activeMapId;
+		const newMaps = {...maps, data: maps.data.map( (map) => {
+				const newMapId = this.generateUUID();
+				if (map.id === activeMapId) {
+					activeMapId = map.id;
+				}
+				return {...map, id: newMapId};
+			})};
+		newMaps.activeMapId = activeMapId;
+		return newMaps;
 	}
 }

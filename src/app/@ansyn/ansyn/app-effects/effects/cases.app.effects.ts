@@ -7,7 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { GetProvidersMapsService, ImageryCommunicatorService } from '@ansyn/imagery';
 import { mapValues, uniqBy } from 'lodash';
 import { IAppState } from '../app.effects.module';
-import { catchError, filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, map, mergeMap, tap, withLatestFrom, concatMap } from 'rxjs/operators';
 import {
 	CasesActionTypes, LoadDefaultCaseAction,
 	LoadDefaultCaseIfNoActiveCaseAction,
@@ -82,19 +82,6 @@ export class CasesAppEffects {
 	);
 
 	@Effect()
-	loadCaseDisplayOverlays$: Observable<any> = this.actions$
-	.pipe(
-		ofType<SelectDilutedCaseAction>(CasesActionTypes.SELECT_DILUTED_CASE),
-		map(({ payload }: SelectDilutedCaseAction) => payload),
-		mergeMap((caseValue: IDilutedCase) => {
-			const maps = caseValue.state.maps.data.filter(mapData => Boolean(mapData.data.overlay));
-
-			const displayOverlayActions = maps.map(map => new DisplayOverlayAction({ overlay: map.data.overlay, mapId: map.id }));
-			return displayOverlayActions;
-		})
-	);
-
-	@Effect()
 	loadCase$: Observable<any> = this.actions$
 		.pipe(
 			ofType<SelectDilutedCaseAction>(CasesActionTypes.SELECT_DILUTED_CASE),
@@ -110,7 +97,7 @@ export class CasesAppEffects {
 				return this.overlaysService.getOverlaysById(ids)
 					.pipe(
 						map(overlays => new Map(overlays.map((overlay): [string, IOverlay] => [overlay.id, overlay]))),
-						map((mapOverlay: Map<string, IOverlay>) => {
+						concatMap((mapOverlay: Map<string, IOverlay>) => {
 							let newCaseValue: IDilutedCase = { ...caseValue, state: {
 									...caseValue.state,
 									favoriteOverlays: caseValue.state.favoriteOverlays
@@ -131,8 +118,9 @@ export class CasesAppEffects {
 											}))
 									}
 								} };
-
-							return new SelectCaseAction(newCaseValue);
+							const overlayToDisplay = newCaseValue.state.maps.data.filter(mapData => Boolean(mapData.data.overlay))
+								.map(map => new DisplayOverlayAction({ overlay: map.data.overlay, mapId: map.id }));
+							return [new SelectCaseAction(newCaseValue), ...overlayToDisplay];
 						}),
 						catchError<any, any>((result: HttpErrorResponse) => {
 							console.warn(result);
@@ -145,22 +133,6 @@ export class CasesAppEffects {
 					);
 			})
 		);
-
-		@Effect({dispatch: false})
-		onLoadDefaultCase$ = this.actions$.pipe(
-			ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
-			withLatestFrom(this.store$.select(selectMapsIds)),
-			filter(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => !action.payload.context && Boolean(mapId)),
-			mergeMap(([action, [mapId]]: [LoadDefaultCaseAction, string[]]) => {
-				const position = this.caseConfig.defaultCase.state.maps.data[0].data.position;
-				const communicator = this.imageryCommunicatorService.provide(mapId);
-				const mapType = communicator.mapSettings.worldView.mapType;
-				return this.getProvidersMapsService.getDefaultProviderByType(mapType).pipe(
-					tap( (source) =>	communicator.loadInitialMapSource(position, source))
-				)
-			})
-		);
-
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

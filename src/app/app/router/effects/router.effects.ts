@@ -72,22 +72,6 @@ export class RouterEffects {
 		));
 
 	@Effect()
-	loadDefaultCase$: Observable<any> = this.actions$.pipe(
-		ofType(CasesActionTypes.LOAD_DEFAULT_CASE),
-		filter((action: LoadDefaultCaseAction) => !action.payload.context),
-		withLatestFrom(this.store$.select(routerStateSelector)),
-		mergeMap(([action, router]: [(SelectDilutedCaseAction), IRouterState]) => {
-			const defaultCase = cloneDeep(this.casesService.defaultCase);
-			// the default map id is null, so we generate a new id
-			// for the initial map
-			const defaultMapId = this.casesService.generateUUID();
-			defaultCase.state.maps.data[0].id = defaultMapId;
-			defaultCase.state.maps.activeMapId = defaultMapId;
-			const defaultCaseQueryParams: ICase = this.casesService.parseCase(defaultCase);
-			return [new SelectDilutedCaseAction(defaultCaseQueryParams)];
-		}));
-
-	@Effect()
 	selectDefaultCaseUpdateRouter$: Observable<NavigateCaseTriggerAction> = this.actions$.pipe(
 		ofType(CasesActionTypes.SELECT_CASE),
 		filter((action: SelectCaseAction) => action.payload.id === this.casesService.defaultCase.id),

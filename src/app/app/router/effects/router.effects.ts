@@ -1,29 +1,24 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
-import {
-	ISetStatePayload,
-	NavigateCaseTriggerAction,
-	RouterActionTypes,
-	SetStateAction
-} from '../actions/router.actions';
+import { NavigateCaseTriggerAction, RouterActionTypes, SetStateAction } from '../actions/router.actions';
 import { Router } from '@angular/router';
 import {
 	CasesActionTypes,
 	CasesService,
-	casesStateSelector, ICase,
-	ICasesState, IDilutedCase,
+	ICase,
+	IDilutedCase,
 	LoadCaseAction,
 	LoadDefaultCaseAction,
 	SaveCaseAsSuccessAction,
 	SelectCaseAction,
-	SelectDilutedCaseAction, selectSelectedCase
+	SelectDilutedCaseAction,
+	selectSelectedCase
 } from '@ansyn/ansyn';
 import { IRouterState, routerStateSelector } from '../reducers/router.reducer';
 import { Store } from '@ngrx/store';
 import { filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import { cloneDeep } from 'lodash';
-import { MenuActionTypes, ResetAppAction, ResetAppActionSuccess } from '@ansyn/menu';
 
 @Injectable()
 export class RouterEffects {
@@ -34,8 +29,7 @@ export class RouterEffects {
 		tap(({ payload }) => {
 			if (payload) {
 				this.router.navigate([payload.schema, payload.id]);
-			}
-			else {
+			} else {
 				this.router.navigate(['']);
 			}
 		})
@@ -44,28 +38,25 @@ export class RouterEffects {
 	@Effect()
 	onLoadAppByCaseId$ = this.actions$.pipe(
 		ofType<SetStateAction>(RouterActionTypes.SET_STATE),
-		filter( (action: SetStateAction) => Boolean(action.payload.caseId)),
-		tap(() => console.log('load case id')),
+		filter((action: SetStateAction) => Boolean(action.payload.caseId)),
 		map((action) => new LoadCaseAction(action.payload.caseId)),
 	);
 
 	@Effect()
 	onLoadAppByLinkId$ = this.actions$.pipe(
 		ofType<SetStateAction>(RouterActionTypes.SET_STATE),
-		filter( (action: SetStateAction) => Boolean(action.payload.linkId)),
-		mergeMap( (action) => this.casesService.getLink(action.payload.linkId)),
-		tap((_case) => console.log('load link id',  {_case})),
-		map( (_case: IDilutedCase) => new SelectDilutedCaseAction(_case))
+		filter((action: SetStateAction) => Boolean(action.payload.linkId)),
+		mergeMap((action) => this.casesService.getLink(action.payload.linkId)),
+		map((_case: IDilutedCase) => new SelectDilutedCaseAction(_case))
 	);
 
 	@Effect()
 	onLoadDefaultCase$ = this.actions$.pipe(
 		ofType<SetStateAction>(RouterActionTypes.SET_STATE),
-		filter( (action: SetStateAction) => !action.payload.caseId && !action.payload.linkId),
+		filter((action: SetStateAction) => !action.payload.caseId && !action.payload.linkId),
 		withLatestFrom(this.store$.select(selectSelectedCase)),
-		filter( ([action, selectCase]) => !selectCase || selectCase.id !== this.casesService.defaultCase.id),
-		tap(([action, selectCase]) => console.log('load default case')),
-		map( ([action, selectCase]) => new LoadDefaultCaseAction(action.payload.queryParams))
+		filter(([action, selectCase]) => !selectCase || selectCase.id !== this.casesService.defaultCase.id),
+		map(([action, selectCase]) => new LoadDefaultCaseAction(action.payload.queryParams))
 	);
 
 	@Effect()
@@ -74,7 +65,10 @@ export class RouterEffects {
 		withLatestFrom(this.store$.select(routerStateSelector)),
 		filter(([action, router]: [(SelectCaseAction | SaveCaseAsSuccessAction), IRouterState]) => Boolean(router)),
 		filter(([action, router]: [(SelectCaseAction | SaveCaseAsSuccessAction), IRouterState]) => action.payload.id !== this.casesService.defaultCase.id && action.payload.id !== router.caseId),
-		map(([action, router]: [SelectCaseAction | SaveCaseAsSuccessAction, IRouterState]) => new NavigateCaseTriggerAction({ schema: (action.payload.schema) ? action.payload.schema : 'case', id: action.payload.id })
+		map(([action, router]: [SelectCaseAction | SaveCaseAsSuccessAction, IRouterState]) => new NavigateCaseTriggerAction({
+				schema: (action.payload.schema) ? action.payload.schema : 'case',
+				id: action.payload.id
+			})
 		));
 
 	@Effect()
@@ -100,14 +94,8 @@ export class RouterEffects {
 		map(() => new NavigateCaseTriggerAction())
 	);
 
-	@Effect()
-	onResetApp$: Observable<LoadDefaultCaseAction> = this.actions$.pipe(
-		ofType<ResetAppAction>(MenuActionTypes.RESET_APP),
-		map(() => new LoadDefaultCaseAction())
-	);
-
 	constructor(protected actions$: Actions, protected store$: Store<any>, protected router: Router,
-		protected casesService: CasesService) {
+				protected casesService: CasesService) {
 	}
 
 }

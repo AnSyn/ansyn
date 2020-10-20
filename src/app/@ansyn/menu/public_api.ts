@@ -17,7 +17,6 @@ export {
 	SetAutoClose,
 	SetBadgeAction,
 	ToggleIsPinnedAction,
-	ResetAppActionSuccess,
 	ResetAppAction
 } from './actions/menu.actions';
 export { MenuComponent } from './menu/menu.component';

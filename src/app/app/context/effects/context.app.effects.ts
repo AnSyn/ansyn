@@ -146,7 +146,7 @@ export class ContextAppEffects {
 					)
 				);
 			default:
-				return [EMPTY];
+				return EMPTY;
 		}
 	}
 

@@ -32,7 +32,7 @@ import {
 	map,
 	mergeMap,
 	share,
-	switchMap, tap,
+	switchMap,
 	withLatestFrom
 } from 'rxjs/operators';
 import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
@@ -79,8 +79,8 @@ export class CasesEffects {
 	@Effect()
 	onDeleteCase$: Observable<any> = this.actions$.pipe(
 		ofType<DeleteCaseAction>(CasesActionTypes.DELETE_CASE),
-		mergeMap((action) => this.dataLayersService.removeCaseLayers(action.payload).pipe(map(() => action))),
-		withLatestFrom(this.store.select(selectSelectedCase), ({ payload: deletedCaseId }, selectedCase: ICase) => [deletedCaseId, selectedCase.id]),
+		mergeMap((action) => this.dataLayersService.removeCaseLayers(action.payload.id).pipe(map(() => action))),
+		withLatestFrom(this.store.select(selectSelectedCase), ({ payload: { id: deletedCaseId }}, selectedCase: ICase) => [deletedCaseId, selectedCase.id]),
 		filter(([deletedCaseId, selectedCaseId]) => deletedCaseId === selectedCaseId),
 		map(() => new LoadDefaultCaseAction()),
 		rxPreventCrash()

@@ -8,7 +8,7 @@ import { SettingsComponent } from '../modules/menu-items/settings/settings/setti
 import { TasksComponent } from '../modules/menu-items/algorithms/components/tasks/tasks.component';
 import { anaglyphSensorAlertKey } from '../modules/plugins/openlayers/plugins/anaglyph-sensor/plugin/anaglyph-sensor.plugin';
 import { AnaglyphSensorAlertComponent } from '../modules/plugins/openlayers/plugins/anaglyph-sensor/alert-component/anaglyph-sensor-alert.component';
-import { CredentialsComponent } from '../modules/core/components/credentials/credentials.component';
+import { CredentialsComponent } from '../modules/menu-items/credentials/components/credentials/credentials.component';
 import { ResultsComponent } from "../modules/menu-items/results/components/results/results.component";
 import { FiltersCollectionComponent } from '../modules/filters/components/filters-collection/filters-collection.component';
 

@@ -112,7 +112,7 @@ export class OverlayStatusEffects {
 					id: activeMap.id,
 					changes: { data: { ...activeMap.data, isAutoImageProcessingActive } }
 				}),
-				new SetAutoImageProcessingSuccess(isAutoImageProcessingActive)
+				new SetAutoImageProcessingSuccess({ value: isAutoImageProcessingActive, fromUI: true })
 			];
 		})
 	);
@@ -217,7 +217,7 @@ export class OverlayStatusEffects {
 		withLatestFrom(this.store$.select(overlayStatusStateSelector).pipe(pluck<IOverlayStatusState, IImageManualProcessArgs>('manualImageProcessingParams'))),
 		mergeMap<any, any>(([map, manualImageProcessingParams]: [ICaseMapState, IImageManualProcessArgs]) => {
 			const { overlay, isAutoImageProcessingActive, imageManualProcessArgs } = map.data;
-			const actions: Action[] = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess(overlay ? isAutoImageProcessingActive : false)];
+			const actions: Action[] = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess({ value: overlay ? isAutoImageProcessingActive : false })];
 			if (!isEqual(imageManualProcessArgs, manualImageProcessingParams)) {
 				actions.push(new SetManualImageProcessing(map.data && imageManualProcessArgs || this.defaultImageManualProcessArgs));
 			}

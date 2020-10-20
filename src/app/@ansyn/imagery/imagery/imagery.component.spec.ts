@@ -9,6 +9,7 @@ import { ImageryMapSource } from '../decorators/map-source-provider';
 import { IMapSettings } from '../model/map-settings';
 import { GetProvidersMapsService } from '../services/get-providers-maps/get-providers-maps.service';
 import { of } from 'rxjs';
+import { COMMUNICATOR_LOG_MESSAGES } from '../communicator-service/communicator-log-messages';
 
 @ImageryMapSource({
 	sourceType: 'sourceType1',
@@ -57,7 +58,11 @@ describe('ImageryComponent', () => {
 					}
 				},
 				{ provide: IMAGERY_MAPS, useValue: {} },
-				ImageryCommunicatorService
+				ImageryCommunicatorService,
+				{
+					provide: COMMUNICATOR_LOG_MESSAGES,
+					useValue: {}
+				}
 			]
 		}).compileComponents();
 	}));

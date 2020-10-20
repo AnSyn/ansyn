@@ -89,7 +89,10 @@ describe('DeleteCaseComponent', () => {
 		spyOn(casesService, 'removeCase').and.returnValue(of(component.activeCase));
 		spyOn(component, 'close');
 		component.onSubmitRemove();
-		expect(store.dispatch).toHaveBeenCalledWith(new DeleteCaseAction(component.activeCase.id));
+		expect(store.dispatch).toHaveBeenCalledWith(new DeleteCaseAction({
+			id: component.activeCase.id,
+			name: component.activeCase.name
+		}));
 		expect(component.close).toHaveBeenCalled();
 
 	});

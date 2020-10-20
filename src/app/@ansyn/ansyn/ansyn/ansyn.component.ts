@@ -15,9 +15,9 @@ import { LoadDefaultCaseAction } from '../modules/menu-items/cases/actions/cases
 import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
 import { IToolsConfig, toolsConfig } from '../modules/menu-items/tools/models/tools-config';
 import { UpdateToolsFlags } from '../modules/menu-items/tools/actions/tools.actions';
-import { toolsFlags } from '../modules/menu-items/tools/reducers/tools.reducer';
 import { LoggerService } from '../modules/core/services/logger.service';
 import { IOverlay } from '../modules/overlays/models/overlay.model';
+import { toolsFlags } from '../modules/menu-items/tools/models/tools.model';
 
 @Component({
 	selector: 'ansyn-app',

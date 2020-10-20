@@ -17,33 +17,29 @@ import {
 } from '../../modules/filters/actions/filters.actions';
 import { EnumFilterMetadata } from '../../modules/filters/models/metadata/enum-filter-metadata';
 import { FilterMetadata } from '../../modules/filters/models/metadata/filter-metadata.interface';
-import { filtersConfig } from '../../modules/filters/services/filters.service';
+import { filtersConfig, FiltersService } from '../../modules/filters/services/filters.service';
 import { filtersFeatureKey, FiltersReducer } from '../../modules/filters/reducer/filters.reducer';
 import { IFilter } from '../../modules/filters/models/IFilter';
 import { SliderFilterMetadata } from '../../modules/filters/models/metadata/slider-filter-metadata';
-import { buildFilteredOverlays } from '../../modules/core/utils/overlays';
 import { GenericTypeResolverService } from '../../modules/core/services/generic-type-resolver.service';
 import {
-	LoadOverlaysAction,
-	SetDropsAction,
+	LoadOverlaysAction, LoadOverlaysSuccessAction, SetDropsAction,
 	SetFilteredOverlaysAction,
-	SetOverlaysStatusMessageAction,
-	SetTotalOverlaysAction
+	SetOverlaysStatusMessageAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	OverlayReducer,
 	overlaysFeatureKey,
 	overlaysStatusMessages
 } from '../../modules/overlays/reducers/overlays.reducer';
-import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { imageryStatusFeatureKey, ImageryStatusReducer } from '@ansyn/map-facade';
 import { FilterType } from '../../modules/filters/models/filter-type';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { TranslateModule } from '@ngx-translate/core';
-import { LoggerService } from '../../modules/core/services/logger.service';
 import { EnumFilterCounters } from '../../modules/filters/models/counters/enum-filter-counters';
 import { FilterCounters } from '../../modules/filters/models/counters/filter-counters.interface';
 import { SliderFilterCounters } from '../../modules/filters/models/counters/slider-filter-counters';
+import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -83,12 +79,6 @@ describe('Filters app effects', () => {
 			providers: [
 				FiltersAppEffects,
 				GenericTypeResolverService,
-				{
-					provide: LoggerService, useValue: {
-						error: (some) => null, info: () => {
-						}
-					}
-				},
 				{ provide: filtersConfig, useValue: {} },
 				provideMockActions(() => actions)
 			]
@@ -99,23 +89,6 @@ describe('Filters app effects', () => {
 		filtersAppEffects = _filtersAppEffects;
 		store = _store;
 	}));
-
-	it('updateOverlayFilters$ effect', () => {
-		const fakeObj = {
-			buildFilteredOverlays: buildFilteredOverlays
-		};
-		spyOn(fakeObj, 'buildFilteredOverlays').and.callFake(() => []);
-		store.dispatch(new InitializeFiltersSuccessAction({
-			filtersMetadata: new Map(),
-			filtersCounters: new Map()
-		}));
-		const expectedResults = cold('(bc)', {
-			b: new SetFilteredOverlaysAction([]),
-			c: new SetOverlaysStatusMessageAction(overlaysStatusMessages.noOverLayMatchFilters),
-		});
-
-		expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
-	});
 
 	it('updateOverlayDrops$ effect', () => {
 		spyOn(OverlaysService, 'parseOverlayDataForDisplay').and.callFake(() => []);
@@ -169,5 +142,39 @@ describe('Filters app effects', () => {
 		store.dispatch(new SetFavoriteOverlaysAction(overlays));
 		const expectedResults = cold('b', { b: new EnableOnlyFavoritesSelectionAction(true) });
 		expect(filtersAppEffects.setShowFavoritesFlagOnFilters$).toBeObservable(expectedResults);
+	});
+
+	describe('updateOverlayFilters$ effect', () => {
+
+		beforeEach(() => {
+			store.dispatch(new InitializeFiltersSuccessAction({
+				filtersMetadata: new Map(),
+				filtersCounters: new Map()
+			}));
+			store.dispatch(new LoadOverlaysSuccessAction([{ id: '1' }] as any));
+		});
+
+		it('should send null message if there are filtered overlays', () => {
+			const expectedResults = cold('(bc)', {
+				b: new SetFilteredOverlaysAction(['1']),
+				c: new SetOverlaysStatusMessageAction({ message: null }),
+			});
+
+			expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
+		});
+
+		it('should send no overlays message if there aren\'t filtered overlays', () => {
+			spyOn(FiltersService, 'pluckFilterModels').and.returnValue([{
+				key: 'myFilter',
+				filterFunc: () => false
+			}]);
+
+			const expectedResults = cold('(bc)', {
+				b: new SetFilteredOverlaysAction([]),
+				c: new SetOverlaysStatusMessageAction({ message: overlaysStatusMessages.noOverLayMatchFilters }),
+			});
+
+			expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
+		});
 	});
 });

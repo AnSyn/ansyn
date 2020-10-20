@@ -30,7 +30,6 @@ import {
 	map,
 	mergeMap,
 	switchMap,
-	tap,
 	withLatestFrom,
 	distinctUntilKeyChanged,
 	distinctUntilChanged
@@ -57,29 +56,10 @@ import { OverlaysService } from '../../modules/overlays/services/overlays.servic
 import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { Dictionary } from '@ngrx/entity';
-import { LoggerService } from '../../modules/core/services/logger.service';
 import { SetBadgeAction } from '@ansyn/menu';
 
 @Injectable()
 export class OverlaysAppEffects {
-
-	@Effect({ dispatch: false })
-	actionsLogger$: Observable<any> = this.actions$.pipe(
-		ofType(
-			OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS,
-			OverlaysActionTypes.CHECK_TRIANGLES,
-			OverlaysActionTypes.LOAD_OVERLAYS,
-			OverlaysActionTypes.LOAD_OVERLAYS_FAIL,
-			OverlaysActionTypes.SET_OVERLAYS_CRITERIA,
-			OverlayStatusActionsTypes.ACTIVATE_SCANNED_AREA,
-			OverlayStatusActionsTypes.TOGGLE_OVERLAY_FAVORITE,
-			OverlayStatusActionsTypes.ADD_ALERT_MSG,
-			OverlayStatusActionsTypes.REMOVE_ALERT_MSG,
-			OverlayStatusActionsTypes.TOGGLE_DRAGGED_MODE
-		),
-		tap((action) => {
-			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Overlays', action.type);
-		}));
 
 	@Effect()
 	displayMultipleOverlays$: Observable<any> = this.actions$.pipe(
@@ -212,12 +192,11 @@ export class OverlaysAppEffects {
 	updateResultTableBadge$: Observable<SetBadgeAction> = this.actions$.pipe(
 		ofType<SetTotalOverlaysAction>(OverlaysActionTypes.SET_TOTAL_OVERLAYS),
 		distinctUntilKeyChanged('payload'),
-		map((action) => new SetBadgeAction({ key: 'Results table', badge: `${ action.payload }` })));
+		map((action) => new SetBadgeAction({ key: 'Results table', badge: `${ action.payload.number }` })));
 
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,
-				public overlaysService: OverlaysService,
-				protected loggerService: LoggerService) {
+				public overlaysService: OverlaysService) {
 	}
 
 }

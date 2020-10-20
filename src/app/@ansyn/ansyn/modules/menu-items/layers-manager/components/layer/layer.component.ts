@@ -38,7 +38,7 @@ export class LayerComponent implements OnInit, OnDestroy {
 	}
 
 	public onCheckboxClicked(checked: boolean): void {
-		this.store$.dispatch(new SetLayerSelection({ id: this.layer.id, value: checked }));
+		this.store$.dispatch(new SetLayerSelection({ id: this.layer.id, value: checked, layer: this.layer }));
 	}
 
 	public selectOnly() {

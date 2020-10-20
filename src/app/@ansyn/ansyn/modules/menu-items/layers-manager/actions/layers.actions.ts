@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 import { ILayer, LayerType } from '../models/layers.model';
 import { ILayerModal, SelectedModalEnum } from '../reducers/layers-modal';
+import { ILogMessage } from '../../../core/models/logger.model';
 
 export enum LayersActionTypes {
 	BEGIN_LAYER_COLLECTION_LOAD = '[Layers] Begin layer collection load',
@@ -23,7 +24,11 @@ export enum LayersActionTypes {
 	REMOVE_CASE_LAYERS_FROM_BACKEND_FAILED_ACTION = '[Layers] Remove case layers from backend failed',
 	SET_ACTIVE_ANNOTATION_LAYER = '[Layers] Set active annotation layer',
 	SET_MODAL = '[Layers] Set modal value',
-	SHOW_ALL_LAYERS = '[Layers] Show all layers'
+	SHOW_ALL_LAYERS = '[Layers] Show all layers',
+	LOG_EXPORT_LAYER = 'LOG_EXPORT_LAYER',
+	LOG_IMPORT_LAYER = 'LOG_IMPORT_LAYER',
+	LOG_RENAME_LAYER = 'LOG_RENAME_LAYER',
+	LOG_ADD_FEATURE_TO_LAYER = 'LOG_ADD_FEATURE_TO_LAYER'
 }
 
 export type LayersActions =
@@ -45,10 +50,14 @@ export class BeginLayerCollectionLoadAction implements Action {
 	}
 }
 
-export class LayerCollectionLoadedAction implements Action {
+export class LayerCollectionLoadedAction implements Action, ILogMessage {
 	type = LayersActionTypes.LAYER_COLLECTION_LOADED;
 
 	constructor(public payload: ILayer[]) {
+	}
+
+	logMessage() {
+		return `${this.payload.length} data layers loaded from backend`;
 	}
 }
 
@@ -66,10 +75,14 @@ export class ErrorLoadingLayersAction implements Action {
 	}
 }
 
-export class SetLayerSelection implements Action {
+export class SetLayerSelection implements Action, ILogMessage {
 	readonly type = LayersActionTypes.SET_LAYER_SELECTION;
 
-	constructor(public payload: { id: string, value: boolean }) {
+	constructor(public payload: { id: string, value: boolean, layer?: ILayer }) {
+	}
+
+	logMessage() {
+		return `${this.payload.value ? 'Un-' : ''}Hiding ${this.payload.layer ? this.payload.layer.type : 'data'} layer ${this.payload.layer ? this.payload.layer.name : ''}`
 	}
 }
 
@@ -80,10 +93,14 @@ export class SelectOnlyLayer implements Action {
 	}
 }
 
-export class AddLayer implements Action {
+export class AddLayer implements Action, ILogMessage {
 	type = LayersActionTypes.ADD_LAYER;
 
 	constructor(public payload: ILayer) {
+	}
+
+	logMessage() {
+		return `Adding ${this.payload.type} data layer ${this.payload.name}` + (this.payload.data.features ? ` with ${this.payload.data.features.length} features` : ``);
 	}
 }
 
@@ -92,6 +109,10 @@ export class AddLayerOnBackendFailedAction extends AddLayer {
 
 	constructor(public payload: ILayer, error: any) {
 		super(payload)
+	}
+
+	logMessage() {
+		return `Failed adding ${this.payload.type} data layer ${this.payload.name} to backend`
 	}
 }
 
@@ -115,6 +136,10 @@ export class UpdateLayerOnBackendFailedAction extends UpdateLayer {
 	constructor(public payload: ILayer, error: any) {
 		super(payload)
 	}
+
+	logMessage() {
+		return `Failed saving ${this.payload.type} data layer ${this.payload.name} to backend`
+	}
 }
 
 export class UpdateLayerOnBackendSuccessAction implements Action {
@@ -124,11 +149,15 @@ export class UpdateLayerOnBackendSuccessAction implements Action {
 	}
 }
 
-export class RemoveLayer implements Action {
+export class RemoveLayer implements Action, ILogMessage {
 	type = LayersActionTypes.REMOVE_LAYER;
 
 	constructor(public payload: string) {
 
+	}
+
+	logMessage() {
+		return `Removing data layer`
 	}
 }
 
@@ -138,12 +167,20 @@ export class RemoveLayerOnBackendFailedAction extends RemoveLayer {
 	constructor(public payload: string, error: any) {
 		super(payload);
 	}
+
+	logMessage() {
+		return `Failed removing data layer from backend`
+	}
 }
 
 export class RemoveLayerOnBackendSuccessAction implements Action {
 	readonly type = LayersActionTypes.REMOVE_LAYER_ON_BACKEND_SUCCESS_ACTION;
 
 	constructor(public payload: string) {
+	}
+
+	logMessage() {
+		return `Removed data layer from backend`
 	}
 }
 
@@ -165,11 +202,15 @@ export class RemoveCaseLayersFromBackendFailedAction extends RemoveCaseLayersFro
 	}
 }
 
-export class SetActiveAnnotationLayer implements Action {
+export class SetActiveAnnotationLayer implements Action, ILogMessage {
 	type = LayersActionTypes.SET_ACTIVE_ANNOTATION_LAYER;
 
 	constructor(public payload: string) {
 
+	}
+
+	logMessage() {
+		return `Changed active annotation layer`
 	}
 }
 
@@ -192,5 +233,53 @@ export class ShowAllLayers implements Action {
 
 	constructor(public payload: LayerType) {
 
+	}
+}
+
+export class LogExportLayer implements Action, ILogMessage {
+	type = LayersActionTypes.LOG_EXPORT_LAYER;
+
+	constructor(public payload: { layer: ILayer, format: string }) {
+
+	}
+
+	logMessage() {
+		return `Opening popup to save ${this.payload.layer.type} layer ${this.payload.layer.name} as ${this.payload.format} file`
+	}
+}
+
+export class LogImportLayer implements Action, ILogMessage {
+	type = LayersActionTypes.LOG_IMPORT_LAYER;
+
+	constructor(public payload: { fileName: string }) {
+
+	}
+
+	logMessage() {
+		return `Importing data layer from file ${this.payload.fileName}`
+	}
+}
+
+export class LogRenameLayer implements Action, ILogMessage {
+	type = LayersActionTypes.LOG_RENAME_LAYER;
+
+	constructor(public payload: { layer: ILayer, name: string }) {
+
+	}
+
+	logMessage() {
+		return `Renaming ${this.payload.layer.type} layer ${this.payload.layer.name} to ${this.payload.name}`
+	}
+}
+
+export class LogAddFeatureToLayer implements Action, ILogMessage {
+	type = LayersActionTypes.LOG_ADD_FEATURE_TO_LAYER;
+
+	constructor(public payload: { layerName: string }) {
+
+	}
+
+	logMessage() {
+		return `Adding feature to annotation layer ${this.payload.layerName}`
 	}
 }

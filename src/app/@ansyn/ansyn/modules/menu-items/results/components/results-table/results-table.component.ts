@@ -122,8 +122,10 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		);
 
 
-	constructor(protected store$: Store<IOverlaysState>,
-				protected translateService: TranslateService) {
+	constructor(
+		protected store$: Store<IOverlaysState>,
+		protected translateService: TranslateService
+	) {
 	}
 
 	findIndexBytOverlayId(overlayId: string): number {
@@ -182,7 +184,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	sortOverlays(header: ITableHeader): void {
-		let { headerData, isDescending, sortFn } = header;
+		const { headerData, isDescending, sortFn, headerName } = header;
 		this.sortedBy = headerData;
 		this.overlays.sort(function (a, b) {
 			const dataA = a[headerData];

@@ -12,6 +12,7 @@ import { OverlaySourceProvider } from '../../../modules/overlays/models/overlays
 import { EPSG_3857 } from '@ansyn/imagery';
 import { LoggerService } from '../../../modules/core/services/logger.service';
 
+const today = new Date();
 const DATA = {
 	'4eeb061d-f8a6-4a0a-86cf-8d97c71a62c6': {
 		'sensorType': 'Video',
@@ -30,8 +31,8 @@ const DATA = {
 		'name': 'Video',
 		'imageUrl': 'https://www.w3schools.com/html/mov_bbb.mp4',
 		'thumbnailUrl': 'https://peach.blender.org/wp-content/uploads/dl_1080p-300x168.jpg',
-		'date': new Date('2019-10-17T23:53:06.772Z'),
-		'photoTime': '2019-10-17T23:53:06.772Z',
+		'date': today,
+		'photoTime': today.toString(),
 		'sourceType': IMAGERY_VIDEO_SOURCE_TYPE,
 		'isGeoRegistered': 'notGeoRegistered'
 	}

@@ -3,9 +3,9 @@ import { saveAs } from 'file-saver';
 import { cloneDeep } from 'lodash';
 import { Store } from '@ngrx/store';
 import { ILayerState } from '../../../reducers/layers.reducer';
-import { CloseLayersModal } from '../../../actions/layers.actions';
+import { CloseLayersModal, LogExportLayer } from '../../../actions/layers.actions';
 import { UUID } from 'angular2-uuid';
-import { ILayer } from '../../../models/layers.model';
+import { ILayer, LayerFileTypes } from '../../../models/layers.model';
 import GeoJsonFormat from 'ol/format/GeoJSON';
 import KMLFormat from 'ol/format/KML';
 
@@ -19,28 +19,35 @@ export class DownloadLayersComponent {
 	geoJsonFormat: GeoJsonFormat;
 	kmlFormat: KMLFormat;
 
-	constructor(protected store: Store<ILayerState>) {
+	constructor(
+		protected store: Store<ILayerState>
+	) {
 		this.geoJsonFormat = new GeoJsonFormat();
 		this.kmlFormat = new KMLFormat();
 	}
 
-	downloadGeojson() {
-		const annotationsLayer = cloneDeep(this.layer.data);
-		this.generateFeaturesIds(annotationsLayer);
-		const blob = new Blob([JSON.stringify(annotationsLayer)], { type: 'application/geo+json' });
-		saveAs(blob, `${ this.layer.name }.geojson`);
+	get LayerFileTypesArray(): LayerFileTypes[] {
+		return Object.values(LayerFileTypes)
+	}
+
+	downloadLayerAs(fileType: LayerFileTypes) {
+		this.store.dispatch(new LogExportLayer({ layer: this.layer, format: fileType }));
+		const layerData = cloneDeep(this.layer.data);
+		this.generateFeaturesIds(layerData);
+		const blob = this.convertLayerDataTo(fileType, layerData);
+		saveAs(blob, `${this.layer.name}.${fileType.toLowerCase()}`);
 		this.store.dispatch(new CloseLayersModal());
 	}
 
-	downloadKml() {
-		const annotationsLayer = cloneDeep(this.layer.data);
-		this.generateFeaturesIds(annotationsLayer);
-		this.visualizerToSimpleStyle(annotationsLayer);
-		const features = this.geoJsonFormat.readFeatures(annotationsLayer);
-		const kml = this.kmlFormat.writeFeatures(features);
-		const blob = new Blob([kml], { type: 'application/vnd.google-earth.kml+xml' });
-		saveAs(blob, `${ this.layer.name }.kml`);
-		this.store.dispatch(new CloseLayersModal());
+	convertLayerDataTo(fileType: LayerFileTypes, layerData: any): Blob {
+		if (fileType === LayerFileTypes.GEOJSON) {
+			return new Blob([JSON.stringify(layerData)], { type: 'application/geo+json' });
+		} else if (fileType === LayerFileTypes.KML) {
+			this.visualizerToSimpleStyle(layerData);
+			const features = this.geoJsonFormat.readFeatures(layerData);
+			const kml = this.kmlFormat.writeFeatures(features);
+			return new Blob([kml], { type: 'application/vnd.google-earth.kml+xml' });
+		}
 	}
 
 	generateFeaturesIds(annotationsLayer): void {

@@ -1,7 +1,8 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ICaseTimeState } from '../../../menu-items/cases/models/case.model';
-import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
+import { LogSelectSearchTimePreset, SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import { Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-timepicker-presets',
@@ -15,7 +16,10 @@ export class TimepickerPresetsComponent implements OnInit, OnDestroy {
 	@Output() openTimePicker = new EventEmitter<boolean>();
 	presets = [7, 30, 60, 365, 5 * 365];
 
-	constructor(protected store$: Store<any>) {
+	constructor(
+		protected store$: Store<any>,
+		protected translate: TranslateService
+	) {
 	}
 
 	setPreset(preset: number) {
@@ -28,6 +32,7 @@ export class TimepickerPresetsComponent implements OnInit, OnDestroy {
 			to: currentDate,
 		};
 
+		this.store$.dispatch(new LogSelectSearchTimePreset({ presetTitle: `${this.presetValue(preset)} ${this.translate.instant(this.presetTitle(preset))}`}));
 		this.store$.dispatch(new SetOverlaysCriteriaAction({ time }));
 		this.closePresets();
 	}

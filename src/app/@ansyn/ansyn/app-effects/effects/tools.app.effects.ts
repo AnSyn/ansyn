@@ -16,11 +16,9 @@ import {
 	selectMapsList
 } from '@ansyn/map-facade';
 import { Point } from 'geojson';
-import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
 import { differenceWith } from 'lodash';
-import { filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
 import { IAppState } from '../app.effects.module';
-import { selectGeoFilterType } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import {
 	ClearActiveInteractionsAction,
@@ -37,13 +35,8 @@ import {
 	UpdateToolsFlags
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import { IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
-import {
-	selectAnnotationMode,
-	selectToolFlag,
-	toolsFlags
-} from '../../modules/menu-items/tools/reducers/tools.reducer';
-import { CaseGeoFilter } from '../../modules/menu-items/cases/models/case.model';
-import { LoggerService } from '../../modules/core/services/logger.service';
+import { selectAnnotationMode, selectToolFlag } from '../../modules/menu-items/tools/reducers/tools.reducer';
+import { toolsFlags } from '../../modules/menu-items/tools/models/tools.model';
 import { OverlayStatusActionsTypes } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 
 @Injectable()
@@ -51,21 +44,6 @@ export class ToolsAppEffects {
 
 
 	isShadowMouseActiveByDefault = this.config.ShadowMouse && this.config.ShadowMouse.activeByDefault;
-
-	@Effect({ dispatch: false })
-	actionsLogger$: Observable<any> = this.actions$.pipe(
-		ofType(
-			ToolsActionsTypes.START_MOUSE_SHADOW,
-			ToolsActionsTypes.STOP_MOUSE_SHADOW,
-			ToolsActionsTypes.GO_TO,
-			ToolsActionsTypes.UPDATE_TOOLS_FLAGS,
-			ToolsActionsTypes.MEASURES.SET_MEASURE_TOOL_STATE,
-			ToolsActionsTypes.STORE.SET_ANNOTATION_MODE,
-			ToolsActionsTypes.SET_SUB_MENU
-		),
-		tap((action) => {
-			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Tools', action.type);
-		}));
 
 	@Effect()
 	onImageriesChanged: Observable<any> = this.actions$.pipe(
@@ -191,8 +169,7 @@ export class ToolsAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				@Inject(toolsConfig) protected config: IToolsConfig,
-				protected loggerService: LoggerService) {
+				@Inject(toolsConfig) protected config: IToolsConfig) {
 	}
 
 

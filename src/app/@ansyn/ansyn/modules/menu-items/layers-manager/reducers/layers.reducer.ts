@@ -4,7 +4,7 @@ import { uniq } from 'lodash';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary, EntitySelectors } from '@ngrx/entity/src/models';
 import { ILayer, LayerType } from '../models/layers.model';
-import { ILayerModal, SelectedModalEnum } from './layers-modal';
+import { getDefaultLayer, ILayerModal, SelectedModalEnum } from './layers-modal';
 
 export const layersAdapter: EntityAdapter<ILayer> = createEntityAdapter<ILayer>();
 
@@ -30,7 +30,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 	switch (action.type) {
 		case LayersActionTypes.LAYER_COLLECTION_LOADED:
 			let annotationLayer = action.payload.find(({ type }) => type === LayerType.annotation);
-			let selectedLayersIds = state.selectedLayersIds;
+			const selectedLayersIds = Boolean(state.selectedLayersIds.length) ? state.selectedLayersIds : getDefaultLayer(action.payload);
 			let activeAnnotationLayer = state.activeAnnotationLayer;
 			let layers = action.payload;
 			activeAnnotationLayer = annotationLayer && annotationLayer.id;

@@ -7,7 +7,6 @@ import { menuFeatureKey, MenuReducer } from './reducers/menu.reducer';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MENU_ITEMS } from './helpers/menu-item-token';
 
-
 // @dynamic
 @NgModule({
 	imports: [

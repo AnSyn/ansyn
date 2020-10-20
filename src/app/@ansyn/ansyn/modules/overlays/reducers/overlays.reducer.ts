@@ -5,9 +5,11 @@ import * as _ from 'lodash';
 import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
 import {
 	OverlaysActions,
-	OverlaysActionTypes, SetMarkUp,
+	OverlaysActionTypes,
+	SetMarkUp,
 	SetMiscOverlay,
-	SetMiscOverlays
+	SetMiscOverlays,
+	SetOverlaysStatusMessageAction
 } from '../actions/overlays.actions';
 import {
 	IOverlay,
@@ -225,7 +227,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 		case OverlaysActionTypes.SET_OVERLAYS_STATUS_MESSAGE:
 			return {
 				...state,
-				statusMessage: action.payload
+				statusMessage: action.payload && (action as SetOverlaysStatusMessageAction).payload.message
 			};
 
 		case OverlaysActionTypes.SET_OVERLAYS_MARKUPS:

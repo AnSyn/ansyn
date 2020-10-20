@@ -8,8 +8,6 @@ describe('TimepickerPresetsComponent', () => {
 	let component: TimepickerPresetsComponent;
 	let fixture: ComponentFixture<TimepickerPresetsComponent>;
 
-
-
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [TimepickerPresetsComponent],

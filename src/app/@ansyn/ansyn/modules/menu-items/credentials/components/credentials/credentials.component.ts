@@ -1,12 +1,12 @@
 import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
-import { CredentialsService } from '../../services/credentials/credentials.service';
+import { CredentialsService } from '../../../../core/services/credentials/credentials.service';
 import { Store } from '@ngrx/store';
 import { getMenuSessionData, SetBadgeAction, UnSelectMenuItemAction } from '@ansyn/menu';
-import { fromEvent, Subscription } from 'rxjs';
 import { tap, filter } from 'rxjs/operators';
-import { ClickOutsideService } from '../../click-outside/click-outside.service';
+import { ClickOutsideService } from '../../../../core/click-outside/click-outside.service';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
 import { setMenuSessionData } from '@ansyn/menu';
+import { LogDownloadPermissionsGuide, LogOpenPermissionsSite } from '../../actions/credentials.actions';
 
 @Component({
 	selector: 'ansyn-credentials',
@@ -16,10 +16,12 @@ import { setMenuSessionData } from '@ansyn/menu';
 @AutoSubscriptions()
 export class CredentialsComponent implements OnInit, OnDestroy {
 
-	constructor(public credentialsService: CredentialsService,
-				protected store$: Store<any>,
-				protected element: ElementRef,
-				protected clickOutsideService: ClickOutsideService) {
+	constructor(
+		public credentialsService: CredentialsService,
+		protected store$: Store<any>,
+		protected element: ElementRef,
+		protected clickOutsideService: ClickOutsideService,
+	) {
 		const menuSession = getMenuSessionData();
 		if (menuSession.isUserFirstEntrance) {
 			setMenuSessionData({ isUserFirstEntrance: false });
@@ -47,6 +49,16 @@ export class CredentialsComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
+	}
+
+	openPermissionSite() {
+		this.store$.dispatch(new LogOpenPermissionsSite());
+		this.credentialsService.openPermissionSite();
+	}
+
+	downloadGuide() {
+		this.store$.dispatch(new LogDownloadPermissionsGuide());
+		this.credentialsService.downloadGuide();
 	}
 
 	closeWindow() {

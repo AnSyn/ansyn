@@ -1,5 +1,9 @@
 import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
-import { CommunicatorEntity, ImageryCommunicatorService, IMapInstanceChanged } from '@ansyn/imagery';
+import {
+	CommunicatorEntity,
+	ImageryCommunicatorService,
+	IMapInstanceChanged
+} from '@ansyn/imagery';
 import { filter, take, tap } from 'rxjs/operators';
 import { AnnotationsVisualizer } from '../../../annotations.visualizer';
 
@@ -29,7 +33,10 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	subscribers = [];
 	annotationsSubscribers = [];
 
-	constructor(public host: ElementRef, protected communicators: ImageryCommunicatorService) {
+	constructor(
+		public host: ElementRef,
+		protected communicators: ImageryCommunicatorService
+	) {
 	}
 
 	@HostListener('contextmenu', ['$event']) contextmenu($event: MouseEvent) {
@@ -82,13 +89,15 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 				this.hoverFeatureId = hoverFeatureId;
 			}),
 			this.annotations.events.onSelect.subscribe((selected: string[]) => {
-					this.selection = selected;
-					this.selectedTab = this.selection.reduce((prev, id) => ({
-						...prev,
-						[id]: this.selectedTab[id]
-					}), {});
+				if (selected.length > 0) {
+					this.communicator.log(this.communicator.logMessages.openingAnnotationsContextMenu);
 				}
-			)
+				this.selection = selected;
+				this.selectedTab = this.selection.reduce((prev, id) => ({
+					...prev,
+					[id]: this.selectedTab[id]
+				}), {});
+			})
 		);
 	}
 

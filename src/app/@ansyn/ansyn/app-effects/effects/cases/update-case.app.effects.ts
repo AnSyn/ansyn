@@ -16,7 +16,6 @@ import { UpdateCaseAction } from '../../../modules/menu-items/cases/actions/case
 import { selectAutoSave, selectSelectedCase } from '../../../modules/menu-items/cases/reducers/cases.reducer';
 import { selectMiscOverlays, selectOverlaysCriteria } from '../../../modules/overlays/reducers/overlays.reducer';
 import { ICase } from '../../../modules/menu-items/cases/models/case.model';
-import { selectGeoFilterType } from '../../../modules/status-bar/reducers/status-bar.reducer';
 
 @Injectable()
 export class UpdateCaseAppEffects {
@@ -35,8 +34,7 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectOverlaysManualProcessArgs),
 		this.store$.select(selectMiscOverlays),
 		this.store$.select(selectTranslationData),
-		this.store$.select(selectScannedAreaData),
-		this.store$.select(selectGeoFilterType)
+		this.store$.select(selectScannedAreaData)
 	]
 		.map(event => event.pipe(this.clearIsAutoSave))
 		.concat([this.store$.select(selectAutoSave).pipe(this.setIsAutoSave)]);
@@ -53,12 +51,11 @@ export class UpdateCaseAppEffects {
 				activeMapId,
 				mapsList,
 				layout,
-				{ time, region, dataInputFilters }, /* overlaysCriteria */
+				{ time, region, dataInputFilters, searchMode }, /* overlaysCriteria */
 				overlaysManualProcessArgs,
 				miscOverlays,
 				overlaysTranslationData,
 				overlaysScannedAreaData,
-				geoFilterType,
 				autoSave
 			] = events;
 
@@ -83,12 +80,12 @@ export class UpdateCaseAppEffects {
 					region,
 					dataInputFilters,
 					time,
+					searchMode,
 					facets,
 					miscOverlays,
 					overlaysManualProcessArgs,
 					overlaysTranslationData,
-					overlaysScannedAreaData,
-					geoFilterType
+					overlaysScannedAreaData
 				}
 			};
 

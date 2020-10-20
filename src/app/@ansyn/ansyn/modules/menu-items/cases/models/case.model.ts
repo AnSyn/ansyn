@@ -73,7 +73,7 @@ export interface IDilutedCaseState {
 	facets?: ICaseFacetsState;
 	region: CaseRegionState;
 	dataInputFilters: ICaseDataInputFiltersState;
-	geoFilterType: CaseGeoFilter;
+	searchMode: CaseGeoFilter;
 	favoriteOverlays?: IDilutedOverlay[];
 	miscOverlays?: IDilutedOverlaysHash;
 	overlaysManualProcessArgs: IOverlaysManualProcessArgs;

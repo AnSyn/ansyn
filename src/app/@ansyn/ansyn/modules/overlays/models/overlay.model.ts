@@ -1,4 +1,4 @@
-import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
+import { CaseGeoFilter, CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
 import { LineString, MultiPolygon, Point } from 'geojson';
 import { EPSG_3857 } from '@ansyn/imagery';
 
@@ -111,6 +111,7 @@ export class Overlay implements IOverlay {
 export interface IOverlaysCriteria {
 	time?: ICaseTimeState;
 	region?: CaseRegionState;
+	searchMode?: CaseGeoFilter;
 	dataInputFilters?: ICaseDataInputFiltersState;
 }
 

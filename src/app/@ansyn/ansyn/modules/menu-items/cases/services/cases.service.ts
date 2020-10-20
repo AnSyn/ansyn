@@ -198,9 +198,6 @@ export class CasesService {
 	}
 
 	createLink(link): Observable<any> {
-		const newLink = {
-
-		}
 		return this.storageService.create(this.linksConfig.schema, link).pipe(
 			map((_: any) => _._id)
 		);

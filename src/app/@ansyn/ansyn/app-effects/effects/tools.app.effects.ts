@@ -124,7 +124,6 @@ export class ToolsAppEffects {
 				new UpdateGeoFilterStatus(),
 				new SetPinLocationModeAction(false)
 			];
-
 			// set measure tool as inactive
 			mapIds.forEach((mapId) => {
 				const updateMeasureAction = new UpdateMeasureDataOptionsAction({

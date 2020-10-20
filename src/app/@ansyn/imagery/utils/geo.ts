@@ -29,7 +29,7 @@ import {
 	unkinkPolygon,
 	featureCollection,
 	envelope,
-	distance, difference
+	distance
 } from '@turf/turf';
 
 export type BBOX = [number, number, number, number] | [number, number, number, number, number, number];

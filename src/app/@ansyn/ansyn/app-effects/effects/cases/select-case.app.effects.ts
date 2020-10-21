@@ -36,6 +36,7 @@ import { IOverlay } from '../../../modules/overlays/models/overlay.model';
 import { mapValues } from 'lodash';
 import { ICasesConfig } from '../../../modules/menu-items/cases/models/cases-config';
 import { UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/status-bar.actions';
+import { Feature, Point, Polygon } from 'geojson';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -61,11 +62,22 @@ export class SelectCaseAppEffects {
 		// map
 		const { data } = state.maps;
 		// context
-		const { favoriteOverlays, region, dataInputFilters, miscOverlays } = state;
+		const { favoriteOverlays, dataInputFilters, miscOverlays } = state;
+
+		let region: Feature<Polygon | Point>;
+		if (state.region.type !== "Feature") {
+			region = {
+				geometry: state.region,
+				type: "Feature",
+				properties: {
+					searchMode: state.region.type
+				}
+			}
+		} else {
+			region = state.region;
+		}
 
 		const { layout } = state.maps;
-
-		const searchMode = state.searchMode ? state.searchMode : region.type;
 
 		let time = state.time ? { ...state.time } : this.casesService.defaultTime;
 
@@ -84,8 +96,8 @@ export class SelectCaseAppEffects {
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),
 			new SetActiveMapId(state.maps.activeMapId),
 			new SetLayoutAction(<any>layout),
-			new SetOverlaysCriteriaAction({ time, region, dataInputFilters, searchMode }, { noInitialSearch }),
-			new UpdateGeoFilterStatus({ active: false, type: searchMode }),
+			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
+			new UpdateGeoFilterStatus({ active: false, type: region.properties.searchMode }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this)) }),
 			new SetOverlaysTranslationDataAction(overlaysTranslationData),

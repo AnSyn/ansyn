@@ -8,7 +8,7 @@ import { combineLatest, fromEvent, merge, Observable } from 'rxjs';
 import { animate, style, transition, trigger, AnimationTriggerMetadata } from '@angular/animations';
 import { filter, tap } from 'rxjs/operators';
 import { selectDataInputFilter, selectRegion, selectTime } from '../../../overlays/reducers/overlays.reducer';
-import { ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
+import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import {
@@ -118,7 +118,9 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	updateGeoFilterCoordinates$ = this.store$.select(selectRegion).pipe(
 		filter(Boolean),
-		tap(({ coordinates }) => this.geoFilterCoordinates = coordinates.toString())
+		tap((region: CaseRegionState) => {
+			this.geoFilterCoordinates = region.geometry.coordinates.toString();
+		})
 	);
 
 	constructor(protected store$: Store<IStatusBarState>,

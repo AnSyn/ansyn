@@ -20,7 +20,7 @@ import {
 import { selectGeoFilterActive, selectGeoFilterType } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { CopyCaseLinkAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { DisplayOverlayFromStoreAction } from '../../modules/overlays/actions/overlays.actions';
-import { selectDropsAscending, selectOverlaysCriteria } from '../../modules/overlays/reducers/overlays.reducer';
+import { selectDropsAscending, selectRegion } from '../../modules/overlays/reducers/overlays.reducer';
 import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
 import { ToolsActionsTypes } from '../../modules/menu-items/tools/actions/tools.actions';
@@ -78,9 +78,9 @@ export class StatusBarAppEffects {
 	onCancelGeoFilter$ = this.actions$.pipe(
 		ofType<UpdateGeoFilterStatus>(StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS),
 		filter(action => action.payload === undefined),
-		withLatestFrom(this.store.select(selectOverlaysCriteria)),
-		map(([action, criteria]) => {
-			const type = criteria.searchMode ? criteria.searchMode : criteria.region.type;
+		withLatestFrom(this.store.select(selectRegion)),
+		map(([action, region]) => {
+			const type = region.properties.searchMode;
 			return new UpdateGeoFilterStatus({ type, active: false })
 		})
 	);

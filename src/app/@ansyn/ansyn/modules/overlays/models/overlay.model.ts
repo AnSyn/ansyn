@@ -116,7 +116,6 @@ export class Overlay implements IOverlay {
 export interface IOverlaysCriteria {
 	time?: ICaseTimeState;
 	region?: CaseRegionState;
-	searchMode?: CaseGeoFilter;
 	dataInputFilters?: ICaseDataInputFiltersState;
 }
 

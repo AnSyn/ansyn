@@ -88,7 +88,7 @@ import {
 } from '../../modules/overlays/overlay-status/config/overlay-status-config';
 import { MeasureDistanceVisualizer } from '../../modules/plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
 import { IGeoFilterStatus, selectGeoFilterStatus } from '../../modules/status-bar/reducers/status-bar.reducer';
-import { booleanEqual, distance } from '@turf/turf';
+import { booleanEqual, distance, Feature, Polygon } from '@turf/turf';
 import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import { IScreenViewConfig, ScreenViewConfig } from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
 
@@ -309,21 +309,22 @@ export class MapAppEffects {
 	searchByExtentPolygon$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.POSITION_CHANGED, MapActionTypes.SET_ACTIVE_MAP_ID, StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS),
 		withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus), this.store$.select(selectRegion)),
+		debounceTime(this.screenViewConfig.debounceTime),
 		filter(([action, mapList, activeMapId, geoFilterStatus, region]) => Boolean(mapList[activeMapId]) && geoFilterStatus.type === CaseGeoFilter.ScreenView),
 		map(([action, mapList, activeMapId, geoFilterStatus, region]) => {
 			const activeMap: IMapSettings = mapList[activeMapId];
 			return [activeMap.data.position.extentPolygon, geoFilterStatus, region];
 		}),
-		debounceTime(this.screenViewConfig.debounceTime),
-		filter(([extentPolygon, geoFilterStatus, region]: [any, IGeoFilterStatus, any]) => !booleanEqual(extentPolygon, region)),
+		filter(([extentPolygon, geoFilterStatus, region]: [any, IGeoFilterStatus, any]) => !booleanEqual(extentPolygon, region.geometry)),
 		concatMap(([extentPolygon, geoFilterStatus, region]: [any, IGeoFilterStatus, any]) => {
 			const extentWidth = Math.round(distance(extentPolygon.coordinates[0][0], extentPolygon.coordinates[0][1], {units: 'metres'}));
+			const extent = this.createRegion(extentPolygon);
 			let actions = [];
 
 			if (extentWidth > this.screenViewConfig.extentWidthSearchLimit) {
 				actions.push(new SetOverlaysStatusMessageAction({message: 'Zoom in to get new overlays'}));
 			} else {
-				actions.push(new SetOverlaysCriteriaAction({ searchMode: CaseGeoFilter.ScreenView, region: extentPolygon }));
+				actions.push(new SetOverlaysCriteriaAction({ region: extent }));
 				if (geoFilterStatus.active) {
 					actions.push(new UpdateGeoFilterStatus({ active: false }));
 				}
@@ -490,6 +491,17 @@ export class MapAppEffects {
 			showWarningIcon: true
 		}));
 		return EMPTY;
+	}
+
+	createRegion(polygon) {
+		const feature: Feature<Polygon> = {
+			geometry: polygon,
+			type: "Feature",
+			properties: {
+				searchMode: "ScreenView"
+			}
+		}
+		return feature;
 	}
 
 	private bboxPolygon(polygon) {

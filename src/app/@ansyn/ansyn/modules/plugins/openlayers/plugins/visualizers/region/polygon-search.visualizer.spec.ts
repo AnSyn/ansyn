@@ -29,10 +29,15 @@ describe('PolygonSearchVisualizer', () => {
 		polygonSearchVisualizer = _polygonSearchVisualizer;
 	}));
 
-	it('createRegion should return "geometry"', () => {
-		const fakeGeojson = <any>{ geometry: 'geometry' };
-		const expectedResult = polygonSearchVisualizer.createRegion(fakeGeojson);
-		expect(expectedResult).toEqual('geometry');
+	it('createRegion should return "Feature" with searchMode property equal to Polygon', () => {
+		const fakeGeojson: Feature<any> = {
+			geometry: {},
+			type: "Feature",
+			properties: {}
+		};
+		const region = polygonSearchVisualizer.createRegion(fakeGeojson);
+		const expectedResult = region.properties.searchMode;
+		expect(expectedResult).toEqual('Polygon');
 	});
 
 	it('onContextMenu should dispatch action UpdateStatusFlagsAction', () => {
@@ -47,10 +52,16 @@ describe('PolygonSearchVisualizer', () => {
 
 	it('drawRegionOnMap calls setEntities with Feature', () => {
 		const id = 'pinPolygon';
-		const fakeGeojson: Polygon = { type: 'Polygon', coordinates: [[[0, 0], [0, 0], [0, 0], [0, 0]]] };
+		const fakeGeojson: Feature<any> = {
+			geometry: {
+				type: 'Polygon',
+				coordinates: [[[0, 0], [0, 0], [0, 0], [0, 0]]]
+			},
+			type: "Feature",
+			properties: {}
+		};
 		spyOn(polygonSearchVisualizer, 'setEntities').and.callFake(() => EMPTY);
-		const expectFeatureJson: Feature<Polygon> = { type: 'Feature', geometry: fakeGeojson, properties: {} };
 		polygonSearchVisualizer.drawRegionOnMap(fakeGeojson);
-		expect(polygonSearchVisualizer.setEntities).toHaveBeenCalledWith([{ id, featureJson: expectFeatureJson }]);
+		expect(polygonSearchVisualizer.setEntities).toHaveBeenCalledWith([{ id, featureJson: fakeGeojson }]);
 	});
 });

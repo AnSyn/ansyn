@@ -7,7 +7,6 @@ import {
 } from '../actions/cases.actions';
 import { casesAdapter, CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
 import { ICase } from '../models/case.model';
-import { StatusBarInitialState } from '../../../status-bar/reducers/status-bar.reducer';
 
 describe('CasesReducer', () => {
 	const caseMock: ICase = {
@@ -23,8 +22,11 @@ describe('CasesReducer', () => {
 				to: new Date()
 			},
 			dataInputFilters: { fullyChecked: true, filters: [] },
-			region: {},
-			searchMode: StatusBarInitialState.geoFilterStatus.type,
+			region: {
+				geometry: {},
+				type: "Feature",
+				properties: {}
+			},
 			overlaysManualProcessArgs: {},
 			overlaysTranslationData: {}
 		}

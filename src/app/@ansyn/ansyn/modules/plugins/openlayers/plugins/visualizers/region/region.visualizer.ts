@@ -27,7 +27,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	newRegionSelect$ = this.store$.select(selectRegion);
 
 	regionSameAsVisualizer$ = this.newRegionSelect$.pipe(
-		map(region => region.type === this.geoFilter)
+		map(region => region.properties.searchMode === this.geoFilter)
 	);
 
 	isActiveMap$ = this.store$.select(selectActiveMapId).pipe(
@@ -81,8 +81,8 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 			tap((featureCollection: FeatureCollection<GeometryObject>) => {
 				const [geoJsonFeature] = featureCollection.features;
 				const region = this.createRegion(geoJsonFeature);
-				if (region.type === 'Point' || turf.kinks(region).features.length === 0) {  // turf way to check if there are any self-intersections
-					this.store$.dispatch(new SetOverlaysCriteriaAction({ searchMode: this.geoFilter, region }));
+				if (region.geometry.type === 'Point' || turf.kinks(region.geometry).features.length === 0) {  // turf way to check if there are any self-intersections
+					this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
 					this.store$.dispatch(new UpdateGeoFilterStatus({ active: false }));
 				} else {
 					this.store$.dispatch(new SetToastMessageAction({

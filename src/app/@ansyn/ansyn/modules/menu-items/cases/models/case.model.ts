@@ -73,7 +73,6 @@ export interface IDilutedCaseState {
 	facets?: ICaseFacetsState;
 	region: CaseRegionState;
 	dataInputFilters: ICaseDataInputFiltersState;
-	searchMode: CaseGeoFilter;
 	favoriteOverlays?: IDilutedOverlay[];
 	miscOverlays?: IDilutedOverlaysHash;
 	overlaysManualProcessArgs: IOverlaysManualProcessArgs;
@@ -88,7 +87,7 @@ export interface ICaseState extends IDilutedCaseState {
 	maps?: ICaseMapsState;
 }
 
-export type CaseRegionState = any | Feature<Polygon> | Point | Polygon | Position;
+export type CaseRegionState = any | Feature<Polygon | Point> | Point | Polygon | Position;
 
 export interface IDataInputFilterValue {
 	providerName: string;

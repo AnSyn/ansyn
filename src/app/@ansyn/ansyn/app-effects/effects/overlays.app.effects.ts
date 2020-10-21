@@ -112,9 +112,9 @@ export class OverlaysAppEffects {
 	@Effect()
 	onDisplayOverlayFromStore$: Observable<DisplayOverlayAction> = this.actions$.pipe(
 		ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE),
-		withLatestFrom(this.overlaysService.getAllOverlays$, this.store$.select(mapStateSelector)),
-		filter(([{ payload }, overlays, { activeMapId }]: [DisplayOverlayFromStoreAction, Map<string, IOverlay>, IMapState]) => overlays && overlays.has(payload.id)),
-		map(([{ payload }, overlays, { activeMapId }]: [DisplayOverlayFromStoreAction, Map<string, IOverlay>, IMapState]) => {
+		withLatestFrom(this.overlaysService.getAllOverlays$, this.store$.select(selectActiveMapId)),
+		filter(([{ payload }, overlays, activeMapId]: [DisplayOverlayFromStoreAction, Map<string, IOverlay>, string]) => overlays && overlays.has(payload.id)),
+		map(([{ payload }, overlays, activeMapId]: [DisplayOverlayFromStoreAction, Map<string, IOverlay>, string]) => {
 			const mapId = payload.mapId || activeMapId;
 			const overlay = overlays.get(payload.id);
 			return new DisplayOverlayAction({

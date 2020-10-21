@@ -256,12 +256,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 				this.timePickerInputTo.nativeElement.textContent = fromText;
 			}
 
-			this.store$.dispatch(new SetOverlaysCriteriaAction({
-				time: {
-					from,
-					to
-				}
-			}));
+			this.store$.dispatch(new SetOverlaysCriteriaAction({ time: { from, to } }));
 
 			return true;
 		}

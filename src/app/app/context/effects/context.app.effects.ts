@@ -54,7 +54,7 @@ export class ContextAppEffects {
 	@Effect()
 	PostContextOpen$: Observable<any> = this.actions$.pipe(
 		ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE_SUCCESS),
-		filter(({ payload }) => Boolean(payload.selectedContextId)),
+		filter(({payload}) => Boolean(payload.selectedContextId)),
 		mergeMap(this.postContextAction.bind(this))
 	);
 
@@ -69,19 +69,19 @@ export class ContextAppEffects {
 	) {
 	}
 
-	parseContextParams([{ payload }, mapId]: [LoadDefaultCaseAction, string]): any[] {
-		const { context, ...params } = payload;
-		const selectedContext = { id: context };
+	parseContextParams([{payload}, mapId]: [LoadDefaultCaseAction, string]): any[] {
+		const {context, ...params} = payload;
+		const selectedContext = {id: context};
 		let contextCase = this.casesService.defaultCase;
 		const missingParams = this.isMissingParametersContext(context, params);
 		const actions: unknown[] = [new SelectCaseAction(contextCase)];
 		if (missingParams.length > 0) {
 			const toastText = this.buildErrorToastMessage(context, missingParams);
-			actions.push(new SetToastMessageAction({ toastText }));
+			actions.push(new SetToastMessageAction({toastText}));
 			return actions;
 		}
 		if (!this.isValidGeometry(params.geometry)) {
-			actions.push(new SetToastMessageAction({ toastText: this.translateService.instant(CONTEXT_TOAST.region) }));
+			actions.push(new SetToastMessageAction({toastText: this.translateService.instant(CONTEXT_TOAST.region)}));
 			return actions;
 		}
 
@@ -128,19 +128,18 @@ export class ContextAppEffects {
 			case ContextName.TwoMaps:
 				return this.actions$.pipe(
 					ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
-					filter( ({payload}: {payload: IOverlay[]}) => Boolean(payload.length)),
-					mergeMap(({payload}: {payload: IOverlay[]}) => {
-						const geoOverlays = this.findGeoOverlays(payload);
-						if (Boolean(geoOverlays.length)) {
-							return [
-								new SetLayoutAction(this.config.TwoMaps.layout),
-								new DisplayMultipleOverlaysFromStoreAction(geoOverlays.map( overlay => ({overlay}))),
-								new SelectOnlyGeoRegistered()
-							]
-						}
-						else {
-							return [new SetToastMessageAction({toastText: CONTEXT_TOAST.geoOverlayNotExist})]
-						}
+					filter(({payload}: { payload: IOverlay[] }) => Boolean(payload.length)),
+					mergeMap(({payload}: { payload: IOverlay[] }) => {
+							const geoOverlays = this.findGeoOverlays(payload);
+							if (Boolean(geoOverlays.length)) {
+								return [
+									new SetLayoutAction(this.config.TwoMaps.layout),
+									new DisplayMultipleOverlaysFromStoreAction(geoOverlays.map(overlay => ({overlay}))),
+									new SelectOnlyGeoRegistered()
+								]
+							} else {
+								return [new SetToastMessageAction({toastText: CONTEXT_TOAST.geoOverlayNotExist})]
+							}
 
 						}
 					)
@@ -151,10 +150,14 @@ export class ContextAppEffects {
 	}
 
 	private parseTimeParams(contextTime: string = '') {
-		const defaultContextDeltaTime = this.config.TwoMaps.defaultContextSearchFromDeltaTime;
-		const time = defaultContextDeltaTime ? {
-			from: moment().subtract(defaultContextDeltaTime.amount, defaultContextDeltaTime.unit).toDate(),
-			to: new Date()} : this.casesService.defaultTime;
+		const {defaultContextSearchFromDeltaTime} = this.config.TwoMaps;
+		let time = this.casesService.defaultTime;
+		if (defaultContextSearchFromDeltaTime) {
+			time = {
+				from: moment().subtract(defaultContextSearchFromDeltaTime.amount, defaultContextSearchFromDeltaTime.unit).toDate(),
+				to: new Date()
+			};
+		}
 		const [start, end] = contextTime.split(',');
 		const from = new Date(start);
 		const to = new Date(end);
@@ -168,10 +171,10 @@ export class ContextAppEffects {
 	}
 
 	private parseSensorParams(sensors): ICaseDataInputFiltersState {
-		const sensorsArray = sensors.split(',').map( sensor => sensor.trim());
+		const sensorsArray = sensors.split(',').map(sensor => sensor.trim());
 		const filters: IDataInputFilterValue[] = uniqWith(sensorsArray
-				.map(this.overlaysService.getSensorTypeAndProviderFromSensorName.bind(this.overlaysService))
-				.filter(Boolean) , isEqual);
+			.map(this.overlaysService.getSensorTypeAndProviderFromSensorName.bind(this.overlaysService))
+			.filter(Boolean), isEqual);
 		return {
 			filters,
 			fullyChecked: filters.length === 0,
@@ -198,10 +201,10 @@ export class ContextAppEffects {
 	}
 
 	private findGeoOverlays(overlays: IOverlay[], numOfOverlays: number = 1): IOverlay[] {
-		const onlyGeoRegisteredOverlay = overlays.filter( overlay => overlay.isGeoRegistered !== GeoRegisteration.notGeoRegistered)
-			// make sure the array in ascending order by date
-			.sort( (a, b) => a.date.getTime() - b.date.getTime());
-		return onlyGeoRegisteredOverlay.slice( onlyGeoRegisteredOverlay.length - numOfOverlays);
+		const onlyGeoRegisteredOverlay = overlays.filter(overlay => overlay.isGeoRegistered !== GeoRegisteration.notGeoRegistered)
+		// make sure the array in ascending order by date
+			.sort((a, b) => a.date.getTime() - b.date.getTime());
+		return onlyGeoRegisteredOverlay.slice(onlyGeoRegisteredOverlay.length - numOfOverlays);
 	}
 
 }

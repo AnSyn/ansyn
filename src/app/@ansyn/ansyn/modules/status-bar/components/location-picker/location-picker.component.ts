@@ -33,6 +33,5 @@ export class LocationPickerComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		cancelAnimationFrame(this.animation);
-		this.store$.dispatch(new UpdateGeoFilterStatus({active: false}));
 	}
 }

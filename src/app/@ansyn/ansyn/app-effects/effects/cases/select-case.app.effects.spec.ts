@@ -85,7 +85,11 @@ describe('SelectCaseAppEffects', () => {
 				orientation: CaseOrientation = 'Imagery Perspective',
 				timeFilter: CaseTimeFilter = 'Start - End',
 				time: ICaseTimeState = { from: new Date(0), to: new Date(0) },
-				region: CaseRegionState = {},
+				region: CaseRegionState = {
+					geometry: {},
+					type: "Feature",
+					properties: {}
+				},
 				dataInputFilters: ICaseDataInputFiltersState = { fullyChecked: true, filters: [] },
 				favoriteOverlays: IOverlay[] = [],
 				maps: ICaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
@@ -133,7 +137,7 @@ describe('SelectCaseAppEffects', () => {
 			b: new SetActiveMapId(state.maps.activeMapId),
 			c: new SetLayoutAction(<any>maps.layout),
 			d: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
-			e: new UpdateGeoFilterStatus({active: false, type: region.type}),
+			e: new UpdateGeoFilterStatus({active: false, type: region.properties.searchMode}),
 			f: new SetFavoriteOverlaysAction(favoriteOverlays),
 			g: new SetMiscOverlays({ miscOverlays }),
 			h: new SetOverlaysTranslationDataAction(overlaysTranslationData),

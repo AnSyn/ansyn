@@ -1,4 +1,5 @@
 import { LayoutKey } from '@ansyn/map-facade';
+import { IDeltaTime } from "@ansyn/ansyn";
 
 export const ContextConfig = 'contextConfig';
 
@@ -22,5 +23,6 @@ export const RequiredContextParams = {
 
 export interface II2MapsContext {
 	layout: LayoutKey,
-	sensors: string[]
+	sensors: string[],
+	defaultContextSearchFromDeltaTime: IDeltaTime
 }

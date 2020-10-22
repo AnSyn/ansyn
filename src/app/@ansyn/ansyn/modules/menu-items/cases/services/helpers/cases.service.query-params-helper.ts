@@ -46,6 +46,7 @@ export class QueryParamsHelper {
 	}
 
 	updateCaseViaContextGeometry(updatedCaseModel, selectedContext, geometry): void {
+		console.log(geometry);
 		/* reference */
 		const geoJsonGeomtry = <GeoJsonObject>wellknown.parse(geometry);
 		if (geoJsonGeomtry.type === 'Point') {

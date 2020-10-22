@@ -14,7 +14,7 @@ import {
 	LoggerService,
 	OverlaysService,
 	rxPreventCrash,
-	SelectCaseAction,
+	SelectCaseAction, ICaseTimeState,
 } from '@ansyn/ansyn';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { filter, mergeMap, withLatestFrom } from 'rxjs/operators';
@@ -151,7 +151,10 @@ export class ContextAppEffects {
 	}
 
 	private parseTimeParams(contextTime: string = '') {
-		const time = this.casesService.defaultTime;
+		const defaultContextDeltaTime = this.config.TwoMaps.defaultContextSearchFromDeltaTime;
+		const time = defaultContextDeltaTime ? {
+			from: moment().subtract(defaultContextDeltaTime.amount, defaultContextDeltaTime.unit).toDate(),
+			to: new Date()} : this.casesService.defaultTime;
 		const [start, end] = contextTime.split(',');
 		const from = new Date(start);
 		const to = new Date(end);

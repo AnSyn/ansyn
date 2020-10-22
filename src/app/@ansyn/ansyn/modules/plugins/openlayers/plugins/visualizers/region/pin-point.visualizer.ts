@@ -12,7 +12,7 @@ import { RegionVisualizer } from './region.visualizer';
 import { CaseGeoFilter, CaseRegionState } from '../../../../../menu-items/cases/models/case.model';
 import { SetOverlaysCriteriaAction } from '../../../../../overlays/actions/overlays.actions';
 import { Injectable } from '@angular/core';
-import { Point } from '@turf/turf';
+import { feature } from '@turf/turf';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -54,16 +54,9 @@ export class PinPointVisualizer extends RegionVisualizer {
 	}
 
 	onContextMenu(coordinates: Position): void {
-		const region: Feature<Point> = {
-			geometry: {
-				coordinates: coordinates,
-				type: "Point"
-			},
-			type: "Feature",
-			properties: {
-				searchMode: "Point"
-			}
-		}
+		const geometry = {type: "Point", coordinates: coordinates};
+		const region = feature(geometry, {searchMode: "Point"});
+
 		this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
 	}
 }

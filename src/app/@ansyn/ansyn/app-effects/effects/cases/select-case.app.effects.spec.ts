@@ -91,7 +91,6 @@ describe('SelectCaseAppEffects', () => {
 					properties: {}
 				},
 				dataInputFilters: ICaseDataInputFiltersState = { fullyChecked: true, filters: [] },
-				searchMode = region.type,
 				favoriteOverlays: IOverlay[] = [],
 				maps: ICaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
 				layers: ICaseLayersState = {
@@ -112,7 +111,6 @@ describe('SelectCaseAppEffects', () => {
 				time,
 				region,
 				dataInputFilters,
-				searchMode,
 				favoriteOverlays,
 				overlaysTranslationData,
 				maps,
@@ -139,7 +137,7 @@ describe('SelectCaseAppEffects', () => {
 			b: new SetActiveMapId(state.maps.activeMapId),
 			c: new SetLayoutAction(<any>maps.layout),
 			d: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
-			e: new UpdateGeoFilterStatus({active: false, type: region.geometry.type}),
+			e: new UpdateGeoFilterStatus({active: false, type: region.properties.searchMode}),
 			f: new SetFavoriteOverlaysAction(favoriteOverlays),
 			g: new SetMiscOverlays({ miscOverlays }),
 			h: new SetOverlaysTranslationDataAction(overlaysTranslationData),

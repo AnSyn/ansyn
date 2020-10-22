@@ -37,6 +37,7 @@ import { mapValues } from 'lodash';
 import { ICasesConfig } from '../../../modules/menu-items/cases/models/cases-config';
 import { UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/status-bar.actions';
 import { Feature, Point, Polygon } from 'geojson';
+import { feature } from '@turf/turf';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -66,13 +67,7 @@ export class SelectCaseAppEffects {
 
 		let region: Feature<Polygon | Point>;
 		if (state.region.type !== "Feature") {
-			region = {
-				geometry: state.region,
-				type: "Feature",
-				properties: {
-					searchMode: state.region.type
-				}
-			}
+			region = feature(state.region, {searchMode: state.region.type});
 		} else {
 			region = state.region;
 		}

@@ -88,7 +88,7 @@ import {
 } from '../../modules/overlays/overlay-status/config/overlay-status-config';
 import { MeasureDistanceVisualizer } from '../../modules/plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
 import { IGeoFilterStatus, selectGeoFilterStatus } from '../../modules/status-bar/reducers/status-bar.reducer';
-import { booleanEqual, distance, Feature, Polygon } from '@turf/turf';
+import { booleanEqual, distance, feature } from '@turf/turf';
 import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import { IScreenViewConfig, ScreenViewConfig } from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
 
@@ -318,7 +318,7 @@ export class MapAppEffects {
 		filter(([extentPolygon, geoFilterStatus, region]: [any, IGeoFilterStatus, any]) => !booleanEqual(extentPolygon, region.geometry)),
 		concatMap(([extentPolygon, geoFilterStatus, region]: [any, IGeoFilterStatus, any]) => {
 			const extentWidth = Math.round(distance(extentPolygon.coordinates[0][0], extentPolygon.coordinates[0][1], {units: 'metres'}));
-			const extent = this.createRegion(extentPolygon);
+			const extent = feature(extentPolygon, {searchMode: "ScreenView"});
 			let actions = [];
 
 			if (extentWidth > this.screenViewConfig.extentWidthSearchLimit) {
@@ -491,17 +491,6 @@ export class MapAppEffects {
 			showWarningIcon: true
 		}));
 		return EMPTY;
-	}
-
-	createRegion(polygon) {
-		const feature: Feature<Polygon> = {
-			geometry: polygon,
-			type: "Feature",
-			properties: {
-				searchMode: "ScreenView"
-			}
-		}
-		return feature;
 	}
 
 	private bboxPolygon(polygon) {

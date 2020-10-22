@@ -97,8 +97,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		drop: {
 			onMouseOver: this.onMouseOver.bind(this),
 			onMouseOut: this.onMouseOut.bind(this),
-			onClick: this.clickEvent(),
-			onDblClick: () => event.stopPropagation(),
+			onClick: this.onClick.bind(this),
 			dropId: d => 'dropId-' + d.id,
 			color: BASE_DROP_COLOR,
 			date: d => new Date(d.date),
@@ -205,33 +204,8 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	clickEvent() {
-		let down, wait;
-		return (data: IEventDropsEvent) => {
-			if (!down) {
-				down = true;
-				wait = setTimeout((() => {
-					wait = null;
-					this.onClick();
-					down = false;
-				}), 300);
-			} else {
-				this.onDblClick(data);
-				if (wait) {
-					window.clearTimeout(wait);
-					wait = null;
-					down = false;
-				}
-				return;
-			}
-		};
-	}
-
-	onDblClick({ id }): void {
+	onClick({ id }: IEventDropsEvent): void {
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id }));
-	}
-
-	onClick(): void {
 	}
 
 	isNoOverlaysLeft(): boolean {

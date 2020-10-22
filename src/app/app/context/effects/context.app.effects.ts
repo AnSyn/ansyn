@@ -150,8 +150,8 @@ export class ContextAppEffects {
 	}
 
 	private parseTimeParams(contextTime: string = '') {
-		const {defaultContextSearchFromDeltaTime} = this.config.TwoMaps;
 		let time = this.casesService.defaultTime;
+		const {defaultContextSearchFromDeltaTime} = this.config.TwoMaps;
 		if (defaultContextSearchFromDeltaTime) {
 			time = {
 				from: moment().subtract(defaultContextSearchFromDeltaTime.amount, defaultContextSearchFromDeltaTime.unit).toDate(),

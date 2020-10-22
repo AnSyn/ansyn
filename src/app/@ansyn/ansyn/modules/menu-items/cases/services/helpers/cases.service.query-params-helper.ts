@@ -26,6 +26,8 @@ export class QueryParamsHelper {
 	}
 
 	updateCaseViaContext(selectedContext: IContext, caseModel: ICase, qParams: Params = {}) {
+		console.log(selectedContext);
+		console.log(caseModel);
 		if (selectedContext.id === 'default') {
 			return { ...this.defaultCase, name: caseModel.name };
 		}

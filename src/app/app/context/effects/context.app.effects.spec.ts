@@ -49,7 +49,7 @@ describe('ContextAppEffects', () => {
 			},
 			maps: {
 				data: [
-					{ id: 'imagery1', data: {} },
+					{id: 'imagery1', data: {}},
 				],
 				activeMapId: 'imagery1'
 			}
@@ -84,18 +84,29 @@ describe('ContextAppEffects', () => {
 				},
 				{
 					provide: ContextConfig,
-					useValue: {}
+					useValue: {
+						TwoMaps: {
+							layout: "layout2",
+							sensors: "S2MSI2A",
+							defaultContextSearchFromDeltaTime: {
+								unit: "months",
+								amount: 3
+							}
+						}
+					}
 				},
 				{
 					provide: OverlaysService,
 					useValue: {
-						getSensorTypeAndProviderFromSensorName: () => {}
+						getSensorTypeAndProviderFromSensorName: () => {
+						}
 					}
 				},
 				{
 					provide: LoggerService,
 					useValue: {
-						info: () => {}
+						info: () => {
+						}
 					}
 				}
 			]
@@ -111,7 +122,7 @@ describe('ContextAppEffects', () => {
 		overlaysService = _overlaysService;
 		const fakeStore = new Map<any, any>([
 			[selectActiveMapId, 'imagery1'],
-			[contextStateSelector, { params: {} }]
+			[contextStateSelector, {params: {}}]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
@@ -128,25 +139,25 @@ describe('ContextAppEffects', () => {
 				geometry: 'POINT(-117.91897 34.81265)'
 			})
 		});
-		const contextCase = {...casesService.defaultCase,  id: ContextName.AreaAnalysis,  };
+		const contextCase = {...casesService.defaultCase, id: ContextName.AreaAnalysis,};
 		const to = new Date();
 		const from = new Date(to);
-		const geo: Point = { type: 'Point', coordinates: [-117.91897, 34.81265] };
+		const geo: Point = {type: 'Point', coordinates: [-117.91897, 34.81265]};
 		from.setMonth(from.getMonth() - 2);
 		contextCase.state = {
 			...contextCase.state,
-			time: { to, from },
+			time: {to, from},
 			region: geo
 		};
 		const expectedResult = cold('-a-', {
 				a: new SelectCaseAction(contextCase),
 			}
 		);
-		spyOn(casesService, 'updateCaseViaContext').and.callFake((ctx, c , p) => contextCase);
+		spyOn(casesService, 'updateCaseViaContext').and.callFake((ctx, c, p) => contextCase);
 		expect(contextAppEffects.loadDefaultCaseContext$).toBeObservable(expectedResult);
 	}));
 
-	it('on load case with quick search context fire SelectDilutedCaseAction and update params', fakeAsync(() => {
+	fit('on load case with quick search context fire SelectDilutedCaseAction and update params', fakeAsync(() => {
 		actions = hot('-a-', {
 			a: new LoadDefaultCaseAction({
 				context: ContextName.QuickSearch,
@@ -155,10 +166,10 @@ describe('ContextAppEffects', () => {
 				sensors: 'Landsat8'
 			})
 		});
-		const contextCase = {...casesService.defaultCase };
+		const contextCase = {...casesService.defaultCase};
 		const to = new Date('2020-06-23');
 		const from = new Date('2020-05-23');
-		const geo: Point = { type: 'Point', coordinates: [-117.91897, 34.81265] };
+		const geo: Point = {type: 'Point', coordinates: [-117.91897, 34.81265]};
 		const filter = {
 			providerName: 'Planet',
 			sensorType: 'Landsat8L1G',
@@ -171,7 +182,7 @@ describe('ContextAppEffects', () => {
 		}
 		contextCase.state = {
 			...contextCase.state,
-			time: { to, from },
+			time: {to, from},
 			region: geo,
 			dataInputFilters
 		};
@@ -182,11 +193,17 @@ describe('ContextAppEffects', () => {
 		spyOn(overlaysService, 'getSensorTypeAndProviderFromSensorName')
 			.and.returnValue(filter);
 		spyOn(casesService, 'updateCaseViaContext')
-			.and.callFake((ctx, c , p) => {
-				return { ...contextCase,
-					state: { ...contextCase.state,
-						time: ctx.time, dataInputFilters: ctx.dataInputFilters }};
+			.and.callFake((ctx, c, p) => {
+			return {
+				...contextCase,
+				state: {
+					...contextCase.state,
+					time: ctx.time, dataInputFilters: ctx.dataInputFilters
+				}
+			};
 		});
+		console.log(expectedResult);
+		console.log(contextAppEffects.loadDefaultCaseContext$);
 		expect(contextAppEffects.loadDefaultCaseContext$).toBeObservable(expectedResult);
 	}))
 })

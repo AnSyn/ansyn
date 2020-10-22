@@ -56,12 +56,12 @@ describe('TimepickerComponent', () => {
 	it('onSelectTime fire SetOverlaysCriteriaAction action' , fakeAsync(() => {
 		spyOn(store, 'dispatch');
 		const startDate = new Date();
-		const endDate = new Date(startDate.getTime() + 60000);
+		const endDate = new Date(startDate.getTime() - 60000);
 		const time: ICaseTimeState = {
 			from: startDate,
 			to: endDate
 		};
-		component.onTimeRangeChange({value: [startDate, endDate]});
+		component.onTimeRangeChange([startDate, endDate]);
 		tick();
 		expect(store.dispatch).toHaveBeenCalledWith(new SetOverlaysCriteriaAction({time}));
 	}))

@@ -31,6 +31,7 @@ import {
 	SetOverlaysCriteriaAction
 } from '../../../overlays/actions/overlays.actions';
 import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
+import { toastMessages } from '../../../core/models/toast-messages';
 
 const moment = momentNs;
 
@@ -222,8 +223,13 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		}
 		if (isEnterKey(event)) {
 			this.store$.dispatch(new LogManualSearchTime({ from: this.timePickerInputFrom.nativeElement.textContent, to: this.timePickerInputTo.nativeElement.textContent }));
-			if (!this.setTimeCriteria()) {
-				this.store$.dispatch(new SetToastMessageAction({ toastText: 'Invalid date' }));
+
+			if (!this.supportRangeDates()) {
+				this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.notSupportRangeDates }));
+			} else if (!this.checkTimeWasChange()) {
+				this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.timeWasNotChange }));
+			} else if (!this.setTimeCriteria()) {
+				this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.invalidDate }));
 			}
 		}
 		if (isEscapeKey(event)) {
@@ -246,7 +252,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	}
 
 	setTimeCriteria() {
-		if (this.validateDates() && this.checkTimeWasChange()) {
+		if (this.validateDates() && this.checkTimeWasChange() && this.supportRangeDates()) {
 			const fromText = this.timePickerInputFrom.nativeElement.textContent;
 			const toText = this.timePickerInputTo.nativeElement.textContent;
 
@@ -258,12 +264,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 				this.timePickerInputTo.nativeElement.textContent = fromText;
 			}
 
-			this.store$.dispatch(new SetOverlaysCriteriaAction({
-				time: {
-					from,
-					to
-				}
-			}));
+			this.store$.dispatch(new SetOverlaysCriteriaAction({ time: { from, to } }));
 
 			return true;
 		}
@@ -293,6 +294,12 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		return !this.timeError.from && !this.timeError.to;
 	}
 
+	supportRangeDates() {
+		this.timeError.from = this.earlyOrLateDate(this.timePickerInputFrom.nativeElement.textContent);
+		this.timeError.to = this.earlyOrLateDate(this.timePickerInputTo.nativeElement.textContent);
+		return !this.timeError.from && !this.timeError.to;
+	}
+
 	getDateFromString(date) {
 		return moment(date, DATE_FORMAT, true).toDate();
 	}
@@ -315,7 +322,12 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	private validateDate(date) {
 		const dateFromFormat = moment(date, DATE_FORMAT, true);
-		return dateFromFormat.isValid() && dateFromFormat.toDate().getTime() <= Date.now();
+		return dateFromFormat.isValid();
+	}
+
+	private earlyOrLateDate(date) {
+		const dateFromFormat = moment(date, DATE_FORMAT, true);
+		return dateFromFormat.toDate().getFullYear() < 1970 || dateFromFormat.toDate().getTime() > Date.now();
 	}
 
 	private findExtentOffset(content: string, fromLast: boolean) {

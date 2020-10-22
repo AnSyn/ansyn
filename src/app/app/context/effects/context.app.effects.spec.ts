@@ -202,8 +202,6 @@ describe('ContextAppEffects', () => {
 				}
 			};
 		});
-		console.log(expectedResult);
-		console.log(contextAppEffects.loadDefaultCaseContext$);
 		expect(contextAppEffects.loadDefaultCaseContext$).toBeObservable(expectedResult);
 	}))
 })

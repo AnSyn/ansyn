@@ -151,7 +151,6 @@ export class ContextAppEffects {
 
 	private parseTimeParams(contextTime: string = '') {
 		let time = this.casesService.defaultTime;
-		console.log(this.config.TwoMaps);
 		const {defaultContextSearchFromDeltaTime} = this.config.TwoMaps;
 		if (defaultContextSearchFromDeltaTime) {
 			time = {

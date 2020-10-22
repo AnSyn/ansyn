@@ -14,7 +14,7 @@ import {
 	LoggerService,
 	OverlaysService,
 	rxPreventCrash,
-	SelectCaseAction, ICaseTimeState,
+	SelectCaseAction,
 } from '@ansyn/ansyn';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { filter, mergeMap, withLatestFrom } from 'rxjs/operators';

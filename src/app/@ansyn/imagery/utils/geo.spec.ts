@@ -1,5 +1,6 @@
 import * as turf from '@turf/turf';
-import { getPolygonIntersectionRatio, isPointContainedInGeometry } from './geo';
+import { convertLineSegmentToThinRectangle, getPolygonIntersectionRatio, isPointContainedInGeometry } from './geo';
+import { Polygon } from 'geojson';
 
 describe('geo utils', () => {
 	// polygon region
@@ -130,6 +131,23 @@ describe('geo utils', () => {
 		]]
 	};
 
+	const lineSegment: Polygon = {
+		type: 'Polygon',
+		coordinates: [[
+			[
+				30,
+				45
+			],
+			[
+				20,
+				25
+			],
+			[
+				30,
+				45
+			]
+			]]};
+
 	describe('getPolygonIntersectionRatio', () => {
 		it('should extent intersection area be 1', function () {
 			expect(getPolygonIntersectionRatio(extent, polygon1)).toBeGreaterThanOrEqual(1);
@@ -153,5 +171,12 @@ describe('geo utils', () => {
 		it('should extent intersection area be 0', function () {
 			expect(isPointContainedInGeometry(pointExtent, polygon3)).toBeFalsy();
 		});
+	});
+
+	describe('convertLineSegmentToThinRectangle', () => {
+		it('should return a quadrangle', () => {
+			const result = convertLineSegmentToThinRectangle(lineSegment);
+			expect(result.coordinates[0].length).toEqual(5);
+		})
 	})
 });

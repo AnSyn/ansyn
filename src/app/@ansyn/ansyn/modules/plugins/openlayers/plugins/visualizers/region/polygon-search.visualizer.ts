@@ -1,10 +1,14 @@
 import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { UUID } from 'angular2-uuid';
 import * as turf from '@turf/turf';
 import { Observable } from 'rxjs';
-import { Position } from 'geojson';
-import { getPolygonByPointAndRadius, ImageryVisualizer, MarkerSize } from '@ansyn/imagery';
+import { Feature, Polygon, Position } from 'geojson';
+import {
+	convertLineSegmentToThinRectangle,
+	getPolygonByPointAndRadius,
+	ImageryVisualizer,
+	MarkerSize
+} from '@ansyn/imagery';
 import { UpdateGeoFilterStatus } from '../../../../../status-bar/actions/status-bar.actions';
 import { RegionVisualizer } from './region.visualizer';
 import { OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
@@ -43,7 +47,11 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 		return this.setEntities(entities);
 	}
 
-	createRegion({ geometry }: any) {
+	createRegion({ geometry }: Feature<Polygon>): Polygon {
+		if (geometry.type === CaseGeoFilter.Polygon && geometry.coordinates[0].length === 	3) {
+			const region = convertLineSegmentToThinRectangle(geometry);
+			return region;
+		}
 		return geometry;
 	}
 

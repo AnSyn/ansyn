@@ -328,7 +328,7 @@ describe('OverlaysAppEffects', () => {
 		it('No MapId on payload( should dispatch activeMapId as mapId )', () => {
 			const lastOverlayId: string = exampleOverlays.last.id;
 			const lastOverlay = exampleOverlays.last;
-			mapState.activeMapId = 'activeMapId';
+			mapState.activeMapId = '1';
 
 			actions = hot('--a--', {
 				a: new DisplayOverlayFromStoreAction({
@@ -338,7 +338,7 @@ describe('OverlaysAppEffects', () => {
 			});
 
 			const expectedResults = cold('--b--', {
-				b: new DisplayOverlayAction({ overlay: <any>lastOverlay, mapId: 'activeMapId', extent: undefined, customOriantation: null })
+				b: new DisplayOverlayAction({ overlay: <any>lastOverlay, mapId: '1', extent: undefined, customOriantation: null })
 			});
 			expect(overlaysAppEffects.onDisplayOverlayFromStore$).toBeObservable(expectedResults);
 		});

@@ -47,13 +47,7 @@ export class MapFacadeService {
 	}
 
 	static mapById(mapsList: IMapSettings[], mapId: string): IMapSettings {
-		if (!Boolean(mapsList)) {
-			return undefined;
-		}
-
-		return mapsList.find(({ id }: IMapSettings) => {
-			return id === mapId;
-		});
+		return Boolean(mapsList) ? mapsList.find(({ id }: IMapSettings) => id === mapId) : undefined;
 	}
 
 	initEmitters(id: string) {

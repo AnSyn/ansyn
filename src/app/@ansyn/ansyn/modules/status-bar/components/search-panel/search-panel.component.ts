@@ -220,7 +220,11 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		}
 		if (isEnterKey(event)) {
 			this.store$.dispatch(new LogManualSearchTime({ from: this.timePickerInputFrom.nativeElement.textContent, to: this.timePickerInputTo.nativeElement.textContent }));
-			if (!this.setTimeCriteria()) {
+			if (!this.supportRangeDates()) {
+				this.store$.dispatch(new SetToastMessageAction({ toastText: 'There are no matching overlays on this date' }));
+			} else if (!this.checkTimeWasChange()) {
+				this.store$.dispatch(new SetToastMessageAction({ toastText: 'The dates have not changed' }));
+			} else if (!this.setTimeCriteria()) {
 				this.store$.dispatch(new SetToastMessageAction({ toastText: 'Invalid date' }));
 			}
 		}
@@ -244,7 +248,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	}
 
 	setTimeCriteria() {
-		if (this.validateDates() && this.checkTimeWasChange()) {
+		if (this.validateDates() && this.checkTimeWasChange() && this.supportRangeDates()) {
 			const fromText = this.timePickerInputFrom.nativeElement.textContent;
 			const toText = this.timePickerInputTo.nativeElement.textContent;
 
@@ -291,6 +295,12 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		return !this.timeError.from && !this.timeError.to;
 	}
 
+	supportRangeDates() {
+		this.timeError.from = this.earlyOrLateDate(this.timePickerInputFrom.nativeElement.textContent);
+		this.timeError.to = this.earlyOrLateDate(this.timePickerInputTo.nativeElement.textContent);
+		return !this.timeError.from && !this.timeError.to;
+	}
+
 	getDateFromString(date) {
 		return moment(date, DATE_FORMAT, true).toDate();
 	}
@@ -313,7 +323,12 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	private validateDate(date) {
 		const dateFromFormat = moment(date, DATE_FORMAT, true);
-		return dateFromFormat.isValid() && dateFromFormat.toDate().getTime() <= Date.now();
+		return dateFromFormat.isValid();
+	}
+
+	private earlyOrLateDate(date) {
+		const dateFromFormat = moment(date, DATE_FORMAT, true);
+		return dateFromFormat.toDate().getFullYear() < 1970 || dateFromFormat.toDate().getTime() > Date.now();
 	}
 
 	private findExtentOffset(content: string, fromLast: boolean) {

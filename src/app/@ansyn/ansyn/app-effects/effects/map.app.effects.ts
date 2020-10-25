@@ -91,6 +91,7 @@ import { IGeoFilterStatus, selectGeoFilterStatus } from '../../modules/status-ba
 import { booleanEqual, distance, feature } from '@turf/turf';
 import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import { IScreenViewConfig, ScreenViewConfig } from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
+import { TranslateService } from '@ngx-translate/core';
 
 const FOOTPRINT_INSIDE_MAP_RATIO = 1;
 
@@ -322,7 +323,7 @@ export class MapAppEffects {
 			let actions = [];
 
 			if (extentWidth > this.screenViewConfig.extentWidthSearchLimit) {
-				actions.push(new SetOverlaysStatusMessageAction({message: 'Zoom in to get new overlays'}));
+				actions.push(new SetOverlaysStatusMessageAction({message: this.translate.instant('Zoom in to get new overlays')}));
 			} else {
 				actions.push(new SetOverlaysCriteriaAction({ region: extent }));
 				if (geoFilterStatus.active) {
@@ -336,6 +337,7 @@ export class MapAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
+				public translate: TranslateService,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig,
 				@Inject(ScreenViewConfig) public screenViewConfig: IScreenViewConfig

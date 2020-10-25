@@ -49,13 +49,14 @@ export class OverlaysEffects {
 		filter(([action, criteria, overlays]: [any, IOverlaysCriteria, IOverlay[]]) => Boolean(overlays) && overlays.length > 0),
 		mergeMap(([action, criteria, overlays]: [any, IOverlaysCriteria, IOverlay[]]) => {
 			const payload: Update<IOverlay>[] = overlays.map((overlay: IOverlay) => {
+				const region = criteria.region.geometry;
 				let containedInSearchPolygon;
 				try {
-					if (criteria.region.type === 'Point') {
-						const isContained = isPointContainedInGeometry(criteria.region, overlay.footprint);
+					if (region.type === 'Point') {
+						const isContained = isPointContainedInGeometry(region, overlay.footprint);
 						containedInSearchPolygon = isContained ? RegionContainment.contained : RegionContainment.notContained;
 					} else {
-						const ratio = getPolygonIntersectionRatio(criteria.region, overlay.footprint);
+						const ratio = getPolygonIntersectionRatio(region, overlay.footprint);
 						if (!Boolean(ratio)) {
 							containedInSearchPolygon = RegionContainment.notContained;
 						} else if (ratio === 1) {
@@ -98,8 +99,9 @@ export class OverlaysEffects {
 	checkTrianglesBeforeSearch$ = this.actions$.pipe(
 		ofType<CheckTrianglesAction>(OverlaysActionTypes.CHECK_TRIANGLES),
 		switchMap((action: CheckTrianglesAction) => {
+			const region = action.payload.region.geometry;
 			const { isUserFirstEntrance } = getMenuSessionData();
-			return forkJoin([this.areaToCredentialsService.getAreaTriangles(action.payload.region), this.userAuthorizedAreas$]).pipe(
+			return forkJoin([this.areaToCredentialsService.getAreaTriangles(region), this.userAuthorizedAreas$]).pipe(
 				mergeMap<any, any>(([trianglesOfArea, userAuthorizedAreas]: [any, any]) => {
 					if (userAuthorizedAreas.some( area => trianglesOfArea.includes(area))) {
 						return [new LoadOverlaysAction(action.payload),

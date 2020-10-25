@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, ViewChild, Input, EventEmitter, Output } from '@angular/core';
-import { ICaseTimeState } from '../../../menu-items/cases/models/case.model';
 import { Store } from '@ngrx/store';
 import { OwlDateTimeComponent } from '@ansyn/ng-pick-datetime';
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
+import { SetToastMessageAction } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-timepicker',
@@ -18,12 +18,16 @@ export class TimePickerComponent implements OnInit, OnDestroy {
 	constructor(protected store$: Store<any>) {
 	}
 
-	onTimeRangeChange(event) {
-		const time: ICaseTimeState = {
-			from: event.value[0],
-			to: event.value[1]
-		};
-		this.store$.dispatch(new SetOverlaysCriteriaAction({ time }));
+	onTimeRangeChange([from, to]) {
+		if (this.validateDate(from) && this.validateDate(to)) {
+			this.store$.dispatch(new SetOverlaysCriteriaAction({ time: { from, to } }));
+		} else {
+			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Invalid date' }));
+		}
+	}
+
+	private validateDate(date: Date) {
+		return date.getTime() <= Date.now();
 	}
 
 	ngOnInit() {

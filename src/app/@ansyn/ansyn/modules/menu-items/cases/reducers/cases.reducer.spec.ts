@@ -22,7 +22,11 @@ describe('CasesReducer', () => {
 				to: new Date()
 			},
 			dataInputFilters: { fullyChecked: true, filters: [] },
-			region: {},
+			region: {
+				geometry: {},
+				type: "Feature",
+				properties: {}
+			},
 			overlaysManualProcessArgs: {},
 			overlaysTranslationData: {}
 		}

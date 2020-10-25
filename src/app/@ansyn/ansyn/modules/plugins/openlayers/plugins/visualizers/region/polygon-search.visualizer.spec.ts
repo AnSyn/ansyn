@@ -40,11 +40,17 @@ describe('PolygonSearchVisualizer', () => {
 
 	it('drawRegionOnMap calls setEntities with Feature', () => {
 		const id = 'pinPolygon';
-		const fakeGeojson: Polygon = { type: 'Polygon', coordinates: [[[0, 0], [0, 0], [0, 0], [0, 0]]] };
+		const fakeGeojson: Feature<any> = {
+			geometry: {
+				type: 'Polygon',
+				coordinates: [[[0, 0], [0, 0], [0, 0], [0, 0]]]
+			},
+			type: "Feature",
+			properties: {}
+		};
 		spyOn(polygonSearchVisualizer, 'setEntities').and.callFake(() => EMPTY);
-		const expectFeatureJson: Feature<Polygon> = { type: 'Feature', geometry: fakeGeojson, properties: {} };
 		polygonSearchVisualizer.drawRegionOnMap(fakeGeojson);
-		expect(polygonSearchVisualizer.setEntities).toHaveBeenCalledWith([{ id, featureJson: expectFeatureJson }]);
+		expect(polygonSearchVisualizer.setEntities).toHaveBeenCalledWith([{ id, featureJson: fakeGeojson }]);
 	});
 
 	describe('createRegion', () => {

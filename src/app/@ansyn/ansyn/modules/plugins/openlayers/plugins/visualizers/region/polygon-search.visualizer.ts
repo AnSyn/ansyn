@@ -42,17 +42,22 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 
 	drawRegionOnMap(region: CaseRegionState): Observable<boolean> {
 		const id = 'pinPolygon';
-		const featureJson = region.type === 'Point' ? getPolygonByPointAndRadius(region.coordinates) : turf.polygon(region.coordinates);
+		const featureJson = region.geometry.type === 'Point' ? getPolygonByPointAndRadius(region.geometry.coordinates) : turf.polygon(region.geometry.coordinates);
 		const entities = [{ id, featureJson }];
 		return this.setEntities(entities);
 	}
 
-	createRegion({ geometry }: Feature<Polygon>): Polygon {
-		if (geometry.type === CaseGeoFilter.Polygon && geometry.coordinates[0].length === 	3) {
-			const region = convertLineSegmentToThinRectangle(geometry);
-			return region;
+	createRegion(feature: Feature<Polygon>): Feature<Polygon> {
+		let region: Feature<Polygon> = feature;
+		if (feature.geometry.type === CaseGeoFilter.Polygon && feature.geometry.coordinates[0].length === 	3) {
+			region = convertLineSegmentToThinRectangle(feature.geometry);
 		}
-		return geometry;
+		return {
+			...region,
+			properties: {
+				searchMode: "Polygon"
+			}
+		};
 	}
 
 	onContextMenu(point: Position): void {

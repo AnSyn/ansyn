@@ -8,7 +8,7 @@ import { combineLatest, fromEvent, merge, Observable } from 'rxjs';
 import { animate, style, transition, trigger, AnimationTriggerMetadata } from '@angular/animations';
 import { filter, tap } from 'rxjs/operators';
 import { selectDataInputFilter, selectRegion, selectTime } from '../../../overlays/reducers/overlays.reducer';
-import { ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
+import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import {
@@ -31,6 +31,7 @@ import {
 	SetOverlaysCriteriaAction
 } from '../../../overlays/actions/overlays.actions';
 import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
+import { toastMessages } from '../../../core/models/toast-messages';
 
 const moment = momentNs;
 
@@ -118,7 +119,9 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	updateGeoFilterCoordinates$ = this.store$.select(selectRegion).pipe(
 		filter(Boolean),
-		tap(({ coordinates }) => this.geoFilterCoordinates = coordinates.toString())
+		tap((region: CaseRegionState) => {
+			this.geoFilterCoordinates = region.geometry.coordinates.toString();
+		})
 	);
 
 	constructor(protected store$: Store<IStatusBarState>,
@@ -220,8 +223,13 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		}
 		if (isEnterKey(event)) {
 			this.store$.dispatch(new LogManualSearchTime({ from: this.timePickerInputFrom.nativeElement.textContent, to: this.timePickerInputTo.nativeElement.textContent }));
-			if (!this.setTimeCriteria()) {
-				this.store$.dispatch(new SetToastMessageAction({ toastText: 'Invalid date' }));
+
+			if (!this.supportRangeDates()) {
+				this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.notSupportRangeDates }));
+			} else if (!this.checkTimeWasChange()) {
+				this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.timeWasNotChange }));
+			} else if (!this.setTimeCriteria()) {
+				this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.invalidDate }));
 			}
 		}
 		if (isEscapeKey(event)) {
@@ -244,7 +252,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	}
 
 	setTimeCriteria() {
-		if (this.validateDates() && this.checkTimeWasChange()) {
+		if (this.validateDates() && this.checkTimeWasChange() && this.supportRangeDates()) {
 			const fromText = this.timePickerInputFrom.nativeElement.textContent;
 			const toText = this.timePickerInputTo.nativeElement.textContent;
 
@@ -256,12 +264,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 				this.timePickerInputTo.nativeElement.textContent = fromText;
 			}
 
-			this.store$.dispatch(new SetOverlaysCriteriaAction({
-				time: {
-					from,
-					to
-				}
-			}));
+			this.store$.dispatch(new SetOverlaysCriteriaAction({ time: { from, to } }));
 
 			return true;
 		}
@@ -291,6 +294,12 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		return !this.timeError.from && !this.timeError.to;
 	}
 
+	supportRangeDates() {
+		this.timeError.from = this.earlyOrLateDate(this.timePickerInputFrom.nativeElement.textContent);
+		this.timeError.to = this.earlyOrLateDate(this.timePickerInputTo.nativeElement.textContent);
+		return !this.timeError.from && !this.timeError.to;
+	}
+
 	getDateFromString(date) {
 		return moment(date, DATE_FORMAT, true).toDate();
 	}
@@ -313,7 +322,12 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	private validateDate(date) {
 		const dateFromFormat = moment(date, DATE_FORMAT, true);
-		return dateFromFormat.isValid() && dateFromFormat.toDate().getTime() <= Date.now();
+		return dateFromFormat.isValid();
+	}
+
+	private earlyOrLateDate(date) {
+		const dateFromFormat = moment(date, DATE_FORMAT, true);
+		return dateFromFormat.toDate().getFullYear() < 1970 || dateFromFormat.toDate().getTime() > Date.now();
 	}
 
 	private findExtentOffset(content: string, fromLast: boolean) {

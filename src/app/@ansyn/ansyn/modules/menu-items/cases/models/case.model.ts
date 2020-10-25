@@ -30,7 +30,8 @@ export type CaseTimeFilter = 'Start - End';
 
 export enum CaseGeoFilter {
 	PinPoint = 'Point',
-	Polygon = 'Polygon'
+	Polygon = 'Polygon',
+	ScreenView = 'ScreenView'
 }
 
 export interface IImageManualProcessArgs {
@@ -86,7 +87,7 @@ export interface ICaseState extends IDilutedCaseState {
 	maps?: ICaseMapsState;
 }
 
-export type CaseRegionState = any | Feature<Polygon> | Point | Polygon | Position;
+export type CaseRegionState = any | Feature<Polygon | Point> | Point | Polygon | Position;
 
 export interface IDataInputFilterValue {
 	providerName: string;

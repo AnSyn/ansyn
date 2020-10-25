@@ -27,7 +27,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	newRegionSelect$ = this.store$.select(selectRegion);
 
 	regionSameAsVisualizer$ = this.newRegionSelect$.pipe(
-		map(region => region.type === this.geoFilter)
+		map(region => region.properties.searchMode === this.geoFilter)
 	);
 
 	isActiveMap$ = this.store$.select(selectActiveMapId).pipe(
@@ -58,7 +58,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	);
 
 	@AutoSubscription
-	drawChanges$ = combineLatest([this.newRegionSelect$, this.regionSameAsVisualizer$, this.geoFilterActive$, this.store$.select(selectIsMinimalistViewMode)]).pipe(
+	drawChanges$ = combineLatest([this.geoFilterType$, this.newRegionSelect$, this.regionSameAsVisualizer$, this.geoFilterActive$, this.store$.select(selectIsMinimalistViewMode)]).pipe(
 		mergeMap(this.drawChanges.bind(this))
 	);
 
@@ -66,8 +66,8 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		super();
 	}
 
-	drawChanges([region, regionAsVisualizer, isActive, isMinimalistViewMode]) {
-		if (regionAsVisualizer && !isActive && !isMinimalistViewMode) {
+	drawChanges([geoFilterType, region, regionAsVisualizer, isActive, isMinimalistViewMode]) {
+		if (regionAsVisualizer && !isActive && !isMinimalistViewMode && geoFilterType !== CaseGeoFilter.ScreenView) {
 			return this.drawRegionOnMap(region);
 		}
 		this.clearEntities();
@@ -81,7 +81,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 			tap((featureCollection: FeatureCollection<GeometryObject>) => {
 				const [geoJsonFeature] = featureCollection.features;
 				const region = this.createRegion(geoJsonFeature);
-				if (region.type === 'Point' || turf.kinks(region).features.length === 0) {  // turf way to check if there are any self-intersections
+				if (region.geometry.type === 'Point' || turf.kinks(region.geometry).features.length === 0) {  // turf way to check if there are any self-intersections
 					this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
 					this.store$.dispatch(new UpdateGeoFilterStatus({ active: false }));
 				} else {
@@ -116,7 +116,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	interactionChanges([geoFilterSearch, isGeoActive, isActiveMap]: [CaseGeoFilter, boolean, boolean]): void {
 		this.removeDrawInteraction();
-		if (geoFilterSearch === this.geoFilter && isGeoActive && isActiveMap) {
+		if (geoFilterSearch === this.geoFilter && isGeoActive && isActiveMap && this.geoFilter !== CaseGeoFilter.ScreenView) {
 			this.createDrawInteraction();
 		}
 	}

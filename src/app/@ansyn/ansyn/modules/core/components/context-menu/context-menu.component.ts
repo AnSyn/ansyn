@@ -21,6 +21,7 @@ import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/ope
 import { selectRegion } from '../../../overlays/reducers/overlays.reducer';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { CaseGeoFilter, ICaseMapState } from '../../../menu-items/cases/models/case.model';
+import { IGeoFilterStatus, selectGeoFilterStatus } from '../../../status-bar/reducers/status-bar.reducer';
 
 export interface IContextMenuShowPayload {
 	point: Point;
@@ -94,6 +95,10 @@ export class ContextMenuComponent implements OnInit {
 	geoFilter$: Observable<CaseGeoFilter> = this.store.select(selectRegion).pipe(
 		filter(Boolean),
 		tap<any>((region) => this.geoFilter = region.type)
+	);
+
+	screenViewMode$ = this.store.select(selectGeoFilterStatus).pipe(
+		map((geoFilter: IGeoFilterStatus) => geoFilter.type === CaseGeoFilter.ScreenView)
 	);
 
 	geoFilter;

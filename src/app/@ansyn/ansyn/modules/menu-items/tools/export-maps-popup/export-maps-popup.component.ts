@@ -187,7 +187,7 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 					doc.setTextColor(255, 255, 255);
 					doc.setFontSize(11);
 					const loadOverlay = mapToBeExport.mapSettings.data.overlay;
-					const desc = Boolean(loadOverlay) ? this.getDescriptionFromOverlay(loadOverlay) : 'Base Map';
+					const desc = Boolean(loadOverlay) ? this.getDescriptionFromOverlay(loadOverlay) : this.translateService.instant('Base Map');
 					doc.text(desc, size[0] / 2, 5, {align: 'center', baseline: 'bottom'});
 				}
 				if (exportMapData.compass) {

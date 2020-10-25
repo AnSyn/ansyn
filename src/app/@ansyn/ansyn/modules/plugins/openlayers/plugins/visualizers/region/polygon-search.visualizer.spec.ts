@@ -63,8 +63,9 @@ describe('PolygonSearchVisualizer', () => {
 				},
 				properties: {}
 			};
-			const expectedResult = polygonSearchVisualizer.createRegion(fakeGeojson);
-			expect(expectedResult).toEqual(fakeGeojson.geometry);
+			const result = polygonSearchVisualizer.createRegion(fakeGeojson);
+			expect(result.geometry).toEqual(fakeGeojson.geometry);
+			expect(result.properties['searchMode']).toEqual('Polygon');
 		});
 
 		it('should return, for one-segment polygon, a quadrangle', () => {
@@ -78,8 +79,9 @@ describe('PolygonSearchVisualizer', () => {
 				},
 				properties: {}
 			};
-			const expectedResult = polygonSearchVisualizer.createRegion(fakeGeojson);
-			expect(expectedResult.coordinates[0].length).toEqual(5);
+			const result = polygonSearchVisualizer.createRegion(fakeGeojson);
+			expect(result.geometry.coordinates[0].length).toEqual(5);
+			expect(result.properties['searchMode']).toEqual('Polygon');
 		});
 	});
 });

@@ -50,12 +50,13 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 	createRegion(feature: Feature<Polygon>): Feature<Polygon> {
 		let region: Feature<Polygon> = feature;
 		if (feature.geometry.type === CaseGeoFilter.Polygon && feature.geometry.coordinates[0].length === 	3) {
-			region = convertLineSegmentToThinRectangle(feature.geometry);
+			region = convertLineSegmentToThinRectangle(feature);
 		}
 		return {
 			...region,
 			properties: {
-				searchMode: "Polygon"
+				...region.properties,
+				searchMode: 'Polygon'
 			}
 		};
 	}

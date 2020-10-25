@@ -1,6 +1,6 @@
 import * as turf from '@turf/turf';
 import { convertLineSegmentToThinRectangle, getPolygonIntersectionRatio, isPointContainedInGeometry } from './geo';
-import { Polygon } from 'geojson';
+import { Feature, Polygon } from 'geojson';
 
 describe('geo utils', () => {
 	// polygon region
@@ -73,34 +73,35 @@ describe('geo utils', () => {
 	// intersect
 	const polygon2: GeoJSON.MultiPolygon = {
 		'type': 'MultiPolygon',
-	coordinates: [[
-		[
+		coordinates: [[
 			[
-				-123.0698776245117,
-				45.538820010517036
-			],
-			[
-				-123.08773040771483,
-				45.51765448081993
-			],
-			[
-				-123.06095123291016,
-				45.502978246693786
-			],
-			[
-				-123.00601959228514,
-				45.51693278828882
-			],
-			[
-				-123.04000854492188,
-				45.538820010517036
-			],
-			[
-				-123.0698776245117,
-				45.538820010517036
+				[
+					-123.0698776245117,
+					45.538820010517036
+				],
+				[
+					-123.08773040771483,
+					45.51765448081993
+				],
+				[
+					-123.06095123291016,
+					45.502978246693786
+				],
+				[
+					-123.00601959228514,
+					45.51693278828882
+				],
+				[
+					-123.04000854492188,
+					45.538820010517036
+				],
+				[
+					-123.0698776245117,
+					45.538820010517036
+				]
 			]
-		]
-	]]};
+		]]
+	};
 
 	// not contain
 	const polygon3: GeoJSON.MultiPolygon = {
@@ -131,22 +132,27 @@ describe('geo utils', () => {
 		]]
 	};
 
-	const lineSegment: Polygon = {
-		type: 'Polygon',
-		coordinates: [[
-			[
-				30,
-				45
-			],
-			[
-				20,
-				25
-			],
-			[
-				30,
-				45
-			]
-			]]};
+	const lineSegment: Feature<Polygon> = {
+		type: 'Feature',
+		properties: [],
+		geometry: {
+			type: 'Polygon',
+			coordinates: [[
+				[
+					30,
+					45
+				],
+				[
+					20,
+					25
+				],
+				[
+					30,
+					45
+				]
+			]]
+		}
+	};
 
 	describe('getPolygonIntersectionRatio', () => {
 		it('should extent intersection area be 1', function () {
@@ -176,7 +182,7 @@ describe('geo utils', () => {
 	describe('convertLineSegmentToThinRectangle', () => {
 		it('should return a quadrangle', () => {
 			const result = convertLineSegmentToThinRectangle(lineSegment);
-			expect(result.coordinates[0].length).toEqual(5);
+			expect(result.geometry.coordinates[0].length).toEqual(5);
 		})
 	})
 });

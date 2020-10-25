@@ -66,15 +66,15 @@ export function getPolygonByBufferRadius(polygonSource: Polygon, radiusInMeteres
 	return result;
 }
 
-export function convertLineSegmentToThinRectangle(sourcePolygon: Polygon, radiusInKm: number = 0.01): Polygon {
-	if (sourcePolygon.coordinates[0].length !== 3) {
+export function convertLineSegmentToThinRectangle(sourcePolygon: Feature<Polygon>, radiusInKm: number = 0.01): Feature<Polygon> {
+	if (sourcePolygon.geometry.coordinates[0].length !== 3) {
 		return sourcePolygon;
 	}
-	const asLine = lineString(sourcePolygon.coordinates[0].slice(1));
+	const asLine = lineString(sourcePolygon.geometry.coordinates[0].slice(1));
 	const offsetLine1 = lineOffset(asLine, radiusInKm);
 	const offsetLine2 = lineOffset(asLine, -radiusInKm);
-	const bufferedPolygon = convex(featureCollection([offsetLine1, offsetLine2]));
-	return bufferedPolygon.geometry;
+	const thinRectangle = convex(featureCollection([offsetLine1, offsetLine2]));
+	return thinRectangle;
 }
 
 export function getPointByGeometry(geometry: GeometryObject | FeatureCollection<any>): Point {

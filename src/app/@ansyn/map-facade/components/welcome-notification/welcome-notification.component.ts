@@ -1,11 +1,13 @@
 import { AfterViewInit, Component, ElementRef, HostBinding, HostListener, Inject, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { selectWasWelcomeNotificationShown } from '../../reducers/map.reducer';
 import { SetWasWelcomeNotificationShownFlagAction } from '../../actions/map.actions';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';
+import { CaseGeoFilter } from '../../../ansyn/modules/menu-items/cases/models/case.model';
+import { selectGeoFilterType } from '../../../ansyn/modules/status-bar/reducers/status-bar.reducer';
 
 @Component({
 	selector: 'ansyn-welcome-notification',
@@ -28,6 +30,12 @@ export class WelcomeNotificationComponent implements AfterViewInit, OnDestroy {
 		.pipe(
 			take(1),
 		);
+
+	mainText$: Observable<string> = this.store$.select(selectGeoFilterType).pipe(
+		map((geoFilterType: CaseGeoFilter) =>
+			geoFilterType === CaseGeoFilter.ScreenView ? this.config.screenViewMainText : this.config.mainText
+		)
+	);
 
 	constructor(public store$: Store<any>,
 				public elem: ElementRef,

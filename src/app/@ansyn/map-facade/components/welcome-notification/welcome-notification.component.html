@@ -1,6 +1,6 @@
 <div class="welcome-notification" [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''">
 	<header>{{config.headerText | translate}}</header>
 	<main>
-		<span>{{config.mainText | translate}}</span> <span class="icon-map-pin-point"></span>
+		<span>{{mainText$ | async | translate}}</span> <span class="icon-map-pin-point"></span>
 	</main>
 </div>

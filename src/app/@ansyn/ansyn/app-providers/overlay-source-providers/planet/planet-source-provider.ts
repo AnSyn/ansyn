@@ -1,4 +1,4 @@
-import { forkJoin, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import {
@@ -26,7 +26,6 @@ import {
 	BaseOverlaySourceProvider,
 	IFetchParams,
 	IOverlayFilter,
-	IStartAndEndDate,
 	timeIntersection
 } from '../../../modules/overlays/models/base-overlay-source-provider.model';
 import { OverlaySourceProvider } from '../../../modules/overlays/models/overlays-source-providers';
@@ -118,6 +117,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 	}*/
 
 	buildFetchObservables(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<any>[] {
+		console.log('buildFetchObservables', fetchParams, filters)
 		const regionFeature = feature(<any>fetchParams.region);
 		const fetchParamsTimeRange = {
 			start: new Date(fetchParams.timeRange.start),
@@ -125,7 +125,11 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		};
 
 		const planetFilters: IPlanetFilter[] = filters
+			// If the criterion customSensorToFilter exists, take only sensors that are included there
+			.filter(({ sensor }) => !fetchParams.customSensorToFilter || fetchParams.customSensorToFilter.includes(sensor))
+			// For each filter object, change "sensor" field to "sensors" = [sensor]
 			.map(({ sensor, ...restItem }) => ({ ...restItem, sensors: sensor ? [sensor] : [] }))
+			// Replace similar filter objects with one filter object with a larger "sensors" array
 			.reduce((res, item) => {
 				const equalItem = res.find((f) => isEqual({
 					coverage: f.coverage,
@@ -137,6 +141,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 				}
 				return [...res, item];
 			}, [])
+			// For each filter object, cross its criteria with the corresponding criteria from fetchParams
 			.map((item): Partial<IFetchParams> => {
 				const intersection = intersect(regionFeature, item.coverage);
 				const time = timeIntersection(fetchParamsTimeRange, item.timeRange);
@@ -147,7 +152,9 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 					sensors
 				};
 			})
+			// Remove empty fetch params
 			.filter(({ timeRange, region }: IFetchParams) => Boolean(timeRange && region))
+			// Convert fetch params to Planet filters format
 			.map(this.paramsToFilter);
 		if (!planetFilters.length) {
 			return [];
@@ -158,6 +165,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		})];
 	}
 
+	// Convert fetch params to Planet filters format
 	paramsToFilter(fetchParams: IFetchParams): IPlanetFilter {
 
 		const filters: IPlanetFilter = {

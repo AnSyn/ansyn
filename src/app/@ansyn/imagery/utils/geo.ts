@@ -71,9 +71,9 @@ export function convertLineSegmentToThinRectangle(sourcePolygon: Feature<Polygon
 		return sourcePolygon;
 	}
 	const asLine = lineString(sourcePolygon.geometry.coordinates[0].slice(1));
-	const offsetLine1 = lineOffset(asLine, radiusInKm);
-	const offsetLine2 = lineOffset(asLine, -radiusInKm);
-	const thinRectangle = convex(featureCollection([offsetLine1, offsetLine2]));
+	const lineOnOneSide = lineOffset(asLine, radiusInKm);
+	const lineOnTheOtherSide = lineOffset(asLine, -radiusInKm);
+	const thinRectangle = convex(featureCollection([lineOnOneSide, lineOnTheOtherSide]));
 	return thinRectangle;
 }
 

@@ -207,6 +207,20 @@ div.menu-wrapper {
 	div.show-menu {
 		width: 100%;
 	}
+
+	&.rtl {
+		button.hide-menu {
+			right: initial;
+			left: 0;
+			transform: translateX(-100%);
+		}
+
+		&.collapsed {
+			div.menu {
+				transform: translateX(100%);
+			}
+		}
+	} // rtl
 }
 
 @media screen and (max-width: 1400px) {
@@ -224,7 +238,7 @@ button.hide-menu {
 	background: @background-color-1;
 	border: none;
 	color: white;
-	box-shadow: 2px 0px 4px -2px black;
+	box-shadow: 2px 0 4px -2px black;
 	outline: none;
 	visibility: visible;
 	transition: .5s;

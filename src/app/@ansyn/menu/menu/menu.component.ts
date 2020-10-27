@@ -40,6 +40,7 @@ import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, filter, tap, withLatestFrom } from 'rxjs/operators';
 import { MENU_ITEMS } from '../helpers/menu-item-token';
+import { TranslateService } from '@ngx-translate/core';
 
 const animations: any[] = [
 	trigger(
@@ -128,15 +129,22 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 		})
 	);
 
-	constructor(public componentFactoryResolver: ComponentFactoryResolver,
-				protected store: Store<IMenuState>,
-				protected renderer: Renderer2,
-				protected elementRef: ElementRef,
-				@Inject(DOCUMENT) protected document: Document,
-				@Inject(MENU_ITEMS) menuItemsMulti: IMenuItem[][],
-				@Inject(MenuConfig) public menuConfig: IMenuConfig,
-				private cdref: ChangeDetectorRef) {
+	constructor(
+		public componentFactoryResolver: ComponentFactoryResolver,
+		protected store: Store<IMenuState>,
+		protected renderer: Renderer2,
+		protected elementRef: ElementRef,
+		@Inject(DOCUMENT) protected document: Document,
+		@Inject(MENU_ITEMS) menuItemsMulti: IMenuItem[][],
+		@Inject(MenuConfig) public menuConfig: IMenuConfig,
+		private cdref: ChangeDetectorRef,
+		protected translateService: TranslateService
+	) {
 		this.initializeMenuItem(menuItemsMulti.reduce((prev, next) => [...prev, ...next], []));
+	}
+
+	get isRTL() {
+		return this.translateService.instant('direction') === 'rtl';
 	}
 
 	get componentElem() {

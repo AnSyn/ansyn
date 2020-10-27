@@ -103,6 +103,20 @@ export class CasesEffects {
 		share());
 
 	@Effect()
+	onUpdateCaseBackendSaveAs$: Observable<UpdateCaseBackendSuccessAction | any> = this.actions$
+		.pipe(
+			ofType(CasesActionTypes.UPDATE_CASE_BACKEND_SAVE_AS),
+			switchMap((action: UpdateCaseBackendAction) => {
+				return this.casesService.updateCase(action.payload)
+					.pipe(
+						map((updatedCase: IStoredEntity<ICasePreview, IDilutedCaseState>) => new UpdateCaseBackendSuccessAction(updatedCase)),
+						catchError(() => EMPTY)
+					);
+
+			})
+		);
+
+	@Effect()
 	onUpdateCaseBackend$: Observable<UpdateCaseBackendSuccessAction | any> = this.actions$
 		.pipe(
 			ofType(CasesActionTypes.UPDATE_CASE_BACKEND),

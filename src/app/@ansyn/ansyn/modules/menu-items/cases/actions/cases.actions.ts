@@ -18,6 +18,7 @@ export const CasesActionTypes = {
 	UPDATE_CASE: 'UPDATE_CASE',
 	UPDATE_CASE_BACKEND: 'UPDATE_CASE_BACKEND',
 	UPDATE_CASE_BACKEND_SUCCESS: 'UPDATE_CASE_BACKEND_SUCCESS',
+	UPDATE_CASE_BACKEND_SAVE_AS: 'UPDATE_CASE_BACKEND_SAVE_AS',
 
 	OPEN_MODAL: 'OPEN_MODAL',
 	CLOSE_MODAL: 'CLOSE_MODAL',
@@ -32,7 +33,7 @@ export const CasesActionTypes = {
 
 	SAVE_CASE_AS: 'SAVE_CASE_AS',
 	SAVE_CASE_AS_SUCCESS: 'SAVE_CASE_AS_SUCCESS',
-
+	
 	COPY_CASE_LINK: 'COPY_CASE_LINK',
 
 	SET_DEFAULT_CASE_QUERY_PARAMS: 'SET_DEFAULT_CASE_QUERY_PARAMS',
@@ -91,6 +92,13 @@ export class UpdateCaseAction implements Action {
 
 export class UpdateCaseBackendAction implements Action {
 	type = CasesActionTypes.UPDATE_CASE_BACKEND;
+
+	constructor(public payload: ICase) {
+	}
+}
+
+export class UpdateCaseBackendSaveAs implements Action {
+	type = CasesActionTypes.UPDATE_CASE_BACKEND_SAVE_AS;
 
 	constructor(public payload: ICase) {
 	}

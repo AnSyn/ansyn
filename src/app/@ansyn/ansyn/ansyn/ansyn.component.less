@@ -22,6 +22,7 @@
 
 	font-family: @app-font;
 	font-size: 14px;
+	direction: ltr;
 
 	div.app {
 		display: flex;
@@ -151,6 +152,20 @@
 		}
 	}
 
+	&.rtl {
+		direction: rtl;
+
+		div.app.animations {
+			@keyframes menu-init {
+				from {
+					transform: translateX(100%);
+				}
+				to {
+					transform: translateX(0);
+				}
+			}
+		}
+	} // rtl
 }
 
 @media screen and (max-width: 959px) {

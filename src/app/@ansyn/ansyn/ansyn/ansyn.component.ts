@@ -49,9 +49,9 @@ export class AnsynComponent implements OnInit {
 		);
 
 	@HostBinding('class.component') component = this.componentMode;
-	@HostBinding('style.direction')
-	get direction() {
-		return this.translateService.instant('direction') === 'rtl' ? 'rtl' : 'ltr'
+	@HostBinding('class.rtl')
+	get isRTL() {
+		return this.translateService.instant('direction') === 'rtl'
 	}
 	@Input() version;
 

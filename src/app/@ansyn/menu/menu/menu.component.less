@@ -162,7 +162,7 @@ div.menu-wrapper {
 
 	div.container {
 		position: absolute;
-		left: 90px;
+		left: @menu-width;
 		top: @status-bar-height;
 		z-index: @z-index-menu-container;
 		height: calc(100% - @status-bar-height);
@@ -209,16 +209,21 @@ div.menu-wrapper {
 	}
 
 	&.rtl {
+		&.collapsed {
+			div.menu {
+				transform: translateX(100%);
+			}
+		}
+
 		button.hide-menu {
 			right: initial;
 			left: 0;
 			transform: translateX(-100%);
 		}
 
-		&.collapsed {
-			div.menu {
-				transform: translateX(100%);
-			}
+		div.container {
+			left: initial;
+			right: @menu-width;
 		}
 	} // rtl
 }

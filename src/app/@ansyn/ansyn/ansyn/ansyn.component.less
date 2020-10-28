@@ -155,16 +155,23 @@
 	&.rtl {
 		direction: rtl;
 
-		div.app.animations {
-			@keyframes menu-init {
-				from {
-					transform: translateX(100%);
-				}
-				to {
-					transform: translateX(0);
+		div.app {
+			&.animations {
+				@keyframes menu-init {
+					from {
+						transform: translateX(100%);
+					}
+					to {
+						transform: translateX(0);
+					}
 				}
 			}
-		}
+
+			div.status {
+				left: initial;
+				right: @menu-width;
+			}
+		} // div.app
 	} // rtl
 }
 

@@ -45,13 +45,16 @@ import { TranslateService } from '@ngx-translate/core';
 const animations: any[] = [
 	trigger(
 		'expand', [
-			state('1', style({
-				transform: 'translateX(0)'
-			})),
-			state('0', style({
+			state('off_ltr', style({
 				transform: 'translateX(-100%)'
 			})),
-			transition('1 <=> 0', animate('0.3s ease-in-out'))
+			state('off_rtl', style({
+				transform: 'translateX(100%)'
+			})),
+			state('on', style({
+				transform: 'translateX(0)'
+			})),
+			transition('off_ltr <=> on, off_rtl <=> on', animate('0.3s ease-in-out'))
 		]
 	)
 ];

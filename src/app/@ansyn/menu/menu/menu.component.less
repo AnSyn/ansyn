@@ -263,7 +263,7 @@ button.hide-menu {
 	}
 }
 
-@keyframes collapsed {
+@keyframes collapsed_ltr {
 	from {
 		transform: scale(1) translateX(100px);
 	}
@@ -272,9 +272,27 @@ button.hide-menu {
 	}
 }
 
-@keyframes unCollapsed {
+@keyframes unCollapsed_ltr {
 	from {
 		transform: scale(1.2) translateX(-100px);
+	}
+	to {
+		transform: scale(1) translateX(0);
+	}
+}
+
+@keyframes collapsed_rtl {
+	from {
+		transform: scale(1) translateX(-100px);
+	}
+	to {
+		transform: scale(1) translateX(0);
+	}
+}
+
+@keyframes unCollapsed_rtl {
+	from {
+		transform: scale(1.2) translateX(100px);
 	}
 	to {
 		transform: scale(1) translateX(0);

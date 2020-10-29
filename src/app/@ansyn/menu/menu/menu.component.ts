@@ -318,7 +318,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 		this.forceRedraw()
 			.then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
 
-		this.animatedElement.style.animation = this.collapse ? 'collapsed .3s' : 'unCollapsed .6s';
+		this.animatedElement.style.animation = `${this.collapse ? 'collapsed' : 'unCollapsed'}_${this.isRTL ? 'rtl' : 'ltr'} ${this.collapse ? '.3s' : '.6s'}`;
 
 	}
 

@@ -213,7 +213,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 			this.renderer.removeClass(this.container.nativeElement, 'pinned');
 		}
 
-		this.animatedElement.style.animation = this.isPinned ? 'pinned .4s' : 'unPinned .4s';
+		this.animatedElement.style.animation = `${this.isPinned ? 'pinned' : 'unPinned'}_${this.isRTL ? 'rtl' : 'ltr'} .4s`;
 		this.forceRedraw().then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
 	}
 

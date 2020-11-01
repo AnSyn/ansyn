@@ -22,13 +22,6 @@ export class ResultsComponent implements OnInit {
 	ngOnInit() {
 	}
 
-	onExpandDone() {
-		const resultsTableElement = document.querySelector('.results');
-		if (resultsTableElement) {
-			resultsTableElement.setAttribute('style', `z-index: 5`);
-		}
-	}
-
 	onExpandStart() {
 		const resultsTableElement = document.querySelector('.results');
 		if (resultsTableElement) {

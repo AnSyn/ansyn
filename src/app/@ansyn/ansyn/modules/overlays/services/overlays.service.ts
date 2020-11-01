@@ -82,7 +82,7 @@ export class OverlaysService {
 	}
 
 	search(params: IOverlaysCriteria): Observable<IOverlaysFetchData> {
-		let feature = params.region;
+		let feature = params.region.geometry;
 		return this._overlaySourceProvider.fetch({
 			dataInputFilters: Boolean(params.dataInputFilters) ? params.dataInputFilters.filters : null,
 			limit: this.config.limit,

@@ -32,7 +32,7 @@
     "test:single-run": "ng test ansyn --watch=false",
     "testCompile": "cd build && gulp testCompile",
     "update": "ng update @angular/core @angular/cli",
-    "postinstall": "ngcc"
+    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points"
   },
   "dependencies": {
     "@angular/animations": "~10.0.5",
@@ -83,8 +83,8 @@
     "proj4": "^2.5.0",
     "rison": "^0.1.1",
     "rxjs": "~6.5.4",
-    "tslib": "^2.0.0",
     "shapefile": "^0.6.6",
+    "tslib": "^2.0.0",
     "wellknown": "^0.5.0",
     "zone.js": "~0.10.2"
   },

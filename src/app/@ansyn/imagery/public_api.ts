@@ -54,6 +54,7 @@ export {
 	getPolygonByPoint,
 	getPolygonByPointAndRadius,
 	getPolygonByBufferRadius,
+	convertLineSegmentToThinRectangle,
 	getPolygonIntersectionRatio,
 	getPolygonIntersectionRatioWithMultiPolygon,
 	polygonsDontIntersect,

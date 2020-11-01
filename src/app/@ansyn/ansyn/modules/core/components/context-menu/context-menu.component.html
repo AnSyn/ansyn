@@ -1,6 +1,6 @@
 <nav class="menu">
 
-	<button class="menu-open-button" (mousedown)="isClick($event) && setPinPoint()" id="contextGeoFilter">
+	<button class="menu-open-button" [disabled]="screenViewMode$ | async" (mousedown)="isClick($event) && setPinPoint()" id="contextGeoFilter">
 		<span class="pointer icon-pin-point">
 
 		</span>

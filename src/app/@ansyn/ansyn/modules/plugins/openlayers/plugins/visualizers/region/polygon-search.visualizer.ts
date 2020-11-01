@@ -1,10 +1,14 @@
 import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { UUID } from 'angular2-uuid';
 import * as turf from '@turf/turf';
 import { Observable } from 'rxjs';
-import { Position } from 'geojson';
-import { getPolygonByPointAndRadius, ImageryVisualizer, MarkerSize } from '@ansyn/imagery';
+import { Feature, Polygon, Position } from 'geojson';
+import {
+	convertLineSegmentToThinRectangle,
+	getPolygonByPointAndRadius,
+	ImageryVisualizer,
+	MarkerSize
+} from '@ansyn/imagery';
 import { UpdateGeoFilterStatus } from '../../../../../status-bar/actions/status-bar.actions';
 import { RegionVisualizer } from './region.visualizer';
 import { OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
@@ -38,13 +42,23 @@ export class PolygonSearchVisualizer extends RegionVisualizer {
 
 	drawRegionOnMap(region: CaseRegionState): Observable<boolean> {
 		const id = 'pinPolygon';
-		const featureJson = region.type === 'Point' ? getPolygonByPointAndRadius(region.coordinates) : turf.polygon(region.coordinates);
+		const featureJson = region.geometry.type === 'Point' ? getPolygonByPointAndRadius(region.geometry.coordinates) : turf.polygon(region.geometry.coordinates);
 		const entities = [{ id, featureJson }];
 		return this.setEntities(entities);
 	}
 
-	createRegion({ geometry }: any) {
-		return geometry;
+	createRegion(feature: Feature<Polygon>): Feature<Polygon> {
+		let region: Feature<Polygon> = feature;
+		if (feature.geometry.type === CaseGeoFilter.Polygon && feature.geometry.coordinates[0].length === 	3) {
+			region = convertLineSegmentToThinRectangle(feature);
+		}
+		return {
+			...region,
+			properties: {
+				...region.properties,
+				searchMode: 'Polygon'
+			}
+		};
 	}
 
 	onContextMenu(point: Position): void {

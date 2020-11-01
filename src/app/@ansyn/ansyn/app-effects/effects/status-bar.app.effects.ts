@@ -17,13 +17,10 @@ import {
 	StatusBarActionsTypes,
 	UpdateGeoFilterStatus
 } from '../../modules/status-bar/actions/status-bar.actions';
-import { selectGeoFilterType } from '../../modules/status-bar/reducers/status-bar.reducer';
+import { selectGeoFilterActive, selectGeoFilterType } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { CopyCaseLinkAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { DisplayOverlayFromStoreAction } from '../../modules/overlays/actions/overlays.actions';
-import {
-	selectDropsAscending,
-	selectRegion
-} from '../../modules/overlays/reducers/overlays.reducer';
+import { selectDropsAscending, selectRegion } from '../../modules/overlays/reducers/overlays.reducer';
 import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
 import { ToolsActionsTypes } from '../../modules/menu-items/tools/actions/tools.actions';
@@ -82,19 +79,22 @@ export class StatusBarAppEffects {
 		ofType<UpdateGeoFilterStatus>(StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS),
 		filter(action => action.payload === undefined),
 		withLatestFrom(this.store.select(selectRegion)),
-		map(([action, { type }]) => new UpdateGeoFilterStatus({ type, active: false }))
+		map(([action, region]) => {
+			const type = region.properties.searchMode;
+			return new UpdateGeoFilterStatus({ type, active: false })
+		})
 	);
 
 	@Effect()
-	polygonSearchInterrupted$: Observable<any> = this.actions$.pipe(
+	geoFilterSearchInterrupted$: Observable<any> = this.actions$.pipe(
 		ofType(
 			MenuActionTypes.SELECT_MENU_ITEM,
 			MapActionTypes.SET_LAYOUT,
 			ToolsActionsTypes.SET_SUB_MENU,
 			MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP,
 			MapActionTypes.CONTEXT_MENU.SHOW),
-		withLatestFrom(this.isPolygonSearch$),
-		filter(([action, isPolygonSearch]: [SelectMenuItemAction, boolean]) => isPolygonSearch),
+		withLatestFrom(this.store.select(selectGeoFilterActive)),
+		filter(([action, isGeoFilterActive]: [SelectMenuItemAction, boolean]) => isGeoFilterActive),
 		map(() => new UpdateGeoFilterStatus())
 	);
 

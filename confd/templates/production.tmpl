@@ -75,11 +75,17 @@
 		   "favoriteOverlays": [],
 		   "overlaysTranslationData": {},
 		   "region": {
-			 "type": "Point",
-			 "coordinates": [
-			   -122.3805754022963,
-			   37.621511305075714
-			 ]
+				"geometry": {
+					"type": "Point",
+					"coordinates": [
+						-122.3805754022963,
+						37.621511305075714
+					]
+				},
+				"type": "Feature",
+				"properties": {
+					"searchMode": "Point"
+				}
 		   },
 		   "dataInputFilters": {
 			 "filters": [],
@@ -1584,6 +1590,10 @@
   "anaglyphConfig": {
   	"getStereoUrl": "needed test",
   	"sensorNames": {{ getv "/ansyn/anaglyph/sensornames" "null" }}
+  },
+  "screenViewConfig": {
+  	"extentWidthSearchLimit": 8000,
+    "debounceTime": 1000
   },
   "addressService": {
       "url": "assets/config/addresses.json"

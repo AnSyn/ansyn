@@ -2,7 +2,12 @@ import { Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild } from
 import { select, Store } from '@ngrx/store';
 import { fromEvent, Observable } from 'rxjs';
 import { getTimeFormat } from '@ansyn/map-facade';
-import { IOverlaysState, MarkUpClass, selectCustomOverviewElementId, selectHoveredOverlay } from '../../reducers/overlays.reducer';
+import {
+	IOverlaysState,
+	MarkUpClass,
+	selectCustomOverviewElementId,
+	selectHoveredOverlay
+} from '../../reducers/overlays.reducer';
 import { overlayOverviewComponentConstants } from './overlay-overview.component.const';
 import {
 	ChangeOverlayPreviewRotationAction,
@@ -100,9 +105,9 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 			if (!hoveredElement) {
 				return;
 			}
-			const hoveredElementBounds: ClientRect = hoveredElement.getBoundingClientRect();
-			this.left = customElement ? hoveredElementBounds.right : this.getLeftPosition(hoveredElementBounds.left);
-			this.top = hoveredElementBounds.top + (customElement ? hoveredElementBounds.height : 0);
+			const { left, height, top }: ClientRect = hoveredElement.getBoundingClientRect();
+			this.left = customElement ? this.getLeftPosition(left) : left - 150;
+			this.top = top + (customElement ? height + 70 : 0);
 			this.showOverview();
 			this.sensorName = overlay.sensorName;
 			this.sensorType = overlay.sensorType;
@@ -121,7 +126,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	getLeftPosition(hoveredElementPos: number): number {
-		const candidateLeftPos = hoveredElementPos - 50;
+		const candidateLeftPos = hoveredElementPos - 340;
 		const myCurrentWidth = (this.el.nativeElement as HTMLElement).offsetWidth;
 		const ansynWidth = this.topElement.getBoundingClientRect().width;
 		// ^ Ansyn component is not a block element, therefore it doesn't have offsetWidth

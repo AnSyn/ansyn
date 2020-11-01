@@ -15,6 +15,7 @@
 line {
 	stroke: #9b9b9b !important;
 }
+
 circle.active {
 	fill: @application-secondary-color;
 	stroke: white;
@@ -24,3 +25,12 @@ circle.hover:not(.active), circle.displayed:not(.active) {
 	fill: @application-secondary-color;
 }
 
+svg {
+	width: 1575px;
+}
+
+.bound {
+	&.end {
+		transform: translate(-150px, -35px);
+	}
+}

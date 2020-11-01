@@ -21,7 +21,6 @@ import { IOverlay, IOverlayDrop } from '../../models/overlay.model';
 export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	goPrevActive = false;
 	goNextActive = false;
-	goNextQuickLoop = false;
 	hasOverlayDisplay: boolean;
 	isFirstOverlay: boolean;
 	isLastOverlay: boolean;

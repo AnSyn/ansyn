@@ -1,5 +1,5 @@
-import { Component, HostBinding, HostListener, Inject, Input, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Component, HostBinding, HostListener, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { select, Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
 import {
 	MapFacadeService,
@@ -18,6 +18,8 @@ import { UpdateToolsFlags } from '../modules/menu-items/tools/actions/tools.acti
 import { LoggerService } from '../modules/core/services/logger.service';
 import { IOverlay } from '../modules/overlays/models/overlay.model';
 import { toolsFlags } from '../modules/menu-items/tools/models/tools.model';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { selectDropsDescending } from '../modules/overlays/reducers/overlays.reducer';
 
 @Component({
 	selector: 'ansyn-app',
@@ -25,8 +27,10 @@ import { toolsFlags } from '../modules/menu-items/tools/models/tools.model';
 	styleUrls: ['./ansyn.component.less']
 })
 
-export class AnsynComponent implements OnInit {
+@AutoSubscriptions()
+export class AnsynComponent implements OnInit, OnDestroy {
 	renderContextMenu: boolean;
+	toggleResults = false;
 
 	isMenuCollapse$ = this.store$.select(selectMenuCollapse);
 
@@ -45,6 +49,13 @@ export class AnsynComponent implements OnInit {
 			filter(([[activeMapId, overlay], mapList]: [[string, IOverlay], ICaseMapState[]]) => Boolean(mapList)),
 			map(([[activeMapId, overlay], mapList]: [[string, IOverlay], ICaseMapState[]]) => MapFacadeService.mapById(mapList, activeMapId)),
 			filter(Boolean)
+		);
+
+	@AutoSubscription
+	overlaysCount$: Observable<any> = this.store$
+		.pipe(
+			select(selectDropsDescending),
+			map(({ length }) => length)
 		);
 
 	@HostBinding('class.component') component = this.componentMode;
@@ -80,5 +91,12 @@ export class AnsynComponent implements OnInit {
 			this.renderContextMenu = true;
 		}, 1000);
 
+	}
+
+	ngOnDestroy(): void {
+	}
+
+	toggleResultsTable(): void {
+		this.toggleResults = !this.toggleResults;
 	}
 }

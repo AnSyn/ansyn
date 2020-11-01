@@ -20,6 +20,59 @@
 		}
 	}
 
+	.results {
+		right: 0;
+		position: absolute;
+	}
+
+	button {
+		&.results-table {
+			background: @background-color-1;
+			position: absolute;
+			text-align: center;
+			color: white;
+			text-decoration: none;
+			right: 24px;
+			bottom: 10px;
+			z-index: 6;
+			padding: 14px 0;
+			cursor: pointer;
+			font-size: 0.9rem;
+
+			i {
+				display: block;
+				font-size: 3em;
+			}
+
+			span.badge {
+				position: absolute;
+				right: 26px;
+				top: 43px;
+				font-size: 14px;
+				min-width: 30px;
+				padding-top: 2px;
+				padding-right: 2px;
+			}
+
+			img {
+				margin: 0 auto 5px auto;
+				display: block;
+			}
+
+			&:hover {
+				background-color: @background-color-3;
+			}
+
+			&.active {
+				background-color: @application-primary-color;
+			}
+
+			&.draw-user-attention {
+				background-color: #3d1a1a;
+			}
+		}
+	}
+
 	font-family: @app-font;
 	font-size: 14px;
 	direction: ltr;

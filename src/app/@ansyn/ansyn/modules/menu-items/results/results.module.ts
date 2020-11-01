@@ -14,7 +14,7 @@ import { MapFacadeModule } from '@ansyn/map-facade';
 		MapFacadeModule,
 	],
 	declarations: [ResultsComponent, ResultsTableComponent],
-	exports: [ResultsTableComponent]
+	exports: [ResultsTableComponent, ResultsComponent]
 })
 export class ResultsModule {
 }

@@ -6,6 +6,7 @@
 @header-size: calc(~"(100vh - @{footer-height}) * 0.025");
 
 :host {
+	background: @background-color-3;
 	&:extend(.default-menu-item);
 
 	div.results-table {
@@ -15,6 +16,10 @@
 		padding: 0 5px;
 		box-sizing: border-box;
 
+		div.no-results {
+			height: 12vh;
+		}
+
 		div.header {
 			color: white;
 			display: flex;
@@ -22,11 +27,12 @@
 			flex-direction: row;
 			font-size: @header-size;
 			margin-top: 17px;
-			margin-left: 23px;
+			margin-left: 240px;
 			margin-bottom: 15px;
 
 			div.header-title {
 				font-size: 24px;
+				margin-right: 29px;
 			}
 
 			div.box {
@@ -51,7 +57,7 @@
 
 			div.results-table-head-row {
 				margin-bottom: -5px;
-				padding: 0 15px;
+				padding: 0 0 15px;
 				width: 100%;
 
 				div.results-table-head-row-data {
@@ -80,21 +86,21 @@
 					}
 
 					.Sensor {
-						margin-left: 77px !important;
+						margin-left: 33px !important;
 					}
 
 					.Type {
 						margin-right: 10px !important;
+						padding-left: 8px;
 					}
 				}
 			}
 		}
 
 		div.results-table-body {
-			direction: rtl;
 			display: block;
 			overflow-y: auto;
-			height: 80vh;
+			height: 67vh;
 
 			div.results-table-body-row-data:hover {
 				background-color: @background-color-7;
@@ -108,13 +114,9 @@
 				top: -2px;
 			}
 
-			div.results-table-body-row:first-child div.results-table-body-row-data {
-				//border-top: 1px solid #EBF8FA;
-			}
-
 			div.results-table-body-row {
 				display: block;
-				margin: 0px 0px 0px 16px;
+				margin: 0 0 0 16px;
 				transition: background .3s, color .3s;
 				overflow: hidden;
 				height: 10%;

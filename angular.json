@@ -49,6 +49,7 @@
               "rbush",
               "core-js",
               "@babel/runtime",
+              "@babel/runtime-corejs3",
               "raf",
               "rxjs/index",
               "lodash-decorators",

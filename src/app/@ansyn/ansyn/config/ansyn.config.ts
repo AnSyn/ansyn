@@ -45,11 +45,6 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			iconClass: 'icon-main-filters'
 		},
 		{
-			name: 'Results table',
-			component: ResultsComponent,
-			iconClass: 'icon-table'
-		},
-		{
 			name: 'Data Layers',
 			component: LayersManagerComponent,
 			iconClass: 'icon-main-data-layers'

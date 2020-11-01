@@ -53,10 +53,10 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	pagination = 15;
 	tableHeaders: ITableHeader[] = [
 		{
-			headerName: 'Date & time',
-			headerData: 'date',
+			headerName: 'Type',
+			headerData: 'icon',
 			isDescending: true,
-			sortFn: (a: number, b: number) => a - b
+			sortFn: (a, b) => a.localeCompare(b)
 		},
 		{
 			headerName: 'Sensor',
@@ -65,10 +65,10 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			sortFn: (a: string, b: string) => this.translateService.instant(a).localeCompare(this.translateService.instant(b))
 		},
 		{
-			headerName: 'Type',
-			headerData: 'icon',
+			headerName: 'Date & time',
+			headerData: 'date',
 			isDescending: true,
-			sortFn: (a, b) => a.localeCompare(b)
+			sortFn: (a: number, b: number) => a - b
 		}
 	];
 	overlayIds: string[];
@@ -77,7 +77,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	onClickClearBadge$ = fromEvent(window, 'click').pipe(
-		tap(() => this.store$.dispatch(new SetBadgeAction({key: 'Results table', badge: undefined})))
+		tap(() => this.store$.dispatch(new SetBadgeAction({ key: 'Results table', badge: undefined })))
 	);
 
 	@AutoSubscription
@@ -115,7 +115,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 					overlayIdToScroll = this.overlayIds[this.overlayIds.length - 1];
 				}
 
-				const indexOfRecentOverlay = this.findIndexBytOverlayId(overlayIdToScroll);
+				const indexOfRecentOverlay = this.findIndexByOverlayId(overlayIdToScroll);
 				this.updatePaginationOnScroll(indexOfRecentOverlay);
 				this.scrollOverlayToCenter(indexOfRecentOverlay);
 			})
@@ -128,8 +128,8 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	) {
 	}
 
-	findIndexBytOverlayId(overlayId: string): number {
-		const overlayIndex = this.overlays.map(overlay => overlay.id).indexOf(overlayId);
+	findIndexByOverlayId(overlayId: string): number {
+		const overlayIndex = this.overlays.map(({id}) => id).indexOf(overlayId);
 		return overlayIndex;
 	}
 
@@ -140,18 +140,16 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	resetSort(): void {
-		this.tableHeaders.forEach(tableHeader => {
-			tableHeader.isDescending = true;
-		});
+		this.tableHeaders.forEach(tableHeader => tableHeader.isDescending = true);
 	}
 
 	scrollOverlayToCenter(index: number): void {
 		requestAnimationFrame(() => {
-			const tableRows = document.getElementsByClassName('results-table-body-row-data');
-			if (tableRows && tableRows[0]) {
-				const heightOfRow = tableRows[0].clientHeight;
-				const amountOfRowsDisplayed = this.table.nativeElement.offsetHeight / heightOfRow;
-				this.table.nativeElement.scrollTo(0, (index * heightOfRow) - (amountOfRowsDisplayed / 2) * heightOfRow);
+			const tableRow = document.getElementsByClassName('results-table-body-row-data').item(0);
+			if (tableRow) {
+				const rowHeight = tableRow.clientHeight;
+				const rowDisplayCount = this.table.nativeElement.offsetHeight / rowHeight;
+				this.table.nativeElement.scrollTo(0, (index * rowHeight) - (rowDisplayCount / 2) * rowHeight);
 			}
 		})
 	}
@@ -184,13 +182,13 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	sortOverlays(header: ITableHeader): void {
-		const { headerData, isDescending, sortFn, headerName } = header;
+		const { headerData, isDescending, sortFn } = header;
 		this.sortedBy = headerData;
-		this.overlays.sort(function (a, b) {
+		this.overlays.sort((a, b) => {
 			const dataA = a[headerData];
 			const dataB = b[headerData];
-			return isDescending ? sortFn(dataA, dataB) : sortFn(dataB, dataA);
 
+			return isDescending ? sortFn(dataA, dataB) : sortFn(dataB, dataA);
 		});
 
 		header.isDescending = !header.isDescending;

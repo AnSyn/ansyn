@@ -4,11 +4,16 @@ FROM node as builder
 WORKDIR /ng-app
 COPY . .
 
-RUN npm set progress=false \
-  && npm config set depth 0 \
-  && npm cache clean --force
+ENV PATH=${PATH}:./node_modules/.bin
 
-RUN npm install && npm run build:prod
+ENV NODE_PATH=/ng-app/node_modules
+
+RUN npm set progress=false \
+  && npm config set depth 0
+
+RUN npm install
+
+RUN npm run build:prod
 
 # Stage 2: Setup
 FROM nginx:1.13-alpine

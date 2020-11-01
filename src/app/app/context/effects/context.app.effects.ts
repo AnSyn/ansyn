@@ -69,6 +69,10 @@ export class ContextAppEffects {
 	) {
 	}
 
+	private hasSendingSystemParam(obj): string {
+		return obj[Object.keys(obj).find( key => key.toLowerCase() === 'sendingsystem')]
+	}
+
 	parseContextParams([{ payload }, mapId]: [LoadDefaultCaseAction, string]): any[] {
 		const { context, ...params } = payload;
 		const selectedContext = { id: context };
@@ -85,8 +89,9 @@ export class ContextAppEffects {
 			return actions;
 		}
 
-		if (params.sendingSystem) {
-			this.loggerService.info(`open context from ${params.sendingSystem}`);
+		const sendingSystem = this.hasSendingSystemParam(params);
+		if (Boolean(sendingSystem)) {
+			this.loggerService.info(`open context from ${sendingSystem}`);
 		}
 		switch (context) {
 			case ContextName.AreaAnalysis:

@@ -4,11 +4,13 @@
 
 @size: 84px;
 
+@side_margin: 20px;
+
 :host {
 	position: absolute;
 	z-index: @z-index-map-rotation;
 	top: @imagery-status-height + 25;
-	right: 20px;
+	right: @side_margin;
 	text-align: center;
 	user-select: none;
 	width: @size;
@@ -20,5 +22,12 @@
 	div {
 		display: flex;
 		flex-direction: column;
+		align-items: center;
+	}
+
+	&.rtl {
+		top: @imagery-status-height + 65;
+		right: unset;
+		left: @side_margin;
 	}
 }

@@ -1,6 +1,6 @@
 <div
 	[attr.tooltip-value]="geoRegisteredProperties.tooltipNorth | translate"
-	tooltip-class="left">
+	[attr.tooltip-class]="isRTL ? 'bottom right' : 'bottom left'">
 	<div class="tooltip-container"
 		 [style.cursor]="isRotating ? '-webkit-grabbing' : '-webkit-grab'"
 		 [style.transform]="'rotate(' + this[geoRegisteredProperties.rotatePointer] + 'rad)'"
@@ -11,13 +11,15 @@
 
 <div class="img-container"
 	 [attr.tooltip-value]="geoRegisteredProperties.tooltip | translate"
-	 tooltip-class="bottom left">
+	 [attr.tooltip-class]="isRTL ? 'bottom right' : 'bottom left'">
 	<img
 		tabindex="0"
 		#northImg
 		[src]="geoRegisteredProperties.compass"
+		alt="{{'compass' | translate}}"
 		(click)="toggleNorth()"
 		(mousedown)="stopPropagation($event)"
 		[style.transform]="'rotate(' + this[geoRegisteredProperties.rotatePointer] + 'rad)'"
-		[style.cursor]="isRotating ? '' : 'pointer'"/>
+		[style.cursor]="isRotating ? '' : 'pointer'"
+	/>
 </div>

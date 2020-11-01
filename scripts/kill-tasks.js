@@ -17,7 +17,8 @@ function killService(service) {
 		const tasks = JSON.parse(stdout);
 		const arns = tasks.taskArns;
 		arns.forEach(arn => {
-			const task = arn.split('/')[1];
+			const tasksList = arn.split('/');
+			const task = tasksList[tasksList.length - 1];
 			exec(`aws --region us-west-2 ecs stop-task --cluster ${cluster} --task ${task}`, (error, stdout, stderr) => {
 				console.log(stdout);
 				console.log(stderr);

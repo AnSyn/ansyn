@@ -16,7 +16,7 @@ import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
 import { IToolsConfig, toolsConfig } from '../modules/menu-items/tools/models/tools-config';
 import { UpdateToolsFlags } from '../modules/menu-items/tools/actions/tools.actions';
 import { LoggerService } from '../modules/core/services/logger.service';
-import { IOverlay } from '../modules/overlays/models/overlay.model';
+import { IOverlay, IOverlayDrop } from '../modules/overlays/models/overlay.model';
 import { toolsFlags } from '../modules/menu-items/tools/models/tools.model';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectDropsDescending } from '../modules/overlays/reducers/overlays.reducer';
@@ -55,7 +55,7 @@ export class AnsynComponent implements OnInit, OnDestroy {
 	overlaysCount$: Observable<any> = this.store$
 		.pipe(
 			select(selectDropsDescending),
-			map(({ length }) => length || 0)
+			map((overlays: IOverlayDrop[]) => overlays.length || 0)
 		);
 
 	@HostBinding('class.component') component = this.componentMode;

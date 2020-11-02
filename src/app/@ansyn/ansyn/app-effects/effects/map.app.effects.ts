@@ -315,8 +315,8 @@ export class MapAppEffects {
 			const activeMap: IMapSettings = mapList[activeMapId];
 			return [activeMap.data.position.extentPolygon, geoFilterStatus, region , activeMap.data.overlay];
 		}),
-		filter(([extentPolygon, geoFilterStatus, region, inOverlay]: [any, IGeoFilterStatus, any, any]) => !booleanEqual(extentPolygon, region.geometry) && !Boolean(inOverlay)),
-		concatMap(([extentPolygon, geoFilterStatus, region, inOverlay]: [any, IGeoFilterStatus, any, any]) => {
+		filter(([extentPolygon, geoFilterStatus, region, overlay]: [any, IGeoFilterStatus, any, IOverlay]) => !booleanEqual(extentPolygon, region.geometry) && !Boolean(overlay)),
+		concatMap(([extentPolygon, geoFilterStatus, region, overlay]: [any, IGeoFilterStatus, any, IOverlay]) => {
 			const extentWidth = Math.round(distance(extentPolygon.coordinates[0][0], extentPolygon.coordinates[0][1], {units: 'metres'}));
 			const extent = feature(extentPolygon, {searchMode: "ScreenView"});
 			let actions = [];

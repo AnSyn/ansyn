@@ -2,16 +2,18 @@
 FROM node as builder
 
 WORKDIR /ng-app
-COPY . .
 
 ENV PATH=${PATH}:./node_modules/.bin
 
 ENV NODE_PATH=/ng-app/node_modules
 
-RUN npm set progress=false \
-  && npm config set depth 0
+COPY package*.json ./
 
-RUN npm install
+RUN npm set progress=false
+
+RUN npm ci --only=production
+
+COPY . .
 
 RUN npm run build:prod
 

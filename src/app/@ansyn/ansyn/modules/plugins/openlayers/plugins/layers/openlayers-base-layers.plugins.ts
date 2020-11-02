@@ -62,7 +62,7 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 		if (!this.layerExists(layer)) {
 			this.createLayer(layer).subscribe((tileLayer) => {
 				if (!this.layerExists(layer)) {
-					this.iMap.getGroup().push(tileLayer);
+					this.iMap.getGroup().getLayers().push(tileLayer);
 				}
 			});
 		}

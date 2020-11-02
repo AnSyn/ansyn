@@ -31,7 +31,7 @@ import Vector from 'ol/source/Vector';
 import View from 'ol/View';
 import { Observable, of, Subject, timer } from 'rxjs';
 import { debounceTime, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
-import { IOlConfig, OL_CONFIG } from '../../../config/ol-config';
+import { IOlConfig, OL_CONFIG, group_layer} from '../../../config/ol-config';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import { OpenLayersMonitor } from '../helpers/openlayers-monitor';
 import * as olShare from '../shared/openlayers-shared';
@@ -51,7 +51,7 @@ export enum StaticGroupsKeys {
 })
 export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	static groupsKeys = StaticGroupsKeys;
-	groupLayers = new Group({className: 'layer-group'});
+	groupLayers = new Group({className: group_layer});
 	private _mapObject: OLMap;
 	private _backgroundMapObject: OLMap;
 	public isValidPosition;

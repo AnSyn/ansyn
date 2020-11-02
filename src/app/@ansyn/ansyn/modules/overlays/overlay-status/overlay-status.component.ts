@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import {
 	IEntryComponent,
 	selectActiveMapId,
@@ -30,6 +30,8 @@ import {
 import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-manager/reducers/layers.reducer';
 import { ClickOutsideService } from '../../core/click-outside/click-outside.service';
 import { isDeleteKey } from '../../core/utils/keyboardKey';
+import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-overlay-status',
@@ -58,6 +60,9 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	isImageControlActive = false;
 	draggedButtonText: string;
 	isLayersVisible: boolean;
+
+	@HostBinding('class.rtl')
+	isRtl = 'rtl' === this.translateService.instant('direction');
 
 	@AutoSubscription
 	favoriteOverlays$: Observable<any[]> = this.store$.select(selectFavoriteOverlays).pipe(
@@ -100,7 +105,13 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 				}
 			}));
 
-	constructor(public store$: Store<any>, protected actions$: Actions, protected element: ElementRef, protected clickOutsideService: ClickOutsideService) {
+	constructor(
+		public store$: Store<any>,
+		protected actions$: Actions,
+		protected element: ElementRef,
+		protected clickOutsideService: ClickOutsideService,
+		protected translateService: TranslateService
+	) {
 		this.isPreset = true;
 		this.isFavorite = true;
 	}

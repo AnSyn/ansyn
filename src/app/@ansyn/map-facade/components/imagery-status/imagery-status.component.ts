@@ -62,7 +62,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	@Output() toggleMapSynchronization = new EventEmitter<void>();
 	@Output() onMove = new EventEmitter<MouseEvent>();
 	enableCopyOriginalOverlayData: boolean;
-	isRtl = 'rtl' === this.translate.instant('direction');
+	isRtl = 'rtl' === this.translateService.instant('direction');
 	@AutoSubscription
 	copyOriginalOverlayDataFlag$ = this.store$.select(selectEnableCopyOriginalOverlayDataFlag).pipe(
 		tap((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
@@ -70,7 +70,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	constructor(protected store$: Store<any>,
 				protected communicators: ImageryCommunicatorService,
-				protected translate: TranslateService,
+				protected translateService: TranslateService,
 				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities) {
 	}
 
@@ -97,7 +97,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	set map(value: IMapSettings) {
 		this._map = value;
 		this.formattedOverlayTime = this.overlay ? this.getFormattedTime(this.overlay.photoTime) : null;
-		this.translate.get(this.overlay && this.overlay.sensorName || 'unknown')
+		this.translateService.get(this.overlay && this.overlay.sensorName || 'unknown')
 			.subscribe(translatedOverlaySensorName => this.translatedOverlaySensorName = translatedOverlaySensorName);
 	}
 

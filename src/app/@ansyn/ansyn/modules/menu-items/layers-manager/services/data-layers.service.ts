@@ -4,7 +4,7 @@ import { featureCollection } from '@turf/turf';
 import { UUID } from 'angular2-uuid';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Observable, of } from 'rxjs';
-import { catchError, filter, tap } from 'rxjs/operators';
+import { catchError, filter, map, tap } from 'rxjs/operators';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { StorageService } from '../../../core/services/storage/storage.service';
 import { ICase } from '../../cases/models/case.model';
@@ -75,6 +75,7 @@ export class DataLayersService implements OnInit, OnDestroy {
 		}
 		return this.storageService.searchByCase<ILayer>(this.config.schema, { caseId })
 			.pipe(
+				map(layers => of(layers.slice().reverse())),
 				catchError(err => {
 					console.log(err);
 					return this.errorHandlerService.httpErrorHandle(err, 'Failed to load layers');

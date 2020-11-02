@@ -9,7 +9,7 @@ import {
 	UpdateLayer,
 	UpdateSelectedLayersIds
 } from '../../modules/menu-items/layers-manager/actions/layers.actions';
-import { CasesActionTypes, SaveCaseAsSuccessAction } from '../../modules/menu-items/cases/actions/cases.actions';
+import { CasesActionTypes, SaveCaseAsSuccessAction, UpdateCaseBackendSaveAs } from '../../modules/menu-items/cases/actions/cases.actions';
 import { ILayer, LayerType } from '../../modules/menu-items/layers-manager/models/layers.model';
 import { selectLayers } from '../../modules/menu-items/layers-manager/reducers/layers.reducer';
 import {
@@ -26,6 +26,7 @@ export class LayersAppEffects {
 		.pipe(
 			ofType<SaveCaseAsSuccessAction>(CasesActionTypes.SAVE_CASE_AS_SUCCESS),
 			mergeMap((action: SaveCaseAsSuccessAction) => [
+					new UpdateCaseBackendSaveAs(action.payload),
 					new BeginLayerCollectionLoadAction({ caseId: action.payload.id }),
 					new UpdateSelectedLayersIds(action.payload.state.layers.activeLayersIds)
 				]

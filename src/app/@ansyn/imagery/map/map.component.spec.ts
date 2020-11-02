@@ -4,6 +4,7 @@ import { cold } from 'jasmine-marbles';
 import { BaseImageryMap } from '../model/base-imagery-map';
 import { BaseImageryPlugin } from '../model/base-imagery-plugin';
 import { of } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('MapComponent', () => {
 	let component: MapComponent;
@@ -13,6 +14,7 @@ describe('MapComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [MapComponent],
+			imports: [TranslateModule.forRoot()],
 			providers: [
 				{
 					provide: BaseImageryMap,

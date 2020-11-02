@@ -49,10 +49,10 @@ export class AnsynComponent implements OnInit {
 		);
 
 	@HostBinding('class.component') component = this.componentMode;
+
 	@HostBinding('class.rtl')
-	get isRTL() {
-		return this.translateService.instant('direction') === 'rtl'
-	}
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
 	@Input() version;
 
 	constructor(

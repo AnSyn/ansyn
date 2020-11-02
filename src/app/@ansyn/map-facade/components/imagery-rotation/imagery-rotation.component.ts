@@ -49,9 +49,7 @@ export class ImageryRotationComponent {
 
 	isRotating = false;
 
-	get isRTL() {
-		return this.translateService.instant('direction') === 'rtl'
-	}
+	isRtl = 'rtl' === this.translateService.instant('direction');
 
 	get geoRegisteredProperties(): IIsGeoRegisteredProperties {
 		return this.isGeoRegistered() ? this.isGeoRegisteredProperties : this.notGeoRegisteredProperties;

@@ -20,9 +20,7 @@ export class FloatingMenuComponent implements OnInit {
 	}
 
 	@HostBinding('class.rtl')
-	get isRTL() {
-		return this.translateService.instant('direction') === 'rtl'
-	}
+	isRTL = this.translateService.instant('direction') === 'rtl';
 
 	constructor(
 		@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities,

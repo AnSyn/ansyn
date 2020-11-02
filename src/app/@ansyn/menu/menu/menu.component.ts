@@ -95,6 +95,8 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	@ViewChild('container', { static: true }) container: ElementRef;
 	@Input() version;
 
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
 	@AutoSubscription
 	collapse$ = this.store.select(selectMenuCollapse).pipe(
 		tap(this.startToggleMenuCollapse.bind(this))
@@ -144,10 +146,6 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 		protected translateService: TranslateService
 	) {
 		this.initializeMenuItem(menuItemsMulti.reduce((prev, next) => [...prev, ...next], []));
-	}
-
-	get isRTL() {
-		return this.translateService.instant('direction') === 'rtl';
 	}
 
 	get componentElem() {

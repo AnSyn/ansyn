@@ -263,7 +263,7 @@ export class CasesService {
 		const newMaps = {...maps, data: maps.data.map( (map) => {
 				const newMapId = this.generateUUID();
 				if (map.id === activeMapId) {
-					activeMapId = map.id;
+					activeMapId = newMapId;
 				}
 				return {...map, id: newMapId};
 			})};

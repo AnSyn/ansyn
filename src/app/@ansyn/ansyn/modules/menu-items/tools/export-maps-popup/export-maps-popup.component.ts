@@ -188,7 +188,7 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 					doc.setFontSize(11);
 					const loadOverlay = mapToBeExport.mapSettings.data.overlay;
 					const desc = Boolean(loadOverlay) ? this.getDescriptionFromOverlay(loadOverlay) : 'Base Map';
-					doc.text(desc, size[0] / 2, 5, {align: 'center', baseline: 'bottom'});
+					doc.text(this.translateService.instant(desc), size[0] / 2, 5, {align: 'center', baseline: 'bottom'});
 				}
 				if (exportMapData.compass) {
 					doc.addImage(exportMapData.compass.toDataURL('image/png'), 'PNG', 0, 0, 25, 25); // we use png for transparent compass

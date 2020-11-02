@@ -1,4 +1,4 @@
-import { BaseImageryMap, ImageryMap, ImageryMapExtent, IImageryMapPosition } from '@ansyn/imagery';
+import { BaseImageryMap, ImageryMap, ImageryMapExtent, IImageryMapPosition, IBaseImageryLayer } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
 import { GeoJsonObject, Point } from 'geojson';
 import { HttpClient } from '@angular/common/http';
@@ -7,7 +7,6 @@ import { ImageryVideoComponent } from '../components/imagery-video/imagery-video
 import * as turf from '@turf/turf';
 import { ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
 import { point, BBox } from '@turf/turf';
-import { IBaseImageryLayer } from '../../imagery/model/imagery-layer.model';
 
 export const ImageryVideoMapType = 'VIDEO_MAP';
 // @dynamic

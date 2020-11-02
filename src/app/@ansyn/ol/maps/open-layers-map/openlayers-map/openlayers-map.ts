@@ -31,7 +31,7 @@ import Vector from 'ol/source/Vector';
 import View from 'ol/View';
 import { Observable, of, Subject, timer } from 'rxjs';
 import { debounceTime, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
-import { IOlConfig, OL_CONFIG, group_layer} from '../../../config/ol-config';
+import { IOlConfig, OL_CONFIG, group_layer } from '../../../config/ol-config';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import { OpenLayersMonitor } from '../helpers/openlayers-monitor';
 import * as olShare from '../shared/openlayers-shared';
@@ -138,7 +138,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return this.mapObject.getLayers().getArray();
 	}
 
-	getGroup(){
+	getGroup() {
 		return this.groupLayers;
 	}
 

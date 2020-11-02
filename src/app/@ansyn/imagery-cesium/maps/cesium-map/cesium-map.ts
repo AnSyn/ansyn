@@ -8,7 +8,8 @@ import {
 	ImageryMapExtent,
 	IImageryMapPosition,
 	IImageryMapProjectedState,
-	toDegrees
+	toDegrees,
+	IBaseImageryLayer
 } from '@ansyn/imagery';
 import { featureCollection } from '@turf/helpers';
 import { feature, geometry } from '@turf/turf';
@@ -20,7 +21,6 @@ import { map, mergeMap, take } from 'rxjs/operators';
 import { CesiumLayer, ISceneMode } from '../../models/cesium-layer';
 import { CesiumProjectionService } from '../../projection/cesium-projection.service';
 import { Cartesian2, Cartesian3, ImageryLayer, Viewer } from 'cesium';
-import { IBaseImageryLayer } from 'src/app/@ansyn/imagery/model/imagery-layer.model';
 
 declare const Cesium: any;
 
@@ -51,7 +51,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		this.layersToCesiumLayer = new Map<CesiumLayer, ImageryLayer>();
 	}
 
-	getGroup(): IBaseImageryLayer{
+	getGroup(): IBaseImageryLayer {
 		return null;
 	}
 	

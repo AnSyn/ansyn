@@ -4,7 +4,8 @@ import {
 	ImageryLayerProperties,
 	ImageryMap,
 	IImageryMapPosition,
-	IExportMapMetadata
+	IExportMapMetadata,
+	IBaseImageryLayer
 } from '@ansyn/imagery';
 import { GeoJsonObject, Point } from 'geojson';
 import ol_Layer from 'ol/layer/Layer';
@@ -13,7 +14,6 @@ import View from 'ol/View';
 import { Observable, of } from 'rxjs';
 import * as olShared from '../open-layers-map/shared/openlayers-shared';
 import { exportMapHelper } from '../helpers/helpers';
-import { IBaseImageryLayer } from '../../../imagery/model/imagery-layer.model';
 export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
 
 @ImageryMap({

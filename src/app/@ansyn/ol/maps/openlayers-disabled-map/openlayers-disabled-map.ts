@@ -13,7 +13,7 @@ import View from 'ol/View';
 import { Observable, of } from 'rxjs';
 import * as olShared from '../open-layers-map/shared/openlayers-shared';
 import { exportMapHelper } from '../helpers/helpers';
-
+import { IBaseImageryLayer } from '../../../imagery/model/imagery-layer.model';
 export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
 
 @ImageryMap({
@@ -42,6 +42,10 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 
 	getLayers(): ol_Layer {
 		return this.mapObject.getLayers().getArray();
+	}
+
+	getGroup(): IBaseImageryLayer {
+		return null
 	}
 
 	public getCenter(): Observable<Point> {

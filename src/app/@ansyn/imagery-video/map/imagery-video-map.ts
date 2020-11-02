@@ -7,6 +7,7 @@ import { ImageryVideoComponent } from '../components/imagery-video/imagery-video
 import * as turf from '@turf/turf';
 import { ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
 import { point, BBox } from '@turf/turf';
+import { IBaseImageryLayer } from '../../imagery/model/imagery-layer.model';
 
 export const ImageryVideoMapType = 'VIDEO_MAP';
 // @dynamic
@@ -62,6 +63,9 @@ export class ImageryVideoMap extends BaseImageryMap<any> {
 		return [this.mainLayer];
 	}
 
+	getGroup(): IBaseImageryLayer{
+		return null;
+	}
 	getPosition(): Observable<IImageryMapPosition> {
 		const _position = this._getPosition();
 		return of(_position);

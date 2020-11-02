@@ -126,11 +126,10 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	toggleGroup(groupName: StaticGroupsKeys, newState: boolean) {
-		const group = this.groupLayers;
 		if (newState) {
-			this.addLayer(group);
+			this.addLayer(this.groupLayers);
 		} else {
-			this.removeLayer(group);
+			this.removeLayer(this.groupLayers);
 		}
 		this.showGroups.set(groupName, newState);
 	}

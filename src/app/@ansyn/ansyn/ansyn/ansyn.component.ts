@@ -1,5 +1,5 @@
 import { Component, HostBinding, HostListener, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
 import {
 	MapFacadeService,
@@ -16,10 +16,9 @@ import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
 import { IToolsConfig, toolsConfig } from '../modules/menu-items/tools/models/tools-config';
 import { UpdateToolsFlags } from '../modules/menu-items/tools/actions/tools.actions';
 import { LoggerService } from '../modules/core/services/logger.service';
-import { IOverlay, IOverlayDrop } from '../modules/overlays/models/overlay.model';
+import { IOverlay } from '../modules/overlays/models/overlay.model';
 import { toolsFlags } from '../modules/menu-items/tools/models/tools.model';
-import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { selectDropsDescending } from '../modules/overlays/reducers/overlays.reducer';
+import { AutoSubscriptions } from 'auto-subscriptions';
 
 @Component({
 	selector: 'ansyn-app',
@@ -30,7 +29,6 @@ import { selectDropsDescending } from '../modules/overlays/reducers/overlays.red
 @AutoSubscriptions()
 export class AnsynComponent implements OnInit, OnDestroy {
 	renderContextMenu: boolean;
-	toggleResults = false;
 
 	isMenuCollapse$ = this.store$.select(selectMenuCollapse);
 
@@ -51,12 +49,7 @@ export class AnsynComponent implements OnInit, OnDestroy {
 			filter(Boolean)
 		);
 
-	@AutoSubscription
-	overlaysCount$: Observable<any> = this.store$
-		.pipe(
-			select(selectDropsDescending),
-			map((overlays: IOverlayDrop[]) => overlays.length || 0)
-		);
+
 
 	@HostBinding('class.component') component = this.componentMode;
 	@Input() version;
@@ -94,9 +87,5 @@ export class AnsynComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-	}
-
-	toggleResultsTable(): void {
-		this.toggleResults = !this.toggleResults;
 	}
 }

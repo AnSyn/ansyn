@@ -15,6 +15,7 @@ import { IBaseMapSourceProviderConstructor } from './model/base-map-source-provi
 import { HttpClientModule } from '@angular/common/http';
 import { GetProvidersMapsService } from './services/get-providers-maps/get-providers-maps.service';
 import { COMMUNICATOR_LOG_MESSAGES, communicatorLogMessages } from './communicator-service/communicator-log-messages';
+import { TranslateModule } from '@ngx-translate/core';
 
 export interface IImageryMetaData {
 	maps: IBaseImageryMapConstructor[],
@@ -26,7 +27,8 @@ export interface IImageryMetaData {
 @NgModule({
 	imports: [
 		CommonModule,
-		HttpClientModule
+		HttpClientModule,
+		TranslateModule
 	],
 	declarations: [ImageryComponent, MapComponent],
 	providers: [

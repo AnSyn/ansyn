@@ -1,4 +1,4 @@
-import { BaseImageryMap, ImageryMap, ImageryMapExtent, IImageryMapPosition } from '@ansyn/imagery';
+import { BaseImageryMap, ImageryMap, ImageryMapExtent, IImageryMapPosition, IBaseImageryLayer } from '@ansyn/imagery';
 import { Observable, of } from 'rxjs';
 import { GeoJsonObject, Point } from 'geojson';
 import { HttpClient } from '@angular/common/http';
@@ -62,6 +62,9 @@ export class ImageryVideoMap extends BaseImageryMap<any> {
 		return [this.mainLayer];
 	}
 
+	getGroup(): IBaseImageryLayer {
+		return null;
+	}
 	getPosition(): Observable<IImageryMapPosition> {
 		const _position = this._getPosition();
 		return of(_position);

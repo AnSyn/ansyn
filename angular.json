@@ -55,6 +55,7 @@
               "lodash-decorators",
               "rison",
               "file-saver",
+              "@babel/runtime-corejs3",
               "jspdf",
               "canvg",
               "pbf"

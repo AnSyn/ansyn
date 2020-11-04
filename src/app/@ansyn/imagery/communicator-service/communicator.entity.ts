@@ -96,7 +96,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		this.plugins.forEach((plugin) => plugin.init(this as any));
 	}
 
-	public replaceMapMainLayer(sourceType: string): Observable<boolean> { // TODO: change all promise to observable
+	public replaceMapMainLayer(sourceType: string): Observable<boolean> {
 		return this.getProvidersMapsService.createMapSourceForMapType(this.activeMapName, sourceType, this.mapSettings).pipe(
 			map( (newLayer) => {
 				if (newLayer) {

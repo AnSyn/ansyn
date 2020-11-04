@@ -89,4 +89,27 @@
 			}
 		}
 	}
-}
+
+	&.rtl {
+		.data-input-header {
+			div.show-all {
+				margin-left: unset;
+				margin-right: auto;
+			}
+		}
+
+		.form-check {
+			margin-right: unset;
+			margin-left: auto;
+
+			label.text {
+				margin-right: 8px;
+				margin-left: 5px;
+			}
+		}
+
+		/deep/ .tree-view-container .treeview-item i {
+			transform: rotate(180deg);
+		}
+	} // rtl
+} // host

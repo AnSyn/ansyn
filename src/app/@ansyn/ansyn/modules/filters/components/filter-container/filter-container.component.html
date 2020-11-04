@@ -1,8 +1,8 @@
-<div class="container" *ngIf="!metadataFromState?.shouldBeHidden()">
+<div class="container" *ngIf="!metadataFromState?.shouldBeHidden()" [class.rtl]="'rtl' === ('direction' | translate)">
 
 	<div class="title-row">
 
-		<div class="filter-title" [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''">
+		<div class="filter-title">
 			<span class="title" [class.title-disabled]="showOnlyFavorite">{{ filter.displayName | translate }}</span>
 
 			<span

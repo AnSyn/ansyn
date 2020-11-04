@@ -11,7 +11,7 @@
 			class="button">
 		<div [class.component]="componentMode">
 			<span class="title">{{geoFilterTitle | translate}} </span>
-			<span *ngIf="!componentMode" class="coordinates"> ({{geoFilterCoordinates}})</span>
+			<span *ngIf="geoFilterTitle !== 'ScreenView' && !componentMode" class="coordinates"> ({{geoFilterCoordinates}})</span>
 		</div>
 	</button>
 

@@ -27,16 +27,15 @@ export class GetProvidersMapsService {
 		return of(this.mapProvidersConfig[type].sources.find(source => source.key === sourceType))
 	}
 
-	createMapSourceForMapType(mapType: string, sourceType: string, mapSettings: IMapSettings): Observable<IBaseImageryLayer> {
+	createMapSourceForMapType(mapType: string, sourceType: string, mapSettings?: IMapSettings): Observable<IBaseImageryLayer> {
 		return this.getMapProviderByTypeAndSource(mapType, sourceType).pipe(
 			map( (mapSource) => [mapSource, this.getMapSourceProvider(mapType, mapSource.sourceType)]),
-			mergeMap( ([mapSource, sourceProvider]: [any, BaseMapSourceProvider]) => from(
-				sourceProvider.createAsync({
-					...mapSettings,
-					worldView: {...mapSettings.worldView, sourceType: mapSource.sourceType},
-					data: {...mapSettings.data, config: mapSource.config, key: mapSource.key}
-				}))
-			),
+			mergeMap( ([mapSource, sourceProvider]: [any, BaseMapSourceProvider]) => {
+				const metaData = {...mapSettings};
+				metaData.worldView = {mapType, sourceType};
+				metaData.data = {...metaData.data, config: mapSource.config, key: mapSource.key};
+				return from(sourceProvider.createAsync(metaData));
+				}),
 			catchError( (error) => {
 				console.error(error);
 				return EMPTY;

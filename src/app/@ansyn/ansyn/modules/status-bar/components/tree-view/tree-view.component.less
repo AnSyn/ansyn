@@ -108,8 +108,15 @@
 			}
 		}
 
-		/deep/ .tree-view-container .treeview-item i {
-			transform: rotate(180deg);
+		/deep/ .tree-view-container .treeview-item {
+			svg.bi-caret-right-fill {
+				transform: rotate(180deg);
+			}
+
+			.treeview-item {
+				margin-left: unset;
+				margin-right: 2rem;
+			}
 		}
 	} // rtl
 } // host

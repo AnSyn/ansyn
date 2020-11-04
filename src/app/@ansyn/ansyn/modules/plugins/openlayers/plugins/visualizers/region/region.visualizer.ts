@@ -97,7 +97,8 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		const drawInteractionHandler = new Draw(<any>{
 			type: this.geoFilter,
 			condition: mouseClickCondition,
-			style: this.featureStyle.bind(this)
+			style: this.featureStyle.bind(this),
+			minPoints: this.geoFilter === CaseGeoFilter.Polygon ? 2 : 1
 		});
 
 		drawInteractionHandler.on('drawend', this.onDrawEndEvent.bind(this));

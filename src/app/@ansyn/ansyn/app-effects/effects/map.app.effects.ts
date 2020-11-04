@@ -313,10 +313,10 @@ export class MapAppEffects {
 		filter(([action, mapList, activeMapId, geoFilterStatus, region]) => Boolean(mapList[activeMapId]) && geoFilterStatus.type === CaseGeoFilter.ScreenView),
 		map(([action, mapList, activeMapId, geoFilterStatus, region]) => {
 			const activeMap: IMapSettings = mapList[activeMapId];
-			return [activeMap.data.position.extentPolygon, geoFilterStatus, region];
+			return [activeMap.data.position.extentPolygon, geoFilterStatus, region , activeMap.data.overlay];
 		}),
-		filter(([extentPolygon, geoFilterStatus, region]: [any, IGeoFilterStatus, any]) => !booleanEqual(extentPolygon, region.geometry)),
-		concatMap(([extentPolygon, geoFilterStatus, region]: [any, IGeoFilterStatus, any]) => {
+		filter(([extentPolygon, geoFilterStatus, region, overlay]: [any, IGeoFilterStatus, any, IOverlay]) => !booleanEqual(extentPolygon, region.geometry) && !Boolean(overlay)),
+		concatMap(([extentPolygon, geoFilterStatus, region, overlay]: [any, IGeoFilterStatus, any, IOverlay]) => {
 			const extentWidth = Math.round(distance(extentPolygon.coordinates[0][0], extentPolygon.coordinates[0][1], {units: 'metres'}));
 			const extent = feature(extentPolygon, {searchMode: "ScreenView"});
 			let actions = [];

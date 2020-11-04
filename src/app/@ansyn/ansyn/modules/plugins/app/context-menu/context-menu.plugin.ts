@@ -50,12 +50,12 @@ export class ContextMenuPlugin extends BaseImageryPlugin {
 			tap(this.contextMenuEventListener.bind(this))
 		);
 
-	contextMenuEventListener(event: MouseEvent) {
+	contextMenuEventListener(event) {
 		event.preventDefault();
 
 		this.containerElem.click();
 
-		let coordinate = this.iMap.getCoordinateFromScreenPixel({ x: event.offsetX, y: event.offsetY });
+		let coordinate = this.iMap.getCoordinateFromScreenPixel({ x: event.layerX, y: event.layerY });
 		if (!areCoordinatesNumeric(coordinate)) {
 			console.warn('no coordinate for pixel');
 			return;

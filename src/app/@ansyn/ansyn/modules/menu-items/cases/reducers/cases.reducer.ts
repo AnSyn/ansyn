@@ -45,10 +45,10 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 			return casesAdapter.updateOne({ id: caseToUpdate.id, changes: caseToUpdate }, { ...state, selectedCase });
 		}
 
-		case CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS: {
+		case CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS || CasesActionTypes.UPDATE_CASE_BACKEND_SAVE_AS: {
 			const lastModified = new Date();
 			const selectedCase = { ...state.selectedCase, lastModified };
-			return casesAdapter.updateOne({ id: action.payload._id, changes: { lastModified } }, {
+			return casesAdapter.updateOne({ id: action.payload.id, changes: { lastModified } }, {
 				...state,
 				selectedCase
 			});

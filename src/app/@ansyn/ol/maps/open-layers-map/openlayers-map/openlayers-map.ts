@@ -31,7 +31,7 @@ import Vector from 'ol/source/Vector';
 import View from 'ol/View';
 import { Observable, of, Subject, timer } from 'rxjs';
 import { debounceTime, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
-import { IOlConfig, OL_CONFIG } from '../../../config/ol-config';
+import { IOlConfig, OL_CONFIG, group_layer } from '../../../config/ol-config';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import { OpenLayersMonitor } from '../helpers/openlayers-monitor';
 import * as olShare from '../shared/openlayers-shared';
@@ -51,7 +51,7 @@ export enum StaticGroupsKeys {
 })
 export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	static groupsKeys = StaticGroupsKeys;
-	static groupLayers = new Map<StaticGroupsKeys, Group>(Object.values(StaticGroupsKeys).map((key) => [key, new Group()]) as any);
+	groupLayers = new Group({className: group_layer});
 	private _mapObject: OLMap;
 	private _backgroundMapObject: OLMap;
 	public isValidPosition;
@@ -126,17 +126,20 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	toggleGroup(groupName: StaticGroupsKeys, newState: boolean) {
-		const group = OpenLayersMap.groupLayers.get(groupName);
 		if (newState) {
-			this.addLayer(group);
+			this.addLayer(this.groupLayers);
 		} else {
-			this.removeLayer(group);
+			this.removeLayer(this.groupLayers);
 		}
 		this.showGroups.set(groupName, newState);
 	}
 
 	getLayers(): ol_Layer[] {
 		return this.mapObject.getLayers().getArray();
+	}
+
+	getGroup() {
+		return this.groupLayers;
 	}
 
 	initMap(target: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: ol_Layer, position?: IImageryMapPosition): Observable<boolean> {
@@ -248,7 +251,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	setGroupLayers() {
 		this.showGroups.forEach((show, group) => {
 			if (show) {
-				this.addLayer(OpenLayersMap.groupLayers.get(group));
+				this.addLayer(this.groupLayers);
 			}
 		});
 	}
@@ -304,7 +307,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	public removeAllLayers() {
 		this.showGroups.forEach((show, group) => {
 			if (show && this._mapObject) {
-				this._mapObject.removeLayer(OpenLayersMap.groupLayers.get(group));
+				this._mapObject.removeLayer(this.groupLayers);
 			}
 		});
 

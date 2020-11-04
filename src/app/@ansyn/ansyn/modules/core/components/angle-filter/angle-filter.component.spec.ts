@@ -98,9 +98,9 @@ describe('AngleFilterComponent', () => {
 	});
 
 	it('should set angles from overlay', () => {
-		expect(component.overlaysAngles[0].overlay.name).toBe('overlay1');
-		expect(component.overlaysAngles[1].overlay.name).toBe('overlay2');
-		expect(component.overlaysAngles[2].overlay.name).toBe('overlay3');
+		expect(component.overlaysAngles[2].overlay.name).toBe('overlay1');
+		expect(component.overlaysAngles[0].overlay.name).toBe('overlay2');
+		expect(component.overlaysAngles[1].overlay.name).toBe('overlay3');
 	});
 
 	it('next overlay should called DisplayOverlayAction', () => {

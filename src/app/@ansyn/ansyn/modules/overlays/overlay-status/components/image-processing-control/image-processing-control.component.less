@@ -28,8 +28,6 @@
 	height: @tools-box-height;
 	position: absolute;
 	top: 35px;
-	left: -178px;
-	transform: translateX(100%);
 	background: @background-color-3;
 	transition-property: width;
 	transition-duration: 0.1s;
@@ -191,4 +189,26 @@
 			}
 		}
 	}
-}
+
+	&.rtl {
+		div.image-processing-container {
+			.title-wrapper {
+				p.title {
+					.resetAll {
+						margin-left: unset;
+						margin-right: auto;
+					}
+				}
+			}
+
+			ul.image-processing-options {
+				li {
+					button {
+						margin-left: unset;
+						margin-right: auto;
+					}
+				}
+			}
+		}
+	} // rtl
+} // host

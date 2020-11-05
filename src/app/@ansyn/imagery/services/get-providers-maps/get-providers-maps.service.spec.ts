@@ -124,7 +124,6 @@ describe('GetProvidersMapsService', () => {
 	it('call getMapSourceProvider return the MockMapProvider', () => {
 		spyOn(service, 'getMapSourceProvider').and.callFake((m, s) => new MockMapProvider());
 		const o = service.getMapSourceProvider(mapType, sourceType);
-		console.log(`getMapSourceProvider`, {o});
 		expect(o instanceof MockMapProvider).toBeTruthy();
 	});
 });

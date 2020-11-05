@@ -106,8 +106,8 @@ describe('GetProvidersMapsService', () => {
 		})
 	});
 
-	it('call getMapProviderByTypeAndSource should gave me the maps from the provider', () => {
-		const o = service.getMapProviderByTypeAndSource(mapType, sourceType);
+	it('call getMapProviderByTypeAndKey should gave me the maps from the provider', () => {
+		const o = service.getMapProviderByTypeAndKey(mapType, sourceType);
 		o.subscribe((provider) => {
 			expect(provider).toEqual(MAP_PROVIDERS[mapType].sources[0]);
 		})

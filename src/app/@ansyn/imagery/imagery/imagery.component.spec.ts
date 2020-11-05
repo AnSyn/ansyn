@@ -54,7 +54,7 @@ describe('ImageryComponent', () => {
 					useValue: {
 						getAllSourceForType: () => of(),
 						getDefaultProviderByType: () => of(),
-						getMapProviderByTypeAndSource: () => of()
+						getMapProviderByTypeAndKey: () => of()
 					}
 				},
 				{ provide: IMAGERY_MAPS, useValue: {} },

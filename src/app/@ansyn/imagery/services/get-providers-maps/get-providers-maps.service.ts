@@ -23,12 +23,12 @@ export class GetProvidersMapsService {
 	}
 
 
-	getMapProviderByTypeAndSource(type, sourceType): Observable<any> {
+	getMapProviderByTypeAndKey(type, sourceType): Observable<any> {
 		return of(this.mapProvidersConfig[type].sources.find(source => source.key === sourceType))
 	}
 
 	createMapSourceForMapType(mapType: string, sourceType: string, mapSettings?: IMapSettings): Observable<IBaseImageryLayer> {
-		return this.getMapProviderByTypeAndSource(mapType, sourceType).pipe(
+		return this.getMapProviderByTypeAndKey(mapType, sourceType).pipe(
 			map( (mapSource) => [mapSource, this.getMapSourceProvider(mapType, mapSource.sourceType)]),
 			mergeMap( ([mapSource, sourceProvider]: [any, BaseMapSourceProvider]) => {
 				const metaData = {...mapSettings};

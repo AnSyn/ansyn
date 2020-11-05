@@ -14,7 +14,8 @@ import {
 	IMultipleOverlaysSourceConfig,
 	MultipleOverlaysSourceConfig
 } from '../../core/models/multiple-overlays-source-config';
-import { IDataInputFilterValue } from '../../menu-items/cases/models/case.model';
+import { IDataInputFilterValue, IImageManualProcessArgs } from '../../menu-items/cases/models/case.model';
+import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from '../overlay-status/config/overlay-status-config';
 
 export const OverlaysConfig = 'overlaysConfig';
 
@@ -46,7 +47,18 @@ export class OverlaysService {
 		})
 	);
 
-	constructor(@Inject(OverlaysConfig) public config: IOverlaysConfig,
+	get params(): Array<IImageProcParam> {
+		return this.overlayStatusConfig.ImageProcParams;
+	}
+
+	get defaultImageManualProcessArgs(): IImageManualProcessArgs {
+		return this.params.reduce<IImageManualProcessArgs>((initialObject: any, imageProcParam) => {
+			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
+		}, {});
+	}
+	
+	constructor(@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig,
+				@Inject(OverlaysConfig) public config: IOverlaysConfig,
 				@Inject(MultipleOverlaysSourceConfig) protected multipleOverlays: IMultipleOverlaysSourceConfig,
 				protected _overlaySourceProvider: MultipleOverlaysSourceProvider,
 				protected store$: Store<any>) {

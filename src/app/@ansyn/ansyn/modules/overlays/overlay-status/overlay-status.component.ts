@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import {
 	IEntryComponent,
 	selectActiveMapId,
@@ -16,6 +16,8 @@ import {
 	SetAutoImageProcessing
 } from './actions/overlay-status.actions';
 import {
+	IOverlayStatusState,
+	overlayStatusStateSelector,
 	selectFavoriteOverlays,
 	selectTranslationData
 } from './reducers/overlay-status.reducer';
@@ -30,6 +32,9 @@ import {
 import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-manager/reducers/layers.reducer';
 import { ClickOutsideService } from '../../core/click-outside/click-outside.service';
 import { isDeleteKey } from '../../core/utils/keyboardKey';
+import { overlayStatusConfig, IOverlayStatusConfig } from './config/overlay-status-config';
+import { isEqual } from 'lodash';
+import { OverlaysService } from '../services/overlays.service';
 
 @Component({
 	selector: 'ansyn-overlay-status',
@@ -58,6 +63,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	isImageControlActive = false;
 	draggedButtonText: string;
 	isLayersVisible: boolean;
+	isChanged: boolean;
 
 	@AutoSubscription
 	favoriteOverlays$: Observable<any[]> = this.store$.select(selectFavoriteOverlays).pipe(
@@ -100,7 +106,18 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 				}
 			}));
 
-	constructor(public store$: Store<any>, protected actions$: Actions, protected element: ElementRef, protected clickOutsideService: ClickOutsideService) {
+	@AutoSubscription
+	manualImageProcessingParams$: Observable<Object> = this.store$.select(overlayStatusStateSelector).pipe(
+		map((overlayStatusState: IOverlayStatusState) => overlayStatusState.manualImageProcessingParams),
+		filter(Boolean),
+		tap((imageManualProcessArgs) => {
+			this.isChanged = !isEqual(this.overlayService.defaultImageManualProcessArgs, imageManualProcessArgs);
+		})
+	);
+
+	constructor(private overlayService: OverlaysService,
+		public store$: Store<any>, protected actions$: Actions, protected element: ElementRef, protected clickOutsideService: ClickOutsideService,
+		@Inject(overlayStatusConfig) protected config: IOverlayStatusConfig) {
 		this.isPreset = true;
 		this.isFavorite = true;
 	}

@@ -10,6 +10,7 @@ import {
 } from "../../reducers/overlay-status.reducer";
 import { LogManualImageProcessing, SetManualImageProcessing } from '../../actions/overlay-status.actions';
 import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from "../../config/overlay-status-config";
+import { OverlaysService } from '../../../services/overlays.service';
 
 @Component({
 	selector: 'ansyn-image-processing-control',
@@ -27,20 +28,13 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 		tap((imageManualProcessArgs) => this.imageManualProcessArgs = imageManualProcessArgs)
 	);
 
-	get params(): Array<IImageProcParam> {
-		return this.config.ImageProcParams;
-	}
-
-	get defaultImageManualProcessArgs(): IImageManualProcessArgs {
-		return this.params.reduce<IImageManualProcessArgs>((initialObject: any, imageProcParam) => {
-			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
-		}, {});
-	}
-
+	defaultImageManualProcessArgs: IImageManualProcessArgs = this.overlayService.defaultImageManualProcessArgs;
 	imageManualProcessArgs: IImageManualProcessArgs = this.defaultImageManualProcessArgs;
+	params: Array<IImageProcParam> = this.overlayService.params;
 
-
-	constructor(public store$: Store<IImageProcessState>, @Inject(overlayStatusConfig) protected config: IOverlayStatusConfig) {
+	constructor(private overlayService: OverlaysService,
+				public store$: Store<IImageProcessState>, 
+				@Inject(overlayStatusConfig) protected config: IOverlayStatusConfig) {
 	}
 
 	resetOne(paramToReset) {

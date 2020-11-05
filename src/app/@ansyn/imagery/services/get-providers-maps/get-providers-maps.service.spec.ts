@@ -114,7 +114,7 @@ describe('GetProvidersMapsService', () => {
 	});
 
 	it('call createMapSourceForMapType return should return MockLayer', () => {
-		spyOn(service, 'createMapSourceForMapType').and.callFake((m,s) => of(new MockLayer()))
+		spyOn(service, 'createMapSourceForMapType').and.callFake((m, s) => of(new MockLayer()));
 		const o = service.createMapSourceForMapType(mapType, sourceType);
 		o.subscribe((layer) => {
 			expect(layer instanceof MockLayer).toBeTruthy();
@@ -122,7 +122,7 @@ describe('GetProvidersMapsService', () => {
 	});
 
 	it('call getMapSourceProvider return the MockMapProvider', () => {
-		spyOn(service, 'getMapSourceProvider').and.callFake((m,s) => new MockMapProvider())
+		spyOn(service, 'getMapSourceProvider').and.callFake((m, s) => new MockMapProvider());
 		const o = service.getMapSourceProvider(mapType, sourceType);
 		console.log(`getMapSourceProvider`, {o});
 		expect(o instanceof MockMapProvider).toBeTruthy();

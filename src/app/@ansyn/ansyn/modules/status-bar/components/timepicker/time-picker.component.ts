@@ -22,7 +22,7 @@ export class TimePickerComponent implements OnInit, OnDestroy {
 		if (this.validateDate(from) && this.validateDate(to)) {
 			this.store$.dispatch(new SetOverlaysCriteriaAction({ time: { from, to } }));
 		} else {
-			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Invalid date' }));
+			this.store$.dispatch(new SetToastMessageAction({ toastText: 'There are no matching overlays on this date' }));
 		}
 	}
 

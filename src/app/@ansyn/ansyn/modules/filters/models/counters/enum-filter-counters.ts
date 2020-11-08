@@ -23,7 +23,11 @@ export class EnumFilterCounters extends FilterCounters {
 	}
 
 	incrementFilteredCount(value: any): void {
-		this.enumsFields.get(value).filteredCount = this.enumsFields.get(value).filteredCount + 1;
+		if (this.enumsFields.has(value)) {
+			this.enumsFields.get(value).filteredCount = this.enumsFields.get(value).filteredCount + 1;
+		} else {
+			this.enumsFields.set(value, { filteredCount: 1 })
+		}
 	}
 
 	resetFilteredCount(): void {

@@ -7,7 +7,7 @@ import {
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../app.effects.module';
 import { SetBadgeAction } from '@ansyn/menu';
-import { catchError, distinctUntilChanged, filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
 import { BooleanFilterMetadata } from '../../modules/filters/models/metadata/boolean-filter-metadata';
 import {
 	EnableOnlyFavoritesSelectionAction,
@@ -54,10 +54,11 @@ import {
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { FilterType } from '../../modules/filters/models/filter-type';
 import { ICaseFacetsState } from '../../modules/menu-items/cases/models/case.model';
-import { IOverlay, IOverlayDrop, IOverlaySpecialObject } from '../../modules/overlays/models/overlay.model';
+import { IOverlay, IOverlaySpecialObject } from '../../modules/overlays/models/overlay.model';
 import { cloneDeep, get as _get, isEqual } from 'lodash';
 import { TranslateService } from '@ngx-translate/core';
 import { FilterCounters } from '../../modules/filters/models/counters/filter-counters.interface';
+import { LoggerService } from '../../modules/core/services/logger.service';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -179,11 +180,8 @@ export class FiltersAppEffects {
 
 	@Effect()
 	filteredOverlaysChanged$: Observable<any> = this.store$.select(selectFilteredOveralys).pipe(
-		tap((x) => console.log(1, x)),
 		withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(selectOverlaysMap), this.store$.select(selectFavoriteOverlays)),
-		tap((x) => console.log(2, x)),
 		filter(([filteredOverlays, filterState, overlays]: [string[], IFiltersState, Map<string, IOverlay>, IOverlay[]]) => Boolean(overlays.size)),
-		tap((x) => console.log(3, x)),
 		map(([filteredOverlays, filterState, overlays, favoriteOverlays]: [string[], IFiltersState, Map<string, IOverlay>, IOverlay[]]) => {
 			const filtersCounters = filterState.filtersCounters;
 			const filtersChanges = Array.from(filterState.filtersMetadata).map(([metadataKey, metadata]: [IFilter, FilterMetadata]) => {
@@ -199,16 +197,23 @@ export class FiltersAppEffects {
 				}
 				return { filter: metadataKey, newCounters: cloneCounters };
 			});
-			console.log(4, filtersChanges);
 			return new UpdateFiltersCounters(filtersChanges);
-		}));
+		}),
+		catchError((err) => {
+			console.error(err);
+			this.loggerService.error(err.message || err.toString());
+			return of(new UpdateFiltersCounters([]));
+		})
+	);
 
-
-	constructor(protected actions$: Actions,
-				protected store$: Store<IAppState>,
-				protected genericTypeResolverService: GenericTypeResolverService,
-				public translate: TranslateService,
-				@Inject(filtersConfig) protected config: IFiltersConfig) {
+	constructor(
+		protected actions$: Actions,
+		protected store$: Store<IAppState>,
+		protected genericTypeResolverService: GenericTypeResolverService,
+		public translate: TranslateService,
+		@Inject(filtersConfig) protected config: IFiltersConfig,
+		protected loggerService: LoggerService
+	) {
 	}
 
 	resolveMetadata(filterType: FilterType): FilterMetadata {

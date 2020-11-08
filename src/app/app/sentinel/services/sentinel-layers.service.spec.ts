@@ -35,6 +35,7 @@ describe('SentinelLayersService', () => {
 
 	beforeEach(inject([SentinelLayersService], (_sentinelLayersService: SentinelLayersService) => {
 		sentinelLayersService = _sentinelLayersService;
+		spyOn(sentinelLayersService, 'getAllLayers').and.callFake( () => of([]));
 	}));
 
 	it('should be created', () => {

@@ -51,7 +51,7 @@ import { IOverlay } from '../../models/overlay.model';
 import { feature, difference } from '@turf/turf';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from '../config/overlay-status-config';
-import { isEqual } from "lodash";
+import { isEqual } from 'lodash';
 import { CasesActionTypes } from '../../../menu-items/cases/actions/cases.actions';
 
 @Injectable()
@@ -60,15 +60,22 @@ export class OverlayStatusEffects {
 	backToWorldView$: Observable<any> = this.actions$
 		.pipe(
 			ofType(OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW),
-			filter( (action: BackToWorldView) => this.communicatorsService.has(action.payload.mapId)),
-			switchMap(({payload}: BackToWorldView) => {
+			filter((action: BackToWorldView) => this.communicatorsService.has(action.payload.mapId)),
+			switchMap(({ payload }: BackToWorldView) => {
 				const communicator = this.communicatorsService.provide(payload.mapId);
-				const mapData = {...communicator.mapSettings.data};
+				const mapData = { ...communicator.mapSettings.data };
 				const position = mapData.position;
 				const disabledMap = communicator.activeMapName === DisabledOpenLayersMapName || communicator.activeMapName === ImageryVideoMapType;
 				this.store$.dispatch(new UpdateMapAction({
 					id: communicator.id,
-					changes: { data: { ...mapData, overlay: null, isAutoImageProcessingActive: false, imageManualProcessArgs: this.defaultImageManualProcessArgs } }
+					changes: {
+						data: {
+							...mapData,
+							overlay: null,
+							isAutoImageProcessingActive: false,
+							imageManualProcessArgs: this.defaultImageManualProcessArgs
+						}
+					}
 				}));
 
 				return fromPromise<any>(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
@@ -179,9 +186,8 @@ export class OverlayStatusEffects {
 
 					if (combinedResult === null) {
 						scannedArea = null;
-					}
-					else if (combinedResult.geometry.type === 'MultiPolygon') {
-							scannedArea = combinedResult.geometry;
+					} else if (combinedResult.geometry.type === 'MultiPolygon') {
+						scannedArea = combinedResult.geometry;
 					} else {
 						scannedArea = geojsonPolygonToMultiPolygon(combinedResult.geometry);
 					}
@@ -218,9 +224,7 @@ export class OverlayStatusEffects {
 		mergeMap<any, any>(([map, manualImageProcessingParams]: [ICaseMapState, IImageManualProcessArgs]) => {
 			const { overlay, isAutoImageProcessingActive, imageManualProcessArgs } = map.data;
 			const actions: Action[] = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess({ value: overlay ? isAutoImageProcessingActive : false })];
-			console.log('outside')
 			if (!isEqual(imageManualProcessArgs, manualImageProcessingParams)) {
-				console.log(imageManualProcessArgs, manualImageProcessingParams)
 				actions.push(new SetManualImageProcessing(map.data && imageManualProcessArgs || this.defaultImageManualProcessArgs));
 			}
 			return actions;

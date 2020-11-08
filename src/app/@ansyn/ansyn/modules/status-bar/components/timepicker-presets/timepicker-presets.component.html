@@ -1,5 +1,5 @@
-<div class="presets">
-	<div *ngFor="let preset of presets" [class.top]="openTop" [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''">
+<div [class.top]="openTop" class="presets">
+	<div *ngFor="let preset of presets" [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''">
 		<button (click)="setPreset(preset)">
 			{{presetValue(preset)}} {{presetTitle(preset) | translate}}
 		</button>

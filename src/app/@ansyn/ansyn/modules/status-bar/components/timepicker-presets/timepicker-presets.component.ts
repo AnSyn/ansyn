@@ -21,7 +21,6 @@ export class TimepickerPresetsComponent implements OnInit, OnDestroy {
 		protected store$: Store<any>,
 		protected translate: TranslateService
 	) {
-		console.log(this.openTop);
 	}
 
 	setPreset(preset: number) {

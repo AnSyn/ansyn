@@ -34,7 +34,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 			let activeAnnotationLayer = state.activeAnnotationLayer;
 			let layers = action.payload;
 			activeAnnotationLayer = annotationLayer && annotationLayer.id;
-			return layersAdapter.setAll(layers, { ...state, selectedLayersIds, activeAnnotationLayer });
+			return layersAdapter.setAll(layers, { ...state, selectedLayersIds,activeAnnotationLayer });
 
 		case LayersActionTypes.SET_LAYER_SELECTION: {
 			const id = action.payload.id, ids = state.selectedLayersIds;

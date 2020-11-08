@@ -24,10 +24,10 @@ before_script:
   #- apt-get install graphicsmagick # for e2e screenshots
 
 script:
-  - npm run lint
-  - npm run test:single-run
-  - npm run build:libs
-  - sh -x scripts/build.sh ansyn $TRAVIS_COMMIT $TRAVIS_TAG
+  - npm run lint || travis_terminate 1;
+  - npm run test:single-run || travis_terminate 1;
+  - npm run build:libs || travis_terminate 1;
+  - sh -x scripts/build.sh ansyn $TRAVIS_COMMIT $TRAVIS_TAG || travis_terminate 1;
 
 cache:
   directories:
@@ -40,11 +40,11 @@ before_deploy:
 
 deploy:
   - provider: script
-    script: sh -x scripts/deploy.sh $REPO_DEV $TRAVIS_COMMIT $CLUSTER $SERVICES_DEV
+    script: sh -x scripts/deploy.sh $REPO_DEV $TRAVIS_COMMIT $CLUSTER $SERVICES_DEV || travis_terminate 1;
     on:
       branch: master
   - provider: script
-    script: sh -x scripts/deploy.sh $REPO_PROD $TRAVIS_TAG $CLUSTER $SERVICES_PROD
+    script: sh -x scripts/deploy.sh $REPO_PROD $TRAVIS_TAG $CLUSTER $SERVICES_PROD || travis_terminate 1;
     on:
       tags: true
 

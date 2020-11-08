@@ -20,6 +20,7 @@ import { LocationPickerComponent } from './components/location-picker/location-p
 import { FiltersPanelComponent } from './components/filters-panel/filters-panel.component';
 import { FiltersModule } from '../filters/filters.module';
 import { TimepickerPresetsComponent } from './components/timepicker-presets/timepicker-presets.component';
+import { TimePickerContainerComponent } from './components/time-picker-container/time-picker-container.component';
 
 @NgModule({
 	imports: [
@@ -34,7 +35,7 @@ import { TimepickerPresetsComponent } from './components/timepicker-presets/time
 		FiltersModule,
 		OwlNativeDateTimeModule
 	],
-	declarations: [StatusBarComponent, TreeViewComponent, SearchPanelComponent, DisplayPanelComponent, CasePanelComponent, TimePickerComponent, LocationPickerComponent, FiltersPanelComponent, TimepickerPresetsComponent],
+	declarations: [StatusBarComponent, TreeViewComponent, SearchPanelComponent, DisplayPanelComponent, CasePanelComponent, TimePickerComponent, LocationPickerComponent, FiltersPanelComponent, TimepickerPresetsComponent, TimePickerContainerComponent],
 	providers: [
 		{
 			provide: TIME_FILTERS,
@@ -50,7 +51,7 @@ import { TimepickerPresetsComponent } from './components/timepicker-presets/time
 		}
 	],
 
-	exports: [StatusBarComponent]
+	exports: [StatusBarComponent, TimePickerContainerComponent]
 })
 export class StatusBarModule {
 }

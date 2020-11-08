@@ -22,6 +22,8 @@
 
 		<ansyn-results class="results" *ngIf="toggleResults"></ansyn-results>
 
+		<ansyn-time-picker-container [openTop]="true" class="time-picker-container"></ansyn-time-picker-container>
+
 		<ansyn-footer
 			[activeMap]="(activeMap$ | async)"
 			[animatedElement]="animatedElementVertical"

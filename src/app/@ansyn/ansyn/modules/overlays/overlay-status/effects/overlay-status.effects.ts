@@ -218,7 +218,9 @@ export class OverlayStatusEffects {
 		mergeMap<any, any>(([map, manualImageProcessingParams]: [ICaseMapState, IImageManualProcessArgs]) => {
 			const { overlay, isAutoImageProcessingActive, imageManualProcessArgs } = map.data;
 			const actions: Action[] = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess({ value: overlay ? isAutoImageProcessingActive : false })];
+			console.log('outside')
 			if (!isEqual(imageManualProcessArgs, manualImageProcessingParams)) {
+				console.log(imageManualProcessArgs, manualImageProcessingParams)
 				actions.push(new SetManualImageProcessing(map.data && imageManualProcessArgs || this.defaultImageManualProcessArgs));
 			}
 			return actions;

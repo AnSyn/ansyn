@@ -24,6 +24,7 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 	public manualImageProcessingParams$: Observable<Object> = this.store$.select(overlayStatusStateSelector).pipe(
 		map((overlayStatusState: IOverlayStatusState) => overlayStatusState.manualImageProcessingParams),
 		distinctUntilChanged(),
+		filter(Boolean),
 		tap((imageManualProcessArguments) => this.imageManualProcessArgs = imageManualProcessArguments)
 	);
 

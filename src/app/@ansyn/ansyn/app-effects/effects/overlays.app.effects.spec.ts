@@ -77,7 +77,8 @@ describe('OverlaysAppEffects', () => {
 		provide: () => ({
 			getPosition: () => of({}),
 			getMapSourceProvider: () => ({
-				getThumbnailUrl: () => of('this is a url')
+				getThumbnailUrl: () => of('http://first'),
+				getThumbnailName: () => 'FIRST'
 			})
 		})
 	};
@@ -126,7 +127,8 @@ describe('OverlaysAppEffects', () => {
 		id: 'first',
 		'photoTime': new Date('2014-06-27T08:43:03.624Z'),
 		'sourceType': 'FIRST',
-		'thumbnailUrl': 'http://first'
+		'thumbnailUrl': 'http://first',
+		'thumbnailName': 'FIRST'
 	};
 	const secondOverlay = <any>{
 		id: 'last',
@@ -201,7 +203,8 @@ describe('OverlaysAppEffects', () => {
 						getTimeStateByOverlay: () => {
 						},
 						getAllOverlays$: of(new Map<string, any>(Object.entries(exampleOverlays))),
-						getThumbnailUrl: () => of('this is a url')
+						getThumbnailUrl: () => of('http://first'),
+						getThumbnailName: () => 'FIRST'
 					}
 				},
 				{

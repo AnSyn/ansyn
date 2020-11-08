@@ -3,7 +3,7 @@ import { fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 import { GeocoderService } from './geocoder.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
-import { defer, Observable } from 'rxjs';
+import { defer, Observable, throwError } from 'rxjs';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { IMapFacadeConfig } from '../models/map-config.model';
 import { ProjectionConverterService } from './projection-converter.service';
@@ -85,7 +85,7 @@ describe('GeocoderService', () => {
 
 		it('should return ([{ name: undefined, point: undefined }]), if there is an error, or unexpected format', fakeAsync(() => {
 			spyOn(console, 'warn');
-			spyOn(httpClient, 'get').and.returnValue(asyncData({}));
+			spyOn(httpClient, 'get').and.returnValue(throwError({status: 500}));
 			result$ = me.getLocation$('hehe');
 			result$.subscribe(res => {
 				endResult = res;

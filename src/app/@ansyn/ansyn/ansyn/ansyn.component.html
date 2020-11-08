@@ -14,13 +14,7 @@
 			<ansyn-context-menu *ngIf="renderContextMenu"></ansyn-context-menu>
 		</div>
 
-		<button [class.active]="toggleResults" class="results-table" (click)="toggleResultsTable()">
-			<i class="icon-table"></i>
-			<span class="badge">{{overlaysCount$ | async}}</span>
-			{{'Search results' | translate}}
-		</button>
-
-		<ansyn-results class="results" *ngIf="toggleResults"></ansyn-results>
+		<ansyn-results class="results"></ansyn-results>
 
 		<ansyn-time-picker-container [openTop]="true" class="time-picker-container"></ansyn-time-picker-container>
 

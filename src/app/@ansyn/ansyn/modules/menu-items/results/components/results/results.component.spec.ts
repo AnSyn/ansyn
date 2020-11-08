@@ -5,6 +5,7 @@ import { MockComponent } from "../../../../core/test/mock-component";
 import { StatusBarConfig } from "../../../../status-bar/models/statusBar.config";
 import { TranslateModule } from "@ngx-translate/core";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { StoreModule } from '@ngrx/store';
 
 describe('ResultsComponent', () => {
 	let component: ResultsComponent;
@@ -14,7 +15,7 @@ describe('ResultsComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [TranslateModule.forRoot(), BrowserAnimationsModule],
+			imports: [TranslateModule.forRoot(), BrowserAnimationsModule, StoreModule.forRoot({})],
 			declarations: [ResultsComponent, a, b],
 			providers: [{
 				provide: StatusBarConfig,

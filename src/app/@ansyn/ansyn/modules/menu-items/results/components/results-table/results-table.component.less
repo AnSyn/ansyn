@@ -1,4 +1,3 @@
-@import "ansyn/less/z-index-globals";
 @import "ansyn/less/colors";
 @import 'ansyn/less/common';
 
@@ -43,6 +42,7 @@
 					position: absolute;
 					margin-left: 145px;
 				}
+
 				.overlay-count {
 					font-size: 17px;
 					margin-top: 7px;
@@ -106,7 +106,7 @@
 				background-color: @background-color-7;
 			}
 
-			div.results-table-body-row:hover + div.results-table-body-row div.cases-table-body-row-data hr  {
+			div.results-table-body-row:hover + div.results-table-body-row div.cases-table-body-row-data hr {
 				top: -2px;
 			}
 
@@ -195,49 +195,12 @@
 						text-overflow: ellipsis;
 					}
 
-					div.results-table-case-name-col {
+					div.results-table-date-col {
 						flex: 1.5;
 						overflow: hidden;
 						text-overflow: ellipsis;
 						margin-left: 19px;
 					}
-
-					.results-table-auto-save-col {
-						padding-top: 20px;
-						flex: 2;
-					}
-
-					div.results-menu-container {
-						flex: 0;
-
-						div.results-menu {
-							display: flex;
-							transition: visibility .3s, transform .3s, opacity .3s;
-							opacity: 0;
-							visibility: hidden;
-							z-index: @z-index-case-menu;
-							position: fixed;
-							border: 0.5px solid #404040;
-							box-sizing: border-box;
-							box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24), 0 0 2px rgba(0, 0, 0, 0.12);
-							border-radius: 4px;
-							background: #FFFFFF;
-							transform: translate(-50%, 50%);
-							pointer-events: none;
-
-							button {
-								background: transparent;
-								border: 1px solid transparent;
-								font-size: 20px;
-
-								&:hover {
-									box-sizing: border-box;
-									border: 1px solid #7b7b7b;
-								}
-							}
-						}
-					}
-
 				}
 			}
 		}

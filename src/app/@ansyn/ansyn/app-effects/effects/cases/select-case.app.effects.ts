@@ -31,7 +31,7 @@ import { isFullOverlay } from '../../../modules/core/utils/overlays';
 import { ICoreConfig } from '../../../modules/core/models/core.config.model';
 import { CoreConfig } from '../../../modules/core/models/core.config';
 import { SetMiscOverlays, SetOverlaysCriteriaAction } from '../../../modules/overlays/actions/overlays.actions';
-import { ICase, ICaseMapState } from '../../../modules/menu-items/cases/models/case.model';
+import { CaseGeoFilter, ICase, ICaseMapState } from '../../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../../modules/overlays/models/overlay.model';
 import { mapValues } from 'lodash';
 import { ICasesConfig } from '../../../modules/menu-items/cases/models/cases-config';
@@ -70,6 +70,10 @@ export class SelectCaseAppEffects {
 			region = feature(state.region, {searchMode: state.region.type});
 		} else {
 			region = state.region;
+		}
+
+		if (region.properties.searchMode === CaseGeoFilter.ScreenView) {
+			noInitialSearch = true;
 		}
 
 		const { layout } = state.maps;

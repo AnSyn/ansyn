@@ -109,7 +109,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	@AutoSubscription
 	manualImageProcessingParams$: Observable<Object> = this.store$.select(overlayStatusStateSelector).pipe(
 		map((overlayStatusState: IOverlayStatusState) => overlayStatusState.manualImageProcessingParams),
-		filter(Boolean),
 		tap((imageManualProcessArgs) => {
 			this.isChanged = !isEqual(this.overlayService.defaultImageManualProcessArgs, imageManualProcessArgs);
 		})

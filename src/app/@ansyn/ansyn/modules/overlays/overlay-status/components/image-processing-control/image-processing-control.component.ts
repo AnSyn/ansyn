@@ -24,8 +24,7 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 	public manualImageProcessingParams$: Observable<Object> = this.store$.select(overlayStatusStateSelector).pipe(
 		map((overlayStatusState: IOverlayStatusState) => overlayStatusState.manualImageProcessingParams),
 		distinctUntilChanged(),
-		filter(Boolean),
-		tap((imageManualProcessArgs) => this.imageManualProcessArgs = imageManualProcessArgs)
+		tap((imageManualProcessArguments) => this.imageManualProcessArgs = imageManualProcessArguments)
 	);
 
 	defaultImageManualProcessArgs: IImageManualProcessArgs = this.overlayService.defaultImageManualProcessArgs;
@@ -42,9 +41,9 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 	}
 
 	updateParam(value, key) {
-		const imageManualProcessArgs = { ...this.imageManualProcessArgs };
-		imageManualProcessArgs[key] = value;
-		this.store$.dispatch(new SetManualImageProcessing(imageManualProcessArgs));
+		const imageManualProcessArguments = { ...this.imageManualProcessArgs };
+		imageManualProcessArguments[key] = value;
+		this.store$.dispatch(new SetManualImageProcessing(imageManualProcessArguments));
 	}
 
 	log(changedArg: string) {

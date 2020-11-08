@@ -6,7 +6,7 @@ import {
 	selectActiveMapId,
 	selectMapsList,
 	selectOverlayOfActiveMap,
-	selectIsMinimalistViewMode, selectFooterCollapse
+	selectIsMinimalistViewMode,
 } from '@ansyn/map-facade';
 import { selectIsPinned, selectMenuCollapse } from '@ansyn/menu';
 import { filter, map, withLatestFrom } from 'rxjs/operators';
@@ -27,8 +27,6 @@ import { toolsFlags } from '../modules/menu-items/tools/models/tools.model';
 
 export class AnsynComponent implements OnInit, OnDestroy {
 	renderContextMenu: boolean;
-
-	isFooterCollapsed$ = this.store$.select(selectFooterCollapse);
 
 	isMenuCollapse$ = this.store$.select(selectMenuCollapse);
 

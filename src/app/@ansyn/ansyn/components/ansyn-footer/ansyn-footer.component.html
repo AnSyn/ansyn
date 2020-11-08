@@ -9,6 +9,7 @@
 	</button>
 
 	<div class="app-timeline-container">
+		<ansyn-time-picker-container *ngIf="!(isFooterCollapsed$ | async)" [openTop]="true" class="time-picker-container"></ansyn-time-picker-container>
 		<ansyn-overlay-navigation-bar></ansyn-overlay-navigation-bar>
 		<ansyn-overlays-container></ansyn-overlays-container>
 	</div>

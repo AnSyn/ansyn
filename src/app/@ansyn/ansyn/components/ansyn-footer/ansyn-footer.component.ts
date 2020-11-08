@@ -27,6 +27,8 @@ export class AnsynFooterComponent implements OnInit, OnDestroy {
 		tap(this.startToggleCollapse.bind(this))
 	);
 
+	isFooterCollapsed$ = this.store.select(selectFooterCollapse);
+
 	constructor(
 		protected elementRef: ElementRef,
 		protected store: Store<IMenuState>,

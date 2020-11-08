@@ -42,12 +42,13 @@ export class TimePickerContainerComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	time$: Observable<ICaseTimeState> = this.store$.select(selectTime).pipe(
-		tap(_time => {
-			this.timeRange = _time && [_time.from, _time.to];
-			if (_time && _time.to && _time.from) {
+		filter(_time => Boolean(_time)),
+		tap(({from, to}) => {
+			this.timeRange = [from, to];
+			if (to && from) {
 				this.timeSelectionTitle = {
-					from: moment(this.timeRange[0]).format(DATE_FORMAT),
-					to: moment(this.timeRange[1]).format(DATE_FORMAT)
+					from: moment(from).format(DATE_FORMAT),
+					to: moment(to).format(DATE_FORMAT)
 				};
 				this.revertTime(); // if time was set from outside, cancel manual editing mode
 				this.timeSelectionOldTitle = { ...this.timeSelectionTitle };
@@ -92,7 +93,6 @@ export class TimePickerContainerComponent implements OnInit, OnDestroy {
 	);
 
 	logTimePickerChange() {
-		const { from: oldFrom, to: oldTo } = this.timeSelectionOldTitle;
 		const from = this.timePickerInputFrom.nativeElement.textContent;
 		const to = this.timePickerInputTo.nativeElement.textContent;
 
@@ -198,7 +198,8 @@ export class TimePickerContainerComponent implements OnInit, OnDestroy {
 
 	private earlyOrLateDate(date) {
 		const dateFromFormat = moment(date, DATE_FORMAT, true);
-		return dateFromFormat.toDate().getFullYear() < 1970 || dateFromFormat.toDate().getTime() > Date.now();
+		const notSupportedDate = 1970;
+		return dateFromFormat.toDate().getFullYear() < notSupportedDate || dateFromFormat.toDate().getTime() > Date.now();
 	}
 
 	supportRangeDates() {

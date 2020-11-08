@@ -1,7 +1,8 @@
 @import 'ansyn/less/common';
 
 :host {
-	z-index: 100;
+	bottom: 0;
+	z-index: 6;
 
 	.results {
 		top: 0;
@@ -12,13 +13,13 @@
 	button {
 		&.results-table {
 			background: @background-color-1;
-			position: absolute;
+			position: fixed;
 			text-align: center;
 			color: white;
 			text-decoration: none;
 			right: 10px;
 			bottom: 10px;
-			z-index: 7;
+			z-index: 27;
 			padding: 16px;
 			cursor: pointer;
 			font-size: 0.9rem;

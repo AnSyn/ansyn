@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { transition, trigger, style, animate } from '@angular/animations';
-import { AutoSubscription } from 'auto-subscriptions';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { selectDropsDescending } from '../../../../overlays/reducers/overlays.reducer';
@@ -20,11 +20,13 @@ import { IOverlayDrop } from '../../../../overlays/models/overlay.model';
 		])
 	]
 })
-export class ResultsComponent implements OnInit {
+
+@AutoSubscriptions()
+export class ResultsComponent implements OnInit, OnDestroy {
 	toggleResults = false;
 
 	@AutoSubscription
-	overlaysCount$: Observable<any> = this.store$
+	overlaysCount$: Observable<number> = this.store$
 		.pipe(
 			select(selectDropsDescending),
 			map((overlays: IOverlayDrop[]) => overlays.length || 0)
@@ -36,15 +38,15 @@ export class ResultsComponent implements OnInit {
 	ngOnInit() {
 	}
 
+	ngOnDestroy() {
+	}
+
 	toggleResultsTable(): void {
 		this.toggleResults = !this.toggleResults;
 	}
 
-	onExpandStart() {
+	onExpandStart(): void {
 		const resultsTableElement = document.querySelector('.results');
-		if (resultsTableElement) {
-			// resultsTableElement.setAttribute('style', `z-index: 16`);
-			resultsTableElement.setAttribute('style', `bottom: 12vh`);
-		}
+		resultsTableElement.setAttribute('style', `z-index: 5`);
 	}
 }

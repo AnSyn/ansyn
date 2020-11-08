@@ -2,24 +2,27 @@
 @import "ansyn/less/globals";
 
 :host {
-	border-radius: @status-bar-panel-radius;
+
 	.box {
 		margin: 0 3px;
 
 		.button {
 			&:extend(.status-bar-button-round);
+			border-radius: @status-bar-panel-radius;
+			background-color: @status-bar-panels;
 			height: 35px;
 
 			&.active {
-				&:extend(.status-bar-button-active);
+				background-color: @status-bar-active;
 			}
 
 			&:hover:not(.active) {
-				&:extend(.status-bar-button-hover);
+				background: @status-bar-hover;
 			}
 		}
 
 		&.timePickerBox {
+			margin: 0 3px;
 			font-size: 13px;
 
 			span.title {

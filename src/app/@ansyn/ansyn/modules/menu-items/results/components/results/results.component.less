@@ -2,7 +2,7 @@
 
 :host {
 	bottom: 0;
-	z-index: 5;
+	z-index: 6 !important;
 
 	.results {
 		top: 0;
@@ -11,7 +11,8 @@
 	}
 
 	button {
-		&.results-table {
+		&.open-table-btn {
+			z-index: 6 !important;
 			background: @background-color-1;
 			position: relative;
 			text-align: center;
@@ -19,7 +20,6 @@
 			text-decoration: none;
 			right: 10px;
 			bottom: 10px;
-			z-index: 27;
 			padding: 16px;
 			cursor: pointer;
 			font-size: 0.9rem;

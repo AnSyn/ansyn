@@ -5,8 +5,8 @@
 @header-size: calc(~"(100vh - @{footer-height}) * 0.025");
 
 :host {
-	z-index: 4;
-	bottom: 83vh;
+	z-index: 5;
+	bottom: 81vh;
 	background: @background-color-3;
 	&:extend(.default-menu-item);
 
@@ -18,7 +18,7 @@
 		box-sizing: border-box;
 
 		div.no-results {
-			height: 13vh;
+			height: 10vh;
 		}
 
 		div.header {
@@ -118,7 +118,6 @@
 
 			div.results-table-body-row {
 				display: block;
-				margin: 0 0 0 16px;
 				transition: background .3s, color .3s;
 				overflow: hidden;
 				height: 10%;

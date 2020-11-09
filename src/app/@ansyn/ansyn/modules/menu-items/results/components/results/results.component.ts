@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { transition, trigger, style, animate } from '@angular/animations';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
@@ -10,15 +9,7 @@ import { IOverlayDrop } from '../../../../overlays/models/overlay.model';
 @Component({
 	selector: 'ansyn-results',
 	templateUrl: './results.component.html',
-	styleUrls: ['./results.component.less'],
-	animations: [
-		trigger('expand', [
-			transition(':enter', [
-				style({ transform: 'translateY(100%)' }),
-				animate('1.25s ease-in-out', style({ transform: 'translateY(0%)' }))
-			])
-		])
-	]
+	styleUrls: ['./results.component.less']
 })
 
 @AutoSubscriptions()
@@ -43,10 +34,5 @@ export class ResultsComponent implements OnInit, OnDestroy {
 
 	toggleResultsTable(): void {
 		this.toggleResults = !this.toggleResults;
-	}
-
-	onExpandStart(): void {
-		const resultsTableElement = document.querySelector('.results');
-		resultsTableElement.setAttribute('style', `z-index: 5`);
 	}
 }

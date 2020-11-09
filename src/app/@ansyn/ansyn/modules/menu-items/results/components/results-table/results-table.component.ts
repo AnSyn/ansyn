@@ -31,6 +31,12 @@ interface ITableHeader {
 	templateUrl: './results-table.component.html',
 	styleUrls: ['./results-table.component.less'],
 	animations: [
+		trigger('expand', [
+			transition(':enter', [
+				style({ transform: 'translateY(100%)' }),
+				animate('1.25s ease-in-out', style({ transform: 'translateY(0%)' }))
+			])
+		]),
 		trigger('isDescending', [
 			state('false', style({
 				transform: 'rotate(180deg)',
@@ -123,7 +129,12 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	findIndexByOverlayId(overlayId: string): number {
-		return this.overlays.map(({id}) => id).indexOf(overlayId);
+		return this.overlays.map(({ id }) => id).indexOf(overlayId);
+	}
+
+	onExpandStart(): void {
+		const resultsTableElement = document.querySelector('.results-table');
+		// resultsTableElement.setAttribute('style', `z-index: 4`);
 	}
 
 	ngOnDestroy(): void {
@@ -133,7 +144,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	resetSort(): void {
-		this.tableHeaders.forEach(({isDescending}) => isDescending = true);
+		this.tableHeaders.forEach(({ isDescending }) => isDescending = true);
 	}
 
 	scrollOverlayToCenter(index: number): void {

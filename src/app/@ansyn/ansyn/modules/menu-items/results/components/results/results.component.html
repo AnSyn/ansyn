@@ -4,6 +4,6 @@
 	{{'Search results' | translate}}
 </button>
 
-<div *ngIf="toggleResults" [@expand] (@expand.start)=" onExpandStart()" class="results">
+<div *ngIf="toggleResults" class="results">
 	<ansyn-results-table></ansyn-results-table>
 </div>

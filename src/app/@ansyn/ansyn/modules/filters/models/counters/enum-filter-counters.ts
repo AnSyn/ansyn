@@ -23,6 +23,9 @@ export class EnumFilterCounters extends FilterCounters {
 	}
 
 	incrementFilteredCount(value: any): void {
+		// Adding a safety check. If we get a filter value whose counter was not
+		// initialized, we initialize the counter here (and since we also need
+		// to increment the counter, we initialize to 1 instead of to 0)
 		if (this.enumsFields.has(value)) {
 			this.enumsFields.get(value).filteredCount = this.enumsFields.get(value).filteredCount + 1;
 		} else {

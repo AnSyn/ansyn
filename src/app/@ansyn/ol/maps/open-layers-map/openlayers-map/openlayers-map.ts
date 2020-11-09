@@ -34,7 +34,6 @@ import { debounceTime, filter, map, switchMap, take, takeUntil, tap, mergeMap } 
 import { IOlConfig, OL_CONFIG, group_layer } from '../../../config/ol-config';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import { OpenLayersMonitor } from '../helpers/openlayers-monitor';
-import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
 import { exportMapHelper } from '../../helpers/helpers';
 
@@ -327,7 +326,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		if (!layer) {
 			return;
 		}
-		olShare.removeWorkers(layer);
 		this._mapLayers = this._mapLayers.filter((mapLayer) => mapLayer !== layer);
 		this._mapObject.removeLayer(layer);
 		this._mapObject.renderSync();

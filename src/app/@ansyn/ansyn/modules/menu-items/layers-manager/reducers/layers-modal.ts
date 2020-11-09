@@ -11,7 +11,3 @@ export interface ILayerModal {
 	readonly layer: ILayer;
 	type: SelectedModalEnum;
 }
-
-export function getDefaultLayer (layers: ILayer[]) {
-	return Boolean(layers.length) ? [layers.find(layer => layer.name === 'Default').id] : [];
-}

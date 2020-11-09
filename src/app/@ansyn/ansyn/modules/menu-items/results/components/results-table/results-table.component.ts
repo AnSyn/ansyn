@@ -177,7 +177,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	sortOverlays(header: ITableHeader): void {
 		const { headerData, isDescending, sortFn } = header;
 		this.sortedBy = headerData;
-		this.overlays.sort((a, b) => {
+		this.overlays.sort((a: IOverlayDrop, b: IOverlayDrop) => {
 			const dataA = a[headerData];
 			const dataB = b[headerData];
 

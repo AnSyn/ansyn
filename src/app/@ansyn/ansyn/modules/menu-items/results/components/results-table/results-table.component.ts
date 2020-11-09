@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Observable, fromEvent } from 'rxjs';
+import { Observable } from 'rxjs';
 import { IOverlayDrop } from '../../../../overlays/models/overlay.model';
 import { select, Store } from '@ngrx/store';
 import {
@@ -18,7 +18,6 @@ import {
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
 import { TranslateService } from '@ngx-translate/core';
-import { SetBadgeAction } from '@ansyn/menu';
 
 interface ITableHeader {
 	headerName: string;
@@ -76,11 +75,6 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	@ViewChild('table') table: ElementRef;
 
 	@AutoSubscription
-	onClickClearBadge$ = fromEvent(window, 'click').pipe(
-		tap(() => this.store$.dispatch(new SetBadgeAction({ key: 'Results table', badge: undefined })))
-	);
-
-	@AutoSubscription
 	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, IMarkUpData>> = this.store$
 		.pipe(
 			select(selectDropMarkup),
@@ -129,8 +123,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	findIndexByOverlayId(overlayId: string): number {
-		const overlayIndex = this.overlays.map(({id}) => id).indexOf(overlayId);
-		return overlayIndex;
+		return this.overlays.map(({id}) => id).indexOf(overlayId);
 	}
 
 	ngOnDestroy(): void {
@@ -140,7 +133,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	resetSort(): void {
-		this.tableHeaders.forEach(tableHeader => tableHeader.isDescending = true);
+		this.tableHeaders.forEach(({isDescending}) => isDescending = true);
 	}
 
 	scrollOverlayToCenter(index: number): void {

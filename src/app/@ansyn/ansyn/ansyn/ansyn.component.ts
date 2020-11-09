@@ -6,7 +6,7 @@ import {
 	selectActiveMapId,
 	selectMapsList,
 	selectOverlayOfActiveMap,
-	selectIsMinimalistViewMode,
+	selectIsMinimalistViewMode
 } from '@ansyn/map-facade';
 import { selectIsPinned, selectMenuCollapse } from '@ansyn/menu';
 import { filter, map, withLatestFrom } from 'rxjs/operators';
@@ -25,7 +25,7 @@ import { toolsFlags } from '../modules/menu-items/tools/models/tools.model';
 	styleUrls: ['./ansyn.component.less']
 })
 
-export class AnsynComponent implements OnInit, OnDestroy {
+export class AnsynComponent implements OnInit {
 	renderContextMenu: boolean;
 
 	isMenuCollapse$ = this.store$.select(selectMenuCollapse);
@@ -46,8 +46,6 @@ export class AnsynComponent implements OnInit, OnDestroy {
 			map(([[activeMapId, overlay], mapList]: [[string, IOverlay], ICaseMapState[]]) => MapFacadeService.mapById(mapList, activeMapId)),
 			filter(Boolean)
 		);
-
-
 
 	@HostBinding('class.component') component = this.componentMode;
 	@Input() version;
@@ -82,8 +80,5 @@ export class AnsynComponent implements OnInit, OnDestroy {
 			this.renderContextMenu = true;
 		}, 1000);
 
-	}
-
-	ngOnDestroy(): void {
 	}
 }

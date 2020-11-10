@@ -33,7 +33,7 @@ import {
 	IImageryMapPosition,
 	IMapSettings,
 	polygonFromBBOX,
-	polygonsDontIntersect, GetProvidersMapsService
+	polygonsDontIntersect, GetProvidersMapsService, ImageryLayerProperties
 } from '@ansyn/imagery';
 import {
 	catchError,
@@ -378,6 +378,12 @@ export class MapAppEffects {
 		this.setIsLoadingSpinner(mapId, sourceLoader, sourceProviderMetaData);
 
 
+		/* -0- */
+		const setIsOverlayProperties = map( (layer: IBaseImageryLayer) => {
+			layer.set(ImageryLayerProperties.IS_OVERLAY, true);
+			return layer;
+		});
+
 		/* -1- */
 		const isActiveMapAlive = mergeMap((layer: IBaseImageryLayer) => {
 			const checkCommunicator = this.imageryCommunicatorService.provide(communicator.id);
@@ -429,6 +435,7 @@ export class MapAppEffects {
 
 		return fromPromise(sourceLoader.createAsync(sourceProviderMetaData))
 			.pipe(
+				setIsOverlayProperties,
 				isActiveMapAlive,
 				changeActiveMap,
 				resetView,

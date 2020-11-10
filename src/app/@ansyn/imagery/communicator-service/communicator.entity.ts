@@ -150,7 +150,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	loadInitialMapSource(position?: IImageryMapPosition, sourceType: string = this.mapSettings.worldView.sourceType): Promise<boolean> {
-		if (this.ActiveMap) {
+		if (!this.ActiveMap) {
 			return Promise.resolve(false)
 		}
 		return this.getProvidersMapsService.createMapSourceForMapType(this.mapSettings.worldView.mapType, sourceType, this.mapSettings).pipe(

@@ -33,7 +33,7 @@ export class GetProvidersMapsService {
 			mergeMap( ([mapSource, sourceProvider]: [any, BaseMapSourceProvider]) => {
 				const metaData = {...mapSettings};
 				metaData.worldView = {mapType, sourceType};
-				metaData.data = {...metaData.data, config: mapSource.config, key: mapSource.key};
+				metaData.data = {...metaData.data, overlay: null, config: mapSource.config, key: mapSource.key};
 				return from(sourceProvider.createAsync(metaData));
 				}),
 			catchError( (error) => {

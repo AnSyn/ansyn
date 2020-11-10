@@ -44,7 +44,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		return this.mapObject.getLayers().getArray();
 	}
 
-	getGroup(): IBaseImageryLayer {
+	getGroupLayers(): IBaseImageryLayer {
 		return null
 	}
 

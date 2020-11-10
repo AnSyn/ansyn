@@ -51,10 +51,10 @@ export class CesiumMap extends BaseImageryMap<any> {
 		this.layersToCesiumLayer = new Map<CesiumLayer, ImageryLayer>();
 	}
 
-	getGroup(): IBaseImageryLayer {
+	getGroupLayers(): IBaseImageryLayer {
 		return null;
 	}
-	
+
 	initMap(element: HTMLElement, shadowElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: CesiumLayer, position?: IImageryMapPosition): Observable<boolean> {
 		this.element = element;
 

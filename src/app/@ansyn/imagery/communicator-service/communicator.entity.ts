@@ -133,7 +133,6 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 			if (!sourceType) {
 				console.warn(`Couldn't find defaultMapSource setting in config, for map type ${ imageryMap.prototype.mapType }`);
 			}
-			this.mapSettings.worldView.sourceType = sourceType;
 		}
 
 		const getLayers = layer ? Promise.resolve(layer) : this.getProvidersMapsService.createMapSourceForMapType(mapType, sourceType, this.mapSettings).toPromise();
@@ -150,7 +149,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 	}
 
 	loadInitialMapSource(position?: IImageryMapPosition, sourceType: string = this.mapSettings.worldView.sourceType): Promise<boolean> {
-		if (this.ActiveMap) {
+		if (!this.ActiveMap) {
 			return Promise.resolve(false)
 		}
 		return this.getProvidersMapsService.createMapSourceForMapType(this.mapSettings.worldView.mapType, sourceType, this.mapSettings).pipe(

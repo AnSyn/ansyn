@@ -15,7 +15,7 @@ import { forkJoin, merge, Observable, of, throwError } from 'rxjs';
 import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
 import { ImageryCommunicatorService } from './communicator.service';
 import { BaseImageryVisualizer } from '../model/base-imagery-visualizer';
-import { filter, map, mergeMap, tap, catchError } from 'rxjs/operators';
+import { filter, map, mergeMap, tap } from 'rxjs/operators';
 import { IMAGERY_MAPS, IImageryMaps } from '../providers/imagery-map-collection';
 import { BaseMapSourceProvider } from '../model/base-map-source-provider';
 import { MapComponent } from '../map/map.component';

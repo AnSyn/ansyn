@@ -3,13 +3,13 @@ import * as Extent from 'ol/extent';
 import TileImage from 'ol/source/TileImage';
 import Projection from 'ol/proj/Projection';
 import TileGrid from 'ol/tilegrid/TileGrid';
+import RasterSource from 'ol/source/Raster';
 
 import { MpImageProjection } from './mp-image-projection';
-import { ProjectableRaster } from '../../../maps/open-layers-map/models/projectable-raster';
 
 const urlTemplate = '&tileMatrix={z}&tileCol={x}&tileRow={y}';
 
-export class MpTileImageSource extends ProjectableRaster {
+export class MpTileImageSource extends RasterSource {
 
 	public _url: any;
 	public crossOrigin: any;

@@ -12,7 +12,6 @@ import ol_Layer from 'ol/layer/Layer';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import { Observable, of } from 'rxjs';
-import * as olShared from '../open-layers-map/shared/openlayers-shared';
 import { exportMapHelper } from '../helpers/helpers';
 export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
 
@@ -116,7 +115,6 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	}
 
 	removeLayer(layer: ol_Layer): void {
-		olShared.removeWorkers(layer);
 		this.mapObject.removeLayer(layer);
 		this.mapObject.renderSync();
 	}

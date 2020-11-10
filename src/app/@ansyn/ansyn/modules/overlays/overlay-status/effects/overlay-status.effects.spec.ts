@@ -4,7 +4,7 @@ import {
 	mapFeatureKey,
 	MapReducer,
 	mapStateSelector,
-	selectMaps,
+	selectMaps, SetActiveMapId,
 	UpdateMapAction
 } from '@ansyn/map-facade';
 import { provideMockActions } from '@ngrx/effects/testing';
@@ -107,7 +107,8 @@ describe('OverlayStatusEffects', () => {
 
 	it('toggleAutoImageProcessing$ should raise SetAutoImageProcessingSuccess', () => {
 		actions = hot('--a--', { a: new SetAutoImageProcessing({ mapId: 'mapId' }) });
-		const expectedResults = cold('--(bc)--', {
+		const expectedResults = cold('--(abc)--', {
+			a: new SetActiveMapId('mapId'),
 			b: new UpdateMapAction({
 				id: 'mapId',
 				changes: {

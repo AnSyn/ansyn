@@ -28,7 +28,6 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	communicator: CommunicatorEntity;
 	private _imageProcessing: OpenLayersImageProcessing;
 	private imageLayer: ImageLayer;
-	// customMainLayer = null;
 
 	isImageProcessActive$ = this.store$.pipe(
 		select(selectMaps),
@@ -56,7 +55,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 				this.setAutoImageProcessing(isAutoImageProcessingActive);
 				// manual
 				if (!isAutoImageProcessingActive) {
-					this._imageProcessing.processImage(this.communicator.mapSettings.data.imageManualProcessArgs);
+					this._imageProcessing.processImage(imageManualProcessArgs);
 				}
 			}
 		})
@@ -83,7 +82,6 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	}
 
 	onResetView(): Observable<boolean> {
-		// this.setCustomMainLayer(null);
 		return of(true).pipe(
 			tap(() => this.recalculateManualImageProcessActive())
 		);
@@ -94,15 +92,8 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		this.onAutoImageProcessingAndManualImageProcessActive$.pipe(take(1)).subscribe();
 	}
 
-	/*setCustomMainLayer(layer) {
-		if (!isEqual(this.getMainLayer(), layer)) {
-			this.removeImageLayer();
-		}
-		this.customMainLayer = layer;
-	}*/
-
 	getMainLayer(): any {
-		return /*Boolean(this.customMainLayer) ? this.customMainLayer :*/ this.communicator.ActiveMap.getMainLayer();
+		return this.communicator.ActiveMap.getMainLayer();
 	}
 
 	public setAutoImageProcessing(shouldPerform: boolean): void {

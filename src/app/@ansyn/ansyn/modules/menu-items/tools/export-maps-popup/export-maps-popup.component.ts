@@ -69,7 +69,6 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 	readonly pdfFormat = FormatEnum.PDF;
 	readonly exportMethods = [ExportMethodEnum.BASIC, ExportMethodEnum.ADVANCED];
 	readonly pathToFontFile = 'assets/fonts/TTWPGOTT.ttf';
-	fonts;
 	title = 'Export';
 	description = 'keep in mind that the image may be protected';
 	selectedExportMethod: ExportMethodEnum = ExportMethodEnum.BASIC;
@@ -131,9 +130,7 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 	}
 
 	getFont(){
-		const res = this.http.get(this.pathToFontFile, {responseType: 'arraybuffer'}).subscribe(res => {
-			this.fonts = arrayBufferToBinaryString(res);
-		});
+		return this.http.get(this.pathToFontFile, {responseType: 'arraybuffer'});
 	}
 
 	constructor(protected store$: Store<any>,
@@ -149,7 +146,6 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		this.getFont();
 	}
 
 	ngOnDestroy(): void {
@@ -190,28 +186,31 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 				return of(exportMapData);
 			}),
 			tap((exportMapData: IExportMapData) => {
-				const {size, extra} = exportMetadata;
-				const doc = new jsPDF('landscape', undefined, this.pageSize);
-				doc.addImage(exportMapData.canvas.toDataURL('image/jpeg'), 'JPEG', 0, 0, exportMetadata.size[0], exportMetadata.size[1]);
-				if (extra.descriptions) {
-					doc.rect(0, 0, size[0], 5, 'F');
-					doc.setTextColor(255, 255, 255);
-					doc.addFileToVFS('Lato-Regular.ttf', this.fonts);
-					doc.addFont('Lato-Regular.ttf', 'Lato', 'normal');
-					doc.setFont('Lato');
-					doc.setFontSize(11);
-					doc.setR2L(true);
-					const loadOverlay = mapToBeExport.mapSettings.data.overlay;
-					const desc = Boolean(loadOverlay) ? this.getDescriptionFromOverlay(loadOverlay) : 'Base Map';
-					doc.text(this.translateService.instant(desc), size[0] / 2, 5, {align: 'center', baseline: 'bottom'});
-				}
-				if (exportMapData.compass) {
-					doc.addImage(exportMapData.compass.toDataURL('image/png'), 'PNG', 0, 0, 25, 25); // we use png for transparent compass
-				}
+				this.getFont().subscribe(res => {
+					const font = arrayBufferToBinaryString(res);
+					const {size, extra} = exportMetadata;
+					const doc = new jsPDF('landscape', undefined, this.pageSize);
+					doc.addImage(exportMapData.canvas.toDataURL('image/jpeg'), 'JPEG', 0, 0, exportMetadata.size[0], exportMetadata.size[1]);
+					if (extra.descriptions) {
+						doc.rect(0, 0, size[0], 5, 'F');
+						doc.setTextColor(255, 255, 255);
+						doc.addFileToVFS('Lato-Regular.ttf', font);
+						doc.addFont('Lato-Regular.ttf', 'Lato', 'normal');
+						doc.setFont('Lato');
+						doc.setFontSize(11);
+						doc.setR2L(true);
+						const loadOverlay = mapToBeExport.mapSettings.data.overlay;
+						const desc = Boolean(loadOverlay) ? this.getDescriptionFromOverlay(loadOverlay) : 'Base Map';
+						doc.text(this.translateService.instant(desc), size[0] / 2, 5, {align: 'center', baseline: 'bottom'});
+					}
+					if (exportMapData.compass) {
+						doc.addImage(exportMapData.compass.toDataURL('image/png'), 'PNG', 0, 0, 25, 25); // we use png for transparent compass
+					}
 
-				doc.save('map.pdf');
-				this.logger.info(LOGS.success);
-			}),
+					doc.save('map.pdf');
+					this.logger.info(LOGS.success);
+					});
+				}),
 			catchError( (err) => {
 				console.error(err);
 				this.logger.error(LOGS.failed);

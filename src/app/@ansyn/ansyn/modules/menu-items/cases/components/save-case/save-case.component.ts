@@ -2,13 +2,12 @@ import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Store } from '@ngrx/store';
 import { ICasesState, selectSelectedCase } from '../../reducers/cases.reducer';
-import { CloseModalAction, SaveCaseAsAction, UpdateCaseAction } from '../../actions/cases.actions';
+import { CloseModalAction, SaveCaseAsAction } from '../../actions/cases.actions';
 import { CasesService } from '../../services/cases.service';
 import { take, tap } from 'rxjs/operators';
 import { cloneDeep } from '../../../../core/utils/rxjs/operators/cloneDeep';
 import { ICase } from '../../models/case.model';
 import { UUID } from 'angular2-uuid';
-import { SetActiveMapId } from '@ansyn/map-facade';
 
 const animationsDuring = '0.2s';
 
@@ -56,14 +55,14 @@ export class SaveCaseComponent {
 				tap((selectedCase: ICase) => {
 					const currentActive = selectedCase.state.maps.activeMapId;
 					let newActiveMapId = currentActive;
-					selectedCase.state.maps.data.forEach( map => {
+					selectedCase.state.maps.data.forEach(map => {
 						const mapId = map.id;
 						map.id = UUID.UUID();
 						if (mapId === currentActive) {
 							newActiveMapId = map.id;
 						}
 					});
-					this.store.dispatch(new SetActiveMapId(newActiveMapId));
+					selectedCase.state.maps.activeMapId = newActiveMapId;
 					this.store.dispatch(new SaveCaseAsAction({ ...selectedCase, name: this.caseName }));
 					this.close();
 				})

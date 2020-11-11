@@ -55,7 +55,7 @@ export class SaveCaseComponent {
 				tap((selectedCase: ICase) => {
 					const currentActive = selectedCase.state.maps.activeMapId;
 					let newActiveMapId = currentActive;
-					selectedCase.state.maps.data.forEach( map => {
+					selectedCase.state.maps.data.forEach(map => {
 						const mapId = map.id;
 						map.id = UUID.UUID();
 						if (mapId === currentActive) {

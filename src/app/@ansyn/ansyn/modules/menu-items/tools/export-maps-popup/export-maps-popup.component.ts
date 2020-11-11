@@ -22,11 +22,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { Observable, of, EMPTY } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import * as base64 from 'js-base64';
-import {font} from './parm';
-import * as bufferto64 from 'base64-arraybuffer'
-import { encode, encode_array } from 'rison';
-// import { isEqual } from 'lodash';
+import { arrayBufferToBinaryString } from 'blob-util'
 
 enum GraphicExportEnum {
 	All = 'All',
@@ -55,7 +51,6 @@ const LOGS = {
 const DEFAULT_QUALITY = 'normal';
 const DEFAULT_PAGE_SIZE = 'a4';
 
-const lato = font
 const item2class = {
 	[GraphicExportEnum.DrawsAndMeasures]: [annotationsClassNameForExport, measuresClassNameForExport],
 	[GraphicExportEnum.North]: floationMenuClassNameForExport,
@@ -135,11 +130,10 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 		return this.toolsConfigData.exportMap;
 	}
 
-	async getFont(){
-		const res = await this.http.get(this.pathToFontFile, {responseType: 'text'}).toPromise();
-		// const encoded = encodeURIComponent(escape(btoa(res)));
-		// console.log(encoded)
-		return res;
+	getFont(){
+		const res = this.http.get(this.pathToFontFile, {responseType: 'arraybuffer'}).subscribe(res => {
+			this.fonts = arrayBufferToBinaryString(res);
+		});
 	}
 
 	constructor(protected store$: Store<any>,
@@ -154,8 +148,8 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 		this.translateService.get('direction', '').subscribe( (direction) => this.isRtl = direction === 'rtl')
 	}
 
-	async ngOnInit() {
-		this.fonts = await this.getFont()
+	ngOnInit() {
+		this.getFont();
 	}
 
 	ngOnDestroy(): void {
@@ -195,14 +189,14 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 				}
 				return of(exportMapData);
 			}),
-			tap(async (exportMapData: IExportMapData) => {
+			tap((exportMapData: IExportMapData) => {
 				const {size, extra} = exportMetadata;
 				const doc = new jsPDF('landscape', undefined, this.pageSize);
 				doc.addImage(exportMapData.canvas.toDataURL('image/jpeg'), 'JPEG', 0, 0, exportMetadata.size[0], exportMetadata.size[1]);
 				if (extra.descriptions) {
 					doc.rect(0, 0, size[0], 5, 'F');
 					doc.setTextColor(255, 255, 255);
-					doc.addFileToVFS('Lato-Regular.ttf', await this.getFont());
+					doc.addFileToVFS('Lato-Regular.ttf', this.fonts);
 					doc.addFont('Lato-Regular.ttf', 'Lato', 'normal');
 					doc.setFont('Lato');
 					doc.setFontSize(11);

@@ -68,7 +68,6 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 	readonly advancedExport = ExportMethodEnum.ADVANCED;
 	readonly pdfFormat = FormatEnum.PDF;
 	readonly exportMethods = [ExportMethodEnum.BASIC, ExportMethodEnum.ADVANCED];
-	readonly pathToFontFile = 'assets/fonts/TTWPGOTT.ttf';
 	title = 'Export';
 	description = 'keep in mind that the image may be protected';
 	selectedExportMethod: ExportMethodEnum = ExportMethodEnum.BASIC;
@@ -99,7 +98,7 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 
 	_pageSize = DEFAULT_PAGE_SIZE;
 
-	get pageSize() {
+	get pageSize(): string {
 		if (this.isPDF()) {
 			return this._pageSize;
 		}
@@ -129,8 +128,9 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 		return this.toolsConfigData.exportMap;
 	}
 
-	getFont(){
-		return this.http.get(this.pathToFontFile, {responseType: 'arraybuffer'});
+	getFont():Observable<ArrayBuffer> {
+		const pathToFontFile = 'assets/fonts/TTWPGOTT.ttf';
+		return this.http.get(pathToFontFile, {responseType: 'arraybuffer'});
 	}
 
 	constructor(protected store$: Store<any>,

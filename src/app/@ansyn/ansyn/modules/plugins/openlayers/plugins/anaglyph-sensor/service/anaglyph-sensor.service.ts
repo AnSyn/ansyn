@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import { GeoRegisteration, IOverlay } from '../../../../../overlays/models/overlay.model';
 import {
 	IBaseImageryLayer,
-	BaseMapSourceProvider, CommunicatorEntity, ImageryCommunicatorService, IMapSettings
+	BaseMapSourceProvider, CommunicatorEntity, ImageryCommunicatorService, IMapSettings, GetProvidersMapsService
 } from '@ansyn/imagery';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { DisabledOpenLayersMapName, OpenlayersMapName, OpenLayersStaticImageSourceProviderSourceType } from '@ansyn/ol';
@@ -16,6 +16,7 @@ import { AnaglyphConfig, IAnaglyphConfig } from '../models/anaglyph.model';
 export class AnaglyphSensorService {
 
 	constructor(protected communicatorService: ImageryCommunicatorService,
+				protected getProvidersMapsService: GetProvidersMapsService,
 				@Inject(AnaglyphConfig) public config: IAnaglyphConfig) {
 
 	}
@@ -27,10 +28,7 @@ export class AnaglyphSensorService {
 
 	displayAnaglyph(mapSettings: IMapSettings): Observable<{} | boolean> {
 		const communicator = this.communicatorService.provide(mapSettings.id);
-		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({
-			sourceType: OpenLayersStaticImageSourceProviderSourceType,
-			mapType: communicator.ActiveMap.mapType
-		});
+		const sourceLoader: BaseMapSourceProvider = this.getProvidersMapsService.getMapSourceProvider(communicator.ActiveMap.mapType, OpenLayersStaticImageSourceProviderSourceType);
 
 		const clonedMapSettings = cloneDeep(mapSettings);
 		clonedMapSettings.data.overlay.id = `anaglyph_${ mapSettings.data.overlay.id }`;
@@ -43,10 +41,7 @@ export class AnaglyphSensorService {
 
 	displayOriginalOverlay(mapSettings: IMapSettings): Observable<{} | boolean> {
 		const communicator = this.communicatorService.provide(mapSettings.id);
-		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({
-			sourceType: OpenLayersStaticImageSourceProviderSourceType,
-			mapType: communicator.ActiveMap.mapType
-		});
+		const sourceLoader: BaseMapSourceProvider = this.getProvidersMapsService.getMapSourceProvider(communicator.ActiveMap.mapType, OpenLayersStaticImageSourceProviderSourceType);
 
 		return this.innerChangeImage(sourceLoader, mapSettings.data.overlay, communicator, mapSettings);
 	}

@@ -62,23 +62,23 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 		if (!this.layerExists(layer)) {
 			this.createLayer(layer).subscribe((tileLayer) => {
 				if (!this.layerExists(layer)) {
-					this.iMap.getGroup().getLayers().push(tileLayer);
+					this.iMap.getGroupLayers().getLayers().push(tileLayer);
 				}
 			});
 		}
 	}
 
 	layerExists(layer: ILayer): boolean {
-		const layersArray = this.iMap.getGroup().getLayers().getArray();
+		const layersArray = this.iMap.getGroupLayers().getLayers().getArray();
 		const exists = layersArray.some((shownLayer) => shownLayer.get('id') === layer.id);
 		return Boolean(exists);
 	}
 
 	removeGroupLayer(id: string): void {
-		const layersArray: any[] = this.iMap.getGroup().getLayers().getArray();
+		const layersArray: any[] = this.iMap.getGroupLayers().getLayers().getArray();
 		let removeIdx = layersArray.indexOf(layersArray.find(l => l.get('id') === id));
 		if (removeIdx >= 0) {
-			this.iMap.getGroup().getLayers().removeAt(removeIdx);
+			this.iMap.getGroupLayers().getLayers().removeAt(removeIdx);
 		}
 	}
 

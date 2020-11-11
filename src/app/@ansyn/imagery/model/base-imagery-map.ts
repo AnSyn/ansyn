@@ -71,8 +71,8 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract getLayers(): IBaseImageryLayer[];
 
-	abstract getGroup(): IBaseImageryLayer;
-	
+	abstract getGroupLayers(): IBaseImageryLayer;
+
 	abstract removeLayer(layer: IBaseImageryLayer): void;
 
 	abstract setPosition(position: IImageryMapPosition): Observable<boolean>;

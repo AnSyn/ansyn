@@ -62,7 +62,7 @@ export class ImageryVideoMap extends BaseImageryMap<any> {
 		return [this.mainLayer];
 	}
 
-	getGroup(): IBaseImageryLayer {
+	getGroupLayers(): IBaseImageryLayer {
 		return null;
 	}
 	getPosition(): Observable<IImageryMapPosition> {

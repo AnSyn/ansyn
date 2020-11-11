@@ -1,7 +1,7 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { AnaglyphSensorAlertComponent } from './anaglyph-sensor-alert.component';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { GetProvidersMapsService, ImageryCommunicatorService } from '@ansyn/imagery';
 import { StoreModule, Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AnaglyphSensorService } from '../service/anaglyph-sensor.service';
@@ -22,6 +22,10 @@ describe('AnaglyphSensorAlertComponent', () => {
 				AnaglyphSensorService,
 				{
 					provide: AnaglyphConfig,
+					useValue: {}
+				},
+				{
+					provide: GetProvidersMapsService,
 					useValue: {}
 				}],
 			declarations: [AnaglyphSensorAlertComponent],

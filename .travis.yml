@@ -6,32 +6,23 @@ addons:
 language: node_js
 
 node_js:
-  - 'node'
+  - lts/*
 
 services:
   - docker
   - xvfb
 
-before_install:
-  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
-
 install:
+  - npm set progress=false
   - npm ci
 
-# Init GUI
-before_script:
-  - "export DISPLAY=:99.0"
-  #- apt-get install graphicsmagick # for e2e screenshots
-
 script:
-  - npm run lint
-  - npm run test:single-run
-  - npm run build:libs
-  - sh -x scripts/build.sh ansyn $TRAVIS_COMMIT $TRAVIS_TAG
+  - npm run lint || travis_terminate 1;
+  - npm run test:single-run || travis_terminate 1;
+  - npm run build:libs || travis_terminate 1;
+  - sh -x scripts/build.sh ansyn $TRAVIS_COMMIT $TRAVIS_TAG || travis_terminate 1;
 
-cache:
-  directories:
-  - ./node_modules
+cache: npm
 
 before_deploy:
   - docker --version

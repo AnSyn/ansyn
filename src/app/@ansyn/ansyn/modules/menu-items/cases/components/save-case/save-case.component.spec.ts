@@ -67,12 +67,12 @@ describe('SaveCaseComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('onSubmitCase should call dispatch with SaveCaseAsAction and call close()', () => {
+	fit('onSubmitCase should call dispatch with SaveCaseAsAction and call close()', () => {
 		spyOn(store, 'dispatch');
 		spyOn(component, 'close');
 		spyOn(store, 'select').and.callFake(() => of({state: {maps: {data: []}}}));
 		component.onSubmitCase();
-		expect(store.dispatch).toHaveBeenCalledWith(new SaveCaseAsAction(<any>{ name: component.caseName, state: {maps: {data: []}}}));
+		expect(store.dispatch).toHaveBeenCalledWith(new SaveCaseAsAction(<any>{ name: component.caseName, state: {maps: {data: [], activeMapId: undefined}}}));
 		expect(component.close).toHaveBeenCalled();
 	});
 });

@@ -5,7 +5,9 @@ import { CacheRequestService } from './cache-request.service';
 describe('CacheRequestService', () => {
 	let service: CacheRequestService;
 	beforeEach(() => {
-		TestBed.configureTestingModule({});
+		TestBed.configureTestingModule({
+			providers: [CacheRequestService]
+		});
 		service = TestBed.inject(CacheRequestService);
 	});
 

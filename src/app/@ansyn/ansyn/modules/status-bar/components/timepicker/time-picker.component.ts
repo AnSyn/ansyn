@@ -28,7 +28,7 @@ export class TimePickerComponent implements OnInit, OnDestroy {
 	}
 
 	private validateDate(date: Date) {
-		return date.getFullYear() < 1970 || date.getTime() > Date.now();
+		return date.getFullYear() >= 1970 && date.getTime() <= Date.now();
 	}
 
 	ngOnInit() {

@@ -8,7 +8,7 @@ import {
 	SetMinimalistViewModeAction, SetToastMessageAction
 } from '@ansyn/map-facade';
 import { LoggerService } from '../../../core/services/logger.service';
-import { debounceTime, filter, tap, mergeMap, catchError, finalize, } from 'rxjs/operators';
+import { debounceTime, filter, tap, mergeMap, catchError, finalize } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import { toBlob } from 'dom-to-image';
 import { MatDialogRef } from '@angular/material/dialog';

@@ -145,7 +145,7 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 		this.translateService.get('direction', '').subscribe( (direction) => this.isRtl = direction === 'rtl')
 	}
 
-	ngOnInit() {
+	ngOnInit(): void {
 	}
 
 	ngOnDestroy(): void {
@@ -153,6 +153,7 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 
 	advancedExportMaps(exportMetadata: IExportMapMetadata) {
 		const mapToBeExport = this.imageryCommunicatorService.provide(this.pdfExportMapId);
+
 		if (!mapToBeExport) {
 			throw new Error('No Such Map Error');
 		}
@@ -194,9 +195,9 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 					if (extra.descriptions) {
 						doc.rect(0, 0, size[0], 5, 'F');
 						doc.setTextColor(255, 255, 255);
-						doc.addFileToVFS('Lato-Regular.ttf', font);
-						doc.addFont('Lato-Regular.ttf', 'Lato', 'normal');
-						doc.setFont('Lato');
+						doc.addFileToVFS('TTWPGOTT.ttf', font);
+						doc.addFont('TTWPGOTT.ttf', 'TTWPGOTT', 'normal');
+						doc.setFont('TTWPGOTT');
 						doc.setFontSize(11);
 						doc.setR2L(true);
 						const loadOverlay = mapToBeExport.mapSettings.data.overlay;

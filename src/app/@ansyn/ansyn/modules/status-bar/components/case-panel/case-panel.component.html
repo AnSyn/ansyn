@@ -1,6 +1,6 @@
 <div *ngIf="!componentMode" class="rows">
 	<div class="row top">
-	<span [attr.tooltip-value]="selectedCaseName$ | async"
+	<span [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''" [attr.tooltip-value]="selectedCaseName$ | async"
 		  tooltip-class="bottom">
 		{{selectedCaseName$ | async}}
 	</span>

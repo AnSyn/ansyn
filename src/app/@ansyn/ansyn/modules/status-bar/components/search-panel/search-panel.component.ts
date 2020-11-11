@@ -226,8 +226,6 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 			if (!this.supportRangeDates()) {
 				this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.notSupportRangeDates }));
-			} else if (!this.checkTimeWasChange()) {
-				this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.timeWasNotChange }));
 			} else if (!this.setTimeCriteria()) {
 				this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.invalidDate }));
 			}

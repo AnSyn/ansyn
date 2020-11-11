@@ -162,27 +162,29 @@ div.cases-table {
 	}
 
 	&.rtl {
-		div.cases-table-body-row {
-			&.mouse-enter {
-				div.cases-table-body-row-data div.case-menu-container div.case-menu {
-					transform: translate(-10%, 50%);
-				}
-			}
-
-			div.cases-table-body-row-data {
-				div.case-menu-container {
-					div.case-menu {
-						transform: translate(50%, 50%);
+		div.cases-table-body {
+			div.cases-table-body-row {
+				&.mouse-enter {
+					div.cases-table-body-row-data div.case-menu-container div.case-menu {
+						transform: translate(-10%, 50%);
 					}
 				}
 
-				div.cases-table-case-name-col {
-					padding-right: unset;
-					padding-left: 3px;
+				div.cases-table-body-row-data {
+					div.case-menu-container {
+						div.case-menu {
+							transform: translate(50%, 50%);
+						}
+					}
+
+					div.cases-table-case-name-col {
+						padding-right: unset;
+						padding-left: 3px;
+					}
 				}
 			}
 		}
-	}
+	} // rtl
 }
 
 p.no-cases {

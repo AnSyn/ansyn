@@ -67,7 +67,7 @@ describe('SaveCaseComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	fit('onSubmitCase should call dispatch with SaveCaseAsAction and call close()', () => {
+	it('onSubmitCase should call dispatch with SaveCaseAsAction and call close()', () => {
 		spyOn(store, 'dispatch');
 		spyOn(component, 'close');
 		spyOn(store, 'select').and.callFake(() => of({state: {maps: {data: []}}}));

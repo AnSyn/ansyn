@@ -1,15 +1,19 @@
-import { combineLatest, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import ImageLayer from 'ol/layer/Image';
-import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
-import { Store } from '@ngrx/store';
+import RasterSource from 'ol/source/Raster';
+import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin, IMapSettings } from '@ansyn/imagery';
+import { Store, select } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
-import { IMAGE_PROCESS_ATTRIBUTE, OpenLayersDisabledMap, OpenLayersMap } from '@ansyn/ol';
+import {
+	OpenLayersDisabledMap,
+	OpenLayersMap
+} from '@ansyn/ol';
 import { OpenLayersImageProcessing } from './image-processing';
 import { distinctUntilChanged, filter, map, take, tap } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import { Inject } from '@angular/core';
 import { selectMaps } from '@ansyn/map-facade';
-import { ICaseMapState, IImageManualProcessArgs } from '../../../../menu-items/cases/models/case.model';
+import { IImageManualProcessArgs } from '../../../../menu-items/cases/models/case.model';
 import {
 	IImageProcParam,
 	IOverlayStatusConfig,
@@ -24,36 +28,27 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	communicator: CommunicatorEntity;
 	private _imageProcessing: OpenLayersImageProcessing;
 	private imageLayer: ImageLayer;
-	customMainLayer = null;
 
-	currentMap$ = this.store$.select(selectMaps).pipe(
-		map((mapsEntities) => mapsEntities[this.mapId]),
-		filter(Boolean)
-	);
-
-	isAutoImageProcessingActive$ = this.currentMap$.pipe(
-		map((currentMap: ICaseMapState) => {
-			return currentMap.data.isAutoImageProcessingActive;
+	isImageProcessActive$ = this.store$.pipe(
+		select(selectMaps),
+		map( maps => maps && maps[this.mapId]),
+		distinctUntilChanged((a, b) => {
+			return isEqual(a, b);
 		}),
-		distinctUntilChanged()
-	);
-
-	imageManualProcessArgs$ = this.currentMap$.pipe(
-		map((currentMap: ICaseMapState) => {
-			return currentMap.data.imageManualProcessArgs;
-		}),
-		distinctUntilChanged(isEqual)
+		filter(Boolean),
+		map( (map: IMapSettings) => {
+			return [map.data.isAutoImageProcessingActive, map.data.imageManualProcessArgs]
+		})
 	);
 
 	@AutoSubscription
-	onAutoImageProcessingAndManualImageProcessActive$ = combineLatest([this.isAutoImageProcessingActive$, this.imageManualProcessArgs$]).pipe(
+	onAutoImageProcessingAndManualImageProcessActive$ = this.isImageProcessActive$.pipe(
 		tap(([isAutoImageProcessingActive, imageManualProcessArgs]: [boolean, IImageManualProcessArgs]) => {
 			const isImageProcessActive = this.isImageProcessActive(isAutoImageProcessingActive, imageManualProcessArgs);
 			if (!isImageProcessActive) {
 				this.removeImageLayer();
 				return;
 			}
-
 			this.createImageLayer();
 			if (Boolean(this.imageLayer)) {
 				// auto
@@ -87,7 +82,6 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	}
 
 	onResetView(): Observable<boolean> {
-		this.setCustomMainLayer(null);
 		return of(true).pipe(
 			tap(() => this.recalculateManualImageProcessActive())
 		);
@@ -98,15 +92,8 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		this.onAutoImageProcessingAndManualImageProcessActive$.pipe(take(1)).subscribe();
 	}
 
-	setCustomMainLayer(layer) {
-		if (!isEqual(this.getMainLayer(), layer)) {
-			this.removeImageLayer();
-		}
-		this.customMainLayer = layer;
-	}
-
 	getMainLayer(): any {
-		return Boolean(this.customMainLayer) ? this.customMainLayer : this.communicator.ActiveMap.getMainLayer();
+		return this.communicator.ActiveMap.getMainLayer();
 	}
 
 	public setAutoImageProcessing(shouldPerform: boolean): void {
@@ -127,10 +114,16 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 			return;
 		}
 		const mainLayer = this.getMainLayer();
-		this.imageLayer = mainLayer.get(IMAGE_PROCESS_ATTRIBUTE);
-		if (!this.imageLayer) {
-			return;
-		}
+		const extent = mainLayer.getExtent();
+		const source = mainLayer.getSource();
+		this.imageLayer = new ImageLayer({
+			source: new RasterSource({
+				sources: [source],
+				operation: (pixels) => pixels[0],
+				operationType: 'image'
+			}),
+			extent: extent
+		});
 
 		this.communicator.ActiveMap.addLayer(this.imageLayer);
 		this.imageLayer.setZIndex(0);
@@ -139,6 +132,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 
 	removeImageLayer(): void {
 		if (this.imageLayer) {
+			this.imageLayer.getSource().dispose();
 			this.communicator.ActiveMap.removeLayer(this.imageLayer);
 			this._imageProcessing = new OpenLayersImageProcessing();
 			this.imageLayer = null;

@@ -15,7 +15,6 @@ import {
 import { IMAGE_PROCESS_ATTRIBUTE, OpenLayersMapSourceProvider } from '../open-layers.map-source-provider';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../../maps/openlayers-disabled-map/openlayers-disabled-map';
-import { removeWorkers } from '../../maps/open-layers-map/shared/openlayers-shared';
 import { MpTileSource } from './ol-utils/mp-tile-source';
 import { MpTileImageSource } from './ol-utils/mp-tile-image-source';
 
@@ -92,33 +91,9 @@ export class OpenLayerMarcoSourceProvider extends OpenLayersMapSourceProvider<IM
 				extent: layerViewExtent
 			});
 
-			const imageLayer = this.getMImageLayer(capabilitiesMeta, imagePath, approximateTramsforom, layerViewExtent, projectionKey);
-			tileLayer.set(IMAGE_PROCESS_ATTRIBUTE, imageLayer);
-			removeWorkers(imageLayer);
-
 			console.log('marco service, layer ready:', tileLayer);
 			return Promise.resolve(tileLayer);
 		});
-	}
-
-	private getMImageLayer(capabilitiesMeta, imagePath, approximateTramsforom, extent, projectionKey) {
-		// create Image Layer
-		const imageUrl = this.config.imageUrl.replace('{imagePath}', `${ imagePath }`);
-		let source = MpTileImageSource.create(
-			capabilitiesMeta,
-			imageUrl,
-			approximateTramsforom,
-			projectionKey);
-
-		source.crossOrigin = 'Anonymous';
-
-		let imageLayer = new ImageLayer({
-			source: source,
-			visible: true,
-			extent
-		});
-
-		return imageLayer;
 	}
 
 	private getWMTSCapabilities(url: string): Promise<any> {

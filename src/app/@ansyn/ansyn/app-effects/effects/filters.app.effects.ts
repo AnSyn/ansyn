@@ -54,10 +54,11 @@ import {
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { FilterType } from '../../modules/filters/models/filter-type';
 import { ICaseFacetsState } from '../../modules/menu-items/cases/models/case.model';
-import { IOverlay, IOverlayDrop, IOverlaySpecialObject } from '../../modules/overlays/models/overlay.model';
+import { IOverlay, IOverlaySpecialObject } from '../../modules/overlays/models/overlay.model';
 import { cloneDeep, get as _get, isEqual } from 'lodash';
 import { TranslateService } from '@ngx-translate/core';
 import { FilterCounters } from '../../modules/filters/models/counters/filter-counters.interface';
+import { LoggerService } from '../../modules/core/services/logger.service';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -197,14 +198,22 @@ export class FiltersAppEffects {
 				return { filter: metadataKey, newCounters: cloneCounters };
 			});
 			return new UpdateFiltersCounters(filtersChanges);
-		}));
+		}),
+		catchError((err) => {
+			console.error(err);
+			this.loggerService.error(err.message || err.toString());
+			return of(new UpdateFiltersCounters([]));
+		})
+	);
 
-
-	constructor(protected actions$: Actions,
-				protected store$: Store<IAppState>,
-				protected genericTypeResolverService: GenericTypeResolverService,
-				public translate: TranslateService,
-				@Inject(filtersConfig) protected config: IFiltersConfig) {
+	constructor(
+		protected actions$: Actions,
+		protected store$: Store<IAppState>,
+		protected genericTypeResolverService: GenericTypeResolverService,
+		public translate: TranslateService,
+		@Inject(filtersConfig) protected config: IFiltersConfig,
+		protected loggerService: LoggerService
+	) {
 	}
 
 	resolveMetadata(filterType: FilterType): FilterMetadata {

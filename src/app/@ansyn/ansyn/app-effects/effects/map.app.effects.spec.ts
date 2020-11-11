@@ -18,7 +18,7 @@ import * as extentFromGeojson from '@ansyn/imagery';
 import {
 	BaseMapSourceProvider,
 	CacheService,
-	CommunicatorEntity,
+	CommunicatorEntity, GetProvidersMapsService,
 	IBaseImageryMapConstructor,
 	IMAGERY_CONFIG,
 	IMAGERY_MAPS,
@@ -242,6 +242,10 @@ describe('MapAppEffects', () => {
 				},
 				{
 					provide: MAP_SOURCE_PROVIDERS_CONFIG,
+					useValue: {}
+				},
+				{
+					provide: GetProvidersMapsService,
 					useValue: {}
 				}
 			]

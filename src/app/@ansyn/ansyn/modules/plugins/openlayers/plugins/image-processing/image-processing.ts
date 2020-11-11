@@ -1,4 +1,4 @@
-import { ProjectableRaster } from '@ansyn/ol';
+import RasterSource from 'ol/source/Raster';
 
 // skipOnValue is the value which the image do not require any processing (e.i. the natural/default value)
 export const IMG_PROCESS_ORDER = [
@@ -18,16 +18,16 @@ interface IProcessOperation {
 // design based on : https://openlayers.org/en/latest/examples/raster.html
 export class OpenLayersImageProcessing {
 	private _libs: Object;
-	private _raster: ProjectableRaster | any;
+	private _raster: RasterSource | any;
 
-	constructor(layerSource?: ProjectableRaster) {
+	constructor(layerSource?: RasterSource) {
 		this.initializeOperations();
 		if (layerSource) {
 			this.initializeRaster(layerSource);
 		}
 	}
 
-	initializeRaster(layerRaster: ProjectableRaster) {
+	initializeRaster(layerRaster: RasterSource) {
 		this._raster = layerRaster;
 		// register pixelOperations to raster event
 		this._raster.on('beforeoperations', (event) => {

@@ -6,6 +6,7 @@
 	<form #f="ngForm" class="edit-case-form" (ngSubmit)="onSubmitCase(selectContextElement.selectedIndex)">
 
 		<ansyn-input
+			[ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''"
             #nameControl
 			[(ngModel)]="caseModel.name"
 			select

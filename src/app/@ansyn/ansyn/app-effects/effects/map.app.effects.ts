@@ -308,8 +308,8 @@ export class MapAppEffects {
 	@Effect()
 	searchByExtentPolygon$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.POSITION_CHANGED, MapActionTypes.SET_ACTIVE_MAP_ID, StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS),
-		withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus), this.store$.select(selectRegion)),
 		debounceTime(this.screenViewConfig.debounceTime),
+		withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus), this.store$.select(selectRegion)),
 		filter(([action, mapList, activeMapId, geoFilterStatus, region]) => Boolean(mapList[activeMapId]) && geoFilterStatus.type === CaseGeoFilter.ScreenView),
 		map(([action, mapList, activeMapId, geoFilterStatus, region]) => {
 			const activeMap: IMapSettings = mapList[activeMapId];

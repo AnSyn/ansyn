@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import { OwlDateTimeComponent } from '@ansyn/ng-pick-datetime';
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import { SetToastMessageAction } from '@ansyn/map-facade';
+import { toastMessages } from '../../../core/models/toast-messages';
 
 @Component({
 	selector: 'ansyn-timepicker',
@@ -22,12 +23,12 @@ export class TimePickerComponent implements OnInit, OnDestroy {
 		if (this.validateDate(from) && this.validateDate(to)) {
 			this.store$.dispatch(new SetOverlaysCriteriaAction({ time: { from, to } }));
 		} else {
-			this.store$.dispatch(new SetToastMessageAction({ toastText: 'There are no matching overlays on this date' }));
+			this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.notSupportRangeDates }));
 		}
 	}
 
 	private validateDate(date: Date) {
-		return date.getTime() <= Date.now();
+		return date.getFullYear() >= 1970 && date.getTime() <= Date.now();
 	}
 
 	ngOnInit() {

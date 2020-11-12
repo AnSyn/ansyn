@@ -21,6 +21,8 @@ import { jsPDF } from 'jspdf';
 import { TranslateService } from '@ngx-translate/core';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { Observable, of, EMPTY } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { arrayBufferToBinaryString } from 'blob-util'
 
 enum GraphicExportEnum {
 	All = 'All',
@@ -96,7 +98,7 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 
 	_pageSize = DEFAULT_PAGE_SIZE;
 
-	get pageSize() {
+	get pageSize(): string {
 		if (this.isPDF()) {
 			return this._pageSize;
 		}
@@ -131,10 +133,16 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 				protected dialogRef: MatDialogRef<ExportMapsPopupComponent>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected translateService: TranslateService,
+				protected http: HttpClient,
 				@Inject(DOCUMENT) protected document: any,
 				@Inject(toolsConfig) public toolsConfigData: IToolsConfig) {
 		this.logger.info(LOGS.request);
 		this.translateService.get('direction', '').subscribe( (direction) => this.isRtl = direction === 'rtl')
+	}
+
+	getFont(): Observable<ArrayBuffer> {
+		const pathToFontFile = 'assets/fonts/TTWPGOTT.ttf';
+		return this.http.get(pathToFontFile, {responseType: 'arraybuffer'});
 	}
 
 	ngOnInit(): void {
@@ -178,25 +186,32 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 				}
 				return of(exportMapData);
 			}),
-			tap( (exportMapData: IExportMapData) => {
-				const {size, extra} = exportMetadata;
-				const doc = new jsPDF('landscape', undefined, this.pageSize);
-				doc.addImage(exportMapData.canvas.toDataURL('image/jpeg'), 'JPEG', 0, 0, exportMetadata.size[0], exportMetadata.size[1]);
-				if (extra.descriptions) {
-					doc.rect(0, 0, size[0], 5, 'F');
-					doc.setTextColor(255, 255, 255);
-					doc.setFontSize(11);
-					const loadOverlay = mapToBeExport.mapSettings.data.overlay;
-					const desc = Boolean(loadOverlay) ? this.getDescriptionFromOverlay(loadOverlay) : 'Base Map';
-					doc.text(this.translateService.instant(desc), size[0] / 2, 5, {align: 'center', baseline: 'bottom'});
-				}
-				if (exportMapData.compass) {
-					doc.addImage(exportMapData.compass.toDataURL('image/png'), 'PNG', 0, 0, 25, 25); // we use png for transparent compass
-				}
+			tap((exportMapData: IExportMapData) => {
+				this.getFont().subscribe(res => {
+					const font = arrayBufferToBinaryString(res);
+					const {size, extra} = exportMetadata;
+					const doc = new jsPDF('landscape', undefined, this.pageSize);
+					doc.addImage(exportMapData.canvas.toDataURL('image/jpeg'), 'JPEG', 0, 0, exportMetadata.size[0], exportMetadata.size[1]);
+					if (extra.descriptions) {
+						doc.rect(0, 0, size[0], 5, 'F');
+						doc.setTextColor(255, 255, 255);
+						doc.addFileToVFS('TTWPGOTT.ttf', font);
+						doc.addFont('TTWPGOTT.ttf', 'TTWPGOTT', 'normal');
+						doc.setFont('TTWPGOTT');
+						doc.setFontSize(11);
+						doc.setR2L(true);
+						const loadOverlay = mapToBeExport.mapSettings.data.overlay;
+						const desc = Boolean(loadOverlay) ? this.getDescriptionFromOverlay(loadOverlay) : 'Base Map';
+						doc.text(this.translateService.instant(desc), size[0] / 2, 5, {align: 'center', baseline: 'bottom'});
+					}
+					if (exportMapData.compass) {
+						doc.addImage(exportMapData.compass.toDataURL('image/png'), 'PNG', 0, 0, 25, 25); // we use png for transparent compass
+					}
 
-				doc.save('map.pdf');
-				this.logger.info(LOGS.success);
-			}),
+					doc.save('map.pdf');
+					this.logger.info(LOGS.success);
+					});
+				}),
 			catchError( (err) => {
 				console.error(err);
 				this.logger.error(LOGS.failed);

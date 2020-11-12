@@ -1,5 +1,5 @@
 import { Component, EventEmitter, HostBinding, OnInit, Output, OnDestroy } from '@angular/core';
-import { Store, select } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
 import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
 import { animate, style, transition, trigger } from '@angular/animations';
@@ -8,6 +8,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { ICasePreview } from '../../models/case.model';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
+import { TranslateService } from '@ngx-translate/core';
 
 const animationsDuring = '0.2s';
 
@@ -34,6 +35,9 @@ const animations: any[] = [
 export class DeleteCaseComponent implements OnInit, OnDestroy {
 	@HostBinding('@modalContent') readonly modalContent = true;
 
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
 	@AutoSubscription
 	activeCase$ = this.store.select(casesStateSelector).pipe(
 		map((cases) => cases.entities[cases.modal.id]),
@@ -44,7 +48,11 @@ export class DeleteCaseComponent implements OnInit, OnDestroy {
 
 	@Output() submitCase = new EventEmitter();
 
-	constructor(protected store: Store<ICasesState>, protected casesService: CasesService) {
+	constructor(
+		protected store: Store<ICasesState>,
+		protected casesService: CasesService,
+		protected translateService: TranslateService
+	) {
 	}
 
 	ngOnInit() {

@@ -19,7 +19,6 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
 import { TranslateService } from '@ngx-translate/core';
 import { SetBadgeAction } from '@ansyn/menu';
-import { SetLayoutAction } from '@ansyn/map-facade';
 
 interface ITableHeader {
 	headerName: string;
@@ -182,7 +181,6 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 
 	openOverlay(id: string): void {
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id }));
-		this.store$.dispatch(new SetLayoutAction('layout2'));
 	}
 
 	sortOverlays(header: ITableHeader): void {

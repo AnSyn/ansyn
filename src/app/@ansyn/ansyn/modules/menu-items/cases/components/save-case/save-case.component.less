@@ -1,11 +1,13 @@
 @import "ansyn/less/common";
 
+@margin: 30px;
+
 :host {
 	display: block;
 	position: absolute;
 	width: 337px;
 	top: 15px;
-	left: 30px;
+	left: @margin;
 
 	div.save-case {
 		background: white;
@@ -70,7 +72,7 @@
 
 	&.rtl {
 		left: unset;
-		right: 30px;
+		right: @margin;
 
 		div.save-case {
 			button.close {

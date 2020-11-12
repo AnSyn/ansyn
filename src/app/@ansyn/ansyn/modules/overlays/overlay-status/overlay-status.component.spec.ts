@@ -32,7 +32,7 @@ describe('OverlayStatusComponent', () => {
 			declarations: [OverlayStatusComponent, ImageProcessingControlComponent],
 			providers: [provideMockActions(() => actions),
 				{ provide: mapFacadeConfig, useValue: {} },
-				{ provide: overlayStatusConfig, useValue: {} }
+				{ provide: overlayStatusConfig, useValue: {ImageProcParams: []} }
 			],
 			imports: [
 				FormsModule,

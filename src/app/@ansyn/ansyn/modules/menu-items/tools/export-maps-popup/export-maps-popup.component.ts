@@ -128,11 +128,6 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 		return this.toolsConfigData.exportMap;
 	}
 
-	getFont():Observable<ArrayBuffer> {
-		const pathToFontFile = 'assets/fonts/TTWPGOTT.ttf';
-		return this.http.get(pathToFontFile, {responseType: 'arraybuffer'});
-	}
-
 	constructor(protected store$: Store<any>,
 				protected logger: LoggerService,
 				protected dialogRef: MatDialogRef<ExportMapsPopupComponent>,
@@ -143,6 +138,11 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 				@Inject(toolsConfig) public toolsConfigData: IToolsConfig) {
 		this.logger.info(LOGS.request);
 		this.translateService.get('direction', '').subscribe( (direction) => this.isRtl = direction === 'rtl')
+	}
+
+	getFont(): Observable<ArrayBuffer> {
+		const pathToFontFile = 'assets/fonts/TTWPGOTT.ttf';
+		return this.http.get(pathToFontFile, {responseType: 'arraybuffer'});
 	}
 
 	ngOnInit(): void {

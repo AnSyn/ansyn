@@ -41,6 +41,7 @@ import { DOCUMENT } from '@angular/common';
 import { IOverlayDrop } from '../../models/overlay.model';
 import { TranslateService } from '@ngx-translate/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { SetLayoutAction } from '@ansyn/map-facade';
 
 export const BASE_DROP_COLOR = '#8cceff';
 selection.prototype.moveToFront = function () {
@@ -206,6 +207,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	onClick({ id }: IEventDropsEvent): void {
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id }));
+		this.store$.dispatch(new SetLayoutAction('layout2'));
 	}
 
 	isNoOverlaysLeft(): boolean {

@@ -15,6 +15,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { FormsModule } from '@angular/forms';
 import { MockComponent } from "../../core/test/mock-component";
 import { ImageProcessingControlComponent } from "./components/image-processing-control/image-processing-control.component";
+import { overlayStatusConfig } from './config/overlay-status-config';
 
 describe('OverlayStatusComponent', () => {
 	let component: OverlayStatusComponent;
@@ -31,6 +32,7 @@ describe('OverlayStatusComponent', () => {
 			declarations: [OverlayStatusComponent, ImageProcessingControlComponent],
 			providers: [provideMockActions(() => actions),
 				{ provide: mapFacadeConfig, useValue: {} },
+				{ provide: overlayStatusConfig, useValue: {} }
 			],
 			imports: [
 				FormsModule,

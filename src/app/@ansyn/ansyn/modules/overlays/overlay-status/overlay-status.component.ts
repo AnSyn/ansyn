@@ -106,13 +106,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 				}
 			}));
 
-	
-	constructor(@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig,
-		public store$: Store<any>, protected actions$: Actions, protected element: ElementRef, protected clickOutsideService: ClickOutsideService) {
-		this.isPreset = true;
-		this.isFavorite = true;
-	}
-
 	@AutoSubscription
 	manualImageProcessingParams$: Observable<Object> = this.store$.select(overlayStatusStateSelector).pipe(
 		map((overlayStatusState: IOverlayStatusState ) => overlayStatusState.manualImageProcessingParams),
@@ -120,12 +113,18 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 			const defalutParms = {};
 			this.overlayStatusConfig.ImageProcParams.forEach(obj => {
 				const key = obj.name
-				defalutParms[key]= obj.defaultValue
+				defalutParms[key] = obj.defaultValue
 			});
 			this.isChanged = !isEqual(defalutParms, imageManualProcessArgs);
 		})
 	);
-	
+
+	constructor(@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig,
+		public store$: Store<any>, protected actions$: Actions, protected element: ElementRef, protected clickOutsideService: ClickOutsideService) {
+		this.isPreset = true;
+		this.isFavorite = true;
+	}
+
 	@AutoSubscription
 	layersVisibility$ = () => combineLatest([
 		this.store$.select(selectSelectedLayersIds),

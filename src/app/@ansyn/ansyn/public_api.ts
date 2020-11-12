@@ -301,7 +301,7 @@ export { ICaseMapState } from './modules/menu-items/cases/models/case.model';
 
 
 export {
-	SetOverlaysCriteriaAction, UpdateOverlaysCountAction,
+	SetOverlaysCriteriaAction,
 	SetMiscOverlays,
 	SetMiscOverlay
 } from './modules/overlays/actions/overlays.actions';

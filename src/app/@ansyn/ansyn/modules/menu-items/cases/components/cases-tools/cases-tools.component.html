@@ -1,11 +1,9 @@
-<div class="buttons-group">
-	<button ansynButton type="button" (click)="showEditCaseModal()">
-		{{'Add Case' | translate}}
-	</button>
-	<button ansynButton type="button" (click)="showSaveCaseModal()">
-		{{'Save As' | translate}}
-	</button>
-	<button ansynButton type="button" [disabled]="isDefaultCaseId" (click)="manualSave()">
-		{{'Save' | translate}}
-	</button>
-</div>
+<button type="button" (click)="showEditCaseModal()">
+	<i class="icon icon-favorite-full"></i>
+</button>
+<button type="button" (click)="showSaveCaseModal()">
+	<i class="icon icon-more"></i>
+</button>
+<button type="button" [disabled]="isDefaultCaseId" (click)="manualSave()">
+	<i class="icon icon-favorite-empty"></i>
+</button>

@@ -30,6 +30,9 @@ import { MapFacadeModule } from '@ansyn/map-facade';
 	],
 	declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent, CasesAutoSaveComponent],
 	entryComponents: [CasesComponent, EditCaseComponent, SaveCaseComponent, DeleteCaseComponent],
+	exports: [
+		CasesToolsComponent
+	],
 	providers: [CasesService]
 })
 export class CasesModule {

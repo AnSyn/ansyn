@@ -2,7 +2,7 @@
 @import "ansyn/less/colors";
 @import "ansyn/less/globals";
 @import "ansyn/less/z-index-globals";
-
+@import "../../less/status-bar-common.less";
 @popup-padding-bottom: 15px;
 
 :host {
@@ -11,19 +11,14 @@
 	display: flex;
 	color: white;
 
+	div.bookmark {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin: 0 10px;
+	}
 	div.search {
 		display: flex;
-		flex-grow: 1;
-		border-right: 1px solid @status-bar-delimiter;
+		flex: 1;
 	}
-
-	/deep/ i.icon {
-		margin-right: 5px;
-
-		&:before {
-			vertical-align: middle;
-		}
-	}
-
-
 }

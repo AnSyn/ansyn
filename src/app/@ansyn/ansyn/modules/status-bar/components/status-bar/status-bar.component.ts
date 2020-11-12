@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -7,7 +8,7 @@ import { Component } from '@angular/core';
 })
 
 export class StatusBarComponent {
-	constructor() {
+	constructor(@Inject(COMPONENT_MODE) public componentMode: boolean) {
 	}
 
 }

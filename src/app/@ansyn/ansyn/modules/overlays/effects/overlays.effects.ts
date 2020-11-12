@@ -3,7 +3,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { forkJoin, from, Observable } from 'rxjs';
-import { catchError,  filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
 	CheckTrianglesAction,
 	DisplayOverlayAction,
@@ -44,7 +44,7 @@ export class OverlaysEffects {
 
 	@Effect()
 	setOverlaysContainedInRegionField$ = this.actions$.pipe(
-		ofType(OverlaysActionTypes.SET_OVERLAYS_CRITERIA, OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
+		ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
 		withLatestFrom(this.store$.select(selectOverlaysCriteria), this.store$.select(selectOverlaysArray)),
 		filter(([action, criteria, overlays]: [any, IOverlaysCriteria, IOverlay[]]) => Boolean(overlays) && overlays.length > 0),
 		mergeMap(([action, criteria, overlays]: [any, IOverlaysCriteria, IOverlay[]]) => {

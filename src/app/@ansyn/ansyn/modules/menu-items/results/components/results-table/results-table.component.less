@@ -120,14 +120,6 @@
 				&.mouse-enter {
 					color: #156879;
 					background: #EBF8FA;
-
-					div.results-table-body-row-data div.results-menu-container div.results-menu {
-						transform: translate(10%, 50%);
-						opacity: 1;
-						visibility: visible;
-						pointer-events: auto;
-					}
-
 				}
 
 				&.active {
@@ -199,38 +191,6 @@
 						padding-top: 20px;
 						flex: 2;
 					}
-
-					div.results-menu-container {
-						flex: 0;
-
-						div.results-menu {
-							display: flex;
-							transition: visibility .3s, transform .3s, opacity .3s;
-							opacity: 0;
-							visibility: hidden;
-							z-index: @z-index-case-menu;
-							position: fixed;
-							border: 0.5px solid #404040;
-							box-sizing: border-box;
-							box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24), 0 0 2px rgba(0, 0, 0, 0.12);
-							border-radius: 4px;
-							background: #FFFFFF;
-							transform: translate(-50%, 50%);
-							pointer-events: none;
-
-							button {
-								background: transparent;
-								border: 1px solid transparent;
-								font-size: 20px;
-
-								&:hover {
-									box-sizing: border-box;
-									border: 1px solid #7b7b7b;
-								}
-							}
-						}
-					}
-
 				}
 			}
 		}
@@ -284,16 +244,6 @@
 						div.results-table-case-name-col {
 							margin-left: unset;
 							margin-right: 29px;
-						}
-						div.results-menu-container {
-							div.results-menu {
-								transform: translate(50%, 50%);
-							}
-						}
-					}
-					&.mouse-enter {
-						div.results-table-body-row-data div.results-menu-container div.results-menu {
-							transform: translate(-10%, 50%);
 						}
 					}
 				}

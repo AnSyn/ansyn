@@ -72,11 +72,13 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	onReadLayerSuccess$ = this.onReadLayer$.pipe(
+		map((layer) => {
+			this.generateFeatureCollection(layer.data, layer.name);
+		}),
 		withLatestFrom(this.store.select(mapStateSelector)),
 		map(([layer, mapState]: [any, IMapState]) => [layer, MapFacadeService.activeMap(mapState)]),
 		filter(([layer, activeMap]: [any, IMapSettings]) => !Boolean(activeMap.data.overlay)),
 		map(([layer, activeMap]: [any, IMapSettings]) => {
-			this.generateFeatureCollection(layer.data, layer.name);
 			return this.calculateLayerBbox(layer.data);
 		}),
 		filter(Boolean),

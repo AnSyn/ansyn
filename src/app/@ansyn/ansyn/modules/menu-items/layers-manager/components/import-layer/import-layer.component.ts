@@ -74,6 +74,7 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	onReadLayerSuccess$ = this.onReadLayer$.pipe(
 		map((layer) => {
 			this.generateFeatureCollection(layer.data, layer.name);
+			return layer;
 		}),
 		withLatestFrom(this.store.select(mapStateSelector)),
 		map(([layer, mapState]: [any, IMapState]) => [layer, MapFacadeService.activeMap(mapState)]),

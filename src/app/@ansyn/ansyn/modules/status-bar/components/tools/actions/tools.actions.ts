@@ -3,7 +3,7 @@ import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { AnnotationMode, IUpdateFeatureEvent } from '@ansyn/ol';
 import { IMeasureDataOptions, SubMenuEnum, toolsFlags } from '../models/tools.model';
 import { type } from '../../../../core/utils/type';
-import { ILogMessage } from 'src/app/@ansyn/map-facade/models/logger.model';
+import { ILogMessage } from '@ansyn/map-facade';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),

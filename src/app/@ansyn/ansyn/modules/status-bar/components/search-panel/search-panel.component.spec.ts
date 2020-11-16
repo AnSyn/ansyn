@@ -20,7 +20,7 @@ import {
 } from '../../../overlays/reducers/overlays.reducer';
 import { ClickOutsideDirective } from '../../../core/click-outside/click-outside.directive';
 import { TranslateModule } from '@ngx-translate/core';
-import { toolsFeatureKey, ToolsReducer } from '../../../menu-items/tools/reducers/tools.reducer';
+import { toolsFeatureKey, ToolsReducer } from '../../../status-bar/components/tools/reducers/tools.reducer';
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
 import { mockIndexProviders } from '../../../core/test/mock-providers';

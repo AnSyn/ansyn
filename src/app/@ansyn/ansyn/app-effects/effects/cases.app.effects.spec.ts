@@ -31,7 +31,7 @@ import {
 } from '../../modules/menu-items/cases/actions/cases.actions';
 import { casesConfig, CasesService } from '../../modules/menu-items/cases/services/cases.service';
 import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/reducers/cases.reducer';
-import { toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
+import { toolsConfig } from '../../modules/status-bar/components/tools/models/tools-config';
 import { OverlayReducer, overlaysFeatureKey } from '../../modules/overlays/reducers/overlays.reducer';
 import {
 	DisplayOverlayAction,

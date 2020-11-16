@@ -1,4 +1,4 @@
-<div class="container" [ngClass]="collection.type">
+<div class="container" [ngClass]="collection.type" [class.rtl]="'rtl' === ('direction' | translate)">
 
 	<div class="title-row">
 		<span class="title">{{collection.type | translate}}</span>
@@ -27,7 +27,6 @@
 	</div>
 
 	<ansyn-layer *ngFor="let layer of collection.data; let index = index"
-				 [ngClass]="'rtl' === ('direction' | translate) ? 'direction-rtl' : ''"
 				 [@layersTrigger]="show"
 				 [layer]="layer"
 				 [showOnly]="collection.data.length < 2">

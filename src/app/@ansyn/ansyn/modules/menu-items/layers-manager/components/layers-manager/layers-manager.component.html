@@ -1,4 +1,4 @@
-<div class="collection">
+<div class="collection" [class.rtl]="'rtl' === ('direction' | translate)">
 	<div class="all-layers scrolled">
 		<ng-container *ngFor="let collection of layers$ | async">
 			<ansyn-layer-collection [collection]="collection"></ansyn-layer-collection>

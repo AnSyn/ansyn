@@ -22,12 +22,6 @@ div.container {
 		}
 
 		ansyn-layer {
-			&.direction-rtl {
-				/deep/.ansyn-checkbox-text {
-					direction: rtl;
-				}
-			}
-
 			&:hover {
 				background: rgba(255, 255, 255, 0.4);
 
@@ -105,5 +99,35 @@ div.container {
 			cursor: pointer;
 		}
 	}
-}
 
+	&.rtl {
+		&.Annotation {
+			ansyn-layer {
+				&:hover {
+					ansyn-layer-menu {
+						transform: translate(-60%, -5px);
+					}
+				}
+			}
+		}
+
+		div.title-row {
+			div.actions {
+				right: unset;
+				left: 30px;
+			}
+			button.down-arrow {
+				border-left: unset;
+				border-right: 2px solid #FFFFFF;
+				float: left;
+				margin-right: unset;
+				margin-left: 17px;
+			}
+			div.show-all {
+				float: left;
+				margin-right: unset;
+				margin-left: 7px;
+			}
+		}
+	}
+}

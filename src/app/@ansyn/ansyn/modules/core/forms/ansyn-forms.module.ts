@@ -11,14 +11,12 @@ import { ComboBoxComponent } from './combo-box/combo-box.component';
 import { ComboBoxTriggerComponent } from './combo-box-trigger/combo-box-trigger.component';
 import { FileInputComponent } from './file-input/file-input.component';
 import { MatInputModule } from '@angular/material/input';
-import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		MatInputModule,
-		FormsModule,
-		TranslateModule
+		FormsModule
 	],
 	declarations: [
 		AnsynCheckboxComponent,

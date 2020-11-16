@@ -1,7 +1,7 @@
 import { Observable, of } from 'rxjs';
 import ImageLayer from 'ol/layer/Image';
 import RasterSource from 'ol/source/Raster';
-import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin, IMapSettings } from '@ansyn/imagery';
+import { BaseImageryPlugin, CommunicatorEntity, ImageryLayerProperties, ImageryPlugin, IMapSettings } from '@ansyn/imagery';
 import { Store, select } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
 import {
@@ -93,7 +93,11 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	}
 
 	getMainLayer(): any {
-		return this.communicator.ActiveMap.getMainLayer();
+		const overlay = this.communicator.ActiveMap.getLayers().find(layer => layer.get(ImageryLayerProperties.IS_OVERLAY))
+		if(overlay) {
+			return overlay;
+		}
+		return ;
 	}
 
 	public setAutoImageProcessing(shouldPerform: boolean): void {

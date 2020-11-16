@@ -33,7 +33,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	isDialogShowing = false;
 	public displayModeOn = false;
 	public flags: Map<toolsFlags, boolean>;
-
+	toolTipDirection = 'bottom'
 	@AutoSubscription
 	public flags$: Observable<Map<toolsFlags, boolean>> = this.store$.select(selectToolFlags).pipe(
 		tap((flags: Map<toolsFlags, boolean>) => this.flags = flags)

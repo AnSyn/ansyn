@@ -9,9 +9,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { mapFacadeConfig, ProjectionConverterService } from '@ansyn/map-facade';
 import { toolsConfig } from '../../models/tools-config';
 import { TranslateModule } from '@ngx-translate/core';
-import { CoreModule } from 'src/app/@ansyn/ansyn/modules/core/core.module';
-import { LoggerConfig } from 'src/app/@ansyn/ansyn/modules/core/models/logger.config';
-import { CoreConfig } from 'src/app/@ansyn/ansyn/modules/core/models/core.config';
+import { CoreModule } from '../../../../../..//modules/core/core.module';
+import { LoggerConfig } from '../../../../../..//modules/core/models/logger.config';
+import { CoreConfig } from '../../../../../../modules/core/models/core.config';
 
 describe('GoToComponent', () => {
 	let component: GoToComponent;

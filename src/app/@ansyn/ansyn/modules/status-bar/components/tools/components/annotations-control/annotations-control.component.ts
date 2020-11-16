@@ -18,10 +18,10 @@ import { IVisualizerStyle, getOpacityFromColor } from '@ansyn/imagery';
 import { filter, map, tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ANNOTATION_MODE_LIST, AnnotationMode, IStyleWeight } from '@ansyn/ol';
-import { selectActiveAnnotationLayer, selectLayers } from 'src/app/@ansyn/ansyn/modules/menu-items/layers-manager/reducers/layers.reducer';
-import { ILayer, LayerType } from 'src/app/@ansyn/ansyn/modules/menu-items/layers-manager/models/layers.model';
-import { ClickOutsideService } from 'src/app/@ansyn/ansyn/modules/core/click-outside/click-outside.service';
-import { SetActiveAnnotationLayer } from 'src/app/@ansyn/ansyn/modules/menu-items/layers-manager/actions/layers.actions';
+import { selectActiveAnnotationLayer, selectLayers } from '../../../../..//menu-items/layers-manager/reducers/layers.reducer';
+import { ILayer, LayerType } from '../../../../../menu-items/layers-manager/models/layers.model';
+import { ClickOutsideService } from '../../../../..//core/click-outside/click-outside.service';
+import { SetActiveAnnotationLayer } from '../../../../..//menu-items/layers-manager/actions/layers.actions';
 
 export enum SelectionBoxTypes {
 	None,

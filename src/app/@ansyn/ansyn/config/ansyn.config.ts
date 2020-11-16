@@ -10,7 +10,6 @@ import { AnaglyphSensorAlertComponent } from '../modules/plugins/openlayers/plug
 import { CredentialsComponent } from '../modules/menu-items/credentials/components/credentials/credentials.component';
 import { ResultsComponent } from "../modules/menu-items/results/components/results/results.component";
 import { FiltersCollectionComponent } from '../modules/filters/components/filters-collection/filters-collection.component';
-import { ToolsComponent } from '../modules/status-bar/components/tools/tools/tools.component';
 
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
 	ansynAlerts: [

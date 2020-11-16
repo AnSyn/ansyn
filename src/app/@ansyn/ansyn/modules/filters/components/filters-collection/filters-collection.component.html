@@ -1,4 +1,4 @@
-<div class="collection">
+<div class="collection" [class.rtl]="'rtl' === ('direction' | translate)">
 	<ansyn-slider-checkbox [checked]="onlyFavorite" (checkedChange)="showOnlyFavorites($event)"
 						   [disabled]="disableShowOnlyFavoritesSelection">
 		{{'Show only favorites' | translate}}

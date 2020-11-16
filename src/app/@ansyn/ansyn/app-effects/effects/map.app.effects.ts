@@ -60,7 +60,7 @@ import {
 	SetActiveCenter,
 	SetMapGeoEnabledModeToolsActionStore,
 	SetMapSearchBox
-} from '../../modules/menu-items/tools/actions/tools.actions';
+} from '../../modules/status-bar/components/tools/actions/tools.actions';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
@@ -80,7 +80,7 @@ import {
 } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { isEqual } from 'lodash';
-import { selectGeoRegisteredOptionsEnabled } from '../../modules/menu-items/tools/reducers/tools.reducer';
+import { selectGeoRegisteredOptionsEnabled } from '../../modules/status-bar/components/tools/reducers/tools.reducer';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import {
 	IOverlayStatusConfig,

@@ -27,7 +27,7 @@ import { TasksModule } from './modules/menu-items/algorithms/tasks.module';
 import { CasesModule } from './modules/menu-items/cases/cases.module';
 import { LayersManagerModule } from './modules/menu-items/layers-manager/layers-manager.module';
 import { SettingsModule } from './modules/menu-items/settings/settings.module';
-import { ToolsModule } from './modules/menu-items/tools/tools.module';
+import { ToolsModule } from './modules/status-bar/components/tools/tools.module';
 import { OverlaysModule } from './modules/overlays/overlays.module';
 import { AnsynPluginsModule } from './modules/plugins/ansyn-plugins.module';
 import { StatusBarModule } from './modules/status-bar/status-bar.module';

@@ -11,7 +11,7 @@ import {
 	ResetAppAction,
 	SetAutoClose
 } from '@ansyn/menu';
-import { selectSubMenu } from '../../modules/menu-items/tools/reducers/tools.reducer';
+import { selectSubMenu } from '../../modules/status-bar/components/tools/reducers/tools.reducer';
 import { map, mergeMap } from 'rxjs/operators';
 import { RedrawTimelineAction, SetTotalOverlaysAction } from '../../modules/overlays/actions/overlays.actions';
 import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';

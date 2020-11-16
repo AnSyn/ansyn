@@ -3,7 +3,6 @@ import { OverlayOutOfBoundsComponent } from '../components/overlay-out-of-bounds
 import { IAlert } from '../modules/alerts/alerts.model';
 import { CasesComponent } from '../modules/menu-items/cases/components/cases/cases.component';
 import { LayersManagerComponent } from '../modules/menu-items/layers-manager/components/layers-manager/layers-manager.component';
-import { ToolsComponent } from '../modules/menu-items/tools/tools/tools.component';
 import { SettingsComponent } from '../modules/menu-items/settings/settings/settings.component';
 import { TasksComponent } from '../modules/menu-items/algorithms/components/tasks/tasks.component';
 import { anaglyphSensorAlertKey } from '../modules/plugins/openlayers/plugins/anaglyph-sensor/plugin/anaglyph-sensor.plugin';
@@ -11,6 +10,7 @@ import { AnaglyphSensorAlertComponent } from '../modules/plugins/openlayers/plug
 import { CredentialsComponent } from '../modules/menu-items/credentials/components/credentials/credentials.component';
 import { ResultsComponent } from "../modules/menu-items/results/components/results/results.component";
 import { FiltersCollectionComponent } from '../modules/filters/components/filters-collection/filters-collection.component';
+import { ToolsComponent } from '../modules/status-bar/components/tools/tools/tools.component';
 
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
 	ansynAlerts: [
@@ -53,11 +53,6 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			name: 'Data Layers',
 			component: LayersManagerComponent,
 			iconClass: 'icon-main-data-layers'
-		},
-		{
-			name: 'Tools',
-			component: ToolsComponent,
-			iconClass: 'icon-main-tools'
 		},
 		{
 			name: 'Algorithms',

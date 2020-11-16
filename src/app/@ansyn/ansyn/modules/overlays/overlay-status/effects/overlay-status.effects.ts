@@ -35,7 +35,7 @@ import {
 } from '../actions/overlay-status.actions';
 import {
 	SetAnnotationMode,
-} from '../../../menu-items/tools/actions/tools.actions';
+} from '../../../status-bar/components/tools/actions/tools.actions';
 import {
 	ICaseMapState,
 	IImageManualProcessArgs,

@@ -13,11 +13,11 @@ import { filter, map, withLatestFrom } from 'rxjs/operators';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
 import { LoadDefaultCaseAction } from '../modules/menu-items/cases/actions/cases.actions';
 import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
-import { IToolsConfig, toolsConfig } from '../modules/menu-items/tools/models/tools-config';
-import { UpdateToolsFlags } from '../modules/menu-items/tools/actions/tools.actions';
+import { IToolsConfig, toolsConfig } from '../modules/status-bar/components/tools/models/tools-config';
+import { UpdateToolsFlags } from '../modules/status-bar/components/tools/actions/tools.actions';
 import { LoggerService } from '../modules/core/services/logger.service';
 import { IOverlay } from '../modules/overlays/models/overlay.model';
-import { toolsFlags } from '../modules/menu-items/tools/models/tools.model';
+import { toolsFlags } from '../modules/status-bar/components/tools/models/tools.model';
 
 @Component({
 	selector: 'ansyn-app',

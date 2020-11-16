@@ -14,11 +14,11 @@ import {
 	toolsStateSelector
 } from '../reducers/tools.reducer';
 import { map, tap, take } from 'rxjs/operators';
-import { selectActiveAnnotationLayer } from '../../layers-manager/reducers/layers.reducer';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { MatDialog } from '@angular/material/dialog';
 import { ExportMapsPopupComponent } from '../export-maps-popup/export-maps-popup.component';
 import { SubMenuEnum, toolsFlags } from '../models/tools.model';
+import { selectActiveAnnotationLayer } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
 
 @Component({
 	selector: 'ansyn-tools',

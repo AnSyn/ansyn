@@ -20,12 +20,14 @@ import { LocationPickerComponent } from './components/location-picker/location-p
 import { FiltersPanelComponent } from './components/filters-panel/filters-panel.component';
 import { FiltersModule } from '../filters/filters.module';
 import { TimepickerPresetsComponent } from './components/timepicker-presets/timepicker-presets.component';
+import { ToolsModule } from './components/tools/tools.module';
 
 @NgModule({
 	imports: [
 		FormsModule,
 		CommonModule,
 		CoreModule,
+		ToolsModule,
 		MapFacadeModule,
 		TreeviewModule.forRoot(),
 		StoreModule.forFeature(statusBarFeatureKey, StatusBarReducer),

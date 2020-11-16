@@ -16,7 +16,7 @@ import {
 	AnnotationRemoveFeature,
 	AnnotationUpdateFeature,
 	ToolsActionsTypes
-} from '../../modules/menu-items/tools/actions/tools.actions';
+} from '../../modules/status-bar/components/tools/actions/tools.actions';
 
 @Injectable()
 export class LayersAppEffects {

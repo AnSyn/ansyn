@@ -7,8 +7,8 @@ import { AnnotationSetProperties, SetAnnotationMode } from '../../actions/tools.
 import { AnnotationMode, AnnotationsWeightComponent, ColorPickerComponent } from '@ansyn/ol';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { TranslateModule } from '@ngx-translate/core';
-import { MockComponent } from '../../../../../..//modules/core/test/mock-component';
-import { mockAnnotationsColorComponent } from 'src/app/@ansyn/ol/plugins/annotations/annotations-context-menu/components/annotations-color/annotations-color.component.mock';
+import { MockComponent } from '../../../../../../modules/core/test/mock-component';
+import { mockAnnotationsColorComponent } from '../../../../../../../ol/plugins/annotations/annotations-context-menu/components/annotations-color/annotations-color.component.mock';
 
 const mockComboBoxOptionComponent = MockComponent({
 	selector: 'ansyn-combo-box-option',

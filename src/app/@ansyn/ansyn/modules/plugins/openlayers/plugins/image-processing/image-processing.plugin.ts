@@ -94,7 +94,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 
 	getMainLayer(): any {
 		const overlay = this.communicator.ActiveMap.getLayers().find(layer => layer.get(ImageryLayerProperties.IS_OVERLAY))
-		if(overlay) {
+		if (overlay) {
 			return overlay;
 		}
 		return ;

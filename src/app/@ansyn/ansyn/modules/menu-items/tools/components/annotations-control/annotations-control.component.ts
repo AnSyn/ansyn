@@ -22,6 +22,7 @@ import { ILayer, LayerType } from '../../../layers-manager/models/layers.model';
 import { SetActiveAnnotationLayer } from '../../../layers-manager/actions/layers.actions';
 import { ANNOTATION_MODE_LIST, AnnotationMode, IStyleWeight } from '@ansyn/ol';
 import { ClickOutsideService } from '../../../../core/click-outside/click-outside.service';
+import { TranslateService } from '@ngx-translate/core';
 
 export enum SelectionBoxTypes {
 	None,
@@ -109,11 +110,16 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		})
 	);
 
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
 	constructor(
 		protected element: ElementRef,
 		public store: Store<any>,
 		protected clickOutsideService: ClickOutsideService,
-		@Inject(DOCUMENT) public document: any) {
+		@Inject(DOCUMENT) public document: any,
+		protected translateService: TranslateService
+	) {
 	}
 
 	@AutoSubscription

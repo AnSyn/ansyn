@@ -1,33 +1,46 @@
 @import "ansyn/less/common";
 
-div.enum-fields-enumerator {
-	&[hidden] {
-		display: none;
-	}
+:host {
+	div.enum-fields-enumerator {
+		&[hidden] {
+			display: none;
+		}
 
-	display: flex;
-	padding: 4px 0;
-	justify-content: space-between;
+		display: flex;
+		padding: 4px 0;
+		justify-content: space-between;
 
-	&:hover {
-		div.left-side span.only-filter {
-			visibility: visible;
+		&:hover {
+			div.left-side span.only-filter {
+				visibility: visible;
+			}
+		}
+
+		div.left-side {
+			display: flex;
+
+			span.only-filter {
+				visibility: hidden;
+				font-size: 12px;
+				font-style: normal;
+				color: rgba(255, 255, 255, 0.75);
+				cursor: pointer;
+				margin-left: 2px;
+
+				&:hover {
+					text-decoration: underline;
+				}
+			}
 		}
 	}
 
-	div.left-side {
-		display: flex;
-
-		span.only-filter {
-			visibility: hidden;
-			font-size: 12px;
-			font-style: normal;
-			color: rgba(255, 255, 255, 0.75);
-			cursor: pointer;
-			margin-left: 2px;
-
-			&:hover {
-				text-decoration: underline;
+	&.rtl {
+		div.enum-fields-enumerator {
+			div.left-side {
+				span.only-filter {
+					margin-left: unset;
+					margin-right: 2px;
+				}
 			}
 		}
 	}

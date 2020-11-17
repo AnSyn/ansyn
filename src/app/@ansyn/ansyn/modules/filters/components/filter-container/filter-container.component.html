@@ -1,4 +1,4 @@
-<div class="container" *ngIf="!metadataFromState?.shouldBeHidden()" [class.rtl]="'rtl' === ('direction' | translate)">
+<div class="container" *ngIf="!metadataFromState?.shouldBeHidden()" [class.rtl]="isRTL">
 
 	<div class="title-row">
 
@@ -32,8 +32,9 @@
 					[metadata]="metadataFromState"
 					[counters]="filterCountersFromState"
 					[filtersSearchResult]="filtersSearchResults[filter.displayName]"
-					(onMetadataChange)="onMetadataChange($event)">
-				</ansyn-enum-filter-container>
+					(onMetadataChange)="onMetadataChange($event)"
+					[isRTL]="isRTL"
+				></ansyn-enum-filter-container>
 
 				<ansyn-slider-filter-container
 					*ngSwitchCase="'Slider'"

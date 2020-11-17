@@ -13,6 +13,7 @@ export class EnumFilterContainerComponent implements OnChanges {
 	@Input() isLongFiltersList: boolean;
 	@Output() onMetadataChange = new EventEmitter<EnumFilterMetadata>(true);
 	@Input() filtersSearchResult: any;
+	@Input() isRTL = false;
 	fields: { key: any, value: any, filteredCount: number }[] = [];
 
 	onInputClicked(key: string) {

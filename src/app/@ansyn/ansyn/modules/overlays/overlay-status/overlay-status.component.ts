@@ -115,7 +115,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 				const key = obj.name
 				defalutParms[key] = obj.defaultValue
 			});
-			this.isChanged = !isEqual(defalutParms, imageManualProcessArgs) && !this.isAutoProcessing;
+			this.isChanged = !isEqual(defalutParms, imageManualProcessArgs);
 		})
 	);
 

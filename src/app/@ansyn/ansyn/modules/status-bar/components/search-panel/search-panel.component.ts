@@ -8,7 +8,11 @@ import { combineLatest, fromEvent, merge, Observable } from 'rxjs';
 import { animate, style, transition, trigger, AnimationTriggerMetadata } from '@angular/animations';
 import { filter, tap } from 'rxjs/operators';
 import { selectDataInputFilter, selectRegion, selectTime } from '../../../overlays/reducers/overlays.reducer';
-import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
+import {
+	CaseRegionState,
+	ICaseDataInputFiltersState,
+	ICaseTimeState
+} from '../../../menu-items/cases/models/case.model';
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import {
@@ -221,15 +225,21 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 				return;
 			}
 		}
-		if (isEnterKey(event)) {
-			this.store$.dispatch(new LogManualSearchTime({ from: this.timePickerInputFrom.nativeElement.textContent, to: this.timePickerInputTo.nativeElement.textContent }));
+		if (this.checkTimeWasChange()) {
+			if (isEnterKey(event)) {
+				this.store$.dispatch(new LogManualSearchTime({
+					from: this.timePickerInputFrom.nativeElement.textContent,
+					to: this.timePickerInputTo.nativeElement.textContent
+				}));
 
-			if (!this.supportRangeDates()) {
-				this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.notSupportRangeDates }));
-			} else if (!this.setTimeCriteria()) {
-				this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.invalidDate }));
+				if (!this.supportRangeDates()) {
+					this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.notSupportRangeDates }));
+				} else if (!this.setTimeCriteria()) {
+					this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.invalidDate }));
+				}
 			}
 		}
+
 		if (isEscapeKey(event)) {
 			this.revertTime();
 		}

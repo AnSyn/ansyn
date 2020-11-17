@@ -199,7 +199,7 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 						doc.addFont('TTWPGOTT.ttf', 'TTWPGOTT', 'normal');
 						doc.setFont('TTWPGOTT');
 						doc.setFontSize(11);
-						doc.setR2L(this.isRtl);
+						doc.setR2L(false);
 						const loadOverlay = mapToBeExport.mapSettings.data.overlay;
 						const desc = Boolean(loadOverlay) ? this.getDescriptionFromOverlay(loadOverlay) : 'Base Map';
 						doc.text(desc, size[0] / 2, 5, {align: 'center', baseline: 'bottom'});

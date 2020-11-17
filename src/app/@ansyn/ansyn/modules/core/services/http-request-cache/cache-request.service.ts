@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { CacheService } from '@ansyn/imagery';
 import { HttpRequest, HttpResponse } from '@angular/common/http';
 
 interface ICached {
@@ -12,7 +13,7 @@ export class CacheRequestService {
 
 	get(req: HttpRequest<any>): HttpResponse<any> | undefined {
 		const key = req.urlWithParams + JSON.stringify(req.body);
-		const cached: ICached = this.cache.get(key);
+		const cached = this.cache.get(key);
 
 		if (!cached) {
 			return undefined

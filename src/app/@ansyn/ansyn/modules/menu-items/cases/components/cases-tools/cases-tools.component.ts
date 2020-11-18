@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ICasesState } from '../../reducers/cases.reducer';
+import { ICasesState, selectShowCasesTable } from '../../reducers/cases.reducer';
 import { select, Store } from '@ngrx/store';
-import { ManualSaveAction, OpenModalAction } from '../../actions/cases.actions';
+import { ManualSaveAction, OpenModalAction, ShowCasesTableAction } from '../../actions/cases.actions';
 import { distinctUntilChanged, tap, map } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectEnableOnlyFavorites, selectShowOnlyFavorites } from '../../../../filters/reducer/filters.reducer';
@@ -18,6 +18,7 @@ import { UpdateFacetsAction } from '../../../../filters/actions/filters.actions'
 })
 export class CasesToolsComponent implements OnInit, OnDestroy {
 	onlyFavorite: boolean;
+	isTableOpen: boolean;
 
 	onlyFavoriteEnable$ = this.store.pipe(
 		select(selectEnableOnlyFavorites),
@@ -32,6 +33,12 @@ export class CasesToolsComponent implements OnInit, OnDestroy {
 		tap((showFavorite) => this.onlyFavorite = showFavorite)
 	);
 
+	@AutoSubscription
+	isTableOpen$ = this.store.pipe(
+		select(selectShowCasesTable),
+		tap( open => this.isTableOpen = open)
+	);
+
 	constructor(protected store: Store<ICasesState>) {
 	}
 
@@ -39,12 +46,8 @@ export class CasesToolsComponent implements OnInit, OnDestroy {
 		this.store.dispatch(new UpdateFacetsAction({ showOnlyFavorites: !this.onlyFavorite }))
 	}
 
-	showEditCaseModal(): void {
-		this.store.dispatch(new OpenModalAction({ type: 'edit' }));
-	}
-
-	showSaveCaseModal(): void {
-		this.store.dispatch(new OpenModalAction({ type: 'save' }));
+	showCasesTable() {
+		this.store.dispatch(new ShowCasesTableAction(!this.isTableOpen))
 	}
 
 	ngOnInit(): void {

@@ -7,6 +7,7 @@ import { ILogMessage } from '../../../core/models/logger.model';
 export type caseModalType = 'save' | 'edit' | 'delete';
 
 export const CasesActionTypes = {
+	SHOW_CASES_TABLE: 'SHOW_CASES_TABLE',
 	LOAD_CASES: 'LOAD_CASES',
 	LOAD_CASE: 'LOAD_CASE',
 
@@ -33,7 +34,7 @@ export const CasesActionTypes = {
 
 	SAVE_CASE_AS: 'SAVE_CASE_AS',
 	SAVE_CASE_AS_SUCCESS: 'SAVE_CASE_AS_SUCCESS',
-	
+
 	COPY_CASE_LINK: 'COPY_CASE_LINK',
 
 	SET_DEFAULT_CASE_QUERY_PARAMS: 'SET_DEFAULT_CASE_QUERY_PARAMS',
@@ -49,6 +50,12 @@ export const CasesActionTypes = {
 };
 
 export type CasesActions = any;
+
+export class ShowCasesTableAction implements Action {
+	readonly type = CasesActionTypes.SHOW_CASES_TABLE;
+	constructor(public payload: boolean = false) {
+	}
+}
 
 export class LoadDefaultCaseIfNoActiveCaseAction implements Action {
 	type = CasesActionTypes.LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE;

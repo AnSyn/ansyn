@@ -1,0 +1,25 @@
+@import "ansyn/less/z-index-globals";
+@import 'ansyn/less/common';
+
+
+:host {
+	display: flex;
+	flex-direction: column;
+	position: absolute;
+	background-color: #171717;
+	top: 55px;
+	left: 0;
+	min-width: 350px;
+	height: calc(100vh - @timeline-area-height - @status-bar-height);
+
+	div.table {
+		height: 50%;
+		flex: .5;
+		margin-bottom: 10px;
+
+		h3 {
+			margin: 2px;
+		}
+	}
+}
+

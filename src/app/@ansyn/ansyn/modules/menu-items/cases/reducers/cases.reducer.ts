@@ -11,6 +11,7 @@ export interface ICaseModal {
 }
 
 export interface ICasesState extends EntityState<ICasePreview> {
+	showCasesTable: boolean;
 	selectedCase: ICase;
 	modal: ICaseModal;
 	autoSave: boolean;
@@ -21,6 +22,7 @@ export const casesFeatureKey = 'cases';
 export const casesAdapter: EntityAdapter<ICasePreview> = createEntityAdapter<ICasePreview>({ sortComparer: (ob1: ICasePreview, ob2: ICasePreview): number => +ob2.creationTime - +ob1.creationTime });
 
 export const initialCasesState: ICasesState = casesAdapter.getInitialState(<ICasesState>{
+	showCasesTable: false,
 	selectedCase: null,
 	modal: { show: false },
 	autoSave: false
@@ -31,6 +33,11 @@ export const casesStateSelector: MemoizedSelector<any, ICasesState> = createFeat
 export function CasesReducer(state: ICasesState = initialCasesState, action: any | CasesActions) {
 
 	switch (action.type) {
+		case CasesActionTypes.SHOW_CASES_TABLE: {
+			const show = action.payload;
+			return {...state, showCasesTable: show}
+		}
+
 		case CasesActionTypes.SAVE_CASE_AS_SUCCESS: {
 			const selectedCase = action.payload;
 			return casesAdapter.addOne(selectedCase, { ...state, selectedCase });
@@ -89,3 +96,4 @@ export const selectAutoSave: MemoizedSelector<any, boolean> = createSelector(cas
 	return cases.autoSave
 });
 export const selectModalState = createSelector(casesStateSelector, (cases) => cases?.modal);
+export const selectShowCasesTable = createSelector(casesStateSelector, (cases) => cases?.showCasesTable);

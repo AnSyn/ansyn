@@ -14,9 +14,9 @@ import { casesConfig, CasesService } from './services/cases.service';
 import { SaveCaseComponent } from './components/save-case/save-case.component';
 import { StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer } from './reducers/cases.reducer';
-import { CasesAutoSaveComponent } from './components/cases-auto-save/cases-auto-save.component';
 import { CoreModule } from '../../core/core.module';
 import { MapFacadeModule } from '@ansyn/map-facade';
+import { CasesContainerComponent } from './components/cases-container/cases-container.component';
 
 // @dynamic
 @NgModule({
@@ -28,7 +28,7 @@ import { MapFacadeModule } from '@ansyn/map-facade';
 		FormsModule,
 		EffectsModule.forFeature([CasesEffects])
 	],
-	declarations: [CasesComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent, CasesAutoSaveComponent],
+	declarations: [CasesComponent, CasesContainerComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent],
 	entryComponents: [CasesComponent, EditCaseComponent, SaveCaseComponent, DeleteCaseComponent],
 	exports: [
 		CasesComponent

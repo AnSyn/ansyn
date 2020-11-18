@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, Input } from '@angular/core';
 import { DeleteCaseComponent } from '../delete-case/delete-case.component';
 import { EditCaseComponent } from '../edit-case/edit-case.component';
 import { Store } from '@ngrx/store';
@@ -13,10 +13,10 @@ import {
 	selectCasesIds
 } from '../../reducers/cases.reducer';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, map, pluck, tap } from 'rxjs/operators';
 import { ICasePreview } from '../../models/case.model';
+import { Dictionary } from '@ngrx/entity';
 
 const animations: any[] = [
 	trigger('leaveAnim', [
@@ -83,9 +83,6 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 	}
 
 	onMouseEnterCaseRow(caseMenu: HTMLDivElement, caseRow: HTMLDivElement, tbodyElement: HTMLDivElement) {
-		let offsetTop = caseRow.offsetTop;
-		let scrollTop = tbodyElement.scrollTop;
-		caseMenu.style.top = `${ offsetTop - scrollTop + 1 }px`;
 		caseRow.classList.add('mouse-enter');
 	}
 
@@ -111,9 +108,7 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 	}
 
 	selectCase(caseId: string): void {
-		if (this.selectedCaseId !== caseId) {
-			this.store$.dispatch(new LoadCaseAction(caseId));
-		}
+		this.store$.dispatch(new LoadCaseAction(caseId));
 	}
 
 }

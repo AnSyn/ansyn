@@ -8,14 +8,9 @@
 					{{'CaseName' | translate}}
 				</div>
 				<div class="cases-table-head-col">
-					{{'Auto Save' | translate}}
+					{{'Date created' | translate}}
 				</div>
-				<div class="cases-table-head-col">
-					{{'Owner' | translate}}
-				</div>
-				<div class="cases-table-head-col">
-					{{'Last Modified' | translate}}
-				</div>
+				<div class="menu-placeholder"></div>
 			</div>
 
 		</div>
@@ -30,7 +25,6 @@
 			 *ngFor="let id of ids"
 			 (click)="selectCase(id)"
 			 [class.active]="(modalCaseId$ | async) === id"
-			 [class.selected]="selectedCaseId === id"
 			 (mouseenter)="onMouseEnterCaseRow(caseMenu, caseRow, tbodyElement)"
 			 (mouseleave)="onMouseLeaveCaseRow(caseRow)"
 			 [@leaveAnim]
@@ -45,23 +39,8 @@
 					{{entities[id].name}}
 				</div>
 
-				<ansyn-cases-auto-save class="cases-table-auto-save-col"
-									   *ngIf="selectedCaseId === id; else notSelected"
-									   [caseId]="id">
-				</ansyn-cases-auto-save>
-
-				<ng-template #notSelected>
-					<div class="cases-table-case-name-col">
-						{{ entities[id].autoSave ? ('AUTOSAVEON' | translate) : ('AUTOSAVEOFF' | translate)}}
-					</div>
-				</ng-template>
-
 				<div class="cases-table-body-col">
-					{{entities[id].owner}}
-				</div>
-
-				<div class="cases-table-body-col">
-					{{entities[id].lastModified | ansynDate}}
+					{{entities[id].creationTime | ansynDate}}
 				</div>
 
 				<!--menu-->

@@ -59,7 +59,7 @@ import { Dictionary } from '@ngrx/entity/src/models';
 import {
 	SetActiveCenter,
 	SetMapGeoEnabledModeToolsActionStore,
-	SetMapSearchBox
+	SetMapSearchBox, ToolsActionsTypes
 } from '../../modules/menu-items/tools/actions/tools.actions';
 import {
 	DisplayOverlayAction,
@@ -90,7 +90,10 @@ import { MeasureDistanceVisualizer } from '../../modules/plugins/openlayers/plug
 import { IGeoFilterStatus, selectGeoFilterStatus } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { booleanEqual, distance, feature } from '@turf/turf';
 import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
-import { IScreenViewConfig, ScreenViewConfig } from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
+import {
+	IScreenViewConfig,
+	ScreenViewConfig
+} from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
 
 const FOOTPRINT_INSIDE_MAP_RATIO = 1;
 
@@ -307,22 +310,24 @@ export class MapAppEffects {
 
 	@Effect()
 	searchByExtentPolygon$: Observable<any> = this.actions$.pipe(
-		ofType(MapActionTypes.POSITION_CHANGED, MapActionTypes.SET_ACTIVE_MAP_ID, StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS),
+		ofType(MapActionTypes.POSITION_CHANGED, ToolsActionsTypes.SET_ACTIVE_CENTER, MapActionTypes.SET_ACTIVE_MAP_ID, StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS),
 		debounceTime(this.screenViewConfig.debounceTime),
 		withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus), this.store$.select(selectRegion)),
 		filter(([action, mapList, activeMapId, geoFilterStatus, region]) => Boolean(mapList[activeMapId]) && geoFilterStatus.type === CaseGeoFilter.ScreenView),
 		map(([action, mapList, activeMapId, geoFilterStatus, region]) => {
+			console.log('action', action);
 			const activeMap: IMapSettings = mapList[activeMapId];
-			return [activeMap.data.position.extentPolygon, geoFilterStatus, region , activeMap.data.overlay];
+			return [activeMap.data.position.extentPolygon, geoFilterStatus, region, activeMap.data.overlay];
 		}),
 		filter(([extentPolygon, geoFilterStatus, region, overlay]: [any, IGeoFilterStatus, any, IOverlay]) => !booleanEqual(extentPolygon, region.geometry) && !Boolean(overlay)),
 		concatMap(([extentPolygon, geoFilterStatus, region, overlay]: [any, IGeoFilterStatus, any, IOverlay]) => {
-			const extentWidth = Math.round(distance(extentPolygon.coordinates[0][0], extentPolygon.coordinates[0][1], {units: 'metres'}));
-			const extent = feature(extentPolygon, {searchMode: "ScreenView"});
+			const [[extentTopLeft, extentTopRight]] = extentPolygon.coordinates;
+			const extentWidth = Math.round(distance(extentTopLeft, extentTopRight, { units: 'metres' }));
+			const extent = feature(extentPolygon, { searchMode: CaseGeoFilter.ScreenView });
 			let actions = [];
 
 			if (extentWidth > this.screenViewConfig.extentWidthSearchLimit) {
-				actions.push(new SetOverlaysStatusMessageAction({message: 'Zoom in to get new overlays'}));
+				actions.push(new SetOverlaysStatusMessageAction({ message: 'Zoom in to get new overlays' }));
 			} else {
 				actions.push(new SetOverlaysCriteriaAction({ region: extent }));
 				if (geoFilterStatus.active) {
@@ -379,7 +384,7 @@ export class MapAppEffects {
 
 
 		/* -0- */
-		const setIsOverlayProperties = map( (layer: IBaseImageryLayer) => {
+		const setIsOverlayProperties = map((layer: IBaseImageryLayer) => {
 			layer.set(ImageryLayerProperties.IS_OVERLAY, true);
 			return layer;
 		});

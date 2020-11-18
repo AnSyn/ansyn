@@ -1,7 +1,7 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { combineLatest, Observable, of, pipe } from 'rxjs';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import {
 	IMapState,
 	IPendingOverlay,
@@ -11,16 +11,13 @@ import {
 	mapStateSelector,
 	RemovePendingOverlayAction,
 	selectActiveMapId,
-	selectFooterCollapse,
+	selectFooterCollapse, selectLayout,
 	selectMaps,
 	selectMapsList,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
 	SetPendingOverlaysAction
 } from '@ansyn/map-facade';
-import {
-	OverlayStatusActionsTypes,
-} from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { IAppState } from '../app.effects.module';
 
 import { IImageryMapPosition } from '@ansyn/imagery';
@@ -110,19 +107,27 @@ export class OverlaysAppEffects {
 	);
 
 	@Effect()
-	onDisplayOverlayFromStore$: Observable<DisplayOverlayAction> = this.actions$.pipe(
+	onDisplayOverlayFromStore$: Observable<any> = this.actions$.pipe(
 		ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE),
-		withLatestFrom(this.overlaysService.getAllOverlays$, this.store$.select(selectActiveMapId)),
-		filter(([{ payload }, overlays, activeMapId]: [DisplayOverlayFromStoreAction, Map<string, IOverlay>, string]) => overlays && overlays.has(payload.id)),
-		map(([{ payload }, overlays, activeMapId]: [DisplayOverlayFromStoreAction, Map<string, IOverlay>, string]) => {
+		withLatestFrom(this.overlaysService.getAllOverlays$, this.store$.select(selectActiveMapId), this.store$.select(selectLayout)),
+		filter(([{ payload }, overlays, activeMapId, layout]: [DisplayOverlayFromStoreAction, Map<string, IOverlay>, string, string]) => overlays && overlays.has(payload.id)),
+		mergeMap(([{ payload }, overlays, activeMapId, layout]: [DisplayOverlayFromStoreAction, Map<string, IOverlay>, string, string]) => {
 			const mapId = payload.mapId || activeMapId;
 			const overlay = overlays.get(payload.id);
-			return new DisplayOverlayAction({
+			const actions: Action[] = [new DisplayOverlayAction({
 				overlay,
 				mapId,
 				extent: payload.extent,
 				customOriantation: payload.customOriantation
-			});
+			})];
+
+			const oneMapLayout = 'layout1';
+			const twoMapsLayout = 'layout2';
+			if (layout === oneMapLayout) {
+				actions.push(new SetLayoutAction(twoMapsLayout));
+			}
+
+			return actions;
 		})
 	);
 

@@ -1,14 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { EditCaseComponent } from '../edit-case/edit-case.component';
-import { SaveCaseComponent } from '../save-case/save-case.component';
-import { ICasesState, selectSelectedCase } from '../../reducers/cases.reducer';
-import { Store } from '@ngrx/store';
+import { ICasesState } from '../../reducers/cases.reducer';
+import { select, Store } from '@ngrx/store';
 import { ManualSaveAction, OpenModalAction } from '../../actions/cases.actions';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { distinctUntilChanged, tap, map } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { get } from 'lodash';
-import { CasesService } from '../../services/cases.service';
+import { selectEnableOnlyFavorites, selectShowOnlyFavorites } from '../../../../filters/reducer/filters.reducer';
+import { UpdateFacetsAction } from '../../../../filters/actions/filters.actions';
 
 @Component({
 	selector: 'ansyn-cases-tools',
@@ -20,22 +17,26 @@ import { CasesService } from '../../services/cases.service';
 	destroy: 'ngOnDestroy'
 })
 export class CasesToolsComponent implements OnInit, OnDestroy {
-	_selectedCase;
+	onlyFavorite: boolean;
+
+	onlyFavoriteEnable$ = this.store.pipe(
+		select(selectEnableOnlyFavorites),
+		distinctUntilChanged(),
+		map((enable) => !enable)
+	);
 
 	@AutoSubscription
-	selectedCase$: Observable<any> = this.store.select(selectSelectedCase)
-		.pipe(
-			tap((selectedCase) => {
-				this._selectedCase = selectedCase;
-			})
-		);
+	onlyFavoriteSelected$ = this.store.pipe(
+		select(selectShowOnlyFavorites),
+		distinctUntilChanged(),
+		tap((showFavorite) => this.onlyFavorite = showFavorite)
+	);
 
-	get isDefaultCaseId() {
-		return get(this.casesService, 'defaultCase.id') === get(this._selectedCase, 'id');
+	constructor(protected store: Store<ICasesState>) {
 	}
 
-	constructor(protected store: Store<ICasesState>,
-				protected casesService: CasesService) {
+	showOnlyFavorite() {
+		this.store.dispatch(new UpdateFacetsAction({ showOnlyFavorites: !this.onlyFavorite }))
 	}
 
 	showEditCaseModal(): void {
@@ -44,10 +45,6 @@ export class CasesToolsComponent implements OnInit, OnDestroy {
 
 	showSaveCaseModal(): void {
 		this.store.dispatch(new OpenModalAction({ type: 'save' }));
-	}
-
-	manualSave(): void {
-		this.store.dispatch(new ManualSaveAction(this._selectedCase));
 	}
 
 	ngOnInit(): void {

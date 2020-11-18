@@ -1,9 +1,15 @@
-<button type="button" (click)="showEditCaseModal()">
-	<i class="icon icon-favorite-full"></i>
+<button type="button"
+		class="favorite-button"
+		[attr.tooltip-value]="'show favorite overlay'"
+		tooltip-class="bottom"
+		(click)="showOnlyFavorite()"
+		[disabled]="onlyFavoriteEnable$ | async">
+	<i class="icon"
+	   [ngClass]="onlyFavorite ? 'icon-favorite-full'  : 'icon-favorite-empty'"></i>
 </button>
 <button type="button" (click)="showSaveCaseModal()">
-	<i class="icon icon-more"></i>
+	<i class="icon icon-main-cases"></i>
 </button>
-<button type="button" [disabled]="isDefaultCaseId" (click)="manualSave()">
-	<i class="icon icon-favorite-empty"></i>
+<button type="button">
+	<i class="icon icon-more"></i>
 </button>

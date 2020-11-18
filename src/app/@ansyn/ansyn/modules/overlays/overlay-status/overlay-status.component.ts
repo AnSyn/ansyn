@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, Inject, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import {
 	IEntryComponent,
 	selectActiveMapId,
@@ -16,11 +16,14 @@ import {
 	SetAutoImageProcessing
 } from './actions/overlay-status.actions';
 import {
+	IOverlayStatusState,
+	overlayStatusStateSelector,
 	selectFavoriteOverlays,
+	selectOverlaysManualProcessArgs,
 	selectTranslationData
 } from './reducers/overlay-status.reducer';
 import { AnnotationMode } from '@ansyn/ol';
-import { ITranslationData } from '../../menu-items/cases/models/case.model';
+import { IImageManualProcessArgs, ITranslationData } from '../../menu-items/cases/models/case.model';
 import { Actions, ofType } from '@ngrx/effects';
 import {
 	SetAnnotationMode,
@@ -32,6 +35,8 @@ import { ClickOutsideService } from '../../core/click-outside/click-outside.serv
 import { isDeleteKey } from '../../core/utils/keyboardKey';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { TranslateService } from '@ngx-translate/core';
+import { isEqual } from 'lodash';
+import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from './config/overlay-status-config';
 
 @Component({
 	selector: 'ansyn-overlay-status',
@@ -60,6 +65,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	isImageControlActive = false;
 	draggedButtonText: string;
 	isLayersVisible: boolean;
+	isChanged: boolean;
 
 	@HostBinding('class.rtl')
 	isRtl = 'rtl' === this.translateService.instant('direction');
@@ -105,8 +111,19 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 				}
 			}));
 
-	constructor(
-		public store$: Store<any>,
+	@AutoSubscription
+	manualImageProcessingParams$: Observable<Object> = this.store$.select(overlayStatusStateSelector).pipe(
+		map((overlayStatusState: IOverlayStatusState ) => overlayStatusState.manualImageProcessingParams),
+		tap((imageManualProcessArgs) => {
+			const defalutParms = {};
+			this.overlayStatusConfig.ImageProcParams.forEach(obj => {
+				const key = obj.name
+				defalutParms[key] = obj.defaultValue
+			});
+			this.isChanged = !isEqual(defalutParms, imageManualProcessArgs) && !this.isAutoProcessing;
+		})
+	);constructor(
+		@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig,public store$: Store<any>,
 		protected actions$: Actions,
 		protected element: ElementRef,
 		protected clickOutsideService: ClickOutsideService,

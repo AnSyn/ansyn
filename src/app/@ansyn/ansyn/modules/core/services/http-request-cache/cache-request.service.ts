@@ -12,7 +12,7 @@ export class CacheRequestService {
 	cache = new Map();
 
 	get(req: HttpRequest<any>): HttpResponse<any> | undefined {
-		const key = req.urlWithParams;
+		const key = req.urlWithParams + JSON.stringify(req.body);
 		const cached = this.cache.get(key);
 
 		if (!cached) {
@@ -24,7 +24,7 @@ export class CacheRequestService {
 	}
 
 	set(req: HttpRequest<any>, response: HttpResponse<any>) {
-		const key = req.urlWithParams;
+		const key = req.urlWithParams + JSON.stringify(req.body);
 		const entry = { key, response, ttl: Date.now() };
 		this.cache.set(key, entry);
 

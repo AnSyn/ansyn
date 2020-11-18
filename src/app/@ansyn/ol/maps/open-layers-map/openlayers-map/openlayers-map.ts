@@ -109,8 +109,11 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	private addToBaseMapGroup(layer: IBaseImageryLayer) {
-		if (!this.groupLayersMap.get(StaticGroupsKeys.map).getLayersArray().some(baseLayer => baseLayer.get('id') === layer.get('id'))) {
+		if (this.groupLayersMap.get(StaticGroupsKeys.map).getLayersArray()[0]?.get('id')  !== layer.get('id')) {
 			this.groupLayersMap.get(StaticGroupsKeys.map).getLayers().setAt(1, layer);
+		}
+		else if (this.groupLayersMap.get(StaticGroupsKeys.map).getLayersArray().length > 1) {
+			this.groupLayersMap.get(StaticGroupsKeys.map).getLayers().removeAt(1);
 		}
 	}
 	/**

@@ -19,11 +19,10 @@ import {
 	IOverlayStatusState,
 	overlayStatusStateSelector,
 	selectFavoriteOverlays,
-	selectOverlaysManualProcessArgs,
 	selectTranslationData
 } from './reducers/overlay-status.reducer';
 import { AnnotationMode } from '@ansyn/ol';
-import { IImageManualProcessArgs, ITranslationData } from '../../menu-items/cases/models/case.model';
+import { ITranslationData } from '../../menu-items/cases/models/case.model';
 import { Actions, ofType } from '@ngrx/effects';
 import {
 	SetAnnotationMode,
@@ -32,11 +31,9 @@ import {
 } from '../../menu-items/tools/actions/tools.actions';
 import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-manager/reducers/layers.reducer';
 import { ClickOutsideService } from '../../core/click-outside/click-outside.service';
-import { isDeleteKey } from '../../core/utils/keyboardKey';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { TranslateService } from '@ngx-translate/core';
 import { isEqual } from 'lodash';
-import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from './config/overlay-status-config';
+import { IOverlayStatusConfig, overlayStatusConfig } from './config/overlay-status-config';
 
 @Component({
 	selector: 'ansyn-overlay-status',
@@ -80,7 +77,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 
 	@AutoSubscription
 	active$ = combineLatest([this.store$.select(selectActiveMapId), this.store$.select(selectTranslationData)]).pipe(
-		tap(([activeMapId, overlaysTranslationData]: [string, { [key: string]: ITranslationData }]) => {
+		tap(([activeMapId, overlaysTranslationData]: [string, { [_: string]: ITranslationData }]) => {
 			this.isActiveMap = activeMapId === this.mapId;
 			this.overlaysTranslationData = overlaysTranslationData;
 			this.updateDraggedStatus();
@@ -122,8 +119,11 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 			});
 			this.isChanged = !isEqual(defalutParms, imageManualProcessArgs) && !this.isAutoProcessing;
 		})
-	);constructor(
-		@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig,public store$: Store<any>,
+	);
+
+	constructor(
+		@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig,
+		public store$: Store<any>,
 		protected actions$: Actions,
 		protected element: ElementRef,
 		protected clickOutsideService: ClickOutsideService,

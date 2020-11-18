@@ -63,8 +63,6 @@
 	}
 
 	input:checked + .slider:before {
-		-webkit-transform: translateX(22px);
-		-ms-transform: translateX(22px);
 		transform: translateX(22px);
 	}
 
@@ -81,6 +79,9 @@
 		.slider-text {
 			margin-left: unset;
 			margin-right: 72px;
+		}
+		input:checked + .slider:before {
+			transform: translateX(-22px);
 		}
 	}
 }

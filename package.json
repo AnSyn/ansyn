@@ -59,6 +59,7 @@
     "angular2-uuid": "^1.1.1",
     "auth0-js": "^9.7.3",
     "auto-subscriptions": "^2.0.5",
+    "blob-util": "^2.0.2",
     "cesium": "^1.66.0",
     "core-js": "^2.5.4",
     "crypto-js": "3.1.9-1",

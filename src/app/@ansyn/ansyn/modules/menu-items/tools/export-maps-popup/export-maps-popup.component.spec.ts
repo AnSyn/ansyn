@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { HttpClientModule } from '@angular/common/http';
 import { ExportMapsPopupComponent } from './export-maps-popup.component';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
@@ -29,6 +30,7 @@ describe('ExportMapsPopupComponent', () => {
 			imports: [
 				CoreModule,
 				FormsModule,
+				HttpClientModule,
 				AnsynFormsModule,
 				MatDialogModule,
 				MatSelectModule,

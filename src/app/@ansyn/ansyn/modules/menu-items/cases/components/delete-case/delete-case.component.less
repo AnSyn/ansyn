@@ -1,10 +1,8 @@
 @import "ansyn/less/common";
+@import "../../less/common.less";
 
 :host {
-	display: block;
-	position: absolute;
-	width: @ansyn-menu-width;
-	top: 15px;
+	&:extend(.modal-host);
 
 	.delete-icon {
 		font-size: 24px;
@@ -12,27 +10,11 @@
 	}
 
 	div.edit-case {
-		background: white;
-		box-shadow: 0 0 13px 0 #2e2d46;
-		padding: 7%;
-		box-sizing: border-box;
-		width: 100%;
-		height: 100%;
+		&:extend(.modal);
 
-		&.rtl {
-			direction: rtl;
-		}
 
 		button.close {
-			position: absolute;
-			right: 0;
-			top: 0;
-			border: none;
-			background: transparent;
-			cursor: pointer;
-			outline: none;
-			color: #2e2d46;
-
+			&:extend(.close-button);
 			&:hover {
 				font-weight: bold;
 				text-decoration: underline;
@@ -40,12 +22,11 @@
 		}
 
 		form.edit-case-form {
-			position: relative;
-			width: 100%;
-			height: 100%;
+			padding: @padding;
 
 			.text {
 				display: flex;
+				color: black;
 
 				span.name {
 					display: inline-block;
@@ -58,8 +39,7 @@
 			}
 
 			.bottom-btns {
-				display: flex;
-				justify-content: flex-end;
+				&:extend(.buttons);
 
 				button {
 					cursor: pointer;

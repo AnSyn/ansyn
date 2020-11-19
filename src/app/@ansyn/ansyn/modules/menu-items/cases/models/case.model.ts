@@ -42,14 +42,6 @@ export interface IImageManualProcessArgs {
 	Sharpness?: number;
 }
 
-export interface ICompressedImageManualProcessArgs {
-	b?: number;
-	c?: number;
-	g?: number;
-	sa?: number;
-	sh?: number;
-}
-
 export interface IOverlaysManualProcessArgs {
 	[key: string]: IImageManualProcessArgs;
 }
@@ -123,18 +115,12 @@ export interface ICaseEnumFilterMetadata {
 	disabledEnums: string[];
 }
 
-export interface ICompressedCaseEnumFilterMetadata {
-	un: string[];
-	dis: string[];
-}
-
 export type CaseArrayFilterMetadata = [string, boolean][];
 
 export type CaseFilterMetadata =
 	ICaseBooleanFilterMetadata
 	| ICaseEnumFilterMetadata
 	| ICaseSliderFilterMetadata
-	| ICompressedCaseEnumFilterMetadata
 	| CaseArrayFilterMetadata;
 
 export interface ICaseFilter<T = CaseFilterMetadata> {
@@ -144,21 +130,9 @@ export interface ICaseFilter<T = CaseFilterMetadata> {
 	positive?: boolean;
 }
 
-export interface ICompressedCaseFilter<T = CaseFilterMetadata> {
-	t: FilterType;
-	f: string;
-	m: T;
-	p?: boolean;
-}
-
 export interface ICaseFacetsState {
 	filters?: ICaseFilter[];
 	showOnlyFavorites?: boolean;
-}
-
-export interface ICompressedCaseFacetsState {
-	f?: ICompressedCaseFilter[];
-	fav?: boolean;
 }
 
 export interface ICaseLayersState {
@@ -175,24 +149,10 @@ export interface ICaseMapsState extends IDilutedCaseMapsState {
 	data: ICaseMapState[];
 }
 
-export interface ICompressedCaseMapsState {
-	d: ICompressedCaseMapState[];
-	l: LayoutKey;
-	id: string;
-}
-
 export interface IDilutedCaseMapData extends IMapSettingsData {
 	overlay?: IDilutedOverlay;
 	isAutoImageProcessingActive?: boolean;
 	imageManualProcessArgs?: IImageManualProcessArgs;
-	translationData?: ITranslationData;
-}
-
-export interface ICompressedCaseMapData extends IDilutedCaseMapData {
-	o?: any;
-	p?: ICompressedMapSettingsData;
-	auto?: boolean;
-	man?: ICompressedImageManualProcessArgs;
 	translationData?: ITranslationData;
 }
 
@@ -206,10 +166,6 @@ export interface IDilutedCaseMapState extends IMapSettings {
 
 export interface ICaseMapState extends IMapSettings {
 	data: ICaseMapData;
-}
-
-export interface ICompressedCaseMapState extends ICompressedMapSettings {
-	d?: any;
 }
 
 

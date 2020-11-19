@@ -4,7 +4,7 @@ import { IStoredEntity } from '../../../core/services/storage/storage.service';
 import { ICase, ICasePreview, IDilutedCase, IDilutedCaseState } from '../models/case.model';
 import { ILogMessage } from '../../../core/models/logger.model';
 
-export type caseModalType = 'save' | 'edit' | 'delete';
+export type caseModalType = 'save' | 'delete';
 
 export const CasesActionTypes = {
 	SHOW_CASES_TABLE: 'SHOW_CASES_TABLE',

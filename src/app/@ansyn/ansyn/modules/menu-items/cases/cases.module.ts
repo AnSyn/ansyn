@@ -3,7 +3,6 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CasesComponent } from './components/cases/cases.component';
 import { CasesTableComponent } from './components/cases-table/cases-table.component';
-import { EditCaseComponent } from './components/edit-case/edit-case.component';
 import { FormsModule } from '@angular/forms';
 import { CasesModalContainerComponent } from './components/cases-modal-container/cases-modal-container.component';
 import { DeleteCaseComponent } from './components/delete-case/delete-case.component';
@@ -28,8 +27,8 @@ import { CasesContainerComponent } from './components/cases-container/cases-cont
 		FormsModule,
 		EffectsModule.forFeature([CasesEffects])
 	],
-	declarations: [CasesComponent, CasesContainerComponent, CasesTableComponent, EditCaseComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent],
-	entryComponents: [CasesComponent, EditCaseComponent, SaveCaseComponent, DeleteCaseComponent],
+	declarations: [CasesComponent, CasesContainerComponent, CasesTableComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent],
+	entryComponents: [CasesComponent, SaveCaseComponent, DeleteCaseComponent],
 	exports: [
 		CasesComponent
 	],

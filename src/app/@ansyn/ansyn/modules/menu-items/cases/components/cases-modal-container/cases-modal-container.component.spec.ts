@@ -58,7 +58,7 @@ describe('ModalContainerComponent', () => {
 	});
 
 	it('dispatch OpenModal with edit type should open ansyn-edit-case', fakeAsync(() => {
-		store.dispatch(new OpenModalAction({ type: 'edit' }));
+		store.dispatch(new OpenModalAction({ type: 'save' }));
 		tick();
 		expect(fixture.nativeElement.querySelector('ansyn-edit-case')).toBeDefined();
 	}));

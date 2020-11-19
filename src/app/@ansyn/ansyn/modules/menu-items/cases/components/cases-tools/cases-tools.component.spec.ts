@@ -74,7 +74,7 @@ describe('CasesToolsComponent', () => {
 
 	it('showEditCaseModal should call store.dispatch with OpenModalAction', () => {
 		component.showEditCaseModal();
-		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({ type: 'edit' }));
+		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({ type: 'save' }));
 	});
 
 	it('save-case button should call showCaseModal()', () => {

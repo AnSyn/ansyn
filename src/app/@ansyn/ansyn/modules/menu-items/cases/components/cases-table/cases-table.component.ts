@@ -1,6 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, Input } from '@angular/core';
-import { DeleteCaseComponent } from '../delete-case/delete-case.component';
-import { EditCaseComponent } from '../edit-case/edit-case.component';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CopyCaseLinkAction, LoadCaseAction, LoadCasesAction, OpenModalAction } from '../../actions/cases.actions';
 import { CasesEffects } from '../../effects/cases.effects';
@@ -100,7 +98,7 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 	}
 
 	editCase(caseId: string) {
-		this.store$.dispatch(new OpenModalAction({ type: 'edit', caseId }));
+		this.store$.dispatch(new OpenModalAction({ type: 'save', caseId }));
 	}
 
 	shareCase(caseId: string, caseName: string) {

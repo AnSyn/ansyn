@@ -55,4 +55,8 @@ export class CasesToolsComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 	}
+
+	showSaveModal() {
+		this.store.dispatch(new OpenModalAction({type: 'save'}))
+	}
 }

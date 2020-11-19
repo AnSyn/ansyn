@@ -3,7 +3,6 @@ import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { EMPTY, forkJoin, Observable, of, pipe, UnaryFunction } from 'rxjs';
 import {
-	AddCaseAction,
 	AddCasesAction,
 	CasesActionTypes,
 	CopyCaseLinkAction,
@@ -64,15 +63,6 @@ export class CasesEffects {
 				map(cases => new AddCasesAction(cases)),
 				catchError(() => EMPTY)
 			);
-		}),
-		share());
-
-	@Effect()
-	onAddCase$: Observable<SelectCaseAction | BackToWorldView> = this.actions$.pipe(
-		ofType<AddCaseAction>(CasesActionTypes.ADD_CASE),
-		mergeMap((action: AddCaseAction) => {
-			const mapId = action.payload.state.maps.activeMapId;
-			return [new SelectCaseAction(action.payload), new BackToWorldView({ mapId })];
 		}),
 		share());
 

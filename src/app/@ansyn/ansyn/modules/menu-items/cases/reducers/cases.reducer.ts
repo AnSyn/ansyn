@@ -43,9 +43,6 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 			return casesAdapter.addOne(selectedCase, { ...state, selectedCase });
 		}
 
-		case CasesActionTypes.ADD_CASE:
-			return casesAdapter.addOne(action.payload, state);
-
 		case CasesActionTypes.UPDATE_CASE: {
 			const caseToUpdate = { ...action.payload.updatedCase };
 			const selectedCase = state.selectedCase && caseToUpdate.id === state.selectedCase.id ? caseToUpdate : state.selectedCase;

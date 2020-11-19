@@ -12,7 +12,6 @@ export const CasesActionTypes = {
 	LOAD_CASE: 'LOAD_CASE',
 
 	ADD_CASES: 'ADD_CASES',
-	ADD_CASE: 'ADD_CASE',
 
 	DELETE_CASE: 'DELETE_CASE',
 
@@ -76,17 +75,6 @@ export class AddCasesAction implements Action {
 	type = CasesActionTypes.ADD_CASES;
 
 	constructor(public payload: ICase[]) {
-	}
-}
-
-export class AddCaseAction implements Action, ILogMessage {
-	type = CasesActionTypes.ADD_CASE;
-
-	constructor(public payload: ICase) {
-	}
-
-	logMessage() {
-		return `Adding case ${this.payload.name}`
 	}
 }
 

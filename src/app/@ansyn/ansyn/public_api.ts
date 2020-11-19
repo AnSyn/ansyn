@@ -180,7 +180,6 @@ export {
 export { casesFeatureKey, CasesReducer, initialCasesState } from './modules/menu-items/cases/reducers/cases.reducer';
 export { PullActiveCenter } from './modules/menu-items/tools/actions/tools.actions';
 export { toolsFeatureKey, toolsInitialState, ToolsReducer } from './modules/menu-items/tools/reducers/tools.reducer';
-export { AddCaseAction } from './modules/menu-items/cases/actions/cases.actions';
 export { QueryParamsHelper } from './modules/menu-items/cases/services/helpers/cases.service.query-params-helper';
 export { UpdateFilterAction } from './modules/filters/actions/filters.actions';
 export { IEnumFiled } from './modules/filters/models/metadata/enum-filter-metadata';

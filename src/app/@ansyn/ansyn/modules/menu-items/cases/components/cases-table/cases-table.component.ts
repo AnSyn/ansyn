@@ -57,10 +57,8 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 	selectedCaseId: string;
 
 	constructor(
-		protected store$: Store<ICasesState>,
-		protected casesEffects: CasesEffects
+		protected store$: Store<ICasesState>
 	) {
-		this.casesEffects.onAddCase$.subscribe(this.onCasesAdded.bind(this));
 	}
 
 	ngOnInit(): void {

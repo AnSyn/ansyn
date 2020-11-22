@@ -1,4 +1,4 @@
-<div class="container" [ngClass]="collection.type" [class.rtl]="'rtl' === ('direction' | translate)">
+<div class="container" [ngClass]="collection.type">
 
 	<div class="title-row">
 		<span class="title">{{collection.type | translate}}</span>
@@ -32,8 +32,9 @@
 				 [showOnly]="collection.data.length < 2">
 
 		<ansyn-layer-menu [disabledRemove]="shouldDisableRemoveLayer(index)"
-						  (openModal)="openModal($event, layer)">
-		</ansyn-layer-menu>
+						  (openModal)="openModal($event, layer)"
+						  [isRTL]="isRTL"
+		></ansyn-layer-menu>
 
 	</ansyn-layer>
 

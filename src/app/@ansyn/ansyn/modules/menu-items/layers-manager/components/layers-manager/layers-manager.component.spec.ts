@@ -5,6 +5,7 @@ import { layersFeatureKey, LayersReducer } from '../../reducers/layers.reducer';
 import { of } from 'rxjs';
 import { MockComponent } from '../../../../core/test/mock-component';
 import { MockPipe } from '../../../../core/test/mock-pipe';
+import { TranslateService } from '@ngx-translate/core';
 
 describe('LayersManagerComponent', () => {
 	let component: LayersManagerComponent;
@@ -25,7 +26,8 @@ describe('LayersManagerComponent', () => {
 				mockModals,
 				mockCollection,
 				mockTranslatePipe
-			]
+			],
+			providers: [{ provide: TranslateService, useValue: { instant: (x) => x }}]
 		})
 			.compileComponents();
 	}));

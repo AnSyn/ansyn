@@ -17,8 +17,7 @@ import {
 } from '@ansyn/ansyn';
 import { IRouterState, routerStateSelector } from '../reducers/router.reducer';
 import { Store } from '@ngrx/store';
-import { filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
-import { cloneDeep } from 'lodash';
+import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 
 @Injectable()
 export class RouterEffects {
@@ -43,17 +42,9 @@ export class RouterEffects {
 	);
 
 	@Effect()
-	onLoadAppByLinkId$ = this.actions$.pipe(
-		ofType<SetStateAction>(RouterActionTypes.SET_STATE),
-		filter((action: SetStateAction) => Boolean(action.payload.linkId)),
-		mergeMap((action) => this.casesService.getLink(action.payload.linkId)),
-		map((_case: IDilutedCase) => new SelectDilutedCaseAction(_case))
-	);
-
-	@Effect()
 	onLoadDefaultCase$ = this.actions$.pipe(
 		ofType<SetStateAction>(RouterActionTypes.SET_STATE),
-		filter((action: SetStateAction) => !action.payload.caseId && !action.payload.linkId),
+		filter((action: SetStateAction) => !action.payload.caseId),
 		withLatestFrom(this.store$.select(selectSelectedCase)),
 		filter(([action, selectCase]) => !selectCase || selectCase.id !== this.casesService.defaultCase.id),
 		map(([action, selectCase]) => new LoadDefaultCaseAction(action.payload.queryParams))

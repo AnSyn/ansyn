@@ -1,11 +1,10 @@
 import { ICasesConfig } from '../models/cases-config';
 import { Inject, Injectable } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
-import { ILinksConfig, QueryParamsHelper, linksConfig } from './helpers/cases.service.query-params-helper';
-import { UrlSerializer } from '@angular/router';
+import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UUID } from 'angular2-uuid';
 import { cloneDeep, cloneDeep as _cloneDeep, isEqual as _isEqual, mapValues } from 'lodash';
-import { catchError, map, take, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 /* Do not change this ( rollup issue ) */
 import * as momentNs from 'moment';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
@@ -46,8 +45,6 @@ export class CasesService {
 
 	constructor(protected storageService: StorageService,
 				@Inject(casesConfig) public config: ICasesConfig,
-				@Inject(linksConfig) public linksConfig: ILinksConfig,
-				public urlSerializer: UrlSerializer,
 				protected translator: TranslateService,
 				public errorHandlerService: ErrorHandlerService) {
 		this.paginationLimit = this.config.paginationLimit;
@@ -56,25 +53,6 @@ export class CasesService {
 
 	get defaultCase() {
 		return this.config.defaultCase;
-	}
-
-	getLink(linkId: string) {
-		return this.storageService.get(this.linksConfig.schema, linkId).pipe(
-			map(caseData => {
-				const dilutedCase: IDilutedCase = {
-					state: <ICaseState>caseData.data,
-					creationTime: new Date(),
-					id: linkId,
-					schema: 'link'
-				};
-				return this.parseCase(dilutedCase);
-			}),
-			catchError(() => EMPTY)
-		);
-	}
-
-	get generateQueryParamsViaCase() {
-		return this.queryParamsHelper.generateQueryParamsViaCase.bind(this.queryParamsHelper);
 	}
 
 	get updateCaseViaContext() {
@@ -195,12 +173,6 @@ export class CasesService {
 
 	generateUUID(): string {
 		return UUID.UUID();
-	}
-
-	createLink(link): Observable<any> {
-		return this.storageService.create(this.linksConfig.schema, link).pipe(
-			map((_: any) => _._id)
-		);
 	}
 
 	updateCase(selectedCase: ICase): Observable<IStoredEntity<ICasePreview, IDilutedCaseState>> {

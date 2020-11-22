@@ -44,7 +44,6 @@ import { CasesEffects } from './cases.effects';
 import { SetMapsDataActionStore, selectActiveMapId, selectMapsIds } from '@ansyn/map-facade';
 import { BackToWorldView } from '../../../overlays/overlay-status/actions/overlay-status.actions';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { linksConfig } from '../services/helpers/cases.service.query-params-helper';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
@@ -107,7 +106,6 @@ describe('CasesEffects', () => {
 				},
 				provideMockActions(() => actions),
 				{ provide: LoggerService, useValue: {} },
-				{ provide: linksConfig, useValue: {} },
 				{ provide: casesConfig, useValue: { schema: null, defaultCase: { id: 'defaultCaseId' } } },
 				{ provide: CoreConfig, useValue: { storageService: { baseUrl: 'fake-base-url' } } }
 			]

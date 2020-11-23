@@ -31,6 +31,7 @@ div.cases-table {
 		display: block;
 		overflow-y: auto;
 		max-height: 80vh;
+		direction: rtl; // to flip the scrollbar location
 
 		div.cases-table-body-row:hover + div.cases-table-body-row hr {
 			display: block;
@@ -54,6 +55,7 @@ div.cases-table {
 			overflow: hidden;
 			height: 57px;
 			position: relative;
+			direction: ltr; // see div.cases-table-body
 
 			&.mouse-enter {
 				color: #156879;
@@ -163,7 +165,10 @@ div.cases-table {
 
 	&.rtl {
 		div.cases-table-body {
+			direction: ltr;
 			div.cases-table-body-row {
+				direction: rtl;
+
 				&.mouse-enter {
 					div.cases-table-body-row-data div.case-menu-container div.case-menu {
 						transform: translate(-10%, 50%);

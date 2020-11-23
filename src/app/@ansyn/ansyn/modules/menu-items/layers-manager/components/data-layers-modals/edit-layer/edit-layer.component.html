@@ -10,8 +10,8 @@
 		</ansyn-input>
 
 		<div class="bottom-btns">
-			<button type="button" (click)="closeModal()">{{'Cancel' | translate}}</button>
 			<button [disabled]="!layerName.value?.trim()">{{'Ok' | translate}}</button>
+			<button type="button" (click)="closeModal()">{{'Cancel' | translate}}</button>
 		</div>
 	</form>
 </div>

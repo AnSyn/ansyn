@@ -13,7 +13,7 @@ import {
 	MapFacadeService,
 	mapStateSelector,
 	PositionChangedAction,
-	selectActiveMapId,
+	selectActiveMapId, selectMapPositionByMapId,
 	selectMaps,
 	selectOverlayOfActiveMap,
 	selectOverlaysWithMapIds,
@@ -308,15 +308,23 @@ export class MapAppEffects {
 			})
 		);
 
+	activeMapId: string;
+	activeMapIdPosition: IImageryMapPosition;
+	activeMapId$ = this.store$.select(selectActiveMapId).subscribe(activeMapId => this.activeMapId = activeMapId);
+	updateLayerScale$ = () => this.store$.select(selectMapPositionByMapId(this.activeMapId)).subscribe(position => this.activeMapIdPosition = position);
+
 	@Effect()
-	searchByExtentPolygon$: Observable<any> = this.actions$.pipe(
+	searchByExtentPolygon$ = (): Observable<any> => this.actions$.pipe(
 		ofType(MapActionTypes.POSITION_CHANGED, ToolsActionsTypes.SET_ACTIVE_CENTER, MapActionTypes.SET_ACTIVE_MAP_ID, StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS),
 		debounceTime(this.screenViewConfig.debounceTime),
-		withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus), this.store$.select(selectRegion)),
-		filter(([action, mapList, activeMapId, geoFilterStatus, region]) => Boolean(mapList[activeMapId]) && geoFilterStatus.type === CaseGeoFilter.ScreenView),
-		map(([action, mapList, activeMapId, geoFilterStatus, region]) => {
-			console.log('action', action);
-			const activeMap: IMapSettings = mapList[activeMapId];
+		withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectGeoFilterStatus), this.store$.select(selectRegion)),
+		filter(([action, mapList, geoFilterStatus, region]) => Boolean(mapList[this.activeMapId]) && geoFilterStatus.type === CaseGeoFilter.ScreenView),
+		map(([action, mapList, geoFilterStatus, region]) => {
+			this.updateLayerScale$();
+			const activeMap: IMapSettings = mapList[this.activeMapId];
+			console.log('currentPosition', this.activeMapIdPosition.projectedState.center);
+			// @ts-ignore
+			console.log('newPosition', <any>action.payload.position.projectedState.center);
 			return [activeMap.data.position.extentPolygon, geoFilterStatus, region, activeMap.data.overlay];
 		}),
 		filter(([extentPolygon, geoFilterStatus, region, overlay]: [any, IGeoFilterStatus, any, IOverlay]) => !booleanEqual(extentPolygon, region.geometry) && !Boolean(overlay)),

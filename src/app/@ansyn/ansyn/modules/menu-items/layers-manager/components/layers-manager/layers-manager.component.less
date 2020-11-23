@@ -13,15 +13,17 @@
 		.all-layers {
 			overflow-y: auto;
 			height: calc(~'100% - 5px');
-			padding-right: 10px;
+			padding-left: 10px;
+			direction: rtl; // to flip the scrollbar location
 		}
 	}
 
 	&.rtl {
 		.collection {
 			.all-layers {
-				padding-right: unset;
-				padding-left: 10px;
+				direction: ltr;
+				padding-left: unset;
+				padding-right: 10px;
 			}
 		}
 	}

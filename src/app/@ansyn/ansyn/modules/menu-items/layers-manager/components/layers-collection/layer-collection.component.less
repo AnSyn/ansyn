@@ -1,6 +1,8 @@
 @import "ansyn/less/common";
 
 :host {
+	direction: ltr; // needs to be repeated here because of scrollbar place
+
 	div.container {
 		background-color: @background-color-2;
 		margin-bottom: 13px;
@@ -103,6 +105,8 @@
 	}
 
 	&.rtl {
+		direction: rtl;
+
 		div.container {
 			&.Annotation {
 				ansyn-layer {

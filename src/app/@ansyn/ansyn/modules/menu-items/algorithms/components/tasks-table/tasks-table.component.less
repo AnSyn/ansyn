@@ -34,6 +34,7 @@ div.tasks-table {
 		display: block;
 		overflow-y: auto;
 		height: 80vh;
+		direction: rtl; // to flip the scrollbar location
 
 		div.tasks-table-body-row:hover + div.tasks-table-body-row hr {
 			display: block;
@@ -57,6 +58,7 @@ div.tasks-table {
 			overflow: hidden;
 			height: 57px;
 			position: relative;
+			direction: ltr; // needs to be repeated here because of scrollbar place
 
 			&.mouse-enter {
 				color: #156879;
@@ -165,7 +167,9 @@ div.tasks-table {
 
 	&.rtl {
 		div.tasks-table-body {
+			direction: ltr;
 			div.tasks-table-body-row {
+				direction: rtl;
 				&.mouse-enter {
 					div.tasks-table-body-row-data div.task-menu-container div.task-menu {
 						transform: translate(-10%, 50%);

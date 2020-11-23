@@ -51,6 +51,7 @@
 
 			div.results-table-head-row {
 				margin-bottom: -5px;
+				margin-left: 10px;
 				width: 100%;
 
 				div.results-table-head-row-data {
@@ -92,6 +93,7 @@
 			display: block;
 			overflow-y: auto;
 			height: 80vh;
+			direction: rtl; // to flip the scrollbar location
 
 			div.results-table-body-row-data:hover {
 				background-color: @background-color-7;
@@ -111,11 +113,12 @@
 
 			div.results-table-body-row {
 				display: block;
-				margin-right: 16px;
+				margin-left: 16px;
 				transition: background .3s, color .3s;
 				overflow: hidden;
 				height: 10%;
 				position: relative;
+				direction: ltr; // see div.cases-table-body
 
 				&.mouse-enter {
 					color: #156879;
@@ -175,7 +178,7 @@
 					}
 
 					div.source-type {
-						margin-left: 43px;
+						margin-left: 34px;
 						overflow: hidden;
 						text-overflow: ellipsis;
 					}
@@ -184,7 +187,7 @@
 						flex: 1.5;
 						overflow: hidden;
 						text-overflow: ellipsis;
-						margin-left: 29px;
+						margin-left: 10px
 					}
 
 					.results-table-auto-save-col {
@@ -213,6 +216,9 @@
 				}
 			}
 			div.results-table-head {
+				margin-left: unset;
+				margin-right: 10px;
+
 				div.results-table-head-row {
 					div.results-table-head-row-data {
 						div.results-table-head-col {
@@ -229,9 +235,12 @@
 				}
 			}
 			div.results-table-body {
+				direction: ltr;
 				div.results-table-body-row {
-					margin-right: unset;
-					margin-left: 16px;
+					direction: rtl;
+					margin-left: unset;
+					margin-right: 16px;
+
 					div.results-table-body-row-data {
 						div.overlay-type {
 							margin-left: unset;
@@ -239,11 +248,13 @@
 						}
 						div.source-type {
 							margin-left: unset;
-							margin-right: 43px;
+							margin-right: 34px;
 						}
 						div.results-table-case-name-col {
 							margin-left: unset;
-							margin-right: 29px;
+							margin-right: 10px;
+							direction: ltr; // it is a date, so don't flip characters
+							text-align: right; // but align it to the right
 						}
 					}
 				}

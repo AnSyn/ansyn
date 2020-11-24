@@ -33,7 +33,7 @@ import {
 	IImageryMapPosition,
 	IMapSettings,
 	polygonFromBBOX,
-	polygonsDontIntersect
+	polygonsDontIntersect, GetProvidersMapsService, ImageryLayerProperties
 } from '@ansyn/imagery';
 import {
 	catchError,
@@ -308,8 +308,8 @@ export class MapAppEffects {
 	@Effect()
 	searchByExtentPolygon$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.POSITION_CHANGED, MapActionTypes.SET_ACTIVE_MAP_ID, StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS),
-		withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus), this.store$.select(selectRegion)),
 		debounceTime(this.screenViewConfig.debounceTime),
+		withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus), this.store$.select(selectRegion)),
 		filter(([action, mapList, activeMapId, geoFilterStatus, region]) => Boolean(mapList[activeMapId]) && geoFilterStatus.type === CaseGeoFilter.ScreenView),
 		map(([action, mapList, activeMapId, geoFilterStatus, region]) => {
 			const activeMap: IMapSettings = mapList[activeMapId];
@@ -336,6 +336,7 @@ export class MapAppEffects {
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
+				protected getProvidersMapsService: GetProvidersMapsService,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig,
 				@Inject(ScreenViewConfig) public screenViewConfig: IScreenViewConfig
@@ -364,10 +365,7 @@ export class MapAppEffects {
 		const intersectionRatio = getPolygonIntersectionRatio(this.bboxPolygon(mapData.position.extentPolygon), overlay.footprint);
 		const communicator = this.imageryCommunicatorService.provide(mapId);
 		const { sourceType } = overlay;
-		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({
-			sourceType,
-			mapType: sourceType.toLowerCase().includes('video') ? ImageryVideoMapType : caseMapState.worldView.mapType
-		});
+		const sourceLoader: BaseMapSourceProvider = this.getProvidersMapsService.getMapSourceProvider(sourceType.toLowerCase().includes('video') ? ImageryVideoMapType : caseMapState.worldView.mapType, sourceType);
 
 		if (!sourceLoader) {
 			return of(new SetToastMessageAction({
@@ -379,6 +377,12 @@ export class MapAppEffects {
 		const sourceProviderMetaData = { ...caseMapState, data: { ...mapData, overlay } };
 		this.setIsLoadingSpinner(mapId, sourceLoader, sourceProviderMetaData);
 
+
+		/* -0- */
+		const setIsOverlayProperties = map( (layer: IBaseImageryLayer) => {
+			layer.set(ImageryLayerProperties.IS_OVERLAY, true);
+			return layer;
+		});
 
 		/* -1- */
 		const isActiveMapAlive = mergeMap((layer: IBaseImageryLayer) => {
@@ -431,6 +435,7 @@ export class MapAppEffects {
 
 		return fromPromise(sourceLoader.createAsync(sourceProviderMetaData))
 			.pipe(
+				setIsOverlayProperties,
 				isActiveMapAlive,
 				changeActiveMap,
 				resetView,

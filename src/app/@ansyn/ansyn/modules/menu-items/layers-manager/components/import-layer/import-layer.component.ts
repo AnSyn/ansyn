@@ -5,14 +5,20 @@ import { DataLayersService } from '../../services/data-layers.service';
 import { AddLayer, LogImportLayer } from '../../actions/layers.actions';
 import { fromEvent, Observable } from 'rxjs';
 import { UUID } from 'angular2-uuid';
-import { selectActiveMapId, SetMapPositionByRectAction, SetToastMessageAction } from '@ansyn/map-facade';
+import {
+	IMapState, MapFacadeService,
+	mapStateSelector,
+	selectActiveMapId,
+	SetMapPositionByRectAction,
+	SetToastMessageAction
+} from '@ansyn/map-facade';
 import { delay, filter, map, retryWhen, tap, withLatestFrom } from 'rxjs/operators';
 import { FeatureCollection, Polygon } from 'geojson';
 import KmlFormat from 'ol/format/KML';
 import GeoJSONFormat from 'ol/format/GeoJSON';
 import * as shapeFile from 'shapefile';
 import { getErrorMessageFromException } from '../../../../core/utils/logs/timer-logs';
-import { bboxFromGeoJson, polygonFromBBOX, validateFeatureProperties } from '@ansyn/imagery';
+import { bboxFromGeoJson, IMapSettings, polygonFromBBOX, validateFeatureProperties } from '@ansyn/imagery';
 
 @Component({
 	selector: 'ansyn-import-layer',
@@ -68,6 +74,12 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	onReadLayerSuccess$ = this.onReadLayer$.pipe(
 		map((layer) => {
 			this.generateFeatureCollection(layer.data, layer.name);
+			return layer;
+		}),
+		withLatestFrom(this.store.select(mapStateSelector)),
+		map(([layer, mapState]: [any, IMapState]) => [layer, MapFacadeService.activeMap(mapState)]),
+		filter(([layer, activeMap]: [any, IMapSettings]) => !Boolean(activeMap.data.overlay)),
+		map(([layer, activeMap]: [any, IMapSettings]) => {
 			return this.calculateLayerBbox(layer.data);
 		}),
 		filter(Boolean),

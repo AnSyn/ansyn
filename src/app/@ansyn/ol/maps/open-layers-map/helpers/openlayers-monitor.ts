@@ -3,7 +3,6 @@ import { IMAGERY_MAIN_LAYER_NAME, ImageryLayerProperties, IMapErrorMessage, IMap
 import Static from 'ol/source/ImageStatic';
 import { HttpClient, HttpEventType, HttpRequest } from '@angular/common/http';
 import OLMap from 'ol/Map';
-import { ProjectableRaster } from '../models/projectable-raster';
 import { EventEmitter } from '@angular/core';
 
 export class OpenLayersMonitor {
@@ -46,9 +45,6 @@ export class OpenLayersMonitor {
 
 		let source = layer.getSource();
 
-		if (source instanceof ProjectableRaster) {
-			return (<ProjectableRaster>source).sources[0];
-		}
 		if (source instanceof Static) {
 			return <Static>source;
 		}

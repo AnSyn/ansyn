@@ -142,20 +142,21 @@ export class TimePickerContainerComponent implements OnInit, OnDestroy {
 				return;
 			}
 		}
-		if (isEnterKey(event)) {
-			this.store$.dispatch(new LogManualSearchTime({
-				from: this.timePickerInputFrom.nativeElement.textContent,
-				to: this.timePickerInputTo.nativeElement.textContent
-			}));
-
-			if (!this.supportRangeDates()) {
-				this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.notSupportRangeDates }));
-			} else if (!this.checkTimeWasChange()) {
-				this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.timeWasNotChange }));
-			} else if (!this.setTimeCriteria()) {
-				this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.invalidDate }));
+		if(this.checkTimeWasChange()) {
+			if (isEnterKey(event)) {
+				this.store$.dispatch(new LogManualSearchTime({
+					from: this.timePickerInputFrom.nativeElement.textContent,
+					to: this.timePickerInputTo.nativeElement.textContent
+				}));
+	
+				if (!this.supportRangeDates()) {
+					this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.notSupportRangeDates }));
+				} else if (!this.setTimeCriteria()) {
+					this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.invalidDate }));
+				}
 			}
 		}
+		
 		if (isEscapeKey(event)) {
 			this.revertTime();
 		}

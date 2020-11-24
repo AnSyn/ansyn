@@ -41,7 +41,7 @@
 			<div class="cases-table-body-row-data">
 				<hr>
 
-				<div class="cases-table-case-name-col">
+				<div [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''" class="cases-table-case-name-col">
 					{{entities[id].name}}
 				</div>
 

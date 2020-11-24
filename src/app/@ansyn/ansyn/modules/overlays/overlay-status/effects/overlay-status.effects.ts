@@ -15,7 +15,7 @@ import {
 	selectMapsList,
 	SetToastMessageAction,
 	UpdateMapAction,
-	SetLayoutSuccessAction, selectActiveMapId, IMapState
+	SetLayoutSuccessAction, selectActiveMapId, IMapState, SetActiveMapId
 } from '@ansyn/map-facade';
 import { AnnotationMode, DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
 import { Actions, Effect, ofType } from '@ngrx/effects';
@@ -111,10 +111,10 @@ export class OverlayStatusEffects {
 		ofType(OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING),
 		withLatestFrom(this.store$.select(mapStateSelector)),
 		mergeMap<any, any>(([action, mapsState]: [SetAutoImageProcessing, IMapState]) => {
-			mapsState.activeMapId = action.payload.mapId;
 			const activeMap: IMapSettings = MapFacadeService.activeMap(mapsState);
 			const isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
 			return [
+				new SetActiveMapId(action.payload.mapId),
 				new UpdateMapAction({
 					id: activeMap.id,
 					changes: { data: { ...activeMap.data, isAutoImageProcessingActive } }

@@ -44,7 +44,7 @@ export class CasesEffects {
 		}),
 		share());
 
-	@Effect()
+	/*@Effect()
 	onDeleteCase$: Observable<any> = this.actions$.pipe(
 		ofType<DeleteCaseAction>(CasesActionTypes.DELETE_CASE),
 		mergeMap((action) => this.dataLayersService.removeCaseLayers(action.payload.id).pipe(map(() => action))),
@@ -52,7 +52,7 @@ export class CasesEffects {
 		filter(([deletedCaseId, selectedCaseId]) => deletedCaseId === selectedCaseId),
 		map(() => new LoadDefaultCaseAction()),
 		rxPreventCrash()
-	);
+	);*/
 
 	@Effect()
 	onDeleteCaseLoadCases$: Observable<LoadCasesAction> = this.actions$.pipe(

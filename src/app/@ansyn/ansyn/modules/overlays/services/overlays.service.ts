@@ -74,16 +74,8 @@ export class OverlaysService {
 	}
 
 	static parseOverlayDataForDisplay({ overlaysArray, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites }: IOverlayDropSources): IOverlayDrop[] {
-		if(!Boolean(filteredOverlays.length)) {
-			return []
-		}
 		const criterialOverlays: IOverlay[] = showOnlyFavorites ? [] : overlaysArray.filter(({ id }) => filteredOverlays.includes(id));
-		const allOverlays: IOverlay[] = unionBy(criterialOverlays,favoriteOverlays ,({ id }) => id);
-		const favoriteOverlaysIds: string[] = [];
-		favoriteOverlays.forEach(overlay => favoriteOverlaysIds.push(overlay.id))
-		const dropsFromOverlays: IOverlayDrop[] = allOverlays.map(({ id, date, sensorName, icon }) => { 
-			return ({ id, date, sensorName, icon, favorite: favoriteOverlaysIds.includes(id) })
-		});
+		const dropsFromOverlays: IOverlayDrop[] = criterialOverlays.map(({ id, date, sensorName, icon }) =>   ({ id, date, sensorName, icon, favorite: favoriteOverlays.map(favoriteOverlay => favoriteOverlay.id).includes(id) }));
 		const allDrops = [...dropsFromOverlays, ...mapValuesToArray(specialObjects)].sort(sortByDateDesc);
 		return allDrops;
 	}

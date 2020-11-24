@@ -50,7 +50,7 @@ export class RouterEffects {
 		map(([action, selectCase]) => new LoadDefaultCaseAction(action.payload.queryParams))
 	);
 
-	@Effect()
+	/*@Effect()
 	selectCaseUpdateRouter$: Observable<NavigateCaseTriggerAction> = this.actions$.pipe(
 		ofType(CasesActionTypes.SELECT_CASE, CasesActionTypes.SAVE_CASE_AS_SUCCESS),
 		withLatestFrom(this.store$.select(routerStateSelector)),
@@ -60,7 +60,7 @@ export class RouterEffects {
 				schema: (action.payload.schema) ? action.payload.schema : 'case',
 				id: action.payload.id
 			})
-		));
+		));*/
 
 	@Effect()
 	selectDefaultCaseUpdateRouter$: Observable<NavigateCaseTriggerAction> = this.actions$.pipe(

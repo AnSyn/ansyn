@@ -13,7 +13,7 @@ import { IAppState } from '../../app.effects.module';
 import { selectSelectedLayersIds } from '../../../modules/menu-items/layers-manager/reducers/layers.reducer';
 import { selectFacets } from '../../../modules/filters/reducer/filters.reducer';
 import { UpdateCaseAction } from '../../../modules/menu-items/cases/actions/cases.actions';
-import { selectAutoSave, selectSelectedCase } from '../../../modules/menu-items/cases/reducers/cases.reducer';
+import { selectSelectedCase } from '../../../modules/menu-items/cases/reducers/cases.reducer';
 import { selectMiscOverlays, selectOverlaysCriteria } from '../../../modules/overlays/reducers/overlays.reducer';
 import { ICase } from '../../../modules/menu-items/cases/models/case.model';
 
@@ -36,8 +36,6 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectTranslationData),
 		this.store$.select(selectScannedAreaData)
 	]
-		.map(event => event.pipe(this.clearIsAutoSave))
-		.concat([this.store$.select(selectAutoSave).pipe(this.setIsAutoSave)]);
 
 	@Effect()
 	shouldUpdateCase$: Observable<UpdateCaseAction> = combineLatest(this.events).pipe(
@@ -88,7 +86,7 @@ export class UpdateCaseAppEffects {
 				}
 			};
 
-			return new UpdateCaseAction({ updatedCase, forceUpdate: this.isAutoSaveTriggered });
+			return new UpdateCaseAction({ updatedCase, forceUpdate: false });
 		})
 	);
 

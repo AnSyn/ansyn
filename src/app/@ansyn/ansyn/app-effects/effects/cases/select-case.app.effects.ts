@@ -18,8 +18,7 @@ import {
 import {
 	CasesActionTypes,
 	SelectCaseAction,
-	SelectCaseSuccessAction,
-	SetAutoSave
+	SelectCaseSuccessAction
 } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { casesConfig, CasesService } from '../../../modules/menu-items/cases/services/cases.service';
 import { UpdateFacetsAction } from '../../../modules/filters/actions/filters.actions';
@@ -57,7 +56,7 @@ export class SelectCaseAppEffects {
 	}
 
 	selectCaseActions(payload: ICase, noInitialSearch: boolean): Action[] {
-		const { state, autoSave } = payload;
+		const { state } = payload;
 		// status-bar
 		const { overlaysManualProcessArgs, overlaysTranslationData, overlaysScannedAreaData } = state;
 		// map
@@ -105,7 +104,6 @@ export class SelectCaseAppEffects {
 			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 			new UpdateFacetsAction(facets),
 			new UpdateSelectedLayersIds(activeLayersIds),
-			new SetAutoSave(autoSave),
 			new SetAnnotationMode(null),
 			new SetMeasureDistanceToolState(false),
 			new SelectCaseSuccessAction(payload)

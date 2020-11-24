@@ -13,6 +13,8 @@ export interface IEntity {
 export interface IStoredEntity<P extends IEntity, D> {
 	preview: P;
 	data?: D;
+	owner?: string; // only in case
+	sharedWith?: string[]; // only in case
 }
 
 /*
@@ -54,12 +56,14 @@ export class StorageService {
 		return this._http.post<P[]>(`${ url }/delete_by_case`, body);
 	}
 
-	getPage<P extends IEntity>(schema: string, offset: number, pageSize: number): Observable<P[]> {
+	getPage<P extends IEntity>(schema: string, offset: number, pageSize: number, user?: string, casesType?: 'owner' | 'sharedWith'): Observable<P[]> {
 		const url = this._buildSchemaUrl(schema);
 		return this._http.get<P[]>(url, {
 			params: {
 				from: offset.toString(),
-				limit: pageSize.toString()
+				limit: pageSize.toString(),
+				user,
+				casesType
 			}
 		});
 	}

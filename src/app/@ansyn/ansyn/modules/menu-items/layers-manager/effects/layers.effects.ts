@@ -15,7 +15,7 @@ import { catchError, filter, map, mergeMap, withLatestFrom } from 'rxjs/operator
 import { DataLayersService } from '../services/data-layers.service';
 import { ILayer, LayerType } from '../models/layers.model';
 import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCrash';
-import { selectAutoSave } from '../../../menu-items/cases/reducers/cases.reducer';
+// import { selectAutoSave } from '../../../menu-items/cases/reducers/cases.reducer';
 
 @Injectable()
 export class LayersEffects {
@@ -39,16 +39,16 @@ export class LayersEffects {
 		})
 	);
 
-	@Effect({ dispatch: false })
+	/*@Effect({ dispatch: false })
 	addLayer$: Observable<any> = this.actions$.pipe(
 		ofType<AddLayer>(LayersActionTypes.ADD_LAYER),
 		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
 		filter(([action, autoSave]) => autoSave),
-		mergeMap(([action]) => this.dataLayersService.addLayer(action.payload)),
+		mergeMap((action) => this.dataLayersService.addLayer(action.payload)),
 		rxPreventCrash()
-	);
+	);*/
 
-	@Effect({ dispatch: false })
+	/*@Effect({ dispatch: false })
 	updateLayer$: Observable<any> = this.actions$.pipe(
 		ofType<UpdateLayer>(LayersActionTypes.UPDATE_LAYER),
 		withLatestFrom(this.store$.pipe(select(selectAutoSave)), this.store$.pipe(select(selectLayersEntities))),
@@ -61,9 +61,9 @@ export class LayersEffects {
 					)
 			}
 		)
-	);
+	);*/
 
-	@Effect({ dispatch: false })
+	/*@Effect({ dispatch: false })
 	removeLayer$ = this.actions$.pipe(
 		ofType<UpdateLayer>(LayersActionTypes.REMOVE_LAYER),
 		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
@@ -73,7 +73,7 @@ export class LayersEffects {
 				catchError(() => EMPTY)
 			)
 		)
-	);
+	);*/
 
 	constructor(protected actions$: Actions,
 				protected dataLayersService: DataLayersService,

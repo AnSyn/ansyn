@@ -8,5 +8,6 @@ export interface ICasesConfig {
 	defaultCase: ICase,
 	updateCaseDebounceTime: number,
 	useHash: boolean,
-	defaultSearchFromDeltaTime?: IDeltaTime
+	defaultSearchFromDeltaTime?: IDeltaTime,
+	user: string
 }

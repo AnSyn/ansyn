@@ -16,9 +16,10 @@ export const CasesActionTypes = {
 	DELETE_CASE: 'DELETE_CASE',
 
 	UPDATE_CASE: 'UPDATE_CASE',
+	/*
 	UPDATE_CASE_BACKEND: 'UPDATE_CASE_BACKEND',
 	UPDATE_CASE_BACKEND_SUCCESS: 'UPDATE_CASE_BACKEND_SUCCESS',
-	UPDATE_CASE_BACKEND_SAVE_AS: 'UPDATE_CASE_BACKEND_SAVE_AS',
+	UPDATE_CASE_BACKEND_SAVE_AS: 'UPDATE_CASE_BACKEND_SAVE_AS',*/
 
 	OPEN_MODAL: 'OPEN_MODAL',
 	CLOSE_MODAL: 'CLOSE_MODAL',
@@ -41,9 +42,9 @@ export const CasesActionTypes = {
 	TOGGLE_FAVORITE_OVERLAY: 'TOGGLE_FAVORITE_OVERLAY',
 
 	LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE: 'LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE',
-	MANUAL_SAVE: 'MANUAL_SAVE',
+	/*MANUAL_SAVE: 'MANUAL_SAVE',
 
-	SET_AUTO_SAVE: 'SET_AUTO_SAVE',
+	SET_AUTO_SAVE: 'SET_AUTO_SAVE',*/
 
 	LOG_RENAME_CASE: 'LOG_RENAME_CASE'
 };
@@ -77,13 +78,14 @@ export class AddCasesAction implements Action {
 	constructor(public payload: ICase[]) {
 	}
 }
-
 export class UpdateCaseAction implements Action {
 	type = CasesActionTypes.UPDATE_CASE;
 
 	constructor(public payload: { updatedCase: ICase, forceUpdate?: boolean }) {
 	}
 }
+
+/*
 
 export class UpdateCaseBackendAction implements Action {
 	type = CasesActionTypes.UPDATE_CASE_BACKEND;
@@ -104,7 +106,7 @@ export class UpdateCaseBackendSuccessAction implements Action {
 
 	constructor(public payload: IStoredEntity<ICasePreview, IDilutedCaseState>) {
 	}
-}
+}*/
 
 export class DeleteCaseAction implements Action, ILogMessage {
 	type = CasesActionTypes.DELETE_CASE;
@@ -203,7 +205,7 @@ export class CopyCaseLinkAction implements Action, ILogMessage {
 	}
 }
 
-export class ManualSaveAction implements Action {
+/*export class ManualSaveAction implements Action {
 	readonly type = CasesActionTypes.MANUAL_SAVE;
 
 	constructor(public payload: ICase) {
@@ -215,7 +217,7 @@ export class SetAutoSave implements Action {
 
 	constructor(public payload: boolean) {
 	}
-}
+}*/
 
 export class LogRenameCase implements Action, ILogMessage {
 	readonly type = CasesActionTypes.LOG_RENAME_CASE;

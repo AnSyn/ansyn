@@ -78,7 +78,7 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	onMouseEnterCaseRow(caseMenu: HTMLDivElement, caseRow: HTMLDivElement, tbodyElement: HTMLDivElement) {
+	onMouseEnterCaseRow(caseRow: HTMLDivElement) {
 		caseRow.classList.add('mouse-enter');
 	}
 

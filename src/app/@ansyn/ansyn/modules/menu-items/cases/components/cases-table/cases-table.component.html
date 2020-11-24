@@ -25,7 +25,7 @@
 			 *ngFor="let id of ids"
 			 (click)="selectCase(id)"
 			 [class.active]="(modalCaseId$ | async) === id"
-			 (mouseenter)="onMouseEnterCaseRow(caseMenu, caseRow, tbodyElement)"
+			 (mouseenter)="onMouseEnterCaseRow(caseRow)"
 			 (mouseleave)="onMouseLeaveCaseRow(caseRow)"
 			 [@leaveAnim]
              #caseRow>

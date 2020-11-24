@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { EMPTY, forkJoin, Observable, of, pipe, UnaryFunction } from 'rxjs';
+import { EMPTY, forkJoin, Observable, of } from 'rxjs';
 import {
 	AddCasesAction,
 	CasesActionTypes,
@@ -10,46 +10,24 @@ import {
 	LoadCaseAction,
 	LoadCasesAction,
 	LoadDefaultCaseAction,
-	ManualSaveAction,
 	SaveCaseAsAction,
-	SaveCaseAsSuccessAction,
-	SelectCaseAction,
-	SelectDilutedCaseAction,
-	SetAutoSave,
-	UpdateCaseAction,
-	UpdateCaseBackendAction,
-	UpdateCaseBackendSuccessAction
+	SelectDilutedCaseAction
 } from '../actions/cases.actions';
 import { casesConfig, CasesService } from '../services/cases.service';
 import { casesStateSelector, ICasesState, selectCaseTotal, selectSelectedCase } from '../reducers/cases.reducer';
 import { ICasesConfig } from '../models/cases-config';
-import {
-	catchError,
-	concatMap,
-	debounceTime,
-	filter,
-	map,
-	mergeMap,
-	share,
-	switchMap,
-	withLatestFrom
-} from 'rxjs/operators';
+import { catchError, debounceTime, filter, map, mergeMap, share, switchMap, withLatestFrom } from 'rxjs/operators';
 import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
-import { UUID } from 'angular2-uuid';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { DataLayersService } from '../../layers-manager/services/data-layers.service';
-import {
-	SetMapsDataActionStore,
-	SetToastMessageAction
-} from '@ansyn/map-facade';
+import { copyFromContent, SetToastMessageAction } from '@ansyn/map-facade';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { IStoredEntity } from '../../../core/services/storage/storage.service';
 import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCrash';
 import { toastMessages } from '../../../core/models/toast-messages';
 import { ICase, ICasePreview, IDilutedCaseState } from '../models/case.model';
-import { BackToWorldView } from '../../../overlays/overlay-status/actions/overlay-status.actions';
 import { fromPromise } from 'rxjs/internal-compatibility';
-import { copyFromContent } from '@ansyn/map-facade';
+import { cloneDeep } from '../../../core/utils/rxjs/operators/cloneDeep';
 
 @Injectable()
 export class CasesEffects {
@@ -84,7 +62,7 @@ export class CasesEffects {
 		map(() => new LoadCasesAction()),
 		share());
 
-	@Effect()
+	/*@Effect()
 	onUpdateCase$: Observable<UpdateCaseBackendAction> = this.actions$.pipe(
 		ofType(CasesActionTypes.UPDATE_CASE),
 		map((action: UpdateCaseAction) => [action, this.casesService.defaultCase.id]),
@@ -119,68 +97,44 @@ export class CasesEffects {
 					);
 
 			})
-		);
+		);*/
 
 	@Effect()
-	onSaveCaseAs$: Observable<SaveCaseAsSuccessAction> = this.actions$.pipe(
+	onSaveCaseAs$ = this.actions$.pipe(
 		ofType<SaveCaseAsAction>(CasesActionTypes.SAVE_CASE_AS),
+		cloneDeep(),
 		withLatestFrom(this.store.select(selectLayers)),
-		mergeMap(([{ payload }, layers]: [SaveCaseAsAction, ILayer[]]) => this.casesService
-			.createCase(payload).pipe(
-				mergeMap((addedCase: ICase) => forkJoin(layers
-						.filter(({ type }) => type === LayerType.annotation)
-						.map((layer) => {
-							const newId = UUID.UUID();
-							const oldId = layer.id;
-
-							addedCase =
-								{
-									...addedCase, state:
-										{
-											...addedCase.state, layers:
-												{
-													...addedCase.state.layers,
-													activeLayersIds: addedCase.state.layers.activeLayersIds.map((id) => {
-														return id === oldId ? newId : id;
-													})
-												}
-										}
-								};
-							// addedCase.state.layers.activeLayersIds = addedCase.state.layers.activeLayersIds.map((id) => {
-							// 	return id === oldId ? newId : id;
-							// });
-							// Todo: the new case was created by shallow cloning an existing case.
-							//  The existing case is in the store, so this caused problems, and I
-							//  had to do special cloning, as above. Perhaps it will be better to:
-							//  (1) Do deep clone, rather than shallow clone, in the service, or
-							//  (2) Do clonings only in the store/reducer, and not in service/effect
-
-							return { ...layer, id: newId, caseId: addedCase.id };
-						}).map((layer) => this.dataLayersService.addLayer(layer))
-					)
-						.pipe(map((_) => addedCase))
-				),
-				map((addedCase: ICase) => new SaveCaseAsSuccessAction(addedCase)),
-				catchError((err) => {
-					console.warn(err);
-					return EMPTY;
-				})
-			)
-		),
+		mergeMap(([{ payload }, layers]: [SaveCaseAsAction, ILayer[]]) => {
+			const newCase = {...payload, id: this.casesService.generateUUID()};
+			// regenerate layers id for the new case.
+			return forkJoin(layers
+				.filter(({ type }) => type === LayerType.annotation)
+				.map((layer) => {
+					const newLayerId = this.casesService.generateUUID();
+					const oldLayerId = layer.id;
+					newCase.state.layers.activeLayersIds = newCase.state.layers.activeLayersIds.map((id) => {
+						return id === oldLayerId ? newLayerId : id;
+					});
+					return { ...layer, id: newLayerId, caseId: newCase.id }
+				}).map((layer) => this.dataLayersService.addLayer(layer))
+			).pipe(map((_) => newCase))
+		}),
+		mergeMap(newCase => this.casesService.createCase(newCase)),
+		map( (newCase) => new AddCasesAction([newCase])),
 		catchError((err) => {
 			console.warn(err);
 			return EMPTY;
 		})
 	);
 
-	@Effect()
+	/*@Effect()
 	onSaveCaseAsSuccess$ = this.actions$.pipe(
 		ofType<SaveCaseAsAction>(CasesActionTypes.SAVE_CASE_AS_SUCCESS),
 		concatMap(({ payload }) => [
 			new SetAutoSave(true),
 			new SetMapsDataActionStore({ mapsList: payload.state.maps.data }),
 		])
-	);
+	);*/
 
 	@Effect()
 	onCopyShareCaseIdLink$ = this.actions$.pipe(
@@ -210,7 +164,7 @@ export class CasesEffects {
 			catchError(() => of(new LoadDefaultCaseAction()))
 		);
 
-	saveLayers: UnaryFunction<any, any> = pipe(
+	/*saveLayers: UnaryFunction<any, any> = pipe(
 		mergeMap((action: ManualSaveAction) => this.dataLayersService
 			.removeCaseLayers(action.payload.id).pipe(
 				withLatestFrom(this.store.select(selectLayers)),
@@ -232,7 +186,7 @@ export class CasesEffects {
 		]),
 		catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Failed to update case')),
 		catchError(() => EMPTY)
-	);
+	);*/
 
 	constructor(protected actions$: Actions,
 				protected casesService: CasesService,

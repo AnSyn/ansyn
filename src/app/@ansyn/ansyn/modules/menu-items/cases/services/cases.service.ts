@@ -55,12 +55,16 @@ export class CasesService {
 		return this.config.defaultCase;
 	}
 
+	get currentUser() {
+		return this.config.user;
+	}
+
 	get updateCaseViaContext() {
 		return this.queryParamsHelper.updateCaseViaContext.bind(this.queryParamsHelper);
 	}
 
-	loadCases(casesOffset: number = 0): Observable<any> {
-		return this.storageService.getPage<ICasePreview>(this.config.schema, casesOffset, this.paginationLimit)
+	loadCases(casesOffset: number = 0, casesType: 'owner' | 'sharedWith' = 'owner'): Observable<any> {
+		return this.storageService.getPage<ICasePreview>(this.config.schema, casesOffset, this.paginationLimit, this.currentUser, casesType)
 			.pipe(
 				map(previews => previews.map(preview => this.parseCasePreview(preview))),
 				catchError(err => this.errorHandlerService.httpErrorHandle(err, this.translator.instant('Failed to load cases')))
@@ -97,7 +101,7 @@ export class CasesService {
 			name: caseValue.name,
 			autoSave: caseValue.autoSave,
 			creationTime: caseValue.creationTime,
-			owner: caseValue.owner,
+			owner: this.currentUser,
 			lastModified: caseValue.lastModified
 		};
 
@@ -147,22 +151,18 @@ export class CasesService {
 	convertToStoredEntity(caseValue: ICase): IStoredEntity<ICasePreview, IDilutedCaseState> {
 		return {
 			preview: this.getPreview(caseValue),
-			data: this.pluckIdSourceType(caseValue.state)
+			data: this.pluckIdSourceType(caseValue.state),
+			owner: this.currentUser,
+			sharedWith: []
 		};
 	}
 
 	createCase(selectedCase: ICase, currentTime = new Date()): Observable<ICase> {
-		const uuid = this.generateUUID();
 		const newCase: ICase = {
 			...selectedCase,
-			state: {
-				...selectedCase.state,
-				maps: this.generateMapId(selectedCase.state.maps),
-			},
-			id: uuid,
 			creationTime: currentTime,
 			lastModified: currentTime,
-			autoSave: true
+			autoSave: false
 		};
 		return this.storageService.create(this.config.schema, this.convertToStoredEntity(newCase))
 			.pipe(
@@ -230,7 +230,7 @@ export class CasesService {
 		return _isEqual(cloneA, cloneB);
 	}
 
-	generateMapId(maps: ICaseMapsState) {
+	/*generateMapId(maps: ICaseMapsState) {
 		let activeMapId = maps.activeMapId;
 		const newMaps = {...maps, data: maps.data.map( (map) => {
 				const newMapId = this.generateUUID();
@@ -241,5 +241,5 @@ export class CasesService {
 			})};
 		newMaps.activeMapId = activeMapId;
 		return newMaps;
-	}
+	}*/
 }

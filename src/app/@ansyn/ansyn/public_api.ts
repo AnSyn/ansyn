@@ -64,7 +64,7 @@ export { StatusBarModule } from './modules/status-bar/status-bar.module';
 
 // menuItems
 export { ClearActiveInteractionsAction } from './modules/menu-items/tools/actions/tools.actions';
-export { selectAutoSave } from './modules/menu-items/cases/reducers/cases.reducer';
+// export { selectAutoSave } from './modules/menu-items/cases/reducers/cases.reducer';
 export { FilterType } from './modules/filters/models/filter-type';
 
 export { SelectCaseSuccessAction } from './modules/menu-items/cases/actions/cases.actions';
@@ -207,7 +207,7 @@ export {
 	AlgorithmTask,
 	AlgorithmTaskStatus
 } from './modules/menu-items/algorithms/models/tasks.model';
-export { SetAutoSave } from './modules/menu-items/cases/actions/cases.actions';
+// export { SetAutoSave } from './modules/menu-items/cases/actions/cases.actions';
 
 
 // core

@@ -49,14 +49,14 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 			return casesAdapter.updateOne({ id: caseToUpdate.id, changes: caseToUpdate }, { ...state, selectedCase });
 		}
 
-		case CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS || CasesActionTypes.UPDATE_CASE_BACKEND_SAVE_AS: {
+		/*case CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS || CasesActionTypes.UPDATE_CASE_BACKEND_SAVE_AS: {
 			const lastModified = new Date();
 			const selectedCase = { ...state.selectedCase, lastModified };
 			return casesAdapter.updateOne({ id: action.payload.id, changes: { lastModified } }, {
 				...state,
 				selectedCase
 			});
-		}
+		}*/
 
 		case CasesActionTypes.DELETE_CASE:
 			return casesAdapter.removeOne((action as DeleteCaseAction).payload.id, state);
@@ -76,8 +76,8 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 		case CasesActionTypes.SELECT_CASE_SUCCESS:
 			return { ...state, selectedCase: action.payload };
 
-		case CasesActionTypes.SET_AUTO_SAVE:
-			return { ...state, autoSave: action.payload };
+		/*case CasesActionTypes.SET_AUTO_SAVE:
+			return { ...state, autoSave: action.payload };*/
 
 		default:
 			return state;
@@ -90,8 +90,8 @@ export const selectCaseEntities = <MemoizedSelector<ICasesState, Dictionary<ICas
 export const selectCasesIds = <MemoizedSelector<any, string[] | number[]>>createSelector(casesStateSelector, selectIds);
 export const selectCaseById = (id: string) => createSelector(selectCaseEntities, (entities) => entities && entities[id]);
 export const selectSelectedCase = createSelector(casesStateSelector, (cases) => cases && cases.selectedCase);
-export const selectAutoSave: MemoizedSelector<any, boolean> = createSelector(casesStateSelector, (cases) => {
+/*export const selectAutoSave: MemoizedSelector<any, boolean> = createSelector(casesStateSelector, (cases) => {
 	return cases.autoSave
-});
+});*/
 export const selectModalState = createSelector(casesStateSelector, (cases) => cases?.modal);
 export const selectShowCasesTable = createSelector(casesStateSelector, (cases) => cases?.showCasesTable);

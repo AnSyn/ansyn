@@ -2,13 +2,6 @@
 @import 'ansyn/less/common';
 
 :host {
-	&.rtl {
-		direction: rtl;
-
-		.mat-dialog-actions {
-			flex-direction: row-reverse;
-		}
-	}
 	background-color: @background-color-2;
 	font: 500 20px/20px Roboto, "Helvetica Neue", sans-serif;
 	display: flex;
@@ -16,6 +9,10 @@
 	flex: 1;
 	color: white;
 	overflow: hidden;
+	direction: ltr;
+	// this popup is not opened under ansyn-component,
+	// so we do not rely on inheriting the direction
+
 	.header {
 		display: flex;
 		justify-content: space-between;
@@ -97,7 +94,6 @@
 			padding: 5px;
 			border-radius: 10px;
 
-
 			&.reset-btn {
 				background-color: @background-color-2;
 				color: @application-primary-color;
@@ -105,6 +101,10 @@
 			}
 		}
 
+	}
+
+	&.rtl {
+		direction: rtl;
 	}
 }
 

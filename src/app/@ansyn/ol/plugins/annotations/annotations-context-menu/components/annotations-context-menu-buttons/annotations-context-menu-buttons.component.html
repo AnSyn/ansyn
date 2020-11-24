@@ -49,6 +49,7 @@
 							[label]="getFeatureProps()?.label"
 							[labelSize]="annotations.idToEntity.get(featureId)?.originalEntity.labelSize"
 							[translateOn]="getFeatureProps()?.labelTranslateOn"
+							[isRTL]="isRTL"
 							(onChangeText)="updateLabel($event)"
 							(onChangeSize)="updateLabelSize($event)"
 							(onTranslateClick)="annotations.labelTranslateMode(featureId)">
@@ -105,10 +106,10 @@
 		</i>
 	</button>
 
-	<ansyn-dynamic-metadata-form 
-		*ngIf="selectedTab[featureId] === Tabs.Metadata" 
-		class="metadata-form" 
-		[attributes]="attributes$ | async" 
+	<ansyn-dynamic-metadata-form
+		*ngIf="selectedTab[featureId] === Tabs.Metadata"
+		class="metadata-form"
+		[attributes]="attributes$ | async"
 		(onSubmit)="onMetadataFormSubmit($event)"
 	></ansyn-dynamic-metadata-form>
 </div>

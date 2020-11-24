@@ -27,7 +27,9 @@ describe('LayersManagerComponent', () => {
 				mockCollection,
 				mockTranslatePipe
 			],
-			providers: [{ provide: TranslateService, useValue: { instant: (x) => x }}]
+			providers: [
+				{ provide: TranslateService, useValue: { instant: (x) => x } }
+			]
 		})
 			.compileComponents();
 	}));

@@ -90,7 +90,6 @@ import { MeasureDistanceVisualizer } from '../../modules/plugins/openlayers/plug
 import { IGeoFilterStatus, selectGeoFilterStatus } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { booleanEqual, distance, feature } from '@turf/turf';
 import {
-	StatusBarActions,
 	StatusBarActionsTypes,
 	UpdateGeoFilterStatus
 } from '../../modules/status-bar/actions/status-bar.actions';
@@ -99,7 +98,6 @@ import {
 	ScreenViewConfig
 } from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
 import { GeometryObject } from '@turf/helpers';
-import { MapActions } from '../../../map-facade/actions/map.actions';
 
 const FOOTPRINT_INSIDE_MAP_RATIO = 1;
 
@@ -319,14 +317,14 @@ export class MapAppEffects {
 		ofType(MapActionTypes.POSITION_CHANGED, MapActionTypes.SET_ACTIVE_MAP_ID, StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS),
 		debounceTime(this.screenViewConfig.debounceTime),
 		withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus), this.store$.select(selectRegion)),
-		filter(([action, mapList, activeMapId, { type }, { geometry }]: [MapActions | StatusBarActions, any, string, IGeoFilterStatus, CaseRegionState]) => Boolean(mapList[activeMapId]) && type === CaseGeoFilter.ScreenView),
-		map(([action, mapList, activeMapId, { active }, { geometry }]: [MapActions | StatusBarActions, any, string, IGeoFilterStatus, CaseRegionState]) => {
+		filter(([action, mapList, activeMapId, { type }, { geometry }]: [any, any, string, IGeoFilterStatus, CaseRegionState]) => Boolean(mapList[activeMapId]) && type === CaseGeoFilter.ScreenView),
+		map(([action, mapList, activeMapId, { active }, { geometry }]: [any, any, string, IGeoFilterStatus, CaseRegionState]) => {
 			const { position, overlay }: IMapSettingsData = mapList[activeMapId].data;
 			// const oldCenter = position.projectedState.center;
 			// const newCenter = action.payload.position.projectedState.center;
 			// console.log('old center', oldCenter);
 			// console.log('new center', newCenter);
-			// console.log(action);
+			// console.log('effect');
 			return [position.extentPolygon, active, geometry, overlay];
 		}),
 		filter(([extentPolygon, isGeoFilterStatusActive, geometry, overlay]: [ImageryMapExtentPolygon, boolean, GeometryObject, IOverlay]) => !booleanEqual(extentPolygon, geometry) && !Boolean(overlay)),

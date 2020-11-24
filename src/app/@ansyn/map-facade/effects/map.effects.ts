@@ -4,7 +4,7 @@ import { MapFacadeService } from '../services/map-facade.service';
 import { EMPTY, forkJoin, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMaps } from '../reducers/map.reducer';
-import { ImageryCommunicatorService, IMapSettings, IWorldViewMapState } from '@ansyn/imagery';
+import { ImageryCommunicatorService, IMapSettings, IMapSettingsData, IWorldViewMapState } from '@ansyn/imagery';
 import {
 	ActiveImageryMouseEnter,
 	ActiveImageryMouseLeave,
@@ -27,7 +27,7 @@ import {
 	SynchronizeMapsAction,
 	UpdateMapAction,
 	ReplaceMainLayerSuccess,
-	ReplaceMainLayerFailed
+	ReplaceMainLayerFailed, PositionChangedAction, CenterChangedAction
 } from '../actions/map.actions';
 import { catchError, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { fromPromise } from 'rxjs/internal-compatibility';
@@ -88,6 +88,21 @@ export class MapEffects {
 	pinLocationModeTriggerAction$: Observable<boolean> = this.actions$.pipe(
 		ofType<PinLocationModeTriggerAction>(MapActionTypes.TRIGGER.PIN_LOCATION_MODE),
 		map(({ payload }) => payload)
+	);
+
+	@Effect()
+	onPositionChanged$: Observable<CenterChangedAction> = this.actions$.pipe(
+		ofType<PositionChangedAction>(MapActionTypes.POSITION_CHANGED),
+		withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId)),
+		map(([action, mapsList, activeMapId]) => {
+			const { position }: IMapSettingsData = mapsList[activeMapId].data;
+			const oldCenter = position.projectedState.center;
+			const newCenter = action.payload.position.projectedState.center;
+			console.log('old center new effect', oldCenter);
+			console.log('new center', newCenter);
+			console.log('action', action);
+			return new CenterChangedAction({ isCenterChanged: oldCenter !== newCenter });
+		})
 	);
 
 	@Effect()
@@ -188,10 +203,10 @@ export class MapEffects {
 	@Effect()
 	changeImageryLayer$ = this.actions$.pipe(
 		ofType<ReplaceMainLayer>(MapActionTypes.REPLACE_MAP_MAIN_LAYER),
-		switchMap( ({payload}) => {
+		switchMap(({ payload }) => {
 			const communicator = this.communicatorsService.provide(payload.id);
 			return communicator.replaceMapMainLayer(payload.sourceType).pipe(
-				map( change => change ? new ReplaceMainLayerSuccess(payload) : new ReplaceMainLayerFailed())
+				map(change => change ? new ReplaceMainLayerSuccess(payload) : new ReplaceMainLayerFailed())
 			);
 		})
 	);

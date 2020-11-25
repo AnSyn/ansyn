@@ -23,6 +23,7 @@ import { SetActiveAnnotationLayer } from '../../../layers-manager/actions/layers
 import { ANNOTATION_MODE_LIST, AnnotationMode, IStyleWeight } from '@ansyn/ol';
 import { ClickOutsideService } from '../../../../core/click-outside/click-outside.service';
 import { TranslateService } from '@ngx-translate/core';
+import { selectIsMinimalistViewMode } from '@ansyn/map-facade';
 
 export enum SelectionBoxTypes {
 	None,
@@ -95,6 +96,11 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 	annotationProperties$: Observable<Partial<IVisualizerStyle>> = this.store.pipe(
 		select(selectAnnotationProperties),
 		tap(annotationProperties => this.annotationProperties = annotationProperties)
+	);
+
+	@AutoSubscription
+	hideAnnotaionMenu$: Observable<boolean> = this.store.select(selectIsMinimalistViewMode).pipe(
+		tap(() => this.store.dispatch(new SetAnnotationMode(null)))
 	);
 
 	public mode: AnnotationMode;

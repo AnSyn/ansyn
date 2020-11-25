@@ -49,10 +49,10 @@ export class SelectCaseAppEffects {
 	);
 
 	constructor(protected actions$: Actions,
-		protected store$: Store<IAppState>,
-		@Inject(CoreConfig) protected coreConfig: ICoreConfig,
-		@Inject(casesConfig) public caseConfig: ICasesConfig,
-		protected casesService: CasesService
+				protected store$: Store<IAppState>,
+				@Inject(CoreConfig) protected coreConfig: ICoreConfig,
+				@Inject(casesConfig) public caseConfig: ICasesConfig,
+				protected casesService: CasesService
 	) {
 	}
 
@@ -62,14 +62,22 @@ export class SelectCaseAppEffects {
 		const { overlaysManualProcessArgs, overlaysTranslationData, overlaysScannedAreaData } = state;
 		// map
 		const { data } = state.maps;
+
 		// context
 		const { favoriteOverlays, dataInputFilters, miscOverlays } = state;
 
 		let region: Feature<Polygon | Point>;
-		if (state.region.type !== "Feature") {
-			region = feature(state.region, {searchMode: state.region.type});
+		const activeMap = data.find(({ id }) => id === state.maps.activeMapId);
+		const activeMapCenter = activeMap.data.position.projectedState.center;
+		if (state.region.type !== 'Feature') {
+			region = feature(state.region, { type: state.region.type, center: activeMapCenter });
 		} else {
-			region = state.region;
+			region = {
+				...state.region, properties: {
+					...state.region.properties,
+					center: activeMapCenter
+				}
+			};
 		}
 
 		if (region.properties.searchMode === CaseGeoFilter.ScreenView) {

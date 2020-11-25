@@ -138,13 +138,13 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 				const oldCenter = activeMap.data.position.projectedState.center;
 				const newCenter = position.projectedState.center;
 				const isCenterChanged = !isEqual(oldCenter, newCenter);
-				if (isCenterChanged) {
+				// if (isCenterChanged) {
 					return mapsAdapter.updateOne({
 						id,
 						changes: { data: { ...activeMap.data, position } }
 					}, state);
-				}
-				return state;
+				// }
+				// return state;
 			}
 			return state;
 		}

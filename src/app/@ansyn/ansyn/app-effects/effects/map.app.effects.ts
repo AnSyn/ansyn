@@ -27,13 +27,19 @@ import {
 } from '@ansyn/map-facade';
 import {
 	BaseMapSourceProvider,
-	bboxFromGeoJson, getPolygonIntersectionRatio,
+	bboxFromGeoJson,
+	getPolygonIntersectionRatio,
 	IBaseImageryLayer,
 	ImageryCommunicatorService,
 	IImageryMapPosition,
 	IMapSettings,
 	polygonFromBBOX,
-	polygonsDontIntersect, GetProvidersMapsService, ImageryLayerProperties, ImageryMapExtentPolygon, IMapSettingsData
+	polygonsDontIntersect,
+	GetProvidersMapsService,
+	ImageryLayerProperties,
+	ImageryMapExtentPolygon,
+	IMapSettingsData,
+	getPointByGeometry
 } from '@ansyn/imagery';
 import {
 	catchError,
@@ -88,7 +94,7 @@ import {
 } from '../../modules/overlays/overlay-status/config/overlay-status-config';
 import { MeasureDistanceVisualizer } from '../../modules/plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
 import { IGeoFilterStatus, selectGeoFilterStatus } from '../../modules/status-bar/reducers/status-bar.reducer';
-import { booleanEqual, distance, feature } from '@turf/turf';
+import { booleanEqual, center, distance, feature } from '@turf/turf';
 import {
 	StatusBarActionsTypes,
 	UpdateGeoFilterStatus
@@ -98,6 +104,7 @@ import {
 	ScreenViewConfig
 } from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
 import { GeometryObject } from '@turf/helpers';
+import proj4 from 'proj4';
 
 const FOOTPRINT_INSIDE_MAP_RATIO = 1;
 
@@ -317,13 +324,17 @@ export class MapAppEffects {
 		ofType(MapActionTypes.POSITION_CHANGED, MapActionTypes.SET_ACTIVE_MAP_ID, StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS),
 		debounceTime(this.screenViewConfig.debounceTime),
 		withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus), this.store$.select(selectRegion)),
-		filter(([action, mapList, activeMapId, { type }, { geometry }]: [any, any, string, IGeoFilterStatus, CaseRegionState]) => Boolean(mapList[activeMapId]) && type === CaseGeoFilter.ScreenView),
-		map(([action, mapList, activeMapId, { active }, { geometry }]: [any, any, string, IGeoFilterStatus, CaseRegionState]) => {
+		filter(([action, mapList, activeMapId, { type }, region]: [any, any, string, IGeoFilterStatus, CaseRegionState]) => Boolean(mapList[activeMapId]) && type === CaseGeoFilter.ScreenView),
+		map(([action, mapList, activeMapId, { active }, region]: [any, any, string, IGeoFilterStatus, CaseRegionState]) => {
 			const { position, overlay }: IMapSettingsData = mapList[activeMapId].data;
-			return [position.extentPolygon, active, geometry, overlay];
+			const oldCenter = region.properties.center;
+			const newCenter = position.projectedState.center;
+			const isCenterChanged = !isEqual(oldCenter, newCenter);
+
+			return [position.extentPolygon, active, region.geometry, overlay, isCenterChanged, newCenter];
 		}),
-		filter(([extentPolygon, isGeoFilterStatusActive, geometry, overlay]: [ImageryMapExtentPolygon, boolean, GeometryObject, IOverlay]) => !booleanEqual(extentPolygon, geometry) && !Boolean(overlay)),
-		concatMap(([extentPolygon, isGeoFilterStatusActive, geometry, overlay]: [ImageryMapExtentPolygon, boolean, GeometryObject, IOverlay]) => {
+		filter(([extentPolygon, isGeoFilterStatusActive, geometry, overlay, isCenterChanged, newCenter]: [ImageryMapExtentPolygon, boolean, GeometryObject, IOverlay, boolean, [number, number]]) => isCenterChanged && !booleanEqual(extentPolygon, geometry) && !Boolean(overlay)),
+		concatMap(([extentPolygon, isGeoFilterStatusActive, geometry, overlay, isCenterChanged, newCenter]: [ImageryMapExtentPolygon, boolean, GeometryObject, IOverlay, boolean, [number, number]]) => {
 			const actions: Action[] = [];
 			const [[extentTopLeft, extentTopRight]] = extentPolygon.coordinates;
 			const extentWidth = Math.round(distance(extentTopLeft, extentTopRight, { units: 'meters' }));
@@ -331,7 +342,7 @@ export class MapAppEffects {
 			if (extentWidth > this.screenViewConfig.extentWidthSearchLimit) {
 				actions.push(new SetOverlaysStatusMessageAction({ message: 'Zoom in to get new overlays' }));
 			} else {
-				const extent = feature(extentPolygon, { searchMode: CaseGeoFilter.ScreenView });
+				const extent = feature(extentPolygon, { searchMode: CaseGeoFilter.ScreenView, center: newCenter });
 				actions.push(new SetOverlaysCriteriaAction({ region: extent }));
 
 				if (isGeoFilterStatusActive) {

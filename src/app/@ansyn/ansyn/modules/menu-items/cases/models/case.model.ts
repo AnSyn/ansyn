@@ -73,6 +73,7 @@ export interface IDilutedCaseState {
 }
 
 export interface ICaseState extends IDilutedCaseState {
+
 	favoriteOverlays?: IOverlay[];
 	miscOverlays?: IOverlaysHash;
 	maps?: ICaseMapsState;

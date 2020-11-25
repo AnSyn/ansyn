@@ -168,7 +168,6 @@ export class CasesEffects {
 		.pipe(
 			ofType(CasesActionTypes.LOAD_CASE),
 			switchMap((action: LoadCaseAction) => this.casesService.loadCase(action.payload)),
-			tap( (dilutedCase) => console.log(dilutedCase)),
 			map((dilutedCase) => new SelectDilutedCaseAction(dilutedCase)),
 			catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load case')),
 			catchError(() => of(new LoadDefaultCaseAction()))

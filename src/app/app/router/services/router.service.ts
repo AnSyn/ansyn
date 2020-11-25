@@ -26,9 +26,7 @@ export class AnsynRouterService {
 				}
 				return activated;
 			}),
-			filter(activated => activated.snapshot.data.name === 'case' ||
-				activated.snapshot.data.name === 'caseChild'
-			),
+			filter(activated => activated.snapshot.data.name === 'case' || activated.snapshot.data.name === 'caseChild'),
 			map(activated => {
 				const { queryParamMap } = activated.snapshot;
 				const queryParams = {};

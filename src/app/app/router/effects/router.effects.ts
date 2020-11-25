@@ -31,7 +31,6 @@ export class RouterEffects {
 	@Effect({ dispatch: false })
 	onLoadCaseChangeUrl$ = this.actions$.pipe(
 		ofType(CasesActionTypes.SELECT_CASE_SUCCESS),
-		filter((action: SelectCaseSuccessAction) => action.payload.id !== this.casesService.defaultCase.id),
 		tap(() => this.router.navigate(['']))
 	);
 
@@ -47,7 +46,7 @@ export class RouterEffects {
 		ofType<SetStateAction>(RouterActionTypes.SET_STATE),
 		filter((action: SetStateAction) => !action.payload.caseId),
 		withLatestFrom(this.store$.select(selectSelectedCase)),
-		filter(([action, selectCase]) => !selectCase || selectCase.id !== this.casesService.defaultCase.id),
+		filter(([action, selectCase]) => !selectCase),
 		map(([action, selectCase]) => new LoadDefaultCaseAction(action.payload.queryParams))
 	);
 

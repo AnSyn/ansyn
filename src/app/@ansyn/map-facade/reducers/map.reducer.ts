@@ -1,7 +1,7 @@
 import { IImageryMapPosition, IMapSettings } from '@ansyn/imagery';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
-import { range } from 'lodash';
+import { range, isEqual } from 'lodash';
 import { UUID } from 'angular2-uuid';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { sessionData } from '../models/core-session-state.model';
@@ -133,13 +133,18 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 
 		case MapActionTypes.POSITION_CHANGED: {
 			const { id, position } = action.payload;
-			console.log('reducer');
-			const entity = state.entities[id];
-			if (entity) {
-				return mapsAdapter.updateOne({
-					id,
-					changes: { data: { ...entity.data, position } }
-				}, state);
+			const activeMap = state.entities[id];
+			if (activeMap) {
+				const oldCenter = activeMap.data.position.projectedState.center;
+				const newCenter = position.projectedState.center;
+				const isCenterChanged = !isEqual(oldCenter, newCenter);
+				if (isCenterChanged) {
+					return mapsAdapter.updateOne({
+						id,
+						changes: { data: { ...activeMap.data, position } }
+					}, state);
+				}
+				return state;
 			}
 			return state;
 		}

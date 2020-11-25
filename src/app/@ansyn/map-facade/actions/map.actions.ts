@@ -35,7 +35,6 @@ export const MapActionTypes = {
 	POINT_TO_REAL_NORTH: 'POINT_TO_REAL_NORTH',
 	LOG_ROTATE_MAP: 'LOG_ROTATE_MAP',
 	POSITION_CHANGED: 'POSITION_CHANGED',
-	CENTER_CHANGED: 'CENTER_CHANGED',
 	UPDATE_MAP_SIZE: 'UPDATE_MAP_SIZE',
 	IMAGERY_CREATED: 'IMAGERY_CREATED',
 	IMAGERY_REMOVED: 'IMAGERY_REMOVED',
@@ -164,13 +163,6 @@ export class PositionChangedAction implements Action {
 	type = MapActionTypes.POSITION_CHANGED;
 
 	constructor(public payload: { id: string, position: IImageryMapPosition, mapInstance: IMapSettings }) {
-	}
-}
-
-export class CenterChangedAction implements Action {
-	type = MapActionTypes.CENTER_CHANGED;
-
-	constructor(public payload: { isCenterChanged: boolean }) {
 	}
 }
 

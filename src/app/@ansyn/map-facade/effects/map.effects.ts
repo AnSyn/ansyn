@@ -27,7 +27,7 @@ import {
 	SynchronizeMapsAction,
 	UpdateMapAction,
 	ReplaceMainLayerSuccess,
-	ReplaceMainLayerFailed, PositionChangedAction, CenterChangedAction
+	ReplaceMainLayerFailed
 } from '../actions/map.actions';
 import { catchError, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { fromPromise } from 'rxjs/internal-compatibility';
@@ -88,21 +88,6 @@ export class MapEffects {
 	pinLocationModeTriggerAction$: Observable<boolean> = this.actions$.pipe(
 		ofType<PinLocationModeTriggerAction>(MapActionTypes.TRIGGER.PIN_LOCATION_MODE),
 		map(({ payload }) => payload)
-	);
-
-	@Effect()
-	onPositionChanged$: Observable<CenterChangedAction> = this.actions$.pipe(
-		ofType<PositionChangedAction>(MapActionTypes.POSITION_CHANGED),
-		withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId)),
-		map(([action, mapsList, activeMapId]) => {
-			const { position }: IMapSettingsData = mapsList[activeMapId].data;
-			const oldCenter = position.projectedState.center;
-			const newCenter = action.payload.position.projectedState.center;
-			console.log('old center new effect', oldCenter);
-			console.log('new center', newCenter);
-			console.log('action', action);
-			return new CenterChangedAction({ isCenterChanged: oldCenter !== newCenter });
-		})
 	);
 
 	@Effect()

@@ -320,11 +320,6 @@ export class MapAppEffects {
 		filter(([action, mapList, activeMapId, { type }, { geometry }]: [any, any, string, IGeoFilterStatus, CaseRegionState]) => Boolean(mapList[activeMapId]) && type === CaseGeoFilter.ScreenView),
 		map(([action, mapList, activeMapId, { active }, { geometry }]: [any, any, string, IGeoFilterStatus, CaseRegionState]) => {
 			const { position, overlay }: IMapSettingsData = mapList[activeMapId].data;
-			// const oldCenter = position.projectedState.center;
-			// const newCenter = action.payload.position.projectedState.center;
-			// console.log('old center', oldCenter);
-			// console.log('new center', newCenter);
-			// console.log('effect');
 			return [position.extentPolygon, active, geometry, overlay];
 		}),
 		filter(([extentPolygon, isGeoFilterStatusActive, geometry, overlay]: [ImageryMapExtentPolygon, boolean, GeometryObject, IOverlay]) => !booleanEqual(extentPolygon, geometry) && !Boolean(overlay)),

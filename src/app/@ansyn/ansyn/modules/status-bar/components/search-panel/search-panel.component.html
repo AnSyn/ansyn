@@ -1,4 +1,8 @@
 <!-- Geo filter -->
+<div class="advanced-search">
+	advanced <br/>
+	search
+</div>
 <div class="box" id="geoPreSearch" [class.component]="componentMode">
 	<button ansynComboBoxTrigger
 			(click)="toggleExpander('LocationPicker')"
@@ -24,7 +28,8 @@
 <ansyn-time-picker-container [openTop]="false"></ansyn-time-picker-container>
 
 <!-- data input filter-->
-<div class="box" id="dataInputsPreSearch">
+
+<!-- <div class="box" id="dataInputsPreSearch">
 	<button ansynComboBoxTrigger
 			#trigger
 			(click)="toggleExpander('DataInputs')"
@@ -44,4 +49,4 @@
 		(ansynClickOutside)="toggleExpander('DataInputs')"
 		(closeTreeView)="toggleExpander('DataInputs')"
 		class="ansyn-tree-view"></ansyn-tree-view>
-</div>
+</div> -->

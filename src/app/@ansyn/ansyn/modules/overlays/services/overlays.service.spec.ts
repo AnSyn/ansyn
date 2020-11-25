@@ -242,16 +242,16 @@ describe('OverlaysService', () => {
 		} as IOverlayDropSources;
 
 		const result = OverlaysService.parseOverlayDataForDisplay(mockData);
-		expect(result.length).toBe(3);
+		expect(result.length).toBe(2);
 
 		mockData.specialObjects.set('15', { id: '15', shape: 'star', date: new Date() });
 
 		const result2 = OverlaysService.parseOverlayDataForDisplay(mockData);
-		expect(result2.length).toBe(4);
+		expect(result2.length).toBe(3);
 
 		mockData.showOnlyFavorites = true;
 		const result3 = OverlaysService.parseOverlayDataForDisplay(mockData);
-		expect(result3.length).toBe(3);
+		expect(result3.length).toBe(1);
 	});
 
 	it('check the method fetchData with spyOn', () => {

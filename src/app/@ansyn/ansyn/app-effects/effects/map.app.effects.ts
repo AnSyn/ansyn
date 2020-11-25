@@ -90,9 +90,9 @@ import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import { IOverlayStatusConfig, overlayStatusConfig } from '../../modules/overlays/overlay-status/config/overlay-status-config';
 import { MeasureDistanceVisualizer } from '../../modules/plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
 import { IGeoFilterStatus, selectGeoFilterStatus } from '../../modules/status-bar/reducers/status-bar.reducer';
-import { booleanEqual, distance, feature } from '@turf/turf';
 import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import { IScreenViewConfig, ScreenViewConfig } from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
+import { booleanEqual, distance, feature } from '@turf/turf';
 import { GeometryObject } from '@turf/helpers';
 
 const FOOTPRINT_INSIDE_MAP_RATIO = 1;

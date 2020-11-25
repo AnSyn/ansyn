@@ -135,16 +135,10 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			const { id, position } = action.payload;
 			const activeMap = state.entities[id];
 			if (activeMap) {
-				const oldCenter = activeMap.data.position.projectedState.center;
-				const newCenter = position.projectedState.center;
-				const isCenterChanged = !isEqual(oldCenter, newCenter);
-				// if (isCenterChanged) {
-					return mapsAdapter.updateOne({
-						id,
-						changes: { data: { ...activeMap.data, position } }
-					}, state);
-				// }
-				// return state;
+				return mapsAdapter.updateOne({
+					id,
+					changes: { data: { ...activeMap.data, position } }
+				}, state);
 			}
 			return state;
 		}

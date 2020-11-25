@@ -1,6 +1,6 @@
 import { Component, EventEmitter, HostBinding, OnDestroy, OnInit, Output } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { ICasesState, selectMyCaseEntities, selectModalState } from '../../reducers/cases.reducer';
+import { ICasesState, selectMyCasesEntities, selectModalState } from '../../reducers/cases.reducer';
 import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CasesService } from '../../services/cases.service';
@@ -37,7 +37,7 @@ export class DeleteCaseComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	activeCase$ = this.store.pipe(
-		select(selectMyCaseEntities),
+		select(selectMyCasesEntities),
 		withLatestFrom(this.store.pipe(select(selectModalState))),
 		map(([entities, modal]) => entities[modal.id]),
 		tap((activeCase) => this.activeCase = activeCase)

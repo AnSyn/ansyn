@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ICasesState, selectMyCasesData } from '../../reducers/cases.reducer';
+import { ICasesState, selectMyCasesData, selectSharedCasesData } from '../../reducers/cases.reducer';
 import { select, Store } from '@ngrx/store';
 import { LoadCasesAction } from '../../actions/cases.actions';
 import { tap } from 'rxjs/operators';
@@ -28,11 +28,24 @@ export class CasesContainerComponent implements OnInit, OnDestroy {
 		})
 	);
 
+	@AutoSubscription
+	getSharedCase$ = this.store$.pipe(
+		select(selectSharedCasesData),
+		tap( ([ids, entities]) => {
+			this.sharedCasesObj = {
+				type: CasesType.MySharedCases,
+				entities,
+				ids
+			}
+		})
+	);
+
 	constructor(protected store$: Store<ICasesState>) {
 	}
 
 	ngOnInit(): void {
 		this.loadMyCases();
+		this.loadSharedCases();
 	}
 
 	ngOnDestroy(): void {
@@ -41,6 +54,10 @@ export class CasesContainerComponent implements OnInit, OnDestroy {
 
 	loadMyCases() {
 		this.store$.dispatch(new LoadCasesAction())
+	}
+
+	loadSharedCases() {
+		this.store$.dispatch(new LoadCasesAction(CasesType.MySharedCases))
 	}
 
 }

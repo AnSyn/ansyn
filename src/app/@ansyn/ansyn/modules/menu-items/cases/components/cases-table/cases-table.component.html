@@ -1,4 +1,4 @@
-<div class="cases-table" *ngIf="cases.ids as ids else noCases">
+<div class="cases-table" *ngIf="cases.ids.length; else noCases">
 
 	<div class="cases-table-head">
 		<div class="cases-table-head-row">
@@ -21,7 +21,7 @@
          #tbodyElement>
 
 		<div class="cases-table-body-row"
-			 *ngFor="let id of ids"
+			 *ngFor="let id of cases.ids"
 			 (click)="selectCase(id)"
 			 [class.active]="(modalCaseId$ | async) === id"
 			 (mouseenter)="onMouseEnterCaseRow(caseRow)"

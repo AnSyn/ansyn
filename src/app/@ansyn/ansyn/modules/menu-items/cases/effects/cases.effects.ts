@@ -17,12 +17,12 @@ import { casesConfig, CasesService } from '../services/cases.service';
 import {
 	casesStateSelector,
 	ICasesState,
-	selectMyCaseTotal,
+	selectMyCasesTotal,
 	selectSelectedCase,
 	selectSharedCaseTotal
 } from '../reducers/cases.reducer';
 import { CasesType, ICasesConfig } from '../models/cases-config';
-import { catchError, debounceTime, filter, map, mergeMap, share, switchMap, withLatestFrom, concatMap } from 'rxjs/operators';
+import { catchError, debounceTime, filter, map, mergeMap, share, switchMap, withLatestFrom, concatMap, tap } from 'rxjs/operators';
 import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { DataLayersService } from '../../layers-manager/services/data-layers.service';
@@ -42,10 +42,10 @@ export class CasesEffects {
 	loadCases$: Observable<AddCasesAction | {}> = this.actions$.pipe(
 		ofType<LoadCasesAction>(CasesActionTypes.LOAD_CASES),
 		concatMap( (action) => {
-			const selector = action.payload === CasesType.MyCases ? this.store.select(selectMyCaseTotal) : this.store.select(selectSharedCaseTotal);
+			const selector = action.payload === CasesType.MyCases ? this.store.select(selectMyCasesTotal) : this.store.select(selectSharedCaseTotal);
 			return of(action).pipe(withLatestFrom(selector));
 		}),
-		switchMap(([action, total]: [LoadCasesAction, number]) => {
+		concatMap(([action, total]: [LoadCasesAction, number]) => {
 			return this.casesService.loadCases(total, action.payload).pipe(
 				map(cases => new AddCasesAction({cases, type: action.payload})),
 				catchError(() => EMPTY)
@@ -66,7 +66,7 @@ export class CasesEffects {
 	@Effect()
 	onDeleteCaseLoadCases$: Observable<LoadCasesAction> = this.actions$.pipe(
 		ofType(CasesActionTypes.DELETE_CASE),
-		withLatestFrom(this.store.select(selectMyCaseTotal), (action, total) => total),
+		withLatestFrom(this.store.select(selectMyCasesTotal), (action, total) => total),
 		filter((total: number) => total <= this.casesService.paginationLimit),
 		map(() => new LoadCasesAction()),
 		share());
@@ -168,6 +168,7 @@ export class CasesEffects {
 		.pipe(
 			ofType(CasesActionTypes.LOAD_CASE),
 			switchMap((action: LoadCaseAction) => this.casesService.loadCase(action.payload)),
+			tap( (dilutedCase) => console.log(dilutedCase)),
 			map((dilutedCase) => new SelectDilutedCaseAction(dilutedCase)),
 			catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load case')),
 			catchError(() => of(new LoadDefaultCaseAction()))

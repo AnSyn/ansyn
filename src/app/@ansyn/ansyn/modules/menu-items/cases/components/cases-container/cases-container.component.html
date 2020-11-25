@@ -1,11 +1,13 @@
 <div class=" table my-cases">
 	<h3>{{'My Cases' | translate}}</h3>
 	<ansyn-cases-table *ngIf="myCasesData"
-		[cases]="myCasesData"
-		(onInfintyScroll)="loadMyCases()"></ansyn-cases-table>
+					   [cases]="myCasesData"
+					   (onInfintyScroll)="loadMyCases()"></ansyn-cases-table>
 </div>
 
 <div class="table shared-cases">
 	<h3>{{'Shared Cases' | translate}}</h3>
-	<!--<ansyn-cases-table></ansyn-cases-table>-->
+	<ansyn-cases-table *ngIf="sharedCasesObj"
+		[cases]="sharedCasesObj"
+	(onInfintyScroll)="loadSharedCases()"></ansyn-cases-table>
 </div>

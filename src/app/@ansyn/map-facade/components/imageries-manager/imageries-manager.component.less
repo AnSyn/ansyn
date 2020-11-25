@@ -372,6 +372,45 @@
 			}
 		}
 	}
+
+	&.rtl {
+		div.imageries-container {
+			&.layout4 {
+				div.map-container-wrapper {
+					&:nth-child(1) {
+						left: unset;
+						right: 0;
+					}
+					&:nth-child(2) {
+						left: unset;
+						right: 50%;
+					}
+					&:nth-child(3) {
+						left: unset;
+						right: 50%;
+					}
+				}
+			}
+		}
+		div.footer-collapsed {
+			&.layout4 {
+				div.map-container-wrapper {
+					&:nth-child(1) {
+						left: unset;
+						right: 0;
+					}
+					&:nth-child(2) {
+						left: unset;
+						right: 50%;
+					}
+					&:nth-child(3) {
+						left: unset;
+						right: 50%;
+					}
+				}
+			}
+		}
+	}
 }
 
 @media screen and (max-width: 1600px) {

@@ -150,7 +150,7 @@ export class CasesEffects {
 		ofType<CopyCaseLinkAction>(CasesActionTypes.COPY_CASE_LINK),
 		filter(action => !Boolean(action.payload.shareCaseAsQueryParams)),
 		map((action) => {
-			const shareLink = this.casesService.generateLinkById(action.payload.caseId, 'case');
+			const shareLink = this.casesService.generateLinkById(action.payload.caseId);
 			return fromPromise(copyFromContent(shareLink));
 		}),
 		map(() => new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast }))

@@ -192,7 +192,7 @@ export class CasesService {
 	}
 
 	loadCase(selectedCaseId: string): Observable<any> {
-		return this.storageService.get<ICasePreview, ICaseState>(this.config.schema, selectedCaseId)
+		return this.storageService.get<ICasePreview, ICaseState>(this.config.schema, selectedCaseId, this.currentUser)
 			.pipe(
 				tap((latestStoredEntity) => this.latestStoredEntity = _cloneDeep(latestStoredEntity)),
 				map(storedEntity =>
@@ -201,10 +201,10 @@ export class CasesService {
 				catchError(err => this.errorHandlerService.httpErrorHandle(err)));
 	}
 
-	generateLinkById(id: string, schema: 'case' | 'link' = 'case') {
+	generateLinkById(id: string) {
 		const baseLocation = location.href.split('#')[0];
 		const href = this.config.useHash ? `${ baseLocation }#` : baseLocation;
-		return `${ href }/${schema}/${ id }`;
+		return `${ href }/case/${ id }`;
 	}
 
 	isStoreEntitiesEqual(caseA, caseB) {

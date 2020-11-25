@@ -68,9 +68,13 @@ export class StorageService {
 		});
 	}
 
-	get<P extends IEntity, D>(schema: string, id: string): Observable<IStoredEntity<P, D>> {
+	get<P extends IEntity, D>(schema: string, id: string, user?: string): Observable<IStoredEntity<P, D>> {
 		const url = this._buildIdUrl(schema, id);
-		return this._http.get<IStoredEntity<P, D>>(url);
+		return this._http.get<IStoredEntity<P, D>>(url, {
+			params: {
+				user
+			}
+		});
 	}
 
 	delete(schema: string, id: string): Observable<Object> {

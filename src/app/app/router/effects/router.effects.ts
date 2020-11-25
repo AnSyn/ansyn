@@ -11,7 +11,7 @@ import {
 	LoadCaseAction,
 	LoadDefaultCaseAction,
 	SaveCaseAsSuccessAction,
-	SelectCaseAction,
+	SelectCaseAction, SelectCaseSuccessAction,
 	SelectDilutedCaseAction,
 	selectSelectedCase
 } from '@ansyn/ansyn';
@@ -22,7 +22,7 @@ import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 @Injectable()
 export class RouterEffects {
 
-	@Effect({ dispatch: false })
+	/*@Effect({ dispatch: false })
 	onNavigateCase$: Observable<any> = this.actions$.pipe(
 		ofType<NavigateCaseTriggerAction>(RouterActionTypes.NAVIGATE_CASE),
 		tap(({ payload }) => {
@@ -32,6 +32,13 @@ export class RouterEffects {
 				this.router.navigate(['']);
 			}
 		})
+	);*/
+
+	@Effect({dispatch: false})
+	onLoadCaseChangeUrl$ = this.actions$.pipe(
+		ofType(CasesActionTypes.SELECT_CASE_SUCCESS),
+		filter( (action: SelectCaseSuccessAction) => action.payload.id !== this.casesService.defaultCase.id),
+		tap( () => this.router.navigate(['']))
 	);
 
 	@Effect()
@@ -62,12 +69,12 @@ export class RouterEffects {
 			})
 		));*/
 
-	@Effect()
+	/*@Effect()
 	selectDefaultCaseUpdateRouter$: Observable<NavigateCaseTriggerAction> = this.actions$.pipe(
 		ofType(CasesActionTypes.SELECT_CASE),
 		filter((action: SelectCaseAction) => action.payload.id === this.casesService.defaultCase.id),
 		map(() => new NavigateCaseTriggerAction())
-	);
+	);*/
 
 	constructor(protected actions$: Actions, protected store$: Store<any>, protected router: Router,
 				protected casesService: CasesService) {

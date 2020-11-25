@@ -1,8 +1,8 @@
 import { Action } from '@ngrx/store';
 import { Params } from '@angular/router';
-import { IStoredEntity } from '../../../core/services/storage/storage.service';
-import { ICase, ICasePreview, IDilutedCase, IDilutedCaseState } from '../models/case.model';
+import { ICase, IDilutedCase } from '../models/case.model';
 import { ILogMessage } from '../../../core/models/logger.model';
+import { CasesType } from '../models/cases-config';
 
 export type caseModalType = 'save' | 'delete';
 
@@ -64,7 +64,7 @@ export class LoadDefaultCaseIfNoActiveCaseAction implements Action {
 export class LoadCasesAction implements Action, ILogMessage {
 	type = CasesActionTypes.LOAD_CASES;
 
-	constructor(public payload?: ICase[]) {
+	constructor(public payload: CasesType = CasesType.MyCases) {
 	}
 
 	logMessage() {
@@ -75,7 +75,7 @@ export class LoadCasesAction implements Action, ILogMessage {
 export class AddCasesAction implements Action {
 	type = CasesActionTypes.ADD_CASES;
 
-	constructor(public payload: ICase[]) {
+	constructor(public payload: {cases: ICase[], type?: CasesType}) {
 	}
 }
 export class UpdateCaseAction implements Action {

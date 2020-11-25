@@ -92,7 +92,7 @@ export class CasesAppEffects {
 					.pipe(
 						map(overlays => new Map(overlays.map((overlay): [string, IOverlay] => [overlay.id, overlay]))),
 						concatMap((mapOverlay: Map<string, IOverlay>) => {
-							let newCaseValue: IDilutedCase = this.getFullOverlays(caseValue, mapOverlay)
+							let newCaseValue: IDilutedCase = this.getFullOverlays(caseValue, mapOverlay);
 							const overlayToDisplay = newCaseValue.state.maps.data.filter(mapData => Boolean(mapData.data.overlay))
 								.map(map => new DisplayOverlayAction({ overlay: map.data.overlay, mapId: map.id }));
 							return [new SelectCaseAction(newCaseValue), ...overlayToDisplay];

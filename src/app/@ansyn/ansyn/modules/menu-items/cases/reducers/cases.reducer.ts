@@ -1,8 +1,9 @@
 import { caseModalType, CasesActions, CasesActionTypes, DeleteCaseAction } from '../actions/cases.actions';
-import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector, MemoizedSelector, createSelectorFactory } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { ICase, ICasePreview } from '../models/case.model';
+import { CasesType } from '../models/cases-config';
 
 export interface ICaseModal {
 	show: boolean,
@@ -10,7 +11,9 @@ export interface ICaseModal {
 	id?: string
 }
 
-export interface ICasesState extends EntityState<ICasePreview> {
+export interface ICasesState {
+	myCases: EntityState<ICasePreview>
+	sharedCases: EntityState<ICasePreview>
 	showCasesTable: boolean;
 	selectedCase: ICase;
 	modal: ICaseModal;
@@ -18,15 +21,21 @@ export interface ICasesState extends EntityState<ICasePreview> {
 }
 
 export const casesFeatureKey = 'cases';
+const casesSortFn = (ob1: ICasePreview, ob2: ICasePreview): number => +ob2.creationTime - +ob1.creationTime;
+export const myCasesAdapter: EntityAdapter<ICasePreview> = createEntityAdapter<ICasePreview>({ sortComparer: casesSortFn});
+export const sharedCasesAdapter: EntityAdapter<ICasePreview> = createEntityAdapter<ICasePreview>({sortComparer: casesSortFn});
 
-export const casesAdapter: EntityAdapter<ICasePreview> = createEntityAdapter<ICasePreview>({ sortComparer: (ob1: ICasePreview, ob2: ICasePreview): number => +ob2.creationTime - +ob1.creationTime });
+const myCasesInitialState = myCasesAdapter.getInitialState();
+const sharedCasesInitialState = sharedCasesAdapter.getInitialState();
 
-export const initialCasesState: ICasesState = casesAdapter.getInitialState(<ICasesState>{
+export const initialCasesState: ICasesState = {
+	myCases: myCasesInitialState,
+	sharedCases: sharedCasesInitialState,
 	showCasesTable: false,
 	selectedCase: null,
 	modal: { show: false },
 	autoSave: false
-});
+};
 
 export const casesStateSelector: MemoizedSelector<any, ICasesState> = createFeatureSelector<ICasesState>(casesFeatureKey);
 
@@ -38,15 +47,14 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 			return {...state, showCasesTable: show}
 		}
 
-		case CasesActionTypes.SAVE_CASE_AS_SUCCESS: {
+		/*case CasesActionTypes.SAVE_CASE_AS_SUCCESS: {
 			const selectedCase = action.payload;
-			return casesAdapter.addOne(selectedCase, { ...state, selectedCase });
-		}
+			return myCasesAdapter.addOne(selectedCase, { ...state, selectedCase });
+		}*/
 
 		case CasesActionTypes.UPDATE_CASE: {
 			const caseToUpdate = { ...action.payload.updatedCase };
-			const selectedCase = state.selectedCase && caseToUpdate.id === state.selectedCase.id ? caseToUpdate : state.selectedCase;
-			return casesAdapter.updateOne({ id: caseToUpdate.id, changes: caseToUpdate }, { ...state, selectedCase });
+			return {...state, selectedCase: caseToUpdate}
 		}
 
 		/*case CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS || CasesActionTypes.UPDATE_CASE_BACKEND_SAVE_AS: {
@@ -59,10 +67,17 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 		}*/
 
 		case CasesActionTypes.DELETE_CASE:
-			return casesAdapter.removeOne((action as DeleteCaseAction).payload.id, state);
+			const myCaseState = myCasesAdapter.removeOne((action as DeleteCaseAction).payload.id, state.myCases);
+			return {...state, myCases: myCaseState};
 
 		case CasesActionTypes.ADD_CASES:
-			return casesAdapter.addMany(action.payload, state);
+			const { cases, type } = action.payload;
+			if (type === CasesType.MySharedCases) {
+				const sharedCases = sharedCasesAdapter.addMany(cases, state.sharedCases);
+				return { ...state, sharedCases }
+			}
+			const myCases = myCasesAdapter.addMany(cases, state.myCases);
+			return {...state, myCases };
 
 		case CasesActionTypes.OPEN_MODAL:
 			return { ...state, modal: { type: action.payload.type, id: action.payload.caseId, show: true } };
@@ -84,11 +99,19 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 	}
 }
 
-export const { selectEntities, selectAll, selectTotal, selectIds } = casesAdapter.getSelectors();
-export const selectCaseTotal = createSelector(casesStateSelector, selectTotal);
-export const selectCaseEntities = <MemoizedSelector<ICasesState, Dictionary<ICasePreview>>>createSelector(casesStateSelector, selectEntities);
-export const selectCasesIds = <MemoizedSelector<any, string[] | number[]>>createSelector(casesStateSelector, selectIds);
-export const selectCaseById = (id: string) => createSelector(selectCaseEntities, (entities) => entities && entities[id]);
+export const myCasesState = createSelector(casesStateSelector, (state) => state?.myCases);
+export const sharedCasesState = createSelector(casesStateSelector, (state) => state?.sharedCases);
+export const { selectEntities: myCasesEntities, selectTotal: myCasesTotal, selectIds: myCasesIds } = myCasesAdapter.getSelectors();
+export const { selectEntities: sharedCasesEntities, selectTotal: sharedCasesTotal, selectIds: sharedCasesIds } = sharedCasesAdapter.getSelectors();
+export const selectMyCaseTotal = createSelector(myCasesState, myCasesTotal);
+export const selectMyCaseEntities = createSelector(myCasesState, myCasesEntities);
+export const selectMyCasesIds = createSelector(myCasesState, (state) => myCasesIds(state));
+export const selectMyCasesData: MemoizedSelector<any, [Array<string | number>, Dictionary<ICasePreview>]> = createSelector(selectMyCasesIds, selectMyCaseEntities, (ids, entities) => [ids, entities]);
+
+export const selectSharedCaseTotal = createSelector(sharedCasesState, sharedCasesTotal);
+
+
+export const selectCaseById = (id: string) => createSelector(selectMyCaseEntities, (entities) => entities && entities[id]);
 export const selectSelectedCase = createSelector(casesStateSelector, (cases) => cases && cases.selectedCase);
 /*export const selectAutoSave: MemoizedSelector<any, boolean> = createSelector(casesStateSelector, (cases) => {
 	return cases.autoSave

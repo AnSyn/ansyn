@@ -1,5 +1,4 @@
-<div class="cases-table" *ngIf="ids$ | async as ids; else noCases">
-
+<div class="cases-table" *ngIf="cases.ids as ids else noCases">
 
 	<div class="cases-table-head">
 		<div class="cases-table-head-row">
@@ -18,7 +17,7 @@
 
 	<div class="cases-table-body scrolled"
 		 [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''"
-		 (ansynInfiniteScroll)="loadCases()" *ngIf="entities$ | async as entities"
+		 (ansynInfiniteScroll)="onInfintyScroll.emit()"
          #tbodyElement>
 
 		<div class="cases-table-body-row"
@@ -36,11 +35,11 @@
 				<hr>
 
 				<div [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''" class="cases-table-case-name-col">
-					{{entities[id].name}}
+					{{cases.entities[id].name}}
 				</div>
 
 				<div class="cases-table-body-col">
-					{{entities[id].creationTime | ansynDate}}
+					{{cases.entities[id].creationTime | ansynDate}}
 				</div>
 
 				<!--menu-->
@@ -51,7 +50,7 @@
 								tooltip-class="bottom">
 							<i class="icon-delete"></i>
 						</button>
-						<button (click)="shareCase(id, entities[id].name)"
+						<button (click)="shareCase(id)"
 								[attr.tooltip-value]="'Share' | translate"
 								tooltip-class="bottom">
 							<i class="icon-share"></i>

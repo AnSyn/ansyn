@@ -1,20 +1,13 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { CopyCaseLinkAction, LoadCaseAction, LoadCasesAction, OpenModalAction } from '../../actions/cases.actions';
-import { CasesEffects } from '../../effects/cases.effects';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import {
-	casesStateSelector,
-	ICaseModal,
-	ICasesState,
-	selectCaseEntities,
-	selectCasesIds
-} from '../../reducers/cases.reducer';
+import { ICaseModal, ICasesState, selectModalState, } from '../../reducers/cases.reducer';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { distinctUntilChanged, map, pluck, tap } from 'rxjs/operators';
+import { AutoSubscriptions } from 'auto-subscriptions';
+import { distinctUntilChanged, pluck } from 'rxjs/operators';
 import { ICasePreview } from '../../models/case.model';
-import { Dictionary } from '@ngrx/entity';
+import { EntityState, Dictionary } from '@ngrx/entity';
+import { OpenModalAction, CopyCaseLinkAction, LoadCaseAction } from '../../actions/cases.actions';
 
 const animations: any[] = [
 	trigger('leaveAnim', [
@@ -35,23 +28,13 @@ const animations: any[] = [
 })
 export class CasesTableComponent implements OnInit, OnDestroy {
 	@ViewChild('tbodyElement') tbodyElement: ElementRef;
+	@Input() cases: Dictionary<ICasePreview>;
+	@Output() onInfintyScroll = new EventEmitter();
 
-	caseState$: Observable<ICasesState> = this.store$.select(casesStateSelector);
-
-	ids$: Observable<string[] | number[]> = this.store$.select(selectCasesIds);
-	entities$: Observable<Dictionary<ICasePreview>> = this.store$.select(selectCaseEntities);
-
-	modalCaseId$: Observable<string> = this.caseState$.pipe(
-		pluck<ICasesState, ICaseModal>('modal'),
+	modalCaseId$: Observable<string> = this.store$.pipe(
+		select(selectModalState),
 		distinctUntilChanged(),
 		pluck<ICaseModal, string>('id')
-	);
-
-	@AutoSubscription
-	selectedCaseId$: Observable<string> = this.caseState$.pipe(
-		map((state: ICasesState) => state.selectedCase ? state.selectedCase.id : null),
-		distinctUntilChanged(),
-		tap((selectedCaseId) => this.selectedCaseId = selectedCaseId)
 	);
 
 	selectedCaseId: string;
@@ -62,15 +45,11 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.loadCases();
 	}
 
 	ngOnDestroy(): void {
 	}
 
-	loadCases() {
-		this.store$.dispatch(new LoadCasesAction());
-	}
 
 	onCasesAdded() {
 		if (this.tbodyElement) {
@@ -99,8 +78,8 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 		this.store$.dispatch(new OpenModalAction({ type: 'save', caseId }));
 	}
 
-	shareCase(caseId: string, caseName: string) {
-		this.store$.dispatch(new CopyCaseLinkAction({ caseId, caseName }));
+	shareCase(caseId: string) {
+		this.store$.dispatch(new CopyCaseLinkAction({ caseId }));
 	}
 
 	selectCase(caseId: string): void {

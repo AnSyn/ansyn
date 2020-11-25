@@ -1,13 +1,13 @@
-import { Component, EventEmitter, HostBinding, OnInit, Output, OnDestroy } from '@angular/core';
-import { Store, select } from '@ngrx/store';
-import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
+import { Component, EventEmitter, HostBinding, OnDestroy, OnInit, Output } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { ICasesState, selectMyCaseEntities, selectModalState } from '../../reducers/cases.reducer';
 import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CasesService } from '../../services/cases.service';
 import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map, tap, withLatestFrom } from 'rxjs/operators';
 import { ICasePreview } from '../../models/case.model';
-import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 
 const animationsDuring = '0.2s';
 
@@ -33,14 +33,15 @@ const animations: any[] = [
 @AutoSubscriptions()
 export class DeleteCaseComponent implements OnInit, OnDestroy {
 	@HostBinding('@modalContent') readonly modalContent = true;
+	activeCase: ICasePreview;
 
 	@AutoSubscription
-	activeCase$ = this.store.select(casesStateSelector).pipe(
-		map((cases) => cases.entities[cases.modal.id]),
-	tap( (activeCase) => this.activeCase = activeCase)
-);
-
-	activeCase: ICasePreview;
+	activeCase$ = this.store.pipe(
+		select(selectMyCaseEntities),
+		withLatestFrom(this.store.pipe(select(selectModalState))),
+		map(([entities, modal]) => entities[modal.id]),
+		tap((activeCase) => this.activeCase = activeCase)
+	);
 
 	@Output() submitCase = new EventEmitter();
 
@@ -49,6 +50,7 @@ export class DeleteCaseComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 	}
+
 	ngOnDestroy(): void {
 	}
 

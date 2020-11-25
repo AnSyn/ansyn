@@ -2,18 +2,14 @@
 @import "ansyn/less/z-index-globals";
 @import "ansyn/less/globals";
 
-@size: 84px;
-
-@side_margin: 20px;
-
 :host {
 	position: absolute;
 	z-index: @z-index-map-rotation;
 	top: @imagery-status-height + 25;
-	right: @side_margin;
+	right: @compass-side-margin;
 	text-align: center;
 	user-select: none;
-	width: @size;
+	width: @compass-width;
 
 	&.isMinimalistViewModeClass {
 		top: 60px;
@@ -26,8 +22,7 @@
 	}
 
 	&.rtl {
-		top: @imagery-status-height + 65;
 		right: unset;
-		left: @side_margin;
+		left: @compass-side-margin;
 	}
 }

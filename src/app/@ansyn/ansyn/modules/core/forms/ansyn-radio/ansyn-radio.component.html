@@ -6,10 +6,9 @@
 	[(ngModel)]="model"
 	[disabled]="disabled"
 />
+<div class="box">
+	<label [for]="id">
+		<ng-content></ng-content>
+	</label>
+</div>
 
-<label [for]="id">
-	<div class="outer-circle">
-		<div class="inner-circle"></div>
-	</div>
-	<ng-content></ng-content>
-</label>

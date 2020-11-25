@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
+import { AutoSubscription } from 'auto-subscriptions';
+import { filter, map, tap } from 'rxjs/operators';
+import { ClickOutsideService } from '../../../core/click-outside/click-outside.service';
 
 @Component({
   selector: 'ansyn-search-options',
@@ -8,7 +11,15 @@ import { Component, OnInit } from '@angular/core';
 export class SearchOptinsComponent implements OnInit {
 
   isExpand: Boolean = false;
-  constructor() { }
+
+  @AutoSubscription
+	isClickOutside$ = this.clickOutside.onClickOutside({monitor: this.element.nativeElement}).pipe(
+		filter(clickOutside => clickOutside ),
+		tap(() => this.close())
+  );
+  
+  constructor(protected clickOutside: ClickOutsideService,
+              protected element: ElementRef) { }
 
   ngOnInit(): void {
   }
@@ -16,5 +27,11 @@ export class SearchOptinsComponent implements OnInit {
   toggleSearchPannel() {
     this.isExpand = !this.isExpand;
   }
+
+  close() {
+    this.isExpand = false;
+  }
+
+  
 
 }

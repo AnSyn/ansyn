@@ -38,8 +38,7 @@ import {
 	GetProvidersMapsService,
 	ImageryLayerProperties,
 	ImageryMapExtentPolygon,
-	IMapSettingsData,
-	getPointByGeometry
+	IMapSettingsData
 } from '@ansyn/imagery';
 import {
 	catchError,
@@ -104,7 +103,6 @@ import {
 	ScreenViewConfig
 } from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
 import { GeometryObject } from '@turf/helpers';
-import proj4 from 'proj4';
 
 const FOOTPRINT_INSIDE_MAP_RATIO = 1;
 

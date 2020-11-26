@@ -98,8 +98,7 @@ import {
 	IScreenViewConfig,
 	ScreenViewConfig
 } from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
-import { booleanEqual, distance, feature } from '@turf/turf';
-import { GeometryObject } from '@turf/helpers';
+import { feature } from '@turf/turf';
 import { calculatePolygonWidth } from '../../../imagery/utils/geo';
 
 const FOOTPRINT_INSIDE_MAP_RATIO = 1;

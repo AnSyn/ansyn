@@ -1,50 +1,28 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import * as momentNs from 'moment';
-import { IStatusBarConfig } from '../../models/statusBar-config.model';
-import { IStatusBarState, selectGeoFilterActive, selectGeoFilterType } from '../../reducers/status-bar.reducer';
-import { StatusBarConfig } from '../../models/statusBar.config';
-import { Store } from '@ngrx/store';
-import { combineLatest } from 'rxjs';
-import { animate, style, transition, trigger, AnimationTriggerMetadata } from '@angular/animations';
-import { filter, tap } from 'rxjs/operators';
-import { selectDataInputFilter, selectRegion } from '../../../overlays/reducers/overlays.reducer';
-import { CaseRegionState, ICaseDataInputFiltersState } from '../../../menu-items/cases/models/case.model';
-import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
-import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import {
-	IMultipleOverlaysSourceConfig,
-	IOverlaysSourceProvider,
-	MultipleOverlaysSourceConfig
-} from '../../../core/models/multiple-overlays-source-config';
+import { Component, Inject, OnInit } from '@angular/core';
 import { SetToastMessageAction } from '@ansyn/map-facade';
-import {
-	LogSearchPanelPopup,
-} from '../../../overlays/actions/overlays.actions';
-import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
-
-const moment = momentNs;
-
-const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
-	transition(':enter', [
-		style({ opacity: 0, transform: 'translateY(-100%)' }),
-		animate('0.2s', style({ opacity: 1, transform: 'translateY(calc(-100% - 15px))' }))
-	]),
-	transition(':leave', [
-		style({ opacity: 1, transform: 'translateY(calc(-100% - 15px))' }),
-		animate('0.2s', style({ opacity: 0, transform: 'translateY(-100%)' }))
-	])
-]);
+import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
+import { Store } from '@ngrx/store';
+import { AutoSubscription } from 'auto-subscriptions';
+import { combineLatest } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
+import { COMPONENT_MODE } from 'src/app/@ansyn/ansyn/public_api';
+import { IOverlaysSourceProvider, MultipleOverlaysSourceConfig, IMultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
+import { ICaseDataInputFiltersState, CaseRegionState } from '../../../menu-items/cases/models/case.model';
+import { LogSearchPanelPopup } from '../../../overlays/actions/overlays.actions';
+import { selectDataInputFilter, selectRegion } from '../../../overlays/reducers/overlays.reducer';
+import { IStatusBarConfig } from '../../models/statusBar-config.model';
+import { StatusBarConfig } from '../../models/statusBar.config';
+import { selectGeoFilterType, selectGeoFilterActive, IStatusBarState } from '../../reducers/status-bar.reducer';
 
 type SearchPanelTitle = 'DataInputs' | 'LocationPicker';
 
 @Component({
-	selector: 'ansyn-search-panel',
-	templateUrl: './search-panel.component.html',
-	styleUrls: ['./search-panel.component.less'],
-	animations: [fadeAnimations]
+  selector: 'ansyn-advanced-search',
+  templateUrl: './advanced-search.component.html',
+  styleUrls: ['./advanced-search.component.less']
 })
-@AutoSubscriptions()
-export class SearchPanelComponent implements OnInit, OnDestroy {
+
+export class AdvancedSearchComponent implements OnInit {
 	popupExpanded = new Map<SearchPanelTitle, boolean>([['DataInputs', false], ['LocationPicker', false]]);
 	dataInputFilterTitle: string;
 	geoFilterTitle: string;
@@ -131,4 +109,5 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	toggleAdvancedSearch() {
 		this.advancedSearch = !this.advancedSearch
 	}
+
 }

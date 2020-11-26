@@ -1,0 +1,103 @@
+@import "ansyn/less/colors";
+@import "ansyn/less/common";
+@import "ansyn/less/z-index-globals";
+@import "../../less/status-bar-common";
+
+:host {
+	min-width: 170px;
+	top: @search-panel-popup-top;
+	
+
+	/deep/ .treeview-container {
+		overflow-y: hidden !important;
+		padding-right: 0 !important;
+
+		
+	}
+
+	/deep/ .treeview-container .row-item, /deep/ div.form-check-inline {
+		display: flex;
+		color: ghostwhite;
+		padding: 5px 15px;
+		margin-bottom: .3rem;
+		align-items: center;
+
+		.form-check-label {
+			cursor: pointer !important;
+		}
+	}
+
+	.data-input-filter {
+		background-clip: padding-box;
+		padding-bottom: 10px;
+	}
+
+	.data-input-header {
+		font-weight: bold;
+		font-size: 1em;
+		padding: 15px 15px 10px;
+		display: flex;
+
+		div.show-all {
+			margin-left: auto;
+			font-size: 10px;
+			font-style: normal;
+			color: rgba(255, 255, 255, 0.75);
+			margin-top: 3px;
+			cursor: pointer;
+		}
+	}
+
+	.tree-view-main {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+
+	.tree-view-container {
+		max-height: 50px;
+		overflow-y: auto;
+		background-color: #3e3e3e;
+		min-width: 350px;
+		border-radius: 5px;
+		display: flex;
+		  flex-wrap: wrap;
+		  
+		.sensorTypeOption {
+			flex-basis: 33.333333%;
+			padding: 5px 6px;
+			cursor: pointer;
+		}
+	}
+
+	.form-check {
+		margin-right: auto;
+		display: flex;
+		align-items: center;
+
+		&:hover {
+			span.only-filter {
+				visibility: visible;
+			}
+		}
+
+		label.text {
+			margin-left: 5px;
+			margin-right: 5px;
+		}
+
+		span.only-filter {
+			visibility: hidden;
+			font-size: 10px;
+			font-weight: bold;
+			color: rgba(255, 255, 255, 0.75);
+			cursor: pointer;
+			margin: 0 2px;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+}

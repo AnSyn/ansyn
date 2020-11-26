@@ -1,0 +1,17 @@
+<div class="data-input-filter">
+	<div class="data-input-header">
+		<div class="show-all">
+			<!-- <span (click)="showAll()">{{'Show all' | translate}}</span> -->
+		</div>
+	</div>
+	<div class="tree-view-main">
+		<div class="tree-view-container scrolled">
+      <div *ngFor="let item of types">
+        <div class="sensorTypeOption">
+          {{item.sensorType}}  
+        </div>
+      </div>
+      
+		</div>
+	</div>
+</div>

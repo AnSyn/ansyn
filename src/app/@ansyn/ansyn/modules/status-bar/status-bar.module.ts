@@ -22,6 +22,8 @@ import { FiltersModule } from '../filters/filters.module';
 import { TimepickerPresetsComponent } from './components/timepicker-presets/timepicker-presets.component';
 import { TimePickerContainerComponent } from './components/time-picker-container/time-picker-container.component';
 import { SearchOptinsComponent } from './components/search-options/search-options.component';
+import { AdvancedSearchComponent } from './components/advanced-search/advanced-search.component';
+import { SensorTypesComponent } from './components/sensor-types/sensor-types.component';
 
 
 @NgModule({
@@ -37,7 +39,7 @@ import { SearchOptinsComponent } from './components/search-options/search-option
 		FiltersModule,
 		OwlNativeDateTimeModule
 	],
-	declarations: [StatusBarComponent, TreeViewComponent, SearchPanelComponent, DisplayPanelComponent, CasePanelComponent, TimePickerComponent, LocationPickerComponent, FiltersPanelComponent, TimepickerPresetsComponent, TimePickerContainerComponent, SearchOptinsComponent],
+	declarations: [StatusBarComponent, TreeViewComponent, SearchPanelComponent, DisplayPanelComponent, CasePanelComponent, TimePickerComponent, LocationPickerComponent, FiltersPanelComponent, TimepickerPresetsComponent, TimePickerContainerComponent, SearchOptinsComponent, AdvancedSearchComponent, SensorTypesComponent],
 	providers: [
 		{
 			provide: TIME_FILTERS,

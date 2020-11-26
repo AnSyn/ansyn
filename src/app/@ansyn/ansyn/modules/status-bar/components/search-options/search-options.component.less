@@ -1,0 +1,37 @@
+@import "ansyn/less/common";
+@import "../../less/status-bar-common";
+
+@more-filter-container-width: 250px;
+:host {
+    margin: 2px;
+    display: flex;
+    align-items: center;
+	.search-icon {
+        border-radius: 50px;
+        background: #3e3e3e;
+        padding: 5px 10px;
+        color: white;
+        cursor: pointer;
+
+    }
+
+    .presets {
+        background-color: black;
+        width: 100px;
+        position: absolute;
+        top: 102%;
+        min-width: 650px;
+        min-height: 110px;
+        margin-bottom: 9px !important;
+        border-radius: 50px;
+        opacity: 0.8;
+        left: 5%;
+        display: flex;
+
+    }
+
+    .close {
+        margin-top: 5%;
+        cursor: pointer;
+    }
+}

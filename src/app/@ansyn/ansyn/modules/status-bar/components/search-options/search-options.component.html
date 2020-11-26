@@ -1,0 +1,15 @@
+<div class="search-icon"
+    (click)="toggleSearchPannel()">
+    <i class="fa fa-search"></i>
+</div>
+<div *ngIf="isExpand">
+    <div class="presets" >
+        <ansyn-search-panel></ansyn-search-panel>
+        <div class="close" (click)="close()">X</div>
+        <div *ngIf="advancedSearch">
+            <div class="expander">
+                <ansyn-advanced-search></ansyn-advanced-search>
+            </div>
+        </div>
+    </div>
+</div>

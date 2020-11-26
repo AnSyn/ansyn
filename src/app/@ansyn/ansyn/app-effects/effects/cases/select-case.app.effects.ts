@@ -68,16 +68,10 @@ export class SelectCaseAppEffects {
 
 		let region: Feature<Polygon | Point>;
 		const activeMap = data.find(({ id }) => id === state.maps.activeMapId);
-		const activeMapCenter = activeMap.data.position.projectedState.center;
 		if (state.region.type !== 'Feature') {
-			region = feature(state.region, { type: state.region.type, center: activeMapCenter });
+			region = feature(state.region, { type: state.region.type });
 		} else {
-			region = {
-				...state.region, properties: {
-					...state.region.properties,
-					center: activeMapCenter
-				}
-			};
+			region = state.region;
 		}
 
 		if (region.properties.searchMode === CaseGeoFilter.ScreenView) {

@@ -67,7 +67,6 @@ export class SelectCaseAppEffects {
 		const { favoriteOverlays, dataInputFilters, miscOverlays } = state;
 
 		let region: Feature<Polygon | Point>;
-		const activeMap = data.find(({ id }) => id === state.maps.activeMapId);
 		if (state.region.type !== 'Feature') {
 			region = feature(state.region, { type: state.region.type });
 		} else {

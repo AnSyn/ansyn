@@ -321,11 +321,11 @@ export class MapAppEffects {
 		debounceTime(this.screenViewConfig.debounceTime),
 		concatMap((action) => of(action).pipe(
 			withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus), this.store$.select(selectRegion),
-				(action: Action, mapList, activeMapId, geoFilterStatus, region): [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], IOverlay] => {
-					const { position, overlay }: IMapSettingsData =  mapList[activeMapId].data ;
+				(action: Action, mapList, activeMapId, geoFilterStatus, { properties }): [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], IOverlay] => {
+					const { position, overlay }: IMapSettingsData = mapList[activeMapId].data;
 					const newCenter = position.projectedState.center;
 
-					return [position?.extentPolygon, geoFilterStatus, newCenter, region.properties.center, overlay];
+					return [position?.extentPolygon, geoFilterStatus, newCenter, properties.center, overlay];
 				})
 		)),
 		filter(([extentPolygon, geoFilterStatus, newCenter, oldCenter, overlay]: [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], IOverlay]) => {

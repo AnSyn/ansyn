@@ -50,7 +50,8 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	geoFilterTitle: string;
 	geoFilterCoordinates: string;
 	dataInputFilters: ICaseDataInputFiltersState;
-
+	advancedSearch: Boolean = false;
+	
 	@AutoSubscription
 	dataInputFilters$ = this.store$.select(selectDataInputFilter).pipe(
 		filter((caseDataInputFiltersState: ICaseDataInputFiltersState) => Boolean(caseDataInputFiltersState) && Boolean(caseDataInputFiltersState.filters)),
@@ -125,5 +126,9 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	isDataInputsOk() {
 		return this.dataInputFilters.fullyChecked || this.dataInputFilters.filters.length > 0;
+	}
+
+	toggleAdvancedSearch() {
+		this.advancedSearch = !this.advancedSearch
 	}
 }

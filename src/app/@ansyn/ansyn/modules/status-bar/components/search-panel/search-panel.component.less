@@ -5,9 +5,18 @@
 
 :host {
 	&:extend(.status-bar-panel);
+	flex-direction: column !important;
+
+	.advanced-search {
+		cursor: pointer;
+	}
+
+	.simple-search {
+		display: flex;
+	}
 
 	.box {
-		margin: 0 3px;
+		margin: 0 20px;
 
 		.button {
 			&:extend(.status-bar-button-round);
@@ -43,6 +52,10 @@
 
 		&#dataInputsPreSearch {
 			width: 110px;
+		}
+		
+		.expander {
+			align-self: self-start;
 		}
 	}
 }

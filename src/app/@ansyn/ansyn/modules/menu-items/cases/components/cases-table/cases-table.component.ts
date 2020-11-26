@@ -8,6 +8,7 @@ import { distinctUntilChanged, pluck } from 'rxjs/operators';
 import { ICasePreview } from '../../models/case.model';
 import { EntityState, Dictionary } from '@ngrx/entity';
 import { OpenModalAction, CopyCaseLinkAction, LoadCaseAction } from '../../actions/cases.actions';
+import { ICaseTableData } from '../../models/cases-config';
 
 const animations: any[] = [
 	trigger('leaveAnim', [
@@ -28,8 +29,9 @@ const animations: any[] = [
 })
 export class CasesTableComponent implements OnInit, OnDestroy {
 	@ViewChild('tbodyElement') tbodyElement: ElementRef;
-	@Input() cases: Dictionary<ICasePreview>;
+	@Input() cases: ICaseTableData;
 	@Output() onInfintyScroll = new EventEmitter();
+	@Output() onHoverCaseRow = new EventEmitter<string>();
 
 	modalCaseId$: Observable<string> = this.store$.pipe(
 		select(selectModalState),
@@ -57,11 +59,13 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	onMouseEnterCaseRow(caseRow: HTMLDivElement) {
+	onMouseEnterCaseRow(caseRow: HTMLDivElement, caseId: string) {
+		this.onHoverCaseRow.emit(caseId);
 		caseRow.classList.add('mouse-enter');
 	}
 
 	onMouseLeaveCaseRow(caseRow: HTMLDivElement) {
+		this.onHoverCaseRow.emit(undefined);
 		caseRow.classList.remove('mouse-enter');
 	}
 
@@ -70,20 +74,9 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 		$event.stopPropagation();
 	}
 
-	removeCase(caseId: string): void {
-		this.store$.dispatch(new OpenModalAction({ type: 'delete', caseId }));
-	}
-
-	editCase(caseId: string) {
-		this.store$.dispatch(new OpenModalAction({ type: 'save', caseId }));
-	}
-
-	shareCase(caseId: string) {
-		this.store$.dispatch(new CopyCaseLinkAction({ caseId }));
-	}
-
 	selectCase(caseId: string): void {
-		this.store$.dispatch(new LoadCaseAction(caseId));
+		if (caseId) {
+			this.store$.dispatch(new LoadCaseAction(caseId));
+		}
 	}
-
 }

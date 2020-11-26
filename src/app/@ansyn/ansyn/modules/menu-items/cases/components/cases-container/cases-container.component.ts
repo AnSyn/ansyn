@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ICasesState, selectMyCasesData, selectSharedCasesData } from '../../reducers/cases.reducer';
 import { select, Store } from '@ngrx/store';
-import { LoadCasesAction } from '../../actions/cases.actions';
+import { CopyCaseLinkAction, LoadCaseAction, LoadCasesAction, OpenModalAction } from '../../actions/cases.actions';
 import { tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { CasesType, ICaseTableData } from '../../models/cases-config';
@@ -15,7 +15,7 @@ import { CasesType, ICaseTableData } from '../../models/cases-config';
 export class CasesContainerComponent implements OnInit, OnDestroy {
 	myCasesData: ICaseTableData;
 	sharedCasesObj: ICaseTableData;
-
+	hoverCaseId: string;
 	@AutoSubscription
 	getMyCases$ = this.store$.pipe(
 		select(selectMyCasesData),
@@ -58,6 +58,32 @@ export class CasesContainerComponent implements OnInit, OnDestroy {
 
 	loadSharedCases() {
 		this.store$.dispatch(new LoadCasesAction(CasesType.MySharedCases))
+	}
+
+	removeCase(): void {
+		if (this.hoverCaseId) {
+			this.store$.dispatch(new OpenModalAction({ type: 'delete', caseId: this.hoverCaseId }));
+		}
+	}
+
+	editCase() {
+		if (this.hoverCaseId) {
+			this.store$.dispatch(new OpenModalAction({ type: 'save', caseId: this.hoverCaseId }));
+		}
+	}
+
+	shareCase() {
+		if (this.hoverCaseId) {
+			this.store$.dispatch(new CopyCaseLinkAction({ caseId: this.hoverCaseId }));
+		}
+	}
+
+	removeShareCase() {
+
+	}
+
+	saveSharedAsMy() {
+
 	}
 
 }

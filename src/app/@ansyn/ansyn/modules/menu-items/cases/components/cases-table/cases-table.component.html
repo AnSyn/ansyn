@@ -18,16 +18,16 @@
 	<div class="cases-table-body scrolled"
 		 [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''"
 		 (ansynInfiniteScroll)="onInfintyScroll.emit()"
-         #tbodyElement>
+		 #tbodyElement>
 
 		<div class="cases-table-body-row"
 			 *ngFor="let id of cases.ids"
 			 (click)="selectCase(id)"
 			 [class.active]="(modalCaseId$ | async) === id"
-			 (mouseenter)="onMouseEnterCaseRow(caseRow)"
+			 (mouseenter)="onMouseEnterCaseRow(caseRow, id)"
 			 (mouseleave)="onMouseLeaveCaseRow(caseRow)"
 			 [@leaveAnim]
-             #caseRow>
+			 #caseRow>
 
 			<hr>
 
@@ -44,22 +44,8 @@
 
 				<!--menu-->
 				<div class="case-menu-container">
-					<div class="case-menu" (click)="caseMenuClick($event, caseRow)" #caseMenu>
-						<button (click)="removeCase(id)"
-								[attr.tooltip-value]="'Remove' | translate"
-								tooltip-class="bottom">
-							<i class="icon-delete"></i>
-						</button>
-						<button (click)="shareCase(id)"
-								[attr.tooltip-value]="'Share' | translate"
-								tooltip-class="bottom">
-							<i class="icon-share"></i>
-						</button>
-						<button (click)="editCase(id)"
-								[attr.tooltip-value]="'Edit' | translate"
-								tooltip-class="bottom">
-							<i class="icon-edit"></i>
-						</button>
+					<div class="case-menu" (click)="caseMenuClick($event, caseRow)">
+						<ng-content></ng-content>
 					</div>
 				</div>
 

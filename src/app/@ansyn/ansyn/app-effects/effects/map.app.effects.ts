@@ -99,7 +99,7 @@ import {
 	ScreenViewConfig
 } from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
 import { feature } from '@turf/turf';
-import { calculatePolygonWidth } from '../../../imagery/utils/geo';
+import { calculatePolygonWidth } from '@ansyn/imagery';
 
 const FOOTPRINT_INSIDE_MAP_RATIO = 1;
 

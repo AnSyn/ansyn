@@ -34,17 +34,11 @@ export const CasesActionTypes = {
 
 	SAVE_CASE_AS: 'SAVE_CASE_AS',
 	SAVE_CASE_AS_SUCCESS: 'SAVE_CASE_AS_SUCCESS',
+	SAVE_SHARED_CASE_AS_MY_OWN: 'SAVE_SHARED_CASE_AS_MY_OWN',
 
 	COPY_CASE_LINK: 'COPY_CASE_LINK',
 
-	SET_DEFAULT_CASE_QUERY_PARAMS: 'SET_DEFAULT_CASE_QUERY_PARAMS',
-	REMOVE_DEFAULT_CASE_QUERY_PARAMS: 'REMOVE_DEFAULT_CASE_QUERY_PARAMS',
-	TOGGLE_FAVORITE_OVERLAY: 'TOGGLE_FAVORITE_OVERLAY',
-
 	LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE: 'LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE',
-	/*MANUAL_SAVE: 'MANUAL_SAVE',
-
-	SET_AUTO_SAVE: 'SET_AUTO_SAVE',*/
 
 	LOG_RENAME_CASE: 'LOG_RENAME_CASE'
 };
@@ -181,9 +175,19 @@ export class SaveCaseAsAction implements Action {
 
 	constructor(public payload: ICase) {
 	}
+
+	logMessage() {
+		return `Saving case as ${this.payload.name}`
+	}
 }
 
-export class SaveCaseAsSuccessAction implements Action, ILogMessage {
+export class SaveSharedCaseAsMyOwn implements Action {
+	readonly type = CasesActionTypes.SAVE_SHARED_CASE_AS_MY_OWN;
+	constructor(public payload: string) {
+	}
+}
+
+/*export class SaveCaseAsSuccessAction implements Action, ILogMessage {
 	type = CasesActionTypes.SAVE_CASE_AS_SUCCESS;
 
 	constructor(public payload: ICase) {
@@ -192,7 +196,7 @@ export class SaveCaseAsSuccessAction implements Action, ILogMessage {
 	logMessage() {
 		return `Saving case as ${this.payload.name}`
 	}
-}
+}*/
 
 export class CopyCaseLinkAction implements Action, ILogMessage {
 	type = CasesActionTypes.COPY_CASE_LINK;

@@ -91,6 +91,10 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 		case CasesActionTypes.SELECT_CASE_SUCCESS:
 			return { ...state, selectedCase: action.payload };
 
+		case CasesActionTypes.SAVE_SHARED_CASE_AS_MY_OWN: {
+			const id = action.payload;
+			return {...state, selectedCase: state.sharedCases.entities[id]}
+		}
 		/*case CasesActionTypes.SET_AUTO_SAVE:
 			return { ...state, autoSave: action.payload };*/
 
@@ -109,11 +113,17 @@ export const selectMyCasesIds = createSelector(myCasesState, (state) => myCasesI
 export const selectMyCasesData: MemoizedSelector<any, [Array<string | number>, Dictionary<ICasePreview>]> = createSelector(selectMyCasesIds, selectMyCasesEntities, (ids, entities) => [ids, entities]);
 
 export const selectSharedCaseTotal = createSelector(sharedCasesState, sharedCasesTotal);
-export const selectMySharedCasesEntities = createSelector(sharedCasesState, myCasesEntities);
+export const selectSharedCasesEntities = createSelector(sharedCasesState, myCasesEntities);
 export const selectSharedCasesIds = createSelector(sharedCasesState, (state) => myCasesIds(state));
-export const selectSharedCasesData: MemoizedSelector<any, [Array<string | number>, Dictionary<ICasePreview>]> = createSelector(selectSharedCasesIds, selectMySharedCasesEntities, (ids, entities) => [ids, entities]);
+export const selectSharedCasesData: MemoizedSelector<any, [Array<string | number>, Dictionary<ICasePreview>]> = createSelector(selectSharedCasesIds, selectSharedCasesEntities, (ids, entities) => [ids, entities]);
 
-export const selectCaseById = (id: string) => createSelector(selectMyCasesEntities, (entities) => entities && entities[id]);
+export const selectCaseById = (id: string) => createSelector(selectMyCasesEntities, selectSharedCasesEntities, (entities, sharedEntities) => {
+	if (entities && entities[id]) {
+		return entities[id]
+	}
+	// in case the case not in my cases search in the shared case.
+	return sharedEntities && sharedEntities[id]
+});
 export const selectSelectedCase = createSelector(casesStateSelector, (cases) => cases && cases.selectedCase);
 /*export const selectAutoSave: MemoizedSelector<any, boolean> = createSelector(casesStateSelector, (cases) => {
 	return cases.autoSave

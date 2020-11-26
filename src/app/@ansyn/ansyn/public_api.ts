@@ -82,7 +82,7 @@ export {
 	ISettingsState, selectFlags, settingsStateSelector, selectIsAnaglyphActive
 }from './modules/menu-items/settings/reducers/settings.reducer';
 export {
-	LoadDefaultCaseAction, SaveCaseAsSuccessAction, SelectDilutedCaseAction
+	LoadDefaultCaseAction, SelectDilutedCaseAction
 }from './modules/menu-items/cases/actions/cases.actions';
 export { FiltersMetadata, IFiltersState } from './modules/filters/reducer/filters.reducer';
 export { IFilter } from './modules/filters/models/IFilter';

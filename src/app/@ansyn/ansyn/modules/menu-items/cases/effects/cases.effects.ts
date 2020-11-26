@@ -1,16 +1,16 @@
 import { Inject, Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { EMPTY, forkJoin, Observable, of } from 'rxjs';
 import {
 	AddCasesAction,
 	CasesActionTypes,
 	CopyCaseLinkAction,
-	DeleteCaseAction,
 	LoadCaseAction,
 	LoadCasesAction,
-	LoadDefaultCaseAction,
+	LoadDefaultCaseAction, OpenModalAction,
 	SaveCaseAsAction,
+	SaveSharedCaseAsMyOwn,
 	SelectDilutedCaseAction
 } from '../actions/cases.actions';
 import { casesConfig, CasesService } from '../services/cases.service';
@@ -18,20 +18,17 @@ import {
 	casesStateSelector,
 	ICasesState,
 	selectMyCasesTotal,
-	selectSelectedCase,
+	selectSharedCasesEntities,
 	selectSharedCaseTotal
 } from '../reducers/cases.reducer';
 import { CasesType, ICasesConfig } from '../models/cases-config';
-import { catchError, debounceTime, filter, map, mergeMap, share, switchMap, withLatestFrom, concatMap, tap } from 'rxjs/operators';
+import { catchError, concatMap, filter, map, mergeMap, share, switchMap, withLatestFrom } from 'rxjs/operators';
 import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { DataLayersService } from '../../layers-manager/services/data-layers.service';
 import { copyFromContent, SetToastMessageAction } from '@ansyn/map-facade';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
-import { IStoredEntity } from '../../../core/services/storage/storage.service';
-import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCrash';
 import { toastMessages } from '../../../core/models/toast-messages';
-import { ICase, ICasePreview, IDilutedCaseState } from '../models/case.model';
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { cloneDeep } from '../../../core/utils/rxjs/operators/cloneDeep';
 
@@ -41,13 +38,13 @@ export class CasesEffects {
 	@Effect()
 	loadCases$: Observable<AddCasesAction | {}> = this.actions$.pipe(
 		ofType<LoadCasesAction>(CasesActionTypes.LOAD_CASES),
-		concatMap( (action) => {
+		concatMap((action) => {
 			const selector = action.payload === CasesType.MyCases ? this.store.select(selectMyCasesTotal) : this.store.select(selectSharedCaseTotal);
 			return of(action).pipe(withLatestFrom(selector));
 		}),
 		concatMap(([action, total]: [LoadCasesAction, number]) => {
 			return this.casesService.loadCases(total, action.payload).pipe(
-				map(cases => new AddCasesAction({cases, type: action.payload})),
+				map(cases => new AddCasesAction({ cases, type: action.payload })),
 				catchError(() => EMPTY)
 			);
 		}),
@@ -114,7 +111,18 @@ export class CasesEffects {
 		cloneDeep(),
 		withLatestFrom(this.store.select(selectLayers)),
 		mergeMap(([{ payload }, layers]: [SaveCaseAsAction, ILayer[]]) => {
-			const newCase = {...payload, id: this.casesService.generateUUID()};
+			const newCase = { ...payload, id: this.casesService.generateUUID() };
+			// regenerate maps id for the new case.
+			const currentActive = newCase.state.maps.activeMapId;
+			let newActiveMapId = currentActive;
+			newCase.state.maps.data.forEach(map => {
+				const mapId = map.id;
+				map.id = this.casesService.generateUUID();
+				if (mapId === currentActive) {
+					newActiveMapId = map.id;
+				}
+			});
+			newCase.state.maps.activeMapId = newActiveMapId;
 			// regenerate layers id for the new case.
 			return forkJoin(layers
 				.filter(({ type }) => type === LayerType.annotation)
@@ -129,7 +137,7 @@ export class CasesEffects {
 			).pipe(map((_) => newCase))
 		}),
 		mergeMap(newCase => this.casesService.createCase(newCase)),
-		map( (newCase) => new AddCasesAction({cases: [newCase]})),
+		map((newCase) => new AddCasesAction({ cases: [newCase] })),
 		catchError((err) => {
 			console.warn(err);
 			return EMPTY;
@@ -172,6 +180,12 @@ export class CasesEffects {
 			catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load case')),
 			catchError(() => of(new LoadDefaultCaseAction()))
 		);
+
+	@Effect()
+	saveSharedCaseAsMyOwn$ = this.actions$.pipe(
+		ofType<SaveSharedCaseAsMyOwn>(CasesActionTypes.SAVE_SHARED_CASE_AS_MY_OWN),
+		map( (caseToSave) => new OpenModalAction({type: 'save'}))
+	)
 
 	/*saveLayers: UnaryFunction<any, any> = pipe(
 		mergeMap((action: ManualSaveAction) => this.dataLayersService

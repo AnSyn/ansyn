@@ -75,16 +75,6 @@ export class SaveCaseComponent implements OnInit, OnDestroy {
 	saveNewCase() {
 		return this.cloneDeepOneTime(selectSelectedCase).pipe(
 			tap((selectedCase: ICase) => {
-				const currentActive = selectedCase.state.maps.activeMapId;
-				let newActiveMapId = currentActive;
-				selectedCase.state.maps.data.forEach(map => {
-					const mapId = map.id;
-					map.id = UUID.UUID();
-					if (mapId === currentActive) {
-						newActiveMapId = map.id;
-					}
-				});
-				selectedCase.state.maps.activeMapId = newActiveMapId;
 				this.store.dispatch(new SaveCaseAsAction({ ...selectedCase, name: this.caseName }));
 			})
 		)

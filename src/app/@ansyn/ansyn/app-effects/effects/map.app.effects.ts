@@ -100,6 +100,7 @@ import {
 } from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
 import { booleanEqual, distance, feature } from '@turf/turf';
 import { GeometryObject } from '@turf/helpers';
+import { calculatePolygonWidth } from '../../../imagery/utils/geo';
 
 const FOOTPRINT_INSIDE_MAP_RATIO = 1;
 
@@ -318,21 +319,22 @@ export class MapAppEffects {
 	searchByExtentPolygon$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.POSITION_CHANGED, MapActionTypes.SET_ACTIVE_MAP_ID, StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS),
 		debounceTime(this.screenViewConfig.debounceTime),
-		withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus), this.store$.select(selectRegion),
-			(action: any, [mapList, activeMapId, geoFilterStatus, region]: [any, string, IGeoFilterStatus, CaseRegionState]) => {
-				const { position, overlay }: IMapSettingsData = mapList[activeMapId].data;
-				const newCenter = position.projectedState.center;
+		concatMap((action) => of(action).pipe(
+			withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus), this.store$.select(selectRegion),
+				(action: Action, mapList, activeMapId, geoFilterStatus, region): [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], IOverlay] => {
+					const { position, overlay }: IMapSettingsData =  mapList[activeMapId].data ;
+					const newCenter = position.projectedState.center;
 
-				return [position.extentPolygon, geoFilterStatus, newCenter, region, overlay];
-			}),
-		filter(([extentPolygon, geoFilterStatus, newCenter, region, overlay]: [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number], CaseRegionState, IOverlay]) => {
-			const oldCenter = region.properties.center;
-			return !isEqual(oldCenter, newCenter) && !Boolean(overlay) && geoFilterStatus.type === CaseGeoFilter.ScreenView;
+					return [position?.extentPolygon, geoFilterStatus, newCenter, region.properties.center, overlay];
+				})
+		)),
+		filter(([extentPolygon, geoFilterStatus, newCenter, oldCenter, overlay]: [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], IOverlay]) => {
+			return geoFilterStatus.type === CaseGeoFilter.ScreenView && !Boolean(overlay) && !isEqual(oldCenter, newCenter);
 		}),
-		concatMap(([ extentPolygon , geoFilterStatus, newCenter, region, overlay]: [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number], CaseRegionState, IOverlay]) => {
+		concatMap(([extentPolygon, geoFilterStatus, newCenter, oldCenter, overlay]: [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], IOverlay]) => {
 			const actions: Action[] = [];
 
-			const extentWidth = this.calculateExtentWidth(extentPolygon.coordinates);
+			const extentWidth = calculatePolygonWidth(extentPolygon);
 			if (extentWidth > this.screenViewConfig.extentWidthSearchLimit) {
 				actions.push(new SetOverlaysStatusMessageAction({ message: 'Zoom in to get new overlays' }));
 			} else {
@@ -343,6 +345,7 @@ export class MapAppEffects {
 					actions.push(new UpdateGeoFilterStatus({ active: false }));
 				}
 			}
+
 			return actions;
 		})
 	);
@@ -368,12 +371,6 @@ export class MapAppEffects {
 			return DisabledOpenLayersMapName;
 		}
 		return null;
-	}
-
-	calculateExtentWidth(extentCoordinates) {
-		const [[extentTopLeft, extentTopRight]] = extentCoordinates;
-		const extentWidth = Math.round(distance(extentTopLeft, extentTopRight, { units: 'meters' }));
-		return extentWidth;
 	}
 
 	onDisplayOverlay([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {

@@ -137,6 +137,11 @@ export function getPolygonIntersectionRatio(extent: Polygon, footprint: MultiPol
 	return intersection
 }
 
+export function calculatePolygonWidth(extent: Polygon) {
+	const [[extentTopLeft, extentTopRight]] = extent.coordinates;
+	return Math.round(distance(extentTopLeft, extentTopRight, { units: 'meters' }));
+}
+
 export function polygonsDontIntersect(extentPolygon, footprint, overlayCoverage): boolean {
 	const intersection = getPolygonIntersectionRatio(extentPolygon, footprint);
 	return intersection < overlayCoverage;

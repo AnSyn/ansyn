@@ -2,31 +2,15 @@ import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import {
-	SetFavoriteOverlaysAction,
-	SetOverlaysScannedAreaDataAction,
-	SetOverlaysTranslationDataAction,
-	UpdateOverlaysManualProcessArgs
-} from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
+import { SetFavoriteOverlaysAction, SetOverlaysScannedAreaDataAction, SetOverlaysTranslationDataAction, UpdateOverlaysManualProcessArgs } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { IAppState } from '../../app.effects.module';
 import { concatMap } from 'rxjs/operators';
 import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '@ansyn/map-facade';
-import {
-	BeginLayerCollectionLoadAction,
-	UpdateSelectedLayersIds
-} from '../../../modules/menu-items/layers-manager/actions/layers.actions';
-import {
-	CasesActionTypes,
-	SelectCaseAction,
-	SelectCaseSuccessAction,
-	SetAutoSave
-} from '../../../modules/menu-items/cases/actions/cases.actions';
+import { BeginLayerCollectionLoadAction, UpdateSelectedLayersIds } from '../../../modules/menu-items/layers-manager/actions/layers.actions';
+import { CasesActionTypes, SelectCaseAction, SelectCaseSuccessAction, SetAutoSave } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { casesConfig, CasesService } from '../../../modules/menu-items/cases/services/cases.service';
 import { UpdateFacetsAction } from '../../../modules/filters/actions/filters.actions';
-import {
-	SetAnnotationMode,
-	SetMeasureDistanceToolState,
-} from '../../../modules/menu-items/tools/actions/tools.actions';
+import { SetAnnotationMode, SetMeasureDistanceToolState, } from '../../../modules/menu-items/tools/actions/tools.actions';
 import { isFullOverlay } from '../../../modules/core/utils/overlays';
 import { ICoreConfig } from '../../../modules/core/models/core.config.model';
 import { CoreConfig } from '../../../modules/core/models/core.config';
@@ -68,7 +52,7 @@ export class SelectCaseAppEffects {
 
 		let region: Feature<Polygon | Point>;
 		if (state.region.type !== 'Feature') {
-			region = feature(state.region, { type: state.region.type });
+			region = feature(state.region, { searchMode: state.region.type });
 		} else {
 			region = state.region;
 		}

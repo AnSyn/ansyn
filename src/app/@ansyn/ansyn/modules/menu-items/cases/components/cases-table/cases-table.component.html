@@ -45,7 +45,9 @@
 				<!--menu-->
 				<div class="case-menu-container">
 					<div class="case-menu" (click)="caseMenuClick($event, caseRow)">
-						<ng-content></ng-content>
+						<ng-container *ngIf="menuItemRef"
+									  [ngTemplateOutlet]="menuItemRef"
+									  [ngTempleOutletContext]="{$implicit:menuItem}"></ng-container>
 					</div>
 				</div>
 

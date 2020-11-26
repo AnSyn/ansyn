@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, TemplateRef, ContentChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { ICaseModal, ICasesState, selectModalState, } from '../../reducers/cases.reducer';
@@ -33,6 +33,7 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 	@Output() onInfintyScroll = new EventEmitter();
 	@Output() onHoverCaseRow = new EventEmitter<string>();
 
+	@ContentChild('menuItem', {static: false}) menuItemRef: TemplateRef<any>;
 	modalCaseId$: Observable<string> = this.store$.pipe(
 		select(selectModalState),
 		distinctUntilChanged(),

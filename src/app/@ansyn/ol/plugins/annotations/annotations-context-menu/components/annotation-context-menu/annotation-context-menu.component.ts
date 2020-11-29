@@ -32,7 +32,8 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	@HostBinding('attr.tabindex') tabindex = 0;
 
 	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
+	isRTL = false;
+	// For now, the context menu remains LTR also in RTL mode
 
 	subscribers = [];
 	annotationsSubscribers = [];

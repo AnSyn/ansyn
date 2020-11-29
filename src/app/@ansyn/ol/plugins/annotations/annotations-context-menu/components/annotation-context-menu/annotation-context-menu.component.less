@@ -11,6 +11,8 @@
 	top: 0;
 	left: 0;
 	z-index: 5;
+	direction: ltr;
+	// For now, the context menu remains LTR also in RTL mode
 
 	div.context-menu-wrapper {
 		position: absolute;
@@ -33,5 +35,9 @@
 		&.hover {
 			z-index: @z-index-annotation-cotext-menu-hover;
 		}
+	}
+
+	&.rtl {
+		direction: rtl;
 	}
 }

@@ -15,7 +15,6 @@ import { LoggerConfig } from '../../../../core/models/logger.config';
 import { TranslateModule } from '@ngx-translate/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { mapFacadeConfig } from '@ansyn/map-facade';
-import { linksConfig } from '../../services/helpers/cases.service.query-params-helper';
 
 describe('DeleteCaseComponent', () => {
 	let component: DeleteCaseComponent;
@@ -23,11 +22,13 @@ describe('DeleteCaseComponent', () => {
 	let casesService: CasesService;
 
 	const fakeICasesState: ICasesState = {
-		entities: {
-			'fakeId1': { id: 'fakeId1', name: 'fakeName1' },
-			'fakeId2': { id: 'fakeId2', name: 'fakeName2' }
+		myCases: {
+			entities: {
+				'fakeId1': { id: 'fakeId1', name: 'fakeName1' },
+				'fakeId2': { id: 'fakeId2', name: 'fakeName2' }
+			},
+			ids: ['fakeId1', 'fakeId2'],
 		},
-		ids: ['fakeId1', 'fakeId2'],
 		modalCaseId: 'fakeId1',
 		modal: {
 			id: 'fakeId1',
@@ -50,7 +51,6 @@ describe('DeleteCaseComponent', () => {
 			],
 			providers: [
 				DataLayersService,
-				{ provide: linksConfig, useValue: {} },
 				{ provide: casesConfig, useValue: { schema: null } },
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
@@ -77,7 +77,7 @@ describe('DeleteCaseComponent', () => {
 
 	it('text on "div.text" tag should include case name', () => {
 		let textElement = fixture.nativeElement.querySelector('div.text');
-		expect(textElement.innerText.includes(fakeICasesState.entities['fakeId1'].name)).toBeTruthy();
+		expect(textElement.innerText.includes(fakeICasesState.myCases.entities['fakeId1'].name)).toBeTruthy();
 	});
 
 	it('close should call store.dispatch with CloseModalAction', () => {

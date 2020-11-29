@@ -120,16 +120,9 @@ export class DataLayersService implements OnInit, OnDestroy {
 			)
 	}
 
-	removeCaseLayers(caseId: string): Observable<any> {
-		this.store.dispatch(new RemoveCaseLayersFromBackendAction(caseId));
+	removeCaseLayers(caseId: string): Observable<[string, string[]]> {
 		return this.storageService.deleteByCase('layers', { caseId }).pipe(
-			tap(() => {
-				this.store.dispatch(new RemoveCaseLayersFromBackendSuccessAction(caseId))
-			}),
-			catchError((err) => {
-				this.store.dispatch(new RemoveCaseLayersFromBackendFailedAction(caseId, err));
-				return this.errorHandlerService.httpErrorHandle(err, 'Failed to remove case layers');
-			})
-		);
+			map( (ids) => [caseId, ids])
+		)
 	}
 }

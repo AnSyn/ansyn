@@ -10,6 +10,7 @@ import { IAppState } from '../app.effects.module';
 import { catchError, concatMap, filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	CasesActionTypes,
+	DeleteCaseAction,
 	LoadDefaultCaseAction,
 	LoadDefaultCaseIfNoActiveCaseAction,
 	SelectCaseAction,
@@ -35,6 +36,7 @@ import {
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { casesConfig, CasesService } from '../../modules/menu-items/cases/services/cases.service';
 import { ICasesConfig } from '../../modules/menu-items/cases/models/cases-config';
+import { RemoveCaseLayersFromBackendAction } from '../../modules/menu-items/layers-manager/actions/layers.actions';
 
 @Injectable()
 export class CasesAppEffects {
@@ -110,6 +112,12 @@ export class CasesAppEffects {
 					);
 			})
 		);
+
+	@Effect()
+	onDeleteCase$: Observable<any> = this.actions$.pipe(
+		ofType<DeleteCaseAction>(CasesActionTypes.DELETE_CASE),
+		map((action) => new RemoveCaseLayersFromBackendAction(action.payload.id)),
+	);
 
 	get defaultImageManualProcessArgs(): IImageManualProcessArgs {
 		return this.overlayStatusConfig.ImageProcParams.reduce<IImageManualProcessArgs>((initialObject: any, imageProcParam) => {

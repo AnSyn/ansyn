@@ -1,7 +1,7 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 
 import { SearchPanelComponent } from './search-panel.component';
-import { comboBoxesOptions, GEO_FILTERS, TIME_FILTERS } from '../../models/combo-boxes.model';
+import { comboBoxesOptions, GEO_FILTERS } from '../../models/combo-boxes.model';
 import { Store, StoreModule } from '@ngrx/store';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import {
@@ -103,10 +103,6 @@ describe('SearchPanelComponent', () => {
 			}),
 				TranslateModule.forRoot()],
 			providers: [
-				{
-					provide: TIME_FILTERS,
-					useValue: comboBoxesOptions.timeFilters
-				},
 				{
 					provide: GEO_FILTERS,
 					useValue: comboBoxesOptions.geoFilters

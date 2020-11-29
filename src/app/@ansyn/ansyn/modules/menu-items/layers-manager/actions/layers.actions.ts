@@ -194,6 +194,10 @@ export class RemoveCaseLayersFromBackendAction implements Action {
 export class RemoveCaseLayersFromBackendSuccessAction extends RemoveCaseLayersFromBackendAction {
 	readonly type = LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_SUCCESS_ACTION;
 }
+
+/**
+ * @unused
+ */
 export class RemoveCaseLayersFromBackendFailedAction extends RemoveCaseLayersFromBackendAction {
 	readonly type = LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_FAILED_ACTION;
 

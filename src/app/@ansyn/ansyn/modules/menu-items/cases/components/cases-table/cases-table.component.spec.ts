@@ -1,7 +1,6 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { CasesTableComponent } from './cases-table.component';
 import { DeleteCaseComponent } from '../delete-case/delete-case.component';
-import { EditCaseComponent } from '../edit-case/edit-case.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { CasesModule } from '../../cases.module';
@@ -15,7 +14,6 @@ import { CoreConfig } from '../../../../core/models/core.config';
 import { LoggerConfig } from '../../../../core/models/logger.config';
 import { TranslateModule } from '@ngx-translate/core';
 import { mapFacadeConfig } from '@ansyn/map-facade';
-import { linksConfig } from '../../services/helpers/cases.service.query-params-helper';
 
 describe('CasesTableComponent', () => {
 	let component: CasesTableComponent;
@@ -25,21 +23,11 @@ describe('CasesTableComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				HttpClientModule,
 				CasesModule,
-				EffectsModule.forRoot([]),
-				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
-				RouterTestingModule,
-				TranslateModule.forRoot()
+				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer })
 			],
 			providers: [
-				DataLayersService,
-				{ provide: casesConfig, useValue: { schema: null } },
-				{ provide: LoggerConfig, useValue: {} },
-				{ provide: linksConfig, useValue: {} },
-				{ provide: CoreConfig, useValue: {} },
-				{ provide: layersConfig, useValue: {} },
-				{ provide: mapFacadeConfig, useValue: {} }
+
 			]
 		})
 			.compileComponents();
@@ -57,11 +45,6 @@ describe('CasesTableComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('loadCases should call casesService.loadCases()', () => {
-		component.loadCases();
-		expect(store.dispatch).toHaveBeenCalledWith(new LoadCasesAction());
-	});
-
 	it('onCasesAdded should change tbodyElement scrollTop to 0( only if tbodyElement is not undefined )', () => {
 		component.tbodyElement = <any>{
 			nativeElement: { scrollTop: 100 }
@@ -71,15 +54,12 @@ describe('CasesTableComponent', () => {
 	});
 
 	it('onMouseEnterCaseRow should calc the top of caseMenu and add "mouse-enter" class', () => {
-		let caseMenu = <HTMLDivElement>{ style: { top: '-1px' } };
 		const caseRow = <HTMLDivElement>{
 			offsetTop: 100, classList: jasmine.createSpyObj({
 				add: () => null
 			})
 		};
-		const tbodyElement = <HTMLDivElement>{ scrollTop: 50 };
-		component.onMouseEnterCaseRow(caseMenu, caseRow, tbodyElement);
-		expect(caseMenu.style.top).toEqual('51px');
+		component.onMouseEnterCaseRow(caseRow, 'id');
 		expect(caseRow.classList.add).toHaveBeenCalledWith('mouse-enter');
 	});
 
@@ -103,24 +83,6 @@ describe('CasesTableComponent', () => {
 		component.caseMenuClick($event, caseRow);
 		expect($event.stopPropagation).toHaveBeenCalled();
 		expect(caseRow.classList.remove).toHaveBeenCalledWith('mouse-enter');
-	});
-
-	it('removeCase should open modal with DeleteCaseComponent', () => {
-		let selectedCaseId = 'fakeSelectedCaseId';
-		component.removeCase(selectedCaseId);
-		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({
-			type: 'delete',
-			caseId: selectedCaseId
-		}));
-	});
-
-	it('editCase should open modal with EditCaseComponent', () => {
-		let selectedCaseId = 'fakeSelectedCaseId';
-		component.editCase(selectedCaseId);
-		expect(store.dispatch).toHaveBeenCalledWith(new OpenModalAction({
-			type: 'edit',
-			caseId: selectedCaseId
-		}));
 	});
 
 });

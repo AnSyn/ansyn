@@ -9,7 +9,6 @@ import { ErrorHandlerService } from '../../../core/services/error-handler.servic
 import { StorageService } from '../../../core/services/storage/storage.service';
 import { ICase } from '../models/case.model';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { linksConfig } from './helpers/cases.service.query-params-helper';
 
 export const MockCasesConfig = {
 	provide: casesConfig,
@@ -93,7 +92,6 @@ describe('CasesService', () => {
 				UrlSerializer,
 				MockCasesConfig,
 				{ provide: ErrorHandlerService, useValue: { httpErrorHandle: () => throwError(null) } },
-				{ provide: linksConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: { storageService: { baseUrl: 'fake-base-url' } } }
 			]
 		});

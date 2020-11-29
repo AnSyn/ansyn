@@ -13,8 +13,6 @@ import { StorageService } from '../../../../core/services/storage/storage.servic
 import {
 	ICase,
 	ICaseFacetsState,
-	ICompressedCaseFacetsState,
-	ICompressedCaseMapsState,
 	IDilutedCaseMapsState
 } from '../../models/case.model';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';

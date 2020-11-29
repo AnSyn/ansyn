@@ -1,11 +1,10 @@
 import {
-	AddCaseAction,
 	CloseModalAction,
 	OpenModalAction,
 	SelectCaseSuccessAction,
 	UpdateCaseAction
 } from '../actions/cases.actions';
-import { casesAdapter, CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
+import { myCasesAdapter, CasesReducer, ICasesState, initialCasesState } from './cases.reducer';
 import { ICase } from '../models/case.model';
 
 describe('CasesReducer', () => {
@@ -32,12 +31,6 @@ describe('CasesReducer', () => {
 		}
 	};
 
-	it('ADD_CASE action should add new case to state', () => {
-		let action = new AddCaseAction(caseMock);
-		let result: ICasesState = CasesReducer(initialCasesState, action);
-		expect(result.entities['fakeId']).toEqual(caseMock);
-	});
-
 	it('OPEN_MODAL action should set modalCaseId from payload and change modal to true', () => {
 		let action: OpenModalAction = new OpenModalAction({ type: 'save', caseId: 'fakeCaseId' });
 		let result: ICasesState = CasesReducer(initialCasesState, action);
@@ -60,11 +53,11 @@ describe('CasesReducer', () => {
 
 	it('UPDATE_CASE action should update existing case from payload(by "id") ', () => {
 		let state: ICasesState = { ...initialCasesState };
-		state = casesAdapter.setAll(<any>[
+		state.myCases = myCasesAdapter.setAll(<any>[
 			{ id: 'id1', name: 'name1' },
 			{ id: 'id2', name: 'name2' },
 			{ id: 'id3', name: 'name3' }
-		], state);
+		], state.myCases);
 
 		state.modal = {...state.modal, id: 'id2'};
 		state.selectedCase = { ...caseMock, id: 'id2' };
@@ -75,7 +68,7 @@ describe('CasesReducer', () => {
 
 		let action: UpdateCaseAction = new UpdateCaseAction({ updatedCase: newCase });
 		let result: ICasesState = CasesReducer(state, action);
-		expect(result.entities['id2'].name).toEqual('name2 lastname2');
+		expect(result.myCases.entities['id2'].name).toEqual('name2 lastname2');
 	});
 
 });

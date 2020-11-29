@@ -5,13 +5,16 @@ import {
 	LayerCollectionLoadedAction,
 	LayersActions,
 	LayersActionTypes,
+	RemoveCaseLayersFromBackendAction,
+	RemoveCaseLayersFromBackendFailedAction,
+	RemoveCaseLayersFromBackendSuccessAction,
 	UpdateLayer
 } from '../actions/layers.actions';
 import { Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { EMPTY, Observable, of } from 'rxjs';
-import { catchError, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, withLatestFrom, tap, retry } from 'rxjs/operators';
 import { DataLayersService } from '../services/data-layers.service';
 import { ILayer, LayerType } from '../models/layers.model';
 import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCrash';
@@ -74,6 +77,17 @@ export class LayersEffects {
 			)
 		)
 	);*/
+
+	@Effect()
+	removeCaseLayers$ = this.actions$.pipe(
+		ofType(LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_ACTION),
+		mergeMap( (action: RemoveCaseLayersFromBackendAction) => this.dataLayersService.removeCaseLayers(action.caseId)),
+		map( ([caseId, layersId]) => new RemoveCaseLayersFromBackendSuccessAction(caseId)),
+		rxPreventCrash()
+	);
+
+
+
 
 	constructor(protected actions$: Actions,
 				protected dataLayersService: DataLayersService,

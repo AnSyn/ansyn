@@ -22,7 +22,7 @@ import {
 	selectSharedCaseTotal
 } from '../reducers/cases.reducer';
 import { CasesType, ICasesConfig } from '../models/cases-config';
-import { catchError, concatMap, filter, map, mergeMap, share, switchMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, concatMap, filter, map, mergeMap, share, switchMap, withLatestFrom, tap } from 'rxjs/operators';
 import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { DataLayersService } from '../../layers-manager/services/data-layers.service';
@@ -39,7 +39,7 @@ export class CasesEffects {
 	loadCases$: Observable<AddCasesAction | {}> = this.actions$.pipe(
 		ofType<LoadCasesAction>(CasesActionTypes.LOAD_CASES),
 		concatMap((action) => {
-			const selector = action.payload === CasesType.MyCases ? this.store.select(selectMyCasesTotal) : this.store.select(selectSharedCaseTotal);
+			const selector = action.payload === CasesType.MySharedCases ? this.store.select(selectSharedCaseTotal) : this.store.select(selectMyCasesTotal);
 			return of(action).pipe(withLatestFrom(selector));
 		}),
 		concatMap(([action, total]: [LoadCasesAction, number]) => {
@@ -51,22 +51,12 @@ export class CasesEffects {
 		share());
 
 	/*@Effect()
-	onDeleteCase$: Observable<any> = this.actions$.pipe(
-		ofType<DeleteCaseAction>(CasesActionTypes.DELETE_CASE),
-		mergeMap((action) => this.dataLayersService.removeCaseLayers(action.payload.id).pipe(map(() => action))),
-		withLatestFrom(this.store.select(selectSelectedCase), ({ payload: { id: deletedCaseId }}, selectedCase: ICase) => [deletedCaseId, selectedCase.id]),
-		filter(([deletedCaseId, selectedCaseId]) => deletedCaseId === selectedCaseId),
-		map(() => new LoadDefaultCaseAction()),
-		rxPreventCrash()
-	);*/
-
-	@Effect()
 	onDeleteCaseLoadCases$: Observable<LoadCasesAction> = this.actions$.pipe(
 		ofType(CasesActionTypes.DELETE_CASE),
 		withLatestFrom(this.store.select(selectMyCasesTotal), (action, total) => total),
 		filter((total: number) => total <= this.casesService.paginationLimit),
 		map(() => new LoadCasesAction()),
-		share());
+		share());*/
 
 	/*@Effect()
 	onUpdateCase$: Observable<UpdateCaseBackendAction> = this.actions$.pipe(
@@ -185,7 +175,7 @@ export class CasesEffects {
 	saveSharedCaseAsMyOwn$ = this.actions$.pipe(
 		ofType<SaveSharedCaseAsMyOwn>(CasesActionTypes.SAVE_SHARED_CASE_AS_MY_OWN),
 		map( (caseToSave) => new OpenModalAction({type: 'save'}))
-	)
+	);
 
 	/*saveLayers: UnaryFunction<any, any> = pipe(
 		mergeMap((action: ManualSaveAction) => this.dataLayersService

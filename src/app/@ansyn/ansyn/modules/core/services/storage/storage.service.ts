@@ -51,9 +51,9 @@ export class StorageService {
 		return from(promise);
 	}
 
-	deleteByCase<P extends IEntity>(schema: string, body): Observable<P[]> {
+	deleteByCase(schema: string, body): Observable<string[]> {
 		const url = this._buildSchemaUrl(schema);
-		return this._http.post<P[]>(`${ url }/delete_by_case`, body);
+		return this._http.post<string[]>(`${ url }/delete_by_case`, body);
 	}
 
 	getPage<P extends IEntity>(schema: string, offset: number, pageSize: number, user?: string, casesType?: 'owner' | 'sharedWith'): Observable<P[]> {

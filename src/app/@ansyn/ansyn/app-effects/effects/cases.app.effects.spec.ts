@@ -24,7 +24,6 @@ import { CoreConfig } from '../../modules/core/models/core.config';
 import { ErrorHandlerService } from '../../modules/core/services/error-handler.service';
 import { StorageService } from '../../modules/core/services/storage/storage.service';
 import {
-	AddCaseAction,
 	LoadDefaultCaseIfNoActiveCaseAction,
 	SelectCaseAction,
 	SelectDilutedCaseAction
@@ -43,7 +42,6 @@ import { ICase } from '../../modules/menu-items/cases/models/case.model';
 import { GeoRegisteration, IOverlay } from '../../modules/overlays/models/overlay.model';
 import { overlayStatusConfig } from "../../modules/overlays/overlay-status/config/overlay-status-config";
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { linksConfig } from '../../modules/menu-items/cases/services/helpers/cases.service.query-params-helper';
 
 describe('CasesAppEffects', () => {
 	let casesAppEffects: CasesAppEffects;
@@ -98,7 +96,6 @@ describe('CasesAppEffects', () => {
 					useValue: {}
 				},
 				{ provide: casesConfig, useValue: { schema: null, defaultCase: { id: 'defaultCaseId' } } },
-				{ provide: linksConfig, useValue: {} },
 				{
 					provide: overlayStatusConfig,
 					useValue: {
@@ -189,7 +186,6 @@ describe('CasesAppEffects', () => {
 		(_imageryCommunicatorService: ImageryCommunicatorService, _store: Store<any>) => {
 			imageryCommunicatorService = _imageryCommunicatorService;
 			store = _store;
-			store.dispatch(new AddCaseAction(selectedCase));
 			store.dispatch(new SelectCaseAction(selectedCase));
 			store.dispatch(new LoadOverlaysSuccessAction([{
 				id: 'tmp',
@@ -279,7 +275,6 @@ describe('CasesAppEffects', () => {
 				...caseMock2,
 				state: { ...caseMock2.state, favoriteOverlays: [{ id: 'blabla', sourceType: 'PLANET' }] }
 			};
-			store.dispatch(new AddCaseAction(caseItem));
 			spyOn(casesService, 'loadCase').and.callFake(() => of(caseItem));
 			actions = hot('--a--', { a: new SelectDilutedCaseAction(<any>caseItem) });
 			const expectedResults = cold('--(bc)--', {

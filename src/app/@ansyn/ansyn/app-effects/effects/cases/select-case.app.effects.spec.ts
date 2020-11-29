@@ -20,8 +20,7 @@ import {
 import { casesConfig, CasesService } from '../../../modules/menu-items/cases/services/cases.service';
 import {
 	SelectCaseAction,
-	SelectCaseSuccessAction,
-	SetAutoSave
+	SelectCaseSuccessAction
 } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { UpdateFacetsAction } from '../../../modules/filters/actions/filters.actions';
 import {
@@ -132,7 +131,7 @@ describe('SelectCaseAppEffects', () => {
 			};
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
-			const expectedResult = cold('--(abcdefghijklmnpqr)--', {
+			const expectedResult = cold('--(abcdefghijklmpqr)--', {
 			a: new SetMapsDataActionStore({ mapsList: maps.data }),
 			b: new SetActiveMapId(state.maps.activeMapId),
 			c: new SetLayoutAction(<any>maps.layout),
@@ -146,7 +145,6 @@ describe('SelectCaseAppEffects', () => {
 			k: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
 			l: new UpdateFacetsAction(facets),
 			m: new UpdateSelectedLayersIds([]),
-			n: new SetAutoSave(false),
 			p: new SetAnnotationMode(null),
 			q: new SetMeasureDistanceToolState(false),
 			r: new SelectCaseSuccessAction(payload)

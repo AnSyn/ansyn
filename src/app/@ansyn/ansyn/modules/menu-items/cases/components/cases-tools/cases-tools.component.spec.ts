@@ -13,7 +13,6 @@ import { CoreConfig } from '../../../../core/models/core.config';
 import { LoggerConfig } from '../../../../core/models/logger.config';
 import { TranslateModule } from '@ngx-translate/core';
 import { mapFacadeConfig } from '@ansyn/map-facade';
-import { linksConfig } from '../../services/helpers/cases.service.query-params-helper';
 
 describe('CasesToolsComponent', () => {
 	let component: CasesToolsComponent;
@@ -34,7 +33,6 @@ describe('CasesToolsComponent', () => {
 				DataLayersService,
 				{ provide: casesConfig, useValue: { schema: null } },
 				{ provide: LoggerConfig, useValue: {} },
-				{ provide: linksConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
 				{ provide: layersConfig, useValue: {} },
 				{ provide: mapFacadeConfig, useValue: {} }

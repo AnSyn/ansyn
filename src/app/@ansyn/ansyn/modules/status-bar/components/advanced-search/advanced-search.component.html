@@ -1,0 +1,14 @@
+<div class="box" id="dataInputsPreSearch">
+    <span class="title">{{'Type' | translate}}</span>
+
+    <ansyn-combo-table
+    buttonClass="display-button screens"
+    direction="bottom"
+    [withArrow]="false"
+	comboTableToolTipDescription="blah blah"
+	(ngModel)="array"
+    (ngModelChange)="typeChanged($event)">
+        <ansyn-combo-table-option *ngFor="let type of array" [value]="type">
+        </ansyn-combo-table-option>
+    </ansyn-combo-table>
+</div>

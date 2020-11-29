@@ -1,0 +1,12 @@
+<div class="combo-container" [ngClass]="[direction]"
+	 [attr.tooltip-value]="comboTableToolTipDescription || null"
+	 [attr.tooltip-class]="direction"
+	 [class.active]="optionsVisible"
+>
+
+	<div class="options-container scrolled"
+         #optionsContainer [style.visibility]="optionsVisible ? 'visible' : 'hidden'"
+		 tabindex="0" (blur)="onBlurOptionsContainer($event)">
+		<ng-content></ng-content>
+	</div>
+</div>

@@ -11,6 +11,8 @@ import { ComboBoxComponent } from './combo-box/combo-box.component';
 import { ComboBoxTriggerComponent } from './combo-box-trigger/combo-box-trigger.component';
 import { FileInputComponent } from './file-input/file-input.component';
 import { MatInputModule } from '@angular/material/input';
+import { AnsynComboTableComponent } from './ansyn-combo-table/ansyn-combo-table.component';
+import { AnsynComboTableOptionComponent } from './ansyn-combo-table-option/ansyn-combo-table-option.component';
 
 @NgModule({
 	imports: [
@@ -27,7 +29,9 @@ import { MatInputModule } from '@angular/material/input';
 		ComboBoxComponent,
 		ComboBoxTriggerComponent,
 		ComboBoxOptionComponent,
-		FileInputComponent
+		FileInputComponent,
+		AnsynComboTableComponent,
+		AnsynComboTableOptionComponent
 	],
 	exports: [
 		AnsynCheckboxComponent,
@@ -38,7 +42,9 @@ import { MatInputModule } from '@angular/material/input';
 		ComboBoxComponent,
 		ComboBoxTriggerComponent,
 		ComboBoxOptionComponent,
-		FileInputComponent
+		FileInputComponent,
+		AnsynComboTableComponent,
+		AnsynComboTableOptionComponent
 	]
 })
 export class AnsynFormsModule {

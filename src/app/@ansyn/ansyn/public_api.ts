@@ -396,3 +396,5 @@ export { OverlaysContainerComponent } from './modules/overlays/components/contai
 export { TimelineComponent } from './modules/overlays/components/timeline/timeline.component';
 export { OverlayOverviewComponent } from './modules/overlays/components/overlay-overview/overlay-overview.component';
 export { OverlayNavigationBarComponent } from './modules/overlays/components/overlay-navigation-bar/overlay-navigation-bar.component';
+export { AnsynComboTableComponent } from './modules/core/forms/ansyn-combo-table/ansyn-combo-table.component';
+export { AnsynComboTableOptionComponent } from './modules/core/forms/ansyn-combo-table-option/ansyn-combo-table-option.component';

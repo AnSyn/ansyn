@@ -1,0 +1,46 @@
+@import 'ansyn/less/colors';
+
+:host {
+	/* temporary */
+	position: relative;
+	z-index: 1;
+
+	&[disabled], &.disabled {
+		opacity: .6;
+		pointer-events: none;
+	}
+
+	&:not(.disabled) .option {
+		&:hover {
+			background-color: @background-color-3;
+			color: white;
+		}
+
+		&.selected {
+			color: @application-primary-color;
+
+			i {
+				opacity: 1;
+			}
+		}
+	}
+
+	.option {
+		line-height: 29px;
+		align-self: center;
+		background: transparent;
+		display: flex;
+		padding: 5px 12px;
+		color: white;
+		cursor: pointer;
+		justify-content: center;
+		box-sizing: border-box;
+		width: 100%;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		border: none;
+		align-items: center;
+
+	}
+}

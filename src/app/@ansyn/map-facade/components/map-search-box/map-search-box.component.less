@@ -56,7 +56,8 @@
 	}
 
 	&.rtl {
-		top: @imagery-status-height + 15;
-		left: @compass-side-margin + @compass-width + 6;
+		top: @compass-top + @compass-width / 2 + 3; // middle of compass
+		transform: translateY(-100%); // locate bottom of search box there
+		left: @compass-side-margin + @compass-width + 14;
 	}
 }

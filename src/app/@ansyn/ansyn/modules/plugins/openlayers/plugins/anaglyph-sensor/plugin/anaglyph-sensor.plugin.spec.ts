@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { AnaglyphSensorPlugin } from './anaglyph-sensor.plugin';
 import { AnaglyphSensorService } from '../service/anaglyph-sensor.service';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { GetProvidersMapsService, ImageryCommunicatorService } from '@ansyn/imagery';
 import { AnaglyphConfig } from '../models/anaglyph.model';
 
 describe('AnaglyphSensorPlugin', () => {
@@ -22,7 +22,12 @@ describe('AnaglyphSensorPlugin', () => {
 				{
 					provide: AnaglyphConfig,
 					useValue: {}
+				},
+				{
+					provide: GetProvidersMapsService,
+					useValue: {}
 				}
+
 			],
 			imports: [StoreModule.forRoot({})]
 		});

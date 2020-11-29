@@ -156,6 +156,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				...state,
 				loading: true,
 				loaded: false,
+				overlaysContainmentChecked: false,
 				overlays: new Map(),
 				filteredOverlays: []
 			});
@@ -169,16 +170,16 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			return overlaysAdapter.setAll([], {
 				...state,
 				loading: true,
-				loaded: false
+				loaded: false,
+				overlaysContainmentChecked: false
 			});
 		}
 
 		case OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS: {
-			const newState = {
+			const newState: IOverlaysState = {
 				...state,
 				loading: false,
 				loaded: true,
-				overlaysContainmentChecked: false,
 				filteredOverlays: []
 			};
 
@@ -337,6 +338,9 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			return overlaysAdapter.updateMany(action.payload, state);
 		}
 
+		case OverlaysActionTypes.RESET_OVERLAY_ARRAY: {
+			return overlaysAdapter.setAll([], state)
+		}
 		default :
 			return state;
 	}

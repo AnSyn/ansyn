@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
 
 @Component({
 	selector: 'ansyn-annotation-label',
@@ -13,6 +13,9 @@ export class AnnotationLabelComponent implements OnInit {
 	@Input() label;
 	@Input() labelSize: number;
 	@Input() translateOn: boolean;
+
+	@HostBinding('class.rtl')
+	@Input() isRTL = false;
 
 	constructor() {
 	}

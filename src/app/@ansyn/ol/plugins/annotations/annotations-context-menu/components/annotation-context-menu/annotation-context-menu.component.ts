@@ -6,6 +6,7 @@ import {
 } from '@ansyn/imagery';
 import { filter, take, tap } from 'rxjs/operators';
 import { AnnotationsVisualizer } from '../../../annotations.visualizer';
+import { TranslateService } from '@ngx-translate/core';
 
 export enum AnnotationsContextmenuTabs {
 	Colors,
@@ -30,12 +31,16 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	@Input() mapId: string;
 	@HostBinding('attr.tabindex') tabindex = 0;
 
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
 	subscribers = [];
 	annotationsSubscribers = [];
 
 	constructor(
 		public host: ElementRef,
-		protected communicators: ImageryCommunicatorService
+		protected communicators: ImageryCommunicatorService,
+		protected translateService: TranslateService
 	) {
 	}
 

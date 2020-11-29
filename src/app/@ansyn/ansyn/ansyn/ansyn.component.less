@@ -1,6 +1,8 @@
 @import 'ansyn/less/common';
 @import "ansyn/less/z-index-globals";
 
+@animation-duration: 0.3s;
+
 :host {
 	&.component {
 		position: relative;
@@ -79,55 +81,9 @@
 		}
 
 		&.animations {
-			@animation-duration: 0.3s;
-
-			@keyframes menu-init {
-				from {
-					transform: translateX(-100%);
-				}
-				to {
-					transform: translateX(0);
-				}
-			}
-
-			@keyframes map-init {
-				from {
-					opacity: 0;
-				}
-				to {
-					opacity: 1;
-				}
-			}
-
-			@keyframes timeline-init {
-				from {
-					top: 100%;
-				}
-				to {
-					top: 0;
-				}
-			}
-
-			@keyframes collapsedVertical {
-				from {
-					transform: scale(1) translateY(-100px);
-				}
-				to {
-					transform: scale(1) translateY(0);
-				}
-			}
-
-			@keyframes unCollapsedVertical {
-				from {
-					transform: scale(1.2) translateY(100px);
-				}
-				to {
-					transform: scale(1) translateY(0);
-				}
-			}
 
 			div.menu {
-				animation: menu-init @animation-duration;
+				animation: menu-init-ltr @animation-duration;
 				transform: transitionX(0);
 				position: relative;
 				height: 100%;
@@ -157,6 +113,22 @@
 		}
 	}
 
+	&.rtl {
+		direction: rtl;
+
+		div.app {
+			&.animations {
+				div.menu {
+					animation: menu-init-rtl @animation-duration;
+				}
+			}
+
+			div.status {
+				left: unset;
+				right: @menu-width;
+			}
+		} // div.app
+	} // rtl
 }
 
 @media screen and (max-width: 959px) {
@@ -186,5 +158,56 @@
 /deep/ .owl-dt-container {
 	font-family: @app-font;
 }
+@keyframes menu-init-ltr {
+	from {
+		transform: translateX(-100%);
+	}
+	to {
+		transform: translateX(0);
+	}
+}
 
+@keyframes menu-init-rtl {
+	from {
+		transform: translateX(100%);
+	}
+	to {
+		transform: translateX(0);
+	}
+}
 
+@keyframes map-init {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes timeline-init {
+	from {
+		top: 100%;
+	}
+	to {
+		top: 0;
+	}
+}
+
+@keyframes collapsedVertical {
+	from {
+		transform: scale(1) translateY(-100px);
+	}
+	to {
+		transform: scale(1) translateY(0);
+	}
+}
+
+@keyframes unCollapsedVertical {
+	from {
+		transform: scale(1.2) translateY(100px);
+	}
+	to {
+		transform: scale(1) translateY(0);
+	}
+}

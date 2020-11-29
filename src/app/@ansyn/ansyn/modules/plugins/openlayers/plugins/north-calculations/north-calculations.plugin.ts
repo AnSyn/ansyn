@@ -62,7 +62,6 @@ import { selectMapOrientation } from '@ansyn/map-facade';
 	deps: [Actions, LoggerService, Store, CoreConfig, OpenLayersProjectionService]
 })
 export class NorthCalculationsPlugin extends BaseImageryPlugin {
-;
 	communicator: CommunicatorEntity;
 	isEnabled = true;
 

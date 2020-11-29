@@ -1,13 +1,16 @@
 @import "ansyn/less/common";
 
+@border: 1px solid @status-bar-delimiter;
+@margin: 12px;
+
 :host {
 	div.rows {
 		&:extend(.status-bar-panel);
 		width: 115px;
 		flex-direction: column;
-		border-left: 1px solid @status-bar-delimiter;
+		border-left: @border;
 		user-select: none;
-		margin-right: 12px;
+		margin-right: @margin;
 
 		hr {
 			margin: 0;
@@ -51,6 +54,13 @@
 
 
 			}
+		}
+
+		&.rtl {
+			border-left: unset;
+			border-right: @border;
+			margin-right: unset;
+			margin-left: @margin;
 		}
 	}
 

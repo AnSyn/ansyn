@@ -7,6 +7,7 @@ import {
 	toDegrees
 } from '@ansyn/imagery';
 import { LogRotateMapAction, PointToImageOrientationAction, PointToRealNorthAction } from '../../actions/map.actions';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface IIsGeoRegisteredProperties {
 	letter: 'N' | '?';
@@ -48,6 +49,8 @@ export class ImageryRotationComponent {
 
 	isRotating = false;
 
+	isRtl = 'rtl' === this.translateService.instant('direction');
+
 	get geoRegisteredProperties(): IIsGeoRegisteredProperties {
 		return this.isGeoRegistered() ? this.isGeoRegisteredProperties : this.notGeoRegisteredProperties;
 	}
@@ -72,6 +75,7 @@ export class ImageryRotationComponent {
 		protected elementRef: ElementRef,
 		protected imageryCommunicatorService: ImageryCommunicatorService,
 		protected store: Store<any>,
+		protected translateService: TranslateService
 	) {
 	}
 

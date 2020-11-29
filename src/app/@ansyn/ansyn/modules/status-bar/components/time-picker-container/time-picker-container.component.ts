@@ -43,7 +43,7 @@ export class TimePickerContainerComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	time$: Observable<ICaseTimeState> = this.store$.select(selectTime).pipe(
 		filter(_time => Boolean(_time)),
-		tap(({from, to}) => {
+		tap(({ from, to }) => {
 			this.timeRange = [from, to];
 			if (to && from) {
 				this.timeSelectionTitle = {
@@ -143,18 +143,19 @@ export class TimePickerContainerComponent implements OnInit, OnDestroy {
 			}
 		}
 		if (isEnterKey(event)) {
-			this.store$.dispatch(new LogManualSearchTime({
-				from: this.timePickerInputFrom.nativeElement.textContent,
-				to: this.timePickerInputTo.nativeElement.textContent
-			}));
+			if (this.checkTimeWasChange()) {
+				this.store$.dispatch(new LogManualSearchTime({
+					from: this.timePickerInputFrom.nativeElement.textContent,
+					to: this.timePickerInputTo.nativeElement.textContent
+				}));
 
-			if (!this.supportRangeDates()) {
-				this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.notSupportRangeDates }));
-			} else if (!this.checkTimeWasChange()) {
-				this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.timeWasNotChange }));
-			} else if (!this.setTimeCriteria()) {
-				this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.invalidDate }));
+				if (!this.supportRangeDates()) {
+					this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.notSupportRangeDates }));
+				} else if (!this.setTimeCriteria()) {
+					this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.invalidDate }));
+				}
 			}
+
 		}
 		if (isEscapeKey(event)) {
 			this.revertTime();

@@ -19,6 +19,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { takeWhile, tap, withLatestFrom } from 'rxjs/operators';
 import { Actions, ofType } from '@ngrx/effects';
 import { IOverlay } from '../../models/overlay.model';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface IOverviewOverlay extends IOverlay {
 	thumbnailName: string;
@@ -54,6 +55,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	public loadingImage = false;
 	public rotation = 0;
 	protected topElement = this.el.nativeElement.parentElement;
+	myCurrentWidth: number;
 
 	get dropElement(): Element {
 		return this.el.nativeElement.ownerDocument.getElementById(`dropId-${ this.overlayId }`);
@@ -71,6 +73,9 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@HostBinding('style.left.px') left = 0;
 	@HostBinding('style.top.px') top = 0;
 
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
 	@AutoSubscription
 	rotationChanged$: Observable<any> = this.actions$.pipe(
 		ofType<ChangeOverlayPreviewRotationAction>(OverlaysActionTypes.CHANGE_OVERLAY_PREVIEW_ROTATION),
@@ -87,7 +92,9 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	constructor(
 		public store$: Store<IOverlaysState>,
 		public actions$: Actions,
-		protected el: ElementRef) {
+		protected el: ElementRef,
+		protected translateService: TranslateService
+	) {
 	}
 
 	ngOnInit() {
@@ -105,9 +112,16 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 			if (!hoveredElement) {
 				return;
 			}
+// <<<<<<< HEAD
 			const { left, height, top }: ClientRect = hoveredElement.getBoundingClientRect();
 			this.left = customElement ? this.getLeftPosition(left) : left - 150;
 			this.top = top + (customElement ? height + 70 : 0);
+// =======
+// 			const hoveredElementBounds: ClientRect = hoveredElement.getBoundingClientRect();
+// 			this.myCurrentWidth = (this.el.nativeElement as HTMLElement).offsetWidth;
+// 			this.left = customElement ? this.isRTL ? hoveredElementBounds.left - this.myCurrentWidth : hoveredElementBounds.right : this.getLeftPosition(hoveredElementBounds.left);
+// 			this.top = hoveredElementBounds.top + (customElement ? hoveredElementBounds.height : 0);
+// >>>>>>> d386083ebc16d18a17804a3c7c9ca45ce27c5a11
 			this.showOverview();
 			this.sensorName = overlay.sensorName;
 			this.sensorType = overlay.sensorType;
@@ -126,12 +140,16 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	getLeftPosition(hoveredElementPos: number): number {
-		const candidateLeftPos = hoveredElementPos - 340;
-		const myCurrentWidth = (this.el.nativeElement as HTMLElement).offsetWidth;
+// <<<<<<< HEAD
+// 		const candidateLeftPos = hoveredElementPos - 340;
+// 		const myCurrentWidth = (this.el.nativeElement as HTMLElement).offsetWidth;
+// =======
+		const candidateLeftPos = hoveredElementPos - 50;
+// >>>>>>> d386083ebc16d18a17804a3c7c9ca45ce27c5a11
 		const ansynWidth = this.topElement.getBoundingClientRect().width;
 		// ^ Ansyn component is not a block element, therefore it doesn't have offsetWidth
 		// Therefore I used getBoundingClientRect()
-		return Math.min(candidateLeftPos, ansynWidth - myCurrentWidth);
+		return Math.min(candidateLeftPos, ansynWidth - this.myCurrentWidth);
 	}
 
 	showOverview() {

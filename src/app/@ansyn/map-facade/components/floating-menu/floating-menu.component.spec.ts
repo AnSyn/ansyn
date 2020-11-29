@@ -4,6 +4,7 @@ import { FloatingMenuComponent } from './floating-menu.component';
 import { ENTRY_COMPONENTS_PROVIDER } from '../../models/entry-components-provider';
 import { EntryComponentDirective } from '../../directives/entry-component.directive';
 import { MockComponent } from '../../test/mock-component';
+import { TranslateService } from '@ngx-translate/core';
 
 describe('FloatingMenuComponent', () => {
 	let component: FloatingMenuComponent;
@@ -21,6 +22,7 @@ describe('FloatingMenuComponent', () => {
 			],
 			providers: [
 				{ provide: ENTRY_COMPONENTS_PROVIDER, useValue: [] },
+				{ provide: TranslateService, useValue: { instant: () => '' }}
 			]
 		}).compileComponents();
 	}));

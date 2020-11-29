@@ -3,12 +3,12 @@
 			(click)="toggleDragged()"
 			[disabled]="!isLayersVisible || noGeoRegistration"
 			[attr.tooltip-value]="this.draggedButtonText | translate"
-			tooltip-class="bottom">
-		<i class="icon-drag-annotations" [class.active]="isDragged"></i>
+			[attr.tooltip-class]="isRtl ? 'bottom left' : 'bottom right'"
+	><i class="icon-drag-annotations" [class.active]="isDragged"></i>
 	</button>
 </div>
 <div class="overlay-status-button">
-	<button tooltip-class="bottom"
+	<button [attr.tooltip-class]="isRtl ? 'bottom left' : 'bottom right'"
 			*ngIf="overlay"
 			class="small-icon-button auto-image-processing"
 			[attr.tooltip-value]="'Automatic Processing' | translate"
@@ -22,17 +22,17 @@
 			class="small-icon-button"
 			[class.active]="isManualProcessing"
 			[attr.tooltip-value]="'Manual Image Enhancement' | translate"
-			tooltip-class="bottom"
+			[attr.tooltip-class]="isRtl ? 'bottom left' : 'bottom right'"
 			(click)="toggleManualImageProcessing()"
 			[class.mode-on]="isImageControlActive && !onAutoImageProcessing">
-		<i class="icon-tools-image-processing" [class.active]="isManualProcessing"></i>
+		<i class="icon-tools-image-processing" [class.active]="isManualProcessing || isChanged"></i>
 	</button>
 	<ansyn-image-processing-control
 		*ngIf="isManualProcessing">
 	</ansyn-image-processing-control>
 </div>
 <div class="overlay-status-button">
-	<button tooltip-class="bottom"
+	<button [attr.tooltip-class]="isRtl ? 'bottom left' : 'bottom right'"
 			*ngIf="overlay"
 			class="button small-icon-button set-favorite"
 			[attr.tooltip-value]="!isFavorite? 'Add to favorites' : 'Remove from favorites' | translate"

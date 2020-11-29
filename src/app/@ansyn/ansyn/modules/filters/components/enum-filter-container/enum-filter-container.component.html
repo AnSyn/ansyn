@@ -6,8 +6,9 @@
 		<ansyn-checkbox
 			[disabled]="enumMetadata.value.disabled"
 			[ngModel]="enumMetadata.value.isChecked"
-			(ngModelChange)="onInputClicked(enumMetadata.key)">
-			<span class="field-name"
+			(ngModelChange)="onInputClicked(enumMetadata.key)"
+			[isRTL]="isRTL"
+		><span class="field-name"
 				  [title]="((enumMetadata?.key || 'Unknown')?.toString() | translate) || 'Unknown'">{{((enumMetadata?.key || 'Unknown')?.toString() | translate) || 'Unknown'}}</span>
 		</ansyn-checkbox>
 

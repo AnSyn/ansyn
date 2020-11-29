@@ -18,6 +18,7 @@ import { UpdateToolsFlags } from '../modules/menu-items/tools/actions/tools.acti
 import { LoggerService } from '../modules/core/services/logger.service';
 import { IOverlay } from '../modules/overlays/models/overlay.model';
 import { toolsFlags } from '../modules/menu-items/tools/models/tools.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-app',
@@ -48,12 +49,19 @@ export class AnsynComponent implements OnInit {
 		);
 
 	@HostBinding('class.component') component = this.componentMode;
+
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
 	@Input() version;
 
-	constructor(protected store$: Store<any>,
-				@Inject(COMPONENT_MODE) public componentMode: boolean,
-				@Inject(toolsConfig) public toolsConfigData: IToolsConfig,
-				public loggerService: LoggerService) {
+	constructor(
+		protected store$: Store<any>,
+		@Inject(COMPONENT_MODE) public componentMode: boolean,
+		@Inject(toolsConfig) public toolsConfigData: IToolsConfig,
+		public loggerService: LoggerService,
+		protected translateService: TranslateService
+	) {
 	}
 
 	@HostListener('window:beforeunload', ['$event'])

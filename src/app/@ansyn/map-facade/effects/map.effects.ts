@@ -190,7 +190,7 @@ export class MapEffects {
 		ofType<ReplaceMainLayer>(MapActionTypes.REPLACE_MAP_MAIN_LAYER),
 		switchMap( ({payload}) => {
 			const communicator = this.communicatorsService.provide(payload.id);
-			return fromPromise(communicator.replaceMapMainLayer(payload.sourceType)).pipe(
+			return communicator.replaceMapMainLayer(payload.sourceType).pipe(
 				map( change => change ? new ReplaceMainLayerSuccess(payload) : new ReplaceMainLayerFailed())
 			);
 		})

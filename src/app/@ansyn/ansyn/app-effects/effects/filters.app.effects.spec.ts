@@ -40,6 +40,7 @@ import { EnumFilterCounters } from '../../modules/filters/models/counters/enum-f
 import { FilterCounters } from '../../modules/filters/models/counters/filter-counters.interface';
 import { SliderFilterCounters } from '../../modules/filters/models/counters/slider-filter-counters';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
+import { LoggerService } from '../../modules/core/services/logger.service';
 
 describe('Filters app effects', () => {
 	let filtersAppEffects: FiltersAppEffects;
@@ -80,7 +81,8 @@ describe('Filters app effects', () => {
 				FiltersAppEffects,
 				GenericTypeResolverService,
 				{ provide: filtersConfig, useValue: {} },
-				provideMockActions(() => actions)
+				provideMockActions(() => actions),
+				{ provide: LoggerService, useValue: { error: () => {} }}
 			]
 		}).compileComponents();
 	}));

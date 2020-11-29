@@ -324,7 +324,7 @@ export class MapAppEffects {
 					const { position, overlay }: IMapSettingsData = mapList[activeMapId].data;
 					const newCenter = position.projectedState.center;
 
-					return [position?.extentPolygon, geoFilterStatus, newCenter, properties.center, overlay];
+					return [position.extentPolygon, geoFilterStatus, newCenter, properties.center, overlay];
 				})
 		)),
 		filter(([extentPolygon, geoFilterStatus, newCenter, oldCenter, overlay]: [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], IOverlay]) => {

@@ -239,7 +239,7 @@ export class TimePickerContainerComponent implements OnInit, OnDestroy {
 
 	toggleTimePicker() {
 		this.isPickerOpen = !this.isPickerOpen;
-	}
+	} 
 
 	closeTimePicker() {
 		this.isPresetOpen = false;

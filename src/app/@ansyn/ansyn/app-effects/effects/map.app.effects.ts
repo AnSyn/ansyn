@@ -320,24 +320,24 @@ export class MapAppEffects {
 		debounceTime(this.screenViewConfig.debounceTime),
 		concatMap((action) => of(action).pipe(
 			withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus), this.store$.select(selectRegion),
-				(action: Action, mapList, activeMapId, geoFilterStatus, { properties }): [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], IOverlay] => {
+				(action: Action, mapList, activeMapId, geoFilterStatus, { properties }): [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], number, number, IOverlay] => {
 					const { position, overlay }: IMapSettingsData = mapList[activeMapId].data;
-					const newCenter = position.projectedState.center;
+					const { center, zoom } = position.projectedState;
 
-					return [position.extentPolygon, geoFilterStatus, newCenter, properties.center, overlay];
+					return [position.extentPolygon, geoFilterStatus, center, properties.center, zoom, properties.zoom, overlay];
 				})
 		)),
-		filter(([extentPolygon, geoFilterStatus, newCenter, oldCenter, overlay]: [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], IOverlay]) => {
-			return geoFilterStatus.type === CaseGeoFilter.ScreenView && !Boolean(overlay) && !isEqual(oldCenter, newCenter);
+		filter(([extentPolygon, geoFilterStatus, newCenter, oldCenter, newZoom, oldZoom, overlay]: [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], number, number, IOverlay]) => {
+			return geoFilterStatus.type === CaseGeoFilter.ScreenView && !Boolean(overlay) && (!isEqual(oldCenter, newCenter) || !isEqual(oldZoom, newZoom));
 		}),
-		concatMap(([extentPolygon, geoFilterStatus, newCenter, oldCenter, overlay]: [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], IOverlay]) => {
+		concatMap(([extentPolygon, geoFilterStatus, newCenter, oldCenter, newZoom, oldZoom, overlay]: [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], number, number, IOverlay]) => {
 			const actions: Action[] = [];
 
 			const extentWidth = calculatePolygonWidth(extentPolygon);
 			if (extentWidth > this.screenViewConfig.extentWidthSearchLimit) {
 				actions.push(new SetOverlaysStatusMessageAction({ message: 'Zoom in to get new overlays' }));
 			} else {
-				const extent = feature(extentPolygon, { searchMode: CaseGeoFilter.ScreenView, center: newCenter });
+				const extent = feature(extentPolygon, { searchMode: CaseGeoFilter.ScreenView, center: newCenter, zoom: newZoom });
 				actions.push(new SetOverlaysCriteriaAction({ region: extent }));
 
 				if (geoFilterStatus.active) {

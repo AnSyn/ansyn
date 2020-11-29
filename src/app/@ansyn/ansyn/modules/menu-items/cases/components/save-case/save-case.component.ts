@@ -42,8 +42,7 @@ export class SaveCaseComponent implements OnInit, OnDestroy {
 		return true;
 	};
 
-	constructor(protected store: Store<ICasesState>,
-				protected casesService: CasesService) {
+	constructor(protected store: Store<ICasesState>) {
 	}
 
 	@AutoSubscription

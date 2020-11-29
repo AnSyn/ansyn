@@ -59,6 +59,7 @@ export class DeleteCaseComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmitRemove() {
+		console.log({active: this.activeCase});
 		(<Observable<any>>this.casesService.removeCase(this.activeCase.id))
 			.pipe(
 				tap(() => {

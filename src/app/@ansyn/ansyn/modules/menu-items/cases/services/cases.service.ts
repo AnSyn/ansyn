@@ -40,15 +40,12 @@ export class CasesService {
 	queryParamsHelper: QueryParamsHelper = new QueryParamsHelper(this);
 	baseUrl;
 	paginationLimit = 15;
-	queryParamsKeys;
 	latestStoredEntity: any;
 
 	constructor(protected storageService: StorageService,
 				@Inject(casesConfig) public config: ICasesConfig,
-				protected translator: TranslateService,
 				public errorHandlerService: ErrorHandlerService) {
 		this.paginationLimit = this.config.paginationLimit;
-		this.queryParamsKeys = this.config.casesQueryParamsKeys;
 	}
 
 	get defaultCase() {
@@ -67,7 +64,7 @@ export class CasesService {
 		return this.storageService.getPage<ICasePreview>(this.config.schema, casesOffset, this.paginationLimit, this.currentUser, casesType)
 			.pipe(
 				map(previews => previews.map(preview => this.parseCasePreview(preview))),
-				catchError(err => this.errorHandlerService.httpErrorHandle(err, this.translator.instant('Failed to load cases')))
+				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load cases'))
 			);
 	}
 
@@ -175,7 +172,7 @@ export class CasesService {
 		return UUID.UUID();
 	}
 
-	updateCase(selectedCase: ICase): Observable<IStoredEntity<ICasePreview, IDilutedCaseState>> {
+	/*updateCase(selectedCase: ICase): Observable<IStoredEntity<ICasePreview, IDilutedCaseState>> {
 		const storeEntity = this.convertToStoredEntity(selectedCase);
 		if (this.isStoreEntitiesEqual(storeEntity, this.latestStoredEntity)) {
 			return EMPTY;
@@ -183,7 +180,7 @@ export class CasesService {
 		this.latestStoredEntity = _cloneDeep(storeEntity);
 		return this.storageService.update(this.config.schema, storeEntity)
 			.pipe<any>(catchError(err => this.errorHandlerService.httpErrorHandle(err)));
-	}
+	}*/
 
 	removeCase(selectedCaseId: string): Observable<any> {
 		return this.storageService.delete(this.config.schema, selectedCaseId).pipe(

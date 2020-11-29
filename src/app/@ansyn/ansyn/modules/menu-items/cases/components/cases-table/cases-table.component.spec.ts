@@ -1,19 +1,10 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { CasesTableComponent } from './cases-table.component';
-import { DeleteCaseComponent } from '../delete-case/delete-case.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer, ICasesState } from '../../reducers/cases.reducer';
-import { CasesModule } from '../../cases.module';
-import { LoadCasesAction, OpenModalAction } from '../../actions/cases.actions';
-import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientModule } from '@angular/common/http';
-import { EffectsModule } from '@ngrx/effects';
-import { DataLayersService, layersConfig } from '../../../layers-manager/services/data-layers.service';
-import { casesConfig } from '../../services/cases.service';
-import { CoreConfig } from '../../../../core/models/core.config';
-import { LoggerConfig } from '../../../../core/models/logger.config';
+import { CasesType } from '../../models/cases-config';
 import { TranslateModule } from '@ngx-translate/core';
-import { mapFacadeConfig } from '@ansyn/map-facade';
+import { LoadCaseAction } from '../../actions/cases.actions';
 
 describe('CasesTableComponent', () => {
 	let component: CasesTableComponent;
@@ -22,13 +13,12 @@ describe('CasesTableComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
+			declarations: [CasesTableComponent],
 			imports: [
-				CasesModule,
-				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer })
+				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
+				TranslateModule.forRoot()
 			],
-			providers: [
-
-			]
+			providers: []
 		})
 			.compileComponents();
 	}));
@@ -37,6 +27,11 @@ describe('CasesTableComponent', () => {
 		spyOn(_store, 'dispatch');
 		fixture = TestBed.createComponent(CasesTableComponent);
 		component = fixture.componentInstance;
+		component.cases = {
+			type: CasesType.MyCases,
+			entities: {},
+			ids: []
+		};
 		fixture.detectChanges();
 		store = _store;
 	}));
@@ -84,5 +79,10 @@ describe('CasesTableComponent', () => {
 		expect($event.stopPropagation).toHaveBeenCalled();
 		expect(caseRow.classList.remove).toHaveBeenCalledWith('mouse-enter');
 	});
+
+	it('selectCase should dispatch LoadCaseAction', () => {
+		component.selectCase('case-id');
+		expect(store.dispatch).toHaveBeenCalledWith(new LoadCaseAction('case-id'));
+	})
 
 });

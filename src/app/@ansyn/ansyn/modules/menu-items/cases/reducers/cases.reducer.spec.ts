@@ -68,7 +68,7 @@ describe('CasesReducer', () => {
 
 		let action: UpdateCaseAction = new UpdateCaseAction({ updatedCase: newCase });
 		let result: ICasesState = CasesReducer(state, action);
-		expect(result.myCases.entities['id2'].name).toEqual('name2 lastname2');
+		expect(result.selectedCase.name).toEqual('name2 lastname2');
 	});
 
 });

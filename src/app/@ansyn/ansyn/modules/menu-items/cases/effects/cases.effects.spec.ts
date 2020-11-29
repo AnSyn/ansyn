@@ -40,7 +40,7 @@ import { selectActiveMapId, selectMapsIds } from '@ansyn/map-facade';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CasesType } from '../models/cases-config';
 
-fdescribe('CasesEffects', () => {
+describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
 	let casesService: CasesService;
 	let loggerService: LoggerService;

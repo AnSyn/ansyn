@@ -49,7 +49,6 @@
 							[label]="getFeatureProps()?.label"
 							[labelSize]="annotations.idToEntity.get(featureId)?.originalEntity.labelSize"
 							[translateOn]="getFeatureProps()?.labelTranslateOn"
-							[isRTL]="isRTL"
 							(onChangeText)="updateLabel($event)"
 							(onChangeSize)="updateLabelSize($event)"
 							(onTranslateClick)="annotations.labelTranslateMode(featureId)">

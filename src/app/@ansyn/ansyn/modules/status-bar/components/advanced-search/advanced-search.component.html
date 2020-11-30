@@ -1,14 +1,29 @@
 <div class="box" id="dataInputsPreSearch">
     <span class="title">{{'Type' | translate}}</span>
-
     <ansyn-combo-table
-    buttonClass="display-button screens"
+    buttonClass="display-button"
     direction="bottom"
     [withArrow]="false"
 	comboTableToolTipDescription="blah blah"
-	(ngModel)="array"
+	(ngModel)="sensorTypes"
     (ngModelChange)="typeChanged($event)">
-        <ansyn-combo-table-option *ngFor="let type of array" [value]="type">
+        <ansyn-combo-table-option *ngFor="let type of sensorTypes" [value]="type">
+        </ansyn-combo-table-option>
+    </ansyn-combo-table>
+
+    
+</div>
+<div class="box" id="dataInputsPreSearch">
+    <span class="title">{{'Sensor' | translate}}</span>
+    <ansyn-combo-table
+    buttonClass="display-button"
+    direction="bottom"
+    [withArrow]="false"
+	comboTableToolTipDescription="blah blah"
+	(ngModel)="sensorTypes"
+    (ngModelChange)="typeChanged($event)">
+        <ansyn-combo-table-option *ngFor="let type of sensorTypes" [value]="type">
         </ansyn-combo-table-option>
     </ansyn-combo-table>
 </div>
+

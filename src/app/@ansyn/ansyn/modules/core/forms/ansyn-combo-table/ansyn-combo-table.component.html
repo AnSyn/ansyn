@@ -5,8 +5,7 @@
 >
 
 	<div class="options-container scrolled"
-         #optionsContainer [style.visibility]="optionsVisible ? 'visible' : 'hidden'"
-		 tabindex="0" (blur)="onBlurOptionsContainer($event)">
+         #optionsContainer [style.visibility]="optionsVisible ? 'visible' : 'hidden'">
 		<ng-content></ng-content>
 	</div>
 </div>

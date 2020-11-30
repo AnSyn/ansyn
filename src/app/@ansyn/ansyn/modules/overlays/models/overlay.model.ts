@@ -130,6 +130,7 @@ export interface IOverlayDrop {
 	shape?: string;
 	sensorName?: string;
 	icon?: any;
+	favorite?: boolean;
 }
 
 export interface IOverlaySpecialObject extends IOverlayDrop {

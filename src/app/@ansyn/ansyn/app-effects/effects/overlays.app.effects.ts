@@ -122,8 +122,8 @@ export class OverlaysAppEffects {
 			})];
 
 			const oneMapLayout = 'layout1';
-			const twoMapsLayout = 'layout2';
 			if (layout === oneMapLayout) {
+				const twoMapsLayout = 'layout2';
 				actions.push(new SetLayoutAction(twoMapsLayout));
 			}
 

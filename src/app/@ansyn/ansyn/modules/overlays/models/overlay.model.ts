@@ -72,6 +72,7 @@ export interface IOverlay extends IDilutedOverlay {
 	sensorLocation?: Point;
 	icon?: string;
 	containedInSearchPolygon?: RegionContainment;
+	resolution?: number;
 }
 
 export class Overlay implements IOverlay {
@@ -131,6 +132,7 @@ export interface IOverlayDrop {
 	sensorName?: string;
 	icon?: any;
 	favorite?: boolean;
+	resolution?: number;
 }
 
 export interface IOverlaySpecialObject extends IOverlayDrop {

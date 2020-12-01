@@ -38,7 +38,7 @@ export class AnsynComboTableOptionComponent implements OnInit {
 		if (this.value) {
 			this._parent.selectOption(this.value);
 		}
-		this._parent.close();
+		// this._parent.close();
   }
   
   ngOnInit(): void {

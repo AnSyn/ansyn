@@ -1,24 +1,43 @@
-<div class="box" id="dataInputsPreSearch">
+<div class="box item1 " id="dataInputsPreSearch">
     <span class="title">{{'Type' | translate}}</span>
     <ansyn-combo-table
     buttonClass="display-button"
     direction="bottom"
     [withArrow]="false"
+    [isLine]="false"
 	comboTableToolTipDescription="blah blah"
 	(ngModel)="sensorTypes"
     (ngModelChange)="typeChanged($event)">
-        <ansyn-combo-table-option *ngFor="let type of sensorTypes" [value]="type">
+        <ansyn-combo-table-option  *ngFor="let type of sensorTypes" [value]="type">
         </ansyn-combo-table-option>
+        
     </ansyn-combo-table>
 
-    
 </div>
-<div class="box" id="dataInputsPreSearch">
+
+<div class="box item2" id="dataInputsPreSearch">
+    <span class="title">{{'Geo Registration' | translate}}</span>
+
+    <ansyn-combo-table
+    buttonClass="display-button"
+    direction="bottom"
+    [withArrow]="false"
+    [isLine]="true"
+	comboTableToolTipDescription="blah blah"
+	(ngModel)="isGeoRegistered"
+    (ngModelChange)="typeChanged($event)">
+        <ansyn-combo-table-option *ngFor="let GeoRegistered of isGeoRegistered" [value]="GeoRegistered">
+        </ansyn-combo-table-option>
+    </ansyn-combo-table>
+</div>
+
+<div class="box item3" id="dataInputsPreSearch">
     <span class="title">{{'Sensor' | translate}}</span>
     <ansyn-combo-table
     buttonClass="display-button"
     direction="bottom"
     [withArrow]="false"
+    [isLine]="false"
 	comboTableToolTipDescription="blah blah"
 	(ngModel)="sensorTypes"
     (ngModelChange)="typeChanged($event)">

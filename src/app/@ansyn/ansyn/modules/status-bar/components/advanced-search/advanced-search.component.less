@@ -5,6 +5,7 @@
 
 :host {
     &:extend(.status-bar-panel);
+    display: grid;
     
 	.box {
 
@@ -41,8 +42,32 @@
 		}
 
 		&#dataInputsPreSearch {
-            width: 250px;
             padding-right: 5px;
-		}
-	}
+        }
+        
+        .grid-item {
+            text-align: center;
+            padding: 20px;
+            font-size: 30px;
+        }
+
+        
+    }
+
+    .small-box {
+        width: 160px !important;
+    }
+    
+    .item1 {
+        grid-column: 1 / span 2;
+        grid-row: 1;
+      }
+      
+      .item2 {
+        grid-column: 3;
+      }
+      .item3 {
+        grid-column: 1 / span 2;
+        grid-row: 2;
+      }
 }

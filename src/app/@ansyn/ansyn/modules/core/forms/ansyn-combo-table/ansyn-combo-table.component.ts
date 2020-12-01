@@ -22,12 +22,14 @@ export class AnsynComboTableComponent implements ControlValueAccessor {
 	@ViewChild('optionsContainer') optionsContainer: ElementRef;
 	@Input() icon: string;
 	disabled: boolean;
-	selected: any;
+	selected: any[] = [];
 	@Input() comboTableToolTipDescription: string;
 	@Input() direction: 'top' | 'bottom' = 'bottom';
 	@Input() withArrow = true;
 	@Input() alwaysChange: boolean;
-	@Input() buttonClass: string;
+  @Input() buttonClass: string;
+	@Input() isLine: boolean;
+  
 
 	@Input() placeholder: string;
 	@Input() required: boolean;
@@ -48,10 +50,13 @@ export class AnsynComboTableComponent implements ControlValueAccessor {
   }
 
   selectOption(selected) {
-		if (selected !== this.selected || this.alwaysChange) {
-			this.selected = selected;
-			this.onChangeCallback(selected);
-		}
+    console.log('select')
+		if (this.selected.includes(selected)) {
+			this.selected.splice(this.selected.indexOf(selected),1);
+    } else {
+      this.selected.push(selected);
+    }
+    console.log(this.selected)
   }
   
   // onBlurOptionsContainer($event: FocusEvent) {
@@ -73,10 +78,10 @@ export class AnsynComboTableComponent implements ControlValueAccessor {
   }
   
   writeValue(value: any): void {
-		if (value !== this.selected) {
-			this.selected = value;
+		if (!this.selected.includes(value)) {
+			this.selected.push(value);
 		}
-	}
+  }
 
-
+  
 }

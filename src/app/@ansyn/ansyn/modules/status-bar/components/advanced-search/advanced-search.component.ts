@@ -20,7 +20,7 @@ export class AdvancedSearchComponent implements OnInit {
 
   sensorTypes: any[];
 	dataFilters: any[];
-  dataInputFiltersItems: any[];
+  isGeoRegistered: any[] = ['Geo Registered','Not Geo Registered']
   
   constructor(@Inject(filtersConfig) protected config: IFiltersConfig,
               protected store: Store<IFiltersState>,

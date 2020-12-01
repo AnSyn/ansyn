@@ -1,29 +1,27 @@
 import { Inject, Injectable } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { EMPTY, forkJoin, Observable, of } from 'rxjs';
 import {
 	AddCasesAction,
 	CasesActionTypes,
-	CopyCaseLinkAction, DeleteCaseAction, DeleteCaseSuccessAction,
+	CopyCaseLinkAction,
+	DeleteCaseAction,
+	DeleteCaseSuccessAction,
 	LoadCaseAction,
 	LoadCasesAction,
-	LoadDefaultCaseAction, OpenModalAction,
+	LoadDefaultCaseAction,
+	OpenModalAction,
+	RenameCaseAction,
 	SaveCaseAsAction,
+	SaveCaseAsSuccessAction,
 	SaveSharedCaseAsMyOwn,
-	SelectDilutedCaseAction,
-	SaveCaseAsSuccessAction, RenameCaseAction
+	SelectDilutedCaseAction
 } from '../actions/cases.actions';
 import { casesConfig, CasesService } from '../services/cases.service';
-import {
-	casesStateSelector,
-	ICasesState,
-	selectMyCasesTotal,
-	selectSharedCasesEntities,
-	selectSharedCaseTotal
-} from '../reducers/cases.reducer';
+import { casesStateSelector, ICasesState, selectMyCasesTotal, selectSharedCaseTotal } from '../reducers/cases.reducer';
 import { CasesType, ICasesConfig } from '../models/cases-config';
-import { catchError, concatMap, filter, map, mergeMap, share, switchMap, withLatestFrom, tap } from 'rxjs/operators';
+import { catchError, concatMap, filter, map, mergeMap, share, switchMap, withLatestFrom } from 'rxjs/operators';
 import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { DataLayersService } from '../../layers-manager/services/data-layers.service';
@@ -91,10 +89,10 @@ export class CasesEffects {
 		})
 	);
 
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	onRenameCaseAction$ = this.actions$.pipe(
 		ofType<RenameCaseAction>(CasesActionTypes.RENAME_CASE),
-		mergeMap( (action) => this.casesService.updateCase(action.payload.case))
+		mergeMap((action) => this.casesService.updateCase(action.payload.case))
 	);
 
 	@Effect()
@@ -120,7 +118,9 @@ export class CasesEffects {
 		.pipe(
 			ofType(CasesActionTypes.LOAD_CASE),
 			switchMap((action: LoadCaseAction) => this.casesService.loadCase(action.payload)),
-			map((dilutedCase) => new SelectDilutedCaseAction(dilutedCase)),
+			concatMap((dilutedCase) => [new SelectDilutedCaseAction(dilutedCase),
+				new LoadCasesAction(CasesType.MyCases),
+				new LoadCaseAction(CasesType.MySharedCases)]),
 			catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load case')),
 			catchError(() => of(new LoadDefaultCaseAction()))
 		);
@@ -128,16 +128,21 @@ export class CasesEffects {
 	@Effect()
 	saveSharedCaseAsMyOwn$ = this.actions$.pipe(
 		ofType<SaveSharedCaseAsMyOwn>(CasesActionTypes.SAVE_SHARED_CASE_AS_MY_OWN),
-		map( (caseToSave) => new OpenModalAction({type: 'save'}))
+		map(() => new OpenModalAction({ type: 'save' }))
 	);
 
 	@Effect()
 	onDeleteCase$: Observable<any> = this.actions$.pipe(
 		ofType<DeleteCaseAction>(CasesActionTypes.DELETE_CASE),
-		mergeMap( (action) => this.casesService.removeCase(action.payload.id).pipe( map(_ => action))),
-		mergeMap( (action) => [
-			new DeleteCaseSuccessAction(action.payload),
-			new RemoveCaseLayersFromBackendAction(action.payload.id)])
+		mergeMap((action) => this.casesService.removeCase(action.payload.id).pipe(map(_ => action))),
+		mergeMap((action) => {
+			const actions: any[] = [new DeleteCaseSuccessAction(action.payload)];
+			if (action.payload.type === CasesType.MyCases) {
+				actions.push(
+					new RemoveCaseLayersFromBackendAction(action.payload.id))
+			}
+			return actions;
+		})
 	);
 
 	constructor(protected actions$: Actions,

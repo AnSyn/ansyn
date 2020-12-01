@@ -47,28 +47,17 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 			return {...state, showCasesTable: show}
 		}
 
-		/*case CasesActionTypes.SAVE_CASE_AS_SUCCESS: {
-			const selectedCase = action.payload;
-			return myCasesAdapter.addOne(selectedCase, { ...state, selectedCase });
-		}*/
-
 		case CasesActionTypes.UPDATE_CASE: {
-			const caseToUpdate = { ...action.payload.updatedCase };
-			return {...state, selectedCase: caseToUpdate}
+			return {...state, selectedCase: action.payload}
 		}
-
-		/*case CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS || CasesActionTypes.UPDATE_CASE_BACKEND_SAVE_AS: {
-			const lastModified = new Date();
-			const selectedCase = { ...state.selectedCase, lastModified };
-			return casesAdapter.updateOne({ id: action.payload.id, changes: { lastModified } }, {
-				...state,
-				selectedCase
-			});
-		}*/
 
 		case CasesActionTypes.DELETE_CASE:
 			const myCaseState = myCasesAdapter.removeOne((action as DeleteCaseAction).payload.id, state.myCases);
 			return {...state, myCases: myCaseState};
+
+		case CasesActionTypes.DELETE_CASE_FROM_SHARED:
+			const sharedState = sharedCasesAdapter.removeOne(action.payload, state.sharedCases);
+			return {...state, sharedCases: sharedState}
 
 		case CasesActionTypes.ADD_CASES:
 			const { cases, type } = action.payload;
@@ -95,8 +84,6 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 			const id = action.payload;
 			return {...state, selectedCase: state.sharedCases.entities[id]}
 		}
-		/*case CasesActionTypes.SET_AUTO_SAVE:
-			return { ...state, autoSave: action.payload };*/
 
 		default:
 			return state;
@@ -113,8 +100,8 @@ export const selectMyCasesIds = createSelector(myCasesState, (state) => myCasesI
 export const selectMyCasesData: MemoizedSelector<any, [Array<string | number>, Dictionary<ICasePreview>]> = createSelector(selectMyCasesIds, selectMyCasesEntities, (ids, entities) => [ids, entities]);
 
 export const selectSharedCaseTotal = createSelector(sharedCasesState, sharedCasesTotal);
-export const selectSharedCasesEntities = createSelector(sharedCasesState, myCasesEntities);
-export const selectSharedCasesIds = createSelector(sharedCasesState, (state) => myCasesIds(state));
+export const selectSharedCasesEntities = createSelector(sharedCasesState, sharedCasesEntities);
+export const selectSharedCasesIds = createSelector(sharedCasesState, sharedCasesIds);
 export const selectSharedCasesData: MemoizedSelector<any, [Array<string | number>, Dictionary<ICasePreview>]> = createSelector(selectSharedCasesIds, selectSharedCasesEntities, (ids, entities) => [ids, entities]);
 
 export const selectCaseById = (id: string) => createSelector(selectMyCasesEntities, selectSharedCasesEntities, (entities, sharedEntities) => {
@@ -125,8 +112,5 @@ export const selectCaseById = (id: string) => createSelector(selectMyCasesEntiti
 	return sharedEntities && sharedEntities[id]
 });
 export const selectSelectedCase = createSelector(casesStateSelector, (cases) => cases && cases.selectedCase);
-/*export const selectAutoSave: MemoizedSelector<any, boolean> = createSelector(casesStateSelector, (cases) => {
-	return cases.autoSave
-});*/
 export const selectModalState = createSelector(casesStateSelector, (cases) => cases?.modal);
 export const selectShowCasesTable = createSelector(casesStateSelector, (cases) => cases?.showCasesTable);

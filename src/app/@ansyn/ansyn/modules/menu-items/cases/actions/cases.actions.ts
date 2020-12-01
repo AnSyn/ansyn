@@ -14,12 +14,9 @@ export const CasesActionTypes = {
 	ADD_CASES: 'ADD_CASES',
 
 	DELETE_CASE: 'DELETE_CASE',
+	DELETE_CASE_FROM_SHARED: 'DELETE_CASE_FROM_SHARED',
 
 	UPDATE_CASE: 'UPDATE_CASE',
-	/*
-	UPDATE_CASE_BACKEND: 'UPDATE_CASE_BACKEND',
-	UPDATE_CASE_BACKEND_SUCCESS: 'UPDATE_CASE_BACKEND_SUCCESS',
-	UPDATE_CASE_BACKEND_SAVE_AS: 'UPDATE_CASE_BACKEND_SAVE_AS',*/
 
 	OPEN_MODAL: 'OPEN_MODAL',
 	CLOSE_MODAL: 'CLOSE_MODAL',
@@ -75,32 +72,9 @@ export class AddCasesAction implements Action {
 export class UpdateCaseAction implements Action {
 	type = CasesActionTypes.UPDATE_CASE;
 
-	constructor(public payload: { updatedCase: ICase, forceUpdate?: boolean }) {
-	}
-}
-
-/*
-
-export class UpdateCaseBackendAction implements Action {
-	type = CasesActionTypes.UPDATE_CASE_BACKEND;
-
 	constructor(public payload: ICase) {
 	}
 }
-
-export class UpdateCaseBackendSaveAs implements Action {
-	type = CasesActionTypes.UPDATE_CASE_BACKEND_SAVE_AS;
-
-	constructor(public payload: ICase) {
-	}
-}
-
-export class UpdateCaseBackendSuccessAction implements Action {
-	type = CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS;
-
-	constructor(public payload: IStoredEntity<ICasePreview, IDilutedCaseState>) {
-	}
-}*/
 
 export class DeleteCaseAction implements Action, ILogMessage {
 	type = CasesActionTypes.DELETE_CASE;
@@ -111,6 +85,14 @@ export class DeleteCaseAction implements Action, ILogMessage {
 	logMessage() {
 		return `Deleting case ${this.payload.name}`
 	}
+}
+
+export class DeleteCaseFromSharedAction implements Action {
+	readonly type = CasesActionTypes.DELETE_CASE_FROM_SHARED;
+
+	constructor(public payload: string) {
+	}
+
 }
 
 export class OpenModalAction implements Action {
@@ -187,17 +169,6 @@ export class SaveSharedCaseAsMyOwn implements Action {
 	}
 }
 
-/*export class SaveCaseAsSuccessAction implements Action, ILogMessage {
-	type = CasesActionTypes.SAVE_CASE_AS_SUCCESS;
-
-	constructor(public payload: ICase) {
-	}
-
-	logMessage() {
-		return `Saving case as ${this.payload.name}`
-	}
-}*/
-
 export class CopyCaseLinkAction implements Action, ILogMessage {
 	type = CasesActionTypes.COPY_CASE_LINK;
 
@@ -208,20 +179,6 @@ export class CopyCaseLinkAction implements Action, ILogMessage {
 		return `Copying case${this.payload.caseName ? ' ' + this.payload.caseName : ''} link to clipboard`;
 	}
 }
-
-/*export class ManualSaveAction implements Action {
-	readonly type = CasesActionTypes.MANUAL_SAVE;
-
-	constructor(public payload: ICase) {
-	}
-}
-
-export class SetAutoSave implements Action {
-	readonly type = CasesActionTypes.SET_AUTO_SAVE;
-
-	constructor(public payload: boolean) {
-	}
-}*/
 
 export class LogRenameCase implements Action, ILogMessage {
 	readonly type = CasesActionTypes.LOG_RENAME_CASE;

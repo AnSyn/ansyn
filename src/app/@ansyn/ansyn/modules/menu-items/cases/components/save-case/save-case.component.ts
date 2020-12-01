@@ -85,7 +85,7 @@ export class SaveCaseComponent implements OnInit, OnDestroy {
 				const oldName = _case.name;
 				_case.name = this.caseName;
 				this.store.dispatch(new LogRenameCase({ oldName: oldName, newName: _case.name }));
-				this.store.dispatch(new UpdateCaseAction({ updatedCase: _case, forceUpdate: true }));
+				this.store.dispatch(new UpdateCaseAction(_case));
 			})
 		)
 	}

@@ -1,24 +1,16 @@
 import { ICasesConfig } from '../models/cases-config';
 import { Inject, Injectable } from '@angular/core';
-import { EMPTY, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UUID } from 'angular2-uuid';
-import { cloneDeep, cloneDeep as _cloneDeep, isEqual as _isEqual, mapValues } from 'lodash';
+import { cloneDeep, cloneDeep as _cloneDeep, mapValues } from 'lodash';
 import { catchError, map, tap } from 'rxjs/operators';
 /* Do not change this ( rollup issue ) */
 import * as momentNs from 'moment';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { IDeltaTime } from '../../../core/models/time.model';
 import { IStoredEntity, StorageService } from '../../../core/services/storage/storage.service';
-import {
-	ICase, ICaseMapsState,
-	ICasePreview,
-	ICaseState,
-	ICaseTimeState, IDilutedCase,
-	IDilutedCaseState
-} from '../models/case.model';
-import { TranslateService } from '@ngx-translate/core';
-import { SelectDilutedCaseAction } from '../actions/cases.actions';
+import { ICase, ICasePreview, ICaseState, ICaseTimeState, IDilutedCaseState } from '../models/case.model';
 
 const moment = momentNs;
 
@@ -42,26 +34,22 @@ export class CasesService {
 	paginationLimit = 15;
 	latestStoredEntity: any;
 
-	constructor(protected storageService: StorageService,
-				@Inject(casesConfig) public config: ICasesConfig,
-				public errorHandlerService: ErrorHandlerService) {
-		this.paginationLimit = this.config.paginationLimit;
-	}
-
 	get defaultCase() {
 		return this.config.defaultCase;
-	}
-
-	get currentUser() {
-		return this.config.user;
 	}
 
 	get updateCaseViaContext() {
 		return this.queryParamsHelper.updateCaseViaContext.bind(this.queryParamsHelper);
 	}
 
+	constructor(protected storageService: StorageService,
+				@Inject(casesConfig) public config: ICasesConfig,
+				public errorHandlerService: ErrorHandlerService) {
+		this.paginationLimit = this.config.paginationLimit;
+	}
+
 	loadCases(casesOffset: number = 0, casesType: 'owner' | 'sharedWith' = 'owner'): Observable<any> {
-		return this.storageService.getPage<ICasePreview>(this.config.schema, casesOffset, this.paginationLimit, this.currentUser, casesType)
+		return this.storageService.getPage<ICasePreview>(this.config.schema, casesOffset, this.paginationLimit, casesType)
 			.pipe(
 				map(previews => previews.map(preview => this.parseCasePreview(preview))),
 				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load cases'))
@@ -72,7 +60,6 @@ export class CasesService {
 		return <any>{
 			...casePreview,
 			creationTime: new Date(casePreview.creationTime),
-			lastModified: new Date(casePreview.lastModified)
 		};
 	}
 
@@ -80,7 +67,6 @@ export class CasesService {
 		return <any>{
 			...caseValue,
 			creationTime: new Date(caseValue.creationTime),
-			lastModified: new Date(caseValue.lastModified),
 			state: {
 				...caseValue.state,
 				time: Boolean(caseValue.state.time) ? {
@@ -97,9 +83,7 @@ export class CasesService {
 			id: caseValue.id,
 			name: caseValue.name,
 			autoSave: caseValue.autoSave,
-			creationTime: caseValue.creationTime,
-			owner: this.currentUser,
-			lastModified: caseValue.lastModified
+			creationTime: caseValue.creationTime
 		};
 
 		if (caseValue.selectedContextId) {
@@ -148,9 +132,7 @@ export class CasesService {
 	convertToStoredEntity(caseValue: ICase): IStoredEntity<ICasePreview, IDilutedCaseState> {
 		return {
 			preview: this.getPreview(caseValue),
-			data: this.pluckIdSourceType(caseValue.state),
-			owner: this.currentUser,
-			sharedWith: []
+			data: this.pluckIdSourceType(caseValue.state)
 		};
 	}
 
@@ -158,7 +140,6 @@ export class CasesService {
 		const newCase: ICase = {
 			...selectedCase,
 			creationTime: currentTime,
-			lastModified: currentTime,
 			autoSave: false
 		};
 		return this.storageService.create(this.config.schema, this.convertToStoredEntity(newCase))
@@ -172,16 +153,6 @@ export class CasesService {
 		return UUID.UUID();
 	}
 
-	/*updateCase(selectedCase: ICase): Observable<IStoredEntity<ICasePreview, IDilutedCaseState>> {
-		const storeEntity = this.convertToStoredEntity(selectedCase);
-		if (this.isStoreEntitiesEqual(storeEntity, this.latestStoredEntity)) {
-			return EMPTY;
-		}
-		this.latestStoredEntity = _cloneDeep(storeEntity);
-		return this.storageService.update(this.config.schema, storeEntity)
-			.pipe<any>(catchError(err => this.errorHandlerService.httpErrorHandle(err)));
-	}*/
-
 	removeCase(selectedCaseId: string): Observable<any> {
 		return this.storageService.delete(this.config.schema, selectedCaseId).pipe(
 			catchError(err => this.errorHandlerService.httpErrorHandle(err, `Case cannot be deleted`))
@@ -189,7 +160,7 @@ export class CasesService {
 	}
 
 	loadCase(selectedCaseId: string): Observable<any> {
-		return this.storageService.get<ICasePreview, ICaseState>(this.config.schema, selectedCaseId, this.currentUser)
+		return this.storageService.get<ICasePreview, ICaseState>(this.config.schema, selectedCaseId)
 			.pipe(
 				tap((latestStoredEntity) => this.latestStoredEntity = _cloneDeep(latestStoredEntity)),
 				map(storedEntity =>
@@ -203,40 +174,4 @@ export class CasesService {
 		const href = this.config.useHash ? `${ baseLocation }#` : baseLocation;
 		return `${ href }/case/${ id }`;
 	}
-
-	isStoreEntitiesEqual(caseA, caseB) {
-		// caseA.data == undefined, can happen if you update only the preview data (of other case such as "name" -> updates the preview only)
-		if (!caseA || !caseB || !caseA.data || !caseB.data) {
-			return false;
-		}
-		const cloneA = JSON.parse(JSON.stringify(caseA));
-		const cloneB = JSON.parse(JSON.stringify(caseB));
-		cloneA.data.maps.data.forEach((map, index) => {
-			if (cloneA.data.maps.activeMapId === map.id) {
-				cloneA.data.maps.activeMapId = index;
-			}
-			map.id = index;
-		});
-		cloneB.data.maps.data.forEach((map, index) => {
-			if (cloneB.data.maps.activeMapId === map.id) {
-				cloneB.data.maps.activeMapId = index;
-			}
-			map.id = index;
-		});
-
-		return _isEqual(cloneA, cloneB);
-	}
-
-	/*generateMapId(maps: ICaseMapsState) {
-		let activeMapId = maps.activeMapId;
-		const newMaps = {...maps, data: maps.data.map( (map) => {
-				const newMapId = this.generateUUID();
-				if (map.id === activeMapId) {
-					activeMapId = newMapId;
-				}
-				return {...map, id: newMapId};
-			})};
-		newMaps.activeMapId = activeMapId;
-		return newMaps;
-	}*/
 }

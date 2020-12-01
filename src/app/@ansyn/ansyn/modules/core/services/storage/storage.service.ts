@@ -13,8 +13,6 @@ export interface IEntity {
 export interface IStoredEntity<P extends IEntity, D> {
 	preview: P;
 	data?: D;
-	owner?: string; // only in case
-	sharedWith?: string[]; // only in case
 }
 
 /*
@@ -24,7 +22,6 @@ export interface IStoredEntity<P extends IEntity, D> {
 @Injectable()
 export class StorageService {
 	constructor(protected _http: HttpClient,
-				protected fetchService: FetchService,
 				@Inject(CoreConfig) public config: ICoreConfig) {
 	}
 
@@ -42,13 +39,7 @@ export class StorageService {
 
 	searchByCase<P extends IEntity>(schema: string, body): Observable<P[]> {
 		const url = this._buildSchemaUrl(schema);
-		const promise = this.fetchService.fetch(`${ url }/search_by_case`, {
-			method: 'POST',
-			body: JSON.stringify(body),
-			headers: { 'Content-Type': 'application/json', },
-		})
-			.then(response => response.json());
-		return from(promise);
+		return this._http.post<P[]>(`${url}/search_by_case`, body);
 	}
 
 	deleteByCase(schema: string, body): Observable<string[]> {
@@ -56,25 +47,20 @@ export class StorageService {
 		return this._http.post<string[]>(`${ url }/delete_by_case`, body);
 	}
 
-	getPage<P extends IEntity>(schema: string, offset: number, pageSize: number, user?: string, casesType?: 'owner' | 'sharedWith'): Observable<P[]> {
+	getPage<P extends IEntity>(schema: string, offset: number, pageSize: number, casesType: 'owner' | 'sharedWith' = 'owner'): Observable<P[]> {
 		const url = this._buildSchemaUrl(schema);
 		return this._http.get<P[]>(url, {
 			params: {
 				from: offset.toString(),
 				limit: pageSize.toString(),
-				user,
 				casesType
 			}
 		});
 	}
 
-	get<P extends IEntity, D>(schema: string, id: string, user?: string): Observable<IStoredEntity<P, D>> {
+	get<P extends IEntity, D>(schema: string, id: string): Observable<IStoredEntity<P, D>> {
 		const url = this._buildIdUrl(schema, id);
-		return this._http.get<IStoredEntity<P, D>>(url, {
-			params: {
-				user
-			}
-		});
+		return this._http.get<IStoredEntity<P, D>>(url);
 	}
 
 	delete(schema: string, id: string): Observable<Object> {

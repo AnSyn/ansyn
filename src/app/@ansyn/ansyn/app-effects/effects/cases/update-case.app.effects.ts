@@ -57,13 +57,12 @@ export class UpdateCaseAppEffects {
 				autoSave
 			] = events;
 
-			const { id, name, lastModified, creationTime } = selectedCase;
+			const { id, name, creationTime } = selectedCase;
 
 			const updatedCase: ICase = {
 				id,
 				name,
 				creationTime,
-				lastModified,
 				autoSave,
 				state: {
 					maps: {
@@ -86,7 +85,7 @@ export class UpdateCaseAppEffects {
 				}
 			};
 
-			return new UpdateCaseAction({ updatedCase, forceUpdate: false });
+			return new UpdateCaseAction( updatedCase);
 		})
 	);
 

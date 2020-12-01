@@ -9,8 +9,6 @@ export interface ICasePreview {
 	creationTime: Date;
 	id: string;
 	name?: string;
-	owner?: string;
-	lastModified?: Date;
 	selectedContextId?: string;
 	autoSave?: boolean;
 	schema?: 'case';

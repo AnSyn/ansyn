@@ -13,8 +13,7 @@ export interface ICasesConfig {
 	defaultCase: ICase,
 	updateCaseDebounceTime: number,
 	useHash: boolean,
-	defaultSearchFromDeltaTime?: IDeltaTime,
-	user: string
+	defaultSearchFromDeltaTime?: IDeltaTime
 }
 
 export interface ICaseTableData {

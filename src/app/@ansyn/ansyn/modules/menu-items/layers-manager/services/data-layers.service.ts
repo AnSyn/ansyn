@@ -36,7 +36,6 @@ export class DataLayersService implements OnInit, OnDestroy {
 	@AutoSubscription
 	caseId$ = this.store
 		.pipe(
-			/* SelectedCase should move to core store */
 			select(selectSelectedCase),
 			filter(Boolean),
 			tap(({ id }: ICase) => this.caseId = id)
@@ -91,18 +90,6 @@ export class DataLayersService implements OnInit, OnDestroy {
 			catchError((err) => {
 				this.store.dispatch(new AddLayerOnBackendFailedAction(layer, err));
 				return this.errorHandlerService.httpErrorHandle(err, 'Failed to create layer');
-			})
-		)
-	}
-
-	updateLayer(layer: ILayer): Observable<any> {
-		return this.storageService.update('layers', { preview: layer, data: null }).pipe(
-			tap(() => {
-				this.store.dispatch(new UpdateLayerOnBackendSuccessAction(layer.id));
-			}),
-			catchError((err) => {
-				this.store.dispatch(new UpdateLayerOnBackendFailedAction(layer, err));
-				return this.errorHandlerService.httpErrorHandle(err, 'Can\'t find layer to update');
 			})
 		)
 	}

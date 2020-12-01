@@ -24,23 +24,23 @@
 	</ansyn-cases-table>
 </div>
 
-<div class="table shared-cases">
+<div class="table shared-cases" *ngIf="sharedCasesObj.ids.length">
 	<h3>{{'Shared Cases' | translate}}</h3>
-	<ansyn-cases-table *ngIf="sharedCasesObj"
-					   [cases]="sharedCasesObj"
-					   (onInfintyScroll)="loadSharedCases()"
-					   (onHoverCaseRow)="hoverCaseId = $event">
+	<ansyn-cases-table
+		[cases]="sharedCasesObj"
+		(onInfintyScroll)="loadSharedCases()"
+		(onHoverCaseRow)="hoverCaseId = $event">
 		<ng-template let-menuItem #menuItem>
-		<button (click)="removeShareCase()"
-				[attr.tooltip-value]="'Remove' | translate"
-				tooltip-class="bottom">
-			<i class="icon-delete"></i>
-		</button>
-		<button (click)="saveSharedAsMy()"
-				[attr.tooltip-value]="'Save' | translate"
-				tooltip-class="bottom">
-			<i class="icon-edit"></i>
-		</button>
+			<button (click)="removeShareCase()"
+					[attr.tooltip-value]="'Remove' | translate"
+					tooltip-class="bottom">
+				<i class="icon-delete"></i>
+			</button>
+			<button (click)="saveSharedAsMy()"
+					[attr.tooltip-value]="'Save' | translate"
+					tooltip-class="bottom">
+				<i class="icon-edit"></i>
+			</button>
 		</ng-template>
 	</ansyn-cases-table>
 </div>

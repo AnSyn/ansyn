@@ -1,7 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ICasesState, selectMyCasesData, selectSharedCasesData } from '../../reducers/cases.reducer';
 import { select, Store } from '@ngrx/store';
-import { CopyCaseLinkAction, LoadCaseAction, LoadCasesAction, OpenModalAction, SaveSharedCaseAsMyOwn } from '../../actions/cases.actions';
+import {
+	CopyCaseLinkAction,
+	DeleteCaseFromSharedAction,
+	LoadCaseAction,
+	LoadCasesAction,
+	OpenModalAction,
+	SaveSharedCaseAsMyOwn
+} from '../../actions/cases.actions';
 import { tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { CasesType, ICaseTableData } from '../../models/cases-config';
@@ -79,7 +86,9 @@ export class CasesContainerComponent implements OnInit, OnDestroy {
 	}
 
 	removeShareCase() {
-
+		if (this.hoverCaseId) {
+			this.store$.dispatch(new DeleteCaseFromSharedAction(this.hoverCaseId));
+		}
 	}
 
 	saveSharedAsMy() {

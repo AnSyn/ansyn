@@ -3,20 +3,16 @@ import { casesConfig, CasesService } from './cases.service';
 import { UrlSerializer } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { UUID } from 'angular2-uuid';
 import { CoreConfig } from '../../../core/models/core.config';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { StorageService } from '../../../core/services/storage/storage.service';
 import { ICase } from '../models/case.model';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 const user = 'owner';
 const caseMock: ICase = {
 	id: 'fakeId',
 	name: 'fakeName',
-	owner: user,
 	creationTime: new Date(),
-	lastModified: new Date(),
 	autoSave: true,
 	state: {
 		time: {
@@ -54,7 +50,6 @@ export const MockCasesConfig = {
 	provide: casesConfig,
 	useValue: {
 		defaultCase: caseMock,
-		user,
 		schema: 'cases'
 
 	}
@@ -87,7 +82,7 @@ describe('CasesService', () => {
 	});
 
 	beforeEach(inject([StorageService, CasesService, HttpClient],
-		( _storageService: StorageService, _casesService: CasesService, _http: HttpClient) => {
+		(_storageService: StorageService, _casesService: CasesService, _http: HttpClient) => {
 			storageService = _storageService;
 			casesService = _casesService;
 			http = _http;
@@ -99,7 +94,6 @@ describe('CasesService', () => {
 	});
 
 	it('createCase should send the case as body in ajax("post")', () => {
-		const owner = casesService.currentUser;
 		let fakeResponse = { caseMock };
 		let newDate = new Date();
 		spyOn(storageService, 'create').and.callFake(() => <any>of(fakeResponse));
@@ -109,14 +103,11 @@ describe('CasesService', () => {
 				preview: {
 					id: caseMock.id,
 					name: caseMock.name,
-					owner: user,
 					creationTime: newDate,
 					lastModified: newDate,
 					autoSave: false
 				},
 				data: casesService.pluckIdSourceType(caseMock.state),
-				owner: user,
-				sharedWith: []
 			});
 	});
 

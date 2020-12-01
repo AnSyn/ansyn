@@ -11,7 +11,8 @@ import {
 	LoadDefaultCaseAction, OpenModalAction,
 	SaveCaseAsAction,
 	SaveSharedCaseAsMyOwn,
-	SelectDilutedCaseAction
+	SelectDilutedCaseAction,
+	SaveCaseAsSuccessAction, RenameCaseAction
 } from '../actions/cases.actions';
 import { casesConfig, CasesService } from '../services/cases.service';
 import {
@@ -83,11 +84,17 @@ export class CasesEffects {
 			).pipe(map((_) => newCase))
 		}),
 		mergeMap(newCase => this.casesService.createCase(newCase)),
-		map((newCase) => new AddCasesAction({ cases: [newCase] })),
+		map((newCase) => new SaveCaseAsSuccessAction(newCase)),
 		catchError((err) => {
 			console.warn(err);
 			return EMPTY;
 		})
+	);
+
+	@Effect({dispatch: false})
+	onRenameCaseAction$ = this.actions$.pipe(
+		ofType<RenameCaseAction>(CasesActionTypes.RENAME_CASE),
+		mergeMap( (action) => this.casesService.updateCase(action.payload.case))
 	);
 
 	@Effect()

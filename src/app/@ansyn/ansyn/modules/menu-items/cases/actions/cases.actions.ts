@@ -37,7 +37,7 @@ export const CasesActionTypes = {
 
 	LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE: 'LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE',
 
-	LOG_RENAME_CASE: 'LOG_RENAME_CASE'
+	RENAME_CASE: 'RENAME_CASE'
 };
 
 export type CasesActions = any;
@@ -151,10 +151,16 @@ export class LoadDefaultCaseAction implements Action, ILogMessage {
 }
 
 export class SaveCaseAsAction implements Action {
-	type = CasesActionTypes.SAVE_CASE_AS;
+	readonly type = CasesActionTypes.SAVE_CASE_AS;
 
 	constructor(public payload: ICase) {
 	}
+
+
+}
+
+export class SaveCaseAsSuccessAction extends SaveCaseAsAction implements ILogMessage {
+	readonly type = CasesActionTypes.SAVE_CASE_AS_SUCCESS;
 
 	logMessage() {
 		return `Saving case as ${this.payload.name}`
@@ -178,10 +184,10 @@ export class CopyCaseLinkAction implements Action, ILogMessage {
 	}
 }
 
-export class LogRenameCase implements Action, ILogMessage {
-	readonly type = CasesActionTypes.LOG_RENAME_CASE;
+export class RenameCaseAction implements Action, ILogMessage {
+	readonly type = CasesActionTypes.RENAME_CASE;
 
-	constructor(public payload: { oldName: string, newName: string }) {
+	constructor(public payload: { case: ICase, oldName: string, newName: string }) {
 	}
 
 	logMessage() {

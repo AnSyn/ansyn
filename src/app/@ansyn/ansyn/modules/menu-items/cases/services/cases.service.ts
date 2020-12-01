@@ -174,4 +174,8 @@ export class CasesService {
 		const href = this.config.useHash ? `${ baseLocation }#` : baseLocation;
 		return `${ href }/case/${ id }`;
 	}
+
+	updateCase(updateCase: ICase) {
+		return this.storageService.update(this.config.schema, {preview: this.getPreview(updateCase)});
+	}
 }

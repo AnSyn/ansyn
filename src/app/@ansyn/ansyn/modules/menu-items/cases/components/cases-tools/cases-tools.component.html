@@ -8,8 +8,9 @@
 	   [ngClass]="onlyFavorite ? 'icon-favorite-full'  : 'icon-favorite-empty'"></i>
 </button>
 <button type="button" (click)="showCasesTable()">
-	<i class="icon icon-main-cases"></i>
+	<i class="icon icon-bookmarks"></i>
 </button>
 <button type="button" (click)="showSaveModal()">
-	<i class="icon icon-more"></i>
+	<i class="icon"
+	[ngClass]="(currentSaveCase$ | async)? 'icon-bookmark-full' : 'icon-bookmark-empty'"></i>
 </button>

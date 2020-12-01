@@ -11,9 +11,7 @@ describe('CasesReducer', () => {
 	const caseMock: ICase = {
 		id: 'fakeId',
 		name: 'fakeName',
-		owner: 'owner',
 		creationTime: new Date(),
-		lastModified: new Date(),
 		autoSave: false,
 		state: {
 			time: {
@@ -66,7 +64,7 @@ describe('CasesReducer', () => {
 			...caseMock, id: 'id2', name: 'name2 lastname2'
 		};
 
-		let action: UpdateCaseAction = new UpdateCaseAction({ updatedCase: newCase });
+		let action: UpdateCaseAction = new UpdateCaseAction(newCase);
 		let result: ICasesState = CasesReducer(state, action);
 		expect(result.selectedCase.name).toEqual('name2 lastname2');
 	});

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ICasesState, selectShowCasesTable } from '../../reducers/cases.reducer';
+import { ICasesState, selectCaseSaved, selectShowCasesTable } from '../../reducers/cases.reducer';
 import { select, Store } from '@ngrx/store';
 import { OpenModalAction, ShowCasesTableAction } from '../../actions/cases.actions';
 import { distinctUntilChanged, tap, map } from 'rxjs/operators';
@@ -25,6 +25,8 @@ export class CasesToolsComponent implements OnInit, OnDestroy {
 		distinctUntilChanged(),
 		map((enable) => !enable)
 	);
+
+	currentSaveCase$ = this.store.pipe(select(selectCaseSaved));
 
 	@AutoSubscription
 	onlyFavoriteSelected$ = this.store.pipe(

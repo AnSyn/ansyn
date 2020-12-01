@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, HostBinding, Input, OnDestroy, OnIn
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Store, select } from '@ngrx/store';
 import { ICasesState, selectCaseById, selectSelectedCase } from '../../reducers/cases.reducer';
-import { CloseModalAction, LogRenameCase, SaveCaseAsAction, UpdateCaseAction } from '../../actions/cases.actions';
+import { CloseModalAction, RenameCaseAction, SaveCaseAsAction, UpdateCaseAction } from '../../actions/cases.actions';
 import { CasesService } from '../../services/cases.service';
 import { take, tap } from 'rxjs/operators';
 import { cloneDeep } from '../../../../core/utils/rxjs/operators/cloneDeep';
@@ -84,8 +84,7 @@ export class SaveCaseComponent implements OnInit, OnDestroy {
 			tap( (_case: ICase) => {
 				const oldName = _case.name;
 				_case.name = this.caseName;
-				this.store.dispatch(new LogRenameCase({ oldName: oldName, newName: _case.name }));
-				this.store.dispatch(new UpdateCaseAction(_case));
+				this.store.dispatch(new RenameCaseAction({case: _case, oldName: oldName, newName: _case.name }));
 			})
 		)
 	}

@@ -17,7 +17,7 @@ export interface ICasesState {
 	showCasesTable: boolean;
 	selectedCase: ICase;
 	modal: ICaseModal;
-	autoSave: boolean;
+	wasSaved: boolean;
 }
 
 export const casesFeatureKey = 'cases';
@@ -34,7 +34,7 @@ export const initialCasesState: ICasesState = {
 	showCasesTable: false,
 	selectedCase: null,
 	modal: { show: false },
-	autoSave: false
+	wasSaved: false
 };
 
 export const casesStateSelector: MemoizedSelector<any, ICasesState> = createFeatureSelector<ICasesState>(casesFeatureKey);
@@ -48,7 +48,13 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 		}
 
 		case CasesActionTypes.UPDATE_CASE: {
-			return { ...state, selectedCase: action.payload }
+			return { ...state, selectedCase: action.payload, wasSaved: false }
+		}
+
+		case CasesActionTypes.RENAME_CASE: {
+			const {id, name} = action.payload.case;
+			const myCasesState = myCasesAdapter.updateOne({id, changes: {name} }, state.myCases);
+			return {...state, myCases: myCasesState}
 		}
 
 		case CasesActionTypes.DELETE_CASE_SUCCESS: {
@@ -82,6 +88,10 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 
 		case CasesActionTypes.SELECT_CASE_SUCCESS:
 			return { ...state, selectedCase: action.payload };
+
+		case CasesActionTypes.SAVE_CASE_AS_SUCCESS:
+			const myCasesState = myCasesAdapter.addOne(action.payload, state.myCases);
+			return {...state, myCases: myCasesState, wasSaved: true}
 
 		case CasesActionTypes.SAVE_SHARED_CASE_AS_MY_OWN: {
 			const id = action.payload;
@@ -117,3 +127,4 @@ export const selectCaseById = (id: string) => createSelector(selectMyCasesEntiti
 export const selectSelectedCase = createSelector(casesStateSelector, (cases) => cases && cases.selectedCase);
 export const selectModalState = createSelector(casesStateSelector, (cases) => cases?.modal);
 export const selectShowCasesTable = createSelector(casesStateSelector, (cases) => cases?.showCasesTable);
+export const selectCaseSaved = createSelector(casesStateSelector, (cases) => cases?.wasSaved)

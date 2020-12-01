@@ -1,8 +1,13 @@
 <!-- Geo filter -->
 <div class="simple-search" >
-	<div class="advanced-search" (click)="toggleAdvancedSearch()">
+	<div *ngIf="!advancedSearch" class="advanced-search" (click)="toggleAdvancedSearch()">
 		advanced <br/>
 		search
+	</div>
+
+	<div *ngIf="advancedSearch" class="advanced-search" (click)="toggleAdvancedSearch()">
+		minimize <br/>
+		
 	</div>
 	
 	<div class="box" id="geoPreSearch" [class.component]="componentMode">

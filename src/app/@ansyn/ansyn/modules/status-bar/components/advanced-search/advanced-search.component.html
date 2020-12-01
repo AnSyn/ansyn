@@ -39,10 +39,22 @@
     [withArrow]="false"
     [isLine]="false"
 	comboTableToolTipDescription="blah blah"
-	(ngModel)="sensorTypes"
+	(ngModel)="sensorsList"
     (ngModelChange)="typeChanged($event)">
-        <ansyn-combo-table-option *ngFor="let type of sensorTypes" [value]="type">
+        <ansyn-combo-table-option *ngFor="let type of sensorsList" [value]="type">
         </ansyn-combo-table-option>
     </ansyn-combo-table>
+</div>
+
+<div class="box item4" id="dataInputsPreSearch">
+    <span class="title">{{'Resolution' | translate}}</span>
+    <div class="slider">
+        <ngx-slider id="dataInputsPreSearch" [value]="minValue" [highValue]="maxValue" [options]="options"></ngx-slider>
+    </div>
+</div>
+
+<div class="search-icon item5"
+    (click)="search()">
+    <i class="fa fa-search"></i>
 </div>
 

@@ -1,16 +1,12 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+import { Component, Inject, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { flattenDeep } from 'lodash';
-import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
 import { IMultipleOverlaysSourceConfig, IOverlaysSourceProvider, MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
 import { IFiltersConfig } from '../../../filters/models/filters-config';
-import { IFilter } from '../../../filters/models/IFilter';
-import { FilterMetadata } from '../../../filters/models/metadata/filter-metadata.interface';
-import { FiltersMetadata, IFiltersState, selectFiltersMetadata, selectFiltersSearchResults } from '../../../filters/reducer/filters.reducer';
+import { IFiltersState } from '../../../filters/reducer/filters.reducer';
 import { filtersConfig } from '../../../filters/services/filters.service';
-
+import { Options } from '@angular-slider/ngx-slider'
 @Component({
   selector: 'ansyn-advanced-search',
   templateUrl: './advanced-search.component.html',
@@ -18,16 +14,60 @@ import { filtersConfig } from '../../../filters/services/filters.service';
 })
 export class AdvancedSearchComponent implements OnInit {
 
+  minValue: number = 100;
+  maxValue: number = 200;
+  options: Options = {
+    floor: 100,
+    ceil: 200,
+    translate: (value: number): string => {
+      return value + ' mm';
+    },
+    getPointerColor: (value: number): string => {
+      if (value < 100) {
+          return 'red';
+      }
+      return 'gray';
+    },
+    getSelectionBarColor: (value: number): string => {
+      if (value < 100) {
+          return 'red';
+      }
+      return 'gray';
+    }
+  };
   sensorTypes: any[];
-	dataFilters: any[];
+  dataFilters: any[];
+  sensorsList: any[];
   isGeoRegistered: any[] = ['Geo Registered','Not Geo Registered']
   
-  constructor(@Inject(filtersConfig) protected config: IFiltersConfig,
-              protected store: Store<IFiltersState>,
+  constructor(protected store: Store<IFiltersState>,
               @Inject(MultipleOverlaysSourceConfig) public multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
-                private translate: TranslateService) { 
+              private translate: TranslateService) { 
     this.dataFilters = this.getAllDataInputFilter();
     this.sensorTypes = this.selectAll();
+    this.sensorsList = this.getAllSensorsNames();
+  }
+
+  getAllSensorsNames(): any[] {
+    const sensors: any[] = [];
+    const dataInputs = Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
+			.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive)
+			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
+          if(sensorNamesByGroup) {
+             sensorNamesByGroup.sensors.forEach(sensor => sensors.push(sensor));
+          }
+				}
+      );
+      sensors.push('happy')
+      sensors.push('birthday')
+      sensors.push('dear')
+      sensors.push('sleepy')
+      sensors.push('joe')
+      sensors.push('joe')
+      sensors.push('joe')
+
+
+		return flattenDeep(sensors);
   }
 
   getAllDataInputFilter(): any[] {
@@ -82,6 +122,10 @@ export class AdvancedSearchComponent implements OnInit {
 
   typeChanged(type) {
     //dispacth action that inform the type changed
+  }
+
+  search() {
+
   }
 
 }

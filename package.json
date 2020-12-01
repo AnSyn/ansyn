@@ -35,6 +35,7 @@
     "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points"
   },
   "dependencies": {
+    "@angular-slider/ngx-slider": "^2.0.3",
     "@angular/animations": "~10.0.5",
     "@angular/cdk": "^10.1.0",
     "@angular/common": "~10.0.5",

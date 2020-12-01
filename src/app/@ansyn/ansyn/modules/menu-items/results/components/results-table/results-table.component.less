@@ -4,6 +4,7 @@
 
 @footer-height: 58px;
 @header-size: calc(~"(100vh - @{footer-height}) * 0.025");
+@date-width: 169px;
 
 :host {
 	&:extend(.default-menu-item);
@@ -51,7 +52,7 @@
 
 			div.results-table-head-row {
 				margin-bottom: -5px;
-				padding: 0 15px;
+				padding-left: 43px;
 				width: 100%;
 
 				div.results-table-head-row-data {
@@ -64,15 +65,10 @@
 					box-sizing: border-box;
 
 					div.results-table-head-col {
-						margin-left: 27px;
-						width: 200px;
 						flex: 1;
 
-						&.Sensor {
-							margin-left: 63px;
-						}
-
-						&.Type {
+						&.date {
+							min-width: @date-width
 						}
 
 						i.icon-arrow {
@@ -104,10 +100,6 @@
 
 			div.results-table-body-row-data.selected + div.results-table-body-row div.cases-table-body-row-data hr {
 				top: -2px;
-			}
-
-			div.results-table-body-row:first-child div.results-table-body-row-data {
-				//border-top: 1px solid #EBF8FA;
 			}
 
 			div.results-table-body-row {
@@ -156,9 +148,9 @@
 					cursor: pointer;
 					box-sizing: border-box;
 					height: 100%;
+					padding-left: 19px;
 
 					div.overlay-favorite {
-						margin-right: 0px;
 						min-width: 24px;
 					}
 
@@ -183,15 +175,13 @@
 					}
 
 					div.results-table-case-name-col {
-						flex: 1.5;
 						overflow: hidden;
 						text-overflow: ellipsis;
-						margin-left: 19px;
+						min-width: @date-width;
 					}
 
 					.results-table-auto-save-col {
 						padding-top: 20px;
-						flex: 2;
 					}
 				}
 			}
@@ -215,22 +205,9 @@
 				}
 			}
 			div.results-table-head {
-				margin-left: unset;
-				margin-right: 10px;
-
 				div.results-table-head-row {
-					div.results-table-head-row-data {
-						div.results-table-head-col {
-							margin-left: unset;
-							margin-right: 29px;
-							&.Sensor {
-								margin-right: 77px;
-							}
-							&.Type {
-								margin-left: 10px;
-							}
-						}
-					}
+					padding-left: unset;
+					padding-right: 43px;
 				}
 			}
 			div.results-table-body {
@@ -239,19 +216,10 @@
 					direction: rtl;
 					margin-left: unset;
 					margin-right: 16px;
-
 					div.results-table-body-row-data {
-						div.overlay-type {
-							margin-left: unset;
-							margin-right: 30px;
-						}
-						div.source-type {
-							margin-left: unset;
-							margin-right: 34px;
-						}
+						padding-left: unset;
+						padding-right: 19px;
 						div.results-table-case-name-col {
-							margin-left: unset;
-							margin-right: 10px;
 							direction: ltr; // it is a date, so don't flip characters
 							text-align: right; // but align it to the right
 						}

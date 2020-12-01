@@ -1,13 +1,14 @@
 import { Component, EventEmitter, HostBinding, OnDestroy, OnInit, Output } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { ICasesState, selectMyCasesEntities, selectModalState } from '../../reducers/cases.reducer';
+import { ICasesState, selectModalState, selectMyCasesEntities } from '../../reducers/cases.reducer';
 import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CasesService } from '../../services/cases.service';
 import { Observable, of } from 'rxjs';
-import { catchError, map, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, map, tap, withLatestFrom, take } from 'rxjs/operators';
 import { ICasePreview } from '../../models/case.model';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { CasesType } from '../../models/cases-config';
 
 const animationsDuring = '0.2s';
 
@@ -59,16 +60,16 @@ export class DeleteCaseComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmitRemove() {
-		(<Observable<any>>this.casesService.removeCase(this.activeCase.id))
-			.pipe(
-				tap(() => {
-					const { id, name } = this.activeCase;
-					this.store.dispatch(new DeleteCaseAction({ id, name }))
-				}),
-				catchError(() => of(false)),
-				tap(() => this.close())
-			)
-			.subscribe();
+		const {id, name} = this.activeCase;
+		this.store.pipe(
+			select(selectMyCasesEntities),
+			take(1),
+			map( (entities) => entities[id] ? CasesType.MyCases : CasesType.MySharedCases),
+			tap( (type: CasesType) => {
+				this.store.dispatch(new DeleteCaseAction({id, name, type}))
+				this.close();
+			} )
+		).subscribe()
 	}
 
 }

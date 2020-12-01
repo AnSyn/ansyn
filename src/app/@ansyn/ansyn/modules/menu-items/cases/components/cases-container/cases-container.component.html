@@ -31,7 +31,7 @@
 		(onInfintyScroll)="loadSharedCases()"
 		(onHoverCaseRow)="hoverCaseId = $event">
 		<ng-template let-menuItem #menuItem>
-			<button (click)="removeShareCase()"
+			<button (click)="removeCase()"
 					[attr.tooltip-value]="'Remove' | translate"
 					tooltip-class="bottom">
 				<i class="icon-delete"></i>

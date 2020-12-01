@@ -1,7 +1,8 @@
 import { Injectable, Inject } from '@angular/core';
-import { CacheService } from '@ansyn/imagery';
 import { HttpRequest, HttpResponse } from '@angular/common/http';
-import { CoreConfig, ICoreConfig } from '../../../../public_api';
+import { CoreConfig } from '../../models/core.config';
+import { ICoreConfig } from '../../models/core.config.model';
+
 
 interface ICached {
 	response: HttpResponse<any>

@@ -1,5 +1,5 @@
 import { caseModalType, CasesActions, CasesActionTypes, DeleteCaseAction } from '../actions/cases.actions';
-import { createFeatureSelector, createSelector, MemoizedSelector, createSelectorFactory } from '@ngrx/store';
+import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { ICase, ICasePreview } from '../models/case.model';
@@ -22,8 +22,8 @@ export interface ICasesState {
 
 export const casesFeatureKey = 'cases';
 const casesSortFn = (ob1: ICasePreview, ob2: ICasePreview): number => +ob2.creationTime - +ob1.creationTime;
-export const myCasesAdapter: EntityAdapter<ICasePreview> = createEntityAdapter<ICasePreview>({ sortComparer: casesSortFn});
-export const sharedCasesAdapter: EntityAdapter<ICasePreview> = createEntityAdapter<ICasePreview>({sortComparer: casesSortFn});
+export const myCasesAdapter: EntityAdapter<ICasePreview> = createEntityAdapter<ICasePreview>({ sortComparer: casesSortFn });
+export const sharedCasesAdapter: EntityAdapter<ICasePreview> = createEntityAdapter<ICasePreview>({ sortComparer: casesSortFn });
 
 const myCasesInitialState = myCasesAdapter.getInitialState();
 const sharedCasesInitialState = sharedCasesAdapter.getInitialState();
@@ -44,29 +44,32 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 	switch (action.type) {
 		case CasesActionTypes.SHOW_CASES_TABLE: {
 			const show = action.payload;
-			return {...state, showCasesTable: show}
+			return { ...state, showCasesTable: show }
 		}
 
 		case CasesActionTypes.UPDATE_CASE: {
-			return {...state, selectedCase: action.payload}
+			return { ...state, selectedCase: action.payload }
 		}
 
-		case CasesActionTypes.DELETE_CASE:
-			const myCaseState = myCasesAdapter.removeOne((action as DeleteCaseAction).payload.id, state.myCases);
-			return {...state, myCases: myCaseState};
+		case CasesActionTypes.DELETE_CASE_SUCCESS: {
+			const { id, type } = action.payload;
+			if (type === CasesType.MyCases) {
+				const myCaseState = myCasesAdapter.removeOne(id, state.myCases);
+				return { ...state, myCases: myCaseState };
+			}
+			const sharedCaseState = sharedCasesAdapter.removeOne(id, state.sharedCases);
+			return { ...state, sharedCases: sharedCaseState };
+		}
 
-		case CasesActionTypes.DELETE_CASE_FROM_SHARED:
-			const sharedState = sharedCasesAdapter.removeOne(action.payload, state.sharedCases);
-			return {...state, sharedCases: sharedState}
-
-		case CasesActionTypes.ADD_CASES:
+		case CasesActionTypes.ADD_CASES: {
 			const { cases, type } = action.payload;
 			if (type === CasesType.MySharedCases) {
 				const sharedCases = sharedCasesAdapter.addMany(cases, state.sharedCases);
 				return { ...state, sharedCases }
 			}
 			const myCases = myCasesAdapter.addMany(cases, state.myCases);
-			return {...state, myCases };
+			return { ...state, myCases };
+		}
 
 		case CasesActionTypes.OPEN_MODAL:
 			return { ...state, modal: { type: action.payload.type, id: action.payload.caseId, show: true } };
@@ -82,7 +85,7 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 
 		case CasesActionTypes.SAVE_SHARED_CASE_AS_MY_OWN: {
 			const id = action.payload;
-			return {...state, selectedCase: state.sharedCases.entities[id]}
+			return { ...state, selectedCase: state.sharedCases.entities[id] }
 		}
 
 		default:

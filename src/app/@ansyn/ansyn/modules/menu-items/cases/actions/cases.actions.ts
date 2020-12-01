@@ -14,7 +14,7 @@ export const CasesActionTypes = {
 	ADD_CASES: 'ADD_CASES',
 
 	DELETE_CASE: 'DELETE_CASE',
-	DELETE_CASE_FROM_SHARED: 'DELETE_CASE_FROM_SHARED',
+	DELETE_CASE_SUCCESS: 'DELETE_CASE_SUCCESS',
 
 	UPDATE_CASE: 'UPDATE_CASE',
 
@@ -76,21 +76,19 @@ export class UpdateCaseAction implements Action {
 	}
 }
 
-export class DeleteCaseAction implements Action, ILogMessage {
+export class DeleteCaseAction implements Action  {
 	type = CasesActionTypes.DELETE_CASE;
 
-	constructor(public payload: { id: string, name: string }) {
+	constructor(public payload: { id: string, name: string, type: CasesType }) {
 	}
+
+}
+
+export class DeleteCaseSuccessAction extends DeleteCaseAction implements ILogMessage {
+	type = CasesActionTypes.DELETE_CASE_SUCCESS;
 
 	logMessage() {
 		return `Deleting case ${this.payload.name}`
-	}
-}
-
-export class DeleteCaseFromSharedAction implements Action {
-	readonly type = CasesActionTypes.DELETE_CASE_FROM_SHARED;
-
-	constructor(public payload: string) {
 	}
 
 }

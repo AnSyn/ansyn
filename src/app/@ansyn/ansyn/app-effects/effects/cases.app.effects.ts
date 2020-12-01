@@ -10,7 +10,7 @@ import { IAppState } from '../app.effects.module';
 import { catchError, concatMap, filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	CasesActionTypes,
-	DeleteCaseAction, DeleteCaseFromSharedAction,
+	DeleteCaseAction, DeleteCaseSuccessAction,
 	LoadDefaultCaseAction,
 	LoadDefaultCaseIfNoActiveCaseAction,
 	SelectCaseAction,
@@ -112,18 +112,6 @@ export class CasesAppEffects {
 					);
 			})
 		);
-
-	@Effect()
-	onDeleteCase$: Observable<any> = this.actions$.pipe(
-		ofType<DeleteCaseAction>(CasesActionTypes.DELETE_CASE),
-		map((action) => new RemoveCaseLayersFromBackendAction(action.payload.id)),
-	);
-
-	@Effect({dispatch: false})
-	deleteCaseFromMyShared$ = this.actions$.pipe(
-		ofType(CasesActionTypes.DELETE_CASE_FROM_SHARED),
-		mergeMap( ({ payload: caseId}: DeleteCaseFromSharedAction) => this.casesService.removeCase(caseId))
-	);
 
 	get defaultImageManualProcessArgs(): IImageManualProcessArgs {
 		return this.overlayStatusConfig.ImageProcParams.reduce<IImageManualProcessArgs>((initialObject: any, imageProcParam) => {

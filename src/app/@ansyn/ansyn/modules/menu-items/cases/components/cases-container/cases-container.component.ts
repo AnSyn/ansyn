@@ -3,8 +3,6 @@ import { ICasesState, selectMyCasesData, selectSharedCasesData } from '../../red
 import { select, Store } from '@ngrx/store';
 import {
 	CopyCaseLinkAction,
-	DeleteCaseFromSharedAction,
-	LoadCaseAction,
 	LoadCasesAction,
 	OpenModalAction,
 	SaveSharedCaseAsMyOwn
@@ -82,12 +80,6 @@ export class CasesContainerComponent implements OnInit, OnDestroy {
 	shareCase() {
 		if (this.hoverCaseId) {
 			this.store$.dispatch(new CopyCaseLinkAction({ caseId: this.hoverCaseId }));
-		}
-	}
-
-	removeShareCase() {
-		if (this.hoverCaseId) {
-			this.store$.dispatch(new DeleteCaseFromSharedAction(this.hoverCaseId));
 		}
 	}
 

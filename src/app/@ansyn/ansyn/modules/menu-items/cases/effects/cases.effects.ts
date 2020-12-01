@@ -5,7 +5,7 @@ import { EMPTY, forkJoin, Observable, of } from 'rxjs';
 import {
 	AddCasesAction,
 	CasesActionTypes,
-	CopyCaseLinkAction,
+	CopyCaseLinkAction, DeleteCaseAction, DeleteCaseSuccessAction,
 	LoadCaseAction,
 	LoadCasesAction,
 	LoadDefaultCaseAction, OpenModalAction,
@@ -31,6 +31,7 @@ import { ErrorHandlerService } from '../../../core/services/error-handler.servic
 import { toastMessages } from '../../../core/models/toast-messages';
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { cloneDeep } from '../../../core/utils/rxjs/operators/cloneDeep';
+import { RemoveCaseLayersFromBackendAction } from '../../layers-manager/actions/layers.actions';
 
 @Injectable()
 export class CasesEffects {
@@ -49,51 +50,6 @@ export class CasesEffects {
 			);
 		}),
 		share());
-
-	/*@Effect()
-	onDeleteCaseLoadCases$: Observable<LoadCasesAction> = this.actions$.pipe(
-		ofType(CasesActionTypes.DELETE_CASE),
-		withLatestFrom(this.store.select(selectMyCasesTotal), (action, total) => total),
-		filter((total: number) => total <= this.casesService.paginationLimit),
-		map(() => new LoadCasesAction()),
-		share());*/
-
-	/*@Effect()
-	onUpdateCase$: Observable<UpdateCaseBackendAction> = this.actions$.pipe(
-		ofType(CasesActionTypes.UPDATE_CASE),
-		map((action: UpdateCaseAction) => [action, this.casesService.defaultCase.id]),
-		filter(([action, defaultCaseId]: [UpdateCaseAction, string]) => action.payload.updatedCase.id !== defaultCaseId && (action.payload.updatedCase.autoSave || action.payload.forceUpdate)),
-		map(([action, defaultCaseId]: [UpdateCaseAction, string]) => new UpdateCaseBackendAction(action.payload.updatedCase)),
-		share());
-
-	@Effect()
-	onUpdateCaseBackendSaveAs$: Observable<UpdateCaseBackendSuccessAction | any> = this.actions$
-		.pipe(
-			ofType(CasesActionTypes.UPDATE_CASE_BACKEND_SAVE_AS),
-			switchMap((action: UpdateCaseBackendAction) => {
-				return this.casesService.updateCase(action.payload)
-					.pipe(
-						map((updatedCase: IStoredEntity<ICasePreview, IDilutedCaseState>) => new UpdateCaseBackendSuccessAction(updatedCase)),
-						catchError(() => EMPTY)
-					);
-
-			})
-		);
-
-	@Effect()
-	onUpdateCaseBackend$: Observable<UpdateCaseBackendSuccessAction | any> = this.actions$
-		.pipe(
-			ofType(CasesActionTypes.UPDATE_CASE_BACKEND),
-			debounceTime(this.casesService.config.updateCaseDebounceTime),
-			switchMap((action: UpdateCaseBackendAction) => {
-				return this.casesService.updateCase(action.payload)
-					.pipe(
-						map((updatedCase: IStoredEntity<ICasePreview, IDilutedCaseState>) => new UpdateCaseBackendSuccessAction(updatedCase)),
-						catchError(() => EMPTY)
-					);
-
-			})
-		);*/
 
 	@Effect()
 	onSaveCaseAs$ = this.actions$.pipe(
@@ -134,15 +90,6 @@ export class CasesEffects {
 		})
 	);
 
-	/*@Effect()
-	onSaveCaseAsSuccess$ = this.actions$.pipe(
-		ofType<SaveCaseAsAction>(CasesActionTypes.SAVE_CASE_AS_SUCCESS),
-		concatMap(({ payload }) => [
-			new SetAutoSave(true),
-			new SetMapsDataActionStore({ mapsList: payload.state.maps.data }),
-		])
-	);*/
-
 	@Effect()
 	onCopyShareCaseIdLink$ = this.actions$.pipe(
 		ofType<CopyCaseLinkAction>(CasesActionTypes.COPY_CASE_LINK),
@@ -177,29 +124,14 @@ export class CasesEffects {
 		map( (caseToSave) => new OpenModalAction({type: 'save'}))
 	);
 
-	/*saveLayers: UnaryFunction<any, any> = pipe(
-		mergeMap((action: ManualSaveAction) => this.dataLayersService
-			.removeCaseLayers(action.payload.id).pipe(
-				withLatestFrom(this.store.select(selectLayers)),
-				mergeMap(([deletedLayersIds, layers]: [string[], ILayer[]]) => forkJoin(layers.filter((layer) => layer.type === LayerType.annotation)
-					.map((layer) => this.dataLayersService.addLayer(layer)))
-					.pipe(map(() => action))
-				)
-			))
-	);
-
 	@Effect()
-	manualSave$ = this.actions$.pipe(
-		ofType<ManualSaveAction>(CasesActionTypes.MANUAL_SAVE),
-		filter((action) => action.payload.id !== this.casesService.defaultCase.id),
-		this.saveLayers,
-		mergeMap((action: ManualSaveAction) => [
-			new UpdateCaseAction({ updatedCase: action.payload, forceUpdate: true }),
-			new SetToastMessageAction({ toastText: 'Case saved successfully' })
-		]),
-		catchError((err) => this.errorHandlerService.httpErrorHandle(err, 'Failed to update case')),
-		catchError(() => EMPTY)
-	);*/
+	onDeleteCase$: Observable<any> = this.actions$.pipe(
+		ofType<DeleteCaseAction>(CasesActionTypes.DELETE_CASE),
+		mergeMap( (action) => this.casesService.removeCase(action.payload.id).pipe( map(_ => action))),
+		mergeMap( (action) => [
+			new DeleteCaseSuccessAction(action.payload),
+			new RemoveCaseLayersFromBackendAction(action.payload.id)])
+	);
 
 	constructor(protected actions$: Actions,
 				protected casesService: CasesService,

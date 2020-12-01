@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { CacheService } from '@ansyn/imagery';
 import { HttpRequest, HttpResponse } from '@angular/common/http';
+import { CoreConfig, ICoreConfig } from '../../../../public_api';
 
 interface ICached {
 	response: HttpResponse<any>
@@ -10,6 +11,11 @@ const ttl = 5 * (1000 * 60); // 5 minutes;
 @Injectable()
 export class CacheRequestService {
 	cache = new Map();
+	get cacheBlackList(): string[] {
+		return this.coreConfig.httpCacheBlackList;
+	}
+	constructor(@Inject(CoreConfig) private coreConfig: ICoreConfig) {
+	}
 
 	get(req: HttpRequest<any>): HttpResponse<any> | undefined {
 		const key = this.getKeyFromRequest(req);
@@ -24,21 +30,22 @@ export class CacheRequestService {
 	}
 
 	set(req: HttpRequest<any>, response: HttpResponse<any>) {
-		const key = this.getKeyFromRequest(req);
-		const entry = { key, response, ttl: Date.now() };
-		this.cache.set(key, entry);
+		if (this.cacheBlackList.some( url => req.urlWithParams.includes(url))) {
+			const key = this.getKeyFromRequest(req);
+			const entry = { key, response, ttl: Date.now() };
+			this.cache.set(key, entry);
 
-		const expired = Date.now() - ttl;
-		this.cache.forEach( expiredEntry => {
-			if (expiredEntry.ttl < expired) {
-				this.cache.delete(expiredEntry.key)
-			}
-		})
-
+			const expired = Date.now() - ttl;
+			this.cache.forEach(expiredEntry => {
+				if (expiredEntry.ttl < expired) {
+					this.cache.delete(expiredEntry.key)
+				}
+			})
+		}
 	}
 
 
 	private getKeyFromRequest(req: HttpRequest<any>): string {
-		return `${req.method}/${req.urlWithParams}/${req.body ? req.body : ''}`
+		return `${req.method}/${req.urlWithParams}/${req.body ? JSON.stringify(req.body) : ''}`
 	}
 }

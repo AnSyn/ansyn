@@ -1,6 +1,6 @@
 {
   "casesConfig": {
-	"user": "user",
+  "user": "AnSyn",
     "schema": "cases",
     "paginationLimit": 16,
     "defaultCase": {
@@ -407,7 +407,10 @@
 	 "httpTimeout": "3000",
 	 "isFooterCollapsible": {{ getv "/ansyn/iscollapsible" "false" }},
 	 "enable3D": {{ getv "/ansyn/3d/enable" "true" }},
-	 "northCalcImagerySensorNamesIgnoreList": []
+	 "northCalcImagerySensorNamesIgnoreList": [],
+	 "httpCacheBlackList": [
+	 	"{{ getv "/ansyn/storage/baseurl" "http://platform.ansyn.io:8888/api/store" }}"
+	 ]
   },
   "olConfig": {
   	 "needToUseLayerExtent": false,

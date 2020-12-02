@@ -18,7 +18,7 @@
 		box-sizing: border-box;
 
 		div.no-results {
-			height: 10vh;
+			height: 14vh;
 		}
 
 		div.header {
@@ -66,16 +66,14 @@
 					display: flex;
 					align-items: center;
 					position: relative;
-					width: 100%;
+					justify-content: space-evenly;
+					width: 85%;
 					height: 57px;
 					cursor: pointer;
 					box-sizing: border-box;
 
 					div.results-table-head-col {
-						margin-left: 29px;
-						width: 200px;
-						flex: 1;
-
+						width: 25%;
 						&.Sensor {
 							margin-left: 77px;
 						}
@@ -94,12 +92,11 @@
 						}
 					}
 					.Sensor {
-						margin-left: 33px !important;
+						margin-left: -45px !important;
 					}
 
 					.Type {
 						margin-right: 10px !important;
-						padding-left: 8px;
 					}
 				}
 			}
@@ -108,8 +105,8 @@
 		div.results-table-body {
 			display: block;
 			overflow-y: auto;
-			height: 80vh;
-			direction: rtl; // to flip the scrollbar location
+			height: 63vh;
+			direction: ltr; // to flip the scrollbar location
 
 			div.results-table-body-row-data:hover {
 				background-color: @background-color-7;
@@ -125,7 +122,8 @@
 
 			div.results-table-body-row {
 				display: block;
-				margin-left: 16px;
+				margin-right: 16px;
+				text-align: center;
 				transition: background .3s, color .3s;
 				overflow: hidden;
 				height: 10%;
@@ -171,7 +169,12 @@
 					height: 100%;
 
 					div.overlay-type {
-						margin-left: 30px;
+
+					}
+
+					div.overlay-favorite {
+						margin-right: 0;
+						min-width: 24px;
 					}
 
 					hr {
@@ -190,16 +193,14 @@
 					}
 
 					div.source-type {
-						margin-left: 34px;
 						overflow: hidden;
 						text-overflow: ellipsis;
 					}
 
 					div.results-table-date-col {
-						flex: 1.5;
+						flex: 2;
 						overflow: hidden;
 						text-overflow: ellipsis;
-						margin-left: 10px
 					}
 
 					.results-table-auto-save-col {
@@ -247,7 +248,7 @@
 				}
 			}
 			div.results-table-body {
-				direction: ltr;
+				direction: rtl;
 				div.results-table-body-row {
 					direction: rtl;
 					margin-left: unset;

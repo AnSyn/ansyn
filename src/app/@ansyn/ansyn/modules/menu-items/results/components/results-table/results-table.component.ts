@@ -58,6 +58,12 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	pagination = 15;
 	tableHeaders: ITableHeader[] = [
 		{
+			headerName: 'Resolution',
+			headerData: 'resolution',
+			isDescending: true,
+			sortFn: (a: number, b: number) => a - b
+		},
+		{
 			headerName: 'Type',
 			headerData: 'icon',
 			isDescending: true,

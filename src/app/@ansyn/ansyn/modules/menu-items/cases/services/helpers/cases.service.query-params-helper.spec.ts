@@ -10,13 +10,6 @@ import { throwError } from 'rxjs';
 import { CoreConfig } from '../../../../core/models/core.config';
 import { ErrorHandlerService } from '../../../../core/services/error-handler.service';
 import { StorageService } from '../../../../core/services/storage/storage.service';
-import {
-	ICase,
-	ICaseFacetsState,
-	ICompressedCaseFacetsState,
-	ICompressedCaseMapsState,
-	IDilutedCaseMapsState
-} from '../../models/case.model';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 describe('CasesService', () => {

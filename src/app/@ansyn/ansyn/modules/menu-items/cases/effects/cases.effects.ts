@@ -120,7 +120,7 @@ export class CasesEffects {
 			switchMap((action: LoadCaseAction) => this.casesService.loadCase(action.payload)),
 			concatMap((dilutedCase) => [new SelectDilutedCaseAction(dilutedCase),
 				new LoadCasesAction(CasesType.MyCases),
-				new LoadCaseAction(CasesType.MySharedCases)]),
+				new LoadCasesAction(CasesType.MySharedCases)]),
 			catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load case')),
 			catchError(() => of(new LoadDefaultCaseAction()))
 		);

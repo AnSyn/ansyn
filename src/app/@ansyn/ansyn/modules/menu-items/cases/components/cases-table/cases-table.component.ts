@@ -40,8 +40,6 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 		pluck<ICaseModal, string>('id')
 	);
 
-	selectedCaseId: string;
-
 	constructor(
 		protected store$: Store<ICasesState>
 	) {

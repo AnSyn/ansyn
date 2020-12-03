@@ -1,4 +1,4 @@
-<div class=" table my-cases">
+<div class="table my-cases" [ngClass]="sharedCasesObj?.ids?.length? 'two-table' : 'one-table'">
 	<h3>{{'My Cases' | translate}}</h3>
 	<ansyn-cases-table *ngIf="myCasesData"
 					   [cases]="myCasesData"
@@ -24,7 +24,7 @@
 	</ansyn-cases-table>
 </div>
 
-<div class="table shared-cases" *ngIf="sharedCasesObj.ids.length">
+<div class="table shared-cases two-table" *ngIf="sharedCasesObj?.ids?.length">
 	<h3>{{'Shared Cases' | translate}}</h3>
 	<ansyn-cases-table
 		[cases]="sharedCasesObj"

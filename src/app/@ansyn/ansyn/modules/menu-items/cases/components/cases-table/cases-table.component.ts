@@ -1,13 +1,22 @@
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, TemplateRef, ContentChild } from '@angular/core';
+import {
+	Component,
+	ContentChild,
+	ElementRef,
+	EventEmitter,
+	Input,
+	OnDestroy,
+	OnInit,
+	Output,
+	TemplateRef,
+	ViewChild
+} from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { ICaseModal, ICasesState, selectModalState, } from '../../reducers/cases.reducer';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, pluck } from 'rxjs/operators';
-import { ICasePreview } from '../../models/case.model';
-import { EntityState, Dictionary } from '@ngrx/entity';
-import { OpenModalAction, CopyCaseLinkAction, LoadCaseAction } from '../../actions/cases.actions';
+import { LoadCaseAction } from '../../actions/cases.actions';
 import { ICaseTableData } from '../../models/cases-config';
 
 const animations: any[] = [
@@ -33,7 +42,7 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 	@Output() onInfintyScroll = new EventEmitter();
 	@Output() onHoverCaseRow = new EventEmitter<string>();
 
-	@ContentChild('menuItem', {static: false}) menuItemRef: TemplateRef<any>;
+	@ContentChild('menuItem', { static: false }) menuItemRef: TemplateRef<any>;
 	modalCaseId$: Observable<string> = this.store$.pipe(
 		select(selectModalState),
 		distinctUntilChanged(),

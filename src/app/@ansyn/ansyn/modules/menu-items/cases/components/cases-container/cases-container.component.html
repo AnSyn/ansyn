@@ -3,7 +3,7 @@
 	<ansyn-cases-table *ngIf="myCasesData"
 					   [cases]="myCasesData"
 					   (onInfintyScroll)="loadMyCases()"
-					   (onHoverCaseRow)="hoverCaseId = $event">
+					   (onRowHover)="hoverCaseId = $event">
 		<ng-template let-menuItem #menuItem>
 			<button (click)="removeCase()"
 					[attr.tooltip-value]="'Remove' | translate"
@@ -29,7 +29,7 @@
 	<ansyn-cases-table
 		[cases]="sharedCasesObj"
 		(onInfintyScroll)="loadSharedCases()"
-		(onHoverCaseRow)="hoverCaseId = $event">
+		(onRowHover)="hoverCaseId = $event">
 		<ng-template let-menuItem #menuItem>
 			<button (click)="removeCase()"
 					[attr.tooltip-value]="'Remove' | translate"

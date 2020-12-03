@@ -40,7 +40,7 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 	@ViewChild('tbodyElement') tbodyElement: ElementRef;
 	@Input() cases: ICaseTableData;
 	@Output() onInfintyScroll = new EventEmitter();
-	@Output() onHoverCaseRow = new EventEmitter<string>();
+	@Output() onRowHover = new EventEmitter<string>();
 
 	@ContentChild('menuItem', { static: false }) menuItemRef: TemplateRef<any>;
 	modalCaseId$: Observable<string> = this.store$.pipe(
@@ -68,12 +68,12 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 	}
 
 	onMouseEnterCaseRow(caseRow: HTMLDivElement, caseId: string) {
-		this.onHoverCaseRow.emit(caseId);
+		this.onRowHover.emit(caseId);
 		caseRow.classList.add('mouse-enter');
 	}
 
 	onMouseLeaveCaseRow(caseRow: HTMLDivElement) {
-		this.onHoverCaseRow.emit(undefined);
+		this.onRowHover.emit(undefined);
 		caseRow.classList.remove('mouse-enter');
 	}
 

@@ -4,6 +4,7 @@ import { EventEmitter } from '@angular/core';
 import { Actions } from '@ngrx/effects';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { MockComponent } from '../../../../../../ansyn/modules/core/test/mock-component';
+import { TranslateService } from '@ngx-translate/core';
 
 describe('AnnotationContextMenuComponent', () => {
 	let component: AnnotationContextMenuComponent;
@@ -17,7 +18,8 @@ describe('AnnotationContextMenuComponent', () => {
 		TestBed.configureTestingModule({
 			providers: [
 				ImageryCommunicatorService,
-				{ provide: Actions, useValue: new EventEmitter() }
+				{ provide: Actions, useValue: new EventEmitter() },
+				{ provide: TranslateService, useValue: { instant: (x) => x } }
 			],
 			declarations: [
 				AnnotationContextMenuComponent,

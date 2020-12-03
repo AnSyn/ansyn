@@ -3,10 +3,16 @@ import { LayersManagerComponent } from './layers-manager.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from '../../reducers/layers.reducer';
 import { of } from 'rxjs';
+import { MockComponent } from '../../../../core/test/mock-component';
+import { MockPipe } from '../../../../core/test/mock-pipe';
+import { TranslateService } from '@ngx-translate/core';
 
 describe('LayersManagerComponent', () => {
 	let component: LayersManagerComponent;
 	let fixture: ComponentFixture<LayersManagerComponent>;
+	const mockModals = MockComponent({ selector: 'ansyn-data-layers-modals', inputs: [] });
+	const mockCollection = MockComponent({ selector: 'ansyn-layer-collection', inputs: ['collection'] });
+	const mockTranslatePipe = MockPipe('translate');
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -15,7 +21,15 @@ describe('LayersManagerComponent', () => {
 					[layersFeatureKey]: LayersReducer
 				})
 			],
-			providers: []
+			declarations: [
+				LayersManagerComponent,
+				mockModals,
+				mockCollection,
+				mockTranslatePipe
+			],
+			providers: [
+				{ provide: TranslateService, useValue: { instant: (x) => x } }
+			]
 		})
 			.compileComponents();
 	}));

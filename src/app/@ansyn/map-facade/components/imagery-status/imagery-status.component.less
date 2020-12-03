@@ -3,6 +3,8 @@
 @import 'ansyn/less/globals';
 @import 'ansyn/less/common';
 
+@button-margin: 6px;
+
 /deep/ .render {
 	display: flex;
 	align-items: center;
@@ -52,7 +54,7 @@
 				display: flex;
 				align-items: center;
 				z-index: 1;
-				margin-left: 6px;
+				margin-left: @button-margin;
 
 
 				&:hover:not(:disabled) {
@@ -75,6 +77,13 @@
 				}
 			}
 
+		}
+
+		&.rtl {
+			button.small-icon-button {
+				margin-left: unset;
+				margin-right: @button-margin;
+			}
 		}
 	}
 

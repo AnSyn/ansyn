@@ -6,6 +6,8 @@ import { MockComponent } from '../../../../core/test/mock-component';
 import { StoreModule } from '@ngrx/store';
 import { overlayStatusConfig } from '../../config/overlay-status-config';
 import { overlayStatusFeatureKey, OverlayStatusReducer } from '../../reducers/overlay-status.reducer';
+import { TranslateService } from '@ngx-translate/core';
+import { of } from 'rxjs';
 
 const mockInputRange = MockComponent({
 	selector: 'input[input_range]',
@@ -32,7 +34,15 @@ describe('ImageProcessingControlComponent', () => {
 					provide: overlayStatusConfig,
 					useValue: {
 						ImageProcParams: []
-					} }
+					}
+				},
+				{
+					provide: TranslateService,
+					useValue: {
+						instant: (x) => x,
+						get: (x) => of(x)
+					}
+				}
 			]
 		})
 			.compileComponents();

@@ -1,4 +1,4 @@
-<div class="color-picker-item">
+<div class="color-picker-item" [class.rtl]="'rtl' === ('direction' | translate)">
 	<input
 		[id]="id"
 		[disabled]="!active"

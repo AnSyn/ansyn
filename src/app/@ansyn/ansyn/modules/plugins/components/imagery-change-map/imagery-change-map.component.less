@@ -1,20 +1,16 @@
 @import "ansyn/less/common";
 @import "ansyn/less/z-index-globals";
 
+@margin: 50px;
+
 :host {
 	position: relative;
 	background-color: rgba(0, 0, 0, 0.3);
 	color: white;
-	left: 20px;
 	width: 40px;
 	margin-bottom: 5px;
 
 	.buttons {
-		line-height: 0;
-		left: 5px;
-		top: 6px;
-		padding: 4px;
-
 		&:hover:not(.active):not(.disabled) {
 			background: rgba(0, 0, 0, 0.5);
 		}
@@ -30,27 +26,20 @@
 		}
 
 		button {
-			position: relative;
-			padding: 4px 6px;
-			vertical-align: middle;
 			color: white;
-			line-height: 0;
 
 			&.small-icon-button {
 				font-size: 17px;
 				background: transparent;
 				border: none;
 				outline: none;
-				padding: 4px 7px;
 				align-items: center;
 				z-index: 1;
-				height: 25px;
-
+				height: 33px;
 			}
 
 			.icon::before {
 				font-size: 18px;
-				vertical-align: middle;
 				display: block;
 			}
 		}
@@ -64,7 +53,7 @@
 		width: 250px;
 		height: 200px;
 		top: 0;
-		right: 50px;
+		right: @margin;
 		background-color: @background-color-1;
 		overflow-y: auto;
 
@@ -106,6 +95,13 @@
 					cursor: default;
 				}
 			}
+		}
+	}
+
+	&.rtl {
+		.popup {
+			right: unset;
+			left: @margin;
 		}
 	}
 }

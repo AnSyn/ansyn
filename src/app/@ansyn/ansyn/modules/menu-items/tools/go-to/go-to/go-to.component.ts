@@ -22,6 +22,7 @@ import {
 import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
 import { copyFromContent } from '@ansyn/map-facade';
 import { SubMenuEnum, toolsFlags } from '../../models/tools.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-go-to',
@@ -85,10 +86,16 @@ export class GoToComponent implements OnInit {
 
 	pinLocationMode: boolean;
 
-	constructor(protected store$: Store<IToolsState>,
-				@Inject(toolsConfig) protected config: IToolsConfig,
-				@Inject(mapFacadeConfig) protected mapfacadeConfig: IMapFacadeConfig,
-				protected projectionConverterService: ProjectionConverterService) {
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
+	constructor(
+		protected store$: Store<IToolsState>,
+		@Inject(toolsConfig) protected config: IToolsConfig,
+		@Inject(mapFacadeConfig) protected mapfacadeConfig: IMapFacadeConfig,
+		protected projectionConverterService: ProjectionConverterService,
+		protected translateService: TranslateService
+	) {
 	}
 
 	initInputs() {

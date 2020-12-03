@@ -38,15 +38,17 @@
 			icon="icon icon-status-bar-time"
 			class="button">
 
-		<span #timePickerTitleFrom
+		<span class="time-range">
+			<span #timePickerTitleFrom
 			  contenteditable
 			  [class.error]="timeError?.from"
 			  class="title">{{timeSelectionTitle?.from}}</span>
-		{{'&nbsp;&nbsp;-&nbsp;&nbsp;'}}
-		<span #timePickerTitleTo
-			  contenteditable
-			  [class.error]="timeError?.to"
-			  class="title">{{timeSelectionTitle?.to}}</span>
+			{{'&nbsp;&nbsp;-&nbsp;&nbsp;'}}
+			<span #timePickerTitleTo
+				  contenteditable
+				  [class.error]="timeError?.to"
+				  class="title">{{timeSelectionTitle?.to}}</span>
+			</span>
 	</button>
 
 	<ansyn-timepicker-presets *ngIf="isActive('TimePickerPreset')"

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostBinding, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import * as momentNs from 'moment';
 import { IStatusBarConfig } from '../../models/statusBar-config.model';
 import { IStatusBarState, selectGeoFilterActive, selectGeoFilterType } from '../../reducers/status-bar.reducer';
@@ -36,6 +36,7 @@ import {
 } from '../../../overlays/actions/overlays.actions';
 import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
 import { toastMessages } from '../../../core/models/toast-messages';
+import { TranslateService } from '@ngx-translate/core';
 
 const moment = momentNs;
 
@@ -128,11 +129,15 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		})
 	);
 
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
 	constructor(protected store$: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 				@Inject(MultipleOverlaysSourceConfig) private multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				@Inject(COMPONENT_MODE) public componentMode: boolean,
-				dateTimeAdapter: DateTimeAdapter<any>
+				dateTimeAdapter: DateTimeAdapter<any>,
+				private translateService: TranslateService
 	) {
 		dateTimeAdapter.setLocale(statusBarConfig.locale);
 	}

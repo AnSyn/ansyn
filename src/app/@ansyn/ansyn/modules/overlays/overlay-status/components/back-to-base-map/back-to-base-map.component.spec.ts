@@ -14,10 +14,12 @@ describe('BackToBaseMapComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [BackToBaseMapComponent],
-			imports: [StoreModule.forRoot({
-				[mapFeatureKey]: MapReducer
-			}),
-				TranslateModule]
+			imports: [
+				StoreModule.forRoot({
+					[mapFeatureKey]: MapReducer
+				}),
+				TranslateModule.forRoot()
+			]
 		})
 			.compileComponents();
 	}));

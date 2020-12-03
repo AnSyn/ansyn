@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { groupBy } from 'lodash';
@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { ILayerCollection } from '../layers-collection/layer-collection.component';
 import { ILayer, LayerType } from '../../models/layers.model';
 import { ILayerState, selectLayers } from '../../reducers/layers.reducer';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-layer-managers',
@@ -29,7 +30,13 @@ export class LayersManagerComponent {
 			})
 		);
 
-	constructor(protected store: Store<ILayerState>) {
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
+	constructor(
+		protected store: Store<ILayerState>,
+		protected translateService: TranslateService
+	) {
 	}
 
 }

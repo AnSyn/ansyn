@@ -117,8 +117,16 @@ export interface IOverlaysCriteria {
 	time?: ICaseTimeState;
 	region?: CaseRegionState;
 	dataInputFilters?: ICaseDataInputFiltersState;
+	resolution?: IResolutionRange;
+	sensors?: string[];
+	types?: string[];
+	registeration?: string[];
 }
 
+export interface IResolutionRange {
+	lowValue: number;
+	highValue: number;
+}
 export interface IOverlaysCriteriaOptions {
 	noInitialSearch?: boolean;
 }

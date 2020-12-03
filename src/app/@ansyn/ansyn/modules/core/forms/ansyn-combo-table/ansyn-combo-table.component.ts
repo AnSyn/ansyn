@@ -1,4 +1,4 @@
-import { Component, ElementRef, forwardRef, Injector, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, forwardRef, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
 
@@ -28,14 +28,15 @@ export class AnsynComboTableComponent implements ControlValueAccessor {
 	@Input() withArrow = true;
 	@Input() alwaysChange: boolean;
   @Input() buttonClass: string;
-	@Input() isLine: boolean;
+  @Input() isLine: boolean;
+  @Input() contentTitle: string;
   
-
 	@Input() placeholder: string;
 	@Input() required: boolean;
 	optionsVisible = true;
 	renderSelected = '';
   
+  @Output() selectedItemsArray = new EventEmitter<any[]>();
   // get optionsTrigger(): ElementRef {
 	// 	return this.trigger && this.trigger.optionsTrigger;
   // }
@@ -50,13 +51,12 @@ export class AnsynComboTableComponent implements ControlValueAccessor {
   }
 
   selectOption(selected) {
-    console.log('select')
 		if (this.selected.includes(selected)) {
 			this.selected.splice(this.selected.indexOf(selected),1);
     } else {
       this.selected.push(selected);
     }
-    console.log(this.selected)
+    this.selectedItemsArray.emit(this.selected)
   }
   
   // onBlurOptionsContainer($event: FocusEvent) {
@@ -80,7 +80,7 @@ export class AnsynComboTableComponent implements ControlValueAccessor {
   writeValue(value: any): void {
 		if (!this.selected.includes(value)) {
 			this.selected.push(value);
-		}
+    }
   }
 
   

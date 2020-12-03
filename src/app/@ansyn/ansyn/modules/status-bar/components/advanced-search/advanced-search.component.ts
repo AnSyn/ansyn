@@ -1,12 +1,12 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { flattenDeep } from 'lodash';
 import { IMultipleOverlaysSourceConfig, IOverlaysSourceProvider, MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
-import { IFiltersConfig } from '../../../filters/models/filters-config';
 import { IFiltersState } from '../../../filters/reducer/filters.reducer';
-import { filtersConfig } from '../../../filters/services/filters.service';
 import { Options } from '@angular-slider/ngx-slider'
+import { GeoRegisteration, IOverlaysCriteria, IResolutionRange } from '../../../overlays/models/overlay.model';
+import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 @Component({
   selector: 'ansyn-advanced-search',
   templateUrl: './advanced-search.component.html',
@@ -38,8 +38,12 @@ export class AdvancedSearchComponent implements OnInit {
   sensorTypes: any[];
   dataFilters: any[];
   sensorsList: any[];
-  isGeoRegistered: any[] = ['Geo Registered','Not Geo Registered']
+  isGeoRegistered: any[] = Object.values(GeoRegisteration)
   
+  selectedTypes: any[];
+  selectedSensors: any[];
+  selectedRegistration: any[];
+
   constructor(protected store: Store<IFiltersState>,
               @Inject(MultipleOverlaysSourceConfig) public multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
               private translate: TranslateService) { 
@@ -50,7 +54,7 @@ export class AdvancedSearchComponent implements OnInit {
 
   getAllSensorsNames(): any[] {
     const sensors: any[] = [];
-    const dataInputs = Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
+    Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
 			.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive)
 			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
           if(sensorNamesByGroup) {
@@ -125,7 +129,34 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   search() {
-
+    const resolution: IResolutionRange = {
+      lowValue: this.minValue,
+      highValue: this.maxValue
+    }
+    const criteria: IOverlaysCriteria = {
+      types: this.selectedTypes,
+      sensors: this.selectedSensors,
+      registeration: this.selectedRegistration,
+      resolution
+    };
+    this.store.dispatch(new SetOverlaysCriteriaAction(criteria));
+      
   }
 
+  updateSelectedArray(selectedItemsArray,arrayToUpdate) {
+    switch (arrayToUpdate) {
+      case 'selectedTypes' : {
+        this.selectedTypes = selectedItemsArray;
+        break;
+      }
+      case 'selectedSensors' : {
+        this.selectedSensors = selectedItemsArray;
+        break;
+      }
+      case 'selectedRegistration' : {
+        this.selectedRegistration = selectedItemsArray;
+        break;
+      }
+    }
+  }
 }

@@ -144,9 +144,9 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	}
 
 	addShapeFileLayer(shpBuffer, dbfBuffer?) {
-		const shaFile = shp.parseShp(shpBuffer);
+		const shpFile = shp.parseShp(shpBuffer);
 		const dbfFile = Boolean(dbfBuffer) ? shp.parseDbf(dbfBuffer) : [];
-		return shp.combine([shaFile, dbfFile]);
+		return shp.combine([shpFile, dbfFile]);
 	}
 
 	generateFeatureCollection(layerData, layerName) {

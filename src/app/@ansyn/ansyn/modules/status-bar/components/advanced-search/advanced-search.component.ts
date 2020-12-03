@@ -40,9 +40,9 @@ export class AdvancedSearchComponent implements OnInit {
   sensorsList: any[];
   isGeoRegistered: any[] = Object.values(GeoRegisteration)
   
-  selectedTypes: any[];
-  selectedSensors: any[];
-  selectedRegistration: any[];
+  selectedTypes: any[] = [];
+  selectedSensors: any[] = [];
+  selectedRegistration: any[] = [];
 
   constructor(protected store: Store<IFiltersState>,
               @Inject(MultipleOverlaysSourceConfig) public multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
@@ -124,9 +124,6 @@ export class AdvancedSearchComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  typeChanged(type) {
-    //dispacth action that inform the type changed
-  }
 
   search() {
     const resolution: IResolutionRange = {
@@ -139,7 +136,7 @@ export class AdvancedSearchComponent implements OnInit {
       registeration: this.selectedRegistration,
       resolution
     };
-    this.store.dispatch(new SetOverlaysCriteriaAction(criteria));
+    // this.store.dispatch(new SetOverlaysCriteriaAction(criteria));
       
   }
 
@@ -155,6 +152,19 @@ export class AdvancedSearchComponent implements OnInit {
       }
       case 'selectedRegistration' : {
         this.selectedRegistration = selectedItemsArray;
+        break;
+      }
+    }
+  }
+
+  selecAll(selectedArrayToFill) {
+    switch (selectedArrayToFill) {
+      case 'types' : {
+        this.selectedTypes = this.sensorTypes;
+        break;
+      }
+      case 'sensors' : {
+        this.selectedTypes = this.sensorsList;
         break;
       }
     }

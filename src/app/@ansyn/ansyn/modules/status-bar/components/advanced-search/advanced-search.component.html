@@ -1,7 +1,7 @@
 <div class="box item1 " id="dataInputsPreSearch">
     <div class="title-grid">
         <div class="item1-title">
-            <div class="select-all">{{'select all' | translate}}</div>
+            <div class="select-all" (click)="selecAll('types')">{{'select all' | translate}}</div>
             <div class="reset">-></div>
         </div>
         <div class="title item2-title">{{'Type' | translate}}</div>
@@ -14,7 +14,6 @@
     comboTableToolTipDescription="blah blah"
     contentTitle="types"
 	(ngModel)="sensorTypes"
-    (ngModelChange)="typeChanged($event)"
     (selectedItemsArray)="updateSelectedArray($event,'selectedTypes')"
     >
         <ansyn-combo-table-option  *ngFor="let type of sensorTypes" [value]="type" [isLine]="false">
@@ -37,7 +36,6 @@
     comboTableToolTipDescription="blah blah"
     contentTitle="registeration"
 	(ngModel)="isGeoRegistered"
-    (ngModelChange)="typeChanged($event)"
     (selectedItemsArray)="updateSelectedArray($event,'selectedRegistration')"
     >
         <ansyn-combo-table-option class="display-full-name" *ngFor="let GeoRegistered of isGeoRegistered" [value]="GeoRegistered" [isLine]="true">
@@ -48,7 +46,7 @@
 <div class="box item3" id="dataInputsPreSearch">
     <div class="title-grid">
         <div class="item1-title">
-            <div class="select-all">{{'select all' | translate}}</div>
+            <div class="select-all" (click)="selecAll('sensors')">{{'select all' | translate}}</div>
             <div class="reset">-></div>
         </div>
         <div class="title item2-title">{{'Sensor' | translate}}</div>
@@ -62,7 +60,6 @@
     comboTableToolTipDescription="blah blah"
     contentTitle="sensors"
 	(ngModel)="sensorsList"
-    (ngModelChange)="typeChanged($event)"
     (selectedItemsArray)="updateSelectedArray($event,'selectedSensors')"
     >
         <ansyn-combo-table-option *ngFor="let type of sensorsList" [value]="type" [isLine]="false">

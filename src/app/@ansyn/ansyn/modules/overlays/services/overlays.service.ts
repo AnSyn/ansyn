@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
 import { IOverlayDropSources, ITimelineRange, selectOverlaysMap } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
-import { unionBy, findKey } from 'lodash';
+import { findKey, intersection } from 'lodash';
 import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs/operators';
@@ -74,7 +74,10 @@ export class OverlaysService {
 	}
 
 	static parseOverlayDataForDisplay({ overlaysArray, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites }: IOverlayDropSources): IOverlayDrop[] {
-		const criteriaOverlays: IOverlay[] = showOnlyFavorites ? [] : overlaysArray.filter(({ id }) => filteredOverlays.includes(id));
+		let criteriaOverlays: IOverlay[] = overlaysArray.filter(({ id }) => filteredOverlays.includes(id));
+		if (showOnlyFavorites) {
+			criteriaOverlays = intersection(criteriaOverlays, favoriteOverlays);
+		}
 		const favoriteOverlayIds: string[] = favoriteOverlays.map(({ id }) => id);
 		const dropsFromOverlays: IOverlayDrop[] = criteriaOverlays.map(({ id, date, sensorName, icon, resolution }) => ({
 			id,

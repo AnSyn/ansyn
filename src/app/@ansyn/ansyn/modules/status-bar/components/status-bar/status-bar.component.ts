@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -7,7 +8,11 @@ import { Component } from '@angular/core';
 })
 
 export class StatusBarComponent {
-	constructor() {
+
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
+	constructor(private translateService: TranslateService) {
 	}
 
 }

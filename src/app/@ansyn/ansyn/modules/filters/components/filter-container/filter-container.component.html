@@ -1,8 +1,8 @@
-<div class="container" *ngIf="!metadataFromState?.shouldBeHidden()">
+<div class="container" *ngIf="!metadataFromState?.shouldBeHidden()" [class.rtl]="isRTL">
 
 	<div class="title-row">
 
-		<div class="filter-title" [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''">
+		<div class="filter-title">
 			<span class="title" [class.title-disabled]="showOnlyFavorite">{{ filter.displayName | translate }}</span>
 
 			<span
@@ -32,31 +32,35 @@
 					[metadata]="metadataFromState"
 					[counters]="filterCountersFromState"
 					[filtersSearchResult]="filtersSearchResults[filter.displayName]"
-					(onMetadataChange)="onMetadataChange($event)">
-				</ansyn-enum-filter-container>
+					(onMetadataChange)="onMetadataChange($event)"
+					[isRTL]="isRTL"
+				></ansyn-enum-filter-container>
 
 				<ansyn-slider-filter-container
 					*ngSwitchCase="'Slider'"
 					[metadata]="metadataFromState"
 					[counters]="filterCountersFromState"
-					(onMetadataChange)="onMetadataChange($event)">
-				</ansyn-slider-filter-container>
+					(onMetadataChange)="onMetadataChange($event)"
+					[isRTL]="isRTL"
+				></ansyn-slider-filter-container>
 
 				<ansyn-boolean-filter-container
 					*ngSwitchCase="'Boolean'"
 					[metadata]="metadataFromState"
 					[counters]="filterCountersFromState"
 					[customData]="filter.customData"
-					(onMetadataChange)="onMetadataChange($event)">
-				</ansyn-boolean-filter-container>
+					(onMetadataChange)="onMetadataChange($event)"
+					[isRTL]="isRTL"
+				></ansyn-boolean-filter-container>
 
 				<ansyn-array-filter-container
 					*ngSwitchCase="'Array'"
 					[metadata]="metadataFromState"
 					[counters]="filterCountersFromState"
 					(onMetadataChange)="onMetadataChange($event)"
-					[filtersSearchResult]="filtersSearchResults[filter.displayName]">
-				</ansyn-array-filter-container>
+					[filtersSearchResult]="filtersSearchResults[filter.displayName]"
+					[isRTL]="isRTL"
+				></ansyn-array-filter-container>
 			</div>
 			<ng-template #noResult>
 				<span class="field-name">{{'No Results' | translate }}</span>

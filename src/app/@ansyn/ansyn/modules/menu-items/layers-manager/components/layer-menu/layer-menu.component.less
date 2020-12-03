@@ -16,6 +16,7 @@
 	pointer-events: none;
 	position: fixed;
 	right: 0;
+
 	button {
 		background: transparent;
 		border: 1px solid transparent;
@@ -29,5 +30,10 @@
 			box-sizing: border-box;
 			border: 1px solid #7b7b7b;
 		}
+	}
+
+	&.rtl {
+		right: unset;
+		left: 0;
 	}
 }

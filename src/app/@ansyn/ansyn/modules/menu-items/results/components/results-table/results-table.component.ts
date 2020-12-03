@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Observable, fromEvent } from 'rxjs';
 import { IOverlayDrop } from '../../../../overlays/models/overlay.model';
@@ -127,6 +127,8 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			})
 		);
 
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
 
 	constructor(
 		protected store$: Store<IOverlaysState>,

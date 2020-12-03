@@ -5,25 +5,37 @@
 	position: relative;
 	height: 30px;
 	width: 100%;
-}
 
-button.back {
-	position: absolute;
-	left: 18px;
-	font-size: 20px;
-	margin-top: -4px;
-	color: white;
-	background-color: transparent;
-	border: none;
-	outline: none;
-	transition: .2s;
+	button.back {
+		position: absolute;
+		left: 18px;
+		font-size: 20px;
+		margin-top: -4px;
+		color: white;
+		background-color: transparent;
+		border: none;
+		outline: none;
+		transition: .2s;
 
-	&:hover {
-		color: @application-contrast-color;
-		left: 14px;
+		&:hover {
+			color: @application-contrast-color;
+			left: 14px;
+		}
+
+		&:active {
+			color: white;
+		}
 	}
 
-	&:active {
-		color: white;
+	&.rtl {
+		button.back {
+			left: unset;
+			right: 18px;
+
+			&:hover {
+				left: unset;
+				right: 14px;
+			}
+		}
 	}
 }

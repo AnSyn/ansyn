@@ -1,14 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AnsynModalComponent } from './ansyn-modal.component';
+import { MockPipe } from '../../test/mock-pipe';
 
 describe('AnsynModalComponent', () => {
 	let component: AnsynModalComponent;
 	let fixture: ComponentFixture<AnsynModalComponent>;
+	const mockTranslatePipe = MockPipe('translate');
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [AnsynModalComponent]
+			declarations: [
+				AnsynModalComponent,
+				mockTranslatePipe
+			]
 		})
 			.compileComponents();
 	}));

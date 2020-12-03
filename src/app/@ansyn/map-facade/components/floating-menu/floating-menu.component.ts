@@ -1,6 +1,7 @@
 import { Component, HostBinding, Inject, Input, OnInit } from '@angular/core';
 import { IMapSettings } from '@ansyn/imagery';
 import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../models/entry-components-provider';
+import { TranslateService } from '@ngx-translate/core';
 export const floationMenuClassNameForExport = 'floating-menu';
 
 @Component({
@@ -18,7 +19,13 @@ export class FloatingMenuComponent implements OnInit {
 		return this.isMinimalistViewMode;
 	}
 
-	constructor(@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities) {
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
+	constructor(
+		@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities,
+		protected translateService: TranslateService
+	) {
 	}
 
 	ngOnInit() {

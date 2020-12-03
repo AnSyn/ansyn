@@ -3,7 +3,7 @@
 :host {
 	margin-right: 5px;
 	display: flex;
-	padding: 4px 0px;
+	padding: 4px 0;
 
 	&.disabled {
 		opacity: 0.5;
@@ -60,6 +60,22 @@
 			overflow: hidden;
 			display: inline-block;
 			max-width: 100%;
+		}
+	}
+
+	&.rtl {
+		margin-right: unset;
+		margin-left: 5px;
+
+		input:checked + label {
+			&:after {
+				left: unset;
+				right: 2px;
+			}
+		}
+		div.ansyn-checkbox-text {
+			margin-left: unset;
+			margin-right: 5px;
 		}
 	}
 }

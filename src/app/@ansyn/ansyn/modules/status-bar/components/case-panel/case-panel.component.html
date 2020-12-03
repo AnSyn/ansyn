@@ -1,4 +1,4 @@
-<div *ngIf="!componentMode" class="rows">
+<div *ngIf="!componentMode" class="rows" [class.rtl]="isRTL">
 	<div class="row top">
 	<span [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''" [attr.tooltip-value]="selectedCaseName$ | async"
 		  tooltip-class="bottom">
@@ -14,7 +14,7 @@
 		</div>
 		<div class="share" (click)="copyLink()"
 			 [attr.tooltip-value]="statusBarConfig?.toolTips?.share | translate"
-			 tooltip-class="bottom-left">
+			 [attr.tooltip-class]="isRTL ? 'bottom-right' : 'bottom-left'">
 			<i class="icon-share"></i>
 			<span>{{'Share' | translate}}</span>
 		</div>

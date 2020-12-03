@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -6,6 +6,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectSelectedLayersIds } from '../../reducers/layers.reducer';
 import { ILayer } from '../../models/layers.model';
 import { SelectOnlyLayer, SetLayerSelection } from '../../actions/layers.actions';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-layer',
@@ -28,7 +29,13 @@ export class LayerComponent implements OnInit, OnDestroy {
 			tap(selectedLayersIds => this.isChecked = selectedLayersIds.includes(this.layer && this.layer.id))
 		);
 
-	constructor(protected store$: Store<any>) {
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
+	constructor(
+		protected store$: Store<any>,
+		protected translateService: TranslateService
+	) {
 	}
 
 	ngOnInit() {

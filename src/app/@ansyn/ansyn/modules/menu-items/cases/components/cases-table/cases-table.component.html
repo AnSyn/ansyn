@@ -1,5 +1,4 @@
-<div class="cases-table" *ngIf="ids$ | async as ids; else noCases">
-
+<div class="cases-table" *ngIf="ids$ | async as ids; else noCases" [class.rtl]="'rtl' === ('direction' | translate)">
 
 	<div class="cases-table-head">
 		<div class="cases-table-head-row">

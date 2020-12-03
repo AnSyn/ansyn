@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
@@ -10,6 +10,7 @@ import {
 } from "../../reducers/overlay-status.reducer";
 import { LogManualImageProcessing, SetManualImageProcessing } from '../../actions/overlay-status.actions';
 import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from "../../config/overlay-status-config";
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-image-processing-control',
@@ -17,6 +18,9 @@ import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from "../.
 	styleUrls: ['./image-processing-control.component.less']
 })
 export class ImageProcessingControlComponent implements OnInit, OnDestroy {
+
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
 
 	private subscriptions: Subscription[] = [];
 
@@ -39,8 +43,11 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 
 	imageManualProcessArgs: IImageManualProcessArgs = this.defaultImageManualProcessArgs;
 
-
-	constructor(public store$: Store<IImageProcessState>, @Inject(overlayStatusConfig) protected config: IOverlayStatusConfig) {
+	constructor(
+		public store$: Store<IImageProcessState>,
+		@Inject(overlayStatusConfig) protected config: IOverlayStatusConfig,
+		private translateService: TranslateService
+	) {
 	}
 
 	resetOne(paramToReset) {

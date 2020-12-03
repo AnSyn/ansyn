@@ -5,10 +5,10 @@ import {
 	selectFiltersMetadata,
 	selectShowOnlyFavorites
 } from '../../../filters/reducer/filters.reducer';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { LogOpenFilterPopup, UpdateFacetsAction } from '../../../filters/actions/filters.actions';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
-import { tap, filter, withLatestFrom } from 'rxjs/operators';
+import { tap, filter, withLatestFrom, shareReplay } from 'rxjs/operators';
 import { ClickOutsideService } from '../../../core/click-outside/click-outside.service';
 import { EnumFilterMetadata } from '../../../filters/models/metadata/enum-filter-metadata';
 import { IFilter } from '../../../filters/models/IFilter';
@@ -36,6 +36,7 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 	filtersMap: {[filterName: string]: {active: boolean, title: string}} = {};
 	onlyFavorite: boolean;
 	disableOnlyFavoritesButton: boolean;
+	selectFiltersMetadata$ = this.store.pipe(select(selectFiltersMetadata));
 
 	@AutoSubscription
 	onlyFavorite$ = this.store.select(selectShowOnlyFavorites).pipe(
@@ -48,7 +49,13 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	updateFilters$ = this.store.select(selectFiltersMetadata).pipe(
+	resetFilterMapOnMetadateEmpty$ = this.selectFiltersMetadata$.pipe(
+		filter( filters => !filters || filters.size === 0),
+		tap( () => this.filtersMap = {})
+	);
+
+	@AutoSubscription
+	updateFilters$ = this.selectFiltersMetadata$.pipe(
 		filter(filters => filters && filters.size > 0 ),
 		withLatestFrom(this.store.select(selectFacets)),
 		tap(([filters, facets]: [Map<IFilter, FilterMetadata>, ICaseFacetsState]) => {

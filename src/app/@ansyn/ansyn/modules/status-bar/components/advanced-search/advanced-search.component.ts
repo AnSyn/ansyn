@@ -7,6 +7,7 @@ import { IFiltersState } from '../../../filters/reducer/filters.reducer';
 import { Options } from '@angular-slider/ngx-slider'
 import { GeoRegisteration, IOverlaysCriteria, IResolutionRange } from '../../../overlays/models/overlay.model';
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
+import { AnsynComboTableComponent } from '../../../core/forms/ansyn-combo-table/ansyn-combo-table.component';
 @Component({
   selector: 'ansyn-advanced-search',
   templateUrl: './advanced-search.component.html',
@@ -43,6 +44,10 @@ export class AdvancedSearchComponent implements OnInit {
   selectedTypes: any[] = [];
   selectedSensors: any[] = [];
   selectedRegistration: any[] = [];
+
+  @ViewChild('types') comboTableTypes:AnsynComboTableComponent;
+  @ViewChild('sensors') comboTableSensors:AnsynComboTableComponent;
+
 
   constructor(protected store: Store<IFiltersState>,
               @Inject(MultipleOverlaysSourceConfig) public multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
@@ -136,7 +141,7 @@ export class AdvancedSearchComponent implements OnInit {
       registeration: this.selectedRegistration,
       resolution
     };
-    // this.store.dispatch(new SetOverlaysCriteriaAction(criteria));
+    this.store.dispatch(new SetOverlaysCriteriaAction(criteria));
       
   }
 
@@ -157,16 +162,17 @@ export class AdvancedSearchComponent implements OnInit {
     }
   }
 
-  selecAll(selectedArrayToFill) {
+  selectAllItems(selectedArrayToFill) {
     switch (selectedArrayToFill) {
       case 'types' : {
-        this.selectedTypes = this.sensorTypes;
+        this.comboTableTypes.selectAllOptions(this.sensorTypes)
         break;
       }
       case 'sensors' : {
-        this.selectedTypes = this.sensorsList;
+        this.comboTableSensors.selectAllOptions(this.sensorsList);
         break;
       }
     }
   }
+  
 }

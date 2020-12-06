@@ -1,7 +1,7 @@
 <div class="box item1 " id="dataInputsPreSearch">
     <div class="title-grid">
         <div class="item1-title">
-            <div class="select-all" (click)="selecAll('types')">{{'select all' | translate}}</div>
+            <div class="select-all" (click)="selectAllItems('types')">{{'select all' | translate}}</div>
             <div class="reset">-></div>
         </div>
         <div class="title item2-title">{{'Type' | translate}}</div>
@@ -15,6 +15,7 @@
     contentTitle="types"
 	(ngModel)="sensorTypes"
     (selectedItemsArray)="updateSelectedArray($event,'selectedTypes')"
+    #types
     >
         <ansyn-combo-table-option  *ngFor="let type of sensorTypes" [value]="type" [isLine]="false">
         </ansyn-combo-table-option>
@@ -46,7 +47,7 @@
 <div class="box item3" id="dataInputsPreSearch">
     <div class="title-grid">
         <div class="item1-title">
-            <div class="select-all" (click)="selecAll('sensors')">{{'select all' | translate}}</div>
+            <div class="select-all" (click)="selectAllItems('sensors')">{{'select all' | translate}}</div>
             <div class="reset">-></div>
         </div>
         <div class="title item2-title">{{'Sensor' | translate}}</div>
@@ -61,6 +62,7 @@
     contentTitle="sensors"
 	(ngModel)="sensorsList"
     (selectedItemsArray)="updateSelectedArray($event,'selectedSensors')"
+    #sensors
     >
         <ansyn-combo-table-option *ngFor="let type of sensorsList" [value]="type" [isLine]="false">
         </ansyn-combo-table-option>

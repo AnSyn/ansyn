@@ -58,13 +58,13 @@ export class AnsynComboTableComponent implements ControlValueAccessor {
     }
     this.selectedItemsArray.emit(this.selected)
   }
-  
-  // onBlurOptionsContainer($event: FocusEvent) {
-	// 	if ($event.relatedTarget !== (this.optionsTrigger && this.optionsTrigger.nativeElement)) {
-	// 		this.close();
-	// 	}
-  // }
-  
+
+  selectAllOptions(allOptionsArray: any[]) {
+    console.log(this.contentTitle)
+    this.selected = allOptionsArray.slice();
+    this.selectedItemsArray.emit(this.selected)
+  }
+
   close() {
 		this.optionsVisible = false;
 	}

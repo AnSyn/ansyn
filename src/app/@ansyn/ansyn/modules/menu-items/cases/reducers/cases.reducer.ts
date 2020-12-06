@@ -1,4 +1,4 @@
-import { caseModalType, CasesActions, CasesActionTypes } from '../actions/cases.actions';
+import { caseModalType, CasesActions, CasesActionTypes, DeleteCaseAction } from '../actions/cases.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary } from '@ngrx/entity/src/models';
@@ -45,17 +45,17 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 			return casesAdapter.updateOne({ id: caseToUpdate.id, changes: caseToUpdate }, { ...state, selectedCase });
 		}
 
-		case CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS: {
+		case CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS || CasesActionTypes.UPDATE_CASE_BACKEND_SAVE_AS: {
 			const lastModified = new Date();
 			const selectedCase = { ...state.selectedCase, lastModified };
-			return casesAdapter.updateOne({ id: action.payload._id, changes: { lastModified } }, {
+			return casesAdapter.updateOne({ id: action.payload.id, changes: { lastModified } }, {
 				...state,
 				selectedCase
 			});
 		}
 
 		case CasesActionTypes.DELETE_CASE:
-			return casesAdapter.removeOne(action.payload, state);
+			return casesAdapter.removeOne((action as DeleteCaseAction).payload.id, state);
 
 		case CasesActionTypes.ADD_CASES:
 			return casesAdapter.addMany(action.payload, state);

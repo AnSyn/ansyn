@@ -110,10 +110,12 @@ export {
 export {
 	selectAnnotationMode, selectAnnotationProperties,
 	selectSubMenu,
-	SubMenuEnum,
-	toolsFlags,
 	toolsStateSelector
 } from './modules/menu-items/tools/reducers/tools.reducer';
+export {
+	SubMenuEnum,
+	toolsFlags
+} from './modules/menu-items/tools/models/tools.model';
 export {
 	EnableOnlyFavoritesSelectionAction,
 	FiltersActionTypes, InitializeFiltersAction,
@@ -250,7 +252,7 @@ export {
 
 export { ICoreConfig } from './modules/core/models/core.config.model';
 export { CoreConfig } from './modules/core/models/core.config';
-export { endTimingLog, startTimingLog } from './modules/core/utils/logs/timer-logs';
+export { endTimingLog, startTimingLog, getLogMessageFromAction, actionHasLogMessage } from './modules/core/utils/logs/timer-logs';
 export { buildFilteredOverlays } from './modules/core/utils/overlays';
 export { isFullOverlay } from './modules/core/utils/overlays';
 export { IFilterModel } from './modules/core/models/IFilterModel';
@@ -271,7 +273,7 @@ export { IDeltaTime } from './modules/core/models/time.model';
 export { PhotoAngle, RegionContainment } from './modules/overlays/models/overlay.model';
 export { IOverlaysCriteriaOptions } from './modules/overlays/models/overlay.model';
 export { GeoRegisteration } from './modules/overlays/models/overlay.model';
-export { IOverlaysFetchData, IOverlayDrop, IOverlaySpecialObject } from './modules/overlays/models/overlay.model';
+export { IOverlayError, IOverlaysFetchData, IOverlayDrop, IOverlaySpecialObject } from './modules/overlays/models/overlay.model';
 export {
 	IOverlay, IDilutedOverlay, Overlay, IOverlaysCriteria, IDilutedOverlaysHash, IOverlaysHash
 }from './modules/overlays/models/overlay.model';
@@ -389,7 +391,7 @@ export { ComboBoxComponent } from './modules/core/forms/combo-box/combo-box.comp
 export { ComboBoxTriggerComponent } from './modules/core/forms/combo-box-trigger/combo-box-trigger.component';
 export { ComboBoxOptionComponent } from './modules/core/forms/combo-box-option/combo-box-option.component';
 export { ContextMenuComponent } from './modules/core/components/context-menu/context-menu.component';
-export { CredentialsComponent } from './modules/core/components/credentials/credentials.component';
+export { CredentialsComponent } from './modules/menu-items/credentials/components/credentials/credentials.component';
 export { OverlaysContainerComponent } from './modules/overlays/components/container/overlays-container.component';
 export { TimelineComponent } from './modules/overlays/components/timeline/timeline.component';
 export { OverlayOverviewComponent } from './modules/overlays/components/overlay-overview/overlay-overview.component';

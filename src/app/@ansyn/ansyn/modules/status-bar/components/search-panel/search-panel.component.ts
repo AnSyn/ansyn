@@ -8,7 +8,11 @@ import { combineLatest, fromEvent, merge, Observable } from 'rxjs';
 import { animate, style, transition, trigger, AnimationTriggerMetadata } from '@angular/animations';
 import { filter, tap } from 'rxjs/operators';
 import { selectDataInputFilter, selectRegion, selectTime } from '../../../overlays/reducers/overlays.reducer';
-import { ICaseDataInputFiltersState, ICaseTimeState } from '../../../menu-items/cases/models/case.model';
+import {
+	CaseRegionState,
+	ICaseDataInputFiltersState,
+	ICaseTimeState
+} from '../../../menu-items/cases/models/case.model';
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import {
@@ -25,9 +29,13 @@ import {
 	isEnterKey,
 	isEscapeKey
 } from '../../../core/utils/keyboardKey';
-import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
-import { LoggerService } from '../../../core/services/logger.service';
+import {
+	LogManualSearchTime,
+	LogSearchPanelPopup,
+	SetOverlaysCriteriaAction
+} from '../../../overlays/actions/overlays.actions';
 import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
+import { toastMessages } from '../../../core/models/toast-messages';
 
 const moment = momentNs;
 
@@ -115,13 +123,14 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	updateGeoFilterCoordinates$ = this.store$.select(selectRegion).pipe(
 		filter(Boolean),
-		tap(({ coordinates }) => this.geoFilterCoordinates = coordinates.toString())
+		tap((region: CaseRegionState) => {
+			this.geoFilterCoordinates = region.geometry.coordinates.toString();
+		})
 	);
 
 	constructor(protected store$: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 				@Inject(MultipleOverlaysSourceConfig) private multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
-				protected loggerService: LoggerService,
 				@Inject(COMPONENT_MODE) public componentMode: boolean,
 				dateTimeAdapter: DateTimeAdapter<any>
 	) {
@@ -160,11 +169,14 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 	}
 
-	toggleExpander(popup: SearchPanelTitle, forceState?: boolean) {
+	toggleExpander(popupName: SearchPanelTitle, forceState?: boolean) {
 		if (this.isDataInputsOk()) {
-			const newState = forceState || !this.popupExpanded.get(popup);
+			const newState = forceState || !this.popupExpanded.get(popupName);
+			if (newState) {
+				this.store$.dispatch(new LogSearchPanelPopup({ popupName }));
+			}
 			this.popupExpanded.forEach((_, key, map) => {
-				map.set(key, key === popup ? newState : false)
+				map.set(key, key === popupName ? newState : false)
 			});
 		} else {
 			this.store$.dispatch(new SetToastMessageAction({
@@ -213,12 +225,21 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 				return;
 			}
 		}
-		if (isEnterKey(event)) {
-			if (!this.setTimeCriteria()) {
-				this.store$.dispatch(new SetToastMessageAction({ toastText: 'Invalid date' }));
+		if (this.checkTimeWasChange()) {
+			if (isEnterKey(event)) {
+				this.store$.dispatch(new LogManualSearchTime({
+					from: this.timePickerInputFrom.nativeElement.textContent,
+					to: this.timePickerInputTo.nativeElement.textContent
+				}));
+
+				if (!this.supportRangeDates()) {
+					this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.notSupportRangeDates }));
+				} else if (!this.setTimeCriteria()) {
+					this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.invalidDate }));
+				}
 			}
-			this.loggerService.info(`press enter on time picker ${ this.timePickerInputFrom.nativeElement.textContent } - ${ this.timePickerInputTo.nativeElement.textContent }`);
 		}
+
 		if (isEscapeKey(event)) {
 			this.revertTime();
 		}
@@ -239,7 +260,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	}
 
 	setTimeCriteria() {
-		if (this.validateDates() && this.checkTimeWasChange()) {
+		if (this.validateDates() && this.checkTimeWasChange() && this.supportRangeDates()) {
 			const fromText = this.timePickerInputFrom.nativeElement.textContent;
 			const toText = this.timePickerInputTo.nativeElement.textContent;
 
@@ -251,12 +272,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 				this.timePickerInputTo.nativeElement.textContent = fromText;
 			}
 
-			this.store$.dispatch(new SetOverlaysCriteriaAction({
-				time: {
-					from,
-					to
-				}
-			}));
+			this.store$.dispatch(new SetOverlaysCriteriaAction({ time: { from, to } }));
 
 			return true;
 		}
@@ -286,6 +302,12 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		return !this.timeError.from && !this.timeError.to;
 	}
 
+	supportRangeDates() {
+		this.timeError.from = this.earlyOrLateDate(this.timePickerInputFrom.nativeElement.textContent);
+		this.timeError.to = this.earlyOrLateDate(this.timePickerInputTo.nativeElement.textContent);
+		return !this.timeError.from && !this.timeError.to;
+	}
+
 	getDateFromString(date) {
 		return moment(date, DATE_FORMAT, true).toDate();
 	}
@@ -301,12 +323,6 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		const { from: oldFrom, to: oldTo } = this.timeSelectionOldTitle;
 		const from = this.timePickerInputFrom.nativeElement.textContent;
 		const to = this.timePickerInputTo.nativeElement.textContent;
-		if (from !== oldFrom) {
-			this.loggerService.info(`change from time: ${ oldFrom } -> ${ from }`);
-		}
-		if (to !== oldTo) {
-			this.loggerService.info(`change to time: ${ oldTo } -> ${ to }`);
-		}
 
 		this.timeSelectionOldTitle.from = from;
 		this.timeSelectionOldTitle.to = to;
@@ -314,7 +330,12 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	private validateDate(date) {
 		const dateFromFormat = moment(date, DATE_FORMAT, true);
-		return dateFromFormat.isValid() && dateFromFormat.toDate().getTime() <= Date.now();
+		return dateFromFormat.isValid();
+	}
+
+	private earlyOrLateDate(date) {
+		const dateFromFormat = moment(date, DATE_FORMAT, true);
+		return dateFromFormat.toDate().getFullYear() < 1970 || dateFromFormat.toDate().getTime() > Date.now();
 	}
 
 	private findExtentOffset(content: string, fromLast: boolean) {

@@ -2,13 +2,20 @@
 FROM node as builder
 
 WORKDIR /ng-app
+
+ENV PATH=${PATH}:./node_modules/.bin
+
+ENV NODE_PATH=/ng-app/node_modules
+
+COPY package*.json ./
+
+RUN npm set progress=false
+
+RUN npm ci
+
 COPY . .
 
-RUN npm set progress=false \
-  && npm config set depth 0 \
-  && npm cache clean --force
-
-RUN npm install && npm run build:prod
+RUN npm run build:prod
 
 # Stage 2: Setup
 FROM nginx:1.13-alpine

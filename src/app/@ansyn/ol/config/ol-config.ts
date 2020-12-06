@@ -1,4 +1,5 @@
 export const OL_CONFIG = 'olConfig';
+export const group_layer = 'group-layer';
 
 export interface IOlConfig {
 	needToUseLayerExtent: boolean;

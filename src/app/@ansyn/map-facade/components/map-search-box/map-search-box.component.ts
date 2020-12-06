@@ -1,7 +1,6 @@
 import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import { GeocoderService } from '../../services/geocoder.service';
-import { Point } from 'geojson';
 import { Observable } from 'rxjs';
 import { filter, retryWhen, switchMap, take, tap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
@@ -9,6 +8,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectIsMinimalistViewMode } from '../../reducers/map.reducer';
 import { Store } from '@ngrx/store';
 import {
+	LogMapSearchBoxAction,
 	SetActiveCenterTriggerAction,
 	SetMapSearchBoxTriggerAction,
 	SetToastMessageAction
@@ -49,7 +49,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		}),
 		retryWhen((err) => {
 			return err.pipe(
-				tap(error => {
+				tap(() => {
 					this.error = true;
 					this.locations = [];
 					this.loading = false;
@@ -58,10 +58,12 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		})
 	);
 
-	constructor(protected store$: Store<any>,
-				protected imageryCommunicatorService: ImageryCommunicatorService,
-				public geocoderService: GeocoderService,
-				protected translator: TranslateService) {
+	constructor(
+		protected store$: Store<any>,
+		protected imageryCommunicatorService: ImageryCommunicatorService,
+		public geocoderService: GeocoderService,
+		protected translator: TranslateService
+	) {
 	}
 
 	resetSearch() {
@@ -92,6 +94,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 
 	onSubmit() {
 		const value: string = this.control.value;
+		this.store$.dispatch(new LogMapSearchBoxAction(value));
 		let point;
 		if (this.geocoderService.isCoordinates(value)) {
 			point = this.geocoderService.createPoint(value);

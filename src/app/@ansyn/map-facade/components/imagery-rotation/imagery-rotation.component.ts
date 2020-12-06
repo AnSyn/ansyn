@@ -1,7 +1,12 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings, toDegrees } from '@ansyn/imagery';
-import { PointToImageOrientationAction, PointToRealNorthAction } from '../../actions/map.actions';
+import {
+	CommunicatorEntity,
+	ImageryCommunicatorService,
+	IMapSettings,
+	toDegrees
+} from '@ansyn/imagery';
+import { LogRotateMapAction, PointToImageOrientationAction, PointToRealNorthAction } from '../../actions/map.actions';
 
 export interface IIsGeoRegisteredProperties {
 	letter: 'N' | '?';
@@ -63,9 +68,11 @@ export class ImageryRotationComponent {
 		return ((this.communicator && this.communicator.getRotation()) || 0) - this.virtualNorth;
 	}
 
-	constructor(protected elementRef: ElementRef,
-				protected imageryCommunicatorService: ImageryCommunicatorService,
-				protected store: Store<any>) {
+	constructor(
+		protected elementRef: ElementRef,
+		protected imageryCommunicatorService: ImageryCommunicatorService,
+		protected store: Store<any>,
+	) {
 	}
 
 	isGeoRegistered() {
@@ -128,6 +135,7 @@ export class ImageryRotationComponent {
 		document.addEventListener<'mousemove'>('mousemove', mouseMoveListener);
 
 		const mouseUpListener = () => {
+			this.store.dispatch(new LogRotateMapAction());
 			document.removeEventListener('mousemove', mouseMoveListener);
 			document.removeEventListener('mouseup', mouseUpListener);
 			this.isRotating = false;

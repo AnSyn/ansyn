@@ -227,6 +227,12 @@ describe('OverlaysAppEffects', () => {
 						error: (some) => null, info: () => {
 						}
 					}
+				},
+				{
+					provide: LoggerService, useValue: {
+						error: (some) => null, info: () => {
+						}
+					}
 				}
 			]
 

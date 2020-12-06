@@ -58,7 +58,10 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 
 	selectedCaseId: string;
 
-	constructor(protected store$: Store<ICasesState>, protected casesEffects: CasesEffects) {
+	constructor(
+		protected store$: Store<ICasesState>,
+		protected casesEffects: CasesEffects
+	) {
 		this.casesEffects.onAddCase$.subscribe(this.onCasesAdded.bind(this));
 	}
 
@@ -103,8 +106,8 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 		this.store$.dispatch(new OpenModalAction({ type: 'edit', caseId }));
 	}
 
-	shareCase(caseId: string) {
-		this.store$.dispatch(new CopyCaseLinkAction({ caseId: caseId }));
+	shareCase(caseId: string, caseName: string) {
+		this.store$.dispatch(new CopyCaseLinkAction({ caseId, caseName }));
 	}
 
 	selectCase(caseId: string): void {

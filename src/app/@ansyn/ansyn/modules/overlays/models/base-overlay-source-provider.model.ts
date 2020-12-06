@@ -9,7 +9,7 @@ import { forkJoinSafe } from '../../core/utils/rxjs/observables/fork-join-safe';
 import { sortByDateDesc } from '../../core/utils/sorting';
 import { IDateRange } from '../../core/models/multiple-overlays-source-config';
 import { LoggerService } from '../../core/services/logger.service';
-import { IOverlay, IOverlaysFetchData } from './overlay.model';
+import { IOverlay, IOverlayError, IOverlaysFetchData } from './overlay.model';
 import { IDataInputFilterValue } from '../../menu-items/cases/models/case.model';
 import { getErrorLogFromException } from '../../core/utils/logs/timer-logs';
 
@@ -63,12 +63,12 @@ export function isFaulty(data: IOverlaysFetchData): boolean {
 	return Array.isArray(data.errors) && data.errors.length > 0;
 }
 
-export function mergeErrors(data: IOverlaysFetchData[]): Error[] {
+export function mergeErrors(data: IOverlaysFetchData[]): IOverlayError[] {
 	return [].concat.apply([],
 		data.map(overlayFetchData => Array.isArray(overlayFetchData.errors) ? overlayFetchData.errors : []));
 }
 
-export function mergeOverlaysFetchData(data: IOverlaysFetchData[], limit: number, errors?: Error[]): IOverlaysFetchData {
+export function mergeOverlaysFetchData(data: IOverlaysFetchData[], limit: number, errors?: IOverlayError[]): IOverlaysFetchData {
 	return {
 		...mergeLimitedArrays(data.filter(item => !isFaulty(item)) as Array<ILimitedArray>,
 			limit, {
@@ -86,7 +86,7 @@ export abstract class BaseOverlaySourceProvider {
 	constructor(protected loggerService: LoggerService) {
 	}
 
-	buildFetchObservables(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<any>[] {
+	buildFetchObservables(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<IOverlaysFetchData>[] {
 		const regionFeature: Feature<any> = feature(<any>fetchParams.region);
 		// They are strings!
 		const fetchParamsTimeRange = {
@@ -114,13 +114,16 @@ export abstract class BaseOverlaySourceProvider {
 					newFetchParams.sensors = [f.sensor];
 				}
 
-				return this.fetch(newFetchParams).pipe(catchError(err => {
+				return this.fetch(newFetchParams).pipe(catchError((err: Error | string) => {
 					const errMsg = getErrorLogFromException(err, `Failed to fetch overlay's newFetchParams=${JSON.stringify(newFetchParams)}`);
 					this.loggerService.error(errMsg, 'overlays');
 					return of({
 						data: null,
 						limited: -1,
-						errors: [new Error(`Failed to fetch overlays from ${ this.sourceType }`)]
+						errors: [{
+							message: err.toString(),
+							sourceType: this.sourceType
+						}]
 					});
 				}));
 			})

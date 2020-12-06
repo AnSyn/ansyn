@@ -1,5 +1,5 @@
 import { combineLatest, Observable, of } from 'rxjs';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Inject, Injectable } from '@angular/core';
 import {
@@ -7,13 +7,14 @@ import {
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../app.effects.module';
 import { SetBadgeAction } from '@ansyn/menu';
-import { catchError, distinctUntilChanged, filter, map, mergeMap, share, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
 import { BooleanFilterMetadata } from '../../modules/filters/models/metadata/boolean-filter-metadata';
 import {
 	EnableOnlyFavoritesSelectionAction,
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
-	UpdateFiltersCounters
+	UpdateFiltersCounters,
+	LogFilters
 } from '../../modules/filters/actions/filters.actions';
 import { EnumFilterMetadata } from '../../modules/filters/models/metadata/enum-filter-metadata';
 import { FilterMetadata } from '../../modules/filters/models/metadata/filter-metadata.interface';
@@ -39,12 +40,10 @@ import {
 	OverlaysActionTypes,
 	SetDropsAction,
 	SetFilteredOverlaysAction,
-	SetOverlaysStatusMessageAction,
-	SetTotalOverlaysAction
+	SetOverlaysStatusMessageAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	overlaysStatusMessages,
-	selectDrops,
 	selectFilteredOveralys,
 	selectOverlaysAreLoaded,
 	selectOverlaysArray,
@@ -55,11 +54,11 @@ import {
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { FilterType } from '../../modules/filters/models/filter-type';
 import { ICaseFacetsState } from '../../modules/menu-items/cases/models/case.model';
-import { IOverlay, IOverlayDrop, IOverlaySpecialObject } from '../../modules/overlays/models/overlay.model';
+import { IOverlay, IOverlaySpecialObject } from '../../modules/overlays/models/overlay.model';
 import { cloneDeep, get as _get, isEqual } from 'lodash';
 import { TranslateService } from '@ngx-translate/core';
-import { LoggerService } from '../../modules/core/services/logger.service';
 import { FilterCounters } from '../../modules/filters/models/counters/filter-counters.interface';
+import { LoggerService } from '../../modules/core/services/logger.service';
 
 @Injectable()
 export class FiltersAppEffects {
@@ -77,18 +76,16 @@ export class FiltersAppEffects {
 	facets$: Observable<ICaseFacetsState> = this.store$.select(selectFacets);
 	onFiltersChangesForLog$: Observable<[FiltersMetadata, boolean]> = combineLatest([this.filtersMetadata$, this.showOnlyFavorite$]);
 
-	@Effect({ dispatch: false })
+	@Effect()
 	filtersLogger$: Observable<any> = this.onFiltersChangesForLog$.pipe(
 		filter(([filters, showOnlyFavorites ]: [FiltersMetadata, boolean]) => Boolean(filters) && filters.size !== 0),
 		map(([filters, showOnlyFavorites]: [FiltersMetadata, boolean]) => {
 			const filtersData = filtersToString(filters);
-			const filtersState = `{"showOnlyFavorites": "${ showOnlyFavorites }", "filters": ${ Boolean(filters) ? filtersData : filters }}`;
+			const filtersState = `Filters changed:\nshowOnlyFavorites: ${ showOnlyFavorites } ${ Boolean(filters) ? filtersData : '' }`;
 			return filtersState;
 		}),
 		distinctUntilChanged(isEqual),
-		tap((message: string) => {
-			this.loggerService.info(message, 'Filters', 'Filtered Data Changed');
-		})
+		map((message: string) => new LogFilters(message))
 	);
 
 	@Effect()
@@ -97,28 +94,28 @@ export class FiltersAppEffects {
 		mergeMap(([filtersMetadata, overlaysArray]: [FiltersMetadata, IOverlay[]]) => {
 			const filterModels: IFilterModel[] = FiltersService.pluckFilterModels(filtersMetadata);
 			const filteredOverlays: string[] = buildFilteredOverlays(overlaysArray, filterModels);
-			const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : this.translate.instant(overlaysStatusMessages.noOverLayMatchFilters);
-			return [
-				new SetFilteredOverlaysAction(filteredOverlays),
-				new SetOverlaysStatusMessageAction(message)
+			const actions: Action[] = [
+				new SetFilteredOverlaysAction(filteredOverlays)
 			];
+			// If there are overlays, before applying the filters, set the status message according to the filters
+			if (overlaysArray && overlaysArray.length) {
+				const message = (filteredOverlays && filteredOverlays.length) ? overlaysStatusMessages.nullify : this.translate.instant(overlaysStatusMessages.noOverLayMatchFilters);
+				actions.push(new SetOverlaysStatusMessageAction({ message }));
+			}
+			return actions;
 		}));
 
 	@Effect()
 	updateOverlayDrops$ = this.forOverlayDrops$.pipe(
-		withLatestFrom(this.store$.select(selectDrops)),
-		filter(([[overlaysMap, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites], oldDrops]: [[Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean], IOverlayDrop[]]) => Boolean(overlaysMap.size)),
-		mergeMap(([[overlaysMap, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites], oldDrops]: [[Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean], IOverlayDrop[]]) => {
-			let drops = OverlaysService.parseOverlayDataForDisplay({
+		map(([overlaysMap, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites]: [Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean]) => {
+			const drops = OverlaysService.parseOverlayDataForDisplay({
 				overlaysArray: mapValuesToArray(overlaysMap),
 				filteredOverlays,
 				specialObjects,
 				favoriteOverlays,
 				showOnlyFavorites
-			}).concat(oldDrops);
-
-			drops = this.removeDuplicateDrops(drops);
-			return [new SetDropsAction(drops), new SetTotalOverlaysAction(drops.length)];
+			});
+			return new SetDropsAction(drops);
 		})
 	);
 
@@ -201,19 +198,22 @@ export class FiltersAppEffects {
 				return { filter: metadataKey, newCounters: cloneCounters };
 			});
 			return new UpdateFiltersCounters(filtersChanges);
-		}));
+		}),
+		catchError((err) => {
+			console.error(err);
+			this.loggerService.error(err.message || err.toString());
+			return of(new UpdateFiltersCounters([]));
+		})
+	);
 
-
-	constructor(protected actions$: Actions,
-				protected store$: Store<IAppState>,
-				protected genericTypeResolverService: GenericTypeResolverService,
-				public translate: TranslateService,
-				protected loggerService: LoggerService,
-				@Inject(filtersConfig) protected config: IFiltersConfig) {
-	}
-
-	removeDuplicateDrops(drops: IOverlayDrop[]): IOverlayDrop[] {
-		return drops.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
+	constructor(
+		protected actions$: Actions,
+		protected store$: Store<IAppState>,
+		protected genericTypeResolverService: GenericTypeResolverService,
+		public translate: TranslateService,
+		@Inject(filtersConfig) protected config: IFiltersConfig,
+		protected loggerService: LoggerService
+	) {
 	}
 
 	resolveMetadata(filterType: FilterType): FilterMetadata {

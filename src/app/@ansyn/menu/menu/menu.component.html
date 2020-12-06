@@ -17,7 +17,7 @@
 						   [hidden]="hideBadge(menuItem.badge)">{{menuItem.badge}}</span>
 					{{menuItem.name | translate}}
 				</div>
-				<div class="menu-btn" (click)="goToLandingPage()">
+				<div class="menu-btn" (click)="onHelp()">
 					<i [style]="" [ngClass]="'icon-main-help'"></i>
 					{{'Help' | translate}}
 				</div>

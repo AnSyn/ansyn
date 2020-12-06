@@ -22,7 +22,8 @@ export class ErrorHandlerService {
 		if (toastMessage !== null) {
 			this.store.dispatch(new SetToastMessageAction({
 				toastText: toastMessage || 'Connection Problem',
-				showWarningIcon: true
+				showWarningIcon: true,
+				originalMessage: errMsg
 			}));
 		}
 

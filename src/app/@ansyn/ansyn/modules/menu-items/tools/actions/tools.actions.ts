@@ -1,9 +1,9 @@
 import { Action } from '@ngrx/store';
 import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
-import { SubMenuEnum, toolsFlags } from '../reducers/tools.reducer';
 import { type } from '../../../core/utils/type';
 import { AnnotationMode, IUpdateFeatureEvent } from '@ansyn/ol';
-import { IMeasureDataOptions } from '../models/measure-data';
+import { IMeasureDataOptions, SubMenuEnum, toolsFlags } from '../models/tools.model';
+import { ILogMessage } from '../../../core/models/logger.model';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),
@@ -38,27 +38,39 @@ export const ToolsActionsTypes = {
 	ANNOTATION_UPDATE_FEATURE: 'ANNOTATION_UPDATE_FEATURE'
 };
 
-export class StartMouseShadow implements Action {
+export class StartMouseShadow implements Action, ILogMessage {
 	type = ToolsActionsTypes.START_MOUSE_SHADOW;
 
 	constructor(public payload?: { updateTools?: boolean, fromUser?: boolean }) {
 		// code...
 	}
+
+	logMessage() {
+		return `Enabling shadow mouse`;
+	}
 }
 
-export class SetAnnotationMode implements Action {
+export class SetAnnotationMode implements Action, ILogMessage {
 	type = ToolsActionsTypes.STORE.SET_ANNOTATION_MODE;
 
 	constructor(public payload: { annotationMode: AnnotationMode, mapId?: string }) {
 
 	}
+
+	logMessage() {
+		return this.payload && this.payload.annotationMode && `Setting annotation mode = ${ this.payload.annotationMode }`;
+	}
 }
 
-export class StopMouseShadow implements Action {
+export class StopMouseShadow implements Action, ILogMessage {
 	type = ToolsActionsTypes.STOP_MOUSE_SHADOW;
 
 	constructor(public payload?: { updateTools?: boolean, fromUser?: boolean }) {
 		// code...
+	}
+
+	logMessage() {
+		return `Disabling shadow mouse`;
 	}
 }
 
@@ -97,11 +109,15 @@ export class SetPinLocationModeAction implements Action {
 	};
 }
 
-export class GoToAction implements Action {
+export class GoToAction implements Action, ILogMessage {
 	type = ToolsActionsTypes.GO_TO;
 
 	constructor(public payload: number[], public mapId?: string) {
 	};
+
+	logMessage() {
+		return `Go to location ${this.payload}`
+	}
 }
 
 export class GoToInputChangeAction implements Action {
@@ -121,10 +137,14 @@ export class SetMapGeoEnabledModeToolsActionStore implements Action {
 	}
 }
 
-export class SetMeasureDistanceToolState implements Action {
+export class SetMeasureDistanceToolState implements Action, ILogMessage {
 	type = ToolsActionsTypes.MEASURES.SET_MEASURE_TOOL_STATE;
 
 	constructor(public payload: boolean) {
+	}
+
+	logMessage() {
+		return this.payload && `Opening measure distance tool`
 	}
 }
 
@@ -142,17 +162,22 @@ export class RemoveMeasureDataAction implements Action {
 	}
 }
 
-export class UpdateMeasureDataOptionsAction implements Action {
+export class UpdateMeasureDataOptionsAction implements Action, ILogMessage {
 	type = ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS;
 
 	constructor(public payload: {
 		mapId: string,
-		options: Partial<IMeasureDataOptions>
+		options: Partial<IMeasureDataOptions>,
+		fromUI?: boolean
 	}) {
+	}
+
+	logMessage() {
+		return this.payload.fromUI && `Updating measure tool options: ${JSON.stringify(this.payload.options)}`
 	}
 }
 
-export class AddMeasureAction implements Action {
+export class AddMeasureAction implements Action, ILogMessage {
 	type = ToolsActionsTypes.MEASURES.ADD_MEASURE;
 
 	constructor(public payload: {
@@ -160,9 +185,13 @@ export class AddMeasureAction implements Action {
 		measure: IVisualizerEntity
 	}) {
 	}
+
+	logMessage() {
+		return `Adding one measure to map`
+	}
 }
 
-export class RemoveMeasureAction implements Action {
+export class RemoveMeasureAction implements Action, ILogMessage {
 	type = ToolsActionsTypes.MEASURES.REMOVE_MEASURE;
 
 	constructor(public payload: {
@@ -170,21 +199,33 @@ export class RemoveMeasureAction implements Action {
 		measureId?: string;
 	}) {
 	}
+
+	logMessage() {
+		return `Removing ${this.payload.measureId ? 'one measure' : 'all measures'} from map`
+	}
 }
 
-export class AnnotationSetProperties implements Action {
+export class AnnotationSetProperties implements Action, ILogMessage {
 	type = ToolsActionsTypes.ANNOTATION_SET_PROPERTIES;
 
 	constructor(public payload: Partial<IVisualizerStyle>) {
 
 	}
+
+	logMessage() {
+		return `Setting annotation properties: ${JSON.stringify(this.payload)}`
+	}
 }
 
-export class SetSubMenu implements Action {
+export class SetSubMenu implements Action, ILogMessage {
 	type = ToolsActionsTypes.SET_SUB_MENU;
 
 	constructor(public payload: SubMenuEnum) {
 
+	}
+
+	logMessage() {
+		return this.payload && `Opening sub menu: ${SubMenuEnum[this.payload]}`
 	}
 }
 

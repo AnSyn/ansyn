@@ -23,9 +23,11 @@ export class MapComponent implements OnInit, OnDestroy {
 		return this.map
 			.initMap(this.mapElement.nativeElement, this.mapElementShadowNorth.nativeElement, this.mapElementShadowDoubleBuffer.nativeElement, layer, position, this.mapViewContainerRef)
 			.pipe(
-				filter(success => success),
-				map(() => this.map),
-				tap(() => this.map.initMapSubscriptions()),
+				filter(Boolean),
+				map(() => {
+					this.map.initMapSubscriptions();
+					return this.map
+				}),
 				take(1)
 			);
 	};

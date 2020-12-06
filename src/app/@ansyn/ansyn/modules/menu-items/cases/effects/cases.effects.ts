@@ -32,7 +32,7 @@ import {
 	map,
 	mergeMap,
 	share,
-	switchMap, tap,
+	switchMap,
 	withLatestFrom
 } from 'rxjs/operators';
 import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
@@ -79,8 +79,8 @@ export class CasesEffects {
 	@Effect()
 	onDeleteCase$: Observable<any> = this.actions$.pipe(
 		ofType<DeleteCaseAction>(CasesActionTypes.DELETE_CASE),
-		mergeMap((action) => this.dataLayersService.removeCaseLayers(action.payload).pipe(map(() => action))),
-		withLatestFrom(this.store.select(selectSelectedCase), ({payload: deletedCaseId}, selectedCase: ICase) => [deletedCaseId, selectedCase.id]),
+		mergeMap((action) => this.dataLayersService.removeCaseLayers(action.payload.id).pipe(map(() => action))),
+		withLatestFrom(this.store.select(selectSelectedCase), ({ payload: { id: deletedCaseId }}, selectedCase: ICase) => [deletedCaseId, selectedCase.id]),
 		filter(([deletedCaseId, selectedCaseId]) => deletedCaseId === selectedCaseId),
 		map(() => new LoadDefaultCaseAction()),
 		rxPreventCrash()
@@ -101,6 +101,20 @@ export class CasesEffects {
 		filter(([action, defaultCaseId]: [UpdateCaseAction, string]) => action.payload.updatedCase.id !== defaultCaseId && (action.payload.updatedCase.autoSave || action.payload.forceUpdate)),
 		map(([action, defaultCaseId]: [UpdateCaseAction, string]) => new UpdateCaseBackendAction(action.payload.updatedCase)),
 		share());
+
+	@Effect()
+	onUpdateCaseBackendSaveAs$: Observable<UpdateCaseBackendSuccessAction | any> = this.actions$
+		.pipe(
+			ofType(CasesActionTypes.UPDATE_CASE_BACKEND_SAVE_AS),
+			switchMap((action: UpdateCaseBackendAction) => {
+				return this.casesService.updateCase(action.payload)
+					.pipe(
+						map((updatedCase: IStoredEntity<ICasePreview, IDilutedCaseState>) => new UpdateCaseBackendSuccessAction(updatedCase)),
+						catchError(() => EMPTY)
+					);
+
+			})
+		);
 
 	@Effect()
 	onUpdateCaseBackend$: Observable<UpdateCaseBackendSuccessAction | any> = this.actions$
@@ -130,12 +144,18 @@ export class CasesEffects {
 							const oldId = layer.id;
 
 							addedCase =
-								{ ...addedCase, state:
-										{ ...addedCase.state, layers:
-												{ ...addedCase.state.layers,
+								{
+									...addedCase, state:
+										{
+											...addedCase.state, layers:
+												{
+													...addedCase.state.layers,
 													activeLayersIds: addedCase.state.layers.activeLayersIds.map((id) => {
-								return id === oldId ? newId : id;
-							})}}};
+														return id === oldId ? newId : id;
+													})
+												}
+										}
+								};
 							// addedCase.state.layers.activeLayersIds = addedCase.state.layers.activeLayersIds.map((id) => {
 							// 	return id === oldId ? newId : id;
 							// });

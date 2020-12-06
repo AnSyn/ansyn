@@ -5,6 +5,7 @@ import { FiltersMetadata, FiltersCounters } from '../reducer/filters.reducer';
 import { ICaseFacetsState } from '../../menu-items/cases/models/case.model';
 import { IFilterSearchResults } from '../models/filter-search-results';
 import { FilterCounters } from '../models/counters/filter-counters.interface';
+import { ILogMessage } from '../../core/models/logger.model';
 
 export const FiltersActionTypes = {
 	INITIALIZE_FILTERS: 'INITIALIZE_FILTERS',
@@ -18,7 +19,9 @@ export const FiltersActionTypes = {
 	UPDATE_FACETS: 'UPDATE_FACETS',
 	SET_FILTER_SEARCH: 'SET_FILTER_SEARCH',
 	SET_FILTERS_SEARCH_RESULTS: 'SET_FILTERS_SEARCH_RESULTS',
-	SELECT_ONLY_GEO_REGISTERED: 'SELECT_ONLY_GEO_REGISTERED'
+	SELECT_ONLY_GEO_REGISTERED: 'SELECT_ONLY_GEO_REGISTERED',
+	LOG_FILTERS: 'LOG_FILTERS',
+	LOG_OPEN_FILTER_POPUP: 'LOG_OPEN_FILTER_POPUP'
 };
 
 export class InitializeFiltersAction implements Action {
@@ -81,6 +84,28 @@ export class SetFiltersSearchResults implements Action {
 export class SelectOnlyGeoRegistered implements Action {
 	readonly type = FiltersActionTypes.SELECT_ONLY_GEO_REGISTERED;
 
+}
+
+export class LogFilters implements Action, ILogMessage {
+	readonly type = FiltersActionTypes.LOG_FILTERS;
+
+	constructor(public payload: string) {
+	}
+
+	logMessage() {
+		return this.payload
+	}
+}
+
+export class LogOpenFilterPopup implements Action, ILogMessage {
+	readonly type = FiltersActionTypes.LOG_OPEN_FILTER_POPUP;
+
+	constructor(public payload: { filterName: string }) {
+	}
+
+	logMessage() {
+		return `Filters panel: opening ${this.payload.filterName} popup`
+	}
 }
 
 export type FiltersActions = InitializeFiltersAction

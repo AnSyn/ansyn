@@ -1,7 +1,7 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { combineLatest, forkJoin, Observable, of, pipe } from 'rxjs';
-import { Store } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import {
 	IMapState,
 	IPendingOverlay,
@@ -11,7 +11,7 @@ import {
 	mapStateSelector,
 	RemovePendingOverlayAction,
 	selectActiveMapId,
-	selectFooterCollapse,
+	selectFooterCollapse, selectLayout,
 	selectMaps,
 	selectMapsList,
 	SetLayoutAction,
@@ -20,8 +20,6 @@ import {
 } from '@ansyn/map-facade';
 import { OverlayStatusActionsTypes } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { IAppState } from '../app.effects.module';
-
-
 import { IImageryMapPosition } from '@ansyn/imagery';
 import {
 	catchError,
@@ -133,7 +131,6 @@ export class OverlaysAppEffects {
 		filter(Boolean),
 		withLatestFrom(this.store$.select(selectOverlaysCriteria)),
 		mergeMap(([action, criteria]: [DisplayFourViewAction, IOverlaysCriteria]): any => {
-			this.store$.dispatch(new SetPendingOverlaysAction(action.payload));
 			const overlayObservables: Observable<IOverlaysFetchData>[] = this.getFourViewOverlays(criteria);
 
 			return forkJoin(overlayObservables).pipe(
@@ -143,8 +140,9 @@ export class OverlaysAppEffects {
 					overlaysData.forEach(({ data }) => {
 						const geoRegisteredOverlays = data.filter(({ isGeoRegistered }) => isGeoRegistered !== GeoRegisteration.notGeoRegistered);
 						const [overlay] = geoRegisteredOverlays.length ? geoRegisteredOverlays : data;
-						overlays.push({ overlay});
+						overlays.push({ overlay });
 					});
+					console.log('overlays', overlays);
 					this.store$.dispatch(new SetPendingOverlaysAction(overlays));
 
 					const fourMapsLayout = 'layout6';
@@ -205,19 +203,27 @@ export class OverlaysAppEffects {
 	);
 
 	@Effect()
-	onDisplayOverlayFromStore$: Observable<DisplayOverlayAction> = this.actions$.pipe(
+	onDisplayOverlayFromStore$: Observable<any> = this.actions$.pipe(
 		ofType(OverlaysActionTypes.DISPLAY_OVERLAY_FROM_STORE),
-		withLatestFrom(this.overlaysService.getAllOverlays$, this.store$.select(mapStateSelector)),
-		filter(([{ payload }, overlays, { activeMapId }]: [DisplayOverlayFromStoreAction, Map<string, IOverlay>, IMapState]) => overlays && overlays.has(payload.id)),
-		map(([{ payload }, overlays, { activeMapId }]: [DisplayOverlayFromStoreAction, Map<string, IOverlay>, IMapState]) => {
+		withLatestFrom(this.overlaysService.getAllOverlays$, this.store$.select(selectActiveMapId), this.store$.select(selectLayout)),
+		filter(([{ payload }, overlays, activeMapId, layout]: [DisplayOverlayFromStoreAction, Map<string, IOverlay>, string, string]) => overlays && overlays.has(payload.id)),
+		mergeMap(([{ payload }, overlays, activeMapId, layout]: [DisplayOverlayFromStoreAction, Map<string, IOverlay>, string, string]) => {
 			const mapId = payload.mapId || activeMapId;
 			const overlay = overlays.get(payload.id);
-			return new DisplayOverlayAction({
+			const actions: Action[] = [new DisplayOverlayAction({
 				overlay,
 				mapId,
 				extent: payload.extent,
 				customOriantation: payload.customOriantation
-			});
+			})];
+
+			const oneMapLayout = 'layout1';
+			if (layout === oneMapLayout) {
+				const twoMapsLayout = 'layout2';
+				actions.push(new SetLayoutAction(twoMapsLayout));
+			}
+
+			return actions;
 		})
 	);
 
@@ -225,7 +231,7 @@ export class OverlaysAppEffects {
 	setHoveredOverlay$: Observable<any> = combineLatest([this.store$.select(selectDropMarkup), this.store$.select(selectFooterCollapse)])
 		.pipe(
 			filter(([drop, footerCollapse]) => Boolean(!footerCollapse)),
-			distinctUntilChanged( isEqual),
+			distinctUntilChanged(isEqual),
 			withLatestFrom<any, any>(this.overlaysService.getAllOverlays$, ([drop, footer], overlays) => [drop, overlays]),
 			this.getOverlayFromDropMarkup,
 			this.getPositionForActiveMap,
@@ -249,7 +255,7 @@ export class OverlaysAppEffects {
 	updateResultTableBadge$: Observable<SetBadgeAction> = this.actions$.pipe(
 		ofType<SetTotalOverlaysAction>(OverlaysActionTypes.SET_TOTAL_OVERLAYS),
 		distinctUntilKeyChanged('payload'),
-		map((action) => new SetBadgeAction({ key: 'Results table', badge: `${ action.payload }` })));
+		map((action) => new SetBadgeAction({ key: 'Results table', badge: `${ action.payload.number }` })));
 
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,
@@ -292,10 +298,5 @@ export class OverlaysAppEffects {
 			params.angleParams = angleParam;
 			return this.sourceProvider.fetch(params);
 		});
-	}
-
-	onDropMarkupFilter([prevAction, currentAction]): boolean {
-		const isEquel = !isEqual(prevAction, currentAction);
-		return isEquel;
 	}
 }

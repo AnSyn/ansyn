@@ -8,7 +8,8 @@ import {
 	ImageryMapExtent,
 	IImageryMapPosition,
 	IImageryMapProjectedState,
-	toDegrees
+	toDegrees,
+	IBaseImageryLayer
 } from '@ansyn/imagery';
 import { featureCollection } from '@turf/helpers';
 import { feature, geometry } from '@turf/turf';
@@ -48,6 +49,10 @@ export class CesiumMap extends BaseImageryMap<any> {
 	constructor(public projectionService: CesiumProjectionService) {
 		super();
 		this.layersToCesiumLayer = new Map<CesiumLayer, ImageryLayer>();
+	}
+
+	getGroupLayers(): IBaseImageryLayer {
+		return null;
 	}
 
 	initMap(element: HTMLElement, shadowElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: CesiumLayer, position?: IImageryMapPosition): Observable<boolean> {

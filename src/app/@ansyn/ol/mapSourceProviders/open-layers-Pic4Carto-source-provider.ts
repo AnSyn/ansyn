@@ -41,7 +41,7 @@ export class OpenLayerPic4CartoSourceProvider extends OpenLayersMapSourceProvide
 
 				const source = new Static({
 					url: metaData.data.overlay.imageUrl,
-					crossOrigin: null,
+					crossOrigin: 'Anonymous',
 					projection: new Projection({
 						code: metaData.data.overlay.id,
 						units: 'pixels',

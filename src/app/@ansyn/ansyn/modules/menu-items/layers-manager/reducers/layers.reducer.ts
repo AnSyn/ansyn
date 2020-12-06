@@ -30,7 +30,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 	switch (action.type) {
 		case LayersActionTypes.LAYER_COLLECTION_LOADED:
 			let annotationLayer = action.payload.find(({ type }) => type === LayerType.annotation);
-			let selectedLayersIds = state.selectedLayersIds;
+			const selectedLayersIds = state.selectedLayersIds;
 			let activeAnnotationLayer = state.activeAnnotationLayer;
 			let layers = action.payload;
 			activeAnnotationLayer = annotationLayer && annotationLayer.id;

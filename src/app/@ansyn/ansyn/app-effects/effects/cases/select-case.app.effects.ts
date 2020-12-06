@@ -2,40 +2,26 @@ import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import {
-	SetFavoriteOverlaysAction,
-	SetOverlaysScannedAreaDataAction,
-	SetOverlaysTranslationDataAction,
-	UpdateOverlaysManualProcessArgs
-} from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
+import { SetFavoriteOverlaysAction, SetOverlaysScannedAreaDataAction, SetOverlaysTranslationDataAction, UpdateOverlaysManualProcessArgs } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { IAppState } from '../../app.effects.module';
 import { concatMap } from 'rxjs/operators';
 import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '@ansyn/map-facade';
-import {
-	BeginLayerCollectionLoadAction,
-	UpdateSelectedLayersIds
-} from '../../../modules/menu-items/layers-manager/actions/layers.actions';
-import {
-	CasesActionTypes,
-	SelectCaseAction,
-	SelectCaseSuccessAction,
-	SetAutoSave
-} from '../../../modules/menu-items/cases/actions/cases.actions';
+import { BeginLayerCollectionLoadAction, UpdateSelectedLayersIds } from '../../../modules/menu-items/layers-manager/actions/layers.actions';
+import { CasesActionTypes, SelectCaseAction, SelectCaseSuccessAction, SetAutoSave } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { casesConfig, CasesService } from '../../../modules/menu-items/cases/services/cases.service';
 import { UpdateFacetsAction } from '../../../modules/filters/actions/filters.actions';
-import {
-	SetAnnotationMode,
-	SetMeasureDistanceToolState,
-} from '../../../modules/menu-items/tools/actions/tools.actions';
+import { SetAnnotationMode, SetMeasureDistanceToolState, } from '../../../modules/menu-items/tools/actions/tools.actions';
 import { isFullOverlay } from '../../../modules/core/utils/overlays';
 import { ICoreConfig } from '../../../modules/core/models/core.config.model';
 import { CoreConfig } from '../../../modules/core/models/core.config';
 import { SetMiscOverlays, SetOverlaysCriteriaAction } from '../../../modules/overlays/actions/overlays.actions';
-import { ICase, ICaseMapState } from '../../../modules/menu-items/cases/models/case.model';
+import { CaseGeoFilter, ICase, ICaseMapState } from '../../../modules/menu-items/cases/models/case.model';
 import { IOverlay } from '../../../modules/overlays/models/overlay.model';
 import { mapValues } from 'lodash';
 import { ICasesConfig } from '../../../modules/menu-items/cases/models/cases-config';
 import { UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/status-bar.actions';
+import { Feature, Point, Polygon } from 'geojson';
+import { feature } from '@turf/turf';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -47,10 +33,10 @@ export class SelectCaseAppEffects {
 	);
 
 	constructor(protected actions$: Actions,
-		protected store$: Store<IAppState>,
-		@Inject(CoreConfig) protected coreConfig: ICoreConfig,
-		@Inject(casesConfig) public caseConfig: ICasesConfig,
-		protected casesService: CasesService
+				protected store$: Store<IAppState>,
+				@Inject(CoreConfig) protected coreConfig: ICoreConfig,
+				@Inject(casesConfig) public caseConfig: ICasesConfig,
+				protected casesService: CasesService
 	) {
 	}
 
@@ -60,8 +46,20 @@ export class SelectCaseAppEffects {
 		const { overlaysManualProcessArgs, overlaysTranslationData, overlaysScannedAreaData } = state;
 		// map
 		const { data } = state.maps;
+
 		// context
-		const { favoriteOverlays, region, dataInputFilters, miscOverlays } = state;
+		const { favoriteOverlays, dataInputFilters, miscOverlays } = state;
+
+		let region: Feature<Polygon | Point>;
+		if (state.region.type !== 'Feature') {
+			region = feature(state.region, { searchMode: state.region.type });
+		} else {
+			region = state.region;
+		}
+
+		if (region.properties.searchMode === CaseGeoFilter.ScreenView) {
+			noInitialSearch = true;
+		}
 
 		const { layout } = state.maps;
 
@@ -83,7 +81,7 @@ export class SelectCaseAppEffects {
 			new SetActiveMapId(state.maps.activeMapId),
 			new SetLayoutAction(<any>layout),
 			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
-			new UpdateGeoFilterStatus({ active: false, type: region.type }),
+			new UpdateGeoFilterStatus({ active: false, type: region.properties.searchMode }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this)) }),
 			new SetOverlaysTranslationDataAction(overlaysTranslationData),

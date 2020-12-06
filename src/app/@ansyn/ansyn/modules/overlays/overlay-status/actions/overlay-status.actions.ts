@@ -7,9 +7,11 @@ import {
 	IOverlaysTranslationData,
 } from '../../../menu-items/cases/models/case.model';
 import { IScannedArea } from '../reducers/overlay-status.reducer';
+import { ILogMessage } from '../../../core/models/logger.model';
 
 export enum OverlayStatusActionsTypes {
 	SET_MANUAL_IMAGE_PROCESSING = 'SET_MANUAL_IMAGE_PROCESSING',
+	LOG_MANUAL_IMAGE_PROCESSING = 'LOG_MANUAL_IMAGE_PROCESSING',
 	BACK_TO_WORLD_VIEW = 'BACK_TO_WORLD_VIEW',
 	BACK_TO_WORLD_SUCCESS = 'BACK_TO_WORLD_SUCCESS',
 	BACK_TO_WORLD_FAILED = 'BACK_TO_WORLD_FAILED',
@@ -78,17 +80,25 @@ export class SetOverlaysScannedAreaDataAction implements Action {
 	}
 }
 
-export class SetAutoImageProcessing implements Action {
+export class SetAutoImageProcessing implements Action, ILogMessage {
 	type = OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING;
 
 	constructor(public payload?: { mapId: string }) {
 	}
+
+	logMessage() {
+		return `Trying to toggle auto image processing`
+	}
 }
 
-export class SetAutoImageProcessingSuccess implements Action {
+export class SetAutoImageProcessingSuccess implements Action, ILogMessage {
 	type = OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS;
 
-	constructor(public payload: boolean) {
+	constructor(public payload: { value: boolean, fromUI?: boolean }) {
+	}
+
+	logMessage() {
+		return this.payload.fromUI ? `Auto image processing was set to ${this.payload.value}` : null;
 	}
 }
 
@@ -106,11 +116,15 @@ export class DisableImageProcessing implements Action {
 	};
 }
 
-export class BackToWorldView implements Action {
+export class BackToWorldView implements Action, ILogMessage {
 	type = OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW;
 
 	constructor(public payload: { mapId: string }) {
 
+	}
+
+	logMessage() {
+		return `Going back to world map`
 	}
 }
 
@@ -121,8 +135,23 @@ export class SetManualImageProcessing implements Action {
 	};
 }
 
+export class LogManualImageProcessing implements Action, ILogMessage {
+	type = OverlayStatusActionsTypes.LOG_MANUAL_IMAGE_PROCESSING;
+
+	constructor(public payload: { changedArg: string, allArgs: IImageManualProcessArgs }) {
+	};
+
+	logMessage() {
+		return `Updating manual image processing param: ${this.payload.changedArg}\n${JSON.stringify(this.payload.allArgs)}`
+	}
+}
+
 export class BackToWorldSuccess extends BackToWorldView {
 	type = OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS;
+
+	logMessage() {
+		return null
+	}
 }
 
 export class BackToWorldFailed extends BackToWorldView {
@@ -131,12 +160,20 @@ export class BackToWorldFailed extends BackToWorldView {
 	constructor(public payload: { mapId: string, error: any }) {
 		super(payload)
 	}
+
+	logMessage(): string {
+		return `Going back to world map failed${this.payload.error ? '\n' + this.payload.error.toString() : ''}`;
+	}
 }
 
-export class ToggleFavoriteAction implements Action {
+export class ToggleFavoriteAction implements Action, ILogMessage {
 	type: string = OverlayStatusActionsTypes.TOGGLE_OVERLAY_FAVORITE;
 
 	constructor(public payload: { id: string, value: boolean, overlay?: IOverlay }) {
+	}
+
+	logMessage() {
+		return `${this.payload.value ? 'Adding' : 'Removing'} overlay ${this.payload.value ? 'to' : 'from'} favorites`
 	}
 }
 
@@ -147,24 +184,37 @@ export class SetFavoriteOverlaysAction implements Action {
 	}
 }
 
-export class AddAlertMsg implements Action {
+export class AddAlertMsg implements Action, ILogMessage {
 	type = OverlayStatusActionsTypes.ADD_ALERT_MSG;
 
 	constructor(public payload: { value: string, key: AlertMsgTypes }) {
 	}
+
+	logMessage() {
+		return `Adding overlay alert message ${this.payload.key}`
+	}
 }
 
-export class RemoveAlertMsg implements Action {
+export class RemoveAlertMsg implements Action, ILogMessage {
 	type = OverlayStatusActionsTypes.REMOVE_ALERT_MSG;
 
 	constructor(public payload: { value: string, key: AlertMsgTypes }) {
 	}
+
+	logMessage() {
+		return `Removing overlay alert message ${this.payload.key}`
+	}
+
 }
 
-export class ToggleDraggedModeAction implements Action {
+export class ToggleDraggedModeAction implements Action, ILogMessage {
 	type = OverlayStatusActionsTypes.TOGGLE_DRAGGED_MODE;
 
 	constructor(public payload: { mapId: string, overlayId: string, dragged: boolean }) {
+	}
+
+	logMessage() {
+		return `${this.payload.dragged ? 'Start' : 'End'} annotations drag mode`
 	}
 }
 

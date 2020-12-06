@@ -55,15 +55,7 @@
 					   "zoom": 14.956666666666665
 					 }
 				   },
-				   "overlay": null,
-				   "imageManualProcessArgs": {
-					 "Sharpness": 0,
-					 "Contrast": 0,
-					 "Brightness": 0,
-					 "Gamma": 100,
-					 "Saturation": 100
-				   },
-				   "isAutoImageProcessingActive": false
+				   "overlay": null
 				 },
 				 "orientation": "Imagery Perspective",
 				 "flags": {},
@@ -71,10 +63,10 @@
 				   "mapType": "openLayersMap",
 				   "sourceType": "{{ getv "/ansyn/imagery/mapsource" "OSM" }}"
 				 },
-				 "id": "af3b94d2-03ff-44e6-9f73-10d386aff493"
+				 "id": null
 			   }
 			 ],
-			 "activeMapId": "af3b94d2-03ff-44e6-9f73-10d386aff493"
+			 "activeMapId": null
 		   },
 		   "layers": {
 			 "activeLayersIds": [
@@ -83,11 +75,37 @@
 		   "favoriteOverlays": [],
 		   "overlaysTranslationData": {},
 		   "region": {
-			 "type": "Point",
-			 "coordinates": [
-			   -122.3805754022963,
-			   37.621511305075714
-			 ]
+				"geometry": {
+					"type": "Polygon",
+					"coordinates": [
+						[
+						  [
+							-122.4148614215284,
+							37.63937724672128
+						  ],
+						  [
+							-122.33393164831777,
+							37.63937724672128
+						  ],
+						  [
+							-122.33393164831777,
+							37.61041039245376
+						  ],
+						  [
+							-122.4148614215284,
+							37.61041039245376
+						  ],
+						  [
+							-122.4148614215284,
+							37.63937724672128
+						  ]
+						]
+					  ]
+				},
+				"type": "Feature",
+				"properties": {
+					"searchMode": "ScreenView"
+				}
 		   },
 		   "dataInputFilters": {
 			 "filters": [],
@@ -99,8 +117,7 @@
 			 "filters": [
 
 			 ]
-		   },
-		   "overlaysManualProcessArgs": {  }
+		   }
 		 }
 	   },
     "casesQueryParamsKeys": [
@@ -147,7 +164,7 @@
   	"showOne2One": {{ getv "/ansyn/show/one2one" "true" }},
   	"welcomeNotification": {
 		"headerText": "Welcome to AnSyn!",
-		"mainText": "To get overlays anywhere in the world, just right click on the wanted area and click the central button"
+		"mainText": "To get overlays anywhere in the world, just move around on the map"
   	},
     "overlayCoverage": 0.1,
     "disableBestResolutionContextMenu": false,
@@ -354,7 +371,8 @@
     "env": "PROD",
     "active": {{ getv "/ansyn/logger/active" "false"}},
     "component": "{{ getv "/ansyn/logger/component/name" "app_client" }}",
-    "disconnectionTimeoutInMinutes": {{ getv "/ansyn/logger/disconnection/minutes" "15"}}
+    "disconnectionTimeoutInMinutes": {{ getv "/ansyn/logger/disconnection/minutes" "15"}},
+    "showTranslationWarnings": false
   },
   "statusBarConfig": {
     "toolTips": {
@@ -1592,6 +1610,10 @@
   "anaglyphConfig": {
   	"getStereoUrl": "needed test",
   	"sensorNames": {{ getv "/ansyn/anaglyph/sensornames" "null" }}
+  },
+  "screenViewConfig": {
+  	"extentWidthSearchLimit": 8000,
+    "debounceTime": 1000
   },
   "addressService": {
       "url": "assets/config/addresses.json"

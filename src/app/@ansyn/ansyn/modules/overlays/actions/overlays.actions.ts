@@ -3,7 +3,7 @@ import { Action } from '@ngrx/store';
 import { type } from '../../core/utils/type';
 import {
 	IOverlay,
-	IOverlayDrop,
+	IOverlayDrop, IOverlayError,
 	IOverlaysCriteria,
 	IOverlaysCriteriaOptions,
 	IOverlaysHash,
@@ -11,6 +11,7 @@ import {
 } from '../models/overlay.model';
 import { IMarkUpData, IOverlayDropMarkUp, ITimelineRange, MarkUpClass } from '../reducers/overlays.reducer';
 import { Update } from '@ngrx/entity';
+import { ILogMessage } from '../../core/models/logger.model';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
@@ -48,8 +49,16 @@ export const OverlaysActionTypes = {
 	DISPLAY_FOUR_VIEW: 'DISPLAY_FOUR_VIEW',
 	UPDATE_OVERLAY: 'UPDATE_OVERLAY',
 	UPDATE_OVERLAYS: 'UPDATE_OVERLAYS',
-	SET_OVERLAYS_CONTAINMENT_CHECKED: 'OVERLAYS_CONTAINMENT_CHECKED'
+	SET_OVERLAYS_CONTAINMENT_CHECKED: 'OVERLAYS_CONTAINMENT_CHECKED',
+	LOG_SEARCH_PANEL_POPUP: 'LOG_SEARCH_PANEL_POPUP',
+	LOG_MANUAL_SEARCH_TIME: 'LOG_MANUAL_SEARCH_TIME',
+	LOG_SELECT_SEARCH_TIME_PRESET: 'LOG_SELECT_SEARCH_TIME_PRESET',
+	RESET_OVERLAY_ARRAY: 'RESET_OVERLAY_ARRAY'
 };
+
+export class ResetOverlayArray implements Action {
+	type = OverlaysActionTypes.RESET_OVERLAY_ARRAY;
+}
 
 export class SelectOverlayAction implements Action {
 	type = OverlaysActionTypes.SELECT_OVERLAY;
@@ -88,10 +97,14 @@ export class UnSelectOverlayAction implements Action {
 	}
 }
 
-export class LoadOverlaysAction implements Action {
+export class LoadOverlaysAction implements Action, ILogMessage {
 	type = OverlaysActionTypes.LOAD_OVERLAYS;
 
 	constructor(public payload: IOverlaysCriteria) {
+	}
+
+	logMessage() {
+		return `Start loading overlays`;
 	}
 }
 export class DisplayFourViewAction implements Action {
@@ -115,10 +128,14 @@ export class RequestOverlayByIDFromBackendAction implements Action {
 	}
 }
 
-export class LoadOverlaysSuccessAction implements Action {
+export class LoadOverlaysSuccessAction implements Action, ILogMessage {
 	type = OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS;
 
 	constructor(public payload: IOverlay[], public clearExistingOverlays = false) {
+	}
+
+	logMessage() {
+		return `Loaded ${this.payload.length} overlays`;
 	}
 }
 
@@ -150,30 +167,50 @@ export class DisplayMultipleOverlaysFromStoreAction implements Action {
 	}
 }
 
-export class DisplayOverlayAction implements Action {
+export function getOverlayTitle(overlay: IOverlay): string {
+	return `${overlay.sensorType} (${overlay.sensorName}) ${overlay.photoTime}`;
+}
+
+export class DisplayOverlayAction implements Action, ILogMessage {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY;
 
 	constructor(public payload: {
 		overlay: IOverlay, mapId: string, extent?: any, forceFirstDisplay?: boolean, force?: boolean, customOriantation?: string
 	}) {
 	}
+
+	logMessage() {
+		return `Start loading overlay ${getOverlayTitle(this.payload.overlay)}`
+	}
 }
 
 export class DisplayOverlaySuccessAction extends DisplayOverlayAction {
 	type = <any>OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS;
+
+	logMessage() {
+		return `Loaded overlay ${getOverlayTitle(this.payload.overlay)}`
+	}
 }
 
-export class DisplayOverlayFailedAction implements Action {
+export class DisplayOverlayFailedAction implements Action, ILogMessage {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY_FAILED;
 
 	constructor(public payload: { id: string, mapId?: string }) {
 	}
+
+	logMessage() {
+		return `Display overlay failed`
+	}
 }
 
-export class SetTotalOverlaysAction implements Action {
+export class SetTotalOverlaysAction implements Action, ILogMessage {
 	type = OverlaysActionTypes.SET_TOTAL_OVERLAYS;
 
-	constructor(public payload: number) {
+	constructor(public payload: { number: number, showLog?: boolean }) {
+	}
+
+	logMessage() {
+		return this.payload.showLog && this.payload.number > 0 && `Showing ${this.payload.number} overlays after filtering`
 	}
 }
 
@@ -205,10 +242,18 @@ export class SetDropsAction implements Action {
 	};
 }
 
-export class SetOverlaysStatusMessageAction implements Action {
+export class SetOverlaysStatusMessageAction implements Action, ILogMessage {
 	type = OverlaysActionTypes.SET_OVERLAYS_STATUS_MESSAGE;
 
-	constructor(public payload: string) {
+	constructor(public payload: { message: string, originalMessages?: IOverlayError[] }) {
+	}
+
+	logMessage() {
+		const originalMessages = this.payload && this.payload.originalMessages &&
+			this.payload.originalMessages.reduce((prevSum, currVal) => {
+				return `${prevSum}\n${currVal.sourceType ? '(' + currVal.sourceType + ') ' : ''}${currVal.message}`
+			}, '');
+		return this.payload && this.payload.message && `Showing overlays status message: ${this.payload.message}${this.payload.originalMessages ? originalMessages : ''}`
 	}
 }
 
@@ -235,11 +280,15 @@ export class ChangeOverlayPreviewRotationAction implements Action {
 	}
 }
 
-export class SetOverlaysCriteriaAction implements Action {
+export class SetOverlaysCriteriaAction implements Action, ILogMessage {
 	type = OverlaysActionTypes.SET_OVERLAYS_CRITERIA;
 
 	constructor(public payload: IOverlaysCriteria,
 				public options: IOverlaysCriteriaOptions = null) {
+	}
+
+	logMessage() {
+		return `Setting overlays criteria for search:\n${JSON.stringify(this.payload)} ${this.options ? JSON.stringify(this.options) : ''}`
 	}
 }
 
@@ -282,6 +331,39 @@ export class SetOverlaysContainmentChecked implements Action {
 	type: string = OverlaysActionTypes.SET_OVERLAYS_CONTAINMENT_CHECKED;
 
 	constructor(public payload: boolean = true) {
+	}
+}
+
+export class LogSearchPanelPopup implements Action, ILogMessage {
+	type: string = OverlaysActionTypes.LOG_SEARCH_PANEL_POPUP;
+
+	constructor(public payload: { popupName: string }) {
+	}
+
+	logMessage() {
+		return `Search panel: opening ${this.payload.popupName} popup`
+	}
+}
+
+export class LogManualSearchTime implements Action, ILogMessage {
+	type: string = OverlaysActionTypes.LOG_MANUAL_SEARCH_TIME;
+
+	constructor(public payload: { from: string, to: string }) {
+	}
+
+	logMessage() {
+		return `User confirmed manual time range: ${ this.payload.from } - ${ this.payload.to }`
+	}
+}
+
+export class LogSelectSearchTimePreset implements Action, ILogMessage {
+	type: string = OverlaysActionTypes.LOG_SELECT_SEARCH_TIME_PRESET;
+
+	constructor(public payload: { presetTitle: string }) {
+	}
+
+	logMessage() {
+		return `User selected search time preset: ${this.payload.presetTitle}`
 	}
 }
 

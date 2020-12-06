@@ -15,7 +15,7 @@ import {
 	selectMapsList,
 	SetToastMessageAction,
 	UpdateMapAction,
-	SetLayoutSuccessAction, selectActiveMapId, IMapState
+	SetLayoutSuccessAction, selectActiveMapId, IMapState, SetActiveMapId
 } from '@ansyn/map-facade';
 import { AnnotationMode, DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
 import { Actions, Effect, ofType } from '@ngrx/effects';
@@ -104,15 +104,15 @@ export class OverlayStatusEffects {
 		ofType(OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING),
 		withLatestFrom(this.store$.select(mapStateSelector)),
 		mergeMap<any, any>(([action, mapsState]: [SetAutoImageProcessing, IMapState]) => {
-			mapsState.activeMapId = action.payload.mapId;
 			const activeMap: IMapSettings = MapFacadeService.activeMap(mapsState);
 			const isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
 			return [
+				new SetActiveMapId(action.payload.mapId),
 				new UpdateMapAction({
 					id: activeMap.id,
 					changes: { data: { ...activeMap.data, isAutoImageProcessingActive } }
 				}),
-				new SetAutoImageProcessingSuccess(isAutoImageProcessingActive)
+				new SetAutoImageProcessingSuccess({ value: isAutoImageProcessingActive, fromUI: true })
 			];
 		})
 	);
@@ -217,7 +217,7 @@ export class OverlayStatusEffects {
 		withLatestFrom(this.store$.select(overlayStatusStateSelector).pipe(pluck<IOverlayStatusState, IImageManualProcessArgs>('manualImageProcessingParams'))),
 		mergeMap<any, any>(([map, manualImageProcessingParams]: [ICaseMapState, IImageManualProcessArgs]) => {
 			const { overlay, isAutoImageProcessingActive, imageManualProcessArgs } = map.data;
-			const actions: Action[] = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess(overlay ? isAutoImageProcessingActive : false)];
+			const actions: Action[] = [new EnableImageProcessing(), new SetAutoImageProcessingSuccess({ value: overlay ? isAutoImageProcessingActive : false })];
 			if (!isEqual(imageManualProcessArgs, manualImageProcessingParams)) {
 				actions.push(new SetManualImageProcessing(map.data && imageManualProcessArgs || this.defaultImageManualProcessArgs));
 			}

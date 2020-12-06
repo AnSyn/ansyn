@@ -11,6 +11,7 @@ export enum ImageryLayerProperties {
 	CACHE_ID = 'cacheId',
 	MAIN_EXTENT = 'mainExtent',
 	FOOTPRINT = 'footprint',
+	IS_OVERLAY = 'isOverlay',
 	DESCRIPTION = 'description'
 }
 

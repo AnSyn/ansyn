@@ -89,7 +89,7 @@ describe('AngleFilterComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AngleFilterComponent);
 		component = fixture.componentInstance;
-		component.show([{ type: '', payload: PAYLOAD }, 0]);
+		component.show([{ type: '', payload: PAYLOAD, logMessage: () => 'hi' }, 0]);
 		fixture.detectChanges();
 	});
 
@@ -98,9 +98,9 @@ describe('AngleFilterComponent', () => {
 	});
 
 	it('should set angles from overlay', () => {
-		expect(component.overlaysAngles[0].overlay.name).toBe('overlay1');
-		expect(component.overlaysAngles[1].overlay.name).toBe('overlay2');
-		expect(component.overlaysAngles[2].overlay.name).toBe('overlay3');
+		expect(component.overlaysAngles[2].overlay.name).toBe('overlay1');
+		expect(component.overlaysAngles[0].overlay.name).toBe('overlay2');
+		expect(component.overlaysAngles[1].overlay.name).toBe('overlay3');
 	});
 
 	it('next overlay should called DisplayOverlayAction', () => {

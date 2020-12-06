@@ -1,18 +1,19 @@
-import { ContainerChangedTriggerAction, MenuConfig, menuFeatureKey, MenuReducer } from '@ansyn/menu';
+import {
+	ContainerChangedTriggerAction, MenuConfig,
+	menuFeatureKey,
+	MenuReducer
+, ResetAppAction } from '@ansyn/menu';
 import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
-import { UpdateMapSizeAction, ToggleFooter } from '@ansyn/map-facade';
+import { UpdateMapSizeAction } from '@ansyn/map-facade';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { RedrawTimelineAction } from '../../modules/overlays/actions/overlays.actions';
-import { ResetAppAction, ToggleIsPinnedAction, UnSelectMenuItemAction } from '../../../menu/actions/menu.actions';
 import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
-import { StartMouseShadow, AnnotationSetProperties } from '../../modules/menu-items/tools/actions/tools.actions';
-import { getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
@@ -53,13 +54,8 @@ describe('MenuAppEffects', () => {
 		actions = hot('--a--', {
 			a: new ResetAppAction()
 		});
-		const expectedResults = cold('--(bdefgh)--', {
-			b: new LoadDefaultCaseAction(),
-			d: new StartMouseShadow({fromUser: true}),
-			e: new AnnotationSetProperties(getInitialAnnotationsFeatureStyle()),
-			f: new ToggleIsPinnedAction(false),
-			g: new UnSelectMenuItemAction(),
-			h: new ToggleFooter(false)
+		const expectedResults = cold('--(b)--', {
+			b: new LoadDefaultCaseAction()
 		});
 		expect(menuAppEffects.onResetApp$).toBeObservable(expectedResults);
 	});

@@ -4,8 +4,6 @@ export { IExportMapMetadata, IExportMapData } from './model/export-map.model';
 
 export {
 	MapOrientation,
-	ICompressedMapSettings,
-	ICompressedMapSettingsData,
 	IMapSettings,
 	IMapSettingsData,
 	IWorldViewMapState
@@ -54,7 +52,9 @@ export {
 	getPolygonByPoint,
 	getPolygonByPointAndRadius,
 	getPolygonByBufferRadius,
+	convertLineSegmentToThinRectangle,
 	getPolygonIntersectionRatio,
+	calculatePolygonWidth,
 	getPolygonIntersectionRatioWithMultiPolygon,
 	polygonsDontIntersect,
 	isPointContainedInGeometry,

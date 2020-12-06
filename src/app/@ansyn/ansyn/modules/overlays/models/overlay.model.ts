@@ -1,12 +1,17 @@
-import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
+import { CaseGeoFilter, CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
 import { LineString, MultiPolygon, Point } from 'geojson';
 import { EPSG_3857 } from '@ansyn/imagery';
+
+export interface IOverlayError {
+	message: string,
+	sourceType?: string
+}
 
 export interface IOverlaysFetchData {
 	data: IOverlay[],
 	// number of overlays removed from total overlays (according to config)
 	limited: number,
-	errors?: Error[]
+	errors?: IOverlayError[]
 }
 
 export interface IDilutedOverlay {
@@ -67,6 +72,7 @@ export interface IOverlay extends IDilutedOverlay {
 	sensorLocation?: Point;
 	icon?: string;
 	containedInSearchPolygon?: RegionContainment;
+	resolution?: number;
 }
 
 export class Overlay implements IOverlay {
@@ -125,6 +131,8 @@ export interface IOverlayDrop {
 	shape?: string;
 	sensorName?: string;
 	icon?: any;
+	favorite?: boolean;
+	resolution?: number;
 }
 
 export interface IOverlaySpecialObject extends IOverlayDrop {

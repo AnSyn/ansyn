@@ -12,7 +12,9 @@ export class MissingTranslationLogging implements MissingTranslationHandler {
 	}
 
 	handle(params: MissingTranslationHandlerParams) {
-		this.logger.warn(`Can't find translation for ${ params.key }`, 'TRANSLATION');
+		if (this.loggerConfig.showTranslationWarnings) {
+			this.logger.warn(`Can't find translation for ${ params.key }`, 'TRANSLATION');
+		}
 		return params.key;
 	}
 }

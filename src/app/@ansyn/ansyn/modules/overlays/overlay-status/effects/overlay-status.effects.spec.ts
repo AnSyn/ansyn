@@ -1,6 +1,12 @@
 import { async, inject, TestBed } from '@angular/core/testing';
 import { ImageryCommunicatorService, } from '@ansyn/imagery';
-import { MapFacadeService, mapFeatureKey, MapReducer, selectMaps, UpdateMapAction } from '@ansyn/map-facade';
+import {
+	mapFeatureKey,
+	MapReducer,
+	mapStateSelector,
+	selectMaps, SetActiveMapId,
+	UpdateMapAction
+} from '@ansyn/map-facade';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
@@ -19,11 +25,19 @@ import { ICase } from '../../../menu-items/cases/models/case.model';
 
 const fakeMaps = {
 	mapId: {
+		id: 'mapId',
 		data: {
-			position: {}
+			position: {},
+			isAutoImageProcessingActive: false
 		}
 	}
 };
+
+const fakeMapState: any = {
+	entities: fakeMaps,
+	activeMapId: 'mapId'
+}
+
 describe('OverlayStatusEffects', () => {
 	let overlayStatusEffects: OverlayStatusEffects;
 	let actions: Observable<any>;
@@ -50,7 +64,8 @@ describe('OverlayStatusEffects', () => {
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
 		const fakeStore = new Map<any, any>([
-			[selectMaps, fakeMaps]
+			[selectMaps, fakeMaps],
+			[mapStateSelector, fakeMapState]
 		]);
 		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
 	}));
@@ -88,6 +103,23 @@ describe('OverlayStatusEffects', () => {
 		actions = hot('--a--', { a: new SelectCaseAction({} as ICase) });
 		const expectedResults = cold('--b--', { b: new DisableImageProcessing() });
 		expect(overlayStatusEffects.onSelectCase$).toBeObservable(expectedResults);
+	});
+
+	it('toggleAutoImageProcessing$ should raise SetAutoImageProcessingSuccess', () => {
+		actions = hot('--a--', { a: new SetAutoImageProcessing({ mapId: 'mapId' }) });
+		const expectedResults = cold('--(abc)--', {
+			a: new SetActiveMapId('mapId'),
+			b: new UpdateMapAction({
+				id: 'mapId',
+				changes: {
+					data: {
+						position: {},
+						isAutoImageProcessingActive: true
+					}}
+			}),
+			c: new SetAutoImageProcessingSuccess({ value: true, fromUI: true })
+		});
+		expect(overlayStatusEffects.toggleAutoImageProcessing$).toBeObservable(expectedResults);
 	});
 
 });

@@ -53,7 +53,8 @@ export class GeocoderService {
 		// WGS84 GEO
 		searchResult = this.coordinateRegex.wgs84GeoRegex.exec(value);
 		if (searchResult && searchResult.length) {
-			const [matchedString, lat, lon] = searchResult;
+			searchResult.shift();
+			const [lat, lon] = searchResult;
 			const coords = [+lat, +lon];
 			if (ProjectionConverterService.isValidGeoWGS84(coords)) {
 				return point(coords).geometry;
@@ -63,7 +64,8 @@ export class GeocoderService {
 		// WGS84 UTM
 		searchResult = this.coordinateRegex.wgs84UtmRegex.exec(value);
 		if (searchResult && searchResult.length) {
-			const [matchedString, zone, x, y] = searchResult;
+			searchResult.shift();
+			const [zone, x, y] = searchResult;
 			const coords = [+x, +y, +zone];
 			if (ProjectionConverterService.isValidUTM(coords)) {
 				const convertPoint = this.projectionConverterService.convertByProjectionDatum(
@@ -78,7 +80,8 @@ export class GeocoderService {
 		// ED50 UTM
 		searchResult = this.coordinateRegex.ed50UtmRegex.exec(value);
 		if (searchResult && searchResult.length) {
-			const [matchedString, zone, x, y] = searchResult;
+			searchResult.shift();
+			const [zone, x, y] = searchResult;
 			const coords = [+x, +y, +zone];
 			if (ProjectionConverterService.isValidUTM(coords)) {
 				const convertPoint = this.projectionConverterService.convertByProjectionDatum(
@@ -93,8 +96,9 @@ export class GeocoderService {
 		// NO PREFIX UTM
 		searchResult = this.coordinateRegex.noPrefixUtmRegex.exec(value);
 		if (searchResult && searchResult.length) {
+			searchResult.shift();
 			const DEFAULT_UTM_ZONE = 36;
-			const [matchedString, x, y] = searchResult;
+			const [x, y] = searchResult;
 			const coords = [+x, +y, DEFAULT_UTM_ZONE];
 			if (ProjectionConverterService.isValidUTM(coords)) {
 				const convertPoint = this.projectionConverterService.convertByProjectionDatum(

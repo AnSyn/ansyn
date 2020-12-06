@@ -18,7 +18,7 @@ import * as extentFromGeojson from '@ansyn/imagery';
 import {
 	BaseMapSourceProvider,
 	CacheService,
-	CommunicatorEntity,
+	CommunicatorEntity, GetProvidersMapsService,
 	IBaseImageryMapConstructor,
 	IMAGERY_CONFIG,
 	IMAGERY_MAPS,
@@ -55,7 +55,6 @@ import {
 	StatusBarReducer,
 	statusBarStateSelector
 } from '../../modules/status-bar/reducers/status-bar.reducer';
-import { LoggerService } from '../../modules/core/services/logger.service';
 import {
 	IOverlaysState,
 	OverlayReducer,
@@ -81,6 +80,7 @@ import {
 } from '../../modules/overlays/models/overlay.model';
 import { ICase } from '../../modules/menu-items/cases/models/case.model';
 import { overlayStatusConfig } from "../../modules/overlays/overlay-status/config/overlay-status-config";
+import { ScreenViewConfig } from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
 
 @ImageryMapSource({
 	sourceType: 'sourceType1',
@@ -189,12 +189,6 @@ describe('MapAppEffects', () => {
 			],
 			providers: [
 				{
-					provide: LoggerService, useValue: {
-						error: (some) => null, info: () => {
-						}
-					}
-				},
-				{
 					provide: CacheService,
 					useClass: CacheService,
 					deps: [VisualizersConfig, ImageryCommunicatorService]
@@ -209,6 +203,9 @@ describe('MapAppEffects', () => {
 					useValue: {}
 				},	{
 					provide: mapFacadeConfig,
+					useValue: {}
+				},  {
+					provide: ScreenViewConfig,
 					useValue: {}
 				},
 				{ provide: IMAGERY_MAPS, useValue: {} },
@@ -245,6 +242,10 @@ describe('MapAppEffects', () => {
 				},
 				{
 					provide: MAP_SOURCE_PROVIDERS_CONFIG,
+					useValue: {}
+				},
+				{
+					provide: GetProvidersMapsService,
 					useValue: {}
 				}
 			]

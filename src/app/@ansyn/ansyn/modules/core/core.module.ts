@@ -11,8 +11,11 @@ import { AnsynFormsModule } from './forms/ansyn-forms.module';
 import { FormsModule } from '@angular/forms';
 import { ContextMenuComponent } from './components/context-menu/context-menu.component';
 import { AngleFilterComponent } from './components/angle-filter/angle-filter.component';
-import { CredentialsComponent } from './components/credentials/credentials.component';
+import { CredentialsComponent } from '../menu-items/credentials/components/credentials/credentials.component';
 import { AreaToCredentialsService } from './services/credentials/area-to-credentials.service';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { CacheInterceptorsService } from './services/http-request-cache/cache-interceptors.service';
+import { CacheRequestService } from './services/http-request-cache/cache-request.service';
 
 @NgModule({
 	imports: [
@@ -26,7 +29,9 @@ import { AreaToCredentialsService } from './services/credentials/area-to-credent
 		LoggerService,
 		ErrorHandlerService,
 		StorageService,
-		AreaToCredentialsService
+		AreaToCredentialsService,
+		CacheRequestService,
+		{ provide: HTTP_INTERCEPTORS, useClass: CacheInterceptorsService, multi: true}
 	],
 	exports: [
 		AnsynTranslationModule,

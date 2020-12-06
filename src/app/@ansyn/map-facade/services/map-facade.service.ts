@@ -8,6 +8,7 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import {
+	LogMessageFromImagery,
 	MapInstanceChangedAction,
 	PositionChangedAction,
 } from '../actions/map.actions';
@@ -46,13 +47,7 @@ export class MapFacadeService {
 	}
 
 	static mapById(mapsList: IMapSettings[], mapId: string): IMapSettings {
-		if (!Boolean(mapsList)) {
-			return undefined;
-		}
-
-		return mapsList.find(({ id }: IMapSettings) => {
-			return id === mapId;
-		});
+		return Boolean(mapsList) ? mapsList.find(({ id }: IMapSettings) => id === mapId) : undefined;
 	}
 
 	initEmitters(id: string) {
@@ -65,7 +60,10 @@ export class MapFacadeService {
 				id: communicator.id,
 				position
 			})),
-			communicator.mapInstanceChanged.subscribe(this.mapInstanceChanged.bind(this))
+			communicator.mapInstanceChanged.subscribe(this.mapInstanceChanged.bind(this)),
+			communicator.logMessagesEmitter.subscribe((message) => {
+				this.store.dispatch(new LogMessageFromImagery(message))
+			})
 		);
 		this.subscribers[id] = communicatorSubscribers;
 	}

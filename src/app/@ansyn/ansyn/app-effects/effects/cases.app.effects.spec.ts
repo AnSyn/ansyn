@@ -34,13 +34,13 @@ import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/re
 import { toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { OverlayReducer, overlaysFeatureKey } from '../../modules/overlays/reducers/overlays.reducer';
 import {
+	DisplayOverlayAction,
 	DisplayOverlaySuccessAction,
 	LoadOverlaysSuccessAction
 } from '../../modules/overlays/actions/overlays.actions';
 import { IOverlayByIdMetaData, OverlaysService } from '../../modules/overlays/services/overlays.service';
-import { LoggerService } from '../../modules/core/services/logger.service';
 import { ICase } from '../../modules/menu-items/cases/models/case.model';
-import { IOverlay } from '../../modules/overlays/models/overlay.model';
+import { GeoRegisteration, IOverlay } from '../../modules/overlays/models/overlay.model';
 import { overlayStatusConfig } from "../../modules/overlays/overlay-status/config/overlay-status-config";
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { linksConfig } from '../../modules/menu-items/cases/services/helpers/cases.service.query-params-helper';
@@ -96,12 +96,6 @@ describe('CasesAppEffects', () => {
 				{
 					provide: TranslateService,
 					useValue: {}
-				},
-				{
-					provide: LoggerService, useValue: {
-						info: () => {
-						}
-					}
 				},
 				{ provide: casesConfig, useValue: { schema: null, defaultCase: { id: 'defaultCaseId' } } },
 				{ provide: linksConfig, useValue: {} },
@@ -289,7 +283,11 @@ describe('CasesAppEffects', () => {
 			spyOn(casesService, 'loadCase').and.callFake(() => of(caseItem));
 			actions = hot('--a--', { a: new SelectDilutedCaseAction(<any>caseItem) });
 			const expectedResults = cold('--(bc)--', {
-				b: new SetToastMessageAction({ toastText: 'Failed to load case (404)', showWarningIcon: true }),
+				b: new SetToastMessageAction({
+					toastText: 'Failed to load case (404)',
+					showWarningIcon: true,
+					originalMessage: 'Http failure response for (unknown url): 404 undefined'
+				}),
 				c: new LoadDefaultCaseIfNoActiveCaseAction()
 			});
 			expect(casesAppEffects.loadCase$).toBeObservable(expectedResults);
@@ -297,11 +295,14 @@ describe('CasesAppEffects', () => {
 
 		it('loadCase$ should dispatch SelectCaseAction if all case and all its overlays exists', () => {
 			const caseItem: ICase = caseMock2;
-			store.dispatch(new AddCaseAction(caseItem));
-			spyOn(casesService, 'loadCase').and.callFake(() => of(caseItem));
+			let overlays = [{id: 'eee', sourceType: 'PLANET', name: 'name', photoTime: 'photoTime', date: new Date(), azimuth: 0, isGeoRegistered: GeoRegisteration.geoRegistered },
+				{id: 'uuu', sourceType: 'PLANET', name: 'favorite', photoTime: 'photoTime', date: new Date(), azimuth: 0, isGeoRegistered: GeoRegisteration.geoRegistered }]
 			actions = hot('--a--', { a: new SelectDilutedCaseAction(<any>caseItem) });
-			const expectedResults = cold('--(b)--', {
-				b: new SelectCaseAction(caseItem)
+			spyOn(overlaysService, 'getOverlaysById').and.callFake(() => of(overlays));
+			const parsedCase: ICase = casesAppEffects.getFullOverlays(caseItem, new Map(overlays.map(overlay => [overlay.id, overlay])));
+			const expectedResults = cold('--(bc)--', {
+				b: new SelectCaseAction(parsedCase),
+				c: new DisplayOverlayAction({overlay: overlays[0], mapId: parsedCase.state.maps.data[0].id})
 			});
 			expect(casesAppEffects.loadCase$).toBeObservable(expectedResults);
 		});

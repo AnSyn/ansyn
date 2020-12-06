@@ -64,7 +64,8 @@ describe('ErrorHandlerService', () => {
 			service.httpErrorHandle(new Error(message), toastMessage);
 			expect(store.dispatch).toHaveBeenCalledWith(new SetToastMessageAction({
 				toastText: toastMessage,
-				showWarningIcon: true
+				showWarningIcon: true,
+				originalMessage: message
 			}));
 		});
 		it('if the returnValue param is undefined, throw observable error', (done) => {

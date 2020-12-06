@@ -25,7 +25,7 @@
 			tooltip-class="bottom"
 			(click)="toggleManualImageProcessing()"
 			[class.mode-on]="isImageControlActive && !onAutoImageProcessing">
-		<i class="icon-tools-image-processing" [class.active]="isManualProcessing"></i>
+		<i class="icon-tools-image-processing" [class.active]="isManualProcessing || isChanged"></i>
 	</button>
 	<ansyn-image-processing-control
 		*ngIf="isManualProcessing">

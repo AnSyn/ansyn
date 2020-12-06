@@ -4,7 +4,7 @@ import { MapFacadeService } from '../services/map-facade.service';
 import { EMPTY, forkJoin, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMaps } from '../reducers/map.reducer';
-import { ImageryCommunicatorService, IMapSettings, IWorldViewMapState } from '@ansyn/imagery';
+import { ImageryCommunicatorService, IMapSettings, IMapSettingsData, IWorldViewMapState } from '@ansyn/imagery';
 import {
 	ActiveImageryMouseEnter,
 	ActiveImageryMouseLeave,
@@ -188,10 +188,10 @@ export class MapEffects {
 	@Effect()
 	changeImageryLayer$ = this.actions$.pipe(
 		ofType<ReplaceMainLayer>(MapActionTypes.REPLACE_MAP_MAIN_LAYER),
-		switchMap( ({payload}) => {
+		switchMap(({ payload }) => {
 			const communicator = this.communicatorsService.provide(payload.id);
-			return fromPromise(communicator.replaceMapMainLayer(payload.sourceType)).pipe(
-				map( change => change ? new ReplaceMainLayerSuccess(payload) : new ReplaceMainLayerFailed())
+			return communicator.replaceMapMainLayer(payload.sourceType).pipe(
+				map(change => change ? new ReplaceMainLayerSuccess(payload) : new ReplaceMainLayerFailed())
 			);
 		})
 	);

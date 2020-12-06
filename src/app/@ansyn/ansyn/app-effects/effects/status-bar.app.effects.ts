@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import { casesStateSelector, ICasesState } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import {
@@ -10,36 +10,29 @@ import {
 	MapActionTypes,
 	selectOverlayOfActiveMap
 } from '@ansyn/map-facade';
-import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, map, withLatestFrom } from 'rxjs/operators';
 import {
 	CopySnapshotShareLinkAction,
 	GoAdjacentOverlay,
 	StatusBarActionsTypes,
 	UpdateGeoFilterStatus
 } from '../../modules/status-bar/actions/status-bar.actions';
-import { selectGeoFilterActive } from '../../modules/status-bar/reducers/status-bar.reducer';
+import { selectGeoFilterActive, selectGeoFilterType } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { CopyCaseLinkAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { DisplayOverlayFromStoreAction } from '../../modules/overlays/actions/overlays.actions';
-import {
-	selectDropsAscending,
-	selectRegion
-} from '../../modules/overlays/reducers/overlays.reducer';
+import { selectDropsAscending, selectRegion } from '../../modules/overlays/reducers/overlays.reducer';
 import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
-import { LoggerService } from '../../modules/core/services/logger.service';
+import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
+import { ToolsActionsTypes } from '../../modules/menu-items/tools/actions/tools.actions';
+import { CaseGeoFilter } from '../../modules/menu-items/cases/models/case.model';
 
 @Injectable()
 export class StatusBarAppEffects {
 
-	@Effect({ dispatch: false })
-	actionsLogger$: Observable<any> = this.actions$.pipe(
-		ofType(
-			StatusBarActionsTypes.COPY_SNAPSHOT_SHARE_LINK,
-			StatusBarActionsTypes.GO_ADJACENT_OVERLAY,
-			StatusBarActionsTypes.SET_IMAGE_OPENING_ORIENTATION
-		),
-		tap((action) => {
-			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Status_Bar', action.type);
-		}));
+	isPolygonSearch$ = this.store.pipe(
+		select(selectGeoFilterType),
+		map((geoFilterSearchMode: CaseGeoFilter) => geoFilterSearchMode === CaseGeoFilter.Polygon)
+	);
 
 	@Effect()
 	onAdjacentOverlay$: Observable<any> = this.actions$.pipe(
@@ -82,24 +75,31 @@ export class StatusBarAppEffects {
 	);
 
 	@Effect()
-	onClickOutsideMap$ = this.actions$.pipe(
-		ofType<ClickOutsideMap | ContextMenuShowAction>(MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP, MapActionTypes.CONTEXT_MENU.SHOW),
-		withLatestFrom(this.store.select(selectGeoFilterActive)),
-		filter(([action, active]) => active),
-		map(([action, active]) => new UpdateGeoFilterStatus())
-	);
-
-	@Effect()
 	onCancelGeoFilter$ = this.actions$.pipe(
 		ofType<UpdateGeoFilterStatus>(StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS),
 		filter(action => action.payload === undefined),
 		withLatestFrom(this.store.select(selectRegion)),
-		map(([action, { type }]) => new UpdateGeoFilterStatus({ type, active: false }))
+		map(([action, region]) => {
+			const type = region.properties.searchMode;
+			return new UpdateGeoFilterStatus({ type, active: false })
+		})
+	);
+
+	@Effect()
+	geoFilterSearchInterrupted$: Observable<any> = this.actions$.pipe(
+		ofType(
+			MenuActionTypes.SELECT_MENU_ITEM,
+			MapActionTypes.SET_LAYOUT,
+			ToolsActionsTypes.SET_SUB_MENU,
+			MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP,
+			MapActionTypes.CONTEXT_MENU.SHOW),
+		withLatestFrom(this.store.select(selectGeoFilterActive)),
+		filter(([action, isGeoFilterActive]: [SelectMenuItemAction, boolean]) => isGeoFilterActive),
+		map(() => new UpdateGeoFilterStatus())
 	);
 
 	constructor(protected actions$: Actions,
-				protected store: Store<IAppState>,
-				protected loggerService: LoggerService) {
+				protected store: Store<IAppState>) {
 	}
 
 }

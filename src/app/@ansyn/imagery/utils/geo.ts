@@ -18,11 +18,14 @@ import {
 	booleanPointOnLine,
 	centerOfMass,
 	circle,
+	convex,
 	destination,
 	feature,
 	geometry,
 	intersect,
 	lineIntersect,
+	lineOffset,
+	lineString,
 	point,
 	polygon,
 	union,
@@ -61,6 +64,17 @@ export function getPolygonByBufferRadius(polygonSource: Polygon, radiusInMeteres
 	});
 	const result: Feature<Polygon> = envelope(possiblePointsInRadius);
 	return result;
+}
+
+export function convertLineSegmentToThinRectangle(sourcePolygon: Feature<Polygon>, radiusInKm: number = 0.01): Feature<Polygon> {
+	if (sourcePolygon.geometry.coordinates[0].length !== 3) {
+		return sourcePolygon;
+	}
+	const asLine = lineString(sourcePolygon.geometry.coordinates[0].slice(1));
+	const lineOnOneSide = lineOffset(asLine, radiusInKm);
+	const lineOnTheOtherSide = lineOffset(asLine, -radiusInKm);
+	const thinRectangle = convex(featureCollection([lineOnOneSide, lineOnTheOtherSide]));
+	return thinRectangle;
 }
 
 export function getPointByGeometry(geometry: GeometryObject | FeatureCollection<any>): Point {
@@ -121,6 +135,11 @@ export function getPolygonIntersectionRatio(extent: Polygon, footprint: MultiPol
 			break
 	}
 	return intersection
+}
+
+export function calculatePolygonWidth(extent: Polygon) {
+	const [[extentTopLeft, extentTopRight]] = extent.coordinates;
+	return Math.round(distance(extentTopLeft, extentTopRight, { units: 'meters' }));
 }
 
 export function polygonsDontIntersect(extentPolygon, footprint, overlayCoverage): boolean {

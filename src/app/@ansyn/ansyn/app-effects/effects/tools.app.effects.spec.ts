@@ -38,7 +38,6 @@ import {
 import { toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import { ICase, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
-import { LoggerService } from '../../modules/core/services/logger.service';
 import { selectMapsIds } from '@ansyn/map-facade';
 
 describe('ToolsAppEffects', () => {
@@ -164,12 +163,6 @@ describe('ToolsAppEffects', () => {
 									max: 100
 								}
 							]
-					}
-				},
-				{
-					provide: LoggerService, useValue: {
-						error: (some) => null, info: () => {
-						}
 					}
 				}
 			]

@@ -113,17 +113,18 @@ describe('CasesService', () => {
 	});
 
 	it('createCase should send the case as body in ajax("post")', () => {
-		let fakeId = 'fakerId';
+		let ids = ['fakerId', 'activeMapId'];
+		let id = 0;
 		let selectedCase: ICase = { ...caseMock, name: 'fakerName' };
 		let fakeResponse = { selectedCase };
 		let newDate = new Date();
 		spyOn(storageService, 'create').and.callFake(() => <any>of(fakeResponse));
-		spyOn(UUID, 'UUID').and.callFake(() => fakeId);
+		spyOn(UUID, 'UUID').and.callFake(() => ids[id++]);
 		casesService.createCase(selectedCase, newDate);
 		expect(storageService.create).toHaveBeenCalledWith(casesService.config.schema,
 			{
 				preview: {
-					id: fakeId,
+					id: ids[0],
 					name: selectedCase.name,
 					owner: selectedCase.owner,
 					creationTime: newDate,

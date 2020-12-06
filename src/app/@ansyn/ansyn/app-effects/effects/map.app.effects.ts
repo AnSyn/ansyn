@@ -27,16 +27,22 @@ import {
 } from '@ansyn/map-facade';
 import {
 	BaseMapSourceProvider,
-	bboxFromGeoJson, getPolygonIntersectionRatio,
+	bboxFromGeoJson,
+	getPolygonIntersectionRatio,
 	IBaseImageryLayer,
 	ImageryCommunicatorService,
 	IImageryMapPosition,
 	IMapSettings,
 	polygonFromBBOX,
-	polygonsDontIntersect
+	polygonsDontIntersect,
+	GetProvidersMapsService,
+	ImageryLayerProperties,
+	ImageryMapExtentPolygon,
+	IMapSettingsData
 } from '@ansyn/imagery';
 import {
 	catchError,
+	concatMap,
 	debounceTime,
 	distinctUntilChanged,
 	filter,
@@ -51,8 +57,8 @@ import {
 import { toastMessages } from '../../modules/core/models/toast-messages';
 import { endTimingLog, startTimingLog } from '../../modules/core/utils/logs/timer-logs';
 import { isFullOverlay } from '../../modules/core/utils/overlays';
-import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
-import { MarkUpClass } from '../../modules/overlays/reducers/overlays.reducer';
+import { CaseGeoFilter, CaseRegionState, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
+import { MarkUpClass, selectRegion } from '../../modules/overlays/reducers/overlays.reducer';
 import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity/src/models';
 import {
@@ -66,7 +72,9 @@ import {
 	DisplayOverlaySuccessAction,
 	OverlaysActionTypes,
 	RequestOverlayByIDFromBackendAction,
-	SetMarkUp
+	SetMarkUp,
+	SetOverlaysCriteriaAction,
+	SetOverlaysStatusMessageAction
 } from '../../modules/overlays/actions/overlays.actions';
 import { GeoRegisteration, IOverlay } from '../../modules/overlays/models/overlay.model';
 import {
@@ -79,39 +87,24 @@ import { fromPromise } from 'rxjs/internal-compatibility';
 import { isEqual } from 'lodash';
 import { selectGeoRegisteredOptionsEnabled } from '../../modules/menu-items/tools/reducers/tools.reducer';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
-import { LoggerService } from '../../modules/core/services/logger.service';
 import {
 	IOverlayStatusConfig,
 	overlayStatusConfig
 } from '../../modules/overlays/overlay-status/config/overlay-status-config';
 import { MeasureDistanceVisualizer } from '../../modules/plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
+import { IGeoFilterStatus, selectGeoFilterStatus } from '../../modules/status-bar/reducers/status-bar.reducer';
+import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
+import {
+	IScreenViewConfig,
+	ScreenViewConfig
+} from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
+import { feature } from '@turf/turf';
+import { calculatePolygonWidth } from '@ansyn/imagery';
 
 const FOOTPRINT_INSIDE_MAP_RATIO = 1;
 
 @Injectable()
 export class MapAppEffects {
-
-	@Effect({ dispatch: false })
-	actionsLogger$: Observable<any> = this.actions$.pipe(
-		ofType(
-			OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS,
-			OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
-			MapActionTypes.MAP_INSTANCE_CHANGED_ACTION,
-			MapActionTypes.CHANGE_IMAGERY_MAP_SUCCESS,
-			MapActionTypes.CHANGE_IMAGERY_MAP_FAILED,
-			MapActionTypes.CHANGE_IMAGERY_MAP,
-			MapActionTypes.CONTEXT_MENU.SHOW,
-			MapActionTypes.CONTEXT_MENU.ANGLE_FILTER_SHOW,
-			MapActionTypes.SET_LAYOUT_SUCCESS,
-			MapActionTypes.POSITION_CHANGED,
-			MapActionTypes.SYNCHRONIZE_MAPS,
-			OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW,
-			OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS,
-			OverlayStatusActionsTypes.BACK_TO_WORLD_FAILED
-		),
-		tap((action) => {
-			this.loggerService.info(action.payload ? JSON.stringify(action.payload) : '', 'Map', action.type);
-		}));
 
 	onDisplayOverlay$: Observable<any> = this.actions$
 		.pipe(
@@ -321,12 +314,48 @@ export class MapAppEffects {
 			})
 		);
 
+	@Effect()
+	searchByExtentPolygon$: Observable<any> = this.actions$.pipe(
+		ofType(MapActionTypes.POSITION_CHANGED, MapActionTypes.SET_ACTIVE_MAP_ID, StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS),
+		debounceTime(this.screenViewConfig.debounceTime),
+		concatMap((action: Action) => of(action).pipe(
+			withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus), this.store$.select(selectRegion),
+				(action: Action, mapList, activeMapId, geoFilterStatus, { properties }): [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], number, number, IOverlay] => {
+					const { position, overlay }: IMapSettingsData = mapList[activeMapId].data;
+					const { center, zoom } = position.projectedState;
+
+					return [position.extentPolygon, geoFilterStatus, center, properties.center, zoom, properties.zoom, overlay];
+				})
+		)),
+		filter(([extentPolygon, geoFilterStatus, newCenter, oldCenter, newZoom, oldZoom, overlay]: [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], number, number, IOverlay]) => {
+			return geoFilterStatus.type === CaseGeoFilter.ScreenView && !Boolean(overlay) && (!isEqual(oldCenter, newCenter) || !isEqual(oldZoom, newZoom));
+		}),
+		concatMap(([extentPolygon, geoFilterStatus, newCenter, oldCenter, newZoom, oldZoom, overlay]: [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], number, number, IOverlay]) => {
+			const actions: Action[] = [];
+
+			const extentWidth = calculatePolygonWidth(extentPolygon);
+			if (extentWidth > this.screenViewConfig.extentWidthSearchLimit) {
+				actions.push(new SetOverlaysStatusMessageAction({ message: 'Zoom in to get new overlays' }));
+			} else {
+				const extent = feature(extentPolygon, { searchMode: CaseGeoFilter.ScreenView, center: newCenter, zoom: newZoom });
+				actions.push(new SetOverlaysCriteriaAction({ region: extent }));
+
+				if (geoFilterStatus.active) {
+					actions.push(new UpdateGeoFilterStatus({ active: false }));
+				}
+			}
+
+			return actions;
+		})
+	);
+
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
-				protected loggerService: LoggerService,
+				protected getProvidersMapsService: GetProvidersMapsService,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
-				@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig
+				@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig,
+				@Inject(ScreenViewConfig) public screenViewConfig: IScreenViewConfig
 	) {
 	}
 
@@ -352,10 +381,7 @@ export class MapAppEffects {
 		const intersectionRatio = getPolygonIntersectionRatio(this.bboxPolygon(mapData.position.extentPolygon), overlay.footprint);
 		const communicator = this.imageryCommunicatorService.provide(mapId);
 		const { sourceType } = overlay;
-		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({
-			sourceType,
-			mapType: sourceType.toLowerCase().includes('video') ? ImageryVideoMapType : caseMapState.worldView.mapType
-		});
+		const sourceLoader: BaseMapSourceProvider = this.getProvidersMapsService.getMapSourceProvider(sourceType.toLowerCase().includes('video') ? ImageryVideoMapType : caseMapState.worldView.mapType, sourceType);
 
 		if (!sourceLoader) {
 			return of(new SetToastMessageAction({
@@ -367,6 +393,11 @@ export class MapAppEffects {
 		const sourceProviderMetaData = { ...caseMapState, data: { ...mapData, overlay } };
 		this.setIsLoadingSpinner(mapId, sourceLoader, sourceProviderMetaData);
 
+		/* -0- */
+		const setIsOverlayProperties = map((layer: IBaseImageryLayer) => {
+			layer.set(ImageryLayerProperties.IS_OVERLAY, true);
+			return layer;
+		});
 
 		/* -1- */
 		const isActiveMapAlive = mergeMap((layer: IBaseImageryLayer) => {
@@ -393,7 +424,7 @@ export class MapAppEffects {
 		const resetView = pipe(
 			mergeMap((layer: IBaseImageryLayer) => {
 				const isFootprintExtentInsideMapExtent = intersectionRatio === FOOTPRINT_INSIDE_MAP_RATIO;
-				const extent = payloadExtent || isFootprintExtentInsideMapExtent && bboxFromGeoJson(overlay.footprint);
+				const extent = payloadExtent || !isFootprintExtentInsideMapExtent && bboxFromGeoJson(overlay.footprint);
 				return communicator.resetView(layer, mapData.position, extent);
 			}),
 			mergeMap(() => {
@@ -419,6 +450,7 @@ export class MapAppEffects {
 
 		return fromPromise(sourceLoader.createAsync(sourceProviderMetaData))
 			.pipe(
+				setIsOverlayProperties,
 				isActiveMapAlive,
 				changeActiveMap,
 				resetView,

@@ -114,10 +114,10 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		tap((imageManualProcessArgs) => {
 			const defalutParms = {};
 			this.overlayStatusConfig.ImageProcParams.forEach(obj => {
-				const key = obj.name
-				defalutParms[key] = obj.defaultValue
+				const key = obj.name;
+				defalutParms[key] = obj.defaultValue;
 			});
-			this.isChanged = !isEqual(defalutParms, imageManualProcessArgs) && !this.isAutoProcessing;
+			this.isChanged = !isEqual(defalutParms, imageManualProcessArgs);
 		})
 	);
 
@@ -238,10 +238,12 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	toggleManualImageProcessing() {
+		if (this.isAutoProcessing) {
+			this.store$.dispatch(new SetAutoImageProcessing({mapId: this.mapId}));
+		}
 		this.isAutoProcessing = false;
 		this.moreButtons = false;
 		this.isManualProcessing = !this.isManualProcessing;
-		this.store$.dispatch(new SetAutoImageProcessing({mapId: this.mapId}));
 	}
 
 	toggleAutoImageProcessing() {

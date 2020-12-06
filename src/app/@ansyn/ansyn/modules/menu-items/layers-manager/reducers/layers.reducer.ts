@@ -29,7 +29,7 @@ export const layersStateSelector: MemoizedSelector<any, ILayerState> = createFea
 export function LayersReducer(state: ILayerState = initialLayersState, action: LayersActions | any): ILayerState {
 	switch (action.type) {
 		case LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD:
-			return layersAdapter.removeAll(state);
+			return layersAdapter.removeAll({...state, selectedLayersIds: [], activeAnnotationLayer: null});
 
 		case LayersActionTypes.LAYER_COLLECTION_LOADED:
 			let annotationLayer = action.payload.find(({ type }) => type === LayerType.annotation);

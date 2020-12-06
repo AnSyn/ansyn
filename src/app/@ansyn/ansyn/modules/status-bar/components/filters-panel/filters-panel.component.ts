@@ -8,7 +8,7 @@ import {
 import { Store, select } from '@ngrx/store';
 import { LogOpenFilterPopup, UpdateFacetsAction } from '../../../filters/actions/filters.actions';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
-import { tap, filter, withLatestFrom, shareReplay } from 'rxjs/operators';
+import { tap, filter, withLatestFrom } from 'rxjs/operators';
 import { ClickOutsideService } from '../../../core/click-outside/click-outside.service';
 import { EnumFilterMetadata } from '../../../filters/models/metadata/enum-filter-metadata';
 import { IFilter } from '../../../filters/models/IFilter';

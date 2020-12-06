@@ -7,7 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { GetProvidersMapsService, ImageryCommunicatorService } from '@ansyn/imagery';
 import { cloneDeep, mapValues, uniqBy } from 'lodash';
 import { IAppState } from '../app.effects.module';
-import { catchError, concatMap, filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, concatMap, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import {
 	CasesActionTypes,
 	LoadDefaultCaseAction,

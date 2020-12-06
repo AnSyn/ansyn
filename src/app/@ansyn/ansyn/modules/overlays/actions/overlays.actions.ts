@@ -52,12 +52,7 @@ export const OverlaysActionTypes = {
 	LOG_SEARCH_PANEL_POPUP: 'LOG_SEARCH_PANEL_POPUP',
 	LOG_MANUAL_SEARCH_TIME: 'LOG_MANUAL_SEARCH_TIME',
 	LOG_SELECT_SEARCH_TIME_PRESET: 'LOG_SELECT_SEARCH_TIME_PRESET',
-	RESET_OVERLAY_ARRAY: 'RESET_OVERLAY_ARRAY'
 };
-
-export class ResetOverlayArray implements Action {
-	type = OverlaysActionTypes.RESET_OVERLAY_ARRAY;
-}
 
 export class SelectOverlayAction implements Action {
 	type = OverlaysActionTypes.SELECT_OVERLAY;

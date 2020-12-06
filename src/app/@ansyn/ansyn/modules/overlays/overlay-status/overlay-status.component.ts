@@ -110,12 +110,12 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	@AutoSubscription
 	manualImageProcessingParams$: () => Observable<Object> = () => this.store$.select(selectManualProcessArgsByMapId(this.mapId)).pipe(
 		tap((imageManualProcessArgs) => {
-			const defalutParms = {};
+			const defaultParams = {};
 			this.overlayStatusConfig.ImageProcParams.forEach(obj => {
 				const key = obj.name;
-				defalutParms[key] = obj.defaultValue;
+				defaultParams[key] = obj.defaultValue;
 			});
-			this.isChanged = !isEqual(defalutParms, imageManualProcessArgs);
+			this.isChanged = !isEqual(defaultParams, imageManualProcessArgs);
 		})
 	);
 

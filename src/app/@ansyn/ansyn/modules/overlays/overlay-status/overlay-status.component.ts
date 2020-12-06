@@ -1,6 +1,8 @@
 import { Component, ElementRef, Inject, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import {
 	IEntryComponent,
+	IMapState,
+	mapStateSelector,
 	selectActiveMapId,
 	selectHideLayersOnMap,
 	selectOverlayByMapId,
@@ -16,8 +18,6 @@ import {
 	SetAutoImageProcessing
 } from './actions/overlay-status.actions';
 import {
-	IOverlayStatusState,
-	overlayStatusStateSelector,
 	selectFavoriteOverlays,
 	selectTranslationData
 } from './reducers/overlay-status.reducer';
@@ -109,8 +109,8 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 			}));
 
 	@AutoSubscription
-	manualImageProcessingParams$: Observable<Object> = this.store$.select(overlayStatusStateSelector).pipe(
-		map((overlayStatusState: IOverlayStatusState ) => overlayStatusState.manualImageProcessingParams),
+	manualImageProcessingParams$: Observable<Object> = this.store$.select(mapStateSelector).pipe(
+		map((mapState: IMapState ) => mapState.entities[this.mapId].data.imageManualProcessArgs),
 		tap((imageManualProcessArgs) => {
 			const defalutParms = {};
 			this.overlayStatusConfig.ImageProcParams.forEach(obj => {

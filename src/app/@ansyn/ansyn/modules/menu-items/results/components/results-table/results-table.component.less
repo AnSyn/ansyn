@@ -1,7 +1,7 @@
 @import "ansyn/less/colors";
 @import 'ansyn/less/common';
 
-@footer-height: 58px;
+@footer-height: 106px;
 @header-size: calc(~"(100vh - @{footer-height}) * 0.025");
 
 :host {
@@ -18,7 +18,7 @@
 		box-sizing: border-box;
 
 		div.no-results {
-			height: 14vh;
+			height: @footer-height;
 		}
 
 		div.header {
@@ -122,7 +122,6 @@
 
 			div.results-table-body-row {
 				display: block;
-				margin-right: 16px;
 				text-align: center;
 				transition: background .3s, color .3s;
 				overflow: hidden;

@@ -1,7 +1,7 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { OverlaysConfig, OverlaysService } from './overlays.service';
 import { IOverlayDropSources, OverlayReducer, overlaysFeatureKey } from '../reducers/overlays.reducer';
-import { EMPTY, Observable, Observer, of } from 'rxjs';
+import { Observable, Observer, of } from 'rxjs';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
@@ -251,7 +251,7 @@ describe('OverlaysService', () => {
 
 		mockData.showOnlyFavorites = true;
 		const result3 = OverlaysService.parseOverlayDataForDisplay(mockData);
-		expect(result3.length).toBe(1);
+		expect(result3.length).toBe(2);
 	});
 
 	it('check the method fetchData with spyOn', () => {

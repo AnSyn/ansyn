@@ -1,7 +1,7 @@
 <div class="app animations" [ngClass]="(isPinnedClass$ | async)" [attr.dir]="isRTL ? 'rtl' : 'ltr'">
 	<!-- the 'dir' attribute will affect Angular Material components -->
 	<div class="menu">
-<!--		<ansyn-menu [version]="version" [animatedElement]="animatedElementHorizontal"></ansyn-menu>-->
+		<ansyn-menu [version]="version" [animatedElement]="animatedElementHorizontal"></ansyn-menu>
 	</div>
 
 	<div class="status" [class.expand]="(isMenuCollapse$ | async)" [class.hide-status-bar]="(hideStatus$ | async)">
@@ -15,7 +15,13 @@
 			<ansyn-context-menu *ngIf="renderContextMenu"></ansyn-context-menu>
 		</div>
 
-		<ansyn-results class="results"></ansyn-results>
+		<button [class.active]="toggleResults" class="results-table" (click)="toggleResultsTable()">
+			<i class="icon-table"></i>
+			<span class="badge">{{overlaysCount$ | async}}</span>
+			{{'Search results' | translate}}
+		</button>
+
+		<ansyn-results class="results" *ngIf="toggleResults"></ansyn-results>
 
 		<ansyn-footer
 			[activeMap]="(activeMap$ | async)"

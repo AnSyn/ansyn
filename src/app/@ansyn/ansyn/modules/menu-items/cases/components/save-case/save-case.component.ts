@@ -9,6 +9,7 @@ import { cloneDeep } from '../../../../core/utils/rxjs/operators/cloneDeep';
 import { ICase } from '../../models/case.model';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
 import { TranslateService } from '@ngx-translate/core';
+import * as moment from 'moment';
 
 const animationsDuring = '0.2s';
 
@@ -56,7 +57,7 @@ export class SaveCaseComponent implements OnInit, OnDestroy {
 	caseName$ = () => this.store.pipe(
 		select(selectCaseById(this.caseId)),
 		tap( (_case) => {
-			this.caseName = _case ? _case.name : new Date().toLocaleString();
+			this.caseName = _case ? _case.name : moment(new Date()).format('DD/MM/YYYY HH:mm:ss').toLocaleString();
 		})
 	);
 

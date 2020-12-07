@@ -1,11 +1,14 @@
+.icon-save:before {
+	content: "\e911";
+}
+.icon-undo:before {
+	content: "\e903";
+}
 .icon-bookmark-full:before {
 	content: "\e910";
 }
-.icon-screen-choice .path1:before {
+.icon-screen-choice:before {
 	content: "\e902";
-}
-.icon-screen-choice .path2:before {
-	content: "\e903";
 }
 .icon-bookmarks:before {
 	content: "\e901";

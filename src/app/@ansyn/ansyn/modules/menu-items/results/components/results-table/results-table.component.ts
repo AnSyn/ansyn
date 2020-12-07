@@ -58,16 +58,10 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	pagination = 15;
 	tableHeaders: ITableHeader[] = [
 		{
-			headerName: 'Resolution',
-			headerData: 'resolution',
+			headerName: 'Date & time',
+			headerData: 'date',
 			isDescending: true,
 			sortFn: (a: number, b: number) => a - b
-		},
-		{
-			headerName: 'Type',
-			headerData: 'icon',
-			isDescending: true,
-			sortFn: (a, b) => a.localeCompare(b)
 		},
 		{
 			headerName: 'Sensor',
@@ -76,8 +70,14 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			sortFn: (a: string, b: string) => this.translateService.instant(a).localeCompare(this.translateService.instant(b))
 		},
 		{
-			headerName: 'Date & time',
-			headerData: 'date',
+			headerName: 'Type',
+			headerData: 'icon',
+			isDescending: true,
+			sortFn: (a, b) => a.localeCompare(b)
+		},
+		{
+			headerName: 'Resolution',
+			headerData: 'resolution',
 			isDescending: true,
 			sortFn: (a: number, b: number) => a - b
 		}

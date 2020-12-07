@@ -1,7 +1,7 @@
 <div class="app animations" [ngClass]="(isPinnedClass$ | async)" [attr.dir]="isRTL ? 'rtl' : 'ltr'">
 	<!-- the 'dir' attribute will affect Angular Material components -->
 	<div class="menu">
-		<ansyn-menu [version]="version" [animatedElement]="animatedElementHorizontal"></ansyn-menu>
+<!--		<ansyn-menu [version]="version" [animatedElement]="animatedElementHorizontal"></ansyn-menu>-->
 	</div>
 
 	<div class="status" [class.expand]="(isMenuCollapse$ | async)" [class.hide-status-bar]="(hideStatus$ | async)">

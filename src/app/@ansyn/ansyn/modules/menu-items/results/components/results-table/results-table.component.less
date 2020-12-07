@@ -66,19 +66,15 @@
 					display: flex;
 					align-items: center;
 					position: relative;
-					justify-content: space-evenly;
+					justify-content: space-around;
+					margin-right: auto;
 					width: 85%;
 					height: 57px;
 					cursor: pointer;
 					box-sizing: border-box;
 
 					div.results-table-head-col {
-						width: 25%;
-						&.Sensor {
-							margin-left: 77px;
-						}
-
-						&.Type {
+						&.date {
 							margin-right: 10px;
 						}
 
@@ -92,11 +88,11 @@
 						}
 					}
 					.Sensor {
-						margin-left: -45px !important;
+						//margin-left: -45px !important;
 					}
 
 					.Type {
-						margin-right: 10px !important;
+						//margin-right: 10px !important;
 					}
 				}
 			}
@@ -211,67 +207,67 @@
 		}
 	}
 
-	&.rtl {
-		div.results-table {
-			div.header {
-				margin-left: unset;
-				margin-right: 23px;
-				div.box {
-					.icon-status-bar-imagery-count {
-						margin-left: unset;
-						margin-right: 145px;
-					}
-					.overlay-count {
-						margin-left: unset;
-						margin-right: 170px;
-					}
-				}
-			}
-			div.results-table-head {
-				margin-left: unset;
-				margin-right: 10px;
-
-				div.results-table-head-row {
-					div.results-table-head-row-data {
-						div.results-table-head-col {
-							margin-left: unset;
-							margin-right: 29px;
-							&.Sensor {
-								margin-right: 77px;
-							}
-							&.Type {
-								margin-left: 10px;
-							}
-						}
-					}
-				}
-			}
-			div.results-table-body {
-				direction: rtl;
-				div.results-table-body-row {
-					direction: rtl;
-					margin-left: unset;
-					margin-right: 16px;
-
-					div.results-table-body-row-data {
-						div.overlay-type {
-							margin-left: unset;
-							margin-right: 30px;
-						}
-						div.source-type {
-							margin-left: unset;
-							margin-right: 34px;
-						}
-						div.results-table-case-name-col {
-							margin-left: unset;
-							margin-right: 10px;
-							direction: ltr; // it is a date, so don't flip characters
-							text-align: right; // but align it to the right
-						}
-					}
-				}
-			}
-		}
-	}
+	//&.rtl {
+	//	div.results-table {
+	//		div.header {
+	//			margin-left: unset;
+	//			margin-right: 23px;
+	//			div.box {
+	//				.icon-status-bar-imagery-count {
+	//					margin-left: unset;
+	//					margin-right: 145px;
+	//				}
+	//				.overlay-count {
+	//					margin-left: unset;
+	//					margin-right: 170px;
+	//				}
+	//			}
+	//		}
+	//		div.results-table-head {
+	//			margin-left: unset;
+	//			margin-right: 10px;
+	//
+	//			div.results-table-head-row {
+	//				div.results-table-head-row-data {
+	//					div.results-table-head-col {
+	//						margin-left: unset;
+	//						margin-right: 29px;
+	//						&.Sensor {
+	//							margin-right: 77px;
+	//						}
+	//						&.Type {
+	//							margin-left: 10px;
+	//						}
+	//					}
+	//				}
+	//			}
+	//		}
+	//		div.results-table-body {
+	//			direction: rtl;
+	//			div.results-table-body-row {
+	//				direction: rtl;
+	//				margin-left: unset;
+	//				margin-right: 16px;
+	//
+	//				div.results-table-body-row-data {
+	//					div.overlay-type {
+	//						margin-left: unset;
+	//						margin-right: 30px;
+	//					}
+	//					div.source-type {
+	//						margin-left: unset;
+	//						margin-right: 34px;
+	//					}
+	//					div.results-table-case-name-col {
+	//						margin-left: unset;
+	//						margin-right: 10px;
+	//						direction: ltr; // it is a date, so don't flip characters
+	//						text-align: right; // but align it to the right
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 }
 

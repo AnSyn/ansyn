@@ -112,16 +112,9 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 			if (!hoveredElement) {
 				return;
 			}
-// <<<<<<< HEAD
 			const { left, height, top }: ClientRect = hoveredElement.getBoundingClientRect();
-			this.left = customElement ? this.getLeftPosition(left) : left - 150;
+			this.left = left - (customElement ? 275 : 150);
 			this.top = top + (customElement ? height + 70 : 0);
-// =======
-// 			const hoveredElementBounds: ClientRect = hoveredElement.getBoundingClientRect();
-// 			this.myCurrentWidth = (this.el.nativeElement as HTMLElement).offsetWidth;
-// 			this.left = customElement ? this.isRTL ? hoveredElementBounds.left - this.myCurrentWidth : hoveredElementBounds.right : this.getLeftPosition(hoveredElementBounds.left);
-// 			this.top = hoveredElementBounds.top + (customElement ? hoveredElementBounds.height : 0);
-// >>>>>>> d386083ebc16d18a17804a3c7c9ca45ce27c5a11
 			this.showOverview();
 			this.sensorName = overlay.sensorName;
 			this.sensorType = overlay.sensorType;
@@ -144,7 +137,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 // 		const candidateLeftPos = hoveredElementPos - 340;
 // 		const myCurrentWidth = (this.el.nativeElement as HTMLElement).offsetWidth;
 // =======
-		const candidateLeftPos = hoveredElementPos - 50;
+		const candidateLeftPos = hoveredElementPos - 350;
 // >>>>>>> d386083ebc16d18a17804a3c7c9ca45ce27c5a11
 		const ansynWidth = this.topElement.getBoundingClientRect().width;
 		// ^ Ansyn component is not a block element, therefore it doesn't have offsetWidth

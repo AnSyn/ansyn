@@ -67,7 +67,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			headerName: 'Type',
 			headerData: 'icon',
 			isDescending: true,
-			sortFn: (a, b) => a.localeCompare(b)
+			sortFn: (a: string, b: string) => a.localeCompare(b)
 		},
 		{
 			headerName: 'Resolution',

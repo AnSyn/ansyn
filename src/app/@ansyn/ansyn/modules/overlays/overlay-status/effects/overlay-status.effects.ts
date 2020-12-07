@@ -51,7 +51,7 @@ import { IOverlay } from '../../models/overlay.model';
 import { feature, difference } from '@turf/turf';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from '../config/overlay-status-config';
-import { isEqual } from 'lodash';
+import { isEqual } from "lodash";
 import { CasesActionTypes } from '../../../menu-items/cases/actions/cases.actions';
 
 @Injectable()
@@ -60,22 +60,15 @@ export class OverlayStatusEffects {
 	backToWorldView$: Observable<any> = this.actions$
 		.pipe(
 			ofType(OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW),
-			filter((action: BackToWorldView) => this.communicatorsService.has(action.payload.mapId)),
-			switchMap(({ payload }: BackToWorldView) => {
+			filter( (action: BackToWorldView) => this.communicatorsService.has(action.payload.mapId)),
+			switchMap(({payload}: BackToWorldView) => {
 				const communicator = this.communicatorsService.provide(payload.mapId);
-				const mapData = { ...communicator.mapSettings.data };
+				const mapData = {...communicator.mapSettings.data};
 				const position = mapData.position;
 				const disabledMap = communicator.activeMapName === DisabledOpenLayersMapName || communicator.activeMapName === ImageryVideoMapType;
 				this.store$.dispatch(new UpdateMapAction({
 					id: communicator.id,
-					changes: {
-						data: {
-							...mapData,
-							overlay: null,
-							isAutoImageProcessingActive: false,
-							imageManualProcessArgs: this.defaultImageManualProcessArgs
-						}
-					}
+					changes: { data: { ...mapData, overlay: null, isAutoImageProcessingActive: false, imageManualProcessArgs: this.defaultImageManualProcessArgs } }
 				}));
 
 				return fromPromise<any>(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
@@ -111,10 +104,10 @@ export class OverlayStatusEffects {
 		ofType(OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING),
 		withLatestFrom(this.store$.select(mapStateSelector)),
 		mergeMap<any, any>(([action, mapsState]: [SetAutoImageProcessing, IMapState]) => {
-			const activeMap: IMapSettings = MapFacadeService.activeMap(mapsState);
+			const activeMap: IMapSettings = mapsState.entities[action.payload.mapId];
 			const isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
 			return [
-				new SetActiveMapId(action.payload.mapId),
+				new SetActiveMapId(activeMap.id),
 				new UpdateMapAction({
 					id: activeMap.id,
 					changes: { data: { ...activeMap.data, isAutoImageProcessingActive } }
@@ -186,7 +179,8 @@ export class OverlayStatusEffects {
 
 					if (combinedResult === null) {
 						scannedArea = null;
-					} else if (combinedResult.geometry.type === 'MultiPolygon') {
+					}
+					else if (combinedResult.geometry.type === 'MultiPolygon') {
 						scannedArea = combinedResult.geometry;
 					} else {
 						scannedArea = geojsonPolygonToMultiPolygon(combinedResult.geometry);

@@ -21,6 +21,7 @@ import {
 	LogSearchPanelPopup,
 } from '../../../overlays/actions/overlays.actions';
 import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
+import { SearchOptionsComponent } from '../search-options/search-options.component';
 
 const moment = momentNs;
 
@@ -91,7 +92,8 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 				@Inject(MultipleOverlaysSourceConfig) private multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				@Inject(COMPONENT_MODE) public componentMode: boolean,
-				dateTimeAdapter: DateTimeAdapter<any>
+				dateTimeAdapter: DateTimeAdapter<any>,
+				protected _parent: SearchOptionsComponent
 	) {
 		dateTimeAdapter.setLocale(statusBarConfig.locale);
 	}
@@ -130,5 +132,8 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	toggleAdvancedSearch() {
 		this.advancedSearch = !this.advancedSearch
+	}
+	close() {
+		this._parent.close()
 	}
 }

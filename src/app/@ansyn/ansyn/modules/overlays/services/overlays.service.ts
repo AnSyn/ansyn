@@ -92,7 +92,11 @@ export class OverlaysService {
 				start: params.time.from,
 				end: params.time.to
 			},
-			customSensorToFilter: params.dataInputFilters.customFiltersSensor
+			customSensorToFilter: params.dataInputFilters.customFiltersSensor,
+			sensors: Boolean(params.sensors) ? params.sensors : null,
+			registeration: Boolean(params.registeration) ? params.registeration : null,
+			resolution: Boolean(params.resolution) ? params.resolution : null,
+			types: Boolean(params.types) ? params.types : null
 			//להוסיף את הפרמטרים לחיפוש
 		});
 	}

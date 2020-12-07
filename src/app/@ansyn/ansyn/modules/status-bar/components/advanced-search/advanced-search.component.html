@@ -2,7 +2,7 @@
     <div class="title-grid">
         <div class="item1-title">
             <div class="select-all" (click)="selectAllItems('types')">{{'select all' | translate}}</div>
-            <div class="reset">-></div>
+            <div class="reset" (click)="resetSelection('types')">-></div>
         </div>
         <div class="title item2-title">{{'Type' | translate}}</div>
     </div>
@@ -48,7 +48,7 @@
     <div class="title-grid">
         <div class="item1-title">
             <div class="select-all" (click)="selectAllItems('sensors')">{{'select all' | translate}}</div>
-            <div class="reset">-></div>
+            <div class="reset" (click)="resetSelection('sensors')">-></div>
         </div>
         <div class="title item2-title">{{'Sensor' | translate}}</div>
     </div>

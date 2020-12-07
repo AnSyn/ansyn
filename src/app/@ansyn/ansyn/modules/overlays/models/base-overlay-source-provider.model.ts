@@ -9,7 +9,7 @@ import { forkJoinSafe } from '../../core/utils/rxjs/observables/fork-join-safe';
 import { sortByDateDesc } from '../../core/utils/sorting';
 import { IDateRange } from '../../core/models/multiple-overlays-source-config';
 import { LoggerService } from '../../core/services/logger.service';
-import { IOverlay, IOverlayError, IOverlaysFetchData } from './overlay.model';
+import { IOverlay, IOverlayError, IOverlaysFetchData, IResolutionRange } from './overlay.model';
 import { IDataInputFilterValue } from '../../menu-items/cases/models/case.model';
 import { getErrorLogFromException } from '../../core/utils/logs/timer-logs';
 
@@ -20,6 +20,9 @@ export interface IFetchParams {
 	dataInputFilters: IDataInputFilterValue[];
 	timeRange: IDateRange;
 	customSensorToFilter: string[]; // for context
+	resolution?: IResolutionRange;
+	types?: string[];
+	registeration?: string[];
 }
 
 export interface IOverlayFilter {

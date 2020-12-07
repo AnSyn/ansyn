@@ -8,6 +8,7 @@ import { Options } from '@angular-slider/ngx-slider'
 import { GeoRegisteration, IOverlaysCriteria, IResolutionRange } from '../../../overlays/models/overlay.model';
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import { AnsynComboTableComponent } from '../../../core/forms/ansyn-combo-table/ansyn-combo-table.component';
+import { SearchPanelComponent } from '../search-panel/search-panel.component';
 @Component({
   selector: 'ansyn-advanced-search',
   templateUrl: './advanced-search.component.html',
@@ -51,7 +52,8 @@ export class AdvancedSearchComponent implements OnInit {
 
   constructor(protected store: Store<IFiltersState>,
               @Inject(MultipleOverlaysSourceConfig) public multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
-              private translate: TranslateService) { 
+              private translate: TranslateService,
+              protected _parent: SearchPanelComponent) { 
     this.dataFilters = this.getAllDataInputFilter();
     this.sensorTypes = this.selectAll();
     this.sensorsList = this.getAllSensorsNames();
@@ -63,7 +65,10 @@ export class AdvancedSearchComponent implements OnInit {
 			.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive)
 			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
           if(sensorNamesByGroup) {
-             sensorNamesByGroup.sensors.forEach(sensor => sensors.push(sensor));
+            const typesNames = Object.keys(sensorNamesByGroup);
+            typesNames.forEach(type => {
+              sensorNamesByGroup[type].forEach(sensor => sensors.push(sensor));
+            })
           }
 				}
       );
@@ -142,13 +147,14 @@ export class AdvancedSearchComponent implements OnInit {
       resolution
     };
     this.store.dispatch(new SetOverlaysCriteriaAction(criteria));
-      
+    this._parent.close();
   }
 
   updateSelectedArray(selectedItemsArray,arrayToUpdate) {
     switch (arrayToUpdate) {
       case 'selectedTypes' : {
         this.selectedTypes = selectedItemsArray;
+        this.updateSelectedSensorsByTypes(selectedItemsArray)
         break;
       }
       case 'selectedSensors' : {
@@ -162,14 +168,50 @@ export class AdvancedSearchComponent implements OnInit {
     }
   }
 
+  updateSelectedSensorsByTypes(selectedItemsArray: string[]) {
+    const sensorsToActiveate: any[] = [];
+    Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
+			.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive)
+			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
+          if(sensorNamesByGroup) {
+            const typesNames = Object.keys(sensorNamesByGroup);
+            typesNames.forEach(type => {
+              if( selectedItemsArray.includes(type)) {
+                sensorsToActiveate.push(...sensorNamesByGroup[type]);
+              }
+            })
+          }
+				}
+      );
+      this.comboTableSensors.resetSelection()
+      sensorsToActiveate.forEach(sensor => {
+        if(!this.comboTableSensors.selected.includes(sensor))
+        this.comboTableSensors.selectOption(sensor)
+      })
+      
+  }
   selectAllItems(selectedArrayToFill) {
     switch (selectedArrayToFill) {
       case 'types' : {
         this.comboTableTypes.selectAllOptions(this.sensorTypes)
+        this.comboTableSensors.selectAllOptions(this.sensorsList);
         break;
       }
       case 'sensors' : {
         this.comboTableSensors.selectAllOptions(this.sensorsList);
+        break;
+      }
+    }
+  }
+
+  resetSelection(selectedArrayToFill) {
+    switch (selectedArrayToFill) {
+      case 'types' : {
+        this.comboTableTypes.resetSelection();
+        break;
+      }
+      case 'sensors' : {
+        this.comboTableSensors.resetSelection();
         break;
       }
     }

@@ -1,6 +1,8 @@
 import { Component, ElementRef, EventEmitter, forwardRef, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Store } from '@ngrx/store';
 import { noop } from 'rxjs';
+import { IStatusBarState } from '../../../status-bar/reducers/status-bar.reducer';
 
 @Component({
   selector: 'ansyn-combo-table',
@@ -18,7 +20,6 @@ export class AnsynComboTableComponent implements ControlValueAccessor {
 
   onTouchedCallback: () => void = noop;
   onChangeCallback: (_: any) => void = noop;
-	// @ViewChild(AnsynComboTableComponent) trigger: AnsynComboTableComponent;
 	@ViewChild('optionsContainer') optionsContainer: ElementRef;
 	@Input() icon: string;
 	disabled: boolean;
@@ -37,11 +38,8 @@ export class AnsynComboTableComponent implements ControlValueAccessor {
 	renderSelected = '';
   
   @Output() selectedItemsArray = new EventEmitter<any[]>();
-  // get optionsTrigger(): ElementRef {
-	// 	return this.trigger && this.trigger.optionsTrigger;
-  // }
   
-  constructor(public injector: Injector) { }
+  constructor(public injector: Injector,public store: Store<IStatusBarState>) { }
 
   toggleShow() {
 		this.optionsVisible = !this.optionsVisible;
@@ -60,8 +58,12 @@ export class AnsynComboTableComponent implements ControlValueAccessor {
   }
 
   selectAllOptions(allOptionsArray: any[]) {
-    console.log(this.contentTitle)
     this.selected = allOptionsArray.slice();
+    this.selectedItemsArray.emit(this.selected)
+  }
+
+  resetSelection() {
+    this.selected =[]
     this.selectedItemsArray.emit(this.selected)
   }
 

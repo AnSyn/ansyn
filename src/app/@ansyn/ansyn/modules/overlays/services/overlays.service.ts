@@ -85,7 +85,7 @@ export class OverlaysService {
 			sensorName,
 			icon,
 			favorite: favoriteOverlayIds.includes(id),
-			resolution: resolution ? resolution : 0
+			resolution: resolution || 0
 		}));
 		const allDrops = [...dropsFromOverlays, ...mapValuesToArray(specialObjects)].sort(sortByDateDesc);
 		return allDrops;

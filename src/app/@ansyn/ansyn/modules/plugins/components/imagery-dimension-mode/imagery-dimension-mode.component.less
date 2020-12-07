@@ -2,10 +2,8 @@
 @import "ansyn/less/z-index-globals";
 
 :host {
-	position: relative;
 	background-color: rgba(0, 0, 0, 0.3);
 	color: white;
-	left: 20px;
 	width: 40px;
 	margin-bottom: 5px;
 
@@ -14,20 +12,13 @@
 	}
 
 	.buttons {
-		line-height: 0;
-		left: 5px;
-		top: 6px;
-
 		&:hover:not(:disabled) {
 			background: rgba(0, 0, 0, 0.5);
 		}
 
 		button {
 			position: relative;
-			padding: 4px 6px;
-			vertical-align: middle;
 			color: white;
-			line-height: 0;
 
 			&.small-icon-button {
 				font-size: 17px;
@@ -35,7 +26,6 @@
 				border: none;
 				outline: none;
 				padding: 4px 7px;
-				align-items: center;
 				z-index: 1;
 				height: 25px;
 
@@ -46,11 +36,8 @@
 			}
 
 			.icon::before {
-				vertical-align: middle;
 				display: block;
 			}
 		}
 	}
 }
-
-

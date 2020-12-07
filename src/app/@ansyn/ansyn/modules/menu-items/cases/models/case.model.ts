@@ -3,7 +3,6 @@ import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
 import { LayoutKey } from '@ansyn/map-facade';
 import { FilterType } from '../../../filters/models/filter-type';
 import { IMapSettings, IMapSettingsData } from '@ansyn/imagery';
-import { ICompressedMapSettings, ICompressedMapSettingsData } from '@ansyn/imagery';
 
 export interface ICasePreview {
 	creationTime: Date;
@@ -72,6 +71,7 @@ export interface IDilutedCaseState {
 }
 
 export interface ICaseState extends IDilutedCaseState {
+
 	favoriteOverlays?: IOverlay[];
 	miscOverlays?: IOverlaysHash;
 	maps?: ICaseMapsState;

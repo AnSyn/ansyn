@@ -1,6 +1,8 @@
 @import "ansyn/less/common";
 @import "../../less/common.less";
 
+@margin: 30px;
+
 :host {
 	&:extend(.modal-host);
 }
@@ -51,6 +53,19 @@ div.save-case {
 
 	}
 
+}
+
+	&.rtl {
+		left: unset;
+		right: @margin;
+
+		div.save-case {
+			button.close {
+				right: unset;
+				left: 0;
+			}
+		}
+	}
 }
 
 

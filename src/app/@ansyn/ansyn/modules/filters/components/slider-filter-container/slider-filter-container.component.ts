@@ -1,5 +1,5 @@
 import { SliderFilterMetadata } from '../../models/metadata/slider-filter-metadata';
-import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 import { SliderFilterCounters } from '../../models/counters/slider-filter-counters';
 
 @Component({
@@ -27,6 +27,9 @@ export class SliderFilterContainerComponent {
 	}
 
 	@Input() counters: SliderFilterCounters;
+
+	@HostBinding('class.rtl')
+	@Input() isRTL = false;
 
 	@Output() onMetadataChange = new EventEmitter<SliderFilterMetadata>(true);
 	rangeValues: number[];

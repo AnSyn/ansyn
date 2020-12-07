@@ -9,6 +9,7 @@ import { catchError, map, tap, withLatestFrom, take, concatMap } from 'rxjs/oper
 import { ICasePreview } from '../../models/case.model';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { CasesType } from '../../models/cases-config';
+import { TranslateService } from '@ngx-translate/core';
 
 const animationsDuring = '0.2s';
 
@@ -34,6 +35,10 @@ const animations: any[] = [
 @AutoSubscriptions()
 export class DeleteCaseComponent implements OnInit, OnDestroy {
 	@HostBinding('@modalContent') readonly modalContent = true;
+
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
 	activeCase: ICasePreview;
 
 	@AutoSubscription
@@ -45,7 +50,11 @@ export class DeleteCaseComponent implements OnInit, OnDestroy {
 
 	@Output() submitCase = new EventEmitter();
 
-	constructor(protected store: Store<ICasesState>, protected casesService: CasesService) {
+	constructor(
+		protected store: Store<ICasesState>,
+		protected casesService: CasesService,
+		protected translateService: TranslateService
+	) {
 	}
 
 	ngOnInit() {

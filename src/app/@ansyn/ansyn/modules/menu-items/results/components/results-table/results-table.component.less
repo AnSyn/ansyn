@@ -4,6 +4,7 @@
 
 @footer-height: 58px;
 @header-size: calc(~"(100vh - @{footer-height}) * 0.025");
+@date-width: 169px;
 
 :host {
 	&:extend(.default-menu-item);
@@ -51,7 +52,7 @@
 
 			div.results-table-head-row {
 				margin-bottom: -5px;
-				padding: 0 15px;
+				padding-left: 43px;
 				width: 100%;
 
 				div.results-table-head-row-data {
@@ -60,14 +61,15 @@
 					position: relative;
 					width: 100%;
 					height: 57px;
-					text-align: left;
 					cursor: pointer;
 					box-sizing: border-box;
 
 					div.results-table-head-col {
-						margin-left: 29px;
-						width: 200px;
 						flex: 1;
+
+						&.date {
+							min-width: @date-width
+						}
 
 						i.icon-arrow {
 							margin-top: -2px;
@@ -78,23 +80,15 @@
 							}
 						}
 					}
-
-					.Sensor {
-						margin-left: 77px !important;
-					}
-
-					.Type {
-						margin-right: 10px !important;
-					}
 				}
 			}
 		}
 
 		div.results-table-body {
-			direction: rtl;
 			display: block;
 			overflow-y: auto;
 			height: 80vh;
+			direction: rtl; // to flip the scrollbar location
 
 			div.results-table-body-row-data:hover {
 				background-color: @background-color-7;
@@ -108,29 +102,18 @@
 				top: -2px;
 			}
 
-			div.results-table-body-row:first-child div.results-table-body-row-data {
-				//border-top: 1px solid #EBF8FA;
-			}
-
 			div.results-table-body-row {
 				display: block;
-				margin: 0px 0px 0px 16px;
+				margin-left: 16px;
 				transition: background .3s, color .3s;
 				overflow: hidden;
 				height: 10%;
 				position: relative;
+				direction: ltr; // needs to be repeated here because of scrollbar place
 
 				&.mouse-enter {
 					color: #156879;
 					background: #EBF8FA;
-
-					div.results-table-body-row-data div.-menu-container div.results-menu {
-						transform: translate(10%, 50%);
-						opacity: 1;
-						visibility: visible;
-						pointer-events: auto;
-					}
-
 				}
 
 				&.active {
@@ -162,14 +145,13 @@
 					position: relative;
 					display: flex;
 					align-items: center;
-					text-align: left;
-					direction: ltr;
 					cursor: pointer;
 					box-sizing: border-box;
 					height: 100%;
+					padding-left: 19px;
 
-					div.overlay-type {
-						margin-left: 30px;
+					div.overlay-favorite {
+						min-width: 24px;
 					}
 
 					hr {
@@ -188,58 +170,63 @@
 					}
 
 					div.source-type {
-						margin-left: 43px !important;
 						overflow: hidden;
 						text-overflow: ellipsis;
 					}
 
 					div.results-table-case-name-col {
-						flex: 1.5;
 						overflow: hidden;
 						text-overflow: ellipsis;
-						margin-left: 19px;
+						min-width: @date-width;
 					}
 
 					.results-table-auto-save-col {
 						padding-top: 20px;
-						flex: 2;
 					}
-
-					div.results-menu-container {
-						flex: 0;
-
-						div.results-menu {
-							display: flex;
-							transition: visibility .3s, transform .3s, opacity .3s;
-							opacity: 0;
-							visibility: hidden;
-							z-index: @z-index-case-menu;
-							position: fixed;
-							border: 0.5px solid #404040;
-							box-sizing: border-box;
-							box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24), 0 0 2px rgba(0, 0, 0, 0.12);
-							border-radius: 4px;
-							background: #FFFFFF;
-							transform: translate(-50%, 50%);
-							pointer-events: none;
-
-							button {
-								background: transparent;
-								border: 1px solid transparent;
-								font-size: 20px;
-
-								&:hover {
-									box-sizing: border-box;
-									border: 1px solid #7b7b7b;
-								}
-							}
-						}
-					}
-
 				}
 			}
 		}
 	}
 
+	&.rtl {
+		div.results-table {
+			div.header {
+				margin-left: unset;
+				margin-right: 23px;
+				div.box {
+					.icon-status-bar-imagery-count {
+						margin-left: unset;
+						margin-right: 145px;
+					}
+					.overlay-count {
+						margin-left: unset;
+						margin-right: 170px;
+					}
+				}
+			}
+			div.results-table-head {
+				div.results-table-head-row {
+					padding-left: unset;
+					padding-right: 43px;
+				}
+			}
+			div.results-table-body {
+				direction: ltr;
+				div.results-table-body-row {
+					direction: rtl;
+					margin-left: unset;
+					margin-right: 16px;
+					div.results-table-body-row-data {
+						padding-left: unset;
+						padding-right: 19px;
+						div.results-table-case-name-col {
+							direction: ltr; // it is a date, so don't flip characters
+							text-align: right; // but align it to the right
+						}
+					}
+				}
+			}
+		}
+	}
 }
 

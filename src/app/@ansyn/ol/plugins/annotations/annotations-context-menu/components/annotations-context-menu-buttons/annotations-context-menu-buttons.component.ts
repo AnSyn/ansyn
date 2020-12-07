@@ -34,6 +34,9 @@ export class AnnotationsContextMenuButtonsComponent implements OnInit, AfterView
 	@Input() selectedTab: { [id: string]: AnnotationsContextmenuTabs } = {};
 	@Input() communicator: CommunicatorEntity;
 
+	@HostBinding('class.rtl')
+	@Input() isRTL = false;
+
 	attributes$: Observable<AttributeBase<any>[]>;
 	isMetadataEnabled: boolean;
 

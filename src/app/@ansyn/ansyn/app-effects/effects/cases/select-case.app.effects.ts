@@ -2,12 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import {
-	SetFavoriteOverlaysAction,
-	SetOverlaysScannedAreaDataAction,
-	SetOverlaysTranslationDataAction,
-	UpdateOverlaysManualProcessArgs
-} from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
+import { SetFavoriteOverlaysAction, SetOverlaysScannedAreaDataAction, SetOverlaysTranslationDataAction, UpdateOverlaysManualProcessArgs } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { IAppState } from '../../app.effects.module';
 import { concatMap } from 'rxjs/operators';
 import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '@ansyn/map-facade';
@@ -22,10 +17,7 @@ import {
 } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { casesConfig, CasesService } from '../../../modules/menu-items/cases/services/cases.service';
 import { UpdateFacetsAction } from '../../../modules/filters/actions/filters.actions';
-import {
-	SetAnnotationMode,
-	SetMeasureDistanceToolState,
-} from '../../../modules/menu-items/tools/actions/tools.actions';
+import { SetAnnotationMode, SetMeasureDistanceToolState, } from '../../../modules/menu-items/tools/actions/tools.actions';
 import { isFullOverlay } from '../../../modules/core/utils/overlays';
 import { ICoreConfig } from '../../../modules/core/models/core.config.model';
 import { CoreConfig } from '../../../modules/core/models/core.config';
@@ -48,10 +40,10 @@ export class SelectCaseAppEffects {
 	);
 
 	constructor(protected actions$: Actions,
-		protected store$: Store<IAppState>,
-		@Inject(CoreConfig) protected coreConfig: ICoreConfig,
-		@Inject(casesConfig) public caseConfig: ICasesConfig,
-		protected casesService: CasesService
+				protected store$: Store<IAppState>,
+				@Inject(CoreConfig) protected coreConfig: ICoreConfig,
+				@Inject(casesConfig) public caseConfig: ICasesConfig,
+				protected casesService: CasesService
 	) {
 	}
 
@@ -61,12 +53,13 @@ export class SelectCaseAppEffects {
 		const { overlaysManualProcessArgs, overlaysTranslationData, overlaysScannedAreaData } = state;
 		// map
 		const { data } = state.maps;
+
 		// context
 		const { favoriteOverlays, dataInputFilters, miscOverlays } = state;
 
 		let region: Feature<Polygon | Point>;
-		if (state.region.type !== "Feature") {
-			region = feature(state.region, {searchMode: state.region.type});
+		if (state.region.type !== 'Feature') {
+			region = feature(state.region, { searchMode: state.region.type });
 		} else {
 			region = state.region;
 		}

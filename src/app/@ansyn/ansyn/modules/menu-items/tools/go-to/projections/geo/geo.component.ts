@@ -1,4 +1,4 @@
-import { Component, EventEmitter, forwardRef, Output } from '@angular/core';
+import { Component, EventEmitter, forwardRef, HostBinding, Input, Output } from '@angular/core';
 import {
 	AbstractControl,
 	ControlValueAccessor,
@@ -31,6 +31,8 @@ import { ProjectionConverterService } from '@ansyn/map-facade';
 
 export class GeoComponent implements ControlValueAccessor, Validator {
 	@Output() copyToClipBoardHandler = new EventEmitter();
+	@HostBinding('class.rtl')
+	@Input() isRTL = false;
 
 	coordinates: number[] = [0, 0];
 	validationErr: ValidationErrors = null;

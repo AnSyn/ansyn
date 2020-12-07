@@ -1,4 +1,5 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, HostBinding } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
 
 @Component({
@@ -8,7 +9,11 @@ import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
 })
 
 export class StatusBarComponent {
-	constructor(@Inject(COMPONENT_MODE) public componentMode: boolean) {
-	}
+
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
+	constructor(private translateService: TranslateService,
+				@Inject(COMPONENT_MODE) public componentMode: boolean) {}
 
 }

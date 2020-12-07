@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { ArrayFilterMetadata } from '../../models/metadata/array-filter-metadata';
 import { FilterSearchResult } from '../../models/filter-search-results';
 import { ArrayFilterCounters } from '../../models/counters/array-filter-counters';
@@ -13,6 +13,10 @@ export class ArrayFilterContainerComponent implements OnChanges {
 	@Input() counters: ArrayFilterCounters;
 	@Input() filtersSearchResult: FilterSearchResult;
 	@Output() onMetadataChange = new EventEmitter<ArrayFilterMetadata>(true);
+
+	@HostBinding('class.rtl')
+	@Input() isRTL = false;
+
 	fields = [];
 
 	onInputClicked(key: string) {

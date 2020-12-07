@@ -105,10 +105,10 @@
 		</i>
 	</button>
 
-	<ansyn-dynamic-metadata-form 
-		*ngIf="selectedTab[featureId] === Tabs.Metadata" 
-		class="metadata-form" 
-		[attributes]="attributes$ | async" 
+	<ansyn-dynamic-metadata-form
+		*ngIf="selectedTab[featureId] === Tabs.Metadata"
+		class="metadata-form"
+		[attributes]="attributes$ | async"
 		(onSubmit)="onMetadataFormSubmit($event)"
 	></ansyn-dynamic-metadata-form>
 </div>

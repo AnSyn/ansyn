@@ -7,8 +7,8 @@ import { CasesService } from '../../services/cases.service';
 import { take, tap } from 'rxjs/operators';
 import { cloneDeep } from '../../../../core/utils/rxjs/operators/cloneDeep';
 import { ICase } from '../../models/case.model';
-import { UUID } from 'angular2-uuid';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
+import { TranslateService } from '@ngx-translate/core';
 
 const animationsDuring = '0.2s';
 
@@ -42,7 +42,14 @@ export class SaveCaseComponent implements OnInit, OnDestroy {
 		return true;
 	};
 
-	constructor(protected store: Store<ICasesState>) {
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
+	constructor(
+		protected store: Store<ICasesState>,
+		protected casesService: CasesService,
+		protected translateService: TranslateService
+	) {
 	}
 
 	@AutoSubscription
@@ -52,6 +59,7 @@ export class SaveCaseComponent implements OnInit, OnDestroy {
 			this.caseName = _case ? _case.name : new Date().toLocaleString();
 		})
 	);
+
 
 	private cloneDeepOneTime(selector) {
 		return this.store.pipe(
@@ -64,8 +72,7 @@ export class SaveCaseComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 	}
 
-	ngOnInit(): void {
-	}
+	ngOnInit(): void {}
 
 	close(): void {
 		this.store.dispatch(new CloseModalAction());

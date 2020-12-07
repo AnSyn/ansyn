@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Observable, fromEvent } from 'rxjs';
 import { IOverlayDrop } from '../../../../overlays/models/overlay.model';
@@ -68,7 +68,13 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			headerName: 'Type',
 			headerData: 'icon',
 			isDescending: true,
-			sortFn: (a, b) => a.localeCompare(b)
+			sortFn: (a: string, b: string) => a.localeCompare(b)
+		},
+		{
+			headerName: 'Resolution',
+			headerData: 'resolution',
+			isDescending: true,
+			sortFn: (a: number, b: number) => a - b
 		}
 	];
 	overlayIds: string[];
@@ -121,6 +127,8 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			})
 		);
 
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
 
 	constructor(
 		protected store$: Store<IOverlaysState>,

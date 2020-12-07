@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { HttpRequest, HttpResponse } from '@angular/common/http';
 import { CoreConfig } from '../../models/core.config';
 import { ICoreConfig } from '../../models/core.config.model';
@@ -8,13 +8,16 @@ interface ICached {
 	response: HttpResponse<any>
 	ttl: number;
 }
+
 const ttl = 5 * (1000 * 60); // 5 minutes;
 @Injectable()
 export class CacheRequestService {
 	cache = new Map();
+
 	get cacheBlackList(): string[] {
 		return this.coreConfig.httpCacheBlackList;
 	}
+
 	constructor(@Inject(CoreConfig) private coreConfig: ICoreConfig) {
 	}
 
@@ -31,8 +34,8 @@ export class CacheRequestService {
 	}
 
 	set(req: HttpRequest<any>, response: HttpResponse<any>) {
-		if (this.cacheBlackList.some( url => req.urlWithParams.includes(url))) {
-			const key = this.getKeyFromRequest(req);
+		const key = this.getKeyFromRequest(req);
+		if (!this.cacheBlackList.some(url => key.includes(url))) {
 			const entry = { key, response, ttl: Date.now() };
 			this.cache.set(key, entry);
 
@@ -47,6 +50,6 @@ export class CacheRequestService {
 
 
 	private getKeyFromRequest(req: HttpRequest<any>): string {
-		return `${req.method}/${req.urlWithParams}/${req.body ? JSON.stringify(req.body) : ''}`
+		return `${ req.method }/${ req.urlWithParams }/${ req.body ? JSON.stringify(req.body) : '' }`
 	}
 }

@@ -55,7 +55,7 @@ export class LoadDefaultCaseIfNoActiveCaseAction implements Action {
 export class LoadCasesAction implements Action, ILogMessage {
 	type = CasesActionTypes.LOAD_CASES;
 
-	constructor(public payload: CasesType = CasesType.MyCases) {
+	constructor(public payload: CasesType = CasesType.MyCases, public fromBegin = false) {
 	}
 
 	logMessage() {

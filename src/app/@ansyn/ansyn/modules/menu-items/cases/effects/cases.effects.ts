@@ -43,7 +43,7 @@ export class CasesEffects {
 			return of(action).pipe(withLatestFrom(selector));
 		}),
 		concatMap(([action, total]: [LoadCasesAction, number]) => {
-			return this.casesService.loadCases(total, action.payload).pipe(
+			return this.casesService.loadCases(action.fromBegin ? 0 : total, action.payload).pipe(
 				map(cases => new AddCasesAction({ cases, type: action.payload })),
 				catchError(() => EMPTY)
 			);
@@ -119,8 +119,7 @@ export class CasesEffects {
 			ofType(CasesActionTypes.LOAD_CASE),
 			switchMap((action: LoadCaseAction) => this.casesService.loadCase(action.payload)),
 			concatMap((dilutedCase) => [new SelectDilutedCaseAction(dilutedCase),
-				new LoadCasesAction(CasesType.MyCases),
-				new LoadCasesAction(CasesType.MySharedCases)]),
+				new LoadCasesAction(CasesType.MySharedCases, true)]),
 			catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load case')),
 			catchError(() => of(new LoadDefaultCaseAction()))
 		);

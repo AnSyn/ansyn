@@ -1,16 +1,20 @@
 <button type="button"
 		class="favorite-button"
-		[attr.tooltip-value]="'show favorite overlay'"
+		[attr.tooltip-value]="'Show Favorite Overlay' | translate"
 		tooltip-class="bottom"
 		(click)="showOnlyFavorite()"
 		[disabled]="onlyFavoriteEnable$ | async">
 	<i class="icon"
 	   [ngClass]="onlyFavorite ? 'icon-favorite-full'  : 'icon-favorite-empty'"></i>
 </button>
-<button type="button" (click)="showCasesTable()">
+<button type="button" (click)="showCasesTable()"
+		[attr.tooltip-value]="'Open Cases' | translate"
+		tooltip-class="bottom">
 	<i class="icon icon-bookmarks"></i>
 </button>
-<button type="button" (click)="showSaveModal()">
+<button type="button" (click)="showSaveModal()"
+		[attr.tooltip-value]="'Save Case' | translate"
+		tooltip-class="bottom">
 	<i class="icon"
-	[ngClass]="(currentSaveCase$ | async)? 'icon-bookmark-full' : 'icon-bookmark-empty'"></i>
+	   [ngClass]="(currentSaveCase$ | async)? 'icon-bookmark-full' : 'icon-bookmark-empty'"></i>
 </button>

@@ -59,11 +59,12 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			component: ToolsComponent,
 			iconClass: 'icon-main-tools'
 		},
-		{
-			name: 'Algorithms',
-			component: TasksComponent,
-			iconClass: 'icon-main-algorithms'
-		},
+		// Todo: uncomment when issue is ready for CR
+		// {
+		// 	name: 'Algorithms',
+		// 	component: TasksComponent,
+		// 	iconClass: 'icon-main-algorithms'
+		// },
 		{
 			name: 'Settings',
 			component: SettingsComponent,

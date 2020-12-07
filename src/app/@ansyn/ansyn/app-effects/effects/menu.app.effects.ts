@@ -12,12 +12,17 @@ import {
 	SetAutoClose
 } from '@ansyn/menu';
 import { selectSubMenu } from '../../modules/menu-items/tools/reducers/tools.reducer';
-import { map, mergeMap } from 'rxjs/operators';
-import { RedrawTimelineAction, SetTotalOverlaysAction } from '../../modules/overlays/actions/overlays.actions';
+import { map, mergeMap, concatMap } from 'rxjs/operators';
+import {
+	LoadOverlaysSuccessAction,
+	RedrawTimelineAction,
+	SetTotalOverlaysAction
+} from '../../modules/overlays/actions/overlays.actions';
 import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { selectDropsWithoutSpecialObjects } from '../../modules/overlays/reducers/overlays.reducer';
 import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
+import { InitializeFiltersAction } from '../../modules/filters/actions/filters.actions';
 
 @Injectable()
 export class MenuAppEffects {
@@ -46,9 +51,13 @@ export class MenuAppEffects {
 		);
 
 	@Effect()
-	onResetApp$: Observable<LoadDefaultCaseAction> = this.actions$.pipe(
+	onResetApp$ = this.actions$.pipe(
 		ofType<ResetAppAction>(MenuActionTypes.RESET_APP),
-		map(() => new LoadDefaultCaseAction())
+		concatMap(() => [
+			new LoadOverlaysSuccessAction([], true),
+			new InitializeFiltersAction(),
+			new LoadDefaultCaseAction()
+		])
 	);
 
 	constructor(

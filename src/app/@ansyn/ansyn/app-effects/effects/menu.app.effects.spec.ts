@@ -11,9 +11,10 @@ import { UpdateMapSizeAction } from '@ansyn/map-facade';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { RedrawTimelineAction } from '../../modules/overlays/actions/overlays.actions';
+import { LoadOverlaysSuccessAction, RedrawTimelineAction } from '../../modules/overlays/actions/overlays.actions';
 import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
+import { InitializeFiltersAction } from '../../modules/filters/actions/filters.actions';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
@@ -54,10 +55,11 @@ describe('MenuAppEffects', () => {
 		actions = hot('--a--', {
 			a: new ResetAppAction()
 		});
-		const expectedResults = cold('--(b)--', {
-			b: new LoadDefaultCaseAction()
+		const expectedResults = cold('--(bcd)--', {
+			b: new LoadOverlaysSuccessAction([], true),
+			c: new InitializeFiltersAction(),
+			d: new LoadDefaultCaseAction()
 		});
 		expect(menuAppEffects.onResetApp$).toBeObservable(expectedResults);
 	});
-
 });

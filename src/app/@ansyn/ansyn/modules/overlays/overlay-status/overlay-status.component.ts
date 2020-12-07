@@ -3,6 +3,7 @@ import {
 	IEntryComponent,
 	selectActiveMapId,
 	selectHideLayersOnMap,
+	selectManualProcessArgsByMapId,
 	selectOverlayByMapId,
 } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
@@ -16,8 +17,6 @@ import {
 	SetAutoImageProcessing
 } from './actions/overlay-status.actions';
 import {
-	IOverlayStatusState,
-	overlayStatusStateSelector,
 	selectFavoriteOverlays,
 	selectTranslationData
 } from './reducers/overlay-status.reducer';
@@ -108,19 +107,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 				}
 			}));
 
-	@AutoSubscription
-	manualImageProcessingParams$: Observable<Object> = this.store$.select(overlayStatusStateSelector).pipe(
-		map((overlayStatusState: IOverlayStatusState ) => overlayStatusState.manualImageProcessingParams),
-		tap((imageManualProcessArgs) => {
-			const defalutParms = {};
-			this.overlayStatusConfig.ImageProcParams.forEach(obj => {
-				const key = obj.name
-				defalutParms[key] = obj.defaultValue
-			});
-			this.isChanged = !isEqual(defalutParms, imageManualProcessArgs) && !this.isAutoProcessing;
-		})
-	);
-
 	constructor(
 		@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig,
 		public store$: Store<any>,
@@ -132,6 +118,18 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		this.isPreset = true;
 		this.isFavorite = true;
 	}
+
+	@AutoSubscription
+	manualImageProcessingParams$: () => Observable<Object> = () => this.store$.select(selectManualProcessArgsByMapId(this.mapId)).pipe(
+		tap((imageManualProcessArgs) => {
+			const defaultParams = {};
+			this.overlayStatusConfig.ImageProcParams.forEach(obj => {
+				const key = obj.name;
+				defaultParams[key] = obj.defaultValue;
+			});
+			this.isChanged = !isEqual(defaultParams, imageManualProcessArgs);
+		})
+	);
 
 	@AutoSubscription
 	layersVisibility$ = () => combineLatest([
@@ -238,10 +236,12 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	toggleManualImageProcessing() {
+		if (this.isAutoProcessing) {
+			this.store$.dispatch(new SetAutoImageProcessing({mapId: this.mapId}));
+		}
 		this.isAutoProcessing = false;
 		this.moreButtons = false;
 		this.isManualProcessing = !this.isManualProcessing;
-		this.store$.dispatch(new SetAutoImageProcessing({mapId: this.mapId}));
 	}
 
 	toggleAutoImageProcessing() {

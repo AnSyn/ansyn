@@ -91,11 +91,13 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 
 		case CasesActionTypes.SAVE_CASE_AS_SUCCESS:
 			const myCasesState = myCasesAdapter.addOne(action.payload, state.myCases);
-			return {...state, myCases: myCasesState, wasSaved: true}
+			return {...state, myCases: myCasesState, wasSaved: true};
 
 		case CasesActionTypes.SAVE_SHARED_CASE_AS_MY_OWN: {
-			const id = action.payload;
-			return { ...state, selectedCase: state.sharedCases.entities[id] }
+			if (typeof action.payload === 'string') {
+				return state;
+			}
+			return { ...state, selectedCase: action.payload }
 		}
 
 		default:

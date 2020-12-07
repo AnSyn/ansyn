@@ -169,7 +169,7 @@ export class SaveCaseAsSuccessAction extends SaveCaseAsAction implements ILogMes
 
 export class SaveSharedCaseAsMyOwn implements Action {
 	readonly type = CasesActionTypes.SAVE_SHARED_CASE_AS_MY_OWN;
-	constructor(public payload: string) {
+	constructor(public payload: string | ICase) {
 	}
 }
 

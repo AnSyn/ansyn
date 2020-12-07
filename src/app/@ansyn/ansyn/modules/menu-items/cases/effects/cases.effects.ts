@@ -21,7 +21,7 @@ import {
 import { casesConfig, CasesService } from '../services/cases.service';
 import { casesStateSelector, ICasesState, selectMyCasesTotal, selectSharedCaseTotal } from '../reducers/cases.reducer';
 import { CasesType, ICasesConfig } from '../models/cases-config';
-import { catchError, concatMap, filter, map, mergeMap, share, switchMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, concatMap, filter, map, mergeMap, share, switchMap, withLatestFrom, tap } from 'rxjs/operators';
 import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { DataLayersService } from '../../layers-manager/services/data-layers.service';
@@ -125,9 +125,19 @@ export class CasesEffects {
 		);
 
 	@Effect()
-	saveSharedCaseAsMyOwn$ = this.actions$.pipe(
+	saveSharedCaseAsMyOwnPrepare$ = this.actions$.pipe(
+		// at the first time we get the id of the shared case in we load it.
 		ofType<SaveSharedCaseAsMyOwn>(CasesActionTypes.SAVE_SHARED_CASE_AS_MY_OWN),
-		map(() => new OpenModalAction({ type: 'save' }))
+		filter( ({payload}) => typeof payload === 'string'),
+		mergeMap( ({payload}) => this.casesService.loadCase(<string>payload)),
+		map( (dilutedCase) => new SaveSharedCaseAsMyOwn(dilutedCase))
+	);
+
+	@Effect()
+	saveSharedCaseAsMyOwnReady$ = this.actions$.pipe(
+		ofType<SaveSharedCaseAsMyOwn>(CasesActionTypes.SAVE_SHARED_CASE_AS_MY_OWN),
+		filter( ({payload}) => typeof payload === 'object'),
+		map( () => new OpenModalAction({type: 'save'}))
 	);
 
 	@Effect()

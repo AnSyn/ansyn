@@ -132,19 +132,6 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	getLeftPosition(hoveredElementPos: number): number {
-// <<<<<<< HEAD
-// 		const candidateLeftPos = hoveredElementPos - 340;
-// 		const myCurrentWidth = (this.el.nativeElement as HTMLElement).offsetWidth;
-// =======
-		const candidateLeftPos = hoveredElementPos - 350;
-// >>>>>>> d386083ebc16d18a17804a3c7c9ca45ce27c5a11
-		const ansynWidth = this.topElement.getBoundingClientRect().width;
-		// ^ Ansyn component is not a block element, therefore it doesn't have offsetWidth
-		// Therefore I used getBoundingClientRect()
-		return Math.min(candidateLeftPos, ansynWidth - this.myCurrentWidth);
-	}
-
 	showOverview() {
 		this.isHoveringOverDrop = true;
 		this.mouseLeave$.subscribe();

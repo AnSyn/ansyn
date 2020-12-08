@@ -37,6 +37,7 @@ export class AnsynComponent implements OnInit, OnDestroy {
 	overlaysCount$: Observable<any> = this.store$
 		.pipe(
 			select(selectDropsDescending),
+			filter(Boolean),
 			map((overlays: IOverlayDrop[]) => overlays.length || 0)
 		);
 

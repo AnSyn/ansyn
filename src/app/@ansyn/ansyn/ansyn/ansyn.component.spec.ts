@@ -81,12 +81,14 @@ describe('AnsynComponent', () => {
 					provide: toolsConfig,
 					useValue: {}
 				},
-				{
-					provide: TranslateService,
-					useValue: {
-						instant: () => ''
-					}
-				}
+				TranslateService
+				// {
+				// 	provide: TranslateService,
+				// 	useValue: {
+				// 		// instant: () => '',
+				// 		// get: () => of('')
+				// 	}
+				// }
 			],
 			imports: [
 				RouterTestingModule,
@@ -114,7 +116,7 @@ describe('AnsynComponent', () => {
 		fixture.detectChanges();
 	});
 
-	fit('should be created', () => {
+	it('should be created', () => {
 		expect(component).toBeTruthy();
 	});
 

@@ -89,7 +89,7 @@ import { ResultsModule } from "./modules/menu-items/results/results.module";
 		ImageryZoomerComponent,
 		ImageryDimensionModeComponent
 	],
-	exports: [AnsynComponent, UnsupportedDevicesComponent, StatusBarModule]
+	exports: [AnsynComponent, UnsupportedDevicesComponent]
 })
 
 export class AnsynModule {

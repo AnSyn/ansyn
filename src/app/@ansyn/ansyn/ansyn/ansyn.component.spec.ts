@@ -64,8 +64,7 @@ describe('AnsynComponent', () => {
 				mockImageryView,
 				mockEmptyComponent,
 				mockStatusBar,
-				mockOverlayOverviewComponent,
-				TranslateModule.forRoot()
+				mockOverlayOverviewComponent
 			],
 			providers: [
 				{
@@ -91,6 +90,7 @@ describe('AnsynComponent', () => {
 			],
 			imports: [
 				RouterTestingModule,
+				TranslateModule.forRoot(),
 				StoreModule.forRoot({})]
 		}).compileComponents();
 	});
@@ -114,7 +114,7 @@ describe('AnsynComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should be created', () => {
+	fit('should be created', () => {
 		expect(component).toBeTruthy();
 	});
 

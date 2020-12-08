@@ -82,13 +82,6 @@ describe('AnsynComponent', () => {
 					useValue: {}
 				},
 				TranslateService
-				// {
-				// 	provide: TranslateService,
-				// 	useValue: {
-				// 		// instant: () => '',
-				// 		// get: () => of('')
-				// 	}
-				// }
 			],
 			imports: [
 				RouterTestingModule,

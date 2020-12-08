@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { transition, trigger, style, animate } from '@angular/animations';
 
 @Component({
@@ -15,15 +15,9 @@ import { transition, trigger, style, animate } from '@angular/animations';
 	]
 })
 
-export class ResultsComponent implements OnInit, OnDestroy {
+export class ResultsComponent {
 
 	constructor() {
-	}
-
-	ngOnInit() {
-	}
-
-	ngOnDestroy() {
 	}
 
 	onExpandStart() {

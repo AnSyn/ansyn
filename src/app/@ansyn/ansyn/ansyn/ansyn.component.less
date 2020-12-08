@@ -157,6 +157,26 @@
 		}
 	}
 
+	&.rtl {
+		direction: rtl;
+
+		div.app {
+			&.animations {
+				div.menu {
+					animation: menu-init-rtl @animation-duration;
+				}
+			}
+
+			div.status {
+				left: unset;
+				right: @menu-width;
+				&.expand {
+					left: unset;
+					right: 0;
+				}
+			}
+		} // div.app
+	} // rtl
 }
 
 @media screen and (max-width: 959px) {

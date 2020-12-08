@@ -35,9 +35,11 @@ import { CaseGeoFilter, ICase, ICaseMapState } from '../../../modules/menu-items
 import { IOverlay } from '../../../modules/overlays/models/overlay.model';
 import { mapValues } from 'lodash';
 import { ICasesConfig } from '../../../modules/menu-items/cases/models/cases-config';
-import { UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/status-bar.actions';
+import { UpdateAdvancedSearchParamAction, UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/status-bar.actions';
 import { Feature, Point, Polygon } from 'geojson';
 import { feature } from '@turf/turf';
+import { StatusBarConfig } from '../../../modules/status-bar/models/statusBar.config';
+import { IStatusBarConfig } from '../../../modules/status-bar/models/statusBar-config.model';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -52,6 +54,7 @@ export class SelectCaseAppEffects {
 		protected store$: Store<IAppState>,
 		@Inject(CoreConfig) protected coreConfig: ICoreConfig,
 		@Inject(casesConfig) public caseConfig: ICasesConfig,
+		@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 		protected casesService: CasesService
 	) {
 	}
@@ -108,7 +111,8 @@ export class SelectCaseAppEffects {
 			new SetAutoSave(autoSave),
 			new SetAnnotationMode(null),
 			new SetMeasureDistanceToolState(false),
-			new SelectCaseSuccessAction(payload)
+			new SelectCaseSuccessAction(payload),
+			new UpdateAdvancedSearchParamAction({advancedSearchParameter: this.statusBarConfig.advancedSearchParameters})
 		];
 
 		return selectCaseAction;

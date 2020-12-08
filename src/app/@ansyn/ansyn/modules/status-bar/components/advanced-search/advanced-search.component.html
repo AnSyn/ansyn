@@ -11,6 +11,7 @@
     direction="bottom"
     [withArrow]="false"
     [isLine]="false"
+    [selected]="selectedTypes"
     comboTableToolTipDescription="blah blah"
     contentTitle="types"
 	(ngModel)="sensorTypes"
@@ -34,10 +35,12 @@
     direction="bottom"
     [withArrow]="false"
     [isLine]="true"
+    [selected]="selectedRegistration"
     comboTableToolTipDescription="blah blah"
     contentTitle="registeration"
 	(ngModel)="isGeoRegistered"
     (selectedItemsArray)="updateSelectedArray($event,'selectedRegistration')"
+    #registeration
     >
         <ansyn-combo-table-option class="display-full-name" *ngFor="let GeoRegistered of isGeoRegistered" [value]="GeoRegistered" [isLine]="true">
         </ansyn-combo-table-option>
@@ -58,6 +61,7 @@
     direction="bottom"
     [withArrow]="false"
     [isLine]="false"
+    [selected]="selectedSensors"
     comboTableToolTipDescription="blah blah"
     contentTitle="sensors"
 	(ngModel)="sensorsList"
@@ -76,7 +80,7 @@
     </div>
     
     <div class="slider">
-        <ngx-slider id="dataInputsPreSearch" [(value)]="minValue" [(highValue)]="maxValue" [options]="options" onchange="getSliderValue($event)"></ngx-slider>
+        <ngx-slider id="dataInputsPreSearch" [(value)]="minValue" [(highValue)]="maxValue" [options]="options" onchange="getSliderValue($event)" #resolution></ngx-slider>
     </div>
 </div>
 

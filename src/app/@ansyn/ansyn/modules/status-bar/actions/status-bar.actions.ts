@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { IGeoFilterStatus } from '../reducers/status-bar.reducer';
+import { IGeoFilterStatus, IStatusBarState } from '../reducers/status-bar.reducer';
 import { ILogMessage } from '../../core/models/logger.model';
 
 export const StatusBarActionsTypes = {
@@ -7,7 +7,8 @@ export const StatusBarActionsTypes = {
 	COPY_SNAPSHOT_SHARE_LINK: 'COPY_SNAPSHOT_SHARE_LINK',
 	EXPAND: 'EXPAND',
 	UPDATE_GEO_FILTER_STATUS: 'UPDATE_GEO_FILTER_STATUS',
-	GO_ADJACENT_OVERLAY: 'GO_ADJACENT_OVERLAY'
+	GO_ADJACENT_OVERLAY: 'GO_ADJACENT_OVERLAY',
+	UPDATE_ADVANCED_SEARCH_PARAM: 'UPDATE_ADVANCED_SEARCH_PARAM'
 };
 
 export class CopySnapshotShareLinkAction implements Action, ILogMessage {
@@ -18,6 +19,13 @@ export class CopySnapshotShareLinkAction implements Action, ILogMessage {
 
 	logMessage() {
 		return `User selected share link option`
+	}
+}
+
+export class UpdateAdvancedSearchParamAction implements Action {
+	type: string = StatusBarActionsTypes.UPDATE_ADVANCED_SEARCH_PARAM;
+
+	constructor(public payload: IStatusBarState) {
 	}
 }
 

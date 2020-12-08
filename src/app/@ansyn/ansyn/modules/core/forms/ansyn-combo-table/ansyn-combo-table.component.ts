@@ -23,7 +23,7 @@ export class AnsynComboTableComponent implements ControlValueAccessor {
 	@ViewChild('optionsContainer') optionsContainer: ElementRef;
 	@Input() icon: string;
 	disabled: boolean;
-	selected: any[] = [];
+	@Input() selected: any[];
 	@Input() comboTableToolTipDescription: string;
 	@Input() direction: 'top' | 'bottom' = 'bottom';
 	@Input() withArrow = true;
@@ -52,7 +52,7 @@ export class AnsynComboTableComponent implements ControlValueAccessor {
 		if (this.selected.includes(selected)) {
 			this.selected.splice(this.selected.indexOf(selected),1);
     } else {
-      this.selected.push(selected);
+      this.selected = [...this.selected, selected]
     }
     this.selectedItemsArray.emit(this.selected)
   }

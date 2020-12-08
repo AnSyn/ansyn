@@ -1,3 +1,5 @@
+import { IResolutionRange } from "../../overlays/models/overlay.model";
+
 export interface IToolTipsConfig {
 	orientation?: string,
 	geoFilter?: string,
@@ -21,8 +23,16 @@ export interface IFilterStatusBar {
 	maximumOpen: number
 
 }
+export interface IAdvancedSearchParameter {
+	types?: string[];
+	registeration?: string[];
+	sensors?: string[];
+	resolution?: IResolutionRange;
+}
+
 export interface IStatusBarConfig {
 	toolTips: IToolTipsConfig,
 	filters: IFilterStatusBar
 	locale: string
+	advancedSearchParameters: IAdvancedSearchParameter
 }

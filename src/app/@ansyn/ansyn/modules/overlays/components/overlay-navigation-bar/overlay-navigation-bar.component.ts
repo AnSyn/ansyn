@@ -11,6 +11,7 @@ import { tap, filter } from 'rxjs/operators';
 import { selectDropsAscending, selectFilteredOveralys } from '../../reducers/overlays.reducer';
 import { combineLatest } from 'rxjs';
 import { IOverlay, IOverlayDrop } from '../../models/overlay.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-overlay-navigation-bar',
@@ -48,9 +49,13 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 
 	private _scannedAreaKeys = '`~;'.split('');
 	private _overlayHackKeys = 'Eeק'.split('');
+	private _toggleDirectionKeys = 'Ddג'.split('');
 
-	constructor(protected store: Store<IStatusBarState>,
-				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
+	constructor(
+		protected store: Store<IStatusBarState>,
+		@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
+		protected translateService: TranslateService
+	) {
 	}
 
 	isElementNotValid($event: KeyboardEvent) {
@@ -83,6 +88,11 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 
 		if (this.keysWereUsed($event, this._overlayHackKeys)) {
 			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(false));
+		}
+
+		if (this.keysWereUsed($event, this._toggleDirectionKeys)) {
+			const direction = this.translateService.instant('direction');
+			this.translateService.set('direction', direction === 'rtl' ? 'ltr' : 'rtl', 'default');
 		}
 	}
 

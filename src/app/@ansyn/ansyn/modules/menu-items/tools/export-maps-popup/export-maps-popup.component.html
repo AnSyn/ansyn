@@ -53,11 +53,13 @@
 <mat-dialog-actions>
 	<button (click)="export()">{{'Export' | translate}}</button>
 	<button class='reset-btn' *ngIf="selectedExportMethod === advancedExport"
-	(click)="reset()">
+			(click)="reset()">
 		{{'Reset' | translate}}
 	</button>
-	<ansyn-animated-ellipsis
-		[text]="exporting && ('Exporting' | translate)"
-		[rtl]="'rtl' === ('direction' | translate)"
-	></ansyn-animated-ellipsis>
+	<div class="status">
+		<ansyn-animated-ellipsis
+			[text]="exporting && ('Exporting' | translate)"
+			[rtl]="'rtl' === ('direction' | translate)"
+		></ansyn-animated-ellipsis>
+	</div>
 </mat-dialog-actions>

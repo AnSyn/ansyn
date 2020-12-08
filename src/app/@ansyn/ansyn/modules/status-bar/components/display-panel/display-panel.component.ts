@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, Inject, OnDestroy, OnInit } from '@angular/core';
 import { LayoutKey, layoutOptions, selectLayout, SetLayoutAction } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
@@ -8,6 +8,7 @@ import { tap } from 'rxjs/operators';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { IStatusBarConfig } from '../../models/statusBar-config.model';
 import { CaseOrientation } from '../../../menu-items/cases/models/case.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-display-panel',
@@ -24,14 +25,20 @@ export class DisplayPanelComponent implements OnInit, OnDestroy {
 		tap( layout => this.layout = layout)
 	);
 
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
 
-	constructor(protected store$: Store<IStatusBarState>,
-				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
+	constructor(
+		protected store$: Store<IStatusBarState>,
+		@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
+		protected translateService: TranslateService
+	) {
 	}
 
 	get layouts(): LayoutKey[] {
 		return Array.from(layoutOptions.keys());
 	}
+
 	ngOnInit() {
 	}
 

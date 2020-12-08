@@ -7,7 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { GetProvidersMapsService, ImageryCommunicatorService } from '@ansyn/imagery';
 import { cloneDeep, mapValues, uniqBy } from 'lodash';
 import { IAppState } from '../app.effects.module';
-import { catchError, concatMap, filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, concatMap, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import {
 	CasesActionTypes,
 	LoadDefaultCaseAction,
@@ -20,7 +20,6 @@ import {
 	DisplayOverlayAction,
 	DisplayOverlaySuccessAction,
 	OverlaysActionTypes,
-	ResetOverlayArray
 } from '../../modules/overlays/actions/overlays.actions';
 import { IOverlayByIdMetaData, OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { ICase, IDilutedCase, IImageManualProcessArgs } from '../../modules/menu-items/cases/models/case.model';
@@ -73,7 +72,7 @@ export class CasesAppEffects {
 			defaultCase.state.maps.data[0].id = defaultMapId;
 			defaultCase.state.maps.activeMapId = defaultMapId;
 			const defaultCaseQueryParams: ICase = this.casesService.parseCase(defaultCase);
-			return [new ResetOverlayArray(), new SelectDilutedCaseAction(defaultCaseQueryParams)];
+			return [ new SelectDilutedCaseAction(defaultCaseQueryParams)];
 		}));
 	@Effect()
 	loadCase$: Observable<any> = this.actions$

@@ -1,5 +1,4 @@
 <div class="selected-layer"
-	 [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''"
 	 *ngIf="(annotationLayer$ | async)?.length > 1">
 	{{'Layer' | translate}}:
 	<div class="combo-box">

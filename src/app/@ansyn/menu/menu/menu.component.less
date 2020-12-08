@@ -162,7 +162,7 @@ div.menu-wrapper {
 
 	div.container {
 		position: absolute;
-		left: 90px;
+		left: @menu-width;
 		top: @status-bar-height;
 		z-index: @z-index-menu-container;
 		height: calc(100% - @status-bar-height);
@@ -207,6 +207,34 @@ div.menu-wrapper {
 	div.show-menu {
 		width: 100%;
 	}
+
+	&.rtl {
+		&.collapsed {
+			div.menu {
+				transform: translateX(100%);
+			}
+		}
+
+		button.hide-menu {
+			right: unset;
+			left: 0;
+			transform: translateX(-100%);
+		}
+
+		div.container {
+			left: unset;
+			right: @menu-width;
+
+			&.pinned {
+				right: 0;
+			}
+
+			button.pin {
+				right: unset;
+				left: 15px;
+			}
+		}
+	} // rtl
 }
 
 @media screen and (max-width: 1400px) {
@@ -224,7 +252,7 @@ button.hide-menu {
 	background: @background-color-1;
 	border: none;
 	color: white;
-	box-shadow: 2px 0px 4px -2px black;
+	box-shadow: 2px 0 4px -2px black;
 	outline: none;
 	visibility: visible;
 	transition: .5s;
@@ -235,7 +263,7 @@ button.hide-menu {
 	}
 }
 
-@keyframes collapsed {
+@keyframes collapsed_ltr {
 	from {
 		transform: scale(1) translateX(100px);
 	}
@@ -244,7 +272,7 @@ button.hide-menu {
 	}
 }
 
-@keyframes unCollapsed {
+@keyframes unCollapsed_ltr {
 	from {
 		transform: scale(1.2) translateX(-100px);
 	}
@@ -253,7 +281,25 @@ button.hide-menu {
 	}
 }
 
-@keyframes pinned {
+@keyframes collapsed_rtl {
+	from {
+		transform: scale(1) translateX(-100px);
+	}
+	to {
+		transform: scale(1) translateX(0);
+	}
+}
+
+@keyframes unCollapsed_rtl {
+	from {
+		transform: scale(1.2) translateX(100px);
+	}
+	to {
+		transform: scale(1) translateX(0);
+	}
+}
+
+@keyframes pinned_ltr {
 	from {
 		transform: scale(1.1) translateX(-100px);
 	}
@@ -262,7 +308,7 @@ button.hide-menu {
 	}
 }
 
-@keyframes unPinned {
+@keyframes unPinned_ltr {
 	from {
 		transform: scale(1) translateX(200px);
 	}
@@ -271,3 +317,20 @@ button.hide-menu {
 	}
 }
 
+@keyframes pinned_rtl {
+	from {
+		transform: scale(1.1) translateX(100px);
+	}
+	to {
+		transform: scale(1) translateX(0);
+	}
+}
+
+@keyframes unPinned_rtl {
+	from {
+		transform: scale(1) translateX(-200px);
+	}
+	to {
+		transform: scale(1) translateX(0);
+	}
+}

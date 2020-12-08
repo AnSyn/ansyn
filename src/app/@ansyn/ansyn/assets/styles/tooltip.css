@@ -8,6 +8,10 @@
 
 @import "./disabled-tooltip.css";
 
+[tooltip-value]:not([tooltip-class*="not-relative"]) {
+	position: relative;
+}
+
 [tooltip-value]:not(.active):not(:disabled):after {
 	content: attr(tooltip-value);
 }
@@ -111,10 +115,6 @@
    position: relative (the tooltip element is position: absolute)
  */
 @supports not (display: grid) {
-	[tooltip-value]:not([tooltip-class*="not-relative"]) {
-		position: relative;
-	}
-
 	[tooltip-value]:not(.active):not(:disabled):not([tooltip-class*="left"])[tooltip-class*="bottom"]:after {
 		left: 0;
 	}

@@ -338,9 +338,6 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			return overlaysAdapter.updateMany(action.payload, state);
 		}
 
-		case OverlaysActionTypes.RESET_OVERLAY_ARRAY: {
-			return overlaysAdapter.setAll([], state)
-		}
 		default :
 			return state;
 	}

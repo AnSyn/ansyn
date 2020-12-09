@@ -2,19 +2,23 @@ import {
 	ContainerChangedTriggerAction, MenuConfig,
 	menuFeatureKey,
 	MenuReducer
-, ResetAppAction } from '@ansyn/menu';
+	, ResetAppAction, ToggleIsPinnedAction, UnSelectMenuItemAction
+} from '@ansyn/menu';
 import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
-import { UpdateMapSizeAction } from '@ansyn/map-facade';
+import { ToggleFooter, UpdateMapSizeAction } from '@ansyn/map-facade';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
 import { LoadOverlaysSuccessAction, RedrawTimelineAction } from '../../modules/overlays/actions/overlays.actions';
-import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
+import { CloseModalAction, LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { COMPONENT_MODE } from '../../app-providers/component-mode';
 import { InitializeFiltersAction } from '../../modules/filters/actions/filters.actions';
+import { MatDialog } from '@angular/material/dialog';
+import { SetLayersModal } from '../../modules/menu-items/layers-manager/actions/layers.actions';
+import { SelectedModalEnum } from '../../modules/menu-items/layers-manager/reducers/layers-modal';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
@@ -30,6 +34,12 @@ describe('MenuAppEffects', () => {
 				{ provide: MenuConfig, useValue: {} }, {
 					provide: COMPONENT_MODE,
 					useValue: false
+				},
+				{
+					provide: MatDialog,
+					useValue: {
+						closeAll: () => {}
+					}
 				}
 			]
 
@@ -51,14 +61,19 @@ describe('MenuAppEffects', () => {
 		expect(menuAppEffects.onContainerChanged$).toBeObservable(expectedResults);
 	});
 
-	it(`onResetApp$ should call LoadDefaultCaseAction`, () => {
+	it(`onResetApp$ should dispatch specified actions`, () => {
 		actions = hot('--a--', {
 			a: new ResetAppAction()
 		});
-		const expectedResults = cold('--(bcd)--', {
-			b: new LoadOverlaysSuccessAction([], true),
-			c: new InitializeFiltersAction(),
-			d: new LoadDefaultCaseAction()
+		const expectedResults = cold('--(bcdefghi)--', {
+			b: new ToggleIsPinnedAction(false),
+			c: new CloseModalAction(),
+			d: new SetLayersModal({ type: SelectedModalEnum.none, layer: null }),
+			e: new UnSelectMenuItemAction(),
+			f: new ToggleFooter(false),
+			g: new LoadOverlaysSuccessAction([], true),
+			h: new InitializeFiltersAction(),
+			i: new LoadDefaultCaseAction()
 		});
 		expect(menuAppEffects.onResetApp$).toBeObservable(expectedResults);
 	});

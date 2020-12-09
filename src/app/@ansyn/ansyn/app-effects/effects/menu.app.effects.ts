@@ -9,7 +9,7 @@ import {
 	MenuActionTypes,
 	MenuConfig,
 	ResetAppAction,
-	SetAutoClose,
+	SetAutoClose, ToggleIsPinnedAction,
 	UnSelectMenuItemAction
 } from '@ansyn/menu';
 import { selectSubMenu } from '../../modules/menu-items/tools/reducers/tools.reducer';
@@ -57,6 +57,7 @@ export class MenuAppEffects {
 	onResetApp$ = this.actions$.pipe(
 		ofType<ResetAppAction>(MenuActionTypes.RESET_APP),
 		concatMap(() => [
+			new ToggleIsPinnedAction(false),
 			new CloseModalAction(),
 			new SetLayersModal({ type: SelectedModalEnum.none, layer: null }),
 			new UnSelectMenuItemAction(),

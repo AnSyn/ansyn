@@ -105,7 +105,6 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 
 	onHoveredOverlay([overlay, customElementId]: [IOverviewOverlay, string]) {
 		if (overlay) {
-			this.overlayId = overlay.id;
 			this.calculateOverviewPosition(customElementId);
 			this.showOverview(overlay);
 		} else {
@@ -143,7 +142,8 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 
 	}
 
-	showOverlayData(sensorName: string, sensorType: string): void {
+	showOverlayData(id: string, sensorName: string, sensorType: string): void {
+		this.overlayId = id;
 		this.sensorName = sensorName;
 		this.sensorType = sensorType;
 	}
@@ -151,7 +151,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	showOverview(overlay: IOverlay) {
 		this.isHoveringOverDrop = true;
 		this.mouseLeave$.subscribe();
-		this.showOverlayData(overlay.sensorName, overlay.sensorType);
+		this.showOverlayData(overlay.id, overlay.sensorName, overlay.sensorType);
 		this.showOverlayImage(overlay.thumbnailUrl);
 
 		this.formattedTime = getTimeFormat(new Date(overlay.photoTime));

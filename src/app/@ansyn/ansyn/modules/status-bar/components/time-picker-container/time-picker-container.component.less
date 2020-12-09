@@ -1,0 +1,66 @@
+@import "ansyn/less/colors";
+@import "ansyn/less/globals";
+
+:host {
+
+	.box {
+		margin: 0 3px;
+
+		.button {
+			&:extend(.status-bar-button-round);
+			border-radius: @status-bar-panel-radius;
+			background-color: @status-bar-panels;
+			height: 35px;
+
+			&.openTop {
+				height: 25px;
+				background-color: #0a0d0d;
+				border: solid 1px rgba(255, 255, 255, 0.5);
+			}
+
+			&.active {
+				background-color: @status-bar-active;
+			}
+
+			&:hover:not(.active) {
+				background: @status-bar-hover;
+			}
+		}
+
+		&.timePickerBox {
+			margin: 0 3px;
+			font-size: 13px;
+
+			span.title {
+				outline: none;
+				cursor: text;
+
+				&::selection {
+					background: @status-bar-panels;
+				}
+
+				&.error {
+					color: red;
+				}
+
+				&:last-child {
+					margin-right: 5px;
+				}
+			}
+		}
+	}
+
+	input.time-picker-input {
+		position: fixed;
+		padding-left: 28px;
+		width: 100%;
+		height: 100%;
+		border: none;
+		background-color: transparent;
+		color: white;
+		opacity: 0;
+		pointer-events: none;
+		font-family: @app-font;
+		font-size: 13px;
+	}
+}

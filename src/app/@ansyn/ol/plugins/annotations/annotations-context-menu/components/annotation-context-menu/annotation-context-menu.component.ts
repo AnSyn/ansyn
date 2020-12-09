@@ -159,3 +159,4 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		return '';
 	}
 }
+

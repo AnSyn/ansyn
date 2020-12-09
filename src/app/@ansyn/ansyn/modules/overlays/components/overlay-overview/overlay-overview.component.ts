@@ -2,7 +2,12 @@ import { Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild } from
 import { select, Store } from '@ngrx/store';
 import { fromEvent, Observable } from 'rxjs';
 import { getTimeFormat } from '@ansyn/map-facade';
-import { IOverlaysState, MarkUpClass, selectCustomOverviewElementId, selectHoveredOverlay } from '../../reducers/overlays.reducer';
+import {
+	IOverlaysState,
+	MarkUpClass,
+	selectCustomOverviewElementId,
+	selectHoveredOverlay
+} from '../../reducers/overlays.reducer';
 import { overlayOverviewComponentConstants } from './overlay-overview.component.const';
 import {
 	ChangeOverlayPreviewRotationAction,
@@ -56,12 +61,12 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		return this.el.nativeElement.ownerDocument.getElementById(`dropId-${ this.overlayId }`);
 	}
 
-	public get const() {
+	public get overViewConstants() {
 		return overlayOverviewComponentConstants;
 	}
 
 	public get errorSrc() {
-		return this.const.OVERLAY_OVERVIEW_FAILED;
+		return this.overViewConstants.OVERLAY_OVERVIEW_FAILED;
 	};
 
 	@HostBinding('class.show') isHoveringOverDrop = false;
@@ -98,62 +103,73 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 	}
 
-	onHoveredOverlay([overlay, customElementId]: [IOverviewOverlay, string]) {
-		if (overlay) {
-			const fetching = overlay.thumbnailUrl === this.const.FETCHING_OVERLAY_DATA;
-			this.overlayId = overlay.id;
-			const customElement = customElementId && this.el.nativeElement.ownerDocument.getElementById(customElementId);
-			const hoveredElement: Element = customElement || this.dropElement;
-			if (!hoveredElement) {
-				return;
-			}
-			const hoveredElementBounds: ClientRect = hoveredElement.getBoundingClientRect();
-			this.myCurrentWidth = (this.el.nativeElement as HTMLElement).offsetWidth;
-			this.left = customElement ? this.isRTL ? hoveredElementBounds.left - this.myCurrentWidth : hoveredElementBounds.right : this.getLeftPosition(hoveredElementBounds.left);
-			this.top = hoveredElementBounds.top + (customElement ? hoveredElementBounds.height : 0);
-			this.showOverview();
-			this.sensorName = overlay.sensorName;
-			this.sensorType = overlay.sensorType;
-			if (fetching) {
-				this.img.nativeElement.removeAttribute('src');
-			} else {
-				this.img.nativeElement.src = overlay.thumbnailUrl;
-			}
-			this.formattedTime = getTimeFormat(new Date(overlay.photoTime));
-			if (!this.img.nativeElement.complete) {
-				this.startedLoadingImage();
-			}
-		} else {
-			this.hideOverview();
+	onHoveredOverlay([overlay, customElementId]: [IOverviewOverlay, string]): void {
+		overlay ? this.showOverview(overlay, customElementId) : this.hideOverview();
+	}
+
+	setOverviewPosition(customElementId: string): void {
+		const customElement = customElementId && this.el.nativeElement.ownerDocument.getElementById(customElementId);
+		const hoveredElement: Element = customElement || this.dropElement;
+		if (!hoveredElement) {
+			return;
 		}
+		this.myCurrentWidth = (this.el.nativeElement as HTMLElement).offsetWidth;
+		const { left, height, top }: ClientRect = hoveredElement.getBoundingClientRect();
+		this.left = customElement ? this.getLeftPosition(left) : left - 150;
+		this.top = top + (customElement ? height + 70 : 0);
 	}
 
 	getLeftPosition(hoveredElementPos: number): number {
-		const candidateLeftPos = hoveredElementPos - 50;
+		const candidateLeftPos = hoveredElementPos - 275;
 		const ansynWidth = this.topElement.getBoundingClientRect().width;
 		// ^ Ansyn component is not a block element, therefore it doesn't have offsetWidth
 		// Therefore I used getBoundingClientRect()
 		return Math.min(candidateLeftPos, ansynWidth - this.myCurrentWidth);
 	}
 
-	showOverview() {
-		this.isHoveringOverDrop = true;
-		this.mouseLeave$.subscribe();
+	showOverlayImage(thumbnailUrl: string): void {
+		const fetching = thumbnailUrl === this.overViewConstants.FETCHING_OVERLAY_DATA;
+		if (fetching) {
+			this.img.nativeElement.removeAttribute('src');
+		} else {
+			this.img.nativeElement.src = thumbnailUrl;
+		}
+
 	}
 
-	hideOverview() {
+	showOverlayData(id: string, sensorName: string, sensorType: string): void {
+		this.overlayId = id;
+		this.sensorName = sensorName;
+		this.sensorType = sensorType;
+	}
+
+	showOverview(overlay: IOverlay, customElementId: string): void {
+		this.setOverviewPosition(customElementId);
+
+		this.isHoveringOverDrop = true;
+		this.mouseLeave$.subscribe();
+		this.showOverlayData(overlay.id, overlay.sensorName, overlay.sensorType);
+		this.showOverlayImage(overlay.thumbnailUrl);
+
+		this.formattedTime = getTimeFormat(new Date(overlay.photoTime));
+		if (!this.img.nativeElement.complete) {
+			this.startedLoadingImage();
+		}
+	}
+
+	hideOverview(): void {
 		this.isHoveringOverDrop = false;
 	}
 
-	onDblClick() {
+	onDblClick(): void {
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id: this.overlayId }));
 	}
 
-	startedLoadingImage() {
+	startedLoadingImage(): void {
 		this.loadingImage = true;
 	}
 
-	finishedLoadingImage() {
+	finishedLoadingImage(): void {
 		this.loadingImage = false;
 	}
 }

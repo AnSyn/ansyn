@@ -172,8 +172,7 @@ export class OverlaysAppEffects {
 	@Effect()
 	setHoveredOverlay$: Observable<any> = combineLatest([this.store$.select(selectDropMarkup), this.store$.select(selectFooterCollapse)])
 		.pipe(
-			filter(([drop, footerCollapse]) => Boolean(!footerCollapse)),
-			distinctUntilChanged( isEqual),
+			distinctUntilChanged(isEqual),
 			withLatestFrom<any, any>(this.overlaysService.getAllOverlays$, ([drop, footer], overlays) => [drop, overlays]),
 			this.getOverlayFromDropMarkup,
 			this.getPositionForActiveMap,

@@ -22,6 +22,47 @@
 		}
 	}
 
+	button {
+		&.results-table {
+			background: @background-color-1;
+			position: absolute;
+			color: white;
+			right: 10px;
+			bottom: 10px;
+			z-index: 6;
+			padding: 13px;
+			font-size: 0.9rem;
+
+			i {
+				display: block;
+				font-size: 3em;
+			}
+
+			span.badge {
+				position: absolute;
+				right: 42px;
+				top: 43px;
+				font-size: 14px;
+				min-width: 30px;
+				padding-top: 2px;
+				padding-right: 2px;
+			}
+
+			&:hover {
+				background-color: @background-color-3;
+			}
+
+			&.active {
+				background-color: @application-primary-color;
+			}
+		}
+	}
+
+	.results {
+		right: 0;
+		position: fixed;
+	}
+
 	font-family: @app-font;
 	font-size: 14px;
 	direction: ltr;

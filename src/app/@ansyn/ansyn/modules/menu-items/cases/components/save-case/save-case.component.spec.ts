@@ -1,9 +1,8 @@
 import {
 	AddCasesAction,
-	LogRenameCase,
+	RenameCaseAction,
 	SaveCaseAsAction,
-	SelectCaseSuccessAction,
-	UpdateCaseAction
+	SelectCaseSuccessAction
 } from '../../actions/cases.actions';
 import { async, ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 import { casesFeatureKey, CasesReducer, ICasesState } from '../../reducers/cases.reducer';
@@ -51,7 +50,7 @@ describe('SaveCaseComponent', () => {
 		fixture.detectChanges();
 		store = _store;
 		store.dispatch(new AddCasesAction({ cases: [<any>fakeCase] }));
-		store.dispatch(new SelectCaseSuccessAction(<any>fakeCase));
+		store.dispatch(new SelectCaseSuccessAction(<any>{...fakeCase}));
 	}));
 
 	it('should be created', () => {
@@ -70,22 +69,18 @@ describe('SaveCaseComponent', () => {
 		expect(component.close).toHaveBeenCalled();
 	});
 
-	it('onSubmitCase should call dispatch with LogRenameCase & UpdateCaseAction when there is caseId', fakeAsync(() => {
+	it('onSubmitCase should call dispatch with RenameCaseAction when there is caseId', fakeAsync(() => {
 		spyOn(store, 'dispatch');
 		spyOn(component, 'close');
+		const oldCase = {...fakeCase};
 		component.caseId = 'fake-case-id';
 		tick();
 		component.caseName = 'new-case-name';
 		component.onSubmitCase();
-		expect(store.dispatch).toHaveBeenCalledWith(new LogRenameCase({
+		expect(store.dispatch).toHaveBeenCalledWith(new RenameCaseAction({
+			case: <any>oldCase,
 			oldName: 'fake-case-name',
 			newName: 'new-case-name'
-		}));
-		expect(store.dispatch).toHaveBeenCalledWith(new UpdateCaseAction({
-			updatedCase: <any>{
-				...fakeCase,
-				name: 'new-case-name'
-			}, forceUpdate: true
 		}));
 		expect(component.close).toHaveBeenCalled();
 	}))

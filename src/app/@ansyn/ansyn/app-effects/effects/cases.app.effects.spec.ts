@@ -56,7 +56,6 @@ describe('CasesAppEffects', () => {
 		name: 'name',
 		owner: 'owner',
 		creationTime: new Date(),
-		lastModified: new Date(),
 		state: {
 			maps: {
 				activeMapId: '5555',
@@ -215,9 +214,7 @@ describe('CasesAppEffects', () => {
 				id: activeMapId, changes: {
 					data: {
 						...activeMap.data,
-						overlay,
-						isAutoImageProcessingActive: false,
-						imageManualProcessArgs: {}
+						overlay
 					}
 				}
 			})

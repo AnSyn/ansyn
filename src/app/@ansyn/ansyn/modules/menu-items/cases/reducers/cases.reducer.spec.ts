@@ -24,7 +24,7 @@ describe('CasesReducer', () => {
 				type: "Feature",
 				properties: {}
 			},
-			overlaysManualProcessArgs: {},
+			overlaysImageProcess: {},
 			overlaysTranslationData: {}
 		}
 	};

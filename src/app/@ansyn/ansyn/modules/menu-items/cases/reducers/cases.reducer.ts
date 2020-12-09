@@ -52,8 +52,9 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 		}
 
 		case CasesActionTypes.RENAME_CASE: {
-			const {id, name} = action.payload.case;
-			const myCasesState = myCasesAdapter.updateOne({id, changes: {name} }, state.myCases);
+			const { case: _case, newName } = action.payload;
+			const { id } = _case;
+			const myCasesState = myCasesAdapter.updateOne({id, changes: {name: newName} }, state.myCases);
 			return {...state, myCases: myCasesState}
 		}
 
@@ -129,4 +130,4 @@ export const selectCaseById = (id: string) => createSelector(selectMyCasesEntiti
 export const selectSelectedCase = createSelector(casesStateSelector, (cases) => cases && cases.selectedCase);
 export const selectModalState = createSelector(casesStateSelector, (cases) => cases?.modal);
 export const selectShowCasesTable = createSelector(casesStateSelector, (cases) => cases?.showCasesTable);
-export const selectCaseSaved = createSelector(casesStateSelector, (cases) => cases?.wasSaved)
+export const selectCaseSaved = createSelector(casesStateSelector, (cases) => cases?.wasSaved);

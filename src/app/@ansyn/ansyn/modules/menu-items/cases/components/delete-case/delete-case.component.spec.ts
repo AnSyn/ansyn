@@ -7,11 +7,12 @@ import { CasesService } from '../../services/cases.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Store, StoreModule } from '@ngrx/store';
+import { CasesType } from '../../models/cases-config';
 
 const mockCases = [
 		{ id: 'fakeId1', name: 'fakeName1' },
 		{ id: 'fakeId2', name: 'fakeName2' }
-	]
+	];
 
 const mockModal = {
 	show: true,
@@ -72,7 +73,8 @@ describe('DeleteCaseComponent', () => {
 		component.onSubmitRemove();
 		expect(store.dispatch).toHaveBeenCalledWith(new DeleteCaseAction({
 			id: component.activeCase.id,
-			name: component.activeCase.name
+			name: component.activeCase.name,
+			type: CasesType.MyCases
 		}));
 		expect(component.close).toHaveBeenCalled();
 

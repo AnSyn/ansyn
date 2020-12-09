@@ -92,7 +92,7 @@ export class CasesEffects {
 	@Effect({ dispatch: false })
 	onRenameCaseAction$ = this.actions$.pipe(
 		ofType<RenameCaseAction>(CasesActionTypes.RENAME_CASE),
-		mergeMap((action) => this.casesService.updateCase(action.payload.case))
+		mergeMap((action) => this.casesService.updateCase({...action.payload.case, name: action.payload.newName})),
 	);
 
 	@Effect()

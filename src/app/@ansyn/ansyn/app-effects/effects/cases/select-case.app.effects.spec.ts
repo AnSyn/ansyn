@@ -95,7 +95,7 @@ describe('SelectCaseAppEffects', () => {
 				layers: ICaseLayersState = {
 					activeLayersIds: []
 				},
-				overlaysManualProcessArgs: IOverlaysImageProcess = {},
+				overlaysImageProcess: IOverlaysImageProcess = {},
 				facets: ICaseFacetsState = { showOnlyFavorites: true, filters: [] },
 				miscOverlays: IOverlaysHash = {},
 				overlaysTranslationData = {},
@@ -114,7 +114,7 @@ describe('SelectCaseAppEffects', () => {
 				overlaysTranslationData,
 				maps,
 				layers,
-				overlaysManualProcessArgs,
+				overlaysImageProcess,
 				facets,
 				miscOverlays,
 				overlaysScannedAreaData
@@ -140,7 +140,7 @@ describe('SelectCaseAppEffects', () => {
 			h: new SetOverlaysTranslationDataAction(overlaysTranslationData),
 			i: new SetOverlaysScannedAreaDataAction(overlaysScannedAreaData),
 			j: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
-			k: new UpdateOverlaysManualProcessArgs(overlaysManualProcessArgs),
+			k: new UpdateOverlaysManualProcessArgs(overlaysImageProcess),
 			l: new UpdateFacetsAction(facets),
 			m: new UpdateSelectedLayersIds([]),
 			p: new SetAnnotationMode(null),

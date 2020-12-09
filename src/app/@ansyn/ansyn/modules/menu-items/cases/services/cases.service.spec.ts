@@ -8,7 +8,6 @@ import { ErrorHandlerService } from '../../../core/services/error-handler.servic
 import { StorageService } from '../../../core/services/storage/storage.service';
 import { ICase } from '../models/case.model';
 
-const user = 'owner';
 const caseMock: ICase = {
 	id: 'fakeId',
 	name: 'fakeName',
@@ -104,7 +103,6 @@ describe('CasesService', () => {
 					id: caseMock.id,
 					name: caseMock.name,
 					creationTime: newDate,
-					lastModified: newDate,
 					autoSave: false
 				},
 				data: casesService.pluckIdSourceType(caseMock.state),
@@ -124,7 +122,7 @@ describe('CasesService', () => {
 		const caseId = '12345';
 		spyOn(storageService, 'get').and.returnValue(<any>of([]));
 		casesService.loadCase(caseId);
-		expect(storageService.get).toHaveBeenCalledWith(casesService.config.schema, caseId, user);
+		expect(storageService.get).toHaveBeenCalledWith(casesService.config.schema, caseId);
 	});
 
 });

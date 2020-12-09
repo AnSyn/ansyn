@@ -18,11 +18,11 @@ import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { DataLayersService, layersConfig } from '../../layers-manager/services/data-layers.service';
 import {
 	AddCasesAction,
-	DeleteCaseAction,
 	LoadCaseAction,
 	LoadCasesAction,
 	LoadDefaultCaseAction,
 	SaveCaseAsAction,
+	SaveCaseAsSuccessAction,
 	SelectDilutedCaseAction
 } from '../actions/cases.actions';
 import { ICase } from '../models/case.model';
@@ -54,7 +54,6 @@ describe('CasesEffects', () => {
 		name: 'name',
 		owner: 'user',
 		creationTime: new Date(),
-		lastModified: new Date(),
 		state: {
 			maps: {
 				activeMapId: '5555',
@@ -191,7 +190,7 @@ describe('CasesEffects', () => {
 		spyOn(dataLayersService, 'addLayer').and.returnValue(of(serverResponse));
 		spyOn(casesService, 'createCase').and.callFake(() => of(selectedCase));
 		actions = hot('--a--', { a: new SaveCaseAsAction(selectedCase) });
-		const expectedResults = cold('--b--', { b: new AddCasesAction({cases: [selectedCase]}) });
+		const expectedResults = cold('--b--', { b: new SaveCaseAsSuccessAction(selectedCase) });
 		expect(casesEffects.onSaveCaseAs$).toBeObservable(expectedResults);
 	});
 
@@ -210,7 +209,7 @@ describe('CasesEffects', () => {
 			const caseToLoad: ICase = { ...caseMock, id: myCaseId };
 			spyOn(casesService, 'loadCase').and.returnValue(of(caseToLoad));
 			actions = hot('--a--', { a: new LoadCaseAction(myCaseId) });
-			const expectedResults = cold('--b--', { b: new SelectDilutedCaseAction(caseToLoad) });
+			const expectedResults = cold('--(bc)--', { b: new SelectDilutedCaseAction(caseToLoad), c: new LoadCasesAction(CasesType.MySharedCases, true) });
 			expect(casesEffects.loadCase$).toBeObservable(expectedResults);
 		});
 		it('should load the default case, if the given case fails to load', () => {

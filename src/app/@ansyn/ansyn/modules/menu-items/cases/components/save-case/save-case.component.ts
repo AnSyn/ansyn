@@ -10,6 +10,7 @@ import { ICase } from '../../models/case.model';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
 import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
+import { Observable } from 'rxjs';
 
 const animationsDuring = '0.2s';
 
@@ -48,7 +49,6 @@ export class SaveCaseComponent implements OnInit, OnDestroy {
 
 	constructor(
 		protected store: Store<ICasesState>,
-		protected casesService: CasesService,
 		protected translateService: TranslateService
 	) {
 	}
@@ -91,8 +91,7 @@ export class SaveCaseComponent implements OnInit, OnDestroy {
 		return this.cloneDeepOneTime(selectCaseById(this.caseId)).pipe(
 			tap( (_case: ICase) => {
 				const oldName = _case.name;
-				_case.name = this.caseName;
-				this.store.dispatch(new RenameCaseAction({case: _case, oldName: oldName, newName: _case.name }));
+				this.store.dispatch(new RenameCaseAction({case: _case, oldName: oldName, newName: this.caseName }));
 			})
 		)
 	}

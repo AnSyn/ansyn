@@ -38,7 +38,7 @@ export class AnsynComponent implements OnInit, OnDestroy {
 		.pipe(
 			select(selectDropsDescending),
 			filter(Boolean),
-			map(({ length }: IOverlayDrop[]) => length)
+			map(({length}: IOverlayDrop[]) => length)
 		);
 
 	isMenuCollapse$ = this.store$.select(selectMenuCollapse);

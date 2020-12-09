@@ -13,14 +13,6 @@ import { Observable, of } from 'rxjs';
 import { overlayStatusFeatureKey, OverlayStatusReducer } from '../reducers/overlay-status.reducer';
 import { OverlayStatusEffects } from './overlay-status.effects';
 import { overlayStatusConfig } from "../config/overlay-status-config";
-import {
-	DisableImageProcessing,
-	SetAutoImageProcessing,
-	SetAutoImageProcessingSuccess
-} from '../actions/overlay-status.actions';
-import { cold, hot } from 'jasmine-marbles';
-import { SelectCaseAction } from '../../../menu-items/cases/actions/cases.actions';
-import { ICase } from '../../../menu-items/cases/models/case.model';
 
 
 const fakeMaps = {
@@ -36,7 +28,7 @@ const fakeMaps = {
 const fakeMapState: any = {
 	entities: fakeMaps,
 	activeMapId: 'mapId'
-}
+};
 
 describe('OverlayStatusEffects', () => {
 	let overlayStatusEffects: OverlayStatusEffects;
@@ -97,29 +89,6 @@ describe('OverlayStatusEffects', () => {
 			});
 			expect(communicator.loadInitialMapSource).toHaveBeenCalled();
 		});*/
-	});
-
-	it('onSelectCase$ should raise DisableImageProcessing', () => {
-		actions = hot('--a--', { a: new SelectCaseAction({} as ICase) });
-		const expectedResults = cold('--b--', { b: new DisableImageProcessing() });
-		expect(overlayStatusEffects.onSelectCase$).toBeObservable(expectedResults);
-	});
-
-	it('toggleAutoImageProcessing$ should raise SetAutoImageProcessingSuccess', () => {
-		actions = hot('--a--', { a: new SetAutoImageProcessing({ mapId: 'mapId' }) });
-		const expectedResults = cold('--(abc)--', {
-			a: new SetActiveMapId('mapId'),
-			b: new UpdateMapAction({
-				id: 'mapId',
-				changes: {
-					data: {
-						position: {},
-						isAutoImageProcessingActive: true
-					}}
-			}),
-			c: new SetAutoImageProcessingSuccess({ value: true, fromUI: true })
-		});
-		expect(overlayStatusEffects.toggleAutoImageProcessing$).toBeObservable(expectedResults);
 	});
 
 });

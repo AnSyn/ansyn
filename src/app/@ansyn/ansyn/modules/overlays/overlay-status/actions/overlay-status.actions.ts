@@ -2,7 +2,7 @@ import { Action } from '@ngrx/store';
 import { AlertMsgTypes } from '../../../alerts/model';
 import { IOverlay } from '../../models/overlay.model';
 import {
-	IImageManualProcessArgs, IOverlaysManualProcessArgs,
+	IImageManualProcessArgs, IOverlaysImageProcess,
 	IOverlaysScannedAreaData,
 	IOverlaysTranslationData,
 } from '../../../menu-items/cases/models/case.model';
@@ -17,12 +17,8 @@ export enum OverlayStatusActionsTypes {
 	BACK_TO_WORLD_FAILED = 'BACK_TO_WORLD_FAILED',
 	SET_FAVORITE_OVERLAYS = 'SET_FAVORITE_OVERLAYS',
 	TOGGLE_OVERLAY_FAVORITE = 'TOGGLE_OVERLAY_FAVORITE',
-	SET_REMOVED_OVERLAYS_VISIBILITY = 'SET_REMOVED_OVERLAYS_VISIBILITY',
-	TOGGLE_OVERLAY_PRESET = 'TOGGLE_OVERLAY_PRESET',
 	SET_AUTO_IMAGE_PROCESSING = 'SET_AUTO_IMAGE_PROCESSING',
-	SET_AUTO_IMAGE_PROCESSING_SUCCESS = 'SET_AUTO_IMAGE_PROCESSING_SUCCESS',
-	ENABLE_IMAGE_PROCESSING = 'ENABLE_IMAGE_PROCESSING',
-	DISABLE_IMAGE_PROCESSING = 'DISABLE_IMAGE_PROCESSING',
+	UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS = 'UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS',
 	ADD_ALERT_MSG = 'ADD_ALERT_MSG',
 	REMOVE_ALERT_MSG = 'REMOVE_ALERT_MSG',
 	TOGGLE_DRAGGED_MODE = 'TOGGLE_DRAGGED_MODE',
@@ -31,7 +27,7 @@ export enum OverlayStatusActionsTypes {
 	SET_OVERLAY_SCANNED_AREA_DATA = 'SET_OVERLAY_SCANNED_AREA_DATA',
 	SET_OVERLAYS_SCANNED_AREA_DATA = 'SET_OVERLAYS_SCANNED_AREA_DATA',
 	ACTIVATE_SCANNED_AREA = 'ACTIVATE_SCANNED_AREA',
-	UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS = 'UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS'
+
 }
 
 
@@ -40,21 +36,18 @@ export type OverlayStatusActions =
 	| BackToWorldSuccess
 	| BackToWorldFailed
 	| ToggleFavoriteAction
-	|
-	SetFavoriteOverlaysAction
-	|
-	ActivateScannedAreaAction
+	| SetFavoriteOverlaysAction
+	| ActivateScannedAreaAction
 	| SetOverlaysScannedAreaDataAction
 	| SetOverlayScannedAreaDataAction
 	| SetOverlayTranslationDataAction
-	|
-	SetOverlaysTranslationDataAction
+	| SetOverlaysTranslationDataAction
 	| ToggleDraggedModeAction;
 
 export class UpdateOverlaysManualProcessArgs implements Action {
 	type = OverlayStatusActionsTypes.UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS;
 
-	constructor(public payload: { override?: boolean, data: IOverlaysManualProcessArgs }) {
+	constructor(public payload: IOverlaysImageProcess) {
 
 	}
 }
@@ -83,37 +76,12 @@ export class SetOverlaysScannedAreaDataAction implements Action {
 export class SetAutoImageProcessing implements Action, ILogMessage {
 	type = OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING;
 
-	constructor(public payload?: { mapId: string }) {
+	constructor(public payload: {overlayId, isAuto: boolean}) {
 	}
 
 	logMessage() {
-		return `Trying to toggle auto image processing`
+		return `overlay ${this.payload.overlayId} was set Auto image processing to ${this.payload.isAuto}`
 	}
-}
-
-export class SetAutoImageProcessingSuccess implements Action, ILogMessage {
-	type = OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS;
-
-	constructor(public payload: { value: boolean, fromUI?: boolean }) {
-	}
-
-	logMessage() {
-		return this.payload.fromUI ? `Auto image processing was set to ${this.payload.value}` : null;
-	}
-}
-
-export class EnableImageProcessing implements Action {
-	type = OverlayStatusActionsTypes.ENABLE_IMAGE_PROCESSING;
-
-	constructor(public payload?: any) {
-	};
-}
-
-export class DisableImageProcessing implements Action {
-	type = OverlayStatusActionsTypes.DISABLE_IMAGE_PROCESSING;
-
-	constructor(public payload?: any) {
-	};
 }
 
 export class BackToWorldView implements Action, ILogMessage {
@@ -131,7 +99,7 @@ export class BackToWorldView implements Action, ILogMessage {
 export class SetManualImageProcessing implements Action {
 	type = OverlayStatusActionsTypes.SET_MANUAL_IMAGE_PROCESSING;
 
-	constructor(public payload: IImageManualProcessArgs) {
+	constructor(public payload: {overlayId: string, imageManualProcessArgs: IImageManualProcessArgs}) {
 	};
 }
 

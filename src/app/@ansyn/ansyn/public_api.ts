@@ -1,7 +1,5 @@
 export { measuresClassNameForExport } from './modules/plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
 
-export { selectOverlaysManualProcessArgs } from './modules/overlays/overlay-status/reducers/overlay-status.reducer';
-
 export { isArrowRightKey, isArrowLeftKey, isBackspaceKey, isDigitKey, isEnterKey, isEscapeKey } from "./modules/core/utils/keyboardKey";
 
 export { IImageProcParam } from "./modules/overlays/overlay-status/config/overlay-status-config";
@@ -290,7 +288,7 @@ export {
 	ICaseTimeState
 } from './modules/menu-items/cases/models/case.model';
 export {
-	ICaseBooleanFilterMetadata, ICaseState, IOverlaysManualProcessArgs
+	ICaseBooleanFilterMetadata, ICaseState, IOverlaysImageProcess
 }from './modules/menu-items/cases/models/case.model';
 export {
 	ICaseMapsState, IDilutedCaseState, IImageManualProcessArgs
@@ -375,9 +373,6 @@ export {
 	ToggleDraggedModeAction,
 	UpdateOverlaysManualProcessArgs,
 	SetAutoImageProcessing,
-	SetAutoImageProcessingSuccess,
-	DisableImageProcessing,
-	EnableImageProcessing,
 	SetManualImageProcessing
 } from './modules/overlays/overlay-status/actions/overlay-status.actions';
 

@@ -40,7 +40,7 @@ import {
 	ICaseMapsState,
 	ICaseState,
 	ICaseTimeState,
-	IOverlaysManualProcessArgs
+	IOverlaysImageProcess
 } from '../../../modules/menu-items/cases/models/case.model';
 import { IOverlay, IOverlaysHash } from '../../../modules/overlays/models/overlay.model';
 import { UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/status-bar.actions';
@@ -95,7 +95,7 @@ describe('SelectCaseAppEffects', () => {
 				layers: ICaseLayersState = {
 					activeLayersIds: []
 				},
-				overlaysManualProcessArgs: IOverlaysManualProcessArgs = {},
+				overlaysManualProcessArgs: IOverlaysImageProcess = {},
 				facets: ICaseFacetsState = { showOnlyFavorites: true, filters: [] },
 				miscOverlays: IOverlaysHash = {},
 				overlaysTranslationData = {},
@@ -123,8 +123,6 @@ describe('SelectCaseAppEffects', () => {
 			const payload: ICase = {
 				id: 'caseId',
 				name: 'caseName',
-				owner: 'ownerName',
-				lastModified: new Date(),
 				creationTime: new Date(),
 				autoSave: false,
 				state
@@ -142,7 +140,7 @@ describe('SelectCaseAppEffects', () => {
 			h: new SetOverlaysTranslationDataAction(overlaysTranslationData),
 			i: new SetOverlaysScannedAreaDataAction(overlaysScannedAreaData),
 			j: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
-			k: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
+			k: new UpdateOverlaysManualProcessArgs(overlaysManualProcessArgs),
 			l: new UpdateFacetsAction(facets),
 			m: new UpdateSelectedLayersIds([]),
 			p: new SetAnnotationMode(null),

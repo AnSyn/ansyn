@@ -31,6 +31,11 @@ export enum CaseGeoFilter {
 	ScreenView = 'ScreenView'
 }
 
+export interface IOverlayImageProcess {
+	isAuto: boolean;
+	manuelArgs: IImageManualProcessArgs
+}
+
 export interface IImageManualProcessArgs {
 	Brightness?: number;
 	Contrast?: number;
@@ -39,8 +44,8 @@ export interface IImageManualProcessArgs {
 	Sharpness?: number;
 }
 
-export interface IOverlaysManualProcessArgs {
-	[key: string]: IImageManualProcessArgs;
+export interface IOverlaysImageProcess {
+	[key: string]: IOverlayImageProcess;
 }
 
 export interface ITranslationData {
@@ -64,7 +69,7 @@ export interface IDilutedCaseState {
 	dataInputFilters: ICaseDataInputFiltersState;
 	favoriteOverlays?: IDilutedOverlay[];
 	miscOverlays?: IDilutedOverlaysHash;
-	overlaysManualProcessArgs: IOverlaysManualProcessArgs;
+	overlaysImageProcess: IOverlaysImageProcess;
 	overlaysTranslationData: IOverlaysTranslationData;
 	overlaysScannedAreaData?: IOverlaysScannedAreaData;
 	layers?: ICaseLayersState;

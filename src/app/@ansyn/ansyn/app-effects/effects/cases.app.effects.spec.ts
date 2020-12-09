@@ -217,7 +217,7 @@ describe('CasesAppEffects', () => {
 						...activeMap.data,
 						overlay,
 						isAutoImageProcessingActive: false,
-						imageManualProcessArgs: casesAppEffects.defaultImageManualProcessArgs
+						imageManualProcessArgs: {}
 					}
 				}
 			})
@@ -229,9 +229,7 @@ describe('CasesAppEffects', () => {
 		const caseMock2: ICase = {
 			id: 'fakeId',
 			name: 'fakeName',
-			owner: 'owner',
 			creationTime: new Date(),
-			lastModified: new Date(),
 			autoSave: false,
 			state: {
 				favoriteOverlays: [

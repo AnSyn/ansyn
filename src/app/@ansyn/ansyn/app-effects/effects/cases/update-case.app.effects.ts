@@ -5,7 +5,7 @@ import { combineLatest, Observable, pipe } from 'rxjs';
 import { selectActiveMapId, selectLayout, selectMapsList } from '@ansyn/map-facade';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import {
-	selectFavoriteOverlays, selectOverlaysManualProcessArgs,
+	selectFavoriteOverlays, selectOverlaysImageProcess,
 	selectScannedAreaData,
 	selectTranslationData
 } from '../../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
@@ -31,11 +31,11 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectMapsList),
 		this.store$.select(selectLayout),
 		this.store$.select(selectOverlaysCriteria),
-		this.store$.select(selectOverlaysManualProcessArgs),
+		this.store$.select(selectOverlaysImageProcess),
 		this.store$.select(selectMiscOverlays),
 		this.store$.select(selectTranslationData),
 		this.store$.select(selectScannedAreaData)
-	]
+	];
 
 	@Effect()
 	shouldUpdateCase$: Observable<UpdateCaseAction> = combineLatest(this.events).pipe(
@@ -50,7 +50,7 @@ export class UpdateCaseAppEffects {
 				mapsList,
 				layout,
 				{ time, region, dataInputFilters }, /* overlaysCriteria */
-				overlaysManualProcessArgs,
+				overlaysImageProcess,
 				miscOverlays,
 				overlaysTranslationData,
 				overlaysScannedAreaData,
@@ -79,7 +79,7 @@ export class UpdateCaseAppEffects {
 					time,
 					facets,
 					miscOverlays,
-					overlaysManualProcessArgs,
+					overlaysImageProcess,
 					overlaysTranslationData,
 					overlaysScannedAreaData
 				}

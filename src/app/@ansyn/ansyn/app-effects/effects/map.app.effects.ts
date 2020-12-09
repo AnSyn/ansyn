@@ -79,9 +79,7 @@ import {
 import { GeoRegisteration, IOverlay } from '../../modules/overlays/models/overlay.model';
 import {
 	BackToWorldView,
-	OverlayStatusActionsTypes,
-	SetManualImageProcessing,
-	UpdateOverlaysManualProcessArgs
+	OverlayStatusActionsTypes
 } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { fromPromise } from 'rxjs/internal-compatibility';
 import { isEqual } from 'lodash';
@@ -146,25 +144,6 @@ export class MapAppEffects {
 			),
 			map(({ payload }: DisplayOverlayAction) => new SetIsLoadingAcion({ mapId: payload.mapId, show: false }))
 		);
-
-	@Effect()
-	onSetManualImageProcessing$: Observable<any> = this.actions$
-		.pipe(
-			ofType<SetManualImageProcessing>(OverlayStatusActionsTypes.SET_MANUAL_IMAGE_PROCESSING),
-			withLatestFrom(this.store$.select(mapStateSelector)),
-			map(([action, mapState]: [SetManualImageProcessing, IMapState]) => [MapFacadeService.activeMap(mapState), action, mapState]),
-			filter(([activeMap]: [ICaseMapState, SetManualImageProcessing, IMapState]) => Boolean(activeMap.data.overlay)),
-			mergeMap(([activeMap, action]: [ICaseMapState, SetManualImageProcessing, IMapState]) => {
-				const imageManualProcessArgs = action.payload;
-				const overlayId = activeMap.data.overlay.id;
-				return [
-					new UpdateMapAction({
-						id: activeMap.id,
-						changes: { data: { ...activeMap.data, imageManualProcessArgs } }
-					}),
-					new UpdateOverlaysManualProcessArgs({ data: { [overlayId]: action.payload } })
-				];
-			}));
 
 	@Effect()
 	displayOverlayOnNewMapInstance$: Observable<any> = this.actions$

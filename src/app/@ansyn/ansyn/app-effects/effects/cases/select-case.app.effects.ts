@@ -50,7 +50,7 @@ export class SelectCaseAppEffects {
 	selectCaseActions(payload: ICase, noInitialSearch: boolean): Action[] {
 		const { state } = payload;
 		// status-bar
-		const { overlaysManualProcessArgs, overlaysTranslationData, overlaysScannedAreaData } = state;
+		const { overlaysImageProcess, overlaysTranslationData, overlaysScannedAreaData } = state;
 		// map
 		const { data } = state.maps;
 
@@ -94,7 +94,7 @@ export class SelectCaseAppEffects {
 			new SetOverlaysTranslationDataAction(overlaysTranslationData),
 			new SetOverlaysScannedAreaDataAction(overlaysScannedAreaData),
 			new BeginLayerCollectionLoadAction({ caseId: payload.id }),
-			new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
+			new UpdateOverlaysManualProcessArgs(overlaysImageProcess),
 			new UpdateFacetsAction(facets),
 			new UpdateSelectedLayersIds(activeLayersIds),
 			new SetAnnotationMode(null),

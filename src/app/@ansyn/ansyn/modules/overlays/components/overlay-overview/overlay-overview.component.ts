@@ -61,12 +61,12 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		return this.el.nativeElement.ownerDocument.getElementById(`dropId-${ this.overlayId }`);
 	}
 
-	public get const() {
+	public get overViewConstants() {
 		return overlayOverviewComponentConstants;
 	}
 
 	public get errorSrc() {
-		return this.const.OVERLAY_OVERVIEW_FAILED;
+		return this.overViewConstants.OVERLAY_OVERVIEW_FAILED;
 	};
 
 	@HostBinding('class.show') isHoveringOverDrop = false;
@@ -103,16 +103,11 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 	}
 
-	onHoveredOverlay([overlay, customElementId]: [IOverviewOverlay, string]) {
-		if (overlay) {
-			this.calculateOverviewPosition(customElementId);
-			this.showOverview(overlay);
-		} else {
-			this.hideOverview();
-		}
+	onHoveredOverlay([overlay, customElementId]: [IOverviewOverlay, string]): void {
+		overlay ? this.showOverview(overlay, customElementId) : this.hideOverview();
 	}
 
-	calculateOverviewPosition(customElementId: string) {
+	setOverviewPosition(customElementId: string): void {
 		const customElement = customElementId && this.el.nativeElement.ownerDocument.getElementById(customElementId);
 		const hoveredElement: Element = customElement || this.dropElement;
 		if (!hoveredElement) {
@@ -133,7 +128,7 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	showOverlayImage(thumbnailUrl: string): void {
-		const fetching = thumbnailUrl === this.const.FETCHING_OVERLAY_DATA;
+		const fetching = thumbnailUrl === this.overViewConstants.FETCHING_OVERLAY_DATA;
 		if (fetching) {
 			this.img.nativeElement.removeAttribute('src');
 		} else {
@@ -148,7 +143,9 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		this.sensorType = sensorType;
 	}
 
-	showOverview(overlay: IOverlay) {
+	showOverview(overlay: IOverlay, customElementId: string): void {
+		this.setOverviewPosition(customElementId);
+
 		this.isHoveringOverDrop = true;
 		this.mouseLeave$.subscribe();
 		this.showOverlayData(overlay.id, overlay.sensorName, overlay.sensorType);
@@ -160,19 +157,19 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	hideOverview() {
+	hideOverview(): void {
 		this.isHoveringOverDrop = false;
 	}
 
-	onDblClick() {
+	onDblClick(): void {
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id: this.overlayId }));
 	}
 
-	startedLoadingImage() {
+	startedLoadingImage(): void {
 		this.loadingImage = true;
 	}
 
-	finishedLoadingImage() {
+	finishedLoadingImage(): void {
 		this.loadingImage = false;
 	}
 }

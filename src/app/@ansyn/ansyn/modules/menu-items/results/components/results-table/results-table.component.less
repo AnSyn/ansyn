@@ -1,14 +1,20 @@
 @import "ansyn/less/colors";
 @import 'ansyn/less/common';
+@import "ansyn/less/z-index-globals";
 
 @footer-height: 109px;
 @header-size: calc(~"(100vh - @{footer-height}) * 0.025");
+@results-table-width: 435px;
 
 :host {
-	z-index: 5;
+	z-index: @z-index-footer;
 	bottom: 93vh;
 	background: @background-color-3;
-	&:extend(.default-menu-item);
+	position: relative;
+	width: @results-table-width;
+	display: block;
+	height: 100%;
+	overflow: hidden;
 	div.results-table {
 
 		width: 100%;
@@ -156,10 +162,6 @@
 					box-sizing: border-box;
 					height: 100%;
 
-					div.overlay-type {
-
-					}
-
 					div.overlay-favorite {
 						margin-right: 0;
 						min-width: 24px;
@@ -199,5 +201,54 @@
 			}
 		}
 	}
+
+	//&.rtl {
+	//
+	//	div.results-table {
+	//		div.header {
+	//			margin-left: unset;
+	//			margin-right: 23px;
+	//
+	//			div.box {
+	//				.icon-status-bar-imagery-count {
+	//					margin-left: unset;
+	//					margin-right: 145px;
+	//				}
+	//
+	//				.overlay-count {
+	//					margin-left: unset;
+	//					margin-right: 170px;
+	//				}
+	//			}
+	//		}
+	//
+	//		div.results-table-head {
+	//			div.results-table-head-row {
+	//				padding-left: unset;
+	//				padding-right: 43px;
+	//			}
+	//		}
+	//
+	//		div.results-table-body {
+	//			direction: ltr;
+	//
+	//			div.results-table-body-row {
+	//				direction: rtl;
+	//				margin-left: unset;
+	//				margin-right: 16px;
+	//
+	//				div.results-table-body-row-data {
+	//					padding-left: unset;
+	//					padding-right: 19px;
+	//
+	//					div.results-table-case-name-col {
+	//						direction: ltr; // it is a date, so don't flip characters
+	//						text-align: right; // but align it to the right
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 }
 

@@ -105,36 +105,59 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 
 	onHoveredOverlay([overlay, customElementId]: [IOverviewOverlay, string]) {
 		if (overlay) {
-			const fetching = overlay.thumbnailUrl === this.const.FETCHING_OVERLAY_DATA;
 			this.overlayId = overlay.id;
-			const customElement = customElementId && this.el.nativeElement.ownerDocument.getElementById(customElementId);
-			const hoveredElement: Element = customElement || this.dropElement;
-			if (!hoveredElement) {
-				return;
-			}
-			const { left, height, top }: ClientRect = hoveredElement.getBoundingClientRect();
-			this.left = left - (customElement ? 275 : 150);
-			this.top = top + (customElement ? height + 70 : 0);
-			this.showOverview();
-			this.sensorName = overlay.sensorName;
-			this.sensorType = overlay.sensorType;
-			if (fetching) {
-				this.img.nativeElement.removeAttribute('src');
-			} else {
-				this.img.nativeElement.src = overlay.thumbnailUrl;
-			}
-			this.formattedTime = getTimeFormat(new Date(overlay.photoTime));
-			if (!this.img.nativeElement.complete) {
-				this.startedLoadingImage();
-			}
+			this.calculateOverviewPosition(customElementId);
+			this.showOverview(overlay);
 		} else {
 			this.hideOverview();
 		}
 	}
 
-	showOverview() {
+	calculateOverviewPosition(customElementId: string) {
+		const customElement = customElementId && this.el.nativeElement.ownerDocument.getElementById(customElementId);
+		const hoveredElement: Element = customElement || this.dropElement;
+		if (!hoveredElement) {
+			return;
+		}
+		this.myCurrentWidth = (this.el.nativeElement as HTMLElement).offsetWidth;
+		const { left, height, top }: ClientRect = hoveredElement.getBoundingClientRect();
+		this.left = customElement ? this.getLeftPosition(left) : left - 150;
+		this.top = top + (customElement ? height + 70 : 0);
+	}
+
+	getLeftPosition(hoveredElementPos: number): number {
+		const candidateLeftPos = hoveredElementPos - 275;
+		const ansynWidth = this.topElement.getBoundingClientRect().width;
+		// ^ Ansyn component is not a block element, therefore it doesn't have offsetWidth
+		// Therefore I used getBoundingClientRect()
+		return Math.min(candidateLeftPos, ansynWidth - this.myCurrentWidth);
+	}
+
+	showOverlayImage(thumbnailUrl: string): void {
+		const fetching = thumbnailUrl === this.const.FETCHING_OVERLAY_DATA;
+		if (fetching) {
+			this.img.nativeElement.removeAttribute('src');
+		} else {
+			this.img.nativeElement.src = thumbnailUrl;
+		}
+
+	}
+
+	showOverlayData(sensorName: string, sensorType: string): void {
+		this.sensorName = sensorName;
+		this.sensorType = sensorType;
+	}
+
+	showOverview(overlay: IOverlay) {
 		this.isHoveringOverDrop = true;
 		this.mouseLeave$.subscribe();
+		this.showOverlayData(overlay.sensorName, overlay.sensorType);
+		this.showOverlayImage(overlay.thumbnailUrl);
+
+		this.formattedTime = getTimeFormat(new Date(overlay.photoTime));
+		if (!this.img.nativeElement.complete) {
+			this.startedLoadingImage();
+		}
 	}
 
 	hideOverview() {

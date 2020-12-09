@@ -1,7 +1,8 @@
 @import 'ansyn/less/common';
+@import "ansyn/less/z-index-globals";
 
 :host {
-	z-index: 5;
+	z-index: @z-index-footer;
 	display: block;
 	position: relative;
 
@@ -9,7 +10,7 @@
 		left: 64%;
 		bottom: 10%;
 		position: fixed;
-		z-index: 6;
+		z-index: @z-index-footer;
 	}
 	direction: ltr;
 }

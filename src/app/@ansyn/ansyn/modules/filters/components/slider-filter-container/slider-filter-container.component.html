@@ -13,8 +13,8 @@
 			</div>
 		</div>
 
-		<p-slider class='slider' [ngModel]="rangeValues" [range]="true" (onSlideEnd)="handleChange($event)"
-				  [min]="factor * metadata.min" [max]="factor * metadata.max"></p-slider>
+		<ngx-slider class='slider' [options]="rangeValues" onchange="handleChange($event)"
+					[(value)]="factor * metadata.min" [(highValue)]="factor * metadata.max"></ngx-slider>
 	</div>
 
 	<ansyn-filter-counter [count]="metadata.count" [filteredCount]="counters?.filteredCount"></ansyn-filter-counter>

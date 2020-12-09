@@ -19,6 +19,7 @@ import { FilterCounterComponent } from './components/filter-counter/filter-count
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { CoreModule } from '../core/core.module';
 import { ArrayFilterContainerComponent } from './components/array-filter-container/array-filter-container.component';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 // @dynamic
 @NgModule({
@@ -28,7 +29,8 @@ import { ArrayFilterContainerComponent } from './components/array-filter-contain
 		StoreModule.forFeature(filtersFeatureKey, FiltersReducer),
 		FormsModule,
 		MapFacadeModule,
-		EffectsModule.forFeature([FiltersEffects])
+		EffectsModule.forFeature([FiltersEffects]),
+		NgxSliderModule
 	],
 	declarations: [
 		FiltersCollectionComponent,

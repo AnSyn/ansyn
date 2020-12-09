@@ -89,6 +89,9 @@ export class EditCaseComponent implements OnInit, OnDestroy {
 	}
 
 	getEmptyCase(selectedCase: ICase): ICase {
+		if (!selectedCase) {
+			return;
+		}
 		let activeMap = selectedCase.state.maps.data.find(({ id }) => id === selectedCase.state.maps.activeMapId);
 		if (!Boolean(activeMap)) {
 			activeMap = selectedCase.state.maps.data[0];

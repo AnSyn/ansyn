@@ -1,5 +1,4 @@
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-
 import { MapSearchBoxComponent } from './map-search-box.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
@@ -10,6 +9,7 @@ import { StoreModule } from "@ngrx/store";
 import { mapFeatureKey, MapReducer } from "../../reducers/map.reducer";
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { Point } from 'geojson';
 
 
 describe('MapSearchBoxComponent', () => {
@@ -70,14 +70,18 @@ describe('MapSearchBoxComponent', () => {
 		}));
 
 		it('should call getLocation$() and then setCenter()', fakeAsync(() => {
-			spyOn(geocoderService, 'getLocation$').and.returnValue(asyncData([{ name: 'blablabla', point: 'test' }]));
+			const point: Point = {
+				coordinates: [0, 0],
+				type: 'Point'
+			};
+			spyOn(geocoderService, 'getLocation$').and.returnValue(asyncData([{ name: 'blablabla', point }]));
 			component.control.setValue('hehe');
 			tick();
 			spyOn(component._communicator, 'setCenter').and.returnValue(asyncData(true));
 			component.onSubmit();
 			tick();
 			expect(geocoderService.getLocation$).toHaveBeenCalledWith('hehe');
-			expect(component._communicator.setCenter).toHaveBeenCalledWith('test', true);
+			expect(component._communicator.setCenter).toHaveBeenCalledWith(point, true);
 		}));
 
 		it('should halt the flow, when given an empty string', fakeAsync(() => {

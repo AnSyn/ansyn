@@ -16,6 +16,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { mapFacadeConfig } from '@ansyn/map-facade';
 import { linksConfig } from '../../services/helpers/cases.service.query-params-helper';
+import { IContext } from '../../../../core/models/context.model';
 
 describe('EditCaseComponent', () => {
 	let component: EditCaseComponent;
@@ -95,10 +96,16 @@ describe('EditCaseComponent', () => {
 			component.editMode = false;
 			spyOn(component, 'close');
 			spyOn(casesService.queryParamsHelper, 'updateCaseViaContext').and.returnValue(component.caseModel);
-			component.contextsList = ['fakeContext' as any];
+			const fakeContext: IContext = {
+				id: '',
+				creationTime: new Date(),
+				name: ''
+			};
+			component.contextsList = [fakeContext];
 			spyOn(casesService, 'createCase').and.callFake((value) => of(value));
 			component.onSubmitCase(0);
-			expect(casesService.queryParamsHelper.updateCaseViaContext).toHaveBeenCalledWith('fakeContext', component.caseModel);
+
+			expect(casesService.queryParamsHelper.updateCaseViaContext).toHaveBeenCalledWith(fakeContext, component.caseModel);
 			expect(store.dispatch).toHaveBeenCalledWith(new AddCaseAction(component.caseModel));
 			expect(component.close).toHaveBeenCalled();
 		});

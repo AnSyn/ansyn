@@ -6,7 +6,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { UUID } from 'angular2-uuid';
 import { CoreConfig } from '../../../core/models/core.config';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
-import { StorageService } from '../../../core/services/storage/storage.service';
+import { IEntity, StorageService } from '../../../core/services/storage/storage.service';
 import { ICase } from '../models/case.model';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { linksConfig } from './helpers/cases.service.query-params-helper';
@@ -121,18 +121,15 @@ describe('CasesService', () => {
 		spyOn(storageService, 'create').and.callFake(() => <any>of(fakeResponse));
 		spyOn(UUID, 'UUID').and.callFake(() => ids[id++]);
 		casesService.createCase(selectedCase, newDate);
-		expect(storageService.create).toHaveBeenCalledWith(casesService.config.schema,
-			{
-				preview: {
-					id: ids[0],
-					name: selectedCase.name,
-					owner: selectedCase.owner,
-					creationTime: newDate,
-					lastModified: newDate,
-					autoSave: true
-				},
-				data: casesService.pluckIdSourceType(selectedCase.state)
-			});
+		const preview = {
+			id: ids[0],
+			name: selectedCase.name,
+			owner: selectedCase.owner,
+			creationTime: newDate,
+			lastModified: newDate,
+			autoSave: true
+		};
+		expect(storageService.create).toHaveBeenCalledWith(casesService.config.schema, { preview, data: casesService.pluckIdSourceType(selectedCase.state) });
 	});
 
 	it('updateCase should send the case as body in ajax("put")', () => {
@@ -141,18 +138,15 @@ describe('CasesService', () => {
 		let fakeResponse = { selectedCase };
 		spyOn(storageService, 'update').and.callFake(() => <any>of(fakeResponse));
 		casesService.updateCase(selectedCase);
-		expect(storageService.update).toHaveBeenCalledWith(casesService.config.schema,
-			{
-				preview: {
-					id: selectedCase.id,
-					name: selectedCase.name,
-					owner: selectedCase.owner,
-					creationTime: selectedCase.creationTime,
-					lastModified: selectedCase.lastModified,
-					autoSave: true
-				},
-				data: casesService.pluckIdSourceType(selectedCase.state)
-			});
+		const preview = {
+			id: selectedCase.id,
+			name: selectedCase.name,
+			owner: selectedCase.owner,
+			creationTime: selectedCase.creationTime,
+			lastModified: selectedCase.lastModified,
+			autoSave: true
+		};
+		expect(storageService.update).toHaveBeenCalledWith(casesService.config.schema, { preview, data: casesService.pluckIdSourceType(selectedCase.state) });
 	});
 
 	it('deleteCase should send the case id as param in ajax("delete")', () => {

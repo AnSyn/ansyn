@@ -242,6 +242,10 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.comboTableSensors.resetSelection();
         break;
       }
+      case 'resolution' : {
+        this.minValue = 100;
+        this.maxValue = 200;
+      }
     }
   }
   

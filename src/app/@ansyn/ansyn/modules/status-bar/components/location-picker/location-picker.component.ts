@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 import { ClearActiveInteractionsAction } from '../../../menu-items/tools/actions/tools.actions';
+import { SearchPanelComponent } from '../search-panel/search-panel.component';
 
 @Component({
 	selector: 'ansyn-location-picker',
@@ -16,11 +17,15 @@ export class LocationPickerComponent implements OnInit, OnDestroy {
 	@Input() geoFilter: CaseGeoFilter;
 
 	constructor(protected store$: Store<IStatusBarState>,
-				@Inject(GEO_FILTERS) public geoFilters: CaseGeoFilter[]) {
+				@Inject(GEO_FILTERS) public geoFilters: CaseGeoFilter[],
+				protected _parent: SearchPanelComponent) {
 	}
 
 	change(type) {
 		this.store$.dispatch(new UpdateGeoFilterStatus({ type }));
+		if (type === 'ScreenView') {
+			this._parent.close();
+		}
 	}
 
 	ngOnInit() {

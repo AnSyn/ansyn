@@ -1,5 +1,5 @@
 import { SaveCaseAsAction } from '../../actions/cases.actions';
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { casesFeatureKey, CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { SaveCaseComponent } from './save-case.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -32,7 +32,7 @@ describe('SaveCaseComponent', () => {
 		selectedCase: { id: 'fakeId1', name: 'fakeName1', state: { selectedContextId: null } }
 	} as any;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				BrowserAnimationsModule,

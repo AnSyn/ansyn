@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, tick, inject, fakeAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick, inject, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { CasesModalContainerComponent } from './cases-modal-container.component';
 import { CasesModule } from '../../cases.module';
 import { CloseModalAction, OpenModalAction } from '../../actions/cases.actions';
@@ -20,7 +20,7 @@ describe('ModalContainerComponent', () => {
 	let fixture: ComponentFixture<CasesModalContainerComponent>;
 	let store: Store<ICasesState>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientModule,

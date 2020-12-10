@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AnnotationsWeightComponent } from './annotations-weight.component';
 
@@ -6,7 +6,7 @@ describe('AnnotationsWeightComponent', () => {
 	let component: AnnotationsWeightComponent;
 	let fixture: ComponentFixture<AnnotationsWeightComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [AnnotationsWeightComponent]
 		})

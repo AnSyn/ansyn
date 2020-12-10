@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ImageryComponent } from './imagery.component';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { BaseMapSourceProvider, MAP_SOURCE_PROVIDERS_CONFIG } from '../model/base-map-source-provider';
@@ -37,7 +37,7 @@ describe('ImageryComponent', () => {
 	let component: ImageryComponent;
 	let fixture: ComponentFixture<ImageryComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [],
 			declarations: [ImageryComponent],

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 
 import { AnsynFooterComponent } from './ansyn-footer.component';
@@ -19,7 +19,7 @@ describe('AnsynFooterComponent', () => {
 		selector: 'ansyn-overlay-navigation-bar'
 	});
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [
 				AnsynFooterComponent,

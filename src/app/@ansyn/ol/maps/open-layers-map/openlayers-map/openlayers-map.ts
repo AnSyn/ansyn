@@ -4,7 +4,6 @@ import {
 	areCoordinatesNumeric,
 	BaseImageryMap,
 	ExtentCalculator, IExportMapMetadata,
-	IMAGERY_BASE_MAP_LAYER,
 	IMAGERY_MAIN_LAYER_NAME, IMAGERY_SLOW_ZOOM_FACTOR,
 	ImageryLayerProperties,
 	ImageryMap,
@@ -52,7 +51,7 @@ export enum StaticGroupsKeys {
 export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	static groupsKeys = StaticGroupsKeys;
 	groupLayersMap = new Map<StaticGroupsKeys, Group>(Object.values(StaticGroupsKeys).map((key) => [key, new Group({className: `group-${key}`})]));
-	private _mapObject: OLMap;
+	mapObject: OLMap;
 	private _backgroundMapObject: OLMap;
 	public isValidPosition;
 	targetElement: HTMLElement = null;
@@ -81,10 +80,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			debounceTimeInMs: 500,
 			timeoutInMs: 3000
 		};
-	}
-
-	public get mapObject() {
-		return this._mapObject;
 	}
 
 	public get backgroundMapObject() {
@@ -162,7 +157,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			})
 		];
 		const renderer = 'canvas';
-		this._mapObject = new OLMap({
+		this.mapObject = new OLMap({
 			target,
 			renderer,
 			controls,
@@ -187,10 +182,10 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	initListeners() {
-		this._mapObject.on('moveend', this._moveEndListener);
-		this._mapObject.on('movestart', this._moveStartListener);
-		this._mapObject.on('pointerdown', this._pointerDownListener);
-		this._mapObject.on('pointermove', this._pointerMoveListener);
+		this.mapObject.on('moveend', this._moveEndListener);
+		this.mapObject.on('movestart', this._moveStartListener);
+		this.mapObject.on('pointerdown', this._pointerDownListener);
+		this.mapObject.on('pointermove', this._pointerMoveListener);
 
 		this.subscribers.push(
 			this.getMoveEndPositionObservable.pipe(
@@ -230,7 +225,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			this._backgroundMapObject.setTarget(null);
 			this._backgroundMapObject = null;
 		}
-		const rotation: number = this._mapObject.getView() && this.mapObject.getView().getRotation();
+		const rotation: number = this.mapObject.getView() && this.mapObject.getView().getRotation();
 		const view = this.createView(layer);
 		// set default values to prevent map Assertion error's
 		view.setCenter([0, 0]);
@@ -247,13 +242,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 					take(1))),
 				switchMap(() => {
 					this.setMainLayerToForegroundMap(layer);
-					this._mapObject.setView(view);
+					this.mapObject.setView(view);
 					return this._setMapPositionOrExtent(this.mapObject, position, extent, rotation);
 				})
 			);
 		} else {
 			this.setMainLayerToForegroundMap(layer);
-			this._mapObject.setView(view);
+			this.mapObject.setView(view);
 			this.monitor.start(this.mapObject);
 			return this._setMapPositionOrExtent(this.mapObject, position, extent, rotation);
 		}
@@ -312,14 +307,14 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 		if (!this._mapLayers.includes(layer)) {
 			this._mapLayers.push(layer);
-			this._mapObject.addLayer(layer);
+			this.mapObject.addLayer(layer);
 		}
 	}
 
 	public removeAllLayers() {
 		this.showGroups.forEach((show, group) => {
-			if (show && this._mapObject) {
-				this._mapObject.removeLayer(this.groupLayersMap.get(StaticGroupsKeys.layers));
+			if (show && this.mapObject) {
+				this.mapObject.removeLayer(this.groupLayersMap.get(StaticGroupsKeys.layers));
 			}
 		});
 
@@ -335,8 +330,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			return;
 		}
 		this._mapLayers = this._mapLayers.filter((mapLayer) => mapLayer !== layer);
-		this._mapObject.removeLayer(layer);
-		this._mapObject.renderSync();
+		this.mapObject.removeLayer(layer);
+		this.mapObject.renderSync();
 	}
 
 	public setCenter(center: GeoPoint, animation: boolean): Observable<boolean> {
@@ -345,7 +340,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			if (animation) {
 				this.flyTo(olCenter);
 			} else {
-				const view = this._mapObject.getView();
+				const view = this.mapObject.getView();
 				view.setCenter(olCenter);
 			}
 
@@ -354,19 +349,19 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	public updateSize(): void {
-		const center = this._mapObject.getView().getCenter();
+		const center = this.mapObject.getView().getCenter();
 		if (!areCoordinatesNumeric(center)) {
 			return;
 		}
-		this._mapObject.updateSize();
-		this._mapObject.renderSync();
+		this.mapObject.updateSize();
+		this.mapObject.renderSync();
 	}
 
 	public getCenter(): Observable<GeoPoint> {
 		if (!this.isValidPosition) {
 			return of(null);
 		}
-		const view = this._mapObject.getView();
+		const view = this.mapObject.getView();
 		const center = view.getCenter();
 		if (!areCoordinatesNumeric(center)) {
 			return of(null);
@@ -539,7 +534,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	flyTo(location: [number, number]) {
-		const view = this._mapObject.getView();
+		const view = this.mapObject.getView();
 		view.animate({
 			center: location,
 			duration: 2000
@@ -574,17 +569,17 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	public dispose() {
 		this.removeAllLayers();
 
-		if (this._mapObject) {
+		if (this.mapObject) {
 			if (this.subscribers) {
 				this.subscribers.forEach((subscriber) => subscriber.unsubscribe());
 				delete this.subscribers;
 			}
 
-			this._mapObject.un('moveend', this._moveEndListener);
-			this._mapObject.un('movestart', this._moveStartListener);
-			this._mapObject.un('pointerdown', this._pointerDownListener);
-			this._mapObject.un('pointermove', this._pointerMoveListener);
-			this._mapObject.setTarget(null);
+			this.mapObject.un('moveend', this._moveEndListener);
+			this.mapObject.un('movestart', this._moveStartListener);
+			this.mapObject.un('pointerdown', this._pointerDownListener);
+			this.mapObject.un('pointermove', this._pointerMoveListener);
+			this.mapObject.setTarget(null);
 		}
 
 		if (this._backgroundMapObject) {
@@ -640,6 +635,6 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	getProjectionCode(): string {
-		return this._mapObject.getView().getProjection().code_;
+		return this.mapObject.getView().getProjection().code_;
 	}
 }

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { ExportMapsPopupComponent } from './export-maps-popup.component';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
@@ -20,7 +20,7 @@ describe('ExportMapsPopupComponent', () => {
 	let component: ExportMapsPopupComponent;
 	let fixture: ComponentFixture<ExportMapsPopupComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ExportMapsPopupComponent, MockComponent({
 				selector: 'ansyn-animated-ellipsis',

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { GeoHolderComponent } from './geo-holder.component';
 
@@ -6,7 +6,7 @@ describe('GeoHolderComponent', () => {
 	let component: GeoHolderComponent;
 	let fixture: ComponentFixture<GeoHolderComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [GeoHolderComponent]
 		})

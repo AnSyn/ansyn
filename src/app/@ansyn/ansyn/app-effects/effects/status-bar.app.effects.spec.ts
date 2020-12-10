@@ -4,7 +4,7 @@ import {
 	OverlayStatusReducer
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { StatusBarAppEffects } from './status-bar.app.effects';
-import { async, inject, TestBed } from '@angular/core/testing';
+import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { AddCaseAction, SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { EMPTY, Observable } from 'rxjs';
 import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
@@ -63,7 +63,7 @@ describe('StatusBarAppEffects', () => {
 	let overlaysService: OverlaysService;
 	let fakeCase: ICase;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientModule,

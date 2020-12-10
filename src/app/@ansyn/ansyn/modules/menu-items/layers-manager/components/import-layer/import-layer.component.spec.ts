@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ImportLayerComponent } from './import-layer.component';
 import { StoreModule } from '@ngrx/store';
@@ -8,7 +8,7 @@ describe('ImportLayerComponent', () => {
 	let component: ImportLayerComponent;
 	let fixture: ComponentFixture<ImportLayerComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ImportLayerComponent],
 			providers: [

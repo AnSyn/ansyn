@@ -1,4 +1,4 @@
-import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 
 import { MapSearchBoxComponent } from './map-search-box.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -16,7 +16,7 @@ describe('MapSearchBoxComponent', () => {
 	let component: MapSearchBoxComponent;
 	let fixture: ComponentFixture<MapSearchBoxComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [MapSearchBoxComponent],
 			imports: [

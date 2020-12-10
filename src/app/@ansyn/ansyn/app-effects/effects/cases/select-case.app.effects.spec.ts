@@ -1,4 +1,4 @@
-import { async, inject, TestBed } from '@angular/core/testing';
+import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs';
@@ -51,7 +51,7 @@ describe('SelectCaseAppEffects', () => {
 	let actions: Observable<any>;
 	let store: Store<any>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				StoreModule.forRoot({}),

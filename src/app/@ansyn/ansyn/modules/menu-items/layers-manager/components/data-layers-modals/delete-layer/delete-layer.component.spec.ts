@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
 
 import { DeleteLayerComponent } from './delete-layer.component';
@@ -8,7 +8,7 @@ describe('DeleteLayerComponent', () => {
 	let component: DeleteLayerComponent;
 	let fixture: ComponentFixture<DeleteLayerComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [DeleteLayerComponent],
 			imports: [StoreModule.forRoot({}), TranslateModule.forRoot()]

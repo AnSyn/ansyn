@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ResultsComponent } from './results.component';
 import { MockComponent } from "../../../../core/test/mock-component";
@@ -13,7 +13,7 @@ describe('ResultsComponent', () => {
 	let a = MockComponent({ selector: 'ansyn-results-table' });
 	let b = MockComponent({ selector: 'ansyn-results-table-header' });
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [TranslateModule.forRoot(), BrowserAnimationsModule, StoreModule.forRoot({})],
 			declarations: [ResultsComponent, a, b],

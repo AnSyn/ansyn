@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { EditCaseComponent } from './edit-case.component';
 import { casesFeatureKey, CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { Store, StoreModule } from '@ngrx/store';
@@ -36,7 +36,7 @@ describe('EditCaseComponent', () => {
 		selectedCase: { id: 'fakeId1', name: 'fakeName1', state: { selectedContextId: null } }
 	} as any;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				BrowserAnimationsModule,

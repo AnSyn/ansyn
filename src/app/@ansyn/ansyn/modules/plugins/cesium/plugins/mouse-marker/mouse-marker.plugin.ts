@@ -10,25 +10,11 @@ import { point } from '@turf/turf';
 })
 export class MouseMarkerPlugin extends BaseEntitiesVisualizer {
 
-	public set isEnabled(value: boolean) {
-		if (this._isEnabled !== value) {
-			this._isEnabled = value;
-
-			if (!this.isEnabled) {
-				this.removeEntity('visEntity');
-			}
-		}
-	}
-
-	public get isEnabled(): boolean {
-		return this._isEnabled;
-	}
-
-	private _isEnabled: boolean;
+	isEnabled: boolean;
 
 	constructor() {
 		super();
-		this._isEnabled = false;
+		this.isEnabled = false;
 	}
 
 	@AutoSubscription
@@ -47,7 +33,7 @@ export class MouseMarkerPlugin extends BaseEntitiesVisualizer {
 	}
 
 	private tryDraw(position: IMousePointerMove) {
-		if (!this._isEnabled) {
+		if (!this.isEnabled) {
 			return;
 		}
 

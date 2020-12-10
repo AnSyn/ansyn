@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { StatusBarComponent } from './status-bar.component';
 import { MockComponent } from '../../../core/test/mock-component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -15,7 +15,7 @@ describe('StatusBarComponent', () => {
 	const mockCasePanel = MockComponent({ selector: 'ansyn-case-panel' });
 	const mockFiltersPanel = MockComponent( {selector: 'ansyn-filters-panel'});
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [TranslateModule.forRoot()],
 			declarations: [StatusBarComponent,

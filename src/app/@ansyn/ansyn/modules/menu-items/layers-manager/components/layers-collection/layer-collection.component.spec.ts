@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from '../../reducers/layers.reducer';
 import { LayerCollectionComponent } from './layer-collection.component';
@@ -17,7 +17,7 @@ describe('LayerCollectionComponent', () => {
 		outputs: ['openModal']
 	});
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				BrowserAnimationsModule,

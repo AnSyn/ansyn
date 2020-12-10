@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ImageryContainerComponent } from './imagery-container.component';
 import { IMapFacadeConfig } from '../../models/map-config.model';
 import { mapFacadeConfig } from '../../models/map-facade.config';
@@ -13,7 +13,7 @@ describe('ImageryContainerComponent', () => {
 	let component: ImageryContainerComponent;
 	let fixture: ComponentFixture<ImageryContainerComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientModule,

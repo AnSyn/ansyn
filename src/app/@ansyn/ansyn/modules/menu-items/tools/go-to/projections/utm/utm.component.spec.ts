@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -10,7 +10,7 @@ describe('UtmComponent', () => {
 	let component: UtmComponent;
 	let fixture: ComponentFixture<UtmComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [UtmComponent],
 			imports: [FormsModule, HttpClientModule, TranslateModule.forRoot()],

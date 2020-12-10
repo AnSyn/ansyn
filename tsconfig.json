@@ -1,41 +1,48 @@
-/*
-  This is a "Solution Style" tsconfig.json file, and is used by editors and TypeScript’s language server to improve development experience.
-  It is not intended to be used to perform a compilation.
-
-  To learn more about this file see: https://angular.io/config/solution-tsconfig.
-*/
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./src/tsconfig.app.json"
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "module": "es2020",
+    "paths": {
+      "@ansyn/ansyn": [
+        "src/app/@ansyn/ansyn/public_api"
+      ],
+      "@ansyn/imagery": [
+        "src/app/@ansyn/imagery/public_api"
+      ],
+      "@ansyn/map-facade": [
+        "src/app/@ansyn/map-facade/public_api"
+      ],
+      "@ansyn/ol": [
+        "src/app/@ansyn/ol/public_api"
+      ],
+      "@ansyn/imagery-cesium": [
+        "src/app/@ansyn/imagery-cesium/public_api"
+      ],
+      "@ansyn/imagery-video": [
+        "src/app/@ansyn/imagery-video/public_api"
+      ],
+      "@ansyn/menu": [
+        "src/app/@ansyn/menu/public_api"
+      ],
+      "root/package.json": ["./package.json"]
     },
-    {
-      "path": "./src/tsconfig.spec.json"
-    },
-    {
-      "path": "./src/tsconfig.builder.json"
-    },
-    {
-      "path": "./src/app/@ansyn/ansyn/tsconfig.lib.json"
-    },
-    {
-      "path": "./src/app/@ansyn/map-facade/tsconfig.lib.json"
-    },
-    {
-      "path": "./src/app/@ansyn/ol/tsconfig.lib.json"
-    },
-    {
-      "path": "./src/app/@ansyn/imagery-cesium/tsconfig.lib.json"
-    },
-    {
-      "path": "./src/app/@ansyn/imagery-video/tsconfig.lib.json"
-    },
-    {
-      "path": "./src/app/@ansyn/imagery/tsconfig.lib.json"
-    },
-    {
-      "path": "./src/app/@ansyn/menu/tsconfig.lib.json"
-    }
-  ]
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es5",
+    "resolveJsonModule": true,
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2017",
+      "es2017.object",
+      "es2016.array.include",
+      "dom"
+    ]
+  }
 }

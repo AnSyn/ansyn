@@ -15,29 +15,14 @@ import { OpenLayersMap } from '@ansyn/ol';
 })
 export class CenterMarkerPlugin extends BaseImageryPlugin {
 
-	public set isEnabled(value: boolean) {
-		if (this._isEnabled !== value) {
-			this._isEnabled = value;
-
-			if (this.isEnabled) {
-				this.tryDrawCenter();
-			} else {
-				this.tryDeleteCenter();
-			}
-		}
-	}
-
-	public get isEnabled(): boolean {
-		return this._isEnabled;
-	}
 	private _iconStyle: Style;
 	private _existingLayer;
 
-	private _isEnabled: boolean;
+	isEnabled: boolean;
 
 	constructor() {
 		super();
-		this._isEnabled = false;
+		this.isEnabled = false;
 
 		this._iconStyle = new Style({
 			image: new Icon(/** @type {olx.style.IconOptions} */ ({
@@ -79,7 +64,7 @@ export class CenterMarkerPlugin extends BaseImageryPlugin {
 
 		this.tryDeleteCenter();
 
-		if (!this._isEnabled) {
+		if (!this.isEnabled) {
 			return;
 		}
 

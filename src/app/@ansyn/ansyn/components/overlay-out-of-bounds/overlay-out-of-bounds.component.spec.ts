@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { OverlayOutOfBoundsComponent } from './overlay-out-of-bounds.component';
 import { bboxFromGeoJson, ImageryCommunicatorService } from '@ansyn/imagery';
@@ -14,7 +14,7 @@ describe('OverlayOutOfBoundsComponent', () => {
 	let imageryCommunicatorService: ImageryCommunicatorService;
 	let store: Store<any>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			providers: [ImageryCommunicatorService],
 			declarations: [OverlayOutOfBoundsComponent],

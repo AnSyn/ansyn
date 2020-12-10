@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AnsynPopoverComponent } from './ansyn-popover.component';
 
@@ -6,7 +6,7 @@ describe('AnsynPopoverComponent', () => {
 	let component: AnsynPopoverComponent;
 	let fixture: ComponentFixture<AnsynPopoverComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [AnsynPopoverComponent]
 		})

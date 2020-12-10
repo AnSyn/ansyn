@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TasksTablePageHeaderComponent } from './tasks-table-page-header.component';
 import { StoreModule } from '@ngrx/store';
@@ -9,7 +9,7 @@ describe('TasksTablePageHeaderComponent', () => {
 	let component: TasksTablePageHeaderComponent;
 	let fixture: ComponentFixture<TasksTablePageHeaderComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [TasksTablePageHeaderComponent],
 			imports: [

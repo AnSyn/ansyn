@@ -1,5 +1,5 @@
 import { LayersEffects } from './layers.effects';
-import { async, inject, TestBed } from '@angular/core/testing';
+import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { DataLayersService, layersConfig } from '../services/data-layers.service';
 import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from '../reducers/layers.reducer';
@@ -21,7 +21,7 @@ describe('LayersEffects', () => {
 	let actions: Observable<any>;
 	let http: HttpClient;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientModule,

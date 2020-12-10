@@ -2,9 +2,9 @@
 	"name": "@ansyn/imagery-video",
 	"version": "3.0.0",
 	"peerDependencies": {
-		"@angular/core": "~10.0.5",
-		"@angular/common": "~10.0.5",
-		"@angular/platform-browser": "~10.0.5",
+		"@angular/core": "~11.0.4",
+		"@angular/common": "~11.0.4",
+		"@angular/platform-browser": "~11.0.4",
 		"@ansyn/imagery": "3.0.0",
 		"@ansyn/map-facade": "3.0.0",
 		"rxjs": "~6.5.4"

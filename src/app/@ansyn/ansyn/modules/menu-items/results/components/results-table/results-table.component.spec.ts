@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ResultsTableComponent } from './results-table.component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -22,7 +22,7 @@ describe('ResultsTableComponent', () => {
 	let fixture: ComponentFixture<ResultsTableComponent>;
 	let store: Store<IOverlaysState>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [TranslateModule.forRoot(),
 				MapFacadeModule,

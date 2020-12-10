@@ -1,4 +1,4 @@
-import { async, inject, TestBed } from '@angular/core/testing';
+import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { ImageryCommunicatorService, } from '@ansyn/imagery';
 import {
 	mapFeatureKey,
@@ -44,7 +44,7 @@ describe('OverlayStatusEffects', () => {
 	let store: Store<any>;
 	let imageryCommunicatorService: ImageryCommunicatorService;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				StoreModule.forRoot({ [mapFeatureKey]: MapReducer, [overlayStatusFeatureKey]: OverlayStatusReducer })

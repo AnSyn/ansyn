@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { ImageryRotationComponent } from './imagery-rotation.component';
 import { EffectsModule } from '@ngrx/effects';
@@ -13,7 +13,7 @@ describe('ImageryRotationComponent', () => {
 	let fixture: ComponentFixture<ImageryRotationComponent>;
 	let store: Store<any>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientModule,

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { CasesTableComponent } from './cases-table.component';
 import { DeleteCaseComponent } from '../delete-case/delete-case.component';
 import { EditCaseComponent } from '../edit-case/edit-case.component';
@@ -22,7 +22,7 @@ describe('CasesTableComponent', () => {
 	let fixture: ComponentFixture<CasesTableComponent>;
 	let store: Store<ICasesState>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientModule,

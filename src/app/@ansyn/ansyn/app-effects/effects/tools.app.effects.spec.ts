@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { Store, StoreModule } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
-import { async, inject, TestBed } from '@angular/core/testing';
+import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { mapStateSelector } from '@ansyn/map-facade';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
@@ -110,7 +110,7 @@ describe('ToolsAppEffects', () => {
 		toolsState = cloneDeep(toolsInitialState);
 	});
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 

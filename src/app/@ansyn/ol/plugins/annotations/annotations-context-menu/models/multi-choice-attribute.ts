@@ -5,21 +5,9 @@ import { IAttributeData } from './attribute-data.interface';
 
 export class MultiChoiceAttribute extends AttributeBase<IKeyValuePair<string>[]> {
 	private selectedOptions: IKeyValuePair<string>[];
+	value: IKeyValuePair<string>[];
 
-	private _value: IKeyValuePair<string>[];
-	set value(value: IKeyValuePair<string>[]) {
-		if (!!value) {
-			this._value = [...value];
-			this.selectedOptions = [...value]
-		}
-	}
-	get value() {
-		return this._value;
-	}
-
-	constructor(
-		data: IAttributeData
-	) {
+	constructor(data: IAttributeData) {
 		super(data);
 		this.type = ControlType.MultipleChoices;
 
@@ -31,12 +19,19 @@ export class MultiChoiceAttribute extends AttributeBase<IKeyValuePair<string>[]>
 		}
 	}
 
+	setValue(value: IKeyValuePair<string>[]) {
+		if (!!value) {
+			this.value = [...value];
+			this.selectedOptions = [...value]
+		}
+	}
+
 	addSelectedOption(option: IKeyValuePair<string>) {
 		if (this.selectedOptions.includes(option)) {
 			return;
 		}
 		this.selectedOptions.push(option);
-		this._value = this.selectedOptions;
+		this.setValue(this.selectedOptions);
 	}
 
 	removeSelectedOption(option: IKeyValuePair<string>) {
@@ -45,8 +40,8 @@ export class MultiChoiceAttribute extends AttributeBase<IKeyValuePair<string>[]>
 		if (index >= 0) {
 			this.selectedOptions.splice(index, 1);
 		}
-		this._value = this.selectedOptions;
 
+		this.setValue(this.selectedOptions);
 	}
 
 	getSelectedOptions() {

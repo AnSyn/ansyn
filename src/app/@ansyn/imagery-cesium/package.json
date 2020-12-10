@@ -2,8 +2,8 @@
 	"name": "@ansyn/imagery-cesium",
 	"version": "3.0.0",
 	"peerDependencies": {
-		"@angular/core": "~10.0.5",
-		"@angular/common": "~10.0.5",
+		"@angular/core": "~11.0.4",
+		"@angular/common": "~11.0.4",
 		"@ansyn/imagery": "3.0.0",
 		"rxjs": "~6.5.4",
 		"cesium": "^1.66.0",

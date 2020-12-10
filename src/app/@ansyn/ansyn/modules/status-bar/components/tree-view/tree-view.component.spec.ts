@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -36,7 +36,7 @@ describe('TreeViewComponent', () => {
 	let statusBarState: IStatusBarState;
 	let store: Store<any>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [
 				TreeViewComponent,

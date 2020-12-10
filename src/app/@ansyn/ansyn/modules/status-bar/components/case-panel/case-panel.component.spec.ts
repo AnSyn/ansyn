@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CasePanelComponent } from './case-panel.component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -16,7 +16,7 @@ describe('CasePanelComponent', () => {
 	let fixture: ComponentFixture<CasePanelComponent>;
 	let store: Store<any>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [CasePanelComponent],
 			imports: [TranslateModule.forRoot(),

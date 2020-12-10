@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ImageryVideoComponent } from './imagery-video.component';
 import { AnimatedEllipsisComponent } from '@ansyn/map-facade';
@@ -7,7 +7,7 @@ xdescribe('ImageryVideoComponent', () => {
 	let component: ImageryVideoComponent;
 	let fixture: ComponentFixture<ImageryVideoComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ImageryVideoComponent, AnimatedEllipsisComponent]
 		})

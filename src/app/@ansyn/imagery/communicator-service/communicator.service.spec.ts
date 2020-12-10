@@ -1,4 +1,4 @@
-import { async, inject, TestBed } from '@angular/core/testing';
+import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { ImageryCommunicatorService } from './communicator.service';
 import { EventEmitter } from '@angular/core';
 import { IImageryMapPosition } from '../model/case-map-position.model';
@@ -24,7 +24,7 @@ describe('ImageryCommunicatorService', () => {
 		plugins: []
 	};
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [],
 			providers: [ImageryCommunicatorService]

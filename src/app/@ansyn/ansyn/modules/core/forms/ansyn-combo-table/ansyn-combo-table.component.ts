@@ -50,11 +50,13 @@ export class AnsynComboTableComponent implements ControlValueAccessor {
 
   selectOption(selected) {
 		if (this.selected.includes(selected)) {
-      if(this.selected.indexOf(selected) < 0) {
-        this.selected = [];
-      } else {
-			  this.selected.splice(this.selected.indexOf(selected),1);
-      }
+      const newSelectedArray = []
+      this.selected.forEach(item => {
+        if (item !== selected) {
+          newSelectedArray.push(item);
+        }
+      })
+      this.selected = newSelectedArray;
     } else {
         this.selected = [...this.selected, selected]
     }

@@ -124,12 +124,14 @@ export class OverlaysEffects {
 	loadOverlays$: Observable<{} | LoadOverlaysSuccessAction> = this.actions$.pipe(
 		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
 		switchMap((action: LoadOverlaysAction) => {
-			if (action.payload.dataInputFilters.fullyChecked || action.payload.dataInputFilters.filters.length > 0) {
+			console.log(action);
+			
+			// if (action.payload.dataInputFilters.fullyChecked || action.payload.dataInputFilters.filters.length > 0) {
 				return this.requestOverlays(action.payload);
-			}
-			else {
-				return [new LoadOverlaysSuccessAction([])];
-			}
+			// }
+			// else {
+			// 	return [new LoadOverlaysSuccessAction([])];
+			// }
 		})
 	);
 
@@ -185,6 +187,8 @@ export class OverlaysEffects {
 	}
 
 	private requestOverlays(criteria: IOverlaysCriteria) {
+		console.log('request overlays');
+		
 		return this.overlaysService.search(criteria).pipe(
 			// We use translate.instant instead of withLatestFrom + translate.get
 			// Because of a bug: sometimes when starting the app the withLatestFrom that was here did not return,

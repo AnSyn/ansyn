@@ -14,6 +14,7 @@ import { IStatusBarState, selectAdvancedSearchParameters } from '../../reducers/
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
 import { IAdvancedSearchParameter } from '../../models/statusBar-config.model';
+import { ICaseDataInputFiltersState, IDataInputFilterValue } from '../../../menu-items/cases/models/case.model';
 
 @Component({
   selector: 'ansyn-advanced-search',
@@ -44,17 +45,19 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
       return 'gray';
     }
   };
-  sensorTypes: any[];
-  dataFilters: any[];
-  sensorsList: any[];
-  isGeoRegistered: any[] = Object.values(GeoRegisteration)
+  providers: string[];
+  sensorTypes: string[];
+  dataFilters: string[];
+  sensorsList: string[];
+  isGeoRegistered: string[] = Object.values(GeoRegisteration)
   
-  selectedTypes: any[] = [];
-  selectedSensors: any[] = [];
-  selectedRegistration: any[] = [];
+  selectedProviders: string[] =[];
+  selectedTypes: string[] = [];
+  selectedSensors: string[] = [];
+  selectedRegistration: string[] = [];
 
   @ViewChild('types') comboTableTypes: AnsynComboTableComponent;
-  @ViewChild('sensors') comboTableSensors: AnsynComboTableComponent;
+  @ViewChild('sensors') comboTableProviders: AnsynComboTableComponent;
 
   @AutoSubscription
   onDataInputFilterChange$ = this.store.pipe(
@@ -78,22 +81,48 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     this.dataFilters = this.getAllDataInputFilter();
     this.sensorTypes = this.selectAll();
     this.sensorsList = this.getAllSensorsNames();
+    this.providers = this.getAllProvidersNames();
+    console.log(this.providers);
+    
+  }
+  getAllProvidersNames(): string[] {
+    const provider: string[] = [];
+    this.getAllDataInputFilter().forEach(element => {
+      provider.push(element.value);
+    });
+    provider.push('happy')
+    provider.push('birthday')
+    provider.push('dear')
+    provider.push('sleepy')
+    provider.push('joe')
+    provider.push('joe')
+    provider.push('joe')
+
+    return provider;
+
   }
   ngOnDestroy(): void {
     this.statusBarStore.dispatch(new UpdateAdvancedSearchParamAction({advancedSearchParameter: this.getCurrentAdvancedSearchParameters()}))
   }
 
-  getCurrentAdvancedSearchParameters(): IAdvancedSearchParameter {
+  getCurrentAdvancedSearchParameters() {
     const resolution: IResolutionRange = {
       lowValue: this.minValue,
       highValue: this.maxValue
     }
 
+    const dataInputFilters: ICaseDataInputFiltersState = {
+      filters: this.getTypesToFilter()
+    }
+
     return  {
+      SensorToFilter: this.selectedSensors,
       types: this.selectedTypes,
       sensors: this.selectedSensors,
       registeration: this.selectedRegistration,
-      resolution
+      resolution,
+      dataInputFilters,
+      providers: this.selectedProviders
     }
   }
   getAllSensorsNames(): any[] {
@@ -109,14 +138,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
           }
 				}
       );
-      sensors.push('happy')
-      sensors.push('birthday')
-      sensors.push('dear')
-      sensors.push('sleepy')
-      sensors.push('joe')
-      sensors.push('joe')
-      sensors.push('joe')
-
 
 		return flattenDeep(sensors);
   }
@@ -155,7 +176,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   
   selectAllChildren(parent) {
 		if (this.isChild(parent)) {
-			return parent.value.sensorType;
+			return parent.text;
 		}
 		return parent.children.map( child => this.selectAllChildren(child));
   }
@@ -171,6 +192,18 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
   }
 
+  getTypesToFilter(): IDataInputFilterValue[] {
+      const types: IDataInputFilterValue[] = [];
+      const allTypesProvider = this.getAllDataInputFilter();
+      allTypesProvider.forEach(provider => {
+        provider.children.forEach(type => {
+          if (this.selectedTypes.includes(type.text)) {
+            types.push(type.value);
+          }
+        });
+      })
+      return types;
+  }
 
   search() {
     this.store.dispatch(new SetOverlaysCriteriaAction(this.getCurrentAdvancedSearchParameters()));
@@ -182,7 +215,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     switch (arrayToUpdate) {
       case 'selectedTypes' : {
         this.selectedTypes = selectedItemsArray;
-        this.updateSelectedSensorsByTypes(selectedItemsArray)
+        // this.updateSelectedSensorsByTypes(selectedItemsArray)
         break;
       }
       case 'selectedSensors' : {
@@ -193,40 +226,65 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.selectedRegistration = selectedItemsArray;
         break;
       }
+      case 'selectedProviders' : {
+        this.selectedProviders = selectedItemsArray;
+        this.updateSelectedTypesByProviders(selectedItemsArray)
+        break;
+      }
     }
   }
-
-  updateSelectedSensorsByTypes(selectedItemsArray: string[]) {
-    const sensorsToActiveate: any[] = [];
+  updateSelectedTypesByProviders(selectedItemsArray: string[]) {
+    const typesToActivate = [];
     Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
 			.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive)
-			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
-          if(sensorNamesByGroup) {
-            const typesNames = Object.keys(sensorNamesByGroup);
-            typesNames.forEach(type => {
-              if( selectedItemsArray.includes(type)) {
-                sensorsToActiveate.push(...sensorNamesByGroup[type]);
-              }
-            })
+			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
+          if(selectedItemsArray.includes(providerName)) {
+            typesToActivate.push(...dataInputFiltersConfig.children);
           }
 				}
       );
-      this.comboTableSensors.resetSelection()
-      sensorsToActiveate.forEach(sensor => {
-        if(!this.comboTableSensors.selected.includes(sensor))
-        this.comboTableSensors.selectOption(sensor)
-      })
-      
+    
+    typesToActivate.forEach(type => {
+      if(!this.comboTableTypes.selected.includes(type.text))
+      this.comboTableTypes.selectOption(type.text)
+    })
   }
+
+  // updateSelectedSensorsByTypes(selectedItemsArray: string[]) {
+  //   const sensorsToActiveate: any[] = [];
+  //   Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
+	// 		.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive)
+	// 		.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
+  //         if(sensorNamesByGroup) {
+  //           const typesNames = Object.keys(sensorNamesByGroup);
+  //           typesNames.forEach(type => {
+  //             if( selectedItemsArray.includes(type)) {
+  //               sensorsToActiveate.push(...sensorNamesByGroup[type]);
+  //             }
+  //           })
+  //         }
+	// 			}
+  //     );
+  //     this.comboTableSensors.resetSelection()
+  //     sensorsToActiveate.forEach(sensor => {
+  //       if(!this.comboTableSensors.selected.includes(sensor))
+  //       this.comboTableSensors.selectOption(sensor)
+  //     })
+      
+  // }
   selectAllItems(selectedArrayToFill) {
     switch (selectedArrayToFill) {
       case 'types' : {
         this.comboTableTypes.selectAllOptions(this.sensorTypes)
-        this.comboTableSensors.selectAllOptions(this.sensorsList);
+        // this.comboTableSensors.selectAllOptions(this.sensorsList);
+        break;
+      }
+      case 'providers' : {
+        this.comboTableProviders.selectAllOptions(this.providers);
         break;
       }
       case 'sensors' : {
-        this.comboTableSensors.selectAllOptions(this.sensorsList);
+        // this.comboTableSensors.selectAllOptions(this.sensorsList);
         break;
       }
     }
@@ -238,10 +296,14 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.comboTableTypes.resetSelection();
         break;
       }
-      case 'sensors' : {
-        this.comboTableSensors.resetSelection();
+      case 'providers' : {
+        this.comboTableProviders.resetSelection();
         break;
       }
+      // case 'sensors' : {
+      //   this.comboTableSensors.resetSelection();
+      //   break;
+      // }
       case 'resolution' : {
         this.minValue = 100;
         this.maxValue = 200;

@@ -6,14 +6,13 @@
 :host {
 	&.component {
 		position: relative;
+
 		.app {
 			/deep/ ansyn-popover.default-case div.pop-hover .pop-content {
 				visibility: hidden !important;
 			}
 
 			div.menu {
-				ansyn-menu {
-				}
 
 				ansyn-tools.ansynToolsAlone {
 					display: block;
@@ -22,39 +21,36 @@
 		}
 	}
 
-	button {
-		&.results-table {
-			background: @background-color-1;
+	.results-table {
+		background: @background-color-1;
+		position: absolute;
+		color: white;
+		border: solid 1px #EBF8FA;
+		right: 10px;
+		bottom: 10px;
+		z-index: 6;
+		padding: 13px;
+		font-size: 0.9rem;
+
+		i {
+			display: block;
+			font-size: 3em;
+		}
+
+		span.badge {
 			position: absolute;
-			color: white;
-			right: 10px;
-			bottom: 10px;
-			z-index: 6;
-			padding: 13px;
-			font-size: 0.9rem;
+			right: 42px;
+			top: 43px;
+			font-size: 14px;
+			min-width: 30px;
+		}
 
-			i {
-				display: block;
-				font-size: 3em;
-			}
+		&:hover {
+			background-color: @status-bar-hover;
+		}
 
-			span.badge {
-				position: absolute;
-				right: 42px;
-				top: 43px;
-				font-size: 14px;
-				min-width: 30px;
-				padding-top: 2px;
-				padding-right: 2px;
-			}
-
-			&:hover {
-				background-color: @background-color-3;
-			}
-
-			&.active {
-				background-color: @application-primary-color;
-			}
+		&.active {
+			background-color: @application-primary-color;
 		}
 	}
 
@@ -79,6 +75,7 @@
 		div.menu {
 			flex-shrink: 1;
 		}
+
 		div.status {
 			position: absolute;
 			top: 0;
@@ -106,9 +103,11 @@
 			flex-direction: column;
 			overflow: hidden;
 			position: relative;
+
 			.maps-container {
 				position: relative;
 				flex-grow: 1;
+
 				&.hide-status-bar {
 					top: 0;
 					height: 100%;
@@ -162,13 +161,18 @@
 			div.status {
 				left: unset;
 				right: @menu-width;
+
 				&.expand {
 					left: unset;
 					right: 0;
 				}
 			}
-		} // div.app
-	} // rtl
+		}
+
+		// div.app
+	}
+
+	// rtl
 }
 
 @media screen and (max-width: 959px) {
@@ -188,7 +192,7 @@
 	}
 }
 
-.credentials{
+.credentials {
 	position: absolute;
 	bottom: 80px;
 	right: 7px;
@@ -198,6 +202,7 @@
 /deep/ .owl-dt-container {
 	font-family: @app-font;
 }
+
 @keyframes menu-init-ltr {
 	from {
 		transform: translateX(-100%);

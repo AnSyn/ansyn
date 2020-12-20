@@ -21,6 +21,7 @@ import { OverlayStatusModule } from './overlay-status/overlay-status.module';
 import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer';
 import { OverlayNavigationBarComponent } from './components/overlay-navigation-bar/overlay-navigation-bar.component';
 import { ResultsModule } from '../menu-items/results/results.module';
+import { StatusBarModule } from '../status-bar/status-bar.module';
 
 @NgModule({
 	imports: [
@@ -37,7 +38,8 @@ import { ResultsModule } from '../menu-items/results/results.module';
 				floating_menu: []
 			}
 		}),
-		ResultsModule
+		ResultsModule,
+		StatusBarModule
 	],
 	declarations: [
 		TimelineComponent,

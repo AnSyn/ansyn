@@ -26,7 +26,7 @@
 		position: absolute;
 		color: white;
 		border: solid 1px #EBF8FA;
-		right: 10px;
+		left: 10px;
 		bottom: 10px;
 		z-index: @z-index-results-table-button;
 		padding: 13px;
@@ -38,14 +38,14 @@
 			display: block;
 			font-size: 3em;
 			position: absolute;
-			right: 40px;
+			left: 40px;
 			bottom: 40px;
 			min-width: 30px;
 		}
 
 		span.badge {
 			position: absolute;
-			right: 45px;
+			left: 45px;
 			top: 40px;
 			font-size: 14px;
 			min-width: 30px;
@@ -53,7 +53,7 @@
 
 		span.results-title {
 			position: absolute;
-			right: 0;
+			left: 0;
 			top: 58px;
 			font-size: 14px;
 			width: 100%;
@@ -70,7 +70,7 @@
 	}
 
 	.results {
-		right: 0;
+		left: 0;
 		position: fixed;
 	}
 
@@ -165,6 +165,28 @@
 
 	&.rtl {
 		direction: rtl;
+
+		.results-table {
+			left: unset;
+			right: 10px;
+			i {
+				left: unset;
+				right: 40px;
+			}
+			span.badge {
+				left: unset;
+				right: 45px;
+			}
+			span.results-title {
+				left: unset;
+				right: 0;
+			}
+		}
+
+		.results {
+			left: unset;
+			right: 0;
+		}
 
 		div.app {
 			&.animations {

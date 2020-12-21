@@ -74,7 +74,7 @@ export class StorageService {
 		return this._http.delete(url);
 	}
 
-	create<P extends IEntity, D>(schema: string, entity): Observable<IStoredEntity<P, D>> {
+	create<P extends IEntity, D>(schema: string, entity: IStoredEntity<P, D>): Observable<IStoredEntity<P, D>> {
 		const url = this._buildEntityUrl(schema, entity);
 		return this._http.post<IStoredEntity<P, D>>(url, entity);
 	}

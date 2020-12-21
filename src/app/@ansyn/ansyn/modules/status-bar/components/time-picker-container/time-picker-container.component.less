@@ -1,8 +1,8 @@
-@import "ansyn/less/colors";
-@import "ansyn/less/globals";
+@import "ansyn/less/common";
 
 :host {
-	direction: rtl;
+	z-index: @z-index-status-bar-navigation-area;
+	direction: ltr; // dates remain LTR
 
 	.box {
 		margin: 0 3px;

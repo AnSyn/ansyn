@@ -126,12 +126,12 @@ export class OverlaysEffects {
 		switchMap((action: LoadOverlaysAction) => {
 			console.log(action);
 			
-			// if (action.payload.dataInputFilters.fullyChecked || action.payload.dataInputFilters.filters.length > 0) {
+			if (action.payload.dataInputFilters.fullyChecked || action.payload.dataInputFilters.filters.length > 0) {
 				return this.requestOverlays(action.payload);
-			// }
-			// else {
-			// 	return [new LoadOverlaysSuccessAction([])];
-			// }
+			}
+			else {
+				return [new LoadOverlaysSuccessAction([])];
+			}
 		})
 	);
 

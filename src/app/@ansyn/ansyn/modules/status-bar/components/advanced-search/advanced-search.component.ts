@@ -288,26 +288,16 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   //     })
       
   // }
-  selectAllItems(selectedArrayToFill) {
-    switch (selectedArrayToFill) {
-      case 'types' : {
-        this.comboTableTypes.selectAllOptions(this.sensorTypes)
-        break;
-      }
-      case 'providers' : {
-        this.comboTableProviders.selectAllOptions(this.providersList);
-        break;
-      }
-    }
+  selectAllItems() {
+      this.comboTableTypes.selectAllOptions(this.sensorTypes)
+      this.comboTableProviders.selectAllOptions(this.providersList);
   }
 
   resetSelection(selectedArrayToFill) {
     switch (selectedArrayToFill) {
-      case 'types' : {
+      case 'providers' :
+      case 'types': {
         this.comboTableTypes.resetSelection();
-        break;
-      }
-      case 'providers' : {
         this.comboTableProviders.resetSelection();
         break;
       }

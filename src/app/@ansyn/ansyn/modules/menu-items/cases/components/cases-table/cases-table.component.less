@@ -10,11 +10,10 @@
 		color: white;
 		font-size: 13px;
 		box-sizing: border-box;
+		padding: 0 5px;
 
 		div.cases-table-head {
 			display: flex;
-			margin-bottom: 5px;
-			border-bottom: 1px solid #EBF8FA;;
 
 			div.cases-table-head-row {
 				padding: 0 15px;
@@ -44,16 +43,23 @@
 			display: flex;
 			flex-direction: column;
 			flex: 1;
+			margin-bottom: 65px;
+			direction: rtl;
+
+			&.rtl {
+				direction: ltr;
+			}
 
 			div.cases-table-body-row {
-				margin-bottom: 10px;
 				transition: background .3s, color .3s;
-				border-bottom: 1px solid #EBF8FA;
+				margin: 0 5px;
+				border-top: 2px solid #EBF8FA;
 
 				&:last-child {
 					border-bottom: unset;
-					margin-bottom: 45px;
+					border-bottom: 2px solid #EBF8FA;
 				}
+
 				&.mouse-enter {
 					color: #156879;
 					background: #EBF8FA;
@@ -78,11 +84,17 @@
 				}
 
 				div.cases-table-body-row-data {
-					padding: 10px 15px;
+					margin: 10px 0;
 					display: flex;
 					align-items: center;
 					cursor: pointer;
 					box-sizing: border-box;
+					position: relative;
+					direction: ltr;
+
+					&.rtl {
+						direction: rtl;
+					}
 
 					div.cases-table-body-col {
 						flex: 1;
@@ -93,7 +105,7 @@
 						flex: 1;
 						overflow: hidden;
 						text-overflow: ellipsis;
-						padding-right: 3px;
+						padding: 0 3px;
 					}
 
 					div.case-menu-container {
@@ -113,6 +125,11 @@
 							background: #FFFFFF;
 							pointer-events: none;
 							margin: auto;
+							direction: rtl;
+
+							&.rtl {
+								direction: ltr;
+							}
 
 							button {
 								background: transparent;

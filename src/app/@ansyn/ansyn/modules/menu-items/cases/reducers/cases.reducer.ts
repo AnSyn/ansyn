@@ -18,6 +18,8 @@ export interface ICasesState {
 	selectedCase: ICase;
 	modal: ICaseModal;
 	wasSaved: boolean;
+	openCaseId: string;
+	loadCase: boolean;
 }
 
 export const casesFeatureKey = 'cases';
@@ -34,7 +36,9 @@ export const initialCasesState: ICasesState = {
 	showCasesTable: false,
 	selectedCase: null,
 	modal: { show: false },
-	wasSaved: false
+	wasSaved: false,
+	openCaseId: null,
+	loadCase: false
 };
 
 export const casesStateSelector: MemoizedSelector<any, ICasesState> = createFeatureSelector<ICasesState>(casesFeatureKey);
@@ -47,8 +51,13 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 			return { ...state, showCasesTable: show }
 		}
 
+		case CasesActionTypes.LOAD_CASE: {
+			return {...state, loadCase: true}
+		}
+
 		case CasesActionTypes.UPDATE_CASE: {
-			return { ...state, selectedCase: action.payload, wasSaved: false }
+			const openCaseId = state.loadCase ? state.openCaseId : null;
+			return { ...state, selectedCase: action.payload, wasSaved: false, openCaseId, loadCase: false }
 		}
 
 		case CasesActionTypes.RENAME_CASE: {
@@ -88,17 +97,17 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 			return { ...state, selectedCase: null };
 
 		case CasesActionTypes.SELECT_CASE_SUCCESS:
-			return { ...state, selectedCase: action.payload };
+			return { ...state, selectedCase: action.payload, openCaseId: action.payload.id };
 
 		case CasesActionTypes.SAVE_CASE_AS_SUCCESS:
 			const myCasesState = myCasesAdapter.addOne(action.payload, state.myCases);
-			return {...state, myCases: myCasesState, wasSaved: true};
+			return {...state, myCases: myCasesState, wasSaved: true, openCaseId: action.payload.id};
 
 		case CasesActionTypes.SAVE_SHARED_CASE_AS_MY_OWN: {
 			if (typeof action.payload === 'string') {
 				return state;
 			}
-			return { ...state, selectedCase: action.payload }
+			return { ...state, selectedCase: action.payload, openCaseId: action.payload.id }
 		}
 
 		default:
@@ -127,6 +136,7 @@ export const selectCaseById = (id: string) => createSelector(selectMyCasesEntiti
 	// in case the case not in my cases search in the shared case.
 	return sharedEntities && sharedEntities[id]
 });
+export const selectOpenCaseId = createSelector(casesStateSelector, (cases) => cases && cases.openCaseId);
 export const selectSelectedCase = createSelector(casesStateSelector, (cases) => cases && cases.selectedCase);
 export const selectModalState = createSelector(casesStateSelector, (cases) => cases?.modal);
 export const selectShowCasesTable = createSelector(casesStateSelector, (cases) => cases?.showCasesTable);

@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { ICaseModal, ICasesState, selectModalState, } from '../../reducers/cases.reducer';
+import { ICaseModal, ICasesState, selectModalState, selectOpenCaseId, } from '../../reducers/cases.reducer';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, pluck } from 'rxjs/operators';
@@ -49,6 +49,8 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 		pluck<ICaseModal, string>('id')
 	);
 
+	openCaseId$: Observable<string> = this.store$.select(selectOpenCaseId);
+	
 	constructor(
 		protected store$: Store<ICasesState>
 	) {

@@ -24,14 +24,16 @@
 			 *ngFor="let id of cases.ids"
 			 (click)="selectCase(id)"
 			 [class.active]="(modalCaseId$ | async) === id"
+			 [class.selected]="(openCaseId$ | async) === id"
+			 [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''"
 			 (mouseenter)="onMouseEnterCaseRow(caseRow, id)"
 			 (mouseleave)="onMouseLeaveCaseRow(caseRow)"
 			 [@leaveAnim]
 			 #caseRow>
 
-			<div class="cases-table-body-row-data">
+			<div [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''" class="cases-table-body-row-data">
 
-				<div [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''" class="cases-table-case-name-col">
+				<div class="cases-table-case-name-col">
 					{{cases.entities[id].name}}
 				</div>
 
@@ -41,7 +43,8 @@
 
 				<!--menu-->
 				<div class="case-menu-container">
-					<div class="case-menu" (click)="caseMenuClick($event, caseRow)">
+					<div [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''"
+						 class="case-menu" (click)="caseMenuClick($event, caseRow)">
 						<ng-container *ngIf="menuItemRef"
 									  [ngTemplateOutlet]="menuItemRef"
 									  [ngTemplateOutletContext]="{$implicit:menuItem}"></ng-container>

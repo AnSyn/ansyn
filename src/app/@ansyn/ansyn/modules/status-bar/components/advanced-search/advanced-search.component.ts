@@ -79,8 +79,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     this.dataFilters = this.getAllDataInputFilter();
     this.sensorTypes = this.selectAll();
     this.providersList = this.getAllProvidersNames();
-    console.log(this.providersList);
-    
   }
   getAllProvidersNames(): string[] {
     const provider: string[] = [];
@@ -201,7 +199,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   }
 
   search() {
-    console.log(this.getCurrentAdvancedSearchParameters());
     this.store.dispatch(new SetOverlaysCriteriaAction(this.getCurrentAdvancedSearchParameters()));
     this.store.dispatch(new UpdateAdvancedSearchParamAction({advancedSearchParameter: this.getCurrentAdvancedSearchParameters()}))
     this._parent.close();
@@ -228,7 +225,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     }
   }
   updateSelectedProvidersByType(selectedItemsArray: string[], changedType: string) {
-    console.log(selectedItemsArray);
     Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
 			.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive)
 			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {

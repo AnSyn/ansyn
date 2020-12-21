@@ -82,7 +82,6 @@ export class OverlaysService {
 	}
 
 	search(params: IOverlaysCriteria): Observable<IOverlaysFetchData> {
-		console.log(params)
 		let feature = params.region.geometry;
 		return this._overlaySourceProvider.fetch({
 			dataInputFilters: Boolean(params.dataInputFilters) ? params.dataInputFilters.filters : null,
@@ -97,7 +96,6 @@ export class OverlaysService {
 			registeration: Boolean(params.registeration) ? params.registeration : null,
 			resolution: Boolean(params.resolution) ? params.resolution : null,
 			types: Boolean(params.types) ? params.types : null
-			//להוסיף את הפרמטרים לחיפוש
 		});
 	}
 

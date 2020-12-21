@@ -187,8 +187,6 @@ export class OverlaysEffects {
 	}
 
 	private requestOverlays(criteria: IOverlaysCriteria) {
-		console.log('request overlays');
-		
 		return this.overlaysService.search(criteria).pipe(
 			// We use translate.instant instead of withLatestFrom + translate.get
 			// Because of a bug: sometimes when starting the app the withLatestFrom that was here did not return,

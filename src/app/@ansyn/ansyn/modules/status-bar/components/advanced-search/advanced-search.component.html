@@ -66,9 +66,9 @@
     contentTitle="providers"
 	(ngModel)="providers"
     (selectedItemsArray)="updateSelectedArray($event,'selectedProviders')"
-    #sensors
+    #providers
     >
-        <ansyn-combo-table-option *ngFor="let type of providers" [value]="type" [isLine]="false">
+        <ansyn-combo-table-option *ngFor="let type of providersList" [value]="type" [isLine]="false">
         </ansyn-combo-table-option>
     </ansyn-combo-table>
 </div>

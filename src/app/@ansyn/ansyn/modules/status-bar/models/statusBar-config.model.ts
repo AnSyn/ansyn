@@ -26,7 +26,7 @@ export interface IFilterStatusBar {
 export interface IAdvancedSearchParameter {
 	types?: string[];
 	registeration?: string[];
-	sensors?: string[];
+	providers?: string[];
 	resolution?: IResolutionRange;
 }
 

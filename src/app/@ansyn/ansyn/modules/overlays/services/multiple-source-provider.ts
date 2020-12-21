@@ -32,7 +32,7 @@ export class MultipleOverlaysSourceProvider {
 	private sourceConfigs: Array<{ filters: IOverlayFilter[], provider: BaseOverlaySourceProvider }> = [];
 
 	constructor(@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
-				@Inject(MultipleOverlaysSource) protected overlaysSources: IMultipleOverlaysSource) {
+				@Inject(MultipleOverlaysSource) public overlaysSources: IMultipleOverlaysSource) {
 		this.prepareWhitelist();
 	}
 

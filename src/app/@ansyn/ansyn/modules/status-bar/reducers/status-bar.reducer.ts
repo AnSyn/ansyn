@@ -21,7 +21,7 @@ export const StatusBarInitialState: IStatusBarState = {
 	advancedSearchParameter: {
 		types: [],
 		registeration: [],
-		sensors: [],
+		providers: [],
 		resolution: {
 			lowValue: 0,
 			highValue: 0

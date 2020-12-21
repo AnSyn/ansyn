@@ -45,19 +45,17 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
       return 'gray';
     }
   };
-  providers: string[];
+  providersList: string[];
   sensorTypes: string[];
   dataFilters: string[];
-  sensorsList: string[];
   isGeoRegistered: string[] = Object.values(GeoRegisteration)
   
   selectedProviders: string[] =[];
   selectedTypes: string[] = [];
-  selectedSensors: string[] = [];
   selectedRegistration: string[] = [];
 
   @ViewChild('types') comboTableTypes: AnsynComboTableComponent;
-  @ViewChild('sensors') comboTableProviders: AnsynComboTableComponent;
+  @ViewChild('providers') comboTableProviders: AnsynComboTableComponent;
 
   @AutoSubscription
   onDataInputFilterChange$ = this.store.pipe(
@@ -65,8 +63,8 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     tap((searchOptions: IAdvancedSearchParameter) => {
       if (searchOptions) {
         this.selectedTypes = searchOptions.types;
+        this.selectedProviders = searchOptions.providers
         this.selectedRegistration = searchOptions.registeration;
-        this.selectedSensors = searchOptions.sensors;
         this.minValue = searchOptions.resolution.lowValue;
         this.maxValue = searchOptions.resolution.highValue;
       }
@@ -80,9 +78,8 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
               protected _parent: SearchPanelComponent) { 
     this.dataFilters = this.getAllDataInputFilter();
     this.sensorTypes = this.selectAll();
-    this.sensorsList = this.getAllSensorsNames();
-    this.providers = this.getAllProvidersNames();
-    console.log(this.providers);
+    this.providersList = this.getAllProvidersNames();
+    console.log(this.providersList);
     
   }
   getAllProvidersNames(): string[] {
@@ -116,9 +113,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     }
 
     return  {
-      SensorToFilter: this.selectedSensors,
       types: this.selectedTypes,
-      sensors: this.selectedSensors,
       registeration: this.selectedRegistration,
       resolution,
       dataInputFilters,
@@ -206,6 +201,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   }
 
   search() {
+    console.log(this.getCurrentAdvancedSearchParameters());
     this.store.dispatch(new SetOverlaysCriteriaAction(this.getCurrentAdvancedSearchParameters()));
     this.store.dispatch(new UpdateAdvancedSearchParamAction({advancedSearchParameter: this.getCurrentAdvancedSearchParameters()}))
     this._parent.close();
@@ -214,12 +210,9 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   updateSelectedArray(selectedItemsArray,arrayToUpdate) {
     switch (arrayToUpdate) {
       case 'selectedTypes' : {
+        const changedType = this.getUniqueElement(selectedItemsArray, this.selectedTypes)[0];
+        this.updateSelectedProvidersByType(selectedItemsArray, changedType);
         this.selectedTypes = selectedItemsArray;
-        // this.updateSelectedSensorsByTypes(selectedItemsArray)
-        break;
-      }
-      case 'selectedSensors' : {
-        this.selectedSensors = selectedItemsArray;
         break;
       }
       case 'selectedRegistration' : {
@@ -227,27 +220,54 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         break;
       }
       case 'selectedProviders' : {
+        const changedProvider = this.getUniqueElement(selectedItemsArray, this.selectedProviders)[0];
+        this.updateSelectedTypesByProviders(selectedItemsArray, changedProvider);
         this.selectedProviders = selectedItemsArray;
-        this.updateSelectedTypesByProviders(selectedItemsArray)
         break;
       }
     }
   }
-  updateSelectedTypesByProviders(selectedItemsArray: string[]) {
-    const typesToActivate = [];
+  updateSelectedProvidersByType(selectedItemsArray: string[], changedType: string) {
+    console.log(selectedItemsArray);
     Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
 			.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive)
 			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
-          if(selectedItemsArray.includes(providerName)) {
+          dataInputFiltersConfig.children.forEach(type => {
+            if(type.text === changedType && !this.selectedProviders.includes(providerName)) {
+              this.comboTableProviders.selectOption(providerName);
+            }
+          });
+				}
+      );
+  }
+  
+  getUniqueElement(selectedItemsArray: string[],elementArray: string[]) {
+    return Boolean(elementArray.length > selectedItemsArray.length)? elementArray.filter(provider => selectedItemsArray.indexOf(provider) < 0) : selectedItemsArray.filter(provider => elementArray.indexOf(provider) < 0);
+  }
+
+  updateSelectedTypesByProviders(selectedItemsArray: string[], changedProvider: string) {
+    const typesToActivate = [];
+    Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
+			.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => providerName === changedProvider)
+			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
             typesToActivate.push(...dataInputFiltersConfig.children);
-          }
 				}
       );
     
-    typesToActivate.forEach(type => {
-      if(!this.comboTableTypes.selected.includes(type.text))
-      this.comboTableTypes.selectOption(type.text)
-    })
+      if (Boolean(selectedItemsArray.includes(changedProvider))) {
+        this.selectedProviders = selectedItemsArray;
+        typesToActivate.forEach(type => {
+          if (!this.selectedTypes.includes(type.text)) {
+            this.comboTableTypes.selectOption(type.text);
+          }
+        });
+      } else {
+        typesToActivate.forEach(type => {
+          if (this.selectedTypes.includes(type.text)) {
+            this.comboTableTypes.selectOption(type.text);
+          }
+        });
+      }
   }
 
   // updateSelectedSensorsByTypes(selectedItemsArray: string[]) {
@@ -276,15 +296,10 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     switch (selectedArrayToFill) {
       case 'types' : {
         this.comboTableTypes.selectAllOptions(this.sensorTypes)
-        // this.comboTableSensors.selectAllOptions(this.sensorsList);
         break;
       }
       case 'providers' : {
-        this.comboTableProviders.selectAllOptions(this.providers);
-        break;
-      }
-      case 'sensors' : {
-        // this.comboTableSensors.selectAllOptions(this.sensorsList);
+        this.comboTableProviders.selectAllOptions(this.providersList);
         break;
       }
     }

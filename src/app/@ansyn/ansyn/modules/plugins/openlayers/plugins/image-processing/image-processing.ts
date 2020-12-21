@@ -39,7 +39,11 @@ export class OpenLayersImageProcessing {
 		}
 	}
 
-	initializeRaster(layerRaster: RasterSource) {
+	initializeOperations(): void {
+		this._libs = Object.getPrototypeOf(this);
+	}
+
+	initializeRaster(layerRaster: RasterSource): void {
 		this._raster = layerRaster;
 		// register pixelOperations to raster event
 		this._raster.on('beforeoperations', this.initializeRasterEvent.bind(this));
@@ -47,16 +51,12 @@ export class OpenLayersImageProcessing {
 		this._raster.setOperation(this.cascadeOperations, this._libs);
 	}
 
-	initializeRasterEvent(event) {
+	initializeRasterEvent(event): void {
 		event.data.pixelOperations = this._raster.get('pixelOperations');
 		event.data.imageOperations = this._raster.get('imageOperations');
 	}
 
-	initializeOperations() {
-		this._libs = Object.getPrototypeOf(this);
-	}
-
-	processImage(operationsArguments: Object) {
+	processImage(operationsArguments: Object): void {
 		if (!this._raster) {
 			return;
 		}
@@ -115,6 +115,7 @@ export class OpenLayersImageProcessing {
 				outputImageData = operationFn(outputImageData, operation.args);
 			});
 		}
+
 		return outputImageData;
 	}
 
@@ -122,7 +123,7 @@ export class OpenLayersImageProcessing {
 		return new Array(size).fill(item);
 	}
 
-	getFunctionByArgument(arg) {
+	getFunctionByArgument(arg): Function {
 		return arg ? this[`perform${ arg }`] : null;
 	}
 

@@ -227,9 +227,11 @@
 				div.results-table-body-row {
 					direction: rtl;
 					div.results-table-body-row-data {
-						div.results-table-date-col {
-							direction: ltr; // it is a date, so don't flip characters
-							text-align: right; // but align it to the right
+						div.results-table-body-col {
+							&.overlay-time {
+								direction: ltr; // it is a date, so don't flip characters
+								text-align: right; // but align it to the right
+							}
 						}
 					}
 				}

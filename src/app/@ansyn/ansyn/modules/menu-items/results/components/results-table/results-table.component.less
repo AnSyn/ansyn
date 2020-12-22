@@ -65,23 +65,24 @@
 
 			div.results-table-head-row {
 				margin-bottom: -5px;
-				padding-left: 43px;
+				padding-left: 30px;
 				width: 100%;
+				text-align: center;
 
 				div.results-table-head-row-data {
 					display: flex;
 					align-items: center;
 					position: relative;
-					justify-content: space-around;
-					margin-right: auto;
-					width: 85%;
 					height: 57px;
 					cursor: pointer;
 					box-sizing: border-box;
 
 					div.results-table-head-col {
+						flex: 1;
+
 						&.date {
-							margin-right: 10px;
+							flex: 0;
+							min-width: 125px;
 						}
 
 						i.icon-arrow {
@@ -122,7 +123,6 @@
 				overflow: hidden;
 				height: 10%;
 				position: relative;
-				margin-left: 16px;
 				direction: ltr; // needs to be repeated here because of scrollbar place
 
 				&.mouse-enter {
@@ -162,12 +162,6 @@
 					cursor: pointer;
 					box-sizing: border-box;
 					height: 100%;
-					padding-left: 19px;
-
-					div.overlay-favorite {
-						margin-right: 0;
-						min-width: 24px;
-					}
 
 					hr {
 						display: block;
@@ -182,22 +176,23 @@
 
 					div.results-table-body-col {
 						flex: 1;
-					}
 
-					div.source-type {
-						overflow: hidden;
-						text-overflow: ellipsis;
-					}
+						&.source-type {
+							overflow: hidden;
+							text-overflow: ellipsis;
+						}
 
-					div.results-table-date-col {
-						flex: 2;
-						overflow: hidden;
-						text-overflow: ellipsis;
-					}
+						&.overlay-favorite {
+							flex: 0;
+							min-width: 24px;
+						}
 
-					.results-table-auto-save-col {
-						padding-top: 20px;
-						flex: 2;
+						&.overlay-time {
+							flex: 0;
+							min-width: 125px;
+							overflow: hidden;
+							text-overflow: ellipsis;
+						}
 					}
 				}
 			}
@@ -224,18 +219,14 @@
 			div.results-table-head {
 				div.results-table-head-row {
 					padding-left: unset;
-					padding-right: 43px;
+					padding-right: 30px;
 				}
 			}
 			div.results-table-body {
 				direction: ltr;
 				div.results-table-body-row {
 					direction: rtl;
-					margin-left: unset;
-					margin-right: 16px;
 					div.results-table-body-row-data {
-						padding-left: unset;
-						padding-right: 19px;
 						div.results-table-date-col {
 							direction: ltr; // it is a date, so don't flip characters
 							text-align: right; // but align it to the right

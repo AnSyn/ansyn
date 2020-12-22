@@ -34,7 +34,7 @@
 			flex-direction: row;
 			font-size: @header-size;
 			margin-top: 17px;
-			margin-left: 240px;
+			margin-left: 23px;
 			margin-bottom: 15px;
 
 			div.header-title {
@@ -65,7 +65,7 @@
 
 			div.results-table-head-row {
 				margin-bottom: -5px;
-				padding: 0 0 15px;
+				padding-left: 43px;
 				width: 100%;
 
 				div.results-table-head-row-data {
@@ -101,7 +101,7 @@
 			display: block;
 			overflow-y: auto;
 			height: 59vh;
-			direction: ltr; // to flip the scrollbar location
+			direction: rtl; // to flip the scrollbar location
 
 			div.results-table-body-row-data:hover {
 				background-color: @background-color-7;
@@ -122,6 +122,7 @@
 				overflow: hidden;
 				height: 10%;
 				position: relative;
+				margin-left: 16px;
 				direction: ltr; // needs to be repeated here because of scrollbar place
 
 				&.mouse-enter {
@@ -161,6 +162,7 @@
 					cursor: pointer;
 					box-sizing: border-box;
 					height: 100%;
+					padding-left: 19px;
 
 					div.overlay-favorite {
 						margin-right: 0;
@@ -202,53 +204,46 @@
 		}
 	}
 
-	//&.rtl {
-	//
-	//	div.results-table {
-	//		div.header {
-	//			margin-left: unset;
-	//			margin-right: 23px;
-	//
-	//			div.box {
-	//				.icon-status-bar-imagery-count {
-	//					margin-left: unset;
-	//					margin-right: 145px;
-	//				}
-	//
-	//				.overlay-count {
-	//					margin-left: unset;
-	//					margin-right: 170px;
-	//				}
-	//			}
-	//		}
-	//
-	//		div.results-table-head {
-	//			div.results-table-head-row {
-	//				padding-left: unset;
-	//				padding-right: 43px;
-	//			}
-	//		}
-	//
-	//		div.results-table-body {
-	//			direction: ltr;
-	//
-	//			div.results-table-body-row {
-	//				direction: rtl;
-	//				margin-left: unset;
-	//				margin-right: 16px;
-	//
-	//				div.results-table-body-row-data {
-	//					padding-left: unset;
-	//					padding-right: 19px;
-	//
-	//					div.results-table-case-name-col {
-	//						direction: ltr; // it is a date, so don't flip characters
-	//						text-align: right; // but align it to the right
-	//					}
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
+	&.rtl {
+		div.results-table {
+			div.header {
+				margin-left: unset;
+				margin-right: 23px;
+				div.box {
+					.icon-status-bar-imagery-count {
+						margin-left: unset;
+						margin-right: 145px;
+					}
+
+					.overlay-count {
+						margin-left: unset;
+						margin-right: 170px;
+					}
+				}
+			}
+			div.results-table-head {
+				div.results-table-head-row {
+					padding-left: unset;
+					padding-right: 43px;
+				}
+			}
+			div.results-table-body {
+				direction: ltr;
+				div.results-table-body-row {
+					direction: rtl;
+					margin-left: unset;
+					margin-right: 16px;
+					div.results-table-body-row-data {
+						padding-left: unset;
+						padding-right: 19px;
+						div.results-table-date-col {
+							direction: ltr; // it is a date, so don't flip characters
+							text-align: right; // but align it to the right
+						}
+					}
+				}
+			}
+		}
+	}
 }
 

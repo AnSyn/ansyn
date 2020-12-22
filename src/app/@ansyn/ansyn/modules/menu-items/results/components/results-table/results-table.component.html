@@ -32,25 +32,27 @@
 
 			<div class="results-table-body-row-data">
 				<hr>
-				<div class="results-table-body-col overlay-resolution">
-					{{overlay.resolution}} {{ 'cm' | translate}}
-				</div>
 
-				<div class="results-table-body-col overlay-type">
-					<i class="icon {{overlay.icon}}"></i>
-				</div>
-
-				<div class="results-table-body-col source-type">
-					{{overlay.sensorName | translate}}
+				<div class="overlay-favorite">
+					<i *ngIf="overlay.favorite" class="icon icon-favorite-full"></i>
 				</div>
 
 				<div class="results-table-date-col overlay-time">
 					{{overlay.date | ansynDate}}
 				</div>
 
-				<div class="overlay-favorite">
-					<i *ngIf="overlay.favorite" class="icon icon-favorite-full"></i>
+				<div class="results-table-body-col source-type">
+					{{overlay.sensorName | translate}}
 				</div>
+
+				<div class="results-table-body-col overlay-type">
+					<i class="icon {{overlay.icon}}"></i>
+				</div>
+
+				<div class="results-table-body-col overlay-resolution">
+					{{overlay.resolution}} {{ 'cm' | translate}}
+				</div>
+
 			</div>
 		</div>
 

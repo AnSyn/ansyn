@@ -62,7 +62,7 @@ export class SelectCaseAppEffects {
 	selectCaseActions(payload: ICase, noInitialSearch: boolean): Action[] {
 		const { state, autoSave } = payload;
 		// status-bar
-		const { overlaysManualProcessArgs, overlaysTranslationData, overlaysScannedAreaData } = state;
+		const { overlaysManualProcessArgs, overlaysTranslationData, overlaysScannedAreaData, providers } = state;
 		// map
 		const { data } = state.maps;
 		// context
@@ -98,7 +98,7 @@ export class SelectCaseAppEffects {
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),
 			new SetActiveMapId(state.maps.activeMapId),
 			new SetLayoutAction(<any>layout),
-			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
+			new SetOverlaysCriteriaAction({ time, region, dataInputFilters, providers }, { noInitialSearch }),
 			new UpdateGeoFilterStatus({ active: false, type: region.properties.searchMode }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this)) }),

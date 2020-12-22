@@ -5,12 +5,13 @@
 	position: relative;
     z-index: 1;
     display: flex;
-    width: 98px;
+	width: 98px;
+	height: 46px;
 
     .Path-2 {
         width: 1px;
         height: 28px;
-        margin: 5px 15px 7px 16px;
+        margin: 5px;
         border: solid 1px rgba(151, 151, 151, 0.55);
       }
       
@@ -35,11 +36,12 @@
 			}
 		}
 	}
-
-	.option {
+	.warper {
+		border-bottom-style: groove;
+        border-color: rgba(151, 151, 151, 0.55);
+		border-width: 4px;
 		line-height: 29px;
 		align-self: center;
-		background: transparent;
 		color: white;
 		cursor: pointer;
 		box-sizing: border-box;
@@ -47,9 +49,18 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
-        border-bottom-style: groove;
-        border-color: rgba(151, 151, 151, 0.55);
-        border-width: 4px;
-        text-align: center;
+		text-align: center;
 	}
+	.option {
+		margin-bottom: 2px;
+		background: transparent;
+		color: white;
+		border-radius: 5px;
+	
+		span {
+			width: 100%;
+		}
+	}
+
+	
 }

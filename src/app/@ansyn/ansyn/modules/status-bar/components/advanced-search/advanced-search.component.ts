@@ -33,15 +33,9 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
       return value + ' mm';
     },
     getPointerColor: (value: number): string => {
-      if (value < 100) {
-          return 'red';
-      }
       return 'gray';
     },
     getSelectionBarColor: (value: number): string => {
-      if (value < 100) {
-          return 'red';
-      }
       return 'gray';
     }
   };
@@ -92,9 +86,15 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     provider.push('joe')
     provider.push('joe')
     provider.push('joe')
-
+    provider.push('happy')
+    provider.push('birthday')
+    provider.push('dear')
+    provider.push('sleepy')
+    provider.push('joe')
+    provider.push('joe')
+    provider.push('joe')
+    
     return provider;
-
   }
   ngOnDestroy(): void {
     this.statusBarStore.dispatch(new UpdateAdvancedSearchParamAction({advancedSearchParameter: this.getCurrentAdvancedSearchParameters()}))

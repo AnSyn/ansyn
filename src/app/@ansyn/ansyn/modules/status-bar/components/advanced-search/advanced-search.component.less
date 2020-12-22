@@ -4,9 +4,8 @@
 @import "../../less/status-bar-common";
 
 :host {
-    &:extend(.status-bar-panel);
     display: grid;
-    
+    margin-top: 25px;
 	.box {
         .reset {
             margin-right: 10px;
@@ -71,9 +70,9 @@
 			}
 		}
 
-		&#dataInputsPreSearch {
-            padding-right: 5px;
-            padding-bottom: 5px;
+		.dataInputsPreSearch {
+            padding-right: 10px;
+            padding-bottom: 10px;
         }
         
         .grid-item {
@@ -118,14 +117,17 @@
           background-color: #3e3e3e;
           border-radius: 10px;
           min-height: 90px;
+          align-items: center;
+          display: flex;
       }
 
       .fa-search {
         cursor: pointer;
         font-size: xx-large;
         background-color: #3e3e3e;
-        border-radius: 10px;
+        border-radius: 20px;
         margin-top: 10px;
+        padding: 5px;
         width: 50px;
       }
 }

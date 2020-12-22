@@ -112,6 +112,7 @@
 			 "fullyChecked": true
 		   },
 		   "time": null,
+		   "providers": ["SENTINEL", "OPEN_AERIAL", "PIC4CARTO"],
 		   "facets": {
 			 "showOnlyFavorites": false,
 			 "filters": [
@@ -398,9 +399,9 @@
     },
     "locale": "en-GB",
 	"advancedSearchParameters": {
-		"types": ["UAV"],
+		"types": ["Multi-Spectral Instrument", "UAV", "Mapillary", "Flickr", "OpenStreetCam", "Wikimedia Commons"],
 		"registeration": ["geoRegistered"],
-		"providers": ["OPEN_AERIAL"],
+		"providers": ["SENTINEL", "OPEN_AERIAL", "PIC4CARTO"],
 		"resolution": {
 			"lowValue": 100,
 			"highValue": 200
@@ -1586,7 +1587,7 @@
   "pic4cartoOverlaySourceConfig": {
   		"baseUrl": "http://api-pic4carto.openstreetmap.fr/search/bbox",
   		 "pointToGeojsonRadius": 1,
-  		 "providers": ["mapillary", "flickr", "openstreetcam", "wikicommons"],
+  		 "providers": ["mapillary", "Flickr", "OpenStreetCam", "Wikimedia Commons"],
   		 "imageWidth": 2048,
   		 "imageHeight": 1200,
   		 "timeLimit": 15000

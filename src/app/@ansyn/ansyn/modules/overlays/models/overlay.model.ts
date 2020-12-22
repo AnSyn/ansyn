@@ -121,7 +121,7 @@ export interface IOverlaysCriteria {
 	sensors?: string[];
 	types?: string[];
 	registeration?: string[];
-	// providers?: string[];
+	providers?: string[];
 }
 
 export interface IResolutionRange {

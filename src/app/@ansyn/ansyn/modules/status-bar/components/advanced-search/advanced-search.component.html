@@ -25,7 +25,7 @@
 
 </div>
 
-<div class="box item2" id="dataInputsPreSearch">
+<div class="box item2 dataInputsPreSearch">
     <div class="title-grid">
         <span class="title item2-title">{{'Geo Registration' | translate}}</span>
     </div>
@@ -47,7 +47,7 @@
     </ansyn-combo-table>
 </div>
 
-<div class="box item3" id="dataInputsPreSearch">
+<div class="box item3 dataInputsPreSearch">
     <div class="title-grid">
         <div class="item1-title">
             <div class="select-all" (click)="selectAllItems()">{{'select all' | translate}}</div>
@@ -73,14 +73,14 @@
     </ansyn-combo-table>
 </div>
 
-<div class="box item4" id="dataInputsPreSearch">
+<div class="box item4 dataInputsPreSearch">
     <div class="grid-title">
         <span class="reset" (click)="resetSelection('resolution')"><i class="icon-undo"></i></span>
         <span class="title item2-title">{{'Resolution' | translate}}</span>
     </div>
     
     <div class="slider">
-        <ngx-slider id="dataInputsPreSearch" [(value)]="minValue" [(highValue)]="maxValue" [options]="options" onchange="getSliderValue($event)" #resolution></ngx-slider>
+        <ngx-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options" onchange="getSliderValue($event)" #resolution></ngx-slider>
     </div>
 </div>
 

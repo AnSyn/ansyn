@@ -79,6 +79,7 @@ export interface IDilutedCaseState {
 	overlaysTranslationData: IOverlaysTranslationData;
 	overlaysScannedAreaData?: IOverlaysScannedAreaData;
 	layers?: ICaseLayersState;
+	providers?: string[];
 }
 
 export interface ICaseState extends IDilutedCaseState {

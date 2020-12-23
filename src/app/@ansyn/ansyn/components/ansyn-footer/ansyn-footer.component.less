@@ -20,18 +20,20 @@
 			}
 
 			ansyn-overlay-navigation-bar {
-				left: calc(~'50% - 30px');
+				left: 50%;
+				transform: translateX(-50%); // center element in  parent
 			}
 
 			ansyn-time-picker-container {
-				right: calc(~'50% + 30px');
+				right: 55%;
 			}
 		}
 
 		button.hide-menu {
 			position: absolute;
 			bottom: calc(100% - 10px);
-			left: calc(~'50% - 30px');
+			left: 50%;
+			transform: translateX(-50%); // center element in  parent
 			width: 60px;
 			background: @background-color-1;
 			border: none;
@@ -61,7 +63,7 @@
 			.app-timeline-container {
 				ansyn-time-picker-container {
 					right: unset;
-					left: calc(~'50% + 110px');
+					left: 55%;
 				}
 			}
 		}

@@ -11,8 +11,8 @@
     direction="bottom"
     [withArrow]="false"
     [isLine]="false"
+    [isBig]="false"
     [selected]="selectedTypes"
-    comboTableToolTipDescription="blah blah"
     contentTitle="types"
 	(ngModel)="sensorTypes"
     (selectedItemsArray)="updateSelectedArray($event,'selectedTypes')"
@@ -35,8 +35,8 @@
     direction="bottom"
     [withArrow]="false"
     [isLine]="true"
+    [isBig]="false"
     [selected]="selectedRegistration"
-    comboTableToolTipDescription="blah blah"
     contentTitle="registeration"
 	(ngModel)="isGeoRegistered"
     (selectedItemsArray)="updateSelectedArray($event,'selectedRegistration')"
@@ -62,7 +62,7 @@
     [withArrow]="false"
     [isLine]="false"
     [selected]="selectedProviders"
-    comboTableToolTipDescription="blah blah"
+    [isBig]="true"
     contentTitle="providers"
 	(ngModel)="providers"
     (selectedItemsArray)="updateSelectedArray($event,'selectedProviders')"
@@ -74,9 +74,9 @@
 </div>
 
 <div class="box item4 dataInputsPreSearch">
-    <div class="grid-title">
-        <span class="reset" (click)="resetSelection('resolution')"><i class="icon-undo"></i></span>
-        <span class="title item2-title">{{'Resolution' | translate}}</span>
+    <div class="title-grid">
+        <div class="reset" (click)="resetSelection('resolution')"><i class="icon-undo"></i></div>
+        <div class="title item2-title">{{'Resolution' | translate}}</div>
     </div>
     
     <div class="slider">

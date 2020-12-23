@@ -31,6 +31,7 @@ export class AnsynComboTableComponent implements ControlValueAccessor {
   @Input() buttonClass: string;
   @Input() isLine: boolean;
   @Input() contentTitle: string;
+  @Input() isBig: boolean
   
 	@Input() placeholder: string;
 	@Input() required: boolean;

@@ -6,10 +6,8 @@
 :host {
     display: grid;
     margin-top: 25px;
+    
 	.box {
-        .reset {
-            margin-right: 10px;
-        }
         .select-all {
             margin-right: 10px;
             cursor: pointer;
@@ -17,7 +15,7 @@
 
         .reset {
             cursor: pointer;
-
+            width: 0;
         }
 
         .display-full-name {
@@ -25,6 +23,7 @@
         }
 
         .title-grid {
+            height: 25px;
             display: grid;
             margin-bottom: 5px;
 
@@ -121,6 +120,7 @@
           min-height: 90px;
           align-items: center;
           display: flex;
+          width: 160px !important;
       }
 
       .fa-search {

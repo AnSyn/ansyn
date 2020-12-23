@@ -114,13 +114,13 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 			return;
 		}
 		this.myCurrentWidth = (this.el.nativeElement as HTMLElement).offsetWidth;
-		const { left, height, top }: ClientRect = hoveredElement.getBoundingClientRect();
-		this.left = customElement ? this.getLeftPosition(left) : left - 150;
+		const { left, right, height, top }: ClientRect = hoveredElement.getBoundingClientRect();
+		this.left = customElement ? this.isRTL ? left - this.myCurrentWidth : right : this.getLeftPosition(left);
 		this.top = top + (customElement ? height + 70 : 0);
 	}
 
 	getLeftPosition(hoveredElementPos: number): number {
-		const candidateLeftPos = hoveredElementPos - 275;
+		const candidateLeftPos = hoveredElementPos - 50;
 		const ansynWidth = this.topElement.getBoundingClientRect().width;
 		// ^ Ansyn component is not a block element, therefore it doesn't have offsetWidth
 		// Therefore I used getBoundingClientRect()

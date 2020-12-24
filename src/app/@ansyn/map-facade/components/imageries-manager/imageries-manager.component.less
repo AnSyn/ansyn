@@ -106,23 +106,20 @@
 		}
 
 		&.layout2 {
-
-
 			div.map-container-wrapper {
 				width: 50%;
 				height: 100%;
 
 				&:nth-child(1) {
 					top: 0;
-					left: 0;
+					left: 50%;
 				}
 
 				&:nth-child(2) {
 					top: 0;
-					left: 50%;
+					left: 0;
 				}
 			}
-
 		}
 
 		&.layout3 {
@@ -375,6 +372,19 @@
 
 	&.rtl {
 		div.imageries-container {
+			&.layout2 {
+				div.map-container-wrapper {
+					&:nth-child(1) {
+						left: unset;
+						right: 50%;
+					}
+
+					&:nth-child(2) {
+						left: unset;
+						right: 0;
+					}
+				}
+			}
 			&.layout4 {
 				div.map-container-wrapper {
 					&:nth-child(1) {

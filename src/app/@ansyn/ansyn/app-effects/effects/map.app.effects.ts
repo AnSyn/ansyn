@@ -98,6 +98,8 @@ import {
 } from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
 import { feature } from '@turf/turf';
 import { calculatePolygonWidth } from '@ansyn/imagery';
+import { CasesActionTypes } from '../../modules/menu-items/cases/actions/cases.actions';
+import { ForceRenderMaps } from 'src/app/@ansyn/map-facade/actions/map.actions';
 
 const FOOTPRINT_INSIDE_MAP_RATIO = 1;
 
@@ -327,6 +329,12 @@ export class MapAppEffects {
 			return actions;
 		})
 	);
+
+	@Effect()
+	onLoadCasForceMapsRender$ = this.actions$.pipe(
+		ofType(CasesActionTypes.SELECT_CASE_SUCCESS),
+		map(() => new ForceRenderMaps())
+	)
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

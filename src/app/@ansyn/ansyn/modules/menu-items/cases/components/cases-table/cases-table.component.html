@@ -31,7 +31,9 @@
 			 [@leaveAnim]
 			 #caseRow>
 
-			<div [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''" class="cases-table-body-row-data">
+			<div class="cases-table-body-row-data"
+				 [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''"
+				 tooltip-class="bottom" [attr.tooltip-value]="cases.entities[id].name">
 
 				<div class="cases-table-case-name-col">
 					{{cases.entities[id].name}}

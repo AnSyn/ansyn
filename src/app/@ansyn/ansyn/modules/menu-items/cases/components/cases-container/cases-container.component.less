@@ -13,7 +13,6 @@
 	left: 0;
 	width: 300px;
 	height: @container-height;
-	border-bottom: 1px solid #7b7b7b;
 
 	&.footerCollapse {
 		height: @container-footerCollapse-height;
@@ -30,6 +29,7 @@
 		overflow-y: hidden;
 		flex: 1;
 		padding: 0 5px;
+		border-bottom: 1px solid #7b7b7b;
 
 		button {
 			background: transparent;
@@ -52,14 +52,12 @@
 		}
 
 		&.one-table {
-			height: @container-height;
-			border-bottom: 1px solid #7b7b7b;
+			min-height: 70%;
 		}
 
 		&.two-table {
-			height: calc(@container-height / 2);
-			max-height: 30%;
 			margin-bottom: 20px;
+			min-height: 30%;
 		}
 	}
 }

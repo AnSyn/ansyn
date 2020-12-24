@@ -24,8 +24,8 @@
 			 *ngFor='let overlay of overlays  | slice:start:end; let i = index'
 			 id="ansyn-results-table-row-{{i}}"
 			 (click)="openOverlay(overlay.id)"
-			 (mouseenter)="onMouseOver($event, overlay.id)"
-			 (mouseleave)="onMouseOut()"
+			 (mouseenter)="openOverlayOverview($event, overlay.id)"
+			 (mouseleave)="closeOverlayOverview()"
 			 [class.selected]="overlayIds.includes(overlay.id)">
 
 			<hr>

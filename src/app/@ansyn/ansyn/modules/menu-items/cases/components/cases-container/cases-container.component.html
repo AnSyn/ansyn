@@ -1,5 +1,5 @@
-<div class="table my-cases" [ngClass]="sharedCasesObj?.ids?.length? 'two-table' : 'one-table'">
-	<h3>{{'My Cases' | translate}}</h3>
+<div class="table my-cases" [ngClass]="sharedCasesObj?.ids?.length? 'one-table' : 'two-table'">
+	<h2>{{'My Cases' | translate}}</h2>
 	<ansyn-cases-table *ngIf="myCasesData"
 					   [cases]="myCasesData"
 					   (onInfintyScroll)="loadMyCases()"
@@ -25,7 +25,7 @@
 </div>
 
 <div class="table shared-cases two-table" *ngIf="sharedCasesObj?.ids?.length">
-	<h3>{{'Shared Cases' | translate}}</h3>
+	<h2>{{'Shared Cases' | translate}}</h2>
 	<ansyn-cases-table
 		[cases]="sharedCasesObj"
 		(onInfintyScroll)="loadSharedCases()"

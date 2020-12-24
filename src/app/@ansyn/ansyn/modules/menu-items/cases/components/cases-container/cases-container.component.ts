@@ -11,6 +11,7 @@ import { tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { CasesType, ICaseTableData } from '../../models/cases-config';
 import { TranslateService } from '@ngx-translate/core';
+import { selectFooterCollapse } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-cases-container',
@@ -21,10 +22,13 @@ import { TranslateService } from '@ngx-translate/core';
 export class CasesContainerComponent implements OnInit, OnDestroy {
 	@HostBinding('class.rtl')
 	isRTL = this.translateService.instant('direction') === 'rtl';
+	@HostBinding('class.footerCollapse')
+	isCollapse = false;
 
 	myCasesData: ICaseTableData;
 	sharedCasesObj: ICaseTableData;
 	hoverCaseId: string;
+
 	@AutoSubscription
 	getMyCases$ = this.store$.pipe(
 		select(selectMyCasesData),
@@ -47,6 +51,11 @@ export class CasesContainerComponent implements OnInit, OnDestroy {
 				ids
 			}
 		})
+	);
+
+	@AutoSubscription
+	isFooterCollapse$ = this.store$.select(selectFooterCollapse).pipe(
+		tap(collapse => this.isCollapse = collapse)
 	);
 
 	constructor(protected store$: Store<ICasesState>, protected translateService: TranslateService) {

@@ -2,6 +2,8 @@
 @import 'ansyn/less/common';
 
 :host {
+	height: -webkit-fill-available;
+
 	div.cases-table {
 		display: flex;
 		flex: 1;
@@ -10,7 +12,6 @@
 		color: white;
 		font-size: 13px;
 		box-sizing: border-box;
-		padding: 0 5px;
 
 		div.cases-table-head {
 			display: flex;
@@ -23,13 +24,12 @@
 					display: flex;
 					align-items: center;
 					flex: 1;
-					padding: 20px 0;
+					padding: 10px 0;
 					box-sizing: border-box;
 
 					div {
 						display: flex;
-						flex: 1;
-						margin: 0 5px;
+						flex: 2.5;
 
 						&.menu-placeholder {
 							flex: 2
@@ -64,13 +64,16 @@
 					color: #156879;
 					background: #EBF8FA;
 
+					div.cases-table-body-row-data div.case-menu-container.rtl div.case-menu {
+						transform: translateX(10px);
+					}
+
 					div.cases-table-body-row-data div.case-menu-container div.case-menu {
-						transform: translateX(15px);
+						transform: translateX(-10px);
 						opacity: 1;
 						visibility: visible;
 						pointer-events: auto;
 					}
-
 				}
 
 				&.active {
@@ -109,7 +112,12 @@
 					}
 
 					div.case-menu-container {
-						flex: 2;
+						flex: 1;
+						direction: rtl;
+
+						&.rtl {
+							direction: ltr;
+						}
 
 						div.case-menu {
 							display: flex;
@@ -124,26 +132,8 @@
 							border-radius: 4px;
 							background: #FFFFFF;
 							pointer-events: none;
-							margin: auto;
-							direction: rtl;
-
-							&.rtl {
-								direction: ltr;
-							}
-
-							button {
-								background: transparent;
-								border: 1px solid transparent;
-								font-size: 20px;
-
-								&:hover {
-									box-sizing: border-box;
-									border: 1px solid #7b7b7b;
-								}
-							}
 						}
 					}
-
 				}
 			}
 		}

@@ -2,17 +2,22 @@
 @import 'ansyn/less/common';
 
 @container-height: calc(100vh - @timeline-area-height - @status-bar-height);
+@container-footerCollapse-height: calc(100vh - @status-bar-height);
 
 :host {
 	display: flex;
 	flex-direction: column;
 	position: absolute;
-	background-color: #2e2e2e;
+	background-color: rgba(44, 44, 44, 0.95);
 	top: 55px;
 	left: 0;
-	width: 400px;
+	width: 300px;
 	height: @container-height;
 	border-bottom: 1px solid #7b7b7b;
+
+	&.footerCollapse {
+		height: @container-footerCollapse-height;
+	}
 
 	&.rtl {
 		left: unset;
@@ -26,21 +31,35 @@
 		flex: 1;
 		padding: 0 5px;
 
-		h3 {
-			margin: 30px 20px;
-			height: 5%;
+		button {
+			background: transparent;
+			border: 1px solid transparent;
+			height: 18px;
+			width: 28px;
+
+			&:hover {
+				box-sizing: border-box;
+				border: 1px solid #7b7b7b;
+			}
+
+			i {
+				font-size: 16px;
+			}
 		}
 
-		ansyn-cases-table {
-			height: 95%;
+		h2 {
+			margin: 15px;
 		}
 
 		&.one-table {
 			height: @container-height;
+			border-bottom: 1px solid #7b7b7b;
 		}
 
 		&.two-table {
 			height: calc(@container-height / 2);
+			max-height: 30%;
+			margin-bottom: 20px;
 		}
 	}
 }

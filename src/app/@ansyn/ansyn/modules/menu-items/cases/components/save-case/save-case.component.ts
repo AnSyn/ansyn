@@ -8,6 +8,7 @@ import { take, tap } from 'rxjs/operators';
 import { cloneDeep } from '../../../../core/utils/rxjs/operators/cloneDeep';
 import { ICase } from '../../models/case.model';
 import { UUID } from 'angular2-uuid';
+import { TranslateService } from '@ngx-translate/core';
 
 const animationsDuring = '0.2s';
 
@@ -37,10 +38,16 @@ export class SaveCaseComponent {
 		return true;
 	};
 
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
 	caseName: string;
 
-	constructor(protected store: Store<ICasesState>,
-				protected casesService: CasesService) {
+	constructor(
+		protected store: Store<ICasesState>,
+		protected casesService: CasesService,
+		protected translateService: TranslateService
+	) {
 	}
 
 	close(): void {

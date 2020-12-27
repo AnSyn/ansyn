@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostBinding, OnInit } from '@angular/core';
 import { ITasksState } from '../../reducers/tasks.reducer';
 import { Store } from '@ngrx/store';
 import { SetTasksPageToShow } from '../../actions/tasks.actions';
 import { TasksPageToShow } from '../../models/tasks.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-tasks-form-page-header',
@@ -11,7 +12,13 @@ import { TasksPageToShow } from '../../models/tasks.model';
 })
 export class TasksFormPageHeaderComponent implements OnInit {
 
-	constructor(protected store$: Store<ITasksState>) {
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
+	constructor(
+		protected store$: Store<ITasksState>,
+		protected translateService: TranslateService
+	) {
 	}
 
 	ngOnInit() {

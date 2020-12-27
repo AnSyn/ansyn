@@ -34,6 +34,7 @@ export {
 	selectMapPositionByMapId,
 	selectMapsStateByIds,
 	selectOverlaysFootprintActiveByMapId,
+	selectManualProcessArgsByMapId,
 	selectOverlayOfActiveMap,
 	selectIsMinimalistViewMode,
 	selectMapTypeById,

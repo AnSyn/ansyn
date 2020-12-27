@@ -11,6 +11,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 import { ICase } from '../../../menu-items/cases/models/case.model';
 import { selectSelectedCase } from '../../../menu-items/cases/reducers/cases.reducer';
 import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-case-panel',
@@ -18,6 +19,8 @@ import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
 	styleUrls: ['./case-panel.component.less']
 })
 export class CasePanelComponent implements OnInit {
+
+	isRTL = this.translateService.instant('direction') === 'rtl';
 
 	overlaysCount$: Observable<number> = this.actions$.pipe(
 		ofType(OverlaysActionTypes.UPDATE_OVERLAY_COUNT),
@@ -29,10 +32,14 @@ export class CasePanelComponent implements OnInit {
 			select(selectSelectedCase),
 			map((selectSelected: ICase) => selectSelected && selectSelected.name ? selectSelected.name : 'Default Case')
 		);
-	constructor(protected actions$: Actions,
-				protected store$: Store<IStatusBarState>,
-				@Inject(COMPONENT_MODE) public componentMode: boolean,
-				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
+
+	constructor(
+		protected actions$: Actions,
+		protected store$: Store<IStatusBarState>,
+		@Inject(COMPONENT_MODE) public componentMode: boolean,
+		@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
+		protected translateService: TranslateService
+	) {
 	}
 
 	ngOnInit() {

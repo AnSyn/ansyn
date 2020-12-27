@@ -1,4 +1,5 @@
-<div class="app animations" [ngClass]="(isPinnedClass$ | async)">
+<div class="app animations" [ngClass]="(isPinnedClass$ | async)" [attr.dir]="isRTL ? 'rtl' : 'ltr'">
+	<!-- the 'dir' attribute will affect Angular Material components -->
 	<div class="menu">
 		<ansyn-menu [version]="version" [animatedElement]="animatedElementHorizontal"></ansyn-menu>
 	</div>
@@ -14,7 +15,15 @@
 			<ansyn-context-menu *ngIf="renderContextMenu"></ansyn-context-menu>
 		</div>
 
-		<ansyn-results class="results"></ansyn-results>
+		<div class="results-table-container">
+			<button [class.active]="toggleResults" class="results-table" (click)="toggleResultsTable()">
+				<i class="icon-table"></i>
+				<span class="badge">{{overlaysCount$ | async}}</span>
+				<span class="results-title">{{'Search results' | translate}}</span>
+			</button>
+		</div>
+
+		<ansyn-results class="results" *ngIf="toggleResults"></ansyn-results>
 
 		<ansyn-footer
 			[activeMap]="(activeMap$ | async)"

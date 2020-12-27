@@ -1,5 +1,17 @@
-<div class="toast" *ngIf="toastMessage$ | async" [@toastAnimation]>
-<!--	<i *ngIf="(toastMessage$ | async)?.showWarningIcon" class="icon-status-bar-alert"></i>-->
-	<span class="message">{{(toastMessage$ | async)?.toastText | translate}}</span>
-	<span class="close" (click)="closeToast()">×</span>
-</div>
+<ng-container *ngIf="isRTL; then rtl; else ltr"></ng-container>
+
+<ng-template #ltr>
+	<div class="toast" *ngIf="toastMessage$ | async"
+		 [@toastAnimation_ltr] [class.rtl]="isRTL">
+		<span class="message">{{(toastMessage$ | async)?.toastText | translate}}</span>
+		<span class="close" (click)="closeToast()">×</span>
+	</div>
+</ng-template>
+
+<ng-template #rtl>
+	<div class="toast" *ngIf="toastMessage$ | async"
+		 [@toastAnimation_rtl] [class.rtl]="isRTL">
+		<span class="message">{{(toastMessage$ | async)?.toastText | translate}}</span>
+		<span class="close" (click)="closeToast()">×</span>
+	</div>
+</ng-template>

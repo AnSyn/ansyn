@@ -1,16 +1,18 @@
 @import 'ansyn/less/common';
+@import "ansyn/less/z-index-globals";
 
 :host {
+	z-index: @z-index-footer;
 	display: block;
 	position: relative;
-	z-index: 5;
 
 	.time-picker-container {
-		left: 56%;
-		bottom: 9%;
+		left: 64%;
+		bottom: 10%;
 		position: fixed;
-		z-index: 6;
+		z-index: @z-index-footer;
 	}
+	direction: ltr;
 }
 
 div.status-timeline-container {
@@ -23,7 +25,7 @@ div.status-timeline-container {
 		ansyn-overlay-navigation-bar {
 			position: absolute;
 			top: 12.5px;
-			left: calc(~'50% - 38px');
+			left: calc(~'50% - 30px');
 		}
 	}
 

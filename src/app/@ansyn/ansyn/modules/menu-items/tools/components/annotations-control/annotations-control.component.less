@@ -165,15 +165,42 @@
 				}
 			}
 		}
-
 	}
-}
 
-span.dummy-arrow {
-	position: relative;
-	font-size: 7px;
-	right: 10px;
-	color: white;
-	top: 25%;
-	pointer-events: none;
+	&.rtl {
+		right: unset;
+		left: 0;
+		transform: translateX(-100%);
+
+		.selected-layer {
+			div.combo-box {
+				margin-left: unset;
+				margin-right: 5px;
+			}
+		}
+
+		&.expand {
+			ul.annotations-options {
+				li {
+					margin-right: unset;
+					margin-left: 5px;
+				}
+			}
+		}
+
+		ul.annotations-options {
+			& > li {
+				&:last-child {
+					padding-right: unset;
+					padding-left: 2px;
+				}
+			}
+			li.expanded-selection {
+				div.list {
+					left: unset;
+					right: 0;
+				}
+			}
+		}
+	}
 }

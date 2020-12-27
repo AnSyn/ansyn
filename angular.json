@@ -58,6 +58,7 @@
               "@babel/runtime-corejs3",
               "jspdf",
               "canvg",
+              "shpjs",
               "pbf"
             ]
           },

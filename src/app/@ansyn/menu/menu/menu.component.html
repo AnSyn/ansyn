@@ -1,4 +1,6 @@
-<div class="menu-wrapper" #menuWrapper>
+<div class="menu-wrapper" #menuWrapper
+	 [class.rtl]="isRTL"
+>
 
 	<div class="menu" #menu [class.expanded]="expand">
 		<div class="menu-content">
@@ -46,14 +48,14 @@
 			class="hide-menu"
 			(click)="toggleCollapse()"
 			[attr.tooltip-value]="minimizeText | translate"
-			tooltip-class="right">
-			<i class="fa fa-caret-left" [class.fa-caret-right]="collapse"></i>
+			[attr.tooltip-class]="isRTL ? 'left' : 'right'">
+			<i class="fa" [ngClass]="isRTL ? collapse ? 'fa-caret-left' : 'fa-caret-right' : collapse ? 'fa-caret-right' : 'fa-caret-left'"></i>
 		</button>
 
 	</div>
 
 
-	<div class="container" #container [@expand]="expand" (@expand.done)="onExpandDone()"
+	<div class="container" #container [@expand]="expand ? 'on' : isRTL ? 'off_rtl' : 'off_ltr'" (@expand.done)="onExpandDone()"
 		 (@expand.start)="onExpandStart()">
 		<!--<button class="close" (click)="closeMenu()">×</button>-->
 		<button class="pin"

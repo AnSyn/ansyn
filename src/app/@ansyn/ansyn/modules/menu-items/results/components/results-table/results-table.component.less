@@ -1,16 +1,22 @@
 @import "ansyn/less/colors";
 @import 'ansyn/less/common';
+@import "ansyn/less/z-index-globals";
 
-@footer-height: 58px;
+@footer-height: 141px;
 @header-size: calc(~"(100vh - @{footer-height}) * 0.025");
+@results-table-width: 435px;
 
 :host {
-	z-index: 5;
-	bottom: 81vh;
+	z-index: @z-index-footer;
+	bottom: 93vh;
 	background: @background-color-3;
-	&:extend(.default-menu-item);
-
+	position: relative;
+	width: @results-table-width;
+	display: block;
+	height: 100%;
+	overflow: hidden;
 	div.results-table {
+
 		width: 100%;
 		color: white;
 		font-size: 13px;
@@ -18,7 +24,7 @@
 		box-sizing: border-box;
 
 		div.no-results {
-			height: 10vh;
+			height: @footer-height;
 		}
 
 		div.header {
@@ -66,16 +72,17 @@
 					display: flex;
 					align-items: center;
 					position: relative;
-					width: 100%;
+					justify-content: space-around;
+					margin-right: auto;
+					width: 85%;
 					height: 57px;
-					text-align: left;
 					cursor: pointer;
 					box-sizing: border-box;
 
 					div.results-table-head-col {
-						margin-left: 29px;
-						width: 200px;
-						flex: 1;
+						&.date {
+							margin-right: 10px;
+						}
 
 						i.icon-arrow {
 							margin-top: -2px;
@@ -86,15 +93,6 @@
 							}
 						}
 					}
-
-					.Sensor {
-						margin-left: 33px !important;
-					}
-
-					.Type {
-						margin-right: 10px !important;
-						padding-left: 8px;
-					}
 				}
 			}
 		}
@@ -102,7 +100,8 @@
 		div.results-table-body {
 			display: block;
 			overflow-y: auto;
-			height: 67vh;
+			height: 59vh;
+			direction: ltr; // to flip the scrollbar location
 
 			div.results-table-body-row-data:hover {
 				background-color: @background-color-7;
@@ -118,22 +117,16 @@
 
 			div.results-table-body-row {
 				display: block;
+				text-align: center;
 				transition: background .3s, color .3s;
 				overflow: hidden;
 				height: 10%;
 				position: relative;
+				direction: ltr; // needs to be repeated here because of scrollbar place
 
 				&.mouse-enter {
 					color: #156879;
 					background: #EBF8FA;
-
-					div.results-table-body-row-data div.-menu-container div.results-menu {
-						transform: translate(10%, 50%);
-						opacity: 1;
-						visibility: visible;
-						pointer-events: auto;
-					}
-
 				}
 
 				&.active {
@@ -165,14 +158,13 @@
 					position: relative;
 					display: flex;
 					align-items: center;
-					text-align: left;
-					direction: ltr;
 					cursor: pointer;
 					box-sizing: border-box;
 					height: 100%;
 
-					div.overlay-type {
-						margin-left: 30px;
+					div.overlay-favorite {
+						margin-right: 0;
+						min-width: 24px;
 					}
 
 					hr {
@@ -191,21 +183,72 @@
 					}
 
 					div.source-type {
-						margin-left: 43px !important;
 						overflow: hidden;
 						text-overflow: ellipsis;
 					}
 
 					div.results-table-date-col {
-						flex: 1.5;
+						flex: 2;
 						overflow: hidden;
 						text-overflow: ellipsis;
-						margin-left: 19px;
+					}
+
+					.results-table-auto-save-col {
+						padding-top: 20px;
+						flex: 2;
 					}
 				}
 			}
 		}
 	}
 
+	//&.rtl {
+	//
+	//	div.results-table {
+	//		div.header {
+	//			margin-left: unset;
+	//			margin-right: 23px;
+	//
+	//			div.box {
+	//				.icon-status-bar-imagery-count {
+	//					margin-left: unset;
+	//					margin-right: 145px;
+	//				}
+	//
+	//				.overlay-count {
+	//					margin-left: unset;
+	//					margin-right: 170px;
+	//				}
+	//			}
+	//		}
+	//
+	//		div.results-table-head {
+	//			div.results-table-head-row {
+	//				padding-left: unset;
+	//				padding-right: 43px;
+	//			}
+	//		}
+	//
+	//		div.results-table-body {
+	//			direction: ltr;
+	//
+	//			div.results-table-body-row {
+	//				direction: rtl;
+	//				margin-left: unset;
+	//				margin-right: 16px;
+	//
+	//				div.results-table-body-row-data {
+	//					padding-left: unset;
+	//					padding-right: 19px;
+	//
+	//					div.results-table-case-name-col {
+	//						direction: ltr; // it is a date, so don't flip characters
+	//						text-align: right; // but align it to the right
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 }
 

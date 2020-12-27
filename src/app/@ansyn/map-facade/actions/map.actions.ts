@@ -8,7 +8,7 @@ import {
 	IWorldViewMapState
 } from '@ansyn/imagery';
 import { LayoutKey, layoutOptions } from '../models/maps-layout';
-import { MapOrientation } from "@ansyn/imagery";
+import { MapOrientation } from '@ansyn/imagery';
 import { ILogMessage } from '../models/logger.model';
 
 export interface IAngleFilterClick { // @TODO: map-facade should not know IOverlay
@@ -114,11 +114,11 @@ export class SetMinimalistViewModeAction implements Action {
 export class SetMapOrientation implements Action, ILogMessage {
 	type = MapActionTypes.SET_MAP_ORIENTATION;
 
-	constructor(public payload: {orientation: MapOrientation, mapId?: string}) {
+	constructor(public payload: { orientation: MapOrientation, mapId?: string }) {
 	}
 
 	logMessage() {
-		return `Setting map image orientation to ${this.payload.orientation}`
+		return `Setting map image orientation to ${ this.payload.orientation }`
 	}
 }
 
@@ -233,7 +233,7 @@ export class LogMapSearchBoxAction implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return `Using map search box. Search string = ${this.payload}`
+		return `Using map search box. Search string = ${ this.payload }`
 	}
 }
 
@@ -375,12 +375,16 @@ export class ChangeImageryMapFailed implements Action {
 
 export class ReplaceMainLayer implements Action {
 	readonly type = MapActionTypes.REPLACE_MAP_MAIN_LAYER;
-	constructor( public payload: { id: string, sourceType: string }) { }
+
+	constructor(public payload: { id: string, sourceType: string }) {
+	}
 }
 
 export class ReplaceMainLayerSuccess implements Action {
 	readonly type = MapActionTypes.REPLACE_MAP_MAIN_LAYER_SUCCESS;
-	constructor( public payload: { id: string, sourceType: string }) { }
+
+	constructor(public payload: { id: string, sourceType: string }) {
+	}
 }
 
 export class ReplaceMainLayerFailed implements Action {
@@ -431,7 +435,7 @@ export class SetLayoutAction implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return `Changing maps layout, no. of maps = ${layoutOptions.get(this.payload).mapsCount}`
+		return `Changing maps layout, no. of maps = ${ layoutOptions.get(this.payload).mapsCount }`
 	}
 }
 
@@ -449,7 +453,7 @@ export class ToggleMapLayersAction implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return `${this.payload.isVisible ? 'Un-' : ''}Hiding data layers for map`
+		return `${ this.payload.isVisible ? 'Un-' : '' }Hiding data layers for map`
 	}
 }
 
@@ -469,8 +473,8 @@ export class SetToastMessageAction implements Action, ILogMessage {
 
 	logMessage() {
 		if (this.payload) {
-			const originalMessage = this.payload.originalMessage ? `\n${this.payload.originalMessage}` : '';
-			return `Showing toast message: ${this.payload.toastText}${originalMessage}`;
+			const originalMessage = this.payload.originalMessage ? `\n${ this.payload.originalMessage }` : '';
+			return `Showing toast message: ${ this.payload.toastText }${ originalMessage }`;
 		}
 	}
 }
@@ -482,7 +486,7 @@ export class ToggleFooter implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return `${this.payload ? '' : 'Un-'}Hiding timeline`
+		return `${ this.payload ? '' : 'Un-' }Hiding timeline`
 	}
 }
 
@@ -500,14 +504,16 @@ export class LogDraggingMapBetweenScreenAreas implements Action, ILogMessage {
 export class SetOverlaysFootprintActive implements Action {
 	readonly type = MapActionTypes.VISUALIZERS.OVERLAYS_FOOTPRINT;
 
-	constructor(public payload: {mapId: string, show: boolean}) {}
+	constructor(public payload: { mapId: string, show: boolean }) {
+	}
 
 }
 
 export class LogMessageFromImagery implements Action, ILogMessage {
 	readonly type = MapActionTypes.LOG_MESSAGE_FROM_IMAGERY;
 
-	constructor(public payload: string) {}
+	constructor(public payload: string) {
+	}
 
 	logMessage() {
 		return this.payload;

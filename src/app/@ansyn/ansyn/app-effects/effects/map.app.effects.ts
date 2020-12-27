@@ -27,13 +27,18 @@ import {
 } from '@ansyn/map-facade';
 import {
 	BaseMapSourceProvider,
-	bboxFromGeoJson, getPolygonIntersectionRatio,
+	bboxFromGeoJson,
+	getPolygonIntersectionRatio,
 	IBaseImageryLayer,
 	ImageryCommunicatorService,
 	IImageryMapPosition,
 	IMapSettings,
 	polygonFromBBOX,
-	polygonsDontIntersect, GetProvidersMapsService, ImageryLayerProperties
+	polygonsDontIntersect,
+	GetProvidersMapsService,
+	ImageryLayerProperties,
+	ImageryMapExtentPolygon,
+	IMapSettingsData
 } from '@ansyn/imagery';
 import {
 	catchError,
@@ -52,7 +57,7 @@ import {
 import { toastMessages } from '../../modules/core/models/toast-messages';
 import { endTimingLog, startTimingLog } from '../../modules/core/utils/logs/timer-logs';
 import { isFullOverlay } from '../../modules/core/utils/overlays';
-import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
+import { CaseGeoFilter, CaseRegionState, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { MarkUpClass, selectRegion } from '../../modules/overlays/reducers/overlays.reducer';
 import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity/src/models';
@@ -88,9 +93,13 @@ import {
 } from '../../modules/overlays/overlay-status/config/overlay-status-config';
 import { MeasureDistanceVisualizer } from '../../modules/plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
 import { IGeoFilterStatus, selectGeoFilterStatus } from '../../modules/status-bar/reducers/status-bar.reducer';
-import { booleanEqual, distance, feature } from '@turf/turf';
 import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
-import { IScreenViewConfig, ScreenViewConfig } from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
+import {
+	IScreenViewConfig,
+	ScreenViewConfig
+} from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
+import { feature } from '@turf/turf';
+import { calculatePolygonWidth } from '@ansyn/imagery';
 
 const FOOTPRINT_INSIDE_MAP_RATIO = 1;
 
@@ -309,26 +318,33 @@ export class MapAppEffects {
 	searchByExtentPolygon$: Observable<any> = this.actions$.pipe(
 		ofType(MapActionTypes.POSITION_CHANGED, MapActionTypes.SET_ACTIVE_MAP_ID, StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS),
 		debounceTime(this.screenViewConfig.debounceTime),
-		withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus), this.store$.select(selectRegion)),
-		filter(([action, mapList, activeMapId, geoFilterStatus, region]) => Boolean(mapList[activeMapId]) && geoFilterStatus.type === CaseGeoFilter.ScreenView),
-		map(([action, mapList, activeMapId, geoFilterStatus, region]) => {
-			const activeMap: IMapSettings = mapList[activeMapId];
-			return [activeMap.data.position.extentPolygon, geoFilterStatus, region , activeMap.data.overlay];
-		}),
-		filter(([extentPolygon, geoFilterStatus, region, overlay]: [any, IGeoFilterStatus, any, IOverlay]) => !booleanEqual(extentPolygon, region.geometry) && !Boolean(overlay)),
-		concatMap(([extentPolygon, geoFilterStatus, region, overlay]: [any, IGeoFilterStatus, any, IOverlay]) => {
-			const extentWidth = Math.round(distance(extentPolygon.coordinates[0][0], extentPolygon.coordinates[0][1], {units: 'metres'}));
-			const extent = feature(extentPolygon, {searchMode: "ScreenView"});
-			let actions = [];
+		concatMap((action: Action) => of(action).pipe(
+			withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus), this.store$.select(selectRegion),
+				(action: Action, mapList, activeMapId, geoFilterStatus, { properties }): [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], number, number, IOverlay] => {
+					const { position, overlay }: IMapSettingsData = mapList[activeMapId].data;
+					const { center, zoom } = position.projectedState;
 
+					return [position.extentPolygon, geoFilterStatus, center, properties.center, zoom, properties.zoom, overlay];
+				})
+		)),
+		filter(([extentPolygon, geoFilterStatus, newCenter, oldCenter, newZoom, oldZoom, overlay]: [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], number, number, IOverlay]) => {
+			return geoFilterStatus.type === CaseGeoFilter.ScreenView && !Boolean(overlay) && (!isEqual(oldCenter, newCenter) || !isEqual(oldZoom, newZoom));
+		}),
+		concatMap(([extentPolygon, geoFilterStatus, newCenter, oldCenter, newZoom, oldZoom, overlay]: [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], number, number, IOverlay]) => {
+			const actions: Action[] = [];
+
+			const extentWidth = calculatePolygonWidth(extentPolygon);
 			if (extentWidth > this.screenViewConfig.extentWidthSearchLimit) {
-				actions.push(new SetOverlaysStatusMessageAction({message: 'Zoom in to get new overlays'}));
+				actions.push(new SetOverlaysStatusMessageAction({ message: 'Zoom in to get new overlays' }));
 			} else {
+				const extent = feature(extentPolygon, { searchMode: CaseGeoFilter.ScreenView, center: newCenter, zoom: newZoom });
 				actions.push(new SetOverlaysCriteriaAction({ region: extent }));
+
 				if (geoFilterStatus.active) {
 					actions.push(new UpdateGeoFilterStatus({ active: false }));
 				}
 			}
+
 			return actions;
 		})
 	);
@@ -377,9 +393,8 @@ export class MapAppEffects {
 		const sourceProviderMetaData = { ...caseMapState, data: { ...mapData, overlay } };
 		this.setIsLoadingSpinner(mapId, sourceLoader, sourceProviderMetaData);
 
-
 		/* -0- */
-		const setIsOverlayProperties = map( (layer: IBaseImageryLayer) => {
+		const setIsOverlayProperties = map((layer: IBaseImageryLayer) => {
 			layer.set(ImageryLayerProperties.IS_OVERLAY, true);
 			return layer;
 		});

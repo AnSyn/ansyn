@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input } from '@angular/core';
+import { Component, forwardRef, HostBinding, Input } from '@angular/core';
 import { UUID } from 'angular2-uuid';
 import {
 	AbstractControl,
@@ -33,6 +33,10 @@ export class AnsynCheckboxComponent implements ControlValueAccessor, Validator {
 	@Input() id = UUID.UUID();
 	@Input() required;
 	@Input() name: string;
+
+	@HostBinding('class.rtl')
+	@Input() isRTL = false;
+
 	disabled: boolean;
 
 	protected _value;

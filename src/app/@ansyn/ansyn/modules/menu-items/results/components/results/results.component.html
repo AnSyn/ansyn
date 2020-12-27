@@ -1,9 +1,3 @@
-<button [class.active]="toggleResults" class="open-table-btn" (click)="toggleResultsTable()">
-	<i class="icon-table"></i>
-	<span class="badge">{{overlaysCount$ | async}}</span>
-	{{'Search results' | translate}}
-</button>
-
-<div *ngIf="toggleResults" class="results">
+<div [@expand] (@expand.start)="onExpandStart()" class="results">
 	<ansyn-results-table></ansyn-results-table>
 </div>

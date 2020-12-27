@@ -11,7 +11,7 @@
 	
 	.close {
 		margin-top: 2%;
-		margin-left: 20px;
+		margin-right: 20px;
         cursor: pointer;
         height: fit-content;
 	}
@@ -37,6 +37,31 @@
 
 			&:hover:not(.active) {
 				&:extend(.status-bar-button-hover);
+			}
+		}
+
+		&.timePickerBox {
+			font-size: 13px;
+
+			span.time-range {
+				direction: ltr; // time fields remains the same in RTL mode
+
+				span.title {
+					outline: none;
+					cursor: text;
+
+					&::selection {
+						background: @status-bar-panels;
+					}
+
+					&.error {
+						color: red;
+					}
+
+					&:last-child {
+						margin-right: 5px;
+					}
+				}
 			}
 		}
 
@@ -73,5 +98,24 @@
 	}
 	.expander {
 		align-self: flex-start;
+	}
+
+	&.rtl {
+		.box {
+			&.timePickerBox {
+				span.time-range {
+					span.title {
+						&:last-child {
+							margin-right: unset;
+							margin-left: 5px;
+						}
+					}
+				}
+			}
+		}
+		input.time-picker-input {
+			padding-left: unset;
+			padding-right: 28px;
+		}
 	}
 }

@@ -2,55 +2,10 @@
 
 :host {
 	bottom: 0;
-	z-index: 6 !important;
 
 	.results {
 		top: 0;
 		right: 0;
 		position: absolute;
-	}
-
-	button {
-		&.open-table-btn {
-			z-index: 6 !important;
-			background: @background-color-1;
-			position: relative;
-			text-align: center;
-			color: white;
-			text-decoration: none;
-			right: 10px;
-			bottom: 10px;
-			padding: 16px;
-			cursor: pointer;
-			font-size: 0.9rem;
-
-			i {
-				display: block;
-				font-size: 3em;
-			}
-
-			span.badge {
-				position: absolute;
-				right: 42px;
-				top: 43px;
-				font-size: 14px;
-				min-width: 30px;
-				padding-top: 2px;
-				padding-right: 2px;
-			}
-
-			img {
-				margin: 0 auto 5px auto;
-				display: block;
-			}
-
-			&:hover {
-				background-color: @background-color-3;
-			}
-
-			&.active {
-				background-color: @application-primary-color;
-			}
-		}
 	}
 }

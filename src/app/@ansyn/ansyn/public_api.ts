@@ -1,3 +1,5 @@
+export { TimePickerContainerComponent } from './modules/status-bar/components/time-picker-container/time-picker-container.component';
+
 export { measuresClassNameForExport } from './modules/plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
 
 export { selectOverlaysManualProcessArgs } from './modules/overlays/overlay-status/reducers/overlay-status.reducer';

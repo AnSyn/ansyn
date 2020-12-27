@@ -9,6 +9,7 @@ import { CasesService } from '../../services/cases.service';
 import { map, tap } from 'rxjs/operators';
 import { ICase, ICasePreview } from '../../models/case.model';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
+import { TranslateService } from '@ngx-translate/core';
 
 const animationsDuring = '0.2s';
 
@@ -35,6 +36,9 @@ const animations: any[] = [
 export class EditCaseComponent implements OnInit, OnDestroy {
 	@HostBinding('@modalContent') readonly modalContent = true;
 
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
 	casesState$: Observable<ICasesState> = this.store.select(casesStateSelector);
 
 	@AutoSubscription
@@ -59,7 +63,8 @@ export class EditCaseComponent implements OnInit, OnDestroy {
 
 	constructor(
 		protected store: Store<ICasesState>,
-		protected casesService: CasesService
+		protected casesService: CasesService,
+		protected translateService: TranslateService
 	) {
 	}
 
@@ -84,6 +89,9 @@ export class EditCaseComponent implements OnInit, OnDestroy {
 	}
 
 	getEmptyCase(selectedCase: ICase): ICase {
+		if (!selectedCase) {
+			return;
+		}
 		let activeMap = selectedCase.state.maps.data.find(({ id }) => id === selectedCase.state.maps.activeMapId);
 		if (!Boolean(activeMap)) {
 			activeMap = selectedCase.state.maps.data[0];

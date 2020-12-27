@@ -111,10 +111,10 @@ export class OverlayStatusEffects {
 		ofType(OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING),
 		withLatestFrom(this.store$.select(mapStateSelector)),
 		mergeMap<any, any>(([action, mapsState]: [SetAutoImageProcessing, IMapState]) => {
-			const activeMap: IMapSettings = MapFacadeService.activeMap(mapsState);
+			const activeMap: IMapSettings = mapsState.entities[action.payload.mapId];
 			const isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
 			return [
-				new SetActiveMapId(action.payload.mapId),
+				new SetActiveMapId(activeMap.id),
 				new UpdateMapAction({
 					id: activeMap.id,
 					changes: { data: { ...activeMap.data, isAutoImageProcessingActive } }
@@ -186,7 +186,8 @@ export class OverlayStatusEffects {
 
 					if (combinedResult === null) {
 						scannedArea = null;
-					} else if (combinedResult.geometry.type === 'MultiPolygon') {
+					}
+					else if (combinedResult.geometry.type === 'MultiPolygon') {
 						scannedArea = combinedResult.geometry;
 					} else {
 						scannedArea = geojsonPolygonToMultiPolygon(combinedResult.geometry);

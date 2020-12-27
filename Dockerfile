@@ -11,7 +11,7 @@ COPY package*.json ./
 
 RUN npm set progress=false
 
-RUN npm ci --only=production
+RUN npm ci
 
 COPY . .
 

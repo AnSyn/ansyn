@@ -58,11 +58,14 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		})
 	);
 
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
 	constructor(
 		protected store$: Store<any>,
 		protected imageryCommunicatorService: ImageryCommunicatorService,
 		public geocoderService: GeocoderService,
-		protected translator: TranslateService
+		protected translateService: TranslateService
 	) {
 	}
 
@@ -112,7 +115,7 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		if (point) {
 			this.goToLocation(point);
 		} else {
-			const toastText = this.translator.instant('Invalid location');
+			const toastText = this.translateService.instant('Invalid location');
 			this.store$.dispatch(new SetToastMessageAction({ toastText }))
 		}
 	}

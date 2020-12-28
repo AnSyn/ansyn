@@ -5,6 +5,7 @@
 @footer-height: 141px;
 @header-size: calc(~"(100vh - @{footer-height}) * 0.025");
 @results-table-width: 435px;
+@date-field-width: 140px;
 
 :host {
 	z-index: @z-index-footer;
@@ -67,7 +68,6 @@
 				margin-bottom: -5px;
 				padding-left: 30px;
 				width: 100%;
-				text-align: center;
 
 				div.results-table-head-row-data {
 					display: flex;
@@ -82,7 +82,7 @@
 
 						&.date {
 							flex: 0;
-							min-width: 125px;
+							min-width: @date-field-width;
 						}
 
 						i.icon-arrow {
@@ -114,7 +114,6 @@
 
 			div.results-table-body-row {
 				display: block;
-				text-align: center;
 				transition: background .3s, color .3s;
 				overflow: hidden;
 				height: 10%;
@@ -190,7 +189,7 @@
 
 						&.overlay-time {
 							flex: 0;
-							min-width: 125px;
+							min-width: @date-field-width;
 							overflow: hidden;
 							text-overflow: ellipsis;
 						}

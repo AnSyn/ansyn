@@ -3,6 +3,7 @@
 	 (keyup.enter)="closeTimePicker()"
 	 [extraClass]="'owl-dt-container presets'"
 	 [trigger]="timePickerTrigger?.optionsTrigger?.nativeElement"
+	 [class.rtl]="'rtl' === ('direction' | translate)"
 >
 	<button ansynComboBoxTrigger
 			#timePickerTrigger
@@ -16,15 +17,17 @@
 			class="button">
 		<i class="icon icon-status-bar-time"></i>
 
-		<span #timePickerTitleFrom
-			  contenteditable
-			  [class.error]="timeError?.from"
-			  class="title">{{timeSelectionTitle?.from}}</span>
-		{{'&nbsp;&nbsp;-&nbsp;&nbsp;'}}
-		<span #timePickerTitleTo
-			  contenteditable
-			  [class.error]="timeError?.to"
-			  class="title">{{timeSelectionTitle?.to}}</span>
+		<span class="date-range">
+			<span #timePickerTitleFrom
+				  contenteditable
+				  [class.error]="timeError?.from"
+				  class="title">{{timeSelectionTitle?.from}}</span>
+			{{'&nbsp;&nbsp;-&nbsp;&nbsp;'}}
+			<span #timePickerTitleTo
+				  contenteditable
+				  [class.error]="timeError?.to"
+				  class="title">{{timeSelectionTitle?.to}}</span>
+		</span>
 	</button>
 
 	<ansyn-timepicker-presets *ngIf="isPresetOpen"

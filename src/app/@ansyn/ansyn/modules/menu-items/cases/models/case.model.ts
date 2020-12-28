@@ -3,6 +3,7 @@ import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
 import { LayoutKey } from '@ansyn/map-facade';
 import { FilterType } from '../../../filters/models/filter-type';
 import { IMapSettings, IMapSettingsData } from '@ansyn/imagery';
+import { IProviderData } from '../../../status-bar/models/statusBar-config.model';
 
 export interface ICasePreview {
 	creationTime: Date;
@@ -70,7 +71,7 @@ export interface IDilutedCaseState {
 	overlaysTranslationData: IOverlaysTranslationData;
 	overlaysScannedAreaData?: IOverlaysScannedAreaData;
 	layers?: ICaseLayersState;
-	providers?: string[];
+	providers?: IProviderData[];
 }
 
 export interface ICaseState extends IDilutedCaseState {

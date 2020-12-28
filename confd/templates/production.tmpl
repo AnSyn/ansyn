@@ -401,7 +401,18 @@
 	"advancedSearchParameters": {
 		"types": ["Multi-Spectral Instrument", "UAV", "Mapillary", "Flickr", "OpenStreetCam", "Wikimedia Commons"],
 		"registeration": ["geoRegistered"],
-		"providers": ["SENTINEL", "OPEN_AERIAL", "PIC4CARTO"],
+		"providers": [{
+			"name": "SENTINEL",
+			"class": "SentinelSourceProvider"
+			}, 
+			{
+			"name": "OPEN_AERIAL",
+			"class": "OpenAerialSourceProvider"
+			},
+			{
+			"name": "PIC4CARTO",
+			"class": "Pic4cartoSourceProvider" 
+			}],
 		"resolution": {
 			"lowValue": 100,
 			"highValue": 200

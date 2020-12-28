@@ -17,7 +17,8 @@ import { transition, trigger, style, animate } from '@angular/animations';
 
 export class ResultsComponent {
 
-	constructor() {}
+	constructor() {
+	}
 
 	onExpandStart() {
 		const resultsTableElement = document.querySelector('.results');

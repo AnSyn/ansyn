@@ -124,8 +124,6 @@ export class OverlaysEffects {
 	loadOverlays$: Observable<{} | LoadOverlaysSuccessAction> = this.actions$.pipe(
 		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
 		switchMap((action: LoadOverlaysAction) => {
-			console.log(action);
-			
 			if (action.payload.dataInputFilters.fullyChecked || action.payload.dataInputFilters.filters.length > 0) {
 				return this.requestOverlays(action.payload);
 			}

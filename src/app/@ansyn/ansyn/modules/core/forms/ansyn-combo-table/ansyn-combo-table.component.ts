@@ -1,6 +1,5 @@
 import { Component, ElementRef, EventEmitter, forwardRef, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Store } from '@ngrx/store';
 import { noop } from 'rxjs';
 import { IStatusBarState } from '../../../status-bar/reducers/status-bar.reducer';
 
@@ -40,7 +39,7 @@ export class AnsynComboTableComponent implements ControlValueAccessor {
   
   @Output() selectedItemsArray = new EventEmitter<any[]>();
   
-  constructor(public injector: Injector,public store: Store<IStatusBarState>) { }
+  constructor(public injector: Injector) { }
 
   toggleShow() {
 		this.optionsVisible = !this.optionsVisible;

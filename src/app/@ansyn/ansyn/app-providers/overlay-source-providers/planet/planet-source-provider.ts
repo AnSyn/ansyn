@@ -117,44 +117,44 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		};
 	}*/
 
-	buildFetchObservables(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<any>[] {
+	buildFetchObservables(fetchParams: IFetchParams): Observable<any>[] {
 		const regionFeature = feature(<any>fetchParams.region);
 		const fetchParamsTimeRange = {
 			start: new Date(fetchParams.timeRange.start),
 			end: new Date(fetchParams.timeRange.end)
 		};
 
-		const planetFilters: IPlanetFilter[] = filters
-			.map(({ sensor, ...restItem }) => ({ ...restItem, sensors: sensor ? [sensor] : [] }))
-			.reduce((res, item) => {
-				const equalItem = res.find((f) => isEqual({
-					coverage: f.coverage,
-					timeRange: f.timeRange
-				}, { coverage: item.coverage, timeRange: item.timeRange }));
-				if (equalItem) {
-					equalItem.sensors = uniq([...equalItem.sensors, ...item.sensors]);
-					return res;
-				}
-				return [...res, item];
-			}, [])
-			.map((item): Partial<IFetchParams> => {
-				const intersection = intersect(regionFeature, item.coverage);
-				const time = timeIntersection(fetchParamsTimeRange, item.timeRange);
-				const { sensors } = item;
-				return {
-					timeRange: time,
-					region: intersection && intersection.geometry,
-					sensors
-				};
-			})
-			.filter(({ timeRange, region }: IFetchParams) => Boolean(timeRange && region))
-			.map(this.paramsToFilter);
-		if (!planetFilters.length) {
-			return [];
-		}
+		// const planetFilters: IPlanetFilter[] = filters
+		// 	.map(({ sensor, ...restItem }) => ({ ...restItem, sensors: sensor ? [sensor] : [] }))
+		// 	.reduce((res, item) => {
+		// 		const equalItem = res.find((f) => isEqual({
+		// 			coverage: f.coverage,
+		// 			timeRange: f.timeRange
+		// 		}, { coverage: item.coverage, timeRange: item.timeRange }));
+		// 		if (equalItem) {
+		// 			equalItem.sensors = uniq([...equalItem.sensors, ...item.sensors]);
+		// 			return res;
+		// 		}
+		// 		return [...res, item];
+		// 	}, [])
+		// 	.map((item): Partial<IFetchParams> => {
+		// 		const intersection = intersect(regionFeature, item.coverage);
+		// 		const time = timeIntersection(fetchParamsTimeRange, item.timeRange);
+		// 		const { sensors } = item;
+		// 		return {
+		// 			timeRange: time,
+		// 			region: intersection && intersection.geometry,
+		// 			sensors
+		// 		};
+		// 	})
+		// 	.filter(({ timeRange, region }: IFetchParams) => Boolean(timeRange && region))
+		// 	.map(this.paramsToFilter);
+		// if (!planetFilters.length) {
+		// 	return [];
+		// }
 		return [this.fetch(<any>{
 			...fetchParams,
-			planetFilters
+			// planetFilters
 		})];
 	}
 

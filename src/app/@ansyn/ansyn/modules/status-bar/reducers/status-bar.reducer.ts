@@ -45,7 +45,7 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 		case StatusBarActionsTypes.UPDATE_ADVANCED_SEARCH_PARAM: {
 			const { payload } = action;
 			if (payload) {
-				return {...state, ...payload };
+				return {...state, advancedSearchParameter: payload.advancedSearchParameter };
 			} else {
 				return state;
 			}
@@ -58,6 +58,6 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 }
 
 export const selectGeoFilterStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.geoFilterStatus : StatusBarInitialState.geoFilterStatus);
-export const selectAdvancedSearchParameters = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.advancedSearchParameter : StatusBarInitialState.advancedSearchParameter);
+export const selectAdvancedSearchParameters = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar && statusBar.advancedSearchParameter);
 export const selectGeoFilterActive = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.active);
 export const selectGeoFilterType = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.type);

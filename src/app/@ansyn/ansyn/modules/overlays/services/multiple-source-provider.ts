@@ -1,17 +1,16 @@
-import { forkJoin, from, Observable, throwError } from 'rxjs';
+import { forkJoin, Observable, throwError } from 'rxjs';
 import { Inject, Injectable } from '@angular/core';
 import {
 	BaseOverlaySourceProvider,
 	IFetchParams,
 	IOverlayFilter,
 	isFaulty,
-	IStartAndEndDate,
 	mergeErrors,
 	mergeOverlaysFetchData
 } from '../models/base-overlay-source-provider.model';
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
-import { map } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
 import { groupBy } from 'lodash';
 import { IOverlayByIdMetaData } from './overlays.service';
 import { IMultipleOverlaysSource, MultipleOverlaysSource } from '../models/overlays-source-providers';
@@ -23,16 +22,33 @@ import {
 	MultipleOverlaysSourceConfig
 } from '../../core/models/multiple-overlays-source-config';
 import { IOverlay, IOverlaysFetchData } from '../models/overlay.model';
-import { IDataInputFilterValue } from '../../menu-items/cases/models/case.model';
+import { select, Store } from '@ngrx/store';
+import { selectAdvancedSearchParameters, selectGeoFilterStatus } from '../../status-bar/reducers/status-bar.reducer';
+import { IAdvancedSearchParameter, IProviderData, IStatusBarConfig } from '../../status-bar/models/statusBar-config.model';
+import { StatusBarConfig } from '../../status-bar/models/statusBar.config';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class MultipleOverlaysSourceProvider {
-	private sourceConfigs: Array<{ filters: IOverlayFilter[], provider: BaseOverlaySourceProvider }> = [];
+	
+	private providers: IProviderData[];
+	private selectedProviders: IProviderData[];
 
-	constructor(@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
+	onDataInputFilterChange$ = this.store.pipe(
+	  select(selectAdvancedSearchParameters),
+	  tap((searchOptions: IAdvancedSearchParameter) => {
+		this.updateSelectedProviders(searchOptions.providers);
+	  })
+	);
+
+	
+	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
+				protected store: Store<any>,
+				@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				@Inject(MultipleOverlaysSource) public overlaysSources: IMultipleOverlaysSource) {
+		this.providers = [];
+		this.selectedProviders = [];
 		this.prepareWhitelist();
 	}
 
@@ -62,10 +78,21 @@ export class MultipleOverlaysSourceProvider {
 		}
 		return '';
 	}
+	updateSelectedProviders(providersFromState) {
+		this.selectedProviders = [];
+		providersFromState.forEach(providerWithStringClass => {
+			this.providers.forEach(provider => {
+				if(providerWithStringClass.class === provider.class.constructor.name) {
+					this.selectedProviders.push(provider);
+				}
+			})
+		});
+	}
 
 	private prepareWhitelist() {
+		let type;
 		const mapProviderConfig = (provider) => {
-			const type = provider.sourceType;
+			type = provider.sourceType;
 			let config = this.multipleOverlaysSourceConfig.indexProviders[type];
 			if (!config) {
 				console.warn(`Missing config for provider ${ type }, using defaultProvider config`);
@@ -74,7 +101,9 @@ export class MultipleOverlaysSourceProvider {
 			return [provider, config];
 		};
 
-		const filterWhiteList = ([provider, { inActive }]: [BaseOverlaySourceProvider, IOverlaysSourceProvider]) => !inActive;
+		const filterWhiteList = ([provider, { inActive }]: [BaseOverlaySourceProvider, IOverlaysSourceProvider]) => !inActive && this.providers.map(providerClass => {
+			providerClass.class.constructor.name === provider.constructor.name
+		})
 
 		Object.values(this.overlaysSources).map(mapProviderConfig).filter(filterWhiteList).forEach(([provider, config]) => {
 
@@ -130,12 +159,12 @@ export class MultipleOverlaysSourceProvider {
 				);
 			}
 
-			// If there are whiteFilters after removing the blackFilters, add it to the sourceConfigs list
+			// If there are whiteFilters after removing the blackFilters, add it to the providers list
 			if (whiteFilters.length > 0) {
-				this.sourceConfigs.push({
-					provider,
-					filters: whiteFilters
-				});
+				this.providers.push({
+					name: provider.constructor.name.replace('SourceProvider','').toUpperCase(),
+					class: provider
+				})
 			}
 		});
 	}
@@ -163,10 +192,9 @@ export class MultipleOverlaysSourceProvider {
 	}
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
-		const mergedSortedOverlays: Observable<IOverlaysFetchData> = forkJoin(this.sourceConfigs
-			.filter(s => !Boolean(fetchParams.dataInputFilters.length) ? true : fetchParams.dataInputFilters.some((dataInputFilter: IDataInputFilterValue) => dataInputFilter.providerName === s.provider.sourceType))
-			.map(s => s.provider.fetchMultiple( fetchParams, s.filters)
-			)).pipe(
+		this.onDataInputFilterChange$.pipe(take(1)).subscribe();
+		const mergedSortedOverlays: Observable<IOverlaysFetchData> = forkJoin(this.selectedProviders
+			.map(s =>  s.class.fetchMultiple(fetchParams))).pipe(
 			map(overlays => {
 				const allFailed = overlays.every(overlay => isFaulty(overlay));
 				const errors = mergeErrors(overlays);

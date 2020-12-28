@@ -31,12 +31,7 @@ interface ITableHeader {
 	templateUrl: './results-table.component.html',
 	styleUrls: ['./results-table.component.less'],
 	animations: [
-		trigger('expand', [
-			transition(':enter', [
-				style({ transform: 'translateY(100%)' }),
-				animate('1.25s ease-in-out', style({ transform: 'translateY(0%)' }))
-			])
-		]),
+		
 		trigger('isDescending', [
 			state('false', style({
 				transform: 'rotate(180deg)',

@@ -4,6 +4,7 @@ import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { ICase, ICasePreview } from '../models/case.model';
 import { CasesType } from '../models/cases-config';
+import { isEqual } from 'lodash';
 
 export interface ICaseModal {
 	show: boolean,
@@ -56,7 +57,7 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 		}
 
 		case CasesActionTypes.UPDATE_CASE: {
-			const openCaseId = state.loadCase ? state.openCaseId : null;
+			const openCaseId = state.loadCase || isEqual(state.selectedCase, action.payload) ? state.openCaseId : null;
 			return { ...state, selectedCase: action.payload, wasSaved: false, openCaseId, loadCase: false }
 		}
 

@@ -4,35 +4,34 @@ import { filter, tap } from 'rxjs/operators';
 import { ClickOutsideService } from '../../../core/click-outside/click-outside.service';
 
 @Component({
-  selector: 'ansyn-search-options',
-  templateUrl: './search-options.component.html',
-  styleUrls: ['./search-options.component.less']
+	selector: 'ansyn-search-options',
+	templateUrl: './search-options.component.html',
+	styleUrls: ['./search-options.component.less']
 })
 @AutoSubscriptions()
 export class SearchOptionsComponent implements OnInit, OnDestroy {
 
-  isExpand: Boolean = false;
+	isExpand: Boolean = false;
 
-  @AutoSubscription
-	isClickOutside$ = this.clickOutside.onClickOutside({monitor: this.element.nativeElement}).pipe(
+	@AutoSubscription
+	isClickOutside$ = this.clickOutside.onClickOutside({ monitor: this.element.nativeElement }).pipe(
 		filter(clickOutside => clickOutside),
 		tap(this.close.bind(this))
 	);
-  constructor(protected element: ElementRef,
-              protected clickOutside: ClickOutsideService) { }
-              
-  ngOnDestroy(): void {
-  }
+	constructor(protected element: ElementRef,
+		protected clickOutside: ClickOutsideService) { }
 
-  ngOnInit(): void {
-  }
-  
-  toggleSearchPannel() {
-    this.isExpand = !this.isExpand;
-  }
+	ngOnDestroy(): void {
+	}
 
-  close() {
-    this.isExpand = false;
-  }
+	ngOnInit(): void {
+	}
 
+	toggleSearchPannel() {
+		this.isExpand = !this.isExpand;
+	}
+
+	close() {
+		this.isExpand = false;
+	}
 }

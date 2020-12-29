@@ -5,29 +5,28 @@ import { debounceTime, tap } from 'rxjs/operators';
 import { AnsynComboTableComponent } from '../ansyn-combo-table/ansyn-combo-table.component';
 
 @Component({
-  selector: 'ansyn-combo-table-option',
-  templateUrl: './ansyn-combo-table-option.component.html',
-  styleUrls: ['./ansyn-combo-table-option.component.less']
-})
-export class AnsynComboTableOptionComponent implements OnInit {
+	selector: 'ansyn-combo-table-option',
+	templateUrl: './ansyn-combo-table-option.component.html',
+	styleUrls: ['./ansyn-combo-table-option.component.less']
+	})
+	export class AnsynComboTableOptionComponent implements OnInit {
 
-  get selected() {
+	get selected() {
 	return this._parent.selected;
-  }
-  @Input() value;
+	}
+	@Input() value;
 
-  @HostBinding('class.disabled')
-  @Input() disabled = false;
-  
-  constructor(protected _parent: AnsynComboTableComponent, protected el: ElementRef) { }
+	@HostBinding('class.disabled')
+	@Input() disabled = false;
 
-  @HostListener('click') onClick() {
+	constructor(protected _parent: AnsynComboTableComponent, protected el: ElementRef) { }
+
+	@HostListener('click') onClick() {
 		if (this.value) {
 			this._parent.selectOption(this.value);
 		}
-  }
-  
-  ngOnInit(): void {
-  }
+	}
 
+	ngOnInit(): void {
+	}
 }

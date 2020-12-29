@@ -6,20 +6,20 @@ describe('AnsynComboTableOptionComponent', () => {
 	let component: AnsynComboTableOptionComponent;
 	let fixture: ComponentFixture<AnsynComboTableOptionComponent>;
 
-  	beforeEach(async(() => {
-	  	TestBed.configureTestingModule({
-	 	declarations: [ AnsynComboTableOptionComponent ]
-	  	})
-	  	.compileComponents();
-  }));
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+		declarations: [ AnsynComboTableOptionComponent ]
+		})
+		.compileComponents();
+	}));
 
-  	beforeEach(() => {
-    	fixture = TestBed.createComponent(AnsynComboTableOptionComponent);
-    	component = fixture.componentInstance;
-    	fixture.detectChanges();
-  });
+	beforeEach(() => {
+		fixture = TestBed.createComponent(AnsynComboTableOptionComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-  	it('should create', () => {
-    	expect(component).toBeTruthy();
-  	});
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
+	});

@@ -36,10 +36,10 @@ export class MultipleOverlaysSourceProvider {
 	private selectedProviders: IProviderData[];
 
 	onDataInputFilterChange$ = this.store.pipe(
-	  select(selectAdvancedSearchParameters),
-	  tap((searchOptions: IAdvancedSearchParameter) => {
-		this.updateSelectedProviders(searchOptions.providers);
-	  })
+		select(selectAdvancedSearchParameters),
+		tap((searchOptions: IAdvancedSearchParameter) => {
+			this.updateSelectedProviders(searchOptions.providers);
+		})
 	);
 
 	

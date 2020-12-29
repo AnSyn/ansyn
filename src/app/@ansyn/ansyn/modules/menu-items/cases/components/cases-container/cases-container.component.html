@@ -2,9 +2,10 @@
 	<h2>{{'My Cases' | translate}}</h2>
 	<ansyn-cases-table *ngIf="myCasesData"
 					   [cases]="myCasesData"
+					   [menu]="menu"
 					   (onInfintyScroll)="loadMyCases()"
 					   (onRowHover)="hoverCaseId = $event">
-		<ng-template let-menuItem #menuItem>
+		<ng-template #menu>
 			<button (click)="removeCase()"
 					[attr.tooltip-value]="'Remove' | translate"
 					tooltip-class="bottom">
@@ -28,9 +29,10 @@
 	<h2>{{'Shared Cases' | translate}}</h2>
 	<ansyn-cases-table
 		[cases]="sharedCasesObj"
+		[menu]="menu"
 		(onInfintyScroll)="loadSharedCases()"
 		(onRowHover)="hoverCaseId = $event">
-		<ng-template let-menuItem #menuItem>
+		<ng-template #menu>
 			<button (click)="removeCase()"
 					[attr.tooltip-value]="'Remove' | translate"
 					tooltip-class="bottom">

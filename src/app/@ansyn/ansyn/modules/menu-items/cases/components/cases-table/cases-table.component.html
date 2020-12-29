@@ -46,9 +46,7 @@
 				<!--menu-->
 				<div [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''" class="case-menu-container">
 					<div class="case-menu" (click)="caseMenuClick($event, caseRow)">
-						<ng-container *ngIf="menuItemRef"
-									  [ngTemplateOutlet]="menuItemRef"
-									  [ngTemplateOutletContext]="{$implicit:menuItem}"></ng-container>
+						<ng-container *ngTemplateOutlet="menu"></ng-container>
 					</div>
 				</div>
 

@@ -39,6 +39,7 @@ const animations: any[] = [
 export class CasesTableComponent implements OnInit, OnDestroy {
 	@ViewChild('tbodyElement') tbodyElement: ElementRef;
 	@Input() cases: ICaseTableData;
+	@Input() menu: ElementRef;
 	@Output() onInfintyScroll = new EventEmitter();
 	@Output() onRowHover = new EventEmitter<string>();
 
@@ -50,7 +51,7 @@ export class CasesTableComponent implements OnInit, OnDestroy {
 	);
 
 	openCaseId$: Observable<string> = this.store$.select(selectOpenCaseId);
-	
+
 	constructor(
 		protected store$: Store<ICasesState>
 	) {

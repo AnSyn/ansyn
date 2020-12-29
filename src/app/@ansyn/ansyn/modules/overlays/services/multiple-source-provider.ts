@@ -82,7 +82,7 @@ export class MultipleOverlaysSourceProvider {
 		this.selectedProviders = [];
 		providersFromState.forEach(providerWithStringClass => {
 			this.providers.forEach(provider => {
-				if(providerWithStringClass.class === provider.class.constructor.name) {
+				if (providerWithStringClass.class === provider.class.constructor.name) {
 					this.selectedProviders.push(provider);
 				}
 			})
@@ -159,9 +159,9 @@ export class MultipleOverlaysSourceProvider {
 			// If there are whiteFilters after removing the blackFilters, add it to the providers list
 			if (whiteFilters.length > 0) {
 				this.providers.push({
-					name: provider.constructor.name.replace('SourceProvider','').toUpperCase(),
+					name: provider.constructor.name.replace('SourceProvider', '').toUpperCase(),
 					class: provider
-				})
+				});
 			}
 		});
 	}

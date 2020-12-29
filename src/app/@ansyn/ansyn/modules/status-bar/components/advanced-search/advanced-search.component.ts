@@ -24,8 +24,8 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 @AutoSubscriptions()
 export class AdvancedSearchComponent implements OnInit, OnDestroy {
 
-  minValue: number = 100;
-  maxValue: number = 200;
+  minValue = 100;
+  maxValue = 200;
   options: Options = {
     floor: 100,
     ceil: 200,
@@ -46,7 +46,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   
   allProviders: IProviderData[] = [];
   selectedProviders: IProviderData[] = [];
-  selectedProvidersNames: string[] =[];
+  selectedProvidersNames: string[] = [];
   selectedTypes: string[] = [];
   selectedRegistration: string[] = [];
 
@@ -72,7 +72,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
               @Inject(MultipleOverlaysSourceConfig) public multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
               private translate: TranslateService,
               protected _parent: SearchPanelComponent,
-              @Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,) { 
+              @Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) { 
     this.dataFilters = this.getAllDataInputFilter();
     this.sensorTypes = this.selectAll();
     this.providersList = this.getAllProvidersNames();
@@ -126,7 +126,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
 			.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive)
 			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
-          if(sensorNamesByGroup) {
+          if (sensorNamesByGroup) {
             const typesNames = Object.keys(sensorNamesByGroup);
             typesNames.forEach(type => {
               sensorNamesByGroup[type].forEach(sensor => sensors.push(sensor));
@@ -208,7 +208,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     this._parent.close();
   }
 
-  updateSelectedArray(selectedItemsArray,arrayToUpdate) {
+  updateSelectedArray(selectedItemsArray, arrayToUpdate) {
     switch (arrayToUpdate) {
       case 'selectedTypes' : {
         const changedType = this.getUniqueElement(selectedItemsArray, this.selectedTypes)[0];
@@ -233,10 +233,12 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   updateSelectedProviders() {
     this.selectedProviders = [];
     this.selectedProvidersNames.forEach(providerName => {
-      if(this.selectedProvidersNames.includes(providerName)) {
+      if (this.selectedProvidersNames.includes(providerName)) {
         this.allProviders.filter(provider => {
-          provider.name === providerName ? this.selectedProviders.push(provider) : null ;
-        })
+          if (provider.name === providerName) {
+            this.selectedProviders.push(provider);
+          }
+        });
       }
     });
   }
@@ -246,7 +248,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 			.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive)
 			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
           dataInputFiltersConfig.children.forEach(type => {
-            if(type.text === changedType && !this.selectedProvidersNames.includes(providerName)) {
+            if (type.text === changedType && !this.selectedProvidersNames.includes(providerName)) {
               this.comboTableProviders.selectOption(providerName);
             }
           });
@@ -255,7 +257,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   }
   
   getUniqueElement(selectedItemsArray, elementArray) {
-    return Boolean(elementArray.length > selectedItemsArray.length)? elementArray.filter(provider => selectedItemsArray.indexOf(provider) < 0) : selectedItemsArray.filter(provider => elementArray.indexOf(provider) < 0);
+    return Boolean(elementArray.length > selectedItemsArray.length) ? elementArray.filter(provider => selectedItemsArray.indexOf(provider) < 0) : selectedItemsArray.filter(provider => elementArray.indexOf(provider) < 0);
   }
 
   updateSelectedTypesByProviders(selectedProviders, changedProvider) {

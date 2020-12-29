@@ -27,7 +27,7 @@ export class AnsynComboTableComponent implements ControlValueAccessor {
   @Input() buttonClass: string;
   @Input() isLine: boolean;
   @Input() contentTitle: string;
-  @Input() isFullSize: boolean
+  @Input() isFullSize: boolean;
   
 	@Input() required: boolean;
 	optionsVisible = true;
@@ -38,27 +38,27 @@ export class AnsynComboTableComponent implements ControlValueAccessor {
 
   selectOption(selected) {
 		if (this.selected.includes(selected)) {
-      const newSelectedArray = []
+      const newSelectedArray = [];
       this.selected.forEach(item => {
         if (item !== selected) {
           newSelectedArray.push(item);
         }
-      })
+      });
       this.selected = newSelectedArray;
     } else {
-        this.selected = [...this.selected, selected]
+        this.selected = [...this.selected, selected];
     }
-    this.selectedItemsArray.emit(this.selected)
+    this.selectedItemsArray.emit(this.selected);
   }
 
   selectAllOptions(allOptionsArray: any[]) {
     this.selected = allOptionsArray.slice();
-    this.selectedItemsArray.emit(this.selected)
+    this.selectedItemsArray.emit(this.selected);
   }
 
   resetSelection() {
-    this.selected =[]
-    this.selectedItemsArray.emit(this.selected)
+    this.selected = [];
+    this.selectedItemsArray.emit(this.selected);
   }
 
   close() {

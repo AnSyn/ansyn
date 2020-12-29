@@ -104,7 +104,7 @@ export abstract class BaseOverlaySourceProvider {
 					}]
 				});
 			}))
-		]
+		];
 	}
 
 	fetchMultiple(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {

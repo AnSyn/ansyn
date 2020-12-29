@@ -82,7 +82,8 @@ export {
 	SynchronizeMapsAction,
 	SetActiveCenterTriggerAction,
 	SetMapSearchBoxTriggerAction,
-	SetOverlaysFootprintActive
+	SetOverlaysFootprintActive,
+	ForceRenderMaps
 } from './actions/map.actions';
 
 export {

@@ -229,7 +229,7 @@ export class MapEffects {
 	@Effect({dispatch: false})
 	onForceMapsRender$ = this.actions$.pipe(
 		ofType(MapActionTypes.FORCE_RENDER_MAPS)
-	)
+	);
 
 
 	constructor(protected actions$: Actions,

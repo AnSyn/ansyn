@@ -5,6 +5,7 @@ import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { combineLatest, EMPTY, forkJoin, from, Observable, of, pipe } from 'rxjs';
 import {
+	ForceRenderMaps,
 	ImageryCreatedAction,
 	IMapFacadeConfig,
 	IMapState,
@@ -99,7 +100,6 @@ import {
 import { feature } from '@turf/turf';
 import { calculatePolygonWidth } from '@ansyn/imagery';
 import { CasesActionTypes } from '../../modules/menu-items/cases/actions/cases.actions';
-import { ForceRenderMaps } from 'src/app/@ansyn/map-facade/actions/map.actions';
 
 const FOOTPRINT_INSIDE_MAP_RATIO = 1;
 
@@ -334,7 +334,7 @@ export class MapAppEffects {
 	onLoadCasForceMapsRender$ = this.actions$.pipe(
 		ofType(CasesActionTypes.SELECT_CASE_SUCCESS),
 		map(() => new ForceRenderMaps())
-	)
+	);
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<IAppState>,

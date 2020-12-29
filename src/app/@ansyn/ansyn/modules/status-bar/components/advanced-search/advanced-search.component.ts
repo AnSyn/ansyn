@@ -224,13 +224,13 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         const changedProvider = this.getUniqueElement(selectedItemsArray, this.selectedProvidersNames)[0];
         this.updateSelectedTypesByProviders(selectedItemsArray, changedProvider);
         this.selectedProvidersNames = selectedItemsArray;
-        this.updateSelectedProviders();
+        this.updateSelectedProvidersByProviderNames();
         break;
       }
     }
   }
 
-  updateSelectedProviders() {
+  updateSelectedProvidersByProviderNames() {
     this.selectedProviders = [];
     this.selectedProvidersNames.forEach(providerName => {
       if (this.selectedProvidersNames.includes(providerName)) {

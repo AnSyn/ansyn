@@ -12,11 +12,11 @@ import { AnsynComboTableComponent } from '../ansyn-combo-table/ansyn-combo-table
 export class AnsynComboTableOptionComponent implements OnInit {
 
   get selected() {
-		return this._parent.selected;
-	}
-	@Input() value;
+	return this._parent.selected;
+  }
+  @Input() value;
 
-	@HostBinding('class.disabled')
+  @HostBinding('class.disabled')
   @Input() disabled = false;
   
   constructor(protected _parent: AnsynComboTableComponent, protected el: ElementRef) { }

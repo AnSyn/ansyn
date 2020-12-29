@@ -22,8 +22,6 @@ export class AnsynComboTableComponent implements ControlValueAccessor {
 	@Input() icon: string;
 	disabled: boolean;
 	@Input() selected: any[];
-	@Input() comboTableToolTipDescription: string;
-	@Input() direction: 'top' | 'bottom' = 'bottom';
   @Input() buttonClass: string;
   @Input() isLine: boolean;
   @Input() contentTitle: string;

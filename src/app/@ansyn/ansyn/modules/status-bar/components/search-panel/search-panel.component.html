@@ -1,12 +1,12 @@
 <!-- Geo filter -->
 <div class="simple-search" >
 	<div *ngIf="!advancedSearch" class="advanced-search" (click)="toggleAdvancedSearch()">
-		advanced <i class="icon-down"></i><br/>
-		search
+		<div class="advanced-search-text">{{'Advanced Search' | translate}}</div>
+		<i class="icon-down"></i><br/>
 	</div>
 
 	<div *ngIf="advancedSearch" class="advanced-search" (click)="toggleAdvancedSearch()">
-		minimize <i class="icon-up"></i><br/>
+		{{'minimize' | translate}} <i class="icon-up"></i><br/>
 	</div>
 	
 	<div class="box" id="geoPreSearch" [class.component]="componentMode">

@@ -189,7 +189,6 @@ export class MultipleOverlaysSourceProvider {
 	}
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
-		console.log(this.providers);
 		this.onDataInputFilterChange$.pipe(take(1)).subscribe();
 		const mergedSortedOverlays: Observable<IOverlaysFetchData> = forkJoin(this.selectedProviders
 			.map(s =>  s.class.fetchMultiple(fetchParams))).pipe(

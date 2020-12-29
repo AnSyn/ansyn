@@ -50,9 +50,6 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 	selectedTypes: string[] = [];
 	selectedRegistration: string[] = [];
 
-	@ViewChild('types') comboTableTypes: AnsynComboTableComponent;
-	@ViewChild('providers') comboTableProviders: AnsynComboTableComponent;
-
 	@AutoSubscription
 	onDataInputFilterChange$ = this.store.pipe(
 	select(selectAdvancedSearchParameters),
@@ -72,7 +69,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 				protected _parent: SearchPanelComponent,
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) { 
 		this.dataFilters = this.getAllDataInputFilter();
-		this.sensorTypes = this.selectAll();
+		this.sensorTypes = this.getAllSensorsTypes();
 		this.providersList = this.getAllProvidersNames();
 	}
 
@@ -122,22 +119,6 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 			}
 	}
 
-	getAllSensorsNames(): any[] {
-		const sensors: any[] = [];
-		Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
-			.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive)
-			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
-				if (sensorNamesByGroup) {
-				const typesNames = Object.keys(sensorNamesByGroup);
-				typesNames.forEach(type => {
-					sensorNamesByGroup[type].forEach(sensor => sensors.push(sensor));
-				})
-				}
-			}
-			);
-		return flattenDeep(sensors);
-	}
-
 	getAllDataInputFilter(): any[] {
 		const dataInputs = Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
 			.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive)
@@ -180,7 +161,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 		return !filter.children || filter.children.length === 0;
 	}
 
-	selectAll() {
+	getAllSensorsTypes() {
 		return flattenDeep(this.dataFilters.map(filter => this.selectAllChildren(filter)));
 	}
 
@@ -285,21 +266,24 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 	}
 
 	selectAllItems() {
-		this.comboTableTypes.selectAllOptions(this.sensorTypes);
-		this.comboTableProviders.selectAllOptions(this.providersList);
+		this.selectedProvidersNames = this.providersList;
+		this.updateSelectedProvidersByProviderNames();
+		this.selectedTypes = this.sensorTypes;
 	}
 
 	resetSelection(selectedArrayToFill) {
 		switch (selectedArrayToFill) {
 			case 'providers' :
 			case 'types': {
-			this.comboTableTypes.resetSelection();
-			this.comboTableProviders.resetSelection();
-			break;
+				this.selectedProvidersNames = [];
+				this.selectedProviders = [];
+				this.selectedTypes = [];
+				break;
 			}
 			case 'resolution' : {
-			this.minValue = 100;
-			this.maxValue = 200;
+				this.minValue = 100;
+				this.maxValue = 200;
+				break;
 			}
 		}
 	}

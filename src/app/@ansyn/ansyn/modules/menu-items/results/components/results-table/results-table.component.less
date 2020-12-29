@@ -1,6 +1,4 @@
-@import "ansyn/less/colors";
-@import 'ansyn/less/common';
-@import "ansyn/less/z-index-globals";
+@import "ansyn/less/common";
 
 @footer-height: 141px;
 @header-size: calc(~"(100vh - @{footer-height}) * 0.025");
@@ -15,10 +13,10 @@
 	position: relative;
 	width: @results-table-width;
 	display: block;
-	height: 100%;
+	height: calc(100vh - @status-bar-height);
 	overflow: hidden;
-	div.results-table {
 
+	div.results-table {
 		width: 100%;
 		color: white;
 		font-size: 13px;

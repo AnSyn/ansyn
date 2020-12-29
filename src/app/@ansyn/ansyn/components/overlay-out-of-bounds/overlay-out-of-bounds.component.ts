@@ -8,7 +8,7 @@ import { IEntryComponent } from '@ansyn/map-facade';
 	templateUrl: './overlay-out-of-bounds.component.html',
 	styleUrls: ['./overlay-out-of-bounds.component.less']
 })
-export class OverlayOutOfBoundsComponent implements OnInit, OnDestroy, IEntryComponent {
+export class OverlayOutOfBoundsComponent implements OnInit, IEntryComponent {
 	@Input() mapId: string;
 
 	constructor(protected communicatorService: ImageryCommunicatorService) {
@@ -24,9 +24,6 @@ export class OverlayOutOfBoundsComponent implements OnInit, OnDestroy, IEntryCom
 
 	ngOnInit(): void {
 		this.backToExtent();
-	}
-
-	ngOnDestroy(): void {
 	}
 
 	getType(): string {

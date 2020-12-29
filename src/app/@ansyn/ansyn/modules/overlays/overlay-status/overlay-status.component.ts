@@ -160,12 +160,13 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	@AutoSubscription
 	overlay$ = () => this.store$.pipe(
 		select(selectOverlayByMapId(this.mapId)),
-		tap(overlay => {
+		withLatestFrom( this.store$.pipe(select(selectOverlaysImageProcess)), (overlay, overlaysImageProcess) => [overlay, overlaysImageProcess[overlay?.id]]),
+		tap(([overlay, overlayImageProcess]) => {
 			if (this.isDragged) {
 				this.toggleDragged();
 			}
 			this.overlay = overlay;
-			this.onChangeOverlay();
+			this.onChangeOverlay(overlayImageProcess);
 		})
 	);
 
@@ -182,16 +183,16 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		return Boolean(this.overlay);
 	}
 
-	onChangeOverlay() {
+	onChangeOverlay(imageProcess) {
 		this.updateFavoriteStatus();
 		this.updateDraggedStatus();
-		this.resetImageProcess();
+		this.resetImageProcess(imageProcess);
 	}
 
-	resetImageProcess() {
+	resetImageProcess(imageProcess) {
 		if (this.overlay) {
 			this.isManualProcessingOpen = false;
-			this.dispatchAutoImageProcess();
+			this.dispatchAutoImageProcess(!!imageProcess?.isAuto);
 		}
 	}
 

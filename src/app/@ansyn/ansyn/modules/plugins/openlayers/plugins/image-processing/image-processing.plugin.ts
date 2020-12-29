@@ -34,8 +34,7 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 
 
 	isImageProcessActive$ = combineLatest([this.selectOverlay$, this.store$.pipe(select(selectOverlaysImageProcess))]).pipe(
-		filter(([overlay, overlaysImageProcess]: [IOverlay, any]) => Boolean(overlay)),
-		map(([overlay, overlaysImageProcess]: [IOverlay, any]) => overlaysImageProcess[overlay.id]),
+		map(([overlay, overlaysImageProcess]: [IOverlay, any]) => overlaysImageProcess && overlaysImageProcess[overlay?.id]),
 		filter(Boolean),
 		distinctUntilChanged(isEqual),
 		map( (overlayImageProcess: IOverlayImageProcess) => {

@@ -13,8 +13,9 @@
 					<i class="icon icon-arrow" [@isDescending]="header.isDescending"
 					   [class.active]="sortedBy === header.headerData"></i>
 				</div>
-			</div>
 
+				<div class="results-table-head-col favorite"></div>
+			</div>
 		</div>
 	</div>
 
@@ -33,10 +34,6 @@
 			<div class="results-table-body-row-data">
 				<hr>
 
-				<div class="results-table-body-col overlay-favorite">
-					<i *ngIf="overlay.favorite" class="icon icon-favorite-full"></i>
-				</div>
-
 				<div class="results-table-body-col overlay-time">
 					{{overlay.date | ansynDate}}
 				</div>
@@ -51,6 +48,10 @@
 
 				<div class="results-table-body-col overlay-resolution">
 					{{overlay.resolution}} {{ 'cm' | translate}}
+				</div>
+
+				<div class="results-table-body-col overlay-favorite">
+					<i *ngIf="overlay.favorite" class="icon icon-favorite-full"></i>
 				</div>
 
 			</div>

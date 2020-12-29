@@ -27,27 +27,27 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 	minValue = 100;
 	maxValue = 200;
 	options: Options = {
-	floor: 100,
-	ceil: 200,
-	translate: (value: number): string => {
-		return value + ' mm ';
-	},
-	getPointerColor: (value: number): string => {
-		return 'gray';
-	},
-	getSelectionBarColor: (value: number): string => {
-		return 'gray';
-	}
+		floor: 100,
+		ceil: 200,
+		translate: (value: number): string => {
+			return value + ' mm ';
+		},
+		getPointerColor: (value: number): string => {
+			return 'gray';
+		},
+		getSelectionBarColor: (value: number): string => {
+			return 'gray';
+		}
 	};
 	providersList: string[];
 	sensorTypes: string[];
 	dataFilters: any[];
-	isGeoRegistered: string[] = Object.values(GeoRegisteration)
+	isGeoRegistered: string[] = Object.values(GeoRegisteration);
 
-	allProviders: IProviderData[] = [];
-	selectedProviders: IProviderData[] = [];
 	selectedProvidersNames: string[] = [];
 	selectedTypes: string[] = [];
+	allProviders: IProviderData[] = [];
+	selectedProviders: IProviderData[] = [];
 	selectedRegistration: string[] = [];
 
 	@AutoSubscription
@@ -116,7 +116,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 			resolution,
 			dataInputFilters,
 			providers: this.selectedProviders
-			}
+		}
 	}
 
 	getAllDataInputFilter(): any[] {

@@ -19,19 +19,6 @@ export class AnsynComboTableOptionComponent implements OnInit {
 	@HostBinding('class.disabled')
   @Input() disabled = false;
   
-  @AutoSubscription
-	selectedChanged$ = this._parent.injector.get(NgControl).valueChanges.pipe(
-		debounceTime(1500),
-		tap(selected => {
-			if (selected) {
-				if (selected === this.value) {
-					this._parent.renderSelected = this.el.nativeElement.innerHTML;
-				}
-			} else {
-				this._parent.renderSelected = '';
-			}
-    }));
-    
   constructor(protected _parent: AnsynComboTableComponent, protected el: ElementRef) { }
 
   @HostListener('click') onClick() {

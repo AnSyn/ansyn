@@ -26,8 +26,6 @@ export class SearchOptionsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
   }
-
-  
   
   toggleSearchPannel() {
     this.isExpand = !this.isExpand;

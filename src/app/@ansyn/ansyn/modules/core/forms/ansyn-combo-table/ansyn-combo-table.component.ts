@@ -1,7 +1,6 @@
 import { Component, ElementRef, EventEmitter, forwardRef, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
-import { IStatusBarState } from '../../../status-bar/reducers/status-bar.reducer';
 
 @Component({
   selector: 'ansyn-combo-table',
@@ -25,28 +24,17 @@ export class AnsynComboTableComponent implements ControlValueAccessor {
 	@Input() selected: any[];
 	@Input() comboTableToolTipDescription: string;
 	@Input() direction: 'top' | 'bottom' = 'bottom';
-	@Input() withArrow = true;
-	@Input() alwaysChange: boolean;
   @Input() buttonClass: string;
   @Input() isLine: boolean;
   @Input() contentTitle: string;
-  @Input() isBig: boolean
+  @Input() isFullSize: boolean
   
-	@Input() placeholder: string;
 	@Input() required: boolean;
 	optionsVisible = true;
-	renderSelected = '';
   
   @Output() selectedItemsArray = new EventEmitter<any[]>();
   
   constructor(public injector: Injector) { }
-
-  toggleShow() {
-		this.optionsVisible = !this.optionsVisible;
-		if (this.optionsVisible) {
-			setTimeout(() => this.optionsContainer && this.optionsContainer.nativeElement.focus(), 0);
-		}
-  }
 
   selectOption(selected) {
 		if (this.selected.includes(selected)) {

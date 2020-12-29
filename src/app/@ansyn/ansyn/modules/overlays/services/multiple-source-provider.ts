@@ -23,7 +23,7 @@ import {
 } from '../../core/models/multiple-overlays-source-config';
 import { IOverlay, IOverlaysFetchData } from '../models/overlay.model';
 import { select, Store } from '@ngrx/store';
-import { selectAdvancedSearchParameters, selectGeoFilterStatus } from '../../status-bar/reducers/status-bar.reducer';
+import { selectAdvancedSearchParameters } from '../../status-bar/reducers/status-bar.reducer';
 import { IAdvancedSearchParameter, IProviderData, IStatusBarConfig } from '../../status-bar/models/statusBar-config.model';
 import { StatusBarConfig } from '../../status-bar/models/statusBar.config';
 
@@ -90,9 +90,8 @@ export class MultipleOverlaysSourceProvider {
 	}
 
 	private prepareWhitelist() {
-		let type;
 		const mapProviderConfig = (provider) => {
-			type = provider.sourceType;
+			const type = provider.sourceType;
 			let config = this.multipleOverlaysSourceConfig.indexProviders[type];
 			if (!config) {
 				console.warn(`Missing config for provider ${ type }, using defaultProvider config`);
@@ -101,9 +100,7 @@ export class MultipleOverlaysSourceProvider {
 			return [provider, config];
 		};
 
-		const filterWhiteList = ([provider, { inActive }]: [BaseOverlaySourceProvider, IOverlaysSourceProvider]) => !inActive && this.providers.map(providerClass => {
-			providerClass.class.constructor.name === provider.constructor.name
-		})
+		const filterWhiteList = ([provider, { inActive }]: [BaseOverlaySourceProvider, IOverlaysSourceProvider]) => !inActive;
 
 		Object.values(this.overlaysSources).map(mapProviderConfig).filter(filterWhiteList).forEach(([provider, config]) => {
 

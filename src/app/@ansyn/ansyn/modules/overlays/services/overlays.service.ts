@@ -94,21 +94,21 @@ export class OverlaysService {
 
 	search(params: IOverlaysCriteria): Observable<IOverlaysFetchData> {
 		let feature = params.region.geometry;
-			return this._overlaySourceProvider.fetch({
-				dataInputFilters: Boolean(params.dataInputFilters) ? params.dataInputFilters.filters : null,
-				limit: this.config.limit,
-				region: feature,
-				timeRange: <any>{
-					start: params.time.from,
-					end: params.time.to
-				},
-				customSensorToFilter: params.dataInputFilters.customFiltersSensor,
-				sensors: Boolean(params.sensors) ? params.sensors : null,
-				registeration: Boolean(params.registeration) ? params.registeration : null,
-				resolution: Boolean(params.resolution) ? params.resolution : null,
-				types: Boolean(params.types) ? params.types : null
-			});
-		}
+		return this._overlaySourceProvider.fetch({
+			dataInputFilters: Boolean(params.dataInputFilters) ? params.dataInputFilters.filters : null,
+			limit: this.config.limit,
+			region: feature,
+			timeRange: <any>{
+				start: params.time.from,
+				end: params.time.to
+			},
+			customSensorToFilter: params.dataInputFilters.customFiltersSensor,
+			sensors: Boolean(params.sensors) ? params.sensors : null,
+			registeration: Boolean(params.registeration) ? params.registeration : null,
+			resolution: Boolean(params.resolution) ? params.resolution : null,
+			types: Boolean(params.types) ? params.types : null
+		});
+	}
 
 	getOverlayById(id: string, sourceType: string): Observable<IOverlay> {
 		return this._overlaySourceProvider.getById(id, sourceType);

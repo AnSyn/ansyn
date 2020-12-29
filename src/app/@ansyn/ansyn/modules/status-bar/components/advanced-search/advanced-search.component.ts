@@ -30,7 +30,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     floor: 100,
     ceil: 200,
     translate: (value: number): string => {
-      return value + ' mm';
+      return value + ' mm ';
     },
     getPointerColor: (value: number): string => {
       return 'gray';
@@ -41,7 +41,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   };
   providersList: string[];
   sensorTypes: string[];
-  dataFilters: string[];
+  dataFilters: any[];
   isGeoRegistered: string[] = Object.values(GeoRegisteration)
   
   allProviders: IProviderData[] = [];
@@ -79,7 +79,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   }
   getAllProvidersNames(): string[] {
     const provider: string[] = [];
-    this.getAllDataInputFilter().forEach(element => {
+    this.dataFilters.forEach(element => {
       provider.push(element.value);
     });
     provider.push('happy')
@@ -212,7 +212,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     switch (arrayToUpdate) {
       case 'selectedTypes' : {
         const changedType = this.getUniqueElement(selectedItemsArray, this.selectedTypes)[0];
-        this.updateSelectedProvidersByType(selectedItemsArray, changedType);
+        this.updateSelectedProvidersByType(changedType);
         this.selectedTypes = selectedItemsArray;
         break;
       }
@@ -241,7 +241,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateSelectedProvidersByType(selectedItemsArray: string[], changedType: string) {
+  updateSelectedProvidersByType(changedType: string) {
     Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
 			.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive)
 			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
@@ -258,17 +258,17 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     return Boolean(elementArray.length > selectedItemsArray.length)? elementArray.filter(provider => selectedItemsArray.indexOf(provider) < 0) : selectedItemsArray.filter(provider => elementArray.indexOf(provider) < 0);
   }
 
-  updateSelectedTypesByProviders(selectedItemsArray, changedProvider) {
+  updateSelectedTypesByProviders(selectedProviders, changedProvider) {
     const typesToActivate = [];
     Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
-			.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => providerName === changedProvider)
+			.filter(([providerName]: [string, IOverlaysSourceProvider]) => providerName === changedProvider)
 			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
             typesToActivate.push(...dataInputFiltersConfig.children);
 				}
       );
     
-      if (Boolean(selectedItemsArray.includes(changedProvider))) {
-        this.selectedProvidersNames = selectedItemsArray;
+      if (Boolean(selectedProviders.includes(changedProvider))) {
+        this.selectedProvidersNames = selectedProviders;
         typesToActivate.forEach(type => {
           if (!this.selectedTypes.includes(type.text)) {
             this.comboTableTypes.selectOption(type.text);

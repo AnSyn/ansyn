@@ -148,6 +148,7 @@ export class TimePickerContainerComponent implements OnInit, OnDestroy {
 					from: this.timePickerInputFrom.nativeElement.textContent,
 					to: this.timePickerInputTo.nativeElement.textContent
 				}));
+				
 				if (!this.supportRangeDates()) {
 					this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.notSupportRangeDates }));
 				} else if (!this.setTimeCriteria()) {

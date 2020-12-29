@@ -249,7 +249,8 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
           dataInputFiltersConfig.children.forEach(type => {
             if (type.text === changedType && !this.selectedProvidersNames.includes(providerName)) {
-              this.comboTableProviders.selectOption(providerName);
+              this.selectedProvidersNames.push(providerName);
+              this.updateSelectedProvidersByProviderNames();
             }
           });
 				}
@@ -273,13 +274,13 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.selectedProvidersNames = selectedProviders;
         typesToActivate.forEach(type => {
           if (!this.selectedTypes.includes(type.text)) {
-            this.comboTableTypes.selectOption(type.text);
+            this.selectedTypes.push(type.text);
           }
         });
       } else {
         typesToActivate.forEach(type => {
           if (this.selectedTypes.includes(type.text)) {
-            this.comboTableTypes.selectOption(type.text);
+            this.selectedTypes = this.selectedTypes.filter(selected => selected !== type.text);
           }
         });
       }

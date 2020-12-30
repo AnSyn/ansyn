@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ICasesState, selectCaseSaved, selectShowCasesTable } from '../../reducers/cases.reducer';
 import { select, Store } from '@ngrx/store';
 import { OpenModalAction, ShowCasesTableAction } from '../../actions/cases.actions';
-import { distinctUntilChanged, tap, map } from 'rxjs/operators';
+import { distinctUntilChanged, tap, map, delay } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectEnableOnlyFavorites, selectShowOnlyFavorites } from '../../../../filters/reducer/filters.reducer';
 import { UpdateFacetsAction } from '../../../../filters/actions/filters.actions';
@@ -26,7 +26,10 @@ export class CasesToolsComponent implements OnInit, OnDestroy {
 		map((enable) => !enable)
 	);
 
-	currentSaveCase$ = this.store.pipe(select(selectCaseSaved));
+	currentSaveCase$ = this.store.pipe(
+		select(selectCaseSaved),
+		delay(0)
+	);
 
 	@AutoSubscription
 	onlyFavoriteSelected$ = this.store.pipe(

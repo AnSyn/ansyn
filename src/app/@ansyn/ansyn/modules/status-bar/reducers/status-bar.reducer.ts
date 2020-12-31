@@ -45,7 +45,7 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 		case StatusBarActionsTypes.UPDATE_ADVANCED_SEARCH_PARAM: {
 			const { payload } = action;
 			if (payload) {
-				return {...state, advancedSearchParameter: payload.advancedSearchParameter };
+				return {...state, advancedSearchParameter: payload };
 			} else {
 				return state;
 			}

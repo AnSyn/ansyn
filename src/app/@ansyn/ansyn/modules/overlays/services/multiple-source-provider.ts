@@ -40,7 +40,6 @@ export class MultipleOverlaysSourceProvider {
 		tap((searchOptions: IAdvancedSearchParameter) => {
 			this.providers = [];
 			this.activeProviders(searchOptions.providers);
-			// this.updateSelectedProviders(searchOptions.providers);
 		})
 	);
 

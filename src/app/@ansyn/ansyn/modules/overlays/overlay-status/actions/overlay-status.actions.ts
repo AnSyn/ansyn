@@ -31,7 +31,8 @@ export enum OverlayStatusActionsTypes {
 	SET_OVERLAY_SCANNED_AREA_DATA = 'SET_OVERLAY_SCANNED_AREA_DATA',
 	SET_OVERLAYS_SCANNED_AREA_DATA = 'SET_OVERLAYS_SCANNED_AREA_DATA',
 	ACTIVATE_SCANNED_AREA = 'ACTIVATE_SCANNED_AREA',
-	UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS = 'UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS'
+	UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS = 'UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS',
+	BACK_TO_EXTENT = 'BACK_TO_EXTENT'
 }
 
 
@@ -61,6 +62,13 @@ export class UpdateOverlaysManualProcessArgs implements Action {
 
 export class ActivateScannedAreaAction implements Action {
 	type: string = OverlayStatusActionsTypes.ACTIVATE_SCANNED_AREA;
+
+	constructor() {
+	}
+}
+
+export class BackToExtentAction implements Action {
+	type: string = OverlayStatusActionsTypes.BACK_TO_EXTENT;
 
 	constructor() {
 	}

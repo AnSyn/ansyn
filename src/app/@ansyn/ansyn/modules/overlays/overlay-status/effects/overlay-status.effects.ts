@@ -31,7 +31,7 @@ import {
 	SetOverlayScannedAreaDataAction,
 	ToggleDraggedModeAction,
 	EnableImageProcessing,
-	DisableImageProcessing, AddAlertMsg
+	DisableImageProcessing
 } from '../actions/overlay-status.actions';
 import {
 	SetAnnotationMode,
@@ -53,7 +53,6 @@ import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from '../config/overlay-status-config';
 import { isEqual } from "lodash";
 import { CasesActionTypes } from '../../../menu-items/cases/actions/cases.actions';
-import { AlertMsgTypesEnum } from "../../../alerts/model";
 import { OverlayOutOfBoundsService } from "../../../../services/overlay-out-of-bounds/overlay-out-of-bounds.service";
 
 @Injectable()
@@ -110,8 +109,7 @@ export class OverlayStatusEffects {
 
 	@Effect({ dispatch: false })
 	onOverlayOutOfBounds: Observable<any> = this.actions$.pipe(
-		ofType(OverlayStatusActionsTypes.ADD_ALERT_MSG),
-		filter(({ payload }: AddAlertMsg) => payload.key === AlertMsgTypesEnum.OverlaysOutOfBounds),
+		ofType(OverlayStatusActionsTypes.BACK_TO_EXTENT),
 		tap(() => this.outOfBoundsService.backToExtent()));
 
 	@Effect()

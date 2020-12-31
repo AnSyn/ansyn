@@ -40,12 +40,14 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 	providersNamesList: string[];
 	sensorTypes: string[];
 	isGeoRegistered: string[] = Object.values(GeoRegisteration);
+	sensorsList: string[];
 
 	selectedProvidersNames: string[] = [];
 	selectedTypes: string[] = [];
 	allProviders: IProviderData[] = [];
 	selectedProviders: IProviderData[] = [];
 	selectedRegistration: string[] = [];
+	selectedSensors: string[] = [];
 
 	@AutoSubscription
 	onDataInputFilterChange$ = this.store.pipe(
@@ -57,6 +59,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 			this.selectedRegistration = searchOptions.registeration;
 			this.minValue = searchOptions.resolution.lowValue;
 			this.maxValue = searchOptions.resolution.highValue;
+			this.selectedSensors = searchOptions.sensors;
 			this.selectedProvidersNames = this.selectedProviders.map(provider => provider.name);
 		}}));
 
@@ -105,7 +108,8 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 			types: this.selectedTypes,
 			registeration: this.selectedRegistration,
 			resolution,
-			providers: this.selectedProviders
+			providers: this.selectedProviders,
+			sensors: this.selectedSensors
 		}
 	}
 

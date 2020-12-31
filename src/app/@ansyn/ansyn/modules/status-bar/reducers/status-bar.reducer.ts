@@ -25,7 +25,8 @@ export const StatusBarInitialState: IStatusBarState = {
 		resolution: {
 			lowValue: 0,
 			highValue: 0
-		}
+		},
+		sensors: []
 	}
 };
 

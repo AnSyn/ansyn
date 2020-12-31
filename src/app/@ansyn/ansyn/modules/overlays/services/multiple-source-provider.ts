@@ -38,7 +38,6 @@ export class MultipleOverlaysSourceProvider {
 	onDataInputFilterChange$ = this.store.pipe(
 		select(selectAdvancedSearchParameters),
 		tap((searchOptions: IAdvancedSearchParameter) => {
-			this.providers = [];
 			this.activeProviders(searchOptions.providers);
 		})
 	);
@@ -48,8 +47,6 @@ export class MultipleOverlaysSourceProvider {
 				protected store: Store<any>,
 				@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				@Inject(MultipleOverlaysSource) public overlaysSources: IMultipleOverlaysSource) {
-		this.providers = [];
-		this.selectedProviders = [];
 	}
 
 	private coverageToFeature(coordinates: number[][][]): Feature<Polygon> {
@@ -90,6 +87,8 @@ export class MultipleOverlaysSourceProvider {
 	};
 
 	private activeProviders(providersFromState) {
+		this.providers = [];
+
 		const filterWhiteList = ([provider, { inActive }]: [BaseOverlaySourceProvider, IOverlaysSourceProvider]) => !inActive;
 
 		Object.values(this.overlaysSources).map(provider => this.mapProviderConfig(provider)).filter(filterWhiteList).forEach(([provider, config]) => {

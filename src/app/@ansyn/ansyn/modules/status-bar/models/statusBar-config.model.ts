@@ -33,6 +33,7 @@ export interface IAdvancedSearchParameter {
 	registeration?: string[];
 	providers?: IProviderData[];
 	resolution?: IResolutionRange;
+	sensors?: string[];
 }
 
 export interface IStatusBarConfig {

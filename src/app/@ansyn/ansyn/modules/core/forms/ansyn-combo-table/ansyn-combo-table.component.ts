@@ -28,7 +28,6 @@ import { noop } from 'rxjs';
 	@Input() isFullSize: boolean;
 
 	@Input() required: boolean;
-	optionsVisible = true;
 
 	@Output() selectedItemsArray = new EventEmitter<any[]>();
 
@@ -36,13 +35,7 @@ import { noop } from 'rxjs';
 
 	selectOption(selected) {
 	if (this.selected.includes(selected)) {
-		const newSelectedArray = [];
-		this.selected.forEach(item => {
-		if (item !== selected) {
-			newSelectedArray.push(item);
-		}
-		});
-		this.selected = newSelectedArray;
+		this.selected = this.selected.filter(selectedButton => selectedButton !== selected);
 	} else {
 		this.selected = [...this.selected, selected];
 	}
@@ -57,10 +50,6 @@ import { noop } from 'rxjs';
 	resetSelection() {
 	this.selected = [];
 	this.selectedItemsArray.emit(this.selected);
-	}
-
-	close() {
-	this.optionsVisible = false;
 	}
 
 	registerOnChange(fn: any): void {

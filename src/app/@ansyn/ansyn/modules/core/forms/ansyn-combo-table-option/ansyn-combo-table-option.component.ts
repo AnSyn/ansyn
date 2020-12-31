@@ -1,7 +1,4 @@
 import { Component, ElementRef, HostBinding, HostListener, Input, OnInit } from '@angular/core';
-import { NgControl } from '@angular/forms';
-import { AutoSubscription } from 'auto-subscriptions';
-import { debounceTime, tap } from 'rxjs/operators';
 import { AnsynComboTableComponent } from '../ansyn-combo-table/ansyn-combo-table.component';
 
 @Component({

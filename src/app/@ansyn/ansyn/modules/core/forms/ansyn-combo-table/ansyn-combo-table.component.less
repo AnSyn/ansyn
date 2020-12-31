@@ -14,35 +14,26 @@
 	.combo-container {
 		position: relative;
 		
-        .item2 {
+        .line {
             width: 160px !important;
 		  }
-		.big-combo {
+		.full-size {
 			height: 135px !important;
 		}
 
 		.options-container {
-			width: 405px;
+			width: 420px;
 			background: #3e3e3e;
-            z-index: 1;
+            z-index: @z-index-combo-table-option;
             flex-wrap: wrap;
             display: flex;
             border-radius: 10px;
             height: 95px;
             overflow-y: auto;
 			overflow-x: hidden;
-			
-			&.show {
-				visibility: visible;
-			}
-
-			&:focus {
-				visibility: visible;
-				outline: none;
-			}
-
 			top: 100%;
 			box-sizing: border-box;
+			direction: initial;
 		}
 
 		&.transparent {

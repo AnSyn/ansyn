@@ -39,5 +39,5 @@ export interface IStatusBarConfig {
 	toolTips: IToolTipsConfig,
 	filters: IFilterStatusBar
 	locale: string
-	advancedSearchParameters: IAdvancedSearchParameter
+	defaultAdvancedSearchParameters: IAdvancedSearchParameter
 }

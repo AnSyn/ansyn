@@ -1,7 +1,7 @@
 import { Component, HostBinding, Inject, OnDestroy, OnInit } from '@angular/core';
 import * as momentNs from 'moment';
 import { IStatusBarConfig } from '../../models/statusBar-config.model';
-import { IStatusBarState, selectGeoFilterActive, selectGeoFilterType } from '../../reducers/status-bar.reducer';
+import { IStatusBarState, selectGeoFilterActive, selectGeoFilterStatus, selectGeoFilterType } from '../../reducers/status-bar.reducer';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs';

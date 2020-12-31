@@ -1,18 +1,19 @@
 @import 'ansyn/less/colors';
+@import "ansyn/less/z-index-globals";
 
 :host {
-	/* temporary */
 	position: relative;
-    z-index: 1;
+    z-index: @z-index-combo-table-option;
     display: flex;
 	width: 98px;
 	height: 46px;
-
+	padding-left: 5px;
+	
     .Path-2 {
         width: 1px;
         height: 28px;
         margin: 5px;
-        border: solid 1px rgba(151, 151, 151, 0.55);
+		border: solid 1px rgba(151, 151, 151, 0.55);
       }
       
 

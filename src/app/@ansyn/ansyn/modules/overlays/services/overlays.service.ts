@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { combineLatest, forkJoin, Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { IOverlayDropSources, ITimelineRange, selectOverlaysMap } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
 import { findKey } from 'lodash';
@@ -15,7 +15,6 @@ import {
 	MultipleOverlaysSourceConfig
 } from '../../core/models/multiple-overlays-source-config';
 import { IDataInputFilterValue } from '../../menu-items/cases/models/case.model';
-import { mergeOverlaysFetchData } from '../models/base-overlay-source-provider.model';
 
 export const OverlaysConfig = 'overlaysConfig';
 

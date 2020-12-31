@@ -1,9 +1,6 @@
-<div  class="combo-container" 
-	 [class.active]="optionsVisible"
->
+<div  class="combo-container" >
 
-	<div [class.item2]="isLine" [class.big-combo]="isFullSize" class="options-container scrolled"
-         #optionsContainer [style.visibility]="optionsVisible ? 'visible' : 'hidden'">
+	<div [class.line]="isLine" [class.full-size]="isFullSize" class="options-container scrolled">
 		<ng-content></ng-content>
 	</div>
 </div>

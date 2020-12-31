@@ -1,13 +1,12 @@
-<div class="box item1 " id="dataInputsPreSearch">
+<div class="box types " id="dataInputsPreSearch">
     <div class="title-grid">
-        <div class="item1-title">
+        <div class="buttons-title">
             <div class="select-all" (click)="selectAllItems()">{{'select all' | translate}}</div>
             <div class="reset" (click)="resetSelection('types')"><i class="icon-undo"></i></div>
         </div>
-        <div class="title item2-title">{{'Type' | translate}}</div>
+        <div class="title text-title">{{'Type' | translate}}</div>
     </div>
     <ansyn-combo-table
-    buttonClass="display-button"
     [isLine]="false"
     [isFullSize]="false"
     [selected]="selectedTypes"
@@ -23,13 +22,12 @@
 
 </div>
 
-<div class="box item2 dataInputsPreSearch">
+<div class="box registration dataInputsPreSearch">
     <div class="title-grid">
-        <div class="title item2-title">{{'Geo Registration' | translate}}</div>
+        <div class="title text-title">{{'Geo Registration' | translate}}</div>
     </div>
 
     <ansyn-combo-table
-    buttonClass="display-button"
     [isLine]="true"
     [isFullSize]="false"
     [selected]="selectedRegistration"
@@ -43,17 +41,16 @@
     </ansyn-combo-table>
 </div>
 
-<div class="box item3 dataInputsPreSearch">
+<div class="box providers dataInputsPreSearch">
     <div class="title-grid">
-        <div class="item1-title">
+        <div class="buttons-title">
             <div class="select-all" (click)="selectAllItems()">{{'select all' | translate}}</div>
             <div class="reset" (click)="resetSelection('providers')"><i class="icon-undo"></i></div>
         </div>
-        <div class="title item2-title">{{'Providers' | translate}}</div>
+        <div class="title text-title">{{'Providers' | translate}}</div>
     </div>
 
     <ansyn-combo-table
-    buttonClass="display-button"
     [isLine]="false"
     [selected]="selectedProvidersNames"
     [isFullSize]="true"
@@ -62,23 +59,23 @@
     (selectedItemsArray)="updateSelectedArray($event,'selectedProviders')"
     #providers
     >
-        <ansyn-combo-table-option *ngFor="let type of providersList" [value]="type">
+        <ansyn-combo-table-option *ngFor="let type of providersNamesList" [value]="type">
         </ansyn-combo-table-option>
     </ansyn-combo-table>
 </div>
 
-<div class="box item4 dataInputsPreSearch">
+<div class="box resolution dataInputsPreSearch">
     <div class="title-grid">
         <div class="reset" (click)="resetSelection('resolution')"><i class="icon-undo"></i></div>
-        <div class="title item2-title">{{'Resolution' | translate}}</div>
+        <div class="title text-title">{{'Resolution' | translate}}</div>
     </div>
     
     <div class="slider">
-        <ngx-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="options" onchange="getSliderValue($event)" #resolution></ngx-slider>
+        <ngx-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="sliderOptions" onchange="getSliderValue($event)" #resolution></ngx-slider>
     </div>
 </div>
 
-<div class="search-icon item5"
+<div class="search-icon search-button"
     (click)="search()">
     <i class="fa fa-search"></i>
 </div>

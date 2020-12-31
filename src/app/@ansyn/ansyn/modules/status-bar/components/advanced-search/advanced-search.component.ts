@@ -6,7 +6,6 @@ import { IMultipleOverlaysSourceConfig, IOverlaysSourceProvider, MultipleOverlay
 import { Options } from '@angular-slider/ngx-slider'
 import { GeoRegisteration, IResolutionRange } from '../../../overlays/models/overlay.model';
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
-import { AnsynComboTableComponent } from '../../../core/forms/ansyn-combo-table/ansyn-combo-table.component';
 import { SearchPanelComponent } from '../search-panel/search-panel.component';
 import { UpdateAdvancedSearchParamAction } from '../../actions/status-bar.actions';
 import { selectAdvancedSearchParameters } from '../../reducers/status-bar.reducer';
@@ -26,7 +25,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 
 	minValue = 100;
 	maxValue = 200;
-	options: Options = {
+	sliderOptions: Options = {
 		floor: 100,
 		ceil: 200,
 		translate: (value: number): string => {
@@ -39,7 +38,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 			return 'gray';
 		}
 	};
-	providersList: string[];
+	providersNamesList: string[];
 	sensorTypes: string[];
 	dataFilters: any[];
 	isGeoRegistered: string[] = Object.values(GeoRegisteration);
@@ -60,7 +59,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 			this.selectedRegistration = searchOptions.registeration;
 			this.minValue = searchOptions.resolution.lowValue;
 			this.maxValue = searchOptions.resolution.highValue;
-			this.selectedProviders.forEach(provider => this.selectedProvidersNames.push(provider.name));
+			this.selectedProvidersNames = this.selectedProviders.map(provider => provider.name);
 		}}));
 
 	constructor(protected store: Store<any>,
@@ -70,7 +69,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) { 
 		this.dataFilters = this.getAllDataInputFilter();
 		this.sensorTypes = this.getAllSensorsTypes();
-		this.providersList = this.getAllProvidersNames();
+		this.providersNamesList = this.getAllProvidersNames();
 	}
 
 	getAllProvidersNames(): string[] {
@@ -100,21 +99,16 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 		this.store.dispatch(new UpdateAdvancedSearchParamAction({advancedSearchParameter: this.getCurrentAdvancedSearchParameters()}))
 	}
 
-	getCurrentAdvancedSearchParameters() {
+	getCurrentAdvancedSearchParameters(): IAdvancedSearchParameter {
 		const resolution: IResolutionRange = {
 			lowValue: this.minValue,
 			highValue: this.maxValue
-		}
-
-		const dataInputFilters: ICaseDataInputFiltersState = {
-			filters: this.getTypesToFilter()
 		}
 
 		return  {
 			types: this.selectedTypes,
 			registeration: this.selectedRegistration,
 			resolution,
-			dataInputFilters,
 			providers: this.selectedProviders
 		}
 	}
@@ -166,7 +160,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 	}
 
 	ngOnInit(): void {
-		this.allProviders = this.statusBarConfig.advancedSearchParameters.providers;
+		this.allProviders = this.statusBarConfig.defaultAdvancedSearchParameters.providers;
 	}
 
 	getTypesToFilter(): IDataInputFilterValue[] {
@@ -189,6 +183,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 	}
 
 	updateSelectedArray(selectedItemsArray, arrayToUpdate) {
+		// this[`selected${arrayToUpdate}`]
 		switch (arrayToUpdate) {
 			case 'selectedTypes' : {
 				const changedType = this.getUniqueElement(selectedItemsArray, this.selectedTypes)[0];
@@ -212,13 +207,9 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 
 	updateSelectedProvidersByProviderNames() {
 		this.selectedProviders = [];
-		this.selectedProvidersNames.forEach(providerName => {
+		this.selectedProvidersNames.map(providerName => {
 			if (this.selectedProvidersNames.includes(providerName)) {
-			this.allProviders.filter(provider => {
-				if (provider.name === providerName) {
-				this.selectedProviders.push(provider);
-				}
-			});
+				this.selectedProviders = this.allProviders.filter(provider => provider.name === providerName);
 			}
 		});
 	}
@@ -248,25 +239,26 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
 				typesToActivate.push(...dataInputFiltersConfig.children);
 		});
-	
+		
+		this.selectedTypes = this.selectedTypes.slice();
 		if (Boolean(selectedProviders.includes(changedProvider))) {
 		this.selectedProvidersNames = selectedProviders;
 		typesToActivate.forEach(type => {
 			if (!this.selectedTypes.includes(type.text)) {
-			this.selectedTypes.push(type.text);
+				this.selectedTypes.push(type.text);
 			}
 		});
 		} else {
 		typesToActivate.forEach(type => {
 			if (this.selectedTypes.includes(type.text)) {
-			this.selectedTypes = this.selectedTypes.filter(selected => selected !== type.text);
+				this.selectedTypes = this.selectedTypes.filter(selected => selected !== type.text);
 			}
 		});
 		}
 	}
 
 	selectAllItems() {
-		this.selectedProvidersNames = this.providersList;
+		this.selectedProvidersNames = this.providersNamesList;
 		this.updateSelectedProvidersByProviderNames();
 		this.selectedTypes = this.sensorTypes;
 	}

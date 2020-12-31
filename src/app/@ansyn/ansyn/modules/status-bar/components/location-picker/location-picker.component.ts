@@ -23,9 +23,7 @@ export class LocationPickerComponent implements OnInit, OnDestroy {
 
 	change(type) {
 		this.store$.dispatch(new UpdateGeoFilterStatus({ type }));
-		if (type === 'ScreenView') {
-			this._parent.close();
-		}
+		this._parent.close();
 	}
 
 	ngOnInit() {

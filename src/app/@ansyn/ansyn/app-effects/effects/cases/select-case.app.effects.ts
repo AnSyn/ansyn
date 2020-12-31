@@ -46,7 +46,7 @@ export class SelectCaseAppEffects {
 	selectCaseActions(payload: ICase, noInitialSearch: boolean): Action[] {
 		const { state, autoSave } = payload;
 		// status-bar
-		const { overlaysManualProcessArgs, overlaysTranslationData, overlaysScannedAreaData, providers } = state;
+		const { overlaysManualProcessArgs, overlaysTranslationData, overlaysScannedAreaData } = state;
 		// map
 		const { data } = state.maps;
 
@@ -79,11 +79,12 @@ export class SelectCaseAppEffects {
 		// filters
 		const { facets } = state;
 
+		const advancedSearchParameters = state.advancedSearchParameters ? state.advancedSearchParameters : this.statusBarConfig.defaultAdvancedSearchParameters;
 		const selectCaseAction = [
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),
 			new SetActiveMapId(state.maps.activeMapId),
 			new SetLayoutAction(<any>layout),
-			new SetOverlaysCriteriaAction({ time, region, dataInputFilters, providers }, { noInitialSearch }),
+			new SetOverlaysCriteriaAction({ time, region, dataInputFilters, providers: advancedSearchParameters.providers }, { noInitialSearch }),
 			new UpdateGeoFilterStatus({ active: false, type: region.properties.searchMode }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this)) }),
@@ -97,7 +98,7 @@ export class SelectCaseAppEffects {
 			new SetAnnotationMode(null),
 			new SetMeasureDistanceToolState(false),
 			new SelectCaseSuccessAction(payload),
-			new UpdateAdvancedSearchParamAction(this.statusBarConfig.defaultAdvancedSearchParameters)
+			new UpdateAdvancedSearchParamAction(advancedSearchParameters)
 		];
 
 		return selectCaseAction;

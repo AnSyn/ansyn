@@ -190,7 +190,7 @@ export class MultipleOverlaysSourceProvider {
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		this.onDataInputFilterChange$.pipe(take(1)).subscribe();
 		const mergedSortedOverlays: Observable<IOverlaysFetchData> = forkJoin(this.selectedProviders
-			.map(s =>  s.class.fetchMultiple(fetchParams))).pipe(
+			.map(selctedProvider =>  selctedProvider.class.fetchMultiple(fetchParams))).pipe(
 			map(overlays => {
 				const allFailed = overlays.every(overlay => isFaulty(overlay));
 				const errors = mergeErrors(overlays);

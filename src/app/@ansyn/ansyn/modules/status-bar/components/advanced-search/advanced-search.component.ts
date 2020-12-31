@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { flattenDeep } from 'lodash';
@@ -12,7 +12,6 @@ import { selectAdvancedSearchParameters } from '../../reducers/status-bar.reduce
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
 import { IAdvancedSearchParameter, IProviderData, IStatusBarConfig } from '../../models/statusBar-config.model';
-import { ICaseDataInputFiltersState, IDataInputFilterValue } from '../../../menu-items/cases/models/case.model';
 import { StatusBarConfig } from '../../models/statusBar.config';
 
 @Component({
@@ -40,7 +39,6 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 	};
 	providersNamesList: string[];
 	sensorTypes: string[];
-	dataFilters: any[];
 	isGeoRegistered: string[] = Object.values(GeoRegisteration);
 
 	selectedProvidersNames: string[] = [];
@@ -67,32 +65,30 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 				private translate: TranslateService,
 				protected _parent: SearchPanelComponent,
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) { 
-		this.dataFilters = this.getAllDataInputFilter();
 		this.sensorTypes = this.getAllSensorsTypes();
 		this.providersNamesList = this.getAllProvidersNames();
 	}
 
 	getAllProvidersNames(): string[] {
-		const provider: string[] = [];
-		this.dataFilters.forEach(element => {
-			provider.push(element.value);
-		});
-		provider.push('happy')
-		provider.push('birthday')
-		provider.push('dear')
-		provider.push('sleepy')
-		provider.push('joe')
-		provider.push('joe')
-		provider.push('joe')
-		provider.push('happy')
-		provider.push('birthday')
-		provider.push('dear')
-		provider.push('sleepy')
-		provider.push('joe')
-		provider.push('joe')
-		provider.push('joe')
+		const allProvider = Object.keys(this.multipleOverlaysSourceConfig.indexProviders);
+		const providers = allProvider.filter(provider => !this.multipleOverlaysSourceConfig.indexProviders[provider].inActive)
+		
+		providers.push('happy')
+		providers.push('birthday')
+		providers.push('dear')
+		providers.push('sleepy')
+		providers.push('joe')
+		providers.push('joe')
+		providers.push('joe')
+		providers.push('happy')
+		providers.push('birthday')
+		providers.push('dear')
+		providers.push('sleepy')
+		providers.push('joe')
+		providers.push('joe')
+		providers.push('joe')
 	
-		return provider;
+		return providers;
 	}
 
 	ngOnDestroy(): void {
@@ -104,7 +100,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 			lowValue: this.minValue,
 			highValue: this.maxValue
 		}
-
+		
 		return  {
 			types: this.selectedTypes,
 			registeration: this.selectedRegistration,
@@ -113,67 +109,18 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 		}
 	}
 
-	getAllDataInputFilter(): any[] {
-		const dataInputs = Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
-			.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive)
-			.map(([providerName, { dataInputFiltersConfig, showOnlyMyChildren }]: [string, IOverlaysSourceProvider]) => {
-				if (showOnlyMyChildren) {
-				return dataInputFiltersConfig.children.map(child => {
-					return this.buildDataFilter(providerName, child);
-				});
-				} else {
-					return {
-						...dataInputFiltersConfig,
-						children: dataInputFiltersConfig.children.map(child => this.buildDataFilter(providerName, child))
-					};
-				}
-			}
-			);
-		return flattenDeep(dataInputs);
-	}
-
-	buildDataFilter(providerName, filter) {
-		return {
-			text: this.translate.instant(filter.text),
-			value: {
-			...filter.value,
-			providerName
-			},
-			collapsed: false,
-			children: []
-		}
-	}
-
-	selectAllChildren(parent) {
-		if (this.isChild(parent)) {
-			return parent.text;
-		}
-		return parent.children.map( child => this.selectAllChildren(child));
-	}
-
-	private isChild(filter) {
-		return !filter.children || filter.children.length === 0;
-	}
-
 	getAllSensorsTypes() {
-		return flattenDeep(this.dataFilters.map(filter => this.selectAllChildren(filter)));
+		const allSensors: string[] = []
+		Object.values(this.multipleOverlaysSourceConfig.indexProviders).filter(provider => !provider.inActive).map(provider => {
+			provider.dataInputFiltersConfig.children.map(sensor => {
+				allSensors.push(sensor.text)
+			});
+		});
+		return flattenDeep(allSensors);
 	}
 
 	ngOnInit(): void {
 		this.allProviders = this.statusBarConfig.defaultAdvancedSearchParameters.providers;
-	}
-
-	getTypesToFilter(): IDataInputFilterValue[] {
-		const types: IDataInputFilterValue[] = [];
-		const allTypesProvider = this.getAllDataInputFilter();
-		allTypesProvider.forEach(provider => {
-		provider.children.forEach(type => {
-			if (this.selectedTypes.includes(type.text)) {
-			types.push(type.value);
-			}
-		});
-		});
-		return types;
 	}
 
 	search() {

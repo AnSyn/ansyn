@@ -20,7 +20,6 @@ import {
 	DisplayOverlayAction,
 	DisplayOverlaySuccessAction,
 	OverlaysActionTypes,
-	ResetOverlayArray
 } from '../../modules/overlays/actions/overlays.actions';
 import { IOverlayByIdMetaData, OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { ICase, IDilutedCase } from '../../modules/menu-items/cases/models/case.model';
@@ -63,7 +62,7 @@ export class CasesAppEffects {
 			defaultCase.state.maps.data[0].id = defaultMapId;
 			defaultCase.state.maps.activeMapId = defaultMapId;
 			const defaultCaseQueryParams: ICase = this.casesService.parseCase(defaultCase);
-			return [new ResetOverlayArray(), new SelectDilutedCaseAction(defaultCaseQueryParams)];
+			return [ new SelectDilutedCaseAction(defaultCaseQueryParams)];
 		}));
 	@Effect()
 	loadCase$: Observable<any> = this.actions$

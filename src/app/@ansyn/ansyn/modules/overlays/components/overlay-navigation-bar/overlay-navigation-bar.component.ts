@@ -22,7 +22,6 @@ import { TranslateService } from '@ngx-translate/core';
 export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	goPrevActive = false;
 	goNextActive = false;
-	goNextQuickLoop = false;
 	hasOverlayDisplay: boolean;
 	isFirstOverlay: boolean;
 	isLastOverlay: boolean;

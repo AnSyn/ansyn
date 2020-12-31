@@ -1,5 +1,5 @@
-import { Component, HostBinding, HostListener, Inject, Input, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Component, HostBinding, HostListener, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Store, select } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
 import {
 	MapFacadeService,
@@ -16,9 +16,11 @@ import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
 import { IToolsConfig, toolsConfig } from '../modules/menu-items/tools/models/tools-config';
 import { UpdateToolsFlags } from '../modules/menu-items/tools/actions/tools.actions';
 import { LoggerService } from '../modules/core/services/logger.service';
-import { IOverlay } from '../modules/overlays/models/overlay.model';
+import { IOverlay, IOverlayDrop } from '../modules/overlays/models/overlay.model';
 import { toolsFlags } from '../modules/menu-items/tools/models/tools.model';
 import { TranslateService } from '@ngx-translate/core';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { selectDropsDescending } from '../modules/overlays/reducers/overlays.reducer';
 
 @Component({
 	selector: 'ansyn-app',
@@ -26,8 +28,18 @@ import { TranslateService } from '@ngx-translate/core';
 	styleUrls: ['./ansyn.component.less']
 })
 
-export class AnsynComponent implements OnInit {
+@AutoSubscriptions()
+export class AnsynComponent implements OnInit, OnDestroy {
 	renderContextMenu: boolean;
+	toggleResults = false;
+
+	@AutoSubscription
+	overlaysCount$: Observable<any> = this.store$
+		.pipe(
+			select(selectDropsDescending),
+			filter(Boolean),
+			map(({length}: IOverlayDrop[]) => length)
+		);
 
 	isMenuCollapse$ = this.store$.select(selectMenuCollapse);
 
@@ -64,10 +76,17 @@ export class AnsynComponent implements OnInit {
 	) {
 	}
 
+	toggleResultsTable(): void {
+		this.toggleResults = !this.toggleResults;
+	}
+
 	@HostListener('window:beforeunload', ['$event'])
 	public onWindowClose($event) {
 		this.loggerService.beforeAppClose();
 		return true;
+	}
+
+	ngOnDestroy(): void {
 	}
 
 	ngOnInit(): void {

@@ -87,7 +87,9 @@ describe('SelectCaseAppEffects', () => {
 				region: CaseRegionState = {
 					geometry: {},
 					type: "Feature",
-					properties: {}
+					properties: {
+						searchMode: "screenView"
+					}
 				},
 				dataInputFilters: ICaseDataInputFiltersState = { fullyChecked: true, filters: [] },
 				favoriteOverlays: IOverlay[] = [],

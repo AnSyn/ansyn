@@ -1,6 +1,6 @@
 import { Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Observable, fromEvent } from 'rxjs';
+import { Observable } from 'rxjs';
 import { IOverlayDrop } from '../../../../overlays/models/overlay.model';
 import { select, Store } from '@ngrx/store';
 import {
@@ -18,7 +18,6 @@ import {
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
 import { TranslateService } from '@ngx-translate/core';
-import { SetBadgeAction } from '@ansyn/menu';
 
 interface ITableHeader {
 	headerName: string;
@@ -82,11 +81,6 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	@ViewChild('table') table: ElementRef;
 
 	@AutoSubscription
-	onClickClearBadge$ = fromEvent(window, 'click').pipe(
-		tap(() => this.store$.dispatch(new SetBadgeAction({key: 'Results table', badge: undefined})))
-	);
-
-	@AutoSubscription
 	dropsMarkUp$: Observable<ExtendMap<MarkUpClass, IMarkUpData>> = this.store$
 		.pipe(
 			select(selectDropMarkup),
@@ -121,7 +115,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 					overlayIdToScroll = this.overlayIds[this.overlayIds.length - 1];
 				}
 
-				const indexOfRecentOverlay = this.findIndexBytOverlayId(overlayIdToScroll);
+				const indexOfRecentOverlay = this.findIndexByOverlayId(overlayIdToScroll);
 				this.updatePaginationOnScroll(indexOfRecentOverlay);
 				this.scrollOverlayToCenter(indexOfRecentOverlay);
 			})
@@ -136,9 +130,8 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	) {
 	}
 
-	findIndexBytOverlayId(overlayId: string): number {
-		const overlayIndex = this.overlays.map(overlay => overlay.id).indexOf(overlayId);
-		return overlayIndex;
+	findIndexByOverlayId(overlayId: string): number {
+		return this.overlays.map(({ id }) => id).indexOf(overlayId);
 	}
 
 	ngOnDestroy(): void {
@@ -148,18 +141,16 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	}
 
 	resetSort(): void {
-		this.tableHeaders.forEach(tableHeader => {
-			tableHeader.isDescending = true;
-		});
+		this.tableHeaders.forEach(({ isDescending }) => isDescending = true);
 	}
 
 	scrollOverlayToCenter(index: number): void {
 		requestAnimationFrame(() => {
-			const tableRows = document.getElementsByClassName('results-table-body-row-data');
-			if (tableRows && tableRows[0]) {
-				const heightOfRow = tableRows[0].clientHeight;
-				const amountOfRowsDisplayed = this.table.nativeElement.offsetHeight / heightOfRow;
-				this.table.nativeElement.scrollTo(0, (index * heightOfRow) - (amountOfRowsDisplayed / 2) * heightOfRow);
+			const tableRow = document.getElementsByClassName('results-table-body-row-data').item(0);
+			if (tableRow) {
+				const rowHeight = tableRow.clientHeight;
+				const rowDisplayCount = this.table.nativeElement.offsetHeight / rowHeight;
+				this.table.nativeElement.scrollTo(0, (index * rowHeight) - (rowDisplayCount / 2) * rowHeight);
 			}
 		})
 	}
@@ -172,7 +163,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		this.end += this.pagination;
 	}
 
-	onMouseOver($event, id: string): void {
+	openOverlayOverview($event, id: string): void {
 		this.store$.dispatch(new SetMarkUp({
 			classToSet: MarkUpClass.hover,
 			dataToSet: { overlaysIds: [id] },
@@ -183,22 +174,23 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		// in zone.js...
 	}
 
-	onMouseOut(): void {
+	closeOverlayOverview(): void {
 		this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
 	}
 
 	openOverlay(id: string): void {
+		this.closeOverlayOverview();
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id }));
 	}
 
 	sortOverlays(header: ITableHeader): void {
-		const { headerData, isDescending, sortFn, headerName } = header;
+		const { headerData, isDescending, sortFn } = header;
 		this.sortedBy = headerData;
-		this.overlays.sort(function (a, b) {
+		this.overlays.sort((a: IOverlayDrop, b: IOverlayDrop) => {
 			const dataA = a[headerData];
 			const dataB = b[headerData];
-			return isDescending ? sortFn(dataA, dataB) : sortFn(dataB, dataA);
 
+			return isDescending ? sortFn(dataA, dataB) : sortFn(dataB, dataA);
 		});
 
 		header.isDescending = !header.isDescending;

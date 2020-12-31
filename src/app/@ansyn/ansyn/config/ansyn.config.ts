@@ -9,7 +9,6 @@ import { TasksComponent } from '../modules/menu-items/algorithms/components/task
 import { anaglyphSensorAlertKey } from '../modules/plugins/openlayers/plugins/anaglyph-sensor/plugin/anaglyph-sensor.plugin';
 import { AnaglyphSensorAlertComponent } from '../modules/plugins/openlayers/plugins/anaglyph-sensor/alert-component/anaglyph-sensor-alert.component';
 import { CredentialsComponent } from '../modules/menu-items/credentials/components/credentials/credentials.component';
-import { ResultsComponent } from "../modules/menu-items/results/components/results/results.component";
 import { FiltersCollectionComponent } from '../modules/filters/components/filters-collection/filters-collection.component';
 
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
@@ -38,11 +37,6 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			name: 'Filters',
 			component: FiltersCollectionComponent,
 			iconClass: 'icon-main-filters'
-		},
-		{
-			name: 'Results table',
-			component: ResultsComponent,
-			iconClass: 'icon-table'
 		},
 		{
 			name: 'Data Layers',

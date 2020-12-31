@@ -149,7 +149,7 @@ export class OverlayStatusEffects {
 						scannedArea = null;
 					}
 					else if (combinedResult.geometry.type === 'MultiPolygon') {
-							scannedArea = combinedResult.geometry;
+						scannedArea = combinedResult.geometry;
 					} else {
 						scannedArea = geojsonPolygonToMultiPolygon(combinedResult.geometry);
 					}

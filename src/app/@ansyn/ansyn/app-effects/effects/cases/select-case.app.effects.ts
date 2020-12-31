@@ -97,7 +97,7 @@ export class SelectCaseAppEffects {
 			new SetAnnotationMode(null),
 			new SetMeasureDistanceToolState(false),
 			new SelectCaseSuccessAction(payload),
-			new UpdateAdvancedSearchParamAction({advancedSearchParameter: this.statusBarConfig.defaultAdvancedSearchParameters})
+			new UpdateAdvancedSearchParamAction(this.statusBarConfig.defaultAdvancedSearchParameters)
 		];
 
 		return selectCaseAction;

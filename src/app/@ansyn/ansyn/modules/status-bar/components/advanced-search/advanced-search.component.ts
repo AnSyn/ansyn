@@ -96,7 +96,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 	}
 
 	ngOnDestroy(): void {
-		this.store.dispatch(new UpdateAdvancedSearchParamAction({advancedSearchParameter: this.getCurrentAdvancedSearchParameters()}))
+		this.store.dispatch(new UpdateAdvancedSearchParamAction(this.getCurrentAdvancedSearchParameters()))
 	}
 
 	getCurrentAdvancedSearchParameters(): IAdvancedSearchParameter {
@@ -177,7 +177,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 	}
 
 	search() {
-		this.store.dispatch(new UpdateAdvancedSearchParamAction({advancedSearchParameter: this.getCurrentAdvancedSearchParameters()}));
+		this.store.dispatch(new UpdateAdvancedSearchParamAction(this.getCurrentAdvancedSearchParameters()));
 		this.store.dispatch(new SetOverlaysCriteriaAction(this.getCurrentAdvancedSearchParameters()));
 		this._parent.close();
 	}

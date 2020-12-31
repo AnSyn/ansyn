@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 import { IGeoFilterStatus, IStatusBarState } from '../reducers/status-bar.reducer';
 import { ILogMessage } from '../../core/models/logger.model';
+import { IAdvancedSearchParameter } from '../models/statusBar-config.model';
 
 export const StatusBarActionsTypes = {
 	SHOW_LINK_COPY_TOAST: 'SHOW_LINK_COPY_TOAST',
@@ -25,7 +26,7 @@ export class CopySnapshotShareLinkAction implements Action, ILogMessage {
 export class UpdateAdvancedSearchParamAction implements Action {
 	type: string = StatusBarActionsTypes.UPDATE_ADVANCED_SEARCH_PARAM;
 
-	constructor(public payload: IStatusBarState) {
+	constructor(public payload: IAdvancedSearchParameter) {
 	}
 }
 

@@ -182,34 +182,32 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 		this._parent.close();
 	}
 
+	updateSelectedTypes(selectedTypesArray) {
+		const changedType = this.getUniqueElement(selectedTypesArray, this.selectedTypes)[0];
+		this.updateSelectedProvidersByType(changedType);
+		this.selectedTypes = selectedTypesArray;
+	}
+
+	updateSelectedProviders(selectedProvidersArray) {
+		const changedProvider = this.getUniqueElement(selectedProvidersArray, this.selectedProvidersNames)[0];
+		this.updateSelectedTypesByProviders(selectedProvidersArray, changedProvider);
+		this.selectedProvidersNames = selectedProvidersArray;
+		this.updateSelectedProvidersByProviderNames();
+	}
+
+	updateSelectedRegistration(selectedRegistrationArray) {
+		this.selectedRegistration = selectedRegistrationArray;
+	}
+
 	updateSelectedArray(selectedItemsArray, arrayToUpdate) {
-		// this[`selected${arrayToUpdate}`]
-		switch (arrayToUpdate) {
-			case 'selectedTypes' : {
-				const changedType = this.getUniqueElement(selectedItemsArray, this.selectedTypes)[0];
-				this.updateSelectedProvidersByType(changedType);
-				this.selectedTypes = selectedItemsArray;
-				break;
-			}
-			case 'selectedRegistration' : {
-				this.selectedRegistration = selectedItemsArray;
-				break;
-			}
-			case 'selectedProviders' : {
-				const changedProvider = this.getUniqueElement(selectedItemsArray, this.selectedProvidersNames)[0];
-				this.updateSelectedTypesByProviders(selectedItemsArray, changedProvider);
-				this.selectedProvidersNames = selectedItemsArray;
-				this.updateSelectedProvidersByProviderNames();
-				break;
-			}
-		}
+		this[`update${arrayToUpdate}`](selectedItemsArray);
 	}
 
 	updateSelectedProvidersByProviderNames() {
 		this.selectedProviders = [];
 		this.selectedProvidersNames.map(providerName => {
 			if (this.selectedProvidersNames.includes(providerName)) {
-				this.selectedProviders = this.allProviders.filter(provider => provider.name === providerName);
+				this.selectedProviders.push(...this.allProviders.filter(provider => provider.name === providerName));
 			}
 		});
 	}

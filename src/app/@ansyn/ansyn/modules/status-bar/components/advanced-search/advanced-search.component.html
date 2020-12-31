@@ -12,7 +12,7 @@
     [selected]="selectedTypes"
     contentTitle="types"
 	(ngModel)="sensorTypes"
-    (selectedItemsArray)="updateSelectedArray($event,'selectedTypes')"
+    (selectedItemsArray)="updateSelectedArray($event,'SelectedTypes')"
     #types
     >
         <ansyn-combo-table-option  *ngFor="let type of sensorTypes" [value]="type">
@@ -33,7 +33,7 @@
     [selected]="selectedRegistration"
     contentTitle="registeration"
 	(ngModel)="isGeoRegistered"
-    (selectedItemsArray)="updateSelectedArray($event,'selectedRegistration')"
+    (selectedItemsArray)="updateSelectedArray($event,'SelectedRegistration')"
     #registeration
     >
         <ansyn-combo-table-option class="display-full-name" *ngFor="let GeoRegistered of isGeoRegistered" [value]="GeoRegistered">
@@ -56,7 +56,7 @@
     [isFullSize]="true"
     contentTitle="providers"
 	(ngModel)="providers"
-    (selectedItemsArray)="updateSelectedArray($event,'selectedProviders')"
+    (selectedItemsArray)="updateSelectedArray($event,'SelectedProviders')"
     #providers
     >
         <ansyn-combo-table-option *ngFor="let type of providersNamesList" [value]="type">

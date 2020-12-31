@@ -38,7 +38,9 @@ export class MultipleOverlaysSourceProvider {
 	onDataInputFilterChange$ = this.store.pipe(
 		select(selectAdvancedSearchParameters),
 		tap((searchOptions: IAdvancedSearchParameter) => {
-			this.updateSelectedProviders(searchOptions.providers);
+			this.providers = [];
+			this.activeProviders(searchOptions.providers);
+			// this.updateSelectedProviders(searchOptions.providers);
 		})
 	);
 
@@ -49,7 +51,6 @@ export class MultipleOverlaysSourceProvider {
 				@Inject(MultipleOverlaysSource) public overlaysSources: IMultipleOverlaysSource) {
 		this.providers = [];
 		this.selectedProviders = [];
-		this.prepareWhitelist();
 	}
 
 	private coverageToFeature(coordinates: number[][][]): Feature<Polygon> {
@@ -78,31 +79,21 @@ export class MultipleOverlaysSourceProvider {
 		}
 		return '';
 	}
-	updateSelectedProviders(providersFromState) {
-		this.selectedProviders = [];
-		providersFromState.forEach(providerWithStringClass => {
-			this.providers.forEach(provider => {
-				if (providerWithStringClass.name === provider.name) {
-					this.selectedProviders.push(provider);
-				}
-			})
-		});
-	}
 
-	private prepareWhitelist() {
-		const mapProviderConfig = (provider) => {
-			const type = provider.sourceType;
-			let config = this.multipleOverlaysSourceConfig.indexProviders[type];
-			if (!config) {
-				console.warn(`Missing config for provider ${ type }, using defaultProvider config`);
-				config = this.multipleOverlaysSourceConfig.defaultProvider;
-			}
-			return [provider, config];
-		};
+	private mapProviderConfig(provider) {
+		const type = provider.sourceType;
+		let config = this.multipleOverlaysSourceConfig.indexProviders[type];
+		if (!config) {
+			console.warn(`Missing config for provider ${ type }, using defaultProvider config`);
+			config = this.multipleOverlaysSourceConfig.defaultProvider;
+		}
+		return [provider, config];
+	};
 
+	private activeProviders(providersFromState) {
 		const filterWhiteList = ([provider, { inActive }]: [BaseOverlaySourceProvider, IOverlaysSourceProvider]) => !inActive;
 
-		Object.values(this.overlaysSources).map(mapProviderConfig).filter(filterWhiteList).forEach(([provider, config]) => {
+		Object.values(this.overlaysSources).map(provider => this.mapProviderConfig(provider)).filter(filterWhiteList).forEach(([provider, config]) => {
 
 			let whiteFilters = [];
 
@@ -163,6 +154,15 @@ export class MultipleOverlaysSourceProvider {
 					class: provider
 				});
 			}
+		});
+
+		this.selectedProviders = [];
+		providersFromState.map(providerFromState => {
+			this.providers.forEach(provider => {
+				if (providerFromState.name === provider.name) {
+					this.selectedProviders.push(provider);
+				}
+			})
 		});
 	}
 

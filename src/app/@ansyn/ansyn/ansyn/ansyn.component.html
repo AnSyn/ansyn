@@ -15,13 +15,11 @@
 			<ansyn-context-menu *ngIf="renderContextMenu"></ansyn-context-menu>
 		</div>
 
-		<div class="results-table-container">
-			<button [class.active]="toggleResults" class="results-table" (click)="toggleResultsTable()">
-				<i class="icon-table"></i>
-				<span class="badge">{{overlaysCount$ | async}}</span>
-				<span class="results-title">{{'Search results' | translate}}</span>
-			</button>
-		</div>
+		<button [class.active]="toggleResults" class="results-table" (click)="toggleResultsTable()">
+			<i class="icon-table"></i>
+			<span class="badge">{{overlaysCount$ | async}}</span>
+			<span class="results-title">{{'Search results' | translate}}</span>
+		</button>
 
 		<ansyn-results class="results" *ngIf="toggleResults"></ansyn-results>
 

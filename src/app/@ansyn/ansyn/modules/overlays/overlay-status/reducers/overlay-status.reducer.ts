@@ -4,19 +4,13 @@ import { AlertMsg } from '../../../alerts/model';
 import { IOverlay } from '../../models/overlay.model'
 import { OverlayStatusActions, OverlayStatusActionsTypes } from '../actions/overlay-status.actions';
 import {
-	IImageManualProcessArgs,
-	IOverlaysManualProcessArgs,
+	IOverlaysImageProcess,
 	ITranslationData
 } from '../../../menu-items/cases/models/case.model';
 import { MultiPolygon } from 'geojson';
 
 export const overlayStatusFeatureKey = 'overlayStatus';
 export const overlayStatusStateSelector: MemoizedSelector<any, IOverlayStatusState> = createFeatureSelector<IOverlayStatusState>(overlayStatusFeatureKey);
-
-export enum overlayStatusFlags {
-	autoImageProcessing = 'autoImageProcessing',
-	imageProcessingDisabled = 'imageProcessingDisabled',
-}
 
 export interface ITranslationsData {
 	[key: string]: ITranslationData;
@@ -28,34 +22,23 @@ export interface IScannedArea {
 
 export interface IOverlayStatusState {
 	favoriteOverlays: IOverlay[];
-	flags: Map<overlayStatusFlags, boolean>;
 	alertMsg: AlertMsg;
-	manualImageProcessingParams: IImageManualProcessArgs;
+	overlaysImageProcess: IOverlaysImageProcess;
 	overlaysTranslationData: ITranslationsData,
-	overlaysManualProcessArgs: IOverlaysManualProcessArgs;
 	overlaysScannedAreaData: {
 		[key: string]: MultiPolygon;
 	}
 }
 
-export interface IImageProcessState {
-	manualImageProcessingParams: IImageManualProcessArgs;
-	overlaysManualProcessArgs: IOverlaysManualProcessArgs;
-}
-
 export const overlayStatusInitialState: IOverlayStatusState = {
-	flags: new Map<overlayStatusFlags, boolean>(),
 	favoriteOverlays: [],
 	alertMsg: new Map([]),
 	overlaysTranslationData: {},
 	overlaysScannedAreaData: {},
-	manualImageProcessingParams: {},
-	overlaysManualProcessArgs: {}
+	overlaysImageProcess: {}
 };
 
 export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusInitialState, action: OverlayStatusActions | any): IOverlayStatusState {
-	let tmpMap: Map<overlayStatusFlags, boolean>;
-
 	switch (action.type) {
 		case OverlayStatusActionsTypes.SET_FAVORITE_OVERLAYS:
 			return { ...state, favoriteOverlays: action.payload };
@@ -66,34 +49,27 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 			return { ...state, favoriteOverlays: value ? uniq([...fo, overlay]) : fo.filter((o) => o.id !== id) };
 		}
 
-		case OverlayStatusActionsTypes.ENABLE_IMAGE_PROCESSING:
-			tmpMap = new Map(state.flags);
-			tmpMap.set(overlayStatusFlags.imageProcessingDisabled, false);
-			tmpMap.set(overlayStatusFlags.autoImageProcessing, false);
-			return { ...state, flags: tmpMap };
-
-		case OverlayStatusActionsTypes.DISABLE_IMAGE_PROCESSING:
-			tmpMap = new Map(state.flags);
-			tmpMap.set(overlayStatusFlags.imageProcessingDisabled, true);
-			tmpMap.set(overlayStatusFlags.autoImageProcessing, false);
-			return { ...state, flags: tmpMap };
+		case OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING: {
+			const {isAuto, overlayId} = action.payload;
+			const overlayProcess = {...state?.overlaysImageProcess[overlayId], isAuto};
+			return {...state, overlaysImageProcess: {
+				...state.overlaysImageProcess,
+				[overlayId]: overlayProcess}
+			};
+		}
 
 		case OverlayStatusActionsTypes.UPDATE_OVERLAYS_MANUAL_PROCESS_ARGS:
-			if (action.payload.override) {
-				return { ...state, overlaysManualProcessArgs: action.payload.data };
-			}
-			return {
-				...state,
-				overlaysManualProcessArgs: { ...state.overlaysManualProcessArgs, ...action.payload.data }
-			};
+			return {...state, overlaysImageProcess: {...action.payload}};
 
-		case OverlayStatusActionsTypes.SET_MANUAL_IMAGE_PROCESSING:
-			return { ...state, manualImageProcessingParams: action.payload };
-
-		case OverlayStatusActionsTypes.SET_AUTO_IMAGE_PROCESSING_SUCCESS:
-			tmpMap = new Map(state.flags);
-			tmpMap.set(overlayStatusFlags.autoImageProcessing, action.payload);
-			return { ...state, flags: tmpMap };
+		case OverlayStatusActionsTypes.SET_MANUAL_IMAGE_PROCESSING: {
+			const {overlayId, imageManualProcessArgs} = action.payload;
+			return {...state, overlaysImageProcess: {
+				...state.overlaysImageProcess,
+				[overlayId]: {
+					isAuto: false,
+					manuelArgs: imageManualProcessArgs
+				}}};
+		}
 
 		case OverlayStatusActionsTypes.ADD_ALERT_MSG: {
 			const alertKey = action.payload.key;
@@ -164,6 +140,6 @@ export function OverlayStatusReducer(state: IOverlayStatusState = overlayStatusI
 
 export const selectFavoriteOverlays: MemoizedSelector<any, IOverlay[]> = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus ? overlayStatus.favoriteOverlays : []);
 export const selectAlertMsg = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.alertMsg);
-export const selectOverlaysManualProcessArgs = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus.overlaysManualProcessArgs);
 export const selectTranslationData = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus && overlayStatus.overlaysTranslationData);
 export const selectScannedAreaData = createSelector(overlayStatusStateSelector, (overlayStatus) => overlayStatus && overlayStatus.overlaysScannedAreaData);
+export const selectOverlaysImageProcess = createSelector(overlayStatusStateSelector, (state) => state?.overlaysImageProcess);

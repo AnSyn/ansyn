@@ -267,6 +267,10 @@ input[type=number]::-webkit-outer-spin-button {
 	line-height: normal;
 }
 
+/deep/ .scrolled {
+	overflow-y: auto;
+}
+
 /deep/ .scrolled::-webkit-scrollbar {
 	width: 7px;
 }

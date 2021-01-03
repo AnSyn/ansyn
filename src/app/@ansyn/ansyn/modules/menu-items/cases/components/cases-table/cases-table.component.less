@@ -1,203 +1,153 @@
 @import "ansyn/less/z-index-globals";
 @import 'ansyn/less/common';
 
-div.cases-table {
-	width: 100%;
-	color: white;
-	font-size: 13px;
-	padding: 0 5px;
-	box-sizing: border-box;
+:host {
+	height: -webkit-fill-available;
 
-	div.cases-table-head {
+	div.cases-table {
 		display: flex;
+		flex: 1;
+		flex-direction: column;
+		height: 100%;
+		color: white;
+		font-size: 13px;
+		box-sizing: border-box;
 
-		div.cases-table-head-row {
-			padding: 0 15px;
-			width: 100%;
+		div.cases-table-head {
+			display: flex;
 
-			div.cases-table-head-row-data {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				position: relative;
-				width: 100%;
-				height: 57px;
-				box-sizing: border-box;
-			}
-		}
-	}
+			div.cases-table-head-row {
+				padding: 0 15px;
+				flex: 1;
 
-	div.cases-table-body {
-		display: block;
-		overflow-y: auto;
-		max-height: 80vh;
-		direction: rtl; // to flip the scrollbar location
-
-		div.cases-table-body-row:hover + div.cases-table-body-row hr {
-			display: block;
-		}
-
-		div.cases-table-body-row:hover + div.cases-table-body-row div.cases-table-body-row-data hr {
-			top: -2px;
-		}
-
-		div.cases-table-body-row.selected + div.cases-table-body-row div.cases-table-body-row-data hr {
-			top: -2px;
-		}
-
-		div.cases-table-body-row:first-child div.cases-table-body-row-data {
-			border-top: 1px solid #EBF8FA;
-		}
-
-		div.cases-table-body-row {
-			padding: 0 15px;
-			transition: background .3s, color .3s;
-			overflow: hidden;
-			height: 57px;
-			position: relative;
-			direction: ltr; // needs to be repeated here because of scrollbar place
-
-			&.mouse-enter {
-				color: #156879;
-				background: #EBF8FA;
-
-				div.cases-table-body-row-data div.case-menu-container div.case-menu {
-					transform: translate(10%, 50%);
-					opacity: 1;
-					visibility: visible;
-					pointer-events: auto;
-				}
-
-			}
-
-			&.active {
-				background: #9deeff;
-				color: #156879;
-			}
-
-			&.selected {
-				color: #156879;
-				background: #EBF8FA;
-			}
-
-			hr {
-				display: none;
-				position: absolute;
-				margin: 0;
-				width: 100%;
-				border: solid 1px #EBF8FA;
-				top: -1px;
-				color: #ebf8fa;
-			}
-
-			/deep/ .slider-text {
-				color: inherit;
-			}
-
-			div.cases-table-body-row-data {
-				position: relative;
-				display: flex;
-				align-items: center;
-				cursor: pointer;
-				box-sizing: border-box;
-				height: 100%;
-
-				hr {
-					display: block;
-					position: absolute;
-					margin: 0;
-					width: 100%;
-					border: solid 1px #EBF8FA;
-					top: -1px;
-					color: #ebf8fa;
-				}
-
-				div.cases-table-body-col {
+				div.cases-table-head-row-data {
+					display: flex;
+					align-items: center;
 					flex: 1;
-				}
+					padding: 10px 0;
+					box-sizing: border-box;
 
-				div.cases-table-case-name-col {
-					flex: 1.5;
-					overflow: hidden;
-					text-overflow: ellipsis;
-					padding-right: 3px;
-				}
-
-				.cases-table-auto-save-col {
-					padding-top: 20px;
-					flex: 2;
-				}
-
-				div.case-menu-container {
-					flex: 0;
-
-					div.case-menu {
+					div {
 						display: flex;
-						transition: visibility .3s, transform .3s, opacity .3s;
-						opacity: 0;
-						visibility: hidden;
-						z-index: @z-index-case-menu;
-						position: fixed;
-						border: 0.5px solid #404040;
-						box-sizing: border-box;
-						box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24), 0 0 2px rgba(0, 0, 0, 0.12);
-						border-radius: 4px;
-						background: #FFFFFF;
-						transform: translate(-50%, 50%);
-						pointer-events: none;
+						flex: 2.5;
 
-						button {
-							background: transparent;
-							border: 1px solid transparent;
-							font-size: 20px;
-
-							&:hover {
-								box-sizing: border-box;
-								border: 1px solid #7b7b7b;
-							}
+						&.menu-placeholder {
+							flex: 2
 						}
 					}
 				}
-
 			}
 		}
-	}
 
-	&.rtl {
 		div.cases-table-body {
-			direction: ltr;
+			display: flex;
+			flex-direction: column;
+			flex: 1;
+			margin-bottom: 65px;
+			direction: rtl;
+
+			&.rtl {
+				direction: ltr;
+			}
+
 			div.cases-table-body-row {
-				direction: rtl;
+				transition: background .3s, color .3s;
+				margin: 0 5px;
+				border-top: 2px solid #EBF8FA;
+
+				&:last-child {
+					border-bottom: unset;
+					border-bottom: 2px solid #EBF8FA;
+				}
 
 				&.mouse-enter {
-					div.cases-table-body-row-data div.case-menu-container div.case-menu {
-						transform: translate(-10%, 50%);
+					color: #156879;
+					background: #EBF8FA;
+
+					div.cases-table-body-row-data div.case-menu-container.rtl div.case-menu {
+						transform: translateX(10px);
 					}
+
+					div.cases-table-body-row-data div.case-menu-container div.case-menu {
+						transform: translateX(-10px);
+						opacity: 1;
+						visibility: visible;
+						pointer-events: auto;
+					}
+				}
+
+				&.active {
+					background: #9deeff;
+					color: #156879;
+				}
+
+				&.selected {
+					color: #156879;
+					background: #EBF8FA;
 				}
 
 				div.cases-table-body-row-data {
-					div.case-menu-container {
-						div.case-menu {
-							transform: translate(50%, 50%);
-						}
+					margin: 10px 0;
+					display: flex;
+					align-items: center;
+					cursor: pointer;
+					box-sizing: border-box;
+					position: relative;
+					direction: ltr;
+
+					&.rtl {
+						direction: rtl;
+					}
+
+					div.cases-table-body-col {
+						flex: 1;
+						margin: 0 5px;
 					}
 
 					div.cases-table-case-name-col {
-						padding-right: unset;
-						padding-left: 3px;
+						flex: 1;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						padding: 0 3px;
+					}
+
+					div.case-menu-container {
+						flex: 1;
+						direction: rtl;
+
+						&.rtl {
+							direction: ltr;
+						}
+
+						div.case-menu {
+							display: flex;
+							visibility: hidden;
+							transition: visibility .3s, transform .3s, opacity .3s;
+							width: fit-content;
+							opacity: 0;
+							z-index: @z-index-case-menu;
+							border: 0.5px solid #404040;
+							box-sizing: border-box;
+							box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24), 0 0 2px rgba(0, 0, 0, 0.12);
+							border-radius: 4px;
+							background: #FFFFFF;
+							pointer-events: none;
+							position: relative;
+						}
 					}
 				}
 			}
 		}
-	} // rtl
-}
+	}
 
-p.no-cases {
-	width: 430px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	font-weight: bold;
-	color: white;
-	padding: 20px 0;
+	p.no-cases {
+		flex: 1;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-weight: bold;
+		color: white;
+		padding: 20px 0;
+	}
+
 }

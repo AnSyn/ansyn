@@ -1,7 +1,7 @@
-import { Observable, of } from 'rxjs';
+import { Observable, of, combineLatest } from 'rxjs';
 import ImageLayer from 'ol/layer/Image';
 import RasterSource from 'ol/source/Raster';
-import { BaseImageryPlugin, CommunicatorEntity, ImageryLayerProperties, ImageryPlugin, IMapSettings } from '@ansyn/imagery';
+import { BaseImageryPlugin, ImageryLayerProperties, ImageryPlugin } from '@ansyn/imagery';
 import { Store, select } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
 import {
@@ -9,35 +9,36 @@ import {
 	OpenLayersMap
 } from '@ansyn/ol';
 import { OpenLayersImageProcessing } from './image-processing';
-import { distinctUntilChanged, filter, map, take, tap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, take, tap, concatMap, withLatestFrom } from 'rxjs/operators';
 import { isEqual } from 'lodash';
-import { Inject } from '@angular/core';
-import { selectMaps } from '@ansyn/map-facade';
-import { IImageManualProcessArgs } from '../../../../menu-items/cases/models/case.model';
+import { IImageManualProcessArgs, IOverlayImageProcess } from '../../../../menu-items/cases/models/case.model';
 import {
-	IImageProcParam,
-	IOverlayStatusConfig,
-	overlayStatusConfig
-} from "../../../../overlays/overlay-status/config/overlay-status-config";
+	selectOverlaysImageProcess
+} from '../../../../overlays/overlay-status/reducers/overlay-status.reducer';
+import { OverlayStatusService } from '../../../../overlays/overlay-status/services/overlay-status.service';
+import { selectMaps, selectOverlayByMapId } from '@ansyn/map-facade';
+import { IOverlay } from '../../../../overlays/models/overlay.model';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],
-	deps: [Store, overlayStatusConfig]
+	deps: [Store, OverlayStatusService]
 })
+
 export class ImageProcessingPlugin extends BaseImageryPlugin {
-	communicator: CommunicatorEntity;
 	private _imageProcessing: OpenLayersImageProcessing;
 	private imageLayer: ImageLayer;
+	selectOverlay$: Observable<IOverlay> =  this.store$.pipe(select(selectMaps)).pipe(
+		map( maps => maps[this.mapId]),
+		map( map => map?.data?.overlay)
+	);
 
-	isImageProcessActive$ = this.store$.pipe(
-		select(selectMaps),
-		map( maps => maps && maps[this.mapId]),
-		distinctUntilChanged((a, b) => {
-			return isEqual(a, b);
-		}),
+
+	isImageProcessActive$ = combineLatest([this.selectOverlay$, this.store$.pipe(select(selectOverlaysImageProcess))]).pipe(
+		map(([overlay, overlaysImageProcess]: [IOverlay, any]) => overlaysImageProcess && overlaysImageProcess[overlay?.id]),
 		filter(Boolean),
-		map( (map: IMapSettings) => {
-			return [map.data.isAutoImageProcessingActive, map.data.imageManualProcessArgs]
+		distinctUntilChanged(isEqual),
+		map( (overlayImageProcess: IOverlayImageProcess) => {
+			return [overlayImageProcess.isAuto, overlayImageProcess.manuelArgs]
 		})
 	);
 
@@ -61,23 +62,12 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		})
 	);
 
-	get params(): Array<IImageProcParam> {
-		return this.config.ImageProcParams;
-	}
-
-	constructor(public store$: Store<any>, @Inject(overlayStatusConfig) protected config: IOverlayStatusConfig) {
+	constructor(public store$: Store<any>, protected overlayStatusService: OverlayStatusService) {
 		super();
 	}
 
-	defaultImageManualProcessArgs(): IImageManualProcessArgs {
-		return this.params.reduce<IImageManualProcessArgs>((initialObject: any, imageProcParam: IImageProcParam) => {
-			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
-		}, {});
-	}
-
 	isImageProcessActive(isAutoImageProcessingActive: boolean, imageManualProcessArgs: IImageManualProcessArgs) {
-		const defaultManualParams = this.defaultImageManualProcessArgs();
-		const result = isAutoImageProcessingActive || (Boolean(imageManualProcessArgs) && !isEqual(defaultManualParams, imageManualProcessArgs));
+		const result = isAutoImageProcessingActive || (!!imageManualProcessArgs && !this.overlayStatusService.isDefaultImageProcess(imageManualProcessArgs));
 		return result;
 	}
 
@@ -114,10 +104,10 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 	}
 
 	createImageLayer() {
-		if (this.imageLayer) {
+		const mainLayer = this.getMainLayer();
+		if (this.imageLayer || !mainLayer) {
 			return;
 		}
-		const mainLayer = this.getMainLayer();
 		const extent = mainLayer.getExtent();
 		const source = mainLayer.getSource();
 		this.imageLayer = new ImageLayer({

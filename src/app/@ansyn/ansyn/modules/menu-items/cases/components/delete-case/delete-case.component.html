@@ -1,16 +1,12 @@
-<div class="edit-case">
+<div class="edit-case" dir="auto">
 	<button (click)="close()" class="close" type="button">
 		<span>×</span>
 	</button>
 
-	<div class="delete-icon">
-		<i class="icon-case-delete"></i>
-	</div>
-
 	<form class="edit-case-form" (submit)="onSubmitRemove()">
 
 		<div class="text">
-			<i class="icon-delete"></i>&nbsp;{{'Delete' | translate}}&nbsp;"<span class="name">{{activeCase?.name}}</span>"?
+			<i class="icon-delete"></i>&nbsp;{{'Are you sure you want to delete' | translate}}&nbsp;"<span class="name">{{activeCase?.name}}</span>"?
 		</div>
 
 		<div class="bottom-btns">

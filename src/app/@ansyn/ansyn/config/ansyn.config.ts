@@ -29,11 +29,6 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 	],
 	ansynMenuItems: [
 		{
-			name: 'Cases',
-			component: CasesComponent,
-			iconClass: 'icon-main-cases'
-		},
-		{
 			name: 'Filters',
 			component: FiltersCollectionComponent,
 			iconClass: 'icon-main-filters'

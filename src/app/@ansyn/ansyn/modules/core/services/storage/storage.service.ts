@@ -22,7 +22,6 @@ export interface IStoredEntity<P extends IEntity, D> {
 @Injectable()
 export class StorageService {
 	constructor(protected _http: HttpClient,
-				protected fetchService: FetchService,
 				@Inject(CoreConfig) public config: ICoreConfig) {
 	}
 
@@ -40,26 +39,21 @@ export class StorageService {
 
 	searchByCase<P extends IEntity>(schema: string, body): Observable<P[]> {
 		const url = this._buildSchemaUrl(schema);
-		const promise = this.fetchService.fetch(`${ url }/search_by_case`, {
-			method: 'POST',
-			body: JSON.stringify(body),
-			headers: { 'Content-Type': 'application/json', },
-		})
-			.then(response => response.json());
-		return from(promise);
+		return this._http.post<P[]>(`${url}/search_by_case`, body);
 	}
 
-	deleteByCase<P extends IEntity>(schema: string, body): Observable<P[]> {
+	deleteByCase(schema: string, body): Observable<string[]> {
 		const url = this._buildSchemaUrl(schema);
-		return this._http.post<P[]>(`${ url }/delete_by_case`, body);
+		return this._http.post<string[]>(`${ url }/delete_by_case`, body);
 	}
 
-	getPage<P extends IEntity>(schema: string, offset: number, pageSize: number): Observable<P[]> {
+	getPage<P extends IEntity>(schema: string, offset: number, pageSize: number, casesType: 'owner' | 'sharedWith' = 'owner'): Observable<P[]> {
 		const url = this._buildSchemaUrl(schema);
 		return this._http.get<P[]>(url, {
 			params: {
 				from: offset.toString(),
-				limit: pageSize.toString()
+				limit: pageSize.toString(),
+				casesType
 			}
 		});
 	}

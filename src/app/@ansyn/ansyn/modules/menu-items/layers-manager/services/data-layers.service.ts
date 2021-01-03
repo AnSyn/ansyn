@@ -14,13 +14,8 @@ import { ILayer, layerPluginTypeEnum, LayerType } from '../models/layers.model';
 import {
 	AddLayerOnBackendFailedAction,
 	AddLayerOnBackendSuccessAction,
-	RemoveCaseLayersFromBackendAction,
-	RemoveCaseLayersFromBackendFailedAction,
-	RemoveCaseLayersFromBackendSuccessAction,
 	RemoveLayerOnBackendFailedAction,
-	RemoveLayerOnBackendSuccessAction,
-	UpdateLayerOnBackendFailedAction,
-	UpdateLayerOnBackendSuccessAction
+	RemoveLayerOnBackendSuccessAction
 } from '../actions/layers.actions';
 
 export const layersConfig = 'layersManagerConfig';
@@ -36,7 +31,6 @@ export class DataLayersService implements OnInit, OnDestroy {
 	@AutoSubscription
 	caseId$ = this.store
 		.pipe(
-			/* SelectedCase should move to core store */
 			select(selectSelectedCase),
 			filter(Boolean),
 			tap(({ id }: ICase) => this.caseId = id)
@@ -95,18 +89,6 @@ export class DataLayersService implements OnInit, OnDestroy {
 		)
 	}
 
-	updateLayer(layer: ILayer): Observable<any> {
-		return this.storageService.update('layers', { preview: layer, data: null }).pipe(
-			tap(() => {
-				this.store.dispatch(new UpdateLayerOnBackendSuccessAction(layer.id));
-			}),
-			catchError((err) => {
-				this.store.dispatch(new UpdateLayerOnBackendFailedAction(layer, err));
-				return this.errorHandlerService.httpErrorHandle(err, 'Can\'t find layer to update');
-			})
-		)
-	}
-
 	removeLayer(layerId: string): Observable<any> {
 		return this.storageService.delete('layers', layerId)
 			.pipe(
@@ -120,16 +102,9 @@ export class DataLayersService implements OnInit, OnDestroy {
 			)
 	}
 
-	removeCaseLayers(caseId: string): Observable<any> {
-		this.store.dispatch(new RemoveCaseLayersFromBackendAction(caseId));
+	removeCaseLayers(caseId: string): Observable<[string, string[]]> {
 		return this.storageService.deleteByCase('layers', { caseId }).pipe(
-			tap(() => {
-				this.store.dispatch(new RemoveCaseLayersFromBackendSuccessAction(caseId))
-			}),
-			catchError((err) => {
-				this.store.dispatch(new RemoveCaseLayersFromBackendFailedAction(caseId, err));
-				return this.errorHandlerService.httpErrorHandle(err, 'Failed to remove case layers');
-			})
-		);
+			map( (ids) => [caseId, ids])
+		)
 	}
 }

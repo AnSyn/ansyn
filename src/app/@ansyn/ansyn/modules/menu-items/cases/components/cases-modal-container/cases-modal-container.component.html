@@ -1,11 +1,11 @@
-<div *ngIf="modal.show " class="blackscreen" (click)="close()" [@blackScreen]></div>
-<div
-	[ngSwitch]="modal.type">
-	<ansyn-edit-case
-		*ngSwitchCase="'edit'"></ansyn-edit-case>
-	<ansyn-delete-case
-		*ngSwitchCase="'delete'"></ansyn-delete-case>
-	<ansyn-save-case
-		*ngSwitchCase="'save'"></ansyn-save-case>
-	<ng-template *ngSwitchDefaultCase></ng-template>
+<div class="modal" *ngIf="modal.show">
+	<div class="blackscreen" (click)="close()" [@blackScreen]></div>
+	<div
+		[ngSwitch]="modal.type">
+		<ansyn-delete-case
+			*ngSwitchCase="'delete'"></ansyn-delete-case>
+		<ansyn-save-case [caseId]="modal.id"
+			*ngSwitchCase="'save'"></ansyn-save-case>
+		<ng-template *ngSwitchDefaultCase></ng-template>
+	</div>
 </div>

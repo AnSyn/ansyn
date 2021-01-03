@@ -186,8 +186,6 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 		const sensorsToAdd = sensorsToActiveate.filter(sensor => !this.selectedSensors.includes(sensor));
 		sensorsToAdd.push(...this.selectedSensors);
 		this.selectedSensors = sensorsToAdd;
-		
-		// this.selectedSensors.push(...sensorsToActiveate.filter(sensor => !this.selectedSensors.includes(sensor)))
 	  }
 
 	updateSelectedProvidersByType(changedType: string) {

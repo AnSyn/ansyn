@@ -37,6 +37,7 @@ import { TasksService } from './modules/menu-items/algorithms/services/tasks.ser
 import { ImageryVideoModule } from '@ansyn/imagery-video';
 import { ImageryChangeMapComponent } from './modules/plugins/components/imagery-change-map/imagery-change-map.component';
 import { ResultsModule } from "./modules/menu-items/results/results.module";
+import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/overlay-out-of-bounds.component';
 
 @NgModule({
 	imports: [
@@ -85,7 +86,8 @@ import { ResultsModule } from "./modules/menu-items/results/results.module";
 		UnsupportedDevicesComponent,
 		AnsynFooterComponent,
 		ImageryZoomerComponent,
-		ImageryDimensionModeComponent
+		ImageryDimensionModeComponent,
+		OverlayOutOfBoundsComponent
 	],
 	exports: [AnsynComponent, UnsupportedDevicesComponent]
 })

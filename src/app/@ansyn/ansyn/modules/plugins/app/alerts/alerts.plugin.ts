@@ -87,6 +87,8 @@ export class AlertsPlugin extends BaseImageryPlugin {
 			const viewExtent = position.extentPolygon;
 			const intersection = getPolygonIntersectionRatio(viewExtent, overlay.footprint);
 			isInBound = Boolean(intersection);
+
+			// calling the BackToExtentAction here because the alert is currently disabled.
 			action = !isInBound ? of(new BackToExtentAction()) :
 				this.outOfBound ? of(new BackToExtentAction()) : of(null);
 		}

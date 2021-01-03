@@ -105,7 +105,7 @@ export class MultipleOverlaysSourceProvider {
 
 		this.selectedProviders = [];
 		this.selectedProviders.push(...providersFromState.map(providerFromState => {
-			return this.providers.filter(provider => providerFromState.name === provider.name).pop();
+			return this.providers.find(provider => providerFromState.name === provider.name);
 		}));
 	}
 

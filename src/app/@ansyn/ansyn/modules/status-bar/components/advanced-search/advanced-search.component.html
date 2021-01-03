@@ -2,7 +2,7 @@
     <div class="title-grid">
         <div class="buttons-title">
             <div class="select-all" (click)="selectAllItems()">{{'select all' | translate}}</div>
-            <div class="reset" (click)="resetSelection('DataInputFilters')"><i class="icon-undo"></i></div>
+            <div class="reset" (click)="resetDataInputFilters()"><i class="icon-undo"></i></div>
         </div>
         <div class="title text-title">{{'Type' | translate}}</div>
     </div>
@@ -45,7 +45,7 @@
     <div class="title-grid">
         <div class="buttons-title">
             <div class="select-all" (click)="selectAllItems()">{{'select all' | translate}}</div>
-            <div class="reset" (click)="resetSelection('DataInputFilters')"><i class="icon-undo"></i></div>
+            <div class="reset" (click)="resetDataInputFilters()"><i class="icon-undo"></i></div>
         </div>
         <div class="title text-title">{{'Providers' | translate}}</div>
     </div>
@@ -66,12 +66,12 @@
 
 <div class="box resolution dataInputsPreSearch">
     <div class="title-grid">
-        <div class="reset" (click)="resetSelection('Resolution')"><i class="icon-undo"></i></div>
+        <div class="reset" (click)="resetResolution()"><i class="icon-undo"></i></div>
         <div class="title text-title">{{'Resolution' | translate}}</div>
     </div>
     
     <div class="slider">
-        <ngx-slider [(value)]="minValue" [(highValue)]="maxValue" [options]="sliderOptions" onchange="getSliderValue($event)" #resolution></ngx-slider>
+        <ngx-slider [(value)]="sliderOptions.floor" [(highValue)]="sliderOptions.ceil" [options]="sliderOptions" onchange="getSliderValue($event)" #resolution></ngx-slider>
     </div>
 </div>
 

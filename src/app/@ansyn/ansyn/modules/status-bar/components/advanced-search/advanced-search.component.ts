@@ -3,7 +3,7 @@ import { select, Store } from '@ngrx/store';
 import { flattenDeep } from 'lodash';
 import { IMultipleOverlaysSourceConfig, IOverlaysSourceProvider, MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
 import { Options } from '@angular-slider/ngx-slider'
-import { GeoRegisteration, IOverlaysCriteria, IResolutionRange } from '../../../overlays/models/overlay.model';
+import { GeoRegisteration , IResolutionRange } from '../../../overlays/models/overlay.model';
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import { SearchPanelComponent } from '../search-panel/search-panel.component';
 import { UpdateAdvancedSearchParamAction } from '../../actions/status-bar.actions';
@@ -22,8 +22,6 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 	@AutoSubscriptions()
 	export class AdvancedSearchComponent implements OnInit, OnDestroy {
 
-	minValue = 0;
-	maxValue = 0;
 	sliderOptions: Options = {
 		floor: this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.lowValue,
 		ceil: this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.highValue,
@@ -56,8 +54,8 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 		this.selectedTypes = searchOptions.types;
 		this.selectedProviders = searchOptions.providers;
 		this.selectedRegistration = searchOptions.registeration;
-		this.minValue = searchOptions.resolution.lowValue;
-		this.maxValue = searchOptions.resolution.highValue;
+		this.sliderOptions.floor = searchOptions.resolution.lowValue;
+		this.sliderOptions.ceil = searchOptions.resolution.highValue;
 		this.selectedSensors = searchOptions.sensors;
 		this.selectedProvidersNames = this.selectedProviders.map(provider => provider.name);
 	}));
@@ -73,21 +71,6 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 	getAllProvidersNames(): string[] {
 		const allProvider = Object.keys(this.multipleOverlaysSourceConfig.indexProviders);
 		const providers = allProvider.filter(provider => !this.multipleOverlaysSourceConfig.indexProviders[provider].inActive)
-		
-		providers.push('happy')
-		providers.push('birthday')
-		providers.push('dear')
-		providers.push('sleepy')
-		providers.push('joe')
-		providers.push('joe')
-		providers.push('joe')
-		providers.push('happy')
-		providers.push('birthday')
-		providers.push('dear')
-		providers.push('sleepy')
-		providers.push('joe')
-		providers.push('joe')
-		providers.push('joe')
 	
 		return providers;
 	}
@@ -98,8 +81,8 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 
 	getCurrentAdvancedSearchParameters(): IAdvancedSearchParameter {
 		const resolution: IResolutionRange = {
-			lowValue: this.minValue,
-			highValue: this.maxValue
+			lowValue: this.sliderOptions.floor,
+			highValue: this.sliderOptions.ceil
 		}
 		
 		return  {
@@ -243,10 +226,6 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 		this.selectedTypes = this.sensorTypes;
 	}
 	
-	resetSelection(selectedArrayToFill) {
-		this[`reset${selectedArrayToFill}`]();
-	}
-
 	resetDataInputFilters() {
 		this.selectedProvidersNames = [];
 		this.selectedProviders = [];
@@ -255,8 +234,8 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 	}
 
 	resetResolution() {
-		this.minValue = this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.lowValue;
-		this.maxValue =  this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.highValue;
+		this.sliderOptions.floor = this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.lowValue;
+		this.sliderOptions.ceil =  this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.highValue;
 	}
 	
 }

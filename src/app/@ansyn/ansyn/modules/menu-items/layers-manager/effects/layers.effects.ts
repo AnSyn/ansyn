@@ -1,4 +1,4 @@
-import { ILayerState, selectLayersEntities } from '../reducers/layers.reducer';
+import { ILayerState } from '../reducers/layers.reducer';
 import {
 	AddLayer,
 	BeginLayerCollectionLoadAction,
@@ -6,19 +6,16 @@ import {
 	LayersActions,
 	LayersActionTypes,
 	RemoveCaseLayersFromBackendAction,
-	RemoveCaseLayersFromBackendFailedAction,
-	RemoveCaseLayersFromBackendSuccessAction,
-	UpdateLayer
+	RemoveCaseLayersFromBackendSuccessAction
 } from '../actions/layers.actions';
 import { Injectable } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { EMPTY, Observable, of } from 'rxjs';
-import { catchError, filter, map, mergeMap, withLatestFrom, tap, retry } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, filter, map, mergeMap } from 'rxjs/operators';
 import { DataLayersService } from '../services/data-layers.service';
 import { ILayer, LayerType } from '../models/layers.model';
 import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCrash';
-// import { selectAutoSave } from '../../../menu-items/cases/reducers/cases.reducer';
 
 @Injectable()
 export class LayersEffects {

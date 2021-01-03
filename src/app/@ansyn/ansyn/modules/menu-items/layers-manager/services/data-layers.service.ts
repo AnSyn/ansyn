@@ -14,13 +14,8 @@ import { ILayer, layerPluginTypeEnum, LayerType } from '../models/layers.model';
 import {
 	AddLayerOnBackendFailedAction,
 	AddLayerOnBackendSuccessAction,
-	RemoveCaseLayersFromBackendAction,
-	RemoveCaseLayersFromBackendFailedAction,
-	RemoveCaseLayersFromBackendSuccessAction,
 	RemoveLayerOnBackendFailedAction,
-	RemoveLayerOnBackendSuccessAction,
-	UpdateLayerOnBackendFailedAction,
-	UpdateLayerOnBackendSuccessAction
+	RemoveLayerOnBackendSuccessAction
 } from '../actions/layers.actions';
 
 export const layersConfig = 'layersManagerConfig';

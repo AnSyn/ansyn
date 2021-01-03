@@ -147,13 +147,6 @@ describe('CasesEffects', () => {
 		expect(casesEffects.loadCases$).toBeObservable(expectedResults);
 	});
 
-	/*it('onUpdateCase$ should call casesService.updateCase with action.payload("updatedCase"), and return UpdateCaseAction', () => {
-		const updatedCase: ICase = { ...caseMock, id: 'updatedCaseId' };
-		actions = hot('--a--', { a: new UpdateCaseAction({ updatedCase: updatedCase, forceUpdate: true }) });
-		const expectedResults = cold('--b--', { b: new UpdateCaseBackendAction(updatedCase) });
-		expect(casesEffects.onUpdateCase$).toBeObservable(expectedResults);
-	});*/
-
 	it('onSaveCaseAs$ should add a default case', () => {
 		const selectedCase = {
 			id: 'selectedCaseId',

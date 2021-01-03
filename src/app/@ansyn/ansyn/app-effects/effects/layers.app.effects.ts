@@ -20,18 +20,6 @@ import {
 @Injectable()
 export class LayersAppEffects {
 
-	/*@Effect()
-	onSaveCaseAs$ = this.actions$
-		.pipe(
-			ofType<SaveCaseAsSuccessAction>(CasesActionTypes.SAVE_CASE_AS_SUCCESS),
-			mergeMap((action: SaveCaseAsSuccessAction) => [
-					new UpdateCaseBackendSaveAs(action.payload),
-					new BeginLayerCollectionLoadAction({ caseId: action.payload.id }),
-					new UpdateSelectedLayersIds(action.payload.state.layers.activeLayersIds)
-				]
-			)
-		);*/
-
 	@Effect()
 	removeAnnotationFeature$: Observable<any> = this.actions$.pipe(
 		ofType<AnnotationRemoveFeature>(ToolsActionsTypes.ANNOTATION_REMOVE_FEATURE),

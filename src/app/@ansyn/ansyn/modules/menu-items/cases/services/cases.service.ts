@@ -1,4 +1,4 @@
-import { ICasesConfig } from '../models/cases-config';
+import { CasesType, ICasesConfig } from '../models/cases-config';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
@@ -48,7 +48,7 @@ export class CasesService {
 		this.paginationLimit = this.config.paginationLimit;
 	}
 
-	loadCases(casesOffset: number = 0, casesType: 'owner' | 'sharedWith' = 'owner'): Observable<any> {
+	loadCases(casesOffset: number = 0, casesType: CasesType = CasesType.MyCases): Observable<any> {
 		return this.storageService.getPage<ICasePreview>(this.config.schema, casesOffset, this.paginationLimit, casesType)
 			.pipe(
 				map(previews => previews.map(preview => this.parseCasePreview(preview))),

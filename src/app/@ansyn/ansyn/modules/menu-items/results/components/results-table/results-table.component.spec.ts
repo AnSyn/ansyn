@@ -55,10 +55,10 @@ describe('ResultsTableComponent', () => {
 		expect(store.dispatch).toHaveBeenCalledWith(new DisplayOverlayFromStoreAction({ id }));
 	});
 
-	it('onMouseOver should dispatch SetMarkUp', () => {
+	it('openOverlayOverview should dispatch SetMarkUp', () => {
 		const $event = { currentTarget: { id: '234' } };
 		const id = '1';
-		component.onMouseOver($event, id);
+		component.openOverlayOverview($event, id);
 		expect(store.dispatch).toHaveBeenCalledWith(new SetMarkUp({
 			classToSet: MarkUpClass.hover,
 			dataToSet: { overlaysIds: [id] },
@@ -67,8 +67,8 @@ describe('ResultsTableComponent', () => {
 	});
 
 
-	it('onMouseOut should dispatch SetMarkUp', () => {
-		component.onMouseOut();
+	it('closeOverlayOverview should dispatch SetMarkUp', () => {
+		component.closeOverlayOverview();
 		expect(store.dispatch).toHaveBeenCalledWith(new SetMarkUp({
 			classToSet: MarkUpClass.hover,
 			dataToSet: { overlaysIds: [] }

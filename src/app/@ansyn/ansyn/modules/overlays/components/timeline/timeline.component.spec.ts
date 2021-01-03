@@ -10,7 +10,8 @@ import { OverlaysService } from '../../services/overlays.service';
 import { MultipleOverlaysSourceProvider } from '../../services/multiple-source-provider';
 import { createStore, IStoreFixture } from '../../../core/test/mock-store';
 import { LoggerService } from '../../../core/services/logger.service';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
+import { MockPipe } from '../../../core/test/mock-pipe';
 
 describe('TimelineComponent', () => {
 	let component: TimelineComponent;
@@ -142,10 +143,12 @@ describe('TimelineComponent', () => {
 					useValue: {}
 				}
 			],
-			declarations: [TimelineComponent],
+			declarations: [
+				TimelineComponent,
+				MockPipe('translate')
+			],
 			imports: [
-				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer }),
-				TranslateModule
+				StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer })
 			]
 		})
 			.compileComponents();

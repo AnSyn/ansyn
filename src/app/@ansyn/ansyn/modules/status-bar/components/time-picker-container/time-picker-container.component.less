@@ -1,8 +1,7 @@
-@import "ansyn/less/colors";
-@import "ansyn/less/globals";
+@import "ansyn/less/common";
 
 :host {
-	direction: rtl;
+	z-index: @z-index-status-bar-navigation-area;
 
 	.box {
 		margin: 0 3px;
@@ -30,6 +29,11 @@
 			&:hover:not(.active) {
 				background: @status-bar-hover;
 			}
+
+			span.date-range {
+				direction: ltr; // dates are always ltr
+				margin-left: 5px;
+			}
 		}
 
 		&.timePickerBox {
@@ -47,8 +51,15 @@
 				&.error {
 					color: red;
 				}
+			}
+		}
 
-				&:last-child {
+		&.rtl {
+			direction: rtl;
+			// This component is under the footer, which is always ltr, so rtl needs to be redefined
+			.button {
+				span.date-range {
+					margin-left: unset;
 					margin-right: 5px;
 				}
 			}

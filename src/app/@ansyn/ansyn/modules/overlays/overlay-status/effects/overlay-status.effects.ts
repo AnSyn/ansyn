@@ -22,7 +22,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, select, Store } from '@ngrx/store';
 import { EMPTY, Observable } from 'rxjs';
 import { fromPromise } from 'rxjs/internal-compatibility';
-import { catchError, filter, map, mergeMap, switchMap, withLatestFrom, pluck } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, switchMap, withLatestFrom, pluck, tap } from 'rxjs/operators';
 import {
 	BackToWorldFailed,
 	BackToWorldSuccess,
@@ -53,6 +53,7 @@ import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from '../config/overlay-status-config';
 import { isEqual } from "lodash";
 import { CasesActionTypes } from '../../../menu-items/cases/actions/cases.actions';
+import { OverlayOutOfBoundsService } from "../../../../services/overlay-out-of-bounds/overlay-out-of-bounds.service";
 
 @Injectable()
 export class OverlayStatusEffects {
@@ -60,15 +61,22 @@ export class OverlayStatusEffects {
 	backToWorldView$: Observable<any> = this.actions$
 		.pipe(
 			ofType(OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW),
-			filter( (action: BackToWorldView) => this.communicatorsService.has(action.payload.mapId)),
-			switchMap(({payload}: BackToWorldView) => {
+			filter((action: BackToWorldView) => this.communicatorsService.has(action.payload.mapId)),
+			switchMap(({ payload }: BackToWorldView) => {
 				const communicator = this.communicatorsService.provide(payload.mapId);
-				const mapData = {...communicator.mapSettings.data};
+				const mapData = { ...communicator.mapSettings.data };
 				const position = mapData.position;
 				const disabledMap = communicator.activeMapName === DisabledOpenLayersMapName || communicator.activeMapName === ImageryVideoMapType;
 				this.store$.dispatch(new UpdateMapAction({
 					id: communicator.id,
-					changes: { data: { ...mapData, overlay: null, isAutoImageProcessingActive: false, imageManualProcessArgs: this.defaultImageManualProcessArgs } }
+					changes: {
+						data: {
+							...mapData,
+							overlay: null,
+							isAutoImageProcessingActive: false,
+							imageManualProcessArgs: this.defaultImageManualProcessArgs
+						}
+					}
 				}));
 
 				return fromPromise<any>(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
@@ -91,13 +99,18 @@ export class OverlayStatusEffects {
 		filter(Boolean),
 		withLatestFrom(this.store$.select(mapStateSelector), (activeMapId, mapState: IMapState) => MapFacadeService.activeMap(mapState)),
 		filter((activeMap: ICaseMapState) => activeMap && activeMap.data && !activeMap.data.overlay),
-		map((activeMap: ICaseMapState) => new DisableImageProcessing())
+		map(() => new DisableImageProcessing())
 	);
 
 	@Effect()
 	onSelectCase$: Observable<DisableImageProcessing> = this.actions$.pipe(
 		ofType(CasesActionTypes.SELECT_CASE),
 		map(() => new DisableImageProcessing()));
+
+	@Effect({ dispatch: false })
+	onOverlayOutOfBounds: Observable<any> = this.actions$.pipe(
+		ofType(OverlayStatusActionsTypes.BACK_TO_EXTENT),
+		tap(() => this.outOfBoundsService.backToExtent()));
 
 	@Effect()
 	toggleAutoImageProcessing$: Observable<any> = this.actions$.pipe(
@@ -179,8 +192,7 @@ export class OverlayStatusEffects {
 
 					if (combinedResult === null) {
 						scannedArea = null;
-					}
-					else if (combinedResult.geometry.type === 'MultiPolygon') {
+					} else if (combinedResult.geometry.type === 'MultiPolygon') {
 						scannedArea = combinedResult.geometry;
 					} else {
 						scannedArea = geojsonPolygonToMultiPolygon(combinedResult.geometry);
@@ -228,6 +240,7 @@ export class OverlayStatusEffects {
 	constructor(protected actions$: Actions,
 				protected communicatorsService: ImageryCommunicatorService,
 				protected store$: Store<any>,
+				protected outOfBoundsService: OverlayOutOfBoundsService,
 				@Inject(overlayStatusConfig) protected config: IOverlayStatusConfig) {
 	}
 

@@ -140,13 +140,6 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 		this.store.dispatch(new ActivateScannedAreaAction());
 	}
 
-	clickTime(): void {
-	}
-
-	clickExpand(): void {
-		this.store.dispatch(new ExpandAction());
-	}
-
 	ngOnInit(): void {
 	}
 

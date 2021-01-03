@@ -77,11 +77,6 @@ describe('OverlyaNavigationBarComponent', () => {
 			component.clickGoAdjacent(true);
 			expect(store.dispatch).toHaveBeenCalledWith(new GoAdjacentOverlay({ isNext: true }));
 		});
-		it('clickExpand should dispatch action ExpandAction', () => {
-			spyOn(store, 'dispatch');
-			component.clickExpand();
-			expect(store.dispatch).toHaveBeenCalledWith(new ExpandAction());
-		});
 	});
 
 	[{ k: 'ArrowRight', n: 'goNextActive', f: 'clickGoAdjacent' }, {

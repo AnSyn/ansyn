@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, HostListener, Input, OnInit } from '@angular/core';
+import { Component, HostBinding, HostListener, Input, OnInit } from '@angular/core';
 import { AnsynComboTableComponent } from '../ansyn-combo-table/ansyn-combo-table.component';
 
 @Component({
@@ -16,7 +16,7 @@ import { AnsynComboTableComponent } from '../ansyn-combo-table/ansyn-combo-table
 	@HostBinding('class.disabled')
 	@Input() disabled = false;
 
-	constructor(protected _parent: AnsynComboTableComponent, protected el: ElementRef) { }
+	constructor(protected _parent: AnsynComboTableComponent) { }
 
 	@HostListener('click') onClick() {
 		if (this.value) {

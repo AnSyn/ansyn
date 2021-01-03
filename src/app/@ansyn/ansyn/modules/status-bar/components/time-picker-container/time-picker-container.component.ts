@@ -62,10 +62,9 @@ export class TimePickerContainerComponent implements OnInit, OnDestroy {
 	
 	@AutoSubscription
 	isLocationPickerOpen$: Observable<any> = this.store$.select(selectGeoFilterActive).pipe(
-		tap(isActive => {
-			if (isActive) {
-				this.isPresetOpen = false;
-			}
+		filter(isActive => isActive),
+		tap(()=> {
+			this.isPresetOpen = false;
 		}));
 
 	constructor(protected store$: Store<IStatusBarState>, @Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {

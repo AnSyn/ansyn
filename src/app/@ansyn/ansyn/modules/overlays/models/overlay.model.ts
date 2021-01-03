@@ -1,7 +1,7 @@
 import { CaseGeoFilter, CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
 import { LineString, MultiPolygon, Point } from 'geojson';
 import { EPSG_3857 } from '@ansyn/imagery';
-import { IProviderData } from '../../status-bar/models/statusBar-config.model';
+import { IAdvancedSearchParameter, IProviderData } from '../../status-bar/models/statusBar-config.model';
 
 export interface IOverlayError {
 	message: string,
@@ -119,11 +119,7 @@ export interface IOverlaysCriteria {
 	time?: ICaseTimeState;
 	region?: CaseRegionState;
 	dataInputFilters?: ICaseDataInputFiltersState;
-	resolution?: IResolutionRange;
-	sensors?: string[];
-	types?: string[];
-	registeration?: string[];
-	providers?: IProviderData[];
+	advancedSearchParams?: IAdvancedSearchParameter;
 }
 
 export interface IResolutionRange {

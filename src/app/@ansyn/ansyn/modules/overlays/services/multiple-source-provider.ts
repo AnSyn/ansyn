@@ -11,7 +11,7 @@ import {
 import { Feature, Polygon } from 'geojson';
 import { area, difference, intersect } from '@turf/turf';
 import { map, take, tap } from 'rxjs/operators';
-import { groupBy } from 'lodash';
+import { filter, groupBy } from 'lodash';
 import { IOverlayByIdMetaData } from './overlays.service';
 import { IMultipleOverlaysSource, MultipleOverlaysSource } from '../models/overlays-source-providers';
 import { forkJoinSafe } from '../../core/utils/rxjs/observables/fork-join-safe';
@@ -21,11 +21,11 @@ import {
 	IOverlaysSourceProvider,
 	MultipleOverlaysSourceConfig
 } from '../../core/models/multiple-overlays-source-config';
-import { IOverlay, IOverlaysFetchData } from '../models/overlay.model';
+import { IOverlay, IOverlaysCriteria, IOverlaysFetchData } from '../models/overlay.model';
 import { select, Store } from '@ngrx/store';
-import { selectAdvancedSearchParameters } from '../../status-bar/reducers/status-bar.reducer';
 import { IAdvancedSearchParameter, IProviderData, IStatusBarConfig } from '../../status-bar/models/statusBar-config.model';
 import { StatusBarConfig } from '../../status-bar/models/statusBar.config';
+import { selectOverlaysCriteria } from '../reducers/overlays.reducer';
 
 @Injectable({
 	providedIn: 'root'
@@ -36,9 +36,9 @@ export class MultipleOverlaysSourceProvider {
 	private selectedProviders: IProviderData[];
 
 	onDataInputFilterChange$ = this.store.pipe(
-		select(selectAdvancedSearchParameters),
-		tap((searchOptions: IAdvancedSearchParameter) => {
-			this.activeProviders(searchOptions.providers);
+		select(selectOverlaysCriteria),
+		tap((searchOptions: IOverlaysCriteria) => {
+			this.activeProviders(searchOptions.advancedSearchParams.providers);
 		})
 	);
 
@@ -86,81 +86,27 @@ export class MultipleOverlaysSourceProvider {
 		return [provider, config];
 	};
 
-	private activeProviders(providersFromState) {
+	private filterOnSelectedProviders([provider, { inActive }]: [BaseOverlaySourceProvider, IOverlaysSourceProvider]) {
+		return !inActive;
+	}
+
+	private prepareAllActiveProvidersArray() {
 		this.providers = [];
 
-		const filterWhiteList = ([provider, { inActive }]: [BaseOverlaySourceProvider, IOverlaysSourceProvider]) => !inActive;
-
-		Object.values(this.overlaysSources).map(provider => this.mapProviderConfig(provider)).filter(filterWhiteList).forEach(([provider, config]) => {
-
-			let whiteFilters = [];
-
-			// Separate all sensors, date ranges, and polygons
-			config.whitelist.forEach(filter => {
-				filter.sensorNames.forEach(sensor => {
-					filter.coverage.forEach(polygon => {
-						filter.dates.forEach(date => {
-							const dateObj = {
-								start: date.start ? new Date(date.start) : null,
-								end: date.end ? new Date(date.end) : null
-							};
-							whiteFilters.push({
-								sensor,
-								timeRange: dateObj,
-								coverage: this.coverageToFeature(polygon)
-							});
-						});
-					});
-				});
-			});
-
-			if (config.blacklist) {
-				let blackFilters = [];
-
-				// Separate all sensors, date ranges, and polygons
-				config.blacklist.forEach(filter => {
-					filter.sensorNames.forEach(sensor => {
-						filter.coverage.forEach(polygon => {
-							filter.dates.forEach(date => {
-								const dateObj = {
-									start: date.start ? new Date(date.start) : null,
-									end: date.end ? new Date(date.end) : null
-								};
-								blackFilters.push({
-									sensor,
-									timeRange: dateObj,
-									coverage: this.coverageToFeature(polygon)
-								});
-							});
-						});
-					});
-				});
-
-				// Sort blackFilters by date (creates less work for the filter
-				blackFilters = blackFilters.sort((a, b) => (!a.timeRange.start || a.timeRange.start > b.timeRange.start) ? 1 : -1);
-
-				// Remove filters that are blacklisted
-				whiteFilters = mergeArrays(whiteFilters
-					.map(filter => filterFilter(filter, blackFilters))
-				);
-			}
-
-			// If there are whiteFilters after removing the blackFilters, add it to the providers list
-			if (whiteFilters.length > 0) {
+		Object.values(this.overlaysSources).map(provider => this.mapProviderConfig(provider)).filter(this.filterOnSelectedProviders).forEach(([provider, config]) => {
 				this.providers.push({
 					name: provider.sourceType,
 					class: provider
 				});
-			}
 		});
+	}
+
+	private activeProviders(providersFromState) {
+		this.prepareAllActiveProvidersArray();
 
 		this.selectedProviders = [];
 		providersFromState.map(providerFromState => {
-			this.providers.forEach(provider => {
-				if (providerFromState.name === provider.name) {
-					this.selectedProviders.push(provider);
-				}
-			})
+			this.selectedProviders.push(...this.providers.filter(provider => providerFromState.name === provider.name));
 		});
 	}
 

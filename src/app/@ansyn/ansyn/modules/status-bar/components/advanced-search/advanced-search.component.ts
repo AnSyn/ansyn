@@ -1,18 +1,17 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { flattenDeep } from 'lodash';
 import { IMultipleOverlaysSourceConfig, IOverlaysSourceProvider, MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
 import { Options } from '@angular-slider/ngx-slider'
-import { GeoRegisteration, IResolutionRange } from '../../../overlays/models/overlay.model';
+import { GeoRegisteration, IOverlaysCriteria, IResolutionRange } from '../../../overlays/models/overlay.model';
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import { SearchPanelComponent } from '../search-panel/search-panel.component';
 import { UpdateAdvancedSearchParamAction } from '../../actions/status-bar.actions';
-import { selectAdvancedSearchParameters } from '../../reducers/status-bar.reducer';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
 import { IAdvancedSearchParameter, IProviderData, IStatusBarConfig } from '../../models/statusBar-config.model';
 import { StatusBarConfig } from '../../models/statusBar.config';
+import { selectOverlaysCriteria } from '../../../overlays/reducers/overlays.reducer';
 
 @Component({
 	selector: 'ansyn-advanced-search',
@@ -22,8 +21,8 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 	@AutoSubscriptions()
 	export class AdvancedSearchComponent implements OnInit, OnDestroy {
 
-	minValue = 100;
-	maxValue = 200;
+	minValue = 0;
+	maxValue = 0;
 	sliderOptions: Options = {
 		floor: 100,
 		ceil: 200,
@@ -51,21 +50,20 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 
 	@AutoSubscription
 	onDataInputFilterChange$ = this.store.pipe(
-	select(selectAdvancedSearchParameters),
-	tap((searchOptions: IAdvancedSearchParameter) => {
+	select(selectOverlaysCriteria),
+	tap((searchOptions: IOverlaysCriteria) => {
 		if (searchOptions) {
-			this.selectedTypes = searchOptions.types;
-			this.selectedProviders = searchOptions.providers;
-			this.selectedRegistration = searchOptions.registeration;
-			this.minValue = searchOptions.resolution.lowValue;
-			this.maxValue = searchOptions.resolution.highValue;
-			this.selectedSensors = searchOptions.sensors;
+			this.selectedTypes = searchOptions.advancedSearchParams.types;
+			this.selectedProviders = searchOptions.advancedSearchParams.providers;
+			this.selectedRegistration = searchOptions.advancedSearchParams.registeration;
+			this.minValue = searchOptions.advancedSearchParams.resolution.lowValue;
+			this.maxValue = searchOptions.advancedSearchParams.resolution.highValue;
+			this.selectedSensors = searchOptions.advancedSearchParams.sensors;
 			this.selectedProvidersNames = this.selectedProviders.map(provider => provider.name);
 		}}));
 
 	constructor(protected store: Store<any>,
 				@Inject(MultipleOverlaysSourceConfig) public multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
-				private translate: TranslateService,
 				protected _parent: SearchPanelComponent,
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) { 
 		this.sensorTypes = this.getAllSensorsTypes();
@@ -114,7 +112,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 	}
 
 	getAllSensorsTypes() {
-		const allSensors: string[] = []
+		const allSensors: string[] = [];
 		Object.values(this.multipleOverlaysSourceConfig.indexProviders).filter(provider => !provider.inActive).map(provider => {
 			provider.dataInputFiltersConfig.children.map(sensor => {
 				allSensors.push(sensor.text)
@@ -129,7 +127,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 
 	search() {
 		this.store.dispatch(new UpdateAdvancedSearchParamAction(this.getCurrentAdvancedSearchParameters()));
-		this.store.dispatch(new SetOverlaysCriteriaAction(this.getCurrentAdvancedSearchParameters()));
+		this.store.dispatch(new SetOverlaysCriteriaAction({advancedSearchParams: this.getCurrentAdvancedSearchParameters()}));
 		this._parent.close();
 	}
 
@@ -170,18 +168,17 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 
 	updateSelectedSensorsByTypes(selectedTypesArray: string[]) {
 		const sensorsToActiveate: any[] = [];
-		Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
-				.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive)
+		this.getActiveProviders()
 				.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
 			  if(sensorNamesByGroup) {
 				const typesNames = Object.keys(sensorNamesByGroup);
-				typesNames.forEach(type => {
-				  if( selectedTypesArray.includes(type)) {
+				typesNames.map(type => {
+				  if(selectedTypesArray.includes(type)) {
 					sensorsToActiveate.push(...sensorNamesByGroup[type]);
 				  }
 				})
 			  }
-					}
+			}
 		  );
 		const sensorsToAdd = sensorsToActiveate.filter(sensor => !this.selectedSensors.includes(sensor));
 		sensorsToAdd.push(...this.selectedSensors);
@@ -189,8 +186,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 	  }
 
 	updateSelectedProvidersByType(changedType: string) {
-		Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
-			.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive)
+		this.getActiveProviders()
 			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
 				dataInputFiltersConfig.children.forEach(type => {
 				if (type.text === changedType && !this.selectedProvidersNames.includes(providerName)) {
@@ -202,13 +198,23 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 		);
 	}
 
-	getUniqueElement(selectedItemsArray, elementArray) {
-		return Boolean(elementArray.length > selectedItemsArray.length) ? elementArray.filter(provider => selectedItemsArray.indexOf(provider) < 0) : selectedItemsArray.filter(provider => elementArray.indexOf(provider) < 0);
+	private getActiveProviders() {
+		return Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
+		.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive);
+	}
+	private isExistInArray(itemsArray, element) {
+		return itemsArray.indexOf(element) < 0;
+	}
+
+	getUniqueElement(currentArray, afterChangeArray) {
+		return Boolean(afterChangeArray.length > currentArray.length) ? 
+		afterChangeArray.filter(provider => this.isExistInArray(currentArray, provider)) : 
+		currentArray.filter(provider => this.isExistInArray(afterChangeArray, provider));
 	}
 
 	updateSelectedTypesByProviders(selectedProviders, changedProvider) {
 		const typesToActivate = [];
-		Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
+		this.getActiveProviders()
 			.filter(([providerName]: [string, IOverlaysSourceProvider]) => providerName === changedProvider)
 			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
 				typesToActivate.push(...dataInputFiltersConfig.children);
@@ -236,21 +242,26 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 		this.updateSelectedProvidersByProviderNames();
 		this.selectedTypes = this.sensorTypes;
 	}
-
+	
 	resetSelection(selectedArrayToFill) {
-		switch (selectedArrayToFill) {
-			case 'providers' :
-			case 'types': {
-				this.selectedProvidersNames = [];
-				this.selectedProviders = [];
-				this.selectedTypes = [];
-				break;
-			}
-			case 'resolution' : {
-				this.minValue = 100;
-				this.maxValue = 200;
-				break;
-			}
-		}
+		this[`reset${selectedArrayToFill}`]();
 	}
+
+	resetProviders() {
+		this.selectedProvidersNames = [];
+		this.selectedProviders = [];
+		this.selectedTypes = [];
+	}
+
+	resetTypes() {
+		this.selectedProvidersNames = [];
+		this.selectedProviders = [];
+		this.selectedTypes = [];
+	}
+
+	resetResolution() {
+		this.minValue = this.statusBarConfig.defaultAdvancedSearchParameters.resolution.lowValue;
+		this.maxValue = this.statusBarConfig.defaultAdvancedSearchParameters.resolution.highValue;
+	}
+	
 }

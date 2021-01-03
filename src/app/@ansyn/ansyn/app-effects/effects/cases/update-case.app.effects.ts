@@ -51,7 +51,7 @@ export class UpdateCaseAppEffects {
 				activeMapId,
 				mapsList,
 				layout,
-				{ time, region, dataInputFilters }, /* overlaysCriteria */
+				{ time, region, dataInputFilters, advancedSearchParameters }, /* overlaysCriteria */
 				overlaysManualProcessArgs,
 				miscOverlays,
 				overlaysTranslationData,
@@ -80,6 +80,7 @@ export class UpdateCaseAppEffects {
 					region,
 					dataInputFilters,
 					time,
+					advancedSearchParameters,
 					facets,
 					miscOverlays,
 					overlaysManualProcessArgs,

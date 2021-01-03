@@ -119,7 +119,7 @@ export interface IOverlaysCriteria {
 	time?: ICaseTimeState;
 	region?: CaseRegionState;
 	dataInputFilters?: ICaseDataInputFiltersState;
-	advancedSearchParams?: IAdvancedSearchParameter;
+	advancedSearchParameters?: IAdvancedSearchParameter;
 }
 
 export interface IResolutionRange {

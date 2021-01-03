@@ -9,9 +9,10 @@ import { SearchPanelComponent } from '../search-panel/search-panel.component';
 import { UpdateAdvancedSearchParamAction } from '../../actions/status-bar.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
-import { IAdvancedSearchParameter, IProviderData, IStatusBarConfig } from '../../models/statusBar-config.model';
-import { StatusBarConfig } from '../../models/statusBar.config';
-import { selectOverlaysCriteria } from '../../../overlays/reducers/overlays.reducer';
+import { IAdvancedSearchParameter, IProviderData } from '../../models/statusBar-config.model';
+import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overlays.reducer';
+import { casesConfig } from '../../../menu-items/cases/services/cases.service';
+import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 
 @Component({
 	selector: 'ansyn-advanced-search',
@@ -24,8 +25,8 @@ import { selectOverlaysCriteria } from '../../../overlays/reducers/overlays.redu
 	minValue = 0;
 	maxValue = 0;
 	sliderOptions: Options = {
-		floor: 100,
-		ceil: 200,
+		floor: this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.lowValue,
+		ceil: this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.highValue,
 		translate: (value: number): string => {
 			return value + ' mm ';
 		},
@@ -50,22 +51,21 @@ import { selectOverlaysCriteria } from '../../../overlays/reducers/overlays.redu
 
 	@AutoSubscription
 	onDataInputFilterChange$ = this.store.pipe(
-	select(selectOverlaysCriteria),
-	tap((searchOptions: IOverlaysCriteria) => {
-		if (searchOptions) {
-			this.selectedTypes = searchOptions.advancedSearchParams.types;
-			this.selectedProviders = searchOptions.advancedSearchParams.providers;
-			this.selectedRegistration = searchOptions.advancedSearchParams.registeration;
-			this.minValue = searchOptions.advancedSearchParams.resolution.lowValue;
-			this.maxValue = searchOptions.advancedSearchParams.resolution.highValue;
-			this.selectedSensors = searchOptions.advancedSearchParams.sensors;
-			this.selectedProvidersNames = this.selectedProviders.map(provider => provider.name);
-		}}));
+	select(selectAdvancedSearchParameters),
+	tap((searchOptions: IAdvancedSearchParameter) => {
+		this.selectedTypes = searchOptions.types;
+		this.selectedProviders = searchOptions.providers;
+		this.selectedRegistration = searchOptions.registeration;
+		this.minValue = searchOptions.resolution.lowValue;
+		this.maxValue = searchOptions.resolution.highValue;
+		this.selectedSensors = searchOptions.sensors;
+		this.selectedProvidersNames = this.selectedProviders.map(provider => provider.name);
+	}));
 
 	constructor(protected store: Store<any>,
 				@Inject(MultipleOverlaysSourceConfig) public multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				protected _parent: SearchPanelComponent,
-				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) { 
+				@Inject(casesConfig) public caseConfig: ICasesConfig) { 
 		this.sensorTypes = this.getAllSensorsTypes();
 		this.providersNamesList = this.getAllProvidersNames();
 	}
@@ -122,12 +122,12 @@ import { selectOverlaysCriteria } from '../../../overlays/reducers/overlays.redu
 	}
 
 	ngOnInit(): void {
-		this.allProviders = this.statusBarConfig.defaultAdvancedSearchParameters.providers;
+		this.allProviders = this.caseConfig.defaultCase.state.advancedSearchParameters.providers;
 	}
 
 	search() {
 		this.store.dispatch(new UpdateAdvancedSearchParamAction(this.getCurrentAdvancedSearchParameters()));
-		this.store.dispatch(new SetOverlaysCriteriaAction({advancedSearchParams: this.getCurrentAdvancedSearchParameters()}));
+		this.store.dispatch(new SetOverlaysCriteriaAction({advancedSearchParameters: this.getCurrentAdvancedSearchParameters()}));
 		this._parent.close();
 	}
 
@@ -247,21 +247,16 @@ import { selectOverlaysCriteria } from '../../../overlays/reducers/overlays.redu
 		this[`reset${selectedArrayToFill}`]();
 	}
 
-	resetProviders() {
+	resetDataInputFilters() {
 		this.selectedProvidersNames = [];
 		this.selectedProviders = [];
 		this.selectedTypes = [];
-	}
-
-	resetTypes() {
-		this.selectedProvidersNames = [];
-		this.selectedProviders = [];
-		this.selectedTypes = [];
+		this.selectedSensors = [];
 	}
 
 	resetResolution() {
-		this.minValue = this.statusBarConfig.defaultAdvancedSearchParameters.resolution.lowValue;
-		this.maxValue = this.statusBarConfig.defaultAdvancedSearchParameters.resolution.highValue;
+		this.minValue = this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.lowValue;
+		this.maxValue =  this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.highValue;
 	}
 	
 }

@@ -25,7 +25,7 @@ import { IOverlay, IOverlaysCriteria, IOverlaysFetchData } from '../models/overl
 import { select, Store } from '@ngrx/store';
 import { IAdvancedSearchParameter, IProviderData, IStatusBarConfig } from '../../status-bar/models/statusBar-config.model';
 import { StatusBarConfig } from '../../status-bar/models/statusBar.config';
-import { selectOverlaysCriteria } from '../reducers/overlays.reducer';
+import { selectOverlaysCriteria, selectProviders } from '../reducers/overlays.reducer';
 
 @Injectable({
 	providedIn: 'root'
@@ -36,9 +36,9 @@ export class MultipleOverlaysSourceProvider {
 	private selectedProviders: IProviderData[];
 
 	onDataInputFilterChange$ = this.store.pipe(
-		select(selectOverlaysCriteria),
-		tap((searchOptions: IOverlaysCriteria) => {
-			this.activeProviders(searchOptions.advancedSearchParams.providers);
+		select(selectProviders),
+		tap((providers: IProviderData[]) => {
+			this.activeProviders(providers);
 		})
 	);
 
@@ -91,13 +91,12 @@ export class MultipleOverlaysSourceProvider {
 	}
 
 	private prepareAllActiveProvidersArray() {
-		this.providers = [];
-
-		Object.values(this.overlaysSources).map(provider => this.mapProviderConfig(provider)).filter(this.filterOnSelectedProviders).forEach(([provider, config]) => {
-				this.providers.push({
+		const rawProviders = Object.values(this.overlaysSources);
+		this.providers = rawProviders.map(provider => this.mapProviderConfig(provider)).filter(this.filterOnSelectedProviders).map(([provider, config]) => {
+				return {
 					name: provider.sourceType,
 					class: provider
-				});
+				};
 		});
 	}
 
@@ -105,9 +104,9 @@ export class MultipleOverlaysSourceProvider {
 		this.prepareAllActiveProvidersArray();
 
 		this.selectedProviders = [];
-		providersFromState.map(providerFromState => {
-			this.selectedProviders.push(...this.providers.filter(provider => providerFromState.name === provider.name));
-		});
+		this.selectedProviders.push(...providersFromState.map(providerFromState => {
+			return this.providers.filter(provider => providerFromState.name === provider.name).pop();
+		}));
 	}
 
 	public getById(id: string, sourceType: string): Observable<IOverlay> {

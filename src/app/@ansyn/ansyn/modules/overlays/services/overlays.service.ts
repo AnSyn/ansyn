@@ -102,10 +102,10 @@ export class OverlaysService {
 				end: params.time.to
 			},
 			customSensorToFilter: params.dataInputFilters.customFiltersSensor,
-			sensors: params.advancedSearchParams.sensors || null,
-			registeration: params.advancedSearchParams.registeration || null,
-			resolution: params.advancedSearchParams.resolution || null,
-			types: params.advancedSearchParams.types || null
+			sensors: params.advancedSearchParameters.sensors || null,
+			registeration: params.advancedSearchParameters.registeration || null,
+			resolution: params.advancedSearchParameters.resolution || null,
+			types: params.advancedSearchParameters.types || null
 		});
 	}
 

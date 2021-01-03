@@ -1,5 +1,4 @@
 import { IMenuItem } from '@ansyn/menu';
-import { OverlayOutOfBoundsComponent } from '../components/overlay-out-of-bounds/overlay-out-of-bounds.component';
 import { IAlert } from '../modules/alerts/alerts.model';
 import { CasesComponent } from '../modules/menu-items/cases/components/cases/cases.component';
 import { LayersManagerComponent } from '../modules/menu-items/layers-manager/components/layers-manager/layers-manager.component';
@@ -22,10 +21,6 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			key: 'overlayIsNotPartOfQuery',
 			background: '#9ca9b3',
 			text: 'This Overlay Is Not a Part of the Query'
-		},
-		{
-			key: 'overlaysOutOfBounds',
-			component: OverlayOutOfBoundsComponent
 		},
 		{
 			key: anaglyphSensorAlertKey,

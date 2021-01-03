@@ -11,7 +11,11 @@ import { selectMapPositionByMapId, selectOverlayByMapId } from '@ansyn/map-facad
 import { filter, map, switchMap, tap, startWith  } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
 import { AlertMsgTypesEnum } from '../../../alerts/model';
-import { AddAlertMsg, RemoveAlertMsg } from '../../../overlays/overlay-status/actions/overlay-status.actions';
+import {
+	AddAlertMsg,
+	BackToExtentAction,
+	RemoveAlertMsg
+} from '../../../overlays/overlay-status/actions/overlay-status.actions';
 import { selectFilteredOveralys } from '../../../overlays/reducers/overlays.reducer';
 import { isFullOverlay } from '../../../core/utils/overlays';
 import { IOverlay } from '../../../overlays/models/overlay.model';
@@ -83,9 +87,12 @@ export class AlertsPlugin extends BaseImageryPlugin {
 			const viewExtent = position.extentPolygon;
 			const intersection = getPolygonIntersectionRatio(viewExtent, overlay.footprint);
 			isInBound = Boolean(intersection);
-			action = !isInBound ? of(new AddAlertMsg(payload)) :
-				this.outOfBound ? of(new RemoveAlertMsg(payload)) : of(null);
+
+			// calling the BackToExtentAction here because the alert is currently disabled.
+			action = !isInBound ? of(new BackToExtentAction()) :
+				this.outOfBound ? of(new BackToExtentAction()) : of(null);
 		}
-		return action
+
+		return action;
 	}
 }

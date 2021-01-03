@@ -22,7 +22,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { EMPTY, Observable } from 'rxjs';
 import { fromPromise } from 'rxjs/internal-compatibility';
-import { catchError, filter, map, mergeMap, switchMap, withLatestFrom, pluck } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, switchMap, withLatestFrom, pluck, tap } from 'rxjs/operators';
 import {
 	BackToWorldFailed,
 	BackToWorldSuccess,
@@ -43,6 +43,8 @@ import {
 import { IOverlay } from '../../models/overlay.model';
 import { feature, difference } from '@turf/turf';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
+import { OverlayOutOfBoundsService } from '../../../../services/overlay-out-of-bounds/overlay-out-of-bounds.service';
+import { IOverlayStatusConfig, overlayStatusConfig } from '../config/overlay-status-config';
 
 @Injectable()
 export class OverlayStatusEffects {
@@ -84,6 +86,11 @@ export class OverlayStatusEffects {
 			})
 		})
 	);
+
+	@Effect({ dispatch: false })
+	onOverlayOutOfBounds: Observable<any> = this.actions$.pipe(
+		ofType(OverlayStatusActionsTypes.BACK_TO_EXTENT),
+		tap(() => this.outOfBoundsService.backToExtent()));
 
 	@Effect()
 	toggleTranslate$: Observable<any> = this.actions$.pipe(
@@ -147,8 +154,7 @@ export class OverlayStatusEffects {
 
 					if (combinedResult === null) {
 						scannedArea = null;
-					}
-					else if (combinedResult.geometry.type === 'MultiPolygon') {
+					} else if (combinedResult.geometry.type === 'MultiPolygon') {
 						scannedArea = combinedResult.geometry;
 					} else {
 						scannedArea = geojsonPolygonToMultiPolygon(combinedResult.geometry);
@@ -176,6 +182,8 @@ export class OverlayStatusEffects {
 
 	constructor(protected actions$: Actions,
 				protected communicatorsService: ImageryCommunicatorService,
-				protected store$: Store<any>) {
+				protected store$: Store<any>,
+				protected outOfBoundsService: OverlayOutOfBoundsService,
+				@Inject(overlayStatusConfig) protected config: IOverlayStatusConfig) {
 	}
 }

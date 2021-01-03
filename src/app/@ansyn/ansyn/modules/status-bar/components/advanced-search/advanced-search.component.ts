@@ -137,6 +137,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 		const changedType = this.getUniqueElement(selectedTypesArray, this.selectedTypes)[0];
 		this.updateSelectedProvidersByType(changedType);
 		this.selectedTypes = selectedTypesArray;
+		this.updateSelectedSensorsByTypes(selectedTypesArray);
 	}
 
 	updateSelectedProviders(selectedProvidersArray) {
@@ -148,6 +149,10 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 
 	updateSelectedRegistration(selectedRegistrationArray) {
 		this.selectedRegistration = selectedRegistrationArray;
+	}
+
+	updateSelectedSensors(selectedSensorsArray) {
+		this.selectedRegistration = selectedSensorsArray;
 	}
 
 	updateSelectedArray(selectedItemsArray, arrayToUpdate) {
@@ -162,6 +167,28 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 			}
 		});
 	}
+
+	updateSelectedSensorsByTypes(selectedTypesArray: string[]) {
+		const sensorsToActiveate: any[] = [];
+		Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
+				.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive)
+				.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
+			  if(sensorNamesByGroup) {
+				const typesNames = Object.keys(sensorNamesByGroup);
+				typesNames.forEach(type => {
+				  if( selectedTypesArray.includes(type)) {
+					sensorsToActiveate.push(...sensorNamesByGroup[type]);
+				  }
+				})
+			  }
+					}
+		  );
+		const sensorsToAdd = sensorsToActiveate.filter(sensor => !this.selectedSensors.includes(sensor));
+		sensorsToAdd.push(...this.selectedSensors);
+		this.selectedSensors = sensorsToAdd;
+		
+		// this.selectedSensors.push(...sensorsToActiveate.filter(sensor => !this.selectedSensors.includes(sensor)))
+	  }
 
 	updateSelectedProvidersByType(changedType: string) {
 		Object.entries(this.multipleOverlaysSourceConfig.indexProviders)

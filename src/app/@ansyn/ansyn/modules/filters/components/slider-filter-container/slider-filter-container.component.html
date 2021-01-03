@@ -13,7 +13,7 @@
 			</div>
 		</div>
 
-		<ngx-slider class='slider' [options]="rangeValues" onchange="handleChange($event)"
+		<ngx-slider class='slider' [options]="sliderOptions" onchange="handleChange($event)"
 					[(value)]="factor * metadata.min" [(highValue)]="factor * metadata.max"></ngx-slider>
 	</div>
 

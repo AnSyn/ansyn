@@ -58,8 +58,8 @@ export class UpdateCaseAppEffects {
 				miscOverlays,
 				overlaysTranslationData,
 				overlaysScannedAreaData,
-				autoSave,
-				advancedSearchParameters
+				advancedSearchParameters,
+				autoSave
 			] = events;
 
 			const { id, name, lastModified, creationTime } = selectedCase;

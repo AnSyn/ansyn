@@ -39,42 +39,6 @@ export class LayersEffects {
 		})
 	);
 
-	/*@Effect({ dispatch: false })
-	addLayer$: Observable<any> = this.actions$.pipe(
-		ofType<AddLayer>(LayersActionTypes.ADD_LAYER),
-		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
-		filter(([action, autoSave]) => autoSave),
-		mergeMap((action) => this.dataLayersService.addLayer(action.payload)),
-		rxPreventCrash()
-	);*/
-
-	/*@Effect({ dispatch: false })
-	updateLayer$: Observable<any> = this.actions$.pipe(
-		ofType<UpdateLayer>(LayersActionTypes.UPDATE_LAYER),
-		withLatestFrom(this.store$.pipe(select(selectAutoSave)), this.store$.pipe(select(selectLayersEntities))),
-		filter(([action, autoSave, layerDictionary]) => autoSave),
-		mergeMap(([action, autoSave, layerDictionary]) => {
-			const layer = layerDictionary[action.payload.id];
-			return this.dataLayersService.updateLayer(layer)
-					.pipe(
-						catchError(() => of(true))
-					)
-			}
-		)
-	);*/
-
-	/*@Effect({ dispatch: false })
-	removeLayer$ = this.actions$.pipe(
-		ofType<UpdateLayer>(LayersActionTypes.REMOVE_LAYER),
-		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
-		filter(([action, autoSave]) => autoSave),
-		mergeMap(([action]: [any, boolean]) => this.dataLayersService.removeLayer(action.payload)
-			.pipe(
-				catchError(() => EMPTY)
-			)
-		)
-	);*/
-
 	@Effect()
 	removeCaseLayers$ = this.actions$.pipe(
 		ofType(LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_ACTION),

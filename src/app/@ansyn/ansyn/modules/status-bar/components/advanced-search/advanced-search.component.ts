@@ -89,11 +89,8 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 	}
 
 	getAllSensorsTypes(): string[] {
-		const allSensors: string[] = [];
-		Object.values(this.multipleOverlaysSourceConfig.indexProviders).filter(provider => !provider.inActive).map(provider => {
-			provider.dataInputFiltersConfig.children.map(sensor => {
-				allSensors.push(sensor.text)
-			});
+		const allSensors = Object.values(this.multipleOverlaysSourceConfig.indexProviders).filter(provider => !provider.inActive).map(provider => {
+			return provider.dataInputFiltersConfig.children.map(sensor => sensor.text);
 		});
 		return flattenDeep(allSensors);
 	}
@@ -136,40 +133,33 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 
 	updateSelectedProvidersByProviderNames(): void {
 		this.selectedProviders = [];
-		this.selectedProvidersNames.map(providerName => {
-			if (this.selectedProvidersNames.includes(providerName)) {
-				this.selectedProviders.push(...this.allProviders.filter(provider => provider.name === providerName));
-			}
-		});
+		this.selectedProvidersNames.filter(providerName => this.selectedProvidersNames.includes(providerName)).map(selectedProviderName => {
+			this.selectedProviders.push(...this.allProviders.filter(provider => provider.name === selectedProviderName))
+		})
 	}
 
 	updateSelectedSensorsByTypes(selectedTypesArray: string[]): void {
-		const sensorsToActiveate: any[] = [];
+		let sensorsToActivate: any[] = [];
 		this.getActiveProviders()
 			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
 				if (sensorNamesByGroup) {
 					const typesNames = Object.keys(sensorNamesByGroup);
-					typesNames.map(type => {
-						if (selectedTypesArray.includes(type)) {
-							sensorsToActiveate.push(...sensorNamesByGroup[type]);
-						}
-					});
+					 typesNames.filter(type => selectedTypesArray.includes(type)).map(type => {
+							sensorsToActivate = sensorNamesByGroup[type].map(sensor => sensor)
+					 });
 				}
 		});
-
-		const sensorsToAdd = sensorsToActiveate.filter(sensor => !this.selectedSensors.includes(sensor));
-		sensorsToAdd.push(...this.selectedSensors);
-		this.selectedSensors = sensorsToAdd;
+		
+		const sensorsToAdd = sensorsToActivate.filter(sensor => !this.selectedSensors.includes(sensor));
+		this.selectedSensors = this.selectedSensors.concat(sensorsToAdd);
 	}
 
 	updateSelectedProvidersByType(changedType: string): void {
 		this.getActiveProviders()
 			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
-				dataInputFiltersConfig.children.forEach(type => {
-				if (type.text === changedType && !this.selectedProvidersNames.includes(providerName)) {
+				dataInputFiltersConfig.children.filter(type => type.text === changedType && !this.selectedProvidersNames.includes(providerName)).map(() => {
 					this.selectedProvidersNames.push(providerName);
 					this.updateSelectedProvidersByProviderNames();
-				}
 				});
 			}
 		);
@@ -190,27 +180,20 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 	}
 
 	updateSelectedTypesByProviders(selectedProviders: string[], changedProvider: string): void {
-		const typesToActivate = [];
+		let typesToActivate = [];
 		this.getActiveProviders()
 			.filter(([providerName]: [string, IOverlaysSourceProvider]) => providerName === changedProvider)
 			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
-				typesToActivate.push(...dataInputFiltersConfig.children);
+				typesToActivate = dataInputFiltersConfig.children.map(children => children);
 		});
-		
-		this.selectedTypes = this.selectedTypes.slice();
+
 		if (Boolean(selectedProviders.includes(changedProvider))) {
-		this.selectedProvidersNames = selectedProviders;
-		typesToActivate.forEach(type => {
-			if (!this.selectedTypes.includes(type.text)) {
-				this.selectedTypes.push(type.text);
-			}
-		});
+			this.selectedProvidersNames = selectedProviders;
+			this.selectedTypes.push(...typesToActivate.filter(type => !this.selectedTypes.includes(type.text)).map(type => type.text));
 		} else {
-		typesToActivate.forEach(type => {
-			if (this.selectedTypes.includes(type.text)) {
+			typesToActivate.filter(type => this.selectedTypes.includes(type.text)).map(type => {
 				this.selectedTypes = this.selectedTypes.filter(selected => selected !== type.text);
-			}
-		});
+			})
 		}
 	}
 

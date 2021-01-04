@@ -3,15 +3,12 @@ import { Inject, Injectable } from '@angular/core';
 import {
 	BaseOverlaySourceProvider,
 	IFetchParams,
-	IOverlayFilter,
 	isFaulty,
 	mergeErrors,
 	mergeOverlaysFetchData
 } from '../models/base-overlay-source-provider.model';
-import { Feature, Polygon } from 'geojson';
-import { area, difference, intersect } from '@turf/turf';
 import { map, take, tap } from 'rxjs/operators';
-import { filter, groupBy } from 'lodash';
+import { groupBy } from 'lodash';
 import { IOverlayByIdMetaData } from './overlays.service';
 import { IMultipleOverlaysSource, MultipleOverlaysSource } from '../models/overlays-source-providers';
 import { forkJoinSafe } from '../../core/utils/rxjs/observables/fork-join-safe';
@@ -47,17 +44,6 @@ export class MultipleOverlaysSourceProvider {
 				protected store: Store<any>,
 				@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				@Inject(MultipleOverlaysSource) public overlaysSources: IMultipleOverlaysSource) {
-	}
-
-	private coverageToFeature(coordinates: number[][][]): Feature<Polygon> {
-		return {
-			type: 'Feature',
-			properties: {},
-			geometry: {
-				type: 'Polygon',
-				coordinates
-			}
-		};
 	}
 
 	getThumbnailUrl(overlay, position): Observable<any> {
@@ -103,10 +89,9 @@ export class MultipleOverlaysSourceProvider {
 	private activeProviders(providersFromState: IProviderData[]) {
 		this.prepareAllActiveProvidersArray();
 
-		this.selectedProviders = [];
-		this.selectedProviders.push(...providersFromState.map(providerFromState => {
+		this.selectedProviders = providersFromState.map(providerFromState => {
 			return this.providers.find(provider => providerFromState.name === provider.name);
-		}));
+		});
 	}
 
 	public getById(id: string, sourceType: string): Observable<IOverlay> {
@@ -152,54 +137,4 @@ export class MultipleOverlaysSourceProvider {
 
 		return mergedSortedOverlays;
 	}
-}
-
-export function filterFilter(whiteFilter: IOverlayFilter, blackFilters: IOverlayFilter[]): IOverlayFilter[] {
-	let filters = [whiteFilter];
-
-	if (blackFilters.length === 0) {
-		return filters;
-	}
-
-	const newBlackFilters = Array.from(blackFilters);
-	const blackFilter = newBlackFilters.shift();
-
-	if (blackFilter.sensor === whiteFilter.sensor &&
-		area(intersect(whiteFilter.coverage, blackFilter.coverage)) > 0) {
-
-		filters = [];
-
-		const newCoverage = difference(whiteFilter.coverage, blackFilter.coverage);
-
-		const whiteDate = whiteFilter.timeRange;
-		const blackDate = blackFilter.timeRange;
-
-		if (blackDate.start && (!whiteDate.start || whiteDate.start < blackDate.start)) {
-			filters.push({
-				coverage: whiteFilter.coverage,
-				sensor: whiteFilter.sensor,
-				timeRange: { start: whiteDate.start, end: blackDate.start }
-			});
-		}
-
-		if (blackDate.end && (!whiteDate.end || whiteDate.end < blackDate.end)) {
-			filters.push({
-				coverage: whiteFilter.coverage,
-				sensor: whiteFilter.sensor,
-				timeRange: { start: blackDate.end, end: whiteDate.end }
-			});
-		}
-
-		if (area(newCoverage) > 0) {
-			filters.push({
-				coverage: newCoverage,
-				sensor: whiteFilter.sensor,
-				timeRange: blackDate
-			});
-		}
-	}
-
-	return mergeArrays(filters
-		.map(filter => filterFilter(filter, newBlackFilters))
-	);
 }

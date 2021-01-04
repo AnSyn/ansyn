@@ -9,6 +9,9 @@ import { UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { AnsynFormsModule } from '../../../core/forms/ansyn-forms.module';
+import { SearchPanelComponent } from '../search-panel/search-panel.component';
+import { StatusBarConfig } from '../../models/statusBar.config';
+import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
 
 describe('LocationPickerComponent', () => {
 	let component: LocationPickerComponent;
@@ -25,7 +28,17 @@ describe('LocationPickerComponent', () => {
 			providers: [{
 				provide: GEO_FILTERS,
 				useValue: []
-			}]
+			},
+			SearchPanelComponent,
+			{
+				provide: StatusBarConfig,
+				useValue: []
+			},
+			{
+				provide: MultipleOverlaysSourceConfig,
+				useValue: []
+			}
+		]
 		})
 			.compileComponents();
 	}));

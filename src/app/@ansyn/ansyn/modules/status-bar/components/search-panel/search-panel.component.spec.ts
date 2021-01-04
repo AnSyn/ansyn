@@ -27,6 +27,7 @@ import { mockIndexProviders } from '../../../core/test/mock-providers';
 import { of } from 'rxjs';
 import { IOverlaysCriteria } from '../../../overlays/models/overlay.model';
 import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
+import { SearchOptionsComponent } from '../search-options/search-options.component';
 
 const CRITERIA: IOverlaysCriteria = {
 	dataInputFilters: {
@@ -125,7 +126,8 @@ describe('SearchPanelComponent', () => {
 				{
 					provide: COMPONENT_MODE,
 					useValue: false
-				}
+				},
+				SearchOptionsComponent
 			]
 		})
 			.compileComponents();

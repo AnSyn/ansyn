@@ -144,12 +144,12 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
 				if (sensorNamesByGroup) {
 					const typesNames = Object.keys(sensorNamesByGroup);
-					 typesNames.filter(type => selectedTypesArray.includes(type)).map(type => {
+					typesNames.filter(type => selectedTypesArray.includes(type)).map(type => {
 							sensorsToActivate = sensorNamesByGroup[type].map(sensor => sensor)
-					 });
+					});
 				}
 		});
-		
+
 		const sensorsToAdd = sensorsToActivate.filter(sensor => !this.selectedSensors.includes(sensor));
 		this.selectedSensors = this.selectedSensors.concat(sensorsToAdd);
 	}

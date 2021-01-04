@@ -9,6 +9,8 @@ import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-
 import { MultipleOverlaysSourceConfig } from '../../core/models/multiple-overlays-source-config';
 import { LoggerService } from '../../core/services/logger.service';
 import { GeoRegisteration, IOverlay, IOverlayError, IOverlaysFetchData } from '../models/overlay.model';
+import { StatusBarConfig } from '../../status-bar/models/statusBar.config';
+import { Store, StoreModule } from '@ngrx/store';
 
 const overlays: IOverlaysFetchData = {
 	data: [
@@ -31,6 +33,7 @@ const emptyOverlays: IOverlaysFetchData = {
 };
 
 const faultySourceType = 'Faulty';
+let store: Store<any>;
 
 @OverlaySourceProvider({
 	sourceType: 'Truthy'
@@ -115,6 +118,8 @@ const whitelist = [
 	}
 ];
 const loggerServiceMock = { error: (some) => null };
+const statusBarConfigMock = { error: (some) => null };
+
 
 describe('MultipleSourceProvider', () => {
 	let multipleSourceProvider: MultipleOverlaysSourceProvider;
@@ -138,11 +143,16 @@ describe('MultipleSourceProvider', () => {
 						}
 					},
 					{
+						provide: StatusBarConfig,
+						useValue: statusBarConfigMock
+					},
+					{
 						provide: MultipleOverlaysSource,
 						useClass: TruthyOverlaySourceProviderMock,
 						multi: true
 					}
-				]
+				],
+				imports: [StoreModule.forRoot({})]
 			});
 		});
 
@@ -173,6 +183,10 @@ describe('MultipleSourceProvider', () => {
 						provide: LoggerService,
 						useValue: loggerServiceMock
 					},
+					{
+						provide: StatusBarConfig,
+						useValue: statusBarConfigMock
+					},
 					MultipleOverlaysSourceProvider,
 					{
 						provide: MultipleOverlaysSourceConfig,
@@ -187,7 +201,8 @@ describe('MultipleSourceProvider', () => {
 						useClass: FaultyOverlaySourceProviderMock,
 						multi: true
 					}
-				]
+				],
+				imports: [StoreModule.forRoot({})]
 			});
 		});
 
@@ -197,7 +212,8 @@ describe('MultipleSourceProvider', () => {
 
 		it('should return an error', () => {
 			const expectedResults = cold('(b|)', { b: { errors: [faultyError], data: null, limited: -1 } });
-
+			console.log(multipleSourceProvider.fetch(fetchParams));
+			console.log(expectedResults);
 			expect(multipleSourceProvider.fetch(fetchParams)).toBeObservable(expectedResults);
 		});
 

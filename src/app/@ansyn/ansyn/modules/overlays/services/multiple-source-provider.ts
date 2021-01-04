@@ -86,7 +86,7 @@ export class MultipleOverlaysSourceProvider {
 		return [provider, config];
 	};
 
-	private filterOnSelectedProviders([provider, { inActive }]: [BaseOverlaySourceProvider, IOverlaysSourceProvider]):boolean {
+	private filterOnSelectedProviders([provider, { inActive }]: [BaseOverlaySourceProvider, IOverlaysSourceProvider]): boolean {
 		return !inActive;
 	}
 

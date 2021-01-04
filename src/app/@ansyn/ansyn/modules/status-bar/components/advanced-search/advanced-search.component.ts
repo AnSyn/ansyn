@@ -28,12 +28,6 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 		translate: (value: number): string => {
 			return value + ' mm ';
 		},
-		getPointerColor: (value: number): string => {
-			return 'gray';
-		},
-		getSelectionBarColor: (value: number): string => {
-			return 'gray';
-		}
 	};
 	providersNamesList: string[];
 	sensorTypes: string[];
@@ -152,21 +146,21 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 	updateSelectedSensorsByTypes(selectedTypesArray: string[]): void {
 		const sensorsToActiveate: any[] = [];
 		this.getActiveProviders()
-				.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
-			  if(sensorNamesByGroup) {
-				const typesNames = Object.keys(sensorNamesByGroup);
-				typesNames.map(type => {
-				  if(selectedTypesArray.includes(type)) {
-					sensorsToActiveate.push(...sensorNamesByGroup[type]);
-				  }
-				})
-			  }
-			}
-		  );
+			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
+				if (sensorNamesByGroup) {
+					const typesNames = Object.keys(sensorNamesByGroup);
+					typesNames.map(type => {
+						if (selectedTypesArray.includes(type)) {
+							sensorsToActiveate.push(...sensorNamesByGroup[type]);
+						}
+					});
+				}
+		});
+
 		const sensorsToAdd = sensorsToActiveate.filter(sensor => !this.selectedSensors.includes(sensor));
 		sensorsToAdd.push(...this.selectedSensors);
 		this.selectedSensors = sensorsToAdd;
-	  }
+	}
 
 	updateSelectedProvidersByType(changedType: string): void {
 		this.getActiveProviders()

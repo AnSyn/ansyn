@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import {
 	ClearActiveInteractionsAction,
 	SetMeasureDistanceToolState,
@@ -6,12 +6,10 @@ import {
 	StartMouseShadow,
 	StopMouseShadow
 } from '../actions/tools.actions';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import {
-	IToolsState,
-	selectSubMenu, selectToolFlags,
-	toolsStateSelector
+	selectSubMenu, selectToolFlags
 } from '../reducers/tools.reducer';
 import { map, tap, take } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -19,6 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ExportMapsPopupComponent } from '../export-maps-popup/export-maps-popup.component';
 import { SubMenuEnum, toolsFlags } from '../models/tools.model';
 import { selectActiveAnnotationLayer } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-tools',
@@ -70,10 +69,15 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		return this.flags?.get(toolsFlags.isMeasureToolActive);
 	}
 
-	// @TODO display the shadow mouse only if there more then one map .
-	constructor(protected store$: Store<any>,
-				public dialog: MatDialog) {
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
 
+	// @TODO display the shadow mouse only if there more then one map .
+	constructor(
+		protected store$: Store<any>,
+		public dialog: MatDialog,
+		protected translateService: TranslateService
+	) {
 	}
 
 	ngOnInit() {

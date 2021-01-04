@@ -1,23 +1,72 @@
 @import 'ansyn/less/common';
 @import "ansyn/less/z-index-globals";
 
+@animation-duration: 0.3s;
+
 :host {
 	&.component {
 		position: relative;
+
 		.app {
 			/deep/ ansyn-popover.default-case div.pop-hover .pop-content {
 				visibility: hidden !important;
 			}
 
 			div.menu {
-				ansyn-menu {
-				}
 
 				ansyn-tools.ansynToolsAlone {
 					display: block;
 				}
 			}
 		}
+	}
+
+	.results-table {
+		background: @background-color-1;
+		position: absolute;
+		color: white;
+		border: solid 1px #EBF8FA;
+		left: 10px;
+		bottom: 10px;
+		z-index: @z-index-results-table-button;
+		font-size: 0.9rem;
+		height: 12%;
+		width: 8%;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-evenly;
+		align-items: center;
+
+		i {
+			display: block;
+			font-size: 3em;
+			line-height: 60%; // hack to compensate for padding inside the icon
+			min-width: 30px;
+		}
+
+		span.badge {
+			font-size: 14px;
+			min-width: 30px;
+		}
+
+		span.results-title {
+			font-size: 14px;
+			width: 100%;
+			min-width: 30px;
+		}
+
+		&:hover {
+			background-color: @status-bar-hover;
+		}
+
+		&.active {
+			background-color: @application-primary-color;
+		}
+	}
+
+	.results {
+		left: 0;
+		position: fixed;
 	}
 
 	font-family: @app-font;
@@ -36,6 +85,7 @@
 		div.menu {
 			flex-shrink: 1;
 		}
+
 		div.status {
 			position: absolute;
 			top: 0;
@@ -63,9 +113,11 @@
 			flex-direction: column;
 			overflow: hidden;
 			position: relative;
+
 			.maps-container {
 				position: relative;
 				flex-grow: 1;
+
 				&.hide-status-bar {
 					top: 0;
 					height: 100%;
@@ -74,55 +126,9 @@
 		}
 
 		&.animations {
-			@animation-duration: 0.3s;
-
-			@keyframes menu-init {
-				from {
-					transform: translateX(-100%);
-				}
-				to {
-					transform: translateX(0);
-				}
-			}
-
-			@keyframes map-init {
-				from {
-					opacity: 0;
-				}
-				to {
-					opacity: 1;
-				}
-			}
-
-			@keyframes timeline-init {
-				from {
-					top: 100%;
-				}
-				to {
-					top: 0;
-				}
-			}
-
-			@keyframes collapsedVertical {
-				from {
-					transform: scale(1) translateY(-100px);
-				}
-				to {
-					transform: scale(1) translateY(0);
-				}
-			}
-
-			@keyframes unCollapsedVertical {
-				from {
-					transform: scale(1.2) translateY(100px);
-				}
-				to {
-					transform: scale(1) translateY(0);
-				}
-			}
 
 			div.menu {
-				animation: menu-init @animation-duration;
+				animation: menu-init-ltr @animation-duration;
 				transform: transitionX(0);
 				position: relative;
 				height: 100%;
@@ -152,6 +158,53 @@
 		}
 	}
 
+	&.rtl {
+		direction: rtl;
+
+		.results-table {
+			left: unset;
+			right: 10px;
+			i {
+				left: unset;
+				right: 40px;
+			}
+			span.badge {
+				left: unset;
+				right: 45px;
+			}
+			span.results-title {
+				left: unset;
+				right: 0;
+			}
+		}
+
+		.results {
+			left: unset;
+			right: 0;
+		}
+
+		div.app {
+			&.animations {
+				div.menu {
+					animation: menu-init-rtl @animation-duration;
+				}
+			}
+
+			div.status {
+				left: unset;
+				right: @menu-width;
+
+				&.expand {
+					left: unset;
+					right: 0;
+				}
+			}
+		}
+
+		// div.app
+	}
+
+	// rtl
 }
 
 @media screen and (max-width: 959px) {
@@ -171,7 +224,7 @@
 	}
 }
 
-.credentials{
+.credentials {
 	position: absolute;
 	bottom: 80px;
 	right: 7px;
@@ -182,4 +235,56 @@
 	font-family: @app-font;
 }
 
+@keyframes menu-init-ltr {
+	from {
+		transform: translateX(-100%);
+	}
+	to {
+		transform: translateX(0);
+	}
+}
 
+@keyframes menu-init-rtl {
+	from {
+		transform: translateX(100%);
+	}
+	to {
+		transform: translateX(0);
+	}
+}
+
+@keyframes map-init {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes timeline-init {
+	from {
+		top: 100%;
+	}
+	to {
+		top: 0;
+	}
+}
+
+@keyframes collapsedVertical {
+	from {
+		transform: scale(1) translateY(-100px);
+	}
+	to {
+		transform: scale(1) translateY(0);
+	}
+}
+
+@keyframes unCollapsedVertical {
+	from {
+		transform: scale(1.2) translateY(100px);
+	}
+	to {
+		transform: scale(1) translateY(0);
+	}
+}

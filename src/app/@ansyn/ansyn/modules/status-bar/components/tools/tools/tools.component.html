@@ -1,6 +1,6 @@
 <div class="tools-menu-item-container">
 	<div>
-		<button [attr.tooltip-class]="toolTipDirection"
+		<button [attr.tooltip-class]="isRTL ? 'left' : 'right'"
 				[attr.tooltip-value]="'Shadow mouse cursor' | translate"
 				(click)="toggleShadowMouse()"
 				[class.mode-on]="onShadowMouse && !shadowMouseDisabled"
@@ -10,7 +10,7 @@
 	</div>
 
 	<div>
-		<button [attr.tooltip-class]="toolTipDirection"
+		<button [attr.tooltip-class]="isRTL ? 'left' : 'right'"
 				[attr.tooltip-value]="'Go To' | translate"
 				(click)="toggleSubMenu(subMenuEnum.goTo)"
 				[class.active]="isExpand(subMenuEnum.goTo) && !isGeoOptionsDisabled"
@@ -20,8 +20,18 @@
 		<ansyn-go-to [disabled]="isGeoOptionsDisabled"></ansyn-go-to>
 	</div>
 
+	<div class="distance-measure-tool">
+		<button [attr.tooltip-class]="isRTL ? 'left' : 'right'"
+				[attr.tooltip-value]="'Measure Distance' | translate"
+				(click)="toggleMeasureDistanceTool()"
+				[disabled]="isGeoOptionsDisabled"
+				[class.mode-on]="onMeasureTool && !isGeoOptionsDisabled">
+			<i class="icon-tools-ruler"></i>
+		</button>
+	</div>
+
 	<div class="user-annotations" [class.active]="isExpand(subMenuEnum.annotations)">
-		<button [attr.tooltip-class]="toolTipDirection"
+		<button [attr.tooltip-class]="isRTL ? 'left' : 'right'"
 				[attr.tooltip-value]="'Annotations' | translate"
 				[class.active]="isExpand(subMenuEnum.annotations) && !isGeoOptionsDisabled"
 				(click)="toggleSubMenu(subMenuEnum.annotations, $event)"
@@ -36,21 +46,11 @@
 
 	</div>
 
-	<div class="distance-measure-tool">
-		<button [attr.tooltip-class]="toolTipDirection"
-				[attr.tooltip-value]="'Measure Distance' | translate"
-				(click)="toggleMeasureDistanceTool()"
-				[disabled]="isGeoOptionsDisabled"
-				[class.mode-on]="onMeasureTool && !isGeoOptionsDisabled">
-			<i class="icon-tools-ruler"></i>
-		</button>
-	</div>
-
 	<div class="export-maps-tool">
-		<button [attr.tooltip-class]="toolTipDirection"
+		<button [attr.tooltip-class]="isRTL ? 'left' : 'right'"
 				[attr.tooltip-value]="'Export maps' | translate"
 				(click)="toggleExportMapsDialog()">
-			<i class="icon-export-maps"></i>
+			<i class="icon-status-bar-imagery-count"></i>
 		</button>
 	</div>
 

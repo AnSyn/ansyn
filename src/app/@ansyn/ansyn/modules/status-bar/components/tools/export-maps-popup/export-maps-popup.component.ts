@@ -199,10 +199,11 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 						doc.addFont('TTWPGOTT.ttf', 'TTWPGOTT', 'normal');
 						doc.setFont('TTWPGOTT');
 						doc.setFontSize(11);
-						doc.setR2L(true);
 						const loadOverlay = mapToBeExport.mapSettings.data.overlay;
-						const desc = Boolean(loadOverlay) ? this.getDescriptionFromOverlay(loadOverlay) : 'Base Map';
-						doc.text(this.translateService.instant(desc), size[0] / 2, 5, {align: 'center', baseline: 'bottom'});
+						const isInOverlay: boolean = Boolean(loadOverlay);
+						const desc = isInOverlay ? this.getDescriptionFromOverlay(loadOverlay) : this.translateService.instant('Base Map');
+						doc.setR2L(!isInOverlay);
+						doc.text(desc, size[0] / 2, 5, {align: 'center', baseline: 'bottom'});
 					}
 					if (exportMapData.compass) {
 						doc.addImage(exportMapData.compass.toDataURL('image/png'), 'PNG', 0, 0, 25, 25); // we use png for transparent compass
@@ -310,8 +311,8 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 
 	private getDescriptionFromOverlay(overlay: IOverlay) {
 		const time = overlay.date;
-		const sensorName = overlay.sensorName;
-		return `${sensorName} ${time.toLocaleString()}`;
+		const sensorName = this.translateService.instant(overlay.sensorName);
+		return this.isRtl ? `${time.toLocaleString()} ${sensorName}` : `${sensorName} ${time.toLocaleString()}`;
 	}
 
 	close() {

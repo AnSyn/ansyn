@@ -1,5 +1,23 @@
-.icon-drone:before {
-	content: "\e90a";
+.icon-save:before {
+	content: "\e911";
+}
+.icon-undo:before {
+	content: "\e903";
+}
+.icon-bookmark-full:before {
+	content: "\e910";
+}
+.icon-screen-choice:before {
+	content: "\e902";
+}
+.icon-bookmarks:before {
+	content: "\e901";
+}
+.icon-bookmark-empty:before {
+	content: "\e900";
+}
+.icon-search-button:before {
+	content: "\e904";
 }
 .icon-layer-add:before {
 	content: "\e800";
@@ -112,8 +130,14 @@
 .icon-drag-annotations:before {
 	content: "\e827";
 }
-.icon-next:before {
+.icon-up:before {
 	content: "\e828";
+}
+.icon-down:before {
+	content: "\e82e";
+}
+.icon-next:before {
+	content: "\e830";
 }
 .icon-prev:before {
 	content: "\e829";
@@ -194,7 +218,7 @@
 	content: "\e845";
 }
 .icon-screen-1:before {
-	content: "\e846";
+	content: "\e902";
 }
 .icon-drag-maps:before {
 	content: "\e847";
@@ -227,32 +251,35 @@
 	content: "\e855";
 }
 .icon-input-filter:before {
-	content: "\e900";
-}
-.icon-status-bar-orientation:before {
-	content: "\e901";
-}
-.icon-home:before {
-	content: "\e902";
-}
-.icon-home2:before {
-	content: "\e903";
-}
-.icon-arrow:before {
-	content: "\e904";
-}
-.icon-status-bar-time:before {
 	content: "\e905";
 }
-.icon-status-bar-geo:before {
+.icon-status-bar-orientation:before {
 	content: "\e906";
 }
-.icon-satellite:before {
+.icon-home:before {
 	content: "\e907";
 }
-.icon-airplane:before {
+.icon-home2:before {
 	content: "\e908";
 }
-.icon-automatic-image-processing:before {
+.icon-arrow:before {
 	content: "\e909";
+}
+.icon-status-bar-time:before {
+	content: "\e90a";
+}
+.icon-status-bar-geo:before {
+	content: "\e90b";
+}
+.icon-satellite:before {
+	content: "\e90c";
+}
+.icon-airplane:before {
+	content: "\e90d";
+}
+.icon-automatic-image-processing:before {
+	content: "\e90e";
+}
+.icon-drone:before {
+	content: "\e90f";
 }

@@ -1,7 +1,7 @@
 import { IImageryMapPosition, IMapSettings } from '@ansyn/imagery';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
-import { range } from 'lodash';
+import { range, isEqual } from 'lodash';
 import { UUID } from 'angular2-uuid';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { sessionData } from '../models/core-session-state.model';
@@ -133,11 +133,11 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 
 		case MapActionTypes.POSITION_CHANGED: {
 			const { id, position } = action.payload;
-			const entity = state.entities[id];
-			if (entity) {
+			const activeMap = state.entities[id];
+			if (activeMap) {
 				return mapsAdapter.updateOne({
 					id,
-					changes: { data: { ...entity.data, position } }
+					changes: { data: { ...activeMap.data, position } }
 				}, state);
 			}
 			return state;
@@ -206,9 +206,12 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return { ...state, minimalistViewMode: action.payload };
 
 		case MapActionTypes.VISUALIZERS.OVERLAYS_FOOTPRINT:
-			const {mapId, show} = action.payload;
+			const { mapId, show } = action.payload;
 			const oldData = state.entities[mapId].data;
-			return mapsAdapter.updateOne({id: mapId, changes: {data: {...oldData, overlaysFootprintActive: show}}}, state);
+			return mapsAdapter.updateOne({
+				id: mapId,
+				changes: { data: { ...oldData, overlaysFootprintActive: show } }
+			}, state);
 		default:
 			return state;
 	}
@@ -242,8 +245,9 @@ export const selectMapsStateByIds: (mapIds: string[]) => MemoizedSelector<any, I
 export const selectOverlayByMapId = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data && mapState.data.overlay);
 export const selectHideLayersOnMap = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.flags.hideLayers);
 export const selectMapPositionByMapId: (mapId: string) => MemoizedSelector<any, IImageryMapPosition> = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.position);
+export const selectManualProcessArgsByMapId: (mapId: string) => MemoizedSelector<any, any> = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.imageManualProcessArgs);
 export const selectMapTypeById: (mapId: string) => MemoizedSelector<any, string> = (mapId => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.worldView.mapType));
 export const selectSourceTypeById: (mapId: string) => MemoizedSelector<any, string> = (mapId => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.worldView.sourceType));
 
 export const selectOverlaysFootprintActiveByMapId: (mapId: string) => MemoizedSelector<any, any> = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data && mapState.data.overlaysFootprintActive);
-export const selectMapOrientation = (mapId: string) => createSelector(selectMapStateById(mapId) , (mapState) => mapState && mapState.orientation);
+export const selectMapOrientation = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.orientation);

@@ -1,25 +1,16 @@
-import { ICasesConfig } from '../models/cases-config';
+import { CasesType, ICasesConfig } from '../models/cases-config';
 import { Inject, Injectable } from '@angular/core';
-import { EMPTY, Observable } from 'rxjs';
-import { ILinksConfig, QueryParamsHelper, linksConfig } from './helpers/cases.service.query-params-helper';
-import { UrlSerializer } from '@angular/router';
+import { Observable } from 'rxjs';
+import { QueryParamsHelper } from './helpers/cases.service.query-params-helper';
 import { UUID } from 'angular2-uuid';
-import { cloneDeep, cloneDeep as _cloneDeep, isEqual as _isEqual, mapValues } from 'lodash';
-import { catchError, map, take, tap } from 'rxjs/operators';
+import { cloneDeep, cloneDeep as _cloneDeep, mapValues } from 'lodash';
+import { catchError, map, tap } from 'rxjs/operators';
 /* Do not change this ( rollup issue ) */
 import * as momentNs from 'moment';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { IDeltaTime } from '../../../core/models/time.model';
 import { IStoredEntity, StorageService } from '../../../core/services/storage/storage.service';
-import {
-	ICase, ICaseMapsState,
-	ICasePreview,
-	ICaseState,
-	ICaseTimeState, IDilutedCase,
-	IDilutedCaseState
-} from '../models/case.model';
-import { TranslateService } from '@ngx-translate/core';
-import { SelectDilutedCaseAction } from '../actions/cases.actions';
+import { ICase, ICasePreview, ICaseState, ICaseTimeState, IDilutedCaseState } from '../models/case.model';
 
 const moment = momentNs;
 
@@ -41,51 +32,27 @@ export class CasesService {
 	queryParamsHelper: QueryParamsHelper = new QueryParamsHelper(this);
 	baseUrl;
 	paginationLimit = 15;
-	queryParamsKeys;
 	latestStoredEntity: any;
-
-	constructor(protected storageService: StorageService,
-				@Inject(casesConfig) public config: ICasesConfig,
-				@Inject(linksConfig) public linksConfig: ILinksConfig,
-				public urlSerializer: UrlSerializer,
-				protected translator: TranslateService,
-				public errorHandlerService: ErrorHandlerService) {
-		this.paginationLimit = this.config.paginationLimit;
-		this.queryParamsKeys = this.config.casesQueryParamsKeys;
-	}
 
 	get defaultCase() {
 		return this.config.defaultCase;
-	}
-
-	getLink(linkId: string) {
-		return this.storageService.get(this.linksConfig.schema, linkId).pipe(
-			map(caseData => {
-				const dilutedCase: IDilutedCase = {
-					state: <ICaseState>caseData.data,
-					creationTime: new Date(),
-					id: linkId,
-					schema: 'link'
-				};
-				return this.parseCase(dilutedCase);
-			}),
-			catchError(() => EMPTY)
-		);
-	}
-
-	get generateQueryParamsViaCase() {
-		return this.queryParamsHelper.generateQueryParamsViaCase.bind(this.queryParamsHelper);
 	}
 
 	get updateCaseViaContext() {
 		return this.queryParamsHelper.updateCaseViaContext.bind(this.queryParamsHelper);
 	}
 
-	loadCases(casesOffset: number = 0): Observable<any> {
-		return this.storageService.getPage<ICasePreview>(this.config.schema, casesOffset, this.paginationLimit)
+	constructor(protected storageService: StorageService,
+				@Inject(casesConfig) public config: ICasesConfig,
+				public errorHandlerService: ErrorHandlerService) {
+		this.paginationLimit = this.config.paginationLimit;
+	}
+
+	loadCases(casesOffset: number = 0, casesType: CasesType = CasesType.MyCases): Observable<any> {
+		return this.storageService.getPage<ICasePreview>(this.config.schema, casesOffset, this.paginationLimit, casesType)
 			.pipe(
 				map(previews => previews.map(preview => this.parseCasePreview(preview))),
-				catchError(err => this.errorHandlerService.httpErrorHandle(err, this.translator.instant('Failed to load cases')))
+				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load cases'))
 			);
 	}
 
@@ -93,7 +60,6 @@ export class CasesService {
 		return <any>{
 			...casePreview,
 			creationTime: new Date(casePreview.creationTime),
-			lastModified: new Date(casePreview.lastModified)
 		};
 	}
 
@@ -101,7 +67,6 @@ export class CasesService {
 		return <any>{
 			...caseValue,
 			creationTime: new Date(caseValue.creationTime),
-			lastModified: new Date(caseValue.lastModified),
 			state: {
 				...caseValue.state,
 				time: Boolean(caseValue.state.time) ? {
@@ -118,9 +83,7 @@ export class CasesService {
 			id: caseValue.id,
 			name: caseValue.name,
 			autoSave: caseValue.autoSave,
-			creationTime: caseValue.creationTime,
-			owner: caseValue.owner,
-			lastModified: caseValue.lastModified
+			creationTime: caseValue.creationTime
 		};
 
 		if (caseValue.selectedContextId) {
@@ -174,17 +137,10 @@ export class CasesService {
 	}
 
 	createCase(selectedCase: ICase, currentTime = new Date()): Observable<ICase> {
-		const uuid = this.generateUUID();
 		const newCase: ICase = {
 			...selectedCase,
-			state: {
-				...selectedCase.state,
-				maps: this.generateMapId(selectedCase.state.maps),
-			},
-			id: uuid,
 			creationTime: currentTime,
-			lastModified: currentTime,
-			autoSave: true
+			autoSave: false
 		};
 		return this.storageService.create(this.config.schema, this.convertToStoredEntity(newCase))
 			.pipe(
@@ -195,22 +151,6 @@ export class CasesService {
 
 	generateUUID(): string {
 		return UUID.UUID();
-	}
-
-	createLink(link): Observable<any> {
-		return this.storageService.create(this.linksConfig.schema, link).pipe(
-			map((_: any) => _._id)
-		);
-	}
-
-	updateCase(selectedCase: ICase): Observable<IStoredEntity<ICasePreview, IDilutedCaseState>> {
-		const storeEntity = this.convertToStoredEntity(selectedCase);
-		if (this.isStoreEntitiesEqual(storeEntity, this.latestStoredEntity)) {
-			return EMPTY;
-		}
-		this.latestStoredEntity = _cloneDeep(storeEntity);
-		return this.storageService.update(this.config.schema, storeEntity)
-			.pipe<any>(catchError(err => this.errorHandlerService.httpErrorHandle(err)));
 	}
 
 	removeCase(selectedCaseId: string): Observable<any> {
@@ -229,45 +169,13 @@ export class CasesService {
 				catchError(err => this.errorHandlerService.httpErrorHandle(err)));
 	}
 
-	generateLinkById(id: string, schema: 'case' | 'link' = 'case') {
+	generateLinkById(id: string) {
 		const baseLocation = location.href.split('#')[0];
 		const href = this.config.useHash ? `${ baseLocation }#` : baseLocation;
-		return `${ href }/${schema}/${ id }`;
+		return `${ href }/case/${ id }`;
 	}
 
-	isStoreEntitiesEqual(caseA, caseB) {
-		// caseA.data == undefined, can happen if you update only the preview data (of other case such as "name" -> updates the preview only)
-		if (!caseA || !caseB || !caseA.data || !caseB.data) {
-			return false;
-		}
-		const cloneA = JSON.parse(JSON.stringify(caseA));
-		const cloneB = JSON.parse(JSON.stringify(caseB));
-		cloneA.data.maps.data.forEach((map, index) => {
-			if (cloneA.data.maps.activeMapId === map.id) {
-				cloneA.data.maps.activeMapId = index;
-			}
-			map.id = index;
-		});
-		cloneB.data.maps.data.forEach((map, index) => {
-			if (cloneB.data.maps.activeMapId === map.id) {
-				cloneB.data.maps.activeMapId = index;
-			}
-			map.id = index;
-		});
-
-		return _isEqual(cloneA, cloneB);
-	}
-
-	generateMapId(maps: ICaseMapsState) {
-		let activeMapId = maps.activeMapId;
-		const newMaps = {...maps, data: maps.data.map( (map) => {
-				const newMapId = this.generateUUID();
-				if (map.id === activeMapId) {
-					activeMapId = newMapId;
-				}
-				return {...map, id: newMapId};
-			})};
-		newMaps.activeMapId = activeMapId;
-		return newMaps;
+	updateCase(updateCase: ICase) {
+		return this.storageService.update(this.config.schema, {preview: this.getPreview(updateCase)});
 	}
 }

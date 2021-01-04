@@ -20,8 +20,10 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ANNOTATION_MODE_LIST, AnnotationMode, IStyleWeight } from '@ansyn/ol';
 import { selectActiveAnnotationLayer, selectLayers } from '../../../../..//menu-items/layers-manager/reducers/layers.reducer';
 import { ILayer, LayerType } from '../../../../../menu-items/layers-manager/models/layers.model';
-import { ClickOutsideService } from '../../../../..//core/click-outside/click-outside.service';
+import { ClickOutsideService } from '../../../../../core/click-outside/click-outside.service';
 import { SetActiveAnnotationLayer } from '../../../../..//menu-items/layers-manager/actions/layers.actions';
+import { TranslateService } from '@ngx-translate/core';
+import { selectIsMinimalistViewMode } from '@ansyn/map-facade';
 
 export enum SelectionBoxTypes {
 	None,
@@ -96,6 +98,11 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		tap(annotationProperties => this.annotationProperties = annotationProperties)
 	);
 
+	@AutoSubscription
+	hideAnnotaionMenu$: Observable<boolean> = this.store.select(selectIsMinimalistViewMode).pipe(
+		tap(() => this.store.dispatch(new SetAnnotationMode(null)))
+	);
+
 	public mode: AnnotationMode;
 	public annotationProperties: Partial<IVisualizerStyle>;
 
@@ -109,11 +116,16 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		})
 	);
 
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
 	constructor(
 		protected element: ElementRef,
 		public store: Store<any>,
 		protected clickOutsideService: ClickOutsideService,
-		@Inject(DOCUMENT) public document: any) {
+		@Inject(DOCUMENT) public document: any,
+		protected translateService: TranslateService
+	) {
 	}
 
 	@AutoSubscription

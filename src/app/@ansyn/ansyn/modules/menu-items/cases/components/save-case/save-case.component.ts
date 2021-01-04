@@ -1,13 +1,16 @@
-import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Store } from '@ngrx/store';
-import { ICasesState, selectSelectedCase } from '../../reducers/cases.reducer';
-import { CloseModalAction, SaveCaseAsAction } from '../../actions/cases.actions';
+import { Store, select } from '@ngrx/store';
+import { ICasesState, selectCaseById, selectSelectedCase } from '../../reducers/cases.reducer';
+import { CloseModalAction, RenameCaseAction, SaveCaseAsAction, UpdateCaseAction } from '../../actions/cases.actions';
 import { CasesService } from '../../services/cases.service';
 import { take, tap } from 'rxjs/operators';
 import { cloneDeep } from '../../../../core/utils/rxjs/operators/cloneDeep';
 import { ICase } from '../../models/case.model';
-import { UUID } from 'angular2-uuid';
+import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
+import { TranslateService } from '@ngx-translate/core';
+import * as moment from 'moment';
+import { Observable } from 'rxjs';
 
 const animationsDuring = '0.2s';
 
@@ -31,42 +34,72 @@ const animations: any[] = [
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	animations
 })
-export class SaveCaseComponent {
+@AutoSubscriptions()
+export class SaveCaseComponent implements OnInit, OnDestroy {
+	@Input() caseId: string;
+	caseName: string;
+
 	@HostBinding('@modalContent')
 	get modalContent() {
 		return true;
 	};
 
-	caseName: string;
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
 
-	constructor(protected store: Store<ICasesState>,
-				protected casesService: CasesService) {
+	constructor(
+		protected store: Store<ICasesState>,
+		protected translateService: TranslateService
+	) {
 	}
+
+	@AutoSubscription
+	caseName$ = () => this.store.pipe(
+		select(selectCaseById(this.caseId)),
+		tap( (_case) => {
+			this.caseName = _case ? _case.name : moment(new Date()).format('DD/MM/YYYY HH:mm:ss').toLocaleString();
+		})
+	);
+
+
+	private cloneDeepOneTime(selector) {
+		return this.store.pipe(
+			select(selector),
+			take(1),
+			cloneDeep()
+		)
+	}
+
+	ngOnDestroy(): void {
+	}
+
+	ngOnInit(): void {}
 
 	close(): void {
 		this.store.dispatch(new CloseModalAction());
 	}
 
+	saveNewCase() {
+		return this.cloneDeepOneTime(selectSelectedCase).pipe(
+			tap((selectedCase: ICase) => {
+				this.store.dispatch(new SaveCaseAsAction({ ...selectedCase, name: this.caseName }));
+			})
+		)
+	}
+
+	renameCase() {
+		return this.cloneDeepOneTime(selectCaseById(this.caseId)).pipe(
+			tap( (_case: ICase) => {
+				const oldName = _case.name;
+				this.store.dispatch(new RenameCaseAction({case: _case, oldName: oldName, newName: this.caseName }));
+			})
+		)
+	}
 	onSubmitCase() {
-		this.store.select(selectSelectedCase)
-			.pipe(
-				take(1),
-				cloneDeep(),
-				tap((selectedCase: ICase) => {
-					const currentActive = selectedCase.state.maps.activeMapId;
-					let newActiveMapId = currentActive;
-					selectedCase.state.maps.data.forEach(map => {
-						const mapId = map.id;
-						map.id = UUID.UUID();
-						if (mapId === currentActive) {
-							newActiveMapId = map.id;
-						}
-					});
-					selectedCase.state.maps.activeMapId = newActiveMapId;
-					this.store.dispatch(new SaveCaseAsAction({ ...selectedCase, name: this.caseName }));
-					this.close();
-				})
-			).subscribe();
+		const obs = this.caseId ? this.renameCase() : this.saveNewCase();
+		obs.pipe(
+			tap(this.close.bind(this))
+		).subscribe()
 	}
 }
 

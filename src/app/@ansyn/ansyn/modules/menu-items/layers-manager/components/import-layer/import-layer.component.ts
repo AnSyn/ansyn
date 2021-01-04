@@ -3,7 +3,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { select, Store } from '@ngrx/store';
 import { DataLayersService } from '../../services/data-layers.service';
 import { AddLayer, LogImportLayer } from '../../actions/layers.actions';
-import { fromEvent, Observable } from 'rxjs';
+import { combineLatest, fromEvent, Observable } from 'rxjs';
 import { UUID } from 'angular2-uuid';
 import {
 	IMapState, MapFacadeService,
@@ -16,9 +16,10 @@ import { delay, filter, map, retryWhen, tap, withLatestFrom } from 'rxjs/operato
 import { FeatureCollection, Polygon } from 'geojson';
 import KmlFormat from 'ol/format/KML';
 import GeoJSONFormat from 'ol/format/GeoJSON';
-import * as shapeFile from 'shapefile';
+import shp from 'shpjs';
 import { getErrorMessageFromException } from '../../../../core/utils/logs/timer-logs';
 import { bboxFromGeoJson, IMapSettings, polygonFromBBOX, validateFeatureProperties } from '@ansyn/imagery';
+import { forEach } from 'lodash';
 
 @Component({
 	selector: 'ansyn-import-layer',
@@ -31,6 +32,8 @@ import { bboxFromGeoJson, IMapSettings, polygonFromBBOX, validateFeatureProperti
 })
 export class ImportLayerComponent implements OnInit, OnDestroy {
 	reader = new FileReader();
+	shpReader = new FileReader();
+	dbfReader = new FileReader();
 	kmlFormat = new KmlFormat();
 	geoJsonFormat = new GeoJSONFormat();
 	file: File;
@@ -40,8 +43,7 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	onFileLoad$: Observable<any> = fromEvent(this.reader, 'load').pipe(
 		tap(() => {
-			const layerName = this.file.name.slice(0, this.file.name.lastIndexOf('.'));
-			let layerData = { name: layerName, data: null };
+			let layerData = { name: this.layerName, data: null };
 			const readerResult: string = <string>this.reader.result;
 			switch (this.fileType.toLowerCase()) {
 				case 'kml':
@@ -56,9 +58,12 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 					this.onReadLayer$.emit(layerData);
 					break;
 				case 'shp':
-					this.addShapeFileLayer(readerResult).then((data) => {
-						this.onReadLayer$.emit({ ...layerData, data });
-					});
+					layerData.data = this.addShapeFileLayer(readerResult);
+					this.onReadLayer$.emit(layerData);
+					break;
+				case 'zip':
+					layerData.data = shp.parseZip(readerResult);
+					this.onReadLayer$.emit(layerData);
 					break;
 				default:
 					throw new Error('Can\'t read file type');
@@ -71,12 +76,31 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
+	onShpAndDbfFilesLoad$: Observable<any> = combineLatest([
+		fromEvent(this.shpReader, 'load'),
+		fromEvent(this.dbfReader, 'load')
+	]).pipe(
+		tap(() => {
+			let layerData = { name: this.layerName, data: null };
+			layerData.data = this.addShapeFileLayer(this.shpReader.result, this.dbfReader.result);
+			this.onReadLayer$.emit(layerData);
+		}),
+		retryWhen((error) => error.pipe(
+			tap((err) => this.importError(err)),
+			delay(100)
+		))
+	);
+
+	@AutoSubscription
 	onReadLayerSuccess$ = this.onReadLayer$.pipe(
+		map((layer) => {
+			this.generateFeatureCollection(layer.data, layer.name);
+			return layer;
+		}),
 		withLatestFrom(this.store.select(mapStateSelector)),
 		map(([layer, mapState]: [any, IMapState]) => [layer, MapFacadeService.activeMap(mapState)]),
 		filter(([layer, activeMap]: [any, IMapSettings]) => !Boolean(activeMap.data.overlay)),
 		map(([layer, activeMap]: [any, IMapSettings]) => {
-			this.generateFeatureCollection(layer.data, layer.name);
 			return this.calculateLayerBbox(layer.data);
 		}),
 		filter(Boolean),
@@ -101,19 +125,28 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	importLayer(files: FileList) {
 		this.file = files.item(0);
 		this.store.dispatch(new LogImportLayer({ fileName: this.file.name }));
-		this.fileType = this.file.name.slice(this.file.name.lastIndexOf('.') + 1);
-		if (this.fileType.toLocaleLowerCase() === 'shp') {
+		this.fileType = this.getFileType(this.file.name);
+		if (files.length === 2) {
+			this.importShpAndDbf(files);
+		} else if (this.fileType.toLocaleLowerCase() === 'shp' || 'zip') {
 			this.reader.readAsArrayBuffer(this.file);
 		} else {
 			this.reader.readAsText(this.file, 'UTF-8');
 		}
 	}
 
-	addShapeFileLayer(data) {
-		return shapeFile.read(data).catch(e => {
-			throw new Error(e)
+	importShpAndDbf(files: FileList) {
+		forEach(files, file => {
+			const fileType = this.getFileType(file.name);
+			const reader = fileType.toLocaleLowerCase() === 'shp' ? "shpReader" : "dbfReader";
+			this[reader].readAsArrayBuffer(file);
 		});
+	}
 
+	addShapeFileLayer(shpBuffer, dbfBuffer?) {
+		const shpFile = shp.parseShp(shpBuffer);
+		const dbfFile = Boolean(dbfBuffer) ? shp.parseDbf(dbfBuffer) : [];
+		return shp.combine([shpFile, dbfFile]);
 	}
 
 	generateFeatureCollection(layerData, layerName) {
@@ -187,4 +220,11 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	private getFileType(fileName) {
+		return fileName.slice(fileName.lastIndexOf('.') + 1);
+	}
+
+	get layerName() {
+		return this.file.name.slice(0, this.file.name.lastIndexOf('.'));
+	}
 }

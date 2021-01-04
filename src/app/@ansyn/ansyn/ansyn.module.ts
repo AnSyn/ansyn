@@ -14,7 +14,6 @@ import { AppEffectsModule } from './app-effects/app.effects.module';
 import { AppProvidersModule } from './app-providers/app-providers.module';
 import { COMPONENT_MODE } from './app-providers/component-mode';
 import { AnsynFooterComponent } from './components/ansyn-footer/ansyn-footer.component';
-import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/overlay-out-of-bounds.component';
 import { UnsupportedDevicesComponent } from './components/unsupported-devices/unsupported-devices.component';
 import { ansynConfig } from './config/ansyn.config';
 import { AngleFilterComponent } from './modules/core/components/angle-filter/angle-filter.component';
@@ -38,6 +37,7 @@ import { TasksService } from './modules/menu-items/algorithms/services/tasks.ser
 import { ImageryVideoModule } from '@ansyn/imagery-video';
 import { ImageryChangeMapComponent } from './modules/plugins/components/imagery-change-map/imagery-change-map.component';
 import { ResultsModule } from "./modules/menu-items/results/results.module";
+import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/overlay-out-of-bounds.component';
 
 @NgModule({
 	imports: [
@@ -83,11 +83,11 @@ import { ResultsModule } from "./modules/menu-items/results/results.module";
 	],
 	declarations: [
 		AnsynComponent,
-		OverlayOutOfBoundsComponent,
 		UnsupportedDevicesComponent,
 		AnsynFooterComponent,
 		ImageryZoomerComponent,
-		ImageryDimensionModeComponent
+		ImageryDimensionModeComponent,
+		OverlayOutOfBoundsComponent
 	],
 	exports: [AnsynComponent, UnsupportedDevicesComponent]
 })

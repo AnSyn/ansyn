@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { CoreModule } from '../core/core.module';
 import { StoreModule } from '@ngrx/store';
 import { statusBarFeatureKey, StatusBarReducer } from './reducers/status-bar.reducer';
-import { comboBoxesOptions, GEO_FILTERS, TIME_FILTERS } from './models/combo-boxes.model';
+import { comboBoxesOptions, GEO_FILTERS } from './models/combo-boxes.model';
 import { TreeviewModule } from 'ngx-treeview';
 import { TreeViewComponent } from './components/tree-view/tree-view.component';
 import { MapFacadeModule } from '@ansyn/map-facade';
@@ -14,13 +14,14 @@ import { OwlDateTimeIntl, OwlDateTimeModule, OwlNativeDateTimeModule } from '@an
 import { TimePickerTranslateService } from './services/time-picker-translate.service';
 import { SearchPanelComponent } from './components/search-panel/search-panel.component';
 import { DisplayPanelComponent } from './components/display-panel/display-panel.component';
-import { CasePanelComponent } from './components/case-panel/case-panel.component';
 import { TimePickerComponent } from './components/timepicker/time-picker.component';
 import { LocationPickerComponent } from './components/location-picker/location-picker.component';
 import { FiltersPanelComponent } from './components/filters-panel/filters-panel.component';
 import { FiltersModule } from '../filters/filters.module';
 import { TimepickerPresetsComponent } from './components/timepicker-presets/timepicker-presets.component';
 import { ToolsModule } from './components/tools/tools.module';
+import { CasesModule } from '../menu-items/cases/cases.module';
+import { TimePickerContainerComponent } from './components/time-picker-container/time-picker-container.component';
 
 @NgModule({
 	imports: [
@@ -34,14 +35,11 @@ import { ToolsModule } from './components/tools/tools.module';
 		ClickOutsideModule,
 		OwlDateTimeModule,
 		FiltersModule,
-		OwlNativeDateTimeModule
+		OwlNativeDateTimeModule,
+		CasesModule
 	],
-	declarations: [StatusBarComponent, TreeViewComponent, SearchPanelComponent, DisplayPanelComponent, CasePanelComponent, TimePickerComponent, LocationPickerComponent, FiltersPanelComponent, TimepickerPresetsComponent],
+	declarations: [StatusBarComponent, TreeViewComponent, SearchPanelComponent, DisplayPanelComponent, TimePickerComponent, LocationPickerComponent, FiltersPanelComponent, TimepickerPresetsComponent, TimePickerContainerComponent],
 	providers: [
-		{
-			provide: TIME_FILTERS,
-			useValue: comboBoxesOptions.timeFilters
-		},
 		{
 			provide: GEO_FILTERS,
 			useValue: comboBoxesOptions.geoFilters
@@ -52,7 +50,7 @@ import { ToolsModule } from './components/tools/tools.module';
 		}
 	],
 
-	exports: [StatusBarComponent]
+	exports: [StatusBarComponent, TimePickerContainerComponent]
 })
 export class StatusBarModule {
 }

@@ -34,6 +34,7 @@ export {
 	selectMapPositionByMapId,
 	selectMapsStateByIds,
 	selectOverlaysFootprintActiveByMapId,
+	selectManualProcessArgsByMapId,
 	selectOverlayOfActiveMap,
 	selectIsMinimalistViewMode,
 	selectMapTypeById,
@@ -82,7 +83,8 @@ export {
 	SynchronizeMapsAction,
 	SetActiveCenterTriggerAction,
 	SetMapSearchBoxTriggerAction,
-	SetOverlaysFootprintActive
+	SetOverlaysFootprintActive,
+	ForceRenderMaps
 } from './actions/map.actions';
 
 export {

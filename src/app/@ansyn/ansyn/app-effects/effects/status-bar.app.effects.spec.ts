@@ -5,7 +5,7 @@ import {
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { StatusBarAppEffects } from './status-bar.app.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { AddCaseAction, SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
+import { SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { EMPTY, Observable } from 'rxjs';
 import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import { HttpBackend, HttpClientModule } from '@angular/common/http';
@@ -129,7 +129,6 @@ describe('StatusBarAppEffects', () => {
 			}
 		} as any;
 
-		store.dispatch(new AddCaseAction(fakeCase));
 		store.dispatch(new SelectCaseAction(fakeCase));
 	}));
 

@@ -23,13 +23,6 @@ export const routes: Routes = [
 				data: {
 					name: 'caseChild'
 				}
-			},
-			{
-				path: 'link/:linkId',
-				component: PlaceholderComponent,
-				data: {
-					name: 'linkChild'
-				}
 			}
 		]
 	},

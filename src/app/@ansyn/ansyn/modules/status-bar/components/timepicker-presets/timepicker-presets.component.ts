@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ICaseTimeState } from '../../../menu-items/cases/models/case.model';
 import { LogSelectSearchTimePreset, SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import { Store } from '@ngrx/store';
@@ -12,6 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 export class TimepickerPresetsComponent implements OnInit, OnDestroy {
 
+	@Input() openTop: boolean;
 	@Output() hideMe = new EventEmitter<boolean>();
 	@Output() openTimePicker = new EventEmitter<boolean>();
 	presets = [7, 30, 60, 365, 5 * 365];

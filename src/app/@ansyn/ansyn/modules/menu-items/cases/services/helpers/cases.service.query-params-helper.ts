@@ -10,13 +10,6 @@ import { ICase } from '../../models/case.model';
 import { catchError, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-export const linksConfig = 'linksConfig';
-
-export interface ILinksConfig {
-	schema: string;
-	idLength: number;
-}
-
 export class QueryParamsHelper {
 	constructor(protected casesService: CasesService) {
 	}
@@ -69,15 +62,5 @@ export class QueryParamsHelper {
 			};
 			updatedCaseModel.state = { ...updatedCaseModel.state, region, maps };
 		}
-	}
-
-	generateQueryParamsViaCase(sCase: ICase): Observable<any> {
-		const id: string = this.casesService.generateUUID();
-		const link = {
-			preview: { id, creationTime: new Date() },
-			data: {...sCase.state, maps: this.casesService.generateMapId(sCase.state.maps)}
-		};
-
-		return this.casesService.createLink(link);
 	}
 }

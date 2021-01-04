@@ -21,11 +21,11 @@ import {
 	IOverlaysSourceProvider,
 	MultipleOverlaysSourceConfig
 } from '../../core/models/multiple-overlays-source-config';
-import { IOverlay, IOverlaysCriteria, IOverlaysFetchData } from '../models/overlay.model';
+import { IOverlay, IOverlaysFetchData } from '../models/overlay.model';
 import { select, Store } from '@ngrx/store';
-import { IAdvancedSearchParameter, IProviderData, IStatusBarConfig } from '../../status-bar/models/statusBar-config.model';
+import { IProviderData, IStatusBarConfig } from '../../status-bar/models/statusBar-config.model';
 import { StatusBarConfig } from '../../status-bar/models/statusBar.config';
-import { selectOverlaysCriteria, selectProviders } from '../reducers/overlays.reducer';
+import { selectProviders } from '../reducers/overlays.reducer';
 
 @Injectable({
 	providedIn: 'root'
@@ -86,7 +86,7 @@ export class MultipleOverlaysSourceProvider {
 		return [provider, config];
 	};
 
-	private filterOnSelectedProviders([provider, { inActive }]: [BaseOverlaySourceProvider, IOverlaysSourceProvider]) {
+	private filterOnSelectedProviders([provider, { inActive }]: [BaseOverlaySourceProvider, IOverlaysSourceProvider]):boolean {
 		return !inActive;
 	}
 
@@ -100,7 +100,7 @@ export class MultipleOverlaysSourceProvider {
 		});
 	}
 
-	private activeProviders(providersFromState) {
+	private activeProviders(providersFromState: IProviderData[]) {
 		this.prepareAllActiveProvidersArray();
 
 		this.selectedProviders = [];

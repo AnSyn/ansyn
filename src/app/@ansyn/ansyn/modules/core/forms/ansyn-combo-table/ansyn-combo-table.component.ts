@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, forwardRef, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
 
 @Component({
 	selector: 'ansyn-combo-table',

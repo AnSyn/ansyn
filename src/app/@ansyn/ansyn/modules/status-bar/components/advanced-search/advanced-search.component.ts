@@ -71,7 +71,7 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 	getAllProvidersNames(): string[] {
 		const allProvider = Object.keys(this.multipleOverlaysSourceConfig.indexProviders);
 		const providers = allProvider.filter(provider => !this.multipleOverlaysSourceConfig.indexProviders[provider].inActive)
-	
+
 		return providers;
 	}
 
@@ -94,7 +94,7 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 		}
 	}
 
-	getAllSensorsTypes() {
+	getAllSensorsTypes(): string[] {
 		const allSensors: string[] = [];
 		Object.values(this.multipleOverlaysSourceConfig.indexProviders).filter(provider => !provider.inActive).map(provider => {
 			provider.dataInputFiltersConfig.children.map(sensor => {
@@ -108,39 +108,39 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 		this.allProviders = this.caseConfig.defaultCase.state.advancedSearchParameters.providers;
 	}
 
-	search() {
+	search(): void {
 		this.store.dispatch(new UpdateAdvancedSearchParamAction(this.getCurrentAdvancedSearchParameters()));
 		this.store.dispatch(new SetOverlaysCriteriaAction({advancedSearchParameters: this.getCurrentAdvancedSearchParameters()}));
 		this._parent.close();
 	}
 
-	updateSelectedTypes(selectedTypesArray) {
-		const changedType = this.getUniqueElement(selectedTypesArray, this.selectedTypes)[0];
+	updateSelectedTypes(selectedTypesArray: string[]): void {
+		const changedType = this.getUniqueElement(selectedTypesArray, this.selectedTypes);
 		this.updateSelectedProvidersByType(changedType);
 		this.selectedTypes = selectedTypesArray;
 		this.updateSelectedSensorsByTypes(selectedTypesArray);
 	}
 
-	updateSelectedProviders(selectedProvidersArray) {
-		const changedProvider = this.getUniqueElement(selectedProvidersArray, this.selectedProvidersNames)[0];
+	updateSelectedProviders(selectedProvidersArray: string[]): void {
+		const changedProvider = this.getUniqueElement(selectedProvidersArray, this.selectedProvidersNames);
 		this.updateSelectedTypesByProviders(selectedProvidersArray, changedProvider);
 		this.selectedProvidersNames = selectedProvidersArray;
 		this.updateSelectedProvidersByProviderNames();
 	}
 
-	updateSelectedRegistration(selectedRegistrationArray) {
+	updateSelectedRegistration(selectedRegistrationArray: string[]): void {
 		this.selectedRegistration = selectedRegistrationArray;
 	}
 
-	updateSelectedSensors(selectedSensorsArray) {
+	updateSelectedSensors(selectedSensorsArray: string[]): void {
 		this.selectedRegistration = selectedSensorsArray;
 	}
 
-	updateSelectedArray(selectedItemsArray, arrayToUpdate) {
+	updateSelectedArray(selectedItemsArray: string[], arrayToUpdate: string): void {
 		this[`update${arrayToUpdate}`](selectedItemsArray);
 	}
 
-	updateSelectedProvidersByProviderNames() {
+	updateSelectedProvidersByProviderNames(): void {
 		this.selectedProviders = [];
 		this.selectedProvidersNames.map(providerName => {
 			if (this.selectedProvidersNames.includes(providerName)) {
@@ -149,7 +149,7 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 		});
 	}
 
-	updateSelectedSensorsByTypes(selectedTypesArray: string[]) {
+	updateSelectedSensorsByTypes(selectedTypesArray: string[]): void {
 		const sensorsToActiveate: any[] = [];
 		this.getActiveProviders()
 				.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
@@ -168,7 +168,7 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 		this.selectedSensors = sensorsToAdd;
 	  }
 
-	updateSelectedProvidersByType(changedType: string) {
+	updateSelectedProvidersByType(changedType: string): void {
 		this.getActiveProviders()
 			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
 				dataInputFiltersConfig.children.forEach(type => {
@@ -181,21 +181,21 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 		);
 	}
 
-	private getActiveProviders() {
+	private getActiveProviders(): any[] {
 		return Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
 		.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive);
 	}
-	private isExistInArray(itemsArray, element) {
+	private isExistInArray(itemsArray: string[], element: string): boolean {
 		return itemsArray.indexOf(element) < 0;
 	}
 
-	getUniqueElement(currentArray, afterChangeArray) {
+	getUniqueElement(currentArray: string[], afterChangeArray: string[]): string {
 		return Boolean(afterChangeArray.length > currentArray.length) ? 
-		afterChangeArray.filter(provider => this.isExistInArray(currentArray, provider)) : 
-		currentArray.filter(provider => this.isExistInArray(afterChangeArray, provider));
+		afterChangeArray.find(provider => this.isExistInArray(currentArray, provider)) : 
+		currentArray.find(provider => this.isExistInArray(afterChangeArray, provider));
 	}
 
-	updateSelectedTypesByProviders(selectedProviders, changedProvider) {
+	updateSelectedTypesByProviders(selectedProviders: string[], changedProvider: string): void {
 		const typesToActivate = [];
 		this.getActiveProviders()
 			.filter(([providerName]: [string, IOverlaysSourceProvider]) => providerName === changedProvider)
@@ -220,20 +220,20 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 		}
 	}
 
-	selectAllItems() {
+	selectAllItems(): void {
 		this.selectedProvidersNames = this.providersNamesList;
 		this.updateSelectedProvidersByProviderNames();
 		this.selectedTypes = this.sensorTypes;
 	}
 	
-	resetDataInputFilters() {
+	resetDataInputFilters(): void {
 		this.selectedProvidersNames = [];
 		this.selectedProviders = [];
 		this.selectedTypes = [];
 		this.selectedSensors = [];
 	}
 
-	resetResolution() {
+	resetResolution(): void {
 		this.sliderOptions.floor = this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.lowValue;
 		this.sliderOptions.ceil =  this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.highValue;
 	}

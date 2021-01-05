@@ -9,6 +9,16 @@
 		</button>
 	</div>
 
+	<div class="distance-measure-tool">
+		<button [attr.tooltip-class]="isRTL ? 'left' : 'right'"
+				[attr.tooltip-value]="'Measure Distance' | translate"
+				(click)="toggleMeasureDistanceTool()"
+				[disabled]="isGeoOptionsDisabled"
+				[class.mode-on]="onMeasureTool && !isGeoOptionsDisabled">
+			<i class="icon-tools-ruler"></i>
+		</button>
+	</div>
+
 	<div>
 		<button [attr.tooltip-class]="isRTL ? 'left' : 'right'"
 				[attr.tooltip-value]="'Go To' | translate"
@@ -18,16 +28,6 @@
 			<i class="icon-tools-go-to"></i>
 		</button>
 		<ansyn-go-to [disabled]="isGeoOptionsDisabled"></ansyn-go-to>
-	</div>
-
-	<div class="distance-measure-tool">
-		<button [attr.tooltip-class]="isRTL ? 'left' : 'right'"
-				[attr.tooltip-value]="'Measure Distance' | translate"
-				(click)="toggleMeasureDistanceTool()"
-				[disabled]="isGeoOptionsDisabled"
-				[class.mode-on]="onMeasureTool && !isGeoOptionsDisabled">
-			<i class="icon-tools-ruler"></i>
-		</button>
 	</div>
 
 	<div class="user-annotations" [class.active]="isExpand(subMenuEnum.annotations)">

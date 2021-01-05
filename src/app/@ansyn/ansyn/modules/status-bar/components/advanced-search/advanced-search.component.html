@@ -41,7 +41,7 @@
     </ansyn-combo-table>
 </div>
 
-<div class="box providers dataInputsPreSearch">
+<div *ngIf="!displaySensors()" class="box providers-sensors dataInputsPreSearch">
     <div class="title-grid">
         <div class="buttons-title">
             <div class="select-all" (click)="selectAllItems()">{{'select all' | translate}}</div>
@@ -59,7 +59,30 @@
     (selectedItemsArray)="updateSelectedArray($event,'SelectedProviders')"
     #providers
     >
-        <ansyn-combo-table-option *ngFor="let type of providersNamesList" [value]="type">
+        <ansyn-combo-table-option *ngFor="let provider of providersNamesList" [value]="provider">
+        </ansyn-combo-table-option>
+    </ansyn-combo-table>
+</div>
+
+<div *ngIf="displaySensors()" class="box providers-sensors dataInputsPreSearch">
+    <div class="title-grid">
+        <div class="buttons-title">
+            <div class="select-all" (click)="selectAllItems()">{{'select all' | translate}}</div>
+            <div class="reset" (click)="resetDataInputFilters()"><i class="icon-undo"></i></div>
+        </div>
+        <div class="title text-title">{{'sensors' | translate}}</div>
+    </div>
+
+    <ansyn-combo-table
+    [isLine]="false"
+    [selected]="selectedSensors"
+    [isFullSize]="true"
+    contentTitle="sensors"
+	(ngModel)="sensors"
+    (selectedItemsArray)="updateSelectedArray($event,'SelectedSensors')"
+    #providers
+    >
+        <ansyn-combo-table-option *ngFor="let sensor of sensorsList" [value]="sensor">
         </ansyn-combo-table-option>
     </ansyn-combo-table>
 </div>

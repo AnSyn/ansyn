@@ -59,9 +59,13 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 				protected _parent: SearchPanelComponent,
 				@Inject(casesConfig) public caseConfig: ICasesConfig) { 
 		this.sensorTypes = this.getAllSensorsTypes();
+		this.sensorsList= this.getAllSensorsNames();
 		this.providersNamesList = this.getAllProvidersNames();
 	}
 
+	displaySensors(): boolean {
+		return Boolean(this.sensorsList.length);
+	}
 	getAllProvidersNames(): string[] {
 		const allProvider = Object.keys(this.multipleOverlaysSourceConfig.indexProviders);
 		const providers = allProvider.filter(provider => !this.multipleOverlaysSourceConfig.indexProviders[provider].inActive)
@@ -87,6 +91,20 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 			sensors: this.selectedSensors
 		}
 	}
+
+	getAllSensorsNames(): any[] {
+		let sensors: any[] = [];
+		this.getActiveProviders()
+		.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
+			if(sensorNamesByGroup) {
+				const typesNames = Object.keys(sensorNamesByGroup);
+				typesNames.map(type => {
+					sensors = sensorNamesByGroup[type].map(sensor => sensor);
+				})
+			}	
+		});
+		return flattenDeep(sensors);
+	  }
 
 	getAllSensorsTypes(): string[] {
 		const allSensors = Object.values(this.multipleOverlaysSourceConfig.indexProviders).filter(provider => !provider.inActive).map(provider => {
@@ -124,7 +142,7 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 	}
 
 	updateSelectedSensors(selectedSensorsArray: string[]): void {
-		this.selectedRegistration = selectedSensorsArray;
+		this.selectedSensors = selectedSensorsArray;
 	}
 
 	updateSelectedArray(selectedItemsArray: string[], arrayToUpdate: string): void {

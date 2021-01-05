@@ -283,3 +283,6 @@
 .icon-drone:before {
 	content: "\e90f";
 }
+.icon-help:before {
+	content: "\e915";
+}

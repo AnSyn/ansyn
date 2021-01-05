@@ -99,7 +99,13 @@ const fetchParams: any = {
 	limit: 250,
 	region: turf.geometry('Polygon', regionCoordinates),
 	timeRange: { start: new Date().toISOString(), end: new Date().toISOString() },
-	dataInputFilters: []
+	dataInputFilters: [],
+	resolution: {
+		lowValue: 0,
+		highValue: 100
+	} ,
+	types: [],
+	registeration: []
 };
 
 const fetchParamsWithLimitZero: any = { ...fetchParams, limit: 0 };
@@ -185,7 +191,7 @@ describe('MultipleSourceProvider', () => {
 					},
 					{
 						provide: StatusBarConfig,
-						useValue: statusBarConfigMock
+						useValue: []
 					},
 					MultipleOverlaysSourceProvider,
 					{
@@ -212,8 +218,6 @@ describe('MultipleSourceProvider', () => {
 
 		it('should return an error', () => {
 			const expectedResults = cold('(b|)', { b: { errors: [faultyError], data: null, limited: -1 } });
-			console.log(multipleSourceProvider.fetch(fetchParams));
-			console.log(expectedResults);
 			expect(multipleSourceProvider.fetch(fetchParams)).toBeObservable(expectedResults);
 		});
 
@@ -248,6 +252,10 @@ describe('MultipleSourceProvider', () => {
 						provide: MultipleOverlaysSource,
 						useClass: FaultyOverlaySourceProviderMock,
 						multi: true
+					},
+					{
+						provide: StatusBarConfig,
+						useValue: []
 					}
 				]
 			});

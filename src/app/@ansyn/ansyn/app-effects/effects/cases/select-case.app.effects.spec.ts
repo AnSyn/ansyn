@@ -93,7 +93,7 @@ describe('SelectCaseAppEffects', () => {
 						searchMode: "screenView"
 					}
 				},
-				advancedSearchParameters: IAdvancedSearchParameter ={
+				advancedSearchParameters: IAdvancedSearchParameter = {
 					providers: [],
 					registeration: [],
 					sensors: [],

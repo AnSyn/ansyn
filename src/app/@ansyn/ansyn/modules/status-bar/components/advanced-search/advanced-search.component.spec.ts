@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
 import { casesConfig } from '../../../menu-items/cases/services/cases.service';
 import { SearchPanelComponent } from '../search-panel/search-panel.component';
@@ -18,7 +19,11 @@ import { AdvancedSearchComponent } from './advanced-search.component';
 						provide: MultipleOverlaysSourceConfig,
 						useValue: {
 							indexProviders: {
-								Truthy: { }
+								OPEN_AERIAL: {
+									dataInputFiltersConfig: {
+										children: []
+									}
+								}
 							}
 						}
 					},
@@ -33,7 +38,7 @@ import { AdvancedSearchComponent } from './advanced-search.component';
 							defaultCase: { 
 								id: 'defaultCaseId',
 								state: {
-									defaultAdvancedSearchParameters: {
+									advancedSearchParameters: {
 										resolution: {
 											lowValue: 0,
 											highValue: 0
@@ -42,9 +47,9 @@ import { AdvancedSearchComponent } from './advanced-search.component';
 								}
 							} 
 						} 
-					},
+					}
 			],
-			imports: [StoreModule.forRoot({})]
+			imports: [StoreModule.forRoot({}), TranslateModule.forRoot()]
 		})
 		.compileComponents();
 	}));
@@ -58,4 +63,4 @@ import { AdvancedSearchComponent } from './advanced-search.component';
 	it('should create', () => {
 		expect(component).toBeTruthy();
 	});
-	});
+});

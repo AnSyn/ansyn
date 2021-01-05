@@ -1,4 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { AnsynComboTableComponent } from '../ansyn-combo-table/ansyn-combo-table.component';
 
 import { AnsynComboTableOptionComponent } from './ansyn-combo-table-option.component';
 
@@ -8,7 +10,16 @@ describe('AnsynComboTableOptionComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-		declarations: [ AnsynComboTableOptionComponent ]
+		imports: [TranslateModule.forRoot()],
+		declarations: [ AnsynComboTableOptionComponent ],
+		providers: [
+			{
+				provide: AnsynComboTableComponent,
+				useValue: {
+					selected: []
+				}
+			}
+		]
 		})
 		.compileComponents();
 	}));
@@ -22,4 +33,4 @@ describe('AnsynComboTableOptionComponent', () => {
 	it('should create', () => {
 		expect(component).toBeTruthy();
 	});
-	});
+});

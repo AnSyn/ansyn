@@ -12,6 +12,9 @@ import { AnsynFormsModule } from '../../../core/forms/ansyn-forms.module';
 import { SearchPanelComponent } from '../search-panel/search-panel.component';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
+import { COMPONENT_MODE } from 'src/app/@ansyn/ansyn/app-providers/component-mode';
+import { SearchOptionsComponent } from '../search-options/search-options.component';
+import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 
 describe('LocationPickerComponent', () => {
 	let component: LocationPickerComponent;
@@ -37,7 +40,13 @@ describe('LocationPickerComponent', () => {
 			{
 				provide: MultipleOverlaysSourceConfig,
 				useValue: []
-			}
+			},
+			{
+				provide: COMPONENT_MODE,
+				useValue: false
+			},
+			SearchOptionsComponent,
+			DateTimeAdapter
 		]
 		})
 			.compileComponents();

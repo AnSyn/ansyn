@@ -121,6 +121,9 @@ describe('OverlaysService', () => {
 		dataInputFilters: {
 			fullyChecked: true,
 			filters: []
+		},
+		advancedSearchParameters: {
+			sensors: []
 		}
 	};
 	const multipleOverlaysSourceConfig: Partial<IMultipleOverlaysSourceConfig> = {
@@ -315,6 +318,9 @@ describe('OverlaysService', () => {
 			dataInputFilters: {
 				fullyChecked: true,
 				filters: []
+			},
+			advancedSearchParameters: {
+				sensors: []
 			}
 		};
 		overlaysService.search(params).subscribe((result: any) => {

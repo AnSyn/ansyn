@@ -5,7 +5,7 @@ import { combineLatest, Observable, pipe } from 'rxjs';
 import { selectActiveMapId, selectLayout, selectMapsList } from '@ansyn/map-facade';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import {
-	selectFavoriteOverlays, selectOverlaysManualProcessArgs,
+	selectFavoriteOverlays, selectOverlaysImageProcess,
 	selectScannedAreaData,
 	selectTranslationData
 } from '../../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
@@ -13,7 +13,7 @@ import { IAppState } from '../../app.effects.module';
 import { selectSelectedLayersIds } from '../../../modules/menu-items/layers-manager/reducers/layers.reducer';
 import { selectFacets } from '../../../modules/filters/reducer/filters.reducer';
 import { UpdateCaseAction } from '../../../modules/menu-items/cases/actions/cases.actions';
-import { selectAutoSave, selectSelectedCase } from '../../../modules/menu-items/cases/reducers/cases.reducer';
+import { selectSelectedCase } from '../../../modules/menu-items/cases/reducers/cases.reducer';
 import { selectMiscOverlays, selectOverlaysCriteria } from '../../../modules/overlays/reducers/overlays.reducer';
 import { ICase } from '../../../modules/menu-items/cases/models/case.model';
 
@@ -31,13 +31,11 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectMapsList),
 		this.store$.select(selectLayout),
 		this.store$.select(selectOverlaysCriteria),
-		this.store$.select(selectOverlaysManualProcessArgs),
+		this.store$.select(selectOverlaysImageProcess),
 		this.store$.select(selectMiscOverlays),
 		this.store$.select(selectTranslationData),
 		this.store$.select(selectScannedAreaData)
-	]
-		.map(event => event.pipe(this.clearIsAutoSave))
-		.concat([this.store$.select(selectAutoSave).pipe(this.setIsAutoSave)]);
+	];
 
 	@Effect()
 	shouldUpdateCase$: Observable<UpdateCaseAction> = combineLatest(this.events).pipe(
@@ -52,20 +50,19 @@ export class UpdateCaseAppEffects {
 				mapsList,
 				layout,
 				{ time, region, dataInputFilters, advancedSearchParameters }, /* overlaysCriteria */
-				overlaysManualProcessArgs,
+				overlaysImageProcess,
 				miscOverlays,
 				overlaysTranslationData,
 				overlaysScannedAreaData,
 				autoSave
 			] = events;
 
-			const { id, name, lastModified, creationTime } = selectedCase;
+			const { id, name, creationTime } = selectedCase;
 
 			const updatedCase: ICase = {
 				id,
 				name,
 				creationTime,
-				lastModified,
 				autoSave,
 				state: {
 					maps: {
@@ -83,13 +80,13 @@ export class UpdateCaseAppEffects {
 					advancedSearchParameters,
 					facets,
 					miscOverlays,
-					overlaysManualProcessArgs,
+					overlaysImageProcess,
 					overlaysTranslationData,
 					overlaysScannedAreaData
 				}
 			};
 
-			return new UpdateCaseAction({ updatedCase, forceUpdate: this.isAutoSaveTriggered });
+			return new UpdateCaseAction( updatedCase);
 		})
 	);
 

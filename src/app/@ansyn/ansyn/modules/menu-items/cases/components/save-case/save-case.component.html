@@ -1,15 +1,14 @@
-<div class="save-case">
+<div class="save-case" dir="auto">
 	<button (click)="close()" class="close" type="button">
 		<span>×</span>
 	</button>
-
+	<h3>{{'Case Name:' | translate}}</h3>
 	<form #f="ngForm" class="save-case-form" (ngSubmit)="onSubmitCase()">
 		<ansyn-input
 			[(ngModel)]="caseName"
 			select
 			name="name"
-			[required]="true"
-			[label]="'CaseName' | translate">
+			[required]="true">
 		</ansyn-input>
 
 		<div class="bottom-btns">

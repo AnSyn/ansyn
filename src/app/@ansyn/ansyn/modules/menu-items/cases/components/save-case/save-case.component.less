@@ -1,31 +1,21 @@
 @import "ansyn/less/common";
+@import "../../less/common.less";
 
 @margin: 30px;
 
 :host {
-	display: block;
-	position: absolute;
-	width: 337px;
-	top: 15px;
-	left: @margin;
+	&:extend(.modal-host);
 
 	div.save-case {
-		background: white;
-		box-shadow: 0 0 13px 0 #2e2d46;
-		padding: 7%;
-		box-sizing: border-box;
-		width: 100%;
-		height: 100%;
+		&:extend(.modal);
+
+		h3 {
+			color: black;
+			text-align: center;
+		}
 
 		button.close {
-			position: absolute;
-			right: 0;
-			top: 0;
-			border: none;
-			background: transparent;
-			cursor: pointer;
-			outline: none;
-			color: #2e2d46;
+			&:extend(.close-button);
 
 			&:hover {
 				font-weight: bold;
@@ -34,14 +24,10 @@
 		}
 
 		form.save-case-form {
-			position: relative;
-			width: 100%;
-			height: 100%;
+			padding: @padding;
 
 			.bottom-btns {
-				margin-top: 10px;
-				display: flex;
-				justify-content: flex-end;
+				&:extend(.buttons);
 
 				button {
 					background: transparent;
@@ -82,6 +68,8 @@
 		}
 	}
 }
+
+
 
 
 

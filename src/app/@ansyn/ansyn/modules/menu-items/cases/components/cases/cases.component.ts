@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Store, select } from '@ngrx/store';
+import { selectShowCasesTable } from '../../reducers/cases.reducer';
+import { distinctUntilChanged, tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'ansyn-cases',
@@ -7,4 +10,10 @@ import { Component } from '@angular/core';
 })
 
 export class CasesComponent {
+	isTableOpen$ = this.store$.pipe(
+		select(selectShowCasesTable),
+		distinctUntilChanged(),
+	);
+	constructor(protected store$: Store) {
+	}
 }

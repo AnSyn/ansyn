@@ -2,8 +2,6 @@ export { TimePickerContainerComponent } from './modules/status-bar/components/ti
 
 export { measuresClassNameForExport } from './modules/plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
 
-export { selectOverlaysManualProcessArgs } from './modules/overlays/overlay-status/reducers/overlay-status.reducer';
-
 export { isArrowRightKey, isArrowLeftKey, isBackspaceKey, isDigitKey, isEnterKey, isEscapeKey } from "./modules/core/utils/keyboardKey";
 
 export { IImageProcParam } from "./modules/overlays/overlay-status/config/overlay-status-config";
@@ -66,7 +64,7 @@ export { StatusBarModule } from './modules/status-bar/status-bar.module';
 
 // menuItems
 export { ClearActiveInteractionsAction } from './modules/menu-items/tools/actions/tools.actions';
-export { selectAutoSave } from './modules/menu-items/cases/reducers/cases.reducer';
+// export { selectAutoSave } from './modules/menu-items/cases/reducers/cases.reducer';
 export { FilterType } from './modules/filters/models/filter-type';
 
 export { SelectCaseSuccessAction } from './modules/menu-items/cases/actions/cases.actions';
@@ -84,7 +82,7 @@ export {
 	ISettingsState, selectFlags, settingsStateSelector, selectIsAnaglyphActive
 }from './modules/menu-items/settings/reducers/settings.reducer';
 export {
-	LoadDefaultCaseAction, SaveCaseAsSuccessAction, SelectDilutedCaseAction
+	LoadDefaultCaseAction, SelectDilutedCaseAction
 }from './modules/menu-items/cases/actions/cases.actions';
 export { FiltersMetadata, IFiltersState } from './modules/filters/reducer/filters.reducer';
 export { IFilter } from './modules/filters/models/IFilter';
@@ -182,7 +180,6 @@ export {
 export { casesFeatureKey, CasesReducer, initialCasesState } from './modules/menu-items/cases/reducers/cases.reducer';
 export { PullActiveCenter } from './modules/menu-items/tools/actions/tools.actions';
 export { toolsFeatureKey, toolsInitialState, ToolsReducer } from './modules/menu-items/tools/reducers/tools.reducer';
-export { AddCaseAction } from './modules/menu-items/cases/actions/cases.actions';
 export { QueryParamsHelper } from './modules/menu-items/cases/services/helpers/cases.service.query-params-helper';
 export { UpdateFilterAction } from './modules/filters/actions/filters.actions';
 export { IEnumFiled } from './modules/filters/models/metadata/enum-filter-metadata';
@@ -210,7 +207,7 @@ export {
 	AlgorithmTask,
 	AlgorithmTaskStatus
 } from './modules/menu-items/algorithms/models/tasks.model';
-export { SetAutoSave } from './modules/menu-items/cases/actions/cases.actions';
+// export { SetAutoSave } from './modules/menu-items/cases/actions/cases.actions';
 
 
 // core
@@ -293,7 +290,7 @@ export {
 	ICaseTimeState
 } from './modules/menu-items/cases/models/case.model';
 export {
-	ICaseBooleanFilterMetadata, ICaseState, IOverlaysManualProcessArgs
+	ICaseBooleanFilterMetadata, ICaseState, IOverlaysImageProcess
 }from './modules/menu-items/cases/models/case.model';
 export {
 	ICaseMapsState, IDilutedCaseState, IImageManualProcessArgs
@@ -303,7 +300,7 @@ export { ICaseMapState } from './modules/menu-items/cases/models/case.model';
 
 
 export {
-	SetOverlaysCriteriaAction, UpdateOverlaysCountAction,
+	SetOverlaysCriteriaAction,
 	SetMiscOverlays,
 	SetMiscOverlay
 } from './modules/overlays/actions/overlays.actions';
@@ -378,9 +375,6 @@ export {
 	ToggleDraggedModeAction,
 	UpdateOverlaysManualProcessArgs,
 	SetAutoImageProcessing,
-	SetAutoImageProcessingSuccess,
-	DisableImageProcessing,
-	EnableImageProcessing,
 	SetManualImageProcessing
 } from './modules/overlays/overlay-status/actions/overlay-status.actions';
 

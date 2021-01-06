@@ -164,7 +164,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		this.end += this.pagination;
 	}
 
-	onMouseOver($event, id: string): void {
+	openOverlayOverview($event, id: string): void {
 		this.store$.dispatch(new SetMarkUp({
 			classToSet: MarkUpClass.hover,
 			dataToSet: { overlaysIds: [id] },
@@ -175,11 +175,12 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		// in zone.js...
 	}
 
-	onMouseOut(): void {
+	closeOverlayOverview(): void {
 		this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
 	}
 
 	openOverlay(id: string): void {
+		this.closeOverlayOverview();
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id }));
 	}
 

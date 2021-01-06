@@ -1,5 +1,6 @@
 {
   "casesConfig": {
+  "user": "AnSyn",
     "schema": "cases",
     "paginationLimit": 16,
     "defaultCase": {
@@ -8,7 +9,6 @@
 		 "lastModified": "2018-04-04T13:21:45.616Z",
 		 "autoSave": false,
 		 "state": {
-		   "timeFilter": "Start - End",
 		   "maps": {
 			 "layout": "layout1",
 			 "data": [
@@ -141,17 +141,6 @@
 		   }
 		 }
 	   },
-    "casesQueryParamsKeys": [
-      "dataInputFilters",
-      "facets",
-      "time",
-      "maps",
-      "region",
-      "overlaysManualProcessArgs",
-      "orientation",
-      "layers",
-      "miscOverlays"
-    ],
     "updateCaseDebounceTime": 700,
     "useHash": true,
     "defaultSearchFromDeltaTime": {
@@ -440,7 +429,10 @@
 	 "httpTimeout": "3000",
 	 "isFooterCollapsible": {{ getv "/ansyn/iscollapsible" "false" }},
 	 "enable3D": {{ getv "/ansyn/3d/enable" "true" }},
-	 "northCalcImagerySensorNamesIgnoreList": []
+	 "northCalcImagerySensorNamesIgnoreList": [],
+	 "httpCacheBlackList": [
+	 	"{{ getv "/ansyn/storage/baseurl" "http://platform.ansyn.io:8888/api/store" }}"
+	 ]
   },
   "olConfig": {
   	 "needToUseLayerExtent": false,
@@ -1633,8 +1625,5 @@
   },
   "addressService": {
       "url": "assets/config/addresses.json"
-    },
-    "linksConfig": {
-        "schema": "link"
-      }
+    }
 }

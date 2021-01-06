@@ -8,10 +8,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
 import { mapFacadeConfig, ProjectionConverterService } from '@ansyn/map-facade';
 import { toolsConfig } from '../../models/tools-config';
-import { CoreConfig } from '../../../../core/models/core.config';
-import { CoreModule } from '../../../../core/core.module';
-import { LoggerConfig } from '../../../../core/models/logger.config';
 import { TranslateModule } from '@ngx-translate/core';
+import { CoreModule } from '../../../../../..//modules/core/core.module';
+import { LoggerConfig } from '../../../../../..//modules/core/models/logger.config';
+import { CoreConfig } from '../../../../../../modules/core/models/core.config';
 
 describe('GoToComponent', () => {
 	let component: GoToComponent;

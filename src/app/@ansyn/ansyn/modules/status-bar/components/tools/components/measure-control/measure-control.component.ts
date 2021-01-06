@@ -15,8 +15,8 @@ import {
 	UpdateMeasureDataOptionsAction
 } from '../../actions/tools.actions';
 import { selectIsMeasureToolActive, selectMeasureDataByMapId } from '../../reducers/tools.reducer';
-import { IOverlay } from '../../../../overlays/models/overlay.model';
 import { IMeasureData } from '../../models/measure-data';
+import { IOverlay } from '../../../../../overlays/models/overlay.model';
 
 @Component({
 	selector: 'ansyn-measure-control',

@@ -31,7 +31,7 @@ import {
 	SetAnnotationMode,
 	ToolsActionsTypes,
 	ClearActiveInteractionsAction
-} from '../../menu-items/tools/actions/tools.actions';
+} from '../../status-bar/components/tools/actions/tools.actions';
 import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-manager/reducers/layers.reducer';
 import { ClickOutsideService } from '../../core/click-outside/click-outside.service';
 import { TranslateService } from '@ngx-translate/core';

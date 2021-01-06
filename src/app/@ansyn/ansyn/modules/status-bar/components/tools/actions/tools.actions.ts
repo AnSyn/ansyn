@@ -1,9 +1,9 @@
 import { Action } from '@ngrx/store';
 import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
-import { type } from '../../../core/utils/type';
 import { AnnotationMode, IUpdateFeatureEvent } from '@ansyn/ol';
 import { IMeasureDataOptions, SubMenuEnum, toolsFlags } from '../models/tools.model';
-import { ILogMessage } from '../../../core/models/logger.model';
+import { type } from '../../../../core/utils/type';
+import { ILogMessage } from '@ansyn/map-facade';
 
 export const ToolsActionsTypes = {
 	START_MOUSE_SHADOW: type('[Tools] start mouse shadow'),

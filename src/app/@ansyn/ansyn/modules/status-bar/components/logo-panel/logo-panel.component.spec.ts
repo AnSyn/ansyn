@@ -6,8 +6,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { StatusBarConfig } from '../../models/statusBar.config';
-import { ResetAppAction } from '@ansyn/menu';
-import { MenuConfig } from '../../../../../../../../dist/ansyn/menu';
+import { MenuConfig, ResetAppAction } from '@ansyn/menu';
 
 describe('LogoPanelComponent', () => {
 	let component: LogoPanelComponent;

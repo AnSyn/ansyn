@@ -235,12 +235,6 @@
 .icon-pin:before {
 	content: "\e84b";
 }
-.icon-credentials {
-	 margin-bottom: 4%; /* hack */
-}
-.icon-credentials:before {
-	content: "\e84c";
-}
 .icon-method-draw-image:before {
 	content: "\e84e";
 }
@@ -291,4 +285,7 @@
 }
 .icon-help:before {
 	content: "\e915";
+}
+.icon-credentials:before {
+	content: "\e916";
 }

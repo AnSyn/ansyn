@@ -231,7 +231,7 @@ describe('OverlaysService', () => {
 
 	});
 
-	fit('parseOverlayDataForDisplay function with special objects', () => {
+	it('parseOverlayDataForDisplay function with special objects', () => {
 
 		const mockData = {
 			overlaysArray: overlaysTmpData,

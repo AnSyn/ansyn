@@ -27,7 +27,7 @@
     "start:aot": "node --max_old_space_size=12288 ./node_modules/@angular/cli/bin/ng serve --aot true",
     "start:prod": "ng serve --prod true",
     "start:builder-dev": "ng s --app builder-dev",
-    "test": "ng test",
+    "test": "node --max_old_space_size=12288 ./node_modules/@angular/cli/bin/ng test",
     "test:e2e": "node scripts/generate-config.js && ng e2e ansyn-e2e",
     "test:single-run": "ng test ansyn --watch=false",
     "testCompile": "cd build && gulp testCompile",

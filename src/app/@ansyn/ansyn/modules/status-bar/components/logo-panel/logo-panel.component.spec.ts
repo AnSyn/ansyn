@@ -1,15 +1,18 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 
 import { LogoPanelComponent } from './logo-panel.component';
 import { TranslateModule } from '@ngx-translate/core';
-import { StoreModule } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { StatusBarConfig } from '../../models/statusBar.config';
+import { ResetAppAction } from '@ansyn/menu';
+import { MenuConfig } from '../../../../../../../../dist/ansyn/menu';
 
-describe('DisplayPanelComponent', () => {
+describe('LogoPanelComponent', () => {
 	let component: LogoPanelComponent;
 	let fixture: ComponentFixture<LogoPanelComponent>;
+	let store: Store<any>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -23,19 +26,30 @@ describe('DisplayPanelComponent', () => {
 				{
 					provide: StatusBarConfig,
 					useValue: { toolTips: {} }
+				},
+				{
+					provide: MenuConfig,
+					useValue: {}
 				}
 			]
 		})
 			.compileComponents();
 	}));
 
-	beforeEach(() => {
+	beforeEach(inject([Store], (_store: Store<any>) => {
 		fixture = TestBed.createComponent(LogoPanelComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
-	});
+		store = _store;
+	}));
 
 	it('should create', () => {
 		expect(component).toBeTruthy();
+	});
+
+	it('reset app will dispatch ResetAppAction', () => {
+		spyOn(store, 'dispatch');
+		component.resetApp();
+		expect(store.dispatch).toHaveBeenCalledWith(new ResetAppAction());
 	});
 });

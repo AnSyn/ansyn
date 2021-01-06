@@ -5,7 +5,6 @@ import { IMenuState, menuFeatureKey, MenuReducer } from '../reducers/menu.reduce
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
 	ContainerChangedTriggerAction,
-	ResetAppAction,
 	SelectMenuItemAction,
 	UnSelectMenuItemAction
 } from '../actions/menu.actions';
@@ -130,11 +129,5 @@ describe('MenuComponent', () => {
 		expect(menuComponent.hideBadge('0')).toBeFalsy();
 		expect(menuComponent.hideBadge('1')).toBeFalsy();
 		expect(menuComponent.hideBadge('★')).toBeFalsy();
-	});
-
-	it('reset app will dispatch ResetAppAction', () => {
-		spyOn(store, 'dispatch');
-		menuComponent.resetApp();
-		expect(store.dispatch).toHaveBeenCalledWith(new ResetAppAction());
 	});
 });

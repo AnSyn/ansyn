@@ -5,7 +5,7 @@
 	</div>
 
 	<div class="status" [class.expand]="(isMenuCollapse$ | async)" [class.hide-status-bar]="(hideStatus$ | async)">
-		<ansyn-status-bar></ansyn-status-bar>
+		<ansyn-status-bar [version]="version"></ansyn-status-bar>
 	</div>
 
 	<div class="layer" #animatedElementHorizontal>

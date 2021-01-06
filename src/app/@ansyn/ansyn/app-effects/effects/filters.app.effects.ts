@@ -115,6 +115,7 @@ export class FiltersAppEffects {
 				favoriteOverlays,
 				showOnlyFavorites
 			});
+			console.log('drops', drops);
 			return new SetDropsAction(drops);
 		})
 	);

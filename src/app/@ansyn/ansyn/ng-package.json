@@ -26,7 +26,7 @@
     "dom-to-image",
     "blob-util",
     "jspdf",
-    "shapjs",
+    "shpjs",
     "d3"
   ],
   "lib": {

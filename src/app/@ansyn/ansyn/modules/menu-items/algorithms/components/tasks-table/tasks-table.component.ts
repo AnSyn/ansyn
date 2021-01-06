@@ -13,7 +13,7 @@ import {
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
-import { Dictionary } from '@ngrx/entity/src/models';
+import { Dictionary } from '@ngrx/entity';
 import { AlgorithmTaskPreview, ITaskModalData, TasksPageToShow } from '../../models/tasks.model';
 
 const animations: any[] = [

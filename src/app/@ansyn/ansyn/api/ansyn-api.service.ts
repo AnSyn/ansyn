@@ -22,7 +22,7 @@ import {
 	ToggleFooter
 } from '@ansyn/map-facade';
 import { Actions, ofType } from '@ngrx/effects';
-import { Dictionary } from '@ngrx/entity/src/models';
+import { Dictionary } from '@ngrx/entity';
 import { select, Store } from '@ngrx/store';
 import { featureCollection } from '@turf/turf';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';

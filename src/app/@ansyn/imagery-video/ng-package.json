@@ -2,12 +2,9 @@
   "$schema": "../../../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../../../dist/ansyn/imagery-video",
   "whitelistedNonPeerDependencies": [
-    "auto-subscriptions",
-    "@turf/turf",
-    "ngx-color-picker",
-    "angular2-uuid",
-    "@angular/platform-browser",
-    "@angular/core"
+    "@ansyn/imagery",
+    "tslib",
+    "@ngx-translate/core"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

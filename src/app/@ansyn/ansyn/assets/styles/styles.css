@@ -15,6 +15,11 @@ circle.drop.selected {
 	fill: black;
 }
 
+.cdk-overlay-container {
+	/* for web component be on top menu */
+	z-index: 5000;
+}
+
 .custom-dialog .mat-dialog-container {
 	padding: 0;
 	width: 600px;

@@ -334,7 +334,8 @@ export {
 	OverlaysActionTypes,
 	RedrawTimelineAction, RequestOverlayByIDFromBackendAction,
 	SetFilteredOverlaysAction, SetHoveredOverlayAction, SetMarkUp,
-	SetOverlaysStatusMessageAction, SetSpecialObjectsActionStore, SetDropsAction
+	SetOverlaysStatusMessageAction, SetSpecialObjectsActionStore, SetDropsAction,
+	UpdateOverlay, UpdateOverlays
 } from './modules/overlays/actions/overlays.actions';
 export {
 	MarkUpClass,

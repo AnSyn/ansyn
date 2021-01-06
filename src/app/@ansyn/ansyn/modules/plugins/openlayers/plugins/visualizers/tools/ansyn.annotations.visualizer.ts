@@ -17,6 +17,8 @@ import {
 	AnnotationMode,
 	AnnotationsVisualizer,
 	IDrawEndEvent,
+	IEditAnnotationMode,
+	ILabelTranslateMode,
 	IOLPluginsConfig,
 	OL_PLUGINS_CONFIG,
 	OpenLayersMap,
@@ -265,7 +267,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	onStartLabelOrAnnotationEditDisableMeasureTranslate$ = () => merge(
+	onStartLabelOrAnnotationEditDisableMeasureTranslate$: () => Observable<IEditAnnotationMode | ILabelTranslateMode> = () => merge(
 		this.annotationsVisualizer.events.onAnnotationEditStart,
 		this.annotationsVisualizer.events.onLabelTranslateStart).pipe(
 		tap((event) => {

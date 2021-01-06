@@ -109,7 +109,7 @@ export class CasesAppEffects {
 				protected imageryCommunicatorService: ImageryCommunicatorService) {
 	}
 
-	getFullOverlays(oldCase: ICase, overlaysMap: Map<string, IOverlay>) {
+	getFullOverlays(oldCase: ICase, overlaysMap: Map<string, IOverlay>): ICase {
 		return {
 			...oldCase, state: {
 				...oldCase.state,

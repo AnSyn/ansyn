@@ -4,16 +4,13 @@
 	"peerDependencies": {
 		"@angular/core": "~10.0.5",
 		"@angular/common": "~10.0.5",
-		"@ansyn/imagery": "3.0.0",
-		"rxjs": "~6.5.4",
-		"cesium": "^1.66.0",
-		"auto-subscriptions": "^2.0.5",
-		"@turf/turf": "^5.1.6",
-		"ngx-color-picker": "^9.1.0",
-		"angular2-uuid": "^1.1.1"
+		"rxjs": "~6.5.4"
 	},
 	"dependencies": {
-		"tslib": "^2.0.0"
+		"tslib": "^2.0.0",
+		"@ansyn/imagery": "3.0.0",
+		"cesium": "^1.66.0",
+		"auto-subscriptions": "^2.0.5"
 	},
 	"license": "MIT"
 }

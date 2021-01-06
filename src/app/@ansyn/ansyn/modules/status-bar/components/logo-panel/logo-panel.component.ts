@@ -17,6 +17,8 @@ export class LogoPanelComponent {
 	@HostBinding('class.rtl')
 	isRTL = this.translateService.instant('direction') === 'rtl';
 
+	showCredentials = false;
+
 	constructor(
 		protected store$: Store<IStatusBarState>,
 		@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
@@ -33,6 +35,10 @@ export class LogoPanelComponent {
 
 	goToLandingPage() {
 		window.open(this.menuConfig.landingPageUrl);
+	}
+
+	toggleCredentials() {
+		this.showCredentials = !this.showCredentials;
 	}
 
 }

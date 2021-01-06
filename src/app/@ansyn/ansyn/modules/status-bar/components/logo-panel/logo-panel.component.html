@@ -1,6 +1,15 @@
-<div class="menu-btn"
-	 (click)="onHelp()"
->
+
+<div class="menu-btn" (click)="toggleCredentials()">
+	<i class="icon-credentials"></i>
+	{{'Permissions' | translate}}
+</div>
+
+<div class="menu-btn" (click)="onHelp()">
 	<i class="icon-help"></i>
 	{{'Help' | translate}}
 </div>
+
+<ansyn-credentials
+	*ngIf="showCredentials"
+	(closeMe)="showCredentials = false"
+></ansyn-credentials>

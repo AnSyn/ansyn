@@ -1,12 +1,12 @@
 
 <div class="menu-btn" (click)="toggleCredentials()">
 	<i class="icon-credentials"></i>
-	{{'Permissions' | translate}}
+	<span>{{'Permissions' | translate}}</span>
 </div>
 
 <div class="menu-btn" (click)="onHelp()">
 	<i class="icon-help"></i>
-	{{'Help' | translate}}
+	<span>{{'Help' | translate}}</span>
 </div>
 
 <div class="menu-btn fork-me" *ngIf="menuConfig?.forkMe?.active">

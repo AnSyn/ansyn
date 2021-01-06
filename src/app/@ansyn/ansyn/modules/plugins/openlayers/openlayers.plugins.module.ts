@@ -39,6 +39,8 @@ import { OpenlayersAnaglyphSensorModule } from './plugins/anaglyph-sensor/anagly
 import { OpenLayersAirbusSourceProvider } from '@ansyn/ol';
 import { OverlayHoverVisualizer } from "./plugins/visualizers/overlays/overlay-hover-visualizer";
 import { OpenLayerPic4CartoSourceProvider } from '@ansyn/ol';
+import { OpenlayersPlacesVisualizer } from './plugins/visualizers/places/openlayers-places.visualizer';
+import { PopupComponent } from './plugins/visualizers/places/popup/popup.component';
 
 @NgModule({
 	imports: [
@@ -67,7 +69,8 @@ import { OpenLayerPic4CartoSourceProvider } from '@ansyn/ol';
 				PolygonSearchVisualizer,
 				OpenlayersGeoJsonLayersVisualizer,
 				TaskRegionVisualizer,
-				ScannedAreaVisualizer
+				ScannedAreaVisualizer,
+				OpenlayersPlacesVisualizer
 			],
 			maps: [OpenLayersMap, OpenLayersDisabledMap],
 			mapSourceProviders: [
@@ -87,7 +90,9 @@ import { OpenLayerPic4CartoSourceProvider } from '@ansyn/ol';
 		}),
 		AnnotationsContextMenuModule,
 		OpenlayersAnaglyphSensorModule
-	]
+	],
+	declarations: [PopupComponent],
+	entryComponents: [PopupComponent]
 })
 export class OpenlayersPluginsModule {
 

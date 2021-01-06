@@ -35,7 +35,15 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 			let annotationLayer = action.payload.find(({ type }) => type === LayerType.annotation);
 			const selectedLayersIds = state.selectedLayersIds;
 			let activeAnnotationLayer = state.activeAnnotationLayer;
-			let layers = action.payload;
+			let layers = [...action.payload];
+			layers.push({
+				id: 'places-layer',
+				creationTime: new Date(),
+				type: LayerType.complex,
+				layerPluginType: 'REST',
+				name: 'places',
+				url: 'https://overpass-api.de/api/interpreter'
+			});
 			activeAnnotationLayer = annotationLayer && annotationLayer.id;
 			return layersAdapter.setAll(layers, { ...state, selectedLayersIds, activeAnnotationLayer });
 

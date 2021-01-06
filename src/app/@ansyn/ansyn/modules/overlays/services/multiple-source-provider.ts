@@ -29,8 +29,8 @@ import { selectProviders } from '../reducers/overlays.reducer';
 })
 export class MultipleOverlaysSourceProvider {
 	
-	private providers: IProviderData[];
-	private selectedProviders: IProviderData[];
+	providers: IProviderData[] = [];
+	selectedProviders: IProviderData[] = [];
 
 	onDataInputFilterChange$ = this.store.pipe(
 		select(selectProviders),

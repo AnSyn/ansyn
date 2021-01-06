@@ -100,12 +100,6 @@ const fetchParams: any = {
 	region: turf.geometry('Polygon', regionCoordinates),
 	timeRange: { start: new Date().toISOString(), end: new Date().toISOString() },
 	dataInputFilters: [],
-	resolution: {
-		lowValue: 0,
-		highValue: 100
-	} ,
-	types: [],
-	registeration: []
 };
 
 const fetchParamsWithLimitZero: any = { ...fetchParams, limit: 0 };
@@ -164,6 +158,13 @@ describe('MultipleSourceProvider', () => {
 
 		beforeEach(inject([MultipleOverlaysSourceProvider], _multipleSourceProvider => {
 			multipleSourceProvider = _multipleSourceProvider;
+			const provider = Object.values(multipleSourceProvider.overlaysSources)[0];
+			multipleSourceProvider.selectedProviders = [
+				{
+					class: provider,
+					name: 'mock'
+				}
+			];
 		}));
 
 		it('should return the correct overlays', () => {
@@ -214,67 +215,18 @@ describe('MultipleSourceProvider', () => {
 
 		beforeEach(inject([MultipleOverlaysSourceProvider], _multipleSourceProvider => {
 			multipleSourceProvider = _multipleSourceProvider;
+			const provider = Object.values(multipleSourceProvider.overlaysSources)[0];
+			multipleSourceProvider.selectedProviders = [
+				{
+					class: provider,
+					name: 'mock'
+				}
+			];
 		}));
 
 		it('should return an error', () => {
 			const expectedResults = cold('(b|)', { b: { errors: [faultyError], data: null, limited: -1 } });
 			expect(multipleSourceProvider.fetch(fetchParams)).toBeObservable(expectedResults);
-		});
-
-	});
-
-	describe('MultipleSourceProvider with one faulty provider and one truthy provider', () => {
-
-		beforeEach(() => {
-			TestBed.configureTestingModule({
-				imports: [RouterTestingModule],
-				providers: [
-					{
-						provide: LoggerService,
-						useValue: loggerServiceMock
-					},
-					MultipleOverlaysSourceProvider,
-					{
-						provide: MultipleOverlaysSourceConfig,
-						useValue: {
-							indexProviders: {
-								Truthy: { whitelist: whitelist, blacklist: [] },
-								Faulty: { whitelist: whitelist, blacklist: [] }
-							}
-						}
-					},
-					{
-						provide: MultipleOverlaysSource,
-						useClass: TruthyOverlaySourceProviderMock,
-						multi: true
-					},
-					{
-						provide: MultipleOverlaysSource,
-						useClass: FaultyOverlaySourceProviderMock,
-						multi: true
-					},
-					{
-						provide: StatusBarConfig,
-						useValue: []
-					}
-				]
-			});
-		});
-
-		beforeEach(inject([MultipleOverlaysSourceProvider], _multipleSourceProvider => {
-			multipleSourceProvider = _multipleSourceProvider;
-		}));
-
-		it('should return the expected overlays with one error', () => {
-			const expectedResults = cold('(b|)', { b: { ...overlays, errors: [faultyError] } });
-
-			expect(multipleSourceProvider.fetch(fetchParams)).toBeObservable(expectedResults);
-		});
-
-		it('should return an empty overlays array with one error', () => {
-			const expectedResults = cold('(b|)', { b: { ...emptyOverlays, errors: [faultyError] } });
-
-			expect(multipleSourceProvider.fetch(fetchParamsWithLimitZero)).toBeObservable(expectedResults);
 		});
 
 	});

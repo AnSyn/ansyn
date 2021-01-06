@@ -9,6 +9,9 @@
 		{{'minimize' | translate}} <i class="icon-up"></i><br/>
 	</div>
 	
+	<!-- Time -->
+	<ansyn-time-picker-container [openTop]="false"></ansyn-time-picker-container>
+
 	<div class="box" id="geoPreSearch" [class.component]="componentMode">
 		<button ansynComboBoxTrigger
 				(click)="toggleExpander('LocationPicker')"
@@ -29,11 +32,6 @@
 			[geoFilter]="geoFilterTitle">
 		</ansyn-location-picker>
 	</div>
-	
-	<!-- Time -->
-	<ansyn-time-picker-container [openTop]="false"></ansyn-time-picker-container>
-	<div class="close" (click)="close()">X</div>
-	<br/>
 </div>
 <div class="expander">
 	<ansyn-advanced-search *ngIf="advancedSearch"></ansyn-advanced-search>

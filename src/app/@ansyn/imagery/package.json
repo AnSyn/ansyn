@@ -5,9 +5,9 @@
 	"author": "ansyn",
 	"license": "MIT",
 	"peerDependencies": {
-		"@angular/common": "~10.0.5",
-		"@angular/core": "~10.0.5",
-		"rxjs": "~6.5.4"
+		"@angular/common": "10.0.0-PLACEHOLDER",
+		"@angular/core": "10.0.0-PLACEHOLDER",
+		"rxjs": "6.x"
 	},
 	"dependencies": {
 		"auto-subscriptions": "^2.0.5",

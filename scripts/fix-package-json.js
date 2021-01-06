@@ -11,7 +11,7 @@ function fix(fileName) {
 	packageJson.version = mainPackage.version;
 	packageJson.license = mainPackage.license;
 
-	if (packageJson.peerDependencies) {
+	/*if (packageJson.peerDependencies) {
 		Object.keys(packageJson.peerDependencies).forEach(name => {
 			if (name in mainPackage.devDependencies) {
 				packageJson.peerDependencies[name] = mainPackage.devDependencies[name];
@@ -25,7 +25,7 @@ function fix(fileName) {
 				packageJson.peerDependencies[name] = packageJson.version;
 			}
 		});
-	}
+	}*/
 	if (packageJson.dependencies) {
 		Object.keys(packageJson.dependencies).forEach(name => {
 			if (name in mainPackage.dependencies) {

@@ -2,10 +2,10 @@
 	"name": "@ansyn/imagery-video",
 	"version": "3.0.0",
 	"peerDependencies": {
-		"@angular/core": "~10.0.5",
-		"@angular/common": "~10.0.5",
-		"@angular/platform-browser": "~10.0.5",
-		"rxjs": "~6.5.4"
+		"@angular/core": "10.0.0-PLACEHOLDER",
+		"@angular/common": "10.0.0-PLACEHOLDER",
+		"@angular/platform-browser": "10.0.0-PLACEHOLDER",
+		"rxjs": "6.x"
 	},
 	"dependencies": {
 		"@ansyn/imagery": "3.0.0",

@@ -2,12 +2,12 @@
 	"name": "@ansyn/map-facade",
 	"version": "3.0.0",
 	"peerDependencies": {
-		"@angular/common": "~10.0.5",
-		"@angular/core": "~10.0.5",
-		"@ngrx/store": "^9.0.0",
-		"@ngrx/effects": "^9.0.0",
-		"@ngrx/entity": "^9.0.0",
-		"rxjs": "~6.5.4"
+		"@angular/common": "10.0.0-PLACEHOLDER",
+		"@angular/core": "10.0.0-PLACEHOLDER",
+		"@ngrx/store": "9.x",
+		"@ngrx/effects": "9.x",
+		"@ngrx/entity": "9.x",
+		"rxjs": "6.x"
 	},
 	"dependencies": {
 		"@ansyn/imagery": "3.0.0",

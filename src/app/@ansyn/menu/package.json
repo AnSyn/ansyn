@@ -2,10 +2,9 @@
 	"name": "@ansyn/menu",
 	"version": "3.0.0",
 	"peerDependencies": {
-		"@angular/common": "~10.0.5",
-		"@angular/core": "~10.0.5",
-		"@ngrx/store": "^9.0.0",
-		"@ngx-translate/core": "^12.1.2"
+		"@angular/common": "10.0.0-PLACEHOLDER",
+		"@angular/core": "10.0.0-PLACEHOLDER",
+		"@ngrx/store": "9.x"
 	},
 	"dependencies": {
 		"auto-subscriptions": "^2.0.5",

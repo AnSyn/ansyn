@@ -2,13 +2,13 @@
 	"name": "@ansyn/ansyn",
 	"version": "3.0.0",
 	"peerDependencies": {
-		"@ngrx/store": "^9.0.0",
-		"@ngrx/effects": "^9.0.0",
-		"@angular/common": "~10.0.5",
-		"@angular/core": "~10.0.5",
-		"@angular/cdk": "^10.1.0",
-		"@angular/material": "^10.1.0",
-		"rxjs": "~6.5.4"
+		"@ngrx/store": "9.x",
+		"@ngrx/effects": "9.x",
+		"@angular/common": "10.0.0-PLACEHOLDER",
+		"@angular/core": "10.0.0-PLACEHOLDER",
+		"@angular/cdk": "10.0.0-PLACEHOLDER",
+		"@angular/material": "10.0.0-PLACEHOLDER",
+		"rxjs": "6.x"
 	},
 	"dependencies": {
 		"@ansyn/imagery": "3.0.0",

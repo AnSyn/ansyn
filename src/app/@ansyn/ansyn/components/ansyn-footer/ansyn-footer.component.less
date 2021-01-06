@@ -25,6 +25,14 @@
 			}
 		}
 
+		ansyn-time-picker-container {
+			@results-table-button-width: 10%;
+			@time-picker-width: 100px;
+			@extra-margin: 50px;
+			right: calc(@results-table-button-width + @time-picker-width + @extra-margin);
+			top: 8px;
+		}
+
 		button.hide-menu {
 			position: absolute;
 			bottom: calc(100% - 10px);
@@ -58,9 +66,9 @@
 		div.status-timeline-container {
 			.app-timeline-container {
 				ansyn-time-picker-container {
-					right: unset;
 					left: 69%;
-					top: 8px
+					right: unset;
+					top: 8px;
 				}
 			}
 		}

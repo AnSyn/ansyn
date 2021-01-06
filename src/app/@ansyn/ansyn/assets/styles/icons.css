@@ -235,6 +235,9 @@
 .icon-pin:before {
 	content: "\e84b";
 }
+.icon-credentials {
+	 margin-bottom: 4%; /* hack */
+}
 .icon-credentials:before {
 	content: "\e84c";
 }
@@ -243,6 +246,9 @@
 }
 .icon-credentials-request:before {
 	content: "\e84f";
+}
+.icon-table {
+	margin: -8% 0; /* hack */
 }
 .icon-table:before {
 	content: "\e854";

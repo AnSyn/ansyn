@@ -8,13 +8,13 @@ import { Actions, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import * as turf from '@turf/turf';
 import { ImageryVisualizer, IVisualizerEntity } from '@ansyn/imagery';
-import { selectToolFlag } from '../../../../../menu-items/tools/reducers/tools.reducer';
+import { selectToolFlag } from '../../../../../status-bar/components/tools/reducers/tools.reducer';
 import { AutoSubscription } from 'auto-subscriptions';
 import { EntitiesVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
 import { filter, map, mergeMap, take, tap } from 'rxjs/operators';
 import { Inject } from '@angular/core';
-import { IToolsConfig, toolsConfig } from '../../../../../menu-items/tools/models/tools-config';
-import { toolsFlags } from '../../../../../menu-items/tools/models/tools.model';
+import { IToolsConfig, toolsConfig } from '../../../../../status-bar/components/tools/models/tools-config';
+import { toolsFlags } from '../../../../../status-bar/components/tools/models/tools.model';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

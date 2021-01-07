@@ -6,14 +6,14 @@ import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { StoreModule } from '@ngrx/store';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { TranslateModule } from '@ngx-translate/core';
-import { LoggerService } from '../../../core/services/logger.service';
-import { LoggerConfig } from '../../../core/models/logger.config';
 import { toolsConfig } from '../models/tools-config';
-import { AnsynFormsModule } from '../../../core/forms/ansyn-forms.module';
 import { FormsModule } from '@angular/forms';
-import { CoreModule } from '../../../core/core.module';
-import { MockComponent } from '../../../../../map-facade/test/mock-component';
 import { MatSelectModule } from '@angular/material/select';
+import { MockComponent } from '../../../../core/test/mock-component';
+import { CoreModule } from '../../../../core/core.module';
+import { AnsynFormsModule } from '../../../../core/forms/ansyn-forms.module';
+import { LoggerService } from '../../../../core/services/logger.service';
+import { LoggerConfig } from '../../../../core/models/logger.config';
 
 
 describe('ExportMapsPopupComponent', () => {

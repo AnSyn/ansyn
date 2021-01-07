@@ -11,6 +11,7 @@ export interface IGeoFilterStatus {
 export interface IStatusBarState {
 	geoFilterStatus?: IGeoFilterStatus;
 	advancedSearchParameter?: IAdvancedSearchParameter;
+	isCalenderOpen?: boolean;
 }
 
 export const StatusBarInitialState: IStatusBarState = {
@@ -27,7 +28,8 @@ export const StatusBarInitialState: IStatusBarState = {
 			highValue: 0
 		},
 		sensors: []
-	}
+	},
+	isCalenderOpen: false
 };
 
 export const statusBarFeatureKey = 'statusBar';
@@ -51,6 +53,10 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 				return state;
 			}
 		}
+		case StatusBarActionsTypes.UPDATE_CALENDER_STATUS: {
+			const { payload } = action;
+			return { ...state, isCalenderOpen: payload}
+		}
 
 		default:
 			return state;
@@ -59,6 +65,7 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 }
 
 export const selectGeoFilterStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.geoFilterStatus : StatusBarInitialState.geoFilterStatus);
+export const selectCalenderStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.isCalenderOpen : StatusBarInitialState.isCalenderOpen);
 export const selectAdvancedSearchParameters = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar && statusBar.advancedSearchParameter);
 export const selectGeoFilterActive = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.active);
 export const selectGeoFilterType = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.type);

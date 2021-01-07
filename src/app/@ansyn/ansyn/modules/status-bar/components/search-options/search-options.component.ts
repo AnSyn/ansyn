@@ -1,7 +1,9 @@
 import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { filter, tap } from 'rxjs/operators';
+import { filter, tap, withLatestFrom } from 'rxjs/operators';
 import { ClickOutsideService } from '../../../core/click-outside/click-outside.service';
+import { selectCalenderStatus } from '../../reducers/status-bar.reducer';
 
 @Component({
 	selector: 'ansyn-search-options',
@@ -16,10 +18,16 @@ export class SearchOptionsComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	isClickOutside$ = this.clickOutside.onClickOutside({ monitor: this.element.nativeElement }).pipe(
 		filter(clickOutside => clickOutside),
-		tap(this.close.bind(this))
+		withLatestFrom(this.store$.select(selectCalenderStatus)),
+		tap(([clickoutside , calenderStatus]) => {
+			if (!calenderStatus) {
+				this.close();
+			}
+		})
 	);
 	constructor(protected element: ElementRef,
-		protected clickOutside: ClickOutsideService) { }
+		protected clickOutside: ClickOutsideService,
+		protected store$: Store<any>) { }
 
 	ngOnDestroy(): void {
 	}

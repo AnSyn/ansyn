@@ -9,7 +9,8 @@ export const StatusBarActionsTypes = {
 	EXPAND: 'EXPAND',
 	UPDATE_GEO_FILTER_STATUS: 'UPDATE_GEO_FILTER_STATUS',
 	GO_ADJACENT_OVERLAY: 'GO_ADJACENT_OVERLAY',
-	UPDATE_ADVANCED_SEARCH_PARAM: 'UPDATE_ADVANCED_SEARCH_PARAM'
+	UPDATE_ADVANCED_SEARCH_PARAM: 'UPDATE_ADVANCED_SEARCH_PARAM',
+	UPDATE_CALENDER_STATUS: 'UPDATE_CALENDER_STATUS'
 };
 
 export class CopySnapshotShareLinkAction implements Action, ILogMessage {
@@ -27,6 +28,13 @@ export class UpdateAdvancedSearchParamAction implements Action {
 	type: string = StatusBarActionsTypes.UPDATE_ADVANCED_SEARCH_PARAM;
 
 	constructor(public payload: IAdvancedSearchParameter) {
+	}
+}
+
+export class UpdateCalendarStatusAction implements Action {
+	type: string = StatusBarActionsTypes.UPDATE_CALENDER_STATUS;
+
+	constructor(public payload: boolean) {
 	}
 }
 

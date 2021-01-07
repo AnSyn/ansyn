@@ -9,29 +9,16 @@ import {
 	UpdateLayer,
 	UpdateSelectedLayersIds
 } from '../../modules/menu-items/layers-manager/actions/layers.actions';
-import { CasesActionTypes, SaveCaseAsSuccessAction, UpdateCaseBackendSaveAs } from '../../modules/menu-items/cases/actions/cases.actions';
 import { ILayer, LayerType } from '../../modules/menu-items/layers-manager/models/layers.model';
 import { selectLayers } from '../../modules/menu-items/layers-manager/reducers/layers.reducer';
 import {
 	AnnotationRemoveFeature,
 	AnnotationUpdateFeature,
 	ToolsActionsTypes
-} from '../../modules/menu-items/tools/actions/tools.actions';
+} from '../../modules/status-bar/components/tools/actions/tools.actions';
 
 @Injectable()
 export class LayersAppEffects {
-
-	@Effect()
-	onSaveCaseAs$ = this.actions$
-		.pipe(
-			ofType<SaveCaseAsSuccessAction>(CasesActionTypes.SAVE_CASE_AS_SUCCESS),
-			mergeMap((action: SaveCaseAsSuccessAction) => [
-					new UpdateCaseBackendSaveAs(action.payload),
-					new BeginLayerCollectionLoadAction({ caseId: action.payload.id }),
-					new UpdateSelectedLayersIds(action.payload.state.layers.activeLayersIds)
-				]
-			)
-		);
 
 	@Effect()
 	removeAnnotationFeature$: Observable<any> = this.actions$.pipe(

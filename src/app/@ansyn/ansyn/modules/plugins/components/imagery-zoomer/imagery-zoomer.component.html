@@ -2,7 +2,7 @@
 	<div class="buttons">
 		<button class="small-icon-button"
 				[attr.tooltip-value]="'Zoom in' | translate"
-				tooltip-class="'left'"
+				[attr.tooltip-class]="('direction' | translate) === 'rtl' ? 'right' : 'left'"
 				(click)="zoomIn()">
 			+
 		</button>
@@ -11,7 +11,7 @@
 	<div class="buttons">
 		<button class="small-icon-button"
 				[attr.tooltip-value]="'Zoom out' | translate"
-				tooltip-class="'left'"
+				[attr.tooltip-class]="('direction' | translate) === 'rtl' ? 'right' : 'left'"
 				(click)="zoomOut()">
 			-
 		</button>

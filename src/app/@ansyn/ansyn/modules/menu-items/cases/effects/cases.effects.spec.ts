@@ -17,19 +17,13 @@ import { LayerType } from '../../layers-manager/models/layers.model';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { DataLayersService, layersConfig } from '../../layers-manager/services/data-layers.service';
 import {
-	AddCaseAction,
 	AddCasesAction,
-	DeleteCaseAction,
 	LoadCaseAction,
 	LoadCasesAction,
 	LoadDefaultCaseAction,
 	SaveCaseAsAction,
 	SaveCaseAsSuccessAction,
-	SelectCaseAction,
-	SelectDilutedCaseAction,
-	SetAutoSave,
-	UpdateCaseAction,
-	UpdateCaseBackendAction
+	SelectDilutedCaseAction
 } from '../actions/cases.actions';
 import { ICase } from '../models/case.model';
 import {
@@ -37,14 +31,14 @@ import {
 	CasesReducer,
 	casesStateSelector,
 	initialCasesState,
+	selectMyCasesTotal,
 	selectSelectedCase
 } from '../reducers/cases.reducer';
 import { casesConfig, CasesService } from '../services/cases.service';
 import { CasesEffects } from './cases.effects';
-import { SetMapsDataActionStore, selectActiveMapId, selectMapsIds } from '@ansyn/map-facade';
-import { BackToWorldView } from '../../../overlays/overlay-status/actions/overlay-status.actions';
+import { selectActiveMapId, selectMapsIds } from '@ansyn/map-facade';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { linksConfig } from '../services/helpers/cases.service.query-params-helper';
+import { CasesType } from '../models/cases-config';
 
 describe('CasesEffects', () => {
 	let casesEffects: CasesEffects;
@@ -58,9 +52,8 @@ describe('CasesEffects', () => {
 	const caseMock: ICase = {
 		id: 'case1',
 		name: 'name',
-		owner: 'owner',
+		owner: 'user',
 		creationTime: new Date(),
-		lastModified: new Date(),
 		state: {
 			maps: {
 				activeMapId: '5555',
@@ -107,7 +100,6 @@ describe('CasesEffects', () => {
 				},
 				provideMockActions(() => actions),
 				{ provide: LoggerService, useValue: {} },
-				{ provide: linksConfig, useValue: {} },
 				{ provide: casesConfig, useValue: { schema: null, defaultCase: { id: 'defaultCaseId' } } },
 				{ provide: CoreConfig, useValue: { storageService: { baseUrl: 'fake-base-url' } } }
 			]
@@ -121,7 +113,8 @@ describe('CasesEffects', () => {
 			[casesStateSelector, casesState],
 			[selectSelectedCase, { id: 'delete-case-id' }],
 			[selectActiveMapId, 'mapId'],
-			[selectMapsIds, 'mapIds[]']
+			[selectMapsIds, 'mapIds[]'],
+			[selectMyCasesTotal, 0]
 		]);
 		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
 	}));
@@ -143,44 +136,15 @@ describe('CasesEffects', () => {
 		expect(casesEffects).toBeDefined();
 	});
 
-	it('loadCases$ should call casesService.loadCases with case lastId from state, and return LoadCasesSuccessAction', () => {
+	it('loadCases$ should call casesService.loadCases with offset and call AddCasesAction with this cases', () => {
 		let loadedCases: ICase[] = [{ ...caseMock, id: 'loadedCase1' }, {
 			...caseMock,
 			id: 'loadedCase2'
-		}, { ...caseMock, id: 'loadedCase1' }];
+		}, { ...caseMock, id: 'loadedCase3' }];
 		spyOn(casesService, 'loadCases').and.callFake(() => of(loadedCases));
 		actions = hot('--a--', { a: new LoadCasesAction() });
-		const expectedResults = cold('--b--', { b: new AddCasesAction(loadedCases) });
+		const expectedResults = cold('--b--', { b: new AddCasesAction({cases: loadedCases, type: CasesType.MyCases}) });
 		expect(casesEffects.loadCases$).toBeObservable(expectedResults);
-	});
-
-	it('onAddCase$ should call casesService.createCase with action.payload(new case), and return AddCaseSuccessAction', () => {
-		let newCasePayload: ICase = { ...caseMock, id: 'newCaseId', name: 'newCaseName' };
-		spyOn(casesService, 'createCase').and.callFake(() => of(newCasePayload));
-		actions = hot('--a--', { a: new AddCaseAction(newCasePayload) });
-		const mapId = newCasePayload.state.maps.activeMapId;
-
-		const expectedResults = cold('--(bc)--', {
-				b: new SelectCaseAction(newCasePayload),
-				c: new BackToWorldView({ mapId })
-			});
-
-		expect(casesEffects.onAddCase$).toBeObservable(expectedResults);
-
-	});
-
-	it('onDeleteCase$ should call DeleteCaseBackendAction. when deleted case equal to selected case LoadDefaultCaseAction should have been called too', () => {
-		spyOn(dataLayersService, 'removeCaseLayers').and.callFake(() => of('good'));
-		actions = hot('--a--', { a: new DeleteCaseAction({ id: 'delete-case-id', name: 'case to delete' }) });
-		const expectedResults = cold('--(a)--', { a: new LoadDefaultCaseAction() });
-		expect(casesEffects.onDeleteCase$).toBeObservable(expectedResults);
-	});
-
-	it('onUpdateCase$ should call casesService.updateCase with action.payload("updatedCase"), and return UpdateCaseAction', () => {
-		const updatedCase: ICase = { ...caseMock, id: 'updatedCaseId' };
-		actions = hot('--a--', { a: new UpdateCaseAction({ updatedCase: updatedCase, forceUpdate: true }) });
-		const expectedResults = cold('--b--', { b: new UpdateCaseBackendAction(updatedCase) });
-		expect(casesEffects.onUpdateCase$).toBeObservable(expectedResults);
 	});
 
 	it('onSaveCaseAs$ should add a default case', () => {
@@ -188,6 +152,10 @@ describe('CasesEffects', () => {
 			id: 'selectedCaseId',
 			selectedContextId: 'selectedContextId',
 			state: {
+				maps: {
+					activeMapId: 'active',
+					data: [{id: 'active'}]
+				},
 				layers: {
 					activeLayersIds: [
 						'111',
@@ -219,14 +187,14 @@ describe('CasesEffects', () => {
 		expect(casesEffects.onSaveCaseAs$).toBeObservable(expectedResults);
 	});
 
-	it('onSaveCaseAsSuccess$ should set auto save with "true" and update map', () => {
+	/*it('onSaveCaseAsSuccess$ should set auto save with "true" and update map', () => {
 		actions = hot('--a--', { a: new SaveCaseAsSuccessAction(<any>{ state: { maps: { data: [] } } }) });
 		const expectedResults = cold('--(bc)--', {
 			b: new SetAutoSave(true),
 			c: new SetMapsDataActionStore({ mapsList: [] })
 		});
 		expect(casesEffects.onSaveCaseAsSuccess$).toBeObservable(expectedResults);
-	});
+	});*/
 
 	describe('loadCase$', () => {
 		it('should load the given case', () => {
@@ -234,7 +202,7 @@ describe('CasesEffects', () => {
 			const caseToLoad: ICase = { ...caseMock, id: myCaseId };
 			spyOn(casesService, 'loadCase').and.returnValue(of(caseToLoad));
 			actions = hot('--a--', { a: new LoadCaseAction(myCaseId) });
-			const expectedResults = cold('--b--', { b: new SelectDilutedCaseAction(caseToLoad) });
+			const expectedResults = cold('--(bc)--', { b: new SelectDilutedCaseAction(caseToLoad), c: new LoadCasesAction(CasesType.MySharedCases, true) });
 			expect(casesEffects.loadCase$).toBeObservable(expectedResults);
 		});
 		it('should load the default case, if the given case fails to load', () => {

@@ -1,56 +1,58 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
-import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
-import { IImageManualProcessArgs } from "../../../../menu-items/cases/models/case.model";
-import {
-	IImageProcessState,
-	IOverlayStatusState,
-	overlayStatusStateSelector
-} from "../../reducers/overlay-status.reducer";
+import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { distinctUntilChanged, map, tap } from 'rxjs/operators';
+import { IImageManualProcessArgs } from '../../../../menu-items/cases/models/case.model';
+import { selectOverlaysImageProcess } from '../../reducers/overlay-status.reducer';
 import { LogManualImageProcessing, SetManualImageProcessing } from '../../actions/overlay-status.actions';
-import { IImageProcParam, IOverlayStatusConfig, overlayStatusConfig } from "../../config/overlay-status-config";
+import { TranslateService } from '@ngx-translate/core';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { isEqual } from 'lodash';
+import { OverlayStatusService } from '../../services/overlay-status.service';
 
 @Component({
 	selector: 'ansyn-image-processing-control',
 	templateUrl: './image-processing-control.component.html',
 	styleUrls: ['./image-processing-control.component.less']
 })
+@AutoSubscriptions()
 export class ImageProcessingControlComponent implements OnInit, OnDestroy {
+	@Input() overlayId: string;
 
-	private subscriptions: Subscription[] = [];
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
 
-	public manualImageProcessingParams$: Observable<Object> = this.store$.select(overlayStatusStateSelector).pipe(
-		map((overlayStatusState: IOverlayStatusState) => overlayStatusState.manualImageProcessingParams),
-		distinctUntilChanged(),
-		filter(Boolean),
-		tap((imageManualProcessArgs) => this.imageManualProcessArgs = imageManualProcessArgs)
+	imageManualProcessArgs: IImageManualProcessArgs
+
+	@AutoSubscription
+	manualImageProcessingParams$: Observable<Object> = this.store$.pipe(
+		select(selectOverlaysImageProcess),
+		map((overlaysImageProcess) => overlaysImageProcess[this.overlayId]?.manuelArgs),
+		distinctUntilChanged(isEqual),
+		tap((imageManualProcessArgs) => {
+			if (imageManualProcessArgs) {
+				this.imageManualProcessArgs = imageManualProcessArgs;
+			} else {
+				this.imageManualProcessArgs = this.overlayStatusService.defaultImageManualProcessArgs
+			}
+		})
 	);
 
-	get params(): Array<IImageProcParam> {
-		return this.config.ImageProcParams;
-	}
-
-	get defaultImageManualProcessArgs(): IImageManualProcessArgs {
-		return this.params.reduce<IImageManualProcessArgs>((initialObject: any, imageProcParam) => {
-			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
-		}, {});
-	}
-
-	imageManualProcessArgs: IImageManualProcessArgs = this.defaultImageManualProcessArgs;
-
-
-	constructor(public store$: Store<IImageProcessState>, @Inject(overlayStatusConfig) protected config: IOverlayStatusConfig) {
+	constructor(
+		public store$: Store<any>,
+		public overlayStatusService: OverlayStatusService,
+		private translateService: TranslateService
+	) {
 	}
 
 	resetOne(paramToReset) {
-		this.updateParam(this.defaultImageManualProcessArgs[paramToReset.name], paramToReset.name);
+		this.updateParam(this.overlayStatusService.defaultImageManualProcessArgs[paramToReset.name], paramToReset.name);
 	}
 
 	updateParam(value, key) {
 		const imageManualProcessArgs = { ...this.imageManualProcessArgs };
 		imageManualProcessArgs[key] = value;
-		this.store$.dispatch(new SetManualImageProcessing(imageManualProcessArgs));
+		this.store$.dispatch(new SetManualImageProcessing({ overlayId: this.overlayId, imageManualProcessArgs }));
 	}
 
 	log(changedArg: string) {
@@ -58,16 +60,13 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 	}
 
 	resetParams() {
-		this.store$.dispatch(new SetManualImageProcessing({ ...this.defaultImageManualProcessArgs }));
+		const imageManualProcessArgs = this.overlayStatusService.defaultImageManualProcessArgs;
+		this.store$.dispatch(new SetManualImageProcessing({ overlayId: this.overlayId, imageManualProcessArgs }));
 	}
 
 	ngOnInit(): void {
-		this.subscriptions.push(
-			this.manualImageProcessingParams$.subscribe()
-		);
 	}
 
 	ngOnDestroy(): void {
-		this.subscriptions.forEach(sub => sub.unsubscribe());
 	}
 }

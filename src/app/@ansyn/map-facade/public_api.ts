@@ -34,6 +34,7 @@ export {
 	selectMapPositionByMapId,
 	selectMapsStateByIds,
 	selectOverlaysFootprintActiveByMapId,
+	selectManualProcessArgsByMapId,
 	selectOverlayOfActiveMap,
 	selectIsMinimalistViewMode,
 	selectMapTypeById,
@@ -82,7 +83,8 @@ export {
 	SynchronizeMapsAction,
 	SetActiveCenterTriggerAction,
 	SetMapSearchBoxTriggerAction,
-	SetOverlaysFootprintActive
+	SetOverlaysFootprintActive,
+	ForceRenderMaps
 } from './actions/map.actions';
 
 export {
@@ -118,3 +120,5 @@ export { WelcomeNotificationComponent } from './components/welcome-notification/
 export { ToastComponent } from './components/toast/toast.component';
 export { AnsynLoaderComponent } from './components/ansyn-loader/ansyn-loader.component';
 export { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.component';
+
+export { ILogMessage } from './models/logger.model'

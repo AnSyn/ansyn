@@ -81,7 +81,10 @@ export function FiltersReducer(state: IFiltersState = initialFiltersState, actio
 		}
 
 		case FiltersActionTypes.INITIALIZE_FILTERS:
-			return { ...state, isLoading: true };
+			return { ...state, isLoading: true,
+				filtersMetadata: new Map<IFilter, FilterMetadata>(),
+				filtersCounters: new Map<IFilter, FilterCounters>(),
+				};
 
 		case FiltersActionTypes.UPDATE_FILTER_METADATA: {
 			const actionPayload: { filter: IFilter, newMetadata: FilterMetadata } = action.payload;

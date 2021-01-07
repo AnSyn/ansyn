@@ -14,7 +14,6 @@ import { AppEffectsModule } from './app-effects/app.effects.module';
 import { AppProvidersModule } from './app-providers/app-providers.module';
 import { COMPONENT_MODE } from './app-providers/component-mode';
 import { AnsynFooterComponent } from './components/ansyn-footer/ansyn-footer.component';
-import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/overlay-out-of-bounds.component';
 import { UnsupportedDevicesComponent } from './components/unsupported-devices/unsupported-devices.component';
 import { ansynConfig } from './config/ansyn.config';
 import { AngleFilterComponent } from './modules/core/components/angle-filter/angle-filter.component';
@@ -27,7 +26,7 @@ import { TasksModule } from './modules/menu-items/algorithms/tasks.module';
 import { CasesModule } from './modules/menu-items/cases/cases.module';
 import { LayersManagerModule } from './modules/menu-items/layers-manager/layers-manager.module';
 import { SettingsModule } from './modules/menu-items/settings/settings.module';
-import { ToolsModule } from './modules/menu-items/tools/tools.module';
+import { ToolsModule } from './modules/status-bar/components/tools/tools.module';
 import { OverlaysModule } from './modules/overlays/overlays.module';
 import { AnsynPluginsModule } from './modules/plugins/ansyn-plugins.module';
 import { StatusBarModule } from './modules/status-bar/status-bar.module';
@@ -38,6 +37,7 @@ import { TasksService } from './modules/menu-items/algorithms/services/tasks.ser
 import { ImageryVideoModule } from '@ansyn/imagery-video';
 import { ImageryChangeMapComponent } from './modules/plugins/components/imagery-change-map/imagery-change-map.component';
 import { ResultsModule } from "./modules/menu-items/results/results.module";
+import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/overlay-out-of-bounds.component';
 
 @NgModule({
 	imports: [
@@ -83,11 +83,11 @@ import { ResultsModule } from "./modules/menu-items/results/results.module";
 	],
 	declarations: [
 		AnsynComponent,
-		OverlayOutOfBoundsComponent,
 		UnsupportedDevicesComponent,
 		AnsynFooterComponent,
 		ImageryZoomerComponent,
-		ImageryDimensionModeComponent
+		ImageryDimensionModeComponent,
+		OverlayOutOfBoundsComponent
 	],
 	exports: [AnsynComponent, UnsupportedDevicesComponent]
 })

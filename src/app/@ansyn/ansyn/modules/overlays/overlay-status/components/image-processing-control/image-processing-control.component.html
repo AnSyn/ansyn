@@ -5,7 +5,7 @@
 		</p>
 	</div>
 	<ul class="image-processing-options">
-		<li *ngFor="let param of params">
+		<li *ngFor="let param of overlayStatusService.params">
 			<div class="param-info">
 				<label  [for]="'image-processing-' + param">{{param.name | translate}}</label><br><br><br>
 			</div>

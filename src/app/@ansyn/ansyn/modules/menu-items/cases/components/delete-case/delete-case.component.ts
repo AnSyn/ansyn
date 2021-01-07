@@ -1,13 +1,15 @@
-import { Component, EventEmitter, HostBinding, OnInit, Output, OnDestroy } from '@angular/core';
-import { Store, select } from '@ngrx/store';
-import { casesStateSelector, ICasesState } from '../../reducers/cases.reducer';
+import { Component, EventEmitter, HostBinding, OnDestroy, OnInit, Output } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { ICasesState, selectModalState, selectMyCasesEntities, selectCaseById } from '../../reducers/cases.reducer';
 import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CasesService } from '../../services/cases.service';
 import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map, tap, withLatestFrom, take, concatMap } from 'rxjs/operators';
 import { ICasePreview } from '../../models/case.model';
-import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { CasesType } from '../../models/cases-config';
+import { TranslateService } from '@ngx-translate/core';
 
 const animationsDuring = '0.2s';
 
@@ -34,21 +36,30 @@ const animations: any[] = [
 export class DeleteCaseComponent implements OnInit, OnDestroy {
 	@HostBinding('@modalContent') readonly modalContent = true;
 
-	@AutoSubscription
-	activeCase$ = this.store.select(casesStateSelector).pipe(
-		map((cases) => cases.entities[cases.modal.id]),
-	tap( (activeCase) => this.activeCase = activeCase)
-);
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
 
 	activeCase: ICasePreview;
 
+	@AutoSubscription
+	activeCase$ = this.store.pipe(
+		select(selectModalState),
+		concatMap( (modal) => of(modal).pipe(withLatestFrom(this.store.pipe(select(selectCaseById(modal.id)))))),
+		tap(([modal, _case]) => this.activeCase = _case),
+	);
+
 	@Output() submitCase = new EventEmitter();
 
-	constructor(protected store: Store<ICasesState>, protected casesService: CasesService) {
+	constructor(
+		protected store: Store<ICasesState>,
+		protected casesService: CasesService,
+		protected translateService: TranslateService
+	) {
 	}
 
 	ngOnInit() {
 	}
+
 	ngOnDestroy(): void {
 	}
 
@@ -57,16 +68,16 @@ export class DeleteCaseComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmitRemove() {
-		(<Observable<any>>this.casesService.removeCase(this.activeCase.id))
-			.pipe(
-				tap(() => {
-					const { id, name } = this.activeCase;
-					this.store.dispatch(new DeleteCaseAction({ id, name }))
-				}),
-				catchError(() => of(false)),
-				tap(() => this.close())
-			)
-			.subscribe();
+		const {id, name} = this.activeCase;
+		this.store.pipe(
+			select(selectMyCasesEntities),
+			take(1),
+			map( (entities) => entities[id] ? CasesType.MyCases : CasesType.MySharedCases),
+			tap( (type: CasesType) => {
+				this.store.dispatch(new DeleteCaseAction({id, name, type}))
+				this.close();
+			} )
+		).subscribe()
 	}
 
 }

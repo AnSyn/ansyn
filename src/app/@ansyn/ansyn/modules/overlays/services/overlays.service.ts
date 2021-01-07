@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
 import { IOverlayDropSources, ITimelineRange, selectOverlaysMap } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
-import { unionBy, findKey } from 'lodash';
+import { findKey } from 'lodash';
 import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs/operators';
@@ -74,10 +74,17 @@ export class OverlaysService {
 	}
 
 	static parseOverlayDataForDisplay({ overlaysArray, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites }: IOverlayDropSources): IOverlayDrop[] {
-		const criterialOverlays: IOverlay[] = showOnlyFavorites ? [] : overlaysArray.filter(({ id }) => filteredOverlays.includes(id));
-		const allOverlays: IOverlay[] = unionBy(criterialOverlays, favoriteOverlays, ({ id }) => id);
-		const dropsFromOverlays: IOverlayDrop[] = allOverlays.map(({ id, date, sensorName, icon }) => ({ id, date, sensorName, icon }));
-		const allDrops = [...dropsFromOverlays, ...mapValuesToArray(specialObjects)].sort(sortByDateDesc);
+		const criteriaOverlays: IOverlay[] = showOnlyFavorites ? favoriteOverlays : overlaysArray.filter(({ id }) => filteredOverlays.includes(id));
+		const favoriteOverlayIds: string[] = favoriteOverlays.map(({ id }) => id);
+		const drops: IOverlayDrop[] = criteriaOverlays.map(({ id, date, sensorName, icon, resolution }) => ({
+			id,
+			date,
+			sensorName,
+			icon,
+			favorite: favoriteOverlayIds.includes(id),
+			resolution: resolution || 0
+		}));
+		const allDrops = [...drops, ...mapValuesToArray(specialObjects)].sort(sortByDateDesc);
 		return allDrops;
 	}
 

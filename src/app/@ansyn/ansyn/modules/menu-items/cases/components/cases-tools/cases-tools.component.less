@@ -1,5 +1,28 @@
-div.buttons-group {
-	display: flex;
-	height: 24px;
-	padding: 15px;
+:host {
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+
+	button {
+		width: 34px;
+		height: 34px;
+		margin-right: 5px;
+		padding: 1px;
+		border-radius: 3px;
+		background-color: #4c4c4c;
+		color: white;
+		outline: none;
+		border: none;
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
+
+		i.icon {
+			margin: unset;
+		}
+
+		&.favorite-button:disabled {
+			opacity: .6;
+		}
+	}
 }

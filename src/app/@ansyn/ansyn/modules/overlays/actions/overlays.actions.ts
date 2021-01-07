@@ -43,7 +43,6 @@ export const OverlaysActionTypes = {
 	SET_HOVERED_OVERLAY: type('SET_HOVERED_OVERLAY'),
 	CHANGE_OVERLAY_PREVIEW_ROTATION: type('[Overlay] CHANGE_OVERLAY_PREVIEW_ROTATION'),
 	SET_OVERLAYS_CRITERIA: 'SET_OVERLAYS_CRITERIA',
-	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT',
 	SET_MISC_OVERLAYS: 'SET_MISC_OVERLAYS',
 	SET_MISC_OVERLAY: 'SET_MISC_OVERLAY',
 	UPDATE_OVERLAY: 'UPDATE_OVERLAY',
@@ -52,12 +51,7 @@ export const OverlaysActionTypes = {
 	LOG_SEARCH_PANEL_POPUP: 'LOG_SEARCH_PANEL_POPUP',
 	LOG_MANUAL_SEARCH_TIME: 'LOG_MANUAL_SEARCH_TIME',
 	LOG_SELECT_SEARCH_TIME_PRESET: 'LOG_SELECT_SEARCH_TIME_PRESET',
-	RESET_OVERLAY_ARRAY: 'RESET_OVERLAY_ARRAY'
 };
-
-export class ResetOverlayArray implements Action {
-	type = OverlaysActionTypes.RESET_OVERLAY_ARRAY;
-}
 
 export class SelectOverlayAction implements Action {
 	type = OverlaysActionTypes.SELECT_OVERLAY;
@@ -282,13 +276,6 @@ export class SetOverlaysCriteriaAction implements Action, ILogMessage {
 
 	logMessage() {
 		return `Setting overlays criteria for search:\n${JSON.stringify(this.payload)} ${this.options ? JSON.stringify(this.options) : ''}`
-	}
-}
-
-export class UpdateOverlaysCountAction {
-	type = OverlaysActionTypes.UPDATE_OVERLAY_COUNT;
-
-	constructor(public payload: number) {
 	}
 }
 

@@ -1,8 +1,9 @@
-<div class="collection">
-	<ansyn-slider-checkbox [checked]="onlyFavorite" (checkedChange)="showOnlyFavorites($event)"
-						   [disabled]="disableShowOnlyFavoritesSelection">
-		{{'Show only favorites' | translate}}
-	</ansyn-slider-checkbox>
+<div class="collection" [class.rtl]="isRTL">
+	<ansyn-slider-checkbox
+		[checked]="onlyFavorite" (checkedChange)="showOnlyFavorites($event)"
+		[disabled]="disableShowOnlyFavoritesSelection"
+		[isRTL]="isRTL"
+	>{{'Show only favorites' | translate}}</ansyn-slider-checkbox>
 
 	<ansyn-input
 		[ngModel]="filtersSearch$ | async"

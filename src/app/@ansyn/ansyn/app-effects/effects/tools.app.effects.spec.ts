@@ -18,7 +18,7 @@ import {
 	toolsInitialState,
 	ToolsReducer,
 	toolsStateSelector
-} from '../../modules/menu-items/tools/reducers/tools.reducer';
+} from '../../modules/status-bar/components/tools/reducers/tools.reducer';
 import {
 	casesFeatureKey,
 	CasesReducer,
@@ -34,8 +34,8 @@ import {
 	SetPinLocationModeAction,
 	SetSubMenu,
 	UpdateMeasureDataOptionsAction
-} from '../../modules/menu-items/tools/actions/tools.actions';
-import { toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
+} from '../../modules/status-bar/components/tools/actions/tools.actions';
+import { toolsConfig } from '../../modules/status-bar/components/tools/models/tools-config';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import { ICase, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { selectMapsIds } from '@ansyn/map-facade';
@@ -52,9 +52,7 @@ describe('ToolsAppEffects', () => {
 	const cases: ICase[] = [{
 		id: '1',
 		name: 'name',
-		owner: 'owner',
 		creationTime: new Date(),
-		lastModified: new Date(),
 		autoSave: false,
 		state: {
 			time: { type: '', from: new Date(), to: new Date() },

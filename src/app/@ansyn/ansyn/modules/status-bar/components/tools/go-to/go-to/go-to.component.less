@@ -1,0 +1,102 @@
+@import "ansyn/less/common";
+@import "ansyn/less/colors";
+@import "ansyn/less/z-index-globals";
+
+:host {
+	width: 0;
+	height: 0;
+	position: absolute;
+	top: 0;
+	right: 40px;
+	transform: translate(100%);
+	background: @background-color-3;
+	visibility: hidden;
+	transition: .2s;
+	z-index: @z-index-go-to-component;
+	overflow: hidden;
+
+	&.expand {
+		form {
+			visibility: visible;
+			opacity: 1;
+			padding: 20px 24px;
+		}
+
+		visibility: visible;
+		width: auto;
+		height: auto;
+		margin-top: 45px;
+	}
+
+	button.close {
+		position: absolute;
+		right: 10px;
+		top: 7px;
+		color: white;
+		border: none;
+		background: transparent;
+		cursor: pointer;
+		outline: none;
+		font-size: 28px;
+		z-index: @z-index-go-to-close;
+
+		&:hover {
+			opacity: 0.9;
+		}
+	}
+
+	form {
+		opacity: 0;
+		transition: visibility 0s linear .2s;
+		visibility: hidden;
+		flex-direction: column;
+		justify-content: space-between;
+		height: 100%;
+		box-sizing: border-box;
+
+		div.buttons-area {
+			display: flex;
+			width: 100%;
+			justify-content: space-between;
+			margin-top: 24px;
+
+			button {
+				outline: none;
+			}
+
+			button.pin-location {
+				background: transparent;
+				border: none;
+				color: white;
+				display: flex;
+				font-size: 14px;
+				align-items: center;
+
+				&:hover {
+					background-color: fade(@background-color-6, 60%);
+					border-radius: 5px;
+				}
+
+				&.active {
+					background-color: fade(@background-color-6, 60%);
+					border-radius: 5px;
+				}
+			}
+
+			button[type='submit'] {
+				width: 74px;
+				height: 30px;
+			}
+		}
+	}
+
+	&.rtl {
+		right: unset;
+		left: 0;
+		transform: translate(-100%);
+		button.close {
+			right: unset;
+			left: 10px;
+		}
+	}
+}

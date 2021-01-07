@@ -8,8 +8,9 @@ import { selectIsPinned } from '@ansyn/menu';
 import { selectSelectedCase } from '../modules/menu-items/cases/reducers/cases.reducer';
 import { mapStateSelector } from '@ansyn/map-facade';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
-import { toolsConfig } from '../modules/menu-items/tools/models/tools-config';
+import { toolsConfig } from '../modules/status-bar/components/tools/models/tools-config';
 import { LoggerService } from '../modules/core/services/logger.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
@@ -63,12 +64,14 @@ describe('AnsynComponent', () => {
 				mockImageryView,
 				mockEmptyComponent,
 				mockStatusBar,
-				mockOverlayOverviewComponent,
+				mockOverlayOverviewComponent
 			],
 			providers: [
 				{
 					provide: LoggerService,
-					useValue: {}
+					useValue: {
+						beforeAppClose: () => {}
+					}
 				},
 				{
 					provide: COMPONENT_MODE,
@@ -77,10 +80,12 @@ describe('AnsynComponent', () => {
 				{
 					provide: toolsConfig,
 					useValue: {}
-				}
+				},
+				TranslateService
 			],
 			imports: [
 				RouterTestingModule,
+				TranslateModule.forRoot(),
 				StoreModule.forRoot({})]
 		}).compileComponents();
 	});

@@ -11,4 +11,5 @@ export interface ICoreConfig {
 	isFooterCollapsible: boolean;
 	enable3D: boolean;
 	northCalcImagerySensorNamesIgnoreList: string[];
+	httpCacheBlackList: string[];
 }

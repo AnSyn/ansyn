@@ -47,7 +47,7 @@ import {
 	IToolsState,
 	toolsInitialState,
 	toolsStateSelector
-} from '../../modules/menu-items/tools/reducers/tools.reducer';
+} from '../../modules/status-bar/components/tools/reducers/tools.reducer';
 import {
 	IStatusBarState,
 	statusBarFeatureKey,
@@ -144,9 +144,7 @@ describe('MapAppEffects', () => {
 	const cases: ICase[] = [{
 		id: '1',
 		name: 'name',
-		owner: 'owner',
 		creationTime: new Date(),
-		lastModified: new Date(),
 		autoSave: false,
 		state: {
 			time: { type: '', from: new Date(), to: new Date() },

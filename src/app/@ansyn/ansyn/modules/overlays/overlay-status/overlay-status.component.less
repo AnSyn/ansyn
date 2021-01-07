@@ -1,6 +1,9 @@
 @import 'ansyn/less/colors';
 @import 'ansyn/less/globals';
 
+@margin-small: 6px;
+@margin-big: 11px;
+
 :host {
 	left: 5px;
 	top: 6px;
@@ -11,6 +14,7 @@
 		display: flex;
 
 		button {
+			position: relative;
 			padding: 4px 6px;
 			color: white;
 			line-height: 0;
@@ -24,10 +28,10 @@
 				display: flex;
 				align-items: center;
 				z-index: 1;
-				margin-left: 6px;
+				margin-left: @margin-small;
 
 				&.perspective {
-					margin-left: 11px;
+					margin-left: @margin-big;
 				}
 
 
@@ -84,6 +88,17 @@
 					opacity: .6;
 					pointer-events: none;
 				}
+			}
+		}
+	}
+
+	&.rtl {
+		button.small-icon-button {
+			margin-left: unset;
+			margin-right: @margin-small;
+
+			&.perspective {
+				margin-right: @margin-big;
 			}
 		}
 	}

@@ -40,17 +40,21 @@ import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, filter, tap, withLatestFrom } from 'rxjs/operators';
 import { MENU_ITEMS } from '../helpers/menu-item-token';
+import { TranslateService } from '@ngx-translate/core';
 
 const animations: any[] = [
 	trigger(
 		'expand', [
-			state('1', style({
-				transform: 'translateX(0)'
-			})),
-			state('0', style({
+			state('off_ltr', style({
 				transform: 'translateX(-100%)'
 			})),
-			transition('1 <=> 0', animate('0.3s ease-in-out'))
+			state('off_rtl', style({
+				transform: 'translateX(100%)'
+			})),
+			state('on', style({
+				transform: 'translateX(0)'
+			})),
+			transition('off_ltr <=> on, off_rtl <=> on', animate('0.3s ease-in-out'))
 		]
 	)
 ];
@@ -91,6 +95,8 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	@ViewChild('container', { static: true }) container: ElementRef;
 	@Input() version;
 
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
 	@AutoSubscription
 	collapse$ = this.store.select(selectMenuCollapse).pipe(
 		tap(this.startToggleMenuCollapse.bind(this))
@@ -128,14 +134,17 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 		})
 	);
 
-	constructor(public componentFactoryResolver: ComponentFactoryResolver,
-				protected store: Store<IMenuState>,
-				protected renderer: Renderer2,
-				protected elementRef: ElementRef,
-				@Inject(DOCUMENT) protected document: Document,
-				@Inject(MENU_ITEMS) menuItemsMulti: IMenuItem[][],
-				@Inject(MenuConfig) public menuConfig: IMenuConfig,
-				private cdref: ChangeDetectorRef) {
+	constructor(
+		public componentFactoryResolver: ComponentFactoryResolver,
+		protected store: Store<IMenuState>,
+		protected renderer: Renderer2,
+		protected elementRef: ElementRef,
+		@Inject(DOCUMENT) protected document: Document,
+		@Inject(MENU_ITEMS) menuItemsMulti: IMenuItem[][],
+		@Inject(MenuConfig) public menuConfig: IMenuConfig,
+		private cdref: ChangeDetectorRef,
+		protected translateService: TranslateService
+	) {
 		this.initializeMenuItem(menuItemsMulti.reduce((prev, next) => [...prev, ...next], []));
 	}
 
@@ -202,7 +211,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 			this.renderer.removeClass(this.container.nativeElement, 'pinned');
 		}
 
-		this.animatedElement.style.animation = this.isPinned ? 'pinned .4s' : 'unPinned .4s';
+		this.animatedElement.style.animation = `${this.isPinned ? 'pinned' : 'unPinned'}_${this.isRTL ? 'rtl' : 'ltr'} .4s`;
 		this.forceRedraw().then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
 	}
 
@@ -307,7 +316,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 		this.forceRedraw()
 			.then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
 
-		this.animatedElement.style.animation = this.collapse ? 'collapsed .3s' : 'unCollapsed .6s';
+		this.animatedElement.style.animation = `${this.collapse ? 'collapsed' : 'unCollapsed'}_${this.isRTL ? 'rtl' : 'ltr'} ${this.collapse ? '.3s' : '.6s'}`;
 
 	}
 

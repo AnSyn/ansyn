@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { TreeviewConfig, TreeviewI18n, TreeviewItem } from 'ngx-treeview';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { Store } from '@ngrx/store';
@@ -36,6 +36,10 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	dataFilters: TreeviewItem[];
 	initDoneSync = false;
 	initDoneAsync: Subject<any> = new Subject();
+
+	@HostBinding('class.rtl')
+	isRTL = this.translateService.instant('direction') === 'rtl';
+
 	dataInputFiltersConfig = TreeviewConfig.create({
 		hasAllCheckBox: false,
 		hasFilter: false,
@@ -58,11 +62,11 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 
 	constructor(@Inject(MultipleOverlaysSourceConfig) public multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				public store: Store<IStatusBarState>,
-				private translate: TranslateService) {
+				private translateService: TranslateService) {
 
 		this.dataFilters = this.getAllDataInputFilter();
 		this.dataFilters.forEach((f) => {
-			translate.get(f.text).subscribe((res: string) => {
+			translateService.get(f.text).subscribe((res: string) => {
 				f.text = res;
 				this.dataInputFiltersItems.push(new TreeviewItem(f));
 			});
@@ -100,7 +104,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
 	buildDataFilter(providerName, filter) {
 		this.leavesCount++;
 		return {
-			text: this.translate.instant(filter.text),
+			text: this.translateService.instant(filter.text),
 			value: {
 				...filter.value,
 				providerName

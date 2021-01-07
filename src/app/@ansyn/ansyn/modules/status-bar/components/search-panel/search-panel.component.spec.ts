@@ -1,7 +1,7 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 
 import { SearchPanelComponent } from './search-panel.component';
-import { comboBoxesOptions, GEO_FILTERS, TIME_FILTERS } from '../../models/combo-boxes.model';
+import { comboBoxesOptions, GEO_FILTERS } from '../../models/combo-boxes.model';
 import { Store, StoreModule } from '@ngrx/store';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import {
@@ -20,7 +20,7 @@ import {
 } from '../../../overlays/reducers/overlays.reducer';
 import { ClickOutsideDirective } from '../../../core/click-outside/click-outside.directive';
 import { TranslateModule } from '@ngx-translate/core';
-import { toolsFeatureKey, ToolsReducer } from '../../../menu-items/tools/reducers/tools.reducer';
+import { toolsFeatureKey, ToolsReducer } from '../../../status-bar/components/tools/reducers/tools.reducer';
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
 import { mockIndexProviders } from '../../../core/test/mock-providers';
@@ -103,10 +103,6 @@ describe('SearchPanelComponent', () => {
 			}),
 				TranslateModule.forRoot()],
 			providers: [
-				{
-					provide: TIME_FILTERS,
-					useValue: comboBoxesOptions.timeFilters
-				},
 				{
 					provide: GEO_FILTERS,
 					useValue: comboBoxesOptions.geoFilters

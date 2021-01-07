@@ -1,26 +1,48 @@
 @import "ansyn/less/colors";
 
-.tick {
-	text {
-		fill: #b0b0b0;
+div.main-timeline {
+
+	.tick {
+		text {
+			fill: #b0b0b0;
+		}
+	}
+
+	.bound {
+		text {
+			fill: #cbcbcb;
+		}
+	}
+
+	line {
+		stroke: #9b9b9b !important;
+	}
+
+	circle.active {
+		fill: @application-secondary-color;
+		stroke: white;
+	}
+
+	circle.hover:not(.active), circle.displayed:not(.active) {
+		fill: @application-secondary-color;
+	}
+
+	svg {
+		width: 90%;
+		right: 1%;
+		position: absolute;
+	}
+
+	.bound {
+		&.end {
+			transform: translate(-10%, -35px);
+		}
+	}
+
+	&.rtl {
+		svg {
+			right: unset;
+			left: 1%;
+		}
 	}
 }
-
-.bound {
-	text {
-		fill: #cbcbcb;
-	}
-}
-
-line {
-	stroke: #9b9b9b !important;
-}
-circle.active {
-	fill: @application-secondary-color;
-	stroke: white;
-}
-
-circle.hover:not(.active), circle.displayed:not(.active) {
-	fill: @application-secondary-color;
-}
-

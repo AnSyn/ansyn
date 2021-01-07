@@ -59,7 +59,6 @@ describe('SearchPanelComponent', () => {
 		inputs: ['buttonClass', 'options', 'withArrow', 'alwaysChange', 'comboBoxToolTipDescription', 'ngModel'],
 		outputs: ['ngModelChange']
 	});
-	const ansynTreeView = MockComponent({ selector: 'ansyn-tree-view', outputs: ['closeTreeView'] });
 	const ansynComboTrigger = MockComponent({
 		selector: 'button[ansynComboBoxTrigger]',
 		inputs: ['isActive', 'render', 'ngModel', 'owlDateTimeTrigger', 'withArrow'],
@@ -89,7 +88,6 @@ describe('SearchPanelComponent', () => {
 				SearchPanelComponent,
 				mockComboBoxComponent,
 				mockComboBoxOptionComponent,
-				ansynTreeView,
 				ansynComboTrigger,
 				ansynTimePicker,
 				ansynLocationPicker,

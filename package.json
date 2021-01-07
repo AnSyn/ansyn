@@ -79,7 +79,6 @@
     "ngx-bootstrap": "^5.5.0",
     "ngx-color-picker": "^9.1.0",
     "ngx-device-detector": "^1.4.1",
-    "ngx-treeview": "^6.0.2",
     "ol": "^6.4.3",
     "proj4": "^2.5.0",
     "rison": "^0.1.1",

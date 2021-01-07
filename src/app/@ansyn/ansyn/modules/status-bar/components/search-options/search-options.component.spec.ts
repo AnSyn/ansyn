@@ -22,7 +22,7 @@ import { SearchOptionsComponent } from './search-options.component';
 		fixture.detectChanges();
 	});
 
-	fit('should create', () => {
+	it('should create', () => {
 		expect(component).toBeTruthy();
 	});
 });

@@ -19,6 +19,7 @@ import { LocationPickerComponent } from './components/location-picker/location-p
 import { FiltersPanelComponent } from './components/filters-panel/filters-panel.component';
 import { FiltersModule } from '../filters/filters.module';
 import { TimepickerPresetsComponent } from './components/timepicker-presets/timepicker-presets.component';
+import { ToolsModule } from './components/tools/tools.module';
 import { CasesModule } from '../menu-items/cases/cases.module';
 import { TimePickerContainerComponent } from './components/time-picker-container/time-picker-container.component';
 import { LogoPanelComponent } from './components/logo-panel/logo-panel.component';
@@ -28,6 +29,7 @@ import { LogoPanelComponent } from './components/logo-panel/logo-panel.component
 		FormsModule,
 		CommonModule,
 		CoreModule,
+		ToolsModule,
 		MapFacadeModule,
 		TreeviewModule.forRoot(),
 		StoreModule.forFeature(statusBarFeatureKey, StatusBarReducer),

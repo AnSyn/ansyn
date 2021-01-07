@@ -1,15 +1,15 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
-import { layersFeatureKey, LayersReducer } from '../../layers-manager/reducers/layers.reducer';
 import { StartMouseShadow, StopMouseShadow } from '../actions/tools.actions';
 import { Store, StoreModule } from '@ngrx/store';
 import { ToolsComponent } from './tools.component';
 import { toolsFeatureKey, ToolsReducer } from '../reducers/tools.reducer';
-import { MockComponent } from '../../../core/test/mock-component';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { SubMenuEnum, toolsFlags } from '../models/tools.model';
+import { MockComponent } from '../../../../core/test/mock-component';
+import { layersFeatureKey, LayersReducer } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
 
 
 describe('ToolsComponent', () => {

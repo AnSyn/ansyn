@@ -1,7 +1,6 @@
 import { IMenuItem } from '@ansyn/menu';
 import { IAlert } from '../modules/alerts/alerts.model';
 import { LayersManagerComponent } from '../modules/menu-items/layers-manager/components/layers-manager/layers-manager.component';
-import { ToolsComponent } from '../modules/menu-items/tools/tools/tools.component';
 import { SettingsComponent } from '../modules/menu-items/settings/settings/settings.component';
 import { TasksComponent } from '../modules/menu-items/algorithms/components/tasks/tasks.component';
 import { anaglyphSensorAlertKey } from '../modules/plugins/openlayers/plugins/anaglyph-sensor/plugin/anaglyph-sensor.plugin';
@@ -35,11 +34,6 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			name: 'Data Layers',
 			component: LayersManagerComponent,
 			iconClass: 'icon-main-data-layers'
-		},
-		{
-			name: 'Tools',
-			component: ToolsComponent,
-			iconClass: 'icon-main-tools'
 		},
 		{
 			name: 'Algorithms',

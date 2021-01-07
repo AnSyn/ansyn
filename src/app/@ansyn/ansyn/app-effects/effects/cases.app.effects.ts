@@ -15,7 +15,7 @@ import {
 	SelectCaseAction,
 	SelectDilutedCaseAction
 } from '../../modules/menu-items/cases/actions/cases.actions';
-import { IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
+import { IToolsConfig, toolsConfig } from '../../modules/status-bar/components/tools/models/tools-config';
 import {
 	DisplayOverlayAction,
 	DisplayOverlaySuccessAction,

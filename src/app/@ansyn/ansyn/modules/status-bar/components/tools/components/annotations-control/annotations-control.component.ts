@@ -17,11 +17,11 @@ import { selectAnnotationMode, selectAnnotationProperties } from '../../reducers
 import { IVisualizerStyle, getOpacityFromColor } from '@ansyn/imagery';
 import { filter, map, tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { selectActiveAnnotationLayer, selectLayers } from '../../../layers-manager/reducers/layers.reducer';
-import { ILayer, LayerType } from '../../../layers-manager/models/layers.model';
-import { SetActiveAnnotationLayer } from '../../../layers-manager/actions/layers.actions';
 import { ANNOTATION_MODE_LIST, AnnotationMode, IStyleWeight } from '@ansyn/ol';
-import { ClickOutsideService } from '../../../../core/click-outside/click-outside.service';
+import { selectActiveAnnotationLayer, selectLayers } from '../../../../..//menu-items/layers-manager/reducers/layers.reducer';
+import { ILayer, LayerType } from '../../../../../menu-items/layers-manager/models/layers.model';
+import { ClickOutsideService } from '../../../../../core/click-outside/click-outside.service';
+import { SetActiveAnnotationLayer } from '../../../../..//menu-items/layers-manager/actions/layers.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { selectIsMinimalistViewMode } from '@ansyn/map-facade';
 

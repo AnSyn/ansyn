@@ -7,7 +7,6 @@ import {
 	selectIsMinimalistViewMode,
 	SetMinimalistViewModeAction, SetToastMessageAction
 } from '@ansyn/map-facade';
-import { LoggerService } from '../../../core/services/logger.service';
 import { debounceTime, filter, tap, mergeMap, catchError, finalize } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import { toBlob } from 'dom-to-image';
@@ -15,14 +14,15 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { DOCUMENT } from '@angular/common';
 import { IToolsConfig, toolsConfig } from '../models/tools-config';
 import { annotationsClassNameForExport } from '@ansyn/ol';
-import { measuresClassNameForExport } from '../../../plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
-import { IExportMapData, IExportMapMetadata, ImageryCommunicatorService } from '@ansyn/imagery';
+import { IExportMapData, IExportMapMetadata, ImageryCommunicatorService, toDegrees } from '@ansyn/imagery';
 import { jsPDF } from 'jspdf';
 import { TranslateService } from '@ngx-translate/core';
-import { IOverlay } from '../../../overlays/models/overlay.model';
 import { Observable, of, EMPTY } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { arrayBufferToBinaryString } from 'blob-util'
+import { measuresClassNameForExport } from '../../../../plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
+import { LoggerService } from '../../../../core/services/logger.service';
+import { IOverlay } from '../../../../overlays/models/overlay.model';
 
 enum GraphicExportEnum {
 	All = 'All',

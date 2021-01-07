@@ -41,7 +41,7 @@ import {
 	selectActiveAnnotationLayer,
 	selectLayersEntities
 } from '../modules/menu-items/layers-manager/reducers/layers.reducer';
-import { GoToAction, SetActiveCenter, ToolsActionsTypes } from '../modules/menu-items/tools/actions/tools.actions';
+import { GoToAction, SetActiveCenter, ToolsActionsTypes } from '../modules/status-bar/components/tools/actions/tools.actions';
 import {
 	DisplayOverlayAction,
 	DisplayOverlaySuccessAction,

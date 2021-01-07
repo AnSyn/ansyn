@@ -30,9 +30,7 @@ import {
 	SetOverlayScannedAreaDataAction,
 	ToggleDraggedModeAction,
 } from '../actions/overlay-status.actions';
-import {
-	SetAnnotationMode,
-} from '../../../menu-items/tools/actions/tools.actions';
+import { SetAnnotationMode } from '../../../status-bar/components/tools/actions/tools.actions';
 import { IOverlaysScannedAreaData } from '../../../menu-items/cases/models/case.model';
 import {
 	ITranslationsData,

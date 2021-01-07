@@ -33,10 +33,10 @@ import {
 	StopMouseShadow,
 	ToolsActionsTypes, UpdateMeasureDataOptionsAction,
 	UpdateToolsFlags
-} from '../../modules/menu-items/tools/actions/tools.actions';
-import { IToolsConfig, toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
-import { selectAnnotationMode, selectToolFlag } from '../../modules/menu-items/tools/reducers/tools.reducer';
-import { toolsFlags } from '../../modules/menu-items/tools/models/tools.model';
+} from '../../modules/status-bar/components/tools/actions/tools.actions';
+import { IToolsConfig, toolsConfig } from '../../modules/status-bar/components/tools/models/tools-config';
+import { selectAnnotationMode, selectToolFlag } from '../../modules/status-bar/components/tools/reducers/tools.reducer';
+import { toolsFlags } from '../../modules/status-bar/components/tools/models/tools.model';
 import { OverlayStatusActionsTypes } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 
 @Injectable()

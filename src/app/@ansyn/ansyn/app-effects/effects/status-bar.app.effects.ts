@@ -23,7 +23,7 @@ import { DisplayOverlayFromStoreAction } from '../../modules/overlays/actions/ov
 import { selectDropsAscending, selectRegion } from '../../modules/overlays/reducers/overlays.reducer';
 import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
-import { ToolsActionsTypes } from '../../modules/menu-items/tools/actions/tools.actions';
+import { ToolsActionsTypes } from '../../modules/status-bar/components/tools/actions/tools.actions';
 import { CaseGeoFilter } from '../../modules/menu-items/cases/models/case.model';
 
 @Injectable()

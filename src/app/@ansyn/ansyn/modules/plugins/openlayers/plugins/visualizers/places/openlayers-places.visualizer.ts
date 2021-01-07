@@ -136,12 +136,13 @@ export class OpenlayersPlacesVisualizer extends EntitiesVisualizer {
 
 		if (this.mapData.zoom < 16) {
 			const entities: IVisualizerEntity[] = this.getSquareEntitiesFromExtent();
-			return this.setEntities(entities);
 			this.createInteraction(true);
+			return this.setEntities(entities);
 		}
 		else {
-			return this.setEntities(this.entities);
 			this.createInteraction()
+			return this.setEntities(this.entities);
+
 		}
 	}
 

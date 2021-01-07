@@ -47,13 +47,13 @@ const animations: any[] = [
 	trigger(
 		'expand', [
 			state('bottom', style({
-				transform: 'translatey(100%)'
+				transform: 'translateY(100%)'
 			})),
 			state('top', style({
-				transform: 'translatey(-100%)'
+				transform: 'translateY(-100%)'
 			})),
 			state('on', style({
-				transform: 'translatey(0)'
+				transform: 'translateY(0)'
 			})),
 			transition('bottom <=> on, top <=> on', animate('0.3s ease-in-out'))
 		]

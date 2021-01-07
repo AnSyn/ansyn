@@ -26,23 +26,15 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 	ansynMenuItems: [
 		{
 			name: 'DataLayers',
-			component: LayersManagerComponent,
-			iconClass: 'icon-main-data-layers',
-			triggerClass: 'top'
+			component: LayersManagerComponent
 		},
 		{
 			name: 'SearchResults',
-			component: ResultsTableComponent,
-			iconClass: '',
-			dockedToBottom: true,
-			triggerClass: 'bottom'
+			component: ResultsTableComponent
 		},
 		{
 			name: 'CasesContainer',
-			component: CasesContainerComponent,
-			iconClass: '',
-			dockedToBottom: true,
-			triggerClass: 'top'
+			component: CasesContainerComponent
 		}
 	]
 };

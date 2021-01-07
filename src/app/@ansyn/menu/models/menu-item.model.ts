@@ -1,7 +1,7 @@
 export interface IMenuItem {
 	name: string;
 	component: any;
-	iconClass: string;
+	iconClass?: string;
 	badge?: string;
 	production?: boolean;
 	dockedToBottom?: boolean;

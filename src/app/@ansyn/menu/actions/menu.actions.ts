@@ -1,8 +1,10 @@
+import { ElementRef } from '@angular/core';
 import { Action } from '@ngrx/store';
 import { ILogMessage } from '../models/logger.model';
 
 export const MenuActionTypes = {
 	SELECT_MENU_ITEM: 'SELECT_MENU_ITEM',
+	SELECT_MENU_ITEM_FROM_OUTSIDE: 'SELECT_MENU_ITEM_FROM_OUTSIDE',
 	UNSELECT_MENU_ITEM: 'UNSELECT_MENU_ITEM',
 	SET_BADGE: 'SET_BADGE',
 	TOGGLE_IS_PINNED: 'TOGGLE_IS_PINNED',
@@ -35,6 +37,17 @@ export class SelectMenuItemAction implements Action, ILogMessage {
 
 	logMessage() {
 		return `Opening menu item: ${this.payload.menuKey}`
+	}
+}
+
+export class SelectMenuItemFromOutsideAction implements Action, ILogMessage {
+	type = MenuActionTypes.SELECT_MENU_ITEM_FROM_OUTSIDE;
+
+	constructor(public payload: { menuKey: string, elementRef: HTMLDivElement | ElementRef, triggerClass: string }) {
+	}
+
+	logMessage() {
+		return `Opening menu item from outside: ${this.payload.menuKey}`
 	}
 }
 

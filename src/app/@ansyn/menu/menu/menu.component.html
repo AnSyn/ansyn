@@ -1,70 +1,13 @@
-<div class="menu-wrapper" #menuWrapper
-	 [class.rtl]="isRTL"
->
-
-	<div class="menu" #menu [class.expanded]="expand">
-		<div class="menu-content">
-
-			<div class="menu-items">
-				<div
-					*ngFor="let menuItem of menuItemsArray"
-					class="menu-btn"
-					[class.bottom]="menuItem.dockedToBottom"
-					[class.active]="isActive(menuItem.name)"
-					(click)="toggleItem(menuItem.name)">
-
-					<i [ngClass]="menuItem.iconClass"></i>
-					<span class="badge"
-						  	[ngClass]="menuItem.dockedToBottom ? 'bottom' : 'count-badge'"
-						   [hidden]="hideBadge(menuItem.badge)">{{menuItem.badge}}</span>
-					{{menuItem.name | translate}}
-				</div>
-				<div class="menu-btn" (click)="onHelp()">
-					<i [style]="" [ngClass]="'icon-main-help'"></i>
-					{{'Help' | translate}}
-				</div>
-			</div>
-			<div class="logo">
-				<ng-container *ngIf="menuConfig?.forkMe?.active">
-					<a class="forkMe" [href]="menuConfig.forkMe?.href" target="_blank">
-						<img [src]="menuConfig.forkMe?.image" [alt]="menuConfig.forkMe?.title"
-							 [title]="menuConfig.forkMe?.title">
-					</a>
-				</ng-container>
-
-				<div class="mode"
-					 *ngIf="menuConfig?.mode"
-					 [style.color]="menuConfig.color"
-					 [style.background]="menuConfig.background"
-					 [style.border]="'1px sollid' + menuConfig.color">
-					{{menuConfig.mode}}
-				</div>
-				<img [src]="menuConfig.path" [alt]="version" [title]="version" (click)="resetApp()">
-			</div>
-		</div>
-
-		<button
-			*ngIf="menuConfig?.isCollapsible"
-			class="hide-menu"
-			(click)="toggleCollapse()"
-			[attr.tooltip-value]="minimizeText | translate"
-			[attr.tooltip-class]="isRTL ? 'left' : 'right'">
-			<i class="fa" [ngClass]="isRTL ? collapse ? 'fa-caret-left' : 'fa-caret-right' : collapse ? 'fa-caret-right' : 'fa-caret-left'"></i>
-		</button>
-
-	</div>
-
-
-	<div class="container" #container [@expand]="expand ? 'on' : isRTL ? 'off_rtl' : 'off_ltr'" (@expand.done)="onExpandDone()"
+<div class="menu-wrapper" #menuWrapper [class.rtl]="isRTL">
+	<div class="container" #container [@expand]="expand ? 'on' : (triggerClass$ | async)" (@expand.done)="onExpandDone()"
 		 (@expand.start)="onExpandStart()">
-		<!--<button class="close" (click)="closeMenu()">×</button>-->
 		<button class="pin"
 				(click)="toggleIsPinned()"
 				[attr.tooltip-value]="pinText | translate" tooltip-class="right">
 			<i [ngClass]="isPinned? 'icon-pin' : 'icon-unpin'"></i>
 		</button>
-		<ng-template #componentElem></ng-template>
+		<div class="template">
+			<ng-template #componentElem></ng-template>
+		</div>
 	</div>
-
-
 </div>

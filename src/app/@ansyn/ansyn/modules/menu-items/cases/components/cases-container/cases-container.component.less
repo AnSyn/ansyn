@@ -7,16 +7,9 @@
 :host {
 	display: flex;
 	flex-direction: column;
-	position: absolute;
-	background-color: rgba(44, 44, 44, 0.95);
-	top: 55px;
 	left: 0;
 	width: 300px;
-	height: @container-height;
-
-	&.footerCollapse {
-		height: @container-footerCollapse-height;
-	}
+	height: 100%;
 
 	&.rtl {
 		left: unset;
@@ -29,7 +22,6 @@
 		overflow-y: hidden;
 		flex: 1;
 		padding: 0 5px;
-		border-bottom: 1px solid #7b7b7b;
 
 		button {
 			background: transparent;
@@ -49,10 +41,12 @@
 
 		h2 {
 			margin: 15px;
+			color: white;
 		}
 
 		&.one-table {
 			min-height: 70%;
+			border-bottom: 1px solid #7b7b7b;
 		}
 
 		&.two-table {

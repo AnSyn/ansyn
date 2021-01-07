@@ -14,6 +14,7 @@ export {
 	UnSelectMenuItemAction,
 	MenuActionTypes,
 	SelectMenuItemAction,
+	SelectMenuItemFromOutsideAction,
 	SetAutoClose,
 	SetBadgeAction,
 	ToggleIsPinnedAction,

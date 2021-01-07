@@ -13,6 +13,7 @@ export interface IMenuState {
 	autoClose: boolean;
 	badges: Map<string, string>;
 	menuCollapse: boolean;
+	triggerClass: string;
 }
 
 const menuSession = getMenuSessionData();
@@ -21,7 +22,8 @@ export const initialMenuState: IMenuState = {
 	isPinned: menuSession.isPinned,
 	autoClose: true,
 	badges: new Map(),
-	menuCollapse: false
+	menuCollapse: false,
+	triggerClass: null
 };
 
 export const menuFeatureKey = 'menu';
@@ -39,6 +41,10 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 				setMenuSessionData({ selectedMenuItem });
 			}
 			return { ...state, selectedMenuItem };
+
+		case MenuActionTypes.SELECT_MENU_ITEM_FROM_OUTSIDE:
+			const triggerClass = action.payload.triggerClass;
+			return { ...state, triggerClass };
 
 		case MenuActionTypes.UNSELECT_MENU_ITEM: {
 			const selectedMenuItem = '';
@@ -72,3 +78,4 @@ export const selectAutoClose = createSelector(menuStateSelector, (menu) => menu?
 export const selectSelectedMenuItem = createSelector(menuStateSelector, (menu) => menu?.selectedMenuItem);
 export const selectMenuCollapse = createSelector(menuStateSelector, (menu) => menu?.menuCollapse);
 export const selectBadges = createSelector(menuStateSelector, (menu) => menu?.badges);
+export const selectTriggerClass = createSelector(menuStateSelector, (menu) => menu?.triggerClass);

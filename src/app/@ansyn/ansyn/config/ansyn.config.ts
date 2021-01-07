@@ -9,6 +9,8 @@ import { anaglyphSensorAlertKey } from '../modules/plugins/openlayers/plugins/an
 import { AnaglyphSensorAlertComponent } from '../modules/plugins/openlayers/plugins/anaglyph-sensor/alert-component/anaglyph-sensor-alert.component';
 import { CredentialsComponent } from '../modules/menu-items/credentials/components/credentials/credentials.component';
 import { FiltersCollectionComponent } from '../modules/filters/components/filters-collection/filters-collection.component';
+import { ResultsTableComponent } from '../modules/menu-items/results/components/results-table/results-table.component';
+import { CasesContainerComponent } from '../modules/menu-items/cases/components/cases-container/cases-container.component';
 
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
 	ansynAlerts: [
@@ -29,35 +31,24 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 	],
 	ansynMenuItems: [
 		{
-			name: 'Filters',
-			component: FiltersCollectionComponent,
-			iconClass: 'icon-main-filters'
-		},
-		{
-			name: 'Data Layers',
+			name: 'DataLayers',
 			component: LayersManagerComponent,
-			iconClass: 'icon-main-data-layers'
+			iconClass: 'icon-main-data-layers',
+			triggerClass: 'top'
 		},
 		{
-			name: 'Tools',
-			component: ToolsComponent,
-			iconClass: 'icon-main-tools'
+			name: 'SearchResults',
+			component: ResultsTableComponent,
+			iconClass: '',
+			dockedToBottom: true,
+			triggerClass: 'bottom'
 		},
 		{
-			name: 'Algorithms',
-			component: TasksComponent,
-			iconClass: 'icon-main-algorithms'
-		},
-		{
-			name: 'Settings',
-			component: SettingsComponent,
-			iconClass: 'icon-main-settings'
-		},
-		{
-			name: 'Permissions',
-			component: CredentialsComponent,
-			iconClass: 'icon-credentials',
-			dockedToBottom: true
+			name: 'CasesContainer',
+			component: CasesContainerComponent,
+			iconClass: '',
+			dockedToBottom: true,
+			triggerClass: 'top'
 		}
 	]
 };

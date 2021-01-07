@@ -15,8 +15,10 @@ import {
 } from '@angular/core';
 import {
 	ContainerChangedTriggerAction, LogHelp,
+	MenuActionTypes,
 	ResetAppAction,
 	SelectMenuItemAction,
+	SelectMenuItemFromOutsideAction,
 	ToggleIsPinnedAction,
 	ToggleMenuCollapse,
 	UnSelectMenuItemAction
@@ -28,7 +30,8 @@ import {
 	selectBadges,
 	selectIsPinned,
 	selectMenuCollapse,
-	selectSelectedMenuItem
+	selectSelectedMenuItem,
+	selectTriggerClass
 } from '../reducers/menu.reducer';
 import { Store } from '@ngrx/store';
 import { animate, state, style, transition, trigger } from '@angular/animations';
@@ -38,23 +41,24 @@ import { MenuConfig } from '../models/menuConfig';
 import { IMenuConfig } from '../models/menu-config.model';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { distinctUntilChanged, filter, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { MENU_ITEMS } from '../helpers/menu-item-token';
 import { TranslateService } from '@ngx-translate/core';
+import { Actions, ofType } from '@ngrx/effects';
 
 const animations: any[] = [
 	trigger(
 		'expand', [
-			state('off_ltr', style({
-				transform: 'translateX(-100%)'
+			state('bottom', style({
+				transform: 'translatey(100%)'
 			})),
-			state('off_rtl', style({
-				transform: 'translateX(100%)'
+			state('top', style({
+				transform: 'translatey(-100%)'
 			})),
 			state('on', style({
-				transform: 'translateX(0)'
+				transform: 'translatey(0)'
 			})),
-			transition('off_ltr <=> on, off_rtl <=> on', animate('0.3s ease-in-out'))
+			transition('bottom <=> on, top <=> on', animate('0.3s ease-in-out'))
 		]
 	)
 ];
@@ -88,6 +92,8 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	expand: boolean;
 	onAnimation: boolean;
 	isBuildNeeded: boolean;
+	triggerClass: string;
+	outsideItemButton: HTMLDivElement | ElementRef;
 
 	@Input() animatedElement: HTMLElement;
 	@ViewChild('menuWrapper', { static: true }) menuWrapperElement: ElementRef;
@@ -100,6 +106,23 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	@AutoSubscription
 	collapse$ = this.store.select(selectMenuCollapse).pipe(
 		tap(this.startToggleMenuCollapse.bind(this))
+	);
+
+	@AutoSubscription
+	triggerClass$ = this.store.select(selectTriggerClass).pipe(
+		map(triggerClass => {
+			return triggerClass;
+		})
+	);
+
+	@AutoSubscription
+	toggleMenuItemFromOutside$ = this.actions.pipe(
+		ofType<SelectMenuItemFromOutsideAction>(MenuActionTypes.SELECT_MENU_ITEM_FROM_OUTSIDE),
+		tap(({payload}) => {
+			this.outsideItemButton = payload.elementRef;
+			this.triggerClass = payload.triggerClass;
+			this.toggleItem(payload.menuKey);
+		})
 	);
 
 	@AutoSubscription
@@ -137,6 +160,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	constructor(
 		public componentFactoryResolver: ComponentFactoryResolver,
 		protected store: Store<IMenuState>,
+		protected actions: Actions,
 		protected renderer: Renderer2,
 		protected elementRef: ElementRef,
 		@Inject(DOCUMENT) protected document: Document,
@@ -184,7 +208,8 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 			filter(this.anyMenuItemSelected.bind(this)),
 			withLatestFrom(this.store.select(selectAutoClose)),
 			filter(([click, autoClose]: [any, boolean]) => {
-				const include = click.path.includes(this.elementRef.nativeElement);
+				const include = click.path.includes(this.elementRef.nativeElement) ||
+								click.path.includes(this.outsideItemButton);
 				return !include && !this.isPinned && autoClose;
 			}),
 			tap(this.closeMenu.bind(this))
@@ -216,15 +241,18 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	}
 
 	setSelectedMenuItem(_selectedMenuItemName) {
-		this.selectedMenuItemName = _selectedMenuItemName;
-		this.expand = Boolean(this.selectedMenuItemName);
+		requestAnimationFrame(() => {
+			this.selectedMenuItemName = _selectedMenuItemName;
+			this.expand = Boolean(this.selectedMenuItemName);
 
-		if (this.anyMenuItemSelected()) {
-			this.componentChanges();
-		}
+			if (this.anyMenuItemSelected()) {
+				this.componentChanges();
+			}
+		});
 	}
 
 	componentChanges(): void {
+		this.forceRedraw().then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
 		if (!this.componentElem || this.onAnimation) {
 			this.isBuildNeeded = !this.componentElem;
 			return;

@@ -3,7 +3,7 @@
 
 :host {
 	z-index: @z-index-footer;
-	display: block;
+	display: contents;
 	position: relative;
 	direction: ltr;
 
@@ -16,7 +16,7 @@
 
 			ansyn-overlay-navigation-bar, ansyn-time-picker-container {
 				position: absolute;
-				top: 12.5px;
+				top: 6.5px;
 			}
 
 			ansyn-overlay-navigation-bar {
@@ -25,13 +25,13 @@
 			}
 
 			ansyn-time-picker-container {
-				right: 55%;
+				left: 315px;
 			}
 		}
 
 		button.hide-menu {
 			position: absolute;
-			bottom: calc(100% - 10px);
+			bottom: calc(100% - 6px);
 			left: 50%;
 			transform: translateX(-50%); // center element in  parent
 			width: 60px;
@@ -62,8 +62,8 @@
 		div.status-timeline-container {
 			.app-timeline-container {
 				ansyn-time-picker-container {
-					right: unset;
-					left: 55%;
+					right: 315px;
+					left: unset;
 				}
 			}
 		}

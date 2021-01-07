@@ -160,11 +160,15 @@ div.menu-wrapper {
 
 	div.container {
 		position: absolute;
-		left: @menu-width;
 		top: @status-bar-height;
 		z-index: @z-index-menu-container;
-		height: calc(100% - @status-bar-height);
+		height: calc(100% - @status-bar-height - @timeline-area-height);
 		background: fade(@background-color-3, 95%);
+
+		div.template {
+			height: calc(100vh - @status-bar-height - @timeline-area-height - 1px);
+			border-bottom: 1px solid #ffffff36;
+		}
 
 		&.pinned {
 			position: relative;
@@ -221,7 +225,6 @@ div.menu-wrapper {
 
 		div.container {
 			left: unset;
-			right: @menu-width;
 
 			&.pinned {
 				right: 0;

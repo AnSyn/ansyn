@@ -5,4 +5,5 @@ export interface IMenuItem {
 	badge?: string;
 	production?: boolean;
 	dockedToBottom?: boolean;
+	triggerClass: string;
 }

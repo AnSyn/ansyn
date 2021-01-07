@@ -1,4 +1,4 @@
-import { Component, HostBinding, HostListener, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostBinding, HostListener, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
 import {
@@ -6,10 +6,11 @@ import {
 	selectActiveMapId,
 	selectMapsList,
 	selectOverlayOfActiveMap,
-	selectIsMinimalistViewMode
+	selectIsMinimalistViewMode,
+	selectFooterCollapse
 } from '@ansyn/map-facade';
-import { selectIsPinned, selectMenuCollapse } from '@ansyn/menu';
-import { filter, map, withLatestFrom } from 'rxjs/operators';
+import { selectIsPinned, selectMenuCollapse, SelectMenuItemFromOutsideAction } from '@ansyn/menu';
+import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
 import { LoadDefaultCaseAction } from '../modules/menu-items/cases/actions/cases.actions';
 import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
@@ -21,6 +22,7 @@ import { toolsFlags } from '../modules/menu-items/tools/models/tools.model';
 import { TranslateService } from '@ngx-translate/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectDropsDescending } from '../modules/overlays/reducers/overlays.reducer';
+import { selectSelectedMenuItem } from '../../menu/reducers/menu.reducer';
 
 @Component({
 	selector: 'ansyn-app',
@@ -43,10 +45,19 @@ export class AnsynComponent implements OnInit, OnDestroy {
 
 	isMenuCollapse$ = this.store$.select(selectMenuCollapse);
 
+	isFooterCollapse$ = this.store$.select(selectFooterCollapse);
+
 	isPinnedClass$: Observable<string> = this.store$.select(selectIsPinned).pipe(
 		map((_isPinned) => _isPinned ? 'isPinned' : 'isNotPinned')
 	);
 
+	isExpanded$ = this.store$.select(selectSelectedMenuItem).pipe(
+		tap(item => {
+			this.toggleResults = item === "SearchResults";
+			return Boolean(item);
+		})
+	);
+	
 	hideStatus$: Observable<boolean> = this.store$.select(selectIsMinimalistViewMode);
 
 	activeMap$: Observable<any> = combineLatest([
@@ -76,8 +87,9 @@ export class AnsynComponent implements OnInit, OnDestroy {
 	) {
 	}
 
-	toggleResultsTable(): void {
+	toggleResultsTable(elementRef: HTMLDivElement): void {
 		this.toggleResults = !this.toggleResults;
+		this.store$.dispatch(new SelectMenuItemFromOutsideAction({ menuKey: "SearchResults", elementRef, triggerClass: 'bottom' }));
 	}
 
 	@HostListener('window:beforeunload', ['$event'])

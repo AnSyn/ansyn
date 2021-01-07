@@ -227,14 +227,12 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	}
 
 	setSelectedMenuItem(_selectedMenuItemName) {
-		requestAnimationFrame(() => {
-			this.selectedMenuItemName = _selectedMenuItemName;
-			this.expand = Boolean(this.selectedMenuItemName);
+		this.selectedMenuItemName = _selectedMenuItemName;
+		requestAnimationFrame(() => this.expand = Boolean(this.selectedMenuItemName));
 
-			if (this.anyMenuItemSelected()) {
-				this.componentChanges();
-			}
-		});
+		if (this.anyMenuItemSelected()) {
+			this.componentChanges();
+		}
 	}
 
 	componentChanges(): void {

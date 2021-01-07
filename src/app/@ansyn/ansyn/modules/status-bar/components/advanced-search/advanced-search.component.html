@@ -2,7 +2,7 @@
     <div class="title-grid">
         <div class="buttons-title">
             <div class="select-all" (click)="selectAllItems()">{{'select all' | translate}}</div>
-            <div class="reset" (click)="resetDataInputFilters()"><i class="icon-undo"></i></div>
+            <div class="reset" (click)="resetDataInputFilters()" [attr.tooltip-value]="'reset' | translate" tooltip-class="bottom"><i class="icon-undo"></i></div>
         </div>
         <div class="title text-title">{{'Type' | translate}}</div>
     </div>
@@ -45,7 +45,7 @@
     <div class="title-grid">
         <div class="buttons-title">
             <div class="select-all" (click)="selectAllItems()">{{'select all' | translate}}</div>
-            <div class="reset" (click)="resetDataInputFilters()"><i class="icon-undo"></i></div>
+            <div class="reset" (click)="resetDataInputFilters()" [attr.tooltip-value]="'reset' | translate" tooltip-class="bottom"><i class="icon-undo"></i></div>
         </div>
         <div class="title text-title">{{'Providers' | translate}}</div>
     </div>
@@ -68,7 +68,7 @@
     <div class="title-grid">
         <div class="buttons-title">
             <div class="select-all" (click)="selectAllItems()">{{'select all' | translate}}</div>
-            <div class="reset" (click)="resetDataInputFilters()"><i class="icon-undo"></i></div>
+            <div class="reset" (click)="resetDataInputFilters()" [attr.tooltip-value]="'reset' | translate" tooltip-class="bottom"><i class="icon-undo"></i></div>
         </div>
         <div class="title text-title">{{'sensors' | translate}}</div>
     </div>
@@ -89,7 +89,7 @@
 
 <div class="box resolution dataInputsPreSearch">
     <div class="title-grid">
-        <div class="reset" (click)="resetResolution()"><i class="icon-undo"></i></div>
+        <div class="reset" (click)="resetResolution()" [attr.tooltip-value]="'reset' | translate" tooltip-class="bottom"><i class="icon-undo"></i></div>
         <div class="title text-title-resolution">{{'Resolution' | translate}}</div>
     </div>
     
@@ -99,7 +99,7 @@
 </div>
 
 <div class="search-icon search-button"
-    (click)="search()">
-    <i class="fa fa-search"></i>
+    (click)="search()" >
+    <i class="fa fa-search" [attr.tooltip-value]="'search' | translate" tooltip-class="bottom"></i>
 </div>
 

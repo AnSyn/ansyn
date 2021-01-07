@@ -24,6 +24,7 @@ import { TimePickerContainerComponent } from './components/time-picker-container
 import { SearchOptionsComponent } from './components/search-options/search-options.component';
 import { AdvancedSearchComponent } from './components/advanced-search/advanced-search.component';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
+import { CasesModule } from '../menu-items/cases/cases.module';
 
 @NgModule({
 	imports: [
@@ -32,6 +33,7 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
 		CoreModule,
 		ToolsModule,
 		MapFacadeModule,
+		CasesModule,
 		TreeviewModule.forRoot(),
 		StoreModule.forFeature(statusBarFeatureKey, StatusBarReducer),
 		ClickOutsideModule,

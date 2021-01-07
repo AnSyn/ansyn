@@ -336,10 +336,10 @@ export class OpenLayersImageProcessing {
 			convertedPixel = pixel;
 			conversionFn.forEach(fnData => convertedPixel = fnData.fn(convertedPixel, fnData.args));
 
-			imageData.data[index] = convertedPixel.r;		// Red
-			imageData.data[index + 1] = convertedPixel.g;	// Green
-			imageData.data[index + 2] = convertedPixel.b;	// Blue
-			imageData.data[index + 3] = convertedPixel.a;	// Alpha
+			imageData.data[index] = convertedPixel.r;
+			imageData.data[index + 1] = convertedPixel.g;
+			imageData.data[index + 2] = convertedPixel.b;
+			imageData.data[index + 3] = convertedPixel.a;
 		}
 
 		return imageData;

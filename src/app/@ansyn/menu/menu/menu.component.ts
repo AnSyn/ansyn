@@ -194,9 +194,9 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 			filter(this.anyMenuItemSelected.bind(this)),
 			withLatestFrom(this.store.select(selectAutoClose)),
 			filter(([click, autoClose]: [any, boolean]) => {
-				const include = click.path.includes(this.elementRef.nativeElement) ||
+				const includedElementToIgnore = click.path.includes(this.elementRef.nativeElement) ||
 								click.path.includes(this.outsideMenuItem.elementRef);
-				return !include && !this.isPinned && autoClose;
+				return !includedElementToIgnore && !this.isPinned && autoClose;
 			}),
 			tap(this.closeMenu.bind(this))
 		);

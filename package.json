@@ -142,6 +142,7 @@
     "typescript": "~3.9.7"
   },
   "precommit": [
+    "no-commit-to-master",
     "fix-all"
   ]
 }

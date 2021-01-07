@@ -152,6 +152,7 @@ export class OpenLayersImageProcessing {
 
 	buildHistogramLut(imageData): any[] {
 		const BANDS = 4, CUTEDGE = 85, MAXBIT = 256;
+
 		const colorChannels = 3;
 		const histogram = this.fillArray(MAXBIT, 0);
 		const {width, height, data} = imageData;
@@ -164,11 +165,12 @@ export class OpenLayersImageProcessing {
 			}
 		}
 		const totalPixels = width * height;
+		const pixelToCut = totalPixels / CUTEDGE;
 		let minPixel = 0, maxPixel = 0, pixelsSoFar = 0;
 		for (let i = 0; i < MAXBIT; i++) {
 			minPixel = i;
 			pixelsSoFar += histogram[i];
-			if (pixelsSoFar > totalPixels / CUTEDGE) {
+			if (pixelsSoFar > pixelToCut) {
 				break;
 			}
 		}
@@ -176,10 +178,11 @@ export class OpenLayersImageProcessing {
 		for (let i = 0; i < MAXBIT; i++) {
 			maxPixel = 255 - i;
 			pixelsSoFar += histogram[255 - i];
-			if (pixelsSoFar > totalPixels / CUTEDGE) {
+			if (pixelsSoFar > pixelToCut) {
 				break;
 			}
 		}
+
 		return this.fillArray(MAXBIT, 0).map((val, index) => this.normalizeColor(255 * (index - minPixel) / (maxPixel - minPixel)));
 	}
 
@@ -292,7 +295,7 @@ export class OpenLayersImageProcessing {
 	// ------ Gamma start ------ //
 	// based on:
 	// http://www.dfstudios.co.uk/articles/programming/image-programming-algorithms/image-processing-algorithms-part-6-gamma-correction/
-	performGamma(pixel, gamma):any {
+	performGamma(pixel, gamma): any {
 		// const DEFAULT_VALUE = 1;
 		// gamma sent range [1-200], should be converted to [0.01-2.00], hence gamma / 100
 		const gammaCorrection = 1 / (gamma / 100);
@@ -309,7 +312,7 @@ export class OpenLayersImageProcessing {
 	// ------ Saturation start ------ //
 	// based on:
 	// https://stackoverflow.com/questions/13348129/using-native-javascript-to-desaturate-a-colour
-	performSaturation(pixel, saturation): any {
+	performSaturation(pixel, saturation: number): any {
 		// saturation sent range [1-100], should be converted to [0.01-1.00], hence saturation / 100
 		saturation /= 100;
 		const gray = pixel.r * 0.3086 + pixel.g * 0.6094 + pixel.b * 0.0820; // gray range [1-255]

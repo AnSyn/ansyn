@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ICasesState, selectCaseSaved, selectShowCasesTable } from '../../reducers/cases.reducer';
+import { selectCaseSaved, selectShowCasesTable } from '../../reducers/cases.reducer';
 import { select, Store } from '@ngrx/store';
-import { OpenModalAction, ShowCasesTableAction } from '../../actions/cases.actions';
+import { OpenModalAction } from '../../actions/cases.actions';
 import { distinctUntilChanged, tap, map, delay } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectEnableOnlyFavorites, selectShowOnlyFavorites } from '../../../../filters/reducer/filters.reducer';

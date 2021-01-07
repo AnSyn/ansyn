@@ -5,5 +5,10 @@ export interface IMenuItem {
 	badge?: string;
 	production?: boolean;
 	dockedToBottom?: boolean;
-	triggerClass: string;
+}
+
+export interface IOutsideMenuItem {
+	name: string;
+	toggleFromBottom: boolean;
+	elementRef: HTMLDivElement;
 }

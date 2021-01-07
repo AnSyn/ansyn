@@ -89,7 +89,7 @@ export class AnsynComponent implements OnInit, OnDestroy {
 
 	toggleResultsTable(elementRef: HTMLDivElement): void {
 		this.toggleResults = !this.toggleResults;
-		this.store$.dispatch(new SelectMenuItemFromOutsideAction({ menuKey: "SearchResults", elementRef, triggerClass: 'bottom' }));
+		this.store$.dispatch(new SelectMenuItemFromOutsideAction({ name: "SearchResults", elementRef, toggleFromBottom: true }));
 	}
 
 	@HostListener('window:beforeunload', ['$event'])

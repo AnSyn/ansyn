@@ -15,10 +15,8 @@ import {
 } from '@angular/core';
 import {
 	ContainerChangedTriggerAction, LogHelp,
-	MenuActionTypes,
 	ResetAppAction,
 	SelectMenuItemAction,
-	SelectMenuItemFromOutsideAction,
 	ToggleIsPinnedAction,
 	ToggleMenuCollapse,
 	UnSelectMenuItemAction
@@ -31,12 +29,12 @@ import {
 	selectIsPinned,
 	selectMenuCollapse,
 	selectSelectedMenuItem,
-	selectTriggerClass
+	selectSelectedOutsideMenuItem
 } from '../reducers/menu.reducer';
 import { Store } from '@ngrx/store';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
-import { IMenuItem } from '../models/menu-item.model';
+import { IMenuItem, IOutsideMenuItem } from '../models/menu-item.model';
 import { MenuConfig } from '../models/menuConfig';
 import { IMenuConfig } from '../models/menu-config.model';
 import { Dictionary } from '@ngrx/entity/src/models';
@@ -44,7 +42,6 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { MENU_ITEMS } from '../helpers/menu-item-token';
 import { TranslateService } from '@ngx-translate/core';
-import { Actions, ofType } from '@ngrx/effects';
 
 const animations: any[] = [
 	trigger(
@@ -92,8 +89,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	expand: boolean;
 	onAnimation: boolean;
 	isBuildNeeded: boolean;
-	triggerClass: string;
-	outsideItemButton: HTMLDivElement | ElementRef;
+	outsideMenuItem: IOutsideMenuItem;
 
 	@Input() animatedElement: HTMLElement;
 	@ViewChild('menuWrapper', { static: true }) menuWrapperElement: ElementRef;
@@ -109,19 +105,10 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	);
 
 	@AutoSubscription
-	triggerClass$ = this.store.select(selectTriggerClass).pipe(
-		map(triggerClass => {
-			return triggerClass;
-		})
-	);
-
-	@AutoSubscription
-	toggleMenuItemFromOutside$ = this.actions.pipe(
-		ofType<SelectMenuItemFromOutsideAction>(MenuActionTypes.SELECT_MENU_ITEM_FROM_OUTSIDE),
-		tap(({payload}) => {
-			this.outsideItemButton = payload.elementRef;
-			this.triggerClass = payload.triggerClass;
-			this.toggleItem(payload.menuKey);
+	selectOutsideMenuItem$ = this.store.select(selectSelectedOutsideMenuItem).pipe(
+		tap((menuItem: IOutsideMenuItem) => {
+			this.outsideMenuItem = menuItem;
+			this.toggleItem(menuItem.name);
 		})
 	);
 
@@ -160,7 +147,6 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	constructor(
 		public componentFactoryResolver: ComponentFactoryResolver,
 		protected store: Store<IMenuState>,
-		protected actions: Actions,
 		protected renderer: Renderer2,
 		protected elementRef: ElementRef,
 		@Inject(DOCUMENT) protected document: Document,
@@ -209,7 +195,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 			withLatestFrom(this.store.select(selectAutoClose)),
 			filter(([click, autoClose]: [any, boolean]) => {
 				const include = click.path.includes(this.elementRef.nativeElement) ||
-								click.path.includes(this.outsideItemButton);
+								click.path.includes(this.outsideMenuItem.elementRef);
 				return !include && !this.isPinned && autoClose;
 			}),
 			tap(this.closeMenu.bind(this))

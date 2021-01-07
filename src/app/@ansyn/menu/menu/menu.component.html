@@ -1,5 +1,5 @@
 <div class="menu-wrapper" #menuWrapper [class.rtl]="isRTL">
-	<div class="container" #container [@expand]="expand ? 'on' : (triggerClass$ | async)" (@expand.done)="onExpandDone()"
+	<div class="container" #container [@expand]="expand ? 'on' : outsideMenuItem.toggleFromBottom ? 'bottom' : 'top'" (@expand.done)="onExpandDone()"
 		 (@expand.start)="onExpandStart()">
 		<button class="pin"
 				(click)="toggleIsPinned()"

@@ -52,12 +52,12 @@ export class CasesToolsComponent implements OnInit, OnDestroy {
 		this.store.dispatch(new UpdateFacetsAction({ showOnlyFavorites: !this.onlyFavorite }))
 	}
 
-	showCasesTable(showCases: HTMLDivElement): void {
-		this.store.dispatch(new SelectMenuItemFromOutsideAction({ menuKey: "CasesContainer", elementRef: showCases, triggerClass: 'top' }))
+	showCasesTable(elementRef: HTMLDivElement): void {
+		this.store.dispatch(new SelectMenuItemFromOutsideAction({ name: "CasesContainer", elementRef, toggleFromBottom: false }))
 	}
 
-	showLayersTable(showLayers: HTMLDivElement): void {
-		this.store.dispatch(new SelectMenuItemFromOutsideAction({ menuKey: "DataLayers", elementRef: showLayers, triggerClass: 'top' }))
+	showLayersTable(elementRef: HTMLDivElement): void {
+		this.store.dispatch(new SelectMenuItemFromOutsideAction({ name: "DataLayers", elementRef, toggleFromBottom: false }))
 	}
 
 	ngOnInit(): void {

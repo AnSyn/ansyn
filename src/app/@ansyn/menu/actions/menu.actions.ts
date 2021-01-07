@@ -1,6 +1,7 @@
 import { ElementRef } from '@angular/core';
 import { Action } from '@ngrx/store';
 import { ILogMessage } from '../models/logger.model';
+import { IOutsideMenuItem } from '../models/menu-item.model';
 
 export const MenuActionTypes = {
 	SELECT_MENU_ITEM: 'SELECT_MENU_ITEM',
@@ -43,11 +44,11 @@ export class SelectMenuItemAction implements Action, ILogMessage {
 export class SelectMenuItemFromOutsideAction implements Action, ILogMessage {
 	type = MenuActionTypes.SELECT_MENU_ITEM_FROM_OUTSIDE;
 
-	constructor(public payload: { menuKey: string, elementRef: HTMLDivElement | ElementRef, triggerClass: string }) {
+	constructor(public payload: IOutsideMenuItem) {
 	}
 
 	logMessage() {
-		return `Opening menu item from outside: ${this.payload.menuKey}`
+		return `Opening menu item from outside: ${this.payload.name}`
 	}
 }
 

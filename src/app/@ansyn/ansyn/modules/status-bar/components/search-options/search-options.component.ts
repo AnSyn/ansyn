@@ -19,12 +19,9 @@ export class SearchOptionsComponent implements OnInit, OnDestroy {
 	isClickOutside$ = this.clickOutside.onClickOutside({ monitor: this.element.nativeElement }).pipe(
 		filter(clickOutside => clickOutside),
 		withLatestFrom(this.store$.select(selectCalenderStatus)),
-		tap(([clickoutside , calenderStatus]) => {
-			if (!calenderStatus) {
-				this.close();
-			}
-		})
-	);
+		filter(([clickoutside , calenderStatus]) => !calenderStatus),
+		tap(() => this.close()));
+		
 	constructor(protected element: ElementRef,
 		protected clickOutside: ClickOutsideService,
 		protected store$: Store<any>) { }

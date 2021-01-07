@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, Output } from '@angular/core';
 
 @Component({
 	selector: 'ansyn-combo-table',
@@ -6,11 +6,8 @@ import { Component, ElementRef, EventEmitter, Injector, Input, Output, ViewChild
 	styleUrls: ['./ansyn-combo-table.component.less']})
 	export class AnsynComboTableComponent {
 
-	@ViewChild('optionsContainer') optionsContainer: ElementRef;
 	@Input() icon: string;
-	disabled: boolean;
 	@Input() selected: any[];
-	@Input() buttonClass: string;
 	@Input() isLine: boolean;
 	@Input() contentTitle: string;
 	@Input() isFullSize: boolean;

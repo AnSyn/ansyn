@@ -3,7 +3,6 @@ import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
 import { EMPTY, Observable, of, throwError } from 'rxjs';
 import { cold } from 'jasmine-marbles';
 import * as turf from '@turf/turf';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MultipleOverlaysSource, OverlaySourceProvider } from '../models/overlays-source-providers';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 import { MultipleOverlaysSourceConfig } from '../../core/models/multiple-overlays-source-config';
@@ -99,7 +98,7 @@ const fetchParams: any = {
 	limit: 250,
 	region: turf.geometry('Polygon', regionCoordinates),
 	timeRange: { start: new Date().toISOString(), end: new Date().toISOString() },
-	dataInputFilters: [],
+	dataInputFilters: []
 };
 
 const fetchParamsWithLimitZero: any = { ...fetchParams, limit: 0 };

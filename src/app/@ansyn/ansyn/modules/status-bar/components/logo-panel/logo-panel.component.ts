@@ -4,8 +4,7 @@ import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { IStatusBarConfig } from '../../models/statusBar-config.model';
 import { TranslateService } from '@ngx-translate/core';
-import { LogHelp, ResetAppAction } from '../../../../../menu/actions/menu.actions';
-import { IMenuConfig, MenuConfig } from '@ansyn/menu';
+import { IMenuConfig, LogHelp, MenuConfig, ResetAppAction } from '@ansyn/menu';
 
 @Component({
 	selector: 'ansyn-logo-panel',

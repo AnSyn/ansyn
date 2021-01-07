@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { StoreModule } from '@ngrx/store';
 
 import { SearchOptionsComponent } from './search-options.component';
 
@@ -8,7 +9,9 @@ import { SearchOptionsComponent } from './search-options.component';
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-		declarations: [ SearchOptionsComponent ]
+		declarations: [ SearchOptionsComponent ],
+		imports: [StoreModule.forRoot({})]
+
 		})
 		.compileComponents();
 	}));
@@ -19,7 +22,7 @@ import { SearchOptionsComponent } from './search-options.component';
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	fit('should create', () => {
 		expect(component).toBeTruthy();
 	});
-	});
+});

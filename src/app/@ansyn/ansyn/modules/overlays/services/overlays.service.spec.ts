@@ -254,7 +254,7 @@ describe('OverlaysService', () => {
 
 		mockData.showOnlyFavorites = true;
 		const result3 = OverlaysService.parseOverlayDataForDisplay(mockData);
-		expect(result3.length).toBe(2);
+		expect(result3.length).toBe(3);
 	});
 
 	it('check the method fetchData with spyOn', () => {

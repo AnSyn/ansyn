@@ -12,7 +12,7 @@ import {
 	SetAutoClose, ToggleIsPinnedAction,
 	UnSelectMenuItemAction
 } from '@ansyn/menu';
-import { selectSubMenu } from '../../modules/menu-items/tools/reducers/tools.reducer';
+import { selectSubMenu } from '../../modules/status-bar/components/tools/reducers/tools.reducer';
 import { concatMap, map, mergeMap, tap } from 'rxjs/operators';
 import {
 	LoadOverlaysSuccessAction,

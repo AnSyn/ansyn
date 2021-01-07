@@ -9,6 +9,16 @@
 		</button>
 	</div>
 
+	<div class="distance-measure-tool">
+		<button [attr.tooltip-class]="isRTL ? 'left' : 'right'"
+				[attr.tooltip-value]="'Measure Distance' | translate"
+				(click)="toggleMeasureDistanceTool()"
+				[disabled]="isGeoOptionsDisabled"
+				[class.mode-on]="onMeasureTool && !isGeoOptionsDisabled">
+			<i class="icon-tools-ruler"></i>
+		</button>
+	</div>
+
 	<div>
 		<button [attr.tooltip-class]="isRTL ? 'left' : 'right'"
 				[attr.tooltip-value]="'Go To' | translate"
@@ -36,21 +46,11 @@
 
 	</div>
 
-	<div class="distance-measure-tool">
-		<button [attr.tooltip-class]="isRTL ? 'left' : 'right'"
-				[attr.tooltip-value]="'Measure Distance' | translate"
-				(click)="toggleMeasureDistanceTool()"
-				[disabled]="isGeoOptionsDisabled"
-				[class.mode-on]="onMeasureTool && !isGeoOptionsDisabled">
-			<i class="icon-tools-ruler"></i>
-		</button>
-	</div>
-
 	<div class="export-maps-tool">
 		<button [attr.tooltip-class]="isRTL ? 'left' : 'right'"
 				[attr.tooltip-value]="'Export maps' | translate"
 				(click)="toggleExportMapsDialog()">
-			<i class="icon-export-maps"></i>
+			<i class="icon-status-bar-imagery-count"></i>
 		</button>
 	</div>
 

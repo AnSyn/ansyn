@@ -1,6 +1,5 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CoreModule } from '../../core/core.module';
 import { ToolsComponent } from './tools/tools.component';
 import { GoToModule } from './go-to/go-to.module';
 import { AnnotationsControlComponent } from './components/annotations-control/annotations-control.component';
@@ -16,6 +15,7 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { CoreModule } from '../../../core/core.module';
 
 // @dynamic
 @NgModule({

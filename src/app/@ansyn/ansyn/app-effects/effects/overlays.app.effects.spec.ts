@@ -43,7 +43,7 @@ import {
 	toolsInitialState,
 	ToolsReducer,
 	toolsStateSelector
-} from '../../modules/menu-items/tools/reducers/tools.reducer';
+} from '../../modules/status-bar/components/tools/reducers/tools.reducer';
 import {
 	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayAction,

@@ -26,7 +26,7 @@ import { UpdateFacetsAction } from '../../../modules/filters/actions/filters.act
 import {
 	SetAnnotationMode,
 	SetMeasureDistanceToolState
-} from '../../../modules/menu-items/tools/actions/tools.actions';
+} from '../../../modules/status-bar/components/tools/actions/tools.actions';
 import { CoreConfig } from '../../../modules/core/models/core.config';
 import { SetMiscOverlays, SetOverlaysCriteriaAction } from '../../../modules/overlays/actions/overlays.actions';
 import {

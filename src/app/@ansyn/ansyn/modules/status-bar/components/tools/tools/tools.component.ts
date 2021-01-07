@@ -12,11 +12,11 @@ import {
 	selectSubMenu, selectToolFlags
 } from '../reducers/tools.reducer';
 import { map, tap, take } from 'rxjs/operators';
-import { selectActiveAnnotationLayer } from '../../layers-manager/reducers/layers.reducer';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { MatDialog } from '@angular/material/dialog';
 import { ExportMapsPopupComponent } from '../export-maps-popup/export-maps-popup.component';
 import { SubMenuEnum, toolsFlags } from '../models/tools.model';
+import { selectActiveAnnotationLayer } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -32,7 +32,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	isDialogShowing = false;
 	public displayModeOn = false;
 	public flags: Map<toolsFlags, boolean>;
-
+	toolTipDirection = 'bottom'
 	@AutoSubscription
 	public flags$: Observable<Map<toolsFlags, boolean>> = this.store$.select(selectToolFlags).pipe(
 		tap((flags: Map<toolsFlags, boolean>) => this.flags = flags)

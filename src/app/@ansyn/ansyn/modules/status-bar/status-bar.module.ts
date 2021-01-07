@@ -19,6 +19,7 @@ import { LocationPickerComponent } from './components/location-picker/location-p
 import { FiltersPanelComponent } from './components/filters-panel/filters-panel.component';
 import { FiltersModule } from '../filters/filters.module';
 import { TimepickerPresetsComponent } from './components/timepicker-presets/timepicker-presets.component';
+import { ToolsModule } from './components/tools/tools.module';
 import { TimePickerContainerComponent } from './components/time-picker-container/time-picker-container.component';
 import { SearchOptionsComponent } from './components/search-options/search-options.component';
 import { AdvancedSearchComponent } from './components/advanced-search/advanced-search.component';
@@ -29,6 +30,7 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
 		FormsModule,
 		CommonModule,
 		CoreModule,
+		ToolsModule,
 		MapFacadeModule,
 		TreeviewModule.forRoot(),
 		StoreModule.forFeature(statusBarFeatureKey, StatusBarReducer),

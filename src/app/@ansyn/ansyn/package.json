@@ -4,10 +4,10 @@
 	"peerDependencies": {
 		"@ngrx/store": "9.x",
 		"@ngrx/effects": "9.x",
-		"@angular/common": "10.0.0-PLACEHOLDER",
-		"@angular/core": "10.0.0-PLACEHOLDER",
-		"@angular/cdk": "10.0.0-PLACEHOLDER",
-		"@angular/material": "10.0.0-PLACEHOLDER",
+		"@angular/common": "9.x || 10.x",
+		"@angular/core": "9.x || 10.x",
+		"@angular/cdk": "9.x || 10.x",
+		"@angular/material": "9.x || 10.x",
 		"rxjs": "6.x"
 	},
 	"dependencies": {

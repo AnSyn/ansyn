@@ -11,21 +11,6 @@ function fix(fileName) {
 	packageJson.version = mainPackage.version;
 	packageJson.license = mainPackage.license;
 
-	/*if (packageJson.peerDependencies) {
-		Object.keys(packageJson.peerDependencies).forEach(name => {
-			if (name in mainPackage.devDependencies) {
-				packageJson.peerDependencies[name] = mainPackage.devDependencies[name];
-			}
-
-			if (name in mainPackage.dependencies) {
-				packageJson.peerDependencies[name] = mainPackage.dependencies[name];
-			}
-
-			if (name.substr(0, 7) === '@ansyn/' && packages.includes(name.substr(7))) {
-				packageJson.peerDependencies[name] = packageJson.version;
-			}
-		});
-	}*/
 	if (packageJson.dependencies) {
 		Object.keys(packageJson.dependencies).forEach(name => {
 			if (name in mainPackage.dependencies) {

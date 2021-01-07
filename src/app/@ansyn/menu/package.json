@@ -2,8 +2,8 @@
 	"name": "@ansyn/menu",
 	"version": "3.0.0",
 	"peerDependencies": {
-		"@angular/common": "10.0.0-PLACEHOLDER",
-		"@angular/core": "10.0.0-PLACEHOLDER",
+		"@angular/common": "9.x || 10.x",
+		"@angular/core": "9.x || 10.x",
 		"@ngrx/store": "9.x"
 	},
 	"dependencies": {

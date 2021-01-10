@@ -1,56 +1,44 @@
-import { SaveCaseAsAction } from '../../actions/cases.actions';
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import {
+	AddCasesAction,
+	RenameCaseAction,
+	SaveCaseAsAction,
+	SelectCaseSuccessAction
+} from '../../actions/cases.actions';
+import { async, ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 import { casesFeatureKey, CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { SaveCaseComponent } from './save-case.component';
-import { RouterTestingModule } from '@angular/router/testing';
-import { CasesModule } from '../../cases.module';
 import { Store, StoreModule } from '@ngrx/store';
-import { of } from 'rxjs';
-import { HttpClientModule } from '@angular/common/http';
-import { EffectsModule } from '@ngrx/effects';
-import { DataLayersService, layersConfig } from '../../../layers-manager/services/data-layers.service';
-import { casesConfig } from '../../services/cases.service';
-import { CoreConfig } from '../../../../core/models/core.config';
-import { LoggerConfig } from '../../../../core/models/logger.config';
 import { TranslateModule } from '@ngx-translate/core';
+import { ICase } from '../../models/case.model';
+import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { mapFacadeConfig } from '@ansyn/map-facade';
-import { linksConfig } from '../../services/helpers/cases.service.query-params-helper';
+import { AnsynInputComponent } from '../../../../core/forms/ansyn-input/ansyn-input.component';
+import { AnsynFormsModule } from '../../../../core/forms/ansyn-forms.module';
+
+const caseDate = new Date();
+const fakeCase: Partial<ICase> = {
+	creationTime: caseDate,
+	id: 'fake-case-id',
+	name: 'fake-case-name',
+};
 
 describe('SaveCaseComponent', () => {
 	let component: SaveCaseComponent;
 	let fixture: ComponentFixture<SaveCaseComponent>;
 	let store: Store<ICasesState>;
 
-	let fakeICasesState: ICasesState = {
-		cases: [
-			{ id: 'fakeId1', name: 'fakeName1', state: { selectedContextId: null } },
-			{ id: 'fakeId2', name: 'fakeName2', state: { selectedContextId: null } }
-		],
-		modalCaseId: 'fakeId1',
-		modal: true,
-		selectedCase: { id: 'fakeId1', name: 'fakeName1', state: { selectedContextId: null } }
-	} as any;
-
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [
-				BrowserAnimationsModule,
-				HttpClientModule,
-				CasesModule,
-				EffectsModule.forRoot([]),
-				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
-				RouterTestingModule,
-				TranslateModule.forRoot()
+			declarations: [
+				SaveCaseComponent,
+				AnsynInputComponent
 			],
-			providers: [
-				DataLayersService,
-				{ provide: linksConfig, useValue: {} },
-				{ provide: casesConfig, useValue: { schema: null } },
-				{ provide: LoggerConfig, useValue: {} },
-				{ provide: CoreConfig, useValue: {} },
-				{ provide: layersConfig, useValue: {} },
-				{ provide: mapFacadeConfig, useValue: {} }
+			imports: [
+				FormsModule,
+				AnsynFormsModule,
+				BrowserAnimationsModule,
+				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
+				TranslateModule.forRoot()
 			]
 		})
 			.compileComponents();
@@ -61,18 +49,39 @@ describe('SaveCaseComponent', () => {
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 		store = _store;
+		store.dispatch(new AddCasesAction({ cases: [<any>fakeCase] }));
+		store.dispatch(new SelectCaseSuccessAction(<any>{...fakeCase}));
 	}));
 
 	it('should be created', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('onSubmitCase should call dispatch with SaveCaseAsAction and call close()', () => {
+	it('onSubmitCase should call dispatch with SaveCaseAsAction when there is not caseId', () => {
 		spyOn(store, 'dispatch');
 		spyOn(component, 'close');
-		spyOn(store, 'select').and.callFake(() => of({state: {maps: {data: []}}}));
+		component.caseId = undefined;
 		component.onSubmitCase();
-		expect(store.dispatch).toHaveBeenCalledWith(new SaveCaseAsAction(<any>{ name: component.caseName, state: {maps: {data: [], activeMapId: undefined}}}));
+		expect(store.dispatch).toHaveBeenCalledWith(new SaveCaseAsAction(<any>{
+			...fakeCase,
+			name: component.caseName
+		}));
 		expect(component.close).toHaveBeenCalled();
 	});
+
+	it('onSubmitCase should call dispatch with RenameCaseAction when there is caseId', fakeAsync(() => {
+		spyOn(store, 'dispatch');
+		spyOn(component, 'close');
+		const oldCase = {...fakeCase};
+		component.caseId = 'fake-case-id';
+		tick();
+		component.caseName = 'new-case-name';
+		component.onSubmitCase();
+		expect(store.dispatch).toHaveBeenCalledWith(new RenameCaseAction({
+			case: <any>oldCase,
+			oldName: 'fake-case-name',
+			newName: 'new-case-name'
+		}));
+		expect(component.close).toHaveBeenCalled();
+	}))
 });

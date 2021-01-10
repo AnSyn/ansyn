@@ -3,13 +3,12 @@ import {
 	IEntryComponent,
 	selectActiveMapId,
 	selectHideLayersOnMap,
-	selectManualProcessArgsByMapId,
 	selectOverlayByMapId,
 } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { combineLatest, Observable } from 'rxjs';
-import { tap, map, filter } from 'rxjs/operators';
+import { combineLatest, Observable, of, EMPTY } from 'rxjs';
+import { tap, map, filter, withLatestFrom, concatMap, catchError } from 'rxjs/operators';
 import { GeoRegisteration, IOverlay } from '../models/overlay.model';
 import {
 	ToggleDraggedModeAction,
@@ -18,10 +17,15 @@ import {
 } from './actions/overlay-status.actions';
 import {
 	selectFavoriteOverlays,
-	selectTranslationData
+	selectTranslationData,
+	selectOverlaysImageProcess
 } from './reducers/overlay-status.reducer';
 import { AnnotationMode } from '@ansyn/ol';
-import { ITranslationData } from '../../menu-items/cases/models/case.model';
+import {
+	IOverlayImageProcess,
+	IOverlaysImageProcess,
+	ITranslationData
+} from '../../menu-items/cases/models/case.model';
 import { Actions, ofType } from '@ngrx/effects';
 import {
 	SetAnnotationMode,
@@ -31,8 +35,7 @@ import {
 import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-manager/reducers/layers.reducer';
 import { ClickOutsideService } from '../../core/click-outside/click-outside.service';
 import { TranslateService } from '@ngx-translate/core';
-import { isEqual } from 'lodash';
-import { IOverlayStatusConfig, overlayStatusConfig } from './config/overlay-status-config';
+import { OverlayStatusService } from './services/overlay-status.service';
 
 @Component({
 	selector: 'ansyn-overlay-status',
@@ -46,22 +49,21 @@ import { IOverlayStatusConfig, overlayStatusConfig } from './config/overlay-stat
 export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent {
 	@Input() mapId: string;
 	isAutoProcessing: boolean;
-	isManualProcessing: boolean;
-	moreButtons: boolean;
+	isManualProcessingOpen: boolean;
 	overlay: IOverlay;
 	isActiveMap: boolean;
 	favoriteOverlays: IOverlay[];
-	presetOverlays: IOverlay[];
 	overlaysTranslationData: any;
 	isFavorite: boolean;
 	favoritesButtonText: string;
 	isPreset: boolean;
-	presetsButtonText: string;
 	isDragged: boolean;
 	isImageControlActive = false;
 	draggedButtonText: string;
 	isLayersVisible: boolean;
-	isChanged: boolean;
+	isManualProcessChanged: boolean;
+
+	selectOverlaysImageProcess$ = this.store$.pipe(select(selectOverlaysImageProcess), filter(this.hasOverlay.bind(this)));
 
 	@HostBinding('class.rtl')
 	isRtl = 'rtl' === this.translateService.instant('direction');
@@ -87,8 +89,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	onClickOutSide$ = this.clickOutsideService.onClickOutside({monitor: this.element.nativeElement}).pipe(
 		filter(Boolean),
 		tap( () => {
-			this.moreButtons = false;
-			this.isManualProcessing = false;
+			this.isManualProcessingOpen = false;
 		})
 	);
 
@@ -107,8 +108,23 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 				}
 			}));
 
+	@AutoSubscription
+	manualImageProcessingParams$: Observable<Object> = this.selectOverlaysImageProcess$.pipe(
+		map((overlaysImageProcess: IOverlaysImageProcess ) => overlaysImageProcess[this.overlay?.id]?.manuelArgs),
+		tap((imageManualProcessArgs) => {
+			this.isManualProcessChanged = !!imageManualProcessArgs && !this.overlayStatusService.isDefaultImageProcess(imageManualProcessArgs);
+		})
+	);
+
+	@AutoSubscription
+	onChangeAutoImageProcess$: Observable<IOverlayImageProcess> = this.selectOverlaysImageProcess$.pipe(
+		map( (overlaysImageProcess) => overlaysImageProcess[this.overlay?.id]),
+		filter(Boolean),
+		tap( ({isAuto}: IOverlayImageProcess) => this.isAutoProcessing = !!isAuto )
+	);
+
 	constructor(
-		@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig,
+		protected overlayStatusService: OverlayStatusService,
 		public store$: Store<any>,
 		protected actions$: Actions,
 		protected element: ElementRef,
@@ -118,18 +134,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		this.isPreset = true;
 		this.isFavorite = true;
 	}
-
-	@AutoSubscription
-	manualImageProcessingParams$: () => Observable<Object> = () => this.store$.select(selectManualProcessArgsByMapId(this.mapId)).pipe(
-		tap((imageManualProcessArgs) => {
-			const defaultParams = {};
-			this.overlayStatusConfig.ImageProcParams.forEach(obj => {
-				const key = obj.name;
-				defaultParams[key] = obj.defaultValue;
-			});
-			this.isChanged = !isEqual(defaultParams, imageManualProcessArgs);
-		})
-	);
 
 	@AutoSubscription
 	layersVisibility$ = () => combineLatest([
@@ -156,12 +160,13 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	@AutoSubscription
 	overlay$ = () => this.store$.pipe(
 		select(selectOverlayByMapId(this.mapId)),
-		tap(overlay => {
+		withLatestFrom( this.store$.pipe(select(selectOverlaysImageProcess)), (overlay, overlaysImageProcess) => [overlay, overlaysImageProcess[overlay?.id]]),
+		tap(([overlay, overlayImageProcess]) => {
 			if (this.isDragged) {
 				this.toggleDragged();
 			}
 			this.overlay = overlay;
-			this.onChangeOverlay();
+			this.onChangeOverlay(overlayImageProcess);
 		})
 	);
 
@@ -174,16 +179,21 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		}
 	}
 
-	onChangeOverlay() {
-		this.updateFavoriteStatus();
-		this.updateDraggedStatus();
-		this.resetButtons();
+	hasOverlay() {
+		return Boolean(this.overlay);
 	}
 
-	resetButtons() {
-		this.moreButtons = false;
-		this.isManualProcessing = false;
-		this.isAutoProcessing = false;
+	onChangeOverlay(imageProcess) {
+		this.updateFavoriteStatus();
+		this.updateDraggedStatus();
+		this.resetImageProcess(imageProcess);
+	}
+
+	resetImageProcess(imageProcess) {
+		if (this.overlay) {
+			this.isManualProcessingOpen = false;
+			this.dispatchAutoImageProcess(!!imageProcess?.isAuto);
+		}
 	}
 
 	updateFavoriteStatus() {
@@ -231,22 +241,17 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		return this.overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered;
 	}
 
-	get onAutoImageProcessing() {
-		return this.isAutoProcessing;
-	}
-
 	toggleManualImageProcessing() {
-		if (this.isAutoProcessing) {
-			this.store$.dispatch(new SetAutoImageProcessing({mapId: this.mapId}));
-		}
-		this.isAutoProcessing = false;
-		this.moreButtons = false;
-		this.isManualProcessing = !this.isManualProcessing;
+		this.isManualProcessingOpen = !this.isManualProcessingOpen;
+		this.dispatchAutoImageProcess();
 	}
 
 	toggleAutoImageProcessing() {
-		this.isAutoProcessing = !this.isAutoProcessing;
-		this.isManualProcessing = false;
-		this.store$.dispatch(new SetAutoImageProcessing({mapId: this.mapId}));
+		this.dispatchAutoImageProcess(!this.isAutoProcessing);
+	}
+
+
+	private dispatchAutoImageProcess(enable = false) {
+		this.store$.dispatch(new SetAutoImageProcessing({overlayId: this.overlay.id, isAuto: enable}));
 	}
 }

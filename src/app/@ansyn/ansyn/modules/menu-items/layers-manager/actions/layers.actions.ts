@@ -194,13 +194,6 @@ export class RemoveCaseLayersFromBackendAction implements Action {
 export class RemoveCaseLayersFromBackendSuccessAction extends RemoveCaseLayersFromBackendAction {
 	readonly type = LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_SUCCESS_ACTION;
 }
-export class RemoveCaseLayersFromBackendFailedAction extends RemoveCaseLayersFromBackendAction {
-	readonly type = LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_FAILED_ACTION;
-
-	constructor(public caseId: string, error: any) {
-		super(caseId);
-	}
-}
 
 export class SetActiveAnnotationLayer implements Action, ILogMessage {
 	type = LayersActionTypes.SET_ACTIVE_ANNOTATION_LAYER;

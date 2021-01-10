@@ -15,8 +15,7 @@ import {
 	SetMarkUp,
 	SetOverlaysCriteriaAction,
 	SetOverlaysStatusMessageAction,
-	UpdateOverlays,
-	UpdateOverlaysCountAction
+	UpdateOverlays
 } from '../actions/overlays.actions';
 import { IOverlay, IOverlaysCriteria, IOverlaysFetchData, RegionContainment } from '../models/overlay.model';
 import { BackToWorldView } from '../overlay-status/actions/overlay-status.actions';
@@ -168,12 +167,6 @@ export class OverlaysEffects {
 			}
 		))
 	);
-
-	@Effect()
-	dropsCount$ = this.store$.select(selectDrops).pipe(
-		filter(Boolean),
-		map<any, UpdateOverlaysCountAction>(drops => new UpdateOverlaysCountAction(drops.length)));
-
 
 	constructor(protected actions$: Actions,
 				protected store$: Store<any>,

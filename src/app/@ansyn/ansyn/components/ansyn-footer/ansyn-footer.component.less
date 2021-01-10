@@ -5,54 +5,67 @@
 	z-index: @z-index-footer;
 	display: block;
 	position: relative;
-
-	.time-picker-container {
-		left: 64%;
-		bottom: 10%;
-		position: fixed;
-		z-index: @z-index-footer;
-	}
 	direction: ltr;
-}
 
-div.status-timeline-container {
-	position: relative;
-	width: 100%;
+	div.status-timeline-container {
+		position: relative;
+		width: 100%;
 
-	.app-timeline-container {
-		height: @timeline-area-height;
+		.app-timeline-container {
+			height: @timeline-area-height;
 
-		ansyn-overlay-navigation-bar {
-			position: absolute;
-			top: 12.5px;
-			left: calc(~'50% - 30px');
+			ansyn-overlay-navigation-bar, ansyn-time-picker-container {
+				position: absolute;
+				top: 12.5px;
+			}
+
+			ansyn-overlay-navigation-bar {
+				left: 50%;
+				transform: translateX(-50%); // center element in  parent
+			}
+
+			ansyn-time-picker-container {
+				right: 55%;
+			}
 		}
-	}
-
-	button.hide-menu {
-		position: absolute;
-		bottom: calc(100% - 10px);
-		left: calc(~'50% - 30px');
-		width: 60px;
-		background: @background-color-1;
-		border: none;
-		color: white;
-		box-shadow: 2px 0 4px -2px black;
-		outline: none;
-		visibility: visible;
-		transition: .5s;
-		z-index: @z-index-hide-menu-button;
-
-		&:hover {
-			background-color: @background-color-3;
-		}
-	}
-
-	&.collapsed {
-		position: absolute;
 
 		button.hide-menu {
-			bottom: 100%;
+			position: absolute;
+			bottom: calc(100% - 10px);
+			left: 50%;
+			transform: translateX(-50%); // center element in  parent
+			width: 60px;
+			background: @background-color-1;
+			border: none;
+			color: white;
+			box-shadow: 2px 0 4px -2px black;
+			outline: none;
+			visibility: visible;
+			transition: .5s;
+			z-index: @z-index-hide-menu-button;
+
+			&:hover {
+				background-color: @background-color-3;
+			}
+		}
+
+		&.collapsed {
+			position: absolute;
+
+			button.hide-menu {
+				bottom: 100%;
+			}
+		}
+	}
+
+	&.rtl {
+		div.status-timeline-container {
+			.app-timeline-container {
+				ansyn-time-picker-container {
+					right: unset;
+					left: 55%;
+				}
+			}
 		}
 	}
 }

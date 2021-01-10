@@ -11,7 +11,6 @@ export const RouterActionTypes = {
 export interface ISetStatePayload {
 	caseId?: string;
 	queryParams: Params;
-	linkId?: string;
 }
 
 export class SetStateAction implements Action {

@@ -2,29 +2,17 @@ import RasterSource from 'ol/source/Raster';
 
 // skipOnValue is the value which the image do not require any processing (e.i. the natural/default value)
 export const IMG_PROCESS_ORDER = [
-	{ ArgumentName: 'Histogram', skipOnValue: 0 },
-	{ ArgumentName: 'Gamma', skipOnValue: 100 },
-	{ ArgumentName: 'Contrast', skipOnValue: 0 },
-	{ ArgumentName: 'Saturation', skipOnValue: 100 },
-	{ ArgumentName: 'Brightness', skipOnValue: 0 },
-	{ ArgumentName: 'Sharpness', skipOnValue: 0, perImage: true }
+	{ArgumentName: 'Histogram', skipOnValue: 0},
+	{ArgumentName: 'Gamma', skipOnValue: 100},
+	{ArgumentName: 'Contrast', skipOnValue: 0},
+	{ArgumentName: 'Saturation', skipOnValue: 100},
+	{ArgumentName: 'Brightness', skipOnValue: 0},
+	{ArgumentName: 'Sharpness', skipOnValue: 0, perImage: true}
 ];
 
-export interface IProcessOperation {
+interface IProcessOperation {
 	type: string,
 	args: any
-}
-
-export interface IConversionFunction {
-	fn: Function,
-	args: any
-}
-
-export interface IPixel {
-	r: number,
-	g: number,
-	b: number,
-	a: number
 }
 
 // design based on : https://openlayers.org/en/latest/examples/raster.html
@@ -39,27 +27,28 @@ export class OpenLayersImageProcessing {
 		}
 	}
 
-	initializeOperations(): void {
-		this._libs = Object.getPrototypeOf(this);
-	}
-
 	initializeRaster(layerRaster: RasterSource): void {
 		this._raster = layerRaster;
 		// register pixelOperations to raster event
-		this._raster.on('beforeoperations', this.initializeRasterEvent.bind(this));
+		this._raster.on('beforeoperations', (event) => {
+			event.data.pixelOperations = this._raster.get('pixelOperations');
+			event.data.imageOperations = this._raster.get('imageOperations');
+		});
+
 		// set a raster operation
 		this._raster.setOperation(this.cascadeOperations, this._libs);
 	}
 
-	initializeRasterEvent(event): void {
-		event.data.pixelOperations = this._raster.get('pixelOperations');
-		event.data.imageOperations = this._raster.get('imageOperations');
+	initializeOperations(): void {
+		// Getting the functions generically
+		this._libs = Object.getPrototypeOf(this);
 	}
 
 	processImage(operationsArguments: Object): void {
 		if (!this._raster) {
 			return;
 		}
+
 		// collection operation by processingParams
 		const pixelOperations: IProcessOperation[] = [];
 		const imageOperations: IProcessOperation[] = [];
@@ -69,11 +58,15 @@ export class OpenLayersImageProcessing {
 			// operationsArguments has provided (for example: {Brightness: 34} )
 			if (operationsArguments && operationsArguments.hasOwnProperty(operation.ArgumentName)) {
 				// add operation to pixelOperations in order
-				const args = operationsArguments[operation.ArgumentName];
+				const operationArgs = operationsArguments[operation.ArgumentName];
+
 				// if provided argument equal to skip (default) value - skip processing for this parameter
-				if (args !== operation.skipOnValue) {
-					const processOperation: IProcessOperation = { type: operation.ArgumentName, args };
-					(operation['perImage'] ? imageOperations : pixelOperations).push(processOperation);
+				if (operationArgs !== operation.skipOnValue) {
+					const currentOperation = {
+						type: operation.ArgumentName,
+						args: operationArgs
+					};
+					(operation.perImage ? imageOperations : pixelOperations).push(currentOperation);
 				}
 			}
 		});
@@ -85,23 +78,27 @@ export class OpenLayersImageProcessing {
 	}
 
 	// ------ General Operation Start ------ //
-	cascadeOperations(pixels, { pixelOperations, imageOperations }) {
+	cascadeOperations(pixels, data): any {
+		const pixelOperations = data.pixelOperations;
+		const imageOperations = data.imageOperations;
 		const imageData = pixels[0];
-		const conversionFn: IConversionFunction[] = [];
+		const conversionFn: { fn, args }[] = [];
 		let outputImageData = imageData;
 
 		if (pixelOperations) {
 			// collect per-pixel operations (function + arguments)
 			Object.keys(pixelOperations).forEach(key => {
 				const operation = pixelOperations[key];
-				let { args } = operation;
-				const fn = this.getFunctionByArgument(operation.type);
-				if (fn) {
-					if (args.type === 'Histogram') {
-						args = this.buildHistogramLut(imageData);
+				const operationFn = this.getFunctionByArgument(operation.type);
+				let operationArgs = operation.args;
+				if (operationFn) {
+					if (operation.type === 'Histogram') {
+						operationArgs = this.buildHistogramLut(imageData);
 					}
-
-					conversionFn.push({ fn, args });
+					conversionFn.push({
+						fn: operationFn.bind(this),
+						args: operationArgs
+					});
 				}
 			});
 			// run per-pixel operations
@@ -119,32 +116,60 @@ export class OpenLayersImageProcessing {
 		return outputImageData;
 	}
 
-	fillArray(size: number, item: any): any[] {
-		return new Array(size).fill(item);
+	getFunctionByArgument(arg): Function {
+		return arg ? this[`perform${arg}`] : null;
 	}
 
-	getFunctionByArgument(arg): Function {
-		return arg ? this[`perform${ arg }`] : null;
+	fillArray(size, item): any[] {
+		return new Array(size).fill(item);
 	}
 
 	// ------ General Operation End ------ //
 
 	// ------ Histogram Start ------ //
 
-	buildHistogramLut(imageData) {
+	rgb2YCbCr(rgb): { y: number, cb, cr } {
+		const y = 16 + 0.257 * rgb.r + 0.504 * rgb.g + 0.098 * rgb.b;
+		const cb = 128 - 0.148 * rgb.r - 0.291 * rgb.g + 0.439 * rgb.b;
+		const cr = 128 + 0.439 * rgb.r - 0.368 * rgb.g - 0.071 * rgb.b;
+
+		return {y, cb, cr};
+	}
+
+	yCbCr2RGB(yCbCr): any {
+		const yNorm = yCbCr.y - 16;
+		const cbNorm = yCbCr.cb - 128;
+		const crNorm = yCbCr.cr - 128;
+
+		const r = 1.164 * yNorm + 1.596 * crNorm;
+		const g = 1.164 * yNorm - 0.392 * cbNorm - 0.813 * crNorm;
+		const b = 1.164 * yNorm + 2.017 * cbNorm;
+
+		return {r, g, b};
+	}
+
+
+	buildHistogramLut(imageData): any[] {
 		const BANDS = 4, CUTEDGE = 85, MAXBIT = 256;
+
+		const colorChannels = 3;
 		const histogram = this.fillArray(MAXBIT, 0);
-		const { width, height, data } = imageData;
+		const {width, height, data} = imageData;
 		for (let i = 0; i < data.length; i += BANDS) {
 			const pixel = data.subarray(i, i + BANDS);
-			histogram[pixel[1]]++;
+
+			// increasing the histogram for the 3 color channels: red, green and blue.
+			for (let i = 0; i < colorChannels; i++) {
+				histogram[pixel[i]]++;
+			}
 		}
 		const totalPixels = width * height;
+		const pixelToCut = totalPixels / CUTEDGE;
 		let minPixel = 0, maxPixel = 0, pixelsSoFar = 0;
 		for (let i = 0; i < MAXBIT; i++) {
 			minPixel = i;
 			pixelsSoFar += histogram[i];
-			if (pixelsSoFar > totalPixels / CUTEDGE) {
+			if (pixelsSoFar > pixelToCut) {
 				break;
 			}
 		}
@@ -152,7 +177,7 @@ export class OpenLayersImageProcessing {
 		for (let i = 0; i < MAXBIT; i++) {
 			maxPixel = 255 - i;
 			pixelsSoFar += histogram[255 - i];
-			if (pixelsSoFar > totalPixels / CUTEDGE) {
+			if (pixelsSoFar > pixelToCut) {
 				break;
 			}
 		}
@@ -160,7 +185,7 @@ export class OpenLayersImageProcessing {
 		return this.fillArray(MAXBIT, 0).map((val, index) => this.normalizeColor(255 * (index - minPixel) / (maxPixel - minPixel)));
 	}
 
-	performHistogram(pixel: IPixel, histogramLut): IPixel {
+	performHistogram(pixel, histogramLut): any {
 		return {
 			r: histogramLut[pixel.r],
 			g: histogramLut[pixel.g],
@@ -184,9 +209,10 @@ export class OpenLayersImageProcessing {
 	// ------ Sharpness Start ------ //
 	// based on: Convolving images
 	// https://www.html5rocks.com/en/tutorials/canvas/imagefilters/
-	performSharpness(imageData, args) {
-		const AUTO_SHARPNESS = 50;
+	performSharpness(imageData, args): any {
+		const AUTO_SHARPNESS = 30;
 		const weights = this.getWeights(args.auto ? AUTO_SHARPNESS : args);
+
 		const side = Math.round(Math.sqrt(weights.length));
 		const halfSide = Math.floor(side / 2);
 		const pixels = imageData.data;
@@ -221,7 +247,9 @@ export class OpenLayersImageProcessing {
 			}
 		}
 
-		imageData.data.forEach((data, index) => data = destPixels[index]);
+		for (let index = 0; index < imageData.data.length; index++) {
+			imageData.data[index] = destPixels[index];
+		}
 
 		return imageData;
 	}
@@ -239,7 +267,7 @@ export class OpenLayersImageProcessing {
 	// ------ Sharpness End ------ //
 
 	// ------ Contrast start ------ //
-	performContrast(pixel, contrast) {
+	performContrast(pixel, contrast): any {
 		const factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
 		return {
 			r: factor * (pixel.r - 128) + 128,
@@ -252,7 +280,7 @@ export class OpenLayersImageProcessing {
 	// ------ Contrast End ------ //
 
 	// ------ Brightness start ------ //
-	performBrightness(pixel, brightness) {
+	performBrightness(pixel, brightness): any {
 		return {
 			r: pixel.r + brightness,
 			g: pixel.g + brightness,
@@ -266,7 +294,7 @@ export class OpenLayersImageProcessing {
 	// ------ Gamma start ------ //
 	// based on:
 	// http://www.dfstudios.co.uk/articles/programming/image-programming-algorithms/image-processing-algorithms-part-6-gamma-correction/
-	performGamma(pixel: IPixel, gamma: number): IPixel {
+	performGamma(pixel, gamma): any {
 		// const DEFAULT_VALUE = 1;
 		// gamma sent range [1-200], should be converted to [0.01-2.00], hence gamma / 100
 		const gammaCorrection = 1 / (gamma / 100);
@@ -283,9 +311,9 @@ export class OpenLayersImageProcessing {
 	// ------ Saturation start ------ //
 	// based on:
 	// https://stackoverflow.com/questions/13348129/using-native-javascript-to-desaturate-a-colour
-	performSaturation(pixel: IPixel, saturation: number): IPixel {
+	performSaturation(pixel, saturation: number): any {
 		// saturation sent range [1-100], should be converted to [0.01-1.00], hence saturation / 100
-		saturation = saturation / 100;
+		saturation /= 100;
 		const gray = pixel.r * 0.3086 + pixel.g * 0.6094 + pixel.b * 0.0820; // gray range [1-255]
 		return {
 			r: Math.round(pixel.r * saturation + gray * (1 - saturation)),
@@ -297,8 +325,8 @@ export class OpenLayersImageProcessing {
 
 	// ------ Saturation  End ------ //
 	// process a list of operation on each pixel
-	forEachRGBPixel(imageData, conversionFn: any[]) {
-		const pixel = { r: 0, g: 0, b: 0, a: 0 };
+	forEachRGBPixel(imageData, conversionFn: Array<any>): any {
+		const pixel = {r: 0, g: 0, b: 0, a: 0};
 		let convertedPixel;
 
 		for (let index = 0; index < imageData.data.length; index += 4) {
@@ -310,10 +338,10 @@ export class OpenLayersImageProcessing {
 			convertedPixel = pixel;
 			conversionFn.forEach(fnData => convertedPixel = fnData.fn(convertedPixel, fnData.args));
 
-			imageData.data[index] = convertedPixel.r;		// Red
-			imageData.data[index + 1] = convertedPixel.g;	// Green
-			imageData.data[index + 2] = convertedPixel.b;	// Blue
-			imageData.data[index + 3] = convertedPixel.a;	// Alpha
+			imageData.data[index] = convertedPixel.r;
+			imageData.data[index + 1] = convertedPixel.g;
+			imageData.data[index + 2] = convertedPixel.b;
+			imageData.data[index + 3] = convertedPixel.a;
 		}
 
 		return imageData;

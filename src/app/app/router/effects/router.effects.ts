@@ -1,29 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable } from 'rxjs';
-import { NavigateCaseTriggerAction, RouterActionTypes, SetStateAction } from '../actions/router.actions';
+import { RouterActionTypes, SetStateAction } from '../actions/router.actions';
 import { Router } from '@angular/router';
 import {
 	CasesActionTypes,
 	CasesService,
-	ICase,
-	IDilutedCase,
 	LoadCaseAction,
 	LoadDefaultCaseAction,
-	SaveCaseAsSuccessAction,
-	SelectCaseAction,
-	SelectDilutedCaseAction,
+	SelectCaseSuccessAction,
 	selectSelectedCase
 } from '@ansyn/ansyn';
-import { IRouterState, routerStateSelector } from '../reducers/router.reducer';
 import { Store } from '@ngrx/store';
-import { filter, map, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
-import { cloneDeep } from 'lodash';
+import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 
 @Injectable()
 export class RouterEffects {
 
-	@Effect({ dispatch: false })
+	/*@Effect({ dispatch: false })
 	onNavigateCase$: Observable<any> = this.actions$.pipe(
 		ofType<NavigateCaseTriggerAction>(RouterActionTypes.NAVIGATE_CASE),
 		tap(({ payload }) => {
@@ -33,6 +26,12 @@ export class RouterEffects {
 				this.router.navigate(['']);
 			}
 		})
+	);*/
+
+	@Effect({ dispatch: false })
+	onLoadCaseChangeUrl$ = this.actions$.pipe(
+		ofType(CasesActionTypes.SELECT_CASE_SUCCESS),
+		tap(() => this.router.navigate(['']))
 	);
 
 	@Effect()
@@ -43,23 +42,15 @@ export class RouterEffects {
 	);
 
 	@Effect()
-	onLoadAppByLinkId$ = this.actions$.pipe(
-		ofType<SetStateAction>(RouterActionTypes.SET_STATE),
-		filter((action: SetStateAction) => Boolean(action.payload.linkId)),
-		mergeMap((action) => this.casesService.getLink(action.payload.linkId)),
-		map((_case: IDilutedCase) => new SelectDilutedCaseAction(_case))
-	);
-
-	@Effect()
 	onLoadDefaultCase$ = this.actions$.pipe(
 		ofType<SetStateAction>(RouterActionTypes.SET_STATE),
-		filter((action: SetStateAction) => !action.payload.caseId && !action.payload.linkId),
+		filter((action: SetStateAction) => !action.payload.caseId),
 		withLatestFrom(this.store$.select(selectSelectedCase)),
-		filter(([action, selectCase]) => !selectCase || selectCase.id !== this.casesService.defaultCase.id),
+		filter(([action, selectCase]) => !selectCase),
 		map(([action, selectCase]) => new LoadDefaultCaseAction(action.payload.queryParams))
 	);
 
-	@Effect()
+	/*@Effect()
 	selectCaseUpdateRouter$: Observable<NavigateCaseTriggerAction> = this.actions$.pipe(
 		ofType(CasesActionTypes.SELECT_CASE, CasesActionTypes.SAVE_CASE_AS_SUCCESS),
 		withLatestFrom(this.store$.select(routerStateSelector)),
@@ -69,14 +60,14 @@ export class RouterEffects {
 				schema: (action.payload.schema) ? action.payload.schema : 'case',
 				id: action.payload.id
 			})
-		));
+		));*/
 
-	@Effect()
+	/*@Effect()
 	selectDefaultCaseUpdateRouter$: Observable<NavigateCaseTriggerAction> = this.actions$.pipe(
 		ofType(CasesActionTypes.SELECT_CASE),
 		filter((action: SelectCaseAction) => action.payload.id === this.casesService.defaultCase.id),
 		map(() => new NavigateCaseTriggerAction())
-	);
+	);*/
 
 	constructor(protected actions$: Actions, protected store$: Store<any>, protected router: Router,
 				protected casesService: CasesService) {

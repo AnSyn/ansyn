@@ -113,6 +113,11 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 		this.mapEffects.pinLocationModeTriggerAction$.subscribe((_pinLocationMode: boolean) => {
 			this.pinLocationMode = _pinLocationMode;
 		});
+		this.mapEffects.onForceMapsRender$.subscribe(() => {
+			const entieis = [...this.mapsEntities];
+			this.mapsEntities = [];
+			setTimeout(() => this.mapsEntities = entieis, 0)
+		})
 	}
 
 	changeActiveImagery(value) {

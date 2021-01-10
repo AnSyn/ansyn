@@ -1,4 +1,4 @@
-<div class="cases-table" *ngIf="ids$ | async as ids; else noCases" [class.rtl]="'rtl' === ('direction' | translate)">
+<div class="cases-table" *ngIf="cases.ids.length; else noCases">
 
 	<div class="cases-table-head">
 		<div class="cases-table-head-row">
@@ -7,14 +7,9 @@
 					{{'CaseName' | translate}}
 				</div>
 				<div class="cases-table-head-col">
-					{{'Auto Save' | translate}}
+					{{'Date created' | translate}}
 				</div>
-				<div class="cases-table-head-col">
-					{{'Owner' | translate}}
-				</div>
-				<div class="cases-table-head-col">
-					{{'Last Modified' | translate}}
-				</div>
+				<div class="menu-placeholder"></div>
 			</div>
 
 		</div>
@@ -22,65 +17,36 @@
 
 	<div class="cases-table-body scrolled"
 		 [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''"
-		 (ansynInfiniteScroll)="loadCases()" *ngIf="entities$ | async as entities"
-         #tbodyElement>
+		 (ansynInfiniteScroll)="onInfintyScroll.emit()"
+		 #tbodyElement>
 
 		<div class="cases-table-body-row"
-			 *ngFor="let id of ids"
+			 *ngFor="let id of cases.ids"
 			 (click)="selectCase(id)"
 			 [class.active]="(modalCaseId$ | async) === id"
-			 [class.selected]="selectedCaseId === id"
-			 (mouseenter)="onMouseEnterCaseRow(caseMenu, caseRow, tbodyElement)"
+			 [class.selected]="(openCaseId$ | async) === id"
+			 [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''"
+			 (mouseenter)="onMouseEnterCaseRow(caseRow, id)"
 			 (mouseleave)="onMouseLeaveCaseRow(caseRow)"
 			 [@leaveAnim]
-             #caseRow>
+			 #caseRow>
 
-			<hr>
+			<div class="cases-table-body-row-data"
+				 [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''"
+				 tooltip-class="bottom" [attr.tooltip-value]="cases.entities[id].name">
 
-			<div class="cases-table-body-row-data">
-				<hr>
-
-				<div [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''" class="cases-table-case-name-col">
-					{{entities[id].name}}
-				</div>
-
-				<ansyn-cases-auto-save class="cases-table-auto-save-col"
-									   *ngIf="selectedCaseId === id; else notSelected"
-									   [caseId]="id">
-				</ansyn-cases-auto-save>
-
-				<ng-template #notSelected>
-					<div class="cases-table-case-name-col">
-						{{ entities[id].autoSave ? ('AUTOSAVEON' | translate) : ('AUTOSAVEOFF' | translate)}}
-					</div>
-				</ng-template>
-
-				<div class="cases-table-body-col">
-					{{entities[id].owner}}
+				<div class="cases-table-case-name-col">
+					{{cases.entities[id].name}}
 				</div>
 
 				<div class="cases-table-body-col">
-					{{entities[id].lastModified | ansynDate}}
+					{{cases.entities[id].creationTime | ansynDate}}
 				</div>
 
 				<!--menu-->
-				<div class="case-menu-container">
-					<div class="case-menu" (click)="caseMenuClick($event, caseRow)" #caseMenu>
-						<button (click)="removeCase(id)"
-								[attr.tooltip-value]="'Remove' | translate"
-								tooltip-class="bottom">
-							<i class="icon-delete"></i>
-						</button>
-						<button (click)="shareCase(id, entities[id].name)"
-								[attr.tooltip-value]="'Share' | translate"
-								tooltip-class="bottom">
-							<i class="icon-share"></i>
-						</button>
-						<button (click)="editCase(id)"
-								[attr.tooltip-value]="'Edit' | translate"
-								tooltip-class="bottom">
-							<i class="icon-edit"></i>
-						</button>
+				<div [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''" class="case-menu-container">
+					<div class="case-menu" (click)="caseMenuClick($event, caseRow)">
+						<ng-container *ngTemplateOutlet="menu"></ng-container>
 					</div>
 				</div>
 

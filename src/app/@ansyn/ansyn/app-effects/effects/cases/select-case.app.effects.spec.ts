@@ -20,8 +20,7 @@ import {
 import { casesConfig, CasesService } from '../../../modules/menu-items/cases/services/cases.service';
 import {
 	SelectCaseAction,
-	SelectCaseSuccessAction,
-	SetAutoSave
+	SelectCaseSuccessAction
 } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { UpdateFacetsAction } from '../../../modules/filters/actions/filters.actions';
 import {
@@ -41,7 +40,7 @@ import {
 	ICaseMapsState,
 	ICaseState,
 	ICaseTimeState,
-	IOverlaysManualProcessArgs
+	IOverlaysImageProcess
 } from '../../../modules/menu-items/cases/models/case.model';
 import { IOverlay, IOverlaysHash } from '../../../modules/overlays/models/overlay.model';
 import { UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/status-bar.actions';
@@ -98,7 +97,7 @@ describe('SelectCaseAppEffects', () => {
 				layers: ICaseLayersState = {
 					activeLayersIds: []
 				},
-				overlaysManualProcessArgs: IOverlaysManualProcessArgs = {},
+				overlaysImageProcess: IOverlaysImageProcess = {},
 				facets: ICaseFacetsState = { showOnlyFavorites: true, filters: [] },
 				miscOverlays: IOverlaysHash = {},
 				overlaysTranslationData = {},
@@ -117,7 +116,7 @@ describe('SelectCaseAppEffects', () => {
 				overlaysTranslationData,
 				maps,
 				layers,
-				overlaysManualProcessArgs,
+				overlaysImageProcess,
 				facets,
 				miscOverlays,
 				overlaysScannedAreaData
@@ -126,15 +125,13 @@ describe('SelectCaseAppEffects', () => {
 			const payload: ICase = {
 				id: 'caseId',
 				name: 'caseName',
-				owner: 'ownerName',
-				lastModified: new Date(),
 				creationTime: new Date(),
 				autoSave: false,
 				state
 			};
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
-			const expectedResult = cold('--(abcdefghijklmnpqr)--', {
+			const expectedResult = cold('--(abcdefghijklmpqr)--', {
 			a: new SetMapsDataActionStore({ mapsList: maps.data }),
 			b: new SetActiveMapId(state.maps.activeMapId),
 			c: new SetLayoutAction(<any>maps.layout),
@@ -145,10 +142,9 @@ describe('SelectCaseAppEffects', () => {
 			h: new SetOverlaysTranslationDataAction(overlaysTranslationData),
 			i: new SetOverlaysScannedAreaDataAction(overlaysScannedAreaData),
 			j: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
-			k: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
+			k: new UpdateOverlaysManualProcessArgs(overlaysImageProcess),
 			l: new UpdateFacetsAction(facets),
 			m: new UpdateSelectedLayersIds([]),
-			n: new SetAutoSave(false),
 			p: new SetAnnotationMode(null),
 			q: new SetMeasureDistanceToolState(false),
 			r: new SelectCaseSuccessAction(payload)

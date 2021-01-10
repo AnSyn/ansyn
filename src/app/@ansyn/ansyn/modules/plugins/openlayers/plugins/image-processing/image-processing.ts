@@ -2,12 +2,12 @@ import RasterSource from 'ol/source/Raster';
 
 // skipOnValue is the value which the image do not require any processing (e.i. the natural/default value)
 export const IMG_PROCESS_ORDER = [
-	{ArgumentName: 'Histogram', skipOnValue: 0},
-	{ArgumentName: 'Gamma', skipOnValue: 100},
-	{ArgumentName: 'Contrast', skipOnValue: 0},
-	{ArgumentName: 'Saturation', skipOnValue: 100},
-	{ArgumentName: 'Brightness', skipOnValue: 0},
-	{ArgumentName: 'Sharpness', skipOnValue: 0, perImage: true}
+	{ ArgumentName: 'Histogram', skipOnValue: 0 },
+	{ ArgumentName: 'Gamma', skipOnValue: 100 },
+	{ ArgumentName: 'Contrast', skipOnValue: 0 },
+	{ ArgumentName: 'Saturation', skipOnValue: 100 },
+	{ ArgumentName: 'Brightness', skipOnValue: 0 },
+	{ ArgumentName: 'Sharpness', skipOnValue: 0, perImage: true }
 ];
 
 interface IProcessOperation {
@@ -117,7 +117,7 @@ export class OpenLayersImageProcessing {
 	}
 
 	getFunctionByArgument(arg): Function {
-		return arg ? this[`perform${arg}`] : null;
+		return arg ? this[`perform${ arg }`] : null;
 	}
 
 	fillArray(size, item): any[] {
@@ -133,7 +133,7 @@ export class OpenLayersImageProcessing {
 		const cb = 128 - 0.148 * rgb.r - 0.291 * rgb.g + 0.439 * rgb.b;
 		const cr = 128 + 0.439 * rgb.r - 0.368 * rgb.g - 0.071 * rgb.b;
 
-		return {y, cb, cr};
+		return { y, cb, cr };
 	}
 
 	yCbCr2RGB(yCbCr): any {
@@ -145,7 +145,7 @@ export class OpenLayersImageProcessing {
 		const g = 1.164 * yNorm - 0.392 * cbNorm - 0.813 * crNorm;
 		const b = 1.164 * yNorm + 2.017 * cbNorm;
 
-		return {r, g, b};
+		return { r, g, b };
 	}
 
 
@@ -154,7 +154,7 @@ export class OpenLayersImageProcessing {
 
 		const colorChannels = 3;
 		const histogram = this.fillArray(MAXBIT, 0);
-		const {width, height, data} = imageData;
+		const { width, height, data } = imageData;
 		for (let i = 0; i < data.length; i += BANDS) {
 			const pixel = data.subarray(i, i + BANDS);
 
@@ -326,7 +326,7 @@ export class OpenLayersImageProcessing {
 	// ------ Saturation  End ------ //
 	// process a list of operation on each pixel
 	forEachRGBPixel(imageData, conversionFn: Array<any>): any {
-		const pixel = {r: 0, g: 0, b: 0, a: 0};
+		const pixel = { r: 0, g: 0, b: 0, a: 0 };
 		let convertedPixel;
 
 		for (let index = 0; index < imageData.data.length; index += 4) {

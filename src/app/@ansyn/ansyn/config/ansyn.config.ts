@@ -8,7 +8,7 @@ import { ResultsTableComponent } from '../modules/menu-items/results/components/
 import { CasesContainerComponent } from '../modules/menu-items/cases/components/cases-container/cases-container.component';
 
 export enum MenuItemsKeys {
-	DataLayers = 'DataLayers',
+	DataLayers = 'Data Layers',
 	ResultsTable = 'Results table',
 	Cases = 'Cases'
 }

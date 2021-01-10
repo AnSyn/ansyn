@@ -6,7 +6,7 @@ import { distinctUntilChanged, tap, map, delay } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectEnableOnlyFavorites, selectShowOnlyFavorites } from '../../../../filters/reducer/filters.reducer';
 import { UpdateFacetsAction } from '../../../../filters/actions/filters.actions';
-import { SelectMenuItemFromOutsideAction } from 'src/app/@ansyn/menu/actions/menu.actions';
+import { SelectMenuItemFromOutsideAction } from '@ansyn/menu';
 
 @Component({
 	selector: 'ansyn-cases-tools',

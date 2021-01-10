@@ -34,6 +34,7 @@ export interface IAdvancedSearchParameter {
 	providers?: IProviderData[];
 	resolution?: IResolutionRange;
 	sensors?: string[];
+	enableResetProviders?: boolean;
 }
 
 export interface IStatusBarConfig {

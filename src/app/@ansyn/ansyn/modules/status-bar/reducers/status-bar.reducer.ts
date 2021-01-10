@@ -1,7 +1,6 @@
 import { StatusBarActions, StatusBarActionsTypes } from '../actions/status-bar.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { CaseGeoFilter } from '../../menu-items/cases/models/case.model';
-import { IAdvancedSearchParameter } from '../models/statusBar-config.model';
 
 export interface IGeoFilterStatus {
 	type: CaseGeoFilter;
@@ -10,7 +9,6 @@ export interface IGeoFilterStatus {
 
 export interface IStatusBarState {
 	geoFilterStatus?: IGeoFilterStatus;
-	advancedSearchParameter?: IAdvancedSearchParameter;
 	isCalenderOpen?: boolean;
 }
 
@@ -18,16 +16,6 @@ export const StatusBarInitialState: IStatusBarState = {
 	geoFilterStatus: {
 		type: CaseGeoFilter.PinPoint,
 		active: false
-	},
-	advancedSearchParameter: {
-		types: [],
-		registeration: [],
-		providers: [],
-		resolution: {
-			lowValue: 0,
-			highValue: 0
-		},
-		sensors: []
 	},
 	isCalenderOpen: false
 };
@@ -45,14 +33,6 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 				return state;
 			}
 		}
-		case StatusBarActionsTypes.UPDATE_ADVANCED_SEARCH_PARAM: {
-			const { payload } = action;
-			if (payload) {
-				return {...state, advancedSearchParameter: payload };
-			} else {
-				return state;
-			}
-		}
 		case StatusBarActionsTypes.UPDATE_CALENDER_STATUS: {
 			const { payload } = action;
 			return { ...state, isCalenderOpen: payload}
@@ -66,6 +46,5 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 
 export const selectGeoFilterStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.geoFilterStatus : StatusBarInitialState.geoFilterStatus);
 export const selectCalenderStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.isCalenderOpen : StatusBarInitialState.isCalenderOpen);
-export const selectAdvancedSearchParameters = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar && statusBar.advancedSearchParameter);
 export const selectGeoFilterActive = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.active);
 export const selectGeoFilterType = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.type);

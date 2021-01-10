@@ -6,13 +6,12 @@ import { Options } from '@angular-slider/ngx-slider'
 import {  GeoRegisterationOptions, IResolutionRange } from '../../../overlays/models/overlay.model';
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import { SearchPanelComponent } from '../search-panel/search-panel.component';
-import { UpdateAdvancedSearchParamAction } from '../../actions/status-bar.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
 import { IAdvancedSearchParameter, IProviderData } from '../../models/statusBar-config.model';
-import { selectAdvancedSearchParameters } from '../../../status-bar/reducers/status-bar.reducer';
 import { casesConfig } from '../../../menu-items/cases/services/cases.service';
 import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
+import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overlays.reducer';
 
 @Component({
 	selector: 'ansyn-advanced-search',
@@ -41,6 +40,8 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 	selectedRegistration: string[] = [];
 	selectedSensors: string[] = [];
 
+	enableResetProviders: boolean;
+
 	@AutoSubscription
 	onDataInputFilterChange$ = this.store.pipe(
 	select(selectAdvancedSearchParameters),
@@ -52,6 +53,7 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 		this.sliderOptions.ceil = searchOptions.resolution.highValue;
 		this.selectedSensors = searchOptions.sensors;
 		this.selectedProvidersNames = this.selectedProviders.map(provider => provider.name);
+		this.enableResetProviders = searchOptions.enableResetProviders;
 	}));
 
 	constructor(protected store: Store<any>,
@@ -74,7 +76,6 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 	}
 
 	ngOnDestroy(): void {
-		this.store.dispatch(new UpdateAdvancedSearchParamAction(this.getCurrentAdvancedSearchParameters()))
 	}
 
 	getCurrentAdvancedSearchParameters(): IAdvancedSearchParameter {
@@ -118,7 +119,6 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 	}
 
 	search(): void {
-		this.store.dispatch(new UpdateAdvancedSearchParamAction(this.getCurrentAdvancedSearchParameters()));
 		this.store.dispatch(new SetOverlaysCriteriaAction({advancedSearchParameters: this.getCurrentAdvancedSearchParameters()}));
 		this._parent.close();
 	}
@@ -207,9 +207,9 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 
 		if (Boolean(selectedProviders.includes(changedProvider))) {
 			this.selectedProvidersNames = selectedProviders;
-			const temp = this.selectedTypes.slice();
-			temp.push(...typesToActivate.filter(type => !this.selectedTypes.includes(type.text)).map(type => type.text))
-			this.selectedTypes = temp;
+			const tempSelectedTypes = this.selectedTypes.slice();
+			tempSelectedTypes.push(...typesToActivate.filter(type => !this.selectedTypes.includes(type.text)).map(type => type.text))
+			this.selectedTypes = tempSelectedTypes;
 		} else {
 			typesToActivate.filter(type => this.selectedTypes.includes(type.text)).map(type => {
 				this.selectedTypes = this.selectedTypes.filter(selected => selected !== type.text);
@@ -225,8 +225,10 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 	}
 	
 	resetDataInputFilters(): void {
-		this.selectedProvidersNames = [];
-		this.selectedProviders = [];
+		if (this.enableResetProviders) {
+			this.selectedProvidersNames = [];
+			this.selectedProviders = [];
+		}
 		this.selectedTypes = [];
 		this.selectedSensors = [];
 	}

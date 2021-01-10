@@ -1,3 +1,5 @@
+export { IEditAnnotationMode, ILabelTranslateMode } from './plugins/annotations/annotations.visualizer';
+
 export { annotationsClassNameForExport } from './plugins/annotations/annotations.visualizer';
 
 export { IMAGE_PROCESS_ATTRIBUTE } from './mapSourceProviders/open-layers.map-source-provider';

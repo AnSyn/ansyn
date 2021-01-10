@@ -5,13 +5,40 @@
 
 :host {
 	&:extend(.status-bar-panel);
+	flex-direction: column !important;
+	display: block;
+	min-width: 600px;
+	
+	.close {
+		margin-top: 1%;
+		margin-right: 20px;
+        cursor: pointer;
+        height: fit-content;
+	}
+	
+	.advanced-search {
+		cursor: pointer;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		min-width: 95px;
+		
+		.advanced-search-text {
+			width: 70px;
+		}
+	}
+
+	.simple-search {
+		display: flex;
+	}
 
 	.box {
-		margin: 0 3px;
+		margin: 0 15px;
 
 		.button {
 			&:extend(.status-bar-button-round);
 			height: 35px;
+			width: 165px;
 
 			&.active {
 				&:extend(.status-bar-button-active);
@@ -69,21 +96,17 @@
 		&#dataInputsPreSearch {
 			width: 110px;
 		}
+		
+		.grid-item {
+            text-align: center;
+            padding: 20px;
+            font-size: 30px;
+          }
+		
+		
 	}
-
-	input.time-picker-input {
-		position: absolute;
-		top: 0;
-		padding-left: 28px;
-		width: 100%;
-		height: 100%;
-		border: none;
-		background-color: transparent;
-		color: white;
-		opacity: 0;
-		pointer-events: none;
-		font-family: @app-font;
-		font-size: 13px;
+	.expander {
+		align-self: flex-start;
 	}
 
 	&.rtl {

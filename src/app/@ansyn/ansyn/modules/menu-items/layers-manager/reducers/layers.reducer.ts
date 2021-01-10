@@ -1,8 +1,7 @@
 import { LayersActions, LayersActionTypes } from '../actions/layers.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { uniq } from 'lodash';
-import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
-import { Dictionary, EntitySelectors } from '@ngrx/entity/src/models';
+import { createEntityAdapter, EntityAdapter, EntityState, Dictionary } from '@ngrx/entity';
 import { ILayer, LayerType } from '../models/layers.model';
 import { ILayerModal, SelectedModalEnum } from './layers-modal';
 
@@ -102,7 +101,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 
 }
 
-export const { selectAll, selectEntities }: EntitySelectors<ILayer, ILayerState> = layersAdapter.getSelectors();
+export const { selectAll, selectEntities } = layersAdapter.getSelectors();
 
 export const layersStateOrInitial: MemoizedSelector<any, any> = createSelector(layersStateSelector, (layersState: ILayerState) => layersState || initialLayersState);
 export const selectLayers: MemoizedSelector<any, any> = createSelector(layersStateOrInitial, selectAll);

@@ -2,7 +2,10 @@
   "$schema": "../../../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../../../dist/ansyn/menu",
   "whitelistedNonPeerDependencies": [
-    "auto-subscriptions"
+    "auto-subscriptions",
+    "tslib",
+    "@ngx-translate/core",
+    "font-awesome"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

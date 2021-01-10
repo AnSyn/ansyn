@@ -1,6 +1,6 @@
 import { Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { noop } from 'rxjs/index';
+import { noop } from 'rxjs';
 import { UUID } from 'angular2-uuid';
 
 @Component({

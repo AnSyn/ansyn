@@ -7,7 +7,7 @@ import {
 	DilutedAlgorithmsTaskState,
 	IAlgorithmsConfig
 } from '../models/tasks.model';
-import { combineLatest, Observable, of } from 'rxjs/index';
+import { combineLatest, Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { IOverlayByIdMetaData, OverlaysService } from '../../../overlays/services/overlays.service';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';

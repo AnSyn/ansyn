@@ -16,15 +16,13 @@ import {
 	casesStateSelector,
 	ICaseModal,
 	ICasesState,
-	selectModalState,
-	selectOpenCaseId,
+	selectModalState
 } from '../../reducers/cases.reducer';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, pluck, tap, filter } from 'rxjs/operators';
 import { LoadCaseAction } from '../../actions/cases.actions';
 import { ICaseTableData } from '../../models/cases-config';
-import { ICase } from '../../models/case.model';
 
 const animations: any[] = [
 	trigger('leaveAnim', [

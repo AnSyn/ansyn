@@ -11,7 +11,6 @@ import { SortPipe } from './pipes/sort.pipe';
 import { FiltersEffects } from './effects/filters.effects';
 import { StoreModule } from '@ngrx/store';
 import { filtersFeatureKey, FiltersReducer } from './reducer/filters.reducer';
-import { SliderModule } from 'primeng/slider';
 import { FormsModule } from '@angular/forms';
 import { SliderFilterContainerComponent } from './components/slider-filter-container/slider-filter-container.component';
 import { BooleanFilterContainerComponent } from './components/boolean-filter-container/boolean-filter-container.component';
@@ -20,6 +19,7 @@ import { FilterCounterComponent } from './components/filter-counter/filter-count
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { CoreModule } from '../core/core.module';
 import { ArrayFilterContainerComponent } from './components/array-filter-container/array-filter-container.component';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 // @dynamic
 @NgModule({
@@ -27,10 +27,10 @@ import { ArrayFilterContainerComponent } from './components/array-filter-contain
 		CommonModule,
 		CoreModule,
 		StoreModule.forFeature(filtersFeatureKey, FiltersReducer),
-		SliderModule,
 		FormsModule,
 		MapFacadeModule,
-		EffectsModule.forFeature([FiltersEffects])
+		EffectsModule.forFeature([FiltersEffects]),
+		NgxSliderModule
 	],
 	declarations: [
 		FiltersCollectionComponent,

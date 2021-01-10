@@ -16,6 +16,7 @@ import { AreaToCredentialsService } from './services/credentials/area-to-credent
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CacheInterceptorsService } from './services/http-request-cache/cache-interceptors.service';
 import { CacheRequestService } from './services/http-request-cache/cache-request.service';
+import { CredentialsService } from './services/credentials/credentials.service';
 
 @NgModule({
 	imports: [
@@ -30,6 +31,7 @@ import { CacheRequestService } from './services/http-request-cache/cache-request
 		ErrorHandlerService,
 		StorageService,
 		AreaToCredentialsService,
+		CredentialsService,
 		CacheRequestService,
 		{ provide: HTTP_INTERCEPTORS, useClass: CacheInterceptorsService, multi: true}
 	],

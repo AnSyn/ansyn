@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { EMPTY, forkJoin, Observable, of } from 'rxjs';
+import { EMPTY, forkJoin, Observable, of, from } from 'rxjs';
 import {
 	AddCasesAction,
 	CasesActionTypes,
@@ -21,14 +21,13 @@ import {
 import { casesConfig, CasesService } from '../services/cases.service';
 import { casesStateSelector, ICasesState, selectMyCasesTotal, selectSharedCaseTotal } from '../reducers/cases.reducer';
 import { CasesType, ICasesConfig } from '../models/cases-config';
-import { catchError, concatMap, filter, map, mergeMap, share, switchMap, withLatestFrom, tap } from 'rxjs/operators';
+import { catchError, concatMap, filter, map, mergeMap, share, switchMap, withLatestFrom } from 'rxjs/operators';
 import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { DataLayersService } from '../../layers-manager/services/data-layers.service';
 import { copyFromContent, SetToastMessageAction } from '@ansyn/map-facade';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { toastMessages } from '../../../core/models/toast-messages';
-import { fromPromise } from 'rxjs/internal-compatibility';
 import { cloneDeep } from '../../../core/utils/rxjs/operators/cloneDeep';
 import { RemoveCaseLayersFromBackendAction } from '../../layers-manager/actions/layers.actions';
 
@@ -101,7 +100,7 @@ export class CasesEffects {
 		filter(action => !Boolean(action.payload.shareCaseAsQueryParams)),
 		map((action) => {
 			const shareLink = this.casesService.generateLinkById(action.payload.caseId);
-			return fromPromise(copyFromContent(shareLink));
+			return from(copyFromContent(shareLink));
 		}),
 		map(() => new SetToastMessageAction({ toastText: toastMessages.showLinkCopyToast }))
 	);

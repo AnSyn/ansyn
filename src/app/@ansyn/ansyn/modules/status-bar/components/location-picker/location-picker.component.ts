@@ -4,6 +4,7 @@ import { CaseGeoFilter } from '../../../menu-items/cases/models/case.model';
 import { Store } from '@ngrx/store';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
+import { SearchPanelComponent } from '../search-panel/search-panel.component';
 import { ClearActiveInteractionsAction } from '../../../status-bar/components/tools/actions/tools.actions';
 
 @Component({
@@ -16,11 +17,13 @@ export class LocationPickerComponent implements OnInit, OnDestroy {
 	@Input() geoFilter: CaseGeoFilter;
 
 	constructor(protected store$: Store<IStatusBarState>,
-				@Inject(GEO_FILTERS) public geoFilters: CaseGeoFilter[]) {
+				@Inject(GEO_FILTERS) public geoFilters: CaseGeoFilter[],
+				protected _parent: SearchPanelComponent) {
 	}
 
 	change(type) {
 		this.store$.dispatch(new UpdateGeoFilterStatus({ type }));
+		this._parent.close();
 	}
 
 	ngOnInit() {

@@ -1,6 +1,7 @@
 import { CaseGeoFilter, CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
 import { LineString, MultiPolygon, Point } from 'geojson';
 import { EPSG_3857 } from '@ansyn/imagery';
+import { IAdvancedSearchParameter, IProviderData } from '../../status-bar/models/statusBar-config.model';
 
 export interface IOverlayError {
 	message: string,
@@ -31,6 +32,11 @@ export enum GeoRegisteration {
 	geoRegistered = 'geoRegistered',
 	notGeoRegistered = 'notGeoRegistered',
 	originRegistration = 'originRegistration'
+}
+
+export enum GeoRegisterationOptions {
+	GeoRegistered = 'Geo Registered',
+	NotGeoRegistered = 'Not Geo Registered',
 }
 
 export enum PhotoAngle {
@@ -118,8 +124,13 @@ export interface IOverlaysCriteria {
 	time?: ICaseTimeState;
 	region?: CaseRegionState;
 	dataInputFilters?: ICaseDataInputFiltersState;
+	advancedSearchParameters?: IAdvancedSearchParameter;
 }
 
+export interface IResolutionRange {
+	lowValue: number;
+	highValue: number;
+}
 export interface IOverlaysCriteriaOptions {
 	noInitialSearch?: boolean;
 }

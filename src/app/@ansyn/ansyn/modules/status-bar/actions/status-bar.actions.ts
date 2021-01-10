@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { IGeoFilterStatus, IStatusBarState } from '../reducers/status-bar.reducer';
+import { IGeoFilterStatus } from '../reducers/status-bar.reducer';
 import { ILogMessage } from '../../core/models/logger.model';
 
 export const StatusBarActionsTypes = {

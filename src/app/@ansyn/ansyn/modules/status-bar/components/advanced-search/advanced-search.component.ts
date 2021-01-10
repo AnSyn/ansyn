@@ -207,9 +207,8 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 
 		if (Boolean(selectedProviders.includes(changedProvider))) {
 			this.selectedProvidersNames = selectedProviders;
-			const tempSelectedTypes = this.selectedTypes.slice();
-			tempSelectedTypes.push(...typesToActivate.filter(type => !this.selectedTypes.includes(type.text)).map(type => type.text))
-			this.selectedTypes = tempSelectedTypes;
+			const selectedTypesToActivate = [...typesToActivate.filter(type => !this.selectedTypes.includes(type.text)).map(type => type.text)];
+			this.selectedTypes = this.selectedTypes.concat(selectedTypesToActivate);
 		} else {
 			typesToActivate.filter(type => this.selectedTypes.includes(type.text)).map(type => {
 				this.selectedTypes = this.selectedTypes.filter(selected => selected !== type.text);

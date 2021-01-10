@@ -9,7 +9,7 @@ import {
 	selectIsMinimalistViewMode,
 	selectFooterCollapse
 } from '@ansyn/map-facade';
-import { selectIsPinned, selectMenuCollapse, SelectMenuItemFromOutsideAction } from '@ansyn/menu';
+import { selectIsPinned, selectMenuCollapse, SelectMenuItemFromOutsideAction, selectSelectedMenuItem } from '@ansyn/menu';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
 import { LoadDefaultCaseAction } from '../modules/menu-items/cases/actions/cases.actions';
@@ -22,7 +22,6 @@ import { toolsFlags } from '../modules/status-bar/components/tools/models/tools.
 import { TranslateService } from '@ngx-translate/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectDropsDescending } from '../modules/overlays/reducers/overlays.reducer';
-import { selectSelectedMenuItem } from '../../menu/reducers/menu.reducer';
 
 @Component({
 	selector: 'ansyn-app',

@@ -7,7 +7,7 @@ export { MenuConfig } from './models/menuConfig';
 export { getMenuSessionData, setMenuSessionData } from './helpers/menu-session.helper';
 export { selectIsPinned } from './reducers/menu.reducer';
 export { MenuModule } from './menu.module';
-export { menuFeatureKey, MenuReducer, selectMenuCollapse } from './reducers/menu.reducer';
+export { menuFeatureKey, MenuReducer, selectMenuCollapse, selectSelectedMenuItem } from './reducers/menu.reducer';
 export {
 	ContainerChangedTriggerAction,
 	ToggleMenuCollapse,

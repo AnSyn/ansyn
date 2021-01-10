@@ -3,14 +3,14 @@ import { select, Store } from '@ngrx/store';
 import { flattenDeep } from 'lodash';
 import { IMultipleOverlaysSourceConfig, IOverlaysSourceProvider, MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
 import { Options } from '@angular-slider/ngx-slider'
-import { GeoRegisteration , IResolutionRange } from '../../../overlays/models/overlay.model';
+import {  GeoRegisterationOptions, IResolutionRange } from '../../../overlays/models/overlay.model';
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import { SearchPanelComponent } from '../search-panel/search-panel.component';
 import { UpdateAdvancedSearchParamAction } from '../../actions/status-bar.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
 import { IAdvancedSearchParameter, IProviderData } from '../../models/statusBar-config.model';
-import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overlays.reducer';
+import { selectAdvancedSearchParameters } from '../../../status-bar/reducers/status-bar.reducer';
 import { casesConfig } from '../../../menu-items/cases/services/cases.service';
 import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 
@@ -31,7 +31,7 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 	};
 	providersNamesList: string[];
 	sensorTypes: string[];
-	isGeoRegistered: string[] = Object.values(GeoRegisteration);
+	isGeoRegistered: string[] = Object.values(GeoRegisterationOptions);
 	sensorsList: string[];
 
 	selectedProvidersNames: string[] = [];
@@ -207,7 +207,9 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 
 		if (Boolean(selectedProviders.includes(changedProvider))) {
 			this.selectedProvidersNames = selectedProviders;
-			this.selectedTypes.push(...typesToActivate.filter(type => !this.selectedTypes.includes(type.text)).map(type => type.text));
+			const temp = this.selectedTypes.slice();
+			temp.push(...typesToActivate.filter(type => !this.selectedTypes.includes(type.text)).map(type => type.text))
+			this.selectedTypes = temp;
 		} else {
 			typesToActivate.filter(type => this.selectedTypes.includes(type.text)).map(type => {
 				this.selectedTypes = this.selectedTypes.filter(selected => selected !== type.text);
@@ -219,6 +221,7 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 		this.selectedProvidersNames = this.providersNamesList;
 		this.updateSelectedProvidersByProviderNames();
 		this.selectedTypes = this.sensorTypes;
+		this.selectedSensors = this.sensorsList;
 	}
 	
 	resetDataInputFilters(): void {

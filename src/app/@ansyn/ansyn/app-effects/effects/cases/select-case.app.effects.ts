@@ -29,7 +29,7 @@ import { CaseGeoFilter, ICase, ICaseMapState } from '../../../modules/menu-items
 import { IOverlay } from '../../../modules/overlays/models/overlay.model';
 import { mapValues } from 'lodash';
 import { ICasesConfig } from '../../../modules/menu-items/cases/models/cases-config';
-import { UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/status-bar.actions';
+import { UpdateAdvancedSearchParamAction, UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/status-bar.actions';
 import { Feature, Point, Polygon } from 'geojson';
 import { feature } from '@turf/turf';
 
@@ -103,6 +103,7 @@ export class SelectCaseAppEffects {
 			new UpdateSelectedLayersIds(activeLayersIds),
 			new SetAnnotationMode(null),
 			new SetMeasureDistanceToolState(false),
+			new UpdateAdvancedSearchParamAction(advancedSearchParameters),
 			new SelectCaseSuccessAction(payload)
 		];
 

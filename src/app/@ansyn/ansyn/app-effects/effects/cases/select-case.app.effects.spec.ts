@@ -43,7 +43,7 @@ import {
 	IOverlaysImageProcess
 } from '../../../modules/menu-items/cases/models/case.model';
 import { IOverlay, IOverlaysHash } from '../../../modules/overlays/models/overlay.model';
-import { UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/status-bar.actions';
+import { UpdateAdvancedSearchParamAction, UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/status-bar.actions';
 import { IAdvancedSearchParameter } from '../../../modules/status-bar/models/statusBar-config.model';
 
 describe('SelectCaseAppEffects', () => {
@@ -139,7 +139,7 @@ describe('SelectCaseAppEffects', () => {
 			};
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
-			const expectedResult = cold('--(abcdefghijklmpqr)--', {
+			const expectedResult = cold('--(abcdefghijklmpqrs)--', {
 			a: new SetMapsDataActionStore({ mapsList: maps.data }),
 			b: new SetActiveMapId(state.maps.activeMapId),
 			c: new SetLayoutAction(<any>maps.layout),
@@ -155,7 +155,8 @@ describe('SelectCaseAppEffects', () => {
 			m: new UpdateSelectedLayersIds([]),
 			p: new SetAnnotationMode(null),
 			q: new SetMeasureDistanceToolState(false),
-			r: new SelectCaseSuccessAction(payload)
+			r: new UpdateAdvancedSearchParamAction(advancedSearchParameters),
+			s: new SelectCaseSuccessAction(payload)
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

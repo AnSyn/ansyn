@@ -29,7 +29,6 @@ import { selectProviders } from '../reducers/overlays.reducer';
 })
 export class MultipleOverlaysSourceProvider {
 	
-	providers: IProviderData[] = [];
 	selectedProviders: IProviderData[] = [];
 
 	onDataInputFilterChange$ = this.store.pipe(
@@ -76,21 +75,17 @@ export class MultipleOverlaysSourceProvider {
 		return !inActive;
 	}
 
-	private prepareAllActiveProvidersArray() {
+	private activeProviders(providersFromState: IProviderData[]) {
 		const rawProviders = Object.values(this.overlaysSources);
-		this.providers = rawProviders.map(provider => this.mapProviderConfig(provider)).filter(this.filterOnSelectedProviders).map(([provider, config]) => {
+		const providers = rawProviders.map(provider => this.mapProviderConfig(provider)).filter(this.filterOnSelectedProviders).map(([provider, config]) => {
 				return {
 					name: provider.sourceType,
 					class: provider
 				};
 		});
-	}
-
-	private activeProviders(providersFromState: IProviderData[]) {
-		this.prepareAllActiveProvidersArray();
 
 		this.selectedProviders = providersFromState.map(providerFromState => {
-			return this.providers.find(provider => providerFromState.name === provider.name);
+			return providers.find(provider => providerFromState.name === provider.name);
 		});
 	}
 

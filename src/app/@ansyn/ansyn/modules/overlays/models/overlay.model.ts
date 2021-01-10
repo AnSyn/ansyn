@@ -34,6 +34,11 @@ export enum GeoRegisteration {
 	originRegistration = 'originRegistration'
 }
 
+export enum GeoRegisterationOptions {
+	GeoRegistered = 'Geo Registered',
+	NotGeoRegistered = 'Not Geo Registered',
+}
+
 export enum PhotoAngle {
 	diagonal = 'diagonal',
 	vertical = 'vertical'

@@ -1,3 +1,18 @@
+.icon-credentials1:before {
+	content: "\e916";
+}
+.icon-pointer-up:before {
+	content: "\e912";
+}
+.icon-eye-blocked:before {
+	content: "\e913";
+}
+.icon-eye1:before {
+	content: "\e914";
+}
+.icon-help:before {
+	content: "\e915";
+}
 .icon-save:before {
 	content: "\e911";
 }
@@ -68,7 +83,7 @@
 	content: "\e810";
 }
 .icon-favorite-empty:before {
-	content: "\e811";
+	content: "\e814";
 }
 .icon-frame-mode:before {
 	content: "\e812";
@@ -90,9 +105,6 @@
 }
 .icon-main-cases:before {
 	content: "\e819";
-}
-.icon-main-data-layers:before {
-	content: "\e81a";
 }
 .icon-main-filters:before {
 	content: "\e81b";

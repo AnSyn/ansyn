@@ -30,7 +30,7 @@
 		bottom: 10px;
 		z-index: @z-index-results-table-button;
 		font-size: 0.9rem;
-		height: 12%;
+		height: @timeline-area-height - 20px;
 		width: 8%;
 		display: flex;
 		flex-direction: column;
@@ -91,7 +91,7 @@
 			position: absolute;
 			top: 0;
 			left: @menu-width;
-			width: calc(100% - @menu-width);
+			width: 100%;
 			height: @status-bar-height;
 			z-index: @z-index-status-bar-navigation-area;
 
@@ -107,13 +107,17 @@
 
 		div.layer {
 			width: 100%;
-			height: calc(100% - @status-bar-height);
+			height: calc(100% - @status-bar-height - @timeline-area-height);
 			top: @status-bar-height;
 			color: white;
 			display: flex;
 			flex-direction: column;
 			overflow: hidden;
 			position: relative;
+
+			&.isCollapse {
+				height: calc(100% - @status-bar-height);
+			}
 
 			.maps-container {
 				position: relative;
@@ -126,6 +130,13 @@
 			}
 		}
 
+		div.footer {
+			position: absolute;
+			bottom: 0;
+			width: 100%;
+			z-index: @z-index-footer;
+		}
+
 		&.animations {
 
 			div.menu {
@@ -133,6 +144,12 @@
 				transform: transitionX(0);
 				position: relative;
 				height: 100%;
+
+				&.isCollapse {
+					/deep/div.menu-wrapper > div.container {
+						height: calc(100% - @status-bar-height);
+					}
+				}
 
 				.ansynToolsAlone {
 					background: @background-color-3;
@@ -193,7 +210,6 @@
 
 			div.status {
 				left: unset;
-				right: @menu-width;
 
 				&.expand {
 					left: unset;

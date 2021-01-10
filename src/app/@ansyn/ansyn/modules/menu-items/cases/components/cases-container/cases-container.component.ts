@@ -22,8 +22,6 @@ import { selectFooterCollapse } from '@ansyn/map-facade';
 export class CasesContainerComponent implements OnInit, OnDestroy {
 	@HostBinding('class.rtl')
 	isRTL = this.translateService.instant('direction') === 'rtl';
-	@HostBinding('class.footerCollapse')
-	isCollapse = false;
 
 	myCasesData: ICaseTableData;
 	sharedCasesObj: ICaseTableData;
@@ -51,11 +49,6 @@ export class CasesContainerComponent implements OnInit, OnDestroy {
 				ids
 			}
 		})
-	);
-
-	@AutoSubscription
-	isFooterCollapse$ = this.store$.select(selectFooterCollapse).pipe(
-		tap(collapse => this.isCollapse = collapse)
 	);
 
 	constructor(protected store$: Store<ICasesState>, protected translateService: TranslateService) {

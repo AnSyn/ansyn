@@ -4,7 +4,7 @@ import { ErrorHandlerService } from './error-handler.service';
 import { LoggerService } from './logger.service';
 import { SetToastMessageAction } from '@ansyn/map-facade';
 import { catchError } from 'rxjs/operators';
-import { Observable, of } from 'rxjs/index';
+import { Observable, of } from 'rxjs';
 import { CoreConfig } from '../models/core.config';
 
 describe('ErrorHandlerService', () => {

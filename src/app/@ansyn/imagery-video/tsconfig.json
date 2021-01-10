@@ -5,9 +5,6 @@
     "paths": {
       "@ansyn/imagery": [
         "src/app/@ansyn/imagery/public_api"
-      ],
-      "@ansyn/map-facade": [
-        "src/app/@ansyn/map-facade/public_api"
       ]
     },
     "target": "es5",

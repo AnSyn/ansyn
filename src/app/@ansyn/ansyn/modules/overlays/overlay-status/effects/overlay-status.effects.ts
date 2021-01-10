@@ -15,13 +15,12 @@ import {
 	selectMapsList,
 	SetToastMessageAction,
 	UpdateMapAction,
-	SetLayoutSuccessAction, selectActiveMapId, IMapState, SetActiveMapId
+	SetLayoutSuccessAction, selectActiveMapId
 } from '@ansyn/map-facade';
 import { AnnotationMode, DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { EMPTY, Observable } from 'rxjs';
-import { fromPromise } from 'rxjs/internal-compatibility';
+import { EMPTY, Observable, from } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, withLatestFrom, pluck, tap } from 'rxjs/operators';
 import {
 	BackToWorldFailed,
@@ -57,7 +56,7 @@ export class OverlayStatusEffects {
 				const position = mapData.position;
 				const disabledMap = communicator.activeMapName === DisabledOpenLayersMapName || communicator.activeMapName === ImageryVideoMapType;
 
-				return fromPromise<any>(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
+				return from<any>(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
 					.pipe(
 						map(() => new BackToWorldSuccess(payload)),
 						catchError((err) => {

@@ -11,7 +11,6 @@ import { tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { CasesType, ICaseTableData } from '../../models/cases-config';
 import { TranslateService } from '@ngx-translate/core';
-import { selectFooterCollapse } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-cases-container',

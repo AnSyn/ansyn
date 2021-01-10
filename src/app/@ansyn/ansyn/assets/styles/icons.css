@@ -1,39 +1,3 @@
-.icon-credentials1:before {
-	content: "\e916";
-}
-.icon-pointer-up:before {
-	content: "\e912";
-}
-.icon-eye-blocked:before {
-	content: "\e913";
-}
-.icon-eye1:before {
-	content: "\e914";
-}
-.icon-help:before {
-	content: "\e915";
-}
-.icon-save:before {
-	content: "\e911";
-}
-.icon-undo:before {
-	content: "\e903";
-}
-.icon-bookmark-full:before {
-	content: "\e910";
-}
-.icon-screen-choice:before {
-	content: "\e902";
-}
-.icon-bookmarks:before {
-	content: "\e901";
-}
-.icon-bookmark-empty:before {
-	content: "\e900";
-}
-.icon-search-button:before {
-	content: "\e904";
-}
 .icon-layer-add:before {
 	content: "\e800";
 }
@@ -82,14 +46,14 @@
 .icon-favorite-full:before {
 	content: "\e810";
 }
-.icon-favorite-empty:before {
-	content: "\e814";
-}
 .icon-frame-mode:before {
 	content: "\e812";
 }
 .icon-layer-import:before {
 	content: "\e813";
+}
+.icon-favorite-empty:before {
+	content: "\e814";
 }
 .icon-layers-hide:before {
 	content: "\e815";
@@ -145,12 +109,6 @@
 .icon-up:before {
 	content: "\e828";
 }
-.icon-down:before {
-	content: "\e82e";
-}
-.icon-next:before {
-	content: "\e830";
-}
 .icon-prev:before {
 	content: "\e829";
 }
@@ -166,8 +124,14 @@
 .icon-status-bar-imagery-count:before {
 	content: "\e82d";
 }
+.icon-down:before {
+	content: "\e82e";
+}
 .icon-area-big:before {
 	content: "\e82f";
+}
+.icon-next:before {
+	content: "\e830";
 }
 .icon-temporary-link:before {
 	content: "\e831";
@@ -262,6 +226,21 @@
 .icon-more:before {
 	content: "\e855";
 }
+.icon-bookmark-empty:before {
+	content: "\e900";
+}
+.icon-bookmarks:before {
+	content: "\e901";
+}
+.icon-screen-choice:before {
+	content: "\e902";
+}
+.icon-undo:before {
+	content: "\e903";
+}
+.icon-search-button:before {
+	content: "\e904";
+}
 .icon-input-filter:before {
 	content: "\e905";
 }
@@ -294,4 +273,25 @@
 }
 .icon-drone:before {
 	content: "\e90f";
+}
+.icon-bookmark-full:before {
+	content: "\e910";
+}
+.icon-save:before {
+	content: "\e911";
+}
+.icon-pointer-up:before {
+	content: "\e912";
+}
+.icon-eye-blocked:before {
+	content: "\e913";
+}
+.icon-eye1:before {
+	content: "\e914";
+}
+.icon-help:before {
+	content: "\e915";
+}
+.icon-credentials1:before {
+	content: "\e916";
 }

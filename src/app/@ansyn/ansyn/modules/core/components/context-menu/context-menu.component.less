@@ -53,7 +53,6 @@
 				}
 
 				.pointer {
-					font-size: 40px;
 					font-weight: bold;
 				}
 
@@ -72,10 +71,6 @@
 					transition-timing-function: cubic-bezier(0.935, 0, 0.34, 1.33);
 					background-color: @context-menu-color;
 					color: @context-menu-contrast;
-
-					i {
-						font-size: 34px;
-					}
 
 					&:hover:not(:disabled) {
 						opacity: 0.8;
@@ -128,6 +123,9 @@
 		position: relative;
 		transition: visibility 200ms;
 		visibility: hidden;
+		i {
+			font-size: 16px;
+		}
 
 		button.menu-open-button {
 			border-radius: 100%;

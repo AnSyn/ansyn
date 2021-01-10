@@ -35,7 +35,7 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 		{
 			name: 'Data Layers',
 			component: LayersManagerComponent,
-			iconClass: 'icon-main-data-layers'
+			iconClass: 'icon-layers-show'
 		},
 		{
 			name: 'Algorithms',

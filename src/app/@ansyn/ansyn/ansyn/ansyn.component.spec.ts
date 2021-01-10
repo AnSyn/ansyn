@@ -97,7 +97,7 @@ describe('AnsynComponent', () => {
 			[mapStateSelector, mapState],
 			[selectSelectedCase, { name: 'Case name' }],
 			[selectIsPinned, true],
-		    [selectFooterCollapse, false]
+			[selectFooterCollapse, false]
 		]);
 		spyOn(store, 'select').and.callFake(type => of(mockStore.get(type)));
 

@@ -28,32 +28,33 @@ import {
 	selectBadges,
 	selectIsPinned,
 	selectMenuCollapse,
-	selectSelectedMenuItem
+	selectSelectedMenuItem,
+	selectSelectedOutsideMenuItem
 } from '../reducers/menu.reducer';
 import { Store } from '@ngrx/store';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
-import { IMenuItem } from '../models/menu-item.model';
+import { IMenuItem, IOutsideMenuItem } from '../models/menu-item.model';
 import { MenuConfig } from '../models/menuConfig';
 import { IMenuConfig } from '../models/menu-config.model';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { distinctUntilChanged, filter, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { MENU_ITEMS } from '../helpers/menu-item-token';
 import { TranslateService } from '@ngx-translate/core';
 
 const animations: any[] = [
 	trigger(
 		'expand', [
-			state('off_ltr', style({
-				transform: 'translateX(-100%)'
+			state('bottom', style({
+				transform: 'translateY(100%)'
 			})),
-			state('off_rtl', style({
-				transform: 'translateX(100%)'
+			state('top', style({
+				transform: 'translateY(-100%)'
 			})),
 			state('on', style({
-				transform: 'translateX(0)'
+				transform: 'translateY(0)'
 			})),
-			transition('off_ltr <=> on, off_rtl <=> on', animate('0.3s ease-in-out'))
+			transition('bottom <=> on, top <=> on', animate('0.3s ease-in-out'))
 		]
 	)
 ];
@@ -87,6 +88,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	expand: boolean;
 	onAnimation: boolean;
 	isBuildNeeded: boolean;
+	outsideMenuItem: IOutsideMenuItem;
 
 	@Input() animatedElement: HTMLElement;
 	@ViewChild('menuWrapper', { static: true }) menuWrapperElement: ElementRef;
@@ -99,6 +101,14 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	@AutoSubscription
 	collapse$ = this.store.select(selectMenuCollapse).pipe(
 		tap(this.startToggleMenuCollapse.bind(this))
+	);
+
+	@AutoSubscription
+	selectOutsideMenuItem$ = this.store.select(selectSelectedOutsideMenuItem).pipe(
+		tap((menuItem: IOutsideMenuItem) => {
+			this.outsideMenuItem = menuItem;
+			this.toggleItem(menuItem.name);
+		})
 	);
 
 	@AutoSubscription
@@ -183,8 +193,9 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 			filter(this.anyMenuItemSelected.bind(this)),
 			withLatestFrom(this.store.select(selectAutoClose)),
 			filter(([click, autoClose]: [any, boolean]) => {
-				const include = click.path.includes(this.elementRef.nativeElement);
-				return !include && !this.isPinned && autoClose;
+				const includedElementToIgnore = click.path.includes(this.elementRef.nativeElement) ||
+								click.path.includes(this.outsideMenuItem.elementRef);
+				return !includedElementToIgnore && !this.isPinned && autoClose;
 			}),
 			tap(this.closeMenu.bind(this))
 		);
@@ -216,7 +227,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 
 	setSelectedMenuItem(_selectedMenuItemName) {
 		this.selectedMenuItemName = _selectedMenuItemName;
-		this.expand = Boolean(this.selectedMenuItemName);
+		requestAnimationFrame(() => this.expand = Boolean(this.selectedMenuItemName));
 
 		if (this.anyMenuItemSelected()) {
 			this.componentChanges();
@@ -224,6 +235,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	}
 
 	componentChanges(): void {
+		this.forceRedraw().then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
 		if (!this.componentElem || this.onAnimation) {
 			this.isBuildNeeded = !this.componentElem;
 			return;

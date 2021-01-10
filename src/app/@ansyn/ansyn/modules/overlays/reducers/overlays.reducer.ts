@@ -3,6 +3,7 @@ import { createEntityAdapter, Dictionary, EntityAdapter, EntityState } from '@ng
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
 import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
+import { IAdvancedSearchParameter, IProviderData } from '../../status-bar/models/statusBar-config.model';
 import {
 	OverlaysActions,
 	OverlaysActionTypes,
@@ -364,6 +365,8 @@ export const selectdisplayOverlayHistory = createSelector(overlaysStateSelector,
 export const selectStatusMessage = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string => overlays.statusMessage);
 export const selectOverlaysCriteria: MemoizedSelector<any, IOverlaysCriteria> = createSelector(overlaysStateSelector, (overlays) => overlays && overlays.overlaysCriteria);
 export const selectDataInputFilter: MemoizedSelector<any, ICaseDataInputFiltersState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.dataInputFilters);
+export const selectAdvancedSearchParameters: MemoizedSelector<any, IAdvancedSearchParameter> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.advancedSearchParameters);
+export const selectProviders: MemoizedSelector<any, IProviderData[]> = createSelector(selectAdvancedSearchParameters, (advancedSearchParameters) => advancedSearchParameters && advancedSearchParameters.providers);
 export const selectRegion: MemoizedSelector<any, CaseRegionState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);
 export const selectTime: MemoizedSelector<any, ICaseTimeState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.time);
 

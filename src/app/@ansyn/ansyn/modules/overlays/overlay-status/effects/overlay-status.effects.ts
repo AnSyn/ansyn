@@ -15,13 +15,12 @@ import {
 	selectMapsList,
 	SetToastMessageAction,
 	UpdateMapAction,
-	SetLayoutSuccessAction, selectActiveMapId, IMapState, SetActiveMapId
+	SetLayoutSuccessAction, selectActiveMapId
 } from '@ansyn/map-facade';
 import { AnnotationMode, DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { EMPTY, Observable } from 'rxjs';
-import { fromPromise } from 'rxjs/internal-compatibility';
+import { EMPTY, Observable, from } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, withLatestFrom, pluck, tap } from 'rxjs/operators';
 import {
 	BackToWorldFailed,
@@ -41,8 +40,8 @@ import {
 import { IOverlay } from '../../models/overlay.model';
 import { feature, difference } from '@turf/turf';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
-import { OverlayOutOfBoundsService } from '../../../../services/overlay-out-of-bounds/overlay-out-of-bounds.service';
 import { IOverlayStatusConfig, overlayStatusConfig } from '../config/overlay-status-config';
+import { OverlayOutOfBoundsService } from '../../../../services/overlay-out-of-bounds/overlay-out-of-bounds.service';
 
 @Injectable()
 export class OverlayStatusEffects {
@@ -50,14 +49,14 @@ export class OverlayStatusEffects {
 	backToWorldView$: Observable<any> = this.actions$
 		.pipe(
 			ofType(OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW),
-			filter( (action: BackToWorldView) => this.communicatorsService.has(action.payload.mapId)),
-			switchMap(({payload}: BackToWorldView) => {
+			filter((action: BackToWorldView) => this.communicatorsService.has(action.payload.mapId)),
+			switchMap(({ payload }: BackToWorldView) => {
 				const communicator = this.communicatorsService.provide(payload.mapId);
-				const mapData = {...communicator.mapSettings.data};
+				const mapData = { ...communicator.mapSettings.data };
 				const position = mapData.position;
 				const disabledMap = communicator.activeMapName === DisabledOpenLayersMapName || communicator.activeMapName === ImageryVideoMapType;
 
-				return fromPromise<any>(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
+				return from<any>(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
 					.pipe(
 						map(() => new BackToWorldSuccess(payload)),
 						catchError((err) => {

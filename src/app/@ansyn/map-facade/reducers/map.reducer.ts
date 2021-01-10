@@ -1,9 +1,9 @@
 import { IImageryMapPosition, IMapSettings } from '@ansyn/imagery';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
-import { range, isEqual } from 'lodash';
+import { range } from 'lodash';
 import { UUID } from 'angular2-uuid';
-import { Dictionary } from '@ngrx/entity/src/models';
+import { Dictionary } from '@ngrx/entity';
 import { sessionData } from '../models/core-session-state.model';
 import { IPendingOverlay, IToastMessage, MapActions, MapActionTypes } from '../actions/map.actions';
 import { LayoutKey, layoutOptions } from '../models/maps-layout';

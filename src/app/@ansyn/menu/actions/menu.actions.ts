@@ -1,4 +1,3 @@
-import { ElementRef } from '@angular/core';
 import { Action } from '@ngrx/store';
 import { ILogMessage } from '../models/logger.model';
 import { IOutsideMenuItem } from '../models/menu-item.model';

@@ -9,8 +9,8 @@ import { CasesContainerComponent } from '../modules/menu-items/cases/components/
 
 export enum MenuItemsKeys {
 	DataLayers = 'DataLayers',
-	SearchResults = 'SearchResults',
-	CasesContainer = 'CasesContainer'
+	ResultsTable = 'Results table',
+	Cases = 'Cases'
 }
 
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
@@ -36,11 +36,11 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			component: LayersManagerComponent
 		},
 		{
-			name: MenuItemsKeys.SearchResults,
+			name: MenuItemsKeys.ResultsTable,
 			component: ResultsTableComponent
 		},
 		{
-			name: MenuItemsKeys.CasesContainer,
+			name: MenuItemsKeys.Cases,
 			component: CasesContainerComponent
 		}
 	]

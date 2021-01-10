@@ -54,7 +54,7 @@ export class CasesToolsComponent implements OnInit, OnDestroy {
 	}
 
 	showCasesTable(elementRef: HTMLDivElement): void {
-		this.store.dispatch(new SelectMenuItemFromOutsideAction({ name: MenuItemsKeys.CasesContainer, elementRef, toggleFromBottom: false }))
+		this.store.dispatch(new SelectMenuItemFromOutsideAction({ name: MenuItemsKeys.Cases, elementRef, toggleFromBottom: false }))
 	}
 
 	showLayersTable(elementRef: HTMLDivElement): void {

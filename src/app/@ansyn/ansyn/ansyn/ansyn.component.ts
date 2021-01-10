@@ -53,7 +53,7 @@ export class AnsynComponent implements OnInit, OnDestroy {
 
 	isExpanded$ = this.store$.select(selectSelectedMenuItem).pipe(
 		tap(item => {
-			this.toggleResults = item === MenuItemsKeys.SearchResults;
+			this.toggleResults = item === MenuItemsKeys.ResultsTable;
 			return Boolean(item);
 		})
 	);
@@ -89,7 +89,7 @@ export class AnsynComponent implements OnInit, OnDestroy {
 
 	toggleResultsTable(elementRef: HTMLDivElement): void {
 		this.toggleResults = !this.toggleResults;
-		this.store$.dispatch(new SelectMenuItemFromOutsideAction({ name: MenuItemsKeys.SearchResults, elementRef, toggleFromBottom: true }));
+		this.store$.dispatch(new SelectMenuItemFromOutsideAction({ name: MenuItemsKeys.ResultsTable, elementRef, toggleFromBottom: true }));
 	}
 
 	@HostListener('window:beforeunload', ['$event'])

@@ -53,7 +53,6 @@
               "raf",
               "rxjs/index",
               "lodash-decorators",
-              "rison",
               "file-saver",
               "@babel/runtime-corejs3",
               "jspdf",
@@ -463,8 +462,8 @@
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/ansyn/ng-package.json"
-            ,              "tsConfig": "src/app/@ansyn/ansyn/tsconfig.lib.prod.json"
+              "project": "src/app/@ansyn/ansyn/ng-package.json",
+              "tsConfig": "src/app/@ansyn/ansyn/tsconfig.lib.prod.json"
 }
           }
         }
@@ -484,9 +483,9 @@
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/map-facade/ng-package.json"
-            ,              "tsConfig": "src/app/@ansyn/map-facade/tsconfig.lib.prod.json"
-}
+              "project": "src/app/@ansyn/map-facade/ng-package.json",
+              "tsConfig": "src/app/@ansyn/map-facade/tsconfig.lib.prod.json"
+            }
           }
         }
       }
@@ -505,9 +504,9 @@
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/ol/ng-package.json"
-            ,              "tsConfig": "src/app/@ansyn/ol/tsconfig.lib.prod.json"
-}
+              "project": "src/app/@ansyn/ol/ng-package.json",
+              "tsConfig": "src/app/@ansyn/ol/tsconfig.lib.prod.json"
+            }
           }
         }
       }
@@ -526,9 +525,9 @@
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/imagery-cesium/ng-package.json"
-            ,              "tsConfig": "src/app/@ansyn/imagery-cesium/tsconfig.lib.prod.json"
-}
+              "project": "src/app/@ansyn/imagery-cesium/ng-package.json",
+              "tsConfig": "src/app/@ansyn/imagery-cesium/tsconfig.lib.prod.json"
+            }
           }
         }
       }
@@ -547,9 +546,9 @@
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/imagery-video/ng-package.json"
-            ,              "tsConfig": "src/app/@ansyn/imagery-video/tsconfig.lib.prod.json"
-}
+              "project": "src/app/@ansyn/imagery-video/ng-package.json",
+              "tsConfig": "src/app/@ansyn/imagery-video/tsconfig.lib.prod.json"
+            }
           }
         }
       }
@@ -568,9 +567,9 @@
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/imagery/ng-package.json"
-            ,              "tsConfig": "src/app/@ansyn/imagery/tsconfig.lib.prod.json"
-}
+              "project": "src/app/@ansyn/imagery/ng-package.json",
+              "tsConfig": "src/app/@ansyn/imagery/tsconfig.lib.prod.json"
+            }
           }
         }
       }
@@ -589,9 +588,9 @@
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/menu/ng-package.json"
-            ,              "tsConfig": "src/app/@ansyn/menu/tsconfig.lib.prod.json"
-}
+              "project": "src/app/@ansyn/menu/ng-package.json",
+              "tsConfig": "src/app/@ansyn/menu/tsconfig.lib.prod.json"
+            }
           }
         }
       }

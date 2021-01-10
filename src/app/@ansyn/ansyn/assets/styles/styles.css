@@ -3,7 +3,6 @@
 @import "bootstrap/carousel.css";
 @import 'icons.css';
 @import 'tooltip.css';
-@import "~primeng/resources/primeng.min.css";
 /*@import "~primeng/resources/themes/luna-amber/theme.css";*/
 /* Todo: primeng theme was omega. But omega did not exist after upgrading primeng for ng9 */
 @import "~font-awesome/css/font-awesome.min.css";
@@ -13,6 +12,11 @@
 
 circle.drop.selected {
 	fill: black;
+}
+
+.cdk-overlay-container {
+	/* for web component be on top menu */
+	z-index: 5000;
 }
 
 .custom-dialog .mat-dialog-container {

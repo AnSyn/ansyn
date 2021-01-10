@@ -83,14 +83,14 @@
   .icon-favorites:before {
 	content: "\e811";
   }
-  .icon-favorite-empty:before {
-	content: "\e814";
-  }
   .icon-frame-mode:before {
 	content: "\e812";
   }
   .icon-layer-import:before {
 	content: "\e813";
+  }
+ .icon-favorite-empty:before {
+	content: "\e814";
   }
   .icon-layers-hide:before {
 	content: "\e815";
@@ -299,4 +299,3 @@
   .icon-drone:before {
 	content: "\e90f";
   }
-  

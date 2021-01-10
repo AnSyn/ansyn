@@ -1,7 +1,7 @@
 import { caseModalType, CasesActions, CasesActionTypes, DeleteCaseAction } from '../actions/cases.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
-import { Dictionary } from '@ngrx/entity/src/models';
+import { Dictionary } from '@ngrx/entity';
 import { ICase, ICasePreview } from '../models/case.model';
 import { CasesType } from '../models/cases-config';
 import { isEqual } from 'lodash';

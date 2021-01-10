@@ -251,6 +251,38 @@
 	font-family: @app-font;
 }
 
+/deep/ .ngx-slider {
+	margin: 0 5px !important;
+}
+
+/deep/ .ngx-slider-bubble {
+	color: white !important;
+	margin-bottom: 5px !important;
+}
+
+/deep/ .ngx-slider-pointer {
+	background-color: gray !important;
+}
+
+/deep/ .ngx-slider-selection {
+	background: gray !important;
+}
+
+/deep/ .ngx-slider-active {
+	outline: none;
+}
+
+/deep/ .ngx-slider-pointer:after {
+	visibility: hidden;
+}
+
+/deep/ .ngx-slider-pointer-min, /deep/ .ngx-slider-pointer-max {
+	width: 24px !important;
+	height: 24px !important;
+	margin-top: 3%;
+}
+
+
 @keyframes menu-init-ltr {
 	from {
 		transform: translateX(-100%);

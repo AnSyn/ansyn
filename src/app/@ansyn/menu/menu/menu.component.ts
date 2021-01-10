@@ -37,7 +37,6 @@ import { DOCUMENT } from '@angular/common';
 import { IMenuItem, IOutsideMenuItem } from '../models/menu-item.model';
 import { MenuConfig } from '../models/menuConfig';
 import { IMenuConfig } from '../models/menu-config.model';
-import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { MENU_ITEMS } from '../helpers/menu-item-token';
@@ -84,7 +83,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	collapse: boolean;
 	_componentElem;
 	selectedMenuItemName: string;
-	entities: Dictionary<IMenuItem> = {};
+	entities: {[key: string]: IMenuItem} = {};
 	isPinned: boolean;
 	expand: boolean;
 	onAnimation: boolean;

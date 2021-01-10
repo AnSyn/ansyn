@@ -3,14 +3,13 @@ import { IAlert } from '../modules/alerts/alerts.model';
 import { LayersManagerComponent } from '../modules/menu-items/layers-manager/components/layers-manager/layers-manager.component';
 import { anaglyphSensorAlertKey } from '../modules/plugins/openlayers/plugins/anaglyph-sensor/plugin/anaglyph-sensor.plugin';
 import { AnaglyphSensorAlertComponent } from '../modules/plugins/openlayers/plugins/anaglyph-sensor/alert-component/anaglyph-sensor-alert.component';
-import { FiltersCollectionComponent } from '../modules/filters/components/filters-collection/filters-collection.component';
 import { ResultsTableComponent } from '../modules/menu-items/results/components/results-table/results-table.component';
 import { CasesContainerComponent } from '../modules/menu-items/cases/components/cases-container/cases-container.component';
 
 export enum MenuItemsKeys {
-	DataLayers = 'DataLayers',
-	SearchResults = 'SearchResults',
-	CasesContainer = 'CasesContainer'
+	DataLayers = 'Data Layers',
+	ResultsTable = 'Results table',
+	Cases = 'Cases'
 }
 
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
@@ -36,11 +35,11 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			component: LayersManagerComponent
 		},
 		{
-			name: MenuItemsKeys.SearchResults,
+			name: MenuItemsKeys.ResultsTable,
 			component: ResultsTableComponent
 		},
 		{
-			name: MenuItemsKeys.CasesContainer,
+			name: MenuItemsKeys.Cases,
 			component: CasesContainerComponent
 		}
 	]

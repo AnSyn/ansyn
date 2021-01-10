@@ -6,6 +6,12 @@ import { AnaglyphSensorAlertComponent } from '../modules/plugins/openlayers/plug
 import { ResultsTableComponent } from '../modules/menu-items/results/components/results-table/results-table.component';
 import { CasesContainerComponent } from '../modules/menu-items/cases/components/cases-container/cases-container.component';
 
+export enum MenuItemsKeys {
+	DataLayers = 'DataLayers',
+	SearchResults = 'SearchResults',
+	CasesContainer = 'CasesContainer'
+}
+
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
 	ansynAlerts: [
 		{
@@ -25,15 +31,15 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 	],
 	ansynMenuItems: [
 		{
-			name: 'DataLayers',
+			name: MenuItemsKeys.DataLayers,
 			component: LayersManagerComponent
 		},
 		{
-			name: 'SearchResults',
+			name: MenuItemsKeys.SearchResults,
 			component: ResultsTableComponent
 		},
 		{
-			name: 'CasesContainer',
+			name: MenuItemsKeys.CasesContainer,
 			component: CasesContainerComponent
 		}
 	]

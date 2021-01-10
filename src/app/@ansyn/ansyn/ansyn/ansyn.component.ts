@@ -22,6 +22,7 @@ import { toolsFlags } from '../modules/status-bar/components/tools/models/tools.
 import { TranslateService } from '@ngx-translate/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectDropsDescending } from '../modules/overlays/reducers/overlays.reducer';
+import { MenuItemsKeys } from '../config/ansyn.config';
 
 @Component({
 	selector: 'ansyn-app',
@@ -52,7 +53,7 @@ export class AnsynComponent implements OnInit, OnDestroy {
 
 	isExpanded$ = this.store$.select(selectSelectedMenuItem).pipe(
 		tap(item => {
-			this.toggleResults = item === "SearchResults";
+			this.toggleResults = item === MenuItemsKeys.SearchResults;
 			return Boolean(item);
 		})
 	);
@@ -88,7 +89,7 @@ export class AnsynComponent implements OnInit, OnDestroy {
 
 	toggleResultsTable(elementRef: HTMLDivElement): void {
 		this.toggleResults = !this.toggleResults;
-		this.store$.dispatch(new SelectMenuItemFromOutsideAction({ name: "SearchResults", elementRef, toggleFromBottom: true }));
+		this.store$.dispatch(new SelectMenuItemFromOutsideAction({ name: MenuItemsKeys.SearchResults, elementRef, toggleFromBottom: true }));
 	}
 
 	@HostListener('window:beforeunload', ['$event'])

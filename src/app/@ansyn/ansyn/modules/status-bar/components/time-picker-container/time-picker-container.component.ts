@@ -6,7 +6,7 @@ import { selectTime } from '../../../overlays/reducers/overlays.reducer';
 import { filter, tap } from 'rxjs/operators';
 import * as moment from 'moment';
 import { Store } from '@ngrx/store';
-import { IStatusBarState } from '../../reducers/status-bar.reducer';
+import { IStatusBarState, selectGeoFilterActive } from '../../reducers/status-bar.reducer';
 import {
 	isArrowLeftKey,
 	isArrowRightKey,
@@ -59,6 +59,13 @@ export class TimePickerContainerComponent implements OnInit, OnDestroy {
 			}
 		})
 	);
+	
+	@AutoSubscription
+	isLocationPickerOpen$: Observable<any> = this.store$.select(selectGeoFilterActive).pipe(
+		filter(isActive => isActive),
+		tap(() => {
+			this.isPresetOpen = false;
+		}));
 
 	constructor(protected store$: Store<IStatusBarState>, @Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig) {
 	}

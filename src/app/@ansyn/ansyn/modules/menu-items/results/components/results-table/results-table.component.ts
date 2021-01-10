@@ -31,6 +31,7 @@ interface ITableHeader {
 	templateUrl: './results-table.component.html',
 	styleUrls: ['./results-table.component.less'],
 	animations: [
+		
 		trigger('isDescending', [
 			state('false', style({
 				transform: 'rotate(180deg)',
@@ -52,10 +53,10 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	pagination = 15;
 	tableHeaders: ITableHeader[] = [
 		{
-			headerName: 'Date & time',
-			headerData: 'date',
+			headerName: 'Type',
+			headerData: 'icon',
 			isDescending: true,
-			sortFn: (a: number, b: number) => a - b
+			sortFn: (a, b) => a.localeCompare(b)
 		},
 		{
 			headerName: 'Sensor',
@@ -64,8 +65,8 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			sortFn: (a: string, b: string) => this.translateService.instant(a).localeCompare(this.translateService.instant(b))
 		},
 		{
-			headerName: 'Type',
-			headerData: 'icon',
+			headerName: 'Date & time',
+			headerData: 'date',
 			isDescending: true,
 			sortFn: (a: string, b: string) => a.localeCompare(b)
 		},

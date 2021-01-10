@@ -37,6 +37,7 @@
     "no-commit-to-master": "sh scripts/check-commit-branch.sh"
   },
   "dependencies": {
+    "@angular-slider/ngx-slider": "^2.0.3",
     "@angular/animations": "~10.0.5",
     "@angular/cdk": "^10.1.0",
     "@angular/common": "~10.0.5",
@@ -76,9 +77,7 @@
     "moment": "^2.21.0",
     "ngx-color-picker": "^9.1.0",
     "ngx-device-detector": "^1.4.1",
-    "ngx-treeview": "^6.0.2",
     "ol": "^6.4.3",
-    "primeng": "^9.0.3",
     "proj4": "^2.5.0",
     "rxjs": "~6.5.4",
     "shpjs": "^3.6.3",

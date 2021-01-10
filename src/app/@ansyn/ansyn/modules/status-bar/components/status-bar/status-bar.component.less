@@ -1,8 +1,6 @@
 @import "ansyn/less/common";
-@import "ansyn/less/colors";
-@import "ansyn/less/globals";
-@import "ansyn/less/z-index-globals";
 @import "../../less/status-bar-common.less";
+
 @popup-padding-bottom: 15px;
 
 :host {
@@ -17,13 +15,22 @@
 		align-items: center;
 		margin: 0 10px;
 	}
+
 	div.search {
 		display: flex;
-		flex: 1;
 		align-items: center;
 	}
 
+	div.logo {
+		display: flex;
+		margin-left: auto;
+	}
+
 	&.rtl {
+		div.logo {
+			margin-left: unset;
+			margin-right: auto;
+		}
 		/deep/ i.icon {
 			margin-right: unset;
 			margin-left: 5px;

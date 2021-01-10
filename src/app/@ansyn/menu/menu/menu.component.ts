@@ -14,9 +14,7 @@ import {
 	ViewContainerRef
 } from '@angular/core';
 import {
-	ContainerChangedTriggerAction, LogHelp,
-	ResetAppAction,
-	SelectMenuItemAction,
+	ContainerChangedTriggerAction, SelectMenuItemAction,
 	ToggleIsPinnedAction,
 	ToggleMenuCollapse,
 	UnSelectMenuItemAction
@@ -271,15 +269,6 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 		}
 	}
 
-	onHelp() {
-		this.store.dispatch(new LogHelp());
-		this.goToLandingPage();
-	}
-
-	goToLandingPage() {
-		window.open(this.menuConfig.landingPageUrl);
-	}
-
 	anyMenuItemSelected(): boolean {
 		return Boolean(this.selectedMenuItem);
 	}
@@ -329,10 +318,6 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 
 		this.animatedElement.style.animation = `${this.collapse ? 'collapsed' : 'unCollapsed'}_${this.isRTL ? 'rtl' : 'ltr'} ${this.collapse ? '.3s' : '.6s'}`;
 
-	}
-
-	resetApp() {
-		this.store.dispatch(new ResetAppAction());
 	}
 
 	ngOnInit() {

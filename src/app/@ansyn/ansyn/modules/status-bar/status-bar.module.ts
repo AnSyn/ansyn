@@ -23,6 +23,7 @@ import { SearchOptionsComponent } from './components/search-options/search-optio
 import { AdvancedSearchComponent } from './components/advanced-search/advanced-search.component';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { CasesModule } from '../menu-items/cases/cases.module';
+import { LogoPanelComponent } from './components/logo-panel/logo-panel.component';
 
 @NgModule({
 	imports: [
@@ -39,7 +40,7 @@ import { CasesModule } from '../menu-items/cases/cases.module';
 		OwlNativeDateTimeModule,
 		NgxSliderModule
 	],
-	declarations: [StatusBarComponent, SearchPanelComponent, DisplayPanelComponent, TimePickerComponent, LocationPickerComponent, FiltersPanelComponent, TimepickerPresetsComponent, TimePickerContainerComponent, SearchOptionsComponent, AdvancedSearchComponent],
+	declarations: [StatusBarComponent, SearchPanelComponent, DisplayPanelComponent, LogoPanelComponent, TimePickerComponent, LocationPickerComponent, FiltersPanelComponent, TimepickerPresetsComponent, TimePickerContainerComponent, SearchOptionsComponent, AdvancedSearchComponent],
 	providers: [
 		{
 			provide: GEO_FILTERS,

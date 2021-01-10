@@ -1,7 +1,7 @@
-import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { CredentialsService } from '../../../../core/services/credentials/credentials.service';
 import { Store } from '@ngrx/store';
-import { getMenuSessionData, SetBadgeAction, UnSelectMenuItemAction } from '@ansyn/menu';
+import { getMenuSessionData, SetBadgeAction } from '@ansyn/menu';
 import { tap, filter } from 'rxjs/operators';
 import { ClickOutsideService } from '../../../../core/click-outside/click-outside.service';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
@@ -15,6 +15,7 @@ import { LogDownloadPermissionsGuide, LogOpenPermissionsSite } from '../../actio
 })
 @AutoSubscriptions()
 export class CredentialsComponent implements OnInit, OnDestroy {
+	@Output() closeMe = new EventEmitter<any>();
 
 	constructor(
 		public credentialsService: CredentialsService,
@@ -62,7 +63,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
 	}
 
 	closeWindow() {
-		this.store$.dispatch(new UnSelectMenuItemAction())
+		this.closeMe.emit();
 	}
 
 }

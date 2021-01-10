@@ -30,7 +30,7 @@ describe('AnsynComponent', () => {
 	const mockImageryView = MockComponent({ selector: 'ansyn-imageries-manager' });
 	const mockOverlayOverviewComponent = MockComponent({ selector: 'ansyn-overlay-overview' });
 	const mockStatusBar = MockComponent({
-		selector: 'ansyn-status-bar'
+		selector: 'ansyn-status-bar', inputs: ['version']
 	});
 
 	const mapState = {

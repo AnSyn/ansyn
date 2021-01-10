@@ -4,9 +4,6 @@
     "paths": {
       "@ansyn/imagery": [
         "dist/ansyn/imagery"
-      ],
-      "@ansyn/map-facade": [
-        "dist/ansyn/map-facade"
       ]
     },
     "outDir": "../../../out-tsc/lib",

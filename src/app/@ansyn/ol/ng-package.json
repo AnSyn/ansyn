@@ -3,10 +3,12 @@
   "dest": "../../../../dist/ansyn/ol",
   "whitelistedNonPeerDependencies": [
     "auto-subscriptions",
+    "@ansyn/imagery",
     "@turf/turf",
     "ol",
     "ngx-color-picker",
     "angular2-uuid",
+    "tslib",
     "@ngx-translate/core"
   ],
   "lib": {

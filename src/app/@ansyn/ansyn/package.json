@@ -2,11 +2,15 @@
 	"name": "@ansyn/ansyn",
 	"version": "3.0.0",
 	"peerDependencies": {
-		"@ngrx/core": "^1.2.0",
-		"@ngrx/store": "^9.0.0",
-		"@ngrx/effects": "^9.0.0",
-		"@angular/common": "~10.0.5",
-		"@angular/core": "~10.0.5",
+		"@ngrx/store": "9.x",
+		"@ngrx/effects": "9.x",
+		"@angular/common": "9.x || 10.x",
+		"@angular/core": "9.x || 10.x",
+		"@angular/cdk": "9.x || 10.x",
+		"@angular/material": "9.x || 10.x",
+		"rxjs": "6.x"
+	},
+	"dependencies": {
 		"@ansyn/imagery": "3.0.0",
 		"@ansyn/map-facade": "3.0.0",
 		"@ansyn/menu": "3.0.0",
@@ -14,26 +18,24 @@
 		"@ansyn/imagery-cesium": "3.0.0",
 		"@ansyn/imagery-video": "3.0.0",
 		"@ansyn/event-drops": "^0.2.8-1.9",
-		"@angular/cdk": "^10.1.0",
-		"@angular/material": "^10.1.0",
-		"@ngx-translate/core": "^12.1.2"
-	},
-	"dependencies": {
 		"@turf/turf": "^5.1.6",
 		"geojson": "^0.5.0",
 		"lodash": "^4.17.15",
 		"moment": "^2.21.0",
 		"tslib": "^2.0.0",
+		"dom-to-image": "^2.6.0",
+		"blob-util": "^2.0.2",
+		"jspdf": "^2.1.1",
+		"shpjs": "^3.6.3",
 		"wellknown": "^0.5.0",
 		"@ansyn/ng-pick-datetime": "^7.1.1",
 		"font-awesome": "^4.7.0",
 		"file-saver": "^1.3.8",
 		"lodash-decorators": "^4.5.0",
-		"ngx-bootstrap": "^5.5.0",
-		"proj4": "^2.5.0",
-		"rison": "^0.1.1",
 		"auto-subscriptions": "^2.0.5",
-		"@ngx-translate/core": "^12.1.2"
+		"@ngx-translate/core": "^12.1.2",
+		"ngx-treeview": "^6.0.2",
+		"d3": "^5.9.2"
 	},
 	"license": "MIT"
 }

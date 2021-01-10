@@ -394,3 +394,4 @@ export { OverlayOverviewComponent } from './modules/overlays/components/overlay-
 export { OverlayNavigationBarComponent } from './modules/overlays/components/overlay-navigation-bar/overlay-navigation-bar.component';
 export { AnsynComboTableComponent } from './modules/core/forms/ansyn-combo-table/ansyn-combo-table.component';
 export { AnsynComboTableOptionComponent } from './modules/core/forms/ansyn-combo-table-option/ansyn-combo-table-option.component';
+export { AdvancedSearchComponent } from './modules/status-bar/components/advanced-search/advanced-search.component';

@@ -1,4 +1,17 @@
-.icon-save:before {
+
+.icon-eye:before {
+	content: "\e9ce";
+  }
+  .icon-pointer_up:before {
+	content: "\e912";
+  }
+  .icon-eye_blocked:before {
+	content: "\e913";
+  }
+  .icon-help:before {
+	content: "\e915";
+  }
+  .icon-save:before {
 	content: "\e911";
 }
 
@@ -8,25 +21,25 @@
 
 .icon-bookmark-full:before {
 	content: "\e910";
-}
+  }
 
-.icon-screen-choice:before {
+  .icon-screen-choice:before {
 	content: "\e902";
-}
+  }
 
-.icon-bookmarks:before {
+  .icon-bookmarks:before {
 	content: "\e901";
-}
+  }
 
-.icon-bookmark-empty:before {
+  .icon-bookmark_empty:before {
 	content: "\e900";
-}
+  }
 
-.icon-search-button:before {
+  .icon-search-button:before {
 	content: "\e904";
-}
+  }
 
-.icon-layer-add:before {
+  .icon-layer-add:before {
 	content: "\e800";
 }
 
@@ -90,7 +103,7 @@
 	content: "\e810";
 }
 
-.icon-favorite-empty:before {
+.icon-favorites:before {
 	content: "\e811";
 }
 
@@ -101,7 +114,9 @@
 .icon-layer-import:before {
 	content: "\e813";
 }
-
+.icon-favorite-empty:before {
+    content: "\e814";
+  }
 .icon-layers-hide:before {
 	content: "\e815";
 }

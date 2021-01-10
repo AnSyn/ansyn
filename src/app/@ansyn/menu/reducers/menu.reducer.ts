@@ -6,9 +6,11 @@ import {
 } from '../actions/menu.actions';
 import { getMenuSessionData, setMenuSessionData } from '../helpers/menu-session.helper';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
+import { IOutsideMenuItem } from '../models/menu-item.model';
 
 export interface IMenuState {
 	selectedMenuItem: string;
+	selectedOutsideMenuItem: IOutsideMenuItem;
 	isPinned: boolean;
 	autoClose: boolean;
 	badges: Map<string, string>;
@@ -21,7 +23,12 @@ export const initialMenuState: IMenuState = {
 	isPinned: menuSession.isPinned,
 	autoClose: true,
 	badges: new Map(),
-	menuCollapse: false
+	menuCollapse: false,
+	selectedOutsideMenuItem: {
+		name: null,
+		elementRef: null,
+		toggleFromBottom: false
+	}
 };
 
 export const menuFeatureKey = 'menu';
@@ -39,6 +46,10 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 				setMenuSessionData({ selectedMenuItem });
 			}
 			return { ...state, selectedMenuItem };
+
+		case MenuActionTypes.SELECT_MENU_ITEM_FROM_OUTSIDE:
+			const selectedOutsideMenuItem = action.payload;
+			return { ...state, selectedOutsideMenuItem };
 
 		case MenuActionTypes.UNSELECT_MENU_ITEM: {
 			const selectedMenuItem = '';
@@ -70,5 +81,6 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 export const selectIsPinned = createSelector(menuStateSelector, (menu) => menu?.isPinned);
 export const selectAutoClose = createSelector(menuStateSelector, (menu) => menu?.autoClose);
 export const selectSelectedMenuItem = createSelector(menuStateSelector, (menu) => menu?.selectedMenuItem);
+export const selectSelectedOutsideMenuItem = createSelector(menuStateSelector, (menu) => menu?.selectedOutsideMenuItem);
 export const selectMenuCollapse = createSelector(menuStateSelector, (menu) => menu?.menuCollapse);
 export const selectBadges = createSelector(menuStateSelector, (menu) => menu?.badges);

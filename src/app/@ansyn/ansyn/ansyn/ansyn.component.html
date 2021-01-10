@@ -1,6 +1,6 @@
 <div class="app animations" [ngClass]="(isPinnedClass$ | async)" [attr.dir]="isRTL ? 'rtl' : 'ltr'">
 	<!-- the 'dir' attribute will affect Angular Material components -->
-	<div class="menu">
+	<div class="menu" [class.isCollapse]="(isFooterCollapse$ | async)">
 		<ansyn-menu [version]="version" [animatedElement]="animatedElementHorizontal"></ansyn-menu>
 	</div>
 
@@ -8,25 +8,28 @@
 		<ansyn-status-bar [version]="version"></ansyn-status-bar>
 	</div>
 
-	<div class="layer" #animatedElementHorizontal>
+	<div class="layer" [class.isCollapse]="(isFooterCollapse$ | async)" #animatedElementHorizontal>
 
-		<div class="maps-container" #animatedElementVertical [class.hide-status-bar]="(hideStatus$ | async)">
+		<div class="maps-container"
+			 [ngClass]="(isPinnedClass$ | async)"
+			 [class.expand]="(isExpanded$ | async)"
+			 [class.hide-status-bar]="(hideStatus$ | async)"
+			 #animatedElementVertical>
 			<ansyn-imageries-manager></ansyn-imageries-manager>
 			<ansyn-context-menu *ngIf="renderContextMenu"></ansyn-context-menu>
 		</div>
+	</div>
 
-		<button [class.active]="toggleResults" class="results-table" (click)="toggleResultsTable()">
+	<div #toggleResultsButton>
+		<button [class.active]="toggleResults" class="results-table" (click)="toggleResultsTable(toggleResultsButton)">
 			<i class="icon-table"></i>
 			<span class="badge">{{overlaysCount$ | async}}</span>
 			<span class="results-title">{{'Search results' | translate}}</span>
 		</button>
+	</div>
 
-		<ansyn-results class="results" *ngIf="toggleResults"></ansyn-results>
-
-		<ansyn-footer
-			[activeMap]="(activeMap$ | async)"
-			[animatedElement]="animatedElementVertical"
-		></ansyn-footer>
+	<div class="footer">
+		<ansyn-footer [activeMap]="(activeMap$ | async)" [animatedElement]="animatedElementVertical"></ansyn-footer>
 	</div>
 </div>
 

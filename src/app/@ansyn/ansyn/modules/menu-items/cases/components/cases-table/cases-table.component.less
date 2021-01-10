@@ -53,16 +53,16 @@
 			div.cases-table-body-row {
 				transition: background .3s, color .3s;
 				margin: 0 5px;
-				border-top: 2px solid #EBF8FA;
+				border-top: 1px solid #EBF8FA;
 
 				&:last-child {
 					border-bottom: unset;
-					border-bottom: 2px solid #EBF8FA;
+					border-bottom: 1px solid #EBF8FA;
 				}
 
 				&.mouse-enter {
-					color: #156879;
-					background: #EBF8FA;
+					background-color: @background-color-7;
+					color: white;
 
 					div.cases-table-body-row-data div.case-menu-container.rtl div.case-menu {
 						transform: translateX(10px);

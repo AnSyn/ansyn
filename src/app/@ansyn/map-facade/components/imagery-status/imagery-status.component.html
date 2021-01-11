@@ -14,7 +14,7 @@
 		[attr.tooltip-value]="'Move' | translate"
 		[attr.tooltip-class]="isRtl ? 'bottom left' : 'bottom right'"
 		(mousedown)="onStartDraggingMap($event)">
-		<i class="icon-drag-maps"></i>
+		<i class="medium-icon icon-drag-maps"></i>
 	</button>
 
 	<button *ngIf="mapsAmount > 1"
@@ -23,7 +23,7 @@
 			[attr.tooltip-class]="isRtl ? 'bottom left' : 'bottom right'"
 			[disabled]="noGeoRegistration"
 			(click)="toggleMapSynchronization.emit()">
-		<i class="icon icon-temporary-link"></i>
+		<i class="medium-icon icon-temporary-link"></i>
 	</button>
 
 	<button class="small-icon-button hide-layers"
@@ -31,7 +31,7 @@
 			(click)="toggleMapLayers()"
 			[attr.tooltip-value]="'Show/ Hide layers' | translate"
 			[attr.tooltip-class]="isRtl ? 'bottom left' : 'bottom right'"
-	><i [class.icon-layers-show]="!hideLayers"
+	><i class="medium-icon" [class.icon-layers-show]="!hideLayers"
 		   [class.icon-layers-hide]="hideLayers"></i>
 	</button>
 
@@ -40,7 +40,7 @@
 			(click)="toggleImageryPerspective()"
 			[attr.tooltip-value]="orientation | translate"
 			[attr.tooltip-class]="isRtl ? 'bottom left' : 'bottom right'"
-	><i class="icon-status-bar-orientation" [class.active]="perspective"></i>
+	><i class="medium-icon icon-status-bar-orientation" [class.active]="perspective"></i>
 	</button>
 
 	<button class="small-icon-button"
@@ -48,7 +48,7 @@
 			(click)="toggleOverlaysFootprint()"
 			[attr.tooltip-value]="'Overlays Footprint' | translate"
 			[attr.tooltip-class]="isRtl ? 'bottom left' : 'bottom right'"
-	><i class="icon-frame-mode" [class.active]="overlaysFootprintActive && !noGeoRegistration"></i>
+	><i class="medium-icon icon-frame-mode" [class.active]="overlaysFootprintActive && !noGeoRegistration"></i>
 	</button>
 
 	<ng-container

@@ -252,6 +252,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 [class^="icon-"], [class*=" icon-"] {
 	/* use !important to prevent issues with browser extensions that change fonts */
+	margin: 0 2.5px;
 	font-family: 'AnSyn' !important;
 	speak: none;
 	font-style: normal;
@@ -266,6 +267,13 @@ input[type=number]::-webkit-outer-spin-button {
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.medium-icon {
+	font-size: 16px;
+}
+
+.small-icon {
+	font-size: 10px;
+}
 .icon-screen-1:before, .icon-screen-2:before, .icon-screen-3:before, .icon-screen-4:before, .icon-screen-5:before, .icon-screen-6:before {
 	font-size: 20px;
 	line-height: normal;

@@ -4,7 +4,7 @@
 		[attr.tooltip-value]="'Save Case' | translate"
 		tooltip-class="bottom">
 		<i class="icon"
-		[ngClass]="(currentSaveCase$ | async)? 'icon-bookmark-full' : 'icon-bookmark_empty'"></i>
+		[ngClass]="(currentSaveCase$ | async)? 'icon-bookmark-full' : 'icon-bookmark-empty'"></i>
 		</button>
 		<button (click)="showCasesTable(cases)"
 		[attr.tooltip-value]="'Open Cases' | translate"
@@ -19,14 +19,14 @@
 		(click)="showOnlyFavorite()"
 		[disabled]="onlyFavoriteEnable$ | async">
 		<i class="icon"
-		[ngClass]="onlyFavorite ? 'icon-favorite-full'  : 'icon-favorites'"></i>
+		[ngClass]="onlyFavorite ? 'icon-favorite-full'  : 'icon-favorite-empty'"></i>
 		</button>
 	</div>
 	<div #showLayers>
 		<button (click)="showLayersTable(showLayers)"
 		[attr.tooltip-value]="'Open Layers' | translate"
 		tooltip-class="bottom">
-		<i class="icon icon-main-data-layers"></i>
+		<i class="icon icon-layers-show"></i>
 		</button>
 	</div>
 </div>

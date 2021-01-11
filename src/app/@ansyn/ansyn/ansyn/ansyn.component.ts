@@ -6,10 +6,11 @@ import {
 	selectActiveMapId,
 	selectMapsList,
 	selectOverlayOfActiveMap,
-	selectIsMinimalistViewMode
+	selectIsMinimalistViewMode,
+	selectFooterCollapse
 } from '@ansyn/map-facade';
-import { selectIsPinned, selectMenuCollapse } from '@ansyn/menu';
-import { filter, map, withLatestFrom } from 'rxjs/operators';
+import { selectIsPinned, selectMenuCollapse, SelectMenuItemFromOutsideAction, selectSelectedMenuItem } from '@ansyn/menu';
+import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
 import { LoadDefaultCaseAction } from '../modules/menu-items/cases/actions/cases.actions';
 import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
@@ -21,6 +22,7 @@ import { toolsFlags } from '../modules/status-bar/components/tools/models/tools.
 import { TranslateService } from '@ngx-translate/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectDropsDescending } from '../modules/overlays/reducers/overlays.reducer';
+import { MenuItemsKeys } from '../config/ansyn.config';
 
 @Component({
 	selector: 'ansyn-app',
@@ -43,10 +45,19 @@ export class AnsynComponent implements OnInit, OnDestroy {
 
 	isMenuCollapse$ = this.store$.select(selectMenuCollapse);
 
+	isFooterCollapse$ = this.store$.select(selectFooterCollapse);
+
 	isPinnedClass$: Observable<string> = this.store$.select(selectIsPinned).pipe(
 		map((_isPinned) => _isPinned ? 'isPinned' : 'isNotPinned')
 	);
 
+	isExpanded$ = this.store$.select(selectSelectedMenuItem).pipe(
+		tap(item => {
+			this.toggleResults = item === MenuItemsKeys.ResultsTable;
+			return Boolean(item);
+		})
+	);
+	
 	hideStatus$: Observable<boolean> = this.store$.select(selectIsMinimalistViewMode);
 
 	activeMap$: Observable<any> = combineLatest([
@@ -76,8 +87,9 @@ export class AnsynComponent implements OnInit, OnDestroy {
 	) {
 	}
 
-	toggleResultsTable(): void {
+	toggleResultsTable(elementRef: HTMLDivElement): void {
 		this.toggleResults = !this.toggleResults;
+		this.store$.dispatch(new SelectMenuItemFromOutsideAction({ name: MenuItemsKeys.ResultsTable, elementRef, toggleFromBottom: true }));
 	}
 
 	@HostListener('window:beforeunload', ['$event'])

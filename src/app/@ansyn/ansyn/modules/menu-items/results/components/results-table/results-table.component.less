@@ -2,62 +2,29 @@
 
 @footer-height: 141px;
 @header-size: calc(~"(100vh - @{footer-height}) * 0.025");
-@results-table-width: 435px;
-@date-field-width: 140px;
+@results-table-width: 350px;
+@date-field-width: 95px;
 @favorite-field-width: 24px;
 
 :host {
 	z-index: @z-index-footer;
-	bottom: 93vh;
 	background: @background-color-3;
-	position: relative;
-	width: @results-table-width;
-	display: block;
-	height: calc(100vh - @status-bar-height);
+	height: 100%;
 	overflow: hidden;
 
 	div.results-table {
-		width: 100%;
+		width: @results-table-width;
 		color: white;
 		font-size: 13px;
 		padding: 0 5px;
 		box-sizing: border-box;
+		height: 100%;
+		display: grid;
 
-		div.no-results {
-			height: @footer-height;
-		}
-
-		div.header {
+		h2.header {
 			color: white;
-			display: flex;
-			font-family: @app-font;
-			flex-direction: row;
-			font-size: @header-size;
-			margin-top: 17px;
-			margin-left: 23px;
-			margin-bottom: 15px;
-
-			div.header-title {
-				font-size: 24px;
-				margin-right: 29px;
-			}
-
-			div.box {
-				flex: 1;
-
-				.icon-status-bar-imagery-count {
-					margin-top: 6px;
-					position: absolute;
-					margin-left: 145px;
-				}
-
-				.overlay-count {
-					font-size: 17px;
-					margin-top: 7px;
-					position: absolute;
-					margin-left: 170px;
-				}
-			}
+			margin: 15px;
+			font-size: calc(1.5em + 1.5px);
 		}
 
 		div.results-table-head {
@@ -84,6 +51,11 @@
 							min-width: @date-field-width;
 						}
 
+						&.sensorName  {
+							margin-right: 10px;
+							margin-left: 15px;
+						}
+
 						&.favorite {
 							flex: 0;
 							min-width: @favorite-field-width;
@@ -92,6 +64,7 @@
 						i.icon-arrow {
 							margin-top: -2px;
 							position: absolute;
+							font-size: 16px;
 
 							&.active {
 								color: @application-primary-color;
@@ -105,7 +78,7 @@
 		div.results-table-body {
 			display: block;
 			overflow-y: auto;
-			height: 59vh;
+			height: calc(100vh - @status-bar-height - @timeline-area-height - 110px);
 			direction: rtl; // to flip the scrollbar location
 
 			div.results-table-body-row:hover + div.results-table-body-row hr {
@@ -120,10 +93,14 @@
 				display: block;
 				transition: background .3s, color .3s;
 				overflow: hidden;
-				height: 10%;
 				position: relative;
 				direction: ltr; // needs to be repeated here because of scrollbar place
-				padding-left: 5px;
+				margin-left: 5px;
+				border-top: 1px solid #EBF8FA;
+
+				&:last-child {
+					border-bottom: 1px solid #EBF8FA;
+				}
 
 				&.mouse-enter {
 					color: #156879;
@@ -161,12 +138,11 @@
 				}
 
 				div.results-table-body-row-data {
-					position: relative;
 					display: flex;
 					align-items: center;
 					cursor: pointer;
 					box-sizing: border-box;
-					height: 100%;
+					margin: 10px 0;
 
 					hr {
 						display: block;
@@ -181,6 +157,7 @@
 
 					div.results-table-body-col {
 						flex: 1;
+						text-align: center;
 
 						&.source-type {
 							overflow: hidden;
@@ -194,7 +171,7 @@
 
 						&.overlay-time {
 							flex: 0;
-							min-width: @date-field-width;
+							min-width: @date-field-width - 5px;
 							overflow: hidden;
 							text-overflow: ellipsis;
 						}
@@ -232,12 +209,13 @@
 				div.results-table-body-row {
 					direction: rtl;
 					padding-left: unset;
-					padding-right: 5px;
+					margin-right: 5px;
 					div.results-table-body-row-data {
 						div.results-table-body-col {
 							&.overlay-time {
 								direction: ltr; // it is a date, so don't flip characters
 								text-align: right; // but align it to the right
+								padding: 0 3px;
 							}
 						}
 					}

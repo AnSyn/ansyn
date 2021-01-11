@@ -226,7 +226,7 @@ export const selectMaps = createSelector(mapStateSelector, selectEntities);
 export const selectLayout: MemoizedSelector<any, LayoutKey> = createSelector(mapStateSelector, (state) => state.layout);
 export const selectWasWelcomeNotificationShown = createSelector(mapStateSelector, (state) => state.wasWelcomeNotificationShown);
 export const selectToastMessage = createSelector(mapStateSelector, (state) => state.toastMessage);
-export const selectFooterCollapse = createSelector(mapStateSelector, (state) => state.footerCollapse);
+export const selectFooterCollapse = createSelector(mapStateSelector, (state) => state?.footerCollapse);
 export const selectIsMinimalistViewMode = createSelector(mapStateSelector, (state) => state && state.minimalistViewMode);
 export const selectOverlaysWithMapIds = createSelector(selectMapsList, selectActiveMapId, (mapsList, activeMapId) => {
 	const overlayAndMapId = mapsList.map(map => map.data.overlay ? ({

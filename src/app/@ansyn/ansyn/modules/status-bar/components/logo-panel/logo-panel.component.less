@@ -1,0 +1,33 @@
+@import "ansyn/less/common";
+@import "../../less/status-bar-common";
+
+
+:host {
+	&:extend(.status-bar-panel);
+
+	div.menu-btn {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-evenly;
+		align-items: center;
+		cursor: pointer;
+		height: 100%;
+		padding: 0 5px;
+
+		&:hover {
+			background-color: @background-color-3;
+		}
+
+		&.active {
+			background-color: @application-primary-color;
+		}
+
+		& > span {
+			font-size: 16px;
+		}
+
+		& > i {
+			font-size: 21px;
+		}
+	}
+}

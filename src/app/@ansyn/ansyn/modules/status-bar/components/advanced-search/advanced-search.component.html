@@ -1,0 +1,105 @@
+<div class="box types " id="dataInputsPreSearch">
+    <div class="title-grid">
+        <div class="buttons-title">
+            <div class="select-all" (click)="selectAllItems()">{{'select all' | translate}}</div>
+            <div class="reset" (click)="resetDataInputFilters()" [attr.tooltip-value]="'reset' | translate" tooltip-class="bottom"><i class="icon-undo"></i></div>
+        </div>
+        <div class="title text-title">{{'Type' | translate}}</div>
+    </div>
+    <ansyn-combo-table
+    [isLine]="false"
+    [isFullSize]="false"
+    [selected]="selectedTypes"
+    contentTitle="types"
+	(ngModel)="sensorTypes"
+    (selectedItemsArray)="updateSelectedArray($event,'SelectedTypes')"
+    #types
+    >
+        <ansyn-combo-table-option  *ngFor="let type of sensorTypes" [value]="type | translate">
+        </ansyn-combo-table-option>
+        
+    </ansyn-combo-table>
+
+</div>
+
+<div class="box registration dataInputsPreSearch">
+    <div class="title-grid">
+        <div class="title text-title">{{'Geo Registration' | translate}}</div>
+    </div>
+
+    <ansyn-combo-table
+    [isLine]="true"
+    [isFullSize]="false"
+    [selected]="selectedRegistration"
+    contentTitle="registeration"
+	(ngModel)="isGeoRegistered"
+    (selectedItemsArray)="updateSelectedArray($event,'SelectedRegistration')"
+    #registeration
+    >
+        <ansyn-combo-table-option class="display-full-name" *ngFor="let GeoRegistered of isGeoRegistered" [value]="GeoRegistered | translate">
+        </ansyn-combo-table-option>
+    </ansyn-combo-table>
+</div>
+
+<div *ngIf="!displaySensors()" class="box providers-sensors dataInputsPreSearch">
+    <div class="title-grid">
+        <div class="buttons-title">
+            <div class="select-all" (click)="selectAllItems()">{{'select all' | translate}}</div>
+            <div class="reset" (click)="resetDataInputFilters()" [attr.tooltip-value]="'reset' | translate" tooltip-class="bottom"><i class="icon-undo"></i></div>
+        </div>
+        <div class="title text-title">{{'Providers' | translate}}</div>
+    </div>
+
+    <ansyn-combo-table
+    [isLine]="false"
+    [selected]="selectedProvidersNames"
+    [isFullSize]="true"
+    contentTitle="providers"
+	(ngModel)="providers"
+    (selectedItemsArray)="updateSelectedArray($event,'SelectedProviders')"
+    #providers
+    >
+        <ansyn-combo-table-option *ngFor="let provider of providersNamesList" [value]="provider | translate">
+        </ansyn-combo-table-option>
+    </ansyn-combo-table>
+</div>
+
+<div *ngIf="displaySensors()" class="box providers-sensors dataInputsPreSearch">
+    <div class="title-grid">
+        <div class="buttons-title">
+            <div class="select-all" (click)="selectAllItems()">{{'select all' | translate}}</div>
+            <div class="reset" (click)="resetDataInputFilters()" [attr.tooltip-value]="'reset' | translate" tooltip-class="bottom"><i class="icon-undo"></i></div>
+        </div>
+        <div class="title text-title">{{'sensors' | translate}}</div>
+    </div>
+
+    <ansyn-combo-table
+    [isLine]="false"
+    [selected]="selectedSensors"
+    [isFullSize]="true"
+    contentTitle="sensors"
+	(ngModel)="sensorsList"
+    (selectedItemsArray)="updateSelectedArray($event,'SelectedSensors')"
+    #providers
+    >
+        <ansyn-combo-table-option *ngFor="let sensor of sensorsList" [value]="sensor | translate">
+        </ansyn-combo-table-option>
+    </ansyn-combo-table>
+</div>
+
+<div class="box resolution dataInputsPreSearch">
+    <div class="title-grid">
+        <div class="reset" (click)="resetResolution()" [attr.tooltip-value]="'reset' | translate" tooltip-class="bottom"><i class="icon-undo"></i></div>
+        <div class="title text-title-resolution">{{'Resolution' | translate}}</div>
+    </div>
+    
+    <div class="slider">
+        <ngx-slider [(value)]="sliderOptions.floor" [(highValue)]="sliderOptions.ceil" [options]="sliderOptions" onchange="getSliderValue($event)" #resolution></ngx-slider>
+    </div>
+</div>
+
+<div class="search-icon search-button"
+    (click)="search()" >
+    <i class="fa fa-search" [attr.tooltip-value]="'search' | translate" tooltip-class="bottom"></i>
+</div>
+

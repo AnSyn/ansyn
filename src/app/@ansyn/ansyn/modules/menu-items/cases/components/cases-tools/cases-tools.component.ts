@@ -1,11 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ICasesState, selectCaseSaved, selectShowCasesTable } from '../../reducers/cases.reducer';
+import { selectCaseSaved, selectShowCasesTable } from '../../reducers/cases.reducer';
 import { select, Store } from '@ngrx/store';
-import { OpenModalAction, ShowCasesTableAction } from '../../actions/cases.actions';
+import { OpenModalAction } from '../../actions/cases.actions';
 import { distinctUntilChanged, tap, map, delay } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectEnableOnlyFavorites, selectShowOnlyFavorites } from '../../../../filters/reducer/filters.reducer';
 import { UpdateFacetsAction } from '../../../../filters/actions/filters.actions';
+import { SelectMenuItemFromOutsideAction } from '@ansyn/menu';
+import { MenuItemsKeys } from 'src/app/@ansyn/ansyn/config/ansyn.config';
 
 @Component({
 	selector: 'ansyn-cases-tools',
@@ -44,15 +46,19 @@ export class CasesToolsComponent implements OnInit, OnDestroy {
 		tap( open => this.isTableOpen = open)
 	);
 
-	constructor(protected store: Store<ICasesState>) {
+	constructor(protected store: Store<any>) {
 	}
 
 	showOnlyFavorite() {
 		this.store.dispatch(new UpdateFacetsAction({ showOnlyFavorites: !this.onlyFavorite }))
 	}
 
-	showCasesTable() {
-		this.store.dispatch(new ShowCasesTableAction(!this.isTableOpen))
+	showCasesTable(elementRef: HTMLDivElement): void {
+		this.store.dispatch(new SelectMenuItemFromOutsideAction({ name: MenuItemsKeys.Cases, elementRef, toggleFromBottom: false }))
+	}
+
+	showLayersTable(elementRef: HTMLDivElement): void {
+		this.store.dispatch(new SelectMenuItemFromOutsideAction({ name: MenuItemsKeys.DataLayers, elementRef, toggleFromBottom: false }))
 	}
 
 	ngOnInit(): void {

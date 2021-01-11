@@ -1,9 +1,7 @@
 <div class="results-table">
-	<div class="header">
-		<div class="header-title">
-			{{'Search results' | translate}}
-		</div>
-	</div>
+	<h2 class="header">
+		{{'Search results' | translate}}
+	</h2>
 	<div class="results-table-head">
 		<div class="results-table-head-row">
 			<div class="results-table-head-row-data">
@@ -28,11 +26,7 @@
 			 (mouseenter)="openOverlayOverview($event, overlay.id)"
 			 (mouseleave)="closeOverlayOverview()"
 			 [class.selected]="overlayIds.includes(overlay.id)">
-
-			<hr>
-
 			<div class="results-table-body-row-data">
-				<hr>
 
 				<div class="results-table-body-col overlay-time">
 					{{overlay.date | ansynDate}}
@@ -47,7 +41,7 @@
 				</div>
 
 				<div class="results-table-body-col overlay-resolution">
-					{{overlay.resolution}} {{ 'cm' | translate}}
+					{{overlay.resolution}} {{ 'mm' | translate}}
 				</div>
 
 				<div class="results-table-body-col overlay-favorite">
@@ -58,6 +52,4 @@
 		</div>
 
 	</div>
-
-	<div class="no-results"></div>
 </div>

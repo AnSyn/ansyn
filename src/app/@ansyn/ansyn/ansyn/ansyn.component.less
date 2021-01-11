@@ -30,17 +30,18 @@
 		bottom: 10px;
 		z-index: @z-index-results-table-button;
 		font-size: 0.9rem;
-		height: 12%;
+		height: @timeline-area-height - 20px;
 		width: 8%;
 		display: flex;
 		flex-direction: column;
 		justify-content: space-evenly;
 		align-items: center;
+		border-radius: @ansyn-results-table-border-radius;
+		outline: none;
 
 		i {
 			display: block;
 			font-size: 3em;
-			line-height: 60%; // hack to compensate for padding inside the icon
 			min-width: 30px;
 		}
 
@@ -90,7 +91,7 @@
 			position: absolute;
 			top: 0;
 			left: @menu-width;
-			width: calc(100% - @menu-width);
+			width: 100%;
 			height: @status-bar-height;
 			z-index: @z-index-status-bar-navigation-area;
 
@@ -106,13 +107,17 @@
 
 		div.layer {
 			width: 100%;
-			height: calc(100% - @status-bar-height);
+			height: calc(100% - @status-bar-height - @timeline-area-height);
 			top: @status-bar-height;
 			color: white;
 			display: flex;
 			flex-direction: column;
 			overflow: hidden;
 			position: relative;
+
+			&.isCollapse {
+				height: calc(100% - @status-bar-height);
+			}
 
 			.maps-container {
 				position: relative;
@@ -125,6 +130,13 @@
 			}
 		}
 
+		div.footer {
+			position: absolute;
+			bottom: 0;
+			width: 100%;
+			z-index: @z-index-footer;
+		}
+
 		&.animations {
 
 			div.menu {
@@ -132,6 +144,12 @@
 				transform: transitionX(0);
 				position: relative;
 				height: 100%;
+
+				&.isCollapse {
+					/deep/div.menu-wrapper > div.container {
+						height: calc(100% - @status-bar-height);
+					}
+				}
 
 				.ansynToolsAlone {
 					background: @background-color-3;
@@ -192,7 +210,6 @@
 
 			div.status {
 				left: unset;
-				right: @menu-width;
 
 				&.expand {
 					left: unset;
@@ -234,6 +251,38 @@
 /deep/ .owl-dt-container {
 	font-family: @app-font;
 }
+
+/deep/ .ngx-slider {
+	margin: 0 5px !important;
+}
+
+/deep/ .ngx-slider-bubble {
+	color: white !important;
+	margin-bottom: 5px !important;
+}
+
+/deep/ .ngx-slider-pointer {
+	background-color: gray !important;
+}
+
+/deep/ .ngx-slider-selection {
+	background: gray !important;
+}
+
+/deep/ .ngx-slider-active {
+	outline: none;
+}
+
+/deep/ .ngx-slider-pointer:after {
+	visibility: hidden;
+}
+
+/deep/ .ngx-slider-pointer-min, /deep/ .ngx-slider-pointer-max {
+	width: 24px !important;
+	height: 24px !important;
+	margin-top: 3%;
+}
+
 
 @keyframes menu-init-ltr {
 	from {

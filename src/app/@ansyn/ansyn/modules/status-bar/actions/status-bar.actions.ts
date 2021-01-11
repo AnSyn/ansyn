@@ -7,7 +7,8 @@ export const StatusBarActionsTypes = {
 	COPY_SNAPSHOT_SHARE_LINK: 'COPY_SNAPSHOT_SHARE_LINK',
 	EXPAND: 'EXPAND',
 	UPDATE_GEO_FILTER_STATUS: 'UPDATE_GEO_FILTER_STATUS',
-	GO_ADJACENT_OVERLAY: 'GO_ADJACENT_OVERLAY'
+	GO_ADJACENT_OVERLAY: 'GO_ADJACENT_OVERLAY',
+	UPDATE_CALENDER_STATUS: 'UPDATE_CALENDER_STATUS'
 };
 
 export class CopySnapshotShareLinkAction implements Action, ILogMessage {
@@ -18,6 +19,14 @@ export class CopySnapshotShareLinkAction implements Action, ILogMessage {
 
 	logMessage() {
 		return `User selected share link option`
+	}
+}
+
+
+export class UpdateCalendarStatusAction implements Action {
+	type: string = StatusBarActionsTypes.UPDATE_CALENDER_STATUS;
+
+	constructor(public payload: boolean) {
 	}
 }
 

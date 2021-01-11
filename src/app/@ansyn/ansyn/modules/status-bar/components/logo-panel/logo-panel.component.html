@@ -1,0 +1,33 @@
+
+<div class="menu-btn" (click)="toggleCredentials()">
+	<i class="icon-credentials"></i>
+	<span>{{'Permissions' | translate}}</span>
+</div>
+
+<div class="menu-btn" (click)="onHelp()">
+	<i class="icon-help"></i>
+	<span>{{'Help' | translate}}</span>
+</div>
+
+<div class="menu-btn fork-me" *ngIf="menuConfig?.forkMe?.active">
+	<a class="forkMe" [href]="menuConfig.forkMe?.href" target="_blank">
+		<img [src]="menuConfig.forkMe?.image" [alt]="menuConfig.forkMe?.title"
+			 [title]="menuConfig.forkMe?.title">
+	</a>
+</div>
+
+<div class="menu-btn logo">
+	<div class="mode"
+		 *ngIf="menuConfig?.mode"
+		 [style.color]="menuConfig.color"
+		 [style.background]="menuConfig.background"
+		 [style.border]="'1px sollid' + menuConfig.color">
+		{{menuConfig.mode}}
+	</div>
+	<img [src]="menuConfig.path" [alt]="version" [title]="version" (click)="resetApp()">
+</div>
+
+<ansyn-credentials
+	*ngIf="showCredentials"
+	(closeMe)="showCredentials = false"
+></ansyn-credentials>

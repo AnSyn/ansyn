@@ -1,9 +1,9 @@
 @import "ansyn/less/common";
 @import "../../less/status-bar-common";
 
+@icon-padding: 7px;
 
 :host {
-	&:extend(.status-bar-panel);
 	flex-direction: row;
 	padding-left: 5px;
 	padding-right: 5px;
@@ -16,9 +16,8 @@
 
 		.display-button {
 			&:extend(.status-bar-button);
-			border: 1px solid #746666;
-			padding: 5px 7px;
-			
+			padding: @icon-padding;
+
 			&.active {
 				&:extend(.status-bar-button-active);
 			}
@@ -30,8 +29,25 @@
 			&.screens span {
 				margin-right: 5px;
 			}
+
+			i.icon {
+				margin: 0; // override default margin from container
+			}
+		}
+
+		div.options-container {
+			/deep/ ansyn-combo-box-option {
+				div.option {
+					padding: @icon-padding;
+
+					i.icon {
+						margin: 0; // override default margin from container
+					}
+				}
+			}
 		}
 	}
+
 
 	&.rtl {
 		/deep/ ansyn-combo-box {

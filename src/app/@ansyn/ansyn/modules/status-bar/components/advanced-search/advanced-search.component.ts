@@ -7,7 +7,7 @@ import {  GeoRegisterationOptions, IResolutionRange } from '../../../overlays/mo
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import { SearchPanelComponent } from '../search-panel/search-panel.component';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { tap } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { IAdvancedSearchParameter, IProviderData } from '../../models/statusBar-config.model';
 import { casesConfig } from '../../../menu-items/cases/services/cases.service';
 import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
@@ -45,6 +45,7 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 	@AutoSubscription
 	onDataInputFilterChange$ = this.store.pipe(
 	select(selectAdvancedSearchParameters),
+	filter(Boolean),
 	tap((searchOptions: IAdvancedSearchParameter) => {
 		this.selectedTypes = searchOptions.types;
 		this.selectedProviders = searchOptions.providers;
@@ -59,7 +60,7 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 	constructor(protected store: Store<any>,
 				@Inject(MultipleOverlaysSourceConfig) public multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				protected _parent: SearchPanelComponent,
-				@Inject(casesConfig) public caseConfig: ICasesConfig) { 
+				@Inject(casesConfig) public caseConfig: ICasesConfig) {
 		this.sensorTypes = this.getAllSensorsTypes();
 		this.sensorsList = this.getAllSensorsNames();
 		this.providersNamesList = this.getAllProvidersNames();
@@ -83,7 +84,7 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 			lowValue: this.sliderOptions.floor,
 			highValue: this.sliderOptions.ceil
 		}
-		
+
 		return  {
 			types: this.selectedTypes,
 			registeration: this.selectedRegistration,
@@ -102,7 +103,7 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 				typesNames.map(type => {
 					sensors = sensorNamesByGroup[type].map(sensor => sensor);
 				})
-			}	
+			}
 		});
 		return flattenDeep(sensors);
 	}
@@ -192,8 +193,8 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 	}
 
 	getUniqueElement(currentArray: string[], afterChangeArray: string[]): string {
-		return Boolean(afterChangeArray.length > currentArray.length) ? 
-		afterChangeArray.find(provider => this.isExistInArray(currentArray, provider)) : 
+		return Boolean(afterChangeArray.length > currentArray.length) ?
+		afterChangeArray.find(provider => this.isExistInArray(currentArray, provider)) :
 		currentArray.find(provider => this.isExistInArray(afterChangeArray, provider));
 	}
 
@@ -222,7 +223,7 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 		this.selectedTypes = this.sensorTypes;
 		this.selectedSensors = this.sensorsList;
 	}
-	
+
 	resetDataInputFilters(): void {
 		if (this.enableResetProviders) {
 			this.selectedProvidersNames = [];
@@ -236,5 +237,5 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 		this.sliderOptions.floor = this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.lowValue;
 		this.sliderOptions.ceil =  this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.highValue;
 	}
-	
+
 }

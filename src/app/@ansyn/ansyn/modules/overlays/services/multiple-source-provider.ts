@@ -7,7 +7,7 @@ import {
 	mergeErrors,
 	mergeOverlaysFetchData
 } from '../models/base-overlay-source-provider.model';
-import { map, take, tap } from 'rxjs/operators';
+import { filter, map, take, tap } from 'rxjs/operators';
 import { groupBy } from 'lodash';
 import { IOverlayByIdMetaData } from './overlays.service';
 import { IMultipleOverlaysSource, MultipleOverlaysSource } from '../models/overlays-source-providers';
@@ -28,17 +28,18 @@ import { selectProviders } from '../reducers/overlays.reducer';
 	providedIn: 'root'
 })
 export class MultipleOverlaysSourceProvider {
-	
+
 	selectedProviders: IProviderData[] = [];
 
 	onDataInputFilterChange$ = this.store.pipe(
 		select(selectProviders),
+		filter(Boolean),
 		tap((providers: IProviderData[]) => {
 			this.activeProviders(providers);
 		})
 	);
 
-	
+
 	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 				protected store: Store<any>,
 				@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,

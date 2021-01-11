@@ -33,6 +33,7 @@
 	.buttons {
 		height: @imagery-status-height;
 		display: flex;
+		margin: 0 2.5px;
 
 		&.hide {
 			visibility: hidden;
@@ -46,7 +47,6 @@
 			line-height: 0;
 
 			&.small-icon-button {
-				font-size: @icon-size;
 				background: transparent;
 				border: none;
 				outline: none;
@@ -66,12 +66,8 @@
 				}
 			}
 
-			.icon::before {
-				vertical-align: middle;
-				display: block;
-			}
-
 			i {
+				font-size: @icon-size;
 				&.active {
 					color: @application-primary-color;
 				}

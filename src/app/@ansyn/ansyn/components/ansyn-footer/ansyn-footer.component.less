@@ -25,7 +25,7 @@
 			}
 
 			ansyn-time-picker-container {
-				left: 305px;
+				left: 280px;
 			}
 		}
 
@@ -62,8 +62,32 @@
 		div.status-timeline-container {
 			.app-timeline-container {
 				ansyn-time-picker-container {
-					right: 305px;
+					right: 280px;
 					left: unset;
+				}
+			}
+		}
+	}
+}
+
+
+@media screen and (min-width: 1920px) { // in wider screen the timepicker is stick to date.
+	:host {
+		div.status-timeline-container {
+			.app-timeline-container {
+				ansyn-time-picker-container {
+					left: 325px;
+				}
+			}
+		}
+
+		&.rtl {
+			div.status-timeline-container {
+				.app-timeline-container {
+					ansyn-time-picker-container {
+						right: 325px;
+						left: unset;
+					}
 				}
 			}
 		}

@@ -147,8 +147,7 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	importShpAndDbf(files: FileList) {
 		forEach(files, file => {
 			const fileType = this.getFileType(file.name);
-			const reader = fileType === FileTypes.shp ? "shpReader" : "dbfReader";
-			this[reader].readAsArrayBuffer(file);
+			this[`${fileType}Reader`].readAsArrayBuffer(file);
 		});
 	}
 

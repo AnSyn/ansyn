@@ -125,10 +125,10 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	importLayer(files: FileList) {
 		this.file = files.item(0);
 		this.store.dispatch(new LogImportLayer({ fileName: this.file.name }));
-		this.fileType = this.getFileType(this.file.name);
+		this.fileType = this.getFileType(this.file.name).toLocaleLowerCase();
 		if (files.length === 2) {
 			this.importShpAndDbf(files);
-		} else if (this.fileType.toLocaleLowerCase() === 'shp' || 'zip') {
+		} else if (this.fileType === 'shp' || this.fileType === 'zip') {
 			this.reader.readAsArrayBuffer(this.file);
 		} else {
 			this.reader.readAsText(this.file, 'UTF-8');

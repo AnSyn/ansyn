@@ -1,6 +1,6 @@
 <div class="tools-menu-item-container">
 	<div>
-		<button [attr.tooltip-class]="isRTL ? 'bottom left' : 'bottom right'"
+		<button tooltip-class="bottom"
 				[attr.tooltip-value]="'Shadow mouse cursor' | translate"
 				(click)="toggleShadowMouse()"
 				[class.mode-on]="onShadowMouse && !shadowMouseDisabled"
@@ -10,7 +10,7 @@
 	</div>
 
 	<div class="distance-measure-tool">
-		<button [attr.tooltip-class]="isRTL ? 'bottom left' : 'bottom right'"
+		<button tooltip-class="bottom"
 				[attr.tooltip-value]="'Measure Distance' | translate"
 				(click)="toggleMeasureDistanceTool()"
 				[disabled]="isGeoOptionsDisabled"
@@ -20,7 +20,7 @@
 	</div>
 
 	<div>
-		<button [attr.tooltip-class]="isRTL ? 'bottom left' : 'bottom right'"
+		<button tooltip-class="bottom"
 				[attr.tooltip-value]="'Go To' | translate"
 				(click)="toggleSubMenu(subMenuEnum.goTo)"
 				[class.active]="isExpand(subMenuEnum.goTo) && !isGeoOptionsDisabled"
@@ -31,7 +31,7 @@
 	</div>
 
 	<div class="user-annotations" [class.active]="isExpand(subMenuEnum.annotations)">
-		<button [attr.tooltip-class]="isRTL ? 'bottom left' : 'bottom right'"
+		<button tooltip-class="bottom"
 				[attr.tooltip-value]="'Annotations' | translate"
 				[class.active]="isExpand(subMenuEnum.annotations) && !isGeoOptionsDisabled"
 				(click)="toggleSubMenu(subMenuEnum.annotations, $event)"
@@ -47,8 +47,8 @@
 	</div>
 
 	<div class="export-maps-tool">
-		<button [attr.tooltip-class]="isRTL ? 'bottom left' : 'bottom right'"
-				[attr.tooltip-value]="'Export maps' | translate"
+		<button tooltip-class="bottom"
+				[attr.tooltip-value]="'export map' | translate"
 				(click)="toggleExportMapsDialog()">
 			<i class="icon-status-bar-imagery-count"></i>
 		</button>

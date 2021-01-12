@@ -91,9 +91,9 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 		.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
 			if (sensorNamesByGroup) {
 				const typesNames = Object.keys(sensorNamesByGroup);
-				typesNames.map(type => {
-					sensors = sensors.concat(sensorNamesByGroup[type].map(sensor => sensor));
-				})
+				typesNames.forEach(type => {
+					sensors = sensors.concat(sensorNamesByGroup[type]);
+				});
 			}
 		});
 		return flattenDeep(sensors);
@@ -146,10 +146,12 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 	updateSelectedTypesBySensor(changedSensor: string): void {
 		this.getActiveProviders()
 			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
-				if (sensorNamesByGroup) {
-					const typesNames = Object.keys(sensorNamesByGroup);
-					this.selectedAdvancedSearchParameters.types = this.selectedAdvancedSearchParameters.types.concat(typesNames.filter(type => sensorNamesByGroup[type].includes(changedSensor) && !this.selectedAdvancedSearchParameters.types.includes(type)));
-				}
+				const typesNames = Object.keys(sensorNamesByGroup);
+				const selectedType = this.selectedAdvancedSearchParameters.types;
+				const typeToActivate = typesNames.filter(type => {
+					return sensorNamesByGroup[type].includes(changedSensor) && !selectedType.includes(type)
+				});
+				this.selectedAdvancedSearchParameters.types = selectedType.concat(typeToActivate);
 		});
 	}
 
@@ -168,7 +170,7 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 				if (sensorNamesByGroup) {
 					const typesNames = Object.keys(sensorNamesByGroup);
 					typesNames.filter(type => selectedTypesArray.includes(type)).map(type => {
-							sensorsToActivate = sensorsToActivate.concat(sensorNamesByGroup[type].map(sensor => sensor));
+							sensorsToActivate = sensorsToActivate.concat(sensorNamesByGroup[type]);
 					});
 				}
 		});

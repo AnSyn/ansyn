@@ -2,13 +2,13 @@
 <div class="simple-search" >
 	<div *ngIf="!advancedSearch" class="advanced-search" (click)="toggleAdvancedSearch()">
 		<div class="advanced-search-text">{{'Advanced Search' | translate}}</div>
-		<i class="icon-down"></i><br/>
+		<i class="medium-icon icon-down"></i><br/>
 	</div>
 
 	<div *ngIf="advancedSearch" class="advanced-search" (click)="toggleAdvancedSearch()">
-		{{'minimize' | translate}} <i class="icon-up"></i><br/>
+		{{'minimize' | translate}} <i class="medium-icon icon-up"></i><br/>
 	</div>
-	
+
 	<!-- Time -->
 	<ansyn-time-picker-container [openTop]="false"></ansyn-time-picker-container>
 
@@ -26,7 +26,7 @@
 				<span class="title">{{geoFilterTitle | translate}} </span>
 			</div>
 		</button>
-	
+
 		<ansyn-location-picker
 			*ngIf="isActive('LocationPicker')"
 			[geoFilter]="geoFilterTitle">

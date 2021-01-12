@@ -21,6 +21,15 @@ import { getErrorMessageFromException } from '../../../../core/utils/logs/timer-
 import { bboxFromGeoJson, IMapSettings, polygonFromBBOX, validateFeatureProperties } from '@ansyn/imagery';
 import { forEach } from 'lodash';
 
+export enum FileTypes {
+	json = 'json',
+	geojson = 'geojson',
+	kml = 'kml',
+	shp = 'shp',
+	dbf = 'dbf',
+	zip = 'zip'
+}
+
 @Component({
 	selector: 'ansyn-import-layer',
 	templateUrl: './import-layer.component.html',
@@ -46,22 +55,22 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 			let layerData = { name: this.layerName, data: null };
 			const readerResult: string = <string>this.reader.result;
 			switch (this.fileType.toLowerCase()) {
-				case 'kml':
+				case FileTypes.kml:
 					const features = this.kmlFormat.readFeatures(readerResult);
 					this.prepareKMLFeature(features);
 					layerData.data = this.geoJsonFormat.writeFeaturesObject(features);
 					this.onReadLayer$.emit(layerData);
 					break;
-				case 'json':
-				case 'geojson':
+				case FileTypes.json:
+				case FileTypes.geojson:
 					layerData.data = JSON.parse(readerResult);
 					this.onReadLayer$.emit(layerData);
 					break;
-				case 'shp':
+				case FileTypes.shp:
 					layerData.data = this.addShapeFileLayer(readerResult);
 					this.onReadLayer$.emit(layerData);
 					break;
-				case 'zip':
+				case FileTypes.zip:
 					layerData.data = shp.parseZip(readerResult);
 					this.onReadLayer$.emit(layerData);
 					break;
@@ -128,7 +137,7 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 		this.fileType = this.getFileType(this.file.name);
 		if (files.length === 2) {
 			this.importShpAndDbf(files);
-		} else if (this.fileType.toLocaleLowerCase() === 'shp' || 'zip') {
+		} else if (this.fileType === FileTypes.shp || this.fileType === FileTypes.zip) {
 			this.reader.readAsArrayBuffer(this.file);
 		} else {
 			this.reader.readAsText(this.file, 'UTF-8');
@@ -138,8 +147,7 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	importShpAndDbf(files: FileList) {
 		forEach(files, file => {
 			const fileType = this.getFileType(file.name);
-			const reader = fileType.toLocaleLowerCase() === 'shp' ? "shpReader" : "dbfReader";
-			this[reader].readAsArrayBuffer(file);
+			this[`${fileType}Reader`].readAsArrayBuffer(file);
 		});
 	}
 
@@ -221,7 +229,7 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 	}
 
 	private getFileType(fileName) {
-		return fileName.slice(fileName.lastIndexOf('.') + 1);
+		return fileName.slice(fileName.lastIndexOf('.') + 1).toLocaleLowerCase();
 	}
 
 	get layerName() {

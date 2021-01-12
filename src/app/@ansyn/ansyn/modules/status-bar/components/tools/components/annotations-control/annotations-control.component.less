@@ -3,7 +3,7 @@
 @import "ansyn/less/z-index-globals";
 
 @tools-box-width: 296px;
-@tools-box-height: 46px;
+@tools-box-height: 40px;
 
 :host {
 	width: 0;
@@ -59,7 +59,6 @@
 			li {
 				visibility: visible;
 				opacity: 1;
-				margin-top: 5px;
 			}
 		}
 	}
@@ -82,11 +81,16 @@
 
 		& > li {
 			list-style-type: none;
-			padding: 1px;
+			padding: 5px;
+			display: flex;
+			cursor: pointer;
 
+			&.Translate {
+				display: none;
+			}
 			span {
 				color: white;
-				font-size: 28px;
+				font-size: 22px;
 			}
 
 			&:hover:not(.mode-on), &.mode-on {
@@ -104,6 +108,7 @@
 				align-items: center;
 				height: 100%;
 				margin: 0 4px;
+				cursor: unset;
 
 				div {
 					height: 70%;
@@ -130,9 +135,12 @@
 
 		li.expanded-selection {
 			position: relative;
-
-			button.expand {
-				background-color: @background-color-6;
+			flex-direction: column;
+			button {
+				display: flex;
+				&.expand {
+					background-color: @background-color-6;
+				}
 			}
 
 			div.list {
@@ -149,7 +157,6 @@
 				background: @background-color-3;
 
 				.item {
-					cursor: pointer;
 
 					&:hover, &.selected {
 						background-color: @background-color-6;
@@ -180,22 +187,7 @@
 			}
 		}
 
-		&.expand {
-			ul.annotations-options {
-				li {
-					margin-right: unset;
-					margin-left: 5px;
-				}
-			}
-		}
-
 		ul.annotations-options {
-			& > li {
-				&:last-child {
-					padding-right: unset;
-					padding-left: 2px;
-				}
-			}
 			li.expanded-selection {
 				div.list {
 					left: unset;

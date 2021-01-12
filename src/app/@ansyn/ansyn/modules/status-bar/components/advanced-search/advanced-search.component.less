@@ -4,44 +4,45 @@
 @import "../../less/status-bar-common";
 
 :host {
-    display: grid;
-    margin-top: 5px;
-
+	display: grid;
+	margin-top: 5px;
+    margin-bottom: 20px;
 	.box {
-        .select-all {
-            margin-right: 10px;
-            cursor: pointer;
-            margin-top: 2px;
-        }
+		.select-all {
+			margin-right: 10px;
+			cursor: pointer;
+			margin-top: 2px;
+		}
 
-        .reset {
-            cursor: pointer;
-            width: 0;
-        }
+		.reset {
+			cursor: pointer;
+			width: 0;
+		}
 
-        .display-full-name {
-            width: 150px;
-        }
+		.display-full-name {
+			width: 150px;
+		}
 
-        .title-grid {
-            height: 25px;
-            display: grid;
-            margin-bottom: 5px;
+		.title-grid {
+			height: 25px;
+			display: grid;
+			margin-bottom: 5px;
 
-            .buttons-title {
-                grid-column: 1;
-                display: inline-flex;
-            }
+			.buttons-title {
+				grid-column: 1;
+				display: inline-flex;
+			}
 
-            .text-title {
-                grid-column: 2 / span 2;
-                margin-top: 2px;
-            }
-            .text-title-resolution {
-                grid-column: 2;
-                margin-top: 2px;
-            }
-        }
+			.text-title {
+				grid-column: 2 / span 2;
+				margin-top: 2px;
+			}
+
+			.text-title-resolution {
+				grid-column: 2;
+				margin-top: 2px;
+			}
+		}
 
 		.button {
 			&:extend(.status-bar-button-round);
@@ -76,63 +77,66 @@
 		}
 
 		.dataInputsPreSearch {
-            padding-right: 10px;
-            padding-bottom: 10px;
-        }
-        
-        .grid-item {
-            text-align: center;
-            padding: 20px;
-            font-size: 30px;
-        }
+			padding-right: 10px;
+			padding-bottom: 10px;
+		}
 
-        
-    }
+		.grid-item {
+			text-align: center;
+			padding: 20px;
+			font-size: 30px;
+		}
 
-    .types {
-        grid-column: 1 / span 2;
-        grid-row: 1;
-      }
-      
-    .registration {
-        grid-column: 3;
-      }
 
-    .providers-sensors {
-        grid-column: 1 / span 2;
-        grid-row: 2 / span 3;
-        margin-top: 5px;
-      }
+	}
 
-    .resolution {
-        grid-row: 2;
-        grid-column: 3;
-        margin-top: 5px;
-      }
-      
-    .search-button {
-        grid-row: 3;
-        grid-column: 3;
-        text-align: center;
-      }
+	.types {
+		grid-column: 1 / span 2;
+		grid-row: 1;
+	}
 
-      .slider {
-          background-color: #3e3e3e;
-          border-radius: 10px;
-          min-height: 90px;
-          align-items: center;
-          display: flex;
-          width: 165px !important;
-          direction: ltr;
-      }
+	.registration {
+		grid-column: 3;
+	}
 
-      .fa-search {
-        cursor: pointer;
-        font-size: 25px;
-        background-color: #3e3e3e;
-        border-radius: 20px;
-        margin-top: 10px;
-        padding: 5px;
-        width: 50px;
-      }
+	.providers-sensors {
+		grid-column: 1 / span 2;
+		grid-row: 2 / span 3;
+		margin-top: 5px;
+	}
+
+	.resolution {
+		grid-row: 2;
+		grid-column: 3;
+		margin-top: 5px;
+	}
+
+	.search-button {
+		grid-row: 3;
+		grid-column: 3;
+		text-align: center;
+		cursor: pointer;
+		font-size: 25px;
+		background-color: #3e3e3e;
+		border-radius: 20px;
+		margin: 10px auto 0 auto;
+		padding: 5px;
+		width: 50px;
+	}
+
+	.slider {
+		background-color: #3e3e3e;
+		border-radius: 10px;
+		min-height: 90px;
+		align-items: center;
+		display: flex;
+		width: 165px !important;
+		direction: ltr;
+	}
+
+	i[class='icon-undo'] {
+		vertical-align: middle;
+		font-size: 14px;
+		margin: 0 5px;
+	}
 }

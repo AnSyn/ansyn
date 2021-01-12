@@ -17,7 +17,7 @@
     >
         <ansyn-combo-table-option  *ngFor="let type of sensorTypes" [value]="type | translate">
         </ansyn-combo-table-option>
-        
+
     </ansyn-combo-table>
 
 </div>
@@ -92,7 +92,7 @@
         <div class="reset" (click)="resetResolution()" [attr.tooltip-value]="'reset' | translate" tooltip-class="bottom"><i class="icon-undo"></i></div>
         <div class="title text-title-resolution">{{'Resolution' | translate}}</div>
     </div>
-    
+
     <div class="slider">
         <ngx-slider [(value)]="sliderOptions.floor" [(highValue)]="sliderOptions.ceil" [options]="sliderOptions" onchange="getSliderValue($event)" #resolution></ngx-slider>
     </div>
@@ -100,6 +100,6 @@
 
 <div class="search-icon search-button"
     (click)="search()" >
-    <i class="fa fa-search" [attr.tooltip-value]="'search' | translate" tooltip-class="bottom"></i>
+    <i class="icon-search-button" [attr.tooltip-value]="'search' | translate" tooltip-class="bottom"></i>
 </div>
 

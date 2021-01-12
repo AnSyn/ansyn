@@ -1,7 +1,7 @@
 <div class="image-processing-container">
 	<div class="title-wrapper">
 		<p class="title">{{'Manual Image Enhancement' | translate}}
-			<span class="resetAll" (click)="resetParams()">{{'Reset all' | translate}}</span>
+			<span class="reset" (click)="resetParams()" [attr.tooltip-value]="'reset' | translate" tooltip-class="bottom"><i class="medium-icon icon-undo"></i></span>
 		</p>
 	</div>
 	<ul class="image-processing-options">

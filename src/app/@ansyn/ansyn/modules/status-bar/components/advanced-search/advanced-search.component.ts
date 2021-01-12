@@ -101,7 +101,7 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 			if (sensorNamesByGroup) {
 				const typesNames = Object.keys(sensorNamesByGroup);
 				typesNames.map(type => {
-					sensors = sensorNamesByGroup[type].map(sensor => sensor);
+					sensors = sensors.concat(sensorNamesByGroup[type].map(sensor => sensor));
 				})
 			}
 		});
@@ -143,11 +143,23 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 	}
 
 	updateSelectedSensors(selectedSensorsArray: string[]): void {
+		const changedSensor = this.getUniqueElement(selectedSensorsArray, this.selectedSensors)
 		this.selectedSensors = selectedSensorsArray;
+		this.updateSelectedTypesBySensor(changedSensor);
 	}
 
 	updateSelectedArray(selectedItemsArray: string[], arrayToUpdate: string): void {
 		this[`update${arrayToUpdate}`](selectedItemsArray);
+	}
+
+	updateSelectedTypesBySensor(changedSensor: string): void {
+		this.getActiveProviders()
+			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
+				if (sensorNamesByGroup) {
+					const typesNames = Object.keys(sensorNamesByGroup);
+					this.selectedTypes = this.selectedTypes.concat(typesNames.filter(type => sensorNamesByGroup[type].includes(changedSensor) && !this.selectedTypes.includes(type)));
+				}
+		});
 	}
 
 	updateSelectedProvidersByProviderNames(): void {
@@ -158,13 +170,14 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 	}
 
 	updateSelectedSensorsByTypes(selectedTypesArray: string[]): void {
+		this.selectedSensors = [];
 		let sensorsToActivate: any[] = [];
 		this.getActiveProviders()
 			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
 				if (sensorNamesByGroup) {
 					const typesNames = Object.keys(sensorNamesByGroup);
 					typesNames.filter(type => selectedTypesArray.includes(type)).map(type => {
-							sensorsToActivate = sensorNamesByGroup[type].map(sensor => sensor)
+							sensorsToActivate = sensorsToActivate.concat(sensorNamesByGroup[type].map(sensor => sensor));
 					});
 				}
 		});

@@ -15,7 +15,7 @@
     (selectedItemsArray)="updateSelectedArray($event,'SelectedTypes')"
     #types
     >
-        <ansyn-combo-table-option  *ngFor="let type of sensorTypes" [value]="type | translate">
+        <ansyn-combo-table-option  *ngFor="let type of sensorTypes" [value]="type">
         </ansyn-combo-table-option>
 
     </ansyn-combo-table>
@@ -36,7 +36,7 @@
     (selectedItemsArray)="updateSelectedArray($event,'SelectedRegistration')"
     #registeration
     >
-        <ansyn-combo-table-option class="display-full-name" *ngFor="let GeoRegistered of isGeoRegistered" [value]="GeoRegistered | translate">
+        <ansyn-combo-table-option class="display-full-name" *ngFor="let GeoRegistered of isGeoRegistered" [value]="GeoRegistered">
         </ansyn-combo-table-option>
     </ansyn-combo-table>
 </div>
@@ -59,7 +59,7 @@
     (selectedItemsArray)="updateSelectedArray($event,'SelectedProviders')"
     #providers
     >
-        <ansyn-combo-table-option *ngFor="let provider of providersNamesList" [value]="provider | translate">
+        <ansyn-combo-table-option *ngFor="let provider of providersNamesList" [value]="provider">
         </ansyn-combo-table-option>
     </ansyn-combo-table>
 </div>
@@ -82,7 +82,7 @@
     (selectedItemsArray)="updateSelectedArray($event,'SelectedSensors')"
     #providers
     >
-        <ansyn-combo-table-option *ngFor="let sensor of sensorsList" [value]="sensor | translate">
+        <ansyn-combo-table-option *ngFor="let sensor of sensorsList" [value]="sensor">
         </ansyn-combo-table-option>
     </ansyn-combo-table>
 </div>

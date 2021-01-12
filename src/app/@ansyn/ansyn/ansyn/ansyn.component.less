@@ -4,6 +4,8 @@
 @animation-duration: 0.3s;
 
 :host {
+	direction: rtl;
+
 	&.component {
 		position: relative;
 
@@ -26,7 +28,7 @@
 		position: absolute;
 		color: white;
 		border: solid 1px #EBF8FA;
-		left: 10px;
+		right: 10px;
 		bottom: 10px;
 		z-index: @z-index-results-table-button;
 		font-size: 0.9rem;
@@ -66,13 +68,12 @@
 	}
 
 	.results {
-		left: 0;
+		right: 0;
 		position: fixed;
 	}
 
 	font-family: @app-font;
 	font-size: 14px;
-	direction: ltr;
 
 	div.app {
 		display: flex;
@@ -90,13 +91,13 @@
 		div.status {
 			position: absolute;
 			top: 0;
-			left: @menu-width;
+			right: 0;
 			width: 100%;
 			height: @status-bar-height;
 			z-index: @z-index-status-bar-navigation-area;
 
 			&.expand {
-				left: 0;
+				right: 0;
 				width: 100%;
 			}
 
@@ -140,7 +141,7 @@
 		&.animations {
 
 			div.menu {
-				animation: menu-init-ltr @animation-duration;
+				animation: menu-init-rtl @animation-duration;
 				transform: transitionX(0);
 				position: relative;
 				height: 100%;
@@ -175,53 +176,6 @@
 			}
 		}
 	}
-
-	&.rtl {
-		direction: rtl;
-
-		.results-table {
-			left: unset;
-			right: 10px;
-			i {
-				left: unset;
-				right: 40px;
-			}
-			span.badge {
-				left: unset;
-				right: 45px;
-			}
-			span.results-title {
-				left: unset;
-				right: 0;
-			}
-		}
-
-		.results {
-			left: unset;
-			right: 0;
-		}
-
-		div.app {
-			&.animations {
-				div.menu {
-					animation: menu-init-rtl @animation-duration;
-				}
-			}
-
-			div.status {
-				left: unset;
-
-				&.expand {
-					left: unset;
-					right: 0;
-				}
-			}
-		}
-
-		// div.app
-	}
-
-	// rtl
 }
 
 @media screen and (max-width: 959px) {

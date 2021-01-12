@@ -7,7 +7,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectEnableOnlyFavorites, selectShowOnlyFavorites } from '../../../../filters/reducer/filters.reducer';
 import { UpdateFacetsAction } from '../../../../filters/actions/filters.actions';
 import { SelectMenuItemFromOutsideAction } from '@ansyn/menu';
-import { MenuItemsKeys } from 'src/app/@ansyn/ansyn/config/ansyn.config';
+import { MenuItemsKeys } from '../../../../../config/ansyn.config';
 
 @Component({
 	selector: 'ansyn-cases-tools',

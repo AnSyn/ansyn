@@ -148,10 +148,13 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
 				const typesNames = Object.keys(sensorNamesByGroup);
 				const selectedType = this.selectedAdvancedSearchParameters.types;
-				const typeToActivate = typesNames.filter(type => {
-					return sensorNamesByGroup[type].includes(changedSensor) && !selectedType.includes(type)
+				const typeToActivate = typesNames.find(type => {
+					const sensorsListByType = sensorNamesByGroup[type];
+					const isSensorContainedInType =  sensorsListByType.includes(changedSensor);
+					const isSelected = selectedType.includes(type);
+					return isSensorContainedInType && !isSelected;
 				});
-				this.selectedAdvancedSearchParameters.types = selectedType.concat(typeToActivate);
+				this.selectedAdvancedSearchParameters.types.push(typeToActivate);
 		});
 	}
 

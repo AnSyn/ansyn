@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { flattenDeep } from 'lodash';
+import { cloneDeep, flattenDeep } from 'lodash';
 import { IMultipleOverlaysSourceConfig, IOverlaysSourceProvider, MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
 import { Options } from '@angular-slider/ngx-slider'
 import {  GeoRegisterationOptions, IResolutionRange } from '../../../overlays/models/overlay.model';
@@ -34,27 +34,18 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 	sensorsList: string[];
 
 	selectedProvidersNames: string[] = [];
-	selectedTypes: string[] = [];
 	allProviders: IProviderData[] = [];
-	selectedProviders: IProviderData[] = [];
-	selectedRegistration: string[] = [];
-	selectedSensors: string[] = [];
 
-	enableResetProviders: boolean;
-
+	selectedAdvancedSearchParameters: IAdvancedSearchParameter = {}
 	@AutoSubscription
 	onDataInputFilterChange$ = this.store.pipe(
 	select(selectAdvancedSearchParameters),
 	filter(Boolean),
 	tap((searchOptions: IAdvancedSearchParameter) => {
-		this.selectedTypes = searchOptions.types;
-		this.selectedProviders = searchOptions.providers;
-		this.selectedRegistration = searchOptions.registeration;
+		this.selectedAdvancedSearchParameters = cloneDeep(searchOptions);
 		this.sliderOptions.floor = searchOptions.resolution.lowValue;
 		this.sliderOptions.ceil = searchOptions.resolution.highValue;
-		this.selectedSensors = searchOptions.sensors;
-		this.selectedProvidersNames = this.selectedProviders.map(provider => provider.name);
-		this.enableResetProviders = searchOptions.enableResetProviders;
+		this.selectedProvidersNames = this.selectedAdvancedSearchParameters.providers.map(provider => provider.name);
 	}));
 
 	constructor(protected store: Store<any>,
@@ -86,11 +77,11 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 		}
 
 		return  {
-			types: this.selectedTypes,
-			registeration: this.selectedRegistration,
+			types: this.selectedAdvancedSearchParameters.types,
+			registeration: this.selectedAdvancedSearchParameters.registeration,
 			resolution,
-			providers: this.selectedProviders,
-			sensors: this.selectedSensors
+			providers: this.selectedAdvancedSearchParameters.providers,
+			sensors: this.selectedAdvancedSearchParameters.sensors
 		}
 	}
 
@@ -125,9 +116,9 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 	}
 
 	updateSelectedTypes(selectedTypesArray: string[]): void {
-		const changedType = this.getUniqueElement(selectedTypesArray, this.selectedTypes);
+		const changedType = this.getUniqueElement(selectedTypesArray, this.selectedAdvancedSearchParameters.types);
 		this.updateSelectedProvidersByType(changedType);
-		this.selectedTypes = selectedTypesArray;
+		this.selectedAdvancedSearchParameters.types = selectedTypesArray;
 		this.updateSelectedSensorsByTypes(selectedTypesArray);
 	}
 
@@ -139,12 +130,12 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 	}
 
 	updateSelectedRegistration(selectedRegistrationArray: string[]): void {
-		this.selectedRegistration = selectedRegistrationArray;
+		this.selectedAdvancedSearchParameters.registeration = selectedRegistrationArray;
 	}
 
 	updateSelectedSensors(selectedSensorsArray: string[]): void {
-		const changedSensor = this.getUniqueElement(selectedSensorsArray, this.selectedSensors)
-		this.selectedSensors = selectedSensorsArray;
+		const changedSensor = this.getUniqueElement(selectedSensorsArray, this.selectedAdvancedSearchParameters.sensors)
+		this.selectedAdvancedSearchParameters.sensors = selectedSensorsArray;
 		this.updateSelectedTypesBySensor(changedSensor);
 	}
 
@@ -157,20 +148,20 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
 				if (sensorNamesByGroup) {
 					const typesNames = Object.keys(sensorNamesByGroup);
-					this.selectedTypes = this.selectedTypes.concat(typesNames.filter(type => sensorNamesByGroup[type].includes(changedSensor) && !this.selectedTypes.includes(type)));
+					this.selectedAdvancedSearchParameters.types = this.selectedAdvancedSearchParameters.types.concat(typesNames.filter(type => sensorNamesByGroup[type].includes(changedSensor) && !this.selectedAdvancedSearchParameters.types.includes(type)));
 				}
 		});
 	}
 
 	updateSelectedProvidersByProviderNames(): void {
-		this.selectedProviders = [];
+		this.selectedAdvancedSearchParameters.providers = [];
 		this.selectedProvidersNames.filter(providerName => this.selectedProvidersNames.includes(providerName)).map(selectedProviderName => {
-			this.selectedProviders.push(...this.allProviders.filter(provider => provider.name === selectedProviderName))
+			this.selectedAdvancedSearchParameters.providers.push(...this.allProviders.filter(provider => provider.name === selectedProviderName))
 		})
 	}
 
 	updateSelectedSensorsByTypes(selectedTypesArray: string[]): void {
-		this.selectedSensors = [];
+		this.selectedAdvancedSearchParameters.sensors = [];
 		let sensorsToActivate: any[] = [];
 		this.getActiveProviders()
 			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
@@ -182,8 +173,8 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 				}
 		});
 
-		const sensorsToAdd = sensorsToActivate.filter(sensor => !this.selectedSensors.includes(sensor));
-		this.selectedSensors = this.selectedSensors.concat(sensorsToAdd);
+		const sensorsToAdd = sensorsToActivate.filter(sensor => !this.selectedAdvancedSearchParameters.sensors.includes(sensor));
+		this.selectedAdvancedSearchParameters.sensors = this.selectedAdvancedSearchParameters.sensors.concat(sensorsToAdd);
 	}
 
 	updateSelectedProvidersByType(changedType: string): void {
@@ -221,11 +212,11 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 
 		if (Boolean(selectedProviders.includes(changedProvider))) {
 			this.selectedProvidersNames = selectedProviders;
-			const selectedTypesToActivate = [...typesToActivate.filter(type => !this.selectedTypes.includes(type.text)).map(type => type.text)];
-			this.selectedTypes = this.selectedTypes.concat(selectedTypesToActivate);
+			const selectedTypesToActivate = [...typesToActivate.filter(type => !this.selectedAdvancedSearchParameters.types.includes(type.text)).map(type => type.text)];
+			this.selectedAdvancedSearchParameters.types = this.selectedAdvancedSearchParameters.types.concat(selectedTypesToActivate);
 		} else {
-			typesToActivate.filter(type => this.selectedTypes.includes(type.text)).map(type => {
-				this.selectedTypes = this.selectedTypes.filter(selected => selected !== type.text);
+			typesToActivate.filter(type => this.selectedAdvancedSearchParameters.types.includes(type.text)).map(type => {
+				this.selectedAdvancedSearchParameters.types = this.selectedAdvancedSearchParameters.types.filter(selected => selected !== type.text);
 			})
 		}
 	}
@@ -233,17 +224,17 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 	selectAllItems(): void {
 		this.selectedProvidersNames = this.providersNamesList;
 		this.updateSelectedProvidersByProviderNames();
-		this.selectedTypes = this.sensorTypes;
-		this.selectedSensors = this.sensorsList;
+		this.selectedAdvancedSearchParameters.types = this.sensorTypes;
+		this.selectedAdvancedSearchParameters.sensors = this.sensorsList;
 	}
 
 	resetDataInputFilters(): void {
-		if (this.enableResetProviders) {
+		if (this.selectedAdvancedSearchParameters.enableResetProviders) {
 			this.selectedProvidersNames = [];
-			this.selectedProviders = [];
+			this.selectedAdvancedSearchParameters.providers = [];
 		}
-		this.selectedTypes = [];
-		this.selectedSensors = [];
+		this.selectedAdvancedSearchParameters.types = [];
+		this.selectedAdvancedSearchParameters.sensors = [];
 	}
 
 	resetResolution(): void {

@@ -9,7 +9,7 @@
     <ansyn-combo-table
     [isLine]="false"
     [isFullSize]="false"
-    [selected]="selectedTypes"
+    [selected]="this.selectedAdvancedSearchParameters.types"
     contentTitle="types"
 	(ngModel)="sensorTypes"
     (selectedItemsArray)="updateSelectedArray($event,'SelectedTypes')"
@@ -30,7 +30,7 @@
     <ansyn-combo-table
     [isLine]="true"
     [isFullSize]="false"
-    [selected]="selectedRegistration"
+    [selected]="this.selectedAdvancedSearchParameters.registeration"
     contentTitle="registeration"
 	(ngModel)="isGeoRegistered"
     (selectedItemsArray)="updateSelectedArray($event,'SelectedRegistration')"
@@ -75,7 +75,7 @@
 
     <ansyn-combo-table
     [isLine]="false"
-    [selected]="selectedSensors"
+    [selected]="this.selectedAdvancedSearchParameters.sensors"
     [isFullSize]="true"
     contentTitle="sensors"
 	(ngModel)="sensorsList"

@@ -44,11 +44,7 @@
 			flex-direction: column;
 			flex: 1;
 			margin-bottom: 65px;
-			direction: rtl;
-
-			&.rtl {
-				direction: ltr;
-			}
+			direction: ltr;
 
 			div.cases-table-body-row {
 				transition: background .3s, color .3s;
@@ -64,12 +60,8 @@
 					background-color: @background-color-7;
 					color: white;
 
-					div.cases-table-body-row-data div.case-menu-container.rtl div.case-menu {
-						transform: translateX(10px);
-					}
-
 					div.cases-table-body-row-data div.case-menu-container div.case-menu {
-						transform: translateX(-10px);
+						transform: translateX(10px);
 						opacity: 1;
 						visibility: visible;
 						pointer-events: auto;
@@ -93,11 +85,7 @@
 					cursor: pointer;
 					box-sizing: border-box;
 					position: relative;
-					direction: ltr;
-
-					&.rtl {
-						direction: rtl;
-					}
+					direction: rtl;
 
 					div.cases-table-body-col {
 						flex: 1;
@@ -113,11 +101,7 @@
 
 					div.case-menu-container {
 						flex: 1;
-						direction: rtl;
-
-						&.rtl {
-							direction: ltr;
-						}
+						direction: ltr;
 
 						div.case-menu {
 							display: flex;

@@ -98,7 +98,6 @@ export class OverlaysService {
 				start: params.time.from,
 				end: params.time.to
 			},
-			customSensorToFilter: params.advancedSearchParameters.sensors || null,
 			sensors: params.advancedSearchParameters.sensors || null,
 			registeration: params.advancedSearchParameters.registeration || null,
 			resolution: params.advancedSearchParameters.resolution || null,

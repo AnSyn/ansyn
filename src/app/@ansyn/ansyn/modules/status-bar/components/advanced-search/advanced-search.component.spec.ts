@@ -58,6 +58,12 @@ describe('AdvancedSearchComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AdvancedSearchComponent);
 		component = fixture.componentInstance;
+		component.selectedAdvancedSearchParameters = {
+			resolution: {
+				lowValue: 0,
+				highValue: 0
+			}
+		}
 		fixture.detectChanges();
 	});
 

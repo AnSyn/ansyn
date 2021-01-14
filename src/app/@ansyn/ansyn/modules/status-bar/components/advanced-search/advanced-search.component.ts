@@ -23,8 +23,8 @@ import { TranslateService } from '@ngx-translate/core';
 	export class AdvancedSearchComponent implements OnInit, OnDestroy {
 
 	sliderOptions: Options = {
-		floor: this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.lowValue,
-		ceil: this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.highValue,
+		floor: this.advancedSearchParametredFromConfig.resolution.lowValue,
+		ceil: this.advancedSearchParametredFromConfig.resolution.highValue,
 		translate: (value: number): string => this.translationService.instant(' cm ') + value
 	};
 	providersNamesList: string[];
@@ -44,6 +44,10 @@ import { TranslateService } from '@ngx-translate/core';
 		this.selectedAdvancedSearchParameters = cloneDeep(searchOptions);
 		this.selectedProvidersNames = this.selectedAdvancedSearchParameters.providers.map(provider => provider.name);
 	}));
+
+	get advancedSearchParametredFromConfig() {
+		return this.caseConfig.defaultCase.state.advancedSearchParameters;
+	}
 
 	constructor(protected store: Store<any>,
 				@Inject(MultipleOverlaysSourceConfig) public multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
@@ -100,7 +104,7 @@ import { TranslateService } from '@ngx-translate/core';
 	}
 
 	ngOnInit(): void {
-		this.allProviders = this.caseConfig.defaultCase.state.advancedSearchParameters.providers;
+		this.allProviders = this.advancedSearchParametredFromConfig.providers;
 	}
 
 	search(): void {
@@ -236,8 +240,8 @@ import { TranslateService } from '@ngx-translate/core';
 	}
 
 	resetResolution(): void {
-		this.selectedAdvancedSearchParameters.resolution.lowValue = this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.lowValue;
-		this.selectedAdvancedSearchParameters.resolution.highValue =  this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.highValue;
+		this.selectedAdvancedSearchParameters.resolution.lowValue = this.advancedSearchParametredFromConfig.resolution.lowValue;
+		this.selectedAdvancedSearchParameters.resolution.highValue =  this.advancedSearchParametredFromConfig.resolution.highValue;
 	}
 
 }

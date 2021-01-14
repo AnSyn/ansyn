@@ -94,7 +94,7 @@
     </div>
 
     <div class="slider">
-        <ngx-slider [(value)]="this.lowValue" [(highValue)]="this.highValue" [options]="sliderOptions" onchange="getSliderValue($event)" #resolution></ngx-slider>
+        <ngx-slider [(value)]="this.selectedAdvancedSearchParameters.resolution.lowValue" [(highValue)]="this.selectedAdvancedSearchParameters.resolution.highValue" [options]="sliderOptions" onchange="getSliderValue($event)" #resolution></ngx-slider>
     </div>
 </div>
 

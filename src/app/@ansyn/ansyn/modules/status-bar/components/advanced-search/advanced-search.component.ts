@@ -34,8 +34,6 @@ import { TranslateService } from '@ngx-translate/core';
 
 	selectedProvidersNames: string[] = [];
 	allProviders: IProviderData[] = [];
-	lowValue = 0;
-	highValue = 0;
 
 	selectedAdvancedSearchParameters: IAdvancedSearchParameter = {}
 	@AutoSubscription
@@ -44,8 +42,6 @@ import { TranslateService } from '@ngx-translate/core';
 	filter(Boolean),
 	tap((searchOptions: IAdvancedSearchParameter) => {
 		this.selectedAdvancedSearchParameters = cloneDeep(searchOptions);
-		this.lowValue = searchOptions.resolution.lowValue;
-		this.highValue = searchOptions.resolution.highValue;
 		this.selectedProvidersNames = this.selectedAdvancedSearchParameters.providers.map(provider => provider.name);
 	}));
 
@@ -73,15 +69,10 @@ import { TranslateService } from '@ngx-translate/core';
 	}
 
 	getCurrentAdvancedSearchParameters(): IAdvancedSearchParameter {
-		const resolution: IResolutionRange = {
-			lowValue: this.lowValue,
-			highValue: this.highValue
-		}
-
 		return  {
 			types: this.selectedAdvancedSearchParameters.types,
 			registeration: this.selectedAdvancedSearchParameters.registeration,
-			resolution,
+			resolution: this.selectedAdvancedSearchParameters.resolution,
 			providers: this.selectedAdvancedSearchParameters.providers,
 			sensors: this.selectedAdvancedSearchParameters.sensors
 		}
@@ -245,8 +236,8 @@ import { TranslateService } from '@ngx-translate/core';
 	}
 
 	resetResolution(): void {
-		this.lowValue = this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.lowValue;
-		this.highValue =  this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.highValue;
+		this.selectedAdvancedSearchParameters.resolution.lowValue = this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.lowValue;
+		this.selectedAdvancedSearchParameters.resolution.highValue =  this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.highValue;
 	}
 
 }

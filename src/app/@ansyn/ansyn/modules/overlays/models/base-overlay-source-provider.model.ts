@@ -19,7 +19,6 @@ export interface IFetchParams {
 	sensors?: string[];
 	dataInputFilters: IDataInputFilterValue[];
 	timeRange: IDateRange;
-	customSensorToFilter: string[]; // for context
 	resolution?: IResolutionRange;
 	types?: string[];
 	registeration?: string[];

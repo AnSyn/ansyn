@@ -1,9 +1,9 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { flattenDeep } from 'lodash';
+import { cloneDeep, flattenDeep } from 'lodash';
 import { IMultipleOverlaysSourceConfig, IOverlaysSourceProvider, MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
 import { Options } from '@angular-slider/ngx-slider'
-import {  GeoRegisterationOptions, IResolutionRange } from '../../../overlays/models/overlay.model';
+import {  GeoRegisterationOptions } from '../../../overlays/models/overlay.model';
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import { SearchPanelComponent } from '../search-panel/search-panel.component';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -23,8 +23,8 @@ import { TranslateService } from '@ngx-translate/core';
 	export class AdvancedSearchComponent implements OnInit, OnDestroy {
 
 	sliderOptions: Options = {
-		floor: this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.lowValue,
-		ceil: this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.highValue,
+		floor: this.advancedSearchParametredFromConfig.resolution.lowValue,
+		ceil: this.advancedSearchParametredFromConfig.resolution.highValue,
 		translate: (value: number): string => this.translationService.instant(' cm ') + value
 	};
 	providersNamesList: string[];
@@ -33,28 +33,21 @@ import { TranslateService } from '@ngx-translate/core';
 	sensorsList: string[];
 
 	selectedProvidersNames: string[] = [];
-	selectedTypes: string[] = [];
 	allProviders: IProviderData[] = [];
-	selectedProviders: IProviderData[] = [];
-	selectedRegistration: string[] = [];
-	selectedSensors: string[] = [];
 
-	enableResetProviders: boolean;
-
+	selectedAdvancedSearchParameters: IAdvancedSearchParameter = {}
 	@AutoSubscription
 	onDataInputFilterChange$ = this.store.pipe(
 	select(selectAdvancedSearchParameters),
 	filter(Boolean),
 	tap((searchOptions: IAdvancedSearchParameter) => {
-		this.selectedTypes = searchOptions.types;
-		this.selectedProviders = searchOptions.providers;
-		this.selectedRegistration = searchOptions.registeration;
-		this.sliderOptions.floor = searchOptions.resolution.lowValue;
-		this.sliderOptions.ceil = searchOptions.resolution.highValue;
-		this.selectedSensors = searchOptions.sensors;
-		this.selectedProvidersNames = this.selectedProviders.map(provider => provider.name);
-		this.enableResetProviders = searchOptions.enableResetProviders;
+		this.selectedAdvancedSearchParameters = cloneDeep(searchOptions);
+		this.selectedProvidersNames = this.selectedAdvancedSearchParameters.providers.map(provider => provider.name);
 	}));
+
+	get advancedSearchParametredFromConfig() {
+		return this.caseConfig.defaultCase.state.advancedSearchParameters;
+	}
 
 	constructor(protected store: Store<any>,
 				@Inject(MultipleOverlaysSourceConfig) public multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
@@ -80,17 +73,12 @@ import { TranslateService } from '@ngx-translate/core';
 	}
 
 	getCurrentAdvancedSearchParameters(): IAdvancedSearchParameter {
-		const resolution: IResolutionRange = {
-			lowValue: this.sliderOptions.floor,
-			highValue: this.sliderOptions.ceil
-		}
-
 		return  {
-			types: this.selectedTypes,
-			registeration: this.selectedRegistration,
-			resolution,
-			providers: this.selectedProviders,
-			sensors: this.selectedSensors
+			types: this.selectedAdvancedSearchParameters.types,
+			registeration: this.selectedAdvancedSearchParameters.registeration,
+			resolution: this.selectedAdvancedSearchParameters.resolution,
+			providers: this.selectedAdvancedSearchParameters.providers,
+			sensors: this.selectedAdvancedSearchParameters.sensors
 		}
 	}
 
@@ -100,9 +88,9 @@ import { TranslateService } from '@ngx-translate/core';
 		.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
 			if (sensorNamesByGroup) {
 				const typesNames = Object.keys(sensorNamesByGroup);
-				typesNames.map(type => {
-					sensors = sensorNamesByGroup[type].map(sensor => sensor);
-				})
+				typesNames.forEach(type => {
+					sensors = sensors.concat(sensorNamesByGroup[type]);
+				});
 			}
 		});
 		return flattenDeep(sensors);
@@ -116,7 +104,7 @@ import { TranslateService } from '@ngx-translate/core';
 	}
 
 	ngOnInit(): void {
-		this.allProviders = this.caseConfig.defaultCase.state.advancedSearchParameters.providers;
+		this.allProviders = this.advancedSearchParametredFromConfig.providers;
 	}
 
 	search(): void {
@@ -125,9 +113,9 @@ import { TranslateService } from '@ngx-translate/core';
 	}
 
 	updateSelectedTypes(selectedTypesArray: string[]): void {
-		const changedType = this.getUniqueElement(selectedTypesArray, this.selectedTypes);
+		const changedType = this.getUniqueElement(selectedTypesArray, this.selectedAdvancedSearchParameters.types);
 		this.updateSelectedProvidersByType(changedType);
-		this.selectedTypes = selectedTypesArray;
+		this.selectedAdvancedSearchParameters.types = selectedTypesArray;
 		this.updateSelectedSensorsByTypes(selectedTypesArray);
 	}
 
@@ -139,38 +127,56 @@ import { TranslateService } from '@ngx-translate/core';
 	}
 
 	updateSelectedRegistration(selectedRegistrationArray: string[]): void {
-		this.selectedRegistration = selectedRegistrationArray;
+		this.selectedAdvancedSearchParameters.registeration = selectedRegistrationArray;
 	}
 
 	updateSelectedSensors(selectedSensorsArray: string[]): void {
-		this.selectedSensors = selectedSensorsArray;
+		const changedSensor = this.getUniqueElement(selectedSensorsArray, this.selectedAdvancedSearchParameters.sensors)
+		this.selectedAdvancedSearchParameters.sensors = selectedSensorsArray;
+		this.updateSelectedTypesBySensor(changedSensor);
 	}
 
 	updateSelectedArray(selectedItemsArray: string[], arrayToUpdate: string): void {
 		this[`update${arrayToUpdate}`](selectedItemsArray);
 	}
 
+	updateSelectedTypesBySensor(changedSensor: string): void {
+		this.getActiveProviders()
+			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
+				const typesNames = Object.keys(sensorNamesByGroup);
+				const selectedType = this.selectedAdvancedSearchParameters.types;
+				const typeToActivate = typesNames.find(type => {
+					const sensorsListByType = sensorNamesByGroup[type];
+					const isSensorContainedInType =  sensorsListByType.includes(changedSensor);
+					const isSelected = selectedType.includes(type);
+					return isSensorContainedInType && !isSelected;
+				});
+				this.selectedAdvancedSearchParameters.types.push(typeToActivate);
+		});
+	}
+
 	updateSelectedProvidersByProviderNames(): void {
-		this.selectedProviders = [];
+		this.selectedAdvancedSearchParameters.providers = [];
 		this.selectedProvidersNames.filter(providerName => this.selectedProvidersNames.includes(providerName)).map(selectedProviderName => {
-			this.selectedProviders.push(...this.allProviders.filter(provider => provider.name === selectedProviderName))
+			this.selectedAdvancedSearchParameters.providers.push(...this.allProviders.filter(provider => provider.name === selectedProviderName))
 		})
 	}
 
 	updateSelectedSensorsByTypes(selectedTypesArray: string[]): void {
+		this.selectedAdvancedSearchParameters.sensors = [];
 		let sensorsToActivate: any[] = [];
 		this.getActiveProviders()
 			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
 				if (sensorNamesByGroup) {
 					const typesNames = Object.keys(sensorNamesByGroup);
 					typesNames.filter(type => selectedTypesArray.includes(type)).map(type => {
-							sensorsToActivate = sensorNamesByGroup[type].map(sensor => sensor)
+							sensorsToActivate = sensorsToActivate.concat(sensorNamesByGroup[type]);
 					});
 				}
 		});
 
-		const sensorsToAdd = sensorsToActivate.filter(sensor => !this.selectedSensors.includes(sensor));
-		this.selectedSensors = this.selectedSensors.concat(sensorsToAdd);
+		const sensorsToAdd = sensorsToActivate.filter(sensor => !this.selectedAdvancedSearchParameters.sensors.includes(sensor));
+		this.selectedAdvancedSearchParameters.sensors = this.selectedAdvancedSearchParameters.sensors.concat(sensorsToAdd);
 	}
 
 	updateSelectedProvidersByType(changedType: string): void {
@@ -208,11 +214,11 @@ import { TranslateService } from '@ngx-translate/core';
 
 		if (Boolean(selectedProviders.includes(changedProvider))) {
 			this.selectedProvidersNames = selectedProviders;
-			const selectedTypesToActivate = [...typesToActivate.filter(type => !this.selectedTypes.includes(type.text)).map(type => type.text)];
-			this.selectedTypes = this.selectedTypes.concat(selectedTypesToActivate);
+			const selectedTypesToActivate = [...typesToActivate.filter(type => !this.selectedAdvancedSearchParameters.types.includes(type.text)).map(type => type.text)];
+			this.selectedAdvancedSearchParameters.types = this.selectedAdvancedSearchParameters.types.concat(selectedTypesToActivate);
 		} else {
-			typesToActivate.filter(type => this.selectedTypes.includes(type.text)).map(type => {
-				this.selectedTypes = this.selectedTypes.filter(selected => selected !== type.text);
+			typesToActivate.filter(type => this.selectedAdvancedSearchParameters.types.includes(type.text)).map(type => {
+				this.selectedAdvancedSearchParameters.types = this.selectedAdvancedSearchParameters.types.filter(selected => selected !== type.text);
 			})
 		}
 	}
@@ -220,22 +226,22 @@ import { TranslateService } from '@ngx-translate/core';
 	selectAllItems(): void {
 		this.selectedProvidersNames = this.providersNamesList;
 		this.updateSelectedProvidersByProviderNames();
-		this.selectedTypes = this.sensorTypes;
-		this.selectedSensors = this.sensorsList;
+		this.selectedAdvancedSearchParameters.types = this.sensorTypes;
+		this.selectedAdvancedSearchParameters.sensors = this.sensorsList;
 	}
 
 	resetDataInputFilters(): void {
-		if (this.enableResetProviders) {
+		if (this.selectedAdvancedSearchParameters.enableResetProviders) {
 			this.selectedProvidersNames = [];
-			this.selectedProviders = [];
+			this.selectedAdvancedSearchParameters.providers = [];
 		}
-		this.selectedTypes = [];
-		this.selectedSensors = [];
+		this.selectedAdvancedSearchParameters.types = [];
+		this.selectedAdvancedSearchParameters.sensors = [];
 	}
 
 	resetResolution(): void {
-		this.sliderOptions.floor = this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.lowValue;
-		this.sliderOptions.ceil =  this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.highValue;
+		this.selectedAdvancedSearchParameters.resolution.lowValue = this.advancedSearchParametredFromConfig.resolution.lowValue;
+		this.selectedAdvancedSearchParameters.resolution.highValue =  this.advancedSearchParametredFromConfig.resolution.highValue;
 	}
 
 }

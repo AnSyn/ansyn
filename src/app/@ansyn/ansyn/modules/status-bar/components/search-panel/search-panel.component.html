@@ -6,7 +6,8 @@
 	</div>
 
 	<div *ngIf="advancedSearch" class="advanced-search" (click)="toggleAdvancedSearch()">
-		{{'minimize' | translate}} <i class="medium-icon icon-up"></i><br/>
+		<div class="advanced-search-text">{{'minimize' | translate}} </div>
+		<i class="medium-icon icon-up"></i><br/>
 	</div>
 
 	<!-- Time -->

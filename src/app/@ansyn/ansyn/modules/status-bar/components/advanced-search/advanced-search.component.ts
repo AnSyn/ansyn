@@ -12,6 +12,7 @@ import { IAdvancedSearchParameter, IProviderData } from '../../models/statusBar-
 import { casesConfig } from '../../../menu-items/cases/services/cases.service';
 import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overlays.reducer';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-advanced-search',
@@ -24,9 +25,7 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 	sliderOptions: Options = {
 		floor: this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.lowValue,
 		ceil: this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.highValue,
-		translate: (value: number): string => {
-			return value + ' mm ';
-		},
+		translate: (value: number): string => this.translationService.instant(' cm ') + value
 	};
 	providersNamesList: string[];
 	sensorTypes: string[];
@@ -53,6 +52,7 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 	constructor(protected store: Store<any>,
 				@Inject(MultipleOverlaysSourceConfig) public multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				protected _parent: SearchPanelComponent,
+				protected translationService: TranslateService,
 				@Inject(casesConfig) public caseConfig: ICasesConfig) {
 		this.sensorTypes = this.getAllSensorsTypes();
 		this.sensorsList = this.getAllSensorsNames();

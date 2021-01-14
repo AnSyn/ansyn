@@ -88,7 +88,7 @@ export class DeleteCaseSuccessAction extends DeleteCaseAction implements ILogMes
 	type = CasesActionTypes.DELETE_CASE_SUCCESS;
 
 	logMessage() {
-		return `Deleting case ${this.payload.name}`
+		return `Deleting case ${this.payload.name} id: ${this.payload.id}`
 	}
 
 }
@@ -128,7 +128,7 @@ export class SelectDilutedCaseAction implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return `Selecting case ${this.payload.name}`
+		return `Selecting case ${this.payload.name} id: ${this.payload.id}`
 	}
 }
 
@@ -163,7 +163,7 @@ export class SaveCaseAsSuccessAction extends SaveCaseAsAction implements ILogMes
 	readonly type = CasesActionTypes.SAVE_CASE_AS_SUCCESS;
 
 	logMessage() {
-		return `Saving case as ${this.payload.name}`
+		return `Saving case as ${this.payload.name} id: ${this.payload.id}`
 	}
 }
 
@@ -180,7 +180,7 @@ export class CopyCaseLinkAction implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return `Copying case${this.payload.caseName ? ' ' + this.payload.caseName : ''} link to clipboard`;
+		return `Copying case${this.payload.caseName ? ' ' + this.payload.caseName : ''} id: ${this.payload.caseId} link to clipboard`;
 	}
 }
 
@@ -191,6 +191,6 @@ export class RenameCaseAction implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return `Renaming case ${this.payload.oldName} to ${this.payload.newName}`
+		return `Renaming case ${this.payload.oldName} id:${this.payload.case.id} to ${this.payload.newName}`
 	}
 }

@@ -35,6 +35,8 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 
 	selectedProvidersNames: string[] = [];
 	allProviders: IProviderData[] = [];
+	lowValue = 0;
+	highValue = 0;
 
 	selectedAdvancedSearchParameters: IAdvancedSearchParameter = {}
 	@AutoSubscription
@@ -43,8 +45,8 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 	filter(Boolean),
 	tap((searchOptions: IAdvancedSearchParameter) => {
 		this.selectedAdvancedSearchParameters = cloneDeep(searchOptions);
-		this.sliderOptions.floor = searchOptions.resolution.lowValue;
-		this.sliderOptions.ceil = searchOptions.resolution.highValue;
+		this.lowValue = searchOptions.resolution.lowValue;
+		this.highValue = searchOptions.resolution.highValue;
 		this.selectedProvidersNames = this.selectedAdvancedSearchParameters.providers.map(provider => provider.name);
 	}));
 
@@ -72,8 +74,8 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 
 	getCurrentAdvancedSearchParameters(): IAdvancedSearchParameter {
 		const resolution: IResolutionRange = {
-			lowValue: this.sliderOptions.floor,
-			highValue: this.sliderOptions.ceil
+			lowValue: this.lowValue,
+			highValue: this.highValue
 		}
 
 		return  {
@@ -243,8 +245,8 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 	}
 
 	resetResolution(): void {
-		this.sliderOptions.floor = this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.lowValue;
-		this.sliderOptions.ceil =  this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.highValue;
+		this.lowValue = this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.lowValue;
+		this.highValue =  this.caseConfig.defaultCase.state.advancedSearchParameters.resolution.highValue;
 	}
 
 }

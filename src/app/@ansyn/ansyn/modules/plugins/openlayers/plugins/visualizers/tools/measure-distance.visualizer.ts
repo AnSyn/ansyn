@@ -47,7 +47,7 @@ export const measuresClassNameForExport = 'measures-layer';
 	deps: [Store, OpenLayersProjectionService, VisualizersConfig],
 	isHideable: true,
 	layerClassName: measuresClassNameForExport,
-	allwaysVisible: true
+	alwaysVisible: true
 })
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	isTotalMeasureActive: boolean;

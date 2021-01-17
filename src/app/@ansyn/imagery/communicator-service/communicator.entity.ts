@@ -280,7 +280,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		this.setActiveMap(mapType, position, sourceType).then(() => {
 			this.imageryCommunicatorService.createCommunicator(this);
 			const hideLayers = this.mapSettings?.flags?.hideLayers;
-			this.visualizers.filter(visualizer => !visualizer.allwaysVisible)
+			this.visualizers.filter(visualizer => !visualizer.alwaysVisible)
 										.forEach(visualizer => visualizer.setVisibility(!hideLayers));
 		}, err => {
 			console.error('Error loading map: ', err);

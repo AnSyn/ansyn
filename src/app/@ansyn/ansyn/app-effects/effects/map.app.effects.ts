@@ -88,7 +88,6 @@ import {
 	IOverlayStatusConfig,
 	overlayStatusConfig
 } from '../../modules/overlays/overlay-status/config/overlay-status-config';
-import { MeasureDistanceVisualizer } from '../../modules/plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
 import { IGeoFilterStatus, selectGeoFilterStatus } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import {
@@ -271,11 +270,8 @@ export class MapAppEffects {
 			ofType<ToggleMapLayersAction>(MapActionTypes.TOGGLE_MAP_LAYERS),
 			tap(({ payload }) => {
 				const communicator = this.imageryCommunicatorService.provide(payload.mapId);
-				communicator.visualizers.forEach(v => {
-					if (!(v instanceof MeasureDistanceVisualizer)) {
-						v.setVisibility(payload.isVisible);
-					}
-				})
+				communicator.visualizers.filter(visualizer => !visualizer.allwaysVisible)
+										.forEach(visualizer => visualizer.setVisibility(payload.isVisible));
 			})
 		);
 

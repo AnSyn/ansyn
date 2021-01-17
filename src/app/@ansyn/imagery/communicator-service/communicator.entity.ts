@@ -279,7 +279,7 @@ export class CommunicatorEntity implements OnInit, OnDestroy {
 		const { worldView: { mapType, sourceType }, data: { position } } = this.mapSettings;
 		this.setActiveMap(mapType, position, sourceType).then(() => {
 			this.imageryCommunicatorService.createCommunicator(this);
-			const hideLayers = this.mapSettings.flags && this.mapSettings.flags.hideLayers;
+			const hideLayers = this.mapSettings?.flags?.hideLayers;
 			this.visualizers.filter(visualizer => !visualizer.allwaysVisible)
 										.forEach(visualizer => visualizer.setVisibility(!hideLayers));
 		}, err => {

@@ -16,7 +16,7 @@
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
-			margin-right: 20px;
+			margin-left: 20px;
 
 			label {
 				opacity: 0.7;
@@ -26,7 +26,6 @@
 
 			input {
 				width: 75px;
-				background: transparent;
 				border: none;
 				outline: none;
 				color: white;
@@ -47,7 +46,7 @@
 			justify-content: flex-end;
 			align-items: flex-end;
 			margin-bottom: 5px;
-			margin-left: auto;
+			margin-right: auto;
 			cursor: pointer;
 		}
 
@@ -79,28 +78,9 @@
 		margin-top: 24px;
 
 		.ed50-notification {
-			margin-left: 1em;
+			margin-right: 1em;
 			direction: rtl;
 			.error-font();
-		}
-	}
-
-	&.rtl {
-		.inputs {
-			.input-box {
-				margin-right: unset;
-				margin-left: 20px;
-			}
-			.utm-copy-to-clipboard {
-				margin-left: unset;
-				margin-right: auto;
-			}
-		}
-		.goto-projection-title {
-			.ed50-notification {
-				margin-left: unset;
-				margin-right: 1em;
-			}
 		}
 	}
 }

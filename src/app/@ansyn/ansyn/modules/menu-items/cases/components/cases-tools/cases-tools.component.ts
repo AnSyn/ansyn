@@ -8,6 +8,8 @@ import { selectEnableOnlyFavorites, selectShowOnlyFavorites } from '../../../../
 import { UpdateFacetsAction } from '../../../../filters/actions/filters.actions';
 import { SelectMenuItemFromOutsideAction } from '@ansyn/menu';
 import { MenuItemsKeys } from '../../../../../config/ansyn.config';
+import { ComponentVisibilityService } from '../../../../../app-providers/component-visibility.service';
+import { ComponentVisibilityItems } from '../../../../../app-providers/component-mode';
 
 @Component({
 	selector: 'ansyn-cases-tools',
@@ -19,6 +21,9 @@ import { MenuItemsKeys } from '../../../../../config/ansyn.config';
 	destroy: 'ngOnDestroy'
 })
 export class CasesToolsComponent implements OnInit, OnDestroy {
+	// for component
+	isLayersShow: boolean;
+	//
 	onlyFavorite: boolean;
 	isTableOpen: boolean;
 
@@ -46,7 +51,9 @@ export class CasesToolsComponent implements OnInit, OnDestroy {
 		tap( open => this.isTableOpen = open)
 	);
 
-	constructor(protected store: Store<any>) {
+	constructor(protected store: Store<any>,
+				componentVisibilityService: ComponentVisibilityService) {
+		this.isLayersShow = componentVisibilityService.get(ComponentVisibilityItems.LAYERS);
 	}
 
 	showOnlyFavorite() {

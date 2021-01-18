@@ -17,7 +17,8 @@
 			 [class.expand]="(isExpanded$ | async)"
 			 [class.hide-status-bar]="(hideStatus$ | async)"
 			 #animatedElementVertical>
-			<ansyn-imageries-manager></ansyn-imageries-manager>
+			<ansyn-imageries-manager
+			[isLayersShow]="isLayersShow"></ansyn-imageries-manager>
 			<ansyn-context-menu *ngIf="renderContextMenu"></ansyn-context-menu>
 		</div>
 	</div>

@@ -22,7 +22,7 @@
 		[ngClass]="onlyFavorite ? 'icon-favorite-full'  : 'icon-favorite-empty'"></i>
 		</button>
 	</div>
-	<div #showLayers>
+	<div #showLayers *ngIf="isLayersShow">
 		<button (click)="showLayersTable(showLayers)"
 		[attr.tooltip-value]="'Open Layers' | translate"
 		tooltip-class="bottom">

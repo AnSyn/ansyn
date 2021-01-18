@@ -2,6 +2,7 @@
 	 [style.visibility]="(isHidden$ | async) ? 'hidden' : 'visible'">
 	<ansyn-imagery-status
 						  class="with-background"
+						  [isLayersShow]="isLayersShow"
 						  [map]="mapState"
 						  [isMinimalistViewMode]="isMinimalistViewMode"
 						  (onMove)="onMove.emit($event)"

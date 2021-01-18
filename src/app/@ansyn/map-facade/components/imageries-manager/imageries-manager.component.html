@@ -13,6 +13,7 @@
 			 [id]="map.id"
 			 draggable="false">
 			<ansyn-imagery-container class="map"
+									 [isLayersShow]="isLayersShow"
 									 [mapState]="map"
 									 [active]="activeMapId === map.id"
 									 [showStatus]="mapsEntities.length > 1"

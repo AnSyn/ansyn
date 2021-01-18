@@ -35,10 +35,11 @@ import { ComponentVisibilityService } from '../app-providers/component-visibilit
 export class AnsynComponent implements OnInit, OnDestroy {
 	renderContextMenu: boolean;
 	toggleResults = false;
-
+	// for component
 	readonly isTimelineShow: boolean;
 	readonly isResultTableShow: boolean;
-
+	readonly isLayersShow: boolean;
+	//
 	@AutoSubscription
 	overlaysCount$: Observable<any> = this.store$
 		.pipe(
@@ -92,6 +93,7 @@ export class AnsynComponent implements OnInit, OnDestroy {
 	) {
 		this.isResultTableShow = this.componentVisibility.get(ComponentVisibilityItems.RESULT_TABLE);
 		this.isTimelineShow = this.componentVisibility.get(ComponentVisibilityItems.TIMELINE);
+		this.isLayersShow = this.componentVisibility.get(ComponentVisibilityItems.LAYERS);
 	}
 
 	toggleResultsTable(elementRef: HTMLDivElement): void {

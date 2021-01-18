@@ -52,6 +52,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	// for component
 	readonly isAnnotationsShow: boolean;
 	readonly isFavoritesShow: boolean;
+	readonly isImageProcessingShow: boolean;
 	//
 	@Input() mapId: string;
 	isAutoProcessing: boolean;
@@ -142,6 +143,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		this.isFavorite = true;
 		this.isAnnotationsShow = componentVisibilityService.get(ComponentVisibilityItems.ANNOTATIONS);
 		this.isFavoritesShow = componentVisibilityService.get(ComponentVisibilityItems.FAVORITES);
+		this.isImageProcessingShow = componentVisibilityService.get(ComponentVisibilityItems.IMAGE_PROCESSING);
 
 	}
 

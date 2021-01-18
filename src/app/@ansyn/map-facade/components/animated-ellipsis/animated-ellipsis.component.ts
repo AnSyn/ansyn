@@ -9,5 +9,5 @@ export class AnimatedEllipsisComponent {
 	@Input() text: string;
 
 	@Input()
-	@HostBinding('class.rtl') rtl: boolean;
+	@HostBinding('class.rtl') rtl = true;
 }

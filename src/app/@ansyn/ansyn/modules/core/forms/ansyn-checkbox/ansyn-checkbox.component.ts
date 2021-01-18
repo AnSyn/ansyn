@@ -35,7 +35,7 @@ export class AnsynCheckboxComponent implements ControlValueAccessor, Validator {
 	@Input() name: string;
 
 	@HostBinding('class.rtl')
-	@Input() isRTL = false;
+	@Input() isRTL = true;
 
 	disabled: boolean;
 

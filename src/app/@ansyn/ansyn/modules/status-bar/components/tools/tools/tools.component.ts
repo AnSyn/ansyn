@@ -18,6 +18,8 @@ import { ExportMapsPopupComponent } from '../export-maps-popup/export-maps-popup
 import { SubMenuEnum, toolsFlags } from '../models/tools.model';
 import { selectActiveAnnotationLayer } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
 import { TranslateService } from '@ngx-translate/core';
+import { ComponentVisibilityService } from '../../../../../app-providers/component-visibility.service';
+import { ComponentVisibilityItems } from '../../../../../app-providers/component-mode';
 
 @Component({
 	selector: 'ansyn-tools',
@@ -29,6 +31,13 @@ import { TranslateService } from '@ngx-translate/core';
 	destroy: 'ngOnDestroy'
 })
 export class ToolsComponent implements OnInit, OnDestroy {
+	// for component
+	readonly isExportShow: boolean;
+	readonly isGoToShow: boolean;
+	readonly isAnnotationsShow: boolean;
+	readonly isMeasuresShow: boolean;
+	readonly isShadowMouseShow: boolean;
+	//
 	isDialogShowing = false;
 	public displayModeOn = false;
 	public flags: Map<toolsFlags, boolean>;
@@ -76,8 +85,14 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	constructor(
 		protected store$: Store<any>,
 		public dialog: MatDialog,
-		protected translateService: TranslateService
+		protected translateService: TranslateService,
+		componentVisibilityService: ComponentVisibilityService
 	) {
+		this.isExportShow = componentVisibilityService.get(ComponentVisibilityItems.EXPORT);
+		this.isGoToShow = componentVisibilityService.get(ComponentVisibilityItems.GOTO);
+		this.isAnnotationsShow = componentVisibilityService.get(ComponentVisibilityItems.ANNOTATIONS);
+		this.isMeasuresShow = componentVisibilityService.get(ComponentVisibilityItems.MEASURES);
+		this.isShadowMouseShow = componentVisibilityService.get(ComponentVisibilityItems.SHADOW_MOUSE);
 	}
 
 	ngOnInit() {

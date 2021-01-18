@@ -12,7 +12,7 @@
 		<i class="icon icon-bookmarks"></i>
 		</button>
 	</div>
-	<div>
+	<div *ngIf="isFavoritesShow">
 		<button class="favorite-button"
 		[attr.tooltip-value]="'Show Favorite Overlay' | translate"
 		tooltip-class="bottom"

@@ -22,7 +22,8 @@ import { ComponentVisibilityItems } from '../../../../../app-providers/component
 })
 export class CasesToolsComponent implements OnInit, OnDestroy {
 	// for component
-	isLayersShow: boolean;
+	readonly isLayersShow: boolean;
+	readonly isFavoritesShow: boolean;
 	//
 	onlyFavorite: boolean;
 	isTableOpen: boolean;
@@ -54,6 +55,7 @@ export class CasesToolsComponent implements OnInit, OnDestroy {
 	constructor(protected store: Store<any>,
 				componentVisibilityService: ComponentVisibilityService) {
 		this.isLayersShow = componentVisibilityService.get(ComponentVisibilityItems.LAYERS);
+		this.isFavoritesShow = componentVisibilityService.get(ComponentVisibilityItems.FAVORITES);
 	}
 
 	showOnlyFavorite() {

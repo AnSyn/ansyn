@@ -51,6 +51,7 @@ import { ComponentVisibilityItems } from '../../../app-providers/component-mode'
 export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent {
 	// for component
 	readonly isAnnotationsShow: boolean;
+	readonly isFavoritesShow: boolean;
 	//
 	@Input() mapId: string;
 	isAutoProcessing: boolean;
@@ -140,6 +141,8 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		this.isPreset = true;
 		this.isFavorite = true;
 		this.isAnnotationsShow = componentVisibilityService.get(ComponentVisibilityItems.ANNOTATIONS);
+		this.isFavoritesShow = componentVisibilityService.get(ComponentVisibilityItems.FAVORITES);
+
 	}
 
 	@AutoSubscription

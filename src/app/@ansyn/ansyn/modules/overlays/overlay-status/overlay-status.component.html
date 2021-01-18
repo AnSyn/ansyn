@@ -32,7 +32,7 @@
 		*ngIf="isManualProcessingOpen">
 	</ansyn-image-processing-control>
 </div>
-<div class="overlay-status-button">
+<div class="overlay-status-button" *ngIf="isFavoritesShow">
 	<button [attr.tooltip-class]="isRtl ? 'bottom left' : 'bottom right'"
 			*ngIf="overlay"
 			class="button small-icon-button set-favorite"

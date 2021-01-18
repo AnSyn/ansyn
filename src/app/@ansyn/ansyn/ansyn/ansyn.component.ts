@@ -57,7 +57,7 @@ export class AnsynComponent implements OnInit, OnDestroy {
 			return Boolean(item);
 		})
 	);
-	
+
 	hideStatus$: Observable<boolean> = this.store$.select(selectIsMinimalistViewMode);
 
 	activeMap$: Observable<any> = combineLatest([
@@ -80,6 +80,7 @@ export class AnsynComponent implements OnInit, OnDestroy {
 
 	constructor(
 		protected store$: Store<any>,
+		@Inject('componentVisibility') public componentVisibility: any,
 		@Inject(COMPONENT_MODE) public componentMode: boolean,
 		@Inject(toolsConfig) public toolsConfigData: IToolsConfig,
 		public loggerService: LoggerService,

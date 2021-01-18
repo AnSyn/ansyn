@@ -8,7 +8,9 @@
 		<ansyn-status-bar [version]="version"></ansyn-status-bar>
 	</div>
 
-	<div class="layer" [class.isCollapse]="(isFooterCollapse$ | async)" #animatedElementHorizontal>
+	<div class="layer" #animatedElementHorizontal
+		 [class.isCollapse]="(isFooterCollapse$ | async)"
+		 [class.isTimelineHidden]="!componentVisibility.timeline">
 
 		<div class="maps-container"
 			 [ngClass]="(isPinnedClass$ | async)"
@@ -28,7 +30,7 @@
 		</button>
 	</div>
 
-	<div class="footer">
+	<div class="footer" *ngIf="componentVisibility.timeline">
 		<ansyn-footer [activeMap]="(activeMap$ | async)" [animatedElement]="animatedElementVertical"></ansyn-footer>
 	</div>
 </div>

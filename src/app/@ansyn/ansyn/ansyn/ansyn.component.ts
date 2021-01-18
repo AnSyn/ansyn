@@ -11,7 +11,7 @@ import {
 } from '@ansyn/map-facade';
 import { selectIsPinned, selectMenuCollapse, SelectMenuItemFromOutsideAction, selectSelectedMenuItem } from '@ansyn/menu';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
-import { COMPONENT_MODE } from '../app-providers/component-mode';
+import { COMPONENT_MODE, ComponentVisibilityItems } from '../app-providers/component-mode';
 import { LoadDefaultCaseAction } from '../modules/menu-items/cases/actions/cases.actions';
 import { ICaseMapState } from '../modules/menu-items/cases/models/case.model';
 import { IToolsConfig, toolsConfig } from '../modules/status-bar/components/tools/models/tools-config';
@@ -23,6 +23,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectDropsDescending } from '../modules/overlays/reducers/overlays.reducer';
 import { MenuItemsKeys } from '../config/ansyn.config';
+import { ComponentVisibilityService } from '../app-providers/component-visibility.service';
 
 @Component({
 	selector: 'ansyn-app',
@@ -34,6 +35,9 @@ import { MenuItemsKeys } from '../config/ansyn.config';
 export class AnsynComponent implements OnInit, OnDestroy {
 	renderContextMenu: boolean;
 	toggleResults = false;
+
+	readonly isTimelineShow: boolean;
+	readonly isResultTableShow: boolean;
 
 	@AutoSubscription
 	overlaysCount$: Observable<any> = this.store$
@@ -80,12 +84,14 @@ export class AnsynComponent implements OnInit, OnDestroy {
 
 	constructor(
 		protected store$: Store<any>,
-		@Inject('componentVisibility') public componentVisibility: any,
+		private componentVisibility: ComponentVisibilityService,
 		@Inject(COMPONENT_MODE) public componentMode: boolean,
 		@Inject(toolsConfig) public toolsConfigData: IToolsConfig,
 		public loggerService: LoggerService,
 		protected translateService: TranslateService
 	) {
+		this.isResultTableShow = this.componentVisibility.get(ComponentVisibilityItems.RESULT_TABLE);
+		this.isTimelineShow = this.componentVisibility.get(ComponentVisibilityItems.TIMELINE);
 	}
 
 	toggleResultsTable(elementRef: HTMLDivElement): void {

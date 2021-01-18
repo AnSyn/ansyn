@@ -24,7 +24,7 @@ export interface IComponentVisiblity {
 	imageProcessing: boolean
 }
 
-export enum ComponentVisiblityItem {
+export enum ComponentVisibilityItems {
 	TIMELINE = 'timeline',
 	RESULT_TABLE = 'resultTable',
 	HELP= 'help',

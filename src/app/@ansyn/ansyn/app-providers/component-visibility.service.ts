@@ -8,6 +8,7 @@ export class ComponentVisibilityService {
 
 	constructor(@Inject(COMPONENT_MODE) protected componentMode: boolean,
 				@Inject(COMPONENT_VISIBILITY) protected isVisibility: IComponentVisiblity) {
+		this.componentMode = true; // for develop remove before merge
 	}
 
 

@@ -10,7 +10,7 @@
 
 	<div class="layer" #animatedElementHorizontal
 		 [class.isCollapse]="(isFooterCollapse$ | async)"
-		 [class.isTimelineHidden]="!componentVisibility.timeline">
+		 [class.isTimelineHidden]="!isTimelineShow">
 
 		<div class="maps-container"
 			 [ngClass]="(isPinnedClass$ | async)"
@@ -22,7 +22,7 @@
 		</div>
 	</div>
 
-	<div #toggleResultsButton>
+	<div #toggleResultsButton *ngIf="isResultTableShow">
 		<button [class.active]="toggleResults" class="results-table" (click)="toggleResultsTable(toggleResultsButton)">
 			<i class="icon-table"></i>
 			<span class="badge">{{overlaysCount$ | async}}</span>
@@ -30,7 +30,7 @@
 		</button>
 	</div>
 
-	<div class="footer" *ngIf="componentVisibility.timeline">
+	<div class="footer" *ngIf="isTimelineShow">
 		<ansyn-footer [activeMap]="(activeMap$ | async)" [animatedElement]="animatedElementVertical"></ansyn-footer>
 	</div>
 </div>

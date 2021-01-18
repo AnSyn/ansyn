@@ -18,6 +18,7 @@ import { EnumFilterCounters } from '../modules/filters/models/counters/enum-filt
 import { SliderFilterCounters } from '../modules/filters/models/counters/slider-filter-counters';
 import { BooleanFilterCounters } from '../modules/filters/models/counters/boolean-filter-counters';
 import { ArrayFilterCounters } from '../modules/filters/models/counters/array-filter-counters';
+import { ComponentVisibilityService } from './component-visibility.service';
 
 @NgModule({
 	providers: [
@@ -29,7 +30,8 @@ import { ArrayFilterCounters } from '../modules/filters/models/counters/array-fi
 		{ provide: FilterCounters, useClass: EnumFilterCounters, multi: true },
 		{ provide: FilterCounters, useClass: SliderFilterCounters, multi: true },
 		{ provide: FilterCounters, useClass: BooleanFilterCounters, multi: true },
-		{ provide: FilterCounters, useClass: ArrayFilterCounters, multi: true }
+		{ provide: FilterCounters, useClass: ArrayFilterCounters, multi: true },
+		ComponentVisibilityService
 	],
 	imports: [
 		HttpClientModule,

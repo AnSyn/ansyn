@@ -22,52 +22,23 @@ import { ComponentVisibilityItems } from '../../../../../app-providers/component
 })
 export class CasesToolsComponent implements OnInit, OnDestroy {
 	// for component
-	readonly isLayersShow: boolean;
-	readonly isFavoritesShow: boolean;
+	readonly isCasesShow: boolean;
 	//
-	onlyFavorite: boolean;
-	isTableOpen: boolean;
-
-	onlyFavoriteEnable$ = this.store.pipe(
-		select(selectEnableOnlyFavorites),
-		distinctUntilChanged(),
-		map((enable) => !enable)
-	);
 
 	currentSaveCase$ = this.store.pipe(
 		select(selectCaseSaved),
 		delay(0)
 	);
 
-	@AutoSubscription
-	onlyFavoriteSelected$ = this.store.pipe(
-		select(selectShowOnlyFavorites),
-		distinctUntilChanged(),
-		tap((showFavorite) => this.onlyFavorite = showFavorite)
-	);
-
-	@AutoSubscription
-	isTableOpen$ = this.store.pipe(
-		select(selectShowCasesTable),
-		tap( open => this.isTableOpen = open)
-	);
-
 	constructor(protected store: Store<any>,
 				componentVisibilityService: ComponentVisibilityService) {
-		this.isLayersShow = componentVisibilityService.get(ComponentVisibilityItems.LAYERS);
-		this.isFavoritesShow = componentVisibilityService.get(ComponentVisibilityItems.FAVORITES);
+		this.isCasesShow = componentVisibilityService.get(ComponentVisibilityItems.CASES);
 	}
 
-	showOnlyFavorite() {
-		this.store.dispatch(new UpdateFacetsAction({ showOnlyFavorites: !this.onlyFavorite }))
-	}
+
 
 	showCasesTable(elementRef: HTMLDivElement): void {
 		this.store.dispatch(new SelectMenuItemFromOutsideAction({ name: MenuItemsKeys.Cases, elementRef, toggleFromBottom: false }))
-	}
-
-	showLayersTable(elementRef: HTMLDivElement): void {
-		this.store.dispatch(new SelectMenuItemFromOutsideAction({ name: MenuItemsKeys.DataLayers, elementRef, toggleFromBottom: false }))
 	}
 
 	ngOnInit(): void {

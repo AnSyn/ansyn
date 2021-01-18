@@ -1,32 +1,15 @@
-<div class="container">
-	<div #cases>
-		<button (click)="showSaveModal()"
-		[attr.tooltip-value]="'Save Case' | translate"
-		tooltip-class="bottom">
+<div *ngIf="isCasesShow">
+<div #cases>
+	<button (click)="showSaveModal()"
+			[attr.tooltip-value]="'Save Case' | translate"
+			tooltip-class="bottom">
 		<i class="icon"
-		[ngClass]="(currentSaveCase$ | async)? 'icon-bookmark-full' : 'icon-bookmark-empty'"></i>
-		</button>
-		<button (click)="showCasesTable(cases)"
-		[attr.tooltip-value]="'Open Cases' | translate"
-		tooltip-class="bottom">
+		   [ngClass]="(currentSaveCase$ | async)? 'icon-bookmark-full' : 'icon-bookmark-empty'"></i>
+	</button>
+	<button (click)="showCasesTable(cases)"
+			[attr.tooltip-value]="'Open Cases' | translate"
+			tooltip-class="bottom">
 		<i class="icon icon-bookmarks"></i>
-		</button>
-	</div>
-	<div *ngIf="isFavoritesShow">
-		<button class="favorite-button"
-		[attr.tooltip-value]="'Show Favorite Overlay' | translate"
-		tooltip-class="bottom"
-		(click)="showOnlyFavorite()"
-		[disabled]="onlyFavoriteEnable$ | async">
-		<i class="icon"
-		[ngClass]="onlyFavorite ? 'icon-favorite-full'  : 'icon-favorite-empty'"></i>
-		</button>
-	</div>
-	<div #showLayers *ngIf="isLayersShow">
-		<button (click)="showLayersTable(showLayers)"
-		[attr.tooltip-value]="'Open Layers' | translate"
-		tooltip-class="bottom">
-		<i class="icon icon-layers-show"></i>
-		</button>
-	</div>
+	</button>
+</div>
 </div>

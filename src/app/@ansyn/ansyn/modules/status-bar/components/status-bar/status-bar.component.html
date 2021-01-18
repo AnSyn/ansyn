@@ -1,5 +1,24 @@
 <div class="cases">
 	<ansyn-cases></ansyn-cases>
+	<div *ngIf="isFavoritesShow">
+		<button class="favorite-button"
+				[attr.tooltip-value]="'Show Favorite Overlay' | translate"
+				tooltip-class="bottom"
+				(click)="showOnlyFavorite()"
+				[disabled]="onlyFavoriteEnable$ | async">
+			<i class="icon"
+			   [ngClass]="onlyFavorite ? 'icon-favorite-full'  : 'icon-favorite-empty'"></i>
+		</button>
+	</div>
+	<div *ngIf="isLayersShow">
+	<div #showLayers>
+		<button (click)="showLayersTable(showLayers)"
+				[attr.tooltip-value]="'Open Layers' | translate"
+				tooltip-class="bottom">
+			<i class="icon icon-layers-show"></i>
+		</button>
+	</div>
+	</div>
 	<hr class="status-bar-hr"/>
 </div>
 <div class="search">

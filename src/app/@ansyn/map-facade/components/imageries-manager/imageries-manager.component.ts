@@ -34,6 +34,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 	@Input() isLayersShow: boolean;
+	@Input() isFootprintShow: boolean;
 	public selectedLayout$: Observable<IMapsLayout> = this.store.pipe(
 		select(selectLayout),
 		map((layout: LayoutKey) => <IMapsLayout>layoutOptions.get(layout))

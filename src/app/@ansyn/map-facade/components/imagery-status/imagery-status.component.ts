@@ -36,6 +36,7 @@ export const imageryStatusClassNameForExport = 'imagery-status';
 export class ImageryStatusComponent implements OnInit, OnDestroy {
 	@HostBinding(`class.${imageryStatusClassNameForExport}`) readonly _ = true;
 	@Input() readonly isLayersShow: boolean;
+	@Input() readonly isFootprintShow: boolean;
 	isMapLayersVisible = true;
 	mapsAmount = 1;
 	_map: IMapSettings;

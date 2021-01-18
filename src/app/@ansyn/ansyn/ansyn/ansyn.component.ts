@@ -39,6 +39,7 @@ export class AnsynComponent implements OnInit, OnDestroy {
 	readonly isTimelineShow: boolean;
 	readonly isResultTableShow: boolean;
 	readonly isLayersShow: boolean;
+	readonly isFootprintShow: boolean;
 	//
 	@AutoSubscription
 	overlaysCount$: Observable<any> = this.store$
@@ -94,6 +95,7 @@ export class AnsynComponent implements OnInit, OnDestroy {
 		this.isResultTableShow = this.componentVisibility.get(ComponentVisibilityItems.RESULT_TABLE);
 		this.isTimelineShow = this.componentVisibility.get(ComponentVisibilityItems.TIMELINE);
 		this.isLayersShow = this.componentVisibility.get(ComponentVisibilityItems.LAYERS);
+		this.isFootprintShow = this.componentVisibility.get(ComponentVisibilityItems.FOOTPRINTS);
 	}
 
 	toggleResultsTable(elementRef: HTMLDivElement): void {

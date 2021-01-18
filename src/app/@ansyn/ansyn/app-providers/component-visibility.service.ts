@@ -19,4 +19,11 @@ export class ComponentVisibilityService {
 
 		return true;
 	}
+
+	some(items: Array<keyof IComponentVisiblity>): boolean {
+		if (this.componentMode) {
+			return items.some(this.get.bind(this));
+		}
+		return true;
+	}
 }

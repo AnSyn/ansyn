@@ -18,6 +18,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 @AutoSubscriptions()
 export class ImageryContainerComponent implements OnInit, OnDestroy {
 	@Input() isLayersShow: boolean;
+	@Input() isFootprintShow: boolean;
 	@Input() mapState: IMapSettings;
 	@Input() active: boolean;
 	@Input() showStatus: boolean;

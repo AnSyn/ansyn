@@ -43,7 +43,8 @@
 	><i class="medium-icon icon-status-bar-orientation" [class.active]="perspective"></i>
 	</button>
 
-	<button class="small-icon-button"
+	<button *ngIf="isFootprintShow"
+		class="small-icon-button"
 		[disabled]="noGeoRegistration"
 			(click)="toggleOverlaysFootprint()"
 			[attr.tooltip-value]="'Overlays Footprint' | translate"

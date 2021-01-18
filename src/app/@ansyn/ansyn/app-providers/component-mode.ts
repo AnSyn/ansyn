@@ -18,7 +18,6 @@ export interface IComponentVisiblity {
 	layers: boolean,
 	favorites: boolean,
 	cases: boolean,
-	overlaySearch: boolean,
 	search: boolean,
 	footprints: boolean,
 	imageProcessing: boolean
@@ -38,7 +37,6 @@ export enum ComponentVisibilityItems {
 	LAYERS= 'layers',
 	FAVORITES= 'favorites',
 	CASES= 'cases',
-	OVERLAY_SEARCH= 'overlaySearch',
 	SEARCH= 'search',
 	FOOTPRINTS= 'footprints',
 	IMAGE_PROCESSING= 'imageProcessing'

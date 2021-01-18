@@ -8,7 +8,7 @@ import { MenuItemsKeys } from '../../../../config/ansyn.config';
 import { selectEnableOnlyFavorites, selectShowOnlyFavorites } from '../../../filters/reducer/filters.reducer';
 import { select, Store } from '@ngrx/store';
 import { distinctUntilChanged, map, tap } from 'rxjs/operators';
-import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -21,6 +21,7 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 	readonly isSplitMapsShow: boolean;
 	readonly isLayersShow: boolean;
 	readonly isFavoritesShow: boolean;
+	readonly isSearchShow: boolean;
 	//
 	onlyFavorite: boolean;
 	@Input() version;
@@ -50,6 +51,7 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 		this.isSplitMapsShow = componentVisibilityService.get(ComponentVisibilityItems.SCREENS);
 		this.isLayersShow = componentVisibilityService.get(ComponentVisibilityItems.LAYERS);
 		this.isFavoritesShow = componentVisibilityService.get(ComponentVisibilityItems.FAVORITES);
+		this.isSearchShow = componentVisibilityService.some([ComponentVisibilityItems.RESULT_TABLE, ComponentVisibilityItems.TIMELINE]);
 	}
 
 	ngOnDestroy(): void {

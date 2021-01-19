@@ -8,7 +8,7 @@
 				<div (click)="sortOverlays(header)" *ngFor="let header of tableHeaders"
 					 class="results-table-head-col  {{header.headerData}}">
 					{{header.headerName | translate}}
-					<i class="small-icon icon-arrow" [@isDescending]="header.isDescending"
+					<i class="smaller-icon icon-arrow" [@isDescending]="header.isDescending"
 					   [class.active]="sortedBy === header.headerData"></i>
 				</div>
 

@@ -10,7 +10,7 @@ import { BBOX, bboxFromGeoJson, ImageryCommunicatorService } from '@ansyn/imager
 })
 export class OverlayOutOfBoundsService implements OnInit, OnDestroy {
 
-	constructor(protected store$: Store, protected communicatorService: ImageryCommunicatorService) {
+	constructor(protected communicatorService: ImageryCommunicatorService) {
 	}
 
 	ngOnInit(): void {

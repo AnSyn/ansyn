@@ -8,6 +8,8 @@ import { selectEnableOnlyFavorites, selectShowOnlyFavorites } from '../../../../
 import { UpdateFacetsAction } from '../../../../filters/actions/filters.actions';
 import { SelectMenuItemFromOutsideAction } from '@ansyn/menu';
 import { MenuItemsKeys } from '../../../../../config/ansyn.config';
+import { ComponentVisibilityService } from '../../../../../app-providers/component-visibility.service';
+import { ComponentVisibilityItems } from '../../../../../app-providers/component-mode';
 
 @Component({
 	selector: 'ansyn-cases-tools',
@@ -19,46 +21,24 @@ import { MenuItemsKeys } from '../../../../../config/ansyn.config';
 	destroy: 'ngOnDestroy'
 })
 export class CasesToolsComponent implements OnInit, OnDestroy {
-	onlyFavorite: boolean;
-	isTableOpen: boolean;
-
-	onlyFavoriteEnable$ = this.store.pipe(
-		select(selectEnableOnlyFavorites),
-		distinctUntilChanged(),
-		map((enable) => !enable)
-	);
+	// for component
+	readonly isCasesShow: boolean;
+	//
 
 	currentSaveCase$ = this.store.pipe(
 		select(selectCaseSaved),
 		delay(0)
 	);
 
-	@AutoSubscription
-	onlyFavoriteSelected$ = this.store.pipe(
-		select(selectShowOnlyFavorites),
-		distinctUntilChanged(),
-		tap((showFavorite) => this.onlyFavorite = showFavorite)
-	);
-
-	@AutoSubscription
-	isTableOpen$ = this.store.pipe(
-		select(selectShowCasesTable),
-		tap( open => this.isTableOpen = open)
-	);
-
-	constructor(protected store: Store<any>) {
+	constructor(protected store: Store<any>,
+				componentVisibilityService: ComponentVisibilityService) {
+		this.isCasesShow = componentVisibilityService.get(ComponentVisibilityItems.CASES);
 	}
 
-	showOnlyFavorite() {
-		this.store.dispatch(new UpdateFacetsAction({ showOnlyFavorites: !this.onlyFavorite }))
-	}
+
 
 	showCasesTable(elementRef: HTMLDivElement): void {
 		this.store.dispatch(new SelectMenuItemFromOutsideAction({ name: MenuItemsKeys.Cases, elementRef, toggleFromBottom: false }))
-	}
-
-	showLayersTable(elementRef: HTMLDivElement): void {
-		this.store.dispatch(new SelectMenuItemFromOutsideAction({ name: MenuItemsKeys.DataLayers, elementRef, toggleFromBottom: false }))
 	}
 
 	ngOnInit(): void {

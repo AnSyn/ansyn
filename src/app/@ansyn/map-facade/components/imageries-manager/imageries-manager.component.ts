@@ -1,4 +1,4 @@
-import { AfterContentChecked, Component, ElementRef, HostBinding, Inject, OnInit, ViewChild } from '@angular/core';
+import { AfterContentChecked, Component, ElementRef, HostBinding, Inject, OnInit, ViewChild, Input } from '@angular/core';
 import { MapEffects } from '../../effects/map.effects';
 import { Observable, fromEvent } from 'rxjs';
 import { select, Store } from '@ngrx/store';
@@ -33,6 +33,8 @@ import { TranslateService } from '@ngx-translate/core';
 })
 
 export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
+	@Input() isLayersShow: boolean;
+	@Input() isFootprintShow: boolean;
 	public selectedLayout$: Observable<IMapsLayout> = this.store.pipe(
 		select(selectLayout),
 		map((layout: LayoutKey) => <IMapsLayout>layoutOptions.get(layout))

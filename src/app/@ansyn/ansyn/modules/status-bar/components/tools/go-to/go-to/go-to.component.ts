@@ -30,6 +30,7 @@ import { TranslateService } from '@ngx-translate/core';
 	styleUrls: ['./go-to.component.less']
 })
 export class GoToComponent implements OnInit {
+	readonly  notification: IEd50Notification;
 
 	@HostBinding('class.expand')
 	set expand(value) {
@@ -56,9 +57,6 @@ export class GoToComponent implements OnInit {
 		return { datum: 'ed50', projection: 'utm' };
 	}
 
-	get notification(): IEd50Notification {
-		return this.mapfacadeConfig.Proj4.ed50Notification;
-	}
 	@Input() disabled: boolean;
 	private _expand: boolean;
 	public activeCenter: number[];
@@ -96,6 +94,7 @@ export class GoToComponent implements OnInit {
 		protected projectionConverterService: ProjectionConverterService,
 		protected translateService: TranslateService
 	) {
+		this.notification = this.mapfacadeConfig.Proj4.ed50Notification;
 	}
 
 	initInputs() {

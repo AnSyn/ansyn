@@ -9,8 +9,7 @@
 	</div>
 
 	<div class="layer" #animatedElementHorizontal
-		 [class.isCollapse]="(isFooterCollapse$ | async)"
-		 [class.isTimelineHidden]="!isTimelineShow">
+		 [class.isCollapse]="(isFooterCollapse$ | async) || !isTimelineShow">
 
 		<div class="maps-container"
 			 [ngClass]="(isPinnedClass$ | async)"

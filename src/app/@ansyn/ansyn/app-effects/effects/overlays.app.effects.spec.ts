@@ -63,6 +63,8 @@ import {
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { ICase } from '../../modules/menu-items/cases/models/case.model';
 import { cloneDeep } from 'lodash';
+import { ComponentVisibilityService } from '../../app-providers/component-visibility.service';
+import { MockCompoentnService } from '../../modules/core/test/mock-compoentn-service';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -217,6 +219,10 @@ describe('OverlaysAppEffects', () => {
 					provide: CacheService,
 					useClass: () => {
 					}
+				},
+				{
+					provide: ComponentVisibilityService,
+					useClass: MockCompoentnService
 				}
 			]
 

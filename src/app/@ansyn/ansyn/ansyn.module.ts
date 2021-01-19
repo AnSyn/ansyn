@@ -77,7 +77,7 @@ import { OverlayOutOfBoundsComponent } from './components/overlay-out-of-bounds/
 		},
 		{
 			provide: COMPONENT_MODE,
-			useValue: true // for develop remove before merge
+			useValue: false
 		},
 		{ provide: UrlSerializer, useClass: DefaultUrlSerializer }
 	],

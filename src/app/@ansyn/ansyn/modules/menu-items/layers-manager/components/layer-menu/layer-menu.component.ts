@@ -11,7 +11,7 @@ export class LayerMenuComponent {
 	@Output() openModal = new EventEmitter<SelectedModalEnum>();
 
 	@HostBinding('class.rtl')
-	@Input() isRTL = false;
+	@Input() isRTL = true;
 
 	get SelectedModalEnum() {
 		return SelectedModalEnum;

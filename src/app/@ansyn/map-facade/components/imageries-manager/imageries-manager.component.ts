@@ -1,6 +1,6 @@
-import { AfterContentChecked, Component, ElementRef, HostBinding, Inject, OnInit, ViewChild } from '@angular/core';
+import { AfterContentChecked, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MapEffects } from '../../effects/map.effects';
-import { Observable, fromEvent } from 'rxjs';
+import { fromEvent, Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import {
 	selectActiveMapId,
@@ -22,7 +22,6 @@ import { DragDropMapService } from './providers/drag-drop-map.service';
 
 import { IMapsLayout, LayoutKey, layoutOptions } from '../../models/maps-layout';
 import { IMapSettings } from '@ansyn/imagery';
-import { TranslateService } from '@ngx-translate/core';
 
 // @dynamic
 @Component({
@@ -58,15 +57,11 @@ export class ImageriesManagerComponent implements OnInit, AfterContentChecked {
 	footerCollapse: boolean;
 	collapsable: boolean;
 
-	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
-
 	constructor(
 		protected mapEffects: MapEffects,
 		protected readonly store: Store<any>,
 		@Inject(DOCUMENT) protected document: Document,
-		public dragDropMapService: DragDropMapService,
-		protected translateService: TranslateService
+		public dragDropMapService: DragDropMapService
 	) {
 	}
 

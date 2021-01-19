@@ -33,7 +33,7 @@ export class UtmComponent implements ControlValueAccessor, Validator {
 	@Input() notification: IEd50Notification;
 	@Input() title: string;
 	@HostBinding('class.rtl')
-	@Input() isRTL = false;
+	@Input() isRTL = true;
 
 	coordinates: number[] = [0, 0, 0];
 	validationErr: ValidationErrors = null;

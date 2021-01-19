@@ -4,7 +4,6 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { IMapState, selectToastMessage } from '../../reducers/map.reducer';
 import { IToastMessage, SetToastMessageAction } from '../../actions/map.actions';
-import { TranslateService } from '@ngx-translate/core';
 
 const animations: any[] = [
 	trigger('toastAnimation_rtl', [
@@ -32,11 +31,8 @@ export class ToastComponent implements OnInit {
 
 	toastMessage$ = this.store$.select(selectToastMessage);
 
-	isRTL = this.translateService.instant('direction') === 'rtl';
-
 	constructor(
-		protected store$: Store<IMapState>,
-		protected translateService: TranslateService
+		protected store$: Store<IMapState>
 	) {
 	}
 

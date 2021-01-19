@@ -32,7 +32,7 @@ import { ProjectionConverterService } from '@ansyn/map-facade';
 export class GeoComponent implements ControlValueAccessor, Validator {
 	@Output() copyToClipBoardHandler = new EventEmitter();
 	@HostBinding('class.rtl')
-	@Input() isRTL = false;
+	@Input() isRTL = true;
 
 	coordinates: number[] = [0, 0];
 	validationErr: ValidationErrors = null;

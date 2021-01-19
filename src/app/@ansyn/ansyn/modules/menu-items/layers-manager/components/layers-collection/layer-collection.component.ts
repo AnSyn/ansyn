@@ -44,7 +44,7 @@ export class LayerCollectionComponent {
 	public show = true;
 
 	@HostBinding('class.rtl')
-	@Input() isRTL = false;
+	@Input() isRTL = true;
 
 	get SelectedModalEnum() {
 		return SelectedModalEnum;

@@ -166,8 +166,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	toggleMapLayers() {
-		this.isMapLayersVisible = !this.isMapLayersVisible;
-		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId, isVisible: this.isMapLayersVisible }));
+		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId, isVisible: this.hideLayers }));
 	}
 
 	toggleImageryPerspective() {

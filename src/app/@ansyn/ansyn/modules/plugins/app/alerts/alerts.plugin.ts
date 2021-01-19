@@ -1,5 +1,5 @@
 import {
-	BaseImageryPlugin,
+	BaseImageryPlugin, bboxFromGeoJson,
 	getPolygonIntersectionRatio,
 	IImageryMapPosition,
 	ImageryPlugin
@@ -89,8 +89,10 @@ export class AlertsPlugin extends BaseImageryPlugin {
 			isInBound = Boolean(intersection);
 
 			// calling the BackToExtentAction here because the alert is currently disabled.
-			action = !isInBound ? of(new BackToExtentAction()) :
-				this.outOfBound ? of(new BackToExtentAction()) : of(null);
+			action = isInBound ? of(null) : of(new BackToExtentAction({
+				mapId: this.mapId,
+				extent: bboxFromGeoJson(overlay.footprint)
+			}))
 		}
 
 		return action;

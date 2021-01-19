@@ -64,7 +64,8 @@ export {
 	getDistanceBetweenPoints,
 	getNewPoint,
 	EPSG_4326,
-	EPSG_3857
+	EPSG_3857,
+	BBOX
 } from './utils/geo';
 
 export { IVisualizersConfig, VisualizersConfig } from './model/visualizers-config.token';

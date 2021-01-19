@@ -3,20 +3,20 @@ import { TestBed } from '@angular/core/testing';
 import { ComponentVisibilityService } from './component-visibility.service';
 import { COMPONENT_MODE, COMPONENT_VISIBILITY } from './component-mode';
 
-describe('ComponentModeService', () => {
+describe('ComponentVisibilityService', () => {
 	let service: ComponentVisibilityService;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [
 				{
-					provider: COMPONENT_MODE,
+					provide: COMPONENT_MODE,
 					useValue: true
 				},
 				{
 					provide: COMPONENT_VISIBILITY,
 					useValue: {
-						component: false
+						help: false
 					}
 				}
 			]
@@ -30,24 +30,24 @@ describe('ComponentModeService', () => {
 
 
 	it('get should return the value from the config only if we in component_mode', () => {
-		expect(service.get('component')).toBeFalsy();
+		expect(service.get('help')).toBeFalsy();
 	});
 });
 
-describe('ComponentModeService', () => {
+describe('ComponentVisibilityService', () => {
 	let service: ComponentVisibilityService;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [
 				{
-					provider: COMPONENT_MODE,
+					provide: COMPONENT_MODE,
 					useValue: false
 				},
 				{
 					provide: COMPONENT_VISIBILITY,
 					useValue: {
-						component: false
+						help: false
 					}
 				}
 			]
@@ -60,6 +60,6 @@ describe('ComponentModeService', () => {
 	});
 
 	it('get should return true if we not in component_mode no matter what the visibility state', () => {
-		expect(service.get('component')).toBeTruthy();
+		expect(service.get('help')).toBeTruthy();
 	})
 });

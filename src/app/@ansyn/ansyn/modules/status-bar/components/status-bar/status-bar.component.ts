@@ -1,6 +1,6 @@
 import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { COMPONENT_MODE, ComponentVisibilityItems } from '../../../../app-providers/component-mode';
+import { ComponentVisibilityItems } from '../../../../app-providers/component-mode';
 import { ComponentVisibilityService } from '../../../../app-providers/component-visibility.service';
 import { UpdateFacetsAction } from '../../../filters/actions/filters.actions';
 import { SelectMenuItemFromOutsideAction } from '@ansyn/menu';
@@ -47,8 +47,7 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 	constructor(
 		private translateService: TranslateService,
 		protected store: Store,
-		componentVisibilityService: ComponentVisibilityService,
-		@Inject(COMPONENT_MODE) public componentMode: boolean
+		componentVisibilityService: ComponentVisibilityService
 	) {
 		this.isSplitMapsShow = componentVisibilityService.get(ComponentVisibilityItems.SCREENS);
 		this.isLayersShow = componentVisibilityService.get(ComponentVisibilityItems.LAYERS);

@@ -11,6 +11,8 @@ import { COMPONENT_MODE } from '../app-providers/component-mode';
 import { toolsConfig } from '../modules/status-bar/components/tools/models/tools-config';
 import { LoggerService } from '../modules/core/services/logger.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ComponentVisibilityService } from '../app-providers/component-visibility.service';
+import { MockCompoentnService } from '../modules/core/test/mock-compoentn-service';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
@@ -80,6 +82,10 @@ describe('AnsynComponent', () => {
 				{
 					provide: toolsConfig,
 					useValue: {}
+				},
+				{
+					provide: ComponentVisibilityService,
+					useClass: MockCompoentnService
 				},
 				TranslateService
 			],

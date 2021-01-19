@@ -7,6 +7,8 @@ import { statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { MenuConfig, ResetAppAction } from '@ansyn/menu';
+import { ComponentVisibilityService } from '../../../../app-providers/component-visibility.service';
+import { MockCompoentnService } from '../../../core/test/mock-compoentn-service';
 
 describe('LogoPanelComponent', () => {
 	let component: LogoPanelComponent;
@@ -29,6 +31,10 @@ describe('LogoPanelComponent', () => {
 				{
 					provide: MenuConfig,
 					useValue: {}
+				},
+				{
+					provide: ComponentVisibilityService,
+					useClass: MockCompoentnService
 				}
 			]
 		})

@@ -4,13 +4,14 @@
 @margin: 50px;
 
 :host {
-	position: relative;
 	background-color: rgba(0, 0, 0, 0.3);
 	color: white;
 	width: 40px;
 	margin-bottom: 5px;
 
 	.buttons {
+		display: flex;
+		justify-content: center;
 		&:hover:not(.active):not(.disabled) {
 			background: rgba(0, 0, 0, 0.5);
 		}
@@ -26,6 +27,9 @@
 		}
 
 		button {
+			i {
+				margin: unset;
+			}
 			color: white;
 
 			&.small-icon-button {

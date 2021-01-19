@@ -15,7 +15,7 @@ export class ArrayFilterContainerComponent implements OnChanges {
 	@Output() onMetadataChange = new EventEmitter<ArrayFilterMetadata>(true);
 
 	@HostBinding('class.rtl')
-	@Input() isRTL = false;
+	@Input() isRTL = true;
 
 	fields = [];
 

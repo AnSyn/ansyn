@@ -33,7 +33,7 @@ export class SliderFilterContainerComponent {
 	@Input() counters: SliderFilterCounters;
 
 	@HostBinding('class.rtl')
-	@Input() isRTL = false;
+	@Input() isRTL = true;
 
 	@Output() onMetadataChange = new EventEmitter<SliderFilterMetadata>(true);
 	rangeValues: number[];

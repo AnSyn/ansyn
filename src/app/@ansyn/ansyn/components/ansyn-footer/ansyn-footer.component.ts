@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { selectFooterCollapse, ToggleFooter } from '@ansyn/map-facade';
 import { ContainerChangedTriggerAction, IMenuState } from '@ansyn/menu';
 import { Store } from '@ngrx/store';
@@ -7,7 +7,6 @@ import { ICoreConfig } from '../../modules/core/models/core.config.model';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
 import { IMapSettings } from '@ansyn/imagery';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-footer',
@@ -28,14 +27,10 @@ export class AnsynFooterComponent implements OnInit, OnDestroy {
 		tap(this.startToggleCollapse.bind(this))
 	);
 
-	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
-
 	constructor(
 		protected elementRef: ElementRef,
 		protected store: Store<IMenuState>,
-		@Inject(CoreConfig) public config: ICoreConfig,
-		protected translateService: TranslateService
+		@Inject(CoreConfig) public config: ICoreConfig
 	) {
 	}
 

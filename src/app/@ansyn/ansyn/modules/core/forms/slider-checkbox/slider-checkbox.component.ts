@@ -10,5 +10,5 @@ export class SliderCheckboxComponent {
 	@Input() readonly disabled: boolean;
 	@Output() readonly checkedChange = new EventEmitter<Event>();
 	@HostBinding('class.rtl')
-	@Input() isRTL = false;
+	@Input() isRTL = true;
 }

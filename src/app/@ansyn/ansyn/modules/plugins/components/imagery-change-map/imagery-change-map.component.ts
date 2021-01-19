@@ -1,21 +1,18 @@
-import { Component, ElementRef, HostBinding, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import {
-	ReplaceMainLayer,
 	IEntryComponent,
+	ReplaceMainLayer,
+	selectIsMinimalistViewMode,
 	selectMapTypeById,
 	selectOverlayByMapId,
-	selectSourceTypeById, selectIsMinimalistViewMode
+	selectSourceTypeById
 } from '@ansyn/map-facade';
-import { Store, select } from '@ngrx/store';
-import {
-	CommunicatorEntity, GetProvidersMapsService,
-	IMapSource
-} from '@ansyn/imagery';
-import { filter, tap, mergeMap } from 'rxjs/operators';
+import { select, Store } from '@ngrx/store';
+import { CommunicatorEntity, GetProvidersMapsService, IMapSource } from '@ansyn/imagery';
+import { filter, mergeMap, tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { LoggerService } from '../../../core/services/logger.service';
 import { ClickOutsideService } from '../../../core/click-outside/click-outside.service';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-imagery-change-map',
@@ -32,9 +29,6 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	mapSources: IMapSource[];
 	communicator: CommunicatorEntity;
 
-	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
-
 	@AutoSubscription
 	isMinimalistViewMode$ = this.store$.select(selectIsMinimalistViewMode).pipe(
 		tap(isMinimalistViewMode => {
@@ -47,8 +41,7 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 		protected logger: LoggerService,
 		protected element: ElementRef,
 		protected clickOutsideService: ClickOutsideService,
-		protected getProvidersMapsService: GetProvidersMapsService,
-		protected translateService: TranslateService
+		protected getProvidersMapsService: GetProvidersMapsService
 	) {
 	}
 

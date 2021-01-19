@@ -1,15 +1,20 @@
 import { Component, HostBinding, HostListener, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { Store, select } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
 import {
 	MapFacadeService,
 	selectActiveMapId,
-	selectMapsList,
-	selectOverlayOfActiveMap,
+	selectFooterCollapse,
 	selectIsMinimalistViewMode,
-	selectFooterCollapse
+	selectMapsList,
+	selectOverlayOfActiveMap
 } from '@ansyn/map-facade';
-import { selectIsPinned, selectMenuCollapse, SelectMenuItemFromOutsideAction, selectSelectedMenuItem } from '@ansyn/menu';
+import {
+	selectIsPinned,
+	selectMenuCollapse,
+	SelectMenuItemFromOutsideAction,
+	selectSelectedMenuItem
+} from '@ansyn/menu';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
 import { LoadDefaultCaseAction } from '../modules/menu-items/cases/actions/cases.actions';
@@ -19,7 +24,6 @@ import { UpdateToolsFlags } from '../modules/status-bar/components/tools/actions
 import { LoggerService } from '../modules/core/services/logger.service';
 import { IOverlay, IOverlayDrop } from '../modules/overlays/models/overlay.model';
 import { toolsFlags } from '../modules/status-bar/components/tools/models/tools.model';
-import { TranslateService } from '@ngx-translate/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectDropsDescending } from '../modules/overlays/reducers/overlays.reducer';
 import { MenuItemsKeys } from '../config/ansyn.config';
@@ -57,7 +61,7 @@ export class AnsynComponent implements OnInit, OnDestroy {
 			return Boolean(item);
 		})
 	);
-	
+
 	hideStatus$: Observable<boolean> = this.store$.select(selectIsMinimalistViewMode);
 
 	activeMap$: Observable<any> = combineLatest([
@@ -73,17 +77,13 @@ export class AnsynComponent implements OnInit, OnDestroy {
 
 	@HostBinding('class.component') component = this.componentMode;
 
-	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
-
 	@Input() version;
 
 	constructor(
 		protected store$: Store<any>,
 		@Inject(COMPONENT_MODE) public componentMode: boolean,
 		@Inject(toolsConfig) public toolsConfigData: IToolsConfig,
-		public loggerService: LoggerService,
-		protected translateService: TranslateService
+		public loggerService: LoggerService
 	) {
 	}
 

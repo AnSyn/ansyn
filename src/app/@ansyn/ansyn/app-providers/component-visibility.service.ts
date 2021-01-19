@@ -1,5 +1,5 @@
-import { Injectable, Inject } from '@angular/core';
-import { COMPONENT_MODE, COMPONENT_VISIBILITY, IComponentVisiblity } from './component-mode';
+import { Inject, Injectable } from '@angular/core';
+import { COMPONENT_MODE, COMPONENT_VISIBILITY, ComponentVisibilityItems, IComponentVisiblity } from './component-mode';
 
 @Injectable({
 	providedIn: 'root'
@@ -21,9 +21,17 @@ export class ComponentVisibilityService {
 	}
 
 	some(items: Array<keyof IComponentVisiblity>): boolean {
-		if (this.componentMode) {
-			return items.some(this.get.bind(this));
-		}
-		return true;
+		return items.some(this.get.bind(this));
+	}
+
+	isOneToolsActive(): boolean {
+		return this.some([
+			ComponentVisibilityItems.IMAGE_PROCESSING,
+			ComponentVisibilityItems.GOTO,
+			ComponentVisibilityItems.SHADOW_MOUSE,
+			ComponentVisibilityItems.MEASURES,
+			ComponentVisibilityItems.ANNOTATIONS,
+			ComponentVisibilityItems.EXPORT
+		])
 	}
 }

@@ -19,12 +19,12 @@
 		</button>
 	</div>
 	</div>
-	<hr class="status-bar-hr"/>
+	<hr class="status-bar-hr" *ngIf="isCasesLineShow"/>
 </div>
 <div class="search">
 	<ansyn-display-panel *ngIf="isSplitMapsShow"></ansyn-display-panel>
 	<ansyn-tools></ansyn-tools>
-	<hr class="status-bar-hr"/>
+	<hr class="status-bar-hr" *ngIf="isToolsLineShow"/>
 	<ansyn-search-options *ngIf="isSearchShow"></ansyn-search-options>
 </div>
 <div class="logo">

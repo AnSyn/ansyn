@@ -22,6 +22,8 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 	readonly isLayersShow: boolean;
 	readonly isFavoritesShow: boolean;
 	readonly isSearchShow: boolean;
+	readonly isCasesLineShow: boolean;
+	readonly isToolsLineShow: boolean;
 	//
 	onlyFavorite: boolean;
 	@Input() version;
@@ -52,6 +54,9 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 		this.isLayersShow = componentVisibilityService.get(ComponentVisibilityItems.LAYERS);
 		this.isFavoritesShow = componentVisibilityService.get(ComponentVisibilityItems.FAVORITES);
 		this.isSearchShow = componentVisibilityService.some([ComponentVisibilityItems.RESULT_TABLE, ComponentVisibilityItems.TIMELINE]);
+		this.isCasesLineShow = componentVisibilityService.some([ComponentVisibilityItems.CASES, ComponentVisibilityItems.LAYERS, ComponentVisibilityItems.FAVORITES]);
+		this.isToolsLineShow = componentVisibilityService.isOneToolsActive() || this.isSplitMapsShow;
+
 	}
 
 	ngOnDestroy(): void {

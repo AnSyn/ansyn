@@ -15,7 +15,7 @@ export class EnumFilterContainerComponent implements OnChanges {
 	@Input() filtersSearchResult: any;
 
 	@HostBinding('class.rtl')
-	@Input() isRTL = false;
+	@Input() isRTL = true;
 
 	fields: { key: any, value: any, filteredCount: number }[] = [];
 

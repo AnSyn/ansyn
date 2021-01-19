@@ -4,7 +4,7 @@ export const COMPONENT_MODE: InjectionToken<boolean> = new InjectionToken<boolea
 
 export const COMPONENT_VISIBILITY = 'componentVisibility';
 
-export interface IComponentVisiblity {
+export interface IComponentVisibility {
 	timeline: boolean,
 	resultTable: boolean,
 	help: boolean,

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { COMPONENT_MODE, COMPONENT_VISIBILITY, ComponentVisibilityItems, IComponentVisiblity } from './component-mode';
+import { COMPONENT_MODE, COMPONENT_VISIBILITY, ComponentVisibilityItems, IComponentVisibility } from './component-mode';
 
 @Injectable({
 	providedIn: 'root'
@@ -7,12 +7,12 @@ import { COMPONENT_MODE, COMPONENT_VISIBILITY, ComponentVisibilityItems, ICompon
 export class ComponentVisibilityService {
 
 	constructor(@Inject(COMPONENT_MODE) protected componentMode: boolean,
-				@Inject(COMPONENT_VISIBILITY) protected isVisibility: IComponentVisiblity) {
+				@Inject(COMPONENT_VISIBILITY) protected isVisibility: IComponentVisibility) {
 	}
 
 
 
-	get(componentName: keyof IComponentVisiblity): boolean {
+	get(componentName: keyof IComponentVisibility): boolean {
 		if (this.componentMode) {
 			return this.isVisibility[componentName];
 		}
@@ -20,7 +20,7 @@ export class ComponentVisibilityService {
 		return true;
 	}
 
-	some(items: Array<keyof IComponentVisiblity>): boolean {
+	some(items: Array<keyof IComponentVisibility>): boolean {
 		return items.some(this.get.bind(this));
 	}
 

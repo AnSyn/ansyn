@@ -1,10 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { IMapState, selectToastMessage } from '../../reducers/map.reducer';
+import { selectToastMessage } from '../../reducers/map.reducer';
 import { IToastMessage, SetToastMessageAction } from '../../actions/map.actions';
 import { TranslateService } from '@ngx-translate/core';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 
 const animations: any[] = [
 	trigger('toastAnimation_ltr', [
@@ -35,8 +36,12 @@ const animations: any[] = [
 	styleUrls: ['./toast.component.less'],
 	animations
 })
-export class ToastComponent implements OnInit {
+
+@AutoSubscriptions()
+export class ToastComponent implements OnInit, OnDestroy {
 	@Input() duration: number;
+	buttonToDisplay: string;
+	toastMessageFromState: IToastMessage;
 
 	timeoutRef;
 
@@ -44,18 +49,30 @@ export class ToastComponent implements OnInit {
 
 	isRTL = this.translateService.instant('direction') === 'rtl';
 
+	@AutoSubscription
+	updateToatsMessage$ = (<Observable<any>>this.toastMessage$).subscribe((toastMessage: IToastMessage) => {
+		this.toastMessageFromState = toastMessage;
+	});
 	constructor(
-		protected store$: Store<IMapState>,
+		protected store$: Store<any>,
 		protected translateService: TranslateService
 	) {
+	}
+	ngOnDestroy(): void {
 	}
 
 	ngOnInit() {
 		(<Observable<any>>this.toastMessage$).subscribe((toastMessage: IToastMessage) => {
+			const durationToButtonPopUp = 10000;
 			if (toastMessage) { // Hide toast in duration time
-				const duration = this.duration * 1000;
+				let duration = this.duration * 1000;
+				if (toastMessage.buttonToDisplay) {
+					this.buttonToDisplay = toastMessage.buttonToDisplay;
+					duration = durationToButtonPopUp;
+				}
 				this.timeoutRef = setTimeout(this.closeToast.bind(this), duration);
 			} else { // Cancel the last hide
+				this.store$.dispatch(new SetToastMessageAction());
 				clearTimeout(this.timeoutRef);
 			}
 		});
@@ -63,5 +80,11 @@ export class ToastComponent implements OnInit {
 
 	closeToast() {
 		this.store$.dispatch(new SetToastMessageAction());
+	}
+
+	functionTodo() {
+		if (this.toastMessageFromState && this.toastMessageFromState.functionToExcute) {
+			this.toastMessageFromState.functionToExcute();
+		}
 	}
 }

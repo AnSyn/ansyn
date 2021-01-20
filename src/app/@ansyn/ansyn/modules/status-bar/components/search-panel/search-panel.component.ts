@@ -1,7 +1,7 @@
 import { Component, HostBinding, Inject, OnDestroy, OnInit } from '@angular/core';
 import * as momentNs from 'moment';
 import { IStatusBarConfig } from '../../models/statusBar-config.model';
-import { IStatusBarState, selectGeoFilterActive, selectGeoFilterStatus, selectGeoFilterType } from '../../reducers/status-bar.reducer';
+import { IStatusBarState, selectAdvancedSearchStatus, selectGeoFilterActive, selectGeoFilterStatus, selectGeoFilterType } from '../../reducers/status-bar.reducer';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs';
@@ -23,6 +23,7 @@ import {
 import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
 import { SearchOptionsComponent } from '../search-options/search-options.component';
 import { TranslateService } from '@ngx-translate/core';
+import { ToggleAdvancedSearchAction } from '../../actions/status-bar.actions';
 
 const moment = momentNs;
 
@@ -93,7 +94,13 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 			this.geoFilterCoordinates = region.geometry.coordinates.toString();
 		})
 	);
-
+	
+	@AutoSubscription
+	updateIsAdvancedSearchOpen$ = this.store$.select(selectAdvancedSearchStatus).pipe(
+		tap((isAdvancedSearchOpen: boolean) => {
+			this.advancedSearch = isAdvancedSearchOpen;
+		})
+	)
 	@HostBinding('class.rtl')
 	isRTL = this.translateService.instant('direction') === 'rtl';
 
@@ -141,7 +148,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	}
 
 	toggleAdvancedSearch() {
-		this.advancedSearch = !this.advancedSearch
+		this.store$.dispatch(new ToggleAdvancedSearchAction(!this.advancedSearch));
 	}
 	close() {
 		this._parent.close()

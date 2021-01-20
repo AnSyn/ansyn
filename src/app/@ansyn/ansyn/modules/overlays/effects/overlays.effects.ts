@@ -37,6 +37,8 @@ import { AreaToCredentialsService } from '../../core/services/credentials/area-t
 import { CredentialsService, ICredentialsResponse } from '../../core/services/credentials/credentials.service';
 import { getMenuSessionData, SetBadgeAction } from '@ansyn/menu';
 import { Update } from '@ngrx/entity';
+import { SetToastMessageAction } from '@ansyn/map-facade';
+import { OpenedFromOutsideAction, ToggleAdvancedSearchAction, ToggleSimpleSearchAction } from '../../status-bar/actions/status-bar.actions';
 
 @Injectable()
 export class OverlaysEffects {
@@ -202,6 +204,12 @@ export class OverlaysEffects {
 				} else if (overlays.limited > 0 && overlays.data.length === this.overlaysService.fetchLimit) {
 					// TODO: replace when design is available
 					actions.push(new SetOverlaysStatusMessageAction({ message: overLoad.replace('$overLoad', overlays.data.length.toString()) }));
+				} 
+
+				const diffrence = criteria.advancedSearchParameters.sensors.filter(sensor => !this.overlaysService.getAllSensorsNames().includes(sensor));
+
+				if (!Boolean(diffrence.length)) {// לעשות בדיקה אם נעשה שינוי בחיפוש מתקדם
+					actions.push(new SetToastMessageAction({toastText: 'there are more overlays exist, ', buttonToDisplay: 'click here to expand', functionToExcute: this.toggleAdvancedSearch.bind(this)}))
 				}
 				return actions;
 			}),
@@ -214,4 +222,9 @@ export class OverlaysEffects {
 		);
 	}
 
+	toggleAdvancedSearch() {
+		this.store$.dispatch(new ToggleSimpleSearchAction(true));
+		this.store$.dispatch(new ToggleAdvancedSearchAction(true));
+		this.store$.dispatch(new OpenedFromOutsideAction(true));
+	}
 }

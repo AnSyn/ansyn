@@ -10,6 +10,9 @@ export interface IGeoFilterStatus {
 export interface IStatusBarState {
 	geoFilterStatus?: IGeoFilterStatus;
 	isCalenderOpen?: boolean;
+	isAdvancedSearchOpen?: boolean;
+	IsSimpleSearchOpen?: boolean;
+	IsOpenedFromOutside?: boolean;
 }
 
 export const StatusBarInitialState: IStatusBarState = {
@@ -17,7 +20,10 @@ export const StatusBarInitialState: IStatusBarState = {
 		type: CaseGeoFilter.PinPoint,
 		active: false
 	},
-	isCalenderOpen: false
+	isCalenderOpen: false,
+	isAdvancedSearchOpen: false,
+	IsSimpleSearchOpen: false,
+	IsOpenedFromOutside: false
 };
 
 export const statusBarFeatureKey = 'statusBar';
@@ -37,6 +43,19 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 			const { payload } = action;
 			return { ...state, isCalenderOpen: payload}
 		}
+		case StatusBarActionsTypes.TOGGLE_ADVANCED_SEARCH: {
+			const { payload } = action;
+
+			return { ...state, isAdvancedSearchOpen: payload}
+		}
+		case StatusBarActionsTypes.TOGGLE_SIMPLE_SEARCH: {
+			const { payload } = action;
+			return { ...state, IsSimpleSearchOpen: payload}
+		}
+		case StatusBarActionsTypes.OPENED_FROM_OUTSIDE: {
+			const { payload } = action;
+			return { ...state, IsOpenedFromOutside: payload}
+		}
 
 		default:
 			return state;
@@ -46,5 +65,8 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 
 export const selectGeoFilterStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.geoFilterStatus : StatusBarInitialState.geoFilterStatus);
 export const selectCalenderStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.isCalenderOpen : StatusBarInitialState.isCalenderOpen);
+export const selectAdvancedSearchStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.isAdvancedSearchOpen : StatusBarInitialState.isAdvancedSearchOpen);
+export const selectSimpledSearchStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.IsSimpleSearchOpen : StatusBarInitialState.IsSimpleSearchOpen);
+export const selectIsOpenedFromOutside = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.IsOpenedFromOutside : StatusBarInitialState.IsOpenedFromOutside);
 export const selectGeoFilterActive = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.active);
 export const selectGeoFilterType = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.type);

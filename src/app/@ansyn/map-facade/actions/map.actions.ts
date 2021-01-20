@@ -28,6 +28,8 @@ export interface IToastMessage {
 	toastText: string;
 	showWarningIcon?: boolean;
 	originalMessage?: string;
+	buttonToDisplay?: string;
+	functionToExcute?: Function;
 }
 
 export const MapActionTypes = {
@@ -64,6 +66,7 @@ export const MapActionTypes = {
 		CONTEXT_MENU: 'CONTEXT_MENU',
 		PIN_LOCATION_MODE: 'PIN_LOCATION_MODE',
 		CLICK_OUTSIDE_MAP: 'CLICK_OUTSIDE_MAP',
+		TOGGLE_ADVANCED_SEARCH: 'TOGGLE_ADVANCED_SEARCH'
 	},
 	MAP_SEARCH_BOX_TRIGGER: 'MAP_SEARCH_BOX_TRIGGER',
 	LOG_MAP_SEARCH_BOX: 'LOG_MAP_SEARCH_BOX',
@@ -328,6 +331,13 @@ export class ClickOutsideMap implements Action {
 	readonly type = MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP;
 
 	constructor(public payload: any) {
+	}
+}
+
+export class toggleAdvancedSearchFromMapFacde implements Action {
+	readonly type = MapActionTypes.TRIGGER.TOGGLE_ADVANCED_SEARCH;
+
+	constructor() {
 	}
 }
 

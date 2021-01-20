@@ -11,7 +11,9 @@
 <ng-template #rtl>
 	<div class="toast" *ngIf="toastMessage$ | async"
 		 [@toastAnimation_rtl] [class.rtl]="isRTL">
-		<span class="message">{{(toastMessage$ | async)?.toastText | translate}}</span>
+		<span class="message">{{(toastMessage$ | async)?.toastText | translate}}
+			<span class="button-style" *ngIf="this.buttonToDisplay" (click)="functionTodo()">{{this.buttonToDisplay}}</span>
+		</span>
 		<span class="close" (click)="closeToast()">×</span>
 	</div>
 </ng-template>

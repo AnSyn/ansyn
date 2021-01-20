@@ -1,24 +1,19 @@
-import { Component, ElementRef, Inject, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
-import {
-	IEntryComponent,
-	selectActiveMapId,
-	selectHideLayersOnMap,
-	selectOverlayByMapId,
-} from '@ansyn/map-facade';
+import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { IEntryComponent, selectActiveMapId, selectHideLayersOnMap, selectOverlayByMapId, } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { combineLatest, Observable, of, EMPTY } from 'rxjs';
-import { tap, map, filter, withLatestFrom, concatMap, catchError } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
+import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { GeoRegisteration, IOverlay } from '../models/overlay.model';
 import {
+	SetAutoImageProcessing,
 	ToggleDraggedModeAction,
-	ToggleFavoriteAction,
-	SetAutoImageProcessing
+	ToggleFavoriteAction
 } from './actions/overlay-status.actions';
 import {
 	selectFavoriteOverlays,
-	selectTranslationData,
-	selectOverlaysImageProcess
+	selectOverlaysImageProcess,
+	selectTranslationData
 } from './reducers/overlay-status.reducer';
 import { AnnotationMode } from '@ansyn/ol';
 import {
@@ -28,13 +23,12 @@ import {
 } from '../../menu-items/cases/models/case.model';
 import { Actions, ofType } from '@ngrx/effects';
 import {
+	ClearActiveInteractionsAction,
 	SetAnnotationMode,
-	ToolsActionsTypes,
-	ClearActiveInteractionsAction
+	ToolsActionsTypes
 } from '../../status-bar/components/tools/actions/tools.actions';
-import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-manager/reducers/layers.reducer';
+import { selectLayers, selectSelectedLayersIds } from '../../menu-items/layers-manager/reducers/layers.reducer';
 import { ClickOutsideService } from '../../core/click-outside/click-outside.service';
-import { TranslateService } from '@ngx-translate/core';
 import { OverlayStatusService } from './services/overlay-status.service';
 import { ComponentVisibilityService } from '../../../app-providers/component-visibility.service';
 import { ComponentVisibilityItems } from '../../../app-providers/component-mode';
@@ -71,9 +65,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	isManualProcessChanged: boolean;
 
 	selectOverlaysImageProcess$ = this.store$.pipe(select(selectOverlaysImageProcess), filter(this.hasOverlay.bind(this)));
-
-	@HostBinding('class.rtl')
-	isRtl = 'rtl' === this.translateService.instant('direction');
 
 	@AutoSubscription
 	favoriteOverlays$: Observable<any[]> = this.store$.select(selectFavoriteOverlays).pipe(
@@ -136,7 +127,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		protected actions$: Actions,
 		protected element: ElementRef,
 		protected clickOutsideService: ClickOutsideService,
-		protected translateService: TranslateService,
 		componentVisibilityService: ComponentVisibilityService
 	) {
 		this.isPreset = true;

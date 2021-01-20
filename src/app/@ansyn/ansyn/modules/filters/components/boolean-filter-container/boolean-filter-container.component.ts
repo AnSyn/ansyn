@@ -17,9 +17,6 @@ export class BooleanFilterContainerComponent {
 	@Input() counters: BooleanFilterCounters;
 	@Output() onMetadataChange = new EventEmitter<BooleanFilterMetadata>(true);
 
-	@HostBinding('class.rtl')
-	@Input() isRTL = false;
-
 	@Input()
 	set customData(value: IBooleanFilterCustomData) {
 		if (value) {

@@ -8,7 +8,7 @@ div.toast {
 	background: rgba(0, 0, 0, 1);
 	position: absolute;
 	color: white;
-	right: @margin;
+	left: @margin;
 	top: calc(@status-bar-height + 60px);
 	padding: 0 16px;
 	height: 48px;
@@ -31,10 +31,5 @@ div.toast {
 		&:hover {
 			color: @status-bar-active;
 		}
-	}
-
-	&.rtl {
-		right: unset;
-		left: @margin;
 	}
 }

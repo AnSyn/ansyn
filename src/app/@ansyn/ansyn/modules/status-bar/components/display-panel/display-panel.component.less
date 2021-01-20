@@ -46,17 +46,9 @@
 
 					i.icon {
 						margin: 0; // override default margin from container
+						transform: rotateY(180deg); // for RTL
 					}
 				}
-			}
-		}
-	}
-
-
-	&.rtl {
-		/deep/ ansyn-combo-box {
-			i {
-				transform: rotateY(180deg);
 			}
 		}
 	}

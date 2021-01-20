@@ -1,6 +1,5 @@
 <div class="collection">
 	<ansyn-slider-checkbox [checked]="isAnaglyphEnabled$ | async"
 						   (checkedChange)="enableAnaglyph($event.target.checked)"
-						   [isRTL]="isRTL"
 	>{{'Ask for anaglyph (if available )' | translate}}</ansyn-slider-checkbox>
 </div>

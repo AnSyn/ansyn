@@ -16,7 +16,6 @@
 	</div>
 
 	<div class="cases-table-body scrolled"
-		 [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''"
 		 (ansynInfiniteScroll)="onInfintyScroll.emit()"
 		 #tbodyElement>
 
@@ -25,14 +24,12 @@
 			 (click)="selectCase(id)"
 			 [class.active]="(modalCaseId$ | async) === id"
 			 [class.selected]="(openCaseId$ | async) === id"
-			 [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''"
 			 (mouseenter)="onMouseEnterCaseRow(caseRow, id)"
 			 (mouseleave)="onMouseLeaveCaseRow(caseRow)"
 			 [@leaveAnim]
 			 #caseRow>
 
 			<div class="cases-table-body-row-data"
-				 [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''"
 				 tooltip-class="bottom" [attr.tooltip-value]="cases.entities[id].name">
 
 				<div class="cases-table-case-name-col">
@@ -44,7 +41,7 @@
 				</div>
 
 				<!--menu-->
-				<div [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''" class="case-menu-container">
+				<div class="case-menu-container">
 					<div class="case-menu" (click)="caseMenuClick($event, caseRow)">
 						<ng-container *ngTemplateOutlet="menu"></ng-container>
 					</div>
@@ -55,7 +52,6 @@
 
 	</div>
 </div>
-
 
 <ng-template #noCases>
 

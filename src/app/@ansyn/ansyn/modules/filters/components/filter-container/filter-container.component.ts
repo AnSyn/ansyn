@@ -12,7 +12,7 @@ import {
 } from '../../reducer/filters.reducer';
 import { Observable } from 'rxjs';
 import { FilterMetadata } from '../../models/metadata/filter-metadata.interface';
-import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { clone } from 'lodash';
 import { EnumFilterMetadata } from '../../models/metadata/enum-filter-metadata';
@@ -21,7 +21,6 @@ import { IFiltersConfig } from '../../models/filters-config';
 import { filter, map, tap } from 'rxjs/operators';
 import { FilterType } from '../../models/filter-type';
 import { FilterCounters } from '../../models/counters/filter-counters.interface';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-filter-container',
@@ -88,13 +87,9 @@ export class FilterContainerComponent implements OnInit, OnDestroy {
 		})
 	);
 
-	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
-
 	constructor(
 		protected store: Store<IFiltersState>,
-		@Inject(filtersConfig) protected config: IFiltersConfig,
-		private translateService: TranslateService
+		@Inject(filtersConfig) protected config: IFiltersConfig
 	) {
 	}
 

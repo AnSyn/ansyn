@@ -233,6 +233,11 @@ div.pin-location {
 	display: none;
 }
 
+input[type=number] {
+	direction: ltr; /* so that '-' will be on the left side (seems a browser bug) */
+	text-align: right /* but otherwise, right aligned */
+}
+
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
 	-webkit-appearance: none;

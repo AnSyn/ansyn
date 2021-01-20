@@ -1,11 +1,10 @@
-import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 import { IImageManualProcessArgs } from '../../../../menu-items/cases/models/case.model';
 import { selectOverlaysImageProcess } from '../../reducers/overlay-status.reducer';
 import { LogManualImageProcessing, SetManualImageProcessing } from '../../actions/overlay-status.actions';
-import { TranslateService } from '@ngx-translate/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { isEqual } from 'lodash';
 import { OverlayStatusService } from '../../services/overlay-status.service';
@@ -18,9 +17,6 @@ import { OverlayStatusService } from '../../services/overlay-status.service';
 @AutoSubscriptions()
 export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 	@Input() overlayId: string;
-
-	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
 
 	imageManualProcessArgs: IImageManualProcessArgs
 
@@ -40,8 +36,7 @@ export class ImageProcessingControlComponent implements OnInit, OnDestroy {
 
 	constructor(
 		public store$: Store<any>,
-		public overlayStatusService: OverlayStatusService,
-		private translateService: TranslateService
+		public overlayStatusService: OverlayStatusService
 	) {
 	}
 

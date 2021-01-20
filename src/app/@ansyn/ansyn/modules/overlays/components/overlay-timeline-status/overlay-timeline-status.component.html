@@ -1,4 +1,4 @@
-<div class="overlays-status" *ngIf="showStatus" [@timeline-status] [class.rtl]="'rtl' === ('direction' | translate)">
+<div class="overlays-status" *ngIf="showStatus" [@timeline-status]>
 	<div class="text-container">
 		<span>{{overlaysStatusMessage$ | async | translate}}</span>
 		<button class="close">X</button>

@@ -26,7 +26,7 @@
 		<i class="medium-icon icon-temporary-link"></i>
 	</button>
 
-	<button class="small-icon-button hide-layers"
+	<button class="small-icon-button hide-layers" *ngIf="isLayersShow"
 			[disabled]="noGeoRegistration"
 			(click)="toggleMapLayers()"
 			[attr.tooltip-value]="'Show/ Hide layers' | translate"
@@ -43,7 +43,8 @@
 	><i class="medium-icon icon-status-bar-orientation" [class.active]="perspective"></i>
 	</button>
 
-	<button class="small-icon-button"
+	<button *ngIf="isFootprintShow"
+		class="small-icon-button"
 		[disabled]="noGeoRegistration"
 			(click)="toggleOverlaysFootprint()"
 			[attr.tooltip-value]="'Overlays Footprint' | translate"

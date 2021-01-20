@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SelectedModalEnum } from '../../reducers/layers-modal';
 
 @Component({
@@ -9,9 +9,6 @@ import { SelectedModalEnum } from '../../reducers/layers-modal';
 export class LayerMenuComponent {
 	@Input() disabledRemove: boolean;
 	@Output() openModal = new EventEmitter<SelectedModalEnum>();
-
-	@HostBinding('class.rtl')
-	@Input() isRTL = true;
 
 	get SelectedModalEnum() {
 		return SelectedModalEnum;

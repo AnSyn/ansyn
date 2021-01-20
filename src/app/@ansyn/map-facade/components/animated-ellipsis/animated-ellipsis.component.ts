@@ -1,4 +1,4 @@
-import { Component, Input, HostBinding } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
 	selector: 'ansyn-animated-ellipsis',
@@ -7,7 +7,4 @@ import { Component, Input, HostBinding } from '@angular/core';
 })
 export class AnimatedEllipsisComponent {
 	@Input() text: string;
-
-	@Input()
-	@HostBinding('class.rtl') rtl = true;
 }

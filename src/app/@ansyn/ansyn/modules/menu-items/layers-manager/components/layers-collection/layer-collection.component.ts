@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Store } from '@ngrx/store';
 import { SetLayersModal, ShowAllLayers } from '../../actions/layers.actions';
@@ -42,9 +42,6 @@ export interface ILayerCollection {
 export class LayerCollectionComponent {
 	@Input() collection: ILayerCollection;
 	public show = true;
-
-	@HostBinding('class.rtl')
-	@Input() isRTL = true;
 
 	get SelectedModalEnum() {
 		return SelectedModalEnum;

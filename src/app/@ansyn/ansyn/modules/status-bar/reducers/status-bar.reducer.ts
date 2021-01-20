@@ -45,7 +45,6 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 		}
 		case StatusBarActionsTypes.TOGGLE_ADVANCED_SEARCH: {
 			const { payload } = action;
-
 			return { ...state, isAdvancedSearchOpen: payload}
 		}
 		case StatusBarActionsTypes.TOGGLE_SIMPLE_SEARCH: {

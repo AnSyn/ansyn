@@ -65,8 +65,7 @@ export const MapActionTypes = {
 		ACTIVE_IMAGERY_MOUSE_LEAVE: 'ACTIVE_IMAGERY_MOUSE_LEAVE',
 		CONTEXT_MENU: 'CONTEXT_MENU',
 		PIN_LOCATION_MODE: 'PIN_LOCATION_MODE',
-		CLICK_OUTSIDE_MAP: 'CLICK_OUTSIDE_MAP',
-		TOGGLE_ADVANCED_SEARCH: 'TOGGLE_ADVANCED_SEARCH'
+		CLICK_OUTSIDE_MAP: 'CLICK_OUTSIDE_MAP'
 	},
 	MAP_SEARCH_BOX_TRIGGER: 'MAP_SEARCH_BOX_TRIGGER',
 	LOG_MAP_SEARCH_BOX: 'LOG_MAP_SEARCH_BOX',
@@ -331,13 +330,6 @@ export class ClickOutsideMap implements Action {
 	readonly type = MapActionTypes.TRIGGER.CLICK_OUTSIDE_MAP;
 
 	constructor(public payload: any) {
-	}
-}
-
-export class toggleAdvancedSearchFromMapFacde implements Action {
-	readonly type = MapActionTypes.TRIGGER.TOGGLE_ADVANCED_SEARCH;
-
-	constructor() {
 	}
 }
 

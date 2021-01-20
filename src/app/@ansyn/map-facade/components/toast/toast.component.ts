@@ -46,6 +46,7 @@ export class ToastComponent implements OnInit, OnDestroy {
 	timeoutRef;
 
 	toastMessage$ = this.store$.select(selectToastMessage);
+	durationToButtonPopUp = 10000;
 
 	isRTL = this.translateService.instant('direction') === 'rtl';
 
@@ -63,12 +64,11 @@ export class ToastComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		(<Observable<any>>this.toastMessage$).subscribe((toastMessage: IToastMessage) => {
-			const durationToButtonPopUp = 10000;
 			if (toastMessage) { // Hide toast in duration time
 				let duration = this.duration * 1000;
 				if (toastMessage.buttonToDisplay) {
 					this.buttonToDisplay = toastMessage.buttonToDisplay;
-					duration = durationToButtonPopUp;
+					duration = this.durationToButtonPopUp;
 				}
 				this.timeoutRef = setTimeout(this.closeToast.bind(this), duration);
 			} else { // Cancel the last hide
@@ -85,6 +85,7 @@ export class ToastComponent implements OnInit, OnDestroy {
 	functionTodo() {
 		if (this.toastMessageFromState && this.toastMessageFromState.functionToExcute) {
 			this.toastMessageFromState.functionToExcute();
+			this.closeToast();
 		}
 	}
 }

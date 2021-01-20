@@ -37,7 +37,7 @@ import { AreaToCredentialsService } from '../../core/services/credentials/area-t
 import { CredentialsService, ICredentialsResponse } from '../../core/services/credentials/credentials.service';
 import { getMenuSessionData, SetBadgeAction } from '@ansyn/menu';
 import { Update } from '@ngrx/entity';
-import { SetToastMessageAction } from '@ansyn/map-facade';
+import { selectWasWelcomeNotificationShown, SetToastMessageAction } from '@ansyn/map-facade';
 import { OpenedFromOutsideAction, ToggleAdvancedSearchAction, ToggleSimpleSearchAction } from '../../status-bar/actions/status-bar.actions';
 
 @Injectable()
@@ -124,9 +124,10 @@ export class OverlaysEffects {
 	@Effect()
 	loadOverlays$: Observable<{} | LoadOverlaysSuccessAction> = this.actions$.pipe(
 		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
-		switchMap((action: LoadOverlaysAction) => {
+		withLatestFrom(this.store$.select(selectWasWelcomeNotificationShown)),
+		switchMap(([action, isUserFirstEntrance]: [LoadOverlaysAction, boolean]) => {
 			if (action.payload.dataInputFilters.fullyChecked || action.payload.dataInputFilters.filters.length > 0) {
-				return this.requestOverlays(action.payload);
+				return this.requestOverlays(action.payload, !isUserFirstEntrance);
 			}
 			else {
 				return [new LoadOverlaysSuccessAction([])];
@@ -179,7 +180,7 @@ export class OverlaysEffects {
 				protected areaToCredentialsService: AreaToCredentialsService) {
 	}
 
-	private requestOverlays(criteria: IOverlaysCriteria) {
+	private requestOverlays(criteria: IOverlaysCriteria, isUserFirstEntrance) {
 		return this.overlaysService.search(criteria).pipe(
 			// We use translate.instant instead of withLatestFrom + translate.get
 			// Because of a bug: sometimes when starting the app the withLatestFrom that was here did not return,
@@ -206,9 +207,9 @@ export class OverlaysEffects {
 					actions.push(new SetOverlaysStatusMessageAction({ message: overLoad.replace('$overLoad', overlays.data.length.toString()) }));
 				} 
 
-				const diffrence = criteria.advancedSearchParameters.sensors.filter(sensor => !this.overlaysService.getAllSensorsNames().includes(sensor));
-
-				if (!Boolean(diffrence.length)) {// לעשות בדיקה אם נעשה שינוי בחיפוש מתקדם
+				// const diffrence = criteria.advancedSearchParameters.sensors.filter(sensor => !this.overlaysService.getAllSensorsNames().includes(sensor));
+				
+				if (isUserFirstEntrance) {// לעשות בדיקה אם נעשה שינוי בחיפוש מתקדם
 					actions.push(new SetToastMessageAction({toastText: 'there are more overlays exist, ', buttonToDisplay: 'click here to expand', functionToExcute: this.toggleAdvancedSearch.bind(this)}))
 				}
 				return actions;

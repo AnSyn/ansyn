@@ -1,4 +1,4 @@
-<div class="overlay-status-button">
+<div class="overlay-status-button" *ngIf="isAnnotationsShow">
 	<button class="small-icon-button drag-mode" *ngIf="overlay"
 			(click)="toggleDragged()"
 			[disabled]="!isLayersVisible || noGeoRegistration"
@@ -7,7 +7,7 @@
 	><i class="medium-icon icon-drag-annotations" [class.active]="isDragged"></i>
 	</button>
 </div>
-<div class="overlay-status-button">
+<div class="overlay-status-button" *ngIf="isImageProcessingShow">
 	<button [attr.tooltip-class]="isRtl ? 'bottom left' : 'bottom right'"
 			*ngIf="overlay"
 			class="small-icon-button auto-image-processing"
@@ -17,7 +17,11 @@
 		<i class="medium-icon icon-automatic-image-processing" [class.active]="isAutoProcessing"></i>
 	</button>
 </div>
+<<<<<<< HEAD
 <div class="overlay-status-button" #closeAnnotation>
+=======
+<div class="overlay-status-button" *ngIf="isImageProcessingShow">
+>>>>>>> c0f96315d8cb345e37775573ac1ec48a2d408630
 	<button *ngIf="overlay"
 			class="small-icon-button"
 			[class.active]="isManualProcessingOpen"
@@ -32,8 +36,12 @@
 		*ngIf="isManualProcessingOpen">
 	</ansyn-image-processing-control>
 </div>
+<<<<<<< HEAD
 
 <div class="overlay-status-button">
+=======
+<div class="overlay-status-button" *ngIf="isFavoritesShow">
+>>>>>>> c0f96315d8cb345e37775573ac1ec48a2d408630
 	<button [attr.tooltip-class]="isRtl ? 'bottom left' : 'bottom right'"
 			*ngIf="overlay"
 			class="button small-icon-button set-favorite"

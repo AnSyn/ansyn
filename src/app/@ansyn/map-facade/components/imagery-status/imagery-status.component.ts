@@ -35,7 +35,8 @@ export const imageryStatusClassNameForExport = 'imagery-status';
 })
 export class ImageryStatusComponent implements OnInit, OnDestroy {
 	@HostBinding(`class.${imageryStatusClassNameForExport}`) readonly _ = true;
-	isMapLayersVisible = true;
+	@Input() readonly isLayersShow: boolean;
+	@Input() readonly isFootprintShow: boolean;
 	mapsAmount = 1;
 	_map: IMapSettings;
 	perspective: boolean;
@@ -164,8 +165,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	toggleMapLayers() {
-		this.isMapLayersVisible = !this.isMapLayersVisible;
-		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId, isVisible: this.isMapLayersVisible }));
+		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId, isVisible: this.hideLayers }));
 	}
 
 	toggleImageryPerspective() {

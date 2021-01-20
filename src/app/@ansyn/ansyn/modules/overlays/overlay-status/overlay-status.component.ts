@@ -46,6 +46,8 @@ import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-m
 import { ClickOutsideService } from '../../core/click-outside/click-outside.service';
 import { TranslateService } from '@ngx-translate/core';
 import { OverlayStatusService } from './services/overlay-status.service';
+import { ComponentVisibilityService } from '../../../app-providers/component-visibility.service';
+import { ComponentVisibilityItems } from '../../../app-providers/component-mode';
 
 @Component({
 	selector: 'ansyn-overlay-status',
@@ -56,8 +58,17 @@ import { OverlayStatusService } from './services/overlay-status.service';
 	init: 'ngOnInit',
 	destroy: 'ngOnDestroy'
 })
+<<<<<<< HEAD
 export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent, AfterViewInit {
 	@ViewChild('closeAnnotation', {static: false}) closeAnnotation: ElementRef;
+=======
+export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent {
+	// for component
+	readonly isAnnotationsShow: boolean;
+	readonly isFavoritesShow: boolean;
+	readonly isImageProcessingShow: boolean;
+	//
+>>>>>>> c0f96315d8cb345e37775573ac1ec48a2d408630
 	@Input() mapId: string;
 	isAutoProcessing: boolean;
 	isManualProcessingOpen: boolean;
@@ -133,10 +144,15 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		protected actions$: Actions,
 		protected element: ElementRef,
 		protected clickOutsideService: ClickOutsideService,
-		protected translateService: TranslateService
+		protected translateService: TranslateService,
+		componentVisibilityService: ComponentVisibilityService
 	) {
 		this.isPreset = true;
 		this.isFavorite = true;
+		this.isAnnotationsShow = componentVisibilityService.get(ComponentVisibilityItems.ANNOTATIONS);
+		this.isFavoritesShow = componentVisibilityService.get(ComponentVisibilityItems.FAVORITES);
+		this.isImageProcessingShow = componentVisibilityService.get(ComponentVisibilityItems.IMAGE_PROCESSING);
+
 	}
 
 	@AutoSubscription

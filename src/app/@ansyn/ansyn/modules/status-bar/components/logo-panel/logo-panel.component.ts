@@ -5,6 +5,8 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 import { IStatusBarConfig } from '../../models/statusBar-config.model';
 import { TranslateService } from '@ngx-translate/core';
 import { IMenuConfig, LogHelp, MenuConfig, ResetAppAction } from '@ansyn/menu';
+import { ComponentVisibilityService } from '../../../../app-providers/component-visibility.service';
+import { ComponentVisibilityItems } from '../../../../app-providers/component-mode';
 
 @Component({
 	selector: 'ansyn-logo-panel',
@@ -12,6 +14,10 @@ import { IMenuConfig, LogHelp, MenuConfig, ResetAppAction } from '@ansyn/menu';
 	styleUrls: ['./logo-panel.component.less']
 })
 export class LogoPanelComponent {
+	// for component
+	readonly isHelpShow: boolean;
+	readonly isCredentialsShow: boolean;
+	//
 	@Input() version;
 
 	@HostBinding('class.rtl')
@@ -21,11 +27,14 @@ export class LogoPanelComponent {
 
 	constructor(
 		protected store$: Store<IStatusBarState>,
+		componentVisibilityService: ComponentVisibilityService,
 		@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 		protected translateService: TranslateService,
 		@Inject(MenuConfig) public menuConfig: IMenuConfig,
 		protected store: Store<any>
 	) {
+		this.isHelpShow = componentVisibilityService.get(ComponentVisibilityItems.HELP);
+		this.isCredentialsShow = componentVisibilityService.get(ComponentVisibilityItems.CREDENTIALS);
 	}
 
 	onHelp() {

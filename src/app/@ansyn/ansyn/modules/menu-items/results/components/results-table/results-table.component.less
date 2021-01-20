@@ -10,12 +10,11 @@
 	z-index: @z-index-footer;
 	background: @background-color-3;
 	height: 100%;
-	overflow: hidden;
 
 	div.results-table {
 		width: @results-table-width;
 		color: white;
-		font-size: 13px;
+		font-size: 14px;
 		padding: 0 5px;
 		box-sizing: border-box;
 		height: 100%;
@@ -24,7 +23,6 @@
 		h2.header {
 			color: white;
 			margin: 15px;
-			font-size: calc(1.5em + 1.5px);
 		}
 
 		div.results-table-head {
@@ -76,7 +74,6 @@
 
 		div.results-table-body {
 			display: block;
-			overflow-y: auto;
 			height: calc(100vh - @status-bar-height - @timeline-area-height - 110px);
 			direction: rtl; // to flip the scrollbar location
 

@@ -10,6 +10,8 @@ import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { SubMenuEnum, toolsFlags } from '../models/tools.model';
 import { MockComponent } from '../../../../core/test/mock-component';
 import { layersFeatureKey, LayersReducer } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
+import { ComponentVisibilityService } from '../../../../../app-providers/component-visibility.service';
+import { MockCompoentnService } from '../../../../core/test/mock-compoentn-service';
 
 
 describe('ToolsComponent', () => {
@@ -42,7 +44,9 @@ describe('ToolsComponent', () => {
 				[mapFeatureKey]: MapReducer
 			}), TranslateModule.forRoot()],
 			declarations: [ToolsComponent, mockGoTo, mockOverlaysDisplayMode, mockAnnotationsControl, mockImageManualProcessing],
-			providers: [ImageryCommunicatorService, { provide: MatDialogRef, useValue: {} }, { provide: MatDialog, useValue: {} }]
+			providers: [ImageryCommunicatorService, { provide: MatDialogRef, useValue: {} }, { provide: MatDialog, useValue: {} },
+				{provide: ComponentVisibilityService,
+				useClass: MockCompoentnService}]
 		})
 			.compileComponents();
 	}));

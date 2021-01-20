@@ -27,6 +27,7 @@
     "start_1": "npm start -- --port 4201",
     "start:aot": "npm start -- --aot true",
     "start:prod": "npm start -- --prod true",
+    "start:max-space": "node --max_old_space_size=12288 ./node_modules/@angular/cli/bin/ng serve",
     "start:builder-dev": "npm start -- --app builder-dev",
     "test": "ng test",
     "test:e2e": "node scripts/generate-config.js && ng e2e ansyn-e2e",
@@ -86,7 +87,7 @@
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.1000.4",
+    "@angular-devkit/build-angular": "^0.1100.7",
     "@angular-devkit/build-ng-packagr": "~0.1000.4",
     "@angular/cli": "~10.0.4",
     "@angular/compiler-cli": "~10.0.5",

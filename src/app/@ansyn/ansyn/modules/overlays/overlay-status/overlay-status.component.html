@@ -17,11 +17,7 @@
 		<i class="medium-icon icon-automatic-image-processing" [class.active]="isAutoProcessing"></i>
 	</button>
 </div>
-<<<<<<< HEAD
-<div class="overlay-status-button" #closeAnnotation>
-=======
-<div class="overlay-status-button" *ngIf="isImageProcessingShow">
->>>>>>> c0f96315d8cb345e37775573ac1ec48a2d408630
+<div class="overlay-status-button" *ngIf="isImageProcessingShow" #closeAnnotation>
 	<button *ngIf="overlay"
 			class="small-icon-button"
 			[class.active]="isManualProcessingOpen"
@@ -36,12 +32,7 @@
 		*ngIf="isManualProcessingOpen">
 	</ansyn-image-processing-control>
 </div>
-<<<<<<< HEAD
-
-<div class="overlay-status-button">
-=======
 <div class="overlay-status-button" *ngIf="isFavoritesShow">
->>>>>>> c0f96315d8cb345e37775573ac1ec48a2d408630
 	<button [attr.tooltip-class]="isRtl ? 'bottom left' : 'bottom right'"
 			*ngIf="overlay"
 			class="button small-icon-button set-favorite"

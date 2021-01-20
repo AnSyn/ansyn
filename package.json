@@ -23,7 +23,7 @@
     "log": "git log master --pretty=format:\\\"%an\\\",\\\"%ai\\\",\\\"%s\\\",\\\"%H\\\" > log.csv && echo Commiter, Date, Message, Hash | cat - log.csv > log2.csv && mv log2.csv log.csv",
     "ng": "ng",
     "prestart": "node scripts/generate-config.js",
-    "start": "ng serve",
+    "start": "node --max_old_space_size=12288 ./node_modules/@angular/cli/bin/ng serve",
     "start_1": "npm start -- --port 4201",
     "start:aot": "npm start -- --aot true",
     "start:prod": "npm start -- --prod true",

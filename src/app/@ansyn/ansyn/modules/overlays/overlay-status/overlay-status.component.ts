@@ -58,17 +58,12 @@ import { ComponentVisibilityItems } from '../../../app-providers/component-mode'
 	init: 'ngOnInit',
 	destroy: 'ngOnDestroy'
 })
-<<<<<<< HEAD
 export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent, AfterViewInit {
 	@ViewChild('closeAnnotation', {static: false}) closeAnnotation: ElementRef;
-=======
-export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent {
-	// for component
 	readonly isAnnotationsShow: boolean;
 	readonly isFavoritesShow: boolean;
 	readonly isImageProcessingShow: boolean;
 	//
->>>>>>> c0f96315d8cb345e37775573ac1ec48a2d408630
 	@Input() mapId: string;
 	isAutoProcessing: boolean;
 	isManualProcessingOpen: boolean;

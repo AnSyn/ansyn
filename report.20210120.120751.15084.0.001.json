@@ -4,15 +4,17 @@
     "reportVersion": 1,
     "event": "Allocation failed - JavaScript heap out of memory",
     "trigger": "FatalError",
-    "filename": "report.20210117.135605.15520.0.001.json",
-    "dumpEventTime": "2021-01-17T13:56:05Z",
-    "dumpEventTimeStamp": "1610884565232",
-    "processId": 15520,
+    "filename": "report.20210120.120751.15084.0.001.json",
+    "dumpEventTime": "2021-01-20T12:07:51Z",
+    "dumpEventTimeStamp": "1611137271155",
+    "processId": 15084,
     "cwd": "C:\\Users\\omeradani\\OneDrive\\Documents\\GitProjects\\ansyn",
     "commandLine": [
       "node",
       "C:\\Users\\omeradani\\OneDrive\\Documents\\GitProjects\\ansyn\\node_modules\\.bin\\\\..\\@angular\\cli\\bin\\ng",
-      "serve"
+      "serve",
+      "--aot",
+      "true"
     ],
     "nodejsVersion": "v12.16.1",
     "wordSize": 64,
@@ -51,74 +53,74 @@
       {
         "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
         "speed": 1800,
-        "user": 1080000,
+        "user": 4054781,
         "nice": 0,
-        "sys": 994656,
-        "idle": 11387125,
-        "irq": 92281
+        "sys": 3984578,
+        "idle": 54557796,
+        "irq": 581812
       },
       {
         "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
         "speed": 1800,
-        "user": 617093,
+        "user": 1980125,
         "nice": 0,
-        "sys": 420578,
-        "idle": 12423750,
-        "irq": 4796
+        "sys": 1455421,
+        "idle": 59161250,
+        "irq": 15515
       },
       {
         "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
         "speed": 1800,
-        "user": 999390,
+        "user": 4827234,
         "nice": 0,
-        "sys": 606250,
-        "idle": 11855781,
-        "irq": 5359
+        "sys": 2724171,
+        "idle": 55045390,
+        "irq": 37593
       },
       {
         "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
         "speed": 1800,
-        "user": 747937,
+        "user": 3253640,
         "nice": 0,
-        "sys": 382656,
-        "idle": 12330828,
-        "irq": 3687
+        "sys": 2007750,
+        "idle": 57335406,
+        "irq": 21734
       },
       {
         "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
         "speed": 1800,
-        "user": 916203,
+        "user": 4059031,
         "nice": 0,
-        "sys": 505640,
-        "idle": 12039578,
-        "irq": 5562
+        "sys": 2760640,
+        "idle": 55777125,
+        "irq": 35937
       },
       {
         "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
         "speed": 1800,
-        "user": 589046,
+        "user": 2602328,
         "nice": 0,
-        "sys": 346625,
-        "idle": 12525734,
-        "irq": 3437
+        "sys": 2040265,
+        "idle": 57954187,
+        "irq": 15531
       },
       {
         "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
         "speed": 1800,
-        "user": 825671,
+        "user": 4172375,
         "nice": 0,
-        "sys": 443484,
-        "idle": 12192250,
-        "irq": 4578
+        "sys": 2850078,
+        "idle": 55574328,
+        "irq": 28265
       },
       {
         "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
         "speed": 1800,
-        "user": 696453,
+        "user": 3529796,
         "nice": 0,
-        "sys": 451078,
-        "idle": 12313875,
-        "irq": 3984
+        "sys": 2894531,
+        "idle": 56172453,
+        "irq": 16234
       }
     ],
     "networkInterfaces": [
@@ -152,7 +154,7 @@
         "name": "‏‏Wi-Fi",
         "internal": false,
         "mac": "0c:d2:92:fb:a9:e6",
-        "address": "192.168.0.103",
+        "address": "192.168.0.102",
         "netmask": "255.255.255.0",
         "family": "IPv4"
       },
@@ -232,23 +234,27 @@
       "symbol": "v8::internal::Factory::NewFillerObject+61"
     },
     {
-      "pc": "0x00007ff7186c0adf",
-      "symbol": "v8::internal::interpreter::JumpTableTargetOffsets::iterator::operator=+1295"
+      "pc": "0x00007ff7186c0c51",
+      "symbol": "v8::internal::interpreter::JumpTableTargetOffsets::iterator::operator=+1665"
     },
     {
       "pc": "0x00007ff718ed4ddd",
       "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+546637"
     },
     {
-      "pc": "0x000002f8e688ae7e",
+      "pc": "0x00007ff718ed5d0d",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+550525"
+    },
+    {
+      "pc": "0x0000004c179fb99e",
       "symbol": ""
     }
   ],
   "javascriptHeap": {
-    "totalMemory": 2159755264,
-    "totalCommittedMemory": 2159755264,
-    "usedMemory": 2129556504,
-    "availableMemory": 46733880,
+    "totalMemory": 2152984576,
+    "totalCommittedMemory": 2152984576,
+    "usedMemory": 2134048704,
+    "availableMemory": 48986640,
     "memoryLimit": 2197815296,
     "heapSpaces": {
       "read_only_space": {
@@ -259,38 +265,38 @@
         "available": 0
       },
       "new_space": {
-        "memorySize": 8388608,
-        "committedMemory": 8388608,
-        "capacity": 4189824,
-        "used": 90368,
-        "available": 4099456
+        "memorySize": 2097152,
+        "committedMemory": 2097152,
+        "capacity": 1047456,
+        "used": 71128,
+        "available": 976328
       },
       "old_space": {
-        "memorySize": 1973043200,
-        "committedMemory": 1973043200,
-        "capacity": 1964407776,
-        "used": 1964023208,
-        "available": 384568
+        "memorySize": 1983266816,
+        "committedMemory": 1983266816,
+        "capacity": 1977028936,
+        "used": 1974896800,
+        "available": 2132136
       },
       "code_space": {
-        "memorySize": 5935104,
-        "committedMemory": 5935104,
-        "capacity": 5241056,
-        "used": 5241056,
+        "memorySize": 5148672,
+        "committedMemory": 5148672,
+        "capacity": 4716320,
+        "used": 4716320,
         "available": 0
       },
       "map_space": {
-        "memorySize": 16781312,
-        "committedMemory": 16781312,
-        "capacity": 5349680,
-        "used": 5349680,
+        "memorySize": 12849152,
+        "committedMemory": 12849152,
+        "capacity": 5488400,
+        "used": 5488400,
         "available": 0
       },
       "large_object_space": {
-        "memorySize": 154722304,
-        "committedMemory": 154722304,
-        "capacity": 154275096,
-        "used": 154275096,
+        "memorySize": 148738048,
+        "committedMemory": 148738048,
+        "capacity": 148298960,
+        "used": 148298960,
         "available": 0
       },
       "code_large_object_space": {
@@ -303,24 +309,24 @@
       "new_large_object_space": {
         "memorySize": 0,
         "committedMemory": 0,
-        "capacity": 4189824,
+        "capacity": 1047456,
         "used": 0,
-        "available": 4189824
+        "available": 1047456
       }
     }
   },
   "resourceUsage": {
-    "userCpuSeconds": 284.937,
-    "kernelCpuSeconds": 15.406,
-    "cpuConsumptionPercent": 150.926,
-    "maxRss": 2356539392,
+    "userCpuSeconds": 186.703,
+    "kernelCpuSeconds": 12.109,
+    "cpuConsumptionPercent": 185.806,
+    "maxRss": 2359050240,
     "pageFaults": {
-      "IORequired": 1818185,
+      "IORequired": 1579884,
       "IONotRequired": 0
     },
     "fsActivity": {
-      "reads": 13484,
-      "writes": 2067
+      "reads": 14710,
+      "writes": 6
     }
   },
   "libuv": [
@@ -353,7 +359,7 @@
     "npm_config_allow_same_version": "",
     "npm_config_also": "",
     "npm_config_always_auth": "",
-    "npm_config_argv": "{\"remain\":[],\"cooked\":[\"start\"],\"original\":[\"start\"]}",
+    "npm_config_argv": "{\"remain\":[\"--aot\",\"true\"],\"cooked\":[\"start\",\"--\",\"--aot\",\"true\"],\"original\":[\"start\",\"--\",\"--aot\",\"true\"]}",
     "npm_config_audit": "true",
     "npm_config_audit_level": "low",
     "npm_config_auth_type": "legacy",
@@ -477,7 +483,7 @@
     "npm_config_viewer": "browser",
     "npm_execpath": "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
     "npm_lifecycle_event": "start",
-    "npm_lifecycle_script": "ng serve",
+    "npm_lifecycle_script": "ng serve \"--aot\" \"true\"",
     "npm_node_execpath": "C:\\Program Files\\nodejs\\node.exe",
     "npm_package_bugs_url": "https://github.com/ansyn/ansyn/issues",
     "npm_package_dependencies_angular2_uuid": "^1.1.1",
@@ -575,7 +581,7 @@
     "npm_package_devDependencies__types_lodash": "4.14.88",
     "npm_package_devDependencies__types_node": "^12.11.1",
     "npm_package_devDependencies__types_wellknown": "0.5.0",
-    "npm_package_gitHead": "a04548e717d62133ffd41b1d085ee0cd03c927b1",
+    "npm_package_gitHead": "346f732495327a0453a023e691699363614d0c72",
     "npm_package_homepage": "https://github.com/ansyn/ansyn#readme",
     "npm_package_license": "MIT",
     "npm_package_name": "ansyn-src",
@@ -602,10 +608,11 @@
     "npm_package_scripts_postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
     "npm_package_scripts_prestart": "node scripts/generate-config.js",
     "npm_package_scripts_publish_libs": "bash scripts/publish-libs.sh",
-    "npm_package_scripts_start": "ng serve",
+    "npm_package_scripts_start": "ng serve \"--aot\" \"true\"",
     "npm_package_scripts_start_1": "npm start -- --port 4201",
     "npm_package_scripts_start_aot": "npm start -- --aot true",
     "npm_package_scripts_start_builder_dev": "npm start -- --app builder-dev",
+    "npm_package_scripts_start_max_space": "node --max_old_space_size=12288 ./node_modules/@angular/cli/bin/ng serve",
     "npm_package_scripts_start_prod": "npm start -- --prod true",
     "npm_package_scripts_test": "ng test",
     "npm_package_scripts_testCompile": "cd build && gulp testCompile",
@@ -618,8 +625,8 @@
     "OneDrive": "C:\\Users\\omeradani\\OneDrive",
     "OneDriveConsumer": "C:\\Users\\omeradani\\OneDrive",
     "OS": "Windows_NT",
-    "Path": "C:\\Program Files\\nodejs\\node_modules\\npm\\node_modules\\npm-lifecycle\\node-gyp-bin;C:\\Users\\omeradani\\OneDrive\\Documents\\GitProjects\\ansyn\\node_modules\\.bin;C:\\Users\\omeradani\\OneDrive\\Documents\\GitProjects\\ansyn\\node_modules\\.bin;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\Intel\\WiFi\\bin\\;C:\\Program Files\\Common Files\\Intel\\WirelessCommon\\;C:\\Program Files (x86)\\Intel\\Intel(R) Management Engine Components\\DAL;C:\\Program Files\\Intel\\Intel(R) Management Engine Components\\DAL;C:\\Program Files\\nodejs\\;C:\\Program Files\\Docker\\Docker\\resources\\bin;C:\\ProgramData\\DockerDesktop\\version-bin;C:\\Program Files\\dotnet\\;C:\\Program Files\\Microsoft SQL Server\\130\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Users\\omeradani\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\omeradani\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\omeradani\\.dotnet\\tools",
-    "PATH": "C:\\Program Files\\nodejs\\node_modules\\npm\\node_modules\\npm-lifecycle\\node-gyp-bin;C:\\Users\\omeradani\\OneDrive\\Documents\\GitProjects\\ansyn\\node_modules\\.bin;C:\\Users\\omeradani\\OneDrive\\Documents\\GitProjects\\ansyn\\node_modules\\.bin;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\Intel\\WiFi\\bin\\;C:\\Program Files\\Common Files\\Intel\\WirelessCommon\\;C:\\Program Files (x86)\\Intel\\Intel(R) Management Engine Components\\DAL;C:\\Program Files\\Intel\\Intel(R) Management Engine Components\\DAL;C:\\Program Files\\nodejs\\;C:\\Program Files\\Docker\\Docker\\resources\\bin;C:\\ProgramData\\DockerDesktop\\version-bin;C:\\Program Files\\dotnet\\;C:\\Program Files\\Microsoft SQL Server\\130\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Users\\omeradani\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\omeradani\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\omeradani\\.dotnet\\tools",
+    "Path": "C:\\Program Files\\nodejs\\node_modules\\npm\\node_modules\\npm-lifecycle\\node-gyp-bin;C:\\Users\\omeradani\\OneDrive\\Documents\\GitProjects\\ansyn\\node_modules\\.bin;C:\\Program Files\\nodejs\\node_modules\\npm\\node_modules\\npm-lifecycle\\node-gyp-bin;C:\\Users\\omeradani\\OneDrive\\Documents\\GitProjects\\ansyn\\node_modules\\.bin;C:\\Users\\omeradani\\OneDrive\\Documents\\GitProjects\\ansyn\\node_modules\\.bin;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\Intel\\WiFi\\bin\\;C:\\Program Files\\Common Files\\Intel\\WirelessCommon\\;C:\\Program Files (x86)\\Intel\\Intel(R) Management Engine Components\\DAL;C:\\Program Files\\Intel\\Intel(R) Management Engine Components\\DAL;C:\\Program Files\\nodejs\\;C:\\Program Files\\Docker\\Docker\\resources\\bin;C:\\ProgramData\\DockerDesktop\\version-bin;C:\\Program Files\\dotnet\\;C:\\Program Files\\Microsoft SQL Server\\130\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Users\\omeradani\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\omeradani\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\omeradani\\.dotnet\\tools",
+    "PATH": "C:\\Program Files\\nodejs\\node_modules\\npm\\node_modules\\npm-lifecycle\\node-gyp-bin;C:\\Users\\omeradani\\OneDrive\\Documents\\GitProjects\\ansyn\\node_modules\\.bin;C:\\Program Files\\nodejs\\node_modules\\npm\\node_modules\\npm-lifecycle\\node-gyp-bin;C:\\Users\\omeradani\\OneDrive\\Documents\\GitProjects\\ansyn\\node_modules\\.bin;C:\\Users\\omeradani\\OneDrive\\Documents\\GitProjects\\ansyn\\node_modules\\.bin;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\Intel\\WiFi\\bin\\;C:\\Program Files\\Common Files\\Intel\\WirelessCommon\\;C:\\Program Files (x86)\\Intel\\Intel(R) Management Engine Components\\DAL;C:\\Program Files\\Intel\\Intel(R) Management Engine Components\\DAL;C:\\Program Files\\nodejs\\;C:\\Program Files\\Docker\\Docker\\resources\\bin;C:\\ProgramData\\DockerDesktop\\version-bin;C:\\Program Files\\dotnet\\;C:\\Program Files\\Microsoft SQL Server\\130\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Users\\omeradani\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\omeradani\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\omeradani\\.dotnet\\tools",
     "PATHEXT": ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JSE;.WSF;.WSH;.MSC",
     "PROCESSOR_ARCHITECTURE": "AMD64",
     "PROCESSOR_IDENTIFIER": "Intel64 Family 6 Model 142 Stepping 10, GenuineIntel",
@@ -652,15 +659,15 @@
     "C:\\WINDOWS\\System32\\KERNELBASE.dll",
     "C:\\WINDOWS\\System32\\WS2_32.dll",
     "C:\\WINDOWS\\System32\\RPCRT4.dll",
-    "C:\\WINDOWS\\System32\\PSAPI.DLL",
-    "C:\\WINDOWS\\System32\\ADVAPI32.dll",
     "C:\\WINDOWS\\SYSTEM32\\dbghelp.dll",
-    "C:\\WINDOWS\\System32\\msvcrt.dll",
+    "C:\\WINDOWS\\System32\\PSAPI.DLL",
     "C:\\WINDOWS\\System32\\ucrtbase.dll",
+    "C:\\WINDOWS\\System32\\ADVAPI32.dll",
+    "C:\\WINDOWS\\System32\\msvcrt.dll",
     "C:\\WINDOWS\\System32\\sechost.dll",
+    "C:\\WINDOWS\\SYSTEM32\\IPHLPAPI.DLL",
     "C:\\WINDOWS\\SYSTEM32\\USERENV.dll",
     "C:\\WINDOWS\\System32\\USER32.dll",
-    "C:\\WINDOWS\\SYSTEM32\\IPHLPAPI.DLL",
     "C:\\WINDOWS\\System32\\win32u.dll",
     "C:\\WINDOWS\\System32\\GDI32.dll",
     "C:\\WINDOWS\\System32\\gdi32full.dll",

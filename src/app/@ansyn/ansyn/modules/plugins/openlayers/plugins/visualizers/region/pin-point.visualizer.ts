@@ -18,7 +18,8 @@ import { feature } from '@turf/turf';
 	supported: [OpenLayersMap],
 	deps: [Store, Actions, OpenLayersProjectionService],
 	dontRestrictToExtent: true,
-	layerClassName: 'pin-point-layer'
+	layerClassName: 'pin-point-layer',
+	isHideable: true
 })
 @Injectable()
 export class PinPointVisualizer extends RegionVisualizer {

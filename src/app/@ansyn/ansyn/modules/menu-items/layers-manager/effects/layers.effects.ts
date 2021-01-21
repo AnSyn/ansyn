@@ -12,7 +12,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
-import { catchError, filter, map, mergeMap } from 'rxjs/operators';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { DataLayersService } from '../services/data-layers.service';
 import { ILayer, LayerType } from '../models/layers.model';
 import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCrash';
@@ -32,10 +32,15 @@ export class LayersEffects {
 	@Effect()
 	onLayerCollectionLoaded$ = this.actions$.pipe(
 		ofType<LayerCollectionLoadedAction>(LayersActionTypes.LAYER_COLLECTION_LOADED),
-		filter((action) => !action.payload.some(({ type }) => type === LayerType.annotation)),
-		map(() => {
-			const annotationLayer = this.dataLayersService.generateAnnotationLayer();
-			return new AddLayer(annotationLayer);
+		mergeMap((action) => {
+			const regionLayer = this.dataLayersService.generateLayer({ name: 'Region', id: 'region-layer', type: LayerType.static });
+			const layers = [regionLayer];
+
+			if (!action.payload.some(({ type }) => type === LayerType.annotation)) {
+				layers.push(this.dataLayersService.generateLayer());
+			}
+
+			return layers.map(layer => new AddLayer(layer));
 		})
 	);
 

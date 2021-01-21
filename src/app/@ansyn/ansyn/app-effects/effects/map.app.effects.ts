@@ -270,8 +270,7 @@ export class MapAppEffects {
 			ofType<ToggleMapLayersAction>(MapActionTypes.TOGGLE_MAP_LAYERS),
 			tap(({ payload }) => {
 				const communicator = this.imageryCommunicatorService.provide(payload.mapId);
-				communicator.visualizers.filter(visualizer => !visualizer.alwaysVisible)
-										.forEach(visualizer => visualizer.setVisibility(payload.isVisible));
+				communicator.visualizers.forEach(visualizer => visualizer.setVisibility(payload.isVisible));
 			})
 		);
 

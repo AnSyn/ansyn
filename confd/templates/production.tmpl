@@ -112,6 +112,28 @@
 			 "fullyChecked": true
 		   },
 		   "time": null,
+		   "advancedSearchParameters": {
+			   "types": ["Multi-Spectral Instrument", "UAV", "Mapillary", "Flickr", "OpenStreetCam", "Wikimedia Commons"],
+				"registeration": ["Geo Registered"],
+				"providers": [{
+					"name": "SENTINEL",
+					"class": "SentinelSourceProvider"
+				},
+				{
+					"name": "OPEN_AERIAL",
+					"class": "OpenAerialSourceProvider"
+				},
+				{
+					"name": "PIC4CARTO",
+					"class": "Pic4cartoSourceProvider"
+				}],
+			"resolution": {
+				"lowValue": 0,
+				"highValue": 200
+			},
+			"sensors": [],
+			"enableResetProviders": true
+		 	},
 		   "facets": {
 			 "showOnlyFavorites": false,
 			 "filters": [
@@ -393,7 +415,6 @@
     },
     "translation": {
     	"default": {
-    		"direction": "rtl",
 		 	"Sentinel-2A": "Sentinel 2A",
 		 	"alg_1": "name 1",
 		 	"alg_2": "name 2",
@@ -1165,9 +1186,6 @@
 				  }
 				}
 			]
-			},
-			"sensorNamesByGroup": {
-				"Landsat8L1G": ["Landsat8"]
 			}
 		},
 		"PIC4CARTO": {
@@ -1393,9 +1411,6 @@
 						}
 					  }
 					]
-			},
-			"sensorNamesByGroup": {
-				"Multi-Spectral Instrument": ["S2MSI1C", "S2MSI2A"]
 			}
 		},
 		"AIRBUS": {
@@ -1610,5 +1625,22 @@
   },
   "addressService": {
       "url": "assets/config/addresses.json"
+    },
+    "componentVisibility": {
+			"timeline": false,
+			"resultTable": false,
+			"help": false,
+			"credentials": false,
+			"export": false,
+			"annotations": false,
+			"goTo": false,
+			"measures": false,
+			"shadowMouse": false,
+			"screens": false,
+			"layers": false,
+			"favorites": false,
+			"cases": false,
+			"footprints": false,
+			"imageProcessing": false
     }
 }

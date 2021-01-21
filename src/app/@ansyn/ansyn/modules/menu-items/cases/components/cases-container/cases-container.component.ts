@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, HostBinding } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ICasesState, selectMyCasesData, selectSharedCasesData } from '../../reducers/cases.reducer';
 import { select, Store } from '@ngrx/store';
 import {
@@ -10,8 +10,6 @@ import {
 import { tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { CasesType, ICaseTableData } from '../../models/cases-config';
-import { TranslateService } from '@ngx-translate/core';
-import { selectFooterCollapse } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-cases-container',
@@ -20,10 +18,6 @@ import { selectFooterCollapse } from '@ansyn/map-facade';
 })
 @AutoSubscriptions()
 export class CasesContainerComponent implements OnInit, OnDestroy {
-	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
-	@HostBinding('class.footerCollapse')
-	isCollapse = false;
 
 	myCasesData: ICaseTableData;
 	sharedCasesObj: ICaseTableData;
@@ -53,12 +47,9 @@ export class CasesContainerComponent implements OnInit, OnDestroy {
 		})
 	);
 
-	@AutoSubscription
-	isFooterCollapse$ = this.store$.select(selectFooterCollapse).pipe(
-		tap(collapse => this.isCollapse = collapse)
-	);
-
-	constructor(protected store$: Store<ICasesState>, protected translateService: TranslateService) {
+	constructor(
+		protected store$: Store<ICasesState>
+	) {
 	}
 
 	ngOnInit(): void {

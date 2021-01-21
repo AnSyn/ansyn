@@ -1,43 +1,43 @@
-<div class="overlay-status-button">
+<div class="overlay-status-button" *ngIf="isAnnotationsShow">
 	<button class="small-icon-button drag-mode" *ngIf="overlay"
 			(click)="toggleDragged()"
 			[disabled]="!isLayersVisible || noGeoRegistration"
 			[attr.tooltip-value]="this.draggedButtonText | translate"
-			[attr.tooltip-class]="isRtl ? 'bottom left' : 'bottom right'"
-	><i class="icon-drag-annotations" [class.active]="isDragged"></i>
+			[attr.tooltip-class]="'bottom left'"
+	><i class="medium-icon icon-drag-annotations" [class.active]="isDragged"></i>
 	</button>
 </div>
-<div class="overlay-status-button">
-	<button [attr.tooltip-class]="isRtl ? 'bottom left' : 'bottom right'"
+<div class="overlay-status-button" *ngIf="isImageProcessingShow">
+	<button [attr.tooltip-class]="'bottom left'"
 			*ngIf="overlay"
 			class="small-icon-button auto-image-processing"
 			[attr.tooltip-value]="'Automatic Processing' | translate"
 			(click)="toggleAutoImageProcessing()"
 			[class.mode-on]="isAutoProcessing">
-		<i class="icon-automatic-image-processing" [class.active]="isAutoProcessing"></i>
+		<i class="medium-icon icon-automatic-image-processing" [class.active]="isAutoProcessing"></i>
 	</button>
 </div>
-<div class="overlay-status-button">
+<div class="overlay-status-button" *ngIf="isImageProcessingShow">
 	<button *ngIf="overlay"
 			class="small-icon-button"
 			[class.active]="isManualProcessingOpen"
 			[attr.tooltip-value]="'Manual Image Enhancement' | translate"
-			[attr.tooltip-class]="isRtl ? 'bottom left' : 'bottom right'"
+			[attr.tooltip-class]="'bottom left'"
 			(click)="toggleManualImageProcessing()"
 			[class.mode-on]="isImageControlActive && !isAutoProcessing">
-		<i class="icon-tools-image-processing" [class.active]="isManualProcessingOpen || (isManualProcessChanged && !isAutoProcessing)"></i>
+		<i class="medium-icon icon-tools-image-processing" [class.active]="isManualProcessingOpen || (isManualProcessChanged && !isAutoProcessing)"></i>
 	</button>
 	<ansyn-image-processing-control
 		[overlayId]="overlay.id"
 		*ngIf="isManualProcessingOpen">
 	</ansyn-image-processing-control>
 </div>
-<div class="overlay-status-button">
-	<button [attr.tooltip-class]="isRtl ? 'bottom left' : 'bottom right'"
+<div class="overlay-status-button" *ngIf="isFavoritesShow">
+	<button [attr.tooltip-class]="'bottom left'"
 			*ngIf="overlay"
 			class="button small-icon-button set-favorite"
 			[attr.tooltip-value]="!isFavorite? 'Add to favorites' : 'Remove from favorites' | translate"
 			(click)="toggleFavorite()">
-		<i class="icon" [ngClass]="!isFavorite? 'icon-favorite-empty' : 'icon-favorite-full'" [class.active]="isFavorite"></i>
+		<i class="medium-icon icon" [ngClass]="!isFavorite? 'icon-favorite-empty' : 'icon-favorite-full'" [class.active]="isFavorite"></i>
 	</button>
 </div>

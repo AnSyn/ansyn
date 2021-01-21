@@ -17,7 +17,10 @@ import {
 } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { casesConfig, CasesService } from '../../../modules/menu-items/cases/services/cases.service';
 import { UpdateFacetsAction } from '../../../modules/filters/actions/filters.actions';
-import { SetAnnotationMode, SetMeasureDistanceToolState, } from '../../../modules/menu-items/tools/actions/tools.actions';
+import {
+	SetAnnotationMode,
+	SetMeasureDistanceToolState,
+} from '../../../modules/status-bar/components/tools/actions/tools.actions';
 import { isFullOverlay } from '../../../modules/core/utils/overlays';
 import { ICoreConfig } from '../../../modules/core/models/core.config.model';
 import { CoreConfig } from '../../../modules/core/models/core.config';
@@ -40,10 +43,10 @@ export class SelectCaseAppEffects {
 	);
 
 	constructor(protected actions$: Actions,
-				protected store$: Store<IAppState>,
-				@Inject(CoreConfig) protected coreConfig: ICoreConfig,
-				@Inject(casesConfig) public caseConfig: ICasesConfig,
-				protected casesService: CasesService
+		protected store$: Store<IAppState>,
+		@Inject(CoreConfig) protected coreConfig: ICoreConfig,
+		@Inject(casesConfig) public caseConfig: ICasesConfig,
+		protected casesService: CasesService
 	) {
 	}
 
@@ -83,11 +86,12 @@ export class SelectCaseAppEffects {
 		// filters
 		const { facets } = state;
 
+		const advancedSearchParameters = state.advancedSearchParameters;
 		const selectCaseAction = [
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),
 			new SetActiveMapId(state.maps.activeMapId),
 			new SetLayoutAction(<any>layout),
-			new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
+			new SetOverlaysCriteriaAction({ time, region, dataInputFilters, advancedSearchParameters }, { noInitialSearch }),
 			new UpdateGeoFilterStatus({ active: false, type: region.properties.searchMode }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this)) }),

@@ -1,27 +1,11 @@
 @import "ansyn/less/z-index-globals";
 @import 'ansyn/less/common';
 
-@container-height: calc(100vh - @timeline-area-height - @status-bar-height);
-@container-footerCollapse-height: calc(100vh - @status-bar-height);
-
 :host {
 	display: flex;
 	flex-direction: column;
-	position: absolute;
-	background-color: rgba(44, 44, 44, 0.95);
-	top: 55px;
-	left: 0;
 	width: 300px;
-	height: @container-height;
-
-	&.footerCollapse {
-		height: @container-footerCollapse-height;
-	}
-
-	&.rtl {
-		left: unset;
-		right: 0;
-	}
+	height: 100%;
 
 	div.table {
 		display: flex;
@@ -29,26 +13,21 @@
 		overflow-y: hidden;
 		flex: 1;
 		padding: 0 5px;
-		border-bottom: 1px solid #7b7b7b;
 
 		button {
 			background: transparent;
 			border: 1px solid transparent;
-			height: 18px;
 			width: 28px;
 
 			&:hover {
 				box-sizing: border-box;
 				border: 1px solid #7b7b7b;
 			}
-
-			i {
-				font-size: 16px;
-			}
 		}
 
 		h2 {
 			margin: 15px;
+			color: white;
 		}
 
 		&.one-table {
@@ -56,6 +35,7 @@
 		}
 
 		&.two-table {
+			border-top: 1px solid #7b7b7b;
 			margin-bottom: 20px;
 			min-height: 30%;
 		}

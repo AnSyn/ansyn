@@ -23,8 +23,7 @@ import {
 	SetMapSearchBoxTriggerAction,
 	SetToastMessageAction,
 	SynchronizeMapsAction,
-	ToggleMapLayersAction,
-	UpdateMapAction
+	ToggleMapLayersAction
 } from '@ansyn/map-facade';
 import {
 	BaseMapSourceProvider,
@@ -58,15 +57,15 @@ import {
 import { toastMessages } from '../../modules/core/models/toast-messages';
 import { endTimingLog, startTimingLog } from '../../modules/core/utils/logs/timer-logs';
 import { isFullOverlay } from '../../modules/core/utils/overlays';
-import { CaseGeoFilter, CaseRegionState, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
+import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import { MarkUpClass, selectRegion } from '../../modules/overlays/reducers/overlays.reducer';
 import { IAppState } from '../app.effects.module';
-import { Dictionary } from '@ngrx/entity/src/models';
+import { Dictionary } from '@ngrx/entity';
 import {
 	SetActiveCenter,
 	SetMapGeoEnabledModeToolsActionStore,
 	SetMapSearchBox
-} from '../../modules/menu-items/tools/actions/tools.actions';
+} from '../../modules/status-bar/components/tools/actions/tools.actions';
 import {
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
@@ -82,15 +81,13 @@ import {
 	BackToWorldView,
 	OverlayStatusActionsTypes
 } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
-import { fromPromise } from 'rxjs/internal-compatibility';
 import { isEqual } from 'lodash';
-import { selectGeoRegisteredOptionsEnabled } from '../../modules/menu-items/tools/reducers/tools.reducer';
+import { selectGeoRegisteredOptionsEnabled } from '../../modules/status-bar/components/tools/reducers/tools.reducer';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import {
 	IOverlayStatusConfig,
 	overlayStatusConfig
 } from '../../modules/overlays/overlay-status/config/overlay-status-config';
-import { MeasureDistanceVisualizer } from '../../modules/plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
 import { IGeoFilterStatus, selectGeoFilterStatus } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import {
@@ -273,11 +270,8 @@ export class MapAppEffects {
 			ofType<ToggleMapLayersAction>(MapActionTypes.TOGGLE_MAP_LAYERS),
 			tap(({ payload }) => {
 				const communicator = this.imageryCommunicatorService.provide(payload.mapId);
-				communicator.visualizers.forEach(v => {
-					if (!(v instanceof MeasureDistanceVisualizer)) {
-						v.setVisibility(payload.isVisible);
-					}
-				})
+				communicator.visualizers.filter(visualizer => !visualizer.alwaysVisible)
+										.forEach(visualizer => visualizer.setVisibility(payload.isVisible));
 			})
 		);
 
@@ -402,7 +396,7 @@ export class MapAppEffects {
 			let newActiveMapName = this.changeImageryMap(overlay, communicator);
 
 			if (newActiveMapName) {
-				observable = fromPromise(communicator.setActiveMap(newActiveMapName, mapData.position, undefined, layer));
+				observable = from(communicator.setActiveMap(newActiveMapName, mapData.position, undefined, layer));
 			}
 			return observable.pipe(map(() => layer));
 		});
@@ -435,7 +429,7 @@ export class MapAppEffects {
 			]);
 		});
 
-		return fromPromise(sourceLoader.createAsync(sourceProviderMetaData))
+		return from(sourceLoader.createAsync(sourceProviderMetaData))
 			.pipe(
 				setIsOverlayProperties,
 				isActiveMapAlive,

@@ -1,11 +1,10 @@
-import { Component, HostBinding, Inject, OnDestroy, OnInit } from '@angular/core';
-import * as momentNs from 'moment';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { IStatusBarConfig } from '../../models/statusBar-config.model';
 import { IStatusBarState, selectGeoFilterActive, selectGeoFilterType } from '../../reducers/status-bar.reducer';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs';
-import { animate, style, transition, trigger, AnimationTriggerMetadata } from '@angular/animations';
+import { animate, AnimationTriggerMetadata, style, transition, trigger } from '@angular/animations';
 import { filter, tap } from 'rxjs/operators';
 import { selectDataInputFilter, selectRegion } from '../../../overlays/reducers/overlays.reducer';
 import { CaseRegionState, ICaseDataInputFiltersState } from '../../../menu-items/cases/models/case.model';
@@ -17,13 +16,9 @@ import {
 	MultipleOverlaysSourceConfig
 } from '../../../core/models/multiple-overlays-source-config';
 import { SetToastMessageAction } from '@ansyn/map-facade';
-import {
-	LogSearchPanelPopup,
-} from '../../../overlays/actions/overlays.actions';
+import { LogSearchPanelPopup, } from '../../../overlays/actions/overlays.actions';
 import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
-import { TranslateService } from '@ngx-translate/core';
-
-const moment = momentNs;
+import { SearchOptionsComponent } from '../search-options/search-options.component';
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [
@@ -51,6 +46,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	geoFilterTitle: string;
 	geoFilterCoordinates: string;
 	dataInputFilters: ICaseDataInputFiltersState;
+	advancedSearch: Boolean = false;
 
 	@AutoSubscription
 	dataInputFilters$ = this.store$.select(selectDataInputFilter).pipe(
@@ -75,6 +71,11 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		this.store$.select(selectGeoFilterActive)
 	]).pipe(
 		tap(([geoFilterType, active]) => {
+			if (!active) {
+				this.popupExpanded.forEach((_, key, map) => {
+					map.set(key, false)
+				});
+			}
 			this.geoFilterTitle = `${ geoFilterType }`;
 		})
 	);
@@ -87,14 +88,11 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		})
 	);
 
-	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
-
 	constructor(protected store$: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 				@Inject(MultipleOverlaysSourceConfig) private multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				@Inject(COMPONENT_MODE) public componentMode: boolean,
-				private translateService: TranslateService,
+				protected _parent: SearchOptionsComponent,
 				dateTimeAdapter: DateTimeAdapter<any>
 	) {
 		dateTimeAdapter.setLocale(statusBarConfig.locale);
@@ -130,5 +128,12 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	isDataInputsOk() {
 		return this.dataInputFilters.fullyChecked || this.dataInputFilters.filters.length > 0;
+	}
+
+	toggleAdvancedSearch() {
+		this.advancedSearch = !this.advancedSearch
+	}
+	close() {
+		this._parent.close()
 	}
 }

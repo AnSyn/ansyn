@@ -14,9 +14,9 @@ import {
 	IToolsState,
 	selectSubMenu,
 	toolsStateSelector
-} from '../../../../../menu-items/tools/reducers/tools.reducer';
-import { SetActiveCenter, SetPinLocationModeAction } from '../../../../../menu-items/tools/actions/tools.actions';
-import { SubMenuEnum, toolsFlags } from '../../../../../menu-items/tools/models/tools.model';
+} from '../../../../../status-bar/components/tools/reducers/tools.reducer';
+import { SetActiveCenter, SetPinLocationModeAction } from '../../../../../status-bar/components/tools/actions/tools.actions';
+import { SubMenuEnum, toolsFlags } from '../../../../../status-bar/components/tools/models/tools.model';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],

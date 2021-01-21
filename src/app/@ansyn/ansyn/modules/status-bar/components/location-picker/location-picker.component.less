@@ -7,11 +7,11 @@
 	position: absolute;
 	white-space: nowrap;
 	align-items: center;
-	padding: 5px;
-	top: @search-panel-popup-top;
+	padding: 0 5px;
 	min-height: 30px;
 	border-radius: 5px;
 	background: @background-color-0;
+	left: 8%;
 
 	span.title {
 		flex: 1;
@@ -19,10 +19,24 @@
 
 	.buttons {
 		display: flex;
-		margin-left: 30px;
-
+		margin: 5px;
+		padding: 5px;
+		flex-direction: column;
+		z-index: @z-index-time-picker-presets;
+		background: black;
+		align-items: center;
+				
 		ansyn-radio {
 			margin: 0 10px;
+		}
+	}
+
+	.geoFilterOption {
+		cursor: pointer;
+		padding: 2px;
+
+		&:hover {
+			background-color: @background-color-7;
 		}
 	}
 

@@ -11,12 +11,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "types": [],
-    "paths": {
-      "@ansyn/menu": [
-        "src/app/@ansyn/menu"
-      ]
-    }
+    "types": []
   },
   "angularCompilerOptions": {
     "skipTemplateCodegen": true,

@@ -1,16 +1,13 @@
 import { ChangeDetectionStrategy, Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Store, select } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { ICasesState, selectCaseById, selectSelectedCase } from '../../reducers/cases.reducer';
-import { CloseModalAction, RenameCaseAction, SaveCaseAsAction, UpdateCaseAction } from '../../actions/cases.actions';
-import { CasesService } from '../../services/cases.service';
+import { CloseModalAction, RenameCaseAction, SaveCaseAsAction } from '../../actions/cases.actions';
 import { take, tap } from 'rxjs/operators';
 import { cloneDeep } from '../../../../core/utils/rxjs/operators/cloneDeep';
 import { ICase } from '../../models/case.model';
-import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
-import { TranslateService } from '@ngx-translate/core';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import * as moment from 'moment';
-import { Observable } from 'rxjs';
 
 const animationsDuring = '0.2s';
 
@@ -44,12 +41,8 @@ export class SaveCaseComponent implements OnInit, OnDestroy {
 		return true;
 	};
 
-	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
-
 	constructor(
-		protected store: Store<ICasesState>,
-		protected translateService: TranslateService
+		protected store: Store<ICasesState>
 	) {
 	}
 

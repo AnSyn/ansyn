@@ -8,6 +8,7 @@ import {
 } from '../../../menu-items/cases/models/case.model';
 import { IScannedArea } from '../reducers/overlay-status.reducer';
 import { ILogMessage } from '../../../core/models/logger.model';
+import { BBOX } from '@ansyn/imagery';
 
 export enum OverlayStatusActionsTypes {
 	SET_MANUAL_IMAGE_PROCESSING = 'SET_MANUAL_IMAGE_PROCESSING',
@@ -62,7 +63,7 @@ export class ActivateScannedAreaAction implements Action {
 export class BackToExtentAction implements Action {
 	type: string = OverlayStatusActionsTypes.BACK_TO_EXTENT;
 
-	constructor() {
+	constructor(public payload: {mapId: string, extent: BBOX}) {
 	}
 }
 

@@ -17,6 +17,34 @@
 		width: 100%;
 		position: relative;
 
+		button {
+			margin: 0;
+			padding: 0;
+			border: none;
+			color: white;
+			background: #4c4c4c;
+			box-sizing: border-box;
+			outline: none;
+			width: 34px;
+			height: 34px;
+			border-radius: 5px;
+			cursor: pointer;
+
+			&.mode-on {
+				border: 1px solid @application-contrast-color;
+			}
+
+			&:hover:not(:disabled), &.active {
+				border: 1px solid @application-primary-color;
+				border-radius: 1px;
+			}
+
+			/deep/ i.icon {
+				vertical-align: middle;
+				font-size: 0;
+			}
+		}
+
 		.options-container {
 			width: auto;
 			min-width: 100%;
@@ -77,35 +105,12 @@
 
 		&.top {
 			.options-container {
-				top: initial;
-				bottom: 100%;
+				bottom: initial;
+				top: 100%;
 				border-bottom: none;
 			}
 		}
 	}
-}
-
-div.placeholder {
-	position: absolute;
-	width: 100%;
-	color: rgba(255, 255, 255, 0.8);
-	transition: .2s;
-	text-align: left;
-	bottom: 6px;
-
-	&.float {
-		bottom: 100%;
-		padding: -1px 0;
-		font-size: 13px;
-		color: rgba(255, 255, 255, 0.7);
-	}
-}
-
-div.render {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	height: 19px;
 }
 
 /deep/ div.option {

@@ -14,9 +14,7 @@ import {
 import { featureCollection } from '@turf/helpers';
 import { feature, geometry } from '@turf/turf';
 import { GeoJsonObject, Point, Polygon } from 'geojson';
-import { Observable, of } from 'rxjs';
-
-import { fromPromise } from 'rxjs/internal-compatibility';
+import { Observable, of, from } from 'rxjs';
 import { map, mergeMap, take } from 'rxjs/operators';
 import { CesiumLayer, ISceneMode } from '../../models/cesium-layer';
 import { CesiumProjectionService } from '../../projection/cesium-projection.service';
@@ -196,7 +194,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		}
 
 		if (layer.mapProjection) {
-			return fromPromise(layer.mapProjection.readyPromise).pipe(
+			return from(layer.mapProjection.readyPromise).pipe(
 				map(() => {
 					const viewer = new Cesium.Viewer(this.element, {
 						terrainProvider: Cesium.createWorldTerrain(),

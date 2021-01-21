@@ -22,7 +22,7 @@ import {
 	ToggleFooter
 } from '@ansyn/map-facade';
 import { Actions, ofType } from '@ngrx/effects';
-import { Dictionary } from '@ngrx/entity/src/models';
+import { Dictionary } from '@ngrx/entity';
 import { select, Store } from '@ngrx/store';
 import { featureCollection } from '@turf/turf';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -41,7 +41,7 @@ import {
 	selectActiveAnnotationLayer,
 	selectLayersEntities
 } from '../modules/menu-items/layers-manager/reducers/layers.reducer';
-import { GoToAction, SetActiveCenter, ToolsActionsTypes } from '../modules/menu-items/tools/actions/tools.actions';
+import { GoToAction, SetActiveCenter, ToolsActionsTypes } from '../modules/status-bar/components/tools/actions/tools.actions';
 import {
 	DisplayOverlayAction,
 	DisplayOverlaySuccessAction,

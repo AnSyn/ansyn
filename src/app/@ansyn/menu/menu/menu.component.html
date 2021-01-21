@@ -1,8 +1,6 @@
-<div class="menu-wrapper" #menuWrapper
-	 [class.rtl]="isRTL"
->
+<div class="menu-wrapper" #menuWrapper>
 
-	<div class="menu" #menu [class.expanded]="expand">
+	<!-- <div class="menu" #menu [class.expanded]="expand">
 		<div class="menu-content">
 
 			<div class="menu-items">
@@ -48,23 +46,21 @@
 			class="hide-menu"
 			(click)="toggleCollapse()"
 			[attr.tooltip-value]="minimizeText | translate"
-			[attr.tooltip-class]="isRTL ? 'left' : 'right'">
-			<i class="fa" [ngClass]="isRTL ? collapse ? 'fa-caret-left' : 'fa-caret-right' : collapse ? 'fa-caret-right' : 'fa-caret-left'"></i>
+			[attr.tooltip-class]="'left'">
+			<i class="fa" [ngClass]="collapse ? 'fa-caret-left' : 'fa-caret-right'"></i>
 		</button>
 
-	</div>
+	</div> -->
 
-
-	<div class="container" #container [@expand]="expand ? 'on' : isRTL ? 'off_rtl' : 'off_ltr'" (@expand.done)="onExpandDone()"
+	<div class="container" #container [@expand]="expand ? 'on' : outsideMenuItem.toggleFromBottom ? 'bottom' : 'top'" (@expand.done)="onExpandDone()"
 		 (@expand.start)="onExpandStart()">
-		<!--<button class="close" (click)="closeMenu()">×</button>-->
 		<button class="pin"
 				(click)="toggleIsPinned()"
 				[attr.tooltip-value]="pinText | translate" tooltip-class="right">
-			<i [ngClass]="isPinned? 'icon-pin' : 'icon-unpin'"></i>
+			<i class="medium-icon" [ngClass]="isPinned? 'icon-pin' : 'icon-unpin'"></i>
 		</button>
-		<ng-template #componentElem></ng-template>
+		<div class="template">
+			<ng-template #componentElem></ng-template>
+		</div>
 	</div>
-
-
 </div>

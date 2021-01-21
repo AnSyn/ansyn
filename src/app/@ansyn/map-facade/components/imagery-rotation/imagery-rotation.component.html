@@ -1,6 +1,6 @@
 <div
 	[attr.tooltip-value]="geoRegisteredProperties.tooltipNorth | translate"
-	[attr.tooltip-class]="isRtl ? 'bottom right' : 'bottom left'">
+	[attr.tooltip-class]="'right'">
 	<div class="tooltip-container"
 		 [style.cursor]="isRotating ? '-webkit-grabbing' : '-webkit-grab'"
 		 [style.transform]="'rotate(' + this[geoRegisteredProperties.rotatePointer] + 'rad)'"
@@ -11,7 +11,7 @@
 
 <div class="img-container"
 	 [attr.tooltip-value]="geoRegisteredProperties.tooltip | translate"
-	 [attr.tooltip-class]="isRtl ? 'bottom right' : 'bottom left'">
+	 [attr.tooltip-class]="'bottom right'">
 	<img
 		tabindex="0"
 		#northImg

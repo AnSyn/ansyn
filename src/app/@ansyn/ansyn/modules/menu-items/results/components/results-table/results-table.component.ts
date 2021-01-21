@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Observable } from 'rxjs';
 import { IOverlayDrop } from '../../../../overlays/models/overlay.model';
@@ -11,10 +11,7 @@ import {
 	selectDropsDescending
 } from '../../../../overlays/reducers/overlays.reducer';
 import { take, tap } from 'rxjs/operators';
-import {
-	DisplayOverlayFromStoreAction,
-	SetMarkUp
-} from '../../../../overlays/actions/overlays.actions';
+import { DisplayOverlayFromStoreAction, SetMarkUp } from '../../../../overlays/actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
 import { TranslateService } from '@ngx-translate/core';
@@ -31,6 +28,7 @@ interface ITableHeader {
 	templateUrl: './results-table.component.html',
 	styleUrls: ['./results-table.component.less'],
 	animations: [
+
 		trigger('isDescending', [
 			state('false', style({
 				transform: 'rotate(180deg)',
@@ -67,7 +65,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 			headerName: 'Type',
 			headerData: 'icon',
 			isDescending: true,
-			sortFn: (a: string, b: string) => a.localeCompare(b)
+			sortFn: (a, b) => a.localeCompare(b)
 		},
 		{
 			headerName: 'Resolution',
@@ -120,9 +118,6 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 				this.scrollOverlayToCenter(indexOfRecentOverlay);
 			})
 		);
-
-	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
 
 	constructor(
 		protected store$: Store<IOverlaysState>,

@@ -2,6 +2,8 @@
 
 :host {
 	z-index: @z-index-status-bar-navigation-area;
+	direction: rtl;
+	// This component is under the footer, which is always ltr, so rtl needs to be redefined
 
 	.box {
 		margin: 0 3px;
@@ -11,14 +13,16 @@
 			border-radius: @status-bar-panel-radius;
 			background-color: @status-bar-panels;
 			height: 35px;
+			width: 310px;
 
 			&.openTop {
 				height: 25px;
 				background-color: #0a0d0d;
 				border: solid 1px rgba(255, 255, 255, 0.5);
+				border-radius: @time-picker-border-radius;
 
 				i {
-					font-size: 20px;
+					font-size: @icon-size;
 				}
 			}
 
@@ -32,7 +36,7 @@
 
 			span.date-range {
 				direction: ltr; // dates are always ltr
-				margin-left: 5px;
+				margin-right: 5px;
 			}
 		}
 
@@ -50,17 +54,6 @@
 
 				&.error {
 					color: red;
-				}
-			}
-		}
-
-		&.rtl {
-			direction: rtl;
-			// This component is under the footer, which is always ltr, so rtl needs to be redefined
-			.button {
-				span.date-range {
-					margin-left: unset;
-					margin-right: 5px;
 				}
 			}
 		}

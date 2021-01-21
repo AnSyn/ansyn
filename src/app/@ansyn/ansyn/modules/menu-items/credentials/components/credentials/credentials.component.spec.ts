@@ -6,7 +6,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { credentialsConfig } from '../../../../core/services/credentials/config';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
-import { UnSelectMenuItemAction } from '@ansyn/menu';
 import { EMPTY } from 'rxjs';
 
 describe('CredentialsComponent', () => {
@@ -56,8 +55,8 @@ describe('CredentialsComponent', () => {
 	});
 
 	it('on click on X close the panel' , () => {
-		spyOn(store, 'dispatch');
+		spyOn(component, 'closeWindow');
 		fixture.nativeElement.querySelector('.close-btn').click();
-		expect(store.dispatch).toHaveBeenCalledWith(new UnSelectMenuItemAction());
+		expect(component.closeWindow).toHaveBeenCalled();
 	})
 });

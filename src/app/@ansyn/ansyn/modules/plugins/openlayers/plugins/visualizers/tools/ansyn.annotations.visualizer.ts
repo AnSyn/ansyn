@@ -11,12 +11,14 @@ import {
 	selectAnnotationMode,
 	selectAnnotationProperties,
 	selectSubMenu,
-} from '../../../../../menu-items/tools/reducers/tools.reducer';
+} from '../../../../../status-bar/components/tools/reducers/tools.reducer';
 import { featureCollection, FeatureCollection } from '@turf/turf';
 import {
 	AnnotationMode,
 	AnnotationsVisualizer,
 	IDrawEndEvent,
+	IEditAnnotationMode,
+	ILabelTranslateMode,
 	IOLPluginsConfig,
 	OL_PLUGINS_CONFIG,
 	OpenLayersMap,
@@ -34,7 +36,7 @@ import {
 	AnnotationUpdateFeature,
 	SetAnnotationMode,
 	ToolsActionsTypes, UpdateMeasureDataOptionsAction
-} from '../../../../../menu-items/tools/actions/tools.actions';
+} from '../../../../../status-bar/components/tools/actions/tools.actions';
 import { LogAddFeatureToLayer, UpdateLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
 import { IOverlaysTranslationData } from '../../../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
@@ -42,7 +44,7 @@ import { selectTranslationData } from '../../../../../overlays/overlay-status/re
 import { SetOverlayTranslationDataAction } from '../../../../../overlays/overlay-status/actions/overlay-status.actions';
 import { Actions, ofType } from '@ngrx/effects';
 import { GeometryObject } from 'geojson';
-import { SubMenuEnum } from '../../../../../menu-items/tools/models/tools.model';
+import { SubMenuEnum } from '../../../../../status-bar/components/tools/models/tools.model';
 
 // @dynamic
 @ImageryPlugin({
@@ -265,7 +267,7 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	onStartLabelOrAnnotationEditDisableMeasureTranslate$ = () => merge(
+	onStartLabelOrAnnotationEditDisableMeasureTranslate$: () => Observable<IEditAnnotationMode | ILabelTranslateMode> = () => merge(
 		this.annotationsVisualizer.events.onAnnotationEditStart,
 		this.annotationsVisualizer.events.onLabelTranslateStart).pipe(
 		tap((event) => {

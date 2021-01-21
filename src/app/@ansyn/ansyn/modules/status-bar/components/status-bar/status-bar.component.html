@@ -1,9 +1,32 @@
-<div class="cases" *ngIf="!componentMode">
+<div class="cases">
 	<ansyn-cases></ansyn-cases>
-	<hr class="status-bar-hr"/>
+	<div *ngIf="isFavoritesShow">
+		<button class="favorite-button"
+				[attr.tooltip-value]="'Show Favorite Overlay' | translate"
+				tooltip-class="bottom"
+				(click)="showOnlyFavorite()"
+				[disabled]="onlyFavoriteEnable$ | async">
+			<i class="icon"
+			   [ngClass]="onlyFavorite ? 'icon-favorite-full'  : 'icon-favorite-empty'"></i>
+		</button>
+	</div>
+	<div *ngIf="isLayersShow">
+	<div #showLayers>
+		<button (click)="showLayersTable(showLayers)"
+				[attr.tooltip-value]="'Open Layers' | translate"
+				tooltip-class="bottom">
+			<i class="icon icon-layers-show"></i>
+		</button>
+	</div>
+	</div>
+	<hr class="status-bar-hr" *ngIf="isCasesLineShow"/>
 </div>
 <div class="search">
-	<ansyn-search-panel></ansyn-search-panel>
-	<ansyn-filters-panel></ansyn-filters-panel>
-	<ansyn-display-panel></ansyn-display-panel>
+	<ansyn-display-panel *ngIf="isSplitMapsShow"></ansyn-display-panel>
+	<ansyn-tools></ansyn-tools>
+	<hr class="status-bar-hr" *ngIf="isToolsLineShow"/>
+	<ansyn-search-options *ngIf="isSearchShow"></ansyn-search-options>
+</div>
+<div class="logo">
+	<ansyn-logo-panel [version]="version"></ansyn-logo-panel>
 </div>

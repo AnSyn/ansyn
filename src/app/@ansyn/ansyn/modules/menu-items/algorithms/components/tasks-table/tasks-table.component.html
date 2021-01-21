@@ -1,5 +1,4 @@
-<div class="tasks-table" *ngIf="ids$ | async as ids; else noTasks"
-	 [class.rtl]="'rtl' === ('direction' | translate)">
+<div class="tasks-table" *ngIf="ids$ | async as ids; else noTasks">
 
 	<div class="tasks-table-head">
 		<div class="tasks-table-head-row">

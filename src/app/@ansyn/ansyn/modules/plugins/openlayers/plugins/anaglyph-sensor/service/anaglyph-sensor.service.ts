@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, from } from 'rxjs';
 import { GeoRegisteration, IOverlay } from '../../../../../overlays/models/overlay.model';
 import {
 	IBaseImageryLayer,
@@ -8,7 +8,6 @@ import {
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { DisabledOpenLayersMapName, OpenlayersMapName, OpenLayersStaticImageSourceProviderSourceType } from '@ansyn/ol';
 import { cloneDeep } from 'lodash';
-import { fromPromise } from 'rxjs/internal-compatibility';
 import { CesiumMapName } from '@ansyn/imagery-cesium';
 import { AnaglyphConfig, IAnaglyphConfig } from '../models/anaglyph.model';
 
@@ -47,7 +46,7 @@ export class AnaglyphSensorService {
 	}
 
 	innerChangeImage(sourceLoader: BaseMapSourceProvider, overlay: IOverlay, communicator: CommunicatorEntity, mapSettings: IMapSettings): Observable<{} | boolean> {
-		const getLayerObservable = fromPromise(sourceLoader.createAsync(mapSettings));
+		const getLayerObservable = from(sourceLoader.createAsync(mapSettings));
 
 		const changeActiveMap = mergeMap((layer: IBaseImageryLayer) => {
 			let observable: Observable<any> = of(true);
@@ -56,7 +55,7 @@ export class AnaglyphSensorService {
 			const newActiveMapName = moveToGeoRegisteredMap ? OpenlayersMapName : moveToNotGeoRegisteredMap ? DisabledOpenLayersMapName : '';
 
 			if (newActiveMapName) {
-				observable = fromPromise(communicator.setActiveMap(newActiveMapName, mapSettings.data.position, undefined, layer));
+				observable = from(communicator.setActiveMap(newActiveMapName, mapSettings.data.position, undefined, layer));
 			}
 			return observable.pipe(map(() => layer));
 		});

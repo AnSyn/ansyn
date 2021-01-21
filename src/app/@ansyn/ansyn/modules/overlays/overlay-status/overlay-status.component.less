@@ -20,7 +20,6 @@
 			line-height: 0;
 
 			&.small-icon-button {
-				font-size: @icon-size;
 				background: transparent;
 				border: none;
 				outline: none;
@@ -28,10 +27,10 @@
 				display: flex;
 				align-items: center;
 				z-index: 1;
-				margin-left: @margin-small;
+				margin-right: @margin-small;
 
 				&.perspective {
-					margin-left: @margin-big;
+					margin-right: @margin-big;
 				}
 
 
@@ -53,52 +52,6 @@
 			.icon::before {
 				vertical-align: middle;
 				display: block;
-			}
-		}
-
-		div.more-buttons {
-			background: @background-color-3;
-			height: 75px;
-			margin-top: 35px;
-			z-index: 0;
-			text-align: left;
-			white-space: nowrap;
-
-			.button-title {
-				margin-left: 10px;
-			}
-
-			i {
-				&.active {
-					color: @application-primary-color;
-				}
-			}
-
-			.button {
-				font-size: 13px;
-				padding-right: 10px;
-				display: flex;
-				cursor: pointer;
-
-				&:hover:not(:disabled) {
-					background: rgba(0, 0, 0, 0.5);
-				}
-
-				&.disabled {
-					opacity: .6;
-					pointer-events: none;
-				}
-			}
-		}
-	}
-
-	&.rtl {
-		button.small-icon-button {
-			margin-left: unset;
-			margin-right: @margin-small;
-
-			&.perspective {
-				margin-right: @margin-big;
 			}
 		}
 	}

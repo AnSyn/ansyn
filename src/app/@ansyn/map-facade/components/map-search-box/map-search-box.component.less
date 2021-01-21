@@ -5,8 +5,9 @@
 
 :host {
 	position: absolute;
-	top: @imagery-status-height + 5;
-	left: 10px;
+	top: @compass-top + @compass-width / 2 + 3; // middle of compass
+	transform: translateY(-100%); // locate bottom of search box there
+	left: @compass-side-margin + @compass-width + 14;
 	z-index: @z-index-map-search-box;
 	font-size: 12px;
 	background-color: rgba(0, 0, 0, 0.3);
@@ -53,11 +54,5 @@
 			background-color: inherit;
 			color: inherit;
 		}
-	}
-
-	&.rtl {
-		top: @compass-top + @compass-width / 2 + 3; // middle of compass
-		transform: translateY(-100%); // locate bottom of search box there
-		left: @compass-side-margin + @compass-width + 14;
 	}
 }

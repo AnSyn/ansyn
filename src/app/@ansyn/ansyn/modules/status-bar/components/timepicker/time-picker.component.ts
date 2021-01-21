@@ -4,6 +4,7 @@ import { OwlDateTimeComponent } from '@ansyn/ng-pick-datetime';
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import { SetToastMessageAction } from '@ansyn/map-facade';
 import { toastMessages } from '../../../core/models/toast-messages';
+import { UpdateCalendarStatusAction } from '../../actions/status-bar.actions';
 
 @Component({
 	selector: 'ansyn-timepicker',
@@ -36,8 +37,10 @@ export class TimePickerComponent implements OnInit, OnDestroy {
 			cancelAnimationFrame(this.requestAnimation);
 		}
 		requestAnimationFrame(() => this.datePicker.open());
+		this.store$.dispatch(new UpdateCalendarStatusAction(true));
 	}
 	ngOnDestroy(): void {
+		this.store$.dispatch(new UpdateCalendarStatusAction(false));
 	}
 
 	afterClosed() {

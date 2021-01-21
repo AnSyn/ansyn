@@ -1,10 +1,10 @@
-<div class="back-to-world-view" *ngIf="overlay" [class.rtl]="isRTL">
+<div class="back-to-world-view" *ngIf="overlay">
 	<button (click)="backToWorldView()"
 			class="small-icon-button"
 			[class.menu-pinned]="isPinned"
-			[attr.tooltip-class]="isRTL ? 'bottom left' : 'bottom right'"
+			[attr.tooltip-class]="'bottom left not-relative'"
 			[attr.tooltip-value]="'Back to base map' | translate">
-		<i class="icon-back-to-base-map"></i>
+		<i class="medium-icon icon-back-to-base-map"></i>
 		{{'Back to base map' | translate}}
 	</button>
 </div>

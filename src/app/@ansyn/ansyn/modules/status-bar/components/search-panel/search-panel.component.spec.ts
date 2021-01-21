@@ -20,13 +20,14 @@ import {
 } from '../../../overlays/reducers/overlays.reducer';
 import { ClickOutsideDirective } from '../../../core/click-outside/click-outside.directive';
 import { TranslateModule } from '@ngx-translate/core';
-import { toolsFeatureKey, ToolsReducer } from '../../../menu-items/tools/reducers/tools.reducer';
+import { toolsFeatureKey, ToolsReducer } from '../../../status-bar/components/tools/reducers/tools.reducer';
 import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
 import { mockIndexProviders } from '../../../core/test/mock-providers';
 import { of } from 'rxjs';
 import { IOverlaysCriteria } from '../../../overlays/models/overlay.model';
 import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
+import { SearchOptionsComponent } from '../search-options/search-options.component';
 
 const CRITERIA: IOverlaysCriteria = {
 	dataInputFilters: {
@@ -58,7 +59,6 @@ describe('SearchPanelComponent', () => {
 		inputs: ['buttonClass', 'options', 'withArrow', 'alwaysChange', 'comboBoxToolTipDescription', 'ngModel'],
 		outputs: ['ngModelChange']
 	});
-	const ansynTreeView = MockComponent({ selector: 'ansyn-tree-view', outputs: ['closeTreeView'] });
 	const ansynComboTrigger = MockComponent({
 		selector: 'button[ansynComboBoxTrigger]',
 		inputs: ['isActive', 'render', 'ngModel', 'owlDateTimeTrigger', 'withArrow'],
@@ -88,7 +88,6 @@ describe('SearchPanelComponent', () => {
 				SearchPanelComponent,
 				mockComboBoxComponent,
 				mockComboBoxOptionComponent,
-				ansynTreeView,
 				ansynComboTrigger,
 				ansynTimePicker,
 				ansynLocationPicker,
@@ -121,7 +120,8 @@ describe('SearchPanelComponent', () => {
 				{
 					provide: COMPONENT_MODE,
 					useValue: false
-				}
+				},
+				SearchOptionsComponent
 			]
 		})
 			.compileComponents();

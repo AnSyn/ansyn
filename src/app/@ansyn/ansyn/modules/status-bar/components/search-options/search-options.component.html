@@ -1,0 +1,9 @@
+<div class="search-icon"
+    (click)="toggleSearchPannel()">
+    <i class="icon icon-search-button"></i>
+</div>
+<div *ngIf="isExpand">
+    <div class="presets" >
+        <ansyn-search-panel></ansyn-search-panel>
+    </div>
+</div>

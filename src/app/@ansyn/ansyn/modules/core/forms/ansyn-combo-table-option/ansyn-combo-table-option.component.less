@@ -1,0 +1,69 @@
+@import 'ansyn/less/colors';
+@import "ansyn/less/z-index-globals";
+
+:host {
+	position: relative;
+    z-index: @z-index-combo-table-option;
+    display: flex;
+	width: 98px;
+	height: 46px;
+	margin-top: 2px;
+	
+    .horizontal-line {
+        width: 2px;
+        height: 28px;
+        margin: 5px;
+		background-color: rgba(151, 151, 151, 0.55);
+      }
+      
+
+	&[disabled], &.disabled {
+		opacity: .6;
+		pointer-events: none;
+	}
+
+	&:not(.disabled) .option {
+		&:hover {
+			background-color: @background-color-3;
+			color: white;
+		}
+
+		&.selected {
+			color: @background-color-3;
+			background-color: white;
+
+			i {
+				opacity: 1;
+			}
+		}
+	}
+	.warper {
+		border-bottom-style: groove;
+        border-color: rgba(151, 151, 151, 0.55);
+		border-width: 4px;
+		line-height: 29px;
+		align-self: center;
+		color: white;
+		cursor: pointer;
+		box-sizing: border-box;
+		width: 100%;
+		white-space: nowrap;
+		overflow: hidden;
+		text-align: center;
+	}
+	.option {
+		margin-bottom: 2px;
+		background: transparent;
+		color: white;
+		border-radius: 5px;
+
+		span {
+			width: 100%;
+			overflow: hidden;
+    		text-overflow: ellipsis;
+			padding: 0px 3px;
+			direction: rtl;
+			font-weight: 500;
+		}
+	}
+}

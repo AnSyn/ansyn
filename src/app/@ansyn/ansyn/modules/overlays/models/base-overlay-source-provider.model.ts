@@ -9,7 +9,7 @@ import { forkJoinSafe } from '../../core/utils/rxjs/observables/fork-join-safe';
 import { sortByDateDesc } from '../../core/utils/sorting';
 import { IDateRange } from '../../core/models/multiple-overlays-source-config';
 import { LoggerService } from '../../core/services/logger.service';
-import { IOverlay, IOverlayError, IOverlaysFetchData } from './overlay.model';
+import { IOverlay, IOverlayError, IOverlaysFetchData, IResolutionRange } from './overlay.model';
 import { IDataInputFilterValue } from '../../menu-items/cases/models/case.model';
 import { getErrorLogFromException } from '../../core/utils/logs/timer-logs';
 
@@ -19,7 +19,9 @@ export interface IFetchParams {
 	sensors?: string[];
 	dataInputFilters: IDataInputFilterValue[];
 	timeRange: IDateRange;
-	customSensorToFilter: string[]; // for context
+	resolution?: IResolutionRange;
+	types?: string[];
+	registeration?: string[];
 }
 
 export interface IOverlayFilter {
@@ -80,7 +82,7 @@ export abstract class BaseOverlaySourceProvider {
 	constructor(protected loggerService: LoggerService) {
 	}
 
-	buildFetchObservables(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<IOverlaysFetchData>[] {
+	buildFetchObservables(fetchParams: IFetchParams): Observable<IOverlaysFetchData>[] {
 		const regionFeature: Feature<any> = feature(<any>fetchParams.region);
 		// They are strings!
 		const fetchParamsTimeRange = {
@@ -88,43 +90,24 @@ export abstract class BaseOverlaySourceProvider {
 			end: new Date(fetchParams.timeRange.end)
 		};
 
-		return filters
-			.filter(f => { // Make sure they have a common region
-				const intersection = intersect(regionFeature, f.coverage);
-				return intersection && intersection.geometry;
-			})
-			// Make sure they have a common time range
-			.filter(f => Boolean(timeIntersection(fetchParamsTimeRange, f.timeRange)))
-			.map(f => {
-				// Create new filters, by the common region and time
-				let newFetchParams: IFetchParams = <any>{
-					...fetchParams,
-					region: intersect(f.coverage, regionFeature).geometry,
-					timeRange: timeIntersection(fetchParamsTimeRange, f.timeRange)
-				};
-
-				// Add sensor if exists on the filter
-				if (f.sensor) {
-					newFetchParams.sensors = [f.sensor];
-				}
-
-				return this.fetch(newFetchParams).pipe(catchError((err: Error | string) => {
-					const errMsg = getErrorLogFromException(err, `Failed to fetch overlay's newFetchParams=${JSON.stringify(newFetchParams)}`);
-					this.loggerService.error(errMsg, 'overlays');
-					return of({
-						data: null,
-						limited: -1,
-						errors: [{
-							message: err.toString(),
-							sourceType: this.sourceType
-						}]
-					});
-				}));
-			})
+		return [
+			this.fetch(fetchParams).pipe(catchError((err: Error | string) => {
+				const errMsg = getErrorLogFromException(err, `Failed to fetch overlay's newFetchParams=${JSON.stringify(fetchParams)}`);
+				this.loggerService.error(errMsg, 'overlays');
+				return of({
+					data: null,
+					limited: -1,
+					errors: [{
+						message: err.toString(),
+						sourceType: this.sourceType
+					}]
+				});
+			}))
+		];
 	}
 
-	fetchMultiple(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<IOverlaysFetchData> {
-		const fetchObservables = this.buildFetchObservables(fetchParams, filters);
+	fetchMultiple(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
+		const fetchObservables = this.buildFetchObservables(fetchParams);
 		if (fetchObservables.length <= 0) {
 			return of({ data: [], limited: 0, errors: [] });
 		}

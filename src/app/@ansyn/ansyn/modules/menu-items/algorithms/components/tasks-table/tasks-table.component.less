@@ -5,7 +5,7 @@
 div.tasks-table {
 	width: 100%;
 	color: white;
-	font-size: 13px;
+	font-size: 14px;
 	padding: 0 5px;
 	box-sizing: border-box;
 
@@ -34,7 +34,7 @@ div.tasks-table {
 		display: block;
 		overflow-y: auto;
 		height: 80vh;
-		direction: rtl; // to flip the scrollbar location
+		direction: ltr; // to flip the scrollbar location
 
 		div.tasks-table-body-row:hover + div.tasks-table-body-row hr {
 			display: block;
@@ -58,14 +58,14 @@ div.tasks-table {
 			overflow: hidden;
 			height: 57px;
 			position: relative;
-			direction: ltr; // needs to be repeated here because of scrollbar place
+			direction: rtl; // needs to be repeated here because of scrollbar place
 
 			&.mouse-enter {
 				color: #156879;
 				background: #EBF8FA;
 
 				div.tasks-table-body-row-data div.task-menu-container div.task-menu {
-					transform: translate(10%, 50%);
+					transform: translate(-10%, 50%);
 					opacity: 1;
 					visibility: visible;
 					pointer-events: auto;
@@ -145,7 +145,7 @@ div.tasks-table {
 						box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24), 0 0 2px rgba(0, 0, 0, 0.12);
 						border-radius: 4px;
 						background: #FFFFFF;
-						transform: translate(-50%, 50%);
+						transform: translate(50%, 50%);
 						pointer-events: none;
 
 						button {
@@ -161,27 +161,6 @@ div.tasks-table {
 					}
 				}
 
-			}
-		}
-	}
-
-	&.rtl {
-		div.tasks-table-body {
-			direction: ltr;
-			div.tasks-table-body-row {
-				direction: rtl;
-				&.mouse-enter {
-					div.tasks-table-body-row-data div.task-menu-container div.task-menu {
-						transform: translate(-10%, 50%);
-					}
-				}
-				div.tasks-table-body-row-data {
-					div.task-menu-container {
-						div.task-menu {
-							transform: translate(50%, 50%);
-						}
-					}
-				}
 			}
 		}
 	}

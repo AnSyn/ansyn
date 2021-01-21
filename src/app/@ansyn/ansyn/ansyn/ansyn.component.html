@@ -1,32 +1,40 @@
-<div class="app animations" [ngClass]="(isPinnedClass$ | async)" [attr.dir]="isRTL ? 'rtl' : 'ltr'">
+<div class="app animations" [ngClass]="(isPinnedClass$ | async)" [attr.dir]="'rtl'">
 	<!-- the 'dir' attribute will affect Angular Material components -->
-	<div class="menu">
+	<div class="menu" [class.isCollapse]="(isFooterCollapse$ | async) || !isTimelineShow">
 		<ansyn-menu [version]="version" [animatedElement]="animatedElementHorizontal"></ansyn-menu>
 	</div>
 
 	<div class="status" [class.expand]="(isMenuCollapse$ | async)" [class.hide-status-bar]="(hideStatus$ | async)">
-		<ansyn-status-bar></ansyn-status-bar>
+		<ansyn-status-bar [version]="version"></ansyn-status-bar>
 	</div>
 
-	<div class="layer" #animatedElementHorizontal>
+	<div class="layer" #animatedElementHorizontal
+		 [class.isCollapse]="(isFooterCollapse$ | async) || !isTimelineShow">
 
-		<div class="maps-container" #animatedElementVertical [class.hide-status-bar]="(hideStatus$ | async)">
-			<ansyn-imageries-manager></ansyn-imageries-manager>
+		<div class="maps-container"
+			 [ngClass]="(isPinnedClass$ | async)"
+			 [class.expand]="(isExpanded$ | async)"
+			 [class.hide-status-bar]="(hideStatus$ | async)"
+			 #animatedElementVertical>
+			<ansyn-imageries-manager
+			[isLayersShow]="isLayersShow"
+			[isFootprintShow]="isFootprintShow"></ansyn-imageries-manager>
 			<ansyn-context-menu *ngIf="renderContextMenu"></ansyn-context-menu>
 		</div>
+	</div>
 
-		<button [class.active]="toggleResults" class="results-table" (click)="toggleResultsTable()">
+	<div *ngIf="isResultTableShow">
+	<div #toggleResultsButton >
+		<button [class.active]="toggleResults" class="results-table" (click)="toggleResultsTable(toggleResultsButton)">
 			<i class="icon-table"></i>
 			<span class="badge">{{overlaysCount$ | async}}</span>
 			<span class="results-title">{{'Search results' | translate}}</span>
 		</button>
+	</div>
+	</div>
 
-		<ansyn-results class="results" *ngIf="toggleResults"></ansyn-results>
-
-		<ansyn-footer
-			[activeMap]="(activeMap$ | async)"
-			[animatedElement]="animatedElementVertical"
-		></ansyn-footer>
+	<div class="footer" *ngIf="isTimelineShow">
+		<ansyn-footer [activeMap]="(activeMap$ | async)" [animatedElement]="animatedElementVertical"></ansyn-footer>
 	</div>
 </div>
 

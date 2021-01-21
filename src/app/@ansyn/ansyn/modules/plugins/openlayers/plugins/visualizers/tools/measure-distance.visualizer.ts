@@ -36,9 +36,9 @@ import { distinctUntilChanged, filter, switchMap, tap, take } from 'rxjs/operato
 import {
 	selectIsMeasureToolActive,
 	selectMeasureDataByMapId
-} from '../../../../../menu-items/tools/reducers/tools.reducer';
+} from '../../../../../status-bar/components/tools/reducers/tools.reducer';
 import { Inject } from '@angular/core';
-import { AddMeasureAction, RemoveMeasureAction } from '../../../../../menu-items/tools/actions/tools.actions';
+import { AddMeasureAction, RemoveMeasureAction } from '../../../../../status-bar/components/tools/actions/tools.actions';
 import { geometry } from '@turf/helpers';
 
 export const measuresClassNameForExport = 'measures-layer';
@@ -46,7 +46,8 @@ export const measuresClassNameForExport = 'measures-layer';
 	supported: [OpenLayersMap],
 	deps: [Store, OpenLayersProjectionService, VisualizersConfig],
 	isHideable: true,
-	layerClassName: measuresClassNameForExport
+	layerClassName: measuresClassNameForExport,
+	alwaysVisible: true
 })
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	isTotalMeasureActive: boolean;

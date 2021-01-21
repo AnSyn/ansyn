@@ -13,19 +13,10 @@
 			height: 100%;
 			background-color: @background-color-5;
 			color: @background-color-12;
-			padding-right: @padding;
-
-			i {
-				font-size: @icon-size;
-			}
-		}
-
-		&.rtl {
-			padding-right: unset;
 			padding-left: @padding;
 
 			i {
-				transform: rotate(180deg);
+				transform: rotate(180deg); // rtl
 			}
 		}
 	}
@@ -39,6 +30,7 @@
 					font-size: 0;
 					overflow: hidden;
 					padding: 0;
+					position: unset;
 
 					&.small-icon-button {
 						margin: 0;

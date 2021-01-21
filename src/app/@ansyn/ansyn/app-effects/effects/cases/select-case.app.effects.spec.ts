@@ -26,7 +26,7 @@ import { UpdateFacetsAction } from '../../../modules/filters/actions/filters.act
 import {
 	SetAnnotationMode,
 	SetMeasureDistanceToolState
-} from '../../../modules/menu-items/tools/actions/tools.actions';
+} from '../../../modules/status-bar/components/tools/actions/tools.actions';
 import { CoreConfig } from '../../../modules/core/models/core.config';
 import { SetMiscOverlays, SetOverlaysCriteriaAction } from '../../../modules/overlays/actions/overlays.actions';
 import {
@@ -44,6 +44,7 @@ import {
 } from '../../../modules/menu-items/cases/models/case.model';
 import { IOverlay, IOverlaysHash } from '../../../modules/overlays/models/overlay.model';
 import { UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/status-bar.actions';
+import { IAdvancedSearchParameter } from '../../../modules/status-bar/models/statusBar-config.model';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;
@@ -91,6 +92,12 @@ describe('SelectCaseAppEffects', () => {
 						searchMode: "screenView"
 					}
 				},
+				advancedSearchParameters: IAdvancedSearchParameter = {
+					providers: [],
+					registeration: [],
+					sensors: [],
+					types: []
+				},
 				dataInputFilters: ICaseDataInputFiltersState = { fullyChecked: true, filters: [] },
 				favoriteOverlays: IOverlay[] = [],
 				maps: ICaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
@@ -112,6 +119,7 @@ describe('SelectCaseAppEffects', () => {
 				time,
 				region,
 				dataInputFilters,
+				advancedSearchParameters,
 				favoriteOverlays,
 				overlaysTranslationData,
 				maps,
@@ -135,7 +143,7 @@ describe('SelectCaseAppEffects', () => {
 			a: new SetMapsDataActionStore({ mapsList: maps.data }),
 			b: new SetActiveMapId(state.maps.activeMapId),
 			c: new SetLayoutAction(<any>maps.layout),
-			d: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
+			d: new SetOverlaysCriteriaAction({ time, region, dataInputFilters, advancedSearchParameters }, { noInitialSearch }),
 			e: new UpdateGeoFilterStatus({active: false, type: region.properties.searchMode}),
 			f: new SetFavoriteOverlaysAction(favoriteOverlays),
 			g: new SetMiscOverlays({ miscOverlays }),

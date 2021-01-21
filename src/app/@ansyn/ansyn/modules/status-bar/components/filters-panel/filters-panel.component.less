@@ -6,13 +6,14 @@
 :host {
 	&:extend(.status-bar-panel);
 	div.filter {
-		margin-right: 6px;
+		margin-left: 6px;
 
 		button {
 			&:extend(.status-bar-button-round);
+			margin: 2px !important;
 
 			span.filter-counter {
-				margin-left: 5px;
+				margin-right: 5px;
 
 				&.hide {
 					display: none;
@@ -43,13 +44,13 @@
 					line-height: 0.85;
 				}
 				span {
-					margin-right: 10px;
+					margin-left: 10px;
 				}
 			}
 			&.more-filters {
 				padding: 1px;
 				i {
-					margin-right: auto;
+					margin-left: auto;
 				}
 			}
 		}
@@ -63,10 +64,10 @@
 
 			button {
 				width: unset;
-				margin-left: 5px;
+				margin-right: 5px;
 				margin-top: 10px;
 				i {
-					margin-right: 5px;
+					margin-left: 5px;
 				}
 				span.title {
 					display: block !important;
@@ -85,41 +86,6 @@
 			width: 140px;
 		}
 	}
-
-	&.rtl {
-		div.filter {
-			margin-right: unset;
-			margin-left: 6px;
-			button {
-				span.filter-counter {
-					margin-left: unset;
-					margin-right: 5px;
-				}
-				&.favorites {
-					span {
-						margin-right: unset;
-						margin-left: 10px;
-					}
-				}
-				&.more-filters {
-					i {
-						margin-right: unset;
-						margin-left: auto;
-					}
-				}
-			}
-			div.more-filters-container {
-				button {
-					margin-left: unset;
-					margin-right: 5px;
-					i {
-						margin-right: unset;
-						margin-left: 5px;
-					}
-				}
-			}
-		}
-	}
 }
 
 @media screen and (max-width: 1200px) {
@@ -127,7 +93,7 @@
 		div.more-or-favorites {
 			button {
 				i {
-					margin-right: auto;
+					margin-left: auto;
 				}
 				&.favorites {
 					padding: 5px 6px;
@@ -142,17 +108,6 @@
 
 			&.sensorName {
 				width: 114px;
-			}
-		}
-
-		&.rtl {
-			div.more-or-favorites {
-				button {
-					i {
-						margin-right: unset;
-						margin-left: auto;
-					}
-				}
 			}
 		}
 	}

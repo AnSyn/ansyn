@@ -3,7 +3,6 @@
 @import "bootstrap/carousel.css";
 @import 'icons.css';
 @import 'tooltip.css';
-@import "~primeng/resources/primeng.min.css";
 /*@import "~primeng/resources/themes/luna-amber/theme.css";*/
 /* Todo: primeng theme was omega. But omega did not exist after upgrading primeng for ng9 */
 @import "~font-awesome/css/font-awesome.min.css";
@@ -13,6 +12,11 @@
 
 circle.drop.selected {
 	fill: black;
+}
+
+.cdk-overlay-container {
+	/* for web component be on top menu */
+	z-index: 5000;
 }
 
 .custom-dialog .mat-dialog-container {
@@ -229,6 +233,11 @@ div.pin-location {
 	display: none;
 }
 
+input[type=number] {
+	direction: ltr; /* so that '-' will be on the left side (seems a browser bug) */
+	text-align: right /* but otherwise, right aligned */
+}
+
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
 	-webkit-appearance: none;
@@ -248,6 +257,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 [class^="icon-"], [class*=" icon-"] {
 	/* use !important to prevent issues with browser extensions that change fonts */
+	margin: 0 2.5px;
 	font-family: 'AnSyn' !important;
 	speak: none;
 	font-style: normal;
@@ -255,11 +265,23 @@ input[type=number]::-webkit-outer-spin-button {
 	font-variant: normal;
 	text-transform: none;
 	line-height: 1;
-	font-size: 24px;
+	font-size: 22px;
 
 	/* Better Font Rendering =========== */
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+}
+
+.medium-icon {
+	font-size: 14px;
+}
+
+.small-icon {
+	font-size: 10px;
+}
+
+.smaller-icon {
+	font-size: 7px;
 }
 
 .icon-screen-1:before, .icon-screen-2:before, .icon-screen-3:before, .icon-screen-4:before, .icon-screen-5:before, .icon-screen-6:before {

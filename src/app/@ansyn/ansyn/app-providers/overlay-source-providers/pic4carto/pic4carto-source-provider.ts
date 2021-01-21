@@ -142,6 +142,7 @@ export class Pic4cartoSourceProvider extends BaseOverlaySourceProvider {
 			date,
 			photoTime: date.toISOString(),
 			azimuth: 0,
+			icon: 'home',
 			sourceType: this.sourceType,
 			isGeoRegistered: GeoRegisteration.notGeoRegistered,
 			tag: {

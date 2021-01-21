@@ -8,7 +8,7 @@
 
 	button.back {
 		position: absolute;
-		left: 18px;
+		right: 18px;
 		font-size: 20px;
 		margin-top: -4px;
 		color: white;
@@ -16,26 +16,19 @@
 		border: none;
 		outline: none;
 		transition: .2s;
+		transform: rotate(180deg); // rtl
+
+		i {
+			transform: rotateX(180deg); // rtl
+		}
 
 		&:hover {
 			color: @application-contrast-color;
-			left: 14px;
+			right: 14px;
 		}
 
 		&:active {
 			color: white;
-		}
-	}
-
-	&.rtl {
-		button.back {
-			left: unset;
-			right: 18px;
-
-			&:hover {
-				left: unset;
-				right: 14px;
-			}
 		}
 	}
 }

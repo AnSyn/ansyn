@@ -1,9 +1,7 @@
 <nav class="menu">
 
 	<button class="menu-open-button" [disabled]="screenViewMode$ | async" (mousedown)="isClick($event) && setPinPoint()" id="contextGeoFilter">
-		<span class="pointer icon-pin-point">
-
-		</span>
+		<i class="small-icon pointer icon-pin-point"></i>
 	</button>
 
 	<div class="buttons-area">
@@ -15,7 +13,7 @@
 			(mousedown)="isClick($event) && data.action($event)"
 			tooltip-class="top"
 			[attr.tooltip-disabled-value]="data.disabledToolTip | translate">
-			<i class="icon-context-menu-{{data.name}}"></i>
+			<i class="small-icon icon-context-menu-{{data.name}}"></i>
 			<span>{{data.name | translate  | titlecase}}</span>
 			<div class="sub-buttons-list" *ngIf="asList(data.subList)">
 				<button

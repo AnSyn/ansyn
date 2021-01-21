@@ -74,12 +74,9 @@ export class OverlaysService {
 	}
 
 	static parseOverlayDataForDisplay({ overlaysArray, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites }: IOverlayDropSources): IOverlayDrop[] {
+		const criteriaOverlays: IOverlay[] = showOnlyFavorites ? favoriteOverlays : overlaysArray.filter(({ id }) => filteredOverlays.includes(id));
 		const favoriteOverlayIds: string[] = favoriteOverlays.map(({ id }) => id);
-		let criteriaOverlays: IOverlay[] = overlaysArray.filter(({ id }) => filteredOverlays.includes(id));
-		if (showOnlyFavorites) {
-			criteriaOverlays = criteriaOverlays.filter(({ id }) => favoriteOverlayIds.includes(id));
-		}
-		const dropsFromOverlays: IOverlayDrop[] = criteriaOverlays.map(({ id, date, sensorName, icon, resolution }) => ({
+		const drops: IOverlayDrop[] = criteriaOverlays.map(({ id, date, sensorName, icon, resolution }) => ({
 			id,
 			date,
 			sensorName,
@@ -87,7 +84,7 @@ export class OverlaysService {
 			favorite: favoriteOverlayIds.includes(id),
 			resolution: resolution || 0
 		}));
-		const allDrops = [...dropsFromOverlays, ...mapValuesToArray(specialObjects)].sort(sortByDateDesc);
+		const allDrops = [...drops, ...mapValuesToArray(specialObjects)].sort(sortByDateDesc);
 		return allDrops;
 	}
 
@@ -101,7 +98,10 @@ export class OverlaysService {
 				start: params.time.from,
 				end: params.time.to
 			},
-			customSensorToFilter: params.dataInputFilters.customFiltersSensor
+			sensors: params.advancedSearchParameters.sensors || null,
+			registeration: params.advancedSearchParameters.registeration || null,
+			resolution: params.advancedSearchParameters.resolution || null,
+			types: params.advancedSearchParameters.types || null
 		});
 	}
 

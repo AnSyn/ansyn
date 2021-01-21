@@ -1,5 +1,4 @@
-import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
 	selector: 'ansyn-annotation-label',
@@ -15,12 +14,7 @@ export class AnnotationLabelComponent implements OnInit {
 	@Input() labelSize: number;
 	@Input() translateOn: boolean;
 
-	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
-	// Annotation label popup changes orientation in RTL mode,
-	// even though Annotation context menu remains in LTR.
-
-	constructor(protected translateService: TranslateService) {
+	constructor() {
 	}
 
 	ngOnInit() {

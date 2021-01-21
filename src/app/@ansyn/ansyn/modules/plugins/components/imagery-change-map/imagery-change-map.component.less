@@ -4,13 +4,14 @@
 @margin: 50px;
 
 :host {
-	position: relative;
 	background-color: rgba(0, 0, 0, 0.3);
 	color: white;
 	width: 40px;
 	margin-bottom: 5px;
 
 	.buttons {
+		display: flex;
+		justify-content: center;
 		&:hover:not(.active):not(.disabled) {
 			background: rgba(0, 0, 0, 0.5);
 		}
@@ -26,6 +27,9 @@
 		}
 
 		button {
+			i {
+				margin: unset;
+			}
 			color: white;
 
 			&.small-icon-button {
@@ -40,7 +44,6 @@
 
 			.icon::before {
 				font-size: 18px;
-				display: block;
 			}
 		}
 	}
@@ -53,7 +56,7 @@
 		width: 250px;
 		height: 200px;
 		top: 0;
-		right: @margin;
+		left: @margin;
 		background-color: @background-color-1;
 		overflow-y: auto;
 
@@ -97,15 +100,7 @@
 			}
 		}
 	}
-
-	&.rtl {
-		.popup {
-			right: unset;
-			left: @margin;
-		}
-	}
 }
-
 
 .imageries-container {
 	&.layout3, &.layout5, &.layout6 {

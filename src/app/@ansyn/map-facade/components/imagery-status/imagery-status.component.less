@@ -33,6 +33,7 @@
 	.buttons {
 		height: @imagery-status-height;
 		display: flex;
+		margin: 0 2.5px;
 
 		&.hide {
 			visibility: hidden;
@@ -46,7 +47,6 @@
 			line-height: 0;
 
 			&.small-icon-button {
-				font-size: @icon-size;
 				background: transparent;
 				border: none;
 				outline: none;
@@ -54,7 +54,7 @@
 				display: flex;
 				align-items: center;
 				z-index: 1;
-				margin-left: @button-margin;
+				margin-right: @button-margin;
 
 
 				&:hover:not(:disabled) {
@@ -66,24 +66,12 @@
 				}
 			}
 
-			.icon::before {
-				vertical-align: middle;
-				display: block;
-			}
-
 			i {
 				&.active {
 					color: @application-primary-color;
 				}
 			}
 
-		}
-
-		&.rtl {
-			button.small-icon-button {
-				margin-left: unset;
-				margin-right: @button-margin;
-			}
 		}
 	}
 

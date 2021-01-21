@@ -2,7 +2,7 @@
 	<button class="small-icon-button"
 			(click)="togglePopup()"
 			[attr.tooltip-value]="'Change map' | translate"
-			[attr.tooltip-class]="('direction' | translate) === 'rtl' ? 'right' : 'left'"
+			[attr.tooltip-class]="'right'"
 	><i class="icon icon-change-map"></i></button>
 </div>
 <div class="popup scrolled" *ngIf="showPopup">

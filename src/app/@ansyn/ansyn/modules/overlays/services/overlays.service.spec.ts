@@ -121,6 +121,9 @@ describe('OverlaysService', () => {
 		dataInputFilters: {
 			fullyChecked: true,
 			filters: []
+		},
+		advancedSearchParameters: {
+			sensors: []
 		}
 	};
 	const multipleOverlaysSourceConfig: Partial<IMultipleOverlaysSourceConfig> = {
@@ -251,7 +254,7 @@ describe('OverlaysService', () => {
 
 		mockData.showOnlyFavorites = true;
 		const result3 = OverlaysService.parseOverlayDataForDisplay(mockData);
-		expect(result3.length).toBe(2);
+		expect(result3.length).toBe(3);
 	});
 
 	it('check the method fetchData with spyOn', () => {
@@ -315,6 +318,9 @@ describe('OverlaysService', () => {
 			dataInputFilters: {
 				fullyChecked: true,
 				filters: []
+			},
+			advancedSearchParameters: {
+				sensors: []
 			}
 		};
 		overlaysService.search(params).subscribe((result: any) => {

@@ -4,19 +4,14 @@
 @animation-duration: 0.3s;
 
 :host {
+	direction: rtl;
+
 	&.component {
 		position: relative;
 
 		.app {
 			/deep/ ansyn-popover.default-case div.pop-hover .pop-content {
 				visibility: hidden !important;
-			}
-
-			div.menu {
-
-				ansyn-tools.ansynToolsAlone {
-					display: block;
-				}
 			}
 		}
 	}
@@ -26,21 +21,22 @@
 		position: absolute;
 		color: white;
 		border: solid 1px #EBF8FA;
-		left: 10px;
+		right: 10px;
 		bottom: 10px;
 		z-index: @z-index-results-table-button;
 		font-size: 0.9rem;
-		height: 12%;
+		height: @timeline-area-height - 20px;
 		width: 8%;
 		display: flex;
 		flex-direction: column;
 		justify-content: space-evenly;
 		align-items: center;
+		border-radius: @ansyn-results-table-border-radius;
+		outline: none;
 
 		i {
 			display: block;
 			font-size: 3em;
-			line-height: 60%; // hack to compensate for padding inside the icon
 			min-width: 30px;
 		}
 
@@ -65,13 +61,12 @@
 	}
 
 	.results {
-		left: 0;
+		right: 0;
 		position: fixed;
 	}
 
 	font-family: @app-font;
 	font-size: 14px;
-	direction: ltr;
 
 	div.app {
 		display: flex;
@@ -89,13 +84,13 @@
 		div.status {
 			position: absolute;
 			top: 0;
-			left: @menu-width;
-			width: calc(100% - @menu-width);
+			right: 0;
+			width: 100%;
 			height: @status-bar-height;
 			z-index: @z-index-status-bar-navigation-area;
 
 			&.expand {
-				left: 0;
+				right: 0;
 				width: 100%;
 			}
 
@@ -106,13 +101,17 @@
 
 		div.layer {
 			width: 100%;
-			height: calc(100% - @status-bar-height);
+			height: calc(100% - @status-bar-height - @timeline-area-height);
 			top: @status-bar-height;
 			color: white;
 			display: flex;
 			flex-direction: column;
 			overflow: hidden;
 			position: relative;
+
+			&.isCollapse {
+				height: calc(100% - @status-bar-height);
+			}
 
 			.maps-container {
 				position: relative;
@@ -125,13 +124,26 @@
 			}
 		}
 
+		div.footer {
+			position: absolute;
+			bottom: 0;
+			width: 100%;
+			z-index: @z-index-footer;
+		}
+
 		&.animations {
 
 			div.menu {
-				animation: menu-init-ltr @animation-duration;
+				animation: menu-init-rtl @animation-duration;
 				transform: transitionX(0);
 				position: relative;
 				height: 100%;
+
+				&.isCollapse {
+					/deep/div.menu-wrapper > div.container {
+						height: calc(100% - @status-bar-height);
+					}
+				}
 
 				.ansynToolsAlone {
 					background: @background-color-3;
@@ -157,54 +169,6 @@
 			}
 		}
 	}
-
-	&.rtl {
-		direction: rtl;
-
-		.results-table {
-			left: unset;
-			right: 10px;
-			i {
-				left: unset;
-				right: 40px;
-			}
-			span.badge {
-				left: unset;
-				right: 45px;
-			}
-			span.results-title {
-				left: unset;
-				right: 0;
-			}
-		}
-
-		.results {
-			left: unset;
-			right: 0;
-		}
-
-		div.app {
-			&.animations {
-				div.menu {
-					animation: menu-init-rtl @animation-duration;
-				}
-			}
-
-			div.status {
-				left: unset;
-				right: @menu-width;
-
-				&.expand {
-					left: unset;
-					right: 0;
-				}
-			}
-		}
-
-		// div.app
-	}
-
-	// rtl
 }
 
 @media screen and (max-width: 959px) {
@@ -234,6 +198,38 @@
 /deep/ .owl-dt-container {
 	font-family: @app-font;
 }
+
+/deep/ .ngx-slider {
+	margin: 0 5px !important;
+}
+
+/deep/ .ngx-slider-bubble {
+	color: white !important;
+	margin-bottom: 5px !important;
+}
+
+/deep/ .ngx-slider-pointer {
+	background-color: gray !important;
+}
+
+/deep/ .ngx-slider-selection {
+	background: gray !important;
+}
+
+/deep/ .ngx-slider-active {
+	outline: none;
+}
+
+/deep/ .ngx-slider-pointer:after {
+	visibility: hidden;
+}
+
+/deep/ .ngx-slider-pointer-min, /deep/ .ngx-slider-pointer-max {
+	width: 24px !important;
+	height: 24px !important;
+	margin-top: 3%;
+}
+
 
 @keyframes menu-init-ltr {
 	from {

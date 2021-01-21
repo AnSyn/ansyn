@@ -1,6 +1,7 @@
 import { SliderFilterMetadata } from '../../models/metadata/slider-filter-metadata';
-import { Component, ElementRef, EventEmitter, HostBinding, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { SliderFilterCounters } from '../../models/counters/slider-filter-counters';
+import { Options } from '@angular-slider/ngx-slider';
 
 @Component({
 	selector: 'ansyn-slider-filter-container',
@@ -12,7 +13,10 @@ export class SliderFilterContainerComponent {
 	factor = 1000;
 	_metadata: SliderFilterMetadata;
 	realRange: number[];
-
+	sliderOptions: Options = {
+		floor: 100,
+		ceil: 200
+	}
 	@Input()
 	set metadata(value: SliderFilterMetadata) {
 		this._metadata = value;
@@ -27,9 +31,6 @@ export class SliderFilterContainerComponent {
 	}
 
 	@Input() counters: SliderFilterCounters;
-
-	@HostBinding('class.rtl')
-	@Input() isRTL = false;
 
 	@Output() onMetadataChange = new EventEmitter<SliderFilterMetadata>(true);
 	rangeValues: number[];

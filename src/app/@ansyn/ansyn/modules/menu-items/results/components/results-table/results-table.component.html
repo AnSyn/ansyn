@@ -1,16 +1,14 @@
 <div class="results-table">
-	<div class="header">
-		<div class="header-title">
-			{{'Search results' | translate}}
-		</div>
-	</div>
+	<h2 class="header">
+		{{'Search results' | translate}}
+	</h2>
 	<div class="results-table-head">
 		<div class="results-table-head-row">
 			<div class="results-table-head-row-data">
 				<div (click)="sortOverlays(header)" *ngFor="let header of tableHeaders"
 					 class="results-table-head-col  {{header.headerData}}">
 					{{header.headerName | translate}}
-					<i class="icon icon-arrow" [@isDescending]="header.isDescending"
+					<i class="smaller-icon icon-arrow" [@isDescending]="header.isDescending"
 					   [class.active]="sortedBy === header.headerData"></i>
 				</div>
 
@@ -28,11 +26,7 @@
 			 (mouseenter)="openOverlayOverview($event, overlay.id)"
 			 (mouseleave)="closeOverlayOverview()"
 			 [class.selected]="overlayIds.includes(overlay.id)">
-
-			<hr>
-
 			<div class="results-table-body-row-data">
-				<hr>
 
 				<div class="results-table-body-col overlay-time">
 					{{overlay.date | ansynDate}}
@@ -43,7 +37,7 @@
 				</div>
 
 				<div class="results-table-body-col overlay-type">
-					<i class="icon {{overlay.icon}}"></i>
+					<i class="icon icon-{{overlay.icon}}"></i>
 				</div>
 
 				<div class="results-table-body-col overlay-resolution">
@@ -51,13 +45,11 @@
 				</div>
 
 				<div class="results-table-body-col overlay-favorite">
-					<i *ngIf="overlay.favorite" class="icon icon-favorite-full"></i>
+					<i *ngIf="overlay.favorite" class="medium-icon icon-favorite-full"></i>
 				</div>
 
 			</div>
 		</div>
 
 	</div>
-
-	<div class="no-results"></div>
 </div>

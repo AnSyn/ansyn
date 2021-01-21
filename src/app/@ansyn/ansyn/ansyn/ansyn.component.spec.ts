@@ -6,11 +6,13 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { of, Subject } from 'rxjs';
 import { selectIsPinned } from '@ansyn/menu';
 import { selectSelectedCase } from '../modules/menu-items/cases/reducers/cases.reducer';
-import { mapStateSelector } from '@ansyn/map-facade';
+import { mapStateSelector, selectFooterCollapse } from '@ansyn/map-facade';
 import { COMPONENT_MODE } from '../app-providers/component-mode';
-import { toolsConfig } from '../modules/menu-items/tools/models/tools-config';
+import { toolsConfig } from '../modules/status-bar/components/tools/models/tools-config';
 import { LoggerService } from '../modules/core/services/logger.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ComponentVisibilityService } from '../app-providers/component-visibility.service';
+import { MockCompoentnService } from '../modules/core/test/mock-compoentn-service';
 
 describe('AnsynComponent', () => {
 	let component: AnsynComponent;
@@ -30,7 +32,7 @@ describe('AnsynComponent', () => {
 	const mockImageryView = MockComponent({ selector: 'ansyn-imageries-manager' });
 	const mockOverlayOverviewComponent = MockComponent({ selector: 'ansyn-overlay-overview' });
 	const mockStatusBar = MockComponent({
-		selector: 'ansyn-status-bar'
+		selector: 'ansyn-status-bar', inputs: ['version']
 	});
 
 	const mapState = {
@@ -81,6 +83,10 @@ describe('AnsynComponent', () => {
 					provide: toolsConfig,
 					useValue: {}
 				},
+				{
+					provide: ComponentVisibilityService,
+					useClass: MockCompoentnService
+				},
 				TranslateService
 			],
 			imports: [
@@ -96,7 +102,8 @@ describe('AnsynComponent', () => {
 		const mockStore = new Map<any, any>([
 			[mapStateSelector, mapState],
 			[selectSelectedCase, { name: 'Case name' }],
-			[selectIsPinned, true]
+			[selectIsPinned, true],
+			[selectFooterCollapse, false]
 		]);
 		spyOn(store, 'select').and.callFake(type => of(mockStore.get(type)));
 

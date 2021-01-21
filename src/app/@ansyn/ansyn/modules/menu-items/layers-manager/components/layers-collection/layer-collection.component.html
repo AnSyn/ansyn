@@ -5,7 +5,7 @@
 
 		<div class="actions">
 			<button [@rotateArrow]="show"
-                    #downArrow class="down-arrow"
+                    #downArrow class="medium-icon down-arrow"
 					(click)="show = !show">
 			</button>
 
@@ -18,7 +18,7 @@
 
 			<button class="add-layer" (click)="openModal(SelectedModalEnum.edit)"
 					[attr.tooltip-value]="'Create new layer' | translate" tooltip-class="bottom right">
-				<i class="icon-layer-add"></i>
+				<i class="small-icon icon-layer-add"></i>
 			</button>
 
 		</div>
@@ -33,7 +33,6 @@
 
 		<ansyn-layer-menu [disabledRemove]="shouldDisableRemoveLayer(index)"
 						  (openModal)="openModal($event, layer)"
-						  [isRTL]="isRTL"
 		></ansyn-layer-menu>
 
 	</ansyn-layer>

@@ -1,10 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { selectToastMessage } from '../../reducers/map.reducer';
 import { IToastMessage, SetToastMessageAction } from '../../actions/map.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { tap } from 'rxjs/operators';
 
 const animations: any[] = [
 	trigger('toastAnimation_rtl', [
@@ -38,9 +39,13 @@ export class ToastComponent implements OnInit, OnDestroy {
 	durationToButtonPopUp = 10000;
 
 	@AutoSubscription
-	updateToatsMessage$ = (<Observable<any>>this.toastMessage$).subscribe((toastMessage: IToastMessage) => {
-		this.toastMessageFromState = toastMessage;
-	});
+	updateToatsMessage$ = this.store$.pipe(
+		select(selectToastMessage),
+		tap((toast: IToastMessage) => {
+			this.toastMessageFromState = toast;
+		})
+	);
+	
 	constructor(
 		protected store$: Store<any>,
 	) {

@@ -207,9 +207,7 @@ export class OverlaysEffects {
 					actions.push(new SetOverlaysStatusMessageAction({ message: overLoad.replace('$overLoad', overlays.data.length.toString()) }));
 				} 
 
-				// const diffrence = criteria.advancedSearchParameters.sensors.filter(sensor => !this.overlaysService.getAllSensorsNames().includes(sensor));
-				
-				if (isUserFirstEntrance) {// לעשות בדיקה אם נעשה שינוי בחיפוש מתקדם
+				if (isUserFirstEntrance) {
 					actions.push(new SetToastMessageAction({toastText: 'there are more overlays exist, ', buttonToDisplay: 'click here to expand', functionToExcute: this.toggleAdvancedSearch.bind(this)}))
 				}
 				return actions;

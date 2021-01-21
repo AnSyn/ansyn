@@ -1,5 +1,5 @@
 import { forkJoin, Observable, throwError } from 'rxjs';
-import { Inject, Injectable, OnDestroy, OnInit } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
 	BaseOverlaySourceProvider,
 	IFetchParams,
@@ -22,12 +22,12 @@ import { IOverlay, IOverlaysFetchData } from '../models/overlay.model';
 import { select, Store } from '@ngrx/store';
 import { IProviderData, IStatusBarConfig } from '../../status-bar/models/statusBar-config.model';
 import { StatusBarConfig } from '../../status-bar/models/statusBar.config';
-import { selectIsRunSecondSearch, selectProviders } from '../reducers/overlays.reducer';
+import { selectProviders } from '../reducers/overlays.reducer';
 
 @Injectable({
 	providedIn: 'root'
 })
-export class MultipleOverlaysSourceProvider implements OnInit,OnDestroy {
+export class MultipleOverlaysSourceProvider {
 
 	selectedProviders: IProviderData[] = [];
 
@@ -39,20 +39,12 @@ export class MultipleOverlaysSourceProvider implements OnInit,OnDestroy {
 		})
 	);
 
-	onAdvancedSearch$ = this.store.pipe(
-		select(selectIsRunSecondSearch),
-		tap((runSecondSearch: boolean) => this.runSecondSearch = runSecondSearch)
-	);
 
-	runSecondSearch = true;
 	constructor(@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 				protected store: Store<any>,
 				@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				@Inject(MultipleOverlaysSource) public overlaysSources: IMultipleOverlaysSource) {
 	}
-
-	ngOnInit() {}
-	ngOnDestroy() {}
 
 	getThumbnailUrl(overlay, position): Observable<any> {
 		const overlaysSource = this.overlaysSources[overlay.sourceType];
@@ -122,7 +114,6 @@ export class MultipleOverlaysSourceProvider implements OnInit,OnDestroy {
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		this.onDataInputFilterChange$.pipe(take(1)).subscribe();
-		this.onAdvancedSearch$.pipe(take(1)).subscribe();
 		const mergedSortedOverlays: Observable<IOverlaysFetchData> = forkJoin(this.selectedProviders
 			.map(selctedProvider =>  selctedProvider.class.fetchMultiple(fetchParams))).pipe(
 			map(overlays => {
@@ -136,13 +127,10 @@ export class MultipleOverlaysSourceProvider implements OnInit,OnDestroy {
 						limited: -1
 					};
 				}
-				console.log(overlays);
+
 				return mergeOverlaysFetchData(overlays, fetchParams.limit, errors);
 			})); // merge the overlays
-		
-		if (this.runSecondSearch) {
 
-		}
 		return mergedSortedOverlays;
 	}
 }

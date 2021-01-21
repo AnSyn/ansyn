@@ -97,7 +97,7 @@ import { OverlaysService } from '../../../overlays/services/overlays.service';
 	}
 
 	search(): void {
-		this.store.dispatch(new SetOverlaysCriteriaAction({advancedSearchParameters: this.getCurrentAdvancedSearchParameters()}));
+		this.store.dispatch(new SetOverlaysCriteriaAction({advancedSearchParameters: this.getCurrentAdvancedSearchParameters(), runSecondSearch: false}));
 		this._parent.close();
 	}
 
@@ -191,7 +191,7 @@ import { OverlaysService } from '../../../overlays/services/overlays.service';
 
 	updateSelectedTypesByProviders(selectedProviders: string[], changedProvider: string): void {
 		let typesToActivate = [];
-		this.overlaysService.getAllSensorsNames()
+		this.overlaysService.getActiveProviders()
 			.filter(([providerName]: [string, IOverlaysSourceProvider]) => providerName === changedProvider)
 			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
 				typesToActivate = dataInputFiltersConfig.children.map(children => children);

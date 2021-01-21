@@ -54,6 +54,8 @@ import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model'
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { Dictionary } from '@ngrx/entity';
 import { SetBadgeAction } from '@ansyn/menu';
+import { ComponentVisibilityService } from '../../app-providers/component-visibility.service';
+import { ComponentVisibilityItems } from '../../app-providers/component-mode';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -122,7 +124,7 @@ export class OverlaysAppEffects {
 			})];
 
 			const oneMapLayout = 'layout1';
-			if (layout === oneMapLayout) {
+			if (layout === oneMapLayout && this.componentVisibilityService.get(ComponentVisibilityItems.SCREENS)) {
 				const twoMapsLayout = 'layout2';
 				actions.push(new SetLayoutAction(twoMapsLayout));
 			}
@@ -200,7 +202,8 @@ export class OverlaysAppEffects {
 
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,
-				public overlaysService: OverlaysService) {
+				public overlaysService: OverlaysService,
+				protected componentVisibilityService: ComponentVisibilityService) {
 	}
 
 }

@@ -211,10 +211,10 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	isNoOverlaysLeft(): boolean {
 		const datesArray = this.chart.filteredData()[0].fullData;
 		const [currentMinimumDate, currentMaximumDate] = this.getCurrentTimeLineRange();
-		const minimumDate = datesArray[0].date;
-		const maximumDate = datesArray[datesArray.length - 1].date;
+		const minimumDate = datesArray[0]?.date;
+		const maximumDate = datesArray[datesArray.length - 1]?.date;
 
-		return ((currentMaximumDate < minimumDate) || (currentMinimumDate > maximumDate));
+		return (maximumDate && minimumDate) && ((currentMaximumDate < minimumDate) || (currentMinimumDate > maximumDate));
 	}
 
 	getCurrentTimeLineRange(): Date[] {

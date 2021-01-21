@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	AnsynApi,
 	AreaToCredentialsService,
@@ -22,7 +22,6 @@ import { take, tap } from 'rxjs/operators';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 
 const moment = momentNs;
 
@@ -87,15 +86,11 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		this.overlay('555', OpenLayersStaticImageSourceProviderSourceType, 'https://image.shutterstock.com/z/stock-vector-cool-milkshake-190524542.jpg', this.lineGeometry, GeoRegisteration.notGeoRegistered, 'vis', null, 1600, 1500)
 	];
 
-	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
-
 	constructor(
 		protected ansynApi: AnsynApi,
 		protected imageryCommunicatorService: ImageryCommunicatorService,
 		protected store$: Store<any>,
-		protected areaToCredentials: AreaToCredentialsService,
-		protected translateService: TranslateService
+		protected areaToCredentials: AreaToCredentialsService
 	) {
 	}
 

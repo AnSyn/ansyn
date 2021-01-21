@@ -1,4 +1,4 @@
-import { Component, EventEmitter, forwardRef, HostBinding, Input, Output } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
 import {
 	AbstractControl,
 	ControlValueAccessor,
@@ -32,8 +32,6 @@ export class UtmComponent implements ControlValueAccessor, Validator {
 	@Output() copyToClipBoardHandler = new EventEmitter();
 	@Input() notification: IEd50Notification;
 	@Input() title: string;
-	@HostBinding('class.rtl')
-	@Input() isRTL = false;
 
 	coordinates: number[] = [0, 0, 0];
 	validationErr: ValidationErrors = null;

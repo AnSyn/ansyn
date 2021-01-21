@@ -38,7 +38,7 @@ i {
 		div.text {
 			flex: 1;
 			font-size: 14px;
-			text-align: left;
+			text-align: right;
 		}
 
 		div.color {
@@ -53,7 +53,7 @@ i {
 		background: transparent;
 		color: white;
 		font-size: 20px;
-		padding-left: 5px;
+		padding-right: 5px;
 		box-sizing: border-box;
 		opacity: .9;
 		outline: none;
@@ -80,22 +80,5 @@ i {
 
 	/deep/ .color-picker {
 		transition: transform 0.2s;
-	}
-
-	&.rtl {
-		label {
-			*:not(:last-child) {
-				margin-right: unset;
-				margin-left: 10px;
-			}
-			div.text {
-				text-align: right;
-			}
-		}
-
-		button.no-fill {
-			padding-left: unset;
-			padding-right: 5px;
-		}
 	}
 }

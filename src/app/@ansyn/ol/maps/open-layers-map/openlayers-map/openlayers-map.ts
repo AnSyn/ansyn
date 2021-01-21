@@ -4,8 +4,8 @@ import {
 	areCoordinatesNumeric,
 	BaseImageryMap,
 	ExtentCalculator, IExportMapMetadata,
-	IMAGERY_BASE_MAP_LAYER,
-	IMAGERY_MAIN_LAYER_NAME, IMAGERY_SLOW_ZOOM_FACTOR,
+	IMAGERY_MAIN_LAYER_NAME,
+	IMAGERY_SLOW_ZOOM_FACTOR,
 	ImageryLayerProperties,
 	ImageryMap,
 	ImageryMapExtent,
@@ -31,7 +31,7 @@ import Vector from 'ol/source/Vector';
 import View from 'ol/View';
 import { Observable, of, Subject, timer } from 'rxjs';
 import { debounceTime, filter, map, switchMap, take, takeUntil, tap, mergeMap } from 'rxjs/operators';
-import { IOlConfig, OL_CONFIG, group_layer } from '../../../config/ol-config';
+import { IOlConfig, OL_CONFIG } from '../../../config/ol-config';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import { OpenLayersMonitor } from '../helpers/openlayers-monitor';
 import { Utils } from '../utils/utils';

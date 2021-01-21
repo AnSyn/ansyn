@@ -1,5 +1,5 @@
 import { filtersConfig } from '../../services/filters.service';
-import { Component, HostBinding, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { IFilter } from '../../models/IFilter';
 import { select, Store } from '@ngrx/store';
 import {
@@ -14,7 +14,6 @@ import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { IFiltersConfig } from '../../models/filters-config';
 import { IFilterSearchResults } from '../../models/filter-search-results';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-filters',
@@ -58,13 +57,9 @@ export class FiltersCollectionComponent implements OnDestroy, OnInit {
 		})
 	);
 
-	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
-
 	constructor(
 		@Inject(filtersConfig) protected config: IFiltersConfig,
-		public store: Store<IFiltersState>,
-		protected translateService: TranslateService
+		public store: Store<IFiltersState>
 	) {
 	}
 

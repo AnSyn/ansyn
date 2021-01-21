@@ -1,28 +1,24 @@
-import { Component, OnInit, Inject, OnDestroy, ElementRef, HostBinding } from '@angular/core';
+import { Component, ElementRef, Inject, OnDestroy, OnInit } from '@angular/core';
 import {
-	IFiltersState, selectEnableOnlyFavorites,
+	IFiltersState,
+	selectEnableOnlyFavorites,
 	selectFacets,
 	selectFiltersMetadata,
 	selectShowOnlyFavorites
 } from '../../../filters/reducer/filters.reducer';
-import { Store, select } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { LogOpenFilterPopup, UpdateFacetsAction } from '../../../filters/actions/filters.actions';
-import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
-import { tap, filter, withLatestFrom } from 'rxjs/operators';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { filter, tap, withLatestFrom } from 'rxjs/operators';
 import { ClickOutsideService } from '../../../core/click-outside/click-outside.service';
 import { EnumFilterMetadata } from '../../../filters/models/metadata/enum-filter-metadata';
 import { IFilter } from '../../../filters/models/IFilter';
 import { FilterMetadata } from '../../../filters/models/metadata/filter-metadata.interface';
-import {
-	ICaseEnumFilterMetadata,
-	ICaseFacetsState,
-	ICaseFilter
-} from '../../../menu-items/cases/models/case.model';
+import { ICaseEnumFilterMetadata, ICaseFacetsState, ICaseFilter } from '../../../menu-items/cases/models/case.model';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { IFilterStatusBar, IStatusBarConfig } from '../../models/statusBar-config.model';
 import { filtersConfig } from '../../../filters/services/filters.service';
 import { IFiltersConfig } from '../../../filters/models/filters-config';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-filters-panel',
@@ -90,16 +86,12 @@ export class FiltersPanelComponent implements OnInit, OnDestroy {
 		return this.config.filterNames.map( filterName => this.filtersConfig.filters.find( filter => filterName === filter.modelName));
 	}
 
-	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
-
 	constructor(
 		@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 		@Inject(filtersConfig) public filtersConfig: IFiltersConfig,
 		public store: Store<IFiltersState>,
 		protected element: ElementRef,
-		protected clickOutside: ClickOutsideService,
-		protected translateService: TranslateService
+		protected clickOutside: ClickOutsideService
 	) {
 		if (this.filters.length > this.config.maximumOpen) {
 			this.expand[this.filters[0].modelName] = false;

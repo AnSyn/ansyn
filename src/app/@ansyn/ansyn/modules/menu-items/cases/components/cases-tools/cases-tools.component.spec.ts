@@ -13,6 +13,8 @@ import { CoreConfig } from '../../../../core/models/core.config';
 import { LoggerConfig } from '../../../../core/models/logger.config';
 import { TranslateModule } from '@ngx-translate/core';
 import { mapFacadeConfig } from '@ansyn/map-facade';
+import { ComponentVisibilityService } from '../../../../../app-providers/component-visibility.service';
+import { MockCompoentnService } from '../../../../core/test/mock-compoentn-service';
 
 describe('CasesToolsComponent', () => {
 	let component: CasesToolsComponent;
@@ -35,8 +37,11 @@ describe('CasesToolsComponent', () => {
 				{ provide: LoggerConfig, useValue: {} },
 				{ provide: CoreConfig, useValue: {} },
 				{ provide: layersConfig, useValue: {} },
-				{ provide: mapFacadeConfig, useValue: {} }
-
+				{ provide: mapFacadeConfig, useValue: {} },
+				{
+					provide: ComponentVisibilityService,
+					useClass: MockCompoentnService
+				}
 			]
 		})
 			.compileComponents();
@@ -49,12 +54,6 @@ describe('CasesToolsComponent', () => {
 		fixture.detectChanges();
 		store = _store;
 	}));
-
-	beforeEach(() => {
-		fixture = TestBed.createComponent(CasesToolsComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
-	});
 
 	it('should create', () => {
 		expect(component).toBeTruthy();

@@ -23,7 +23,7 @@
 
 	.slider-text {
 		color: white;
-		margin-left: 72px;
+		margin-right: 72px;
 		display: block;
 		white-space: nowrap;
 		margin-top: -3px;
@@ -63,7 +63,7 @@
 	}
 
 	input:checked + .slider:before {
-		transform: translateX(22px);
+		transform: translateX(-22px);
 	}
 
 	/* Rounded sliders */
@@ -73,15 +73,5 @@
 
 	.slider.round:before {
 		border-radius: 50%;
-	}
-
-	&.rtl {
-		.slider-text {
-			margin-left: unset;
-			margin-right: 72px;
-		}
-		input:checked + .slider:before {
-			transform: translateX(-22px);
-		}
 	}
 }

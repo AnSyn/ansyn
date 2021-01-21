@@ -1,4 +1,4 @@
-<div class="menu-wrapper" #menuWrapper [class.rtl]="isRTL">
+<div class="menu-wrapper" #menuWrapper>
 
 	<!-- <div class="menu" #menu [class.expanded]="expand">
 		<div class="menu-content">
@@ -46,8 +46,8 @@
 			class="hide-menu"
 			(click)="toggleCollapse()"
 			[attr.tooltip-value]="minimizeText | translate"
-			[attr.tooltip-class]="isRTL ? 'left' : 'right'">
-			<i class="fa" [ngClass]="isRTL ? collapse ? 'fa-caret-left' : 'fa-caret-right' : collapse ? 'fa-caret-right' : 'fa-caret-left'"></i>
+			[attr.tooltip-class]="'left'">
+			<i class="fa" [ngClass]="collapse ? 'fa-caret-left' : 'fa-caret-right'"></i>
 		</button>
 
 	</div> -->

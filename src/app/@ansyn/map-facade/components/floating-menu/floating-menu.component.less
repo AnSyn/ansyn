@@ -6,7 +6,7 @@
 	position: absolute;
 	z-index: @z-index-map-rotation;
 	top: @compass-top;
-	right: @compass-side-margin;
+	left: @compass-side-margin;
 	text-align: center;
 	user-select: none;
 	width: @compass-width;
@@ -19,10 +19,5 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-	}
-
-	&.rtl {
-		right: unset;
-		left: @compass-side-margin;
 	}
 }

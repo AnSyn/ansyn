@@ -58,9 +58,6 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		})
 	);
 
-	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
-
 	constructor(
 		protected store$: Store<any>,
 		protected imageryCommunicatorService: ImageryCommunicatorService,

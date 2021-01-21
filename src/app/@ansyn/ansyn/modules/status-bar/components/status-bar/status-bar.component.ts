@@ -1,5 +1,4 @@
-import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { ComponentVisibilityItems } from '../../../../app-providers/component-mode';
 import { ComponentVisibilityService } from '../../../../app-providers/component-visibility.service';
 import { UpdateFacetsAction } from '../../../filters/actions/filters.actions';
@@ -28,9 +27,6 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 	onlyFavorite: boolean;
 	@Input() version;
 
-	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
-
 	onlyFavoriteEnable$ = this.store.pipe(
 		select(selectEnableOnlyFavorites),
 		distinctUntilChanged(),
@@ -45,7 +41,6 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 	);
 
 	constructor(
-		private translateService: TranslateService,
 		protected store: Store,
 		componentVisibilityService: ComponentVisibilityService
 	) {

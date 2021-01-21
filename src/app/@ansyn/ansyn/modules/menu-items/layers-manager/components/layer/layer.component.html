@@ -1,4 +1,4 @@
-<div class="layer" [class.rtl]="isRTL">
+<div class="layer">
 
 	<div class="layer-name">
 		<ansyn-checkbox
@@ -6,7 +6,6 @@
 			[id]="'checkbox' + layer?.id"
 			(ngModelChange)="onCheckboxClicked($event)"
 			[ngModel]="isChecked"
-			[isRTL]="isRTL"
 		>{{layer?.name}}</ansyn-checkbox>
 
 		<span class="only-filter" (click)="selectOnly()" [hidden]="showOnly">{{'only' | translate}}</span>

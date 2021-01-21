@@ -7,7 +7,6 @@
 		[(ngModel)]="inputs.geoWgs84"
 		(ngModelChange)="convert($event, geoWgs84)"
 		(copyToClipBoardHandler)="copyToClipBoard($event)"
-		[isRTL]="isRTL"
 		required>
 	</ansyn-geo-wgs>
 
@@ -18,7 +17,6 @@
 		[(ngModel)]="inputs.utmEd50"
 		(ngModelChange)="convert($event, utmEd50)"
 		(copyToClipBoardHandler)="copyToClipBoard($event, 'utm', 'ed50')"
-		[isRTL]="isRTL"
 		required>
 	</ansyn-utm>
 
@@ -28,7 +26,6 @@
 		[(ngModel)]="inputs.utmWgs84"
 		(ngModelChange)="convert($event, utmWgs84)"
 		(copyToClipBoardHandler)="copyToClipBoard($event, 'utm', 'wgs84')"
-		[isRTL]="isRTL"
 		required>
 	</ansyn-utm>
 

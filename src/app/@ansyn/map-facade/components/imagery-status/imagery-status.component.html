@@ -1,4 +1,4 @@
-<div class="buttons" [class.hide]="isMinimalistViewMode" [class.rtl]="isRtl">
+<div class="buttons" [class.hide]="isMinimalistViewMode">
 
 	<ng-container
 		*ngFor="let component of entryComponents.status">
@@ -12,7 +12,7 @@
 		*ngIf="mapsAmount > 1"
 		class="small-icon-button drag-me"
 		[attr.tooltip-value]="'Move' | translate"
-		[attr.tooltip-class]="isRtl ? 'bottom left' : 'bottom right'"
+		[attr.tooltip-class]="'bottom left'"
 		(mousedown)="onStartDraggingMap($event)">
 		<i class="medium-icon icon-drag-maps"></i>
 	</button>
@@ -20,7 +20,7 @@
 	<button *ngIf="mapsAmount > 1"
 			class="small-icon-button link-maps"
 			[attr.tooltip-value]="'Momentarily link screens' | translate"
-			[attr.tooltip-class]="isRtl ? 'bottom left' : 'bottom right'"
+			[attr.tooltip-class]="'bottom left'"
 			[disabled]="noGeoRegistration"
 			(click)="toggleMapSynchronization.emit()">
 		<i class="medium-icon icon-temporary-link"></i>
@@ -30,7 +30,7 @@
 			[disabled]="noGeoRegistration"
 			(click)="toggleMapLayers()"
 			[attr.tooltip-value]="'Show/ Hide layers' | translate"
-			[attr.tooltip-class]="isRtl ? 'bottom left' : 'bottom right'"
+			[attr.tooltip-class]="'bottom left'"
 	><i class="medium-icon" [class.icon-layers-show]="!hideLayers"
 		   [class.icon-layers-hide]="hideLayers"></i>
 	</button>
@@ -39,7 +39,7 @@
 			[disabled]="noGeoRegistration"
 			(click)="toggleImageryPerspective()"
 			[attr.tooltip-value]="orientation | translate"
-			[attr.tooltip-class]="isRtl ? 'bottom left' : 'bottom right'"
+			[attr.tooltip-class]="'bottom left'"
 	><i class="medium-icon icon-status-bar-orientation" [class.active]="perspective"></i>
 	</button>
 
@@ -48,7 +48,7 @@
 		[disabled]="noGeoRegistration"
 			(click)="toggleOverlaysFootprint()"
 			[attr.tooltip-value]="'Overlays Footprint' | translate"
-			[attr.tooltip-class]="isRtl ? 'bottom left' : 'bottom right'"
+			[attr.tooltip-class]="'bottom left'"
 	><i class="medium-icon icon-frame-mode" [class.active]="overlaysFootprintActive && !noGeoRegistration"></i>
 	</button>
 

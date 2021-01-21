@@ -9,8 +9,8 @@
 	width: 0;
 	position: absolute;
 	top: 45px;
-    right: 40px;
-	transform: translateX(87%);
+	left: 0;
+	transform: translateX(-87%);
 	background: @background-color-3;
 	transition-property: width, visibility;
 	transition-duration: 0.1s;
@@ -33,7 +33,7 @@
 		div.combo-box {
 
 			width: 50%;
-			margin-left: 5px;
+			margin-right: 5px;
 			padding: 7px 0;
 			display: flex;
 
@@ -148,7 +148,7 @@
 				flex-direction: column;
 				position: absolute;
 				top: 35px;
-				left: 0;
+				right: 0;
 				overflow: hidden;
 				padding: 0;
 				margin: 0;
@@ -170,28 +170,6 @@
 
 				&.color-selection-expand.open {
 					visibility: visible;
-				}
-			}
-		}
-	}
-
-	&.rtl {
-		right: unset;
-		left: 0;
-		transform: translateX(-87%);
-
-		.selected-layer {
-			div.combo-box {
-				margin-left: unset;
-				margin-right: 5px;
-			}
-		}
-
-		ul.annotations-options {
-			li.expanded-selection {
-				div.list {
-					left: unset;
-					right: 0;
 				}
 			}
 		}

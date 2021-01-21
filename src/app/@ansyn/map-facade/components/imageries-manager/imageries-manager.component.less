@@ -112,12 +112,12 @@
 
 				&:nth-child(1) {
 					top: 0;
-					left: 50%;
+					right: 50%;
 				}
 
 				&:nth-child(2) {
 					top: 0;
-					left: 0;
+					right: 0;
 				}
 			}
 		}
@@ -153,17 +153,17 @@
 
 				&:nth-child(1) {
 					top: 0;
-					left: 0;
+					right: 0;
 				}
 
 				&:nth-child(2) {
 					top: 0;
-					left: 50%;
+					right: 50%;
 				}
 
 				&:nth-child(3) {
 					top: 50%;
-					left: 50%;
+					right: 50%;
 				}
 			}
 
@@ -279,7 +279,7 @@
 					width: 50%;
 					height: 100%;
 					top: 0;
-					left: 0;
+					right: 0;
 
 					/deep/ .ol-attribution {
 						bottom: @attribute-on-hide-button-minimize;
@@ -288,7 +288,7 @@
 
 				&:nth-child(2) {
 					top: 0;
-					left: 50%;
+					right: 50%;
 					/deep/ .ol-attribution {
 						bottom: @attribute-default;
 					}
@@ -296,7 +296,7 @@
 
 				&:nth-child(3) {
 					top: 50%;
-					left: 50%;
+					right: 50%;
 				}
 			}
 		}
@@ -365,58 +365,6 @@
 				&:nth-child(4) {
 					top: 50%;
 					left: 50%;
-				}
-			}
-		}
-	}
-
-	&.rtl {
-		div.imageries-container {
-			&.layout2 {
-				div.map-container-wrapper {
-					&:nth-child(1) {
-						left: unset;
-						right: 50%;
-					}
-
-					&:nth-child(2) {
-						left: unset;
-						right: 0;
-					}
-				}
-			}
-			&.layout4 {
-				div.map-container-wrapper {
-					&:nth-child(1) {
-						left: unset;
-						right: 0;
-					}
-					&:nth-child(2) {
-						left: unset;
-						right: 50%;
-					}
-					&:nth-child(3) {
-						left: unset;
-						right: 50%;
-					}
-				}
-			}
-		}
-		div.footer-collapsed {
-			&.layout4 {
-				div.map-container-wrapper {
-					&:nth-child(1) {
-						left: unset;
-						right: 0;
-					}
-					&:nth-child(2) {
-						left: unset;
-						right: 50%;
-					}
-					&:nth-child(3) {
-						left: unset;
-						right: 50%;
-					}
 				}
 			}
 		}

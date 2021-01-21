@@ -63,7 +63,6 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	@Output() toggleMapSynchronization = new EventEmitter<void>();
 	@Output() onMove = new EventEmitter<MouseEvent>();
 	enableCopyOriginalOverlayData: boolean;
-	isRtl = 'rtl' === this.translateService.instant('direction');
 	@AutoSubscription
 	copyOriginalOverlayDataFlag$ = this.store$.select(selectEnableCopyOriginalOverlayDataFlag).pipe(
 		tap((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)

@@ -12,6 +12,7 @@ import {
 import { Observable } from 'rxjs';
 import { IToolsConfig, toolsConfig } from '../../models/tools-config';
 import {
+	copyFromContent,
 	ICoordinatesSystem,
 	IEd50Notification,
 	IMapFacadeConfig,
@@ -20,9 +21,7 @@ import {
 	SetToastMessageAction
 } from '@ansyn/map-facade';
 import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
-import { copyFromContent } from '@ansyn/map-facade';
 import { SubMenuEnum, toolsFlags } from '../../models/tools.model';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-go-to',
@@ -84,15 +83,11 @@ export class GoToComponent implements OnInit {
 
 	pinLocationMode: boolean;
 
-	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
-
 	constructor(
 		protected store$: Store<IToolsState>,
 		@Inject(toolsConfig) protected config: IToolsConfig,
 		@Inject(mapFacadeConfig) protected mapfacadeConfig: IMapFacadeConfig,
-		protected projectionConverterService: ProjectionConverterService,
-		protected translateService: TranslateService
+		protected projectionConverterService: ProjectionConverterService
 	) {
 		this.notification = this.mapfacadeConfig.Proj4.ed50Notification;
 	}

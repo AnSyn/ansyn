@@ -16,6 +16,7 @@ import { catchError, map, mergeMap } from 'rxjs/operators';
 import { DataLayersService } from '../services/data-layers.service';
 import { ILayer, LayerType } from '../models/layers.model';
 import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCrash';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class LayersEffects {
@@ -33,7 +34,8 @@ export class LayersEffects {
 	onLayerCollectionLoaded$ = this.actions$.pipe(
 		ofType<LayerCollectionLoadedAction>(LayersActionTypes.LAYER_COLLECTION_LOADED),
 		mergeMap((action) => {
-			const regionLayer = this.dataLayersService.generateLayer({ name: 'Region', id: 'region-layer', type: LayerType.static });
+			const regionLayerName = this.translate.instant('Region');
+			const regionLayer = this.dataLayersService.generateLayer({ name: regionLayerName, id: 'region-layer', type: LayerType.static });
 			const layers = [regionLayer];
 
 			if (!action.payload.some(({ type }) => type === LayerType.annotation)) {
@@ -57,6 +59,7 @@ export class LayersEffects {
 
 	constructor(protected actions$: Actions,
 				protected dataLayersService: DataLayersService,
+				protected translate: TranslateService,
 				protected store$: Store<ILayerState>) {
 	}
 }

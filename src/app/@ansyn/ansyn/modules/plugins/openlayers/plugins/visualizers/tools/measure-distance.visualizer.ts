@@ -45,9 +45,7 @@ export const measuresClassNameForExport = 'measures-layer';
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store, OpenLayersProjectionService, VisualizersConfig],
-	isHideable: true,
-	layerClassName: measuresClassNameForExport,
-	alwaysVisible: true
+	layerClassName: measuresClassNameForExport
 })
 export class MeasureDistanceVisualizer extends EntitiesVisualizer {
 	isTotalMeasureActive: boolean;

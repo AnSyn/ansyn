@@ -1,11 +1,28 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Observable, EMPTY } from 'rxjs';
 import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
+import { LoggerService } from '../../../core/services/logger.service';
 import { casesConfig } from '../../../menu-items/cases/services/cases.service';
+import { BaseOverlaySourceProvider, IFetchParams } from '../../../overlays/models/base-overlay-source-provider.model';
+import { IOverlaysFetchData, IOverlay } from '../../../overlays/models/overlay.model';
+import { MultipleOverlaysSourceProvider } from '../../../overlays/services/multiple-source-provider';
+import { OverlaysConfig } from '../../../overlays/services/overlays.service';
+import { StatusBarConfig } from '../../models/statusBar.config';
 import { SearchPanelComponent } from '../search-panel/search-panel.component';
 
 import { AdvancedSearchComponent } from './advanced-search.component';
+
+class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
+	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
+		return EMPTY;
+	}
+
+	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
+		return EMPTY;
+	};
+}
 
 describe('AdvancedSearchComponent', () => {
 	let component: AdvancedSearchComponent;
@@ -48,7 +65,19 @@ describe('AdvancedSearchComponent', () => {
 							}
 						}
 					}
-				}
+				},
+				{
+					provide: OverlaysConfig,
+					useValue: {}
+				},
+				{
+					provide: StatusBarConfig,
+					useValue: {}
+				},
+				{ provide: MultipleOverlaysSourceProvider, useClass: OverlaySourceProviderMock },
+				{ provide: LoggerService, useValue: {} },
+
+
 			],
 			imports: [StoreModule.forRoot({}), TranslateModule.forRoot()]
 		})

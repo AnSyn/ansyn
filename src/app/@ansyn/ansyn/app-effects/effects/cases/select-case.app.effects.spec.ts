@@ -98,6 +98,7 @@ describe('SelectCaseAppEffects', () => {
 					sensors: [],
 					types: []
 				},
+				runSecondSearch: boolean = true,
 				dataInputFilters: ICaseDataInputFiltersState = { fullyChecked: true, filters: [] },
 				favoriteOverlays: IOverlay[] = [],
 				maps: ICaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
@@ -120,6 +121,7 @@ describe('SelectCaseAppEffects', () => {
 				region,
 				dataInputFilters,
 				advancedSearchParameters,
+				runSecondSearch,
 				favoriteOverlays,
 				overlaysTranslationData,
 				maps,
@@ -127,7 +129,7 @@ describe('SelectCaseAppEffects', () => {
 				overlaysImageProcess,
 				facets,
 				miscOverlays,
-				overlaysScannedAreaData
+				overlaysScannedAreaData,
 			};
 
 			const payload: ICase = {
@@ -143,7 +145,7 @@ describe('SelectCaseAppEffects', () => {
 			a: new SetMapsDataActionStore({ mapsList: maps.data }),
 			b: new SetActiveMapId(state.maps.activeMapId),
 			c: new SetLayoutAction(<any>maps.layout),
-			d: new SetOverlaysCriteriaAction({ time, region, dataInputFilters, advancedSearchParameters }, { noInitialSearch }),
+			d: new SetOverlaysCriteriaAction({ time, region, dataInputFilters, advancedSearchParameters, runSecondSearch }, { noInitialSearch }),
 			e: new UpdateGeoFilterStatus({active: false, type: region.properties.searchMode}),
 			f: new SetFavoriteOverlaysAction(favoriteOverlays),
 			g: new SetMiscOverlays({ miscOverlays }),

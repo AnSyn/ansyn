@@ -1,4 +1,4 @@
-import { async, inject, TestBed } from '@angular/core/testing';
+import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MapAppEffects } from './map.app.effects';
 import { EMPTY, Observable, of } from 'rxjs';
@@ -174,7 +174,7 @@ describe('MapAppEffects', () => {
 	}
 	];
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientModule,

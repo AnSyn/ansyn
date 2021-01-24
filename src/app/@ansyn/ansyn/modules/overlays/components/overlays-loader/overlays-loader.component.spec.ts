@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { OverlaysLoaderComponent } from './overlays-loader.component';
 import { OverlayReducer, overlaysFeatureKey } from '../../reducers/overlays.reducer';
@@ -9,7 +9,7 @@ describe('OverlaysLoaderComponent', () => {
 	let component: OverlaysLoaderComponent;
 	let fixture: ComponentFixture<OverlaysLoaderComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [OverlaysLoaderComponent],
 			imports: [StoreModule.forRoot({ [overlaysFeatureKey]: OverlayReducer }), BrowserAnimationsModule]

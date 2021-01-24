@@ -1,4 +1,4 @@
-import { async, ComponentFixture, fakeAsync, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { DeleteCaseComponent } from './delete-case.component';
 import { casesFeatureKey, CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { AddCasesAction, CloseModalAction, DeleteCaseAction, OpenModalAction } from '../../actions/cases.actions';
@@ -25,7 +25,7 @@ describe('DeleteCaseComponent', () => {
 	let fixture: ComponentFixture<DeleteCaseComponent>;
 	let store: Store<ICasesState>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				BrowserAnimationsModule,

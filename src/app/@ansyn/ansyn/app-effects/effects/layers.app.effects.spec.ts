@@ -5,7 +5,7 @@ import {
 	LayersReducer,
 	layersStateSelector
 } from '../../modules/menu-items/layers-manager/reducers/layers.reducer';
-import { async, inject, TestBed } from '@angular/core/testing';
+import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { LayersAppEffects } from './layers.app.effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
@@ -28,7 +28,7 @@ describe('LayersAppEffects', () => {
 	const casesState: ICasesState = cloneDeep(initialCasesState);
 	const layerState: ILayerState = cloneDeep(initialLayersState);
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [StoreModule.forRoot({
 				[layersFeatureKey]: LayersReducer,

@@ -196,7 +196,7 @@ export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 		);
 
 	forceRedraw() {
-		return new Promise(resolve => {
+		return new Promise<void>(resolve => {
 			this.elementRef.nativeElement.style.display = 'none';
 			requestAnimationFrame(() => {
 				this.elementRef.nativeElement.style.display = '';

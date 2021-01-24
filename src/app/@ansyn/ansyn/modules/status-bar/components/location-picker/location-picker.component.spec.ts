@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { LocationPickerComponent } from './location-picker.component';
 import { IStatusBarState, statusBarFeatureKey, StatusBarReducer } from '../../reducers/status-bar.reducer';
@@ -20,7 +20,7 @@ describe('LocationPickerComponent', () => {
 	let component: LocationPickerComponent;
 	let fixture: ComponentFixture<LocationPickerComponent>;
 	let store: Store<IStatusBarState>;
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [LocationPickerComponent],
 			imports: [StoreModule.forRoot({[statusBarFeatureKey]: StatusBarReducer}),

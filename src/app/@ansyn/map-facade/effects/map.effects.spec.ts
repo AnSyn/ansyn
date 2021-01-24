@@ -1,7 +1,7 @@
 import { MapEffects } from './map.effects';
 import { Observable, of } from 'rxjs';
 import { Store, StoreModule } from '@ngrx/store';
-import { async, inject, TestBed } from '@angular/core/testing';
+import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { IMapState, initialMapState, mapFeatureKey, MapReducer, mapStateSelector } from '../reducers/map.reducer';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { GetProvidersMapsService, ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
@@ -26,7 +26,7 @@ describe('MapEffects', () => {
 	let mapFacadeService: MapFacadeService;
 	let mapState: IMapState = cloneDeep(initialMapState);
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				StoreModule.forRoot({ [mapFeatureKey]: MapReducer })

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ImageryTileProgressComponent } from './imagery-tile-progress.component';
 import { StoreModule } from '@ngrx/store';
 import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
@@ -11,7 +11,7 @@ describe('ImageryTileProgressComponent', () => {
 	let fixture: ComponentFixture<ImageryTileProgressComponent>;
 	let mapLoader: DebugElement;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [StoreModule.forRoot({ [mapFeatureKey]: MapReducer }), EffectsModule.forRoot([])],
 			declarations: [ImageryTileProgressComponent]

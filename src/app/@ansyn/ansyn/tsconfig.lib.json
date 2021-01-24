@@ -1,5 +1,5 @@
 {
-  "extends": "../../../../tsconfig.base.json",
+  "extends": "../../../../tsconfig.json",
   "compilerOptions": {
     "paths": {
       "@ansyn/menu": [
@@ -24,6 +24,7 @@
         "dist/ansyn/imagery-video"
       ]
     },
+    "declarationMap": true,
     "outDir": "../../../out-tsc/lib",
     "target": "es2015",
     "module": "es2015",

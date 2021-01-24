@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { MenuComponent } from './menu.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { IMenuState, menuFeatureKey, MenuReducer } from '../reducers/menu.reducer';
@@ -19,7 +19,7 @@ describe('MenuComponent', () => {
 	let element: any;
 	let store: Store<IMenuState>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [BrowserAnimationsModule, StoreModule.forRoot({ [menuFeatureKey]: MenuReducer }), TranslateModule.forRoot()],
 			declarations: [MenuComponent],

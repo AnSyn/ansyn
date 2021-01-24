@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { AnnotationsControlComponent } from './annotations-control.component';
 import { Store, StoreModule } from '@ngrx/store';
@@ -27,7 +27,7 @@ describe('AnnotationsControlComponent', () => {
 	let fixture: ComponentFixture<AnnotationsControlComponent>;
 	let store: Store<any>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [AnnotationsControlComponent, ColorPickerComponent, mockAnnotationsColorComponent, AnnotationsWeightComponent, mockComboBoxComponent, mockComboBoxOptionComponent],
 			imports: [

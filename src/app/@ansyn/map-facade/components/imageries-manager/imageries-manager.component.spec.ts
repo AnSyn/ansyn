@@ -1,4 +1,4 @@
-import { async, ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { ImageriesManagerComponent } from './imageries-manager.component';
 import { MapEffects } from '../../effects/map.effects';
 import { Store, StoreModule } from '@ngrx/store';
@@ -60,7 +60,7 @@ describe('ImageriesManagerComponent', () => {
 	let store: Store<IMapState>;
 
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			providers: [
 				MapEffects,

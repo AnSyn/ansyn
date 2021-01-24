@@ -22,6 +22,14 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	mainLayer: ol_Layer;
 	element: HTMLElement;
 
+	public get mapObject() {
+		return this.mapObject;
+	}
+
+	public set mapObject(mapObject) {
+		this.mapObject = mapObject;
+	}
+
 	initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, mainLayer: ol_Layer, position?: IImageryMapPosition): Observable<boolean> {
 		this.element = element;
 		this.mapObject = new Map({

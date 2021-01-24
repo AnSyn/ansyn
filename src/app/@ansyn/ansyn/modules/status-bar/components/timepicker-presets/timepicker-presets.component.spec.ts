@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TimepickerPresetsComponent } from './timepicker-presets.component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -8,7 +8,7 @@ describe('TimepickerPresetsComponent', () => {
 	let component: TimepickerPresetsComponent;
 	let fixture: ComponentFixture<TimepickerPresetsComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [TimepickerPresetsComponent],
 			imports: [TranslateModule.forRoot(), StoreModule.forRoot({})]

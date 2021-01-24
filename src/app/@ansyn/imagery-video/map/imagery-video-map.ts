@@ -18,6 +18,14 @@ export class ImageryVideoMap extends BaseImageryMap<any> {
 	videoComponent: ImageryVideoComponent;
 	mainLayer = null;
 
+	public get mapObject() {
+		return this.mapObject;
+	}
+
+	public set mapObject(mapObject) {
+		this.mapObject = mapObject;
+	}
+
 	constructor(protected http: HttpClient, public componentFactoryResolver: ComponentFactoryResolver) {
 		super();
 	}

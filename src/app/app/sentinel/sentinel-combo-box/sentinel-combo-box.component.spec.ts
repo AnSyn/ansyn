@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { mapFeatureKey, MapReducer, selectMaps } from '@ansyn/map-facade';
 import { Store, StoreModule } from '@ngrx/store';
@@ -18,7 +18,7 @@ describe('SentinelComboBoxComponent', () => {
 	let fixture: ComponentFixture<SentinelComboBoxComponent>;
 	let store: Store<any>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [SentinelComboBoxComponent],
 			imports: [FormsModule,

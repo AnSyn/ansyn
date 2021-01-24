@@ -7,16 +7,12 @@ export class MultiChoiceAttribute extends AttributeBase<IKeyValuePair<string>[]>
 	private selectedOptions: IKeyValuePair<string>[];
 
 	private _value: IKeyValuePair<string>[];
-	set value(value: IKeyValuePair<string>[]) {
+	setValue(value: IKeyValuePair<string>[]) {
 		if (!!value) {
 			this._value = [...value];
 			this.selectedOptions = [...value]
 		}
 	}
-	get value() {
-		return this._value;
-	}
-
 	constructor(
 		data: IAttributeData
 	) {
@@ -27,7 +23,7 @@ export class MultiChoiceAttribute extends AttributeBase<IKeyValuePair<string>[]>
 			throw new Error('Value must be of type IKeyValuePair<string>[]');
 		}
 		if (!data.value) {
-			this.value = [];
+			this.setValue([]);
 		}
 	}
 

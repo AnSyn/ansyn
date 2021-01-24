@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { AnsynComboTableComponent } from '../ansyn-combo-table/ansyn-combo-table.component';
 
@@ -8,7 +8,7 @@ describe('AnsynComboTableOptionComponent', () => {
 	let component: AnsynComboTableOptionComponent;
 	let fixture: ComponentFixture<AnsynComboTableOptionComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 		imports: [TranslateModule.forRoot()],
 		declarations: [ AnsynComboTableOptionComponent ],

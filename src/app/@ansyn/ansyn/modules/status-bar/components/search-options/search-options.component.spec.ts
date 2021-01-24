@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
 
 import { SearchOptionsComponent } from './search-options.component';
@@ -7,7 +7,7 @@ import { SearchOptionsComponent } from './search-options.component';
 		let component: SearchOptionsComponent;
 		let fixture: ComponentFixture<SearchOptionsComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 		declarations: [ SearchOptionsComponent ],
 		imports: [StoreModule.forRoot({})]

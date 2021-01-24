@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TasksComponent } from './tasks.component';
 import { MockComponent } from '../../../../core/test/mock-component';
@@ -12,7 +12,7 @@ describe('TasksComponent', () => {
 	const mockTablePage = MockComponent({ selector: 'ansyn-tasks-table-page' });
 	const mockFormPage = MockComponent({ selector: 'ansyn-tasks-form-page' });
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [
 				TasksComponent,

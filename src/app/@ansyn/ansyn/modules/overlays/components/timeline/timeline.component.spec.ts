@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { TimelineComponent } from './timeline.component';
 import { DebugElement } from '@angular/core';
 import * as d3 from 'd3/dist/d3';
@@ -121,7 +121,7 @@ describe('TimelineComponent', () => {
 	}
 	];
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			providers: [
 				{

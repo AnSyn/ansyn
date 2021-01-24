@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
@@ -11,7 +11,7 @@ describe('AdvancedSearchComponent', () => {
 	let component: AdvancedSearchComponent;
 	let fixture: ComponentFixture<AdvancedSearchComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [AdvancedSearchComponent, SearchPanelComponent],
 			providers: [

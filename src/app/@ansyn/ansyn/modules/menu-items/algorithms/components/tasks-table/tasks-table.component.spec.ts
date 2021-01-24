@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { TasksTableComponent } from './tasks-table.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { ITasksState, tasksFeatureKey, TasksReducer } from '../../reducers/tasks.reducer';
@@ -28,7 +28,7 @@ describe('TasksTableComponent', () => {
 	const mockRemove = MockComponent({ selector: 'ansyn-remove-task-modal', inputs: ['message'] });
 	const mockDatePipe = MockPipe('ansynDate');
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [
 				TasksTableComponent,

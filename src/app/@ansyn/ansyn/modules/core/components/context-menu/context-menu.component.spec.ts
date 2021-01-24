@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { ContextMenuComponent } from './context-menu.component';
 import { FormsModule } from '@angular/forms';
 import { Store, StoreModule } from '@ngrx/store';
@@ -20,7 +20,7 @@ describe('ContextMenuComponent', () => {
 	let fixture: ComponentFixture<ContextMenuComponent>;
 	let store: Store<any>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [HttpClientModule, TranslateModule.forRoot(), FormsModule, StoreModule.forRoot({
 				[mapFeatureKey]: MapReducer,

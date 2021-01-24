@@ -1,4 +1,4 @@
-import { async, ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { SetFavoriteOverlaysAction } from '../../../../overlays/overlay-status/actions/overlay-status.actions';
 import {
 	overlayStatusFeatureKey,
@@ -28,7 +28,7 @@ describe('TasksFormComponent', () => {
 
 	const mockLoader = MockComponent({ selector: 'ansyn-loader', inputs: ['show'] });
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [
 				TasksFormComponent,

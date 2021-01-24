@@ -1,11 +1,12 @@
 {
-  "extends": "../../../../tsconfig.base.json",
+  "extends": "../../../../tsconfig.json",
   "compilerOptions": {
     "paths": {
       "@ansyn/imagery": [
         "dist/ansyn/imagery"
       ]
     },
+    "declarationMap": true,
     "outDir": "../../../out-tsc/lib",
     "target": "es2015",
     "module": "es2015",

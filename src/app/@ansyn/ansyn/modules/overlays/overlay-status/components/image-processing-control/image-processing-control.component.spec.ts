@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ImageProcessingControlComponent } from './image-processing-control.component';
 import { MockPipe } from '../../../../core/test/mock-pipe';
@@ -19,7 +19,7 @@ describe('ImageProcessingControlComponent', () => {
 	let component: ImageProcessingControlComponent;
 	let fixture: ComponentFixture<ImageProcessingControlComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				StoreModule.forRoot({[overlayStatusFeatureKey]: OverlayStatusReducer})

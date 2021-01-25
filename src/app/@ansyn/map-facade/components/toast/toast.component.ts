@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -6,6 +6,7 @@ import { selectToastMessage } from '../../reducers/map.reducer';
 import { IToastMessage, SetToastMessageAction } from '../../actions/map.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
+import { IMapFacadeConfig, mapFacadeConfig } from '../../public_api';
 
 const animations: any[] = [
 	trigger('toastAnimation_rtl', [
@@ -36,7 +37,6 @@ export class ToastComponent implements OnInit, OnDestroy {
 	timeoutRef;
 
 	toastMessage$ = this.store$.select(selectToastMessage);
-	durationToButtonPopUp = 10000;
 
 	@AutoSubscription
 	updateToatsMessage$ = this.store$.pipe(
@@ -48,6 +48,7 @@ export class ToastComponent implements OnInit, OnDestroy {
 	
 	constructor(
 		protected store$: Store<any>,
+		@Inject(mapFacadeConfig) public mapFacadeConfig: IMapFacadeConfig
 	) {
 	}
 	ngOnDestroy(): void {
@@ -59,7 +60,7 @@ export class ToastComponent implements OnInit, OnDestroy {
 				let duration = this.duration * 1000;
 				if (toastMessage.buttonToDisplay) {
 					this.buttonToDisplay = toastMessage.buttonToDisplay;
-					duration = this.durationToButtonPopUp;
+					duration = this.mapFacadeConfig.timeToDisplayButtonToast;
 				}
 				this.timeoutRef = setTimeout(this.closeToast.bind(this), duration);
 			} else { // Cancel the last hide

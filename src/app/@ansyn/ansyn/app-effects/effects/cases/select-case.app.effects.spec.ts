@@ -98,7 +98,7 @@ describe('SelectCaseAppEffects', () => {
 					sensors: [],
 					types: []
 				},
-				runSecondSearch: boolean = true,
+				runSecondSearch = true,
 				dataInputFilters: ICaseDataInputFiltersState = { fullyChecked: true, filters: [] },
 				favoriteOverlays: IOverlay[] = [],
 				maps: ICaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },

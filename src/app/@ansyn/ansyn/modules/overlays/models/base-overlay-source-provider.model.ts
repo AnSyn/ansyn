@@ -22,6 +22,7 @@ export interface IFetchParams {
 	resolution?: IResolutionRange;
 	types?: string[];
 	registeration?: string[];
+	runSecondSearch?: boolean;
 }
 
 export interface IOverlayFilter {

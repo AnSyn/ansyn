@@ -102,7 +102,8 @@ export class OverlaysService {
 			sensors: params.advancedSearchParameters.sensors || null,
 			registeration: params.advancedSearchParameters.registeration || null,
 			resolution: params.advancedSearchParameters.resolution || null,
-			types: params.advancedSearchParameters.types || null
+			types: params.advancedSearchParameters.types || null,
+			runSecondSearch: params.runSecondSearch || null
 		});
 	}
 

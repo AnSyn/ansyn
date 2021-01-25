@@ -6,7 +6,8 @@ import { selectToastMessage } from '../../reducers/map.reducer';
 import { IToastMessage, SetToastMessageAction } from '../../actions/map.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
-import { IMapFacadeConfig, mapFacadeConfig } from '../../public_api';
+import { IMapFacadeConfig } from '../../models/map-config.model';
+import { mapFacadeConfig } from '../../models/map-facade.config';
 
 const animations: any[] = [
 	trigger('toastAnimation_rtl', [

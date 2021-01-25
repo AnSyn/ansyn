@@ -38,7 +38,7 @@ describe('ToastComponent', () => {
 		fixture.detectChanges();
 	});
 
-	fit('should be created', () => {
+	it('should be created', () => {
 		expect(component).toBeTruthy();
 	});
 });

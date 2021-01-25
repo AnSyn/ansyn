@@ -7,12 +7,14 @@ export class MultiChoiceAttribute extends AttributeBase<IKeyValuePair<string>[]>
 	private selectedOptions: IKeyValuePair<string>[];
 
 	private _value: IKeyValuePair<string>[];
+
 	setValue(value: IKeyValuePair<string>[]) {
 		if (!!value) {
 			this._value = [...value];
 			this.selectedOptions = [...value]
 		}
 	}
+
 	constructor(
 		data: IAttributeData
 	) {

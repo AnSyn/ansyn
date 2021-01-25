@@ -6,6 +6,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
 import { mapFeatureKey, MapReducer } from '../../reducers/map.reducer';
 import { TranslateModule } from '@ngx-translate/core';
+import { mapFacadeConfig } from '../../models/map-facade.config';
 
 describe('ToastComponent', () => {
 	let component: ToastComponent;
@@ -21,7 +22,13 @@ describe('ToastComponent', () => {
 				EffectsModule.forRoot([]),
 				TranslateModule.forRoot()
 			],
-			declarations: [ToastComponent]
+			declarations: [ToastComponent],
+			providers: [
+				{
+					provide: mapFacadeConfig,
+					useValue: {}
+				}
+			]
 		}).compileComponents();
 	}));
 
@@ -31,7 +38,7 @@ describe('ToastComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should be created', () => {
+	fit('should be created', () => {
 		expect(component).toBeTruthy();
 	});
 });

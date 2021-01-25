@@ -8,13 +8,6 @@ export class MultiChoiceAttribute extends AttributeBase<IKeyValuePair<string>[]>
 
 	private _value: IKeyValuePair<string>[];
 
-	setValue(value: IKeyValuePair<string>[]) {
-		if (!!value) {
-			this._value = [...value];
-			this.selectedOptions = [...value]
-		}
-	}
-
 	constructor(
 		data: IAttributeData
 	) {
@@ -28,6 +21,14 @@ export class MultiChoiceAttribute extends AttributeBase<IKeyValuePair<string>[]>
 			this.setValue([]);
 		}
 	}
+
+	setValue(value: IKeyValuePair<string>[]) {
+		if (!!value) {
+			this._value = [...value];
+			this.selectedOptions = [...value]
+		}
+	}
+
 
 	addSelectedOption(option: IKeyValuePair<string>) {
 		if (this.selectedOptions.includes(option)) {

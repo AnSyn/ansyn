@@ -38,7 +38,7 @@ import { CredentialsService, ICredentialsResponse } from '../../core/services/cr
 import { getMenuSessionData, SetBadgeAction } from '@ansyn/menu';
 import { Update } from '@ngrx/entity';
 import { selectWasWelcomeNotificationShown, SetToastMessageAction } from '@ansyn/map-facade';
-import { OpenedFromOutsideAction, ToggleAdvancedSearchAction, ToggleSimpleSearchAction } from '../../status-bar/actions/status-bar.actions';
+import { OpenAdvancedSearchFromOutsideAction, ToggleAdvancedSearchAction, ToggleSimpleSearchAction } from '../../status-bar/actions/status-bar.actions';
 
 @Injectable()
 export class OverlaysEffects {
@@ -224,6 +224,6 @@ export class OverlaysEffects {
 	toggleAdvancedSearch() {
 		this.store$.dispatch(new ToggleSimpleSearchAction(true));
 		this.store$.dispatch(new ToggleAdvancedSearchAction(true));
-		this.store$.dispatch(new OpenedFromOutsideAction(true));
+		this.store$.dispatch(new OpenAdvancedSearchFromOutsideAction(true));
 	}
 }

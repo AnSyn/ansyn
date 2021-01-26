@@ -61,7 +61,7 @@ export class ToastComponent implements OnInit, OnDestroy {
 				let duration = this.duration * 1000;
 				if (toastMessage.buttonToDisplay) {
 					this.buttonToDisplay = toastMessage.buttonToDisplay;
-					duration = this.mapFacadeConfig.timeToDisplayButtonToast;
+					duration = this.mapFacadeConfig.firstSearchNotification.timeToDisplayButtonToast;
 				}
 				this.timeoutRef = setTimeout(this.closeToast.bind(this), duration);
 			} else { // Cancel the last hide
@@ -76,7 +76,7 @@ export class ToastComponent implements OnInit, OnDestroy {
 	}
 
 	functionTodo() {
-		if (this.toastMessageFromState && this.toastMessageFromState.functionToExcute) {
+		if (this?.toastMessageFromState?.functionToExcute) {
 			this.toastMessageFromState.functionToExcute();
 			this.closeToast();
 		}

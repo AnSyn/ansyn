@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, tap, withLatestFrom } from 'rxjs/operators';
 import { ClickOutsideService } from '../../../core/click-outside/click-outside.service';
-import { OpenedFromOutsideAction, ToggleAdvancedSearchAction, ToggleSimpleSearchAction } from '../../actions/status-bar.actions';
+import { OpenAdvancedSearchFromOutsideAction, ToggleAdvancedSearchAction, ToggleSimpleSearchAction } from '../../actions/status-bar.actions';
 import { selectAdvancedSearchStatus, selectCalenderStatus, selectIsOpenedFromOutside, selectSimpledSearchStatus } from '../../reducers/status-bar.reducer';
 
 @Component({
@@ -26,7 +26,7 @@ export class SearchOptionsComponent implements OnInit, OnDestroy {
 				this.close();
 			}
 			else {
-				this.store$.dispatch(new OpenedFromOutsideAction(false));
+				this.store$.dispatch(new OpenAdvancedSearchFromOutsideAction(false));
 			}
 		}));
 		

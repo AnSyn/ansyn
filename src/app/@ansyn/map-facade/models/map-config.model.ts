@@ -12,7 +12,9 @@ export interface IMapSearchConfig {
 
 export interface IMapFacadeConfig {
 	showOne2One: boolean;
-	timeToDisplayButtonToast: number;
+	firstSearchNotification: {
+		timeToDisplayButtonToast: number;
+	};
 	displayDebounceTime: number;
 	overlayCoverage: number;
 	disableBestResolutionContextMenu: boolean;

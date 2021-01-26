@@ -129,7 +129,7 @@ describe('SelectCaseAppEffects', () => {
 				overlaysImageProcess,
 				facets,
 				miscOverlays,
-				overlaysScannedAreaData,
+				overlaysScannedAreaData
 			};
 
 			const payload: ICase = {

@@ -47,7 +47,7 @@ export class ToggleSimpleSearchAction implements Action {
 	}
 }
 
-export class OpenedFromOutsideAction implements Action {
+export class OpenAdvancedSearchFromOutsideAction implements Action {
 	type: string = StatusBarActionsTypes.OPENED_FROM_OUTSIDE;
 
 	constructor(public payload: boolean) {

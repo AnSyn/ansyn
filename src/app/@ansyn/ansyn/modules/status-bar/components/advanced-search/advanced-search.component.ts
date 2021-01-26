@@ -2,7 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { cloneDeep, flattenDeep } from 'lodash';
 import { IMultipleOverlaysSourceConfig, IOverlaysSourceProvider, MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
-import { Options } from '@angular-slider/ngx-slider'
+import { Options } from '@angular-slider/ngx-slider';
 import {  GeoRegisterationOptions } from '../../../overlays/models/overlay.model';
 import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import { SearchPanelComponent } from '../search-panel/search-panel.component';
@@ -145,13 +145,20 @@ import { TranslateService } from '@ngx-translate/core';
 			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
 				const typesNames = Object.keys(sensorNamesByGroup);
 				const selectedType = this.selectedAdvancedSearchParameters.types;
-				const typeToActivate = typesNames.find(type => {
+				const selectedSensors = this.selectedAdvancedSearchParameters.sensors;
+				typesNames.map(type => {
 					const sensorsListByType = sensorNamesByGroup[type];
 					const isSensorContainedInType =  sensorsListByType.includes(changedSensor);
 					const isSelected = selectedType.includes(type);
-					return isSensorContainedInType && !isSelected;
+					const isAnySensorOfThisTypeSelected = Boolean(sensorsListByType.find(sensor => selectedSensors.includes(sensor)));
+
+					if (isSensorContainedInType && isSelected && !isAnySensorOfThisTypeSelected) {
+						const typeIndex = selectedType.indexOf(type);
+						this.selectedAdvancedSearchParameters.types.splice(typeIndex, 1); 
+					} else if (isSensorContainedInType && !isSelected) {
+						this.selectedAdvancedSearchParameters.types.push(type);
+					}
 				});
-				this.selectedAdvancedSearchParameters.types.push(typeToActivate);
 		});
 	}
 

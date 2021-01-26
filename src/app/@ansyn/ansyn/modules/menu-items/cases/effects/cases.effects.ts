@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { EMPTY, forkJoin, Observable, of, from } from 'rxjs';
+import { EMPTY, forkJoin, from, Observable, of } from 'rxjs';
 import {
 	AddCasesAction,
 	CasesActionTypes,
@@ -19,7 +19,13 @@ import {
 	SelectDilutedCaseAction
 } from '../actions/cases.actions';
 import { casesConfig, CasesService } from '../services/cases.service';
-import { casesStateSelector, ICasesState, selectMyCasesTotal, selectSharedCaseTotal } from '../reducers/cases.reducer';
+import {
+	casesStateSelector,
+	ICasesState,
+	selectMyCasesEntities,
+	selectMyCasesTotal,
+	selectSharedCaseTotal
+} from '../reducers/cases.reducer';
 import { CasesType, ICasesConfig } from '../models/cases-config';
 import { catchError, concatMap, filter, map, mergeMap, share, switchMap, withLatestFrom } from 'rxjs/operators';
 import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
@@ -42,7 +48,7 @@ export class CasesEffects {
 			return of(action).pipe(withLatestFrom(selector));
 		}),
 		concatMap(([action, total]: [LoadCasesAction, number]) => {
-			return this.casesService.loadCases(action.fromBegin ? 0 : total, action.payload).pipe(
+			return this.casesService.loadCases(total, action.payload).pipe(
 				map(cases => new AddCasesAction({ cases, type: action.payload })),
 				catchError(() => EMPTY)
 			);
@@ -116,9 +122,16 @@ export class CasesEffects {
 	loadCase$: Observable<any> = this.actions$
 		.pipe(
 			ofType(CasesActionTypes.LOAD_CASE),
-			switchMap((action: LoadCaseAction) => this.casesService.loadCase(action.payload)),
-			concatMap((dilutedCase) => [new SelectDilutedCaseAction(dilutedCase),
-				new LoadCasesAction(CasesType.MySharedCases, true)]),
+			switchMap((action: LoadCaseAction) => this.casesService.loadCase(action.payload).pipe(
+				withLatestFrom(this.store.pipe(select(selectMyCasesEntities)))
+			)),
+			mergeMap( ([dilutedCase, myCases]) => {
+				const actions: any[] = [new SelectDilutedCaseAction(dilutedCase)];
+				if (!Boolean(myCases[dilutedCase.id])) {
+					actions.push(new AddCasesAction({cases: [dilutedCase], type: CasesType.MySharedCases}));
+				}
+				return actions;
+			}),
 			catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load case')),
 			catchError(() => of(new LoadDefaultCaseAction()))
 		);

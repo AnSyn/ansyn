@@ -149,13 +149,13 @@ import { TranslateService } from '@ngx-translate/core';
 				typesNames.map(type => {
 					const sensorsListByType = sensorNamesByGroup[type];
 					const isSensorContainedInType =  sensorsListByType.includes(changedSensor);
-					const isSelected = selectedType.includes(type);
+					const isTypeSelected = selectedType.includes(type);
 					const isAnySensorOfThisTypeSelected = Boolean(sensorsListByType.find(sensor => selectedSensors.includes(sensor)));
 
-					if (isSensorContainedInType && isSelected && !isAnySensorOfThisTypeSelected) {
+					if (isSensorContainedInType && isTypeSelected && !isAnySensorOfThisTypeSelected) {
 						const typeIndex = selectedType.indexOf(type);
 						this.selectedAdvancedSearchParameters.types.splice(typeIndex, 1); 
-					} else if (isSensorContainedInType && !isSelected) {
+					} else if (isSensorContainedInType && !isTypeSelected) {
 						this.selectedAdvancedSearchParameters.types.push(type);
 					}
 				});

@@ -22,7 +22,7 @@ export class SearchOptionsComponent implements OnInit, OnDestroy {
 		withLatestFrom(this.store$.select(selectCalenderStatus), this.store$.select(selectIsOpenedFromOutside)),
 		filter(([clickoutside , calenderStatus,  isOpenedFromOutside]) => !calenderStatus  ),
 		tap(([clickoutside , calenderStatus,  isOpenedFromOutside]) => {
-			if (!isOpenedFromOutside) { //todo: add to the clickoutside service class to ignore
+			if (!isOpenedFromOutside) { // todo: add to the clickoutside service class to ignore
 				this.close();
 			}
 			else {

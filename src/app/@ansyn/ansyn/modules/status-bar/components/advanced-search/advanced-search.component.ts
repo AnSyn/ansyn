@@ -13,6 +13,7 @@ import { casesConfig } from '../../../menu-items/cases/services/cases.service';
 import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overlays.reducer';
 import { TranslateService } from '@ngx-translate/core';
+import { OverlaysService } from '../../../overlays/services/overlays.service';
 
 @Component({
 	selector: 'ansyn-advanced-search',
@@ -53,9 +54,10 @@ import { TranslateService } from '@ngx-translate/core';
 				@Inject(MultipleOverlaysSourceConfig) public multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
 				protected _parent: SearchPanelComponent,
 				protected translationService: TranslateService,
-				@Inject(casesConfig) public caseConfig: ICasesConfig) {
+				@Inject(casesConfig) public caseConfig: ICasesConfig,
+				protected overlaysService: OverlaysService) {
 		this.sensorTypes = this.getAllSensorsTypes();
-		this.sensorsList = this.getAllSensorsNames();
+		this.sensorsList = this.overlaysService.getAllSensorsNames();
 		this.providersNamesList = this.getAllProvidersNames();
 	}
 
@@ -82,19 +84,6 @@ import { TranslateService } from '@ngx-translate/core';
 		}
 	}
 
-	getAllSensorsNames(): any[] {
-		let sensors: any[] = [];
-		this.getActiveProviders()
-		.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
-			if (sensorNamesByGroup) {
-				const typesNames = Object.keys(sensorNamesByGroup);
-				typesNames.forEach(type => {
-					sensors = sensors.concat(sensorNamesByGroup[type]);
-				});
-			}
-		});
-		return flattenDeep(sensors);
-	}
 
 	getAllSensorsTypes(): string[] {
 		const allSensors = Object.values(this.multipleOverlaysSourceConfig.indexProviders).filter(provider => !provider.inActive).map(provider => {
@@ -108,7 +97,7 @@ import { TranslateService } from '@ngx-translate/core';
 	}
 
 	search(): void {
-		this.store.dispatch(new SetOverlaysCriteriaAction({advancedSearchParameters: this.getCurrentAdvancedSearchParameters()}));
+		this.store.dispatch(new SetOverlaysCriteriaAction({advancedSearchParameters: this.getCurrentAdvancedSearchParameters(), runSecondSearch: false}));
 		this._parent.close();
 	}
 
@@ -141,7 +130,7 @@ import { TranslateService } from '@ngx-translate/core';
 	}
 
 	updateSelectedTypesBySensor(changedSensor: string): void {
-		this.getActiveProviders()
+		this.overlaysService.getActiveProviders()
 			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
 				const typesNames = Object.keys(sensorNamesByGroup);
 				const selectedType = this.selectedAdvancedSearchParameters.types;
@@ -172,7 +161,7 @@ import { TranslateService } from '@ngx-translate/core';
 	updateSelectedSensorsByTypes(selectedTypesArray: string[]): void {
 		this.selectedAdvancedSearchParameters.sensors = [];
 		let sensorsToActivate: any[] = [];
-		this.getActiveProviders()
+		this.overlaysService.getActiveProviders()
 			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
 				if (sensorNamesByGroup) {
 					const typesNames = Object.keys(sensorNamesByGroup);
@@ -187,7 +176,7 @@ import { TranslateService } from '@ngx-translate/core';
 	}
 
 	updateSelectedProvidersByType(changedType: string): void {
-		this.getActiveProviders()
+		this.overlaysService.getActiveProviders()
 			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
 				dataInputFiltersConfig.children.filter(type => type.text === changedType && !this.selectedProvidersNames.includes(providerName)).map(() => {
 					this.selectedProvidersNames.push(providerName);
@@ -197,10 +186,6 @@ import { TranslateService } from '@ngx-translate/core';
 		);
 	}
 
-	private getActiveProviders(): any[] {
-		return Object.entries(this.multipleOverlaysSourceConfig.indexProviders)
-		.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive);
-	}
 	private isExistInArray(itemsArray: string[], element: string): boolean {
 		return itemsArray.indexOf(element) < 0;
 	}
@@ -213,7 +198,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 	updateSelectedTypesByProviders(selectedProviders: string[], changedProvider: string): void {
 		let typesToActivate = [];
-		this.getActiveProviders()
+		this.overlaysService.getActiveProviders()
 			.filter(([providerName]: [string, IOverlaysSourceProvider]) => providerName === changedProvider)
 			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
 				typesToActivate = dataInputFiltersConfig.children.map(children => children);

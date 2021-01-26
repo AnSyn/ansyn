@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { IStatusBarConfig } from '../../models/statusBar-config.model';
-import { IStatusBarState, selectGeoFilterActive, selectGeoFilterType } from '../../reducers/status-bar.reducer';
+import { IStatusBarState, selectAdvancedSearchStatus, selectGeoFilterActive, selectGeoFilterType } from '../../reducers/status-bar.reducer';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs';
@@ -19,6 +19,7 @@ import { SetToastMessageAction } from '@ansyn/map-facade';
 import { LogSearchPanelPopup, } from '../../../overlays/actions/overlays.actions';
 import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
 import { SearchOptionsComponent } from '../search-options/search-options.component';
+import { ToggleAdvancedSearchAction } from '../../actions/status-bar.actions';
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [
@@ -88,6 +89,12 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 		})
 	);
 
+	@AutoSubscription
+	updateIsAdvancedSearchOpen$ = this.store$.select(selectAdvancedSearchStatus).pipe(
+		tap((isAdvancedSearchOpen: boolean) => {
+			this.advancedSearch = isAdvancedSearchOpen;
+		})
+	);
 	constructor(protected store$: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 				@Inject(MultipleOverlaysSourceConfig) private multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig,
@@ -131,7 +138,7 @@ export class SearchPanelComponent implements OnInit, OnDestroy {
 	}
 
 	toggleAdvancedSearch() {
-		this.advancedSearch = !this.advancedSearch
+		this.store$.dispatch(new ToggleAdvancedSearchAction(!this.advancedSearch));
 	}
 	close() {
 		this._parent.close()

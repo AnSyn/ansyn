@@ -22,7 +22,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 import { LoggerService } from '../../core/services/logger.service';
 import { OverlaySourceProvider } from '../models/overlays-source-providers';
-import { imageryStatusFeatureKey, imageryStatusInitialState } from '@ansyn/map-facade';
+import { imageryStatusFeatureKey, imageryStatusInitialState, selectWasWelcomeNotificationShown } from '@ansyn/map-facade';
 import { IOverlay } from '../models/overlay.model';
 import { MissingTranslationHandler, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
 import { AreaToCredentialsService } from "../../core/services/credentials/area-to-credentials.service";
@@ -119,7 +119,8 @@ describe('Overlays Effects ', () => {
 
 		const fakeStore = new Map<any, any>([
 			[imageryStatusFeatureKey, imageryStatusState],
-			[overlaysStateSelector, overlayState]
+			[overlaysStateSelector, overlayState],
+			[selectWasWelcomeNotificationShown, true]
 		]);
 		spyOn(store, 'select').and.callFake((selector) => of(fakeStore.get(selector)));
 	}));

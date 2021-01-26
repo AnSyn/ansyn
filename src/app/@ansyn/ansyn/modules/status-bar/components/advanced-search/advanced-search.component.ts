@@ -154,7 +154,7 @@ import { OverlaysService } from '../../../overlays/services/overlays.service';
 	updateSelectedSensorsByTypes(selectedTypesArray: string[]): void {
 		this.selectedAdvancedSearchParameters.sensors = [];
 		let sensorsToActivate: any[] = [];
-		this.overlaysService.getAllSensorsNames()
+		this.overlaysService.getActiveProviders()
 			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
 				if (sensorNamesByGroup) {
 					const typesNames = Object.keys(sensorNamesByGroup);
@@ -169,7 +169,7 @@ import { OverlaysService } from '../../../overlays/services/overlays.service';
 	}
 
 	updateSelectedProvidersByType(changedType: string): void {
-		this.overlaysService.getAllSensorsNames()
+		this.overlaysService.getActiveProviders()
 			.map(([providerName, { dataInputFiltersConfig }]: [string, IOverlaysSourceProvider]) => {
 				dataInputFiltersConfig.children.filter(type => type.text === changedType && !this.selectedProvidersNames.includes(providerName)).map(() => {
 					this.selectedProvidersNames.push(providerName);

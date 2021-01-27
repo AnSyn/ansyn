@@ -161,8 +161,11 @@ export function polygonsIntersection(firstPolygon: Polygon, secondPolygon: Polyg
 		featureCoordinates.push(featureCoordinates[0]);
 	}
 
+	if (!featureCoordinates.length) {
+		return null;
+	}
 	// To see if the feature has the minimum amount of coordinates for turf's feature class
-	return Boolean(featureCoordinates.length > minCoordinatesLength) ? polygon([featureCoordinates]) : null;
+	return Boolean(featureCoordinates.length > minCoordinatesLength) ? polygon([featureCoordinates]) : intersect(firstPolygon, secondPolygon);
 }
 
 export function getPolygonIntersectionRatioWithMultiPolygon(extent: Polygon, footprint: MultiPolygon): number {

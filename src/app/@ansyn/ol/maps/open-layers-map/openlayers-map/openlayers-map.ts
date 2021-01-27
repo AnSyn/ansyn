@@ -217,7 +217,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	createView(layer): View {
 		return new View({
 			projection: layer.getSource().getProjection(),
-			maxZoom: 21,
+			maxZoom: 31,
 			minZoom: 1
 		});
 	}

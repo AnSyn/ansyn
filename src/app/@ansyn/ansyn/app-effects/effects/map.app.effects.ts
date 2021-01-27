@@ -153,8 +153,6 @@ export class MapAppEffects {
 			map(({ payload }: DisplayOverlayAction) => new SetIsLoadingAcion({ mapId: payload.mapId, show: false }))
 		);
 
-
-
 	@Effect()
 	displayOverlayOnNewMapInstance$: Observable<any> = this.actions$
 		.pipe(

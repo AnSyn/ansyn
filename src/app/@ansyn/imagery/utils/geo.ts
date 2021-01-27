@@ -155,12 +155,14 @@ export function polygonsIntersection(firstPolygon: Polygon, secondPolygon: Polyg
 	const featureCoordinates = intersection.map(({ x, y }) => [x, y]);
 
 	// To see if the feature has the maximum amount of coordinates for turf's feature class
-	if (featureCoordinates.length !== 5) {
+	const maxCoordinatesLength = 5;
+	const miCoordinatesLength = 3;
+	if (featureCoordinates.length !== maxCoordinatesLength) {
 		featureCoordinates.push(featureCoordinates[0]);
 	}
 
 	// To see if the feature has the minimum amount of coordinates for turf's feature class
-	return Boolean(featureCoordinates.length > 3) ? polygon([featureCoordinates]) : null;
+	return Boolean(featureCoordinates.length > miCoordinatesLength) ? polygon([featureCoordinates]) : null;
 }
 
 export function getPolygonIntersectionRatioWithMultiPolygon(extent: Polygon, footprint: MultiPolygon): number {

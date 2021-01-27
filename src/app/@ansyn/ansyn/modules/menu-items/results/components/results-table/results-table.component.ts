@@ -143,7 +143,7 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 		requestAnimationFrame(() => {
 			const tableRow = document.getElementsByClassName('results-table-body-row-data').item(0);
 			if (tableRow) {
-				const rowHeight = tableRow.clientHeight;
+				const rowHeight = tableRow.parentElement.clientHeight;
 				const rowDisplayCount = this.table.nativeElement.offsetHeight / rowHeight;
 				this.table.nativeElement.scrollTo(0, (index * rowHeight) - (rowDisplayCount / 2) * rowHeight);
 			}

@@ -35,6 +35,7 @@ export class Pic4cartoSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	fetch(fetchParams: IFetchParams): Observable<any> {
+		console.log(fetchParams)
 		let geometry;
 		let params: IPic4CartoParams;
 

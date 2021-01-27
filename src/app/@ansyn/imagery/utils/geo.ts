@@ -156,13 +156,13 @@ export function polygonsIntersection(firstPolygon: Polygon, secondPolygon: Polyg
 
 	// To see if the feature has the maximum amount of coordinates for turf's feature class
 	const maxCoordinatesLength = 5;
-	const miCoordinatesLength = 3;
+	const minCoordinatesLength = 3;
 	if (featureCoordinates.length !== maxCoordinatesLength) {
 		featureCoordinates.push(featureCoordinates[0]);
 	}
 
 	// To see if the feature has the minimum amount of coordinates for turf's feature class
-	return Boolean(featureCoordinates.length > miCoordinatesLength) ? polygon([featureCoordinates]) : null;
+	return Boolean(featureCoordinates.length > minCoordinatesLength) ? polygon([featureCoordinates]) : null;
 }
 
 export function getPolygonIntersectionRatioWithMultiPolygon(extent: Polygon, footprint: MultiPolygon): number {

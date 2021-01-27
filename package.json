@@ -78,6 +78,7 @@
     "ngx-color-picker": "^9.1.0",
     "ngx-device-detector": "^1.4.1",
     "ol": "^6.4.3",
+    "polygons-intersect": "^1.0.3",
     "proj4": "^2.5.0",
     "rxjs": "~6.5.4",
     "shpjs": "^3.6.3",

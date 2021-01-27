@@ -34,6 +34,7 @@ import {
 	envelope,
 	distance
 } from '@turf/turf';
+import polygonsIntersect from 'polygons-intersect';
 
 export type BBOX = [number, number, number, number] | [number, number, number, number, number, number];
 
@@ -147,6 +148,21 @@ export function polygonsDontIntersect(extentPolygon, footprint, overlayCoverage)
 	return intersection < overlayCoverage;
 }
 
+export function polygonsIntersection(firstPolygon: Polygon, secondPolygon: Polygon) {
+	const extentPolygon = firstPolygon.coordinates[0].map(([x, y]) => ({ x, y }));
+	const featurePolygon = secondPolygon.coordinates[0].map(([x, y]) => ({ x, y }));
+	const intersection = polygonsIntersect(extentPolygon, featurePolygon);
+	const featureCoordinates = intersection.map(({ x, y }) => [x, y]);
+
+	// To see if the feature has the maximum amount of coordinates for turf's feature class
+	if (featureCoordinates.length !== 5) {
+		featureCoordinates.push(featureCoordinates[0]);
+	}
+
+	// To see if the feature has the minimum amount of coordinates for turf's feature class
+	return Boolean(featureCoordinates.length > 3) ? polygon([featureCoordinates]) : null;
+}
+
 export function getPolygonIntersectionRatioWithMultiPolygon(extent: Polygon, footprint: MultiPolygon): number {
 	let intersectionArea = 0;
 	let extentArea = 1;
@@ -157,11 +173,12 @@ export function getPolygonIntersectionRatioWithMultiPolygon(extent: Polygon, foo
 
 		footprint.coordinates.forEach(coordinates => {
 			const tempPoly = polygon(coordinates);
-			const intersections = extentPolygons.features.map( feature => intersect(feature.geometry, tempPoly));
-			intersectionArea = intersections.reduce( (acc, intersection) => {
+			const intersections = extentPolygons.features.map(feature => polygonsIntersection(feature.geometry, tempPoly.geometry));
+			intersectionArea = intersections.reduce((acc, intersection) => {
 				if (intersection) {
 					acc = booleanEqual(intersection, tempPoly) ? extentArea : acc + area(intersection);
 				}
+
 				return acc;
 			}, 0)
 		});

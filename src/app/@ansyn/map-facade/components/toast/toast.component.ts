@@ -1,22 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { IMapState, selectToastMessage } from '../../reducers/map.reducer';
+import { selectToastMessage } from '../../reducers/map.reducer';
 import { IToastMessage, SetToastMessageAction } from '../../actions/map.actions';
-import { TranslateService } from '@ngx-translate/core';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { tap } from 'rxjs/operators';
+import { IMapFacadeConfig } from '../../models/map-config.model';
+import { mapFacadeConfig } from '../../models/map-facade.config';
 
 const animations: any[] = [
-	trigger('toastAnimation_ltr', [
-		transition(':enter', [style({
-			opacity: 0,
-			transform: 'translate(100%, 0)'
-		}), animate('0.2s', style({ opacity: 1, transform: 'translate(0, 0)' }))]),
-		transition(':leave', [style({ opacity: 1, transform: 'translate(0, 0)' }), animate('0.4s', style({
-			opacity: 0,
-			transform: 'translate(100%, 0)'
-		}))])
-	]),
 	trigger('toastAnimation_rtl', [
 		transition(':enter', [style({
 			opacity: 0,
@@ -35,27 +28,44 @@ const animations: any[] = [
 	styleUrls: ['./toast.component.less'],
 	animations
 })
-export class ToastComponent implements OnInit {
+
+@AutoSubscriptions()
+export class ToastComponent implements OnInit, OnDestroy {
 	@Input() duration: number;
+	buttonToDisplay: string;
+	toastMessageFromState: IToastMessage;
 
 	timeoutRef;
 
 	toastMessage$ = this.store$.select(selectToastMessage);
 
-	isRTL = this.translateService.instant('direction') === 'rtl';
-
+	@AutoSubscription
+	updateToatsMessage$ = this.store$.pipe(
+		select(selectToastMessage),
+		tap((toast: IToastMessage) => {
+			this.toastMessageFromState = toast;
+		})
+	);
+	
 	constructor(
-		protected store$: Store<IMapState>,
-		protected translateService: TranslateService
+		protected store$: Store<any>,
+		@Inject(mapFacadeConfig) public mapFacadeConfig: IMapFacadeConfig
 	) {
+	}
+	ngOnDestroy(): void {
 	}
 
 	ngOnInit() {
 		(<Observable<any>>this.toastMessage$).subscribe((toastMessage: IToastMessage) => {
 			if (toastMessage) { // Hide toast in duration time
-				const duration = this.duration * 1000;
+				let duration = this.duration * 1000;
+				if (toastMessage.buttonToDisplay) {
+					this.buttonToDisplay = toastMessage.buttonToDisplay;
+					duration = this.mapFacadeConfig.firstSearchNotification.timeToDisplayButtonToast;
+				}
 				this.timeoutRef = setTimeout(this.closeToast.bind(this), duration);
 			} else { // Cancel the last hide
+				this.store$.dispatch(new SetToastMessageAction());
 				clearTimeout(this.timeoutRef);
 			}
 		});
@@ -63,5 +73,12 @@ export class ToastComponent implements OnInit {
 
 	closeToast() {
 		this.store$.dispatch(new SetToastMessageAction());
+	}
+
+	functionTodo() {
+		if (this?.toastMessageFromState?.functionToExcute) {
+			this.toastMessageFromState.functionToExcute();
+			this.closeToast();
+		}
 	}
 }

@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	ClearActiveInteractionsAction,
 	SetMeasureDistanceToolState,
@@ -8,16 +8,15 @@ import {
 } from '../actions/tools.actions';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import {
-	selectSubMenu, selectToolFlags
-} from '../reducers/tools.reducer';
-import { map, tap, take } from 'rxjs/operators';
+import { selectSubMenu, selectToolFlags } from '../reducers/tools.reducer';
+import { map, take, tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { MatDialog } from '@angular/material/dialog';
 import { ExportMapsPopupComponent } from '../export-maps-popup/export-maps-popup.component';
 import { SubMenuEnum, toolsFlags } from '../models/tools.model';
 import { selectActiveAnnotationLayer } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
-import { TranslateService } from '@ngx-translate/core';
+import { ComponentVisibilityService } from '../../../../../app-providers/component-visibility.service';
+import { ComponentVisibilityItems } from '../../../../../app-providers/component-mode';
 
 @Component({
 	selector: 'ansyn-tools',
@@ -29,6 +28,13 @@ import { TranslateService } from '@ngx-translate/core';
 	destroy: 'ngOnDestroy'
 })
 export class ToolsComponent implements OnInit, OnDestroy {
+	// for component
+	readonly isExportShow: boolean;
+	readonly isGoToShow: boolean;
+	readonly isAnnotationsShow: boolean;
+	readonly isMeasuresShow: boolean;
+	readonly isShadowMouseShow: boolean;
+	//
 	isDialogShowing = false;
 	public displayModeOn = false;
 	public flags: Map<toolsFlags, boolean>;
@@ -69,15 +75,16 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		return this.flags?.get(toolsFlags.isMeasureToolActive);
 	}
 
-	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
-
-	// @TODO display the shadow mouse only if there more then one map .
 	constructor(
 		protected store$: Store<any>,
 		public dialog: MatDialog,
-		protected translateService: TranslateService
+		componentVisibilityService: ComponentVisibilityService
 	) {
+		this.isExportShow = componentVisibilityService.get(ComponentVisibilityItems.EXPORT);
+		this.isGoToShow = componentVisibilityService.get(ComponentVisibilityItems.GOTO);
+		this.isAnnotationsShow = componentVisibilityService.get(ComponentVisibilityItems.ANNOTATIONS);
+		this.isMeasuresShow = componentVisibilityService.get(ComponentVisibilityItems.MEASURES);
+		this.isShadowMouseShow = componentVisibilityService.get(ComponentVisibilityItems.SHADOW_MOUSE);
 	}
 
 	ngOnInit() {

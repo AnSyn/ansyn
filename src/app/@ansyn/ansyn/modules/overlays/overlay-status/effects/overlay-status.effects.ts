@@ -23,6 +23,7 @@ import { Store } from '@ngrx/store';
 import { EMPTY, Observable, from } from 'rxjs';
 import { catchError, filter, map, mergeMap, switchMap, withLatestFrom, pluck, tap } from 'rxjs/operators';
 import {
+	BackToExtentAction,
 	BackToWorldFailed,
 	BackToWorldSuccess,
 	BackToWorldView,
@@ -87,7 +88,7 @@ export class OverlayStatusEffects {
 	@Effect({ dispatch: false })
 	onOverlayOutOfBounds: Observable<any> = this.actions$.pipe(
 		ofType(OverlayStatusActionsTypes.BACK_TO_EXTENT),
-		tap(() => this.outOfBoundsService.backToExtent()));
+		tap(({payload}: BackToExtentAction) => this.outOfBoundsService.backToExtent(payload.mapId, payload.extent)));
 
 	@Effect()
 	toggleTranslate$: Observable<any> = this.actions$.pipe(

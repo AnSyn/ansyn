@@ -1,13 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { IEntryComponent, selectMapsTotal, selectOverlayByMapId } from '@ansyn/map-facade';
+import { IEntryComponent, selectOverlayByMapId } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { BackToWorldView } from '../../actions/overlay-status.actions';
 import { Observable } from 'rxjs';
 import { selectIsPinned } from '@ansyn/menu';
-import { IStatusBarConfig } from '../../../../status-bar/models/statusBar-config.model';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-back-to-base-map',
@@ -21,8 +19,6 @@ export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponen
 	overlay: any;
 	isPinned: boolean;
 
-	isRTL = this.translateService.instant('direction') === 'rtl';
-
 	@AutoSubscription
 	isPinned$: Observable<boolean> = this.store$.pipe(
 		select(selectIsPinned),
@@ -30,8 +26,7 @@ export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponen
 	);
 
 	constructor(
-		protected store$: Store<any>,
-		protected translateService: TranslateService
+		protected store$: Store<any>
 	) {
 	}
 

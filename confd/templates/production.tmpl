@@ -118,14 +118,14 @@
 				"providers": [{
 					"name": "SENTINEL",
 					"class": "SentinelSourceProvider"
-				}, 
+				},
 				{
 					"name": "OPEN_AERIAL",
 					"class": "OpenAerialSourceProvider"
 				},
 				{
 					"name": "PIC4CARTO",
-					"class": "Pic4cartoSourceProvider" 
+					"class": "Pic4cartoSourceProvider"
 				}],
 			"resolution": {
 				"lowValue": 0,
@@ -134,6 +134,7 @@
 			"sensors": [],
 			"enableResetProviders": true
 		 	},
+			"runSecondSearch": true,
 		   "facets": {
 			 "showOnlyFavorites": false,
 			 "filters": [
@@ -173,6 +174,9 @@
   },
   "mapFacadeConfig": {
   	"showOne2One": {{ getv "/ansyn/show/one2one" "true" }},
+	"firstSearchNotification": {
+		"timeToDisplayButtonToast": 10000
+	},
   	"welcomeNotification": {
 		"headerText": "Welcome to AnSyn!",
 		"mainText": "To get overlays anywhere in the world, just move around on the map"
@@ -415,7 +419,6 @@
     },
     "translation": {
     	"default": {
-    		"direction": "rtl",
 		 	"Sentinel-2A": "Sentinel 2A",
 		 	"alg_1": "name 1",
 		 	"alg_2": "name 2",
@@ -1626,5 +1629,22 @@
   },
   "addressService": {
       "url": "assets/config/addresses.json"
+    },
+    "componentVisibility": {
+			"timeline": false,
+			"resultTable": false,
+			"help": false,
+			"credentials": false,
+			"export": false,
+			"annotations": false,
+			"goTo": false,
+			"measures": false,
+			"shadowMouse": false,
+			"screens": false,
+			"layers": false,
+			"favorites": false,
+			"cases": false,
+			"footprints": false,
+			"imageProcessing": false
     }
 }

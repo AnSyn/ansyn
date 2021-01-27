@@ -1,9 +1,8 @@
-import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ISettingsState, selectIsAnaglyphActive } from '../reducers/settings.reducer';
 import { Store } from '@ngrx/store';
 import { SetAnaglyphStateAction } from '../actions/settings.actions';
 import { Observable } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'ansyn-settings',
@@ -13,12 +12,8 @@ import { TranslateService } from '@ngx-translate/core';
 export class SettingsComponent implements OnInit, OnDestroy {
 	public isAnaglyphEnabled$: Observable<boolean> = this.store.select(selectIsAnaglyphActive);
 
-	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
-
 	constructor(
-		public store: Store<ISettingsState>,
-		protected translateService: TranslateService
+		public store: Store<ISettingsState>
 	) {
 	}
 

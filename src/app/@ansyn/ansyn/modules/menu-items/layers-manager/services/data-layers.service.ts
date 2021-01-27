@@ -43,17 +43,16 @@ export class DataLayersService implements OnInit, OnDestroy {
 		this.ngOnInit();
 	}
 
-
-	generateAnnotationLayer(name = 'Default', data: any = featureCollection([]), isNonEditable: boolean = false): ILayer {
+	generateLayer(properties?: { name?: string, data?: any, isNonEditable?: boolean, type?: LayerType, id?: string }): ILayer {
 		return {
-			id: UUID.UUID(),
+			id: properties?.id || UUID.UUID(),
 			creationTime: new Date(),
 			layerPluginType: layerPluginTypeEnum.Annotations,
-			name,
+			name: properties?.name || 'Default',
 			caseId: this.caseId,
-			type: LayerType.annotation,
-			data,
-			isNonEditable
+			type: properties?.type || LayerType.annotation,
+			data: properties?.data || featureCollection([]),
+			isNonEditable: properties?.isNonEditable || false
 		};
 	}
 

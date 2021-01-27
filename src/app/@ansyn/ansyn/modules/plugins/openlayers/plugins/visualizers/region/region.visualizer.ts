@@ -21,13 +21,14 @@ import { UpdateGeoFilterStatus } from '../../../../../status-bar/actions/status-
 import { SetOverlaysCriteriaAction } from '../../../../../overlays/actions/overlays.actions';
 import { selectRegion } from '../../../../../overlays/reducers/overlays.reducer';
 import { CaseGeoFilter, CaseRegionState } from '../../../../../menu-items/cases/models/case.model';
+import { LayersActionTypes, SetLayerSelection } from 'src/app/@ansyn/ansyn/modules/menu-items/layers-manager/actions/layers.actions';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';
 	newRegionSelect$ = this.store$.select(selectRegion);
 
 	regionSameAsVisualizer$ = this.newRegionSelect$.pipe(
-		map(region => region.properties.searchMode === this.geoFilter)
+		map(region => region.geometry.type === this.geoFilter)
 	);
 
 	isActiveMap$ = this.store$.select(selectActiveMapId).pipe(
@@ -41,6 +42,15 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	isTheRightVisualizer$ = this.geoFilterType$.pipe(
 		map(geoFilter => geoFilter === this.geoFilter)
+	);
+
+	@AutoSubscription
+	updateLayer$: Observable<any> = this.actions$.pipe(
+		ofType<SetLayerSelection>(LayersActionTypes.SET_LAYER_SELECTION),
+		filter(action => action.payload.id === 'region-layer'),
+		tap((action) => {
+			this.setVisibility(action.payload.value);
+		})
 	);
 
 	@AutoSubscription
@@ -67,7 +77,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	}
 
 	drawChanges([geoFilterType, region, regionAsVisualizer, isActive, isMinimalistViewMode]) {
-		if (regionAsVisualizer && !isActive && !isMinimalistViewMode && geoFilterType !== CaseGeoFilter.ScreenView) {
+		if (regionAsVisualizer && !isActive && !isMinimalistViewMode && geoFilterType) {
 			return this.drawRegionOnMap(region);
 		}
 		this.clearEntities();
@@ -116,7 +126,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	interactionChanges([geoFilterSearch, isGeoActive, isActiveMap]: [CaseGeoFilter, boolean, boolean]): void {
 		this.removeDrawInteraction();
-		if (geoFilterSearch === this.geoFilter && isGeoActive && isActiveMap && this.geoFilter !== CaseGeoFilter.ScreenView) {
+		if (geoFilterSearch === this.geoFilter && isGeoActive && isActiveMap && this.geoFilter) {
 			this.createDrawInteraction();
 		}
 	}

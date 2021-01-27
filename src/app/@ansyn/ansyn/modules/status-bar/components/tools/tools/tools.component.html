@@ -1,5 +1,5 @@
 <div class="tools-menu-item-container">
-	<div>
+	<div *ngIf="isShadowMouseShow">
 		<button tooltip-class="bottom"
 				[attr.tooltip-value]="'Shadow mouse cursor' | translate"
 				(click)="toggleShadowMouse()"
@@ -9,7 +9,7 @@
 		</button>
 	</div>
 
-	<div class="distance-measure-tool">
+	<div *ngIf="isMeasuresShow" class="distance-measure-tool">
 		<button tooltip-class="bottom"
 				[attr.tooltip-value]="'Measure Distance' | translate"
 				(click)="toggleMeasureDistanceTool()"
@@ -19,7 +19,7 @@
 		</button>
 	</div>
 
-	<div>
+	<div *ngIf="isGoToShow">
 		<button tooltip-class="bottom"
 				[attr.tooltip-value]="'Go To' | translate"
 				(click)="toggleSubMenu(subMenuEnum.goTo)"
@@ -30,7 +30,7 @@
 		<ansyn-go-to [disabled]="isGeoOptionsDisabled"></ansyn-go-to>
 	</div>
 
-	<div class="user-annotations" [class.active]="isExpand(subMenuEnum.annotations)">
+	<div *ngIf="isAnnotationsShow" class="user-annotations" [class.active]="isExpand(subMenuEnum.annotations)">
 		<button tooltip-class="bottom"
 				[attr.tooltip-value]="'Annotations' | translate"
 				[class.active]="isExpand(subMenuEnum.annotations) && !isGeoOptionsDisabled"
@@ -46,7 +46,7 @@
 
 	</div>
 
-	<div class="export-maps-tool">
+	<div class="export-maps-tool" *ngIf="isExportShow">
 		<button tooltip-class="bottom"
 				[attr.tooltip-value]="'export map' | translate"
 				(click)="toggleExportMapsDialog()">

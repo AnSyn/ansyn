@@ -9,7 +9,7 @@
 	flex: 1;
 	color: white;
 	overflow: hidden;
-	direction: ltr;
+	direction: rtl;
 	// this popup is not opened under ansyn-component,
 	// so we do not rely on inheriting the direction
 
@@ -118,14 +118,8 @@
 			background-color: transparent;
 			pointer-events: none;
 		}
-
-	}
-
-	&.rtl {
-		direction: rtl;
 	}
 }
-
 
 /deep/ mat-option {
 	background-color: @background-color-4 !important;

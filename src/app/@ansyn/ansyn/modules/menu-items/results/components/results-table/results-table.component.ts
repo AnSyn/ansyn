@@ -10,11 +10,12 @@ import {
 	selectDropMarkup,
 	selectDropsDescending
 } from '../../../../overlays/reducers/overlays.reducer';
-import { take, tap } from 'rxjs/operators';
+import { take, tap, distinctUntilChanged } from 'rxjs/operators';
 import { DisplayOverlayFromStoreAction, SetMarkUp } from '../../../../overlays/actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ExtendMap } from '../../../../overlays/reducers/extendedMap.class';
 import { TranslateService } from '@ngx-translate/core';
+import { isEqual } from 'lodash';
 
 interface ITableHeader {
 	headerName: string;
@@ -93,6 +94,8 @@ export class ResultsTableComponent implements OnInit, OnDestroy {
 	loadOverlays$: Observable<any> = this.store$
 		.pipe(
 			select(selectDropsDescending),
+			// hack for not load the overlays twice when one of them update.
+			distinctUntilChanged(isEqual),
 			tap((overlays: IOverlayDrop[]) => {
 				this.resetSort();
 				this.overlays = overlays.slice();

@@ -157,7 +157,7 @@ export function getPolygonIntersectionRatioWithMultiPolygon(extent: Polygon, foo
 
 		footprint.coordinates.forEach(coordinates => {
 			const tempPoly = polygon(coordinates);
-			const intersections = extentPolygons.features.map(feature => intersect(feature.geometry, tempPoly));
+			const intersections = extentPolygons.features.map(feature => intersect(feature, tempPoly));
 			intersectionArea = intersections.reduce((acc, intersection) => {
 				if (intersection) {
 					acc = booleanEqual(intersection, tempPoly) ? extentArea : acc + area(intersection);

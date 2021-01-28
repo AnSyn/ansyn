@@ -18,7 +18,7 @@
 		"@ansyn/imagery-cesium": "4.1.1",
 		"@ansyn/imagery-video": "4.1.1",
 		"@ansyn/event-drops": "^0.2.8-1.9",
-		"@turf/turf": "^5.1.6",
+		"@turf/turf": "^6.3.0",
 		"geojson": "^0.5.0",
 		"lodash": "^4.17.15",
 		"moment": "^2.21.0",

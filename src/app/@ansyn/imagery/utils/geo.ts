@@ -34,7 +34,6 @@ import {
 	envelope,
 	distance
 } from '@turf/turf';
-import polygonsIntersect from 'polygons-intersect';
 
 export type BBOX = [number, number, number, number] | [number, number, number, number, number, number];
 
@@ -148,26 +147,6 @@ export function polygonsDontIntersect(extentPolygon, footprint, overlayCoverage)
 	return intersection < overlayCoverage;
 }
 
-export function polygonsIntersection(firstPolygon: Polygon, secondPolygon: Polygon) {
-	const extentPolygon = firstPolygon.coordinates[0].map(([x, y]) => ({ x, y }));
-	const featurePolygon = secondPolygon.coordinates[0].map(([x, y]) => ({ x, y }));
-	const intersection = polygonsIntersect(extentPolygon, featurePolygon);
-	const featureCoordinates = intersection.map(({ x, y }) => [x, y]);
-
-	// To see if the feature has the maximum amount of coordinates for turf's feature class
-	const maxCoordinatesLength = 5;
-	const minCoordinatesLength = 3;
-	if (featureCoordinates.length !== maxCoordinatesLength) {
-		featureCoordinates.push(featureCoordinates[0]);
-	}
-
-	if (!featureCoordinates.length) {
-		return null;
-	}
-	// To see if the feature has the minimum amount of coordinates for turf's feature class
-	return Boolean(featureCoordinates.length > minCoordinatesLength) ? polygon([featureCoordinates]) : intersect(firstPolygon, secondPolygon);
-}
-
 export function getPolygonIntersectionRatioWithMultiPolygon(extent: Polygon, footprint: MultiPolygon): number {
 	let intersectionArea = 0;
 	let extentArea = 1;
@@ -178,7 +157,7 @@ export function getPolygonIntersectionRatioWithMultiPolygon(extent: Polygon, foo
 
 		footprint.coordinates.forEach(coordinates => {
 			const tempPoly = polygon(coordinates);
-			const intersections = extentPolygons.features.map(feature => polygonsIntersection(feature.geometry, tempPoly.geometry));
+			const intersections = extentPolygons.features.map(feature => intersect(feature.geometry, tempPoly));
 			intersectionArea = intersections.reduce((acc, intersection) => {
 				if (intersection) {
 					acc = booleanEqual(intersection, tempPoly) ? extentArea : acc + area(intersection);

@@ -10,7 +10,7 @@
 		"tslib": "^2.0.0",
 		"@ansyn/imagery": "4.1.1",
 		"cesium": "^1.66.0",
-		"@turf/turf": "^5.1.6"
+		"@turf/turf": "^6.3.0"
 	},
 	"license": "MIT"
 }

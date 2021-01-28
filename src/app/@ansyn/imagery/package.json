@@ -11,7 +11,7 @@
 	},
 	"dependencies": {
 		"auto-subscriptions": "^2.0.5",
-		"@turf/turf": "^5.1.6",
+		"@turf/turf": "^6.3.0",
 		"tslib": "^2.0.0"
 	}
 }

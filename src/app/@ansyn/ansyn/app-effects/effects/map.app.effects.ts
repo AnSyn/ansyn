@@ -113,6 +113,15 @@ export class MapAppEffects {
 		);
 
 
+	@Effect()
+	onUpdateOverlay$: Observable<any> = this.actions$
+		.pipe(
+			ofType<DisplayOverlayAction>(OverlaysActionTypes.UPDATE_OVERLAY),
+			withLatestFrom(this.store$.select(mapStateSelector)),
+			mergeMap(this.onDisplayOverlay.bind(this))
+		);
+
+
 	onDisplayOverlaySwitchMap$ = this.onDisplayOverlay$
 		.pipe(
 			filter((data) => this.displayShouldSwitch(data))

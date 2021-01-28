@@ -18,7 +18,7 @@ import { Store } from '@ngrx/store';
 import { selectSentinelselectedLayers } from './reducers/sentinel.reducer';
 import { map, take } from 'rxjs/operators';
 import { OpenLayersDisabledMap, OpenLayersMap, OpenLayersMapSourceProvider } from '@ansyn/ol';
-import { BBox2d } from '@turf/helpers/lib/geojson';
+import { BBox } from '@turf/helpers';
 
 export const OpenLayerSentinelSourceProviderSourceType = 'SENTINEL';
 
@@ -37,11 +37,11 @@ export class OpenLayersSentinelSourceProvider extends OpenLayersMapSourceProvide
 		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
 	}
 
-	createExtent(metaData: IMapSettings, destinationProjCode: string = EPSG_3857): [number, number, number, number] {
+	createExtent(metaData: IMapSettings, destinationProjCode: string = EPSG_3857): BBox {
 		const footprint = { ...metaData.data.overlay.footprint };
 		footprint.coordinates = [[footprint.coordinates[0][0].map(coordinate => proj.transform(coordinate, EPSG_4326, destinationProjCode))]];
 		this.geometry = wellknown.stringify(footprint);
-		return <BBox2d>turf.bbox(turf.feature(footprint));
+		return turf.bbox(turf.feature(footprint));
 	}
 
 	createSource(metaData: IMapSettings): any {

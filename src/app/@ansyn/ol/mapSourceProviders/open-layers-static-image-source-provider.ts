@@ -5,6 +5,7 @@ import ImageLayer from 'ol/layer/Image';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../maps/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
+import { BBox } from '@turf/helpers';
 
 export const OpenLayersStaticImageSourceProviderSourceType = 'STATIC_IMAGE';
 
@@ -14,7 +15,7 @@ export const OpenLayersStaticImageSourceProviderSourceType = 'STATIC_IMAGE';
 })
 export class OpenLayersStaticImageSourceProvider extends OpenLayersMapSourceProvider {
 
-	createExtent(metaData: IMapSettings, destinationProjCode: string = EPSG_3857): [number, number, number, number] {
+	createExtent(metaData: IMapSettings, destinationProjCode: string = EPSG_3857): BBox {
 		return [0, 0, metaData.data.overlay.tag.imageData.imageWidth, metaData.data.overlay.tag.imageData.imageHeight];
 	}
 

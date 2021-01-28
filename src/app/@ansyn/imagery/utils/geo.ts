@@ -196,7 +196,7 @@ export function isPointContainedInGeometry(point: Point, footprint: MultiPolygon
 }
 
 export function unifyPolygons(features: Feature<Polygon>[]): Feature<MultiPolygon | Polygon> {
-	return union(...features);
+	return union(features[0], features[1]);
 }
 
 export function calculateLineDistance(aPoint: Point, bPoint: Point) {

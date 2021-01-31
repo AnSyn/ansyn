@@ -1,11 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { selectCaseSaved, selectShowCasesTable } from '../../reducers/cases.reducer';
+import { selectCaseSaved } from '../../reducers/cases.reducer';
 import { select, Store } from '@ngrx/store';
 import { OpenModalAction } from '../../actions/cases.actions';
-import { distinctUntilChanged, tap, map, delay } from 'rxjs/operators';
-import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { selectEnableOnlyFavorites, selectShowOnlyFavorites } from '../../../../filters/reducer/filters.reducer';
-import { UpdateFacetsAction } from '../../../../filters/actions/filters.actions';
+import { delay } from 'rxjs/operators';
+import { AutoSubscriptions } from 'auto-subscriptions';
 import { SelectMenuItemFromOutsideAction } from '@ansyn/menu';
 import { MenuItemsKeys } from '../../../../../config/ansyn.config';
 import { ComponentVisibilityService } from '../../../../../app-providers/component-visibility.service';

@@ -161,7 +161,7 @@ export class ImportLayerComponent implements OnInit, OnDestroy {
 		if (this.isFeatureCollection(layerData)) {
 			this.ValidateFeatures(layerData);
 			const isNonEditable = this.isNonEditable(layerData);
-			const layer = this.dataLayersService.generateAnnotationLayer(layerName, layerData, isNonEditable);
+			const layer = this.dataLayersService.generateLayer({name: layerName, data: layerData, isNonEditable});
 			this.store.dispatch(new AddLayer(layer));
 		} else {
 			throw new Error('Not a feature collection');

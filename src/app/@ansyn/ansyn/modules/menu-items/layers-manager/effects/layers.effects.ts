@@ -12,10 +12,11 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
-import { catchError, filter, map, mergeMap } from 'rxjs/operators';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { DataLayersService } from '../services/data-layers.service';
 import { ILayer, LayerType } from '../models/layers.model';
 import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCrash';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class LayersEffects {
@@ -32,10 +33,16 @@ export class LayersEffects {
 	@Effect()
 	onLayerCollectionLoaded$ = this.actions$.pipe(
 		ofType<LayerCollectionLoadedAction>(LayersActionTypes.LAYER_COLLECTION_LOADED),
-		filter((action) => !action.payload.some(({ type }) => type === LayerType.annotation)),
-		map(() => {
-			const annotationLayer = this.dataLayersService.generateAnnotationLayer();
-			return new AddLayer(annotationLayer);
+		mergeMap((action) => {
+			const regionLayerName = this.translate.instant('Region');
+			const regionLayer = this.dataLayersService.generateLayer({ name: regionLayerName, id: 'region-layer', type: LayerType.static });
+			const layers = [regionLayer];
+
+			if (!action.payload.some(({ type }) => type === LayerType.annotation)) {
+				layers.push(this.dataLayersService.generateLayer());
+			}
+
+			return layers.map(layer => new AddLayer(layer));
 		})
 	);
 
@@ -52,6 +59,7 @@ export class LayersEffects {
 
 	constructor(protected actions$: Actions,
 				protected dataLayersService: DataLayersService,
+				protected translate: TranslateService,
 				protected store$: Store<ILayerState>) {
 	}
 }

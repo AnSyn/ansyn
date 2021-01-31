@@ -2,7 +2,7 @@
 		[class.active]="goPrevActive"
 		[disabled]="!hasOverlayDisplay || isFirstOverlay || !overlaysLength"
 		[attr.tooltip-value]="statusBarConfig?.toolTips?.backwards | translate"
-		tooltip-class="top left"
+		tooltip-class="top"
 		class="prev-btn"
 >
 	<i class="medium-icon icon-prev"></i>
@@ -12,7 +12,7 @@
 		[class.active]="goNextActive"
 		[disabled]="!hasOverlayDisplay || isLastOverlay || !overlaysLength"
 		[attr.tooltip-value]="statusBarConfig?.toolTips?.forward | translate"
-		tooltip-class="top left"
+		tooltip-class="top"
 >
 	<i class="medium-icon icon-next"></i>
 </button>

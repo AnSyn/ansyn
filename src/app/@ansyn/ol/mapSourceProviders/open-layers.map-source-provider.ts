@@ -11,6 +11,8 @@ import TileLayer from 'ol/layer/Tile';
 import * as proj from 'ol/proj';
 import XYZ from 'ol/source/XYZ';
 import { Inject } from '@angular/core';
+import { BBox } from '@turf/helpers';
+
 export const IMAGE_PROCESS_ATTRIBUTE = 'imageLayer';
 export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSourceProvider<CONF> {
 	constructor(protected cacheService: CacheService,
@@ -33,7 +35,7 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 		return `${ metaData.worldView.mapType }/${ metaData.data.key }`;
 	}
 
-	createLayer(source, extent: [number, number, number, number]): ol_Layer {
+	createLayer(source, extent: BBox): ol_Layer {
 		const tileLayer = new TileLayer(<any>{
 			visible: true,
 			preload: Infinity,
@@ -43,9 +45,9 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 		return tileLayer;
 	}
 
-	createExtent(metaData: IMapSettings, destinationProjCode = EPSG_3857) {
+	createExtent(metaData: IMapSettings, destinationProjCode = EPSG_3857): BBox {
 		const sourceProjection = metaData.data.config && metaData.data.config.projection ? metaData.data.config.projection : EPSG_4326;
-		let extent: [number, number, number, number] = metaData.data.overlay ? <[number, number, number, number]>bboxFromGeoJson(metaData.data.overlay.footprint) : [-180, -90, 180, 90];
+		let extent: BBox = metaData.data.overlay ? <[number, number, number, number]>bboxFromGeoJson(metaData.data.overlay.footprint) : [-180, -90, 180, 90];
 		[extent[0], extent[1]] = proj.transform([extent[0], extent[1]], sourceProjection, destinationProjCode);
 		[extent[2], extent[3]] = proj.transform([extent[2], extent[3]], sourceProjection, destinationProjCode);
 		return extent;

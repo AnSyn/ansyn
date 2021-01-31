@@ -14,6 +14,7 @@ import { ErrorHandlerService } from '../../../core/services/error-handler.servic
 import { LoggerService } from '../../../core/services/logger.service';
 import { StorageService } from '../../../core/services/storage/storage.service';
 import { casesFeatureKey, CasesReducer } from '../../cases/reducers/cases.reducer';
+import { TranslateService } from '@ngx-translate/core';
 
 describe('LayersEffects', () => {
 	let layersEffects: LayersEffects;
@@ -33,6 +34,7 @@ describe('LayersEffects', () => {
 			providers: [
 				{ provide: CoreConfig, useValue: {} },
 				{ provide: StorageService, useValue: {} },
+				{ provide: TranslateService, useValue: {} },
 				{
 					provide: LoggerService,
 					useValue: { error: (some) => null }

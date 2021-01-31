@@ -8,7 +8,10 @@ export const StatusBarActionsTypes = {
 	EXPAND: 'EXPAND',
 	UPDATE_GEO_FILTER_STATUS: 'UPDATE_GEO_FILTER_STATUS',
 	GO_ADJACENT_OVERLAY: 'GO_ADJACENT_OVERLAY',
-	UPDATE_CALENDER_STATUS: 'UPDATE_CALENDER_STATUS'
+	UPDATE_CALENDER_STATUS: 'UPDATE_CALENDER_STATUS',
+	TOGGLE_ADVANCED_SEARCH: 'TOGGLE_ADVANCED_SEARCH',
+	TOGGLE_SIMPLE_SEARCH: 'TOGGLE_SIMPLE_SEARCH',
+	OPENED_FROM_OUTSIDE: 'OPENED_FROM_OUTSIDE'
 };
 
 export class CopySnapshotShareLinkAction implements Action, ILogMessage {
@@ -25,6 +28,27 @@ export class CopySnapshotShareLinkAction implements Action, ILogMessage {
 
 export class UpdateCalendarStatusAction implements Action {
 	type: string = StatusBarActionsTypes.UPDATE_CALENDER_STATUS;
+
+	constructor(public payload: boolean) {
+	}
+}
+
+export class ToggleAdvancedSearchAction implements Action {
+	type: string = StatusBarActionsTypes.TOGGLE_ADVANCED_SEARCH;
+
+	constructor(public payload: boolean) {
+	}
+}
+
+export class ToggleSimpleSearchAction implements Action {
+	type: string = StatusBarActionsTypes.TOGGLE_SIMPLE_SEARCH;
+
+	constructor(public payload: boolean) {
+	}
+}
+
+export class OpenAdvancedSearchFromOutsideAction implements Action {
+	type: string = StatusBarActionsTypes.OPENED_FROM_OUTSIDE;
 
 	constructor(public payload: boolean) {
 	}

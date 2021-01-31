@@ -128,7 +128,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			if (options && options.noInitialSearch) {
 				return { ...state, loading: false, displayOverlayHistory: {}, overlaysCriteria };
 			}
-			return { ...state, displayOverlayHistory: {}, overlaysCriteria };
+			return { ...state, loading: true, displayOverlayHistory: {}, overlaysCriteria };
 		}
 		case OverlaysActionTypes.SELECT_OVERLAY:
 

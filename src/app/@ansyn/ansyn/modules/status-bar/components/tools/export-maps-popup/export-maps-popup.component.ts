@@ -1,23 +1,25 @@
-import { Component, HostBinding, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { select, Store } from '@ngrx/store';
 import {
 	floationMenuClassNameForExport,
-	imageryStatusClassNameForExport, selectActiveMapId,
+	imageryStatusClassNameForExport,
+	selectActiveMapId,
 	selectIsMinimalistViewMode,
-	SetMinimalistViewModeAction, SetToastMessageAction
+	SetMinimalistViewModeAction,
+	SetToastMessageAction
 } from '@ansyn/map-facade';
-import { debounceTime, filter, tap, mergeMap, catchError, finalize } from 'rxjs/operators';
+import { catchError, debounceTime, filter, finalize, mergeMap, tap } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import { toBlob } from 'dom-to-image';
 import { MatDialogRef } from '@angular/material/dialog';
 import { DOCUMENT } from '@angular/common';
 import { IToolsConfig, toolsConfig } from '../models/tools-config';
 import { annotationsClassNameForExport } from '@ansyn/ol';
-import { IExportMapData, IExportMapMetadata, ImageryCommunicatorService, toDegrees } from '@ansyn/imagery';
+import { IExportMapData, IExportMapMetadata, ImageryCommunicatorService } from '@ansyn/imagery';
 import { jsPDF } from 'jspdf';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, of, EMPTY } from 'rxjs';
+import { EMPTY, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { arrayBufferToBinaryString } from 'blob-util'
 import { measuresClassNameForExport } from '../../../../plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
@@ -64,7 +66,6 @@ const item2class = {
 })
 @AutoSubscriptions()
 export class ExportMapsPopupComponent implements OnInit, OnDestroy {
-	@HostBinding('class.rtl') isRtl: boolean;
 	readonly advancedExport = ExportMethodEnum.ADVANCED;
 	readonly pdfFormat = FormatEnum.PDF;
 	readonly exportMethods = [ExportMethodEnum.BASIC, ExportMethodEnum.ADVANCED];
@@ -137,7 +138,6 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 				@Inject(DOCUMENT) protected document: any,
 				@Inject(toolsConfig) public toolsConfigData: IToolsConfig) {
 		this.logger.info(LOGS.request);
-		this.translateService.get('direction', '').subscribe( (direction) => this.isRtl = direction === 'rtl')
 	}
 
 	getFont(): Observable<ArrayBuffer> {
@@ -312,7 +312,7 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 	private getDescriptionFromOverlay(overlay: IOverlay) {
 		const time = overlay.date;
 		const sensorName = this.translateService.instant(overlay.sensorName);
-		return this.isRtl ? `${time.toLocaleString()} ${sensorName}` : `${sensorName} ${time.toLocaleString()}`;
+		return `${time.toLocaleString()} ${sensorName}`;
 	}
 
 	close() {

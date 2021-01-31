@@ -1,7 +1,7 @@
 @import "ansyn/less/common";
 
 :host {
-	margin-right: 5px;
+	margin-left: 5px;
 	display: flex;
 	padding: 4px 0;
 
@@ -45,14 +45,14 @@
 			font-size: 8px;
 			position: absolute;
 			top: -1px;
-			left: 2px;
+			right: 2px;
 			color: @background-color-3;
 		}
 	}
 
 	div.ansyn-checkbox-text {
 		color: white;
-		margin-left: 5px;
+		margin-right: 5px;
 		overflow: hidden;
 
 		label {
@@ -60,22 +60,6 @@
 			overflow: hidden;
 			display: inline-block;
 			max-width: 100%;
-		}
-	}
-
-	&.rtl {
-		margin-right: unset;
-		margin-left: 5px;
-
-		input:checked + label {
-			&:after {
-				left: unset;
-				right: 2px;
-			}
-		}
-		div.ansyn-checkbox-text {
-			margin-left: unset;
-			margin-right: 5px;
 		}
 	}
 }

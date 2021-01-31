@@ -14,15 +14,17 @@ import { select, Store } from '@ngrx/store';
 import { AnnotationSetProperties, ClearActiveInteractionsAction, SetAnnotationMode } from '../../actions/tools.actions';
 import { DOCUMENT } from '@angular/common';
 import { selectAnnotationMode, selectAnnotationProperties } from '../../reducers/tools.reducer';
-import { IVisualizerStyle, getOpacityFromColor } from '@ansyn/imagery';
+import { getOpacityFromColor, IVisualizerStyle } from '@ansyn/imagery';
 import { filter, map, tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { ANNOTATION_MODE_LIST, AnnotationMode, IStyleWeight } from '@ansyn/ol';
-import { selectActiveAnnotationLayer, selectLayers } from '../../../../..//menu-items/layers-manager/reducers/layers.reducer';
+import {
+	selectActiveAnnotationLayer,
+	selectLayers
+} from '../../../../../menu-items/layers-manager/reducers/layers.reducer';
 import { ILayer, LayerType } from '../../../../../menu-items/layers-manager/models/layers.model';
 import { ClickOutsideService } from '../../../../../core/click-outside/click-outside.service';
-import { SetActiveAnnotationLayer } from '../../../../..//menu-items/layers-manager/actions/layers.actions';
-import { TranslateService } from '@ngx-translate/core';
+import { SetActiveAnnotationLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
 import { selectIsMinimalistViewMode } from '@ansyn/map-facade';
 
 export enum SelectionBoxTypes {
@@ -116,15 +118,11 @@ export class AnnotationsControlComponent implements OnInit, OnDestroy {
 		})
 	);
 
-	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
-
 	constructor(
 		protected element: ElementRef,
 		public store: Store<any>,
 		protected clickOutsideService: ClickOutsideService,
-		@Inject(DOCUMENT) public document: any,
-		protected translateService: TranslateService
+		@Inject(DOCUMENT) public document: any
 	) {
 	}
 

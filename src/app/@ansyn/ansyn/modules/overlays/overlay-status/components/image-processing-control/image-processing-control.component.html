@@ -19,7 +19,7 @@
 					   (ngModelChange)="updateParam($event, param.name)"
 					   (change)="log(param.name)"
 				>
-				<button class="button-reset" (click)="resetOne(param)">{{'reset' | translate}}</button>
+				<span class="button-reset" (click)="resetOne(param)" [attr.tooltip-value]="'reset' | translate" tooltip-class="bottom"><i class="medium-icon icon-undo"></i></span>
 			</div>
 		</li>
 	</ul>

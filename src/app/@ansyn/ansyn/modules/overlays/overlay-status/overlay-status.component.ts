@@ -1,14 +1,4 @@
-import {
-	Component,
-	ElementRef,
-	Inject,
-	HostBinding,
-	Input,
-	OnDestroy,
-	OnInit,
-	ViewChild,
-	AfterViewInit
-} from '@angular/core';
+import { Component, ElementRef, Inject, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import {
 	IEntryComponent,
 	selectActiveMapId,
@@ -18,7 +8,7 @@ import {
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { combineLatest, Observable, of, EMPTY } from 'rxjs';
-import { tap, map, filter, withLatestFrom, concatMap, catchError, take } from 'rxjs/operators';
+import { tap, map, filter, withLatestFrom, concatMap, catchError } from 'rxjs/operators';
 import { GeoRegisteration, IOverlay } from '../models/overlay.model';
 import {
 	ToggleDraggedModeAction,
@@ -58,8 +48,8 @@ import { ComponentVisibilityItems } from '../../../app-providers/component-mode'
 	init: 'ngOnInit',
 	destroy: 'ngOnDestroy'
 })
-export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent, AfterViewInit {
-	@ViewChild('closeAnnotation', {static: false}) closeAnnotation: ElementRef;
+export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent {
+	// for component
 	readonly isAnnotationsShow: boolean;
 	readonly isFavoritesShow: boolean;
 	readonly isImageProcessingShow: boolean;
@@ -74,7 +64,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	isFavorite: boolean;
 	favoritesButtonText: string;
 	isPreset: boolean;
-	onClickOutSide$: any;
 	isDragged: boolean;
 	isImageControlActive = false;
 	draggedButtonText: string;
@@ -100,6 +89,14 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 			this.isActiveMap = activeMapId === this.mapId;
 			this.overlaysTranslationData = overlaysTranslationData;
 			this.updateDraggedStatus();
+		})
+	);
+
+	@AutoSubscription
+	onClickOutSide$ = this.clickOutsideService.onClickOutside({monitor: this.element.nativeElement}).pipe(
+		filter(Boolean),
+		tap( () => {
+			this.isManualProcessingOpen = false;
 		})
 	);
 
@@ -192,17 +189,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		if (this.isDragged) {
 			this.toggleDragged();
 		}
-
-		this.onClickOutSide$.unsubscribe();
-	}
-
-	ngAfterViewInit() {
-		this.onClickOutSide$ = this.clickOutsideService.onClickOutside({monitor: this.closeAnnotation.nativeElement}).pipe(
-			filter(Boolean),
-			tap( () => {
-				this.isManualProcessingOpen = false;
-			})
-		).subscribe();
 	}
 
 	hasOverlay() {

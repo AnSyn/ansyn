@@ -1,15 +1,14 @@
 import { Component, EventEmitter, HostBinding, OnDestroy, OnInit, Output } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { ICasesState, selectModalState, selectMyCasesEntities, selectCaseById } from '../../reducers/cases.reducer';
+import { ICasesState, selectCaseById, selectModalState, selectMyCasesEntities } from '../../reducers/cases.reducer';
 import { CloseModalAction, DeleteCaseAction } from '../../actions/cases.actions';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CasesService } from '../../services/cases.service';
-import { Observable, of } from 'rxjs';
-import { catchError, map, tap, withLatestFrom, take, concatMap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { concatMap, map, take, tap, withLatestFrom } from 'rxjs/operators';
 import { ICasePreview } from '../../models/case.model';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { CasesType } from '../../models/cases-config';
-import { TranslateService } from '@ngx-translate/core';
 
 const animationsDuring = '0.2s';
 
@@ -36,9 +35,6 @@ const animations: any[] = [
 export class DeleteCaseComponent implements OnInit, OnDestroy {
 	@HostBinding('@modalContent') readonly modalContent = true;
 
-	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
-
 	activeCase: ICasePreview;
 
 	@AutoSubscription
@@ -52,8 +48,7 @@ export class DeleteCaseComponent implements OnInit, OnDestroy {
 
 	constructor(
 		protected store: Store<ICasesState>,
-		protected casesService: CasesService,
-		protected translateService: TranslateService
+		protected casesService: CasesService
 	) {
 	}
 

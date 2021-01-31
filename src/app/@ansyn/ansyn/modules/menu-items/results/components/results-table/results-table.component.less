@@ -30,7 +30,7 @@
 
 			div.results-table-head-row {
 				margin-bottom: -5px;
-				padding-left: 13px;
+				padding-right: 13px;
 				width: 100%;
 
 				div.results-table-head-row-data {
@@ -75,7 +75,7 @@
 		div.results-table-body {
 			display: block;
 			height: calc(100vh - @status-bar-height - @timeline-area-height - 110px);
-			direction: rtl; // to flip the scrollbar location
+			direction: ltr; // to flip the scrollbar location
 
 			div.results-table-body-row:hover + div.results-table-body-row hr {
 				top: -2px;
@@ -90,8 +90,8 @@
 				transition: background .3s, color .3s;
 				overflow: hidden;
 				position: relative;
-				direction: ltr; // needs to be repeated here because of scrollbar place
-				margin-left: 5px;
+				direction: rtl; // needs to be repeated here because of scrollbar place
+				margin-right: 6px;
 				border-top: 1px solid #EBF8FA;
 
 				&:last-child {
@@ -167,52 +167,11 @@
 
 						&.overlay-time {
 							flex: 0;
-							min-width: @date-field-width - 5px;
+							min-width: @date-field-width;
 							overflow: hidden;
 							text-overflow: ellipsis;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	&.rtl {
-		div.results-table {
-			div.header {
-				margin-left: unset;
-				margin-right: 23px;
-				div.box {
-					.icon-status-bar-imagery-count {
-						margin-left: unset;
-						margin-right: 145px;
-					}
-
-					.overlay-count {
-						margin-left: unset;
-						margin-right: 170px;
-					}
-				}
-			}
-			div.results-table-head {
-				div.results-table-head-row {
-					padding-left: unset;
-					padding-right: 13px;
-				}
-			}
-			div.results-table-body {
-				direction: ltr;
-				div.results-table-body-row {
-					direction: rtl;
-					padding-left: unset;
-					margin-right: 5px;
-					div.results-table-body-row-data {
-						div.results-table-body-col {
-							&.overlay-time {
-								direction: ltr; // it is a date, so don't flip characters
-								text-align: right; // but align it to the right
-								padding: 0 3px;
-							}
+							direction: ltr; // it is a date, so don't flip characters
+							text-align: right; // but align it to the right
 						}
 					}
 				}

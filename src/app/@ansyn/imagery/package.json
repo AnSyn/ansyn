@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/imagery",
-	"version": "3.0.0",
+	"version": "4.1.1",
 	"keywords": [],
 	"author": "ansyn",
 	"license": "MIT",
@@ -11,7 +11,7 @@
 	},
 	"dependencies": {
 		"auto-subscriptions": "^2.0.5",
-		"@turf/turf": "^5.1.6",
+		"@turf/turf": "^6.3.0",
 		"tslib": "^2.0.0"
 	}
 }

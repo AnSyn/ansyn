@@ -1,4 +1,4 @@
-<div class="app animations" [ngClass]="(isPinnedClass$ | async)" [attr.dir]="isRTL ? 'rtl' : 'ltr'">
+<div class="app animations" [ngClass]="(isPinnedClass$ | async)" [attr.dir]="'rtl'">
 	<!-- the 'dir' attribute will affect Angular Material components -->
 	<div class="menu" [class.isCollapse]="(isFooterCollapse$ | async) || !isTimelineShow">
 		<ansyn-menu [version]="version" [animatedElement]="animatedElementHorizontal"></ansyn-menu>
@@ -25,7 +25,10 @@
 
 	<div *ngIf="isResultTableShow">
 	<div #toggleResultsButton >
-		<button [class.active]="toggleResults" class="results-table" (click)="toggleResultsTable(toggleResultsButton)">
+		<button [class.active]="toggleResults" class="results-table" (click)="toggleResultsTable(toggleResultsButton)"
+		tooltip-class="top"
+		[attr.tooltip-value]="'Search Results' | translate"
+		>
 			<i class="icon-table"></i>
 			<span class="badge">{{overlaysCount$ | async}}</span>
 			<span class="results-title">{{'Search results' | translate}}</span>

@@ -1,4 +1,4 @@
-<div class="container" *ngIf="!metadataFromState?.shouldBeHidden()" [class.rtl]="isRTL">
+<div class="container" *ngIf="!metadataFromState?.shouldBeHidden()">
 
 	<div class="title-row">
 
@@ -18,8 +18,9 @@
 	</div>
 
 	<div *ngIf="(isLoading$ | async); else filterBody">
-		<ansyn-animated-ellipsis [text]="'Loading' | translate"
-								 [rtl]="'rtl' === ('direction' | translate)"></ansyn-animated-ellipsis>
+		<ansyn-animated-ellipsis
+			[text]="'Loading' | translate"
+		></ansyn-animated-ellipsis>
 	</div>
 
 	<ng-template #filterBody>
@@ -33,7 +34,6 @@
 					[counters]="filterCountersFromState"
 					[filtersSearchResult]="filtersSearchResults[filter.displayName]"
 					(onMetadataChange)="onMetadataChange($event)"
-					[isRTL]="isRTL"
 				></ansyn-enum-filter-container>
 
 				<ansyn-slider-filter-container
@@ -41,7 +41,6 @@
 					[metadata]="metadataFromState"
 					[counters]="filterCountersFromState"
 					(onMetadataChange)="onMetadataChange($event)"
-					[isRTL]="isRTL"
 				></ansyn-slider-filter-container>
 
 				<ansyn-boolean-filter-container
@@ -50,7 +49,6 @@
 					[counters]="filterCountersFromState"
 					[customData]="filter.customData"
 					(onMetadataChange)="onMetadataChange($event)"
-					[isRTL]="isRTL"
 				></ansyn-boolean-filter-container>
 
 				<ansyn-array-filter-container
@@ -59,7 +57,6 @@
 					[counters]="filterCountersFromState"
 					(onMetadataChange)="onMetadataChange($event)"
 					[filtersSearchResult]="filtersSearchResults[filter.displayName]"
-					[isRTL]="isRTL"
 				></ansyn-array-filter-container>
 			</div>
 			<ng-template #noResult>

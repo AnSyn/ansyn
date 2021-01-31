@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { SearchOptionsComponent } from './search-options.component';
 
@@ -10,7 +11,8 @@ import { SearchOptionsComponent } from './search-options.component';
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 		declarations: [ SearchOptionsComponent ],
-		imports: [StoreModule.forRoot({})]
+		imports: [StoreModule.forRoot({}),
+				TranslateModule.forRoot()]
 
 		})
 		.compileComponents();

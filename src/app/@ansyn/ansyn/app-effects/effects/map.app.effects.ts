@@ -113,6 +113,15 @@ export class MapAppEffects {
 		);
 
 
+	@Effect()
+	onUpdateOverlay$: Observable<any> = this.actions$
+		.pipe(
+			ofType<DisplayOverlayAction>(OverlaysActionTypes.UPDATE_OVERLAY),
+			withLatestFrom(this.store$.select(mapStateSelector)),
+			mergeMap(this.onDisplayOverlay.bind(this))
+		);
+
+
 	onDisplayOverlaySwitchMap$ = this.onDisplayOverlay$
 		.pipe(
 			filter((data) => this.displayShouldSwitch(data))
@@ -270,8 +279,7 @@ export class MapAppEffects {
 			ofType<ToggleMapLayersAction>(MapActionTypes.TOGGLE_MAP_LAYERS),
 			tap(({ payload }) => {
 				const communicator = this.imageryCommunicatorService.provide(payload.mapId);
-				communicator.visualizers.filter(visualizer => !visualizer.alwaysVisible)
-										.forEach(visualizer => visualizer.setVisibility(payload.isVisible));
+				communicator.visualizers.forEach(visualizer => visualizer.setVisibility(payload.isVisible));
 			})
 		);
 

@@ -73,9 +73,6 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@HostBinding('style.left.px') left = 0;
 	@HostBinding('style.top.px') top = 0;
 
-	@HostBinding('class.rtl')
-	isRTL = this.translateService.instant('direction') === 'rtl';
-
 	@AutoSubscription
 	rotationChanged$: Observable<any> = this.actions$.pipe(
 		ofType<ChangeOverlayPreviewRotationAction>(OverlaysActionTypes.CHANGE_OVERLAY_PREVIEW_ROTATION),
@@ -114,8 +111,8 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 			return;
 		}
 		this.myCurrentWidth = (this.el.nativeElement as HTMLElement).offsetWidth;
-		const { left, right, height, top }: ClientRect = hoveredElement.getBoundingClientRect();
-		this.left = customElement ? this.isRTL ? left - this.myCurrentWidth : right : this.getLeftPosition(left);
+		const { left, height, top }: ClientRect = hoveredElement.getBoundingClientRect();
+		this.left = customElement ? left - this.myCurrentWidth : this.getLeftPosition(left);
 		this.top = top + (customElement ? height + 70 : 0);
 	}
 

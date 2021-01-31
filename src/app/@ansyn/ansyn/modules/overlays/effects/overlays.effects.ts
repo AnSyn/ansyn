@@ -37,6 +37,8 @@ import { AreaToCredentialsService } from '../../core/services/credentials/area-t
 import { CredentialsService, ICredentialsResponse } from '../../core/services/credentials/credentials.service';
 import { getMenuSessionData, SetBadgeAction } from '@ansyn/menu';
 import { Update } from '@ngrx/entity';
+import { selectWasWelcomeNotificationShown, SetToastMessageAction } from '@ansyn/map-facade';
+import { OpenAdvancedSearchFromOutsideAction, ToggleAdvancedSearchAction, ToggleSimpleSearchAction } from '../../status-bar/actions/status-bar.actions';
 
 @Injectable()
 export class OverlaysEffects {
@@ -122,9 +124,10 @@ export class OverlaysEffects {
 	@Effect()
 	loadOverlays$: Observable<{} | LoadOverlaysSuccessAction> = this.actions$.pipe(
 		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
-		switchMap((action: LoadOverlaysAction) => {
+		withLatestFrom(this.store$.select(selectWasWelcomeNotificationShown)),
+		switchMap(([action, isUserFirstEntrance]: [LoadOverlaysAction, boolean]) => {
 			if (action.payload.dataInputFilters.fullyChecked || action.payload.dataInputFilters.filters.length > 0) {
-				return this.requestOverlays(action.payload);
+				return this.requestOverlays(action.payload, !isUserFirstEntrance);
 			}
 			else {
 				return [new LoadOverlaysSuccessAction([])];
@@ -177,7 +180,7 @@ export class OverlaysEffects {
 				protected areaToCredentialsService: AreaToCredentialsService) {
 	}
 
-	private requestOverlays(criteria: IOverlaysCriteria) {
+	private requestOverlays(criteria: IOverlaysCriteria, isUserFirstEntrance) {
 		return this.overlaysService.search(criteria).pipe(
 			// We use translate.instant instead of withLatestFrom + translate.get
 			// Because of a bug: sometimes when starting the app the withLatestFrom that was here did not return,
@@ -202,6 +205,10 @@ export class OverlaysEffects {
 				} else if (overlays.limited > 0 && overlays.data.length === this.overlaysService.fetchLimit) {
 					// TODO: replace when design is available
 					actions.push(new SetOverlaysStatusMessageAction({ message: overLoad.replace('$overLoad', overlays.data.length.toString()) }));
+				} 
+
+				if (isUserFirstEntrance) {
+					actions.push(new SetToastMessageAction({toastText: 'there are more overlays exist, ', buttonToDisplay: 'click here to expand', functionToExcute: this.toggleAdvancedSearch.bind(this)}))
 				}
 				return actions;
 			}),
@@ -214,4 +221,9 @@ export class OverlaysEffects {
 		);
 	}
 
+	toggleAdvancedSearch() {
+		this.store$.dispatch(new ToggleSimpleSearchAction(true));
+		this.store$.dispatch(new ToggleAdvancedSearchAction(true));
+		this.store$.dispatch(new OpenAdvancedSearchFromOutsideAction(true));
+	}
 }

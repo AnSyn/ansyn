@@ -17,6 +17,7 @@
 </div>
 
 <div class="menu-btn logo">
+	<img [src]="menuConfig.path" [alt]="version" [title]="version" (click)="resetApp()">
 	<div class="mode"
 		 *ngIf="menuConfig?.mode"
 		 [style.color]="menuConfig.color"
@@ -24,7 +25,6 @@
 		 [style.border]="'1px sollid' + menuConfig.color">
 		{{menuConfig.mode}}
 	</div>
-	<img [src]="menuConfig.path" [alt]="version" [title]="version" (click)="resetApp()">
 </div>
 
 <ansyn-credentials

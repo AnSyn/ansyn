@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/imagery-cesium",
-	"version": "3.0.0",
+	"version": "4.1.1",
 	"peerDependencies": {
 		"@angular/core": "9.x || 10.x",
 		"@angular/common": "9.x || 10.x",
@@ -8,9 +8,9 @@
 	},
 	"dependencies": {
 		"tslib": "^2.0.0",
-		"@ansyn/imagery": "3.0.0",
+		"@ansyn/imagery": "4.1.1",
 		"cesium": "^1.66.0",
-		"@turf/turf": "^5.1.6"
+		"@turf/turf": "^6.3.0"
 	},
 	"license": "MIT"
 }

@@ -512,7 +512,7 @@ export class AnsynApi {
 		});
 
 		this.generateFeaturesIds(layerData);
-		const layer = this.dataLayersService.generateAnnotationLayer(layerName, layerData, !isEditable);
+		const layer = this.dataLayersService.generateLayer({name: layerName, data: layerData, isNonEditable: !isEditable});
 		this.store.dispatch(new AddLayer(layer));
 		return layer.id;
 	}

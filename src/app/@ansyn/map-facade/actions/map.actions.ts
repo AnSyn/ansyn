@@ -28,6 +28,8 @@ export interface IToastMessage {
 	toastText: string;
 	showWarningIcon?: boolean;
 	originalMessage?: string;
+	buttonToDisplay?: string;
+	functionToExcute?: Function;
 }
 
 export const MapActionTypes = {
@@ -63,7 +65,7 @@ export const MapActionTypes = {
 		ACTIVE_IMAGERY_MOUSE_LEAVE: 'ACTIVE_IMAGERY_MOUSE_LEAVE',
 		CONTEXT_MENU: 'CONTEXT_MENU',
 		PIN_LOCATION_MODE: 'PIN_LOCATION_MODE',
-		CLICK_OUTSIDE_MAP: 'CLICK_OUTSIDE_MAP',
+		CLICK_OUTSIDE_MAP: 'CLICK_OUTSIDE_MAP'
 	},
 	MAP_SEARCH_BOX_TRIGGER: 'MAP_SEARCH_BOX_TRIGGER',
 	LOG_MAP_SEARCH_BOX: 'LOG_MAP_SEARCH_BOX',

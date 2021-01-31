@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/ansyn",
-	"version": "3.0.0",
+	"version": "4.1.1",
 	"peerDependencies": {
 		"@ngrx/store": "9.x",
 		"@ngrx/effects": "9.x",
@@ -11,14 +11,14 @@
 		"rxjs": "6.x"
 	},
 	"dependencies": {
-		"@ansyn/imagery": "3.0.0",
-		"@ansyn/map-facade": "3.0.0",
-		"@ansyn/menu": "3.0.0",
-		"@ansyn/ol": "3.0.0",
-		"@ansyn/imagery-cesium": "3.0.0",
-		"@ansyn/imagery-video": "3.0.0",
+		"@ansyn/imagery": "4.1.1",
+		"@ansyn/map-facade": "4.1.1",
+		"@ansyn/menu": "4.1.1",
+		"@ansyn/ol": "4.1.1",
+		"@ansyn/imagery-cesium": "4.1.1",
+		"@ansyn/imagery-video": "4.1.1",
 		"@ansyn/event-drops": "^0.2.8-1.9",
-		"@turf/turf": "^5.1.6",
+		"@turf/turf": "^6.3.0",
 		"geojson": "^0.5.0",
 		"lodash": "^4.17.15",
 		"moment": "^2.21.0",

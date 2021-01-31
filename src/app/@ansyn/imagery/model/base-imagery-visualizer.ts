@@ -31,14 +31,12 @@ export interface IImageryVisualizerMetaData extends IImageryPluginMetaData {
 	readonly isHideable?: boolean;
 	readonly dontRestrictToExtent?: boolean;
 	readonly layerClassName?: string;
-	readonly alwaysVisible?: boolean;
 }
 
 export abstract class BaseImageryVisualizer extends BaseImageryPlugin implements IImageryVisualizerMetaData {
 	readonly isHideable?: boolean;
 	readonly dontRestrictToExtent?: boolean;
 	readonly layerClassName?: string;
-	readonly alwaysVisible?: boolean;
 	type: string;
 	source: any;
 	vector: any;

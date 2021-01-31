@@ -1,4 +1,14 @@
-import { Component, ElementRef, Inject, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+	Component,
+	ElementRef,
+	Inject,
+	HostBinding,
+	Input,
+	OnDestroy,
+	OnInit,
+	AfterViewInit,
+	ViewChild
+} from '@angular/core';
 import {
 	IEntryComponent,
 	selectActiveMapId,
@@ -48,9 +58,10 @@ import { ComponentVisibilityItems } from '../../../app-providers/component-mode'
 	init: 'ngOnInit',
 	destroy: 'ngOnDestroy'
 })
-export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent {
+export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent, AfterViewInit {
 	// for component
 	readonly isAnnotationsShow: boolean;
+	@ViewChild('closeElementAnnotation', {static: false}) closeElementAnnotation: ElementRef;
 	readonly isFavoritesShow: boolean;
 	readonly isImageProcessingShow: boolean;
 	//
@@ -61,6 +72,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	isActiveMap: boolean;
 	favoriteOverlays: IOverlay[];
 	overlaysTranslationData: any;
+	onClickOutSide$: any;
 	isFavorite: boolean;
 	favoritesButtonText: string;
 	isPreset: boolean;
@@ -92,13 +104,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		})
 	);
 
-	@AutoSubscription
-	onClickOutSide$ = this.clickOutsideService.onClickOutside({monitor: this.element.nativeElement}).pipe(
-		filter(Boolean),
-		tap( () => {
-			this.isManualProcessingOpen = false;
-		})
-	);
 
 	@AutoSubscription
 	annoatationModeChange$: any = this.actions$
@@ -189,6 +194,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		if (this.isDragged) {
 			this.toggleDragged();
 		}
+		this.onClickOutSide$.unsubscribe();
 	}
 
 	hasOverlay() {
@@ -266,4 +272,14 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	private dispatchAutoImageProcess(enable = false) {
 		this.store$.dispatch(new SetAutoImageProcessing({overlayId: this.overlay.id, isAuto: enable}));
 	}
+
+	ngAfterViewInit(): void {
+		this.onClickOutSide$ = this.clickOutsideService.onClickOutside({monitor: this.closeElementAnnotation.nativeElement}).pipe(
+			filter(Boolean),
+			tap( () => {
+				this.isManualProcessingOpen = false;
+			})
+		).subscribe();
+	}
+
 }

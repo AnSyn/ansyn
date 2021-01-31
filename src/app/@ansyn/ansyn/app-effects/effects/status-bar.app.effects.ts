@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable, EMPTY } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import { casesStateSelector, ICasesState } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import {
-	ClickOutsideMap,
-	ContextMenuShowAction,
 	MapActionTypes,
 	selectOverlayOfActiveMap
 } from '@ansyn/map-facade';
-import { filter, map, withLatestFrom, mergeMap } from 'rxjs/operators';
+import { filter, map, withLatestFrom } from 'rxjs/operators';
 import {
 	CopySnapshotShareLinkAction,
 	GoAdjacentOverlay, SearchAction,

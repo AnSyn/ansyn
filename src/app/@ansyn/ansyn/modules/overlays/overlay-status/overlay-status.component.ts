@@ -1,7 +1,6 @@
 import {
 	Component,
 	ElementRef,
-	Inject,
 	HostBinding,
 	Input,
 	OnDestroy,
@@ -17,8 +16,8 @@ import {
 } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { combineLatest, Observable, of, EMPTY } from 'rxjs';
-import { tap, map, filter, withLatestFrom, concatMap, catchError } from 'rxjs/operators';
+import { combineLatest, Observable} from 'rxjs';
+import { tap, map, filter, withLatestFrom } from 'rxjs/operators';
 import { GeoRegisteration, IOverlay } from '../models/overlay.model';
 import {
 	ToggleDraggedModeAction,

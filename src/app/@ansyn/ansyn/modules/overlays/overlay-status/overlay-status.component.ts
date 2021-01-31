@@ -18,7 +18,7 @@ import {
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { combineLatest, Observable, of, EMPTY } from 'rxjs';
-import { tap, map, filter, withLatestFrom, concatMap, catchError } from 'rxjs/operators';
+import { tap, map, filter, withLatestFrom, concatMap, catchError, take } from 'rxjs/operators';
 import { GeoRegisteration, IOverlay } from '../models/overlay.model';
 import {
 	ToggleDraggedModeAction,
@@ -203,7 +203,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 				this.isManualProcessingOpen = false;
 			})
 		).subscribe();
-		}
+	}
 
 	hasOverlay() {
 		return Boolean(this.overlay);

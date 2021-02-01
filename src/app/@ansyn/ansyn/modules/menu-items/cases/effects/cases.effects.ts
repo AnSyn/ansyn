@@ -77,7 +77,7 @@ export class CasesEffects {
 					newCase.state.layers.activeLayersIds[layerId] = newLayerId;
 					return { ...layer, id: newLayerId, caseId: newCase.id };
 				});
-			return this.casesService.createCase(newCase).pipe(map( () => [newCase, newAnnotationLayers]));
+			return this.casesService.createCase(newCase).pipe(map( (_case) => [_case, newAnnotationLayers]));
 		}),
 		concatMap(([newCase, newAnnotationLayers]: [ICase, ILayer[]]) =>
 		forkJoin(newAnnotationLayers.map( (layer) => this.dataLayersService.addLayer(layer))).pipe(

@@ -187,15 +187,6 @@ describe('CasesEffects', () => {
 		expect(casesEffects.onSaveCaseAs$).toBeObservable(expectedResults);
 	});
 
-	/*it('onSaveCaseAsSuccess$ should set auto save with "true" and update map', () => {
-		actions = hot('--a--', { a: new SaveCaseAsSuccessAction(<any>{ state: { maps: { data: [] } } }) });
-		const expectedResults = cold('--(bc)--', {
-			b: new SetAutoSave(true),
-			c: new SetMapsDataActionStore({ mapsList: [] })
-		});
-		expect(casesEffects.onSaveCaseAsSuccess$).toBeObservable(expectedResults);
-	});*/
-
 	describe('loadCase$', () => {
 		it('should load the given case', () => {
 			const myCaseId = 'myCaseId';

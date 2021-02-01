@@ -23,6 +23,7 @@ export interface IFetchParams {
 	types?: string[];
 	registeration?: string[];
 	runSecondSearch?: boolean;
+	sensorsForSecondSearch?: string[];
 }
 
 export interface IOverlayFilter {

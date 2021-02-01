@@ -14,7 +14,7 @@ import { selectIsPinned } from '@ansyn/menu';
 })
 @AutoSubscriptions()
 export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponent {
-	static showFirst = true;
+	static showLast = true;
 	@Input() mapId: string;
 	overlay: any;
 	isPinned: boolean;

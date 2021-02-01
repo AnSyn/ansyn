@@ -14,7 +14,7 @@ export class CacheInterceptorsService implements HttpInterceptor {
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		const cachedResponse = this.cache.get(req);
-		return cachedResponse ? of(cachedResponse).pipe(delay(200)) : this.requestHandler(req, next);
+		return cachedResponse ? of(cachedResponse) : this.requestHandler(req, next);
 	}
 
 	requestHandler(req: HttpRequest<any>, next: HttpHandler) {

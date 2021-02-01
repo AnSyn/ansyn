@@ -3,7 +3,7 @@ import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/s
 import { createEntityAdapter, Dictionary, EntityAdapter, EntityState } from '@ngrx/entity';
 import { ICase, ICasePreview } from '../models/case.model';
 import { CasesType } from '../models/cases-config';
-import { isEqual } from 'lodash';
+import { isEqual, isEqualWith } from 'lodash';
 
 export interface ICaseModal {
 	show: boolean,
@@ -58,9 +58,23 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 		case CasesActionTypes.UPDATE_CASE: {
 			const openCaseId = state.loadCase || isEqual(state.selectedCase, action.payload) ? state.openCaseId : null;
 			if (!isEqual(state.selectedCase, action.payload)) {
-				console.log(1, (deepDiffMapper.map(state.selectedCase, action.payload)))
-				// console.log(2, state.selectedCase)
-				// console.log(3, action.payload)
+				console.log(1, deepDiffMapper.map(state.selectedCase, action.payload));
+				const comparator = (val1, val2, key) => {
+					console.log(key);
+					if (key === 'extentPolygon') {
+						return true;
+					}
+				};
+				console.log(2, isEqualWith(state.selectedCase, action.payload, comparator));
+				// const cloned1 = cloneDeep<ICase>(state.selectedCase);
+				// const cloned2 = cloneDeep<ICase>(action.payload);
+				// cloned1.state.maps.data.forEach((mapData) => {
+				// 	mapData.data.position.extentPolygon = null;
+				// });
+				// cloned2.state.maps.data.forEach((mapData) => {
+				// 	mapData.data.position.extentPolygon = null;
+				// });
+				// console.log(2, deepDiffMapper.map(cloned1, cloned2));
 			}
 			return { ...state, selectedCase: action.payload, wasSaved: false, openCaseId, loadCase: false }
 		}

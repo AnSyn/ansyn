@@ -36,6 +36,7 @@ import { ErrorHandlerService } from '../../../core/services/error-handler.servic
 import { toastMessages } from '../../../core/models/toast-messages';
 import { cloneDeep } from '../../../core/utils/rxjs/operators/cloneDeep';
 import { RemoveCaseLayersFromBackendAction } from '../../layers-manager/actions/layers.actions';
+import { ICase } from '../models/case.model';
 
 @Injectable()
 export class CasesEffects {
@@ -122,12 +123,10 @@ export class CasesEffects {
 	loadCase$: Observable<any> = this.actions$
 		.pipe(
 			ofType(CasesActionTypes.LOAD_CASE),
-			switchMap((action: LoadCaseAction) => this.casesService.loadCase(action.payload).pipe(
-				withLatestFrom(this.store.pipe(select(selectMyCasesEntities)))
-			)),
-			mergeMap( ([dilutedCase, myCases]) => {
+			switchMap((action: LoadCaseAction) => this.casesService.loadCase(action.payload)),
+			mergeMap( (dilutedCase: ICase) => {
 				const actions: any[] = [new SelectDilutedCaseAction(dilutedCase)];
-				if (!Boolean(myCases[dilutedCase.id])) {
+				if (dilutedCase.shared) {
 					actions.push(new AddCasesAction({cases: [dilutedCase], type: CasesType.MySharedCases}));
 				}
 				return actions;

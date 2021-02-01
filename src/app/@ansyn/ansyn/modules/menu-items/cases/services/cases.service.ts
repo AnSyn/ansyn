@@ -159,7 +159,7 @@ export class CasesService {
 		);
 	}
 
-	loadCase(selectedCaseId: string): Observable<any> {
+	loadCase(selectedCaseId: string): Observable<ICase> {
 		return this.storageService.get<ICasePreview, ICaseState>(this.config.schema, selectedCaseId)
 			.pipe(
 				tap((latestStoredEntity) => this.latestStoredEntity = _cloneDeep(latestStoredEntity)),

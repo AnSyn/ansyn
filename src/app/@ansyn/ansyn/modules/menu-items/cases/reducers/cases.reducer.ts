@@ -56,15 +56,17 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 		}
 
 		case CasesActionTypes.UPDATE_CASE: {
+			const comparator = (val1, val2, key) => {
+				// Ignore case updates where only extentPolygon changed, but not center or zoom
+				// (in particular, pinning of the cases list causes such changes)
+				if (key === 'extentPolygon') {
+					return true;
+				}
+			};
 			const openCaseId = state.loadCase || isEqual(state.selectedCase, action.payload) ? state.openCaseId : null;
-			if (!isEqual(state.selectedCase, action.payload)) {
+			if (!isEqualWith(state.selectedCase, action.payload, comparator)) {
 				console.log(1, deepDiffMapper.map(state.selectedCase, action.payload));
-				const comparator = (val1, val2, key) => {
-					if (key === 'extentPolygon') {
-						return true;
-					}
-				};
-				console.log(2, isEqualWith(state.selectedCase, action.payload, comparator));
+				// console.log(2, isEqualWith(state.selectedCase, action.payload, comparator));
 				// const cloned1 = cloneDeep<ICase>(state.selectedCase);
 				// const cloned2 = cloneDeep<ICase>(action.payload);
 				// cloned1.state.maps.data.forEach((mapData) => {

@@ -60,7 +60,6 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 			if (!isEqual(state.selectedCase, action.payload)) {
 				console.log(1, deepDiffMapper.map(state.selectedCase, action.payload));
 				const comparator = (val1, val2, key) => {
-					console.log(key);
 					if (key === 'extentPolygon') {
 						return true;
 					}
@@ -216,11 +215,15 @@ const deepDiffMapper = function () {
 					continue;
 				}
 
-				let value2 = undefined;
-				if (obj2[key] !== undefined) {
-					value2 = obj2[key];
+				if (!obj2.hasOwnProperty(key)) {
+					diff[key] = {
+						type: this.VALUE_DELETED,
+						data: obj1[key]
+					};
+					continue;
 				}
 
+				const value2 = obj2[key];
 				const result = this.map(obj1[key], value2);
 				if (result) {
 					diff[key] = result
@@ -230,6 +233,14 @@ const deepDiffMapper = function () {
 			}
 			for (let key in obj2) {
 				if (this.isFunction(obj2[key]) || diff[key] !== undefined || unchanged.has(key)) {
+					continue;
+				}
+
+				if (!obj1.hasOwnProperty(key)) {
+					diff[key] = {
+						type: this.VALUE_CREATED,
+						data: obj1[key]
+					};
 					continue;
 				}
 

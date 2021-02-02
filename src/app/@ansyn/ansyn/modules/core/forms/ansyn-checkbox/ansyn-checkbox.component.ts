@@ -33,6 +33,7 @@ export class AnsynCheckboxComponent implements ControlValueAccessor, Validator {
 	@Input() id = UUID.UUID();
 	@Input() required;
 	@Input() name: string;
+
 	disabled: boolean;
 
 	protected _value;

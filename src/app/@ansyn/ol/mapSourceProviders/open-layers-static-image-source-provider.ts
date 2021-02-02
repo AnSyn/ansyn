@@ -1,19 +1,11 @@
-import {
-	CacheService,
-	ImageryCommunicatorService,
-	ImageryMapSource,
-	IMapSettings,
-	IMapSourceProvidersConfig,
-	MAP_SOURCE_PROVIDERS_CONFIG
-} from '@ansyn/imagery';
+import { EPSG_3857, ImageryMapSource, IMapSettings } from '@ansyn/imagery';
 import Projection from 'ol/proj/Projection';
 import Static from 'ol/source/ImageStatic';
 import ImageLayer from 'ol/layer/Image';
-import { HttpClient } from '@angular/common/http';
-import { Inject } from '@angular/core';
 import { OpenLayersMap } from '../maps/open-layers-map/openlayers-map/openlayers-map';
 import { OpenLayersDisabledMap } from '../maps/openlayers-disabled-map/openlayers-disabled-map';
 import { OpenLayersMapSourceProvider } from './open-layers.map-source-provider';
+import { BBox } from '@turf/helpers';
 
 export const OpenLayersStaticImageSourceProviderSourceType = 'STATIC_IMAGE';
 
@@ -23,16 +15,12 @@ export const OpenLayersStaticImageSourceProviderSourceType = 'STATIC_IMAGE';
 })
 export class OpenLayersStaticImageSourceProvider extends OpenLayersMapSourceProvider {
 
-	constructor(
-		protected cacheService: CacheService,
-		protected imageryCommunicatorService: ImageryCommunicatorService,
-		@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig,
-		protected http: HttpClient) {
-		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
+	createExtent(metaData: IMapSettings, destinationProjCode: string = EPSG_3857): BBox {
+		return [0, 0, metaData.data.overlay.tag.imageData.imageWidth, metaData.data.overlay.tag.imageData.imageHeight];
 	}
 
-	create(metaData: IMapSettings): Promise<any> {
-		const extent: any = [0, 0, metaData.data.overlay.tag.imageData.imageWidth, metaData.data.overlay.tag.imageData.imageHeight];
+	createSource(metaData: IMapSettings): any {
+		const extent = this.createExtent(metaData);
 		const code = `static-image ${ metaData.data.overlay.id }`;
 
 		const projection = new Projection({
@@ -47,13 +35,14 @@ export class OpenLayersStaticImageSourceProvider extends OpenLayersMapSourceProv
 			imageExtent: extent,
 			projection
 		});
+		return source;
+	}
 
-		const layer = new ImageLayer({
+	createLayer(source, extent: [number, number, number, number]): ImageLayer {
+		return new ImageLayer({
 			source,
 			extent
 		});
-
-		return Promise.resolve(layer);
 	}
 
 }

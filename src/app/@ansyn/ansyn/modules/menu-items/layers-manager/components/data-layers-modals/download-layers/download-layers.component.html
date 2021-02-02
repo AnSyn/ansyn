@@ -1,10 +1,8 @@
 <div class="download">
-
 	<h4 [title]="layer?.name"><i
 		class="icon-layer-export"></i>&nbsp;{{'Export' | translate}}&nbsp;"<span>{{ layer?.name }}</span>"</h4>
 
 	<div class="export-buttons">
-		<button class="format" (click)="downloadGeojson()">GeoJSON</button>
-		<button class="format" (click)="downloadKml()">KML</button>
+		<button *ngFor="let fileType of LayerFileTypesArray" class="format" (click)="downloadLayerAs(fileType)">{{fileType}}</button>
 	</div>
 </div>

@@ -12,7 +12,7 @@ export class AnsynModalComponent {
 
 	escPressed$: Observable<any> = fromEvent(window, 'keydown').pipe(
 		takeWhile(() => this.show),
-		filter(($event: KeyboardEvent) => $event.keyCode === 27),
+		filter(($event: KeyboardEvent) => $event.key  === "Escape" ||  $event.keyCode === 27 ), // tslint:disable-line
 		tap(() => this.show = false));
 
 	@HostBinding('class.show')

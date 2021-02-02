@@ -1,21 +1,24 @@
 import {
-	AddMenuItemAction,
-	ContainerChangedTriggerAction,
+	ContainerChangedTriggerAction, MenuConfig,
 	menuFeatureKey,
-	MenuReducer,
-	SelectMenuItemAction
+	MenuReducer
+	, ResetAppAction, ToggleIsPinnedAction, UnSelectMenuItemAction
 } from '@ansyn/menu';
 import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
-import { RemovePendingOverlayAction, UpdateMapSizeAction } from '@ansyn/map-facade';
+import { ToggleFooter, UpdateMapSizeAction } from '@ansyn/map-facade';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { DisplayOverlaySuccessAction, RedrawTimelineAction } from '../../modules/overlays/actions/overlays.actions';
-import { ResetAppAction } from '../../../menu/actions/menu.actions';
-import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
+import { LoadOverlaysSuccessAction, RedrawTimelineAction } from '../../modules/overlays/actions/overlays.actions';
+import { CloseModalAction, LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
+import { COMPONENT_MODE } from '../../app-providers/component-mode';
+import { InitializeFiltersAction } from '../../modules/filters/actions/filters.actions';
+import { MatDialog } from '@angular/material/dialog';
+import { SetLayersModal } from '../../modules/menu-items/layers-manager/actions/layers.actions';
+import { SelectedModalEnum } from '../../modules/menu-items/layers-manager/reducers/layers-modal';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
@@ -27,7 +30,17 @@ describe('MenuAppEffects', () => {
 			imports: [StoreModule.forRoot({ [menuFeatureKey]: MenuReducer, [casesFeatureKey]: CasesReducer })],
 			providers: [
 				provideMockActions(() => actions),
-				MenuAppEffects
+				MenuAppEffects,
+				{ provide: MenuConfig, useValue: {} }, {
+					provide: COMPONENT_MODE,
+					useValue: false
+				},
+				{
+					provide: MatDialog,
+					useValue: {
+						closeAll: () => {}
+					}
+				}
 			]
 
 		}).compileComponents();
@@ -40,20 +53,6 @@ describe('MenuAppEffects', () => {
 
 	beforeEach(inject([Store], (_store: Store<any>) => {
 		store = _store;
-		store.dispatch(new AddMenuItemAction({
-			name: 'Cases',
-			component: null,
-			iconClass: null
-
-		}));
-		store.dispatch(new AddMenuItemAction({
-			name: 'Shmases',
-			component: null,
-			iconClass: null
-
-		}));
-		store.dispatch(new SelectMenuItemAction({ menuKey: 'Cases' }));
-
 	}));
 
 	it('onContainerChanged$ effect should dispatch UpdateMapSizeAction and RedrawTimelineAction', () => {
@@ -62,14 +61,20 @@ describe('MenuAppEffects', () => {
 		expect(menuAppEffects.onContainerChanged$).toBeObservable(expectedResults);
 	});
 
-	it(`onResetApp$ should call LoadDefaultCaseAction`, () => {
+	it(`onResetApp$ should dispatch specified actions`, () => {
 		actions = hot('--a--', {
 			a: new ResetAppAction()
 		});
-		const expectedResults = cold('--b--', {
-			b: new LoadDefaultCaseAction()
+		const expectedResults = cold('--(bcdefghi)--', {
+			b: new ToggleIsPinnedAction(false),
+			c: new CloseModalAction(),
+			d: new SetLayersModal({ type: SelectedModalEnum.none, layer: null }),
+			e: new UnSelectMenuItemAction(),
+			f: new ToggleFooter(false),
+			g: new LoadOverlaysSuccessAction([], true),
+			h: new InitializeFiltersAction(),
+			i: new LoadDefaultCaseAction()
 		});
 		expect(menuAppEffects.onResetApp$).toBeObservable(expectedResults);
 	});
-
 });

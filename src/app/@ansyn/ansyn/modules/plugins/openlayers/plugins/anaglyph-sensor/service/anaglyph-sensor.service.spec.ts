@@ -1,7 +1,8 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { AnaglyphSensorService } from './anaglyph-sensor.service';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { GetProvidersMapsService, ImageryCommunicatorService } from '@ansyn/imagery';
 import { AnaglyphConfig } from '../models/anaglyph.model';
+import { of } from 'rxjs';
 
 describe('AnaglyphSensorService', () => {
 	beforeEach(() => {
@@ -22,6 +23,12 @@ describe('AnaglyphSensorService', () => {
 				{
 					provide: AnaglyphConfig,
 					useValue: {}
+				},
+				{
+					provide: GetProvidersMapsService,
+					useValue: {
+						getMapSourceProvider: () => of()
+					}
 				}
 			]
 		});

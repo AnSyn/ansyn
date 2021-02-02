@@ -99,14 +99,6 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 		);
 	}
 
-	getStartDateViaLimitFacets(params: { facets; limit; region }): Observable<IStartAndEndDate> {
-		return empty();
-	}
-
-	getStartAndEndDateViaRangeFacets(params: { facets; limitBefore; limitAfter; date; region }): Observable<any> {
-		return empty();
-	}
-
 	private extractArrayData(overlays: Array<any>): Array<IOverlay> {
 		if (!overlays) {
 			return [];
@@ -139,6 +131,7 @@ export class OpenAerialSourceProvider extends BaseOverlaySourceProvider {
 			sourceType: this.sourceType,
 			isGeoRegistered: GeoRegisteration.geoRegistered,
 			tag: openAerialElement,
+			icon: 'drone',
 			sensorLocation: this.multipleOverlays.useAngleDebugMode ? getPointByGeometry(footprint.geometry ? footprint.geometry : footprint) : undefined
 		});
 

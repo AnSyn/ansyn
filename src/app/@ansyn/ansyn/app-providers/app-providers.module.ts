@@ -3,16 +3,22 @@ import { HttpClientModule } from '@angular/common/http';
 import { OpenAerialSourceProvider } from './overlay-source-providers/open-aerial-source-provider';
 import { PlanetSourceProvider } from './overlay-source-providers/planet/planet-source-provider';
 import { IdahoSourceProvider } from './overlay-source-providers/idaho-source-provider';
-import { BooleanFilterMetadata } from '../modules/menu-items/filters/models/metadata/boolean-filter-metadata';
-import { EnumFilterMetadata } from '../modules/menu-items/filters/models/metadata/enum-filter-metadata';
-import { FilterMetadata } from '../modules/menu-items/filters/models/metadata/filter-metadata.interface';
-import { SliderFilterMetadata } from '../modules/menu-items/filters/models/metadata/slider-filter-metadata';
+import { BooleanFilterMetadata } from '../modules/filters/models/metadata/boolean-filter-metadata';
+import { EnumFilterMetadata } from '../modules/filters/models/metadata/enum-filter-metadata';
+import { FilterMetadata } from '../modules/filters/models/metadata/filter-metadata.interface';
+import { SliderFilterMetadata } from '../modules/filters/models/metadata/slider-filter-metadata';
 import { OverlaysModule } from '../modules/overlays/overlays.module';
-import { ArrayFilterMetadata } from '../modules/menu-items/filters/models/metadata/array-filter-metadata';
+import { ArrayFilterMetadata } from '../modules/filters/models/metadata/array-filter-metadata';
 import { AirbusSourceProvider } from './overlay-source-providers/airbus/airbus-source-provider';
 import { ImageryVideoOverlaySourceProvider } from './overlay-source-providers/video/imagery-video-overlay-source-provider';
 import { ImageryVideoModule } from '@ansyn/imagery-video';
 import { Pic4cartoSourceProvider } from './overlay-source-providers/pic4carto/pic4carto-source-provider';
+import { FilterCounters } from '../modules/filters/models/counters/filter-counters.interface';
+import { EnumFilterCounters } from '../modules/filters/models/counters/enum-filter-counters';
+import { SliderFilterCounters } from '../modules/filters/models/counters/slider-filter-counters';
+import { BooleanFilterCounters } from '../modules/filters/models/counters/boolean-filter-counters';
+import { ArrayFilterCounters } from '../modules/filters/models/counters/array-filter-counters';
+import { ComponentVisibilityService } from './component-visibility.service';
 
 @NgModule({
 	providers: [
@@ -20,7 +26,12 @@ import { Pic4cartoSourceProvider } from './overlay-source-providers/pic4carto/pi
 		{ provide: FilterMetadata, useClass: EnumFilterMetadata, multi: true },
 		{ provide: FilterMetadata, useClass: SliderFilterMetadata, multi: true },
 		{ provide: FilterMetadata, useClass: BooleanFilterMetadata, multi: true },
-		{ provide: FilterMetadata, useClass: ArrayFilterMetadata, multi: true }
+		{ provide: FilterMetadata, useClass: ArrayFilterMetadata, multi: true },
+		{ provide: FilterCounters, useClass: EnumFilterCounters, multi: true },
+		{ provide: FilterCounters, useClass: SliderFilterCounters, multi: true },
+		{ provide: FilterCounters, useClass: BooleanFilterCounters, multi: true },
+		{ provide: FilterCounters, useClass: ArrayFilterCounters, multi: true },
+		ComponentVisibilityService
 	],
 	imports: [
 		HttpClientModule,

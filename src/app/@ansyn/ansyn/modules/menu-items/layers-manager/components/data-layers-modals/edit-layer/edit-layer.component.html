@@ -1,17 +1,17 @@
 <div class="edit-layer">
+	<h3>{{'Layer Name:' | translate}}</h3>
 	<form #f="ngForm" class="edit-layer-form"
 		  (ngSubmit)="layer ? editLayer(layerName.value) : addLayer(layerName.value)">
 		<ansyn-input
             #layerName
 			[ngModel]="layer?.name"
 			select
-			name="name"
-			[label]="'Name' | translate">
+			name="name">
 		</ansyn-input>
 
 		<div class="bottom-btns">
-			<button type="button" (click)="closeModal()">{{'Cancel' | translate}}</button>
 			<button [disabled]="!layerName.value?.trim()">{{'Ok' | translate}}</button>
+			<button type="button" (click)="closeModal()">{{'Cancel' | translate}}</button>
 		</div>
 	</form>
 </div>

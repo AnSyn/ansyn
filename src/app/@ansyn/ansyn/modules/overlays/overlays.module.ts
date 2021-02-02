@@ -19,6 +19,9 @@ import {
 } from './models/overlays-source-providers';
 import { OverlayStatusModule } from './overlay-status/overlay-status.module';
 import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer';
+import { OverlayNavigationBarComponent } from './components/overlay-navigation-bar/overlay-navigation-bar.component';
+import { ResultsModule } from '../menu-items/results/results.module';
+import { StatusBarModule } from '../status-bar/status-bar.module';
 
 @NgModule({
 	imports: [
@@ -34,7 +37,9 @@ import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer'
 				status: [],
 				floating_menu: []
 			}
-		})
+		}),
+		ResultsModule,
+		StatusBarModule
 	],
 	declarations: [
 		TimelineComponent,
@@ -42,13 +47,14 @@ import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer'
 		OverlayTimelineStatusComponent,
 		OverlayOverviewComponent,
 		OverlaysLoaderComponent,
-		OverlaySourceTypeNoticeComponent
+		OverlaySourceTypeNoticeComponent,
+		OverlayNavigationBarComponent
 	],
-	entryComponents: [OverlaySourceTypeNoticeComponent],
 	exports: [
 		OverlaysContainerComponent,
 		TimelineComponent,
-		OverlayOverviewComponent
+		OverlayOverviewComponent,
+		OverlayNavigationBarComponent
 	],
 	providers: [
 		createOverlaysSourceProviders([]),
@@ -57,7 +63,7 @@ import { OverlayReducer, overlaysFeatureKey } from './reducers/overlays.reducer'
 
 })
 export class OverlaysModule {
-	static provide(metadata: IOverlaysMetadata): ModuleWithProviders {
+	static provide(metadata: IOverlaysMetadata): ModuleWithProviders<OverlaysModule> {
 		return {
 			ngModule: OverlaysModule,
 			providers: [

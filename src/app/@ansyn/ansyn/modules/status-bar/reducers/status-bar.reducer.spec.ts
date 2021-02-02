@@ -10,8 +10,8 @@ describe('Status Bar Reducer', () => {
 	});
 
 	it('update geoFilter status', () => {
-		const action = new UpdateGeoFilterStatus({ searchMode: CaseGeoFilter.PinPoint, indicator: true });
+		const action = new UpdateGeoFilterStatus({ type: CaseGeoFilter.PinPoint, active: true });
 		const newState = StatusBarReducer(_reducerState, action);
-		expect(newState.geoFilterStatus).toEqual({ searchMode: CaseGeoFilter.PinPoint, indicator: true });
+		expect(newState.geoFilterStatus).toEqual({ type: CaseGeoFilter.PinPoint, active: true });
 	});
 });

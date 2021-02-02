@@ -27,6 +27,13 @@ export class AnaglyphSensorAlertComponent implements OnInit, OnDestroy, IEntryCo
 	mode: AnaglyphComponentMode;
 	isDisabled: boolean;
 
+	constructor(public store: Store<any>,
+				protected anaglyphSensorService: AnaglyphSensorService,
+				protected loggerService: LoggerService) {
+		this.mode = AnaglyphComponentMode.ShowAnaglyph;
+		this.isDisabled = true;
+	}
+
 	@AutoSubscription
 	mapState$ = () => this.store.pipe(
 		select(selectMapStateById(this.mapId)),
@@ -81,13 +88,6 @@ export class AnaglyphSensorAlertComponent implements OnInit, OnDestroy, IEntryCo
 	}
 
 	ngOnDestroy(): void {
-	}
-
-	constructor(public store: Store<any>,
-				protected anaglyphSensorService: AnaglyphSensorService,
-				protected loggerService: LoggerService) {
-		this.mode = AnaglyphComponentMode.ShowAnaglyph;
-		this.isDisabled = true;
 	}
 
 	getType(): string {

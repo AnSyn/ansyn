@@ -5,13 +5,13 @@ import { IMenuState, menuFeatureKey, MenuReducer } from '../reducers/menu.reduce
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
 	ContainerChangedTriggerAction,
-	ResetAppAction,
 	SelectMenuItemAction,
 	UnSelectMenuItemAction
 } from '../actions/menu.actions';
 import { MenuConfig } from '../models/menuConfig';
 import { IMenuItem } from '../models/menu-item.model';
 import { TranslateModule } from '@ngx-translate/core';
+import { MENU_ITEMS } from '../helpers/menu-item-token';
 
 describe('MenuComponent', () => {
 	let menuComponent: MenuComponent;
@@ -23,7 +23,7 @@ describe('MenuComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [BrowserAnimationsModule, StoreModule.forRoot({ [menuFeatureKey]: MenuReducer }), TranslateModule.forRoot()],
 			declarations: [MenuComponent],
-			providers: [{ provide: MenuConfig, useValue: {} }]
+			providers: [{ provide: MenuConfig, useValue: {}}, {provide: MENU_ITEMS, useValue: [[]]}]
 		}).compileComponents();
 	}));
 
@@ -55,7 +55,7 @@ describe('MenuComponent', () => {
 		} as IMenuItem;
 		const fakeFactory = 'fakeFactory';
 		spyOnProperty(menuComponent, 'selectedMenuItem', 'get').and.returnValue(mockMenuItem);
-		spyOn(menuComponent.componentFactoryResolver, 'resolveComponentFactory').and.callFake(() => fakeFactory);
+		spyOn(menuComponent.componentFactoryResolver, 'resolveComponentFactory').and.callFake(() => <any>fakeFactory);
 		spyOn(menuComponent.componentElem, 'createComponent');
 		menuComponent.buildCurrentComponent();
 		expect(menuComponent.componentFactoryResolver.resolveComponentFactory).toHaveBeenCalledWith(mockMenuItem.component);
@@ -89,7 +89,7 @@ describe('MenuComponent', () => {
 	it('openMenu should call store.dispatch with SelectMenuItemAction', () => {
 		spyOn(store, 'dispatch');
 		menuComponent.openMenu('one', false);
-		expect(store.dispatch).toHaveBeenCalledWith(new SelectMenuItemAction({ menuKey: 'one', skipSession: false}));
+		expect(store.dispatch).toHaveBeenCalledWith(new SelectMenuItemAction({ menuKey: 'one', skipSession: false }));
 	});
 
 	it('onExpandDone should call componentChanges if anySelectItem is "false"', () => {
@@ -109,7 +109,7 @@ describe('MenuComponent', () => {
 
 	it('onIsPinnedChange should toggle "pinned" class on container element and should send ContainerChangedTriggerAction', () => {
 		spyOn(store, 'dispatch');
-		spyOn(menuComponent, 'forceRedraw').and.callFake(() => ({ then: (c) => c() }));
+		spyOn(menuComponent, 'forceRedraw').and.callFake(() => (<any>{ then: (c) => c() }));
 
 		menuComponent.isPinned = true;
 		menuComponent.onIsPinnedChange();
@@ -123,16 +123,11 @@ describe('MenuComponent', () => {
 	});
 
 	it('hideBadge should check if badge need to be hidden', () => {
-		expect(menuComponent.hideBadge('')).toBeTruthy();
-		expect(menuComponent.hideBadge('0')).toBeTruthy();
+		expect(menuComponent.hideBadge(undefined)).toBeTruthy();
 		expect(menuComponent.hideBadge('str')).toBeTruthy();
+		expect(menuComponent.hideBadge('')).toBeFalsy();
+		expect(menuComponent.hideBadge('0')).toBeFalsy();
 		expect(menuComponent.hideBadge('1')).toBeFalsy();
 		expect(menuComponent.hideBadge('★')).toBeFalsy();
-	});
-
-	it('reset app will dispatch ResetAppAction', () => {
-		spyOn(store, 'dispatch');
-		menuComponent.resetApp();
-		expect(store.dispatch).toHaveBeenCalledWith(new ResetAppAction());
 	});
 });

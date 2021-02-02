@@ -18,7 +18,6 @@ import { MapSearchBoxComponent } from './components/map-search-box/map-search-bo
 import { ToastComponent } from './components/toast/toast.component';
 import { WelcomeNotificationComponent } from './components/welcome-notification/welcome-notification.component';
 import { EntryComponentDirective } from './directives/entry-component.directive';
-import { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
 import { MapEffects } from './effects/map.effects';
 import {
 	EntryComponentsProvider,
@@ -32,7 +31,10 @@ import { ImageryMouseCoordinatesComponent } from './components/imagery-mouse-coo
 import { GeoHolderComponent } from './components/imagery-mouse-coordinates/holders/geo-holder/geo-holder.component';
 import { UtmHolderComponent } from './components/imagery-mouse-coordinates/holders/utm-holder/utm-holder.component';
 import { FloatingMenuComponent } from './components/floating-menu/floating-menu.component';
-import { MatAutocompleteModule, MatInputModule } from '@angular/material';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
+import { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
+import { AnsynDatePipe } from './pipes/ansyn-date.pipe';
 
 @NgModule({
 	imports: [
@@ -60,8 +62,8 @@ import { MatAutocompleteModule, MatInputModule } from '@angular/material';
 		MapSearchBoxComponent,
 		ImageryStatusComponent,
 		WelcomeNotificationComponent,
-		ToastComponent,
 		InfiniteScrollDirective,
+		ToastComponent,
 		AnimatedEllipsisComponent,
 		AnsynLoaderComponent,
 		AnsynPopoverComponent,
@@ -69,34 +71,36 @@ import { MatAutocompleteModule, MatInputModule } from '@angular/material';
 		ImageryMouseCoordinatesComponent,
 		GeoHolderComponent,
 		UtmHolderComponent,
-		FloatingMenuComponent
+		FloatingMenuComponent,
+		AnsynDatePipe
 	],
 	exports: [
 		ImageriesManagerComponent,
 		ImageryStatusComponent,
 		WelcomeNotificationComponent,
 		ToastComponent,
-		InfiniteScrollDirective,
 		AnimatedEllipsisComponent,
+		InfiniteScrollDirective,
 		AnsynLoaderComponent,
 		AnsynPopoverComponent,
 		EntryComponentDirective,
 		GeoHolderComponent,
-		UtmHolderComponent
+		UtmHolderComponent,
+		AnsynDatePipe
 	]
 })
 
 export class MapFacadeModule {
 
-	static provide(metadata: { entryComponents: IEntryComponentsEntities }): ModuleWithProviders {
+	constructor() {
+	}
+
+	static provide(metadata: { entryComponents: IEntryComponentsEntities }): ModuleWithProviders<MapFacadeModule> {
 		return {
 			ngModule: MapFacadeModule,
 			providers: [
 				provideEntryComponentsEntities(metadata.entryComponents)
 			]
 		};
-	}
-
-	constructor() {
 	}
 }

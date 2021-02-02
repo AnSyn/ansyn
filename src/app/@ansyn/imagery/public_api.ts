@@ -1,9 +1,18 @@
+export { GetProvidersMapsService } from './services/get-providers-maps/get-providers-maps.service';
+
+export { IExportMapMetadata, IExportMapData } from './model/export-map.model';
+
+export {
+	MapOrientation,
+	IMapSettings,
+	IMapSettingsData,
+	IWorldViewMapState
+} from "./model/map-settings";
 export { IMapSource } from './model/map-providers-config';
 export { IStroke, IIcon } from './model/visualizers/visualizer-style';
-
 export { ICanvasExportData } from './model/base-imagery-map';
 export {
-	ImageryMapExtent, ImageryMapExtentPolygon, ImageryMapProjectedState, ImageryMapPosition, IMousePointerMove
+	ImageryMapExtent, ImageryMapExtentPolygon, IImageryMapProjectedState, IImageryMapPosition, IMousePointerMove
 }from './model/case-map-position.model';
 
 export { MAP_SOURCE_PROVIDERS_CONFIG, IMapSourceProvidersConfig } from './model/base-map-source-provider';
@@ -11,15 +20,16 @@ export { MarkerSizeDic } from './model/visualizers/visualizer-style';
 export { IVisualizerEntity } from './model/visualizers/visualizers-entity';
 export { MarkerSize } from './model/visualizers/visualizer-style';
 export { IVisualizerStyle } from './model/visualizers/visualizer-style';
-export { IVisualizerStateStyle } from './model/visualizers/visualizer-state';
-export { VisualizerStates } from './model/visualizers/visualizer-state';
+export { IVisualizerStateStyle, VisualizerStates } from './model/visualizers/visualizer-state';
+export { IVisualizerAttributes } from './model/visualizers/visualizer-attributes';
+export { getInitialAnnotationsFeatureProperties, getInitialAnnotationsFeatureStyle, validateFeatureProperties } from './model/visualizers/initial-annotations-feature-properties';
 export { IMapProgress, IMapErrorMessage } from './model/map-progress.model';
 export {
 	IMapProviderConfig,
 	IMapProvidersConfig,
 	MAP_PROVIDERS_CONFIG
 } from './model/map-providers-config';
-export { ImageryMapSources } from './providers/map-source-providers';
+export { IImageryMapSources } from './providers/map-source-providers';
 export { IMapInstanceChanged } from './communicator-service/communicator.entity';
 export { IBaseMapSourceProviderConstructor } from './model/base-map-source-provider';
 export { VisualizerInteractions } from './model/base-imagery-visualizer';
@@ -42,15 +52,20 @@ export {
 	getPolygonByPoint,
 	getPolygonByPointAndRadius,
 	getPolygonByBufferRadius,
+	convertLineSegmentToThinRectangle,
 	getPolygonIntersectionRatio,
+	calculatePolygonWidth,
+	getPolygonIntersectionRatioWithMultiPolygon,
 	polygonsDontIntersect,
 	isPointContainedInGeometry,
 	unifyPolygons,
 	calculateLineDistance,
 	calculateGeometryArea,
 	getDistanceBetweenPoints,
+	getNewPoint,
 	EPSG_4326,
-	EPSG_3857
+	EPSG_3857,
+	BBOX
 } from './utils/geo';
 
 export { IVisualizersConfig, VisualizersConfig } from './model/visualizers-config.token';
@@ -73,8 +88,11 @@ export { ProjectionService } from './projection-service/projection.service';
 export { StayInImageryService } from './stay-in-imagery-service/stay-in-imagery.service';
 export { ImageryModule } from './imagery.module';
 export { IMAGERY_CONFIG } from './model/configuration.token';
-export { ImageryLayerProperties, IMAGERY_MAIN_LAYER_NAME, IMAGERY_BASE_MAP_LAYER } from './model/imagery-layer.model';
-
-export { IMapSettings, IMapSettingsData, IWorldViewMapState } from './model/map-settings';
+export {
+	IBaseImageryLayer, ImageryLayerProperties, IMAGERY_MAIN_LAYER_NAME, IMAGERY_BASE_MAP_LAYER
+} from './model/imagery-layer.model';
+export { IMAGERY_SLOW_ZOOM_FACTOR } from './model/imagery-zoom.model';
 export { toDegrees, toRadians, getAngleDegreeBetweenPoints } from './utils/math';
 export { ExtentCalculator } from './utils/extent-calculator';
+export { ImageryComponent } from './imagery/imagery.component';
+export { getOpacityFromColor } from './utils/color-opacity-extractor';

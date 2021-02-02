@@ -1,9 +1,7 @@
-import { ITasksState } from './tasks.reducer';
 import { TasksActions, TasksActionTypes } from '../actions/tasks.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { AlgorithmsTaskState, AlgorithmTask, AlgorithmTaskPreview, TasksPageToShow } from '../models/tasks.model';
-import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
-import { Dictionary } from '@ngrx/entity/src/models';
+import { createEntityAdapter, EntityAdapter, EntityState, Dictionary } from '@ngrx/entity';
 import { UUID } from 'angular2-uuid';
 
 export const tasksAdapter: EntityAdapter<AlgorithmTaskPreview> = createEntityAdapter<AlgorithmTaskPreview>(
@@ -93,9 +91,11 @@ export function TasksReducer(state: ITasksState = initialTasksState, action: Tas
 		}
 
 		case TasksActionTypes.ADD_TASK:
-			let task: AlgorithmTask = action.payload;
-			task.id = UUID.UUID();
-			task.creationTime = new Date();
+			let task: AlgorithmTask = {
+				...action.payload,
+				id: UUID.UUID(),
+				creationTime: new Date()
+			};
 			return tasksAdapter.addOne(task, state);
 
 		case TasksActionTypes.DELETE_TASK:
@@ -110,7 +110,7 @@ export function TasksReducer(state: ITasksState = initialTasksState, action: Tas
 
 }
 
-export const { selectEntities, selectAll, selectTotal, selectIds } = tasksAdapter.getSelectors();
+export const { selectEntities, selectTotal, selectIds } = tasksAdapter.getSelectors();
 export const selectTaskTotal = createSelector(tasksStateSelector, selectTotal);
 export const selectTaskEntities = <MemoizedSelector<ITasksState, Dictionary<AlgorithmTaskPreview>>>createSelector(tasksStateSelector, selectEntities);
 export const selectTasksIds = <MemoizedSelector<any, string[] | number[]>>createSelector(tasksStateSelector, selectIds);

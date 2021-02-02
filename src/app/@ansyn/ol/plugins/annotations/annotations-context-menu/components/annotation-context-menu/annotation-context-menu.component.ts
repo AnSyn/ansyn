@@ -2,11 +2,14 @@ import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnI
 import { CommunicatorEntity, ImageryCommunicatorService, IMapInstanceChanged } from '@ansyn/imagery';
 import { filter, take, tap } from 'rxjs/operators';
 import { AnnotationsVisualizer } from '../../../annotations.visualizer';
+import { TranslateService } from '@ngx-translate/core';
+import { IFeatureIdentifier } from '../../../../entities-visualizer';
 
 export enum AnnotationsContextmenuTabs {
 	Colors,
 	Weight,
-	Label
+	Label,
+	Metadata
 }
 
 @Component({
@@ -15,7 +18,7 @@ export enum AnnotationsContextmenuTabs {
 	styleUrls: ['./annotation-context-menu.component.less']
 })
 export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
-	annotations: AnnotationsVisualizer;
+	annotations: AnnotationsVisualizer[];
 	communicator: CommunicatorEntity;
 	selectedTab: { [id: string]: AnnotationsContextmenuTabs } = {};
 
@@ -28,21 +31,56 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 	subscribers = [];
 	annotationsSubscribers = [];
 
+	constructor(
+		public host: ElementRef,
+		protected communicators: ImageryCommunicatorService,
+		protected translateService: TranslateService
+	) {
+	}
+
 	@HostListener('contextmenu', ['$event']) contextmenu($event: MouseEvent) {
 		$event.preventDefault();
 	}
 
-	constructor(public host: ElementRef, protected communicators: ImageryCommunicatorService) {
-	}
-
 	calcBoundingRect(id) {
-		const { feature } = this.annotations.idToEntity.get(id);
-		return this.annotations.getFeatureBoundingRect(feature);
+		let boundingRect;
+		for (let i = 0; i < this.annotations.length; i++) {
+			const entity = this.annotations[i].idToEntity.get(id);
+			if (entity) {
+				boundingRect = this.annotations[i].getFeatureBoundingRect(entity.feature);
+				break;
+			}
+		}
+		return boundingRect;
 	}
 
 	getFeatureProps(id) {
-		const { originalEntity: { featureJson: { properties } } } = this.annotations.idToEntity.get(id);
-		return properties;
+		const entity = this.getEntitiy(id);
+		if (entity) {
+			const { originalEntity: { featureJson: { properties } } } = entity;
+			return properties;
+		}
+		return undefined;
+	}
+
+	getAnnotationVisById(featureId) {
+		for (let i = 0; i < this.annotations.length; i++) {
+			if (this.annotations[i].idToEntity.has(featureId)) {
+				return this.annotations[i];
+			}
+		}
+		return undefined;
+	}
+
+	getEntitiy(featureId): IFeatureIdentifier {
+		if (this.annotations && this.annotations.length > 0) {
+			for (let i = 0; i < this.annotations.length; i++) {
+				if (this.annotations[i].idToEntity.has(featureId)) {
+					return this.annotations[i].idToEntity.get(featureId);
+				}
+			}
+		}
+		return undefined
 	}
 
 	initData() {
@@ -55,8 +93,8 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 			filter(({ id }) => id === this.mapId),
 			tap(() => {
 				this.communicator = this.communicators.provide(this.mapId);
-				this.annotations = this.communicator.getPlugin(AnnotationsVisualizer);
-				if (this.annotations) {
+				this.annotations = this.getAnnotationsVisualiers();
+				if (this.annotations && this.annotations.length > 0) {
 					this.subscribeVisualizerEvents();
 				} else {
 					this.unSubscribeVisualizerEvents();
@@ -65,8 +103,8 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 				this.subscribers.push(this.communicator.mapInstanceChanged.subscribe((mapInstanceChanged: IMapInstanceChanged) => {
 					this.unSubscribeVisualizerEvents();
 					this.initData();
-					this.annotations = this.communicator.getPlugin(AnnotationsVisualizer);
-					if (this.annotations) {
+					this.annotations = this.getAnnotationsVisualiers();
+					if (this.annotations && this.annotations.length > 0) {
 						this.subscribeVisualizerEvents();
 					}
 				}));
@@ -75,20 +113,27 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		).subscribe();
 	}
 
+	getAnnotationsVisualiers(): AnnotationsVisualizer[] {
+		const annotations = this.communicator.plugins.filter((plugin) => plugin instanceof AnnotationsVisualizer);
+		return annotations;
+	}
+
 	subscribeVisualizerEvents() {
-		this.annotationsSubscribers.push(
-			this.annotations.events.onHover.subscribe((hoverFeatureId: string) => {
-				this.hoverFeatureId = hoverFeatureId;
-			}),
-			this.annotations.events.onSelect.subscribe((selected: string[]) => {
-					this.selection = selected;
-					this.selectedTab = this.selection.reduce((prev, id) => ({
-						...prev,
-						[id]: this.selectedTab[id]
-					}), {});
-				}
-			)
-		);
+		this.annotations.forEach((annotationVis) => {
+			this.annotationsSubscribers.push(
+				annotationVis.events.onHover.subscribe((hoverFeatureId: string) => {
+					this.hoverFeatureId = hoverFeatureId;
+				}),
+				annotationVis.events.onSelect.subscribe((selected: string[]) => {
+						this.selection = selected;
+						this.selectedTab = this.selection.reduce((prev, id) => ({
+							...prev,
+							[id]: this.selectedTab[id]
+						}), {});
+					}
+				)
+			);
+		});
 	}
 
 	unSubscribeVisualizerEvents() {
@@ -110,3 +155,4 @@ export class AnnotationContextMenuComponent implements OnInit, OnDestroy {
 		return '';
 	}
 }
+

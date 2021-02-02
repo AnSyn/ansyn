@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit, AfterViewInit } from '@angular/core';
 import { ComboBoxComponent } from '../combo-box/combo-box.component';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { debounceTime, tap } from 'rxjs/operators';
@@ -10,19 +10,22 @@ import { NgControl } from '@angular/forms';
 	styleUrls: ['./combo-box-option.component.less']
 })
 @AutoSubscriptions({
-	init: 'ngOnInit',
+	init: 'ngAfterViewInit',
 	destroy: 'ngOnDestroy'
 })
-export class ComboBoxOptionComponent implements OnInit, OnDestroy {
+export class ComboBoxOptionComponent implements AfterViewInit, OnDestroy {
+
+	get selected() {
+		return this._parent.selected;
+	}
 	@Input() value;
 
 	@HostBinding('class.disabled')
-	@Input('disabled') disabled = false;
+	@Input() disabled = false;
 
 
 	@AutoSubscription
 	selectedChanged$ = this._parent.injector.get(NgControl).valueChanges.pipe(
-		debounceTime(1500),
 		tap(selected => {
 			if (selected) {
 				if (selected === this.value) {
@@ -33,6 +36,9 @@ export class ComboBoxOptionComponent implements OnInit, OnDestroy {
 			}
 		}));
 
+	constructor(protected _parent: ComboBoxComponent, protected el: ElementRef) {
+	}
+
 	@HostListener('click') onClick() {
 		if (this.value) {
 			this._parent.selectOption(this.value);
@@ -40,14 +46,7 @@ export class ComboBoxOptionComponent implements OnInit, OnDestroy {
 		this._parent.close();
 	}
 
-	get selected() {
-		return this._parent.selected;
-	}
-
-	constructor(protected _parent: ComboBoxComponent, protected el: ElementRef) {
-	}
-
-	ngOnInit() {
+	ngAfterViewInit() {
 	}
 
 	ngOnDestroy(): void {

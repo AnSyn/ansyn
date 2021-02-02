@@ -1,47 +1,41 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { LayersManagerModule } from '../../layers-manager.module';
 import { LayersManagerComponent } from './layers-manager.component';
-import { StoreModule } from '@ngrx/store';
-import { DataLayersService, layersConfig } from '../../services/data-layers.service';
+import { Store, StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from '../../reducers/layers.reducer';
-import { HttpClientModule } from '@angular/common/http';
-import { EffectsModule } from '@ngrx/effects';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CoreConfig } from '../../../../core/models/core.config';
-import { LoggerService } from '../../../../core/services/logger.service';
-import { LoggerConfig } from '../../../../core/models/logger.config';
-import { casesFeatureKey, CasesReducer } from '../../../cases/reducers/cases.reducer';
-import { TranslateModule } from '@ngx-translate/core';
+import { of } from 'rxjs';
+import { MockComponent } from '../../../../core/test/mock-component';
+import { MockPipe } from '../../../../core/test/mock-pipe';
+import { TranslateService } from '@ngx-translate/core';
 
 describe('LayersManagerComponent', () => {
 	let component: LayersManagerComponent;
 	let fixture: ComponentFixture<LayersManagerComponent>;
+	const mockModals = MockComponent({ selector: 'ansyn-data-layers-modals', inputs: [] });
+	const mockCollection = MockComponent({ selector: 'ansyn-layer-collection', inputs: ['collection'] });
+	const mockTranslatePipe = MockPipe('translate');
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				LayersManagerModule,
-				HttpClientModule,
-				BrowserAnimationsModule,
-				EffectsModule.forRoot([]),
 				StoreModule.forRoot({
-					[layersFeatureKey]: LayersReducer,
-					[casesFeatureKey]: CasesReducer
-				}),
-				TranslateModule.forRoot()
+					[layersFeatureKey]: LayersReducer
+				})
+			],
+			declarations: [
+				LayersManagerComponent,
+				mockModals,
+				mockCollection,
+				mockTranslatePipe
 			],
 			providers: [
-				{ provide: layersConfig, useValue: { schema: null } },
-				{ provide: LoggerConfig, useValue: {} },
-				{ provide: LoggerService, useValue: { error: (some) => null } },
-				{ provide: CoreConfig, useValue: {} }
+				{ provide: TranslateService, useValue: { instant: (x) => x } }
 			]
 		})
 			.compileComponents();
 	}));
 
-	beforeEach(inject([DataLayersService], (_dataLayersService: DataLayersService) => {
-		spyOn(_dataLayersService, 'getAllLayersInATree');
+	beforeEach(inject([Store], (_store: Store<any>) => {
+		spyOn(_store, 'pipe').and.returnValue(of([]));
 		fixture = TestBed.createComponent(LayersManagerComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();

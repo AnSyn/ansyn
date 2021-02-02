@@ -9,7 +9,7 @@ import { forkJoinSafe } from '../../core/utils/rxjs/observables/fork-join-safe';
 import { sortByDateDesc } from '../../core/utils/sorting';
 import { IDateRange } from '../../core/models/multiple-overlays-source-config';
 import { LoggerService } from '../../core/services/logger.service';
-import { IOverlay, IOverlaysFetchData } from './overlay.model';
+import { IOverlay, IOverlayError, IOverlaysFetchData, IResolutionRange } from './overlay.model';
 import { IDataInputFilterValue } from '../../menu-items/cases/models/case.model';
 import { getErrorLogFromException } from '../../core/utils/logs/timer-logs';
 
@@ -19,6 +19,11 @@ export interface IFetchParams {
 	sensors?: string[];
 	dataInputFilters: IDataInputFilterValue[];
 	timeRange: IDateRange;
+	resolution?: IResolutionRange;
+	types?: string[];
+	registeration?: string[];
+	runSecondSearch?: boolean;
+	sensorsForSecondSearch?: string[];
 }
 
 export interface IOverlayFilter {
@@ -56,12 +61,12 @@ export function isFaulty(data: IOverlaysFetchData): boolean {
 	return Array.isArray(data.errors) && data.errors.length > 0;
 }
 
-export function mergeErrors(data: IOverlaysFetchData[]): Error[] {
+export function mergeErrors(data: IOverlaysFetchData[]): IOverlayError[] {
 	return [].concat.apply([],
 		data.map(overlayFetchData => Array.isArray(overlayFetchData.errors) ? overlayFetchData.errors : []));
 }
 
-export function mergeOverlaysFetchData(data: IOverlaysFetchData[], limit: number, errors?: Error[]): IOverlaysFetchData {
+export function mergeOverlaysFetchData(data: IOverlaysFetchData[], limit: number, errors?: IOverlayError[]): IOverlaysFetchData {
 	return {
 		...mergeLimitedArrays(data.filter(item => !isFaulty(item)) as Array<ILimitedArray>,
 			limit, {
@@ -79,7 +84,7 @@ export abstract class BaseOverlaySourceProvider {
 	constructor(protected loggerService: LoggerService) {
 	}
 
-	buildFetchObservables(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<any>[] {
+	buildFetchObservables(fetchParams: IFetchParams): Observable<IOverlaysFetchData>[] {
 		const regionFeature: Feature<any> = feature(<any>fetchParams.region);
 		// They are strings!
 		const fetchParamsTimeRange = {
@@ -87,40 +92,24 @@ export abstract class BaseOverlaySourceProvider {
 			end: new Date(fetchParams.timeRange.end)
 		};
 
-		return filters
-			.filter(f => { // Make sure they have a common region
-				const intersection = intersect(regionFeature, f.coverage);
-				return intersection && intersection.geometry;
-			})
-			// Make sure they have a common time range
-			.filter(f => Boolean(timeIntersection(fetchParamsTimeRange, f.timeRange)))
-			.map(f => {
-				// Create new filters, by the common region and time
-				let newFetchParams: IFetchParams = <any>{
-					...fetchParams,
-					region: intersect(f.coverage, regionFeature).geometry,
-					timeRange: timeIntersection(fetchParamsTimeRange, f.timeRange)
-				};
-
-				// Add sensor if exists on the filter
-				if (f.sensor) {
-					newFetchParams.sensors = [f.sensor];
-				}
-
-				return this.fetch(newFetchParams).pipe(catchError(err => {
-					const errMsg = getErrorLogFromException(err, `Failed to fetch overlay's newFetchParams=${JSON.stringify(newFetchParams)}`);
-					this.loggerService.error(errMsg, 'overlays');
-					return of({
-						data: null,
-						limited: -1,
-						errors: [new Error(`Failed to fetch overlays from ${ this.sourceType }`)]
-					});
-				}));
-			})
+		return [
+			this.fetch(fetchParams).pipe(catchError((err: Error | string) => {
+				const errMsg = getErrorLogFromException(err, `Failed to fetch overlay's newFetchParams=${JSON.stringify(fetchParams)}`);
+				this.loggerService.error(errMsg, 'overlays');
+				return of({
+					data: null,
+					limited: -1,
+					errors: [{
+						message: err.toString(),
+						sourceType: this.sourceType
+					}]
+				});
+			}))
+		];
 	}
 
-	fetchMultiple(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<IOverlaysFetchData> {
-		const fetchObservables = this.buildFetchObservables(fetchParams, filters);
+	fetchMultiple(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
+		const fetchObservables = this.buildFetchObservables(fetchParams);
 		if (fetchObservables.length <= 0) {
 			return of({ data: [], limited: 0, errors: [] });
 		}
@@ -141,11 +130,7 @@ export abstract class BaseOverlaySourceProvider {
 
 	abstract fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData>;
 
-	abstract getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<IStartAndEndDate>;
-
 	abstract getById(id: string, sourceType: string): Observable<IOverlay>;
-
-	abstract getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any>;
 
 	getByIds(ids: IOverlayByIdMetaData[]): Observable<IOverlay[]> {
 		const requests = ids.map(({ id, sourceType }) => this.getById(id, sourceType));

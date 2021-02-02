@@ -1,3 +1,11 @@
+export { TimePickerContainerComponent } from './modules/status-bar/components/time-picker-container/time-picker-container.component';
+
+export { measuresClassNameForExport } from './modules/plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
+
+export { isArrowRightKey, isArrowLeftKey, isBackspaceKey, isDigitKey, isEnterKey, isEscapeKey } from "./modules/core/utils/keyboardKey";
+
+export { IImageProcParam } from "./modules/overlays/overlay-status/config/overlay-status-config";
+
 export { AddLayer } from './modules/menu-items/layers-manager/actions/layers.actions';
 export {
 	AnaglyphConfig,
@@ -9,9 +17,7 @@ export { AreaToCredentialsService } from './modules/core/services/credentials/ar
 export { CredentialsService } from './modules/core/services/credentials/credentials.service';
 export { credentialsConfig, ICredentialsConfig } from './modules/core/services/credentials/config';
 
-export {
-	OpenlayersBaseLayersPlugins
-}from './modules/plugins/openlayers/plugins/layers/openlayers-base-layers.plugins';
+export { OpenlayersBaseLayersPlugins }from './modules/plugins/openlayers/plugins/layers/openlayers-base-layers.plugins';
 
 export { AddAlertMsg, RemoveAlertMsg } from './modules/overlays/overlay-status/actions/overlay-status.actions';
 export { IAlert } from './modules/alerts/alerts.model';
@@ -33,83 +39,68 @@ export { IConfigModel } from './config.model';
 
 // // statusBar
 export { IStatusBarConfig } from './modules/status-bar/models/statusBar-config.model';
-export { IComboBoxesProperties } from './modules/status-bar/models/combo-boxes.model';
 export {
 	statusBarFeatureKey,
 	StatusBarInitialState,
 	StatusBarReducer
 } from './modules/status-bar/reducers/status-bar.reducer';
 export { statusBarStateSelector } from './modules/status-bar/reducers/status-bar.reducer';
-export { SearchMode } from './modules/status-bar/models/search-mode.enum';
 export { comboBoxesOptions } from './modules/status-bar/models/combo-boxes.model';
 export {
 	IStatusBarState,
-	selectComboBoxesProperties,
-	selectGeoFilterIndicator,
-	selectGeoFilterSearchMode
+	selectGeoFilterActive,
+	selectGeoFilterType
 } from './modules/status-bar/reducers/status-bar.reducer';
 export {
 	CopySnapshotShareLinkAction,
-	SetImageOpeningOrientation,
 	StatusBarActionsTypes,
 	UpdateGeoFilterStatus,
 	StatusBarActions,
 	GoAdjacentOverlay,
 	ExpandAction,
-	GoNextPresetOverlay
 } from './modules/status-bar/actions/status-bar.actions';
-export { SearchModeEnum } from './modules/status-bar/models/search-mode.enum';
 export { StatusBarConfig } from './modules/status-bar/models/statusBar.config';
 export { StatusBarModule } from './modules/status-bar/status-bar.module';
-export { orientations, ORIENTATIONS } from './modules/status-bar/models/combo-boxes.model';
 
 // menuItems
-export { ClearActiveInteractionsAction } from './modules/menu-items/tools/actions/tools.actions';
-export { selectAutoSave } from './modules/menu-items/cases/reducers/cases.reducer';
-export { FilterType } from './modules/menu-items/filters/models/filter-type';
-export { OverlayDisplayMode } from './modules/menu-items/tools/overlays-display-mode/overlays-display-mode.component';
+export { ClearActiveInteractionsAction } from './modules/status-bar/components/tools/actions/tools.actions';
+// export { selectAutoSave } from './modules/menu-items/cases/reducers/cases.reducer';
+export { FilterType } from './modules/filters/models/filter-type';
 
 export { SelectCaseSuccessAction } from './modules/menu-items/cases/actions/cases.actions';
 export { ILayersManagerConfig } from './modules/menu-items/layers-manager/models/layers-manager-config';
-export { IFiltersConfig } from './modules/menu-items/filters/models/filters-config';
+export { IFiltersConfig } from './modules/filters/models/filters-config';
 export { DataLayersService } from './modules/menu-items/layers-manager/services/data-layers.service';
 
 export { LoadCaseAction } from './modules/menu-items/cases/actions/cases.actions';
 export { SettingsComponent } from './modules/menu-items/settings/settings/settings.component';
-export { GoToAction } from './modules/menu-items/tools/actions/tools.actions';
+export { GoToAction } from './modules/status-bar/components/tools/actions/tools.actions';
 export { ILayerState } from './modules/menu-items/layers-manager/reducers/layers.reducer';
 export { ICasesState } from './modules/menu-items/cases/reducers/cases.reducer';
-export { IToolsState, selectGeoRegisteredOptionsEnabled } from './modules/menu-items/tools/reducers/tools.reducer';
+export { IToolsState, selectGeoRegisteredOptionsEnabled } from './modules/status-bar/components/tools/reducers/tools.reducer';
 export {
 	ISettingsState, selectFlags, settingsStateSelector, selectIsAnaglyphActive
 }from './modules/menu-items/settings/reducers/settings.reducer';
 export {
-	LoadDefaultCaseAction, SaveCaseAsSuccessAction, SelectDilutedCaseAction
+	LoadDefaultCaseAction, SelectDilutedCaseAction
 }from './modules/menu-items/cases/actions/cases.actions';
-export { Filters, IFiltersState } from './modules/menu-items/filters/reducer/filters.reducer';
-export { IFilter } from './modules/menu-items/filters/models/IFilter';
+export { FiltersMetadata, IFiltersState } from './modules/filters/reducer/filters.reducer';
+export { IFilter } from './modules/filters/models/IFilter';
 export { ILayer } from './modules/menu-items/layers-manager/models/layers.model';
-export { SetAutoImageProcessing, ShowOverlaysFootprintAction } from './modules/menu-items/tools/actions/tools.actions';
 export { TasksComponent } from './modules/menu-items/algorithms/components/tasks/tasks.component';
 export {
-	DisableImageProcessing,
-	EnableImageProcessing,
 	SetActiveCenter,
-	SetActiveOverlaysFootprintModeAction,
 	SetAnnotationMode,
-	SetAutoImageProcessingSuccess,
-	SetManualImageProcessing,
 	SetMapGeoEnabledModeToolsActionStore,
 	SetMeasureDistanceToolState,
 	SetPinLocationModeAction,
 	StartMouseShadow,
 	StopMouseShadow,
 	ToolsActionsTypes,
-	UpdateOverlaysManualProcessArgs,
 	UpdateToolsFlags,
 	AnnotationRemoveFeature,
 	AnnotationUpdateFeature
-} from './modules/menu-items/tools/actions/tools.actions';
+} from './modules/status-bar/components/tools/actions/tools.actions';
 export {
 	CasesActionTypes, CopyCaseLinkAction,
 	LoadDefaultCaseIfNoActiveCaseAction,
@@ -118,18 +109,20 @@ export {
 } from './modules/menu-items/cases/actions/cases.actions';
 export {
 	selectAnnotationMode, selectAnnotationProperties,
-	selectOverlaysManualProcessArgs,
 	selectSubMenu,
-	SubMenuEnum,
-	toolsFlags,
 	toolsStateSelector
-} from './modules/menu-items/tools/reducers/tools.reducer';
+} from './modules/status-bar/components/tools/reducers/tools.reducer';
+export {
+	SubMenuEnum,
+	toolsFlags
+} from './modules/status-bar/components/tools/models/tools.model';
 export {
 	EnableOnlyFavoritesSelectionAction,
 	FiltersActionTypes, InitializeFiltersAction,
 	InitializeFiltersSuccessAction,
-	UpdateFacetsAction
-} from './modules/menu-items/filters/actions/filters.actions';
+	UpdateFacetsAction,
+	SelectOnlyGeoRegistered
+} from './modules/filters/actions/filters.actions';
 export {
 	BeginLayerCollectionLoadAction,
 	UpdateLayer,
@@ -138,10 +131,10 @@ export {
 export {
 	layerPluginType, layerPluginTypeEnum, LayerType
 }from './modules/menu-items/layers-manager/models/layers.model';
-export { BooleanFilterMetadata } from './modules/menu-items/filters/models/metadata/boolean-filter-metadata';
-export { SliderFilterMetadata } from './modules/menu-items/filters/models/metadata/slider-filter-metadata';
-export { FilterMetadata } from './modules/menu-items/filters/models/metadata/filter-metadata.interface';
-export { EnumFilterMetadata } from './modules/menu-items/filters/models/metadata/enum-filter-metadata';
+export { BooleanFilterMetadata } from './modules/filters/models/metadata/boolean-filter-metadata';
+export { SliderFilterMetadata } from './modules/filters/models/metadata/slider-filter-metadata';
+export { FilterMetadata } from './modules/filters/models/metadata/filter-metadata.interface';
+export { EnumFilterMetadata } from './modules/filters/models/metadata/enum-filter-metadata';
 export { casesConfig, CasesService } from './modules/menu-items/cases/services/cases.service';
 export {
 	selectActiveAnnotationLayer,
@@ -149,46 +142,47 @@ export {
 	selectLayersEntities,
 	selectSelectedLayersIds
 } from './modules/menu-items/layers-manager/reducers/layers.reducer';
-export { HelpComponent } from './modules/menu-items/help/components/help.component';
-export { filtersConfig, FiltersService } from './modules/menu-items/filters/services/filters.service';
+export { filtersConfig, FiltersService } from './modules/filters/services/filters.service';
 export { casesStateSelector, selectSelectedCase } from './modules/menu-items/cases/reducers/cases.reducer';
 export {
 	filtersStateSelector,
 	selectFacets,
-	selectFilters,
+	selectFiltersMetadata,
+	selectEnableOnlyFavorites,
 	selectShowOnlyFavorites
-} from './modules/menu-items/filters/reducer/filters.reducer';
-export { ToolsComponent } from './modules/menu-items/tools/tools/tools.component';
+} from './modules/filters/reducer/filters.reducer';
+export { ToolsComponent } from './modules/status-bar/components/tools/tools/tools.component';
 export { layersConfig } from './modules/menu-items/layers-manager/services/data-layers.service';
 export {
 	LayersManagerComponent
-}from './modules/menu-items/layers-manager/components/layers-manager/layers-manager.component';
+} from './modules/menu-items/layers-manager/components/layers-manager/layers-manager.component';
 export {
 	FiltersCollectionComponent
-}from './modules/menu-items/filters/components/filters-collection/filters-collection.component';
+} from './modules/filters/components/filters-collection/filters-collection.component';
+export {
+	FilterContainerComponent
+} from './modules/filters/components/filter-container/filter-container.component';
 export { CasesComponent } from './modules/menu-items/cases/components/cases/cases.component';
-export { IToolsConfig, toolsConfig, IImageProcParam } from './modules/menu-items/tools/models/tools-config';
+export { IToolsConfig, toolsConfig } from './modules/status-bar/components/tools/models/tools-config';
 export { CasesModule } from './modules/menu-items/cases/cases.module';
 export { TasksModule } from './modules/menu-items/algorithms/tasks.module';
-export { FiltersModule } from './modules/menu-items/filters/filters.module';
-export { HelpModule } from './modules/menu-items/help/help.module';
+export { FiltersModule } from './modules/filters/filters.module';
 export { LayersManagerModule } from './modules/menu-items/layers-manager/layers-manager.module';
 export { SettingsModule } from './modules/menu-items/settings/settings.module';
-export { ToolsModule } from './modules/menu-items/tools/tools.module';
+export { ToolsModule } from './modules/status-bar/components/tools/tools.module';
 export { ICasesConfig } from './modules/menu-items/cases/models/cases-config';
-export { filtersFeatureKey, FiltersReducer } from './modules/menu-items/filters/reducer/filters.reducer';
+export { filtersFeatureKey, FiltersReducer } from './modules/filters/reducer/filters.reducer';
 export {
 	initialLayersState, layersFeatureKey,
 	LayersReducer,
 	layersStateSelector
 } from './modules/menu-items/layers-manager/reducers/layers.reducer';
 export { casesFeatureKey, CasesReducer, initialCasesState } from './modules/menu-items/cases/reducers/cases.reducer';
-export { PullActiveCenter } from './modules/menu-items/tools/actions/tools.actions';
-export { toolsFeatureKey, toolsInitialState, ToolsReducer } from './modules/menu-items/tools/reducers/tools.reducer';
-export { AddCaseAction } from './modules/menu-items/cases/actions/cases.actions';
+export { PullActiveCenter } from './modules/status-bar/components/tools/actions/tools.actions';
+export { toolsFeatureKey, toolsInitialState, ToolsReducer } from './modules/status-bar/components/tools/reducers/tools.reducer';
 export { QueryParamsHelper } from './modules/menu-items/cases/services/helpers/cases.service.query-params-helper';
-export { UpdateFilterAction } from './modules/menu-items/filters/actions/filters.actions';
-export { IEnumFiled } from './modules/menu-items/filters/models/metadata/enum-filter-metadata';
+export { UpdateFilterAction } from './modules/filters/actions/filters.actions';
+export { IEnumFiled } from './modules/filters/models/metadata/enum-filter-metadata';
 export {
 	selectCurrentAlgorithmTaskRegion,
 	selectAlgorithmTaskDrawIndicator,
@@ -213,7 +207,7 @@ export {
 	AlgorithmTask,
 	AlgorithmTaskStatus
 } from './modules/menu-items/algorithms/models/tasks.model';
-export { SetAutoSave } from './modules/menu-items/cases/actions/cases.actions';
+// export { SetAutoSave } from './modules/menu-items/cases/actions/cases.actions';
 
 
 // core
@@ -233,6 +227,7 @@ export { ILoggerConfig } from './modules/core/models/logger-config.model';
 export { AnsynTranslationModule } from './modules/core/translation/ansyn-translation.module';
 export { SliderCheckboxComponent } from './modules/core/forms/slider-checkbox/slider-checkbox.component';
 export { MockComponent } from './modules/core/test/mock-component';
+export { mockIndexProviders } from "./modules/core/test/mock-providers";
 export { createStore, IStoreFixture } from './modules/core/test/mock-store';
 export { AnsynCheckboxComponent } from './modules/core/forms/ansyn-checkbox/ansyn-checkbox.component';
 export { asyncData } from './modules/core/test/async-observable-helpers';
@@ -256,7 +251,7 @@ export {
 
 export { ICoreConfig } from './modules/core/models/core.config.model';
 export { CoreConfig } from './modules/core/models/core.config';
-export { endTimingLog, startTimingLog } from './modules/core/utils/logs/timer-logs';
+export { endTimingLog, startTimingLog, getLogMessageFromAction, actionHasLogMessage } from './modules/core/utils/logs/timer-logs';
 export { buildFilteredOverlays } from './modules/core/utils/overlays';
 export { isFullOverlay } from './modules/core/utils/overlays';
 export { IFilterModel } from './modules/core/models/IFilterModel';
@@ -268,7 +263,6 @@ export { rxPreventCrash } from './modules/core/utils/rxjs/operators/rxPreventCra
 export { IContext } from './modules/core/models/context.model';
 export { mapValuesToArray } from './modules/core/utils/misc';
 export { CoreModule } from './modules/core/core.module';
-export { DisplayedOverlay } from './modules/core/models/context.model';
 export { BaseFetchService } from './modules/core/services/base-fetch-service';
 export { FetchService } from './modules/core/services/fetch.service';
 export { IDeltaTime } from './modules/core/models/time.model';
@@ -278,7 +272,7 @@ export { IDeltaTime } from './modules/core/models/time.model';
 export { PhotoAngle, RegionContainment } from './modules/overlays/models/overlay.model';
 export { IOverlaysCriteriaOptions } from './modules/overlays/models/overlay.model';
 export { GeoRegisteration } from './modules/overlays/models/overlay.model';
-export { IOverlaysFetchData, IOverlayDrop, IOverlaySpecialObject } from './modules/overlays/models/overlay.model';
+export { IOverlayError, IOverlaysFetchData, IOverlayDrop, IOverlaySpecialObject } from './modules/overlays/models/overlay.model';
 export {
 	IOverlay, IDilutedOverlay, Overlay, IOverlaysCriteria, IDilutedOverlaysHash, IOverlaysHash
 }from './modules/overlays/models/overlay.model';
@@ -295,19 +289,18 @@ export {
 	ICaseDataInputFiltersState,
 	ICaseTimeState
 } from './modules/menu-items/cases/models/case.model';
-export { IContextEntity } from './modules/menu-items/cases/models/case.model';
 export {
-	ICaseBooleanFilterMetadata, ICaseState, IOverlaysManualProcessArgs
+	ICaseBooleanFilterMetadata, ICaseState, IOverlaysImageProcess
 }from './modules/menu-items/cases/models/case.model';
 export {
-	ICaseMapsState, IDilutedCaseState, ImageManualProcessArgs
+	ICaseMapsState, IDilutedCaseState, IImageManualProcessArgs
 }from './modules/menu-items/cases/models/case.model';
 export { ICaseEnumFilterMetadata } from './modules/menu-items/cases/models/case.model';
 export { ICaseMapState } from './modules/menu-items/cases/models/case.model';
 
 
 export {
-	SetOverlaysCriteriaAction, UpdateOverlaysCountAction,
+	SetOverlaysCriteriaAction,
 	SetMiscOverlays,
 	SetMiscOverlay
 } from './modules/overlays/actions/overlays.actions';
@@ -341,13 +334,14 @@ export {
 	OverlaysActionTypes,
 	RedrawTimelineAction, RequestOverlayByIDFromBackendAction,
 	SetFilteredOverlaysAction, SetHoveredOverlayAction, SetMarkUp,
-	SetOverlaysStatusMessageAction, SetSpecialObjectsActionStore, SetDropsAction
+	SetOverlaysStatusMessageAction, SetSpecialObjectsActionStore, SetDropsAction,
+	UpdateOverlay, UpdateOverlays
 } from './modules/overlays/actions/overlays.actions';
 export {
 	MarkUpClass,
 	overlaysStateSelector,
 	overlaysStatusMessages, selectdisplayOverlayHistory, selectDropMarkup,
-	selectFilteredOveralys, selectOverlaysArray,
+	selectFilteredOveralys, selectOverlaysArray, selectOverlaysIds,
 	selectOverlaysMap, selectOverlays, selectSpecialObjects, selectDrops, selectDropsWithoutSpecialObjects
 } from './modules/overlays/reducers/overlays.reducer';
 export { OverlaysConfig, OverlaysService } from './modules/overlays/services/overlays.service';
@@ -380,5 +374,25 @@ export {
 	SetOverlaysTranslationDataAction,
 	SetOverlayTranslationDataAction,
 	ToggleDraggedModeAction,
-	TogglePresetOverlayAction
+	UpdateOverlaysManualProcessArgs,
+	SetAutoImageProcessing,
+	SetManualImageProcessing
 } from './modules/overlays/overlay-status/actions/overlay-status.actions';
+
+// ng9 upgrade - missing exports
+export { UnsupportedDevicesComponent } from './components/unsupported-devices/unsupported-devices.component';
+export { StatusBarComponent } from './modules/status-bar/components/status-bar/status-bar.component';
+export { AnsynButtonComponent } from './modules/core/forms/ansyn-button/ansyn-button.component';
+export { AnsynRadioComponent } from './modules/core/forms/ansyn-radio/ansyn-radio.component';
+export { ComboBoxComponent } from './modules/core/forms/combo-box/combo-box.component';
+export { ComboBoxTriggerComponent } from './modules/core/forms/combo-box-trigger/combo-box-trigger.component';
+export { ComboBoxOptionComponent } from './modules/core/forms/combo-box-option/combo-box-option.component';
+export { ContextMenuComponent } from './modules/core/components/context-menu/context-menu.component';
+export { CredentialsComponent } from './modules/menu-items/credentials/components/credentials/credentials.component';
+export { OverlaysContainerComponent } from './modules/overlays/components/container/overlays-container.component';
+export { TimelineComponent } from './modules/overlays/components/timeline/timeline.component';
+export { OverlayOverviewComponent } from './modules/overlays/components/overlay-overview/overlay-overview.component';
+export { OverlayNavigationBarComponent } from './modules/overlays/components/overlay-navigation-bar/overlay-navigation-bar.component';
+export { AnsynComboTableComponent } from './modules/core/forms/ansyn-combo-table/ansyn-combo-table.component';
+export { AnsynComboTableOptionComponent } from './modules/core/forms/ansyn-combo-table-option/ansyn-combo-table-option.component';
+export { AdvancedSearchComponent } from './modules/status-bar/components/advanced-search/advanced-search.component';

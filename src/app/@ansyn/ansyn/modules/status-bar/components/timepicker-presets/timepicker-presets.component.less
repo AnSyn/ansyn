@@ -1,0 +1,38 @@
+@import "ansyn/less/colors";
+@import "../../less/status-bar-common";
+@import "ansyn/less/z-index-globals";
+
+:host {
+
+	div.presets {
+		background-color: black;
+		width: 100px;
+		position: absolute;
+		min-width: 150px;
+		min-height: 110px;
+		margin-bottom: 9px;
+		margin-right: 60px;
+		z-index: @z-index-time-picker-presets;
+
+
+		&.top {
+			position: relative;
+			bottom: 194px;
+		}
+
+		button {
+			background-color: black;
+			color: white;
+			border-style: none;
+			width: 100%;
+			font-size: 14px;
+			padding-top: 9px;
+			cursor: pointer;
+
+			&:hover {
+				background-color: @background-color-7;
+			}
+		}
+
+	}
+}

@@ -1,24 +1,29 @@
 import { StatusBarActions, StatusBarActionsTypes } from '../actions/status-bar.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { IComboBoxesProperties } from '../models/combo-boxes.model';
-import { SearchMode, SearchModeEnum } from '../models/search-mode.enum';
+import { CaseGeoFilter } from '../../menu-items/cases/models/case.model';
 
 export interface IGeoFilterStatus {
-	searchMode: SearchMode;
-	indicator: boolean;
+	type: CaseGeoFilter;
+	active: boolean;
 }
 
 export interface IStatusBarState {
-	geoFilterStatus: IGeoFilterStatus;
-	comboBoxesProperties: IComboBoxesProperties;
+	geoFilterStatus?: IGeoFilterStatus;
+	isCalenderOpen?: boolean;
+	isAdvancedSearchOpen?: boolean;
+	IsSimpleSearchOpen?: boolean;
+	IsOpenedFromOutside?: boolean;
 }
 
 export const StatusBarInitialState: IStatusBarState = {
 	geoFilterStatus: {
-		searchMode: SearchModeEnum.none,
-		indicator: true
+		type: CaseGeoFilter.PinPoint,
+		active: false
 	},
-	comboBoxesProperties: {}
+	isCalenderOpen: false,
+	isAdvancedSearchOpen: false,
+	IsSimpleSearchOpen: false,
+	IsOpenedFromOutside: false
 };
 
 export const statusBarFeatureKey = 'statusBar';
@@ -26,11 +31,30 @@ export const statusBarStateSelector: MemoizedSelector<any, IStatusBarState> = cr
 
 export function StatusBarReducer(state = StatusBarInitialState, action: StatusBarActions | any): IStatusBarState {
 	switch (action.type) {
-		case StatusBarActionsTypes.SET_IMAGE_OPENING_ORIENTATION:
-			return { ...state, comboBoxesProperties: { ...state.comboBoxesProperties, ...action.payload } };
-
-		case StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS:
-			return { ...state, geoFilterStatus: { ...state.geoFilterStatus, ...action.payload } };
+		case StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS: {
+			const { payload } = action;
+			if ( payload ) {
+				return { ...state, geoFilterStatus: { ...state.geoFilterStatus, ...payload } };
+			} else {
+				return state;
+			}
+		}
+		case StatusBarActionsTypes.UPDATE_CALENDER_STATUS: {
+			const { payload } = action;
+			return { ...state, isCalenderOpen: payload}
+		}
+		case StatusBarActionsTypes.TOGGLE_ADVANCED_SEARCH: {
+			const { payload } = action;
+			return { ...state, isAdvancedSearchOpen: payload}
+		}
+		case StatusBarActionsTypes.TOGGLE_SIMPLE_SEARCH: {
+			const { payload } = action;
+			return { ...state, IsSimpleSearchOpen: payload}
+		}
+		case StatusBarActionsTypes.OPENED_FROM_OUTSIDE: {
+			const { payload } = action;
+			return { ...state, IsOpenedFromOutside: payload}
+		}
 
 		default:
 			return state;
@@ -38,7 +62,10 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 	}
 }
 
-export const selectComboBoxesProperties = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.comboBoxesProperties : StatusBarInitialState.comboBoxesProperties);
 export const selectGeoFilterStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.geoFilterStatus : StatusBarInitialState.geoFilterStatus);
-export const selectGeoFilterIndicator = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.indicator);
-export const selectGeoFilterSearchMode = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.searchMode);
+export const selectCalenderStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.isCalenderOpen : StatusBarInitialState.isCalenderOpen);
+export const selectAdvancedSearchStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.isAdvancedSearchOpen : StatusBarInitialState.isAdvancedSearchOpen);
+export const selectSimpledSearchStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.IsSimpleSearchOpen : StatusBarInitialState.IsSimpleSearchOpen);
+export const selectIsOpenedFromOutside = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.IsOpenedFromOutside : StatusBarInitialState.IsOpenedFromOutside);
+export const selectGeoFilterActive = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.active);
+export const selectGeoFilterType = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.type);

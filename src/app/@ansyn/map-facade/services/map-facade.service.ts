@@ -1,14 +1,14 @@
-import { ExportMapsToPngRequestedAction } from '../actions/map.actions';
 import { Injectable } from '@angular/core';
 import {
 	ImageryCommunicatorService,
-	ImageryMapPosition,
+	IImageryMapPosition,
 	IMapInstanceChanged,
 	IMapSettings
 } from '@ansyn/imagery';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import {
+	LogMessageFromImagery,
 	MapInstanceChangedAction,
 	PositionChangedAction,
 } from '../actions/map.actions';
@@ -28,6 +28,12 @@ export class MapFacadeService {
 	layout: LayoutKey;
 	layout$ = this.store.select(selectLayout);
 
+	constructor(protected store: Store<IMapState>,
+				protected imageryCommunicatorService: ImageryCommunicatorService) {
+		(<Observable<any>>this.mapsList$).subscribe((mapsList) => this.mapsList = mapsList);
+		(<Observable<any>>this.layout$).subscribe((layout) => this.layout = layout);
+	}
+
 	// @todo IOveraly
 	static isOverlayGeoRegistered(overlay: any): boolean {
 		if (!overlay) {
@@ -41,19 +47,7 @@ export class MapFacadeService {
 	}
 
 	static mapById(mapsList: IMapSettings[], mapId: string): IMapSettings {
-		if (!Boolean(mapsList)) {
-			return undefined;
-		}
-
-		return mapsList.find(({ id }: IMapSettings) => {
-			return id === mapId;
-		});
-	}
-
-	constructor(protected store: Store<IMapState>,
-				protected imageryCommunicatorService: ImageryCommunicatorService) {
-		(<Observable<any>>this.mapsList$).subscribe((mapsList) => this.mapsList = mapsList);
-		(<Observable<any>>this.layout$).subscribe((layout) => this.layout = layout);
+		return Boolean(mapsList) ? mapsList.find(({ id }: IMapSettings) => id === mapId) : undefined;
 	}
 
 	initEmitters(id: string) {
@@ -66,7 +60,10 @@ export class MapFacadeService {
 				id: communicator.id,
 				position
 			})),
-			communicator.mapInstanceChanged.subscribe(this.mapInstanceChanged.bind(this))
+			communicator.mapInstanceChanged.subscribe(this.mapInstanceChanged.bind(this)),
+			communicator.logMessagesEmitter.subscribe((message) => {
+				this.store.dispatch(new LogMessageFromImagery(message))
+			})
 		);
 		this.subscribers[id] = communicatorSubscribers;
 	}
@@ -82,14 +79,10 @@ export class MapFacadeService {
 		this.store.dispatch(new MapInstanceChangedAction($event));
 	}
 
-	positionChanged($event: { id: string, position: ImageryMapPosition }) {
+	positionChanged($event: { id: string, position: IImageryMapPosition }) {
 		if (Boolean(this.mapsList)) {
 			const mapInstance = <IMapSettings>MapFacadeService.mapById(this.mapsList, $event.id);
 			this.store.dispatch(new PositionChangedAction({ ...$event, mapInstance }));
 		}
-	}
-
-	public exportMapsToPng(): void {
-		this.store.dispatch(new ExportMapsToPngRequestedAction());
 	}
 }

@@ -1,9 +1,7 @@
-import { ILayerState } from './layers.reducer';
 import { LayersActions, LayersActionTypes } from '../actions/layers.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { uniq } from 'lodash';
-import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
-import { Dictionary, EntitySelectors } from '@ngrx/entity/src/models';
+import { createEntityAdapter, EntityAdapter, EntityState, Dictionary } from '@ngrx/entity';
 import { ILayer, LayerType } from '../models/layers.model';
 import { ILayerModal, SelectedModalEnum } from './layers-modal';
 
@@ -29,13 +27,16 @@ export const layersStateSelector: MemoizedSelector<any, ILayerState> = createFea
 
 export function LayersReducer(state: ILayerState = initialLayersState, action: LayersActions | any): ILayerState {
 	switch (action.type) {
+		case LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD:
+			return layersAdapter.removeAll({...state, selectedLayersIds: [], activeAnnotationLayer: null});
+
 		case LayersActionTypes.LAYER_COLLECTION_LOADED:
 			let annotationLayer = action.payload.find(({ type }) => type === LayerType.annotation);
-			let selectedLayersIds = state.selectedLayersIds;
+			const selectedLayersIds = state.selectedLayersIds;
 			let activeAnnotationLayer = state.activeAnnotationLayer;
 			let layers = action.payload;
 			activeAnnotationLayer = annotationLayer && annotationLayer.id;
-			return layersAdapter.addAll(layers, { ...state, selectedLayersIds, activeAnnotationLayer });
+			return layersAdapter.setAll(layers, { ...state, selectedLayersIds, activeAnnotationLayer });
 
 		case LayersActionTypes.SET_LAYER_SELECTION: {
 			const id = action.payload.id, ids = state.selectedLayersIds;
@@ -100,7 +101,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 
 }
 
-export const { selectAll, selectEntities }: EntitySelectors<ILayer, ILayerState> = layersAdapter.getSelectors();
+export const { selectAll, selectEntities } = layersAdapter.getSelectors();
 
 export const layersStateOrInitial: MemoizedSelector<any, any> = createSelector(layersStateSelector, (layersState: ILayerState) => layersState || initialLayersState);
 export const selectLayers: MemoizedSelector<any, any> = createSelector(layersStateOrInitial, selectAll);

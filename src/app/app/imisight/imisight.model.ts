@@ -1,5 +1,6 @@
 export const ImisightOverlaySourceConfig = 'imisightOverlaysSourceConfig';
 
 export interface IImisightOverlaySourceConfig {
-	baseUrl: string;
+	baseUrl: string,
+	searchPath: string;
 }

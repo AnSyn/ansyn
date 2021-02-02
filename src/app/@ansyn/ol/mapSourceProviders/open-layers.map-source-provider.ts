@@ -1,23 +1,30 @@
 import {
 	BaseMapSourceProvider,
-	bboxFromGeoJson,
+	bboxFromGeoJson, CacheService,
 	EPSG_3857,
-	EPSG_4326,
+	EPSG_4326, ImageryCommunicatorService,
 	ImageryLayerProperties,
-	IMapSettings
+	IMapSettings, IMapSourceProvidersConfig, MAP_SOURCE_PROVIDERS_CONFIG
 } from '@ansyn/imagery';
-import Layer from 'ol/layer/Layer';
-import ImageLayer from 'ol/layer/Image';
+import ol_Layer from 'ol/layer/Layer';
 import TileLayer from 'ol/layer/Tile';
 import * as proj from 'ol/proj';
 import XYZ from 'ol/source/XYZ';
-import { ProjectableRaster } from '../maps/open-layers-map/models/projectable-raster';
+import { Inject } from '@angular/core';
+import { BBox } from '@turf/helpers';
 
+export const IMAGE_PROCESS_ATTRIBUTE = 'imageLayer';
 export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSourceProvider<CONF> {
-	create(metaData: IMapSettings): Promise<any> {
-		const source = this.getXYZSource(metaData.data.overlay.imageUrl);
-		const extent = this.getExtent(metaData.data.overlay.footprint);
-		const tileLayer = this.getTileLayer(source, extent);
+	constructor(protected cacheService: CacheService,
+				protected imageryCommunicatorService: ImageryCommunicatorService,
+				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig<CONF>) {
+		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
+	}
+
+	create(metaData: IMapSettings): Promise<ol_Layer> {
+		const extent = this.createExtent(metaData);
+		const source = this.createSource(metaData);
+		const tileLayer = this.createLayer(source, extent);
 		return Promise.resolve(tileLayer);
 	}
 
@@ -28,52 +35,27 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 		return `${ metaData.worldView.mapType }/${ metaData.data.key }`;
 	}
 
-	removeExtraData(layer: any) {
-		if (this.isRasterLayer(layer)) {
-			layer.getSource().destroy();
-		}
-		super.removeExtraData(layer);
-	}
-
-	protected isRasterLayer(layer: any) {
-		return layer instanceof Layer && layer.getSource() instanceof ProjectableRaster;
-	}
-
-	getTileLayer(source, extent: [number, number, number, number]): TileLayer {
+	createLayer(source, extent: BBox): ol_Layer {
 		const tileLayer = new TileLayer(<any>{
 			visible: true,
 			preload: Infinity,
 			source,
 			extent
 		});
-		const imageLayer = this.getImageLayer(source, extent);
-		this.removeExtraData(imageLayer);
-		tileLayer.set('imageLayer', imageLayer);
 		return tileLayer;
 	}
 
-	getImageLayer(source, extent): ImageLayer {
-		const imageLayer = new ImageLayer({
-			source: new ProjectableRaster({
-				sources: [source],
-				operation: (pixels) => pixels[0],
-				operationType: 'image'
-			}),
-			extent: extent
-		});
-		return imageLayer;
-	}
-
-	getExtent(footprint, destinationProjCode = EPSG_3857) {
-		let extent: [number, number, number, number] = <[number, number, number, number]>bboxFromGeoJson(footprint);
-		[extent[0], extent[1]] = proj.transform([extent[0], extent[1]], EPSG_4326, destinationProjCode);
-		[extent[2], extent[3]] = proj.transform([extent[2], extent[3]], EPSG_4326, destinationProjCode);
+	createExtent(metaData: IMapSettings, destinationProjCode = EPSG_3857): BBox {
+		const sourceProjection = metaData.data.config && metaData.data.config.projection ? metaData.data.config.projection : EPSG_4326;
+		let extent: BBox = metaData.data.overlay ? <[number, number, number, number]>bboxFromGeoJson(metaData.data.overlay.footprint) : [-180, -90, 180, 90];
+		[extent[0], extent[1]] = proj.transform([extent[0], extent[1]], sourceProjection, destinationProjCode);
+		[extent[2], extent[3]] = proj.transform([extent[2], extent[3]], sourceProjection, destinationProjCode);
 		return extent;
 	}
 
-	getXYZSource(url: string) {
+	createSource(metaData: IMapSettings) {
 		const source = new XYZ({
-			url: url,
+			url: metaData.data.overlay.imageUrl,
 			crossOrigin: 'Anonymous',
 			projection: EPSG_3857
 		});
@@ -87,7 +69,7 @@ export abstract class OpenLayersMapSourceProvider<CONF = any> extends BaseMapSou
 		return {}
 	}
 
-	setExtraData(layer: any, extraData: any): void {
+	setExtraData(layer: ol_Layer, extraData: any): void {
 		Object.entries(extraData).forEach(([key, value]) => {
 			layer.set(key, value)
 		})

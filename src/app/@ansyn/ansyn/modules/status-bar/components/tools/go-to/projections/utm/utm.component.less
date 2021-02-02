@@ -1,0 +1,86 @@
+@import 'ansyn/less/common';
+@import 'ansyn/less/colors';
+@import "ansyn/less/z-index-globals";
+
+:host {
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	color: white;
+
+	.inputs {
+		display: flex;
+		margin-top: 15px;
+
+		.input-box {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			margin-left: 20px;
+
+			label {
+				opacity: 0.7;
+				margin-bottom: 5px;
+				font-size: 16px;
+			}
+
+			input {
+				width: 75px;
+				border: none;
+				outline: none;
+				color: white;
+				font-size: 14px;
+				padding: 6px 11px;
+				background: black;
+			}
+
+			&.narrow  input {
+				width: 24px;
+			}
+		}
+
+		.utm-copy-to-clipboard {
+			width: 5%;
+			font-size: 18px;
+			display: flex;
+			justify-content: flex-end;
+			align-items: flex-end;
+			margin-bottom: 5px;
+			margin-right: auto;
+			cursor: pointer;
+		}
+
+	}
+
+	.error-message {
+		position: absolute;
+		color: #d50000;
+		font-size: 12px;
+		margin: 0;
+		padding: 0 10px;
+	}
+
+	.error-font() {
+		color: #d50000;
+		font-size: 12px;
+	}
+
+	.error-message {
+		position: absolute;
+		.error-font();
+		margin: 0;
+		padding: 0 10px;
+	}
+
+	.goto-projection-title {
+		display: flex;
+		align-items: flex-end;
+		margin-top: 24px;
+
+		.ed50-notification {
+			margin-right: 1em;
+			direction: rtl;
+			.error-font();
+		}
+	}
+}

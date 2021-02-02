@@ -1,3 +1,9 @@
+export interface IBaseImageryLayer {
+	get(key: any): any;
+	set(key: any, value: any): void;
+	[key: string]: any;
+}
+
 export enum ImageryLayerProperties {
 	NAME = 'name',
 	ID = 'id',
@@ -5,6 +11,7 @@ export enum ImageryLayerProperties {
 	CACHE_ID = 'cacheId',
 	MAIN_EXTENT = 'mainExtent',
 	FOOTPRINT = 'footprint',
+	IS_OVERLAY = 'isOverlay',
 	DESCRIPTION = 'description'
 }
 

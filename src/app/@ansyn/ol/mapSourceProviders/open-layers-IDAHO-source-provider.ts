@@ -27,6 +27,9 @@ export class OpenLayerIDAHOSourceProvider extends OpenLayersMapSourceProvider {
 		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
 	}
 
+	/*
+		not in use
+	 */
 	create(metaData: IMapSettings): Promise<any> {
 		let layerPromise;
 

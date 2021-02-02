@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { MapFacadeService } from '../services/map-facade.service';
-import { EMPTY, forkJoin, Observable } from 'rxjs';
+import { EMPTY, forkJoin, Observable, from } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { IMapState, mapStateSelector, selectActiveMapId, selectMaps } from '../reducers/map.reducer';
-import { ImageryCommunicatorService, IMapSettings, IWorldViewMapState } from '@ansyn/imagery';
+import { ImageryCommunicatorService, IMapSettings, IMapSettingsData, IWorldViewMapState } from '@ansyn/imagery';
 import {
 	ActiveImageryMouseEnter,
 	ActiveImageryMouseLeave,
@@ -30,7 +30,6 @@ import {
 	ReplaceMainLayerFailed
 } from '../actions/map.actions';
 import { catchError, filter, map, mergeMap, share, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { fromPromise } from 'rxjs/internal-compatibility';
 import { mapFacadeConfig } from '../models/map-facade.config';
 import { IMapFacadeConfig } from '../models/map-config.model';
 import { updateSession } from '../models/core-session-state.model';
@@ -167,7 +166,7 @@ export class MapEffects {
 		withLatestFrom(this.store$.select(selectMaps)),
 		mergeMap(([{ payload: { id, mapType, sourceType } }, mapsEntities]) => {
 			const communicator = this.communicatorsService.provide(id);
-			return fromPromise(communicator.setActiveMap(mapType, mapsEntities[id].data.position, sourceType)).pipe(
+			return from(communicator.setActiveMap(mapType, mapsEntities[id].data.position, sourceType)).pipe(
 				map(() => {
 					sourceType = sourceType || communicator.mapSettings.worldView.sourceType;
 					const worldView: IWorldViewMapState = { mapType, sourceType };
@@ -188,10 +187,10 @@ export class MapEffects {
 	@Effect()
 	changeImageryLayer$ = this.actions$.pipe(
 		ofType<ReplaceMainLayer>(MapActionTypes.REPLACE_MAP_MAIN_LAYER),
-		switchMap( ({payload}) => {
+		switchMap(({ payload }) => {
 			const communicator = this.communicatorsService.provide(payload.id);
-			return fromPromise(communicator.replaceMapMainLayer(payload.sourceType)).pipe(
-				map( change => change ? new ReplaceMainLayerSuccess(payload) : new ReplaceMainLayerFailed())
+			return communicator.replaceMapMainLayer(payload.sourceType).pipe(
+				map(change => change ? new ReplaceMainLayerSuccess(payload) : new ReplaceMainLayerFailed())
 			);
 		})
 	);
@@ -225,6 +224,11 @@ export class MapEffects {
 				updateSession(payloadObj);
 			})
 		);
+
+	@Effect({dispatch: false})
+	onForceMapsRender$ = this.actions$.pipe(
+		ofType(MapActionTypes.FORCE_RENDER_MAPS)
+	);
 
 
 	constructor(protected actions$: Actions,

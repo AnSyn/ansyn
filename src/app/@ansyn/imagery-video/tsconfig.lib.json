@@ -1,12 +1,9 @@
 {
-  "extends": "../../../../tsconfig.json",
+  "extends": "../../../../tsconfig.base.json",
   "compilerOptions": {
     "paths": {
       "@ansyn/imagery": [
         "dist/ansyn/imagery"
-      ],
-      "@ansyn/map-facade": [
-        "dist/ansyn/map-facade"
       ]
     },
     "outDir": "../../../out-tsc/lib",
@@ -28,7 +25,6 @@
     ]
   },
   "angularCompilerOptions": {
-    "annotateForClosureCompiler": true,
     "skipTemplateCodegen": true,
     "strictMetadataEmit": true,
     "fullTemplateTypeCheck": true,

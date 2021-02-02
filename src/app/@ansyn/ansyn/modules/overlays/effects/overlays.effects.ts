@@ -2,24 +2,24 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, forkJoin, from, Observable, zip, EMPTY } from 'rxjs';
-import { catchError, combineAll, filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { forkJoin, from, Observable } from 'rxjs';
+import { catchError, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
 	CheckTrianglesAction,
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction,
 	LoadOverlaysAction,
 	LoadOverlaysSuccessAction,
-	OverlaysActionTypes,
+	OverlaysActionTypes, SetOverlaysContainmentChecked,
 	RequestOverlayByIDFromBackendAction,
 	SetMarkUp,
 	SetOverlaysCriteriaAction,
 	SetOverlaysStatusMessageAction,
-	UpdateOverlaysCountAction
+	UpdateOverlays
 } from '../actions/overlays.actions';
 import { IOverlay, IOverlaysCriteria, IOverlaysFetchData, RegionContainment } from '../models/overlay.model';
 import { BackToWorldView } from '../overlay-status/actions/overlay-status.actions';
-import { selectFavoriteOverlays, selectPresetOverlays } from '../overlay-status/reducers/overlay-status.reducer';
+import { selectFavoriteOverlays } from '../overlay-status/reducers/overlay-status.reducer';
 import {
 	MarkUpClass,
 	overlaysStateSelector,
@@ -33,39 +33,52 @@ import { rxPreventCrash } from '../../core/utils/rxjs/operators/rxPreventCrash';
 import { getPolygonIntersectionRatio, isPointContainedInGeometry } from '@ansyn/imagery';
 import { getErrorLogFromException } from '../../core/utils/logs/timer-logs';
 import { LoggerService } from '../../core/services/logger.service';
-import { AreaToCredentialsService } from "../../core/services/credentials/area-to-credentials.service";
-import { CredentialsService, ICredentialsResponse } from "../../core/services/credentials/credentials.service";
-import { SetDoesUserHaveCredentials } from "@ansyn/menu";
+import { AreaToCredentialsService } from '../../core/services/credentials/area-to-credentials.service';
+import { CredentialsService, ICredentialsResponse } from '../../core/services/credentials/credentials.service';
+import { getMenuSessionData, SetBadgeAction } from '@ansyn/menu';
+import { Update } from '@ngrx/entity';
+import { selectWasWelcomeNotificationShown, SetToastMessageAction } from '@ansyn/map-facade';
+import { OpenAdvancedSearchFromOutsideAction, ToggleAdvancedSearchAction, ToggleSimpleSearchAction } from '../../status-bar/actions/status-bar.actions';
 
 @Injectable()
 export class OverlaysEffects {
 
-	@Effect({ dispatch: false })
+	@Effect()
 	setOverlaysContainedInRegionField$ = this.actions$.pipe(
-		ofType(OverlaysActionTypes.SET_OVERLAYS_CRITERIA, OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
+		ofType(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
 		withLatestFrom(this.store$.select(selectOverlaysCriteria), this.store$.select(selectOverlaysArray)),
 		filter(([action, criteria, overlays]: [any, IOverlaysCriteria, IOverlay[]]) => Boolean(overlays) && overlays.length > 0),
-		tap(([action, criteria, overlays]: [any, IOverlaysCriteria, IOverlay[]]) => {
-			overlays.forEach((overlay: IOverlay) => {
+		mergeMap(([action, criteria, overlays]: [any, IOverlaysCriteria, IOverlay[]]) => {
+			const payload: Update<IOverlay>[] = overlays.map((overlay: IOverlay) => {
+				const region = criteria.region.geometry;
+				let containedInSearchPolygon;
 				try {
-					if (criteria.region.type === 'Point') {
-						const isContained = isPointContainedInGeometry(criteria.region, overlay.footprint);
-						overlay.containedInSearchPolygon = isContained ? RegionContainment.contained : RegionContainment.notContained;
+					if (region.type === 'Point') {
+						const isContained = isPointContainedInGeometry(region, overlay.footprint);
+						containedInSearchPolygon = isContained ? RegionContainment.contained : RegionContainment.notContained;
 					} else {
-						const ratio = getPolygonIntersectionRatio(criteria.region, overlay.footprint);
+						const ratio = getPolygonIntersectionRatio(region, overlay.footprint);
 						if (!Boolean(ratio)) {
-							overlay.containedInSearchPolygon = RegionContainment.notContained;
+							containedInSearchPolygon = RegionContainment.notContained;
 						} else if (ratio === 1) {
-							overlay.containedInSearchPolygon = RegionContainment.contained;
+							containedInSearchPolygon = RegionContainment.contained;
 						} else {
-							overlay.containedInSearchPolygon = RegionContainment.intersect;
+							containedInSearchPolygon = RegionContainment.intersect;
 						}
 					}
 				} catch (e) {
 					console.error('failed to calc overlay intersection ratio of ', overlay, ' error ', e);
-					overlay.containedInSearchPolygon = RegionContainment.unknown;
+					containedInSearchPolygon = RegionContainment.unknown;
 				}
+				return {
+					id: overlay.id,
+					changes: { containedInSearchPolygon }
+				};
 			});
+			return [
+				new UpdateOverlays(payload),
+				new SetOverlaysContainmentChecked()
+			];
 		}),
 		rxPreventCrash()
 	);
@@ -87,20 +100,21 @@ export class OverlaysEffects {
 	checkTrianglesBeforeSearch$ = this.actions$.pipe(
 		ofType<CheckTrianglesAction>(OverlaysActionTypes.CHECK_TRIANGLES),
 		switchMap((action: CheckTrianglesAction) => {
-			return forkJoin([this.areaToCredentialsService.getAreaTriangles(action.payload.region), this.userAuthorizedAreas$]).pipe(
+			const region = action.payload.region.geometry;
+			const { isUserFirstEntrance } = getMenuSessionData();
+			return forkJoin([this.areaToCredentialsService.getAreaTriangles(region), this.userAuthorizedAreas$]).pipe(
 				mergeMap<any, any>(([trianglesOfArea, userAuthorizedAreas]: [any, any]) => {
-
 					if (userAuthorizedAreas.some( area => trianglesOfArea.includes(area))) {
 						return [new LoadOverlaysAction(action.payload),
-							new SetDoesUserHaveCredentials(true)];
+							new SetBadgeAction({key: 'Permissions', badge: undefined})];
 					}
 					return [new LoadOverlaysSuccessAction([]),
-						new SetOverlaysStatusMessageAction(this.translate.instant(overlaysStatusMessages.noPermissionsForArea)),
-						new SetDoesUserHaveCredentials(false)];
+						new SetOverlaysStatusMessageAction({ message: this.translate.instant(overlaysStatusMessages.noPermissionsForArea) }),
+						new SetBadgeAction({key: 'Permissions', badge: isUserFirstEntrance ? '' : undefined})];
 				}),
 				catchError( () => {
 					return [new LoadOverlaysAction(action.payload),
-						new SetDoesUserHaveCredentials(true)];
+						new SetBadgeAction({key: 'Permissions', badge: undefined})];
 				})
 			)
 		})
@@ -110,34 +124,14 @@ export class OverlaysEffects {
 	@Effect()
 	loadOverlays$: Observable<{} | LoadOverlaysSuccessAction> = this.actions$.pipe(
 		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
-		switchMap((action: LoadOverlaysAction) => {
-			return this.overlaysService.search(action.payload).pipe(
-				// We use (map + translate.instant) instead of withLatestFrom + translate.get
-				// Because of a bug: sometimes when starting the app the withLatestFrom that was here did not return,
-				// and the timeline was stuck and not updated. After this fix the pipe works, but once in a while the
-				// translations that are called here fail, and return the keys instead.
-				map((overlays) => [overlays, this.translate.instant(overlaysStatusMessages.noOverLayMatchQuery), this.translate.instant(overlaysStatusMessages.overLoad), this.translate.instant('Error on overlays request')] ),
-				mergeMap<any, any>(([overlays, noOverlayMatchQuery, overLoad, error]: [IOverlaysFetchData, string, string, string]) => {
-					const overlaysResult = Array.isArray(overlays.data) ? overlays.data : [];
-
-					if (!Array.isArray(overlays.data) && Array.isArray(overlays.errors) && overlays.errors.length >= 0) {
-						return [new LoadOverlaysSuccessAction(overlaysResult),
-							new SetOverlaysStatusMessageAction(error)];
-					}
-
-					const actions: Array<any> = [new LoadOverlaysSuccessAction(overlaysResult)];
-
-					// if data.length != fetchLimit that means only duplicate overlays removed
-					if (!overlays.data || overlays.data.length === 0) {
-						actions.push(new SetOverlaysStatusMessageAction(noOverlayMatchQuery));
-					} else if (overlays.limited > 0 && overlays.data.length === this.overlaysService.fetchLimit) {
-						// TODO: replace when design is available
-						actions.push(new SetOverlaysStatusMessageAction(overLoad.replace('$overLoad', overlays.data.length.toString())));
-					}
-					return actions;
-				}),
-				catchError(() => from([new LoadOverlaysSuccessAction([]), new SetOverlaysStatusMessageAction('Error on overlays request')]))
-			);
+		withLatestFrom(this.store$.select(selectWasWelcomeNotificationShown)),
+		switchMap(([action, isUserFirstEntrance]: [LoadOverlaysAction, boolean]) => {
+			if (action.payload.dataInputFilters.fullyChecked || action.payload.dataInputFilters.filters.length > 0) {
+				return this.requestOverlays(action.payload, !isUserFirstEntrance);
+			}
+			else {
+				return [new LoadOverlaysSuccessAction([])];
+			}
 		})
 	);
 
@@ -177,25 +171,6 @@ export class OverlaysEffects {
 		))
 	);
 
-	@Effect()
-	setPresetOverlaysUpdateCase$: Observable<any> = this.store$.pipe(
-		select(selectPresetOverlays),
-		map((presetOverlays: IOverlay[]) => presetOverlays.map(overlay => overlay.id)),
-		map((overlayIds) => new SetMarkUp({
-				classToSet: MarkUpClass.presets,
-				dataToSet: {
-					overlaysIds: overlayIds
-				}
-			}
-		))
-	);
-
-	@Effect()
-	dropsCount$ = this.store$.select(selectDrops).pipe(
-		filter(Boolean),
-		map(drops => new UpdateOverlaysCountAction(drops.length)));
-
-
 	constructor(protected actions$: Actions,
 				protected store$: Store<any>,
 				protected translate: TranslateService,
@@ -205,5 +180,50 @@ export class OverlaysEffects {
 				protected areaToCredentialsService: AreaToCredentialsService) {
 	}
 
+	private requestOverlays(criteria: IOverlaysCriteria, isUserFirstEntrance) {
+		return this.overlaysService.search(criteria).pipe(
+			// We use translate.instant instead of withLatestFrom + translate.get
+			// Because of a bug: sometimes when starting the app the withLatestFrom that was here did not return,
+			// and the timeline was stuck and not updated. After this fix the pipe works, but once in a while the
+			// translations that are called here fail, and return the keys instead.
+			mergeMap<IOverlaysFetchData, any>((overlays: IOverlaysFetchData) => {
+				const noOverlayMatchQuery = this.translate.instant(overlaysStatusMessages.noOverLayMatchQuery);
+				const overLoad = this.translate.instant(overlaysStatusMessages.overLoad);
+				const error = this.translate.instant('Error on overlays request');
+				const overlaysResult = Array.isArray(overlays.data) ? overlays.data : [];
 
+				if (!Array.isArray(overlays.data) && Array.isArray(overlays.errors) && overlays.errors.length >= 0) {
+					return [new LoadOverlaysSuccessAction(overlaysResult),
+						new SetOverlaysStatusMessageAction({ message: error, originalMessages: overlays.errors })];
+				}
+
+				const actions: Array<any> = [new LoadOverlaysSuccessAction(overlaysResult)];
+
+				// if data.length != fetchLimit that means only duplicate overlays removed
+				if (!overlays.data || overlays.data.length === 0) {
+					actions.push(new SetOverlaysStatusMessageAction({ message: noOverlayMatchQuery, originalMessages: overlays.errors }));
+				} else if (overlays.limited > 0 && overlays.data.length === this.overlaysService.fetchLimit) {
+					// TODO: replace when design is available
+					actions.push(new SetOverlaysStatusMessageAction({ message: overLoad.replace('$overLoad', overlays.data.length.toString()) }));
+				} 
+
+				if (isUserFirstEntrance) {
+					actions.push(new SetToastMessageAction({toastText: 'there are more overlays exist, ', buttonToDisplay: 'click here to expand', functionToExcute: this.toggleAdvancedSearch.bind(this)}))
+				}
+				return actions;
+			}),
+			catchError((err) => from([
+				new LoadOverlaysSuccessAction([]),
+				new SetOverlaysStatusMessageAction({
+					message: 'Error on overlays request', originalMessages: [{ message: err }]
+				})
+			]))
+		);
+	}
+
+	toggleAdvancedSearch() {
+		this.store$.dispatch(new ToggleSimpleSearchAction(true));
+		this.store$.dispatch(new ToggleAdvancedSearchAction(true));
+		this.store$.dispatch(new OpenAdvancedSearchFromOutsideAction(true));
+	}
 }

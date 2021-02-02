@@ -1,0 +1,43 @@
+@import "ansyn/less/z-index-globals";
+@import 'ansyn/less/common';
+
+:host {
+	display: flex;
+	flex-direction: column;
+	width: 300px;
+	height: 100%;
+
+	div.table {
+		display: flex;
+		flex-direction: column;
+		overflow-y: hidden;
+		flex: 1;
+		padding: 0 5px;
+
+		button {
+			background: transparent;
+			border: 1px solid transparent;
+
+			&:hover {
+				box-sizing: border-box;
+				border: 1px solid #7b7b7b;
+			}
+		}
+
+		h2 {
+			margin: 15px;
+			color: white;
+		}
+
+		&.one-table {
+			min-height: 70%;
+		}
+
+		&.two-table {
+			border-top: 1px solid #7b7b7b;
+			margin-bottom: 20px;
+			min-height: 30%;
+		}
+	}
+}
+

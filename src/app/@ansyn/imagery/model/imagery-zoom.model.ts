@@ -1,0 +1,1 @@
+export const IMAGERY_SLOW_ZOOM_FACTOR = 0.5;

@@ -16,7 +16,6 @@ import SelectEvent from 'ol/interaction/Select';
 import * as olExtent from 'ol/extent';
 import {
 	BaseImageryVisualizer,
-	calculateGeometryArea,
 	calculateLineDistance,
 	getPointByGeometry,
 	IVisualizerEntity,
@@ -88,8 +87,9 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 		this.featuresCollection = [];
 		this.source = new SourceVector({ features: this.featuresCollection, wrapX: false });
 
-		let extent = !this.dontRestrictToExtent ? this.iMap.getMainLayer().getExtent() : undefined;
+		let extent = !this.dontRestrictToExtent ? (this.iMap.getMainLayer() as ol_Layer).getExtent() : undefined;
 		this.vector = new VectorLayer(<any>{
+			className: this.layerClassName ? this.layerClassName : undefined,
 			source: this.source,
 			style: this.featureStyle.bind(this),
 			opacity: this.visualizerStyle.opacity,
@@ -290,7 +290,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 		const featuresProject = (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(featuresCollectionToAdd, this.iMap.mapObject);
 		const labelsProject = (<OpenLayersMap>this.iMap).projectionService.projectCollectionAccuratelyToImage<Feature>(labelCollectionToAdd, this.iMap.mapObject);
-		return forkJoin(featuresProject, labelsProject)
+		return forkJoin([featuresProject, labelsProject])
 			.pipe(map(([features, labels]: [Feature[], Feature[]]) => {
 				features.forEach((feature: Feature) => {
 					const _id: string = <string>feature.getId();
@@ -299,7 +299,9 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 						originalEntity: filteredLogicalEntities.find(({ id }) => id === _id),
 						feature: feature
 					};
-					entity.feature.set('label', { ...feature.get('label'), geometry: label && label.getGeometry() });
+					if (label) {
+						entity.feature.set('label', { ...feature.get('label'), geometry: label && label.getGeometry() });
+					}
 					this.idToEntity.set(_id, entity);
 					const featureWithTheSameId = this.source.getFeatureById(_id);
 					if (featureWithTheSameId) {
@@ -431,7 +433,8 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 	formatArea(geometry) {
 		const fractionDigits = 2;
-		const area = getArea(geometry);
+		const projection = this.iMap.getProjectionCode();
+		const area = getArea(geometry, { projection });
 
 		if (area >= 1000) {
 			return (area / 1000).toFixed(fractionDigits) + 'km2';

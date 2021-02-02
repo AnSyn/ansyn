@@ -9,11 +9,8 @@ import {
 	SetFavoriteOverlaysAction,
 	SetOverlaysScannedAreaDataAction,
 	SetOverlaysTranslationDataAction,
-	SetPresetOverlaysAction,
-	SetRemovedOverlaysIdsAction,
-	SetRemovedOverlaysVisibilityAction
+	UpdateOverlaysManualProcessArgs,
 } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
-import { SetImageOpeningOrientation } from '../../../modules/status-bar/actions/status-bar.actions';
 import { SelectCaseAppEffects } from './select-case.app.effects';
 import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '@ansyn/map-facade';
 import {
@@ -23,15 +20,13 @@ import {
 import { casesConfig, CasesService } from '../../../modules/menu-items/cases/services/cases.service';
 import {
 	SelectCaseAction,
-	SelectCaseSuccessAction,
-	SetAutoSave
+	SelectCaseSuccessAction
 } from '../../../modules/menu-items/cases/actions/cases.actions';
-import { UpdateFacetsAction } from '../../../modules/menu-items/filters/actions/filters.actions';
+import { UpdateFacetsAction } from '../../../modules/filters/actions/filters.actions';
 import {
 	SetAnnotationMode,
-	SetMeasureDistanceToolState,
-	UpdateOverlaysManualProcessArgs
-} from '../../../modules/menu-items/tools/actions/tools.actions';
+	SetMeasureDistanceToolState
+} from '../../../modules/status-bar/components/tools/actions/tools.actions';
 import { CoreConfig } from '../../../modules/core/models/core.config';
 import { SetMiscOverlays, SetOverlaysCriteriaAction } from '../../../modules/overlays/actions/overlays.actions';
 import {
@@ -45,10 +40,11 @@ import {
 	ICaseMapsState,
 	ICaseState,
 	ICaseTimeState,
-	IContextEntity,
-	IOverlaysManualProcessArgs
+	IOverlaysImageProcess
 } from '../../../modules/menu-items/cases/models/case.model';
 import { IOverlay, IOverlaysHash } from '../../../modules/overlays/models/overlay.model';
+import { UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/status-bar.actions';
+import { IAdvancedSearchParameter } from '../../../modules/status-bar/models/statusBar-config.model';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;
@@ -88,20 +84,29 @@ describe('SelectCaseAppEffects', () => {
 			const
 				orientation: CaseOrientation = 'Imagery Perspective',
 				timeFilter: CaseTimeFilter = 'Start - End',
-				time: ICaseTimeState = { type: 'absolute', from: new Date(0), to: new Date(0) },
-				region: CaseRegionState = {},
+				time: ICaseTimeState = { from: new Date(0), to: new Date(0) },
+				region: CaseRegionState = {
+					geometry: {},
+					type: "Feature",
+					properties: {
+						searchMode: "screenView"
+					}
+				},
+				advancedSearchParameters: IAdvancedSearchParameter = {
+					providers: [],
+					registeration: [],
+					sensors: [],
+					types: []
+				},
+				runSecondSearch = true,
 				dataInputFilters: ICaseDataInputFiltersState = { fullyChecked: true, filters: [] },
 				favoriteOverlays: IOverlay[] = [],
-				removedOverlaysIds: string[] = [],
-				removedOverlaysVisibility = true,
-				presetOverlays: IOverlay[] = [],
 				maps: ICaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
 				layers: ICaseLayersState = {
 					activeLayersIds: []
 				},
-				overlaysManualProcessArgs: IOverlaysManualProcessArgs = {},
+				overlaysImageProcess: IOverlaysImageProcess = {},
 				facets: ICaseFacetsState = { showOnlyFavorites: true, filters: [] },
-				contextEntities: IContextEntity[] = [{ id: '234', date: new Date(), featureJson: null }],
 				miscOverlays: IOverlaysHash = {},
 				overlaysTranslationData = {},
 				overlaysScannedAreaData = {}
@@ -115,16 +120,14 @@ describe('SelectCaseAppEffects', () => {
 				time,
 				region,
 				dataInputFilters,
+				advancedSearchParameters,
+				runSecondSearch,
 				favoriteOverlays,
-				removedOverlaysVisibility,
-				removedOverlaysIds,
-				presetOverlays,
 				overlaysTranslationData,
 				maps,
 				layers,
-				overlaysManualProcessArgs,
+				overlaysImageProcess,
 				facets,
-				contextEntities,
 				miscOverlays,
 				overlaysScannedAreaData
 			};
@@ -132,37 +135,29 @@ describe('SelectCaseAppEffects', () => {
 			const payload: ICase = {
 				id: 'caseId',
 				name: 'caseName',
-				owner: 'ownerName',
-				lastModified: new Date(),
 				creationTime: new Date(),
 				autoSave: false,
 				state
 			};
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
-
-			const expectedResult = cold('--(abcdefghijklmnopqrstx)--', {
-				a: new SetMapsDataActionStore({ mapsList: maps.data }),
-				b: new SetActiveMapId(maps.activeMapId),
-				c: new SetLayoutAction(<any>maps.layout),
-				d: new SetImageOpeningOrientation({ orientation }),
-				e: new SetOverlaysCriteriaAction({ time, region, dataInputFilters }, { noInitialSearch }),
-				f: new SetFavoriteOverlaysAction(favoriteOverlays),
-				g: new SetPresetOverlaysAction(presetOverlays),
-				h: new SetMiscOverlays({ miscOverlays }),
-				i: new SetOverlaysTranslationDataAction(overlaysTranslationData),
-				j: new SetOverlaysScannedAreaDataAction(overlaysScannedAreaData),
-				k: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
-				l: new UpdateOverlaysManualProcessArgs({ override: true, data: overlaysManualProcessArgs }),
-				m: new UpdateFacetsAction(facets),
-				n: new UpdateSelectedLayersIds([]),
-				o: <any>{ type: '[Context] Set context params', payload: { contextEntities } },
-				p: new SetAutoSave(false),
-				q: new SetRemovedOverlaysIdsAction(removedOverlaysIds),
-				r: new SetRemovedOverlaysVisibilityAction(removedOverlaysVisibility),
-				s: new SetAnnotationMode(null),
-				t: new SetMeasureDistanceToolState(false),
-				x: new SelectCaseSuccessAction(payload)
+			const expectedResult = cold('--(abcdefghijklmpqr)--', {
+			a: new SetMapsDataActionStore({ mapsList: maps.data }),
+			b: new SetActiveMapId(state.maps.activeMapId),
+			c: new SetLayoutAction(<any>maps.layout),
+			d: new SetOverlaysCriteriaAction({ time, region, dataInputFilters, advancedSearchParameters, runSecondSearch }, { noInitialSearch }),
+			e: new UpdateGeoFilterStatus({active: false, type: region.properties.searchMode}),
+			f: new SetFavoriteOverlaysAction(favoriteOverlays),
+			g: new SetMiscOverlays({ miscOverlays }),
+			h: new SetOverlaysTranslationDataAction(overlaysTranslationData),
+			i: new SetOverlaysScannedAreaDataAction(overlaysScannedAreaData),
+			j: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
+			k: new UpdateOverlaysManualProcessArgs(overlaysImageProcess),
+			l: new UpdateFacetsAction(facets),
+			m: new UpdateSelectedLayersIds([]),
+			p: new SetAnnotationMode(null),
+			q: new SetMeasureDistanceToolState(false),
+			r: new SelectCaseSuccessAction(payload)
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

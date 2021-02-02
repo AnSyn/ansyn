@@ -13,11 +13,10 @@ import { distinctUntilChanged, map, mergeMap, pluck, take, tap } from 'rxjs/oper
 import {
 	IToolsState,
 	selectSubMenu,
-	SubMenuEnum,
-	toolsFlags,
 	toolsStateSelector
-} from '../../../../../menu-items/tools/reducers/tools.reducer';
-import { SetActiveCenter, SetPinLocationModeAction } from '../../../../../menu-items/tools/actions/tools.actions';
+} from '../../../../../status-bar/components/tools/reducers/tools.reducer';
+import { SetActiveCenter, SetPinLocationModeAction } from '../../../../../status-bar/components/tools/actions/tools.actions';
+import { SubMenuEnum, toolsFlags } from '../../../../../status-bar/components/tools/models/tools.model';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -47,13 +46,17 @@ export class GoToVisualizer extends EntitiesVisualizer {
 		pluck<IToolsState, number[]>('activeCenter'),
 		distinctUntilChanged());
 
+	mapSearchBox$ = this.toolsState$.pipe(
+		pluck<IToolsState, number[]>('mapSearchBoxSearch'),
+		distinctUntilChanged());
+
 	/* events */
 	@AutoSubscription
-	drawPinPoint$ = combineLatest(this.isActiveMap$, this.goToExpand$, this.activeCenter$)
+	drawPinPoint$ = combineLatest([this.isActiveMap$, this.goToExpand$, this.activeCenter$, this.mapSearchBox$])
 		.pipe(mergeMap(this.drawGotoIconOnMap.bind(this)));
 
 	@AutoSubscription
-	goToPinAvailable$ = combineLatest(this.pinLocation$, this.isActiveMap$).pipe(
+	goToPinAvailable$ = combineLatest([this.pinLocation$, this.isActiveMap$]).pipe(
 		tap(([pinLocation, isActiveMap]: [boolean, boolean]) => {
 			if (isActiveMap && pinLocation) {
 				this.createSingleClickEvent();
@@ -71,6 +74,10 @@ export class GoToVisualizer extends EntitiesVisualizer {
 		zIndex: 100
 	});
 
+	constructor(public store$: Store<any>, protected projectionService: OpenLayersProjectionService) {
+		super();
+	}
+
 	public singleClickListener = (e) => {
 		this.projectionService
 			.projectAccurately({ type: 'Point', coordinates: e.coordinate }, this.iMap.mapObject)
@@ -80,10 +87,6 @@ export class GoToVisualizer extends EntitiesVisualizer {
 				this.store$.dispatch(new SetActiveCenter(point.coordinates));
 			});
 	};
-
-	constructor(public store$: Store<any>, protected projectionService: OpenLayersProjectionService) {
-		super();
-	}
 
 	featureStyle(feature: Feature, resolution) {
 		return this._iconSrc;
@@ -97,8 +100,8 @@ export class GoToVisualizer extends EntitiesVisualizer {
 		return this.iMap && this.iMap.mapObject.un('singleclick', this.singleClickListener, this);
 	}
 
-	drawGotoIconOnMap([isActiveMap, goToExpand, activeCenter]: [boolean, boolean, number[]]): Observable<boolean> {
-		if (goToExpand && isActiveMap) {
+	drawGotoIconOnMap([isActiveMap, goToExpand, activeCenter, mapSearchBox]: [boolean, boolean, number[], boolean]): Observable<boolean> {
+		if ((goToExpand && isActiveMap) || mapSearchBox) {
 			const featureJson: GeoJSON.Feature<any> = turf.point(activeCenter);
 			return this.setEntities([{ id: 'goto', featureJson }]);
 		}

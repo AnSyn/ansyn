@@ -19,13 +19,14 @@ import {
 import { Inject } from '@angular/core';
 import { UpdateMeasureDataAction } from '../../../../../menu-items/tools/actions/tools.actions';
 
+export const measuresClassNameForExport = 'measures-layer';
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store, OpenLayersProjectionService, VisualizersConfig],
+	layerClassName: measuresClassNameForExport,
 	isHideable: true
 })
 export class MeasureDistanceVisualizer extends MeasureRulerVisualizer {
-	measureData: IMeasureData;
 
 	constructor(protected store$: Store<any>,
 				protected projectionService: OpenLayersProjectionService,
@@ -34,15 +35,17 @@ export class MeasureDistanceVisualizer extends MeasureRulerVisualizer {
 	}
 
 	@AutoSubscription
-	show$ = () => combineLatest(
+	show$ = () => combineLatest([
 		this.store$.select(selectActiveMapId),
 		this.store$.select(selectMeasureDataByMapId(this.mapId)),
 		this.store$.select(selectIsMeasureToolActive),
-		this.onHiddenStateChanged).pipe(
+		this.onHiddenStateChanged]).pipe(
 		distinctUntilChanged(),
-		filter(([activeMapId, measureData, isMeasureToolActive]) => !this.isHidden && Boolean(measureData)),
+		// filter() update - checking isMeasureToolActive: if the measures layer is
+		// hidden, we still want to proceed if the measure tool changed to inactive,
+		// in order to cancel cursor style and interactions.
+		filter(([activeMapId, measureData, isMeasureToolActive]) => (!this.isHidden || !isMeasureToolActive) && Boolean(measureData)),
 		tap(([activeMapId, measureData, isMeasureToolActive]) => {
-			this.measureData = measureData;
 			if (!measureData.isLayerShowed) {
 				this.iMap.removeLayer(this.vector);
 			} else {

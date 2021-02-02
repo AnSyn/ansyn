@@ -1,33 +1,28 @@
 <div class="menu-wrapper" #menuWrapper>
 
-	<div class="menu" #menu [class.expanded]="expand">
+	<!-- <div class="menu" #menu [class.expanded]="expand">
 		<div class="menu-content">
 
 			<div class="menu-items">
 				<div
-					*ngFor="let menuItem of topMenuItemsAsArray$ | async"
+					*ngFor="let menuItem of menuItemsArray"
 					class="menu-btn"
+					[class.bottom]="menuItem.dockedToBottom"
 					[class.active]="isActive(menuItem.name)"
 					(click)="toggleItem(menuItem.name)">
 
 					<i [ngClass]="menuItem.iconClass"></i>
-					<span class="badge" [hidden]="hideBadge(menuItem.badge)">{{menuItem.badge}}</span>
+					<span class="badge"
+						  	[ngClass]="menuItem.dockedToBottom ? 'bottom' : 'count-badge'"
+						   [hidden]="hideBadge(menuItem.badge)">{{menuItem.badge}}</span>
 					{{menuItem.name | translate}}
 				</div>
-			</div>
-			<div
-				*ngFor="let menuItem of bottomMenuItemsAsArray$ | async"
-				class="menu-btn bottom"
-				[class.draw-user-attention]="isUserFirstEntrance || !doesUserHaveCredentials"
-				[class.active]="isActive(menuItem.name)"
-				(click)="toggleItem(menuItem.name, true)">
-
-				<i [ngClass]="menuItem.iconClass"></i>
-				<span class="badge bottom" [hidden]="!isUserFirstEntrance && doesUserHaveCredentials"> </span>
-				{{menuItem.name | translate}}
+				<div class="menu-btn" (click)="onHelp()">
+					<i [style]="" [ngClass]="'icon-main-help'"></i>
+					{{'Help' | translate}}
+				</div>
 			</div>
 			<div class="logo">
-
 				<ng-container *ngIf="menuConfig?.forkMe?.active">
 					<a class="forkMe" [href]="menuConfig.forkMe?.href" target="_blank">
 						<img [src]="menuConfig.forkMe?.image" [alt]="menuConfig.forkMe?.title"
@@ -51,23 +46,21 @@
 			class="hide-menu"
 			(click)="toggleCollapse()"
 			[attr.tooltip-value]="minimizeText | translate"
-			tooltip-class="right">
-			<i class="fa fa-caret-left" [class.fa-caret-right]="collapse"></i>
+			[attr.tooltip-class]="'left'">
+			<i class="fa" [ngClass]="collapse ? 'fa-caret-left' : 'fa-caret-right'"></i>
 		</button>
 
-	</div>
+	</div> -->
 
-
-	<div class="container" #container [@expand]="expand" (@expand.done)="onExpandDone()"
+	<div class="container" #container [@expand]="expand ? 'on' : outsideMenuItem.toggleFromBottom ? 'bottom' : 'top'" (@expand.done)="onExpandDone()"
 		 (@expand.start)="onExpandStart()">
-		<!--<button class="close" (click)="closeMenu()">×</button>-->
 		<button class="pin"
 				(click)="toggleIsPinned()"
 				[attr.tooltip-value]="pinText | translate" tooltip-class="right">
-			<i [ngClass]="isPinned? 'icon-pin' : 'icon-unpin'"></i>
+			<i class="medium-icon" [ngClass]="isPinned? 'icon-pin' : 'icon-unpin'"></i>
 		</button>
-		<ng-template #componentElem></ng-template>
+		<div class="template">
+			<ng-template #componentElem></ng-template>
+		</div>
 	</div>
-
-
 </div>

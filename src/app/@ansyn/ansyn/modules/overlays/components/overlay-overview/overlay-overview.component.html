@@ -1,5 +1,5 @@
 <div class="overlay-overview" (dblclick)="onDblClick()">
-	<header [ngClass]="'rtl' === ('direction' | translate) ? 'rtl' : ''">
+	<header>
 		<div class="name">{{ sensorType | translate }} ({{sensorName | translate}})</div>
 		<div>{{formattedTime}}</div>
 	</header>
@@ -14,4 +14,4 @@
 		<ansyn-loader [show]="loadingImage"></ansyn-loader>
 	</main>
 </div>
-<div class="transparent" [id]="const.TRANSPARENT_DIV_ID"></div>
+<div class="transparent" [id]="overViewConstants.TRANSPARENT_DIV_ID"></div>

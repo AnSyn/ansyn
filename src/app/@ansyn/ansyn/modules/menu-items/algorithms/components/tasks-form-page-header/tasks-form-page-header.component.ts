@@ -11,7 +11,9 @@ import { TasksPageToShow } from '../../models/tasks.model';
 })
 export class TasksFormPageHeaderComponent implements OnInit {
 
-	constructor(protected store$: Store<ITasksState>) {
+	constructor(
+		protected store$: Store<ITasksState>
+	) {
 	}
 
 	ngOnInit() {

@@ -1,31 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Effect } from '@ngrx/effects';
-import { createFeatureSelector, createSelector, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { combineLatest, Observable, pipe } from 'rxjs';
 import { selectActiveMapId, selectLayout, selectMapsList } from '@ansyn/map-facade';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import {
-	selectFavoriteOverlays,
-	selectPresetOverlays,
-	selectRemovedOverlays,
-	selectRemovedOverlaysVisibility,
+	selectFavoriteOverlays, selectOverlaysImageProcess,
 	selectScannedAreaData,
 	selectTranslationData
 } from '../../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { IAppState } from '../../app.effects.module';
 import { selectSelectedLayersIds } from '../../../modules/menu-items/layers-manager/reducers/layers.reducer';
-import { selectFacets } from '../../../modules/menu-items/filters/reducer/filters.reducer';
-import { selectComboBoxesProperties } from '../../../modules/status-bar/reducers/status-bar.reducer';
-import { selectOverlaysManualProcessArgs } from '../../../modules/menu-items/tools/reducers/tools.reducer';
+import { selectFacets } from '../../../modules/filters/reducer/filters.reducer';
 import { UpdateCaseAction } from '../../../modules/menu-items/cases/actions/cases.actions';
-import { selectAutoSave, selectSelectedCase } from '../../../modules/menu-items/cases/reducers/cases.reducer';
+import { selectSelectedCase } from '../../../modules/menu-items/cases/reducers/cases.reducer';
 import { selectMiscOverlays, selectOverlaysCriteria } from '../../../modules/overlays/reducers/overlays.reducer';
 import { ICase } from '../../../modules/menu-items/cases/models/case.model';
-
-// @todo refactor
-const contextFeatureSelector = createFeatureSelector('context');
-const selectContextsParams = createSelector(contextFeatureSelector, (context: any) => context && context.params);
-const selectContextEntities = createSelector(selectContextsParams, (params: any) => params && params.contextEntities);
 
 @Injectable()
 export class UpdateCaseAppEffects {
@@ -37,22 +27,15 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectSelectedLayersIds),
 		this.store$.select(selectFacets),
 		this.store$.select(selectFavoriteOverlays),
-		this.store$.select(selectRemovedOverlays),
-		this.store$.select(selectRemovedOverlaysVisibility),
-		this.store$.select(selectPresetOverlays),
-		this.store$.select(selectComboBoxesProperties),
 		this.store$.select(selectActiveMapId),
 		this.store$.select(selectMapsList),
 		this.store$.select(selectLayout),
 		this.store$.select(selectOverlaysCriteria),
-		this.store$.select(selectOverlaysManualProcessArgs),
-		this.store$.select(selectContextEntities),
+		this.store$.select(selectOverlaysImageProcess),
 		this.store$.select(selectMiscOverlays),
 		this.store$.select(selectTranslationData),
 		this.store$.select(selectScannedAreaData)
-	]
-		.map(event => event.pipe(this.clearIsAutoSave))
-		.concat([this.store$.select(selectAutoSave).pipe(this.setIsAutoSave)]);
+	];
 
 	@Effect()
 	shouldUpdateCase$: Observable<UpdateCaseAction> = combineLatest(this.events).pipe(
@@ -63,33 +46,25 @@ export class UpdateCaseAppEffects {
 				activeLayersIds,
 				facets,
 				favoriteOverlays,
-				removedOverlaysIds,
-				removedOverlaysVisibility,
-				presetOverlays,
-				{ timeFilter, orientation }, /* -> comboBoxesProperties */
 				activeMapId,
 				mapsList,
 				layout,
-				{ time, region, dataInputFilters }, /* overlaysCriteria */
-				overlaysManualProcessArgs,
-				contextEntities,
+				{ time, region, dataInputFilters, advancedSearchParameters }, /* overlaysCriteria */
+				overlaysImageProcess,
 				miscOverlays,
 				overlaysTranslationData,
 				overlaysScannedAreaData,
 				autoSave
 			] = events;
 
-			const { id, name, lastModified, creationTime, selectedContextId } = selectedCase;
+			const { id, name, creationTime } = selectedCase;
 
 			const updatedCase: ICase = {
 				id,
 				name,
 				creationTime,
-				lastModified,
 				autoSave,
 				state: {
-					timeFilter,
-					orientation,
 					maps: {
 						layout,
 						data: mapsList,
@@ -99,22 +74,19 @@ export class UpdateCaseAppEffects {
 						activeLayersIds
 					},
 					favoriteOverlays,
-					removedOverlaysIds,
-					removedOverlaysVisibility,
-					presetOverlays,
 					region,
 					dataInputFilters,
 					time,
+					advancedSearchParameters,
 					facets,
-					contextEntities,
 					miscOverlays,
-					overlaysManualProcessArgs,
+					overlaysImageProcess,
 					overlaysTranslationData,
 					overlaysScannedAreaData
 				}
 			};
 
-			return new UpdateCaseAction({ updatedCase, forceUpdate: this.isAutoSaveTriggered });
+			return new UpdateCaseAction( updatedCase);
 		})
 	);
 

@@ -1,28 +1,28 @@
 import {
 	BaseImageryMap,
-	ICanvasExportData,
-	IMAGERY_MAIN_LAYER_NAME,
+	IMAGERY_MAIN_LAYER_NAME, IMAGERY_SLOW_ZOOM_FACTOR,
 	ImageryLayerProperties,
 	ImageryMap,
-	ImageryMapPosition
+	IImageryMapPosition,
+	IExportMapMetadata,
+	IBaseImageryLayer
 } from '@ansyn/imagery';
 import { GeoJsonObject, Point } from 'geojson';
-import Layer from 'ol/layer/Layer';
+import ol_Layer from 'ol/layer/Layer';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import { Observable, of } from 'rxjs';
-import * as olShared from '../open-layers-map/shared/openlayers-shared';
-
+import { exportMapHelper } from '../helpers/helpers';
 export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
 
 @ImageryMap({
 	mapType: DisabledOpenLayersMapName
 })
 export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
-	mainLayer: Layer;
+	mainLayer: ol_Layer;
 	element: HTMLElement;
 
-	initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, mainLayer: any, position?: ImageryMapPosition): Observable<boolean> {
+	initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, mainLayer: ol_Layer, position?: IImageryMapPosition): Observable<boolean> {
 		this.element = element;
 		this.mapObject = new Map({
 			target: element,
@@ -33,14 +33,18 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		return of(true);
 	}
 
-	addLayerIfNotExist(layer: any) {
+	addLayerIfNotExist(layer: ol_Layer) {
 	}
 
 	toggleGroup(groupName: string, newState: boolean) {
 	}
 
-	getLayers(): any[] {
+	getLayers(): ol_Layer {
 		return this.mapObject.getLayers().getArray();
+	}
+
+	getGroupLayers(): IBaseImageryLayer {
+		return null
 	}
 
 	public getCenter(): Observable<Point> {
@@ -52,12 +56,12 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	}
 
 
-	resetView(layer: any, position?: ImageryMapPosition): Observable<boolean> {
+	resetView(layer: ol_Layer, position?: IImageryMapPosition): Observable<boolean> {
 		this.setMainLayer(layer, position);
 		return of(true);
 	}
 
-	setMainLayer(layer: Layer, position?: ImageryMapPosition) {
+	setMainLayer(layer: ol_Layer, position?: IImageryMapPosition) {
 		this.removeMainLayer();
 		const view = this.generateNewView(layer, position);
 		this.mapObject.setView(view);
@@ -74,7 +78,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		return this.mainLayer;
 	}
 
-	generateNewView(layer: Layer, position?: ImageryMapPosition): View {
+	generateNewView(layer: ol_Layer, position?: IImageryMapPosition): View {
 		const newProjection = layer.getSource().getProjection();
 
 		// for outside only
@@ -99,7 +103,7 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		});
 	}
 
-	addLayer(layer: Layer): void {
+	addLayer(layer: ol_Layer): void {
 		this.mapObject.addLayer(layer);
 	}
 
@@ -110,17 +114,16 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 		}
 	}
 
-	removeLayer(layer: any): void {
-		olShared.removeWorkers(layer);
+	removeLayer(layer: ol_Layer): void {
 		this.mapObject.removeLayer(layer);
 		this.mapObject.renderSync();
 	}
 
-	setPosition(position: ImageryMapPosition): Observable<boolean> {
+	setPosition(position: IImageryMapPosition): Observable<boolean> {
 		return of(true);
 	}
 
-	getPosition(): Observable<ImageryMapPosition> {
+	getPosition(): Observable<IImageryMapPosition> {
 		return of(undefined);
 	}
 
@@ -150,13 +153,13 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	zoomOut(): void {
 		const view = this.mapObject.getView();
 		const current = view.getZoom();
-		view.setZoom(current - 1);
+		view.setZoom(current - IMAGERY_SLOW_ZOOM_FACTOR);
 	}
 
 	zoomIn(): void {
 		const view = this.mapObject.getView();
 		const current = view.getZoom();
-		view.setZoom(current + 1);
+		view.setZoom(current + IMAGERY_SLOW_ZOOM_FACTOR);
 	}
 
 	getRotation(): number {
@@ -169,6 +172,13 @@ export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 
 	getHtmlContainer(): HTMLElement {
 		return <HTMLElement>this.element;
+	}
+
+	exportMap(exportMetadata: IExportMapMetadata): Observable<HTMLCanvasElement> {
+		const { size, resolution } = exportMetadata;
+		exportMetadata.extra.north = false;
+		const classToInclude = '.ol-layer canvas';
+		return exportMapHelper(this.mapObject, size, resolution, classToInclude);
 	}
 
 	dispose() {

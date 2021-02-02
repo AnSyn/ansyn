@@ -5,17 +5,18 @@ import {
 	LayerCollectionLoadedAction,
 	LayersActions,
 	LayersActionTypes,
-	UpdateLayer
+	RemoveCaseLayersFromBackendAction,
+	RemoveCaseLayersFromBackendSuccessAction
 } from '../actions/layers.actions';
 import { Injectable } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { EMPTY, Observable, of } from 'rxjs';
-import { catchError, filter, map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { DataLayersService } from '../services/data-layers.service';
 import { ILayer, LayerType } from '../models/layers.model';
 import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCrash';
-import { selectAutoSave } from '../../../menu-items/cases/reducers/cases.reducer';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class LayersEffects {
@@ -32,48 +33,33 @@ export class LayersEffects {
 	@Effect()
 	onLayerCollectionLoaded$ = this.actions$.pipe(
 		ofType<LayerCollectionLoadedAction>(LayersActionTypes.LAYER_COLLECTION_LOADED),
-		filter((action) => !action.payload.some(({ type }) => type === LayerType.annotation)),
-		map(() => {
-			const annotationLayer = this.dataLayersService.generateAnnotationLayer();
-			return new AddLayer(annotationLayer);
+		mergeMap((action) => {
+			const regionLayerName = this.translate.instant('Region');
+			const regionLayer = this.dataLayersService.generateLayer({ name: regionLayerName, id: 'region-layer', type: LayerType.static });
+			const layers = [regionLayer];
+
+			if (!action.payload.some(({ type }) => type === LayerType.annotation)) {
+				layers.push(this.dataLayersService.generateLayer());
+			}
+
+			return layers.map(layer => new AddLayer(layer));
 		})
 	);
 
-	@Effect({ dispatch: false })
-	addLayer$: Observable<any> = this.actions$.pipe(
-		ofType<AddLayer>(LayersActionTypes.ADD_LAYER),
-		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
-		filter(([action, autoSave]) => autoSave),
-		mergeMap(([action]) => this.dataLayersService.addLayer(action.payload)),
+	@Effect()
+	removeCaseLayers$ = this.actions$.pipe(
+		ofType(LayersActionTypes.REMOVE_CASE_LAYERS_FROM_BACKEND_ACTION),
+		mergeMap( (action: RemoveCaseLayersFromBackendAction) => this.dataLayersService.removeCaseLayers(action.caseId)),
+		map( ([caseId, layersId]) => new RemoveCaseLayersFromBackendSuccessAction(caseId)),
 		rxPreventCrash()
 	);
 
-	@Effect({ dispatch: false })
-	updateLayer$: Observable<any> = this.actions$.pipe(
-		ofType<UpdateLayer>(LayersActionTypes.UPDATE_LAYER),
-		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
-		filter(([action, autoSave]) => autoSave),
-		mergeMap(([action]) => this.dataLayersService.updateLayer(action.payload)
-			.pipe(
-				catchError(() => of(true))
-			)
-		)
-	);
 
-	@Effect({ dispatch: false })
-	removeLayer$ = this.actions$.pipe(
-		ofType<UpdateLayer>(LayersActionTypes.REMOVE_LAYER),
-		withLatestFrom(this.store$.pipe(select(selectAutoSave))),
-		filter(([action, autoSave]) => autoSave),
-		mergeMap(([action]: [any, boolean]) => this.dataLayersService.removeLayer(action.payload)
-			.pipe(
-				catchError(() => EMPTY)
-			)
-		)
-	);
+
 
 	constructor(protected actions$: Actions,
 				protected dataLayersService: DataLayersService,
+				protected translate: TranslateService,
 				protected store$: Store<ILayerState>) {
 	}
 }

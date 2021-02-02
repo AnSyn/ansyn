@@ -1,52 +1,62 @@
-<div class="buttons" *ngIf="!isMinimalistViewMode">
-
-	<ng-container
-		*ngFor="let component of entryComponents.status">
-		<ng-container
-			*ngIf="component.showFirst && component.prototype.getType() === 'buttons'"
-			[ansynEntryComponent]="{ component: component , mapId: mapId }">
-		</ng-container>
-	</ng-container>
-
+<div class="buttons" [class.hide]="isMinimalistViewMode">
 	<button
 		*ngIf="mapsAmount > 1"
 		class="small-icon-button drag-me"
 		[attr.tooltip-value]="'Move' | translate"
-		tooltip-class="bottom right"
-		(mousedown)="onMove.emit($event)">
-		<i class="icon-drag-maps"></i>
+		[attr.tooltip-class]="'bottom left'"
+		(mousedown)="onStartDraggingMap($event)">
+		<i class="medium-icon icon-drag-maps"></i>
 	</button>
 
 	<button *ngIf="mapsAmount > 1"
 			class="small-icon-button link-maps"
 			[attr.tooltip-value]="'Momentarily link screens' | translate"
-			tooltip-class="bottom right"
+			[attr.tooltip-class]="'bottom left'"
 			[disabled]="noGeoRegistration"
 			(click)="toggleMapSynchronization.emit()">
-		<i class="icon icon-temporary-link"></i>
+		<i class="medium-icon icon-temporary-link"></i>
 	</button>
 
-	<button class="small-icon-button hide-layers"
+	<button class="small-icon-button hide-layers" *ngIf="isLayersShow"
 			[disabled]="noGeoRegistration"
 			(click)="toggleMapLayers()"
 			[attr.tooltip-value]="'Show/ Hide layers' | translate"
-			tooltip-class="bottom right">
-		<i [class.icon-layers-show]="!hideLayers"
+			[attr.tooltip-class]="'bottom left'"
+	><i class="medium-icon" [class.icon-layers-show]="!hideLayers"
 		   [class.icon-layers-hide]="hideLayers"></i>
+	</button>
+
+	<button class="small-icon-button perspective"
+			[disabled]="noGeoRegistration"
+			(click)="toggleImageryPerspective()"
+			[attr.tooltip-value]="orientation | translate"
+			[attr.tooltip-class]="'bottom left'"
+	><i class="medium-icon icon-status-bar-orientation" [class.active]="perspective"></i>
+	</button>
+
+	<button *ngIf="isFootprintShow"
+		class="small-icon-button"
+		[disabled]="noGeoRegistration"
+			(click)="toggleOverlaysFootprint()"
+			[attr.tooltip-value]="'Overlays Footprint' | translate"
+			[attr.tooltip-class]="'bottom left'"
+	><i class="medium-icon icon-frame-mode" [class.active]="overlaysFootprintActive && !noGeoRegistration"></i>
 	</button>
 
 	<ng-container
 		*ngFor="let component of entryComponents.status">
 		<ng-container
-			*ngIf="!component.showFirst && component.prototype.getType() === 'buttons'"
+			*ngIf="!component.showLast && component.prototype.getType() === 'buttons'"
 			[ansynEntryComponent]="{ component: component , mapId: mapId }">
 		</ng-container>
 	</ng-container>
+
 </div>
 
 <div class="description">
 	<ansyn-popover *ngIf="overlay" [text]="overlayDescription"
-				   [popDirection]="'bottom wrap'">
+				   [showOverflow]="isMinimalistViewMode"
+				   [popDirection]="'bottom left'">
 		<button class="share-link" (click)="copyOverlayDescription()">
 			<span>{{overlayDescription | translate}}</span>
 		</button>
@@ -56,7 +66,6 @@
 	</div>
 </div>
 
-
 <ng-container *ngIf="!isMinimalistViewMode">
 	<ng-container
 		*ngFor="let component of entryComponents.status">
@@ -64,5 +73,13 @@
 			*ngIf="component.prototype.getType() === 'notification'"
 			[ansynEntryComponent]="{ component: component , mapId: mapId }">
 		</ng-container>
+	</ng-container>
+</ng-container>
+
+<ng-container
+	*ngFor="let component of entryComponents.status">
+	<ng-container
+		*ngIf="component.showLast && component.prototype.getType() === 'buttons'"
+		[ansynEntryComponent]="{ component: component , mapId: mapId }">
 	</ng-container>
 </ng-container>

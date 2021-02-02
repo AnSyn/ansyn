@@ -1,0 +1,48 @@
+<div class="table my-cases one-table">
+	<h2>{{'My Cases' | translate}}</h2>
+	<ansyn-cases-table *ngIf="myCasesData"
+					   [cases]="myCasesData"
+					   [menu]="menu"
+					   (onInfintyScroll)="loadMyCases()"
+					   (onRowHover)="hoverCaseId = $event">
+		<ng-template #menu>
+			<button (click)="removeCase()"
+					[attr.tooltip-value]="'Remove' | translate"
+					tooltip-class="bottom">
+				<i class="icon-delete small-icon"></i>
+			</button>
+			<button (click)="shareCase()"
+					[attr.tooltip-value]="'Share' | translate"
+					tooltip-class="bottom">
+				<i class="icon-share small-icon"></i>
+			</button>
+			<button (click)="editCase()"
+					[attr.tooltip-value]="'Edit' | translate"
+					tooltip-class="bottom">
+				<i class="icon-edit small-icon"></i>
+			</button>
+		</ng-template>
+	</ansyn-cases-table>
+</div>
+
+<div class="table shared-cases two-table" *ngIf="sharedCasesObj?.ids?.length">
+	<h2>{{'Shared Cases' | translate}}</h2>
+	<ansyn-cases-table
+		[cases]="sharedCasesObj"
+		[menu]="menu"
+		(onInfintyScroll)="loadSharedCases()"
+		(onRowHover)="hoverCaseId = $event">
+		<ng-template #menu>
+			<button (click)="removeCase()"
+					[attr.tooltip-value]="'Remove' | translate"
+					tooltip-class="bottom">
+				<i class="icon-delete small-icon"></i>
+			</button>
+			<button (click)="saveSharedAsMy()"
+					[attr.tooltip-value]="'Save' | translate"
+					tooltip-class="bottom">
+				<i class="icon-save small-icon"></i>
+			</button>
+		</ng-template>
+	</ansyn-cases-table>
+</div>

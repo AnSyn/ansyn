@@ -1,31 +1,31 @@
 import {
 	BaseImageryMap,
 	ExtentCalculator,
-	ICanvasExportData,
 	IMAGERY_BASE_MAP_LAYER,
-	IMAGERY_MAIN_LAYER_NAME,
+	IMAGERY_MAIN_LAYER_NAME, IMAGERY_SLOW_ZOOM_FACTOR,
 	ImageryLayerProperties,
 	ImageryMap,
 	ImageryMapExtent,
-	ImageryMapPosition,
-	ImageryMapProjectedState,
-	toDegrees
+	IImageryMapPosition,
+	IImageryMapProjectedState,
+	toDegrees,
+	IBaseImageryLayer
 } from '@ansyn/imagery';
 import { featureCollection } from '@turf/helpers';
 import { feature, geometry } from '@turf/turf';
 import { GeoJsonObject, Point, Polygon } from 'geojson';
-import { Observable, of } from 'rxjs';
-
-import { fromPromise } from 'rxjs/internal-compatibility';
+import { Observable, of, from } from 'rxjs';
 import { map, mergeMap, take } from 'rxjs/operators';
 import { CesiumLayer, ISceneMode } from '../../models/cesium-layer';
 import { CesiumProjectionService } from '../../projection/cesium-projection.service';
-import { Cartesian2, Cartesian3, Viewer } from 'cesium';
+import { Cartesian2, Cartesian3, ImageryLayer, Viewer } from 'cesium';
 
 declare const Cesium: any;
 
 Cesium.buildModuleUrl.setBaseUrl('assets/Cesium/');
-Cesium.BingMapsApi.defaultKey = 'AnjT_wAj_juA_MsD8NhcEAVSjCYpV-e50lUypkWm1JPxVu0XyVqabsvD3r2DQpX-';
+if (Cesium.BingMapsApi) {
+	Cesium.BingMapsApi.defaultKey = 'AnjT_wAj_juA_MsD8NhcEAVSjCYpV-e50lUypkWm1JPxVu0XyVqabsvD3r2DQpX-';
+}
 
 export const CesiumMapName = 'CesiumMap';
 
@@ -35,21 +35,25 @@ export const CesiumMapName = 'CesiumMap';
 	deps: [CesiumProjectionService]
 })
 export class CesiumMap extends BaseImageryMap<any> {
-	static groupLayers = new Map<string, any>();
+	static groupLayers = new Map<string, CesiumLayer>();
 	mapObject: Viewer;
 	element: HTMLElement;
 	_moveEndListener;
 	_mouseMoveHandler;
 	lastRotation = 0;
 	mainLayer: CesiumLayer;
-	layersToCesiumLayer: Map<CesiumLayer, any>;
+	layersToCesiumLayer: Map<CesiumLayer, ImageryLayer>;
 
 	constructor(public projectionService: CesiumProjectionService) {
 		super();
-		this.layersToCesiumLayer = new Map<CesiumLayer, any>();
+		this.layersToCesiumLayer = new Map<CesiumLayer, ImageryLayer>();
 	}
 
-	initMap(element: HTMLElement, shadowElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: any, position?: ImageryMapPosition): Observable<boolean> {
+	getGroupLayers(): IBaseImageryLayer {
+		return null;
+	}
+
+	initMap(element: HTMLElement, shadowElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: CesiumLayer, position?: IImageryMapPosition): Observable<boolean> {
 		this.element = element;
 
 		return this.resetView(layer, position);
@@ -190,7 +194,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		}
 
 		if (layer.mapProjection) {
-			return fromPromise(layer.mapProjection.readyPromise).pipe(
+			return from(layer.mapProjection.readyPromise).pipe(
 				map(() => {
 					const viewer = new Cesium.Viewer(this.element, {
 						terrainProvider: Cesium.createWorldTerrain(),
@@ -263,7 +267,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		}
 	}
 
-	resetView(layer: CesiumLayer, position: ImageryMapPosition, extent ?: ImageryMapExtent): Observable<boolean> {
+	resetView(layer: CesiumLayer, position: IImageryMapPosition, extent ?: ImageryMapExtent): Observable<boolean> {
 		if (!this.mapObject || (layer.mapProjection && (<any>this.mapObject.scene.mapProjection).projectionName !== layer.mapProjection.projectionName)) {
 			return this.createMapObject(layer).pipe(
 				mergeMap((isReady) => {
@@ -338,11 +342,11 @@ export class CesiumMap extends BaseImageryMap<any> {
 		return this.internalSetPosition((<any>polygon.geometry));
 	}
 
-	getMainLayer(): any {
+	getMainLayer(): CesiumLayer {
 		return this.mainLayer;
 	}
 
-	public addMapLayer(layer: any) {
+	public addMapLayer(layer: CesiumLayer) {
 		const main = this.getMainLayer();
 		const mainLayerId = main.get(ImageryLayerProperties.ID);
 		const baseMapLayer = Array.from(this.layersToCesiumLayer.keys()).find((currentLayer: CesiumLayer) => currentLayer.get(ImageryLayerProperties.NAME) === IMAGERY_BASE_MAP_LAYER && currentLayer.get(ImageryLayerProperties.ID) !== mainLayerId);
@@ -354,12 +358,12 @@ export class CesiumMap extends BaseImageryMap<any> {
 		}
 	}
 
-	addLayer(layer: any): void {
+	addLayer(layer: CesiumLayer): void {
 		const actualCesiumLayer = this.mapObject.imageryLayers.addImageryProvider(layer.layer);
 		this.layersToCesiumLayer.set(layer, actualCesiumLayer);
 	}
 
-	removeLayer(layer: any): void {
+	removeLayer(layer: CesiumLayer): void {
 		const actualCesiumLayer = this.layersToCesiumLayer.get(layer);
 		if (actualCesiumLayer) {
 			this.mapObject.imageryLayers.remove(actualCesiumLayer);
@@ -378,7 +382,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		});
 	}
 
-	setPosition(position: ImageryMapPosition): Observable<boolean> {
+	setPosition(position: IImageryMapPosition): Observable<boolean> {
 		if (position.projectedState && position.projectedState.projection &&
 			position.projectedState.projection.code === 'cesium_WGS84') {
 			this.setCameraView(position.projectedState.rotation, position.projectedState.pitch, position.projectedState.roll, position.projectedState.cameraPosition);
@@ -417,10 +421,10 @@ export class CesiumMap extends BaseImageryMap<any> {
 		}
 	}
 
-	getPosition(): Observable<ImageryMapPosition> {
+	getPosition(): Observable<IImageryMapPosition> {
 		try {
 			const center = this.getInnerCenter();
-			const projectedState: ImageryMapProjectedState = {
+			const projectedState: IImageryMapProjectedState = {
 				center: [center.coordinates[0], center.coordinates[1], center.coordinates[2]],
 				cameraPosition: this.mapObject.camera.position,
 				rotation: +this.mapObject.camera.heading.toFixed(7),
@@ -472,11 +476,11 @@ export class CesiumMap extends BaseImageryMap<any> {
 	}
 
 	zoomIn(): void {
-		this.mapObject.camera.zoomIn();
+		this.mapObject.camera.zoomIn(this.mapObject.camera.defaultZoomAmount * IMAGERY_SLOW_ZOOM_FACTOR);
 	}
 
 	zoomOut(): void {
-		this.mapObject.camera.zoomOut();
+		this.mapObject.camera.zoomOut(this.mapObject.camera.defaultZoomAmount * IMAGERY_SLOW_ZOOM_FACTOR);
 	}
 
 	one2one(): void {
@@ -506,7 +510,7 @@ export class CesiumMap extends BaseImageryMap<any> {
 		return new Observable();
 	}
 
-	getLayers(): any[] {
+	getLayers(): CesiumLayer[] {
 		return [];
 	}
 

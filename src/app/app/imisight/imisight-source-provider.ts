@@ -1,6 +1,6 @@
 import { Inject } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import {
@@ -30,7 +30,7 @@ export const ImisightOverlaySourceType = 'IMISIGHT';
 
 const DEFAULT_OVERLAYS_LIMIT = 500;
 
-export interface ImiSightElement {
+export interface IImiSightElement {
 	s3Id: string;
 	geojson: object;
 	timestamp: string;
@@ -49,6 +49,8 @@ export interface ImiSightElement {
 })
 export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 
+	private gatewayUrl: string;
+	private searchUrl: string;
 	constructor(
 		public errorHandlerService: ErrorHandlerService,
 		protected loggerService: LoggerService,
@@ -57,6 +59,8 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 		@Inject(ImisightOverlaySourceConfig)
 		protected imisightOverlaysSourceConfig: IImisightOverlaySourceConfig) {
 		super(loggerService);
+		this.searchUrl = this.imisightOverlaysSourceConfig.baseUrl + this.imisightOverlaysSourceConfig.searchPath;
+		this.gatewayUrl = this.imisightOverlaysSourceConfig.baseUrl;
 	}
 
 	fetch(fetchParams: IFetchParams): Observable<any> {
@@ -81,7 +85,6 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 		}
 		// if limit not provided by config - set default value
 		fetchParams.limit = fetchParams.limit ? fetchParams.limit : DEFAULT_OVERLAYS_LIMIT;
-		let baseUrl = this.imisightOverlaysSourceConfig.baseUrl;
 		// let headers = new HttpHeaders( );
 		// add 1 to limit - so we'll know if provider have more then X overlays
 		const params = {
@@ -96,7 +99,7 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 				'Authorization': 'Bearer ' + token
 			}
 		};
-		return this.http.post<any>(baseUrl, params, httpOptions).pipe(
+		return this.http.post<any>(this.searchUrl, params, httpOptions).pipe(
 			map(data => this.extractData(data)),
 			map((overlays: IOverlay[]) => <any>limitArray(overlays, fetchParams.limit, {
 				sortFn: sortByDateDesc,
@@ -111,23 +114,18 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 	}
 
 	getById(id: string, sourceType: string): Observable<IOverlay> {
-		let baseUrl = this.imisightOverlaysSourceConfig.baseUrl;
-		return this.http.get<any>(baseUrl, { params: { _id: id } }).pipe(
-			map(data => this.extractData(data.results)),
-			map(([overaly]): any => overaly),
+		const token = localStorage.getItem('id_token');
+		const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+		const params = new HttpParams().set('id', id);
+		
+		return this.http.get<any>(this.searchUrl, { headers, params }).pipe(
+			map(data => this.extractData(data)),
+			map(([overlay]): any => overlay),
 			catchError((error: any) => this.errorHandlerService.httpErrorHandle(error))
 		);
 	}
 
-	getStartDateViaLimitFacets(params: { facets; limit; region }): Observable<IStartAndEndDate> {
-		return EMPTY;
-	}
-
-	getStartAndEndDateViaRangeFacets(params: { facets; limitBefore; limitAfter; date; region }): Observable<any> {
-		return EMPTY;
-	}
-
-	private extractData(overlays: Array<ImiSightElement>): IOverlay[] {
+	private extractData(overlays: Array<IImiSightElement>): IOverlay[] {
 		if (!overlays) {
 			return [];
 		}
@@ -137,9 +135,8 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 		return overlays.map((element) => this.parseData(element));
 	}
 
-	protected parseData(imiSightElement: ImiSightElement): IOverlay {
+	protected parseData(imiSightElement: IImiSightElement): IOverlay {
 		const companyId = 1;
-		const gatewayUrl = 'https://gw.sat.imisight.net';
 		const footprint: any = imiSightElement.geojson;
 		return new Overlay({
 			id: imiSightElement._id,
@@ -148,8 +145,8 @@ export class ImisightSourceProvider extends BaseOverlaySourceProvider {
 			sensorName: imiSightElement.sensorName,
 			bestResolution: 1,
 			name: imiSightElement.s3Id,
-			imageUrl: `${ gatewayUrl }/geo/geoserver/company_${ companyId }/wms/${ imiSightElement.geoFile }`,
-			thumbnailUrl: `${ gatewayUrl }/geo/geoserver/company_${ companyId }/wms/${ imiSightElement.geoFile }`,
+			imageUrl: `${ this.gatewayUrl }/geo/geoserver/company_${ companyId }/wms/${ imiSightElement.geoFile }`,
+			thumbnailUrl: `${ this.gatewayUrl }/geo/geoserver/company_${ companyId }/wms/${ imiSightElement.geoFile }`,
 			date: new Date(imiSightElement.timestamp),
 			photoTime: imiSightElement.timestamp,
 			azimuth: toRadians(180),

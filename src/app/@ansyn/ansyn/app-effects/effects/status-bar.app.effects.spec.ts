@@ -1,29 +1,27 @@
 import { Store, StoreModule } from '@ngrx/store';
-import { SetPresetOverlaysAction } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import {
 	overlayStatusFeatureKey,
 	OverlayStatusReducer
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { StatusBarAppEffects } from './status-bar.app.effects';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { AddCaseAction, SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
+import { SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
 import { EMPTY, Observable } from 'rxjs';
-import { ImageryCommunicatorService } from '@ansyn/imagery';
+import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import { HttpBackend, HttpClientModule } from '@angular/common/http';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import { ExpandAction, GoNextPresetOverlay } from '../../modules/status-bar/actions/status-bar.actions';
+import { ExpandAction } from '../../modules/status-bar/actions/status-bar.actions';
 import { statusBarFeatureKey, StatusBarReducer } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { CasesService } from '../../modules/menu-items/cases/services/cases.service';
 import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/reducers/cases.reducer';
-import { LoggerService } from '../../modules/core/services/logger.service';
 import { OverlayReducer, overlaysFeatureKey } from '../../modules/overlays/reducers/overlays.reducer';
 import {
 	BaseOverlaySourceProvider,
 	IFetchParams
 } from '../../modules/overlays/models/base-overlay-source-provider.model';
 import { MultipleOverlaysSourceProvider } from '../../modules/overlays/services/multiple-source-provider';
-import { OverlaysConfig, OverlaysService } from '../../modules/overlays/services/overlays.service';
+import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { OverlaySourceProvider } from '../../modules/overlays/models/overlays-source-providers';
 import { DisplayOverlayAction } from '../../modules/overlays/actions/overlays.actions';
 import {
@@ -32,7 +30,7 @@ import {
 	mapFeatureKey,
 	MapReducer,
 	SetActiveMapId,
-	SetMapsDataActionStore,
+	SetMapsDataActionStore
 } from '@ansyn/map-facade';
 import { ICase } from '../../modules/menu-items/cases/models/case.model';
 import { IOverlay, IOverlaysFetchData } from '../../modules/overlays/models/overlay.model';
@@ -44,14 +42,6 @@ class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		return EMPTY;
 	}
-
-	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {
-		return EMPTY;
-	};
-
-	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
-		return EMPTY;
-	};
 
 	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
 		return EMPTY;
@@ -88,26 +78,16 @@ describe('StatusBarAppEffects', () => {
 				})
 			],
 			providers: [
-				{ provide: LoggerService, useValue: { error: (some) => null } },
-				OverlaysService,
+				{
+					provide: OverlaysService,
+					useValue: {}
+				},
 				StatusBarAppEffects,
 				provideMockActions(() => actions),
 				{ provide: CasesService, useValue: { updateCase: () => null, getOverlaysMarkup: () => null } },
 				ImageryCommunicatorService,
 				HttpBackend,
-				{
-					provide: OverlaysConfig,
-					useValue: {
-						'limit': 500
-					}
-				},
-				{ provide: MultipleOverlaysSourceProvider, useClass: OverlaySourceProviderMock },
-				{
-					provide: LoggerService, useValue: {
-						error: (some) => null, info: () => {
-						}
-					}
-				}
+				{ provide: MultipleOverlaysSourceProvider, useClass: OverlaySourceProviderMock }
 			]
 		}).compileComponents();
 	}));
@@ -149,7 +129,6 @@ describe('StatusBarAppEffects', () => {
 			}
 		} as any;
 
-		store.dispatch(new AddCaseAction(fakeCase));
 		store.dispatch(new SelectCaseAction(fakeCase));
 	}));
 
@@ -157,53 +136,6 @@ describe('StatusBarAppEffects', () => {
 		actions = hot('--a--', { a: new ExpandAction() });
 		const expectedResults = cold('--b--', { b: undefined });
 		expect(statusBarAppEffects.onExpand$).toBeObservable(expectedResults);
-	});
-
-	describe('onNextPresetOverlay$ should return an action which displays the next preset overlay', () => {
-		let presetOverlays;
-		let mapsList;
-		beforeEach(() => {
-			presetOverlays = <any>[mockOverlay('1'), mockOverlay('2'), mockOverlay('3')];
-			mapsList = <any>[{
-				id: 'map_1',
-				data: { position: null },
-				worldView: { mapType: null, sourceType: null },
-				flags: null
-			}];
-
-			store.dispatch(new SetActiveMapId('map_1'));
-			store.dispatch(new SetMapsDataActionStore({ mapsList }));
-			store.dispatch(new SetPresetOverlaysAction(presetOverlays))
-		});
-		it('if no preset overlay currently displays, should display presetOverlays[0]', () => {
-			actions = hot('--a--', { a: new GoNextPresetOverlay() });
-
-			const expectedResult = cold('--b--', {
-				b: new DisplayOverlayAction({ overlay: presetOverlays[0], mapId: 'map_1' })
-			});
-
-			expect(statusBarAppEffects.onNextPresetOverlay$).toBeObservable(expectedResult);
-		});
-		it('if presetOverlays[n] overlay currently displays, should display presetOverlays[n+1]', () => {
-			mapsList[0].data.overlay = presetOverlays[0];
-			actions = hot('--a--', { a: new GoNextPresetOverlay() });
-
-			const expectedResult = cold('--b--', {
-				b: new DisplayOverlayAction({ overlay: presetOverlays[1], mapId: 'map_1' })
-			});
-
-			expect(statusBarAppEffects.onNextPresetOverlay$).toBeObservable(expectedResult);
-		});
-		it('if presetOverlays[last] overlay currently displays, should display presetOverlays[0]', () => {
-			mapsList[0].data.overlay = presetOverlays[2];
-			actions = hot('--a--', { a: new GoNextPresetOverlay() });
-
-			const expectedResult = cold('--b--', {
-				b: new DisplayOverlayAction({ overlay: presetOverlays[0], mapId: 'map_1' })
-			});
-
-			expect(statusBarAppEffects.onNextPresetOverlay$).toBeObservable(expectedResult);
-		});
 	});
 
 });

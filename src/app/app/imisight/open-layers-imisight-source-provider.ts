@@ -22,23 +22,25 @@ import { OpenLayersDisabledMap, OpenLayersMap, OpenLayersMapSourceProvider } fro
 	supported: [OpenLayersMap, OpenLayersDisabledMap]
 })
 export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvider {
-	gatewayUrl = 'https://gw.sat.imisight.net';
 
+	gatewayUrl: string;
 	constructor(protected cacheService: CacheService,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				@Inject(MAP_SOURCE_PROVIDERS_CONFIG) protected mapSourceProvidersConfig: IMapSourceProvidersConfig,
 				protected httpClient: HttpClient) {
 		super(cacheService, imageryCommunicatorService, mapSourceProvidersConfig);
+
+		this.gatewayUrl = this.config.imageUrl;
 	}
 
 	public create(metaData: IMapSettings): any {
 		const url = metaData.data.overlay.imageUrl;
 		const layers = metaData.data.overlay.tag.urls;
-		const projection = EPSG_3857;
+		const projection = metaData.data.overlay.tag.metaData.coordinateReferenceSystem;
 		const token = localStorage.getItem('id_token');
 		const helper = new JwtHelperService();
 		const decodedToken = this.parseTokenObjects(helper.decodeToken(token));
-		const companyId = decodedToken.user_metadata.companyId;
+		const companyId = decodedToken.app_metadata.companyId;
 		const source = new TileWMS({
 			url: `${ this.gatewayUrl }/geo/geoserver/company_${ companyId }/wms`,
 			params: {
@@ -47,6 +49,7 @@ export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvide
 				LAYERS: layers
 				// FORMAT: 'image/gif'
 			},
+			projection: projection,
 			serverType: 'geoserver',
 			tileLoadFunction: (tile, src) => {
 				this.getImageURL(src)
@@ -58,11 +61,14 @@ export class OpenLayersImisightSourceProvider extends OpenLayersMapSourceProvide
 			}
 		});
 
-		return Promise.resolve(new TileLayer({ source }));
+		return Promise.resolve(new TileLayer({
+			preload: Infinity,
+			source
+		}));
 	}
 
 	getImageURL(url: string): Observable<any> {
-		const token = localStorage.getItem('access_token');
+		const token = localStorage.getItem('id_token');
 		const headers = {
 			'Content-Type': 'application/json',
 			'Authorization': 'Bearer ' + token,

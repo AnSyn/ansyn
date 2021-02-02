@@ -1,0 +1,13 @@
+<div class="search-icon"
+    (click)="toggleSearchPannel()"
+    tooltip-class="bottom"
+	[attr.tooltip-value]="'search' | translate"
+					 
+    >
+    <i class="icon icon-search-button"></i>
+</div>
+<div *ngIf="isExpand">
+    <div class="presets" >
+        <ansyn-search-panel></ansyn-search-panel>
+    </div>
+</div>

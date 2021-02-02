@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { IEntryComponent, selectMapsTotal, selectOverlayByMapId } from '@ansyn/map-facade';
+import { IEntryComponent, selectOverlayByMapId } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -14,7 +14,7 @@ import { selectIsPinned } from '@ansyn/menu';
 })
 @AutoSubscriptions()
 export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponent {
-	static showFirst = true;
+	static showLast = true;
 	@Input() mapId: string;
 	overlay: any;
 	isPinned: boolean;
@@ -25,7 +25,9 @@ export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponen
 		tap(isPinned => this.isPinned = isPinned)
 	);
 
-	constructor(protected store$: Store<any>) {
+	constructor(
+		protected store$: Store<any>
+	) {
 	}
 
 	@AutoSubscription

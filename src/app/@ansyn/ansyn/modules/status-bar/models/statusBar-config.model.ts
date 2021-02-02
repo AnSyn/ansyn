@@ -1,3 +1,6 @@
+import { BaseOverlaySourceProvider } from "../../overlays/models/base-overlay-source-provider.model";
+import { IResolutionRange } from "../../overlays/models/overlay.model";
+
 export interface IToolTipsConfig {
 	orientation?: string,
 	geoFilter?: string,
@@ -12,10 +15,31 @@ export interface IToolTipsConfig {
 	forward?: string,
 	reset?: string,
 	enlarge?: string,
-	quickloop?: string
+	quickloop?: string,
+	share?: string
+}
+
+export interface IFilterStatusBar {
+	filterNames: string[],
+	maximumOpen: number
+}
+
+export interface IProviderData {
+	name: string;
+	class: BaseOverlaySourceProvider;
+}
+export interface IAdvancedSearchParameter {
+	types?: string[];
+	registeration?: string[];
+	providers?: IProviderData[];
+	resolution?: IResolutionRange;
+	sensors?: string[];
+	enableResetProviders?: boolean;
+	sensorsForSecondSearch?: string[];
 }
 
 export interface IStatusBarConfig {
 	toolTips: IToolTipsConfig,
+	filters: IFilterStatusBar
 	locale: string
 }

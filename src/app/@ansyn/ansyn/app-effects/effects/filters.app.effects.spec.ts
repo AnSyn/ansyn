@@ -4,7 +4,7 @@ import {
 	OverlayStatusReducer
 } from '../../modules/overlays/overlay-status/reducers/overlay-status.reducer';
 import { FiltersAppEffects } from './filters.app.effects';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
@@ -14,18 +14,16 @@ import {
 	EnableOnlyFavoritesSelectionAction,
 	InitializeFiltersAction,
 	InitializeFiltersSuccessAction
-} from '../../modules/menu-items/filters/actions/filters.actions';
-import { EnumFilterMetadata } from '../../modules/menu-items/filters/models/metadata/enum-filter-metadata';
-import { FilterMetadata } from '../../modules/menu-items/filters/models/metadata/filter-metadata.interface';
-import { filtersConfig } from '../../modules/menu-items/filters/services/filters.service';
-import { filtersFeatureKey, FiltersReducer } from '../../modules/menu-items/filters/reducer/filters.reducer';
-import { IFilter } from '../../modules/menu-items/filters/models/IFilter';
-import { SliderFilterMetadata } from '../../modules/menu-items/filters/models/metadata/slider-filter-metadata';
-import { buildFilteredOverlays } from '../../modules/core/utils/overlays';
+} from '../../modules/filters/actions/filters.actions';
+import { EnumFilterMetadata } from '../../modules/filters/models/metadata/enum-filter-metadata';
+import { FilterMetadata } from '../../modules/filters/models/metadata/filter-metadata.interface';
+import { filtersConfig, FiltersService } from '../../modules/filters/services/filters.service';
+import { filtersFeatureKey, FiltersReducer } from '../../modules/filters/reducer/filters.reducer';
+import { IFilter } from '../../modules/filters/models/IFilter';
+import { SliderFilterMetadata } from '../../modules/filters/models/metadata/slider-filter-metadata';
 import { GenericTypeResolverService } from '../../modules/core/services/generic-type-resolver.service';
 import {
-	LoadOverlaysAction,
-	SetDropsAction,
+	LoadOverlaysAction, LoadOverlaysSuccessAction, SetDropsAction,
 	SetFilteredOverlaysAction,
 	SetOverlaysStatusMessageAction
 } from '../../modules/overlays/actions/overlays.actions';
@@ -34,11 +32,14 @@ import {
 	overlaysFeatureKey,
 	overlaysStatusMessages
 } from '../../modules/overlays/reducers/overlays.reducer';
-import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { imageryStatusFeatureKey, ImageryStatusReducer } from '@ansyn/map-facade';
-import { FilterType } from '../../modules/menu-items/filters/models/filter-type';
+import { FilterType } from '../../modules/filters/models/filter-type';
 import { IOverlay } from '../../modules/overlays/models/overlay.model';
-import { MissingTranslationHandler, TranslateLoader, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { EnumFilterCounters } from '../../modules/filters/models/counters/enum-filter-counters';
+import { FilterCounters } from '../../modules/filters/models/counters/filter-counters.interface';
+import { SliderFilterCounters } from '../../modules/filters/models/counters/slider-filter-counters';
+import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { LoggerService } from '../../modules/core/services/logger.service';
 
 describe('Filters app effects', () => {
@@ -50,11 +51,16 @@ describe('Filters app effects', () => {
 	const filterMetadata2: FilterMetadata = new EnumFilterMetadata();
 	const filterMetadata3: FilterMetadata = new SliderFilterMetadata();
 	const filterMetadata4: FilterMetadata = new SliderFilterMetadata();
+	const filterCounters: FilterCounters = new EnumFilterCounters();
+	const filterCounters2: FilterCounters = new EnumFilterCounters();
+	const filterCounters3: FilterCounters = new SliderFilterCounters();
+	const filterCounters4: FilterCounters = new SliderFilterCounters();
 	const filterKey: IFilter = { modelName: 'enumModel1', displayName: 'Enum Model', type: FilterType.Enum };
 	const filterKey2: IFilter = { modelName: 'enumModel2', displayName: 'Enum Model 2', type: FilterType.Enum };
 	const filterKey3: IFilter = { modelName: 'SliderModel', displayName: 'Slider Model', type: FilterType.Slider };
 	const filterKey4: IFilter = { modelName: 'SliderModel2', displayName: 'Slider Model2', type: FilterType.Slider };
-	const filters = new Map([[filterKey, filterMetadata], [filterKey2, filterMetadata2], [filterKey3, filterMetadata3], [filterKey4, filterMetadata4]]);
+	const filtersMetadata = new Map([[filterKey, filterMetadata], [filterKey2, filterMetadata2], [filterKey3, filterMetadata3], [filterKey4, filterMetadata4]]);
+	const filtersCounters = new Map([[filterKey, filterCounters], [filterKey2, filterCounters2], [filterKey3, filterCounters3], [filterKey4, filterCounters4]]);
 
 	const favoriteOver = <IOverlay>{};
 	favoriteOver.id = '2';
@@ -74,14 +80,9 @@ describe('Filters app effects', () => {
 			providers: [
 				FiltersAppEffects,
 				GenericTypeResolverService,
-				{
-					provide: LoggerService, useValue: {
-						error: (some) => null, info: () => {
-						}
-					}
-				},
 				{ provide: filtersConfig, useValue: {} },
-				provideMockActions(() => actions)
+				provideMockActions(() => actions),
+				{ provide: LoggerService, useValue: { error: () => {} }}
 			]
 		}).compileComponents();
 	}));
@@ -90,19 +91,6 @@ describe('Filters app effects', () => {
 		filtersAppEffects = _filtersAppEffects;
 		store = _store;
 	}));
-
-	it('updateOverlayFilters$ effect', () => {
-		const fakeObj = {
-			buildFilteredOverlays: buildFilteredOverlays
-		};
-		spyOn(fakeObj, 'buildFilteredOverlays').and.callFake(() => []);
-		store.dispatch(new InitializeFiltersSuccessAction(new Map()));
-		const expectedResults = cold('(bc)', {
-			b: new SetFilteredOverlaysAction([]),
-			c: new SetOverlaysStatusMessageAction(overlaysStatusMessages.noOverLayMatchFilters)
-		});
-		expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
-	});
 
 	it('updateOverlayDrops$ effect', () => {
 		spyOn(OverlaysService, 'parseOverlayDataForDisplay').and.callFake(() => []);
@@ -122,26 +110,22 @@ describe('Filters app effects', () => {
 		(<EnumFilterMetadata>filterMetadata).enumsFields.set('example', {
 			key: 'example',
 			count: 10,
-			filteredCount: 0,
 			isChecked: true
 		}); // (isChecked) => no changes
 		(<EnumFilterMetadata>filterMetadata).enumsFields.set('example2', {
 			key: 'example2',
 			count: 10,
-			filteredCount: 0,
 			isChecked: false
 		}); // (!isChecked) => 1
 
 		(<EnumFilterMetadata>filterMetadata2).enumsFields.set('example', {
 			key: 'example',
 			count: 10,
-			filteredCount: 0,
 			isChecked: true
 		}); // (isChecked) => no changes
 		(<EnumFilterMetadata>filterMetadata2).enumsFields.set('example2', {
 			key: 'example2',
 			count: 10,
-			filteredCount: 0,
 			isChecked: false
 		}); // (!isChecked) => 2
 
@@ -150,7 +134,7 @@ describe('Filters app effects', () => {
 
 		(<SliderFilterMetadata>filterMetadata3).start = -2;
 		(<SliderFilterMetadata>filterMetadata3).end = 1; // (start > -Infinity || end < Infinity ) => 3
-		store.dispatch(new InitializeFiltersSuccessAction(filters));
+		store.dispatch(new InitializeFiltersSuccessAction({ filtersMetadata, filtersCounters }));
 		const expectedResults = cold('b', { b: new SetBadgeAction({ key: 'Filters', badge: '3' }) });
 		expect(filtersAppEffects.updateFiltersBadge$).toBeObservable(expectedResults);
 	});
@@ -160,5 +144,39 @@ describe('Filters app effects', () => {
 		store.dispatch(new SetFavoriteOverlaysAction(overlays));
 		const expectedResults = cold('b', { b: new EnableOnlyFavoritesSelectionAction(true) });
 		expect(filtersAppEffects.setShowFavoritesFlagOnFilters$).toBeObservable(expectedResults);
+	});
+
+	describe('updateOverlayFilters$ effect', () => {
+
+		beforeEach(() => {
+			store.dispatch(new InitializeFiltersSuccessAction({
+				filtersMetadata: new Map(),
+				filtersCounters: new Map()
+			}));
+			store.dispatch(new LoadOverlaysSuccessAction([{ id: '1' }] as any));
+		});
+
+		it('should send null message if there are filtered overlays', () => {
+			const expectedResults = cold('(bc)', {
+				b: new SetFilteredOverlaysAction(['1']),
+				c: new SetOverlaysStatusMessageAction({ message: null }),
+			});
+
+			expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
+		});
+
+		it('should send no overlays message if there aren\'t filtered overlays', () => {
+			spyOn(FiltersService, 'pluckFilterModels').and.returnValue([{
+				key: 'myFilter',
+				filterFunc: () => false
+			}]);
+
+			const expectedResults = cold('(bc)', {
+				b: new SetFilteredOverlaysAction([]),
+				c: new SetOverlaysStatusMessageAction({ message: overlaysStatusMessages.noOverLayMatchFilters }),
+			});
+
+			expect(filtersAppEffects.updateOverlayFilters$).toBeObservable(expectedResults);
+		});
 	});
 });

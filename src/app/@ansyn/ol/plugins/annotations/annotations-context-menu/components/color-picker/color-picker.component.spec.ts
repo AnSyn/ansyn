@@ -1,8 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ColorPickerComponent } from './color-picker.component';
-import { ColorPickerModule } from 'ngx-color-picker';
 import { mockStayInImageryService } from '../../../../../../imagery/stay-in-imagery-service/stay-in-imagery.service.mock';
+import { MockPipe } from '../../../../../../ansyn/modules/core/test/mock-pipe';
+import { MockComponent } from '../../../../../../ansyn/modules/core/test/mock-component';
+
+const mockColorPickerTrigger = MockComponent({
+	selector: 'input[colorPickerInput]',
+	inputs: ['colorPicker'],
+	outputs: ['colorPickerChange']
+});
 
 describe('ColorPickerComponent', () => {
 	let component: ColorPickerComponent;
@@ -12,8 +19,11 @@ describe('ColorPickerComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ColorPickerComponent],
-			imports: [ColorPickerModule]
+			declarations: [
+				ColorPickerComponent,
+				mockColorPickerTrigger,
+				MockPipe('translate')
+			]
 		})
 			.overrideComponent(myComponent, {
 				set: {

@@ -2,18 +2,18 @@ import { ImageryStatusActionTypes } from '../actions/imagery-status.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 
 export const imageryStatusFeatureKey = 'imageryStatus';
-export const imageryStatusStateSelector: MemoizedSelector<any, ImageryStatusState> = createFeatureSelector<ImageryStatusState>(imageryStatusFeatureKey);
+export const imageryStatusStateSelector: MemoizedSelector<any, IImageryStatusState> = createFeatureSelector<IImageryStatusState>(imageryStatusFeatureKey);
 
-export interface ImageryStatusState {
+export interface IImageryStatusState {
 	enableCopyOriginalOverlayData: boolean;
 
 }
 
-export const imageryStatusInitialState: ImageryStatusState = {
+export const imageryStatusInitialState: IImageryStatusState = {
 	enableCopyOriginalOverlayData: false,
 };
 
-export function ImageryStatusReducer(state: ImageryStatusState = imageryStatusInitialState, action: any): ImageryStatusState {
+export function ImageryStatusReducer(state: IImageryStatusState = imageryStatusInitialState, action: any): IImageryStatusState {
 	switch (action.type) {
 
 		case ImageryStatusActionTypes.ENABLE_COPY_ORIGINAL_OVERLAY_DATA:

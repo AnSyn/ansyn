@@ -11,7 +11,7 @@
 
 :host {
 	position: absolute;
-	height: calc(100% + 10px);
+	height: 100%;
 	width: 100%;
 
 	div.collapsable {
@@ -56,22 +56,6 @@
 		}
 	}
 
-	div.imageries-container:not(.footer-collapsed) {
-		&.layout3, &.layout5 {
-			:nth-child(2) {
-				/deep/ ansyn-imagery-status > div.buttons {
-					margin-left: 15px;
-				}
-			}
-		}
-		&.layout6 {
-			:nth-child(3) {
-				/deep/ ansyn-imagery-status > div.buttons {
-					margin-left: 15px;
-				}
-			}
-		}
-	}
 	div.imageries-container {
 		position: relative;
 		display: flex;
@@ -102,7 +86,7 @@
 			pointer-events: none;
 
 			&.active {
-				border: solid 4px @background-color-3;
+				border: solid 4px @application-primary-color;
 			}
 		}
 
@@ -110,6 +94,7 @@
 			bottom: 5px;
 			height: @scale-line-height;
 			min-width: 200px;
+			direction: ltr; // does not change in app RTL mode
 		}
 
 		/deep/ .ol-scale-line-inner {
@@ -121,23 +106,20 @@
 		}
 
 		&.layout2 {
-
-
 			div.map-container-wrapper {
 				width: 50%;
 				height: 100%;
 
 				&:nth-child(1) {
 					top: 0;
-					left: 0;
+					right: 50%;
 				}
 
 				&:nth-child(2) {
 					top: 0;
-					left: 50%;
+					right: 0;
 				}
 			}
-
 		}
 
 		&.layout3 {
@@ -171,17 +153,17 @@
 
 				&:nth-child(1) {
 					top: 0;
-					left: 0;
+					right: 0;
 				}
 
 				&:nth-child(2) {
 					top: 0;
-					left: 50%;
+					right: 50%;
 				}
 
 				&:nth-child(3) {
 					top: 50%;
-					left: 50%;
+					right: 50%;
 				}
 			}
 
@@ -297,7 +279,7 @@
 					width: 50%;
 					height: 100%;
 					top: 0;
-					left: 0;
+					right: 0;
 
 					/deep/ .ol-attribution {
 						bottom: @attribute-on-hide-button-minimize;
@@ -306,7 +288,7 @@
 
 				&:nth-child(2) {
 					top: 0;
-					left: 50%;
+					right: 50%;
 					/deep/ .ol-attribution {
 						bottom: @attribute-default;
 					}
@@ -314,7 +296,7 @@
 
 				&:nth-child(3) {
 					top: 50%;
-					left: 50%;
+					right: 50%;
 				}
 			}
 		}

@@ -3,15 +3,15 @@ import { Inject } from '@angular/core';
 import {
 	areCoordinatesNumeric,
 	BaseImageryMap,
-	ExtentCalculator,
-	IMAGERY_BASE_MAP_LAYER,
+	ExtentCalculator, IExportMapMetadata,
 	IMAGERY_MAIN_LAYER_NAME,
+	IMAGERY_SLOW_ZOOM_FACTOR,
 	ImageryLayerProperties,
 	ImageryMap,
 	ImageryMapExtent,
 	ImageryMapExtentPolygon,
-	ImageryMapPosition,
-	IMapProgress
+	IImageryMapPosition,
+	IMapProgress, GetProvidersMapsService, IBaseImageryLayer
 } from '@ansyn/imagery';
 import * as turf from '@turf/turf';
 import { feature } from '@turf/turf';
@@ -24,40 +24,41 @@ import OLGeoJSON from 'ol/format/GeoJSON';
 import olPolygon from 'ol/geom/Polygon';
 import * as olInteraction from 'ol/interaction'
 import Group from 'ol/layer/Group';
-import Layer from 'ol/layer/Layer';
+import ol_Layer from 'ol/layer/Layer';
 import VectorLayer from 'ol/layer/Vector';
 import OLMap from 'ol/Map';
 import Vector from 'ol/source/Vector';
 import View from 'ol/View';
 import { Observable, of, Subject, timer } from 'rxjs';
-import { debounceTime, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, filter, map, switchMap, take, takeUntil, tap, mergeMap } from 'rxjs/operators';
 import { IOlConfig, OL_CONFIG } from '../../../config/ol-config';
 import { OpenLayersProjectionService } from '../../../projection/open-layers-projection.service';
 import { OpenLayersMonitor } from '../helpers/openlayers-monitor';
-import * as olShare from '../shared/openlayers-shared';
 import { Utils } from '../utils/utils';
+import { exportMapHelper } from '../../helpers/helpers';
 
 export const OpenlayersMapName = 'openLayersMap';
 
 export enum StaticGroupsKeys {
-	layers = 'layers'
+	layers = 'layers',
+	map = 'map'
 }
 
 // @dynamic
 @ImageryMap({
 	mapType: OpenlayersMapName,
-	deps: [HttpClient, OpenLayersProjectionService, OL_CONFIG]
+	deps: [HttpClient, OpenLayersProjectionService, OL_CONFIG, GetProvidersMapsService]
 })
 export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	static groupsKeys = StaticGroupsKeys;
-	static groupLayers = new Map<StaticGroupsKeys, Group>(Object.values(StaticGroupsKeys).map((key) => [key, new Group()]) as any);
+	groupLayersMap = new Map<StaticGroupsKeys, Group>(Object.values(StaticGroupsKeys).map((key) => [key, new Group({className: `group-${key}`})]));
 	private _mapObject: OLMap;
 	private _backgroundMapObject: OLMap;
 	public isValidPosition;
 	targetElement: HTMLElement = null;
 	public shadowNorthElement = null;
-	getMoveEndPositionObservable = new Subject<ImageryMapPosition>();
-	getMoveStartPositionObservable = new Subject<ImageryMapPosition>();
+	getMoveEndPositionObservable = new Subject<IImageryMapPosition>();
+	getMoveStartPositionObservable = new Subject<IImageryMapPosition>();
 	subscribers = [];
 	private showGroups = new Map<StaticGroupsKeys, boolean>();
 	private _backgroundMapParams: object;
@@ -72,7 +73,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	constructor(protected http: HttpClient,
 				public projectionService: OpenLayersProjectionService,
-				@Inject(OL_CONFIG) public olConfig: IOlConfig) {
+				@Inject(OL_CONFIG) public olConfig: IOlConfig,
+				protected getProvidersMapsService: GetProvidersMapsService) {
 		super();
 		// todo: a more orderly way to give default values to config params
 		this.olConfig.tilesLoadingDoubleBuffer = this.olConfig.tilesLoadingDoubleBuffer || {
@@ -106,16 +108,24 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		).subscribe();
 	}
 
+	private addToBaseMapGroup(layer: IBaseImageryLayer) {
+		if (this.groupLayersMap.get(StaticGroupsKeys.map).getLayersArray()[0]?.get('id')  !== layer.get('id')) {
+			this.groupLayersMap.get(StaticGroupsKeys.map).getLayers().setAt(1, layer);
+		}
+		else if (this.groupLayersMap.get(StaticGroupsKeys.map).getLayersArray().length > 1) {
+			this.groupLayersMap.get(StaticGroupsKeys.map).getLayers().removeAt(1);
+		}
+	}
 	/**
 	 * add layer to the map if it is not already exists the layer must have an id set
 	 * @param layer
 	 */
-	public addLayerIfNotExist(layer): Layer {
+	public addLayerIfNotExist(layer): ol_Layer {
 		const layerId = layer.get(ImageryLayerProperties.ID);
 		if (!layerId) {
 			return;
 		}
-		const existingLayer: Layer = this.getLayerById(layerId);
+		const existingLayer: ol_Layer = this.getLayerById(layerId);
 		if (!existingLayer) {
 			// layer.set('visible',false);
 			this.addLayer(layer);
@@ -125,20 +135,23 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	toggleGroup(groupName: StaticGroupsKeys, newState: boolean) {
-		const group = OpenLayersMap.groupLayers.get(groupName);
 		if (newState) {
-			this.addLayer(group);
+			this.addLayer(this.groupLayersMap.get(groupName));
 		} else {
-			this.removeLayer(group);
+			this.removeLayer(this.groupLayersMap.get(groupName));
 		}
 		this.showGroups.set(groupName, newState);
 	}
 
-	getLayers(): any[] {
+	getLayers(): ol_Layer[] {
 		return this.mapObject.getLayers().getArray();
 	}
 
-	initMap(target: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: any, position?: ImageryMapPosition): Observable<boolean> {
+	getGroupLayers() {
+		return this.groupLayersMap.get(StaticGroupsKeys.layers);
+	}
+
+	initMap(target: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer: ol_Layer, position?: IImageryMapPosition): Observable<boolean> {
 		this.targetElement = target;
 		this.shadowNorthElement = shadowNorthElement;
 		this._mapLayers = [];
@@ -153,9 +166,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 			target,
 			renderer,
 			controls,
-			interaction: olInteraction.defaults({ doubleClickZoom: false }),
-			loadTilesWhileInteracting: true,
-			loadTilesWhileAnimating: true
+			interactions: olInteraction.defaults({ doubleClickZoom: false }),
+			preload: Infinity
 		});
 		this.initListeners();
 		this._backgroundMapParams = {
@@ -165,7 +177,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		// For initMap() we invoke resetView without double buffer
 		// (otherwise resetView() would have waited for the tile loading to end, but we don't want initMap() to wait).
 		// The double buffer is not relevant at this stage anyway.
-		return this.resetView(layer, position);
+		return this.getProvidersMapsService.getDefaultProviderByType(this.mapType).pipe(
+			mergeMap( (defaultSourceType) => this.getProvidersMapsService.createMapSourceForMapType(this.mapType, defaultSourceType)),
+			mergeMap( (defaultLayer) => {
+				this.groupLayersMap.get(StaticGroupsKeys.map).getLayers().setAt(0, defaultLayer);
+				return this.resetView(layer, position);
+			})
+		)
 	}
 
 	initListeners() {
@@ -204,7 +222,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		});
 	}
 
-	public resetView(layer: any, position: ImageryMapPosition, extent?: ImageryMapExtent, useDoubleBuffer?: boolean): Observable<boolean> {
+	public resetView(layer: ol_Layer, position: IImageryMapPosition, extent?: ImageryMapExtent, useDoubleBuffer?: boolean): Observable<boolean> {
 		useDoubleBuffer = useDoubleBuffer && !layer.get(ImageryLayerProperties.FROM_CACHE);
 		if (useDoubleBuffer) {
 			this._backgroundMapObject = new OLMap(this._backgroundMapParams);
@@ -241,35 +259,39 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		}
 	}
 
-	public getLayerById(id: string): Layer {
-		return <Layer>this.mapObject.getLayers().getArray().find(item => item.get(ImageryLayerProperties.ID) === id);
+	public getLayerById(id: string): ol_Layer {
+		return <ol_Layer>this.mapObject.getLayers().getArray().find(item => item.get(ImageryLayerProperties.ID) === id);
 	}
 
 	setGroupLayers() {
 		this.showGroups.forEach((show, group) => {
 			if (show) {
-				this.addLayer(OpenLayersMap.groupLayers.get(group));
+				this.addLayer(this.groupLayersMap.get(StaticGroupsKeys.layers));
 			}
 		});
 	}
 
-	setMainLayerToForegroundMap(layer: Layer) {
-		layer.set(ImageryLayerProperties.NAME, IMAGERY_MAIN_LAYER_NAME);
-		layer.set(ImageryLayerProperties.MAIN_EXTENT, null);
+	setMainLayerToForegroundMap(layer: ol_Layer) {
 		this.removeAllLayers();
-		this.addLayer(layer);
+		if (layer.get(ImageryLayerProperties.IS_OVERLAY)) {
+			this.addLayer(layer);
+		}
+		else {
+			this.addToBaseMapGroup(layer);
+			this.addLayer(this.groupLayersMap.get(StaticGroupsKeys.map));
+		}
 		this.setGroupLayers();
 	}
 
-	setMainLayerToBackgroundMap(layer: Layer) {
+	setMainLayerToBackgroundMap(layer: ol_Layer) {
+		// should be removed useDoubleBuffer is deprecated.
 		layer.set(ImageryLayerProperties.NAME, IMAGERY_MAIN_LAYER_NAME);
 		this.backgroundMapObject.getLayers().clear();
 		this.backgroundMapObject.addLayer(layer);
 	}
 
-	getMainLayer(): Layer {
-		const mainLayer = this._mapLayers.find((layer: Layer) => layer.get(ImageryLayerProperties.NAME) === IMAGERY_MAIN_LAYER_NAME);
-		return mainLayer;
+	getMainLayer(): ol_Layer {
+		return this.groupLayersMap.get(StaticGroupsKeys.map).getLayers().item(0);
 	}
 
 	fitToExtent(extent: ImageryMapExtent, map: OLMap = this.mapObject, view: View = map.getView()) {
@@ -282,18 +304,11 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		);
 	}
 
-	public addMapLayer(layer: any) {
-		const main = this.getMainLayer();
-		const baseMapLayer = this._mapLayers.find((layer: Layer) => layer.get(ImageryLayerProperties.NAME) === IMAGERY_BASE_MAP_LAYER);
-		if (baseMapLayer) {
-			this.removeLayer(baseMapLayer);
-		}
-		if (layer.get(ImageryLayerProperties.ID) !== main.get(ImageryLayerProperties.ID)) {
-			this.addLayer(layer);
-		}
+	public addMapLayer(layer: ol_Layer) {
+		this.addToBaseMapGroup(layer);
 	}
 
-	public addLayer(layer: any) {
+	public addLayer(layer: ol_Layer) {
 
 		if (!this._mapLayers.includes(layer)) {
 			this._mapLayers.push(layer);
@@ -304,7 +319,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	public removeAllLayers() {
 		this.showGroups.forEach((show, group) => {
 			if (show && this._mapObject) {
-				this._mapObject.removeLayer(OpenLayersMap.groupLayers.get(group));
+				this._mapObject.removeLayer(this.groupLayersMap.get(StaticGroupsKeys.layers));
 			}
 		});
 
@@ -315,11 +330,10 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		this._mapLayers = [];
 	}
 
-	public removeLayer(layer: any): void {
+	public removeLayer(layer: ol_Layer): void {
 		if (!layer) {
 			return;
 		}
-		olShare.removeWorkers(layer);
 		this._mapLayers = this._mapLayers.filter((mapLayer) => mapLayer !== layer);
 		this._mapObject.removeLayer(layer);
 		this._mapObject.renderSync();
@@ -425,7 +439,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		);
 	}
 
-	public setPosition(position: ImageryMapPosition, map: OLMap = this.mapObject, view: View = map.getView()): Observable<boolean> {
+	public setPosition(position: IImageryMapPosition, map: OLMap = this.mapObject, view: View = map.getView()): Observable<boolean> {
 		const { extentPolygon, projectedState, customResolution } = position;
 
 		const someIsNan = !extentPolygon.coordinates[0].every(areCoordinatesNumeric);
@@ -449,7 +463,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		}
 	}
 
-	public getPosition(): Observable<ImageryMapPosition> {
+	public getPosition(): Observable<IImageryMapPosition> {
 		const view = this.mapObject.getView();
 		const projection = view.getProjection();
 		const projectedState = {
@@ -501,6 +515,12 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		return view.getRotation();
 	}
 
+	exportMap(exportMetadata: IExportMapMetadata): Observable<HTMLCanvasElement> {
+		const {size, resolution, extra: {annotations}} = exportMetadata;
+		const classToInclude = '.ol-layer canvas' + (annotations ? `,${annotations}` : '');
+		return exportMapHelper(this.mapObject, size, resolution, classToInclude);
+	}
+
 	one2one(): void {
 		const view = this.mapObject.getView();
 		view.setResolution(1)
@@ -509,13 +529,13 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	zoomOut(): void {
 		const view = this.mapObject.getView();
 		const current = view.getZoom();
-		view.setZoom(current - 1);
+		view.setZoom(current - IMAGERY_SLOW_ZOOM_FACTOR);
 	}
 
 	zoomIn(): void {
 		const view = this.mapObject.getView();
 		const current = view.getZoom();
-		view.setZoom(current + 1);
+		view.setZoom(current + IMAGERY_SLOW_ZOOM_FACTOR);
 	}
 
 	flyTo(location: [number, number]) {
@@ -528,6 +548,8 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 
 	public addGeojsonLayer(data: GeoJsonObject): void {
 		let layer: VectorLayer = new VectorLayer({
+			updateWhileAnimating: true,
+			updateWhileInteracting: true,
 			source: new Vector({
 				features: new olGeoJSON().readFeatures(data)
 			})
@@ -603,7 +625,7 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	};
 
 	// Used by resetView()
-	private _setMapPositionOrExtent(map: OLMap, position: ImageryMapPosition, extent: ImageryMapExtent, rotation: number): Observable<boolean> {
+	private _setMapPositionOrExtent(map: OLMap, position: IImageryMapPosition, extent: ImageryMapExtent, rotation: number): Observable<boolean> {
 		if (extent) {
 			this.fitToExtent(extent, map).subscribe();
 			if (rotation) {
@@ -615,5 +637,9 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 		}
 
 		return of(true);
+	}
+
+	getProjectionCode(): string {
+		return this._mapObject.getView().getProjection().code_;
 	}
 }

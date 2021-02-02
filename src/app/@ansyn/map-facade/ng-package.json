@@ -2,11 +2,13 @@
   "$schema": "../../../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../../../dist/ansyn/map-facade",
   "whitelistedNonPeerDependencies": [
-    "@turf/turf",
+    "@ansyn/imagery",
     "lodash",
-    "angular2-uuid",
     "auto-subscriptions",
-    "file-saver"
+    "tslib",
+    "@ngx-translate/core",
+    "font-awesome",
+    "proj4"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

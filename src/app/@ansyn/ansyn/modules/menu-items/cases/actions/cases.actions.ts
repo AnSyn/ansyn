@@ -1,20 +1,22 @@
 import { Action } from '@ngrx/store';
 import { Params } from '@angular/router';
-import { IStoredEntity } from '../../../core/services/storage/storage.service';
-import { ICase, ICasePreview, IDilutedCase, IDilutedCaseState } from '../models/case.model';
+import { ICase, IDilutedCase } from '../models/case.model';
+import { ILogMessage } from '../../../core/models/logger.model';
+import { CasesType } from '../models/cases-config';
+
+export type caseModalType = 'save' | 'delete';
 
 export const CasesActionTypes = {
+	SHOW_CASES_TABLE: 'SHOW_CASES_TABLE',
 	LOAD_CASES: 'LOAD_CASES',
 	LOAD_CASE: 'LOAD_CASE',
 
 	ADD_CASES: 'ADD_CASES',
-	ADD_CASE: 'ADD_CASE',
 
 	DELETE_CASE: 'DELETE_CASE',
+	DELETE_CASE_SUCCESS: 'DELETE_CASE_SUCCESS',
 
 	UPDATE_CASE: 'UPDATE_CASE',
-	UPDATE_CASE_BACKEND: 'UPDATE_CASE_BACKEND',
-	UPDATE_CASE_BACKEND_SUCCESS: 'UPDATE_CASE_BACKEND_SUCCESS',
 
 	OPEN_MODAL: 'OPEN_MODAL',
 	CLOSE_MODAL: 'CLOSE_MODAL',
@@ -29,78 +31,72 @@ export const CasesActionTypes = {
 
 	SAVE_CASE_AS: 'SAVE_CASE_AS',
 	SAVE_CASE_AS_SUCCESS: 'SAVE_CASE_AS_SUCCESS',
+	SAVE_SHARED_CASE_AS_MY_OWN: 'SAVE_SHARED_CASE_AS_MY_OWN',
 
 	COPY_CASE_LINK: 'COPY_CASE_LINK',
 
-	SET_DEFAULT_CASE_QUERY_PARAMS: 'SET_DEFAULT_CASE_QUERY_PARAMS',
-	REMOVE_DEFAULT_CASE_QUERY_PARAMS: 'REMOVE_DEFAULT_CASE_QUERY_PARAMS',
-	TOGGLE_FAVORITE_OVERLAY: 'TOGGLE_FAVORITE_OVERLAY',
-
 	LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE: 'LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE',
-	MANUAL_SAVE: 'MANUAL_SAVE',
 
-	SET_AUTO_SAVE: 'SET_AUTO_SAVE',
+	RENAME_CASE: 'RENAME_CASE'
 };
 
 export type CasesActions = any;
+
+export class ShowCasesTableAction implements Action {
+	readonly type = CasesActionTypes.SHOW_CASES_TABLE;
+	constructor(public payload: boolean = false) {
+	}
+}
 
 export class LoadDefaultCaseIfNoActiveCaseAction implements Action {
 	type = CasesActionTypes.LOAD_DEFAULT_CASE_IF_NO_ACTIVE_CASE;
 }
 
-export class LoadCasesAction implements Action {
+export class LoadCasesAction implements Action, ILogMessage {
 	type = CasesActionTypes.LOAD_CASES;
 
-	constructor(public payload?: ICase[]) {
+	constructor(public payload: CasesType = CasesType.MyCases) {
+	}
+
+	logMessage() {
+		return `Loading cases from backend`
 	}
 }
 
 export class AddCasesAction implements Action {
 	type = CasesActionTypes.ADD_CASES;
 
-	constructor(public payload: ICase[]) {
+	constructor(public payload: {cases: ICase[], type?: CasesType}) {
 	}
 }
-
-export class AddCaseAction implements Action {
-	type = CasesActionTypes.ADD_CASE;
-
-	constructor(public payload: ICase) {
-	}
-}
-
 export class UpdateCaseAction implements Action {
 	type = CasesActionTypes.UPDATE_CASE;
 
-	constructor(public payload: { updatedCase: ICase, forceUpdate?: boolean }) {
-	}
-}
-
-export class UpdateCaseBackendAction implements Action {
-	type = CasesActionTypes.UPDATE_CASE_BACKEND;
-
 	constructor(public payload: ICase) {
 	}
 }
 
-export class UpdateCaseBackendSuccessAction implements Action {
-	type = CasesActionTypes.UPDATE_CASE_BACKEND_SUCCESS;
-
-	constructor(public payload: IStoredEntity<ICasePreview, IDilutedCaseState>) {
-	}
-}
-
-export class DeleteCaseAction implements Action {
+export class DeleteCaseAction implements Action  {
 	type = CasesActionTypes.DELETE_CASE;
 
-	constructor(public payload: string) {
+	constructor(public payload: { id: string, name: string, type: CasesType }) {
 	}
+
+}
+
+export class DeleteCaseSuccessAction extends DeleteCaseAction implements ILogMessage {
+	type = CasesActionTypes.DELETE_CASE_SUCCESS;
+
+	logMessage() {
+		return `Deleting case ${this.payload.name} id: ${this.payload.id}`
+	}
+
 }
 
 export class OpenModalAction implements Action {
 	type = CasesActionTypes.OPEN_MODAL;
 
-	constructor(public payload: { component: any, caseId?: string }) {
+	constructor(public payload: { type: caseModalType, caseId?: string }) {
 	}
 }
 
@@ -125,10 +121,14 @@ export class SelectCaseSuccessAction implements Action {
 	}
 }
 
-export class SelectDilutedCaseAction implements Action {
+export class SelectDilutedCaseAction implements Action, ILogMessage {
 	type = CasesActionTypes.SELECT_DILUTED_CASE;
 
 	constructor(public payload: IDilutedCase) {
+	}
+
+	logMessage() {
+		return `Selecting case ${this.payload.name} id: ${this.payload.id}`
 	}
 }
 
@@ -139,44 +139,58 @@ export class LoadCaseAction implements Action {
 	}
 }
 
-export class LoadDefaultCaseAction implements Action {
+export class LoadDefaultCaseAction implements Action, ILogMessage {
 	type = CasesActionTypes.LOAD_DEFAULT_CASE;
 
 	constructor(public payload: Params = {}) {
 	}
+
+	logMessage() {
+		return `App will load default case`;
+	}
 }
 
 export class SaveCaseAsAction implements Action {
-	type = CasesActionTypes.SAVE_CASE_AS;
+	readonly type = CasesActionTypes.SAVE_CASE_AS;
 
 	constructor(public payload: ICase) {
 	}
+
+
 }
 
-export class SaveCaseAsSuccessAction implements Action {
-	type = CasesActionTypes.SAVE_CASE_AS_SUCCESS;
+export class SaveCaseAsSuccessAction extends SaveCaseAsAction implements ILogMessage {
+	readonly type = CasesActionTypes.SAVE_CASE_AS_SUCCESS;
 
-	constructor(public payload: ICase) {
+	logMessage() {
+		return `Saving case as ${this.payload.name} id: ${this.payload.id}`
 	}
 }
 
-export class CopyCaseLinkAction implements Action {
+export class SaveSharedCaseAsMyOwn implements Action {
+	readonly type = CasesActionTypes.SAVE_SHARED_CASE_AS_MY_OWN;
+	constructor(public payload: string | ICase) {
+	}
+}
+
+export class CopyCaseLinkAction implements Action, ILogMessage {
 	type = CasesActionTypes.COPY_CASE_LINK;
 
-	constructor(public payload: { caseId: string, shareCaseAsQueryParams?: boolean }) {
+	constructor(public payload: { caseId: string, shareCaseAsQueryParams?: boolean, caseName?: string }) {
+	}
+
+	logMessage() {
+		return `Copying case${this.payload.caseName ? ' ' + this.payload.caseName : ''} id: ${this.payload.caseId} link to clipboard`;
 	}
 }
 
-export class ManualSaveAction implements Action {
-	readonly type = CasesActionTypes.MANUAL_SAVE;
+export class RenameCaseAction implements Action, ILogMessage {
+	readonly type = CasesActionTypes.RENAME_CASE;
 
-	constructor(public payload: ICase) {
+	constructor(public payload: { case: ICase, oldName: string, newName: string }) {
 	}
-}
 
-export class SetAutoSave implements Action {
-	readonly type = CasesActionTypes.SET_AUTO_SAVE;
-
-	constructor(public payload: boolean) {
+	logMessage() {
+		return `Renaming case ${this.payload.oldName} id:${this.payload.case.id} to ${this.payload.newName}`
 	}
 }

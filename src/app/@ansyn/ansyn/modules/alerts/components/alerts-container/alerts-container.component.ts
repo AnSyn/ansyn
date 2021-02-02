@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { selectMapsTotal, selectOverlayByMapId } from '@ansyn/map-facade';
+import { selectOverlayByMapId } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { combineLatest, Observable } from 'rxjs';
@@ -21,8 +21,20 @@ export class AlertsContainerComponent implements OnInit, OnDestroy {
 	overlay: IOverlay;
 	@Input() mapId: string;
 
+	get noGeoRegistration() {
+		if (!this.overlay) {
+			return false;
+		}
+
+		return this.overlay.isGeoRegistered === 'notGeoRegistered';
+	}
+
+	constructor(protected store$: Store<any>,
+				@Inject(ALERTS) public alerts: IAlert[]) {
+	}
+
 	@AutoSubscription
-	alertMsg$: () => Observable<any> = () => combineLatest(this.store$.select(selectAlertMsg), this.store$.select(selectOverlayByMapId(this.mapId))).pipe(
+	alertMsg$: () => Observable<any> = () => combineLatest([this.store$.select(selectAlertMsg), this.store$.select(selectOverlayByMapId(this.mapId))]).pipe(
 		distinctUntilChanged(),
 		tap(([alertMsg, overlay]) => {
 			this.alertMsg = alertMsg;
@@ -30,25 +42,15 @@ export class AlertsContainerComponent implements OnInit, OnDestroy {
 		})
 	);
 
-	constructor(protected store$: Store<any>,
-				@Inject(ALERTS) public alerts: IAlert[]) {
-	}
-
 	showAlert(alertKey) {
-		const ids = this.alertMsg.get(alertKey);
-		if (ids) {
-			return ids.has(this.mapId);
-		} else {
-			return this[alertKey];
+		if (this.overlay) {
+			const ids = this.alertMsg?.get(alertKey);
+			if (ids) {
+				return ids.has(this.mapId);
+			} else {
+				return this[alertKey];
+			}
 		}
-	}
-
-	get noGeoRegistration() {
-		if (!this.overlay) {
-			return false;
-		}
-
-		return this.overlay.isGeoRegistered === 'notGeoRegistered';
 	}
 
 	ngOnInit() {

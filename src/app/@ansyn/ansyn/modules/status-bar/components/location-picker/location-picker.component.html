@@ -1,0 +1,8 @@
+<div class="buttons">
+	<div class="geoFilterOption"
+		*ngFor="let _geoFilter of geoFilters"
+		(click)="change(_geoFilter)">
+		{{_geoFilter | translate }}
+	</div>
+</div>
+

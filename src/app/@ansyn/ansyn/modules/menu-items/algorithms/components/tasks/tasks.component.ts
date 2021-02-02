@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ITasksState, selectAlgorithmTasksPageToShow } from '../../reducers/tasks.reducer';
 import { Store } from '@ngrx/store';
 import { TasksPageToShow } from '../../models/tasks.model';
-import { Observable } from 'rxjs/index';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'ansyn-algorithms',

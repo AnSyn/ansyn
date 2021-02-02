@@ -13,8 +13,11 @@ import { createPluginsCollection } from './providers/plugins-collection';
 import { IBaseImageryPluginConstructor } from './model/base-imagery-plugin';
 import { IBaseMapSourceProviderConstructor } from './model/base-map-source-provider';
 import { HttpClientModule } from '@angular/common/http';
+import { GetProvidersMapsService } from './services/get-providers-maps/get-providers-maps.service';
+import { COMMUNICATOR_LOG_MESSAGES, communicatorLogMessages } from './communicator-service/communicator-log-messages';
+import { TranslateModule } from '@ngx-translate/core';
 
-export interface ImageryMetaData {
+export interface IImageryMetaData {
 	maps: IBaseImageryMapConstructor[],
 	plugins: IBaseImageryPluginConstructor[],
 	mapSourceProviders: IBaseMapSourceProviderConstructor[]
@@ -24,10 +27,10 @@ export interface ImageryMetaData {
 @NgModule({
 	imports: [
 		CommonModule,
-		HttpClientModule
+		HttpClientModule,
+		TranslateModule
 	],
 	declarations: [ImageryComponent, MapComponent],
-	entryComponents: [MapComponent],
 	providers: [
 		ImageryCommunicatorService,
 		CacheService,
@@ -36,13 +39,18 @@ export interface ImageryMetaData {
 		createImageryMapsCollection([]),
 		createMapSourceProviders([]),
 		BaseMapSourceProviderProvider,
-		ImageryMapsProvider
+		ImageryMapsProvider,
+		GetProvidersMapsService,
+		{
+			provide: COMMUNICATOR_LOG_MESSAGES,
+			useValue: communicatorLogMessages
+		}
 	],
 	exports: [ImageryComponent]
 })
 export class ImageryModule {
 
-	static provide(metadata: ImageryMetaData): ModuleWithProviders {
+	static provide(metadata: IImageryMetaData): ModuleWithProviders<ImageryModule> {
 		return {
 			ngModule: ImageryModule,
 			providers: [
@@ -53,7 +61,7 @@ export class ImageryModule {
 		};
 	}
 
-	static provideConfig(config: IImageryConfig): ModuleWithProviders {
+	static provideConfig(config: IImageryConfig): ModuleWithProviders<ImageryModule> {
 		return {
 			ngModule: ImageryModule,
 			providers: [createConfig(config)]

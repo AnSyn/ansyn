@@ -1,58 +1,57 @@
-import { combineLatest, Observable, of } from 'rxjs';
+import { Observable, of, combineLatest } from 'rxjs';
 import ImageLayer from 'ol/layer/Image';
-import { BaseImageryPlugin, CommunicatorEntity, ImageryPlugin } from '@ansyn/imagery';
-import { Store } from '@ngrx/store';
+import RasterSource from 'ol/source/Raster';
+import { BaseImageryPlugin, ImageryLayerProperties, ImageryPlugin } from '@ansyn/imagery';
+import { Store, select } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
-import { OpenLayersDisabledMap, OpenLayersMap, ProjectableRaster } from '@ansyn/ol';
+import {
+	OpenLayersDisabledMap,
+	OpenLayersMap
+} from '@ansyn/ol';
 import { OpenLayersImageProcessing } from './image-processing';
-import { distinctUntilChanged, filter, map, take, tap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, take, tap, concatMap, withLatestFrom } from 'rxjs/operators';
 import { isEqual } from 'lodash';
-import { Inject } from '@angular/core';
-import { selectMaps } from '@ansyn/map-facade';
-import { IImageProcParam, IToolsConfig, toolsConfig } from '../../../../menu-items/tools/models/tools-config';
-import { ICaseMapState, ImageManualProcessArgs } from '../../../../menu-items/cases/models/case.model';
+import { IImageManualProcessArgs, IOverlayImageProcess } from '../../../../menu-items/cases/models/case.model';
+import {
+	selectOverlaysImageProcess
+} from '../../../../overlays/overlay-status/reducers/overlay-status.reducer';
+import { OverlayStatusService } from '../../../../overlays/overlay-status/services/overlay-status.service';
+import { selectMaps, selectOverlayByMapId } from '@ansyn/map-facade';
+import { IOverlay } from '../../../../overlays/models/overlay.model';
 
 @ImageryPlugin({
 	supported: [OpenLayersMap, OpenLayersDisabledMap],
-	deps: [Store, toolsConfig]
+	deps: [Store, OverlayStatusService]
 })
+
 export class ImageProcessingPlugin extends BaseImageryPlugin {
-	communicator: CommunicatorEntity;
 	private _imageProcessing: OpenLayersImageProcessing;
 	private imageLayer: ImageLayer;
-	customMainLayer = null;
-
-	currentMap$ = this.store$.select(selectMaps).pipe(
-		map((mapsEntities) => mapsEntities[this.mapId]),
-		filter(Boolean)
+	selectOverlay$: Observable<IOverlay> =  this.store$.pipe(select(selectMaps)).pipe(
+		map( maps => maps[this.mapId]),
+		map( map => map?.data?.overlay)
 	);
 
-	isAutoImageProcessingActive$ = this.currentMap$.pipe(
-		map((currentMap: ICaseMapState) => {
-			return currentMap.data.isAutoImageProcessingActive;
-		}),
-		distinctUntilChanged()
-	);
 
-	imageManualProcessArgs$ = this.currentMap$.pipe(
-		map((currentMap: ICaseMapState) => {
-			return currentMap.data.imageManualProcessArgs;
-		}),
-		distinctUntilChanged(isEqual)
+	isImageProcessActive$ = combineLatest([this.selectOverlay$, this.store$.pipe(select(selectOverlaysImageProcess))]).pipe(
+		map(([overlay, overlaysImageProcess]: [IOverlay, any]) => overlaysImageProcess && overlaysImageProcess[overlay?.id]),
+		filter(Boolean),
+		distinctUntilChanged(isEqual),
+		map( (overlayImageProcess: IOverlayImageProcess) => {
+			return [overlayImageProcess.isAuto, overlayImageProcess.manuelArgs]
+		})
 	);
 
 	@AutoSubscription
-	onAutoImageProcessingAndManualImageProcessActive$ = combineLatest(this.isAutoImageProcessingActive$, this.imageManualProcessArgs$).pipe(
-		tap(([isAutoImageProcessingActive, imageManualProcessArgs]: [boolean, ImageManualProcessArgs]) => {
+	onAutoImageProcessingAndManualImageProcessActive$ = this.isImageProcessActive$.pipe(
+		tap(([isAutoImageProcessingActive, imageManualProcessArgs]: [boolean, IImageManualProcessArgs]) => {
 			const isImageProcessActive = this.isImageProcessActive(isAutoImageProcessingActive, imageManualProcessArgs);
 			if (!isImageProcessActive) {
 				this.removeImageLayer();
 				return;
 			}
-			// else
-			this.createImageLayer([isAutoImageProcessingActive, imageManualProcessArgs]);
-			const hasRasterLayer = this.getExistingRasterLayer();
-			if (Boolean(hasRasterLayer)) {
+			this.createImageLayer();
+			if (Boolean(this.imageLayer)) {
 				// auto
 				this.setAutoImageProcessing(isAutoImageProcessingActive);
 				// manual
@@ -63,28 +62,16 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		})
 	);
 
-	get params(): Array<IImageProcParam> {
-		return this.config.ImageProcParams;
-	}
-
-	constructor(public store$: Store<any>, @Inject(toolsConfig) protected config: IToolsConfig) {
+	constructor(public store$: Store<any>, protected overlayStatusService: OverlayStatusService) {
 		super();
 	}
 
-	defaultImageManualProcessArgs(): ImageManualProcessArgs {
-		return this.params.reduce<ImageManualProcessArgs>((initialObject: any, imageProcParam: IImageProcParam) => {
-			return <any>{ ...initialObject, [imageProcParam.name]: imageProcParam.defaultValue };
-		}, {});
-	}
-
-	isImageProcessActive(isAutoImageProcessingActive: boolean, imageManualProcessArgs: ImageManualProcessArgs) {
-		const defaultManualParams = this.defaultImageManualProcessArgs();
-		const result = isAutoImageProcessingActive || (Boolean(imageManualProcessArgs) && !isEqual(defaultManualParams, imageManualProcessArgs));
+	isImageProcessActive(isAutoImageProcessingActive: boolean, imageManualProcessArgs: IImageManualProcessArgs) {
+		const result = isAutoImageProcessingActive || (!!imageManualProcessArgs && !this.overlayStatusService.isDefaultImageProcess(imageManualProcessArgs));
 		return result;
 	}
 
 	onResetView(): Observable<boolean> {
-		this.setCustomMainLayer(null);
 		return of(true).pipe(
 			tap(() => this.recalculateManualImageProcessActive())
 		);
@@ -95,15 +82,12 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		this.onAutoImageProcessingAndManualImageProcessActive$.pipe(take(1)).subscribe();
 	}
 
-	setCustomMainLayer(layer) {
-		if (!isEqual(this.getMainLayer(), layer)) {
-			this.removeImageLayer();
-		}
-		this.customMainLayer = layer;
-	}
-
 	getMainLayer(): any {
-		return Boolean(this.customMainLayer) ? this.customMainLayer : this.communicator.ActiveMap.getMainLayer();
+		const overlay = this.communicator.ActiveMap.getLayers().find(layer => layer.get(ImageryLayerProperties.IS_OVERLAY))
+		if (overlay) {
+			return overlay;
+		}
+		return ;
 	}
 
 	public setAutoImageProcessing(shouldPerform: boolean): void {
@@ -119,42 +103,34 @@ export class ImageProcessingPlugin extends BaseImageryPlugin {
 		}
 	}
 
-	createImageLayer([isAutoImageProcessingActive, imageManualProcessArgs]: [boolean, ImageManualProcessArgs]) {
-		this.imageLayer = this.getExistingRasterLayer();
-		if (this.imageLayer) {
-			return;
-		}
+	createImageLayer() {
 		const mainLayer = this.getMainLayer();
-		const imageLayer = mainLayer.get('imageLayer');
-		if (!imageLayer) {
+		if (this.imageLayer || !mainLayer) {
 			return;
 		}
+		const extent = mainLayer.getExtent();
+		const source = mainLayer.getSource();
+		this.imageLayer = new ImageLayer({
+			source: new RasterSource({
+				sources: [source],
+				operation: (pixels) => pixels[0],
+				operationType: 'image'
+			}),
+			extent: extent
+		});
 
-		this.communicator.ActiveMap.addLayer(imageLayer);
-		this.imageLayer = imageLayer;
+		this.communicator.ActiveMap.addLayer(this.imageLayer);
 		this.imageLayer.setZIndex(0);
 		this._imageProcessing = new OpenLayersImageProcessing(<any>this.imageLayer.getSource());
 	}
 
 	removeImageLayer(): void {
-		this.imageLayer = this.getExistingRasterLayer();
 		if (this.imageLayer) {
+			this.imageLayer.getSource().dispose();
 			this.communicator.ActiveMap.removeLayer(this.imageLayer);
 			this._imageProcessing = new OpenLayersImageProcessing();
 			this.imageLayer = null;
 		}
-	}
-
-	getExistingRasterLayer(): ImageLayer {
-		const layers = this.communicator.ActiveMap.getLayers();
-		const imageLayer = layers.find((layer) => {
-			if (layer.type && layer.type === 'IMAGE') { // for component
-				const source = layer.getSource();
-				return source instanceof ProjectableRaster;
-			}
-			return false;
-		});
-		return imageLayer;
 	}
 
 }

@@ -21,7 +21,7 @@ export class SentinelLayersService {
 				protected store: Store<any>,
 				@Inject(sentinelOverlaySourceConfig) protected config: ISentinelOverlaySourceConfig,
 				@Inject(MultipleOverlaysSourceConfig) protected multipleOverlaysSourceConfig: IMultipleOverlaysSourceConfig) {
-		if (!this.multipleOverlaysSourceConfig.indexProviders[SentinelOverlaySourceType].inActive) {
+		if (this.multipleOverlaysSourceConfig.indexProviders[SentinelOverlaySourceType] && !this.multipleOverlaysSourceConfig.indexProviders[SentinelOverlaySourceType].inActive) {
 			this.getAllLayers().pipe(
 				map(layers => {
 					const sentinelLayers = layers.map(layer => ({ name: layer.Name, title: layer.Title }));

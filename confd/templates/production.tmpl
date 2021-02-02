@@ -1,15 +1,14 @@
 {
   "casesConfig": {
+  "user": "AnSyn",
     "schema": "cases",
     "paginationLimit": 16,
     "defaultCase": {
 		 "id": "4df64c1a-330b-1332-c286-7d73754bd001",
-		 "name": "Default case",
+		 "name": "Default Case",
 		 "lastModified": "2018-04-04T13:21:45.616Z",
 		 "autoSave": false,
 		 "state": {
-		   "timeFilter": "Start - End",
-		   "orientation": "User Perspective",
 		   "maps": {
 			 "layout": "layout1",
 			 "data": [
@@ -56,82 +55,108 @@
 					   "zoom": 14.956666666666665
 					 }
 				   },
-				   "overlay": null,
-				   "imageManualProcessArgs": {
-					 "Sharpness": 0,
-					 "Contrast": 0,
-					 "Brightness": 0,
-					 "Gamma": 100,
-					 "Saturation": 100
-				   },
-				   "isAutoImageProcessingActive": false
+				   "overlay": null
 				 },
+				 "orientation": "Imagery Perspective",
 				 "flags": {},
 				 "worldView": {
 				   "mapType": "openLayersMap",
 				   "sourceType": "{{ getv "/ansyn/imagery/mapsource" "OSM" }}"
 				 },
-				 "id": "af3b94d2-03ff-44e6-9f73-10d386aff493"
+				 "id": null
 			   }
 			 ],
-			 "activeMapId": "af3b94d2-03ff-44e6-9f73-10d386aff493"
+			 "activeMapId": null
 		   },
 		   "layers": {
 			 "activeLayersIds": [
 			 ]
 		   },
 		   "favoriteOverlays": [],
-		   "removedOverlaysIds": [],
-		   "removedOverlaysVisibility": true,
-		   "presetOverlays": [],
 		   "overlaysTranslationData": {},
 		   "region": {
-			 "type": "Point",
-			 "coordinates": [
-			   -122.3805754022963,
-			   37.621511305075714
-			 ]
+				"geometry": {
+					"type": "Polygon",
+					"coordinates": [
+						[
+						  [
+							-122.4148614215284,
+							37.63937724672128
+						  ],
+						  [
+							-122.33393164831777,
+							37.63937724672128
+						  ],
+						  [
+							-122.33393164831777,
+							37.61041039245376
+						  ],
+						  [
+							-122.4148614215284,
+							37.61041039245376
+						  ],
+						  [
+							-122.4148614215284,
+							37.63937724672128
+						  ]
+						]
+					  ]
+				},
+				"type": "Feature",
+				"properties": {
+					"searchMode": "ScreenView"
+				}
 		   },
 		   "dataInputFilters": {
 			 "filters": [],
 			 "fullyChecked": true
 		   },
 		   "time": null,
+		   "advancedSearchParameters": {
+			   "types": ["Multi-Spectral Instrument", "UAV", "Mapillary", "Flickr", "OpenStreetCam", "Wikimedia Commons"],
+				"registeration": ["Geo Registered"],
+				"providers": [{
+					"name": "SENTINEL",
+					"class": "SentinelSourceProvider"
+				},
+				{
+					"name": "OPEN_AERIAL",
+					"class": "OpenAerialSourceProvider"
+				},
+				{
+					"name": "PIC4CARTO",
+					"class": "Pic4cartoSourceProvider"
+				}],
+			"resolution": {
+				"lowValue": 0,
+				"highValue": 200
+			},
+			"sensors": [],
+			"enableResetProviders": true,
+			"sensorsForSecondSearch": []
+		 	},
+			"runSecondSearch": true,
 		   "facets": {
 			 "showOnlyFavorites": false,
 			 "filters": [
 
 			 ]
-		   },
-		   "contextEntities": null,
-		   "overlaysManualProcessArgs": {
-			 "20190412_213505_ssc11d2_0011": {
-			   "Sharpness": 0,
-			   "Contrast": 0,
-			   "Brightness": 0,
-			   "Gamma": 100,
-			   "Saturation": 100
-			 }
 		   }
 		 }
 	   },
-    "casesQueryParamsKeys": [
-      "facets",
-      "time",
-      "maps",
-      "region",
-      "overlaysManualProcessArgs",
-      "orientation",
-      "layers",
-      "miscOverlays"
-    ],
     "updateCaseDebounceTime": 700,
     "useHash": true,
     "defaultSearchFromDeltaTime": {
-    	"unit": "days",
-    	"amount": 80
+    	"unit": "months",
+    	"amount": 2
     }
   },
+  "contextConfig": {
+      "TwoMaps": {
+        "layout": "layout2",
+        "sensors": "S2MSI2A"
+      }
+    },
   "layersManagerConfig": {
     "schema": "layers"
   },
@@ -149,9 +174,13 @@
 	}
   },
   "mapFacadeConfig": {
+  	"showOne2One": {{ getv "/ansyn/show/one2one" "true" }},
+	"firstSearchNotification": {
+		"timeToDisplayButtonToast": 10000
+	},
   	"welcomeNotification": {
 		"headerText": "Welcome to AnSyn!",
-		"mainText": "To get overlays anywhere in the world, just right click on the wanted area and click the central button"
+		"mainText": "To get overlays anywhere in the world, just move around on the map"
   	},
     "overlayCoverage": 0.1,
     "disableBestResolutionContextMenu": false,
@@ -166,8 +195,7 @@
     },
 	"mapSearch": {
 		"active": true,
-		"url": "http://dev.virtualearth.net/REST/v1/Locations?locality=$searchString&maxResults=1&key=$apiKey",
-		"apiKey": "AofqJGk-uEej_Pv7hkbpXh6H3pb54luGZj6lfe90ksZEoBY-JmgTwGE2s9TF6peC"
+		"url": "https://nominatim.openstreetmap.org/search.php?q="
 	},
 	"floatingPositionSuffix": "{{ getv "/ansyn/floation/position/suffix" "" }}",
 	"floatingPositionSystem" : "WGS84",
@@ -181,6 +209,19 @@
   	"openLayersMap": {
   		"defaultMapSource": "{{ getv "/ansyn/imagery/mapsource" "OSM" }}",
   		"sources": [
+  			{
+				"key": "ESRI_4326",
+				"displayName": "ESRI 4326",
+				"thumbnail": "https://services.arcgisonline.com/arcgis/rest/services/ESRI_Imagery_World_2D/MapServer/tile/0/0/0.png",
+				"sourceType": "ESRI_4326",
+				"config": {
+					"baseUrl": "https://services.arcgisonline.com/arcgis/rest/services/ESRI_Imagery_World_2D/MapServer/tile/{z}/{y}/{x}",
+					"projection": "EPSG:4326",
+					"maxZoom": 16,
+					"tileSize": 256,
+					"attributions": "Copyright:© 2013 ESRI, i-cubed, GeoEye"
+				}
+			},
   			{
   				"key": "OSM",
   				"displayName": "Open Street Map",
@@ -253,94 +294,101 @@
 	},
   	"ESRI_4326": { },
 
-    "CESIUM_GEO_SERVER": { }
+    "CESIUM_GEO_SERVER": { },
+	"IMISIGHT": {
+		"imageUrl": "https://gw.lab01.imisight.net"
+	}
   },
   "filtersConfig": {
   	"shortFilterListLength": 8,
     "filters": [
       {
-        "modelName": "sensorType",
-        "displayName": "Sensor Type",
-        "type": "Enum"
-      },
-      {
-        "modelName": "sensorName",
-        "displayName": "Sensor Name",
-        "type": "Enum"
-      },
-      {
-        "modelName": "sourceType",
-        "displayName": "Source Type",
-        "type": "Enum"
-      },
-      {
-        "modelName": "isGeoRegistered",
-        "displayName": "Geo Registration",
-        "type": "Enum"
-      },
-      {
-      	"modelName": "containedInSearchPolygon",
-        "displayName": "Contains Region",
-        "type": "Enum"
-      },
-      {
-        "modelName": "bestResolution",
-        "displayName": "Resolution",
-        "type": "Slider"
-      },
-      {
-        "modelName": "cloudCoverage",
-        "displayName": "Cloud Coverage",
-        "type": "Slider"
-      }
+		  "modelName": "sensorType",
+		  "displayName": "Sensor Type",
+		  "type": "Enum"
+		},
+		{
+			"modelName": "sensorName",
+			"displayName": "Sensor",
+			"type": "Enum"
+	  	},
+		{
+		  "modelName": "sourceType",
+		  "displayName": "Source Type",
+		  "type": "Enum"
+		},
+		{
+		  "modelName": "isGeoRegistered",
+		  "displayName": "Geo Registration",
+		  "type": "Enum"
+		},
+		{
+			"modelName": "containedInSearchPolygon",
+		  "displayName": "Contains Region",
+		  "type": "Enum"
+		},
+		{
+		  "modelName": "bestResolution",
+		  "displayName": "Resolution",
+		  "type": "Slider"
+		},
+		{
+		  "modelName": "cloudCoverage",
+		  "displayName": "Cloud Coverage",
+		  "type": "Slider"
+		}
     ]
   },
-  "contextConfig": {
-    "schema": "contexts"
+  "OverlayStatusConfig": {
+  	"ImageProcParams": [
+	  {
+		"name": "Sharpness",
+		"defaultValue": 0,
+		"min": 0,
+		"max": 100
+	  },
+	  {
+		"name": "Contrast",
+		"defaultValue": 0,
+		"min": -100,
+		"max": 100
+	  },
+	  {
+		"name": "Brightness",
+		"defaultValue": 0,
+		"min": -100,
+		"max": 100
+	  },
+	  {
+		"name": "Gamma",
+		"defaultValue": 100,
+		"min": 1,
+		"max": 200
+	  },
+	  {
+		"name": "Saturation",
+		"defaultValue": 100,
+		"min": 1,
+		"max": 100
+	  }
+	]
   },
   "toolsConfig": {
-    "ImageProcParams": [
-      {
-        "name": "Sharpness",
-        "defaultValue": 0,
-        "min": 0,
-        "max": 100
-      },
-      {
-        "name": "Contrast",
-        "defaultValue": 0,
-        "min": -100,
-        "max": 100
-      },
-      {
-        "name": "Brightness",
-        "defaultValue": 0,
-        "min": -100,
-        "max": 100
-      },
-      {
-        "name": "Gamma",
-        "defaultValue": 100,
-        "min": 1,
-        "max": 200
-      },
-      {
-        "name": "Saturation",
-        "defaultValue": 100,
-        "min": 1,
-        "max": 100
-      }
-    ],
     "ShadowMouse": {
     	"activeByDefault": {{ getv "/ansyn/is/shadow/active" "false"}},
     	"forceSendShadowMousePosition": {{ getv "/ansyn/force/send/shadow/mouse/position" "false"}}
+    },
+    "exportMap": {
+    	"target": "ansyn-imageries-manager",
+    	"excludeClasses": ["ol-attribution", "sentinel-combo", "map-loader-wrapper"]
     }
   },
   "loggerConfig": {
     "env": "PROD",
     "active": {{ getv "/ansyn/logger/active" "false"}},
     "component": "{{ getv "/ansyn/logger/component/name" "app_client" }}",
-    "disconnectionTimeoutInMinutes": {{ getv "/ansyn/logger/disconnection/minutes" "15"}}
+    "disconnectionTimeoutInMinutes": {{ getv "/ansyn/logger/disconnection/minutes" "15"}},
+    "showTranslationWarnings": false
   },
   "statusBarConfig": {
     "toolTips": {
@@ -357,7 +405,12 @@
       "forward": "Next overlay",
       "reset": "Reset timeline (according to the time filter)",
       "enlarge": "Expand timeline",
-      "quickloop": "Next overlay from the quick loop (key: Q)"
+      "quickloop": "Next overlay from the quick loop (key: Q)",
+      "share": "Share link"
+    },
+    "filters": {
+    	"filterNames": ["sensorName", "isGeoRegistered"],
+    	"maximumOpen": 2
     },
     "locale": "en-GB"
   },
@@ -381,7 +434,10 @@
 	 "httpTimeout": "3000",
 	 "isFooterCollapsible": {{ getv "/ansyn/iscollapsible" "false" }},
 	 "enable3D": {{ getv "/ansyn/3d/enable" "true" }},
-	 "northCalcImagerySensorNamesIgnoreList": []
+	 "northCalcImagerySensorNamesIgnoreList": [],
+	 "httpCacheBlackList": [
+	 	"{{ getv "/ansyn/storage/baseurl" "http://platform.ansyn.io:8888/api/store" }}"
+	 ]
   },
   "olConfig": {
   	 "needToUseLayerExtent": false,
@@ -393,11 +449,65 @@
   "olPluginsConfig": {
   	"Annotations": {
   		"displayId":  "{{ getv "/ansyn/tools/displayid" "0" }}"
-  	}
+  	},
+	"AnnotationsContextMenu": {
+		"metadataActive": false,
+		"metadataAttributes": [
+			{
+				"key": "key1",
+				"type": "SingleChoice",
+				"label": "Type",
+				"options": [
+					{
+						"key": "building",
+						"value": "Building"
+					},
+					{
+						"key": "house",
+						"value": "House"
+					},
+					{
+						"key": "vehicle",
+						"value": "Vehicle"
+					}
+				]
+			},
+			{
+				"key": "key2",
+				"type": "MultipleChoices",
+				"label": "Tags",
+				"options": [
+					{
+						"key": "damaged",
+						"value": "damaged"
+					},
+					{
+						"key": "undamaged",
+						"value": "un-damaged"
+					},
+					{
+						"key": "region1",
+						"value": "region1"
+					}
+				]
+			},
+			{
+				"key": "key3",
+				"type": "FreeText",
+				"label": "Notes"
+			},
+			{
+				"key": "key4",
+				"type": "Number",
+				"label": "Level on confidence"
+			}
+		]
+	}
   },
   "menuConfig": {
     "menuItems": {{ getv "/ansyn/menu/items" "null" }},
     "path": "assets/logo.svg",
+    "baseUrl": "http://platform.ansyn.io:81/#/",
     "color": "{{ getv "/ansyn/menu/color" "white" }}",
     "background": "{{ getv "/ansyn/menu/background" "red" }}",
     "mode": "{{ getv "/ansyn/menu/mode" "" }}",
@@ -407,7 +517,8 @@
     	"title": "Fork me on github",
 		"href": "{{ getv "/ansyn/menu/forkme/url" "https://github.com/ansyn/ansyn" }}"
     },
-    "isCollapsible": {{ getv "/ansyn/iscollapsible" "false" }}
+    "isCollapsible": {{ getv "/ansyn/iscollapsible" "false" }},
+    "landingPageUrl": "http://platform.ansyn.io:81/#/"
   },
   "loginConfig": {
   	"baseUrl": "{{ getv "/ansyn/login/baseurl" "http://platform.ansyn.io:9001/api/v1/login" }}",
@@ -435,6 +546,12 @@
   	]
   },
   "visualizersConfig": {
+	"AnnotationsVisualizer": {
+		"extra": {
+			"continuousDrawing": false,
+			"openContextMenuOnDrawEnd": false
+		}
+	},
   	"MeasureDistanceVisualizer": {
   		"extra": {
   			"isTotalMeasureActive": true
@@ -1022,58 +1139,58 @@
 		  "blacklist": [],
 		  "dataInputFiltersConfig": {
 			"text": "Planet",
-			"value": 1,
-				"collapsed": true,
-				"children": [
-				  {
-					"text": "REScene",
-					"value": {
-					  "sensorType": "REScene"
-					}
-				  },
-				  {
-					"text": "PSScene3Band",
-					"value": {
-					  "sensorType": "PSScene3Band"
-					}
-				  },
-				  {
-					"text": "PSOrthoTile",
-					"value": {
-					  "sensorType": "PSOrthoTile"
-					}
-				  },
-				  {
-					"text": "REOrthoTile",
-					"value": {
-					  "sensorType": "REOrthoTile"
-					}
-				  },
-				  {
-					"text": "SkySatScene",
-					"value": {
-					  "sensorType": "SkySatScene"
-					}
-				  },
-				  {
-					"text": "Landsat8L1G",
-					"value": {
-					  "sensorType": "Landsat8L1G"
-					}
-				  },
-				  {
-					"text": "Sentinel2L1C",
-					"value": {
-					  "sensorType": "Sentinel2L1C"
-					}
-				  },
-				  {
-					  "text": "Others",
-					  "value": {
-						"sensorType": "others"
-					  }
-					}
-				]
+			"value": "PLANET",
+			"collapsed": true,
+			"children": [
+			  {
+				"text": "REScene",
+				"value": {
+				  "sensorType": "REScene"
+				}
+			  },
+			  {
+				"text": "PSScene3Band",
+				"value": {
+				  "sensorType": "PSScene3Band"
+				}
+			  },
+			  {
+				"text": "PSOrthoTile",
+				"value": {
+				  "sensorType": "PSOrthoTile"
+				}
+			  },
+			  {
+				"text": "REOrthoTile",
+				"value": {
+				  "sensorType": "REOrthoTile"
+				}
+			  },
+			  {
+				"text": "SkySatScene",
+				"value": {
+				  "sensorType": "SkySatScene"
+				}
+			  },
+			  {
+				"text": "Landsat8L1G",
+				"value": {
+				  "sensorType": "Landsat8L1G"
+				}
+			  },
+			  {
+				"text": "Sentinel2L1C",
+				"value": {
+				  "sensorType": "Sentinel2L1C"
+				}
+			  },
+			  {
+				  "text": "Others",
+				  "value": {
+					"sensorType": "others"
+				  }
+				}
+			]
 			}
 		},
 		"PIC4CARTO": {
@@ -1104,7 +1221,7 @@
 			"blacklist":[],
 			"dataInputFiltersConfig":{
 				"text":"Open Street Images",
-				"value":1,
+				"value":"PIC4CARTO",
 				"collapsed":true,
 				"children":[
 					{
@@ -1177,7 +1294,7 @@
 			"blacklist": [],
 			"dataInputFiltersConfig": {
 				"text": "OpenAerial",
-				"value": 1,
+				"value": "OPEN_AERIAL",
 					"indeterminate": true,
 					"collapsed": true,
 					"children": [
@@ -1233,7 +1350,7 @@
 			"blacklist": [],
 			"dataInputFiltersConfig": {
 				  "text":"Imisight",
-				  "value": 1,
+				  "value": "IMISIGHT",
 				  "collapsed": true,
 				  "children": [
 					 {
@@ -1288,18 +1405,18 @@
 			"blacklist": [],
 			"dataInputFiltersConfig": {
 				"text": "Sentinel",
-				"value": 1,
+				"value": "SENTINEL",
 					"indeterminate": true,
 					"collapsed": true,
 					"children": [
 					  {
-						"text": "S2L2A",
+						"text": "Multi-Spectral Instrument",
 						"value": {
-						  "sensorType": "S2L2A"
+						  "sensorType": "Multi-Spectral Instrument"
 						}
 					  }
 					]
-			  }
+			}
 		},
 		"AIRBUS": {
 			"inActive": {{ getv "/ansyn/overlay/airbus/inactive" "true" }},
@@ -1344,7 +1461,7 @@
 			"blacklist": [],
 			"dataInputFiltersConfig": {
 				"text": "Airbus",
-				"value": 1,
+				"value": "AIRBUS",
 					"indeterminate": true,
 					"collapsed": true,
 					"children": [
@@ -1418,7 +1535,7 @@
         		"blacklist": [],
         		"dataInputFiltersConfig": {
         			"text": "Video",
-        			"value": 1,
+        			"value": "IMAGERY_VIDEO",
         				"indeterminate": true,
         				"collapsed": true,
         				"children": [
@@ -1443,7 +1560,8 @@
   	"baseUrl": "https://api.openaerialmap.org/meta"
   },
   "imisightOverlaysSourceConfig": {
-    "baseUrl": "https://gw.sat.imisight.net/a3/search"
+	"baseUrl": "https://gw.lab01.imisight.net",
+    "searchPath": "/a3/search"
   },
   "planetOverlaysSourceConfig": {
     "baseUrl": "https://api.planet.com/data/v1/quick-search",
@@ -1477,13 +1595,13 @@
   "auth0Config": {
       "auth0Active": {{ getv "/ansyn/auth0/auth0Active" "false" }},
       "clientID":"{{ getv "/ansyn/auth0/clientId" "KXLTbs08LtLqrbPwSgn7Ioej0aMB7tf6" }}",
-      "domain": "{{ getv "/ansyn/auth0/domain" "imisight-sat.auth0.com" }}",
+      "domain": "{{ getv "/ansyn/auth0/domain" "imisight.auth0.com" }}",
       "responseType": "{{ getv "/ansyn/auth0/responseType" "token id_token" }}",
-      "audience": "{{ getv "/ansyn/auth0/audience" "https://gw.sat.imisight.net" }}",
+      "audience": "{{ getv "/ansyn/auth0/audience" "https://gw.lab01.imisight.net" }}",
       "callbackURL": "{{ getv "/ansyn/auth0/callbackURL" "http://localhost:4200/#/callback/" }}",
       "scope": "{{ getv "/ansyn/auth0/scope" "openid" }}"
   },
-  "ORIENTATIONS": ["Align North", "User Perspective", "Imagery Perspective"],
+  "ORIENTATIONS": ["User Perspective", "Imagery Perspective"],
   "algorithmsConfig": {
     "schema": "tasks",
     "paginationLimit": 16,
@@ -1491,13 +1609,13 @@
 		"alg_1" : {
 			"maxOverlays": 20,
 			"timeEstimationPerOverlayInMinutes": 10,
-			"sensorNames": [ "Sentinel-2A", "Sentinel-2B" ],
+			"sensorNames": [ "Sentinel-2A", "Sentinel-2B", "S2MSI1C", "S2MSI2A" ],
 			"regionLengthInMeters": 200
 		},
 		"alg_2" : {
 			"maxOverlays": 2,
 			"timeEstimationPerOverlayInMinutes": 20,
-			"sensorNames": [ "Sentinel-2A" ],
+			"sensorNames": [ "Sentinel-2A", "S2MSI2A" ],
 			"regionLengthInMeters": 100
 		}
 	}
@@ -1505,5 +1623,29 @@
   "anaglyphConfig": {
   	"getStereoUrl": "needed test",
   	"sensorNames": {{ getv "/ansyn/anaglyph/sensornames" "null" }}
-  }
+  },
+  "screenViewConfig": {
+  	"extentWidthSearchLimit": 8000,
+    "debounceTime": 1000
+  },
+  "addressService": {
+      "url": "assets/config/addresses.json"
+    },
+    "componentVisibility": {
+			"timeline": false,
+			"resultTable": false,
+			"help": false,
+			"credentials": false,
+			"export": false,
+			"annotations": false,
+			"goTo": false,
+			"measures": false,
+			"shadowMouse": false,
+			"screens": false,
+			"layers": false,
+			"favorites": false,
+			"cases": false,
+			"footprints": false,
+			"imageProcessing": false
+    }
 }

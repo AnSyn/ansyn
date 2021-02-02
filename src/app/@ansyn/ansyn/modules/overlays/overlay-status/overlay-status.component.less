@@ -1,47 +1,58 @@
 @import 'ansyn/less/colors';
 @import 'ansyn/less/globals';
 
+@margin-small: 6px;
+@margin-big: 11px;
+
 :host {
-	line-height: 0;
 	left: 5px;
 	top: 6px;
 	display: flex;
+	width: 150px;
 
-	button {
-		position: relative;
-		padding: 4px 6px;
-		vertical-align: middle;
-		color: white;
-		line-height: 0;
+	div.overlay-status-button {
+		display: flex;
 
-		&.small-icon-button {
-			font-size: @icon-size;
-			background: transparent;
-			border: none;
-			outline: none;
-			padding: 0;
-			display: flex;
-			align-items: center;
-			z-index: 1;
+		button {
+			position: relative;
+			padding: 4px 6px;
+			color: white;
+			line-height: 0;
 
-			&:hover:not(:disabled) {
-				background: rgba(0, 0, 0, 0.5);
+			&.small-icon-button {
+				background: transparent;
+				border: none;
+				outline: none;
+				padding: 0;
+				display: flex;
+				align-items: center;
+				z-index: 1;
+				margin-right: @margin-small;
+
+				&.perspective {
+					margin-right: @margin-big;
+				}
+
+
+				&:hover:not(:disabled) {
+					background: rgba(0, 0, 0, 0.5);
+				}
+
+				&:disabled {
+					opacity: .6;
+				}
 			}
 
-			&:disabled {
-				opacity: .6;
+			i {
+				&.active {
+					color: @application-primary-color;
+				}
 			}
-		}
 
-		i {
-			&.active {
-				color: @application-primary-color;
+			.icon::before {
+				vertical-align: middle;
+				display: block;
 			}
-		}
-
-		.icon::before {
-			vertical-align: middle;
-			display: block;
 		}
 	}
 }

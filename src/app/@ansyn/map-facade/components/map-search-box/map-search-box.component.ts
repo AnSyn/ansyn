@@ -1,13 +1,20 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommunicatorEntity, ImageryCommunicatorService } from '@ansyn/imagery';
 import { GeocoderService } from '../../services/geocoder.service';
-import { Point } from 'geojson';
 import { Observable } from 'rxjs';
 import { filter, retryWhen, switchMap, take, tap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { selectIsMinimalistViewMode } from "../../reducers/map.reducer";
-import { Store } from "@ngrx/store";
+import { selectIsMinimalistViewMode } from '../../reducers/map.reducer';
+import { Store } from '@ngrx/store';
+import {
+	LogMapSearchBoxAction,
+	SetActiveCenterTriggerAction,
+	SetMapSearchBoxTriggerAction,
+	SetToastMessageAction
+} from '../../actions/map.actions';
+import { TranslateService } from '@ngx-translate/core';
+import { IMapSearchResult } from '../../models/map-search.model';
 
 @Component({
 	selector: 'ansyn-map-search-box',
@@ -17,18 +24,17 @@ import { Store } from "@ngrx/store";
 @AutoSubscriptions()
 export class MapSearchBoxComponent implements OnInit, OnDestroy {
 	@Input() mapId: string;
-	show: boolean;
+	@HostBinding('class.hide') isMinimalView: boolean;
 	control = new FormControl();
 	_communicator: CommunicatorEntity;
-	autoCompleteWidth = 108;
-	locations: { name: string, point: Point }[] = [];
-	public error: string = null;
+	locations: IMapSearchResult[] = [];
+	public error: boolean;
 	loading: boolean;
 
 	@AutoSubscription
 	isMinimalistViewMode$ = this.store$.select(selectIsMinimalistViewMode).pipe(
 		tap(isMinimalistViewMode => {
-			this.show = !isMinimalistViewMode;
+			this.isMinimalView = isMinimalistViewMode;
 		})
 	);
 
@@ -36,37 +42,37 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 	filteredLocations$: Observable<any> = this.control.valueChanges.pipe(
 		tap(this.resetSearch.bind(this)),
 		filter((value: string) => value.length >= 2),
-		tap((value: string) => this.loading = true),
 		switchMap((value: string) => this.geocoderService.getLocation$(value)),
-		tap((allLocations: Array<any>) => {
-			console.log({allLocations});
-			this.error = null;
-			this.locations = allLocations.filter((loc, index) => index < 5);
-			this.autoCompleteWidth = this.locations.reduce<number>((acc, next) => {
-				return acc > next.name.length ? acc : next.name.length;
-			}, 0) * 9;
+		tap((allLocations: Array<IMapSearchResult>) => {
+			this.locations = allLocations.slice(0, 10);
 			this.loading = false;
 		}),
 		retryWhen((err) => {
 			return err.pipe(
-				tap(error => {
-					console.log({error});
-					this.error = error ? error[0].name : '';
-					this.autoCompleteWidth = (<string>this.error).length * 5;
+				tap(() => {
+					this.error = true;
+					this.locations = [];
 					this.loading = false;
 				})
 			)
 		})
 	);
 
-	constructor(protected store$: Store<any>,
-				protected imageryCommunicatorService: ImageryCommunicatorService,
-				public geocoderService: GeocoderService) {
+	constructor(
+		protected store$: Store<any>,
+		protected imageryCommunicatorService: ImageryCommunicatorService,
+		public geocoderService: GeocoderService,
+		protected translateService: TranslateService
+	) {
 	}
 
-	resetSearch(point) {
+	resetSearch() {
 		this.locations = [];
 		this.error = null;
+		this.loading = true;
+		if (!this.control.value) {
+			this.store$.dispatch(new SetMapSearchBoxTriggerAction(false));
+		}
 	}
 
 	goToLocation(point) {
@@ -75,6 +81,8 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 		}
 		if (point) {
 			this._communicator.setCenter(point, true).pipe(take(1)).subscribe();
+			this.store$.dispatch(new SetActiveCenterTriggerAction(point.coordinates));
+			this.store$.dispatch(new SetMapSearchBoxTriggerAction(true));
 		}
 	}
 
@@ -85,16 +93,27 @@ export class MapSearchBoxComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmit() {
-		const value = this.control.value;
+		const value: string = this.control.value;
+		this.store$.dispatch(new LogMapSearchBoxAction(value));
 		let point;
-		let index = this.locations.findIndex(loc => loc.name === value);
-		if (index > -1) {
-			point = this.locations[index].point;
+		if (this.geocoderService.isCoordinates(value)) {
+			point = this.geocoderService.createPoint(value);
 		} else {
-			const bestLocation = this.locations[0];
-			point = bestLocation && bestLocation.point;
-			this.control.setValue(bestLocation ? bestLocation.name : value);
+			let index = this.locations.findIndex(loc => loc.name === value);
+			if (index > -1) {
+				point = this.locations[index].point;
+			} else {
+				const bestLocation = this.locations[0];
+				point = bestLocation && bestLocation.point;
+				this.control.setValue(bestLocation ? bestLocation.name : value);
+			}
 		}
-		this.goToLocation(point);
+
+		if (point) {
+			this.goToLocation(point);
+		} else {
+			const toastText = this.translateService.instant('Invalid location');
+			this.store$.dispatch(new SetToastMessageAction({ toastText }))
+		}
 	}
 }

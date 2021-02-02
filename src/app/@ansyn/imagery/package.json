@@ -1,16 +1,17 @@
 {
 	"name": "@ansyn/imagery",
-	"version": "1.6.33",
+	"version": "4.1.1",
 	"keywords": [],
 	"author": "ansyn",
 	"license": "MIT",
 	"peerDependencies": {
-		"@angular/common": "^7.2.2",
-		"@angular/core": "^7.2.2",
-		"@types/geojson": "7946.0.3"
+		"@angular/common": "9.x || 10.x",
+		"@angular/core": "9.x || 10.x",
+		"rxjs": "6.x"
 	},
 	"dependencies": {
 		"auto-subscriptions": "^2.0.5",
-		"@turf/turf": "^5.1.6"
+		"@turf/turf": "^6.3.0",
+		"tslib": "^2.0.0"
 	}
 }

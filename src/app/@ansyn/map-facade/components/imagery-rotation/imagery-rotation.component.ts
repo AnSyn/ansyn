@@ -1,9 +1,9 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings, toDegrees } from '@ansyn/imagery';
-import { PointToImageOrientationAction, PointToRealNorthAction } from '../../actions/map.actions';
+import { LogRotateMapAction, PointToImageOrientationAction, PointToRealNorthAction } from '../../actions/map.actions';
 
-export interface IsGeoRegisteredProperties {
+export interface IIsGeoRegisteredProperties {
 	letter: 'N' | '?';
 	color: '#6e6e7f' | 'red';
 	tooltipNorth: 'Drag to Change Orientation' | 'Press Alt+Shift and drag to rotate';
@@ -19,11 +19,11 @@ export interface IsGeoRegisteredProperties {
 })
 export class ImageryRotationComponent {
 	@Input() mapState: IMapSettings;
-	@ViewChild('northImg') northImgElement: ElementRef;
+	@ViewChild('northImg', {static: true}) northImgElement: ElementRef;
 
 	protected thresholdDegrees = 5;
 
-	isGeoRegisteredProperties: IsGeoRegisteredProperties = {
+	isGeoRegisteredProperties: IIsGeoRegisteredProperties = {
 		letter: 'N',
 		color: 'red',
 		tooltipNorth: 'Drag to Change Orientation',
@@ -32,7 +32,7 @@ export class ImageryRotationComponent {
 		rotatePointer: 'rotationAngle'
 	};
 
-	notGeoRegisteredProperties: IsGeoRegisteredProperties = {
+	notGeoRegisteredProperties: IIsGeoRegisteredProperties = {
 		letter: '?',
 		color: '#6e6e7f',
 		tooltipNorth: 'Drag to Change Orientation',
@@ -43,7 +43,7 @@ export class ImageryRotationComponent {
 
 	isRotating = false;
 
-	get geoRegisteredProperties(): IsGeoRegisteredProperties {
+	get geoRegisteredProperties(): IIsGeoRegisteredProperties {
 		return this.isGeoRegistered() ? this.isGeoRegisteredProperties : this.notGeoRegisteredProperties;
 	}
 
@@ -63,9 +63,11 @@ export class ImageryRotationComponent {
 		return ((this.communicator && this.communicator.getRotation()) || 0) - this.virtualNorth;
 	}
 
-	constructor(protected elementRef: ElementRef,
-				protected imageryCommunicatorService: ImageryCommunicatorService,
-				protected store: Store<any>) {
+	constructor(
+		protected elementRef: ElementRef,
+		protected imageryCommunicatorService: ImageryCommunicatorService,
+		protected store: Store<any>
+	) {
 	}
 
 	isGeoRegistered() {
@@ -128,6 +130,7 @@ export class ImageryRotationComponent {
 		document.addEventListener<'mousemove'>('mousemove', mouseMoveListener);
 
 		const mouseUpListener = () => {
+			this.store.dispatch(new LogRotateMapAction());
 			document.removeEventListener('mousemove', mouseMoveListener);
 			document.removeEventListener('mouseup', mouseUpListener);
 			this.isRotating = false;

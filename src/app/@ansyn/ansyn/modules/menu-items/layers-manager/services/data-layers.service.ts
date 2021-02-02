@@ -4,7 +4,7 @@ import { featureCollection } from '@turf/turf';
 import { UUID } from 'angular2-uuid';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Observable, of } from 'rxjs';
-import { catchError, filter, tap } from 'rxjs/operators';
+import { catchError, filter, map, tap } from 'rxjs/operators';
 import { ErrorHandlerService } from '../../../core/services/error-handler.service';
 import { StorageService } from '../../../core/services/storage/storage.service';
 import { ICase } from '../../cases/models/case.model';
@@ -14,13 +14,8 @@ import { ILayer, layerPluginTypeEnum, LayerType } from '../models/layers.model';
 import {
 	AddLayerOnBackendFailedAction,
 	AddLayerOnBackendSuccessAction,
-	RemoveCaseLayersFromBackendAction,
-	RemoveCaseLayersFromBackendFailedAction,
-	RemoveCaseLayersFromBackendSuccessAction,
 	RemoveLayerOnBackendFailedAction,
-	RemoveLayerOnBackendSuccessAction,
-	UpdateLayerOnBackendFailedAction,
-	UpdateLayerOnBackendSuccessAction
+	RemoveLayerOnBackendSuccessAction
 } from '../actions/layers.actions';
 
 export const layersConfig = 'layersManagerConfig';
@@ -36,31 +31,29 @@ export class DataLayersService implements OnInit, OnDestroy {
 	@AutoSubscription
 	caseId$ = this.store
 		.pipe(
-			/* SelectedCase should move to core store */
 			select(selectSelectedCase),
 			filter(Boolean),
 			tap(({ id }: ICase) => this.caseId = id)
 		);
-
-
-	generateAnnotationLayer(name = 'Default', data: any = featureCollection([]), isNonEditable: boolean = false): ILayer {
-		return {
-			id: UUID.UUID(),
-			creationTime: new Date(),
-			layerPluginType: layerPluginTypeEnum.Annotations,
-			name,
-			caseId: this.caseId,
-			type: LayerType.annotation,
-			data,
-			isNonEditable
-		};
-	}
 
 	constructor(@Inject(ErrorHandlerService) public errorHandlerService: ErrorHandlerService,
 				protected storageService: StorageService,
 				protected store: Store<any>,
 				@Inject(layersConfig) public config: ILayersManagerConfig) {
 		this.ngOnInit();
+	}
+
+	generateLayer(properties?: { name?: string, data?: any, isNonEditable?: boolean, type?: LayerType, id?: string }): ILayer {
+		return {
+			id: properties?.id || UUID.UUID(),
+			creationTime: new Date(),
+			layerPluginType: layerPluginTypeEnum.Annotations,
+			name: properties?.name || 'Default',
+			caseId: this.caseId,
+			type: properties?.type || LayerType.annotation,
+			data: properties?.data || featureCollection([]),
+			isNonEditable: properties?.isNonEditable || false
+		};
 	}
 
 	ngOnInit(): void {
@@ -75,6 +68,7 @@ export class DataLayersService implements OnInit, OnDestroy {
 		}
 		return this.storageService.searchByCase<ILayer>(this.config.schema, { caseId })
 			.pipe(
+				map(layers => layers.reverse()),
 				catchError(err => {
 					console.log(err);
 					return this.errorHandlerService.httpErrorHandle(err, 'Failed to load layers');
@@ -94,18 +88,6 @@ export class DataLayersService implements OnInit, OnDestroy {
 		)
 	}
 
-	updateLayer(layer: ILayer): Observable<any> {
-		return this.storageService.update('layers', { preview: layer, data: null }).pipe(
-			tap(() => {
-				this.store.dispatch(new UpdateLayerOnBackendSuccessAction(layer.id));
-			}),
-			catchError((err) => {
-				this.store.dispatch(new UpdateLayerOnBackendFailedAction(layer, err));
-				return this.errorHandlerService.httpErrorHandle(err, 'Can\'t find layer to update');
-			})
-		)
-	}
-
 	removeLayer(layerId: string): Observable<any> {
 		return this.storageService.delete('layers', layerId)
 			.pipe(
@@ -119,16 +101,9 @@ export class DataLayersService implements OnInit, OnDestroy {
 			)
 	}
 
-	removeCaseLayers(caseId: string): Observable<any> {
-		this.store.dispatch(new RemoveCaseLayersFromBackendAction(caseId));
+	removeCaseLayers(caseId: string): Observable<[string, string[]]> {
 		return this.storageService.deleteByCase('layers', { caseId }).pipe(
-			tap(() => {
-				this.store.dispatch(new RemoveCaseLayersFromBackendSuccessAction(caseId))
-			}),
-			catchError((err) => {
-				this.store.dispatch(new RemoveCaseLayersFromBackendFailedAction(caseId, err));
-				return this.errorHandlerService.httpErrorHandle(err, 'Failed to remove case layers');
-			})
-		);
+			map( (ids) => [caseId, ids])
+		)
 	}
 }

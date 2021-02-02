@@ -1,14 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { EditCaseComponent } from '../edit-case/edit-case.component';
-import { SaveCaseComponent } from '../save-case/save-case.component';
-import { ICasesState, selectSelectedCase } from '../../reducers/cases.reducer';
-import { Store } from '@ngrx/store';
-import { ManualSaveAction, OpenModalAction } from '../../actions/cases.actions';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { get } from 'lodash';
-import { CasesService } from '../../services/cases.service';
+import { selectCaseSaved } from '../../reducers/cases.reducer';
+import { select, Store } from '@ngrx/store';
+import { OpenModalAction } from '../../actions/cases.actions';
+import { delay } from 'rxjs/operators';
+import { AutoSubscriptions } from 'auto-subscriptions';
+import { SelectMenuItemFromOutsideAction } from '@ansyn/menu';
+import { MenuItemsKeys } from '../../../../../config/ansyn.config';
+import { ComponentVisibilityService } from '../../../../../app-providers/component-visibility.service';
+import { ComponentVisibilityItems } from '../../../../../app-providers/component-mode';
 
 @Component({
 	selector: 'ansyn-cases-tools',
@@ -20,39 +19,33 @@ import { CasesService } from '../../services/cases.service';
 	destroy: 'ngOnDestroy'
 })
 export class CasesToolsComponent implements OnInit, OnDestroy {
-	_selectedCase;
+	// for component
+	readonly isCasesShow: boolean;
+	//
 
-	@AutoSubscription
-	selectedCase$: Observable<any> = this.store.select(selectSelectedCase)
-		.pipe(
-			tap((selectedCase) => {
-				this._selectedCase = selectedCase;
-			})
-		);
+	currentSaveCase$ = this.store.pipe(
+		select(selectCaseSaved),
+		delay(0)
+	);
 
-	get isDefaultCaseId() {
-		return get(this.casesService, 'defaultCase.id') === get(this._selectedCase, 'id');
+	constructor(protected store: Store<any>,
+				componentVisibilityService: ComponentVisibilityService) {
+		this.isCasesShow = componentVisibilityService.get(ComponentVisibilityItems.CASES);
 	}
 
-	constructor(protected store: Store<ICasesState>,
-				protected casesService: CasesService) {
-	}
 
-	showEditCaseModal(): void {
-		this.store.dispatch(new OpenModalAction({ component: EditCaseComponent }));
-	}
 
-	showSaveCaseModal(): void {
-		this.store.dispatch(new OpenModalAction({ component: SaveCaseComponent }));
-	}
-
-	manualSave(): void {
-		this.store.dispatch(new ManualSaveAction(this._selectedCase));
+	showCasesTable(elementRef: HTMLDivElement): void {
+		this.store.dispatch(new SelectMenuItemFromOutsideAction({ name: MenuItemsKeys.Cases, elementRef, toggleFromBottom: false }))
 	}
 
 	ngOnInit(): void {
 	}
 
 	ngOnDestroy(): void {
+	}
+
+	showSaveModal() {
+		this.store.dispatch(new OpenModalAction({type: 'save'}))
 	}
 }

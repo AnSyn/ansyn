@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	AnsynApi,
+	AreaToCredentialsService,
 	GeoRegisteration,
 	IOverlay,
 	IOverlaysCriteria,
 	PhotoAngle,
 	RegionContainment,
 	selectMiscOverlays,
-	selectOverlaysArray,
 	SetMiscOverlay,
 } from '@ansyn/ansyn';
 import { FeatureCollection, Point, Polygon } from 'geojson';
@@ -22,7 +22,6 @@ import { take, tap } from 'rxjs/operators';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Store } from '@ngrx/store';
-import { AreaToCredentialsService } from "@ansyn/ansyn";
 
 const moment = momentNs;
 
@@ -47,7 +46,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 	needToShowLayer = true;
 
 	@AutoSubscription
-	currentOverlays$ = this.store$.select(selectOverlaysArray).pipe(
+	currentOverlays$ = this.ansynApi.events.overlaysLoadedSuccess.pipe(
 		tap(x => console.log('sandbox', 'overlays array', x)),
 		tap((x: IOverlay[]) => this.currentOverlays = x)
 	);
@@ -86,6 +85,14 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		this.overlay('444', OpenLayersStaticImageSourceProviderSourceType, 'https://image.shutterstock.com/z/stock-vector-cool-milkshake-190524542.jpg', this.pointGeometry, GeoRegisteration.notGeoRegistered, 'vis', null, 1600, 1500),
 		this.overlay('555', OpenLayersStaticImageSourceProviderSourceType, 'https://image.shutterstock.com/z/stock-vector-cool-milkshake-190524542.jpg', this.lineGeometry, GeoRegisteration.notGeoRegistered, 'vis', null, 1600, 1500)
 	];
+
+	constructor(
+		protected ansynApi: AnsynApi,
+		protected imageryCommunicatorService: ImageryCommunicatorService,
+		protected store$: Store<any>,
+		protected areaToCredentials: AreaToCredentialsService
+	) {
+	}
 
 	overlay(id: string, sourceType: string, imageUrl: string, footprint: any, geoRegistered: GeoRegisteration = GeoRegisteration.notGeoRegistered, sensorType: string = 'mySensorType', sensorName: string = 'mySensorName', imageWidth?: number, imageHeight?: number): IOverlay {
 		const days = 10 * Math.random();
@@ -133,12 +140,6 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		};
 	}
 
-	constructor(protected ansynApi: AnsynApi,
-				protected imageryCommunicatorService: ImageryCommunicatorService,
-				protected store$: Store<any>,
-				protected areaToCredentials: AreaToCredentialsService) {
-	}
-
 	ngOnInit() {
 	}
 
@@ -157,7 +158,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 			type: 'Point',
 			coordinates: [-117.914, 33.811]
 		};
-		this.ansynApi.setMapPositionByRadius(center, 100, true);
+		this.ansynApi.setMapPositionByRadius(center, 100, undefined, true);
 	}
 
 	setPositionByRect() {
@@ -181,7 +182,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 			type: 'Point',
 			coordinates: [-118.02, 33.69]
 		};
-		this.ansynApi.setMapPositionByRadius(point, 2000, false);
+		this.ansynApi.setMapPositionByRadius(point, 2000, undefined, false);
 		let criteria: IOverlaysCriteria = {
 			region: point
 		};
@@ -193,7 +194,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 			type: 'Point',
 			coordinates: [-118.02, 33.69]
 		};
-		this.ansynApi.setMapPositionByRadius(point, 2000, false);
+		this.ansynApi.setMapPositionByRadius(point, 2000, undefined, false);
 		const rectangle: Polygon = {
 			'type': 'Polygon',
 			'coordinates': [
@@ -240,8 +241,8 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		this.ansynApi.changeMapLayout('layout2').pipe(
 			tap(() => {
 				this.ansynApi.setOverlays(this.overlays);
-				this.ansynApi.displayOverLay(this.overlays[1], 0);
-				this.ansynApi.displayOverLay(this.overlays[2], 1);
+				this.ansynApi.displayOverLay(this.overlays[1], 1);
+				this.ansynApi.displayOverLay(this.overlays[2], 2);
 			}),
 			take(1)
 		).subscribe();
@@ -290,7 +291,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 			type: 'Point',
 			coordinates: [-117.9402, 33.8181]
 		};
-		this.ansynApi.setMapPositionByRadius(center, 5000, true);
+		this.ansynApi.setMapPositionByRadius(center, 5000, undefined, true);
 		this.ansynApi.setAnnotations({
 			'type': 'FeatureCollection',
 			'features': [
@@ -609,4 +610,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		plugin.setMode(null, false);
 	}
 
+	errorMap() {
+		this.ansynApi.setRotation(Math.PI, 'no-such-map-id');
+	}
 }

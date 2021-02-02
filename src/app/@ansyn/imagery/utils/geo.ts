@@ -1,4 +1,13 @@
-import { Feature, FeatureCollection, GeometryObject, LineString, MultiPolygon, Point, Polygon } from 'geojson';
+import {
+	Feature,
+	FeatureCollection,
+	GeometryObject,
+	LineString,
+	MultiPolygon,
+	Point,
+	Polygon,
+	Position
+} from 'geojson';
 import {
 	AllGeoJSON,
 	area,
@@ -9,11 +18,14 @@ import {
 	booleanPointOnLine,
 	centerOfMass,
 	circle,
+	convex,
 	destination,
 	feature,
 	geometry,
 	intersect,
 	lineIntersect,
+	lineOffset,
+	lineString,
 	point,
 	polygon,
 	union,
@@ -52,6 +64,17 @@ export function getPolygonByBufferRadius(polygonSource: Polygon, radiusInMeteres
 	});
 	const result: Feature<Polygon> = envelope(possiblePointsInRadius);
 	return result;
+}
+
+export function convertLineSegmentToThinRectangle(sourcePolygon: Feature<Polygon>, radiusInKm: number = 0.01): Feature<Polygon> {
+	if (sourcePolygon.geometry.coordinates[0].length !== 3) {
+		return sourcePolygon;
+	}
+	const asLine = lineString(sourcePolygon.geometry.coordinates[0].slice(1));
+	const lineOnOneSide = lineOffset(asLine, radiusInKm);
+	const lineOnTheOtherSide = lineOffset(asLine, -radiusInKm);
+	const thinRectangle = convex(featureCollection([lineOnOneSide, lineOnTheOtherSide]));
+	return thinRectangle;
 }
 
 export function getPointByGeometry(geometry: GeometryObject | FeatureCollection<any>): Point {
@@ -114,6 +137,11 @@ export function getPolygonIntersectionRatio(extent: Polygon, footprint: MultiPol
 	return intersection
 }
 
+export function calculatePolygonWidth(extent: Polygon) {
+	const [[extentTopLeft, extentTopRight]] = extent.coordinates;
+	return Math.round(distance(extentTopLeft, extentTopRight, { units: 'meters' }));
+}
+
 export function polygonsDontIntersect(extentPolygon, footprint, overlayCoverage): boolean {
 	const intersection = getPolygonIntersectionRatio(extentPolygon, footprint);
 	return intersection < overlayCoverage;
@@ -129,10 +157,14 @@ export function getPolygonIntersectionRatioWithMultiPolygon(extent: Polygon, foo
 
 		footprint.coordinates.forEach(coordinates => {
 			const tempPoly = polygon(coordinates);
-			const intersection = intersect(extentPolygon, tempPoly);
-			if (intersection) {
-				intersectionArea = booleanEqual(intersection, tempPoly) ? extentArea : intersectionArea + area(intersection);
-			}
+			const intersections = extentPolygons.features.map(feature => intersect(feature, tempPoly));
+			intersectionArea = intersections.reduce((acc, intersection) => {
+				if (intersection) {
+					acc = booleanEqual(intersection, tempPoly) ? extentArea : acc + area(intersection);
+				}
+
+				return acc;
+			}, 0)
 		});
 	} catch (e) {
 		console.warn('getPolygonIntersectionRatioWithMultiPolygon: turf exception', e);
@@ -164,7 +196,7 @@ export function isPointContainedInGeometry(point: Point, footprint: MultiPolygon
 }
 
 export function unifyPolygons(features: Feature<Polygon>[]): Feature<MultiPolygon | Polygon> {
-	return union(...features);
+	return union(features[0], features[1]);
 }
 
 export function calculateLineDistance(aPoint: Point, bPoint: Point) {
@@ -183,6 +215,13 @@ export function getDistanceBetweenPoints(source: Point, destination: Point): num
 		console.warn('getDistanceBetweenPoints: turf exception', e);
 	}
 	return distanceInKilometers;
+}
+
+export function getNewPoint(coordinates: Position): Point {
+	return {
+		type: 'Point',
+		coordinates
+	};
 }
 
 export const EPSG_4326 = 'EPSG:4326';

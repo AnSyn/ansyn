@@ -18,12 +18,26 @@ const defaultSubType = '';
 
 @Injectable()
 export class LoggerService implements ErrorHandler {
+
+	get standardPrefix() {
+		return `Ansyn[${ this.env }, ${ this.component }]`;
+	}
 	env = 'ENV'; // default (unknown environment)
 	component = 'app';
 	stack: ILogObject[] = [];
 	disconnectionInMilliseconds: number;
 	timeoutCookie;
 	isConnected: boolean;
+
+	constructor(@Inject(LoggerConfig) public loggerConfig: ILoggerConfig) {
+		this.env = loggerConfig.env;
+		this.component = loggerConfig.component;
+		this.disconnectionInMilliseconds = new Date().getTime() - moment().subtract(this.loggerConfig.disconnectionTimeoutInMinutes, 'minutes').toDate().getTime();
+		this.isConnected = false;
+		window.onerror = (e) => {
+			this.error(e.toString());
+		};
+	}
 
 	beforeAppClose() {
 		this.info('app closed');
@@ -38,20 +52,6 @@ export class LoggerService implements ErrorHandler {
 		}
 		// IMPORTANT: Rethrow the error otherwise it gets swallowed
 		throw error;
-	}
-
-	constructor(@Inject(LoggerConfig) public loggerConfig: ILoggerConfig) {
-		this.env = loggerConfig.env;
-		this.component = loggerConfig.component;
-		this.disconnectionInMilliseconds = new Date().getTime() - moment().subtract(this.loggerConfig.disconnectionTimeoutInMinutes, 'minutes').toDate().getTime();
-		this.isConnected = false;
-		window.onerror = (e) => {
-			this.error(e.toString());
-		};
-	}
-
-	get standardPrefix() {
-		return `Ansyn[${ this.env }, ${ this.component }]`;
 	}
 
 	critical(msg: string, actionType = defaultActionType, subType = defaultSubType) {
@@ -75,7 +75,7 @@ export class LoggerService implements ErrorHandler {
 	}
 
 	protected log(severity: Severity, actionType: string, subType: string, msg: string, includeBrowserData?: boolean) {
-		if (!this.loggerConfig.active) {
+		if (!this.loggerConfig.active || !msg) {
 			return;
 		}
 		this.updateLogTimeForDisconnect();
@@ -83,7 +83,7 @@ export class LoggerService implements ErrorHandler {
 		if (includeBrowserData) {
 			prefix += this.getBrowserData();
 		}
-		const str = `${ prefix }[${ severity }] [${ actionType.toUpperCase() }] ${ subType !== '' ? '[' + subType.toUpperCase() + ']' : '' } ${ msg }`;
+		const str = `${ prefix }[${ severity }] [${ actionType.toUpperCase() }] ${ subType !== '' ? '[' + subType.toUpperCase() + ']' : '' }\n${ msg }`;
 		this.stack.push({ severity, msg: str });
 		this.output();
 	}

@@ -30,7 +30,8 @@
 		align-items: center;
 		font-size: 28px;
 
-		&.active, &:hover {
+		&.active,
+		&:hover {
 			background-color: @application-primary-color;
 		}
 
@@ -63,7 +64,8 @@
 			.item {
 				cursor: pointer;
 
-				&:hover, &.selected {
+				&:hover,
+				&.selected {
 					background-color: #297f9b;
 				}
 			}
@@ -89,9 +91,27 @@
 		fill: #ffffff;
 	}
 
+	.metadata-icon {
+		width: 24px;
+		padding-left: 3px;
+	}
+
 	i {
 		font-style: normal;
 		display: inherit;
 	}
 
+	.metadata-form {
+		position: absolute;
+	}
+}
+
+// for chrome 44
+@supports not (display: grid) {
+	div.color {
+		// Prevent a stacking context (z-index) problem.
+		// The delete button (which got position relative in chrome 44)
+		// appeared over the color window.
+		z-index: @z-index-annotation-context-menu-color-button;
+	}
 }

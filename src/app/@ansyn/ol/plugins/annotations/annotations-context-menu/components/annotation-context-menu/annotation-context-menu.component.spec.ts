@@ -4,20 +4,22 @@ import { EventEmitter } from '@angular/core';
 import { Actions } from '@ngrx/effects';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { MockComponent } from '../../../../../../ansyn/modules/core/test/mock-component';
+import { TranslateService } from '@ngx-translate/core';
 
 describe('AnnotationContextMenuComponent', () => {
 	let component: AnnotationContextMenuComponent;
 	let fixture: ComponentFixture<AnnotationContextMenuComponent>;
 	const mockAnnotationsContextMenuButtonsComponent = MockComponent({
 		selector: 'ansyn-annotations-context-menu-buttons',
-		inputs: ['annotations', 'featureId', 'selectedTab']
+		inputs: ['annotations', 'featureId', 'selectedTab', 'communicator']
 	});
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [
 				ImageryCommunicatorService,
-				{ provide: Actions, useValue: new EventEmitter() }
+				{ provide: Actions, useValue: new EventEmitter() },
+				{ provide: TranslateService, useValue: { instant: (x) => x } }
 			],
 			declarations: [
 				AnnotationContextMenuComponent,

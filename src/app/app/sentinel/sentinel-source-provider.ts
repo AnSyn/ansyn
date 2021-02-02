@@ -6,11 +6,9 @@ import {
 	geojsonPolygonToMultiPolygon,
 	getPointByGeometry,
 	getPolygonByPointAndRadius,
-	IMapSourceProvidersConfig,
-	MAP_SOURCE_PROVIDERS_CONFIG,
 	toRadians,
 } from '@ansyn/imagery';
-import { empty, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { catchError, map, timeout } from 'rxjs/operators';
 
 import proj4 from 'proj4';
@@ -24,7 +22,6 @@ import {
 	IFetchParams,
 	IMultipleOverlaysSourceConfig,
 	IOverlay,
-	IStartAndEndDate,
 	limitArray,
 	LoggerService,
 	MultipleOverlaysSourceConfig,
@@ -77,11 +74,13 @@ export class SentinelSourceProvider extends BaseOverlaySourceProvider {
 		}
 		// bbox = proj.transform(bbox, EPSG_4326, EPSG_3857);
 		const { start, end } = fetchParams.timeRange;
+		const { sensors } = fetchParams;
 		const params = {
 			region: fetchParams.region,
 			start,
 			end,
 			limit: 250,
+			producttype: sensors && sensors.length ? sensors.join(',') : undefined,
 			plate: 'Sentinel-2'
 		};
 		return this.http.post<any>(search, params, { responseType: 'json' }).pipe(
@@ -111,14 +110,6 @@ export class SentinelSourceProvider extends BaseOverlaySourceProvider {
 		);
 	}
 
-	getStartDateViaLimitFacets(params: { facets; limit; region }): Observable<IStartAndEndDate> {
-		return empty();
-	}
-
-	getStartAndEndDateViaRangeFacets(params: { facets; limitBefore; limitAfter; date; region }): Observable<any> {
-		return empty();
-	}
-
 	private extractArrayData(overlays: Array<any>): Array<IOverlay> {
 		if (!overlays) {
 			return [];
@@ -146,8 +137,11 @@ export class SentinelSourceProvider extends BaseOverlaySourceProvider {
 		return new Overlay({
 			id: sentinelElement.properties.id,
 			footprint: geometry,
-			sensorType: sentinelElement.properties.producttype,
-			sensorName: sentinelElement.properties.instrumentname,
+			// Sensor name/type switched (08.20) because it seemed to make more sense.
+			// instrumentname is "Multi-Spectral Instrument" for all overlays
+			// producttype seems a more specific name, like: "S2MSI1C", "S2MSI2A"
+			sensorName: sentinelElement.properties.producttype,
+			sensorType: sentinelElement.properties.instrumentname,
 			cloudCoverage: sentinelElement.properties.cloudcoverpercentage / 100,
 			bestResolution: 1,
 			name: sentinelElement.properties.identifier,
@@ -159,6 +153,7 @@ export class SentinelSourceProvider extends BaseOverlaySourceProvider {
 			sourceType: this.sourceType,
 			isGeoRegistered: GeoRegisteration.geoRegistered,
 			tag: sentinelElement,
+			icon: 'satellite',
 			sensorLocation: this.multipleOverlaysSourceConfig.useAngleDebugMode ? getPointByGeometry(geometry) : undefined
 		});
 	}

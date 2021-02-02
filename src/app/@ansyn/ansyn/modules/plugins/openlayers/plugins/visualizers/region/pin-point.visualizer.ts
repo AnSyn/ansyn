@@ -10,12 +10,18 @@ import { Position } from 'geojson';
 import { OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
 import { RegionVisualizer } from './region.visualizer';
 import { CaseGeoFilter, CaseRegionState } from '../../../../../menu-items/cases/models/case.model';
+import { SetOverlaysCriteriaAction } from '../../../../../overlays/actions/overlays.actions';
+import { Injectable } from '@angular/core';
+import { feature } from '@turf/turf';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
 	deps: [Store, Actions, OpenLayersProjectionService],
-	dontRestrictToExtent: true
+	dontRestrictToExtent: true,
+	layerClassName: 'pin-point-layer',
+	isHideable: true
 })
+@Injectable()
 export class PinPointVisualizer extends RegionVisualizer {
 	_iconSrc: Style = new Style({
 		image: new Icon({
@@ -34,7 +40,7 @@ export class PinPointVisualizer extends RegionVisualizer {
 	}
 
 	drawRegionOnMap(region: CaseRegionState): Observable<boolean> {
-		const coordinates = getPointByGeometry(<GeoJSON.GeometryObject>region).coordinates;
+		const coordinates = getPointByGeometry(<GeoJSON.GeometryObject>region.geometry).coordinates;
 		const id = 'pinPoint';
 		const featureJson = turf.point(coordinates);
 		const entities = [{ id, featureJson }];
@@ -42,9 +48,16 @@ export class PinPointVisualizer extends RegionVisualizer {
 	}
 
 	createRegion(geoJsonFeature: any): any {
-		return geoJsonFeature.geometry;
+		geoJsonFeature.properties = {
+			searchMode: "Point"
+		}
+		return geoJsonFeature;
 	}
 
 	onContextMenu(coordinates: Position): void {
+		const geometry = {type: "Point", coordinates: coordinates};
+		const region = feature(geometry, {searchMode: "Point"});
+
+		this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
 	}
 }

@@ -2,7 +2,12 @@ import { Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild } from
 import { select, Store } from '@ngrx/store';
 import { fromEvent, Observable } from 'rxjs';
 import { getTimeFormat } from '@ansyn/map-facade';
-import { IOverlaysState, MarkUpClass, selectHoveredOverlay } from '../../reducers/overlays.reducer';
+import {
+	IOverlaysState,
+	MarkUpClass,
+	selectCustomOverviewElementId,
+	selectHoveredOverlay
+} from '../../reducers/overlays.reducer';
 import { overlayOverviewComponentConstants } from './overlay-overview.component.const';
 import {
 	ChangeOverlayPreviewRotationAction,
@@ -11,9 +16,10 @@ import {
 	SetMarkUp
 } from '../../actions/overlays.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { takeWhile, tap } from 'rxjs/operators';
+import { takeWhile, tap, withLatestFrom } from 'rxjs/operators';
 import { Actions, ofType } from '@ngrx/effects';
 import { IOverlay } from '../../models/overlay.model';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface IOverviewOverlay extends IOverlay {
 	thumbnailName: string;
@@ -49,17 +55,18 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	public loadingImage = false;
 	public rotation = 0;
 	protected topElement = this.el.nativeElement.parentElement;
+	myCurrentWidth: number;
 
 	get dropElement(): Element {
-		return this.topElement.querySelector(`#dropId-${ this.overlayId }`);
+		return this.el.nativeElement.ownerDocument.getElementById(`dropId-${ this.overlayId }`);
 	}
 
-	public get const() {
+	public get overViewConstants() {
 		return overlayOverviewComponentConstants;
 	}
 
 	public get errorSrc() {
-		return this.const.OVERLAY_OVERVIEW_FAILED;
+		return this.overViewConstants.OVERLAY_OVERVIEW_FAILED;
 	};
 
 	@HostBinding('class.show') isHoveringOverDrop = false;
@@ -75,13 +82,16 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	hoveredOverlay$: Observable<any> = this.store$.pipe(
 		select(selectHoveredOverlay),
+		withLatestFrom(this.store$.select(selectCustomOverviewElementId)),
 		tap(this.onHoveredOverlay.bind(this))
 	);
 
 	constructor(
 		public store$: Store<IOverlaysState>,
 		public actions$: Actions,
-		protected el: ElementRef) {
+		protected el: ElementRef,
+		protected translateService: TranslateService
+	) {
 	}
 
 	ngOnInit() {
@@ -90,61 +100,73 @@ export class OverlayOverviewComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 	}
 
-	onHoveredOverlay(overlay: IOverviewOverlay) {
-		if (overlay) {
-			const fetching = overlay.thumbnailUrl === this.const.FETCHING_OVERLAY_DATA;
-			this.overlayId = overlay.id;
-			const hoveredElement: Element = this.dropElement;
-			if (!hoveredElement) {
-				return;
-			}
-			const hoveredElementBounds: ClientRect = hoveredElement.getBoundingClientRect();
-			this.left = this.getLeftPosition(hoveredElementBounds.left);
-			this.top = hoveredElementBounds.top;
-			this.showOverview();
-			this.sensorName = overlay.sensorName;
-			this.sensorType = overlay.sensorType;
-			if (fetching) {
-				this.img.nativeElement.removeAttribute('src');
-			} else {
-				this.img.nativeElement.src = overlay.thumbnailUrl;
-			}
-			this.formattedTime = getTimeFormat(new Date(overlay.photoTime));
-			if (!this.img.nativeElement.complete) {
-				this.startedLoadingImage();
-			}
-		} else {
-			this.hideOverview();
+	onHoveredOverlay([overlay, customElementId]: [IOverviewOverlay, string]): void {
+		overlay ? this.showOverview(overlay, customElementId) : this.hideOverview();
+	}
+
+	setOverviewPosition(customElementId: string): void {
+		const customElement = customElementId && this.el.nativeElement.ownerDocument.getElementById(customElementId);
+		const hoveredElement: Element = customElement || this.dropElement;
+		if (!hoveredElement) {
+			return;
 		}
+		this.myCurrentWidth = (this.el.nativeElement as HTMLElement).offsetWidth;
+		const { left, height, top }: ClientRect = hoveredElement.getBoundingClientRect();
+		this.left = customElement ? left - this.myCurrentWidth : this.getLeftPosition(left);
+		this.top = top + (customElement ? height + 70 : 0);
 	}
 
 	getLeftPosition(hoveredElementPos: number): number {
 		const candidateLeftPos = hoveredElementPos - 50;
-		const myCurrentWidth = (this.el.nativeElement as HTMLElement).offsetWidth;
 		const ansynWidth = this.topElement.getBoundingClientRect().width;
 		// ^ Ansyn component is not a block element, therefore it doesn't have offsetWidth
 		// Therefore I used getBoundingClientRect()
-		return Math.min(candidateLeftPos, ansynWidth - myCurrentWidth);
+		return Math.min(candidateLeftPos, ansynWidth - this.myCurrentWidth);
 	}
 
-	showOverview() {
+	showOverlayImage(thumbnailUrl: string): void {
+		const fetching = thumbnailUrl === this.overViewConstants.FETCHING_OVERLAY_DATA;
+		if (fetching) {
+			this.img.nativeElement.removeAttribute('src');
+		} else {
+			this.img.nativeElement.src = thumbnailUrl;
+		}
+
+	}
+
+	showOverlayData(id: string, sensorName: string, sensorType: string): void {
+		this.overlayId = id;
+		this.sensorName = sensorName;
+		this.sensorType = sensorType;
+	}
+
+	showOverview(overlay: IOverlay, customElementId: string): void {
+		this.setOverviewPosition(customElementId);
+
 		this.isHoveringOverDrop = true;
 		this.mouseLeave$.subscribe();
+		this.showOverlayData(overlay.id, overlay.sensorName, overlay.sensorType);
+		this.showOverlayImage(overlay.thumbnailUrl);
+
+		this.formattedTime = getTimeFormat(new Date(overlay.photoTime));
+		if (!this.img.nativeElement.complete) {
+			this.startedLoadingImage();
+		}
 	}
 
-	hideOverview() {
+	hideOverview(): void {
 		this.isHoveringOverDrop = false;
 	}
 
-	onDblClick() {
+	onDblClick(): void {
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id: this.overlayId }));
 	}
 
-	startedLoadingImage() {
+	startedLoadingImage(): void {
 		this.loadingImage = true;
 	}
 
-	finishedLoadingImage() {
+	finishedLoadingImage(): void {
 		this.loadingImage = false;
 	}
 }

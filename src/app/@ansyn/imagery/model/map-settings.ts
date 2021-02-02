@@ -1,4 +1,5 @@
-import { ImageryMapPosition } from './case-map-position.model';
+import { IImageryMapPosition } from './case-map-position.model';
+export type MapOrientation = 'User Perspective' | 'Imagery Perspective';
 
 export interface IWorldViewMapState {
 	mapType: string;
@@ -6,8 +7,8 @@ export interface IWorldViewMapState {
 }
 
 export interface IMapSettingsData {
-	position: ImageryMapPosition;
-
+	position: IImageryMapPosition;
+	overlaysFootprintActive?: boolean;
 	[key: string]: any;
 }
 
@@ -15,6 +16,7 @@ export interface IMapSettings {
 	id: string;
 	worldView: IWorldViewMapState;
 	data: IMapSettingsData;
+	orientation: MapOrientation;
 	flags: {
 		hideLayers?: boolean;
 	};

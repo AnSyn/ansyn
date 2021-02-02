@@ -7,7 +7,7 @@ import {
 	getPointByGeometry,
 	toRadians
 } from '@ansyn/imagery';
-import { HttpResponseBase } from '@angular/common/http/src/response';
+import { HttpResponseBase } from '@angular/common/http';
 import { IOverlaysPlanetFetchData, PlanetOverlay } from './planet.model';
 import { catchError, debounceTime, map } from 'rxjs/operators';
 /* Do not change this ( rollup issue ) */
@@ -32,7 +32,6 @@ import {
 import { OverlaySourceProvider } from '../../../modules/overlays/models/overlays-source-providers';
 import { IOverlayByIdMetaData } from '../../../modules/overlays/services/overlays.service';
 import { GeoRegisteration, IOverlay, Overlay } from '../../../modules/overlays/models/overlay.model';
-import { IDataInputFilterValue } from '../../../modules/menu-items/cases/models/case.model';
 
 const moment = momentNs;
 
@@ -95,7 +94,8 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		return `${ url }?api_key=${ this.planetOverlaysSourceConfig.apiKey }`;
 	}
 
-	buildDataInputFilter(dataInputFilters: IDataInputFilterValue[]): IPlanetFilter {
+	// in case we return to prefilter sourceType
+	/*buildDataInputFilter(dataInputFilters: IDataInputFilterValue[]): IPlanetFilter {
 		return {
 			type: 'OrFilter',
 			config: dataInputFilters.map((aFilter: IDataInputFilterValue) => {
@@ -115,46 +115,17 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 				return sensorTypeFilter;
 			})
 		};
-	}
+	}*/
 
-	buildFetchObservables(fetchParams: IFetchParams, filters: IOverlayFilter[]): Observable<any>[] {
+	buildFetchObservables(fetchParams: IFetchParams): Observable<any>[] {
 		const regionFeature = feature(<any>fetchParams.region);
 		const fetchParamsTimeRange = {
 			start: new Date(fetchParams.timeRange.start),
 			end: new Date(fetchParams.timeRange.end)
 		};
-
-		const planetFilters: IPlanetFilter[] = filters
-			.map(({ sensor, ...restItem }) => ({ ...restItem, sensors: sensor ? [sensor] : [] }))
-			.reduce((res, item) => {
-				const equalItem = res.find((f) => isEqual({
-					coverage: f.coverage,
-					timeRange: f.timeRange
-				}, { coverage: item.coverage, timeRange: item.timeRange }));
-				if (equalItem) {
-					equalItem.sensors = uniq([...equalItem.sensors, ...item.sensors]);
-					return res;
-				}
-				return [...res, item];
-			}, [])
-			.map((item): Partial<IFetchParams> => {
-				const intersection = intersect(regionFeature, item.coverage);
-				const time = timeIntersection(fetchParamsTimeRange, item.timeRange);
-				const { sensors } = item;
-				return {
-					timeRange: time,
-					region: intersection && intersection.geometry,
-					sensors
-				};
-			})
-			.filter(({ timeRange, region }: IFetchParams) => Boolean(timeRange && region))
-			.map(this.paramsToFilter);
-		if (!planetFilters.length) {
-			return [];
-		}
+		
 		return [this.fetch(<any>{
-			...fetchParams,
-			planetFilters
+			...fetchParams
 		})];
 	}
 
@@ -198,8 +169,8 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		// add 1 to limit - so we'll know if provider have more then X overlays
 		const _page_size = `${ fetchParams.limit + 1 }`;
 		let sensors = Array.isArray(fetchParams.sensors) ? fetchParams.sensors : this.planetOverlaysSourceConfig.itemTypes;
-
-		if (Array.isArray(fetchParams.dataInputFilters) && fetchParams.dataInputFilters.length > 0) {
+		// in case we return to prefilter sourceType
+		/*if (Array.isArray(fetchParams.dataInputFilters) && fetchParams.dataInputFilters.length > 0) {
 			const parsedDataInput = fetchParams.dataInputFilters.map(({ sensorType }) => sensorType).filter(Boolean);
 			if (fetchParams.dataInputFilters.some(({ sensorType }) => sensorType === 'others')) {
 				const allDataInput = this.multipleOverlaysSourceConfig.indexProviders[this.sourceType].dataInputFiltersConfig.children.map(({ value }) => value.sensorType);
@@ -207,8 +178,7 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 			} else {
 				sensors = parsedDataInput;
 			}
-		}
-
+		}*/
 		const { baseUrl } = this.planetOverlaysSourceConfig;
 		const body = this.buildFilters({ config: planetFilters, sensors, type: 'OrFilter' });
 		const options = { headers: this.httpHeaders, params: { _page_size } };
@@ -257,39 +227,6 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 		);
 	}
 
-	getStartDateViaLimitFacets(params: { facets; limit; region }): Observable<IStartAndEndDate> {
-		const baseUrl = this.planetOverlaysSourceConfig.baseUrl;
-		const filters = this.parsePlanetFilters(params.facets);
-		const bboxFilter = this._getBboxFilter(params.region);
-
-		const dateFilter = {
-			type: 'DateRangeFilter', field_name: 'acquired',
-			config: { gte: new Date(0).toISOString(), lte: new Date().toISOString() }
-		};
-		const pageLimit: any = params.limit ? params.limit : DEFAULT_OVERLAYS_LIMIT;
-
-		return this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters({ config: [...filters, bboxFilter, dateFilter] }),
-			{ headers: this.httpHeaders, params: { _page_size: pageLimit } })
-			.pipe(
-				map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features)),
-				map((overlays: IOverlay[]): IStartAndEndDate => {
-					let startDate: string, endDate: string;
-					if (overlays.length === 0) {
-						startDate = moment().subtract(1, 'month').toISOString();  // month ago
-						endDate = new Date().toISOString();
-					} else {
-						const overlaysDates = overlays.map(overlay => moment(overlay.date));
-						startDate = moment.min(overlaysDates).toISOString();
-						endDate = moment.max(overlaysDates).toISOString();
-					}
-					return { startDate, endDate };
-				}),
-				catchError((error: HttpResponseBase | any) => {
-					return this.errorHandlerService.httpErrorHandle(error);
-				})
-			);
-	}
-
 	private _getBboxFilter(region: { type }): { type; field_name; config } {
 		let fetchRegion = region;
 		if (fetchRegion.type === 'MultiPolygon') {
@@ -324,64 +261,6 @@ export class PlanetSourceProvider extends BaseOverlaySourceProvider {
 				config: filterObj.metadata
 			};
 		});
-	}
-
-	getStartAndEndDateViaRangeFacets(params: { facets; limitBefore; limitAfter; date; region }): Observable<IStartAndEndDate> {
-		const baseUrl = this.planetOverlaysSourceConfig.baseUrl;
-		const filters = this.parsePlanetFilters(params.facets);
-		const bboxFilter = this._getBboxFilter(params.region);
-
-		let dateFilter = {
-			type: 'DateRangeFilter', field_name: 'acquired',
-			config: { gte: new Date(0).toISOString(), lte: new Date(params.date).toISOString() }
-		};
-		let pageLimit: any = params.limitBefore ? params.limitBefore : DEFAULT_OVERLAYS_LIMIT / 2;
-
-		const startDate$: Observable<Date> = this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters({ config: [...filters, bboxFilter, dateFilter] }),
-			{ headers: this.httpHeaders, params: { _page_size: pageLimit } }).pipe(
-			map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features)),
-			map((overlays: IOverlay[]) => {
-				let startDate: Date;
-				if (overlays.length === 0) {
-					startDate = moment(params.date).subtract(1, 'month').toDate();  // a month before
-				} else {
-					const overlaysDates = overlays.map(overlay => moment(overlay.date));
-					startDate = moment.min(overlaysDates).toDate();
-				}
-				return startDate;
-			}),
-			catchError((error: HttpResponseBase | any) => {
-				return this.errorHandlerService.httpErrorHandle(error);
-			})
-		);
-
-		dateFilter = {
-			type: 'DateRangeFilter', field_name: 'acquired',
-			config: { gte: new Date(params.date).toISOString(), lte: new Date().toISOString() }
-		};
-		pageLimit = params.limitAfter ? params.limitAfter : DEFAULT_OVERLAYS_LIMIT / 2;
-
-		const endDate$: Observable<Date> = this.http.post<IOverlaysPlanetFetchData>(baseUrl, this.buildFilters({ config: [...filters, bboxFilter, dateFilter] }),
-			{ headers: this.httpHeaders, params: { _page_size: pageLimit } }).pipe(
-			map((data: IOverlaysPlanetFetchData) => this.extractArrayData(data.features)),
-			map((overlays: IOverlay[]) => {
-				let endDate: Date;
-				if (overlays.length === 0) {
-					endDate = moment.min([moment(params.date).add(1, 'month'), moment()]).toDate();  // a month after
-				} else {
-					const overlaysDates = overlays.map(overlay => moment(overlay.date));
-					endDate = moment.max(overlaysDates).toDate();
-				}
-				return endDate;
-			}),
-			catchError((error: HttpResponseBase | any) => {
-				return this.errorHandlerService.httpErrorHandle(error);
-			})
-		);
-
-		return forkJoin(startDate$, endDate$).pipe(
-			map(([start, end]: [Date, Date]) => ({ startDate: start.toISOString(), endDate: end.toString() }))
-		);
 	}
 
 	private extractArrayData(overlays: PlanetOverlay[]): IOverlay[] {

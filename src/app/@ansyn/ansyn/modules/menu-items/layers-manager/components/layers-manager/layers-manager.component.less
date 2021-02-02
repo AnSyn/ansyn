@@ -3,17 +3,18 @@
 :host {
 	&:extend(.default-menu-item);
 	overflow: visible;
-}
 
-.collection {
-	width: 100%;
-	padding: 45px 10px;
-	box-sizing: border-box;
-	height: 100%;
+	.collection {
+		width: 100%;
+		padding: 45px 10px;
+		box-sizing: border-box;
+		height: 100%;
 
-	.all-layers {
-		overflow-y: auto;
-		height: calc(~'100% - 5px');
-		padding-right: 10px;
+		.all-layers {
+			overflow-y: auto;
+			height: calc(~'100% - 5px');
+			padding-right: 10px;
+			direction: ltr; // to flip the scrollbar location
+		}
 	}
 }

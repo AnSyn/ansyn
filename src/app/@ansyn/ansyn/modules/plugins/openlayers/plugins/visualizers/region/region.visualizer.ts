@@ -3,6 +3,7 @@ import { combineLatest, EMPTY, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { FeatureCollection, GeometryObject, Position } from 'geojson';
+import { primaryAction as mouseClickCondition } from 'ol/events/condition'
 import {
 	ContextMenuTriggerAction,
 	MapActionTypes,
@@ -15,23 +16,19 @@ import Draw from 'ol/interaction/Draw';
 import { AutoSubscription } from 'auto-subscriptions';
 import { distinctUntilChanged, filter, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { EntitiesVisualizer, OpenLayersProjectionService } from '@ansyn/ol';
-import { SearchMode, SearchModeEnum } from '../../../../../status-bar/models/search-mode.enum';
-import {
-	selectGeoFilterIndicator,
-	selectGeoFilterSearchMode
-} from '../../../../../status-bar/reducers/status-bar.reducer';
+import { selectGeoFilterActive, selectGeoFilterType } from '../../../../../status-bar/reducers/status-bar.reducer';
 import { UpdateGeoFilterStatus } from '../../../../../status-bar/actions/status-bar.actions';
 import { SetOverlaysCriteriaAction } from '../../../../../overlays/actions/overlays.actions';
 import { selectRegion } from '../../../../../overlays/reducers/overlays.reducer';
 import { CaseGeoFilter, CaseRegionState } from '../../../../../menu-items/cases/models/case.model';
+import { LayersActionTypes, SetLayerSelection } from 'src/app/@ansyn/ansyn/modules/menu-items/layers-manager/actions/layers.actions';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';
-	region$ = this.store$.select(selectRegion);
+	newRegionSelect$ = this.store$.select(selectRegion);
 
-	geoFilter$: Observable<any> = this.region$.pipe(
-		map((region) => region.type),
-		distinctUntilChanged()
+	regionSameAsVisualizer$ = this.newRegionSelect$.pipe(
+		map(region => region.geometry.type === this.geoFilter)
 	);
 
 	isActiveMap$ = this.store$.select(selectActiveMapId).pipe(
@@ -39,46 +36,48 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		distinctUntilChanged()
 	);
 
-	isActiveGeoFilter$ = this.geoFilter$
-		.pipe(map((geoFilter: CaseGeoFilter) => geoFilter === this.geoFilter));
+	geoFilterType$: Observable<CaseGeoFilter> = this.store$.select(selectGeoFilterType);
 
-	geoFilterSearch$: Observable<SearchMode> = this.store$.select(selectGeoFilterSearchMode);
+	geoFilterActive$ = this.store$.select(selectGeoFilterActive);
 
-	onSearchMode$ = this.geoFilterSearch$.pipe(
-		map((geoFilterSearch) => geoFilterSearch === this.geoFilter),
-		distinctUntilChanged()
+	isTheRightVisualizer$ = this.geoFilterType$.pipe(
+		map(geoFilter => geoFilter === this.geoFilter)
 	);
 
-	geoFilterIndicator$ = this.store$.select(selectGeoFilterIndicator);
+	@AutoSubscription
+	updateLayer$: Observable<any> = this.actions$.pipe(
+		ofType<SetLayerSelection>(LayersActionTypes.SET_LAYER_SELECTION),
+		filter(action => action.payload.id === 'region-layer'),
+		tap((action) => {
+			this.setVisibility(action.payload.value);
+		})
+	);
 
 	@AutoSubscription
 	onContextMenu$: Observable<any> = this.actions$.pipe(
 		ofType<ContextMenuTriggerAction>(MapActionTypes.TRIGGER.CONTEXT_MENU),
-		withLatestFrom(this.isActiveGeoFilter$),
-		filter(([action, isActiveGeoFilter]) => isActiveGeoFilter),
+		withLatestFrom(this.isTheRightVisualizer$),
+		filter(([action, rightVisualizer]) => Boolean(rightVisualizer)),
 		map(([{ payload }]) => payload),
 		tap(this.onContextMenu.bind(this))
 	);
 
 	@AutoSubscription
-	interactionChanges$: Observable<any> = combineLatest(this.onSearchMode$, this.isActiveMap$).pipe(
+	interactionChanges$: Observable<any> = combineLatest([this.geoFilterType$, this.geoFilterActive$, this.isActiveMap$]).pipe(
 		tap(this.interactionChanges.bind(this))
 	);
 
 	@AutoSubscription
-	drawChanges$ = combineLatest(this.geoFilter$, this.region$, this.geoFilterIndicator$, this.geoFilterSearch$, this.store$.select(selectIsMinimalistViewMode)).pipe(
-		mergeMap(this.drawChanges.bind(this)));
+	drawChanges$ = combineLatest([this.geoFilterType$, this.newRegionSelect$, this.regionSameAsVisualizer$, this.geoFilterActive$, this.store$.select(selectIsMinimalistViewMode)]).pipe(
+		mergeMap(this.drawChanges.bind(this))
+	);
 
 	constructor(public store$: Store<any>, public actions$: Actions, public projectionService: OpenLayersProjectionService, public geoFilter: CaseGeoFilter) {
 		super();
 	}
 
-	drawChanges([geoFilter, region, geoFilterIndicator, geoFilterSearch, isMinimalistViewMode]) {
-		if (!geoFilterIndicator || geoFilterSearch !== SearchModeEnum.none || isMinimalistViewMode) {
-			this.clearEntities();
-			return EMPTY;
-		}
-		if (geoFilter === this.geoFilter) {
+	drawChanges([geoFilterType, region, regionAsVisualizer, isActive, isMinimalistViewMode]) {
+		if (regionAsVisualizer && !isActive && !isMinimalistViewMode && geoFilterType) {
 			return this.drawRegionOnMap(region);
 		}
 		this.clearEntities();
@@ -92,9 +91,9 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 			tap((featureCollection: FeatureCollection<GeometryObject>) => {
 				const [geoJsonFeature] = featureCollection.features;
 				const region = this.createRegion(geoJsonFeature);
-				if (region.type === 'Point' || turf.kinks(region).features.length === 0) {  // turf way to check if there are any self-intersections
+				if (region.geometry.type === 'Point' || turf.kinks(region.geometry).features.length === 0) {  // turf way to check if there are any self-intersections
 					this.store$.dispatch(new SetOverlaysCriteriaAction({ region }));
-					this.store$.dispatch(new UpdateGeoFilterStatus());
+					this.store$.dispatch(new UpdateGeoFilterStatus({ active: false }));
 				} else {
 					this.store$.dispatch(new SetToastMessageAction({
 						toastText: this.selfIntersectMessage
@@ -107,8 +106,9 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	createDrawInteraction() {
 		const drawInteractionHandler = new Draw(<any>{
 			type: this.geoFilter,
-			condition: (event: any) => (<MouseEvent>event.originalEvent).which === 1,
-			style: this.featureStyle.bind(this)
+			condition: mouseClickCondition,
+			style: this.featureStyle.bind(this),
+			minPoints: this.geoFilter === CaseGeoFilter.Polygon ? 2 : 1
 		});
 
 		drawInteractionHandler.on('drawend', this.onDrawEndEvent.bind(this));
@@ -121,12 +121,12 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	resetInteractions() {
 		super.resetInteractions();
-		this.store$.dispatch(new UpdateGeoFilterStatus());
+		this.store$.dispatch(new UpdateGeoFilterStatus({ active: false }));
 	}
 
-	interactionChanges([onSearchMode, isActiveMap]: [boolean, boolean]): void {
+	interactionChanges([geoFilterSearch, isGeoActive, isActiveMap]: [CaseGeoFilter, boolean, boolean]): void {
 		this.removeDrawInteraction();
-		if (onSearchMode && isActiveMap) {
+		if (geoFilterSearch === this.geoFilter && isGeoActive && isActiveMap && this.geoFilter) {
 			this.createDrawInteraction();
 		}
 	}

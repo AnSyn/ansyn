@@ -1,22 +1,58 @@
 import { Action } from '@ngrx/store';
-import { IComboBoxesProperties } from '../models/combo-boxes.model';
 import { IGeoFilterStatus } from '../reducers/status-bar.reducer';
-import { SearchModeEnum } from '../models/search-mode.enum';
+import { ILogMessage } from '../../core/models/logger.model';
+import { IAdvancedSearchParameter } from '../models/statusBar-config.model';
 
 export const StatusBarActionsTypes = {
 	SHOW_LINK_COPY_TOAST: 'SHOW_LINK_COPY_TOAST',
 	COPY_SNAPSHOT_SHARE_LINK: 'COPY_SNAPSHOT_SHARE_LINK',
 	EXPAND: 'EXPAND',
-	SET_IMAGE_OPENING_ORIENTATION: 'SET_IMAGE_OPENING_ORIENTATION',
 	UPDATE_GEO_FILTER_STATUS: 'UPDATE_GEO_FILTER_STATUS',
 	GO_ADJACENT_OVERLAY: 'GO_ADJACENT_OVERLAY',
-	GO_NEXT_PRESET_OVERLAY: 'GO_NEXT_PRESET_OVERLAY'
+	UPDATE_CALENDER_STATUS: 'UPDATE_CALENDER_STATUS',
+	TOGGLE_ADVANCED_SEARCH: 'TOGGLE_ADVANCED_SEARCH',
+	TOGGLE_SIMPLE_SEARCH: 'TOGGLE_SIMPLE_SEARCH',
+	OPENED_FROM_OUTSIDE: 'OPENED_FROM_OUTSIDE',
+	SEARCH_ACTION: 'SEARCH_ACTION'
 };
 
-export class CopySnapshotShareLinkAction implements Action {
+export class CopySnapshotShareLinkAction implements Action, ILogMessage {
 	type: string = StatusBarActionsTypes.COPY_SNAPSHOT_SHARE_LINK;
 
 	constructor() {
+	}
+
+	logMessage() {
+		return `User selected share link option`
+	}
+}
+
+
+export class UpdateCalendarStatusAction implements Action {
+	type: string = StatusBarActionsTypes.UPDATE_CALENDER_STATUS;
+
+	constructor(public payload: boolean) {
+	}
+}
+
+export class ToggleAdvancedSearchAction implements Action {
+	type: string = StatusBarActionsTypes.TOGGLE_ADVANCED_SEARCH;
+
+	constructor(public payload: boolean) {
+	}
+}
+
+export class ToggleSimpleSearchAction implements Action {
+	type: string = StatusBarActionsTypes.TOGGLE_SIMPLE_SEARCH;
+
+	constructor(public payload: boolean) {
+	}
+}
+
+export class OpenAdvancedSearchFromOutsideAction implements Action {
+	type: string = StatusBarActionsTypes.OPENED_FROM_OUTSIDE;
+
+	constructor(public payload: boolean) {
 	}
 }
 
@@ -27,18 +63,15 @@ export class ExpandAction implements Action {
 	}
 }
 
-
-export class SetImageOpeningOrientation implements Action {
-	type = StatusBarActionsTypes.SET_IMAGE_OPENING_ORIENTATION;
-
-	constructor(public payload: IComboBoxesProperties) {
-	}
-}
-
-export class UpdateGeoFilterStatus implements Action {
+export class UpdateGeoFilterStatus implements Action, ILogMessage {
 	readonly type = StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS;
 
-	constructor(public payload: Partial<IGeoFilterStatus> = { searchMode: SearchModeEnum.none }) {
+	constructor(public payload?: Partial<IGeoFilterStatus>) {
+	}
+
+	logMessage() {
+		// if payload.active is undefined, rather than false, the geotype is not deactivated
+		return this.payload && this.payload.type && ( this.payload.active !== false ) && `Setting geo filter type to ${this.payload.type}`
 	}
 }
 
@@ -49,15 +82,14 @@ export class GoAdjacentOverlay implements Action {
 	}
 }
 
-export class GoNextPresetOverlay implements Action {
-	type: string = StatusBarActionsTypes.GO_NEXT_PRESET_OVERLAY;
-
-	constructor() {
+export class SearchAction implements Action {
+	readonly type: string = StatusBarActionsTypes.SEARCH_ACTION;
+	constructor(public payload: IAdvancedSearchParameter) {
 	}
 }
+
 
 export type StatusBarActions =
 	CopySnapshotShareLinkAction
 	| UpdateGeoFilterStatus
 	| ExpandAction
-	| SetImageOpeningOrientation;

@@ -1,11 +1,10 @@
-import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { CasesEffects } from '../../effects/cases.effects';
-import { Observable } from 'rxjs';
-import { casesStateSelector, ICaseModal, ICasesState } from '../../reducers/cases.reducer';
-import { Store } from '@ngrx/store';
-import { CloseModalAction, OpenModalAction } from '../../actions/cases.actions';
-import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
+import { ICaseModal, ICasesState, selectModalState } from '../../reducers/cases.reducer';
+import { Store, select } from '@ngrx/store';
+import { CloseModalAction } from '../../actions/cases.actions';
+import { tap } from 'rxjs/operators';
+import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
 
 const animationsDuring = '0.2s';
 
@@ -22,17 +21,18 @@ const animations: any[] = [
 	styleUrls: ['./cases-modal-container.component.less'],
 	animations
 })
+@AutoSubscriptions()
 export class CasesModalContainerComponent implements OnInit, OnDestroy {
-	@ViewChild('modalContent', { read: ViewContainerRef }) modalContent: ViewContainerRef;
-	show$: Observable<boolean> = this.store.select(casesStateSelector).pipe(
-		pluck<ICasesState, ICaseModal>('modal'),
-		map((modal: ICaseModal) => modal.show),
-		distinctUntilChanged()
+	modal: ICaseModal;
+
+	@AutoSubscription
+	getModal = this.store.pipe(
+		select(selectModalState),
+		tap( (modal) => this.modal = modal)
 	);
 
-	selectedComponentRef;
 
-	constructor(public casesEffects: CasesEffects, protected componentFactoryResolver: ComponentFactoryResolver, protected store: Store<ICasesState>) {
+	constructor(protected store: Store<ICasesState>) {
 	}
 
 	close() {
@@ -40,20 +40,8 @@ export class CasesModalContainerComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		this.casesEffects.openModal$.subscribe(this.buildTemplate.bind(this));
-		this.casesEffects.closeModal$.subscribe(this.destroyTemplate.bind(this));
 	}
 
-	buildTemplate(action: OpenModalAction) {
-		let factory = this.componentFactoryResolver.resolveComponentFactory(action.payload.component);
-		this.selectedComponentRef = this.modalContent.createComponent(factory);
-	}
-
-	destroyTemplate() {
-		if (this.selectedComponentRef) {
-			this.selectedComponentRef.destroy();
-		}
-	}
 
 	ngOnDestroy(): void {
 		this.close();

@@ -10,5 +10,5 @@ export class AnsynLoaderComponent {
 	@HostBinding('class.show') show: boolean;
 
 	@Input() loaderText = '';
-	@Input() rtl = false;
+	@Input() rtl = true;
 }

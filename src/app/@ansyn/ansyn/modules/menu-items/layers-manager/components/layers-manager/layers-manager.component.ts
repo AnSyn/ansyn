@@ -29,7 +29,8 @@ export class LayersManagerComponent {
 			})
 		);
 
-	constructor(protected store: Store<ILayerState>) {
+	constructor(
+		protected store: Store<ILayerState>	) {
 	}
 
 }

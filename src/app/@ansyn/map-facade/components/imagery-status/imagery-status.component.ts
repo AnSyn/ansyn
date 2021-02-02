@@ -1,16 +1,28 @@
 import { Component, EventEmitter, HostBinding, Inject, Input, OnDestroy, OnInit, Output, } from '@angular/core';
-import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
+import { ImageryCommunicatorService, IMapSettings, MapOrientation } from '@ansyn/imagery';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { get as _get } from 'lodash'
-import { map, tap } from 'rxjs/operators';
-import { SetToastMessageAction, ToggleMapLayersAction } from '../../actions/map.actions';
+import { map, tap, filter } from 'rxjs/operators';
+import {
+	SetMapOrientation,
+	SetOverlaysFootprintActive, SetToastMessageAction,
+	LogDraggingMapBetweenScreenAreas,
+	ToggleMapLayersAction
+} from '../../actions/map.actions';
 import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../models/entry-components-provider';
 import { selectEnableCopyOriginalOverlayDataFlag } from '../../reducers/imagery-status.reducer';
-import { selectActiveMapId, selectHideLayersOnMap, selectMapsTotal } from '../../reducers/map.reducer';
-import { copyFromContent } from '../../utils/clipboard';
+import {
+	selectActiveMapId,
+	selectHideLayersOnMap,
+	selectMapOrientation,
+	selectMapsTotal, selectOverlaysFootprintActiveByMapId
+} from '../../reducers/map.reducer';
 import { getTimeFormat } from '../../utils/time';
 import { TranslateService } from '@ngx-translate/core';
+import { copyFromContent } from '../../utils/clipboard';
+
+export const imageryStatusClassNameForExport = 'imagery-status';
 
 @Component({
 	selector: 'ansyn-imagery-status',
@@ -22,13 +34,20 @@ import { TranslateService } from '@ngx-translate/core';
 	destroy: 'ngOnDestroy'
 })
 export class ImageryStatusComponent implements OnInit, OnDestroy {
-	isMapLayersVisible = true;
+	@HostBinding(`class.${imageryStatusClassNameForExport}`) readonly _ = true;
+	@Input() readonly isLayersShow: boolean;
+	@Input() readonly isFootprintShow: boolean;
 	mapsAmount = 1;
 	_map: IMapSettings;
+	perspective: boolean;
+	orientation: MapOrientation;
+	overlaysFootprintActive: boolean;
 	baseMapDescription = 'Base Map';
 	formattedOverlayTime: string = null;
 	@HostBinding('class.active') isActiveMap: boolean;
+	@Input() isMinimalistViewMode: boolean;
 	hideLayers: boolean;
+
 	@AutoSubscription
 	active$ = this.store$.pipe(
 		select(selectActiveMapId),
@@ -49,14 +68,26 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		tap((enableCopyOriginalOverlayData) => this.enableCopyOriginalOverlayData = enableCopyOriginalOverlayData)
 	);
 
-	@Input()
-	isMinimalistViewMode: boolean;
-
 	constructor(protected store$: Store<any>,
 				protected communicators: ImageryCommunicatorService,
-				protected translate: TranslateService,
+				protected translateService: TranslateService,
 				@Inject(ENTRY_COMPONENTS_PROVIDER) public entryComponents: IEntryComponentsEntities) {
 	}
+
+	@AutoSubscription
+	getMapOrientation$ = () => this.store$.select(selectMapOrientation(this.mapId)).pipe(
+		filter(Boolean),
+		tap( (orientation: MapOrientation) => {
+			this.orientation = orientation;
+			this.perspective = this.orientation === 'User Perspective';
+		})
+	);
+
+	@AutoSubscription
+	getOverlaysFootprint = () => this.store$.select(selectOverlaysFootprintActiveByMapId(this.mapId)).pipe(
+		tap( isActive => this.overlaysFootprintActive = isActive)
+	);
+
 
 	get map() {
 		return this._map;
@@ -66,7 +97,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	set map(value: IMapSettings) {
 		this._map = value;
 		this.formattedOverlayTime = this.overlay ? this.getFormattedTime(this.overlay.photoTime) : null;
-		this.translate.get(this.overlay && this.overlay.sensorName || 'unknown')
+		this.translateService.get(this.overlay && this.overlay.sensorName || 'unknown')
 			.subscribe(translatedOverlaySensorName => this.translatedOverlaySensorName = translatedOverlaySensorName);
 	}
 
@@ -96,7 +127,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 			return this.baseMapDescription;
 		}
 		const catalogId = (<any>this.overlay).catalogID ? (' catalogId ' + (<any>this.overlay).catalogID) : '';
-		return `${ this.translatedOverlaySensorName } ${ this.overlayTimeDate } ${ catalogId }`;
+		return '\u202A' + `${ this.overlayTimeDate } ${ catalogId } ${ this.translatedOverlaySensorName }` + '\u202C';
 	}
 
 	// @todo refactor
@@ -117,15 +148,12 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 		return getTimeFormat(new Date(dateTimeSring));
 	}
 
-	// @todo refactor
 	copyOverlayDescription() {
 		if (this.enableCopyOriginalOverlayData && this.overlay.tag) {
 			const tagJson = JSON.stringify(this.overlay.tag);
-			copyFromContent(tagJson);
-			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay original data copied to clipboard' }));
+			copyFromContent(tagJson).then(() => this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay original data copied to clipboard' })));
 		} else {
-			copyFromContent(this.overlayDescription);
-			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay description copied to clipboard' }));
+			copyFromContent(this.overlayDescription).then(() => this.store$.dispatch(new SetToastMessageAction({ toastText: 'Overlay description copied to clipboard' })));
 		}
 	}
 
@@ -136,7 +164,21 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	}
 
 	toggleMapLayers() {
-		this.isMapLayersVisible = !this.isMapLayersVisible;
-		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId, isVisible: this.isMapLayersVisible }));
+		this.store$.dispatch(new ToggleMapLayersAction({ mapId: this.mapId, isVisible: this.hideLayers }));
+	}
+
+	toggleImageryPerspective() {
+		const newMapOrientation = this.orientation === 'Imagery Perspective' ? 'User Perspective' : 'Imagery Perspective';
+		this.store$.dispatch(new SetMapOrientation({orientation: newMapOrientation, mapId: this.mapId}));
+	}
+
+	toggleOverlaysFootprint() {
+		const isDisplay = !this.overlaysFootprintActive;
+		this.store$.dispatch(new SetOverlaysFootprintActive({mapId: this.mapId, show: isDisplay}));
+	}
+
+	onStartDraggingMap(event) {
+		this.store$.dispatch(new LogDraggingMapBetweenScreenAreas());
+		this.onMove.emit(event);
 	}
 }

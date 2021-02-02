@@ -12,7 +12,9 @@ import { Observable } from 'rxjs';
 export class SettingsComponent implements OnInit, OnDestroy {
 	public isAnaglyphEnabled$: Observable<boolean> = this.store.select(selectIsAnaglyphActive);
 
-	constructor(public store: Store<ISettingsState>) {
+	constructor(
+		public store: Store<ISettingsState>
+	) {
 	}
 
 	ngOnInit() {

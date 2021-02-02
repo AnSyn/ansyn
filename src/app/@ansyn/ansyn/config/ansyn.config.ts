@@ -1,16 +1,16 @@
 import { IMenuItem } from '@ansyn/menu';
-import { OverlayOutOfBoundsComponent } from '../components/overlay-out-of-bounds/overlay-out-of-bounds.component';
 import { IAlert } from '../modules/alerts/alerts.model';
-import { CasesComponent } from '../modules/menu-items/cases/components/cases/cases.component';
-import { FiltersCollectionComponent } from '../modules/menu-items/filters/components/filters-collection/filters-collection.component';
 import { LayersManagerComponent } from '../modules/menu-items/layers-manager/components/layers-manager/layers-manager.component';
-import { ToolsComponent } from '../modules/menu-items/tools/tools/tools.component';
-import { SettingsComponent } from '../modules/menu-items/settings/settings/settings.component';
-import { HelpComponent } from '../modules/menu-items/help/components/help.component';
-import { TasksComponent } from '../modules/menu-items/algorithms/components/tasks/tasks.component';
 import { anaglyphSensorAlertKey } from '../modules/plugins/openlayers/plugins/anaglyph-sensor/plugin/anaglyph-sensor.plugin';
 import { AnaglyphSensorAlertComponent } from '../modules/plugins/openlayers/plugins/anaglyph-sensor/alert-component/anaglyph-sensor-alert.component';
-import { CredentialsComponent } from '../modules/core/components/credentials/credentials.component';
+import { ResultsTableComponent } from '../modules/menu-items/results/components/results-table/results-table.component';
+import { CasesContainerComponent } from '../modules/menu-items/cases/components/cases-container/cases-container.component';
+
+export enum MenuItemsKeys {
+	DataLayers = 'Data Layers',
+	ResultsTable = 'Results table',
+	Cases = 'Cases'
+}
 
 export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] } = {
 	ansynAlerts: [
@@ -25,55 +25,22 @@ export const ansynConfig: { ansynAlerts: IAlert[], ansynMenuItems: IMenuItem[] }
 			text: 'This Overlay Is Not a Part of the Query'
 		},
 		{
-			key: 'overlaysOutOfBounds',
-			component: OverlayOutOfBoundsComponent
-		},
-		{
 			key: anaglyphSensorAlertKey,
 			component: AnaglyphSensorAlertComponent
 		}
 	],
 	ansynMenuItems: [
 		{
-			name: 'Cases',
-			component: CasesComponent,
-			iconClass: 'icon-main-cases'
+			name: MenuItemsKeys.DataLayers,
+			component: LayersManagerComponent
 		},
 		{
-			name: 'Filters',
-			component: FiltersCollectionComponent,
-			iconClass: 'icon-main-filters'
+			name: MenuItemsKeys.ResultsTable,
+			component: ResultsTableComponent
 		},
 		{
-			name: 'Data Layers',
-			component: LayersManagerComponent,
-			iconClass: 'icon-main-data-layers'
-		},
-		{
-			name: 'Tools',
-			component: ToolsComponent,
-			iconClass: 'icon-main-tools'
-		},
-		{
-			name: 'Algorithms',
-			component: TasksComponent,
-			iconClass: 'icon-main-algorithms'
-		},
-		{
-			name: 'Settings',
-			component: SettingsComponent,
-			iconClass: 'icon-main-settings'
-		},
-		{
-			name: 'Help',
-			component: HelpComponent,
-			iconClass: 'icon-main-help'
-		},
-		{
-			name: 'Permissions',
-			component: CredentialsComponent,
-			iconClass: 'icon-credentials',
-			dockedToBottom: true
+			name: MenuItemsKeys.Cases,
+			component: CasesContainerComponent
 		}
 	]
 };

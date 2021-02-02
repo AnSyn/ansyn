@@ -2,7 +2,6 @@
 @import "ansyn/less/colors";
 
 :host {
-
 	div.back-to-world-view {
 		height: @imagery-status-height;
 		button {
@@ -12,25 +11,45 @@
 			height: 100%;
 			background-color: @background-color-5;
 			color: @background-color-12;
-			padding: 0 5px 0 0;
+			direction: ltr;
+			margin-right: 5px;
 
 			i {
-				font-size: @icon-size;
+				padding-right: 5px;
 			}
 		}
 	}
 }
 
-@media screen and (max-width: 1440px) {
-	:host {
-		div.back-to-world-view {
-			button.menu-pinned {
-				font-size: 0;
-				overflow: hidden;
-				padding: 0;
+.imageries-container {
+	&.layout2, &.layout4, &.layout6 {
+		:host {
+			div.back-to-world-view {
+				button {
+					font-size: 0;
+					overflow: hidden;
+					position: unset;
 
-				&.small-icon-button {
-					margin: 0;
+					i {
+						padding-right: 0;
+					}
+				}
+			}
+		}
+	}
+
+	&.layout5 {
+		:nth-child(2), :nth-child(3) {
+			:host {
+				div.back-to-world-view {
+					button {
+						font-size: 0;
+						overflow: hidden;
+
+						i {
+							padding-right: 0;
+						}
+					}
 				}
 			}
 		}

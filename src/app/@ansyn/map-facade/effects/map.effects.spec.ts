@@ -4,7 +4,7 @@ import { Store, StoreModule } from '@ngrx/store';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { IMapState, initialMapState, mapFeatureKey, MapReducer, mapStateSelector } from '../reducers/map.reducer';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
+import { GetProvidersMapsService, ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import { MapFacadeService } from '../services/map-facade.service';
 import { cloneDeep } from 'lodash';
 import { cold, hot } from 'jasmine-marbles';
@@ -36,7 +36,11 @@ describe('MapEffects', () => {
 				{ provide: mapFacadeConfig, useValue: {} },
 				MapFacadeService,
 				provideMockActions(() => actions),
-				ImageryCommunicatorService
+				ImageryCommunicatorService,
+				{
+					provide: GetProvidersMapsService,
+					useValue: {}
+				}
 			]
 		}).compileComponents();
 	}));
@@ -100,7 +104,7 @@ describe('MapEffects', () => {
 			const fakeMap: IMapSettings = <any>{ id: 'imagery2', data: { position: true } };
 			const fakeMap2: IMapSettings = <any>{ id: 'imagery3', data: { position: true } };
 			mapState.entities = { [fakeMap.id]: fakeMap, [fakeMap2.id]: fakeMap2 };
-			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => communicator);
+			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => <any>communicator);
 			spyOn(communicator, 'getPosition').and.callFake(() => of(true));
 			spyOn(communicator, 'setPosition').and.callFake(() => of(true));
 			const action = new SynchronizeMapsAction({ mapId: 'imagery2' });
@@ -113,13 +117,13 @@ describe('MapEffects', () => {
 
 	describe('setMapPositionByRect$', () => {
 		it('setMapPositionByRect$ should call communicator.setPositionByRect', () => {
-			spyOn(imageryCommunicatorService, 'provide').and.returnValue({
-				setPositionByRect: () => of('345')
+			spyOn(imageryCommunicatorService, 'provide').and.returnValue(<any>{
+				setPositionByRect: () => of(true)
 			});
 			actions = hot('--a--', { a: new SetMapPositionByRectAction({ id: '234', rect: null }) });
 
 			const expectedResults = cold('--b--', {
-				b: '345'
+				b: true
 			});
 			expect(mapEffects.setMapPositionByRect$).toBeObservable(expectedResults);
 		});
@@ -134,8 +138,8 @@ describe('MapEffects', () => {
 
 	describe('setMapPositionByRadius$', () => {
 		it('setMapPositionByRadius$ should call communicator.setPositionByRect', () => {
-			spyOn(imageryCommunicatorService, 'provide').and.returnValue({
-				setPositionByRadius: () => of('456')
+			spyOn(imageryCommunicatorService, 'provide').and.returnValue(<any>{
+				setPositionByRadius: () => of(true)
 			});
 			actions = hot('--a--', {
 				a: new SetMapPositionByRadiusAction({
@@ -146,7 +150,7 @@ describe('MapEffects', () => {
 			});
 
 			const expectedResults = cold('--b--', {
-				b: '456'
+				b: true
 			});
 			expect(mapEffects.setMapPositionByRadius$).toBeObservable(expectedResults);
 		});

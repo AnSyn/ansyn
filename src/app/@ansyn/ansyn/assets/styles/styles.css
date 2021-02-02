@@ -3,41 +3,32 @@
 @import "bootstrap/carousel.css";
 @import 'icons.css';
 @import 'tooltip.css';
-@import "~primeng/resources/primeng.min.css";
-@import "~primeng/resources/themes/omega/theme.css";
+/*@import "~primeng/resources/themes/luna-amber/theme.css";*/
+/* Todo: primeng theme was omega. But omega did not exist after upgrading primeng for ng9 */
 @import "~font-awesome/css/font-awesome.min.css";
 @import "~cesium/Build/Cesium/Widgets/widgets.css";
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 @import "~@ansyn/ng-pick-datetime/assets/style/picker.min.css";
 
-
 circle.drop.selected {
 	fill: black;
 }
 
+.cdk-overlay-container {
+	/* for web component be on top menu */
+	z-index: 5000;
+}
 
 .custom-dialog .mat-dialog-container {
 	padding: 0;
 	width: 600px;
 	overflow: hidden;
-	text-align: center;
-}
-
-.close.mat-button {
-	cursor: pointer;
-	float: right;
-	padding: 0;
-	marginTop: 5px;
-	min-width: 25px;
-}
-
-.main-progress .mat-progress-bar-fill::after {
-	background-color: #0091ff !important;
 }
 
 .main-timeline {
 	padding: 0 10px;
 	width: 100%;
+	height: 100%;
 	margin: 0 auto;
 	box-sizing: border-box;
 	color: #cbcbcb;
@@ -242,6 +233,11 @@ div.pin-location {
 	display: none;
 }
 
+input[type=number] {
+	direction: ltr; /* so that '-' will be on the left side (seems a browser bug) */
+	text-align: right /* but otherwise, right aligned */
+}
+
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
 	-webkit-appearance: none;
@@ -252,7 +248,6 @@ input[type=number]::-webkit-outer-spin-button {
 	font-family: 'AnSyn';
 	src: url('/assets/fonts/AnSyn/AnSyn.eot?56493936');
 	src: url('/assets/fonts/AnSyn/AnSyn.eot?56493936#iefix') format('embedded-opentype'),
-	url('/assets/fonts/AnSyn/AnSyn.woff2?56493936') format('woff2'),
 	url('/assets/fonts/AnSyn/AnSyn.woff?56493936') format('woff'),
 	url('/assets/fonts/AnSyn/AnSyn.ttf?56493936') format('truetype'),
 	url('/assets/fonts/AnSyn/AnSyn.svg?56493936#AnSyn') format('svg');
@@ -262,6 +257,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 [class^="icon-"], [class*=" icon-"] {
 	/* use !important to prevent issues with browser extensions that change fonts */
+	margin: 0 2.5px;
 	font-family: 'AnSyn' !important;
 	speak: none;
 	font-style: normal;
@@ -269,16 +265,32 @@ input[type=number]::-webkit-outer-spin-button {
 	font-variant: normal;
 	text-transform: none;
 	line-height: 1;
-	font-size: 24px;
+	font-size: 22px;
 
 	/* Better Font Rendering =========== */
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.medium-icon {
+	font-size: 14px;
+}
+
+.small-icon {
+	font-size: 10px;
+}
+
+.smaller-icon {
+	font-size: 7px;
+}
+
 .icon-screen-1:before, .icon-screen-2:before, .icon-screen-3:before, .icon-screen-4:before, .icon-screen-5:before, .icon-screen-6:before {
 	font-size: 20px;
 	line-height: normal;
+}
+
+/deep/ .scrolled {
+	overflow-y: auto;
 }
 
 /deep/ .scrolled::-webkit-scrollbar {
@@ -301,4 +313,19 @@ input[type=number]::-webkit-outer-spin-button {
 	background-clip: padding-box;
 	border-radius: 2px;
 	background: white -webkit-gradient(linear, 0 0, 0 100%, color-stop(.5, rgba(255, 255, 255, .2)), color-stop(.5, transparent), to(transparent));
+}
+
+.mat-autocomplete-panel::-webkit-scrollbar, .mat-select-panel::-webkit-scrollbar {
+	width: 7px;
+}
+
+.mat-autocomplete-panel::-webkit-scrollbar-thumb, .mat-select-panel::-webkit-scrollbar-thumb {
+	background: white;
+    border-radius: 2px;
+}
+
+.mat-autocomplete-panel::-webkit-scrollbar-track, .mat-select-panel::-webkit-scrollbar-track {
+    border-radius: 2px;
+    background-color: #2c2c2c;
+
 }

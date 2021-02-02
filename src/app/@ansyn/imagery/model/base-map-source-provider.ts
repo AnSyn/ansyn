@@ -2,7 +2,7 @@ import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { CacheService } from '../cache-service/cache.service';
 import { ImageryCommunicatorService } from '../communicator-service/communicator.service';
 import { IBaseImageryMapConstructor } from './base-imagery-map';
-import { ImageryLayerProperties } from './imagery-layer.model';
+import { IBaseImageryLayer, ImageryLayerProperties } from './imagery-layer.model';
 import { IMapSettings } from './map-settings';
 
 export const IMAGERY_MAP_SOURCE_PROVIDERS = new InjectionToken('IMAGERY_MAP_SOURCE_PROVIDERS');
@@ -18,9 +18,7 @@ export interface IImageryMapSourceMetaData {
 	readonly supported?: IBaseImageryMapConstructor[];
 }
 
-export interface IBaseMapSourceProviderConstructor {
-	new(...args): BaseMapSourceProvider
-}
+export type IBaseMapSourceProviderConstructor = new(...args) => BaseMapSourceProvider;
 
 @Injectable()
 export abstract class BaseMapSourceProvider<CONF = any> implements IImageryMapSourceMetaData {
@@ -40,7 +38,7 @@ export abstract class BaseMapSourceProvider<CONF = any> implements IImageryMapSo
 		return new Date().toISOString()
 	};
 
-	protected createOrGetFromCache<META extends IMapSettings>(metaData: META): Promise<any> {
+	protected createOrGetFromCache<META extends IMapSettings>(metaData: META): Promise<IBaseImageryLayer> {
 		const cacheId = this.generateLayerId(metaData);
 		const cacheLayer = this.cacheService.getLayerFromCache(cacheId);
 		if (cacheLayer) {
@@ -50,16 +48,18 @@ export abstract class BaseMapSourceProvider<CONF = any> implements IImageryMapSo
 
 		return this.create(metaData).then((layer) => {
 			layer.set(ImageryLayerProperties.ID, cacheId);
-			this.cacheService.addLayerToCache(cacheId, layer);
+			if (cacheId.split('/').length > 2) { // save in cache only overlay layer.
+				this.cacheService.addLayerToCache(cacheId, layer);
+			}
 			const extraData = this.generateExtraData(metaData);
 			this.setExtraData(layer, extraData);
 			return layer;
 		});
 	}
 
-	protected abstract create<META extends IMapSettings>(metaData: META): Promise<any>;
+	protected abstract create<META extends IMapSettings>(metaData: META): Promise<IBaseImageryLayer>;
 
-	createAsync<META extends IMapSettings>(metaData: META): Promise<any> {
+	createAsync<META extends IMapSettings>(metaData: META): Promise<IBaseImageryLayer> {
 		return this.createOrGetFromCache(metaData)
 	}
 
@@ -73,9 +73,9 @@ export abstract class BaseMapSourceProvider<CONF = any> implements IImageryMapSo
 		return {}
 	};
 
-	setExtraData(layer: any, extraData: any): void {
+	setExtraData(layer: IBaseImageryLayer, extraData: any): void {
 	}
 
-	removeExtraData(layer: any) {
+	removeExtraData(layer: IBaseImageryLayer) {
 	}
 }

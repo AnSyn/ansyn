@@ -1,19 +1,20 @@
 {
 	"name": "@ansyn/ol",
-	"version": "1.6.33",
+	"version": "4.1.1",
 	"peerDependencies": {
-		"@angular/core": "^7.2.2",
-		"@angular/common": "^7.2.2",
-		"@ansyn/imagery": "1.6.33",
-		"rxjs": "^6.4.0",
-		"@ngx-translate/core": "^11.0.1"
+		"@angular/core": "9.x || 10.x",
+		"@angular/common": "9.x || 10.x",
+		"rxjs": "6.x"
 	},
 	"dependencies": {
+		"@ansyn/imagery": "4.1.1",
 		"auto-subscriptions": "^2.0.5",
-		"@turf/turf": "^5.1.6",
-		"ol": "^5.3.0",
-		"ngx-color-picker": "^7.5.0",
-		"angular2-uuid": "^1.1.1"
+		"@turf/turf": "^6.3.0",
+		"ol": "^6.4.3",
+		"ngx-color-picker": "^9.1.0",
+		"angular2-uuid": "^1.1.1",
+		"tslib": "^2.0.0",
+		"@ngx-translate/core": "^12.1.2"
 	},
 	"license": "MIT"
 }

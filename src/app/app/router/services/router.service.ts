@@ -28,11 +28,13 @@ export class AnsynRouterService {
 			}),
 			filter(activated => activated.snapshot.data.name === 'case' || activated.snapshot.data.name === 'caseChild'),
 			map(activated => {
-				const queryParamMap = activated.snapshot.queryParamMap;
+				const { queryParamMap } = activated.snapshot;
 				const queryParams = {};
+
 				queryParamMap.keys.forEach(key => {
 					queryParams[key] = queryParamMap.get(key);
 				});
+
 				const caseId = activated.snapshot.paramMap.get('caseId');
 				return { caseId, queryParams };
 			}),

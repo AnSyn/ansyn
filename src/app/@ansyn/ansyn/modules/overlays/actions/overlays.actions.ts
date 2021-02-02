@@ -3,16 +3,19 @@ import { Action } from '@ngrx/store';
 import { type } from '../../core/utils/type';
 import {
 	IOverlay,
-	IOverlayDrop,
+	IOverlayDrop, IOverlayError,
 	IOverlaysCriteria,
 	IOverlaysCriteriaOptions,
 	IOverlaysHash,
 	IOverlaySpecialObject,
 } from '../models/overlay.model';
 import { IMarkUpData, IOverlayDropMarkUp, ITimelineRange, MarkUpClass } from '../reducers/overlays.reducer';
+import { Update } from '@ngrx/entity';
+import { ILogMessage } from '../../core/models/logger.model';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
+	SET_TOTAL_OVERLAYS: type('[Overlay] Set Selected Overlay'),
 	UNSELECT_OVERLAY: type('[Overlay] Unselect Overlay'),
 	LOAD_OVERLAYS: type('[Overlay] Load Overlays'),
 	CHECK_TRIANGLES: type('[Overlay] Check Triangles Before Overlay Search'),
@@ -40,9 +43,14 @@ export const OverlaysActionTypes = {
 	SET_HOVERED_OVERLAY: type('SET_HOVERED_OVERLAY'),
 	CHANGE_OVERLAY_PREVIEW_ROTATION: type('[Overlay] CHANGE_OVERLAY_PREVIEW_ROTATION'),
 	SET_OVERLAYS_CRITERIA: 'SET_OVERLAYS_CRITERIA',
-	UPDATE_OVERLAY_COUNT: 'UPDATE_OVERLAY_COUNT',
 	SET_MISC_OVERLAYS: 'SET_MISC_OVERLAYS',
 	SET_MISC_OVERLAY: 'SET_MISC_OVERLAY',
+	UPDATE_OVERLAY: 'UPDATE_OVERLAY',
+	UPDATE_OVERLAYS: 'UPDATE_OVERLAYS',
+	SET_OVERLAYS_CONTAINMENT_CHECKED: 'OVERLAYS_CONTAINMENT_CHECKED',
+	LOG_SEARCH_PANEL_POPUP: 'LOG_SEARCH_PANEL_POPUP',
+	LOG_MANUAL_SEARCH_TIME: 'LOG_MANUAL_SEARCH_TIME',
+	LOG_SELECT_SEARCH_TIME_PRESET: 'LOG_SELECT_SEARCH_TIME_PRESET',
 };
 
 export class SelectOverlayAction implements Action {
@@ -55,7 +63,7 @@ export class SelectOverlayAction implements Action {
 export class SetMarkUp implements Action {
 	type = OverlaysActionTypes.SET_OVERLAYS_MARKUPS;
 
-	constructor(public payload: { classToSet: MarkUpClass, dataToSet: IMarkUpData }) {
+	constructor(public payload: { classToSet: MarkUpClass, dataToSet: IMarkUpData, customOverviewElementId?: string }) {
 	};
 }
 
@@ -65,7 +73,6 @@ export class AddMarkUp implements Action {
 	constructor(public payload: Array<IOverlayDropMarkUp>) {
 	};
 }
-
 
 export class RemoveMarkUp implements Action {
 	type = OverlaysActionTypes.REMOVE_OVERLAYS_MARKUPS;
@@ -83,10 +90,14 @@ export class UnSelectOverlayAction implements Action {
 	}
 }
 
-export class LoadOverlaysAction implements Action {
+export class LoadOverlaysAction implements Action, ILogMessage {
 	type = OverlaysActionTypes.LOAD_OVERLAYS;
 
 	constructor(public payload: IOverlaysCriteria) {
+	}
+
+	logMessage() {
+		return `Start loading overlays`;
 	}
 }
 
@@ -104,10 +115,14 @@ export class RequestOverlayByIDFromBackendAction implements Action {
 	}
 }
 
-export class LoadOverlaysSuccessAction implements Action {
+export class LoadOverlaysSuccessAction implements Action, ILogMessage {
 	type = OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS;
 
 	constructor(public payload: IOverlay[], public clearExistingOverlays = false) {
+	}
+
+	logMessage() {
+		return `Loaded ${this.payload.length} overlays`;
 	}
 }
 
@@ -139,21 +154,50 @@ export class DisplayMultipleOverlaysFromStoreAction implements Action {
 	}
 }
 
-export class DisplayOverlayAction implements Action {
+export function getOverlayTitle(overlay: IOverlay): string {
+	return `${overlay.sensorType} (${overlay.sensorName}) ${overlay.photoTime}`;
+}
+
+export class DisplayOverlayAction implements Action, ILogMessage {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY;
 
-	constructor(public payload: { overlay: IOverlay, mapId: string, extent?: any, forceFirstDisplay?: boolean, force?: boolean, customOriantation?: string }) {
+	constructor(public payload: {
+		overlay: IOverlay, mapId: string, extent?: any, forceFirstDisplay?: boolean, force?: boolean, customOriantation?: string
+	}) {
+	}
+
+	logMessage() {
+		return `Start loading overlay ${getOverlayTitle(this.payload.overlay)}`
 	}
 }
 
 export class DisplayOverlaySuccessAction extends DisplayOverlayAction {
-	type = OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS;
+	type = <any>OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS;
+
+	logMessage() {
+		return `Loaded overlay ${getOverlayTitle(this.payload.overlay)}`
+	}
 }
 
-export class DisplayOverlayFailedAction implements Action {
+export class DisplayOverlayFailedAction implements Action, ILogMessage {
 	type = OverlaysActionTypes.DISPLAY_OVERLAY_FAILED;
 
 	constructor(public payload: { id: string, mapId?: string }) {
+	}
+
+	logMessage() {
+		return `Display overlay failed`
+	}
+}
+
+export class SetTotalOverlaysAction implements Action, ILogMessage {
+	type = OverlaysActionTypes.SET_TOTAL_OVERLAYS;
+
+	constructor(public payload: { number: number, showLog?: boolean }) {
+	}
+
+	logMessage() {
+		return this.payload.showLog && this.payload.number > 0 && `Showing ${this.payload.number} overlays after filtering`
 	}
 }
 
@@ -185,10 +229,18 @@ export class SetDropsAction implements Action {
 	};
 }
 
-export class SetOverlaysStatusMessageAction implements Action {
+export class SetOverlaysStatusMessageAction implements Action, ILogMessage {
 	type = OverlaysActionTypes.SET_OVERLAYS_STATUS_MESSAGE;
 
-	constructor(public payload: string) {
+	constructor(public payload: { message: string, originalMessages?: IOverlayError[] }) {
+	}
+
+	logMessage() {
+		const originalMessages = this.payload && this.payload.originalMessages &&
+			this.payload.originalMessages.reduce((prevSum, currVal) => {
+				return `${prevSum}\n${currVal.sourceType ? '(' + currVal.sourceType + ') ' : ''}${currVal.message}`
+			}, '');
+		return this.payload && this.payload.message && `Showing overlays status message: ${this.payload.message}${this.payload.originalMessages ? originalMessages : ''}`
 	}
 }
 
@@ -215,18 +267,15 @@ export class ChangeOverlayPreviewRotationAction implements Action {
 	}
 }
 
-export class SetOverlaysCriteriaAction implements Action {
+export class SetOverlaysCriteriaAction implements Action, ILogMessage {
 	type = OverlaysActionTypes.SET_OVERLAYS_CRITERIA;
 
 	constructor(public payload: IOverlaysCriteria,
 				public options: IOverlaysCriteriaOptions = null) {
 	}
-}
 
-export class UpdateOverlaysCountAction {
-	type = OverlaysActionTypes.UPDATE_OVERLAY_COUNT;
-
-	constructor(public payload: number) {
+	logMessage() {
+		return `Setting overlays criteria for search:\n${JSON.stringify(this.payload)} ${this.options ? JSON.stringify(this.options) : ''}`
 	}
 }
 
@@ -241,6 +290,60 @@ export class SetMiscOverlay implements Action {
 	type: string = OverlaysActionTypes.SET_MISC_OVERLAY;
 
 	constructor(public payload: { key: string, overlay: IOverlay }) {
+	}
+}
+
+export class UpdateOverlay implements Action {
+	type: string = OverlaysActionTypes.UPDATE_OVERLAY;
+
+	constructor(public payload: Update<IOverlay>) {
+	}
+}
+
+export class UpdateOverlays implements Action {
+	type: string = OverlaysActionTypes.UPDATE_OVERLAYS;
+
+	constructor(public payload: Update<IOverlay>[]) {
+	}
+}
+
+export class SetOverlaysContainmentChecked implements Action {
+	type: string = OverlaysActionTypes.SET_OVERLAYS_CONTAINMENT_CHECKED;
+
+	constructor(public payload: boolean = true) {
+	}
+}
+
+export class LogSearchPanelPopup implements Action, ILogMessage {
+	type: string = OverlaysActionTypes.LOG_SEARCH_PANEL_POPUP;
+
+	constructor(public payload: { popupName: string }) {
+	}
+
+	logMessage() {
+		return `Search panel: opening ${this.payload.popupName} popup`
+	}
+}
+
+export class LogManualSearchTime implements Action, ILogMessage {
+	type: string = OverlaysActionTypes.LOG_MANUAL_SEARCH_TIME;
+
+	constructor(public payload: { from: string, to: string }) {
+	}
+
+	logMessage() {
+		return `User confirmed manual time range: ${ this.payload.from } - ${ this.payload.to }`
+	}
+}
+
+export class LogSelectSearchTimePreset implements Action, ILogMessage {
+	type: string = OverlaysActionTypes.LOG_SELECT_SEARCH_TIME_PRESET;
+
+	constructor(public payload: { presetTitle: string }) {
+	}
+
+	logMessage() {
+		return `User selected search time preset: ${this.payload.presetTitle}`
 	}
 }
 
@@ -269,3 +372,6 @@ export type OverlaysActions
 	| SetOverlaysCriteriaAction
 	| SetMiscOverlays
 	| SetMiscOverlay
+	| UpdateOverlay
+	| UpdateOverlays
+	| SetOverlaysContainmentChecked

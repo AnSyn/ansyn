@@ -1,14 +1,32 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import { IAppState } from '../app.effects.module';
 import { select, Store } from '@ngrx/store';
-import { UpdateMapSizeAction } from '@ansyn/map-facade';
-import { MenuActionTypes, SetAutoClose } from '@ansyn/menu';
-import { selectSubMenu } from '../../modules/menu-items/tools/reducers/tools.reducer';
-import { map, mergeMap } from 'rxjs/operators';
-import { RedrawTimelineAction } from '../../modules/overlays/actions/overlays.actions';
-import { LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
+import { ToggleFooter, UpdateMapSizeAction } from '@ansyn/map-facade';
+import {
+	IMenuConfig,
+	MenuActionTypes,
+	MenuConfig,
+	ResetAppAction,
+	SetAutoClose, ToggleIsPinnedAction,
+	UnSelectMenuItemAction
+} from '@ansyn/menu';
+import { selectSubMenu } from '../../modules/status-bar/components/tools/reducers/tools.reducer';
+import { concatMap, map, mergeMap, tap } from 'rxjs/operators';
+import {
+	LoadOverlaysSuccessAction,
+	RedrawTimelineAction,
+	SetTotalOverlaysAction
+} from '../../modules/overlays/actions/overlays.actions';
+import { CloseModalAction, LoadDefaultCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
+import { selectDropsWithoutSpecialObjects } from '../../modules/overlays/reducers/overlays.reducer';
+import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
+import { COMPONENT_MODE } from '../../app-providers/component-mode';
+import { InitializeFiltersAction } from '../../modules/filters/actions/filters.actions';
+import { SetLayersModal } from '../../modules/menu-items/layers-manager/actions/layers.actions';
+import { SelectedModalEnum } from '../../modules/menu-items/layers-manager/reducers/layers-modal';
+import { MatDialog } from '@angular/material/dialog';
 
 @Injectable()
 export class MenuAppEffects {
@@ -23,6 +41,11 @@ export class MenuAppEffects {
 			])
 		);
 
+	@Effect()
+	loadOverlays$: Observable<any> = this.store$
+		.pipe(
+			select(selectDropsWithoutSpecialObjects),
+			map((overlays: IOverlayDrop[]) => new SetTotalOverlaysAction({ number: overlays.length, showLog: true })));
 
 	@Effect()
 	autoCloseMenu$: Observable<SetAutoClose> = this.store$
@@ -32,12 +55,34 @@ export class MenuAppEffects {
 		);
 
 	@Effect()
-	onResetApp$: Observable<LoadDefaultCaseAction> = this.actions$
-		.pipe(
-			ofType(MenuActionTypes.RESET_APP),
-			map(() => new LoadDefaultCaseAction())
-		);
+	onResetApp$ = this.actions$.pipe(
+		ofType<ResetAppAction>(MenuActionTypes.RESET_APP),
+		tap(() => {
+			this.closeAngularMaterialDialogs();
+		}),
+		concatMap(() => [
+			new ToggleIsPinnedAction(false),
+			new CloseModalAction(),
+			new SetLayersModal({ type: SelectedModalEnum.none, layer: null }),
+			new UnSelectMenuItemAction(),
+			new ToggleFooter(false),
+			new LoadOverlaysSuccessAction([], true),
+			new InitializeFiltersAction(),
+			new LoadDefaultCaseAction()
+		])
+	);
 
-	constructor(protected actions$: Actions, protected store$: Store<IAppState>) {
+	constructor(
+		protected actions$: Actions,
+		protected store$: Store<IAppState>,
+		@Inject(COMPONENT_MODE) public componentMode: boolean,
+		@Inject(MenuConfig) public menuConfig: IMenuConfig,
+		private dialogRef: MatDialog
+	) {
 	}
+
+	closeAngularMaterialDialogs() {
+		this.dialogRef.closeAll();
+	}
+
 }

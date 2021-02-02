@@ -1,5 +1,4 @@
 import {
-	AddMenuItemAction,
 	MenuActionTypes,
 	SelectMenuItemAction,
 	SetBadgeAction,
@@ -7,52 +6,50 @@ import {
 } from '../actions/menu.actions';
 import { getMenuSessionData, setMenuSessionData } from '../helpers/menu-session.helper';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { IMenuItem } from '../models/menu-item.model';
-import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
-import { Dictionary, EntitySelectors } from '@ngrx/entity/src/models';
+import { IOutsideMenuItem } from '../models/menu-item.model';
 
-export const menuItemsAdapter: EntityAdapter<IMenuItem> = createEntityAdapter<IMenuItem>({ selectId: (menuItem: IMenuItem) => menuItem.name });
-
-export interface IMenuState extends EntityState<IMenuItem> {
+export interface IMenuState {
 	selectedMenuItem: string;
+	selectedOutsideMenuItem: IOutsideMenuItem;
 	isPinned: boolean;
 	autoClose: boolean;
+	badges: Map<string, string>;
 	menuCollapse: boolean;
-	isUserFirstEntrance: boolean;
-	doesUserHaveCredentials: boolean;
 }
 
 const menuSession = getMenuSessionData();
-export const initialMenuState: IMenuState = menuItemsAdapter.getInitialState({
+export const initialMenuState: IMenuState = {
 	selectedMenuItem: menuSession.selectedMenuItem,
 	isPinned: menuSession.isPinned,
 	autoClose: true,
+	badges: new Map(),
 	menuCollapse: false,
-	isUserFirstEntrance: menuSession.isUserFirstEntrance,
-	doesUserHaveCredentials: menuSession.doesUserHaveCredentials
-});
+	selectedOutsideMenuItem: {
+		name: null,
+		elementRef: null,
+		toggleFromBottom: false
+	}
+};
 
 export const menuFeatureKey = 'menu';
 
 export const menuStateSelector: MemoizedSelector<any, IMenuState> = createFeatureSelector<IMenuState>(menuFeatureKey);
 
-export type MenuActions = AddMenuItemAction | SelectMenuItemAction | UnSelectMenuItemAction | SetBadgeAction;
+export type MenuActions = SelectMenuItemAction | UnSelectMenuItemAction | SetBadgeAction;
 
 export function MenuReducer(state: IMenuState = initialMenuState, action: MenuActions) {
 
 	switch (action.type) {
-		case MenuActionTypes.INITIALIZE_MENU_ITEMS: {
-			return menuItemsAdapter.addAll(action.payload, state);
-		}
-		case MenuActionTypes.ADD_MENU_ITEM:
-			return menuItemsAdapter.addOne(action.payload, state);
-
 		case MenuActionTypes.SELECT_MENU_ITEM:
 			const selectedMenuItem = action.payload.menuKey;
 			if (!action.payload.skipSession) {
 				setMenuSessionData({ selectedMenuItem });
 			}
 			return { ...state, selectedMenuItem };
+
+		case MenuActionTypes.SELECT_MENU_ITEM_FROM_OUTSIDE:
+			const selectedOutsideMenuItem = action.payload;
+			return { ...state, selectedOutsideMenuItem };
 
 		case MenuActionTypes.UNSELECT_MENU_ITEM: {
 			const selectedMenuItem = '';
@@ -62,7 +59,9 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 
 		case MenuActionTypes.SET_BADGE:
 			const { key, badge } = action.payload;
-			return menuItemsAdapter.updateOne({ id: key, changes: { ...state.entities[key], badge } }, state);
+			const badges = new Map(state.badges);
+			badges.set(key, badge);
+			return {...state, badges};
 
 		case MenuActionTypes.TOGGLE_IS_PINNED:
 			setMenuSessionData({ isPinned: action.payload });
@@ -74,27 +73,14 @@ export function MenuReducer(state: IMenuState = initialMenuState, action: MenuAc
 		case MenuActionTypes.MENU_COLLAPSE:
 			return { ...state, menuCollapse: action.payload };
 
-		case MenuActionTypes.SET_DOES_USER_HAVE_CREDENTIALS:
-			setMenuSessionData({ doesUserHaveCredentials: action.payload });
-			return { ...state, doesUserHaveCredentials: action.payload };
-
-		case MenuActionTypes.SET_USER_ENTER:
-			setMenuSessionData({ isUserFirstEntrance: false });
-			return { ...state, isUserFirstEntrance: false };
 		default:
 			return state;
 	}
 }
 
-/* @ngrx/entity */
-export const { selectAll, selectEntities }: EntitySelectors<IMenuItem, IMenuState> = menuItemsAdapter.getSelectors();
-export const selectAllMenuItems: MemoizedSelector<IMenuState, IMenuItem[]> = createSelector(menuStateSelector, selectAll);
-export const selectEntitiesMenuItems: MemoizedSelector<IMenuState, Dictionary<IMenuItem>> = createSelector(menuStateSelector, selectEntities);
-
-export const selectIsPinned = createSelector(menuStateSelector, (menu) => menu && menu.isPinned);
-export const selectAutoClose = createSelector(menuStateSelector, (menu) => menu.autoClose);
-export const selectSelectedMenuItem = createSelector(menuStateSelector, (menu) => menu.selectedMenuItem);
-export const selectMenuCollapse = createSelector(menuStateSelector, (menu) => menu.menuCollapse);
-export const selectUserFirstEnter = createSelector(menuStateSelector, (menu) => menu.isUserFirstEntrance);
-export const selectUserHaveCredentials = createSelector(menuStateSelector, (menu) => menu.doesUserHaveCredentials);
-
+export const selectIsPinned = createSelector(menuStateSelector, (menu) => menu?.isPinned);
+export const selectAutoClose = createSelector(menuStateSelector, (menu) => menu?.autoClose);
+export const selectSelectedMenuItem = createSelector(menuStateSelector, (menu) => menu?.selectedMenuItem);
+export const selectSelectedOutsideMenuItem = createSelector(menuStateSelector, (menu) => menu?.selectedOutsideMenuItem);
+export const selectMenuCollapse = createSelector(menuStateSelector, (menu) => menu?.menuCollapse);
+export const selectBadges = createSelector(menuStateSelector, (menu) => menu?.badges);

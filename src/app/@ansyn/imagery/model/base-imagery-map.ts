@@ -1,8 +1,11 @@
 import { EventEmitter, ViewContainerRef } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError, EMPTY } from 'rxjs';
 import { GeoJsonObject, Point } from 'geojson';
-import { ImageryMapExtent, ImageryMapPosition, IMousePointerMove } from './case-map-position.model';
+import { ImageryMapExtent, IImageryMapPosition, IMousePointerMove } from './case-map-position.model';
 import { IMapErrorMessage, IMapProgress } from './map-progress.model';
+import { IBaseImageryLayer } from './imagery-layer.model';
+import { EPSG_4326 } from '../utils/geo';
+import { IExportMapMetadata } from './export-map.model';
 
 export interface IImageryMapMetaData {
 	deps?: any[];
@@ -17,21 +20,21 @@ export interface ICanvasExportData {
 }
 
 export interface IBaseImageryMapConstructor {
-	groupLayers: Map<string, any>;
+	groupLayers: Map<string, IBaseImageryLayer>;
 
 	new(...args): BaseImageryMap;
 }
 
 // @dynamic
 export abstract class BaseImageryMap<T = any> {
-	static groupLayers = new Map<string, any>();
+	static groupLayers = new Map<string, IBaseImageryLayer>();
 	readonly deps?: any[];
 	readonly mapType?: string;
 	readonly defaultMapSource?: string;
 
-	public positionChanged: EventEmitter<ImageryMapPosition> = new EventEmitter<ImageryMapPosition>();
+	public positionChanged: EventEmitter<IImageryMapPosition> = new EventEmitter<IImageryMapPosition>();
 	public mousePointerMoved: EventEmitter<IMousePointerMove> = new EventEmitter<IMousePointerMove>();
-	public moveStart: EventEmitter<ImageryMapPosition> = new EventEmitter<ImageryMapPosition>();
+	public moveStart: EventEmitter<IImageryMapPosition> = new EventEmitter<IImageryMapPosition>();
 
 	public tilesLoadProgressEventEmitter: EventEmitter<IMapProgress> = new EventEmitter<IMapProgress>();
 	public tilesLoadErrorEventEmitter: EventEmitter<IMapErrorMessage> = new EventEmitter<IMapErrorMessage>();
@@ -43,7 +46,7 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract toggleGroup(groupName: string, newState: boolean);
 
-	abstract initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer?: any, position?: ImageryMapPosition, mapViewContainerRef?: ViewContainerRef): Observable<boolean>;
+	abstract initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, layer?: IBaseImageryLayer, position?: IImageryMapPosition, mapViewContainerRef?: ViewContainerRef): Observable<boolean>;
 
 	// This method is for the use of the @AutoSubscription decorator
 	initMapSubscriptions(): void {
@@ -54,23 +57,25 @@ export abstract class BaseImageryMap<T = any> {
 	 * @param layer The new layer to set the view with. this layer projection will be the views projection
 	 * @param extent The extent (bounding box points) of the map at ESPG:4326
 	 */
-	abstract resetView(layer: any, position: ImageryMapPosition, extent?: ImageryMapExtent, useDoubleBuffer?: boolean): Observable<boolean>;
+	abstract resetView(layer: IBaseImageryLayer, position: IImageryMapPosition, extent?: ImageryMapExtent, useDoubleBuffer?: boolean): Observable<boolean>;
 
-	abstract addLayer(layer: any): void;
+	abstract addLayer(layer: IBaseImageryLayer): void;
 
-	addMapLayer(layer: any): void {
+	addMapLayer(layer: IBaseImageryLayer): void {
 		throw new Error('Method not implemented.');
 	};
 
-	getMainLayer(): any {
+	getMainLayer(): IBaseImageryLayer {
 		throw new Error('Method not implemented.');
 	}
 
-	abstract getLayers(): any[];
+	abstract getLayers(): IBaseImageryLayer[];
 
-	abstract removeLayer(layer: any): void;
+	abstract getGroupLayers(): IBaseImageryLayer;
 
-	abstract setPosition(position: ImageryMapPosition): Observable<boolean>;
+	abstract removeLayer(layer: IBaseImageryLayer): void;
+
+	abstract setPosition(position: IImageryMapPosition): Observable<boolean>;
 
 	abstract setRotation(rotation: number): void;
 
@@ -82,7 +87,7 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract one2one(): void;
 
-	abstract getPosition(): Observable<ImageryMapPosition>;
+	abstract getPosition(): Observable<IImageryMapPosition>;
 
 	abstract updateSize(): void;
 
@@ -90,17 +95,25 @@ export abstract class BaseImageryMap<T = any> {
 
 	abstract dispose(): void;
 
-	abstract addLayerIfNotExist(layer: any);
+	abstract addLayerIfNotExist(layer: IBaseImageryLayer);
 
 	abstract getCoordinateFromScreenPixel(screenPixel: { x, y }): [number, number, number];
 
 	abstract getHtmlContainer(): HTMLElement;
 
+	getProjectionCode(): string {
+		return EPSG_4326;
+	}
+
 	fitToExtent(extent: any): Observable<any> {
-		throw new Error('Method not implemented.');
+		return EMPTY;
 	};
 
 	getExtraData(): { [key: string]: any } {
 		return {}
+	}
+
+	exportMap(exportMetadata: IExportMapMetadata): Observable<HTMLCanvasElement> {
+		return throwError(`Method not implement on ${this.mapType}`);
 	}
 }

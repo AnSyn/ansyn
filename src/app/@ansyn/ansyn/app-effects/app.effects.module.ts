@@ -14,11 +14,12 @@ import { ToolsAppEffects } from './effects/tools.app.effects';
 import { UpdateCaseAppEffects } from './effects/cases/update-case.app.effects';
 import { SelectCaseAppEffects } from './effects/cases/select-case.app.effects';
 import { ICasesState } from '../modules/menu-items/cases/reducers/cases.reducer';
-import { IFiltersState } from '../modules/menu-items/filters/reducer/filters.reducer';
+import { IFiltersState } from '../modules/filters/reducer/filters.reducer';
 import { ILayerState } from '../modules/menu-items/layers-manager/reducers/layers.reducer';
-import { IToolsState } from '../modules/menu-items/tools/reducers/tools.reducer';
+import { IToolsState } from '../modules/status-bar/components/tools/reducers/tools.reducer';
 import { IOverlaysState } from '../modules/overlays/reducers/overlays.reducer';
 import { TranslateModule } from '@ngx-translate/core';
+import { LoggerAppEffects } from './effects/logger.app.effects';
 
 export interface IAppState {
 	overlays: IOverlaysState;
@@ -45,7 +46,8 @@ export interface IAppState {
 			FiltersAppEffects,
 			ToolsAppEffects,
 			UpdateCaseAppEffects,
-			SelectCaseAppEffects
+			SelectCaseAppEffects,
+			LoggerAppEffects
 		])
 	]
 })

@@ -11,7 +11,9 @@ describe('ImportLayerComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ImportLayerComponent],
-			providers: [{ provide: DataLayersService, useValue: {} }],
+			providers: [
+				{ provide: DataLayersService, useValue: {} }
+			],
 			imports: [StoreModule.forRoot({})]
 		})
 			.compileComponents();

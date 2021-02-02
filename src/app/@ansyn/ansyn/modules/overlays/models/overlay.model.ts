@@ -1,12 +1,18 @@
-import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
+import { CaseGeoFilter, CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
 import { LineString, MultiPolygon, Point } from 'geojson';
 import { EPSG_3857 } from '@ansyn/imagery';
+import { IAdvancedSearchParameter, IProviderData } from '../../status-bar/models/statusBar-config.model';
+
+export interface IOverlayError {
+	message: string,
+	sourceType?: string
+}
 
 export interface IOverlaysFetchData {
 	data: IOverlay[],
 	// number of overlays removed from total overlays (according to config)
 	limited: number,
-	errors?: Error[]
+	errors?: IOverlayError[]
 }
 
 export interface IDilutedOverlay {
@@ -25,11 +31,17 @@ export interface IDilutedOverlaysHash {
 export enum GeoRegisteration {
 	geoRegistered = 'geoRegistered',
 	notGeoRegistered = 'notGeoRegistered',
+	originRegistration = 'originRegistration'
+}
+
+export enum GeoRegisterationOptions {
+	GeoRegistered = 'Geo Registered',
+	NotGeoRegistered = 'Not Geo Registered',
 }
 
 export enum PhotoAngle {
 	diagonal = 'diagonal',
-	vertical = 'verticle'
+	vertical = 'vertical'
 }
 
 export enum RegionContainment {
@@ -64,7 +76,9 @@ export interface IOverlay extends IDilutedOverlay {
 	catalogID?: string;
 	photoAngle?: PhotoAngle;
 	sensorLocation?: Point;
+	icon?: string;
 	containedInSearchPolygon?: RegionContainment;
+	resolution?: number;
 }
 
 export class Overlay implements IOverlay {
@@ -110,8 +124,14 @@ export interface IOverlaysCriteria {
 	time?: ICaseTimeState;
 	region?: CaseRegionState;
 	dataInputFilters?: ICaseDataInputFiltersState;
+	advancedSearchParameters?: IAdvancedSearchParameter;
+	runSecondSearch?: boolean;
 }
 
+export interface IResolutionRange {
+	lowValue: number;
+	highValue: number;
+}
 export interface IOverlaysCriteriaOptions {
 	noInitialSearch?: boolean;
 }
@@ -121,6 +141,10 @@ export interface IOverlayDrop {
 	id: string;
 	date: Date;
 	shape?: string;
+	sensorName?: string;
+	icon?: any;
+	favorite?: boolean;
+	resolution?: number;
 }
 
 export interface IOverlaySpecialObject extends IOverlayDrop {

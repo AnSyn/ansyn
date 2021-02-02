@@ -1,19 +1,21 @@
+export { IEditAnnotationMode, ILabelTranslateMode } from './plugins/annotations/annotations.visualizer';
+
+export { annotationsClassNameForExport } from './plugins/annotations/annotations.visualizer';
+
+export { IMAGE_PROCESS_ATTRIBUTE } from './mapSourceProviders/open-layers.map-source-provider';
+
 export { MeasureRulerVisualizer, ILabelHandler } from './plugins/measure-ruler/measure-ruler.visualizer';
 
 export { OpenLayerESRI_4326SourceProviderSourceType } from './mapSourceProviders/open-layers-ESRI-4326-source-provider';
-
 export { OpenLayerPic4CartoSourceProvider } from './mapSourceProviders/open-layers-Pic4Carto-source-provider';
 export { IStyleWeight } from './plugins/annotations/annotations-context-menu/components/annotations-weight/annotations-weight.component';
 export { OpenLayersAirbusSourceProvider } from './mapSourceProviders/open-layers-Airbus-source-provider';
-
-export { removeWorkers } from './maps/open-layers-map/shared/openlayers-shared';
 
 export { ANNOTATION_MODE_LIST } from './plugins/annotations/annotations.model';
 export { OL_PLUGINS_CONFIG, IOLPluginsConfig } from './plugins/plugins.config';
 export { OL_CONFIG } from './config/ol-config';
 export { OpenLayerBingSourceProviderSourceType } from './mapSourceProviders/open-layers-BING-source-provider';
 export { EntitiesVisualizer } from './plugins/entities-visualizer';
-export { ProjectableRaster } from './maps/open-layers-map/models/projectable-raster';
 export { OpenLayersProjectionService } from './projection/open-layers-projection.service';
 export { DisabledOpenLayersMapName } from './maps/openlayers-disabled-map/openlayers-disabled-map';
 export { OpenlayersMapName } from './maps/open-layers-map/openlayers-map/openlayers-map';

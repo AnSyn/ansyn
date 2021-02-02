@@ -3,6 +3,7 @@ import { UnsupportedDevicesComponent } from '../@ansyn/ansyn/components/unsuppor
 import { AppAnsynComponent } from './app.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DeviceDetectorModule } from 'ngx-device-detector';
+import { LoggerService } from '@ansyn/ansyn';
 
 describe('AppAnsynComponent', () => {
 	let fixture: ComponentFixture<AppAnsynComponent>;
@@ -13,7 +14,15 @@ describe('AppAnsynComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [RouterTestingModule,
 				DeviceDetectorModule.forRoot()],
-			declarations: [AppAnsynComponent, UnsupportedDevicesComponent]
+			declarations: [AppAnsynComponent, UnsupportedDevicesComponent],
+			providers: [
+				{
+					provide: LoggerService, useValue: {
+						info: () => {
+						}
+					}
+				}
+			]
 		}).compileComponents();
 	}));
 

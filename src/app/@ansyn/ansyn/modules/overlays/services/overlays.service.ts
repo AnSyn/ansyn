@@ -1,9 +1,8 @@
-import { IStartAndEndDate } from '../models/base-overlay-source-provider.model';
 import { Inject, Injectable } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
 import { IOverlayDropSources, ITimelineRange, selectOverlaysMap } from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
-import { unionBy } from 'lodash';
+import { findKey, flattenDeep } from 'lodash';
 import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs/operators';
@@ -11,6 +10,12 @@ import { selectFavoriteOverlays } from '../overlay-status/reducers/overlay-statu
 import { sortByDateDesc } from '../../core/utils/sorting';
 import { mapValuesToArray } from '../../core/utils/misc';
 import { IOverlay, IOverlayDrop, IOverlaysCriteria, IOverlaysFetchData } from '../models/overlay.model';
+import {
+	IMultipleOverlaysSourceConfig,
+	IOverlaysSourceProvider,
+	MultipleOverlaysSourceConfig
+} from '../../core/models/multiple-overlays-source-config';
+import { IDataInputFilterValue } from '../../menu-items/cases/models/case.model';
 
 export const OverlaysConfig = 'overlaysConfig';
 
@@ -25,10 +30,14 @@ export interface IOverlayByIdMetaData {
 })
 export class OverlaysService {
 
+	get fetchLimit() {
+		return (this.config) ? this.config.limit : null;
+	}
+
 	/**
 	 * @description Observable: get a map with both query overlays and favorite overlays
 	 */
-	getAllOverlays$: Observable<Map<string, IOverlay>> = combineLatest(this.store$.select(selectOverlaysMap), this.store$.select(selectFavoriteOverlays)).pipe(
+	getAllOverlays$: Observable<Map<string, IOverlay>> = combineLatest([this.store$.select(selectOverlaysMap), this.store$.select(selectFavoriteOverlays)]).pipe(
 		map(([queryOverlays, favoriteOverlays]: [Map<string, IOverlay>, IOverlay[]]) => {
 			const result = new Map(queryOverlays);
 			favoriteOverlays.forEach(overlay => {
@@ -37,6 +46,12 @@ export class OverlaysService {
 			return result;
 		})
 	);
+
+	constructor(@Inject(OverlaysConfig) public config: IOverlaysConfig,
+				@Inject(MultipleOverlaysSourceConfig) protected multipleOverlays: IMultipleOverlaysSourceConfig,
+				protected _overlaySourceProvider: MultipleOverlaysSourceProvider,
+				protected store$: Store<any>) {
+	}
 
 	/**
 	 * function to return specific fields from overlay given ids object if properties is empty it returns all of the object;
@@ -60,25 +75,22 @@ export class OverlaysService {
 	}
 
 	static parseOverlayDataForDisplay({ overlaysArray, filteredOverlays, specialObjects, favoriteOverlays, showOnlyFavorites }: IOverlayDropSources): IOverlayDrop[] {
-		const criterialOverlays: IOverlay[] = showOnlyFavorites ? [] :
-			overlaysArray.filter(({ id }) => filteredOverlays.includes(id));
-		const allOverlays: IOverlay[] = unionBy(criterialOverlays, favoriteOverlays, ({ id }) => id);
-		const dropsFromOverlays: IOverlayDrop[] = allOverlays.map(({ id, date }) => ({ id, date }));
-		const allDrops = [...dropsFromOverlays, ...mapValuesToArray(specialObjects)].sort(sortByDateDesc);
+		const criteriaOverlays: IOverlay[] = showOnlyFavorites ? favoriteOverlays : overlaysArray.filter(({ id }) => filteredOverlays.includes(id));
+		const favoriteOverlayIds: string[] = favoriteOverlays.map(({ id }) => id);
+		const drops: IOverlayDrop[] = criteriaOverlays.map(({ id, date, sensorName, icon, resolution }) => ({
+			id,
+			date,
+			sensorName,
+			icon,
+			favorite: favoriteOverlayIds.includes(id),
+			resolution: resolution || 0
+		}));
+		const allDrops = [...drops, ...mapValuesToArray(specialObjects)].sort(sortByDateDesc);
 		return allDrops;
 	}
 
-	get fetchLimit() {
-		return (this.config) ? this.config.limit : null;
-	}
-
-	constructor(@Inject(OverlaysConfig) public config: IOverlaysConfig,
-				protected _overlaySourceProvider: MultipleOverlaysSourceProvider,
-				protected store$: Store<any>) {
-	}
-
 	search(params: IOverlaysCriteria): Observable<IOverlaysFetchData> {
-		let feature = params.region;
+		let feature = params.region.geometry;
 		return this._overlaySourceProvider.fetch({
 			dataInputFilters: Boolean(params.dataInputFilters) ? params.dataInputFilters.filters : null,
 			limit: this.config.limit,
@@ -86,7 +98,13 @@ export class OverlaysService {
 			timeRange: <any>{
 				start: params.time.from,
 				end: params.time.to
-			}
+			},
+			sensors: params.advancedSearchParameters.sensors || null,
+			registeration: params.advancedSearchParameters.registeration || null,
+			resolution: params.advancedSearchParameters.resolution || null,
+			types: params.advancedSearchParameters.types || null,
+			runSecondSearch: params.runSecondSearch || null,
+			sensorsForSecondSearch: params.advancedSearchParameters.sensorsForSecondSearch || []
 		});
 	}
 
@@ -98,14 +116,25 @@ export class OverlaysService {
 		return this._overlaySourceProvider.getByIds(ids);
 	}
 
-	getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<IStartAndEndDate> {
-		return this._overlaySourceProvider.getStartDateViaLimitFacets(params);
+	getAllSensorsNames(): any[] {
+		let sensors: any[] = [];
+		this.getActiveProviders()
+		.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
+			if (sensorNamesByGroup) {
+				const typesNames = Object.keys(sensorNamesByGroup);
+				typesNames.forEach(type => {
+					sensors = sensors.concat(sensorNamesByGroup[type]);
+				});
+			}
+		});
+		return flattenDeep(sensors);
 	}
 
-	getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
-		return this._overlaySourceProvider.getStartAndEndDateViaRangeFacets(params);
+	getActiveProviders(): any[] {
+		return Object.entries(this.multipleOverlays.indexProviders)
+		.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive);
 	}
-
+	
 	getTimeStateByOverlay(displayedOverlay: IOverlayDrop, timeLineRange: ITimelineRange): ITimelineRange {
 		let { start, end } = timeLineRange;
 		const startTime = start.getTime();
@@ -155,5 +184,23 @@ export class OverlaysService {
 
 	getThumbnailName(overlay): string {
 		return this._overlaySourceProvider.getThumbnailName(overlay)
+	}
+
+	getSensorTypeAndProviderFromSensorName(sensorName: string): IDataInputFilterValue {
+		if (!(this.multipleOverlays && this.multipleOverlays.indexProviders instanceof Object)) {
+			return;
+		}
+		let sensorType: string;
+		const providerName = findKey(this.multipleOverlays.indexProviders, (provider) => {
+			sensorType = findKey(provider.sensorNamesByGroup, (group) => group.includes(sensorName));
+			return Boolean(sensorType);
+		});
+		if (providerName) {
+			const result: IDataInputFilterValue = {
+				providerName,
+				sensorType
+			};
+			return result;
+		}
 	}
 }

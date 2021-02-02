@@ -1,4 +1,11 @@
+export { copyFromContent } from './utils/clipboard';
+
+export { imageryStatusClassNameForExport } from './components/imagery-status/imagery-status.component';
+
+export { floationMenuClassNameForExport } from './components/floating-menu/floating-menu.component';
+
 export { GeocoderService } from './services/geocoder.service';
+export { IMapSearchResult } from './models/map-search.model';
 
 export { ImageryZoomerService } from './services/imagery-zoomer.service';
 export { IEd50Notification } from './models/map-config.model';
@@ -26,11 +33,13 @@ export {
 	selectOverlaysWithMapIds,
 	selectMapPositionByMapId,
 	selectMapsStateByIds,
-	selectOverlayDisplayModeByMapId,
+	selectOverlaysFootprintActiveByMapId,
+	selectManualProcessArgsByMapId,
 	selectOverlayOfActiveMap,
 	selectIsMinimalistViewMode,
 	selectMapTypeById,
-	selectSourceTypeById
+	selectSourceTypeById,
+	selectMapOrientation
 } from './reducers/map.reducer';
 
 export {
@@ -71,7 +80,11 @@ export {
 	ReplaceMainLayer,
 	ReplaceMainLayerSuccess,
 	ReplaceMainLayerFailed,
-	SynchronizeMapsAction
+	SynchronizeMapsAction,
+	SetActiveCenterTriggerAction,
+	SetMapSearchBoxTriggerAction,
+	SetOverlaysFootprintActive,
+	ForceRenderMaps
 } from './actions/map.actions';
 
 export {
@@ -86,17 +99,26 @@ export {
 	imageryStatusInitialState
 } from './reducers/imagery-status.reducer'
 
-export { copyFromContent } from './utils/clipboard';
 export { getTimeFormat, getTimeDiff, getTimeDiffFormat } from './utils/time';
+export { AnsynDatePipe } from './pipes/ansyn-date.pipe';
 
 export { ProjectionConverterService, ICoordinatesSystem, IUtmZone } from './services/projection-converter.service';
 export { MapFacadeService } from './services/map-facade.service';
-export { IMapFacadeConfig } from './models/map-config.model';
+export { IMapFacadeConfig, IMapSearchConfig } from './models/map-config.model';
 export { mapFacadeConfig } from './models/map-facade.config';
 export { EntryComponentDirective } from './directives/entry-component.directive';
 export { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
 export { AnimatedEllipsisComponent } from './components/animated-ellipsis/animated-ellipsis.component';
 export { MapFacadeModule } from './map-facade.module';
 
-
 export { LayoutKey, layoutOptions, IMapsLayout } from './models/maps-layout';
+export { UtmHolderComponent } from './components/imagery-mouse-coordinates/holders/utm-holder/utm-holder.component';
+export { GeoHolderComponent } from './components/imagery-mouse-coordinates/holders/geo-holder/geo-holder.component';
+export { ImageriesManagerComponent } from './components/imageries-manager/imageries-manager.component';
+export { ImageryStatusComponent } from './components/imagery-status/imagery-status.component';
+export { WelcomeNotificationComponent } from './components/welcome-notification/welcome-notification.component';
+export { ToastComponent } from './components/toast/toast.component';
+export { AnsynLoaderComponent } from './components/ansyn-loader/ansyn-loader.component';
+export { AnsynPopoverComponent } from './components/ansyn-popover/ansyn-popover.component';
+
+export { ILogMessage } from './models/logger.model'

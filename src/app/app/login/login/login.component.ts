@@ -1,8 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { Observable, throwError } from 'rxjs';
-import { fromPromise } from 'rxjs/internal-compatibility';
+import { Observable, throwError, from } from 'rxjs';
 import { catchError, filter, map, mergeMap } from 'rxjs/operators';
 import { LoginConfig } from '../services/login-config.service';
 import { ILoginConfig } from '../models/login.config';
@@ -42,7 +41,7 @@ export class LoginComponent implements OnInit {
 
 	loginRequest(): Observable<any> {
 		return this.authService.login(this.username, this.password, this.rememberMe).pipe(
-			mergeMap(() => fromPromise(this.router.navigateByUrl(this.returnUrl))),
+			mergeMap(() => from(this.router.navigateByUrl(this.returnUrl))),
 			catchError(() => {
 				this.showTryAgainMsg();
 				return throwError('Unauthorized');

@@ -18,7 +18,7 @@ import * as extentFromGeojson from '@ansyn/imagery';
 import {
 	BaseMapSourceProvider,
 	CacheService,
-	CommunicatorEntity,
+	CommunicatorEntity, GetProvidersMapsService,
 	IBaseImageryMapConstructor,
 	IMAGERY_CONFIG,
 	IMAGERY_MAPS,
@@ -47,7 +47,7 @@ import {
 	IToolsState,
 	toolsInitialState,
 	toolsStateSelector
-} from '../../modules/menu-items/tools/reducers/tools.reducer';
+} from '../../modules/status-bar/components/tools/reducers/tools.reducer';
 import {
 	IStatusBarState,
 	statusBarFeatureKey,
@@ -55,7 +55,6 @@ import {
 	StatusBarReducer,
 	statusBarStateSelector
 } from '../../modules/status-bar/reducers/status-bar.reducer';
-import { LoggerService } from '../../modules/core/services/logger.service';
 import {
 	IOverlaysState,
 	OverlayReducer,
@@ -80,6 +79,8 @@ import {
 	RegionContainment
 } from '../../modules/overlays/models/overlay.model';
 import { ICase } from '../../modules/menu-items/cases/models/case.model';
+import { overlayStatusConfig } from "../../modules/overlays/overlay-status/config/overlay-status-config";
+import { ScreenViewConfig } from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
 
 @ImageryMapSource({
 	sourceType: 'sourceType1',
@@ -112,14 +113,6 @@ class OverlaySourceProviderMock extends BaseOverlaySourceProvider {
 		return EMPTY;
 	}
 
-	public getStartDateViaLimitFacets(params: { facets, limit, region }): Observable<any> {
-		return EMPTY;
-	};
-
-	public getStartAndEndDateViaRangeFacets(params: { facets, limitBefore, limitAfter, date, region }): Observable<any> {
-		return EMPTY;
-	};
-
 	public getById(id: string, sourceType: string = null): Observable<IOverlay> {
 		return EMPTY;
 	};
@@ -151,9 +144,7 @@ describe('MapAppEffects', () => {
 	const cases: ICase[] = [{
 		id: '1',
 		name: 'name',
-		owner: 'owner',
 		creationTime: new Date(),
-		lastModified: new Date(),
 		autoSave: false,
 		state: {
 			time: { type: '', from: new Date(), to: new Date() },
@@ -196,12 +187,6 @@ describe('MapAppEffects', () => {
 			],
 			providers: [
 				{
-					provide: LoggerService, useValue: {
-						error: (some) => null, info: () => {
-						}
-					}
-				},
-				{
 					provide: CacheService,
 					useClass: CacheService,
 					deps: [VisualizersConfig, ImageryCommunicatorService]
@@ -212,7 +197,13 @@ describe('MapAppEffects', () => {
 				OverlaysService,
 				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
 				{
+					provide: overlayStatusConfig,
+					useValue: {}
+				},	{
 					provide: mapFacadeConfig,
+					useValue: {}
+				},  {
+					provide: ScreenViewConfig,
 					useValue: {}
 				},
 				{ provide: IMAGERY_MAPS, useValue: {} },
@@ -249,6 +240,10 @@ describe('MapAppEffects', () => {
 				},
 				{
 					provide: MAP_SOURCE_PROVIDERS_CONFIG,
+					useValue: {}
+				},
+				{
+					provide: GetProvidersMapsService,
 					useValue: {}
 				}
 			]
@@ -326,9 +321,10 @@ describe('MapAppEffects', () => {
 				}
 			});
 
-			spyOn(extentFromGeojson, 'bboxFromGeoJson').and.returnValue(fakeExtent);
+			spyOnProperty(extentFromGeojson, 'bboxFromGeoJson', 'get').and.returnValue(<any>fakeExtent);
+
 			spyOn(imageryCommunicatorService, 'provide').and.returnValue(fakeCommunicator);
-			spyOn(baseSourceProviders, 'find').and.returnValue(fakeSourceLoader);
+			spyOn(baseSourceProviders, 'find').and.returnValue(<any>fakeSourceLoader);
 			spyOn(fakeCommunicator, 'resetView');
 		});
 

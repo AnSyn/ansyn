@@ -1,18 +1,24 @@
 import { Inject, Injectable } from '@angular/core';
-import { Observable, of, pipe } from 'rxjs';
+import { Observable, of, from } from 'rxjs';
 import { GeoRegisteration, IOverlay } from '../../../../../overlays/models/overlay.model';
 import {
-	BaseMapSourceProvider, CommunicatorEntity, ImageryCommunicatorService, IMapSettings
+	IBaseImageryLayer,
+	BaseMapSourceProvider, CommunicatorEntity, ImageryCommunicatorService, IMapSettings, GetProvidersMapsService
 } from '@ansyn/imagery';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { DisabledOpenLayersMapName, OpenlayersMapName, OpenLayersStaticImageSourceProviderSourceType } from '@ansyn/ol';
 import { cloneDeep } from 'lodash';
-import { fromPromise } from 'rxjs/internal-compatibility';
 import { CesiumMapName } from '@ansyn/imagery-cesium';
 import { AnaglyphConfig, IAnaglyphConfig } from '../models/anaglyph.model';
 
 @Injectable()
 export class AnaglyphSensorService {
+
+	constructor(protected communicatorService: ImageryCommunicatorService,
+				protected getProvidersMapsService: GetProvidersMapsService,
+				@Inject(AnaglyphConfig) public config: IAnaglyphConfig) {
+
+	}
 
 	isSupprotedOverlay(overlay: IOverlay): Observable<boolean> {
 		const result = Array.isArray(this.config.sensorNames) && this.config.sensorNames.includes(overlay.sensorName);
@@ -21,10 +27,7 @@ export class AnaglyphSensorService {
 
 	displayAnaglyph(mapSettings: IMapSettings): Observable<{} | boolean> {
 		const communicator = this.communicatorService.provide(mapSettings.id);
-		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({
-			sourceType: OpenLayersStaticImageSourceProviderSourceType,
-			mapType: communicator.ActiveMap.mapType
-		});
+		const sourceLoader: BaseMapSourceProvider = this.getProvidersMapsService.getMapSourceProvider(communicator.ActiveMap.mapType, OpenLayersStaticImageSourceProviderSourceType);
 
 		const clonedMapSettings = cloneDeep(mapSettings);
 		clonedMapSettings.data.overlay.id = `anaglyph_${ mapSettings.data.overlay.id }`;
@@ -37,30 +40,27 @@ export class AnaglyphSensorService {
 
 	displayOriginalOverlay(mapSettings: IMapSettings): Observable<{} | boolean> {
 		const communicator = this.communicatorService.provide(mapSettings.id);
-		const sourceLoader: BaseMapSourceProvider = communicator.getMapSourceProvider({
-			sourceType: OpenLayersStaticImageSourceProviderSourceType,
-			mapType: communicator.ActiveMap.mapType
-		});
+		const sourceLoader: BaseMapSourceProvider = this.getProvidersMapsService.getMapSourceProvider(communicator.ActiveMap.mapType, OpenLayersStaticImageSourceProviderSourceType);
 
 		return this.innerChangeImage(sourceLoader, mapSettings.data.overlay, communicator, mapSettings);
 	}
 
-	innerChangeImage(sourceLoader, overlay: IOverlay, communicator: CommunicatorEntity, mapSettings: IMapSettings): Observable<{} | boolean> {
-		const getLayerObservable = fromPromise(sourceLoader.createAsync(mapSettings));
+	innerChangeImage(sourceLoader: BaseMapSourceProvider, overlay: IOverlay, communicator: CommunicatorEntity, mapSettings: IMapSettings): Observable<{} | boolean> {
+		const getLayerObservable = from(sourceLoader.createAsync(mapSettings));
 
-		const changeActiveMap = mergeMap((layer) => {
-			let observable = of(true);
+		const changeActiveMap = mergeMap((layer: IBaseImageryLayer) => {
+			let observable: Observable<any> = of(true);
 			const moveToGeoRegisteredMap = overlay.isGeoRegistered !== GeoRegisteration.notGeoRegistered && communicator.activeMapName === DisabledOpenLayersMapName;
 			const moveToNotGeoRegisteredMap = overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered && (communicator.activeMapName === OpenlayersMapName || communicator.activeMapName === CesiumMapName);
 			const newActiveMapName = moveToGeoRegisteredMap ? OpenlayersMapName : moveToNotGeoRegisteredMap ? DisabledOpenLayersMapName : '';
 
 			if (newActiveMapName) {
-				observable = fromPromise(communicator.setActiveMap(newActiveMapName, mapSettings.data.position, undefined, layer));
+				observable = from(communicator.setActiveMap(newActiveMapName, mapSettings.data.position, undefined, layer));
 			}
 			return observable.pipe(map(() => layer));
 		});
 
-		const resetView = mergeMap((layer) => {
+		const resetView = mergeMap((layer: IBaseImageryLayer) => {
 			if (Boolean(layer)) {
 				return communicator.resetView(layer, mapSettings.data.position, null, true);
 			}
@@ -73,10 +73,5 @@ export class AnaglyphSensorService {
 			catchError((error) => {
 				return of(false);
 			}));
-	}
-
-	constructor(protected communicatorService: ImageryCommunicatorService,
-				@Inject(AnaglyphConfig) public config: IAnaglyphConfig) {
-
 	}
 }

@@ -14,7 +14,7 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 	protected subscriptions: Subscription[] = [];
 
 	// todo: return auto-subscription when the bug is fixed
-	osmLayersChanges$: Observable<any[]> = combineLatest(this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds))
+	osmLayersChanges$: Observable<any[]> = combineLatest([this.store$.select(selectLayers), this.store$.select(selectSelectedLayersIds)])
 		.pipe(
 			tap(([result, selectedLayerId]: [ILayer[], string[]]) => {
 				result.filter(this.checkLayer)
@@ -27,6 +27,10 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 					});
 			})
 		);
+
+	protected constructor(protected store$: Store<any>) {
+		super();
+	}
 
 	// todo: return auto-subscription when the bug is fixed
 	toggleGroup$ = () => this.store$.select(selectHideLayersOnMap(this.mapId)).pipe(
@@ -49,10 +53,6 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 		super.onDispose();
 	}
 
-	protected constructor(protected store$: Store<any>) {
-		super();
-	}
-
 	abstract checkLayer(layer: ILayer);
 
 	abstract createLayer(layer: ILayer): Observable<TileLayer>;
@@ -62,26 +62,23 @@ export abstract class OpenlayersBaseLayersPlugins extends BaseImageryPlugin {
 		if (!this.layerExists(layer)) {
 			this.createLayer(layer).subscribe((tileLayer) => {
 				if (!this.layerExists(layer)) {
-					const group = OpenLayersMap.groupLayers.get(OpenLayersMap.groupsKeys.layers);
-					group.getLayers().push(tileLayer);
+					this.iMap.getGroupLayers().getLayers().push(tileLayer);
 				}
 			});
 		}
 	}
 
 	layerExists(layer: ILayer): boolean {
-		const group = OpenLayersMap.groupLayers.get(OpenLayersMap.groupsKeys.layers);
-		const layersArray = group.getLayers().getArray();
+		const layersArray = this.iMap.getGroupLayers().getLayers().getArray();
 		const exists = layersArray.some((shownLayer) => shownLayer.get('id') === layer.id);
 		return Boolean(exists);
 	}
 
 	removeGroupLayer(id: string): void {
-		const group = OpenLayersMap.groupLayers.get(OpenLayersMap.groupsKeys.layers);
-		const layersArray: any[] = group.getLayers().getArray();
+		const layersArray: any[] = this.iMap.getGroupLayers().getLayers().getArray();
 		let removeIdx = layersArray.indexOf(layersArray.find(l => l.get('id') === id));
 		if (removeIdx >= 0) {
-			group.getLayers().removeAt(removeIdx);
+			this.iMap.getGroupLayers().getLayers().removeAt(removeIdx);
 		}
 	}
 

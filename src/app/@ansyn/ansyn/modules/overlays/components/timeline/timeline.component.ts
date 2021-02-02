@@ -30,16 +30,17 @@ import {
 	OverlaysActionTypes,
 	RedrawTimelineAction,
 	SetMarkUp, SetOverlaysStatusMessageAction,
-	SetTimelineStateAction, UpdateOverlaysCountAction
+	SetTimelineStateAction
 } from '../../actions/overlays.actions';
 import { schemeCategory10 } from 'd3-scale-chromatic';
-import { distinctUntilChanged, map, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, tap, withLatestFrom } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import { ExtendMap } from '../../reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../overlay-overview/overlay-overview.component.const';
 import { DOCUMENT } from '@angular/common';
 import { IOverlayDrop } from '../../models/overlay.model';
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService } from '@ngx-translate/core';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 
 export const BASE_DROP_COLOR = '#8cceff';
 selection.prototype.moveToFront = function () {
@@ -61,9 +62,10 @@ export interface IEventDropsEvent {
 	encapsulation: ViewEncapsulation.None
 })
 
+@AutoSubscriptions()
 export class TimelineComponent implements OnInit, OnDestroy {
 
-	@ViewChild('context') context: ElementRef;
+	@ViewChild('context', { static: true }) context: ElementRef;
 
 	configuration = {
 		range: {
@@ -95,8 +97,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		drop: {
 			onMouseOver: this.onMouseOver.bind(this),
 			onMouseOut: this.onMouseOut.bind(this),
-			onClick: this.clickEvent(),
-			onDblClick: () => event.stopPropagation(),
+			onClick: this.onClick.bind(this),
 			dropId: d => 'dropId-' + d.id,
 			color: BASE_DROP_COLOR,
 			date: d => new Date(d.date),
@@ -120,6 +121,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 	private element: any;
 	private oldActiveId: string;
 
+	@AutoSubscription
 	redraw$: Observable<any> = this.actions$
 		.pipe(
 			ofType<RedrawTimelineAction>(OverlaysActionTypes.REDRAW_TIMELINE),
@@ -127,6 +129,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 			tap(([action, drops]) => this.initEventDropsSequence(drops))
 		);
 
+	@AutoSubscription
 	timeLineRange$: Observable<ITimelineRange> = this.store$
 		.pipe(
 			select(selectTimelineRange),
@@ -134,6 +137,8 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		);
 
 	private markup: ExtendMap<MarkUpClass, IMarkUpData>;
+
+	@AutoSubscription
 	dropsMarkUp$: Observable<[ExtendMap<MarkUpClass, IMarkUpData>, any]> = this.store$
 		.pipe(
 			select(selectDropMarkup),
@@ -146,6 +151,8 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		);
 
 	dropsIdMap: Map<string, IOverlayDrop> = new Map();
+
+	@AutoSubscription
 	dropsChange$: Observable<IOverlayDrop[]> = this.store$
 		.pipe(
 			select(selectDrops),
@@ -159,8 +166,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 			})
 		);
 
-	private subscribers: Subscription[];
-
+	@AutoSubscription
 	onResize$: Observable<any> = fromEvent(window, 'resize')
 		.pipe(
 			withLatestFrom(this.store$.select(selectDrops)),
@@ -175,7 +181,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 				protected translator: TranslateService) {
 	}
 
-	addRStyle() {
+	addRStyle(): void {
 		const circlesR: HTMLStyleElement = this.document.createElement('style');
 		circlesR.innerText = ` circle.displayed, circle.active { r: 8; } `;
 		this.elementRef.nativeElement.appendChild(circlesR);
@@ -183,96 +189,63 @@ export class TimelineComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.addRStyle();
-		this.subscribers = [this.dropsChange$.subscribe(),
-			this.dropsMarkUp$.subscribe(),
-			this.timeLineRange$.subscribe(),
-			this.redraw$.subscribe(),
-			this.onResize$.subscribe()
-		];
 	}
 
 	ngOnDestroy() {
-		this.subscribers.forEach(subscriber => subscriber.unsubscribe());
 	}
 
-	onMouseOver({ id }: IEventDropsEvent) {
+	onMouseOver({ id }: IEventDropsEvent): void {
 		this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [id] } }));
 	}
 
-	onMouseOut({ id }: IEventDropsEvent) {
+	onMouseOut({ id }: IEventDropsEvent): void {
 		if (!d3.event.toElement || (d3.event.toElement && d3.event.toElement.id !== overlayOverviewComponentConstants.TRANSPARENT_DIV_ID)) {
 			this.store$.dispatch(new SetMarkUp({ classToSet: MarkUpClass.hover, dataToSet: { overlaysIds: [] } }));
 		}
 	}
 
-	clickEvent() {
-		let down, wait;
-		return (data: IEventDropsEvent) => {
-			if (!down) {
-				down = true;
-				wait = setTimeout((() => {
-					wait = null;
-					this.onClick();
-					down = false;
-				}), 300);
-			} else {
-				this.onDblClick(data);
-				if (wait) {
-					window.clearTimeout(wait);
-					wait = null;
-					down = false;
-				}
-				return;
-			}
-		};
-	}
-
-	onDblClick({ id }) {
+	onClick({ id }: IEventDropsEvent): void {
 		this.store$.dispatch(new DisplayOverlayFromStoreAction({ id }));
 	}
 
-	onClick() {
-	}
-
-	isNoOverlaysLeft() {
+	isNoOverlaysLeft(): boolean {
 		const datesArray = this.chart.filteredData()[0].fullData;
-		const currentMinimumDate = this.chart.scale().domain()[0];
-		const currentMaximumDate = this.chart.scale().domain()[1];
-		const minimumDate = datesArray[0].date;
-		const maximumDate = datesArray[datesArray.length - 1].date;
+		const [currentMinimumDate, currentMaximumDate] = this.getCurrentTimeLineRange();
+		const minimumDate = datesArray[0]?.date;
+		const maximumDate = datesArray[datesArray.length - 1]?.date;
 
-		return ((currentMaximumDate < minimumDate) || (currentMinimumDate > maximumDate));
+		return (maximumDate && minimumDate) && ((currentMaximumDate < minimumDate) || (currentMinimumDate > maximumDate));
 	}
 
-	onZoomEnd() {
+	getCurrentTimeLineRange(): Date[] {
+		return this.chart.scale().domain();
+	}
+
+	onZoomEnd(): void {
 		const errorMessage = this.isNoOverlaysLeft() ? this.translator.instant('No overlays left there') : null;
 		this.store$.dispatch(new SetOverlaysStatusMessageAction(errorMessage));
+		const [start, end] = this.getCurrentTimeLineRange();
 
-		this.store$.dispatch(new SetTimelineStateAction({
-			timeLineRange: {
-				start: this.chart.scale().domain()[0],
-				end: this.chart.scale().domain()[1]
-			}
-		}));
+		this.store$.dispatch(new SetTimelineStateAction({ timeLineRange: { start, end } }));
 
 	}
 
-	initEventDropsSequence(drops) {
+	initEventDropsSequence(drops): void {
 		this.removeOldEventDrops();
 		this.initEventDrop(drops);
 		this.drawMarkup();
 	}
 
-	removeOldEventDrops() {
+	removeOldEventDrops(): void {
 		if (this.element) {
-			const exsitEventDrops = this.element.select('.event-drop-chart');
-			if (exsitEventDrops) {
-				exsitEventDrops.remove();
+			const existEventDrops = this.element.select('.event-drop-chart');
+			if (existEventDrops) {
+				existEventDrops.remove();
 			}
 		}
 	}
 
-	isTimeChanged(timeRange) {
+	isTimeChanged(timeRange): boolean {
 		const currentStartDate = this.configuration.range.start;
 		const currentEndDate = this.configuration.range.end;
 		const newStartDate = timeRange.start;
@@ -281,7 +254,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		return (newStartDate.getTime() !== currentStartDate.getTime()) || (newSendDate.getTime() !== currentEndDate.getTime());
 	}
 
-	checkDifferenceInTimeRange([newMarkUp, drops]: [ExtendMap<MarkUpClass, IMarkUpData>, any]) {
+	checkDifferenceInTimeRange([newMarkUp, drops]: [ExtendMap<MarkUpClass, IMarkUpData>, any]): void {
 		const newActive = newMarkUp.get(MarkUpClass.active).overlaysIds;
 		if (!newActive || !newActive.length) {
 			return;
@@ -308,7 +281,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		this.element.clone().select('.drops').append('g').classed('textContainer', true);
 	}
 
-	drawMarkup() {
+	drawMarkup(): void {
 		if (this.markup && this.element) {
 			const dropsElements = this.element.selectAll('.drop');
 			const textContainer = this.element.select('.textContainer');
@@ -316,7 +289,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 			this.markup.keys.forEach(className => {
 				const markUpData = this.markup.get(className);
 				markUpData.overlaysIds.forEach(overlayId => {
-					const dropElement = dropsElements.filter('#dropId-' + overlayId);
+					const dropElement = dropsElements.filter((d) => d.id === overlayId);
 					if (!dropElement.empty()) {
 						if (markUpData.type === MarkUpTypes.symbole) {
 							this.appendLetters(textContainer, dropElement, markUpData.data);
@@ -332,7 +305,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	appendLetters(textContainer, dropElement, symbol) {
+	appendLetters(textContainer, dropElement, symbol): void {
 		textContainer.append('text')
 			.classed('letters', true)
 			.attr('x', dropElement.attr('cx'))
@@ -344,12 +317,12 @@ export class TimelineComponent implements OnInit, OnDestroy {
 			.text(symbol);
 	}
 
-	clearMarkUp(dropsElements) {
+	clearMarkUp(dropsElements): void {
 		dropsElements.filter('.changedDrops').attr('class', 'drop').style('filter', null);
 		this.element.selectAll('.letters').remove();
 	}
 
-	arrangeDrops(drops, textContainer) {
+	arrangeDrops(drops, textContainer): void {
 		const changeDrops = drops.filter('.changedDrops');
 		if (!changeDrops.empty()) {
 			this.moveToFront(changeDrops);
@@ -366,13 +339,12 @@ export class TimelineComponent implements OnInit, OnDestroy {
 		this.moveToFront(textContainer);
 	}
 
-	moveToFront(element) {
+	moveToFront(element): void {
 		element.each(function () {
 			this.parentNode.appendChild(this);
 		});
 	}
 
 }
-
 
 

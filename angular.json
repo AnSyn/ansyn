@@ -11,6 +11,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -40,15 +41,45 @@
             },
             "scripts": [
               "node_modules/cesium/Build/Cesium/Cesium.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "auto-subscriptions",
+              "pixelworks/lib/index",
+              "rbush",
+              "core-js",
+              "@babel/runtime",
+              "@babel/runtime-corejs3",
+              "raf",
+              "rxjs/index",
+              "lodash-decorators",
+              "file-saver",
+              "@babel/runtime-corejs3",
+              "jspdf",
+              "canvg",
+              "shpjs",
+              "pbf"
             ]
           },
           "configurations": {
             "dev": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "sourceMap": true,
               "extractCss": true,
               "fileReplacements": []
             },
             "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": true,
@@ -167,6 +198,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "build/buildBundle/dist",
             "index": "src/index.html",
             "main": "src/app/builder/main.builder.ts",
@@ -193,6 +225,12 @@
           },
           "configurations": {
             "dev": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/configuration/configuration.ts",
@@ -201,6 +239,12 @@
               ]
             },
             "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -282,6 +326,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "build/buildBundle/dist",
             "index": "src/app/builder/dev/index.html",
             "main": "src/app/builder/dev/builder-dev.main.ts",
@@ -310,6 +355,12 @@
           },
           "configurations": {
             "dev": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/configuration/configuration.ts",
@@ -318,6 +369,12 @@
               ]
             },
             "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -405,8 +462,9 @@
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/ansyn/ng-package.json"
-            }
+              "project": "src/app/@ansyn/ansyn/ng-package.json",
+              "tsConfig": "src/app/@ansyn/ansyn/tsconfig.lib.prod.json"
+}
           }
         }
       }
@@ -425,7 +483,8 @@
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/map-facade/ng-package.json"
+              "project": "src/app/@ansyn/map-facade/ng-package.json",
+              "tsConfig": "src/app/@ansyn/map-facade/tsconfig.lib.prod.json"
             }
           }
         }
@@ -445,7 +504,8 @@
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/ol/ng-package.json"
+              "project": "src/app/@ansyn/ol/ng-package.json",
+              "tsConfig": "src/app/@ansyn/ol/tsconfig.lib.prod.json"
             }
           }
         }
@@ -465,7 +525,8 @@
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/imagery-cesium/ng-package.json"
+              "project": "src/app/@ansyn/imagery-cesium/ng-package.json",
+              "tsConfig": "src/app/@ansyn/imagery-cesium/tsconfig.lib.prod.json"
             }
           }
         }
@@ -485,7 +546,8 @@
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/imagery-video/ng-package.json"
+              "project": "src/app/@ansyn/imagery-video/ng-package.json",
+              "tsConfig": "src/app/@ansyn/imagery-video/tsconfig.lib.prod.json"
             }
           }
         }
@@ -505,7 +567,8 @@
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/imagery/ng-package.json"
+              "project": "src/app/@ansyn/imagery/ng-package.json",
+              "tsConfig": "src/app/@ansyn/imagery/tsconfig.lib.prod.json"
             }
           }
         }
@@ -525,7 +588,8 @@
           },
           "configurations": {
             "production": {
-              "project": "src/app/@ansyn/menu/ng-package.json"
+              "project": "src/app/@ansyn/menu/ng-package.json",
+              "tsConfig": "src/app/@ansyn/menu/tsconfig.lib.prod.json"
             }
           }
         }
@@ -536,7 +600,7 @@
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "ansyn",
-      "styleext": "less"
+      "style": "less"
     },
     "@schematics/angular:directive": {
       "prefix": "ansyn"

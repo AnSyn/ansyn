@@ -7,14 +7,15 @@ import { IIdahoOverlaySourceConfig } from './app-providers/overlay-source-provid
 import { ICasesConfig } from './modules/menu-items/cases/models/cases-config';
 import { ILayersManagerConfig } from './modules/menu-items/layers-manager/models/layers-manager-config';
 import { IOverlaysConfig } from './modules/overlays/models/overlays.config';
-import { IFiltersConfig } from './modules/menu-items/filters/models/filters-config';
-import { IToolsConfig } from './modules/menu-items/tools/models/tools-config';
+import { IFiltersConfig } from './modules/filters/models/filters-config';
+import { IToolsConfig } from './modules/status-bar/components/tools//models/tools-config';
 import { ILoggerConfig } from './modules/core/models/logger-config.model';
 import { IStatusBarConfig } from './modules/status-bar/models/statusBar-config.model';
 import { ICoreConfig } from './modules/core/models/core.config.model';
 import { IMultipleOverlaysSourceConfig } from './modules/core/models/multiple-overlays-source-config';
 import { IAlgorithmsConfig } from './modules/menu-items/algorithms/models/tasks.model';
 import { IAnaglyphConfig } from './modules/plugins/openlayers/plugins/anaglyph-sensor/models/anaglyph.model';
+import { IOLPluginsConfig } from '@ansyn/ol';
 
 export interface IConfigModel {
 	casesConfig: ICasesConfig;
@@ -39,4 +40,5 @@ export interface IConfigModel {
 	ORIENTATIONS: string[];
 	algorithmsConfig: IAlgorithmsConfig;
 	anaglyphConfig: IAnaglyphConfig;
+	olPluginsConfig: IOLPluginsConfig;
 }

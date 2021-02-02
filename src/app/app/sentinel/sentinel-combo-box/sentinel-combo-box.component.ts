@@ -15,8 +15,10 @@ import { SentinelOverlaySourceType } from '../sentinel-source-provider';
 })
 @AutoSubscriptions()
 export class SentinelComboBoxComponent implements OnInit, OnDestroy, IEntryComponent {
+;
+;
 	@HostBinding('hidden') hidden = true;
-
+	@HostBinding('class.sentinel-combo') sentinelCombo = true;
 	@Input() mapId: string;
 
 	sentinelLayers: ISentinelLayer[];
@@ -35,6 +37,10 @@ export class SentinelComboBoxComponent implements OnInit, OnDestroy, IEntryCompo
 		})
 	);
 
+	constructor(protected store: Store<any>) {
+
+	}
+
 	@AutoSubscription
 	sourceTypeShow$ = () => this.store.pipe(
 		select(selectOverlayByMapId(this.mapId)),
@@ -43,20 +49,14 @@ export class SentinelComboBoxComponent implements OnInit, OnDestroy, IEntryCompo
 		})
 	);
 
-	constructor(protected store: Store<any>) {
-
-	}
-
 	changeLayer(layer) {
 		this.store.dispatch(new SetSentinelLayerOnMap({ id: this.mapId, layer }));
 	}
 
 	ngOnInit(): void {
-	};
-
+	}
 	ngOnDestroy(): void {
-	};
-
+	}
 	getType(): string {
 		return '';
 	}

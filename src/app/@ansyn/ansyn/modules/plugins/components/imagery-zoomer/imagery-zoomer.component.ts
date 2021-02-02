@@ -1,5 +1,5 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { IEntryComponent, ImageryZoomerService } from '@ansyn/map-facade';
+import { Component, Input, OnDestroy, OnInit, Inject } from '@angular/core';
+import { IEntryComponent, ImageryZoomerService, IMapFacadeConfig, mapFacadeConfig } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap } from 'rxjs/operators';
@@ -22,7 +22,11 @@ export class ImageryZoomerComponent implements OnInit, OnDestroy, IEntryComponen
 		})
 	);
 
+	get showOne2One(): boolean {
+		return this.mapFacedeConfig.showOne2One;
+	}
 	constructor(protected imageryZoomerService: ImageryZoomerService,
+				@Inject(mapFacadeConfig) public mapFacedeConfig: IMapFacadeConfig,
 				protected store$: Store<any>) {
 	}
 

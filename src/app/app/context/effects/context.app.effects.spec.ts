@@ -1,51 +1,28 @@
-import { inject, TestBed } from '@angular/core/testing';
+import { inject, TestBed, fakeAsync } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 
 import {
-	casesFeatureKey,
-	CasesReducer,
 	CasesService,
-	casesStateSelector,
-	DisplayedOverlay,
-	DisplayMultipleOverlaysFromStoreAction,
-	DisplayOverlayFromStoreAction,
-	ErrorHandlerService,
 	ICase,
-	initialCasesState,
-	IToolsState,
-	MarkUpClass,
-	OverlayReducer,
-	overlaysFeatureKey,
-	overlaysInitialState,
+	ICaseDataInputFiltersState,
+	LoadDefaultCaseAction, LoggerService,
 	OverlaysService,
-	overlaysStateSelector,
-	selectDropMarkup,
-	selectOverlaysMap,
-	SetFilteredOverlaysAction,
-	statusBarStateSelector,
-	StorageService,
-	toolsFeatureKey,
-	toolsInitialState,
-	ToolsReducer,
-	toolsStateSelector
+	SelectCaseAction
 } from '@ansyn/ansyn';
-import { Observable, of, throwError } from 'rxjs';
-import { HttpClientModule } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
-import {
-	BaseMapSourceProvider,
-	CacheService,
-	ImageryCommunicatorService,
-	ImageryMapSource,
-	MAP_SOURCE_PROVIDERS_CONFIG,
-} from '@ansyn/imagery';
-import { initialMapState, mapFeatureKey, MapReducer, mapStateSelector, selectMapsList } from '@ansyn/map-facade';
-import { cloneDeep as _cloneDeep } from 'lodash';
 import { ContextAppEffects } from './context.app.effects';
-import { SetContextParamsAction } from '../actions/context.actions';
-import { contextFeatureSelector, contextInitialState, selectContextsParams } from '../reducers/context.reducer';
-import { ContextConfig } from '../models/context.config';
+import {
+	contextFeatureKey,
+	ContextReducer,
+	contextStateSelector
+} from '../reducers/context.reducer';
+import { ContextConfig, ContextName } from '../models/context.config';
+import { Point } from '@turf/helpers';
+import { TranslateModule } from '@ngx-translate/core';
+import { mapFeatureKey, MapReducer, selectActiveMapId } from '@ansyn/map-facade';
+import { Auth0Service } from '../../imisight/auth0.service';
 
 describe('ContextAppEffects', () => {
 	let contextAppEffects: ContextAppEffects;
@@ -53,131 +30,56 @@ describe('ContextAppEffects', () => {
 	let store: Store<any>;
 	let casesService: CasesService;
 	let overlaysService: OverlaysService;
-	let imageryCommunicatorService: ImageryCommunicatorService;
-	const contextState: any = { ...contextInitialState };
-
-	let imageryCommunicatorServiceMock = {
-		provide: () => ({
-			getPosition: () => of({}),
-			getMapSourceProvider: () => ({
-				getThumbnailUrl: () => of('this is a url')
-			})
-		})
-	};
+	let auth0Service: Auth0Service;
 	const caseItem: ICase = {
-		'id': '31b33526-6447-495f-8b52-83be3f6b55bd',
-		'state': {
-			'region': {
-				'type': 'FeatureCollection',
-				'features': [{
-					'type': 'Feature',
-					'properties': {
-						'MUN_HEB': 'Hasharon',
-						'MUN_ENG': 'Hasharon'
-					},
-					'geometry': {
-						'type': 'Polygon',
-						'coordinates': [
-							[
-								[35.71991824722275, 32.709192409794866],
-								[35.54566531753454, 32.393992011030576]
-							]
-
-
-						]
-					}
-				}
+		id: '31b33526-6447-495f-8b52-83be3f6b55bd',
+		state: {
+			region: {
+				type: 'Polygon',
+				coordinates: [
+					[
+						[35.71991824722275, 32.709192409794866],
+						[35.54566531753454, 32.393992011030576]
+					]
 				]
 			},
-			'time': {
-				'type': 'absolute',
-				'from': new Date('2013-06-27T08:43:03.624Z'),
-				'to': new Date('2015-04-17T03:55:12.129Z')
+			time: {
+				from: new Date('2013-06-27T08:43:03.624Z'),
+				to: new Date('2015-04-17T03:55:12.129Z')
 			},
 			maps: {
 				data: [
-					{ id: 'imagery1', data: { overlayDisplayMode: 'Heatmap' } },
-					{ id: 'imagery2', data: { overlayDisplayMode: 'None' } },
-					{ id: 'imagery3', data: {} }
+					{ id: 'imagery1', data: {} },
 				],
 				activeMapId: 'imagery1'
 			}
 		}
 	} as any;
 
-	const firstOverlay = <any>{
-		id: 'first',
-		'photoTime': new Date('2014-06-27T08:43:03.624Z'),
-		'sourceType': 'FIRST',
-		'thumbnailUrl': 'http://first'
-	};
-	const secondOverlay = <any>{
-		id: 'last',
-		'photoTime': new Date(),
-		'sourceType': 'LAST',
-		'thumbnailUrl': 'http://last'
-	};
-
-	const exampleOverlays: any = {
-		'first': firstOverlay,
-		'last': secondOverlay
-	};
-
-	const toolsState: IToolsState = { ...toolsInitialState };
-
-	const overlaysState = _cloneDeep(overlaysInitialState);
-
-	const initOverlaysState = () => {
-		overlaysState.filteredOverlays = ['first', 'last'];
-		overlaysState.ids = [firstOverlay.id, secondOverlay.id];
-		overlaysState.entities = { ...exampleOverlays };
-		overlaysState.dropsMarkUp.set(MarkUpClass.hover, { overlaysIds: ['first'] });
-	};
-
-	const casesState = { ...initialCasesState, cases: [caseItem], selectedCase: caseItem };
-
-	const mapState = { ...initialMapState, entities: { '1': { 'id': '1' }, '2': { 'id': '2' } }, ids: ['1', '2'] };
-
-	const statusBarState: any = { 'layouts': [{ 'mapsCount': 3 }] };
-
-	@ImageryMapSource({
-		supported: [],
-		sourceType: 'FIRST'
-	})
-	class MapSourceProviderMock extends BaseMapSourceProvider {
-		public create(metaData: any): Promise<any> {
-			return Promise.resolve(null);
-		}
-	}
-
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				HttpClientModule,
 				StoreModule.forRoot({
-					[casesFeatureKey]: CasesReducer,
-					[overlaysFeatureKey]: OverlayReducer,
-					[toolsFeatureKey]: ToolsReducer,
+					[contextFeatureKey]: ContextReducer,
 					[mapFeatureKey]: MapReducer
-				})
+				}),
+				TranslateModule.forRoot()
 			],
 			providers: [
 				ContextAppEffects,
-				{
-					provide: ErrorHandlerService,
-					useValue: { httpErrorHandle: () => throwError(null) }
-				},
-				{
-					provide: MAP_SOURCE_PROVIDERS_CONFIG,
-					useValue: {}
-				},
 				provideMockActions(() => actions),
-				{ provide: StorageService, useValue: {} },
-				// { provide: BaseOverlaySourceProvider, useClass: OverlaySourceProviderMock },
 				{
 					provide: CasesService,
 					useValue: {
-						getOverlaysMarkup: () => null
+						defaultCase: caseItem,
+						defaultTime: {to: new Date(), from: new Date()},
+						updateCaseViaContext: () => ({})
+					}
+				},
+				{
+					provide: Auth0Service,
+					useValue: {
+						setSession: () => ({})
 					}
 				},
 				{
@@ -187,35 +89,13 @@ describe('ContextAppEffects', () => {
 				{
 					provide: OverlaysService,
 					useValue: {
-						getStartDateViaLimitFasets: () => {
-							return of({
-								'startDate': new Date('2014-06-27T08:43:03.624Z'),
-								'endDate': new Date('2015-06-27T08:43:03.624Z')
-							});
-						},
-						getStartAndEndDateViaRangeFacets: () => {
-							return of({
-								'startDate': new Date('2014-06-27T08:43:03.624Z'),
-								'endDate': new Date('2015-06-27T08:43:03.624Z')
-							});
-						},
-						getTimeStateByOverlay: () => {
-						},
-						getAllOverlays$: of(new Map<string, any>(Object.entries(exampleOverlays)))
+						getSensorTypeAndProviderFromSensorName: () => {}
 					}
 				},
 				{
-					provide: ImageryCommunicatorService,
-					useValue: imageryCommunicatorServiceMock
-				},
-				{
-					provide: BaseMapSourceProvider,
-					useClass: MapSourceProviderMock,
-					multi: true
-				},
-				{
-					provide: CacheService,
-					useClass: () => {
+					provide: LoggerService,
+					useValue: {
+						info: () => {}
 					}
 				}
 			]
@@ -223,98 +103,91 @@ describe('ContextAppEffects', () => {
 		}).compileComponents();
 	});
 
-	beforeEach(inject([Store], (_store) => {
+	beforeEach(inject([Store, CasesService, ContextAppEffects, Auth0Service, OverlaysService], (_store, _casesService, _contextAppEffects, _auth0Service, _overlaysService) => {
+		contextAppEffects = _contextAppEffects;
 		store = _store;
-		initOverlaysState();
-
+		casesService = _casesService;
+		auth0Service = _auth0Service;
+		overlaysService = _overlaysService;
 		const fakeStore = new Map<any, any>([
-			[casesStateSelector, casesState],
-			[overlaysStateSelector, overlaysState],
-			[toolsStateSelector, toolsState],
-			[mapStateSelector, mapState],
-			[statusBarStateSelector, statusBarState],
-			[selectDropMarkup, overlaysState.dropsMarkUp],
-			[selectOverlaysMap, new Map(Object.entries(exampleOverlays))],
-			[contextFeatureSelector, contextState],
-			[selectContextsParams, contextState.params],
-			[selectMapsList, Object.values(mapState.entities)]
+			[selectActiveMapId, 'imagery1'],
+			[contextStateSelector, { params: {} }]
 		]);
 
 		spyOn(store, 'select').and.callFake(type => of(fakeStore.get(type)));
-
-	}));
-
-	beforeEach(inject([CasesService, ImageryCommunicatorService, ContextAppEffects, OverlaysService], (_casesService: CasesService, _imageryCommunicatorService: ImageryCommunicatorService, _contextAppEffects: ContextAppEffects, _overlaysService: OverlaysService) => {
-		casesService = _casesService;
-		contextAppEffects = _contextAppEffects;
-		overlaysService = _overlaysService;
-		imageryCommunicatorService = _imageryCommunicatorService;
 	}));
 
 	it('should be defined', () => {
 		expect(contextAppEffects).toBeTruthy();
 	});
 
-
-	it('displayLatestOverlay$ effect should have been call only if displayOverlay = "latest"', () => {
-		contextState.params.defaultOverlay = DisplayedOverlay.latest;
-		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
-		const expectedResults = cold('--(ab)--', {
-			a: new SetContextParamsAction({ defaultOverlay: null }),
-			b: new DisplayOverlayFromStoreAction({ id: 'last' })
+	it('on load case with area analysis context fire SelectDilutedCaseAction and update params', fakeAsync(() => {
+		actions = hot('-a-', {
+			a: new LoadDefaultCaseAction({
+				context: ContextName.AreaAnalysis,
+				geometry: 'POINT(-117.91897 34.81265)'
+			})
 		});
-		expect(contextAppEffects.displayLatestOverlay$).toBeObservable(expectedResults);
-	});
+		const contextCase = {...casesService.defaultCase,  id: ContextName.AreaAnalysis,  };
+		const to = new Date();
+		const from = new Date(to);
+		const geo: Point = { type: 'Point', coordinates: [-117.91897, 34.81265] };
+		from.setMonth(from.getMonth() - 2);
+		contextCase.state = {
+			...contextCase.state,
+			time: { to, from },
+			region: geo
+		};
+		const expectedResult = cold('-a-', {
+				a: new SelectCaseAction(contextCase),
+			}
+		);
+		spyOn(casesService, 'updateCaseViaContext').and.callFake((ctx, c , p) => contextCase);
+		expect(contextAppEffects.loadDefaultCaseContext$).toBeObservable(expectedResult);
+	}));
 
-	it(`displayTwoNearestOverlay$ effect with one overlay before and one date after 
-	should call DisplayMultipleOverlaysFromStoreAction with those two overlays`, () => {
-		contextState.params.defaultOverlay = DisplayedOverlay.nearest;
-		contextState.params.time = new Date('2015-06-27T08:43:03.624Z');
-
-		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
-		const expectedResults = cold('--(bc)--', {
-			b: new DisplayMultipleOverlaysFromStoreAction([{
-				overlay: firstOverlay,
-				extent: undefined
-			}, { overlay: secondOverlay, extent: undefined }]),
-			c: new SetContextParamsAction({ defaultOverlay: null })
+	it('on load case with quick search context fire SelectDilutedCaseAction and update params', fakeAsync(() => {
+		actions = hot('-a-', {
+			a: new LoadDefaultCaseAction({
+				context: ContextName.QuickSearch,
+				geometry: 'POINT(-117.91897 34.81265)',
+				time: '2020-05-23,2020-06-23',
+				sensors: 'Landsat8'
+			})
 		});
-		expect(contextAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
-	});
-
-	it(`displayTwoNearestOverlay$ effect with overlay before
-	should call DisplayMultipleOverlaysFromStoreAction one undefined`, () => {
-		const overlay: any = { id: 'first', 'photoTime': new Date('2014-06-27T08:43:03.624Z') };
-		overlaysState.entities = { [overlay.id]: overlay };
-		overlaysState.filteredOverlays = ['first'];
-
-		contextState.params.defaultOverlay = DisplayedOverlay.nearest;
-		contextState.params.time = new Date('2015-06-27T08:43:03.624Z');
-
-		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
-		const expectedResults = cold('--(bc)--', {
-			b: new DisplayMultipleOverlaysFromStoreAction([<any>{ overlay, extent: undefined }]),
-			c: new SetContextParamsAction({ defaultOverlay: null })
+		const contextCase = {...casesService.defaultCase };
+		const to = new Date('2020-06-23');
+		const from = new Date('2020-05-23');
+		const geo: Point = { type: 'Point', coordinates: [-117.91897, 34.81265] };
+		const filter = {
+			providerName: 'Planet',
+			sensorType: 'Landsat8L1G',
+			sensorName: 'Landsat8'
+		};
+		const dataInputFilters: ICaseDataInputFiltersState = {
+			filters: [filter],
+			fullyChecked: false,
+			customFiltersSensor: ['Landsat8']
+		}
+		contextCase.state = {
+			...contextCase.state,
+			time: { to, from },
+			region: geo,
+			dataInputFilters
+		};
+		const expectedResult = cold('-a-', {
+				a: new SelectCaseAction(contextCase),
+			}
+		);
+		spyOn(overlaysService, 'getSensorTypeAndProviderFromSensorName')
+			.and.returnValue(filter);
+		spyOn(casesService, 'updateCaseViaContext')
+			.and.callFake((ctx, c , p) => {
+				return { ...contextCase,
+					state: { ...contextCase.state,
+						time: ctx.time, dataInputFilters: ctx.dataInputFilters }};
 		});
-		expect(contextAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
-	});
-
-	it(`displayTwoNearestOverlay$ effect with overlay after
-	should call DisplayMultipleOverlaysFromStoreAction one undefined`, () => {
-		const overlay: any = { id: 'last', 'photoTime': new Date('2016-06-27T08:43:03.624Z') };
-		overlaysState.entities = { [overlay.id]: overlay };
-		overlaysState.filteredOverlays = ['last'];
-
-		contextState.params.defaultOverlay = DisplayedOverlay.nearest;
-		contextState.params.time = new Date('2015-06-27T08:43:03.624Z');
-
-		actions = hot('--a--', { a: new SetFilteredOverlaysAction([]) });
-		const expectedResults = cold('--(bc)--', {
-			b: new DisplayMultipleOverlaysFromStoreAction([<any>{ overlay, extent: undefined }]),
-			c: new SetContextParamsAction({ defaultOverlay: null })
-		});
-		expect(contextAppEffects.displayTwoNearestOverlay$).toBeObservable(expectedResults);
-	});
-
+		expect(contextAppEffects.loadDefaultCaseContext$).toBeObservable(expectedResult);
+	}))
 })
 ;

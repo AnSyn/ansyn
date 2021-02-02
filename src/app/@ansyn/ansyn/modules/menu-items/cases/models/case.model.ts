@@ -1,18 +1,18 @@
 import { IDilutedOverlay, IDilutedOverlaysHash, IOverlay, IOverlaysHash } from '../../../overlays/models/overlay.model';
 import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
 import { LayoutKey } from '@ansyn/map-facade';
-import { FilterType } from '../../filters/models/filter-type';
-import { IMapSettings, IMapSettingsData, IVisualizerEntity } from '@ansyn/imagery';
-import { OverlayDisplayMode } from '../../tools/overlays-display-mode/overlays-display-mode.component';
+import { FilterType } from '../../../filters/models/filter-type';
+import { IMapSettings, IMapSettingsData } from '@ansyn/imagery';
+import { IAdvancedSearchParameter, IProviderData } from '../../../status-bar/models/statusBar-config.model';
 
 export interface ICasePreview {
 	creationTime: Date;
 	id: string;
-	name: string;
-	owner?: string;
-	lastModified: Date;
+	name?: string;
 	selectedContextId?: string;
-	autoSave: boolean;
+	autoSave?: boolean;
+	schema?: 'case';
+	shared?: boolean;
 }
 
 export interface ICase extends ICasePreview {
@@ -23,20 +23,22 @@ export interface IDilutedCase extends ICasePreview {
 	state: ICaseState;
 }
 
-export interface IContextEntity extends IVisualizerEntity {
-	date: Date;
-}
-
 export type CaseOrientation = 'Align North' | 'User Perspective' | 'Imagery Perspective';
 export type CaseTimeFilter = 'Start - End';
 
 
 export enum CaseGeoFilter {
 	PinPoint = 'Point',
-	Polygon = 'Polygon'
+	Polygon = 'Polygon',
+	ScreenView = 'ScreenView'
 }
 
-export interface ImageManualProcessArgs {
+export interface IOverlayImageProcess {
+	isAuto: boolean;
+	manuelArgs: IImageManualProcessArgs
+}
+
+export interface IImageManualProcessArgs {
 	Brightness?: number;
 	Contrast?: number;
 	Gamma?: number;
@@ -44,8 +46,8 @@ export interface ImageManualProcessArgs {
 	Sharpness?: number;
 }
 
-export interface IOverlaysManualProcessArgs {
-	[key: string]: ImageManualProcessArgs;
+export interface IOverlaysImageProcess {
+	[key: string]: IOverlayImageProcess;
 }
 
 export interface ITranslationData {
@@ -66,43 +68,39 @@ export interface IDilutedCaseState {
 	time: ICaseTimeState;
 	facets?: ICaseFacetsState;
 	region: CaseRegionState;
-	contextEntities?: IContextEntity[];
-	orientation: CaseOrientation;
 	dataInputFilters: ICaseDataInputFiltersState;
-	timeFilter: CaseTimeFilter;
 	favoriteOverlays?: IDilutedOverlay[];
 	miscOverlays?: IDilutedOverlaysHash;
-	removedOverlaysIds?: string[];
-	removedOverlaysVisibility: boolean;
-	presetOverlays?: IDilutedOverlay[];
-	overlaysManualProcessArgs: IOverlaysManualProcessArgs;
+	overlaysImageProcess: IOverlaysImageProcess;
 	overlaysTranslationData: IOverlaysTranslationData;
 	overlaysScannedAreaData?: IOverlaysScannedAreaData;
 	layers?: ICaseLayersState;
+	advancedSearchParameters?: IAdvancedSearchParameter;
+	runSecondSearch?: boolean;
 }
 
 export interface ICaseState extends IDilutedCaseState {
+
 	favoriteOverlays?: IOverlay[];
-	presetOverlays?: IOverlay[];
 	miscOverlays?: IOverlaysHash;
 	maps?: ICaseMapsState;
 }
 
-export type CaseRegionState = any | Feature<Polygon> | Point | Polygon | Position;
+export type CaseRegionState = any | Feature<Polygon | Point> | Point | Polygon | Position;
 
 export interface IDataInputFilterValue {
 	providerName: string;
 	sensorType: string;
-	sensorName: string;
+	sensorName?: string;
 }
 
 export interface ICaseDataInputFiltersState {
 	fullyChecked?: boolean;
 	filters: IDataInputFilterValue[];
+	customFiltersSensor?: string[]; // for context
 }
 
 export interface ICaseTimeState {
-	type: 'absolute';
 	from: Date;
 	to: Date;
 }
@@ -158,13 +156,11 @@ export interface ICaseMapsState extends IDilutedCaseMapsState {
 	data: ICaseMapState[];
 }
 
-
 export interface IDilutedCaseMapData extends IMapSettingsData {
 	overlay?: IDilutedOverlay;
 	isAutoImageProcessingActive?: boolean;
-	overlayDisplayMode?: OverlayDisplayMode;
-	imageManualProcessArgs?: ImageManualProcessArgs;
-	translationData: ITranslationData;
+	imageManualProcessArgs?: IImageManualProcessArgs;
+	translationData?: ITranslationData;
 }
 
 export interface ICaseMapData extends IDilutedCaseMapData {
@@ -178,3 +174,5 @@ export interface IDilutedCaseMapState extends IMapSettings {
 export interface ICaseMapState extends IMapSettings {
 	data: ICaseMapData;
 }
+
+

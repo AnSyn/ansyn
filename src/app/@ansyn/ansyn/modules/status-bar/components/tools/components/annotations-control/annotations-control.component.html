@@ -1,0 +1,75 @@
+<div class="selected-layer"
+	 *ngIf="(annotationLayer$ | async)?.length > 1">
+	{{'Layer' | translate}}:
+	<div class="combo-box">
+		<ansyn-combo-box
+			class="annotaion-combo-box"
+			icon=""
+			direction="top"
+			color="transparent"
+			name="annotations-layer"
+			[ngModel]="activeAnnotationId"
+			[comboBoxToolTipDescription]="'choose annotation layer' | translate"
+			(ngModelChange)="setSelectedAnnotationLayer($event)"
+			[disabled]="isGeoOptionsDisabled">
+
+			<ansyn-combo-box-option *ngFor="let layer of annotationLayer$ | async" [value]="layer.id" [disabled]="layer.isNonEditable">
+				{{ layer.name }}
+			</ansyn-combo-box-option>
+
+		</ansyn-combo-box>
+	</div>
+</div>
+
+<ul class="annotations-options">
+
+	<li *ngFor="let annotationMode of ANNOTATION_MODE_LIST"
+		[ngClass]="annotationMode"
+		[class.mode-on]="isActive(annotationMode)"
+		(click)="setAnnotationMode(annotationMode)"
+		[class.disabled]="!isAnnotationEnable(annotationMode)">
+		<span
+			class="icon-annotation-{{annotationMode.toLowerCase()}}" [attr.tooltip-value]="annotationMode | translate"
+			tooltip-class="bottom">
+		</span>
+	</li>
+
+	<li class="spliter">
+		<div></div>
+	</li>
+
+	<li class="expanded-selection line-width-selection">
+
+		<button (click)="toggleSelection(SelectionBoxTypes.LineWidth)"
+				[disabled]="this.mode === 'Point'"
+				[class.disabled]="this.mode === 'Point'"
+				[class.expand]="selectedBox === SelectionBoxTypes.LineWidth">
+			<span class="icon-annotation-weight" [attr.tooltip-value]="'Width' | translate"
+				  tooltip-class="bottom"></span>
+		</button>
+
+		<ansyn-annotations-weight
+			[show]="selectedBox === SelectionBoxTypes.LineWidth"
+			[properties]="annotationProperties"
+			(selectLineStyle)="selectLineStyle($event)"
+		></ansyn-annotations-weight>
+	</li>
+
+	<li class="expanded-selection color-selection">
+
+		<button (click)="toggleSelection(SelectionBoxTypes.ColorPicker)"
+				[class.expand]="selectedBox === SelectionBoxTypes.ColorPicker">
+			<span class="icon-annotation-color" [attr.tooltip-value]="'Color' | translate"
+				  tooltip-class="bottom"></span>
+		</button>
+
+		<ansyn-annotations-color
+			[show]="selectedBox === SelectionBoxTypes.ColorPicker"
+			[properties]="annotationProperties"
+			(activeChange)="activeChange($event)"
+			(colorChange)="colorChange($event)"
+		></ansyn-annotations-color>
+
+	</li>
+
+</ul>

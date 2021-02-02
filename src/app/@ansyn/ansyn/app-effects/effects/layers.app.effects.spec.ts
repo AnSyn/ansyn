@@ -20,7 +20,6 @@ import {
 	ICasesState,
 	initialCasesState
 } from '../../modules/menu-items/cases/reducers/cases.reducer';
-import { LoggerService } from '../../modules/core/services/logger.service';
 
 describe('LayersAppEffects', () => {
 	let layersAppEffects: LayersAppEffects;
@@ -39,13 +38,7 @@ describe('LayersAppEffects', () => {
 			providers: [
 				provideMockActions(() => actions),
 				LayersAppEffects,
-				ImageryCommunicatorService,
-				{
-					provide: LoggerService, useValue: {
-						error: (some) => null, info: () => {
-						}
-					}
-				}
+				ImageryCommunicatorService
 			]
 
 		}).compileComponents();

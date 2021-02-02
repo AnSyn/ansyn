@@ -1,0 +1,93 @@
+@import 'ansyn/less/colors';
+@import 'ansyn/less/common';
+
+:host {
+	&.combo-center .combo-container .options-container /deep/ .option {
+		justify-content: center;
+		text-align: center;
+	}
+
+	position: relative;
+	height: 100%;
+	width: 100%;
+
+	.combo-container {
+		position: relative;
+		
+        .line {
+            width: 165px !important;
+		  }
+		.full-size {
+			height: 135px !important;
+		}
+
+		.options-container {
+			width: 405px;
+			background: #3e3e3e;
+            z-index: @z-index-combo-table-option;
+            flex-wrap: wrap;
+            display: flex;
+            border-radius: 10px;
+			height: 96px;
+			justify-content: flex-end;
+            overflow-y: auto;
+			overflow-x: hidden;
+			top: 100%;
+			box-sizing: border-box;
+			direction: initial;
+			-webkit-user-select: none;
+		}
+
+		&.transparent {
+			@transparent-color: rgba(255, 255, 255, 0.4);
+
+			/deep/ button[ansynComboBoxTrigger] {
+				background: transparent;
+				border: none;
+				border-bottom: 1px solid @transparent-color;
+				padding: 6px;
+			}
+
+			.options-container {
+				box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.2);
+                border-color: @transparent-color;
+                
+				/deep/ .option {
+                    font-weight: 500;
+                    
+
+					&:hover {
+						color: @application-primary-color;
+					}
+				}
+			}
+
+			&.top {
+				/deep/ button[ansynComboBoxTrigger] {
+					border-bottom: 1px solid @transparent-color;
+					border-top: none;
+				}
+			}
+		}
+
+		&.bottom {
+			.options-container {
+                border-top: none;
+                
+			}
+		}
+
+		&.top {
+			.options-container {
+				top: initial;
+				bottom: 100%;
+				border-bottom: none;
+			}
+		}
+	}
+}
+
+/deep/ div.option {
+	display: flex;
+	align-items: center;
+}

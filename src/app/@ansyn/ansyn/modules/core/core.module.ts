@@ -6,13 +6,17 @@ import { ErrorHandlerService } from './services/error-handler.service';
 import { StorageService } from './services/storage/storage.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { AnsynModalComponent } from './components/ansyn-modal/ansyn-modal.component';
-import { ManualRemovedOverlaysComponent } from './components/manual-removed-overlays/manual-removed-overlays.component';
 import { AnsynTranslationModule } from './translation/ansyn-translation.module';
 import { AnsynFormsModule } from './forms/ansyn-forms.module';
 import { FormsModule } from '@angular/forms';
 import { ContextMenuComponent } from './components/context-menu/context-menu.component';
 import { AngleFilterComponent } from './components/angle-filter/angle-filter.component';
-import { CredentialsComponent } from './components/credentials/credentials.component';
+import { CredentialsComponent } from '../menu-items/credentials/components/credentials/credentials.component';
+import { AreaToCredentialsService } from './services/credentials/area-to-credentials.service';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { CacheInterceptorsService } from './services/http-request-cache/cache-interceptors.service';
+import { CacheRequestService } from './services/http-request-cache/cache-request.service';
+import { CredentialsService } from './services/credentials/credentials.service';
 
 @NgModule({
 	imports: [
@@ -25,24 +29,25 @@ import { CredentialsComponent } from './components/credentials/credentials.compo
 		GenericTypeResolverService,
 		LoggerService,
 		ErrorHandlerService,
-		StorageService
+		StorageService,
+		AreaToCredentialsService,
+		CredentialsService,
+		CacheRequestService,
+		{ provide: HTTP_INTERCEPTORS, useClass: CacheInterceptorsService, multi: true}
 	],
 	exports: [
 		AnsynTranslationModule,
 		AnsynFormsModule,
 		AnsynModalComponent,
-		ManualRemovedOverlaysComponent,
 		ContextMenuComponent,
 		CredentialsComponent
 	],
 	declarations: [
 		AnsynModalComponent,
-		ManualRemovedOverlaysComponent,
 		ContextMenuComponent,
 		AngleFilterComponent,
 		CredentialsComponent
-	],
-	entryComponents: [AngleFilterComponent]
+	]
 })
 
 export class CoreModule {

@@ -1,9 +1,9 @@
-import { ImageryMapPosition, IMapSettings } from '@ansyn/imagery';
+import { IImageryMapPosition, IMapSettings } from '@ansyn/imagery';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { range } from 'lodash';
 import { UUID } from 'angular2-uuid';
-import { Dictionary } from '@ngrx/entity/src/models';
+import { Dictionary } from '@ngrx/entity';
 import { sessionData } from '../models/core-session-state.model';
 import { IPendingOverlay, IToastMessage, MapActions, MapActionTypes } from '../actions/map.actions';
 import { LayoutKey, layoutOptions } from '../models/maps-layout';
@@ -23,9 +23,11 @@ export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId,
 					position: {
 						extentPolygon: activeMap.data.position.extentPolygon,
 						projectedState: activeMap.data.position.projectedState
-					}
+					},
+					overlaysFootprintActive: false
 				},
 				worldView: { ...activeMap.worldView },
+				orientation: activeMap.orientation,
 				flags: {
 					hideLayers: false
 				}
@@ -56,7 +58,6 @@ export interface IMapState extends EntityState<IMapSettings> {
 	toastMessage: IToastMessage;
 	footerCollapse: boolean;
 	minimalistViewMode: boolean;
-	isExportingMaps: boolean;
 }
 
 
@@ -70,8 +71,7 @@ export const initialMapState: IMapState = mapsAdapter.getInitialState({
 	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
 	toastMessage: null,
 	footerCollapse: false,
-	minimalistViewMode: false,
-	isExportingMaps: false
+	minimalistViewMode: false
 });
 
 export const mapFeatureKey = 'map';
@@ -107,6 +107,15 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return { ...state, isLoadingMaps };
 		}
 
+		case MapActionTypes.SET_MAP_ORIENTATION: {
+			return mapsAdapter.updateOne({
+				id: action.payload.mapId || state.activeMapId,
+				changes: {
+					orientation: action.payload.orientation
+				}
+			}, state);
+		}
+
 		case MapActionTypes.VIEW.SET_IS_VISIBLE: {
 			const isHiddenMaps = new Set(state.isHiddenMaps);
 			const { mapId, isVisible } = action.payload;
@@ -124,11 +133,11 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 
 		case MapActionTypes.POSITION_CHANGED: {
 			const { id, position } = action.payload;
-			const entity = state.entities[id];
-			if (entity) {
+			const activeMap = state.entities[id];
+			if (activeMap) {
 				return mapsAdapter.updateOne({
 					id,
-					changes: { data: { ...entity.data, position } }
+					changes: { data: { ...activeMap.data, position } }
 				}, state);
 			}
 			return state;
@@ -139,7 +148,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		}
 
 		case MapActionTypes.SET_MAPS_DATA:
-			return mapsAdapter.addAll(action.payload.mapsList, state);
+			return mapsAdapter.setAll(action.payload.mapsList, state);
 
 		case MapActionTypes.DECREASE_PENDING_MAPS_COUNT:
 			const currentCount = state.pendingMapsCount;
@@ -166,7 +175,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			if (layout.mapsCount !== Object.values(state.entities).length && Object.values(state.entities).length) {
 				const pendingMapsCount = Math.abs(layout.mapsCount - Object.values(state.entities).length);
 				const mapsList = setMapsDataChanges(state.entities, state.activeMapId, layout);
-				return mapsAdapter.addAll(mapsList, { ...state, pendingMapsCount, layout: action.payload });
+				return mapsAdapter.setAll(mapsList, { ...state, pendingMapsCount, layout: action.payload });
 			}
 			return { ...state, layout: action.payload };
 
@@ -179,11 +188,11 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		}
 
 		case MapActionTypes.REPLACE_MAP_MAIN_LAYER_SUCCESS: {
-			const {id, sourceType } = action.payload;
-			const worldView = {...state.entities[id].worldView, sourceType};
+			const { id, sourceType } = action.payload;
+			const worldView = { ...state.entities[id].worldView, sourceType };
 			return mapsAdapter.updateOne({
 				id,
-				changes: {worldView}
+				changes: { worldView }
 			}, state)
 		}
 
@@ -196,15 +205,13 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 		case MapActionTypes.SET_MINIMALIST_VIEW_MODE:
 			return { ...state, minimalistViewMode: action.payload };
 
-		case MapActionTypes.EXPORT_MAPS_TO_PNG_REQUEST:
-			return {...state, isExportingMaps: true};
-
-		case MapActionTypes.EXPORT_MAPS_TO_PNG_SUCCESS:
-			return {...state, isExportingMaps: false};
-
-		case MapActionTypes.EXPORT_MAPS_TO_PNG_FAILED:
-			return {...state, isExportingMaps: false};
-
+		case MapActionTypes.VISUALIZERS.OVERLAYS_FOOTPRINT:
+			const { mapId, show } = action.payload;
+			const oldData = state.entities[mapId].data;
+			return mapsAdapter.updateOne({
+				id: mapId,
+				changes: { data: { ...oldData, overlaysFootprintActive: show } }
+			}, state);
 		default:
 			return state;
 	}
@@ -219,12 +226,14 @@ export const selectMaps = createSelector(mapStateSelector, selectEntities);
 export const selectLayout: MemoizedSelector<any, LayoutKey> = createSelector(mapStateSelector, (state) => state.layout);
 export const selectWasWelcomeNotificationShown = createSelector(mapStateSelector, (state) => state.wasWelcomeNotificationShown);
 export const selectToastMessage = createSelector(mapStateSelector, (state) => state.toastMessage);
-export const selectFooterCollapse = createSelector(mapStateSelector, (state) => state.footerCollapse);
+export const selectFooterCollapse = createSelector(mapStateSelector, (state) => state?.footerCollapse);
 export const selectIsMinimalistViewMode = createSelector(mapStateSelector, (state) => state && state.minimalistViewMode);
-export const selectIsExportingMaps = createSelector(mapStateSelector, (state) => state && state.isExportingMaps);
-
 export const selectOverlaysWithMapIds = createSelector(selectMapsList, selectActiveMapId, (mapsList, activeMapId) => {
-	const overlayAndMapId = mapsList.map( map => map.data.overlay ? ({overlay: map.data.overlay, mapId: map.id, isActive: map.id === activeMapId}) : ({}));
+	const overlayAndMapId = mapsList.map(map => map.data.overlay ? ({
+		overlay: map.data.overlay,
+		mapId: map.id,
+		isActive: map.id === activeMapId
+	}) : ({}));
 	return overlayAndMapId;
 });
 export const selectOverlayOfActiveMap = createSelector(selectMapsList, selectActiveMapId, (mapsList, activeMapId) => {
@@ -235,8 +244,10 @@ export const selectMapStateById = (id: string) => createSelector(selectMaps, (ma
 export const selectMapsStateByIds: (mapIds: string[]) => MemoizedSelector<any, IMapSettings[]> = (mapIds: string[]) => createSelector(selectMaps, (maps) => mapIds.map(id => maps[id]));
 export const selectOverlayByMapId = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data && mapState.data.overlay);
 export const selectHideLayersOnMap = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.flags.hideLayers);
-export const selectMapPositionByMapId: (mapId: string) => MemoizedSelector<any, ImageryMapPosition> = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.position);
+export const selectMapPositionByMapId: (mapId: string) => MemoizedSelector<any, IImageryMapPosition> = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.position);
+export const selectManualProcessArgsByMapId: (mapId: string) => MemoizedSelector<any, any> = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data.imageManualProcessArgs);
 export const selectMapTypeById: (mapId: string) => MemoizedSelector<any, string> = (mapId => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.worldView.mapType));
 export const selectSourceTypeById: (mapId: string) => MemoizedSelector<any, string> = (mapId => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.worldView.sourceType));
 
-export const selectOverlayDisplayModeByMapId: (mapId: string) => MemoizedSelector<any, any> = (mapId: string) => createSelector(selectMapStateById(mapId) , (mapState) => mapState && mapState.data && mapState.data.overlayDisplayMode);
+export const selectOverlaysFootprintActiveByMapId: (mapId: string) => MemoizedSelector<any, any> = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.data && mapState.data.overlaysFootprintActive);
+export const selectMapOrientation = (mapId: string) => createSelector(selectMapStateById(mapId), (mapState) => mapState && mapState.orientation);

@@ -19,42 +19,6 @@
 	}
 }
 
-div.imageries-container {
-	&.layout3 {
-		div.map-container-wrapper:first-child {
-			:host {
-				bottom: @mouse-coordinate-height;
-			}
-		}
-	}
-
-	&.layout4 {
-		div.map-container-wrapper:nth-child(2) {
-			:host {
-				bottom: @mouse-coordinate-height;
-			}
-		}
-	}
-
-	&.layout5 {
-		div.map-container-wrapper:first-child {
-			:host {
-				bottom: @mouse-coordinate-height;
-			}
-		}
-	}
-
-	&.layout6 {
-		div.map-container-wrapper {
-			&:nth-child(1), &:nth-child(2) {
-				:host {
-					bottom: @mouse-coordinate-height;
-				}
-			}
-		}
-	}
-}
-
 div.footer-collapsed {
 	:host {
 		bottom: calc(@mouse-coordinate-height + @mouse-coordinate-bottom-minimize);

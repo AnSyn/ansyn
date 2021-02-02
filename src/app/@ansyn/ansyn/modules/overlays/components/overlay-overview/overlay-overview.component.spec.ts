@@ -101,9 +101,20 @@ describe('OverlayOverviewComponent', () => {
 
 	it('showPreview should change value of isHoveringOverDrop to true, and call mouseMove$.subscribe ', () => {
 		spyOn(component.mouseLeave$, 'subscribe');
-		component.showOverview();
+		const overlay: IOverlay = {
+			id: '',
+			name: 'bcd',
+			photoTime: 'ttt',
+			date: new Date(),
+			azimuth: 100,
+			sensorName: '',
+			sensorType: '',
+			isGeoRegistered: GeoRegisteration.geoRegistered
+
+		};
+		component.showOverview(overlay, '');
 		expect(component.isHoveringOverDrop).toBeTruthy();
-		expect(component.mouseLeave$.subscribe).toHaveBeenCalled();
+		expect(component.mouseLeave$.subscribe).toHaveBeenCalled(); // tslint:disable-line
 	});
 
 	it('hidePreview should change value of isHoveringOverDrop to false', () => {

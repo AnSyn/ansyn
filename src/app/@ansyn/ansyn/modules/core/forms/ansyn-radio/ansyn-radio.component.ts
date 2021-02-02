@@ -1,7 +1,7 @@
 import { Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { noop } from 'rxjs/index';
 import { UUID } from 'angular2-uuid';
+import { noop } from 'rxjs';
 
 @Component({
 	selector: 'ansyn-radio',

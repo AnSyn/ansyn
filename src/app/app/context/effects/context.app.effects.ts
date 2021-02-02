@@ -1,215 +1,209 @@
-import { Injectable } from '@angular/core';
-import { from, Observable, of } from 'rxjs';
+import { Inject, Injectable } from '@angular/core';
+import { EMPTY, Observable } from 'rxjs';
 import {
 	CasesActionTypes,
 	CasesService,
-	DisplayedOverlay,
 	DisplayMultipleOverlaysFromStoreAction,
-	DisplayOverlayFromStoreAction,
 	GeoRegisteration,
-	ICase,
-	IContext,
-	IContextEntity,
-	IOverlaySpecialObject,
-	IOverlaysState,
-	IStartAndEndDate,
+	ICaseDataInputFiltersState,
+	IDataInputFilterValue,
+	IOverlay,
 	LoadDefaultCaseAction,
+	LoadOverlaysSuccessAction,
 	OverlaysActionTypes,
+	LoggerService,
 	OverlaysService,
-	overlaysStateSelector,
+	rxPreventCrash,
 	SelectCaseAction,
-	SetFilteredOverlaysAction,
-	SetSpecialObjectsActionStore
 } from '@ansyn/ansyn';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { catchError, filter, map, mergeMap, share, withLatestFrom } from 'rxjs/operators';
-import { Action, Store } from '@ngrx/store';
+import { filter, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import { selectActiveMapId, SetLayoutAction, SetToastMessageAction } from '@ansyn/map-facade';
 import {
-	IContextParams,
-	selectContextEntities,
-	selectContextsArray,
-	selectContextsParams
-} from '../reducers/context.reducer';
-import { SetContextParamsAction } from '../actions/context.actions';
-import { ContextService } from '../services/context.service';
-import { get } from 'lodash';
-import { bbox, transformScale } from '@turf/turf';
-import { SetToastMessageAction } from '@ansyn/map-facade';
+	ContextConfig,
+	ContextName,
+	IContextConfig,
+	RequiredContextParams
+} from '../models/context.config';
+import { TranslateService } from '@ngx-translate/core';
+import { Auth0Service } from '../../imisight/auth0.service';
+import { isEqual, uniqWith } from 'lodash';
+import { SelectOnlyGeoRegistered } from '@ansyn/ansyn';
+import * as moment from 'moment';
+
+const CONTEXT_TOAST = {
+	paramsError: 'params: {0} is require in {1} context',
+	contextError: 'Unknown context {0}',
+	region: 'Unknown geometry',
+	geoOverlayNotExist: 'There is no Geo registration overlay'
+};
 
 @Injectable()
 export class ContextAppEffects {
 
-	mapNotRegisteredOverlayFromFilter$ = map(([action, params, overlayState]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => {
-		const newOverlayState = this.filterNotRegisteredFromFilterOverlay(overlayState);
-		return [action, params, newOverlayState]
-	});
+	@Effect()
 	loadDefaultCaseContext$: Observable<any> = this.actions$.pipe(
 		ofType<LoadDefaultCaseAction>(CasesActionTypes.LOAD_DEFAULT_CASE),
 		filter((action: LoadDefaultCaseAction) => action.payload.context),
-		withLatestFrom(this.store.select(selectContextsArray), this.store.select(selectContextsParams)),
-		map(([action, contexts, params]: [LoadDefaultCaseAction, any[], IContextParams]) => {
-			const context = contexts.find(({ id }) => action.payload.context === id);
-			return [action, context, params];
-		})
-	);
-
-	setContext: any = mergeMap(([action, context, contextParams]: [LoadDefaultCaseAction, IContext, IContextParams]) => {
-		const paramsPayload: IContextParams = {};
-		if (context.defaultOverlay) {
-			paramsPayload.defaultOverlay = context.defaultOverlay;
-		}
-		if (context.requirements && context.requirements.includes('time')) {
-			paramsPayload.time = action.payload.time;
-		}
-		const defaultCaseQueryParams = this.casesService.updateCaseViaContext(context, this.casesService.defaultCase, action.payload);
-		return this.getCaseForContext(defaultCaseQueryParams, context, paramsPayload).pipe(
-			mergeMap((selectedCase) => [
-					new SetContextParamsAction(paramsPayload),
-					new SelectCaseAction(selectedCase)
-				]
-			));
-	});
-
-	@Effect()
-	loadExistingDefaultCaseContext$: Observable<SetContextParamsAction | SelectCaseAction> =
-		this.loadDefaultCaseContext$
-			.pipe(
-				filter(([action, context]: [LoadDefaultCaseAction, any, IContextParams]) => Boolean(context)),
-				this.setContext
-			);
-
-	@Effect()
-	loadNotExistingDefaultCaseContext$: Observable<any> =
-		this.loadDefaultCaseContext$.pipe(
-			filter(([action, context]: [LoadDefaultCaseAction, any, IContextParams]) => !(Boolean(context))),
-			mergeMap(([action, context, params]: [LoadDefaultCaseAction, IContext, IContextParams]) => {
-				return this.contextService
-					.loadContext(action.payload.context)
-					.pipe(
-						map((context: IContext) => [action, context, params]),
-						this.setContext
-					);
-			}),
-			catchError((err) => {
-				console.warn('Error loading context as case', err);
-				const defaultCaseParams = this.casesService.updateCaseViaQueryParmas({}, this.casesService.defaultCase);
-				return from([new SelectCaseAction(defaultCaseParams),
-					new SetToastMessageAction({
-						toastText: 'Failed to load context',
-						showWarningIcon: true
-					})]);
-			})
-		);
-
-	@Effect()
-	displayLatestOverlay$: Observable<any> = this.actions$.pipe(
-		ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS),
-		withLatestFrom(this.store.select(selectContextsParams), this.store.select(overlaysStateSelector)),
-		this.mapNotRegisteredOverlayFromFilter$,
-		filter(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => params && params.defaultOverlay === DisplayedOverlay.latest && filteredOverlays.length > 0),
-		mergeMap(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => {
-			const id = filteredOverlays[filteredOverlays.length - 1];
-			return [
-				new SetContextParamsAction({ defaultOverlay: null }),
-				new DisplayOverlayFromStoreAction({ id })
-			];
-		}),
-		share()
+		withLatestFrom(this.store.select(selectActiveMapId)),
+		mergeMap(this.parseContextParams.bind(this)),
+		rxPreventCrash()
 	);
 
 	@Effect()
-	displayTwoNearestOverlay$: Observable<any> = this.actions$.pipe(
-		ofType<SetFilteredOverlaysAction>(OverlaysActionTypes.SET_FILTERED_OVERLAYS),
-		withLatestFrom(this.store.select(selectContextsParams), this.store.select(overlaysStateSelector)),
-		this.mapNotRegisteredOverlayFromFilter$,
-		filter(([action, params, { filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => params && params.defaultOverlay === DisplayedOverlay.nearest && filteredOverlays.length > 0),
-		mergeMap(([action, params, { entities: overlays, filteredOverlays }]: [SetFilteredOverlaysAction, IContextParams, IOverlaysState]) => {
-			const overlaysBeforeId = [...filteredOverlays].reverse().find(overlayId => overlays[overlayId].photoTime < params.time);
-			const overlaysBefore = overlays[overlaysBeforeId];
-			const overlaysAfterId = filteredOverlays.find(overlayId => overlays[overlayId].photoTime > params.time);
-			const overlaysAfter = overlays[overlaysAfterId];
-			const featureJson = get(params, 'contextEntities[0].featureJson');
-			let extent;
-			if (featureJson) {
-				const featureJsonScale = transformScale(featureJson, 1.1);
-				if (featureJsonScale.geometry.type !== 'Point') {
-					extent = bbox(featureJsonScale);
-				}
-			}
-			const payload = [{ overlay: overlaysBefore, extent }, {
-				overlay: overlaysAfter,
-				extent
-			}].filter(({ overlay }) => Boolean(overlay));
-			return [
-				new DisplayMultipleOverlaysFromStoreAction(payload),
-				new SetContextParamsAction({ defaultOverlay: null })
-			];
-		}),
-		share()
-	);
-
-	@Effect()
-	setSpecialObjectsFromContextEntities$: Observable<any> = this.store.select(selectContextEntities).pipe(
-		filter((contextEntities: IContextEntity[]) => Boolean(contextEntities)),
-		map((contextEntities: IContextEntity[]): Action => {
-			const specialObjects = contextEntities.map(contextEntity => ({
-				id: contextEntity.id,
-				date: contextEntity.date,
-				shape: 'star'
-			} as IOverlaySpecialObject));
-			return new SetSpecialObjectsActionStore(specialObjects);
-		})
+	PostContextOpen$: Observable<any> = this.actions$.pipe(
+		ofType<SelectCaseAction>(CasesActionTypes.SELECT_CASE_SUCCESS),
+		filter(({ payload }) => Boolean(payload.selectedContextId)),
+		mergeMap(this.postContextAction.bind(this))
 	);
 
 	constructor(protected actions$: Actions,
 				protected store: Store<any>,
 				protected casesService: CasesService,
+				protected translateService: TranslateService,
+				protected loggerService: LoggerService,
+				protected auth0Service: Auth0Service,
 				protected overlaysService: OverlaysService,
-				protected contextService: ContextService) {
-
+				@Inject(ContextConfig) protected config: IContextConfig
+	) {
 	}
 
-	filterNotRegisteredFromFilterOverlay(overlayState: IOverlaysState): IOverlaysState {
-		const newOverlayState = {...overlayState};
-		newOverlayState.filteredOverlays = newOverlayState.filteredOverlays.filter( filterOverlay =>
-			overlayState.entities[filterOverlay].isGeoRegistered !== GeoRegisteration.notGeoRegistered);
-		return newOverlayState;
+	private hasSendingSystemParam(obj): string {
+		return obj[Object.keys(obj).find( key => key.toLowerCase() === 'sendingsystem')]
 	}
 
-	getCaseForContext(defaultCaseQueryParams: ICase, context: IContext, params: IContextParams): Observable<ICase> {
-		const updatedCase = { ...defaultCaseQueryParams };
-
-		const mapToCase = map(({ startDate, endDate }: IStartAndEndDate): ICase => ({
-				...updatedCase,
-				state: {
-					...updatedCase.state,
-					time: {
-						type: 'absolute',
-						from: new Date(startDate),
-						to: new Date(endDate)
-					}
-				}
-			}
-		));
-
-		let case$: Observable<ICase> = of(defaultCaseQueryParams).pipe(<any>mapToCase);
-
-		if (context.imageryCountBefore && !context.imageryCountAfter) {
-			case$ = <any>this.overlaysService.getStartDateViaLimitFacets({
-				region: updatedCase.state.region,
-				limit: context.imageryCountBefore,
-				facets: updatedCase.state.facets
-			}).pipe(mapToCase);
-		} else if (context.imageryCountBefore && context.imageryCountAfter) {
-			case$ = this.overlaysService.getStartAndEndDateViaRangeFacets({
-				region: updatedCase.state.region,
-				limitBefore: context.imageryCountBefore,
-				limitAfter: context.imageryCountAfter,
-				facets: updatedCase.state.facets,
-				date: params.time
-			}).pipe(mapToCase);
+	parseContextParams([{ payload }, mapId]: [LoadDefaultCaseAction, string]): any[] {
+		const { context, ...params } = payload;
+		const selectedContext = { id: context };
+		let contextCase = this.casesService.defaultCase;
+		const missingParams = this.isMissingParametersContext(context, params);
+		const actions: unknown[] = [new SelectCaseAction(contextCase)];
+		if (missingParams.length > 0) {
+			const toastText = this.buildErrorToastMessage(context, missingParams);
+			actions.push(new SetToastMessageAction({ toastText }));
+			return actions;
 		}
-		return case$;
+		if (!this.isValidGeometry(params.geometry)) {
+			actions.push(new SetToastMessageAction({ toastText: this.translateService.instant(CONTEXT_TOAST.region) }));
+			return actions;
+		}
+
+		const sendingSystem = this.hasSendingSystemParam(params);
+		if (Boolean(sendingSystem)) {
+			this.loggerService.info(`open context from ${sendingSystem}`);
+		}
+		switch (context) {
+			case ContextName.AreaAnalysis:
+				contextCase = this.casesService.updateCaseViaContext({
+					...selectedContext,
+				}, this.casesService.defaultCase, params);
+				return [new SelectCaseAction(contextCase)];
+			case ContextName.ImisightMission:
+				this.auth0Service.setSession({
+					accessToken: params.accessToken,
+					idToken: params.idToken,
+					expiresIn: params.expiresIn
+				});
+
+				// If no time is provided, the time will be taken from the configuration file
+				contextCase = this.casesService.updateCaseViaContext(selectedContext, this.casesService.defaultCase, params);
+				return [new SelectCaseAction(contextCase)];
+			case ContextName.QuickSearch:
+			case ContextName.TwoMaps:
+				const time = this.parseTimeParams(params.time);
+				const dataInputFilters = this.parseSensorParams(context === ContextName.TwoMaps ? this.config.TwoMaps.sensors : params.sensors);
+				contextCase = this.casesService.updateCaseViaContext({
+					...selectedContext,
+					time,
+					dataInputFilters
+				}, this.casesService.defaultCase, params);
+				return [new SelectCaseAction(contextCase)];
+			default:
+				actions.push(new SetToastMessageAction({
+						toastText: this.buildErrorToastMessage(context)
+					})
+				);
+		}
+		return actions;
+	}
+
+	postContextAction(action: SelectCaseAction) {
+		switch (action.payload.selectedContextId) {
+			case ContextName.TwoMaps:
+				return this.actions$.pipe(
+					ofType<LoadOverlaysSuccessAction>(OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS),
+					filter( ({payload}: {payload: IOverlay[]}) => Boolean(payload.length)),
+					mergeMap(({payload}: {payload: IOverlay[]}) => {
+						const geoOverlays = this.findGeoOverlays(payload);
+						if (Boolean(geoOverlays.length)) {
+							return [
+								new SetLayoutAction(this.config.TwoMaps.layout),
+								new DisplayMultipleOverlaysFromStoreAction(geoOverlays.map( overlay => ({overlay}))),
+								new SelectOnlyGeoRegistered()
+							]
+						}
+						else {
+							return [new SetToastMessageAction({toastText: CONTEXT_TOAST.geoOverlayNotExist})]
+						}
+
+						}
+					)
+				);
+			default:
+				return EMPTY;
+		}
+	}
+
+	private parseTimeParams(contextTime: string = '') {
+		const time = this.casesService.defaultTime;
+		const [start, end] = contextTime.split(',');
+		const from = new Date(start);
+		const to = new Date(end);
+		if (moment(from).isValid()) {
+			time.from = from;
+		}
+		if (moment(to).isValid()) {
+			time.to = to;
+		}
+		return time;
+	}
+
+	private parseSensorParams(sensors): ICaseDataInputFiltersState {
+		const sensorsArray = sensors.split(',').map( sensor => sensor.trim());
+		const filters: IDataInputFilterValue[] = uniqWith(sensorsArray
+				.map(this.overlaysService.getSensorTypeAndProviderFromSensorName.bind(this.overlaysService))
+				.filter(Boolean) , isEqual);
+		return {
+			filters,
+			fullyChecked: filters.length === 0,
+			customFiltersSensor: sensorsArray
+		}
+	}
+
+	private buildErrorToastMessage(contextName: string, params?: string[]) {
+		if (params) {
+			return this.translateService.instant(CONTEXT_TOAST.paramsError).replace('{0}', params.join(', ')).replace('{1}', contextName);
+		}
+		return this.translateService.instant(CONTEXT_TOAST.contextError.replace('{0}', contextName));
+
+	}
+
+	private isMissingParametersContext(contextName: string, params: { [key: string]: unknown }) {
+		const passParams = Object.keys(params);
+		const allParams = RequiredContextParams[contextName];
+		return Boolean(allParams) ? allParams.filter(param => !passParams.includes(param)) : [];
+	}
+
+	private isValidGeometry(geometry: string) {
+		return /POLYGON|POINT/i.test(geometry)
+	}
+
+	private findGeoOverlays(overlays: IOverlay[], numOfOverlays: number = 1): IOverlay[] {
+		const onlyGeoRegisteredOverlay = overlays.filter( overlay => overlay.isGeoRegistered !== GeoRegisteration.notGeoRegistered)
+			// make sure the array in ascending order by date
+			.sort( (a, b) => a.date.getTime() - b.date.getTime());
+		return onlyGeoRegisteredOverlay.slice( onlyGeoRegisteredOverlay.length - numOfOverlays);
 	}
 
 }

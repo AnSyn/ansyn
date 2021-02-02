@@ -19,7 +19,6 @@ import { TranslateModule } from '@ngx-translate/core';
 		TranslateModule
 	],
 	providers: [AnaglyphSensorService],
-	entryComponents: [AnaglyphSensorAlertComponent],
 	declarations: [AnaglyphSensorAlertComponent]
 })
 export class OpenlayersAnaglyphSensorModule {

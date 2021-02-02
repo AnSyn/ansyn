@@ -1,23 +1,24 @@
-import { BaseImageryPlugin, ImageryPlugin, IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
+import { BaseImageryPlugin, ImageryPlugin, IVisualizerEntity, IVisualizerStyle, VisualizersConfig, IVisualizersConfig } from '@ansyn/imagery';
 import { uniq } from 'lodash';
 import { select, Store } from '@ngrx/store';
 import { selectActiveMapId, selectOverlayByMapId } from '@ansyn/map-facade';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, merge, Observable } from 'rxjs';
 import { Inject } from '@angular/core';
-import { distinctUntilChanged, map, mergeMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, map, mergeMap, take, tap, withLatestFrom, filter, skip, switchMapTo } from 'rxjs/operators';
 import { AutoSubscription } from 'auto-subscriptions';
-import { selectGeoFilterSearchMode } from '../../../../../status-bar/reducers/status-bar.reducer';
+import { selectGeoFilterActive } from '../../../../../status-bar/reducers/status-bar.reducer';
 import {
 	selectAnnotationMode,
 	selectAnnotationProperties,
 	selectSubMenu,
-	SubMenuEnum
-} from '../../../../../menu-items/tools/reducers/tools.reducer';
+} from '../../../../../status-bar/components/tools/reducers/tools.reducer';
 import { featureCollection, FeatureCollection } from '@turf/turf';
 import {
 	AnnotationMode,
 	AnnotationsVisualizer,
 	IDrawEndEvent,
+	IEditAnnotationMode,
+	ILabelTranslateMode,
 	IOLPluginsConfig,
 	OL_PLUGINS_CONFIG,
 	OpenLayersMap,
@@ -34,36 +35,43 @@ import {
 	AnnotationRemoveFeature,
 	AnnotationUpdateFeature,
 	SetAnnotationMode,
-	ToolsActionsTypes
-} from '../../../../../menu-items/tools/actions/tools.actions';
-import { UpdateLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
-import { SearchMode, SearchModeEnum } from '../../../../../status-bar/models/search-mode.enum';
+	ToolsActionsTypes, UpdateMeasureDataOptionsAction
+} from '../../../../../status-bar/components/tools/actions/tools.actions';
+import { LogAddFeatureToLayer, UpdateLayer } from '../../../../../menu-items/layers-manager/actions/layers.actions';
 import { IOverlaysTranslationData } from '../../../../../menu-items/cases/models/case.model';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
 import { selectTranslationData } from '../../../../../overlays/overlay-status/reducers/overlay-status.reducer';
 import { SetOverlayTranslationDataAction } from '../../../../../overlays/overlay-status/actions/overlay-status.actions';
 import { Actions, ofType } from '@ngrx/effects';
+import { GeometryObject } from 'geojson';
+import { SubMenuEnum } from '../../../../../status-bar/components/tools/models/tools.model';
 
 // @dynamic
 @ImageryPlugin({
 	supported: [OpenLayersMap],
-	deps: [Store, Actions, OpenLayersProjectionService, OL_PLUGINS_CONFIG]
+	deps: [Store, Actions, OpenLayersProjectionService, OL_PLUGINS_CONFIG, VisualizersConfig]
 })
 export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
+	protected isContinuousDrawingEnabled: boolean;
+	protected openLastDrawnAnnotationContextMenuEnabled: boolean;
+
+	/** Last selected annotation mode which was not null or undefined */
+	private lastAnnotationMode: AnnotationMode;
+
 	annotationsVisualizer: AnnotationsVisualizer;
 	overlay: IOverlay;
 
-	activeAnnotationLayer$: Observable<ILayer> = combineLatest(
+	activeAnnotationLayer$: Observable<ILayer> = combineLatest([
 		this.store$.pipe(select(selectActiveAnnotationLayer)),
 		this.store$.pipe(select(selectLayersEntities))
-	).pipe(
+	]).pipe(
 		map(([activeAnnotationLayerId, entities]) => {
 			return entities[activeAnnotationLayerId];
 		})
 	);
 
 	getAllAnotationLayers$: Observable<any> = this.store$.select(selectLayers).pipe(
-		map( (layers: ILayer[]) => layers.filter(layer => layer.type === LayerType.annotation))
+		map((layers: ILayer[]) => layers.filter(layer => layer.type === LayerType.annotation))
 	);
 
 	annotationFlag$ = this.store$.select(selectSubMenu).pipe(
@@ -88,9 +96,9 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 
 	@AutoSubscription
 	geoFilterSearchMode$ = this.store$.pipe(
-		select(selectGeoFilterSearchMode),
-		tap((searchMode: SearchMode) => {
-			this.annotationsVisualizer.mapSearchIsActive = searchMode !== SearchModeEnum.none;
+		select(selectGeoFilterActive),
+		tap((active: boolean) => {
+			this.annotationsVisualizer.mapSearchIsActive = active;
 		})
 	);
 
@@ -104,7 +112,11 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 				if (!useMapId || (useMapId && action.payload.mapId === this.mapId)) {
 					this.annotationsVisualizer.setMode(annotationMode, !useMapId);
 				}
-			}));
+			}),
+			map(action => action.payload ? action.payload.annotationMode : null),
+			filter(annotationMode => !!annotationMode),
+			tap(annotationMode => this.lastAnnotationMode = annotationMode)
+		);
 
 	@AutoSubscription
 	annotationPropertiesChange$: Observable<any> = this.store$.pipe(
@@ -113,22 +125,26 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	);
 
 	@AutoSubscription
-	onAnnotationsChange$ = combineLatest(
+	onAnnotationsChange$ = combineLatest([
 		this.store$.pipe(select(selectLayersEntities)),
 		this.annotationFlag$,
 		this.store$.select(selectSelectedLayersIds),
 		this.isActiveMap$,
 		this.store$.select(selectActiveAnnotationLayer)
-	).pipe(
+	]).pipe(
 		mergeMap(this.onAnnotationsChange.bind(this))
 	);
 
 	constructor(public store$: Store<any>,
 				protected actions$: Actions,
 				protected projectionService: OpenLayersProjectionService,
-				@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig) {
+				@Inject(OL_PLUGINS_CONFIG) protected olPluginsConfig: IOLPluginsConfig,
+				@Inject(VisualizersConfig) config: IVisualizersConfig) {
 		super();
-}
+		// TODO - refactor with optional chaining when typescript version updated to >= 3.7
+		this.isContinuousDrawingEnabled = (config && config.AnnotationsVisualizer && config.AnnotationsVisualizer.extra && config.AnnotationsVisualizer.extra.continuousDrawing) ? config.AnnotationsVisualizer.extra.continuousDrawing : false;
+		this.openLastDrawnAnnotationContextMenuEnabled = (config && config.AnnotationsVisualizer && config.AnnotationsVisualizer.extra && config.AnnotationsVisualizer.extra.openContextMenuOnDrawEnd) ? config.AnnotationsVisualizer.extra.openContextMenuOnDrawEnd : false;
+	}
 
 	get offset() {
 		return this.annotationsVisualizer.offset;
@@ -159,19 +175,26 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 	@AutoSubscription
 	onDrawEnd$ = () => this.annotationsVisualizer.events.onDrawEnd.pipe(
 		withLatestFrom(this.activeAnnotationLayer$),
-		tap(([{ GeoJSON, feature }, activeAnnotationLayer]: [IDrawEndEvent, ILayer]) => {
-			const [geoJsonFeature] = GeoJSON.features;
-			const data = <FeatureCollection<any>>{ ...activeAnnotationLayer.data };
-			data.features.push(geoJsonFeature);
+		map(([{ GeoJSON, feature }, activeAnnotationLayer]: [IDrawEndEvent, ILayer]) => {
+			this.store$.dispatch(new LogAddFeatureToLayer({ layerName: activeAnnotationLayer.name }));
+			const data = <FeatureCollection<any>>{
+				...activeAnnotationLayer.data,
+				features: activeAnnotationLayer.data.features.concat(GeoJSON.features)
+			};
 			if (this.overlay) {
-				geoJsonFeature.properties = {
-					...geoJsonFeature.properties,
+				GeoJSON.features[0].properties = {
+					...GeoJSON.features[0].properties,
 					...this.projectionService.getProjectionProperties(this.communicator, data, feature, this.overlay)
 				};
 			}
-			geoJsonFeature.properties = { ...geoJsonFeature.properties };
-			this.store$.dispatch(new UpdateLayer(<ILayer>{ ...activeAnnotationLayer, data }));
-		})
+			GeoJSON.features[0].properties = { ...GeoJSON.features[0].properties };
+			this.store$.dispatch(new UpdateLayer({ id: activeAnnotationLayer.id, data }));
+			const featureId = this.getFeatureIdFromGeoJson(GeoJSON);
+			return featureId;
+		}),
+		filter(featureId => this.isContinuousDrawingEnabled || (this.openLastDrawnAnnotationContextMenuEnabled && !!featureId)),
+		tap(this.openLastDrawnAnnotationContextMenuEnabled ? this.openContextMenuByFeatureId : () => {}),
+		switchMapTo(this.closeContextMenuesAndKeepDrawing$)
 	);
 
 	@AutoSubscription
@@ -180,30 +203,34 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 		tap(([{ GeoJSON, feature }, AnnotationLayers]: [IDrawEndEvent, ILayer[]]) => {
 			const [geoJsonFeature] = GeoJSON.features;
 			const layerToUpdate = AnnotationLayers.find((layer: ILayer) => layer.data.features.some(({ id }) => id === geoJsonFeature.id));
-			const data = <FeatureCollection<any>>{ ...layerToUpdate.data };
-			const annotationToChangeIndex = data.features.findIndex((feature) => feature.id === geoJsonFeature.id);
-			data.features[annotationToChangeIndex] = geoJsonFeature;
-			let label = geoJsonFeature.properties.label;
-			if (geoJsonFeature.properties.label.geometry) {
-				label = {...geoJsonFeature.properties.label, geometry: GeoJSON.features[1].geometry}
-			}
-			feature.set('label', label);
-			if (this.overlay) {
-				geoJsonFeature.properties = {
-					...geoJsonFeature.properties,
-					...this.projectionService.getProjectionProperties(this.communicator, data, feature, this.overlay)
+			if (layerToUpdate) {
+				const annotationToChangeIndex = layerToUpdate.data.features.findIndex((feature) => feature.id === geoJsonFeature.id);
+				const data = <FeatureCollection<any>>{ ...layerToUpdate.data,
+					features: layerToUpdate.data.features.map((existingFeature, index) =>
+					index === annotationToChangeIndex ? geoJsonFeature : existingFeature)
 				};
+				let label = geoJsonFeature.properties.label;
+				if (geoJsonFeature.properties.label.geometry) {
+					label = { ...geoJsonFeature.properties.label, geometry: GeoJSON.features[1].geometry };
+				}
+				feature.set('label', label);
+				if (this.overlay) {
+					geoJsonFeature.properties = {
+						...geoJsonFeature.properties,
+						...this.projectionService.getProjectionProperties(this.communicator, data, feature, this.overlay)
+					};
+				}
+				geoJsonFeature.properties = { ...geoJsonFeature.properties, label };
+				this.store$.dispatch(new UpdateLayer({ id: layerToUpdate.id, data }));
 			}
-			geoJsonFeature.properties = { ...geoJsonFeature.properties , label};
-			this.store$.dispatch(new UpdateLayer(<ILayer>{ ...layerToUpdate, data }));
-			})
+		})
 	);
 
 	@AutoSubscription
-	getOffsetFromCase$ = () => combineLatest(this.store$.select(selectTranslationData), this.store$.select(selectOverlayByMapId(this.mapId))).pipe(
+	getOffsetFromCase$ = () => combineLatest([this.store$.select(selectTranslationData), this.store$.select(selectOverlayByMapId(this.mapId))]).pipe(
 		tap(([translationData, overlay]: [IOverlaysTranslationData, IOverlay]) => {
 			if (overlay && translationData[overlay.id] && translationData[overlay.id].offset) {
-				this.offset = translationData[overlay.id].offset;
+				this.offset = [...translationData[overlay.id].offset] as [number, number];
 			} else {
 				this.offset = [0, 0];
 			}
@@ -217,7 +244,6 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			this.store$.dispatch(new AnnotationRemoveFeature(featureId));
 		})
 	);
-
 
 	@AutoSubscription
 	updateEntity$ = (): Observable<IVisualizerEntity> => this.annotationsVisualizer.events.updateEntity.pipe(
@@ -237,6 +263,20 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 					overlayId: this.overlay.id, offset
 				}));
 			}
+		})
+	);
+
+	@AutoSubscription
+	onStartLabelOrAnnotationEditDisableMeasureTranslate$: () => Observable<IEditAnnotationMode | ILabelTranslateMode> = () => merge(
+		this.annotationsVisualizer.events.onAnnotationEditStart,
+		this.annotationsVisualizer.events.onLabelTranslateStart).pipe(
+		tap((event) => {
+			this.store$.dispatch(new UpdateMeasureDataOptionsAction({
+				mapId: this.mapId,
+				options: {
+					forceDisableTranslate: event !== undefined
+				}
+			}))
 		})
 	);
 
@@ -284,6 +324,27 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 			});
 	}
 
+	private openContextMenuByFeatureId = (featureId: string) => this.annotationsVisualizer.events.onSelect.next([featureId]);
+
+	private get closeContextMenuesAndKeepDrawing$() {
+		// TODO - can be replaced with this.communicator.ActiveMap.mouseSingleClick.pipe(...) when most recent changes merged
+		return this.annotationsVisualizer.events.onClick.pipe(
+			skip(this.isContinuousDrawingEnabled && !this.openLastDrawnAnnotationContextMenuEnabled ? 0 : 1),
+			take(1),
+			tap(_ => {
+				if (this.openLastDrawnAnnotationContextMenuEnabled) {
+					this.annotationsVisualizer.events.onSelect.next([]);
+				}
+				if (this.isContinuousDrawingEnabled) {
+					this.annotationsVisualizer.setMode(this.lastAnnotationMode, true);
+				}
+			})
+		);
+	}
+
+	private getFeatureIdFromGeoJson(geoJson: FeatureCollection<GeometryObject, {[name: string]: any}>, index = 0): string {
+		return (geoJson.features && geoJson.features[index] && geoJson.features[index].id) ?
+			geoJson.features[index].id.toString() :
+			null;
+	}
 }
-
-

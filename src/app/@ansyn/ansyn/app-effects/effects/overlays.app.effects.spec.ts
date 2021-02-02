@@ -43,7 +43,7 @@ import {
 	toolsInitialState,
 	ToolsReducer,
 	toolsStateSelector
-} from '../../modules/menu-items/tools/reducers/tools.reducer';
+} from '../../modules/status-bar/components/tools/reducers/tools.reducer';
 import {
 	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayAction,
@@ -63,7 +63,8 @@ import {
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { ICase } from '../../modules/menu-items/cases/models/case.model';
 import { cloneDeep } from 'lodash';
-import { LoggerService } from '../../modules/core/services/logger.service';
+import { ComponentVisibilityService } from '../../app-providers/component-visibility.service';
+import { MockCompoentnService } from '../../modules/core/test/mock-compoentn-service';
 
 describe('OverlaysAppEffects', () => {
 	let overlaysAppEffects: OverlaysAppEffects;
@@ -199,18 +200,6 @@ describe('OverlaysAppEffects', () => {
 				{
 					provide: OverlaysService,
 					useValue: {
-						getStartDateViaLimitFasets: () => {
-							return of({
-								'startDate': new Date('2014-06-27T08:43:03.624Z'),
-								'endDate': new Date('2015-06-27T08:43:03.624Z')
-							});
-						},
-						getStartAndEndDateViaRangeFacets: () => {
-							return of({
-								'startDate': new Date('2014-06-27T08:43:03.624Z'),
-								'endDate': new Date('2015-06-27T08:43:03.624Z')
-							});
-						},
 						getTimeStateByOverlay: () => {
 						},
 						getAllOverlays$: of(new Map<string, any>(Object.entries(exampleOverlays))),
@@ -232,10 +221,8 @@ describe('OverlaysAppEffects', () => {
 					}
 				},
 				{
-					provide: LoggerService, useValue: {
-						error: (some) => null, info: () => {
-						}
-					}
+					provide: ComponentVisibilityService,
+					useClass: MockCompoentnService
 				}
 			]
 
@@ -347,7 +334,7 @@ describe('OverlaysAppEffects', () => {
 		it('No MapId on payload( should dispatch activeMapId as mapId )', () => {
 			const lastOverlayId: string = exampleOverlays.last.id;
 			const lastOverlay = exampleOverlays.last;
-			mapState.activeMapId = 'activeMapId';
+			mapState.activeMapId = '1';
 
 			actions = hot('--a--', {
 				a: new DisplayOverlayFromStoreAction({
@@ -357,7 +344,7 @@ describe('OverlaysAppEffects', () => {
 			});
 
 			const expectedResults = cold('--b--', {
-				b: new DisplayOverlayAction({ overlay: <any>lastOverlay, mapId: 'activeMapId', extent: undefined, customOriantation: null })
+				b: new DisplayOverlayAction({ overlay: <any>lastOverlay, mapId: '1', extent: undefined, customOriantation: null })
 			});
 			expect(overlaysAppEffects.onDisplayOverlayFromStore$).toBeObservable(expectedResults);
 		});

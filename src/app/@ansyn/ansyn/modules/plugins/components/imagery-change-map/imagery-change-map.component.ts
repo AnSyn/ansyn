@@ -1,22 +1,18 @@
-import { Component, ElementRef, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import {
-	ReplaceMainLayer,
 	IEntryComponent,
+	ReplaceMainLayer,
+	selectIsMinimalistViewMode,
 	selectMapTypeById,
 	selectOverlayByMapId,
-	selectSourceTypeById, selectIsMinimalistViewMode
+	selectSourceTypeById
 } from '@ansyn/map-facade';
-import { Store } from '@ngrx/store';
-import {
-	CommunicatorEntity,
-	IMapProviderConfig,
-	IMapSource,
-	MAP_PROVIDERS_CONFIG
-} from '@ansyn/imagery';
-import { fromEvent } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
+import { select, Store } from '@ngrx/store';
+import { CommunicatorEntity, GetProvidersMapsService, IMapSource } from '@ansyn/imagery';
+import { filter, mergeMap, tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { LoggerService } from '../../../core/services/logger.service';
+import { ClickOutsideService } from '../../../core/click-outside/click-outside.service';
 
 @Component({
 	selector: 'ansyn-imagery-change-map',
@@ -34,27 +30,34 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	communicator: CommunicatorEntity;
 
 	@AutoSubscription
-	onClickOutside$ = fromEvent(window, 'click').pipe(
-		filter(() => Boolean(this.showPopup)),
-		tap((event: any) => {
-			if (event.path && !event.path.includes(this.element.nativeElement)) {
-				this.showPopup = false;
-			}
-		})
-	);
-
-	@AutoSubscription
 	isMinimalistViewMode$ = this.store$.select(selectIsMinimalistViewMode).pipe(
 		tap(isMinimalistViewMode => {
 			this.show = !isMinimalistViewMode;
 		})
 	);
 
-	constructor(protected store$: Store<any>,
-				protected element: ElementRef,
-				protected logger: LoggerService,
-				@Inject(MAP_PROVIDERS_CONFIG) protected mapProvidersConfig: IMapProviderConfig) {
+	constructor(
+		protected store$: Store<any>,
+		protected logger: LoggerService,
+		protected element: ElementRef,
+		protected clickOutsideService: ClickOutsideService,
+		protected getProvidersMapsService: GetProvidersMapsService
+	) {
 	}
+
+
+	getMapType$ = () => this.store$.pipe(
+		select(selectMapTypeById(this.mapId)),
+		filter((mapType: string) => Boolean(mapType))
+	);
+
+	@AutoSubscription
+	onClickOutside$ = () => this.clickOutsideService.onClickOutside({monitor: this.element.nativeElement}).pipe(
+		filter((shouldCallback) => {
+			return shouldCallback && this.showPopup;
+		}),
+		tap(this.togglePopup.bind(this))
+	);
 
 	@AutoSubscription
 	onDisplayChange$ = () => this.store$.select(selectOverlayByMapId(this.mapId)).pipe(
@@ -64,12 +67,15 @@ export class ImageryChangeMapComponent implements OnInit, OnDestroy, IEntryCompo
 	);
 
 	@AutoSubscription
-	mapTypeChange$ = () => this.store$.select(selectMapTypeById(this.mapId)).pipe(
-		filter((mapType: string) => Boolean(mapType)),
-		tap((mapType: string) => {
-			this.currentSourceType = this.mapProvidersConfig[mapType].defaultMapSource;
-			this.mapSources = this.mapProvidersConfig[mapType].sources;
-		})
+	getDefaultSource$ = () => this.getMapType$().pipe(
+		mergeMap( (mapType) => this.getProvidersMapsService.getDefaultProviderByType(mapType)),
+		tap( (defaultSource) => this.currentSourceType = defaultSource)
+	);
+
+	@AutoSubscription
+	getAllSources$ = () => this.getMapType$().pipe(
+		mergeMap( (mapType) => this.getProvidersMapsService.getAllSourceForType(mapType)),
+		tap( (sources) => this.mapSources = sources)
 	);
 
 	@AutoSubscription

@@ -1,33 +1,37 @@
-import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
-import {
-	IEntryComponent,
-	selectActiveMapId,
-	selectHideLayersOnMap,
-	selectMapsTotal,
-	selectOverlayByMapId,
-} from '@ansyn/map-facade';
+import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { IEntryComponent, selectActiveMapId, selectHideLayersOnMap, selectOverlayByMapId, } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { combineLatest, Observable } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { GeoRegisteration, IOverlay } from '../models/overlay.model';
 import {
-	SetRemovedOverlaysIdAction,
+	SetAutoImageProcessing,
 	ToggleDraggedModeAction,
-	ToggleFavoriteAction,
-	TogglePresetOverlayAction
+	ToggleFavoriteAction
 } from './actions/overlay-status.actions';
 import {
 	selectFavoriteOverlays,
-	selectPresetOverlays,
-	selectRemovedOverlays,
+	selectOverlaysImageProcess,
 	selectTranslationData
 } from './reducers/overlay-status.reducer';
 import { AnnotationMode } from '@ansyn/ol';
-import { ITranslationData } from '../../menu-items/cases/models/case.model';
+import {
+	IOverlayImageProcess,
+	IOverlaysImageProcess,
+	ITranslationData
+} from '../../menu-items/cases/models/case.model';
 import { Actions, ofType } from '@ngrx/effects';
-import { SetAnnotationMode, ToolsActionsTypes, ClearActiveInteractionsAction } from '../../menu-items/tools/actions/tools.actions';
-import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-manager/reducers/layers.reducer';
+import {
+	ClearActiveInteractionsAction,
+	SetAnnotationMode,
+	ToolsActionsTypes
+} from '../../status-bar/components/tools/actions/tools.actions';
+import { selectLayers, selectSelectedLayersIds } from '../../menu-items/layers-manager/reducers/layers.reducer';
+import { ClickOutsideService } from '../../core/click-outside/click-outside.service';
+import { OverlayStatusService } from './services/overlay-status.service';
+import { ComponentVisibilityService } from '../../../app-providers/component-visibility.service';
+import { ComponentVisibilityItems } from '../../../app-providers/component-mode';
 
 @Component({
 	selector: 'ansyn-overlay-status',
@@ -39,21 +43,28 @@ import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-m
 	destroy: 'ngOnDestroy'
 })
 export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent {
+	// for component
+	readonly isAnnotationsShow: boolean;
+	readonly isFavoritesShow: boolean;
+	readonly isImageProcessingShow: boolean;
+	//
 	@Input() mapId: string;
+	isAutoProcessing: boolean;
+	isManualProcessingOpen: boolean;
 	overlay: IOverlay;
 	isActiveMap: boolean;
 	favoriteOverlays: IOverlay[];
-	removedOverlaysIds: string[] = [];
-	presetOverlays: IOverlay[];
 	overlaysTranslationData: any;
 	isFavorite: boolean;
 	favoritesButtonText: string;
 	isPreset: boolean;
-	presetsButtonText: string;
-	isRemoved: boolean;
 	isDragged: boolean;
+	isImageControlActive = false;
 	draggedButtonText: string;
 	isLayersVisible: boolean;
+	isManualProcessChanged: boolean;
+
+	selectOverlaysImageProcess$ = this.store$.pipe(select(selectOverlaysImageProcess), filter(this.hasOverlay.bind(this)));
 
 	@AutoSubscription
 	favoriteOverlays$: Observable<any[]> = this.store$.select(selectFavoriteOverlays).pipe(
@@ -62,28 +73,21 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 			this.updateFavoriteStatus();
 		})
 	);
-	@AutoSubscription
-	presetOverlays$: Observable<any[]> = this.store$.select(selectPresetOverlays).pipe(
-		tap((presetOverlays) => {
-			this.presetOverlays = presetOverlays;
-			this.updatePresetStatus();
-		})
-	);
 
 	@AutoSubscription
-	removedOverlays$: Observable<string[]> = this.store$.select(selectRemovedOverlays).pipe(
-		tap((removedOverlaysIds) => {
-			this.removedOverlaysIds = removedOverlaysIds;
-			this.updateRemovedStatus();
-		})
-	);
-
-	@AutoSubscription
-	active$ = combineLatest(this.store$.select(selectActiveMapId), this.store$.select(selectTranslationData)).pipe(
-		tap(([activeMapId, overlaysTranslationData]: [string, { [key: string]: ITranslationData }]) => {
+	active$ = combineLatest([this.store$.select(selectActiveMapId), this.store$.select(selectTranslationData)]).pipe(
+		tap(([activeMapId, overlaysTranslationData]: [string, { [_: string]: ITranslationData }]) => {
 			this.isActiveMap = activeMapId === this.mapId;
 			this.overlaysTranslationData = overlaysTranslationData;
 			this.updateDraggedStatus();
+		})
+	);
+
+	@AutoSubscription
+	onClickOutSide$ = this.clickOutsideService.onClickOutside({monitor: this.element.nativeElement}).pipe(
+		filter(Boolean),
+		tap( () => {
+			this.isManualProcessingOpen = false;
 		})
 	);
 
@@ -102,16 +106,42 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 				}
 			}));
 
-	constructor(public store$: Store<any>, protected actions$: Actions) {
+	@AutoSubscription
+	manualImageProcessingParams$: Observable<Object> = this.selectOverlaysImageProcess$.pipe(
+		map((overlaysImageProcess: IOverlaysImageProcess ) => overlaysImageProcess[this.overlay?.id]?.manuelArgs),
+		tap((imageManualProcessArgs) => {
+			this.isManualProcessChanged = !!imageManualProcessArgs && !this.overlayStatusService.isDefaultImageProcess(imageManualProcessArgs);
+		})
+	);
+
+	@AutoSubscription
+	onChangeAutoImageProcess$: Observable<IOverlayImageProcess> = this.selectOverlaysImageProcess$.pipe(
+		map( (overlaysImageProcess) => overlaysImageProcess[this.overlay?.id]),
+		filter(Boolean),
+		tap( ({isAuto}: IOverlayImageProcess) => this.isAutoProcessing = !!isAuto )
+	);
+
+	constructor(
+		protected overlayStatusService: OverlayStatusService,
+		public store$: Store<any>,
+		protected actions$: Actions,
+		protected element: ElementRef,
+		protected clickOutsideService: ClickOutsideService,
+		componentVisibilityService: ComponentVisibilityService
+	) {
 		this.isPreset = true;
 		this.isFavorite = true;
+		this.isAnnotationsShow = componentVisibilityService.get(ComponentVisibilityItems.ANNOTATIONS);
+		this.isFavoritesShow = componentVisibilityService.get(ComponentVisibilityItems.FAVORITES);
+		this.isImageProcessingShow = componentVisibilityService.get(ComponentVisibilityItems.IMAGE_PROCESSING);
+
 	}
 
 	@AutoSubscription
-	layersVisibility$ = () => combineLatest(
-			this.store$.select(selectSelectedLayersIds),
-			this.store$.select(selectHideLayersOnMap(this.mapId)),
-			this.store$.select(selectLayers))
+	layersVisibility$ = () => combineLatest([
+		this.store$.select(selectSelectedLayersIds),
+		this.store$.select(selectHideLayersOnMap(this.mapId)),
+		this.store$.select(selectLayers)])
 		.pipe(
 			map(([selectedLayerIds, areLayersHidden, layers]) => {
 				layers = layers.filter((currentLayer) =>
@@ -132,21 +162,15 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	@AutoSubscription
 	overlay$ = () => this.store$.pipe(
 		select(selectOverlayByMapId(this.mapId)),
-		tap(overlay => {
+		withLatestFrom( this.store$.pipe(select(selectOverlaysImageProcess)), (overlay, overlaysImageProcess) => [overlay, overlaysImageProcess[overlay?.id]]),
+		tap(([overlay, overlayImageProcess]) => {
 			if (this.isDragged) {
 				this.toggleDragged();
 			}
 			this.overlay = overlay;
-			this.onChangeOverlay();
+			this.onChangeOverlay(overlayImageProcess);
 		})
 	);
-
-	@HostListener('window:keydown', ['$event'])
-	deleteKeyPressed($event: KeyboardEvent) {
-		if (this.isActiveMap && this.overlay && $event.which === 46 && !this.isRemoved) {
-			this.removeOverlay();
-		}
-	}
 
 	ngOnInit() {
 	}
@@ -157,11 +181,21 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		}
 	}
 
-	onChangeOverlay() {
-		this.updateRemovedStatus();
-		this.updatePresetStatus();
+	hasOverlay() {
+		return Boolean(this.overlay);
+	}
+
+	onChangeOverlay(imageProcess) {
 		this.updateFavoriteStatus();
 		this.updateDraggedStatus();
+		this.resetImageProcess(imageProcess);
+	}
+
+	resetImageProcess(imageProcess) {
+		if (this.overlay) {
+			this.isManualProcessingOpen = false;
+			this.dispatchAutoImageProcess(!!imageProcess?.isAuto);
+		}
 	}
 
 	updateFavoriteStatus() {
@@ -172,18 +206,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		this.favoritesButtonText = this.isFavorite ? 'Remove from favorites' : 'Add to favorites';
 	}
 
-	updatePresetStatus() {
-		this.isPreset = false;
-		if (this.overlay && this.presetOverlays && this.presetOverlays.length > 0) {
-			this.isPreset = this.presetOverlays.some(o => o.id === this.overlay.id);
-		}
-		this.presetsButtonText = this.isPreset ? 'Remove from overlays quick loop' : 'Add to overlays quick loop';
-	}
-
-	updateRemovedStatus() {
-		this.isRemoved = this.removedOverlaysIds.includes(this.overlay && this.overlay.id);
-	}
-
 	toggleFavorite() {
 		const overlay = this.overlay;
 		const { id } = overlay;
@@ -191,32 +213,15 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		this.store$.dispatch(new ToggleFavoriteAction({ value, id, overlay }));
 	}
 
-	togglePreset() {
-		const overlay = this.overlay;
-		const { id } = overlay;
-		const value = !this.isPreset;
-		this.store$.dispatch(new TogglePresetOverlayAction({ value, id, overlay }));
-
-	}
-
 	toggleDragged() {
 		this.store$.dispatch(new ToggleDraggedModeAction({
 			mapId: this.mapId,
 			overlayId: this.overlay.id,
 			dragged: !this.isDragged
-		}))
+		}));
 		if (this.isDragged) {
 			this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [SetAnnotationMode] }));
 		}
-	}
-
-	removeOverlay() {
-		this.store$.dispatch(new SetRemovedOverlaysIdAction({
-			mapId: this.mapId,
-			id: this.overlay.id,
-			value: !this.isRemoved
-
-		}))
 	}
 
 	getType(): string {
@@ -236,5 +241,19 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 			return false;
 		}
 		return this.overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered;
+	}
+
+	toggleManualImageProcessing() {
+		this.isManualProcessingOpen = !this.isManualProcessingOpen;
+		this.dispatchAutoImageProcess();
+	}
+
+	toggleAutoImageProcessing() {
+		this.dispatchAutoImageProcess(!this.isAutoProcessing);
+	}
+
+
+	private dispatchAutoImageProcess(enable = false) {
+		this.store$.dispatch(new SetAutoImageProcessing({overlayId: this.overlay.id, isAuto: enable}));
 	}
 }

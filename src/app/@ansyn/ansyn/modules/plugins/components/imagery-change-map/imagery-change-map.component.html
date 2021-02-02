@@ -1,10 +1,9 @@
-<div class="buttons" *ngIf="show" [class.active]="showPopup" [class.disabled]="overlayDisplay">
+<div class="buttons" *ngIf="show"  [class.active]="showPopup" [class.disabled]="overlayDisplay">
 	<button class="small-icon-button"
 			(click)="togglePopup()"
 			[attr.tooltip-value]="'Change map' | translate"
-			[attr.tooltip-class]="'left'">
-		<i class="icon icon-change-map"></i>
-	</button>
+			[attr.tooltip-class]="'right'"
+	><i class="icon icon-change-map"></i></button>
 </div>
 <div class="popup scrolled" *ngIf="showPopup">
 	<div *ngFor="let source of mapSources"
@@ -15,7 +14,7 @@
 			[attr.tooltip-value]="source.displayName"
 			tooltip-class="wrap">
 			<p>{{source.displayName}}</p>
-			<img src="{{source.thumbnail}}" />
+			<img src="{{source.thumbnail}}" alt="{{'thumbnail' | translate}}" />
 		</button>
 	</div>
 </div>

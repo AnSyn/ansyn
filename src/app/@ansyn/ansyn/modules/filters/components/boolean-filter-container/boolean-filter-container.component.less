@@ -1,0 +1,36 @@
+@import "ansyn/less/common";
+
+:host {
+	div.enum-fields-enumerator {
+		&[hidden] {
+			display: none;
+		}
+
+		display: flex;
+		padding: 4px 0;
+		justify-content: space-between;
+
+		&:hover {
+			div.left-side span.only-filter {
+				visibility: visible;
+			}
+		}
+
+		div.left-side {
+			display: flex;
+
+			span.only-filter {
+				visibility: hidden;
+				font-size: 12px;
+				font-style: normal;
+				color: rgba(255, 255, 255, 0.75);
+				cursor: pointer;
+				margin-right: 2px;
+
+				&:hover {
+					text-decoration: underline;
+				}
+			}
+		}
+	}
+}

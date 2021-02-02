@@ -1,0 +1,13 @@
+<div [class.top]="openTop" class="presets">
+	<div *ngFor="let preset of presets">
+		<button (click)="setPreset(preset)">
+			{{presetValue(preset)}} {{presetTitle(preset) | translate}}
+		</button>
+	</div>
+	<button
+		type="submit"
+		(click)="toggleTimePicker()">
+		{{'Custom' | translate}}
+	</button>
+
+</div>

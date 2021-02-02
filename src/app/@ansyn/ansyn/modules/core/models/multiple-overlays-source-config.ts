@@ -16,7 +16,11 @@ export interface IOverlaysSourceProvider {
 	inActive?: boolean;
 	whitelist: IFiltersList[];
 	blacklist: IFiltersList[];
-	dataInputFiltersConfig?: any
+	showOnlyMyChildren?: boolean;
+	dataInputFiltersConfig?: any;
+	sensorNamesByGroup: {
+		[groupName: string]: string[]
+	}
 }
 
 export interface IMultipleOverlaysSourceConfig {

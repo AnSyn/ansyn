@@ -1,4 +1,6 @@
 import {
+	AfterViewChecked,
+	ChangeDetectorRef,
 	Component,
 	ComponentFactoryResolver,
 	ComponentRef,
@@ -13,42 +15,44 @@ import {
 } from '@angular/core';
 import {
 	ContainerChangedTriggerAction,
-	ResetAppAction,
 	SelectMenuItemAction,
 	ToggleIsPinnedAction,
 	ToggleMenuCollapse,
 	UnSelectMenuItemAction
 } from '../actions/menu.actions';
-import { combineLatest, fromEvent, Observable } from 'rxjs';
+import { fromEvent } from 'rxjs';
 import {
 	IMenuState,
-	selectAllMenuItems,
 	selectAutoClose,
-	selectEntitiesMenuItems,
+	selectBadges,
 	selectIsPinned,
 	selectMenuCollapse,
-	selectSelectedMenuItem, selectUserFirstEnter, selectUserHaveCredentials
+	selectSelectedMenuItem,
+	selectSelectedOutsideMenuItem
 } from '../reducers/menu.reducer';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
-import { IMenuItem } from '../models/menu-item.model';
+import { IMenuItem, IOutsideMenuItem } from '../models/menu-item.model';
 import { MenuConfig } from '../models/menuConfig';
 import { IMenuConfig } from '../models/menu-config.model';
-import { Dictionary } from '@ngrx/entity/src/models';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { distinctUntilChanged, filter, tap, withLatestFrom, map } from 'rxjs/operators';
+import { distinctUntilChanged, filter, tap, withLatestFrom } from 'rxjs/operators';
+import { MENU_ITEMS } from '../helpers/menu-item-token';
 
 const animations: any[] = [
 	trigger(
 		'expand', [
-			state('1', style({
-				transform: 'translateX(0)'
+			state('bottom', style({
+				transform: 'translateY(100%)'
 			})),
-			state('0', style({
-				transform: 'translateX(-100%)'
+			state('top', style({
+				transform: 'translateY(-100%)'
 			})),
-			transition('1 <=> 0', animate('0.3s ease-in-out'))
+			state('on', style({
+				transform: 'translateY(0)'
+			})),
+			transition('bottom <=> on, top <=> on', animate('0.3s ease-in-out'))
 		]
 	)
 ];
@@ -72,27 +76,23 @@ const animations: any[] = [
 	menu is open -> toggle same menu item ->  dispatch store -> subscribe store -> change expand -> destroy component
 */
 
-export class MenuComponent implements OnInit, OnDestroy {
-	isUserFirstEntrance: boolean;
-	doesUserHaveCredentials: boolean;
-	_componentElem;
+export class MenuComponent implements OnInit, OnDestroy, AfterViewChecked {
 	currentComponent: ComponentRef<any>;
 	collapse: boolean;
+	_componentElem;
+	selectedMenuItemName: string;
+	entities: {[key: string]: IMenuItem} = {};
+	isPinned: boolean;
+	expand: boolean;
+	onAnimation: boolean;
+	isBuildNeeded: boolean;
+	outsideMenuItem: IOutsideMenuItem;
+
 	@Input() animatedElement: HTMLElement;
-	@ViewChild('menuWrapper') menuWrapperElement: ElementRef;
-	@ViewChild('menu') menuElement: ElementRef;
-	@ViewChild('container') container: ElementRef;
+	@ViewChild('menuWrapper', { static: true }) menuWrapperElement: ElementRef;
+	@ViewChild('menu', { static: true }) menuElement: ElementRef;
+	@ViewChild('container', { static: true }) container: ElementRef;
 	@Input() version;
-
-	topMenuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(
-		select(selectAllMenuItems),
-		map( menuItems => menuItems.filter((menuItem: IMenuItem) => !menuItem.dockedToBottom))
-	);
-
-	bottomMenuItemsAsArray$: Observable<IMenuItem[]> = this.store.pipe(
-		select(selectAllMenuItems),
-		map( menuItems => menuItems.filter((menuItem: IMenuItem) => menuItem.dockedToBottom))
-	);
 
 	@AutoSubscription
 	collapse$ = this.store.select(selectMenuCollapse).pipe(
@@ -100,14 +100,15 @@ export class MenuComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	getMenuEntities: Observable<any> = this.store.select(selectEntitiesMenuItems)
-		.pipe(
-			filter(Boolean),
-			tap((menuEntities) => this.entities = menuEntities)
-		);
+	selectOutsideMenuItem$ = this.store.select(selectSelectedOutsideMenuItem).pipe(
+		tap((menuItem: IOutsideMenuItem) => {
+			this.outsideMenuItem = menuItem;
+			this.toggleItem(menuItem.name);
+		})
+	);
 
 	@AutoSubscription
-	selectIsPinned$ =  this.store.select(selectIsPinned).pipe(
+	selectIsPinned$ = this.store.select(selectIsPinned).pipe(
 		distinctUntilChanged(),
 		tap((isPinned) => {
 			this.isPinned = isPinned;
@@ -121,43 +122,52 @@ export class MenuComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	isUserFirstEntrance$ = this.store.select(selectUserFirstEnter).pipe(
-		tap((isUserFirstEntrance) => this.isUserFirstEntrance = isUserFirstEntrance)
+	selectBadges$ = this.store.select(selectBadges).pipe(
+		distinctUntilChanged((badgeMapA, badgeMapB) => {
+			let isNotChange = true;
+			badgeMapA.forEach( (value, key) => {
+				isNotChange = isNotChange && badgeMapB.get(key) === value;
+			});
+			return isNotChange;
+		}),
+		tap((badgeMap) => {
+			badgeMap.forEach( (value, key) => {
+				if (this.entities[key]) { // for component in case our customer dont want Result Table menu item.
+					this.entities[key].badge = value;
+				}
+			});
+		})
 	);
 
-	@AutoSubscription
-	doesUserHaveCredentials$ = this.store.select(selectUserHaveCredentials).pipe(
-		tap((doesUserHaveCredentials) => this.doesUserHaveCredentials = doesUserHaveCredentials)
-	);
-
-	selectedMenuItemName: string;
-	entities: Dictionary<IMenuItem> = {};
-
-	isPinned: boolean;
-	expand: boolean;
-	onAnimation: boolean;
-	isBuildNeeded: boolean;
-
-	constructor(public componentFactoryResolver: ComponentFactoryResolver,
-				protected store: Store<IMenuState>,
-				protected renderer: Renderer2,
-				protected elementRef: ElementRef,
-				@Inject(DOCUMENT) protected document: Document,
-				@Inject(MenuConfig) public menuConfig: IMenuConfig) {
-
+	constructor(
+		public componentFactoryResolver: ComponentFactoryResolver,
+		protected store: Store<IMenuState>,
+		protected renderer: Renderer2,
+		protected elementRef: ElementRef,
+		@Inject(DOCUMENT) protected document: Document,
+		@Inject(MENU_ITEMS) menuItemsMulti: IMenuItem[][],
+		@Inject(MenuConfig) public menuConfig: IMenuConfig,
+		private cdref: ChangeDetectorRef
+	) {
+		this.initializeMenuItem(menuItemsMulti.reduce((prev, next) => [...prev, ...next], []));
 	}
 
 	get componentElem() {
 		return this._componentElem;
 	}
 
-	@ViewChild('componentElem', { read: ViewContainerRef })
+	@ViewChild('componentElem', { read: ViewContainerRef, static: true })
 	set componentElem(value) {
 		this._componentElem = value;
 		if (this.isBuildNeeded) {
 			this.componentChanges();
 			this.isBuildNeeded = false;
 		}
+	}
+
+	get menuItemsArray(): IMenuItem[] {
+		return Object.values(this.entities)
+			.sort((a, b) => b.dockedToBottom ? -1 : 0); // sort all bottom item to last of the list
 	}
 
 	get pinText(): string {
@@ -178,8 +188,9 @@ export class MenuComponent implements OnInit, OnDestroy {
 			filter(this.anyMenuItemSelected.bind(this)),
 			withLatestFrom(this.store.select(selectAutoClose)),
 			filter(([click, autoClose]: [any, boolean]) => {
-				const include = click.path.includes(this.elementRef.nativeElement);
-				return !include && !this.isPinned && autoClose;
+				const includedElementToIgnore = click.path.includes(this.elementRef.nativeElement) ||
+								click.path.includes(this.outsideMenuItem.elementRef);
+				return !includedElementToIgnore && !this.isPinned && autoClose;
 			}),
 			tap(this.closeMenu.bind(this))
 		);
@@ -205,13 +216,13 @@ export class MenuComponent implements OnInit, OnDestroy {
 			this.renderer.removeClass(this.container.nativeElement, 'pinned');
 		}
 
-		this.animatedElement.style.animation = this.isPinned ? 'pinned .4s' : 'unPinned .4s';
+		this.animatedElement.style.animation = `${this.isPinned ? 'pinned' : 'unPinned'}_rtl .4s`;
 		this.forceRedraw().then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
 	}
 
 	setSelectedMenuItem(_selectedMenuItemName) {
 		this.selectedMenuItemName = _selectedMenuItemName;
-		this.expand = Boolean(this.selectedMenuItemName);
+		requestAnimationFrame(() => this.expand = Boolean(this.selectedMenuItemName));
 
 		if (this.anyMenuItemSelected()) {
 			this.componentChanges();
@@ -219,6 +230,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	componentChanges(): void {
+		this.forceRedraw().then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
 		if (!this.componentElem || this.onAnimation) {
 			this.isBuildNeeded = !this.componentElem;
 			return;
@@ -228,7 +240,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	hideBadge(badge: string): boolean {
-		return badge !== '★' && !Number(badge);
+		return badge === undefined || (badge !== '★' && isNaN(Number(badge)));
 	}
 
 	isActive(key: string): boolean {
@@ -246,6 +258,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 		if (this.onAnimation) {
 			return;
 		}
+
 		if (this.selectedMenuItemName === key) {
 			this.closeMenu();
 		} else {
@@ -258,7 +271,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	openMenu(key: string, skipSession: boolean) {
-		this.store.dispatch(new SelectMenuItemAction({ menuKey: key, skipSession}));
+		this.store.dispatch(new SelectMenuItemAction({ menuKey: key, skipSession }));
 	}
 
 	closeMenu(): void {
@@ -300,12 +313,8 @@ export class MenuComponent implements OnInit, OnDestroy {
 		this.forceRedraw()
 			.then(() => this.store.dispatch(new ContainerChangedTriggerAction()));
 
-		this.animatedElement.style.animation = this.collapse ? 'collapsed .3s' : 'unCollapsed .6s';
+		this.animatedElement.style.animation = `${this.collapse ? 'collapsed' : 'unCollapsed'}_rtl ${this.collapse ? '.3s' : '.6s'}`;
 
-	}
-
-	resetApp() {
-		this.store.dispatch(new ResetAppAction());
 	}
 
 	ngOnInit() {
@@ -319,6 +328,24 @@ export class MenuComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
+	}
+
+	ngAfterViewChecked() {
+		this.cdref.detectChanges();
+	}
+
+	private initializeMenuItem(menuItems: IMenuItem[]) {
+		const menuItemsObject = menuItems.reduce((menuItems, menuItem: IMenuItem) => {
+			return { ...menuItems, [menuItem.name]: menuItem };
+		}, {});
+
+		// if empty put all
+		if (Array.isArray(this.menuConfig.menuItems)) {
+			menuItems = this.menuConfig.menuItems
+				.map((name) => menuItemsObject[name])
+				.filter(Boolean);
+		}
+		this.entities = Object.assign({}, ...menuItems.map(item => ({ [item.name]: item })));
 	}
 }
 

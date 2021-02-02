@@ -1,6 +1,4 @@
 @import "ansyn/less/common";
-@import "ansyn/less/colors";
-@import "ansyn/less/z-index-globals";
 
 @context-menu-color: @application-primary-color;
 @context-menu-contrast: white;
@@ -9,10 +7,10 @@
 :host {
 	outline: none;
 	position: fixed;
-	transform: translate(-28px, -27px);
-
-	width: 0;
+	transform: translate(28px, -27px);
+	width: 0; // because we use focus/blur for show/hide we must give width and height 0.
 	height: 0;
+	display: flex;
 	z-index: @z-index-context-menu;
 
 	&:focus {
@@ -48,7 +46,7 @@
 				align-items: center;
 				justify-content: center;
 
-				&:hover {
+				&:hover:not(:disabled) {
 					background-color: @context-menu-color;
 					transform: scale(0.6715);
 
@@ -58,8 +56,16 @@
 				}
 
 				.pointer {
-					font-size: 40px;
 					font-weight: bold;
+				}
+
+				&:disabled {
+					background-color: rgb(163, 163, 163);
+					transform: scale(0.6715);
+
+					.pointer {
+						color: @context-menu-contrast;
+					}
 				}
 			}
 
@@ -68,10 +74,6 @@
 					transition-timing-function: cubic-bezier(0.935, 0, 0.34, 1.33);
 					background-color: @context-menu-color;
 					color: @context-menu-contrast;
-
-					i {
-						font-size: 34px;
-					}
 
 					&:hover:not(:disabled) {
 						opacity: 0.8;
@@ -131,9 +133,6 @@
 			outline: none;
 			width: 56px;
 			height: 56px;
-			position: relative;
-			top: 0;
-			left: 0;
 			z-index: @z-index-context-menu;
 			cursor: pointer;
 			background: @context-menu-contrast;

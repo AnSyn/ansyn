@@ -18,7 +18,6 @@ import { AnsynPluginsModule, AreaToCredentialsService } from '@ansyn/ansyn';
 	],
 	providers: [AreaToCredentialsService],
 	exports: [SandboxComponent],
-	entryComponents: [SandboxComponent],
 	declarations: [SandboxComponent]
 })
 export class SandboxModule {

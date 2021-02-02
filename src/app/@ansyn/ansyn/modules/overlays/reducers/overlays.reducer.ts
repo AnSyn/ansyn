@@ -2,8 +2,16 @@ import { MapActionTypes } from '@ansyn/map-facade';
 import { createEntityAdapter, Dictionary, EntityAdapter, EntityState } from '@ngrx/entity';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import * as _ from 'lodash';
-import { ICaseDataInputFiltersState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
-import { OverlaysActions, OverlaysActionTypes, SetMiscOverlay, SetMiscOverlays } from '../actions/overlays.actions';
+import { CaseRegionState, ICaseDataInputFiltersState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
+import { IAdvancedSearchParameter, IProviderData } from '../../status-bar/models/statusBar-config.model';
+import {
+	OverlaysActions,
+	OverlaysActionTypes,
+	SetMarkUp,
+	SetMiscOverlay,
+	SetMiscOverlays,
+	SetOverlaysStatusMessageAction
+} from '../actions/overlays.actions';
 import {
 	IOverlay,
 	IOverlayDrop,
@@ -11,7 +19,6 @@ import {
 	IOverlaysHash,
 	IOverlaySpecialObject
 } from '../models/overlay.model';
-import { OverlayStatusActionsTypes } from '../overlay-status/actions/overlay-status.actions';
 import { ExtendMap } from './extendedMap.class';
 
 export interface ITimelineRange {
@@ -69,6 +76,12 @@ export interface IOverlaysState extends EntityState<IOverlay> {
 	hoveredOverlay: IOverlay;
 	overlaysCriteria: IOverlaysCriteria;
 	miscOverlays: IOverlaysHash;
+	customOverviewElementId: string;
+	// Angular 9: Saving in the store dom element id, instead of the dom element itself,
+	// because it caused the dom element to become freezed, and this caused a crash
+	// in zone.js...
+	totalOverlaysLength: number;
+	overlaysContainmentChecked: boolean;
 }
 
 let initDropsMarkUp: ExtendMap<MarkUpClass, IMarkUpData> = new ExtendMap<MarkUpClass, IMarkUpData>();
@@ -91,6 +104,9 @@ export const overlaysInitialState: IOverlaysState = overlaysAdapter.getInitialSt
 	hoveredOverlay: null,
 	overlaysCriteria: {},
 	miscOverlays: {},
+	customOverviewElementId: null,
+	totalOverlaysLength: 0,
+	overlaysContainmentChecked: false
 });
 
 export const overlaysFeatureKey = 'overlays';
@@ -112,7 +128,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			if (options && options.noInitialSearch) {
 				return { ...state, loading: false, displayOverlayHistory: {}, overlaysCriteria };
 			}
-			return { ...state, displayOverlayHistory: {}, overlaysCriteria };
+			return { ...state, loading: true, displayOverlayHistory: {}, overlaysCriteria };
 		}
 		case OverlaysActionTypes.SELECT_OVERLAY:
 
@@ -137,34 +153,41 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			}
 
 		case OverlaysActionTypes.LOAD_OVERLAYS: {
-			return overlaysAdapter.addAll([], {
+			return overlaysAdapter.setAll([], {
 				...state,
 				loading: true,
 				loaded: false,
+				overlaysContainmentChecked: false,
 				overlays: new Map(),
 				filteredOverlays: []
 			});
 		}
 
+		case OverlaysActionTypes.SET_TOTAL_OVERLAYS: {
+			return { ...state, totalOverlaysLength: action.payload };
+		}
+
 		case OverlaysActionTypes.CHECK_TRIANGLES: {
-			return overlaysAdapter.addAll([], {
+			return overlaysAdapter.setAll([], {
 				...state,
 				loading: true,
-				loaded: false
+				loaded: false,
+				overlaysContainmentChecked: false
 			});
 		}
 
 		case OverlaysActionTypes.LOAD_OVERLAYS_SUCCESS: {
-			const newState = {
+			const newState: IOverlaysState = {
 				...state,
 				loading: false,
 				loaded: true,
 				filteredOverlays: []
 			};
+
 			if (!(<any>action).clearExistingOverlays) {
 				return overlaysAdapter.addMany(action.payload, newState);
 			}
-			return overlaysAdapter.addAll(action.payload, newState);
+			return overlaysAdapter.setAll(action.payload, newState);
 		}
 
 		case OverlaysActionTypes.LOAD_OVERLAYS_FAIL:
@@ -206,14 +229,16 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 		case OverlaysActionTypes.SET_OVERLAYS_STATUS_MESSAGE:
 			return {
 				...state,
-				statusMessage: action.payload
+				statusMessage: action.payload && (action as SetOverlaysStatusMessageAction).payload.message
 			};
 
 		case OverlaysActionTypes.SET_OVERLAYS_MARKUPS:
 			let dropsMarkUpCloneToSet = new ExtendMap(state.dropsMarkUp);
 			dropsMarkUpCloneToSet.set(action.payload.classToSet, action.payload.dataToSet);
+			const { customOverviewElementId } = (action as unknown as SetMarkUp).payload;
+
 			return {
-				...state, dropsMarkUp: dropsMarkUpCloneToSet
+				...state, dropsMarkUp: dropsMarkUpCloneToSet, customOverviewElementId
 			};
 
 		case OverlaysActionTypes.REMOVE_OVERLAYS_MARKUPS:
@@ -237,7 +262,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				});
 			}
 
-			return { ...state, dropsMarkUp: dropsMarkUpClone };
+			return { ...state, dropsMarkUp: dropsMarkUpClone, customOverviewElementId: null };
 
 
 		case OverlaysActionTypes.ADD_OVERLAYS_MARKUPS:
@@ -265,6 +290,9 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 		case OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS:
 			const { mapId, overlay } = action.payload;
 			const mapHistory = state.displayOverlayHistory[mapId] || [];
+			if (mapHistory.slice(-1)[0] === overlay.id) { // Is this overlay already the last item in history?
+				return state;
+			}
 			return {
 				...state,
 				displayOverlayHistory: {
@@ -273,20 +301,10 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				}
 			};
 
-		case OverlayStatusActionsTypes.SET_REMOVED_OVERLAY_ID:
-			if (action.payload.value) {
-				const displayOverlayHistory = { ...state.displayOverlayHistory };
-				Object.entries(displayOverlayHistory).forEach(([key, value]) => {
-					displayOverlayHistory[key] = value.filter((id) => id !== action.payload.id);
-				});
-				return { ...state, displayOverlayHistory };
-			}
-			return state;
-
 		case MapActionTypes.SET_MAPS_DATA:
 			const { mapsList } = action.payload;
 			if (mapsList) {
-				const { displayOverlayHistory } = state;
+				const displayOverlayHistory = { ...state.displayOverlayHistory };
 				Object.keys(displayOverlayHistory).forEach((key) => {
 					if (!mapsList.some((map) => map.id === key)) {
 						delete displayOverlayHistory[key];
@@ -310,6 +328,17 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			};
 		}
 
+		case OverlaysActionTypes.SET_OVERLAYS_CONTAINMENT_CHECKED:
+			return { ...state, overlaysContainmentChecked: action.payload };
+
+		case OverlaysActionTypes.UPDATE_OVERLAY: {
+			return overlaysAdapter.updateOne(action.payload, state);
+		}
+
+		case OverlaysActionTypes.UPDATE_OVERLAYS: {
+			return overlaysAdapter.updateMany(action.payload, state);
+		}
+
 		default :
 			return state;
 	}
@@ -321,20 +350,29 @@ export const { selectEntities, selectAll, selectTotal, selectIds } = overlaysAda
 export const selectOverlays = createSelector(overlaysStateSelector, selectEntities);
 export const selectOverlaysMap: any = createSelector(selectOverlays, (entities: Dictionary<IOverlay>): Map<string, IOverlay> => new Map(Object.entries(entities)));
 export const selectOverlaysArray = createSelector(overlaysStateSelector, selectAll);
-export const selectFilteredOveralys = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string[] => overlays.filteredOverlays);
+export const selectOverlaysIds = createSelector(overlaysStateSelector, selectIds);
+export const selectFilteredOveralys = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string[] => overlays && overlays.filteredOverlays);
 export const selectSpecialObjects = createSelector(overlaysStateSelector, (overlays: IOverlaysState): Map<string, IOverlaySpecialObject> => overlays.specialObjects);
-export const selectDrops = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays.drops);
-export const selectDropsWithoutSpecialObjects = createSelector(selectDrops, (drops: IOverlayDrop[]) => drops.filter(({ shape }) => !shape));
+export const selectDrops = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays && overlays.drops);
+export const selectDropsWithoutSpecialObjects = createSelector(selectDrops, (drops: IOverlayDrop[]) => drops && drops.filter(({ shape }) => !shape));
+export const selectDropsDescending = createSelector(selectDrops, (drops: IOverlayDrop[]) => drops && drops.filter(({ shape }) => !shape).reverse());
+export const selectDropsAscending = createSelector(selectDrops, (drops: IOverlayDrop[]) => drops && drops.filter(({ shape }) => !shape));
 export const selectLoading = createSelector(overlaysStateSelector, (overlays: IOverlaysState): boolean => overlays.loading);
 export const selectDropMarkup = createSelector(overlaysStateSelector, (overlayState: IOverlaysState): ExtendMap<MarkUpClass, IMarkUpData> => overlayState.dropsMarkUp);
 export const selectHoveredOverlay = createSelector(overlaysStateSelector, (overlays: IOverlaysState): IOverlay => overlays.hoveredOverlay);
 export const selectTimelineRange = createSelector(overlaysStateSelector, (overlays: IOverlaysState): ITimelineRange => overlays.timeLineRange);
 export const selectdisplayOverlayHistory = createSelector(overlaysStateSelector, (overlays: IOverlaysState): { [mapId: string]: string[] } => overlays.displayOverlayHistory);
 export const selectStatusMessage = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string => overlays.statusMessage);
-export const selectOverlaysCriteria: MemoizedSelector<any, IOverlaysCriteria> = createSelector(overlaysStateSelector, (overlays) => overlays.overlaysCriteria);
+export const selectOverlaysCriteria: MemoizedSelector<any, IOverlaysCriteria> = createSelector(overlaysStateSelector, (overlays) => overlays && overlays.overlaysCriteria);
 export const selectDataInputFilter: MemoizedSelector<any, ICaseDataInputFiltersState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.dataInputFilters);
-export const selectRegion: MemoizedSelector<any, any> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);
+export const selectAdvancedSearchParameters: MemoizedSelector<any, IAdvancedSearchParameter> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria?.advancedSearchParameters);
+export const selectIsRunSecondSearch: MemoizedSelector<any, boolean> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria?.runSecondSearch);
+export const selectProviders: MemoizedSelector<any, IProviderData[]> = createSelector(selectAdvancedSearchParameters, (advancedSearchParameters) => advancedSearchParameters && advancedSearchParameters.providers);
+export const selectRegion: MemoizedSelector<any, CaseRegionState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);
 export const selectTime: MemoizedSelector<any, ICaseTimeState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.time);
 
 export const selectMiscOverlays: MemoizedSelector<any, any> = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays ? overlays.miscOverlays : {});
 export const selectMiscOverlay = (key: string) => createSelector(selectMiscOverlays, (miscOverlays: any) => miscOverlays[key]);
+export const selectCustomOverviewElementId = createSelector(overlaysStateSelector, (state) => state && state.customOverviewElementId);
+export const selectOverlaysAreLoaded: MemoizedSelector<any, boolean> = createSelector(overlaysStateSelector, (state) => state?.loaded);
+export const selectOverlaysContainmentChecked: MemoizedSelector<any, boolean> = createSelector(overlaysStateSelector, (state) => state?.overlaysContainmentChecked);

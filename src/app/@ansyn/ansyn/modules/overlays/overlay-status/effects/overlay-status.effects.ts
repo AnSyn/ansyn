@@ -1,43 +1,48 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
-	CommunicatorEntity,
 	geojsonMultiPolygonToPolygons,
 	geojsonPolygonToMultiPolygon,
 	ImageryCommunicatorService,
-	ImageryMapPosition,
+	IImageryMapPosition,
 	IMapSettings,
-	unifyPolygons
+	unifyPolygons,
+	getPolygonIntersectionRatioWithMultiPolygon
 } from '@ansyn/imagery';
 import {
 	MapActionTypes,
 	MapFacadeService,
 	mapStateSelector,
-	selectMaps, selectMapsIds, selectMapsList,
+	selectMapsList,
 	SetToastMessageAction,
 	UpdateMapAction,
 	SetLayoutSuccessAction, selectActiveMapId
 } from '@ansyn/map-facade';
 import { AnnotationMode, DisabledOpenLayersMapName, OpenlayersMapName } from '@ansyn/ol';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Dictionary } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
-import { EMPTY, Observable } from 'rxjs';
-import { fromPromise } from 'rxjs/internal-compatibility';
-import { catchError, filter, map, mergeMap, switchMap, withLatestFrom, tap } from 'rxjs/operators';
+import { EMPTY, Observable, from } from 'rxjs';
+import { catchError, filter, map, mergeMap, switchMap, withLatestFrom, pluck, tap } from 'rxjs/operators';
 import {
+	BackToExtentAction,
 	BackToWorldFailed,
 	BackToWorldSuccess,
 	BackToWorldView,
 	OverlayStatusActionsTypes,
 	SetOverlayScannedAreaDataAction,
-	ToggleDraggedModeAction
+	ToggleDraggedModeAction,
 } from '../actions/overlay-status.actions';
-import { SetAnnotationMode } from '../../../menu-items/tools/actions/tools.actions';
+import { SetAnnotationMode } from '../../../status-bar/components/tools/actions/tools.actions';
 import { IOverlaysScannedAreaData } from '../../../menu-items/cases/models/case.model';
-import { ITranslationsData, selectScannedAreaData, selectTranslationData } from '../reducers/overlay-status.reducer';
+import {
+	ITranslationsData,
+	selectScannedAreaData,
+	selectTranslationData
+} from '../reducers/overlay-status.reducer';
 import { IOverlay } from '../../models/overlay.model';
-import { feature } from '@turf/turf';
+import { feature, difference } from '@turf/turf';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
+import { IOverlayStatusConfig, overlayStatusConfig } from '../config/overlay-status-config';
+import { OverlayOutOfBoundsService } from '../../../../services/overlay-out-of-bounds/overlay-out-of-bounds.service';
 
 @Injectable()
 export class OverlayStatusEffects {
@@ -45,24 +50,14 @@ export class OverlayStatusEffects {
 	backToWorldView$: Observable<any> = this.actions$
 		.pipe(
 			ofType(OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW),
-			withLatestFrom(this.store$.select(selectMaps)),
-			filter(([action, entities]: [BackToWorldView, Dictionary<IMapSettings>]) => Boolean(entities[action.payload.mapId])),
-			map(([action, entities]: [BackToWorldView, Dictionary<IMapSettings>]) => {
-				const mapId = action.payload.mapId;
-				const selectedMap = entities[mapId];
-				const communicator = this.communicatorsService.provide(mapId);
-				const { position } = selectedMap.data;
-				return [action.payload, selectedMap, communicator, position];
-			}),
-			filter(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => Boolean(communicator)),
-			switchMap(([payload, selectedMap, communicator, position]: [{ mapId: string }, IMapSettings, CommunicatorEntity, ImageryMapPosition]) => {
+			filter((action: BackToWorldView) => this.communicatorsService.has(action.payload.mapId)),
+			switchMap(({ payload }: BackToWorldView) => {
+				const communicator = this.communicatorsService.provide(payload.mapId);
+				const mapData = { ...communicator.mapSettings.data };
+				const position = mapData.position;
 				const disabledMap = communicator.activeMapName === DisabledOpenLayersMapName || communicator.activeMapName === ImageryVideoMapType;
-				this.store$.dispatch(new UpdateMapAction({
-					id: communicator.id,
-					changes: { data: { ...selectedMap.data, overlay: null, isAutoImageProcessingActive: false } }
-				}));
 
-				return fromPromise(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
+				return from<any>(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
 					.pipe(
 						map(() => new BackToWorldSuccess(payload)),
 						catchError((err) => {
@@ -76,6 +71,24 @@ export class OverlayStatusEffects {
 					);
 			})
 		);
+
+	@Effect()
+	backToWorldSuccessRemoveOverlay$: Observable<UpdateMapAction> = this.actions$.pipe(
+		ofType(OverlayStatusActionsTypes.BACK_TO_WORLD_SUCCESS),
+		map( (action: BackToWorldSuccess) => {
+			const communicator = this.communicatorsService.provide(action.payload.mapId);
+			const mapData = {...communicator.mapSettings.data};
+			return new UpdateMapAction({
+				id: action.payload.mapId,
+				changes: { data: { ...mapData, overlay: null } }
+			})
+		})
+	);
+
+	@Effect({ dispatch: false })
+	onOverlayOutOfBounds: Observable<any> = this.actions$.pipe(
+		ofType(OverlayStatusActionsTypes.BACK_TO_EXTENT),
+		tap(({payload}: BackToExtentAction) => this.outOfBoundsService.backToExtent(payload.mapId, payload.extent)));
 
 	@Effect()
 	toggleTranslate$: Observable<any> = this.actions$.pipe(
@@ -109,8 +122,8 @@ export class OverlayStatusEffects {
 			const mapSettings: IMapSettings = MapFacadeService.activeMap(mapState);
 			return [mapSettings.data.position, mapSettings.data.overlay, overlaysScannedAreaData];
 		}),
-		filter(([position, overlay, overlaysScannedAreaData]: [ImageryMapPosition, IOverlay, IOverlaysScannedAreaData]) => Boolean(position) && Boolean(overlay)),
-		map(([position, overlay, overlaysScannedAreaData]: [ImageryMapPosition, IOverlay, IOverlaysScannedAreaData]) => {
+		filter(([position, overlay, overlaysScannedAreaData]: [IImageryMapPosition, IOverlay, IOverlaysScannedAreaData]) => Boolean(position) && Boolean(overlay)),
+		map(([position, overlay, overlaysScannedAreaData]: [IImageryMapPosition, IOverlay, IOverlaysScannedAreaData]) => {
 			let scannedArea = overlaysScannedAreaData && overlaysScannedAreaData[overlay.id];
 			if (!scannedArea) {
 				scannedArea = geojsonPolygonToMultiPolygon(position.extentPolygon);
@@ -121,10 +134,27 @@ export class OverlayStatusEffects {
 					const featurePolygons = polygons.map((polygon) => {
 						return feature(polygon);
 					});
-					const combinedResult = unifyPolygons(featurePolygons);
-					if (combinedResult.geometry.type === 'MultiPolygon') {
+					let combinedResult = unifyPolygons(featurePolygons);
+					let scannedAreaContainsExtentPolygon = false;
+
+					scannedArea.coordinates.forEach(coordinates => {
+						let multiPolygon = JSON.parse(JSON.stringify(scannedArea));
+						multiPolygon.coordinates = [coordinates];
+
+						if (getPolygonIntersectionRatioWithMultiPolygon(position.extentPolygon, multiPolygon)) {
+							scannedAreaContainsExtentPolygon = true;
+						}
+					});
+
+					if (scannedAreaContainsExtentPolygon) {
+						combinedResult = difference(combinedResult, position.extentPolygon);
+					}
+
+					if (combinedResult === null) {
+						scannedArea = null;
+					} else if (combinedResult.geometry.type === 'MultiPolygon') {
 						scannedArea = combinedResult.geometry;
-					} else {	// polygon
+					} else {
 						scannedArea = geojsonPolygonToMultiPolygon(combinedResult.geometry);
 					}
 				} catch (e) {
@@ -140,16 +170,18 @@ export class OverlayStatusEffects {
 		ofType<SetLayoutSuccessAction>(MapActionTypes.SET_LAYOUT_SUCCESS),
 		withLatestFrom(this.store$.select(selectTranslationData), this.store$.select(selectActiveMapId)),
 		filter(([action, translateData, activeMap]: [SetLayoutSuccessAction, ITranslationsData, string]) => Boolean(translateData && Object.keys(translateData).length)),
-		mergeMap( ([action, translateData, activeMap]: [SetLayoutSuccessAction, ITranslationsData, string]) => {
+		mergeMap(([action, translateData, activeMap]: [SetLayoutSuccessAction, ITranslationsData, string]) => {
 			const actions = Object.keys(translateData)
 				.filter(id => Boolean(translateData[id].dragged))
-				.map(id => new ToggleDraggedModeAction({mapId: activeMap, overlayId: id, dragged: false}));
+				.map(id => new ToggleDraggedModeAction({ mapId: activeMap, overlayId: id, dragged: false }));
 			return actions
 		})
 	);
 
 	constructor(protected actions$: Actions,
 				protected communicatorsService: ImageryCommunicatorService,
-				protected store$: Store<any>) {
+				protected store$: Store<any>,
+				protected outOfBoundsService: OverlayOutOfBoundsService,
+				@Inject(overlayStatusConfig) protected config: IOverlayStatusConfig) {
 	}
 }

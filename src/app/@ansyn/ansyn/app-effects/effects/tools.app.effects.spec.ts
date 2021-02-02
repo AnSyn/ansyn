@@ -1,11 +1,10 @@
-import { BackToWorldView } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { ToolsAppEffects } from './tools.app.effects';
 import { Observable, of } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { Store, StoreModule } from '@ngrx/store';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { async, inject, TestBed } from '@angular/core/testing';
-import { MapFacadeService, mapStateSelector, UpdateMapAction } from '@ansyn/map-facade';
+import { mapStateSelector } from '@ansyn/map-facade';
 import { cold, hot } from 'jasmine-marbles';
 import { provideMockActions } from '@ngrx/effects/testing';
 import {
@@ -19,7 +18,7 @@ import {
 	toolsInitialState,
 	ToolsReducer,
 	toolsStateSelector
-} from '../../modules/menu-items/tools/reducers/tools.reducer';
+} from '../../modules/status-bar/components/tools/reducers/tools.reducer';
 import {
 	casesFeatureKey,
 	CasesReducer,
@@ -28,25 +27,18 @@ import {
 } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import {
 	ClearActiveInteractionsAction,
-	DisableImageProcessing,
 	GoToAction,
 	PullActiveCenter,
 	SetActiveCenter,
 	SetAnnotationMode,
-	SetAutoImageProcessing,
-	SetAutoImageProcessingSuccess,
-	SetMeasureDistanceToolState,
 	SetPinLocationModeAction,
 	SetSubMenu,
-	ShowOverlaysFootprintAction,
-	UpdateMeasureDataAction
-} from '../../modules/menu-items/tools/actions/tools.actions';
-import { SelectCaseAction } from '../../modules/menu-items/cases/actions/cases.actions';
-import { toolsConfig } from '../../modules/menu-items/tools/models/tools-config';
+	UpdateMeasureDataOptionsAction
+} from '../../modules/status-bar/components/tools/actions/tools.actions';
+import { toolsConfig } from '../../modules/status-bar/components/tools/models/tools-config';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import { ICase, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
-import { LoggerService } from '../../modules/core/services/logger.service';
-import { selectMapsIds } from '../../../map-facade/reducers/map.reducer';
+import { selectMapsIds } from '@ansyn/map-facade';
 
 describe('ToolsAppEffects', () => {
 	let toolsAppEffects: ToolsAppEffects;
@@ -60,9 +52,7 @@ describe('ToolsAppEffects', () => {
 	const cases: ICase[] = [{
 		id: '1',
 		name: 'name',
-		owner: 'owner',
 		creationTime: new Date(),
-		lastModified: new Date(),
 		autoSave: false,
 		state: {
 			time: { type: '', from: new Date(), to: new Date() },
@@ -172,12 +162,6 @@ describe('ToolsAppEffects', () => {
 								}
 							]
 					}
-				},
-				{
-					provide: LoggerService, useValue: {
-						error: (some) => null, info: () => {
-						}
-					}
 				}
 			]
 		}).compileComponents();
@@ -215,7 +199,7 @@ describe('ToolsAppEffects', () => {
 				return of({ coordinates: [0, 0] });
 			}
 		};
-		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => activeCommunicator);
+		spyOn(imageryCommunicatorService, 'provide').and.callFake(() => <any>activeCommunicator);
 		actions = hot('--a--', { a: new PullActiveCenter() });
 		const expectedResults = cold('--b--', { b: new SetActiveCenter([0, 0]) });
 		expect(toolsAppEffects.getActiveCenter$).toBeObservable(expectedResults);
@@ -230,7 +214,7 @@ describe('ToolsAppEffects', () => {
 		};
 
 		beforeEach(() => {
-			spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [activeCommunicator, activeCommunicator]);
+			spyOn(imageryCommunicatorService, 'communicatorsAsArray').and.callFake(() => [<any>activeCommunicator, <any>activeCommunicator]);
 		});
 	});
 
@@ -259,77 +243,20 @@ describe('ToolsAppEffects', () => {
 		expect(toolsAppEffects).toBeTruthy();
 	});
 
-
-	describe('onDisplayOverlaySuccess', () => {
-		const manualProcessArgs = {
-			Sharpness: 0,
-			Contrast: 0,
-			Brightness: 100,
-			Gamma: 100,
-			Saturation: 0
-		};
-	});
-
-	describe('backToWorldView', () => {
-		it('backToWorldView should raise DisableImageProcessing', () => {
-			const activeCommunicator = {};
-			spyOn(imageryCommunicatorService, 'provide').and.callFake(() => activeCommunicator);
-			actions = hot('--a--', { a: new BackToWorldView({ mapId: 'mapId' }) });
-			const expectedResults = cold('--b--', { b: new DisableImageProcessing() });
-			expect(toolsAppEffects.backToWorldView$).toBeObservable(expectedResults);
-		});
-	});
-
-	it('onSelectCase$ should raise DisableImageProcessing', () => {
-		actions = hot('--a--', { a: new SelectCaseAction({} as ICase) });
-		const expectedResults = cold('--b--', { b: new DisableImageProcessing() });
-		expect(toolsAppEffects.onSelectCase$).toBeObservable(expectedResults);
-	});
-
-	it('toggleAutoImageProcessing with image processing as true should raise ToggleMapAutoImageProcessing, UpdateMapAction and ToggleAutoImageProcessingSuccess accordingly', () => {
-		const activeMap = MapFacadeService.activeMap(imapState);
-		const isAutoImageProcessingActive = !activeMap.data.isAutoImageProcessingActive;
-		actions = hot('--a--', { a: new SetAutoImageProcessing() });
-		const expectedResults = cold('--(ab)--', {
-			a: new UpdateMapAction({
-				id: activeMap.id,
-				changes: { data: { ...activeMap.data, isAutoImageProcessingActive } }
-			}),
-			b: new SetAutoImageProcessingSuccess(isAutoImageProcessingActive)
-		});
-		expect(toolsAppEffects.toggleAutoImageProcessing$).toBeObservable(expectedResults);
-	});
-
-	it('Effect : updateCaseFromTools$ - with OverlayVisualizerMode === "Heatmap"', () => {
-		const activeMap = MapFacadeService.activeMap(imapState);
-		const overlayDisplayMode = 'Heatmap';
-
-		actions = hot('--a--', { a: new ShowOverlaysFootprintAction(overlayDisplayMode) });
-
-		const expectedResults = cold('--a--', {
-			a: new UpdateMapAction({
-				id: activeMap.id, changes: {
-					data: {
-						...activeMap.data,
-						overlayDisplayMode: overlayDisplayMode
-					}
-				}
-			})
-		});
-
-		expect(toolsAppEffects.updateCaseFromTools$).toBeObservable(expectedResults);
-	});
-
 	it('clearActiveInteractions$ should clear active interactions', () => {
 		actions = hot('--a--', { a: new ClearActiveInteractionsAction() });
 
-		const expectedResult = cold('--(bcde)--', {
+		const expectedResult = cold('--(bcdef)--', {
 			b: new SetAnnotationMode(null),
 			c: new UpdateGeoFilterStatus(),
 			d: new SetPinLocationModeAction(false),
-			e: new UpdateMeasureDataAction({
+			e: new UpdateMeasureDataOptionsAction({
 				mapId: 'imagery1',
-				measureData: { isToolActive: false }
+				options: { isToolActive: false, isRemoveMeasureModeActive: false }
+			}),
+			f: new UpdateMeasureDataOptionsAction({
+				mapId: 'imagery1',
+				options: { forceDisableTranslate: undefined}
 			})
 		});
 
@@ -343,12 +270,16 @@ describe('ToolsAppEffects', () => {
 			})
 		});
 
-		const expectedResult = cold('--(bcd)--', {
+		const expectedResult = cold('--(bcde)--', {
 			b: new UpdateGeoFilterStatus(),
 			c: new SetPinLocationModeAction(false),
-			d: new UpdateMeasureDataAction({
+			d: new UpdateMeasureDataOptionsAction({
 				mapId: 'imagery1',
-				measureData: { isToolActive: false }
+				options: { isToolActive: false, isRemoveMeasureModeActive: false }
+			}),
+			e: new UpdateMeasureDataOptionsAction({
+				mapId: 'imagery1',
+				options: { forceDisableTranslate: undefined}
 			})
 		});
 

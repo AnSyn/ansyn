@@ -1,11 +1,15 @@
-<div class="buttons-group">
-	<button ansynButton type="button" (click)="showEditCaseModal()">
-		{{'Add Case' | translate}}
+<div *ngIf="isCasesShow">
+<div #cases>
+	<button (click)="showSaveModal()"
+			[attr.tooltip-value]="'Save Case' | translate"
+			tooltip-class="bottom">
+		<i class="icon"
+		   [ngClass]="(currentSaveCase$ | async)? 'icon-bookmark-full' : 'icon-bookmark-empty'"></i>
 	</button>
-	<button ansynButton type="button" (click)="showSaveCaseModal()">
-		{{'Save As' | translate}}
+	<button (click)="showCasesTable(cases)"
+			[attr.tooltip-value]="'Open Cases' | translate"
+			tooltip-class="bottom">
+		<i class="icon icon-bookmarks"></i>
 	</button>
-	<button ansynButton type="button" [disabled]="isDefaultCaseId" (click)="manualSave()">
-		{{'Save' | translate}}
-	</button>
+</div>
 </div>

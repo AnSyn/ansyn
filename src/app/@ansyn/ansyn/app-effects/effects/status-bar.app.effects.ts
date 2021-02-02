@@ -5,21 +5,22 @@ import { Store, select } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import { casesStateSelector, ICasesState } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import {
-	ClickOutsideMap,
-	ContextMenuShowAction,
 	MapActionTypes,
 	selectOverlayOfActiveMap
 } from '@ansyn/map-facade';
 import { filter, map, withLatestFrom } from 'rxjs/operators';
 import {
 	CopySnapshotShareLinkAction,
-	GoAdjacentOverlay,
+	GoAdjacentOverlay, SearchAction,
 	StatusBarActionsTypes,
 	UpdateGeoFilterStatus
 } from '../../modules/status-bar/actions/status-bar.actions';
 import { selectGeoFilterActive, selectGeoFilterType } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { CopyCaseLinkAction } from '../../modules/menu-items/cases/actions/cases.actions';
-import { DisplayOverlayFromStoreAction } from '../../modules/overlays/actions/overlays.actions';
+import {
+	DisplayOverlayFromStoreAction,
+	SetOverlaysCriteriaAction
+} from '../../modules/overlays/actions/overlays.actions';
 import { selectDropsAscending, selectRegion } from '../../modules/overlays/reducers/overlays.reducer';
 import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
@@ -98,6 +99,18 @@ export class StatusBarAppEffects {
 		map(() => new UpdateGeoFilterStatus())
 	);
 
+	@Effect()
+	onAdvancedSearchClick$ = this.actions$.pipe(
+		ofType<SearchAction>(StatusBarActionsTypes.SEARCH_ACTION),
+		withLatestFrom(this.store.pipe(select(selectGeoFilterType))),
+		map( ([action, geoFilter]) => {
+			const options: any = {};
+			if (geoFilter === CaseGeoFilter.ScreenView) {
+				options.noInitialSearch = true;
+			}
+			return new SetOverlaysCriteriaAction({advancedSearchParameters: action.payload, runSecondSearch: false}, options);
+		})
+	);
 	constructor(protected actions$: Actions,
 				protected store: Store<IAppState>) {
 	}

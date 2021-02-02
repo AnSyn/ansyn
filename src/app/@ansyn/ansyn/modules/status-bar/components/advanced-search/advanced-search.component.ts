@@ -4,7 +4,6 @@ import { cloneDeep, flattenDeep } from 'lodash';
 import { IMultipleOverlaysSourceConfig, IOverlaysSourceProvider, MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
 import { Options } from '@angular-slider/ngx-slider';
 import {  GeoRegisterationOptions } from '../../../overlays/models/overlay.model';
-import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import { SearchPanelComponent } from '../search-panel/search-panel.component';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, tap } from 'rxjs/operators';
@@ -14,6 +13,7 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overlays.reducer';
 import { TranslateService } from '@ngx-translate/core';
 import { OverlaysService } from '../../../overlays/services/overlays.service';
+import { SearchAction } from '../../actions/status-bar.actions';
 
 @Component({
 	selector: 'ansyn-advanced-search',
@@ -36,7 +36,7 @@ import { OverlaysService } from '../../../overlays/services/overlays.service';
 	selectedProvidersNames: string[] = [];
 	allProviders: IProviderData[] = [];
 
-	selectedAdvancedSearchParameters: IAdvancedSearchParameter = {}
+	selectedAdvancedSearchParameters: IAdvancedSearchParameter = {};
 	@AutoSubscription
 	onDataInputFilterChange$ = this.store.pipe(
 	select(selectAdvancedSearchParameters),
@@ -97,7 +97,7 @@ import { OverlaysService } from '../../../overlays/services/overlays.service';
 	}
 
 	search(): void {
-		this.store.dispatch(new SetOverlaysCriteriaAction({advancedSearchParameters: this.getCurrentAdvancedSearchParameters(), runSecondSearch: false}));
+		this.store.dispatch(new SearchAction(this.getCurrentAdvancedSearchParameters()));
 		this._parent.close();
 	}
 
@@ -143,7 +143,7 @@ import { OverlaysService } from '../../../overlays/services/overlays.service';
 
 					if (isSensorContainedInType && isTypeSelected && !isAnySensorOfThisTypeSelected) {
 						const typeIndex = selectedType.indexOf(type);
-						this.selectedAdvancedSearchParameters.types.splice(typeIndex, 1); 
+						this.selectedAdvancedSearchParameters.types.splice(typeIndex, 1);
 					} else if (isSensorContainedInType && !isTypeSelected) {
 						this.selectedAdvancedSearchParameters.types.push(type);
 					}

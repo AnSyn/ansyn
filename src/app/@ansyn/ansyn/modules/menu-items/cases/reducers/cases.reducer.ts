@@ -3,7 +3,7 @@ import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/s
 import { createEntityAdapter, Dictionary, EntityAdapter, EntityState } from '@ngrx/entity';
 import { ICase, ICasePreview } from '../models/case.model';
 import { CasesType } from '../models/cases-config';
-import { isEqual, isEqualWith } from 'lodash';
+import { isEqualWith, difference } from 'lodash';
 
 export interface ICaseModal {
 	show: boolean,
@@ -56,15 +56,33 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 		}
 
 		case CasesActionTypes.UPDATE_CASE: {
+			const reduceUndefinedKeys = (prev, current) => {
+				return { ...prev, [current]: undefined }
+			};
 			const comparator = (val1, val2, key) => {
 				// Ignore case updates where only extentPolygon changed, but not center or zoom
 				// (in particular, pinning of the cases list causes such changes)
 				if (key === 'extentPolygon') {
 					return true;
 				}
+				// When a key is missing in an object, and in the other object is exists with value === undefined,
+				// lodash isEqual makes them not equal, but we want them equal
+				if (typeof val1 === 'object' && !Array.isArray(val1) && val1 !== null) {
+					const val1Keys = Object.keys(val1);
+					const val2Keys = Object.keys(val2);
+					const missingKeysInVal2 = difference(val1Keys, val2Keys);
+					const missingKeysInVal1 = difference(val2Keys, val1Keys);
+					if (missingKeysInVal1.length > 0 || missingKeysInVal2.length > 0) {
+						const newKeysForVal1 = missingKeysInVal1.reduce(reduceUndefinedKeys, {});
+						const newKeysForVal2 = missingKeysInVal2.reduce(reduceUndefinedKeys, {});
+						const isNowEqual = isEqualWith({ ...val1, ...newKeysForVal1 }, { ...val2, ...newKeysForVal2 }, comparator);
+						return isNowEqual;
+					}
+				}
 			};
-			const openCaseId = state.loadCase || isEqual(state.selectedCase, action.payload) ? state.openCaseId : null;
-			if (!isEqualWith(state.selectedCase, action.payload, comparator)) {
+			const casesAreEqual = isEqualWith(state.selectedCase, action.payload, comparator);
+			const openCaseId = state.loadCase || casesAreEqual ? state.openCaseId : null;
+			if (!casesAreEqual) {
 				console.log(1, deepDiffMapper.map(state.selectedCase, action.payload));
 				// console.log(2, isEqualWith(state.selectedCase, action.payload, comparator));
 				// const cloned1 = cloneDeep<ICase>(state.selectedCase);
@@ -241,7 +259,7 @@ const deepDiffMapper = function () {
 				if (!obj1.hasOwnProperty(key)) {
 					diff[key] = {
 						type: this.VALUE_CREATED,
-						data: obj1[key]
+						data: obj2[key]
 					};
 					continue;
 				}

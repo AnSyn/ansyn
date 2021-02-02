@@ -56,6 +56,7 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 		}
 
 		case CasesActionTypes.UPDATE_CASE: {
+			console.log('UPDATE_CASE called');
 			const reduceUndefinedKeys = (prev, current) => {
 				return { ...prev, [current]: undefined }
 			};

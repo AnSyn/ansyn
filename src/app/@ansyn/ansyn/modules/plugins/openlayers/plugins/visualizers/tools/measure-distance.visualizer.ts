@@ -2,22 +2,22 @@ import {
 	ImageryVisualizer,
 	IVisualizerEntity,
 	IVisualizersConfig,
-	VisualizerInteractions,
 	VisualizersConfig
 } from '@ansyn/imagery';
 import { combineLatest } from 'rxjs';
 import { selectActiveMapId } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
-import { ILabelHandler, MeasureRulerVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
+import { MeasureRulerVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
 import { distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
+import { Inject } from '@angular/core';
 import {
-	IMeasureData,
 	selectIsMeasureToolActive,
 	selectMeasureDataByMapId
-} from '../../../../../menu-items/tools/reducers/tools.reducer';
-import { Inject } from '@angular/core';
-import { UpdateMeasureDataAction } from '../../../../../menu-items/tools/actions/tools.actions';
+} from '../../../../../status-bar/components/tools/reducers/tools.reducer';
+import {
+	AddMeasureAction, RemoveMeasureAction,
+} from '../../../../../status-bar/components/tools/actions/tools.actions';
 
 export const measuresClassNameForExport = 'measures-layer';
 @ImageryVisualizer({
@@ -52,33 +52,31 @@ export class MeasureDistanceVisualizer extends MeasureRulerVisualizer {
 				this.iMap.addLayer(this.vector);
 				this.enableRuler(isMeasureToolActive && activeMapId && measureData.isToolActive);
 				this.startDeleteSingleEntity(isMeasureToolActive && activeMapId && measureData.isRemoveMeasureModeActive);
+				if (measureData.forceDisableTranslate) {
+					this.removeTranslateMeasuresLabelInteraction();
+				}
+				else if (measureData.forceDisableTranslate === false) { // don't enter if forceDisableTranslate is undefined
+					this.createTranslateMeasuresLabelInteraction();
+				}
 			}
 		}),
 		switchMap(([activeMapId, measureData, isMeasureToolActive]) => {
 			return this.setEntities(measureData.meausres);
-		}),
-		filter(Boolean),
-		tap(([activeMapId, measureData, isMeasureToolActive]) => {
-			this.setLabelsFeature(this.measureData ? this.measureData.meausres : [])
 		})
 	);
 
 	afterEntityDeleted(entity: IVisualizerEntity) {
-		this.measureData.meausres = this.measureData.meausres.filter((measureEntity) => measureEntity.id !== entity.id);
-		this.store$.dispatch(new UpdateMeasureDataAction({
+		this.store$.dispatch(new RemoveMeasureAction({
 			mapId: this.mapId,
-			measureData: { meausres: this.measureData.meausres }
+			measureId: entity.id
 		}));
 	}
 
 	afterDrawEndEvent(entity: IVisualizerEntity) {
-		this.measureData.meausres.push(entity);
 		this.store$.dispatch(
-			new UpdateMeasureDataAction({
+			new AddMeasureAction({
 				mapId: this.mapId,
-				measureData: {
-					meausres: this.measureData.meausres
-				}
+				measure: entity
 			})
 		);
 	}

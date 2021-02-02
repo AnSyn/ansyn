@@ -127,7 +127,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 			return this.baseMapDescription;
 		}
 		const catalogId = (<any>this.overlay).catalogID ? (' catalogId ' + (<any>this.overlay).catalogID) : '';
-		return `${ this.translatedOverlaySensorName } ${ this.overlayTimeDate } ${ catalogId }`;
+		return '\u202A' + `${ this.overlayTimeDate } ${ catalogId } ${ this.translatedOverlaySensorName }` + '\u202C';
 	}
 
 	// @todo refactor

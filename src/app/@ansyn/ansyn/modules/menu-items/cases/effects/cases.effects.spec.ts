@@ -199,10 +199,10 @@ describe('CasesEffects', () => {
 	describe('loadCase$', () => {
 		it('should load the given case', () => {
 			const myCaseId = 'myCaseId';
-			const caseToLoad: ICase = { ...caseMock, id: myCaseId };
+			const caseToLoad: ICase = { ...caseMock, id: myCaseId, shared: true };
 			spyOn(casesService, 'loadCase').and.returnValue(of(caseToLoad));
 			actions = hot('--a--', { a: new LoadCaseAction(myCaseId) });
-			const expectedResults = cold('--(bc)--', { b: new SelectDilutedCaseAction(caseToLoad), c: new LoadCasesAction(CasesType.MySharedCases, true) });
+			const expectedResults = cold('--(bc)--', { b: new SelectDilutedCaseAction(caseToLoad), c: new AddCasesAction({cases: [caseToLoad], type: CasesType.MySharedCases}) });
 			expect(casesEffects.loadCase$).toBeObservable(expectedResults);
 		});
 		it('should load the default case, if the given case fails to load', () => {

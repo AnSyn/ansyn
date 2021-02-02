@@ -27,7 +27,7 @@ import {
 	selectSharedCaseTotal
 } from '../reducers/cases.reducer';
 import { CasesType, ICasesConfig } from '../models/cases-config';
-import { catchError, concatMap, filter, map, mergeMap, share, switchMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, concatMap, filter, map, mergeMap, share, switchMap, withLatestFrom, retryWhen, tap } from 'rxjs/operators';
 import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { DataLayersService } from '../../layers-manager/services/data-layers.service';
@@ -74,25 +74,25 @@ export class CasesEffects {
 				}
 			});
 			newCase.state.maps.activeMapId = newActiveMapId;
-			// regenerate layers id for the new case.
-			return forkJoin(layers
+			const newAnnotationLayers: ILayer[] = layers
 				.filter(({ type }) => type === LayerType.annotation)
-				.map((layer) => {
+				.map( (layer: ILayer) => {
 					const newLayerId = this.casesService.generateUUID();
 					const oldLayerId = layer.id;
-					newCase.state.layers.activeLayersIds = newCase.state.layers.activeLayersIds.map((id) => {
-						return id === oldLayerId ? newLayerId : id;
-					});
-					return { ...layer, id: newLayerId, caseId: newCase.id }
-				}).map((layer) => this.dataLayersService.addLayer(layer))
-			).pipe(map((_) => newCase))
+					const layerId = newCase.state.layers.activeLayersIds.findIndex( id => id === oldLayerId);
+					newCase.state.layers.activeLayersIds[layerId] = newLayerId;
+					return { ...layer, id: newLayerId, caseId: newCase.id };
+				});
+			return this.casesService.createCase(newCase).pipe(map( (_case) => [_case, newAnnotationLayers]));
 		}),
-		mergeMap(newCase => this.casesService.createCase(newCase)),
+		concatMap(([newCase, newAnnotationLayers]: [ICase, ILayer[]]) =>
+		forkJoin(newAnnotationLayers.map( (layer) => this.dataLayersService.addLayer(layer))).pipe(
+			map( () => newCase)
+		)),
 		map((newCase) => new SaveCaseAsSuccessAction(newCase)),
-		catchError((err) => {
-			console.warn(err);
-			return EMPTY;
-		})
+		retryWhen((err) => err.pipe(
+			tap( e => console.warn(e))
+		))
 	);
 
 	@Effect({ dispatch: false })

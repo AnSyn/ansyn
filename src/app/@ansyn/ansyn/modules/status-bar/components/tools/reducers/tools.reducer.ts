@@ -152,7 +152,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			const mapsMeasures = new Map(state.mapsMeasures);
 			const mapMeasure = mapsMeasures.get(mapId);
 			if (mapMeasure) {
-				mapsMeasures.set(mapId, {...mapMeasure, meausres: [...mapMeasure.meausres, measure]})
+				mapsMeasures.set(mapId, {...mapMeasure, measures: [...mapMeasure.measures, measure]})
 			}
 			return { ...state, mapsMeasures };
 		}
@@ -162,8 +162,8 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			const mapsMeasures = new Map(state.mapsMeasures);
 			if (mapsMeasures.has(mapId)) {
 				const mapMeasure = mapsMeasures.get(mapId);
-				const meausres = measureId ? mapMeasure.meausres.filter( measure => measure.id !== measureId) : [];
-				mapsMeasures.set(mapId, {...mapMeasure, meausres})
+				const measures = measureId ? mapMeasure.measures.filter( measure => measure.id !== measureId) : [];
+				mapsMeasures.set(mapId, {...mapMeasure, measures})
 			}
 			return { ...state, mapsMeasures };
 		}

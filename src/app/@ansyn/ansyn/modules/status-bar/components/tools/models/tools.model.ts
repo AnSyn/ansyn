@@ -20,7 +20,7 @@ export interface IMeasureDataOptions {
 }
 
 export interface IMeasureData extends IMeasureDataOptions{
-	meausres: IVisualizerEntity[];
+	measures: IVisualizerEntity[];
 }
 
 export function createNewMeasureData(): IMeasureData {
@@ -28,6 +28,6 @@ export function createNewMeasureData(): IMeasureData {
 		isLayerShowed: true,
 		isToolActive: true,
 		isRemoveMeasureModeActive: false,
-		meausres: []
+		measures: []
 	}
 }

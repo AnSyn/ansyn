@@ -61,7 +61,7 @@ export class MeasureDistanceVisualizer extends MeasureRulerVisualizer {
 			}
 		}),
 		switchMap(([activeMapId, measureData, isMeasureToolActive]) => {
-			return this.setEntities(measureData.meausres);
+			return this.setEntities(measureData.measures);
 		})
 	);
 

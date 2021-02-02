@@ -9,7 +9,7 @@ import {
 	SetMinimalistViewModeAction,
 	SetToastMessageAction
 } from '@ansyn/map-facade';
-import { catchError, debounceTime, filter, finalize, mergeMap, tap } from 'rxjs/operators';
+import { catchError, debounceTime, filter, finalize, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import { toBlob } from 'dom-to-image';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -25,6 +25,8 @@ import { arrayBufferToBinaryString } from 'blob-util'
 import { measuresClassNameForExport } from '../../../../plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
 import { LoggerService } from '../../../../core/services/logger.service';
 import { IOverlay } from '../../../../overlays/models/overlay.model';
+import { UpdateMeasureDataOptionsAction } from '../actions/tools.actions';
+import { selectIsMeasureToolActive } from '../reducers/tools.reducer';
 
 enum GraphicExportEnum {
 	All = 'All',
@@ -69,6 +71,7 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 	readonly advancedExport = ExportMethodEnum.ADVANCED;
 	readonly pdfFormat = FormatEnum.PDF;
 	readonly exportMethods = [ExportMethodEnum.BASIC, ExportMethodEnum.ADVANCED];
+	lastMeasureActiveStatus: boolean;
 	title = 'Export';
 	description = 'keep in mind that the image may be protected';
 	selectedExportMethod: ExportMethodEnum = ExportMethodEnum.BASIC;
@@ -139,6 +142,22 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 				@Inject(toolsConfig) public toolsConfigData: IToolsConfig) {
 		this.logger.info(LOGS.request);
 	}
+
+	@AutoSubscription
+	onOpenDialogDisableMeasureDraw$ = () => this.dialogRef.afterOpened().pipe(
+		withLatestFrom(this.store$.select(selectIsMeasureToolActive), (_, isActive) => isActive),
+		tap( (measureActive) => {
+			this.lastMeasureActiveStatus = measureActive;
+			this.updateMeasureStatus();
+		})
+	);
+
+	@AutoSubscription
+	revertMeasureActiveStatusOnClose$ = () => this.dialogRef.beforeClosed().pipe(
+		tap( () => {
+			this.updateMeasureStatus(this.lastMeasureActiveStatus);
+		})
+	);
 
 	getFont(): Observable<ArrayBuffer> {
 		const pathToFontFile = 'assets/fonts/TTWPGOTT.ttf';
@@ -313,6 +332,15 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 		const time = overlay.date;
 		const sensorName = this.translateService.instant(overlay.sensorName);
 		return `${time.toLocaleString()} ${sensorName}`;
+	}
+
+	private updateMeasureStatus(active: boolean = false) {
+		this.store$.dispatch(new UpdateMeasureDataOptionsAction({
+			mapId: this.pdfExportMapId,
+			options: {
+				isToolActive: active
+			}
+		}));
 	}
 
 	close() {

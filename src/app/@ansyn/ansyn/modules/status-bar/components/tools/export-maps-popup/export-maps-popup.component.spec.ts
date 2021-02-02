@@ -14,6 +14,7 @@ import { CoreModule } from '../../../../core/core.module';
 import { AnsynFormsModule } from '../../../../core/forms/ansyn-forms.module';
 import { LoggerService } from '../../../../core/services/logger.service';
 import { LoggerConfig } from '../../../../core/models/logger.config';
+import { of } from 'rxjs/internal/observable/of';
 
 
 describe('ExportMapsPopupComponent', () => {
@@ -39,7 +40,9 @@ describe('ExportMapsPopupComponent', () => {
 			providers: [ImageryCommunicatorService,
 				{
 					provide: MatDialogRef, useValue: {
-						close: () => {}
+						close: () => {},
+						afterOpened: () => of({}),
+						beforeClosed: () => of({})
 					}
 				},
 				{

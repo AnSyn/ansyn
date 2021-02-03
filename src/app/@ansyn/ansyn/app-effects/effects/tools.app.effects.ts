@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, Store, select } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { CommunicatorEntity, ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import {
 	ImageryCreatedAction,
@@ -17,7 +17,7 @@ import {
 } from '@ansyn/map-facade';
 import { Point } from 'geojson';
 import { differenceWith } from 'lodash';
-import { filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
+import { filter, map, mergeMap, switchMap, withLatestFrom, concatMap, tap } from 'rxjs/operators';
 import { IAppState } from '../app.effects.module';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import {
@@ -35,26 +35,32 @@ import {
 	UpdateToolsFlags
 } from '../../modules/status-bar/components/tools/actions/tools.actions';
 import { IToolsConfig, toolsConfig } from '../../modules/status-bar/components/tools/models/tools-config';
-import { selectAnnotationMode, selectToolFlag } from '../../modules/status-bar/components/tools/reducers/tools.reducer';
+import {
+	selectAnnotationMode,
+	selectIsMeasureToolActive, selectMeasureDataByMapId,
+	selectToolFlag
+} from '../../modules/status-bar/components/tools/reducers/tools.reducer';
 import { toolsFlags } from '../../modules/status-bar/components/tools/models/tools.model';
 import { OverlayStatusActionsTypes } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
 
 @Injectable()
 export class ToolsAppEffects {
 
-
-	isShadowMouseActiveByDefault = this.config.ShadowMouse && this.config.ShadowMouse.activeByDefault;
+	@Effect()
+	onMeasureToolChange: Observable<any> = this.actions$.pipe(
+		ofType(MapActionTypes.SET_ACTIVE_MAP_ID, ToolsActionsTypes.MEASURES.SET_MEASURES_TOOL_FLAG),
+		concatMap( action => of(action).pipe(
+			withLatestFrom(this.store$.pipe(select(selectMapsIds)), this.store$.pipe(select(selectIsMeasureToolActive)), ( _, mapIds, measureIsActive) => [mapIds, measureIsActive])
+		)),
+		mergeMap( ([mapIds, isActive]: [string[], boolean]) =>
+			mapIds.map( (mapId) => isActive ? new CreateMeasureDataAction({ mapId })
+			: new RemoveMeasureDataAction({ mapId })))
+	);
 
 	@Effect()
-	onImageriesChanged: Observable<any> = this.actions$.pipe(
-		ofType(MapActionTypes.IMAGERY_CREATED, MapActionTypes.IMAGERY_REMOVED),
-		map((action: ImageryCreatedAction | ImageryRemovedAction) => {
-			if (action instanceof ImageryCreatedAction) {
-				return new CreateMeasureDataAction({ mapId: action.payload.id });
-			} else { // instanceof ImageryRemovedAction
-				return new RemoveMeasureDataAction({ mapId: action.payload.id });
-			}
-		})
+	removeMapMeasureOnMapRemove$ = this.actions$.pipe(
+		ofType(MapActionTypes.IMAGERY_REMOVED),
+		map( (action: ImageryRemovedAction) => new RemoveMeasureDataAction({mapId: action.payload.id}))
 	);
 
 	@Effect()

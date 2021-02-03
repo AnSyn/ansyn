@@ -43,18 +43,18 @@ export class MeasureDistanceVisualizer extends MeasureRulerVisualizer {
 		// filter() update - checking isMeasureToolActive: if the measures layer is
 		// hidden, we still want to proceed if the measure tool changed to inactive,
 		// in order to cancel cursor style and interactions.
-		filter(([activeMapId, measureData, isMeasureToolActive]) => (!this.isHidden || !isMeasureToolActive) && Boolean(measureData)),
+		filter(([activeMapId, measureData, isMeasureToolActive]) => (!this.isHidden || !isMeasureToolActive)),
 		tap(([activeMapId, measureData, isMeasureToolActive]) => {
-			if (!measureData.isLayerShowed) {
+			if (!measureData?.isLayerShowed) {
 				this.iMap.removeLayer(this.vector);
 			} else {
 				this.iMap.addLayer(this.vector);
-				this.enableRuler(isMeasureToolActive && activeMapId && measureData.isToolActive);
-				this.startDeleteSingleEntity(isMeasureToolActive && activeMapId && measureData.isRemoveMeasureModeActive);
+				this.enableRuler(isMeasureToolActive && activeMapId && measureData?.isToolActive);
+				this.startDeleteSingleEntity(isMeasureToolActive && activeMapId && measureData?.isRemoveMeasureModeActive);
 			}
 		}),
 		switchMap(([activeMapId, measureData, isMeasureToolActive]) => {
-			return this.setEntities(measureData.measures);
+			return this.setEntities(measureData?.measures || []);
 		})
 	);
 

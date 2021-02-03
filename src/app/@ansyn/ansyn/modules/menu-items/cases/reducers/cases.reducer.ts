@@ -4,7 +4,6 @@ import { createEntityAdapter, Dictionary, EntityAdapter, EntityState } from '@ng
 import { ICase, ICasePreview } from '../models/case.model';
 import { CasesType } from '../models/cases-config';
 import { isEqualWith } from 'lodash';
-import { deepDiffMapper } from '../../../core/utils/deep-diff';
 import { casesComparator } from './cases.compare';
 
 export interface ICaseModal {
@@ -58,12 +57,8 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 		}
 
 		case CasesActionTypes.UPDATE_CASE: {
-			console.log('UPDATE_CASE called');
 			const casesAreEqual = isEqualWith(state.selectedCase, action.payload, casesComparator);
 			const openCaseId = state.loadCase || casesAreEqual ? state.openCaseId : null;
-			if (!casesAreEqual) {
-				console.log(1, deepDiffMapper.map(state.selectedCase, action.payload));
-			}
 			return { ...state, selectedCase: action.payload, wasSaved: false, openCaseId, loadCase: false }
 		}
 
@@ -124,16 +119,8 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 
 export const myCasesState = createSelector(casesStateSelector, (state) => state?.myCases);
 export const sharedCasesState = createSelector(casesStateSelector, (state) => state?.sharedCases);
-export const {
-	selectEntities: myCasesEntities,
-	selectTotal: myCasesTotal,
-	selectIds: myCasesIds
-} = myCasesAdapter.getSelectors();
-export const {
-	selectEntities: sharedCasesEntities,
-	selectTotal: sharedCasesTotal,
-	selectIds: sharedCasesIds
-} = sharedCasesAdapter.getSelectors();
+export const { selectEntities: myCasesEntities, selectTotal: myCasesTotal, selectIds: myCasesIds } = myCasesAdapter.getSelectors();
+export const { selectEntities: sharedCasesEntities, selectTotal: sharedCasesTotal, selectIds: sharedCasesIds } = sharedCasesAdapter.getSelectors();
 export const selectMyCasesTotal = createSelector(myCasesState, myCasesTotal);
 export const selectMyCasesEntities = createSelector(myCasesState, myCasesEntities);
 export const selectMyCasesIds = createSelector(myCasesState, (state) => myCasesIds(state));

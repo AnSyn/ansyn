@@ -3,7 +3,9 @@ import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/s
 import { createEntityAdapter, Dictionary, EntityAdapter, EntityState } from '@ngrx/entity';
 import { ICase, ICasePreview } from '../models/case.model';
 import { CasesType } from '../models/cases-config';
-import { isEqualWith, difference } from 'lodash';
+import { isEqualWith } from 'lodash';
+import { deepDiffMapper } from '../../../core/utils/deep-diff';
+import { casesComparator } from './cases.compare';
 
 export interface ICaseModal {
 	show: boolean,
@@ -57,44 +59,10 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 
 		case CasesActionTypes.UPDATE_CASE: {
 			console.log('UPDATE_CASE called');
-			const reduceUndefinedKeys = (prev, current) => {
-				return { ...prev, [current]: undefined }
-			};
-			const comparator = (val1, val2, key) => {
-				// Ignore case updates where only extentPolygon changed, but not center or zoom
-				// (in particular, pinning of the cases list causes such changes)
-				if (key === 'extentPolygon') {
-					return true;
-				}
-				// When a key is missing in an object, and in the other object is exists with value === undefined,
-				// lodash isEqual makes them not equal, but we want them equal
-				if (typeof val1 === 'object' && !Array.isArray(val1) && val1 !== null) {
-					const val1Keys = Object.keys(val1);
-					const val2Keys = Object.keys(val2);
-					const missingKeysInVal2 = difference(val1Keys, val2Keys);
-					const missingKeysInVal1 = difference(val2Keys, val1Keys);
-					if (missingKeysInVal1.length > 0 || missingKeysInVal2.length > 0) {
-						const newKeysForVal1 = missingKeysInVal1.reduce(reduceUndefinedKeys, {});
-						const newKeysForVal2 = missingKeysInVal2.reduce(reduceUndefinedKeys, {});
-						const isNowEqual = isEqualWith({ ...val1, ...newKeysForVal1 }, { ...val2, ...newKeysForVal2 }, comparator);
-						return isNowEqual;
-					}
-				}
-			};
-			const casesAreEqual = isEqualWith(state.selectedCase, action.payload, comparator);
+			const casesAreEqual = isEqualWith(state.selectedCase, action.payload, casesComparator);
 			const openCaseId = state.loadCase || casesAreEqual ? state.openCaseId : null;
 			if (!casesAreEqual) {
 				console.log(1, deepDiffMapper.map(state.selectedCase, action.payload));
-				// console.log(2, isEqualWith(state.selectedCase, action.payload, comparator));
-				// const cloned1 = cloneDeep<ICase>(state.selectedCase);
-				// const cloned2 = cloneDeep<ICase>(action.payload);
-				// cloned1.state.maps.data.forEach((mapData) => {
-				// 	mapData.data.position.extentPolygon = null;
-				// });
-				// cloned2.state.maps.data.forEach((mapData) => {
-				// 	mapData.data.position.extentPolygon = null;
-				// });
-				// console.log(2, deepDiffMapper.map(cloned1, cloned2));
 			}
 			return { ...state, selectedCase: action.payload, wasSaved: false, openCaseId, loadCase: false }
 		}
@@ -188,125 +156,3 @@ export const selectSelectedCase = createSelector(casesStateSelector, (cases) => 
 export const selectModalState = createSelector(casesStateSelector, (cases) => cases?.modal);
 export const selectShowCasesTable = createSelector(casesStateSelector, (cases) => cases?.showCasesTable);
 export const selectCaseSaved = createSelector(casesStateSelector, (cases) => cases?.wasSaved);
-
-// Based on https://stackoverflow.com/a/8596559/4402222
-const deepDiffMapper = function () {
-	return {
-		VALUE_CREATED: 'created',
-		VALUE_UPDATED: 'updated',
-		VALUE_DELETED: 'deleted',
-		VALUE_UNCHANGED: 'unchanged',
-		map: function (obj1, obj2) {
-			if (this.isFunction(obj1) || this.isFunction(obj2)) {
-				throw Error('Invalid argument. Function given, object expected.');
-			}
-			if (this.isValue(obj1) || this.isValue(obj2)) {
-				const fromResult = this.compareValues(obj1, obj2);
-				let toResult;
-				switch (fromResult) {
-					case this.VALUE_UNCHANGED:
-						toResult = undefined;
-						break;
-					case this.VALUE_CREATED:
-						toResult = {
-							type: fromResult,
-							data: obj2
-						};
-						break;
-					case this.VALUE_DELETED:
-						toResult = {
-							type: fromResult,
-							data: obj1
-						};
-						break;
-					default:
-						toResult = {
-							type: fromResult,
-							from: obj1,
-							to: obj2
-						}
-				}
-				return toResult;
-			}
-
-			const diff = {};
-			const unchanged = new Set();
-			for (let key in obj1) {
-				if (this.isFunction(obj1[key])) {
-					continue;
-				}
-
-				if (!obj2.hasOwnProperty(key)) {
-					diff[key] = {
-						type: this.VALUE_DELETED,
-						data: obj1[key]
-					};
-					continue;
-				}
-
-				const value2 = obj2[key];
-				const result = this.map(obj1[key], value2);
-				if (result) {
-					diff[key] = result
-				} else {
-					unchanged.add(key);
-				}
-			}
-			for (let key in obj2) {
-				if (this.isFunction(obj2[key]) || diff[key] !== undefined || unchanged.has(key)) {
-					continue;
-				}
-
-				if (!obj1.hasOwnProperty(key)) {
-					diff[key] = {
-						type: this.VALUE_CREATED,
-						data: obj2[key]
-					};
-					continue;
-				}
-
-				const result = this.map(undefined, obj2[key]);
-				if (result) {
-					diff[key] = result
-				}
-			}
-
-			if (Object.keys(diff).length === 0) { // {}
-				return undefined
-			} else {
-				return diff
-			}
-
-		},
-		compareValues: function (value1, value2) {
-			if (value1 === value2) {
-				return this.VALUE_UNCHANGED;
-			}
-			if (this.isDate(value1) && this.isDate(value2) && value1.getTime() === value2.getTime()) {
-				return this.VALUE_UNCHANGED;
-			}
-			if (value1 === undefined) {
-				return this.VALUE_CREATED;
-			}
-			if (value2 === undefined) {
-				return this.VALUE_DELETED;
-			}
-			return this.VALUE_UPDATED;
-		},
-		isFunction: function (x) {
-			return Object.prototype.toString.call(x) === '[object Function]';
-		},
-		isArray: function (x) {
-			return Object.prototype.toString.call(x) === '[object Array]';
-		},
-		isDate: function (x) {
-			return Object.prototype.toString.call(x) === '[object Date]';
-		},
-		isObject: function (x) {
-			return Object.prototype.toString.call(x) === '[object Object]';
-		},
-		isValue: function (x) {
-			return !this.isObject(x) && !this.isArray(x);
-		}
-	}
-}();

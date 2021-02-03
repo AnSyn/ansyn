@@ -137,13 +137,6 @@ export class ToolsAppEffects {
 				clearActions = differenceWith(clearActions, action.payload.skipClearFor,
 					(act, actType) => act instanceof actType);
 			}
-			mapIds.forEach((mapId) => {
-				const updateMeasureAction = new UpdateMeasureDataOptionsAction({
-					mapId: mapId,
-					options: { forceDisableTranslate: undefined }
-				});
-				clearActions.push(updateMeasureAction);
-			});
 			return clearActions;
 		}));
 

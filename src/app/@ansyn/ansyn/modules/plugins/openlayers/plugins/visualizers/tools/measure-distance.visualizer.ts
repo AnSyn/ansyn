@@ -38,8 +38,7 @@ export class MeasureDistanceVisualizer extends MeasureRulerVisualizer {
 	show$ = () => combineLatest([
 		this.store$.select(selectActiveMapId),
 		this.store$.select(selectMeasureDataByMapId(this.mapId)),
-		this.store$.select(selectIsMeasureToolActive),
-		this.onHiddenStateChanged]).pipe(
+		this.store$.select(selectIsMeasureToolActive)]).pipe(
 		distinctUntilChanged(),
 		// filter() update - checking isMeasureToolActive: if the measures layer is
 		// hidden, we still want to proceed if the measure tool changed to inactive,
@@ -52,12 +51,6 @@ export class MeasureDistanceVisualizer extends MeasureRulerVisualizer {
 				this.iMap.addLayer(this.vector);
 				this.enableRuler(isMeasureToolActive && activeMapId && measureData.isToolActive);
 				this.startDeleteSingleEntity(isMeasureToolActive && activeMapId && measureData.isRemoveMeasureModeActive);
-				if (measureData.forceDisableTranslate) {
-					this.removeTranslateMeasuresLabelInteraction();
-				}
-				else if (measureData.forceDisableTranslate === false) { // don't enter if forceDisableTranslate is undefined
-					this.createTranslateMeasuresLabelInteraction();
-				}
 			}
 		}),
 		switchMap(([activeMapId, measureData, isMeasureToolActive]) => {

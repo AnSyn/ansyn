@@ -24,8 +24,7 @@ import {
 } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { UpdateFacetsAction } from '../../../modules/filters/actions/filters.actions';
 import {
-	SetAnnotationMode,
-	SetMeasureDistanceToolState
+	SetAnnotationMode
 } from '../../../modules/status-bar/components/tools/actions/tools.actions';
 import { CoreConfig } from '../../../modules/core/models/core.config';
 import { SetMiscOverlays, SetOverlaysCriteriaAction } from '../../../modules/overlays/actions/overlays.actions';

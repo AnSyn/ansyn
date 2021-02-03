@@ -17,11 +17,7 @@ import {
 } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { casesConfig, CasesService } from '../../../modules/menu-items/cases/services/cases.service';
 import { UpdateFacetsAction } from '../../../modules/filters/actions/filters.actions';
-import {
-	CreateMeasureDataAction,
-	SetAnnotationMode,
-	SetMeasureDistanceToolState,
-} from '../../../modules/status-bar/components/tools/actions/tools.actions';
+import { SetAnnotationMode } from '../../../modules/status-bar/components/tools/actions/tools.actions';
 import { isFullOverlay } from '../../../modules/core/utils/overlays';
 import { ICoreConfig } from '../../../modules/core/models/core.config.model';
 import { CoreConfig } from '../../../modules/core/models/core.config';

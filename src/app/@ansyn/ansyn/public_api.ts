@@ -92,7 +92,7 @@ export {
 	SetActiveCenter,
 	SetAnnotationMode,
 	SetMapGeoEnabledModeToolsActionStore,
-	SetMeasureDistanceToolState,
+	SetMeasuresToolFlag,
 	SetPinLocationModeAction,
 	StartMouseShadow,
 	StopMouseShadow,

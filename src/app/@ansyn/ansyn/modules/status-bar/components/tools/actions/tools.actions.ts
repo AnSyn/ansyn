@@ -20,7 +20,7 @@ export const ToolsActionsTypes = {
 	ANNOTATION_SET_PROPERTIES: type('ANNOTATION_SET_PROPERTIES'),
 	SET_SUB_MENU: type('SET_SUB_MENU'),
 	MEASURES: {
-		SET_MEASURE_TOOL_STATE: type('[tools] SET_MEASURE_TOOL_STATE'),
+		SET_MEASURES_TOOL_FLAG: type('[tools] SET_MEASURES_TOOL_FLAG'),
 		CREATE_MEASURE_DATA: type('[tools] CREATE_MEASURE_DATA'),
 		REMOVE_MEASURE_DATA: type('[tools] REMOVE_MEASURE_DATA'),
 		ADD_MEASURE: type('[tools] ADD_MEASURE'),
@@ -137,8 +137,8 @@ export class SetMapGeoEnabledModeToolsActionStore implements Action {
 	}
 }
 
-export class SetMeasureDistanceToolState implements Action, ILogMessage {
-	type = ToolsActionsTypes.MEASURES.SET_MEASURE_TOOL_STATE;
+export class SetMeasuresToolFlag implements Action, ILogMessage {
+	type = ToolsActionsTypes.MEASURES.SET_MEASURES_TOOL_FLAG;
 
 	constructor(public payload: boolean) {
 	}
@@ -263,7 +263,7 @@ export type ToolsActions =
 	| GoToAction
 	| SetMapGeoEnabledModeToolsActionStore
 	| SetAnnotationMode
-	| SetMeasureDistanceToolState
+	| SetMeasuresToolFlag
 	| SetSubMenu
 	| ClearActiveInteractionsAction
 	| SetMapSearchBox;

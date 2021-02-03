@@ -11,7 +11,7 @@ import { combineLatest } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import {
 	ClearActiveInteractionsAction, RemoveMeasureAction,
-	SetMeasureDistanceToolState,
+	SetMeasuresToolFlag,
 	UpdateMeasureDataOptionsAction
 } from '../../actions/tools.actions';
 import { selectIsMeasureToolActive, selectMeasureDataByMapId } from '../../reducers/tools.reducer';
@@ -118,6 +118,6 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 	}
 
 	done() {
-		this.store$.dispatch(new SetMeasureDistanceToolState(false));
+		this.store$.dispatch(new SetMeasuresToolFlag(false));
 	}
 }

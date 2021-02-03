@@ -49,7 +49,6 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 	geoJsonFormat: GeoJSON;
 	interactionSource: VectorSource;
 	hoveredMeasureId: string;
-	onHiddenStateChanged = new Subject();
 
 	protected allLengthTextStyle = new Text({
 		font: '16px Calibri,sans-serif',
@@ -116,18 +115,6 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 		return this.interactions.get(VisualizerInteractions.drawInteractionHandler);
 	}
 
-	get isRulerEnabled(): boolean {
-		return this.interactions.has(VisualizerInteractions.drawInteractionHandler);
-	}
-
-	get isRulerRemoveEntitiesEnabled(): boolean {
-		return this.interactions.has(VisualizerInteractions.pointerMove);
-	}
-	onInitSubscriptions() {
-		super.onInitSubscriptions();
-		this.onHiddenStateChanged.next();
-	}
-
 	enableRuler(activate: boolean) {
 		if (activate) {
 			this.createDrawInteraction();
@@ -168,13 +155,6 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 		entitiesToRemove.forEach( (entity) => this.removeEntity(entity.id));
 		return this.addOrUpdateEntities(entitiesToDraw);
 
-	}
-
-
-	// override base method
-	setVisibility(isVisible: boolean) {
-		super.setVisibility(isVisible);
-		this.onHiddenStateChanged.next();
 	}
 
 	createHoverForDeleteInteraction() {

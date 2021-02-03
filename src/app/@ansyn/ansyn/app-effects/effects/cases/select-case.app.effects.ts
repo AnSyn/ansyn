@@ -18,6 +18,7 @@ import {
 import { casesConfig, CasesService } from '../../../modules/menu-items/cases/services/cases.service';
 import { UpdateFacetsAction } from '../../../modules/filters/actions/filters.actions';
 import {
+	CreateMeasureDataAction,
 	SetAnnotationMode,
 	SetMeasureDistanceToolState,
 } from '../../../modules/status-bar/components/tools/actions/tools.actions';
@@ -103,7 +104,6 @@ export class SelectCaseAppEffects {
 			new UpdateFacetsAction(facets),
 			new UpdateSelectedLayersIds(activeLayersIds),
 			new SetAnnotationMode(null),
-			new SetMeasureDistanceToolState(false),
 			new SelectCaseSuccessAction(payload)
 		];
 

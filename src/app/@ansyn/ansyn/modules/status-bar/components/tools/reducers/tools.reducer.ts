@@ -1,7 +1,8 @@
 import {
 	AddMeasureAction,
 	CreateMeasureDataAction,
-	RemoveMeasureAction, RemoveMeasureDataAction,
+	RemoveMeasureAction,
+	RemoveMeasureDataAction,
 	SetActiveCenter,
 	SetAnnotationMode,
 	SetMapGeoEnabledModeToolsActionStore,
@@ -41,7 +42,8 @@ export interface IToolsState {
 
 export const toolsInitialState: IToolsState = {
 	flags: new Map<toolsFlags, boolean>([
-		[toolsFlags.geoRegisteredOptionsEnabled, true]
+		[toolsFlags.geoRegisteredOptionsEnabled, true],
+		[toolsFlags.isMeasureToolActive, false]
 	]),
 	subMenu: undefined,
 	activeCenter: [0, 0],
@@ -110,9 +112,9 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.MEASURES.SET_MEASURE_TOOL_STATE:
-
+			const active: boolean = (action as SetMeasureDistanceToolState).payload;
 			tmpMap = new Map(state.flags);
-			tmpMap.set(toolsFlags.isMeasureToolActive, (<SetMeasureDistanceToolState>action).payload);
+			tmpMap.set(toolsFlags.isMeasureToolActive, active);
 			const mapsMeasures = new Map(state.mapsMeasures);
 			Array.from(mapsMeasures.keys()).forEach((key: string) => {
 				mapsMeasures.set(key, createNewMeasureData());
@@ -120,10 +122,10 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			return { ...state, flags: tmpMap, mapsMeasures };
 
 		case ToolsActionsTypes.MEASURES.CREATE_MEASURE_DATA: {
-
+			const { mapId } = (action as unknown as CreateMeasureDataAction).payload;
 			const mapsMeasures = new Map(state.mapsMeasures);
-			if (!mapsMeasures.has((<CreateMeasureDataAction><unknown>action).payload.mapId)) {
-				mapsMeasures.set((<CreateMeasureDataAction><unknown>action).payload.mapId, createNewMeasureData());
+			if (!mapsMeasures.has(mapId)) {
+				mapsMeasures.set(mapId, createNewMeasureData());
 			}
 			return { ...state, mapsMeasures };
 		}
@@ -187,6 +189,5 @@ export const selectToolFlags = createSelector(toolsStateSelector, (tools: ITools
 export const selectToolFlag = (flag: toolsFlags) => createSelector(selectToolFlags, (flags: Map<toolsFlags, boolean>) => flags.get(flag));
 export const selectIsMeasureToolActive = createSelector(selectToolFlags, (_toolsFlags) => _toolsFlags.get(toolsFlags.isMeasureToolActive));
 export const selectGeoRegisteredOptionsEnabled = createSelector(selectToolFlags, (_toolsFlags) => _toolsFlags.get(toolsFlags.geoRegisteredOptionsEnabled));
-export const selectMeasureDataByMapId = (mapId: string) => createSelector(toolsStateSelector, (tools: IToolsState) => {
-	return tools && tools.mapsMeasures && tools.mapsMeasures.get(mapId);
-});
+export const selectAllMeasuresData = createSelector(toolsStateSelector, (tools: IToolsState) => tools?.mapsMeasures);
+export const selectMeasureDataByMapId = (mapId: string) => createSelector(selectAllMeasuresData, (mapsMeasures: Map<string, IMeasureData>) => mapsMeasures.get(mapId));

@@ -141,7 +141,7 @@ describe('SelectCaseAppEffects', () => {
 			};
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
-			const expectedResult = cold('--(abcdefghijklmpqr)--', {
+			const expectedResult = cold('--(abcdefghijklmpr)--', {
 			a: new SetMapsDataActionStore({ mapsList: maps.data }),
 			b: new SetActiveMapId(state.maps.activeMapId),
 			c: new SetLayoutAction(<any>maps.layout),
@@ -156,7 +156,6 @@ describe('SelectCaseAppEffects', () => {
 			l: new UpdateFacetsAction(facets),
 			m: new UpdateSelectedLayersIds([]),
 			p: new SetAnnotationMode(null),
-			q: new SetMeasureDistanceToolState(false),
 			r: new SelectCaseSuccessAction(payload)
 			});
 

@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { AnnotationMode, IUpdateFeatureEvent } from '@ansyn/ol';
-import { IMeasureDataOptions, SubMenuEnum, toolsFlags } from '../models/tools.model';
+import { IMeasureData, IMeasureDataOptions, SubMenuEnum, toolsFlags } from '../models/tools.model';
 import { type } from '../../../../core/utils/type';
 import { ILogMessage } from '@ansyn/map-facade';
 
@@ -21,6 +21,7 @@ export const ToolsActionsTypes = {
 	SET_SUB_MENU: type('SET_SUB_MENU'),
 	MEASURES: {
 		SET_MEASURES_TOOL_FLAG: type('[tools] SET_MEASURES_TOOL_FLAG'),
+		SET_MEASURES_DATA: type('[tools] SET_MEASURES_DATA'),
 		CREATE_MEASURE_DATA: type('[tools] CREATE_MEASURE_DATA'),
 		REMOVE_MEASURE_DATA: type('[tools] REMOVE_MEASURE_DATA'),
 		ADD_MEASURE: type('[tools] ADD_MEASURE'),
@@ -148,6 +149,11 @@ export class SetMeasuresToolFlag implements Action, ILogMessage {
 	}
 }
 
+export class SetMeasuresDataAction implements Action {
+	readonly type = ToolsActionsTypes.MEASURES.SET_MEASURES_DATA;
+	constructor(public payload: Map<string, IMeasureData>) {
+	}
+}
 export class CreateMeasureDataAction implements Action {
 	type = ToolsActionsTypes.MEASURES.CREATE_MEASURE_DATA;
 

@@ -52,6 +52,7 @@ export class ToolsAppEffects {
 		concatMap( action => of(action).pipe(
 			withLatestFrom(this.store$.pipe(select(selectMapsIds)), this.store$.pipe(select(selectIsMeasureToolActive)), ( _, mapIds, measureIsActive) => [mapIds, measureIsActive])
 		)),
+		filter( ([mapIds, isActive]: [string[], boolean]) => isActive !== undefined),
 		mergeMap( ([mapIds, isActive]: [string[], boolean]) =>
 			mapIds.map( (mapId) => isActive ? new CreateMeasureDataAction({ mapId })
 			: new RemoveMeasureDataAction({ mapId })))

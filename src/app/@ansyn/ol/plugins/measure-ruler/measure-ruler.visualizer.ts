@@ -309,8 +309,12 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 	}
 
 	// The feature after created
-	featureStyle(feature: Feature, state: string = VisualizerStates.INITIAL) {
-		return this.filterLineStringFeature(feature) ? this.measurementMainStyle() : feature.get('measureStyle');
+	createStyle(feature: Feature) {
+		if (this.filterLineStringFeature(feature)) {
+			return this.measurementMainStyle();
+		}
+		const style = feature.get('measureStyle');
+		return style instanceof Style ? style : new Style(style);
 	}
 
 	// Style in draw mode

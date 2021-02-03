@@ -6,7 +6,7 @@ import {
 	SetActiveCenter,
 	SetAnnotationMode,
 	SetMapGeoEnabledModeToolsActionStore,
-	SetMapSearchBox,
+	SetMapSearchBox, SetMeasuresDataAction,
 	SetMeasuresToolFlag,
 	SetPinLocationModeAction,
 	SetSubMenu,
@@ -18,7 +18,7 @@ import {
 	UpdateToolsFlags
 } from '../actions/tools.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { IVisualizerStyle, getInitialAnnotationsFeatureStyle } from '@ansyn/imagery';
+import { getInitialAnnotationsFeatureStyle, IVisualizerStyle } from '@ansyn/imagery';
 import { AnnotationMode } from '@ansyn/ol';
 import {
 	createNewMeasureData,
@@ -42,8 +42,7 @@ export interface IToolsState {
 
 export const toolsInitialState: IToolsState = {
 	flags: new Map<toolsFlags, boolean>([
-		[toolsFlags.geoRegisteredOptionsEnabled, true],
-		[toolsFlags.isMeasureToolActive, false]
+		[toolsFlags.geoRegisteredOptionsEnabled, true]
 	]),
 	subMenu: undefined,
 	activeCenter: [0, 0],
@@ -117,6 +116,14 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			tmpMap.set(toolsFlags.isMeasureToolActive, active);
 			return { ...state, flags: tmpMap };
 
+		case ToolsActionsTypes.MEASURES.SET_MEASURES_DATA: {
+			const mapsMeasures = (action as unknown as SetMeasuresDataAction).payload;
+			tmpMap = new Map(state.flags);
+			if ( mapsMeasures.size > 0) {
+				tmpMap.set(toolsFlags.isMeasureToolActive, true);
+			}
+			return {...state, flags: tmpMap, mapsMeasures}
+		}
 		case ToolsActionsTypes.MEASURES.CREATE_MEASURE_DATA: {
 			const { mapId } = (action as unknown as CreateMeasureDataAction).payload;
 			const mapsMeasures = new Map(state.mapsMeasures);

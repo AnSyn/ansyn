@@ -18,6 +18,7 @@ import {
 import {
 	AddMeasureAction, RemoveMeasureAction,
 } from '../../../../../status-bar/components/tools/actions/tools.actions';
+import { isEqual } from 'lodash';
 
 export const measuresClassNameForExport = 'measures-layer';
 @ImageryVisualizer({
@@ -39,18 +40,23 @@ export class MeasureDistanceVisualizer extends MeasureRulerVisualizer {
 		this.store$.select(selectActiveMapId),
 		this.store$.select(selectMeasureDataByMapId(this.mapId)),
 		this.store$.select(selectIsMeasureToolActive)]).pipe(
-		distinctUntilChanged(),
+		distinctUntilChanged((a, b) => {
+			const equal = isEqual(a, b);
+			return equal;
+		}),
 		// filter() update - checking isMeasureToolActive: if the measures layer is
 		// hidden, we still want to proceed if the measure tool changed to inactive,
 		// in order to cancel cursor style and interactions.
 		filter(([activeMapId, measureData, isMeasureToolActive]) => (!this.isHidden || !isMeasureToolActive)),
 		tap(([activeMapId, measureData, isMeasureToolActive]) => {
-			if (!measureData?.isLayerShowed) {
-				this.iMap.removeLayer(this.vector);
-			} else {
-				this.iMap.addLayer(this.vector);
-				this.enableRuler(isMeasureToolActive && activeMapId && measureData?.isToolActive);
-				this.startDeleteSingleEntity(isMeasureToolActive && activeMapId && measureData?.isRemoveMeasureModeActive);
+			if (measureData) {
+				if (!measureData?.isLayerShowed) {
+					this.iMap.removeLayer(this.vector);
+				} else {
+					this.iMap.addLayer(this.vector);
+					this.enableRuler(isMeasureToolActive && activeMapId && measureData?.isToolActive);
+					this.startDeleteSingleEntity(isMeasureToolActive && activeMapId && measureData?.isRemoveMeasureModeActive);
+				}
 			}
 		}),
 		switchMap(([activeMapId, measureData, isMeasureToolActive]) => {

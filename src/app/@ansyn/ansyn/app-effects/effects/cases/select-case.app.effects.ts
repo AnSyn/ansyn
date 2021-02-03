@@ -17,7 +17,10 @@ import {
 } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { casesConfig, CasesService } from '../../../modules/menu-items/cases/services/cases.service';
 import { UpdateFacetsAction } from '../../../modules/filters/actions/filters.actions';
-import { SetAnnotationMode } from '../../../modules/status-bar/components/tools/actions/tools.actions';
+import {
+	SetAnnotationMode,
+	SetMeasuresDataAction
+} from '../../../modules/status-bar/components/tools/actions/tools.actions';
 import { isFullOverlay } from '../../../modules/core/utils/overlays';
 import { ICoreConfig } from '../../../modules/core/models/core.config.model';
 import { CoreConfig } from '../../../modules/core/models/core.config';
@@ -84,7 +87,12 @@ export class SelectCaseAppEffects {
 		const { facets } = state;
 
 		const advancedSearchParameters = state.advancedSearchParameters;
-		const { runSecondSearch } = state
+		const { runSecondSearch } = state;
+		const mapMeasures = new Map();
+		state.maps.data.filter( map => map.data.measures).forEach( map => {
+			mapMeasures.set(map.id, map.data.measures);
+		});
+
 		const selectCaseAction = [
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),
 			new SetActiveMapId(state.maps.activeMapId),
@@ -100,6 +108,7 @@ export class SelectCaseAppEffects {
 			new UpdateFacetsAction(facets),
 			new UpdateSelectedLayersIds(activeLayersIds),
 			new SetAnnotationMode(null),
+			new SetMeasuresDataAction(mapMeasures),
 			new SelectCaseSuccessAction(payload)
 		];
 

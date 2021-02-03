@@ -66,9 +66,10 @@ export class CasesEffects {
 		mergeMap(([{ payload }, layers, measuresData]: [SaveCaseAsAction, ILayer[], Map<string, IMeasureData>]) => {
 			const newCase = { ...payload, id: this.casesService.generateUUID() };
 			// 1. add measures to case
-			measuresData.forEach( (measureData, key) => {
-				const mapIndex = newCase.state.maps.data.findIndex( (map) => map.id === key);
-				newCase.state.maps.data[mapIndex].data.measures = measureData.measures
+			newCase.state.maps.data.forEach( (map) => {
+				if (measuresData.has(map.id)) {
+					map.data.measures = measuresData.get(map.id)
+				}
 			});
 			// 2. regenerate maps id for the new case.
 			const currentActive = newCase.state.maps.activeMapId;

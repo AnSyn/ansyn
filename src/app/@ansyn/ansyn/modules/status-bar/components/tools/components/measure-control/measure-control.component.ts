@@ -37,15 +37,9 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 	show$ = () => combineLatest([
 		this.store$.select(selectIsMeasureToolActive),
 		this.store$.select(selectActiveMapId),
-		this.store$.select(selectIsMinimalistViewMode),
-		this.store$.select(selectOverlayByMapId(this.mapId))
+		this.store$.select(selectIsMinimalistViewMode)
 		]).pipe(
-		tap(([isActive, activeMapId, isHidden, overlay]) => {
-			const differentOverlay = this.isDifferentOverlay(this.currentOverlay, overlay);
-			this.currentOverlay = overlay;
-			if (differentOverlay) {
-				this.done();
-			}
+		tap(([isActive, activeMapId, isHidden]) => {
 			this.show = isActive && activeMapId === this.mapId && !isHidden;
 		})
 	);
@@ -56,21 +50,6 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 			this.measureData = measureData;
 		})
 	);
-
-	private isDifferentOverlay(currentOverlay: IOverlay, overlay: IOverlay) {
-		if (!Boolean(currentOverlay) && !Boolean(overlay)) {
-			return false;
-		}
-
-		if (!Boolean(currentOverlay) || !Boolean(overlay)) {
-			return true;
-		}
-
-		if (currentOverlay.id === overlay.id) {
-			return false;
-		}
-		return true;
-	}
 
 	ngOnInit() {
 	}

@@ -37,7 +37,6 @@ export class MeasureDistanceVisualizer extends MeasureRulerVisualizer {
 
 	@AutoSubscription
 	show$ = () => combineLatest([
-		this.store$.select(selectActiveMapId),
 		this.store$.select(selectMeasureDataByMapId(this.mapId)),
 		this.store$.select(selectIsMeasureToolActive)]).pipe(
 		distinctUntilChanged((a, b) => {
@@ -47,20 +46,25 @@ export class MeasureDistanceVisualizer extends MeasureRulerVisualizer {
 		// filter() update - checking isMeasureToolActive: if the measures layer is
 		// hidden, we still want to proceed if the measure tool changed to inactive,
 		// in order to cancel cursor style and interactions.
-		filter(([activeMapId, measureData, isMeasureToolActive]) => (!this.isHidden || !isMeasureToolActive)),
-		tap(([activeMapId, measureData, isMeasureToolActive]) => {
+		filter(([measureData, isMeasureToolActive]) => (!this.isHidden || !isMeasureToolActive)),
+		tap(([measureData, isMeasureToolActive]) => {
 			if (measureData) {
 				if (!measureData?.isLayerShowed) {
 					this.iMap.removeLayer(this.vector);
 				} else {
 					this.iMap.addLayer(this.vector);
-					this.enableRuler(isMeasureToolActive && activeMapId && measureData?.isToolActive);
-					this.startDeleteSingleEntity(isMeasureToolActive && activeMapId && measureData?.isRemoveMeasureModeActive);
+					this.enableRuler(isMeasureToolActive && measureData?.isToolActive);
+					this.startDeleteSingleEntity(isMeasureToolActive && measureData?.isRemoveMeasureModeActive);
 				}
 			}
 		}),
-		switchMap(([activeMapId, measureData, isMeasureToolActive]) => {
-			return this.setEntities(measureData?.measures || []);
+		switchMap(([measureData, isMeasureToolActive]) => {
+			const entities = measureData?.measures.reduce((entities: IVisualizerEntity[], measure: IVisualizerEntity) => {
+				const textMeasures = measure.featureJson.properties.measures;
+				entities.push(measure, ...textMeasures);
+				return entities;
+			}, []);
+			return this.setEntities(entities || []);
 		})
 	);
 

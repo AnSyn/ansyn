@@ -386,7 +386,7 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 		const select = new Select({
 			condition: (event) => pointerMoveCondition(event) && !event.dragging,
 			layers: [this.vector],
-			style: (feature) => feature.get('measureStyle'),
+			style: (feature) => feature.styleCache,
 			filter: (feature) => !this.filterLineStringFeature(feature)
 		});
 		const translate = new Translate({

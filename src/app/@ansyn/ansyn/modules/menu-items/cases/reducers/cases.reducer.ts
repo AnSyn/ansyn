@@ -1,10 +1,10 @@
-import { caseModalType, CasesActions, CasesActionTypes, DeleteCaseAction } from '../actions/cases.actions';
+import { caseModalType, CasesActions, CasesActionTypes } from '../actions/cases.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
-import { Dictionary } from '@ngrx/entity';
+import { createEntityAdapter, Dictionary, EntityAdapter, EntityState } from '@ngrx/entity';
 import { ICase, ICasePreview } from '../models/case.model';
 import { CasesType } from '../models/cases-config';
-import { isEqual } from 'lodash';
+import { isEqualWith } from 'lodash';
+import { casesComparator } from './cases.compare';
 
 export interface ICaseModal {
 	show: boolean,
@@ -53,19 +53,20 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 		}
 
 		case CasesActionTypes.LOAD_CASE: {
-			return {...state, loadCase: true}
+			return { ...state, loadCase: true }
 		}
 
 		case CasesActionTypes.UPDATE_CASE: {
-			const openCaseId = state.loadCase || isEqual(state.selectedCase, action.payload) ? state.openCaseId : null;
+			const casesAreEqual = isEqualWith(state.selectedCase, action.payload, casesComparator);
+			const openCaseId = state.loadCase || casesAreEqual ? state.openCaseId : null;
 			return { ...state, selectedCase: action.payload, wasSaved: false, openCaseId, loadCase: false }
 		}
 
 		case CasesActionTypes.RENAME_CASE: {
 			const { case: _case, newName } = action.payload;
 			const { id } = _case;
-			const myCasesState = myCasesAdapter.updateOne({id, changes: {name: newName} }, state.myCases);
-			return {...state, myCases: myCasesState}
+			const myCasesState = myCasesAdapter.updateOne({ id, changes: { name: newName } }, state.myCases);
+			return { ...state, myCases: myCasesState }
 		}
 
 		case CasesActionTypes.DELETE_CASE_SUCCESS: {
@@ -102,7 +103,7 @@ export function CasesReducer(state: ICasesState = initialCasesState, action: any
 
 		case CasesActionTypes.SAVE_CASE_AS_SUCCESS:
 			const myCasesState = myCasesAdapter.addOne(action.payload, state.myCases);
-			return {...state, myCases: myCasesState, wasSaved: true, openCaseId: action.payload.id};
+			return { ...state, myCases: myCasesState, wasSaved: true, openCaseId: action.payload.id };
 
 		case CasesActionTypes.SAVE_SHARED_CASE_AS_MY_OWN: {
 			if (typeof action.payload === 'string') {

@@ -62,7 +62,7 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 		}),
 		scale: 1.5,
 		offsetY: 30,
-		offsetX: -150
+		offsetX: -100
 	});
 	protected editDistanceStyle = new Style({
 		fill: new Fill({

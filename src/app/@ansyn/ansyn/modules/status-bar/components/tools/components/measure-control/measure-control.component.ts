@@ -1,17 +1,16 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { IEntryComponent, selectActiveMapId, selectIsMinimalistViewMode } from '@ansyn/map-facade';
-import { Store } from '@ngrx/store';
+import { IEntryComponent, selectActiveMapId, selectIsMinimalistViewMode, selectMaps } from '@ansyn/map-facade';
+import { Store, select } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { combineLatest } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 import {
 	ClearActiveInteractionsAction,
 	RemoveMeasureAction,
 	UpdateMeasureDataOptionsAction,
 	UpdateToolsFlags
 } from '../../actions/tools.actions';
-import { selectIsMeasureToolActive, selectMeasureDataByMapId } from '../../reducers/tools.reducer';
-import { IOverlay } from '../../../../../overlays/models/overlay.model';
+import { selectIsMeasureToolActive } from '../../reducers/tools.reducer';
 import { IMeasureData, toolsFlags } from '../../models/tools.model';
 
 @Component({
@@ -25,26 +24,26 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 	show: boolean;
 	measureData: IMeasureData;
 
-	constructor(protected store$: Store<any>) {
-	}
+	@AutoSubscription
+	mapMeasures$ = this.store$.pipe(
+		select(selectMaps),
+		map( (maps) => maps[this.mapId]?.data?.measuresData),
+		tap( (measureData) => this.measureData = measureData)
+	);
 
 	@AutoSubscription
-	show$ = () => combineLatest([
+	show$ = combineLatest([
 		this.store$.select(selectIsMeasureToolActive),
 		this.store$.select(selectActiveMapId),
 		this.store$.select(selectIsMinimalistViewMode)
-		]).pipe(
+	]).pipe(
 		tap(([isActive, activeMapId, isHidden]) => {
 			this.show = isActive && activeMapId === this.mapId && !isHidden;
 		})
 	);
 
-	@AutoSubscription
-	measureData$ = () => this.store$.select(selectMeasureDataByMapId(this.mapId)).pipe(
-		tap((measureData: IMeasureData) => {
-			this.measureData = measureData;
-		})
-	);
+	constructor(protected store$: Store<any>) {
+	}
 
 	ngOnInit() {
 	}

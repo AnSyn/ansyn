@@ -20,8 +20,6 @@ export const ToolsActionsTypes = {
 	ANNOTATION_SET_PROPERTIES: type('ANNOTATION_SET_PROPERTIES'),
 	SET_SUB_MENU: type('SET_SUB_MENU'),
 	MEASURES: {
-		SET_MEASURES_TOOL_FLAG: type('[tools] SET_MEASURES_TOOL_FLAG'),
-		SET_MEASURES_DATA: type('[tools] SET_MEASURES_DATA'),
 		CREATE_MEASURE_DATA: type('[tools] CREATE_MEASURE_DATA'),
 		REMOVE_MEASURE_DATA: type('[tools] REMOVE_MEASURE_DATA'),
 		ADD_MEASURE: type('[tools] ADD_MEASURE'),
@@ -138,11 +136,6 @@ export class SetMapGeoEnabledModeToolsActionStore implements Action {
 	}
 }
 
-export class SetMeasuresDataAction implements Action {
-	readonly type = ToolsActionsTypes.MEASURES.SET_MEASURES_DATA;
-	constructor(public payload: Map<string, IMeasureData>) {
-	}
-}
 export class CreateMeasureDataAction implements Action {
 	type = ToolsActionsTypes.MEASURES.CREATE_MEASURE_DATA;
 

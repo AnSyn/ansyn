@@ -16,8 +16,8 @@ import {
 	selectMapsList
 } from '@ansyn/map-facade';
 import { Point } from 'geojson';
-import { differenceWith } from 'lodash';
-import { filter, map, mergeMap, switchMap, withLatestFrom, concatMap, tap } from 'rxjs/operators';
+import { differenceWith, isEqual } from 'lodash';
+import { filter, map, mergeMap, switchMap, withLatestFrom, concatMap, tap, distinctUntilChanged } from 'rxjs/operators';
 import { IAppState } from '../app.effects.module';
 import { UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import {
@@ -37,7 +37,7 @@ import {
 import { IToolsConfig, toolsConfig } from '../../modules/status-bar/components/tools/models/tools-config';
 import {
 	selectAnnotationMode,
-	selectIsMeasureToolActive, selectMeasureDataByMapId,
+	selectIsMeasureToolActive,
 	selectToolFlag
 } from '../../modules/status-bar/components/tools/reducers/tools.reducer';
 import { toolsFlags } from '../../modules/status-bar/components/tools/models/tools.model';
@@ -48,20 +48,15 @@ export class ToolsAppEffects {
 
 	@Effect()
 	onMeasureToolChange: Observable<any> = this.actions$.pipe(
-		ofType(MapActionTypes.SET_ACTIVE_MAP_ID, ToolsActionsTypes.MEASURES.SET_MEASURES_TOOL_FLAG),
+		ofType(MapActionTypes.SET_ACTIVE_MAP_ID, ToolsActionsTypes.UPDATE_TOOLS_FLAGS),
 		concatMap( action => of(action).pipe(
 			withLatestFrom(this.store$.pipe(select(selectMapsIds)), this.store$.pipe(select(selectIsMeasureToolActive)), ( _, mapIds, measureIsActive) => [mapIds, measureIsActive])
 		)),
+		distinctUntilChanged(isEqual),
 		filter( ([mapIds, isActive]: [string[], boolean]) => isActive !== undefined),
 		mergeMap( ([mapIds, isActive]: [string[], boolean]) =>
 			mapIds.map( (mapId) => isActive ? new CreateMeasureDataAction({ mapId })
 			: new RemoveMeasureDataAction({ mapId })))
-	);
-
-	@Effect()
-	removeMapMeasureOnMapRemove$ = this.actions$.pipe(
-		ofType(MapActionTypes.IMAGERY_REMOVED),
-		map( (action: ImageryRemovedAction) => new RemoveMeasureDataAction({mapId: action.payload.id}))
 	);
 
 	@Effect()

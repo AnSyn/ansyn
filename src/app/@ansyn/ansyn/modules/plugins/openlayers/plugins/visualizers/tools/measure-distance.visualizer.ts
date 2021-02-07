@@ -5,15 +5,14 @@ import {
 	VisualizersConfig
 } from '@ansyn/imagery';
 import { combineLatest } from 'rxjs';
-import { selectActiveMapId } from '@ansyn/map-facade';
-import { Store } from '@ngrx/store';
+import { selectMaps } from '@ansyn/map-facade';
+import { Store, select } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
 import { MeasureRulerVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
-import { distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
+import { filter, switchMap, tap, map } from 'rxjs/operators';
 import { Inject } from '@angular/core';
 import {
-	selectIsMeasureToolActive,
-	selectMeasureDataByMapId
+	selectIsMeasureToolActive
 } from '../../../../../status-bar/components/tools/reducers/tools.reducer';
 import {
 	AddMeasureAction, RemoveMeasureAction,
@@ -28,21 +27,15 @@ export const measuresClassNameForExport = 'measures-layer';
 	isHideable: true
 })
 export class MeasureDistanceVisualizer extends MeasureRulerVisualizer {
-
-	constructor(protected store$: Store<any>,
-				protected projectionService: OpenLayersProjectionService,
-				@Inject(VisualizersConfig) config: IVisualizersConfig) {
-		super(projectionService, config);
-	}
+	mapMeasures$ = this.store$.pipe(
+		select(selectMaps),
+		map( (maps) => maps[this.mapId]?.data?.measuresData)
+	);
 
 	@AutoSubscription
-	show$ = () => combineLatest([
-		this.store$.select(selectMeasureDataByMapId(this.mapId)),
+	show$ = combineLatest([
+		this.mapMeasures$,
 		this.store$.select(selectIsMeasureToolActive)]).pipe(
-		distinctUntilChanged((a, b) => {
-			const equal = isEqual(a, b);
-			return equal;
-		}),
 		// filter() update - checking isMeasureToolActive: if the measures layer is
 		// hidden, we still want to proceed if the measure tool changed to inactive,
 		// in order to cancel cursor style and interactions.
@@ -67,6 +60,11 @@ export class MeasureDistanceVisualizer extends MeasureRulerVisualizer {
 			return this.setEntities(entities || []);
 		})
 	);
+	constructor(protected store$: Store<any>,
+				protected projectionService: OpenLayersProjectionService,
+				@Inject(VisualizersConfig) config: IVisualizersConfig) {
+		super(projectionService, config);
+	}
 
 	afterEntityDeleted(entity: IVisualizerEntity) {
 		this.store$.dispatch(new RemoveMeasureAction({

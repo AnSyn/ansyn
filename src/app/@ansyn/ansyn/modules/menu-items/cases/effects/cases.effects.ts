@@ -37,8 +37,6 @@ import { toastMessages } from '../../../core/models/toast-messages';
 import { cloneDeep } from '../../../core/utils/rxjs/operators/cloneDeep';
 import { RemoveCaseLayersFromBackendAction } from '../../layers-manager/actions/layers.actions';
 import { ICase } from '../models/case.model';
-import { selectAllMeasuresData } from '../../../status-bar/components/tools/reducers/tools.reducer';
-import { IMeasureData } from '../../../status-bar/components/tools/models/tools.model';
 
 @Injectable()
 export class CasesEffects {
@@ -62,16 +60,10 @@ export class CasesEffects {
 	onSaveCaseAs$ = this.actions$.pipe(
 		ofType<SaveCaseAsAction>(CasesActionTypes.SAVE_CASE_AS),
 		cloneDeep(),
-		withLatestFrom(this.store.select(selectLayers), this.store.select(selectAllMeasuresData)),
-		mergeMap(([{ payload }, layers, measuresData]: [SaveCaseAsAction, ILayer[], Map<string, IMeasureData>]) => {
+		withLatestFrom(this.store.select(selectLayers)),
+		mergeMap(([{ payload }, layers]: [SaveCaseAsAction, ILayer[]]) => {
 			const newCase = { ...payload, id: this.casesService.generateUUID() };
-			// 1. add measures to case
-			newCase.state.maps.data.forEach( (map) => {
-				if (measuresData.has(map.id)) {
-					map.data.measures = measuresData.get(map.id)
-				}
-			});
-			// 2. regenerate maps id for the new case.
+			// 1. regenerate maps id for the new case.
 			const currentActive = newCase.state.maps.activeMapId;
 			let newActiveMapId = currentActive;
 			newCase.state.maps.data.forEach(map => {
@@ -82,7 +74,7 @@ export class CasesEffects {
 				}
 			});
 			newCase.state.maps.activeMapId = newActiveMapId;
-			// 3. regenerate layers to the case
+			// 2. regenerate layers to the case
 			const newAnnotationLayers: ILayer[] = layers
 				.filter(({ type }) => type === LayerType.annotation)
 				.map( (layer: ILayer) => {

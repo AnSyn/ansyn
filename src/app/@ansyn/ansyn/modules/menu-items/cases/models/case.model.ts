@@ -162,7 +162,7 @@ export interface IDilutedCaseMapData extends IMapSettingsData {
 	isAutoImageProcessingActive?: boolean;
 	imageManualProcessArgs?: IImageManualProcessArgs;
 	translationData?: ITranslationData;
-	measures?: IMeasureData;
+	measuresData?: IMeasureData;
 }
 
 export interface ICaseMapData extends IDilutedCaseMapData {

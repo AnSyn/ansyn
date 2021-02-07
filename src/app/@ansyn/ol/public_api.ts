@@ -4,6 +4,8 @@ export { annotationsClassNameForExport } from './plugins/annotations/annotations
 
 export { IMAGE_PROCESS_ATTRIBUTE } from './mapSourceProviders/open-layers.map-source-provider';
 
+export { MeasureRulerVisualizer, ILabelHandler } from './plugins/measure-ruler/measure-ruler.visualizer';
+
 export { OpenLayerESRI_4326SourceProviderSourceType } from './mapSourceProviders/open-layers-ESRI-4326-source-provider';
 export { OpenLayerPic4CartoSourceProvider } from './mapSourceProviders/open-layers-Pic4Carto-source-provider';
 export { IStyleWeight } from './plugins/annotations/annotations-context-menu/components/annotations-weight/annotations-weight.component';

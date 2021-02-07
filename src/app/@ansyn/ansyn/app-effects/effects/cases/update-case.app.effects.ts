@@ -53,11 +53,11 @@ export class UpdateCaseAppEffects {
 				overlaysImageProcess,
 				miscOverlays,
 				overlaysTranslationData,
-				overlaysScannedAreaData,
-				autoSave
+				overlaysScannedAreaData
 			] = events;
 
 			const { id, name, creationTime } = selectedCase;
+			const autoSave = false; // Todo: placeholder
 
 			const updatedCase: ICase = {
 				id,

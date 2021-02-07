@@ -100,6 +100,7 @@ import { feature } from '@turf/turf';
 import { calculatePolygonWidth } from '@ansyn/imagery';
 import { CasesActionTypes } from '../../modules/menu-items/cases/actions/cases.actions';
 import { createNewMeasureData } from '../../modules/status-bar/components/tools/models/tools.model';
+import { rxPreventCrash } from '../../modules/core/utils/rxjs/operators/rxPreventCrash';
 
 const FOOTPRINT_INSIDE_MAP_RATIO = 1;
 
@@ -368,7 +369,7 @@ export class MapAppEffects {
 					break;
 				case ToolsActionsTypes.MEASURES.REMOVE_MEASURE:
 					const measureId = action.payload.measureId;
-					const updateMeasures = measureId ? changes.data.measursData.measures.filter( measure => measure.id !== measureId) : [];
+					const updateMeasures = measureId ? changes.data.measuresData.measures.filter( measure => measure.id !== measureId) : [];
 					changes.data.measuresData = {...changes.data.measuresData, measures: updateMeasures};
 					break;
 				case ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS:
@@ -377,7 +378,8 @@ export class MapAppEffects {
 					break;
 			}
 			return new UpdateMapAction({id: map.id, changes});
-		})
+		}),
+		rxPreventCrash()
 	);
 
 	constructor(protected actions$: Actions,

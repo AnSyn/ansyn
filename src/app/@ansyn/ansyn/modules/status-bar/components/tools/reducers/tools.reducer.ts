@@ -7,7 +7,6 @@ import {
 	SetAnnotationMode,
 	SetMapGeoEnabledModeToolsActionStore,
 	SetMapSearchBox, SetMeasuresDataAction,
-	SetMeasuresToolFlag,
 	SetPinLocationModeAction,
 	SetSubMenu,
 	StartMouseShadow,
@@ -108,12 +107,6 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 		case ToolsActionsTypes.SET_PIN_LOCATION_MODE:
 			tmpMap = new Map(state.flags);
 			tmpMap.set(toolsFlags.pinLocation, (<SetPinLocationModeAction>action).payload);
-			return { ...state, flags: tmpMap };
-
-		case ToolsActionsTypes.MEASURES.SET_MEASURES_TOOL_FLAG:
-			const active: boolean = (action as SetMeasuresToolFlag).payload;
-			tmpMap = new Map(state.flags);
-			tmpMap.set(toolsFlags.isMeasureToolActive, active);
 			return { ...state, flags: tmpMap };
 
 		case ToolsActionsTypes.MEASURES.SET_MEASURES_DATA: {

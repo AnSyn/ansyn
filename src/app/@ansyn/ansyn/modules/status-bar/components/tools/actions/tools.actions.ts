@@ -138,17 +138,6 @@ export class SetMapGeoEnabledModeToolsActionStore implements Action {
 	}
 }
 
-export class SetMeasuresToolFlag implements Action, ILogMessage {
-	type = ToolsActionsTypes.MEASURES.SET_MEASURES_TOOL_FLAG;
-
-	constructor(public payload: boolean) {
-	}
-
-	logMessage() {
-		return this.payload && `Opening measure distance tool`
-	}
-}
-
 export class SetMeasuresDataAction implements Action {
 	readonly type = ToolsActionsTypes.MEASURES.SET_MEASURES_DATA;
 	constructor(public payload: Map<string, IMeasureData>) {
@@ -269,7 +258,6 @@ export type ToolsActions =
 	| GoToAction
 	| SetMapGeoEnabledModeToolsActionStore
 	| SetAnnotationMode
-	| SetMeasuresToolFlag
 	| SetSubMenu
 	| ClearActiveInteractionsAction
 	| SetMapSearchBox;

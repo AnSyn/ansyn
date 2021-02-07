@@ -1,22 +1,18 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import {
-	IEntryComponent,
-	selectActiveMapId,
-	selectIsMinimalistViewMode,
-	selectOverlayByMapId
-} from '@ansyn/map-facade';
+import { IEntryComponent, selectActiveMapId, selectIsMinimalistViewMode } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { combineLatest } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import {
-	ClearActiveInteractionsAction, RemoveMeasureAction,
-	SetMeasuresToolFlag,
-	UpdateMeasureDataOptionsAction
+	ClearActiveInteractionsAction,
+	RemoveMeasureAction,
+	UpdateMeasureDataOptionsAction,
+	UpdateToolsFlags
 } from '../../actions/tools.actions';
 import { selectIsMeasureToolActive, selectMeasureDataByMapId } from '../../reducers/tools.reducer';
 import { IOverlay } from '../../../../../overlays/models/overlay.model';
-import { IMeasureData } from '../../models/tools.model';
+import { IMeasureData, toolsFlags } from '../../models/tools.model';
 
 @Component({
 	selector: 'ansyn-measure-control',
@@ -27,7 +23,6 @@ import { IMeasureData } from '../../models/tools.model';
 export class MeasureControlComponent implements OnInit, OnDestroy, IEntryComponent {
 	@Input() mapId: string;
 	show: boolean;
-	currentOverlay: IOverlay = undefined;
 	measureData: IMeasureData;
 
 	constructor(protected store$: Store<any>) {
@@ -97,6 +92,6 @@ export class MeasureControlComponent implements OnInit, OnDestroy, IEntryCompone
 	}
 
 	done() {
-		this.store$.dispatch(new SetMeasuresToolFlag(false));
+		this.store$.dispatch(new UpdateToolsFlags([{key: toolsFlags.isMeasureToolActive, value: false}]));
 	}
 }

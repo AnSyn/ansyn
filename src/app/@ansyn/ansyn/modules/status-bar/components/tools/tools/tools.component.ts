@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	ClearActiveInteractionsAction,
-	SetMeasuresToolFlag,
 	SetSubMenu,
 	StartMouseShadow,
-	StopMouseShadow, UpdateMeasureDataOptionsAction
+	StopMouseShadow, UpdateMeasureDataOptionsAction,
+	UpdateToolsFlags
 } from '../actions/tools.actions';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -105,9 +105,9 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	}
 
 	toggleMeasureDistanceTool() {
-		const value = this.onMeasureTool;
+		const value = !this.onMeasureTool;
 		this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateMeasureDataOptionsAction] }));
-		this.store$.dispatch(new SetMeasuresToolFlag(!value));
+		this.store$.dispatch(new UpdateToolsFlags([{key: toolsFlags.isMeasureToolActive, value}]));
 	}
 
 	toggleSubMenu(subMenu: SubMenuEnum, event: MouseEvent = null) {

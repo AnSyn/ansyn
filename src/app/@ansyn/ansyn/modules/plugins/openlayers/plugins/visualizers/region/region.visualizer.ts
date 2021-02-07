@@ -21,7 +21,7 @@ import { UpdateGeoFilterStatus } from '../../../../../status-bar/actions/status-
 import { SetOverlaysCriteriaAction } from '../../../../../overlays/actions/overlays.actions';
 import { selectRegion } from '../../../../../overlays/reducers/overlays.reducer';
 import { CaseGeoFilter, CaseRegionState } from '../../../../../menu-items/cases/models/case.model';
-import { LayersActionTypes, SetLayerSelection } from 'src/app/@ansyn/ansyn/modules/menu-items/layers-manager/actions/layers.actions';
+import { LayersActionTypes, SetLayerSelection } from '../../../../../menu-items/layers-manager/actions/layers.actions';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';

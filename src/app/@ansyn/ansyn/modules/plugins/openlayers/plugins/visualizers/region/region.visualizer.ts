@@ -9,6 +9,7 @@ import {
 	MapActionTypes,
 	selectActiveMapId,
 	selectIsMinimalistViewMode,
+	selectMaps,
 	SetToastMessageAction
 } from '@ansyn/map-facade';
 import { VisualizerInteractions } from '@ansyn/imagery';
@@ -45,6 +46,11 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	);
 
 	@AutoSubscription
+	isOverlay$ = this.store$.select(selectMaps).pipe(
+		map(maps => Boolean(maps[this.mapId]?.data.overlay))
+	);
+
+	@AutoSubscription
 	updateLayer$: Observable<any> = this.actions$.pipe(
 		ofType<SetLayerSelection>(LayersActionTypes.SET_LAYER_SELECTION),
 		filter(action => action.payload.id === 'region-layer'),
@@ -68,7 +74,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	);
 
 	@AutoSubscription
-	drawChanges$ = combineLatest([this.geoFilterType$, this.newRegionSelect$, this.regionSameAsVisualizer$, this.geoFilterActive$, this.store$.select(selectIsMinimalistViewMode)]).pipe(
+	drawChanges$ = combineLatest([this.geoFilterType$, this.newRegionSelect$, this.regionSameAsVisualizer$, this.geoFilterActive$, this.store$.select(selectIsMinimalistViewMode), this.isOverlay$]).pipe(
 		mergeMap(this.drawChanges.bind(this))
 	);
 
@@ -76,8 +82,8 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		super();
 	}
 
-	drawChanges([geoFilterType, region, regionAsVisualizer, isActive, isMinimalistViewMode]) {
-		if (regionAsVisualizer && !isActive && !isMinimalistViewMode && geoFilterType) {
+	drawChanges([geoFilterType, region, regionAsVisualizer, isActive, isMinimalistViewMode, isOverlay]) {
+		if (regionAsVisualizer && !isActive && !isMinimalistViewMode && geoFilterType && (region.properties.searchMode !== CaseGeoFilter.ScreenView || isOverlay)) {
 			return this.drawRegionOnMap(region);
 		}
 		this.clearEntities();

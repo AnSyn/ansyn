@@ -83,9 +83,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 
 	selectOverlaysImageProcess$ = this.store$.pipe(select(selectOverlaysImageProcess), filter(this.hasOverlay.bind(this)));
 
-	@HostBinding('class.rtl')
-	isRtl = 'rtl' === this.translateService.instant('direction');
-
 	@AutoSubscription
 	favoriteOverlays$: Observable<any[]> = this.store$.select(selectFavoriteOverlays).pipe(
 		tap((favoriteOverlays) => {

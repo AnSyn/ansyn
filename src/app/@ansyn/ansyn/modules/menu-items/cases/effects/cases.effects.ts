@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { EMPTY, forkJoin, Observable, of, from } from 'rxjs';
+import { EMPTY, forkJoin, from, Observable, of } from 'rxjs';
 import {
 	AddCasesAction,
 	CasesActionTypes,
@@ -19,9 +19,15 @@ import {
 	SelectDilutedCaseAction
 } from '../actions/cases.actions';
 import { casesConfig, CasesService } from '../services/cases.service';
-import { casesStateSelector, ICasesState, selectMyCasesTotal, selectSharedCaseTotal } from '../reducers/cases.reducer';
+import {
+	casesStateSelector,
+	ICasesState,
+	selectMyCasesEntities,
+	selectMyCasesTotal,
+	selectSharedCaseTotal
+} from '../reducers/cases.reducer';
 import { CasesType, ICasesConfig } from '../models/cases-config';
-import { catchError, concatMap, filter, map, mergeMap, share, switchMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, concatMap, filter, map, mergeMap, share, switchMap, withLatestFrom, retryWhen, tap } from 'rxjs/operators';
 import { ILayer, LayerType } from '../../layers-manager/models/layers.model';
 import { selectLayers } from '../../layers-manager/reducers/layers.reducer';
 import { DataLayersService } from '../../layers-manager/services/data-layers.service';
@@ -30,6 +36,7 @@ import { ErrorHandlerService } from '../../../core/services/error-handler.servic
 import { toastMessages } from '../../../core/models/toast-messages';
 import { cloneDeep } from '../../../core/utils/rxjs/operators/cloneDeep';
 import { RemoveCaseLayersFromBackendAction } from '../../layers-manager/actions/layers.actions';
+import { ICase } from '../models/case.model';
 
 @Injectable()
 export class CasesEffects {
@@ -42,7 +49,7 @@ export class CasesEffects {
 			return of(action).pipe(withLatestFrom(selector));
 		}),
 		concatMap(([action, total]: [LoadCasesAction, number]) => {
-			return this.casesService.loadCases(action.fromBegin ? 0 : total, action.payload).pipe(
+			return this.casesService.loadCases(total, action.payload).pipe(
 				map(cases => new AddCasesAction({ cases, type: action.payload })),
 				catchError(() => EMPTY)
 			);
@@ -67,25 +74,25 @@ export class CasesEffects {
 				}
 			});
 			newCase.state.maps.activeMapId = newActiveMapId;
-			// regenerate layers id for the new case.
-			return forkJoin(layers
+			const newAnnotationLayers: ILayer[] = layers
 				.filter(({ type }) => type === LayerType.annotation)
-				.map((layer) => {
+				.map( (layer: ILayer) => {
 					const newLayerId = this.casesService.generateUUID();
 					const oldLayerId = layer.id;
-					newCase.state.layers.activeLayersIds = newCase.state.layers.activeLayersIds.map((id) => {
-						return id === oldLayerId ? newLayerId : id;
-					});
-					return { ...layer, id: newLayerId, caseId: newCase.id }
-				}).map((layer) => this.dataLayersService.addLayer(layer))
-			).pipe(map((_) => newCase))
+					const layerId = newCase.state.layers.activeLayersIds.findIndex( id => id === oldLayerId);
+					newCase.state.layers.activeLayersIds[layerId] = newLayerId;
+					return { ...layer, id: newLayerId, caseId: newCase.id };
+				});
+			return this.casesService.createCase(newCase).pipe(map( (_case) => [_case, newAnnotationLayers]));
 		}),
-		mergeMap(newCase => this.casesService.createCase(newCase)),
+		concatMap(([newCase, newAnnotationLayers]: [ICase, ILayer[]]) =>
+		forkJoin(newAnnotationLayers.map( (layer) => this.dataLayersService.addLayer(layer))).pipe(
+			map( () => newCase)
+		)),
 		map((newCase) => new SaveCaseAsSuccessAction(newCase)),
-		catchError((err) => {
-			console.warn(err);
-			return EMPTY;
-		})
+		retryWhen((err) => err.pipe(
+			tap( e => console.warn(e))
+		))
 	);
 
 	@Effect({ dispatch: false })
@@ -117,8 +124,13 @@ export class CasesEffects {
 		.pipe(
 			ofType(CasesActionTypes.LOAD_CASE),
 			switchMap((action: LoadCaseAction) => this.casesService.loadCase(action.payload)),
-			concatMap((dilutedCase) => [new SelectDilutedCaseAction(dilutedCase),
-				new LoadCasesAction(CasesType.MySharedCases, true)]),
+			mergeMap( (dilutedCase: ICase) => {
+				const actions: any[] = [new SelectDilutedCaseAction(dilutedCase)];
+				if (dilutedCase.shared) {
+					actions.push(new AddCasesAction({cases: [dilutedCase], type: CasesType.MySharedCases}));
+				}
+				return actions;
+			}),
 			catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to load case')),
 			catchError(() => of(new LoadDefaultCaseAction()))
 		);

@@ -1,13 +1,4 @@
 <div class="buttons" [class.hide]="isMinimalistViewMode">
-
-	<ng-container
-		*ngFor="let component of entryComponents.status">
-		<ng-container
-			*ngIf="component.showFirst && component.prototype.getType() === 'buttons'"
-			[ansynEntryComponent]="{ component: component , mapId: mapId }">
-		</ng-container>
-	</ng-container>
-
 	<button
 		*ngIf="mapsAmount > 1"
 		class="small-icon-button drag-me"
@@ -55,7 +46,7 @@
 	<ng-container
 		*ngFor="let component of entryComponents.status">
 		<ng-container
-			*ngIf="!component.showFirst && component.prototype.getType() === 'buttons'"
+			*ngIf="!component.showLast && component.prototype.getType() === 'buttons'"
 			[ansynEntryComponent]="{ component: component , mapId: mapId }">
 		</ng-container>
 	</ng-container>
@@ -82,5 +73,13 @@
 			*ngIf="component.prototype.getType() === 'notification'"
 			[ansynEntryComponent]="{ component: component , mapId: mapId }">
 		</ng-container>
+	</ng-container>
+</ng-container>
+
+<ng-container
+	*ngFor="let component of entryComponents.status">
+	<ng-container
+		*ngIf="component.showLast && component.prototype.getType() === 'buttons'"
+		[ansynEntryComponent]="{ component: component , mapId: mapId }">
 	</ng-container>
 </ng-container>

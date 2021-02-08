@@ -145,7 +145,7 @@ export class CasesService {
 		return this.storageService.create(this.config.schema, this.convertToStoredEntity(newCase))
 			.pipe(
 				map(_ => newCase),
-				catchError(err => this.errorHandlerService.httpErrorHandle(err, 'Failed to create case'))
+				catchError(err => this.errorHandlerService.httpErrorHandle(err, err?.error?.message || 'Failed to create case'))
 			);
 	}
 
@@ -159,7 +159,7 @@ export class CasesService {
 		);
 	}
 
-	loadCase(selectedCaseId: string): Observable<any> {
+	loadCase(selectedCaseId: string): Observable<ICase> {
 		return this.storageService.get<ICasePreview, ICaseState>(this.config.schema, selectedCaseId)
 			.pipe(
 				tap((latestStoredEntity) => this.latestStoredEntity = _cloneDeep(latestStoredEntity)),

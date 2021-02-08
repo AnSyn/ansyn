@@ -12,6 +12,7 @@ export interface ICasePreview {
 	selectedContextId?: string;
 	autoSave?: boolean;
 	schema?: 'case';
+	shared?: boolean;
 }
 
 export interface ICase extends ICasePreview {

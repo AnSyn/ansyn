@@ -46,8 +46,12 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	);
 
 	@AutoSubscription
-	isOverlay$ = this.store$.select(selectMaps).pipe(
-		map(maps => Boolean(maps[this.mapId]?.data.overlay))
+	shouldDrawRegion$ = combineLatest([this.store$.select(selectMaps), this.newRegionSelect$]).pipe(
+		map(([maps, region]) => {
+			const isOverlay = Boolean(maps[this.mapId]?.data.overlay);
+			const isNotScreenViewMode = region.properties.searchMode !== CaseGeoFilter.ScreenView;
+			return isOverlay || isNotScreenViewMode;
+		})
 	);
 
 	@AutoSubscription
@@ -74,7 +78,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	);
 
 	@AutoSubscription
-	drawChanges$ = combineLatest([this.geoFilterType$, this.newRegionSelect$, this.regionSameAsVisualizer$, this.geoFilterActive$, this.store$.select(selectIsMinimalistViewMode), this.isOverlay$]).pipe(
+	drawChanges$ = combineLatest([this.geoFilterType$, this.newRegionSelect$, this.regionSameAsVisualizer$, this.geoFilterActive$, this.store$.select(selectIsMinimalistViewMode), this.shouldDrawRegion$]).pipe(
 		mergeMap(this.drawChanges.bind(this))
 	);
 
@@ -82,8 +86,8 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		super();
 	}
 
-	drawChanges([geoFilterType, region, regionAsVisualizer, isActive, isMinimalistViewMode, isOverlay]) {
-		if (regionAsVisualizer && !isActive && !isMinimalistViewMode && geoFilterType && (region.properties.searchMode !== CaseGeoFilter.ScreenView || isOverlay)) {
+	drawChanges([geoFilterType, region, regionAsVisualizer, isActive, isMinimalistViewMode, shouldDrawRegion]) {
+		if (regionAsVisualizer && !isActive && !isMinimalistViewMode && geoFilterType && shouldDrawRegion) {
 			return this.drawRegionOnMap(region);
 		}
 		this.clearEntities();

@@ -43,7 +43,6 @@ import {
 } from '../../status-bar/components/tools/actions/tools.actions';
 import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-manager/reducers/layers.reducer';
 import { ClickOutsideService } from '../../core/click-outside/click-outside.service';
-import { TranslateService } from '@ngx-translate/core';
 import { OverlayStatusService } from './services/overlay-status.service';
 import { ComponentVisibilityService } from '../../../app-providers/component-visibility.service';
 import { ComponentVisibilityItems } from '../../../app-providers/component-mode';
@@ -137,7 +136,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		protected actions$: Actions,
 		protected element: ElementRef,
 		protected clickOutsideService: ClickOutsideService,
-		protected translateService: TranslateService,
 		componentVisibilityService: ComponentVisibilityService
 	) {
 		this.isPreset = true;

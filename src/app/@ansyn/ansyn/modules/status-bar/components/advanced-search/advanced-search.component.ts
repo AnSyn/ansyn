@@ -13,7 +13,6 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overlays.reducer';
 import { TranslateService } from '@ngx-translate/core';
 import { OverlaysService } from '../../../overlays/services/overlays.service';
-import { SearchAction } from '../../actions/status-bar.actions';
 
 @Component({
 	selector: 'ansyn-advanced-search',
@@ -37,6 +36,8 @@ import { SearchAction } from '../../actions/status-bar.actions';
 	allProviders: IProviderData[] = [];
 
 	selectedAdvancedSearchParameters: IAdvancedSearchParameter = {};
+	showMessage: boolean;
+
 	@AutoSubscription
 	onDataInputFilterChange$ = this.store.pipe(
 	select(selectAdvancedSearchParameters),
@@ -97,8 +98,9 @@ import { SearchAction } from '../../actions/status-bar.actions';
 	}
 
 	search(): void {
-		this.store.dispatch(new SearchAction(this.getCurrentAdvancedSearchParameters()));
-		this._parent.close();
+		this.showMessage = !this.showMessage;
+		// this.store.dispatch(new SearchAction(this.getCurrentAdvancedSearchParameters()));
+		// this._parent.close();
 	}
 
 	updateSelectedTypes(selectedTypesArray: string[]): void {

@@ -126,12 +126,18 @@
 
 	.message {
 		grid-row: 4;
-		grid-column: 1 / -1;
-		margin-top: 10px;
+		grid-column: 1 / span 4;
+		margin-top: 0.4em;
+		padding: 0 5px;
 		color: red;
 		background-color: white;
 		font-weight: bold;
-		padding: 5px;
+		line-height: 1.5;
+		transition: font-size 0.3s;
+
+		&.hide {
+			font-size: 0;
+		}
 	}
 
 	.slider {

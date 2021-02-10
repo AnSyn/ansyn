@@ -52,7 +52,7 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 	onHiddenStateChanged = new Subject();
 
 	protected allLengthTextStyle = new Text({
-		font: '16px Calibri,sans-serif',
+		font: '24px Calibri,sans-serif',
 		fill: new Fill({
 			color: '#fff'
 		}),
@@ -60,7 +60,6 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 			color: '#000',
 			width: 3
 		}),
-		scale: 1.5,
 		offsetY: 30,
 		offsetX: -100
 	});

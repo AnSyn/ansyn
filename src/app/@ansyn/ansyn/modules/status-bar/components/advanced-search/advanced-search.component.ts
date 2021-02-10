@@ -13,6 +13,7 @@ import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overlays.reducer';
 import { TranslateService } from '@ngx-translate/core';
 import { OverlaysService } from '../../../overlays/services/overlays.service';
+import { SearchAction } from '../../actions/status-bar.actions';
 
 @Component({
 	selector: 'ansyn-advanced-search',
@@ -98,9 +99,25 @@ import { OverlaysService } from '../../../overlays/services/overlays.service';
 	}
 
 	search(): void {
-		this.showMessage = !this.showMessage;
-		// this.store.dispatch(new SearchAction(this.getCurrentAdvancedSearchParameters()));
-		// this._parent.close();
+		const params = this.getCurrentAdvancedSearchParameters();
+		if (this.isValid(params)) {
+			this.store.dispatch(new SearchAction(params));
+			this._parent.close();
+		} else {
+			this.showMessage = true;
+		}
+	}
+
+	isValid(params: IAdvancedSearchParameter): boolean {
+		let result = true;
+		if (
+			params.registeration.length === 0
+			|| params.types.length === 0
+			|| params.sensors.length === 0 && params.providers.length === 0
+		) {
+			result = false;
+		}
+		return result;
 	}
 
 	updateSelectedTypes(selectedTypesArray: string[]): void {
@@ -128,6 +145,7 @@ import { OverlaysService } from '../../../overlays/services/overlays.service';
 	}
 
 	updateSelectedArray(selectedItemsArray: string[], arrayToUpdate: string): void {
+		this.showMessage = false;
 		this[`update${arrayToUpdate}`](selectedItemsArray);
 	}
 

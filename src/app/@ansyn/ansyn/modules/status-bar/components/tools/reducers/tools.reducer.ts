@@ -183,10 +183,10 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 export const selectSubMenu = createSelector(toolsStateSelector, (tools: IToolsState) => tools.subMenu);
 export const selectAnnotationMode = createSelector(toolsStateSelector, (tools: IToolsState) => tools.annotationMode);
 export const selectAnnotationProperties = createSelector(toolsStateSelector, (tools: IToolsState) => tools.annotationProperties);
-export const selectToolFlags = createSelector(toolsStateSelector, (tools: IToolsState) => tools.flags);
-export const selectToolFlag = (flag: toolsFlags) => createSelector(selectToolFlags, (flags: Map<toolsFlags, boolean>) => flags.get(flag));
-export const selectIsMeasureToolActive = createSelector(selectToolFlags, (_toolsFlags) => _toolsFlags.get(toolsFlags.isMeasureToolActive));
-export const selectGeoRegisteredOptionsEnabled = createSelector(selectToolFlags, (_toolsFlags) => _toolsFlags.get(toolsFlags.geoRegisteredOptionsEnabled));
+export const selectToolFlags = createSelector(toolsStateSelector, (tools: IToolsState) => tools?.flags);
+export const selectToolFlag = (flag: toolsFlags) => createSelector(selectToolFlags, (flags: Map<toolsFlags, boolean>) => flags?.get(flag));
+export const selectIsMeasureToolActive = createSelector(selectToolFlags, (_toolsFlags) => _toolsFlags?.get(toolsFlags.isMeasureToolActive));
+export const selectGeoRegisteredOptionsEnabled = createSelector(selectToolFlags, (_toolsFlags) => _toolsFlags?.get(toolsFlags.geoRegisteredOptionsEnabled));
 export const selectMeasureDataByMapId = (mapId: string) => createSelector(toolsStateSelector, (tools: IToolsState) => {
 	return tools && tools.mapsMeasures && tools.mapsMeasures.get(mapId);
 });

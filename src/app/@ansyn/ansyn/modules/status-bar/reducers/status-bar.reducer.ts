@@ -73,6 +73,6 @@ export const selectCalenderStatus = createSelector(statusBarStateSelector, (stat
 export const selectAdvancedSearchStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.isAdvancedSearchOpen : StatusBarInitialState.isAdvancedSearchOpen);
 export const selectSimpledSearchStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.IsSimpleSearchOpen : StatusBarInitialState.IsSimpleSearchOpen);
 export const selectIsOpenedFromOutside = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.IsOpenedFromOutside : StatusBarInitialState.IsOpenedFromOutside);
-export const selectMarkedSecondSearchSensors = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar?.markSecondSearchSensors || StatusBarInitialState.IsOpenedFromOutside);
+export const selectMarkedSecondSearchSensors = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar?.markSecondSearchSensors);
 export const selectGeoFilterActive = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.active);
 export const selectGeoFilterType = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.type);

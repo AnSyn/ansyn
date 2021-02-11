@@ -109,15 +109,10 @@ import { SearchAction } from '../../actions/status-bar.actions';
 	}
 
 	isValid(params: IAdvancedSearchParameter): boolean {
-		let result = true;
-		if (
-			params.registeration.length === 0
-			|| params.types.length === 0
-			|| params.sensors.length === 0 && params.providers.length === 0
-		) {
-			result = false;
-		}
-		return result;
+		return params?.resolution?.highValue >= params?.resolution?.lowValue
+			&& params?.registeration?.length > 0
+			&& params?.types?.length > 0
+			&& (params?.sensors?.length > 0 || params?.providers?.length > 0);
 	}
 
 	updateSelectedTypes(selectedTypesArray: string[]): void {

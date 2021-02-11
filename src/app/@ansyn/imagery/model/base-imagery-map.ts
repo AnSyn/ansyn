@@ -1,5 +1,5 @@
 import { EventEmitter, ViewContainerRef } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, EMPTY } from 'rxjs';
 import { GeoJsonObject, Point } from 'geojson';
 import { ImageryMapExtent, IImageryMapPosition, IMousePointerMove } from './case-map-position.model';
 import { IMapErrorMessage, IMapProgress } from './map-progress.model';
@@ -106,7 +106,7 @@ export abstract class BaseImageryMap<T = any> {
 	}
 
 	fitToExtent(extent: any): Observable<any> {
-		throw new Error('Method not implemented.');
+		return EMPTY;
 	};
 
 	getExtraData(): { [key: string]: any } {

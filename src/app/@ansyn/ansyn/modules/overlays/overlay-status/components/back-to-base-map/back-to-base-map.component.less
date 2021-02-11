@@ -1,8 +1,6 @@
 @import "ansyn/less/globals";
 @import "ansyn/less/colors";
 
-@padding: 5px;
-
 :host {
 	div.back-to-world-view {
 		height: @imagery-status-height;
@@ -13,10 +11,11 @@
 			height: 100%;
 			background-color: @background-color-5;
 			color: @background-color-12;
-			padding-left: @padding;
+			direction: ltr;
+			margin-right: 5px;
 
 			i {
-				transform: rotate(180deg); // rtl
+				padding-right: 5px;
 			}
 		}
 	}
@@ -29,11 +28,10 @@
 				button {
 					font-size: 0;
 					overflow: hidden;
-					padding: 0;
 					position: unset;
 
-					&.small-icon-button {
-						margin: 0;
+					i {
+						padding-right: 0;
 					}
 				}
 			}
@@ -47,10 +45,9 @@
 					button {
 						font-size: 0;
 						overflow: hidden;
-						padding: 0;
 
-						&.small-icon-button {
-							margin: 0;
+						i {
+							padding-right: 0;
 						}
 					}
 				}

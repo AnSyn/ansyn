@@ -12,6 +12,7 @@ const caseMock: ICase = {
 	id: 'fakeId',
 	name: 'fakeName',
 	creationTime: new Date(),
+	shared: false,
 	autoSave: true,
 	state: {
 		time: {

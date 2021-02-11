@@ -12,6 +12,7 @@ export interface ICasePreview {
 	selectedContextId?: string;
 	autoSave?: boolean;
 	schema?: 'case';
+	shared?: boolean;
 }
 
 export interface ICase extends ICasePreview {
@@ -75,6 +76,7 @@ export interface IDilutedCaseState {
 	overlaysScannedAreaData?: IOverlaysScannedAreaData;
 	layers?: ICaseLayersState;
 	advancedSearchParameters?: IAdvancedSearchParameter;
+	runSecondSearch?: boolean;
 }
 
 export interface ICaseState extends IDilutedCaseState {

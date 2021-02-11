@@ -132,8 +132,10 @@
 				"highValue": 200
 			},
 			"sensors": [],
-			"enableResetProviders": true
+			"enableResetProviders": true,
+			"sensorsForSecondSearch": []
 		 	},
+			"runSecondSearch": true,
 		   "facets": {
 			 "showOnlyFavorites": false,
 			 "filters": [
@@ -173,6 +175,9 @@
   },
   "mapFacadeConfig": {
   	"showOne2One": {{ getv "/ansyn/show/one2one" "true" }},
+	"firstSearchNotification": {
+		"timeToDisplayButtonToast": 10000
+	},
   	"welcomeNotification": {
 		"headerText": "Welcome to AnSyn!",
 		"mainText": "To get overlays anywhere in the world, just move around on the map"

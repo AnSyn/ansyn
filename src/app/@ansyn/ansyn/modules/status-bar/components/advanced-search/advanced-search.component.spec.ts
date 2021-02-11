@@ -2,10 +2,15 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
+import { LoggerService } from '../../../core/services/logger.service';
 import { casesConfig } from '../../../menu-items/cases/services/cases.service';
+import { MultipleOverlaysSourceProvider } from '../../../overlays/services/multiple-source-provider';
+import { OverlaysConfig } from '../../../overlays/services/overlays.service';
+import { StatusBarConfig } from '../../models/statusBar.config';
 import { SearchPanelComponent } from '../search-panel/search-panel.component';
 
 import { AdvancedSearchComponent } from './advanced-search.component';
+import { OverlaySourceProviderMock } from './overlay-source-provider.mock';
 
 describe('AdvancedSearchComponent', () => {
 	let component: AdvancedSearchComponent;
@@ -48,7 +53,19 @@ describe('AdvancedSearchComponent', () => {
 							}
 						}
 					}
-				}
+				},
+				{
+					provide: OverlaysConfig,
+					useValue: {}
+				},
+				{
+					provide: StatusBarConfig,
+					useValue: {}
+				},
+				{ provide: MultipleOverlaysSourceProvider, useClass: OverlaySourceProviderMock },
+				{ provide: LoggerService, useValue: {} },
+
+
 			],
 			imports: [StoreModule.forRoot({}), TranslateModule.forRoot()]
 		})

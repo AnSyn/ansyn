@@ -36,7 +36,7 @@
 	<button [attr.tooltip-class]="'bottom left'"
 			*ngIf="overlay"
 			class="button small-icon-button set-favorite"
-			[attr.tooltip-value]="!isFavorite? 'Add to favorites' : 'Remove from favorites' | translate"
+			[attr.tooltip-value]="(!isFavorite? 'Add to favorites' : 'Remove from favorites') | translate"
 			(click)="toggleFavorite()">
 		<i class="medium-icon icon" [ngClass]="!isFavorite? 'icon-favorite-empty' : 'icon-favorite-full'" [class.active]="isFavorite"></i>
 	</button>

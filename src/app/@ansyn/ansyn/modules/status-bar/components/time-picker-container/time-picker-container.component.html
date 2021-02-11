@@ -8,7 +8,7 @@
 			#timePickerTrigger
 			(click)="toggleTimePickerPreset()"
 			[attr.tooltip-value]="statusBarConfig?.toolTips?.timeFilterEdit| translate"
-			tooltip-class="bottom"
+			[attr.tooltip-class]="openTop ? 'top' : 'bottom'"
 			[class.active]="isPresetOpen"
 			[class.openTop]="openTop"
 			[isActive]="isPresetOpen"

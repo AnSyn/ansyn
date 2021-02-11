@@ -157,11 +157,12 @@ export function getPolygonIntersectionRatioWithMultiPolygon(extent: Polygon, foo
 
 		footprint.coordinates.forEach(coordinates => {
 			const tempPoly = polygon(coordinates);
-			const intersections = extentPolygons.features.map( feature => intersect(feature.geometry, tempPoly));
-			intersectionArea = intersections.reduce( (acc, intersection) => {
+			const intersections = extentPolygons.features.map(feature => intersect(feature, tempPoly));
+			intersectionArea = intersections.reduce((acc, intersection) => {
 				if (intersection) {
 					acc = booleanEqual(intersection, tempPoly) ? extentArea : acc + area(intersection);
 				}
+
 				return acc;
 			}, 0)
 		});
@@ -195,7 +196,7 @@ export function isPointContainedInGeometry(point: Point, footprint: MultiPolygon
 }
 
 export function unifyPolygons(features: Feature<Polygon>[]): Feature<MultiPolygon | Polygon> {
-	return union(...features);
+	return union(features[0], features[1]);
 }
 
 export function calculateLineDistance(aPoint: Point, bPoint: Point) {

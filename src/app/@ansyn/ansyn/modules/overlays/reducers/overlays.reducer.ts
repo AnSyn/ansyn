@@ -128,7 +128,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 			if (options && options.noInitialSearch) {
 				return { ...state, loading: false, displayOverlayHistory: {}, overlaysCriteria };
 			}
-			return { ...state, displayOverlayHistory: {}, overlaysCriteria };
+			return { ...state, loading: true, displayOverlayHistory: {}, overlaysCriteria };
 		}
 		case OverlaysActionTypes.SELECT_OVERLAY:
 
@@ -366,6 +366,7 @@ export const selectStatusMessage = createSelector(overlaysStateSelector, (overla
 export const selectOverlaysCriteria: MemoizedSelector<any, IOverlaysCriteria> = createSelector(overlaysStateSelector, (overlays) => overlays && overlays.overlaysCriteria);
 export const selectDataInputFilter: MemoizedSelector<any, ICaseDataInputFiltersState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.dataInputFilters);
 export const selectAdvancedSearchParameters: MemoizedSelector<any, IAdvancedSearchParameter> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria?.advancedSearchParameters);
+export const selectIsRunSecondSearch: MemoizedSelector<any, boolean> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria?.runSecondSearch);
 export const selectProviders: MemoizedSelector<any, IProviderData[]> = createSelector(selectAdvancedSearchParameters, (advancedSearchParameters) => advancedSearchParameters && advancedSearchParameters.providers);
 export const selectRegion: MemoizedSelector<any, CaseRegionState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);
 export const selectTime: MemoizedSelector<any, ICaseTimeState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.time);

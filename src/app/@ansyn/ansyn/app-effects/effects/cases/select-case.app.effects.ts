@@ -64,7 +64,7 @@ export class SelectCaseAppEffects {
 		if (state.region.type !== 'Feature') {
 			region = feature(state.region, { searchMode: state.region.type });
 		} else {
-			region = feature(state.region.geometry, { searchMode: state.region.properties.searchMode });
+			region = feature(state.region.geometry, { ...state.region.properties });
 		}
 
 		if (region.properties.searchMode === CaseGeoFilter.ScreenView) {
@@ -87,11 +87,12 @@ export class SelectCaseAppEffects {
 		const { facets } = state;
 
 		const advancedSearchParameters = state.advancedSearchParameters;
+		const { runSecondSearch } = state
 		const selectCaseAction = [
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),
 			new SetActiveMapId(state.maps.activeMapId),
 			new SetLayoutAction(<any>layout),
-			new SetOverlaysCriteriaAction({ time, region, dataInputFilters, advancedSearchParameters }, { noInitialSearch }),
+			new SetOverlaysCriteriaAction({ time, region, dataInputFilters, advancedSearchParameters, runSecondSearch }, { noInitialSearch }),
 			new UpdateGeoFilterStatus({ active: false, type: region.properties.searchMode }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this)) }),

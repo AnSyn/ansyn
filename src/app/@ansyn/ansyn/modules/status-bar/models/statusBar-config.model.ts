@@ -35,11 +35,11 @@ export interface IAdvancedSearchParameter {
 	resolution?: IResolutionRange;
 	sensors?: string[];
 	enableResetProviders?: boolean;
+	sensorsForSecondSearch?: string[];
 }
 
 export interface IStatusBarConfig {
 	toolTips: IToolTipsConfig,
 	filters: IFilterStatusBar
 	locale: string
-	defaultAdvancedSearchParameters: IAdvancedSearchParameter
 }

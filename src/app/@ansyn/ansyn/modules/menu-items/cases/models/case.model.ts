@@ -76,7 +76,6 @@ export interface IDilutedCaseState {
 	overlaysScannedAreaData?: IOverlaysScannedAreaData;
 	layers?: ICaseLayersState;
 	advancedSearchParameters?: IAdvancedSearchParameter;
-	runSecondSearch?: boolean;
 }
 
 export interface ICaseState extends IDilutedCaseState {

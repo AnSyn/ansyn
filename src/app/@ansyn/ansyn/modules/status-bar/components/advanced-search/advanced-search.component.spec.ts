@@ -103,23 +103,19 @@ describe('AdvancedSearchComponent', () => {
 
 		beforeEach(() => {
 			params = {
-				resolution: {
-					lowValue: 0,
-					highValue: 0
-				},
-				sensors: ['sensor1'],
-				types: ['type1'],
-				registeration: ['registered']
+				sensors: [],
+				types: [],
+				registeration: []
 			};
 		});
 
-		it('should return true if no parameters are missing', () => {
-			expect(component.isValid(params)).toBeTruthy();
+		it('should return false if all search parameters are empty', () => {
+			expect(component.isValid(params)).toBeFalsy();
 		})
 
-		it('should return false if some parameters are missing', () => {
-			params.types = [];
-			expect(component.isValid(params)).toBeFalsy();
+		it('should return true if some search parameters are not empty', () => {
+			params.types = ['shmulik'];
+			expect(component.isValid(params)).toBeTruthy();
 		})
 	});
 

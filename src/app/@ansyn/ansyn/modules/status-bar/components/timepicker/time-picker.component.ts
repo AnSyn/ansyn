@@ -1,10 +1,9 @@
 import { Component, OnInit, OnDestroy, ViewChild, Input, EventEmitter, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { OwlDateTimeComponent } from '@ansyn/ng-pick-datetime';
-import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
 import { SetToastMessageAction } from '@ansyn/map-facade';
 import { toastMessages } from '../../../core/models/toast-messages';
-import { UpdateCalendarStatusAction } from '../../actions/status-bar.actions';
+import { UpdateCalendarStatusAction, SearchAction } from '../../actions/status-bar.actions';
 
 @Component({
 	selector: 'ansyn-timepicker',
@@ -22,7 +21,7 @@ export class TimePickerComponent implements OnInit, OnDestroy {
 
 	onTimeRangeChange([from, to]) {
 		if (this.validateDate(from) && this.validateDate(to)) {
-			this.store$.dispatch(new SetOverlaysCriteriaAction({ time: { from, to } }));
+			this.store$.dispatch(new SearchAction({ time: { from, to } }));
 		} else {
 			this.store$.dispatch(new SetToastMessageAction({ toastText: toastMessages.notSupportRangeDates }));
 		}

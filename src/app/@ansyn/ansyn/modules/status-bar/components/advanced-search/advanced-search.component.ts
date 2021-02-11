@@ -97,7 +97,7 @@ import { SearchAction } from '../../actions/status-bar.actions';
 	}
 
 	search(): void {
-		this.store.dispatch(new SearchAction(this.getCurrentAdvancedSearchParameters()));
+		this.store.dispatch(new SearchAction({advancedSearchParameters: this.getCurrentAdvancedSearchParameters()}));
 		this._parent.close();
 	}
 

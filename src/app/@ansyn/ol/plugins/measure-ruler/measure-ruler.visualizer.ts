@@ -52,7 +52,7 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 	onHiddenStateChanged = new Subject();
 
 	protected allLengthTextStyle = new Text({
-		font: '16px Calibri,sans-serif',
+		font: '24px Calibri,sans-serif',
 		fill: new Fill({
 			color: '#fff'
 		}),
@@ -60,7 +60,8 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 			color: '#000',
 			width: 3
 		}),
-		offsetY: 30
+		offsetY: 30,
+		offsetX: -100
 	});
 	protected editDistanceStyle = new Style({
 		fill: new Fill({
@@ -410,8 +411,8 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 				const entityMap = this.idToEntity.get(featureId);
 				if (entityMap) {
 					const featureGeoJson = <any>this.geoJsonFormat.writeFeatureObject(entityMap.feature);
-					const centroid = getPointByGeometry(featureGeoJson.geometry);
-					allLinePoint = new Point(<[number, number]>centroid.coordinates);
+					const endCoordinate = featureGeoJson.coordinates[featureGeoJson.coordinates.length - 1];
+					allLinePoint = new Point(endCoordinate);
 				}
 			}
 
@@ -448,8 +449,9 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 			const allLengthText = this.measureAccurateLength(linestring);
 			const allLengthTextStyle = this.allLengthTextStyle.clone();
 			allLengthTextStyle.setText(allLengthText);
-			const centroid = getPointByGeometry(linestring);
-			const labelFeature = this.createLabelFeature(centroid.coordinates, allLengthTextStyle);
+			// displaying the total distance on the end coordinate's location
+			const endCoordinate = linestring.coordinates[linestring.coordinates.length - 1];
+			const labelFeature = this.createLabelFeature(endCoordinate, allLengthTextStyle);
 			features.push(labelFeature);
 		}
 		features.forEach(feature => feature.setId(UUID.UUID()));

@@ -14,6 +14,7 @@ import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overl
 import { TranslateService } from '@ngx-translate/core';
 import { OverlaysService } from '../../../overlays/services/overlays.service';
 import { SearchAction } from '../../actions/status-bar.actions';
+import { selectMarkedSecondSearchSensors } from '../../reducers/status-bar.reducer';
 
 @Component({
 	selector: 'ansyn-advanced-search',
@@ -46,6 +47,14 @@ import { SearchAction } from '../../actions/status-bar.actions';
 		this.selectedProvidersNames = this.selectedAdvancedSearchParameters.providers.map(provider => provider.name);
 	}));
 
+	@AutoSubscription
+	markSecondSearchSensors$ = this.store.pipe(
+		select(selectMarkedSecondSearchSensors),
+		filter((isSecondSearchRun: boolean) => isSecondSearchRun),
+		tap(() => {
+			this.selectedAdvancedSearchParameters.sensors.push(...this.selectedAdvancedSearchParameters.sensorsForSecondSearch);
+		})
+	)
 	get advancedSearchParametredFromConfig() {
 		return this.caseConfig.defaultCase.state.advancedSearchParameters;
 	}

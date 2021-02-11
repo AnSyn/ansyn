@@ -24,6 +24,7 @@ export interface IFetchParams {
 	registeration?: string[];
 	runSecondSearch?: boolean;
 	sensorsForSecondSearch?: string[];
+	isSecondSearchRun?: boolean;
 }
 
 export interface IOverlayFilter {

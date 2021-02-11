@@ -13,6 +13,7 @@ export interface IStatusBarState {
 	isAdvancedSearchOpen?: boolean;
 	IsSimpleSearchOpen?: boolean;
 	IsOpenedFromOutside?: boolean;
+	markSecondSearchSensors?: boolean;
 }
 
 export const StatusBarInitialState: IStatusBarState = {
@@ -23,7 +24,8 @@ export const StatusBarInitialState: IStatusBarState = {
 	isCalenderOpen: false,
 	isAdvancedSearchOpen: false,
 	IsSimpleSearchOpen: false,
-	IsOpenedFromOutside: false
+	IsOpenedFromOutside: false,
+	markSecondSearchSensors: false
 };
 
 export const statusBarFeatureKey = 'statusBar';
@@ -55,6 +57,10 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 			const { payload } = action;
 			return { ...state, IsOpenedFromOutside: payload}
 		}
+		case StatusBarActionsTypes.MARK_SECOND_SEARCH: {
+			const { payload } = action;
+			return { ...state, markSecondSearchSensors: payload}
+		}
 
 		default:
 			return state;
@@ -67,5 +73,6 @@ export const selectCalenderStatus = createSelector(statusBarStateSelector, (stat
 export const selectAdvancedSearchStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.isAdvancedSearchOpen : StatusBarInitialState.isAdvancedSearchOpen);
 export const selectSimpledSearchStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.IsSimpleSearchOpen : StatusBarInitialState.IsSimpleSearchOpen);
 export const selectIsOpenedFromOutside = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.IsOpenedFromOutside : StatusBarInitialState.IsOpenedFromOutside);
+export const selectMarkedSecondSearchSensors = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.markSecondSearchSensors : StatusBarInitialState.markSecondSearchSensors);
 export const selectGeoFilterActive = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.active);
 export const selectGeoFilterType = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.type);

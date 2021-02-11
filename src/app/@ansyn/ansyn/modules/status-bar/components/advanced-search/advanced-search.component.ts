@@ -53,6 +53,9 @@ import { selectMarkedSecondSearchSensors } from '../../reducers/status-bar.reduc
 		filter((isSecondSearchRun: boolean) => isSecondSearchRun),
 		tap(() => {
 			this.selectedAdvancedSearchParameters.sensors.push(...this.selectedAdvancedSearchParameters.sensorsForSecondSearch);
+			this.selectedAdvancedSearchParameters.sensorsForSecondSearch.forEach(sensor => {
+				this.updateSelectedTypesBySensor(sensor);
+			})
 		})
 	)
 	get advancedSearchParametredFromConfig() {

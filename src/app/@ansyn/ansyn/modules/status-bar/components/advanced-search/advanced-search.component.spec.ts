@@ -26,6 +26,14 @@ describe('AdvancedSearchComponent', () => {
 					selector: 'ansyn-combo-table',
 					inputs: ['isLine', 'isFullSize', 'selected', 'contentTitle'],
 					outputs: ['selectedItemsArray']
+				}),
+				MockComponent({
+					selector: 'ansyn-combo-table-option',
+					inputs: ['value']
+				}),
+				MockComponent({
+					selector: 'ngx-slider',
+					inputs: ['value', 'highValue', 'options']
 				})
 			],
 			providers: [

@@ -24,8 +24,7 @@ import {
 } from '../../../modules/menu-items/cases/actions/cases.actions';
 import { UpdateFacetsAction } from '../../../modules/filters/actions/filters.actions';
 import {
-	SetAnnotationMode,
-	SetMeasureDistanceToolState
+	SetAnnotationMode, UpdateToolsFlags
 } from '../../../modules/status-bar/components/tools/actions/tools.actions';
 import { CoreConfig } from '../../../modules/core/models/core.config';
 import { SetMiscOverlays, SetOverlaysCriteriaAction } from '../../../modules/overlays/actions/overlays.actions';
@@ -45,6 +44,7 @@ import {
 import { IOverlay, IOverlaysHash } from '../../../modules/overlays/models/overlay.model';
 import { UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/status-bar.actions';
 import { IAdvancedSearchParameter } from '../../../modules/status-bar/models/statusBar-config.model';
+import { toolsFlags } from '../../../modules/status-bar/components/tools/models/tools.model';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;
@@ -145,7 +145,7 @@ describe('SelectCaseAppEffects', () => {
 			a: new SetMapsDataActionStore({ mapsList: maps.data }),
 			b: new SetActiveMapId(state.maps.activeMapId),
 			c: new SetLayoutAction(<any>maps.layout),
-			d: new SetOverlaysCriteriaAction({ time, region, dataInputFilters, advancedSearchParameters, runSecondSearch }, { noInitialSearch }),
+			d: new SetOverlaysCriteriaAction({ time, region, dataInputFilters, advancedSearchParameters }, { noInitialSearch, runSecondSearch }),
 			e: new UpdateGeoFilterStatus({active: false, type: region.properties.searchMode}),
 			f: new SetFavoriteOverlaysAction(favoriteOverlays),
 			g: new SetMiscOverlays({ miscOverlays }),
@@ -156,7 +156,7 @@ describe('SelectCaseAppEffects', () => {
 			l: new UpdateFacetsAction(facets),
 			m: new UpdateSelectedLayersIds([]),
 			p: new SetAnnotationMode(null),
-			q: new SetMeasureDistanceToolState(false),
+			q: new UpdateToolsFlags([{key: toolsFlags.isMeasureToolActive, value: false}]),
 			r: new SelectCaseSuccessAction(payload)
 			});
 

@@ -186,7 +186,7 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 
 	getSinglePointLengthTextStyle(text, isTotal = false): Text {
 		return new Text({
-			font: `${isTotal ? 16 : 14}px Calibri,sans-serif`,
+			font: `${isTotal ? 24 : 14}px Calibri,sans-serif`,
 			fill: new Fill({
 				color: '#FFFFFF'
 			}),
@@ -195,6 +195,7 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 				width: 3
 			}),
 			offsetY: 30,
+			offsetX: isTotal ? -100 : 0,
 			text
 		});
 	}
@@ -368,8 +369,8 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 				const entityMap = this.idToEntity.get(featureId);
 				if (entityMap) {
 					const featureGeoJson = <any>this.geoJsonFormat.writeFeatureObject(entityMap.feature);
-					const centroid = getPointByGeometry(featureGeoJson.geometry);
-					allLinePoint = new Point(<[number, number]>centroid.coordinates);
+					const endCoordinate = featureGeoJson.coordinates[featureGeoJson.coordinates.length - 1];
+					allLinePoint = new Point(endCoordinate);
 				}
 			}
 

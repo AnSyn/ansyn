@@ -65,7 +65,7 @@ export class CasesEffects {
 		mergeMap(([{ payload }, layers, runSecondSearch]: [SaveCaseAsAction, ILayer[], boolean]) => {
 			const newCase = { ...payload, id: this.casesService.generateUUID() };
 			newCase.state.runSecondSearch = runSecondSearch;
-			// regenerate maps id for the new case.
+			// 1. regenerate maps id for the new case.
 			const currentActive = newCase.state.maps.activeMapId;
 			let newActiveMapId = currentActive;
 			newCase.state.maps.data.forEach(map => {
@@ -76,6 +76,7 @@ export class CasesEffects {
 				}
 			});
 			newCase.state.maps.activeMapId = newActiveMapId;
+			// 2. regenerate layers to the case
 			const newAnnotationLayers: ILayer[] = layers
 				.filter(({ type }) => type === LayerType.annotation)
 				.map( (layer: ILayer) => {

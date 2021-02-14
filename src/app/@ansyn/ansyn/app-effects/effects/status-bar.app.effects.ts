@@ -108,7 +108,8 @@ export class StatusBarAppEffects {
 			if (geoFilter === CaseGeoFilter.ScreenView) {
 				options.noInitialSearch = true;
 			}
-			return new SetOverlaysCriteriaAction({advancedSearchParameters: action.payload, runSecondSearch: false}, options);
+			options.runSecondSearch = false;
+			return new SetOverlaysCriteriaAction({advancedSearchParameters: action.payload}, options);
 		})
 	);
 	constructor(protected actions$: Actions,

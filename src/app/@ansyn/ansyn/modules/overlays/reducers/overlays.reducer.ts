@@ -124,7 +124,7 @@ export const overlaysStatusMessages = {
 export function OverlayReducer(state = overlaysInitialState, action: OverlaysActions): IOverlaysState {
 	switch (action.type) {
 		case OverlaysActionTypes.SET_OVERLAYS_CRITERIA: {
-			const overlaysCriteria = { ...state.overlaysCriteria, ...action.payload };//לבדוק אם לקחת את runsecondserach מהסטייט או מהאופשנס ואיך להחזיר אותו
+			const overlaysCriteria = { ...state.overlaysCriteria, ...action.payload };
 			const { options } = <any>action;
 			let runSecondSearch = state.runSecondSearch;
 			if (options && options.hasOwnProperty('runSecondSearch')) {

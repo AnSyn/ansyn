@@ -4,8 +4,8 @@ import { IKeyValuePair } from './key-value.interface';
 import { IAttributeData } from './attribute-data.interface';
 
 export class MultiChoiceAttribute extends AttributeBase<IKeyValuePair<string>[]> {
-	private selectedOptions: IKeyValuePair<string>[];
 
+	private selectedOptions: IKeyValuePair<string>[];
 	private _value: IKeyValuePair<string>[];
 
 	constructor(
@@ -20,6 +20,10 @@ export class MultiChoiceAttribute extends AttributeBase<IKeyValuePair<string>[]>
 		if (!data.value) {
 			this.setValue([]);
 		}
+	}
+
+	getValue() {
+		return this._value;
 	}
 
 	setValue(value: IKeyValuePair<string>[]) {

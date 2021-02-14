@@ -104,11 +104,11 @@ export class StatusBarAppEffects {
 		ofType<SearchAction>(StatusBarActionsTypes.SEARCH_ACTION),
 		withLatestFrom(this.store.pipe(select(selectGeoFilterType))),
 		map( ([action, geoFilter]) => {
-			const options: any = {};
+			const options: any = {runSecondSearch: false};
 			if (geoFilter === CaseGeoFilter.ScreenView) {
 				options.noInitialSearch = true;
 			}
-			return new SetOverlaysCriteriaAction({...action.payload, runSecondSearch: false}, options);
+			return new SetOverlaysCriteriaAction({...action.payload}, options);
 		})
 	);
 	constructor(protected actions$: Actions,

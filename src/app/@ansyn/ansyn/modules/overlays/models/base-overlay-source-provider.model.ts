@@ -22,8 +22,6 @@ export interface IFetchParams {
 	resolution?: IResolutionRange;
 	types?: string[];
 	registeration?: string[];
-	runSecondSearch?: boolean;
-	sensorsForSecondSearch?: string[];
 }
 
 export interface IOverlayFilter {

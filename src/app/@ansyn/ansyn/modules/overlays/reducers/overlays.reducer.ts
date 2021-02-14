@@ -124,13 +124,16 @@ export const overlaysStatusMessages = {
 export function OverlayReducer(state = overlaysInitialState, action: OverlaysActions): IOverlaysState {
 	switch (action.type) {
 		case OverlaysActionTypes.SET_OVERLAYS_CRITERIA: {
-			const overlaysCriteria = { ...state.overlaysCriteria, ...action.payload };
-
+			const overlaysCriteria = { ...state.overlaysCriteria, ...action.payload };//לבדוק אם לקחת את runsecondserach מהסטייט או מהאופשנס ואיך להחזיר אותו
 			const { options } = <any>action;
-			if (options && options.noInitialSearch) {
-				return { ...state, loading: false, displayOverlayHistory: {}, overlaysCriteria };
+			let runSecondSearch = state.runSecondSearch;
+			if (options && options.hasOwnProperty('runSecondSearch')) {
+				runSecondSearch = options.runSecondSearch;
 			}
-			return { ...state, loading: true, displayOverlayHistory: {}, overlaysCriteria };
+			if (options && options.noInitialSearch) {
+				return { ...state, loading: false, displayOverlayHistory: {}, overlaysCriteria, runSecondSearch };
+			}
+			return { ...state, loading: true, displayOverlayHistory: {}, overlaysCriteria, runSecondSearch };
 		}
 		case OverlaysActionTypes.SELECT_OVERLAY:
 

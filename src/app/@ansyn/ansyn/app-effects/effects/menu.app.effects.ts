@@ -72,7 +72,6 @@ export class MenuAppEffects {
 			new UnSelectMenuItemAction(),
 			new ToggleFooter(false),
 			new LoadOverlaysSuccessAction([], true),
-			new UpdateToolsFlags([{key: toolsFlags.isMeasureToolActive, value: false}]),
 			new InitializeFiltersAction(),
 			new LoadDefaultCaseAction()
 		])

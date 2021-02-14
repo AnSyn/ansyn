@@ -37,6 +37,8 @@ import { SearchAction } from '../../actions/status-bar.actions';
 	allProviders: IProviderData[] = [];
 
 	selectedAdvancedSearchParameters: IAdvancedSearchParameter = {};
+	showMessage: boolean;
+
 	@AutoSubscription
 	onDataInputFilterChange$ = this.store.pipe(
 	select(selectAdvancedSearchParameters),
@@ -97,8 +99,20 @@ import { SearchAction } from '../../actions/status-bar.actions';
 	}
 
 	search(): void {
-		this.store.dispatch(new SearchAction(this.getCurrentAdvancedSearchParameters()));
-		this._parent.close();
+		const params = this.getCurrentAdvancedSearchParameters();
+		if (this.isValid(params)) {
+			this.store.dispatch(new SearchAction(params));
+			this._parent.close();
+		} else {
+			this.showMessage = true;
+		}
+	}
+
+	isValid(params: IAdvancedSearchParameter): boolean {
+		return params?.registeration?.length > 0
+			|| params?.types?.length > 0
+			|| params?.sensors?.length > 0
+			|| params?.providers?.length > 0;
 	}
 
 	updateSelectedTypes(selectedTypesArray: string[]): void {
@@ -126,6 +140,7 @@ import { SearchAction } from '../../actions/status-bar.actions';
 	}
 
 	updateSelectedArray(selectedItemsArray: string[], arrayToUpdate: string): void {
+		this.showMessage = false;
 		this[`update${arrayToUpdate}`](selectedItemsArray);
 	}
 

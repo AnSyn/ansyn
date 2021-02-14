@@ -101,7 +101,7 @@ import { SearchAction } from '../../actions/status-bar.actions';
 	search(): void {
 		const params = this.getCurrentAdvancedSearchParameters();
 		if (this.isValid(params)) {
-			this.store.dispatch(new SearchAction(params));
+			this.store.dispatch(new SearchAction({advancedSearchParameters: params}));
 			this._parent.close();
 		} else {
 			this.showMessage = true;

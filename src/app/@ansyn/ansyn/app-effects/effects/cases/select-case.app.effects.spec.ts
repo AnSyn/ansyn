@@ -145,7 +145,7 @@ describe('SelectCaseAppEffects', () => {
 			a: new SetMapsDataActionStore({ mapsList: maps.data }),
 			b: new SetActiveMapId(state.maps.activeMapId),
 			c: new SetLayoutAction(<any>maps.layout),
-			d: new SetOverlaysCriteriaAction({ time, region, dataInputFilters, advancedSearchParameters, runSecondSearch }, { noInitialSearch }),
+			d: new SetOverlaysCriteriaAction({ time, region, dataInputFilters, advancedSearchParameters }, { noInitialSearch, runSecondSearch }),
 			e: new UpdateGeoFilterStatus({active: false, type: region.properties.searchMode}),
 			f: new SetFavoriteOverlaysAction(favoriteOverlays),
 			g: new SetMiscOverlays({ miscOverlays }),

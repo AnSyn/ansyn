@@ -1,5 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { StoreModule } from '@ngrx/store';
+import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
 import { LoggerService } from '../../../core/services/logger.service';
@@ -11,10 +11,13 @@ import { SearchPanelComponent } from '../search-panel/search-panel.component';
 
 import { AdvancedSearchComponent } from './advanced-search.component';
 import { OverlaySourceProviderMock } from './overlay-source-provider.mock';
+import { IAdvancedSearchParameter } from '../../models/statusBar-config.model';
 
 describe('AdvancedSearchComponent', () => {
 	let component: AdvancedSearchComponent;
 	let fixture: ComponentFixture<AdvancedSearchComponent>;
+	let store: Store<any>;
+	let parent: SearchPanelComponent;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -35,7 +38,9 @@ describe('AdvancedSearchComponent', () => {
 				},
 				{
 					provide: SearchPanelComponent,
-					useValue: {}
+					useValue: {
+						close: () => {}
+					}
 				},
 				{
 					provide: casesConfig,
@@ -72,6 +77,11 @@ describe('AdvancedSearchComponent', () => {
 			.compileComponents();
 	}));
 
+	beforeEach(inject([Store, SearchPanelComponent], (_store: Store<any>, _parent: SearchPanelComponent) => {
+		store = _store;
+		parent = _parent;
+	}));
+
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AdvancedSearchComponent);
 		component = fixture.componentInstance;
@@ -87,4 +97,44 @@ describe('AdvancedSearchComponent', () => {
 	it('should create', () => {
 		expect(component).toBeTruthy();
 	});
+
+	describe('isValid()', () => {
+		let params: IAdvancedSearchParameter;
+
+		beforeEach(() => {
+			params = {
+				sensors: [],
+				types: [],
+				registeration: []
+			};
+		});
+
+		it('should return false if all search parameters are empty', () => {
+			expect(component.isValid(params)).toBeFalsy();
+		})
+
+		it('should return true if some search parameters are not empty', () => {
+			params.types = ['shmulik'];
+			expect(component.isValid(params)).toBeTruthy();
+		})
+	});
+
+	describe('search()', () => {
+		it('should trigger an error message if parameters are missing', () => {
+			spyOn(component, 'isValid').and.returnValue(false);
+			component.showMessage = false;
+			component.search();
+			expect(component.showMessage).toBeTruthy();
+		});
+
+		it('should trigger a search if parameters are valid', () => {
+			spyOn(component, 'isValid').and.returnValue(true);
+			spyOn(store, 'dispatch');
+			spyOn(parent, 'close');
+			component.search();
+			expect(store.dispatch).toHaveBeenCalled();
+			expect(parent.close).toHaveBeenCalled();
+		});
+
+	})
 });

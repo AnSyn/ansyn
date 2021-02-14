@@ -100,7 +100,7 @@ export class SelectCaseAppEffects {
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),
 			new SetActiveMapId(state.maps.activeMapId),
 			new SetLayoutAction(<any>layout),
-			new SetOverlaysCriteriaAction({ time, region, dataInputFilters, advancedSearchParameters, runSecondSearch }, { noInitialSearch }),
+			new SetOverlaysCriteriaAction({ time, region, dataInputFilters, advancedSearchParameters }, { noInitialSearch, runSecondSearch }),
 			new UpdateGeoFilterStatus({ active: false, type: region.properties.searchMode }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this)) }),

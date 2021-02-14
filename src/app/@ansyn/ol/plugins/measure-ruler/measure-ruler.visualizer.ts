@@ -462,8 +462,8 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 		if (this.isTotalMeasureActive || length === 2) {
 			// all line string
 			const allLengthText = this.measureAccurateLength(linestring);
-			const centroid = getPointByGeometry(linestring);
-			const labelFeature = this.createLabelFeature(centroid.coordinates, allLengthText, true);
+			const endCoordinate = linestring.coordinates[linestring.coordinates.length - 1];
+			const labelFeature = this.createLabelFeature(endCoordinate, allLengthText, true);
 			features.push(labelFeature);
 		}
 		features.forEach(feature => feature.setId(UUID.UUID()));

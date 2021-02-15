@@ -23,7 +23,7 @@ import {
 	SetMapSearchBoxTriggerAction,
 	SetToastMessageAction,
 	SynchronizeMapsAction,
-	ToggleMapLayersAction
+	ToggleMapLayersAction, UpdateMapAction
 } from '@ansyn/map-facade';
 import {
 	BaseMapSourceProvider,
@@ -62,9 +62,11 @@ import { MarkUpClass, selectRegion } from '../../modules/overlays/reducers/overl
 import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity';
 import {
+	AddMeasureAction,
+	CreateMeasureDataAction, RemoveMeasureAction, RemoveMeasureDataAction,
 	SetActiveCenter,
 	SetMapGeoEnabledModeToolsActionStore,
-	SetMapSearchBox
+	SetMapSearchBox, ToolsActionsTypes, UpdateMeasureDataOptionsAction
 } from '../../modules/status-bar/components/tools/actions/tools.actions';
 import {
 	DisplayOverlayAction,
@@ -97,6 +99,8 @@ import {
 import { feature } from '@turf/turf';
 import { calculatePolygonWidth } from '@ansyn/imagery';
 import { CasesActionTypes } from '../../modules/menu-items/cases/actions/cases.actions';
+import { createNewMeasureData } from '../../modules/status-bar/components/tools/models/tools.model';
+import { rxPreventCrash } from '../../modules/core/utils/rxjs/operators/rxPreventCrash';
 
 const FOOTPRINT_INSIDE_MAP_RATIO = 1;
 
@@ -336,6 +340,46 @@ export class MapAppEffects {
 	onLoadCasForceMapsRender$ = this.actions$.pipe(
 		ofType(CasesActionTypes.SELECT_CASE_SUCCESS),
 		map(() => new ForceRenderMaps())
+	);
+
+	// measures effects
+	@Effect()
+	onMeasureChange$ = this.actions$.pipe(
+		ofType(ToolsActionsTypes.MEASURES.CREATE_MEASURE_DATA, ToolsActionsTypes.MEASURES.REMOVE_MEASURE_DATA,
+			ToolsActionsTypes.MEASURES.ADD_MEASURE, ToolsActionsTypes.MEASURES.REMOVE_MEASURE, ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS),
+		concatMap( action => of(action).pipe(
+			withLatestFrom(this.store$.select(selectMaps)),
+		)),
+		map( ([action, maps]: [
+			CreateMeasureDataAction | RemoveMeasureDataAction | AddMeasureAction | RemoveMeasureAction | UpdateMeasureDataOptionsAction,
+			Dictionary<IMapSettings>]) => {
+			const map = maps[action.payload.mapId];
+			const changes = {data: {...map.data}};
+			switch ( action.type) {
+				case ToolsActionsTypes.MEASURES.CREATE_MEASURE_DATA:
+					const measuresData = createNewMeasureData();
+					changes.data.measuresData = changes.data.measuresData ? changes.data.measuresData : measuresData;
+					break;
+				case ToolsActionsTypes.MEASURES.REMOVE_MEASURE_DATA:
+					changes.data.measuresData = undefined;
+					break;
+				case ToolsActionsTypes.MEASURES.ADD_MEASURE:
+					const oldMeasures = changes.data.measuresData.measures;
+					changes.data.measuresData = {...changes.data.measuresData, measures: [...oldMeasures, action.payload.measure]};
+					break;
+				case ToolsActionsTypes.MEASURES.REMOVE_MEASURE:
+					const measureId = action.payload.measureId;
+					const updateMeasures = measureId ? changes.data.measuresData.measures.filter( measure => measure.id !== measureId) : [];
+					changes.data.measuresData = {...changes.data.measuresData, measures: updateMeasures};
+					break;
+				case ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS:
+					const newOptions = action.payload.options;
+					changes.data.measuresData = {...changes.data.measuresData, ...newOptions};
+					break;
+			}
+			return new UpdateMapAction({id: map.id, changes});
+		}),
+		rxPreventCrash()
 	);
 
 	constructor(protected actions$: Actions,

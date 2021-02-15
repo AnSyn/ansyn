@@ -2,7 +2,12 @@ import { Inject, Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { SetFavoriteOverlaysAction, SetOverlaysScannedAreaDataAction, SetOverlaysTranslationDataAction, UpdateOverlaysManualProcessArgs } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
+import {
+	SetFavoriteOverlaysAction,
+	SetOverlaysScannedAreaDataAction,
+	SetOverlaysTranslationDataAction,
+	UpdateOverlaysManualProcessArgs
+} from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { IAppState } from '../../app.effects.module';
 import { concatMap } from 'rxjs/operators';
 import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '@ansyn/map-facade';
@@ -19,7 +24,7 @@ import { casesConfig, CasesService } from '../../../modules/menu-items/cases/ser
 import { UpdateFacetsAction } from '../../../modules/filters/actions/filters.actions';
 import {
 	SetAnnotationMode,
-	SetMeasureDistanceToolState,
+	UpdateToolsFlags
 } from '../../../modules/status-bar/components/tools/actions/tools.actions';
 import { isFullOverlay } from '../../../modules/core/utils/overlays';
 import { ICoreConfig } from '../../../modules/core/models/core.config.model';
@@ -32,6 +37,7 @@ import { ICasesConfig } from '../../../modules/menu-items/cases/models/cases-con
 import { UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/status-bar.actions';
 import { Feature, Point, Polygon } from 'geojson';
 import { feature } from '@turf/turf';
+import { toolsFlags } from '../../../modules/status-bar/components/tools/models/tools.model';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -87,12 +93,14 @@ export class SelectCaseAppEffects {
 		const { facets } = state;
 
 		const advancedSearchParameters = state.advancedSearchParameters;
-		const { runSecondSearch } = state
+		const { runSecondSearch } = state;
+		const measureIsActive = state.maps.data.some( map => map.data.measuresData);
+
 		const selectCaseAction = [
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),
 			new SetActiveMapId(state.maps.activeMapId),
 			new SetLayoutAction(<any>layout),
-			new SetOverlaysCriteriaAction({ time, region, dataInputFilters, advancedSearchParameters, runSecondSearch }, { noInitialSearch }),
+			new SetOverlaysCriteriaAction({ time, region, dataInputFilters, advancedSearchParameters }, { noInitialSearch, runSecondSearch }),
 			new UpdateGeoFilterStatus({ active: false, type: region.properties.searchMode }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this)) }),
@@ -103,7 +111,7 @@ export class SelectCaseAppEffects {
 			new UpdateFacetsAction(facets),
 			new UpdateSelectedLayersIds(activeLayersIds),
 			new SetAnnotationMode(null),
-			new SetMeasureDistanceToolState(false),
+			new UpdateToolsFlags([{key: toolsFlags.isMeasureToolActive, value: measureIsActive}]),
 			new SelectCaseSuccessAction(payload)
 		];
 

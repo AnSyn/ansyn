@@ -3,4 +3,5 @@ export interface IOverlaysConfig {
 	sourceTypeNotices: {
 		[propName: string]: string
 	};
+	sensorsForSecondSearch?: string[];
 }

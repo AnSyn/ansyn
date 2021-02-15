@@ -37,6 +37,7 @@ import { toastMessages } from '../../../core/models/toast-messages';
 import { cloneDeep } from '../../../core/utils/rxjs/operators/cloneDeep';
 import { RemoveCaseLayersFromBackendAction } from '../../layers-manager/actions/layers.actions';
 import { ICase } from '../models/case.model';
+import { selectIsRunSecondSearch } from '../../../overlays/reducers/overlays.reducer';
 
 @Injectable()
 export class CasesEffects {
@@ -60,10 +61,11 @@ export class CasesEffects {
 	onSaveCaseAs$ = this.actions$.pipe(
 		ofType<SaveCaseAsAction>(CasesActionTypes.SAVE_CASE_AS),
 		cloneDeep(),
-		withLatestFrom(this.store.select(selectLayers)),
-		mergeMap(([{ payload }, layers]: [SaveCaseAsAction, ILayer[]]) => {
+		withLatestFrom(this.store.select(selectLayers), this.store.select(selectIsRunSecondSearch)),
+		mergeMap(([{ payload }, layers, runSecondSearch]: [SaveCaseAsAction, ILayer[], boolean]) => {
 			const newCase = { ...payload, id: this.casesService.generateUUID() };
-			// regenerate maps id for the new case.
+			newCase.state.runSecondSearch = runSecondSearch;
+			// 1. regenerate maps id for the new case.
 			const currentActive = newCase.state.maps.activeMapId;
 			let newActiveMapId = currentActive;
 			newCase.state.maps.data.forEach(map => {
@@ -74,6 +76,7 @@ export class CasesEffects {
 				}
 			});
 			newCase.state.maps.activeMapId = newActiveMapId;
+			// 2. regenerate layers to the case
 			const newAnnotationLayers: ILayer[] = layers
 				.filter(({ type }) => type === LayerType.annotation)
 				.map( (layer: ILayer) => {

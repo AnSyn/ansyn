@@ -9,6 +9,7 @@ import {
 	MapActionTypes,
 	selectActiveMapId,
 	selectIsMinimalistViewMode,
+	selectMaps,
 	SetToastMessageAction
 } from '@ansyn/map-facade';
 import { VisualizerInteractions } from '@ansyn/imagery';
@@ -21,7 +22,7 @@ import { UpdateGeoFilterStatus } from '../../../../../status-bar/actions/status-
 import { SetOverlaysCriteriaAction } from '../../../../../overlays/actions/overlays.actions';
 import { selectRegion } from '../../../../../overlays/reducers/overlays.reducer';
 import { CaseGeoFilter, CaseRegionState } from '../../../../../menu-items/cases/models/case.model';
-import { SetLayerSelection, LayersActionTypes } from '../../../../../menu-items/layers-manager/actions/layers.actions';
+import { LayersActionTypes, SetLayerSelection } from '../../../../../menu-items/layers-manager/actions/layers.actions';
 
 export abstract class RegionVisualizer extends EntitiesVisualizer {
 	selfIntersectMessage = 'Invalid Polygon (Self-Intersect)';
@@ -42,6 +43,15 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 
 	isTheRightVisualizer$ = this.geoFilterType$.pipe(
 		map(geoFilter => geoFilter === this.geoFilter)
+	);
+
+	@AutoSubscription
+	shouldDrawRegion$ = combineLatest([this.store$.select(selectMaps), this.newRegionSelect$]).pipe(
+		map(([maps, region]) => {
+			const isOverlay = Boolean(maps[this.mapId]?.data.overlay);
+			const isNotScreenViewMode = region.properties.searchMode !== CaseGeoFilter.ScreenView;
+			return isOverlay || isNotScreenViewMode;
+		})
 	);
 
 	@AutoSubscription
@@ -68,7 +78,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	);
 
 	@AutoSubscription
-	drawChanges$ = combineLatest([this.geoFilterType$, this.newRegionSelect$, this.regionSameAsVisualizer$, this.geoFilterActive$, this.store$.select(selectIsMinimalistViewMode)]).pipe(
+	drawChanges$ = combineLatest([this.geoFilterType$, this.newRegionSelect$, this.regionSameAsVisualizer$, this.geoFilterActive$, this.store$.select(selectIsMinimalistViewMode), this.shouldDrawRegion$]).pipe(
 		mergeMap(this.drawChanges.bind(this))
 	);
 
@@ -76,8 +86,8 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		super();
 	}
 
-	drawChanges([geoFilterType, region, regionAsVisualizer, isActive, isMinimalistViewMode]) {
-		if (regionAsVisualizer && !isActive && !isMinimalistViewMode && geoFilterType) {
+	drawChanges([geoFilterType, region, regionAsVisualizer, isActive, isMinimalistViewMode, shouldDrawRegion]) {
+		if (regionAsVisualizer && !isActive && !isMinimalistViewMode && geoFilterType && shouldDrawRegion) {
 			return this.drawRegionOnMap(region);
 		}
 		this.clearEntities();

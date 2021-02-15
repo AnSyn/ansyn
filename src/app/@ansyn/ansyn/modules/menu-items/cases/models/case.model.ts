@@ -4,6 +4,7 @@ import { LayoutKey } from '@ansyn/map-facade';
 import { FilterType } from '../../../filters/models/filter-type';
 import { IMapSettings, IMapSettingsData } from '@ansyn/imagery';
 import { IAdvancedSearchParameter, IProviderData } from '../../../status-bar/models/statusBar-config.model';
+import { IMeasureData } from '../../../status-bar/components/tools/models/tools.model';
 
 export interface ICasePreview {
 	creationTime: Date;
@@ -161,6 +162,7 @@ export interface IDilutedCaseMapData extends IMapSettingsData {
 	isAutoImageProcessingActive?: boolean;
 	imageManualProcessArgs?: IImageManualProcessArgs;
 	translationData?: ITranslationData;
+	measuresData?: IMeasureData;
 }
 
 export interface ICaseMapData extends IDilutedCaseMapData {

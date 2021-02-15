@@ -125,7 +125,6 @@ export interface IOverlaysCriteria {
 	region?: CaseRegionState;
 	dataInputFilters?: ICaseDataInputFiltersState;
 	advancedSearchParameters?: IAdvancedSearchParameter;
-	runSecondSearch?: boolean;
 }
 
 export interface IResolutionRange {
@@ -134,6 +133,7 @@ export interface IResolutionRange {
 }
 export interface IOverlaysCriteriaOptions {
 	noInitialSearch?: boolean;
+	runSecondSearch?: boolean;
 }
 
 

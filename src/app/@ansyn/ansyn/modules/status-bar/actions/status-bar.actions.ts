@@ -2,6 +2,7 @@ import { Action } from '@ngrx/store';
 import { IGeoFilterStatus } from '../reducers/status-bar.reducer';
 import { ILogMessage } from '../../core/models/logger.model';
 import { IAdvancedSearchParameter } from '../models/statusBar-config.model';
+import { IOverlaysCriteria } from '../../overlays/models/overlay.model';
 
 export const StatusBarActionsTypes = {
 	SHOW_LINK_COPY_TOAST: 'SHOW_LINK_COPY_TOAST',
@@ -84,7 +85,7 @@ export class GoAdjacentOverlay implements Action {
 
 export class SearchAction implements Action {
 	readonly type: string = StatusBarActionsTypes.SEARCH_ACTION;
-	constructor(public payload: IAdvancedSearchParameter) {
+	constructor(public payload: IOverlaysCriteria) {
 	}
 }
 

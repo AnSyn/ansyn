@@ -6,7 +6,7 @@ import { DateTimeAdapter } from '@ansyn/ng-pick-datetime';
 import { MockComponent } from '../../../core/test/mock-component';
 import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
 import { ICaseTimeState } from '../../../menu-items/cases/models/case.model';
-import { SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
+import { SearchAction } from '../../actions/status-bar.actions';
 
 const mockTimePickerTrigger = MockComponent({
 	selector: 'input[timePickerInput]',
@@ -63,6 +63,6 @@ describe('TimepickerComponent', () => {
 		};
 		component.onTimeRangeChange([startDate, endDate]);
 		tick();
-		expect(store.dispatch).toHaveBeenCalledWith(new SetOverlaysCriteriaAction({time}));
+		expect(store.dispatch).toHaveBeenCalledWith(new SearchAction({time}));
 	}))
 });

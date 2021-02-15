@@ -4,6 +4,7 @@ import { SliderFilterContainerComponent } from './slider-filter-container.compon
 import { FormsModule } from '@angular/forms';
 import { FilterCounterComponent } from '../filter-counter/filter-counter.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { MockComponent } from '../../../core/test/mock-component';
 
 describe('SliderFilterContainerComponent', () => {
 	let component: SliderFilterContainerComponent;
@@ -11,7 +12,14 @@ describe('SliderFilterContainerComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [SliderFilterContainerComponent, FilterCounterComponent],
+			declarations: [
+				SliderFilterContainerComponent,
+				FilterCounterComponent,
+				MockComponent({
+					selector: 'ngx-slider',
+					inputs: ['value', 'highValue', 'options']
+				})
+			],
 			imports: [
 				FormsModule, TranslateModule.forRoot()
 			]

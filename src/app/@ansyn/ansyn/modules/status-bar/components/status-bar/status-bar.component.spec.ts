@@ -16,6 +16,8 @@ describe('StatusBarComponent', () => {
 	const mockFiltersPanel = MockComponent( {selector: 'ansyn-filters-panel'});
 	const mockDisplayPanel = MockComponent( {selector: 'ansyn-display-panel'});
 	const mockLogoPanel = MockComponent( {selector: 'ansyn-logo-panel', inputs: ['version']});
+	const mockTools = MockComponent({ selector: 'ansyn-tools' });
+	const mockSearchOptions = MockComponent({ selector: 'ansyn-search-options'});
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -25,7 +27,9 @@ describe('StatusBarComponent', () => {
 				mockCasePanel,
 				mockFiltersPanel,
 				mockDisplayPanel,
-				mockLogoPanel
+				mockLogoPanel,
+				mockTools,
+				mockSearchOptions
 			],
 			providers: [
 				{

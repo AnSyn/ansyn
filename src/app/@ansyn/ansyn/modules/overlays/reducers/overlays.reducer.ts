@@ -125,12 +125,15 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 	switch (action.type) {
 		case OverlaysActionTypes.SET_OVERLAYS_CRITERIA: {
 			const overlaysCriteria = { ...state.overlaysCriteria, ...action.payload };
-
 			const { options } = <any>action;
-			if (options && options.noInitialSearch) {
-				return { ...state, loading: false, displayOverlayHistory: {}, overlaysCriteria };
+			let runSecondSearch = state.runSecondSearch;
+			if (options && options.hasOwnProperty('runSecondSearch')) {
+				runSecondSearch = options.runSecondSearch;
 			}
-			return { ...state, loading: true, displayOverlayHistory: {}, overlaysCriteria };
+			if (options && options.noInitialSearch) {
+				return { ...state, loading: false, displayOverlayHistory: {}, overlaysCriteria, runSecondSearch };
+			}
+			return { ...state, loading: true, displayOverlayHistory: {}, overlaysCriteria, runSecondSearch };
 		}
 		case OverlaysActionTypes.SELECT_OVERLAY:
 
@@ -362,7 +365,7 @@ export const selectDropsAscending = createSelector(selectDrops, (drops: IOverlay
 export const selectLoading = createSelector(overlaysStateSelector, (overlays: IOverlaysState): boolean => overlays.loading);
 export const selectDropMarkup = createSelector(overlaysStateSelector, (overlayState: IOverlaysState): ExtendMap<MarkUpClass, IMarkUpData> => overlayState.dropsMarkUp);
 export const selectHoveredOverlay = createSelector(overlaysStateSelector, (overlays: IOverlaysState): IOverlay => overlays.hoveredOverlay);
-export const selectIsRunSecondSearch = createSelector(overlaysStateSelector, (overlays: IOverlaysState): boolean => overlays.runSecondSearch);
+export const selectIsRunSecondSearch = createSelector(overlaysStateSelector, (overlays: IOverlaysState): boolean => overlays?.runSecondSearch);
 export const selectTimelineRange = createSelector(overlaysStateSelector, (overlays: IOverlaysState): ITimelineRange => overlays.timeLineRange);
 export const selectdisplayOverlayHistory = createSelector(overlaysStateSelector, (overlays: IOverlaysState): { [mapId: string]: string[] } => overlays.displayOverlayHistory);
 export const selectStatusMessage = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string => overlays.statusMessage);

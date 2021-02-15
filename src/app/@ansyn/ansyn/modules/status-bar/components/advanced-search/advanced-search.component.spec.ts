@@ -12,6 +12,7 @@ import { SearchPanelComponent } from '../search-panel/search-panel.component';
 import { AdvancedSearchComponent } from './advanced-search.component';
 import { OverlaySourceProviderMock } from './overlay-source-provider.mock';
 import { IAdvancedSearchParameter } from '../../models/statusBar-config.model';
+import { MockComponent } from '../../../core/test/mock-component';
 
 describe('AdvancedSearchComponent', () => {
 	let component: AdvancedSearchComponent;
@@ -21,7 +22,23 @@ describe('AdvancedSearchComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [AdvancedSearchComponent, SearchPanelComponent],
+			declarations: [
+				AdvancedSearchComponent,
+				SearchPanelComponent,
+				MockComponent({
+					selector: 'ansyn-combo-table',
+					inputs: ['isLine', 'isFullSize', 'selected', 'contentTitle'],
+					outputs: ['selectedItemsArray']
+				}),
+				MockComponent({
+					selector: 'ansyn-combo-table-option',
+					inputs: ['value']
+				}),
+				MockComponent({
+					selector: 'ngx-slider',
+					inputs: ['value', 'highValue', 'options']
+				})
+			],
 			providers: [
 				TranslateService,
 				{

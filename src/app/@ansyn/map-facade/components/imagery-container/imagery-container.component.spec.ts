@@ -28,7 +28,7 @@ describe('ImageryContainerComponent', () => {
 				EntryComponentDirective,
 				MockComponent({
 					selector: 'ansyn-imagery-status',
-					inputs: ['map', 'isMinimalistViewMode'],
+					inputs: ['map', 'isMinimalistViewMode', 'isLayersShow', 'isFootprintShow'],
 					outputs: ['onMove', 'toggleMapSynchronization']
 				}),
 				MockComponent({

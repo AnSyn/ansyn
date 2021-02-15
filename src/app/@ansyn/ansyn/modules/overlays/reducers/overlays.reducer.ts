@@ -365,7 +365,7 @@ export const selectDropsAscending = createSelector(selectDrops, (drops: IOverlay
 export const selectLoading = createSelector(overlaysStateSelector, (overlays: IOverlaysState): boolean => overlays.loading);
 export const selectDropMarkup = createSelector(overlaysStateSelector, (overlayState: IOverlaysState): ExtendMap<MarkUpClass, IMarkUpData> => overlayState.dropsMarkUp);
 export const selectHoveredOverlay = createSelector(overlaysStateSelector, (overlays: IOverlaysState): IOverlay => overlays.hoveredOverlay);
-export const selectIsRunSecondSearch = createSelector(overlaysStateSelector, (overlays: IOverlaysState): boolean => overlays.runSecondSearch);
+export const selectIsRunSecondSearch = createSelector(overlaysStateSelector, (overlays: IOverlaysState): boolean => overlays?.runSecondSearch);
 export const selectTimelineRange = createSelector(overlaysStateSelector, (overlays: IOverlaysState): ITimelineRange => overlays.timeLineRange);
 export const selectdisplayOverlayHistory = createSelector(overlaysStateSelector, (overlays: IOverlaysState): { [mapId: string]: string[] } => overlays.displayOverlayHistory);
 export const selectStatusMessage = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string => overlays.statusMessage);

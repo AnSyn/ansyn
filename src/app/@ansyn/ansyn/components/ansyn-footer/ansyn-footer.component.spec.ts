@@ -19,12 +19,18 @@ describe('AnsynFooterComponent', () => {
 		selector: 'ansyn-overlay-navigation-bar'
 	});
 
+	const mockTimePickerContainer = MockComponent({
+		selector: 'ansyn-time-picker-container',
+		inputs: ['openTop']
+	})
+
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [
 				AnsynFooterComponent,
 				mockOverlays,
-				mockOverlayNavigationBar
+				mockOverlayNavigationBar,
+				mockTimePickerContainer
 			],
 			imports: [
 				StoreModule.forRoot({ [mapFeatureKey]: MapReducer }),

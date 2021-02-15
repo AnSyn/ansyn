@@ -118,7 +118,7 @@ import { SearchAction } from '../../actions/status-bar.actions';
 	updateSelectedTypes(selectedTypesArray: string[]): void {
 		const changedType = this.getUniqueElement(selectedTypesArray, this.selectedAdvancedSearchParameters.types);
 		this.updateSelectedProvidersByType(changedType);
-		this.updateSelectedSensorsByTypes(selectedTypesArray,changedType);
+		this.updateSelectedSensorsByTypes(selectedTypesArray, changedType);
 		this.selectedAdvancedSearchParameters.types = selectedTypesArray;
 	}
 

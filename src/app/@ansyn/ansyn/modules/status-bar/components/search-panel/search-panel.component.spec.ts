@@ -75,6 +75,11 @@ describe('SearchPanelComponent', () => {
 		outputs: ['hideMe', 'openTimePicker']
 	});
 
+	const ansynTimePickerContainer = MockComponent({
+		selector: 'ansyn-time-picker-container',
+		inputs: ['openTop']
+	})
+
 	const ansynLocationPicker = MockComponent({
 		selector: 'ansyn-location-picker',
 		inputs: ['geoFilter']
@@ -92,6 +97,7 @@ describe('SearchPanelComponent', () => {
 				ansynTimePicker,
 				ansynLocationPicker,
 				ansynTimePickerPreset,
+				ansynTimePickerContainer,
 				ClickOutsideDirective
 			],
 			imports: [StoreModule.forRoot({

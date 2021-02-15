@@ -29,7 +29,10 @@ describe('AnsynComponent', () => {
 	});
 	const mockOverlaysContainer = MockComponent({ selector: 'ansyn-overlays-container' });
 	const mockEmptyComponent = MockComponent({ selector: 'ansyn-empty' });
-	const mockImageryView = MockComponent({ selector: 'ansyn-imageries-manager' });
+	const mockImageryView = MockComponent({
+		selector: 'ansyn-imageries-manager',
+		inputs: ['isLayersShow', 'isFootprintShow']
+	});
 	const mockOverlayOverviewComponent = MockComponent({ selector: 'ansyn-overlay-overview' });
 	const mockStatusBar = MockComponent({
 		selector: 'ansyn-status-bar', inputs: ['version']

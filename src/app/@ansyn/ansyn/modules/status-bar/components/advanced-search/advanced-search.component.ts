@@ -38,6 +38,8 @@ import { selectMarkedSecondSearchSensors } from '../../reducers/status-bar.reduc
 	allProviders: IProviderData[] = [];
 
 	selectedAdvancedSearchParameters: IAdvancedSearchParameter = {};
+	showMessage: boolean;
+
 	@AutoSubscription
 	onDataInputFilterChange$ = this.store.pipe(
 	select(selectAdvancedSearchParameters),
@@ -109,8 +111,20 @@ import { selectMarkedSecondSearchSensors } from '../../reducers/status-bar.reduc
 	}
 
 	search(): void {
-		this.store.dispatch(new SearchAction(this.getCurrentAdvancedSearchParameters()));
-		this._parent.close();
+		const params = this.getCurrentAdvancedSearchParameters();
+		if (this.isValid(params)) {
+			this.store.dispatch(new SearchAction({advancedSearchParameters: params}));
+			this._parent.close();
+		} else {
+			this.showMessage = true;
+		}
+	}
+
+	isValid(params: IAdvancedSearchParameter): boolean {
+		return params?.registeration?.length > 0
+			|| params?.types?.length > 0
+			|| params?.sensors?.length > 0
+			|| params?.providers?.length > 0;
 	}
 
 	updateSelectedTypes(selectedTypesArray: string[]): void {
@@ -138,6 +152,7 @@ import { selectMarkedSecondSearchSensors } from '../../reducers/status-bar.reduc
 	}
 
 	updateSelectedArray(selectedItemsArray: string[], arrayToUpdate: string): void {
+		this.showMessage = false;
 		this[`update${arrayToUpdate}`](selectedItemsArray);
 	}
 

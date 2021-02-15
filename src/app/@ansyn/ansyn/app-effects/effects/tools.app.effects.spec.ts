@@ -246,40 +246,32 @@ describe('ToolsAppEffects', () => {
 	it('clearActiveInteractions$ should clear active interactions', () => {
 		actions = hot('--a--', { a: new ClearActiveInteractionsAction() });
 
-		const expectedResult = cold('--(bcdef)--', {
+		const expectedResult = cold('--(bcde)--', {
 			b: new SetAnnotationMode(null),
 			c: new UpdateGeoFilterStatus(),
 			d: new SetPinLocationModeAction(false),
 			e: new UpdateMeasureDataOptionsAction({
 				mapId: 'imagery1',
 				options: { isToolActive: false, isRemoveMeasureModeActive: false }
-			}),
-			f: new UpdateMeasureDataOptionsAction({
-				mapId: 'imagery1',
-				options: { forceDisableTranslate: undefined}
 			})
 		});
 
 		expect(toolsAppEffects.clearActiveInteractions$).toBeObservable(expectedResult);
 	});
 
-	it('clearActiveInteractions$ should clear active interactions without SetMeasureDistanceToolState', () => {
+	it('clearActiveInteractions$ should clear active interactions without SetAnnotationMode', () => {
 		actions = hot('--a--', {
 			a: new ClearActiveInteractionsAction({
 				skipClearFor: [SetAnnotationMode]
 			})
 		});
 
-		const expectedResult = cold('--(bcde)--', {
+		const expectedResult = cold('--(bcd)--', {
 			b: new UpdateGeoFilterStatus(),
 			c: new SetPinLocationModeAction(false),
 			d: new UpdateMeasureDataOptionsAction({
 				mapId: 'imagery1',
 				options: { isToolActive: false, isRemoveMeasureModeActive: false }
-			}),
-			e: new UpdateMeasureDataOptionsAction({
-				mapId: 'imagery1',
-				options: { forceDisableTranslate: undefined}
 			})
 		});
 

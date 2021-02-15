@@ -82,6 +82,7 @@ export interface IOverlaysState extends EntityState<IOverlay> {
 	// in zone.js...
 	totalOverlaysLength: number;
 	overlaysContainmentChecked: boolean;
+	runSecondSearch: boolean;
 }
 
 let initDropsMarkUp: ExtendMap<MarkUpClass, IMarkUpData> = new ExtendMap<MarkUpClass, IMarkUpData>();
@@ -106,7 +107,8 @@ export const overlaysInitialState: IOverlaysState = overlaysAdapter.getInitialSt
 	miscOverlays: {},
 	customOverviewElementId: null,
 	totalOverlaysLength: 0,
-	overlaysContainmentChecked: false
+	overlaysContainmentChecked: false,
+	runSecondSearch: true
 });
 
 export const overlaysFeatureKey = 'overlays';
@@ -123,12 +125,15 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 	switch (action.type) {
 		case OverlaysActionTypes.SET_OVERLAYS_CRITERIA: {
 			const overlaysCriteria = { ...state.overlaysCriteria, ...action.payload };
-
 			const { options } = <any>action;
-			if (options && options.noInitialSearch) {
-				return { ...state, loading: false, displayOverlayHistory: {}, overlaysCriteria };
+			let runSecondSearch = state.runSecondSearch;
+			if (options && options.hasOwnProperty('runSecondSearch')) {
+				runSecondSearch = options.runSecondSearch;
 			}
-			return { ...state, loading: true, displayOverlayHistory: {}, overlaysCriteria };
+			if (options && options.noInitialSearch) {
+				return { ...state, loading: false, displayOverlayHistory: {}, overlaysCriteria, runSecondSearch };
+			}
+			return { ...state, loading: true, displayOverlayHistory: {}, overlaysCriteria, runSecondSearch };
 		}
 		case OverlaysActionTypes.SELECT_OVERLAY:
 
@@ -360,13 +365,13 @@ export const selectDropsAscending = createSelector(selectDrops, (drops: IOverlay
 export const selectLoading = createSelector(overlaysStateSelector, (overlays: IOverlaysState): boolean => overlays.loading);
 export const selectDropMarkup = createSelector(overlaysStateSelector, (overlayState: IOverlaysState): ExtendMap<MarkUpClass, IMarkUpData> => overlayState.dropsMarkUp);
 export const selectHoveredOverlay = createSelector(overlaysStateSelector, (overlays: IOverlaysState): IOverlay => overlays.hoveredOverlay);
+export const selectIsRunSecondSearch = createSelector(overlaysStateSelector, (overlays: IOverlaysState): boolean => overlays?.runSecondSearch);
 export const selectTimelineRange = createSelector(overlaysStateSelector, (overlays: IOverlaysState): ITimelineRange => overlays.timeLineRange);
 export const selectdisplayOverlayHistory = createSelector(overlaysStateSelector, (overlays: IOverlaysState): { [mapId: string]: string[] } => overlays.displayOverlayHistory);
 export const selectStatusMessage = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string => overlays.statusMessage);
 export const selectOverlaysCriteria: MemoizedSelector<any, IOverlaysCriteria> = createSelector(overlaysStateSelector, (overlays) => overlays && overlays.overlaysCriteria);
 export const selectDataInputFilter: MemoizedSelector<any, ICaseDataInputFiltersState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria.dataInputFilters);
 export const selectAdvancedSearchParameters: MemoizedSelector<any, IAdvancedSearchParameter> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria?.advancedSearchParameters);
-export const selectIsRunSecondSearch: MemoizedSelector<any, boolean> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria?.runSecondSearch);
 export const selectProviders: MemoizedSelector<any, IProviderData[]> = createSelector(selectAdvancedSearchParameters, (advancedSearchParameters) => advancedSearchParameters && advancedSearchParameters.providers);
 export const selectRegion: MemoizedSelector<any, CaseRegionState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.region);
 export const selectTime: MemoizedSelector<any, ICaseTimeState> = createSelector(selectOverlaysCriteria, (overlayCriteria) => overlayCriteria && overlayCriteria.time);

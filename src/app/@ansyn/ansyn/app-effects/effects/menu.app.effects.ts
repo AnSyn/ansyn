@@ -12,7 +12,10 @@ import {
 	SetAutoClose, ToggleIsPinnedAction,
 	UnSelectMenuItemAction
 } from '@ansyn/menu';
-import { selectSubMenu } from '../../modules/status-bar/components/tools/reducers/tools.reducer';
+import {
+	selectIsMeasureToolActive,
+	selectSubMenu
+} from '../../modules/status-bar/components/tools/reducers/tools.reducer';
 import { concatMap, map, mergeMap, tap } from 'rxjs/operators';
 import {
 	LoadOverlaysSuccessAction,
@@ -27,6 +30,8 @@ import { InitializeFiltersAction } from '../../modules/filters/actions/filters.a
 import { SetLayersModal } from '../../modules/menu-items/layers-manager/actions/layers.actions';
 import { SelectedModalEnum } from '../../modules/menu-items/layers-manager/reducers/layers-modal';
 import { MatDialog } from '@angular/material/dialog';
+import { UpdateToolsFlags } from '../../modules/status-bar/components/tools/actions/tools.actions';
+import { toolsFlags } from '../../modules/status-bar/components/tools/models/tools.model';
 
 @Injectable()
 export class MenuAppEffects {

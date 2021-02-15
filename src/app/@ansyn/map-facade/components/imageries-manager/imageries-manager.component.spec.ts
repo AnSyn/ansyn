@@ -19,7 +19,8 @@ const mockAnsynContextMenu = MockComponent({
 });
 const mockAnsynImageryContainer = MockComponent({
 	selector: 'ansyn-imagery-container',
-	inputs: ['mapState', 'active', 'showStatus', 'showSpinner', 'notInCase', 'mapsAmount', 'isFavoriteOverlayDisplayed']
+	inputs: ['mapState', 'active', 'showStatus', 'showSpinner', 'notInCase',
+		'mapsAmount', 'isFavoriteOverlayDisplayed', 'isLayersShow', 'isFootprintShow']
 });
 const mockAnnotationContextMenu = MockComponent({
 	selector: 'ansyn-annotations-context-menu', inputs: ['mapId']

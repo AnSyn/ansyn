@@ -12,9 +12,10 @@ import { casesConfig } from '../../../menu-items/cases/services/cases.service';
 import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overlays.reducer';
 import { TranslateService } from '@ngx-translate/core';
-import { OverlaysService } from '../../../overlays/services/overlays.service';
+import { OverlaysConfig, OverlaysService } from '../../../overlays/services/overlays.service';
 import { SearchAction } from '../../actions/status-bar.actions';
 import { selectMarkedSecondSearchSensors } from '../../reducers/status-bar.reducer';
+import { IOverlaysConfig } from '../../../overlays/models/overlays.config';
 
 @Component({
 	selector: 'ansyn-advanced-search',
@@ -54,8 +55,8 @@ import { selectMarkedSecondSearchSensors } from '../../reducers/status-bar.reduc
 		select(selectMarkedSecondSearchSensors),
 		filter((isSecondSearchRun: boolean) => isSecondSearchRun),
 		tap(() => {
-			this.selectedAdvancedSearchParameters.sensors.push(...this.selectedAdvancedSearchParameters.sensorsForSecondSearch);
-			this.selectedAdvancedSearchParameters.sensorsForSecondSearch.forEach(sensor => {
+			this.selectedAdvancedSearchParameters.sensors.push(...this.overlaysConfig.sensorsForSecondSearch);
+			this.overlaysConfig.sensorsForSecondSearch.forEach(sensor => {
 				this.updateSelectedTypesBySensor(sensor);
 			})
 		})
@@ -69,6 +70,7 @@ import { selectMarkedSecondSearchSensors } from '../../reducers/status-bar.reduc
 				protected _parent: SearchPanelComponent,
 				protected translationService: TranslateService,
 				@Inject(casesConfig) public caseConfig: ICasesConfig,
+				@Inject(OverlaysConfig) public overlaysConfig: IOverlaysConfig,
 				protected overlaysService: OverlaysService) {
 		this.sensorTypes = this.getAllSensorsTypes();
 		this.sensorsList = this.overlaysService.getAllSensorsNames();

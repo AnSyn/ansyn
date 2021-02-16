@@ -52,12 +52,12 @@ export class MeasureDistanceVisualizer extends MeasureRulerVisualizer {
 			}
 		}),
 		switchMap(([measureData, isMeasureToolActive]) => {
-			const entities = measureData?.measures.reduce((entities: IVisualizerEntity[], measure: IVisualizerEntity) => {
+			const entities = measureData.measures ? measureData?.measures.reduce((entities: IVisualizerEntity[], measure: IVisualizerEntity) => {
 				const textMeasures = measure.featureJson.properties.measures;
 				entities.push(measure, ...textMeasures);
 				return entities;
-			}, []);
-			return this.setEntities(entities || []);
+			}, []) : [];
+			return this.setEntities(entities);
 		})
 	);
 	constructor(protected store$: Store<any>,

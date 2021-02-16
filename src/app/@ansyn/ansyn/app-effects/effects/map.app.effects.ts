@@ -70,13 +70,13 @@ import {
 } from '../../modules/status-bar/components/tools/actions/tools.actions';
 import {
 	DisplayOverlayAction,
-	DisplayOverlayFailedAction,
+	DisplayOverlayFailedAction, DisplayOverlayFromStoreAction,
 	DisplayOverlaySuccessAction,
 	OverlaysActionTypes,
 	RequestOverlayByIDFromBackendAction,
 	SetMarkUp,
 	SetOverlaysCriteriaAction,
-	SetOverlaysStatusMessageAction
+	SetOverlaysStatusMessageAction, UpdateOverlay
 } from '../../modules/overlays/actions/overlays.actions';
 import { GeoRegisteration, IOverlay } from '../../modules/overlays/models/overlay.model';
 import {
@@ -106,6 +106,7 @@ const FOOTPRINT_INSIDE_MAP_RATIO = 1;
 
 @Injectable()
 export class MapAppEffects {
+	lastOverlayIds: Map<string, string>;
 
 	onDisplayOverlay$: Observable<any> = this.actions$
 		.pipe(
@@ -117,12 +118,18 @@ export class MapAppEffects {
 		);
 
 
-	@Effect()
+	@Effect({dispatch: false})
 	onUpdateOverlay$: Observable<any> = this.actions$
 		.pipe(
-			ofType<DisplayOverlayAction>(OverlaysActionTypes.UPDATE_OVERLAY),
-			withLatestFrom(this.store$.select(mapStateSelector)),
-			mergeMap(this.onDisplayOverlay.bind(this))
+			ofType<UpdateOverlay>(OverlaysActionTypes.UPDATE_OVERLAY),
+			tap(({payload}: UpdateOverlay) => {
+				const mapId = Array.from(this.lastOverlayIds.keys()).find(
+					mapId => this.lastOverlayIds.get(mapId) === payload.id
+				);
+				if (mapId) {
+					this.store$.dispatch(new DisplayOverlayFromStoreAction({id: <string>payload.id, mapId: mapId}))
+				}
+			})
 		);
 
 
@@ -154,6 +161,7 @@ export class MapAppEffects {
 				OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
 				OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW
 			),
+			tap( ({payload}) => this.lastOverlayIds.delete(payload.mapId)),
 			map(({ payload }: DisplayOverlayAction) => new SetIsLoadingAcion({ mapId: payload.mapId, show: false }))
 		);
 
@@ -390,6 +398,7 @@ export class MapAppEffects {
 				@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig,
 				@Inject(ScreenViewConfig) public screenViewConfig: IScreenViewConfig
 	) {
+		this.lastOverlayIds = new Map();
 	}
 
 	changeImageryMap(overlay, communicator): string | null {
@@ -408,6 +417,7 @@ export class MapAppEffects {
 	onDisplayOverlay([[prevAction, { payload }], mapState]: [[DisplayOverlayAction, DisplayOverlayAction], IMapState]) {
 		const { overlay, extent: payloadExtent } = payload;
 		const mapId = payload.mapId || mapState.activeMapId;
+		this.lastOverlayIds.set(mapId, overlay.id);
 		const caseMapState = mapState.entities[payload.mapId || mapState.activeMapId];
 		const mapData = caseMapState.data;
 		const prevOverlay = mapData.overlay;

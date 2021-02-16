@@ -70,7 +70,7 @@ export class SelectCaseAppEffects {
 		if (state.region.type !== 'Feature') {
 			region = feature(state.region, { searchMode: state.region.type });
 		} else {
-			region = feature(state.region.geometry, { ...state.region.properties });
+			region = feature(state.region.geometry, { ...state.region.properties, forceScreenViewSearch: true });
 		}
 
 		if (region.properties.searchMode === CaseGeoFilter.ScreenView) {

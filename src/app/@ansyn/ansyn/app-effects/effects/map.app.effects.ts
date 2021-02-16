@@ -319,11 +319,11 @@ export class MapAppEffects {
 					const { position, overlay }: IMapSettingsData = mapList[activeMapId].data;
 					const { center, zoom } = position.projectedState;
 
-					return [position.extentPolygon, geoFilterStatus, center, properties.center, zoom, properties.zoom, overlay, action.type === StatusBarActionsTypes.SEARCH_ACTION];
+					return [position.extentPolygon, geoFilterStatus, center, properties.center, zoom, properties.zoom, overlay, action.type === StatusBarActionsTypes.SEARCH_ACTION || properties.forceScreenViewSearch];
 				})
 		)),
-		filter(([extentPolygon, geoFilterStatus, newCenter, oldCenter, newZoom, oldZoom, overlay, isFromSeacrch]: [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], number, number, IOverlay, boolean]) => {
-			return geoFilterStatus.type === CaseGeoFilter.ScreenView && !Boolean(overlay) && (isFromSeacrch || (!isEqual(oldCenter, newCenter) || !isEqual(oldZoom, newZoom)));
+		filter(([extentPolygon, geoFilterStatus, newCenter, oldCenter, newZoom, oldZoom, overlay, forceScreenViewSearch]: [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], number, number, IOverlay, boolean]) => {
+			return geoFilterStatus.type === CaseGeoFilter.ScreenView && !Boolean(overlay) && (forceScreenViewSearch || (!isEqual(oldCenter, newCenter) || !isEqual(oldZoom, newZoom)));
 		}),
 		concatMap(([extentPolygon, geoFilterStatus, newCenter, oldCenter, newZoom, oldZoom, overlay, isFromSearch]: [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], number, number, IOverlay, boolean]) => {
 			const actions: Action[] = [];

@@ -52,7 +52,7 @@ export class MeasureDistanceVisualizer extends MeasureRulerVisualizer {
 			}
 		}),
 		switchMap(([measureData, isMeasureToolActive]) => {
-			const entities = measureData.measures ? measureData?.measures.reduce((entities: IVisualizerEntity[], measure: IVisualizerEntity) => {
+			const entities = measureData?.measures ? measureData?.measures.reduce((entities: IVisualizerEntity[], measure: IVisualizerEntity) => {
 				const textMeasures = measure.featureJson.properties.measures;
 				entities.push(measure, ...textMeasures);
 				return entities;

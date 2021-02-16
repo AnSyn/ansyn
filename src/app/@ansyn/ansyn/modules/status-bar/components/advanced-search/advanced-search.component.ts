@@ -12,8 +12,10 @@ import { casesConfig } from '../../../menu-items/cases/services/cases.service';
 import { ICasesConfig } from '../../../menu-items/cases/models/cases-config';
 import { selectAdvancedSearchParameters } from '../../../overlays/reducers/overlays.reducer';
 import { TranslateService } from '@ngx-translate/core';
-import { OverlaysService } from '../../../overlays/services/overlays.service';
+import { OverlaysConfig, OverlaysService } from '../../../overlays/services/overlays.service';
 import { SearchAction } from '../../actions/status-bar.actions';
+import { selectMarkedSecondSearchSensors } from '../../reducers/status-bar.reducer';
+import { IOverlaysConfig } from '../../../overlays/models/overlays.config';
 
 @Component({
 	selector: 'ansyn-advanced-search',
@@ -48,6 +50,17 @@ import { SearchAction } from '../../actions/status-bar.actions';
 		this.selectedProvidersNames = this.selectedAdvancedSearchParameters.providers.map(provider => provider.name);
 	}));
 
+	@AutoSubscription
+	markSecondSearchSensors$ = this.store.pipe(
+		select(selectMarkedSecondSearchSensors),
+		filter((isSecondSearchRun: boolean) => isSecondSearchRun),
+		tap(() => {
+			this.selectedAdvancedSearchParameters.sensors.push(...this.overlaysConfig.sensorsForSecondSearch);
+			this.overlaysConfig.sensorsForSecondSearch.forEach(sensor => {
+				this.updateSelectedTypesBySensor(sensor);
+			})
+		})
+	)
 	get advancedSearchParametredFromConfig() {
 		return this.caseConfig.defaultCase.state.advancedSearchParameters;
 	}
@@ -57,6 +70,7 @@ import { SearchAction } from '../../actions/status-bar.actions';
 				protected _parent: SearchPanelComponent,
 				protected translationService: TranslateService,
 				@Inject(casesConfig) public caseConfig: ICasesConfig,
+				@Inject(OverlaysConfig) public overlaysConfig: IOverlaysConfig,
 				protected overlaysService: OverlaysService) {
 		this.sensorTypes = this.getAllSensorsTypes();
 		this.sensorsList = this.overlaysService.getAllSensorsNames();
@@ -118,8 +132,8 @@ import { SearchAction } from '../../actions/status-bar.actions';
 	updateSelectedTypes(selectedTypesArray: string[]): void {
 		const changedType = this.getUniqueElement(selectedTypesArray, this.selectedAdvancedSearchParameters.types);
 		this.updateSelectedProvidersByType(changedType);
+		this.updateSelectedSensorsByTypes(selectedTypesArray, changedType);
 		this.selectedAdvancedSearchParameters.types = selectedTypesArray;
-		this.updateSelectedSensorsByTypes(selectedTypesArray);
 	}
 
 	updateSelectedProviders(selectedProvidersArray: string[]): void {
@@ -173,21 +187,23 @@ import { SearchAction } from '../../actions/status-bar.actions';
 		})
 	}
 
-	updateSelectedSensorsByTypes(selectedTypesArray: string[]): void {
-		this.selectedAdvancedSearchParameters.sensors = [];
-		let sensorsToActivate: any[] = [];
+	updateSelectedSensorsByTypes(selectedTypesArray: string[], changedType: string): void {
+		let allTypeSensors: any[] = [];
 		this.overlaysService.getActiveProviders()
 			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
 				if (sensorNamesByGroup) {
-					const typesNames = Object.keys(sensorNamesByGroup);
-					typesNames.filter(type => selectedTypesArray.includes(type)).map(type => {
-							sensorsToActivate = sensorsToActivate.concat(sensorNamesByGroup[type]);
-					});
+					allTypeSensors = sensorNamesByGroup[changedType];
 				}
 		});
 
-		const sensorsToAdd = sensorsToActivate.filter(sensor => !this.selectedAdvancedSearchParameters.sensors.includes(sensor));
-		this.selectedAdvancedSearchParameters.sensors = this.selectedAdvancedSearchParameters.sensors.concat(sensorsToAdd);
+		if (Boolean(selectedTypesArray.includes(changedType))) {
+			const sensorToAdd = allTypeSensors.filter(sensor => !this.selectedAdvancedSearchParameters.sensors.includes(sensor));
+			this.selectedAdvancedSearchParameters.sensors = this.selectedAdvancedSearchParameters.sensors.concat(sensorToAdd);
+		} else {
+			allTypeSensors.filter(sensor => this.selectedAdvancedSearchParameters.sensors.includes(sensor)).map(sensorsToUnactivate => {
+				this.selectedAdvancedSearchParameters.sensors = this.selectedAdvancedSearchParameters.sensors.filter(selectedSensor => selectedSensor !== sensorsToUnactivate);
+			})
+		}
 	}
 
 	updateSelectedProvidersByType(changedType: string): void {

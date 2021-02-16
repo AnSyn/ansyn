@@ -14,7 +14,8 @@ export const StatusBarActionsTypes = {
 	TOGGLE_ADVANCED_SEARCH: 'TOGGLE_ADVANCED_SEARCH',
 	TOGGLE_SIMPLE_SEARCH: 'TOGGLE_SIMPLE_SEARCH',
 	OPENED_FROM_OUTSIDE: 'OPENED_FROM_OUTSIDE',
-	SEARCH_ACTION: 'SEARCH_ACTION'
+	SEARCH_ACTION: 'SEARCH_ACTION',
+	MARK_SECOND_SEARCH: 'MARK_SECOND_SEARCH' 
 };
 
 export class CopySnapshotShareLinkAction implements Action, ILogMessage {
@@ -57,6 +58,13 @@ export class OpenAdvancedSearchFromOutsideAction implements Action {
 	}
 }
 
+export class MarkSecondSearchSensorsAction implements Action {
+	type: string = StatusBarActionsTypes.MARK_SECOND_SEARCH;
+
+	constructor(public payload: boolean) {
+	}
+}
+
 export class ExpandAction implements Action {
 	type: string = StatusBarActionsTypes.EXPAND;
 
@@ -94,3 +102,4 @@ export type StatusBarActions =
 	CopySnapshotShareLinkAction
 	| UpdateGeoFilterStatus
 	| ExpandAction
+	| MarkSecondSearchSensorsAction

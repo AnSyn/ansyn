@@ -6,7 +6,7 @@ import {
 	OnDestroy,
 	OnInit,
 	AfterViewInit,
-	ViewChild
+	ViewChild, EventEmitter
 } from '@angular/core';
 import {
 	IEntryComponent,
@@ -16,8 +16,8 @@ import {
 } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { combineLatest, Observable} from 'rxjs';
-import { tap, map, filter, withLatestFrom } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
+import { tap, map, filter, withLatestFrom, switchMap } from 'rxjs/operators';
 import { GeoRegisteration, IOverlay } from '../models/overlay.model';
 import {
 	ToggleDraggedModeAction,
@@ -70,6 +70,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	isActiveMap: boolean;
 	favoriteOverlays: IOverlay[];
 	overlaysTranslationData: any;
+	isAfterViewInit: EventEmitter<boolean> = new EventEmitter<boolean>();
 	onClickOutSide$: any;
 	isFavorite: boolean;
 	favoritesButtonText: string;
@@ -169,6 +170,14 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		);
 
 	@AutoSubscription
+	onClickOutSide = () => this.isAfterViewInit.pipe(switchMap(() => this.clickOutsideService.onClickOutside({monitor: this.closeElementAnnotation.nativeElement}).pipe(
+			filter(Boolean),
+			tap( () => {
+				this.isManualProcessingOpen = false;
+			})
+		)));
+
+	@AutoSubscription
 	overlay$ = () => this.store$.pipe(
 		select(selectOverlayByMapId(this.mapId)),
 		withLatestFrom( this.store$.pipe(select(selectOverlaysImageProcess)), (overlay, overlaysImageProcess) => [overlay, overlaysImageProcess[overlay?.id]]),
@@ -188,7 +197,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		if (this.isDragged) {
 			this.toggleDragged();
 		}
-		this.onClickOutSide$.unsubscribe();
 	}
 
 	hasOverlay() {
@@ -268,12 +276,8 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	ngAfterViewInit(): void {
-		this.onClickOutSide$ = this.clickOutsideService.onClickOutside({monitor: this.closeElementAnnotation.nativeElement}).pipe(
-			filter(Boolean),
-			tap( () => {
-				this.isManualProcessingOpen = false;
-			})
-		).subscribe();
+		this.isAfterViewInit.next(true);
 	}
+
 
 }

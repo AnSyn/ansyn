@@ -71,7 +71,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	favoriteOverlays: IOverlay[];
 	overlaysTranslationData: any;
 	isAfterViewInit: EventEmitter<boolean> = new EventEmitter<boolean>();
-	onClickOutSide$: any;
 	isFavorite: boolean;
 	favoritesButtonText: string;
 	isPreset: boolean;

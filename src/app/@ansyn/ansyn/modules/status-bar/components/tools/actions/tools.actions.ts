@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { AnnotationMode, IUpdateFeatureEvent } from '@ansyn/ol';
-import { IMeasureDataOptions, SubMenuEnum, toolsFlags } from '../models/tools.model';
+import { IMeasureData, IMeasureDataOptions, SubMenuEnum, toolsFlags } from '../models/tools.model';
 import { type } from '../../../../core/utils/type';
 import { ILogMessage } from '@ansyn/map-facade';
 
@@ -20,7 +20,6 @@ export const ToolsActionsTypes = {
 	ANNOTATION_SET_PROPERTIES: type('ANNOTATION_SET_PROPERTIES'),
 	SET_SUB_MENU: type('SET_SUB_MENU'),
 	MEASURES: {
-		SET_MEASURE_TOOL_STATE: type('[tools] SET_MEASURE_TOOL_STATE'),
 		CREATE_MEASURE_DATA: type('[tools] CREATE_MEASURE_DATA'),
 		REMOVE_MEASURE_DATA: type('[tools] REMOVE_MEASURE_DATA'),
 		ADD_MEASURE: type('[tools] ADD_MEASURE'),
@@ -134,17 +133,6 @@ export class SetMapGeoEnabledModeToolsActionStore implements Action {
 	type = ToolsActionsTypes.MAP_GEO_ENABLED_MODE_CHANGED;
 
 	constructor(public payload: boolean) {
-	}
-}
-
-export class SetMeasureDistanceToolState implements Action, ILogMessage {
-	type = ToolsActionsTypes.MEASURES.SET_MEASURE_TOOL_STATE;
-
-	constructor(public payload: boolean) {
-	}
-
-	logMessage() {
-		return this.payload && `Opening measure distance tool`
 	}
 }
 
@@ -263,7 +251,6 @@ export type ToolsActions =
 	| GoToAction
 	| SetMapGeoEnabledModeToolsActionStore
 	| SetAnnotationMode
-	| SetMeasureDistanceToolState
 	| SetSubMenu
 	| ClearActiveInteractionsAction
 	| SetMapSearchBox;

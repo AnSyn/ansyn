@@ -14,11 +14,12 @@ import {
 	isDigitKey,
 	isEnterKey, isEscapeKey
 } from '../../../core/utils/keyboardKey';
-import { LogManualSearchTime, SetOverlaysCriteriaAction } from '../../../overlays/actions/overlays.actions';
+import { LogManualSearchTime } from '../../../overlays/actions/overlays.actions';
 import { SetToastMessageAction } from '@ansyn/map-facade';
 import { toastMessages } from '../../../core/models/toast-messages';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { IStatusBarConfig } from '../../models/statusBar-config.model';
+import { SearchAction } from '../../actions/status-bar.actions';
 
 const DATE_FORMAT = 'DD/MM/YYYY HH:mm';
 
@@ -193,7 +194,7 @@ export class TimePickerContainerComponent implements OnInit, OnDestroy {
 				this.timePickerInputTo.nativeElement.textContent = fromText;
 			}
 
-			this.store$.dispatch(new SetOverlaysCriteriaAction({ time: { from, to } }));
+			this.store$.dispatch(new SearchAction({ time: { from, to } }));
 
 			return true;
 		}

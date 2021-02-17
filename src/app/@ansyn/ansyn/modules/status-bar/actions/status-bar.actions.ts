@@ -2,6 +2,7 @@ import { Action } from '@ngrx/store';
 import { IGeoFilterStatus } from '../reducers/status-bar.reducer';
 import { ILogMessage } from '../../core/models/logger.model';
 import { IAdvancedSearchParameter } from '../models/statusBar-config.model';
+import { IOverlaysCriteria } from '../../overlays/models/overlay.model';
 
 export const StatusBarActionsTypes = {
 	SHOW_LINK_COPY_TOAST: 'SHOW_LINK_COPY_TOAST',
@@ -13,7 +14,8 @@ export const StatusBarActionsTypes = {
 	TOGGLE_ADVANCED_SEARCH: 'TOGGLE_ADVANCED_SEARCH',
 	TOGGLE_SIMPLE_SEARCH: 'TOGGLE_SIMPLE_SEARCH',
 	OPENED_FROM_OUTSIDE: 'OPENED_FROM_OUTSIDE',
-	SEARCH_ACTION: 'SEARCH_ACTION'
+	SEARCH_ACTION: 'SEARCH_ACTION',
+	MARK_SECOND_SEARCH: 'MARK_SECOND_SEARCH' 
 };
 
 export class CopySnapshotShareLinkAction implements Action, ILogMessage {
@@ -56,6 +58,13 @@ export class OpenAdvancedSearchFromOutsideAction implements Action {
 	}
 }
 
+export class MarkSecondSearchSensorsAction implements Action {
+	type: string = StatusBarActionsTypes.MARK_SECOND_SEARCH;
+
+	constructor(public payload: boolean) {
+	}
+}
+
 export class ExpandAction implements Action {
 	type: string = StatusBarActionsTypes.EXPAND;
 
@@ -84,7 +93,7 @@ export class GoAdjacentOverlay implements Action {
 
 export class SearchAction implements Action {
 	readonly type: string = StatusBarActionsTypes.SEARCH_ACTION;
-	constructor(public payload: IAdvancedSearchParameter) {
+	constructor(public payload: IOverlaysCriteria) {
 	}
 }
 
@@ -93,3 +102,4 @@ export type StatusBarActions =
 	CopySnapshotShareLinkAction
 	| UpdateGeoFilterStatus
 	| ExpandAction
+	| MarkSecondSearchSensorsAction

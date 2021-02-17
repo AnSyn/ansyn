@@ -170,12 +170,13 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		);
 
 	@AutoSubscription
-	onClickOutSide = () => this.isAfterViewInit.pipe(switchMap(() => this.clickOutsideService.onClickOutside({monitor: this.closeElementAnnotation.nativeElement}).pipe(
+	onClickOutSide = () => this.isAfterViewInit.pipe(switchMap(() => this.clickOutsideService.onClickOutside({monitor: this.closeElementAnnotation.nativeElement})
+	),
 			filter(Boolean),
 			tap( () => {
 				this.isManualProcessingOpen = false;
 			})
-		)));
+		);
 
 	@AutoSubscription
 	overlay$ = () => this.store$.pipe(

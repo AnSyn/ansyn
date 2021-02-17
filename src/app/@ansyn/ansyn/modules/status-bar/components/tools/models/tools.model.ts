@@ -16,11 +16,10 @@ export interface IMeasureDataOptions {
 	isLayerShowed: boolean;
 	isToolActive: boolean;
 	isRemoveMeasureModeActive: boolean;
-	forceDisableTranslate?: boolean;
 }
 
 export interface IMeasureData extends IMeasureDataOptions{
-	meausres: IVisualizerEntity[];
+	measures: IVisualizerEntity[];
 }
 
 export function createNewMeasureData(): IMeasureData {
@@ -28,6 +27,6 @@ export function createNewMeasureData(): IMeasureData {
 		isLayerShowed: true,
 		isToolActive: true,
 		isRemoveMeasureModeActive: false,
-		meausres: []
+		measures: []
 	}
 }

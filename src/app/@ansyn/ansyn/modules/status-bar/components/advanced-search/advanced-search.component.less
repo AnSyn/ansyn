@@ -124,6 +124,22 @@
 		width: 50px;
 	}
 
+	.message {
+		grid-row: 4;
+		grid-column: 1 / span 4;
+		margin-top: 0.4em;
+		padding: 0 5px;
+		color: red;
+		background-color: white;
+		font-weight: bold;
+		line-height: 1.5;
+		transition: font-size 0.3s;
+
+		&.hide {
+			font-size: 0;
+		}
+	}
+
 	.slider {
 		background-color: #3e3e3e;
 		border-radius: 10px;

@@ -266,20 +266,6 @@ export class AnsynAnnotationsVisualizer extends BaseImageryPlugin {
 		})
 	);
 
-	@AutoSubscription
-	onStartLabelOrAnnotationEditDisableMeasureTranslate$: () => Observable<IEditAnnotationMode | ILabelTranslateMode> = () => merge(
-		this.annotationsVisualizer.events.onAnnotationEditStart,
-		this.annotationsVisualizer.events.onLabelTranslateStart).pipe(
-		tap((event) => {
-			this.store$.dispatch(new UpdateMeasureDataOptionsAction({
-				mapId: this.mapId,
-				options: {
-					forceDisableTranslate: event !== undefined
-				}
-			}))
-		})
-	);
-
 	onAnnotationsChange([entities, annotationFlag, selectedLayersIds, isActiveMap, activeAnnotationLayer]: [{ [key: string]: ILayer }, boolean, string[], boolean, string]): Observable<any> {
 		const displayedIds = uniq(
 			isActiveMap && annotationFlag ? [...selectedLayersIds, activeAnnotationLayer] : [...selectedLayersIds]

@@ -11,7 +11,7 @@ describe('CasesContainerComponent', () => {
 	let fixture: ComponentFixture<CasesContainerComponent>;
 	const mockCasesTable = MockComponent({
 		selector: 'ansyn-cases-table',
-		inputs: ['cases'],
+		inputs: ['cases', 'menu'],
 		outputs: ['onInfintyScroll', 'onHoverCaseRow']
 	});
 	beforeEach(waitForAsync(() => {

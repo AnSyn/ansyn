@@ -210,6 +210,7 @@ export class OverlaysEffects {
 				if (isUserFirstEntrance) {
 					actions.push(new SetToastMessageAction({toastText: 'there are more overlays exist, ', buttonToDisplay: 'click here to expand', functionToExcute: this.toggleAdvancedSearch.bind(this)}))
 				}
+				
 				return actions;
 			}),
 			catchError((err) => from([

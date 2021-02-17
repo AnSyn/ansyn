@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 
 import { AnsynFooterComponent } from './ansyn-footer.component';
@@ -20,11 +20,18 @@ describe('AnsynFooterComponent', () => {
 	});
 
 	beforeEach(waitForAsync(() => {
+	const mockTimePickerContainer = MockComponent({
+		selector: 'ansyn-time-picker-container',
+		inputs: ['openTop']
+	});
+
+	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [
 				AnsynFooterComponent,
 				mockOverlays,
-				mockOverlayNavigationBar
+				mockOverlayNavigationBar,
+				mockTimePickerContainer
 			],
 			imports: [
 				StoreModule.forRoot({ [mapFeatureKey]: MapReducer }),

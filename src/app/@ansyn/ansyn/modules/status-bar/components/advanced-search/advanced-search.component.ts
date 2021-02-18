@@ -28,7 +28,7 @@ import { IOverlaysConfig } from '../../../overlays/models/overlays.config';
 	sliderOptions: Options = {
 		floor: this.advancedSearchParametredFromConfig.resolution.lowValue,
 		ceil: this.advancedSearchParametredFromConfig.resolution.highValue,
-		translate: (value: number): string => this.translationService.instant(' cm ') + value
+		translate: (value: number): string => `${this.translationService.instant('cm')} ${value}`
 	};
 	providersNamesList: string[];
 	sensorTypes: string[];

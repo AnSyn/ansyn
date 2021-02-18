@@ -347,9 +347,7 @@
             "styles": [
               "src/app/@ansyn/ansyn/assets/styles/styles.css"
             ],
-            "scripts": [
-
-            ]
+            "scripts": []
           },
           "configurations": {
             "dev": {
@@ -461,7 +459,7 @@
             "production": {
               "project": "src/app/@ansyn/ansyn/ng-package.json",
               "tsConfig": "src/app/@ansyn/ansyn/tsconfig.lib.prod.json"
-}
+            }
           }
         }
       }

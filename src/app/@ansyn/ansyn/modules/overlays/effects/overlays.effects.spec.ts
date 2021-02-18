@@ -22,7 +22,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { BaseOverlaySourceProvider, IFetchParams } from '../models/base-overlay-source-provider.model';
 import { LoggerService } from '../../core/services/logger.service';
 import { OverlaySourceProvider } from '../models/overlays-source-providers';
-import { imageryStatusFeatureKey, imageryStatusInitialState, selectWasWelcomeNotificationShown } from '@ansyn/map-facade';
+import { imageryStatusFeatureKey, imageryStatusInitialState, selectWasWelcomeNotificationShown, SetToastMessageAction } from '@ansyn/map-facade';
 import { IOverlay } from '../models/overlay.model';
 import { MissingTranslationHandler, TranslateModule, USE_DEFAULT_LANG } from '@ngx-translate/core';
 import { AreaToCredentialsService } from "../../core/services/credentials/area-to-credentials.service";
@@ -137,8 +137,9 @@ describe('Overlays Effects ', () => {
 	it('it should load all the overlays', () => {
 		overlaysService.search.and.returnValue(of({ data: overlays, limited: 0, errors: [] }));
 		actions = hot('--a--', { a: new LoadOverlaysAction({dataInputFilters: {fullyChecked: true, filters: []}}) });
-		const expectedResults = cold('--(a)--', {
-			a: new LoadOverlaysSuccessAction(overlays)
+		const expectedResults = cold('--(ab)--', {
+			a: new LoadOverlaysSuccessAction(overlays),
+			b: new SetToastMessageAction({toastText: 'there are more overlays exist, ', buttonToDisplay: 'click here to expand', functionToExcute: jasmine.any(Function) }) 
 		});
 		expect(overlaysEffects.loadOverlays$).toBeObservable(expectedResults);
 	});

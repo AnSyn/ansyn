@@ -58,6 +58,7 @@ export {
 	StatusBarActions,
 	GoAdjacentOverlay,
 	ExpandAction,
+	MarkSecondSearchSensorsAction
 } from './modules/status-bar/actions/status-bar.actions';
 export { StatusBarConfig } from './modules/status-bar/models/statusBar.config';
 export { StatusBarModule } from './modules/status-bar/status-bar.module';
@@ -270,7 +271,7 @@ export { IDeltaTime } from './modules/core/models/time.model';
 
 export { PhotoAngle, RegionContainment } from './modules/overlays/models/overlay.model';
 export { IOverlaysCriteriaOptions } from './modules/overlays/models/overlay.model';
-export { GeoRegisteration } from './modules/overlays/models/overlay.model';
+export { GeoRegisteration, GeoRegisterationOptions } from './modules/overlays/models/overlay.model';
 export { IOverlayError, IOverlaysFetchData, IOverlayDrop, IOverlaySpecialObject } from './modules/overlays/models/overlay.model';
 export {
 	IOverlay, IDilutedOverlay, Overlay, IOverlaysCriteria, IDilutedOverlaysHash, IOverlaysHash
@@ -349,7 +350,7 @@ export {
 	overlayOverviewComponentConstants
 }from './modules/overlays/components/overlay-overview/overlay-overview.component.const';
 export { OverlaysModule } from './modules/overlays/overlays.module';
-export { OverlayReducer, overlaysFeatureKey, overlaysInitialState } from './modules/overlays/reducers/overlays.reducer';
+export { OverlayReducer, overlaysFeatureKey, overlaysInitialState, selectIsRunSecondSearch } from './modules/overlays/reducers/overlays.reducer';
 
 // plugins
 

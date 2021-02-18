@@ -1,19 +1,33 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
-import { IEntryComponent, selectActiveMapId, selectHideLayersOnMap, selectOverlayByMapId, } from '@ansyn/map-facade';
+import {
+	Component,
+	ElementRef,
+	HostBinding,
+	Input,
+	OnDestroy,
+	OnInit,
+	AfterViewInit,
+	ViewChild, EventEmitter
+} from '@angular/core';
+import {
+	IEntryComponent,
+	selectActiveMapId,
+	selectHideLayersOnMap,
+	selectOverlayByMapId,
+} from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { combineLatest, Observable } from 'rxjs';
-import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
+import { tap, map, filter, withLatestFrom, switchMap } from 'rxjs/operators';
 import { GeoRegisteration, IOverlay } from '../models/overlay.model';
 import {
-	SetAutoImageProcessing,
 	ToggleDraggedModeAction,
-	ToggleFavoriteAction
+	ToggleFavoriteAction,
+	SetAutoImageProcessing
 } from './actions/overlay-status.actions';
 import {
 	selectFavoriteOverlays,
-	selectOverlaysImageProcess,
-	selectTranslationData
+	selectTranslationData,
+	selectOverlaysImageProcess
 } from './reducers/overlay-status.reducer';
 import { AnnotationMode } from '@ansyn/ol';
 import {
@@ -23,11 +37,11 @@ import {
 } from '../../menu-items/cases/models/case.model';
 import { Actions, ofType } from '@ngrx/effects';
 import {
-	ClearActiveInteractionsAction,
 	SetAnnotationMode,
-	ToolsActionsTypes
+	ToolsActionsTypes,
+	ClearActiveInteractionsAction
 } from '../../status-bar/components/tools/actions/tools.actions';
-import { selectLayers, selectSelectedLayersIds } from '../../menu-items/layers-manager/reducers/layers.reducer';
+import { selectSelectedLayersIds, selectLayers } from '../../menu-items/layers-manager/reducers/layers.reducer';
 import { ClickOutsideService } from '../../core/click-outside/click-outside.service';
 import { OverlayStatusService } from './services/overlay-status.service';
 import { ComponentVisibilityService } from '../../../app-providers/component-visibility.service';
@@ -42,7 +56,7 @@ import { ComponentVisibilityItems } from '../../../app-providers/component-mode'
 	init: 'ngOnInit',
 	destroy: 'ngOnDestroy'
 })
-export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent {
+export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent, AfterViewInit {
 	// for component
 	readonly isAnnotationsShow: boolean;
 	readonly isFavoritesShow: boolean;
@@ -55,6 +69,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	isActiveMap: boolean;
 	favoriteOverlays: IOverlay[];
 	overlaysTranslationData: any;
+	isAfterViewInit: EventEmitter<boolean> = new EventEmitter<boolean>();
 	isFavorite: boolean;
 	favoritesButtonText: string;
 	isPreset: boolean;
@@ -63,8 +78,9 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	draggedButtonText: string;
 	isLayersVisible: boolean;
 	isManualProcessChanged: boolean;
-
 	selectOverlaysImageProcess$ = this.store$.pipe(select(selectOverlaysImageProcess), filter(this.hasOverlay.bind(this)));
+	@ViewChild('closeElementAnnotation', {static: false}) closeElementAnnotation: ElementRef;
+
 
 	@AutoSubscription
 	favoriteOverlays$: Observable<any[]> = this.store$.select(selectFavoriteOverlays).pipe(
@@ -83,13 +99,6 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		})
 	);
 
-	@AutoSubscription
-	onClickOutSide$ = this.clickOutsideService.onClickOutside({monitor: this.element.nativeElement}).pipe(
-		filter(Boolean),
-		tap( () => {
-			this.isManualProcessingOpen = false;
-		})
-	);
 
 	@AutoSubscription
 	annoatationModeChange$: any = this.actions$
@@ -156,6 +165,15 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 				if (this.isDragged) {
 					this.toggleDragged();
 				}
+			})
+		);
+
+	@AutoSubscription
+	onClickOutSide = () => this.isAfterViewInit.pipe(switchMap(() => this.clickOutsideService.onClickOutside({monitor: this.closeElementAnnotation.nativeElement})
+	),
+			filter(Boolean),
+			tap( () => {
+				this.isManualProcessingOpen = false;
 			})
 		);
 
@@ -256,4 +274,10 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	private dispatchAutoImageProcess(enable = false) {
 		this.store$.dispatch(new SetAutoImageProcessing({overlayId: this.overlay.id, isAuto: enable}));
 	}
+
+	ngAfterViewInit(): void {
+		this.isAfterViewInit.next(true);
+	}
+
+
 }

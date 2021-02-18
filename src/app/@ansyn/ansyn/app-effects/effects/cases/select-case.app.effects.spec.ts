@@ -89,7 +89,8 @@ describe('SelectCaseAppEffects', () => {
 					geometry: {},
 					type: "Feature",
 					properties: {
-						searchMode: "screenView"
+						searchMode: "screenView",
+						forceScreenViewSearch: true
 					}
 				},
 				advancedSearchParameters: IAdvancedSearchParameter = {

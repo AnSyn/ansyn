@@ -7,6 +7,10 @@ export const casesComparator = (val1, val2, key) => {
 	if (key === 'extentPolygon') {
 		return true;
 	}
+	// ignore the first time we enter to case
+	if (key === 'forceScreenViewSearch') {
+		return true;
+	}
 	// When a key is missing in an object, and in the other object is exists with value === undefined,
 	// lodash isEqual makes them not equal, but we want them equal
 	if (typeof val1 === 'object' && !Array.isArray(val1) && val1 !== null && val2 !== null) {

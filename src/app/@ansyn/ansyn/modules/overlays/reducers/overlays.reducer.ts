@@ -133,7 +133,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				runSecondSearch = options.runSecondSearch;
 			}
 			if (options && options.noInitialSearch) {
-				return { ...state, loading: false, displayOverlayHistory: {}, overlaysCriteria, runSecondSearch };
+				return overlaysAdapter.removeAll({ ...state, loading: false, displayOverlayHistory: {}, overlaysCriteria, runSecondSearch });
 			}
 			return { ...state, loading: true, displayOverlayHistory: {}, overlaysCriteria, runSecondSearch };
 		}

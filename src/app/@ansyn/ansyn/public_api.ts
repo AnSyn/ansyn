@@ -350,7 +350,7 @@ export {
 	overlayOverviewComponentConstants
 }from './modules/overlays/components/overlay-overview/overlay-overview.component.const';
 export { OverlaysModule } from './modules/overlays/overlays.module';
-export { OverlayReducer, overlaysFeatureKey, overlaysInitialState,selectIsRunSecondSearch } from './modules/overlays/reducers/overlays.reducer';
+export { OverlayReducer, overlaysFeatureKey, overlaysInitialState, selectIsRunSecondSearch } from './modules/overlays/reducers/overlays.reducer';
 
 // plugins
 

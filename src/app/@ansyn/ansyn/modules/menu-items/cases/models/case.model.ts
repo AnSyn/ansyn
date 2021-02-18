@@ -1,9 +1,9 @@
 import { IDilutedOverlay, IDilutedOverlaysHash, IOverlay, IOverlaysHash } from '../../../overlays/models/overlay.model';
-import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
+import { Feature, MultiPolygon, Point, Polygon, Position } from 'geojson';
 import { LayoutKey } from '@ansyn/map-facade';
 import { FilterType } from '../../../filters/models/filter-type';
 import { IMapSettings, IMapSettingsData } from '@ansyn/imagery';
-import { IAdvancedSearchParameter, IProviderData } from '../../../status-bar/models/statusBar-config.model';
+import { IAdvancedSearchParameter } from '../../../status-bar/models/statusBar-config.model';
 import { IMeasureData } from '../../../status-bar/components/tools/models/tools.model';
 
 export interface ICasePreview {

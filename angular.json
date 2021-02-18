@@ -59,6 +59,7 @@
               "canvg",
               "shpjs",
               "pbf",
+              "@auth0",
               "@auth0/angular-jwt"
             ]
           },

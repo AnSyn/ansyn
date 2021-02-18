@@ -1,19 +1,19 @@
 import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { CasesTableComponent } from './cases-table.component';
+import { EntitiesTableComponent } from './entities-table.component';
 import { Store, StoreModule } from '@ngrx/store';
-import { casesFeatureKey, CasesReducer, ICasesState } from '../../reducers/cases.reducer';
-import { CasesType } from '../../models/cases-config';
+import { casesFeatureKey, CasesReducer, ICasesState } from '../../../menu-items/cases/reducers/cases.reducer';
+import { CasesType } from '../../../menu-items/cases/models/cases-config';
 import { TranslateModule } from '@ngx-translate/core';
-import { LoadCaseAction } from '../../actions/cases.actions';
+import { LoadCaseAction } from '../../../menu-items/cases/actions/cases.actions';
 
 describe('CasesTableComponent', () => {
-	let component: CasesTableComponent;
-	let fixture: ComponentFixture<CasesTableComponent>;
+	let component: EntitiesTableComponent;
+	let fixture: ComponentFixture<EntitiesTableComponent>;
 	let store: Store<ICasesState>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [CasesTableComponent],
+			declarations: [EntitiesTableComponent],
 			imports: [
 				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
 				TranslateModule.forRoot()
@@ -25,9 +25,9 @@ describe('CasesTableComponent', () => {
 
 	beforeEach(inject([Store], (_store: Store<ICasesState>) => {
 		spyOn(_store, 'dispatch');
-		fixture = TestBed.createComponent(CasesTableComponent);
+		fixture = TestBed.createComponent(EntitiesTableComponent);
 		component = fixture.componentInstance;
-		component.cases = {
+		component.entities = {
 			type: CasesType.MyCases,
 			entities: {},
 			ids: []
@@ -44,7 +44,7 @@ describe('CasesTableComponent', () => {
 		component.tbodyElement = <any>{
 			nativeElement: { scrollTop: 100 }
 		};
-		component.onCasesAdded();
+		component.onEntityAdded();
 		expect(component.tbodyElement.nativeElement.scrollTop).toEqual(0);
 	});
 
@@ -54,7 +54,7 @@ describe('CasesTableComponent', () => {
 				add: () => null
 			})
 		};
-		component.onMouseEnterCaseRow(caseRow, 'id');
+		component.onMouseEnterRow(caseRow, 'id');
 		expect(caseRow.classList.add).toHaveBeenCalledWith('mouse-enter');
 	});
 
@@ -64,7 +64,7 @@ describe('CasesTableComponent', () => {
 				remove: () => null
 			})
 		};
-		component.onMouseLeaveCaseRow(caseRow);
+		component.onMouseLeaveRow(caseRow);
 		expect(caseRow.classList.remove).toHaveBeenCalledWith('mouse-enter');
 	});
 
@@ -75,7 +75,7 @@ describe('CasesTableComponent', () => {
 				remove: () => null
 			})
 		};
-		component.caseMenuClick($event, caseRow);
+		component.menuClick($event, caseRow);
 		expect($event.stopPropagation).toHaveBeenCalled();
 		expect(caseRow.classList.remove).toHaveBeenCalledWith('mouse-enter');
 	});

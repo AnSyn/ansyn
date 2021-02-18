@@ -4,7 +4,7 @@
 :host {
 	height: -webkit-fill-available;
 
-	div.cases-table {
+	div.entities-table {
 		display: flex;
 		flex: 1;
 		flex-direction: column;
@@ -13,14 +13,14 @@
 		font-size: 14px;
 		box-sizing: border-box;
 
-		div.cases-table-head {
+		div.entities-table-head {
 			display: flex;
 
-			div.cases-table-head-row {
+			div.entities-table-head-row {
 				padding: 0 15px;
 				flex: 1;
 
-				div.cases-table-head-row-data {
+				div.entities-table-head-row-data {
 					display: flex;
 					align-items: center;
 					flex: 1;
@@ -39,14 +39,14 @@
 			}
 		}
 
-		div.cases-table-body {
+		div.entities-table-body {
 			display: flex;
 			flex-direction: column;
 			flex: 1;
 			margin-bottom: 65px;
 			direction: ltr;
 
-			div.cases-table-body-row {
+			div.entities-table-body-row {
 				transition: background .3s, color .3s;
 				margin: 0 5px;
 				border-top: 1px solid #EBF8FA;
@@ -60,7 +60,7 @@
 					background-color: @background-color-7;
 					color: white;
 
-					div.cases-table-body-row-data div.case-menu-container div.case-menu {
+					div.entities-table-body-row-data div.entity-menu-container div.entity-menu {
 						transform: translateX(7px);
 						opacity: 1;
 						visibility: visible;
@@ -78,7 +78,7 @@
 					background: #EBF8FA;
 				}
 
-				div.cases-table-body-row-data {
+				div.entities-table-body-row-data {
 					margin: 10px 0;
 					display: flex;
 					align-items: center;
@@ -87,29 +87,29 @@
 					position: relative;
 					direction: rtl;
 
-					div.cases-table-body-col {
+					div.entities-table-body-col {
 						flex: 1;
 						margin: 0 5px;
 					}
 
-					div.cases-table-case-name-col {
+					div.entities-table-entity-name-col {
 						flex: 1;
 						overflow: hidden;
 						text-overflow: ellipsis;
 						padding: 0 3px;
 					}
 
-					div.case-menu-container {
+					div.entity-menu-container {
 						flex: 1;
 						direction: ltr;
 
-						div.case-menu {
+						div.entity-menu {
 							display: flex;
 							visibility: hidden;
 							transition: visibility .3s, transform .3s, opacity .3s;
 							width: fit-content;
 							opacity: 0;
-							z-index: @z-index-case-menu;
+							z-index: @z-index-entity-menu;
 							border: 0.5px solid #404040;
 							box-sizing: border-box;
 							box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24), 0 0 2px rgba(0, 0, 0, 0.12);
@@ -124,7 +124,7 @@
 		}
 	}
 
-	p.no-cases {
+	p.no-entities {
 		flex: 1;
 		display: flex;
 		justify-content: center;

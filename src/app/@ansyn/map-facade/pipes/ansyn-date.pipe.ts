@@ -1,10 +1,13 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, LOCALE_ID, Inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 @Pipe({
 	name: 'ansynDate'
 })
 export class AnsynDatePipe extends DatePipe implements PipeTransform {
+	constructor() {
+		super('en-US')
+	}
 	transform(value: any, args?: any): any {
 		return super.transform(value, 'dd/MM/yyyy HH:mm:ss');
 	}

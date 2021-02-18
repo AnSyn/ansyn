@@ -17,13 +17,17 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CacheInterceptorsService } from './services/http-request-cache/cache-interceptors.service';
 import { CacheRequestService } from './services/http-request-cache/cache-request.service';
 import { CredentialsService } from './services/credentials/credentials.service';
+import { EntitiesTableComponent } from './components/entities-table/entities-table.component';
+import { MapFacadeModule } from '@ansyn/map-facade';
+import { TableRowPipe } from './pipe/table-row.pipe';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		AnsynFormsModule,
 		TranslateModule,
-		FormsModule
+		FormsModule,
+		MapFacadeModule
 	],
 	providers: [
 		GenericTypeResolverService,
@@ -40,13 +44,16 @@ import { CredentialsService } from './services/credentials/credentials.service';
 		AnsynFormsModule,
 		AnsynModalComponent,
 		ContextMenuComponent,
-		CredentialsComponent
+		CredentialsComponent,
+		EntitiesTableComponent
 	],
 	declarations: [
 		AnsynModalComponent,
 		ContextMenuComponent,
 		AngleFilterComponent,
-		CredentialsComponent
+		CredentialsComponent,
+		EntitiesTableComponent,
+		TableRowPipe
 	]
 })
 

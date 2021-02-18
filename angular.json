@@ -58,7 +58,8 @@
               "jspdf",
               "canvg",
               "shpjs",
-              "pbf"
+              "pbf",
+              "@auth0"
             ]
           },
           "configurations": {

@@ -59,7 +59,6 @@ import { ComponentVisibilityItems } from '../../../app-providers/component-mode'
 export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponent, AfterViewInit {
 	// for component
 	readonly isAnnotationsShow: boolean;
-	@ViewChild('closeElementAnnotation', {static: false}) closeElementAnnotation: ElementRef;
 	readonly isFavoritesShow: boolean;
 	readonly isImageProcessingShow: boolean;
 	//
@@ -79,8 +78,9 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	draggedButtonText: string;
 	isLayersVisible: boolean;
 	isManualProcessChanged: boolean;
-
 	selectOverlaysImageProcess$ = this.store$.pipe(select(selectOverlaysImageProcess), filter(this.hasOverlay.bind(this)));
+	@ViewChild('closeElementAnnotation', {static: false}) closeElementAnnotation: ElementRef;
+
 
 	@AutoSubscription
 	favoriteOverlays$: Observable<any[]> = this.store$.select(selectFavoriteOverlays).pipe(

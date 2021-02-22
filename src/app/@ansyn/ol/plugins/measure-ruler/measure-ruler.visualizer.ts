@@ -395,6 +395,11 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 		});
 		this.addInteraction(VisualizerInteractions.selectMeasureLabelHandler, select);
 		this.addInteraction(VisualizerInteractions.translateInteractionHandler, translate);
+		translate.on('translateend', this.onTranslateEndEvent.bind(this, translate))
+	}
+
+	onTranslateEndEvent(trans, data) {
+		console.log('translateend', trans, data);
 	}
 
 	removeTranslateMeasuresLabelInteraction() {

@@ -94,7 +94,7 @@ export class SelectCaseAppEffects {
 
 		const advancedSearchParameters = state.advancedSearchParameters;
 		const { runSecondSearch } = state;
-		const measureIsActive = state.maps.data.some( map => map.data.measuresData);
+		const measureIsActive = state.maps.data.some( map => map?.data?.measuresData?.isToolActive);
 
 		const selectCaseAction = [
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),

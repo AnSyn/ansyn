@@ -366,7 +366,7 @@ export class MapAppEffects {
 			switch ( action.type) {
 				case ToolsActionsTypes.MEASURES.CREATE_MEASURE_DATA:
 					const measuresData = createNewMeasureData();
-					changes.data.measuresData = changes.data.measuresData ? changes.data.measuresData : measuresData;
+					changes.data.measuresData = {...measuresData, measures: changes.data.measuresData?.measures || []};
 					break;
 				case ToolsActionsTypes.MEASURES.REMOVE_MEASURE_DATA:
 					changes.data.measuresData = undefined;

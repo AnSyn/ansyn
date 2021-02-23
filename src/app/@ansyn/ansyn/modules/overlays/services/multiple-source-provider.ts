@@ -87,7 +87,7 @@ export class MultipleOverlaysSourceProvider {
 
 		this.selectedProviders = providersFromState.map(providerFromState => {
 			return providers.find(provider => providerFromState.name === provider.name);
-		});
+		}).filter(Boolean);
 	}
 
 	public getById(id: string, sourceType: string): Observable<IOverlay> {

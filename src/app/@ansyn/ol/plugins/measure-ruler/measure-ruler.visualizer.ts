@@ -34,6 +34,7 @@ import { EntitiesVisualizer } from '../entities-visualizer';
 import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { geometry } from '@turf/helpers';
+import { cloneDeep } from 'lodash';
 
 const MEASURE_TEXT_KEY = 'measureText';
 const IS_TOTAL_MEASURE = 'isTotalMeasure';
@@ -395,11 +396,15 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 		});
 		this.addInteraction(VisualizerInteractions.selectMeasureLabelHandler, select);
 		this.addInteraction(VisualizerInteractions.translateInteractionHandler, translate);
-		translate.on('translateend', this.onTranslateEndEvent.bind(this, translate))
+		translate.on('translateend', this.onTranslateEndEvent.bind(this))
 	}
 
-	onTranslateEndEvent(trans, data) {
-		console.log('translateend', trans, data);
+	onTranslateEndEvent(eventData) {
+		console.log('translateend', cloneDeep(eventData));
+		this.projectionService.projectCollectionAccurately([eventData.features[0]], this.iMap.mapObject)
+			.subscribe((featureCollection: FeatureCollection<GeometryObject>) => {
+				console.log('featureCollection', featureCollection);
+			})
 	}
 
 	removeTranslateMeasuresLabelInteraction() {

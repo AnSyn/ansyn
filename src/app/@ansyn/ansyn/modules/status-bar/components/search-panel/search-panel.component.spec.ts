@@ -15,7 +15,7 @@ import { MockComponent } from '../../../core/test/mock-component';
 import {
 	OverlayReducer,
 	overlaysFeatureKey,
-	selectDataInputFilter, selectRegion,
+	selectRegion,
 	selectTime
 } from '../../../overlays/reducers/overlays.reducer';
 import { ClickOutsideDirective } from '../../../core/click-outside/click-outside.directive';
@@ -30,10 +30,6 @@ import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
 import { SearchOptionsComponent } from '../search-options/search-options.component';
 
 const CRITERIA: IOverlaysCriteria = {
-	dataInputFilters: {
-		filters: [],
-		fullyChecked: true
-	},
 	time: {
 		from: new Date(2020, 4, 10),
 		to: new Date(2020, 5, 20)
@@ -143,7 +139,6 @@ describe('SearchPanelComponent', () => {
 		store = _store;
 		const mockStore = new Map<any, any>([
 			[selectGeoFilterStatus, { type: 'Point', active: true }],
-			[selectDataInputFilter, CRITERIA.dataInputFilters],
 			[selectTime, CRITERIA.time],
 			[selectRegion, CRITERIA.region]
 		]);

@@ -162,14 +162,16 @@ describe('ContextAppEffects', () => {
 		contextCase.state = {
 			...contextCase.state,
 			time: { to, from },
-			region: geo
+			region: geo,
+			advancedSearchParameters: {
+				...contextCase.state.advancedSearchParameters,
+				sensors: sensors
+			}
 		};
 		const expectedResult = cold('-a-', {
 				a: new SelectCaseAction(contextCase),
 			}
 		);
-		spyOn(overlaysService, 'getSensorTypeAndProviderFromSensorName')
-			.and.returnValue(sensors);
 		spyOn(casesService, 'updateCaseViaContext')
 			.and.callFake((ctx, c , p) => {
 				return { ...contextCase,

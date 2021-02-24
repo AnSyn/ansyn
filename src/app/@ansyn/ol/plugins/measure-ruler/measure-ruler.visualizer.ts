@@ -400,12 +400,24 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 	}
 
 	onTranslateEndEvent(eventData) {
-		console.log('translateend', cloneDeep(eventData));
+		console.log('measure translateend', cloneDeep(eventData));
 		this.projectionService.projectCollectionAccurately([eventData.features.item(0)], this.iMap.mapObject)
 			.pipe(take(1))
 			.subscribe((featureCollection: FeatureCollection<GeometryObject>) => {
-				console.log('featureCollection', featureCollection);
+				console.log('measure featureCollection', featureCollection);
+				const feature = featureCollection.features[0];
+				console.log('measure feature', feature);
+				feature['getId'] = () => feature.id;
+				const entity = feature && this.getEntity(feature);
+				if (entity) {
+					console.log('measure entity', entity);
+					this.afterTranslateEndEvent(entity);
+				}
 			})
+	}
+
+	afterTranslateEndEvent(entity: IVisualizerEntity) {
+
 	}
 
 	removeTranslateMeasuresLabelInteraction() {

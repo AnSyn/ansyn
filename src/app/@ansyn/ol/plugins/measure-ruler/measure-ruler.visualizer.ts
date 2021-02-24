@@ -401,7 +401,8 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 
 	onTranslateEndEvent(eventData) {
 		console.log('translateend', cloneDeep(eventData));
-		this.projectionService.projectCollectionAccurately([eventData.features[0]], this.iMap.mapObject)
+		this.projectionService.projectCollectionAccurately([eventData.features.item(0)], this.iMap.mapObject)
+			.pipe(take(1))
 			.subscribe((featureCollection: FeatureCollection<GeometryObject>) => {
 				console.log('featureCollection', featureCollection);
 			})

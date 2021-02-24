@@ -69,7 +69,6 @@ export interface IDilutedCaseState {
 	time: ICaseTimeState;
 	facets?: ICaseFacetsState;
 	region: CaseRegionState;
-	dataInputFilters: ICaseDataInputFiltersState;
 	favoriteOverlays?: IDilutedOverlay[];
 	miscOverlays?: IDilutedOverlaysHash;
 	overlaysImageProcess: IOverlaysImageProcess;
@@ -88,18 +87,6 @@ export interface ICaseState extends IDilutedCaseState {
 }
 
 export type CaseRegionState = any | Feature<Polygon | Point> | Point | Polygon | Position;
-
-export interface IDataInputFilterValue {
-	providerName: string;
-	sensorType: string;
-	sensorName?: string;
-}
-
-export interface ICaseDataInputFiltersState {
-	fullyChecked?: boolean;
-	filters: IDataInputFilterValue[];
-	customFiltersSensor?: string[]; // for context
-}
 
 export interface ICaseTimeState {
 	from: Date;

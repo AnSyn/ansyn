@@ -126,14 +126,7 @@ export class OverlaysEffects {
 	loadOverlays$: Observable<{} | LoadOverlaysSuccessAction> = this.actions$.pipe(
 		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
 		withLatestFrom(this.store$.select(selectIsFirstSearchRun)),
-		switchMap(([action, isFirstSearch]: [LoadOverlaysAction, boolean]) => {
-			if (action.payload.dataInputFilters.fullyChecked || action.payload.dataInputFilters.filters.length > 0) {
-				return this.requestOverlays(action.payload, isFirstSearch);
-			}
-			else {
-				return [new LoadOverlaysSuccessAction([])];
-			}
-		})
+		switchMap(([action, isFirstSearch]: [LoadOverlaysAction, boolean]) => this.requestOverlays(action.payload, isFirstSearch))
 	);
 
 	@Effect()
@@ -206,12 +199,12 @@ export class OverlaysEffects {
 				} else if (overlays.limited > 0 && overlays.data.length === this.overlaysService.fetchLimit) {
 					// TODO: replace when design is available
 					actions.push(new SetOverlaysStatusMessageAction({ message: overLoad.replace('$overLoad', overlays.data.length.toString()) }));
-				} 
+				}
 
 				if (!isFirstSearch) {
 					actions.push(new SetToastMessageAction({toastText: 'there are more overlays exist, ', buttonToDisplay: 'click here to expand', functionToExcute: this.toggleAdvancedSearch.bind(this)}))
 				}
-				
+
 				return actions;
 			}),
 			catchError((err) => from([

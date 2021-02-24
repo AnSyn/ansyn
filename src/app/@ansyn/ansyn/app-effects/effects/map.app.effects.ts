@@ -66,7 +66,7 @@ import {
 	CreateMeasureDataAction, RemoveMeasureAction, RemoveMeasureDataAction,
 	SetActiveCenter,
 	SetMapGeoEnabledModeToolsActionStore,
-	SetMapSearchBox, ToolsActionsTypes, UpdateMeasureDataOptionsAction
+	SetMapSearchBox, ToolsActionsTypes, UpdateMeasureDataOptionsAction, UpdateMeasureLabelAction
 } from '../../modules/status-bar/components/tools/actions/tools.actions';
 import {
 	DisplayOverlayAction,
@@ -83,7 +83,7 @@ import {
 	BackToWorldView,
 	OverlayStatusActionsTypes
 } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
-import { isEqual } from 'lodash';
+import { isEqual, cloneDeep } from 'lodash';
 import { selectGeoRegisteredOptionsEnabled } from '../../modules/status-bar/components/tools/reducers/tools.reducer';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import {
@@ -354,12 +354,14 @@ export class MapAppEffects {
 	@Effect()
 	onMeasureChange$ = this.actions$.pipe(
 		ofType(ToolsActionsTypes.MEASURES.CREATE_MEASURE_DATA, ToolsActionsTypes.MEASURES.REMOVE_MEASURE_DATA,
-			ToolsActionsTypes.MEASURES.ADD_MEASURE, ToolsActionsTypes.MEASURES.REMOVE_MEASURE, ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS),
+			ToolsActionsTypes.MEASURES.ADD_MEASURE, ToolsActionsTypes.MEASURES.REMOVE_MEASURE,
+			ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS, ToolsActionsTypes.MEASURES.UPDATE_MEASURE_LABEL),
 		concatMap( action => of(action).pipe(
 			withLatestFrom(this.store$.select(selectMaps)),
 		)),
 		map( ([action, maps]: [
-			CreateMeasureDataAction | RemoveMeasureDataAction | AddMeasureAction | RemoveMeasureAction | UpdateMeasureDataOptionsAction,
+			CreateMeasureDataAction | RemoveMeasureDataAction | AddMeasureAction | RemoveMeasureAction
+				| UpdateMeasureDataOptionsAction | UpdateMeasureLabelAction,
 			Dictionary<IMapSettings>]) => {
 			const map = maps[action.payload.mapId];
 			const changes = {data: {...map.data}};
@@ -384,6 +386,31 @@ export class MapAppEffects {
 					const newOptions = action.payload.options;
 					changes.data.measuresData = {...changes.data.measuresData, ...newOptions};
 					break;
+				case ToolsActionsTypes.MEASURES.UPDATE_MEASURE_LABEL: {
+					const { labelEntity } = action.payload;
+					const lineStringId = labelEntity.featureJson.properties.feature;
+					const updateMeasures = changes.data.measuresData.measures.map(measure =>
+						measure.id !== lineStringId ?
+							measure :
+							{
+								...measure,
+								featureJson: {
+									...measure.featureJson,
+									properties: {
+										...measure.featureJson.properties,
+										measures: measure.featureJson.properties.measures.map(label =>
+											label.id !== labelEntity.id ?
+												label :
+												cloneDeep(labelEntity)
+										)
+									}
+								}
+							}
+					);
+					console.log('measures in effect', labelEntity, cloneDeep(changes.data.measuresData), updateMeasures);
+					changes.data.measuresData = {...changes.data.measuresData, measures: updateMeasures};
+					break;
+				}
 			}
 			return new UpdateMapAction({id: map.id, changes});
 		}),

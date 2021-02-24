@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { IVisualizerEntity, IVisualizerStyle } from '@ansyn/imagery';
 import { AnnotationMode, IUpdateFeatureEvent } from '@ansyn/ol';
-import { IMeasureData, IMeasureDataOptions, SubMenuEnum, toolsFlags } from '../models/tools.model';
+import { IMeasureDataOptions, SubMenuEnum, toolsFlags } from '../models/tools.model';
 import { type } from '../../../../core/utils/type';
 import { ILogMessage } from '@ansyn/map-facade';
 
@@ -24,7 +24,8 @@ export const ToolsActionsTypes = {
 		REMOVE_MEASURE_DATA: type('[tools] REMOVE_MEASURE_DATA'),
 		ADD_MEASURE: type('[tools] ADD_MEASURE'),
 		REMOVE_MEASURE: type('[tools] REMOVE_MEASURE'),
-		UPDATE_MEASURE_DATE_OPTIONS: type('[tools] UPDATE_MEASURE_DATA_OPTIONS')
+		UPDATE_MEASURE_DATE_OPTIONS: type('[tools] UPDATE_MEASURE_DATA_OPTIONS'),
+		UPDATE_MEASURE_LABEL: type('[tools] UPDATE_MEASURE_LABEL')
 	},
 	STORE: {
 		SET_ANNOTATION_MODE: type('SET_ANNOTATION_MODE')
@@ -162,6 +163,20 @@ export class UpdateMeasureDataOptionsAction implements Action, ILogMessage {
 
 	logMessage() {
 		return this.payload.fromUI && `Updating measure tool options: ${JSON.stringify(this.payload.options)}`
+	}
+}
+
+export class UpdateMeasureLabelAction implements Action, ILogMessage {
+	type = ToolsActionsTypes.MEASURES.UPDATE_MEASURE_LABEL;
+
+	constructor(public payload: {
+		mapId: string,
+		labelEntity: IVisualizerEntity
+	}) {
+	}
+
+	logMessage() {
+		return `Updating measure label`
 	}
 }
 

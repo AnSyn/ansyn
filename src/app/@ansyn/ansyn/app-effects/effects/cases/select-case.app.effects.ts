@@ -63,8 +63,9 @@ export class SelectCaseAppEffects {
 		// map
 		const { data } = state.maps;
 
-		// context
-		const { favoriteOverlays, dataInputFilters, miscOverlays } = state;
+		const { favoriteOverlays, miscOverlays } = state;
+
+		const { advancedSearchParameters, runSecondSearch } = state;
 
 		let region: Feature<Polygon | Point>;
 		if (state.region.type !== 'Feature') {
@@ -92,15 +93,13 @@ export class SelectCaseAppEffects {
 		// filters
 		const { facets } = state;
 
-		const advancedSearchParameters = state.advancedSearchParameters;
-		const { runSecondSearch } = state;
 		const measureIsActive = state.maps.data.some( map => map?.data?.measuresData?.isToolActive);
 
 		const selectCaseAction = [
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),
 			new SetActiveMapId(state.maps.activeMapId),
 			new SetLayoutAction(<any>layout),
-			new SetOverlaysCriteriaAction({ time, region, dataInputFilters, advancedSearchParameters }, { noInitialSearch, runSecondSearch }),
+			new SetOverlaysCriteriaAction({ time, region, advancedSearchParameters }, { noInitialSearch, runSecondSearch }),
 			new UpdateGeoFilterStatus({ active: false, type: region.properties.searchMode }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this)) }),

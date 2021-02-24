@@ -15,7 +15,6 @@ import {
 	IOverlaysSourceProvider,
 	MultipleOverlaysSourceConfig
 } from '../../core/models/multiple-overlays-source-config';
-import { IDataInputFilterValue } from '../../menu-items/cases/models/case.model';
 
 export const OverlaysConfig = 'overlaysConfig';
 
@@ -92,7 +91,6 @@ export class OverlaysService {
 	search(params: IOverlaysCriteria): Observable<IOverlaysFetchData> {
 		let feature = params.region.geometry;
 		return this._overlaySourceProvider.fetch({
-			dataInputFilters: Boolean(params.dataInputFilters) ? params.dataInputFilters.filters : null,
 			limit: this.config.limit,
 			region: feature,
 			timeRange: <any>{
@@ -132,7 +130,7 @@ export class OverlaysService {
 		return Object.entries(this.multipleOverlays.indexProviders)
 		.filter(([providerName, { inActive }]: [string, IOverlaysSourceProvider]) => !inActive);
 	}
-	
+
 	getTimeStateByOverlay(displayedOverlay: IOverlayDrop, timeLineRange: ITimelineRange): ITimelineRange {
 		let { start, end } = timeLineRange;
 		const startTime = start.getTime();
@@ -182,23 +180,5 @@ export class OverlaysService {
 
 	getThumbnailName(overlay): string {
 		return this._overlaySourceProvider.getThumbnailName(overlay)
-	}
-
-	getSensorTypeAndProviderFromSensorName(sensorName: string): IDataInputFilterValue {
-		if (!(this.multipleOverlays && this.multipleOverlays.indexProviders instanceof Object)) {
-			return;
-		}
-		let sensorType: string;
-		const providerName = findKey(this.multipleOverlays.indexProviders, (provider) => {
-			sensorType = findKey(provider.sensorNamesByGroup, (group) => group.includes(sensorName));
-			return Boolean(sensorType);
-		});
-		if (providerName) {
-			const result: IDataInputFilterValue = {
-				providerName,
-				sensorType
-			};
-			return result;
-		}
 	}
 }

@@ -246,7 +246,7 @@ export { AnsynInputComponent } from './modules/core/forms/ansyn-input/ansyn-inpu
 export { ErrorHandlerService } from './modules/core/services/error-handler.service';
 export { LoggerService } from './modules/core/services/logger.service';
 export {
-	selectDataInputFilter, selectOverlaysCriteria, selectRegion
+	selectOverlaysCriteria, selectRegion
 }from './modules/overlays/reducers/overlays.reducer';
 
 export { ICoreConfig } from './modules/core/models/core.config.model';
@@ -281,12 +281,11 @@ export { ICaseSliderFilterMetadata } from './modules/menu-items/cases/models/cas
 export { ICaseLayersState } from './modules/menu-items/cases/models/case.model';
 export { ICaseFacetsState, ICaseFilter, CaseFilterMetadata } from './modules/menu-items/cases/models/case.model';
 export { ICase, ICasePreview, IDilutedCase } from './modules/menu-items/cases/models/case.model';
-export { CaseRegionState, IDataInputFilterValue } from './modules/menu-items/cases/models/case.model';
+export { CaseRegionState } from './modules/menu-items/cases/models/case.model';
 export {
 	CaseGeoFilter,
 	CaseOrientation,
 	CaseTimeFilter,
-	ICaseDataInputFiltersState,
 	ICaseTimeState
 } from './modules/menu-items/cases/models/case.model';
 export {

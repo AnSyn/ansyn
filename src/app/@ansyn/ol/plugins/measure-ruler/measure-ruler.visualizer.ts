@@ -34,7 +34,6 @@ import { EntitiesVisualizer } from '../entities-visualizer';
 import { OpenLayersProjectionService } from '../../projection/open-layers-projection.service';
 import { OpenLayersMap } from '../../maps/open-layers-map/openlayers-map/openlayers-map';
 import { geometry } from '@turf/helpers';
-import { cloneDeep } from 'lodash';
 
 const MEASURE_TEXT_KEY = 'measureText';
 const IS_TOTAL_MEASURE = 'isTotalMeasure';
@@ -396,28 +395,27 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 		});
 		this.addInteraction(VisualizerInteractions.selectMeasureLabelHandler, select);
 		this.addInteraction(VisualizerInteractions.translateInteractionHandler, translate);
-		translate.on('translateend', this.onTranslateEndEvent.bind(this))
+		translate.on('translateend', this.onLabelTranslateEndEvent.bind(this))
 	}
 
-	onTranslateEndEvent(eventData) {
-		console.log('measure translateend', cloneDeep(eventData));
+	onLabelTranslateEndEvent(eventData) {
 		this.projectionService.projectCollectionAccurately([eventData.features.item(0)], this.iMap.mapObject)
 			.pipe(take(1))
 			.subscribe((featureCollection: FeatureCollection<GeometryObject>) => {
-				console.log('measure featureCollection', featureCollection);
 				const feature = featureCollection.features[0];
-				console.log('measure feature', feature);
-				feature['getId'] = () => feature.id;
-				const entity = feature && this.getEntity(feature);
-				if (entity) {
-					console.log('measure entity', entity);
-					this.afterTranslateEndEvent(entity);
+				const oldEntity = feature && this.getEntityById(<string>feature.id);
+				if (oldEntity) {
+					const newEntity = {
+						...oldEntity,
+						featureJson: { ...feature }
+					}
+					this.afterLabelTranslateEndEvent(newEntity);
 				}
 			})
 	}
 
-	afterTranslateEndEvent(entity: IVisualizerEntity) {
-
+	afterLabelTranslateEndEvent(labelEntity: IVisualizerEntity) {
+		this.addOrUpdateEntities([labelEntity]);
 	}
 
 	removeTranslateMeasuresLabelInteraction() {

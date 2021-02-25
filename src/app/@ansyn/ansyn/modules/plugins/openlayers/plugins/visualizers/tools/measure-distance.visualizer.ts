@@ -83,7 +83,7 @@ export class MeasureDistanceVisualizer extends MeasureRulerVisualizer {
 		);
 	}
 
-	afterTranslateEndEvent(labelEntity: IVisualizerEntity) {
+	afterLabelTranslateEndEvent(labelEntity: IVisualizerEntity) {
 		this.store$.dispatch(
 			new UpdateMeasureLabelAction({
 				mapId: this.mapId,

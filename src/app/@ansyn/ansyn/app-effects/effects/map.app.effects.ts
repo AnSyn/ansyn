@@ -407,7 +407,6 @@ export class MapAppEffects {
 								}
 							}
 					);
-					console.log('measures in effect', labelEntity, cloneDeep(changes.data.measuresData), updateMeasures);
 					changes.data.measuresData = {...changes.data.measuresData, measures: updateMeasures};
 					break;
 				}

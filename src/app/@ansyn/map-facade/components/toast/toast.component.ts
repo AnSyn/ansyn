@@ -46,7 +46,7 @@ export class ToastComponent implements OnInit, OnDestroy {
 			this.toastMessageFromState = toast;
 		})
 	);
-	
+
 	constructor(
 		protected store$: Store<any>,
 		@Inject(mapFacadeConfig) public mapFacadeConfig: IMapFacadeConfig
@@ -58,11 +58,10 @@ export class ToastComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		(<Observable<any>>this.toastMessage$).subscribe((toastMessage: IToastMessage) => {
 			if (toastMessage) { // Hide toast in duration time
-				let duration = this.duration * 1000;
-				if (toastMessage.buttonToDisplay) {
-					this.buttonToDisplay = toastMessage.buttonToDisplay;
-					duration = this.mapFacadeConfig.firstSearchNotification.timeToDisplayButtonToast;
-				}
+				this.buttonToDisplay = toastMessage.buttonToDisplay;
+				const duration = toastMessage.buttonToDisplay ?
+					this.mapFacadeConfig.firstSearchNotification.timeToDisplayButtonToast :
+					this.duration * 1000;
 				this.timeoutRef = setTimeout(this.closeToast.bind(this), duration);
 			} else { // Cancel the last hide
 				this.store$.dispatch(new SetToastMessageAction());

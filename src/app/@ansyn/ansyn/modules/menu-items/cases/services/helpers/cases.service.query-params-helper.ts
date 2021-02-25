@@ -7,9 +7,9 @@ import { bbox, bboxPolygon, polygon } from '@turf/turf';
 import { Feature, GeoJsonObject, Point, Polygon } from 'geojson';
 import { getPolygonByPointAndRadius, } from '@ansyn/imagery';
 import { ICase } from '../../models/case.model';
-import { catchError, map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { has as _has, set as _set, get as _get } from 'lodash';
 
+const contextToCaseStateMap = {sensors: 'advancedSearchParameters.sensors', time: 'time'};
 export class QueryParamsHelper {
 	constructor(protected casesService: CasesService) {
 	}
@@ -25,9 +25,9 @@ export class QueryParamsHelper {
 		let updatedCaseModel = cloneDeep(caseModel);
 		// needed for ngc
 		updatedCaseModel.selectedContextId = selectedContext.id;
-		['dataInputFilters', 'facets', 'time'].forEach(key => {
-			if (selectedContext[key]) {
-				updatedCaseModel.state[key] = selectedContext[key];
+		Object.entries(contextToCaseStateMap).forEach(([key, value]) => {
+			if (_has(selectedContext, key)) {
+				_set(updatedCaseModel, `state.${value}`, _get(selectedContext, key));
 			}
 		});
 

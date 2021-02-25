@@ -18,14 +18,14 @@ describe('CasesReducer', () => {
 				from: new Date(),
 				to: new Date()
 			},
-			dataInputFilters: { fullyChecked: true, filters: [] },
 			region: {
 				geometry: {},
 				type: "Feature",
 				properties: {}
 			},
 			overlaysImageProcess: {},
-			overlaysTranslationData: {}
+			overlaysTranslationData: {},
+			advancedSearchParameters: {}
 		}
 	};
 

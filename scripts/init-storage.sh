@@ -6,17 +6,6 @@ status=$(curl -s -o /dev/null -w "%{http_code}" "$url/api/store/layers")
 if [ "$status" = 200 ]; then echo "layers Ok"; else curl -XPOST -s "$url/api/store/layers"; fi
 status=$(curl -s -o /dev/null -w "%{http_code}" "$url/api/store/cases")
 if [ "$status" = 200 ]; then echo "cases Ok"; else curl -XPOST -s "$url/api/store/cases"; fi
-status=$(curl -s -o /dev/null -w "%{http_code}" "$url/api/store/contexts")
-if [ "$status" = 200 ]; then echo "contexts Ok"; else curl -XPOST -s "$url/api/store/contexts"; fi
-status=$(curl -s -o /dev/null -w "%{http_code}" "$url/api/store/tasks")
-if [ "$status" = 200 ]; then echo "tasks Ok"; else curl -XPOST -s "$url/api/store/tasks"; fi
-
-echo "Initial contexts"
-status=$(curl -s -o /dev/null -w "%{http_code}" "$url/api/store/contexts/areaAnalysis")
-if [ "$status" = 200 ]; then echo "areaAnalysis is alerady set "; else curl -XPOST -s -H "Content-Type: application/json" -d @resources/contexts/areaContext.json "$url/api/store/contexts/areaAnalysis"; fi
-status=$(curl -s -o /dev/null -w "%{http_code}" "$url/api/store/contexts/infoEntity")
-if [ "$status" = 200 ]; then echo "infoEntity is alerady set "; else curl -XPOST -s -H "Content-Type: application/json" -d @resources/contexts/infoEntity.json "$url/api/store/contexts/infoEntity"; fi
-
 
 echo "Initials Layers"
 status=$(curl -s -o /dev/null -w "%{http_code}" "$url/api/store/layers/1e2a8166-37a4-485f-8bdd-4f92e675ca35")

@@ -9,7 +9,7 @@ import { selectMaps } from '@ansyn/map-facade';
 import { Store, select } from '@ngrx/store';
 import { AutoSubscription } from 'auto-subscriptions';
 import { MeasureRulerVisualizer, OpenLayersMap, OpenLayersProjectionService } from '@ansyn/ol';
-import { filter, switchMap, tap, map } from 'rxjs/operators';
+import { filter, switchMap, tap, map, distinctUntilChanged } from 'rxjs/operators';
 import { Inject } from '@angular/core';
 import {
 	selectIsMeasureToolActive
@@ -39,6 +39,7 @@ export class MeasureDistanceVisualizer extends MeasureRulerVisualizer {
 		// filter() update - checking isMeasureToolActive: if the measures layer is
 		// hidden, we still want to proceed if the measure tool changed to inactive,
 		// in order to cancel cursor style and interactions.
+		distinctUntilChanged(isEqual),
 		filter(([measureData, isMeasureToolActive]) => (!this.isHidden || !isMeasureToolActive)),
 		tap(([measureData, isMeasureToolActive]) => {
 			if (measureData) {

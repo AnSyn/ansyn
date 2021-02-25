@@ -1,39 +1,39 @@
 <!-- Geo filter -->
 <div class="simple-search" >
-	<div *ngIf="!advancedSearch" class="advanced-search" (click)="toggleAdvancedSearch()">
-		<div class="advanced-search-text">{{'Advanced Search' | translate}}</div>
-		<i class="medium-icon icon-down"></i><br/>
+	<div class="advanced-search" (click)="toggleAdvancedSearch()">
+		<div class="advanced-search-text">{{((advancedSearchActive$ | async) ? 'minimize' : 'Advanced Search') | translate}}</div>
+		<i class="medium-icon" [ngClass]="(advancedSearchActive$ | async) ? 'icon-up' : 'icon-down'"></i><br/>
 	</div>
 
-	<div *ngIf="advancedSearch" class="advanced-search" (click)="toggleAdvancedSearch()">
+	<!--<div *ngIf="advancedSearch" class="advanced-search" (click)="toggleAdvancedSearch()">
 		<div class="advanced-search-text">{{'minimize' | translate}} </div>
 		<i class="medium-icon icon-up"></i><br/>
-	</div>
+	</div>-->
 
 	<!-- Time -->
 	<ansyn-time-picker-container [openTop]="false"></ansyn-time-picker-container>
 
 	<div class="box" id="geoPreSearch" [class.component]="componentMode">
 		<button ansynComboBoxTrigger
-				(click)="toggleExpander('LocationPicker')"
+				(click)="toggleGeoFilter()"
 				[attr.tooltip-value]="statusBarConfig?.toolTips?.geoFilter | translate"
 				tooltip-class="bottom"
-				[class.active]="isActive('LocationPicker')"
-				[isActive]="isActive('LocationPicker')"
+				[class.active]="geoFilterActive$ | async"
+				[isActive]="geoFilterActive$ | async"
 				[withArrow]="false"
 				icon="icon icon-status-bar-geo"
 				class="button">
 			<div [class.component]="componentMode">
-				<span class="title">{{geoFilterTitle | translate}} </span>
+				<span class="title">{{geoFilterTitle$ | async | translate}}</span>
 			</div>
 		</button>
 
 		<ansyn-location-picker
-			*ngIf="isActive('LocationPicker')"
-			[geoFilter]="geoFilterTitle">
+			*ngIf="geoFilterActive$ | async"
+			[geoFilter]="geoFilterTitle$ | async">
 		</ansyn-location-picker>
 	</div>
 </div>
 <div class="expander">
-	<ansyn-advanced-search *ngIf="advancedSearch"></ansyn-advanced-search>
+	<ansyn-advanced-search *ngIf="advancedSearchActive$ | async"></ansyn-advanced-search>
 </div>

@@ -1,9 +1,9 @@
 import { IDilutedOverlay, IDilutedOverlaysHash, IOverlay, IOverlaysHash } from '../../../overlays/models/overlay.model';
-import { Feature, MultiPolygon, Point, Polygon } from 'geojson';
+import { Feature, MultiPolygon, Point, Polygon, Position } from 'geojson';
 import { LayoutKey } from '@ansyn/map-facade';
 import { FilterType } from '../../../filters/models/filter-type';
 import { IMapSettings, IMapSettingsData } from '@ansyn/imagery';
-import { IAdvancedSearchParameter, IProviderData } from '../../../status-bar/models/statusBar-config.model';
+import { IAdvancedSearchParameter } from '../../../status-bar/models/statusBar-config.model';
 import { IMeasureData } from '../../../status-bar/components/tools/models/tools.model';
 
 export interface ICasePreview {
@@ -69,7 +69,6 @@ export interface IDilutedCaseState {
 	time: ICaseTimeState;
 	facets?: ICaseFacetsState;
 	region: CaseRegionState;
-	dataInputFilters: ICaseDataInputFiltersState;
 	favoriteOverlays?: IDilutedOverlay[];
 	miscOverlays?: IDilutedOverlaysHash;
 	overlaysImageProcess: IOverlaysImageProcess;
@@ -88,18 +87,6 @@ export interface ICaseState extends IDilutedCaseState {
 }
 
 export type CaseRegionState = any | Feature<Polygon | Point> | Point | Polygon | Position;
-
-export interface IDataInputFilterValue {
-	providerName: string;
-	sensorType: string;
-	sensorName?: string;
-}
-
-export interface ICaseDataInputFiltersState {
-	fullyChecked?: boolean;
-	filters: IDataInputFilterValue[];
-	customFiltersSensor?: string[]; // for context
-}
 
 export interface ICaseTimeState {
 	from: Date;

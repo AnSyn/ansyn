@@ -75,7 +75,6 @@ export class UpdateCaseAppEffects {
 					},
 					favoriteOverlays,
 					region,
-					dataInputFilters,
 					time,
 					advancedSearchParameters,
 					facets,

@@ -395,6 +395,27 @@ export class MeasureRulerVisualizer extends EntitiesVisualizer {
 		});
 		this.addInteraction(VisualizerInteractions.selectMeasureLabelHandler, select);
 		this.addInteraction(VisualizerInteractions.translateInteractionHandler, translate);
+		translate.on('translateend', this.onLabelTranslateEndEvent.bind(this))
+	}
+
+	onLabelTranslateEndEvent(eventData) {
+		this.projectionService.projectCollectionAccurately([eventData.features.item(0)], this.iMap.mapObject)
+			.pipe(take(1))
+			.subscribe((featureCollection: FeatureCollection<GeometryObject>) => {
+				const feature = featureCollection.features[0];
+				const oldEntity = feature && this.getEntityById(<string>feature.id);
+				if (oldEntity) {
+					const newEntity = {
+						...oldEntity,
+						featureJson: { ...feature }
+					}
+					this.afterLabelTranslateEndEvent(newEntity);
+				}
+			})
+	}
+
+	afterLabelTranslateEndEvent(labelEntity: IVisualizerEntity) {
+		this.addOrUpdateEntities([labelEntity]);
 	}
 
 	removeTranslateMeasuresLabelInteraction() {

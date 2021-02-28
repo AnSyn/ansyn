@@ -115,12 +115,12 @@ export class OverlaysService {
 	getAllSensorsNames(): any[] {
 		let sensors: any[] = [];
 		const sensorNamesByGroup = this.multipleOverlays.sensorNamesByGroup;
-		const typesNames = Object.keys(sensorNamesByGroup);
-		typesNames.forEach(type => {
-			sensors = sensors.concat(sensorNamesByGroup[type]);
-		});
-				
-	
+		if (sensorNamesByGroup) {
+			const typesNames = Object.keys(sensorNamesByGroup);
+			typesNames.forEach(type => {
+				sensors = sensors.concat(sensorNamesByGroup[type]);
+			});
+		}
 		return flattenDeep(sensors);
 	}
 

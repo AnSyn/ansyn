@@ -6,6 +6,7 @@
 						  [activatedId]="(modalCaseId$ | async)"
 						  [rowsData]="rowsData"
 						  [menu]="menu"
+						  [emptyTableLabel]="'No Cases'"
 						  (onInfintyScroll)="loadMyCases()"
 						  (onEntitySelect)="openCase($event)"
 						  (onRowHover)="hoverCaseId = $event">
@@ -37,6 +38,7 @@
 		[selectedId]="(openCaseId$ | async)"
 		[activatedId]="(modalCaseId$ | async)"
 		[rowsData]="rowsData"
+		[emptyTableLabel]="'No Cases'"
 		(onInfintyScroll)="loadSharedCases()"
 		(onEntitySelect)="openCase($event)"
 		(onRowHover)="hoverCaseId = $event">

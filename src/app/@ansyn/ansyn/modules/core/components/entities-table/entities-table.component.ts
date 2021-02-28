@@ -39,6 +39,7 @@ export class EntitiesTableComponent<T> implements OnInit, OnDestroy {
 	@Input() selectedId: string;
 	@Input() activatedId: string;
 	@Input() rowsData: ITableRowModel<T>[];
+	@Input() readonly emptyTableLabel = 'No entities';
 	@Output() onInfintyScroll = new EventEmitter();
 	@Output() onRowHover = new EventEmitter<string>();
 	@Output() onEntitySelect = new EventEmitter<string>(true);

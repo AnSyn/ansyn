@@ -186,7 +186,7 @@ import { IOverlaysConfig } from '../../../overlays/models/overlays.config';
 	}
 
 	updateSelectedSensorsByTypes(selectedTypesArray: string[], changedType: string): void {
-		let allTypeSensors: any[] = this.multipleOverlaysSourceConfig.sensorNamesByGroup[changedType];
+		const allTypeSensors: any[] = this.multipleOverlaysSourceConfig.sensorNamesByGroup[changedType];
 
 		if (Boolean(selectedTypesArray.includes(changedType))) {
 			const sensorToAdd = allTypeSensors.filter(sensor => !this.selectedAdvancedSearchParameters.sensors.includes(sensor));

@@ -15,7 +15,7 @@ import {
 	selectIsMeasureToolActive
 } from '../../../../../status-bar/components/tools/reducers/tools.reducer';
 import {
-	AddMeasureAction, RemoveMeasureAction,
+	AddMeasureAction, RemoveMeasureAction, UpdateMeasureLabelAction,
 } from '../../../../../status-bar/components/tools/actions/tools.actions';
 import { isEqual } from 'lodash';
 
@@ -79,6 +79,15 @@ export class MeasureDistanceVisualizer extends MeasureRulerVisualizer {
 			new AddMeasureAction({
 				mapId: this.mapId,
 				measure: entity
+			})
+		);
+	}
+
+	afterLabelTranslateEndEvent(labelEntity: IVisualizerEntity) {
+		this.store$.dispatch(
+			new UpdateMeasureLabelAction({
+				mapId: this.mapId,
+				labelEntity
 			})
 		);
 	}

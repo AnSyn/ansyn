@@ -17,7 +17,7 @@
 		<i class="medium-icon icon-automatic-image-processing" [class.active]="isAutoProcessing"></i>
 	</button>
 </div>
-<div class="overlay-status-button" *ngIf="isImageProcessingShow">
+<div class="overlay-status-button" *ngIf="isImageProcessingShow" #closeElementAnnotation>
 	<button *ngIf="overlay"
 			class="small-icon-button"
 			[class.active]="isManualProcessingOpen"

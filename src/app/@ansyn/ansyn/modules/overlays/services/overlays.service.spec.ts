@@ -20,7 +20,6 @@ import {
 	IMultipleOverlaysSourceConfig,
 	MultipleOverlaysSourceConfig
 } from '../../core/models/multiple-overlays-source-config';
-import { IDataInputFilterValue } from '../../menu-items/cases/models/case.model';
 
 @OverlaySourceProvider({
 	sourceType: 'Mock'
@@ -117,10 +116,6 @@ describe('OverlaysService', () => {
 		time: {
 			from: new Date(2020),
 			to: new Date()
-		},
-		dataInputFilters: {
-			fullyChecked: true,
-			filters: []
 		},
 		advancedSearchParameters: {
 			sensors: []
@@ -315,10 +310,6 @@ describe('OverlaysService', () => {
 				from: new Date(2020),
 				to: new Date()
 			},
-			dataInputFilters: {
-				fullyChecked: true,
-				filters: []
-			},
 			advancedSearchParameters: {
 				sensors: []
 			}
@@ -365,21 +356,4 @@ describe('OverlaysService', () => {
 		});
 
 	});
-
-	describe('getSensorTypeAndProviderFromSensorName()', () => {
-		it('will find group and provider for sensor name', () => {
-			const sensorName = 'shmulik';
-			const expected: IDataInputFilterValue = {
-				providerName: 'animals',
-				sensorType: 'kipod'
-			};
-			const actual = overlaysService.getSensorTypeAndProviderFromSensorName(sensorName);
-			expect(actual).toEqual(expected);
-		});
-
-		it('will return falsy value if group and provider were not found', () => {
-			const actual = overlaysService.getSensorTypeAndProviderFromSensorName('muki');
-			expect(actual).toBeFalsy();
-		})
-	})
 });

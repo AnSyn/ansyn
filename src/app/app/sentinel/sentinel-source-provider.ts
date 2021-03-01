@@ -60,7 +60,6 @@ export class SentinelSourceProvider extends BaseOverlaySourceProvider {
 	fetch(fetchParams: IFetchParams): Observable<any> {
 		// if limit not provided by config - set default value
 		fetchParams.limit = fetchParams.limit ? fetchParams.limit : DEFAULT_OVERLAYS_LIMIT;
-		// let search = `${this.config.search}${fetchParams.dataInputFilters[0].sensorType}/searchIndex`;
 		const search = `${ this.config.baseUrl }/search`;
 		if (fetchParams.region.type === 'MultiPolygon') {
 			fetchParams.region = geojsonMultiPolygonToFirstPolygon(fetchParams.region as GeoJSON.MultiPolygon);

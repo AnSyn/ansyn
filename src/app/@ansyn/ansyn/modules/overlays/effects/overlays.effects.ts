@@ -25,6 +25,7 @@ import {
 	overlaysStateSelector,
 	overlaysStatusMessages,
 	selectDrops,
+	selectIsFirstSearchRun,
 	selectOverlaysArray,
 	selectOverlaysCriteria
 } from '../reducers/overlays.reducer';
@@ -124,15 +125,8 @@ export class OverlaysEffects {
 	@Effect()
 	loadOverlays$: Observable<{} | LoadOverlaysSuccessAction> = this.actions$.pipe(
 		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
-		withLatestFrom(this.store$.select(selectWasWelcomeNotificationShown)),
-		switchMap(([action, isUserFirstEntrance]: [LoadOverlaysAction, boolean]) => {
-			if (action.payload.dataInputFilters.fullyChecked || action.payload.dataInputFilters.filters.length > 0) {
-				return this.requestOverlays(action.payload, !isUserFirstEntrance);
-			}
-			else {
-				return [new LoadOverlaysSuccessAction([])];
-			}
-		})
+		withLatestFrom(this.store$.select(selectIsFirstSearchRun)),
+		switchMap(([action, isFirstSearch]: [LoadOverlaysAction, boolean]) => this.requestOverlays(action.payload, isFirstSearch))
 	);
 
 	@Effect()
@@ -180,7 +174,7 @@ export class OverlaysEffects {
 				protected areaToCredentialsService: AreaToCredentialsService) {
 	}
 
-	private requestOverlays(criteria: IOverlaysCriteria, isUserFirstEntrance) {
+	private requestOverlays(criteria: IOverlaysCriteria, isFirstSearch) {
 		return this.overlaysService.search(criteria).pipe(
 			// We use translate.instant instead of withLatestFrom + translate.get
 			// Because of a bug: sometimes when starting the app the withLatestFrom that was here did not return,
@@ -205,12 +199,12 @@ export class OverlaysEffects {
 				} else if (overlays.limited > 0 && overlays.data.length === this.overlaysService.fetchLimit) {
 					// TODO: replace when design is available
 					actions.push(new SetOverlaysStatusMessageAction({ message: overLoad.replace('$overLoad', overlays.data.length.toString()) }));
-				} 
+				}
 
-				if (isUserFirstEntrance) {
+				if (!isFirstSearch) {
 					actions.push(new SetToastMessageAction({toastText: 'there are more overlays exist, ', buttonToDisplay: 'click here to expand', functionToExcute: this.toggleAdvancedSearch.bind(this)}))
 				}
-				
+
 				return actions;
 			}),
 			catchError((err) => from([

@@ -10,14 +10,12 @@ import { sortByDateDesc } from '../../core/utils/sorting';
 import { IDateRange } from '../../core/models/multiple-overlays-source-config';
 import { LoggerService } from '../../core/services/logger.service';
 import { IOverlay, IOverlayError, IOverlaysFetchData, IResolutionRange } from './overlay.model';
-import { IDataInputFilterValue } from '../../menu-items/cases/models/case.model';
 import { getErrorLogFromException } from '../../core/utils/logs/timer-logs';
 
 export interface IFetchParams {
 	limit: number;
 	region: GeoJsonObject;
 	sensors?: string[];
-	dataInputFilters: IDataInputFilterValue[];
 	timeRange: IDateRange;
 	resolution?: IResolutionRange;
 	types?: string[];

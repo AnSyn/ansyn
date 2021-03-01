@@ -58,6 +58,7 @@ export {
 	StatusBarActions,
 	GoAdjacentOverlay,
 	ExpandAction,
+	MarkSecondSearchSensorsAction
 } from './modules/status-bar/actions/status-bar.actions';
 export { StatusBarConfig } from './modules/status-bar/models/statusBar.config';
 export { StatusBarModule } from './modules/status-bar/status-bar.module';
@@ -245,7 +246,7 @@ export { AnsynInputComponent } from './modules/core/forms/ansyn-input/ansyn-inpu
 export { ErrorHandlerService } from './modules/core/services/error-handler.service';
 export { LoggerService } from './modules/core/services/logger.service';
 export {
-	selectDataInputFilter, selectOverlaysCriteria, selectRegion
+	selectOverlaysCriteria, selectRegion
 }from './modules/overlays/reducers/overlays.reducer';
 
 export { ICoreConfig } from './modules/core/models/core.config.model';
@@ -270,7 +271,7 @@ export { IDeltaTime } from './modules/core/models/time.model';
 
 export { PhotoAngle, RegionContainment } from './modules/overlays/models/overlay.model';
 export { IOverlaysCriteriaOptions } from './modules/overlays/models/overlay.model';
-export { GeoRegisteration } from './modules/overlays/models/overlay.model';
+export { GeoRegisteration, GeoRegisterationOptions } from './modules/overlays/models/overlay.model';
 export { IOverlayError, IOverlaysFetchData, IOverlayDrop, IOverlaySpecialObject } from './modules/overlays/models/overlay.model';
 export {
 	IOverlay, IDilutedOverlay, Overlay, IOverlaysCriteria, IDilutedOverlaysHash, IOverlaysHash
@@ -280,12 +281,11 @@ export { ICaseSliderFilterMetadata } from './modules/menu-items/cases/models/cas
 export { ICaseLayersState } from './modules/menu-items/cases/models/case.model';
 export { ICaseFacetsState, ICaseFilter, CaseFilterMetadata } from './modules/menu-items/cases/models/case.model';
 export { ICase, ICasePreview, IDilutedCase } from './modules/menu-items/cases/models/case.model';
-export { CaseRegionState, IDataInputFilterValue } from './modules/menu-items/cases/models/case.model';
+export { CaseRegionState } from './modules/menu-items/cases/models/case.model';
 export {
 	CaseGeoFilter,
 	CaseOrientation,
 	CaseTimeFilter,
-	ICaseDataInputFiltersState,
 	ICaseTimeState
 } from './modules/menu-items/cases/models/case.model';
 export {
@@ -349,7 +349,7 @@ export {
 	overlayOverviewComponentConstants
 }from './modules/overlays/components/overlay-overview/overlay-overview.component.const';
 export { OverlaysModule } from './modules/overlays/overlays.module';
-export { OverlayReducer, overlaysFeatureKey, overlaysInitialState } from './modules/overlays/reducers/overlays.reducer';
+export { OverlayReducer, overlaysFeatureKey, overlaysInitialState, selectIsRunSecondSearch } from './modules/overlays/reducers/overlays.reducer';
 
 // plugins
 

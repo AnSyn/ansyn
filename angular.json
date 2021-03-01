@@ -60,6 +60,7 @@
               "shpjs",
               "pbf",
               "@auth0",
+              "url",
               "@auth0/angular-jwt"
             ]
           },

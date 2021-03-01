@@ -18,12 +18,12 @@ export interface IOverlaysSourceProvider {
 	blacklist: IFiltersList[];
 	showOnlyMyChildren?: boolean;
 	dataInputFiltersConfig?: any;
-	sensorNamesByGroup: {
-		[groupName: string]: string[]
-	}
 }
 
 export interface IMultipleOverlaysSourceConfig {
+	sensorNamesByGroup: {
+		[groupName: string]: string[]
+	}
 	useAngleDebugMode: boolean
 	defaultProvider: IOverlaysSourceProvider;
 	diagonalSensorNames: string[];

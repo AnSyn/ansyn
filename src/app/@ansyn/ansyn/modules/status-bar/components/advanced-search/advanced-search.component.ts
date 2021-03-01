@@ -160,24 +160,22 @@ import { IOverlaysConfig } from '../../../overlays/models/overlays.config';
 	}
 
 	updateSelectedTypesBySensor(changedSensor: string): void {
-		this.overlaysService.getActiveProviders()
-			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
-				const typesNames = Object.keys(sensorNamesByGroup);
-				const selectedType = this.selectedAdvancedSearchParameters.types;
-				const selectedSensors = this.selectedAdvancedSearchParameters.sensors;
-				typesNames.map(type => {
-					const sensorsListByType = sensorNamesByGroup[type];
-					const isSensorContainedInType =  sensorsListByType.includes(changedSensor);
-					const isTypeSelected = selectedType.includes(type);
-					const isAnySensorOfThisTypeSelected = Boolean(sensorsListByType.find(sensor => selectedSensors.includes(sensor)));
+		const sensorNamesByGroup = this.multipleOverlaysSourceConfig.sensorNamesByGroup
+		const typesNames = Object.keys(sensorNamesByGroup);
+		const selectedType = this.selectedAdvancedSearchParameters.types;
+		const selectedSensors = this.selectedAdvancedSearchParameters.sensors;
+		typesNames.map(type => {
+			const sensorsListByType = sensorNamesByGroup[type];
+			const isSensorContainedInType =  sensorsListByType.includes(changedSensor);
+			const isTypeSelected = selectedType.includes(type);
+			const isAnySensorOfThisTypeSelected = Boolean(sensorsListByType.find(sensor => selectedSensors.includes(sensor)));
 
-					if (isSensorContainedInType && isTypeSelected && !isAnySensorOfThisTypeSelected) {
-						const typeIndex = selectedType.indexOf(type);
-						this.selectedAdvancedSearchParameters.types.splice(typeIndex, 1);
-					} else if (isSensorContainedInType && !isTypeSelected) {
-						this.selectedAdvancedSearchParameters.types.push(type);
-					}
-				});
+			if (isSensorContainedInType && isTypeSelected && !isAnySensorOfThisTypeSelected) {
+				const typeIndex = selectedType.indexOf(type);
+				this.selectedAdvancedSearchParameters.types.splice(typeIndex, 1);
+			} else if (isSensorContainedInType && !isTypeSelected) {
+				this.selectedAdvancedSearchParameters.types.push(type);
+			}
 		});
 	}
 
@@ -189,13 +187,7 @@ import { IOverlaysConfig } from '../../../overlays/models/overlays.config';
 	}
 
 	updateSelectedSensorsByTypes(selectedTypesArray: string[], changedType: string): void {
-		let allTypeSensors: any[] = [];
-		this.overlaysService.getActiveProviders()
-			.map(([providerName, { sensorNamesByGroup }]: [string, IOverlaysSourceProvider]) => {
-				if (sensorNamesByGroup) {
-					allTypeSensors = sensorNamesByGroup[changedType];
-				}
-		});
+		const allTypeSensors: any[] = this.multipleOverlaysSourceConfig.sensorNamesByGroup[changedType];
 
 		if (Boolean(selectedTypesArray.includes(changedType))) {
 			const sensorToAdd = allTypeSensors.filter(sensor => !this.selectedAdvancedSearchParameters.sensors.includes(sensor));

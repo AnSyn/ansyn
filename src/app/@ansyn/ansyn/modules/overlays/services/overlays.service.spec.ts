@@ -125,10 +125,7 @@ describe('OverlaysService', () => {
 		indexProviders: {
 			animals: {
 				whitelist: [],
-				blacklist: [],
-				sensorNamesByGroup: {
-					kipod: ["shmulik"]
-				}
+				blacklist: []
 			}
 		}
 	}

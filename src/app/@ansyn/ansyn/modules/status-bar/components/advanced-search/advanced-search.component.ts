@@ -123,10 +123,11 @@ import { IOverlaysConfig } from '../../../overlays/models/overlays.config';
 	}
 
 	isValid(params: IAdvancedSearchParameter): boolean {
+		const isSensorsMode = this.displaySensors();
 		return params?.registeration?.length > 0
 			|| params?.types?.length > 0
-			|| params?.sensors?.length > 0
-			|| params?.providers?.length > 0;
+			|| isSensorsMode && params?.sensors?.length > 0
+			|| !isSensorsMode && params?.providers?.length > 0;
 	}
 
 	updateSelectedTypes(selectedTypesArray: string[]): void {

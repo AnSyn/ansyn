@@ -4,7 +4,6 @@ import { Store, StoreModule } from '@ngrx/store';
 import {
 	CasesService,
 	ICase,
-	ICaseDataInputFiltersState,
 	LoadDefaultCaseAction, LoggerService,
 	OverlaysService,
 	SelectCaseAction
@@ -159,33 +158,28 @@ describe('ContextAppEffects', () => {
 		const to = new Date('2020-06-23');
 		const from = new Date('2020-05-23');
 		const geo: Point = { type: 'Point', coordinates: [-117.91897, 34.81265] };
-		const filter = {
-			providerName: 'Planet',
-			sensorType: 'Landsat8L1G',
-			sensorName: 'Landsat8'
-		};
-		const dataInputFilters: ICaseDataInputFiltersState = {
-			filters: [filter],
-			fullyChecked: false,
-			customFiltersSensor: ['Landsat8']
-		}
+		const sensors = ["Landsat8"];
 		contextCase.state = {
 			...contextCase.state,
 			time: { to, from },
 			region: geo,
-			dataInputFilters
+			advancedSearchParameters: {
+				...contextCase.state.advancedSearchParameters,
+				sensors: sensors
+			}
 		};
 		const expectedResult = cold('-a-', {
 				a: new SelectCaseAction(contextCase),
 			}
 		);
-		spyOn(overlaysService, 'getSensorTypeAndProviderFromSensorName')
-			.and.returnValue(filter);
 		spyOn(casesService, 'updateCaseViaContext')
 			.and.callFake((ctx, c , p) => {
 				return { ...contextCase,
 					state: { ...contextCase.state,
-						time: ctx.time, dataInputFilters: ctx.dataInputFilters }};
+						time: ctx.time, advancedSearchParameters: {
+						...contextCase.state.advancedSearchParameters,
+							sensors: sensors
+						} }};
 		});
 		expect(contextAppEffects.loadDefaultCaseContext$).toBeObservable(expectedResult);
 	}))

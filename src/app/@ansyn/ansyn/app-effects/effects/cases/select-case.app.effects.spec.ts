@@ -33,7 +33,6 @@ import {
 	CaseRegionState,
 	CaseTimeFilter,
 	ICase,
-	ICaseDataInputFiltersState,
 	ICaseFacetsState,
 	ICaseLayersState,
 	ICaseMapsState,
@@ -100,7 +99,6 @@ describe('SelectCaseAppEffects', () => {
 					types: []
 				},
 				runSecondSearch = true,
-				dataInputFilters: ICaseDataInputFiltersState = { fullyChecked: true, filters: [] },
 				favoriteOverlays: IOverlay[] = [],
 				maps: ICaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
 				layers: ICaseLayersState = {
@@ -120,7 +118,6 @@ describe('SelectCaseAppEffects', () => {
 				timeFilter,
 				time,
 				region,
-				dataInputFilters,
 				advancedSearchParameters,
 				runSecondSearch,
 				favoriteOverlays,
@@ -146,7 +143,7 @@ describe('SelectCaseAppEffects', () => {
 			a: new SetMapsDataActionStore({ mapsList: maps.data }),
 			b: new SetActiveMapId(state.maps.activeMapId),
 			c: new SetLayoutAction(<any>maps.layout),
-			d: new SetOverlaysCriteriaAction({ time, region, dataInputFilters, advancedSearchParameters }, { noInitialSearch, runSecondSearch }),
+			d: new SetOverlaysCriteriaAction({ time, region, advancedSearchParameters }, { noInitialSearch, runSecondSearch }),
 			e: new UpdateGeoFilterStatus({active: false, type: region.properties.searchMode}),
 			f: new SetFavoriteOverlaysAction(favoriteOverlays),
 			g: new SetMiscOverlays({ miscOverlays }),

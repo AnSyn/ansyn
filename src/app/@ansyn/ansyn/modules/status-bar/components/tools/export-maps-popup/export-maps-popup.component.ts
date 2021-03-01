@@ -182,7 +182,9 @@ export class ExportMapsPopupComponent implements OnInit, OnDestroy {
 			mergeMap( (exportMapData) => {
 				if (exportMetadata.extra.north) {
 					return new Observable( obs => {
-						const rotation = mapToBeExport.getRotation();
+						const virtualNorth = mapToBeExport?.getVirtualNorth() || 0;
+						const realNorth = mapToBeExport?.getRotation() || 0;
+						const rotation = realNorth - virtualNorth;
 						const northImage = new Image();
 						northImage.onload = function() {
 							const { width, height } = northImage;

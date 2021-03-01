@@ -136,10 +136,10 @@ describe('Overlays Effects ', () => {
 
 	it('it should load all the overlays', () => {
 		overlaysService.search.and.returnValue(of({ data: overlays, limited: 0, errors: [] }));
-		actions = hot('--a--', { a: new LoadOverlaysAction({dataInputFilters: {fullyChecked: true, filters: []}}) });
+		actions = hot('--a--', { a: new LoadOverlaysAction({})});
 		const expectedResults = cold('--(ab)--', {
 			a: new LoadOverlaysSuccessAction(overlays),
-			b: new SetToastMessageAction({toastText: 'there are more overlays exist, ', buttonToDisplay: 'click here to expand', functionToExcute: jasmine.any(Function) }) 
+			b: new SetToastMessageAction({toastText: 'there are more overlays exist, ', buttonToDisplay: 'click here to expand', functionToExcute: jasmine.any(Function) })
 		});
 		expect(overlaysEffects.loadOverlays$).toBeObservable(expectedResults);
 	});

@@ -5,8 +5,6 @@ import {
 	CasesService,
 	DisplayMultipleOverlaysFromStoreAction,
 	GeoRegisteration,
-	ICaseDataInputFiltersState,
-	IDataInputFilterValue,
 	IOverlay,
 	LoadDefaultCaseAction,
 	LoadOverlaysSuccessAction,
@@ -112,11 +110,11 @@ export class ContextAppEffects {
 			case ContextName.QuickSearch:
 			case ContextName.TwoMaps:
 				const time = this.parseTimeParams(params.time);
-				const dataInputFilters = this.parseSensorParams(context === ContextName.TwoMaps ? this.config.TwoMaps.sensors : params.sensors);
+				const sensors: string[] = this.parseSensorParams(context === ContextName.TwoMaps ? this.config.TwoMaps.sensors : params.sensors);
 				contextCase = this.casesService.updateCaseViaContext({
 					...selectedContext,
 					time,
-					dataInputFilters
+					sensors
 				}, this.casesService.defaultCase, params);
 				return [new SelectCaseAction(contextCase)];
 			default:
@@ -169,16 +167,8 @@ export class ContextAppEffects {
 		return time;
 	}
 
-	private parseSensorParams(sensors): ICaseDataInputFiltersState {
-		const sensorsArray = sensors.split(',').map( sensor => sensor.trim());
-		const filters: IDataInputFilterValue[] = uniqWith(sensorsArray
-				.map(this.overlaysService.getSensorTypeAndProviderFromSensorName.bind(this.overlaysService))
-				.filter(Boolean) , isEqual);
-		return {
-			filters,
-			fullyChecked: filters.length === 0,
-			customFiltersSensor: sensorsArray
-		}
+	private parseSensorParams(sensors): string[] {
+		return sensors.split(',');
 	}
 
 	private buildErrorToastMessage(contextName: string, params?: string[]) {

@@ -603,5 +603,8 @@
     "@schematics/angular:directive": {
       "prefix": "ansyn"
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

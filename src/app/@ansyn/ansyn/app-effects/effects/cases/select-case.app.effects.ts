@@ -93,7 +93,7 @@ export class SelectCaseAppEffects {
 		// filters
 		const { facets } = state;
 
-		const measureIsActive = state.maps.data.some( map => map?.data?.measuresData?.isToolActive);
+		const measureIsActive = state.maps.data.some( map => map?.data?.measuresData?.measures?.length>0);
 
 		const selectCaseAction = [
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),

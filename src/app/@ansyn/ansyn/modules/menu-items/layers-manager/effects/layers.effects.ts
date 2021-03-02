@@ -35,7 +35,7 @@ export class LayersEffects {
 		ofType<LayerCollectionLoadedAction>(LayersActionTypes.LAYER_COLLECTION_LOADED),
 		mergeMap((action) => {
 			const regionLayerName = this.translate.instant('Region');
-			const regionLayer = this.dataLayersService.generateLayer({ name: regionLayerName, id: 'region-layer', type: LayerType.static });
+			const regionLayer = this.dataLayersService.generateLayer({ name: regionLayerName, id: 'region-layer', type: LayerType.base });
 			const layers = [regionLayer];
 
 			if (!action.payload.some(({ type }) => type === LayerType.annotation)) {

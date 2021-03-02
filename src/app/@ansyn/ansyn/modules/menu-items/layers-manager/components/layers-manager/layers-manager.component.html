@@ -1,10 +1,19 @@
-<div class="collection">
-	<div class="all-layers scrolled">
-		<ng-container *ngFor="let collection of layers$ | async">
-			<ansyn-layer-collection [collection]="collection"
-			></ansyn-layer-collection>
-		</ng-container>
+<div class="layer-search">
+	<input type="text" [placeholder]="'search layers' | translate" />
+	<div class="layer-search-button">
+	<button>
+		<i class="medium-icon icon-annotation-polygon"></i>
+	</button>
+	<button>
+		<i class="medium-icon icon-annotation-rectangle"></i>
+	</button>
 	</div>
 </div>
-
-<ansyn-data-layers-modals></ansyn-data-layers-modals>
+<div class="layers">
+	<ng-container *ngFor="let layer of (layers$ | async)">
+		<ansyn-layer-collection [collection]="layer" [rowsData]="layersRowsData"></ansyn-layer-collection>
+	</ng-container>
+	<ng-container>
+		<ansyn-layer-collection [collection]="overlays$ | async" [rowsData]="overlaysRowData"></ansyn-layer-collection>
+	</ng-container>
+</div>

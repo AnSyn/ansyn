@@ -3,13 +3,9 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Store } from '@ngrx/store';
 import { SetLayersModal, ShowAllLayers } from '../../actions/layers.actions';
 import { SelectedModalEnum } from '../../reducers/layers-modal';
-import { ILayer, LayerType } from '../../models/layers.model';
+import { ILayer, ILayersEntities, LayerType } from '../../models/layers.model';
 import { ILayerState } from '../../reducers/layers.reducer';
-
-export interface ILayerCollection {
-	type: LayerType;
-	data: ILayer[];
-}
+import { ITableRowModel } from '../../../../core/models/IEntitiesTableModel';
 
 @Component({
 	selector: 'ansyn-layer-collection',
@@ -40,7 +36,8 @@ export interface ILayerCollection {
 })
 
 export class LayerCollectionComponent {
-	@Input() collection: ILayerCollection;
+	@Input() collection: ILayersEntities;
+	@Input() rowsData: ITableRowModel<any>;
 	public show = true;
 
 	get SelectedModalEnum() {
@@ -55,14 +52,14 @@ export class LayerCollectionComponent {
 	}
 
 	showAll() {
-		this.store.dispatch(new ShowAllLayers(this.collection.type));
+		this.store.dispatch(new ShowAllLayers(<LayerType>this.collection.type));
 	}
 
 	openModal(type: SelectedModalEnum, layer?: ILayer): void {
 		this.store.dispatch(new SetLayersModal({ type, layer }));
 	}
 
-	shouldDisableRemoveLayer(layerIndexToRemove: number): boolean {
-		return this.collection.data.length < 2 || this.collection.data.every((layer, index) => layer.isNonEditable || index === layerIndexToRemove);
-	}
+	/*shouldDisableRemoveLayer(layerIndexToRemove: number): boolean {
+		return this.collection.data..id.length < 2 || this.collection.data.every((layer, index) => layer.isNonEditable || index === layerIndexToRemove);
+	}*/
 }

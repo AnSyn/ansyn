@@ -2,7 +2,7 @@
 @import 'ansyn/less/common';
 
 :host {
-	height: -webkit-fill-available;
+	height: 100%;
 
 	div.entities-table {
 		display: flex;
@@ -30,6 +30,10 @@
 					div {
 						display: flex;
 						flex: 2.5;
+
+						&.entities-table-head-col {
+							justify-content: center;
+						}
 
 						&.menu-placeholder {
 							flex: 2

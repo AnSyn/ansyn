@@ -2,19 +2,53 @@
 
 :host {
 	&:extend(.default-menu-item);
-	overflow: visible;
+	display: flex;
+	flex-direction: column;
+	width: 410px;
+	align-items: flex-start;
+	padding-top: 20px;
+	margin: 0 10px;
+	color: @text-color;
+	height: 100%;
+	box-sizing: border-box;
 
-	.collection {
-		width: 100%;
-		padding: 45px 10px;
-		box-sizing: border-box;
-		height: 100%;
+	.layer-search{
+		display: flex;
+		border: 1px solid @background-color-12;
+		width: 80%;
+		justify-content: space-between;
+		padding: 5px;
 
-		.all-layers {
-			overflow-y: auto;
-			height: calc(~'100% - 5px');
-			padding-right: 10px;
-			direction: ltr; // to flip the scrollbar location
+		input {
+			background: transparent;
+			flex: 1;
+			border: none;
+			outline: none;
+
+		}
+
+		.layer-search-button {
+			display: flex;
+			button {
+				&:extend(.ansyn-base-button);
+				display: flex;
+				align-items: center;
+			}
 		}
 	}
+
+	.layers {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		width: 100%;
+		margin-top: 10px;
+
+		ansyn-layer-collection {
+			height: 25%;
+
+		}
+	}
+
+
 }

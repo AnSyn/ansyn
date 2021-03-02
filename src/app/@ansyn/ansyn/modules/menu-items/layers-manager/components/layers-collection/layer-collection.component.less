@@ -4,16 +4,11 @@
 	direction: rtl; // needs to be repeated here because of scrollbar place
 
 	div.container {
-		background-color: @background-color-2;
-		margin-bottom: 13px;
-		padding: 13px;
-		overflow: hidden;;
+		margin-bottom: 20px;
+		overflow: hidden;
+		height: 100%;
 
 		&.Annotation {
-			button.down-arrow {
-				display: none;
-			}
-
 			div.title-row {
 				button.add-layer, ansyn-import-layer {
 					display: flex;
@@ -23,25 +18,12 @@
 					display: block;
 				}
 			}
-
-			ansyn-layer {
-				&:hover {
-					background: rgba(255, 255, 255, 0.4);
-
-					ansyn-layer-menu {
-						visibility: visible;
-						transform: translate(-60%, -5px);
-						opacity: 1;
-						pointer-events: auto;
-					}
-				}
-			}
 		}
 
 		div.title-row {
 			padding: 5px 0 10px 0;
+			margin-right: 10px;
 			display: flex;
-			justify-content: space-between;
 			align-items: baseline;
 
 			span.title {

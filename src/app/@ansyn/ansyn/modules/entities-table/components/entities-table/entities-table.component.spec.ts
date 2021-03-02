@@ -7,8 +7,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { LoadCaseAction } from '../../../menu-items/cases/actions/cases.actions';
 
 describe('CasesTableComponent', () => {
-	let component: EntitiesTableComponent;
-	let fixture: ComponentFixture<EntitiesTableComponent>;
+	let component: EntitiesTableComponent<any>;
+	let fixture: ComponentFixture<EntitiesTableComponent<any>>;
 	let store: Store<ICasesState>;
 
 	beforeEach(async(() => {
@@ -28,7 +28,6 @@ describe('CasesTableComponent', () => {
 		fixture = TestBed.createComponent(EntitiesTableComponent);
 		component = fixture.componentInstance;
 		component.entities = {
-			type: CasesType.MyCases,
 			entities: {},
 			ids: []
 		};
@@ -79,10 +78,5 @@ describe('CasesTableComponent', () => {
 		expect($event.stopPropagation).toHaveBeenCalled();
 		expect(caseRow.classList.remove).toHaveBeenCalledWith('mouse-enter');
 	});
-
-	it('selectCase should dispatch LoadCaseAction', () => {
-		component.selectCase('case-id');
-		expect(store.dispatch).toHaveBeenCalledWith(new LoadCaseAction('case-id'));
-	})
 
 });

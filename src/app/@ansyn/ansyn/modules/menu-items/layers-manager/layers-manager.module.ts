@@ -17,6 +17,7 @@ import { EditLayerComponent } from './components/data-layers-modals/edit-layer/e
 import { DeleteLayerComponent } from './components/data-layers-modals/delete-layer/delete-layer.component';
 import { ImportLayerComponent } from './components/import-layer/import-layer.component';
 import { CoreModule } from '../../core/core.module';
+import { EntitiesTableModule } from '../../entities-table/entities-table.module';
 
 // @dynamic
 @NgModule({
@@ -25,7 +26,8 @@ import { CoreModule } from '../../core/core.module';
 		CommonModule,
 		FormsModule,
 		StoreModule.forFeature(layersFeatureKey, LayersReducer),
-		EffectsModule.forFeature([LayersEffects])
+		EffectsModule.forFeature([LayersEffects]),
+		EntitiesTableModule
 	],
 	declarations: [LayersManagerComponent, LayerCollectionComponent, DownloadLayersComponent, LayerComponent, LayerMenuComponent, DataLayersModalsComponent, EditLayerComponent, DeleteLayerComponent, ImportLayerComponent],
 	providers: [DataLayersService]

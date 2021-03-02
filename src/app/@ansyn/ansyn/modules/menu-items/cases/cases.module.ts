@@ -15,6 +15,7 @@ import { casesFeatureKey, CasesReducer } from './reducers/cases.reducer';
 import { CoreModule } from '../../core/core.module';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { CasesContainerComponent } from './components/cases-container/cases-container.component';
+import { EntitiesTableModule } from '../../entities-table/entities-table.module';
 
 // @dynamic
 @NgModule({
@@ -24,7 +25,8 @@ import { CasesContainerComponent } from './components/cases-container/cases-cont
 		CoreModule,
 		MapFacadeModule,
 		FormsModule,
-		EffectsModule.forFeature([CasesEffects])
+		EffectsModule.forFeature([CasesEffects]),
+		EntitiesTableModule
 	],
 	declarations: [CasesComponent, CasesContainerComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent],
 	entryComponents: [CasesComponent, SaveCaseComponent, DeleteCaseComponent],

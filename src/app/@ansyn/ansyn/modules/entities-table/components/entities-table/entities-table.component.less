@@ -3,6 +3,7 @@
 
 :host {
 	height: 100%;
+	min-height: 200px;
 
 	div.entities-table {
 		display: flex;
@@ -13,12 +14,56 @@
 		font-size: 14px;
 		box-sizing: border-box;
 
+		div.title-row {
+			padding: 5px 0 10px 0;
+			margin-right: 10px;
+			display: flex;
+			align-items: baseline;
+
+			span.title {
+				font-family: @app-font;
+				font-style: normal;
+				font-weight: bold;
+				font-size: 14px;
+				line-height: 100%;
+				color: #FFFFFF;
+			}
+
+			button.down-arrow {
+				width: 10px;
+				height: 10px;
+				padding: 0;
+				background: transparent;
+				border: none;
+				border-bottom: 2px solid #FFFFFF;
+				border-left: 2px solid #FFFFFF;
+				float: left;
+				margin-left: 17px;
+				margin-top: 2px;
+				cursor: pointer;
+				outline: none;
+			}
+		}
+
 		div.entities-table-head {
 			display: flex;
 
 			div.entities-table-head-row {
-				padding: 0 15px;
+				display: flex;
+				padding: 10px 15px;
 				flex: 1;
+
+				div {
+					flex: 1;
+
+					&.entities-table-head-col {
+						justify-content: center;
+					}
+
+					&.menu-placeholder {
+						flex: 0
+					}
+				}
 
 				div.entities-table-head-row-data {
 					display: flex;
@@ -28,15 +73,14 @@
 					box-sizing: border-box;
 
 					div {
-						display: flex;
-						flex: 2.5;
+						flex: 1;
 
 						&.entities-table-head-col {
 							justify-content: center;
 						}
 
 						&.menu-placeholder {
-							flex: 2
+							flex: 0
 						}
 					}
 				}
@@ -47,7 +91,6 @@
 			display: flex;
 			flex-direction: column;
 			flex: 1;
-			margin-bottom: 65px;
 			direction: ltr;
 
 			div.entities-table-body-row {
@@ -56,7 +99,7 @@
 				border-top: 1px solid #EBF8FA;
 
 				&:last-child {
-					border-bottom: unset;
+					margin-bottom: 50px; //for showing tooltip without scrolling
 					border-bottom: 1px solid #EBF8FA;
 				}
 
@@ -104,7 +147,7 @@
 					}
 
 					div.entity-menu-container {
-						flex: 1;
+						flex: 0;
 						direction: ltr;
 
 						div.entity-menu {

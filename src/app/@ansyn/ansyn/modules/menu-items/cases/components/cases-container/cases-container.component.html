@@ -7,7 +7,7 @@
 						  [rowsData]="rowsData"
 						  [menu]="menu"
 						  [emptyTableLabel]="'No Cases'"
-						  (onInfintyScroll)="loadMyCases()"
+						  (onInfinityScroll)="loadMyCases()"
 						  (onEntitySelect)="openCase($event)"
 						  (onRowHover)="hoverCaseId = $event">
 		<ng-template #menu>
@@ -39,7 +39,7 @@
 		[activatedId]="(modalCaseId$ | async)"
 		[rowsData]="rowsData"
 		[emptyTableLabel]="'No Cases'"
-		(onInfintyScroll)="loadSharedCases()"
+		(onInfinityScroll)="loadSharedCases()"
 		(onEntitySelect)="openCase($event)"
 		(onRowHover)="hoverCaseId = $event">
 		<ng-template #menu>

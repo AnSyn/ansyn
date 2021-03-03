@@ -3,10 +3,54 @@
 @import "ansyn/less/globals";
 @import "../../less/status-bar-common";
 
-:host {
-	display: grid;
+.advanced-search-container {
 	margin-top: 5px;
     margin-bottom: 20px;
+
+	.first-row-container{
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+
+		.geo-registration-title{
+			text-align: center;
+			margin-bottom: 4px;
+			height: 25px;
+
+			.text-title{
+				margin-top:2px;
+			}
+		}
+	}
+
+	.second-row-container{
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+
+		.resolution-search-container{
+			display: flex;
+			flex-direction: column;
+
+			.resolution-title-container{
+				display: flex;
+				height: 25px;
+				margin-bottom: 5px;
+
+				.reset{
+					flex-basis: 25%;
+					margin-top: 2px;
+				}
+
+				.text-title-resolution{
+					flex-basis: 50%;
+					text-align: center;
+					margin-top: 2px;
+				}
+			}
+		}
+	}
+
 	.box {
 		.select-all {
 			margin-right: 10px;
@@ -25,22 +69,18 @@
 
 		.title-grid {
 			height: 25px;
-			display: grid;
+			display: flex;
 			margin-bottom: 5px;
 
 			.buttons-title {
-				grid-column: 1;
 				display: inline-flex;
+				flex-basis: 33.3%;
 			}
 
 			.text-title {
-				grid-column: 2 / span 2;
 				margin-top: 2px;
-			}
-
-			.text-title-resolution {
-				grid-column: 2;
-				margin-top: 2px;
+				flex-basis: 33.3%;
+				text-align: center;
 			}
 		}
 
@@ -86,34 +126,17 @@
 			padding: 20px;
 			font-size: 30px;
 		}
-
-
-	}
-
-	.types {
-		grid-column: 1 / span 2;
-		grid-row: 1;
-	}
-
-	.registration {
-		grid-column: 3;
 	}
 
 	.providers-sensors {
-		grid-column: 1 / span 2;
-		grid-row: 2 / span 3;
 		margin-top: 5px;
 	}
 
 	.resolution {
-		grid-row: 2;
-		grid-column: 3;
 		margin-top: 5px;
 	}
 
 	.search-button {
-		grid-row: 3;
-		grid-column: 3;
 		text-align: center;
 		cursor: pointer;
 		font-size: 25px;
@@ -125,8 +148,6 @@
 	}
 
 	.message {
-		grid-row: 4;
-		grid-column: 1 / span 4;
 		margin-top: 0.4em;
 		padding: 0 5px;
 		color: red;

@@ -1,7 +1,7 @@
 <div class="entities-table" *ngIf="entities.ids.length; else noEntities">
 
-	<div class="title-row" *ngIf="collapsible">
-		<button [@rotateArrow]="show"
+	<div class="title-row">
+		<button [@rotateArrow]="show" *ngIf="collapsible"
 				#downArrow class="medium-icon down-arrow"
 				(click)="show = !show">
 		</button>

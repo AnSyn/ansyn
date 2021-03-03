@@ -1,0 +1,27 @@
+name: Node.js CI
+
+on:
+  push:
+    branches:
+      - 'Add-github-actions'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm set progress=false
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run test:single-run
+      - run: npm run build:libs

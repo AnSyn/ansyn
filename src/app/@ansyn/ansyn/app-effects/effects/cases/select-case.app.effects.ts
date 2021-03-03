@@ -113,7 +113,6 @@ export class SelectCaseAppEffects {
 			new UpdateToolsFlags([{key: toolsFlags.isMeasureToolActive, value: measureIsActive}]),
 			new SelectCaseSuccessAction(payload)
 		];
-
 		return selectCaseAction;
 	}
 

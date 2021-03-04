@@ -1,7 +1,7 @@
 import { LayersActions, LayersActionTypes } from '../actions/layers.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { uniq } from 'lodash';
-import { createEntityAdapter, EntityAdapter, EntityState, Dictionary } from '@ngrx/entity';
+import { createEntityAdapter, Dictionary, EntityAdapter, EntityState } from '@ngrx/entity';
 import { ILayer, LayerType } from '../models/layers.model';
 import { ILayerModal, SelectedModalEnum } from './layers-modal';
 

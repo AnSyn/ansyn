@@ -1,0 +1,18 @@
+<div class="actions">
+
+	<button class="add-layer" (click)="openModal(SelectedModalEnum.edit)"
+			[attr.tooltip-value]="'Create new layer' | translate" tooltip-class="bottom right">
+		<i class="small-icon icon-layer-add"></i>
+	</button>
+
+	<ansyn-import-layer [attr.tooltip-value]="'Import layer' | translate"
+						tooltip-class="bottom right"></ansyn-import-layer>
+
+</div>
+<ansyn-entities-table
+	[entities]="layers$ | async"
+	[title]="'Annotations' | translate"
+	[rowsData]="layersRowsData"
+	[collapsible]="true"
+>
+</ansyn-entities-table>

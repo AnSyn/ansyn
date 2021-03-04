@@ -1,5 +1,5 @@
 import { IEntity } from '../../../core/services/storage/storage.service';
-import { IEntitiesTableData } from '../../../core/models/IEntitiesTableModel';
+import { IEntitiesTableData, ITableRowModel } from '../../../core/models/IEntitiesTableModel';
 
 export enum LayerType {
 	static = 'Static',

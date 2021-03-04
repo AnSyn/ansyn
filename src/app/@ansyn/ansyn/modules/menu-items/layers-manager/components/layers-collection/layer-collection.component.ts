@@ -1,65 +1,61 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { SetLayersModal, ShowAllLayers } from '../../actions/layers.actions';
 import { SelectedModalEnum } from '../../reducers/layers-modal';
 import { ILayer, ILayersEntities, LayerType } from '../../models/layers.model';
-import { ILayerState } from '../../reducers/layers.reducer';
-import { ITableRowModel } from '../../../../core/models/IEntitiesTableModel';
+import { ILayerState, selectLayers } from '../../reducers/layers.reducer';
+import { IEntitiesTableData, ITableRowModel } from '../../../../core/models/IEntitiesTableModel';
+import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
+import { map, distinctUntilChanged } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { isEqual } from 'lodash';
 
 @Component({
 	selector: 'ansyn-layer-collection',
-	templateUrl: './layer-collection.component.html',
-	styleUrls: ['./layer-collection.component.less'],
-	animations: [
-		trigger('rotateArrow', [
-			state('true', style({
-				transform: 'rotateZ(-45deg) translateY(35%) translateX(50%)'
-			})),
-			state('false', style({
-				transform: 'rotateZ(135deg) translateY(-75%)'
-			})),
-			transition('1 <=> 0', animate('0.1s'))
-		]),
-		trigger('layersTrigger', [
-			state('true', style({
-				maxHeight: '5000px',
-				opacity: 1
-			})),
-			state('false', style({
-				maxHeight: '0',
-				opacity: 0
-			})),
-			transition('1 <=> 0', animate('0.2s'))
-		])
-	]
+	template: ''
 })
-
-export class LayerCollectionComponent {
-	@Input() collection: ILayersEntities;
-	@Input() rowsData: ITableRowModel<any>;
-	public show = true;
+export class LayerCollectionComponent{
+	type: LayerType;
+	layersRowsData: ITableRowModel<ILayer>[] = [
+		{
+			headName: 'Layer name',
+			propertyName: 'name'
+		}
+	];
 
 	get SelectedModalEnum() {
 		return SelectedModalEnum;
 	}
 
-	get LayerType() {
-		return LayerType;
+	getLayers$ = this.store$.pipe(select(selectLayers));
+
+	layers$ = this.getLayers$.pipe(
+		map(this.filterLayer.bind(this)),
+		distinctUntilChanged(isEqual),
+		map(this.createTableEntities.bind(this))
+	);
+	constructor(public store$: Store) {
 	}
 
-	constructor(public store: Store<ILayerState>) {
-	}
-
-	showAll() {
-		this.store.dispatch(new ShowAllLayers(<LayerType>this.collection.type));
-	}
 
 	openModal(type: SelectedModalEnum, layer?: ILayer): void {
-		this.store.dispatch(new SetLayersModal({ type, layer }));
+		this.store$.dispatch(new SetLayersModal({ type, layer }));
 	}
 
-	/*shouldDisableRemoveLayer(layerIndexToRemove: number): boolean {
-		return this.collection.data..id.length < 2 || this.collection.data.every((layer, index) => layer.isNonEditable || index === layerIndexToRemove);
-	}*/
+	filterLayer(layers: ILayer[]): ILayer[] {
+		return layers.filter(layer => layer.type === this.type);
+	}
+	private createTableEntities(layers: ILayer[]): IEntitiesTableData<ILayer> {
+		const entitiesData: IEntitiesTableData<ILayer> = {ids: [], entities: {}};
+		for (let layer of layers) {
+			entitiesData.ids.push(layer.id);
+			entitiesData.entities[layer.id] = layer;
+		}
+		return entitiesData
+	}
+
+
+
+
 }

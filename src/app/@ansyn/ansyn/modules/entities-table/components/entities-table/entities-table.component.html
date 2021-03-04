@@ -14,9 +14,6 @@
 				{{row.headName | translate}}
 			</div>
 			<div class="menu-placeholder"></div>
-			<!--<div class="entities-table-head-row-data">
-
-			</div>-->
 
 		</div>
 	</div>
@@ -39,7 +36,11 @@
 				 tooltip-class="bottom" [attr.tooltip-value]="entities?.entities[id]?.name">
 
 				<div class="entities-table-entity-name-col" *ngFor="let row of rowsData">
-					{{entities.entities[id][row.propertyName] | TableRowPipe:row.pipe }}
+					<span
+						*ngIf="!row.isIcon; else icon">{{entities.entities[id][row.propertyName] | TableRowPipe:row.pipe }}</span>
+					<ng-template #icon>
+						<i class="medium-icon" [ngClass]="'icon-'+entities.entities[id][row.propertyName]"></i>
+					</ng-template>
 				</div>
 
 				<!--menu-->

@@ -18,6 +18,9 @@ import { DeleteLayerComponent } from './components/data-layers-modals/delete-lay
 import { ImportLayerComponent } from './components/import-layer/import-layer.component';
 import { CoreModule } from '../../core/core.module';
 import { EntitiesTableModule } from '../../entities-table/entities-table.module';
+import { StaticLayersComponent } from './components/static-layers/static-layers.component';
+import { BaseLayersComponent } from './components/base-layers/base-layers.component';
+import { AnnotationLayersComponent } from './components/annotation-layers/annotation-layers.component';
 
 // @dynamic
 @NgModule({
@@ -29,7 +32,7 @@ import { EntitiesTableModule } from '../../entities-table/entities-table.module'
 		EffectsModule.forFeature([LayersEffects]),
 		EntitiesTableModule
 	],
-	declarations: [LayersManagerComponent, LayerCollectionComponent, DownloadLayersComponent, LayerComponent, LayerMenuComponent, DataLayersModalsComponent, EditLayerComponent, DeleteLayerComponent, ImportLayerComponent],
+	declarations: [LayersManagerComponent, LayerCollectionComponent, DownloadLayersComponent, LayerComponent, LayerMenuComponent, DataLayersModalsComponent, EditLayerComponent, DeleteLayerComponent, ImportLayerComponent, StaticLayersComponent, BaseLayersComponent, AnnotationLayersComponent],
 	providers: [DataLayersService]
 })
 

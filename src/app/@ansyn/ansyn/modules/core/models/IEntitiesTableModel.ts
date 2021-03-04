@@ -10,4 +10,5 @@ export interface ITableRowModel<T> {
 	headName: string;
 	propertyName: keyof T;
 	pipe?: PipeTransform
+	isIcon?: boolean;
 }

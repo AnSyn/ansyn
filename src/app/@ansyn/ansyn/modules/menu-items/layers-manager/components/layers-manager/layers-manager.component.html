@@ -1,19 +1,29 @@
 <div class="layer-search">
-	<input type="text" [placeholder]="'search layers' | translate" />
+	<input type="text" [placeholder]="'search layers' | translate"/>
 	<div class="layer-search-button">
-	<button>
-		<i class="medium-icon icon-annotation-polygon"></i>
-	</button>
-	<button>
-		<i class="medium-icon icon-annotation-rectangle"></i>
-	</button>
+		<button>
+			<i class="medium-icon icon-annotation-polygon"></i>
+		</button>
+		<button>
+			<i class="medium-icon icon-annotation-rectangle"></i>
+		</button>
 	</div>
 </div>
 <div class="layers">
-	<ng-container *ngFor="let layer of (layers$ | async)">
-		<ansyn-layer-collection [collection]="layer" [rowsData]="layersRowsData"></ansyn-layer-collection>
-	</ng-container>
-	<ng-container>
-		<ansyn-layer-collection [collection]="overlays$ | async" [rowsData]="overlaysRowData"></ansyn-layer-collection>
-	</ng-container>
+	<div class="layer">
+		<ansyn-static-layers></ansyn-static-layers>
+	</div>
+	<div class="layer">
+		<ansyn-annotation-layers></ansyn-annotation-layers>
+	</div>
+	<div class="layer">
+		<ansyn-base-layers></ansyn-base-layers>
+	</div>
+	<div class="layer">
+
+	</div>
+
 </div>
+
+
+<ansyn-data-layers-modals></ansyn-data-layers-modals>

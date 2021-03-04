@@ -20,8 +20,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: sh VAR=$GITHUB_REF | tr '[:upper:]' '[:lower:]'
-      - run: sh echo $VAR
       - run: npm set progress=false
       - run: npm ci
       - run: npm run lint
@@ -30,4 +28,4 @@ jobs:
         with:
           run: npm run test:single-run
       - run: npm run build:libs
-      - run: sh -x scripts/build.sh ansyn $GITHUB_SHA ${$GITHUB_REF,,}
+      - run: sh -x scripts/build.sh ansyn $GITHUB_SHA 'test'

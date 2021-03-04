@@ -28,3 +28,4 @@ jobs:
         with:
           run: npm run test:single-run
       - run: npm run build:libs
+      - run: sh -x scripts/build.sh ansyn $GITHUB_SHA $GITHUB_REF

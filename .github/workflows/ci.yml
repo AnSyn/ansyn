@@ -29,3 +29,10 @@ jobs:
           run: npm run test:single-run
       - run: npm run build:libs
       - run: sh -x scripts/build.sh ansyn $GITHUB_SHA 'test'
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: v1-npm-deps-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: v1-npm-deps-

@@ -15,6 +15,14 @@ jobs:
         node-version: [12.x]
         python-version: [3.8]
 
+    env:
+      CLUSTER: mapathaon-ansyn
+      REPO_DEV: 223455578796.dkr.ecr.us-west-2.amazonaws.com/ansyn/client-chrome.v.44
+      REPO_PROD: 223455578796.dkr.ecr.us-west-2.amazonaws.com/ansyn/client
+      SERVICES_DEV: ansyn-client-chrome-v44
+      SERVICES_PROD: ansyn-client
+      TEST_SECRET: ${{ secrets.TEST_SECRET }}
+
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}

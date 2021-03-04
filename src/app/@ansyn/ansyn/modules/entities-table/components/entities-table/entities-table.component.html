@@ -1,14 +1,15 @@
+<div class="title-row">
+	<button [@rotateArrow]="show" *ngIf="collapsible"
+			class="down-arrow"
+			(click)="show = !show">
+	</button>
+	<span class="title">{{title | translate}}</span>
+</div>
+
+<ng-container *ngIf="show">
 <div class="entities-table" *ngIf="entities.ids.length; else noEntities">
 
-	<div class="title-row">
-		<button [@rotateArrow]="show" *ngIf="collapsible"
-				#downArrow class="medium-icon down-arrow"
-				(click)="show = !show">
-		</button>
-		<span class="title">{{title | translate}}</span>
-	</div>
-
-	<div class="entities-table-head" *ngIf="show">
+	<div class="entities-table-head">
 		<div class="entities-table-head-row">
 			<div class="entities-table-head-col" *ngFor="let row of rowsData">
 				{{row.headName | translate}}
@@ -18,7 +19,7 @@
 		</div>
 	</div>
 
-	<div class="entities-table-body scrolled" *ngIf="show"
+	<div class="entities-table-body scrolled"
 		 (ansynInfiniteScroll)="onInfinityScroll.emit()"
 		 #tbodyElement>
 
@@ -63,3 +64,4 @@
 	</p>
 
 </ng-template>
+</ng-container>

@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { LayerCollectionComponent } from '../layers-collection/layer-collection.component';
-import { selectBaseLayers } from '../../reducers/layers.reducer';
-import { select } from '@ngrx/store';
 import { LayerType } from '../../models/layers.model';
 
 @Component({

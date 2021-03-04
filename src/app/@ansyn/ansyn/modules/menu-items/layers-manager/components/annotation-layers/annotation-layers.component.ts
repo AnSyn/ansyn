@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { LayerCollectionComponent } from '../layers-collection/layer-collection.component';
-import { LayerType, ILayer } from '../../models/layers.model';
-import { SelectedModalEnum } from '../../reducers/layers-modal';
-import { SetLayersModal } from '../../actions/layers.actions';
+import { LayerType } from '../../models/layers.model';
 
 @Component({
 	selector: 'ansyn-annotation-layers',

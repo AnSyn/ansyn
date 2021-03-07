@@ -60,7 +60,3 @@ jobs:
         run: |
           pip install --user awscli # install aws cli w/o sudo
       - run: export PATH=$PATH:$HOME/.local/bin # put aws in the path
-
-      - name: Deploy to aws
-        if: github.ref === 'Add-github-actions'
-        run: echo $REPO_DEV $GITHUB_SHA $CLUSTER $SERVICES_DEV

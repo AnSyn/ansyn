@@ -68,7 +68,7 @@ export class DataLayersService implements OnInit, OnDestroy {
 		}
 		return this.storageService.searchByCase<ILayer>(this.config.schema, { caseId })
 			.pipe(
-				map(layers => layers.reverse()),
+				map(layers => layers),
 				catchError(err => {
 					console.log(err);
 					return this.errorHandlerService.httpErrorHandle(err, 'Failed to load layers');

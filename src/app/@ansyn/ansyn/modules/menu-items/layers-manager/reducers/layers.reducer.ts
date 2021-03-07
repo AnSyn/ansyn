@@ -5,7 +5,7 @@ import { createEntityAdapter, Dictionary, EntityAdapter, EntityState } from '@ng
 import { ILayer, LayerType } from '../models/layers.model';
 import { ILayerModal, SelectedModalEnum } from './layers-modal';
 
-export const layersAdapter: EntityAdapter<ILayer> = createEntityAdapter<ILayer>();
+export const layersAdapter: EntityAdapter<ILayer> = createEntityAdapter<ILayer>({sortComparer: (a, b) => +a.creationTime - +b.creationTime});
 
 export interface ILayerState extends EntityState<ILayer> {
 	selectedLayersIds: string[];

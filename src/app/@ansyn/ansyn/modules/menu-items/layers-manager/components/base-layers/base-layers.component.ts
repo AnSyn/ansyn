@@ -9,5 +9,6 @@ import { LayerType } from '../../models/layers.model';
 })
 export class BaseLayersComponent extends LayerCollectionComponent {
 	type = LayerType.base;
+
 }
 

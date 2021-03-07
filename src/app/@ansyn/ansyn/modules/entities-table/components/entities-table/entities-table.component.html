@@ -47,7 +47,7 @@
 				<!--menu-->
 				<div class="entity-menu-container">
 					<div class="entity-menu" (click)="menuClick($event, row)">
-						<ng-container *ngTemplateOutlet="menu"></ng-container>
+						<ng-container *ngTemplateOutlet="menu; context: {id: id}"></ng-container>
 					</div>
 				</div>
 

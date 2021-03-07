@@ -3,7 +3,7 @@ name: Node.js CI
 on:
   push:
     branches:
-      - 'Add-github-actions'
+      - 'master'
 
 jobs:
   build:
@@ -31,7 +31,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - run: echo $GITHUB_REF
       - run: npm set progress=false
       - run: npm ci
       - run: npm run lint
@@ -40,7 +39,10 @@ jobs:
         with:
           run: npm run test:single-run
       - run: npm run build:libs
-      - run: sh -x scripts/build.sh ansyn $GITHUB_SHA 'test'
+      - if: ${{ github.ref.contains('tags') }}
+        run: sh -x scripts/build.sh ansyn $GITHUB_SHA $GITHUB_REF
+      - if: ${{ github.ref.contains('heads') }}
+        run: sh -x scripts/build.sh ansyn $GITHUB_SHA
 
       - name: Cache node modules
         uses: actions/cache@v2

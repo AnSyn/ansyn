@@ -35,6 +35,7 @@ jobs:
         if: ${{ github.ref == 'Add-github-actions' }}
         run: echo $REPO_DEV $GITHUB_SHA $CLUSTER $SERVICES_DEV
 
+      - run: echo $GITHUB_REF
       - run: npm set progress=false
       - run: npm ci
       - run: npm run lint

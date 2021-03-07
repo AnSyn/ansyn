@@ -130,16 +130,16 @@ export class MapAppEffects {
 		);
 
 
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	onUpdateOverlay$: Observable<any> = this.actions$
 		.pipe(
 			ofType<UpdateOverlay>(OverlaysActionTypes.UPDATE_OVERLAY),
-			tap(({payload}: UpdateOverlay) => {
+			tap(({ payload }: UpdateOverlay) => {
 				const mapId = Array.from(this.lastOverlayIds.keys()).find(
 					mapId => this.lastOverlayIds.get(mapId) === payload.id
 				);
 				if (mapId) {
-					this.store$.dispatch(new DisplayOverlayFromStoreAction({id: <string>payload.id, mapId: mapId}))
+					this.store$.dispatch(new DisplayOverlayFromStoreAction({ id: <string>payload.id, mapId: mapId }))
 				}
 			})
 		);
@@ -173,7 +173,7 @@ export class MapAppEffects {
 				OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
 				OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW
 			),
-			tap( ({payload}) => this.lastOverlayIds.delete(payload.mapId)),
+			tap(({ payload }) => this.lastOverlayIds.delete(payload.mapId)),
 			map(({ payload }: DisplayOverlayAction) => new SetIsLoadingAcion({ mapId: payload.mapId, show: false }))
 		);
 
@@ -344,7 +344,11 @@ export class MapAppEffects {
 			if (extentWidth > this.screenViewConfig.extentWidthSearchLimit) {
 				actions.push(new SetOverlaysStatusMessageAction({ message: 'Zoom in to get new overlays' }));
 			} else {
-				const extent = feature(extentPolygon, { searchMode: CaseGeoFilter.ScreenView, center: newCenter, zoom: newZoom });
+				const extent = feature(extentPolygon, {
+					searchMode: CaseGeoFilter.ScreenView,
+					center: newCenter,
+					zoom: newZoom
+				});
 				actions.push(new SetOverlaysCriteriaAction({ region: extent }));
 
 				if (geoFilterStatus.active) {
@@ -382,7 +386,7 @@ export class MapAppEffects {
 
 			return forkJoin(observableOverlays).pipe(
 				mergeMap((overlaysData: any[]) => {
-					overlaysData = this.sortOverlaysByAngle(overlaysData,payload. point);
+					overlaysData = this.sortOverlaysByAngle(overlaysData, payload.point);
 
 					// Getting the first overlay from each query.
 					const overlays: any[] = overlaysData.map(({ data }) => ({ overlay: data[0] })).filter(({ overlay }) => overlay);
@@ -423,35 +427,38 @@ export class MapAppEffects {
 		ofType(ToolsActionsTypes.MEASURES.CREATE_MEASURE_DATA, ToolsActionsTypes.MEASURES.REMOVE_MEASURE_DATA,
 			ToolsActionsTypes.MEASURES.ADD_MEASURE, ToolsActionsTypes.MEASURES.REMOVE_MEASURE,
 			ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS, ToolsActionsTypes.MEASURES.UPDATE_MEASURE_LABEL),
-		concatMap( action => of(action).pipe(
+		concatMap(action => of(action).pipe(
 			withLatestFrom(this.store$.select(selectMaps)),
 		)),
-		map( ([action, maps]: [
+		map(([action, maps]: [
 			CreateMeasureDataAction | RemoveMeasureDataAction | AddMeasureAction | RemoveMeasureAction
-				| UpdateMeasureDataOptionsAction | UpdateMeasureLabelAction,
+			| UpdateMeasureDataOptionsAction | UpdateMeasureLabelAction,
 			Dictionary<IMapSettings>]) => {
 			const map = maps[action.payload.mapId];
-			const changes = {data: {...map.data}};
-			switch ( action.type) {
+			const changes = { data: { ...map.data } };
+			switch (action.type) {
 				case ToolsActionsTypes.MEASURES.CREATE_MEASURE_DATA:
 					const measuresData = createNewMeasureData();
-					changes.data.measuresData = {...measuresData, ...changes.data?.measuresData};
+					changes.data.measuresData = { ...measuresData, ...changes.data?.measuresData };
 					break;
 				case ToolsActionsTypes.MEASURES.REMOVE_MEASURE_DATA:
 					changes.data.measuresData = { ...changes.data?.measureData, measures: [] };
 					break;
 				case ToolsActionsTypes.MEASURES.ADD_MEASURE:
 					const oldMeasures = changes.data.measuresData.measures;
-					changes.data.measuresData = {...changes.data.measuresData, measures: [...oldMeasures, action.payload.measure]};
+					changes.data.measuresData = {
+						...changes.data.measuresData,
+						measures: [...oldMeasures, action.payload.measure]
+					};
 					break;
 				case ToolsActionsTypes.MEASURES.REMOVE_MEASURE:
 					const measureId = action.payload.measureId;
-					const updateMeasures = measureId ? changes.data.measuresData.measures.filter( measure => measure.id !== measureId) : [];
-					changes.data.measuresData = {...changes.data.measuresData, measures: updateMeasures};
+					const updateMeasures = measureId ? changes.data.measuresData.measures.filter(measure => measure.id !== measureId) : [];
+					changes.data.measuresData = { ...changes.data.measuresData, measures: updateMeasures };
 					break;
 				case ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS:
 					const newOptions = action.payload.options;
-					changes.data.measuresData = {...changes.data.measuresData, ...newOptions};
+					changes.data.measuresData = { ...changes.data.measuresData, ...newOptions };
 					break;
 				case ToolsActionsTypes.MEASURES.UPDATE_MEASURE_LABEL: {
 					const { labelEntity } = action.payload;
@@ -474,11 +481,11 @@ export class MapAppEffects {
 								}
 							}
 					);
-					changes.data.measuresData = {...changes.data.measuresData, measures: updateMeasures};
+					changes.data.measuresData = { ...changes.data.measuresData, measures: updateMeasures };
 					break;
 				}
 			}
-			return new UpdateMapAction({id: map.id, changes});
+			return new UpdateMapAction({ id: map.id, changes });
 		}),
 		rxPreventCrash()
 	);

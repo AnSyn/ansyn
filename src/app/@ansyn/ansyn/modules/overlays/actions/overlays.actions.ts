@@ -53,7 +53,6 @@ export const OverlaysActionTypes = {
 	LOG_SEARCH_PANEL_POPUP: 'LOG_SEARCH_PANEL_POPUP',
 	LOG_MANUAL_SEARCH_TIME: 'LOG_MANUAL_SEARCH_TIME',
 	LOG_SELECT_SEARCH_TIME_PRESET: 'LOG_SELECT_SEARCH_TIME_PRESET',
-	DISPLAY_FOUR_VIEWS: 'DISPLAY_FOUR_VIEWS',
 	SET_FOUR_VIEWS_OVERLAYS: 'SET_FOUR_VIEWS_OVERLAYS'
 };
 
@@ -91,13 +90,6 @@ export class UnSelectOverlayAction implements Action {
 	type = OverlaysActionTypes.UNSELECT_OVERLAY;
 
 	constructor(public payload: string) {
-	}
-}
-
-export class DisplayFourViewsAction implements Action {
-	type = OverlaysActionTypes.DISPLAY_FOUR_VIEWS;
-
-	constructor(public payload: Point) {
 	}
 }
 

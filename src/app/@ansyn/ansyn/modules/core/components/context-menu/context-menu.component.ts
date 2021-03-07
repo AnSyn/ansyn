@@ -12,7 +12,7 @@ import {
 	MapActionTypes,
 	mapFacadeConfig,
 	MapFacadeService,
-	mapStateSelector
+	mapStateSelector, SetFourViewsModeAction
 } from '@ansyn/map-facade';
 import { uniq as _uniq, cloneDeep } from 'lodash';
 import { Point } from 'geojson';
@@ -22,7 +22,6 @@ import { selectRegion } from '../../../overlays/reducers/overlays.reducer';
 import { fourViewsConfig, IFourViewsConfig, IOverlay } from '../../../overlays/models/overlay.model';
 import { CaseGeoFilter, ICaseMapState } from '../../../menu-items/cases/models/case.model';
 import { IGeoFilterStatus, selectGeoFilterStatus } from '../../../status-bar/reducers/status-bar.reducer';
-import { DisplayFourViewsAction } from '../../../overlays/actions/overlays.actions';
 
 export interface IContextMenuShowPayload {
 	point: Point;
@@ -253,7 +252,7 @@ export class ContextMenuComponent implements OnInit {
 				}
 			};
 
-			this.store$.dispatch(new DisplayFourViewsAction(point));
+			this.store$.dispatch(new SetFourViewsModeAction({point, active: true}));
 		}
 	}
 

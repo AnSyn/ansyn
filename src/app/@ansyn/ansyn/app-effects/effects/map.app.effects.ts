@@ -24,7 +24,7 @@ import {
 	SetToastMessageAction,
 	SynchronizeMapsAction,
 	ToggleMapLayersAction, UpdateMapAction,
-	ToggleFooter, SetFourViewsModeAction, SetLayoutAction
+	ToggleFooter, SetFourViewsModeAction, SetLayoutAction, SetPendingOverlaysAction
 } from '@ansyn/map-facade';
 import {
 	BaseMapSourceProvider,
@@ -39,7 +39,7 @@ import {
 	GetProvidersMapsService,
 	ImageryLayerProperties,
 	ImageryMapExtentPolygon,
-	IMapSettingsData
+	IMapSettingsData, getAngleDegreeBetweenPoints
 } from '@ansyn/imagery';
 import {
 	catchError,
@@ -59,7 +59,7 @@ import { toastMessages } from '../../modules/core/models/toast-messages';
 import { endTimingLog, startTimingLog } from '../../modules/core/utils/logs/timer-logs';
 import { isFullOverlay } from '../../modules/core/utils/overlays';
 import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
-import { MarkUpClass, selectRegion } from '../../modules/overlays/reducers/overlays.reducer';
+import { MarkUpClass, selectOverlaysCriteria, selectRegion } from '../../modules/overlays/reducers/overlays.reducer';
 import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity';
 import {
@@ -80,7 +80,13 @@ import {
 	SetOverlaysCriteriaAction,
 	SetOverlaysStatusMessageAction, UpdateOverlay
 } from '../../modules/overlays/actions/overlays.actions';
-import { GeoRegisteration, IOverlay } from '../../modules/overlays/models/overlay.model';
+import {
+	GeoRegisteration, IFourViews,
+	IFourViewsConfig,
+	fourViewsConfig,
+	IOverlay,
+	IOverlaysCriteria
+} from '../../modules/overlays/models/overlay.model';
 import {
 	BackToWorldView,
 	OverlayStatusActionsTypes
@@ -101,10 +107,14 @@ import {
 import { feature } from '@turf/turf';
 import { calculatePolygonWidth } from '@ansyn/imagery';
 import { CasesActionTypes } from '../../modules/menu-items/cases/actions/cases.actions';
+import { casesConfig } from '../../modules/menu-items/cases/services/cases.service';
 import { createNewMeasureData } from '../../modules/status-bar/components/tools/models/tools.model';
 import { rxPreventCrash } from '../../modules/core/utils/rxjs/operators/rxPreventCrash';
-
-const FOOTPRINT_INSIDE_MAP_RATIO = 1;
+import { ICasesConfig } from '../../modules/menu-items/cases/models/cases-config';
+import { TranslateService } from '@ngx-translate/core';
+import { MultipleOverlaysSourceProvider } from '../../modules/overlays/services/multiple-source-provider';
+import { Point } from 'geojson';
+import { IFetchParams } from '../../modules/overlays/models/base-overlay-source-provider.model';
 
 @Injectable()
 export class MapAppEffects {
@@ -355,10 +365,55 @@ export class MapAppEffects {
 	@Effect()
 	onDisableFourViewsMode$ = this.actions$.pipe(
 		ofType(MapActionTypes.SET_FOUR_VIEWS_MODE),
-		filter(({ payload }: SetFourViewsModeAction) => !payload),
+		filter(({ payload }: SetFourViewsModeAction) => !payload.active),
 		mergeMap(() => {
 			const oneMapLayout = 'layout1';
 			return [new SetLayoutAction(oneMapLayout), new ToggleFooter(false), new SetFourViewsOverlaysAction({})]
+		})
+	);
+
+	@Effect()
+	onFourViewsMode$ = this.actions$.pipe(
+		ofType(MapActionTypes.SET_FOUR_VIEWS_MODE),
+		filter(({ payload }: SetFourViewsModeAction) => payload.active),
+		withLatestFrom(this.store$.select(selectOverlaysCriteria)),
+		mergeMap(([{ payload }, criteria]: [SetFourViewsModeAction, IOverlaysCriteria]) => {
+			const observableOverlays = this.getFourViewsOverlays(payload.point, criteria);
+
+			return forkJoin(observableOverlays).pipe(
+				mergeMap((overlaysData: any[]) => {
+					overlaysData = this.sortOverlaysByAngle(overlaysData,payload. point);
+
+					// Getting the first overlay from each query.
+					const overlays: any[] = overlaysData.map(({ data }) => ({ overlay: data[0] })).filter(({ overlay }) => overlay);
+
+					if (overlays.length < 4) {
+						let toastText = this.translateService.instant('Some angles are missing');
+						if (!overlays.length) {
+							toastText = this.translateService.instant('There are no overlays for the current Criteria');
+						}
+
+						return [new SetToastMessageAction(toastText)];
+					}
+
+					const [firstAngleOverlays, secondAngleOverlays, thirdAngleOverlays, fourthAngleOverlays] = overlays.map(({ data }) => data);
+					const fourViewsOverlays: IFourViews = {
+						firstAngleOverlays,
+						secondAngleOverlays,
+						thirdAngleOverlays,
+						fourthAngleOverlays
+					};
+					const fourMapsLayout = 'layout6';
+
+					return [
+						new SetOverlaysCriteriaAction({ region: feature(payload.point) }),
+						new SetLayoutAction(fourMapsLayout),
+						new SetPendingOverlaysAction(overlays),
+						new ToggleFooter(true),
+						new SetFourViewsOverlaysAction(fourViewsOverlays),
+					];
+				})
+			)
 		})
 	);
 
@@ -432,11 +487,60 @@ export class MapAppEffects {
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected getProvidersMapsService: GetProvidersMapsService,
+				@Inject(fourViewsConfig) protected fourViewsConfig: IFourViewsConfig,
+				@Inject(casesConfig) protected casesConfig: ICasesConfig,
+				protected translateService: TranslateService,
+				protected sourceProvider: MultipleOverlaysSourceProvider,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig,
 				@Inject(ScreenViewConfig) public screenViewConfig: IScreenViewConfig
 	) {
 		this.lastOverlayIds = new Map();
+	}
+
+
+	getFourViewsOverlays(region: Point, criteria: IOverlaysCriteria) {
+		const { registeration, resolution } = this.casesConfig.defaultCase.state.advancedSearchParameters;
+		const searchParams: IFetchParams = {
+			limit: this.fourViewsConfig.storageLimitPerAngle,
+			sensors: this.fourViewsConfig.sensors,
+			region,
+			timeRange: {
+				start: criteria.time.from,
+				end: criteria.time.to
+			},
+			registeration,
+			resolution,
+			angleParams: {
+				firstAngle: 0,
+				secondAngle: 89
+			}
+		};
+
+		const queryOverlays = [this.sourceProvider.fetch(searchParams)];
+
+		for (let i = 0; i < 4; i++) {
+			searchParams.angleParams.firstAngle += 90;
+			searchParams.angleParams.secondAngle += 90;
+			queryOverlays.push(this.sourceProvider.fetch(searchParams));
+		}
+
+		return queryOverlays;
+	}
+
+	sortOverlaysByAngle(overlaysData, point) {
+		return overlaysData.sort((prev, next) => {
+			if (!prev.data.length || !next.data.length) {
+				return false;
+			}
+
+			const [prevOverlay] = prev.data;
+			const [nextOverlay] = next.data;
+
+			const prevOverlayAngle = getAngleDegreeBetweenPoints(prevOverlay.sensorLocation, point);
+			const nextOverlayAngle = getAngleDegreeBetweenPoints(nextOverlay.sensorLocation, point);
+			return prevOverlayAngle - nextOverlayAngle;
+		})
 	}
 
 	changeImageryMap(overlay, communicator): string | null {

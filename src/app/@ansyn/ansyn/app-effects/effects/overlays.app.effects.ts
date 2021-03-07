@@ -33,7 +33,6 @@ import {
 } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import {
-	DisplayFourViewsAction,
 	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
@@ -52,13 +51,13 @@ import {
 import { ExtendMap } from '../../modules/overlays/reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../../modules/overlays/components/overlay-overview/overlay-overview.component.const';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
-import { CaseRegionState, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
+import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
 import {
 	IFourViewsConfig,
 	fourViewsConfig,
 	IOverlay,
 	IOverlaysCriteria,
-	IOverlaysFetchData, IFourViews
+	IFourViews
 } from '../../modules/overlays/models/overlay.model';
 import { Dictionary } from '@ngrx/entity';
 import { SetBadgeAction } from '@ansyn/menu';
@@ -71,6 +70,7 @@ import { MultipleOverlaysSourceProvider } from '../../modules/overlays/services/
 import { Point } from 'geojson';
 import { IFetchParams } from '../../modules/overlays/models/base-overlay-source-provider.model';
 import { feature } from '@turf/turf';
+
 @Injectable()
 export class OverlaysAppEffects {
 
@@ -147,45 +147,6 @@ export class OverlaysAppEffects {
 			return actions;
 		})
 	);
-
-	@Effect()
-	onDisplayFourViews$: Observable<any> = this.actions$.pipe(
-		ofType(OverlaysActionTypes.DISPLAY_FOUR_VIEWS),
-		withLatestFrom(this.store$.select(selectOverlaysCriteria)),
-		mergeMap(([{ payload }, criteria]: [DisplayFourViewsAction, IOverlaysCriteria]) => {
-			const observableOverlays: Observable<IOverlaysFetchData>[] = this.getFourViewsOverlays(payload, criteria);
-
-			return forkJoin(observableOverlays).pipe(
-				mergeMap((overlaysData: any[]) => {
-					overlaysData = this.sortOverlaysByAngle(overlaysData, payload);
-					const overlays: any[] = overlaysData.map(({data}) => ({ overlay: data[0]})).filter(({ overlay }) => overlay);
-
-					if (overlays.length < 4) {
-						let toastText = this.translateService.instant('Some angles are missing');
-						if (!overlays.length) {
-							toastText = this.translateService.instant('There are no overlays for the current Criteria');
-						}
-
-						return [new SetToastMessageAction(toastText)];
-					}
-
-					const [firstAngleOverlays, secondAngleOverlays, thirdAngleOverlays, fourthAngleOverlays] = overlays.map(({ data }) => data);
-					const fourViewsOverlays: IFourViews = { firstAngleOverlays, secondAngleOverlays, thirdAngleOverlays, fourthAngleOverlays };
-					const fourMapsLayout = 'layout6';
-
-					return [
-						new SetOverlaysCriteriaAction({ region: feature(payload) }),
-						new SetLayoutAction(fourMapsLayout),
-						new SetPendingOverlaysAction(overlays),
-						new ToggleFooter(true),
-						new SetFourViewsOverlaysAction(fourViewsOverlays),
-						new SetFourViewsModeAction(true)
-					];
-				})
-			)
-		})
-	);
-
 	private getOverlayFromDropMarkup = map(([markupMap, overlays]: [ExtendMap<MarkUpClass, IMarkUpData>, Map<any, any>]) =>
 		overlays.get(markupMap && markupMap.get(MarkUpClass.hover) && markupMap.get(MarkUpClass.hover).overlaysIds[0])
 	);
@@ -255,56 +216,7 @@ export class OverlaysAppEffects {
 
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,
-				@Inject(fourViewsConfig) protected fourViewsConfig: IFourViewsConfig,
-				@Inject(casesConfig) protected casesConfig: ICasesConfig,
-				protected translateService: TranslateService,
-				protected sourceProvicer: MultipleOverlaysSourceProvider,
 				public overlaysService: OverlaysService,
 				protected componentVisibilityService: ComponentVisibilityService) {
 	}
-
-	getFourViewsOverlays(region: Point, criteria: CaseRegionState) {
-		const { registeration, resolution } = this.casesConfig.defaultCase.state.advancedSearchParameters;
-		const searchParams: IFetchParams = {
-			limit: this.fourViewsConfig.storageLimitPerAngle,
-			sensors: this.fourViewsConfig.sensors,
-			region,
-			timeRange: {
-				start: criteria.time.from,
-				end: criteria.time.to
-			},
-			registeration,
-			resolution,
-			angleParams: {
-				firstAngle: 0,
-				secondAngle: 89
-			}
-		};
-
-		const observableOverlays = [this.sourceProvicer.fetch(searchParams)];
-
-		for (let i = 0; i < 4; i++) {
-			searchParams.angleParams.firstAngle += 90;
-			searchParams.angleParams.secondAngle += 90;
-			observableOverlays.push(this.sourceProvicer.fetch(searchParams));
-		}
-
-		return observableOverlays;
-	}
-
-	sortOverlaysByAngle(overlaysData, point) {
-		return overlaysData.sort((prev, next) => {
-			if (!prev.data.length || !next.data.length) {
-				return false;
-			}
-
-			const [prevOverlay] = prev.data;
-			const [nextOverlay] = next.data;
-
-			const prevOverlayAngle = getAngleDegreeBetweenPoints(prevOverlay.sensorLocation, point);
-			const nextOverlayAngle = getAngleDegreeBetweenPoints(nextOverlay.sensorLocation, point);
-			return prevOverlayAngle - nextOverlayAngle;
-		})
-	}
-
 }

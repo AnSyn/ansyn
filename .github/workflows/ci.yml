@@ -39,9 +39,9 @@ jobs:
         with:
           run: npm run test:single-run
       - run: npm run build:libs
-      - if: ${{ github.ref.contains('tags') }}
+      - if: ${{ contains(github.ref, 'tags') }}
         run: sh -x scripts/build.sh ansyn $GITHUB_SHA $GITHUB_REF
-      - if: ${{ github.ref.contains('heads') }}
+      - if: ${{ contains(github.ref, 'heads') }}
         run: sh -x scripts/build.sh ansyn $GITHUB_SHA
 
       - name: Cache node modules

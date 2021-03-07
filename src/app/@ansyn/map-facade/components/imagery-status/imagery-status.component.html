@@ -26,7 +26,7 @@
 		   [class.icon-layers-hide]="hideLayers"></i>
 	</button>
 
-	<button class="small-icon-button perspective"
+	<button *ngIf="!isFourViewsMode" class="small-icon-button perspective"
 			[disabled]="noGeoRegistration"
 			(click)="toggleImageryPerspective()"
 			[attr.tooltip-value]="orientation | translate"
@@ -34,7 +34,7 @@
 	><i class="medium-icon icon-status-bar-orientation" [class.active]="perspective"></i>
 	</button>
 
-	<button *ngIf="isFootprintShow"
+	<button *ngIf="isFootprintShow && !isFourViewsMode"
 		class="small-icon-button"
 		[disabled]="noGeoRegistration"
 			(click)="toggleOverlaysFootprint()"

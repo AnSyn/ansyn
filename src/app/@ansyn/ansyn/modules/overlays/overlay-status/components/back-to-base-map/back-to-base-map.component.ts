@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { IEntryComponent, selectOverlayByMapId } from '@ansyn/map-facade';
+import { IEntryComponent, selectOverlayByMapId, selectFourViewsMode, SetFourViewsModeAction } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -18,6 +18,12 @@ export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponen
 	@Input() mapId: string;
 	overlay: any;
 	isPinned: boolean;
+	isFourViewsMode: boolean;
+
+	@AutoSubscription
+	isFourViewsMode$ = this.store$.select(selectFourViewsMode).pipe(
+		tap(isFourViewsMode => this.isFourViewsMode = isFourViewsMode)
+	);
 
 	@AutoSubscription
 	isPinned$: Observable<boolean> = this.store$.pipe(
@@ -47,6 +53,10 @@ export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	backToWorldView() {
+		if (this.isFourViewsMode) {
+			this.store$.dispatch(new SetFourViewsModeAction(false))
+		}
+
 		this.store$.dispatch(new BackToWorldView({ mapId: this.mapId }));
 	}
 }

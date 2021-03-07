@@ -1,15 +1,20 @@
 import { Inject, Injectable } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
-import { IOverlayDropSources, ITimelineRange, selectOverlaysMap } from '../reducers/overlays.reducer';
+import {
+	IOverlayDropSources,
+	ITimelineRange,
+	selectFourViewsOverlays,
+	selectOverlaysMap
+} from '../reducers/overlays.reducer';
 import { IOverlaysConfig } from '../models/overlays.config';
-import { findKey, flattenDeep } from 'lodash';
+import { flattenDeep, flatten } from 'lodash';
 import { MultipleOverlaysSourceProvider } from './multiple-source-provider';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs/operators';
 import { selectFavoriteOverlays } from '../overlay-status/reducers/overlay-status.reducer';
 import { sortByDateDesc } from '../../core/utils/sorting';
 import { mapValuesToArray } from '../../core/utils/misc';
-import { IOverlay, IOverlayDrop, IOverlaysCriteria, IOverlaysFetchData } from '../models/overlay.model';
+import { IFourViews, IOverlay, IOverlayDrop, IOverlaysCriteria, IOverlaysFetchData } from '../models/overlay.model';
 import {
 	IMultipleOverlaysSourceConfig,
 	IOverlaysSourceProvider,
@@ -36,12 +41,15 @@ export class OverlaysService {
 	/**
 	 * @description Observable: get a map with both query overlays and favorite overlays
 	 */
-	getAllOverlays$: Observable<Map<string, IOverlay>> = combineLatest([this.store$.select(selectOverlaysMap), this.store$.select(selectFavoriteOverlays)]).pipe(
-		map(([queryOverlays, favoriteOverlays]: [Map<string, IOverlay>, IOverlay[]]) => {
+	getAllOverlays$: Observable<Map<string, IOverlay>> = combineLatest([this.store$.select(selectOverlaysMap), this.store$.select(selectFavoriteOverlays), this.store$.select(selectFourViewsOverlays)]).pipe(
+		map(([queryOverlays, favoriteOverlays, fourViewsOverlays]: [Map<string, IOverlay>, IOverlay[], IFourViews]) => {
 			const result = new Map(queryOverlays);
 			favoriteOverlays.forEach(overlay => {
 				result.set(overlay.id, overlay);
 			});
+
+			const allFourViewsOverlays = this.getAllFourViewsOverlays(fourViewsOverlays);
+			allFourViewsOverlays.forEach(overlay => result.set(overlay.id, overlay));
 			return result;
 		})
 	);
@@ -178,5 +186,9 @@ export class OverlaysService {
 
 	getThumbnailName(overlay): string {
 		return this._overlaySourceProvider.getThumbnailName(overlay)
+	}
+
+	getAllFourViewsOverlays(fourViewsOverlays: IFourViews): IOverlay[] {
+		return flatten(Object.keys(fourViewsOverlays).map(key => fourViewsOverlays[key]));
 	}
 }

@@ -58,6 +58,7 @@ export interface IMapState extends EntityState<IMapSettings> {
 	toastMessage: IToastMessage;
 	footerCollapse: boolean;
 	minimalistViewMode: boolean;
+	fourViewsMode: boolean;
 }
 
 
@@ -71,7 +72,8 @@ export const initialMapState: IMapState = mapsAdapter.getInitialState({
 	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
 	toastMessage: null,
 	footerCollapse: false,
-	minimalistViewMode: false
+	minimalistViewMode: false,
+	fourViewsMode: false
 });
 
 export const mapFeatureKey = 'map';
@@ -84,6 +86,9 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 	switch (action.type) {
 		case MapActionTypes.SET_TOAST_MESSAGE:
 			return { ...state, toastMessage: action.payload };
+
+		case MapActionTypes.SET_FOUR_VIEWS_MODE:
+			return { ...state, fourViewsMode: action.payload };
 
 		case MapActionTypes.IMAGERY_REMOVED: {
 			const isLoadingMaps = new Map(state.isLoadingMaps);
@@ -160,7 +165,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return { ...state, pendingOverlays: action.payload };
 
 		case MapActionTypes.REMOVE_PENDING_OVERLAY:
-			const pendingOverlays = state.pendingOverlays.filter((pending) => pending.overlay.id !== action.payload);
+			const pendingOverlays = state.pendingOverlays.filter((pendingOverlay: any) => pendingOverlay.id !== action.payload);
 			return { ...state, pendingOverlays };
 
 		case MapActionTypes.TOGGLE_MAP_LAYERS: {
@@ -219,6 +224,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 
 const { selectAll, selectEntities, selectIds, selectTotal } = mapsAdapter.getSelectors();
 export const selectActiveMapId = createSelector(mapStateSelector, (map: IMapState) => map.activeMapId);
+export const selectFourViewsMode = createSelector(mapStateSelector, (map: IMapState) => map.fourViewsMode);
 export const selectMapsList = createSelector(mapStateSelector, selectAll);
 export const selectMapsTotal = createSelector(mapStateSelector, selectTotal);
 export const selectMapsIds = createSelector(mapStateSelector, selectIds);

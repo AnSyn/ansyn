@@ -19,9 +19,10 @@ import { Point } from 'geojson';
 import { Actions, ofType } from '@ngrx/effects';
 import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { selectRegion } from '../../../overlays/reducers/overlays.reducer';
-import { IOverlay } from '../../../overlays/models/overlay.model';
+import { fourViewsConfig, IFourViewsConfig, IOverlay } from '../../../overlays/models/overlay.model';
 import { CaseGeoFilter, ICaseMapState } from '../../../menu-items/cases/models/case.model';
 import { IGeoFilterStatus, selectGeoFilterStatus } from '../../../status-bar/reducers/status-bar.reducer';
+import { DisplayFourViewsAction } from '../../../overlays/actions/overlays.actions';
 
 export interface IContextMenuShowPayload {
 	point: Point;
@@ -31,7 +32,7 @@ export interface IContextMenuShowPayload {
 
 export interface IOverlayButton {
 	name: string;
-	subList: string;
+	subList?: string;
 	disabledToolTip?: string;
 	action: ($event: MouseEvent, subFilter?: string) => void;
 }
@@ -120,16 +121,14 @@ export class ContextMenuComponent implements OnInit {
 	private _nextfilteredOverlays = [];
 
 	/*
-	Note: 'best' and 'angle' are first in the list, in order that they do not hide the tooltips
+	Note: 'four-views' and 'angle' are first in the list, in order that they do not hide the tooltips
 	that stem from 'first' and 'last', which are under them on the screen
 	* */
 
 	overlayButtons: IOverlayButton[] = [
 		{
-			name: 'best',
-			subList: 'allSensors',
-			disabledToolTip: this.config.disableBestResolutionContextMenu ? 'down for maintenance' : null,
-			action: this.clickBest.bind(this)
+			name: 'four-views',
+			action: this.clickFourViews.bind(this)
 		},
 		{
 			name: 'angle',
@@ -161,6 +160,7 @@ export class ContextMenuComponent implements OnInit {
 	constructor(protected store: Store<IMapState>,
 				protected actions$: Actions,
 				protected elem: ElementRef,
+				@Inject(fourViewsConfig) protected fourViewsConfig: IFourViewsConfig,
 				protected renderer: Renderer2,
 				public store$: Store<any>,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
@@ -244,11 +244,17 @@ export class ContextMenuComponent implements OnInit {
 		this.displayOverlayEvent($event, prevOverlay);
 	}
 
-	clickBest($event: MouseEvent, subFilter?: string) {
-		const bestOverlay = this.filteredOverlays
-			.filter((overlay: IOverlay) => !subFilter || subFilter === overlay[this.filterField])
-			.reduce((minValue, value) => value.bestResolution < minValue.bestResolution ? value : minValue);
-		this.displayOverlayEvent($event, bestOverlay);
+	clickFourViews($event: MouseEvent, subFilter?: string) {
+		if (this.fourViewsConfig.active) {
+			const point = {
+				...this.point,
+				properties: {
+					searchMode: "Point"
+				}
+			};
+
+			this.store$.dispatch(new DisplayFourViewsAction(point));
+		}
 	}
 
 	clickFirst($event: MouseEvent, subFilter?: string) {
@@ -289,6 +295,10 @@ export class ContextMenuComponent implements OnInit {
 	}
 
 	isDisabled(subList: string) {
+		if (!subList) {
+			return false;
+		}
+
 		if (subList === 'angleFilter') {
 			return !this[subList] || this[subList].overlays.length === 0;
 		} else if (subList === 'allSensors') {

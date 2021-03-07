@@ -7,7 +7,8 @@ import {
 	selectFooterCollapse,
 	selectIsMinimalistViewMode,
 	selectMapsList,
-	selectOverlayOfActiveMap
+	selectOverlayOfActiveMap,
+	selectFourViewsMode
 } from '@ansyn/map-facade';
 import {
 	selectIsPinned,
@@ -52,6 +53,9 @@ export class AnsynComponent implements OnInit, OnDestroy {
 			filter(Boolean),
 			map(({length}: IOverlayDrop[]) => length)
 		);
+
+	@AutoSubscription
+	isFourViewsMode$: Observable<boolean> = this.store$.select(selectFourViewsMode);
 
 	isMenuCollapse$ = this.store$.select(selectMenuCollapse);
 

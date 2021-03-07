@@ -20,6 +20,12 @@ export interface IFetchParams {
 	resolution?: IResolutionRange;
 	types?: string[];
 	registeration?: string[];
+	angleParams?: IAngleParams;
+}
+
+export interface IAngleParams {
+	firstAngle: number;
+	secondAngle: number;
 }
 
 export interface IOverlayFilter {

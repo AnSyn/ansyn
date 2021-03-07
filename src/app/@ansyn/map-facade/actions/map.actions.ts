@@ -96,7 +96,8 @@ export const MapActionTypes = {
 	REPLACE_MAP_MAIN_LAYER_FAILED: '[Maps] replace Main Layer failed',
 	LOG_DRAGGING_MAP_BETWEEN_SCREEN_AREAS: '[Maps] LOG_DRAGGING_MAP_BETWEEN_SCREEN_AREAS',
 	LOG_MESSAGE_FROM_IMAGERY: '[Maps] LOG_MESSAGE_FROM_IMAGERY',
-	FORCE_RENDER_MAPS: '[Maps] FORCE_RENDER_MAPS'
+	FORCE_RENDER_MAPS: '[Maps] FORCE_RENDER_MAPS',
+	SET_FOUR_VIEWS_MODE: 'SET_FOUR_VIEWS_MODE'
 };
 
 export interface IContextMenuShowPayload {
@@ -129,6 +130,13 @@ export class SetProgressBarAction implements Action {
 	readonly type = MapActionTypes.VIEW.SET_PROGRESS_BAR;
 
 	constructor(public payload: IMapProgress) {
+	}
+}
+
+export class SetFourViewsModeAction implements Action {
+	readonly type = MapActionTypes.SET_FOUR_VIEWS_MODE;
+
+	constructor(public payload: boolean) {
 	}
 }
 

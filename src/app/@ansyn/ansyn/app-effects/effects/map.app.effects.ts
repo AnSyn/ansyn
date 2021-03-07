@@ -23,7 +23,8 @@ import {
 	SetMapSearchBoxTriggerAction,
 	SetToastMessageAction,
 	SynchronizeMapsAction,
-	ToggleMapLayersAction, UpdateMapAction
+	ToggleMapLayersAction, UpdateMapAction,
+	ToggleFooter, SetFourViewsModeAction, SetLayoutAction
 } from '@ansyn/map-facade';
 import {
 	BaseMapSourceProvider,
@@ -74,6 +75,7 @@ import {
 	DisplayOverlaySuccessAction,
 	OverlaysActionTypes,
 	RequestOverlayByIDFromBackendAction,
+	SetFourViewsOverlaysAction,
 	SetMarkUp,
 	SetOverlaysCriteriaAction,
 	SetOverlaysStatusMessageAction, UpdateOverlay
@@ -350,6 +352,16 @@ export class MapAppEffects {
 		map(() => new ForceRenderMaps())
 	);
 
+	@Effect()
+	onDisableFourViewsMode$ = this.actions$.pipe(
+		ofType(MapActionTypes.SET_FOUR_VIEWS_MODE),
+		filter(({ payload }: SetFourViewsModeAction) => !payload),
+		mergeMap(() => {
+			const oneMapLayout = 'layout1';
+			return [new SetLayoutAction(oneMapLayout), new ToggleFooter(false), new SetFourViewsOverlaysAction({})]
+		})
+	);
+
 	// measures effects
 	@Effect()
 	onMeasureChange$ = this.actions$.pipe(
@@ -447,7 +459,7 @@ export class MapAppEffects {
 		const caseMapState = mapState.entities[payload.mapId || mapState.activeMapId];
 		const mapData = caseMapState.data;
 		const prevOverlay = mapData.overlay;
-		const intersectionRatio = getPolygonIntersectionRatio(this.bboxPolygon(mapData.position.extentPolygon), overlay.footprint);
+		const isNotIntersect = polygonsDontIntersect(mapData.position.extentPolygon, overlay.footprint, this.config.overlayCoverage);
 		const communicator = this.imageryCommunicatorService.provide(mapId);
 		const { sourceType } = overlay;
 		const sourceLoader: BaseMapSourceProvider = this.getProvidersMapsService.getMapSourceProvider(sourceType.toLowerCase().includes('video') ? ImageryVideoMapType : caseMapState.worldView.mapType, sourceType);
@@ -492,12 +504,11 @@ export class MapAppEffects {
 		/* -3- */
 		const resetView = pipe(
 			mergeMap((layer: IBaseImageryLayer) => {
-				const isFootprintExtentInsideMapExtent = intersectionRatio === FOOTPRINT_INSIDE_MAP_RATIO;
-				const extent = payloadExtent || !isFootprintExtentInsideMapExtent && bboxFromGeoJson(overlay.footprint);
+				const extent = payloadExtent || isNotIntersect && bboxFromGeoJson(overlay.footprint);
 				return communicator.resetView(layer, mapData.position, extent);
 			}),
 			mergeMap(() => {
-				const wasOverlaySetAsExtent = !payloadExtent && intersectionRatio < this.config.overlayCoverage;
+				const wasOverlaySetAsExtent = !payloadExtent && isNotIntersect;
 				const actionsArray: Action[] = [];
 				// in order to set the new map position for unregistered overlays maps
 				if (overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered && wasOverlaySetAsExtent) {

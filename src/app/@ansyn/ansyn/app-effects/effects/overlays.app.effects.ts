@@ -1,6 +1,6 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Injectable } from '@angular/core';
-import { combineLatest, Observable, of, pipe } from 'rxjs';
+import { Inject, Injectable } from '@angular/core';
+import { combineLatest, forkJoin, Observable, of, pipe } from 'rxjs';
 import { Action, Store } from '@ngrx/store';
 import {
 	IMapState,
@@ -13,14 +13,14 @@ import {
 	selectActiveMapId,
 	selectFooterCollapse, selectLayout,
 	selectMaps,
-	selectMapsList,
+	selectMapsList, SetFourViewsModeAction,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
-	SetPendingOverlaysAction
+	SetPendingOverlaysAction, SetToastMessageAction, ToggleFooter
 } from '@ansyn/map-facade';
 import { IAppState } from '../app.effects.module';
 
-import { IImageryMapPosition } from '@ansyn/imagery';
+import { getAngleDegreeBetweenPoints, IImageryMapPosition } from '@ansyn/imagery';
 import {
 	catchError,
 	filter,
@@ -33,30 +33,44 @@ import {
 } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import {
+	DisplayFourViewsAction,
 	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayAction,
 	DisplayOverlayFromStoreAction,
 	DisplayOverlaySuccessAction,
 	OverlaysActionTypes,
 	SetHoveredOverlayAction,
-	SetMarkUp,
-	SetTotalOverlaysAction
+	SetMarkUp, SetOverlaysCriteriaAction,
+	SetTotalOverlaysAction,
+	SetFourViewsOverlaysAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	IMarkUpData,
 	MarkUpClass,
-	selectDropMarkup,
+	selectDropMarkup, selectOverlaysCriteria,
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { ExtendMap } from '../../modules/overlays/reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../../modules/overlays/components/overlay-overview/overlay-overview.component.const';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
-import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
-import { IOverlay } from '../../modules/overlays/models/overlay.model';
+import { CaseRegionState, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
+import {
+	IFourViewsConfig,
+	fourViewsConfig,
+	IOverlay,
+	IOverlaysCriteria,
+	IOverlaysFetchData, IFourViews
+} from '../../modules/overlays/models/overlay.model';
 import { Dictionary } from '@ngrx/entity';
 import { SetBadgeAction } from '@ansyn/menu';
 import { ComponentVisibilityService } from '../../app-providers/component-visibility.service';
 import { ComponentVisibilityItems } from '../../app-providers/component-mode';
-
+import { casesConfig } from '../../modules/menu-items/cases/services/cases.service';
+import { ICasesConfig } from '../../modules/menu-items/cases/models/cases-config';
+import { TranslateService } from '@ngx-translate/core';
+import { MultipleOverlaysSourceProvider } from '../../modules/overlays/services/multiple-source-provider';
+import { Point } from 'geojson';
+import { IFetchParams } from '../../modules/overlays/models/base-overlay-source-provider.model';
+import { feature } from '@turf/turf';
 @Injectable()
 export class OverlaysAppEffects {
 
@@ -90,7 +104,8 @@ export class OverlaysAppEffects {
 		withLatestFrom(this.store$.select(mapStateSelector)),
 		filter(([action, mapState]) => mapState.pendingOverlays.length > 0),
 		mergeMap(([action, mapState]: [SetLayoutSuccessAction, IMapState]) => {
-			return mapState.pendingOverlays.map((pendingOverlay: any, index: number) => {
+			const validPendingOverlays = mapState.pendingOverlays.filter(({ overlay }) => overlay);
+			return validPendingOverlays.map((pendingOverlay: any, index: number) => {
 				const { overlay, extent } = pendingOverlay;
 				const mapId = Object.values(mapState.entities)[index].id;
 				return new DisplayOverlayAction({ overlay, mapId, extent });
@@ -102,7 +117,7 @@ export class OverlaysAppEffects {
 	removePendingOverlayOnDisplay$: Observable<any> = this.actions$.pipe(
 		ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
 		withLatestFrom(this.store$.select(mapStateSelector)),
-		filter(([action, mapState]: [DisplayOverlaySuccessAction, IMapState]) => mapState.pendingOverlays.some((pending) => pending.overlay.id === action.payload.overlay.id)),
+		filter(([action, mapState]: [DisplayOverlaySuccessAction, IMapState]) => mapState.pendingOverlays.some((pending) => pending.overlay?.id === action.payload.overlay.id)),
 		map(([action, mapState]: [DisplayOverlaySuccessAction, IMapState]) => {
 			return new RemovePendingOverlayAction(action.payload.overlay.id);
 		})
@@ -130,6 +145,44 @@ export class OverlaysAppEffects {
 			}
 
 			return actions;
+		})
+	);
+
+	@Effect()
+	onDisplayFourViews$: Observable<any> = this.actions$.pipe(
+		ofType(OverlaysActionTypes.DISPLAY_FOUR_VIEWS),
+		withLatestFrom(this.store$.select(selectOverlaysCriteria)),
+		mergeMap(([{ payload }, criteria]: [DisplayFourViewsAction, IOverlaysCriteria]) => {
+			const observableOverlays: Observable<IOverlaysFetchData>[] = this.getFourViewsOverlays(payload, criteria);
+
+			return forkJoin(observableOverlays).pipe(
+				mergeMap((overlaysData: any[]) => {
+					overlaysData = this.sortOverlaysByAngle(overlaysData, payload);
+					const overlays: any[] = overlaysData.map(({data}) => ({ overlay: data[0]})).filter(({ overlay }) => overlay);
+
+					if (overlays.length < 4) {
+						let toastText = this.translateService.instant('Some angles are missing');
+						if (!overlays.length) {
+							toastText = this.translateService.instant('There are no overlays for the current Criteria');
+						}
+
+						return [new SetToastMessageAction(toastText)];
+					}
+
+					const [firstAngleOverlays, secondAngleOverlays, thirdAngleOverlays, fourthAngleOverlays] = overlays.map(({ data }) => data);
+					const fourViewsOverlays: IFourViews = { firstAngleOverlays, secondAngleOverlays, thirdAngleOverlays, fourthAngleOverlays };
+					const fourMapsLayout = 'layout6';
+
+					return [
+						new SetOverlaysCriteriaAction({ region: feature(payload) }),
+						new SetLayoutAction(fourMapsLayout),
+						new SetPendingOverlaysAction(overlays),
+						new ToggleFooter(true),
+						new SetFourViewsOverlaysAction(fourViewsOverlays),
+						new SetFourViewsModeAction(true)
+					];
+				})
+			)
 		})
 	);
 
@@ -202,8 +255,56 @@ export class OverlaysAppEffects {
 
 	constructor(public actions$: Actions,
 				public store$: Store<IAppState>,
+				@Inject(fourViewsConfig) protected fourViewsConfig: IFourViewsConfig,
+				@Inject(casesConfig) protected casesConfig: ICasesConfig,
+				protected translateService: TranslateService,
+				protected sourceProvicer: MultipleOverlaysSourceProvider,
 				public overlaysService: OverlaysService,
 				protected componentVisibilityService: ComponentVisibilityService) {
+	}
+
+	getFourViewsOverlays(region: Point, criteria: CaseRegionState) {
+		const { registeration, resolution } = this.casesConfig.defaultCase.state.advancedSearchParameters;
+		const searchParams: IFetchParams = {
+			limit: this.fourViewsConfig.storageLimitPerAngle,
+			sensors: this.fourViewsConfig.sensors,
+			region,
+			timeRange: {
+				start: criteria.time.from,
+				end: criteria.time.to
+			},
+			registeration,
+			resolution,
+			angleParams: {
+				firstAngle: 0,
+				secondAngle: 89
+			}
+		};
+
+		const observableOverlays = [this.sourceProvicer.fetch(searchParams)];
+
+		for (let i = 0; i < 4; i++) {
+			searchParams.angleParams.firstAngle += 90;
+			searchParams.angleParams.secondAngle += 90;
+			observableOverlays.push(this.sourceProvicer.fetch(searchParams));
+		}
+
+		return observableOverlays;
+	}
+
+	sortOverlaysByAngle(overlaysData, point) {
+		return overlaysData.sort((prev, next) => {
+			if (!prev.data.length || !next.data.length) {
+				return false;
+			}
+
+			const [prevOverlay] = prev.data;
+			const [nextOverlay] = next.data;
+
+			const prevOverlayAngle = getAngleDegreeBetweenPoints(prevOverlay.sensorLocation, point);
+			const nextOverlayAngle = getAngleDegreeBetweenPoints(nextOverlay.sensorLocation, point);
+			return prevOverlayAngle - nextOverlayAngle;
+		})
 	}
 
 }

@@ -32,8 +32,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Deploy to aws
-          if: github.ref === 'Add-github-actions'
-          run: echo $REPO_DEV $GITHUB_SHA $CLUSTER $SERVICES_DEV
+        if: github.ref === 'Add-github-actions'
+        run: echo $REPO_DEV $GITHUB_SHA $CLUSTER $SERVICES_DEV
 
       - run: npm set progress=false
       - run: npm ci

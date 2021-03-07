@@ -46,6 +46,7 @@ export class EntitiesTableComponent<T> implements OnInit, OnDestroy {
 	@Input() collapsible = false;
 	@Input() rowsData: ITableRowModel<T>[];
 	@Input() readonly emptyTableLabel = 'No entities';
+	@Input() readonly background: 'transparent' | 'white' = 'white';
 	@Output() onInfinityScroll = new EventEmitter();
 	@Output() onRowHover = new EventEmitter<string>();
 	@Output() onEntitySelect = new EventEmitter<string>(true);
@@ -81,7 +82,6 @@ export class EntitiesTableComponent<T> implements OnInit, OnDestroy {
 	}
 
 	menuClick($event: MouseEvent, row: HTMLDivElement) {
-		row.classList.remove('mouse-enter');
 		$event.stopPropagation();
 	}
 }

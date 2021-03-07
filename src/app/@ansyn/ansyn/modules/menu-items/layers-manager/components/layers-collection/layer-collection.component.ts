@@ -1,14 +1,12 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Store, select } from '@ngrx/store';
-import { SetLayerSelection, SetLayersModal, ShowAllLayers } from '../../actions/layers.actions';
+import { Component } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { SetLayerSelection, SetLayersModal } from '../../actions/layers.actions';
 import { SelectedModalEnum } from '../../reducers/layers-modal';
-import { ILayer, ILayersEntities, LayerType } from '../../models/layers.model';
-import { ILayerState, selectLayers, selectSelectedLayersIds } from '../../reducers/layers.reducer';
+import { ILayer, LayerType } from '../../models/layers.model';
+import { selectLayers, selectSelectedLayersIds } from '../../reducers/layers.reducer';
 import { IEntitiesTableData, ITableRowModel } from '../../../../core/models/IEntitiesTableModel';
-import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
-import { map, distinctUntilChanged, tap, take } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { distinctUntilChanged, map, take, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { isEqual } from 'lodash';
 
 @Component({
@@ -28,23 +26,28 @@ export class LayerCollectionComponent {
 	selectedLayersIds$ = this.store$.pipe(
 		select(selectSelectedLayersIds)
 	);
+	getLayers$ = this.store$.pipe(
+		select(selectLayers),
+		map(this.filterLayer.bind(this)),
+		distinctUntilChanged(isEqual));
+	layers$: Observable<IEntitiesTableData<ILayer>> = this.getLayers$.pipe(
+		map(this.createTableEntities.bind(this))
+	);
 
 	get SelectedModalEnum() {
 		return SelectedModalEnum;
 	}
 
-	getLayers$ = this.store$.pipe(select(selectLayers));
-
-	layers$ = this.getLayers$.pipe(
-		map(this.filterLayer.bind(this)),
-		distinctUntilChanged(isEqual),
-		map(this.createTableEntities.bind(this))
-	);
 	constructor(public store$: Store) {
 	}
 
-	openModal(type: SelectedModalEnum, layer?: ILayer): void {
-		this.store$.dispatch(new SetLayersModal({ type, layer }));
+	openModal(type: SelectedModalEnum): void {
+		this.layers$.pipe(
+			take(1),
+			map(layers => layers.entities[this.hoverLayer]),
+			tap((layer) => this.store$.dispatch(new SetLayersModal({ type, layer })))
+		).subscribe()
+
 	}
 
 	filterLayer(layers: ILayer[]): ILayer[] {
@@ -52,17 +55,17 @@ export class LayerCollectionComponent {
 	}
 
 	toggleLayer() {
-		if ( this.hoverLayer) {
+		if (this.hoverLayer) {
 			this.selectedLayersIds$.pipe(
 				take(1),
-				map( (layers: string[]) => layers.includes(this.hoverLayer)),
-				tap((isCheck) => this.store$.dispatch(new SetLayerSelection({id: this.hoverLayer, value: !isCheck})))
+				map((layers: string[]) => layers.includes(this.hoverLayer)),
+				tap((isCheck) => this.store$.dispatch(new SetLayerSelection({ id: this.hoverLayer, value: !isCheck })))
 			).subscribe();
 		}
 	}
 
 	private createTableEntities(layers: ILayer[]): IEntitiesTableData<ILayer> {
-		const entitiesData: IEntitiesTableData<ILayer> = {ids: [], entities: {}};
+		const entitiesData: IEntitiesTableData<ILayer> = { ids: [], entities: {} };
 		for (let layer of layers) {
 			entitiesData.ids.push(layer.id);
 			entitiesData.entities[layer.id] = layer;

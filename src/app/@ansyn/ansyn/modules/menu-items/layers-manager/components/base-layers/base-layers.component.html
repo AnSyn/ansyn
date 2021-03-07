@@ -4,7 +4,8 @@
 	[rowsData]="layersRowsData"
 	[collapsible]="true"
 	(onRowHover)="hoverLayer = $event"
-	[menu]="menu">
+	[menu]="menu"
+	background="transparent">
 	<ng-template let-id="id" #menu>
 		<button (click)="toggleLayer()"
 				[attr.tooltip-value]="(selectedLayersIds$ | async).includes(id) ? 'Hide' : 'Show' | translate"

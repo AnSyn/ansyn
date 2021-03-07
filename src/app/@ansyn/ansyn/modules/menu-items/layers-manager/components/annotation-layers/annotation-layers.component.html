@@ -14,5 +14,33 @@
 	[title]="'Annotations' | translate"
 	[rowsData]="layersRowsData"
 	[collapsible]="true"
->
+	[menu]="menu"
+	(onRowHover)="hoverLayer = $event"
+	(onEntitySelect)="openLayersTools($event)"
+	background="transparent">
+	<ng-template let-id="id" #menu>
+		<button
+			[disabled]="(disabledRemove | async) || (layers$ | async).entities[id].isNonEditable"
+			(click)="openModal(SelectedModalEnum.remove)"
+			[attr.tooltip-value]="'Remove' | translate"
+			tooltip-class="bottom">
+			<i class="icon-delete"></i>
+		</button>
+		<button (click)="openModal(SelectedModalEnum.download)"
+				[attr.tooltip-value]="'Export' | translate"
+				tooltip-class="bottom">
+			<i class="icon-layer-export"></i>
+		</button>
+		<button (click)="toggleLayer()"
+				[attr.tooltip-value]="(selectedLayersIds$ | async).includes(id) ? 'Hide' : 'Show' | translate"
+				tooltip-class="bottom">
+			<i [ngClass]="(selectedLayersIds$ | async).includes(id) ? 'icon-eye-blocked' : 'icon-eye1'"></i>
+		</button>
+		<button (click)="openModal(SelectedModalEnum.edit)"
+				[attr.tooltip-value]="'Edit' | translate"
+				tooltip-class="bottom">
+			<i class="icon-edit"></i>
+		</button>
+
+	</ng-template>
 </ansyn-entities-table>

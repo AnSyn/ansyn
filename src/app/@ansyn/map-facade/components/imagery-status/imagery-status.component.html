@@ -76,10 +76,12 @@
 	</ng-container>
 </ng-container>
 
-<ng-container
-	*ngFor="let component of entryComponents.status">
+<ng-container *ngIf="!isMinimalistViewMode">
 	<ng-container
-		*ngIf="component.showLast && component.prototype.getType() === 'buttons'"
-		[ansynEntryComponent]="{ component: component , mapId: mapId }">
+		*ngFor="let component of entryComponents.status">
+		<ng-container
+			*ngIf="component.showLast && component.prototype.getType() === 'buttons'"
+			[ansynEntryComponent]="{ component: component , mapId: mapId }">
+		</ng-container>
 	</ng-container>
 </ng-container>

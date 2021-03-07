@@ -43,7 +43,7 @@ export class MeasureDistanceVisualizer extends MeasureRulerVisualizer {
 		filter(([measureData, isMeasureToolActive]) => (!this.isHidden || !isMeasureToolActive)),
 		tap(([measureData, isMeasureToolActive]) => {
 			if (measureData) {
-				if (!measureData?.isLayerShowed) {
+				if (!measureData?.isLayerShowed && this.idToEntity.size > 0 ) {
 					this.iMap.removeLayer(this.vector);
 				} else {
 					this.iMap.addLayer(this.vector);
@@ -52,6 +52,7 @@ export class MeasureDistanceVisualizer extends MeasureRulerVisualizer {
 				}
 			}
 		}),
+		filter(([measureData, isMeasureToolActive]) => measureData?.isLayerShowed),
 		switchMap(([measureData, isMeasureToolActive]) => {
 			const entities = measureData?.measures ? measureData?.measures.reduce((entities: IVisualizerEntity[], measure: IVisualizerEntity) => {
 				const textMeasures = measure.featureJson.properties.measures;

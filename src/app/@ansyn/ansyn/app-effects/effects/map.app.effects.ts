@@ -368,10 +368,10 @@ export class MapAppEffects {
 			switch ( action.type) {
 				case ToolsActionsTypes.MEASURES.CREATE_MEASURE_DATA:
 					const measuresData = createNewMeasureData();
-					changes.data.measuresData = {...measuresData, measures: changes.data.measuresData?.measures || []};
+					changes.data.measuresData = {...measuresData, ...changes.data?.measuresData};
 					break;
 				case ToolsActionsTypes.MEASURES.REMOVE_MEASURE_DATA:
-					changes.data.measuresData = undefined;
+					changes.data.measuresData = { ...changes.data?.measureData, measures: [] };
 					break;
 				case ToolsActionsTypes.MEASURES.ADD_MEASURE:
 					const oldMeasures = changes.data.measuresData.measures;

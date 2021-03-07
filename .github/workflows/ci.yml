@@ -18,6 +18,13 @@ jobs:
         with:
           node-version: 12.x
 
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: npm-deps-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: npm-deps-
+
       - run: npm set progress=false
       - run: npm ci
       - run: npm run lint
@@ -26,10 +33,3 @@ jobs:
         with:
           run: npm run test:single-run
       - run: npm run build:libs
-
-      - name: Cache node modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: v1-npm-deps-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: v1-npm-deps-

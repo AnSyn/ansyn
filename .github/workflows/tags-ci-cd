@@ -12,9 +12,7 @@ jobs:
 
         env:
             CLUSTER: mapathaon-ansyn
-            REPO_DEV: 223455578796.dkr.ecr.us-west-2.amazonaws.com/ansyn/client-chrome.v.44
             REPO_PROD: 223455578796.dkr.ecr.us-west-2.amazonaws.com/ansyn/client
-            SERVICES_DEV: ansyn-client-chrome-v44
             SERVICES_PROD: ansyn-client
             AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -26,6 +24,13 @@ jobs:
               with:
                   node-version: 12.x
 
+            - name: Cache node modules
+              uses: actions/cache@v2
+              with:
+                path: ~/.npm
+                key: npm-deps-${{ hashFiles('**/package-lock.json') }}
+                restore-keys: npm-deps-
+
             - run: npm set progress=false
             - run: npm ci
             - run: npm run lint
@@ -35,13 +40,6 @@ jobs:
                   run: npm run test:single-run
             - run: npm run build:libs
             - run: sh -x scripts/build.sh ansyn $GITHUB_SHA $GITHUB_REF
-
-            - name: Cache node modules
-              uses: actions/cache@v2
-              with:
-                  path: ~/.npm
-                  key: v1-npm-deps-${{ hashFiles('**/package-lock.json') }}
-                  restore-keys: v1-npm-deps-
 
             - name: Set up Python 3.8
               uses: actions/setup-python@v2

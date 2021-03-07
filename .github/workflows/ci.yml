@@ -31,10 +31,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Deploy to aws
-        if: ${{ github.ref == 'refs/heads/Add-github-actions' }}
-        run: echo $REPO_DEV $GITHUB_SHA $CLUSTER $SERVICES_DEV
-
       - run: echo $GITHUB_REF
       - run: npm set progress=false
       - run: npm ci
@@ -61,3 +57,11 @@ jobs:
         run: |
           pip install --user awscli # install aws cli w/o sudo
       - run: export PATH=$PATH:$HOME/.local/bin # put aws in the path
+
+      - name: Deploy to aws - Dev
+        if: ${{ github.ref == 'refs/heads/master' }}
+        run: sh -x scripts/deploy.sh $REPO_DEV $GITHUB_SHA $CLUSTER $SERVICES_DEV
+
+      - name: Deploy to aws - Prod
+        if: ${{ github.ref == 'refs/tags/true' }}
+        run: sh -x scripts/deploy.sh $REPO_PROD $GITHUB_REF $CLUSTER $SERVICES_PROD

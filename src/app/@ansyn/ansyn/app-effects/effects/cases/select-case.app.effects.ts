@@ -112,7 +112,7 @@ export class SelectCaseAppEffects {
 			new SetFourViewsModeAction(fourViewsMode),
 			new SetAnnotationMode(null),
 			new UpdateToolsFlags([{key: toolsFlags.isMeasureToolActive, value: measureIsActive}]),
-			new SelectCaseSuccessAction(payload),
+			new SelectCaseSuccessAction(payload)
 		];
 
 		return selectCaseAction;

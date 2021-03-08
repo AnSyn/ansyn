@@ -3,7 +3,7 @@ name: CI-CD - tag true
 on:
   push:
     tags:
-      - 'true'
+      - '**'
 
 jobs:
   build:

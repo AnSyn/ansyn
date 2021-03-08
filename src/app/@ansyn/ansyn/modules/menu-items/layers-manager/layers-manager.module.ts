@@ -9,7 +9,6 @@ import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from './reducers/layers.reducer';
 import { LayerCollectionComponent } from './components/layers-collection/layer-collection.component';
 import { DownloadLayersComponent } from './components/data-layers-modals/download-layers/download-layers.component';
-import { LayerComponent } from './components/layer/layer.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LayerMenuComponent } from './components/layer-menu/layer-menu.component';
 import { DataLayersModalsComponent } from './components/data-layers-modals/data-layers-modals.component';
@@ -38,7 +37,7 @@ import { MatInputModule } from '@angular/material/input';
 		MatInputModule,
 		MatAutocompleteModule
 	],
-	declarations: [LayersManagerComponent, LayerCollectionComponent, DownloadLayersComponent, LayerComponent, LayerMenuComponent, DataLayersModalsComponent, EditLayerComponent, DeleteLayerComponent, ImportLayerComponent, StaticLayersComponent, BaseLayersComponent, AnnotationLayersComponent, LayersSearchComponent],
+	declarations: [LayersManagerComponent, LayerCollectionComponent, DownloadLayersComponent, LayerMenuComponent, DataLayersModalsComponent, EditLayerComponent, DeleteLayerComponent, ImportLayerComponent, StaticLayersComponent, BaseLayersComponent, AnnotationLayersComponent, LayersSearchComponent],
 	providers: [DataLayersService]
 })
 

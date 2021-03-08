@@ -1,53 +1,54 @@
 name: CI-CD - tag true
 
 on:
- push:
-  tags:
-    - 'true'
+  push:
+    tags:
+      - 'true'
 
 jobs:
- build:
-  runs-on: ubuntu-latest
+  build:
+
+    runs-on: ubuntu-latest
 
     env:
-     CLUSTER: mapathaon-ansyn
-     REPO_PROD: 223455578796.dkr.ecr.us-west-2.amazonaws.com/ansyn/client
-     SERVICES_PROD: ansyn-client
-     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      CLUSTER: mapathaon-ansyn
+      REPO_PROD: 223455578796.dkr.ecr.us-west-2.amazonaws.com/ansyn/client
+      SERVICES_PROD: ansyn-client
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     steps:
-     - uses: actions/checkout@v2
-     - name: Use Node.js 12.x
+      - uses: actions/checkout@v2
+      - name: Use Node.js 12.x
        uses: actions/setup-node@v1
        with:
-        node-version: 12.x
+         node-version: 12.x
 
-     - name: Cache node modules
-       uses: actions/cache@v2
-       with:
-        path: ~/.npm
-        key: npm-deps-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: npm-deps-
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: npm-deps-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: npm-deps-
 
-        - run: npm set progress=false
-        - run: npm ci
-        - run: npm run lint
-        - name: Run headless test
-          uses: GabrielBB/xvfb-action@v1
-          with:
-            run: npm run test:single-run
-        - run: npm run build:libs
-        - run: sh -x scripts/build.sh ansyn $GITHUB_SHA $GITHUB_REF
+      - run: npm set progress=false
+      - run: npm ci
+      - run: npm run lint
+      - name: Run headless test
+        uses: GabrielBB/xvfb-action@v1
+        with:
+          run: npm run test:single-run
+      - run: npm run build:libs
+      - run: sh -x scripts/build.sh ansyn $GITHUB_SHA $GITHUB_REF
 
-        - name: Set up Python 3.8
-          uses: actions/setup-python@v2
-          with:
-            python-version: 3.8
-        - name: Install dependencies
-          run: |
-            pip install --user awscli # install aws cli w/o sudo
-        - run: export PATH=$PATH:$HOME/.local/bin # put aws in the path
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: |
+          pip install --user awscli # install aws cli w/o sudo
+      - run: export PATH=$PATH:$HOME/.local/bin # put aws in the path
 
-        - name: Deploy to aws - Prod
-          run: sh -x scripts/deploy.sh $REPO_PROD $GITHUB_REF $CLUSTER $SERVICES_PROD
+      - name: Deploy to aws - Prod
+        run: sh -x scripts/deploy.sh $REPO_PROD $GITHUB_REF $CLUSTER $SERVICES_PROD

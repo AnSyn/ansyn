@@ -1,4 +1,10 @@
-import { IDilutedOverlay, IDilutedOverlaysHash, IOverlay, IOverlaysHash } from '../../../overlays/models/overlay.model';
+import {
+	IDilutedOverlay,
+	IDilutedOverlaysHash,
+	IFourViewsData,
+	IOverlay,
+	IOverlaysHash
+} from '../../../overlays/models/overlay.model';
 import { Feature, MultiPolygon, Point, Polygon, Position } from 'geojson';
 import { LayoutKey } from '@ansyn/map-facade';
 import { FilterType } from '../../../filters/models/filter-type';
@@ -77,7 +83,7 @@ export interface IDilutedCaseState {
 	layers?: ICaseLayersState;
 	advancedSearchParameters?: IAdvancedSearchParameter;
 	runSecondSearch?: boolean;
-	fourViewsMode?: any;
+	fourViewsMode?: IFourViewsData;
 }
 
 export interface ICaseState extends IDilutedCaseState {

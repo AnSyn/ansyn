@@ -7,6 +7,7 @@ import { Dictionary } from '@ngrx/entity';
 import { sessionData } from '../models/core-session-state.model';
 import { IPendingOverlay, IToastMessage, MapActions, MapActionTypes } from '../actions/map.actions';
 import { LayoutKey, layoutOptions } from '../models/maps-layout';
+import { IFourViewsData } from '../../ansyn/modules/overlays/models/overlay.model';
 
 export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId, layout): any {
 	const mapsList: IMapSettings[] = [];
@@ -58,7 +59,7 @@ export interface IMapState extends EntityState<IMapSettings> {
 	toastMessage: IToastMessage;
 	footerCollapse: boolean;
 	minimalistViewMode: boolean;
-	fourViewsMode: any;
+	fourViewsMode: IFourViewsData;
 }
 
 

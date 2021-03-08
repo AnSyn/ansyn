@@ -84,6 +84,7 @@ import { overlayStatusConfig } from "../../modules/overlays/overlay-status/confi
 import { ScreenViewConfig } from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MultipleOverlaysSourceProvider } from '../../modules/overlays/services/multiple-source-provider';
+import { LoggerService } from '../../modules/core/services/logger.service';
 
 @ImageryMapSource({
 	sourceType: 'sourceType1',
@@ -191,6 +192,7 @@ describe('MapAppEffects', () => {
 			],
 			providers: [
 				{ provide: MultipleOverlaysSourceProvider, useClass: OverlaySourceProviderMock },
+				{ provide: LoggerService, useValue: {} },
 				TranslateService,
 				{
 					provide: CacheService,
@@ -336,7 +338,7 @@ describe('MapAppEffects', () => {
 			spyOn(fakeCommunicator, 'resetView');
 		});
 
-		fit('should NOT dispatch/do anything if "overlay date = undefined"', () => {
+		it('should NOT dispatch/do anything if "overlay date = undefined"', () => {
 			const testOverlay: IOverlay = <IOverlay>{
 				id: 'testOverlayId',
 				name: 'testOverlay1',

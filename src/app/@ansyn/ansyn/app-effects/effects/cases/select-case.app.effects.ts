@@ -109,10 +109,10 @@ export class SelectCaseAppEffects {
 			new UpdateOverlaysManualProcessArgs(overlaysImageProcess),
 			new UpdateFacetsAction(facets),
 			new UpdateSelectedLayersIds(activeLayersIds),
-			new SetAnnotationMode(null),
 			new SetFourViewsModeAction(fourViewsMode),
+			new SetAnnotationMode(null),
 			new UpdateToolsFlags([{key: toolsFlags.isMeasureToolActive, value: measureIsActive}]),
-			new SelectCaseSuccessAction(payload)
+			new SelectCaseSuccessAction(payload),
 		];
 
 		return selectCaseAction;

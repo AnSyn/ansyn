@@ -10,6 +10,7 @@ import {
 import { LayoutKey, layoutOptions } from '../models/maps-layout';
 import { MapOrientation } from '@ansyn/imagery';
 import { ILogMessage } from '../models/logger.model';
+import { IFourViewsData } from '../../ansyn/modules/overlays/models/overlay.model';
 
 export interface IAngleFilterClick { // @TODO: map-facade should not know IOverlay
 	click: { x: number, y: number };
@@ -136,7 +137,7 @@ export class SetProgressBarAction implements Action {
 export class SetFourViewsModeAction implements Action {
 	readonly type = MapActionTypes.SET_FOUR_VIEWS_MODE;
 
-	constructor(public payload: { active: boolean, point?: Point}) {
+	constructor(public payload: IFourViewsData) {
 	}
 }
 

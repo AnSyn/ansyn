@@ -1,0 +1,29 @@
+@import "ansyn/less/common";
+
+:host {
+	display: flex;
+	flex: 1;
+	padding: 5px;
+
+	form {
+		display: flex;
+		flex: 1;
+		input {
+			background: transparent;
+			flex: 1;
+			border: none;
+			outline: none;
+			color: @text-color;
+		}
+
+		.layer-search-button {
+			display: flex;
+
+			button {
+				&:extend(.ansyn-base-button);
+				display: flex;
+				align-items: center;
+			}
+		}
+	}
+}

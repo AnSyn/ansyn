@@ -1,0 +1,22 @@
+<form>
+	<input type="text" [placeholder]="'search layers' | translate"
+		   [formControl]="control"
+		   [matAutocomplete]="auto"/>
+	<mat-autocomplete #auto="matAutocomplete" panelWidth="fit" autoActiveFirstOption>
+		<mat-option *ngFor="let layer of layers"
+					(onSelectionChange)="addLayer(layer)"
+					[value]="layer.name">
+			{{layer.name}}
+		</mat-option>
+
+
+	</mat-autocomplete>
+	<div class="layer-search-button">
+		<button>
+			<i class="medium-icon icon-annotation-polygon"></i>
+		</button>
+		<button>
+			<i class="medium-icon icon-annotation-rectangle"></i>
+		</button>
+	</div>
+</form>

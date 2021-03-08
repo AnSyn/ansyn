@@ -100,7 +100,7 @@ export class AddLayer implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return `Adding ${this.payload.type} data layer ${this.payload.name}` + (this.payload.data.features ? ` with ${this.payload.data.features.length} features` : ``);
+		return `Adding ${this.payload.type} data layer ${this.payload.name}` + (this.payload?.data?.features ? ` with ${this.payload.data.features.length} features` : ``);
 	}
 }
 

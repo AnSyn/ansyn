@@ -2,5 +2,21 @@
 	[entities]="layers$ | async"
 	[title]="'Static' | translate"
 	[rowsData]="layersRowsData"
-	[collapsible]="true">
+	[collapsible]="true"
+	background="transparent"
+	(onRowHover)="hoverLayer = $event"
+	[menu]="menu">
+	<ng-template let-id="id" #menu>
+		<button
+			(click)="openModal(SelectedModalEnum.remove)"
+			[attr.tooltip-value]="'Remove' | translate"
+			tooltip-class="bottom">
+			<i class="icon-delete"></i>
+		</button>
+		<button (click)="toggleLayer()"
+				[attr.tooltip-value]="(selectedLayersIds$ | async).includes(id) ? 'Hide' : 'Show' | translate"
+				tooltip-class="bottom">
+			<i [ngClass]="(selectedLayersIds$ | async).includes(id) ? 'icon-eye-blocked' : 'icon-eye1'"></i>
+		</button>
+	</ng-template>
 </ansyn-entities-table>

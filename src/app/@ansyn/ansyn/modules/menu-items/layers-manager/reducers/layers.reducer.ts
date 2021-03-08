@@ -10,11 +10,13 @@ export const layersAdapter: EntityAdapter<ILayer> = createEntityAdapter<ILayer>(
 export interface ILayerState extends EntityState<ILayer> {
 	selectedLayersIds: string[];
 	activeAnnotationLayer: string;
+	staticLayers: ILayer[];
 	modal: ILayerModal
 }
 
 export const initialLayersState: ILayerState = layersAdapter.getInitialState({
 	selectedLayersIds: [],
+	staticLayers: [],
 	activeAnnotationLayer: null,
 	modal: {
 		layer: null,
@@ -31,12 +33,12 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 			return layersAdapter.removeAll({...state, selectedLayersIds: [], activeAnnotationLayer: null});
 
 		case LayersActionTypes.LAYER_COLLECTION_LOADED:
-			let annotationLayer = action.payload.find(({ type }) => type === LayerType.annotation);
+			const annotationLayer = action.payload.find(({ type }) => type === LayerType.annotation);
+			const staticLayers = action.payload.filter( layer => layer.type === LayerType.static);
 			const selectedLayersIds = state.selectedLayersIds;
-			let activeAnnotationLayer = state.activeAnnotationLayer;
-			let layers = action.payload;
-			activeAnnotationLayer = annotationLayer && annotationLayer.id;
-			return layersAdapter.setAll(layers, { ...state, selectedLayersIds, activeAnnotationLayer });
+			let activeAnnotationLayer = (annotationLayer && annotationLayer.id) || state.activeAnnotationLayer;
+			let layers = action.payload.filter(layer => layer.type !== LayerType.static);
+			return layersAdapter.setAll(layers, { ...state, selectedLayersIds, activeAnnotationLayer, staticLayers });
 
 		case LayersActionTypes.SET_LAYER_SELECTION: {
 			const id = action.payload.id, ids = state.selectedLayersIds;
@@ -109,3 +111,4 @@ export const selectLayersEntities: MemoizedSelector<any, any> = createSelector(l
 export const selectSelectedLayersIds: MemoizedSelector<any, any> = createSelector(layersStateOrInitial, (layersState: ILayerState) => layersState.selectedLayersIds);
 export const selectActiveAnnotationLayer: MemoizedSelector<any, any> = createSelector(layersStateOrInitial, (layersState: ILayerState) => layersState.activeAnnotationLayer);
 export const selectLayersModal: MemoizedSelector<any, any> = createSelector(layersStateOrInitial, (layersState: ILayerState) => layersState.modal);
+export const selectStaticLayer: MemoizedSelector<any, ILayer[]> = createSelector(layersStateOrInitial, (layersState: ILayerState) => layersState?.staticLayers);

@@ -26,10 +26,12 @@ export class LayerCollectionComponent {
 	selectedLayersIds$ = this.store$.pipe(
 		select(selectSelectedLayersIds)
 	);
+
 	getLayers$ = this.store$.pipe(
 		select(selectLayers),
 		map(this.filterLayer.bind(this)),
 		distinctUntilChanged(isEqual));
+
 	layers$: Observable<IEntitiesTableData<ILayer>> = this.getLayers$.pipe(
 		map(this.createTableEntities.bind(this))
 	);

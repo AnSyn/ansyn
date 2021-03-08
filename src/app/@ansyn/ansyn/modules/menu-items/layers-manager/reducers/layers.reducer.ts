@@ -35,10 +35,9 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 		case LayersActionTypes.LAYER_COLLECTION_LOADED:
 			const annotationLayer = action.payload.find(({ type }) => type === LayerType.annotation);
 			const staticLayers = action.payload.filter( layer => layer.type === LayerType.static);
-			const selectedLayersIds = state.selectedLayersIds;
 			let activeAnnotationLayer = (annotationLayer && annotationLayer.id) || state.activeAnnotationLayer;
-			let layers = action.payload.filter(layer => layer.type !== LayerType.static);
-			return layersAdapter.setAll(layers, { ...state, selectedLayersIds, activeAnnotationLayer, staticLayers });
+			let layers = action.payload.filter(layer => layer.type !== LayerType.static || state.selectedLayersIds.includes(layer.id));
+			return layersAdapter.setAll(layers, { ...state, activeAnnotationLayer, staticLayers });
 
 		case LayersActionTypes.SET_LAYER_SELECTION: {
 			const id = action.payload.id, ids = state.selectedLayersIds;

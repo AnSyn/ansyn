@@ -8,6 +8,7 @@ import { selectEnableOnlyFavorites, selectShowOnlyFavorites } from '../../../fil
 import { select, Store } from '@ngrx/store';
 import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { selectFourViewsMode } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -25,6 +26,7 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 	readonly isToolsLineShow: boolean;
 	//
 	onlyFavorite: boolean;
+	fourViewsMode: boolean;
 	@Input() version;
 
 	onlyFavoriteEnable$ = this.store.pipe(
@@ -38,6 +40,12 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 		select(selectShowOnlyFavorites),
 		distinctUntilChanged(),
 		tap((showFavorite) => this.onlyFavorite = showFavorite)
+	);
+
+	@AutoSubscription
+	fourViewsMode$ = this.store.pipe(
+		select(selectFourViewsMode),
+		tap(fourViewsMode => this.fourViewsMode = fourViewsMode)
 	);
 
 	constructor(

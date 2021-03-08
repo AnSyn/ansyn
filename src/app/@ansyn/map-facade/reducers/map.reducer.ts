@@ -58,7 +58,7 @@ export interface IMapState extends EntityState<IMapSettings> {
 	toastMessage: IToastMessage;
 	footerCollapse: boolean;
 	minimalistViewMode: boolean;
-	fourViewsMode: boolean;
+	fourViewsMode: any;
 }
 
 
@@ -73,7 +73,10 @@ export const initialMapState: IMapState = mapsAdapter.getInitialState({
 	toastMessage: null,
 	footerCollapse: false,
 	minimalistViewMode: false,
-	fourViewsMode: false
+	fourViewsMode: {
+		point: null,
+		active: false
+	}
 });
 
 export const mapFeatureKey = 'map';
@@ -224,7 +227,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 
 const { selectAll, selectEntities, selectIds, selectTotal } = mapsAdapter.getSelectors();
 export const selectActiveMapId = createSelector(mapStateSelector, (map: IMapState) => map.activeMapId);
-export const selectFourViewsMode = createSelector(mapStateSelector, (map: IMapState) => map.fourViewsMode);
+export const selectFourViewsMode = createSelector(mapStateSelector, (map: IMapState) => map.fourViewsMode.active);
 export const selectMapsList = createSelector(mapStateSelector, selectAll);
 export const selectMapsTotal = createSelector(mapStateSelector, selectTotal);
 export const selectMapsIds = createSelector(mapStateSelector, selectIds);

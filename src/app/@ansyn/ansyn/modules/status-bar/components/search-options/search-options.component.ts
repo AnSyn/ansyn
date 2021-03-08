@@ -29,7 +29,7 @@ export class SearchOptionsComponent implements OnInit, OnDestroy {
 				this.store$.dispatch(new OpenAdvancedSearchFromOutsideAction(false));
 			}
 		}));
-		
+
 	@AutoSubscription
 	updateIsSimpleSearchOpen$ = this.store$.select(selectSimpledSearchStatus).pipe(
 		tap((isSimpleSearchOpen: boolean) => {

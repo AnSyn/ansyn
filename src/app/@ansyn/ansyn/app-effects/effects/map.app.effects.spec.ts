@@ -37,7 +37,7 @@ import {
 	casesStateSelector,
 	ICasesState
 } from '../../modules/menu-items/cases/reducers/cases.reducer';
-import { CasesService } from '../../modules/menu-items/cases/services/cases.service';
+import { casesConfig, CasesService } from '../../modules/menu-items/cases/services/cases.service';
 import {
 	ILayerState,
 	initialLayersState,
@@ -73,6 +73,7 @@ import {
 import { OverlaySourceProvider } from '../../modules/overlays/models/overlays-source-providers';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import {
+	fourViewsConfig,
 	GeoRegisteration,
 	IOverlay,
 	IOverlaysFetchData,
@@ -81,6 +82,8 @@ import {
 import { ICase } from '../../modules/menu-items/cases/models/case.model';
 import { overlayStatusConfig } from "../../modules/overlays/overlay-status/config/overlay-status-config";
 import { ScreenViewConfig } from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { MultipleOverlaysSourceProvider } from '../../modules/overlays/services/multiple-source-provider';
 
 @ImageryMapSource({
 	sourceType: 'sourceType1',
@@ -177,6 +180,7 @@ describe('MapAppEffects', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
+				TranslateModule.forRoot(),
 				HttpClientModule,
 				StoreModule.forRoot({
 					[casesFeatureKey]: CasesReducer,
@@ -186,6 +190,8 @@ describe('MapAppEffects', () => {
 				})
 			],
 			providers: [
+				{ provide: MultipleOverlaysSourceProvider, useClass: OverlaySourceProviderMock },
+				TranslateService,
 				{
 					provide: CacheService,
 					useClass: CacheService,
@@ -193,6 +199,8 @@ describe('MapAppEffects', () => {
 				},
 				ImageryCommunicatorService,
 				{ provide: VisualizersConfig, useValue: {} },
+				{ provide: fourViewsConfig, useValue: {} },
+				{ provide: casesConfig, useValue: {} },
 				MapAppEffects,
 				OverlaysService,
 				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },
@@ -328,7 +336,7 @@ describe('MapAppEffects', () => {
 			spyOn(fakeCommunicator, 'resetView');
 		});
 
-		it('should NOT dispatch/do anything if "overlay date = undefined"', () => {
+		fit('should NOT dispatch/do anything if "overlay date = undefined"', () => {
 			const testOverlay: IOverlay = <IOverlay>{
 				id: 'testOverlayId',
 				name: 'testOverlay1',

@@ -5,7 +5,7 @@
 				[attr.tooltip-value]="'Show Favorite Overlay' | translate"
 				tooltip-class="bottom"
 				(click)="showOnlyFavorite()"
-				[disabled]="onlyFavoriteEnable$ | async">
+				[disabled]="(onlyFavoriteEnable$ | async) && fourViewsMode">
 			<i class="icon"
 			   [ngClass]="onlyFavorite ? 'icon-favorite-full'  : 'icon-favorite-empty'"></i>
 		</button>
@@ -25,7 +25,7 @@
 	<ansyn-display-panel *ngIf="isSplitMapsShow"></ansyn-display-panel>
 	<ansyn-tools></ansyn-tools>
 	<hr class="status-bar-hr" *ngIf="isToolsLineShow"/>
-	<ansyn-search-options *ngIf="isSearchShow"></ansyn-search-options>
+	<ansyn-search-options [class.disabled]="fourViewsMode" *ngIf="isSearchShow"></ansyn-search-options>
 </div>
 <div class="logo">
 	<ansyn-logo-panel [version]="version"></ansyn-logo-panel>

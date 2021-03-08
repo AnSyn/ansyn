@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable, pipe } from 'rxjs';
-import { selectActiveMapId, selectLayout, selectMapsList } from '@ansyn/map-facade';
+import { selectActiveMapId, selectFourViewsMode, selectLayout, selectMapsList } from '@ansyn/map-facade';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import {
 	selectFavoriteOverlays, selectOverlaysImageProcess,
@@ -16,6 +16,7 @@ import { UpdateCaseAction } from '../../../modules/menu-items/cases/actions/case
 import { selectSelectedCase } from '../../../modules/menu-items/cases/reducers/cases.reducer';
 import { selectMiscOverlays, selectOverlaysCriteria } from '../../../modules/overlays/reducers/overlays.reducer';
 import { ICase } from '../../../modules/menu-items/cases/models/case.model';
+import { selectFourViewsData } from '../../../../map-facade/reducers/map.reducer';
 
 @Injectable()
 export class UpdateCaseAppEffects {
@@ -34,7 +35,8 @@ export class UpdateCaseAppEffects {
 		this.store$.select(selectOverlaysImageProcess),
 		this.store$.select(selectMiscOverlays),
 		this.store$.select(selectTranslationData),
-		this.store$.select(selectScannedAreaData)
+		this.store$.select(selectScannedAreaData),
+		this.store$.select(selectFourViewsData)
 	];
 
 	@Effect()
@@ -53,7 +55,8 @@ export class UpdateCaseAppEffects {
 				overlaysImageProcess,
 				miscOverlays,
 				overlaysTranslationData,
-				overlaysScannedAreaData
+				overlaysScannedAreaData,
+				fourViewsMode
 			] = events;
 
 			const { id, name, creationTime } = selectedCase;
@@ -77,6 +80,7 @@ export class UpdateCaseAppEffects {
 					region,
 					time,
 					advancedSearchParameters,
+					fourViewsMode,
 					facets,
 					miscOverlays,
 					overlaysImageProcess,

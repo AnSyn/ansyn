@@ -98,7 +98,11 @@ import {
 	IOverlayStatusConfig,
 	overlayStatusConfig
 } from '../../modules/overlays/overlay-status/config/overlay-status-config';
-import { IGeoFilterStatus, selectGeoFilterStatus } from '../../modules/status-bar/reducers/status-bar.reducer';
+import {
+	IGeoFilterStatus,
+	selectFourViewsSensors,
+	selectGeoFilterStatus
+} from '../../modules/status-bar/reducers/status-bar.reducer';
 import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import {
 	IScreenViewConfig,
@@ -369,7 +373,7 @@ export class MapAppEffects {
 	@Effect()
 	onDisableFourViewsMode$ = this.actions$.pipe(
 		ofType(MapActionTypes.SET_FOUR_VIEWS_MODE),
-		filter(({ payload }: SetFourViewsModeAction) => !payload.active),
+		filter(({ payload }: SetFourViewsModeAction) => !payload?.active),
 		mergeMap(() => {
 			const oneMapLayout = 'layout1';
 			return [new SetLayoutAction(oneMapLayout), new ToggleFooter(false), new SetFourViewsOverlaysAction({})]
@@ -379,10 +383,10 @@ export class MapAppEffects {
 	@Effect()
 	onFourViewsMode$ = this.actions$.pipe(
 		ofType(MapActionTypes.SET_FOUR_VIEWS_MODE),
-		filter(({ payload }: SetFourViewsModeAction) => payload.active),
-		withLatestFrom(this.store$.select(selectOverlaysCriteria)),
-		mergeMap(([{ payload }, criteria]: [SetFourViewsModeAction, IOverlaysCriteria]) => {
-			const observableOverlays = this.getFourViewsOverlays(payload.point, criteria);
+		filter(({ payload }: SetFourViewsModeAction) => payload?.active),
+		withLatestFrom(this.store$.select(selectOverlaysCriteria), this.store$.select(selectFourViewsSensors)),
+		mergeMap(([{ payload }, criteria, sensors]: [SetFourViewsModeAction, IOverlaysCriteria, string[]]) => {
+			const observableOverlays = this.getFourViewsOverlays(payload.point, criteria, sensors);
 
 			return forkJoin(observableOverlays).pipe(
 				mergeMap((overlaysData: any[]) => {
@@ -505,12 +509,11 @@ export class MapAppEffects {
 		this.lastOverlayIds = new Map();
 	}
 
-
-	getFourViewsOverlays(region: Point, criteria: IOverlaysCriteria) {
+	getFourViewsOverlays(region: Point, criteria: IOverlaysCriteria, sensors: string[]) {
 		const { registeration, resolution } = this.casesConfig.defaultCase.state.advancedSearchParameters;
 		const searchParams: IFetchParams = {
 			limit: this.fourViewsConfig.storageLimitPerAngle,
-			sensors: this.fourViewsConfig.sensors,
+			sensors: sensors.length ? sensors : this.fourViewsConfig.sensors,
 			region,
 			timeRange: {
 				start: criteria.time.from,
@@ -526,7 +529,7 @@ export class MapAppEffects {
 
 		const queryOverlays = [this.sourceProvider.fetch(searchParams)];
 
-		for (let i = 0; i < 4; i++) {
+		for (let i = 0; i < 3; i++) {
 			searchParams.angleParams.firstAngle += 90;
 			searchParams.angleParams.secondAngle += 90;
 			queryOverlays.push(this.sourceProvider.fetch(searchParams));

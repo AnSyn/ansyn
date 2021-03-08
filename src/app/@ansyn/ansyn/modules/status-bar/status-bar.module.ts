@@ -24,9 +24,12 @@ import { AdvancedSearchComponent } from './components/advanced-search/advanced-s
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { CasesModule } from '../menu-items/cases/cases.module';
 import { LogoPanelComponent } from './components/logo-panel/logo-panel.component';
+import { FourViewsFilterComponent } from '../four-views/four-views-filter/four-views-filter.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @NgModule({
 	imports: [
+		TranslateModule,
 		FormsModule,
 		CommonModule,
 		CoreModule,
@@ -40,7 +43,7 @@ import { LogoPanelComponent } from './components/logo-panel/logo-panel.component
 		OwlNativeDateTimeModule,
 		NgxSliderModule
 	],
-	declarations: [StatusBarComponent, SearchPanelComponent, DisplayPanelComponent, LogoPanelComponent, TimePickerComponent, LocationPickerComponent, FiltersPanelComponent, TimepickerPresetsComponent, TimePickerContainerComponent, SearchOptionsComponent, AdvancedSearchComponent],
+	declarations: [StatusBarComponent, SearchPanelComponent, DisplayPanelComponent, LogoPanelComponent, TimePickerComponent, LocationPickerComponent, FiltersPanelComponent, TimepickerPresetsComponent, TimePickerContainerComponent, SearchOptionsComponent, AdvancedSearchComponent, FourViewsFilterComponent],
 	providers: [
 		{
 			provide: GEO_FILTERS,
@@ -49,7 +52,8 @@ import { LogoPanelComponent } from './components/logo-panel/logo-panel.component
 		{
 			provide: OwlDateTimeIntl,
 			useClass: TimePickerTranslateService
-		}
+		},
+		TranslateService
 	],
 
 	exports: [StatusBarComponent, TimePickerContainerComponent]

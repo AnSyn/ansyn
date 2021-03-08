@@ -77,6 +77,7 @@ export interface IDilutedCaseState {
 	layers?: ICaseLayersState;
 	advancedSearchParameters?: IAdvancedSearchParameter;
 	runSecondSearch?: boolean;
+	fourViewsMode?: any;
 }
 
 export interface ICaseState extends IDilutedCaseState {

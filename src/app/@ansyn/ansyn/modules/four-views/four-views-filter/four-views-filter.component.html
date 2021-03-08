@@ -1,0 +1,14 @@
+<div class="four-view-filter-container">
+	<h1>{{'Four views filters' | translate}}</h1>
+
+	<h3>{{'Pick sensors' | translate}}</h3>
+	<div class="sensors-area" *ngFor="let sensor of fourViewsConfig.sensors">
+		<ansyn-checkbox [ngModel]="sensor" (ngModelChange)="onSensorChanged(sensor, $event)">
+			<span class="field-name" [title]="true">{{sensor | translate}}</span>
+		</ansyn-checkbox>
+	</div>
+
+	<ansyn-time-picker-container [openTop]="true"></ansyn-time-picker-container>
+
+	<button ansynButton (click)="searchFourViewsOverlays()">{{'Search' | translate}}</button>
+</div>

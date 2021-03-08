@@ -29,7 +29,6 @@ import {
 import {
 	BaseMapSourceProvider,
 	bboxFromGeoJson,
-	getPolygonIntersectionRatio,
 	IBaseImageryLayer,
 	ImageryCommunicatorService,
 	IImageryMapPosition,
@@ -58,8 +57,11 @@ import {
 import { toastMessages } from '../../modules/core/models/toast-messages';
 import { endTimingLog, startTimingLog } from '../../modules/core/utils/logs/timer-logs';
 import { isFullOverlay } from '../../modules/core/utils/overlays';
-import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
-import { MarkUpClass, selectOverlaysCriteria, selectRegion } from '../../modules/overlays/reducers/overlays.reducer';
+import { CaseGeoFilter, ICaseMapState, ICaseTimeState } from '../../modules/menu-items/cases/models/case.model';
+import {
+	MarkUpClass,
+	selectRegion, selectTime
+} from '../../modules/overlays/reducers/overlays.reducer';
 import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity';
 import {
@@ -84,8 +86,7 @@ import {
 	GeoRegisteration, IFourViews,
 	IFourViewsConfig,
 	fourViewsConfig,
-	IOverlay,
-	IOverlaysCriteria
+	IOverlay
 } from '../../modules/overlays/models/overlay.model';
 import {
 	BackToWorldView,
@@ -384,9 +385,9 @@ export class MapAppEffects {
 	onFourViewsMode$ = this.actions$.pipe(
 		ofType(MapActionTypes.SET_FOUR_VIEWS_MODE),
 		filter(({ payload }: SetFourViewsModeAction) => payload?.active),
-		withLatestFrom(this.store$.select(selectOverlaysCriteria), this.store$.select(selectFourViewsSensors)),
-		mergeMap(([{ payload }, criteria, sensors]: [SetFourViewsModeAction, IOverlaysCriteria, string[]]) => {
-			const observableOverlays = this.getFourViewsOverlays(payload.point, criteria, sensors);
+		withLatestFrom(this.store$.select(selectTime), this.store$.select(selectFourViewsSensors)),
+		mergeMap(([{ payload }, criteriaTime, sensors]: [SetFourViewsModeAction, ICaseTimeState, string[]]) => {
+			const observableOverlays = this.getFourViewsOverlays(payload.point, criteriaTime, sensors);
 
 			return forkJoin(observableOverlays).pipe(
 				mergeMap((overlaysData: any[]) => {
@@ -509,15 +510,15 @@ export class MapAppEffects {
 		this.lastOverlayIds = new Map();
 	}
 
-	getFourViewsOverlays(region: Point, criteria: IOverlaysCriteria, sensors: string[]) {
+	getFourViewsOverlays(region: Point, criteriaTime: ICaseTimeState, sensors: string[]) {
 		const { registeration, resolution } = this.casesConfig.defaultCase.state.advancedSearchParameters;
 		const searchParams: IFetchParams = {
 			limit: this.fourViewsConfig.storageLimitPerAngle,
 			sensors: sensors.length ? sensors : this.fourViewsConfig.sensors,
 			region,
 			timeRange: {
-				start: criteria.time.from,
-				end: criteria.time.to
+				start: criteriaTime.from,
+				end: criteriaTime.to
 			},
 			registeration,
 			resolution,

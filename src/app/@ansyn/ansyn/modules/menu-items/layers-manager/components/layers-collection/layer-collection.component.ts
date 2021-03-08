@@ -49,6 +49,15 @@ export class LayerCollectionComponent {
 			map(layers => layers.entities[this.hoverLayer]),
 			tap((layer) => this.store$.dispatch(new SetLayersModal({ type, layer })))
 		).subscribe()
+	}
+
+	click(menuClick: string) {
+		if (this[menuClick]) {
+			this[menuClick]();
+		}
+		else {
+			this.openModal(menuClick as SelectedModalEnum);
+		}
 
 	}
 

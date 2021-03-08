@@ -5,6 +5,7 @@
 	<mat-autocomplete #auto="matAutocomplete" panelWidth="fit" autoActiveFirstOption>
 		<mat-option *ngFor="let layer of layers"
 					(onSelectionChange)="addLayer(layer)"
+					(click)="$event.stopPropagation()"
 					[value]="layer.name">
 			{{layer.name}}
 		</mat-option>

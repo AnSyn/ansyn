@@ -7,10 +7,10 @@
 	[menu]="menu"
 	background="transparent">
 	<ng-template let-id="id" #menu>
-		<button (click)="toggleLayer()"
-				[attr.tooltip-value]="(selectedLayersIds$ | async).includes(id) ? 'Hide' : 'Show' | translate"
-				tooltip-class="bottom" >
-			<i [ngClass]="(selectedLayersIds$ | async).includes(id) ? 'icon-eye-blocked' : 'icon-eye1'"></i>
-		</button>
+		<ansyn-layer-menu
+		[selected]="(selectedLayersIds$ | async).includes(id)"
+		(menuClick)="click($event)"
+		[toggleActive]="true"
+		></ansyn-layer-menu>
 	</ng-template>
 </ansyn-entities-table>

@@ -1,17 +1,28 @@
-<button
+<button *ngIf="removeActive"
 	[disabled]="disabledRemove"
-	(click)="openModal.emit(SelectedModalEnum.remove)"
+	(click)="menuClick.emit(SelectedModalEnum.remove)"
 	[attr.tooltip-value]="'Remove' | translate"
 	tooltip-class="bottom">
-	<i class="icon-delete small-icon"></i>
+	<i class="icon-delete"></i>
 </button>
-<button (click)="openModal.emit(SelectedModalEnum.download)"
+
+
+
+<button *ngIf="exportActive"
+	(click)="menuClick.emit(SelectedModalEnum.download)"
 		[attr.tooltip-value]="'Export' | translate"
 		tooltip-class="bottom">
-	<i class="icon-layer-export small-icon"></i>
+	<i class="icon-layer-export"></i>
 </button>
-<button (click)="openModal.emit(SelectedModalEnum.edit)"
+<button *ngIf="editActive"
+	(click)="menuClick.emit(SelectedModalEnum.edit)"
 		[attr.tooltip-value]="'Edit' | translate"
 		tooltip-class="bottom">
-	<i class="icon-edit small-icon"></i>
+	<i class="icon-edit"></i>
+</button>
+<button *ngIf="toggleActive"
+	(click)="menuClick.emit('toggleLayer')"
+		[attr.tooltip-value]="selected ? 'Hide' : 'Show' | translate"
+		tooltip-class="bottom" >
+	<i [ngClass]="selected ? 'icon-eye-blocked' : 'icon-eye1'"></i>
 </button>

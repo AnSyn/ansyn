@@ -18,7 +18,7 @@ fi
 
 echo "start deploying version $version on target $target"
 
-eval $(aws ecr get-login --no-include-email --region us-west-2)
+eval $(aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin $target)
 
 docker tag "ansyn:$version" "$target:latest"
 

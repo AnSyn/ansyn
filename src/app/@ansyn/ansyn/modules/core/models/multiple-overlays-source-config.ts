@@ -21,10 +21,13 @@ export interface IOverlaysSourceProvider {
 }
 
 export interface IMultipleOverlaysSourceConfig {
+	sensorsTypes: {
+		[sensorType: string]: string;
+	}
 	sensorNamesByGroup: {
 		[groupName: string]: string[]
-	}
-	useAngleDebugMode: boolean
+	};
+	useAngleDebugMode: boolean;
 	defaultProvider: IOverlaysSourceProvider;
 	diagonalSensorNames: string[];
 	indexProviders: IIndexProviders;

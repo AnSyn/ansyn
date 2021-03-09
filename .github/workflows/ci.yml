@@ -25,13 +25,6 @@ jobs:
           key: npm-deps-${{ hashFiles('**/package-lock.json') }}
           restore-keys: npm-deps-
 
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=TAG_NAME::${GITHUB_REF#refs/heads/}
-
-      - name: print version
-        run: echo ${{ steps.get_version.outputs.TAG_NAME }}
-
       - run: npm set progress=false
       - run: npm ci
       - run: npm run lint

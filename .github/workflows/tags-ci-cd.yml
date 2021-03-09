@@ -33,10 +33,7 @@ jobs:
 
       - name: Get the version
         id: get_version
-        run: echo ::set-output name=TAG_NAME::${GITHUB_REF/refs\/tags\//}
-
-      - name: print version
-        run: echo ${{ steps.get_version.outputs.TAG_NAME }}
+        run: echo ::set-output name=TAG_NAME::${GITHUB_REF#refs/tags/}
 
       - run: npm set progress=false
       - run: npm ci

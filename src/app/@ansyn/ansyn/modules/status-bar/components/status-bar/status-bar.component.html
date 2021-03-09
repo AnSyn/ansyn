@@ -25,10 +25,8 @@
 	<ansyn-display-panel *ngIf="isSplitMapsShow"></ansyn-display-panel>
 	<ansyn-tools></ansyn-tools>
 	<hr class="status-bar-hr" *ngIf="isToolsLineShow"/>
-	<ansyn-search-options [class.disabled]="fourViewsMode" *ngIf="isSearchShow"></ansyn-search-options>
+	<ansyn-search-options *ngIf="isSearchShow"></ansyn-search-options>
 </div>
 <div class="logo">
 	<ansyn-logo-panel [version]="version"></ansyn-logo-panel>
 </div>
-
-<ansyn-four-views-filter *ngIf="fourViewsMode"></ansyn-four-views-filter>

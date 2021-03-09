@@ -27,6 +27,7 @@ export {
 	selectWasWelcomeNotificationShown,
 	selectToastMessage,
 	selectFooterCollapse,
+	selectFourViewsData,
 	selectOverlayByMapId,
 	selectMapStateById,
 	selectHideLayersOnMap,

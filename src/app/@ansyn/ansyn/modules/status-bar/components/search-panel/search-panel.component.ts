@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { IStatusBarConfig } from '../../models/statusBar-config.model';
 import { IStatusBarState, selectAdvancedSearchStatus, selectGeoFilterActive, selectGeoFilterType } from '../../reducers/status-bar.reducer';
 import { StatusBarConfig } from '../../models/statusBar.config';
@@ -13,6 +13,8 @@ import {
 import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
 import { SearchOptionsComponent } from '../search-options/search-options.component';
 import { ToggleAdvancedSearchAction, UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
+import { selectFourViewsMode } from '@ansyn/map-facade';
+import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [
@@ -31,11 +33,25 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	styleUrls: ['./search-panel.component.less'],
 	animations: [fadeAnimations]
 })
-export class SearchPanelComponent {
+
+@AutoSubscriptions()
+export class SearchPanelComponent implements OnInit, OnDestroy{
+
+	advancedSearchActive: boolean;
+	fourViewsMode: boolean;
 
 	geoFilterTitle$ = this.store$.pipe(select(selectGeoFilterType));
 	geoFilterActive$ = this.store$.pipe(select(selectGeoFilterActive));
-	advancedSearchActive$ = this.store$.pipe(select(selectAdvancedSearchStatus));
+
+	@AutoSubscription
+	advancedSearchActive$ = this.store$.select(selectAdvancedSearchStatus).pipe(
+		tap(advancedSearchActive => this.advancedSearchActive = advancedSearchActive)
+	);
+
+	@AutoSubscription
+	fourViewsMode$ = this.store$.select(selectFourViewsMode).pipe(
+		tap(fourViewsMode => this.fourViewsMode = fourViewsMode)
+	);
 
 	constructor(protected store$: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
@@ -45,6 +61,12 @@ export class SearchPanelComponent {
 				dateTimeAdapter: DateTimeAdapter<any>
 	) {
 		dateTimeAdapter.setLocale(statusBarConfig.locale);
+	}
+
+	ngOnDestroy(): void {
+	}
+
+	ngOnInit(): void {
 	}
 
 	toggleGeoFilter() {

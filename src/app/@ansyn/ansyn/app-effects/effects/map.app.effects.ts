@@ -24,7 +24,7 @@ import {
 	SetToastMessageAction,
 	SynchronizeMapsAction,
 	ToggleMapLayersAction, UpdateMapAction,
-	ToggleFooter, SetFourViewsModeAction, SetLayoutAction, SetPendingOverlaysAction
+	ToggleFooter, SetFourViewsModeAction, SetLayoutAction
 } from '@ansyn/map-facade';
 import {
 	BaseMapSourceProvider,
@@ -72,6 +72,7 @@ import {
 	SetMapSearchBox, ToolsActionsTypes, UpdateMeasureDataOptionsAction, UpdateMeasureLabelAction
 } from '../../modules/status-bar/components/tools/actions/tools.actions';
 import {
+	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction, DisplayOverlayFromStoreAction,
 	DisplayOverlaySuccessAction,
@@ -101,7 +102,6 @@ import {
 } from '../../modules/overlays/overlay-status/config/overlay-status-config';
 import {
 	IGeoFilterStatus,
-	selectFourViewsSensors,
 	selectGeoFilterStatus
 } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
@@ -385,9 +385,9 @@ export class MapAppEffects {
 	onFourViewsMode$ = this.actions$.pipe(
 		ofType(MapActionTypes.SET_FOUR_VIEWS_MODE),
 		filter(({ payload }: SetFourViewsModeAction) => payload?.active),
-		withLatestFrom(this.store$.select(selectTime), this.store$.select(selectFourViewsSensors)),
-		mergeMap(([{ payload }, criteriaTime, sensors]: [SetFourViewsModeAction, ICaseTimeState, string[]]) => {
-			const observableOverlays = this.getFourViewsOverlays(payload.point, criteriaTime, sensors);
+		withLatestFrom(this.store$.select(selectTime)),
+		mergeMap(([{ payload }, criteriaTime]: [SetFourViewsModeAction, ICaseTimeState]) => {
+			const observableOverlays = this.getFourViewsOverlays(payload.point, criteriaTime, payload.sensors);
 
 			return forkJoin(observableOverlays).pipe(
 				mergeMap((overlaysData: any[]) => {
@@ -417,7 +417,7 @@ export class MapAppEffects {
 					return [
 						new SetOverlaysCriteriaAction({ region: feature(payload.point) }),
 						new SetLayoutAction(fourMapsLayout),
-						new SetPendingOverlaysAction(overlays),
+						new DisplayMultipleOverlaysFromStoreAction(overlays),
 						new ToggleFooter(true),
 						new SetFourViewsOverlaysAction(fourViewsOverlays),
 					];
@@ -514,7 +514,7 @@ export class MapAppEffects {
 		const { registeration, resolution } = this.casesConfig.defaultCase.state.advancedSearchParameters;
 		const searchParams: IFetchParams = {
 			limit: this.fourViewsConfig.storageLimitPerAngle,
-			sensors: sensors.length ? sensors : this.fourViewsConfig.sensors,
+			sensors,
 			region,
 			timeRange: {
 				start: criteriaTime.from,

@@ -14,7 +14,15 @@ import { map } from 'rxjs/operators';
 import { selectFavoriteOverlays } from '../overlay-status/reducers/overlay-status.reducer';
 import { sortByDateDesc } from '../../core/utils/sorting';
 import { mapValuesToArray } from '../../core/utils/misc';
-import { IFourViews, IOverlay, IOverlayDrop, IOverlaysCriteria, IOverlaysFetchData } from '../models/overlay.model';
+import {
+	IFourViews,
+	IFourViewsConfig,
+	fourViewsConfig,
+	IOverlay,
+	IOverlayDrop,
+	IOverlaysCriteria,
+	IOverlaysFetchData
+} from '../models/overlay.model';
 import {
 	IMultipleOverlaysSourceConfig,
 	IOverlaysSourceProvider,
@@ -55,6 +63,7 @@ export class OverlaysService {
 	);
 
 	constructor(@Inject(OverlaysConfig) public config: IOverlaysConfig,
+				@Inject(fourViewsConfig) public fourViewsConfig: IFourViewsConfig,
 				@Inject(MultipleOverlaysSourceConfig) protected multipleOverlays: IMultipleOverlaysSourceConfig,
 				protected _overlaySourceProvider: MultipleOverlaysSourceProvider,
 				protected store$: Store<any>) {
@@ -120,13 +129,15 @@ export class OverlaysService {
 		return this._overlaySourceProvider.getByIds(ids);
 	}
 
-	getAllSensorsNames(): any[] {
+	getAllSensorsNames(isFourViewsModeActive?: boolean): any[] {
 		let sensors: any[] = [];
 		const sensorNamesByGroup = this.multipleOverlays.sensorNamesByGroup;
 		if (sensorNamesByGroup) {
 			const typesNames = Object.keys(sensorNamesByGroup);
 			typesNames.forEach(type => {
-				sensors = sensors.concat(sensorNamesByGroup[type]);
+				if (!isFourViewsModeActive || this.fourViewsConfig.sensorTypes.includes(type)) {
+					sensors = sensors.concat(sensorNamesByGroup[type]);
+				}
 			});
 		}
 		return flattenDeep(sensors);

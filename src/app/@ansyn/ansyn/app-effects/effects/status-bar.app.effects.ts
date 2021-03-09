@@ -54,8 +54,8 @@ export class StatusBarAppEffects {
 		withLatestFrom(this.store.select(selectOverlayOfActiveMap), this.store.select(selectFourViewsMode)),
 		filter(([action, overlay, fourViewsMode]) => Boolean(overlay) && !fourViewsMode),
 		withLatestFrom(this.store.select(selectFourViewsOverlays), ([{ payload }, { id: overlayId }, fourViewsMode], fourViewsOverlays: IFourViews): IOverlayDrop => {
-			const currentMapAngleOverlay = this.findAngleOverlaysByOverlay(fourViewsOverlays, overlayId);
-			return this.getAdjacentOverlay(currentMapAngleOverlay, overlayId, payload.isNext);
+			const currentMapAngleOverlays = this.findAngleOverlaysByOverlay(fourViewsOverlays, overlayId);
+			return this.getAdjacentOverlay(currentMapAngleOverlays, overlayId, payload.isNext);
 		}),
 		filter(Boolean),
 		map(({ id }) => new DisplayOverlayFromStoreAction({ id })));

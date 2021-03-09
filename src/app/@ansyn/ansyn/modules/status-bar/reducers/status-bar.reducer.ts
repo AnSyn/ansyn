@@ -14,7 +14,6 @@ export interface IStatusBarState {
 	IsSimpleSearchOpen?: boolean;
 	IsOpenedFromOutside?: boolean;
 	markSecondSearchSensors?: boolean;
-	fourViewsSensors?: string[]
 }
 
 export const StatusBarInitialState: IStatusBarState = {
@@ -26,8 +25,7 @@ export const StatusBarInitialState: IStatusBarState = {
 	isAdvancedSearchOpen: false,
 	IsSimpleSearchOpen: false,
 	IsOpenedFromOutside: false,
-	markSecondSearchSensors: false,
-	fourViewsSensors: []
+	markSecondSearchSensors: false
 };
 
 export const statusBarFeatureKey = 'statusBar';
@@ -48,11 +46,6 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 			return { ...state, isCalenderOpen: payload}
 		}
 
-		case StatusBarActionsTypes.SET_FOUR_VIEWS_SENSORS: {
-			const { payload } = action;
-			console.log(payload);
-			return { ...state, fourViewsSensors: payload}
-		}
 		case StatusBarActionsTypes.TOGGLE_ADVANCED_SEARCH: {
 			const { payload } = action;
 			return { ...state, isAdvancedSearchOpen: payload}
@@ -79,7 +72,6 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 export const selectGeoFilterStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.geoFilterStatus : StatusBarInitialState.geoFilterStatus);
 export const selectCalenderStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.isCalenderOpen : StatusBarInitialState.isCalenderOpen);
 export const selectAdvancedSearchStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.isAdvancedSearchOpen : StatusBarInitialState.isAdvancedSearchOpen);
-export const selectFourViewsSensors = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar?.fourViewsSensors);
 export const selectSimpledSearchStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.IsSimpleSearchOpen : StatusBarInitialState.IsSimpleSearchOpen);
 export const selectIsOpenedFromOutside = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.IsOpenedFromOutside : StatusBarInitialState.IsOpenedFromOutside);
 export const selectMarkedSecondSearchSensors = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar?.markSecondSearchSensors);

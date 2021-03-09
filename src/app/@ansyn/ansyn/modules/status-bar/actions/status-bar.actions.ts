@@ -15,8 +15,7 @@ export const StatusBarActionsTypes = {
 	TOGGLE_SIMPLE_SEARCH: 'TOGGLE_SIMPLE_SEARCH',
 	OPENED_FROM_OUTSIDE: 'OPENED_FROM_OUTSIDE',
 	SEARCH_ACTION: 'SEARCH_ACTION',
-	MARK_SECOND_SEARCH: 'MARK_SECOND_SEARCH',
-	SET_FOUR_VIEWS_SENSORS: 'SET_FOUR_VIEWS_SENSORS'
+	MARK_SECOND_SEARCH: 'MARK_SECOND_SEARCH'
 };
 
 export class CopySnapshotShareLinkAction implements Action, ILogMessage {
@@ -35,13 +34,6 @@ export class UpdateCalendarStatusAction implements Action {
 	type: string = StatusBarActionsTypes.UPDATE_CALENDER_STATUS;
 
 	constructor(public payload: boolean) {
-	}
-}
-
-export class SetFourViewsSensorsAction implements Action {
-	type: string = StatusBarActionsTypes.SET_FOUR_VIEWS_SENSORS;
-
-	constructor(public payload: string[]) {
 	}
 }
 

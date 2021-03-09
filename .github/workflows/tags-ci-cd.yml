@@ -31,6 +31,13 @@ jobs:
           key: npm-deps-${{ hashFiles('**/package-lock.json') }}
           restore-keys: npm-deps-
 
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=TAG_NAME::${GITHUB_REF/refs\/tags\//}
+
+      - name: print version
+        run: echo ${{ steps.get_version.outputs.TAG_NAME }}
+
       - run: npm set progress=false
       - run: npm ci
       - run: npm run lint
@@ -39,7 +46,7 @@ jobs:
         with:
           run: npm run test:single-run
       - run: npm run build:libs
-      - run: sh -x scripts/build.sh ansyn $GITHUB_SHA $GITHUB_REF
+      - run: sh -x scripts/build.sh ansyn $GITHUB_SHA ${{ steps.get_version.outputs.TAG_NAME }}
 
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
@@ -51,4 +58,4 @@ jobs:
       - run: export PATH=$PATH:$HOME/.local/bin # put aws in the path
 
       - name: Deploy to aws - Prod
-        run: sh -x scripts/deploy.sh $REPO_PROD $GITHUB_REF $CLUSTER $SERVICES_PROD
+        run: sh -x scripts/deploy.sh $REPO_PROD ${{ steps.get_version.outputs.TAG_NAME }} $CLUSTER $SERVICES_PROD

@@ -548,8 +548,8 @@ export class MapAppEffects {
 			const [prevOverlay] = prev.data;
 			const [nextOverlay] = next.data;
 
-			const prevOverlayAngle = getAngleDegreeBetweenPoints(prevOverlay.sensorLocation, point);
-			const nextOverlayAngle = getAngleDegreeBetweenPoints(nextOverlay.sensorLocation, point);
+			const prevOverlayAngle = (360 - getAngleDegreeBetweenPoints(prevOverlay.sensorLocation, point)) % 360;
+			const nextOverlayAngle = (360 - getAngleDegreeBetweenPoints(nextOverlay.sensorLocation, point)) % 360;
 			return prevOverlayAngle - nextOverlayAngle;
 		})
 	}

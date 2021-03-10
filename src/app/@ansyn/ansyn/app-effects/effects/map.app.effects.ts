@@ -120,6 +120,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { MultipleOverlaysSourceProvider } from '../../modules/overlays/services/multiple-source-provider';
 import { Point } from 'geojson';
 import { IFetchParams } from '../../modules/overlays/models/base-overlay-source-provider.model';
+import { regionLayerDefaultName, regionLayerId } from '../../modules/menu-items/layers-manager/models/layers.model';
+import { UpdateLayer } from '../../modules/menu-items/layers-manager/actions/layers.actions';
 
 @Injectable()
 export class MapAppEffects {
@@ -377,7 +379,13 @@ export class MapAppEffects {
 		filter(({ payload }: SetFourViewsModeAction) => !payload?.active),
 		mergeMap(() => {
 			const oneMapLayout = 'layout1';
-			return [new SetLayoutAction(oneMapLayout), new ToggleFooter(false), new SetFourViewsOverlaysAction({})]
+			const regionLayerName = this.translateService.instant(regionLayerDefaultName);
+			return [
+				new SetLayoutAction(oneMapLayout),
+				new ToggleFooter(false),
+				new SetFourViewsOverlaysAction({}),
+				new UpdateLayer({ id: regionLayerId, name: regionLayerName })
+			];
 		})
 	);
 
@@ -419,7 +427,8 @@ export class MapAppEffects {
 						new SetLayoutAction(fourMapsLayout),
 						new DisplayMultipleOverlaysFromStoreAction(overlays),
 						new ToggleFooter(true),
-						new SetFourViewsOverlaysAction(fourViewsOverlays),
+						new UpdateLayer({ id: regionLayerId, name: 'four views' }),
+						new SetFourViewsOverlaysAction(fourViewsOverlays)
 					];
 				})
 			)

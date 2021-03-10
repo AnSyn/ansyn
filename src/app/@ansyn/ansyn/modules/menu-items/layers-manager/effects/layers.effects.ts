@@ -14,7 +14,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { DataLayersService } from '../services/data-layers.service';
-import { ILayer, LayerType } from '../models/layers.model';
+import { ILayer, LayerType, regionLayerDefaultName, regionLayerId } from '../models/layers.model';
 import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCrash';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -34,8 +34,8 @@ export class LayersEffects {
 	onLayerCollectionLoaded$ = this.actions$.pipe(
 		ofType<LayerCollectionLoadedAction>(LayersActionTypes.LAYER_COLLECTION_LOADED),
 		mergeMap((action) => {
-			const regionLayerName = this.translate.instant('Region');
-			const regionLayer = this.dataLayersService.generateLayer({ name: regionLayerName, id: 'region-layer', type: LayerType.static });
+			const regionLayerName = this.translate.instant(regionLayerDefaultName);
+			const regionLayer = this.dataLayersService.generateLayer({ name: regionLayerName, id: regionLayerId, type: LayerType.static });
 			const layers = [regionLayer];
 
 			if (!action.payload.some(({ type }) => type === LayerType.annotation)) {

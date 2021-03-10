@@ -75,7 +75,8 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	fourViewsMode$: Observable<IFourViewsData> = this.store.select(selectFourViewsData).pipe(
+	fourViewsData$: Observable<IFourViewsData> = this.store.select(selectFourViewsData).pipe(
+		filter(Boolean),
 		tap((fourViewsData: IFourViewsData) => {
 			this.fourViewsData = fourViewsData;
 			if (fourViewsData?.active) {

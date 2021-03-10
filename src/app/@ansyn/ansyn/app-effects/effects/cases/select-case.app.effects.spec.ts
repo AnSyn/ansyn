@@ -12,7 +12,7 @@ import {
 	UpdateOverlaysManualProcessArgs,
 } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { SelectCaseAppEffects } from './select-case.app.effects';
-import { SetActiveMapId, SetFourViewsModeAction, SetLayoutAction, SetMapsDataActionStore } from '@ansyn/map-facade';
+import { SetActiveMapId, SetFourViewsModeAction, SetLayoutAction, SetMapsDataActionStore, IFourViewsData } from '@ansyn/map-facade';
 import {
 	BeginLayerCollectionLoadAction,
 	UpdateSelectedLayersIds
@@ -40,7 +40,7 @@ import {
 	ICaseTimeState,
 	IOverlaysImageProcess
 } from '../../../modules/menu-items/cases/models/case.model';
-import { IFourViewsData, IOverlay, IOverlaysHash } from '../../../modules/overlays/models/overlay.model';
+import { IOverlay, IOverlaysHash } from '../../../modules/overlays/models/overlay.model';
 import { UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/status-bar.actions';
 import { IAdvancedSearchParameter } from '../../../modules/status-bar/models/statusBar-config.model';
 import { toolsFlags } from '../../../modules/status-bar/components/tools/models/tools.model';

@@ -117,6 +117,18 @@ export class ContextAppEffects {
 					sensors
 				}, this.casesService.defaultCase, params);
 				return [new SelectCaseAction(contextCase)];
+			case ContextName.GeoAndTime: {
+				const time = this.parseTimeParams(params.time);
+				const sensors = this.overlaysService.getAllSensorsNames();
+				contextCase = this.casesService.updateCaseViaContext({
+					...selectedContext,
+					time,
+					sensors
+				}, this.casesService.defaultCase, params);
+				contextCase.state.advancedSearchParameters.registeration = [];
+
+				return [new SelectCaseAction(contextCase)];
+			}
 			default:
 				actions.push(new SetToastMessageAction({
 						toastText: this.buildErrorToastMessage(context)

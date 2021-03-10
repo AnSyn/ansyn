@@ -10,7 +10,7 @@ import {
 import { LayoutKey, layoutOptions } from '../models/maps-layout';
 import { MapOrientation } from '@ansyn/imagery';
 import { ILogMessage } from '../models/logger.model';
-import { IFourViewsData } from '../../ansyn/modules/overlays/models/overlay.model';
+import { IFourViewsData } from '../reducers/map.reducer';
 
 export interface IAngleFilterClick { // @TODO: map-facade should not know IOverlay
 	click: { x: number, y: number };

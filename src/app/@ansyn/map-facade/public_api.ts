@@ -17,6 +17,7 @@ export {
 	mapFeatureKey,
 	MapReducer,
 	IMapState,
+	IFourViewsData,
 	mapStateSelector,
 	selectMapsIds,
 	selectActiveMapId,

@@ -1,12 +1,11 @@
 import {
 	IDilutedOverlay,
 	IDilutedOverlaysHash,
-	IFourViewsData,
 	IOverlay,
 	IOverlaysHash
 } from '../../../overlays/models/overlay.model';
 import { Feature, MultiPolygon, Point, Polygon, Position } from 'geojson';
-import { LayoutKey } from '@ansyn/map-facade';
+import { IFourViewsData, LayoutKey } from '@ansyn/map-facade';
 import { FilterType } from '../../../filters/models/filter-type';
 import { IMapSettings, IMapSettingsData } from '@ansyn/imagery';
 import { IAdvancedSearchParameter } from '../../../status-bar/models/statusBar-config.model';

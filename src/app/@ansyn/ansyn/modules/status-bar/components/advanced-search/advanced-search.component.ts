@@ -10,8 +10,7 @@ import { Options } from '@angular-slider/ngx-slider';
 import {
 	GeoRegisterationOptions,
 	IFourViewsConfig,
-	fourViewsConfig,
-	IFourViewsData
+	fourViewsConfig
 } from '../../../overlays/models/overlay.model';
 import { SearchPanelComponent } from '../search-panel/search-panel.component';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -26,7 +25,7 @@ import { SearchAction } from '../../actions/status-bar.actions';
 import { selectMarkedSecondSearchSensors } from '../../reducers/status-bar.reducer';
 import { IOverlaysConfig } from '../../../overlays/models/overlays.config';
 import { Observable } from 'rxjs';
-import { SetFourViewsModeAction, selectFourViewsData } from '@ansyn/map-facade';
+import { SetFourViewsModeAction, selectFourViewsData, IFourViewsData } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-advanced-search',

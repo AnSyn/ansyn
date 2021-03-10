@@ -11,12 +11,6 @@ export interface IFourViewsConfig {
 	active: boolean;
 }
 
-export interface IFourViewsData {
-	point?: Point;
-	active: boolean;
-	sensors?: string[];
-}
-
 export interface IFourViews {
 	firstAngleOverlays?: IOverlay[]; // 0 < angle < 90
 	secondAngleOverlays?: IOverlay[]; // 90 < angle < 180

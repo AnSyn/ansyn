@@ -394,7 +394,7 @@ export class MapAppEffects {
 					overlaysData = this.sortOverlaysByAngle(overlaysData, payload.point);
 
 					// Getting the first overlay from each query.
-					const overlays: any[] = overlaysData.map(({ data }) => ({ overlay: data[0] })).filter(({ overlay }) => overlay);
+					const overlays: any[] = overlaysData.map(({ data }) => ({ overlay: data && data[data.length - 1] })).filter(({ overlay }) => overlay);
 
 					if (overlays.length < 4) {
 						let toastText = this.translateService.instant('Some angles are missing');

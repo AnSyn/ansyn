@@ -107,11 +107,15 @@
 					<ngx-slider [(value)]="this.selectedAdvancedSearchParameters.resolution.lowValue" [(highValue)]="this.selectedAdvancedSearchParameters.resolution.highValue" [options]="sliderOptions" onchange="getSliderValue($event)" #resolution></ngx-slider>
 				</div>
 			</div>
-			<div class="search-icon search-button"
-				 (click)="search()" >
+			<div *ngIf="!fourViewsData?.active" class="search-icon search-button"
+				 (click)="search()">
 				<i class="icon-search-button" [attr.tooltip-value]="'search' | translate" tooltip-class="bottom"></i>
 			</div>
 		</div>
+	</div>
+	<div *ngIf="fourViewsData?.active" class="search-icon search-button four-views-search"
+		 (click)="search()">
+		<i class="icon-search-button" [attr.tooltip-value]="'search' | translate" tooltip-class="bottom"></i>
 	</div>
 
 	<div class="message" [class.hide]="!showMessage">{{'Please select search parameters' | translate}}</div>

@@ -109,22 +109,13 @@ export class ContextAppEffects {
 				return [new SelectCaseAction(contextCase)];
 			case ContextName.QuickSearch:
 			case ContextName.TwoMaps:
-				const time = this.parseTimeParams(params.time);
 				const sensors: string[] = this.parseSensorParams(context === ContextName.TwoMaps ? this.config.TwoMaps.sensors : params.sensors);
-				contextCase = this.casesService.updateCaseViaContext({
-					...selectedContext,
-					time,
-					sensors
-				}, this.casesService.defaultCase, params);
+				contextCase = this.updateContextWithTimeAndSensors(selectedContext, sensors, params);
 				return [new SelectCaseAction(contextCase)];
+
 			case ContextName.GeoAndTime: {
-				const time = this.parseTimeParams(params.time);
 				const sensors = this.overlaysService.getAllSensorsNames();
-				contextCase = this.casesService.updateCaseViaContext({
-					...selectedContext,
-					time,
-					sensors
-				}, this.casesService.defaultCase, params);
+				contextCase = this.updateContextWithTimeAndSensors(selectedContext, sensors, params);
 				contextCase.state.advancedSearchParameters.registeration = [];
 
 				return [new SelectCaseAction(contextCase)];
@@ -136,6 +127,15 @@ export class ContextAppEffects {
 				);
 		}
 		return actions;
+	}
+
+	updateContextWithTimeAndSensors(selectedContext, sensors, params) {
+		const time = this.parseTimeParams(params.time);
+		return this.casesService.updateCaseViaContext({
+			...selectedContext,
+			time,
+			sensors
+		}, this.casesService.defaultCase, params);
 	}
 
 	postContextAction(action: SelectCaseAction) {

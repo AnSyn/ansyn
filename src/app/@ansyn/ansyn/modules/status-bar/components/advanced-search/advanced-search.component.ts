@@ -76,7 +76,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	fourViewsData$: Observable<IFourViewsData> = this.store.select(selectFourViewsData).pipe(
-		filter(Boolean),
 		tap((fourViewsData: IFourViewsData) => {
 			this.fourViewsData = fourViewsData;
 			if (fourViewsData?.active) {
@@ -141,7 +140,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 	}
 
 	search(): void {
-		if (this.fourViewsData.active) {
+		if (this.fourViewsData?.active) {
 			const { point } = this.fourViewsData;
 			const { sensors } = this.selectedAdvancedSearchParameters;
 			this.store.dispatch(new SetFourViewsModeAction({ point, active: true, sensors }))
@@ -194,7 +193,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 	}
 
 	updateSelectedTypesBySensor(changedSensor: string): void {
-		if (!this.fourViewsData.active) {
+		if (!this.fourViewsData?.active) {
 			const sensorNamesByGroup = this.multipleOverlaysSourceConfig.sensorNamesByGroup;
 			const typesNames = Object.keys(sensorNamesByGroup);
 			const selectedType = this.selectedAdvancedSearchParameters.types;

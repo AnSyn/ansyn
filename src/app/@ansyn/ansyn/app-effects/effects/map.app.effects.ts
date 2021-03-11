@@ -423,7 +423,7 @@ export class MapAppEffects {
 		withLatestFrom(this.store$.select(selectTime)),
 		mergeMap(([{ payload }, criteriaTime]: [SetFourViewsModeAction, ICaseTimeState]) => {
 			const sensors = payload.sensors.length ? payload.sensors : this.overlaysService.getAllSensorsNames(true);
-			const observableOverlays = this.getFourViewsOverlays(payload.point, criteriaTime, payload.sensors);
+			const observableOverlays = this.getFourViewsOverlays(payload.point, criteriaTime, sensors);
 
 			return forkJoin(observableOverlays).pipe(
 				mergeMap((overlaysData: any[]) => {

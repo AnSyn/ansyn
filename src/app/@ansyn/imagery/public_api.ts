@@ -65,6 +65,7 @@ export {
 	getNewPoint,
 	EPSG_4326,
 	EPSG_3857,
+	splitExtent,
 	BBOX
 } from './utils/geo';
 

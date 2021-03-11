@@ -15,3 +15,11 @@ export function getAngleDegreeBetweenPoints(source: Point, destination: Point): 
 	const brng = bearing(source, destination);
 	return brng;
 }
+
+export function heatmapCalculate(value, min, max) {
+	let colorP = (value - min) / (max - min ) || 1;
+	const colors = [[0, 255, 0], [255, 255, 0], [255, 0, 0]];
+	const idx = Math.ceil(colorP * (colors.length - 1));
+	const color = colors[idx]
+	return `rgba(${color.join(',')}, 0.5)`
+}

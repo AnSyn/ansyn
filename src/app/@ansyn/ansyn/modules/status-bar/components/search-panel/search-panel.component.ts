@@ -1,6 +1,11 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { IStatusBarConfig } from '../../models/statusBar-config.model';
-import { IStatusBarState, selectAdvancedSearchStatus, selectGeoFilterActive, selectGeoFilterType } from '../../reducers/status-bar.reducer';
+import {
+	IStatusBarState,
+	selectAdvancedSearchStatus,
+	selectGeoFilterActive,
+	selectGeoFilterType
+} from '../../reducers/status-bar.reducer';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store, select } from '@ngrx/store';
 import { animate, AnimationTriggerMetadata, style, transition, trigger } from '@angular/animations';
@@ -34,13 +39,12 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	animations: [fadeAnimations]
 })
 
-@AutoSubscriptions()
-export class SearchPanelComponent implements OnInit, OnDestroy{
+export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	geoFilterTitle$ = this.store$.pipe(select(selectGeoFilterType));
 	geoFilterActive$ = this.store$.pipe(select(selectGeoFilterActive));
 	advancedSearchActive$ = this.store$.select(selectAdvancedSearchStatus);
- 	fourViewsMode$ = this.store$.select(selectFourViewsMode);
+	fourViewsMode$ = this.store$.select(selectFourViewsMode);
 
 	constructor(protected store$: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
@@ -61,16 +65,17 @@ export class SearchPanelComponent implements OnInit, OnDestroy{
 	toggleGeoFilter() {
 		this.geoFilterActive$.pipe(
 			take(1),
-			tap( (active: boolean) => this.store$.dispatch(new UpdateGeoFilterStatus({active: !active})))
+			tap((active: boolean) => this.store$.dispatch(new UpdateGeoFilterStatus({ active: !active })))
 		).subscribe();
 	}
 
 	toggleAdvancedSearch() {
 		this.advancedSearchActive$.pipe(
 			take(1),
-			tap( (active: boolean) => this.store$.dispatch(new ToggleAdvancedSearchAction(!active)))
+			tap((active: boolean) => this.store$.dispatch(new ToggleAdvancedSearchAction(!active)))
 		).subscribe();
 	}
+
 	close() {
 		this._parent.close()
 	}

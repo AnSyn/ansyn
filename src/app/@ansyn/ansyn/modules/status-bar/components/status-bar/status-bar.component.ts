@@ -41,7 +41,6 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 		tap((showFavorite) => this.onlyFavorite = showFavorite)
 	);
 
-	@AutoSubscription
 	fourViewsMode$ = this.store.select(selectFourViewsMode);
 
 	constructor(

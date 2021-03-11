@@ -83,6 +83,7 @@ export class ContextMenuComponent implements OnInit {
 	get onMousewheel() {
 		return this.hide;
 	}
+
 	mapState$ = this.store.select(mapStateSelector);
 
 	displayedOverlay$: Observable<IOverlay> = this.mapState$.pipe(
@@ -127,6 +128,7 @@ export class ContextMenuComponent implements OnInit {
 	overlayButtons: IOverlayButton[] = [
 		{
 			name: 'four-views',
+			subList: 'fourViews',
 			action: this.clickFourViews.bind(this)
 		},
 		{
@@ -244,16 +246,14 @@ export class ContextMenuComponent implements OnInit {
 	}
 
 	clickFourViews($event: MouseEvent, subFilter?: string) {
-		if (this.fourViewsConfig.active) {
-			const point = {
-				...this.point,
-				properties: {
-					searchMode: "Point"
-				}
-			};
+		const point = {
+			...this.point,
+			properties: {
+				searchMode: 'Point'
+			}
+		};
 
-			this.store$.dispatch(new SetFourViewsModeAction({point, active: true}));
-		}
+		this.store$.dispatch(new SetFourViewsModeAction({ point, active: true }));
 	}
 
 	clickFirst($event: MouseEvent, subFilter?: string) {
@@ -294,8 +294,8 @@ export class ContextMenuComponent implements OnInit {
 	}
 
 	isDisabled(subList: string) {
-		if (!subList) {
-			return false;
+		if (subList === 'fourViews') {
+			return !this.fourViewsConfig.active;
 		}
 
 		if (subList === 'angleFilter') {

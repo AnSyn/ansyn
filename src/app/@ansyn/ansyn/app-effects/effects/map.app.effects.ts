@@ -443,7 +443,7 @@ export class MapAppEffects {
 						new SetOverlaysCriteriaAction({ region: feature(payload.point) }),
 						new SetLayoutAction(fourMapsLayout),
 						new ToggleFooter(true),
-						new UpdateLayer({ id: regionLayerId, name: 'four views' }),
+						new UpdateLayer({ id: regionLayerId, name: 'four views coordinate' }),
 						new SetFourViewsOverlaysAction(fourViewsOverlays)
 					];
 

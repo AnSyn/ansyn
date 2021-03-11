@@ -15,6 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
 import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
 import { fourViewsConfig } from '../../../overlays/models/overlay.model';
+import { OverlaysService } from '../../../overlays/services/overlays.service';
 
 describe('ContextMenuComponent', () => {
 	let component: ContextMenuComponent;
@@ -33,6 +34,7 @@ describe('ContextMenuComponent', () => {
 				provide: mapFacadeConfig,
 				useValue: <IMapFacadeConfig>{ sensorTypeShortcuts: {}, contextMenu: { filterField: 'filterField' } }
 			},
+				OverlaysService,
 				{
 					provide: fourViewsConfig,
 					useValue: {}

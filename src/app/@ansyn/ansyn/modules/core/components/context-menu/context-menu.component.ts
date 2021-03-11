@@ -22,6 +22,7 @@ import { selectRegion } from '../../../overlays/reducers/overlays.reducer';
 import { fourViewsConfig, IFourViewsConfig, IOverlay } from '../../../overlays/models/overlay.model';
 import { CaseGeoFilter, ICaseMapState } from '../../../menu-items/cases/models/case.model';
 import { IGeoFilterStatus, selectGeoFilterStatus } from '../../../status-bar/reducers/status-bar.reducer';
+import { OverlaysService } from '../../../overlays/services/overlays.service';
 
 export interface IContextMenuShowPayload {
 	point: Point;
@@ -162,6 +163,7 @@ export class ContextMenuComponent implements OnInit {
 				protected actions$: Actions,
 				protected elem: ElementRef,
 				@Inject(fourViewsConfig) protected fourViewsConfig: IFourViewsConfig,
+				protected overlaysService: OverlaysService,
 				protected renderer: Renderer2,
 				public store$: Store<any>,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
@@ -253,7 +255,8 @@ export class ContextMenuComponent implements OnInit {
 			}
 		};
 
-		this.store$.dispatch(new SetFourViewsModeAction({ point, active: true }));
+		const sensors = this.overlaysService.getAllSensorsNames(true);
+		this.store$.dispatch(new SetFourViewsModeAction({ point, active: true, sensors }));
 	}
 
 	clickFirst($event: MouseEvent, subFilter?: string) {

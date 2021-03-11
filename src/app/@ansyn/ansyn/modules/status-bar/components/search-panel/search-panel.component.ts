@@ -19,7 +19,6 @@ import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
 import { SearchOptionsComponent } from '../search-options/search-options.component';
 import { ToggleAdvancedSearchAction, UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
 import { selectFourViewsMode } from '@ansyn/map-facade';
-import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [

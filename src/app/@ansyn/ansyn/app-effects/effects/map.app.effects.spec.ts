@@ -80,7 +80,7 @@ import {
 	RegionContainment
 } from '../../modules/overlays/models/overlay.model';
 import { ICase } from '../../modules/menu-items/cases/models/case.model';
-import { overlayStatusConfig } from "../../modules/overlays/overlay-status/config/overlay-status-config";
+import { overlayStatusConfig } from '../../modules/overlays/overlay-status/config/overlay-status-config';
 import { ScreenViewConfig } from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MultipleOverlaysSourceProvider } from '../../modules/overlays/services/multiple-source-provider';
@@ -192,6 +192,12 @@ describe('MapAppEffects', () => {
 			],
 			providers: [
 				{ provide: MultipleOverlaysSourceProvider, useClass: OverlaySourceProviderMock },
+				{
+					provide: OverlaysService,
+					useValue: {
+						getAllSensorsNames: () => null
+					}
+				},
 				{ provide: LoggerService, useValue: {} },
 				TranslateService,
 				{
@@ -209,10 +215,10 @@ describe('MapAppEffects', () => {
 				{
 					provide: overlayStatusConfig,
 					useValue: {}
-				},	{
+				}, {
 					provide: mapFacadeConfig,
 					useValue: {}
-				},  {
+				}, {
 					provide: ScreenViewConfig,
 					useValue: {}
 				},

@@ -35,12 +35,6 @@ describe('ContextMenuComponent', () => {
 				useValue: <IMapFacadeConfig>{ sensorTypeShortcuts: {}, contextMenu: { filterField: 'filterField' } }
 			},
 				{
-					provide: OverlaysService,
-					useValue: {
-						getAllSensorsNames: () => null
-					}
-				},
-				{
 					provide: fourViewsConfig,
 					useValue: {}
 				}]

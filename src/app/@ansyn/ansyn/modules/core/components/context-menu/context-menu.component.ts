@@ -163,7 +163,6 @@ export class ContextMenuComponent implements OnInit {
 				protected actions$: Actions,
 				protected elem: ElementRef,
 				@Inject(fourViewsConfig) protected fourViewsConfig: IFourViewsConfig,
-				protected overlaysService: OverlaysService,
 				protected renderer: Renderer2,
 				public store$: Store<any>,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig) {
@@ -255,8 +254,7 @@ export class ContextMenuComponent implements OnInit {
 			}
 		};
 
-		const sensors = this.overlaysService.getAllSensorsNames(true);
-		this.store$.dispatch(new SetFourViewsModeAction({ point, active: true, sensors }));
+		this.store$.dispatch(new SetFourViewsModeAction({ point, active: true }));
 	}
 
 	clickFirst($event: MouseEvent, subFilter?: string) {

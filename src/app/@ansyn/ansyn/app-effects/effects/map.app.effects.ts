@@ -122,6 +122,7 @@ import { Point } from 'geojson';
 import { IFetchParams } from '../../modules/overlays/models/base-overlay-source-provider.model';
 import { regionLayerDefaultName, regionLayerId } from '../../modules/menu-items/layers-manager/models/layers.model';
 import { UpdateLayer } from '../../modules/menu-items/layers-manager/actions/layers.actions';
+import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 
 @Injectable()
 export class MapAppEffects {
@@ -421,6 +422,7 @@ export class MapAppEffects {
 		filter(({ payload }: SetFourViewsModeAction) => payload?.active),
 		withLatestFrom(this.store$.select(selectTime)),
 		mergeMap(([{ payload }, criteriaTime]: [SetFourViewsModeAction, ICaseTimeState]) => {
+			const sensors = payload.sensors.length ? payload.sensors : this.overlaysService.getAllSensorsNames(true);
 			const observableOverlays = this.getFourViewsOverlays(payload.point, criteriaTime, payload.sensors);
 
 			return forkJoin(observableOverlays).pipe(
@@ -529,6 +531,7 @@ export class MapAppEffects {
 				@Inject(fourViewsConfig) protected fourViewsConfig: IFourViewsConfig,
 				@Inject(casesConfig) protected casesConfig: ICasesConfig,
 				protected translateService: TranslateService,
+				protected overlaysService: OverlaysService,
 				protected sourceProvider: MultipleOverlaysSourceProvider,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig,

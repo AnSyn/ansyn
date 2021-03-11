@@ -26,7 +26,6 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 	readonly isToolsLineShow: boolean;
 	//
 	onlyFavorite: boolean;
-	fourViewsMode: boolean;
 	@Input() version;
 
 	onlyFavoriteEnable$ = this.store.pipe(
@@ -43,10 +42,7 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 	);
 
 	@AutoSubscription
-	fourViewsMode$ = this.store.pipe(
-		select(selectFourViewsMode),
-		tap(fourViewsMode => this.fourViewsMode = fourViewsMode)
-	);
+	fourViewsMode$ = this.store.select(selectFourViewsMode);
 
 	constructor(
 		protected store: Store,

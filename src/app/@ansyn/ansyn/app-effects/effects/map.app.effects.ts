@@ -24,7 +24,7 @@ import {
 	SetToastMessageAction,
 	SynchronizeMapsAction,
 	ToggleMapLayersAction, UpdateMapAction,
-	ToggleFooter, SetFourViewsModeAction, SetLayoutAction
+	ToggleFooter, SetFourViewsModeAction, SetLayoutAction, selectFourViewsMode, selectMapsIds, SetLayoutSuccessAction
 } from '@ansyn/map-facade';
 import {
 	BaseMapSourceProvider,
@@ -59,7 +59,7 @@ import { endTimingLog, startTimingLog } from '../../modules/core/utils/logs/time
 import { isFullOverlay } from '../../modules/core/utils/overlays';
 import { CaseGeoFilter, ICaseMapState, ICaseTimeState } from '../../modules/menu-items/cases/models/case.model';
 import {
-	MarkUpClass,
+	MarkUpClass, selectFourViewsOverlays,
 	selectRegion, selectTime
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { IAppState } from '../app.effects.module';
@@ -93,7 +93,7 @@ import {
 	BackToWorldView,
 	OverlayStatusActionsTypes
 } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
-import { isEqual, cloneDeep } from 'lodash';
+import { isEqual, cloneDeep, flatten } from 'lodash';
 import { selectGeoRegisteredOptionsEnabled } from '../../modules/status-bar/components/tools/reducers/tools.reducer';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import {
@@ -390,6 +390,32 @@ export class MapAppEffects {
 	);
 
 	@Effect()
+	onSetLayoutFourViewsMode$: Observable<any> = this.actions$.pipe(
+		ofType(MapActionTypes.SET_LAYOUT_SUCCESS),
+		withLatestFrom(this.store$.select(selectFourViewsMode), this.store$.select(selectMapsIds), this.store$.select(selectFourViewsOverlays)),
+		filter(([action, fourViewsMode, mapsIds, fourViewsOverlays]: [SetLayoutSuccessAction, boolean, string[], IFourViews]) => fourViewsMode),
+		mergeMap(([action, fourViewsMode, mapsIds, fourViewsOverlays]: [SetLayoutSuccessAction, boolean, string[], IFourViews]) => {
+			const actions = [];
+			const fourViewsOverlaysKeys = Object.keys(fourViewsOverlays);
+
+			for (let i = 0; i < 4; i++) {
+				const mapId = mapsIds[i];
+				const currentMapOverlays = fourViewsOverlays[fourViewsOverlaysKeys[i]];
+
+				// Most recent overlay
+				const overlay = currentMapOverlays[currentMapOverlays.length - 1];
+				if (overlay) {
+					actions.push(new DisplayOverlayAction({ overlay, mapId }));
+				} else {
+					const toastText = this.translateService.instant('Some angles are missing');
+					actions.push (new SetToastMessageAction({ toastText }))
+				}
+			}
+
+			return actions;
+		}));
+
+	@Effect()
 	onFourViewsMode$ = this.actions$.pipe(
 		ofType(MapActionTypes.SET_FOUR_VIEWS_MODE),
 		filter(({ payload }: SetFourViewsModeAction) => payload?.active),
@@ -399,12 +425,8 @@ export class MapAppEffects {
 
 			return forkJoin(observableOverlays).pipe(
 				mergeMap((overlaysData: any[]) => {
-					overlaysData = this.sortOverlaysByAngle(overlaysData, payload.point);
-
-					// Getting the most recent overlay from each query.
-					const overlays: any[] = overlaysData.map(({ data }) => ({ overlay: data && data[data.length - 1] })).filter(({ overlay }) => overlay);
-
-					if (!overlays.length) {
+					const allOverlays = flatten(overlaysData.map(({data}) => data));
+					if (!allOverlays.length) {
 						const toastText = this.translateService.instant('There are no overlays for the current Criteria');
 						return [new SetToastMessageAction({ toastText })];
 					}
@@ -420,16 +442,10 @@ export class MapAppEffects {
 					const fourViewsActions: Action[] = [
 						new SetOverlaysCriteriaAction({ region: feature(payload.point) }),
 						new SetLayoutAction(fourMapsLayout),
-						new DisplayMultipleOverlaysFromStoreAction(overlays),
 						new ToggleFooter(true),
 						new UpdateLayer({ id: regionLayerId, name: 'four views' }),
 						new SetFourViewsOverlaysAction(fourViewsOverlays)
 					];
-
-					if (overlays.length < 4) {
-						const toastText = this.translateService.instant('Some angles are missing');
-						fourViewsActions.push(new SetToastMessageAction({ toastText }));
-					}
 
 					return fourViewsActions;
 				})
@@ -548,21 +564,6 @@ export class MapAppEffects {
 		}
 
 		return queryOverlays;
-	}
-
-	sortOverlaysByAngle(overlaysData, point) {
-		return overlaysData.sort((prev, next) => {
-			if (!prev.data.length || !next.data.length) {
-				return false;
-			}
-
-			const [prevOverlay] = prev.data;
-			const [nextOverlay] = next.data;
-
-			const prevOverlayAngle = (360 - getAngleDegreeBetweenPoints(prevOverlay.sensorLocation, point)) % 360;
-			const nextOverlayAngle = (360 - getAngleDegreeBetweenPoints(nextOverlay.sensorLocation, point)) % 360;
-			return prevOverlayAngle - nextOverlayAngle;
-		})
 	}
 
 	changeImageryMap(overlay, communicator): string | null {

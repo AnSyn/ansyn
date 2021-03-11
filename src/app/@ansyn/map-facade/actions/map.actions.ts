@@ -29,6 +29,7 @@ export interface IToastMessage {
 	toastText: string;
 	showWarningIcon?: boolean;
 	originalMessage?: string;
+	mapId?: string;
 	buttonToDisplay?: string;
 	functionToExcute?: Function;
 }

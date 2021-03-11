@@ -234,9 +234,8 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 
 const { selectAll, selectEntities, selectIds, selectTotal } = mapsAdapter.getSelectors();
 export const selectActiveMapId = createSelector(mapStateSelector, (map: IMapState) => map.activeMapId);
-export const selectFourViewsMode = createSelector(mapStateSelector, (map: IMapState) => map?.fourViewsMode?.active);
 export const selectFourViewsData = createSelector(mapStateSelector, (map: IMapState) => map?.fourViewsMode);
-export const selectFourViewsPoint = createSelector(mapStateSelector, (map: IMapState) => map?.fourViewsMode?.point);
+export const selectFourViewsMode = createSelector(selectFourViewsData, (fourViewsData: IFourViewsData) => fourViewsData?.active);
 export const selectMapsList = createSelector(mapStateSelector, selectAll);
 export const selectMapsTotal = createSelector(mapStateSelector, selectTotal);
 export const selectMapsIds = createSelector(mapStateSelector, selectIds);

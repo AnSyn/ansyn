@@ -37,21 +37,10 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 @AutoSubscriptions()
 export class SearchPanelComponent implements OnInit, OnDestroy{
 
-	advancedSearchActive: boolean;
-	fourViewsMode: boolean;
-
 	geoFilterTitle$ = this.store$.pipe(select(selectGeoFilterType));
 	geoFilterActive$ = this.store$.pipe(select(selectGeoFilterActive));
-
-	@AutoSubscription
-	advancedSearchActive$ = this.store$.select(selectAdvancedSearchStatus).pipe(
-		tap(advancedSearchActive => this.advancedSearchActive = advancedSearchActive)
-	);
-
-	@AutoSubscription
-	fourViewsMode$ = this.store$.select(selectFourViewsMode).pipe(
-		tap(fourViewsMode => this.fourViewsMode = fourViewsMode)
-	);
+	advancedSearchActive$ = this.store$.select(selectAdvancedSearchStatus);
+ 	fourViewsMode$ = this.store$.select(selectFourViewsMode);
 
 	constructor(protected store$: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,

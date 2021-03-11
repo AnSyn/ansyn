@@ -401,28 +401,23 @@ export class MapAppEffects {
 				mergeMap((overlaysData: any[]) => {
 					overlaysData = this.sortOverlaysByAngle(overlaysData, payload.point);
 
-					// Getting the first overlay from each query.
+					// Getting the most recent overlay from each query.
 					const overlays: any[] = overlaysData.map(({ data }) => ({ overlay: data && data[data.length - 1] })).filter(({ overlay }) => overlay);
 
-					if (overlays.length < 4) {
-						let toastText = this.translateService.instant('Some angles are missing');
-						if (!overlays.length) {
-							toastText = this.translateService.instant('There are no overlays for the current Criteria');
-						}
-
-						return [new SetToastMessageAction(toastText)];
+					if (!overlays.length) {
+						const toastText = this.translateService.instant('There are no overlays for the current Criteria');
+						return [new SetToastMessageAction({ toastText })];
 					}
 
-					const [firstAngleOverlays, secondAngleOverlays, thirdAngleOverlays, fourthAngleOverlays] = overlays.map(({ data }) => data);
+					const fourMapsLayout = 'layout6';
+					const [firstAngleOverlays, secondAngleOverlays, thirdAngleOverlays, fourthAngleOverlays] = overlaysData.map(({ data }) => data);
 					const fourViewsOverlays: IFourViews = {
 						firstAngleOverlays,
 						secondAngleOverlays,
 						thirdAngleOverlays,
 						fourthAngleOverlays
 					};
-					const fourMapsLayout = 'layout6';
-
-					return [
+					const fourViewsActions: Action[] = [
 						new SetOverlaysCriteriaAction({ region: feature(payload.point) }),
 						new SetLayoutAction(fourMapsLayout),
 						new DisplayMultipleOverlaysFromStoreAction(overlays),
@@ -430,6 +425,13 @@ export class MapAppEffects {
 						new UpdateLayer({ id: regionLayerId, name: 'four views' }),
 						new SetFourViewsOverlaysAction(fourViewsOverlays)
 					];
+
+					if (overlays.length < 4) {
+						const toastText = this.translateService.instant('Some angles are missing');
+						fourViewsActions.push(new SetToastMessageAction({ toastText }));
+					}
+
+					return fourViewsActions;
 				})
 			)
 		})

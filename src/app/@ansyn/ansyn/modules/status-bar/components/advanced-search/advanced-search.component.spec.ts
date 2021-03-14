@@ -13,6 +13,7 @@ import { AdvancedSearchComponent } from './advanced-search.component';
 import { OverlaySourceProviderMock } from './overlay-source-provider.mock';
 import { IAdvancedSearchParameter } from '../../models/statusBar-config.model';
 import { MockComponent } from '../../../core/test/mock-component';
+import { fourViewsConfig } from '../../../overlays/models/overlay.model';
 
 describe('AdvancedSearchComponent', () => {
 	let component: AdvancedSearchComponent;
@@ -79,6 +80,12 @@ describe('AdvancedSearchComponent', () => {
 				{
 					provide: OverlaysConfig,
 					useValue: {}
+				},
+				{
+					provide: fourViewsConfig,
+					useValue: {
+						active: false
+					}
 				},
 				{
 					provide: StatusBarConfig,

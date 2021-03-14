@@ -10,6 +10,7 @@ import { take } from 'rxjs/operators';
 import { LoggerService } from '../../core/services/logger.service';
 import { OverlaySourceProvider } from '../models/overlays-source-providers';
 import {
+	fourViewsConfig,
 	GeoRegisteration,
 	IOverlay,
 	IOverlaysCriteria,
@@ -125,10 +126,7 @@ describe('OverlaysService', () => {
 		indexProviders: {
 			animals: {
 				whitelist: [],
-				blacklist: [],
-				sensorNamesByGroup: {
-					kipod: ["shmulik"]
-				}
+				blacklist: []
 			}
 		}
 	}
@@ -137,6 +135,7 @@ describe('OverlaysService', () => {
 		TestBed.configureTestingModule({
 			providers: [
 				OverlaysService,
+				{ provide: fourViewsConfig, useValue: {} },
 				{ provide: LoggerService, useValue: { error: (some) => null } },
 				// { provide: XHRBackend, useClass: MockBackend },
 				{ provide: OverlaysConfig, useValue: {} },

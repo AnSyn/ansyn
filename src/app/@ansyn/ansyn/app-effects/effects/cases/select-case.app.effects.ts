@@ -10,7 +10,7 @@ import {
 } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { IAppState } from '../../app.effects.module';
 import { concatMap } from 'rxjs/operators';
-import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '@ansyn/map-facade';
+import { SetActiveMapId, SetFourViewsModeAction, SetLayoutAction, SetMapsDataActionStore } from '@ansyn/map-facade';
 import {
 	BeginLayerCollectionLoadAction,
 	UpdateSelectedLayersIds
@@ -65,7 +65,7 @@ export class SelectCaseAppEffects {
 
 		const { favoriteOverlays, miscOverlays } = state;
 
-		const { advancedSearchParameters, runSecondSearch } = state;
+		const { advancedSearchParameters, runSecondSearch, fourViewsMode } = state;
 
 		let region: Feature<Polygon | Point>;
 		if (state.region.type !== 'Feature') {
@@ -93,7 +93,7 @@ export class SelectCaseAppEffects {
 		// filters
 		const { facets } = state;
 
-		const measureIsActive = state.maps.data.some( map => map?.data?.measuresData?.isToolActive);
+		const measureIsActive = state.maps.data.some( map => map?.data?.measuresData?.measures?.length > 0);
 
 		const selectCaseAction = [
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),
@@ -109,6 +109,7 @@ export class SelectCaseAppEffects {
 			new UpdateOverlaysManualProcessArgs(overlaysImageProcess),
 			new UpdateFacetsAction(facets),
 			new UpdateSelectedLayersIds(activeLayersIds),
+			new SetFourViewsModeAction(fourViewsMode),
 			new SetAnnotationMode(null),
 			new UpdateToolsFlags([{key: toolsFlags.isMeasureToolActive, value: measureIsActive}]),
 			new SelectCaseSuccessAction(payload)

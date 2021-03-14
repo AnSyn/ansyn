@@ -5,7 +5,7 @@
 				[attr.tooltip-value]="'Show Favorite Overlay' | translate"
 				tooltip-class="bottom"
 				(click)="showOnlyFavorite()"
-				[disabled]="onlyFavoriteEnable$ | async">
+				[disabled]="(onlyFavoriteEnable$ | async) && (fourViewsMode$ | async)">
 			<i class="icon"
 			   [ngClass]="onlyFavorite ? 'icon-favorite-full'  : 'icon-favorite-empty'"></i>
 		</button>

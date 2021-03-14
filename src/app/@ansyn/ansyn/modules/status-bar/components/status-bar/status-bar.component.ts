@@ -8,6 +8,7 @@ import { selectEnableOnlyFavorites, selectShowOnlyFavorites } from '../../../fil
 import { select, Store } from '@ngrx/store';
 import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
+import { selectFourViewsMode } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-status-bar',
@@ -39,6 +40,8 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 		distinctUntilChanged(),
 		tap((showFavorite) => this.onlyFavorite = showFavorite)
 	);
+
+	fourViewsMode$ = this.store.select(selectFourViewsMode);
 
 	constructor(
 		protected store: Store,

@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { LayoutKey, layoutOptions, selectLayout, SetLayoutAction } from '@ansyn/map-facade';
-import { Store } from '@ngrx/store';
+import { LayoutKey, layoutOptions, selectFourViewsMode, selectLayout, SetLayoutAction } from '@ansyn/map-facade';
+import { select, Store } from '@ngrx/store';
 import { IStatusBarState } from '../../reducers/status-bar.reducer';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Observable } from 'rxjs';
@@ -18,10 +18,17 @@ import { CaseOrientation } from '../../../menu-items/cases/models/case.model';
 export class DisplayPanelComponent implements OnInit, OnDestroy {
 	layout: LayoutKey;
 	orientation: CaseOrientation;
+	fourViewsMode: boolean;
 
 	@AutoSubscription
 	layout$: Observable<LayoutKey> = this.store$.select(selectLayout).pipe(
 		tap( layout => this.layout = layout)
+	);
+
+	@AutoSubscription
+	fourViewsMode$ = this.store$.pipe(
+		select(selectFourViewsMode),
+		tap(fourViewsMode => this.fourViewsMode = fourViewsMode)
 	);
 
 	constructor(

@@ -23,12 +23,12 @@ import {
 	SetMapSearchBoxTriggerAction,
 	SetToastMessageAction,
 	SynchronizeMapsAction,
-	ToggleMapLayersAction, UpdateMapAction
+	ToggleMapLayersAction, UpdateMapAction,
+	ToggleFooter, SetFourViewsModeAction, SetLayoutAction, selectFourViewsMode, selectMapsIds, SetLayoutSuccessAction
 } from '@ansyn/map-facade';
 import {
 	BaseMapSourceProvider,
 	bboxFromGeoJson,
-	getPolygonIntersectionRatio,
 	IBaseImageryLayer,
 	ImageryCommunicatorService,
 	IImageryMapPosition,
@@ -38,7 +38,7 @@ import {
 	GetProvidersMapsService,
 	ImageryLayerProperties,
 	ImageryMapExtentPolygon,
-	IMapSettingsData
+	IMapSettingsData, getAngleDegreeBetweenPoints
 } from '@ansyn/imagery';
 import {
 	catchError,
@@ -57,8 +57,11 @@ import {
 import { toastMessages } from '../../modules/core/models/toast-messages';
 import { endTimingLog, startTimingLog } from '../../modules/core/utils/logs/timer-logs';
 import { isFullOverlay } from '../../modules/core/utils/overlays';
-import { CaseGeoFilter, ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
-import { MarkUpClass, selectRegion } from '../../modules/overlays/reducers/overlays.reducer';
+import { CaseGeoFilter, ICaseMapState, ICaseTimeState } from '../../modules/menu-items/cases/models/case.model';
+import {
+	MarkUpClass, selectFourViewsOverlays,
+	selectRegion, selectTime
+} from '../../modules/overlays/reducers/overlays.reducer';
 import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity';
 import {
@@ -69,28 +72,38 @@ import {
 	SetMapSearchBox, ToolsActionsTypes, UpdateMeasureDataOptionsAction, UpdateMeasureLabelAction
 } from '../../modules/status-bar/components/tools/actions/tools.actions';
 import {
+	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayAction,
 	DisplayOverlayFailedAction, DisplayOverlayFromStoreAction,
 	DisplayOverlaySuccessAction,
 	OverlaysActionTypes,
 	RequestOverlayByIDFromBackendAction,
+	SetFourViewsOverlaysAction,
 	SetMarkUp,
 	SetOverlaysCriteriaAction,
 	SetOverlaysStatusMessageAction, UpdateOverlay
 } from '../../modules/overlays/actions/overlays.actions';
-import { GeoRegisteration, IOverlay } from '../../modules/overlays/models/overlay.model';
+import {
+	GeoRegisteration, IFourViews,
+	IFourViewsConfig,
+	fourViewsConfig,
+	IOverlay
+} from '../../modules/overlays/models/overlay.model';
 import {
 	BackToWorldView,
 	OverlayStatusActionsTypes
 } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
-import { isEqual, cloneDeep } from 'lodash';
+import { isEqual, cloneDeep, flatten } from 'lodash';
 import { selectGeoRegisteredOptionsEnabled } from '../../modules/status-bar/components/tools/reducers/tools.reducer';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import {
 	IOverlayStatusConfig,
 	overlayStatusConfig
 } from '../../modules/overlays/overlay-status/config/overlay-status-config';
-import { IGeoFilterStatus, selectGeoFilterStatus } from '../../modules/status-bar/reducers/status-bar.reducer';
+import {
+	IGeoFilterStatus,
+	selectGeoFilterStatus
+} from '../../modules/status-bar/reducers/status-bar.reducer';
 import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import {
 	IScreenViewConfig,
@@ -99,10 +112,17 @@ import {
 import { feature } from '@turf/turf';
 import { calculatePolygonWidth } from '@ansyn/imagery';
 import { CasesActionTypes } from '../../modules/menu-items/cases/actions/cases.actions';
+import { casesConfig } from '../../modules/menu-items/cases/services/cases.service';
 import { createNewMeasureData } from '../../modules/status-bar/components/tools/models/tools.model';
 import { rxPreventCrash } from '../../modules/core/utils/rxjs/operators/rxPreventCrash';
-
-const FOOTPRINT_INSIDE_MAP_RATIO = 1;
+import { ICasesConfig } from '../../modules/menu-items/cases/models/cases-config';
+import { TranslateService } from '@ngx-translate/core';
+import { MultipleOverlaysSourceProvider } from '../../modules/overlays/services/multiple-source-provider';
+import { Point } from 'geojson';
+import { IFetchParams } from '../../modules/overlays/models/base-overlay-source-provider.model';
+import { regionLayerDefaultName, regionLayerId } from '../../modules/menu-items/layers-manager/models/layers.model';
+import { UpdateLayer } from '../../modules/menu-items/layers-manager/actions/layers.actions';
+import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 
 @Injectable()
 export class MapAppEffects {
@@ -118,16 +138,16 @@ export class MapAppEffects {
 		);
 
 
-	@Effect({dispatch: false})
+	@Effect({ dispatch: false })
 	onUpdateOverlay$: Observable<any> = this.actions$
 		.pipe(
 			ofType<UpdateOverlay>(OverlaysActionTypes.UPDATE_OVERLAY),
-			tap(({payload}: UpdateOverlay) => {
+			tap(({ payload }: UpdateOverlay) => {
 				const mapId = Array.from(this.lastOverlayIds.keys()).find(
 					mapId => this.lastOverlayIds.get(mapId) === payload.id
 				);
 				if (mapId) {
-					this.store$.dispatch(new DisplayOverlayFromStoreAction({id: <string>payload.id, mapId: mapId}))
+					this.store$.dispatch(new DisplayOverlayFromStoreAction({ id: <string>payload.id, mapId: mapId }))
 				}
 			})
 		);
@@ -161,7 +181,7 @@ export class MapAppEffects {
 				OverlaysActionTypes.DISPLAY_OVERLAY_FAILED,
 				OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW
 			),
-			tap( ({payload}) => this.lastOverlayIds.delete(payload.mapId)),
+			tap(({ payload }) => this.lastOverlayIds.delete(payload.mapId)),
 			map(({ payload }: DisplayOverlayAction) => new SetIsLoadingAcion({ mapId: payload.mapId, show: false }))
 		);
 
@@ -332,7 +352,11 @@ export class MapAppEffects {
 			if (extentWidth > this.screenViewConfig.extentWidthSearchLimit) {
 				actions.push(new SetOverlaysStatusMessageAction({ message: 'Zoom in to get new overlays' }));
 			} else {
-				const extent = feature(extentPolygon, { searchMode: CaseGeoFilter.ScreenView, center: newCenter, zoom: newZoom });
+				const extent = feature(extentPolygon, {
+					searchMode: CaseGeoFilter.ScreenView,
+					center: newCenter,
+					zoom: newZoom
+				});
 				actions.push(new SetOverlaysCriteriaAction({ region: extent }));
 
 				if (geoFilterStatus.active) {
@@ -350,41 +374,125 @@ export class MapAppEffects {
 		map(() => new ForceRenderMaps())
 	);
 
+	@Effect()
+	onDisableFourViewsMode$ = this.actions$.pipe(
+		ofType(MapActionTypes.SET_FOUR_VIEWS_MODE),
+		filter(({ payload }: SetFourViewsModeAction) => !payload?.active),
+		mergeMap(() => {
+			const oneMapLayout = 'layout1';
+			const regionLayerName = this.translateService.instant(regionLayerDefaultName);
+			return [
+				new SetLayoutAction(oneMapLayout),
+				new ToggleFooter(false),
+				new SetFourViewsOverlaysAction({}),
+				new UpdateLayer({ id: regionLayerId, name: regionLayerName })
+			];
+		})
+	);
+
+	@Effect()
+	onSetLayoutFourViewsMode$: Observable<any> = this.actions$.pipe(
+		ofType(MapActionTypes.SET_LAYOUT_SUCCESS),
+		withLatestFrom(this.store$.select(selectFourViewsMode), this.store$.select(selectMapsIds), this.store$.select(selectFourViewsOverlays)),
+		filter(([action, fourViewsMode, mapsIds, fourViewsOverlays]: [SetLayoutSuccessAction, boolean, string[], IFourViews]) => fourViewsMode),
+		mergeMap(([action, fourViewsMode, mapsIds, fourViewsOverlays]: [SetLayoutSuccessAction, boolean, string[], IFourViews]) => {
+			const actions = [];
+			const fourViewsOverlaysKeys = Object.keys(fourViewsOverlays);
+
+			for (let i = 0; i < 4; i++) {
+				const mapId = mapsIds[i];
+				const currentMapOverlays = fourViewsOverlays[fourViewsOverlaysKeys[i]];
+
+				// Most recent overlay
+				const overlay = currentMapOverlays[currentMapOverlays.length - 1];
+				if (overlay) {
+					actions.push(new DisplayOverlayAction({ overlay, mapId }));
+				} else {
+					const toastText = this.translateService.instant('Some angles are missing');
+					actions.push (new SetToastMessageAction({ toastText }))
+				}
+			}
+
+			return actions;
+		}));
+
+	@Effect()
+	onFourViewsMode$ = this.actions$.pipe(
+		ofType(MapActionTypes.SET_FOUR_VIEWS_MODE),
+		filter(({ payload }: SetFourViewsModeAction) => payload?.active),
+		withLatestFrom(this.store$.select(selectTime)),
+		mergeMap(([{ payload }, criteriaTime]: [SetFourViewsModeAction, ICaseTimeState]) => {
+			const sensors = payload.sensors.length ? payload.sensors : this.overlaysService.getAllSensorsNames(true);
+			const observableOverlays = this.getFourViewsOverlays(payload.point, criteriaTime, sensors);
+
+			return forkJoin(observableOverlays).pipe(
+				mergeMap((overlaysData: any[]) => {
+					const allOverlays = flatten(overlaysData.map(({data}) => data));
+					if (!allOverlays.length) {
+						const toastText = this.translateService.instant('There are no overlays for the current Criteria');
+						return [new SetToastMessageAction({ toastText })];
+					}
+
+					const fourMapsLayout = 'layout6';
+					const [firstAngleOverlays, secondAngleOverlays, thirdAngleOverlays, fourthAngleOverlays] = overlaysData.map(({ data }) => data);
+					const fourViewsOverlays: IFourViews = {
+						firstAngleOverlays,
+						secondAngleOverlays,
+						thirdAngleOverlays,
+						fourthAngleOverlays
+					};
+					const fourViewsActions: Action[] = [
+						new SetOverlaysCriteriaAction({ region: feature(payload.point) }),
+						new SetLayoutAction(fourMapsLayout),
+						new ToggleFooter(true),
+						new UpdateLayer({ id: regionLayerId, name: 'four views coordinate' }),
+						new SetFourViewsOverlaysAction(fourViewsOverlays)
+					];
+
+					return fourViewsActions;
+				})
+			)
+		})
+	);
+
 	// measures effects
 	@Effect()
 	onMeasureChange$ = this.actions$.pipe(
 		ofType(ToolsActionsTypes.MEASURES.CREATE_MEASURE_DATA, ToolsActionsTypes.MEASURES.REMOVE_MEASURE_DATA,
 			ToolsActionsTypes.MEASURES.ADD_MEASURE, ToolsActionsTypes.MEASURES.REMOVE_MEASURE,
 			ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS, ToolsActionsTypes.MEASURES.UPDATE_MEASURE_LABEL),
-		concatMap( action => of(action).pipe(
+		concatMap(action => of(action).pipe(
 			withLatestFrom(this.store$.select(selectMaps)),
 		)),
-		map( ([action, maps]: [
+		map(([action, maps]: [
 			CreateMeasureDataAction | RemoveMeasureDataAction | AddMeasureAction | RemoveMeasureAction
-				| UpdateMeasureDataOptionsAction | UpdateMeasureLabelAction,
+			| UpdateMeasureDataOptionsAction | UpdateMeasureLabelAction,
 			Dictionary<IMapSettings>]) => {
 			const map = maps[action.payload.mapId];
-			const changes = {data: {...map.data}};
-			switch ( action.type) {
+			const changes = { data: { ...map.data } };
+			switch (action.type) {
 				case ToolsActionsTypes.MEASURES.CREATE_MEASURE_DATA:
 					const measuresData = createNewMeasureData();
-					changes.data.measuresData = {...measuresData, measures: changes.data.measuresData?.measures || []};
+					changes.data.measuresData = { ...measuresData, ...changes.data?.measuresData };
 					break;
 				case ToolsActionsTypes.MEASURES.REMOVE_MEASURE_DATA:
-					changes.data.measuresData = undefined;
+					changes.data.measuresData = { ...changes.data?.measureData, measures: [] };
 					break;
 				case ToolsActionsTypes.MEASURES.ADD_MEASURE:
 					const oldMeasures = changes.data.measuresData.measures;
-					changes.data.measuresData = {...changes.data.measuresData, measures: [...oldMeasures, action.payload.measure]};
+					changes.data.measuresData = {
+						...changes.data.measuresData,
+						measures: [...oldMeasures, action.payload.measure]
+					};
 					break;
 				case ToolsActionsTypes.MEASURES.REMOVE_MEASURE:
 					const measureId = action.payload.measureId;
-					const updateMeasures = measureId ? changes.data.measuresData.measures.filter( measure => measure.id !== measureId) : [];
-					changes.data.measuresData = {...changes.data.measuresData, measures: updateMeasures};
+					const updateMeasures = measureId ? changes.data.measuresData.measures.filter(measure => measure.id !== measureId) : [];
+					changes.data.measuresData = { ...changes.data.measuresData, measures: updateMeasures };
 					break;
 				case ToolsActionsTypes.MEASURES.UPDATE_MEASURE_DATE_OPTIONS:
 					const newOptions = action.payload.options;
-					changes.data.measuresData = {...changes.data.measuresData, ...newOptions};
+					changes.data.measuresData = { ...changes.data.measuresData, ...newOptions };
 					break;
 				case ToolsActionsTypes.MEASURES.UPDATE_MEASURE_LABEL: {
 					const { labelEntity } = action.payload;
@@ -407,11 +515,11 @@ export class MapAppEffects {
 								}
 							}
 					);
-					changes.data.measuresData = {...changes.data.measuresData, measures: updateMeasures};
+					changes.data.measuresData = { ...changes.data.measuresData, measures: updateMeasures };
 					break;
 				}
 			}
-			return new UpdateMapAction({id: map.id, changes});
+			return new UpdateMapAction({ id: map.id, changes });
 		}),
 		rxPreventCrash()
 	);
@@ -420,11 +528,45 @@ export class MapAppEffects {
 				protected store$: Store<IAppState>,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
 				protected getProvidersMapsService: GetProvidersMapsService,
+				@Inject(fourViewsConfig) protected fourViewsConfig: IFourViewsConfig,
+				@Inject(casesConfig) protected casesConfig: ICasesConfig,
+				protected translateService: TranslateService,
+				protected overlaysService: OverlaysService,
+				protected sourceProvider: MultipleOverlaysSourceProvider,
 				@Inject(mapFacadeConfig) public config: IMapFacadeConfig,
 				@Inject(overlayStatusConfig) public overlayStatusConfig: IOverlayStatusConfig,
 				@Inject(ScreenViewConfig) public screenViewConfig: IScreenViewConfig
 	) {
 		this.lastOverlayIds = new Map();
+	}
+
+	getFourViewsOverlays(region: Point, criteriaTime: ICaseTimeState, sensors: string[]) {
+		const { registeration, resolution } = this.casesConfig.defaultCase.state.advancedSearchParameters;
+		const searchParams: IFetchParams = {
+			limit: this.fourViewsConfig.storageLimitPerAngle,
+			sensors,
+			region,
+			timeRange: {
+				start: criteriaTime.from,
+				end: criteriaTime.to
+			},
+			registeration,
+			resolution,
+			angleParams: {
+				firstAngle: 0,
+				secondAngle: 89
+			}
+		};
+
+		const queryOverlays = [this.sourceProvider.fetch(searchParams)];
+
+		for (let i = 0; i < 3; i++) {
+			searchParams.angleParams.firstAngle += 90;
+			searchParams.angleParams.secondAngle += 90;
+			queryOverlays.push(this.sourceProvider.fetch(searchParams));
+		}
+
+		return queryOverlays;
 	}
 
 	changeImageryMap(overlay, communicator): string | null {
@@ -447,7 +589,7 @@ export class MapAppEffects {
 		const caseMapState = mapState.entities[payload.mapId || mapState.activeMapId];
 		const mapData = caseMapState.data;
 		const prevOverlay = mapData.overlay;
-		const intersectionRatio = getPolygonIntersectionRatio(this.bboxPolygon(mapData.position.extentPolygon), overlay.footprint);
+		const isNotIntersect = polygonsDontIntersect(mapData.position.extentPolygon, overlay.footprint, this.config.overlayCoverage);
 		const communicator = this.imageryCommunicatorService.provide(mapId);
 		const { sourceType } = overlay;
 		const sourceLoader: BaseMapSourceProvider = this.getProvidersMapsService.getMapSourceProvider(sourceType.toLowerCase().includes('video') ? ImageryVideoMapType : caseMapState.worldView.mapType, sourceType);
@@ -492,12 +634,11 @@ export class MapAppEffects {
 		/* -3- */
 		const resetView = pipe(
 			mergeMap((layer: IBaseImageryLayer) => {
-				const isFootprintExtentInsideMapExtent = intersectionRatio === FOOTPRINT_INSIDE_MAP_RATIO;
-				const extent = payloadExtent || !isFootprintExtentInsideMapExtent && bboxFromGeoJson(overlay.footprint);
+				const extent = payloadExtent || isNotIntersect && bboxFromGeoJson(overlay.footprint);
 				return communicator.resetView(layer, mapData.position, extent);
 			}),
 			mergeMap(() => {
-				const wasOverlaySetAsExtent = !payloadExtent && intersectionRatio < this.config.overlayCoverage;
+				const wasOverlaySetAsExtent = !payloadExtent && isNotIntersect;
 				const actionsArray: Action[] = [];
 				// in order to set the new map position for unregistered overlays maps
 				if (overlay.isGeoRegistered === GeoRegisteration.notGeoRegistered && wasOverlaySetAsExtent) {

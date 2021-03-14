@@ -1,6 +1,11 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { IStatusBarConfig } from '../../models/statusBar-config.model';
-import { IStatusBarState, selectAdvancedSearchStatus, selectGeoFilterActive, selectGeoFilterType } from '../../reducers/status-bar.reducer';
+import {
+	IStatusBarState,
+	selectAdvancedSearchStatus,
+	selectGeoFilterActive,
+	selectGeoFilterType
+} from '../../reducers/status-bar.reducer';
 import { StatusBarConfig } from '../../models/statusBar.config';
 import { Store, select } from '@ngrx/store';
 import { animate, AnimationTriggerMetadata, style, transition, trigger } from '@angular/animations';
@@ -13,6 +18,7 @@ import {
 import { COMPONENT_MODE } from '../../../../app-providers/component-mode';
 import { SearchOptionsComponent } from '../search-options/search-options.component';
 import { ToggleAdvancedSearchAction, UpdateGeoFilterStatus } from '../../actions/status-bar.actions';
+import { selectFourViewsMode } from '@ansyn/map-facade';
 
 const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	transition(':enter', [
@@ -31,11 +37,13 @@ const fadeAnimations: AnimationTriggerMetadata = trigger('fade', [
 	styleUrls: ['./search-panel.component.less'],
 	animations: [fadeAnimations]
 })
-export class SearchPanelComponent {
+
+export class SearchPanelComponent implements OnInit, OnDestroy {
 
 	geoFilterTitle$ = this.store$.pipe(select(selectGeoFilterType));
 	geoFilterActive$ = this.store$.pipe(select(selectGeoFilterActive));
-	advancedSearchActive$ = this.store$.pipe(select(selectAdvancedSearchStatus));
+	advancedSearchActive$ = this.store$.select(selectAdvancedSearchStatus);
+	fourViewsMode$ = this.store$.select(selectFourViewsMode);
 
 	constructor(protected store$: Store<IStatusBarState>,
 				@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
@@ -47,19 +55,26 @@ export class SearchPanelComponent {
 		dateTimeAdapter.setLocale(statusBarConfig.locale);
 	}
 
+	ngOnDestroy(): void {
+	}
+
+	ngOnInit(): void {
+	}
+
 	toggleGeoFilter() {
 		this.geoFilterActive$.pipe(
 			take(1),
-			tap( (active: boolean) => this.store$.dispatch(new UpdateGeoFilterStatus({active: !active})))
+			tap((active: boolean) => this.store$.dispatch(new UpdateGeoFilterStatus({ active: !active })))
 		).subscribe();
 	}
 
 	toggleAdvancedSearch() {
 		this.advancedSearchActive$.pipe(
 			take(1),
-			tap( (active: boolean) => this.store$.dispatch(new ToggleAdvancedSearchAction(!active)))
+			tap((active: boolean) => this.store$.dispatch(new ToggleAdvancedSearchAction(!active)))
 		).subscribe();
 	}
+
 	close() {
 		this._parent.close()
 	}

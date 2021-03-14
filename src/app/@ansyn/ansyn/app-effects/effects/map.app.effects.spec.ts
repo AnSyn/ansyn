@@ -71,7 +71,7 @@ import {
 	RequestOverlayByIDFromBackendAction
 } from '../../modules/overlays/actions/overlays.actions';
 import { OverlaySourceProvider } from '../../modules/overlays/models/overlays-source-providers';
-import { OverlaysService } from '../../modules/overlays/services/overlays.service';
+import { OverlaysConfig, OverlaysService } from '../../modules/overlays/services/overlays.service';
 import {
 	fourViewsConfig,
 	GeoRegisteration,
@@ -85,6 +85,7 @@ import { ScreenViewConfig } from '../../modules/plugins/openlayers/plugins/visua
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MultipleOverlaysSourceProvider } from '../../modules/overlays/services/multiple-source-provider';
 import { LoggerService } from '../../modules/core/services/logger.service';
+import { MultipleOverlaysSourceConfig } from '../../modules/core/models/multiple-overlays-source-config';
 
 @ImageryMapSource({
 	sourceType: 'sourceType1',
@@ -195,7 +196,7 @@ describe('MapAppEffects', () => {
 				{
 					provide: OverlaysService,
 					useValue: {
-						getAllSensorsNames: () => null
+						getAllSensorsNames: () => {}
 					}
 				},
 				{ provide: LoggerService, useValue: {} },
@@ -209,6 +210,8 @@ describe('MapAppEffects', () => {
 				{ provide: VisualizersConfig, useValue: {} },
 				{ provide: fourViewsConfig, useValue: {} },
 				{ provide: casesConfig, useValue: {} },
+				{ provide: OverlaysConfig, useValue: {} },
+				{ provide: MultipleOverlaysSourceConfig, useValue: {} },
 				MapAppEffects,
 				OverlaysService,
 				{ provide: BaseMapSourceProvider, useClass: SourceProviderMock1, multi: true },

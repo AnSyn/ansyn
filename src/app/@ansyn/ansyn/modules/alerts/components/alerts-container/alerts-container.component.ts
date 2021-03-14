@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { selectOverlayByMapId } from '@ansyn/map-facade';
+import { selectOverlayByMapId, selectFourViewsMode } from '@ansyn/map-facade';
 import { Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { combineLatest, Observable } from 'rxjs';
@@ -20,6 +20,12 @@ export class AlertsContainerComponent implements OnInit, OnDestroy {
 	alertMsg: AlertMsg;
 	overlay: IOverlay;
 	@Input() mapId: string;
+	isFourViewsMode: boolean;
+
+	@AutoSubscription
+	isFourViewsMode$: Observable<boolean> = this.store$.select(selectFourViewsMode).pipe(
+		tap(isFourViewsMode => this.isFourViewsMode = isFourViewsMode)
+	);
 
 	get noGeoRegistration() {
 		if (!this.overlay) {
@@ -43,7 +49,7 @@ export class AlertsContainerComponent implements OnInit, OnDestroy {
 	);
 
 	showAlert(alertKey) {
-		if (this.overlay) {
+		if (this.overlay && !this.isFourViewsMode) {
 			const ids = this.alertMsg?.get(alertKey);
 			if (ids) {
 				return ids.has(this.mapId);

@@ -1,7 +1,22 @@
-import { CaseGeoFilter, CaseRegionState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
+import { CaseRegionState, ICaseTimeState } from '../../menu-items/cases/models/case.model';
 import { LineString, MultiPolygon, Point } from 'geojson';
 import { EPSG_3857 } from '@ansyn/imagery';
-import { IAdvancedSearchParameter, IProviderData } from '../../status-bar/models/statusBar-config.model';
+import { IAdvancedSearchParameter } from '../../status-bar/models/statusBar-config.model';
+
+export const fourViewsConfig = 'fourViewsConfig';
+
+export interface IFourViewsConfig {
+	sensorTypes: string[];
+	storageLimitPerAngle: number;
+	active: boolean;
+}
+
+export interface IFourViews {
+	firstAngleOverlays?: IOverlay[]; // 0 < angle < 90
+	secondAngleOverlays?: IOverlay[]; // 90 < angle < 180
+	thirdAngleOverlays?: IOverlay[]; // 180 < angle < 270
+	fourthAngleOverlays?: IOverlay[]; // 270 < angle < 360
+}
 
 export interface IOverlayError {
 	message: string,

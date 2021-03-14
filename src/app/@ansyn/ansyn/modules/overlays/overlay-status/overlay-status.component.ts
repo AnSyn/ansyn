@@ -13,6 +13,7 @@ import {
 	selectActiveMapId,
 	selectHideLayersOnMap,
 	selectOverlayByMapId,
+	selectFourViewsMode
 } from '@ansyn/map-facade';
 import { select, Store } from '@ngrx/store';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
@@ -78,9 +79,15 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	draggedButtonText: string;
 	isLayersVisible: boolean;
 	isManualProcessChanged: boolean;
+	isFourViewsMode: boolean;
+
 	selectOverlaysImageProcess$ = this.store$.pipe(select(selectOverlaysImageProcess), filter(this.hasOverlay.bind(this)));
 	@ViewChild('closeElementAnnotation', {static: false}) closeElementAnnotation: ElementRef;
 
+	@AutoSubscription
+	isFourViewsMode$ = this.store$.select(selectFourViewsMode).pipe(
+		tap(isFourViewsMode => this.isFourViewsMode = isFourViewsMode)
+	);
 
 	@AutoSubscription
 	favoriteOverlays$: Observable<any[]> = this.store$.select(selectFavoriteOverlays).pipe(

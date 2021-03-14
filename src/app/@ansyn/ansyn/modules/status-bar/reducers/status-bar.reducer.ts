@@ -45,6 +45,7 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 			const { payload } = action;
 			return { ...state, isCalenderOpen: payload}
 		}
+
 		case StatusBarActionsTypes.TOGGLE_ADVANCED_SEARCH: {
 			const { payload } = action;
 			return { ...state, isAdvancedSearchOpen: payload}

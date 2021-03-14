@@ -1,6 +1,6 @@
 <div class="advanced-search-container">
 	<div class="first-row-container">
-		<div class="box types " id="dataInputsPreSearch">
+		<div *ngIf="!fourViewsData?.active" class="box types " id="dataInputsPreSearch">
 			<div class="title-grid">
 				<div class="buttons-title">
 					<div class="select-all" (click)="selectAllItems()">{{'select all' | translate}}</div>
@@ -16,7 +16,6 @@
 				contentTitle="types"
 				(ngModel)="sensorTypes"
 				(selectedItemsArray)="updateSelectedArray($event,'SelectedTypes')"
-				#types
 				>
 					<ansyn-combo-table-option  *ngFor="let type of sensorTypes" [value]="type">
 					</ansyn-combo-table-option>
@@ -25,7 +24,7 @@
 			</div>
 		</div>
 
-		<div class="box registration dataInputsPreSearch">
+		<div *ngIf="!fourViewsData?.active" class="box registration dataInputsPreSearch">
 			<div class="geo-registration-title">
 				<div class="title text-title">{{'Geo Registration' | translate}}</div>
 			</div>
@@ -48,7 +47,7 @@
 	</div>
 
 	<div class="second-row-container">
-		<div *ngIf="!displaySensors()" class="box providers-sensors dataInputsPreSearch">
+		<div *ngIf="!displaySensors() && !fourViewsData?.active" class="box providers-sensors dataInputsPreSearch">
 			<div class="title-grid">
 				<div class="buttons-title">
 					<div class="select-all" (click)="selectAllItems()">{{'select all' | translate}}</div>
@@ -98,7 +97,7 @@
 		</div>
 
 		<div class="resolution-search-container">
-			<div class="box resolution dataInputsPreSearch">
+			<div *ngIf="!fourViewsData?.active" class="box resolution dataInputsPreSearch">
 				<div class="resolution-title-container">
 					<div class="reset" (click)="resetResolution()" [attr.tooltip-value]="'reset' | translate" tooltip-class="bottom"><i class="icon-undo"></i></div>
 					<div class="title text-title-resolution">{{'Resolution' | translate}}</div>
@@ -108,11 +107,15 @@
 					<ngx-slider [(value)]="this.selectedAdvancedSearchParameters.resolution.lowValue" [(highValue)]="this.selectedAdvancedSearchParameters.resolution.highValue" [options]="sliderOptions" onchange="getSliderValue($event)" #resolution></ngx-slider>
 				</div>
 			</div>
-			<div class="search-icon search-button"
-				 (click)="search()" >
+			<div *ngIf="!fourViewsData?.active" class="search-icon search-button"
+				 (click)="search()">
 				<i class="icon-search-button" [attr.tooltip-value]="'search' | translate" tooltip-class="bottom"></i>
 			</div>
 		</div>
+	</div>
+	<div *ngIf="fourViewsData?.active" class="search-icon search-button four-views-search"
+		 (click)="search()">
+		<i class="icon-search-button" [attr.tooltip-value]="'search' | translate" tooltip-class="bottom"></i>
 	</div>
 
 	<div class="message" [class.hide]="!showMessage">{{'Please select search parameters' | translate}}</div>

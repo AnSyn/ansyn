@@ -4,7 +4,7 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { filter, tap, withLatestFrom } from 'rxjs/operators';
 import { ClickOutsideService } from '../../../core/click-outside/click-outside.service';
 import { OpenAdvancedSearchFromOutsideAction, ToggleAdvancedSearchAction, ToggleSimpleSearchAction } from '../../actions/status-bar.actions';
-import { selectAdvancedSearchStatus, selectCalenderStatus, selectIsOpenedFromOutside, selectSimpledSearchStatus } from '../../reducers/status-bar.reducer';
+import { selectCalenderStatus, selectIsOpenedFromOutside, selectSimpledSearchStatus } from '../../reducers/status-bar.reducer';
 
 @Component({
 	selector: 'ansyn-search-options',
@@ -29,7 +29,7 @@ export class SearchOptionsComponent implements OnInit, OnDestroy {
 				this.store$.dispatch(new OpenAdvancedSearchFromOutsideAction(false));
 			}
 		}));
-		
+
 	@AutoSubscription
 	updateIsSimpleSearchOpen$ = this.store$.select(selectSimpledSearchStatus).pipe(
 		tap((isSimpleSearchOpen: boolean) => {

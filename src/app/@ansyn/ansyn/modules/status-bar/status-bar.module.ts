@@ -24,9 +24,11 @@ import { AdvancedSearchComponent } from './components/advanced-search/advanced-s
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { CasesModule } from '../menu-items/cases/cases.module';
 import { LogoPanelComponent } from './components/logo-panel/logo-panel.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @NgModule({
 	imports: [
+		TranslateModule,
 		FormsModule,
 		CommonModule,
 		CoreModule,
@@ -49,7 +51,8 @@ import { LogoPanelComponent } from './components/logo-panel/logo-panel.component
 		{
 			provide: OwlDateTimeIntl,
 			useClass: TimePickerTranslateService
-		}
+		},
+		TranslateService
 	],
 
 	exports: [StatusBarComponent, TimePickerContainerComponent]

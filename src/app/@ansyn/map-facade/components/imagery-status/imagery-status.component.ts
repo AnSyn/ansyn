@@ -13,7 +13,7 @@ import {
 import { ENTRY_COMPONENTS_PROVIDER, IEntryComponentsEntities } from '../../models/entry-components-provider';
 import { selectEnableCopyOriginalOverlayDataFlag } from '../../reducers/imagery-status.reducer';
 import {
-	selectActiveMapId,
+	selectActiveMapId, selectFourViewsMode,
 	selectHideLayersOnMap,
 	selectMapOrientation,
 	selectMapsTotal, selectOverlaysFootprintActiveByMapId
@@ -21,6 +21,7 @@ import {
 import { getTimeFormat } from '../../utils/time';
 import { TranslateService } from '@ngx-translate/core';
 import { copyFromContent } from '../../utils/clipboard';
+import { Observable } from 'rxjs';
 
 export const imageryStatusClassNameForExport = 'imagery-status';
 
@@ -34,7 +35,7 @@ export const imageryStatusClassNameForExport = 'imagery-status';
 	destroy: 'ngOnDestroy'
 })
 export class ImageryStatusComponent implements OnInit, OnDestroy {
-	@HostBinding(`class.${imageryStatusClassNameForExport}`) readonly _ = true;
+	@HostBinding(`class.${ imageryStatusClassNameForExport }`) readonly _ = true;
 	@Input() readonly isLayersShow: boolean;
 	@Input() readonly isFootprintShow: boolean;
 	mapsAmount = 1;
@@ -47,6 +48,12 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	@HostBinding('class.active') isActiveMap: boolean;
 	@Input() isMinimalistViewMode: boolean;
 	hideLayers: boolean;
+	isFourViewsMode: boolean;
+
+	@AutoSubscription
+	isFourViewsMode$: Observable<boolean> = this.store$.select(selectFourViewsMode).pipe(
+		tap(isFourViewsMode => this.isFourViewsMode = isFourViewsMode)
+	);
 
 	@AutoSubscription
 	active$ = this.store$.pipe(
@@ -77,7 +84,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	getMapOrientation$ = () => this.store$.select(selectMapOrientation(this.mapId)).pipe(
 		filter(Boolean),
-		tap( (orientation: MapOrientation) => {
+		tap((orientation: MapOrientation) => {
 			this.orientation = orientation;
 			this.perspective = this.orientation === 'User Perspective';
 		})
@@ -85,7 +92,7 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	getOverlaysFootprint = () => this.store$.select(selectOverlaysFootprintActiveByMapId(this.mapId)).pipe(
-		tap( isActive => this.overlaysFootprintActive = isActive)
+		tap(isActive => this.overlaysFootprintActive = isActive)
 	);
 
 
@@ -169,12 +176,12 @@ export class ImageryStatusComponent implements OnInit, OnDestroy {
 
 	toggleImageryPerspective() {
 		const newMapOrientation = this.orientation === 'Imagery Perspective' ? 'User Perspective' : 'Imagery Perspective';
-		this.store$.dispatch(new SetMapOrientation({orientation: newMapOrientation, mapId: this.mapId}));
+		this.store$.dispatch(new SetMapOrientation({ orientation: newMapOrientation, mapId: this.mapId }));
 	}
 
 	toggleOverlaysFootprint() {
 		const isDisplay = !this.overlaysFootprintActive;
-		this.store$.dispatch(new SetOverlaysFootprintActive({mapId: this.mapId, show: isDisplay}));
+		this.store$.dispatch(new SetOverlaysFootprintActive({ mapId: this.mapId, show: isDisplay }));
 	}
 
 	onStartDraggingMap(event) {

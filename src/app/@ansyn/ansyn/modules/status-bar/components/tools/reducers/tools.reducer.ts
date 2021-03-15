@@ -26,7 +26,7 @@ export interface IToolsState {
 	annotationMode: AnnotationMode;
 	annotationProperties: Partial<IVisualizerStyle>;
 	activeAnnotationLayer: string;
-	mapSearchBoxSearch: boolean;
+	isMapSearchBoxFilled: boolean;
 }
 
 
@@ -39,7 +39,7 @@ export const toolsInitialState: IToolsState = {
 	annotationMode: undefined,
 	annotationProperties: getInitialAnnotationsFeatureStyle(),
 	activeAnnotationLayer: null,
-	mapSearchBoxSearch: false
+	isMapSearchBoxFilled: false
 };
 
 export const toolsFeatureKey = 'tools';
@@ -92,7 +92,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 			return { ...state, activeCenter: (<SetActiveCenter>action).payload };
 
 		case ToolsActionsTypes.SET_MAP_SEARCH_BOX:
-			return { ...state, mapSearchBoxSearch: (<SetMapSearchBox>action).payload };
+			return { ...state, isMapSearchBoxFilled: (<SetMapSearchBox>action).payload };
 
 		case ToolsActionsTypes.SET_PIN_LOCATION_MODE:
 			tmpMap = new Map(state.flags);
@@ -111,6 +111,7 @@ export function ToolsReducer(state = toolsInitialState, action: ToolsActions): I
 	}
 }
 
+export const selectIsMapSearchBoxFilled = createSelector(toolsStateSelector, (tools: IToolsState) => tools.isMapSearchBoxFilled);
 export const selectSubMenu = createSelector(toolsStateSelector, (tools: IToolsState) => tools.subMenu);
 export const selectAnnotationMode = createSelector(toolsStateSelector, (tools: IToolsState) => tools.annotationMode);
 export const selectAnnotationProperties = createSelector(toolsStateSelector, (tools: IToolsState) => tools.annotationProperties);

@@ -135,7 +135,7 @@ export class SetProgressBarAction implements Action {
 	}
 }
 
-export class SetFourViewsModeAction implements Action {
+export class SetFourViewsModeAction implements Action, ILogMessage {
 	readonly type = MapActionTypes.SET_FOUR_VIEWS_MODE;
 
 	constructor(public payload: IFourViewsData) {

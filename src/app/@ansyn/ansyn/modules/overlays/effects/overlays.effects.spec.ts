@@ -139,7 +139,7 @@ describe('Overlays Effects ', () => {
 		actions = hot('--a--', { a: new LoadOverlaysAction({})});
 		const expectedResults = cold('--(ab)--', {
 			a: new LoadOverlaysSuccessAction(overlays),
-			b: new SetToastMessageAction({toastText: 'there are more overlays exist, ', buttonToDisplay: 'click here to expand', functionToExcute: jasmine.any(Function) })
+			b: new SetToastMessageAction({toastText: 'there are more overlays exist, ', buttonToDisplay: 'click here to expand', functionToExcute: jasmine.any(Function) as any })
 		});
 		expect(overlaysEffects.loadOverlays$).toBeObservable(expectedResults);
 	});

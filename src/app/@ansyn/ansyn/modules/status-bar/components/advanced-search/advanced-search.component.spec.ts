@@ -1,5 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { StoreModule } from '@ngrx/store';
+import { async, ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
 import { LoggerService } from '../../../core/services/logger.service';

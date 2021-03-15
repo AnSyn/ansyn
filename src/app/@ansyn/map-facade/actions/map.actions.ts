@@ -142,7 +142,7 @@ export class SetFourViewsModeAction implements Action {
 	}
 
 	logMessage() {
-		return `Activated four views at ${payload.point}`
+		return `Activated four views at ${ this.payload.point }`
 	}
 }
 

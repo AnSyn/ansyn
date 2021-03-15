@@ -142,7 +142,9 @@ export class SetFourViewsModeAction implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return `Activated four views at ${ this.payload.point }`
+		if (this.payload) {
+			return `Activated four views at ${ this?.payload?.point }`
+		}
 	}
 }
 

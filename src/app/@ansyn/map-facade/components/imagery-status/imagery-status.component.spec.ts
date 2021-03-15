@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { ImageryCommunicatorService, IMapSettings } from '@ansyn/imagery';
 import { EffectsModule } from '@ngrx/effects';
@@ -34,7 +34,7 @@ describe('ImageryStatusComponent', () => {
 	let communicatorService: ImageryCommunicatorService;
 	let store: Store<any>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientModule,

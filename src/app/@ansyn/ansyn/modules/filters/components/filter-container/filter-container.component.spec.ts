@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
 import { filtersFeatureKey, FiltersReducer } from '../../reducer/filters.reducer';
 import { FiltersModule } from '../../filters.module';
@@ -8,7 +8,7 @@ describe('FilterContainerComponent', () => {
 	let component: FilterContainerComponent;
 	let fixture: ComponentFixture<FilterContainerComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [FiltersModule, StoreModule.forRoot({ [filtersFeatureKey]: FiltersReducer })]
 		})

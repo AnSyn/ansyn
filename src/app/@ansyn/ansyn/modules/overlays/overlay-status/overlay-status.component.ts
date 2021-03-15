@@ -82,7 +82,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	isFourViewsMode: boolean;
 
 	selectOverlaysImageProcess$ = this.store$.pipe(select(selectOverlaysImageProcess), filter(this.hasOverlay.bind(this)));
-	@ViewChild('closeElementAnnotation', {static: false}) closeElementAnnotation: ElementRef;
+	@ViewChild('closeElementAnnotation', { static: false }) closeElementAnnotation: ElementRef;
 
 	@AutoSubscription
 	isFourViewsMode$ = this.store$.select(selectFourViewsMode).pipe(
@@ -124,7 +124,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 
 	@AutoSubscription
 	manualImageProcessingParams$: Observable<Object> = this.selectOverlaysImageProcess$.pipe(
-		map((overlaysImageProcess: IOverlaysImageProcess ) => overlaysImageProcess[this.overlay?.id]?.manuelArgs),
+		map((overlaysImageProcess: IOverlaysImageProcess) => overlaysImageProcess[this.overlay?.id]?.manuelArgs),
 		tap((imageManualProcessArgs) => {
 			this.isManualProcessChanged = !!imageManualProcessArgs && !this.overlayStatusService.isDefaultImageProcess(imageManualProcessArgs);
 		})
@@ -132,9 +132,9 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 
 	@AutoSubscription
 	onChangeAutoImageProcess$: Observable<IOverlayImageProcess> = this.selectOverlaysImageProcess$.pipe(
-		map( (overlaysImageProcess) => overlaysImageProcess[this.overlay?.id]),
+		map((overlaysImageProcess) => overlaysImageProcess[this.overlay?.id]),
 		filter(Boolean),
-		tap( ({isAuto}: IOverlayImageProcess) => this.isAutoProcessing = !!isAuto )
+		tap(({ isAuto }: IOverlayImageProcess) => this.isAutoProcessing = !!isAuto)
 	);
 
 	constructor(
@@ -162,7 +162,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 			map(([selectedLayerIds, areLayersHidden, layers]) => {
 				layers = layers.filter((currentLayer) =>
 					Boolean(currentLayer.data) &&
-					currentLayer.type === "Annotation" &&
+					currentLayer.type === 'Annotation' &&
 					currentLayer.data.features.length > 0 &&
 					selectedLayerIds.includes(currentLayer.id));
 				return [areLayersHidden, layers];
@@ -176,18 +176,16 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 		);
 
 	@AutoSubscription
-	onClickOutSide = () => this.isAfterViewInit.pipe(switchMap(() => this.clickOutsideService.onClickOutside({monitor: this.closeElementAnnotation.nativeElement})
-	),
-			filter(Boolean),
-			tap( () => {
-				this.isManualProcessingOpen = false;
-			})
-		);
+	onClickOutSide = () => this.isAfterViewInit.pipe(
+		switchMap(() => this.clickOutsideService.onClickOutside({ monitor: this.closeElementAnnotation.nativeElement })),
+		filter(Boolean),
+		tap(() => this.isManualProcessingOpen = false)
+	);
 
 	@AutoSubscription
 	overlay$ = () => this.store$.pipe(
 		select(selectOverlayByMapId(this.mapId)),
-		withLatestFrom( this.store$.pipe(select(selectOverlaysImageProcess)), (overlay, overlaysImageProcess) => [overlay, overlaysImageProcess[overlay?.id]]),
+		withLatestFrom(this.store$.pipe(select(selectOverlaysImageProcess)), (overlay, overlaysImageProcess) => [overlay, overlaysImageProcess[overlay?.id]]),
 		tap(([overlay, overlayImageProcess]) => {
 			if (this.isDragged) {
 				this.toggleDragged();
@@ -279,7 +277,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 
 
 	private dispatchAutoImageProcess(enable = false) {
-		this.store$.dispatch(new SetAutoImageProcessing({overlayId: this.overlay.id, isAuto: enable}));
+		this.store$.dispatch(new SetAutoImageProcessing({ overlayId: this.overlay.id, isAuto: enable }));
 	}
 
 	ngAfterViewInit(): void {

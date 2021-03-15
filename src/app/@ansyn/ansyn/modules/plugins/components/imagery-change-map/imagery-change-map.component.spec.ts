@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ImageryChangeMapComponent } from './imagery-change-map.component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -24,7 +24,7 @@ describe('ImageryChangeMapComponent', () => {
 	let imageryCommunicatorService: ImageryCommunicatorService;
 	let store: Store<any>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ImageryChangeMapComponent],
 			imports: [StoreModule.forRoot({ [mapFeatureKey]: MapReducer }),

@@ -5,7 +5,7 @@ import {
 	, ResetAppAction, ToggleIsPinnedAction, UnSelectMenuItemAction
 } from '@ansyn/menu';
 import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/reducers/cases.reducer';
-import { async, inject, TestBed } from '@angular/core/testing';
+import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
 import { SetMapSearchBoxTriggerAction, ToggleFooter, UpdateMapSizeAction } from '@ansyn/map-facade';
@@ -27,7 +27,7 @@ describe('MenuAppEffects', () => {
 	let store: Store<any>;
 	let actions: Observable<any>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [StoreModule.forRoot({ [menuFeatureKey]: MenuReducer, [casesFeatureKey]: CasesReducer })],
 			providers: [

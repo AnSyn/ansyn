@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { WelcomeNotificationComponent } from './welcome-notification.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -12,7 +12,7 @@ describe('WelcomeNotificationComponent', () => {
 	let fixture: ComponentFixture<WelcomeNotificationComponent>;
 	let store: Store<any>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				StoreModule.forRoot({ [mapFeatureKey]: MapReducer }),
@@ -49,7 +49,7 @@ describe('WelcomeNotificationComponent', () => {
 			expect(component.tabindex).toEqual(0);
 		});
 
-		it('the element.focus() should be called, during the component`s init', async(() => {
+		it('the element.focus() should be called, during the component`s init', waitForAsync(() => {
 			fixture.whenStable().then(() => {
 				expect(component.elem.nativeElement.focus).toHaveBeenCalled();
 			});
@@ -80,7 +80,7 @@ describe('WelcomeNotificationComponent', () => {
 			fixture.detectChanges();
 		});
 
-		it('the element.focus() should not be called, during the component`s init', async(() => {
+		it('the element.focus() should not be called, during the component`s init', waitForAsync(() => {
 			fixture.whenStable().then(() => {
 				expect(component.elem.nativeElement.focus).not.toHaveBeenCalled();
 			});

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ImageryDimensionModeComponent } from './imagery-dimension-mode.component';
 import { StoreModule } from '@ngrx/store';
@@ -9,7 +9,7 @@ describe('ImageryDimensionModeComponent', () => {
 	let component: ImageryDimensionModeComponent;
 	let fixture: ComponentFixture<ImageryDimensionModeComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ImageryDimensionModeComponent],
 			imports: [StoreModule.forRoot({})],

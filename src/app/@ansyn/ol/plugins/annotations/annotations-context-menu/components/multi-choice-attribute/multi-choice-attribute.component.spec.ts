@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MultiChoiceAttributeComponent } from './multi-choice-attribute.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -12,7 +12,7 @@ describe('MultiChoiceAttributeComponent', () => {
 	let component: MultiChoiceAttributeComponent;
 	let fixture: ComponentFixture<MultiChoiceAttributeComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ MultiChoiceAttributeComponent ],
 			imports: [ ReactiveFormsModule, MatChipsModule, MatFormFieldModule, MatMenuModule, TranslateModule.forRoot() ],

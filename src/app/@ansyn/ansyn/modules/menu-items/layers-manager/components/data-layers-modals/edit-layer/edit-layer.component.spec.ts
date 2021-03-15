@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { EditLayerComponent } from './edit-layer.component';
 import { FormsModule } from '@angular/forms';
@@ -20,7 +20,7 @@ describe('EditLayerComponent', () => {
 	let component: EditLayerComponent;
 	let fixture: ComponentFixture<EditLayerComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [FormsModule, HttpClientModule, MatInputModule, BrowserAnimationsModule, StoreModule.forRoot({ [layersFeatureKey]: LayersReducer }), TranslateModule.forRoot()],
 			providers: [

@@ -1,5 +1,5 @@
 import { TasksEffects } from './tasks.effects';
-import { async, inject, TestBed } from '@angular/core/testing';
+import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { TasksService } from '../services/tasks.service';
 import { Store, StoreModule } from '@ngrx/store';
 import { tasksFeatureKey, TasksReducer } from '../reducers/tasks.reducer';
@@ -55,7 +55,7 @@ describe('TasksEffects', () => {
 		}
 	} as any;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientModule,

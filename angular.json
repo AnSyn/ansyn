@@ -58,7 +58,10 @@
               "jspdf",
               "canvg",
               "shpjs",
-              "pbf"
+              "pbf",
+              "@auth0",
+              "url",
+              "@auth0/angular-jwt"
             ]
           },
           "configurations": {
@@ -70,7 +73,6 @@
                 }
               ],
               "sourceMap": true,
-              "extractCss": true,
               "fileReplacements": []
             },
             "production": {
@@ -83,7 +85,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": true,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -248,7 +249,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -376,7 +376,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -453,7 +452,7 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "src/app/@ansyn/ansyn/tsconfig.lib.json",
             "project": "src/app/@ansyn/ansyn/ng-package.json"
@@ -474,7 +473,7 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "src/app/@ansyn/map-facade/tsconfig.lib.json",
             "project": "src/app/@ansyn/map-facade/ng-package.json"
@@ -495,7 +494,7 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "src/app/@ansyn/ol/tsconfig.lib.json",
             "project": "src/app/@ansyn/ol/ng-package.json"
@@ -516,7 +515,7 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "src/app/@ansyn/imagery-cesium/tsconfig.lib.json",
             "project": "src/app/@ansyn/imagery-cesium/ng-package.json"
@@ -537,7 +536,7 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "src/app/@ansyn/imagery-video/tsconfig.lib.json",
             "project": "src/app/@ansyn/imagery-video/ng-package.json"
@@ -558,7 +557,7 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "src/app/@ansyn/imagery/tsconfig.lib.json",
             "project": "src/app/@ansyn/imagery/ng-package.json"
@@ -579,7 +578,7 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "src/app/@ansyn/menu/tsconfig.lib.json",
             "project": "src/app/@ansyn/menu/ng-package.json"

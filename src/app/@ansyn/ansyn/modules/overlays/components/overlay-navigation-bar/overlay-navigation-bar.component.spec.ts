@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { OverlayNavigationBarComponent } from './overlay-navigation-bar.component';
 import { StatusBarConfig } from '../../../status-bar/models/statusBar.config';
 import { Store, StoreModule } from '@ngrx/store';
@@ -27,7 +27,7 @@ describe('OverlyaNavigationBarComponent', () => {
 	let fixture: ComponentFixture<OverlayNavigationBarComponent>;
 	let store: Store<any>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [OverlayNavigationBarComponent],
 			imports: [StoreModule.forRoot({

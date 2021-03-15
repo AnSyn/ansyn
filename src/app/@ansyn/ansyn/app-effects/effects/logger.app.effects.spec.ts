@@ -1,5 +1,5 @@
 import { LoggerAppEffects } from './logger.app.effects';
-import { async, inject, TestBed } from '@angular/core/testing';
+import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
 import { LoggerService } from '../../modules/core/services/logger.service';
 import { Actions } from '@ngrx/effects';
@@ -10,7 +10,7 @@ describe('LoggerAppEffects', () => {
 	let loggerService: LoggerService;
 	let actions$: Actions;
 
-	beforeEach(async( () => {
+	beforeEach(waitForAsync( () => {
 		TestBed.configureTestingModule({
 			imports: [
 				StoreModule.forRoot({})

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, inject, tick, fakeAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, inject, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 
 import { TimePickerComponent } from './time-picker.component';
 import { StoreModule, Store } from '@ngrx/store';
@@ -23,7 +23,7 @@ describe('TimepickerComponent', () => {
 	let component: TimePickerComponent;
 	let fixture: ComponentFixture<TimePickerComponent>;
 	let store: Store<any>;
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [
 				TimePickerComponent,

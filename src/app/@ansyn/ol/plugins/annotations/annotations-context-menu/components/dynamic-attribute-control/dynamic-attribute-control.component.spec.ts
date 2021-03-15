@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DynamicAttributeControlComponent } from './dynamic-attribute-control.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -9,7 +9,7 @@ describe('DynamicAttributeControlComponent', () => {
 	let component: DynamicAttributeControlComponent;
 	let fixture: ComponentFixture<DynamicAttributeControlComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ DynamicAttributeControlComponent ],
 			imports: [ ReactiveFormsModule, TranslateModule.forRoot() ],

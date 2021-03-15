@@ -65,7 +65,7 @@ export class AnsynFooterComponent implements OnInit, OnDestroy {
 	}
 
 	forceRedraw() {
-		return new Promise(resolve => {
+		return new Promise<void>(resolve => {
 			this.elementRef.nativeElement.style.visibility = 'hidden';
 			requestAnimationFrame(() => {
 				this.elementRef.nativeElement.style.visibility = '';

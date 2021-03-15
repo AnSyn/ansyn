@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SandboxComponent } from './sandbox.component';
 import {
@@ -18,7 +18,7 @@ describe('SandboxComponent', () => {
 	let component: SandboxComponent;
 	let fixture: ComponentFixture<SandboxComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [SandboxComponent],
 			providers: [

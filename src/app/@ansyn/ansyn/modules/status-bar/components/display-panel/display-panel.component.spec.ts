@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DisplayPanelComponent } from './display-panel.component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -31,7 +31,7 @@ describe('DisplayPanelComponent', () => {
 		outputs: ['ngModelChange']
 	});
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [DisplayPanelComponent,
 			mockComboBoxComponent,

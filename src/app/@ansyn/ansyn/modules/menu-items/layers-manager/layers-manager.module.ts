@@ -21,8 +21,6 @@ import { StaticLayersComponent } from './components/static-layers/static-layers.
 import { BaseLayersComponent } from './components/base-layers/base-layers.component';
 import { AnnotationLayersComponent } from './components/annotation-layers/annotation-layers.component';
 import { LayersSearchComponent } from './components/layers-search/layers-search.component';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatInputModule } from '@angular/material/input';
 
 // @dynamic
 @NgModule({
@@ -33,9 +31,7 @@ import { MatInputModule } from '@angular/material/input';
 		ReactiveFormsModule,
 		StoreModule.forFeature(layersFeatureKey, LayersReducer),
 		EffectsModule.forFeature([LayersEffects]),
-		EntitiesTableModule,
-		MatInputModule,
-		MatAutocompleteModule
+		EntitiesTableModule
 	],
 	declarations: [LayersManagerComponent, LayerCollectionComponent, DownloadLayersComponent, LayerMenuComponent, DataLayersModalsComponent, EditLayerComponent, DeleteLayerComponent, ImportLayerComponent, StaticLayersComponent, BaseLayersComponent, AnnotationLayersComponent, LayersSearchComponent],
 	providers: [DataLayersService]

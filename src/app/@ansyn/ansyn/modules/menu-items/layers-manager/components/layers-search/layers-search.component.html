@@ -1,17 +1,10 @@
 <form>
-	<input type="text" [placeholder]="'search layers' | translate"
-		   [formControl]="control"
-		   [matAutocomplete]="auto"/>
-	<mat-autocomplete #auto="matAutocomplete" panelWidth="fit" autoActiveFirstOption>
-		<mat-option *ngFor="let layer of layers"
-					(onSelectionChange)="addLayer(layer)"
-					(click)="$event.stopPropagation()"
-					[value]="layer.name">
-			{{layer.name}}
-		</mat-option>
-
-
-	</mat-autocomplete>
+	<ansyn-auto-complete
+	[dbClickFn]="getAllLayers.bind(this)"
+	(selectChange)="addLayer($event)"
+	[keyFromText]="'name'"
+	[onInputChangeFn]="getAllLayersByValue.bind(this)">
+	</ansyn-auto-complete>
 	<div class="layer-search-button">
 		<button (click)="changeSearchType(LayerSearchTypes.polygonView)"
 				[class.active]="layerSearchType === LayerSearchTypes.polygonView"

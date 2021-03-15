@@ -140,6 +140,10 @@ export class SetFourViewsModeAction implements Action {
 
 	constructor(public payload: IFourViewsData) {
 	}
+
+	logMessage() {
+		return `Activated four views at ${payload.point}`
+	}
 }
 
 export class PointToRealNorthAction implements Action, ILogMessage {

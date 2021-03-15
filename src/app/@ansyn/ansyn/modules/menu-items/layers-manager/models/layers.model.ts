@@ -32,7 +32,7 @@ export interface ILayer extends IEntity {
 	isNonEditable?: boolean;
 }
 
-export interface ILayersEntities {
-	type: string;
-	data: IEntitiesTableData<ILayer>;
+export enum LayerSearchTypeEnum {
+	mapView = 'mapView',
+	polygonView = 'polygonView'
 }

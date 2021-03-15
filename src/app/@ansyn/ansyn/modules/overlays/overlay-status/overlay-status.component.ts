@@ -46,6 +46,7 @@ import { ClickOutsideService } from '../../core/click-outside/click-outside.serv
 import { OverlayStatusService } from './services/overlay-status.service';
 import { ComponentVisibilityService } from '../../../app-providers/component-visibility.service';
 import { ComponentVisibilityItems } from '../../../app-providers/component-mode';
+import { ILayer } from '../../menu-items/layers-manager/models/layers.model';
 
 @Component({
 	selector: 'ansyn-overlay-status',
@@ -76,7 +77,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	isDragged: boolean;
 	isImageControlActive = false;
 	draggedButtonText: string;
-	isLayersVisible: boolean;
+	isAnnotationLayerActive: boolean;
 	isManualProcessChanged: boolean;
 	selectOverlaysImageProcess$ = this.store$.pipe(select(selectOverlaysImageProcess), filter(this.hasOverlay.bind(this)));
 	@ViewChild('closeElementAnnotation', {static: false}) closeElementAnnotation: ElementRef;
@@ -147,21 +148,21 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	@AutoSubscription
-	layersVisibility$ = () => combineLatest([
+	isAnnotationLayerActive$ = () => combineLatest([
 		this.store$.select(selectSelectedLayersIds),
 		this.store$.select(selectHideLayersOnMap(this.mapId)),
 		this.store$.select(selectLayers)])
 		.pipe(
 			map(([selectedLayerIds, areLayersHidden, layers]) => {
-				layers = layers.filter((currentLayer) =>
+				const layersActive: ILayer[] = layers.filter((currentLayer) =>
 					Boolean(currentLayer.data) &&
 					currentLayer.type === "Annotation" &&
 					currentLayer.data.features.length > 0 &&
 					selectedLayerIds.includes(currentLayer.id));
-				return [areLayersHidden, layers];
+				return [areLayersHidden, layersActive];
 			}),
-			tap(([areLayersHidden, layers]) => {
-				this.isLayersVisible = !((Boolean(areLayersHidden)) || (Boolean(layers.length === 0)));
+			tap(([areLayersHidden, layers]: [boolean, ILayer[]]) => {
+				this.isAnnotationLayerActive = !((Boolean(areLayersHidden)) || (Boolean(layers.length === 0)));
 				if (this.isDragged) {
 					this.toggleDragged();
 				}

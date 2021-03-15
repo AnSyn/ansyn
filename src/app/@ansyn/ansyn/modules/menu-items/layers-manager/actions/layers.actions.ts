@@ -1,7 +1,8 @@
 import { Action } from '@ngrx/store';
-import { ILayer, LayerType } from '../models/layers.model';
+import { ILayer, LayerSearchTypeEnum, LayerType } from '../models/layers.model';
 import { ILayerModal, SelectedModalEnum } from '../reducers/layers-modal';
 import { ILogMessage } from '../../../core/models/logger.model';
+import { IVisualizerEntity } from '@ansyn/imagery';
 
 export enum LayersActionTypes {
 	BEGIN_LAYER_COLLECTION_LOAD = '[Layers] Begin layer collection load',
@@ -23,6 +24,8 @@ export enum LayersActionTypes {
 	REMOVE_CASE_LAYERS_FROM_BACKEND_SUCCESS_ACTION = '[Layers] Remove case layers from backend success',
 	REMOVE_CASE_LAYERS_FROM_BACKEND_FAILED_ACTION = '[Layers] Remove case layers from backend failed',
 	SET_ACTIVE_ANNOTATION_LAYER = '[Layers] Set active annotation layer',
+	SET_LAYER_SEARCH_TYPE = '[Layers] Set Layer Search Type',
+	SET_LAYER_SEARCH_POLYGON = '[Layers] Set Layer Search Polygon',
 	SET_MODAL = '[Layers] Set modal value',
 	SHOW_ALL_LAYERS = '[Layers] Show all layers',
 	LOG_EXPORT_LAYER = 'LOG_EXPORT_LAYER',
@@ -274,5 +277,20 @@ export class LogAddFeatureToLayer implements Action, ILogMessage {
 
 	logMessage() {
 		return `Adding feature to annotation layer ${this.payload.layerName}`
+	}
+}
+
+export class SetLayerSearchType implements Action, ILogMessage {
+	readonly type = LayersActionTypes.SET_LAYER_SEARCH_TYPE;
+	constructor(public payload: LayerSearchTypeEnum) {}
+
+	logMessage() {
+		return 'Changing layer search type to ' + this.payload
+	}
+}
+
+export class SetLayerSearchPolygon implements Action {
+	readonly  type = LayersActionTypes.SET_LAYER_SEARCH_POLYGON;
+	constructor(public payload: IVisualizerEntity) {
 	}
 }

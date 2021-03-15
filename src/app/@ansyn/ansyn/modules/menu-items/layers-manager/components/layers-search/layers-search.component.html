@@ -13,11 +13,11 @@
 
 	</mat-autocomplete>
 	<div class="layer-search-button">
-		<button>
+		<button (click)="changeSearchType(LayerSearchTypes.polygonView)"
+				[class.active]="layerSearchType === LayerSearchTypes.polygonView"
+		[attr.tooltip-value]="'Query layers by polygon' | translate"
+		tooltip-class="bottom right">
 			<i class="medium-icon icon-annotation-polygon"></i>
-		</button>
-		<button>
-			<i class="medium-icon icon-annotation-rectangle"></i>
 		</button>
 	</div>
 </form>

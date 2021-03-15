@@ -2,13 +2,17 @@ import { select, Store } from '@ngrx/store';
 import { HttpClient } from '@angular/common/http';
 import { Feature, FeatureCollection, Polygon } from 'geojson';
 import { containsExtent } from 'ol/extent'
-import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { combineLatest, Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap, withLatestFrom, startWith } from 'rxjs/operators';
+import { combineLatest, Observable, scheduled } from 'rxjs';
 import { selectMaps, SetToastMessageAction } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
 import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
 import { ILayer, layerPluginTypeEnum } from '../../../../menu-items/layers-manager/models/layers.model';
-import { selectLayers, selectSelectedLayersIds } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
+import {
+	selectLayers,
+	selectLayerSearchPolygon,
+	selectSelectedLayersIds
+} from '../../../../menu-items/layers-manager/reducers/layers.reducer';
 import { feature, featureCollection } from '@turf/turf';
 import {
 	BBOX,
@@ -41,12 +45,18 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 
 	onMapPositionChanges$ = this.getCurrentMapState$.pipe(
 		map((map: IMapSettings) => map?.data?.positio?.extentPolygon),
-		distinctUntilChanged(isEqual)
+		distinctUntilChanged(isEqual),
+		filter(Boolean)
+	);
+
+	getLayerSearchPolygon$: Observable<Polygon> = this.store$.pipe(
+		select(selectLayerSearchPolygon),
+		map( (layerSearchPolygon) => layerSearchPolygon?.featureJson?.geometry )
 	);
 
 	selectedLayersChange$ = this.store$.pipe(
 		select(selectSelectedLayersIds),
-		withLatestFrom(this.store$.pipe(selectLayers)),
+		withLatestFrom(this.store$.pipe(select(selectLayers))),
 		filter(([selectedLayersIds, layers]: [string[], ILayer[]]) => Boolean(layers)),
 		map(([selectedLayersIds, layers]: [string[], ILayer[]]) =>
 			layers.filter(layer => this.isGeoJsonLayer(layer) && selectedLayersIds.includes(layer.id))),
@@ -70,16 +80,16 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	);
 
 	@AutoSubscription
-	onMapChange$ = combineLatest([this.selectedLayersChange$, this.onMapPositionChanges$]).pipe(
+	onMapChange$ = combineLatest([this.selectedLayersChange$, this.onMapPositionChanges$, this.getLayerSearchPolygon$]).pipe(
 		debounceTime(1000),
 		filter(() => !this.isHidden),
-		switchMap(([layers, extentPolygon]: [ILayer[], ImageryMapExtentPolygon]) => {
+		switchMap(([layers, extentPolygon, searchPolygon]: [ILayer[], ImageryMapExtentPolygon, Polygon]) => {
 			const area = calculateGeometryArea(extentPolygon) * 1e-6;
 			let layersObs = [];
 			layers.forEach(layer => {
 				const layerKey = this.getLayerKey(layer);
 				this.layersDictionary.set(layerKey, []);
-				const splitExtents = splitExtent(extentPolygon, 2).filter(extent => !this.noEntitiesInExtent(extent, layer));
+				const splitExtents = splitExtent(searchPolygon || extentPolygon, 2).filter(extent => !this.noEntitiesInExtent(extent, layer));
 				splitExtents.forEach(extent => {
 					if (area < 1000) {
 						layersObs.push(this.getEntitiesForLayer(layer, extent))

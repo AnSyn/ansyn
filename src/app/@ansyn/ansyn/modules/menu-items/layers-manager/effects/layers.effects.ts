@@ -6,7 +6,7 @@ import {
 	LayersActions,
 	LayersActionTypes,
 	RemoveCaseLayersFromBackendAction,
-	RemoveCaseLayersFromBackendSuccessAction
+	RemoveCaseLayersFromBackendSuccessAction, SetLayerSearchPolygon
 } from '../actions/layers.actions';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
@@ -54,6 +54,12 @@ export class LayersEffects {
 		rxPreventCrash()
 	);
 
+
+	@Effect()
+	onChangeLayerTypeRemovePolygon = this.actions$.pipe(
+		ofType(LayersActionTypes.SET_LAYER_SEARCH_TYPE),
+		map( () => new SetLayerSearchPolygon(null))
+	);
 
 
 

@@ -2,8 +2,9 @@ import { LayersActions, LayersActionTypes } from '../actions/layers.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 import { uniq } from 'lodash';
 import { createEntityAdapter, Dictionary, EntityAdapter, EntityState } from '@ngrx/entity';
-import { ILayer, LayerType } from '../models/layers.model';
+import { ILayer, LayerSearchTypeEnum, LayerType } from '../models/layers.model';
 import { ILayerModal, SelectedModalEnum } from './layers-modal';
+import { IVisualizerEntity } from '@ansyn/imagery';
 
 export const layersAdapter: EntityAdapter<ILayer> = createEntityAdapter<ILayer>({sortComparer: (a, b) => +a.creationTime - +b.creationTime});
 
@@ -11,7 +12,9 @@ export interface ILayerState extends EntityState<ILayer> {
 	selectedLayersIds: string[];
 	activeAnnotationLayer: string;
 	staticLayers: ILayer[];
-	modal: ILayerModal
+	modal: ILayerModal;
+	layerSearchType: LayerSearchTypeEnum;
+	layerSearchPolygon: IVisualizerEntity;
 }
 
 export const initialLayersState: ILayerState = layersAdapter.getInitialState({
@@ -21,7 +24,9 @@ export const initialLayersState: ILayerState = layersAdapter.getInitialState({
 	modal: {
 		layer: null,
 		type: SelectedModalEnum.none
-	}
+	},
+	layerSearchType: LayerSearchTypeEnum.mapView,
+	layerSearchPolygon: null
 });
 
 export const layersFeatureKey = 'layers';
@@ -87,6 +92,13 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 		case LayersActionTypes.SET_ACTIVE_ANNOTATION_LAYER:
 			return { ...state, activeAnnotationLayer: action.payload };
 
+		case LayersActionTypes.SET_LAYER_SEARCH_TYPE:
+			return { ...state, layerSearchType: action.payload };
+
+		case LayersActionTypes.SET_LAYER_SEARCH_POLYGON: {
+			return { ...state, layerSearchPolygon: action.payload}
+		}
+
 		case LayersActionTypes.SET_MODAL:
 			return { ...state, modal: action.payload };
 
@@ -105,9 +117,11 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 export const { selectAll, selectEntities } = layersAdapter.getSelectors();
 
 export const layersStateOrInitial: MemoizedSelector<any, any> = createSelector(layersStateSelector, (layersState: ILayerState) => layersState || initialLayersState);
-export const selectLayers: MemoizedSelector<any, any> = createSelector(layersStateOrInitial, selectAll);
+export const selectLayers: MemoizedSelector<any, ILayer[]> = createSelector(layersStateOrInitial, selectAll);
 export const selectLayersEntities: MemoizedSelector<any, any> = createSelector(layersStateOrInitial, <(state: any) => Dictionary<any>>selectEntities);
 export const selectSelectedLayersIds: MemoizedSelector<any, any> = createSelector(layersStateOrInitial, (layersState: ILayerState) => layersState.selectedLayersIds);
 export const selectActiveAnnotationLayer: MemoizedSelector<any, any> = createSelector(layersStateOrInitial, (layersState: ILayerState) => layersState.activeAnnotationLayer);
 export const selectLayersModal: MemoizedSelector<any, any> = createSelector(layersStateOrInitial, (layersState: ILayerState) => layersState.modal);
 export const selectStaticLayer: MemoizedSelector<any, ILayer[]> = createSelector(layersStateOrInitial, (layersState: ILayerState) => layersState?.staticLayers);
+export const selectLayerSearchType: MemoizedSelector<any, LayerSearchTypeEnum> = createSelector(layersStateOrInitial, (layerState: ILayerState) => layerState?.layerSearchType);
+export const selectLayerSearchPolygon: MemoizedSelector<ILayerState, IVisualizerEntity> = createSelector(layersStateOrInitial, (layerState: ILayerState) => layerState.layerSearchPolygon);

@@ -1,7 +1,7 @@
 <form>
 	<ansyn-auto-complete
-	[dbClickFn]="getAllLayers.bind(this)"
 	(selectChange)="addLayer($event)"
+	[allEntities]="allLayers$ | async"
 	[keyFromText]="'name'"
 	[onInputChangeFn]="getAllLayersByValue.bind(this)">
 	</ansyn-auto-complete>

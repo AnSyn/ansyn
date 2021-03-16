@@ -1,5 +1,5 @@
 <input type="text" [placeholder]="'search layers' | translate"
-	   (dblclick)="options = dbClickFn()"
+	   (dblclick)="dbClick()"
 	   (blur)="options = []"
 	   [formControl]="control"
 	   [matAutocomplete]="auto"/>

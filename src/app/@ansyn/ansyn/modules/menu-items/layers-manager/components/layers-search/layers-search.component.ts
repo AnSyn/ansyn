@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ILayer, LayerSearchTypeEnum, LayerType } from '../../models/layers.model';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { tap, map } from 'rxjs/operators';
 import { select, Store } from '@ngrx/store';
 import { selectLayerSearchType, selectStaticLayer } from '../../reducers/layers.reducer';
 import { AddLayer, SetLayerSearchType } from '../../actions/layers.actions';
@@ -14,9 +14,7 @@ import { AddLayer, SetLayerSearchType } from '../../actions/layers.actions';
 })
 @AutoSubscriptions()
 export class LayersSearchComponent implements OnInit, OnDestroy {
-	lastValue: string;
 	layers: ILayer[];
-	allStaticLayers: ILayer[];
 	layerSearchType: LayerSearchTypeEnum;
 
 	@AutoSubscription
@@ -24,10 +22,9 @@ export class LayersSearchComponent implements OnInit, OnDestroy {
 		select(selectLayerSearchType),
 		tap((layerSearchType) => this.layerSearchType = layerSearchType)
 	);
-	@AutoSubscription
+
 	allLayers$ = this.store.pipe(
 		select(selectStaticLayer),
-		tap((layers) => this.allStaticLayers = layers)
 	);
 
 	get LayerSearchTypes() {
@@ -55,14 +52,10 @@ export class LayersSearchComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	getAllLayers() {
-		return Boolean(this.lastValue) ? this.getAllLayersByValue(this.lastValue) : this.allStaticLayers;
-	}
-
-
 	getAllLayersByValue(value: string) {
-		this.lastValue = value;
-		return this.allStaticLayers.filter((layer) => layer.name.toLowerCase().includes(value?.toLowerCase()))
+		return this.allLayers$.pipe(
+			map( (layers) => layers.filter((layer) => layer.name.toLowerCase().includes(value?.toLowerCase())))
+		)
 	}
 
 }

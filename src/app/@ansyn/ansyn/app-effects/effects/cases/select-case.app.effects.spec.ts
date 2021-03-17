@@ -1,4 +1,4 @@
-import { async, inject, TestBed } from '@angular/core/testing';
+import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs';
@@ -12,7 +12,7 @@ import {
 	UpdateOverlaysManualProcessArgs,
 } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { SelectCaseAppEffects } from './select-case.app.effects';
-import { SetActiveMapId, SetLayoutAction, SetMapsDataActionStore } from '@ansyn/map-facade';
+import { SetActiveMapId, SetFourViewsModeAction, SetLayoutAction, SetMapsDataActionStore, IFourViewsData } from '@ansyn/map-facade';
 import {
 	BeginLayerCollectionLoadAction,
 	UpdateSelectedLayersIds
@@ -50,7 +50,7 @@ describe('SelectCaseAppEffects', () => {
 	let actions: Observable<any>;
 	let store: Store<any>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				StoreModule.forRoot({}),
@@ -98,6 +98,9 @@ describe('SelectCaseAppEffects', () => {
 					sensors: [],
 					types: []
 				},
+				fourViewsMode: IFourViewsData = {
+					active: false
+				},
 				runSecondSearch = true,
 				favoriteOverlays: IOverlay[] = [],
 				maps: ICaseMapsState = { activeMapId: 'activeMapId', data: [], layout: 'layout6' },
@@ -126,6 +129,7 @@ describe('SelectCaseAppEffects', () => {
 				layers,
 				overlaysImageProcess,
 				facets,
+				fourViewsMode,
 				miscOverlays,
 				overlaysScannedAreaData
 			};
@@ -139,7 +143,7 @@ describe('SelectCaseAppEffects', () => {
 			};
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
-			const expectedResult = cold('--(abcdefghijklmpqr)--', {
+			const expectedResult = cold('--(abcdefghijklmnpqr)--', {
 			a: new SetMapsDataActionStore({ mapsList: maps.data }),
 			b: new SetActiveMapId(state.maps.activeMapId),
 			c: new SetLayoutAction(<any>maps.layout),
@@ -153,6 +157,7 @@ describe('SelectCaseAppEffects', () => {
 			k: new UpdateOverlaysManualProcessArgs(overlaysImageProcess),
 			l: new UpdateFacetsAction(facets),
 			m: new UpdateSelectedLayersIds([]),
+			n: new SetFourViewsModeAction(fourViewsMode),
 			p: new SetAnnotationMode(null),
 			q: new UpdateToolsFlags([{key: toolsFlags.isMeasureToolActive, value: false}]),
 			r: new SelectCaseSuccessAction(payload)

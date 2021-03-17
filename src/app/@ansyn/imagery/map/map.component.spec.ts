@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { MapComponent } from './map.component';
 import { cold } from 'jasmine-marbles';
 import { BaseImageryMap } from '../model/base-imagery-map';
@@ -11,7 +11,7 @@ describe('MapComponent', () => {
 	let fixture: ComponentFixture<MapComponent>;
 	let map: BaseImageryMap;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [MapComponent],
 			imports: [TranslateModule.forRoot()],

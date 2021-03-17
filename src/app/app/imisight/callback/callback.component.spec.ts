@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { CallbackComponent } from './callback.component';
 import { MockComponent } from '@ansyn/ansyn';
 
@@ -8,7 +8,7 @@ describe('CallbackComponent', () => {
 	const mockLoader = MockComponent({ selector: 'ansyn-loader', inputs: ['show', 'loaderText'] });
 
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [CallbackComponent, mockLoader]
 		})

@@ -1,4 +1,4 @@
-import { async, inject, TestBed } from '@angular/core/testing';
+import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import {
 	overlayStatusFeatureKey,
 	OverlayStatusReducer
@@ -75,7 +75,7 @@ describe('CasesAppEffects', () => {
 		}
 	} as any;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientModule,

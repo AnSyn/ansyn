@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { ContextMenuComponent } from './context-menu.component';
 import { FormsModule } from '@angular/forms';
 import { Store, StoreModule } from '@ngrx/store';
@@ -14,13 +14,15 @@ import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
 import { OverlayReducer, overlaysFeatureKey } from '../../../overlays/reducers/overlays.reducer';
+import { fourViewsConfig } from '../../../overlays/models/overlay.model';
+import { OverlaysService } from '../../../overlays/services/overlays.service';
 
 describe('ContextMenuComponent', () => {
 	let component: ContextMenuComponent;
 	let fixture: ComponentFixture<ContextMenuComponent>;
 	let store: Store<any>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [HttpClientModule, TranslateModule.forRoot(), FormsModule, StoreModule.forRoot({
 				[mapFeatureKey]: MapReducer,
@@ -31,7 +33,11 @@ describe('ContextMenuComponent', () => {
 			providers: [{
 				provide: mapFacadeConfig,
 				useValue: <IMapFacadeConfig>{ sensorTypeShortcuts: {}, contextMenu: { filterField: 'filterField' } }
-			}]
+			},
+				{
+					provide: fourViewsConfig,
+					useValue: {}
+				}]
 		}).compileComponents();
 	}));
 
@@ -143,21 +149,6 @@ describe('ContextMenuComponent', () => {
 		expect(component.displayOverlayEvent).toHaveBeenCalledWith($event, component.filteredOverlays[0]);
 
 		component.clickFirst($event, 'c');
-		expect(component.displayOverlayEvent).toHaveBeenCalledWith($event, component.filteredOverlays[1]);
-	});
-
-	it('clickBest should calculate best(resolution) overlay(via subFilter) and call displayOverlayEvent', () => {
-		component.filteredOverlays = [
-			{ id: '1', [component.filterField]: 'c', bestResolution: 3.5 },
-			{ id: '2', [component.filterField]: 'c', bestResolution: 1.25 }, // best of "c" (index 1)
-			{ id: '3', [component.filterField]: 'b', bestResolution: 0.5 }, // best (index 2)
-			{ id: '4', [component.filterField]: 'c', bestResolution: 1.5 }
-		] as any[];
-		const $event = <MouseEvent>null;
-		spyOn(component, 'displayOverlayEvent');
-		component.clickBest($event);
-		expect(component.displayOverlayEvent).toHaveBeenCalledWith($event, component.filteredOverlays[2]);
-		component.clickBest($event, 'c');
 		expect(component.displayOverlayEvent).toHaveBeenCalledWith($event, component.filteredOverlays[1]);
 	});
 

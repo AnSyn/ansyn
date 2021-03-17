@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { ImageryCommunicatorService } from '@ansyn/imagery';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { StartMouseShadow, StopMouseShadow } from '../actions/tools.actions';
@@ -36,7 +36,7 @@ describe('ToolsComponent', () => {
 		outputs: ['isActive']
 	});
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [StoreModule.forRoot({
 				[toolsFeatureKey]: ToolsReducer,

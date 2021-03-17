@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FloatingMenuComponent } from './floating-menu.component';
 import { ENTRY_COMPONENTS_PROVIDER } from '../../models/entry-components-provider';
@@ -10,7 +10,7 @@ describe('FloatingMenuComponent', () => {
 	let component: FloatingMenuComponent;
 	let fixture: ComponentFixture<FloatingMenuComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [
 				FloatingMenuComponent,

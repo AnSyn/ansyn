@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { LayerComponent } from './layer.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { SelectOnlyLayer } from '../../actions/layers.actions';
@@ -11,7 +11,7 @@ describe('LayerComponent', () => {
 	let fixture: ComponentFixture<LayerComponent>;
 	let store: Store<any>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [LayerComponent, AnsynCheckboxComponent],
 			imports: [StoreModule.forRoot({}), FormsModule, TranslateModule.forRoot()]

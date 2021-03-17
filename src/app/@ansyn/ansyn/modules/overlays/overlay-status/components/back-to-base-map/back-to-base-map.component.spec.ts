@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { BackToWorldView } from '../../actions/overlay-status.actions';
 
@@ -11,7 +11,7 @@ describe('BackToBaseMapComponent', () => {
 	let fixture: ComponentFixture<BackToBaseMapComponent>;
 	let store: Store<any>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [BackToBaseMapComponent],
 			imports: [

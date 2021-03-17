@@ -13,6 +13,7 @@ import {
 	SetOverlaysStatusMessageAction
 } from '../actions/overlays.actions';
 import {
+	IFourViews,
 	IOverlay,
 	IOverlayDrop,
 	IOverlaysCriteria,
@@ -84,6 +85,7 @@ export interface IOverlaysState extends EntityState<IOverlay> {
 	overlaysContainmentChecked: boolean;
 	runSecondSearch: boolean;
 	wasFirstSearchDone: boolean;
+	fourViewsOverlays: IFourViews;
 }
 
 let initDropsMarkUp: ExtendMap<MarkUpClass, IMarkUpData> = new ExtendMap<MarkUpClass, IMarkUpData>();
@@ -110,7 +112,8 @@ export const overlaysInitialState: IOverlaysState = overlaysAdapter.getInitialSt
 	totalOverlaysLength: 0,
 	overlaysContainmentChecked: false,
 	runSecondSearch: true,
-	wasFirstSearchDone: false
+	wasFirstSearchDone: false,
+	fourViewsOverlays: {}
 });
 
 export const overlaysFeatureKey = 'overlays';
@@ -159,6 +162,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				return state;
 			}
 
+
 		case OverlaysActionTypes.LOAD_OVERLAYS: {
 			return overlaysAdapter.setAll([], {
 				...state,
@@ -172,6 +176,10 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 
 		case OverlaysActionTypes.SET_TOTAL_OVERLAYS: {
 			return { ...state, totalOverlaysLength: action.payload };
+		}
+
+		case OverlaysActionTypes.SET_FOUR_VIEWS_OVERLAYS: {
+			return { ...state, fourViewsOverlays: action.payload };
 		}
 
 		case OverlaysActionTypes.CHECK_TRIANGLES: {
@@ -362,6 +370,7 @@ export const selectOverlaysIds = createSelector(overlaysStateSelector, selectIds
 export const selectFilteredOveralys = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string[] => overlays && overlays.filteredOverlays);
 export const selectSpecialObjects = createSelector(overlaysStateSelector, (overlays: IOverlaysState): Map<string, IOverlaySpecialObject> => overlays.specialObjects);
 export const selectDrops = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays && overlays.drops);
+export const selectFourViewsOverlays = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays?.fourViewsOverlays);
 export const selectDropsWithoutSpecialObjects = createSelector(selectDrops, (drops: IOverlayDrop[]) => drops && drops.filter(({ shape }) => !shape));
 export const selectDropsDescending = createSelector(selectDrops, (drops: IOverlayDrop[]) => drops && drops.filter(({ shape }) => !shape).reverse());
 export const selectDropsAscending = createSelector(selectDrops, (drops: IOverlayDrop[]) => drops && drops.filter(({ shape }) => !shape));

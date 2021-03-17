@@ -10,6 +10,7 @@ import {
 import { LayoutKey, layoutOptions } from '../models/maps-layout';
 import { MapOrientation } from '@ansyn/imagery';
 import { ILogMessage } from '../models/logger.model';
+import { IFourViewsData } from '../reducers/map.reducer';
 
 export interface IAngleFilterClick { // @TODO: map-facade should not know IOverlay
 	click: { x: number, y: number };
@@ -28,6 +29,7 @@ export interface IToastMessage {
 	toastText: string;
 	showWarningIcon?: boolean;
 	originalMessage?: string;
+	mapId?: string;
 	buttonToDisplay?: string;
 	functionToExcute?: Function;
 }
@@ -96,7 +98,8 @@ export const MapActionTypes = {
 	REPLACE_MAP_MAIN_LAYER_FAILED: '[Maps] replace Main Layer failed',
 	LOG_DRAGGING_MAP_BETWEEN_SCREEN_AREAS: '[Maps] LOG_DRAGGING_MAP_BETWEEN_SCREEN_AREAS',
 	LOG_MESSAGE_FROM_IMAGERY: '[Maps] LOG_MESSAGE_FROM_IMAGERY',
-	FORCE_RENDER_MAPS: '[Maps] FORCE_RENDER_MAPS'
+	FORCE_RENDER_MAPS: '[Maps] FORCE_RENDER_MAPS',
+	SET_FOUR_VIEWS_MODE: 'SET_FOUR_VIEWS_MODE'
 };
 
 export interface IContextMenuShowPayload {
@@ -129,6 +132,19 @@ export class SetProgressBarAction implements Action {
 	readonly type = MapActionTypes.VIEW.SET_PROGRESS_BAR;
 
 	constructor(public payload: IMapProgress) {
+	}
+}
+
+export class SetFourViewsModeAction implements Action, ILogMessage {
+	readonly type = MapActionTypes.SET_FOUR_VIEWS_MODE;
+
+	constructor(public payload: IFourViewsData) {
+	}
+
+	logMessage() {
+		if (this?.payload) {
+			return this?.payload?.active ? `Activated four views at ${ this.payload.point }` : 'Disabled four views';
+		}
 	}
 }
 

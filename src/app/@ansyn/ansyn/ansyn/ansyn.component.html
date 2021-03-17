@@ -23,7 +23,7 @@
 		</div>
 	</div>
 
-	<div *ngIf="isResultTableShow">
+	<div *ngIf="isResultTableShow && !(isFourViewsMode$ | async)">
 	<div #toggleResultsButton >
 		<button [class.active]="toggleResults" class="results-table" (click)="toggleResultsTable(toggleResultsButton)"
 		tooltip-class="top"

@@ -17,6 +17,7 @@ export {
 	mapFeatureKey,
 	MapReducer,
 	IMapState,
+	IFourViewsData,
 	mapStateSelector,
 	selectMapsIds,
 	selectActiveMapId,
@@ -27,6 +28,7 @@ export {
 	selectWasWelcomeNotificationShown,
 	selectToastMessage,
 	selectFooterCollapse,
+	selectFourViewsData,
 	selectOverlayByMapId,
 	selectMapStateById,
 	selectHideLayersOnMap,
@@ -39,7 +41,8 @@ export {
 	selectIsMinimalistViewMode,
 	selectMapTypeById,
 	selectSourceTypeById,
-	selectMapOrientation
+	selectMapOrientation,
+	selectFourViewsMode
 } from './reducers/map.reducer';
 
 export {
@@ -84,7 +87,8 @@ export {
 	SetActiveCenterTriggerAction,
 	SetMapSearchBoxTriggerAction,
 	SetOverlaysFootprintActive,
-	ForceRenderMaps
+	ForceRenderMaps,
+	SetFourViewsModeAction
 } from './actions/map.actions';
 
 export {

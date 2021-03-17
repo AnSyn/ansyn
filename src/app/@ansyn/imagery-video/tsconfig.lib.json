@@ -6,6 +6,7 @@
         "dist/ansyn/imagery"
       ]
     },
+    "declarationMap": true,
     "outDir": "../../../out-tsc/lib",
     "target": "es2015",
     "module": "es2015",

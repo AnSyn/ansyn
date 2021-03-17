@@ -7,6 +7,13 @@ import { Dictionary } from '@ngrx/entity';
 import { sessionData } from '../models/core-session-state.model';
 import { IPendingOverlay, IToastMessage, MapActions, MapActionTypes } from '../actions/map.actions';
 import { LayoutKey, layoutOptions } from '../models/maps-layout';
+import { Point } from 'geojson';
+
+export interface IFourViewsData {
+	point?: Point;
+	active: boolean;
+	sensors?: string[];
+}
 
 export function setMapsDataChanges(oldEntities: Dictionary<any>, oldActiveMapId, layout): any {
 	const mapsList: IMapSettings[] = [];
@@ -58,6 +65,7 @@ export interface IMapState extends EntityState<IMapSettings> {
 	toastMessage: IToastMessage;
 	footerCollapse: boolean;
 	minimalistViewMode: boolean;
+	fourViewsMode: IFourViewsData;
 }
 
 
@@ -71,7 +79,11 @@ export const initialMapState: IMapState = mapsAdapter.getInitialState({
 	wasWelcomeNotificationShown: sessionData().wasWelcomeNotificationShown,
 	toastMessage: null,
 	footerCollapse: false,
-	minimalistViewMode: false
+	minimalistViewMode: false,
+	fourViewsMode: {
+		point: null,
+		active: false
+	}
 });
 
 export const mapFeatureKey = 'map';
@@ -84,6 +96,9 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 	switch (action.type) {
 		case MapActionTypes.SET_TOAST_MESSAGE:
 			return { ...state, toastMessage: action.payload };
+
+		case MapActionTypes.SET_FOUR_VIEWS_MODE:
+			return { ...state, fourViewsMode: action.payload };
 
 		case MapActionTypes.IMAGERY_REMOVED: {
 			const isLoadingMaps = new Map(state.isLoadingMaps);
@@ -160,7 +175,7 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 			return { ...state, pendingOverlays: action.payload };
 
 		case MapActionTypes.REMOVE_PENDING_OVERLAY:
-			const pendingOverlays = state.pendingOverlays.filter((pending) => pending.overlay.id !== action.payload);
+			const pendingOverlays = state.pendingOverlays.filter((pendingOverlay: any) => pendingOverlay.id !== action.payload);
 			return { ...state, pendingOverlays };
 
 		case MapActionTypes.TOGGLE_MAP_LAYERS: {
@@ -219,6 +234,8 @@ export function MapReducer(state: IMapState = initialMapState, action: MapAction
 
 const { selectAll, selectEntities, selectIds, selectTotal } = mapsAdapter.getSelectors();
 export const selectActiveMapId = createSelector(mapStateSelector, (map: IMapState) => map.activeMapId);
+export const selectFourViewsData = createSelector(mapStateSelector, (map: IMapState) => map?.fourViewsMode);
+export const selectFourViewsMode = createSelector(selectFourViewsData, (fourViewsData: IFourViewsData) => fourViewsData?.active);
 export const selectMapsList = createSelector(mapStateSelector, selectAll);
 export const selectMapsTotal = createSelector(mapStateSelector, selectTotal);
 export const selectMapsIds = createSelector(mapStateSelector, selectIds);

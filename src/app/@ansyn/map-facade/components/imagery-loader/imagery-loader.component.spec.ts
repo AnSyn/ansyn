@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ImageryLoaderComponent } from './imagery-loader.component';
 import { StoreModule } from '@ngrx/store';
@@ -12,7 +12,7 @@ describe('ImageryLoaderComponent', () => {
 
 	const mockLoader = MockComponent({ selector: 'ansyn-loader', inputs: ['show', 'loaderText', 'rtl'] });
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				StoreModule.forRoot({ [mapFeatureKey]: MapReducer }),

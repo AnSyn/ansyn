@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SliderCheckboxComponent } from './slider-checkbox.component';
 
@@ -6,7 +6,7 @@ describe('SliderCheckboxComponent', () => {
 	let component: SliderCheckboxComponent;
 	let fixture: ComponentFixture<SliderCheckboxComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [SliderCheckboxComponent]
 		})

@@ -5,10 +5,10 @@ import {
 	, ResetAppAction, ToggleIsPinnedAction, UnSelectMenuItemAction
 } from '@ansyn/menu';
 import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/reducers/cases.reducer';
-import { async, inject, TestBed } from '@angular/core/testing';
+import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
-import { ToggleFooter, UpdateMapSizeAction } from '@ansyn/map-facade';
+import { SetMapSearchBoxTriggerAction, ToggleFooter, UpdateMapSizeAction } from '@ansyn/map-facade';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
@@ -27,7 +27,7 @@ describe('MenuAppEffects', () => {
 	let store: Store<any>;
 	let actions: Observable<any>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [StoreModule.forRoot({ [menuFeatureKey]: MenuReducer, [casesFeatureKey]: CasesReducer })],
 			providers: [
@@ -67,7 +67,7 @@ describe('MenuAppEffects', () => {
 		actions = hot('--a--', {
 			a: new ResetAppAction()
 		});
-		const expectedResults = cold('--(bcdefghi)--', {
+		const expectedResults = cold('--(bcdefghij)--', {
 			b: new ToggleIsPinnedAction(false),
 			c: new CloseModalAction(),
 			d: new SetLayersModal({ type: SelectedModalEnum.none, layer: null }),
@@ -75,7 +75,8 @@ describe('MenuAppEffects', () => {
 			f: new ToggleFooter(false),
 			g: new LoadOverlaysSuccessAction([], true),
 			h: new InitializeFiltersAction(),
-			i: new LoadDefaultCaseAction()
+			i: new LoadDefaultCaseAction(),
+			j: new SetMapSearchBoxTriggerAction(false)
 		});
 		expect(menuAppEffects.onResetApp$).toBeObservable(expectedResults);
 	});

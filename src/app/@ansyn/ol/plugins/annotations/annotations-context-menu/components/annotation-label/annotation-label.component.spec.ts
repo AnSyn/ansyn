@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
@@ -11,7 +11,7 @@ describe('AnnotationLabelComponent', () => {
 	let component: AnnotationLabelComponent;
 	let fixture: ComponentFixture<AnnotationLabelComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [AnnotationLabelComponent],
 			imports: [BrowserAnimationsModule, FormsModule, MatInputModule, MatSelectModule, TranslateModule.forRoot()]

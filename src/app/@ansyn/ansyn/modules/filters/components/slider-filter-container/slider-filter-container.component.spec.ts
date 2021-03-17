@@ -1,5 +1,5 @@
 import { SliderFilterMetadata } from '../../models/metadata/slider-filter-metadata';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { SliderFilterContainerComponent } from './slider-filter-container.component';
 import { FormsModule } from '@angular/forms';
 import { FilterCounterComponent } from '../filter-counter/filter-counter.component';
@@ -10,7 +10,7 @@ describe('SliderFilterContainerComponent', () => {
 	let component: SliderFilterContainerComponent;
 	let fixture: ComponentFixture<SliderFilterContainerComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [
 				SliderFilterContainerComponent,

@@ -1,13 +1,14 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { from, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ICoreConfig } from '../../models/core.config.model';
 import { CoreConfig } from '../../models/core.config';
-import { FetchService } from '../fetch.service';
 
 export interface IEntity {
 	creationTime: Date;
 	id: string;
+	name?: string;
+	autoSave?: boolean;
 }
 
 export interface IStoredEntity<P extends IEntity, D> {

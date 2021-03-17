@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { mapFacadeConfig, MapFacadeModule, mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import {
 	overlayStatusFeatureKey,
@@ -17,7 +17,7 @@ describe('AlertsContainerComponent', () => {
 	let component: AlertsContainerComponent;
 	let fixture: ComponentFixture<AlertsContainerComponent>;
 	let actions: Observable<any>;
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [AlertsContainerComponent],
 			imports: [

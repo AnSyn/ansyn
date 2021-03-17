@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { BooleanFilterContainerComponent } from './boolean-filter-container.component';
 import { BooleanFilterMetadata } from '../../models/metadata/boolean-filter-metadata';
@@ -11,7 +11,7 @@ describe('BooleanFilterContainerComponent', () => {
 	let component: BooleanFilterContainerComponent;
 	let fixture: ComponentFixture<BooleanFilterContainerComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [FormsModule],
 			declarations: [BooleanFilterContainerComponent, FilterCounterComponent, AnsynCheckboxComponent]

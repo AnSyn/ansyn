@@ -6,6 +6,7 @@ declare const Cesium: any;
 export abstract class BaseEntitiesVisualizer extends BaseImageryVisualizer {
 
 	billboardCollection;
+	abstract isEnabled: boolean;
 
 	public idToEntity: Map<string, any> = new Map<string, { feature: null, originalEntity: null }>();
 

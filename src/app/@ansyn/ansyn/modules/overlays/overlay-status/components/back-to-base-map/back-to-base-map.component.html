@@ -5,6 +5,6 @@
 			[attr.tooltip-class]="'bottom right not-relative'"
 			[attr.tooltip-value]="'Back to base map' | translate">
 		<i class="medium-icon icon-back-to-base-map"></i>
-		{{'Back to base map' | translate}}
+		{{(isFourViewsMode ? 'Exit Four views mode' : 'Back to base map') | translate}}
 	</button>
 </div>

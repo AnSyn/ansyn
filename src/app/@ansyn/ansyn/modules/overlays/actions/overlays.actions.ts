@@ -2,6 +2,7 @@ import { IPendingOverlay } from '@ansyn/map-facade';
 import { Action } from '@ngrx/store';
 import { type } from '../../core/utils/type';
 import {
+	IFourViews,
 	IOverlay,
 	IOverlayDrop, IOverlayError,
 	IOverlaysCriteria,
@@ -12,6 +13,7 @@ import {
 import { IMarkUpData, IOverlayDropMarkUp, ITimelineRange, MarkUpClass } from '../reducers/overlays.reducer';
 import { Update } from '@ngrx/entity';
 import { ILogMessage } from '../../core/models/logger.model';
+import { Point } from 'geojson';
 
 export const OverlaysActionTypes = {
 	SELECT_OVERLAY: type('[Overlay] Select Overlay'),
@@ -51,6 +53,7 @@ export const OverlaysActionTypes = {
 	LOG_SEARCH_PANEL_POPUP: 'LOG_SEARCH_PANEL_POPUP',
 	LOG_MANUAL_SEARCH_TIME: 'LOG_MANUAL_SEARCH_TIME',
 	LOG_SELECT_SEARCH_TIME_PRESET: 'LOG_SELECT_SEARCH_TIME_PRESET',
+	SET_FOUR_VIEWS_OVERLAYS: 'SET_FOUR_VIEWS_OVERLAYS'
 };
 
 export class SelectOverlayAction implements Action {
@@ -87,6 +90,13 @@ export class UnSelectOverlayAction implements Action {
 	type = OverlaysActionTypes.UNSELECT_OVERLAY;
 
 	constructor(public payload: string) {
+	}
+}
+
+export class SetFourViewsOverlaysAction implements Action {
+	type = OverlaysActionTypes.SET_FOUR_VIEWS_OVERLAYS;
+
+	constructor(public payload: IFourViews) {
 	}
 }
 

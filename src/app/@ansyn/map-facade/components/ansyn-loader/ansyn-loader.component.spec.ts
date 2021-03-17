@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AnsynLoaderComponent } from './ansyn-loader.component';
 import { AnimatedEllipsisComponent } from '../animated-ellipsis/animated-ellipsis.component';
@@ -7,7 +7,7 @@ describe('AnsynLoaderComponent', () => {
 	let component: AnsynLoaderComponent;
 	let fixture: ComponentFixture<AnsynLoaderComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [AnsynLoaderComponent, AnimatedEllipsisComponent]
 		})

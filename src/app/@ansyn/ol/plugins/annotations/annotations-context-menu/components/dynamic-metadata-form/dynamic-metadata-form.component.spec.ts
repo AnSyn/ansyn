@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DynamicMetadataFormComponent } from './dynamic-metadata-form.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -10,7 +10,7 @@ describe('DynamicMetadataFormComponent', () => {
 	let component: DynamicMetadataFormComponent;
 	let fixture: ComponentFixture<DynamicMetadataFormComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [DynamicMetadataFormComponent],
 			imports: [		

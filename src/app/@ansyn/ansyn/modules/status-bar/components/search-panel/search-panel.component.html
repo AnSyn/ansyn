@@ -1,19 +1,14 @@
 <!-- Geo filter -->
 <div class="simple-search" >
-	<div class="advanced-search" (click)="toggleAdvancedSearch()">
+	<div *ngIf="!(fourViewsMode$ | async)" class="advanced-search" (click)="toggleAdvancedSearch()">
 		<div class="advanced-search-text">{{((advancedSearchActive$ | async) ? 'minimize' : 'Advanced Search') | translate}}</div>
 		<i class="medium-icon" [ngClass]="(advancedSearchActive$ | async) ? 'icon-up' : 'icon-down'"></i><br/>
 	</div>
 
-	<!--<div *ngIf="advancedSearch" class="advanced-search" (click)="toggleAdvancedSearch()">
-		<div class="advanced-search-text">{{'minimize' | translate}} </div>
-		<i class="medium-icon icon-up"></i><br/>
-	</div>-->
-
 	<!-- Time -->
-	<ansyn-time-picker-container [openTop]="false"></ansyn-time-picker-container>
+	<ansyn-time-picker-container></ansyn-time-picker-container>
 
-	<div class="box" id="geoPreSearch" [class.component]="componentMode">
+	<div *ngIf="!(fourViewsMode$ | async)" class="box" id="geoPreSearch" [class.component]="componentMode">
 		<button ansynComboBoxTrigger
 				(click)="toggleGeoFilter()"
 				[attr.tooltip-value]="statusBarConfig?.toolTips?.geoFilter | translate"
@@ -35,5 +30,5 @@
 	</div>
 </div>
 <div class="expander">
-	<ansyn-advanced-search *ngIf="advancedSearchActive$ | async"></ansyn-advanced-search>
+	<ansyn-advanced-search *ngIf="(advancedSearchActive$ | async )|| (fourViewsMode$ | async)"></ansyn-advanced-search>
 </div>

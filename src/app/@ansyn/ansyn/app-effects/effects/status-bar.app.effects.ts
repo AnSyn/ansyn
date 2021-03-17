@@ -5,7 +5,7 @@ import { Store, select } from '@ngrx/store';
 import { IAppState } from '../app.effects.module';
 import { casesStateSelector, ICasesState } from '../../modules/menu-items/cases/reducers/cases.reducer';
 import {
-	MapActionTypes,
+	MapActionTypes, selectFourViewsMode,
 	selectOverlayOfActiveMap
 } from '@ansyn/map-facade';
 import { filter, map, withLatestFrom } from 'rxjs/operators';
@@ -21,8 +21,12 @@ import {
 	DisplayOverlayFromStoreAction,
 	SetOverlaysCriteriaAction
 } from '../../modules/overlays/actions/overlays.actions';
-import { selectDropsAscending, selectRegion } from '../../modules/overlays/reducers/overlays.reducer';
-import { IOverlayDrop } from '../../modules/overlays/models/overlay.model';
+import {
+	selectDropsAscending,
+	selectFourViewsOverlays,
+	selectRegion
+} from '../../modules/overlays/reducers/overlays.reducer';
+import { IFourViews, IOverlay, IOverlayDrop } from '../../modules/overlays/models/overlay.model';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
 import { ToolsActionsTypes } from '../../modules/status-bar/components/tools/actions/tools.actions';
 import { CaseGeoFilter } from '../../modules/menu-items/cases/models/case.model';
@@ -38,22 +42,24 @@ export class StatusBarAppEffects {
 	@Effect()
 	onAdjacentOverlay$: Observable<any> = this.actions$.pipe(
 		ofType<GoAdjacentOverlay>(StatusBarActionsTypes.GO_ADJACENT_OVERLAY),
-		withLatestFrom(this.store.select(selectOverlayOfActiveMap)),
-		filter(([action, overlay]) => Boolean(overlay)),
-		withLatestFrom(this.store.select(selectDropsAscending), ([action, { id: overlayId }], drops: IOverlayDrop[]): IOverlayDrop => {
-			if (Boolean(drops.length)) {
-				const isNextOverlay = action.payload.isNext;
-				const adjacent = isNextOverlay ? 1 : -1;
-				const index = drops.findIndex(({ id }) => id === overlayId);
-				if (index >= 0) {
-					return drops[index + adjacent];
-				}
+		withLatestFrom(this.store.select(selectOverlayOfActiveMap), this.store.select(selectFourViewsMode)),
+		filter(([action, overlay, fourViewsMode]) => Boolean(overlay) && !fourViewsMode),
+		withLatestFrom(this.store.select(selectDropsAscending), ([{ payload }, { id: overlayId }, fourViewsMode], drops: IOverlayDrop[]): IOverlayDrop => this.getAdjacentOverlay(drops, overlayId, payload.isNext)),
+		filter(Boolean),
+		map(({ id }) => new DisplayOverlayFromStoreAction({ id })));
 
-				return adjacent > 0 ? drops[drops.length - 1] : drops[0];
-			}
+	@Effect()
+	onAdjacentOverlayFourViews$: Observable<any> = this.actions$.pipe(
+		ofType<GoAdjacentOverlay>(StatusBarActionsTypes.GO_ADJACENT_OVERLAY),
+		withLatestFrom(this.store.select(selectOverlayOfActiveMap), this.store.select(selectFourViewsMode)),
+		filter(([action, overlay, fourViewsMode]) => Boolean(overlay) && !fourViewsMode),
+		withLatestFrom(this.store.select(selectFourViewsOverlays), ([{ payload }, { id: overlayId }, fourViewsMode], fourViewsOverlays: IFourViews): IOverlayDrop => {
+			const currentMapAngleOverlays = this.findAngleOverlaysByOverlay(fourViewsOverlays, overlayId);
+			return this.getAdjacentOverlay(currentMapAngleOverlays, overlayId, payload.isNext);
 		}),
 		filter(Boolean),
 		map(({ id }) => new DisplayOverlayFromStoreAction({ id })));
+
 
 	@Effect()
 	onCopySelectedCaseLink$ = this.actions$.pipe(
@@ -103,16 +109,39 @@ export class StatusBarAppEffects {
 	onAdvancedSearchClick$ = this.actions$.pipe(
 		ofType<SearchAction>(StatusBarActionsTypes.SEARCH_ACTION),
 		withLatestFrom(this.store.pipe(select(selectGeoFilterType))),
-		map( ([action, geoFilter]) => {
-			const options: any = {runSecondSearch: false};
+		map(([action, geoFilter]) => {
+			const options: any = { runSecondSearch: false };
 			if (geoFilter === CaseGeoFilter.ScreenView) {
 				options.noInitialSearch = true;
 			}
-			return new SetOverlaysCriteriaAction({...action.payload}, options);
+			return new SetOverlaysCriteriaAction({ ...action.payload }, options);
 		})
 	);
+
 	constructor(protected actions$: Actions,
 				protected store: Store<IAppState>) {
+	}
+
+	getAdjacentOverlay(overlays, overlayId: string, isNext: boolean) {
+		if (Boolean(overlays.length)) {
+			const adjacent = isNext ? 1 : -1;
+			const index = overlays.findIndex(({ id }) => id === overlayId);
+			if (index >= 0) {
+				return overlays[index + adjacent];
+			}
+
+			return adjacent > 0 ? overlays[overlays.length - 1] : overlays[0];
+		}
+	}
+
+	findAngleOverlaysByOverlay(fourViewsOverlays: IFourViews, overlayId: string): IOverlay[] {
+		const fourViewsOverlaysKeys = Object.keys(fourViewsOverlays);
+		if (!fourViewsOverlaysKeys.length) {
+			return;
+		}
+
+		const angleKey = Object.keys(fourViewsOverlaysKeys).find(key => fourViewsOverlays[key].map((({ id }) => id)).includes(overlayId));
+		return fourViewsOverlays[angleKey];
 	}
 
 }

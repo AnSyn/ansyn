@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { OverlayTimelineStatusComponent } from './overlay-timeline-status.component';
 import {
 	IOverlaysState,
@@ -17,7 +17,7 @@ describe('OverlayTimelineStatusComponent', () => {
 	const selectStatusMessageMock$ = new EventEmitter();
 	const selectLoadingMock$ = new EventEmitter();
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [OverlayTimelineStatusComponent],
 			imports: [
@@ -47,7 +47,7 @@ describe('OverlayTimelineStatusComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('Should change "showStatus" to true only if statusMessage exists and not loading', async(async () => {
+	it('Should change "showStatus" to true only if statusMessage exists and not loading', waitForAsync(async () => {
 		expect(component.showStatus).toBeFalsy();
 
 		selectStatusMessageMock$.emit('message!!');

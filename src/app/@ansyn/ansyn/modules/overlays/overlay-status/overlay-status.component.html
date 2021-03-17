@@ -1,4 +1,4 @@
-<div class="overlay-status-button" *ngIf="isAnnotationsShow">
+<div class="overlay-status-button" *ngIf="isAnnotationsShow && !isFourViewsMode">
 	<button class="small-icon-button drag-mode" *ngIf="overlay"
 			(click)="toggleDragged()"
 			[disabled]="!isAnnotationLayerActive || noGeoRegistration"
@@ -32,7 +32,7 @@
 		*ngIf="isManualProcessingOpen">
 	</ansyn-image-processing-control>
 </div>
-<div class="overlay-status-button" *ngIf="isFavoritesShow">
+<div class="overlay-status-button" *ngIf="isFavoritesShow && !isFourViewsMode">
 	<button [attr.tooltip-class]="'bottom left'"
 			*ngIf="overlay"
 			class="button small-icon-button set-favorite"

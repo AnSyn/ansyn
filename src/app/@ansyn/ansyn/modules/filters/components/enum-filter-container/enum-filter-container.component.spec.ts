@@ -1,5 +1,5 @@
 import { EnumFilterMetadata } from '../../models/metadata/enum-filter-metadata';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { SortPipe } from '../../pipes/sort.pipe';
 import { MapIteratorPipe } from '../../pipes/map-iterator.pipe';
 import { EnumFilterContainerComponent } from './enum-filter-container.component';
@@ -14,7 +14,7 @@ describe('EnumFilterContainerComponent', () => {
 	let component: EnumFilterContainerComponent;
 	let fixture: ComponentFixture<EnumFilterContainerComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 			TestBed.configureTestingModule({
 				imports: [TranslateModule.forRoot(), FormsModule],
 				declarations: [EnumFilterContainerComponent, SortPipe, MapIteratorPipe, ShowMorePipe, FilterCounterComponent, AnsynCheckboxComponent],

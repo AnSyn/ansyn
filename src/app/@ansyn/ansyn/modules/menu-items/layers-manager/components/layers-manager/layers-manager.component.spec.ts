@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { LayersManagerComponent } from './layers-manager.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from '../../reducers/layers.reducer';
@@ -14,7 +14,7 @@ describe('LayersManagerComponent', () => {
 	const mockCollection = MockComponent({ selector: 'ansyn-layer-collection', inputs: ['collection'] });
 	const mockTranslatePipe = MockPipe('translate');
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				StoreModule.forRoot({

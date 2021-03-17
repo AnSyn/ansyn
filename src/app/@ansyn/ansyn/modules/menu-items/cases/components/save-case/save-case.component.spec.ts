@@ -4,7 +4,7 @@ import {
 	SaveCaseAsAction,
 	SelectCaseSuccessAction
 } from '../../actions/cases.actions';
-import { async, ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { casesFeatureKey, CasesReducer, ICasesState } from '../../reducers/cases.reducer';
 import { SaveCaseComponent } from './save-case.component';
 import { Store, StoreModule } from '@ngrx/store';
@@ -27,7 +27,7 @@ describe('SaveCaseComponent', () => {
 	let fixture: ComponentFixture<SaveCaseComponent>;
 	let store: Store<ICasesState>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [
 				SaveCaseComponent,

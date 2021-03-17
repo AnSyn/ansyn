@@ -9,6 +9,9 @@ export enum LayerType {
 
 export type layerPluginType = string | layerPluginTypeEnum;
 
+export const regionLayerId = 'region-layer';
+export const regionLayerDefaultName = 'Region';
+
 export enum layerPluginTypeEnum {
 	ARCGIS = 'ARCGIS',
 	OSM = 'OSM',

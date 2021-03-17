@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { LayerMenuComponent } from './layer-menu.component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -7,7 +7,7 @@ describe('LayerMenuComponent', () => {
 	let component: LayerMenuComponent;
 	let fixture: ComponentFixture<LayerMenuComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [LayerMenuComponent],
 			imports: [TranslateModule.forRoot()]

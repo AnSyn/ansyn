@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MultipleOverlaysSourceConfig } from '../../../core/models/multiple-overlays-source-config';
@@ -13,6 +13,7 @@ import { AdvancedSearchComponent } from './advanced-search.component';
 import { OverlaySourceProviderMock } from './overlay-source-provider.mock';
 import { IAdvancedSearchParameter } from '../../models/statusBar-config.model';
 import { MockComponent } from '../../../core/test/mock-component';
+import { fourViewsConfig } from '../../../overlays/models/overlay.model';
 
 describe('AdvancedSearchComponent', () => {
 	let component: AdvancedSearchComponent;
@@ -20,7 +21,7 @@ describe('AdvancedSearchComponent', () => {
 	let store: Store<any>;
 	let parent: SearchPanelComponent;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [
 				AdvancedSearchComponent,
@@ -79,6 +80,12 @@ describe('AdvancedSearchComponent', () => {
 				{
 					provide: OverlaysConfig,
 					useValue: {}
+				},
+				{
+					provide: fourViewsConfig,
+					useValue: {
+						active: false
+					}
 				},
 				{
 					provide: StatusBarConfig,

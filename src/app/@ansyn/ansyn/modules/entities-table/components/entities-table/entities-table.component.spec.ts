@@ -1,17 +1,15 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { EntitiesTableComponent } from './entities-table.component';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { EntitiesTableComponent } from './cases-table.component';
 import { Store, StoreModule } from '@ngrx/store';
 import { casesFeatureKey, CasesReducer, ICasesState } from '../../../menu-items/cases/reducers/cases.reducer';
-import { CasesType } from '../../../menu-items/cases/models/cases-config';
 import { TranslateModule } from '@ngx-translate/core';
-import { LoadCaseAction } from '../../../menu-items/cases/actions/cases.actions';
 
 describe('CasesTableComponent', () => {
 	let component: EntitiesTableComponent<any>;
 	let fixture: ComponentFixture<EntitiesTableComponent<any>>;
 	let store: Store<ICasesState>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [EntitiesTableComponent],
 			imports: [

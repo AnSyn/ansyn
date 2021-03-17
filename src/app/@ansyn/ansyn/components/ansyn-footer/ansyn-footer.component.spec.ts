@@ -1,6 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
-
 import { AnsynFooterComponent } from './ansyn-footer.component';
 import { MockComponent } from '../../modules/core/test/mock-component';
 import { StoreModule } from '@ngrx/store';
@@ -19,12 +18,12 @@ describe('AnsynFooterComponent', () => {
 		selector: 'ansyn-overlay-navigation-bar'
 	});
 
-	const mockTimePickerContainer = MockComponent({
-		selector: 'ansyn-time-picker-container',
-		inputs: ['openTop']
-	})
+	beforeEach(waitForAsync(() => {
+		const mockTimePickerContainer = MockComponent({
+			selector: 'ansyn-time-picker-container',
+			inputs: ['openTop']
+		});
 
-	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [
 				AnsynFooterComponent,

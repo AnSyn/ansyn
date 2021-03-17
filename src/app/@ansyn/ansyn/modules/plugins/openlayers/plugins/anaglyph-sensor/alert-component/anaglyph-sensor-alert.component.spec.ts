@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { mapFeatureKey, MapReducer } from '@ansyn/map-facade';
 import { AnaglyphSensorAlertComponent } from './anaglyph-sensor-alert.component';
 import { GetProvidersMapsService, ImageryCommunicatorService } from '@ansyn/imagery';
@@ -14,7 +14,7 @@ describe('AnaglyphSensorAlertComponent', () => {
 	let imageryCommunicatorService: ImageryCommunicatorService;
 	let store: Store<any>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			providers: [
 				ImageryCommunicatorService,

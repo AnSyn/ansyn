@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DataLayersModalsComponent } from './data-layers-modals.component';
 import { Store, StoreModule } from '@ngrx/store';
@@ -18,7 +18,7 @@ describe('DataLayersModalsComponent', () => {
 	let fixture: ComponentFixture<DataLayersModalsComponent>;
 	let store: Store<any>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [DataLayersModalsComponent, AnsynModalComponent, DownloadLayersComponent, EditLayerComponent, DeleteLayerComponent, AnsynInputComponent],
 			imports: [MatInputModule, MatFormFieldModule, FormsModule, StoreModule.forRoot({ [layersFeatureKey]: LayersReducer }), TranslateModule.forRoot()]

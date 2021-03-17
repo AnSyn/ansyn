@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { OverlaysContainerComponent } from './overlays-container.component';
 import { OverlaysService } from '../../services/overlays.service';
 import { EMPTY, Observable } from 'rxjs';
@@ -40,7 +40,7 @@ describe('OverlayContainerComponent', () => {
 	let state: State<{ overlays: IOverlaysState }>;
 	let getState: () => IOverlaysState;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 
 			declarations: [

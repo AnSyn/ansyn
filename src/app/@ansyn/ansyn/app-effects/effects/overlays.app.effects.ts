@@ -1,6 +1,6 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Injectable } from '@angular/core';
-import { combineLatest, Observable, of, pipe } from 'rxjs';
+import { Inject, Injectable } from '@angular/core';
+import { combineLatest, forkJoin, Observable, of, pipe } from 'rxjs';
 import { Action, Store } from '@ngrx/store';
 import {
 	IMapState,
@@ -13,14 +13,14 @@ import {
 	selectActiveMapId,
 	selectFooterCollapse, selectLayout,
 	selectMaps,
-	selectMapsList,
+	selectMapsList, SetFourViewsModeAction,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
-	SetPendingOverlaysAction
+	SetPendingOverlaysAction, SetToastMessageAction, ToggleFooter
 } from '@ansyn/map-facade';
 import { IAppState } from '../app.effects.module';
 
-import { IImageryMapPosition } from '@ansyn/imagery';
+import { getAngleDegreeBetweenPoints, IImageryMapPosition } from '@ansyn/imagery';
 import {
 	catchError,
 	filter,
@@ -39,23 +39,37 @@ import {
 	DisplayOverlaySuccessAction,
 	OverlaysActionTypes,
 	SetHoveredOverlayAction,
-	SetMarkUp,
-	SetTotalOverlaysAction
+	SetMarkUp, SetOverlaysCriteriaAction,
+	SetTotalOverlaysAction,
+	SetFourViewsOverlaysAction
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	IMarkUpData,
 	MarkUpClass,
-	selectDropMarkup,
+	selectDropMarkup, selectOverlaysCriteria,
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { ExtendMap } from '../../modules/overlays/reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../../modules/overlays/components/overlay-overview/overlay-overview.component.const';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
-import { IOverlay } from '../../modules/overlays/models/overlay.model';
+import {
+	IFourViewsConfig,
+	fourViewsConfig,
+	IOverlay,
+	IOverlaysCriteria,
+	IFourViews
+} from '../../modules/overlays/models/overlay.model';
 import { Dictionary } from '@ngrx/entity';
 import { SetBadgeAction } from '@ansyn/menu';
 import { ComponentVisibilityService } from '../../app-providers/component-visibility.service';
 import { ComponentVisibilityItems } from '../../app-providers/component-mode';
+import { casesConfig } from '../../modules/menu-items/cases/services/cases.service';
+import { ICasesConfig } from '../../modules/menu-items/cases/models/cases-config';
+import { TranslateService } from '@ngx-translate/core';
+import { MultipleOverlaysSourceProvider } from '../../modules/overlays/services/multiple-source-provider';
+import { Point } from 'geojson';
+import { IFetchParams } from '../../modules/overlays/models/base-overlay-source-provider.model';
+import { feature } from '@turf/turf';
 
 @Injectable()
 export class OverlaysAppEffects {
@@ -90,7 +104,8 @@ export class OverlaysAppEffects {
 		withLatestFrom(this.store$.select(mapStateSelector)),
 		filter(([action, mapState]) => mapState.pendingOverlays.length > 0),
 		mergeMap(([action, mapState]: [SetLayoutSuccessAction, IMapState]) => {
-			return mapState.pendingOverlays.map((pendingOverlay: any, index: number) => {
+			const validPendingOverlays = mapState.pendingOverlays.filter(({ overlay }) => overlay);
+			return validPendingOverlays.map((pendingOverlay: any, index: number) => {
 				const { overlay, extent } = pendingOverlay;
 				const mapId = Object.values(mapState.entities)[index].id;
 				return new DisplayOverlayAction({ overlay, mapId, extent });
@@ -102,7 +117,7 @@ export class OverlaysAppEffects {
 	removePendingOverlayOnDisplay$: Observable<any> = this.actions$.pipe(
 		ofType(OverlaysActionTypes.DISPLAY_OVERLAY_SUCCESS),
 		withLatestFrom(this.store$.select(mapStateSelector)),
-		filter(([action, mapState]: [DisplayOverlaySuccessAction, IMapState]) => mapState.pendingOverlays.some((pending) => pending.overlay.id === action.payload.overlay.id)),
+		filter(([action, mapState]: [DisplayOverlaySuccessAction, IMapState]) => mapState.pendingOverlays.some((pending) => pending.overlay?.id === action.payload.overlay.id)),
 		map(([action, mapState]: [DisplayOverlaySuccessAction, IMapState]) => {
 			return new RemovePendingOverlayAction(action.payload.overlay.id);
 		})
@@ -132,7 +147,6 @@ export class OverlaysAppEffects {
 			return actions;
 		})
 	);
-
 	private getOverlayFromDropMarkup = map(([markupMap, overlays]: [ExtendMap<MarkUpClass, IMarkUpData>, Map<any, any>]) =>
 		overlays.get(markupMap && markupMap.get(MarkUpClass.hover) && markupMap.get(MarkUpClass.hover).overlaysIds[0])
 	);
@@ -205,5 +219,4 @@ export class OverlaysAppEffects {
 				public overlaysService: OverlaysService,
 				protected componentVisibilityService: ComponentVisibilityService) {
 	}
-
 }

@@ -3,6 +3,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "module": "es2020",
+    "skipLibCheck": true,
     "paths": {
       "@ansyn/ansyn": [
         "src/app/@ansyn/ansyn/public_api"

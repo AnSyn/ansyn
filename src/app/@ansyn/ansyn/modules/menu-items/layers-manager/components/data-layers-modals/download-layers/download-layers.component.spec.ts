@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DownloadLayersComponent } from './download-layers.component';
 import { StoreModule } from '@ngrx/store';
@@ -10,7 +10,7 @@ describe('DownloadLayersComponent', () => {
 	let component: DownloadLayersComponent;
 	let fixture: ComponentFixture<DownloadLayersComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [DownloadLayersComponent],
 			imports: [StoreModule.forRoot({ [layersFeatureKey]: LayersReducer }), TranslateModule.forRoot()]

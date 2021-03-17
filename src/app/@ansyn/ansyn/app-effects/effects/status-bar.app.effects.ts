@@ -52,7 +52,7 @@ export class StatusBarAppEffects {
 	onAdjacentOverlayFourViews$: Observable<any> = this.actions$.pipe(
 		ofType<GoAdjacentOverlay>(StatusBarActionsTypes.GO_ADJACENT_OVERLAY),
 		withLatestFrom(this.store.select(selectOverlayOfActiveMap), this.store.select(selectFourViewsMode)),
-		filter(([action, overlay, fourViewsMode]) => Boolean(overlay) && !fourViewsMode),
+		filter(([action, overlay, fourViewsMode]) => Boolean(overlay) && fourViewsMode),
 		withLatestFrom(this.store.select(selectFourViewsOverlays), ([{ payload }, { id: overlayId }, fourViewsMode], fourViewsOverlays: IFourViews): IOverlayDrop => {
 			const currentMapAngleOverlays = this.findAngleOverlaysByOverlay(fourViewsOverlays, overlayId);
 			return this.getAdjacentOverlay(currentMapAngleOverlays, overlayId, payload.isNext);
@@ -140,7 +140,7 @@ export class StatusBarAppEffects {
 			return;
 		}
 
-		const angleKey = Object.keys(fourViewsOverlaysKeys).find(key => fourViewsOverlays[key].map((({ id }) => id)).includes(overlayId));
+		const angleKey = fourViewsOverlaysKeys.find(key => fourViewsOverlays[key].map((({ id }) => id)).includes(overlayId));
 		return fourViewsOverlays[angleKey];
 	}
 

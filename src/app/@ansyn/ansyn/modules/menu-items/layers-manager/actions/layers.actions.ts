@@ -14,6 +14,7 @@ export enum LayersActionTypes {
 	ADD_LAYER = '[Layers] Add layer',
 	ADD_LAYER_ON_BACKEND_FAILED_ACTION = '[Layers] Add layer to backend failed',
 	ADD_LAYER_ON_BACKEND_SUCCESS_ACTION = '[Layers] Add layer to backend success',
+	ADD_STATIC_LAYERS = '[Layers] Add Static Layers',
 	UPDATE_LAYER = '[Layers] Update layer',
 	UPDATE_LAYER_ON_BACKEND_FAILED_ACTION = '[Layers] Update layer to backend failed',
 	UPDATE_LAYER_ON_BACKEND_SUCCESS_ACTION = '[Layers] Update layer to backend success',
@@ -44,6 +45,7 @@ export type LayersActions =
 	| AddLayer
 	| UpdateLayer
 	| SetLayersModal
+	| AddStaticLayers
 	| CloseLayersModal;
 
 export class BeginLayerCollectionLoadAction implements Action {
@@ -292,5 +294,11 @@ export class SetLayerSearchType implements Action, ILogMessage {
 export class SetLayerSearchPolygon implements Action {
 	readonly  type = LayersActionTypes.SET_LAYER_SEARCH_POLYGON;
 	constructor(public payload: IVisualizerEntity) {
+	}
+}
+
+export class AddStaticLayers implements Action {
+	readonly type = LayersActionTypes.ADD_STATIC_LAYERS;
+	constructor(public payload: ILayer[]) {
 	}
 }

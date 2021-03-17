@@ -17,7 +17,7 @@ import { feature, featureCollection } from '@turf/turf';
 import {
 	BBOX,
 	bboxFromGeoJson,
-	calculateGeometryArea,
+	calculateGeometryArea, ExtentCollector,
 	ImageryMapExtentPolygon,
 	ImageryVisualizer,
 	IMapSettings,
@@ -35,7 +35,7 @@ import { forkJoinSafe } from '../../../../core/utils/rxjs/observables/fork-join-
 })
 export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	layersDictionary: Map<string, Feature<Polygon>[]> = new Map();
-	bboxToZeroEntities: Map<string, Map<BBOX, number>> = new Map();
+	bboxToZeroEntities: Map<string, ExtentCollector> = new Map();
 	selectedLayers: string[] = [];
 
 	getCurrentMapState$: Observable<IMapSettings> = this.store$.pipe(
@@ -45,6 +45,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 
 	onMapPositionChanges$ = this.getCurrentMapState$.pipe(
 		map((map: IMapSettings) => map?.data?.position?.extentPolygon),
+		debounceTime(1000),
 		distinctUntilChanged(isEqual),
 		filter(Boolean)
 	);
@@ -65,7 +66,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 			layers.forEach(layer => {
 				const key = this.getLayerKey(layer);
 				if (!this.bboxToZeroEntities.has(key)) {
-					this.bboxToZeroEntities.set(key, new Map());
+					this.bboxToZeroEntities.set(key, new ExtentCollector());
 				}
 				this.selectedLayers.push(key);
 			})
@@ -81,7 +82,6 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 
 	@AutoSubscription
 	onMapChange$ = combineLatest([this.selectedLayersChange$, this.onMapPositionChanges$, this.getLayerSearchPolygon$]).pipe(
-		debounceTime(1000),
 		filter(() => !this.isHidden),
 		switchMap(([layers, extentPolygon, searchPolygon]: [ILayer[], ImageryMapExtentPolygon, Polygon]) => {
 			const area = calculateGeometryArea(extentPolygon) * 1e-6;
@@ -142,11 +142,10 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 		const layerKey = this.getLayerKey(layer);
 		return this.getRequest(layer, extent).pipe(
 			tap((data: any) => {
-				const bbox = bboxFromGeoJson(extent);
 				if (data?.total_entities > 0) {
 					this.layersDictionary.get(layerKey).push(feature(extent, data));
 				} else {
-					this.bboxToZeroEntities.get(layerKey).set(bbox, data.total_entities);
+					this.bboxToZeroEntities.get(layerKey).add(extent);
 				}
 			})
 		)
@@ -154,17 +153,8 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 
 	noEntitiesInExtent(extent: ImageryMapExtentPolygon, layer: ILayer) {
 		const layerKey = this.getLayerKey(layer);
-		const saveBbox = this.bboxToZeroEntities.get(layerKey).keys();
-		const extentBbox = bboxFromGeoJson(extent);
-		let isInsideSomeExtent = false;
-		let _saveBbox = saveBbox.next();
-		while (!_saveBbox.done && !isInsideSomeExtent) {
-			isInsideSomeExtent = containsExtent(_saveBbox.value, extent);
-			if (!isInsideSomeExtent) {
-				_saveBbox = saveBbox.next();
-			}
-		}
-		return isInsideSomeExtent;
+		const savedExtent: ExtentCollector = this.bboxToZeroEntities.get(layerKey);
+		return savedExtent.isInside(extent)
 	}
 
 	getLayerKey(layer: ILayer): string {

@@ -126,7 +126,9 @@ export {
 export {
 	BeginLayerCollectionLoadAction,
 	UpdateLayer,
-	UpdateSelectedLayersIds
+	UpdateSelectedLayersIds,
+	AddStaticLayers,
+	LayersActionTypes
 } from './modules/menu-items/layers-manager/actions/layers.actions';
 export {
 	layerPluginType, layerPluginTypeEnum, LayerType

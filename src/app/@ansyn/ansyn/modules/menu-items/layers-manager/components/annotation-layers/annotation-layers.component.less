@@ -7,6 +7,14 @@
 		position: absolute;
 		left: 30px;
 
+		&.disabled {
+			opacity: 0.3;
+
+			* {
+				pointer-events: none;
+			}
+		}
+
 		button.add-layer {
 			cursor: pointer;
 			background: transparent;

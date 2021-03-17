@@ -1,4 +1,5 @@
-<div class="actions">
+<div class="actions" [class.disabled]="annotationLayerExceedLimit" (click)="notifyIfAddLayerNotAllowed()"
+[attr.tooltip-value]="annotationLayerExceedLimit ? config.limitError : null" tooltip-class="bottom-right">
 
 	<button class="add-layer" (click)="openModal(SelectedModalEnum.edit)"
 			[attr.tooltip-value]="'Create new layer' | translate" tooltip-class="bottom right">

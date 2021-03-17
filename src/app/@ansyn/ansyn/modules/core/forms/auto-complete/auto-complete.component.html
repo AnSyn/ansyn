@@ -1,12 +1,10 @@
-<input type="text" [placeholder]="'search layers' | translate"
+<input matAutocomplete type="text" [placeholder]="'search layers' | translate"
 	   (dblclick)="dbClick()"
-	   (blur)="options = []"
 	   [formControl]="control"
 	   [matAutocomplete]="auto"/>
-<mat-autocomplete #auto="matAutocomplete" panelWidth="fit" autoActiveFirstOption>
+<mat-autocomplete #auto="matAutocomplete" panelWidth="fit" autoActiveFirstOption (optionSelected)="onSelect()">
 	<mat-option *ngFor="let option of options"
 				(onSelectionChange)="selectChange.emit(option)"
-				(click)="$event.stopPropagation()"
 				[value]="keyFromText ? option[keyFromText] : option"
 				[innerHTML]="(keyFromText ? option[keyFromText] : option) | bold:control.value">
 	</mat-option>

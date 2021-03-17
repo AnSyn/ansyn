@@ -55,4 +55,7 @@ export class AutoCompleteComponent<T> implements OnInit, OnDestroy {
 		}
 	}
 
+	onSelect() {
+		this.control.setValue('')
+	}
 }

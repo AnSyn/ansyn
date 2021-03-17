@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { SetLayerSelection, SetLayersModal } from '../../actions/layers.actions';
 import { SelectedModalEnum } from '../../reducers/layers-modal';
@@ -8,6 +8,8 @@ import { IEntitiesTableData, ITableRowModel } from '../../../../core/models/IEnt
 import { distinctUntilChanged, map, take, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { isEqual } from 'lodash';
+import { layersConfig } from '../../services/data-layers.service';
+import { ILayersManagerConfig } from '../../models/layers-manager-config';
 
 @Component({
 	selector: 'ansyn-layer-collection',
@@ -40,7 +42,7 @@ export class LayerCollectionComponent {
 		return SelectedModalEnum;
 	}
 
-	constructor(public store$: Store) {
+	constructor(protected store$: Store, @Inject(layersConfig) public config: ILayersManagerConfig) {
 	}
 
 	openModal(type: SelectedModalEnum): void {

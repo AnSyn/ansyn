@@ -44,7 +44,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	);
 
 	onMapPositionChanges$ = this.getCurrentMapState$.pipe(
-		map((map: IMapSettings) => map?.data?.positio?.extentPolygon),
+		map((map: IMapSettings) => map?.data?.position?.extentPolygon),
 		distinctUntilChanged(isEqual),
 		filter(Boolean)
 	);

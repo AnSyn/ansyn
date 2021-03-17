@@ -392,7 +392,7 @@ export class MapAppEffects {
 
 	@Effect()
 	onSetLayoutFourViewsMode$: Observable<any> = this.actions$.pipe(
-		ofType(MapActionTypes.SET_LAYOUT_SUCCESS),
+		ofType(MapActionTypes.SET_LAYOUT),
 		withLatestFrom(this.store$.select(selectFourViewsMode), this.store$.select(selectMapsIds), this.store$.select(selectFourViewsOverlays)),
 		filter(([action, fourViewsMode, mapsIds, fourViewsOverlays]: [SetLayoutSuccessAction, boolean, string[], IFourViews]) => fourViewsMode),
 		mergeMap(([action, fourViewsMode, mapsIds, fourViewsOverlays]: [SetLayoutSuccessAction, boolean, string[], IFourViews]) => {
@@ -422,17 +422,11 @@ export class MapAppEffects {
 		filter(({ payload }: SetFourViewsModeAction) => payload?.active),
 		withLatestFrom(this.store$.select(selectTime)),
 		mergeMap(([{ payload }, criteriaTime]: [SetFourViewsModeAction, ICaseTimeState]) => {
-			const sensors = payload.sensors.length ? payload.sensors : this.overlaysService.getAllSensorsNames(true);
+			const sensors = payload.sensors?.length ? payload.sensors : this.overlaysService.getAllSensorsNames(true);
 			const observableOverlays = this.getFourViewsOverlays(payload.point, criteriaTime, sensors);
 
 			return forkJoin(observableOverlays).pipe(
 				mergeMap((overlaysData: any[]) => {
-					const allOverlays = flatten(overlaysData.map(({data}) => data));
-					if (!allOverlays.length) {
-						const toastText = this.translateService.instant('There are no overlays for the current Criteria');
-						return [new SetToastMessageAction({ toastText })];
-					}
-
 					const fourMapsLayout = 'layout6';
 					const [firstAngleOverlays, secondAngleOverlays, thirdAngleOverlays, fourthAngleOverlays] = overlaysData.map(({ data }) => data);
 					const fourViewsOverlays: IFourViews = {
@@ -441,12 +435,13 @@ export class MapAppEffects {
 						thirdAngleOverlays,
 						fourthAngleOverlays
 					};
+					const fourViewsLayerName = this.translateService.instant('four views coordinate');
 					const fourViewsActions: Action[] = [
+						new SetFourViewsOverlaysAction(fourViewsOverlays),
+						new UpdateLayer({ id: regionLayerId, name: fourViewsLayerName }),
 						new SetOverlaysCriteriaAction({ region: feature(payload.point) }),
-						new SetLayoutAction(fourMapsLayout),
 						new ToggleFooter(true),
-						new UpdateLayer({ id: regionLayerId, name: 'four views coordinate' }),
-						new SetFourViewsOverlaysAction(fourViewsOverlays)
+						new SetLayoutAction(fourMapsLayout)
 					];
 
 					return fourViewsActions;

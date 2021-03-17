@@ -22,7 +22,6 @@ import { selectRegion } from '../../../overlays/reducers/overlays.reducer';
 import { fourViewsConfig, IFourViewsConfig, IOverlay } from '../../../overlays/models/overlay.model';
 import { CaseGeoFilter, ICaseMapState } from '../../../menu-items/cases/models/case.model';
 import { IGeoFilterStatus, selectGeoFilterStatus } from '../../../status-bar/reducers/status-bar.reducer';
-import { OverlaysService } from '../../../overlays/services/overlays.service';
 
 export interface IContextMenuShowPayload {
 	point: Point;
@@ -90,7 +89,10 @@ export class ContextMenuComponent implements OnInit {
 	displayedOverlay$: Observable<IOverlay> = this.mapState$.pipe(
 		map(MapFacadeService.activeMap),
 		filter(Boolean),
-		map((activeMap: ICaseMapState) => activeMap.data.overlay),
+		map((activeMap: ICaseMapState) => {
+			this.displayedOverlay = activeMap.data.overlay;
+			return this.displayedOverlay;
+		}),
 		distinctUntilChanged()
 	);
 
@@ -116,6 +118,7 @@ export class ContextMenuComponent implements OnInit {
 		point: null
 	};
 	point: Point;
+	displayedOverlay: IOverlay;
 
 	private _filteredOverlays: IOverlay[];
 	private _prevfilteredOverlays = [];
@@ -296,7 +299,7 @@ export class ContextMenuComponent implements OnInit {
 
 	isDisabled(subList: string) {
 		if (subList === 'fourViews') {
-			return !this.fourViewsConfig.active;
+			return !this.fourViewsConfig.active || this.displayedOverlay;
 		}
 
 		if (subList === 'angleFilter') {

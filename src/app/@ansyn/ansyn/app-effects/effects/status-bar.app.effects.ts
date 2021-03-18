@@ -140,6 +140,7 @@ export class StatusBarAppEffects {
 			return;
 		}
 
+
 		const angleKey = fourViewsOverlaysKeys.find(key => fourViewsOverlays[key].map((({ id }) => id)).includes(overlayId));
 		return fourViewsOverlays[angleKey];
 	}

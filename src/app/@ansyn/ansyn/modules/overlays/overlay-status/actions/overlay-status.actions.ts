@@ -95,7 +95,7 @@ export class SetAutoImageProcessing implements Action, ILogMessage {
 export class BackToWorldView implements Action, ILogMessage {
 	type = OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW;
 
-	constructor(public payload: { mapId: string }) {
+	constructor(public payload?: { mapId: string }) {
 
 	}
 

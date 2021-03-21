@@ -50,22 +50,23 @@ export class OverlayStatusEffects {
 	backToWorldView$: Observable<any> = this.actions$
 		.pipe(
 			ofType(OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW),
-			filter((action: BackToWorldView) => this.communicatorsService.has(action.payload.mapId)),
-			switchMap(({ payload }: BackToWorldView) => {
-				const communicator = this.communicatorsService.provide(payload.mapId);
+			withLatestFrom(this.store$.select(selectActiveMapId)),
+			switchMap(([{ payload }, activeMapID]: [BackToWorldView, string]) => {
+				const communicator = this.communicatorsService.provide(activeMapID);
+				const newPayload = payload ? payload : new BackToWorldView({ mapId: activeMapID }).payload;
 				const mapData = { ...communicator.mapSettings.data };
 				const position = mapData.position;
 				const disabledMap = communicator.activeMapName === DisabledOpenLayersMapName || communicator.activeMapName === ImageryVideoMapType;
 
 				return from<any>(disabledMap ? communicator.setActiveMap(OpenlayersMapName, position) : communicator.loadInitialMapSource(position))
 					.pipe(
-						map(() => new BackToWorldSuccess(payload)),
+						map(() => new BackToWorldSuccess(newPayload)),
 						catchError((err) => {
 							this.store$.dispatch(new SetToastMessageAction({
 								toastText: 'Failed to load map',
 								showWarningIcon: true
 							}));
-							this.store$.dispatch(new BackToWorldFailed({ mapId: payload.mapId, error: err }));
+							this.store$.dispatch(new BackToWorldFailed({ mapId: newPayload.mapId, error: err }));
 							return EMPTY;
 						})
 					);

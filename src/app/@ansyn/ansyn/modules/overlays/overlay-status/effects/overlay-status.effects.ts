@@ -52,8 +52,8 @@ export class OverlayStatusEffects {
 			ofType(OverlayStatusActionsTypes.BACK_TO_WORLD_VIEW),
 			withLatestFrom(this.store$.select(selectActiveMapId)),
 			switchMap(([{ payload }, activeMapID]: [BackToWorldView, string]) => {
-				const communicator = this.communicatorsService.provide(activeMapID);
-				const newPayload = payload ? payload : new BackToWorldView({ mapId: activeMapID }).payload;
+				const newPayload = payload || { mapId: activeMapID };
+				const communicator = this.communicatorsService.provide(newPayload.mapId);
 				const mapData = { ...communicator.mapSettings.data };
 				const position = mapData.position;
 				const disabledMap = communicator.activeMapName === DisabledOpenLayersMapName || communicator.activeMapName === ImageryVideoMapType;

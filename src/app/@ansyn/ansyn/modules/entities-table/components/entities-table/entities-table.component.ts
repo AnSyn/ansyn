@@ -53,11 +53,6 @@ export class EntitiesTableComponent<T> implements OnInit, OnDestroy {
 	@ContentChild('menuItem', { static: false }) menuItemRef: TemplateRef<any>;
 	show = true;
 
-	constructor(
-		protected store$: Store<any>
-	) {
-	}
-
 	ngOnInit(): void {
 	}
 
@@ -81,7 +76,7 @@ export class EntitiesTableComponent<T> implements OnInit, OnDestroy {
 		row.classList.remove('mouse-enter');
 	}
 
-	menuClick($event: MouseEvent, row: HTMLDivElement) {
+	menuClick($event: MouseEvent) {
 		$event.stopPropagation();
 	}
 }

@@ -1,0 +1,469 @@
+
+{
+  "header": {
+    "reportVersion": 1,
+    "event": "Allocation failed - JavaScript heap out of memory",
+    "trigger": "FatalError",
+    "filename": "report.20210321.111725.18940.0.001.json",
+    "dumpEventTime": "2021-03-21T11:17:25Z",
+    "dumpEventTimeStamp": "1616318245942",
+    "processId": 18940,
+    "cwd": "C:\\Users\\Tzahi\\Projects\\AnsynIo\\ansyn",
+    "commandLine": [
+      "C:/Program Files/nodejs/node.exe",
+      "node_modules/@angular/cli/bin/ng",
+      "test"
+    ],
+    "nodejsVersion": "v12.16.1",
+    "wordSize": 64,
+    "arch": "x64",
+    "platform": "win32",
+    "componentVersions": {
+      "node": "12.16.1",
+      "v8": "7.8.279.23-node.31",
+      "uv": "1.34.0",
+      "zlib": "1.2.11",
+      "brotli": "1.0.7",
+      "ares": "1.15.0",
+      "modules": "72",
+      "nghttp2": "1.40.0",
+      "napi": "5",
+      "llhttp": "2.0.4",
+      "http_parser": "2.9.3",
+      "openssl": "1.1.1d",
+      "cldr": "35.1",
+      "icu": "64.2",
+      "tz": "2019c",
+      "unicode": "12.1"
+    },
+    "release": {
+      "name": "node",
+      "lts": "Erbium",
+      "headersUrl": "https://nodejs.org/download/release/v12.16.1/node-v12.16.1-headers.tar.gz",
+      "sourceUrl": "https://nodejs.org/download/release/v12.16.1/node-v12.16.1.tar.gz",
+      "libUrl": "https://nodejs.org/download/release/v12.16.1/win-x64/node.lib"
+    },
+    "osName": "Windows_NT",
+    "osRelease": "10.0.18363",
+    "osVersion": "Windows 10 Pro",
+    "osMachine": "x86_64",
+    "cpus": [
+      {
+        "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
+        "speed": 1800,
+        "user": 2274937,
+        "nice": 0,
+        "sys": 1987312,
+        "idle": 17111000,
+        "irq": 164265
+      },
+      {
+        "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
+        "speed": 1800,
+        "user": 1550125,
+        "nice": 0,
+        "sys": 1075171,
+        "idle": 18747359,
+        "irq": 16875
+      },
+      {
+        "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
+        "speed": 1800,
+        "user": 2660781,
+        "nice": 0,
+        "sys": 1599890,
+        "idle": 17112000,
+        "irq": 23546
+      },
+      {
+        "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
+        "speed": 1800,
+        "user": 1890859,
+        "nice": 0,
+        "sys": 1266734,
+        "idle": 18215062,
+        "irq": 31000
+      },
+      {
+        "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
+        "speed": 1800,
+        "user": 2609718,
+        "nice": 0,
+        "sys": 1644625,
+        "idle": 17118312,
+        "irq": 34968
+      },
+      {
+        "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
+        "speed": 1800,
+        "user": 2266468,
+        "nice": 0,
+        "sys": 1449343,
+        "idle": 17656843,
+        "irq": 18156
+      },
+      {
+        "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
+        "speed": 1800,
+        "user": 2894062,
+        "nice": 0,
+        "sys": 1543671,
+        "idle": 16934921,
+        "irq": 25671
+      },
+      {
+        "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
+        "speed": 1800,
+        "user": 2218890,
+        "nice": 0,
+        "sys": 1329265,
+        "idle": 17824500,
+        "irq": 15015
+      }
+    ],
+    "networkInterfaces": [
+      {
+        "name": "VirtualBox Host-Only Network",
+        "internal": false,
+        "mac": "0a:00:27:00:00:09",
+        "address": "fe80::c43e:fb5b:11cb:28b1",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 9
+      },
+      {
+        "name": "VirtualBox Host-Only Network",
+        "internal": false,
+        "mac": "0a:00:27:00:00:09",
+        "address": "192.168.56.1",
+        "netmask": "255.255.255.0",
+        "family": "IPv4"
+      },
+      {
+        "name": "Wi-Fi",
+        "internal": false,
+        "mac": "0c:d2:92:fb:8f:a1",
+        "address": "fe80::d42d:64a3:b1ad:2e2c",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 18
+      },
+      {
+        "name": "Wi-Fi",
+        "internal": false,
+        "mac": "0c:d2:92:fb:8f:a1",
+        "address": "192.168.0.104",
+        "netmask": "255.255.255.0",
+        "family": "IPv4"
+      },
+      {
+        "name": "Loopback Pseudo-Interface 1",
+        "internal": true,
+        "mac": "00:00:00:00:00:00",
+        "address": "::1",
+        "netmask": "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff",
+        "family": "IPv6",
+        "scopeid": 0
+      },
+      {
+        "name": "Loopback Pseudo-Interface 1",
+        "internal": true,
+        "mac": "00:00:00:00:00:00",
+        "address": "127.0.0.1",
+        "netmask": "255.0.0.0",
+        "family": "IPv4"
+      },
+      {
+        "name": "vEthernet (Default Switch)",
+        "internal": false,
+        "mac": "00:15:5d:c5:05:5b",
+        "address": "fe80::b0fd:b55d:af93:eabd",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 24
+      },
+      {
+        "name": "vEthernet (Default Switch)",
+        "internal": false,
+        "mac": "00:15:5d:c5:05:5b",
+        "address": "192.168.154.161",
+        "netmask": "255.255.255.240",
+        "family": "IPv4"
+      }
+    ],
+    "host": "DESKTOP-9GKOCJM"
+  },
+  "javascriptStack": {
+    "message": "No stack.",
+    "stack": [
+      "Unavailable."
+    ]
+  },
+  "nativeStack": [
+    {
+      "pc": "0x00007ff7d46219f9",
+      "symbol": "std::basic_ostream<char,std::char_traits<char> >::operator<<+10873"
+    },
+    {
+      "pc": "0x00007ff7d4625e1c",
+      "symbol": "std::basic_ostream<char,std::char_traits<char> >::operator<<+28316"
+    },
+    {
+      "pc": "0x00007ff7d4624dd8",
+      "symbol": "std::basic_ostream<char,std::char_traits<char> >::operator<<+24152"
+    },
+    {
+      "pc": "0x00007ff7d47234cb",
+      "symbol": "v8::base::CPU::has_sse+38363"
+    },
+    {
+      "pc": "0x00007ff7d4f39f4e",
+      "symbol": "v8::Isolate::ReportExternalAllocationLimitReached+94"
+    },
+    {
+      "pc": "0x00007ff7d4f22021",
+      "symbol": "v8::SharedArrayBuffer::Externalize+833"
+    },
+    {
+      "pc": "0x00007ff7d4dee57c",
+      "symbol": "v8::internal::Heap::EphemeronKeyWriteBarrierFromCode+1436"
+    },
+    {
+      "pc": "0x00007ff7d4df97d0",
+      "symbol": "v8::internal::Heap::ProtectUnprotectedMemoryChunks+1312"
+    },
+    {
+      "pc": "0x00007ff7d4df62f4",
+      "symbol": "v8::internal::Heap::PageFlagsAreConsistent+3204"
+    },
+    {
+      "pc": "0x00007ff7d4debb13",
+      "symbol": "v8::internal::Heap::CollectGarbage+1283"
+    },
+    {
+      "pc": "0x00007ff7d4dea184",
+      "symbol": "v8::internal::Heap::AddRetainedMap+2452"
+    },
+    {
+      "pc": "0x00007ff7d4e0b36d",
+      "symbol": "v8::internal::Factory::NewFillerObject+61"
+    },
+    {
+      "pc": "0x00007ff7d4b70adf",
+      "symbol": "v8::internal::interpreter::JumpTableTargetOffsets::iterator::operator=+1295"
+    },
+    {
+      "pc": "0x00007ff7d5384ddd",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+546637"
+    },
+    {
+      "pc": "0x00000097f7570117",
+      "symbol": ""
+    }
+  ],
+  "javascriptHeap": {
+    "totalMemory": 2159079424,
+    "totalCommittedMemory": 2159079424,
+    "usedMemory": 2133708360,
+    "availableMemory": 48691680,
+    "memoryLimit": 2197815296,
+    "heapSpaces": {
+      "read_only_space": {
+        "memorySize": 262144,
+        "committedMemory": 262144,
+        "capacity": 32808,
+        "used": 32808,
+        "available": 0
+      },
+      "new_space": {
+        "memorySize": 8388608,
+        "committedMemory": 8388608,
+        "capacity": 4189824,
+        "used": 153568,
+        "available": 4036256
+      },
+      "old_space": {
+        "memorySize": 1866874880,
+        "committedMemory": 1866874880,
+        "capacity": 1861504544,
+        "used": 1859774816,
+        "available": 1729728
+      },
+      "code_space": {
+        "memorySize": 6197248,
+        "committedMemory": 6197248,
+        "capacity": 5437056,
+        "used": 5437056,
+        "available": 0
+      },
+      "map_space": {
+        "memorySize": 13635584,
+        "committedMemory": 13635584,
+        "capacity": 5154320,
+        "used": 5154320,
+        "available": 0
+      },
+      "large_object_space": {
+        "memorySize": 263098368,
+        "committedMemory": 263098368,
+        "capacity": 262611504,
+        "used": 262611504,
+        "available": 0
+      },
+      "code_large_object_space": {
+        "memorySize": 622592,
+        "committedMemory": 622592,
+        "capacity": 544288,
+        "used": 544288,
+        "available": 0
+      },
+      "new_large_object_space": {
+        "memorySize": 0,
+        "committedMemory": 0,
+        "capacity": 4189824,
+        "used": 0,
+        "available": 4189824
+      }
+    }
+  },
+  "resourceUsage": {
+    "userCpuSeconds": 492.953,
+    "kernelCpuSeconds": 113.062,
+    "cpuConsumptionPercent": 47.6802,
+    "maxRss": 2489970688,
+    "pageFaults": {
+      "IORequired": 2955544,
+      "IONotRequired": 0
+    },
+    "fsActivity": {
+      "reads": 19898,
+      "writes": 861
+    }
+  },
+  "libuv": [
+  ],
+  "environmentVariables": {
+    "ACLOCAL_PATH": "/mingw64/share/aclocal:/usr/share/aclocal",
+    "ALLUSERSPROFILE": "C:\\ProgramData",
+    "ANSYN_ISCOLLAPSIBLE": "true",
+    "APPDATA": "C:\\Users\\Tzahi\\AppData\\Roaming",
+    "BROWSERSLIST_IGNORE_OLD_DATA": "1",
+    "ChocolateyInstall": "C:\\ProgramData\\chocolatey",
+    "ChocolateyLastPathUpdate": "132401830297443697",
+    "COMMONPROGRAMFILES": "C:\\Program Files\\Common Files",
+    "CommonProgramFiles(x86)": "C:\\Program Files (x86)\\Common Files",
+    "CommonProgramW6432": "C:\\Program Files\\Common Files",
+    "COMPUTERNAME": "DESKTOP-9GKOCJM",
+    "COMSPEC": "C:\\WINDOWS\\system32\\cmd.exe",
+    "CONFIG_SITE": "/mingw64/etc/config.site",
+    "DISPLAY": "needs-to-be-defined",
+    "DriverData": "C:\\Windows\\System32\\Drivers\\DriverData",
+    "EXEPATH": "C:\\Program Files\\Git\\bin",
+    "FPS_BROWSER_APP_PROFILE_STRING": "Internet Explorer",
+    "FPS_BROWSER_USER_PROFILE_STRING": "Default",
+    "HOME": "C:\\Users\\Tzahi",
+    "HOMEDRIVE": "C:",
+    "HOMEPATH": "\\Users\\Tzahi",
+    "HOSTNAME": "DESKTOP-9GKOCJM",
+    "IDEA_INITIAL_DIRECTORY": "C:\\Program Files\\JetBrains\\WebStorm 2019.1.3\\bin",
+    "INFOPATH": "/usr/local/info:/usr/share/info:/usr/info:/share/info",
+    "LANG": "en_US.UTF-8",
+    "LOCALAPPDATA": "C:\\Users\\Tzahi\\AppData\\Local",
+    "LOGONSERVER": "\\\\DESKTOP-9GKOCJM",
+    "MANPATH": "/mingw64/local/man:/mingw64/share/man:/usr/local/man:/usr/share/man:/usr/man:/share/man",
+    "MINGW_CHOST": "x86_64-w64-mingw32",
+    "MINGW_PACKAGE_PREFIX": "mingw-w64-x86_64",
+    "MINGW_PREFIX": "/mingw64",
+    "MSYSTEM": "MINGW64",
+    "MSYSTEM_CARCH": "x86_64",
+    "MSYSTEM_CHOST": "x86_64-w64-mingw32",
+    "MSYSTEM_PREFIX": "/mingw64",
+    "NUMBER_OF_PROCESSORS": "8",
+    "OneDrive": "C:\\Users\\Tzahi\\OneDrive",
+    "ORIGINAL_PATH": "C:\\Program Files\\Git\\mingw64\\bin;C:\\Program Files\\Git\\usr\\bin;C:\\Users\\Tzahi\\bin;C:\\Users\\Tzahi\\Projects\\AnsynIo\\ansyn\\node_modules\\.bin;C:\\Python27;C:\\Python27\\Scripts;C:\\Python38\\Scripts;C:\\Python38;C:\\Python\\Python38-32\\Scripts;C:\\Python\\Python38-32;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0;C:\\WINDOWS\\System32\\OpenSSH;C:\\ProgramData\\chocolatey\\bin;C:\\Program Files (x86)\\Yarn\\bin;C:\\Program Files\\Java\\jdk-12.0.2\\bin;C:\\Program Files (x86)\\PDFtk\\bin;C:\\Program Files\\PuTTY;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Docker\\Docker\\resources\\bin;C:\\ProgramData\\DockerDesktop\\version-bin;C:\\Program Files\\nodejs;C:\\Users\\Tzahi\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Program Files\\JetBrains\\WebStorm 2019.1.3\\bin;C:\\Users\\Tzahi\\AppData\\Local\\Yarn\\bin;C:\\ffmpeg-4.2\\bin;C:\\Users\\Tzahi\\AppData\\Roaming\\npm",
+    "ORIGINAL_TEMP": "/tmp",
+    "ORIGINAL_TMP": "/tmp",
+    "OS": "Windows_NT",
+    "PATH": "C:\\Users\\Tzahi\\bin;C:\\Program Files\\Git\\mingw64\\bin;C:\\Program Files\\Git\\usr\\local\\bin;C:\\Program Files\\Git\\usr\\bin;C:\\Program Files\\Git\\usr\\bin;C:\\Program Files\\Git\\mingw64\\bin;C:\\Program Files\\Git\\usr\\bin;C:\\Users\\Tzahi\\bin;C:\\Users\\Tzahi\\Projects\\AnsynIo\\ansyn\\node_modules\\.bin;C:\\Python27;C:\\Python27\\Scripts;C:\\Python38\\Scripts;C:\\Python38;C:\\Python\\Python38-32\\Scripts;C:\\Python\\Python38-32;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0;C:\\WINDOWS\\System32\\OpenSSH;C:\\ProgramData\\chocolatey\\bin;C:\\Program Files (x86)\\Yarn\\bin;C:\\Program Files\\Java\\jdk-12.0.2\\bin;C:\\Program Files (x86)\\PDFtk\\bin;C:\\Program Files\\PuTTY;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Docker\\Docker\\resources\\bin;C:\\ProgramData\\DockerDesktop\\version-bin;C:\\Program Files\\nodejs;C:\\Users\\Tzahi\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Program Files\\JetBrains\\WebStorm 2019.1.3\\bin;C:\\Users\\Tzahi\\AppData\\Local\\Yarn\\bin;C:\\ffmpeg-4.2\\bin;C:\\Users\\Tzahi\\AppData\\Roaming\\npm;C:\\Program Files\\Git\\usr\\bin\\vendor_perl;C:\\Program Files\\Git\\usr\\bin\\core_perl",
+    "PATHEXT": ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.PY;.PYW",
+    "PKG_CONFIG_PATH": "/mingw64/lib/pkgconfig:/mingw64/share/pkgconfig",
+    "PLINK_PROTOCOL": "ssh",
+    "PROCESSOR_ARCHITECTURE": "AMD64",
+    "PROCESSOR_IDENTIFIER": "Intel64 Family 6 Model 142 Stepping 10, GenuineIntel",
+    "PROCESSOR_LEVEL": "6",
+    "PROCESSOR_REVISION": "8e0a",
+    "ProgramData": "C:\\ProgramData",
+    "PROGRAMFILES": "C:\\Program Files",
+    "ProgramFiles(x86)": "C:\\Program Files (x86)",
+    "ProgramW6432": "C:\\Program Files",
+    "PS1": "\\[\\033]0;$TITLEPREFIX:$PWD\\007\\]\\n\\[\\033[32m\\]\\u@\\h \\[\\033[35m\\]$MSYSTEM \\[\\033[33m\\]\\w\\[\\033[36m\\]`__git_ps1`\\[\\033[0m\\]\\n$ ",
+    "PSModulePath": "C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules",
+    "PUBLIC": "C:\\Users\\Public",
+    "PWD": "/c/Users/Tzahi/Projects/AnsynIo/ansyn",
+    "SESSIONNAME": "Console",
+    "SHELL": "C:\\Program Files\\Git\\usr\\bin\\bash.exe",
+    "SHLVL": "1",
+    "SSH_ASKPASS": "/mingw64/libexec/git-core/git-gui--askpass",
+    "SYSTEMDRIVE": "C:",
+    "SYSTEMROOT": "C:\\WINDOWS",
+    "TEMP": "C:\\Users\\Tzahi\\AppData\\Local\\Temp",
+    "TERMINAL_EMULATOR": "JetBrains-JediTerm",
+    "TMP": "C:\\Users\\Tzahi\\AppData\\Local\\Temp",
+    "TMPDIR": "C:\\Users\\Tzahi\\AppData\\Local\\Temp",
+    "USERDOMAIN": "DESKTOP-9GKOCJM",
+    "USERDOMAIN_ROAMINGPROFILE": "DESKTOP-9GKOCJM",
+    "USERNAME": "Tzahi",
+    "USERPROFILE": "C:\\Users\\Tzahi",
+    "VBOX_MSI_INSTALL_PATH": "C:\\Program Files\\Oracle\\VirtualBox\\",
+    "WebStorm": "C:\\Program Files\\JetBrains\\WebStorm 2019.1.3\\bin;",
+    "WINDIR": "C:\\WINDOWS",
+    "_": "/usr/bin/winpty",
+    "__INTELLIJ_COMMAND_HISTFILE__": "C:\\Users\\Tzahi\\.WebStorm2019.3\\config\\terminal\\history\\history-31"
+  },
+  "sharedObjects": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "C:\\WINDOWS\\SYSTEM32\\ntdll.dll",
+    "C:\\WINDOWS\\System32\\KERNEL32.DLL",
+    "C:\\WINDOWS\\System32\\KERNELBASE.dll",
+    "C:\\WINDOWS\\System32\\WS2_32.dll",
+    "C:\\WINDOWS\\System32\\RPCRT4.dll",
+    "C:\\WINDOWS\\System32\\PSAPI.DLL",
+    "C:\\WINDOWS\\SYSTEM32\\dbghelp.dll",
+    "C:\\WINDOWS\\System32\\ADVAPI32.dll",
+    "C:\\WINDOWS\\System32\\msvcrt.dll",
+    "C:\\WINDOWS\\System32\\ucrtbase.dll",
+    "C:\\WINDOWS\\System32\\sechost.dll",
+    "C:\\WINDOWS\\System32\\USER32.dll",
+    "C:\\WINDOWS\\System32\\win32u.dll",
+    "C:\\WINDOWS\\SYSTEM32\\USERENV.dll",
+    "C:\\WINDOWS\\SYSTEM32\\IPHLPAPI.DLL",
+    "C:\\WINDOWS\\System32\\GDI32.dll",
+    "C:\\WINDOWS\\System32\\profapi.dll",
+    "C:\\WINDOWS\\System32\\gdi32full.dll",
+    "C:\\WINDOWS\\System32\\msvcp_win.dll",
+    "C:\\WINDOWS\\System32\\CRYPT32.dll",
+    "C:\\WINDOWS\\System32\\MSASN1.dll",
+    "C:\\WINDOWS\\System32\\bcrypt.dll",
+    "C:\\WINDOWS\\SYSTEM32\\WINMM.dll",
+    "C:\\WINDOWS\\SYSTEM32\\winmmbase.dll",
+    "C:\\WINDOWS\\System32\\cfgmgr32.dll",
+    "C:\\WINDOWS\\System32\\bcryptPrimitives.dll",
+    "C:\\WINDOWS\\System32\\IMM32.DLL",
+    "C:\\WINDOWS\\System32\\powrprof.dll",
+    "C:\\WINDOWS\\System32\\UMPDC.dll",
+    "C:\\WINDOWS\\SYSTEM32\\CRYPTBASE.DLL",
+    "C:\\WINDOWS\\system32\\uxtheme.dll",
+    "C:\\WINDOWS\\System32\\combase.dll",
+    "C:\\WINDOWS\\system32\\mswsock.dll",
+    "C:\\WINDOWS\\System32\\kernel.appcore.dll",
+    "C:\\WINDOWS\\System32\\NSI.dll",
+    "C:\\WINDOWS\\SYSTEM32\\dhcpcsvc6.DLL",
+    "C:\\WINDOWS\\SYSTEM32\\dhcpcsvc.DLL",
+    "C:\\WINDOWS\\SYSTEM32\\DNSAPI.dll",
+    "C:\\WINDOWS\\system32\\napinsp.dll",
+    "C:\\WINDOWS\\system32\\pnrpnsp.dll",
+    "C:\\WINDOWS\\System32\\winrnr.dll",
+    "C:\\WINDOWS\\system32\\NLAapi.dll",
+    "C:\\WINDOWS\\system32\\wshbth.dll"
+  ]
+}

@@ -1,28 +1,22 @@
-import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
-import { EntitiesTableComponent } from './cases-table.component';
-import { Store, StoreModule } from '@ngrx/store';
-import { casesFeatureKey, CasesReducer, ICasesState } from '../../../menu-items/cases/reducers/cases.reducer';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
+import { EntitiesTableComponent } from './entities-table.component';
 
-describe('CasesTableComponent', () => {
+describe('EntitiesTableComponent', () => {
 	let component: EntitiesTableComponent<any>;
 	let fixture: ComponentFixture<EntitiesTableComponent<any>>;
-	let store: Store<ICasesState>;
 
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [EntitiesTableComponent],
 			imports: [
-				StoreModule.forRoot({ [casesFeatureKey]: CasesReducer }),
 				TranslateModule.forRoot()
 			],
 			providers: []
-		})
-			.compileComponents();
+		}).compileComponents();
 	}));
 
-	beforeEach(inject([Store], (_store: Store<ICasesState>) => {
-		spyOn(_store, 'dispatch');
+	beforeEach(() => {
 		fixture = TestBed.createComponent(EntitiesTableComponent);
 		component = fixture.componentInstance;
 		component.entities = {
@@ -30,8 +24,7 @@ describe('CasesTableComponent', () => {
 			ids: []
 		};
 		fixture.detectChanges();
-		store = _store;
-	}));
+	});
 
 	it('should create', () => {
 		expect(component).toBeTruthy();
@@ -46,16 +39,18 @@ describe('CasesTableComponent', () => {
 	});
 
 	it('onMouseEnterCaseRow should calc the top of caseMenu and add "mouse-enter" class', () => {
+		spyOn(component.onRowHover, 'emit');
 		const caseRow = <HTMLDivElement>{
-			offsetTop: 100, classList: jasmine.createSpyObj({
+			classList: jasmine.createSpyObj({
 				add: () => null
-			})
-		};
+			})};
 		component.onMouseEnterRow(caseRow, 'id');
 		expect(caseRow.classList.add).toHaveBeenCalledWith('mouse-enter');
+		expect(component.onRowHover.emit).toHaveBeenCalledWith('id')
 	});
 
 	it('onMouseLeaveCaseRow should remove "mouse-enter" class', () => {
+		spyOn(component.onRowHover, 'emit');
 		const caseRow = <HTMLDivElement>{
 			classList: jasmine.createSpyObj({
 				remove: () => null
@@ -63,18 +58,13 @@ describe('CasesTableComponent', () => {
 		};
 		component.onMouseLeaveRow(caseRow);
 		expect(caseRow.classList.remove).toHaveBeenCalledWith('mouse-enter');
+		expect(component.onRowHover.emit).toHaveBeenCalledWith(undefined);
 	});
 
 	it('caseMenuClick should call stopPropagation() and remove mouse-enter class from caseRow', () => {
 		const $event = jasmine.createSpyObj({ stopPropagation: () => null });
-		const caseRow = <HTMLDivElement>{
-			classList: jasmine.createSpyObj({
-				remove: () => null
-			})
-		};
-		component.menuClick($event, caseRow);
+		component.menuClick($event);
 		expect($event.stopPropagation).toHaveBeenCalled();
-		expect(caseRow.classList.remove).toHaveBeenCalledWith('mouse-enter');
 	});
 
 });

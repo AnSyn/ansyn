@@ -95,10 +95,8 @@ export class AnsynComponent implements OnInit, OnDestroy {
 		private componentVisibility: ComponentVisibilityService,
 		@Inject(COMPONENT_MODE) public componentMode: boolean,
 		@Inject(toolsConfig) public toolsConfigData: IToolsConfig,
-		private ansynApi: AnsynApi,
 		public loggerService: LoggerService
 	) {
-		window['api'] = ansynApi;
 		this.isResultTableShow = this.componentVisibility.get(ComponentVisibilityItems.RESULT_TABLE);
 		this.isTimelineShow = this.componentVisibility.get(ComponentVisibilityItems.TIMELINE);
 		this.isLayersShow = this.componentVisibility.get(ComponentVisibilityItems.LAYERS);

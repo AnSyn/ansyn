@@ -16,7 +16,7 @@ export class ExtentCollector {
 	}
 
 	isInside(extent: Feature<Polygon> | Polygon) {
-		if (this.unionExtent) {
+		if (!this.unionExtent) {
 			return false;
 		}
 		const extentIsInsideUnionExtent = !Boolean(difference(extent, this.unionExtent));

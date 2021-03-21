@@ -27,6 +27,9 @@ import { LoggerService } from '../../../../core/services/logger.service';
 import { isEqual } from 'lodash';
 import { AutoSubscription } from 'auto-subscriptions';
 import { forkJoinSafe } from '../../../../core/utils/rxjs/observables/fork-join-safe';
+import { layersConfig } from '../../../../menu-items/layers-manager/services/data-layers.service';
+import { ILayersManagerConfig } from '../../../../menu-items/layers-manager/models/layers-manager-config';
+import { Inject } from '@angular/core';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -89,7 +92,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 			layers.forEach(layer => {
 				const layerKey = this.getLayerKey(layer);
 				this.layersDictionary.set(layerKey, []);
-				const splitExtents = splitExtent(searchPolygon || extentPolygon, 2).filter(extent => !this.noEntitiesInExtent(extent, layer));
+				const splitExtents = splitExtent(searchPolygon || extentPolygon, this.config.splitExtentDeep).filter(extent => !this.noEntitiesInExtent(extent, layer));
 				splitExtents.forEach(extent => {
 					if (area < 1000) {
 						layersObs.push(this.getEntitiesForLayer(layer, extent))
@@ -108,7 +111,8 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 
 	constructor(protected store$: Store<any>,
 				protected http: HttpClient,
-				protected loggerService: LoggerService) {
+				protected loggerService: LoggerService,
+				@Inject(layersConfig) protected config: ILayersManagerConfig) {
 		super({
 			initial: {
 				'fill-opacity': 0

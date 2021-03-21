@@ -1,6 +1,4 @@
 import { BoldPipe } from './bold.pipe';
-import { filtersConfig } from '../../../filters/services/filters.service';
-import { ShowMorePipe } from '../../../filters/pipes/show-more.pipe';
 import { TestBed, inject } from '@angular/core/testing';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -26,4 +24,17 @@ describe('BoldPipe', () => {
 	it('create an instance', () => {
 		expect(boldPipe).toBeTruthy();
 	});
+
+	it('will return bold text', () => {
+		const option = 'bold';
+		const input = 'ol';
+		const output = 'b<strong>ol</strong>d';
+		expect(boldPipe.transform(option, input)).toEqual(output);
+	});
+
+	it('will return the same text', () => {
+		const option = 'bold';
+		const input = 'e';
+		expect(boldPipe.transform(option, input)).toEqual(option);
+	})
 });

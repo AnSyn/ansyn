@@ -38,7 +38,7 @@ import {
 	GetProvidersMapsService,
 	ImageryLayerProperties,
 	ImageryMapExtentPolygon,
-	IMapSettingsData, getAngleDegreeBetweenPoints
+	IMapSettingsData
 } from '@ansyn/imagery';
 import {
 	catchError,
@@ -123,6 +123,7 @@ import { IFetchParams } from '../../modules/overlays/models/base-overlay-source-
 import { regionLayerDefaultName, regionLayerId } from '../../modules/menu-items/layers-manager/models/layers.model';
 import { UpdateLayer } from '../../modules/menu-items/layers-manager/actions/layers.actions';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
+import { UnSelectMenuItemAction } from '@ansyn/menu';
 
 @Injectable()
 export class MapAppEffects {
@@ -441,6 +442,7 @@ export class MapAppEffects {
 						new UpdateLayer({ id: regionLayerId, name: fourViewsLayerName }),
 						new SetOverlaysCriteriaAction({ region: feature(payload.point) }),
 						new ToggleFooter(true),
+						new UnSelectMenuItemAction(),
 						new SetLayoutAction(fourMapsLayout)
 					];
 

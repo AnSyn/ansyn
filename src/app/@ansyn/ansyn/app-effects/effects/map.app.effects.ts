@@ -334,7 +334,7 @@ export class MapAppEffects {
 		ofType(MapActionTypes.POSITION_CHANGED, MapActionTypes.SET_ACTIVE_MAP_ID, StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS, StatusBarActionsTypes.SEARCH_ACTION),
 		debounceTime(this.screenViewConfig.debounceTime),
 		concatMap((action: Action) => of(action).pipe(
-			withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus), this.store$.select(selectRegion), this.store$.select(selectRegion),
+			withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus), this.store$.select(selectRegion), this.store$.select(selectFourViewsMode),
 				(action: Action, mapList, activeMapId, geoFilterStatus, { properties }, isFourViewsMode): [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], number, number, IOverlay, boolean, boolean] => {
 					const { position, overlay }: IMapSettingsData = mapList[activeMapId].data;
 					const { center, zoom } = position.projectedState;

@@ -21,7 +21,7 @@ export class ComboBoxComponent implements ControlValueAccessor {
 	@ViewChild(ComboBoxTriggerComponent) trigger: ComboBoxTriggerComponent;
 	@ViewChild('optionsContainer') optionsContainer: ElementRef;
 	@Input() icon: string;
-	disabled: boolean;
+	@Input() disabled: boolean;
 	selected: any;
 	@Input() comboBoxToolTipDescription: string;
 	@Input() direction: 'top' | 'bottom' = 'bottom';

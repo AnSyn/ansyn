@@ -38,7 +38,7 @@ import { AreaToCredentialsService } from '../../core/services/credentials/area-t
 import { CredentialsService, ICredentialsResponse } from '../../core/services/credentials/credentials.service';
 import { getMenuSessionData, SetBadgeAction } from '@ansyn/menu';
 import { Update } from '@ngrx/entity';
-import { selectWasWelcomeNotificationShown, SetToastMessageAction } from '@ansyn/map-facade';
+import { selectFourViewsMode, selectWasWelcomeNotificationShown, SetToastMessageAction } from '@ansyn/map-facade';
 import { OpenAdvancedSearchFromOutsideAction, ToggleAdvancedSearchAction, ToggleSimpleSearchAction } from '../../status-bar/actions/status-bar.actions';
 
 @Injectable()
@@ -125,8 +125,9 @@ export class OverlaysEffects {
 	@Effect()
 	loadOverlays$: Observable<{} | LoadOverlaysSuccessAction> = this.actions$.pipe(
 		ofType<LoadOverlaysAction>(OverlaysActionTypes.LOAD_OVERLAYS),
-		withLatestFrom(this.store$.select(selectIsFirstSearchRun)),
-		switchMap(([action, isFirstSearch]: [LoadOverlaysAction, boolean]) => this.requestOverlays(action.payload, isFirstSearch))
+		withLatestFrom(this.store$.select(selectIsFirstSearchRun), this.store$.select(selectFourViewsMode)),
+		filter(([action, isFirstSearch, isFourViewsMode]: [LoadOverlaysAction, boolean, boolean]) => !isFourViewsMode),
+		switchMap(([action, isFirstSearch, isFourViewsMode]: [LoadOverlaysAction, boolean, boolean]) => this.requestOverlays(action.payload, isFirstSearch))
 	);
 
 	@Effect()

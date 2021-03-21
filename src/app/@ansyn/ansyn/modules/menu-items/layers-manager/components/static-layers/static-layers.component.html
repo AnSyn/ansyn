@@ -8,7 +8,6 @@
 	[menu]="menu">
 	<ng-template let-id="id" #menu>
 		<ansyn-layer-menu
-			[disabledRemove]="(disabledRemove | async) || (layers$ | async).entities[id].isNonEditable"
 			[selected]="(selectedLayersIds$ | async).includes(id)"
 			(menuClick)="click($event)"
 			[toggleActive]="true"

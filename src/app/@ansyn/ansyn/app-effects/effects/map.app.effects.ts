@@ -378,14 +378,16 @@ export class MapAppEffects {
 	onDisableFourViewsMode$ = this.actions$.pipe(
 		ofType(MapActionTypes.SET_FOUR_VIEWS_MODE),
 		filter(({ payload }: SetFourViewsModeAction) => !payload?.active),
-		mergeMap(() => {
+		withLatestFrom(this.store$.select(selectActiveMapId)),
+		mergeMap(([payload, activeMapID]: [any, string]) => {
 			const oneMapLayout = 'layout1';
 			const regionLayerName = this.translateService.instant(regionLayerDefaultName);
 			return [
 				new SetLayoutAction(oneMapLayout),
 				new ToggleFooter(false),
 				new SetFourViewsOverlaysAction({}),
-				new UpdateLayer({ id: regionLayerId, name: regionLayerName })
+				new UpdateLayer({ id: regionLayerId, name: regionLayerName }),
+				new BackToWorldView({ mapId: activeMapID })
 			];
 		})
 	);

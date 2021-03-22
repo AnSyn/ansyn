@@ -555,12 +555,12 @@ export class MapAppEffects {
 			}
 		};
 
-		const queryOverlays = [this.sourceProvider.fetch(searchParams)];
+		const queryOverlays = [];
 
-		for (let i = 0; i < 3; i++) {
+		for (let i = 0; i < 4; i++) {
+			queryOverlays.push(this.sourceProvider.fetch(searchParams));
 			searchParams.angleParams.firstAngle += 90;
 			searchParams.angleParams.secondAngle += 90;
-			queryOverlays.push(this.sourceProvider.fetch(searchParams));
 		}
 
 		return queryOverlays;

@@ -19,7 +19,6 @@ export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponen
 	overlay: any;
 	isPinned: boolean;
 	isFourViewsMode: boolean;
-	activeMapID: string;
 
 	@AutoSubscription
 	isFourViewsMode$ = this.store$.select(selectFourViewsMode).pipe(

@@ -6,7 +6,7 @@ import { IAdvancedSearchParameter } from '../../status-bar/models/statusBar-conf
 export const fourViewsConfig = 'fourViewsConfig';
 
 export interface IFourViewsConfig {
-	sensorTypes: string[];
+	sensors: string[];
 	storageLimitPerAngle: number;
 	active: boolean;
 }

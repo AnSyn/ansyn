@@ -1,5 +1,5 @@
 import { Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { selectFooterCollapse, ToggleFooter } from '@ansyn/map-facade';
+import { selectFooterCollapse, selectFourViewsMode, ToggleFooter } from '@ansyn/map-facade';
 import { ContainerChangedTriggerAction, IMenuState } from '@ansyn/menu';
 import { Store } from '@ngrx/store';
 import { CoreConfig } from '../../modules/core/models/core.config';
@@ -21,10 +21,16 @@ export class AnsynFooterComponent implements OnInit, OnDestroy {
 	@ViewChild('footerWrapper') wrapperElement: ElementRef;
 
 	collapse: boolean;
+	fourViewsMode: boolean;
 
 	@AutoSubscription
 	collapse$ = this.store.select(selectFooterCollapse).pipe(
 		tap(this.startToggleCollapse.bind(this))
+	);
+
+	@AutoSubscription
+	fourViewsMode$ = this.store.select(selectFourViewsMode).pipe(
+		tap(fourViewsMode => this.fourViewsMode = fourViewsMode)
 	);
 
 	constructor(

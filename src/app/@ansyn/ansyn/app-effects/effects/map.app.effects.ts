@@ -15,7 +15,7 @@ import {
 	mapStateSelector,
 	PositionChangedAction,
 	selectActiveMapId,
-	selectFourViewsMode,
+	selectFourViewsMode, selectLayout,
 	selectMaps,
 	selectMapsIds,
 	selectOverlayOfActiveMap,
@@ -436,8 +436,8 @@ export class MapAppEffects {
 	onFourViewsMode$ = this.actions$.pipe(
 		ofType(MapActionTypes.SET_FOUR_VIEWS_MODE),
 		filter(({ payload }: SetFourViewsModeAction) => payload?.active),
-		withLatestFrom(this.store$.select(selectTime)),
-		mergeMap(([{ payload }, criteriaTime]: [SetFourViewsModeAction, ICaseTimeState]) => {
+		withLatestFrom(this.store$.select(selectTime), this.store$.select(selectLayout)),
+		mergeMap(([{ payload }, criteriaTime, layout]: [SetFourViewsModeAction, ICaseTimeState, string]) => {
 			const sensors = payload.sensors?.length ? payload.sensors : this.overlaysService.getAllSensorsNames(true);
 			const observableOverlays = this.getFourViewsOverlays(payload.point, criteriaTime, sensors);
 
@@ -458,9 +458,14 @@ export class MapAppEffects {
 						new SetOverlaysCriteriaAction({ region: feature(payload.point) }),
 						new UpdateGeoFilterStatus({ active: false, type: CaseGeoFilter.PinPoint }),
 						new ToggleFooter(true),
-						new UnSelectMenuItemAction(),
-						new SetLayoutAction(fourMapsLayout)
+						new UnSelectMenuItemAction()
 					];
+
+					if (layout === fourMapsLayout) {
+						fourViewsActions.push(new SetLayoutSuccessAction());
+					} else {
+						fourViewsActions.push(new SetLayoutAction(fourMapsLayout));
+					}
 
 					return fourViewsActions;
 				})

@@ -54,9 +54,11 @@ export class BackToBaseMapComponent implements OnInit, OnDestroy, IEntryComponen
 
 	backToWorldView() {
 		if (this.isFourViewsMode) {
-			this.store$.dispatch(new SetFourViewsModeAction({ active: false }))
+			this.store$.dispatch(new SetFourViewsModeAction({ active: false }));
+
+		} else {
+			this.store$.dispatch(new BackToWorldView({ mapId: this.mapId }));
 		}
 
-		this.store$.dispatch(new BackToWorldView({ mapId: this.mapId }));
 	}
 }

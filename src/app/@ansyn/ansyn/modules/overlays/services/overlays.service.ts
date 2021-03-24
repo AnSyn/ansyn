@@ -130,15 +130,15 @@ export class OverlaysService {
 	}
 
 	getAllSensorsNames(isFourViewsModeActive?: boolean): any[] {
+		if (isFourViewsModeActive) {
+			return this.fourViewsConfig.sensors;
+		}
+
 		let sensors: any[] = [];
 		const sensorNamesByGroup = this.multipleOverlays.sensorNamesByGroup;
 		if (sensorNamesByGroup) {
 			const typesNames = Object.keys(sensorNamesByGroup);
-			typesNames.forEach(type => {
-				if (!isFourViewsModeActive || this.fourViewsConfig.sensorTypes.includes(type)) {
-					sensors = sensors.concat(sensorNamesByGroup[type]);
-				}
-			});
+			typesNames.forEach(type => sensors = sensors.concat(sensorNamesByGroup[type]));
 		}
 		return flattenDeep(sensors);
 	}

@@ -135,7 +135,6 @@ import { IFetchParams } from '../../modules/overlays/models/base-overlay-source-
 import { regionLayerDefaultName, regionLayerId } from '../../modules/menu-items/layers-manager/models/layers.model';
 import { UpdateLayer } from '../../modules/menu-items/layers-manager/actions/layers.actions';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
-import { UnSelectMenuItemAction } from '@ansyn/menu';
 
 @Injectable()
 export class MapAppEffects {
@@ -347,18 +346,18 @@ export class MapAppEffects {
 		ofType(MapActionTypes.POSITION_CHANGED, MapActionTypes.SET_ACTIVE_MAP_ID, StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS, StatusBarActionsTypes.SEARCH_ACTION),
 		debounceTime(this.screenViewConfig.debounceTime),
 		concatMap((action: Action) => of(action).pipe(
-			withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus), this.store$.select(selectRegion), this.store$.select(selectFourViewsMode),
-				(action: Action, mapList, activeMapId, geoFilterStatus, { properties }, isFourViewsMode): [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], number, number, IOverlay, boolean, boolean] => {
+			withLatestFrom(this.store$.select(selectMaps), this.store$.select(selectActiveMapId), this.store$.select(selectGeoFilterStatus), this.store$.select(selectRegion),
+				(action: Action, mapList, activeMapId, geoFilterStatus, { properties }): [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], number, number, IOverlay, boolean] => {
 					const { position, overlay }: IMapSettingsData = mapList[activeMapId].data;
 					const { center, zoom } = position.projectedState;
 
-					return [position.extentPolygon, geoFilterStatus, center, properties.center, zoom, properties.zoom, overlay, action.type === StatusBarActionsTypes.SEARCH_ACTION || properties.forceScreenViewSearch, isFourViewsMode];
+					return [position.extentPolygon, geoFilterStatus, center, properties.center, zoom, properties.zoom, overlay, action.type === StatusBarActionsTypes.SEARCH_ACTION || properties.forceScreenViewSearch];
 				})
 		)),
-		filter(([extentPolygon, geoFilterStatus, newCenter, oldCenter, newZoom, oldZoom, overlay, forceScreenViewSearch, isFourViewsMode]: [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], number, number, IOverlay, boolean, boolean]) => {
-			return geoFilterStatus.type === CaseGeoFilter.ScreenView && !Boolean(overlay) && (forceScreenViewSearch || (!isEqual(oldCenter, newCenter) || !isEqual(oldZoom, newZoom))) && !isFourViewsMode;
+		filter(([extentPolygon, geoFilterStatus, newCenter, oldCenter, newZoom, oldZoom, overlay, forceScreenViewSearch]: [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], number, number, IOverlay, boolean]) => {
+			return geoFilterStatus.type === CaseGeoFilter.ScreenView && !Boolean(overlay) && (forceScreenViewSearch || (!isEqual(oldCenter, newCenter) || !isEqual(oldZoom, newZoom)));
 		}),
-		concatMap(([extentPolygon, geoFilterStatus, newCenter, oldCenter, newZoom, oldZoom, overlay, isFromSearch, isFourViewsMode]: [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], number, number, IOverlay, boolean, boolean]) => {
+		concatMap(([extentPolygon, geoFilterStatus, newCenter, oldCenter, newZoom, oldZoom, overlay, isFromSearch]: [ImageryMapExtentPolygon, IGeoFilterStatus, [number, number, number], [number, number], number, number, IOverlay, boolean]) => {
 			const actions: Action[] = [];
 
 			const extentWidth = calculatePolygonWidth(extentPolygon);
@@ -391,16 +390,14 @@ export class MapAppEffects {
 	onDisableFourViewsMode$ = this.actions$.pipe(
 		ofType(MapActionTypes.SET_FOUR_VIEWS_MODE),
 		filter(({ payload }: SetFourViewsModeAction) => !payload?.active),
-		withLatestFrom(this.store$.select(selectActiveMapId)),
-		mergeMap(([payload, activeMapID]: [SetFourViewsModeAction, string]) => {
+		mergeMap(() => {
 			const oneMapLayout = 'layout1';
 			const regionLayerName = this.translateService.instant(regionLayerDefaultName);
 			return [
 				new SetLayoutAction(oneMapLayout),
 				new ToggleFooter(false),
 				new SetFourViewsOverlaysAction({}),
-				new UpdateLayer({ id: regionLayerId, name: regionLayerName }),
-				new BackToWorldView({ mapId: activeMapID })
+				new UpdateLayer({ id: regionLayerId, name: regionLayerName })
 			];
 		})
 	);
@@ -458,7 +455,6 @@ export class MapAppEffects {
 						new SetOverlaysCriteriaAction({ region: feature(payload.point) }),
 						new ToggleFooter(true),
 						new UpdateGeoFilterStatus({ active: false, type: CaseGeoFilter.PinPoint }),
-						new UnSelectMenuItemAction(),
 						new SetLayoutAction(fourMapsLayout)
 					];
 
@@ -571,12 +567,12 @@ export class MapAppEffects {
 			}
 		};
 
-		const queryOverlays = [];
+		const queryOverlays = [this.sourceProvider.fetch(searchParams)];
 
-		for (let i = 0; i < 4; i++) {
-			queryOverlays.push(this.sourceProvider.fetch(searchParams));
+		for (let i = 0; i < 3; i++) {
 			searchParams.angleParams.firstAngle += 90;
 			searchParams.angleParams.secondAngle += 90;
+			queryOverlays.push(this.sourceProvider.fetch(searchParams));
 		}
 
 		return queryOverlays;

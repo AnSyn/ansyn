@@ -407,8 +407,7 @@ export class MapAppEffects {
 
 	@Effect()
 	onSetLayoutFourViewsMode$: Observable<any> = this.actions$.pipe(
-		ofType(MapActionTypes.SET_LAYOUT),
-		debounceTime(100),
+		ofType(MapActionTypes.SET_LAYOUT_SUCCESS),
 		withLatestFrom(this.store$.select(selectFourViewsMode), this.store$.select(selectMapsIds), this.store$.select(selectFourViewsOverlays)),
 		filter(([action, fourViewsMode, mapsIds, fourViewsOverlays]: [SetLayoutSuccessAction, boolean, string[], IFourViews]) => fourViewsMode),
 		mergeMap(([action, fourViewsMode, mapsIds, fourViewsOverlays]: [SetLayoutSuccessAction, boolean, string[], IFourViews]) => {

@@ -15,30 +15,37 @@ import {
 	mapStateSelector,
 	PositionChangedAction,
 	selectActiveMapId,
+	selectFourViewsMode,
 	selectMaps,
+	selectMapsIds,
 	selectOverlayOfActiveMap,
 	selectOverlaysWithMapIds,
 	SetActiveCenterTriggerAction,
+	SetFourViewsModeAction,
 	SetIsLoadingAcion,
+	SetLayoutAction,
+	SetLayoutSuccessAction,
 	SetMapSearchBoxTriggerAction,
 	SetToastMessageAction,
 	SynchronizeMapsAction,
-	ToggleMapLayersAction, UpdateMapAction,
-	ToggleFooter, SetFourViewsModeAction, SetLayoutAction, selectFourViewsMode, selectMapsIds, SetLayoutSuccessAction
+	ToggleFooter,
+	ToggleMapLayersAction,
+	UpdateMapAction
 } from '@ansyn/map-facade';
 import {
 	BaseMapSourceProvider,
 	bboxFromGeoJson,
-	IBaseImageryLayer,
-	ImageryCommunicatorService,
-	IImageryMapPosition,
-	IMapSettings,
-	polygonFromBBOX,
-	polygonsDontIntersect,
+	calculatePolygonWidth,
 	GetProvidersMapsService,
+	IBaseImageryLayer,
+	IImageryMapPosition,
+	ImageryCommunicatorService,
 	ImageryLayerProperties,
 	ImageryMapExtentPolygon,
-	IMapSettingsData, getAngleDegreeBetweenPoints
+	IMapSettings,
+	IMapSettingsData,
+	polygonFromBBOX,
+	polygonsDontIntersect
 } from '@ansyn/imagery';
 import {
 	catchError,
@@ -59,58 +66,63 @@ import { endTimingLog, startTimingLog } from '../../modules/core/utils/logs/time
 import { isFullOverlay } from '../../modules/core/utils/overlays';
 import { CaseGeoFilter, ICaseMapState, ICaseTimeState } from '../../modules/menu-items/cases/models/case.model';
 import {
-	MarkUpClass, selectFourViewsOverlays,
-	selectRegion, selectTime
+	MarkUpClass,
+	selectFourViewsOverlays,
+	selectRegion,
+	selectTime
 } from '../../modules/overlays/reducers/overlays.reducer';
 import { IAppState } from '../app.effects.module';
 import { Dictionary } from '@ngrx/entity';
 import {
 	AddMeasureAction,
-	CreateMeasureDataAction, RemoveMeasureAction, RemoveMeasureDataAction,
+	CreateMeasureDataAction,
+	RemoveMeasureAction,
+	RemoveMeasureDataAction,
 	SetActiveCenter,
 	SetMapGeoEnabledModeToolsActionStore,
-	SetMapSearchBox, ToolsActionsTypes, UpdateMeasureDataOptionsAction, UpdateMeasureLabelAction
+	SetMapSearchBox,
+	ToolsActionsTypes,
+	UpdateMeasureDataOptionsAction,
+	UpdateMeasureLabelAction
 } from '../../modules/status-bar/components/tools/actions/tools.actions';
 import {
-	DisplayMultipleOverlaysFromStoreAction,
 	DisplayOverlayAction,
-	DisplayOverlayFailedAction, DisplayOverlayFromStoreAction,
+	DisplayOverlayFailedAction,
+	DisplayOverlayFromStoreAction,
 	DisplayOverlaySuccessAction,
 	OverlaysActionTypes,
 	RequestOverlayByIDFromBackendAction,
 	SetFourViewsOverlaysAction,
 	SetMarkUp,
 	SetOverlaysCriteriaAction,
-	SetOverlaysStatusMessageAction, UpdateOverlay
+	SetOverlaysStatusMessageAction,
+	UpdateOverlay
 } from '../../modules/overlays/actions/overlays.actions';
 import {
-	GeoRegisteration, IFourViews,
-	IFourViewsConfig,
 	fourViewsConfig,
+	GeoRegisteration,
+	IFourViews,
+	IFourViewsConfig,
 	IOverlay
 } from '../../modules/overlays/models/overlay.model';
 import {
 	BackToWorldView,
 	OverlayStatusActionsTypes
 } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
-import { isEqual, cloneDeep, flatten } from 'lodash';
+import { cloneDeep, isEqual } from 'lodash';
 import { selectGeoRegisteredOptionsEnabled } from '../../modules/status-bar/components/tools/reducers/tools.reducer';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import {
 	IOverlayStatusConfig,
 	overlayStatusConfig
 } from '../../modules/overlays/overlay-status/config/overlay-status-config';
-import {
-	IGeoFilterStatus,
-	selectGeoFilterStatus
-} from '../../modules/status-bar/reducers/status-bar.reducer';
+import { IGeoFilterStatus, selectGeoFilterStatus } from '../../modules/status-bar/reducers/status-bar.reducer';
 import { StatusBarActionsTypes, UpdateGeoFilterStatus } from '../../modules/status-bar/actions/status-bar.actions';
 import {
 	IScreenViewConfig,
 	ScreenViewConfig
 } from '../../modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
 import { feature } from '@turf/turf';
-import { calculatePolygonWidth } from '@ansyn/imagery';
 import { CasesActionTypes } from '../../modules/menu-items/cases/actions/cases.actions';
 import { casesConfig } from '../../modules/menu-items/cases/services/cases.service';
 import { createNewMeasureData } from '../../modules/status-bar/components/tools/models/tools.model';
@@ -392,7 +404,8 @@ export class MapAppEffects {
 
 	@Effect()
 	onSetLayoutFourViewsMode$: Observable<any> = this.actions$.pipe(
-		ofType(MapActionTypes.SET_LAYOUT_SUCCESS),
+		ofType(MapActionTypes.SET_LAYOUT),
+		debounceTime(100),
 		withLatestFrom(this.store$.select(selectFourViewsMode), this.store$.select(selectMapsIds), this.store$.select(selectFourViewsOverlays)),
 		filter(([action, fourViewsMode, mapsIds, fourViewsOverlays]: [SetLayoutSuccessAction, boolean, string[], IFourViews]) => fourViewsMode),
 		mergeMap(([action, fourViewsMode, mapsIds, fourViewsOverlays]: [SetLayoutSuccessAction, boolean, string[], IFourViews]) => {
@@ -440,6 +453,7 @@ export class MapAppEffects {
 						new SetFourViewsOverlaysAction(fourViewsOverlays),
 						new UpdateLayer({ id: regionLayerId, name: fourViewsLayerName }),
 						new SetOverlaysCriteriaAction({ region: feature(payload.point) }),
+						new UpdateGeoFilterStatus({ active: false, type: CaseGeoFilter.PinPoint }),
 						new ToggleFooter(true),
 						new SetLayoutAction(fourMapsLayout)
 					];

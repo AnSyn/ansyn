@@ -418,10 +418,9 @@ export class MapAppEffects {
 				const mapId = mapsIds[i];
 				const currentMapOverlays = fourViewsOverlays[fourViewsOverlaysKeys[i]];
 
-				// Most recent overlay
-				const overlay = currentMapOverlays[currentMapOverlays.length - 1];
-				if (overlay) {
-					actions.push(new DisplayOverlayAction({ overlay, mapId }));
+				const mostRecentOverlay = currentMapOverlays[currentMapOverlays.length - 1];
+				if (mostRecentOverlay) {
+					actions.push(new DisplayOverlayAction({ overlay: mostRecentOverlay, mapId }));
 				} else {
 					const toastText = this.translateService.instant('Some angles are missing');
 					actions.push (new SetToastMessageAction({ toastText }))

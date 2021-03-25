@@ -454,7 +454,7 @@ export class MapAppEffects {
 					const fourViewsActions: Action[] = [
 						new SetFourViewsOverlaysAction(fourViewsOverlays),
 						new UpdateLayer({ id: regionLayerId, name: fourViewsLayerName }),
-						new SetOverlaysCriteriaAction({ region: feature(payload.point) }),
+						new SetOverlaysCriteriaAction({ region: feature(payload.point), time: criteriaTime }),
 						new UpdateGeoFilterStatus({ active: false, type: CaseGeoFilter.PinPoint }),
 						new ToggleFooter(true),
 						new UnSelectMenuItemAction()

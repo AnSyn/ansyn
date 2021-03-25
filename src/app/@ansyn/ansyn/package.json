@@ -1,23 +1,25 @@
 {
 	"name": "@ansyn/ansyn",
-	"version": "4.1.1",
+	"version": "5.0.0",
 	"peerDependencies": {
 		"@ngrx/store": "9.x",
 		"@ngrx/effects": "9.x",
-		"@angular/common": "9.x || 10.x",
-		"@angular/core": "9.x || 10.x",
+		"@angular/common": "9.x || 10.x || 11.x",
+		"@angular/core": "9.x || 10.x || 11.x",
 		"@angular/cdk": "9.x || 10.x",
 		"@angular/material": "9.x || 10.x",
 		"rxjs": "6.x"
 	},
 	"dependencies": {
-		"@ansyn/imagery": "4.1.1",
-		"@ansyn/map-facade": "4.1.1",
-		"@ansyn/menu": "4.1.1",
-		"@ansyn/ol": "4.1.1",
-		"@ansyn/imagery-cesium": "4.1.1",
-		"@ansyn/imagery-video": "4.1.1",
+		"@angular-slider/ngx-slider": "^2.0.3",
+		"@ansyn/imagery": "5.0.0",
+		"@ansyn/map-facade": "5.0.0",
+		"@ansyn/menu": "5.0.0",
+		"@ansyn/ol": "5.0.0",
+		"@ansyn/imagery-cesium": "5.0.0",
+		"@ansyn/imagery-video": "5.0.0",
 		"@ansyn/event-drops": "^0.2.8-1.9",
+		"angular2-uuid": "^1.1.1",
 		"@turf/turf": "^6.3.0",
 		"geojson": "^0.5.0",
 		"lodash": "^4.17.15",
@@ -34,8 +36,9 @@
 		"lodash-decorators": "^4.5.0",
 		"auto-subscriptions": "^2.0.5",
 		"@ngx-translate/core": "^12.1.2",
-		"ngx-treeview": "^6.0.2",
-		"d3": "^5.9.2"
+		"d3": "^5.9.2",
+		"ngx-color-picker": "^9.1.0",
+		"ol": "^6.4.3"
 	},
 	"license": "MIT"
 }

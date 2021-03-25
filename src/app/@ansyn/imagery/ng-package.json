@@ -4,7 +4,10 @@
   "whitelistedNonPeerDependencies": [
     "auto-subscriptions",
     "@turf/turf",
-    "tslib"
+    "tslib",
+    "geojson",
+    "lodash",
+    "@ngx-translate/core"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

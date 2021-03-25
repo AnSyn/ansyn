@@ -109,7 +109,7 @@ import {
 	BackToWorldView,
 	OverlayStatusActionsTypes
 } from '../../modules/overlays/overlay-status/actions/overlay-status.actions';
-import { cloneDeep, isEqual } from 'lodash';
+import { cloneDeep, isEqual, clone } from 'lodash';
 import { selectGeoRegisteredOptionsEnabled } from '../../modules/status-bar/components/tools/reducers/tools.reducer';
 import { ImageryVideoMapType } from '@ansyn/imagery-video';
 import {
@@ -437,6 +437,7 @@ export class MapAppEffects {
 		withLatestFrom(this.store$.select(selectTime), this.store$.select(selectLayout)),
 		mergeMap(([{ payload }, criteriaTime, layout]: [SetFourViewsModeAction, ICaseTimeState, string]) => {
 			const sensors = payload.sensors?.length ? payload.sensors : this.overlaysService.getAllSensorsNames(true);
+			criteriaTime = this.getFourViewsQueryTime(clone(criteriaTime));
 			const observableOverlays = this.getFourViewsOverlays(payload.point, criteriaTime, sensors);
 
 			return forkJoin(observableOverlays).pipe(
@@ -554,6 +555,16 @@ export class MapAppEffects {
 				@Inject(ScreenViewConfig) public screenViewConfig: IScreenViewConfig
 	) {
 		this.lastOverlayIds = new Map();
+	}
+
+	getFourViewsQueryTime(criteriaTime: ICaseTimeState): ICaseTimeState {
+		const currentYear = (new Date()).getFullYear();
+		const criteriaFromYear = criteriaTime.from.getFullYear();
+		if (currentYear - criteriaFromYear <  1) {
+			criteriaTime.from.setFullYear(currentYear - 1);
+		}
+
+		return criteriaTime;
 	}
 
 	getFourViewsOverlays(region: Point, criteriaTime: ICaseTimeState, sensors: string[]) {

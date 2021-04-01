@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, HostListener } from '@angular/core';
 import {
 	ClearActiveInteractionsAction,
 	SetSubMenu,
@@ -17,6 +17,8 @@ import { SubMenuEnum, toolsFlags } from '../models/tools.model';
 import { selectActiveAnnotationLayer } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
 import { ComponentVisibilityService } from '../../../../../app-providers/component-visibility.service';
 import { ComponentVisibilityItems } from '../../../../../app-providers/component-mode';
+import { PacmanPopupComponent } from '../../../../easter-eggs/pacman-popup/pacman-popup.component';
+import { KeysListenerService } from "../../../../core/services/keys-listener.service";
 
 @Component({
 	selector: 'ansyn-tools',
@@ -42,6 +44,15 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	public flags$: Observable<Map<toolsFlags, boolean>> = this.store$.select(selectToolFlags).pipe(
 		tap((flags: Map<toolsFlags, boolean>) => this.flags = flags)
+	);
+
+	@AutoSubscription
+	onKeyUp$ = () => this.keyListenerService.keyup.pipe(
+		tap($event => {
+			if (this.keyListenerService.keysWereUsed($event, this._pacmanKeys)) {
+				this.togglePacmanDialog();
+			}
+		})
 	);
 
 	isActiveAnnotationLayer$ = this.store$.select(selectActiveAnnotationLayer).pipe(
@@ -75,9 +86,12 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		return this.flags?.get(toolsFlags.isMeasureToolActive);
 	}
 
+	private _pacmanKeys = 'Ppפ'.split('');
+
 	constructor(
 		protected store$: Store<any>,
 		public dialog: MatDialog,
+		public keyListenerService: KeysListenerService,
 		componentVisibilityService: ComponentVisibilityService
 	) {
 		this.isExportShow = componentVisibilityService.get(ComponentVisibilityItems.EXPORT);
@@ -98,15 +112,15 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		const value = this.onShadowMouse;
 
 		if (value) {
-			this.store$.dispatch(new StopMouseShadow({ fromUser: true }));
+			this.store$.dispatch(new StopMouseShadow({fromUser: true}));
 		} else {
-			this.store$.dispatch(new StartMouseShadow({ fromUser: true }));
+			this.store$.dispatch(new StartMouseShadow({fromUser: true}));
 		}
 	}
 
 	toggleMeasureDistanceTool() {
 		const value = !this.onMeasureTool;
-		this.store$.dispatch(new ClearActiveInteractionsAction({ skipClearFor: [UpdateMeasureDataOptionsAction] }));
+		this.store$.dispatch(new ClearActiveInteractionsAction({skipClearFor: [UpdateMeasureDataOptionsAction]}));
 		this.store$.dispatch(new UpdateToolsFlags([{key: toolsFlags.isMeasureToolActive, value}]));
 	}
 
@@ -130,9 +144,18 @@ export class ToolsComponent implements OnInit, OnDestroy {
 
 	toggleExportMapsDialog() {
 		if (!this.isDialogShowing) {
-			const dialogRef = this.dialog.open(ExportMapsPopupComponent, { panelClass: 'custom-dialog' });
+			const dialogRef = this.dialog.open(ExportMapsPopupComponent, {panelClass: 'custom-dialog'});
 			dialogRef.afterClosed().pipe(take(1), tap(() => this.isDialogShowing = false)).subscribe();
 			this.isDialogShowing = !this.isDialogShowing;
 		}
 	}
+
+	togglePacmanDialog() {
+		if (!this.isDialogShowing) {
+			const dialogRef = this.dialog.open(PacmanPopupComponent, {panelClass: 'custom-dialog'});
+			dialogRef.afterClosed().pipe(take(1), tap(() => this.isDialogShowing = false)).subscribe();
+			this.isDialogShowing = !this.isDialogShowing;
+		}
+	}
+
 }

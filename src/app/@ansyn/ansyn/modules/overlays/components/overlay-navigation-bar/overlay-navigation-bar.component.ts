@@ -12,6 +12,7 @@ import { selectDropsAscending, selectFilteredOveralys } from '../../reducers/ove
 import { combineLatest } from 'rxjs';
 import { IOverlay, IOverlayDrop } from '../../models/overlay.model';
 import { TranslateService } from '@ngx-translate/core';
+import { KeysListenerService } from "../../../core/services/keys-listener.service";
 
 @Component({
 	selector: 'ansyn-overlay-navigation-bar',
@@ -28,6 +29,47 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	overlaysLength: number;
 
 	@AutoSubscription
+	onKeyDown$ = () => this.keyListenerService.keydown.pipe(
+		tap($event => {
+			if (this.keyListenerService.keyWasUsed($event, 'ArrowRight', 39)) {
+				this.goNextActive = true;
+			} else if (this.keyWasUsed($event, 'ArrowLeft', 37)) {
+				this.goPrevActive = true;
+			}
+
+			if (this.keyListenerService.keysWereUsed($event, this._overlayHackKeys)) {
+				this.store.dispatch(new EnableCopyOriginalOverlayDataAction(true));
+			}
+		})
+	)
+
+	@AutoSubscription
+	onKeyUp$ = () => this.keyListenerService.keyup.pipe(
+		tap($event => {
+			if (this.keyListenerService.isElementNotValid($event)) {
+				return;
+			}
+
+			if (this.keyListenerService.keyWasUsed($event, 'ArrowRight', 39)) {
+				this.clickGoAdjacent(true);
+				this.goNextActive = false;
+			} else if (this.keyListenerService.keyWasUsed($event, 'ArrowLeft', 37)) {
+				this.clickGoAdjacent(false);
+				this.goPrevActive = false;
+			}
+
+			if (this.keysWereUsed($event, this._overlayHackKeys)) {
+				this.store.dispatch(new EnableCopyOriginalOverlayDataAction(false));
+			}
+
+			if (this.keysWereUsed($event, this._toggleDirectionKeys)) {
+				const direction = this.translateService.instant('direction');
+				this.translateService.set('direction', direction === 'rtl' ? 'ltr' : 'rtl', 'default');
+			}
+		})
+	);
+
+	@AutoSubscription
 	hasOverlayDisplay$ = this.store.select(selectOverlayOfActiveMap).pipe(
 		tap(overlay => this.hasOverlayDisplay = Boolean(overlay))
 	);
@@ -39,7 +81,7 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 		this.store.select(selectFilteredOveralys)
 	]).pipe(
 		filter(([activeMapOverlay, overlays, filtered]: [IOverlay, IOverlayDrop[], any[]]) => Boolean(activeMapOverlay) && Boolean(overlays.length)),
-		tap(([activeMapOverlay, overlays, filtered]: [IOverlay, IOverlayDrop[],  IOverlay[]]) => {
+		tap(([activeMapOverlay, overlays, filtered]: [IOverlay, IOverlayDrop[], IOverlay[]]) => {
 			this.overlaysLength = filtered.length;
 			this.isFirstOverlay = activeMapOverlay.id === overlays[0].id;
 			this.isLastOverlay = activeMapOverlay.id === overlays[overlays.length - 1].id;
@@ -52,13 +94,14 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 
 	constructor(
 		protected store: Store<IStatusBarState>,
+		public keyListenerService: KeysListenerService,
 		@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 		protected translateService: TranslateService
 	) {
 	}
 
 	isElementNotValid($event: KeyboardEvent) {
-		const { activeElement } = (<Window>$event.currentTarget).document;
+		const {activeElement} = (<Window>$event.currentTarget).document;
 		return this.isElementInput(activeElement) || this.isTimePicker(activeElement);
 	}
 
@@ -67,50 +110,46 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	}
 
 	isTimePicker(activeElement) {
-		const { className } = activeElement;
+		const {className} = activeElement;
 		return className.includes('owl') || className.includes('title');
 	}
 
-	@HostListener('window:keyup', ['$event'])
-	onkeyup($event: KeyboardEvent) {
-		if (this.isElementNotValid($event)) {
-			return;
-		}
-
-		if (this.keyWasUsed($event, 'ArrowRight', 39)) {
-			this.clickGoAdjacent(true);
-			this.goNextActive = false;
-		} else if (this.keyWasUsed($event, 'ArrowLeft', 37)) {
-			this.clickGoAdjacent(false);
-			this.goPrevActive = false;
-		}
-
-		if (this.keysWereUsed($event, this._overlayHackKeys)) {
-			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(false));
-		}
-
-		if (this.keysWereUsed($event, this._toggleDirectionKeys)) {
-			const direction = this.translateService.instant('direction');
-			this.translateService.set('direction', direction === 'rtl' ? 'ltr' : 'rtl', 'default');
-		}
-	}
-
-	@HostListener('window:keydown', ['$event'])
-	onkeydown($event: KeyboardEvent) {
-		if (this.isElementNotValid($event)) {
-			return;
-		}
-
-		if (this.keyWasUsed($event, 'ArrowRight', 39)) {
-			this.goNextActive = true;
-		} else if (this.keyWasUsed($event, 'ArrowLeft', 37)) {
-			this.goPrevActive = true;
-		}
-
-		if (this.keysWereUsed($event, this._overlayHackKeys)) {
-			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(true));
-		}
-	}
+	// @HostListener('window:keyup', ['$event'])
+	// onkeyup($event: KeyboardEvent) {
+	// 	if (this.keyWasUsed($event, 'ArrowRight', 39)) {
+	// 		this.clickGoAdjacent(true);
+	// 		this.goNextActive = false;
+	// 	} else if (this.keyWasUsed($event, 'ArrowLeft', 37)) {
+	// 		this.clickGoAdjacent(false);
+	// 		this.goPrevActive = false;
+	// 	}
+	//
+	// 	if (this.keysWereUsed($event, this._overlayHackKeys)) {
+	// 		this.store.dispatch(new EnableCopyOriginalOverlayDataAction(false));
+	// 	}
+	//
+	// 	if (this.keysWereUsed($event, this._toggleDirectionKeys)) {
+	// 		const direction = this.translateService.instant('direction');
+	// 		this.translateService.set('direction', direction === 'rtl' ? 'ltr' : 'rtl', 'default');
+	// 	}
+	// }
+	//
+	// @HostListener('window:keydown', ['$event'])
+	// onkeydown($event: KeyboardEvent) {
+	// 	if (this.isElementNotValid($event)) {
+	// 		return;
+	// 	}
+	//
+	// 	if (this.keyWasUsed($event, 'ArrowRight', 39)) {
+	// 		this.goNextActive = true;
+	// 	} else if (this.keyWasUsed($event, 'ArrowLeft', 37)) {
+	// 		this.goPrevActive = true;
+	// 	}
+	//
+	// 	if (this.keysWereUsed($event, this._overlayHackKeys)) {
+	// 		this.store.dispatch(new EnableCopyOriginalOverlayDataAction(true));
+	// 	}
+	// }
 
 	@HostListener('window:keypress', ['$event'])
 	onkeypress($event: KeyboardEvent) {
@@ -133,7 +172,7 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	}
 
 	clickGoAdjacent(isNext): void {
-		this.store.dispatch(new GoAdjacentOverlay({ isNext }));
+		this.store.dispatch(new GoAdjacentOverlay({isNext}));
 	}
 
 	clickScannedArea(): void {

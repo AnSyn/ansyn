@@ -23,7 +23,7 @@ export class ClickOutsideService {
 		)
 	}
 
-	// for chrome44
+	// for chrome44 - AD MATAY
 	private getPath(event) {
 		const currentElement = event.target;
 		const eventTarget = [currentElement];

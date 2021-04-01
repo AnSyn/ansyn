@@ -17,6 +17,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CacheInterceptorsService } from './services/http-request-cache/cache-interceptors.service';
 import { CacheRequestService } from './services/http-request-cache/cache-request.service';
 import { CredentialsService } from './services/credentials/credentials.service';
+import { KeysListenerService } from "./services/keys-listener.service";
 
 @NgModule({
 	imports: [
@@ -33,7 +34,8 @@ import { CredentialsService } from './services/credentials/credentials.service';
 		AreaToCredentialsService,
 		CredentialsService,
 		CacheRequestService,
-		{ provide: HTTP_INTERCEPTORS, useClass: CacheInterceptorsService, multi: true}
+		KeysListenerService,
+		{provide: HTTP_INTERCEPTORS, useClass: CacheInterceptorsService, multi: true}
 	],
 	exports: [
 		AnsynTranslationModule,

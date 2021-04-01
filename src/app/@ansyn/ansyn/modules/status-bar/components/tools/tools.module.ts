@@ -16,6 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { CoreModule } from '../../../core/core.module';
+import { PacmanPopupComponent } from '../../../easter-eggs/pacman-popup/pacman-popup.component';
 
 // @dynamic
 @NgModule({
@@ -39,7 +40,7 @@ import { CoreModule } from '../../../core/core.module';
 		MatSelectModule
 	],
 	providers: [ProjectionConverterService],
-	declarations: [ToolsComponent, AnnotationsControlComponent, MeasureControlComponent, ExportMapsPopupComponent],
+	declarations: [ToolsComponent, AnnotationsControlComponent, MeasureControlComponent, ExportMapsPopupComponent, PacmanPopupComponent],
 	entryComponents: [ToolsComponent, MeasureControlComponent, ExportMapsPopupComponent],
 	exports: [ToolsComponent, MatDialogModule]
 })

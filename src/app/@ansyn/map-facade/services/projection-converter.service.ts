@@ -97,7 +97,7 @@ export class ProjectionConverterService {
 		if (y > 5000000) {
 			y -= 10000000;
 		}
-		const utmWgs84Proj = `+proj=utm +zone=${ zone } +datum=WGS84`;
+		const utmWgs84Proj = `+proj=utm +zone=${ zone || 36 } +datum=WGS84`;
 		const conv = proj4(utmWgs84Proj, EPSG_4326, [x, y]);
 
 		return [...conv];

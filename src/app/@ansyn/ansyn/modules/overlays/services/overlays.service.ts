@@ -121,6 +121,10 @@ export class OverlaysService {
 		});
 	}
 
+	sortOverlaysByPrioritySensor(overlays: IOverlay[]): void {
+		overlays.sort((a, b) => (+a.sensorName.includes(this.fourViewsConfig.prioritySensor)) - (+b.sensorName.includes(this.fourViewsConfig.prioritySensor)));
+	}
+
 	getOverlayById(id: string, sourceType: string): Observable<IOverlay> {
 		return this._overlaySourceProvider.getById(id, sourceType);
 	}

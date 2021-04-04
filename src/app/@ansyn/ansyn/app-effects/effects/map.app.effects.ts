@@ -601,12 +601,8 @@ export class MapAppEffects {
 		const fourViewsOverlaysKeys = Object.keys(fourViewsOverlays);
 		fourViewsOverlaysKeys.forEach(currentAngleKey => {
 			const currentAngleOverlays = fourViewsOverlays[currentAngleKey];
-			this.sortOverlaysByPrioritySensor(currentAngleOverlays);
+			this.overlaysService.sortOverlaysByPrioritySensor(currentAngleOverlays);
 		});
-	}
-
-	sortOverlaysByPrioritySensor(overlays: IOverlay[]): void {
-		overlays.sort((a, b) => (+a.sensorName.includes(this.fourViewsConfig.prioritySensor)) - (+b.sensorName.includes(this.fourViewsConfig.prioritySensor)));
 	}
 
 	changeImageryMap(overlay, communicator): string | null {

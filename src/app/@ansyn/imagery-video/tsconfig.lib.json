@@ -3,7 +3,7 @@
   "compilerOptions": {
     "paths": {
       "@ansyn/imagery": [
-        "src/libs/ansyn/dist/ansyn/imagery"
+        "dist/ansyn/imagery"
       ]
     },
     "declarationMap": true,

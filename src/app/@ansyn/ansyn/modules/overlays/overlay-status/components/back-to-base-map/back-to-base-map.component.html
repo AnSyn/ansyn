@@ -3,7 +3,7 @@
 			class="small-icon-button"
 			[class.menu-pinned]="isPinned"
 			[attr.tooltip-class]="'bottom right not-relative'"
-			[attr.tooltip-value]="'Back to base map' | translate">
+			[attr.tooltip-value]="(isFourViewsMode ? 'Exit Four views mode' : 'Back to base map') | translate">
 		<i class="medium-icon icon-back-to-base-map"></i>
 		{{(isFourViewsMode ? 'Exit Four views mode' : 'Back to base map') | translate}}
 	</button>

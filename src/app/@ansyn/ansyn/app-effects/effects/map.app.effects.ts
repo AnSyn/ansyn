@@ -450,6 +450,7 @@ export class MapAppEffects {
 						thirdAngleOverlays,
 						fourthAngleOverlays
 					};
+					this.sortFourViewsOverlaysByPrioritySensor(fourViewsOverlays);
 					const fourViewsLayerName = this.translateService.instant('four views coordinate');
 					const fourViewsActions: Action[] = [
 						new SetFourViewsOverlaysAction(fourViewsOverlays),
@@ -594,6 +595,18 @@ export class MapAppEffects {
 		}
 
 		return queryOverlays;
+	}
+
+	sortFourViewsOverlaysByPrioritySensor(fourViewsOverlays: IFourViews) {
+		const fourViewsOverlaysKeys = Object.keys(fourViewsOverlays);
+		fourViewsOverlaysKeys.forEach(currentAngleKey => {
+			const currentAngleOverlays = fourViewsOverlays[currentAngleKey];
+			this.sortOverlaysByPrioritySensor(currentAngleOverlays);
+		});
+	}
+
+	sortOverlaysByPrioritySensor(overlays: IOverlay[]): void {
+		overlays.sort((a, b) => (+a.sensorName.includes(this.fourViewsConfig.prioritySensor)) - (+b.sensorName.includes(this.fourViewsConfig.prioritySensor)));
 	}
 
 	changeImageryMap(overlay, communicator): string | null {

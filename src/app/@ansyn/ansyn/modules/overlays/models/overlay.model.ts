@@ -8,6 +8,7 @@ export const fourViewsConfig = 'fourViewsConfig';
 export interface IFourViewsConfig {
 	sensors: string[];
 	storageLimitPerAngle: number;
+	prioritySensor: string;
 	active: boolean;
 }
 

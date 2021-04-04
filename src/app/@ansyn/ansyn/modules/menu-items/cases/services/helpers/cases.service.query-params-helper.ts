@@ -34,8 +34,16 @@ export class QueryParamsHelper {
 		if (Boolean(qParams.geometry)) {
 			this.updateCaseViaContextGeometry(updatedCaseModel, selectedContext, qParams.geometry);
 		}
+		if (Boolean(qParams.id))
+		{
+			this.updateCaseViaContextId(updatedCaseModel, selectedContext, qParams.id);
+		}
 
 		return this.casesService.parseCase(updatedCaseModel);
+	}
+
+	updateCaseViaContextId(updatedCaseModel, selectedContext, id) {
+		updatedCaseModel.state.map.data[0].data.overlay = <any>{id : id};
 	}
 
 	updateCaseViaContextGeometry(updatedCaseModel, selectedContext, geometry): void {

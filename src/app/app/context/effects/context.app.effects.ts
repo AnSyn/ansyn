@@ -12,7 +12,7 @@ import {
 	LoggerService,
 	OverlaysService,
 	rxPreventCrash,
-	SelectCaseAction,
+	SelectCaseAction, SelectDilutedCaseAction,
 } from '@ansyn/ansyn';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { filter, mergeMap, withLatestFrom } from 'rxjs/operators';
@@ -97,6 +97,11 @@ export class ContextAppEffects {
 					...selectedContext,
 				}, this.casesService.defaultCase, params);
 				return [new SelectCaseAction(contextCase)];
+			case ContextName.IdSearch:
+				contextCase = this.casesService.updateCaseViaContext({
+					...selectedContext,
+				}, this.casesService.defaultCase, params);
+				return [new SelectDilutedCaseAction(contextCase)];
 			case ContextName.ImisightMission:
 				this.auth0Service.setSession({
 					accessToken: params.accessToken,

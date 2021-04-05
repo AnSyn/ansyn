@@ -1,15 +1,16 @@
 <form>
 	<ansyn-auto-complete
-	(selectChange)="addLayer($event)"
-	[allEntities]="allStaticLayers$ | async"
-	[keyFromText]="'name'"
-	[onInputChangeFn]="getAllLayersByValue.bind(this)">
+		[placeholder]="'search layers'"
+		(selectChange)="addLayer($event)"
+		[allEntities]="allStaticLayers$ | async"
+		[keyFromText]="'name'"
+		[onInputChangeFn]="getAllLayersByValue.bind(this)">
 	</ansyn-auto-complete>
 	<div class="layer-search-button">
 		<button (click)="changeSearchType(LayerSearchTypes.polygonView)"
 				[class.active]="layerSearchType === LayerSearchTypes.polygonView"
-		[attr.tooltip-value]="'Query layers by polygon' | translate"
-		tooltip-class="bottom right">
+				[attr.tooltip-value]="'Query layers by polygon' | translate"
+				tooltip-class="bottom right">
 			<i class="medium-icon icon-annotation-polygon"></i>
 		</button>
 	</div>

@@ -41,6 +41,5 @@ keys = [
     "/ansyn/overlay/imageryvideo/inactive",
     "/ansyn/show/one2one",
     "/ansyn/layers/manager/limit",
-    "/ansyn/layers/manager/limit/error",
-    "/ansyn/layers/manager/extent/split"
+    "/ansyn/layers/manager/limit/error"
 ]

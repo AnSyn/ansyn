@@ -39,7 +39,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 
 		case LayersActionTypes.LAYER_COLLECTION_LOADED:
 			const annotationLayer = action.payload.find(({ type }) => type === LayerType.annotation);
-			const staticLayers = state.staticLayers.concat(action.payload.filter( layer => layer.type === LayerType.static));
+			const staticLayers = action.payload.filter( layer => layer.type === LayerType.static);
 			let activeAnnotationLayer = (annotationLayer && annotationLayer.id) || state.activeAnnotationLayer;
 			let layers = action.payload.filter(layer => layer.type !== LayerType.static || state.selectedLayersIds.includes(layer.id));
 			return layersAdapter.setAll(layers, { ...state, activeAnnotationLayer, staticLayers });
@@ -111,7 +111,9 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 		case LayersActionTypes.ADD_STATIC_LAYERS: {
 			const staticLayers = state.staticLayers.concat(action.payload);
 			const layersToAdd = action.payload.filter( layer => state.selectedLayersIds.includes(layer.id));
-			return layersAdapter.addMany(layersToAdd, {...state, staticLayers});
+			return layersAdapter.addMany(layersToAdd, {...state, staticLayers,
+				/*force render layers on load case */
+				selectedLayersIds: [...state.selectedLayersIds]});
 		}
 
 		default:

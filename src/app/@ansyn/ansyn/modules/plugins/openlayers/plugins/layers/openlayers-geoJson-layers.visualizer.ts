@@ -1,9 +1,12 @@
 import { select, Store } from '@ngrx/store';
 import { HttpClient } from '@angular/common/http';
 import { Feature, FeatureCollection, Polygon } from 'geojson';
-import { containsExtent } from 'ol/extent'
-import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap, withLatestFrom, startWith } from 'rxjs/operators';
-import { combineLatest, Observable, scheduled } from 'rxjs';
+import olStyle from 'ol/style/Style';
+import olStroke from 'ol/style/Stroke';
+import olFill from 'ol/style/Fill';
+import olCircle from 'ol/style/Circle';
+import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap, withLatestFrom, startWith, retryWhen } from 'rxjs/operators';
+import { combineLatest, EMPTY, Observable, scheduled } from 'rxjs';
 import { selectMaps, SetToastMessageAction } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
 import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
@@ -15,13 +18,11 @@ import {
 } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
 import { feature, featureCollection } from '@turf/turf';
 import {
-	BBOX,
-	bboxFromGeoJson,
 	calculateGeometryArea, ExtentCollector,
 	ImageryMapExtentPolygon,
 	ImageryVisualizer,
 	IMapSettings,
-	IVisualizerEntity, splitExtent
+	IVisualizerEntity, MarkerSize, randomColor, splitExtent
 } from '@ansyn/imagery';
 import { LoggerService } from '../../../../core/services/logger.service';
 import { isEqual } from 'lodash';
@@ -37,6 +38,7 @@ import { Inject } from '@angular/core';
 	isHideable: true
 })
 export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
+	layersToStyle: Map<string, olStyle> = new Map();
 	layersDictionary: Map<string, Feature<Polygon>[]> = new Map();
 	bboxToZeroEntities: Map<string, ExtentCollector> = new Map();
 	selectedLayers: string[] = [];
@@ -90,23 +92,32 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 			const area = calculateGeometryArea(extentPolygon) * 1e-6;
 			let layersObs = [];
 			layers.forEach(layer => {
+				const queryExtent = searchPolygon || extentPolygon;
 				const layerKey = this.getLayerKey(layer);
 				this.layersDictionary.set(layerKey, []);
-				const splitExtents = splitExtent(searchPolygon || extentPolygon, this.config.splitExtentDeep).filter(extent => !this.noEntitiesInExtent(extent, layer));
-				splitExtents.forEach(extent => {
-					if (area < 1000) {
-						layersObs.push(this.getEntitiesForLayer(layer, extent))
-					} else if (area < 10000) {
-						layersObs.push(this.countEntitiesForLayer(layer, extent))
+				if (area < 1000) {
+					if (!this.layersToStyle.has(layerKey)) {
+						this.layersToStyle.set(layerKey, this.createLayerStyle());
 					}
-				});
+					layersObs.push(this.getEntitiesForLayer(layer, queryExtent))
+				}
+				else if (area < 10000) {
+					const splitExtents = splitExtent(queryExtent, 2).filter(extent => !this.noEntitiesInExtent(extent, layer));
+					splitExtents.forEach(extent => {
+						layersObs.push(this.countEntitiesForLayer(layer, extent))
+					});
+				}
 			});
 			if (layersObs.length === 0 && layers.length) {
 				this.store$.dispatch(new SetToastMessageAction({ toastText: 'zoom to query layers' }));
 			}
 			return forkJoinSafe(layersObs);
 		}),
-		switchMap(this.drawLayer.bind(this))
+		switchMap(this.drawLayer.bind(this)),
+		retryWhen( err => {
+			this.store$.dispatch(new SetToastMessageAction({toastText: 'Error loading layer'}))
+			return EMPTY;
+		})
 	);
 
 	constructor(protected store$: Store<any>,
@@ -124,6 +135,11 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 		return undefined; // override if other data is used
 	}
 
+	protected initLayers() {
+		super.initLayers();
+		this.vector.setZIndex(101);
+	}
+
 	drawLayer(): Observable<boolean> {
 		const allEntities: Feature[] = [];
 		this.selectedLayers.forEach(layerKey => {
@@ -132,6 +148,13 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 			}
 		});
 		return this.setEntities(this.layerToEntities(featureCollection(allEntities)));
+	}
+
+	protected createStyle(feature, isStyle, ...styles): any[] {
+		if(feature.get('layerKey')) {
+			return this.layersToStyle.get(feature.get('layerKey'));
+		}
+		return super.createStyle(feature, isStyle, ...styles);
 	}
 
 	getEntitiesForLayer(layer: ILayer, extent: ImageryMapExtentPolygon): Observable<any> {
@@ -181,15 +204,21 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 		}));
 	}
 
-	fixFeature(feature: Feature) {
-		return feature;
-	}
-
 	buildUrl(layer: ILayer, extent: ImageryMapExtentPolygon) {
 		return this.http.get(layer.url, this.buildBody(extent));
 	}
 
 	buildBody(option) {
 		return {}
+	}
+
+	createLayerStyle() {
+		const fill = new olFill({color: randomColor()});
+		const stroke = new olStroke({color: randomColor(), width: 1});
+		return new olStyle({
+			fill,
+			stroke,
+			image: new olCircle({fill: fill, stroke: null, radius: MarkerSize.medium })
+		})
 	}
 }

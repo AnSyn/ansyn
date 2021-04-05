@@ -5,6 +5,7 @@
 	[collapsible]="true"
 	background="transparent"
 	(onRowHover)="hoverLayer = $event"
+	[emptyTableLabel]="'No Layers loaded'"
 	[menu]="menu">
 	<ng-template let-id="id" #menu>
 		<ansyn-layer-menu

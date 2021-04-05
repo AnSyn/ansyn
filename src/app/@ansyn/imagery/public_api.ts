@@ -93,7 +93,7 @@ export {
 	IBaseImageryLayer, ImageryLayerProperties, IMAGERY_MAIN_LAYER_NAME, IMAGERY_BASE_MAP_LAYER
 } from './model/imagery-layer.model';
 export { IMAGERY_SLOW_ZOOM_FACTOR } from './model/imagery-zoom.model';
-export { toDegrees, toRadians, getAngleDegreeBetweenPoints, heatmapCalculate } from './utils/math';
+export { toDegrees, toRadians, getAngleDegreeBetweenPoints, randomColor } from './utils/math';
 export { ExtentCalculator } from './utils/extent-calculator';
 export { ImageryComponent } from './imagery/imagery.component';
 export { getOpacityFromColor } from './utils/color-opacity-extractor';

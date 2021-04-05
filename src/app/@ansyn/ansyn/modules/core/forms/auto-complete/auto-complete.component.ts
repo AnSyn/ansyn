@@ -13,6 +13,7 @@ import { Observable } from 'rxjs';
 export class AutoCompleteComponent<T> implements OnInit, OnDestroy {
 	lastValue: string;
 	options: T[];
+	@Input() placeholder = '';
 	@Input() onInputChangeFn: (string) => Observable<T[]>;
 	@Input() keyFromText: string;
 	@Input() allEntities: T[];

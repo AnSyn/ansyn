@@ -398,6 +398,7 @@ export class MapAppEffects {
 			return [
 				new SetLayoutAction(oneMapLayout),
 				new ToggleFooter(false),
+				new UpdateGeoFilterStatus({ active: false, type: CaseGeoFilter.ScreenView }),
 				new SetFourViewsOverlaysAction({}),
 				new UpdateLayer({ id: regionLayerId, name: regionLayerName }),
 				new BackToWorldView({ mapId: activeMapID })

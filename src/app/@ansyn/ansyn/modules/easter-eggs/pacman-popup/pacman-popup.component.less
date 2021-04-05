@@ -30,30 +30,43 @@
     box-sizing: border-box;
 }
 
-.Elor {
-    background:  url('../../../assets/important/elor.JPG');
-    box-sizing: border-box;
-    background-color: darkred;
+.ghost {
+	box-sizing: border-box;
+	background-color: darkred;
+	border-radius: 0px !important;
+	border: none !important;
 }
 
-.Pini {
-    background: url('../../../assets/important/aviv.JPG');
-    box-sizing: border-box;
-    background-color: purple;
+@length: 2;
+@random: `Math.ceil(Math.random() * (@{length}))`;
+
+@blinkyImages: 'yehonatan.jpg', 'tzahi.jpg';
+@randomBlinkyimage: extract(@blinkyImages,@random);
+
+.blinky {
+    background:  url('../../../assets/important/@{randomBlinkyimage}');
 }
 
-.Aviv {
-    background: url('../../../assets/important/rom.JPG');
-    box-sizing: border-box;
-    background-color: cyan;
+@pinkyImages: 'aviv.jpg', 'pini.jpg';
+@randomPinkyimage: extract(@pinkyImages,@random);
+
+.pinky {
+    background: url('../../../assets/important/@{randomPinkyimage}');
 }
 
-.Rom {
-    background: url('../../../assets/important/pini.JPG');
-    box-sizing: border-box;
-    background-color: orange;    
+@inkyImages: 'elor.jpg', 'yuval.jpg';
+@randominkyimage: extract(@inkyImages,@random);
+
+.inky {
+    background: url('../../../assets/important/@{randominkyimage}');
 }
 
+@clydeImages: 'adani.jpg', 'rom.jpg';
+@randomClydeimage: extract(@clydeImages,@random);
+
+.clyde {
+	background: url('../../../assets/important/@{randomClydeimage}');
+}
 
 .pac-man {
     background-color: yellow;

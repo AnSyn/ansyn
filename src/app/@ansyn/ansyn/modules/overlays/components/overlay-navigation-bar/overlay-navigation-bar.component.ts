@@ -33,7 +33,7 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 		tap($event => {
 			if (this.keyListenerService.keyWasUsed($event, 'ArrowRight', 39)) {
 				this.goNextActive = true;
-			} else if (this.keyWasUsed($event, 'ArrowLeft', 37)) {
+			} else if (this.keyListenerService.keyWasUsed($event, 'ArrowLeft', 37)) {
 				this.goPrevActive = true;
 			}
 
@@ -41,7 +41,20 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 				this.store.dispatch(new EnableCopyOriginalOverlayDataAction(true));
 			}
 		})
-	)
+	);
+
+	@AutoSubscription
+	onkeypress$ = () => this.keyListenerService.keyup.pipe(
+		tap($event => {
+				if (this.keyListenerService.isElementNotValid($event)) {
+					return;
+				}
+
+				if (this.keyListenerService.keysWereUsed($event, this._scannedAreaKeys)) {
+					this.clickScannedArea();
+				}
+			}
+		));
 
 	@AutoSubscription
 	onKeyUp$ = () => this.keyListenerService.keyup.pipe(
@@ -58,11 +71,11 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 				this.goPrevActive = false;
 			}
 
-			if (this.keysWereUsed($event, this._overlayHackKeys)) {
+			if (this.keyListenerService.keysWereUsed($event, this._overlayHackKeys)) {
 				this.store.dispatch(new EnableCopyOriginalOverlayDataAction(false));
 			}
 
-			if (this.keysWereUsed($event, this._toggleDirectionKeys)) {
+			if (this.keyListenerService.keysWereUsed($event, this._toggleDirectionKeys)) {
 				const direction = this.translateService.instant('direction');
 				this.translateService.set('direction', direction === 'rtl' ? 'ltr' : 'rtl', 'default');
 			}
@@ -98,77 +111,6 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 		@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 		protected translateService: TranslateService
 	) {
-	}
-
-	isElementNotValid($event: KeyboardEvent) {
-		const {activeElement} = (<Window>$event.currentTarget).document;
-		return this.isElementInput(activeElement) || this.isTimePicker(activeElement);
-	}
-
-	isElementInput(activeElement) {
-		return activeElement instanceof HTMLInputElement;
-	}
-
-	isTimePicker(activeElement) {
-		const {className} = activeElement;
-		return className.includes('owl') || className.includes('title');
-	}
-
-	// @HostListener('window:keyup', ['$event'])
-	// onkeyup($event: KeyboardEvent) {
-	// 	if (this.keyWasUsed($event, 'ArrowRight', 39)) {
-	// 		this.clickGoAdjacent(true);
-	// 		this.goNextActive = false;
-	// 	} else if (this.keyWasUsed($event, 'ArrowLeft', 37)) {
-	// 		this.clickGoAdjacent(false);
-	// 		this.goPrevActive = false;
-	// 	}
-	//
-	// 	if (this.keysWereUsed($event, this._overlayHackKeys)) {
-	// 		this.store.dispatch(new EnableCopyOriginalOverlayDataAction(false));
-	// 	}
-	//
-	// 	if (this.keysWereUsed($event, this._toggleDirectionKeys)) {
-	// 		const direction = this.translateService.instant('direction');
-	// 		this.translateService.set('direction', direction === 'rtl' ? 'ltr' : 'rtl', 'default');
-	// 	}
-	// }
-	//
-	// @HostListener('window:keydown', ['$event'])
-	// onkeydown($event: KeyboardEvent) {
-	// 	if (this.isElementNotValid($event)) {
-	// 		return;
-	// 	}
-	//
-	// 	if (this.keyWasUsed($event, 'ArrowRight', 39)) {
-	// 		this.goNextActive = true;
-	// 	} else if (this.keyWasUsed($event, 'ArrowLeft', 37)) {
-	// 		this.goPrevActive = true;
-	// 	}
-	//
-	// 	if (this.keysWereUsed($event, this._overlayHackKeys)) {
-	// 		this.store.dispatch(new EnableCopyOriginalOverlayDataAction(true));
-	// 	}
-	// }
-
-	@HostListener('window:keypress', ['$event'])
-	onkeypress($event: KeyboardEvent) {
-		if (this.isElementNotValid($event)) {
-			return;
-		}
-
-		if (this.keysWereUsed($event, this._scannedAreaKeys)) {
-			this.clickScannedArea();
-		}
-	}
-
-	private keyWasUsed(event: KeyboardEvent, key: string, keycode: number = key.charCodeAt(0)): boolean {
-		return event.key === key || event.which === keycode; // tslint:disable-line
-		// We need to check also on the old field event.which, for Chrome 44
-	}
-
-	private keysWereUsed(event: KeyboardEvent, keys: string[]): boolean {
-		return keys.some(key => this.keyWasUsed(event, key));
 	}
 
 	clickGoAdjacent(isNext): void {

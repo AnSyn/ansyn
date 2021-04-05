@@ -1,6 +1,5 @@
-import { Injectable, Output, EventEmitter, HostListener, OnInit } from '@angular/core';
+import { Injectable, Output, EventEmitter } from '@angular/core';
 import { fromEvent } from "rxjs";
-import { take } from "rxjs/operators";
 
 @Injectable({providedIn: 'any'})
 export class KeysListenerService {

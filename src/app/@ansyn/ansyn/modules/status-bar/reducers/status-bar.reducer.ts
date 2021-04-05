@@ -14,6 +14,7 @@ export interface IStatusBarState {
 	IsSimpleSearchOpen?: boolean;
 	IsOpenedFromOutside?: boolean;
 	markSecondSearchSensors?: boolean;
+	isPacmanMode?: boolean;
 }
 
 export const StatusBarInitialState: IStatusBarState = {
@@ -25,7 +26,8 @@ export const StatusBarInitialState: IStatusBarState = {
 	isAdvancedSearchOpen: false,
 	IsSimpleSearchOpen: false,
 	IsOpenedFromOutside: false,
-	markSecondSearchSensors: false
+	markSecondSearchSensors: false,
+	isPacmanMode: false// add action to status-bar actions that changes this ok?
 };
 
 export const statusBarFeatureKey = 'statusBar';

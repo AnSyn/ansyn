@@ -1,4 +1,4 @@
-import { Component, HostListener, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IStatusBarState } from '../../../status-bar/reducers/status-bar.reducer';
 import { ExpandAction, GoAdjacentOverlay } from '../../../status-bar/actions/status-bar.actions';

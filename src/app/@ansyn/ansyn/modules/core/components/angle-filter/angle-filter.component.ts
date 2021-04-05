@@ -2,7 +2,6 @@ import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit, Re
 import {
 	ImageryCommunicatorService,
 	toDegrees,
-	toRadians
 } from '@ansyn/imagery';
 import {
 	ContextMenuShowAngleFilter,

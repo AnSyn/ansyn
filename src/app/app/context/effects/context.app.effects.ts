@@ -82,7 +82,7 @@ export class ContextAppEffects {
 			actions.push(new SetToastMessageAction({ toastText }));
 			return actions;
 		}
-		if (!this.isValidGeometry(params.geometry)) {
+		if (params.geometry && !this.isValidGeometry(params.geometry)) {
 			actions.push(new SetToastMessageAction({ toastText: this.translateService.instant(CONTEXT_TOAST.region) }));
 			return actions;
 		}

@@ -43,7 +43,7 @@ export class QueryParamsHelper {
 	}
 
 	updateCaseViaContextId(updatedCaseModel, selectedContext, id) {
-		updatedCaseModel.state.map.data[0].data.overlay = <any>{id : id};
+		updatedCaseModel.state.maps.data[0].data.overlay = <any>{id : id};
 	}
 
 	updateCaseViaContextGeometry(updatedCaseModel, selectedContext, geometry): void {

@@ -106,7 +106,7 @@ export class MultipleOverlaysSourceProvider {
 	getByIds(ids: IOverlayByIdMetaData[]): Observable<IOverlay[]> {
 		const grouped = groupBy(ids, 'sourceType');
 		const observables = Object.entries(grouped)
-			.map(([sourceType, ids]): Observable<IOverlay[]> => {
+			.map(([sourceType, ids]) => {
 				const overlaysSource = this.overlaysSources[sourceType];
 				if (overlaysSource) {
 					return overlaysSource.getByIds(ids);
@@ -118,7 +118,7 @@ export class MultipleOverlaysSourceProvider {
 							.pipe(
 								switchMap(overlay => of(overlay)),
 								catchError(() => of(null))
-							); //by using switchMap+catchError it will continue after failure
+							); // by using switchMap+catchError it will continue after failure
 					});
 					return zip(...allSourcesOverlays).pipe(
 						map((overlays) => {

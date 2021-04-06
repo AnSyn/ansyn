@@ -29,7 +29,6 @@ import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { selectDropsDescending } from '../modules/overlays/reducers/overlays.reducer';
 import { MenuItemsKeys } from '../config/ansyn.config';
 import { ComponentVisibilityService } from '../app-providers/component-visibility.service';
-import { AnsynApi } from '../api/ansyn-api.service';
 
 @Component({
 	selector: 'ansyn-app',

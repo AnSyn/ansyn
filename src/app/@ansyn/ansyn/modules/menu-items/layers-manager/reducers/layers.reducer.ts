@@ -1,6 +1,6 @@
 import { LayersActions, LayersActionTypes } from '../actions/layers.actions';
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
-import { uniq } from 'lodash';
+import { uniq, uniqWith } from 'lodash';
 import { createEntityAdapter, Dictionary, EntityAdapter, EntityState } from '@ngrx/entity';
 import { ILayer, LayerSearchTypeEnum, LayerType } from '../models/layers.model';
 import { ILayerModal, SelectedModalEnum } from './layers-modal';
@@ -12,6 +12,8 @@ export interface ILayerState extends EntityState<ILayer> {
 	selectedLayersIds: string[];
 	activeAnnotationLayer: string;
 	staticLayers: ILayer[];
+	staticLayersError: boolean;
+	staticLayersLoading: boolean;
 	modal: ILayerModal;
 	layerSearchType: LayerSearchTypeEnum;
 	layerSearchPolygon: IVisualizerEntity;
@@ -20,6 +22,8 @@ export interface ILayerState extends EntityState<ILayer> {
 export const initialLayersState: ILayerState = layersAdapter.getInitialState({
 	selectedLayersIds: [],
 	staticLayers: [],
+	staticLayersError: false,
+	staticLayersLoading: true,
 	activeAnnotationLayer: null,
 	modal: {
 		layer: null,
@@ -109,11 +113,20 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 		}
 
 		case LayersActionTypes.ADD_STATIC_LAYERS: {
-			const staticLayers = state.staticLayers.concat(action.payload);
+			const allStaticLayers = state.staticLayers.concat(action.payload);
+			const uniqStaticLayers = uniqWith(allStaticLayers, (a, b) => a.id === b.id);
 			const layersToAdd = action.payload.filter( layer => state.selectedLayersIds.includes(layer.id));
-			return layersAdapter.addMany(layersToAdd, {...state, staticLayers,
+			return layersAdapter.addMany(layersToAdd, {...state, staticLayers: uniqStaticLayers,
 				/*force render layers on load case */
 				selectedLayersIds: [...state.selectedLayersIds]});
+		}
+
+		case LayersActionTypes.REFRESH_STATIC_LAYERS: {
+			return { ...state, staticLayersLoading: true }
+		}
+
+		case LayersActionTypes.ERROR_LOADING_STATIC_LAYERS: {
+			return { ...state, staticLayersLoading: false }
 		}
 
 		default:
@@ -131,5 +144,7 @@ export const selectSelectedLayersIds: MemoizedSelector<any, any> = createSelecto
 export const selectActiveAnnotationLayer: MemoizedSelector<any, any> = createSelector(layersStateOrInitial, (layersState: ILayerState) => layersState.activeAnnotationLayer);
 export const selectLayersModal: MemoizedSelector<any, any> = createSelector(layersStateOrInitial, (layersState: ILayerState) => layersState.modal);
 export const selectStaticLayer: MemoizedSelector<any, ILayer[]> = createSelector(layersStateOrInitial, (layersState: ILayerState) => layersState?.staticLayers);
+export const selectIsErrorFetchStaticLayers: MemoizedSelector<any, boolean> = createSelector(layersStateOrInitial, (layerState: ILayerState) => layerState?.staticLayersError);
 export const selectLayerSearchType: MemoizedSelector<any, LayerSearchTypeEnum> = createSelector(layersStateOrInitial, (layerState: ILayerState) => layerState?.layerSearchType);
 export const selectLayerSearchPolygon: MemoizedSelector<ILayerState, IVisualizerEntity> = createSelector(layersStateOrInitial, (layerState: ILayerState) => layerState.layerSearchPolygon);
+export const selectStaticLayersLoading: MemoizedSelector<any, boolean> = createSelector(layersStateOrInitial, (layerState: ILayerState) => layerState?.staticLayersLoading);

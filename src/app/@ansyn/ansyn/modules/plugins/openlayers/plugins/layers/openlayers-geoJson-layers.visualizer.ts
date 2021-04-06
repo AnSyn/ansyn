@@ -5,8 +5,17 @@ import olStyle from 'ol/style/Style';
 import olStroke from 'ol/style/Stroke';
 import olFill from 'ol/style/Fill';
 import olCircle from 'ol/style/Circle';
-import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap, withLatestFrom, startWith, retryWhen } from 'rxjs/operators';
-import { combineLatest, EMPTY, Observable, scheduled } from 'rxjs';
+import {
+	debounceTime,
+	distinctUntilChanged,
+	filter,
+	map,
+	retryWhen,
+	switchMap,
+	tap,
+	withLatestFrom
+} from 'rxjs/operators';
+import { combineLatest, EMPTY, Observable } from 'rxjs';
 import { selectMaps, SetToastMessageAction } from '@ansyn/map-facade';
 import { UUID } from 'angular2-uuid';
 import { EntitiesVisualizer, OpenLayersMap } from '@ansyn/ol';
@@ -18,11 +27,15 @@ import {
 } from '../../../../menu-items/layers-manager/reducers/layers.reducer';
 import { feature, featureCollection } from '@turf/turf';
 import {
-	calculateGeometryArea, ExtentCollector,
+	calculateGeometryArea,
+	ExtentCollector,
 	ImageryMapExtentPolygon,
 	ImageryVisualizer,
 	IMapSettings,
-	IVisualizerEntity, MarkerSize, randomColor, splitExtent
+	IVisualizerEntity,
+	MarkerSize,
+	randomColor,
+	splitExtent
 } from '@ansyn/imagery';
 import { LoggerService } from '../../../../core/services/logger.service';
 import { isEqual } from 'lodash';
@@ -57,7 +70,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 
 	getLayerSearchPolygon$: Observable<Polygon> = this.store$.pipe(
 		select(selectLayerSearchPolygon),
-		map( (layerSearchPolygon) => layerSearchPolygon?.featureJson?.geometry )
+		map((layerSearchPolygon) => layerSearchPolygon?.featureJson?.geometry)
 	);
 
 	selectedLayersChange$ = this.store$.pipe(
@@ -100,8 +113,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 						this.layersToStyle.set(layerKey, this.createLayerStyle());
 					}
 					layersObs.push(this.getEntitiesForLayer(layer, queryExtent))
-				}
-				else if (area < 10000) {
+				} else if (area < 10000) {
 					const splitExtents = splitExtent(queryExtent, 2).filter(extent => !this.noEntitiesInExtent(extent, layer));
 					splitExtents.forEach(extent => {
 						layersObs.push(this.countEntitiesForLayer(layer, extent))
@@ -114,8 +126,8 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 			return forkJoinSafe(layersObs);
 		}),
 		switchMap(this.drawLayer.bind(this)),
-		retryWhen( err => {
-			this.store$.dispatch(new SetToastMessageAction({toastText: 'Error loading layer'}))
+		retryWhen(err => {
+			this.store$.dispatch(new SetToastMessageAction({ toastText: 'Error loading layer' }))
 			return EMPTY;
 		})
 	);
@@ -135,11 +147,6 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 		return undefined; // override if other data is used
 	}
 
-	protected initLayers() {
-		super.initLayers();
-		this.vector.setZIndex(101);
-	}
-
 	drawLayer(): Observable<boolean> {
 		const allEntities: Feature[] = [];
 		this.selectedLayers.forEach(layerKey => {
@@ -148,13 +155,6 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 			}
 		});
 		return this.setEntities(this.layerToEntities(featureCollection(allEntities)));
-	}
-
-	protected createStyle(feature, isStyle, ...styles): any[] {
-		if(feature.get('layerKey')) {
-			return this.layersToStyle.get(feature.get('layerKey'));
-		}
-		return super.createStyle(feature, isStyle, ...styles);
 	}
 
 	getEntitiesForLayer(layer: ILayer, extent: ImageryMapExtentPolygon): Observable<any> {
@@ -213,12 +213,24 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	}
 
 	createLayerStyle() {
-		const fill = new olFill({color: randomColor()});
-		const stroke = new olStroke({color: randomColor(), width: 1});
+		const fill = new olFill({ color: randomColor() });
+		const stroke = new olStroke({ color: randomColor(), width: 1 });
 		return new olStyle({
 			fill,
 			stroke,
-			image: new olCircle({fill: fill, stroke: null, radius: MarkerSize.medium })
+			image: new olCircle({ fill: fill, stroke: null, radius: MarkerSize.medium })
 		})
+	}
+
+	protected initLayers() {
+		super.initLayers();
+		this.vector.setZIndex(101);
+	}
+
+	protected createStyle(feature, isStyle, ...styles): any[] {
+		if (feature.get('layerKey')) {
+			return this.layersToStyle.get(feature.get('layerKey'));
+		}
+		return super.createStyle(feature, isStyle, ...styles);
 	}
 }

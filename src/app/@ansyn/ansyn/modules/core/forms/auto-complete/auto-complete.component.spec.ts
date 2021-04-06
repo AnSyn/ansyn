@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
-fdescribe('AutoCompleteComponent', () => {
+describe('AutoCompleteComponent', () => {
 	let component: AutoCompleteComponent<any>;
 	let fixture: ComponentFixture<AutoCompleteComponent<any>>;
 	const mockBoldPipe = MockPipe('bold');

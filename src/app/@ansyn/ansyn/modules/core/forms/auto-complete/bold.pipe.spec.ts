@@ -28,7 +28,7 @@ describe('BoldPipe', () => {
 	it('will return bold text', () => {
 		const option = 'bold';
 		const input = 'ol';
-		const output = 'b<strong>ol</strong>d';
+		const output = '<span>b<strong>ol</strong>d</span>';
 		expect(boldPipe.transform(option, input)).toEqual(output);
 	});
 

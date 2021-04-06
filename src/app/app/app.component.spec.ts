@@ -4,6 +4,7 @@ import { AppAnsynComponent } from './app.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DeviceDetectorModule } from 'ngx-device-detector';
 import { LoggerService } from '@ansyn/ansyn';
+import { provideMockStore } from "@ngrx/store/testing";
 
 describe('AppAnsynComponent', () => {
 	let fixture: ComponentFixture<AppAnsynComponent>;
@@ -21,7 +22,8 @@ describe('AppAnsynComponent', () => {
 						info: () => {
 						}
 					}
-				}
+				},
+				provideMockStore({})
 			]
 		}).compileComponents();
 	}));

@@ -12,6 +12,8 @@
 	<button (click)="setOverlayCriteriaPolygon()">Set overlays criteria polygon with radius 0 m</button>
 	<button (click)="setOverlayCriteriaPolygon(500)">Set overlays criteria polygon with radius 500 m</button>
 
+	<button (click)="getOverlaysCriteria()">Get overlays criteria</button>
+
 	<button (click)="setOverlays()">Set overlays in timeline</button>
 
 	<button (click)="checkCredentialsByArea()">Send Area Credentials Request</button>
@@ -21,6 +23,12 @@
 	<button (click)="setLayout2maps()">Set layout 2 maps</button>
 
 	<button (click)="displayOverlaysOnTwoMaps()">Display overlays on two maps</button>
+
+	<button (click)="deleteAllAnnotations()">Delete all annotations</button>
+
+	<button (click)="setOutSourceMouseShadow()">Set out source mouse shadow</button>
+
+	<button (click)="goToPosition()">Go to Position</button>
 
 	<button (click)="setMarcoOverlays()">Display Marco overlays in timeline</button>
 
@@ -35,6 +43,8 @@
 	<button (click)="getAllOverlaysData()">Get Timeline overlay's data</button>
 
 	<button (click)="setRotation()">Set rotation</button>
+
+	<button (click)="getRotation()">Get rotation</button>
 
 	<label>collapse footer
 		<select (change)="footerCollapse($event.target.value)">

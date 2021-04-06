@@ -13,7 +13,7 @@ export class ImageryCommunicatorService {
 	public instanceRemoved = new EventEmitter<{ id: string }>();
 
 	public has(id: string): boolean {
-		return Object.keys(this.communicators).includes(id);
+		return Boolean(this.communicators[id]);
 	}
 
 	public provide(id: string): CommunicatorEntity {

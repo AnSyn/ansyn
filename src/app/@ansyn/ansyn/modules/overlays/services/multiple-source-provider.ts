@@ -106,7 +106,7 @@ export class MultipleOverlaysSourceProvider {
 	getByIds(ids: IOverlayByIdMetaData[]): Observable<IOverlay[]> {
 		const grouped = groupBy(ids, 'sourceType');
 		const observables = Object.entries(grouped)
-			.map(([sourceType, ids]) => {
+			.map(([sourceType, ids]): Observable<IOverlay[]> => {
 				const overlaysSource = this.overlaysSources[sourceType];
 				if (overlaysSource) {
 					return overlaysSource.getByIds(ids);

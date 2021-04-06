@@ -8,7 +8,12 @@ import { casesFeatureKey, CasesReducer } from '../../modules/menu-items/cases/re
 import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { MenuAppEffects } from './menu.app.effects';
-import { SetMapSearchBoxTriggerAction, ToggleFooter, UpdateMapSizeAction } from '@ansyn/map-facade';
+import {
+	SetFourViewsModeAction,
+	SetMapSearchBoxTriggerAction,
+	ToggleFooter,
+	UpdateMapSizeAction
+} from '@ansyn/map-facade';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { cold, hot } from 'jasmine-marbles';
@@ -67,7 +72,7 @@ describe('MenuAppEffects', () => {
 		actions = hot('--a--', {
 			a: new ResetAppAction()
 		});
-		const expectedResults = cold('--(bcdefghij)--', {
+		const expectedResults = cold('--(bcdefghijk)--', {
 			b: new ToggleIsPinnedAction(false),
 			c: new CloseModalAction(),
 			d: new SetLayersModal({ type: SelectedModalEnum.none, layer: null }),
@@ -76,7 +81,8 @@ describe('MenuAppEffects', () => {
 			g: new LoadOverlaysSuccessAction([], true),
 			h: new InitializeFiltersAction(),
 			i: new LoadDefaultCaseAction(),
-			j: new SetMapSearchBoxTriggerAction(false)
+			j: new SetMapSearchBoxTriggerAction(false),
+			k: new SetFourViewsModeAction({ active: false })
 		});
 		expect(menuAppEffects.onResetApp$).toBeObservable(expectedResults);
 	});

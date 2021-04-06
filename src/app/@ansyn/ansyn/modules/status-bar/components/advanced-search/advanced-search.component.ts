@@ -79,7 +79,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 			this.fourViewsData = fourViewsData;
 			if (fourViewsData?.active) {
 				this.sensorsList = this.overlaysService.getAllSensorsNames(fourViewsData.active);
-				this.selectedAdvancedSearchParameters.sensors = this.sensorsList;
+				this.selectedAdvancedSearchParameters.sensors = fourViewsData.sensors || this.sensorsList;
 				this.sensorTypes = this.getAllSensorsTypes();
 			}
 		})

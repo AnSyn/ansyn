@@ -106,4 +106,12 @@ export class DataLayersService implements OnInit, OnDestroy {
 			map( (ids) => [caseId, ids])
 		)
 	}
+
+	getStaticLayers(): Observable<ILayer[]> {
+		return of([]);
+	}
+
+	parseStaticLayers(layers: ILayer[]): ILayer[] {
+		return layers;
+	}
 }

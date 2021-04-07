@@ -1,7 +1,7 @@
 import { ILayerState } from '../reducers/layers.reducer';
 import {
-	AddLayer,
-	BeginLayerCollectionLoadAction,
+	AddLayer, AddStaticLayers,
+	BeginLayerCollectionLoadAction, ErrorLoadingStaticLayers,
 	LayerCollectionLoadedAction,
 	LayersActions,
 	LayersActionTypes,
@@ -12,7 +12,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap } from 'rxjs/operators';
 import { DataLayersService } from '../services/data-layers.service';
 import { ILayer, LayerType, regionLayerDefaultName, regionLayerId } from '../models/layers.model';
 import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCrash';
@@ -59,6 +59,17 @@ export class LayersEffects {
 	onChangeLayerTypeRemovePolygon = this.actions$.pipe(
 		ofType(LayersActionTypes.SET_LAYER_SEARCH_TYPE),
 		map( () => new SetLayerSearchPolygon(null))
+	);
+
+	@Effect()
+	loadStaticLayers$ = this.actions$.pipe(
+		ofType(LayersActionTypes.LAYER_COLLECTION_LOADED, LayersActionTypes.REFRESH_STATIC_LAYERS),
+		mergeMap( () => this.dataLayersService.getStaticLayers()),
+		mergeMap( layers => {
+			const actions: any[] = [new ErrorLoadingStaticLayers(layers.some(layer => !layer))];
+			actions.push(new AddStaticLayers(this.dataLayersService.parseStaticLayers(layers)));
+			return actions;
+		})
 	);
 
 

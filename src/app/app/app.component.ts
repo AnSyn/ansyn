@@ -18,17 +18,10 @@ export class AppAnsynComponent implements AfterViewInit {
 
 	constructor(store: Store, public renderer: Renderer2, @Inject(DOCUMENT) protected document: Document, private deviceService: DeviceDetectorService, private loggerService: LoggerService) {
 		document.addEventListener('keydown', (event) => {
-			this.keysPressed[event.key] = true;
-
-			if (this.keysPressed['Control'] && event.key === 'q') {
+			if (event.key === 'q' && event.ctrlKey) {
 				store.dispatch(new ToggleMenuCollapse(false));
 				store.dispatch(new SelectMenuItemAction({ menuKey: "Sandbox" }));
-				this.keysPressed = {};
 			}
-		});
-
-		document.addEventListener('keyup', (event) => {
-			delete this.keysPressed[event.key];
 		});
 	}
 

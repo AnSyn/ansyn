@@ -49,10 +49,10 @@ export class SelectCaseAppEffects {
 	);
 
 	constructor(protected actions$: Actions,
-		protected store$: Store<IAppState>,
-		@Inject(CoreConfig) protected coreConfig: ICoreConfig,
-		@Inject(casesConfig) public caseConfig: ICasesConfig,
-		protected casesService: CasesService
+				protected store$: Store<IAppState>,
+				@Inject(CoreConfig) protected coreConfig: ICoreConfig,
+				@Inject(casesConfig) public caseConfig: ICasesConfig,
+				protected casesService: CasesService
 	) {
 	}
 
@@ -93,13 +93,16 @@ export class SelectCaseAppEffects {
 		// filters
 		const { facets } = state;
 
-		const measureIsActive = state.maps.data.some( map => map?.data?.measuresData?.measures?.length > 0);
+		const measureIsActive = state.maps.data.some(map => map?.data?.measuresData?.measures?.length > 0);
 
 		const selectCaseAction = [
 			new SetMapsDataActionStore({ mapsList: data.map(this.parseMapData.bind(this)) }),
 			new SetActiveMapId(state.maps.activeMapId),
 			new SetLayoutAction(<any>layout),
-			new SetOverlaysCriteriaAction({ time, region, advancedSearchParameters }, { noInitialSearch, runSecondSearch }),
+			new SetOverlaysCriteriaAction({ time, region, advancedSearchParameters }, {
+				noInitialSearch,
+				runSecondSearch
+			}),
 			new UpdateGeoFilterStatus({ active: false, type: region.properties.searchMode }),
 			new SetFavoriteOverlaysAction(favoriteOverlays.map(this.parseOverlay.bind(this))),
 			new SetMiscOverlays({ miscOverlays: mapValues(miscOverlays || {}, this.parseOverlay.bind(this)) }),
@@ -109,11 +112,14 @@ export class SelectCaseAppEffects {
 			new UpdateOverlaysManualProcessArgs(overlaysImageProcess),
 			new UpdateFacetsAction(facets),
 			new UpdateSelectedLayersIds(activeLayersIds),
-			new SetFourViewsModeAction(fourViewsMode),
 			new SetAnnotationMode(null),
-			new UpdateToolsFlags([{key: toolsFlags.isMeasureToolActive, value: measureIsActive}]),
+			new UpdateToolsFlags([{ key: toolsFlags.isMeasureToolActive, value: measureIsActive }]),
 			new SelectCaseSuccessAction(payload)
 		];
+
+		if (fourViewsMode) {
+			selectCaseAction.push(new SetFourViewsModeAction(fourViewsMode));
+		}
 
 		return selectCaseAction;
 	}

@@ -3,6 +3,8 @@ import * as packageJson from 'root/package.json';
 import { DOCUMENT } from '@angular/common';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { LoggerService } from '@ansyn/ansyn';
+import { Store } from "@ngrx/store";
+import { SelectMenuItemAction, ToggleMenuCollapse } from "@ansyn/menu";
 
 @Component({
 	selector: 'ansyn-root',
@@ -12,8 +14,15 @@ import { LoggerService } from '@ansyn/ansyn';
 export class AppAnsynComponent implements AfterViewInit {
 	mobileOrTable: boolean = this.deviceService.isMobile() || this.deviceService.isTablet();
 	validBrowser: boolean = ['chrome', 'safari'].includes(this.deviceService.browser.toLowerCase()) && !this.mobileOrTable;
+	keysPressed: any = {};
 
-	constructor(public renderer: Renderer2, @Inject(DOCUMENT) protected document: Document, private deviceService: DeviceDetectorService, private loggerService: LoggerService) {
+	constructor(store: Store, public renderer: Renderer2, @Inject(DOCUMENT) protected document: Document, private deviceService: DeviceDetectorService, private loggerService: LoggerService) {
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'q' && event.ctrlKey) {
+				store.dispatch(new ToggleMenuCollapse(false));
+				store.dispatch(new SelectMenuItemAction({ menuKey: "Sandbox" }));
+			}
+		});
 	}
 
 	browserLogs(): void {

@@ -16,7 +16,7 @@ import {
 	BackToExtentAction,
 	RemoveAlertMsg
 } from '../../../overlays/overlay-status/actions/overlay-status.actions';
-import { selectFilteredOveralys } from '../../../overlays/reducers/overlays.reducer';
+import { selectFilteredOverlays } from '../../../overlays/reducers/overlays.reducer';
 import { isFullOverlay } from '../../../core/utils/overlays';
 import { IOverlay } from '../../../overlays/models/overlay.model';
 import { CesiumMap } from '@ansyn/imagery-cesium';
@@ -31,7 +31,7 @@ import { Injectable } from '@angular/core';
 export class AlertsPlugin extends BaseImageryPlugin {
 	notInQueryMsg: boolean;
 	outOfBound: boolean;
-	filteredOverlay$ = this.store$.select(selectFilteredOveralys);
+	filteredOverlay$ = this.store$.select(selectFilteredOverlays);
 
 	@AutoSubscription
 	selectAlertMsg$ = this.store$.select(selectAlertMsg).pipe(

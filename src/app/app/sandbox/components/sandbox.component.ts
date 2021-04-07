@@ -182,7 +182,7 @@ export class SandboxComponent implements OnInit, OnDestroy {
 			type: 'Point',
 			coordinates: [-118.02, 33.69]
 		};
-		this.ansynApi.setMapPositionByRadius(point, 2000, undefined, false);
+		this.ansynApi.setMapPositionByRadius(point, radius, undefined, false);
 		let criteria: IOverlaysCriteria = {
 			region: point
 		};
@@ -192,32 +192,32 @@ export class SandboxComponent implements OnInit, OnDestroy {
 	setOverlayCriteriaPolygon(radius: number = 0) {
 		const point: Point = {
 			type: 'Point',
-			coordinates: [-118.02, 33.69]
+			coordinates: [-122.08, 37.403]
 		};
-		this.ansynApi.setMapPositionByRadius(point, 2000, undefined, false);
+		this.ansynApi.setMapPositionByRadius(point, radius, undefined, false);
 		const rectangle: Polygon = {
 			'type': 'Polygon',
 			'coordinates': [
 				[
 					[
-						-118.02150428295135,
-						33.69001239538193
+						-122.10267998206342,
+						37.41018709685841
 					],
 					[
-						-118.02152037620544,
-						33.69126230478287
+						-122.06103352857271,
+						37.41018709685841
 					],
 					[
-						-118.01999688148499,
-						33.69127303361893
+						-122.06103352857271,
+						37.395555620812516
 					],
 					[
-						-118.02000761032104,
-						33.69001239538193
+						-122.10267998206342,
+						37.395555620812516
 					],
 					[
-						-118.02150428295135,
-						33.69001239538193
+						-122.10267998206342,
+						37.41018709685841
 					]
 				]
 			]
@@ -252,6 +252,18 @@ export class SandboxComponent implements OnInit, OnDestroy {
 		this.ansynApi.setOverlays(this.overlays);
 	}
 
+	deleteAllAnnotations() {
+		this.ansynApi.deleteAllAnnotations();
+	}
+
+	setOutSourceMouseShadow() {
+		this.ansynApi.setOutSourceMouseShadow({ type: "Point", coordinates: [-122.39197, 37.62066] })
+	}
+
+	goToPosition() {
+		this.ansynApi.goToPosition({ type: "Point", coordinates: [-122.39197, 37.62066] });
+	}
+
 	setLayout2maps() {
 		this.ansynApi.changeMapLayout('layout2');
 	}
@@ -284,6 +296,14 @@ export class SandboxComponent implements OnInit, OnDestroy {
 
 	setRotation() {
 		this.ansynApi.setRotation(100);
+	}
+
+	getRotation() {
+		console.log(this.ansynApi.getRotation());
+	}
+
+	getOverlaysCriteria() {
+		this.ansynApi.getOverlaysCriteria().subscribe(overlaysCriteria => console.log(overlaysCriteria));
 	}
 
 	setAnnotationsWithIcons() {

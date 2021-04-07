@@ -168,7 +168,6 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				...state,
 				loading: true,
 				loaded: false,
-				overlaysContainmentChecked: false,
 				overlays: new Map(),
 				filteredOverlays: []
 			});
@@ -196,6 +195,7 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 				...state,
 				loading: false,
 				loaded: true,
+				overlaysContainmentChecked: false,
 				filteredOverlays: [],
 				wasFirstSearchDone: true
 			};
@@ -367,7 +367,7 @@ export const selectOverlays = createSelector(overlaysStateSelector, selectEntiti
 export const selectOverlaysMap: any = createSelector(selectOverlays, (entities: Dictionary<IOverlay>): Map<string, IOverlay> => new Map(Object.entries(entities)));
 export const selectOverlaysArray = createSelector(overlaysStateSelector, selectAll);
 export const selectOverlaysIds = createSelector(overlaysStateSelector, selectIds);
-export const selectFilteredOveralys = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string[] => overlays && overlays.filteredOverlays);
+export const selectFilteredOverlays = createSelector(overlaysStateSelector, (overlays: IOverlaysState): string[] => overlays && overlays.filteredOverlays);
 export const selectSpecialObjects = createSelector(overlaysStateSelector, (overlays: IOverlaysState): Map<string, IOverlaySpecialObject> => overlays.specialObjects);
 export const selectDrops = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays && overlays.drops);
 export const selectFourViewsOverlays = createSelector(overlaysStateSelector, (overlays: IOverlaysState) => overlays?.fourViewsOverlays);

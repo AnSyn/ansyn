@@ -114,7 +114,8 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 
 		case LayersActionTypes.ADD_STATIC_LAYERS: {
 			const allStaticLayers = state.staticLayers.concat(action.payload);
-			const uniqStaticLayers = uniqWith(allStaticLayers, (a, b) => a.id === b.id);
+			const uniqStaticLayers = uniqWith(allStaticLayers, (a: ILayer, b: ILayer) => a.id === b.id)
+				.sort( (a: ILayer, b: ILayer) => a.name.localeCompare(b.name));;
 			const layersToAdd = action.payload.filter( layer => state.selectedLayersIds.includes(layer.id));
 			return layersAdapter.addMany(layersToAdd, {...state, staticLayers: uniqStaticLayers,
 				/*force render layers on load case */

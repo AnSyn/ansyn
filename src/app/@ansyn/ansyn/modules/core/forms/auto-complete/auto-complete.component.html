@@ -2,15 +2,14 @@
 	   (dblclick)="dbClick()"
 	   [formControl]="control"
 	   [matAutocomplete]="auto"/>
-<mat-autocomplete #auto="matAutocomplete" panelWidth="fit" autoActiveFirstOption (optionSelected)="onSelect()">
+<mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption (optionSelected)="onSelect()">
 	<mat-option *ngIf="options && !options.length" disabled>
 		{{'No Results' | translate}}
 	</mat-option>
 	<mat-option *ngFor="let option of options"
 				(onSelectionChange)="selectChange.emit(option)"
-				(click)="$event.stopPropagation()"
-				[value]="keyFromText ? option[keyFromText] : option"
-				[innerHTML]="(keyFromText ? option[keyFromText] : option) | bold:control.value">
+				(click)="$event.stopPropagation()">
+		<ng-container *ngTemplateOutlet="optionRef; context: {option: option, value: control.value}"></ng-container>
 	</mat-option>
 
 </mat-autocomplete>

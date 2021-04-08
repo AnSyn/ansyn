@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, OnDestroy, ElementRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { AutoSubscriptions, AutoSubscription } from 'auto-subscriptions';
 import { tap, filter, retryWhen, switchMap, take } from 'rxjs/operators';
@@ -15,7 +15,7 @@ export class AutoCompleteComponent<T> implements OnInit, OnDestroy {
 	options: T[];
 	@Input() placeholder = '';
 	@Input() onInputChangeFn: (string) => Observable<T[]>;
-	@Input() keyFromText: string;
+	@Input() optionRef: ElementRef;
 	@Input() allEntities: T[];
 	@Output() selectChange = new EventEmitter<T>(true);
 	control = new FormControl();

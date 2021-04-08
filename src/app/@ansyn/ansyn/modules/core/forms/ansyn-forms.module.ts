@@ -55,7 +55,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 		FileInputComponent,
 		AnsynComboTableComponent,
 		AnsynComboTableOptionComponent,
-		AutoCompleteComponent
+		AutoCompleteComponent,
+		BoldPipe
 	]
 })
 export class AnsynFormsModule {

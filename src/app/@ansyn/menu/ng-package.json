@@ -4,8 +4,7 @@
   "whitelistedNonPeerDependencies": [
     "auto-subscriptions",
     "tslib",
-    "@ngx-translate/core",
-    "font-awesome"
+    "@ngx-translate/core"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

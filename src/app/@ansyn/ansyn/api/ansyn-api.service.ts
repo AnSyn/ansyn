@@ -24,7 +24,7 @@ import {
 import { Actions, ofType } from '@ngrx/effects';
 import { Dictionary } from '@ngrx/entity';
 import { select, Store } from '@ngrx/store';
-import { featureCollection } from '@turf/turf';
+import { feature, featureCollection } from '@turf/turf';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { Feature, FeatureCollection, Point, Polygon } from 'geojson';
 import { cloneDeep } from 'lodash';
@@ -52,7 +52,7 @@ import {
 import { IOverlay, IOverlaysCriteria } from '../modules/overlays/models/overlay.model';
 import { ANSYN_ID } from './ansyn-id.provider';
 import {
-	selectFilteredOveralys,
+	selectFilteredOverlays,
 	selectOverlaysArray,
 	selectOverlaysCriteria
 } from '../modules/overlays/reducers/overlays.reducer';
@@ -362,7 +362,7 @@ export class AnsynApi {
 	 * @return all the overlays in the timeline.
 	 */
 	getOverlays(): Observable<IOverlay[]> {
-		return combineLatest([this.store.select(selectOverlaysArray), this.store.select(selectFilteredOveralys)]).pipe(
+		return combineLatest([this.store.select(selectOverlaysArray), this.store.select(selectFilteredOverlays)]).pipe(
 			take(1),
 			map(([overlays, filteredOverlays]: [IOverlay[], string[]]) => {
 				return overlays.filter((overlay) => {
@@ -413,7 +413,7 @@ export class AnsynApi {
 		}));
 		if (search) {
 			const criteria: IOverlaysCriteria = {
-				region: center
+				region: feature(center)
 			};
 			this.store.dispatch(new SetOverlaysCriteriaAction(criteria));
 		}
@@ -443,6 +443,7 @@ export class AnsynApi {
 					return null;
 			}
 		}
+		criteria.region = feature(criteria.region);
 		this.store.dispatch(new SetOverlaysCriteriaAction(criteria));
 	}
 

@@ -10,6 +10,7 @@
     "@ansyn/menu",
     "@ansyn/ol",
     "@ansyn/event-drops",
+    "angular2-uuid",
     "@turf/turf",
     "geojson",
     "lodash",
@@ -21,12 +22,15 @@
     "lodash-decorators",
     "@ngx-translate/core",
     "font-awesome",
-    "ngx-treeview",
     "dom-to-image",
     "blob-util",
     "jspdf",
     "shpjs",
-    "d3"
+    "d3",
+    "ngx-color-picker",
+    "ol",
+    "tslib",
+    "@angular-slider/ngx-slider"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

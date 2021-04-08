@@ -5,7 +5,8 @@
     "@turf/turf",
     "cesium",
     "@ansyn/imagery",
-    "tslib"
+    "tslib",
+    "geojson"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

@@ -340,7 +340,7 @@ export {
 	MarkUpClass,
 	overlaysStateSelector,
 	overlaysStatusMessages, selectdisplayOverlayHistory, selectDropMarkup,
-	selectFilteredOveralys, selectOverlaysArray, selectOverlaysIds,
+	selectFilteredOverlays, selectOverlaysArray, selectOverlaysIds,
 	selectOverlaysMap, selectOverlays, selectSpecialObjects, selectDrops, selectDropsWithoutSpecialObjects
 } from './modules/overlays/reducers/overlays.reducer';
 export { OverlaysConfig, OverlaysService } from './modules/overlays/services/overlays.service';

@@ -1,16 +1,17 @@
 {
 	"name": "@ansyn/imagery-cesium",
-	"version": "4.1.1",
+	"version": "5.0.0",
 	"peerDependencies": {
-		"@angular/core": "9.x || 10.x",
-		"@angular/common": "9.x || 10.x",
+		"@angular/core": "9.x || 10.x || 11.x",
+		"@angular/common": "9.x || 10.x || 11.x",
 		"rxjs": "6.x"
 	},
 	"dependencies": {
 		"tslib": "^2.0.0",
-		"@ansyn/imagery": "4.1.1",
+		"@ansyn/imagery": "5.0.0",
 		"cesium": "^1.66.0",
-		"@turf/turf": "^6.3.0"
+		"@turf/turf": "^6.3.0",
+		"geojson": "^0.5.0"
 	},
 	"license": "MIT"
 }

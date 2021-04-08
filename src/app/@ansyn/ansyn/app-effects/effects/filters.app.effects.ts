@@ -44,7 +44,7 @@ import {
 } from '../../modules/overlays/actions/overlays.actions';
 import {
 	overlaysStatusMessages,
-	selectFilteredOveralys,
+	selectFilteredOverlays,
 	selectOverlaysAreLoaded,
 	selectOverlaysArray,
 	selectOverlaysContainmentChecked,
@@ -68,7 +68,7 @@ export class FiltersAppEffects {
 	favoriteOverlays$: Observable<IOverlay[]> = this.store$.select(selectFavoriteOverlays);
 	overlaysMap$: Observable<Map<string, IOverlay>> = this.store$.select(selectOverlaysMap);
 	overlaysArray$: Observable<IOverlay[]> = this.store$.select(selectOverlaysArray);
-	filteredOverlays$: Observable<string[]> = this.store$.select(selectFilteredOveralys);
+	filteredOverlays$: Observable<string[]> = this.store$.select(selectFilteredOverlays);
 	specialObjects$: Observable<Map<string, IOverlaySpecialObject>> = this.store$.select(selectSpecialObjects);
 	onFiltersChanges$: Observable<[FiltersMetadata, boolean, IOverlay[]]> = combineLatest([this.filtersMetadata$, this.showOnlyFavorite$, this.favoriteOverlays$]);
 	forOverlayDrops$: Observable<[Map<string, IOverlay>, string[], Map<string, IOverlaySpecialObject>, IOverlay[], boolean]> = combineLatest([
@@ -179,7 +179,7 @@ export class FiltersAppEffects {
 	);
 
 	@Effect()
-	filteredOverlaysChanged$: Observable<any> = this.store$.select(selectFilteredOveralys).pipe(
+	filteredOverlaysChanged$: Observable<any> = this.store$.select(selectFilteredOverlays).pipe(
 		withLatestFrom(this.store$.select(filtersStateSelector), this.store$.select(selectOverlaysMap), this.store$.select(selectFavoriteOverlays)),
 		filter(([filteredOverlays, filterState, overlays]: [string[], IFiltersState, Map<string, IOverlay>, IOverlay[]]) => Boolean(overlays.size)),
 		map(([filteredOverlays, filterState, overlays, favoriteOverlays]: [string[], IFiltersState, Map<string, IOverlay>, IOverlay[]]) => {

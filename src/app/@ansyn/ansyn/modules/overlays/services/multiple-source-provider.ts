@@ -80,13 +80,12 @@ export class MultipleOverlaysSourceProvider {
 
 	private setAvailableProviders() {
 		const rawProviders = Object.values(this.overlaysSources);
-		const providers = rawProviders.map(provider => this.mapProviderConfig(provider)).filter(this.filterOnSelectedProviders).map(([provider, config]) => {
+		this.availableProviders = rawProviders.map(provider => this.mapProviderConfig(provider)).filter(this.filterOnSelectedProviders).map(([provider, config]) => {
 			return {
 				name: provider.sourceType,
 				class: provider
 			};
 		});
-		this.availableProviders = providers;
 	}
 
 	private activeProviders(providersFromState: IProviderData[]) {
@@ -112,25 +111,30 @@ export class MultipleOverlaysSourceProvider {
 					return overlaysSource.getByIds(ids);
 				}
 				else {
-					const allSourcesOverlays: Observable<IOverlay[]>[] = this.availableProviders
-						.map((overlaysSource) => {
-						return this.overlaysSources[overlaysSource.name].getByIds(ids)
-							.pipe(
-								switchMap(overlay => of(overlay)),
-								catchError(() => of(null))
-							); // by using switchMap+catchError it will continue after failure
-					});
-					return zip(...allSourcesOverlays).pipe(
-						map((overlays) => {
-							return mergeArrays(overlays.filter(Boolean));
-						})
-					);
+					return this.getIdByAvailableProviders(ids);
 				}
 				return throwError(`Cannot find overlay for source = ${ sourceType }`);
 			});
 
 		return forkJoinSafe(observables).pipe(map(mergeArrays));
 	}
+
+	getIdByAvailableProviders(ids)
+	{
+		const allSourcesOverlays: Observable<IOverlay[]>[] = this.availableProviders
+			.map((overlaysSource) => {
+				return this.overlaysSources[overlaysSource.name].getByIds(ids)
+					.pipe(
+						switchMap(overlay => of(overlay)),
+						catchError(() => of(null))
+					); // by using switchMap+catchError it will continue after failure
+			});
+		return zip(...allSourcesOverlays).pipe(
+			map((overlays) => {
+				return mergeArrays(overlays.filter(Boolean));
+			})
+		);
+}
 
 	public fetch(fetchParams: IFetchParams): Observable<IOverlaysFetchData> {
 		this.onDataInputFilterChange$.pipe(take(1)).subscribe();

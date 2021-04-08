@@ -11,6 +11,7 @@ export enum ContextName {
 	QuickSearch = 'QuickSearch',
 	ImisightMission = 'ImisightMission',
 	TwoMaps = 'TwoMaps',
+	IdSearch = 'IdSearch',
 	GeoAndTime = 'GeoAndTime'
 }
 
@@ -18,6 +19,7 @@ export const RequiredContextParams = {
 	[ContextName.AreaAnalysis]: ['geometry'],
 	[ContextName.QuickSearch]: ['geometry', 'time', 'sensors'],
 	[ContextName.TwoMaps]: ['geometry'],
+	[ContextName.IdSearch]: ['id'],
 	[ContextName.ImisightMission]: ['geometry', 'accessToken', 'idToken', 'expiresIn'],
 	[ContextName.GeoAndTime]: ['geometry', 'time']
 };

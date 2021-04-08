@@ -444,7 +444,7 @@ export class MapAppEffects {
 			return forkJoin(observableOverlays).pipe(
 				mergeMap((overlaysData: any[]) => {
 					const fourMapsLayout = 'layout6';
-					const [firstAngleOverlays, secondAngleOverlays, thirdAngleOverlays, fourthAngleOverlays] = overlaysData.map(({ data }) => data);
+					const [firstAngleOverlays, secondAngleOverlays, thirdAngleOverlays, fourthAngleOverlays] = overlaysData.map(({ data }) => data || []);
 					const fourViewsOverlays: IFourViews = {
 						firstAngleOverlays,
 						secondAngleOverlays,

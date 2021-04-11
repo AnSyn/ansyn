@@ -105,7 +105,8 @@ describe('SelectCaseAppEffects', () => {
 					types: []
 				},
 				fourViewsMode: IFourViewsData = {
-					active: false
+					active: true,
+					sensors: []
 				},
 				runSecondSearch = true,
 				favoriteOverlays: IOverlay[] = [],

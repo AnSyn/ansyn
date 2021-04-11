@@ -79,7 +79,8 @@ describe('MenuAppEffects', () => {
 			g: new LoadOverlaysSuccessAction([], true),
 			h: new InitializeFiltersAction(),
 			i: new LoadDefaultCaseAction(),
-			j: new SetMapSearchBoxTriggerAction(false)
+			j: new SetMapSearchBoxTriggerAction(false),
+			k: new SetFourViewsModeAction({ active: false })
 		});
 		expect(menuAppEffects.onResetApp$).toBeObservable(expectedResults);
 	});

@@ -46,7 +46,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 			const staticLayers = action.payload.filter( layer => layer.type === LayerType.static);
 			let activeAnnotationLayer = (annotationLayer && annotationLayer.id) || state.activeAnnotationLayer;
 			let layers = action.payload.filter(layer => layer.type !== LayerType.static || state.selectedLayersIds.includes(layer.id));
-			return layersAdapter.setAll(layers, { ...state, activeAnnotationLayer, staticLayers, staticLayersLoading: staticLayers.length === 0 });
+			return layersAdapter.setAll(layers, { ...state, activeAnnotationLayer, staticLayers });
 
 		case LayersActionTypes.SET_LAYER_SELECTION: {
 			const id = action.payload.id, ids = state.selectedLayersIds;
@@ -127,7 +127,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 		}
 
 		case LayersActionTypes.ERROR_LOADING_STATIC_LAYERS: {
-			return { ...state, staticLayersLoading: false }
+			return { ...state, staticLayersError: action.payload, staticLayersLoading: false }
 		}
 
 		default:

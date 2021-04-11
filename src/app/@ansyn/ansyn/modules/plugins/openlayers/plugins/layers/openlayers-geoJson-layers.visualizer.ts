@@ -44,6 +44,7 @@ import { forkJoinSafe } from '../../../../core/utils/rxjs/observables/fork-join-
 import { layersConfig } from '../../../../menu-items/layers-manager/services/data-layers.service';
 import { ILayersManagerConfig } from '../../../../menu-items/layers-manager/models/layers-manager-config';
 import { Inject } from '@angular/core';
+import { IScreenViewConfig, ScreenViewConfig } from '../visualizers/models/screen-view.model';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -51,6 +52,7 @@ import { Inject } from '@angular/core';
 	isHideable: true
 })
 export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
+	readonly STYLE_KEY = 'styleKey';
 	layersToStyle: Map<string, olStyle> = new Map();
 	layersDictionary: Map<string, Feature<Polygon>[]> = new Map();
 	bboxToZeroEntities: Map<string, ExtentCollector> = new Map();
@@ -63,7 +65,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 
 	onMapPositionChanges$ = this.getCurrentMapState$.pipe(
 		map((map: IMapSettings) => map?.data?.position?.extentPolygon),
-		debounceTime(1000),
+		debounceTime(this.screenViewConfig.debounceTime),
 		distinctUntilChanged(isEqual),
 		filter(Boolean)
 	);
@@ -103,7 +105,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 		filter(() => !this.isHidden),
 		switchMap(([layers, extentPolygon, searchPolygon]: [ILayer[], ImageryMapExtentPolygon, Polygon]) => {
 			const area = calculateGeometryArea(extentPolygon) * 1e-6;
-			let layersObs = [];
+			const layersObs = [];
 			layers.forEach(layer => {
 				const queryExtent = searchPolygon || extentPolygon;
 				const layerKey = this.getLayerKey(layer);
@@ -135,7 +137,8 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	constructor(protected store$: Store<any>,
 				protected http: HttpClient,
 				protected loggerService: LoggerService,
-				@Inject(layersConfig) protected config: ILayersManagerConfig) {
+				@Inject(layersConfig) protected config: ILayersManagerConfig,
+				@Inject(ScreenViewConfig) protected screenViewConfig: IScreenViewConfig) {
 		super({
 			initial: {
 				'fill-opacity': 0
@@ -228,8 +231,8 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	}
 
 	protected createStyle(feature, isStyle, ...styles): any[] {
-		if (feature.get('layerKey')) {
-			return this.layersToStyle.get(feature.get('layerKey'));
+		if (feature.get(this.STYLE_KEY)) {
+			return this.layersToStyle.get(feature.get(this.STYLE_KEY));
 		}
 		return super.createStyle(feature, isStyle, ...styles);
 	}

@@ -19,7 +19,7 @@ export class AnnotationLayersComponent extends LayerCollectionComponent implemen
 	type = LayerType.annotation;
 
 
-	disabledRemove = this.getLayers$.pipe(
+	disabledRemove$ = this.getLayers$.pipe(
 		map( (layers: ILayer[]) => layers.length < 2)
 	);
 

@@ -132,6 +132,7 @@ describe('SelectCaseAppEffects', () => {
 				favoriteOverlays,
 				overlaysTranslationData,
 				maps,
+
 				layers,
 				overlaysImageProcess,
 				facets,

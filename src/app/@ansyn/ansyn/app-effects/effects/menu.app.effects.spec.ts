@@ -24,8 +24,6 @@ import { InitializeFiltersAction } from '../../modules/filters/actions/filters.a
 import { MatDialog } from '@angular/material/dialog';
 import { SetLayersModal } from '../../modules/menu-items/layers-manager/actions/layers.actions';
 import { SelectedModalEnum } from '../../modules/menu-items/layers-manager/reducers/layers-modal';
-import { UpdateToolsFlags } from '../../modules/status-bar/components/tools/actions/tools.actions';
-import { toolsFlags } from '../../modules/status-bar/components/tools/models/tools.model';
 
 describe('MenuAppEffects', () => {
 	let menuAppEffects: MenuAppEffects;
@@ -81,8 +79,7 @@ describe('MenuAppEffects', () => {
 			g: new LoadOverlaysSuccessAction([], true),
 			h: new InitializeFiltersAction(),
 			i: new LoadDefaultCaseAction(),
-			j: new SetMapSearchBoxTriggerAction(false),
-			k: new SetFourViewsModeAction({ active: false })
+			j: new SetMapSearchBoxTriggerAction(false)
 		});
 		expect(menuAppEffects.onResetApp$).toBeObservable(expectedResults);
 	});

@@ -155,7 +155,8 @@
   "layersManagerConfig": {
     "schema": "layers",
     "limit": {{ getv "/ansyn/layers/manager/limit" "20" }},
-    "limitError": "{{ getv "/ansyn/layers/manager/limit/error" "can't open more than 20 layers" }}"
+    "limitError": "{{ getv "/ansyn/layers/manager/limit/error" "can't open more than 20 layers" }}",
+    "staticUrls": {{ getv "/ansyn/layers/manager/static/urls" "[]" }}
   },
   "overlaysConfig": {
     "limit": 249,

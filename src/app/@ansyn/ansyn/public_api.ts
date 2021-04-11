@@ -1,3 +1,5 @@
+export { ScreenViewConfig, IScreenViewConfig } from './modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
+
 export { TimePickerContainerComponent } from './modules/status-bar/components/time-picker-container/time-picker-container.component';
 
 export { measuresClassNameForExport } from './modules/plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';

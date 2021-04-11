@@ -398,3 +398,4 @@ export { AnsynComboTableComponent } from './modules/core/forms/ansyn-combo-table
 export { AnsynComboTableOptionComponent } from './modules/core/forms/ansyn-combo-table-option/ansyn-combo-table-option.component';
 export { AdvancedSearchComponent } from './modules/status-bar/components/advanced-search/advanced-search.component';
 export { AutoCompleteComponent } from './modules/core/forms/auto-complete/auto-complete.component';
+export { BoldPipe } from './modules/core/forms/auto-complete/bold.pipe';

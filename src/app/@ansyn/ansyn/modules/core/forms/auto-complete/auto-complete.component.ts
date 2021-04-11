@@ -26,7 +26,7 @@ export class AutoCompleteComponent<T> implements OnInit, OnDestroy {
 			this.lastValue = value;
 			this.options = []
 		}),
-		filter( (value: string) => value.length > 1),
+		filter( (value: string) => value?.length > 1),
 		switchMap( (value) =>  this.onInputChangeFn(value)),
 		tap( (options: T[]) => this.options = options),
 		retryWhen((err) => {

@@ -6,7 +6,7 @@ import { ILayer, LayerSearchTypeEnum, LayerType } from '../models/layers.model';
 import { ILayerModal, SelectedModalEnum } from './layers-modal';
 import { IVisualizerEntity } from '@ansyn/imagery';
 
-export const layersAdapter: EntityAdapter<ILayer> = createEntityAdapter<ILayer>({sortComparer: (a, b) => +a.creationTime - +b.creationTime});
+export const layersAdapter: EntityAdapter<ILayer> = createEntityAdapter<ILayer>({ sortComparer: (a, b) => +a.creationTime - +b.creationTime });
 
 export interface ILayerState extends EntityState<ILayer> {
 	selectedLayersIds: string[];
@@ -39,11 +39,11 @@ export const layersStateSelector: MemoizedSelector<any, ILayerState> = createFea
 export function LayersReducer(state: ILayerState = initialLayersState, action: LayersActions | any): ILayerState {
 	switch (action.type) {
 		case LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD:
-			return layersAdapter.removeAll({...state, selectedLayersIds: [], activeAnnotationLayer: null});
+			return layersAdapter.removeAll({ ...state, selectedLayersIds: [], activeAnnotationLayer: null });
 
 		case LayersActionTypes.LAYER_COLLECTION_LOADED:
 			const annotationLayer = action.payload.find(({ type }) => type === LayerType.annotation);
-			const staticLayers = action.payload.filter( layer => layer.type === LayerType.static);
+			const staticLayers = action.payload.filter(layer => layer.type === LayerType.static);
 			let activeAnnotationLayer = (annotationLayer && annotationLayer.id) || state.activeAnnotationLayer;
 			let layers = action.payload.filter(layer => layer.type !== LayerType.static || state.selectedLayersIds.includes(layer.id));
 			return layersAdapter.setAll(layers, { ...state, activeAnnotationLayer, staticLayers });
@@ -100,7 +100,7 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 			return { ...state, layerSearchType: action.payload };
 
 		case LayersActionTypes.SET_LAYER_SEARCH_POLYGON: {
-			return { ...state, layerSearchPolygon: action.payload}
+			return { ...state, layerSearchPolygon: action.payload }
 		}
 
 		case LayersActionTypes.SET_MODAL:
@@ -115,11 +115,14 @@ export function LayersReducer(state: ILayerState = initialLayersState, action: L
 		case LayersActionTypes.ADD_STATIC_LAYERS: {
 			const allStaticLayers = state.staticLayers.concat(action.payload);
 			const uniqStaticLayers = uniqWith(allStaticLayers, (a: ILayer, b: ILayer) => a.id === b.id)
-				.sort( (a: ILayer, b: ILayer) => a.name.localeCompare(b.name));;
-			const layersToAdd = action.payload.filter( layer => state.selectedLayersIds.includes(layer.id));
-			return layersAdapter.addMany(layersToAdd, {...state, staticLayers: uniqStaticLayers,
+				.sort((a: ILayer, b: ILayer) => a.name.localeCompare(b.name));
+			;
+			const layersToAdd = action.payload.filter(layer => state.selectedLayersIds.includes(layer.id));
+			return layersAdapter.addMany(layersToAdd, {
+				...state, staticLayers: uniqStaticLayers,
 				/*force render layers on load case */
-				selectedLayersIds: [...state.selectedLayersIds]});
+				selectedLayersIds: [...state.selectedLayersIds]
+			});
 		}
 
 		case LayersActionTypes.REFRESH_STATIC_LAYERS: {

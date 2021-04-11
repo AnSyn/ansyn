@@ -41,14 +41,12 @@ import { LoggerService } from '../../../../core/services/logger.service';
 import { isEqual } from 'lodash';
 import { AutoSubscription } from 'auto-subscriptions';
 import { forkJoinSafe } from '../../../../core/utils/rxjs/observables/fork-join-safe';
-import { layersConfig } from '../../../../menu-items/layers-manager/services/data-layers.service';
-import { ILayersManagerConfig } from '../../../../menu-items/layers-manager/models/layers-manager-config';
 import { Inject } from '@angular/core';
 import { IScreenViewConfig, ScreenViewConfig } from '../visualizers/models/screen-view.model';
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
-	deps: [Store, HttpClient, LoggerService],
+	deps: [Store, HttpClient, LoggerService, ScreenViewConfig],
 	isHideable: true
 })
 export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
@@ -137,7 +135,6 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	constructor(protected store$: Store<any>,
 				protected http: HttpClient,
 				protected loggerService: LoggerService,
-				@Inject(layersConfig) protected config: ILayersManagerConfig,
 				@Inject(ScreenViewConfig) protected screenViewConfig: IScreenViewConfig) {
 		super({
 			initial: {

@@ -117,7 +117,7 @@ export class SelectCaseAppEffects {
 			new SelectCaseSuccessAction(payload)
 		];
 
-		if (fourViewsMode) {
+		if (fourViewsMode?.active) {
 			selectCaseAction.push(new SetFourViewsModeAction(fourViewsMode));
 		}
 

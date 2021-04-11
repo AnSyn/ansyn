@@ -105,7 +105,8 @@ describe('SelectCaseAppEffects', () => {
 					types: []
 				},
 				fourViewsMode: IFourViewsData = {
-					active: false
+					active: true,
+					sensors: []
 				},
 				runSecondSearch = true,
 				favoriteOverlays: IOverlay[] = [],
@@ -132,6 +133,7 @@ describe('SelectCaseAppEffects', () => {
 				favoriteOverlays,
 				overlaysTranslationData,
 				maps,
+
 				layers,
 				overlaysImageProcess,
 				facets,

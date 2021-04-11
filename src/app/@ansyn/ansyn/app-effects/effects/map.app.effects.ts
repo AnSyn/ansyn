@@ -398,6 +398,7 @@ export class MapAppEffects {
 			return [
 				new SetLayoutAction(oneMapLayout),
 				new ToggleFooter(false),
+				new UpdateGeoFilterStatus({ active: false, type: CaseGeoFilter.ScreenView }),
 				new SetFourViewsOverlaysAction({}),
 				new UpdateLayer({ id: regionLayerId, name: regionLayerName }),
 				new BackToWorldView({ mapId: activeMapID })
@@ -443,7 +444,7 @@ export class MapAppEffects {
 			return forkJoin(observableOverlays).pipe(
 				mergeMap((overlaysData: any[]) => {
 					const fourMapsLayout = 'layout6';
-					const [firstAngleOverlays, secondAngleOverlays, thirdAngleOverlays, fourthAngleOverlays] = overlaysData.map(({ data }) => data);
+					const [firstAngleOverlays, secondAngleOverlays, thirdAngleOverlays, fourthAngleOverlays] = overlaysData.map(({ data }) => data || []);
 					const fourViewsOverlays: IFourViews = {
 						firstAngleOverlays,
 						secondAngleOverlays,

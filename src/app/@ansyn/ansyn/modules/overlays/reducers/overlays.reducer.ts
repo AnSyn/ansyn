@@ -245,7 +245,8 @@ export function OverlayReducer(state = overlaysInitialState, action: OverlaysAct
 		case OverlaysActionTypes.SET_OVERLAYS_STATUS_MESSAGE:
 			return {
 				...state,
-				statusMessage: action.payload && (action as SetOverlaysStatusMessageAction).payload.message
+				statusMessage: action.payload && (action as SetOverlaysStatusMessageAction).payload.message,
+				loading: false
 			};
 
 		case OverlaysActionTypes.SET_OVERLAYS_MARKUPS:

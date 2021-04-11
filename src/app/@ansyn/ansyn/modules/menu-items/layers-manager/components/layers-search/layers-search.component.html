@@ -1,0 +1,21 @@
+<form>
+	<ansyn-auto-complete
+		[placeholder]="'search layers'"
+		(selectChange)="addLayer($event)"
+		[allEntities]="allStaticLayers$ | async"
+		[optionRef]="optionRef"
+		[onInputChangeFn]="getAllLayersByValue.bind(this)">
+	</ansyn-auto-complete>
+	<div class="layer-search-button">
+		<button (click)="changeSearchType(LayerSearchTypes.polygonView)"
+				[class.active]="layerSearchType === LayerSearchTypes.polygonView"
+				[attr.tooltip-value]="'Query layers by polygon' | translate"
+				tooltip-class="bottom right">
+			<i class="medium-icon icon-annotation-polygon"></i>
+		</button>
+	</div>
+</form>
+<ng-template let-option="option" let-value="value" #optionRef>
+	<span [title]="option['name']" [innerHTML]="option['name'] | bold:value"></span>
+	<small style="margin: 5px" *ngIf="option?.data?.source">{{option?.data?.source}}</small>
+</ng-template>

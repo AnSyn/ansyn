@@ -126,7 +126,9 @@ export {
 export {
 	BeginLayerCollectionLoadAction,
 	UpdateLayer,
-	UpdateSelectedLayersIds
+	UpdateSelectedLayersIds,
+	AddStaticLayers,
+	LayersActionTypes
 } from './modules/menu-items/layers-manager/actions/layers.actions';
 export {
 	layerPluginType, layerPluginTypeEnum, LayerType
@@ -395,3 +397,5 @@ export { OverlayNavigationBarComponent } from './modules/overlays/components/ove
 export { AnsynComboTableComponent } from './modules/core/forms/ansyn-combo-table/ansyn-combo-table.component';
 export { AnsynComboTableOptionComponent } from './modules/core/forms/ansyn-combo-table-option/ansyn-combo-table-option.component';
 export { AdvancedSearchComponent } from './modules/status-bar/components/advanced-search/advanced-search.component';
+export { AutoCompleteComponent } from './modules/core/forms/auto-complete/auto-complete.component';
+export { BoldPipe } from './modules/core/forms/auto-complete/bold.pipe';

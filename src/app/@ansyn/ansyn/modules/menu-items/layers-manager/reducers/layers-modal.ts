@@ -1,10 +1,10 @@
 import { ILayer } from '../models/layers.model';
 
 export enum SelectedModalEnum {
-	none,
-	download,
-	remove,
-	edit
+	none= 'none',
+	download = 'download',
+	remove = 'remove',
+	edit = 'edit'
 }
 
 export interface ILayerModal {

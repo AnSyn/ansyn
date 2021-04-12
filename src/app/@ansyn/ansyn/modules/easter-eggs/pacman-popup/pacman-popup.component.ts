@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef, Renderer2, OnDestroy } from '
 import { KeysListenerService } from "../../core/services/keys-listener.service";
 import { AutoSubscription, AutoSubscriptions } from "auto-subscriptions";
 import { filter, tap } from "rxjs/operators";
+import { PacnManModeAction } from "../../status-bar/actions/status-bar.actions";
+import { Store } from "@ngrx/store";
 
 export enum KEY_CODE {
 	RIGHT_ARROW = 39,
@@ -25,7 +27,7 @@ class Ghost {
 		this.speed = speed;
 		this.currentIndex = startIndex;
 		this.previousIndex = startIndex;
-		this.isScared = false
+		this.isScared = false,
 		this.timerId = NaN
 	}
 }
@@ -97,7 +99,8 @@ export class PacmanPopupComponent implements OnInit, OnDestroy {
 
 	constructor(private renderer: Renderer2,
 				public keyListenerService: KeysListenerService,
-				private elem: ElementRef) {
+				private elem: ElementRef,
+				protected store$: Store<any>) {
 
 	}
 
@@ -185,10 +188,11 @@ export class PacmanPopupComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-
+		this.store$.dispatch(new PacnManModeAction(true));
 	}
 
 	ngOnDestroy(): void {
+		this.store$.dispatch(new PacnManModeAction(false));
 	}
 
 	// init all the ghosts from the array

@@ -1,18 +1,23 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { IStatusBarState } from '../../../status-bar/reducers/status-bar.reducer';
+import { select, Store } from '@ngrx/store';
+import {
+	IStatusBarState,
+	selectMarkedSecondSearchSensors,
+	selectPacmanMode
+} from '../../../status-bar/reducers/status-bar.reducer';
 import { ExpandAction, GoAdjacentOverlay } from '../../../status-bar/actions/status-bar.actions';
 import { IStatusBarConfig } from '../../../status-bar/models/statusBar-config.model';
 import { StatusBarConfig } from '../../../status-bar/models/statusBar.config';
 import { EnableCopyOriginalOverlayDataAction, selectOverlayOfActiveMap } from '@ansyn/map-facade';
 import { ActivateScannedAreaAction } from '../../overlay-status/actions/overlay-status.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { tap, filter } from 'rxjs/operators';
+import { tap, filter, withLatestFrom } from 'rxjs/operators';
 import { selectDropsAscending, selectFilteredOveralys } from '../../reducers/overlays.reducer';
 import { combineLatest } from 'rxjs';
 import { IOverlay, IOverlayDrop } from '../../models/overlay.model';
 import { TranslateService } from '@ngx-translate/core';
 import { KeysListenerService } from "../../../core/services/keys-listener.service";
+import { LoadOverlaysAction } from "../../actions/overlays.actions";
 
 @Component({
 	selector: 'ansyn-overlay-navigation-bar',
@@ -30,7 +35,9 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	onKeyDown$ = () => this.keyListenerService.keydown.pipe(
-		tap($event => {
+		withLatestFrom(this.store.select(selectPacmanMode)),
+		filter(([$event, isPacmanMode]: [KeyboardEvent, boolean]) => !isPacmanMode),
+		tap(([$event, isPacmanMode]: [KeyboardEvent, boolean]) => {
 			if (this.keyListenerService.keyWasUsed($event, 'ArrowRight', 39)) {
 				this.goNextActive = true;
 			} else if (this.keyListenerService.keyWasUsed($event, 'ArrowLeft', 37)) {
@@ -58,7 +65,9 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	onKeyUp$ = () => this.keyListenerService.keyup.pipe(
-		tap($event => {
+		withLatestFrom(this.store.select(selectPacmanMode)),
+		filter(([$event, isPacmanMode]: [KeyboardEvent, boolean]) => !isPacmanMode),
+		tap(([$event, isPacmanMode]: [KeyboardEvent, boolean]) => {
 			if (this.keyListenerService.isElementNotValid($event)) {
 				return;
 			}

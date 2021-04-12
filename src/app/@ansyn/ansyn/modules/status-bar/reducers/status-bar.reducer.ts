@@ -27,7 +27,7 @@ export const StatusBarInitialState: IStatusBarState = {
 	IsSimpleSearchOpen: false,
 	IsOpenedFromOutside: false,
 	markSecondSearchSensors: false,
-	isPacmanMode: false// add action to status-bar actions that changes this ok?
+	isPacmanMode: false
 };
 
 export const statusBarFeatureKey = 'statusBar';
@@ -64,6 +64,10 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 			const { payload } = action;
 			return { ...state, markSecondSearchSensors: payload}
 		}
+		case StatusBarActionsTypes.PACMAN_MODE: {
+			const { payload } = action;
+			return { ...state, isPacmanMode: payload}
+		}
 
 		default:
 			return state;
@@ -76,6 +80,8 @@ export const selectCalenderStatus = createSelector(statusBarStateSelector, (stat
 export const selectAdvancedSearchStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.isAdvancedSearchOpen : StatusBarInitialState.isAdvancedSearchOpen);
 export const selectSimpledSearchStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.IsSimpleSearchOpen : StatusBarInitialState.IsSimpleSearchOpen);
 export const selectIsOpenedFromOutside = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.IsOpenedFromOutside : StatusBarInitialState.IsOpenedFromOutside);
+export const selectPacmanMode = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.isPacmanMode : StatusBarInitialState.isPacmanMode);
 export const selectMarkedSecondSearchSensors = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar?.markSecondSearchSensors);
 export const selectGeoFilterActive = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.active);
 export const selectGeoFilterType = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.type);
+

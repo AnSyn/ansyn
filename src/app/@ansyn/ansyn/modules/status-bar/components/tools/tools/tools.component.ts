@@ -30,41 +30,6 @@ import { KeysListenerService } from "../../../../core/services/keys-listener.ser
 	destroy: 'ngOnDestroy'
 })
 export class ToolsComponent implements OnInit, OnDestroy {
-	// for component
-	readonly isExportShow: boolean;
-	readonly isGoToShow: boolean;
-	readonly isAnnotationsShow: boolean;
-	readonly isMeasuresShow: boolean;
-	readonly isShadowMouseShow: boolean;
-	//
-	isDialogShowing = false;
-	public displayModeOn = false;
-	public flags: Map<toolsFlags, boolean>;
-	toolTipDirection = 'bottom'
-	@AutoSubscription
-	public flags$: Observable<Map<toolsFlags, boolean>> = this.store$.select(selectToolFlags).pipe(
-		tap((flags: Map<toolsFlags, boolean>) => this.flags = flags)
-	);
-
-	@AutoSubscription
-	onKeyUp$ = () => this.keyListenerService.keyup.pipe(
-		tap($event => {
-			if (this.keyListenerService.keysWereUsed($event, this._pacmanKeys)) {
-				this.togglePacmanDialog();
-			}
-		})
-	);
-
-	isActiveAnnotationLayer$ = this.store$.select(selectActiveAnnotationLayer).pipe(
-		map(Boolean)
-	);
-
-	@AutoSubscription
-	subMenu$ = this.store$.select(selectSubMenu).pipe(
-		tap((subMenu) => this.subMenu = subMenu)
-	);
-
-	subMenu: SubMenuEnum;
 
 	get subMenuEnum() {
 		return SubMenuEnum;
@@ -85,8 +50,35 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	get onMeasureTool() {
 		return this.flags?.get(toolsFlags.isMeasureToolActive);
 	}
+	// for component
+	readonly isExportShow: boolean;
+	readonly isGoToShow: boolean;
+	readonly isAnnotationsShow: boolean;
+	readonly isMeasuresShow: boolean;
+	readonly isShadowMouseShow: boolean;
+	//
+	isDialogShowing = false;
+	public displayModeOn = false;
+	public flags: Map<toolsFlags, boolean>;
+	toolTipDirection = 'bottom'
 
 	private _pacmanKeys = 'Ppפ'.split('');
+
+	@AutoSubscription
+	public flags$: Observable<Map<toolsFlags, boolean>> = this.store$.select(selectToolFlags).pipe(
+		tap((flags: Map<toolsFlags, boolean>) => this.flags = flags)
+	);
+
+	isActiveAnnotationLayer$ = this.store$.select(selectActiveAnnotationLayer).pipe(
+		map(Boolean)
+	);
+
+	@AutoSubscription
+	subMenu$ = this.store$.select(selectSubMenu).pipe(
+		tap((subMenu) => this.subMenu = subMenu)
+	);
+
+	subMenu: SubMenuEnum;
 
 	constructor(
 		protected store$: Store<any>,
@@ -100,6 +92,16 @@ export class ToolsComponent implements OnInit, OnDestroy {
 		this.isMeasuresShow = componentVisibilityService.get(ComponentVisibilityItems.MEASURES);
 		this.isShadowMouseShow = componentVisibilityService.get(ComponentVisibilityItems.SHADOW_MOUSE);
 	}
+
+	@AutoSubscription
+	onKeyUp$ = () => this.keyListenerService.keyup.pipe(
+		tap($event => {
+			if (this.keyListenerService.keysWereUsed($event, this._pacmanKeys)) {
+				this.togglePacmanDialog();
+			}
+		})
+	);
+
 
 	ngOnInit() {
 	}

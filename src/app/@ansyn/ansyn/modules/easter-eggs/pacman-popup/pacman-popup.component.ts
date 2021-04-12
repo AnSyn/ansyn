@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Renderer2, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Renderer2, OnDestroy, AfterViewInit } from '@angular/core';
 import { KeysListenerService } from "../../core/services/keys-listener.service";
 import { AutoSubscription, AutoSubscriptions } from "auto-subscriptions";
 import { filter, tap } from "rxjs/operators";
@@ -38,7 +38,7 @@ class Ghost {
 	styleUrls: ['./pacman-popup.component.less']
 })
 @AutoSubscriptions()
-export class PacmanPopupComponent implements OnInit, OnDestroy {
+export class PacmanPopupComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	title = 'angular-pacman';
 	width = 28;

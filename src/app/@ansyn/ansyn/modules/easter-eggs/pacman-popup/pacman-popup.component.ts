@@ -213,7 +213,6 @@ export class PacmanPopupComponent implements OnInit, OnDestroy, AfterViewInit {
 	 * @param ghost
 	 */
 	moveGhost(ghost) {
-		// please implement this.
 		let widthX = this.width;
 		let squaresY = this.squares;
 		let scoreValX = this.scoreValue;
@@ -301,11 +300,11 @@ export class PacmanPopupComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	/**
-	 * Once pacman consume the power pellet it gain super power
+	 * Once pacman consume the power pellet it gains super power
 	 * All the ghost will be afraid of em.
 	 * By right the ghost should run away from pacman as much as possible
-	 * Set an timeout for the ghost to turn back to hunting mode rather than
-	 * scare of pacman.
+	 * Set a timeout for the ghost to turn back to hunting mode rather than
+	 * be scared of pacman.
 	 */
 	powerPelletEaten() {
 		if (this.squares[this.pacmanCurrentIndex].classList.contains('power-pellet')) {

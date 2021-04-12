@@ -1,18 +1,21 @@
 import { Action } from '@ngrx/store';
-import { ILayer, LayerType } from '../models/layers.model';
+import { ILayer, LayerSearchTypeEnum, LayerType } from '../models/layers.model';
 import { ILayerModal, SelectedModalEnum } from '../reducers/layers-modal';
 import { ILogMessage } from '../../../core/models/logger.model';
+import { IVisualizerEntity } from '@ansyn/imagery';
 
 export enum LayersActionTypes {
 	BEGIN_LAYER_COLLECTION_LOAD = '[Layers] Begin layer collection load',
 	LAYER_COLLECTION_LOADED = '[Layers] Layer collection loaded',
-	ERROR_LOADING_LAYERS = '[Layers] Error loading layers',
 	UPDATE_SELECTED_LAYERS_IDS = '[Layers] Update selected layers ids',
 	SET_LAYER_SELECTION = '[Layers] Set layer selection',
 	SELECT_ONLY = '[Layers] Select only',
 	ADD_LAYER = '[Layers] Add layer',
 	ADD_LAYER_ON_BACKEND_FAILED_ACTION = '[Layers] Add layer to backend failed',
 	ADD_LAYER_ON_BACKEND_SUCCESS_ACTION = '[Layers] Add layer to backend success',
+	ADD_STATIC_LAYERS = '[Layers] Add Static Layers',
+	ERROR_LOADING_STATIC_LAYERS = '[Layers] Error loading static layers',
+	REFRESH_STATIC_LAYERS = '[Layers] Refresh Static Layers',
 	UPDATE_LAYER = '[Layers] Update layer',
 	UPDATE_LAYER_ON_BACKEND_FAILED_ACTION = '[Layers] Update layer to backend failed',
 	UPDATE_LAYER_ON_BACKEND_SUCCESS_ACTION = '[Layers] Update layer to backend success',
@@ -23,6 +26,8 @@ export enum LayersActionTypes {
 	REMOVE_CASE_LAYERS_FROM_BACKEND_SUCCESS_ACTION = '[Layers] Remove case layers from backend success',
 	REMOVE_CASE_LAYERS_FROM_BACKEND_FAILED_ACTION = '[Layers] Remove case layers from backend failed',
 	SET_ACTIVE_ANNOTATION_LAYER = '[Layers] Set active annotation layer',
+	SET_LAYER_SEARCH_TYPE = '[Layers] Set Layer Search Type',
+	SET_LAYER_SEARCH_POLYGON = '[Layers] Set Layer Search Polygon',
 	SET_MODAL = '[Layers] Set modal value',
 	SHOW_ALL_LAYERS = '[Layers] Show all layers',
 	LOG_EXPORT_LAYER = 'LOG_EXPORT_LAYER',
@@ -34,14 +39,16 @@ export enum LayersActionTypes {
 export type LayersActions =
 	| BeginLayerCollectionLoadAction
 	| LayerCollectionLoadedAction
-	| ErrorLoadingLayersAction
+	| ErrorLoadingStaticLayers
 	| UpdateSelectedLayersIds
 	| SetLayerSelection
 	| SelectOnlyLayer
 	| AddLayer
 	| UpdateLayer
 	| SetLayersModal
-	| CloseLayersModal;
+	| AddStaticLayers
+	| CloseLayersModal
+	| RefreshStaticLayers
 
 export class BeginLayerCollectionLoadAction implements Action {
 	type = LayersActionTypes.BEGIN_LAYER_COLLECTION_LOAD;
@@ -68,10 +75,10 @@ export class UpdateSelectedLayersIds implements Action {
 	}
 }
 
-export class ErrorLoadingLayersAction implements Action {
-	type = LayersActionTypes.ERROR_LOADING_LAYERS;
+export class ErrorLoadingStaticLayers implements Action {
+	type = LayersActionTypes.ERROR_LOADING_STATIC_LAYERS;
 
-	constructor(public payload: string) {
+	constructor(public payload: boolean) {
 	}
 }
 
@@ -100,7 +107,7 @@ export class AddLayer implements Action, ILogMessage {
 	}
 
 	logMessage() {
-		return `Adding ${this.payload.type} data layer ${this.payload.name}` + (this.payload.data.features ? ` with ${this.payload.data.features.length} features` : ``);
+		return `Adding ${this.payload.type} data layer ${this.payload.name}` + (this.payload?.data?.features ? ` with ${this.payload.data.features.length} features` : ``);
 	}
 }
 
@@ -275,4 +282,29 @@ export class LogAddFeatureToLayer implements Action, ILogMessage {
 	logMessage() {
 		return `Adding feature to annotation layer ${this.payload.layerName}`
 	}
+}
+
+export class SetLayerSearchType implements Action, ILogMessage {
+	readonly type = LayersActionTypes.SET_LAYER_SEARCH_TYPE;
+	constructor(public payload: LayerSearchTypeEnum) {}
+
+	logMessage() {
+		return 'Changing layer search type to ' + this.payload
+	}
+}
+
+export class SetLayerSearchPolygon implements Action {
+	readonly  type = LayersActionTypes.SET_LAYER_SEARCH_POLYGON;
+	constructor(public payload: IVisualizerEntity) {
+	}
+}
+
+export class AddStaticLayers implements Action {
+	readonly type = LayersActionTypes.ADD_STATIC_LAYERS;
+	constructor(public payload: ILayer[]) {
+	}
+}
+
+export class RefreshStaticLayers implements Action {
+	readonly type = LayersActionTypes.REFRESH_STATIC_LAYERS;
 }

@@ -9,14 +9,19 @@ import { StoreModule } from '@ngrx/store';
 import { layersFeatureKey, LayersReducer } from './reducers/layers.reducer';
 import { LayerCollectionComponent } from './components/layers-collection/layer-collection.component';
 import { DownloadLayersComponent } from './components/data-layers-modals/download-layers/download-layers.component';
-import { LayerComponent } from './components/layer/layer.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LayerMenuComponent } from './components/layer-menu/layer-menu.component';
 import { DataLayersModalsComponent } from './components/data-layers-modals/data-layers-modals.component';
 import { EditLayerComponent } from './components/data-layers-modals/edit-layer/edit-layer.component';
 import { DeleteLayerComponent } from './components/data-layers-modals/delete-layer/delete-layer.component';
 import { ImportLayerComponent } from './components/import-layer/import-layer.component';
 import { CoreModule } from '../../core/core.module';
+import { EntitiesTableModule } from '../../entities-table/entities-table.module';
+import { StaticLayersComponent } from './components/static-layers/static-layers.component';
+import { BaseLayersComponent } from './components/base-layers/base-layers.component';
+import { AnnotationLayersComponent } from './components/annotation-layers/annotation-layers.component';
+import { LayersSearchComponent } from './components/layers-search/layers-search.component';
+import { MapFacadeModule } from '@ansyn/map-facade';
 
 // @dynamic
 @NgModule({
@@ -24,10 +29,13 @@ import { CoreModule } from '../../core/core.module';
 		CoreModule,
 		CommonModule,
 		FormsModule,
+		ReactiveFormsModule,
 		StoreModule.forFeature(layersFeatureKey, LayersReducer),
-		EffectsModule.forFeature([LayersEffects])
+		EffectsModule.forFeature([LayersEffects]),
+		EntitiesTableModule,
+		MapFacadeModule
 	],
-	declarations: [LayersManagerComponent, LayerCollectionComponent, DownloadLayersComponent, LayerComponent, LayerMenuComponent, DataLayersModalsComponent, EditLayerComponent, DeleteLayerComponent, ImportLayerComponent],
+	declarations: [LayersManagerComponent, LayerCollectionComponent, DownloadLayersComponent, LayerMenuComponent, DataLayersModalsComponent, EditLayerComponent, DeleteLayerComponent, ImportLayerComponent, StaticLayersComponent, BaseLayersComponent, AnnotationLayersComponent, LayersSearchComponent],
 	providers: [DataLayersService]
 })
 

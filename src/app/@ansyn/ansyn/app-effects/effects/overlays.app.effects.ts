@@ -1,6 +1,6 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Inject, Injectable } from '@angular/core';
-import { combineLatest, forkJoin, Observable, of, pipe } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { combineLatest, Observable, of, pipe } from 'rxjs';
 import { Action, Store } from '@ngrx/store';
 import {
 	IMapState,
@@ -11,25 +11,26 @@ import {
 	mapStateSelector,
 	RemovePendingOverlayAction,
 	selectActiveMapId,
-	selectFooterCollapse, selectLayout,
+	selectFooterCollapse,
+	selectLayout,
 	selectMaps,
-	selectMapsList, SetFourViewsModeAction,
+	selectMapsList,
 	SetLayoutAction,
 	SetLayoutSuccessAction,
-	SetPendingOverlaysAction, SetToastMessageAction, ToggleFooter
+	SetPendingOverlaysAction
 } from '@ansyn/map-facade';
 import { IAppState } from '../app.effects.module';
 
-import { getAngleDegreeBetweenPoints, IImageryMapPosition } from '@ansyn/imagery';
+import { IImageryMapPosition } from '@ansyn/imagery';
 import {
 	catchError,
+	distinctUntilChanged,
+	distinctUntilKeyChanged,
 	filter,
 	map,
 	mergeMap,
 	switchMap,
-	withLatestFrom,
-	distinctUntilKeyChanged,
-	distinctUntilChanged
+	withLatestFrom
 } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import {
@@ -39,37 +40,19 @@ import {
 	DisplayOverlaySuccessAction,
 	OverlaysActionTypes,
 	SetHoveredOverlayAction,
-	SetMarkUp, SetOverlaysCriteriaAction,
-	SetTotalOverlaysAction,
-	SetFourViewsOverlaysAction
+	SetMarkUp,
+	SetTotalOverlaysAction
 } from '../../modules/overlays/actions/overlays.actions';
-import {
-	IMarkUpData,
-	MarkUpClass,
-	selectDropMarkup, selectOverlaysCriteria,
-} from '../../modules/overlays/reducers/overlays.reducer';
+import { IMarkUpData, MarkUpClass, selectDropMarkup, } from '../../modules/overlays/reducers/overlays.reducer';
 import { ExtendMap } from '../../modules/overlays/reducers/extendedMap.class';
 import { overlayOverviewComponentConstants } from '../../modules/overlays/components/overlay-overview/overlay-overview.component.const';
 import { OverlaysService } from '../../modules/overlays/services/overlays.service';
 import { ICaseMapState } from '../../modules/menu-items/cases/models/case.model';
-import {
-	IFourViewsConfig,
-	fourViewsConfig,
-	IOverlay,
-	IOverlaysCriteria,
-	IFourViews
-} from '../../modules/overlays/models/overlay.model';
+import { IOverlay } from '../../modules/overlays/models/overlay.model';
 import { Dictionary } from '@ngrx/entity';
 import { SetBadgeAction } from '@ansyn/menu';
 import { ComponentVisibilityService } from '../../app-providers/component-visibility.service';
 import { ComponentVisibilityItems } from '../../app-providers/component-mode';
-import { casesConfig } from '../../modules/menu-items/cases/services/cases.service';
-import { ICasesConfig } from '../../modules/menu-items/cases/models/cases-config';
-import { TranslateService } from '@ngx-translate/core';
-import { MultipleOverlaysSourceProvider } from '../../modules/overlays/services/multiple-source-provider';
-import { Point } from 'geojson';
-import { IFetchParams } from '../../modules/overlays/models/base-overlay-source-provider.model';
-import { feature } from '@turf/turf';
 
 @Injectable()
 export class OverlaysAppEffects {

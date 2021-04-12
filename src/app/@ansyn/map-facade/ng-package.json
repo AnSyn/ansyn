@@ -7,8 +7,9 @@
     "auto-subscriptions",
     "tslib",
     "@ngx-translate/core",
-    "font-awesome",
-    "proj4"
+    "proj4",
+    "angular2-uuid",
+    "geojson"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

@@ -21,13 +21,14 @@ export const DisabledOpenLayersMapName = 'disabledOpenLayersMap';
 export class OpenLayersDisabledMap extends BaseImageryMap<Map> {
 	mainLayer: ol_Layer;
 	element: HTMLElement;
+	_mapObject: Map;
 
 	public get mapObject() {
-		return this.mapObject;
+		return this._mapObject;
 	}
 
 	public set mapObject(mapObject) {
-		this.mapObject = mapObject;
+		this._mapObject = mapObject;
 	}
 
 	initMap(element: HTMLElement, shadowNorthElement: HTMLElement, shadowDoubleBufferElement: HTMLElement, mainLayer: ol_Layer, position?: IImageryMapPosition): Observable<boolean> {

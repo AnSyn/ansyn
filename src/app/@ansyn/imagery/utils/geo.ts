@@ -224,5 +224,23 @@ export function getNewPoint(coordinates: Position): Point {
 	};
 }
 
+export function splitExtent(extent: Polygon, deep: number): Polygon[] {
+	const polygons = [];
+	const extentCoord = extent.coordinates[0];
+	const center = getPointByGeometry(extent);
+	const extnetWithoutLastPoint = extentCoord.slice(0, 4);
+	extnetWithoutLastPoint.forEach( point => {
+		const extentFeature = polygonFromBBOX([point[0], point[1], center.coordinates[0], center.coordinates[1]]);
+		if (deep === 1) {
+			polygons.push(extentFeature);
+		}
+		else {
+			polygons.push(...splitExtent(extentFeature, deep - 1))
+		}
+	});
+
+	return polygons;
+}
+
 export const EPSG_4326 = 'EPSG:4326';
 export const EPSG_3857 = 'EPSG:3857';

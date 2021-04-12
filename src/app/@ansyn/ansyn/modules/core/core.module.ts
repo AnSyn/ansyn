@@ -42,7 +42,8 @@ import { KeysListenerService } from "./services/keys-listener.service";
 		AnsynFormsModule,
 		AnsynModalComponent,
 		ContextMenuComponent,
-		CredentialsComponent
+		CredentialsComponent,
+		TranslateModule
 	],
 	declarations: [
 		AnsynModalComponent,

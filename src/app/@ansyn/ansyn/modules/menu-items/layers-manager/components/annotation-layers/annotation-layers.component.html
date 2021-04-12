@@ -1,0 +1,33 @@
+<div class="actions" [class.disabled]="annotationLayerExceedLimit" (click)="notifyIfAddLayerNotAllowed()"
+[attr.tooltip-value]="annotationLayerExceedLimit ? config.limitError : null" tooltip-class="bottom-right">
+
+	<button class="add-layer" (click)="openModal(SelectedModalEnum.edit)"
+			[attr.tooltip-value]="'Create new layer' | translate" tooltip-class="bottom right">
+		<i class="small-icon icon-layer-add"></i>
+	</button>
+
+	<ansyn-import-layer [attr.tooltip-value]="'Import layer' | translate"
+						tooltip-class="bottom right"></ansyn-import-layer>
+
+</div>
+<ansyn-entities-table
+	[entities]="layers$ | async"
+	[title]="'Annotation Layers' | translate"
+	[rowsData]="layersRowsData"
+	[collapsible]="true"
+	[menu]="menu"
+	(onRowHover)="hoverLayer = $event"
+	(onEntitySelect)="openLayersTools($event)"
+	background="transparent">
+	<ng-template let-id="id" #menu>
+		<ansyn-layer-menu
+		[disabledRemove]="(disabledRemove$ | async) || (layers$ | async).entities[id].isNonEditable"
+		[selected]="(selectedLayersIds$ | async).includes(id)"
+		(menuClick)="click($event)"
+		[toggleActive]="true"
+		[editActive]="true"
+		[exportActive]="true"
+		[removeActive]="true"
+		></ansyn-layer-menu>
+	</ng-template>
+</ansyn-entities-table>

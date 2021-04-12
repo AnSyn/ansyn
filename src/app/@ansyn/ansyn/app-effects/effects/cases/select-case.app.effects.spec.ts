@@ -12,7 +12,13 @@ import {
 	UpdateOverlaysManualProcessArgs,
 } from '../../../modules/overlays/overlay-status/actions/overlay-status.actions';
 import { SelectCaseAppEffects } from './select-case.app.effects';
-import { SetActiveMapId, SetFourViewsModeAction, SetLayoutAction, SetMapsDataActionStore, IFourViewsData } from '@ansyn/map-facade';
+import {
+	SetActiveMapId,
+	SetFourViewsModeAction,
+	SetLayoutAction,
+	SetMapsDataActionStore,
+	IFourViewsData
+} from '@ansyn/map-facade';
 import {
 	BeginLayerCollectionLoadAction,
 	UpdateSelectedLayersIds
@@ -60,7 +66,7 @@ describe('SelectCaseAppEffects', () => {
 				SelectCaseAppEffects,
 				provideMockActions(() => actions),
 				{ provide: CoreConfig, useValue: {} },
-				{ provide: casesConfig, useValue: {defaultCase: {id: 'caseId'}} },
+				{ provide: casesConfig, useValue: { defaultCase: { id: 'caseId' } } },
 				{ provide: CasesService, useValue: {} }
 			]
 		}).compileComponents();
@@ -86,9 +92,9 @@ describe('SelectCaseAppEffects', () => {
 				time: ICaseTimeState = { from: new Date(0), to: new Date(0) },
 				region: CaseRegionState = {
 					geometry: {},
-					type: "Feature",
+					type: 'Feature',
 					properties: {
-						searchMode: "screenView",
+						searchMode: 'screenView',
 						forceScreenViewSearch: true
 					}
 				},
@@ -99,7 +105,8 @@ describe('SelectCaseAppEffects', () => {
 					types: []
 				},
 				fourViewsMode: IFourViewsData = {
-					active: false
+					active: true,
+					sensors: []
 				},
 				runSecondSearch = true,
 				favoriteOverlays: IOverlay[] = [],
@@ -126,6 +133,7 @@ describe('SelectCaseAppEffects', () => {
 				favoriteOverlays,
 				overlaysTranslationData,
 				maps,
+
 				layers,
 				overlaysImageProcess,
 				facets,
@@ -143,24 +151,27 @@ describe('SelectCaseAppEffects', () => {
 			};
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
-			const expectedResult = cold('--(abcdefghijklmnpqr)--', {
-			a: new SetMapsDataActionStore({ mapsList: maps.data }),
-			b: new SetActiveMapId(state.maps.activeMapId),
-			c: new SetLayoutAction(<any>maps.layout),
-			d: new SetOverlaysCriteriaAction({ time, region, advancedSearchParameters }, { noInitialSearch, runSecondSearch }),
-			e: new UpdateGeoFilterStatus({active: false, type: region.properties.searchMode}),
-			f: new SetFavoriteOverlaysAction(favoriteOverlays),
-			g: new SetMiscOverlays({ miscOverlays }),
-			h: new SetOverlaysTranslationDataAction(overlaysTranslationData),
-			i: new SetOverlaysScannedAreaDataAction(overlaysScannedAreaData),
-			j: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
-			k: new UpdateOverlaysManualProcessArgs(overlaysImageProcess),
-			l: new UpdateFacetsAction(facets),
-			m: new UpdateSelectedLayersIds([]),
-			n: new SetFourViewsModeAction(fourViewsMode),
-			p: new SetAnnotationMode(null),
-			q: new UpdateToolsFlags([{key: toolsFlags.isMeasureToolActive, value: false}]),
-			r: new SelectCaseSuccessAction(payload)
+			const expectedResult = cold('--(abcdefghijklmpqrx)--', {
+				a: new SetMapsDataActionStore({ mapsList: maps.data }),
+				b: new SetActiveMapId(state.maps.activeMapId),
+				c: new SetLayoutAction(<any>maps.layout),
+				d: new SetOverlaysCriteriaAction({ time, region, advancedSearchParameters }, {
+					noInitialSearch,
+					runSecondSearch
+				}),
+				e: new UpdateGeoFilterStatus({ active: false, type: region.properties.searchMode }),
+				f: new SetFavoriteOverlaysAction(favoriteOverlays),
+				g: new SetMiscOverlays({ miscOverlays }),
+				h: new SetOverlaysTranslationDataAction(overlaysTranslationData),
+				i: new SetOverlaysScannedAreaDataAction(overlaysScannedAreaData),
+				j: new BeginLayerCollectionLoadAction({ caseId: payload.id }),
+				k: new UpdateOverlaysManualProcessArgs(overlaysImageProcess),
+				l: new UpdateFacetsAction(facets),
+				m: new UpdateSelectedLayersIds([]),
+				p: new SetAnnotationMode(null),
+				q: new UpdateToolsFlags([{ key: toolsFlags.isMeasureToolActive, value: false }]),
+				r: new SelectCaseSuccessAction(payload),
+				x: new SetFourViewsModeAction(fourViewsMode)
 			});
 
 			expect(selectCaseAppEffects.selectCase$).toBeObservable(expectedResult);

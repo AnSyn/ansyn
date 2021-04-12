@@ -2,7 +2,6 @@ import { ICasesConfig } from './models/cases-config';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CasesComponent } from './components/cases/cases.component';
-import { CasesTableComponent } from './components/cases-table/cases-table.component';
 import { FormsModule } from '@angular/forms';
 import { CasesModalContainerComponent } from './components/cases-modal-container/cases-modal-container.component';
 import { DeleteCaseComponent } from './components/delete-case/delete-case.component';
@@ -16,6 +15,7 @@ import { casesFeatureKey, CasesReducer } from './reducers/cases.reducer';
 import { CoreModule } from '../../core/core.module';
 import { MapFacadeModule } from '@ansyn/map-facade';
 import { CasesContainerComponent } from './components/cases-container/cases-container.component';
+import { EntitiesTableModule } from '../../entities-table/entities-table.module';
 
 // @dynamic
 @NgModule({
@@ -25,9 +25,10 @@ import { CasesContainerComponent } from './components/cases-container/cases-cont
 		CoreModule,
 		MapFacadeModule,
 		FormsModule,
-		EffectsModule.forFeature([CasesEffects])
+		EffectsModule.forFeature([CasesEffects]),
+		EntitiesTableModule
 	],
-	declarations: [CasesComponent, CasesContainerComponent, CasesTableComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent],
+	declarations: [CasesComponent, CasesContainerComponent, CasesModalContainerComponent, DeleteCaseComponent, CasesToolsComponent, SaveCaseComponent],
 	entryComponents: [CasesComponent, SaveCaseComponent, DeleteCaseComponent],
 	exports: [
 		CasesComponent

@@ -3,7 +3,12 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
 import { IAppState } from '../app.effects.module';
 import { select, Store } from '@ngrx/store';
-import { SetMapSearchBoxTriggerAction, ToggleFooter, UpdateMapSizeAction } from '@ansyn/map-facade';
+import {
+	SetFourViewsModeAction,
+	SetMapSearchBoxTriggerAction,
+	ToggleFooter,
+	UpdateMapSizeAction
+} from '@ansyn/map-facade';
 import {
 	IMenuConfig,
 	MenuActionTypes,
@@ -74,7 +79,8 @@ export class MenuAppEffects {
 			new LoadOverlaysSuccessAction([], true),
 			new InitializeFiltersAction(),
 			new LoadDefaultCaseAction(),
-			new SetMapSearchBoxTriggerAction(false)
+			new SetMapSearchBoxTriggerAction(false),
+			new SetFourViewsModeAction({ active: false })
 		])
 	);
 

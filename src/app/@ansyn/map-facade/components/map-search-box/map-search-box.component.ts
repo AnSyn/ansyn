@@ -23,6 +23,7 @@ import { IMapSearchResult } from '../../models/map-search.model';
 })
 @AutoSubscriptions()
 export class MapSearchBoxComponent implements OnInit, OnDestroy {
+	// @TODO: do refactor to enter this to @ansyn/ansyn package and then use ansyn-auto-complete.
 	@Input() mapId: string;
 	@HostBinding('class.hide') isMinimalView: boolean;
 	control = new FormControl();

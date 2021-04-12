@@ -9,7 +9,10 @@
     "ngx-color-picker",
     "angular2-uuid",
     "tslib",
-    "@ngx-translate/core"
+    "@ngx-translate/core",
+    "d3",
+    "geojson",
+    "lodash"
   ],
   "lib": {
     "entryFile": "./public_api.ts",

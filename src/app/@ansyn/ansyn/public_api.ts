@@ -1,3 +1,5 @@
+export { ScreenViewConfig, IScreenViewConfig } from './modules/plugins/openlayers/plugins/visualizers/models/screen-view.model';
+
 export { TimePickerContainerComponent } from './modules/status-bar/components/time-picker-container/time-picker-container.component';
 
 export { measuresClassNameForExport } from './modules/plugins/openlayers/plugins/visualizers/tools/measure-distance.visualizer';
@@ -126,7 +128,9 @@ export {
 export {
 	BeginLayerCollectionLoadAction,
 	UpdateLayer,
-	UpdateSelectedLayersIds
+	UpdateSelectedLayersIds,
+	AddStaticLayers,
+	LayersActionTypes
 } from './modules/menu-items/layers-manager/actions/layers.actions';
 export {
 	layerPluginType, layerPluginTypeEnum, LayerType
@@ -340,7 +344,7 @@ export {
 	MarkUpClass,
 	overlaysStateSelector,
 	overlaysStatusMessages, selectdisplayOverlayHistory, selectDropMarkup,
-	selectFilteredOveralys, selectOverlaysArray, selectOverlaysIds,
+	selectFilteredOverlays, selectOverlaysArray, selectOverlaysIds,
 	selectOverlaysMap, selectOverlays, selectSpecialObjects, selectDrops, selectDropsWithoutSpecialObjects
 } from './modules/overlays/reducers/overlays.reducer';
 export { OverlaysConfig, OverlaysService } from './modules/overlays/services/overlays.service';
@@ -395,3 +399,5 @@ export { OverlayNavigationBarComponent } from './modules/overlays/components/ove
 export { AnsynComboTableComponent } from './modules/core/forms/ansyn-combo-table/ansyn-combo-table.component';
 export { AnsynComboTableOptionComponent } from './modules/core/forms/ansyn-combo-table-option/ansyn-combo-table-option.component';
 export { AdvancedSearchComponent } from './modules/status-bar/components/advanced-search/advanced-search.component';
+export { AutoCompleteComponent } from './modules/core/forms/auto-complete/auto-complete.component';
+export { BoldPipe } from './modules/core/forms/auto-complete/bold.pipe';

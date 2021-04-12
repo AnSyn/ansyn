@@ -78,7 +78,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 	);
 
 	@AutoSubscription
-	drawChanges$ = combineLatest([this.geoFilterType$, this.newRegionSelect$, this.regionSameAsVisualizer$, this.geoFilterActive$, this.store$.select(selectIsMinimalistViewMode), this.shouldDrawRegion$]).pipe(
+	drawChanges$ = combineLatest([this.geoFilterType$, this.newRegionSelect$, this.regionSameAsVisualizer$, this.geoFilterActive$, this.store$.select(selectIsMinimalistViewMode), this.shouldDrawRegion$, this.isTheRightVisualizer$]).pipe(
 		mergeMap(this.drawChanges.bind(this))
 	);
 
@@ -86,8 +86,8 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		super();
 	}
 
-	drawChanges([geoFilterType, region, regionAsVisualizer, isActive, isMinimalistViewMode, shouldDrawRegion]) {
-		if (regionAsVisualizer && !isActive && !isMinimalistViewMode && geoFilterType && shouldDrawRegion) {
+	drawChanges([geoFilterType, region, regionAsVisualizer, isActive, isMinimalistViewMode, shouldDrawRegion, isTheRightVisualizer]) {
+		if (regionAsVisualizer && !isActive && !isMinimalistViewMode && geoFilterType && shouldDrawRegion && isTheRightVisualizer) {
 			return this.drawRegionOnMap(region);
 		}
 		this.clearEntities();

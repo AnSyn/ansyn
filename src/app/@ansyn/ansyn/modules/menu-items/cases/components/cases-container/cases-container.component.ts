@@ -1,15 +1,24 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ICasesState, selectMyCasesData, selectSharedCasesData } from '../../reducers/cases.reducer';
+import {
+	casesStateSelector, ICaseModal,
+	ICasesState, selectModalState,
+	selectMyCasesData,
+	selectSharedCasesData
+} from '../../reducers/cases.reducer';
 import { select, Store } from '@ngrx/store';
 import {
-	CopyCaseLinkAction,
+	CopyCaseLinkAction, LoadCaseAction,
 	LoadCasesAction,
 	OpenModalAction,
 	SaveSharedCaseAsMyOwn
 } from '../../actions/cases.actions';
-import { tap } from 'rxjs/operators';
+import { tap, pluck, distinctUntilChanged } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
-import { CasesType, ICaseTableData } from '../../models/cases-config';
+import { CasesType } from '../../models/cases-config';
+import { Observable } from 'rxjs';
+import { IEntitiesTableData, ITableRowModel } from '../../../../core/models/IEntitiesTableModel';
+import { ICasePreview } from '../../models/case.model';
+import { AnsynDatePipe } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-cases-container',
@@ -18,17 +27,37 @@ import { CasesType, ICaseTableData } from '../../models/cases-config';
 })
 @AutoSubscriptions()
 export class CasesContainerComponent implements OnInit, OnDestroy {
-
-	myCasesData: ICaseTableData;
-	sharedCasesObj: ICaseTableData;
+	rowsData: ITableRowModel<ICasePreview>[] = [
+		{
+			headName: 'Case Name',
+			propertyName: 'name'
+		},
+		{
+			headName: 'Date create',
+			propertyName: 'creationTime',
+			pipe: new AnsynDatePipe()
+		}
+	];
+	myCasesData: IEntitiesTableData<ICasePreview>;
+	sharedCasesObj: IEntitiesTableData<ICasePreview>;
 	hoverCaseId: string;
+
+	modalCaseId$: Observable<string> = this.store$.pipe(
+		select(selectModalState),
+		distinctUntilChanged(),
+		pluck<ICaseModal, string>('id')
+	);
+
+	openCaseId$: Observable<string> = this.store$.pipe(
+		select(casesStateSelector),
+		pluck<ICasesState, string>('openCaseId')
+	);
 
 	@AutoSubscription
 	getMyCases$ = this.store$.pipe(
 		select(selectMyCasesData),
 		tap( ([ids, entities]) => {
 			this.myCasesData = {
-				type: CasesType.MyCases,
 				entities,
 				ids
 			}
@@ -40,7 +69,6 @@ export class CasesContainerComponent implements OnInit, OnDestroy {
 		select(selectSharedCasesData),
 		tap( ([ids, entities]) => {
 			this.sharedCasesObj = {
-				type: CasesType.MySharedCases,
 				entities,
 				ids
 			}
@@ -58,6 +86,10 @@ export class CasesContainerComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
+	}
+
+	openCase(caseId: string) {
+		this.store$.dispatch(new LoadCaseAction(caseId));
 	}
 
 

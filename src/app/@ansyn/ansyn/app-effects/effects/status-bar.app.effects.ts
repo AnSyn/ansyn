@@ -110,7 +110,10 @@ export class StatusBarAppEffects {
 		ofType<SearchAction>(StatusBarActionsTypes.SEARCH_ACTION),
 		withLatestFrom(this.store.pipe(select(selectGeoFilterType))),
 		map(([action, geoFilter]) => {
-			const options: any = { runSecondSearch: false };
+			let options: any;
+			if (!action.payload.time) {
+				options = { runSecondSearch: false };
+			}
 			if (geoFilter === CaseGeoFilter.ScreenView) {
 				options.noInitialSearch = true;
 			}

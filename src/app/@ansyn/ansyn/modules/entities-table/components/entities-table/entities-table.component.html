@@ -1,0 +1,67 @@
+<div class="title-row">
+	<button [@rotateArrow]="show" *ngIf="collapsible"
+			class="down-arrow"
+			(click)="show = !show">
+	</button>
+	<span class="title">{{title | translate}}</span>
+</div>
+
+<ng-container *ngIf="show">
+<div class="entities-table" *ngIf="entities.ids.length; else noEntities">
+
+	<div class="entities-table-head">
+		<div class="entities-table-head-row">
+			<div class="entities-table-head-col" *ngFor="let row of rowsData">
+				{{row.headName | translate}}
+			</div>
+			<div class="menu-placeholder"></div>
+
+		</div>
+	</div>
+
+	<div class="entities-table-body scrolled"
+		 (ansynInfiniteScroll)="onInfinityScroll.emit()"
+		 #tbodyElement>
+
+		<div class="entities-table-body-row"
+			 *ngFor="let id of entities.ids"
+			 (click)="onEntitySelect.emit(id)"
+			 [class.active]="activatedId === id"
+			 [class.selected]="selectedId === id"
+			 (mouseenter)="onMouseEnterRow(row, id)"
+			 (mouseleave)="onMouseLeaveRow(row)"
+			 [@leaveAnim]
+			 #row>
+
+			<div class="entities-table-body-row-data"
+				 tooltip-class="bottom" [attr.tooltip-value]="entities?.entities[id]?.name">
+
+				<div class="entities-table-entity-name-col" *ngFor="let row of rowsData">
+					<span
+						*ngIf="!row.isIcon; else icon">{{entities.entities[id][row.propertyName] | TableRowPipe:row.pipe }}</span>
+					<ng-template #icon>
+						<i class="medium-icon" [ngClass]="'icon-'+entities.entities[id][row.propertyName]"></i>
+					</ng-template>
+				</div>
+
+				<!--menu-->
+				<div class="entity-menu-container">
+					<div class="entity-menu" [ngClass]="background" (click)="menuClick($event)">
+						<ng-container *ngTemplateOutlet="menu; context: {id: id}"></ng-container>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<ng-template #noEntities>
+
+	<p class="no-entities">
+		{{emptyTableLabel | translate}}
+	</p>
+
+</ng-template>
+</ng-container>

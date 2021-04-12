@@ -1,18 +1,18 @@
 import { ILayerState } from '../reducers/layers.reducer';
 import {
-	AddLayer,
-	BeginLayerCollectionLoadAction,
+	AddLayer, AddStaticLayers,
+	BeginLayerCollectionLoadAction, ErrorLoadingStaticLayers,
 	LayerCollectionLoadedAction,
 	LayersActions,
 	LayersActionTypes,
 	RemoveCaseLayersFromBackendAction,
-	RemoveCaseLayersFromBackendSuccessAction
+	RemoveCaseLayersFromBackendSuccessAction, SetLayerSearchPolygon
 } from '../actions/layers.actions';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap } from 'rxjs/operators';
 import { DataLayersService } from '../services/data-layers.service';
 import { ILayer, LayerType, regionLayerDefaultName, regionLayerId } from '../models/layers.model';
 import { rxPreventCrash } from '../../../core/utils/rxjs/operators/rxPreventCrash';
@@ -35,7 +35,7 @@ export class LayersEffects {
 		ofType<LayerCollectionLoadedAction>(LayersActionTypes.LAYER_COLLECTION_LOADED),
 		mergeMap((action) => {
 			const regionLayerName = this.translate.instant(regionLayerDefaultName);
-			const regionLayer = this.dataLayersService.generateLayer({ name: regionLayerName, id: regionLayerId, type: LayerType.static });
+			const regionLayer = this.dataLayersService.generateLayer({ name: regionLayerName, id: regionLayerId, type: LayerType.base });
 			const layers = [regionLayer];
 
 			if (!action.payload.some(({ type }) => type === LayerType.annotation)) {
@@ -54,6 +54,23 @@ export class LayersEffects {
 		rxPreventCrash()
 	);
 
+
+	@Effect()
+	onChangeLayerTypeRemovePolygon = this.actions$.pipe(
+		ofType(LayersActionTypes.SET_LAYER_SEARCH_TYPE),
+		map( () => new SetLayerSearchPolygon(null))
+	);
+
+	@Effect()
+	loadStaticLayers$ = this.actions$.pipe(
+		ofType(LayersActionTypes.LAYER_COLLECTION_LOADED, LayersActionTypes.REFRESH_STATIC_LAYERS),
+		mergeMap( () => this.dataLayersService.getStaticLayers()),
+		mergeMap( layers => {
+			const actions: any[] = [new ErrorLoadingStaticLayers(layers.some(layer => !layer))];
+			actions.push(new AddStaticLayers(this.dataLayersService.parseStaticLayers(layers)));
+			return actions;
+		})
+	);
 
 
 

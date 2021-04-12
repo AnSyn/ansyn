@@ -1,0 +1,16 @@
+<ansyn-entities-table
+	[entities]="layers$ | async"
+	[title]="'Base Layers' | translate"
+	[rowsData]="layersRowsData"
+	[collapsible]="true"
+	(onRowHover)="hoverLayer = $event"
+	[menu]="menu"
+	background="transparent">
+	<ng-template let-id="id" #menu>
+		<ansyn-layer-menu
+		[selected]="(selectedLayersIds$ | async).includes(id)"
+		(menuClick)="click($event)"
+		[toggleActive]="true"
+		></ansyn-layer-menu>
+	</ng-template>
+</ansyn-entities-table>

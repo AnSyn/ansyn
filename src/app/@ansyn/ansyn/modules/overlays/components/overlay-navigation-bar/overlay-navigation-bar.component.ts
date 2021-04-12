@@ -8,7 +8,7 @@ import { EnableCopyOriginalOverlayDataAction, selectOverlayOfActiveMap } from '@
 import { ActivateScannedAreaAction } from '../../overlay-status/actions/overlay-status.actions';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { tap, filter } from 'rxjs/operators';
-import { selectDropsAscending, selectFilteredOveralys } from '../../reducers/overlays.reducer';
+import { selectDropsAscending, selectFilteredOverlays } from '../../reducers/overlays.reducer';
 import { combineLatest } from 'rxjs';
 import { IOverlay, IOverlayDrop } from '../../models/overlay.model';
 import { TranslateService } from '@ngx-translate/core';
@@ -36,7 +36,7 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	isLastOrFirstOverlay$ = combineLatest([
 		this.store.select(selectOverlayOfActiveMap),
 		this.store.select(selectDropsAscending),
-		this.store.select(selectFilteredOveralys)
+		this.store.select(selectFilteredOverlays)
 	]).pipe(
 		filter(([activeMapOverlay, overlays, filtered]: [IOverlay, IOverlayDrop[], any[]]) => Boolean(activeMapOverlay) && Boolean(overlays.length)),
 		tap(([activeMapOverlay, overlays, filtered]: [IOverlay, IOverlayDrop[],  IOverlay[]]) => {

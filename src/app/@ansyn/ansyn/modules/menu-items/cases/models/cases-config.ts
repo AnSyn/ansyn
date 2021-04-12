@@ -15,9 +15,3 @@ export interface ICasesConfig {
 	useHash: boolean,
 	defaultSearchFromDeltaTime?: IDeltaTime
 }
-
-export interface ICaseTableData {
-	type: CasesType,
-	entities: Dictionary<ICasePreview>
-	ids: Array<string | number>
-}

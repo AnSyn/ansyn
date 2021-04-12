@@ -1,0 +1,17 @@
+<ansyn-entities-table
+	[entities]="layers$ | async"
+	[title]="'Static Layers' | translate"
+	[rowsData]="layersRowsData"
+	[collapsible]="true"
+	background="transparent"
+	(onRowHover)="hoverLayer = $event"
+	[emptyTableLabel]="'No Layers loaded'"
+	[menu]="menu">
+	<ng-template let-id="id" #menu>
+		<ansyn-layer-menu
+			[selected]="(selectedLayersIds$ | async).includes(id)"
+			(menuClick)="click($event)"
+			[toggleActive]="true"
+			[removeActive]="true"></ansyn-layer-menu>
+	</ng-template>
+</ansyn-entities-table>

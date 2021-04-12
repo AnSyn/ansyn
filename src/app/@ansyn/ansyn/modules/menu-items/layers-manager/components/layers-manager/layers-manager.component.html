@@ -1,10 +1,30 @@
-<div class="collection">
-	<div class="all-layers scrolled">
-		<ng-container *ngFor="let collection of layers$ | async">
-			<ansyn-layer-collection [collection]="collection"
-			></ansyn-layer-collection>
-		</ng-container>
+<div class="layer-search">
+	<div class="search">
+		<div class="search-container">
+			<ansyn-layers-search></ansyn-layers-search>
+		</div>
+		<div class="refresh-button">
+			<ansyn-loader [show]="isStaticLayersLoad | async"></ansyn-loader>
+			<span *ngIf="!(isStaticLayersLoad | async)" (click)="refreshStaticLayers()">{{'refresh' | translate}} {{staticLayersSize | async}}</span>
+		</div>
 	</div>
+	<span *ngIf="isStaticLayersError | async" class="error">{{'some layers not fetch successfully' | translate}}</span>
 </div>
+<div class="layers">
+	<div class="layer">
+		<ansyn-static-layers></ansyn-static-layers>
+	</div>
+	<div class="layer">
+		<ansyn-annotation-layers></ansyn-annotation-layers>
+	</div>
+	<div class="layer">
+		<ansyn-base-layers></ansyn-base-layers>
+	</div>
+	<div class="layer">
+
+	</div>
+
+</div>
+
 
 <ansyn-data-layers-modals></ansyn-data-layers-modals>

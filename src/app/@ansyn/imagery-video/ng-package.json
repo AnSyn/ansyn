@@ -4,6 +4,9 @@
   "whitelistedNonPeerDependencies": [
     "@ansyn/imagery",
     "tslib",
+    "@turf/turf",
+    "geojson",
+    "lodash",
     "@ngx-translate/core"
   ],
   "lib": {

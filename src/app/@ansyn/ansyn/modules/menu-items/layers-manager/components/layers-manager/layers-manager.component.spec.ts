@@ -10,8 +10,6 @@ import { TranslateService } from '@ngx-translate/core';
 describe('LayersManagerComponent', () => {
 	let component: LayersManagerComponent;
 	let fixture: ComponentFixture<LayersManagerComponent>;
-	const mockModals = MockComponent({ selector: 'ansyn-data-layers-modals', inputs: [] });
-	const mockCollection = MockComponent({ selector: 'ansyn-layer-collection', inputs: ['collection'] });
 	const mockTranslatePipe = MockPipe('translate');
 
 	beforeEach(waitForAsync(() => {
@@ -23,8 +21,6 @@ describe('LayersManagerComponent', () => {
 			],
 			declarations: [
 				LayersManagerComponent,
-				mockModals,
-				mockCollection,
 				mockTranslatePipe
 			],
 			providers: [

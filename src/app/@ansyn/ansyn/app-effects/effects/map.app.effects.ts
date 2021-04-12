@@ -398,6 +398,7 @@ export class MapAppEffects {
 			return [
 				new SetLayoutAction(oneMapLayout),
 				new ToggleFooter(false),
+				new UpdateGeoFilterStatus({ active: false, type: CaseGeoFilter.ScreenView }),
 				new SetFourViewsOverlaysAction({}),
 				new UpdateLayer({ id: regionLayerId, name: regionLayerName }),
 				new BackToWorldView({ mapId: activeMapID })
@@ -443,13 +444,14 @@ export class MapAppEffects {
 			return forkJoin(observableOverlays).pipe(
 				mergeMap((overlaysData: any[]) => {
 					const fourMapsLayout = 'layout6';
-					const [firstAngleOverlays, secondAngleOverlays, thirdAngleOverlays, fourthAngleOverlays] = overlaysData.map(({ data }) => data);
+					const [firstAngleOverlays, secondAngleOverlays, thirdAngleOverlays, fourthAngleOverlays] = overlaysData.map(({ data }) => data || []);
 					const fourViewsOverlays: IFourViews = {
 						firstAngleOverlays,
 						secondAngleOverlays,
 						thirdAngleOverlays,
 						fourthAngleOverlays
 					};
+					this.sortFourViewsOverlaysByPrioritySensor(fourViewsOverlays);
 					const fourViewsLayerName = this.translateService.instant('four views coordinate');
 					const fourViewsActions: Action[] = [
 						new SetFourViewsOverlaysAction(fourViewsOverlays),
@@ -594,6 +596,14 @@ export class MapAppEffects {
 		}
 
 		return queryOverlays;
+	}
+
+	sortFourViewsOverlaysByPrioritySensor(fourViewsOverlays: IFourViews) {
+		const fourViewsOverlaysKeys = Object.keys(fourViewsOverlays);
+		fourViewsOverlaysKeys.forEach(currentAngleKey => {
+			const currentAngleOverlays = fourViewsOverlays[currentAngleKey];
+			this.overlaysService.sortOverlaysByPrioritySensor(currentAngleOverlays);
+		});
 	}
 
 	changeImageryMap(overlay, communicator): string | null {

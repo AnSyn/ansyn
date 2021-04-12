@@ -1,7 +1,7 @@
 <div class="overlay-status-button" *ngIf="isAnnotationsShow && !isFourViewsMode">
 	<button class="small-icon-button drag-mode" *ngIf="overlay"
 			(click)="toggleDragged()"
-			[disabled]="!isLayersVisible || noGeoRegistration"
+			[disabled]="!isAnnotationLayerActive || noGeoRegistration"
 			[attr.tooltip-value]="this.draggedButtonText | translate"
 			[attr.tooltip-class]="'bottom left'"
 	><i class="medium-icon icon-drag-annotations" [class.active]="isDragged"></i>

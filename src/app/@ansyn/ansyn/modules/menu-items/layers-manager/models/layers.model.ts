@@ -3,8 +3,7 @@ import { IEntity } from '../../../core/services/storage/storage.service';
 export enum LayerType {
 	static = 'Static',
 	annotation = 'Annotation',
-	dynamic = 'Dynamic',
-	complex = 'Complex'
+	base = 'Base'
 }
 
 export type layerPluginType = string | layerPluginTypeEnum;
@@ -33,4 +32,9 @@ export interface ILayer extends IEntity {
 	caseId?: string;
 	extent?: [number, number, number, number];
 	isNonEditable?: boolean;
+}
+
+export enum LayerSearchTypeEnum {
+	mapView = 'mapView',
+	polygonView = 'polygonView'
 }

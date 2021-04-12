@@ -15,3 +15,7 @@ export function getAngleDegreeBetweenPoints(source: Point, destination: Point): 
 	const brng = bearing(source, destination);
 	return brng;
 }
+
+export function randomColor() {
+	return `rgb(${Math.round(Math.random() * 255)},${Math.round(Math.random() * 255)},${Math.round(Math.random() * 255)})`
+}

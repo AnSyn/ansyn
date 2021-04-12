@@ -40,7 +40,8 @@ import { CredentialsService } from './services/credentials/credentials.service';
 		AnsynFormsModule,
 		AnsynModalComponent,
 		ContextMenuComponent,
-		CredentialsComponent
+		CredentialsComponent,
+		TranslateModule
 	],
 	declarations: [
 		AnsynModalComponent,

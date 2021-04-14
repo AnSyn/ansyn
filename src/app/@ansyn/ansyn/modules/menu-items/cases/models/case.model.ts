@@ -92,7 +92,8 @@ export interface ICaseState extends IDilutedCaseState {
 	maps?: ICaseMapsState;
 }
 
-export type CaseRegionState = any | Feature<Polygon | Point> | Point | Polygon | Position;
+// TODO: remove any type
+export type CaseRegionState = any | Feature<Polygon | Point> | Point | Polygon;
 
 export interface ICaseTimeState {
 	from: Date;

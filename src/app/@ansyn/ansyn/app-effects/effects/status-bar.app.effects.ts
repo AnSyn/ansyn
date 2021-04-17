@@ -26,7 +26,7 @@ import {
 	selectFourViewsOverlays,
 	selectRegion
 } from '../../modules/overlays/reducers/overlays.reducer';
-import { IFourViews, IOverlay, IOverlayDrop } from '../../modules/overlays/models/overlay.model';
+import { IFourViews, IOverlay, IOverlayDrop, IOverlaysCriteriaOptions } from '../../modules/overlays/models/overlay.model';
 import { MenuActionTypes, SelectMenuItemAction } from '@ansyn/menu';
 import { ToolsActionsTypes } from '../../modules/status-bar/components/tools/actions/tools.actions';
 import { CaseGeoFilter } from '../../modules/menu-items/cases/models/case.model';
@@ -110,9 +110,9 @@ export class StatusBarAppEffects {
 		ofType<SearchAction>(StatusBarActionsTypes.SEARCH_ACTION),
 		withLatestFrom(this.store.pipe(select(selectGeoFilterType))),
 		map(([action, geoFilter]) => {
-			let options: any;
+			let options: IOverlaysCriteriaOptions = {};
 			if (!action.payload.time) {
-				options = { runSecondSearch: false };
+				options.runSecondSearch = false;
 			}
 			if (geoFilter === CaseGeoFilter.ScreenView) {
 				options.noInitialSearch = true;

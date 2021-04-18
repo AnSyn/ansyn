@@ -1,6 +1,6 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { map, share, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { ILayer } from '../../models/layers.model';
 import {
 	selectIsErrorFetchStaticLayers,

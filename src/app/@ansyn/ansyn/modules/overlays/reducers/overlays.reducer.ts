@@ -129,7 +129,7 @@ export const overlaysStatusMessages = {
 export function OverlayReducer(state = overlaysInitialState, action: OverlaysActions): IOverlaysState {
 	switch (action.type) {
 		case OverlaysActionTypes.SET_OVERLAYS_CRITERIA: {
-			const overlaysCriteria = { ...state.overlaysCriteria, ...action.payload };
+			const overlaysCriteria = { ...state.overlaysCriteria,  ...action.payload, advancedSearchParameters: {...state.overlaysCriteria.advancedSearchParameters, ...(action.payload?.advancedSearchParameters || {})} };
 			const { options } = <any>action;
 			let runSecondSearch = state.runSecondSearch;
 			if (options && options.hasOwnProperty('runSecondSearch')) {

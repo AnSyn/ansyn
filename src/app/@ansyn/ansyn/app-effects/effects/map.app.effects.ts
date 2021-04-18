@@ -483,6 +483,10 @@ export class MapAppEffects {
 		concatMap(action => of(action).pipe(
 			withLatestFrom(this.store$.select(selectMaps)),
 		)),
+		filter(([action, maps]: [
+			CreateMeasureDataAction | RemoveMeasureDataAction | AddMeasureAction | RemoveMeasureAction
+			| UpdateMeasureDataOptionsAction | UpdateMeasureLabelAction,
+			Dictionary<IMapSettings>]) => Boolean(maps[action.payload.mapId])),
 		map(([action, maps]: [
 			CreateMeasureDataAction | RemoveMeasureDataAction | AddMeasureAction | RemoveMeasureAction
 			| UpdateMeasureDataOptionsAction | UpdateMeasureLabelAction,

@@ -21,11 +21,13 @@ import {
 	OverlayStatusReducer,
 } from '../../overlay-status/reducers/overlay-status.reducer';
 import { of } from 'rxjs';
+import { KeysListenerService } from "../../../core/services/keys-listener.service";
 
 describe('OverlyaNavigationBarComponent', () => {
 	let component: OverlayNavigationBarComponent;
 	let fixture: ComponentFixture<OverlayNavigationBarComponent>;
 	let store: Store<any>;
+	let keyListenerService: KeysListenerService;
 
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
@@ -37,6 +39,7 @@ describe('OverlyaNavigationBarComponent', () => {
 			}), TranslateModule.forRoot()],
 			providers: [
 				{
+					KeysListenerService,
 					provide: StatusBarConfig,
 					useValue: { toolTips: {} }
 				}
@@ -92,20 +95,12 @@ describe('OverlyaNavigationBarComponent', () => {
 		it(`onkeyup should call ${ key.n } when key = "${ key.k }"`, () => {
 			spyOn(component, <'clickGoAdjacent'>key.f);
 			expect(component[key.n]).toEqual(false);
-			const $event = {
-				key: key.k,
-				currentTarget: {
-					document: {
-						activeElement: {
-							className: []
-						}
-					}
-				}
-			};
-			component.onkeydown(<any>$event);
+
+			spyOn(keyListenerService, 'keydown');
+			component.onKeyDown$();
 			expect(component[key.n]).toEqual(true);
 
-			component.onkeyup(<any>$event);
+			component.onKeyUp$();
 			expect(component[key.n]).toEqual(false);
 			expect(component[key.f]).toHaveBeenCalled();
 		});

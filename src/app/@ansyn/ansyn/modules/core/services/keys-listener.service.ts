@@ -10,7 +10,6 @@ export class KeysListenerService {
 	events: string[] = ['keypress', 'keyup', 'keydown'];
 
 	constructor() {
-		console.log("medabeg im hadpasot");
 		this.events.forEach(eventName => fromEvent(document, eventName).subscribe(($event: KeyboardEvent ) =>
 		{
 			if (this.isElementNotValid($event)) {

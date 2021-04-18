@@ -12,6 +12,13 @@ export enum KEY_CODE {
 	UP_ARROW = 38
 }
 
+export enum BOARD_CELLS {
+	PAC_DOT,
+	WALL,
+	GHOST_LAIR,
+	POWER_PALLET,
+}
+
 class Ghost {
 	className: string;
 	startIndex: number;
@@ -175,13 +182,13 @@ export class PacmanPopupComponent implements OnInit, OnDestroy, AfterViewInit {
 			this.renderer.appendChild(this.grid.nativeElement, square);
 			this.squares.push(square)
 
-			if (this.layout[i] === 0) {
+			if (this.layout[i] === BOARD_CELLS.PAC_DOT) {
 				this.renderer.addClass(this.squares[i], 'pac-dot');
-			} else if (this.layout[i] === 1) {
+			} else if (this.layout[i] === BOARD_CELLS.WALL) {
 				this.renderer.addClass(this.squares[i], 'wall');
-			} else if (this.layout[i] === 2) {
+			} else if (this.layout[i] === BOARD_CELLS.GHOST_LAIR) {
 				this.renderer.addClass(this.squares[i], 'ghost-lair');
-			} else if (this.layout[i] === 3) {
+			} else if (this.layout[i] === BOARD_CELLS.POWER_PALLET) {
 				this.renderer.addClass(this.squares[i], 'power-pellet');
 			}
 		}
@@ -312,7 +319,6 @@ export class PacmanPopupComponent implements OnInit, OnDestroy, AfterViewInit {
 			this.score.nativeElement.innerHTML = this.scoreValue;
 			this.ghosts.forEach(ghost => {
 				ghost.isScared = true;
-				console.log("turn to scared of pacman");
 				// turn the ghost colour to aquamarine.
 				this.squares[ghost.currentIndex].classList.add(ghost.className, 'ghost', 'scared-ghost');
 			});

@@ -4,11 +4,11 @@
 			<ansyn-layers-search></ansyn-layers-search>
 		</div>
 		<div class="refresh-button">
-			<ansyn-loader [show]="isStaticLayersLoad | async"></ansyn-loader>
-			<span *ngIf="!(isStaticLayersLoad | async)" (click)="refreshStaticLayers()">{{'refresh' | translate}} {{staticLayersSize | async}}</span>
+			<ansyn-loader [show]="loadingLayers"></ansyn-loader>
+			<span *ngIf="!loadingLayers" (click)="refreshStaticLayers()">{{'refresh' | translate}} {{staticLayersSize | async}}</span>
 		</div>
 	</div>
-	<span *ngIf="isStaticLayersError | async" class="error">{{'some layers not fetch successfully' | translate}}</span>
+	<span *ngIf="loadingError" class="error">{{'some layers not fetch successfully' | translate}}</span>
 </div>
 <div class="layers">
 	<div class="layer">

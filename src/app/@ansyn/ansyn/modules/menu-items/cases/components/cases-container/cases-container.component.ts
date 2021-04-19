@@ -35,7 +35,7 @@ export class CasesContainerComponent implements OnInit, OnDestroy {
 		{
 			headName: 'Date create',
 			propertyName: 'creationTime',
-			pipe: new AnsynDatePipe()
+			pipe: new AnsynDatePipe('en-US')
 		}
 	];
 	myCasesData: IEntitiesTableData<ICasePreview>;

@@ -34,12 +34,11 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		distinctUntilChanged()
 	);
 
-	isOverlayDisplay$ = this.store$.pipe(
-		select(selectMaps),
+	isOverlayDisplay$ = this.store$.select(selectMaps).pipe(
 		map((maps) => maps[this.mapId] && Boolean(maps[this.mapId].data.overlay)),
 	);
 
-	selectGeoFilter$ = this.store$.pipe(select(selectGeoFilterStatus));
+	selectGeoFilter$ = this.store$.select(selectGeoFilterStatus);
 
 	regionLayersSelectedChange$ = this.actions$.pipe(
 		ofType<SetLayerSelection>(LayersActionTypes.SET_LAYER_SELECTION),
@@ -47,8 +46,7 @@ export abstract class RegionVisualizer extends EntitiesVisualizer {
 		map((action) => action.payload.value)
 	);
 
-	isMinimalisticView$ = this.store$.pipe(
-		select(selectIsMinimalistViewMode),
+	isMinimalisticView$ = this.store$.select(selectIsMinimalistViewMode).pipe(
 		map(IsMinimalistView => !IsMinimalistView)
 	);
 

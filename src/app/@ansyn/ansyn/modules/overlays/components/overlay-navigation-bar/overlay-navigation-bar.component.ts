@@ -2,7 +2,6 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
 	IStatusBarState,
-	selectPacmanMode
 } from '../../../status-bar/reducers/status-bar.reducer';
 import { ExpandAction, GoAdjacentOverlay } from '../../../status-bar/actions/status-bar.actions';
 import { IStatusBarConfig } from '../../../status-bar/models/statusBar-config.model';
@@ -92,9 +91,7 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	onKeyUp$ = () => this.keyListenerService.keyup.pipe(
-		withLatestFrom(this.store.select(selectPacmanMode)),
-		filter(([$event, isPacmanMode]: [KeyboardEvent, boolean]) => !isPacmanMode),
-		tap(([$event, isPacmanMode]: [KeyboardEvent, boolean]) => {
+		tap(($event: KeyboardEvent) => {
 			if (this.keyListenerService.isElementNotValid($event)) {
 				return;
 			}

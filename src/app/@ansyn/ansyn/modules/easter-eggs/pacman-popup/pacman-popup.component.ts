@@ -181,15 +181,16 @@ export class PacmanPopupComponent implements OnInit, OnDestroy, AfterViewInit {
 			const square = this.renderer.createElement('div');
 			this.renderer.appendChild(this.grid.nativeElement, square);
 			this.squares.push(square)
+			let currentSquare = this.squares[i];
 
 			if (this.layout[i] === BOARD_CELLS.PAC_DOT) {
-				this.renderer.addClass(this.squares[i], 'pac-dot');
+				this.renderer.addClass(currentSquare, 'pac-dot');
 			} else if (this.layout[i] === BOARD_CELLS.WALL) {
-				this.renderer.addClass(this.squares[i], 'wall');
+				this.renderer.addClass(currentSquare, 'wall');
 			} else if (this.layout[i] === BOARD_CELLS.GHOST_LAIR) {
-				this.renderer.addClass(this.squares[i], 'ghost-lair');
+				this.renderer.addClass(currentSquare, 'ghost-lair');
 			} else if (this.layout[i] === BOARD_CELLS.POWER_PALLET) {
-				this.renderer.addClass(this.squares[i], 'power-pellet');
+				this.renderer.addClass(currentSquare, 'power-pellet');
 			}
 		}
 	}

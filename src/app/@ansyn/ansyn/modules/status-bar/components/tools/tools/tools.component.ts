@@ -9,7 +9,7 @@ import {
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { selectSubMenu, selectToolFlags } from '../reducers/tools.reducer';
-import { map, take, tap } from 'rxjs/operators';
+import { filter, map, take, tap } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { MatDialog } from '@angular/material/dialog';
 import { ExportMapsPopupComponent } from '../export-maps-popup/export-maps-popup.component';
@@ -95,10 +95,9 @@ export class ToolsComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	onKeyUp$ = () => this.keyListenerService.keyup.pipe(
+		filter(($event: KeyboardEvent) => this.keyListenerService.keysWereUsed($event, this._pacmanKeys) && !this.isDialogShowing),
 		tap($event => {
-			if (this.keyListenerService.keysWereUsed($event, this._pacmanKeys)) {
 				this.togglePacmanDialog();
-			}
 		})
 	);
 
@@ -153,11 +152,9 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	}
 
 	togglePacmanDialog() {
-		if (!this.isDialogShowing) {
-			const dialogRef = this.dialog.open(PacmanPopupComponent, {panelClass: 'custom-dialog'});
-			dialogRef.afterClosed().pipe(take(1), tap(() => this.isDialogShowing = false)).subscribe();
-			this.isDialogShowing = !this.isDialogShowing;
-		}
+		const dialogRef = this.dialog.open(PacmanPopupComponent, {panelClass: 'custom-dialog'});
+		dialogRef.afterClosed().pipe(take(1), tap(() => this.isDialogShowing = false)).subscribe();
+		this.isDialogShowing = !this.isDialogShowing;
 	}
 
 }

@@ -51,6 +51,7 @@ describe('OverlyaNavigationBarComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(OverlayNavigationBarComponent);
 		component = fixture.componentInstance;
+		keyListenerService = new KeysListenerService();
 		fixture.detectChanges();
 	});
 
@@ -96,7 +97,8 @@ describe('OverlyaNavigationBarComponent', () => {
 			spyOn(component, <'clickGoAdjacent'>key.f);
 			expect(component[key.n]).toEqual(false);
 
-			spyOn(keyListenerService, 'keydown');
+			// spyOn(keyListenerService, 'keydown');
+			keyListenerService.keydown.emit(new KeyboardEvent('keydown'));
 			component.onKeyDown$();
 			expect(component[key.n]).toEqual(true);
 

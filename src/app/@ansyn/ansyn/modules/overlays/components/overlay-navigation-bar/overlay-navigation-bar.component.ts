@@ -64,9 +64,7 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	onKeyDown$ = () => this.keyListenerService.keydown.pipe(
-		withLatestFrom(this.store.select(selectPacmanMode)),
-		filter(([$event, isPacmanMode]: [KeyboardEvent, boolean]) => !isPacmanMode),
-		tap(([$event, isPacmanMode]: [KeyboardEvent, boolean]) => {
+		tap(($event: KeyboardEvent) => {
 			if (this.keyListenerService.keyWasUsed($event, 'ArrowRight', 39)) {
 				this.goNextActive = true;
 			} else if (this.keyListenerService.keyWasUsed($event, 'ArrowLeft', 37)) {

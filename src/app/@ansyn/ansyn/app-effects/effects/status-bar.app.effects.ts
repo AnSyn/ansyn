@@ -126,7 +126,7 @@ export class StatusBarAppEffects {
 	}
 
 	getAdjacentOverlay(overlays, overlayId: string, isNext: boolean) {
-		if (Boolean(overlays.length)) {
+		if (Boolean(overlays?.length)) {
 			const adjacent = isNext ? 1 : -1;
 			const index = overlays.findIndex(({ id }) => id === overlayId);
 			if (index >= 0) {

@@ -6,10 +6,10 @@ import {
 	StopMouseShadow, UpdateMeasureDataOptionsAction,
 	UpdateToolsFlags
 } from '../actions/tools.actions';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { selectSubMenu, selectToolFlags } from '../reducers/tools.reducer';
-import { filter, map, take, tap } from 'rxjs/operators';
+import { filter, map, take, tap, withLatestFrom } from 'rxjs/operators';
 import { AutoSubscription, AutoSubscriptions } from 'auto-subscriptions';
 import { MatDialog } from '@angular/material/dialog';
 import { ExportMapsPopupComponent } from '../export-maps-popup/export-maps-popup.component';
@@ -18,7 +18,8 @@ import { selectActiveAnnotationLayer } from '../../../../menu-items/layers-manag
 import { ComponentVisibilityService } from '../../../../../app-providers/component-visibility.service';
 import { ComponentVisibilityItems } from '../../../../../app-providers/component-mode';
 import { PacmanPopupComponent } from '../../../../easter-eggs/pacman-popup/pacman-popup.component';
-import { KeysListenerService } from "../../../../core/services/keys-listener.service";
+import { KeysListenerService } from '../../../../core/services/keys-listener.service';
+import { selectOverlaysWithMapIds } from '@ansyn/map-facade';
 
 @Component({
 	selector: 'ansyn-tools',
@@ -95,9 +96,14 @@ export class ToolsComponent implements OnInit, OnDestroy {
 
 	@AutoSubscription
 	onKeyUp$ = () => this.keyListenerService.keyup.pipe(
-		filter(($event: KeyboardEvent) => this.keyListenerService.keysWereUsed($event, this._pacmanKeys) && !this.isDialogShowing),
-		tap($event => {
-				this.togglePacmanDialog();
+		withLatestFrom(this.store$.select(selectOverlaysWithMapIds)),
+		filter(([$event, overlayWithMapIds]: [KeyboardEvent, { overlay: any, mapId: string, isActive: boolean }[]]) =>
+			this.keyListenerService.keysWereUsed($event, this._pacmanKeys) &&
+			// open pacman only when there are no overlays displayed and no dialog
+			!this.isDialogShowing &&
+			!overlayWithMapIds.some(overlayAndMapId => Boolean(overlayAndMapId.overlay))),
+	tap($event => {
+				this.togglePacmanDialog ();
 		})
 	);
 

@@ -34,8 +34,7 @@ import {
 	IMapSettings,
 	IVisualizerEntity,
 	MarkerSize, MarkerSizeDic,
-	randomColor,
-	splitExtent
+	splitExtent, stringToHexRGB
 } from '@ansyn/imagery';
 import { LoggerService } from '../../../../core/services/logger.service';
 import { isEqual } from 'lodash';
@@ -110,7 +109,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 				this.layersDictionary.set(layerKey, []);
 				if (area < 1000) {
 					if (!this.layersToStyle.has(layerKey)) {
-						this.layersToStyle.set(layerKey, this.createLayerStyle());
+						this.layersToStyle.set(layerKey, this.createLayerStyle(layerKey));
 					}
 					layersObs.push(this.getEntitiesForLayer(layer, queryExtent))
 				} else if (area < 10000 || searchPolygon) {
@@ -212,9 +211,9 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 		return {}
 	}
 
-	createLayerStyle() {
-		const fill = new olFill({ color: randomColor() });
-		const stroke = new olStroke({ color: randomColor(), width: 1 });
+	createLayerStyle(layerKey) {
+		const fill = new olFill({ color: stringToHexRGB(layerKey) });
+		const stroke = new olStroke({ color: stringToHexRGB(layerKey + "10"), width: 1 });
 		return new olStyle({
 			fill,
 			stroke,

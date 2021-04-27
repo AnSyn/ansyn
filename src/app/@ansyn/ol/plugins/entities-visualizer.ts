@@ -433,7 +433,7 @@ export abstract class EntitiesVisualizer extends BaseImageryVisualizer {
 
 	formatArea(geometry) {
 		const fractionDigits = 2;
-		const projection = this.iMap.getProjectionCode();
+		const projection = this.iMap.getProjection();
 		const area = getArea(geometry, { projection });
 
 		if (area >= 1000) {

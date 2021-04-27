@@ -11,8 +11,8 @@ export function getOpacityFromColor(color: string): number {
 	return alpha;
 }
 
-export function stringToRGB(str: string) {
-	return intToRGB(hashCode(str));
+export function stringToHexRGB(str: string) {
+	return "#" + intToRGB(hashCode(str));
 }
 
 function hashCode(str) { // java String#hashCode

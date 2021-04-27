@@ -98,3 +98,4 @@ export { ExtentCalculator } from './utils/extent-calculator';
 export { ImageryComponent } from './imagery/imagery.component';
 export { getOpacityFromColor } from './utils/color-calculator';
 export { ExtentCollector } from './utils/extent-collector';
+export { stringToHexRGB } from './utils/color-calculator'

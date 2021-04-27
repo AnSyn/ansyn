@@ -34,7 +34,7 @@ import {
 	IMapSettings,
 	IVisualizerEntity,
 	MarkerSize, MarkerSizeDic,
-	splitExtent
+	splitExtent, stringToHexRGB
 } from '@ansyn/imagery';
 import { LoggerService } from '../../../../core/services/logger.service';
 import { isEqual } from 'lodash';
@@ -42,7 +42,6 @@ import { AutoSubscription } from 'auto-subscriptions';
 import { forkJoinSafe } from '../../../../core/utils/rxjs/observables/fork-join-safe';
 import { Inject } from '@angular/core';
 import { IScreenViewConfig, ScreenViewConfig } from '../visualizers/models/screen-view.model';
-import { stringToRGB } from "../../../../../../imagery/utils/color-calculator";
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -213,8 +212,8 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 	}
 
 	createLayerStyle(layerKey) {
-		const fill = new olFill({ color: "#" + stringToRGB(layerKey) });
-		const stroke = new olStroke({ color: "#" + stringToRGB(layerKey + "10"), width: 1 });
+		const fill = new olFill({ color: stringToHexRGB(layerKey) });
+		const stroke = new olStroke({ color: stringToHexRGB(layerKey + "10"), width: 1 });
 		return new olStyle({
 			fill,
 			stroke,

@@ -28,7 +28,7 @@ import ol_Layer from 'ol/layer/Layer';
 import VectorLayer from 'ol/layer/Vector';
 import OLMap from 'ol/Map';
 import Vector from 'ol/source/Vector';
-import Projection from 'ol/proj/projection';
+import Projection from 'ol/proj/Projection';
 import View from 'ol/View';
 import { Observable, of, Subject, timer } from 'rxjs';
 import { debounceTime, filter, map, switchMap, take, takeUntil, tap, mergeMap } from 'rxjs/operators';

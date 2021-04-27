@@ -15,6 +15,7 @@ import { filter, map, mergeMap, take, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { FeatureCollection, Polygon } from 'geojson';
 import { SetLayerSearchPolygon } from '../../../../menu-items/layers-manager/actions/layers.actions';
+import { selectIsMinimalistViewMode } from "@ansyn/map-facade";
 
 const interactionType: VisualizerInteractionTypes = <any>'layerSearchInteraction';
 
@@ -27,6 +28,10 @@ const interactionType: VisualizerInteractionTypes = <any>'layerSearchInteraction
 export class LayerSearchVisualizer extends EntitiesVisualizer {
 	isHidden = true;
 
+	isMinimalisticView$ = this.store.select(selectIsMinimalistViewMode).pipe(
+		map(IsMinimalistView => !IsMinimalistView)
+	);
+
 	@AutoSubscription
 	drawPolygon$: Observable<boolean> = this.store.pipe(
 		select(selectLayerSearchPolygon),
@@ -36,6 +41,11 @@ export class LayerSearchVisualizer extends EntitiesVisualizer {
 			this.getInteraction(interactionType).setActive(false);
 			return this.setEntities([polygon]);
 		})
+	);
+
+	@AutoSubscription
+	updateLayer$: Observable<any> = this.isMinimalisticView$.pipe(
+		tap((show) => this.setVisibility(show))
 	);
 
 	@AutoSubscription

@@ -10,9 +10,10 @@ import { DisplayOverlayAction } from '../modules/overlays/actions/overlays.actio
 import { IOverlay } from '../modules/overlays/models/overlay.model';
 import { DataLayersService, layersConfig } from '../modules/menu-items/layers-manager/services/data-layers.service';
 import { ErrorHandlerService } from '../modules/core/services/error-handler.service';
-import { throwError } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { StorageService } from '../modules/core/services/storage/storage.service';
 import { Point } from 'geojson';
+import { OverlaysService } from '../modules/overlays/services/overlays.service';
 
 describe('apiService', () => {
 	let ansynApi: AnsynApi;
@@ -42,7 +43,10 @@ describe('apiService', () => {
 					useValue: { httpErrorHandle: () => throwError(null) }
 				},
 				{ provide: StorageService, useValue: {} },
-				{ provide: layersConfig, useValue: {} }
+				{ provide: layersConfig, useValue: {} },
+				{ provide: OverlaysService, useValue: {
+						getOverlaysById: (ids) => of([])
+					}}
 			]
 		}).compileComponents();
 	}));

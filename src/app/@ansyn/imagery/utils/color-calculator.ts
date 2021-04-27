@@ -23,7 +23,7 @@ function hashCode(str) { // java String#hashCode
 	return hash;
 }
 
-function intToRGB(i){
+function intToRGB(i) {
 	let c = (i & 0x00FFFFFF)
 		.toString(16)
 		.toUpperCase();

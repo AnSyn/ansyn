@@ -28,6 +28,7 @@ import ol_Layer from 'ol/layer/Layer';
 import VectorLayer from 'ol/layer/Vector';
 import OLMap from 'ol/Map';
 import Vector from 'ol/source/Vector';
+import Projection from 'ol/proj/projection';
 import View from 'ol/View';
 import { Observable, of, Subject, timer } from 'rxjs';
 import { debounceTime, filter, map, switchMap, take, takeUntil, tap, mergeMap } from 'rxjs/operators';
@@ -640,6 +641,10 @@ export class OpenLayersMap extends BaseImageryMap<OLMap> {
 	}
 
 	getProjectionCode(): string {
-		return this._mapObject.getView().getProjection().code_;
+		return this.getProjection().code_;
+	}
+
+	getProjection(): Projection {
+		return this._mapObject.getView().getProjection();
 	}
 }

@@ -33,7 +33,7 @@ import {
 	ImageryVisualizer,
 	IMapSettings,
 	IVisualizerEntity,
-	MarkerSize,
+	MarkerSize, MarkerSizeDic,
 	randomColor,
 	splitExtent
 } from '@ansyn/imagery';
@@ -218,7 +218,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 		return new olStyle({
 			fill,
 			stroke,
-			image: new olCircle({ fill: fill, stroke: null, radius: MarkerSize.medium })
+			image: new olCircle({ fill: fill, stroke: null, radius: MarkerSizeDic[MarkerSize.medium] })
 		})
 	}
 

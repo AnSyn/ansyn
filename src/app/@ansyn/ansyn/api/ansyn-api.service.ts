@@ -62,6 +62,7 @@ import { DataLayersService } from '../modules/menu-items/layers-manager/services
 import { AnnotationsVisualizer } from '@ansyn/ol';
 import NoSuchMapError from './NoSuchMapError';
 import { UpdateGeoFilterStatus } from '../modules/status-bar/actions/status-bar.actions';
+import { OverlaysService } from '../modules/overlays/services/overlays.service';
 
 export type mapIdOrNumber = string | number | undefined;
 
@@ -217,6 +218,7 @@ export class AnsynApi {
 				protected actions$: Actions,
 				protected projectionConverterService: ProjectionConverterService,
 				protected imageryCommunicatorService: ImageryCommunicatorService,
+				protected overlaysService: OverlaysService,
 				protected moduleRef: NgModuleRef<any>,
 				private dataLayersService: DataLayersService,
 				@Inject(ANSYN_ID) public id: string) {
@@ -466,6 +468,26 @@ export class AnsynApi {
 	 */
 	getOverlayData(mapId?: mapIdOrNumber): IOverlay {
 		return this.mapsEntities[this.getMapIdFromMapNumber(mapId)].data.overlay;
+	}
+
+	/**
+	 * display the overlay with the id `overlayId` in the active map.
+	 * if `addToTimeline` is true, the overlay was add to the timeline.
+	 * @param overlayId the id of the overlay we want to display
+	 * @param addToTimeline if load the overlay to timeline.
+	 */
+	displayOverlayById(overlayId: string, addToTimeline: boolean) {
+		this.overlaysService.getOverlaysById([{ id: overlayId, sourceType: undefined}]).pipe(
+			map(overlays => overlays.find(overlay => Boolean(overlay.sourceType))),
+			tap( overlay => {
+				if (overlay) {
+					this.displayOverLay(overlay);
+					if (addToTimeline) {
+						this.store.dispatch(new LoadOverlaysSuccessAction([overlay], false));
+					}
+				}
+			})
+		).subscribe()
 	}
 
 	/**

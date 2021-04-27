@@ -96,6 +96,5 @@ export { IMAGERY_SLOW_ZOOM_FACTOR } from './model/imagery-zoom.model';
 export { toDegrees, toRadians, getAngleDegreeBetweenPoints, randomColor } from './utils/math';
 export { ExtentCalculator } from './utils/extent-calculator';
 export { ImageryComponent } from './imagery/imagery.component';
-export { getOpacityFromColor } from './utils/color-calculator';
+export { getOpacityFromColor, stringToHexRGB } from './utils/color-calculator';
 export { ExtentCollector } from './utils/extent-collector';
-export { stringToHexRGB } from './utils/color-calculator'

@@ -113,7 +113,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 						this.layersToStyle.set(layerKey, this.createLayerStyle());
 					}
 					layersObs.push(this.getEntitiesForLayer(layer, queryExtent))
-				} else if (area < 10000) {
+				} else if (area < 10000 || searchPolygon) {
 					const splitExtents = splitExtent(queryExtent, 2).filter(extent => !this.noEntitiesInExtent(extent, layer));
 					splitExtents.forEach(extent => {
 						layersObs.push(this.countEntitiesForLayer(layer, extent))

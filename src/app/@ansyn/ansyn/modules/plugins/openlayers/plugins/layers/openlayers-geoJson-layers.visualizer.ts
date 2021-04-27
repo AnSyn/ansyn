@@ -34,7 +34,6 @@ import {
 	IMapSettings,
 	IVisualizerEntity,
 	MarkerSize, MarkerSizeDic,
-	randomColor,
 	splitExtent
 } from '@ansyn/imagery';
 import { LoggerService } from '../../../../core/services/logger.service';
@@ -43,6 +42,7 @@ import { AutoSubscription } from 'auto-subscriptions';
 import { forkJoinSafe } from '../../../../core/utils/rxjs/observables/fork-join-safe';
 import { Inject } from '@angular/core';
 import { IScreenViewConfig, ScreenViewConfig } from '../visualizers/models/screen-view.model';
+import { stringToRGB } from "../../../../../../imagery/utils/color-calculator";
 
 @ImageryVisualizer({
 	supported: [OpenLayersMap],
@@ -110,7 +110,7 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 				this.layersDictionary.set(layerKey, []);
 				if (area < 1000) {
 					if (!this.layersToStyle.has(layerKey)) {
-						this.layersToStyle.set(layerKey, this.createLayerStyle());
+						this.layersToStyle.set(layerKey, this.createLayerStyle(layerKey));
 					}
 					layersObs.push(this.getEntitiesForLayer(layer, queryExtent))
 				} else if (area < 10000 || searchPolygon) {
@@ -212,9 +212,9 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 		return {}
 	}
 
-	createLayerStyle() {
-		const fill = new olFill({ color: randomColor() });
-		const stroke = new olStroke({ color: randomColor(), width: 1 });
+	createLayerStyle(layerKey) {
+		const fill = new olFill({ color: "#" + stringToRGB(layerKey) });
+		const stroke = new olStroke({ color: "#" + stringToRGB(layerKey + "10"), width: 1 });
 		return new olStyle({
 			fill,
 			stroke,

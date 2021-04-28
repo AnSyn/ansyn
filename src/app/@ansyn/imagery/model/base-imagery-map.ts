@@ -105,6 +105,11 @@ export abstract class BaseImageryMap<T = any> {
 		return EPSG_4326;
 	}
 
+	getProjection(): string {
+		return EPSG_4326;
+	}
+
+
 	fitToExtent(extent: any): Observable<any> {
 		return EMPTY;
 	};

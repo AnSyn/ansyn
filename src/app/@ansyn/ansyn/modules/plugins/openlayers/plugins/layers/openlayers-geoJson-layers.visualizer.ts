@@ -33,9 +33,8 @@ import {
 	ImageryVisualizer,
 	IMapSettings,
 	IVisualizerEntity,
-	MarkerSize,
-	randomColor,
-	splitExtent
+	MarkerSize, MarkerSizeDic,
+	splitExtent, stringToHexRGB
 } from '@ansyn/imagery';
 import { LoggerService } from '../../../../core/services/logger.service';
 import { isEqual } from 'lodash';
@@ -110,10 +109,10 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 				this.layersDictionary.set(layerKey, []);
 				if (area < 1000) {
 					if (!this.layersToStyle.has(layerKey)) {
-						this.layersToStyle.set(layerKey, this.createLayerStyle());
+						this.layersToStyle.set(layerKey, this.createLayerStyle(layerKey));
 					}
 					layersObs.push(this.getEntitiesForLayer(layer, queryExtent))
-				} else if (area < 10000) {
+				} else if (area < 10000 || searchPolygon) {
 					const splitExtents = splitExtent(queryExtent, 2).filter(extent => !this.noEntitiesInExtent(extent, layer));
 					splitExtents.forEach(extent => {
 						layersObs.push(this.countEntitiesForLayer(layer, extent))
@@ -212,13 +211,13 @@ export class OpenlayersGeoJsonLayersVisualizer extends EntitiesVisualizer {
 		return {}
 	}
 
-	createLayerStyle() {
-		const fill = new olFill({ color: randomColor() });
-		const stroke = new olStroke({ color: randomColor(), width: 1 });
+	createLayerStyle(layerKey) {
+		const fill = new olFill({ color: stringToHexRGB(layerKey) });
+		const stroke = new olStroke({ color: stringToHexRGB(layerKey + "10"), width: 1 });
 		return new olStyle({
 			fill,
 			stroke,
-			image: new olCircle({ fill: fill, stroke: null, radius: MarkerSize.medium })
+			image: new olCircle({ fill: fill, stroke: null, radius: MarkerSizeDic[MarkerSize.medium] })
 		})
 	}
 

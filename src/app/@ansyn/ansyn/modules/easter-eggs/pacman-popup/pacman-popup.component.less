@@ -39,33 +39,34 @@
 
 @length: 2;
 @random: `Math.ceil(Math.random() * (@{length}))`;
+@contentRoot: 'src/app/@ansyn/ansyn/assets/important';
 
 @blinkyImages: 'yehonatan.jpg', 'tzahi.jpg';
 @randomBlinkyimage: extract(@blinkyImages,@random);
 
 .blinky {
-    background:  url('../../../assets/important/@{randomBlinkyimage}');
+    background:  url('@{contentRoot}/@{randomBlinkyimage}');
 }
 
 @pinkyImages: 'aviv.jpg', 'pini.jpg';
 @randomPinkyimage: extract(@pinkyImages,@random);
 
 .pinky {
-    background: url('../../../assets/important/@{randomPinkyimage}');
+    background: url('@{contentRoot}/@{randomPinkyimage}');
 }
 
 @inkyImages: 'elor.jpg', 'yuval.jpg';
 @randomInkyimage: extract(@inkyImages,@random);
 
 .inky {
-    background: url('../../../assets/important/@{randomInkyimage}');
+    background: url('@{contentRoot}/@{randomInkyimage}');
 }
 
 @clydeImages: 'adani.jpg', 'rom.jpg';
 @randomClydeimage: extract(@clydeImages,@random);
 
 .clyde {
-	background: url('../../../assets/important/@{randomClydeimage}');
+	background: url('@{contentRoot}/@{randomClydeimage}');
 }
 
 .pac-man {
@@ -74,5 +75,5 @@
 }
 
 .scared-ghost {
-    background: url('../../../assets/important/dana.JPG');
+    background: url('@{contentRoot}/dana.JPG');
 }

@@ -22,8 +22,9 @@ import {
 } from '../../overlay-status/reducers/overlay-status.reducer';
 import { of } from 'rxjs';
 import { KeysListenerService } from "../../../core/services/keys-listener.service";
+import { EventEmitter } from "@angular/core";
 
-describe('OverlyaNavigationBarComponent', () => {
+describe('OverlayNavigationBarComponent', () => {
 	let component: OverlayNavigationBarComponent;
 	let fixture: ComponentFixture<OverlayNavigationBarComponent>;
 	let store: Store<any>;
@@ -96,15 +97,33 @@ describe('OverlyaNavigationBarComponent', () => {
 		it(`onkeyup should call ${ key.n } when key = "${ key.k }"`, () => {
 			spyOn(component, <'clickGoAdjacent'>key.f);
 			expect(component[key.n]).toEqual(false);
+			const $event = {
+				key: key.k,
+				currentTarget: {
+					document: {
+						activeElement: {
+							className: []
+						}
+					}
+				}
+			};
 
-			// spyOn(keyListenerService, 'keydown');
-			keyListenerService.keydown.emit(new KeyboardEvent('keydown'));
-			component.onKeyDown$();
-			expect(component[key.n]).toEqual(true);
+			// spyOn(keyListenerService, 'keydown').and.returnValue(<any>of($event));
+			// spyOn(keyListenerService, 'keyup').and.returnValue(<any>of($event));
 
-			component.onKeyUp$();
-			expect(component[key.n]).toEqual(false);
-			expect(component[key.f]).toHaveBeenCalled();
-		});
+			component.onKeyDown$().subscribe(() => {
+				expect(component[key.n]).toEqual(false);
+			});
+			component.onKeyUp$().subscribe(() => {
+				expect(component[key.n]).toEqual(false);
+				expect(component[key.f]).toHaveBeenCalled();
+			});
+			spyOn(keyListenerService.keydown, 'emit');
+			spyOn(keyListenerService.keyup, 'emit');
+
+			// keyListenerService.keydown.emit();
+			//
+			// keyListenerService.keyup.next(new KeyboardEvent('keyup'));
+			});
 	});
 });

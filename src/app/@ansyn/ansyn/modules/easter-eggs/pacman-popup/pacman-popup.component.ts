@@ -168,7 +168,7 @@ export class PacmanPopupComponent implements OnInit, OnDestroy, AfterViewInit {
 			this.pacDotEaten();
 			this.powerPelletEaten();
 			this.checkForGameOver(this.squares, this.pacmanCurrentIndex);
-			this.checkforWin();
+			this.checkForWin();
 		}));
 
 
@@ -274,7 +274,7 @@ export class PacmanPopupComponent implements OnInit, OnDestroy, AfterViewInit {
 	 * Check whether has pacman consume all the pellet from the grid
 	 * if yes then display the winning message
 	 */
-	checkforWin() {
+	checkForWin() {
 		if (this.scoreValue === 274) {
 			this.ghosts.forEach(ghost => clearInterval(ghost.timerId));
 			this.isPacmanAlive = false;

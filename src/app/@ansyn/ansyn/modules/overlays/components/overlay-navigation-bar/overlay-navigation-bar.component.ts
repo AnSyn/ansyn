@@ -64,56 +64,55 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	onKeyDown$ = () => this.keyListenerService.keydown.pipe(
 		tap(($event: KeyboardEvent) => {
-			if (this.keyListenerService.keyWasUsed($event, 'ArrowRight', 39)) {
-				this.goNextActive = true;
-			} else if (this.keyListenerService.keyWasUsed($event, 'ArrowLeft', 37)) {
-				this.goPrevActive = true;
-			}
-
-			if (this.keyListenerService.keysWereUsed($event, this._overlayHackKeys)) {
-				this.store.dispatch(new EnableCopyOriginalOverlayDataAction(true));
-			}
+			this.onKeyDownEventCheck($event);
 		})
 	);
 
+	onKeyDownEventCheck($event: KeyboardEvent) {
+		if (this.keyListenerService.keyWasUsed($event, 'ArrowRight', 39)) {
+			this.goNextActive = true;
+		} else if (this.keyListenerService.keyWasUsed($event, 'ArrowLeft', 37)) {
+			this.goPrevActive = true;
+		}
+
+		if (this.keyListenerService.keysWereUsed($event, this._overlayHackKeys)) {
+			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(true));
+		}
+	}
+
+	@AutoSubscription
+	onKeyUp$ = () => this.keyListenerService.keyup.pipe(
+		tap(($event: KeyboardEvent) => {
+			this.onKeyUpEventCheck($event);
+		})
+	);
+
+	onKeyUpEventCheck($event: KeyboardEvent) {
+		if (this.keyListenerService.keyWasUsed($event, 'ArrowRight', 39)) {
+			this.clickGoAdjacent(true);
+			this.goNextActive = false;
+		} else if (this.keyListenerService.keyWasUsed($event, 'ArrowLeft', 37)) {
+			this.clickGoAdjacent(false);
+			this.goPrevActive = false;
+		}
+
+		if (this.keyListenerService.keysWereUsed($event, this._overlayHackKeys)) {
+			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(false));
+		}
+
+		if (this.keyListenerService.keysWereUsed($event, this._toggleDirectionKeys)) {
+			const direction = this.translateService.instant('direction');
+			this.translateService.set('direction', direction === 'rtl' ? 'ltr' : 'rtl', 'default');
+		}
+	}
 	@AutoSubscription
 	onkeypress$ = () => this.keyListenerService.keyup.pipe(
 		tap($event => {
-				if (this.keyListenerService.isElementNotValid($event)) {
-					return;
-				}
-
 				if (this.keyListenerService.keysWereUsed($event, this._scannedAreaKeys)) {
 					this.clickScannedArea();
 				}
 			}
 		));
-
-	@AutoSubscription
-	onKeyUp$ = () => this.keyListenerService.keyup.pipe(
-		tap(($event: KeyboardEvent) => {
-			if (this.keyListenerService.isElementNotValid($event)) {
-				return;
-			}
-
-			if (this.keyListenerService.keyWasUsed($event, 'ArrowRight', 39)) {
-				this.clickGoAdjacent(true);
-				this.goNextActive = false;
-			} else if (this.keyListenerService.keyWasUsed($event, 'ArrowLeft', 37)) {
-				this.clickGoAdjacent(false);
-				this.goPrevActive = false;
-			}
-
-			if (this.keyListenerService.keysWereUsed($event, this._overlayHackKeys)) {
-				this.store.dispatch(new EnableCopyOriginalOverlayDataAction(false));
-			}
-
-			if (this.keyListenerService.keysWereUsed($event, this._toggleDirectionKeys)) {
-				const direction = this.translateService.instant('direction');
-				this.translateService.set('direction', direction === 'rtl' ? 'ltr' : 'rtl', 'default');
-			}
-		})
-	);
 
 	clickGoAdjacent(isNext): void {
 		this.store.dispatch(new GoAdjacentOverlay({isNext}));

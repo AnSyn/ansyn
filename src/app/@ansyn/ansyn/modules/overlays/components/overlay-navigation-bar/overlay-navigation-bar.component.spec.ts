@@ -108,22 +108,30 @@ describe('OverlayNavigationBarComponent', () => {
 				}
 			};
 
+			component.onKeyDownEventCheck(new KeyboardEvent('keydown', {'key': key.k}));
+			expect(component[key.n]).toEqual(true);
+
+			component.onKeyUpEventCheck(new KeyboardEvent('keyup', {'key': key.k}))
+			expect(component[key.n]).toEqual(false);
+			expect(component[key.f]).toHaveBeenCalled();
+		});
+
 			// spyOn(keyListenerService, 'keydown').and.returnValue(<any>of($event));
 			// spyOn(keyListenerService, 'keyup').and.returnValue(<any>of($event));
 
-			component.onKeyDown$().subscribe(() => {
-				expect(component[key.n]).toEqual(false);
-			});
-			component.onKeyUp$().subscribe(() => {
-				expect(component[key.n]).toEqual(false);
-				expect(component[key.f]).toHaveBeenCalled();
-			});
-			spyOn(keyListenerService.keydown, 'emit');
-			spyOn(keyListenerService.keyup, 'emit');
-
+			// component.onKeyDown$().subscribe(() => {
+			// 	expect(component[key.n]).toEqual(false);
+			// });
+			// component.onKeyUp$().subscribe(() => {
+			// 	expect(component[key.n]).toEqual(false);
+			// 	expect(component[key.f]).toHaveBeenCalled();
+			// });
+			// spyOn(keyListenerService.keydown, 'emit');
+			// spyOn(keyListenerService.keyup, 'emit');
+			// fixture.nativeElement.dispatchEvent(new KeyboardEvent('keydown', {'key': key.k}))
 			// keyListenerService.keydown.emit();
 			//
 			// keyListenerService.keyup.next(new KeyboardEvent('keyup'));
 			});
 	});
-});
+// });

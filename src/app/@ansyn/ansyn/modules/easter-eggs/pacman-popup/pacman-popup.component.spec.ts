@@ -14,7 +14,7 @@ describe('PacmanPopupComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports:[
+			imports: [
 				StoreModule.forRoot({
 					[statusBarFeatureKey]: StatusBarReducer
 				})

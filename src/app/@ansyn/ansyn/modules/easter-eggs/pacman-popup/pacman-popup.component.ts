@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, ElementRef, Renderer2, OnDestroy, AfterVi
 import { KeysListenerService } from "../../core/services/keys-listener.service";
 import { AutoSubscription, AutoSubscriptions } from "auto-subscriptions";
 import { filter, tap } from "rxjs/operators";
-import { PacnManModeAction } from "../../status-bar/actions/status-bar.actions";
 import { Store } from "@ngrx/store";
 
 export enum KEY_CODE {
@@ -196,11 +195,9 @@ export class PacmanPopupComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	ngOnInit(): void {
-		this.store$.dispatch(new PacnManModeAction(true));
 	}
 
 	ngOnDestroy(): void {
-		this.store$.dispatch(new PacnManModeAction(false));
 	}
 
 	// init all the ghosts from the array

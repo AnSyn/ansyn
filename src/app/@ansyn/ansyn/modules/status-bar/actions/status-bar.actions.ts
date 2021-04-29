@@ -16,7 +16,6 @@ export const StatusBarActionsTypes = {
 	OPENED_FROM_OUTSIDE: 'OPENED_FROM_OUTSIDE',
 	SEARCH_ACTION: 'SEARCH_ACTION',
 	MARK_SECOND_SEARCH: 'MARK_SECOND_SEARCH',
-	PACMAN_MODE: 'PACMAN_MODE'
 };
 
 export class CopySnapshotShareLinkAction implements Action, ILogMessage {
@@ -61,14 +60,6 @@ export class OpenAdvancedSearchFromOutsideAction implements Action {
 
 export class MarkSecondSearchSensorsAction implements Action {
 	type: string = StatusBarActionsTypes.MARK_SECOND_SEARCH;
-
-	constructor(public payload: boolean) {
-	}
-}
-
-
-export class PacnManModeAction implements Action {
-	type: string = StatusBarActionsTypes.PACMAN_MODE;
 
 	constructor(public payload: boolean) {
 	}

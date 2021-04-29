@@ -13,6 +13,7 @@ import { concatMap } from 'rxjs/operators';
 import { SetActiveMapId, SetFourViewsModeAction, SetLayoutAction, SetMapsDataActionStore } from '@ansyn/map-facade';
 import {
 	BeginLayerCollectionLoadAction,
+	SetLayerSearchType,
 	UpdateSelectedLayersIds
 } from '../../../modules/menu-items/layers-manager/actions/layers.actions';
 import {
@@ -38,6 +39,7 @@ import { UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/statu
 import { Feature, Point, Polygon } from 'geojson';
 import { feature } from '@turf/turf';
 import { toolsFlags } from '../../../modules/status-bar/components/tools/models/tools.model';
+import { LayerSearchTypeEnum } from '../../../modules/menu-items/layers-manager/models/layers.model';
 
 @Injectable()
 export class SelectCaseAppEffects {
@@ -112,6 +114,7 @@ export class SelectCaseAppEffects {
 			new UpdateOverlaysManualProcessArgs(overlaysImageProcess),
 			new UpdateFacetsAction(facets),
 			new UpdateSelectedLayersIds(activeLayersIds),
+			new SetLayerSearchType(LayerSearchTypeEnum.mapView),
 			new SetAnnotationMode(null),
 			new UpdateToolsFlags([{ key: toolsFlags.isMeasureToolActive, value: measureIsActive }]),
 			new SelectCaseSuccessAction(payload)

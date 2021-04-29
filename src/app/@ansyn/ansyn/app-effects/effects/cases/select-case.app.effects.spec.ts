@@ -20,7 +20,7 @@ import {
 	IFourViewsData
 } from '@ansyn/map-facade';
 import {
-	BeginLayerCollectionLoadAction,
+	BeginLayerCollectionLoadAction, SetLayerSearchType,
 	UpdateSelectedLayersIds
 } from '../../../modules/menu-items/layers-manager/actions/layers.actions';
 import { casesConfig, CasesService } from '../../../modules/menu-items/cases/services/cases.service';
@@ -50,6 +50,7 @@ import { IOverlay, IOverlaysHash } from '../../../modules/overlays/models/overla
 import { UpdateGeoFilterStatus } from '../../../modules/status-bar/actions/status-bar.actions';
 import { IAdvancedSearchParameter } from '../../../modules/status-bar/models/statusBar-config.model';
 import { toolsFlags } from '../../../modules/status-bar/components/tools/models/tools.model';
+import { LayerSearchTypeEnum } from '../../../modules/menu-items/layers-manager/models/layers.model';
 
 describe('SelectCaseAppEffects', () => {
 	let selectCaseAppEffects: SelectCaseAppEffects;
@@ -151,7 +152,7 @@ describe('SelectCaseAppEffects', () => {
 			};
 
 			actions = hot('--a--', { a: new SelectCaseAction(payload) });
-			const expectedResult = cold('--(abcdefghijklmpqrx)--', {
+			const expectedResult = cold('--(abcdefghijklmnpqrx)--', {
 				a: new SetMapsDataActionStore({ mapsList: maps.data }),
 				b: new SetActiveMapId(state.maps.activeMapId),
 				c: new SetLayoutAction(<any>maps.layout),
@@ -168,6 +169,7 @@ describe('SelectCaseAppEffects', () => {
 				k: new UpdateOverlaysManualProcessArgs(overlaysImageProcess),
 				l: new UpdateFacetsAction(facets),
 				m: new UpdateSelectedLayersIds([]),
+				n: new SetLayerSearchType(LayerSearchTypeEnum.mapView),
 				p: new SetAnnotationMode(null),
 				q: new UpdateToolsFlags([{ key: toolsFlags.isMeasureToolActive, value: false }]),
 				r: new SelectCaseSuccessAction(payload),

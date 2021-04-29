@@ -40,6 +40,7 @@ import { OpenLayersAirbusSourceProvider } from '@ansyn/ol';
 import { OverlayHoverVisualizer } from "./plugins/visualizers/overlays/overlay-hover-visualizer";
 import { OpenLayerPic4CartoSourceProvider } from '@ansyn/ol';
 import { LayerSearchVisualizer } from './plugins/layers/layer-search.visualizer';
+import { ScreenViewVisualizer } from './plugins/visualizers/region/screen-view.visualizer';
 
 @NgModule({
 	imports: [
@@ -55,7 +56,6 @@ import { LayerSearchVisualizer } from './plugins/layers/layer-search.visualizer'
 				OpenlayersArcgisLayersPulgin,
 				AlertsPlugin,
 				// Visualizers
-				// FootprintHeatmapVisualizer,
 				FrameVisualizer,
 				OverlayHoverVisualizer,
 				FootprintPolylineVisualizer,
@@ -64,8 +64,9 @@ import { LayerSearchVisualizer } from './plugins/layers/layer-search.visualizer'
 				MeasureDistanceVisualizer,
 				GoToVisualizer,
 				PinPointVisualizer,
-				MouseShadowVisualizer,
+				ScreenViewVisualizer,
 				PolygonSearchVisualizer,
+				MouseShadowVisualizer,
 				OpenlayersGeoJsonLayersVisualizer,
 				TaskRegionVisualizer,
 				ScannedAreaVisualizer,

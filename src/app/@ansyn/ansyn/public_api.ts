@@ -130,7 +130,8 @@ export {
 	UpdateLayer,
 	UpdateSelectedLayersIds,
 	AddStaticLayers,
-	LayersActionTypes
+	LayersActionTypes,
+	LayersActions
 } from './modules/menu-items/layers-manager/actions/layers.actions';
 export {
 	layerPluginType, layerPluginTypeEnum, LayerType
@@ -144,7 +145,9 @@ export {
 	selectActiveAnnotationLayer,
 	selectLayers,
 	selectLayersEntities,
-	selectSelectedLayersIds
+	selectSelectedLayersIds,
+	selectLayerSearchPolygon,
+	selectLayerSearchType
 } from './modules/menu-items/layers-manager/reducers/layers.reducer';
 export { filtersConfig, FiltersService } from './modules/filters/services/filters.service';
 export { casesStateSelector, selectSelectedCase } from './modules/menu-items/cases/reducers/cases.reducer';

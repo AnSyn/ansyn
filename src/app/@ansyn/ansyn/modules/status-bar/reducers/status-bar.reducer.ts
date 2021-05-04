@@ -25,7 +25,7 @@ export const StatusBarInitialState: IStatusBarState = {
 	isAdvancedSearchOpen: false,
 	IsSimpleSearchOpen: false,
 	IsOpenedFromOutside: false,
-	markSecondSearchSensors: false,
+	markSecondSearchSensors: false
 };
 
 export const statusBarFeatureKey = 'statusBar';

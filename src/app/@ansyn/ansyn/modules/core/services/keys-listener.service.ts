@@ -33,11 +33,11 @@ export class KeysListenerService {
 		return className.includes('owl') || className.includes('title');
 	}
 
-	keyWasUsed(event: KeyboardEvent, key: string, keycode: number = key.charCodeAt(0)): boolean {
-		return event.key === key;// tslint:disable-line
+	keyWasUsed(event: KeyboardEvent, key: number): boolean {
+		return event.which === key;
 	}
 
-	keysWereUsed(event: KeyboardEvent, keys: string[]): boolean {
+	keysWereUsed(event: KeyboardEvent, keys: number[]): boolean {
 		return keys.some(key => this.keyWasUsed(event, key));
 	}
 }

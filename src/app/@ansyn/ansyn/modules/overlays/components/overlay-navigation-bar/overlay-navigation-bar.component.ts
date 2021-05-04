@@ -15,6 +15,7 @@ import { combineLatest } from 'rxjs';
 import { IOverlay, IOverlayDrop } from '../../models/overlay.model';
 import { TranslateService } from '@ngx-translate/core';
 import { KeysListenerService } from "../../../core/services/keys-listener.service";
+import { Key } from "ts-keycode-enum";
 
 @Component({
 	selector: 'ansyn-overlay-navigation-bar',
@@ -30,9 +31,9 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	isLastOverlay: boolean;
 	overlaysLength: number;
 
-	private _scannedAreaKeys = '`~;'.split('');
-	private _overlayHackKeys = 'Eeק'.split('');
-	private _toggleDirectionKeys = 'Ddג'.split('');
+	private _scannedAreaKeys = Key.Tilde;
+	private _overlayHackKeys = Key.E;
+	private _toggleDirectionKeys = Key.D;
 
 	@AutoSubscription
 	hasOverlayDisplay$ = this.store.select(selectOverlayOfActiveMap).pipe(
@@ -69,13 +70,13 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	);
 
 	onKeyDownEventCheck($event: KeyboardEvent) {
-		if (this.keyListenerService.keyWasUsed($event, 'ArrowRight', 39)) {
+		if (this.keyListenerService.keyWasUsed($event, Key.RightArrow)) {
 			this.goNextActive = true;
-		} else if (this.keyListenerService.keyWasUsed($event, 'ArrowLeft', 37)) {
+		} else if (this.keyListenerService.keyWasUsed($event, Key.LeftArrow)) {
 			this.goPrevActive = true;
 		}
 
-		if (this.keyListenerService.keysWereUsed($event, this._overlayHackKeys)) {
+		if (this.keyListenerService.keyWasUsed($event, this._overlayHackKeys)) {
 			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(true));
 		}
 	}
@@ -88,19 +89,19 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	);
 
 	onKeyUpEventCheck($event: KeyboardEvent) {
-		if (this.keyListenerService.keyWasUsed($event, 'ArrowRight', 39)) {
+		if (this.keyListenerService.keyWasUsed($event, Key.RightArrow)) {
 			this.clickGoAdjacent(true);
 			this.goNextActive = false;
-		} else if (this.keyListenerService.keyWasUsed($event, 'ArrowLeft', 37)) {
+		} else if (this.keyListenerService.keyWasUsed($event, Key.LeftArrow)) {
 			this.clickGoAdjacent(false);
 			this.goPrevActive = false;
 		}
 
-		if (this.keyListenerService.keysWereUsed($event, this._overlayHackKeys)) {
+		if (this.keyListenerService.keyWasUsed($event, this._overlayHackKeys)) {
 			this.store.dispatch(new EnableCopyOriginalOverlayDataAction(false));
 		}
 
-		if (this.keyListenerService.keysWereUsed($event, this._toggleDirectionKeys)) {
+		if (this.keyListenerService.keyWasUsed($event, this._toggleDirectionKeys)) {
 			const direction = this.translateService.instant('direction');
 			this.translateService.set('direction', direction === 'rtl' ? 'ltr' : 'rtl', 'default');
 		}
@@ -108,7 +109,7 @@ export class OverlayNavigationBarComponent implements OnInit, OnDestroy {
 	@AutoSubscription
 	onkeypress$ = () => this.keyListenerService.keyup.pipe(
 		tap($event => {
-				if (this.keyListenerService.keysWereUsed($event, this._scannedAreaKeys)) {
+				if (this.keyListenerService.keyWasUsed($event, this._scannedAreaKeys)) {
 					this.clickScannedArea();
 				}
 			}

@@ -20,6 +20,7 @@ import { ComponentVisibilityItems } from '../../../../../app-providers/component
 import { PacmanPopupComponent } from '../../../../easter-eggs/pacman-popup/pacman-popup.component';
 import { KeysListenerService } from '../../../../core/services/keys-listener.service';
 import { selectOverlaysWithMapIds } from '@ansyn/map-facade';
+import { Key } from 'ts-keycode-enum';
 
 @Component({
 	selector: 'ansyn-tools',
@@ -63,7 +64,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	public flags: Map<toolsFlags, boolean>;
 	toolTipDirection = 'bottom'
 
-	private _pacmanKeys = 'Ppפ'.split('');
+	private _pacmanKey = Key.P;
 
 	@AutoSubscription
 	public flags$: Observable<Map<toolsFlags, boolean>> = this.store$.select(selectToolFlags).pipe(
@@ -98,7 +99,7 @@ export class ToolsComponent implements OnInit, OnDestroy {
 	onKeyUp$ = () => this.keyListenerService.keyup.pipe(
 		withLatestFrom(this.store$.select(selectOverlaysWithMapIds)),
 		filter(([$event, overlayWithMapIds]: [KeyboardEvent, { overlay: any, mapId: string, isActive: boolean }[]]) =>
-			this.keyListenerService.keysWereUsed($event, this._pacmanKeys) &&
+			this.keyListenerService.keyWasUsed($event, this._pacmanKey) &&
 			// open pacman only when there are no overlays displayed and no dialog
 			!this.isDialogShowing &&
 			!overlayWithMapIds.some(overlayAndMapId => Boolean(overlayAndMapId.overlay))),

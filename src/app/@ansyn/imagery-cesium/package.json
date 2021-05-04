@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/imagery-cesium",
-	"version": "5.1.0",
+	"version": "5.1.3",
 	"peerDependencies": {
 		"@angular/core": "9.x || 10.x || 11.x",
 		"@angular/common": "9.x || 10.x || 11.x",
@@ -8,7 +8,7 @@
 	},
 	"dependencies": {
 		"tslib": "^2.0.0",
-		"@ansyn/imagery": "5.1.0",
+		"@ansyn/imagery": "5.1.3",
 		"cesium": "^1.66.0",
 		"@turf/turf": "^6.3.0",
 		"geojson": "^0.5.0"

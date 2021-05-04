@@ -474,14 +474,15 @@ export class AnsynApi {
 	 * display the overlay with the id `overlayId` in the active map.
 	 * if `addToTimeline` is true, the overlay was add to the timeline.
 	 * @param overlayId the id of the overlay we want to display
+	 * @param mapId the id of the map to add the overlay
 	 * @param addToTimeline if load the overlay to timeline.
 	 */
-	displayOverlayById(overlayId: string, addToTimeline: boolean) {
+	displayOverlayById(overlayId: string, mapId?: mapIdOrNumber, addToTimeline?: boolean) {
 		this.overlaysService.getOverlaysById([{ id: overlayId, sourceType: undefined}]).pipe(
 			map(overlays => overlays.find(overlay => Boolean(overlay.sourceType))),
 			tap( overlay => {
 				if (overlay) {
-					this.displayOverLay(overlay);
+					this.displayOverLay(overlay, mapId);
 					if (addToTimeline) {
 						this.store.dispatch(new LoadOverlaysSuccessAction([overlay], false));
 					}

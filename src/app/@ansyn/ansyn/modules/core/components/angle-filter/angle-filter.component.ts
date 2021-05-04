@@ -1,7 +1,7 @@
 import { Component, ElementRef, HostBinding, HostListener, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import {
 	ImageryCommunicatorService,
-	toDegrees,
+	toDegrees
 } from '@ansyn/imagery';
 import {
 	ContextMenuShowAngleFilter,

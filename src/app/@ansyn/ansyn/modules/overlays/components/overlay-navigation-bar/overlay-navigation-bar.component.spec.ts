@@ -23,6 +23,7 @@ import {
 import { of } from 'rxjs';
 import { KeysListenerService } from "../../../core/services/keys-listener.service";
 import { EventEmitter } from "@angular/core";
+import { Key } from "ts-keycode-enum";
 
 describe('OverlayNavigationBarComponent', () => {
 	let component: OverlayNavigationBarComponent;
@@ -89,29 +90,19 @@ describe('OverlayNavigationBarComponent', () => {
 		});
 	});
 
-	[{ k: 'ArrowRight', n: 'goNextActive', f: 'clickGoAdjacent' }, {
-		k: 'ArrowLeft',
+	[{ k: Key.RightArrow, n: 'goNextActive', f: 'clickGoAdjacent' }, {
+		k: Key.LeftArrow,
 		n: 'goPrevActive',
 		f: 'clickGoAdjacent'
 	}].forEach(key => {
 		it(`onkeyup should call ${ key.n } when key = "${ key.k }"`, () => {
 			spyOn(component, <'clickGoAdjacent'>key.f);
 			expect(component[key.n]).toEqual(false);
-			const $event = {
-				key: key.k,
-				currentTarget: {
-					document: {
-						activeElement: {
-							className: []
-						}
-					}
-				}
-			};
 
-			component.onKeyDownEventCheck(new KeyboardEvent('keydown', {'key': key.k}));
+			component.onKeyDownEventCheck(new KeyboardEvent('keydown', {'keyCode': key.k}));
 			expect(component[key.n]).toEqual(true);
 
-			component.onKeyUpEventCheck(new KeyboardEvent('keyup', {'key': key.k}))
+			component.onKeyUpEventCheck(new KeyboardEvent('keyup', {'keyCode': key.k}))
 			expect(component[key.n]).toEqual(false);
 			expect(component[key.f]).toHaveBeenCalled();
 		});

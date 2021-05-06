@@ -17,5 +17,5 @@
 </form>
 <ng-template let-option="option" let-value="value" #optionRef>
 	<span [title]="option['name']" [innerHTML]="option['name'] | bold:value"></span>
-	<small style="margin: 5px" *ngIf="option?.data?.source">{{option?.data?.source}}</small>
+	<small style="margin: 5px" *ngIf="option?.data?.source">{{option?.data?.source | translate}}</small>
 </ng-template>

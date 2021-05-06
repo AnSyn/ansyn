@@ -1,6 +1,6 @@
 {
 	"name": "@ansyn/ansyn",
-	"version": "5.1.3",
+	"version": "5.1.4",
 	"peerDependencies": {
 		"@ngrx/store": "9.x",
 		"@ngrx/effects": "9.x",
@@ -12,12 +12,12 @@
 	},
 	"dependencies": {
 		"@angular-slider/ngx-slider": "^2.0.3",
-		"@ansyn/imagery": "5.1.3",
-		"@ansyn/map-facade": "5.1.3",
-		"@ansyn/menu": "5.1.3",
-		"@ansyn/ol": "5.1.3",
-		"@ansyn/imagery-cesium": "5.1.3",
-		"@ansyn/imagery-video": "5.1.3",
+		"@ansyn/imagery": "5.1.4",
+		"@ansyn/map-facade": "5.1.4",
+		"@ansyn/menu": "5.1.4",
+		"@ansyn/ol": "5.1.4",
+		"@ansyn/imagery-cesium": "5.1.4",
+		"@ansyn/imagery-video": "5.1.4",
 		"@ansyn/event-drops": "^0.2.8-1.9",
 		"angular2-uuid": "^1.1.1",
 		"@turf/turf": "^6.3.0",

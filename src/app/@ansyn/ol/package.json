@@ -1,13 +1,13 @@
 {
 	"name": "@ansyn/ol",
-	"version": "5.1.3",
+	"version": "5.1.4",
 	"peerDependencies": {
 		"@angular/core": "9.x || 10.x || 11.x",
 		"@angular/common": "9.x || 10.x || 11.x",
 		"rxjs": "6.x"
 	},
 	"dependencies": {
-		"@ansyn/imagery": "5.1.3",
+		"@ansyn/imagery": "5.1.4",
 		"auto-subscriptions": "^2.0.5",
 		"@turf/turf": "^6.3.0",
 		"ol": "^6.4.3",

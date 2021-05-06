@@ -9,6 +9,7 @@ import { StatusBarConfig } from '../../models/statusBar.config';
 import { MenuConfig, ResetAppAction } from '@ansyn/menu';
 import { ComponentVisibilityService } from '../../../../app-providers/component-visibility.service';
 import { MockCompoentnService } from '../../../core/test/mock-compoentn-service';
+import { AddressConfig } from '../../models/address-config.model';
 
 describe('LogoPanelComponent', () => {
 	let component: LogoPanelComponent;
@@ -30,6 +31,10 @@ describe('LogoPanelComponent', () => {
 				},
 				{
 					provide: MenuConfig,
+					useValue: {}
+				},
+				{
+					provide: AddressConfig,
 					useValue: {}
 				},
 				{

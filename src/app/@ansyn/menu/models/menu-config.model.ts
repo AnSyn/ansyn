@@ -15,4 +15,5 @@ export interface IMenuConfig {
 	landingPageUrl: string;
 	menuItems?: string[];
 	isCollapsible?: boolean;
+	environment: string;
 }

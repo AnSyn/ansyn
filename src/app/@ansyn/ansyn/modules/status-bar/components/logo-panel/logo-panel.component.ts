@@ -6,6 +6,7 @@ import { IStatusBarConfig } from '../../models/statusBar-config.model';
 import { IMenuConfig, LogHelp, MenuConfig, ResetAppAction } from '@ansyn/menu';
 import { ComponentVisibilityService } from '../../../../app-providers/component-visibility.service';
 import { ComponentVisibilityItems } from '../../../../app-providers/component-mode';
+import { AddressConfig, IAddressConfig } from '../../models/address-config.model';
 
 @Component({
 	selector: 'ansyn-logo-panel',
@@ -26,6 +27,7 @@ export class LogoPanelComponent {
 		componentVisibilityService: ComponentVisibilityService,
 		@Inject(StatusBarConfig) public statusBarConfig: IStatusBarConfig,
 		@Inject(MenuConfig) public menuConfig: IMenuConfig,
+		@Inject(AddressConfig) public addressConfig: IAddressConfig,
 		protected store: Store<any>
 	) {
 		this.isHelpShow = componentVisibilityService.get(ComponentVisibilityItems.HELP);
@@ -47,6 +49,10 @@ export class LogoPanelComponent {
 
 	resetApp() {
 		this.store.dispatch(new ResetAppAction());
+	}
+
+	switchEnvironment() {
+		window.open(this.addressConfig.urlToNavigate, "_self");
 	}
 
 }

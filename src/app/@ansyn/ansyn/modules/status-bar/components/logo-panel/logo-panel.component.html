@@ -22,7 +22,8 @@
 		 *ngIf="menuConfig?.mode"
 		 [style.color]="menuConfig.color"
 		 [style.background]="menuConfig.background"
-		 [style.border]="'1px sollid' + menuConfig.color">
+		 [style.border]="'1px sollid' + menuConfig.color"
+		 (click)="switchEnvironment()">
 		{{menuConfig.mode}}
 	</div>
 </div>

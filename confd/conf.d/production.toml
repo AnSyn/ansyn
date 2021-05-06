@@ -42,5 +42,6 @@ keys = [
     "/ansyn/show/one2one",
     "/ansyn/layers/manager/limit",
     "/ansyn/layers/manager/limit/error",
-    "/ansyn/layers/manager/static/urls"
+    "/ansyn/layers/manager/static/urls",
+    "/ansyn/environment"
 ]

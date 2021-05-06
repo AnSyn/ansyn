@@ -41,6 +41,7 @@ export { IConfigModel } from './config.model';
 
 // // statusBar
 export { IStatusBarConfig } from './modules/status-bar/models/statusBar-config.model';
+export { IAddressConfig } from './modules/status-bar/models/address-config.model';
 export {
 	statusBarFeatureKey,
 	StatusBarInitialState,

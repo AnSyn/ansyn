@@ -581,11 +581,11 @@ export class AnsynApi {
 	}
 
 	private getMapIdFromMapNumber(mapId: mapIdOrNumber): string {
-		if (!Boolean(mapId)) {
+		if (typeof mapId !== 'number' && !Boolean(mapId)) {
 			return this.activeMapId;
 		}
 		if ((typeof mapId === 'string' && Boolean(this.mapsEntities[mapId])) ||
-			(typeof mapId === 'number' && mapId > 0  && mapId < 4 && Boolean(this.mapList[mapId - 1]))) {
+			(typeof mapId === 'number' && mapId > 0  && mapId <= 4 && Boolean(this.mapList[mapId - 1]))) {
 			return typeof mapId === 'string' ? mapId : this.mapList[mapId - 1].id;
 		}
 		else {

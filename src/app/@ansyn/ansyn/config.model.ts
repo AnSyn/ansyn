@@ -16,6 +16,7 @@ import { IMultipleOverlaysSourceConfig } from './modules/core/models/multiple-ov
 import { IAlgorithmsConfig } from './modules/menu-items/algorithms/models/tasks.model';
 import { IAnaglyphConfig } from './modules/plugins/openlayers/plugins/anaglyph-sensor/models/anaglyph.model';
 import { IOLPluginsConfig } from '@ansyn/ol';
+import { IAddressConfig } from './modules/status-bar/models/address-config.model';
 
 export interface IConfigModel {
 	casesConfig: ICasesConfig;
@@ -30,6 +31,7 @@ export interface IConfigModel {
 	toolsConfig: IToolsConfig;
 	loggerConfig: ILoggerConfig;
 	statusBarConfig: IStatusBarConfig;
+	addressConfig: IAddressConfig;
 	coreConfig: ICoreConfig;
 	menuConfig: IMenuConfig;
 	visualizersConfig: IVisualizersConfig;

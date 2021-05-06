@@ -178,6 +178,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 
 	@AutoSubscription
 	onClickOutSide = () => this.isAfterViewInit.pipe(
+		filter(Boolean),
 		switchMap(() => this.clickOutsideService.onClickOutside({ monitor: this.closeElementAnnotation.nativeElement })),
 		filter(Boolean),
 		tap(() => this.isManualProcessingOpen = false)
@@ -282,7 +283,7 @@ export class OverlayStatusComponent implements OnInit, OnDestroy, IEntryComponen
 	}
 
 	ngAfterViewInit(): void {
-		this.isAfterViewInit.next(true);
+		this.isAfterViewInit.next(this.isImageProcessingShow);
 	}
 
 

@@ -1,5 +1,5 @@
 export interface IAddressConfig {
-    urlToNavigate: string;
+	urlToNavigate: string;
 }
 
 export const AddressConfig = 'addressConfig'

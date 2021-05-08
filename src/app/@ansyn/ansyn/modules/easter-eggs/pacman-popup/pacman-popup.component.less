@@ -1,0 +1,79 @@
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    width: 560px;
+    height: 560px;
+    border: solid black;
+    background-color: black;
+}
+
+.grid div {
+    width: 20px;
+    height: 20px;
+}
+
+.pac-dot {
+    background-color: white;
+    border: 7px solid black;
+    box-sizing: border-box;
+    border-radius: 50%;
+}
+
+.wall {
+    background-color: blue;
+}
+
+.power-pellet {
+    background-color: rgb(140, 206, 255);
+    border-radius: 50%;
+    border: 3px solid black;
+    box-sizing: border-box;
+}
+
+.ghost {
+	box-sizing: border-box;
+	background-color: darkred;
+	border-radius: 0px !important;
+	border: none !important;
+}
+
+@length: 2;
+@random: `Math.ceil(Math.random() * (@{length}))`;
+@contentRoot: '/assets/important';
+
+@blinkyImages: 'yehonatan.jpg', 'tzahi.jpg';
+@randomBlinkyimage: extract(@blinkyImages,@random);
+
+.blinky {
+    background:  url('@{contentRoot}/@{randomBlinkyimage}');
+}
+
+@pinkyImages: 'aviv.jpg', 'pini.jpg';
+@randomPinkyimage: extract(@pinkyImages,@random);
+
+.pinky {
+    background: url('@{contentRoot}/@{randomPinkyimage}');
+}
+
+@inkyImages: 'elor.jpg', 'yuval.jpg';
+@randomInkyimage: extract(@inkyImages,@random);
+
+.inky {
+    background: url('@{contentRoot}/@{randomInkyimage}');
+}
+
+@clydeImages: 'adani.jpg', 'rom.jpg';
+@randomClydeimage: extract(@clydeImages,@random);
+
+.clyde {
+	background: url('@{contentRoot}/@{randomClydeimage}');
+}
+
+.pac-man {
+    background-color: yellow;
+    border-radius: 50%;
+}
+
+.scared-ghost {
+    background: url('@{contentRoot}/dana.JPG');
+}

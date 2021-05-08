@@ -21,11 +21,15 @@ import {
 	OverlayStatusReducer,
 } from '../../overlay-status/reducers/overlay-status.reducer';
 import { of } from 'rxjs';
+import { KeysListenerService } from "../../../core/services/keys-listener.service";
+import { EventEmitter } from "@angular/core";
+import { Key } from "ts-keycode-enum";
 
-describe('OverlyaNavigationBarComponent', () => {
+describe('OverlayNavigationBarComponent', () => {
 	let component: OverlayNavigationBarComponent;
 	let fixture: ComponentFixture<OverlayNavigationBarComponent>;
 	let store: Store<any>;
+	let keyListenerService: KeysListenerService;
 
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
@@ -37,6 +41,7 @@ describe('OverlyaNavigationBarComponent', () => {
 			}), TranslateModule.forRoot()],
 			providers: [
 				{
+					KeysListenerService,
 					provide: StatusBarConfig,
 					useValue: { toolTips: {} }
 				}
@@ -48,6 +53,7 @@ describe('OverlyaNavigationBarComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(OverlayNavigationBarComponent);
 		component = fixture.componentInstance;
+		keyListenerService = new KeysListenerService();
 		fixture.detectChanges();
 	});
 
@@ -84,30 +90,22 @@ describe('OverlyaNavigationBarComponent', () => {
 		});
 	});
 
-	[{ k: 'ArrowRight', n: 'goNextActive', f: 'clickGoAdjacent' }, {
-		k: 'ArrowLeft',
+	[{ k: Key.RightArrow, n: 'goNextActive', f: 'clickGoAdjacent' }, {
+		k: Key.LeftArrow,
 		n: 'goPrevActive',
 		f: 'clickGoAdjacent'
 	}].forEach(key => {
 		it(`onkeyup should call ${ key.n } when key = "${ key.k }"`, () => {
 			spyOn(component, <'clickGoAdjacent'>key.f);
 			expect(component[key.n]).toEqual(false);
-			const $event = {
-				key: key.k,
-				currentTarget: {
-					document: {
-						activeElement: {
-							className: []
-						}
-					}
-				}
-			};
-			component.onkeydown(<any>$event);
+
+			component.onKeyDownEventCheck(new KeyboardEvent('keydown', {'keyCode': key.k}));
 			expect(component[key.n]).toEqual(true);
 
-			component.onkeyup(<any>$event);
+			component.onKeyUpEventCheck(new KeyboardEvent('keyup', {'keyCode': key.k}))
 			expect(component[key.n]).toEqual(false);
 			expect(component[key.f]).toHaveBeenCalled();
 		});
 	});
 });
+

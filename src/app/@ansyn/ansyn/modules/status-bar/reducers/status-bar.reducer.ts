@@ -77,3 +77,4 @@ export const selectIsOpenedFromOutside = createSelector(statusBarStateSelector, 
 export const selectMarkedSecondSearchSensors = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar?.markSecondSearchSensors);
 export const selectGeoFilterActive = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.active);
 export const selectGeoFilterType = createSelector(selectGeoFilterStatus, (geoFilterStatus: IGeoFilterStatus) => geoFilterStatus.type);
+

@@ -1,5 +1,6 @@
 @import 'ansyn/less/colors';
 @import "ansyn/less/z-index-globals";
+@import 'ansyn/less/common';
 
 :host {
 	position: relative;
@@ -38,18 +39,7 @@
 		}
 	}
 	.warper {
-		border-bottom-style: groove;
-        border-color: rgba(151, 151, 151, 0.55);
-		border-width: 4px;
-		line-height: 29px;
-		align-self: center;
-		color: white;
-		cursor: pointer;
-		box-sizing: border-box;
-		width: 100%;
-		white-space: nowrap;
-		overflow: hidden;
-		text-align: center;
+		&:extend(.warper-container);
 	}
 	.option {
 		margin-bottom: 2px;

@@ -171,16 +171,9 @@
 		}
 	}
 	.wraper {
-        border-color: rgba(151, 151, 151, 0.55);
-		border-width: 4px;
-		line-height: 29px;
-		align-self: center;
-		color: white;
-		cursor: pointer;
-		box-sizing: border-box;
-		white-space: nowrap;
-		overflow: hidden;
-		text-align: center;
+        &:extend(.warper-container);
+		border-bottom-style: none;
+
 		background-color: @status-bar-panels;
 		border-radius: 5px;
 		margin-left: 25px;

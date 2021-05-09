@@ -21,6 +21,7 @@ export interface IFetchParams {
 	types?: string[];
 	registeration?: string[];
 	angleParams?: IAngleParams;
+	displayTrainer?: boolean;
 }
 
 export interface IAngleParams {

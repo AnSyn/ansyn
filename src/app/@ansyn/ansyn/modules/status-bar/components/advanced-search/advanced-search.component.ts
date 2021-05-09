@@ -52,6 +52,8 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 	selectedAdvancedSearchParameters: IAdvancedSearchParameter = {};
 	showMessage: boolean;
 
+	isExer: boolean;
+
 	@AutoSubscription
 	onDataInputFilterChange$ = this.store.pipe(
 		select(selectAdvancedSearchParameters),
@@ -100,6 +102,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 		this.sensorTypes = this.getAllSensorsTypes();
 		this.sensorsList = this.overlaysService.getAllSensorsNames();
 		this.providersNamesList = this.getAllProvidersNames();
+		this.isExer = this.multipleOverlaysSourceConfig.enableExerciseImages;
 	}
 
 	displaySensors(): boolean {
@@ -122,7 +125,8 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 			registeration: this.selectedAdvancedSearchParameters.registeration,
 			resolution: this.selectedAdvancedSearchParameters.resolution,
 			providers: this.selectedAdvancedSearchParameters.providers,
-			sensors: this.selectedAdvancedSearchParameters.sensors
+			sensors: this.selectedAdvancedSearchParameters.sensors,
+			displayTrainer: this.selectedAdvancedSearchParameters.displayTrainer
 		}
 	}
 
@@ -292,6 +296,10 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 	resetResolution(): void {
 		this.selectedAdvancedSearchParameters.resolution.lowValue = this.advancedSearchParametredFromConfig.resolution.lowValue;
 		this.selectedAdvancedSearchParameters.resolution.highValue = this.advancedSearchParametredFromConfig.resolution.highValue;
+	}
+
+	toggleSearchByTrainer(): void {
+		this.selectedAdvancedSearchParameters.displayTrainer = !this.selectedAdvancedSearchParameters.displayTrainer;
 	}
 
 }

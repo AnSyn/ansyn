@@ -2,6 +2,7 @@
 @import "~@ansyn/event-drops/style.css";
 @import 'icons.css';
 @import 'tooltip.css';
+@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 @import "~@ansyn/ng-pick-datetime/assets/style/picker.min.css";
 
 circle.drop.selected {

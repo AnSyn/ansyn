@@ -35,6 +35,7 @@ export interface IAdvancedSearchParameter {
 	resolution?: IResolutionRange;
 	sensors?: string[];
 	enableResetProviders?: boolean;
+	displayTrainer?: boolean;
 }
 
 export interface IStatusBarConfig {

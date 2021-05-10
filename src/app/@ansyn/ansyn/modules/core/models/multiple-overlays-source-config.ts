@@ -27,6 +27,7 @@ export interface IMultipleOverlaysSourceConfig {
 	sensorNamesByGroup: {
 		[groupName: string]: string[]
 	};
+	enableExerciseImages: boolean;
 	useAngleDebugMode: boolean;
 	defaultProvider: IOverlaysSourceProvider;
 	diagonalSensorNames: string[];

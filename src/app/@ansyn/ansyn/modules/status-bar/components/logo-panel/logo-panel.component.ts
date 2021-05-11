@@ -22,7 +22,6 @@ export class LogoPanelComponent {
 
 	showCredentials = false;
 
-
 	constructor(
 		protected store$: Store<IStatusBarState>,
 		componentVisibilityService: ComponentVisibilityService,

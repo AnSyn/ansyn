@@ -16,4 +16,5 @@ export interface IMenuConfig {
 	menuItems?: string[];
 	isCollapsible?: boolean;
 	environment: string;
+	isSwitchEnvironmentChecked?: boolean;
 }

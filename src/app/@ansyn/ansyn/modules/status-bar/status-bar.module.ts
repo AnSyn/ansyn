@@ -25,6 +25,7 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { CasesModule } from '../menu-items/cases/cases.module';
 import { LogoPanelComponent } from './components/logo-panel/logo-panel.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle'
 
 @NgModule({
 	imports: [
@@ -40,7 +41,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 		OwlDateTimeModule,
 		FiltersModule,
 		OwlNativeDateTimeModule,
-		NgxSliderModule
+		NgxSliderModule,
+		MatSlideToggleModule
 	],
 	declarations: [StatusBarComponent, SearchPanelComponent, DisplayPanelComponent, LogoPanelComponent, TimePickerComponent, LocationPickerComponent, FiltersPanelComponent, TimepickerPresetsComponent, TimePickerContainerComponent, SearchOptionsComponent, AdvancedSearchComponent],
 	providers: [

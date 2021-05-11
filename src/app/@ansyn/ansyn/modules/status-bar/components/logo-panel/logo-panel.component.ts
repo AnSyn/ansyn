@@ -22,6 +22,8 @@ export class LogoPanelComponent {
 
 	showCredentials = false;
 
+	isChecked: boolean;
+
 	constructor(
 		protected store$: Store<IStatusBarState>,
 		componentVisibilityService: ComponentVisibilityService,
@@ -32,6 +34,7 @@ export class LogoPanelComponent {
 	) {
 		this.isHelpShow = componentVisibilityService.get(ComponentVisibilityItems.HELP);
 		this.isCredentialsShow = componentVisibilityService.get(ComponentVisibilityItems.CREDENTIALS);
+		this.isChecked = this.menuConfig.isSwitchEnvironmentChecked;
 	}
 
 	onHelp() {

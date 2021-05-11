@@ -18,7 +18,7 @@
 
 <div class="menu-btn logo">
 	<img [src]="menuConfig.path" [alt]="version" [title]="version" (click)="resetApp()">
-	<mat-slide-toggle *ngIf="menuConfig?.mode" [checked]="this.isChecked" (click)="switchEnvironment()"> {{menuConfig.mode}} </mat-slide-toggle>
+	<mat-slide-toggle *ngIf="menuConfig?.mode" [checked]="menuConfig?.isSwitchEnvironmentChecked" (click)="switchEnvironment()"> {{menuConfig.mode}} </mat-slide-toggle>
 </div>
 
 <ansyn-credentials

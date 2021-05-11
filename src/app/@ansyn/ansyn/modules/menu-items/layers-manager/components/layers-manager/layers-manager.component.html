@@ -6,6 +6,8 @@
 		<div class="refresh-button">
 			<i [class.animate]="loadingLayers"
 			   class="icon-refresh medium-icon"
+			   [tooltip-value]="'refresh' | translate"
+			   tooltip-class="bottom"
 			   (click)="refreshStaticLayers()"></i>
 		</div>
 	</div>

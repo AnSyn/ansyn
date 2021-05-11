@@ -5,7 +5,7 @@
 		(click)="toggle()"
 		[attr.tooltip-value]="minimizeText | translate"
 		tooltip-class="top">
-		<i class="fa fa-caret-down" [class.fa-caret-up]="collapse"></i>
+		<div [class.show]="collapse"><i class="icon-footer-toggle small-icon"></i></div>
 	</button>
 
 	<div class="app-timeline-container">

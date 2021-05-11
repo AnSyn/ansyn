@@ -1,4 +1,4 @@
-import { forkJoin, Observable, throwError, zip } from 'rxjs';
+import { of, forkJoin, Observable, throwError, zip } from 'rxjs';
 import { Inject, Injectable } from '@angular/core';
 import {
 	BaseOverlaySourceProvider,
@@ -23,7 +23,6 @@ import { select, Store } from '@ngrx/store';
 import { IProviderData, IStatusBarConfig } from '../../status-bar/models/statusBar-config.model';
 import { StatusBarConfig } from '../../status-bar/models/statusBar.config';
 import { selectProviders } from '../reducers/overlays.reducer';
-import { of } from 'rxjs/internal/observable/of';
 
 @Injectable({
 	providedIn: 'root'

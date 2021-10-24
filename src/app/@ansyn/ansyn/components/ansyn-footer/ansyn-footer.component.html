@@ -1,12 +1,4 @@
-<div class="status-timeline-container" #footerWrapper>
-	<button
-		*ngIf="config?.isFooterCollapsible && !fourViewsMode"
-		class="hide-menu"
-		(click)="toggle()"
-		[attr.tooltip-value]="minimizeText | translate"
-		tooltip-class="top">
-		<div [class.show]="collapse"><i class="icon-footer-toggle small-icon"></i></div>
-	</button>
+<div class="status-timeline-container">
 
 	<div class="app-timeline-container">
 		<ansyn-overlay-navigation-bar></ansyn-overlay-navigation-bar>

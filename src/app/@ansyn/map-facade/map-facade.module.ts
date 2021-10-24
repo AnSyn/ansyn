@@ -35,6 +35,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
 import { AnsynDatePipe } from './pipes/ansyn-date.pipe';
+import { MinimizeDirective } from './directives/minimize.directive';
 
 @NgModule({
 	imports: [
@@ -72,7 +73,8 @@ import { AnsynDatePipe } from './pipes/ansyn-date.pipe';
 		GeoHolderComponent,
 		UtmHolderComponent,
 		FloatingMenuComponent,
-		AnsynDatePipe
+		AnsynDatePipe,
+		MinimizeDirective
 	],
 	exports: [
 		ImageriesManagerComponent,
@@ -86,7 +88,8 @@ import { AnsynDatePipe } from './pipes/ansyn-date.pipe';
 		EntryComponentDirective,
 		GeoHolderComponent,
 		UtmHolderComponent,
-		AnsynDatePipe
+		AnsynDatePipe,
+		MinimizeDirective
 	]
 })
 

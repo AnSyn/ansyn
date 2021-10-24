@@ -74,7 +74,7 @@
 		width: 100%;
 		position: relative;
 		overflow: hidden;
-		flex-direction: row;
+		flex-direction: column;
 		background: @background-color-0;
 
 		div.menu {
@@ -82,11 +82,7 @@
 		}
 
 		div.status {
-			position: absolute;
-			top: 0;
-			right: 0;
 			width: 100%;
-			height: @status-bar-height;
 			z-index: @z-index-status-bar-navigation-area;
 
 			&.expand {
@@ -101,13 +97,10 @@
 
 		div.layer {
 			width: 100%;
-			height: calc(100% - @status-bar-height - @timeline-area-height);
-			top: @status-bar-height;
 			color: white;
+			flex: 1;
 			display: flex;
-			flex-direction: column;
 			overflow: hidden;
-			position: relative;
 
 			&.isCollapse {
 				height: calc(100% - @status-bar-height);
@@ -125,8 +118,6 @@
 		}
 
 		div.footer {
-			position: absolute;
-			bottom: 0;
 			width: 100%;
 			z-index: @z-index-footer;
 		}
@@ -136,7 +127,7 @@
 			div.menu {
 				animation: menu-init-rtl @animation-duration;
 				transform: transitionX(0);
-				position: relative;
+				position: absolute;
 				height: 100%;
 
 				&.isCollapse {
@@ -256,7 +247,7 @@
 
 /deep/ .mat-slide-toggle.mat-checked .mat-slide-toggle-label {
 	color: lightgreen !important;
-} 
+}
 
 /deep/ .mat-slide-toggle-label {
 	font-size: larger !important;

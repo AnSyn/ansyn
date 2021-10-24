@@ -8,8 +8,8 @@ export class MinimizeDirective {
 	readonly btn: HTMLButtonElement = document.createElement('button');
 	readonly iconDiv: HTMLDivElement = document.createElement('div');
 	@Input() onToggle: () => void;
-	private _startDegRotate: number;
-	private _endDegRotate: number;
+	private _startDegRotate = 0;
+	private _endDegRotate = 180;
 
 	@Input() set toBottom(val: boolean) {
 		this._startDegRotate = val ? 0 : 180;
@@ -48,10 +48,11 @@ export class MinimizeDirective {
 		this.btn.style.position = 'absolute';
 		this.btn.style.bottom = 'calc(100% - 6px)';
 		this.btn.style.left = '50%';
-		this.btn.style.width = '60px';
+		this.btn.style.width = '50px';
 		this.btn.style.color = 'white';
 		this.btn.style.transform = 'translateX(-50%)';
 		this.btn.style.border = 'none';
+		this.btn.style.borderRadius = '10%';
 		this.btn.style.boxShadow = '2px 0 4px -2px black';
 		this.btn.style.outline = 'none';
 		this.btn.style.transition = '.5s';

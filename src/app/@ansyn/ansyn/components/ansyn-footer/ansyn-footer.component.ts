@@ -61,7 +61,7 @@ export class AnsynFooterComponent implements OnInit, OnDestroy {
 		}
 
 		this.collapse = collapse;
-		this.wrapperElement.nativeElement.classList.toggle('collapsed');
+		this.wrapperElement.nativeElement.style.height = `${this.collapse ? '0px' : ''}`;
 
 		this.forceRedraw()
 			.then(() => this.store.dispatch(new ContainerChangedTriggerAction()));

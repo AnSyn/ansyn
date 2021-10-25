@@ -91,7 +91,6 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 		const opacity = state ? 1 : 0;
 		const visibility = state ? 'visible' : 'hidden';
 		const height = state ? '' : '0';
-		const position = state ? '' : 'absolute';
 		this.wrapperElement.nativeElement.style.height = height;
 		let animate = this.el.nativeElement.animate([
 			{opacity, visibility}

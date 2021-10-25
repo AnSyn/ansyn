@@ -8,6 +8,7 @@ export interface IGeoFilterStatus {
 }
 
 export interface IStatusBarState {
+	visibilityState: boolean;
 	geoFilterStatus?: IGeoFilterStatus;
 	isCalenderOpen?: boolean;
 	isAdvancedSearchOpen?: boolean;
@@ -17,6 +18,7 @@ export interface IStatusBarState {
 }
 
 export const StatusBarInitialState: IStatusBarState = {
+	visibilityState: true,
 	geoFilterStatus: {
 		type: CaseGeoFilter.PinPoint,
 		active: false
@@ -33,6 +35,9 @@ export const statusBarStateSelector: MemoizedSelector<any, IStatusBarState> = cr
 
 export function StatusBarReducer(state = StatusBarInitialState, action: StatusBarActions | any): IStatusBarState {
 	switch (action.type) {
+		case StatusBarActionsTypes.TOGGLE_STATUS_BAR:
+			return { ...state, visibilityState: action.payload};
+
 		case StatusBarActionsTypes.UPDATE_GEO_FILTER_STATUS: {
 			const { payload } = action;
 			if ( payload ) {
@@ -69,6 +74,7 @@ export function StatusBarReducer(state = StatusBarInitialState, action: StatusBa
 	}
 }
 
+export const selectStatusBarVisibilityState = createSelector(statusBarStateSelector, (statusbar: IStatusBarState) => statusbar?.visibilityState);
 export const selectGeoFilterStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.geoFilterStatus : StatusBarInitialState.geoFilterStatus);
 export const selectCalenderStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.isCalenderOpen : StatusBarInitialState.isCalenderOpen);
 export const selectAdvancedSearchStatus = createSelector(statusBarStateSelector, (statusBar: IStatusBarState) => statusBar ? statusBar.isAdvancedSearchOpen : StatusBarInitialState.isAdvancedSearchOpen);

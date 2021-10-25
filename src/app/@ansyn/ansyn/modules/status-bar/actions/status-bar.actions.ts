@@ -5,6 +5,7 @@ import { IAdvancedSearchParameter } from '../models/statusBar-config.model';
 import { IOverlaysCriteria } from '../../overlays/models/overlay.model';
 
 export const StatusBarActionsTypes = {
+	TOGGLE_STATUS_BAR: 'TOGGLE_STATUS_BAR',
 	SHOW_LINK_COPY_TOAST: 'SHOW_LINK_COPY_TOAST',
 	COPY_SNAPSHOT_SHARE_LINK: 'COPY_SNAPSHOT_SHARE_LINK',
 	EXPAND: 'EXPAND',
@@ -97,9 +98,19 @@ export class SearchAction implements Action {
 	}
 }
 
+export class ToggleStatusBar implements Action, ILogMessage {
+	readonly type = StatusBarActionsTypes.TOGGLE_STATUS_BAR;
+	constructor(public payload: boolean) {
+	}
+
+	logMessage() {
+		return `user is ${this.payload? 'show' : 'hide'} the status bar`
+	}
+}
 
 export type StatusBarActions =
 	CopySnapshotShareLinkAction
 	| UpdateGeoFilterStatus
 	| ExpandAction
 	| MarkSecondSearchSensorsAction
+	| ToggleStatusBar

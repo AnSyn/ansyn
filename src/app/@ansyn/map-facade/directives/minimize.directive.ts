@@ -1,22 +1,23 @@
-import { Directive, ElementRef, Input } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 @Directive({
 	selector: '[ansynMinimize]'
 })
-export class MinimizeDirective {
+export class MinimizeDirective implements AfterViewInit {
 	readonly btn: HTMLButtonElement = document.createElement('button');
 	readonly iconDiv: HTMLDivElement = document.createElement('div');
 	@Input() onToggle: () => void;
 	private _startDegRotate = 0;
 	private _endDegRotate = 180;
-
-	@Input() set toBottom(val: boolean) {
-		this._startDegRotate = val ? 0 : 180;
-		this._endDegRotate = val ? 180 : 0;
-
+	private _toTop: boolean;
+	@Input() set toTop(val: boolean) {
+		this._toTop = val;
+		this._startDegRotate = val ? 180 : 0;
+		this._endDegRotate = val ? 0 : 180;
 	};
 
+	topOffset: number;
 	_minimize = false;
 
 	get minimize() {
@@ -27,16 +28,25 @@ export class MinimizeDirective {
 		this._minimize = mini;
 		this.btn.setAttribute('tooltip-value', this._minimize ? 'show' : 'hide');
 		this.iconDiv.style.transform = `rotateX(${ this.minimize ? this._endDegRotate : this._startDegRotate }deg)`;
+		this.updatePositionStyle()
 	};
 
-	constructor(private el: ElementRef, private store: Store) {
+	constructor(private el: ElementRef) {
 		this.iconDiv.innerHTML = `<i class="icon-footer-toggle small-icon"></i>`;
 		this.iconDiv.style.transform = `rotateX(${this._startDegRotate}deg)`;
 		this.btn.appendChild(this.iconDiv);
 		this.btn.setAttribute('tooltip-class', 'top');
-		this.updateStyle();
 		this.btn.onclick = this.toggle.bind(this);
 		this.el.nativeElement.appendChild(this.btn);
+	}
+
+	ngAfterViewInit() {
+		this.minimize = false;
+		this.updateStyle();
+		const parentHeight = this.el.nativeElement.offsetHeight;
+		const btnHeight = this.btn.offsetHeight;
+		this.topOffset = parentHeight - (btnHeight / 2);
+		this.updatePositionStyle();
 	}
 
 	toggle() {
@@ -44,9 +54,16 @@ export class MinimizeDirective {
 		this.onToggle();
 	}
 
+	private updatePositionStyle() {
+
+		if (this._toTop) {
+			this.btn.style.top = this.minimize ? '0' : `${this.topOffset}px`;
+		}else {
+			this.btn.style.bottom = this.minimize ? '0' : `${this.topOffset}px`;
+		}
+	}
 	private updateStyle() {
 		this.btn.style.position = 'absolute';
-		this.btn.style.bottom = 'calc(100% - 6px)';
 		this.btn.style.left = '50%';
 		this.btn.style.width = '50px';
 		this.btn.style.color = 'white';

@@ -4,50 +4,52 @@
 @popup-padding-bottom: 15px;
 
 :host {
-	background-color: @status-bar-background;
-	height: @status-bar-height;
-	display: flex;
-	color: white;
-
-	div.cases {
+	.status-container {
+		background-color: @status-bar-background;
 		display: flex;
-		justify-content: center;
-		align-items: center;
-		padding-right: 10px;
-		div {
-			button {
-				width: 34px;
-				height: 34px;
-				margin: 0 5px;
-				padding: 1px;
-				border-radius: 3px;
-				background-color: #4c4c4c;
-				color: white;
-				outline: none;
-				border: none;
-				display: inline-flex;
-				justify-content: center;
-				align-items: center;
+		color: white;
 
-				i.icon {
-					margin: unset;
-					margin-top: 2px;
-				}
+		div.cases {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			padding-right: 10px;
 
-				&.favorite-button:disabled {
-					opacity: .6;
+			div {
+				button {
+					width: 34px;
+					height: 34px;
+					margin: 0 5px;
+					padding: 1px;
+					border-radius: 3px;
+					background-color: #4c4c4c;
+					color: white;
+					outline: none;
+					border: none;
+					display: inline-flex;
+					justify-content: center;
+					align-items: center;
+
+					i.icon {
+						margin: unset;
+						margin-top: 2px;
+					}
+
+					&.favorite-button:disabled {
+						opacity: .6;
+					}
 				}
 			}
 		}
-	}
 
-	div.search {
-		display: flex;
-		flex: 1;
-		align-items: center;
-	}
+		div.search {
+			display: flex;
+			flex: 1;
+			align-items: center;
+		}
 
-	div.logo {
-		display: flex;
+		div.logo {
+			display: flex;
+		}
 	}
 }

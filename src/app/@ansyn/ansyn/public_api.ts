@@ -45,7 +45,8 @@ export { IAddressConfig } from './modules/status-bar/models/address-config.model
 export {
 	statusBarFeatureKey,
 	StatusBarInitialState,
-	StatusBarReducer
+	StatusBarReducer,
+	selectStatusBarVisibilityState
 } from './modules/status-bar/reducers/status-bar.reducer';
 export { statusBarStateSelector } from './modules/status-bar/reducers/status-bar.reducer';
 export { comboBoxesOptions } from './modules/status-bar/models/combo-boxes.model';

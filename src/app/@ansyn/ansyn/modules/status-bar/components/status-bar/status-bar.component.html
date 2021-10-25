@@ -1,4 +1,5 @@
-<div class="cases">
+<div class="status-container" ansynMinimize [toTop]="true" [onToggle]="toggleStatusBar.bind(this)" #wrappedElement>
+	<div class="cases">
 	<ansyn-cases></ansyn-cases>
 	<div *ngIf="isFavoritesShow">
 		<button class="favorite-button"
@@ -29,4 +30,5 @@
 </div>
 <div class="logo">
 	<ansyn-logo-panel [version]="version"></ansyn-logo-panel>
+</div>
 </div>

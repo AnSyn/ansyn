@@ -1,4 +1,4 @@
-<div class="status-container" ansynMinimize [toTop]="true" [onToggle]="toggleStatusBar.bind(this)" #wrappedElement>
+<div class="status-container" ansynMinimize [toTop]="true" (onToggle)="toggleStatusBar()" #wrappedElement>
 	<div class="cases">
 	<ansyn-cases></ansyn-cases>
 	<div *ngIf="isFavoritesShow">

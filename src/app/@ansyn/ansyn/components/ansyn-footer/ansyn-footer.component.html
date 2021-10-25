@@ -1,4 +1,4 @@
-<div class="status-timeline-container" ansynMinimize [onToggle]="toggle.bind(this)"  #footerWrapper>
+<div class="status-timeline-container" ansynMinimize (onToggle)="toggle()"  #footerWrapper>
 
 	<div class="app-timeline-container">
 		<ansyn-overlay-navigation-bar></ansyn-overlay-navigation-bar>

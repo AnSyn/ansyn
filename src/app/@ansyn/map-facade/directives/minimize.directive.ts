@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, ElementRef, Input } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 @Directive({
@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 export class MinimizeDirective implements AfterViewInit {
 	readonly btn: HTMLButtonElement = document.createElement('button');
 	readonly iconDiv: HTMLDivElement = document.createElement('div');
-	@Input() onToggle: () => void;
+	@Output() onToggle = new EventEmitter();
 	private _startDegRotate = 0;
 	private _endDegRotate = 180;
 	private _toTop: boolean;
@@ -15,6 +15,7 @@ export class MinimizeDirective implements AfterViewInit {
 		this._toTop = val;
 		this._startDegRotate = val ? 180 : 0;
 		this._endDegRotate = val ? 0 : 180;
+		this.btn.setAttribute('tooltip-class', this._toTop ? 'bottom' : 'top');
 	};
 
 	topOffset: number;
@@ -35,7 +36,7 @@ export class MinimizeDirective implements AfterViewInit {
 		this.iconDiv.innerHTML = `<i class="icon-footer-toggle small-icon"></i>`;
 		this.iconDiv.style.transform = `rotateX(${this._startDegRotate}deg)`;
 		this.btn.appendChild(this.iconDiv);
-		this.btn.setAttribute('tooltip-class', 'top');
+		this.btn.setAttribute('tooltip-class', /* default */ 'top');
 		this.btn.onclick = this.toggle.bind(this);
 		this.el.nativeElement.appendChild(this.btn);
 	}
@@ -43,24 +44,17 @@ export class MinimizeDirective implements AfterViewInit {
 	ngAfterViewInit() {
 		this.minimize = false;
 		this.updateStyle();
-		const parentHeight = this.el.nativeElement.offsetHeight;
-		const btnHeight = this.btn.offsetHeight;
-		this.topOffset = parentHeight - (btnHeight / 2);
-		this.updatePositionStyle();
 	}
 
 	toggle() {
 		this.minimize = !this.minimize;
-		this.onToggle();
+		this.onToggle.emit();
 	}
 
 	private updatePositionStyle() {
-
-		if (this._toTop) {
-			this.btn.style.top = this.minimize ? '0' : `${this.topOffset}px`;
-		}else {
-			this.btn.style.bottom = this.minimize ? '0' : `${this.topOffset}px`;
-		}
+		const offset = this.minimize ? '0' : `${this.topOffset}px`;
+		const keyFrames = {[this._toTop ? 'top' : 'bottom']: offset};
+		this.btn.animate([keyFrames], {duration: 150, fill: 'forwards'})
 	}
 	private updateStyle() {
 		this.btn.style.position = 'absolute';
@@ -76,6 +70,15 @@ export class MinimizeDirective implements AfterViewInit {
 		this.btn.style.zIndex = '1000';
 		this.btn.style.visibility = 'visible';
 		this.btn.style.background = '#0e0e0e';
+
+		const parentHeight = this.el.nativeElement.offsetHeight;
+		const btnHeight = this.btn.offsetHeight;
+		this.topOffset = parentHeight - (btnHeight / 2);
+		if (this._toTop) {
+			this.btn.style.top = this.minimize ? '0' : `${this.topOffset}px`;
+		}else {
+			this.btn.style.bottom = this.minimize ? '0' : `${this.topOffset}px`;
+		}
 	}
 }
 
